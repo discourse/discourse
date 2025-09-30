@@ -21,6 +21,7 @@ import ThemesGridPlaceholder from "./themes-grid-placeholder";
 export default class ThemeCard extends Component {
   @service toasts;
   @service dialog;
+  @service router;
 
   @tracked isUpdating = false;
 
@@ -43,6 +44,14 @@ export default class ThemeCard extends Component {
 
   get destroyDisabled() {
     return this.args.theme.default || this.args.theme.system;
+  }
+
+  get editUrl() {
+    return this.router.urlFor(
+      "adminCustomizeThemes.show",
+      "themes",
+      this.args.theme.id
+    );
   }
 
   @action
@@ -159,7 +168,10 @@ export default class ThemeCard extends Component {
   }
 
   <template>
-    <AdminConfigAreaCard class={{this.themeCardClasses}}>
+    <AdminConfigAreaCard
+      class={{this.themeCardClasses}}
+      data-theme-id={{@theme.id}}
+    >
       <:content>
 
         <div class="theme-card__image-wrapper">
@@ -174,7 +186,7 @@ export default class ThemeCard extends Component {
           {{/if}}
         </div>
         <div class="theme-card__content">
-          <div class="theme-card__title">{{@theme.name}}</div>
+          <a class="theme-card__title" href={{this.editUrl}}>{{@theme.name}}</a>
           {{#if @theme.description}}
             <p class="theme-card__description">{{@theme.description}}</p>
           {{/if}}

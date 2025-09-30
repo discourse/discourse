@@ -1294,7 +1294,7 @@ vi:
         invalid: "Username này không thích hợp. Nó chỉ chứa các ký tự là chữ cái và chữ số. "
       add_email:
         title: "Thêm Email"
-        add: "thêm vào"
+        add: "Thêm"
       change_email:
         title: "Thay đổi Email"
         taken: "Xin lỗi, email này không dùng được. "
@@ -1916,6 +1916,7 @@ vi:
         other: "+%{count} danh mục phụ"
       topic_count:
         other: "%{count} chủ đề trong danh mục này"
+      read_only: "chỉ đọc"
     select_kit:
       delete_item: "Xoá %{name}"
       filter_by: "Lọc theo: %{name}"
@@ -3517,7 +3518,6 @@ vi:
         other: "chọn ít nhất %{count} thẻ…"
       choose_for_topic_required_group:
         other: "chọn %{count} thẻ từ “%{name}”…"
-      info: "Thông tin"
       default_info: "Thẻ này không bị giới hạn đối với bất kỳ danh mục nào và không có từ đồng nghĩa."
       staff_info: "Để thêm các hạn chế, hãy đặt thẻ này vào <a href=%{basePath}/tag_groups>nhóm thẻ</a>."
       category_restricted: "Thẻ này bị hạn chế đối với các danh mục bạn không có quyền truy cập."

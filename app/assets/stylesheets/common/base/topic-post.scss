@@ -411,7 +411,7 @@ nav.post-controls {
             // Like button when like count is present
             .discourse-no-touch & {
               &:hover {
-                background: var(--primary-low);
+                background: var(--d-hover);
               }
             }
           }
@@ -1516,7 +1516,7 @@ span.mention {
 .post-notice {
   box-sizing: border-box;
   align-items: center;
-  background-color: var(--tertiary-low);
+  background-color: var(--tertiary-very-low);
   border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
@@ -1525,15 +1525,20 @@ span.mention {
       var(--topic-avatar-width)
   );
   padding: var(--topic-body-width-padding);
-  padding-left: 0;
+  font-size: var(--font-down-1-rem);
+  border-radius: var(--d-border-radius);
 
-  &.old {
-    background-color: unset;
-    color: var(--primary-medium);
+  &.new-user {
+    gap: var(--space-2);
+  }
 
-    .d-icon {
-      color: var(--primary-medium);
-    }
+  &.custom {
+    background: var(--danger-low);
+  }
+
+  .emoji {
+    width: 1.5em;
+    height: 1.5em;
   }
 
   .post-notice-message {

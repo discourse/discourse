@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import Site from "discourse/models/site";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -460,17 +461,20 @@ module("Unit | Model | category", function (hooks) {
       { id: 999, name: "Test2 Sub Sub", parent_category_id: 1000 },
     ];
 
-    assert.deepEqual(Category.sortCategories(categories).mapBy("name"), [
-      "Test",
-      "Test Sub",
-      "Test Sub Sub",
-      "Test Sub Sub Sub",
-      "Test Sub Sub Sub2",
-      "Test2",
-      "Test2 Sub",
-      "Test2 Sub Sub2",
-      "Test2 Sub Sub",
-    ]);
+    assert.deepEqual(
+      Category.sortCategories(categories).map((item) => item.name),
+      [
+        "Test",
+        "Test Sub",
+        "Test Sub Sub",
+        "Test Sub Sub Sub",
+        "Test Sub Sub Sub2",
+        "Test2",
+        "Test2 Sub",
+        "Test2 Sub Sub2",
+        "Test2 Sub Sub",
+      ]
+    );
   });
 
   test("asyncFindByIds - do not request categories that have been loaded already", async function (assert) {
@@ -494,5 +498,40 @@ module("Unit | Model | category", function (hooks) {
 
     await Category.asyncFindByIds([12345]);
     assert.deepEqual(requestedIds, [[12345, 12346], [12347]]);
+  });
+
+  test("registerCategorySaveProperty includes property in save request", async function (assert) {
+    const done = assert.async();
+
+    withPluginApi((api) => {
+      api.registerCategorySaveProperty("cats_and_dogs");
+    });
+
+    const category = Category.create({
+      id: 12345,
+      name: "Test Category",
+      cats_and_dogs: 42,
+      group_permissions: [{ permission_type: 1, group_name: "everyone" }],
+      permissions: ["everyone"],
+    });
+
+    pretender.put("/categories/12345", (request) => {
+      const requestBody = JSON.parse(request.requestBody);
+      assert.strictEqual(
+        requestBody.cats_and_dogs,
+        42,
+        "registered property is included in category save request"
+      );
+      done();
+      return response(200, {
+        category: {
+          id: 12345,
+          name: "Test Category",
+          cats_and_dogs: 42,
+        },
+      });
+    });
+
+    await category.save();
   });
 });

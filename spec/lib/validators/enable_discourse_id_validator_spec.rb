@@ -33,9 +33,28 @@ RSpec.describe EnableDiscourseIdValidator do
       end
 
       describe "when value is true" do
-        it "should not be valid" do
-          expect(validator.valid_value?("t")).to eq(false)
+        it "should automatically register" do
+          allow(DiscourseId::Register).to receive(:call).and_return(
+            instance_double(Service::Base::Context, success?: true),
+          )
+          expect(validator.valid_value?("t")).to eq(true)
+        end
 
+        it "should show an appropriate error message when something went wrong" do
+          failed_context = Service::Base::Context.new
+          failed_context.fail(error: "an error")
+          allow(DiscourseId::Register).to receive(:call).and_return(failed_context)
+
+          expect(validator.valid_value?("t")).to eq(false)
+          expect(validator.error_message).to eq("an error")
+        end
+
+        it "shows a default error message when something went _very_ wrong" do
+          failed_context = Service::Base::Context.new
+          failed_context.fail
+          allow(DiscourseId::Register).to receive(:call).and_return(failed_context)
+
+          expect(validator.valid_value?("t")).to eq(false)
           expect(validator.error_message).to eq(
             I18n.t("site_settings.errors.discourse_id_credentials"),
           )
@@ -53,9 +72,29 @@ RSpec.describe EnableDiscourseIdValidator do
       end
 
       describe "when value is true" do
-        it "should not be valid" do
-          expect(validator.valid_value?("t")).to eq(false)
+        it "automatically registers" do
+          allow(DiscourseId::Register).to receive(:call).and_return(
+            instance_double(Service::Base::Context, success?: true),
+          )
 
+          expect(validator.valid_value?("t")).to eq(true)
+        end
+
+        it "shows an appropriate error message when something went wrong" do
+          failed_context = Service::Base::Context.new
+          failed_context.fail(error: "another error")
+          allow(DiscourseId::Register).to receive(:call).and_return(failed_context)
+
+          expect(validator.valid_value?("t")).to eq(false)
+          expect(validator.error_message).to eq("another error")
+        end
+
+        it "shows a default error message when something went _very_ wrong" do
+          failed_context = Service::Base::Context.new
+          failed_context.fail(error: nil)
+          allow(DiscourseId::Register).to receive(:call).and_return(failed_context)
+
+          expect(validator.valid_value?("t")).to eq(false)
           expect(validator.error_message).to eq(
             I18n.t("site_settings.errors.discourse_id_credentials"),
           )

@@ -2,7 +2,7 @@
   position: sticky;
   top: var(--header-offset);
   background: var(--d-content-background);
-  z-index: z("base");
+  z-index: calc(z("base") + 1);
   padding: 1.5rem 0 1rem 0;
   max-width: unset;
 
@@ -35,11 +35,6 @@
         }
       }
     }
-  }
-
-  .select-kit.combo-box.category-drop.has-selection
-    .category-drop-header:hover {
-    border-color: transparent;
   }
 }
 

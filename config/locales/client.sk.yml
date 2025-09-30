@@ -1888,7 +1888,7 @@ sk:
         invalid: "Toto používateľské meno nie je platné. Musí obsahovať iba znaky a čísla."
       add_email:
         title: "Pridať e-mail"
-        add: "pridať"
+        add: "Pridať"
       change_email:
         title: "Zmeniť email"
         taken: "Ľutujeme, tento email nie je k dispozícii."
@@ -2773,6 +2773,7 @@ sk:
         few: "%{count} tém v tejto kategórii"
         many: "%{count} tém v tejto kategórii"
         other: "%{count} témy v tejto kategórii"
+      read_only: "len na čítanie"
     timezone_input:
       ambiguous_ist: "IST je nejednoznačné, vyberte konkrétne časové pásmo (napr.: Ázia/Kolkata)"
     select_kit:
@@ -3583,8 +3584,6 @@ sk:
         many: "%{count} príspevkov k téme"
         other: "%{count} príspevkov k téme"
       create: "Nová téma"
-      create_disabled_category: "V tejto kategórii nemáte povolené vytvárať témy"
-      create_disabled_tag: "Nemáte povolené vytvárať témy s touto značkou"
       create_long: "Vytvoriť novú tému"
       open_draft: "Otvoriť koncept"
       private_message: "Vytvoríť správu"
@@ -4065,6 +4064,9 @@ sk:
       title: "Najnovšie príspevky"
       empty: "Neexistujú žiadne príspevky"
       aria_post_number: "%{title} – príspevok č.%{postNumber}"
+      bulk:
+        clear_all: "Vymazať všetko"
+        actions: "Hromadné akcie"
     post:
       confirm_delete: "Naozaj chcete odstrániť tento príspevok?"
       quote_reply: "Citácia"
@@ -5062,7 +5064,6 @@ sk:
         few: "vyberte %{count} značiek z „%{name}“…"
         many: "vyberte %{count} značiek z „%{name}“…"
         other: "vyberte %{count} značky z „%{name}“…"
-      info: "Info"
       default_info: "Táto značka nie je obmedzená na žiadne kategórie a nemá žiadne synonymá."
       staff_info: "Ak chcete pridať obmedzenia, vložte túto značku do skupiny značiek <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Táto značka je obmedzená na kategórie, ku ktorým nemáte oprávnenie na prístup."
@@ -6686,7 +6687,7 @@ sk:
             title: "Nastavenia témy webu"
           themes:
             title: "Témy"
-            description: 'Témy pre celú stránku, ktoré menia celkový vzhľad a dojem z vašej stránky pre všetkých používateľov.'
+            description: "Témy pre celú stránku, ktoré menia celkový vzhľad a dojem z vašej stránky pre všetkých používateľov."
             themes_intro: "Na začiatok si nainštalujte novú tému alebo si vytvorte vlastnú od začiatku pomocou týchto zdrojov."
             new_theme: "Nová téma"
             back: "Späť na témy"
@@ -7123,6 +7124,8 @@ sk:
         schema:
           title: "Úprava nastavenia %{name}"
           back_button: "Späť na %{name}"
+          move_up: "Posunúť sa nahor"
+          move_down: "Posunúť sa nadol"
           fields:
             required: "*povinné"
             groups:

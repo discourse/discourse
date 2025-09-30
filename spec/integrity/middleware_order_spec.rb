@@ -11,6 +11,7 @@ RSpec.describe "Middleware order" do
       Middleware::ProcessingRequest,
       Rack::Sendfile,
       ActionDispatch::Static,
+      Propshaft::Server,
       ActionDispatch::Executor,
       Rack::MethodOverride,
       Middleware::EnforceHostname,

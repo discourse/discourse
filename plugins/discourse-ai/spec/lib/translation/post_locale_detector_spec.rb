@@ -25,6 +25,13 @@ describe DiscourseAi::Translation::PostLocaleDetector do
       )
     end
 
+    it "returns site default locale if post is empty" do
+      post.update_column(:cooked, "")
+      expect { described_class.detect_locale(post) }.to change { post.reload.locale }.from(nil).to(
+        "en",
+      )
+    end
+
     it "bypasses validations when updating locale" do
       post.update_column(:cooked, "A")
 

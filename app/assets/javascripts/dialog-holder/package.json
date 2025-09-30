@@ -9,7 +9,7 @@
   ],
   "dependencies": {
     "a11y-dialog": "8.1.4",
-    "ember-auto-import": "^2.10.0",
+    "ember-auto-import": "^2.10.1",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "ember-template-imports": "^4.3.0",
@@ -19,7 +19,7 @@
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
-    "webpack": "^5.101.3"
+    "webpack": "^5.102.0"
   },
   "engines": {
     "node": ">= 18",

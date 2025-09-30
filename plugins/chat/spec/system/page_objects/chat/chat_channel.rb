@@ -142,6 +142,16 @@ module PageObjects
         within(message_reactions_list(message)) { return find("[data-emoji-name=\"#{emoji}\"]") }
       end
 
+      def click_quick_reaction(message, emoji_name)
+        hover_message(message)
+        find(".chat-message-actions [data-emoji-name=\"#{emoji_name}\"]").click
+      end
+
+      def open_emoji_picker(message)
+        hover_message(message)
+        find(".chat-message-react-btn").click
+      end
+
       def find_quick_reaction(emoji_name)
         find(".chat-message-actions [data-emoji-name=\"#{emoji_name}\"]")
       end

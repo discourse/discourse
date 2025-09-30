@@ -1567,6 +1567,15 @@ de:
         anon_views: Anonym
         total_views: Gesamt
       description: "Die 100 meistgesehenen Themen in einem Zeitraum, basierend auf Aufrufen durch angemeldete und anonyme Benutzer. Kann nach Kategorie gefiltert werden."
+    associated_accounts_by_provider:
+      title: "Verknüpfte Konten nach Anmeldemethode"
+      labels:
+        provider: Anmeldeanbieter
+        no_accounts: "Keine verknüpften Konten"
+        discourse_connect: "SSO über Discourse Connect"
+        no_sso_accounts: "Konten ohne SSO-Eintrag"
+        total_users: "Gesamtzahl der aktiven Benutzerkonten"
+      description: "Zeigt die Anzahl der verknüpften Konten gruppiert nach Anmeldeanbieter an. Gilt nur, wenn Anmeldungen über soziale Netzwerke aktiviert sind."
   dashboard:
     problem:
       twitter_login: 'Die Anmeldung über Twitter scheint im Moment nicht zu funktionieren. Überprüfe die Anmeldedaten in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">den Website-Einstellungen</a>.'
@@ -1654,7 +1663,7 @@ de:
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Externe (per Hotlink aufgerufene) Bilder in lokale Bilder konvertieren, indem sie heruntergeladen werden; so bleibt der Inhalt erhalten, auch wenn die Bilder in Zukunft von der externen Website entfernt werden."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher, um externe Bilder lokal herunterzuladen (in Prozent)"
-    disabled_image_download_domains: "Durch senkrechte Striche („|“) getrennte Liste von Domains, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
+    disabled_image_download_domains: "Liste von Domains, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
     block_hotlinked_media: "Verhindert, dass Benutzer extrene (per Hotline aufgerufene) Medien in ihren Beiträgen einfügen. Externe Medien, die nicht über „download_remote_images_to_local“ heruntergeladen werden, werden durch einen Platzhalter-Link ersetzt."
     block_hotlinked_media_exceptions: "Eine Liste von Basis-URLs, die von der Einstellung block_hotlinked_media ausgenommen sind. Protokoll muss angegeben werden (z. B. https://example.com)."
     editing_grace_period: "Für (n) Sekunden nach dem Schreiben wird durch die Bearbeitung keine neue Version im Beitragsverlauf erstellt."
@@ -1705,7 +1714,7 @@ de:
     opengraph_image: "Standard-Opengraph-Bild. Wird verwendet, wenn die Seite kein anderes passendes Bild hat. Falls leer, wird large_icon verwendet."
     x_summary_large_image: "Twitter-Karte „summary large image“ (sollte mindestens 280 Pixel in der Breite und mindestens 150 Pixel in der Höhe sein, keine .svg-Datei). Wenn das Feld leer gelassen wird, werden die regulären Metadaten der Karte aus dem opengraph_image generiert, sofern es sich nicht ebenfalls um eine .svg-Datei handelt"
     notification_email: "Die E-Mail-Adresse, die als „from:“-Absender aller wichtigen System-E-Mails benutzt wird. Die angegebene Domain sollte über korrekte SPF-, DKIM- und Reverse-PTR-Einträge verfügen, damit E-Mails sicher zugestellt werden können."
-    email_custom_headers: "Eine durch senkrechte Striche („|“) getrennte Liste von eigenen E-Mail-Headern"
+    email_custom_headers: "Eine Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
     enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus. Wenn enforce_second_factor_on_external_auth aktiviert ist, können sich Benutzer nicht mit externen Authentifizierungsanbietern anmelden, nachdem sie die Zwei-Faktor-Authentifizierung eingerichtet haben."
@@ -1820,8 +1829,8 @@ de:
     whispers_allowed_groups: "Private Kommunikation innerhalb von Themen für Mitglieder bestimmter Gruppen erlauben."
     hidden_post_visible_groups: "Erlaube Mitgliedern dieser Gruppen, ausgeblendete Beiträge aufzurufen. Team-Mitglieder können jederzeit ausgeblendete Beiträge aufrufen."
     allow_index_in_robots_txt: "Lege in der robots.txt fest, dass diese Website von Suchmaschinen indiziert werden darf. Du kannst <a href='%{base_path}/admin/customize/robots'>deine robots.txt hier überschreiben.</a> <b>WARNUNG</b>: Falsch konfigurierte Regeln können verhindern, dass deine Website wie erwartet gecrawlt wird."
-    blocked_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, mit denen Benutzer keine Konten registrieren dürfen. Subdomains werden automatisch für die angegebenen Domains behandelt. Die Wildcard-Symbole * und ? werden nicht unterstützt. Beispiel: mailinator.com|trashmail.net"
-    allowed_email_domains: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, mit denen Benutzer Konten registrieren MÜSSEN. Subdomains werden automatisch für die angegebenen Domains behandelt. Die Wildcard-Symbole * und ? werden nicht unterstützt. WARNUNG: Benutzer mit anderen als den aufgeführten E-Mail-Domains sind nicht zugelassen!"
+    blocked_email_domains: "Eine Liste von E-Mail-Domains, mit denen Benutzer keine Konten registrieren dürfen. Subdomains werden automatisch für die angegebenen Domains verwaltet. Die Wildcard-Symbole * und ? werden nicht unterstützt. Beispiel: mailinator.com"
+    allowed_email_domains: "Eine Liste von E-Mail-Domains, mit denen Benutzer Konten registrieren MÜSSEN. Subdomains werden automatisch für die angegebenen Domains verwaltet. Die Wildcard-Symbole * und ? werden nicht unterstützt. WARNUNG: Benutzer mit anderen als den aufgeführten E-Mail-Domains sind nicht zugelassen!"
     normalize_emails: "Überprüfen, ob normalisierte E-Mail-Adressen einzigartig sind. Bei normalisierten E-Mail-Adressen werden alle Punkte aus dem Benutzernamen und alles zwischen + und @ Symbolen entfernt."
     auto_approve_email_domains: "Benutzer mit E-Mail-Adressen aus dieser Liste von Domains werden automatisch genehmigt. Subdomains werden automatisch für die angegebenen Domains behandelt. Die Wildcard-Symbole * und ? werden nicht unterstützt."
     hide_email_address_taken: "Benutzer beim Registrieren oder Passwort-Zurücksetzen nicht über ein bereits bestehendes Konto mit dieser E-Mail-Adresse informieren. Erfordert die Angabe vollständiger E-Mail-Adressen zum Passwort-Zurücksetzen."
@@ -1855,6 +1864,7 @@ de:
     auth_overrides_email: "Überschreibt lokale E-Mail bei jeder Anmeldung mit externer Website-E-Mail und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter. (WARNUNG: Aufgrund der Normalisierung lokaler E-Mails können Abweichungen auftreten.)"
     auth_overrides_username: "Überschreibt den lokalen Benutzernamen bei jeder Anmeldung mit dem Benutzernamen der externen Website und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter. (WARNUNG: Abweichungen können aufgrund unterschiedlicher Länge/Anforderungen des Benutzernamens auftreten.)"
     auth_overrides_name: "Überschreibt bei jeder Anmeldung den lokalen vollständigen Namen mit dem vollständigen Namen der externen Website und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter."
+    auth_overrides_avatar: "Überschreibt bei jeder Anmeldung das lokale Profilbild mit dem Profilbild der externen Website und verhindert lokale Änderungen. Gilt für alle Authentifizierungsanbieter."
     discourse_connect_overrides_avatar: "Überschreibt den Benutzeravatar mit dem Wert aus dem DiscourseConnect-Payload. Wenn diese Option aktiviert ist, dürfen Benutzer keine Avatare bei Discourse hochladen."
     discourse_connect_overrides_location: "Überschreibt den Benutzerstandort mit dem Wert aus dem DiscourseConnect-Payload und verhindert lokale Änderungen."
     discourse_connect_overrides_website: "Überschreibt die Benutzer-Website mit dem Wert aus dem DiscourseConnect-Payload und verhindert lokale Änderungen."
@@ -2217,9 +2227,6 @@ de:
     enable_category_group_moderation: "Gruppen erlauben, Inhalte in bestimmten Kategorien zu moderieren"
     group_in_subject: "Setze %%{optional_pm} im E-Mail-Betreff auf den Namen der ersten Gruppe in der persönlichen Nachricht, siehe: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Betreffformat für Standard-E-Mails anpassen</a>"
     allow_anonymous_mode: "Aktiviere die Option, dass Benutzer beim Posten in den anonymen Modus wechseln können. Wenn diese Option aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website erstellen. Siehe auch `allow anonymous likes`."
-    allow_likes_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus das Markieren von Beiträgen mit „Gefällt mir“ zu ermöglichen. Wenn diese Einstellung aktiviert ist, können die Benutzer ihre Identität verbergen, wenn sie Beiträge oder Themen auf der Website liken. Siehe auch `allow anonymous mode`."
-    anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
-    anonymous_posting_allowed_groups: "Gruppen, die anonyme Beiträge zulassen dürfen"
     anonymous_account_duration_minutes: "Erzeuge alle N Minuten ein neues anonymes Konto je Benutzer, um die Anonymität zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit dem letzten Beitrag dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
     hide_new_user_profiles: "Verstecke Benutzerprofile der Vertrauensstufe 1 oder niedriger vor der Öffentlichkeit und bei Benutzern der Vertrauensstufe 1, bis sie zum ersten Mal posten. Diese Funktion ist auf Websites mit must_approve_users und invite_only bedingungslos deaktiviert."
@@ -2237,7 +2244,7 @@ de:
     clean_up_unused_staged_users_after_days: "Anzahl der Tage, bevor ein inaktiver vorbereiteter Benutzer (ohne Beiträge) entfernt wird. Zum Deaktivieren der Bereinigung auf 0 setzen."
     user_selected_primary_groups: "Benutzern erlauben, ihre eigene primäre Gruppe festzulegen"
     max_notifications_per_user: "Maximale Anzahl an Benachrichtigungen pro Benutzer. Wenn diese Zahl überschritten wird, werden alte Benachrichtigungen gelöscht. Wird wöchentlich erzwungen. Zum Deaktivieren auf 0 setzen"
-    allowed_user_website_domains: "Benutzer-Websites werden mit diesen Domains abgeglichen. Mehrere Domains können durch senkrechte Striche („|“) getrennt angegeben werden."
+    allowed_user_website_domains: "Benutzer-Websites werden mit diesen Domains abgeglichen."
     allow_profile_backgrounds: "Benutzern erlauben, Profilhintergründe hochzuladen."
     get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im selben Thema an dieselbe Person schreiben kann, bevor er gewarnt wird."
     dont_feed_the_trolls_threshold: "Anzahl der Meldungen von anderen Benutzern, bevor verwarnt wird."
@@ -2320,7 +2327,6 @@ de:
     disable_watched_word_checking_in_user_fields: "deaktiviere die Prüfung überwachter Wörter in Benutzerfeldern"
     watched_words_regular_expressions: "Erlaubt die Verwendung von regulären Ausdrücken zum Filtern von Wörtern. Wenn diese Funktion aktiviert ist, gruppiert sie sensible Wörter nach ihrer Groß- und Kleinschreibung. Anschließend werden alle ausgewählten Wörter in einem einzigen regulären Ausdruck zusammengefasst, wobei Wortgrenzen für regulär überwachte Wörter hinzugefügt werden. Diese Regex-basierte Filtermethode fügt also eine zusätzliche Kontrollebene für die Inhaltsmoderation hinzu, indem sie komplexere Wortmuster unterstützt. Die Einstellung ermöglicht es außerdem, den ursprünglichen Text einfach durch die Ersetzung deiner Wahl zu ersetzen."
     enable_fast_edit: "Fügt dem Beitragsauswahlmenü eine Schaltfläche hinzu, um eine kleine Auswahl inline zu bearbeiten."
-    old_post_notice_days: "Die Anzahl der Tage, nach denen eine Beitragsbenachrichtigung als alt gilt. Dies unterscheidet sie visuell von neueren Meldungen auf der Website."
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
@@ -2443,6 +2449,7 @@ de:
     show_bottom_topic_map: "Zeigt die Themenübersicht am Ende des Themas an, wenn es 10 Antworten oder mehr hat."
     show_topic_map_in_topics_without_replies: "Zeigt die Themenübersicht an, auch wenn es zum Thema keine Antworten gibt."
     enable_welcome_banner: "Zeige auf den Hauptseiten mit Themenlisten ein Banner an, um Mitglieder willkommen zu heißen und ihnen die Suche nach Website-Inhalten zu ermöglichen"
+    welcome_banner_image: "Lege ein Bild fest, das im Hintergrund des Willkommensbanners angezeigt werden soll."
     welcome_banner_location: "Legt fest, wo auf der Seite das Willkommensbanner erscheinen soll."
     welcome_banner_page_visibility: "Legt fest, auf welchen Seiten das Willkommensbanner erscheinen soll."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
@@ -2454,11 +2461,14 @@ de:
     glimmer_post_stream_mode_auto_groups: "Aktiviere die neue „glimmer“-Beitragsstrom-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und veröffentlicht ist."
     deactivate_widgets_rendering: "Deaktiviert die veraltete Rendering-Engine für Widgets. Dadurch werden alle Widgets deaktiviert, die nicht auf Glimmer-Komponenten umgestellt wurden. Außerdem wird der Glimmer-Post-Stream unabhängig vom Wert der Einstellung `glimmer_post_stream_mode` bedingungslos aktiviert. Diese Einstellung wird für Produktionsumgebungen nicht empfohlen, da sie bestehende Themes und Plug-ins beeinträchtigen kann."
     floatkit_autocomplete_composer: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü im Editor. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle JQuery-basierte Autovervollständigungsmenü ersetzt."
+    floatkit_autocomplete_input_fields: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü für Eingabefelder in der Ganzseitensuche und in Gruppenauswahlfeldern. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle jQuery-basierte Autovervollständigungsmenü ersetzt."
     floatkit_autocomplete_chat_composer: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü im Chat-Editor. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle jQuery-basierte Autovervollständigungsmenü ersetzt."
     experimental_form_templates: "Aktiviere die Funktion für Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
     experimental_auto_grid_images: "Wickelt Bilder automatisch in [grid]-Tags ein, wenn 3 oder mehr Bilder im Composer hochgeladen werden."
+    experimental_impersonation: "Schlüpfe in die Rolle eines anderen Benutzers, ohne dich von deinem Administratorkonto abmelden zu müssen."
+    experimental_impersonation_time_limit_minutes: "Nach welcher Zeitspanne das Schlüpfen in die Rolle eines Benutzers automatisch beendet wird."
     page_loading_indicator: "Die Ladeanzeige konfigurieren, die bei der Seitennavigation in Discourse erscheint. „Spinner“ ist ein ganzseitiger Indikator. „Slider“ zeigt einen schmalen Balken am oberen Rand des Bildschirms an."
     show_user_menu_avatars: "Benutzeravatare im Benutzermenü anzeigen"
     about_page_hidden_groups: "Mitglieder bestimmter Gruppen nicht auf der /about-Seite anzeigen."
@@ -2470,11 +2480,11 @@ de:
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
     rich_editor: "Aktiviere den Rich-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor wechseln können, um intuitiver und benutzerfreundlicher zu arbeiten."
     default_composition_mode: "Lege den Standardmodus für den Editor deiner Community fest. Der Rich-Text-Modus bietet den meisten Benutzern ein moderneres, vertrauteres Schreibgefühl, während der Markdown-Modus für ein eher technisches Publikum geeignet sein kann. Die Mitglieder können mit einem Schalter in der Editor-Symbolleiste zwischen den Modi wechseln."
-    viewport_based_mobile_mode: "EXPERIMENTELL: Deaktiviere die User-Agent-basierten Mobil-/Desktop-Modi und verwende stattdessen die Viewport-Breite."
     reviewable_ui_refresh: "Gruppen, die die experimentelle neue Benutzeroberfläche in der Warteschlange zur Überprüfung nutzen können."
     content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
     content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_allowed_groups: "Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass „content localization enabled“ aktiviert ist."
+    content_localization_language_switcher: "Zeige einen Sprachumschalter in der Kopfzeile an, mit dem Besucher die Sprache der Discourse-Oberfläche und der von Benutzern erstellten Inhalten ändern können. Nutzt die Sprachen, die in ‚content localization supported locales‘ festgelegt wurden."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_email: "Ungültige E-Mail-Adresse."
@@ -2546,6 +2556,7 @@ de:
       invalid_uncategorized_category_setting: 'Die Kategorie „Nicht kategorisiert“ kann nicht ausgewählt werden, wenn „Nicht kategorisierte Themen zulassen“ nicht aktiviert ist.'
       invalid_search_ranking_weights: "Der Wert für die Websiteeinstellung search_ranking_weights ist ungültig. Beispiel: „{0.1,0.2,0.3,1.0}“. Beachte, dass der Maximalwert für jede Gewichtung 1.0 beträgt."
       content_localization_locale_limit: "Die Anzahl der unterstützten Sprachvarianten darf %{max} nicht überschreiten."
+      content_localization_language_switcher_requirements: "Für den Sprachumschalter müssen die Seiteneinstellungen ‚set locale from cookie‘ und ‚allow user locale‘ aktiviert sein und ‚content localization supported locales‘ muss mindestens eine Sprache enthalten."
       mediaconvert_role_arn_required: "Die AWS IAM role ARN ist erforderlich, wenn du AWS MediaConvert für die Videokonvertierung verwendest."
       s3_credentials_required_for_video_conversion: "Für die Videokonvertierung werden S3-Anmeldedaten benötigt. Bitte konfiguriere S3-Zugangsschlüssel oder aktiviere das IAM-Profil."
     keywords:
@@ -2570,7 +2581,6 @@ de:
   filter:
     description:
       status: "Themen nach ihrem Status filtern"
-      in: "Themen nach persönlichen Kriterien filtern"
       order: "Themen nach einem bestimmten Feld sortieren"
       category: "Themen aus einer bestimmten Kategorie anzeigen"
       category_any: "Themen aus jeder der angegebenen Kategorien anzeigen (durch Kommas getrennt)"
@@ -4212,10 +4222,10 @@ de:
   page_not_found:
     page_title: "Seite nicht gefunden"
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
-    popular_topics: "Beliebt"
-    recent_topics: "Aktuell"
+    popular_topics: "Beliebte Themen"
+    recent_topics: "Aktuelle Themen"
     see_more: "Mehr"
-    search_title: "Diese Website durchsuchen"
+    search_title: "Versuche stattdessen zu suchen?"
     search_button: "Suche"
   offline:
     title: "App kann nicht geladen werden"
@@ -5328,6 +5338,34 @@ de:
       approve_and_unhide:
         title: "Beitrag genehmigen und nicht länger verstecken"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
+      no_action_post:
+        title: "Keine Aktion"
+        description: "Keine Maßnahmen bezüglich des Beitrags ergreifen"
+        complete: "Keine Aktion bezüglich des Beitrags ausgeführt"
+      delete_post:
+        title: "Beitrag löschen"
+        description: "Diesen Beitrag löschen"
+        complete: "Beitrag gelöscht"
+      hide_post:
+        title: "Beitrag ausblenden"
+        description: "Diesen Beitrag vor der Öffentlichkeit verbergen"
+        complete: "Beitrag ausgeblendet"
+      unhide_post:
+        title: "Beitrag sichtbar machen"
+        description: "Diesen Beitrag für alle Benutzer sichtbar machen"
+        complete: "Beitrag sichtbar gemacht"
+      restore_post:
+        title: "Beitrag wiederherstellen"
+        description: "Diesen gelöschten Beitrag wiederherstellen"
+        complete: "Beitrag wiederhergestellt"
+      edit_post:
+        title: "Beitrag bearbeiten"
+        description: "Den Inhalt dieses Beitrags bearbeiten"
+        complete: "Beitrag bearbeitet"
+      convert_to_pm:
+        title: "In PN umwandeln"
+        description: "Diesen Beitrag in eine persönliche Nachricht umwandeln"
+        complete: "Beitrag in persönliche Nachricht umgewandelt"
       user_actions:
         bundle_title: "Was willst du mit dem Benutzer machen?"
       no_action_user:

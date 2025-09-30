@@ -1787,7 +1787,7 @@ tr_TR:
         invalid: "Bu kullanıcı adı geçersiz. Kullanıcı adı, yalnızca sayı ve harf içerebilir."
       add_email:
         title: "E-posta Ekle"
-        add: "ekle"
+        add: "Ekle"
       change_email:
         title: "E-postayı Değiştir"
         taken: "Üzgünüz, bu e-posta kullanılamıyor."
@@ -2614,6 +2614,7 @@ tr_TR:
       topic_count:
         one: "bu kategorideki %{count} konu"
         other: "bu kategorideki %{count} konu"
+      read_only: "salt okunur"
     timezone_input:
       ambiguous_ist: "IST belirsiz, lütfen belirli bir saat dilimi seçin (ör.: Asya/Kalküta)"
     select_kit:
@@ -3339,8 +3340,6 @@ tr_TR:
         one: "Konuda %{count} gönderi"
         other: "Konuda %{count} gönderi"
       create: "Yeni Konu"
-      create_disabled_category: "Bu kategoride konu oluşturma izniniz yok"
-      create_disabled_tag: "Bu etiketle konu oluşturmanıza izin verilmiyor"
       create_long: "Yeni bir Konu oluştur"
       open_draft: "Taslağı aç"
       private_message: "Mesaj başlat"
@@ -3781,6 +3780,9 @@ tr_TR:
       title: "En son gönderiler"
       empty: "Gönderi yok"
       aria_post_number: "%{title} - gönderi #%{postNumber}"
+      bulk:
+        clear_all: "Tümünü temizle"
+        actions: "Toplu eylemler"
     post:
       confirm_delete: "Bu gönderiyi silmek istediğinize emin misiniz?"
       quote_reply: "Alıntı"
@@ -4689,7 +4691,6 @@ tr_TR:
       choose_for_topic_required_group:
         one: "'%{name}' içinden %{count} etiket seç…"
         other: "'%{name}' içinden %{count} etiket seç…"
-      info: "Bilgi"
       default_info: "Bu etiket hiçbir kategoriyle sınırlı değil ve eş anlamlısı yok."
       staff_info: "Kısıtlama eklemek için bu etiketi bir <a href=%{basePath}/tag_groups>etiket grubuna</a> koyun."
       category_restricted: "Bu etiket, erişim izninizin olmadığı kategorilerle sınırlı."
@@ -6675,6 +6676,8 @@ tr_TR:
         schema:
           title: "%{name} ayarını düzenle"
           back_button: "%{name} adlı kişiye geri dön"
+          move_up: "Yukarı taşı"
+          move_down: "Aşağı taşı"
           fields:
             required: "*gerekli"
             groups:

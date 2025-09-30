@@ -362,6 +362,27 @@ class Plugin::Instance
     Site.add_categories_callbacks(&block)
   end
 
+  # Add a category parameter that includes both controller param permission
+  # and transactional callback. This allows plugins to extend category updates
+  # with custom logic that runs within the same database transaction.
+  #
+  # The callback block receives the category instance and the parameter value.
+  # If the callback raises an exception, the entire category update will be rolled back.
+  #
+  # Example usage:
+  #   register_category_update_param_with_callback(:doc_index_topic_id) do |category, value|
+  #     DocCategories::CategoryIndexManager.new(category).assign!(value)
+  #   end
+  #
+  def register_category_update_param_with_callback(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.category_update_param_with_callback[param_name] = {
+        plugin: plugin,
+        callback: callback,
+      }
+    end
+  end
+
   def register_upload_unused(&block)
     Upload.add_unused_callback(&block)
   end

@@ -2483,6 +2483,7 @@ ja:
         other: "+%{count} 個のサブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
+      read_only: "読み取り専用"
     timezone_input:
       ambiguous_ist: "IST はあいまいです。特定のタイムゾーンを選択してください（「アジア/コルカタ」など）"
     select_kit:
@@ -3162,8 +3163,6 @@ ja:
       filter_to:
         other: "トピックの %{count} 件の投稿"
       create: "新規トピック"
-      create_disabled_category: "このカテゴリにトピックを作成することはできません"
-      create_disabled_tag: "このタグでトピックを作成することはできません"
       create_long: "新しいトピックの作成"
       open_draft: "下書きを開く"
       private_message: "メッセージを書く"
@@ -3580,6 +3579,9 @@ ja:
       title: "最新の投稿"
       empty: "投稿はありません"
       aria_post_number: "%{title} - 投稿 #%{postNumber}"
+      bulk:
+        clear_all: "すべてクリア"
+        actions: "一括操作"
     post:
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"
@@ -4444,7 +4446,6 @@ ja:
         other: "少なくとも %{count} 個のタグを選択してください…"
       choose_for_topic_required_group:
         other: "'%{name}' から %{count} 個のタグを選択…"
-      info: "情報"
       default_info: "このタグはどのカテゴリにも制限されておらず、同義語もありません。"
       staff_info: "制限を追加するには、このタグを<a href=%{basePath}/tag_groups>タググループ</a>に追加します。"
       category_restricted: "このタグは、アクセス権限のないカテゴリに制限されています。"
@@ -6400,6 +6401,8 @@ ja:
         schema:
           title: "%{name} 設定の編集"
           back_button: "%{name} に戻る"
+          move_up: "上に移動"
+          move_down: "下に移動"
           fields:
             required: "*必須"
             groups:

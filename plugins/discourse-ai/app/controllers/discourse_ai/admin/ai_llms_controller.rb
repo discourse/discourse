@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiLlmsController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def index
         llms = LlmModel.all.includes(:llm_quotas).order(:display_name)
@@ -138,11 +138,15 @@ module DiscourseAi
       def test
         RateLimiter.new(current_user, "llm_test_#{current_user.id}", 3, 1.minute).performed!
 
-        llm_model = LlmModel.new(ai_llm_params)
+        # We don't care about the display_name attr for testing.
+        llm_model = LlmModel.new(ai_llm_params.merge(display_name: "LLM test"))
 
-        DiscourseAi::Configuration::LlmValidator.new.run_test(llm_model)
-
-        render json: { success: true }
+        if llm_model.valid?
+          DiscourseAi::Configuration::LlmValidator.new.run_test(llm_model)
+          render json: { success: true }
+        else
+          render json: { success: false, validation_errors: llm_model.errors.full_messages }
+        end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed => e
         render json: { success: false, error: e.message }
       end

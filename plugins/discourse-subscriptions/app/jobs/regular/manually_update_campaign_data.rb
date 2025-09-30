@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class ManuallyUpdateCampaignData < ::Jobs::Base
     def execute(args)
       return unless SiteSetting.discourse_subscriptions_campaign_enabled

@@ -14,7 +14,11 @@ import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
 export const ALL_PAGES_EXCLUDED_ROUTES = [
+  "account-created.edit-email",
+  "account-created.index",
+  "account-created.resent",
   "activate-account",
+  "full-page-search",
   "invites.show",
   "login",
   "password-reset",
@@ -73,8 +77,7 @@ export default class WelcomeBanner extends Component {
         return currentRouteName.startsWith("discovery.");
       case "all_pages":
         return (
-          currentRouteName !== "full-page-search" &&
-          !currentRouteName.startsWith("admin.") &&
+          !currentRouteName.startsWith("admin") &&
           !ALL_PAGES_EXCLUDED_ROUTES.some(
             (routeName) => routeName === currentRouteName
           )
@@ -130,9 +133,20 @@ export default class WelcomeBanner extends Component {
   get bgImgStyle() {
     if (this.siteSettings.welcome_banner_image) {
       return htmlSafe(
-        `background-image: url(${escapeExpression(
+        `background-image:url(${escapeExpression(
           this.siteSettings.welcome_banner_image
-        )})`
+        )});`
+      );
+    }
+  }
+
+  get textColorStyle() {
+    if (
+      this.siteSettings.welcome_banner_image &&
+      this.siteSettings.welcome_banner_text_color
+    ) {
+      return htmlSafe(
+        `color:${escapeExpression(this.siteSettings.welcome_banner_text_color)};`
       );
     }
   }
@@ -153,7 +167,10 @@ export default class WelcomeBanner extends Component {
           class="custom-search-banner-wrap welcome-banner__wrap"
           style={{if this.bgImgStyle this.bgImgStyle}}
         >
-          <div class="welcome-banner__title">
+          <div
+            class="welcome-banner__title"
+            style={{if this.textColorStyle this.textColorStyle}}
+          >
             {{htmlSafe this.headerText}}
             {{#if this.subheaderText}}
               <p class="welcome-banner__subheader">

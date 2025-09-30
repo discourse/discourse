@@ -195,27 +195,31 @@
   // a little extra space for long names
   min-width: 250px;
 
-  li a {
+  .activity-list {
+    margin-top: 0;
+  }
+
+  li > a {
     display: grid;
     grid-template-areas: " avatar names count";
     grid-template-columns: auto 1fr auto;
     align-items: center;
     padding: 0.5em 13px;
+    gap: 0.25em;
 
     .assign-image {
-      width: 45px;
-      margin-right: 0.5em;
+      width: 2em;
       text-align: center;
       grid-area: avatar;
 
       a {
         padding: 0;
-        padding-right: 0.5em;
       }
 
       svg {
-        width: 40px;
-        height: 40px;
+        width: 1.5em;
+        height: 1.5em;
+        color: var(--primary-high);
       }
     }
 

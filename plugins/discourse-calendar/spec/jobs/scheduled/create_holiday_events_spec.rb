@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-describe DiscourseCalendar::CreateHolidayEvents do
+describe Jobs::DiscourseCalendar::CreateHolidayEvents do
+  subject(:job) { described_class.new }
+
   let(:calendar_post) { create_post(raw: "[calendar]\n[/calendar]") }
 
   let(:frenchy) do
@@ -21,7 +23,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
 
     frenchy
     freeze_time Time.zone.local(2019, 8, 1)
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     expect(CalendarEvent.where(user_id: frenchy.id).count).to eq(0)
   end
@@ -29,7 +31,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
   it "adds all holidays in the next 6 months" do
     frenchy
     freeze_time Time.zone.local(2019, 8, 1)
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to match_array(
       [
@@ -45,7 +47,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
   it "checks for observed dates" do
     aussie
     freeze_time Time.zone.local(2020, 1, 20)
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     # The "Australia Day" is always observed on a Monday
     expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to match_array(
@@ -60,7 +62,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
   it "only checks for holidays during business days" do
     frenchy
     freeze_time Time.zone.local(2019, 7, 1)
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     # The "Fête Nationale" is on July 14th but it's on a Sunday in 2019
     expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to match_array(
@@ -104,48 +106,44 @@ describe DiscourseCalendar::CreateHolidayEvents do
         },
       )
 
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to eq([])
   end
 
   it "does not create duplicates when username is changed" do
     frenchy
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
     created_event = CalendarEvent.last
     expect(created_event.username).to eq(frenchy.username)
     frenchy.update!(username: "new_username")
 
-    expect { DiscourseCalendar::CreateHolidayEvents.new.execute(nil) }.not_to change {
-      CalendarEvent.count
-    }
+    expect { job.execute(nil) }.not_to change { CalendarEvent.count }
     expect(created_event.reload.username).to eq("new_username")
   end
 
   it "does not create duplicates when timezone is changed" do
     frenchy
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
     created_event = CalendarEvent.last
     expect(created_event.timezone).to eq(frenchy.user_option.timezone)
     frenchy.user_option.update!(timezone: "Asia/Taipei")
 
-    expect { DiscourseCalendar::CreateHolidayEvents.new.execute(nil) }.not_to change {
-      CalendarEvent.count
-    }
+    expect { job.execute(nil) }.not_to change { CalendarEvent.count }
     expect(created_event.reload.timezone).to eq("Asia/Taipei")
   end
 
   it "cleans up holidays from deactivated/silenced/suspended users" do
     frenchy
     freeze_time Time.zone.local(2019, 8, 1)
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     expect(CalendarEvent.exists?(user_id: frenchy.id)).to eq(true)
 
     frenchy.active = false
     frenchy.save!
 
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     expect(CalendarEvent.exists?(user_id: frenchy.id)).to eq(false)
   end
@@ -153,7 +151,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
   it "cleans up holidays from users who changed their region" do
     frenchy
     freeze_time Time.zone.local(2019, 8, 1)
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     expect(CalendarEvent.exists?(user_id: frenchy.id)).to eq(true)
 
@@ -162,7 +160,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
 
     freeze_time Time.zone.local(2020, 1, 1)
 
-    DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+    job.execute(nil)
 
     # Past 'fr' holidays should not be removed
     expect(
@@ -204,7 +202,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
     it "only adds enabled holidays to the calendar" do
       frenchy
       freeze_time Time.zone.local(2019, 7, 1)
-      DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+      job.execute(nil)
 
       expect(CalendarEvent.pluck(:region, :description, :start_date, :user_id)).to match_array(
         [
@@ -218,7 +216,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
     it "doesn't add disabled holidays to the calendar" do
       frenchy
       freeze_time Time.zone.local(2019, 7, 1)
-      DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+      job.execute(nil)
 
       expect(CalendarEvent.pluck(:description)).not_to include(france_assomption[:holiday_name])
       expect(CalendarEvent.pluck(:description)).not_to include(france_toussaint[:holiday_name])
@@ -229,7 +227,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
     it "uses the user TZ when available" do
       frenchy.user_option.update!(timezone: "Europe/Paris")
       freeze_time Time.zone.local(2019, 8, 1)
-      DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+      job.execute(nil)
 
       calendar_event = CalendarEvent.first
       expect(calendar_event.region).to eq("fr")
@@ -248,7 +246,7 @@ describe DiscourseCalendar::CreateHolidayEvents do
       it "uses the user TZ when available" do
         frenchy.user_option.update!(timezone: "Europe/Paris")
         freeze_time Time.zone.local(2019, 8, 1)
-        DiscourseCalendar::CreateHolidayEvents.new.execute(nil)
+        job.execute(nil)
 
         calendar_event = CalendarEvent.first
         expect(calendar_event.region).to eq("fr")

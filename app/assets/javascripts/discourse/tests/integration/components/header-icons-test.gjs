@@ -10,9 +10,17 @@ module("Integration | Component | Header | Icons", function (hooks) {
   setupRenderingTest(hooks);
 
   test("showSearchButton", async function (assert) {
-    const site = getOwner(this).lookup("service:site");
+    const siteStub = sinon.stub(
+      getOwner(this).lookup("service:site"),
+      "mobileView"
+    );
+    const routerStub = sinon.stub(
+      getOwner(this).lookup("service:router"),
+      "currentRouteName"
+    );
     const noop = () => {};
     this.siteSettings.search_experience = "search_field";
+    routerStub.value("discovery.latest");
 
     await render(
       <template>
@@ -32,7 +40,28 @@ module("Integration | Component | Header | Icons", function (hooks) {
         "it does not display when the search_experience setting is search_field"
       );
 
+    routerStub.value("admin.dashboard.general");
+
+    await render(
+      <template>
+        <Icons
+          @sidebarEnabled={{true}}
+          @toggleSearchMenu={{noop}}
+          @toggleNavigationMenu={{noop}}
+          @toggleUserMenu={{noop}}
+          @searchButtonId={{SEARCH_BUTTON_ID}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".search-dropdown")
+      .exists(
+        "it shows on admin routes even when the search_experience setting is search_field"
+      );
+
     this.siteSettings.search_experience = "search_icon";
+    routerStub.value("discovery.latest");
 
     await render(
       <template>
@@ -52,8 +81,8 @@ module("Integration | Component | Header | Icons", function (hooks) {
         "it does display when the search_experience setting is search_icon"
       );
 
-    sinon.stub(site, "mobileView").value(true);
     this.siteSettings.search_experience = "search_field";
+    siteStub.value(true);
 
     await render(
       <template>

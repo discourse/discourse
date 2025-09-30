@@ -113,6 +113,52 @@ schema:
           - "public_topic_count"
           - "staff_topic_count"
           - "target_tag_id"
+    user_associated_accounts:
+      primary_key_column_names: [ "user_id", "provider_name" ]
+      columns:
+        exclude:
+          - "id"
+          - "credentials"
+          - "extra"
+        modify:
+          - name: "last_used"
+            nullable: true
+    user_custom_fields:
+      columns:
+        exclude:
+          - "id"
+      primary_key_column_names: [ "user_id" , "name", "value" ]
+    topics:
+      columns:
+        exclude:
+          - "last_posted_at"
+          - "last_post_user_id"
+          - "reply_count"
+          - "featured_user1_id"
+          - "featured_user2_id"
+          - "featured_user3_id"
+          - "featured_user4_id"
+          - "image_upload_id"
+          - "highest_post_number"
+          - "like_count"
+          - "locale"
+          - "incoming_link_count"
+          - "moderator_posts_count"
+          - "bumped_at"
+          - "has_summary"
+          - "notify_moderators_count"
+          - "spam_count"
+          - "percent_rank"
+          - "posts_count"
+          - "score"
+          - "slug"
+          - "participant_count"
+          - "word_count"
+          - "excerpt"
+          - "fancy_title"
+          - "highest_staff_post_number"
+          - "reviewable_score"
+          - "slow_mode_seconds"
     user_emails:
       columns:
         include:
@@ -126,6 +172,27 @@ schema:
       columns:
         exclude:
           - "id"
+    user_field_values:
+      copy_of: user_custom_fields
+      columns:
+        exclude:
+          - "id"
+          - "name"
+        add:
+          - name: "field_id"
+            datatype: numeric
+            nullable: false
+          - name: "is_multiselect_field"
+            datatype: boolean
+      indexes:
+        - name: "user_field_values_multiselect_index"
+          columns: [ "user_id", "field_id", "value" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = TRUE"
+        - name: "user_field_values_not_multiselect_index"
+          columns: [ "user_id", "field_id" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = FALSE"
     user_fields:
       columns:
         exclude:
@@ -400,7 +467,6 @@ schema:
         - "topic_voting_category_settings"
         - "topic_voting_topic_vote_count"
         - "topic_voting_votes"
-        - "topics"
         - "translation_overrides"
         - "unsubscribe_keys"
         - "upload_references"
@@ -411,7 +477,6 @@ schema:
         - "user_api_key_scopes"
         - "user_api_keys"
         - "user_archived_messages"
-        - "user_associated_accounts"
         - "user_associated_groups"
         - "user_auth_token_logs"
         - "user_auth_tokens"
@@ -419,7 +484,6 @@ schema:
         - "user_badges"
         - "user_chat_channel_memberships"
         - "user_chat_thread_memberships"
-        - "user_custom_fields"
         - "user_exports"
         - "user_histories"
         - "user_ip_address_histories"

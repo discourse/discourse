@@ -5,6 +5,7 @@ import {
 import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { isNumeric } from "discourse/lib/utilities";
+import { i18n } from "discourse-i18n";
 import ImageNodeView from "../components/image-node-view";
 import GlimmerNodeView from "../lib/glimmer-node-view";
 import { getChangedRanges } from "../lib/plugin-utils";
@@ -13,6 +14,8 @@ const PLACEHOLDER_IMG = "/images/transparent.png";
 
 const ALT_TEXT_REGEX =
   /^(.*?)(?:\|(\d{1,4}x\d{1,4}))?(?:,\s*(\d{1,3})%)?(?:\|(.*))?$/;
+
+const UPLOAD_TIMEOUT = 30_000;
 
 const createImageNodeView =
   ({ getContext }) =>
@@ -196,7 +199,7 @@ const extension = {
     };
   },
 
-  plugins({ pmState: { Plugin, NodeSelection, TextSelection } }) {
+  plugins({ pmState: { Plugin, NodeSelection, TextSelection }, getContext }) {
     const shortUrlResolver = new Plugin({
       state: {
         init() {
@@ -307,7 +310,146 @@ const extension = {
       },
     });
 
-    return [shortUrlResolver, avoidTextInputRemoval];
+    const dataImageUploader = new Plugin({
+      state: {
+        init() {
+          return new Map();
+        },
+        apply(tr, uriNodesMap) {
+          getChangedRanges(tr).forEach(({ new: { from, to } }) => {
+            tr.doc.nodesBetween(from, to, (node, pos) => {
+              if (
+                node.type.name === "image" &&
+                node.attrs.src?.startsWith("data:")
+              ) {
+                if (!uriNodesMap.has(node.attrs.src)) {
+                  uriNodesMap.set(node.attrs.src, []);
+                }
+                uriNodesMap.get(node.attrs.src).push({ node, pos });
+              } else if (node.type.name === "image" && node.attrs.src) {
+                for (const [dataURI, nodes] of uriNodesMap) {
+                  uriNodesMap.set(
+                    dataURI,
+                    nodes.filter((n) => n.pos !== pos)
+                  );
+                  if (uriNodesMap.get(dataURI).length === 0) {
+                    uriNodesMap.delete(dataURI);
+                  }
+                }
+              }
+            });
+          });
+
+          return uriNodesMap;
+        },
+      },
+
+      view() {
+        const { appEvents } = getContext();
+        const pendingUploads = new Set();
+
+        const uploadDataImage = async (dataURI, nodes, view) => {
+          const mimeMatch = dataURI.match(/data:image\/([^;]+)/);
+          let fileExtension = "png";
+          if (mimeMatch) {
+            const remap = { jpeg: "jpg" };
+            const ext = mimeMatch[1].toLowerCase();
+            fileExtension = remap[ext] || ext;
+          }
+
+          const fileName = `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExtension}`;
+
+          const res = await fetch(dataURI);
+          const blob = await res.blob();
+          const file = new File([blob], fileName, { type: blob.type });
+          file.id = fileName;
+          pendingUploads.add(fileName);
+
+          const handleSuccess = (uploadedFileName, upload) => {
+            if (uploadedFileName === fileName && pendingUploads.has(fileName)) {
+              if (!upload?.short_url && !upload?.url) {
+                return handleError(fileName);
+              }
+
+              const tr = view.state.tr;
+
+              nodes.forEach(({ pos }) => {
+                const node = view.state.doc.nodeAt(pos);
+                if (node && node.type.name === "image") {
+                  tr.setNodeMarkup(pos, null, {
+                    ...node.attrs,
+                    alt:
+                      node.attrs.alt ||
+                      i18n("upload_selector.default_image_alt_text"),
+                    src: upload.url || upload.short_url,
+                    originalSrc: upload.short_url || upload.url,
+                  });
+                }
+              });
+
+              if (tr.docChanged) {
+                view.dispatch(tr);
+              }
+              cleanup();
+            }
+          };
+
+          const handleError = (uploadedFileName) => {
+            if (
+              (uploadedFileName === fileName || !uploadedFileName) &&
+              pendingUploads.has(fileName)
+            ) {
+              const tr = view.state.tr;
+              nodes.forEach(({ pos }) => {
+                const node = view.state.doc.nodeAt(pos);
+                if (node && node.type.name === "image") {
+                  tr.replaceWith(
+                    pos,
+                    pos + node.nodeSize,
+                    view.state.schema.text("[Upload failed]")
+                  );
+                }
+              });
+              if (tr.docChanged) {
+                view.dispatch(tr);
+              }
+              cleanup();
+            }
+          };
+
+          const cleanup = () => {
+            pendingUploads.delete(fileName);
+            appEvents.off("composer:upload-success", handleSuccess);
+            appEvents.off("composer:upload-error", handleError);
+          };
+
+          appEvents.on("composer:upload-success", handleSuccess);
+          appEvents.on("composer:upload-error", handleError);
+
+          appEvents.trigger("composer:add-files", [file], {
+            skipPlaceholder: true,
+          });
+
+          setTimeout(() => {
+            if (pendingUploads.has(fileName)) {
+              handleError(fileName);
+            }
+          }, UPLOAD_TIMEOUT);
+        };
+
+        return {
+          update(view) {
+            dataImageUploader
+              .getState(view.state)
+              .forEach((nodes, dataURI) =>
+                uploadDataImage(dataURI, nodes, view)
+              );
+          },
+        };
+      },
+    });
+
+    return [shortUrlResolver, avoidTextInputRemoval, dataImageUploader];
   },
 };
 

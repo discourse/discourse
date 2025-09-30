@@ -3,7 +3,7 @@
 module Chat
   module Admin
     class ExportController < ::Admin::AdminController
-      requires_plugin Chat::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def export_messages
         entity = "chat_message"

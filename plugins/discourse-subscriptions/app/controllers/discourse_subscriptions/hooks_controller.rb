@@ -5,7 +5,7 @@ module DiscourseSubscriptions
     include DiscourseSubscriptions::Group
     include DiscourseSubscriptions::Stripe
 
-    requires_plugin DiscourseSubscriptions::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     layout false
 

@@ -67,35 +67,35 @@ module DiscourseWebauthn
   # credentials.
   #
   # @param user [User] the user to stage the challenge for
-  # @param secure_session [SecureSession] the session to store the challenge in
-  def self.stage_challenge(user, secure_session)
+  # @param server_session [ServerSession] the session to store the challenge in
+  def self.stage_challenge(user, server_session)
     ::DiscourseWebauthn::ChallengeGenerator.generate.commit_to_session(
-      secure_session,
+      server_session,
       user,
       expires: CHALLENGE_EXPIRY,
     )
   end
 
   ##
-  # Clears the challenge from the user's secure session.
+  # Clears the challenge from the user's server session.
   #
   # @param user [User] the user to clear the challenge for
-  # @param secure_session [SecureSession] the session to clear the challenge from
-  def self.clear_challenge(user, secure_session)
-    secure_session[self.session_challenge_key(user)] = nil
+  # @param server_session [ServerSession] the session to clear the challenge from
+  def self.clear_challenge(user, server_session)
+    server_session.delete(session_challenge_key(user))
   end
 
-  def self.allowed_credentials(user, secure_session)
+  def self.allowed_credentials(user, server_session)
     return {} if !user.security_keys_enabled?
 
     {
       allowed_credential_ids: user.second_factor_security_key_credential_ids,
-      challenge: self.challenge(user, secure_session),
+      challenge: challenge(user, server_session),
     }
   end
 
-  def self.challenge(user, secure_session)
-    secure_session[self.session_challenge_key(user)]
+  def self.challenge(user, server_session)
+    server_session[session_challenge_key(user)]
   end
 
   def self.rp_id

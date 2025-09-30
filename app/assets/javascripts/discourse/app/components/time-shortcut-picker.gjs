@@ -188,9 +188,8 @@ export default class TimeShortcutPicker extends Component {
 
     let specialOptions = specialShortcutOptions();
     if (this.lastCustomDate && this.lastCustomTime) {
-      let lastCustom = specialOptions.findBy(
-        "id",
-        TIME_SHORTCUT_TYPES.LAST_CUSTOM
+      let lastCustom = specialOptions.find(
+        (option) => option.id === TIME_SHORTCUT_TYPES.LAST_CUSTOM
       );
       lastCustom.time = this.parsedLastCustomDatetime;
       lastCustom.timeFormatKey = "dates.long_no_year";
@@ -225,7 +224,12 @@ export default class TimeShortcutPicker extends Component {
 
   @action
   selectShortcut(type) {
-    if (this.options.filterBy("hidden").mapBy("id").includes(type)) {
+    if (
+      this.options
+        .filter((opt) => opt.hidden)
+        .map((item) => item.id)
+        .includes(type)
+    ) {
       return;
     }
 
@@ -254,7 +258,7 @@ export default class TimeShortcutPicker extends Component {
         this.keyValueStore.lastCustomDate = this.customDate;
       }
     } else {
-      dateTime = this.options.findBy("id", type).time;
+      dateTime = this.options.find((option) => option.id === type).time;
     }
 
     this.setProperties({

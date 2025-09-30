@@ -605,6 +605,11 @@ en:
       resume: "Resume"
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"
+      bulk_delete: "Delete selected"
+      bulk_delete_confirmation: "Delete drafts"
+      bulk_delete_message:
+        one: "Are you sure you want to delete this draft?"
+        other: "Are you sure you want to delete these %{count} drafts?"
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
@@ -691,6 +696,7 @@ en:
     review:
       show_more: "Show more"
       show_less: "Show less"
+      back_to_queue: "Back to queue"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
@@ -1900,7 +1906,7 @@ en:
 
       add_email:
         title: "Add Email"
-        add: "add"
+        add: "Add"
 
       change_email:
         title: "Change Email"
@@ -2817,6 +2823,8 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
+      read_only: "read-only"
+      read_only_description: "This category is read-only so you cannot choose it for this topic"
 
     timezone_input:
       ambiguous_ist: "IST is ambiguous, please select a specific timezone (eg: Asia/Kolkata)"
@@ -3445,6 +3453,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
+        select: "Bulk select"
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
@@ -3590,8 +3599,6 @@ en:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
-      create_disabled_category: "You're not allowed to create topics in this category"
-      create_disabled_tag: "You're not allowed to create topics with this tag"
       create_long: "Create a new Topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
@@ -4071,6 +4078,13 @@ en:
       title: "Latest posts"
       empty: "There are no posts"
       aria_post_number: "%{title} - post #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} post selected"
+          other: "%{count} posts selected"
+        select_all: "Select all"
+        clear_all: "Clear all"
+        actions: "Bulk actions"
 
     post:
       confirm_delete: "Are you sure you want to delete this post?"
@@ -4161,6 +4175,7 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
+        manage: "Manage translations (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
@@ -5034,7 +5049,7 @@ en:
       choose_for_topic_required_group:
         one: "select %{count} tag from '%{name}'…"
         other: "select %{count} tags from '%{name}'…"
-      info: "Info"
+      info: "Show tag info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
@@ -5065,6 +5080,7 @@ en:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
       edit_tag: "Edit tag name and description"
+      edit: "Edit this tag"
       description: "Description (max 1000 characters)"
       sort_by: "Sort by:"
       sort_by_count: "count"
@@ -5170,6 +5186,7 @@ en:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
     theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+    theme_preview_failed: "Failed to preview theme because it doesn't exist, or you don't have permission to access it."
 
     image_removed: "(image removed)"
 
@@ -5962,6 +5979,7 @@ en:
         help: "The theme you are currently using is <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Go to the <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>theme config page</a> to alter theme site settings, or click on a linked theme in the table below to edit its settings."
         filter: "Filter theme site settings by setting name, description, or theme name..."
         filter_no_results: "No theme site settings match your filter"
+        site_setting_warning: 'This setting is managed by the default theme for your site (%{defaultThemeName}). You can modify it from <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">the theme''s edit page</a>.'
 
       search:
         modal_title: "Search everything in admin"
@@ -6313,6 +6331,7 @@ en:
               suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
+              create: Create a new user.
             user_status:
               read: Read user status.
               update: Update user status.
@@ -6658,7 +6677,7 @@ en:
             description: "Settings that allow themes to have greater control over the full site experience by overriding a small subset of core site settings."
           themes:
             title: "Themes"
-            description: 'Site-wide themes that change the overall look and feel of your site for all users.'
+            description: "Site-wide themes that change the overall look and feel of your site for all users."
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
@@ -6819,6 +6838,7 @@ en:
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
+            is_disabled_title: "Restore is currently disabled. To enable it, search for 'allow restore' in site settings."
             label: "Restore"
             title: "Restore the backup"
             confirm: "Are you sure you want to restore this backup?"
@@ -6877,6 +6897,7 @@ en:
           title: "Email"
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
+          multiple_bodies: "This email template has multiple bodies."
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
@@ -7105,6 +7126,8 @@ en:
         schema:
           title: "Edit %{name} setting"
           back_button: "Back to %{name}"
+          move_up: "Move up"
+          move_down: "Move down"
           fields:
             required: "*required"
             groups:
@@ -8075,6 +8098,10 @@ en:
           title: "Show on user card"
           enabled: "Shown on user card"
           disabled: "Not shown on user card"
+        show_on_signup:
+          title: "Show on signup form"
+          enabled: "Shown signup form"
+          disabled: "Not shown on signup form"
         searchable:
           title: "Searchable"
           enabled: "Searchable"

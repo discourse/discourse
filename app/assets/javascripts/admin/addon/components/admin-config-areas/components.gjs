@@ -234,6 +234,10 @@ export default class AdminConfigAreasComponents extends Component {
         >
           <:content>
             <LoadMore @action={{this.loadMore}} @rootMargin="0px 0px 250px 0px">
+              <PluginOutlet
+                @name="admin-config-area-components-above-table"
+                @outletArgs={{lazyHash components=this.components}}
+              />
               <table class="d-table component-list">
                 <thead class="d-table__header">
                   <tr class="d-table__row">
@@ -281,6 +285,7 @@ export default class AdminConfigAreasComponents extends Component {
 class ComponentRow extends Component {
   @service toasts;
   @service dialog;
+  @service router;
 
   @tracked enabled = this.args.component.enabled;
   @tracked hasUpdates = this.args.component.remote_theme?.commits_behind > 0;
@@ -331,6 +336,14 @@ class ComponentRow extends Component {
     return (
       this.args.component.description ??
       (remoteUrl && descriptionForRemoteUrl(remoteUrl))
+    );
+  }
+
+  get editUrl() {
+    return this.router.urlFor(
+      "adminCustomizeThemes.show",
+      "themes",
+      this.args.component.id
     );
   }
 
@@ -460,9 +473,9 @@ class ComponentRow extends Component {
         {{if this.hasUpdates 'has-update'}}"
     >
       <td class="d-table__cell --overview">
-        <div class="d-table__overview-name">
+        <a class="d-table__overview-name" href={{this.editUrl}}>
           {{@component.name}}
-        </div>
+        </a>
         {{#if @component.remote_theme.authors}}
           <div
             class="d-table__overview-author admin-config-components__author-name"

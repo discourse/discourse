@@ -270,6 +270,9 @@ zh_CN:
         logged_in_members: "欢迎回来，%{preferred_display_name}！"
         anonymous_members: "欢迎来到 %{site_name}！"
       search: "搜索"
+    impersonation:
+      notice: "您正在模拟 %{username}"
+      stop: "停止模拟"
     themes:
       default_description: "默认"
       broken_theme_alert: "由于主题/组件有错误，您的站点可能无法正常运行。请查看浏览器控制台了解详情。"
@@ -571,6 +574,7 @@ zh_CN:
     review:
       show_more: "展开"
       show_less: "收起"
+      back_to_queue: "返回队列"
       order_by: "排序依据"
       date_filter: "发布时间介于"
       in_reply_to: "回复给"
@@ -1579,6 +1583,7 @@ zh_CN:
         in_progress: "（正在发送电子邮件）"
         error: "（错误）"
         action: "发送密码重置电子邮件"
+        staged_user: "暂存用户无法接收密码重置电子邮件。"
         set_password: "设置密码"
         choose_new: "选择一个新密码"
         choose: "选择一个密码"
@@ -2469,6 +2474,8 @@ zh_CN:
         other: "+%{count} 个子类别"
       topic_count:
         other: "此类别下有 %{count} 个话题"
+      read_only: "只读"
+      read_only_description: "此类别只读，因此您无法为话题选择该类别"
     timezone_input:
       ambiguous_ist: "IST 不明确，请选择特定时区（例如：亚洲/加尔各答）"
     select_kit:
@@ -2598,7 +2605,9 @@ zh_CN:
       create_shared_draft: "创建共享草稿"
       edit_shared_draft: "编辑共享草稿"
       title: "或按 %{modifier}Enter"
+      save_and_close: "保存并关闭"
       discard: "舍弃"
+      draft_saved: "草稿已保存！"
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
@@ -2654,7 +2663,14 @@ zh_CN:
       list_item: "列表条目"
       toggle_direction: "切换方向"
       help: "Markdown 编辑帮助"
+      collapse: "最小化编辑器面板"
+      open: "打开编辑器面板"
+      abandon: "关闭编辑器并舍弃草稿"
+      enter_fullscreen: "进入全屏编辑器"
+      exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
+      show_toolbar: "显示编辑器工具栏"
+      hide_toolbar: "隐藏编辑器工具栏"
       modal_ok: "确定"
       cant_send_pm: "抱歉，您无法向 %{username} 发送消息。"
       create_message_error: "抱歉，创建该消息时出错。请重试。"
@@ -3018,6 +3034,7 @@ zh_CN:
     topics:
       new_messages_marker: "上次访问"
       bulk:
+        select: "批量选择"
         confirm: "确认"
         select_all: "全选"
         clear_all: "全部清除"
@@ -3148,8 +3165,6 @@ zh_CN:
       filter_to:
         other: "话题中的 %{count} 个帖子"
       create: "新建话题"
-      create_disabled_category: "您无权在此类别中创建话题"
-      create_disabled_tag: "您无权创建带有此标签的话题"
       create_long: "创建新话题"
       open_draft: "打开草稿"
       private_message: "开始消息"
@@ -3566,6 +3581,9 @@ zh_CN:
       title: "最新帖子"
       empty: "没有帖子"
       aria_post_number: "%{title} - 帖子 #%{postNumber}"
+      bulk:
+        clear_all: "全部清除"
+        actions: "批量操作"
     post:
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
@@ -3636,6 +3654,7 @@ zh_CN:
           edit: "编辑"
           delete: "删除"
         add: "添加新翻译"
+        manage: "管理翻译（现有 %{count}）"
         view:
           other: "查看 %{count} 种已翻译的语言区域"
         modal:
@@ -4430,7 +4449,7 @@ zh_CN:
         other: "至少选择 %{count} 个标签…"
       choose_for_topic_required_group:
         other: "从 '%{name}' 中选择 %{count} 个标签…"
-      info: "信息"
+      info: "显示标签信息"
       default_info: "此标签不限于任何类别，并且没有同义词。"
       staff_info: "要添加限制，请将此标签放入<a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
@@ -4456,6 +4475,7 @@ zh_CN:
       delete_confirm_synonyms:
         other: "其 %{count} 个同义词也将被删除。"
       edit_tag: "编辑标签名称和描述"
+      edit: "编辑此标签"
       description: "描述（最多 1000 个字符）"
       sort_by: "排序依据："
       sort_by_count: "计数"
@@ -4550,6 +4570,7 @@ zh_CN:
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
     theme_preview_notice: "您当前正在预览主题，请关闭此浏览器标签页或窗口以返回到正常网站配置。"
+    theme_preview_failed: "无法预览主题，因为它不存在，或者您没有访问它的权限。"
     image_removed: "（图片被移除）"
     pause_notifications:
       title: "暂停通知…"
@@ -5295,6 +5316,7 @@ zh_CN:
         help: "您当前使用的主题为 <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>。请转到<a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>主题配置页面</a>更改主题站点设置，或点击下表中链接的主题，编辑其设置。"
         filter: "按设置名称、描述或主题名称筛选主题站点设置…"
         filter_no_results: "没有符合您的筛选条件的主题站点设置"
+        site_setting_warning: '此设置由您网站的默认主题管理 (%{defaultThemeName})。您可以在 <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">主题的编辑页面</a>进行修改。'
       search:
         modal_title: "在管理页面中搜索所有内容"
         title: "搜索"
@@ -5626,6 +5648,7 @@ zh_CN:
               suspend: 封禁用户帐户。
               delete: 删除用户帐户。
               list: 获取用户列表。
+              create: 创建一个新用户。
             user_status:
               read: 读取用户状态。
               update: 更新用户状态。
@@ -5961,7 +5984,7 @@ zh_CN:
             description: "允许主题通过覆盖一小部分核心站点设置对整个站点体验拥有更大控制的设置。"
           themes:
             title: "主题"
-            description: '可为所有用户改变站点的整体外观和风格的站点范围主题。'
+            description: "可为所有用户改变站点的整体外观和风格的站点范围主题。"
             themes_intro: "安装新主题以开始，或使用这些资源从头开始创建自己的主题。"
             new_theme: "新主题"
             back: "返回主题"
@@ -6171,6 +6194,7 @@ zh_CN:
           title: "电子邮件"
           subject: "主题"
           multiple_subjects: "此电子邮件模板具有多个主题。"
+          multiple_bodies: "此电子邮件模板有多个正文。"
           body: "正文"
           revert: "还原变更"
           revert_confirm: "确定要还原您的变更吗？"
@@ -6395,6 +6419,8 @@ zh_CN:
         schema:
           title: "编辑 %{name} 设置"
           back_button: "返回 %{name}"
+          move_up: "上移"
+          move_down: "下移"
           fields:
             required: "*必选"
             groups:
@@ -7312,6 +7338,10 @@ zh_CN:
           title: "在用户卡片上显示"
           enabled: "在用户卡片上显示"
           disabled: "不在用户卡片上显示"
+        show_on_signup:
+          title: "在注册表单上显示"
+          enabled: "显示注册表单"
+          disabled: "未显示在注册表单上"
         searchable:
           title: "可搜索"
           enabled: "可搜索"

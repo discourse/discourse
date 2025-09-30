@@ -42,12 +42,12 @@ module DiscourseChatIntegration
     end
 
     class HookEngine < ::Rails::Engine
-      engine_name DiscourseChatIntegration::PLUGIN_NAME + "-hooks"
-      isolate_namespace DiscourseChatIntegration::Provider
+      engine_name PLUGIN_NAME + "-hooks"
+      isolate_namespace Provider
     end
 
     class HookController < ::ApplicationController
-      requires_plugin DiscourseChatIntegration::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       class ProviderDisabled < StandardError
       end

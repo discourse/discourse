@@ -21,7 +21,7 @@ module ::DiscourseSolved
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
 end
 
-require_relative "lib/discourse_solved/engine.rb"
+require_relative "lib/discourse_solved/engine"
 
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
@@ -186,7 +186,7 @@ after_initialize do
   register_category_list_topics_preloader_associations(:solved) if SiteSetting.solved_enabled
   register_topic_preloader_associations(:solved) if SiteSetting.solved_enabled
   Search.custom_topic_eager_load { [:solved] } if SiteSetting.solved_enabled
-  Site.preloaded_category_custom_fields << ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+  Site.preloaded_category_custom_fields << DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
 
   add_api_key_scope(
     :solved,
@@ -273,7 +273,7 @@ after_initialize do
   add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
-  on(:post_destroyed) { |post| ::DiscourseSolved.unaccept_answer!(post) }
+  on(:post_destroyed) { |post| DiscourseSolved.unaccept_answer!(post) }
 
   on(:filter_auto_bump_topics) do |_category, filters|
     filters.push(

@@ -9,6 +9,9 @@ describe "Composer - ProseMirror editor", type: :system do
     )
   end
   fab!(:tag)
+  fab!(:category_with_emoji) do
+    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
+  end
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -645,6 +648,33 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("ol li", text: "Item 2Item 3")
     end
 
+    it "supports hashtag decoration when pressing return" do
+      open_composer
+
+      composer.type_content("##{category_with_emoji.slug}")
+      composer.send_keys(:space)
+      composer.send_keys(:home)
+      wait_for_timeout
+      composer.send_keys(:enter)
+
+      expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    end
+
+    it "supports hashtag decoration when backspacing to combine paragraphs" do
+      open_composer
+
+      composer.type_content("some text ")
+      composer.send_keys(:enter)
+
+      composer.type_content("##{category_with_emoji.slug}")
+      composer.send_keys(:space)
+      composer.send_keys(:home)
+      wait_for_timeout
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    end
+
     it "supports Ctrl + M to toggle between rich and markdown editors" do
       open_composer
 
@@ -793,6 +823,42 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.toggle_rich_editor
 
       expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
+    end
+
+    it "handles multiple data URI images pasted simultaneously" do
+      valid_png_data_uri =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+      valid_jpeg_data_uri =
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/wA=="
+
+      cdp.allow_clipboard
+
+      open_composer
+
+      html = <<~HTML
+          before 1<br>
+          <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
+          <img src="#{valid_png_data_uri}" alt="img2">
+          between<br>
+          <img src="#{valid_jpeg_data_uri}">
+          after 2
+        HTML
+
+      cdp.copy_paste(html, html: true)
+
+      expect(rich).to have_css("img[alt='img1'][width='100'][height='100'][data-orig-src]")
+      expect(rich).to have_css("img[alt='img2'][data-orig-src]")
+      expect(rich).to have_css("img[alt='image'][data-orig-src]")
+      expect(rich).to have_css("p", text: "before 1")
+      expect(rich).to have_css("p", text: "between")
+      expect(rich).to have_css("p", text: "after 2")
+      expect(rich).to have_no_css("img[src^='data:']")
+
+      # pasting a second time to make sure there's no cache pollution
+      cdp.copy_paste("<img src='#{valid_png_data_uri}' alt='img1'>", html: true)
+
+      expect(rich).to have_no_css("img[src^='data:']")
+      expect(rich).to have_css("img[alt='img1'][data-orig-src]", count: 2)
     end
 
     it "merges text with link marks created from parsing" do
@@ -1062,8 +1128,8 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   describe "with mentions" do
-    fab!(:post)
-    fab!(:topic) { post.topic }
+    fab!(:topic) { Fabricate(:topic, category: category_with_emoji) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:mixed_case_user) { Fabricate(:user, username: "TestUser_123") }
     fab!(:mixed_case_group) do
       Fabricate(:group, name: "TestGroup_ABC", mentionable_level: Group::ALIAS_LEVELS[:everyone])
@@ -1219,6 +1285,57 @@ describe "Composer - ProseMirror editor", type: :system do
         "a[href='https://updated-example.com?query=with%20space']",
         text: "Example",
       )
+    end
+
+    it "preserves existing percent escapes when inserting a link" do
+      open_composer
+
+      composer.click_toolbar_button("link")
+
+      expect(upsert_hyperlink_modal).to be_open
+
+      upsert_hyperlink_modal.fill_in_link_text("Encoded URL")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com/%20test")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css("a[href='https://example.com/%20test']", text: "Encoded URL")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[Encoded URL](https://example.com/%20test)")
+    end
+
+    it "handles malformed links gracefully" do
+      cdp.allow_clipboard
+      open_composer
+
+      composer.click_toolbar_button("link")
+
+      expect(upsert_hyperlink_modal).to be_open
+
+      upsert_hyperlink_modal.fill_in_link_text("Encoded URL")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com/100%/working 1")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css(
+        "a[href='https://example.com/100%25/working%201']",
+        text: "Encoded URL",
+      )
+
+      composer.send_keys(:left, :left, :left)
+      find("button.composer-link-toolbar__edit").click
+
+      expect(upsert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Encoded URL")
+      # this ensures we keeps the corrected encoding and do not decode prior to edit
+      # if we decode prior to edit user may end up being confused about why the url has spaces etc...
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com/100%25/working%201")
+
+      upsert_hyperlink_modal.close
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[Encoded URL](https://example.com/100%25/working%201)")
     end
 
     it "allows copying a link URL via toolbar" do

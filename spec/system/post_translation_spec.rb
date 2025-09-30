@@ -30,7 +30,8 @@ describe "Post translations", type: :system do
       post.update!(locale: "en")
 
       topic_page.visit_topic(topic)
-      find("#post_#{post.post_number} .post-action-menu__add-translation").click
+      find("#post_1 .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
       translation_selector.expand
       expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(3)
       expect(translation_selector).to have_option_value("fr")
@@ -41,7 +42,8 @@ describe "Post translations", type: :system do
 
     it "allows a user to translate a post" do
       topic_page.visit_topic(topic)
-      find("#post_#{post.post_number} .post-action-menu__add-translation").click
+      find("#post_1 .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
       expect(composer).to be_opened
       translation_selector.expand
       translation_selector.select_row_by_value("fr")

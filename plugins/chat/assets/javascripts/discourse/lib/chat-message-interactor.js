@@ -249,7 +249,7 @@ export default class ChatemojiReactions {
       });
     }
 
-    return buttons.reject((button) => removedSecondaryActions.has(button.id));
+    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
   }
 
   select(checked = true) {
@@ -334,6 +334,9 @@ export default class ChatemojiReactions {
         emoji,
         reactAction
       )
+      .then(() => {
+        this.emojiStore.trackEmojiForContext(emoji, "chat");
+      })
       .catch((errResult) => {
         popupAjaxError(errResult);
         this.message.react(

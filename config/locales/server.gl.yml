@@ -1235,7 +1235,6 @@ gl:
     educate_until_posts: "Cando o usuario comeza a escribir as súas primeiras (n) publicacións, mostrarlle o panel emerxente cos consellos para usuarios novos no editor."
     crawl_images: "Recuperar imaxes desde URL remotos para inserilas coas dimensións correctas de largura e altura."
     download_remote_images_threshold: "Espazo mínimo que cómpre no disco para descargar imaxes remotas de forma local (en porcentaxe)"
-    disabled_image_download_domains: "As imaxes remotas procedentes destes dominios non serán descargadas. Listaxe delimitada por barras verticais."
     editing_grace_period: "Durante (n) segundos despois de publicar, pódese editar sen chegar a crear unha nova versión no historial."
     editing_grace_period_max_diff: "Número máximo de caracteres que se poden cambiar no período de graza de edición; se hai más cambios, almacenarase unha outra revisión da publicación (nivel de confianza 0 e 1)"
     editing_grace_period_max_diff_high_trust: "Número máximo de caracteres que se poden cambiar no período de graza de edición; se hai más cambios, almacenarase unha outra revisión da publicación (nivel de confianza 2 e superiores)"
@@ -1270,7 +1269,6 @@ gl:
     favicon: "Unha favicona para o seu sitio, mire <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar correctamente sobre un CDN debe ser PNG. Redimensionarase automaticamente a 32x32. Se se deixa en branco, utilizarase large_icon."
     opengraph_image: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada"
     notification_email: "O enderezo electrónico remitente utilizado ao enviar todos os correos electrónicos esenciais do sistema. O dominio especificado debe ter correctamente configurados os rexistros SPF, DKIM e PTR inversos para que os correos electrónicos se reciban correctamente."
-    email_custom_headers: "Unha listaxe de cabeceiras de correo personalizadas separadas por barras verticais"
     email_subject: "Formato de asunto personalizábel para correos electrónicos estándar. Véxase <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciónalles máis información aos usuarios sobre os motivos polos que non poden acceder a un tema en concreto. Nota: isto é menos seguro porque os usuarios saberán se o URL liga cun tema válido."
     force_https: "Forzar o sitio a utilizar só HTTPS. AVISO: NON active esta opción ata que verifique completamente a configuración e esta funcione correctamente en todas as partes! Comprobou tamén que o CDN, os inicios de sesión a través de redes sociais e calquera logo externo/dependencia son compatibles con HTTPS?"
@@ -1622,7 +1620,6 @@ gl:
     enable_group_directory: "Fornecer un directorio de grupos para explorar"
     enable_category_group_moderation: "Permitirlles aos grupos moderar contido en categorías específicas"
     group_in_subject: "Estabelece %%{optional_pm} no asunto do correo electrónico co nome do primeiro grupo en MP, véxase: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personaliza o formato do asunto para correos estándar</a>"
-    anonymous_posting_min_trust_level: "O nivel de confianza mínimo requirido para activar a publicación anónima"
     anonymous_account_duration_minutes: "Para protexer o anonimato, crear unha nova conta anónima cada N minutos para cada usuario. Exemplo: se se estabelece en 600, así que pasen 600 minutos desde a última publicación E o usuario cambie a anónimo, crearase unha nova conta anónima."
     hide_user_profiles_from_public: "Desactivar tarxetas de usuario, perfís de usuario e directorio de usuarios para usuarios anónimos."
     allow_users_to_hide_profile: "Permitirlles aos usuarios agochar o seu perfil e presenza"
@@ -1636,7 +1633,6 @@ gl:
     clean_up_unused_staged_users_after_days: "Número de días antes de que un usuario transitorio (sen actividade) sexa retirado. Para desactivar esta opción establézase en 0."
     user_selected_primary_groups: "Permitirlles aos usuarios estabelecer o seu propio grupo principal"
     max_notifications_per_user: "Número máximo de notificacións por usuario. Se se supera este número, as notificacións antigas eliminaranse. Aplicación semanal. Estabelecer en 0 para desactivalo"
-    allowed_user_website_domains: "O sitio web do usuario verificarase respecto destes dominios. Listaxe separada por barras verticais."
     allow_profile_backgrounds: "Permitir que os usuarios suban fondos de perfil."
     get_a_room_threshold: "Número de publicacións que un usuario debe facerlle á mesma persoa e no mesmo tema antes de recibir unha advertencia."
     enable_mobile_theme: "Os dispositivos móbiles utilizan un tema adaptado para móbiles, coa posibilidade de trocar o sitio completo. Desactíveo se quere utilizar unha folla de estilo personalizada que sexa completamente adaptábel."
@@ -3064,10 +3060,7 @@ gl:
   page_not_found:
     page_title: "Páxina non atopada"
     title: "Oopa! Esta páxina non existe ou é privada."
-    popular_topics: "Destacados"
-    recent_topics: "Recentes"
     see_more: "Máis"
-    search_title: "Buscar neste sitio"
     search_button: "Buscar"
   offline:
     title: "Non se pode cargar a aplicación"
@@ -3591,6 +3584,10 @@ gl:
           description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
       reject:
         title: "Rexeitar"
+      no_action_post:
+        title: "Sen acción"
+      delete_post:
+        complete: "Publicación eliminada"
       no_action_user:
         title: "Sen acción"
       delete_user:

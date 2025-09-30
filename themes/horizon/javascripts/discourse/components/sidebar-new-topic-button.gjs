@@ -5,7 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { gt, not } from "truth-helpers";
+import { gt } from "truth-helpers";
 import CreateTopicButton from "discourse/components/create-topic-button";
 
 export default class SidebarNewTopicButton extends Component {
@@ -32,42 +32,24 @@ export default class SidebarNewTopicButton extends Component {
   }
 
   get createTopicTargetCategory() {
-    if (this.category?.canCreateTopic) {
-      return this.category;
+    let subcategory;
+
+    if (
+      !this.category?.canCreateTopic &&
+      this.siteSettings.default_subcategory_on_read_only_category
+    ) {
+      subcategory = this.category?.subcategoryWithCreateTopicPermission;
     }
 
-    if (this.siteSettings.default_subcategory_on_read_only_category) {
-      return this.category?.subcategoryWithCreateTopicPermission;
-    }
-  }
-
-  get tagRestricted() {
-    return this.tag?.staff;
-  }
-
-  get createTopicDisabled() {
-    return (
-      (this.category && !this.createTopicTargetCategory) ||
-      (this.tagRestricted && !this.currentUser.staff)
-    );
-  }
-
-  get categoryReadOnlyBanner() {
-    if (this.category && this.currentUser && this.createTopicDisabled) {
-      return this.category.read_only_banner;
-    }
-  }
-
-  get createTopicClass() {
-    const baseClasses = "sidebar-new-topic-button";
-    return this.categoryReadOnlyBanner
-      ? `${baseClasses} disabled`
-      : baseClasses;
+    return subcategory ?? this.category;
   }
 
   @action
   createNewTopic() {
-    this.composer.openNewTopic({ category: this.category, tags: this.tag?.id });
+    this.composer.openNewTopic({
+      category: this.createTopicTargetCategory,
+      tags: this.tag?.id,
+    });
   }
 
   @action
@@ -104,11 +86,9 @@ export default class SidebarNewTopicButton extends Component {
         <CreateTopicButton
           @canCreateTopic={{this.canCreateTopic}}
           @action={{this.createNewTopic}}
-          @disabled={{this.createTopicDisabled}}
           @label="topic.create"
-          @btnClass={{this.createTopicClass}}
+          @btnClass="sidebar-new-topic-button"
           @btnTypeClass="btn-primary"
-          @canCreateTopicOnTag={{not this.tagRestricted}}
           @showDrafts={{gt this.draftCount 0}}
         />
       </div>

@@ -564,18 +564,6 @@ basic:
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
-  floatkit_autocomplete_composer:
-    client: true
-    default: true
-    area: "interface"
-  floatkit_autocomplete_input_fields:
-    client: true
-    default: true
-    area: "interface"
-  floatkit_autocomplete_chat_composer:
-    client: true
-    default: true
-    area: "interface"
 
 login:
   invite_only:
@@ -609,7 +597,6 @@ login:
     default: true
   enable_discourse_id:
     default: false
-    hidden: true
     validator: "EnableDiscourseIdValidator"
   discourse_id_client_id:
     default: ""
@@ -3050,7 +3037,7 @@ developer:
     hidden: true
     client: true
   viewport_based_mobile_mode:
-    default: false
+    default: true
     client: true
 
 navigation:
@@ -3683,19 +3670,22 @@ uncategorized:
     default: true
     themeable: true
     area: "interface"
-
   welcome_banner_image:
     client: true
     default: ""
     type: upload
     area: "interface"
-
+  welcome_banner_text_color:
+    client: true
+    type: color
+    default: ""
+    validator: "CssColorWithBlankValidator"
+    area: "interface"
   welcome_banner_location:
     client: true
     enum: "WelcomeBannerLocation"
     default: "above_topic_content"
     area: "interface"
-
   welcome_banner_page_visibility:
     client: true
     enum: "WelcomeBannerPageVisibility"

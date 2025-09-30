@@ -29,6 +29,7 @@ hu:
       solution_summary:
         one: "megoldás"
         other: "megoldás"
+      accepted_answer_solver_info: "%{user} megoldotta a következő bejegyzésben: %{post}"
       accepted_answer_post_number: "%{post_number}. bejegyzés"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -38,6 +39,7 @@ hu:
       no_solved_topics_title: "Még egy témát sem oldott meg"
       no_solved_topics_title_others: "%{username} még nem oldott meg témát"
       no_solved_topics_body: "Ha hasznos választ ad egy témára, előfordulhat, hogy a téma tulajdonosa vagy a stáb az Ön válaszát választják megoldásként."
+      marked_solved_by: "%{user} felhasználó megoldottnak jelölte"
       no_answer:
         title: Megválaszolták a kérdését?
         description: "Emelje ki a választ, és segítsen másoknak is a helyes válasz alatti megoldás gomb segítségével."

@@ -114,7 +114,7 @@ export default class FormTemplateForm extends Component {
 
   @action
   onInsertField(type) {
-    const structure = templateFormFields.findBy("type", type).structure;
+    const structure = templateFormFields.find((v) => v.type === type).structure;
 
     if (this.templateContent.length === 0) {
       this.templateContent += structure;

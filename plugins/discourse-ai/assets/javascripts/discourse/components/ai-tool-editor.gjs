@@ -8,10 +8,12 @@ export default class AiToolEditor extends Component {
 
   get selectedPreset() {
     if (!this.args.selectedPreset) {
-      return this.args.presets.findBy("preset_id", "empty_tool");
+      return this.args.presets.find((item) => item.preset_id === "empty_tool");
     }
 
-    return this.args.presets.findBy("preset_id", this.args.selectedPreset);
+    return this.args.presets.find(
+      (item) => item.preset_id === this.args.selectedPreset
+    );
   }
 
   get editingModel() {

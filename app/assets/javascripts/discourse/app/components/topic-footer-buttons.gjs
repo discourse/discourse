@@ -4,6 +4,7 @@ import { concat, hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
+import { compare } from "@ember/utils";
 import { attributeBindings } from "@ember-decorators/component";
 import { eq, gt } from "truth-helpers";
 import BookmarkMenu from "discourse/components/bookmark-menu";
@@ -50,12 +51,18 @@ export default class TopicFooterButtons extends Component {
 
   @computed("inlineButtons.[]", "inlineDropdowns.[]")
   get inlineActionables() {
-    return this.inlineButtons
-      .filterBy("dropdown", false)
-      .filterBy("anonymousOnly", false)
-      .concat(this.inlineDropdowns)
-      .sortBy("priority")
-      .reverse();
+    return (
+      this.inlineButtons
+        .filter(
+          (button) =>
+            button.dropdown === false && button.anonymousOnly === false
+        )
+        .concat(this.inlineDropdowns)
+        .sort((a, b) => compare(a?.priority, b?.priority))
+        // Reversing the array is necessary because when priorities are not set,
+        // we want to show the most recently added item first
+        .reverse()
+    );
   }
 
   @computed("topic")

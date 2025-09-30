@@ -289,8 +289,8 @@ export default class TextareaTextManipulation {
 
         if (
           operation !== OP.ADDED &&
-          ((l.slice(0, hlen) === hval && tlen === 0) ||
-            (tail.length && l.slice(-tlen) === tail))
+          l.slice(0, hlen) === hval &&
+          (tlen === 0 || l.slice(-tlen) === tail)
         ) {
           operation = OP.REMOVED;
           if (tlen === 0) {
@@ -905,21 +905,12 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    if (this.siteSettings.floatkit_autocomplete_composer) {
-      return DAutocompleteModifier.setupAutocomplete(
-        getOwner(this),
-        this.textarea,
-        this.autocompleteHandler,
-        options
-      );
-    } else {
-      // @ts-ignore
-      this.$textarea.autocomplete(
-        options instanceof Object
-          ? { textHandler: this.autocompleteHandler, ...options }
-          : options
-      );
-    }
+    return DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      this.textarea,
+      this.autocompleteHandler,
+      options
+    );
   }
 }
 

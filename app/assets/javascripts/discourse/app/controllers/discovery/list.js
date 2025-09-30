@@ -92,18 +92,25 @@ export default class DiscoveryListController extends Controller {
 
   get createTopicTargetCategory() {
     const { category } = this.model;
+
     if (category?.canCreateTopic) {
       return category;
     }
 
+    return this.subcategoryWithPermission ?? category;
+  }
+
+  get subcategoryWithPermission() {
     if (this.siteSettings.default_subcategory_on_read_only_category) {
-      return category?.subcategoryWithCreateTopicPermission;
+      return this.model.category?.subcategoryWithCreateTopicPermission;
     }
   }
 
   get createTopicDisabled() {
     // We are in a category route, but user does not have permission for the category
-    return this.model.category && !this.createTopicTargetCategory;
+    return (
+      !this.model.category?.canCreateTopic && !this.subcategoryWithPermission
+    );
   }
 
   get resolvedAscending() {
@@ -168,7 +175,7 @@ export default class DiscoveryListController extends Controller {
       category: this.createTopicTargetCategory,
       tags: [this.model.tag?.id, ...(this.model.additionalTags ?? [])]
         .filter(Boolean)
-        .reject((t) => ["none", "all"].includes(t))
+        .filter((t) => !["none", "all"].includes(t))
         .join(","),
     });
   }

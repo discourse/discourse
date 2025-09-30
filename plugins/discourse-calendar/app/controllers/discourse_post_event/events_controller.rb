@@ -5,7 +5,10 @@ module DiscoursePostEvent
     def index
       @events =
         DiscoursePostEvent::EventFinder.search(current_user, filtered_events_params).includes(
-          post: :topic,
+          :event_dates,
+          post: {
+            topic: %i[tags category],
+          },
         )
 
       # The detailed serializer is currently not used anywhere in the frontend, but available via API

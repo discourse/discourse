@@ -338,6 +338,18 @@ module SystemHelpers
     page.evaluate_script(script, element, key)
   end
 
+  def expect_no_alert
+    opened_dialog = false
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.on("dialog", ->(dialog) { opened_dialog = true })
+
+      yield
+
+      expect(opened_dialog).to eq(false)
+    end
+  end
+
   def get_rgb_color(element, property = "backgroundColor")
     element.native.evaluate(<<~JS)
       (el) => {
@@ -356,5 +368,13 @@ module SystemHelpers
   # that is not visually changing on the page
   def wait_for_timeout(ms = 100)
     page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(ms) }
+  end
+
+  def wait_until_hidden(element)
+    element.with_playwright_element_handle do |playwright_element|
+      playwright_element.wait_for_element_state("hidden")
+    rescue Playwright::Error => e
+      raise e unless e.message.match?(/Element is not attached to the DOM/)
+    end
   end
 end

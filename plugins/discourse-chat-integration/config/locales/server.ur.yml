@@ -7,9 +7,9 @@
 ur:
   site_settings:
     chat_integration_enabled: 'ڈسکورس-چَیٹ-اِنٹیگرَیشَن پلگ اِن کو فعال کریں'
-    chat_integration_discourse_username: 'صارف کا صارف نام جس کی بنیاد پر مواد لایا جائے۔'
+    chat_integration_discourse_username: 'صارف کا اسمِ صارف جس کی بنیاد پر مواد لایا جائے۔'
     chat_integration_delay_seconds: 'پوسٹ کی تخلیق کے بعد چَیٹ اطلاعات بھیجنے سے پہلے کتنے سیکنڈ کا انتظار کیا جائے'
-    chat_integration_slack_username: "سلَیک پر پوسٹ کرنے کیلئے بَوٹ کا صارف نام"
+    chat_integration_slack_username: "سلَیک پر پوسٹ کرنے کیلئے بَوٹ کا اسمِ صارف"
     chat_integration_slack_enabled: 'سلَّیک کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں'
     chat_integration_slack_access_token: 'سلَّیک کے ساتھ توثیق کیلئے OAuth ایکسَیس ٹوکن'
     chat_integration_slack_incoming_webhook_token: 'آنے والی درخواستوں کی توثیق کرنے کیلئے استعمال ہونے والا توثیقی ٹوکن'
@@ -40,12 +40,13 @@ ur:
     chat_integration_zulip_bot_email_address: "آپ کے زُولِپ بَوٹ کے ساتھ منسلک ای میل ایڈریس"
     chat_integration_zulip_bot_api_key: "آپ کے زُولِپ بَوٹ کیلئے API کِی"
     chat_integration_zulip_excerpt_length: "زُولِپ پوسٹ کے اقتباس کا سائز"
-    chat_integration_rocketchat_enabled: "راکٹ چَیٹ کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
-    chat_integration_rocketchat_webhook_url: "راکٹ چَیٹ اِنٹیگرَیشَن وَیب ھُوک کیلئے URL"
+    chat_integration_rocketchat_enabled: "راکٹ چیٹ کا چیٹ انٹیگریشن فراہم کنندہ فعال کریں"
+    chat_integration_rocketchat_webhook_url: "راکٹ چیٹ انٹیگریشن ویب ھُوک کیلئے یو آر ایل"
     chat_integration_rocketchat_excerpt_length: "راکٹ چَیٹ پوسٹ کے اقتباس کا سائز"
     chat_integration_gitter_enabled: "گِیٹر کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
     chat_integration_flowdock_enabled: "فلَوڈَوک کا چَیٹ-اِنٹیگرَیشَن پرووَائیڈر فعال کریں"
     chat_integration_flowdock_excerpt_length: "فلَوڈَوک پوسٹ کے اقتباس کا سائز"
+    chat_integration_google_enabled: "'گوگل چیٹ' چیٹ انٹیگریشن فراہم کنندہ کو فعال کریں"
   chat_integration:
     all_categories: "(تمام زمرہ جات)"
     deleted_category: "(حذف کردہ زُمرہ)"
@@ -84,8 +85,8 @@ ur:
           change_last_message: "آخری پیغام تبدیل کریں..."
           loading: "ٹرانسکرِپٹ لوڈ ہو رہی ہے..."
       telegram:
-        unknown_chat: "یہ چیٹ %{site_title} پر سَیٹ اَپ نہیں ہے۔ 'چیٹ ID' %{chat_id} والا چَینل شامل کرنے کیلئے ایک ایڈمِنِسٹریٹر کو کہیے۔"
-        known_chat: "یہ چیٹ %{site_title} پر سَیٹ اَپ ہے۔ اِسے اَیڈمِن پَینل میں ترتیب دیں۔ (چیٹ ID:%{chat_id})"
+        unknown_chat: "یہ چیٹ %{site_title} پر سیٹ اپ نہیں ہے۔ 'چیٹ آئی ڈی' %{chat_id} والا چینل شامل کرنے کیلئے ایک منتظم کو کہیے۔"
+        known_chat: "یہ چیٹ %{site_title} پر سیٹ اَپ ہے۔ اسے منتظمی کے پینل میں ترتیب دیں۔ (چیٹ آئی ڈی: %{chat_id})"
         message: |-
           <b>%{user}</b>نے <a href="%{post_url}">%{title}</a> میں پوسٹ کیا
 

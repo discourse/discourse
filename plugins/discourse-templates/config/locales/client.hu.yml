@@ -8,6 +8,19 @@ hu:
   admin_js:
     discourse_templates:
       title: "Sablonok"
+    admin:
+      site_settings:
+        categories:
+          discourse_templates: "Discourse sablonok"
   js:
+    keyboard_shortcuts_help:
+      templates:
+        title: "Sablonok (szövegmezőben)"
+        insert_template: "%{shortcut} Sablon beszúrása"
     templates:
+      filter_hint: "Szűrés cím szerint..."
+      insert_template: "Sablon beszúrása"
+      close_templates: "Sablonválasztó bezárása"
+      copy: "Sablon másolása"
+      new_topic: "Új téma sablonból"
       source: "Forrás"

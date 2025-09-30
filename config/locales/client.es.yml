@@ -1787,7 +1787,7 @@ es:
         invalid: "Este nombre de usuario no es válido. Este solo puede incluir números y letras"
       add_email:
         title: "Añadir correo electrónico"
-        add: "añadir"
+        add: "Añadir"
       change_email:
         title: "Cambiar correo electrónico"
         taken: "Lo sentimos, ese correo electrónico no está disponible."
@@ -2614,6 +2614,7 @@ es:
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
+      read_only: "solo lectura"
     timezone_input:
       ambiguous_ist: "El IST es ambiguo, selecciona una zona horaria específica (por ejemplo: Asia/Kolkata)"
     select_kit:
@@ -3339,8 +3340,6 @@ es:
         one: "%{count} publicación en el tema"
         other: "%{count} publicaciones en el tema"
       create: "Nuevo tema"
-      create_disabled_category: "No tienes permiso para crear temas en esta categoría."
-      create_disabled_tag: "No puedes crear temas con esta etiqueta"
       create_long: "Crear un tema nuevo"
       open_draft: "Abrir borrador"
       private_message: "Comenzar un mensaje"
@@ -3781,6 +3780,9 @@ es:
       title: "Últimas publicaciones"
       empty: "No hay publicaciones"
       aria_post_number: "%{title}, publicación n.º %{postNumber}"
+      bulk:
+        clear_all: "Limpiar todo"
+        actions: "Acciones en bloque"
     post:
       confirm_delete: "¿Seguro que quieres eliminar esta publicación?"
       quote_reply: "Citar"
@@ -4689,7 +4691,6 @@ es:
       choose_for_topic_required_group:
         one: "selecciona %{count} etiqueta de «%{name}»…"
         other: "selecciona %{count} etiquetas de «%{name}»…"
-      info: "Info"
       default_info: "Esta etiqueta no está restringida a ninguna categoría, y no tiene sinónimos."
       staff_info: "Para añadir restricciones, mete la etiqueta a un <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Esta etiqueta está restringida para las categorías a las que no tienes permiso de acceso."
@@ -6685,6 +6686,8 @@ es:
         schema:
           title: "Editar el ajuste de %{name}"
           back_button: "Volver a %{name}"
+          move_up: "Sube"
+          move_down: "Baja"
           fields:
             required: "* obligatorio"
             groups:

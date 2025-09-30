@@ -1660,7 +1660,6 @@ fi:
     crawl_images: "Lataa linkatut kuvat kuvan mittojen määrittamiseksi."
     download_remote_images_to_local: "Muunna etäkuvat (linkitetyt) paikallisiksi kuviksi lataamalle ne. Tämä säilyttää sisällön myös silloin, jos kuvat poistetaan etäsivustolta tulevaisuudessa."
     download_remote_images_threshold: "Vähin vapaa tila, jotta linkatut kuvat ladataan paikallisesti (prosenteissa)"
-    disabled_image_download_domains: "Linkattuja kuvia ei koskaan ladata näistä verkkotunnuksista. Pystyviivalla eroteltu luettelo."
     block_hotlinked_media: "Estä käyttäjiä käyttämästä etämediasisältöä (linkitettyä) viesteissään. Etämediasisältö, jota ei ole ladattu \"download_remote_images_to_local\"-asetuksen kautta, korvataan paikkamerkkilinkillä."
     block_hotlinked_media_exceptions: "Luettelo perus-URL-osoitteista, joihin ei sovelleta block_hotlinked_media-asetusta. Liitä mukaan protokolla (esim. https://example.com)."
     editing_grace_period: "Viestin muokkaaminen (n) sekunnin sisällä sen lähettämisestä ei luo viestistä uutta versiota viestin historiaan."
@@ -1711,7 +1710,6 @@ fi:
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
     x_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
-    email_custom_headers: "Pystyviivalla eroteltu luettelo mukautetuista sähköpostin otsikkotiedoista"
     email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
     enforce_second_factor: "Vaadi käyttäjiä ottamaan käyttöön kaksivaiheinen tunnistus ennen kuin he voivat käyttää Discoursen käyttöliittymää. Tämä asetus ei vaikuta API- tai DiscourseConnect-palveluntarjoajatodennukseen. Jos enforce_second_factor_on_external_auth on käytössä, käyttäjät eivät voi kirjautua sisään ulkoisilla todennuspalveluilla kaksivaiheisen tunnistuksen määrittämisen jälkeen."
@@ -1826,8 +1824,6 @@ fi:
     whispers_allowed_groups: "Salli tiettyjen ryhmien jäsenten yksityinen viestintä ketjuissa."
     hidden_post_visible_groups: "Salli näiden ryhmien jäsenten tarkastella piilotettuja viestejä. Ylläpidon jäsenet voivat aina tarkastella piilotettuja viestejä."
     allow_index_in_robots_txt: "Määritä robots.txt:ssä, että verkkohakukoneet voivat indeksoida tämän sivuston. Voit <a href='%{base_path}/admin/customize/robots'>ohittaa robots.txt:n täällä.</a> <b>VAROITUS</b>: väärin määritetyt säännöt voivat estää sivustosi indeksoinnin odotetulla tavalla."
-    blocked_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjät eivät saa rekisteröidä tilejä. Määritettyjen verkkotunnusten alaverkkotunnukset käsitellään automaattisesti. Jokerimerkkisymboleita * ja ? ei tueta. Esimerkki: mailinator.com|trashmail.net"
-    allowed_email_domains: "Pystyviivalla eroteltu luettelo sähköpostiverkkotunnuksista, joilla käyttäjien TÄYTYY rekisteröidä tilit. Määritettyjen verkkotunnusten alaverkkotunnukset käsitellään automaattisesti. VAROITUS: käyttäjiä, joiden sähköpostiverkkotunnus ei ole luettelossa, ei sallita!"
     normalize_emails: "Tarkista, onko normalisoitu sähköpostiosoite yksilöllinen. Normalisoitu sähköpostiosoite poistaa kaikki pisteet käyttäjätunnuksesta ja kaiken +- ja @-symbolien väliltä."
     auto_approve_email_domains: "Käyttäjät, joilla on sähköpostiosoite tästä verkkotunnusten luettelosta, hyväksytään automaattisesti. Määritettyjen verkkotunnusten aliverkkotunnukset käsitellään automaattisesti. Jokerimerkkisymboleita * ja ? ei tueta."
     hide_email_address_taken: "Älä ilmoita käyttäjille rekisteröitymisen tai unohtuneen salasanan palautuksen aikana, että annetulla sähköpostiosoitteella on olemassa tili. Vaadi täydellinen sähköpostiosoite unohtuneen salasanan pyynnöissä."
@@ -2223,9 +2219,6 @@ fi:
     enable_category_group_moderation: "Salli ryhmien valvoa sisältöä tietyillä alueilla"
     group_in_subject: "Aseta %%{optional_pm} sähköpostin aiheessa ensimmäisen ryhmän nimeksi yksityisviestissä, katso: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_mode: "Ota käyttöön valinta, jolla käyttäjät voivat vaihtaa anonyymiin tilaan viestin julkaisua varten. Kun tämä aktivoidaan, käyttäjät voivat halutessaan piilottaa henkilöllisyytensä luodessaan viestejä tai ketjuja sivustolla. Katso myös \"allow anonymous likes\"."
-    allow_likes_in_anonymous_mode: "Ota tämä asetus käyttöön, jos haluat sallia sivustoasi anonyymisti selaavien käyttäjien tykätä julkaisuista. Kun tämä asetus on käytössä, käyttäjät voivat valita identiteettinsä piilottamisen, kun he tykkäävät julkaisuista tai aiheista koko sivustolla. Katso myös `allow_anonymous_mode`."
-    anonymous_posting_min_trust_level: "Anonyymien viestien lähettämiseen vaadittava luottamustila"
-    anonymous_posting_allowed_groups: "Ryhmät, jotka voivat ottaa käyttöön anonyymin viestien lähettämisen"
     anonymous_account_duration_minutes: "Suojellaksesi anonymiteettiä, luo käyttäjälle uusi anonyymi tili N minuutin välein. Esimerkki: jos arvoksi asetetaan 600, kun 600 minuuttia tulee kuluneeksi edellisestä viestistä JA käyttäjä vaihtaa anonyymiin tilaan, luodaan uusi anonyymi tili."
     hide_user_profiles_from_public: "Älä näytä käyttäjäkortteja, käyttäjäprofiileita tai käyttäjähakemistoa anonyymeille käyttäjille."
     hide_new_user_profiles: "Piilota luottamustason 1 tai alempien tasojen käyttäjäprofiilit yleisöltä ja luottamustason 1 käyttäjiltä, kunnes he lähettävät ensimmäisen viestinsä. Tämä ominaisuus on poistettu käytöstä ehdoitta must_approve_users- ja invite_only-sivustoilla."
@@ -2243,7 +2236,6 @@ fi:
     clean_up_unused_staged_users_after_days: "Kuinka monen päivän kuluttua käyttämätön esikäyttäjä (ei yhtään viestiä) poistetaan. Arvo 0 poistaa siivouksen käytöstä."
     user_selected_primary_groups: "Salli käyttäjän asettaa ensisijainen ryhmänsä itse"
     max_notifications_per_user: "Ilmoitusten enimmäismäärä käyttäjää kohden. Jos tämä määrä ylitetään, vanhat ilmoitukset poistetaan. Pakotetaan viikoittain. Poista käytöstä valitsemalla 0"
-    allowed_user_website_domains: "Käyttäjän verkkosivusto voi olla näiden verkkotunnusten alainen. Pystyviivoin erotettu lista."
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     get_a_room_threshold: "Kuinka monta viestiä tulee kohdistaa samalle käyttäjälle samassa ketjussa, jotta näytetään varoitus."
     dont_feed_the_trolls_threshold: "Muiden käyttäjien tekemä ilmoitusmäärä, josta seuraa varoitus."
@@ -2326,7 +2318,6 @@ fi:
     disable_watched_word_checking_in_user_fields: "poista tarkkailtujen sanojen tarkistus käytöstä käyttäjäkentissä"
     watched_words_regular_expressions: "Sallii säännöllisten lausekkeiden käytön sanojen suodattamiseen. Jos tämä on käytössä, tämä ominaisuus ryhmittelee arkaluontoiset sanat kirjainkoon mukaan. Sen jälkeen se kokoaa kaikki valitut sanat yhdeksi säännölliseksi lausekkeeksi ja lisää sanarajat säännöllisesti tarkkailuille sanoille. Näin ollen tämä regex-pohjainen suodatusmenetelmä lisää ylimääräisen valvontatason sisällön moderointiin tukemalla kehittyneempiä sanamalleja. Asetus mahdollistaa myös alkuperäisen tekstin helposti korvaamisen halutulla korvauksella."
     enable_fast_edit: "Lisää painikkeen viestin valintavalikkoon, jolla voi muokata pientä valintaa tekstiin sidottuna."
-    old_post_notice_days: "Päivien lukumäärä, jonka jälkeen viesti-ilmoitus katsotaan vanhaksi. Tämä erottaa sen visuaalisesti sivuston uudemmista ilmoituksista."
     new_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee uusiin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_user_notice_tl: "Vähimmäisluottamustaso, jolla näkee palaaviin käyttäjiin liittyvät viesti-ilmoitukset."
     returning_users_days: "Kuinka monen päivän kuluttua käyttäjä tulkitaan palaavaksi."
@@ -2476,7 +2467,6 @@ fi:
     view_raw_email_allowed_groups: "Ryhmät, jotka voivat tarkastella viestin raakaa sähköpostisisältöä, jos se on luotu saapuvasta sähköpostista. Tämä sisältää sähköpostin ylätunnisteet ja muut tekniset tiedot."
     rich_editor: "Ota käyttöön kirjoitustilan muotoilueditori, jotta kaikki käyttäjät voivat vaihtaa nykyisen Markdown-tilan ja uuden muotoilutekstieditorin välillä, joka tarjoaa intuitiivisemman ja käyttäjäystävällisemmän kirjoituskokemuksen."
     default_composition_mode: "Aseta yhteisösi kirjoitustilan oletustila. Muotoilutila tarjoaa useimmille käyttäjille modernimman ja tutumman kirjoituskokemuksen, kun taas markdown-tila saattaa sopia teknisemmälle yleisölle. Jäsenet voivat vaihtaa tilojen välillä kirjoitustilan työkalupalkin valitsimella."
-    viewport_based_mobile_mode: "KOKEELLINEN: Poista käyttäjäagenttipohjaiset mobiili- ja työpöytätilat käytöstä ja käytä sen sijaan näyttöikkunan leveyttä."
     reviewable_ui_refresh: "Ryhmät, jotka voivat käyttää kokeellista uutta käyttöliittymää tarkastusjonossa."
     content_localization_enabled: "Näyttää käyttäjille lokalisoitua sisältöä heidän selain- tai kieliasetustensa perusteella. Tällainen sisältö voi sisältää alueita, tunnisteita, viestejä ja ketjuja. Tuetut kielialueet on asetettu asetuksessa \"content localization supported locales\"."
     content_localization_supported_locales: "Luettelo tuetuista kielialueista, joille käyttäjäsisältö voidaan kääntää. Edellyttää \"content localization enabled\" -asetusta."
@@ -2576,7 +2566,6 @@ fi:
   filter:
     description:
       status: "Suodata ketjuja niiden tilan mukaan"
-      in: "Suodata ketjuja henkilökohtaisten luetteloiden mukaan"
       order: "Järjestä ketjut tietyn kentän mukaan"
       category: "Näytä ketjut tietyssä luokassa"
       category_any: "Näytä ketjut missä tahansa määritetyistä luokista (pilkuilla erotettuna)"
@@ -4216,10 +4205,7 @@ fi:
   page_not_found:
     page_title: "Sivua ei löytynyt"
     title: "Hups! Sivua ei ole tai se on yksityinen."
-    popular_topics: "Suosittuja"
-    recent_topics: "Tuoreimpia"
     see_more: "Lisää"
-    search_title: "Hae tältä sivustolta"
     search_button: "Haku"
   offline:
     title: "Sovellusta ei voida ladata"
@@ -5240,6 +5226,16 @@ fi:
       approve_and_unhide:
         title: "Hyväksy ja näytä viesti"
         complete: "Viesti hyväksytty ja näkyvissä"
+      no_action_post:
+        title: "Ei toimintaa"
+      delete_post:
+        title: "Poista viesti"
+        complete: "Viesti poistettu"
+      hide_post:
+        title: "Piilota viesti"
+      restore_post:
+        title: "Palauta viesti"
+        complete: "Viesti palautettu"
       no_action_user:
         title: "Ei toimintaa"
       silence_user:

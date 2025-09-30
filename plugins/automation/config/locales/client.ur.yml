@@ -144,7 +144,7 @@ ur:
         pm_created:
           fields:
             restricted_user:
-              label: صارفین
+              label: اراکین
             restricted_group:
               label: گروپ
         after_post_cook:

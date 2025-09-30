@@ -92,12 +92,16 @@ RSpec.describe "groups" do
 
       produces "application/json"
       response "200", "success response" do
-        schema type: :object, properties: { success: { type: :string, example: "OK" } }
+        expected_response_schema = load_spec_schema("success_ok_response")
+        schema expected_response_schema
 
         let(:id) { Fabricate(:group).id }
         let(:params) { { "group" => { "name" => "awesome" } } }
 
-        run_test!
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
+        end
       end
     end
   end

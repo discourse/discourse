@@ -1787,7 +1787,7 @@ pt_BR:
         invalid: "Este nome do(a) usuário(a) é inválido. Deve conter apenas números e letras"
       add_email:
         title: "Adicione o e-mail"
-        add: "adicionar"
+        add: "Adicionar"
       change_email:
         title: "Alterar e-mail"
         taken: "Desculpe, este e-mail não está disponível."
@@ -2614,6 +2614,7 @@ pt_BR:
       topic_count:
         one: "%{count} tópico nesta categoria"
         other: "%{count} tópicos nesta categoria"
+      read_only: "somente leitura"
     timezone_input:
       ambiguous_ist: "O IST é ambíguo. Selecione um fuso horário específico (por exemplo: Ásia/Kolkata)"
     select_kit:
@@ -3339,8 +3340,6 @@ pt_BR:
         one: "%{count} postagem no tópico"
         other: "%{count} postagens no tópico"
       create: "Novo tópico"
-      create_disabled_category: "Você não possui permissão para criar tópicos nesta categoria"
-      create_disabled_tag: "Você não tem permissão para criar tópicos com esta etiqueta"
       create_long: "Criar um novo tópico"
       open_draft: "Abrir rascunho"
       private_message: "Iniciar uma mensagem"
@@ -3781,6 +3780,9 @@ pt_BR:
       title: "Últimas postagens"
       empty: "Não há postagens"
       aria_post_number: "%{title} - postagem #%{postNumber}"
+      bulk:
+        clear_all: "Limpar tudo"
+        actions: "Ações em massa"
     post:
       confirm_delete: "Tem certeza de que deseja excluir esta postagem?"
       quote_reply: "Citação"
@@ -4689,7 +4691,6 @@ pt_BR:
       choose_for_topic_required_group:
         one: "selecione %{count} etiqueta de \"%{name}\"…"
         other: "selecione %{count} etiquetas de \"%{name}\"…"
-      info: "Informações"
       default_info: "Esta etiqueta não está restrita a nenhuma categorias e não possui sinônimos."
       staff_info: "Para adicionar restrições, coloque esta etiqueta em um <a href=%{basePath}/tag_groups>grupo de etiquetas</a>."
       category_restricted: "Essa tag é restrita a categorias que você não tem permissão para acessar."
@@ -6675,6 +6676,8 @@ pt_BR:
         schema:
           title: "Editar configuração de %{name}"
           back_button: "Voltar para %{name}"
+          move_up: "Mover para cima"
+          move_down: "Mover para baixo"
           fields:
             required: "*necessário(a)"
             groups:

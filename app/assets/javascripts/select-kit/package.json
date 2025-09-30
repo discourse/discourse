@@ -14,12 +14,12 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.28.3",
+    "@babel/core": "^7.28.4",
     "@ember-decorators/component": "*",
     "@ember/string": "^4.0.1",
     "@popperjs/core": "^2.11.8",
     "discourse-i18n": "workspace:1.0.0",
-    "ember-auto-import": "^2.10.0",
+    "ember-auto-import": "^2.10.1",
     "ember-cached-decorator-polyfill": "^1.0.2",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
@@ -45,7 +45,7 @@
     "ember-source": "~6.6.0",
     "ember-source-channel-url": "^3.0.0",
     "loader.js": "^4.7.0",
-    "webpack": "^5.101.3"
+    "webpack": "^5.102.0"
   },
   "engines": {
     "node": ">= 18",

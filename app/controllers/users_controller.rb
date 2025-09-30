@@ -763,8 +763,8 @@ class UsersController < ApplicationController
       associations.each { |a| a.update!(user: user) }
       user.update_timezone_if_missing(params[:timezone])
 
-      secure_session[HONEYPOT_KEY] = nil
-      secure_session[CHALLENGE_KEY] = nil
+      server_session.delete(HONEYPOT_KEY)
+      server_session.delete(CHALLENGE_KEY)
 
       # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
@@ -833,11 +833,11 @@ class UsersController < ApplicationController
       format.html do
         return render "password_reset", layout: "no_ember" if @error
 
-        DiscourseWebauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, server_session)
         store_preloaded(
           "password_reset",
           MultiJson.dump(
-            security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session)),
+            security_params.merge(DiscourseWebauthn.allowed_credentials(@user, server_session)),
           ),
         )
 
@@ -847,9 +847,9 @@ class UsersController < ApplicationController
       format.json do
         return render json: { message: @error } if @error
 
-        DiscourseWebauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, server_session)
         render json:
-                 security_params.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
+                 security_params.merge(DiscourseWebauthn.allowed_credentials(@user, server_session))
       end
     end
   end
@@ -881,9 +881,9 @@ class UsersController < ApplicationController
     raise Discourse::ReadOnly if @staff_writes_only_mode && !@user&.staff?
 
     if @user
-      if !secure_session["second-factor-#{token}"]
+      if !server_session["second-factor-#{token}"]
         second_factor_authentication_result =
-          @user.authenticate_second_factor(params, secure_session)
+          @user.authenticate_second_factor(params, server_session)
         if !second_factor_authentication_result.ok
           user_error_key =
             (
@@ -899,7 +899,7 @@ class UsersController < ApplicationController
           # this must be set because the first call we authenticate e.g. TOTP, and we do
           # not want to re-authenticate on the second call to change the password as this
           # will cause a TOTP error saying the code has already been used
-          secure_session["second-factor-#{token}"] = true
+          server_session["second-factor-#{token}"] = true
         end
       end
 
@@ -918,8 +918,8 @@ class UsersController < ApplicationController
 
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
-          secure_session["password-#{token}"] = nil
-          secure_session["second-factor-#{token}"] = nil
+          server_session.delete("password-#{token}")
+          server_session.delete("second-factor-#{token}")
 
           if SiteSetting.delete_associated_accounts_on_password_reset
             @user.user_associated_accounts.destroy_all
@@ -940,7 +940,7 @@ class UsersController < ApplicationController
       format.html do
         return render "password_reset", layout: "no_ember" if @error
 
-        DiscourseWebauthn.stage_challenge(@user, secure_session)
+        DiscourseWebauthn.stage_challenge(@user, server_session)
 
         security_params = {
           is_developer: UsernameCheckerService.is_developer?(@user.email),
@@ -949,7 +949,7 @@ class UsersController < ApplicationController
           security_key_required: @user.security_keys_enabled?,
           backup_enabled: @user.backup_codes_enabled?,
           multiple_second_factor_methods: @user.has_multiple_second_factor_methods?,
-        }.merge(DiscourseWebauthn.allowed_credentials(@user, secure_session))
+        }.merge(DiscourseWebauthn.allowed_credentials(@user, server_session))
 
         store_preloaded("password_reset", MultiJson.dump(security_params))
 
@@ -1558,7 +1558,7 @@ class UsersController < ApplicationController
       raise Discourse::NotFound
     end
 
-    if confirm_secure_session
+    if confirm_server_session
       render json: success_json
     else
       render json: failed_json.merge(error: I18n.t("login.incorrect_password_or_passkey"))
@@ -1607,7 +1607,7 @@ class UsersController < ApplicationController
   def create_second_factor_totp
     require "rotp" if !defined?(ROTP)
     totp_data = ROTP::Base32.random
-    secure_session["staged-totp-#{current_user.id}"] = totp_data
+    server_session["staged-totp-#{current_user.id}"] = totp_data
     qrcode_png =
       RQRCode::QRCode.new(current_user.totp_provisioning_uri(totp_data)).as_png(
         border_modules: 1,
@@ -1624,7 +1624,7 @@ class UsersController < ApplicationController
       return
     end
 
-    challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
+    challenge_session = DiscourseWebauthn.stage_challenge(current_user, server_session)
     render json:
              success_json.merge(
                challenge: challenge_session.challenge,
@@ -1645,7 +1645,7 @@ class UsersController < ApplicationController
     ::DiscourseWebauthn::RegistrationService.new(
       current_user,
       params,
-      session: secure_session,
+      session: server_session,
       factor_type: UserSecurityKey.factor_types[:second_factor],
     ).register_security_key
     render json: success_json
@@ -1656,7 +1656,7 @@ class UsersController < ApplicationController
   def create_passkey
     raise Discourse::NotFound unless SiteSetting.enable_passkeys
 
-    challenge_session = DiscourseWebauthn.stage_challenge(current_user, secure_session)
+    challenge_session = DiscourseWebauthn.stage_challenge(current_user, server_session)
     render json:
              success_json.merge(
                challenge: challenge_session.challenge,
@@ -1679,7 +1679,7 @@ class UsersController < ApplicationController
       ::DiscourseWebauthn::RegistrationService.new(
         current_user,
         params,
-        session: secure_session,
+        session: server_session,
         factor_type: UserSecurityKey.factor_types[:first_factor],
       ).register_security_key
 
@@ -1736,7 +1736,7 @@ class UsersController < ApplicationController
     end
     auth_token = params[:second_factor_token]
 
-    totp_data = secure_session["staged-totp-#{current_user.id}"]
+    totp_data = server_session["staged-totp-#{current_user.id}"]
     totp_object = current_user.get_totp_object(totp_data)
 
     rate_limit_second_factor!(current_user)
@@ -2099,9 +2099,9 @@ class UsersController < ApplicationController
       end
 
     if @user
-      secure_session["password-#{token}"] = @user.id
+      server_session["password-#{token}"] = @user.id
     else
-      user_id = secure_session["password-#{token}"].to_i
+      user_id = server_session["password-#{token}"].to_i
       @user = User.find(user_id) if user_id > 0
     end
 
@@ -2226,7 +2226,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def confirm_secure_session
+  def confirm_server_session
     RateLimiter.new(
       nil,
       "login-hr-#{request.remote_ip}",
@@ -2253,22 +2253,22 @@ class UsersController < ApplicationController
         ::DiscourseWebauthn::AuthenticationService.new(
           current_user,
           params[:publicKeyCredential],
-          session: secure_session,
+          session: server_session,
           factor_type: UserSecurityKey.factor_types[:first_factor],
         ).authenticate_security_key
 
       return false if !passkey
     end
 
-    secure_session["confirmed-session-#{current_user.id}"] = "true"
+    server_session["confirmed-session-#{current_user.id}"] = "true"
   end
 
-  def secure_session_confirmed?
-    secure_session["confirmed-session-#{current_user.id}"] == "true"
+  def server_session_confirmed?
+    server_session["confirmed-session-#{current_user.id}"] == "true"
   end
 
   def session_is_trusted?
-    secure_session_confirmed? || user_just_created
+    server_session_confirmed? || user_just_created
   end
 
   def summary_cache_key(user)

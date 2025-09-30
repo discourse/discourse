@@ -5,10 +5,16 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
   js:
     login:
       patreon:
         name: Patreon
+        title: Bejelentkezés Patreonnal
     patreon:
       title: 'Patreon'
       header:
@@ -16,11 +22,38 @@ hu:
       group: 'Csoport'
       rewards: 'Jutalmak'
       filter: 'Szűr'
+      help_text: 'Szinkronizálhatsz egy Discourse csoportot egy vagy több Patreon jutalomszinttel.'
       last_synced: 'Utoljára szinkronizálva'
       edit: 'Szerkesztés'
       delete: 'Törlés'
       save: 'Mentés'
+      update_data: 'Patreon adatok frissítése és csoportok szinkronizálása'
+      refresh_page: 'Új adatok letöltődtek a Patreon API-ból. Kérjük, frissítse az oldalt.'
+      select_group: 'Válasszon ki egy csoportot'
       field:
         id: "Id"
         email: "E-mail:"
+        amount_cents: "Összeg (centben)"
         rewards: "Jutalmak"
+        more_details:
+          label: "Fizetések és további részletek"
+          help_text:
+            email_available: "A Patreon támogatási előzményeinek megtekintéséhez nyisd ki az oldal jobb alsó sarkát."
+            email_not_available: "Válaszd ki a Patreon tagot, és az oldal jobb alsó sarkában nézd meg a korábbi adományokat."
+      donation_prompt:
+        body: |
+          <h1>Üdvözlöm olvasó!</h1>
+
+          <p>Tetszik a weboldalunk? Szeretnél hozzájárulni egy jó ügyhöz?</p>
+
+          <p>
+            Ha hasznosnak találod weboldalunkat, és tetszik az általunk létrehozott közösség, örülnénk, ha adományoznál nekünk.
+            Az adományok biztosítják szolgáltatásaink zökkenőmentes működését, és biztosítják, hogy közösségünk hosszú éveken át működőképes legyen.
+            Minden dollár számít, és jó hasznát fogjuk venni.
+          </p>
+
+          <p>Köszönjük a támogatásodat!</p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Légy te is támogató</a>
+          </p>

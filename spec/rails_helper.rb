@@ -17,7 +17,6 @@ end
 require "rubygems"
 require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
-require "pry-byebug"
 require "pry-rails"
 require "pry-stack_explorer"
 require "fabrication"
@@ -120,7 +119,7 @@ Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
-require_relative "./helpers/redis_snapshot_helper"
+require_relative "helpers/redis_snapshot_helper"
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
 if ENV["LOAD_PLUGINS"] == "1"
@@ -131,12 +130,7 @@ if ENV["LOAD_PLUGINS"] == "1"
   Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
 end
 
-# let's not run seed_fu every test
-SeedFu.quiet = true if SeedFu.respond_to? :quiet
-
 SiteSetting.automatically_download_gravatars = false
-
-SeedFu.seed
 
 # we need this env var to ensure that we can impersonate in test
 # this enable integration_helpers sign_in helper
@@ -234,6 +228,9 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Default is :fork, but this causes problems if any miniracer context have started
+  config.bisect_runner = :shell
 
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
@@ -665,8 +662,26 @@ RSpec.configure do |config|
       # To work around this problem, we are going to preload all the model schemas before running any system tests so that
       # the lock in ActiveRecord::ModelSchema is not acquired at runtime. This is a temporary workaround while we report
       # the issue to the Rails.
+
+      # TODO: halfvec in AI embedding tables is not supported by Rails
+      # it causes a noisy stderr warning cause it is missing from the PG
+      # typemap.
+      #
+      # This workaround will suppress the noise until Rails adds support
+      suppress_embedding_warnings =
+        proc do |&blk|
+          stderr_orig = $stderr
+          $stderr = StringIO.new
+          blk.call
+          warning = $stderr.string
+          if warning.present? && !warning.include?("failed to recognize type of 'embeddings'")
+            stderr_orig.print warning
+          end
+          $stderr = stderr_orig
+        end
+
       ActiveRecord::Base.connection.data_sources.map do |table|
-        ActiveRecord::Base.connection.schema_cache.add(table)
+        suppress_embedding_warnings.call { ActiveRecord::Base.connection.schema_cache.add(table) }
       end
 
       system_tests_initialized = true
@@ -924,11 +939,17 @@ def before_next_spec(&callback)
 end
 
 def global_setting(name, value)
+  SiteSetting.hidden_settings_provider.remove_hidden(name)
+  SiteSetting.shadowed_settings.delete(name)
   GlobalSetting.reset_s3_cache!
 
   GlobalSetting.stubs(name).returns(value)
 
-  before_next_spec { GlobalSetting.reset_s3_cache! }
+  before_next_spec do
+    SiteSetting.hidden_settings_provider.remove_hidden(name)
+    SiteSetting.shadowed_settings.delete(name)
+    GlobalSetting.reset_s3_cache!
+  end
 end
 
 def set_cdn_url(cdn_url)

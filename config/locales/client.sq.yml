@@ -1586,7 +1586,7 @@ sq:
         invalid: "Emri i përdoruesit nuk është i vlefshëm. Duhet të përmbaje vetëm shkronja ose numra"
       add_email:
         title: "Shto Email"
-        add: "shto"
+        add: "Shto"
       change_email:
         title: "Ndrysho email"
         taken: "Na vjen keq, por ky email nuk është i disponueshëm."
@@ -3037,8 +3037,6 @@ sq:
         one: "%{count} postim në temë"
         other: "%{count} postime në temë"
       create: "Temë e re"
-      create_disabled_category: "Nuk ju lejohet të krijoni tema në këtë kategori"
-      create_disabled_tag: "Nuk ju lejohet të krijoni tema me këtë etiketë"
       create_long: "Hap një temë të re"
       open_draft: "Draft i hapur"
       private_message: "Fillo një mesazh"

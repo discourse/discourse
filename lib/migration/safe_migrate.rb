@@ -156,7 +156,7 @@ class Migration::SafeMigrate
         in use by live applications.
       TEXT
       raise Discourse::InvalidMigration, "Attempt was made to drop a table"
-    elsif sql =~ /\A\s*alter\s+table.*(?:rename|drop(?!\s+not\s+null))\s+/i
+    elsif sql =~ /\A\s*alter\s+table.*(?:rename|drop(?!(\s+not\s+null)|(\s+default)))\s+/i
       $stdout.puts("", <<~TEXT)
         WARNING
         -------------------------------------------------------------------------------------

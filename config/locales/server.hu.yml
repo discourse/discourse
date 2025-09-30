@@ -74,6 +74,7 @@ hu:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
     ember_selector_error: "Sajnáljuk, az #ember vagy az .ember-view CSS-szelektorok használata nem engedélyezett, mert ezek a nevek dinamikusan generálódnak futás közben és idővel változnak, ami végül a CSS meghibásodását eredményezi. Próbálkozzon másik választóval."
+    setting_not_themeable: "A(z) „%{name}” beállítás nem témázható."
     import_error:
       generic: Hiba történt a téma importálása során
       upload: "Hiba a feltöltési tartalom létrehozásakor: %{name}. %{errors}"
@@ -1566,6 +1567,14 @@ hu:
         anon_views: Névtelen
         total_views: Összes
       description: "A 100 legnézettebb téma egy adott dátumtartományban, a bejelentkezett és az anonim megtekintések kombinálásával. Kategóriák szerint szűrhető."
+    associated_accounts_by_provider:
+      title: "Kapcsolódó fiókok bejelentkezési mód szerint"
+      labels:
+        provider: Belépési szolgáltató
+        no_accounts: "Nincsenek társított fiókok"
+        discourse_connect: "Egyszeri bejelentkezés Discourse Connecten keresztül"
+        no_sso_accounts: "SSO-rekord nélküli fiókok"
+        total_users: "Összes aktív felhasználói fiók"
   dashboard:
     problem:
       twitter_login: 'Úgy tűnik, hogy az X bejelentkezés jelenleg nem működik. Ellenőrizze a hitelesítő adatokat a <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Webhelybeállítások</a>részben.'
@@ -1652,7 +1661,6 @@ hu:
     crawl_images: "Képek lekérése távoli URL-címekről a helyes szélesség és magasság méretek beillesztéséhez."
     download_remote_images_to_local: "Távoli (hotlinkelt) képek átalakítása helyi képekké azok letöltésével; Ez megőrzi a tartalmat még akkor is, ha a képeket a jövőben eltávolítják a távoli oldalról."
     download_remote_images_threshold: "A távoli képek helyi letöltéséhez szükséges minimális lemezterület (százalékban)"
-    disabled_image_download_domains: "Távoli képek soha nem lesznek letöltve ezekről a domain-ekről. Függőleges vonallal (|) elválasztott lista."
     block_hotlinked_media: "Megakadályozza, hogy a felhasználók távoli (hotlinkelt) médiát illesszenek be a bejegyzéseikbe. Azokat a távoli médiaelemeket, amelyeket nem töltünk le a 'download_remote_images_to_local' beállítás segítségével, egy helyőrző linkkel helyettesítjük."
     block_hotlinked_media_exceptions: "Azon alap URL-ek listája, amelyek kivételt képeznek a block_hotlinked_media beállítás alól. Tartalmazza a protokollt is (pl. https://example.com)."
     editing_grace_period: "A bejegyzés közzététele után (n) másodpercig a szerkesztés nem hoz létre új verziót a bejegyzés előzményeiben."
@@ -1703,7 +1711,6 @@ hu:
     opengraph_image: "Alapértelmezett opengraph kép, amely akkor használatos, amikor az oldalnak nincs más megfelelő képe. Ha üresen hagyja, a large_icon lesz használva."
     x_summary_large_image: "Twitter kártya 'summary large image' (legalább 280 pixel széles és legalább 150 pixel magas legyen, nem lehet .svg formátumú). Ha üresen hagyja, a normál kártya metaadatai az opengraph_image alapján lesznek generálva, amennyiben az sem .svg formátumú."
     notification_email: "A feladó e-mail címe, amelyet az összes lényeges rendszerüzenet küldésekor használ a rendszer. Az itt megadott domainhez helyesen beállított SPF, DKIM és fordított PTR rekordokkal kell rendelkeznie ahhoz, hogy az e-mailek megérkezzenek."
-    email_custom_headers: "Függőleges vonallal elválasztott lista az egyéni e-mail fejlécekről"
     email_subject: "Testreszabható tárgyformátum a szabványos e-mailekhez. Lásd <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Részletesebb tájékoztatást nyújt a felhasználóknak arról, hogy miért nem férhetnek hozzá egy adott témához. Megjegyzés: Ez kevésbé biztonságos, mert a felhasználók tudni fogják, ha egy URL érvényes témára mutat."
     enforce_second_factor: "Megköveteli a felhasználóktól a kétfaktoros hitelesítés engedélyezését, mielőtt hozzáférhetnének a Discourse felhasználói felületéhez. Ez a beállítás nem érinti az API vagy a 'DiscourseConnect szolgáltató' hitelesítést. Ha az enforce_second_factor_on_external_auth be van kapcsolva, a felhasználók nem tudnak bejelentkezni külső hitelesítési szolgáltatókkal, miután beállították a kétfaktoros hitelesítést."
@@ -1817,8 +1824,6 @@ hu:
     whispers_allowed_groups: "Privát kommunikáció engedélyezése a témákon belül meghatározott csoportok tagjai számára."
     hidden_post_visible_groups: "Engedélyezze e csoportok tagjainak a rejtett bejegyzések megtekintését. A személyzet felhasználói mindig megtekinthetik a rejtett bejegyzéseket."
     allow_index_in_robots_txt: "Adja meg a robots.txt fájlban, hogy ezt a webhelyet a webes keresőmotorok indexelhetik. Itt <a href='%{base_path}/admin/customize/robots'>felülírhatja a robots.txt fájlt.</a> <b>FIGYELMEZTETÉS</b>: A rosszul konfigurált szabályok megakadályozhatják a webhely várt feltérképezését."
-    blocked_email_domains: "Függőleges vonallal elválasztott lista azokról az e-mail domainek-ről, amelyekkel a felhasználók nem regisztrálhatnak fiókot. Az aldomainek automatikusan kezelve vannak a megadott domainekhez. A * és ? helyettesítő karakterek nem támogatottak. Példa: mailinator.com|trashmail.net"
-    allowed_email_domains: "Függőleges vonallal elválasztott lista azokról az e-mail domainek-ről, amelyekkel a felhasználóknak KÖTELEZŐ regisztrálniuk fiókot. Az aldomainek automatikusan kezelve vannak a megadott domainekhez. A * és ? helyettesítő karakterek nem támogatottak. FIGYELMEZTETÉS: A felsorolásban nem szereplő e-mail domainnel rendelkező felhasználók regisztrációja nem lesz engedélyezve!"
     normalize_emails: "Ellenőrizze, hogy a normalizált e-mail egyedi-e. A normalizált e-mail eltávolítja az összes pontot a felhasználónévből, és mindent, ami a + és a @ szimbólumok között található."
     auto_approve_email_domains: "Az ezen domainek listájáról származó e-mail címekkel rendelkező felhasználók automatikusan jóváhagyásra kerülnek. Az aldomainek automatikusan kezelve vannak a megadott domainekhez. A * és ? helyettesítő karakterek nem támogatottak."
     hide_email_address_taken: "Ne tájékoztassa a felhasználókat arról, hogy létezik fiók egy adott e-mail címmel a regisztráció során vagy az elfelejtett jelszó folyamata során. Teljes e-mail cím megkövetelése az „elfelejtett jelszó” kérésekhez."
@@ -2208,9 +2213,6 @@ hu:
     enable_category_group_moderation: "Csoportok számára engedélyezi a tartalom moderálását specifikus kategóriákban"
     group_in_subject: "Állítsa be az e-mail tárgyában a %%{optional_pm} értéket a privát üzenetben szereplő első csoport nevére, lásd: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standard e-mailek tárgyformátumának testreszabása</a>"
     allow_anonymous_mode: "Engedélyezze a felhasználók számára, hogy névtelen módra váltsanak a közzétételhez. Ha aktiválva van, a felhasználók eldönthetik, hogy személyazonosságukat elrejtse, amikor bejegyzéseket vagy témákat hoznak létre a webhelyen. Lásd még: \"névtelen kedvelések engedélyezése\"."
-    allow_likes_in_anonymous_mode: "Engedélyezze ezt a beállítást, hogy az oldalát névtelenül böngésző felhasználók is lájkolhassák a bejegyzéseket. Ha aktiválva van, a felhasználók dönthetnek úgy, hogy a bejegyzések vagy témák lájkolásakor az egész webhelyen elrejtik a személyazonosságukat. Lásd még `allow_anonymous_mode`."
-    anonymous_posting_min_trust_level: "Minimális bizalmi szint a névtelen bejegyzés engedélyezéséhez."
-    anonymous_posting_allowed_groups: "Csoportok, amelyek engedélyezik a névtelen bejegyzést"
     anonymous_account_duration_minutes: "Az anonimitás védelme érdekében N percenként új névtelen fiókot hoz létre minden felhasználó számára. Példa: ha 600-ra van állítva, amint 600 perc eltelik az utolsó bejegyzés óta ÉS a felhasználó névtelen módra vált, egy új névtelen fiók jön létre."
     hide_user_profiles_from_public: "Felhasználói kártyák, felhasználói profilok és felhasználói címtár letiltása névtelen felhasználók számára."
     hide_new_user_profiles: "Rejti az 1-es vagy alacsonyabb bizalmi szinttel rendelkező felhasználói profilokat a nyilvánosság és az 1-es szintű felhasználók elől, amíg azok nem posztolnak először. Ez a funkció feltétel nélkül le van tiltva azokon az oldalakon, ahol kötelező a felhasználók jóváhagyása vagy ahol csak meghívással lehet regisztrálni."
@@ -2227,7 +2229,6 @@ hu:
     clean_up_unused_staged_users_after_days: "Az inaktív átmeneti felhasználók (akiknek nincs bejegyzésük) eltávolítása előtti napok száma. A tisztítás kikapcsolásához állítsa 0-ra."
     user_selected_primary_groups: "Lehetővé teszi a felhasználók számára, hogy beállítsák saját elsődleges csoportjukat"
     max_notifications_per_user: "Az értesítések maximális száma felhasználónként, ha ezt a számot túllépi, a régi értesítések törlődnek. Heti rendszerességgel végrehajtva. A letiltáshoz állítsa 0-ra"
-    allowed_user_website_domains: "A felhasználói webhelyet ezeken a domaineken ellenőrizzük. Függőleges vonallal elválasztva."
     allow_profile_backgrounds: "Engedélyezze a felhasználóknak profilhátterek feltöltését."
     get_a_room_threshold: "Azon bejegyzések száma, amelyeket a felhasználónak ugyanabban a témában ugyanannak a személynek kell közzétennie, mielőtt figyelmeztetést kapna."
     dont_feed_the_trolls_threshold: "A többi felhasználótól kapott jelzések száma a figyelmeztetés előtt."
@@ -2310,7 +2311,6 @@ hu:
     disable_watched_word_checking_in_user_fields: "a figyelt szavak ellenőrzésének kikapcsolása a felhasználói mezőkben"
     watched_words_regular_expressions: "Lehetővé teszi a reguláris kifejezések használatát a szavak szűrésére. Ha engedélyezve van, ez a funkció csoportosítja az érzékeny szavakat azok kis- és nagybetű érzékenysége alapján. Ezután az összes kiválasztott szót egyetlen reguláris kifejezésbe fordítja le, hozzáadva szóhatárokat a rendszeresen figyelt szavakhoz. Ennek eredményeként ez a regex-alapú szűrési módszer további kontrollréteget biztosít a tartalom moderálásához, támogatva az összetettebb szómintákat. A beállítás lehetővé teszi az eredeti szöveg egyszerű helyettesítését egy választott alternatívával is."
     enable_fast_edit: "Szerkesztés gomb hozzáadása a bejegyzéseknél, a kijelölt szövegrészlet közvetlen szerkesztéséhez."
-    old_post_notice_days: "Azoknak a napoknak a száma, amely után egy bejegyzés értesítése elavultnak minősül. Ez vizuálisan megkülönbözteti az újabb értesítésektől az oldalon."
     new_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy az új felhasználók bejegyzés értesítéseit lássa."
     returning_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy a visszatérő felhasználók bejegyzés értesítéseit lássa."
     returning_users_days: "Hány napnak kell eltelnie, mielőtt egy felhasználó visszatérőnek tekinthető."
@@ -2447,7 +2447,6 @@ hu:
     about_page_extra_groups_order: "Az extra csoportok sorrendje a névjegy oldalon."
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
-    viewport_based_mobile_mode: "KÍSÉRLETI: Tiltsa le a felhasználói ügynök alapú mobil/asztali módokat, és használja helyettük a nézetablak szélességét."
     content_localization_enabled: "Lokalizált tartalmakat jelenít meg a felhasználók számára a böngésző vagy a felhasználói nyelvi beállítások alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. A támogatott helyi nyelvek a 'tartalom lokalizációja támogatott helyi nyelvek' menüpontban vannak beállítva."
     content_localization_supported_locales: "A támogatott helyi nyelvek listája, amelyekre a felhasználói tartalom lefordítható. Feltételezi, hogy a 'tartalom lokalizáció engedélyezve'."
     content_localization_allowed_groups: "Lokalizált tartalom frissítésére jogosult csoportok. Feltételezi a 'tartalom lokalizáció engedélyezve' opciót."
@@ -4058,10 +4057,7 @@ hu:
   page_not_found:
     page_title: "Az oldal nem található"
     title: "Hoppá! Az az oldal nem létezik, vagy magánjellegű."
-    popular_topics: "Népszerű"
-    recent_topics: "Friss"
     see_more: "Több"
-    search_title: "Keresés az oldalon"
     search_button: "Keresés"
   offline:
     title: "Nem lehet betölteni az alkalmazást"
@@ -5172,6 +5168,16 @@ hu:
       approve_and_unhide:
         title: "Bejegyzés jóváhagyása és felfedése"
         complete: "Bejegyzés jóváhagyva és felfedve"
+      no_action_post:
+        title: "Nincs művelet"
+      delete_post:
+        title: "Bejegyzés törlése"
+        complete: "Bejegyzés törölve"
+      hide_post:
+        title: "Bejegyzés elrejtése"
+      restore_post:
+        title: "Bejegyzés visszaállítása"
+        complete: "A bejegyzés visszaállítva"
       no_action_user:
         title: "Nincs művelet"
       silence_user:

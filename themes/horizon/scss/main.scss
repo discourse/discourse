@@ -137,8 +137,6 @@ aside.onebox {
 .no-ember {
   #main-outlet {
     border-radius: var(--d-border-radius-large);
-    margin: 0 var(--main-grid-gap) var(--main-grid-gap) var(--main-grid-gap);
-    padding: 2em;
     max-height: calc(100vh - 50px - 1em - var(--main-grid-gap));
   }
 }

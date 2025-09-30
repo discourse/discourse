@@ -3114,6 +3114,7 @@ ar:
         few: "%{count} موضوعات في هذه الفئة"
         many: "%{count} موضوعًا في هذه الفئة"
         other: "%{count} موضوع في هذه الفئة"
+      read_only: "للقراءة فقط"
     timezone_input:
       ambiguous_ist: "اختصار IST غير واضح، يرجى اختيار منطقة زمنية محددة (مثل: Asia/Kolkata)"
     select_kit:
@@ -4023,8 +4024,6 @@ ar:
         many: "%{count} منشورًا في الموضوع"
         other: "%{count} منشور في الموضوع"
       create: "موضوع جديد"
-      create_disabled_category: "غير مسموح لك بإنشاء الموضوعات في هذه القئة"
-      create_disabled_tag: "غير مسموح لك بإنشاء موضوعات تحمل هذا الوسم"
       create_long: "إنشاء موضوع جديد"
       open_draft: "فتح المسودة"
       private_message: "إنشاء رسالة"
@@ -4557,6 +4556,9 @@ ar:
       title: "آخر المنشورات"
       empty: "لا توجد منشورات"
       aria_post_number: "%{title} - المنشور #%{postNumber}"
+      bulk:
+        clear_all: "مسح الكل"
+        actions: "الإجراءات الجماعية"
     post:
       confirm_delete: "هل تريد بالتأكيد حذف هذا المنشور؟"
       quote_reply: "اقتباس"
@@ -5640,7 +5642,6 @@ ar:
         few: "حدِّد %{count} وسوم من '%{name}'…"
         many: "حدِّد %{count} وسمًا من '%{name}'…"
         other: "حدِّد %{count} وسم من '%{name}'…"
-      info: "المعلومات"
       default_info: "هذ الوسم ليس مقصورًا على أي فئة، وليس له مرادفات."
       staff_info: "لإضافة قيود، ضَع هذا الوسم في <a href=%{basePath}/tag_groups>مجموعة الوسوم</a>."
       category_restricted: "هذا الوسم مقيَّد بالفئات التي ليس لديك إذن بالوصول إليها."
@@ -7793,6 +7794,8 @@ ar:
         schema:
           title: "تعديل إعداد %{name}"
           back_button: "العودة إلى %{name}"
+          move_up: "التحريك لأعلى"
+          move_down: "التحريك لأسفل"
           fields:
             required: "*مطلوب"
             groups:

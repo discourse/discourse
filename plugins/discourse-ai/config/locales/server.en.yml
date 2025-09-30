@@ -1,4 +1,10 @@
 en:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Model ID"
+        max_prompt_tokens: "Context window"
+
   discourse_automation:
     ai:
       flag_types:
@@ -96,6 +102,8 @@ en:
     ai_embeddings_semantic_search_use_hyde: "Use HyDE for semantic full page search. Uses an LLM to create an hypothetical post from the user search term to help with matches."
     ai_embeddings_semantic_quick_search_enabled: "Enable semantic search option in search menu popup."
     ai_embeddings_semantic_related_include_closed_topics: "Include closed topics in semantic search results"
+    ai_embeddings_semantic_related_age_penalty: "Apply exponential age penalty to topics in semantic search results. 0.0 = no penalty, 0.3 = gentle bias toward recently active content, 1.0+ = strong recency bias."
+    ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
     ai_embeddings_semantic_search_hyde_model: "Model used to expand keywords to get better results during a semantic search"
     ai_embeddings_per_post_enabled: Generate embeddings for each post
 
@@ -115,6 +123,9 @@ en:
     ai_bot_public_sharing_allowed_groups: "Allow these groups to share AI personal messages with the public via a unique publicly available link. Note: if your site requires login, shares will also require login."
     ai_bot_add_to_header: "Display a button in the header to start a PM with a AI Bot"
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
+
+    ai_discover_enabled: "Enable the discovery search feature"
+    ai_discover_persona: "Persona to use for discovery search feature"
 
     ai_stability_api_key: "API key for the stability.ai API"
     ai_stability_engine: "Image generation engine to use for the stability.ai API"
@@ -413,6 +424,9 @@ en:
         report_runner:
           name: "Report runner"
           description: "Default persona used in the report automation script"
+        discover:
+          name: "Discover"
+          description: "Default persona used in the discoveries feature (complimentary search)"
 
       topic_not_found: "Summary unavailable, topic not found!"
       summarizing: "Summarizing topic"
@@ -631,6 +645,10 @@ en:
       updated: "updated"
       set: "set"
       removed: "removed"
+
+    translation:
+      errors:
+        disabled: "The AI translation feature is not fully configured."
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."

@@ -10,18 +10,6 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
     discourse_post_event_enabled: true,
     events_calendar_categories: "1",
     calendar_categories: "",
-    map_events_to_color: JSON.stringify([
-      {
-        type: "tag",
-        color: "rgb(231, 76, 60)",
-        slug: "awesome-tag",
-      },
-      {
-        type: "category",
-        color: "rgb(140,24,193)",
-        slug: "awesome-category",
-      },
-    ]),
   });
 
   needs.pretender((server, helper) => {
@@ -46,7 +34,6 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               topic: {
                 id: 18449,
                 title: "This is an event",
-                tags: ["awesome-tag"],
               },
             },
             name: "Awesome Event",
@@ -70,7 +57,6 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               topic: {
                 id: 18450,
                 title: "This is an event",
-                category_slug: "awesome-category",
               },
             },
             name: "Awesome Event 2",
@@ -93,7 +79,6 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
               topic: {
                 id: 18451,
                 title: "This is an event",
-                category_slug: "awesome-category",
               },
             },
             name: "Awesome Event 3<script>alert('my awesome event');</script>",
@@ -112,30 +97,6 @@ acceptance("Discourse Calendar - Category Events Calendar", function (needs) {
         "Awesome Event 3<script>alert('my awesome event');</script>",
         "Elements should be escaped and appear as text rather than be the actual element."
       );
-  });
-
-  test("events display the color configured in the map_events_to_color site setting", async function (assert) {
-    await visit("/c/bug/1");
-
-    assert
-      .dom(".fc-event")
-      .exists({ count: 4 }, "Events are displayed on the calendar");
-
-    assert
-      .dom(
-        ".fc-daygrid-event-harness a[href='/t/-/18449/1']  .fc-daygrid-event-dot"
-      )
-      .hasStyle({
-        "border-color": "rgb(231, 76, 60)",
-      });
-
-    assert
-      .dom(
-        ".fc-daygrid-event-harness a[href='/t/-/18450/1'] .fc-daygrid-event-dot"
-      )
-      .hasStyle({
-        "border-color": "rgb(140, 24, 193)",
-      });
   });
 
   test("shows event calendar on category page", async function (assert) {

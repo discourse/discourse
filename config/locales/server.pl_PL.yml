@@ -616,7 +616,7 @@ pl_PL:
     top_weekly: "Najpopularniejsze tematy w tym tygodniu"
     top_daily: "Najpopularniejsze tematy dzisiaj"
     posts: "Aktualne wpisy"
-    private_posts: "Ostatnie wiadomości prywatne"
+    private_posts: "Ostatnie prywatne wiadomości"
     group_posts: "Ostatni wpis z %{group_name}"
     group_mentions: "Ostatnie wspomnienie z %{group_name}"
     user_posts: "Ostatnie wpisy @%{username}"
@@ -1866,7 +1866,7 @@ pl_PL:
     opengraph_image: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon"
     x_summary_large_image: "Karta Twittera 'summary large image' (powinna mieć co najmniej 280 szerokości i co najmniej 150 wysokości, nie może być to .svg). Jeśli pozostanie pusta, zwykłe metadane karty są generowane przy użyciu opengraph_image, o ile nie jest to również .svg"
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
-    email_custom_headers: "A pipe-delimited list of custom email headers"
+    email_custom_headers: "Lista niestandardowych nagłówków wiadomości e-mail"
     email_subject: "Konfigurowalny format tematów standardowych wiadomości e-mail. Zobacz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
     enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego, zanim będą mogli uzyskać dostęp do interfejsu Discourse. To ustawienie nie ma wpływu na uwierzytelnianie API lub 'dostawcy DiscourseConnect'. Jeśli opcja enforce_second_factor_on_external_auth jest włączona, użytkownicy nie będą mogli logować się za pomocą zewnętrznych dostawców uwierzytelniania po skonfigurowaniu uwierzytelniania dwuskładnikowego."
@@ -1981,8 +1981,8 @@ pl_PL:
     whispers_allowed_groups: "Zezwalaj na prywatną komunikację w ramach tematów członkom określonych grup."
     hidden_post_visible_groups: "Zezwól członkom tych grup na przeglądanie ukrytych postów. Użytkownicy personelu zawsze mogą przeglądać ukryte posty."
     allow_index_in_robots_txt: "Określ w pliku robots.txt, że ta strona może być indeksowana przez wyszukiwarki internetowe. Możesz <a href='%{base_path}/admin/customize/robots'>zastąpić swój plik robots.txt tutaj.</a> <b>OSTRZEŻENIE</b>: Błędnie skonfigurowane reguły mogą uniemożliwić prawidłowe indeksowanie Twojej strony."
-    blocked_email_domains: "Rozdzielona pionową kreską lista domen poczty e-mail, z których użytkownicy nie mogą rejestrować kont. Subdomeny są obsługiwane automatycznie dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane. Przykład: mailinator.com|trashmail.net"
-    allowed_email_domains: "Rozdzielona pionową kreską lista domen e-mail, z których użytkownicy MUSZĄ zarejestrować konta. Subdomeny są obsługiwane automatycznie dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane. OSTRZEŻENIE: Użytkownicy z domenami e-mail innymi niż wymienione nie będą mogli się zarejestrować!"
+    blocked_email_domains: "Lista domen e-mail, w których użytkownicy nie mogą rejestrować kont. Subdomeny są automatycznie obsługiwane dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane. Przykład: mailinator.com"
+    allowed_email_domains: "Lista domen e-mail, w których użytkownicy MUSZĄ zarejestrować konta. Subdomeny są automatycznie obsługiwane dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane. OSTRZEŻENIE: użytkownicy z domenami e-mail innymi niż wymienione nie będą mieli dostępu!"
     normalize_emails: "Sprawdź, czy znormalizowany e-mail jest unikalny. Znormalizowany e-mail usuwa wszystkie kropki z nazwy użytkownika i wszystko między symbolami + i @."
     auto_approve_email_domains: "Użytkownicy z adresami e-mail z tej listy domen zostaną automatycznie zatwierdzeni. Subdomeny są obsługiwane automatycznie dla określonych domen. Symbole wieloznaczne * i ? nie są obsługiwane."
     hide_email_address_taken: "Nie informuj użytkowników, że istnieje konto z podanym adresem e-mail podczas rejestracji lub podczas procesu przypominania hasła. Wymagaj podania pełnego adresu email przy prośbach o 'przypomnienie hasła'."
@@ -2379,9 +2379,9 @@ pl_PL:
     enable_category_group_moderation: "Zezwalaj grupom na moderowanie treści w określonych kategoriach"
     group_in_subject: "Ustaw %%{optional_pm} w temacie wiadomości e-mail z nazwą pierwszej grupy w prywatnej wiadomości, zobacz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Dostosuj format tematu dla standardowych wiadomości e-mail</a>"
     allow_anonymous_mode: "Włącz opcję przełączania użytkowników na tryb anonimowy podczas publikowania. Po włączeniu tej opcji użytkownicy mogą zdecydować się na ukrycie swojej tożsamości podczas tworzenia postów lub tematów w całej witrynie. Zobacz także `allow anonymous likes`."
-    allow_likes_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają Twoją witrynę anonimowo, polubienie postów. Po aktywacji użytkownicy mogą zdecydować się na ukrycie swojej tożsamości podczas polubienia postów lub tematów w całej witrynie. Zobacz także `allow_anonymous_mode`."
-    anonymous_posting_min_trust_level: "Minimalny poziom zaufania potrzebny, aby aktywować anonimowe wpisy"
-    anonymous_posting_allowed_groups: "Grupy, które mogą włączyć anonimowe publikowanie"
+    allow_likes_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom anonimowo przeglądającym Twoją witrynę polubienie postów. Po aktywacji użytkownicy mogą ukryć swoją tożsamość podczas polubienia postów lub tematów w witrynie. To ustawienie wymaga włączenia opcji „Zezwól na tryb anonimowy”."
+    anonymous_posting_min_trust_level: "Minimalny poziom zaufania wymagany do włączenia anonimowego publikowania. To ustawienie wymaga włączenia opcji „Zezwól na tryb anonimowy”."
+    anonymous_posting_allowed_groups: "Grupy, które mogą zezwalać na anonimowe publikowanie. To ustawienie wymaga włączenia opcji „Zezwól na tryb anonimowy”."
     anonymous_account_duration_minutes: "Aby chronić anonimowość twórz nowe anonimowe konto co N minut dla każdego użytkownika. Przykład: jeśli ustawione na 600, dopóki nie minie 600 minut od ostatniego wpisu i użytkownik przełącza się na anon, zostanie utworzone nowe anonimowe konto."
     hide_user_profiles_from_public: "Wyłącz karty użytkownika, profile użytkowników i katalog użytkowników dla użytkowników anonimowych."
     hide_new_user_profiles: "Ukryj profile użytkowników poziomu zaufania 1 lub niższego przed innymi i użytkownikami poziomu zaufania 1, dopóki nie opublikują po raz pierwszy. Ta funkcja jest bezwarunkowo wyłączona w witrynach must_approve_users i invite_only."
@@ -2399,7 +2399,7 @@ pl_PL:
     clean_up_unused_staged_users_after_days: "Liczba dni do usunięcia nieużywanego konta użytkownika etapowego (bez żadnych postów). Aby wyłączyć czyszczenie, ustaw na 0."
     user_selected_primary_groups: "Zezwalaj użytkownikom na ustawianie własnej grupy podstawowej"
     max_notifications_per_user: "Maksymalna liczba powiadomień na użytkownika, jeśli ta liczba zostanie przekroczona, stare powiadomienia zostaną usunięte. Egzekwowane co tydzień. Ustaw na 0, aby wyłączyć"
-    allowed_user_website_domains: "Witryna użytkownika zostanie zweryfikowana pod kątem tych domen. Lista rozdzielana znakiem pionowej kreski (|)."
+    allowed_user_website_domains: "Witryna użytkownika zostanie zweryfikowana pod kątem tych domen."
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     get_a_room_threshold: "Liczba wpisów dodanych przez użytkownika w odpowiedzi na wpisy tej samej osoby w jednym temacie, po której zostanie on ostrzeżony."
     dont_feed_the_trolls_threshold: "Liczba flag od innych użytkowników przed otrzymaniem ostrzeżenia."
@@ -2482,7 +2482,7 @@ pl_PL:
     disable_watched_word_checking_in_user_fields: "wyłącz sprawdzanie obserwowanych słów w polach użytkownika"
     watched_words_regular_expressions: "Włącza możliwość filtrowania słów za pomocą wyrażeń regularnych. Po włączeniu ta funkcja grupuje wrażliwe słowa według ich wielkości liter. Następnie kompiluje wszystkie wybrane słowa w jedno wyrażenie regularne, dodając granice słów dla regularnie obserwowanych słów. W rezultacie, ta metoda filtrowania oparta na wyrażeniach regularnych dodaje dodatkową warstwę kontroli nad moderowaniem treści, umożliwiając obsługę bardziej złożonych wzorców słów. Ustawienie pozwala również na łatwą zamianę oryginalnego tekstu na wybrany zamiennik."
     enable_fast_edit: "Dodaje przycisk do menu wyboru wpisu, umożliwiający bezpośrednią edycję zaznaczonego tekstu."
-    old_post_notice_days: "Liczba dni, po której ogłoszenie jest uważane za stare. Pozwala to na wizualne odróżnienie go od nowszych ogłoszeń na stronie."
+    old_post_notice_days: "Liczba dni, po których ogłoszenie jest uznawane za stare. Stare ogłoszenia będą ukryte."
     new_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o wpisach nowych użytkowników."
     returning_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o postach powracających użytkowników."
     returning_users_days: "Ile dni powinno minąć, zanim użytkownik zostanie uznany za powracającego."
@@ -2608,6 +2608,7 @@ pl_PL:
     welcome_banner_image: "Ustaw obraz, który będzie wyświetlany w tle baneru powitalnego."
     welcome_banner_location: "Określa, w którym miejscu strony pojawi się baner powitalny."
     welcome_banner_page_visibility: "Określa, na których stronach będzie wyświetlany baner powitalny."
+    welcome_banner_text_color: "Po skonfigurowaniu ustawienia „Obraz baneru powitalnego” użyj tego ustawienia, aby zmienić kolor tekstu baneru i zapewnić jego czytelność. Jeśli pole pozostanie puste lub nie zostanie przesłany żaden obraz, zostanie użyty „kolor podstawowy” z palety kolorów."
     splash_screen: "Wyświetla tymczasowy ekran ładowania podczas ładowania zasobów witryny"
     navigation_menu: "Określ pasek boczny lub menu rozwijane nagłówka jako główne menu nawigacyjne witryny. Zalecany jest pasek boczny."
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
@@ -2636,7 +2637,7 @@ pl_PL:
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
     rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
     default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
-    viewport_based_mobile_mode: "EKSPERYMENTALNE: wyłącz tryby mobilne/komputerowe oparte na agencie użytkownika i zamiast tego użyj szerokości obszaru widoku."
+    viewport_based_mobile_mode: "Użyj szerokości pola widzenia, aby określić tryby mobilne/komputerowe. To ustawienie zostanie wkrótce usunięte. Jeśli uznasz, że musisz je wyłączyć, daj nam znać <a href='https://meta.discourse.org/t/384280'>na Meta</a>."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
     content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, do których można przetłumaczyć zawartość użytkownika. Wymaga 'włączonej lokalizacji zawartości'."
@@ -2744,7 +2745,7 @@ pl_PL:
   filter:
     description:
       status: "Filtruj tematy według ich statusu"
-      in: "Filtruj tematy według list osobistych"
+      in: "Filtruj tematy na listach osobistych"
       order: "Sortuj tematy według określonego pola"
       category: "Pokaż tematy w określonej kategorii"
       category_any: "Pokaż tematy w dowolnej z określonych kategorii (rozdzielone przecinkami)"
@@ -4018,7 +4019,7 @@ pl_PL:
 
       %{topic_url}
     user_invited_to_private_message_pm_group:
-      title: "Użytkownik zaproszony grupy do PM"
+      title: "Użytkownik zaproszony grupy do PW"
       subject_template: "[%{email_prefix}]%{username} zaprosił @%{group_name} do wiadomości '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -4186,7 +4187,7 @@ pl_PL:
 
         %{respond_instructions}
     user_posted_pm:
-      title: "Użytkownik Napisał PM"
+      title: "Użytkownik opublikował PW"
       subject_template: "[%{email_prefix}] [PW] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -4197,7 +4198,7 @@ pl_PL:
 
         %{respond_instructions}
     user_posted_pm_staged:
-      title: "Użytkownik dodał stopniowe PM"
+      title: "Użytkownik dodał stopniowe PW"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -4457,11 +4458,13 @@ pl_PL:
   page_not_found:
     page_title: "Nie znaleziono strony"
     title: "Ups! Ta strona nie istnieje lub jest prywatna."
-    popular_topics: "Popularne"
-    recent_topics: "Ostatnie"
+    subtitle: "Szukaliśmy wszędzie, ale nie znaleźliśmy poszukiwanej strony"
+    popular_topics: "Popularne tematy"
+    recent_topics: "Ostatnie tematy"
     see_more: "Więcej"
-    search_title: "Szukaj w serwisie"
+    search_title: "Zamiast tego spróbuj wyszukać?"
     search_button: "Wyszukaj"
+    home: "Wróć do strony głównej"
   offline:
     title: "Nie można załadować aplikacji"
     offline_page_message: "Wygląda na to, że jesteś offline! Sprawdź połączenie sieciowe i spróbuj ponownie."
@@ -5591,6 +5594,36 @@ pl_PL:
       approve_and_unhide:
         title: "Zatwierdź i pokaż post"
         complete: "Post zatwierdzony i nieukryty"
+      post_actions:
+        bundle_title: "Co chcesz zrobić z tym wpisem?"
+      no_action_post:
+        title: "Brak akcji"
+        description: "Nie podejmuj żadnych działań w związku ze wpisem"
+        complete: "Nie podjęto żadnych działań w związku ze wpisem"
+      delete_post:
+        title: "Usuń wpis"
+        description: "Usuń ten wpis"
+        complete: "Wpis usunięty"
+      hide_post:
+        title: "Ukryj wpis"
+        description: "Ukryj ten wpis przed widokiem publicznym"
+        complete: "Wpis ukryty"
+      unhide_post:
+        title: "Odkryj wpis"
+        description: "Udostępnij ten wpis wszystkim użytkownikom"
+        complete: "Wpis nieukryty"
+      restore_post:
+        title: "Przywróć wpis"
+        description: "Przywróć ten usunięty wpis"
+        complete: "Wpis przywrócony"
+      edit_post:
+        title: "Edytuj wpis"
+        description: "Edytuj treść tego wpisu"
+        complete: "Wpis edytowany"
+      convert_to_pm:
+        title: "Konwertuj na PW"
+        description: "Zmień ten post na prywatną wiadomość"
+        complete: "Wpis przekształcony w prywatną wiadomość"
       user_actions:
         bundle_title: "Co chcesz zrobić z użytkownikiem?"
       no_action_user:

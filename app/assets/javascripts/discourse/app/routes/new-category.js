@@ -15,9 +15,9 @@ export function setNewCategoryDefaultColors(backgroundColor, textColor) {
 export default class NewCategory extends DiscourseRoute {
   @service router;
 
-  controllerName = "edit-category-tabs";
+  controllerName = "edit-category.tabs";
 
-  templateName = "edit-category-tabs";
+  templateName = "edit-category.tabs";
 
   beforeModel() {
     if (!this.currentUser) {
@@ -75,7 +75,7 @@ export default class NewCategory extends DiscourseRoute {
   defaultGroupPermissions() {
     return [
       {
-        group_name: this.site.groups.findBy("id", 0).name,
+        group_name: this.site.groups.find((g) => g.id === 0).name,
         permission_type: 1,
       },
     ];

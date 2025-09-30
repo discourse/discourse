@@ -577,7 +577,7 @@ class InvitesController < ApplicationController
       info[:username] = current_user.username
     end
 
-    secure_session["invite-key"] = invite.invite_key
+    server_session["invite-key"] = invite.invite_key
 
     respond_to do |format|
       format.html { store_preloaded("invite_info", MultiJson.dump(info)) }

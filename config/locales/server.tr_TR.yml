@@ -1660,7 +1660,6 @@ tr_TR:
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını eklemek için uzak URL'lerden görüntüleri alın."
     download_remote_images_to_local: "Uzak (hotlink'li) görüntüleri indirerek yerel görüntülere dönüştürün; Bu işlem, görüntüler gelecekte uzak siteden kaldırılsa bile içeriği korur."
     download_remote_images_threshold: "Uzak görüntüleri yerel olarak indirmek için gereken minimum disk alanı (yüzde olarak)"
-    disabled_image_download_domains: "Uzak görüntüler bu alanlardan asla indirilmez. Veri kanalı ile sınırlandırılmış liste."
     block_hotlinked_media: "Kullanıcıların gönderilerine uzak (hotlink'li) medya eklemesini engelleyin. \"download_remote_images_to_local\" aracılığıyla indirilmeyen uzak medya, bir yer tutucu bağlantıyla değiştirilir."
     block_hotlinked_media_exceptions: "block_hotlinked_media ayarından muaf olan temel URL'lerin bir listesi. Protokolü dahil edin (örn. https://example.com)."
     editing_grace_period: "Gönderdikten sonra (n) saniye boyunca düzenleme, gönderi geçmişinde yeni bir sürüm oluşturmaz."
@@ -1711,7 +1710,6 @@ tr_TR:
     opengraph_image: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır"
     x_summary_large_image: "Twitter kartı \"özet büyük görüntü\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
-    email_custom_headers: "Özel e-posta başlıklarının boruyla ayrılmış bir listesi"
     email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlanıp bağlanmadığını bilir."
     enforce_second_factor: "Kullanıcıların Discourse kullanıcı arayüzüne erişebilmeleri için iki adımlı kimlik doğrulamayı etkinleştirmelerini zorunlu kılın. Bu ayar API veya \"DiscourseConnect sağlayıcısı\" kimlik doğrulamasını etkilemez. enforce_second_factor_on_external_auth etkinse kullanıcılar iki adımlı kimlik doğrulamayı ayarladıktan sonra harici kimlik doğrulama sağlayıcılarıyla giriş yapamazlar."
@@ -1826,8 +1824,6 @@ tr_TR:
     whispers_allowed_groups: "Belirli grupların üyeleri için konular dahilinde özel iletişime izin verin."
     hidden_post_visible_groups: "Bu grupların üyelerinin gizli gönderileri görmesine izin verin. Personel olan kullanıcılar, gizli gönderileri her zaman görüntüleyebilir."
     allow_index_in_robots_txt: "Robots.txt dosyasında bu sitenin web arama motorları tarafından dizine eklenmesine izin verildiğini belirtin. <a href='%{base_path}/admin/customize/robots'>Robots.txt dosyanızı buradan geçersiz kılabilirsiniz</a>. <b>UYARI</b>: Yanlış yapılandırılmış kurallar sitenizde beklendiği gibi gezinilmesini engelleyebilir."
-    blocked_email_domains: "Kullanıcıların hesap açmasına izin verilmeyen e-posta alan adlarının boruyla ayrılmış bir listesi. Belirtilen alan adları için alt alan adları otomatik olarak işlenir. Joker karakter sembolleri * ve ? desteklenmez. Örnek: mailinator.com|trashmail.net"
-    allowed_email_domains: "Kullanıcıların hesap açmaları GEREKEN e-posta alan adlarının boruyla ayrılmış bir listesi. Belirtilen alan adları için alt alan adları otomatik olarak işlenir. Joker karakter sembolleri olan * ve ? desteklenmez. UYARI: Listelenenler dışındaki e-posta alan adlarına sahip kullanıcılara izin verilmez!"
     normalize_emails: "Normalleştirilmiş e-postanın benzersiz olup olmadığını kontrol edin. Normalleştirilmiş e-posta, kullanıcı adındaki tüm noktaları ve + ve @ sembolleri arasındaki her şeyi kaldırır."
     auto_approve_email_domains: "Bu alan adları listesinden e-posta adresleri olan kullanıcılar otomatik olarak onaylanır. Belirtilen alan adları için alt alan adları otomatik olarak işlenir. Joker karakter sembolleri olan * ve ? desteklenmez."
     hide_email_address_taken: "Kayıt sırasında veya şifremi unuttum akışı sırasında kullanıcıları belirli bir e-posta adresiyle bir hesabın var olduğu konusunda bilgilendirmeyin. \"Şifremi unuttum\" talepleri için tam e-postayı gerekli kılın."
@@ -2223,9 +2219,6 @@ tr_TR:
     enable_category_group_moderation: "Grupların belirli kategorilerdeki içeriği denetlemesine izin verin"
     group_in_subject: "Kişisel mesajdaki ilk grubun adına e-posta konusunda %%{optional_pm} olarak ayarlayın, bkz.: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Standart e-postalar için konu formatını özelleştirme</a>"
     allow_anonymous_mode: "Kullanıcıların gönderi paylaşmak için anonim moda geçme seçeneğini etkinleştirin. Etkinleştirildiğinde, kullanıcılar site genelinde gönderi veya konu oluştururken kimliklerinin gizlenmesini tercih edebilirler. Ayrıca \"anonim beğenilere izin ver\" bölümüne bakın."
-    allow_likes_in_anonymous_mode: "Sitenizde anonim olarak gezinen kullanıcıların gönderileri beğenmesine izin vermek için bu ayarı etkinleştirin. Etkinleştirildiğinde, kullanıcılar site genelinde gönderileri veya konuları beğenirken kimliklerinin gizlenmesini tercih edebilirler. Ayrıca `allow_anonymous_mode` ögesine bakın."
-    anonymous_posting_min_trust_level: "Anonim gönderimi etkinleştirmek için gereken minimum güven seviyesi"
-    anonymous_posting_allowed_groups: "Anonim gönderimi etkinleştirmesine izin verilen gruplar"
     anonymous_account_duration_minutes: "Anonimliği korumak için her kullanıcı için her N dakikada bir yeni bir anonim hesap oluşturun. Örnek: 600 olarak ayarlanırsa son gönderiden itibaren 600 dakika geçer geçmez VE kullanıcı anonime geçerse yeni bir anonim hesap oluşturulur."
     hide_user_profiles_from_public: "Anonim kullanıcılar için kullanıcı kartlarını, kullanıcı profillerini ve kullanıcı dizinini devre dışı bırakın."
     hide_new_user_profiles: "Güven seviyesi 1 veya daha düşük kullanıcı profillerini herkesten gizleyin ve güven seviyesi 1 olan kullanıcıları ilk kez gönderi yapana kadar koruyun. Bu özellik must_approve_users ve invite_only sitelerinde koşulsuz olarak devre dışıdır."
@@ -2243,7 +2236,6 @@ tr_TR:
     clean_up_unused_staged_users_after_days: "Kullanılmayan bir aşamalı kullanıcı (herhangi bir gönderisi olmayan) kaldırılmadan önceki gün sayısı. Temizlemeyi devre dışı bırakmak için 0 olarak ayarlayın."
     user_selected_primary_groups: "Kullanıcıların kendi birincil gruplarını belirlemelerine izin verin"
     max_notifications_per_user: "Kullanıcı başına maksimum bildirim miktarı, bu sayı aşılırsa eski bildirimler silinir. Haftalık olarak uygulanır. Devre dışı bırakmak için 0 olarak ayarlayın"
-    allowed_user_website_domains: "Kullanıcı web sitesi bu alan adlarına göre doğrulanır. Boruyla ayrılmış liste."
     allow_profile_backgrounds: "Kullanıcıların profil arka planları yüklemesine izin verin."
     get_a_room_threshold: "Bir kullanıcının uyarılmadan önce aynı konuda aynı kişiye yapması gereken gönderi sayısı."
     dont_feed_the_trolls_threshold: "Uyarılmadan önce diğer kullanıcılardan gelen bayrak sayısı."
@@ -2326,7 +2318,6 @@ tr_TR:
     disable_watched_word_checking_in_user_fields: "kullanıcı alanlarında izlenen kelime kontrolünü devre dışı bırak"
     watched_words_regular_expressions: "Kelimeleri filtrelemek için düzenli ifadelerin kullanılmasına izin verir. Etkinleştirilirse bu özellik hassas sözcükleri büyük/küçük harf duyarlılıklarına göre gruplar. Ardından, seçilen tüm kelimeleri tek bir düzenli ifadede derler ve düzenli olarak izlenen kelimeler için kelime sınırları ekler. Sonuç olarak, bu regex tabanlı filtreleme yöntemi, daha karmaşık kelime kalıplarını destekleyerek içerik denetimi üzerinde ekstra bir kontrol katmanı ekler. Bu ayar aynı zamanda orijinal metnin yerine tercih edilen metnin kolayca yerleştirilmesine de olanak tanır."
     enable_fast_edit: "Satır içi küçük bir seçimi düzenlemek için yazı seçimi menüsüne bir düğme ekler."
-    old_post_notice_days: "Bir gönderi bildiriminin kaç gün sonra eski sayılacağı. Bu, onu sitedeki daha yeni bildirimlerden görsel olarak ayırır."
     new_user_notice_tl: "Yeni kullanıcı gönderi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcı gönderisi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_users_days: "Bir kullanıcının geri döndüğünün kabul edilmesi için kaç gün geçmesi gerektiği."
@@ -2477,7 +2468,6 @@ tr_TR:
     view_raw_email_allowed_groups: "Gelen bir e-posta tarafından oluşturulmuşsa gönderinin ham e-posta içeriğini görüntüleyebilen gruplar. Buna e-posta başlıkları ve diğer teknik bilgiler dâhildir."
     rich_editor: "Besteci için zengin düzenleyiciyi etkinleştirin, böylece tüm kullanıcılar mevcut Markdown modu ile daha sezgisel ve kullanıcı dostu kompozisyonlar için yeni zengin metin düzenleyicisi arasında geçiş yapabilirler."
     default_composition_mode: "Topluluğunuzun bestecisi için varsayılan modu ayarlayın. Zengin metin modu çoğu kullanıcı için daha modern ve tanıdık bir yazma deneyimi sağlarken, Markdown modu daha teknik kitleler için uygun olabilir. Üyeler, besteci araç çubuğundaki geçiş düğmesini kullanarak modlar arasında geçiş yapabilirler."
-    viewport_based_mobile_mode: "DENEYSEL: Kullanıcı temsilcisi tabanlı mobil/masaüstü modlarını devre dışı bırakın ve bunun yerine görünüm genişliğini kullanın."
     reviewable_ui_refresh: "İnceleme kuyruğunda deneysel yeni kullanıcı arayüzünü kullanabilen gruplar."
     content_localization_enabled: "Kullanıcılara tarayıcı veya kullanıcı dil tercihlerine göre yerelleştirilmiş içerik görüntüler. Bu içerik kategoriler, etiketler, gönderiler ve konular içerebilir. Desteklenen yerel ayarlar, \"İçerik yerelleştirmesi tarafından desteklenen yerel ayarlar\" bölümünde belirtilmiştir."
     content_localization_supported_locales: "Kullanıcı içeriğinin çevrilebileceği desteklenen yerel ayarların listesi. \"İçerik yerelleştirmesinin etkinleştirilmesini\" gerektirir."
@@ -2577,7 +2567,6 @@ tr_TR:
   filter:
     description:
       status: "Konuları durumlarına göre filtreleyin"
-      in: "Kişisel listelerdeki konuları filtreleyin"
       order: "Konuları belirli bir alana göre sıralayın"
       category: "Belirli bir kategorideki konuları gösterin"
       category_any: "Belirtilen kategorilerden herhangi birindeki konuları gösterin (virgülle ayrılmış)"
@@ -4181,10 +4170,7 @@ tr_TR:
   page_not_found:
     page_title: "Sayfa Bulunamadı"
     title: "Hay aksi! Bu sayfa mevcut değil ya da gizli."
-    popular_topics: "Popüler"
-    recent_topics: "Yakın zaman"
     see_more: "Daha fazla"
-    search_title: "Bu sitede ara"
     search_button: "Ara"
   offline:
     title: "Uygulama yüklenemiyor"
@@ -5296,6 +5282,16 @@ tr_TR:
       approve_and_unhide:
         title: "Gönderiyi onayla ve Gizlemesini kaldır"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
+      no_action_post:
+        title: "Eylem yok"
+      delete_post:
+        title: "Gönderiyi sil"
+        complete: "Gönderi silindi"
+      hide_post:
+        title: "Gönderiyi gizle"
+      restore_post:
+        title: "Gönderiyi geri yükle"
+        complete: "Gönderi geri yüklendi"
       no_action_user:
         title: "Eylem yok"
       silence_user:

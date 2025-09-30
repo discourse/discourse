@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe Jobs::TopicsLocaleDetectionBackfill do
-  fab!(:topic) { Fabricate(:topic, locale: nil) }
   subject(:job) { described_class.new }
+
+  fab!(:topic) { Fabricate(:topic, locale: nil) }
 
   before do
     assign_fake_provider_to(:ai_default_llm_model)

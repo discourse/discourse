@@ -629,7 +629,6 @@ bs_BA:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
-    disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
@@ -638,7 +637,6 @@ bs_BA:
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
-    email_custom_headers: "A pipe-delimited list of custom email headers"
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     polling_interval: "How often should logged in user clients poll in milliseconds"
@@ -907,10 +905,7 @@ bs_BA:
       title: "Vaš post je odobren"
   page_not_found:
     page_title: "Stranica nije pronađena"
-    popular_topics: "Popularno"
-    recent_topics: "Nove"
     see_more: "Više"
-    search_title: "Pretraži stranicu"
     search_button: "Pretraži"
   upload:
     edit_reason: "downloaded local copies of images"
@@ -1090,6 +1085,8 @@ bs_BA:
           complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      delete_post:
+        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "user"

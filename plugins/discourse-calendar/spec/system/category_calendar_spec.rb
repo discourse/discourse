@@ -24,7 +24,9 @@ describe "Category calendar", type: :system do
   it "shows the calendar on the category page" do
     category_page.visit(category)
 
-    expect(category_page).to have_selector("#category-events-calendar .fc")
+    expect(category_page).to have_selector(
+      "#category-events-calendar.--discovery-list-container-top .fc",
+    )
     expect(category_page).to have_css(
       ".fc-daygrid-event-harness .fc-event-title",
       text: "Sell a boat party",
@@ -39,5 +41,16 @@ describe "Category calendar", type: :system do
 
     expect(page).to have_current_path("#{category.relative_url}/l/latest")
     expect(category_page).to have_selector("#category-events-calendar .fc")
+  end
+
+  context "when discourse_post_event_enabled is false" do
+    before { SiteSetting.discourse_post_event_enabled = false }
+
+    it "does not crash the page" do
+      category_page.visit(category)
+
+      expect(category_page).to have_no_selector("#category-events-calendar .fc")
+      expect(category_page).to have_content("Sell a boat party")
+    end
   end
 end
