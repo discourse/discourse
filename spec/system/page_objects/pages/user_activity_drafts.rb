@@ -33,8 +33,7 @@ module PageObjects
       end
 
       def select_draft(index = 0)
-        checkboxes = page.all(".bulk-select-checkbox")
-        checkboxes[index].click
+        page.find(".post-list-item:nth-of-type(#{index + 1}) .bulk-select-checkbox").click
         self
       end
 
@@ -82,23 +81,19 @@ module PageObjects
       end
 
       def has_draft_selected?(index = 0)
-        drafts = page.all(".post-list-item")
-        drafts[index].has_css?(".post-list-item--selected")
+        page.has_css?(".post-list-item:nth-of-type(#{index + 1}) .post-list-item--selected")
       end
 
       def has_no_draft_selected?(index = 0)
-        drafts = page.all(".post-list-item")
-        drafts[index].has_no_css?(".post-list-item--selected")
+        page.has_no_css?(".post-list-item:nth-of-type(#{index + 1}) .post-list-item--selected")
       end
 
       def has_checkbox_checked?(index = 0)
-        checkboxes = page.all(".bulk-select-checkbox")
-        checkboxes[index].checked?
+        page.has_css?(".post-list-item:nth-of-type(#{index + 1}) .bulk-select-checkbox:checked")
       end
 
       def has_checkbox_unchecked?(index = 0)
-        checkboxes = page.all(".bulk-select-checkbox")
-        !checkboxes[index].checked?
+        page.has_no_css?(".post-list-item:nth-of-type(#{index + 1}) .bulk-select-checkbox:checked")
       end
     end
   end
