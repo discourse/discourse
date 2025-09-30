@@ -52,6 +52,7 @@ module Migrations::Database::IntermediateDB
     # @param approved_at                 [Time, nil]
     # @param approved_by_id              [Integer, String, nil]
     # @param avatar_type                 [Integer, nil]
+    #   Any constant from AvatarType (e.g. AvatarType::AVATAR)
     # @param created_at                  [Time]
     # @param date_of_birth               [Time, nil]
     # @param first_seen_at               [Time, nil]
@@ -75,6 +76,8 @@ module Migrations::Database::IntermediateDB
     # @param views                       [Integer, nil]
     #
     # @return [void]
+    #
+    # @see Migrations::Database::IntermediateDB::Enums::AvatarType
     def self.create(
       original_id:,
       active: nil,

@@ -13,11 +13,11 @@ CREATE TABLE badge_groupings
 
 CREATE TABLE badges
 (
-    original_id         NUMERIC  NOT NULL PRIMARY KEY,
+    original_id         NUMERIC      NOT NULL PRIMARY KEY,
     allow_title         BOOLEAN,
     auto_revoke         BOOLEAN,
     badge_grouping_id   NUMERIC,
-    badge_type_id       NUMERIC  NOT NULL,
+    badge_type_id       ENUM_INTEGER NOT NULL,
     created_at          DATETIME,
     description         TEXT,
     enabled             BOOLEAN,
@@ -27,7 +27,7 @@ CREATE TABLE badges
     listable            BOOLEAN,
     long_description    TEXT,
     multiple_grant      BOOLEAN,
-    name                TEXT     NOT NULL,
+    name                TEXT         NOT NULL,
     "query"             TEXT,
     show_in_post_header BOOLEAN,
     show_posts          BOOLEAN,
@@ -37,7 +37,7 @@ CREATE TABLE badges
 
 CREATE TABLE categories
 (
-    original_id                               NUMERIC  NOT NULL PRIMARY KEY,
+    original_id                               NUMERIC      NOT NULL PRIMARY KEY,
     about_topic_title                         TEXT,
     all_topics_wiki                           BOOLEAN,
     allow_badges                              BOOLEAN,
@@ -60,7 +60,7 @@ CREATE TABLE categories
     locale                                    TEXT,
     mailinglist_mirror                        BOOLEAN,
     minimum_required_tags                     INTEGER,
-    name                                      TEXT     NOT NULL,
+    name                                      TEXT         NOT NULL,
     navigate_to_first_post_after_read         BOOLEAN,
     num_featured_topics                       INTEGER,
     parent_category_id                        NUMERIC,
@@ -69,11 +69,11 @@ CREATE TABLE categories
     read_restricted                           BOOLEAN,
     search_priority                           INTEGER,
     show_subcategory_list                     BOOLEAN,
-    slug                                      TEXT     NOT NULL,
+    slug                                      TEXT         NOT NULL,
     sort_ascending                            BOOLEAN,
     sort_order                                TEXT,
-    style_type                                INTEGER,
-    subcategory_list_style                    TEXT,
+    style_type                                ENUM_INTEGER,
+    subcategory_list_style                    ENUM_TEXT,
     text_color                                TEXT,
     topic_featured_link_allowed               BOOLEAN,
     topic_id                                  NUMERIC,
@@ -82,7 +82,7 @@ CREATE TABLE categories
     uploaded_background_id                    TEXT,
     uploaded_logo_dark_id                     TEXT,
     uploaded_logo_id                          TEXT,
-    user_id                                   NUMERIC  NOT NULL
+    user_id                                   NUMERIC      NOT NULL
 );
 
 CREATE TABLE category_custom_fields
@@ -95,32 +95,32 @@ CREATE TABLE category_custom_fields
 
 CREATE TABLE category_users
 (
-    category_id        NUMERIC  NOT NULL,
-    user_id            NUMERIC  NOT NULL,
+    category_id        NUMERIC      NOT NULL,
+    user_id            NUMERIC      NOT NULL,
     last_seen_at       DATETIME,
-    notification_level INTEGER  NOT NULL,
+    notification_level ENUM_INTEGER NOT NULL,
     PRIMARY KEY (category_id, user_id)
 );
 
 CREATE TABLE group_users
 (
-    group_id           NUMERIC  NOT NULL,
-    user_id            NUMERIC  NOT NULL,
+    group_id           NUMERIC      NOT NULL,
+    user_id            NUMERIC      NOT NULL,
     created_at         DATETIME,
-    notification_level INTEGER,
+    notification_level ENUM_INTEGER,
     owner              BOOLEAN,
     PRIMARY KEY (group_id, user_id)
 );
 
 CREATE TABLE "groups"
 (
-    original_id                        NUMERIC  NOT NULL PRIMARY KEY,
+    original_id                        NUMERIC      NOT NULL PRIMARY KEY,
     allow_membership_requests          BOOLEAN,
     allow_unknown_sender_topic_replies BOOLEAN,
     automatic_membership_email_domains TEXT,
     bio_raw                            TEXT,
     created_at                         DATETIME,
-    default_notification_level         INTEGER,
+    default_notification_level         ENUM_INTEGER,
     existing_id                        NUMERIC,
     flair_bg_color                     TEXT,
     flair_color                        TEXT,
@@ -132,7 +132,7 @@ CREATE TABLE "groups"
     membership_request_template        TEXT,
     mentionable_level                  INTEGER,
     messageable_level                  INTEGER,
-    name                               TEXT     NOT NULL,
+    name                               TEXT         NOT NULL,
     primary_group                      BOOLEAN,
     public_admission                   BOOLEAN,
     public_exit                        BOOLEAN,
@@ -328,14 +328,14 @@ CREATE TABLE user_options
 
 CREATE TABLE users
 (
-    original_id               NUMERIC   NOT NULL PRIMARY KEY,
+    original_id               NUMERIC      NOT NULL PRIMARY KEY,
     active                    BOOLEAN,
     admin                     BOOLEAN,
     approved                  BOOLEAN,
     approved_at               DATETIME,
     approved_by_id            NUMERIC,
-    avatar_type               INTEGER,
-    created_at                DATETIME  NOT NULL,
+    avatar_type               ENUM_INTEGER,
+    created_at                DATETIME     NOT NULL,
     date_of_birth             DATE,
     first_seen_at             DATETIME,
     flair_group_id            NUMERIC,
@@ -352,9 +352,9 @@ CREATE TABLE users
     silenced_till             DATETIME,
     staged                    BOOLEAN,
     title                     TEXT,
-    trust_level               INTEGER   NOT NULL,
+    trust_level               INTEGER      NOT NULL,
     uploaded_avatar_id        TEXT,
-    username                  TEXT      NOT NULL,
+    username                  TEXT         NOT NULL,
     views                     INTEGER
 );
 

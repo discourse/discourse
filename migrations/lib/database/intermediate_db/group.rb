@@ -49,6 +49,7 @@ module Migrations::Database::IntermediateDB
     # @param bio_raw                              [String, nil]
     # @param created_at                           [Time, nil]
     # @param default_notification_level           [Integer, nil]
+    #   Any constant from GroupNotificationLevel (e.g. GroupNotificationLevel::MUTED)
     # @param existing_id                          [Integer, String, nil]
     # @param flair_bg_color                       [String, nil]
     # @param flair_color                          [String, nil]
@@ -69,6 +70,8 @@ module Migrations::Database::IntermediateDB
     # @param visibility_level                     [Integer, nil]
     #
     # @return [void]
+    #
+    # @see Migrations::Database::IntermediateDB::Enums::GroupNotificationLevel
     def self.create(
       original_id:,
       allow_membership_requests: nil,

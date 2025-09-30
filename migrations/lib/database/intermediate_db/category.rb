@@ -100,7 +100,9 @@ module Migrations::Database::IntermediateDB
     # @param sort_ascending                              [Boolean, nil]
     # @param sort_order                                  [String, nil]
     # @param style_type                                  [Integer, nil]
+    #   Any constant from CategoryStyleType (e.g. CategoryStyleType::SQUARE)
     # @param subcategory_list_style                      [String, nil]
+    #   Any constant from SubcategoryListStyle (e.g. SubcategoryListStyle::BOXES)
     # @param text_color                                  [String, nil]
     # @param topic_featured_link_allowed                 [Boolean, nil]
     # @param topic_id                                    [Integer, String, nil]
@@ -112,6 +114,9 @@ module Migrations::Database::IntermediateDB
     # @param user_id                                     [Integer, String]
     #
     # @return [void]
+    #
+    # @see Migrations::Database::IntermediateDB::Enums::CategoryStyleType
+    # @see Migrations::Database::IntermediateDB::Enums::SubcategoryListStyle
     def self.create(
       original_id:,
       about_topic_title: nil,

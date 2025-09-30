@@ -11,6 +11,9 @@ schema:
   tables:
     badges:
       columns:
+        modify:
+          - name: "badge_type_id"
+            enum: badge_type
         add:
           - name: "existing_id"
             datatype: "numeric"
@@ -20,6 +23,11 @@ schema:
     badge_groupings: {}
     categories:
       columns:
+        modify:
+          - name: "style_type"
+            enum: category_style_type
+          - name: "subcategory_list_style"
+            enum: subcategory_list_style
         add:
           - name: "about_topic_title"
             datatype: text
@@ -44,6 +52,9 @@ schema:
     category_users:
       primary_key_column_names: [ "category_id", "user_id" ]
       columns:
+        modify:
+          - name: "notification_level"
+            enum: category_notification_level
         exclude:
            - "id"
     category_custom_fields:
@@ -55,11 +66,17 @@ schema:
     group_users:
       primary_key_column_names: [ "group_id", "user_id" ]
       columns:
+        modify:
+          - name: "notification_level"
+            enum: group_notification_level
         exclude:
           - "id"
           - "first_unread_pm_at"
     groups:
       columns:
+        modify:
+          - name: "default_notification_level"
+            enum: group_notification_level
         add:
           - name: "existing_id"
             datatype: numeric
@@ -69,7 +86,6 @@ schema:
           - "automatic_membership_email_domains"
           - "bio_raw"
           - "created_at"
-          - "default_notification_level"
           - "flair_bg_color"
           - "flair_color"
           - "flair_icon"
@@ -180,7 +196,7 @@ schema:
           - name: "original_username"
             datatype: text
           - name: "avatar_type"
-            datatype: integer
+            enum: avatar_type
         exclude:
           - "flag_level"
           - "last_emailed_at"
@@ -481,6 +497,30 @@ schema:
         - "web_hook_events"
         - "web_hook_events_daily_aggregates"
         - "web_hooks"
+
+  enums:
+    avatar_type:
+      values:
+        - "avatar"
+        - "gravatar"
+    badge_type:
+      source: BadgeType.pluck(:name, :id).to_h
+    category_notification_level:
+      source: CategoryUser.notification_levels
+    category_style_type:
+      source: Category.style_types
+    subcategory_list_style:
+      strings:
+        rows: "rows"
+        rows_with_featured_topics: "rows_with_featured_topics"
+        boxes: "boxes"
+        boxes_with_featured_topics: "boxes_with_featured_topics"
+    group_notification_level:
+      source: GroupUser.notification_levels
+    post_action_type:
+      source: PostActionType.types
+    upload_type:
+      source: UploadCreator::TYPES_TO_CROP
 
 plugins:
   - "automation"
