@@ -168,7 +168,7 @@ export default class DButton extends Component {
       class={{concatClass
         @class
         (if @isLoading "is-loading")
-        (if @btnLink "btn-link" "btn")
+        (if this.btnLink "btn-link" "btn")
         (if this.noText "no-text")
         this.btnType
       }}
