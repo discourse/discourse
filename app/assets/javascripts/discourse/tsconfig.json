@@ -7,6 +7,9 @@
     "composite": true,
     "rootDir": "./app",
     "outDir": "./declarations",
-    "types": ["ember-source/types"]
+    "types": ["ember-source/types"],
+    "paths": {
+      "discourse/*": ["./app/*"]
+    },
   }
 }
