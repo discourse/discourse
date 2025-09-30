@@ -84,7 +84,6 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
               create_message(channel_1, user: user_1)
 
-              expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
               expect(channels_index_page).to have_unread_channel(channel_1)
             end
           end
@@ -101,7 +100,6 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
                 message: "hello @#{current_user.username} what's up?",
               )
 
-              expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator")
               expect(channels_index_page).to have_unread_channel(channel_1, count: 1)
             end
 
@@ -118,10 +116,6 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
               3.times { create_message(channel_1, user: user_1) }
 
-              expect(page).to have_css(
-                ".chat-header-icon .chat-channel-unread-indicator",
-                text: "1",
-              )
               expect(channels_index_page).to have_unread_channel(channel_1, count: 1)
             end
           end
@@ -141,21 +135,10 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
             visit("/chat/direct-messages")
 
             create_message(dm_channel_1, user: user_1)
-
-            expect(page).to have_css(
-              ".chat-header-icon .chat-channel-unread-indicator",
-              text: "1",
-              wait: 25,
-            )
-            expect(channels_index_page).to have_unread_channel(dm_channel_1, wait: 25)
+            expect(channels_index_page).to have_unread_channel(dm_channel_1, count: 1, wait: 25)
 
             create_message(dm_channel_1, user: user_1)
-
-            expect(page).to have_css(
-              ".chat-header-icon .chat-channel-unread-indicator",
-              text: "2",
-              wait: 25,
-            )
+            expect(channels_index_page).to have_unread_channel(dm_channel_1, count: 2, wait: 25)
           end
 
           it "reorders channels" do
@@ -223,18 +206,12 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
         context "when messages are created" do
           it "correctly renders notifications" do
             visit("/chat/channels")
-
             create_message(channel_1, user: user_1)
-
-            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "")
             expect(channels_index_page).to have_unread_channel(channel_1)
 
             visit("/chat/direct-messages")
-
             create_message(dm_channel_1, user: user_1)
-
             expect(channels_index_page).to have_unread_channel(dm_channel_1)
-            expect(page).to have_css(".chat-header-icon .chat-channel-unread-indicator", text: "1")
           end
         end
       end

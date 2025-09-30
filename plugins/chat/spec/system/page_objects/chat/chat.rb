@@ -33,6 +33,11 @@ module PageObjects
         has_no_css?("html.has-chat")
       end
 
+      def back_to_channels_list
+        find(".d-icon.d-icon-chevron-left").click
+        has_css?("html.has-chat")
+      end
+
       def has_header_href?(href)
         find(".chat-header-icon").has_link?(href: href)
       end
