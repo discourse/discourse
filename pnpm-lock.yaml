@@ -1112,8 +1112,8 @@ importers:
         specifier: ^8.5.6
         version: 8.5.6
       postcss-js:
-        specifier: ^5.0.0
-        version: 5.0.0(postcss@8.5.6)
+        specifier: ^5.0.1
+        version: 5.0.1(postcss@8.5.6)
       postcss-media-minmax:
         specifier: ^5.0.0
         version: 5.0.0(postcss@8.5.6)
@@ -7381,8 +7381,8 @@ packages:
     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
     engines: {node: '>= 0.4'}
 
-  postcss-js@5.0.0:
-    resolution: {integrity: sha512-wIYeafewkdxYTGL8ZLpwH4avehYTtPSbcL5Ldlxi7atDaoIyjN0zSeQ7kDJlpo0HGkYWAbVKuw9h4L/wnT2uKQ==}
+  postcss-js@5.0.1:
+    resolution: {integrity: sha512-PfV0Jx9berzyIJ9FlH6ElRJUTvUy4+K+j5DOA8hjZNRMVwtnSSH9JTTbohL8GTDM+Gtsl0SDugPCQatXKea9/Q==}
     engines: {node: ^20 || ^22 || >= 24}
     peerDependencies:
       postcss: ^8.4.21
@@ -17011,7 +17011,7 @@ snapshots:
 
   possible-typed-array-names@1.1.0: {}
 
-  postcss-js@5.0.0(postcss@8.5.6):
+  postcss-js@5.0.1(postcss@8.5.6):
     dependencies:
       camelcase-css: 2.0.1
       postcss: 8.5.6
