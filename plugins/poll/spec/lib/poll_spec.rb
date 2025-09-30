@@ -340,43 +340,6 @@ RSpec.describe DiscoursePoll::Poll do
   end
 
   describe ".serialized_voters" do
-    shared_examples "serialized_voters tests" do
-      before do
-        votes.each_pair { |user, options| DiscoursePoll::Poll.vote(user, post.id, "poll", options) }
-      end
-
-      it "returns all serialized voters" do
-        voters = DiscoursePoll::Poll.serialized_voters(poll)
-        if poll.ranked_choice?
-          voters&.transform_values! do |users|
-            users.sort_by { |ranked_u| ranked_u[:user][:username] }
-          end
-        end
-
-        expect(voters).to eq(expected_voters)
-      end
-
-      it "correctly paginates voters" do
-        page = 1
-        loop do
-          expected = expected_paginated_voters[page - 1]
-          opts = { page:, limit: 2 }.with_indifferent_access
-
-          voters = DiscoursePoll::Poll.serialized_voters(poll, opts)
-          if poll.ranked_choice?
-            voters&.transform_values! do |users|
-              users.sort_by { |ranked_u| ranked_u[:user][:username] }
-            end
-          end
-
-          expect(voters).to eq(expected)
-
-          break unless voters
-          page += 1
-        end
-      end
-    end
-
     context "with a regular poll" do
       let(:post) { post_with_regular_poll }
       let(:poll) { post.polls.first }
@@ -401,7 +364,28 @@ RSpec.describe DiscoursePoll::Poll do
       end
       let(:expected_paginated_voters) { [expected_voters] }
 
-      include_examples "serialized_voters tests"
+      before do
+        votes.each_pair { |user, options| DiscoursePoll::Poll.vote(user, post.id, "poll", options) }
+      end
+
+      it "returns all serialized voters" do
+        voters = DiscoursePoll::Poll.serialized_voters(poll)
+        expect(voters).to eq(expected_voters)
+      end
+
+      it "correctly paginates voters" do
+        page = 1
+        loop do
+          expected = expected_paginated_voters[page - 1]
+          opts = { page:, limit: 2 }.with_indifferent_access
+
+          voters = DiscoursePoll::Poll.serialized_voters(poll, opts)
+          expect(voters).to eq(expected)
+
+          break unless voters
+          page += 1
+        end
+      end
     end
 
     context "with a multi-choice poll" do
@@ -454,7 +438,28 @@ RSpec.describe DiscoursePoll::Poll do
         ]
       end
 
-      include_examples "serialized_voters tests"
+      before do
+        votes.each_pair { |user, options| DiscoursePoll::Poll.vote(user, post.id, "poll", options) }
+      end
+
+      it "returns all serialized voters" do
+        voters = DiscoursePoll::Poll.serialized_voters(poll)
+        expect(voters).to eq(expected_voters)
+      end
+
+      it "correctly paginates voters" do
+        page = 1
+        loop do
+          expected = expected_paginated_voters[page - 1]
+          opts = { page:, limit: 2 }.with_indifferent_access
+
+          voters = DiscoursePoll::Poll.serialized_voters(poll, opts)
+          expect(voters).to eq(expected)
+
+          break unless voters
+          page += 1
+        end
+      end
     end
 
     context "with a ranked choice poll" do
@@ -558,7 +563,34 @@ RSpec.describe DiscoursePoll::Poll do
         ]
       end
 
-      include_examples "serialized_voters tests"
+      before do
+        votes.each_pair { |user, options| DiscoursePoll::Poll.vote(user, post.id, "poll", options) }
+      end
+
+      it "returns all serialized voters" do
+        voters = DiscoursePoll::Poll.serialized_voters(poll)
+        voters&.transform_values! do |users|
+          users.sort_by { |ranked_u| ranked_u[:user][:username] }
+        end
+        expect(voters).to eq(expected_voters)
+      end
+
+      it "correctly paginates voters" do
+        page = 1
+        loop do
+          expected = expected_paginated_voters[page - 1]
+          opts = { page:, limit: 2 }.with_indifferent_access
+
+          voters = DiscoursePoll::Poll.serialized_voters(poll, opts)
+          voters&.transform_values! do |users|
+            users.sort_by { |ranked_u| ranked_u[:user][:username] }
+          end
+          expect(voters).to eq(expected)
+
+          break unless voters
+          page += 1
+        end
+      end
     end
   end
 end
