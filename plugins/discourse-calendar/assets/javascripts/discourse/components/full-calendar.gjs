@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { modifier as modifierFn } from "ember-modifier";
 import loadFullCalendar from "discourse/lib/load-full-calendar";
 import DiscourseURL from "discourse/lib/url";
 import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
@@ -36,6 +37,19 @@ export default class FullCalendar extends Component {
   @controller topic;
 
   calendar = null;
+
+  // TODO: remove this workaround when updating to fullcalendar v7
+  forceUpdateSize = modifierFn((element) => {
+    const observer = new ResizeObserver(() => {
+      this.calendar?.updateSize?.();
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  });
 
   willDestroy() {
     this.calendar?.destroy?.();
@@ -187,6 +201,7 @@ export default class FullCalendar extends Component {
     <div
       {{didInsert this.setupCalendar}}
       {{didUpdate this.updateCalendar @events this.capabilities.viewport.md}}
+      {{this.forceUpdateSize}}
       ...attributes
     >
       {{! The calendar will be rendered inside this div by the library }}
