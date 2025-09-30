@@ -45,6 +45,11 @@ export BASE="forum"
 # extensions ('*') so the import won't fail on extension checks. All settings are restored after
 # the uploads step.
 # export LOOSEN_UPLOAD_CONSTRAINTS="true"
+#
+# Optional: import users as staged. When enabled, users are created as staged instead of full accounts.
+# Useful for historical migrations or when email delivery should be suppressed until first login.
+# Set to "true" (case-insensitive) to enable.
+# export STAGE_IMPORTED_USERS="true"
 =end
 
 class ImportScripts::MylittleforumSQL < ImportScripts::Base
@@ -54,18 +59,19 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   DB_USER = ENV["DB_USER"] || "root"
   TABLE_PREFIX = ENV["TABLE_PREFIX"] || "forum_"
   IMPORT_AFTER = ENV["IMPORT_AFTER"] || "1970-01-01"
-  IMAGE_BASE = ENV["IMAGE_BASE"] || ""
+  IMAGE_BASE = (ENV["IMAGE_BASE"] || "").strip
   BASE = ENV["BASE"] || "forum/"
-  PARENT_CATEGORY = ENV["PARENT_CATEGORY"]
-  REWRITE_LINKS = (ENV["REWRITE_LINKS"] || "").strip.upcase == "TRUE"
-  UPLOADS_DIR = ENV["UPLOADS_DIR"]
-  REPAIR_UPLOAD_LINKS = (ENV["REPAIR_UPLOAD_LINKS"] || "").strip.upcase == "TRUE"
-  LOOSEN_UPLOAD_CONSTRAINTS = (ENV["LOOSEN_UPLOAD_CONSTRAINTS"] || "").strip.upcase == "TRUE"
+  PARENT_CATEGORY = (ENV["PARENT_CATEGORY"] || "").strip
+  REWRITE_LINKS = (ENV["REWRITE_LINKS"] || "").strip.casecmp?("true")
+  UPLOADS_DIR = (ENV["UPLOADS_DIR"] || "").strip
+  REPAIR_UPLOAD_LINKS = (ENV["REPAIR_UPLOAD_LINKS"] || "").strip.casecmp?("true")
+  LOOSEN_UPLOAD_CONSTRAINTS = (ENV["LOOSEN_UPLOAD_CONSTRAINTS"] || "").strip.casecmp?("true")
 
   BATCH_SIZE = 1000
   CONVERT_HTML = true
   QUIET = nil || ENV["VERBOSE"] == "TRUE"
   FORCE_HOSTNAME = nil || ENV["FORCE_HOSTNAME"]
+  STAGE_IMPORTED_USERS = (ENV["STAGE_IMPORTED_USERS"] || "").strip.upcase == "TRUE"
 
   QUIET = true
 
@@ -73,11 +79,38 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   SiteSetting.disable_emails = "non-staff"
   SiteSetting.force_hostname = FORCE_HOSTNAME if FORCE_HOSTNAME
 
+  def get_site_settings_for_import
+    settings = super
+
+    return settings unless LOOSEN_UPLOAD_CONSTRAINTS
+
+    max_file_size_kb = 102_400
+    settings[:max_image_size_kb] = [max_file_size_kb, SiteSetting.max_image_size_kb].max
+    settings[:max_attachment_size_kb] = [max_file_size_kb, SiteSetting.max_attachment_size_kb].max
+    settings[:authorized_extensions] = "*"
+    settings[:authorized_extensions_for_staff] = "*"
+
+    # allow the bumped limits to pass validations during the import
+    begin
+      SiteSetting.type_supervisor.load_setting(
+        :max_image_size_kb,
+        max: settings[:max_image_size_kb],
+      )
+      SiteSetting.type_supervisor.load_setting(
+        :max_attachment_size_kb,
+        max: settings[:max_attachment_size_kb],
+      )
+    rescue => e
+      print_warning("Could not widen validation caps: #{e.message}")
+    end
+    settings
+  end
+
   def resolve_parent_category_id
     # Find existing Discourse category by name or slug; return id or nil
-    return nil if PARENT_CATEGORY.nil? || PARENT_CATEGORY.strip.empty?
+    return nil if PARENT_CATEGORY.empty?
 
-    name = PARENT_CATEGORY.strip
+    name = PARENT_CATEGORY
     parent =
       Category.where("lower(name) = ?", name.downcase).first ||
         Category.where("lower(slug) = ?", name.parameterize.downcase).first
@@ -162,6 +195,14 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   def import_users
     puts "", "creating users"
 
+    # MLF 1.x used 'user_place', MLF 2.x uses 'user_location'
+    location_col =
+      if mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}userdata LIKE 'user_place'").any?
+        "user_place"
+      else
+        "user_location"
+      end
+
     total_count =
       mysql_query(
         "SELECT count(*) count FROM #{TABLE_PREFIX}userdata WHERE last_login > '#{IMPORT_AFTER}';",
@@ -170,14 +211,6 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       ]
 
     batches(BATCH_SIZE) do |offset|
-      # MLF 1.x used 'user_place', MLF 2.x uses 'user_location'
-      location_col =
-        if mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}userdata LIKE 'user_place'").any?
-          "user_place"
-        else
-          "user_location"
-        end
-
       results =
         mysql_query(
           "
@@ -221,7 +254,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           email: user["Email"],
           username: user["username"],
           name: user["Name"],
-          staged: true,
+          staged: STAGE_IMPORTED_USERS,
           created_at: user["DateInserted"] == nil ? 0 : Time.zone.at(user["DateInserted"]),
           bio_raw: user["bio_raw"],
           registration_ip_address: user["InsertIPAddress"],
@@ -293,7 +326,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     # Optional youtube_link column (not present in standard MLF 2.x)
     youtube_available =
       mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'").any?
-    youtube_select = youtube_available ? ", youtube_link as youtube" : ""
+    optional_youtube_column = youtube_available ? ", youtube_link as youtube" : ""
 
     batches(BATCH_SIZE) do |offset|
       discussions =
@@ -302,7 +335,8 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                 category as CategoryID,
                 subject as Name,
                 text as Body,
-                time as DateInserted#{youtube_select},
+                time as DateInserted,
+				 #{optional_youtube_column}
                 user_id as InsertUserID
          FROM #{TABLE_PREFIX}entries
          WHERE pid = 0
@@ -359,7 +393,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     # Optional youtube_link column (not present in standard MLF 2.x)
     youtube_available =
       mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'").any?
-    youtube_select = youtube_available ? ", youtube_link as youtube" : ""
+    optional_youtube_column = youtube_available ? ", youtube_link as youtube" : ""
 
     batches(BATCH_SIZE) do |offset|
       comments =
@@ -367,7 +401,8 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           "SELECT id as CommentID,
                 tid as DiscussionID,
                 text as Body,
-                time as DateInserted#{youtube_select},
+                time as DateInserted,
+				#{optional_youtube_column}
                 user_id as InsertUserID
          FROM #{TABLE_PREFIX}entries
          WHERE pid > 0
@@ -645,18 +680,18 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   def build_legacy_link_rewriter
     @rewrite_links_enabled = false
     return unless REWRITE_LINKS
-    return if IMAGE_BASE.to_s.strip.empty?
+    return if IMAGE_BASE.empty?
 
     begin
-      u = URI.parse(IMAGE_BASE.strip)
-      host = u.host
-      path = u.path || ""
+      u = URI.parse(IMAGE_BASE)
+      host = u.host&.downcase
+      path = u.path.to_s
       return unless host
 
       # normalize host (allow matching with/without www)
-      host = host.sub(/\Awww\./i, "")
+      host = host.delete_prefix("www.")
       # normalize path (no trailing slash)
-      path = path.sub(%r{/\z}, "")
+      path = path.delete_suffix("/")
 
       host_esc = Regexp.escape(host)
       path_esc = Regexp.escape(path)
@@ -703,10 +738,10 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
   def build_legacy_upload_rewriter
     @rewrite_uploads_enabled = false
-    return if IMAGE_BASE.to_s.strip.empty?
+    return if IMAGE_BASE.empty?
 
     begin
-      u = URI.parse(IMAGE_BASE.strip)
+      u = URI.parse(IMAGE_BASE)
       host = u.host
       path = u.path || ""
       return unless host
@@ -770,7 +805,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   end
 
   def import_uploads
-    return if UPLOADS_DIR.to_s.strip.empty?
+    return if UPLOADS_DIR.empty?
 
     table = find_uploads_table_name
     unless table
@@ -781,40 +816,6 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     end
 
     puts "", "importing uploads from #{table}..."
-
-    loosened = false
-    original_limits = nil
-
-    if LOOSEN_UPLOAD_CONSTRAINTS
-      loosened = true
-      original_limits = {
-        max_attachment_size_kb: SiteSetting.max_attachment_size_kb,
-        max_image_size_kb: SiteSetting.max_image_size_kb,
-        authorized_extensions: SiteSetting.authorized_extensions,
-        authorized_extensions_for_staff: SiteSetting.authorized_extensions_for_staff,
-      }
-      # keep it conservative & reversible
-      SiteSetting.max_attachment_size_kb = [SiteSetting.max_attachment_size_kb, 102_400].max
-      SiteSetting.max_image_size_kb = [SiteSetting.max_image_size_kb, 102_400].max
-
-      # temporarily allow all extensions ('*') so extension checks don't block the import
-      begin
-        SiteSetting.authorized_extensions = "*" unless SiteSetting
-          .authorized_extensions
-          .to_s
-          .strip == "*"
-      rescue => e
-        print_warning("Could not widen authorized_extensions: #{e.message}")
-      end
-      begin
-        SiteSetting.authorized_extensions_for_staff = "*" unless SiteSetting
-          .authorized_extensions_for_staff
-          .to_s
-          .strip == "*"
-      rescue => e
-        print_warning("Could not widen authorized_extensions_for_staff: #{e.message}")
-      end
-    end
 
     # only import uploads newer than IMPORT_AFTER (consistent with topics/posts)
     total =
@@ -921,22 +922,6 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       save_upload_map(@upload_map_path, @upload_map) # persist incrementally
     end
 
-    if loosened && original_limits
-      SiteSetting.max_attachment_size_kb = original_limits[:max_attachment_size_kb]
-      SiteSetting.max_image_size_kb = original_limits[:max_image_size_kb]
-      begin
-        SiteSetting.authorized_extensions = original_limits[:authorized_extensions]
-      rescue => e
-        print_warning("Could not restore authorized_extensions: #{e.message}")
-      end
-      begin
-        SiteSetting.authorized_extensions_for_staff =
-          original_limits[:authorized_extensions_for_staff]
-      rescue => e
-        print_warning("Could not restore authorized_extensions_for_staff: #{e.message}")
-      end
-    end
-
     puts "uploads: created=#{created}, skipped=#{skipped}, missing=#{missing}"
   end
 
@@ -994,6 +979,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     Post
       .where(id: ids)
+      .where("raw LIKE '%/images/uploaded/%'")
       .find_in_batches(batch_size: BATCH_SIZE) do |posts|
         posts.each do |post|
           begin
