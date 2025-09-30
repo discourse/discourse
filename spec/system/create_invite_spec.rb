@@ -126,7 +126,7 @@ describe "Creating Invites", type: :system do
       expect(user_invited_pending_page.latest_invite).to have_group(group)
       expect(user_invited_pending_page.latest_invite).to have_topic(topic)
       expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
-        Time.zone.now + 90.days,
+        Time.find_zone(user.user_option.timezone).now + 90.days,
       )
     end
 
