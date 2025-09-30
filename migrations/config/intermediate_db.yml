@@ -113,21 +113,11 @@ schema:
           - "public_topic_count"
           - "staff_topic_count"
           - "target_tag_id"
-    user_associated_accounts:
-      primary_key_column_names: [ "user_id", "provider_name" ]
+    topic_allowed_users:
+      primary_key_column_names: [ "topic_id", "user_id" ]
       columns:
         exclude:
           - "id"
-          - "credentials"
-          - "extra"
-        modify:
-          - name: "last_used"
-            nullable: true
-    user_custom_fields:
-      columns:
-        exclude:
-          - "id"
-      primary_key_column_names: [ "user_id" , "name", "value" ]
     topics:
       columns:
         exclude:
@@ -159,6 +149,21 @@ schema:
           - "highest_staff_post_number"
           - "reviewable_score"
           - "slow_mode_seconds"
+    user_associated_accounts:
+      primary_key_column_names: [ "user_id", "provider_name" ]
+      columns:
+        exclude:
+          - "id"
+          - "credentials"
+          - "extra"
+        modify:
+          - name: "last_used"
+            nullable: true
+    user_custom_fields:
+      columns:
+        exclude:
+          - "id"
+      primary_key_column_names: [ "user_id" , "name", "value" ]
     user_emails:
       columns:
         include:
@@ -448,7 +453,6 @@ schema:
         - "themes"
         - "top_topics"
         - "topic_allowed_groups"
-        - "topic_allowed_users"
         - "topic_custom_fields"
         - "topic_embeds"
         - "topic_groups"
