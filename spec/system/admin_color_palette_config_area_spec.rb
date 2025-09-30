@@ -12,6 +12,11 @@ describe "Admin Color Palette Config Area Page", type: :system do
 
   before { sign_in(admin) }
 
+  after do
+    Stylesheet::Manager.rm_cache_folder
+    Stylesheet::Manager.cache.clear
+  end
+
   it "allows editing the palette name" do
     config_area.visit(color_scheme.id)
 
