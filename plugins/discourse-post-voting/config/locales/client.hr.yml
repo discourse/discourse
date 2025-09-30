@@ -32,8 +32,10 @@ hr:
               one: "Unesite barem %{count} znak"
               few: "Unesite barem %{count} znakova"
               other: "Unesite barem %{count} znakova"
+          submit: "Dodaj komentar"
           edit: "uredi"
           cancel: "otkaži"
+          add: "Dodaj komentar"
           user:
             deleted: "(korisnik izbrisan)"
           reviewables:
@@ -47,7 +49,7 @@ hr:
       topic:
         answer:
           label: "Odgovori"
-          help: "započnite sastavljanje odgovora"
+          help: "Započnite sastavljanje odgovora"
         sort_by: "Sortiraj po"
         votes: "Glasovi"
         activity: "Aktivnosti"

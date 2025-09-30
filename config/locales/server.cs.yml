@@ -2315,6 +2315,7 @@ cs:
     use_name_for_username_suggestions: "Při navrhování uživatelských jmen použít celé jméno uživatele."
     experimental_form_templates: "Povolit funkci šablon formulářů. Spravujte šablony v <a href='%{base_path}/admin/customize/form-templates'>Přizpůsobit/Šablony</a>."
     adobe_analytics_tags_url: "Adresa URL tagů Adobe Analytics (`https://assets.adobedtm.com/...`)"
+    viewport_based_mobile_mode: "EXPERIMENTÁLNÍ: Zakáže mobilní/desktopové režimy založené na uživatelském agentu a použije místo nich šířku zobrazovací oblasti."
     content_localization_anon_language_switcher: "Povolit přepínač jazyků, který umožňuje návštěvníkům webu, kteří nejsou přihlášeni, přepínat mezi přeloženými verzemi Discourse a obsahem od uživatelů. Závisí na seznamu jazyků definovaných v nastavení 'content localization supported locales'."
     errors:
       invalid_email: "Neplatná emailová adresa."

@@ -9,3 +9,5 @@ cs:
     login:
       amazon:
         name: "Amazon"
+        title: "Přihlásit se přes Amazon"
+        message: "Ověřování pomocí služby Login with Amazon (ujistěte se, že není povoleno blokování vyskakovacích oken)"
