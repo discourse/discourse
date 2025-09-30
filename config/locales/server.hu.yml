@@ -74,6 +74,7 @@ hu:
     bad_color_scheme: "A téma nem frissíthető, érvénytelen színpaletta"
     other_error: "Hiba történt az oldal stílusának frissítésekor"
     ember_selector_error: "Sajnáljuk, az #ember vagy az .ember-view CSS-szelektorok használata nem engedélyezett, mert ezek a nevek dinamikusan generálódnak futás közben és idővel változnak, ami végül a CSS meghibásodását eredményezi. Próbálkozzon másik választóval."
+    setting_not_themeable: "A(z) „%{name}” beállítás nem témázható."
     import_error:
       generic: Hiba történt a téma importálása során
       upload: "Hiba a feltöltési tartalom létrehozásakor: %{name}. %{errors}"
@@ -1566,6 +1567,14 @@ hu:
         anon_views: Névtelen
         total_views: Összes
       description: "A 100 legnézettebb téma egy adott dátumtartományban, a bejelentkezett és az anonim megtekintések kombinálásával. Kategóriák szerint szűrhető."
+    associated_accounts_by_provider:
+      title: "Kapcsolódó fiókok bejelentkezési mód szerint"
+      labels:
+        provider: Belépési szolgáltató
+        no_accounts: "Nincsenek társított fiókok"
+        discourse_connect: "Egyszeri bejelentkezés Discourse Connecten keresztül"
+        no_sso_accounts: "SSO-rekord nélküli fiókok"
+        total_users: "Összes aktív felhasználói fiók"
   dashboard:
     problem:
       twitter_login: 'Úgy tűnik, hogy az X bejelentkezés jelenleg nem működik. Ellenőrizze a hitelesítő adatokat a <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">Webhelybeállítások</a>részben.'
@@ -2302,7 +2311,6 @@ hu:
     disable_watched_word_checking_in_user_fields: "a figyelt szavak ellenőrzésének kikapcsolása a felhasználói mezőkben"
     watched_words_regular_expressions: "Lehetővé teszi a reguláris kifejezések használatát a szavak szűrésére. Ha engedélyezve van, ez a funkció csoportosítja az érzékeny szavakat azok kis- és nagybetű érzékenysége alapján. Ezután az összes kiválasztott szót egyetlen reguláris kifejezésbe fordítja le, hozzáadva szóhatárokat a rendszeresen figyelt szavakhoz. Ennek eredményeként ez a regex-alapú szűrési módszer további kontrollréteget biztosít a tartalom moderálásához, támogatva az összetettebb szómintákat. A beállítás lehetővé teszi az eredeti szöveg egyszerű helyettesítését egy választott alternatívával is."
     enable_fast_edit: "Szerkesztés gomb hozzáadása a bejegyzéseknél, a kijelölt szövegrészlet közvetlen szerkesztéséhez."
-    old_post_notice_days: "Azoknak a napoknak a száma, amely után egy bejegyzés értesítése elavultnak minősül. Ez vizuálisan megkülönbözteti az újabb értesítésektől az oldalon."
     new_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy az új felhasználók bejegyzés értesítéseit lássa."
     returning_user_notice_tl: "Minimális bizalmi szint szükséges ahhoz, hogy a visszatérő felhasználók bejegyzés értesítéseit lássa."
     returning_users_days: "Hány napnak kell eltelnie, mielőtt egy felhasználó visszatérőnek tekinthető."
@@ -4050,10 +4058,7 @@ hu:
   page_not_found:
     page_title: "Az oldal nem található"
     title: "Hoppá! Az az oldal nem létezik, vagy magánjellegű."
-    popular_topics: "Népszerű"
-    recent_topics: "Friss"
     see_more: "Több"
-    search_title: "Keresés az oldalon"
     search_button: "Keresés"
   offline:
     title: "Nem lehet betölteni az alkalmazást"

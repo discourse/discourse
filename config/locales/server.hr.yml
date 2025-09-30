@@ -2417,9 +2417,7 @@ hr:
         Ovo je automatizirana poruka od %{site_name} koja vas obavještava da je [vaša objava] (%{base_url}%{post_url}) odobrena.
   page_not_found:
     page_title: "Stranica nije pronađena"
-    popular_topics: "Popularno"
     see_more: "Više"
-    search_title: "Pretraži ovu stranicu"
     search_button: "Pretraži"
   upload:
     unauthorized: "Nažalost, datoteka koju pokušavate prenijeti nije dopuštena (dopuštene ekstenzije: %{authorized_extensions})."
@@ -2683,10 +2681,10 @@ hr:
       long_description: |
         Ova značka se dodjeljuje kada prvi put objavite neku poveznicu samu u retku, koja se automatski proširuje u okvir sa sažetkom, naslovom i (ako je dostupno) slikom.
     first_reply_by_email:
-      name: Prvi odgovor putem e-pošte
-      description: Odgovorio/la na objavu putem e-pošte
+      name: Prvi odgovor putem e-maila
+      description: Odgovorio/la na objavu putem e-maila
       long_description: |
-        Ova značka se dodjeljuje prvi put kada odgovorite na objavu putem e-pošte :e-mail:.
+        Ova značka se dodjeljuje prvi put kada odgovorite na objavu putem e-maila :e-mail:.
     new_user_of_the_month:
       name: "Novi korisnik mjeseca"
       description: Izvanredni doprinosi u prvom mjesecu

@@ -1,4 +1,6 @@
 .ai-translations {
-  --chart-progress-color: rgb(153, 102, 255, 0.8);
-  --chart-remaining-color: rgb(153, 102, 255, 0.4);
+  --chart-progress-color: var(--tertiary);
+  --chart-remaining-color: var(--tertiary-low);
+  --chart-text-color: var(--primary);
+  --chart-label-color: var(--secondary);
 }

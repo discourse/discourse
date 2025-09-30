@@ -2318,7 +2318,6 @@ tr_TR:
     disable_watched_word_checking_in_user_fields: "kullanıcı alanlarında izlenen kelime kontrolünü devre dışı bırak"
     watched_words_regular_expressions: "Kelimeleri filtrelemek için düzenli ifadelerin kullanılmasına izin verir. Etkinleştirilirse bu özellik hassas sözcükleri büyük/küçük harf duyarlılıklarına göre gruplar. Ardından, seçilen tüm kelimeleri tek bir düzenli ifadede derler ve düzenli olarak izlenen kelimeler için kelime sınırları ekler. Sonuç olarak, bu regex tabanlı filtreleme yöntemi, daha karmaşık kelime kalıplarını destekleyerek içerik denetimi üzerinde ekstra bir kontrol katmanı ekler. Bu ayar aynı zamanda orijinal metnin yerine tercih edilen metnin kolayca yerleştirilmesine de olanak tanır."
     enable_fast_edit: "Satır içi küçük bir seçimi düzenlemek için yazı seçimi menüsüne bir düğme ekler."
-    old_post_notice_days: "Bir gönderi bildiriminin kaç gün sonra eski sayılacağı. Bu, onu sitedeki daha yeni bildirimlerden görsel olarak ayırır."
     new_user_notice_tl: "Yeni kullanıcı gönderi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_user_notice_tl: "Geri dönen kullanıcı gönderisi bildirimlerini görmek için gereken minimum güven seviyesi."
     returning_users_days: "Bir kullanıcının geri döndüğünün kabul edilmesi için kaç gün geçmesi gerektiği."
@@ -4173,10 +4172,7 @@ tr_TR:
   page_not_found:
     page_title: "Sayfa Bulunamadı"
     title: "Hay aksi! Bu sayfa mevcut değil ya da gizli."
-    popular_topics: "Popüler"
-    recent_topics: "Yakın zaman"
     see_more: "Daha fazla"
-    search_title: "Bu sitede ara"
     search_button: "Ara"
   offline:
     title: "Uygulama yüklenemiyor"

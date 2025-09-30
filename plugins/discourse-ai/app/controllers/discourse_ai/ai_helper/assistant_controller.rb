@@ -54,6 +54,7 @@ module DiscourseAi
       def suggest_title
         if params[:topic_id]
           topic = Topic.find_by(id: params[:topic_id])
+          guardian.ensure_can_see!(topic)
           input = DiscourseAi::Summarization::Strategies::TopicSummary.new(topic).targets_data
         else
           input = get_text_param!
@@ -75,7 +76,9 @@ module DiscourseAi
 
       def suggest_category
         if params[:topic_id]
-          opts = { topic_id: params[:topic_id] }
+          topic = Topic.find_by(id: params[:topic_id])
+          guardian.ensure_can_see!(topic)
+          opts = { topic_id: topic.id }
         else
           input = get_text_param!
           opts = { text: input }
@@ -87,7 +90,9 @@ module DiscourseAi
 
       def suggest_tags
         if params[:topic_id]
-          opts = { topic_id: params[:topic_id] }
+          topic = Topic.find_by(id: params[:topic_id])
+          guardian.ensure_can_see!(topic)
+          opts = { topic_id: topic.id }
         else
           input = get_text_param!
           opts = { text: input }

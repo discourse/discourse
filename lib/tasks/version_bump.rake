@@ -197,24 +197,10 @@ task "version_bump:beta" do
     current_version = parse_current_version
 
     commits =
-      if current_version.start_with?("3.1")
-        # Legacy strategy - no `-dev` suffix
-        next_version = current_version.sub(/beta(\d+)/) { "beta#{$1.to_i + 1}" }
+      begin
+        raise "Expected current version to end in -latest" if !current_version.end_with?("-latest")
 
-        [
-          PlannedCommit.new(
-            version: next_version,
-            tags: [
-              PlannedTag.new(name: "beta", message: "latest beta release"),
-              PlannedTag.new(name: "latest-release", message: "latest release"),
-              PlannedTag.new(name: "v#{next_version}", message: "version #{next_version}"),
-            ],
-          ),
-        ]
-      else
-        raise "Expected current version to end in -dev" if !current_version.end_with?("-dev")
-
-        beta_release_version = current_version.sub("-dev", "")
+        beta_release_version = current_version.sub("-latest", "")
         next_dev_version = current_version.sub(/beta(\d+)/) { "beta#{$1.to_i + 1}" }
 
         [
@@ -271,7 +257,7 @@ task "version_bump:minor_stable" do
   puts "Done!"
 end
 
-desc "Stage commits for a major version bump (e.g. 3.1.0.beta6-dev -> 3.1.0.beta6 -> 3.1.0 -> 3.2.0.beta1-dev). A PR will be created for approval, then the script will merge to `main`. Should be passed a version number for the next stable version (e.g. 3.2.0)"
+desc "Stage commits for a major version bump (e.g. 3.1.0.beta6-latest -> 3.1.0.beta6 -> 3.1.0 -> 3.2.0.beta1-latest). A PR will be created for approval, then the script will merge to `main`. Should be passed a version number for the next stable version (e.g. 3.2.0)"
 task "version_bump:major_stable_prepare", [:next_major_version_number] do |t, args|
   unless args[:next_major_version_number] =~ /\A\d+\.\d+\.\d+\z/
     raise "Expected next_major_version number to be in the form X.Y.Z"
@@ -283,22 +269,11 @@ task "version_bump:major_stable_prepare", [:next_major_version_number] do |t, ar
   with_clean_worktree(base) do
     current_version = parse_current_version
 
-    # special case for moving away from the 'legacy' release system where we don't use the `-dev` suffix
-    is_31_release = args[:next_major_version_number] == "3.2.0"
+    raise "Expected current version to end in -latest" if !current_version.end_with?("-latest")
 
-    if !current_version.end_with?("-dev") && !is_31_release
-      raise "Expected current version to end in -dev"
-    end
+    beta_release_version = current_version.sub("-latest", "")
 
-    beta_release_version =
-      if is_31_release
-        # The 3.1.0 beta series didn't use the -dev suffix
-        current_version.sub(/beta(\d+)/) { "beta#{$1.to_i + 1}" }
-      else
-        current_version.sub("-dev", "")
-      end
-
-    next_dev_version = args[:next_major_version_number] + ".beta1-dev"
+    next_dev_version = args[:next_major_version_number] + ".beta1-latest"
 
     final_beta_release =
       PlannedCommit.new(

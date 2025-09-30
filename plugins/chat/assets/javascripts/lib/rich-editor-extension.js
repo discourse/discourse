@@ -1,5 +1,5 @@
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import getURL from "discourse/lib/get-url";
-import { emojiUnescape } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
 /** @type {RichEditorExtension} */
@@ -49,7 +49,7 @@ const extension = {
               : null;
 
             metaElement.innerHTML = i18n("chat.quote.original_channel", {
-              channel: emojiUnescape(node.attrs.channel),
+              channel: replaceEmoji(node.attrs.channel),
               channelLink,
             });
           } else {
@@ -58,7 +58,7 @@ const extension = {
             channelLinkElement.href = getURL(
               `/chat/c/-/${node.attrs.channelId}`
             );
-            channelLinkElement.innerHTML = `#${emojiUnescape(
+            channelLinkElement.innerHTML = `#${replaceEmoji(
               node.attrs.channel
             )}`;
           }
@@ -104,7 +104,7 @@ const extension = {
             "chat-transcript-thread-header__title"
           );
           threadTitleElement.innerHTML = node.attrs.threadTitle
-            ? emojiUnescape(node.attrs.threadTitle)
+            ? replaceEmoji(node.attrs.threadTitle)
             : i18n("chat.quote.default_thread_title");
 
           threadHeaderElement.appendChild(threadTitleElement);

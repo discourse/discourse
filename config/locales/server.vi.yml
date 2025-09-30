@@ -1851,10 +1851,7 @@ vi:
   page_not_found:
     page_title: "Không Tìm Thấy Trang"
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
-    popular_topics: "Phổ biến"
-    recent_topics: "Gân đây"
     see_more: "Thêm"
-    search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."

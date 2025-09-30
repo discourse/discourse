@@ -2188,10 +2188,7 @@ lt:
   page_not_found:
     page_title: "Puslapis nerastas"
     title: "Oi! Šis puslapis neegzistuoja arba yra privatus."
-    popular_topics: "Populiaros"
-    recent_topics: "Naujausios"
     see_more: "Daugiau"
-    search_title: "Ieškoti svetainėje"
     search_button: "Paieška"
   offline:
     title: "Nepavyko įkelti programos"

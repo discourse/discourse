@@ -59,8 +59,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(prettier@3.5.3)
       '@swc/core':
-        specifier: ^1.13.19
-        version: 1.13.19
+        specifier: ^1.13.5
+        version: 1.13.5
       chart.js:
         specifier: 3.5.1
         version: 3.5.1
@@ -89,8 +89,8 @@ importers:
         specifier: ^4.0.4
         version: 4.0.4
       lefthook:
-        specifier: ^1.13.4
-        version: 1.13.4
+        specifier: ^1.13.5
+        version: 1.13.5
       licensee:
         specifier: ^11.1.1
         version: 11.1.1(patch_hash=55h346kvblvnigtrwrsh4hpona)
@@ -154,7 +154,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)))
+        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)))
       '@glimmer/component':
         specifier: ^2.0.0
         version: 2.0.0
@@ -202,7 +202,7 @@ importers:
         version: 4.7.0
       webpack:
         specifier: ^5.101.3
-        version: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+        version: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   app/assets/javascripts/custom-proxy:
     devDependencies:
@@ -234,7 +234,7 @@ importers:
         version: 8.1.4
       ember-auto-import:
         specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.4)
@@ -259,7 +259,7 @@ importers:
         version: 4.0.9
       webpack:
         specifier: ^5.101.3
-        version: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+        version: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   app/assets/javascripts/discourse:
     dependencies:
@@ -437,7 +437,7 @@ importers:
         version: 2.1.8(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)
       '@embroider/webpack':
         specifier: ^4.1.0
-        version: 4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       '@floating-ui/dom':
         specifier: ^1.7.4
         version: 1.7.4
@@ -451,8 +451,8 @@ importers:
         specifier: ^2.11.8
         version: 2.11.8
       '@swc/core':
-        specifier: ^1.13.19
-        version: 1.13.19
+        specifier: ^1.13.5
+        version: 1.13.5
       '@types/jquery':
         specifier: ^3.5.33
         version: 3.5.33
@@ -521,7 +521,7 @@ importers:
         version: 2.0.1(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2)
       ember-auto-import:
         specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-buffered-proxy:
         specifier: ^2.1.1
         version: 2.1.1(@babel/core@7.28.4)
@@ -560,7 +560,7 @@ importers:
         version: 6.1.1
       ember-exam:
         specifier: ^10.0.0
-        version: 10.0.0(@glint/template@1.6.0-alpha.2)(ember-qunit@9.0.4(@ember/test-helpers@5.3.0(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)(qunit@2.24.1))(ember-source@6.6.0(patch_hash=tyhbf7f4uxnr3gt4x2tdcudbva)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.1)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 10.0.0(@glint/template@1.6.0-alpha.2)(ember-qunit@9.0.4(@ember/test-helpers@5.3.0(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)(qunit@2.24.1))(ember-source@6.6.0(patch_hash=tyhbf7f4uxnr3gt4x2tdcudbva)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.1)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-load-initializers:
         specifier: ^3.0.1
         version: 3.0.1(ember-source@6.6.0(patch_hash=tyhbf7f4uxnr3gt4x2tdcudbva)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -587,7 +587,7 @@ importers:
         version: 2.6.0
       imports-loader:
         specifier: ^5.0.0
-        version: 5.0.0(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 5.0.0(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       jquery:
         specifier: ^3.7.1
         version: 3.7.1
@@ -595,8 +595,8 @@ importers:
         specifier: ^4.1.0
         version: 4.1.0
       jsuites:
-        specifier: ^5.12.0
-        version: 5.12.0
+        specifier: ^5.13.3
+        version: 5.13.3
       loader.js:
         specifier: ^4.7.0
         version: 4.7.0
@@ -641,10 +641,10 @@ importers:
         version: 2.1.1(patch_hash=ng672yys7q7cl7vz44xn3y54uq)
       webpack:
         specifier: 5.101.3
-        version: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+        version: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
       webpack-retry-chunk-load-plugin:
         specifier: ^3.1.1
-        version: 3.1.1(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 3.1.1(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       webpack-stats-plugin:
         specifier: ^1.1.3
         version: 1.1.3
@@ -671,7 +671,7 @@ importers:
         version: link:../discourse-i18n
       ember-auto-import:
         specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       markdown-it:
         specifier: 14.0.0
         version: 14.0.0
@@ -714,7 +714,7 @@ importers:
         version: 6.6.0(handlebars@4.7.8)(underscore@1.13.7)
       webpack:
         specifier: ^5.101.3
-        version: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+        version: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   app/assets/javascripts/discourse-widget-hbs:
     dependencies:
@@ -723,7 +723,7 @@ importers:
         version: 7.28.4(supports-color@8.1.1)
       ember-auto-import:
         specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.4)
@@ -736,7 +736,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)))
+        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)))
       '@glimmer/component':
         specifier: ^2.0.0
         version: 2.0.0
@@ -778,7 +778,7 @@ importers:
         version: 4.7.0
       webpack:
         specifier: ^5.101.3
-        version: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+        version: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   app/assets/javascripts/ember-cli-progress-ci: {}
 
@@ -795,7 +795,7 @@ importers:
         version: 1.7.4
       ember-auto-import:
         specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.4)
@@ -817,7 +817,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)))
+        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)))
       '@glimmer/component':
         specifier: ^2.0.0
         version: 2.0.0
@@ -865,7 +865,7 @@ importers:
         version: 4.7.0
       webpack:
         specifier: ^5.101.3
-        version: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+        version: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   app/assets/javascripts/pretty-text:
     dependencies:
@@ -877,7 +877,7 @@ importers:
         version: link:../discourse-i18n
       ember-auto-import:
         specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.4)
@@ -893,7 +893,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)))
+        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)))
       '@glimmer/component':
         specifier: ^2.0.0
         version: 2.0.0
@@ -941,7 +941,7 @@ importers:
         version: 4.7.0
       webpack:
         specifier: ^5.101.3
-        version: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+        version: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   app/assets/javascripts/select-kit:
     dependencies:
@@ -962,7 +962,7 @@ importers:
         version: link:../discourse-i18n
       ember-auto-import:
         specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cached-decorator-polyfill:
         specifier: ^1.0.2
         version: 1.0.2(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2)(ember-source@6.6.0(patch_hash=tyhbf7f4uxnr3gt4x2tdcudbva)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -987,7 +987,7 @@ importers:
         version: 2.2.0
       '@embroider/test-setup':
         specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)))
+        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)))
       '@glimmer/component':
         specifier: ^2.0.0
         version: 2.0.0
@@ -1035,7 +1035,7 @@ importers:
         version: 4.7.0
       webpack:
         specifier: ^5.101.3
-        version: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+        version: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   app/assets/javascripts/theme-transpiler:
     dependencies:
@@ -1052,8 +1052,8 @@ importers:
         specifier: ^2.0.11
         version: 2.0.11(postcss@8.5.6)
       '@rollup/browser':
-        specifier: ^4.52.2
-        version: 4.52.2
+        specifier: ^4.52.3
+        version: 4.52.3
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.0.4(@babel/core@7.28.4)(rollup@4.44.0)
@@ -1141,7 +1141,7 @@ importers:
         version: 1.10.0
       ember-auto-import:
         specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
 
 packages:
 
@@ -2562,8 +2562,8 @@ packages:
     peerDependencies:
       prettier: 3.x
 
-  '@rollup/browser@4.52.2':
-    resolution: {integrity: sha512-UydIwccTNdHWCTbrfsZ9jF0EPT9ql055p+KRf6UOZIzUzewc7cs0E119NvLG0Svi3d4w2L1TLJ0eQ/3UT0otpA==}
+  '@rollup/browser@4.52.3':
+    resolution: {integrity: sha512-iG4K8HE9EyVrHfgOsnGvEAfU86YTudS6gAhTkTyVw0scCacIbcemdXDHAE63wDhv+sxc/5NnHhP9igtb5Yobgg==}
 
   '@rollup/plugin-babel@6.0.4':
     resolution: {integrity: sha512-YF7Y52kFdFT/xVSuVdjkV5ZdX/3YtmX0QulG+x0taQOtJdHYzVU61aSSkAgVJ7NOv6qPkIYiJSgSWWN/DM5sGw==}
@@ -2736,68 +2736,68 @@ packages:
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
-  '@swc/core-darwin-arm64@1.13.19':
-    resolution: {integrity: sha512-NxDyte9tCJSJ8+R62WDtqwg8eI57lubD52sHyGOfezpJBOPr36bUSGGLyO3Vod9zTGlOu2CpkuzA/2iVw92u1g==}
+  '@swc/core-darwin-arm64@1.13.5':
+    resolution: {integrity: sha512-lKNv7SujeXvKn16gvQqUQI5DdyY8v7xcoO3k06/FJbHJS90zEwZdQiMNRiqpYw/orU543tPaWgz7cIYWhbopiQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@swc/core-darwin-x64@1.13.19':
-    resolution: {integrity: sha512-+w5DYrJndSygFFRDcuPYmx5BljD6oYnAohZ15K1L6SfORHp/BTSIbgSFRKPoyhjuIkDiq3W0um8RoMTOBAcQjQ==}
+  '@swc/core-darwin-x64@1.13.5':
+    resolution: {integrity: sha512-ILd38Fg/w23vHb0yVjlWvQBoE37ZJTdlLHa8LRCFDdX4WKfnVBiblsCU9ar4QTMNdeTBEX9iUF4IrbNWhaF1Ng==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [darwin]
 
-  '@swc/core-linux-arm-gnueabihf@1.13.19':
-    resolution: {integrity: sha512-7LlfgpdwwYq2q7himNkAAFo4q6jysMLFNoBH6GRP7WL29NcSsl5mPMJjmYZymK+sYq/9MTVieDTQvChzYDsapw==}
+  '@swc/core-linux-arm-gnueabihf@1.13.5':
+    resolution: {integrity: sha512-Q6eS3Pt8GLkXxqz9TAw+AUk9HpVJt8Uzm54MvPsqp2yuGmY0/sNaPPNVqctCX9fu/Nu8eaWUen0si6iEiCsazQ==}
     engines: {node: '>=10'}
     cpu: [arm]
     os: [linux]
 
-  '@swc/core-linux-arm64-gnu@1.13.19':
-    resolution: {integrity: sha512-ml3I6Lm2marAQ3UC/TS9t/yILBh/eDSVHAdPpikp652xouWAVW1znUeV6bBSxe1sSZIenv+p55ubKAWq/u84sQ==}
+  '@swc/core-linux-arm64-gnu@1.13.5':
+    resolution: {integrity: sha512-aNDfeN+9af+y+M2MYfxCzCy/VDq7Z5YIbMqRI739o8Ganz6ST+27kjQFd8Y/57JN/hcnUEa9xqdS3XY7WaVtSw==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
 
-  '@swc/core-linux-arm64-musl@1.13.19':
-    resolution: {integrity: sha512-M/otFc3/rWWkbF6VgbOXVzUKVoE7MFcphTaStxJp4bwb7oP5slYlxMZN51Dk/OTOfvCDo9pTAFDKNyixbkXMDQ==}
+  '@swc/core-linux-arm64-musl@1.13.5':
+    resolution: {integrity: sha512-9+ZxFN5GJag4CnYnq6apKTnnezpfJhCumyz0504/JbHLo+Ue+ZtJnf3RhyA9W9TINtLE0bC4hKpWi8ZKoETyOQ==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [linux]
 
-  '@swc/core-linux-x64-gnu@1.13.19':
-    resolution: {integrity: sha512-NoMUKaOJEdouU4tKF88ggdDHFiRRING+gYLxDqnTfm+sUXaizB5OGBRzvSVDYSXQb1SuUuChnXFPFzwTWbt3ZQ==}
+  '@swc/core-linux-x64-gnu@1.13.5':
+    resolution: {integrity: sha512-WD530qvHrki8Ywt/PloKUjaRKgstQqNGvmZl54g06kA+hqtSE2FTG9gngXr3UJxYu/cNAjJYiBifm7+w4nbHbA==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
 
-  '@swc/core-linux-x64-musl@1.13.19':
-    resolution: {integrity: sha512-r6krlZwyu8SBaw24QuS1lau2I9q8M+eJV6ITz0rpb6P1Bx0elf9ii5Bhh8ddmIqXXH8kOGSjC/dwcdHbZqAhgw==}
+  '@swc/core-linux-x64-musl@1.13.5':
+    resolution: {integrity: sha512-Luj8y4OFYx4DHNQTWjdIuKTq2f5k6uSXICqx+FSabnXptaOBAbJHNbHT/06JZh6NRUouaf0mYXN0mcsqvkhd7Q==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [linux]
 
-  '@swc/core-win32-arm64-msvc@1.13.19':
-    resolution: {integrity: sha512-awcZSIuxyVn0Dw28VjMvgk1qiDJ6CeQwHkZNUjg2UxVlq23zE01NMMp+zkoGFypmLG9gaGmJSzuoqvk/WCQ5tw==}
+  '@swc/core-win32-arm64-msvc@1.13.5':
+    resolution: {integrity: sha512-cZ6UpumhF9SDJvv4DA2fo9WIzlNFuKSkZpZmPG1c+4PFSEMy5DFOjBSllCvnqihCabzXzpn6ykCwBmHpy31vQw==}
     engines: {node: '>=10'}
     cpu: [arm64]
     os: [win32]
 
-  '@swc/core-win32-ia32-msvc@1.13.19':
-    resolution: {integrity: sha512-H5d+KO7ISoLNgYvTbOcCQjJZNM3R7yaYlrMAF13lUr6GSiOUX+92xtM31B+HvzAWI7HtvVe74d29aC1b1TpXFA==}
+  '@swc/core-win32-ia32-msvc@1.13.5':
+    resolution: {integrity: sha512-C5Yi/xIikrFUzZcyGj9L3RpKljFvKiDMtyDzPKzlsDrKIw2EYY+bF88gB6oGY5RGmv4DAX8dbnpRAqgFD0FMEw==}
     engines: {node: '>=10'}
     cpu: [ia32]
     os: [win32]
 
-  '@swc/core-win32-x64-msvc@1.13.19':
-    resolution: {integrity: sha512-qNoyCpXvv2O3JqXKanRIeoMn03Fho/As+N4Fhe7u0FsYh4VYqGQah4DGDzEP/yjl4Gx1IElhqLGDhCCGMwWaDw==}
+  '@swc/core-win32-x64-msvc@1.13.5':
+    resolution: {integrity: sha512-YrKdMVxbYmlfybCSbRtrilc6UA8GF5aPmGKBdPvjrarvsmf4i7ZHGCEnLtfOMd3Lwbs2WUZq3WdMbozYeLU93Q==}
     engines: {node: '>=10'}
     cpu: [x64]
     os: [win32]
 
-  '@swc/core@1.13.19':
-    resolution: {integrity: sha512-V1r4wFdjaZIUIZZrV2Mb/prEeu03xvSm6oatPxsvnXKF9lNh5Jtk9QvUdiVfD9rrvi7bXrAVhg9Wpbmv/2Fl1g==}
+  '@swc/core@1.13.5':
+    resolution: {integrity: sha512-WezcBo8a0Dg2rnR82zhwoR6aRNxeTGfK5QCD6TQ+kg3xx/zNT02s/0o+81h/3zhvFSB24NtqEr8FTw88O5W/JQ==}
     engines: {node: '>=10'}
     peerDependencies:
       '@swc/helpers': '>=0.5.17'
@@ -6279,8 +6279,8 @@ packages:
   jspreadsheet-ce@4.15.0:
     resolution: {integrity: sha512-1A1q7uxICxzXRiql3ZhXldFPjdt5VcFcoHSEvfvBFw9DcU7bq/gAEaqyKMJPeG+6zibpO4r+b8Dk88nIR7NKng==}
 
-  jsuites@5.12.0:
-    resolution: {integrity: sha512-t/tqa+b+8OsRDA3Sw/Ye+V2swsab6TQU1Hz9Seav4UTG3csb+kK0Lh9cD/p4dl+C3oKK8ExkNiOaLdMuf1oLBg==}
+  jsuites@5.13.3:
+    resolution: {integrity: sha512-je27Vu9Sl+jBnUQmyX+WWenK6ThSBP4NufDgOZhlZ7eRAHn6SdiB9dg5eMqCRkzhw2N4MywemYkx1B0aze8eSA==}
 
   just-diff-apply@5.5.0:
     resolution: {integrity: sha512-OYTthRfSh55WOItVqwpefPtNt2VdKsq5AnAK6apdtR6yCH8pr0CmSr710J0Mf+WdQy7K/OzMy7K2MgAfdQURDw==}
@@ -6322,58 +6322,58 @@ packages:
     resolution: {integrity: sha512-M6T051+5QCGLBQb8id3hdvIW8+zeFV2FyBGFS9IEK5H9Wt4MueD4bW1eWikpHgZp+5xR3l5c8pZUkQsIA0BFZg==}
     engines: {node: '>=8'}
 
-  lefthook-darwin-arm64@1.13.4:
-    resolution: {integrity: sha512-A/t0OYW9NCEqJ+j3volPvetfgErveioYxTG0tzgmJoMOR4joFN0vkjahKQpKPIMQ1HSqFQtiRefXL3M97rCD1A==}
+  lefthook-darwin-arm64@1.13.5:
+    resolution: {integrity: sha512-BYt5CnAOXasVCS6i+A4ljUo9xru/B5uMFD6EWHhs3R26jGF7mBSDxM3ErzXTUaJRTP0kQI/XBmgqBryBqoqZOQ==}
     cpu: [arm64]
     os: [darwin]
 
-  lefthook-darwin-x64@1.13.4:
-    resolution: {integrity: sha512-pBCy4pm8HEjsDSPNYv4Y4p94ZJYC7Q3KOMkYVH6no7e7ide2adetRq5eylNM7OyKF6fDA3VMv8ywINxHVKu3tg==}
+  lefthook-darwin-x64@1.13.5:
+    resolution: {integrity: sha512-ZDtLBzvI5e26C/RZ4irOHpELTd22x9lDTgF2+eCYcnrBWOkB7800V8tuAvBybsLGvg6JwKjFxn+NTRNZnCC2hw==}
     cpu: [x64]
     os: [darwin]
 
-  lefthook-freebsd-arm64@1.13.4:
-    resolution: {integrity: sha512-km8VRaIhORrebspVVwP+j01rYv2Wl8gDpEPcz42az9tfcp1o2d87Hi3zZ3DNSucSq+e7bMul1WNFYnk9xRy0jw==}
+  lefthook-freebsd-arm64@1.13.5:
+    resolution: {integrity: sha512-uQ/kQZSSedw74aGCpsfOPN4yVt3klg8grOP6gHQOCRUMv5oK/Lj3pe1PylpTuuhxWORWRzkauPMot26J0OZZdA==}
     cpu: [arm64]
     os: [freebsd]
 
-  lefthook-freebsd-x64@1.13.4:
-    resolution: {integrity: sha512-eWiFL4uFSg1XhLnbSo8dNF8K5yJ1Al3HauV1XbDfa8rUoonJfGWxOz6z22qzKj8mVkwl7Tk1hhjnAyNtXZNG8g==}
+  lefthook-freebsd-x64@1.13.5:
+    resolution: {integrity: sha512-6czek8XagVrI7ExURawkfrfX40Qjc/wktc8bLq/iXfRlmdvKDMrx2FrA82mDfEVCAEz+tTvkteK1TfR3icYF3Q==}
     cpu: [x64]
     os: [freebsd]
 
-  lefthook-linux-arm64@1.13.4:
-    resolution: {integrity: sha512-0aHeK1WoRPHwvgbEXdo1Q25MMCWNeY5wouhcShHpxhmrVBX1c0rYkWC9mQgR+632eUKkA/48+1J69x3mvtMZRg==}
+  lefthook-linux-arm64@1.13.5:
+    resolution: {integrity: sha512-MjWtiuW1br+rpTtgG1KGV53mSGtL5MWQwgafYzrFleJ89fKb86F4TD/4mVNzk5thmZ+HVPZw9bRZGUHFBnNJWg==}
     cpu: [arm64]
     os: [linux]
 
-  lefthook-linux-x64@1.13.4:
-    resolution: {integrity: sha512-f0rM3o5b7HNX+eKnCZzOPPWV+uPwOgfZEIKd1MqfkxxreQ+kloAcuUcNt6huwrs8foR7+45eC31T5plII3aTnw==}
+  lefthook-linux-x64@1.13.5:
+    resolution: {integrity: sha512-TIm+AYCanBR/+BVbBuIY3EMp3Z5lcJh+dovB52gHiuUjiauAptFXvntezyR5wAbyptLpYsb4WDmpSR8O2eln+w==}
     cpu: [x64]
     os: [linux]
 
-  lefthook-openbsd-arm64@1.13.4:
-    resolution: {integrity: sha512-ov9rjWPOtphlNG2SOPQAPBSeWVTfB/vbh5AcvPECnVVe9jZTCthhKIyr9wx/UfKKqGxlL4wi7jk7BQ1BEJuC5w==}
+  lefthook-openbsd-arm64@1.13.5:
+    resolution: {integrity: sha512-lYXrWf0/hBrwtG8ceaHq886bcqRKh3Lfv+jZJs+ykMLB6L/kaqk8tA4V2NHWydQ5h56o45ugs/580nMz36ZdRg==}
     cpu: [arm64]
     os: [openbsd]
 
-  lefthook-openbsd-x64@1.13.4:
-    resolution: {integrity: sha512-4TVuVG86fJhWGBx8nR+USq00lYHuzLp1PqrW3vDKmTwxlMf3gmquO6PyQ85I5jfr1G2QpKn/cVJCvj3ExMUOxg==}
+  lefthook-openbsd-x64@1.13.5:
+    resolution: {integrity: sha512-Ba1JrsRbfan4WKd8Q7gUhTxCUuppXzirDObd3JxpLRSLxA47yxhjMv7KByDunRDTvzTgsXoykZI6mPupkc1JiQ==}
     cpu: [x64]
     os: [openbsd]
 
-  lefthook-windows-arm64@1.13.4:
-    resolution: {integrity: sha512-y46ZgRAgyMy5MQYkZoSBtHYUYj0+54cM0VDT/Lu/jz1GRFAE8JkrRVetk3geqECpnMGxBkSgfhcbGDYeEvJQdw==}
+  lefthook-windows-arm64@1.13.5:
+    resolution: {integrity: sha512-Y/CpmEIb0hlFe+kTT/efWgX6+/gUTp5NItTF+gmUrY1/G/bTLIxdIRS7WpodVM0MEN24sOrQVTSi9DN9FvGoGg==}
     cpu: [arm64]
     os: [win32]
 
-  lefthook-windows-x64@1.13.4:
-    resolution: {integrity: sha512-p2YfWuj/43gUT0nHJ6j0pTRpLLwX9n2bio60POuXOrr3RVxdv5MEaQchdRhqYG5uWj7Zsm86K9FWkNuxPG81IA==}
+  lefthook-windows-x64@1.13.5:
+    resolution: {integrity: sha512-WJBqGNBlFJnunRwy12QyaDHdGULtostPqpYSZSS4boFJDY0lP5qtz9lAGmJ49aA5GQ19jrnDjGLwVPFiwIqksQ==}
     cpu: [x64]
     os: [win32]
 
-  lefthook@1.13.4:
-    resolution: {integrity: sha512-4EJfkcNlZW69ISxyEuBzkyivER/XIVCJcGYTemVBf5DWlBwK97hSrbgDH8O5JuHiCR5lW83hDa1T5TW/dRfnGg==}
+  lefthook@1.13.5:
+    resolution: {integrity: sha512-tpDfEviaODCNcvLohh8vKwo5dCAa6m/KX6ECsiCPYsp4H+XDATuy9S9o6G1We5MuQwz1cFAYv+LQRtWd7eoSow==}
     hasBin: true
 
   levn@0.4.1:
@@ -8983,8 +8983,8 @@ packages:
       '@volar/language-service':
         optional: true
 
-  vscode-html-languageservice@5.5.1:
-    resolution: {integrity: sha512-/ZdEtsZ3OiFSyL00kmmu7crFV9KwWR+MgpzjsxO60DQH7sIfHZM892C/E4iDd11EKocr+NYuvOA4Y7uc3QzLEA==}
+  vscode-html-languageservice@5.5.2:
+    resolution: {integrity: sha512-QpaUhCjvb7U/qThOzo4V6grwsRE62Jk/vf8BRJZoABlMw3oplLB5uovrvcrLO9vYhkeMiSjyqLnCxbfHzzZqmw==}
 
   vscode-jsonrpc@8.2.0:
     resolution: {integrity: sha512-C+r0eKJUIfiDIfwJhria30+TYWPtuHJXHtI7J0YlOmKAo7ogxP20T0zxB7HZQIFhIyvoBPwWskjxrvAtfjyZfA==}
@@ -10253,11 +10253,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/babel-loader-9@3.1.1(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(supports-color@8.1.1)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))':
+  '@embroider/babel-loader-9@3.1.1(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(supports-color@8.1.1)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))':
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       '@embroider/core': 3.5.5(@glint/template@1.6.0-alpha.2)
-      babel-loader: 9.2.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      babel-loader: 9.2.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
     transitivePeerDependencies:
       - supports-color
       - webpack
@@ -10349,10 +10349,10 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@embroider/hbs-loader@3.0.3(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))':
+  '@embroider/hbs-loader@3.0.3(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))':
     dependencies:
       '@embroider/core': 3.5.5(@glint/template@1.6.0-alpha.2)
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   '@embroider/macros@1.16.12(@glint/template@1.6.0-alpha.2)':
     dependencies:
@@ -10446,41 +10446,41 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/test-setup@4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)))':
+  '@embroider/test-setup@4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2))(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)))':
     dependencies:
       lodash: 4.17.21
       resolve: 1.22.10
     optionalDependencies:
       '@embroider/compat': 3.8.5(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)
       '@embroider/core': 3.5.5(@glint/template@1.6.0-alpha.2)
-      '@embroider/webpack': 4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      '@embroider/webpack': 4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
 
-  '@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))':
+  '@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))':
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       '@babel/preset-env': 7.28.3(@babel/core@7.28.4)(supports-color@8.1.1)
-      '@embroider/babel-loader-9': 3.1.1(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(supports-color@8.1.1)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      '@embroider/babel-loader-9': 3.1.1(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(supports-color@8.1.1)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       '@embroider/core': 3.5.5(@glint/template@1.6.0-alpha.2)
-      '@embroider/hbs-loader': 3.0.3(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      '@embroider/hbs-loader': 3.0.3(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       '@embroider/shared-internals': 2.9.0(supports-color@8.1.1)
       '@types/supports-color': 8.1.3
       assert-never: 1.4.0
-      babel-loader: 8.4.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
-      css-loader: 5.2.7(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      babel-loader: 8.4.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
+      css-loader: 5.2.7(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       csso: 4.2.0
       debug: 4.4.3(supports-color@8.1.1)
       escape-string-regexp: 4.0.0
       fs-extra: 9.1.0
       jsdom: 25.0.1(supports-color@8.1.1)
       lodash: 4.17.21
-      mini-css-extract-plugin: 2.9.4(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      mini-css-extract-plugin: 2.9.4(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       semver: 7.7.2
       source-map-url: 0.4.1
-      style-loader: 2.0.0(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      style-loader: 2.0.0(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       supports-color: 8.1.1
       terser: 5.44.0
-      thread-loader: 3.0.4(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      thread-loader: 3.0.4(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
     transitivePeerDependencies:
       - bufferutil
       - canvas
@@ -11194,7 +11194,7 @@ snapshots:
       prettier: 3.5.3
       rxjs: 6.6.7
 
-  '@rollup/browser@4.52.2':
+  '@rollup/browser@4.52.3':
     dependencies:
       '@types/estree': 1.0.8
 
@@ -11334,51 +11334,51 @@ snapshots:
 
   '@socket.io/component-emitter@3.1.2': {}
 
-  '@swc/core-darwin-arm64@1.13.19':
+  '@swc/core-darwin-arm64@1.13.5':
     optional: true
 
-  '@swc/core-darwin-x64@1.13.19':
+  '@swc/core-darwin-x64@1.13.5':
     optional: true
 
-  '@swc/core-linux-arm-gnueabihf@1.13.19':
+  '@swc/core-linux-arm-gnueabihf@1.13.5':
     optional: true
 
-  '@swc/core-linux-arm64-gnu@1.13.19':
+  '@swc/core-linux-arm64-gnu@1.13.5':
     optional: true
 
-  '@swc/core-linux-arm64-musl@1.13.19':
+  '@swc/core-linux-arm64-musl@1.13.5':
     optional: true
 
-  '@swc/core-linux-x64-gnu@1.13.19':
+  '@swc/core-linux-x64-gnu@1.13.5':
     optional: true
 
-  '@swc/core-linux-x64-musl@1.13.19':
+  '@swc/core-linux-x64-musl@1.13.5':
     optional: true
 
-  '@swc/core-win32-arm64-msvc@1.13.19':
+  '@swc/core-win32-arm64-msvc@1.13.5':
     optional: true
 
-  '@swc/core-win32-ia32-msvc@1.13.19':
+  '@swc/core-win32-ia32-msvc@1.13.5':
     optional: true
 
-  '@swc/core-win32-x64-msvc@1.13.19':
+  '@swc/core-win32-x64-msvc@1.13.5':
     optional: true
 
-  '@swc/core@1.13.19':
+  '@swc/core@1.13.5':
     dependencies:
       '@swc/counter': 0.1.3
       '@swc/types': 0.1.25
     optionalDependencies:
-      '@swc/core-darwin-arm64': 1.13.19
-      '@swc/core-darwin-x64': 1.13.19
-      '@swc/core-linux-arm-gnueabihf': 1.13.19
-      '@swc/core-linux-arm64-gnu': 1.13.19
-      '@swc/core-linux-arm64-musl': 1.13.19
-      '@swc/core-linux-x64-gnu': 1.13.19
-      '@swc/core-linux-x64-musl': 1.13.19
-      '@swc/core-win32-arm64-msvc': 1.13.19
-      '@swc/core-win32-ia32-msvc': 1.13.19
-      '@swc/core-win32-x64-msvc': 1.13.19
+      '@swc/core-darwin-arm64': 1.13.5
+      '@swc/core-darwin-x64': 1.13.5
+      '@swc/core-linux-arm-gnueabihf': 1.13.5
+      '@swc/core-linux-arm64-gnu': 1.13.5
+      '@swc/core-linux-arm64-musl': 1.13.5
+      '@swc/core-linux-x64-gnu': 1.13.5
+      '@swc/core-linux-x64-musl': 1.13.5
+      '@swc/core-win32-arm64-msvc': 1.13.5
+      '@swc/core-win32-ia32-msvc': 1.13.5
+      '@swc/core-win32-x64-msvc': 1.13.5
 
   '@swc/counter@0.1.3': {}
 
@@ -12043,21 +12043,21 @@ snapshots:
 
   babel-import-util@3.0.1: {}
 
-  babel-loader@8.4.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  babel-loader@8.4.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       find-cache-dir: 3.3.2
       loader-utils: 2.0.4
       make-dir: 3.1.0
       schema-utils: 2.7.1
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
-  babel-loader@9.2.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  babel-loader@9.2.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       find-cache-dir: 4.0.0
       schema-utils: 4.3.2
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   babel-plugin-debug-macros@0.2.0(@babel/core@7.28.4):
     dependencies:
@@ -13126,7 +13126,7 @@ snapshots:
 
   css-functions-list@3.2.3: {}
 
-  css-loader@5.2.7(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  css-loader@5.2.7(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.6)
       loader-utils: 2.0.4
@@ -13138,7 +13138,7 @@ snapshots:
       postcss-value-parser: 4.2.0
       schema-utils: 3.3.0
       semver: 7.7.2
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   css-tree@1.1.3:
     dependencies:
@@ -13343,7 +13343,7 @@ snapshots:
       - '@glint/template'
       - supports-color
 
-  ember-auto-import@2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  ember-auto-import@2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.28.4)
@@ -13353,7 +13353,7 @@ snapshots:
       '@babel/preset-env': 7.28.3(@babel/core@7.28.4)(supports-color@8.1.1)
       '@embroider/macros': 1.18.1(@glint/template@1.6.0-alpha.2)
       '@embroider/shared-internals': 2.9.1
-      babel-loader: 8.4.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      babel-loader: 8.4.1(@babel/core@7.28.4)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       babel-plugin-ember-modules-api-polyfill: 3.5.0
       babel-plugin-ember-template-compilation: 2.4.1
       babel-plugin-htmlbars-inline-precompile: 5.3.1
@@ -13363,7 +13363,7 @@ snapshots:
       broccoli-merge-trees: 4.2.0
       broccoli-plugin: 4.0.7
       broccoli-source: 3.0.1
-      css-loader: 5.2.7(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      css-loader: 5.2.7(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       debug: 4.4.3(supports-color@8.1.1)
       fs-extra: 10.1.0
       fs-tree-diff: 2.0.1
@@ -13371,14 +13371,14 @@ snapshots:
       is-subdir: 1.2.0
       js-string-escape: 1.0.1
       lodash: 4.17.21
-      mini-css-extract-plugin: 2.9.4(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      mini-css-extract-plugin: 2.9.4(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       minimatch: 3.1.2
       parse5: 6.0.1
       pkg-entry-points: 1.1.1
       resolve: 1.22.10
       resolve-package-path: 4.0.3
       semver: 7.7.2
-      style-loader: 2.0.0(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      style-loader: 2.0.0(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       typescript-memoize: 1.1.1
       walk-sync: 3.0.0
     transitivePeerDependencies:
@@ -13815,13 +13815,13 @@ snapshots:
       - eslint
       - typescript
 
-  ember-exam@10.0.0(@glint/template@1.6.0-alpha.2)(ember-qunit@9.0.4(@ember/test-helpers@5.3.0(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)(qunit@2.24.1))(ember-source@6.6.0(patch_hash=tyhbf7f4uxnr3gt4x2tdcudbva)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.1)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  ember-exam@10.0.0(@glint/template@1.6.0-alpha.2)(ember-qunit@9.0.4(@ember/test-helpers@5.3.0(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)(qunit@2.24.1))(ember-source@6.6.0(patch_hash=tyhbf7f4uxnr3gt4x2tdcudbva)(@glimmer/component@2.0.0)(rsvp@4.8.5))(qunit@2.24.1)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       chalk: 5.6.0
       cli-table3: 0.6.5
       debug: 4.4.3(supports-color@8.1.1)
-      ember-auto-import: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      ember-auto-import: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel: 8.2.0(@babel/core@7.28.4)
       ember-qunit: 9.0.4(@ember/test-helpers@5.3.0(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)(qunit@2.24.1)
       ember-source: 6.6.0(patch_hash=tyhbf7f4uxnr3gt4x2tdcudbva)(@glimmer/component@2.0.0)(rsvp@4.8.5)
@@ -15406,11 +15406,11 @@ snapshots:
 
   import-meta-resolve@4.1.0: {}
 
-  imports-loader@5.0.0(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  imports-loader@5.0.0(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       source-map-js: 1.2.1
       strip-comments: 2.0.1
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   imurmurhash@0.1.4: {}
 
@@ -15879,9 +15879,9 @@ snapshots:
   jspreadsheet-ce@4.15.0:
     dependencies:
       '@jspreadsheet/formula': 2.0.2
-      jsuites: 5.12.0
+      jsuites: 5.13.3
 
-  jsuites@5.12.0: {}
+  jsuites@5.13.3: {}
 
   just-diff-apply@5.5.0: {}
 
@@ -15919,48 +15919,48 @@ snapshots:
     dependencies:
       invert-kv: 3.0.1
 
-  lefthook-darwin-arm64@1.13.4:
+  lefthook-darwin-arm64@1.13.5:
     optional: true
 
-  lefthook-darwin-x64@1.13.4:
+  lefthook-darwin-x64@1.13.5:
     optional: true
 
-  lefthook-freebsd-arm64@1.13.4:
+  lefthook-freebsd-arm64@1.13.5:
     optional: true
 
-  lefthook-freebsd-x64@1.13.4:
+  lefthook-freebsd-x64@1.13.5:
     optional: true
 
-  lefthook-linux-arm64@1.13.4:
+  lefthook-linux-arm64@1.13.5:
     optional: true
 
-  lefthook-linux-x64@1.13.4:
+  lefthook-linux-x64@1.13.5:
     optional: true
 
-  lefthook-openbsd-arm64@1.13.4:
+  lefthook-openbsd-arm64@1.13.5:
     optional: true
 
-  lefthook-openbsd-x64@1.13.4:
+  lefthook-openbsd-x64@1.13.5:
     optional: true
 
-  lefthook-windows-arm64@1.13.4:
+  lefthook-windows-arm64@1.13.5:
     optional: true
 
-  lefthook-windows-x64@1.13.4:
+  lefthook-windows-x64@1.13.5:
     optional: true
 
-  lefthook@1.13.4:
+  lefthook@1.13.5:
     optionalDependencies:
-      lefthook-darwin-arm64: 1.13.4
-      lefthook-darwin-x64: 1.13.4
-      lefthook-freebsd-arm64: 1.13.4
-      lefthook-freebsd-x64: 1.13.4
-      lefthook-linux-arm64: 1.13.4
-      lefthook-linux-x64: 1.13.4
-      lefthook-openbsd-arm64: 1.13.4
-      lefthook-openbsd-x64: 1.13.4
-      lefthook-windows-arm64: 1.13.4
-      lefthook-windows-x64: 1.13.4
+      lefthook-darwin-arm64: 1.13.5
+      lefthook-darwin-x64: 1.13.5
+      lefthook-freebsd-arm64: 1.13.5
+      lefthook-freebsd-x64: 1.13.5
+      lefthook-linux-arm64: 1.13.5
+      lefthook-linux-x64: 1.13.5
+      lefthook-openbsd-arm64: 1.13.5
+      lefthook-openbsd-x64: 1.13.5
+      lefthook-windows-arm64: 1.13.5
+      lefthook-windows-x64: 1.13.5
 
   levn@0.4.1:
     dependencies:
@@ -16337,11 +16337,11 @@ snapshots:
     dependencies:
       dom-walk: 0.1.2
 
-  mini-css-extract-plugin@2.9.4(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  mini-css-extract-plugin@2.9.4(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       schema-utils: 4.3.2
       tapable: 2.2.3
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   minimatch@10.0.3:
     dependencies:
@@ -18198,11 +18198,11 @@ snapshots:
 
   strip-test-selectors@0.1.0: {}
 
-  style-loader@2.0.0(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  style-loader@2.0.0(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       loader-utils: 2.0.4
       schema-utils: 3.3.0
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   styled_string@0.0.1: {}
 
@@ -18388,16 +18388,16 @@ snapshots:
 
   temporal-spec@0.2.4: {}
 
-  terser-webpack-plugin@5.3.14(@swc/core@1.13.19)(esbuild@0.25.10)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  terser-webpack-plugin@5.3.14(@swc/core@1.13.5)(esbuild@0.25.10)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.2
       serialize-javascript: 6.0.2
       terser: 5.44.0
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
     optionalDependencies:
-      '@swc/core': 1.13.19
+      '@swc/core': 1.13.5
       esbuild: 0.25.10
 
   terser@5.44.0:
@@ -18505,14 +18505,14 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  thread-loader@3.0.4(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  thread-loader@3.0.4(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       json-parse-better-errors: 1.0.2
       loader-runner: 4.3.0
       loader-utils: 2.0.4
       neo-async: 2.6.2
       schema-utils: 3.3.0
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   through2-filter@3.0.0:
     dependencies:
@@ -18947,7 +18947,7 @@ snapshots:
 
   volar-service-html@0.0.64(@volar/language-service@2.4.12):
     dependencies:
-      vscode-html-languageservice: 5.5.1
+      vscode-html-languageservice: 5.5.2
       vscode-languageserver-textdocument: 1.0.12
       vscode-uri: 3.1.0
     optionalDependencies:
@@ -18964,7 +18964,7 @@ snapshots:
     optionalDependencies:
       '@volar/language-service': 2.4.12
 
-  vscode-html-languageservice@5.5.1:
+  vscode-html-languageservice@5.5.2:
     dependencies:
       '@vscode/l10n': 0.0.18
       vscode-languageserver-textdocument: 1.0.12
@@ -19059,16 +19059,16 @@ snapshots:
 
   webidl-conversions@7.0.0: {}
 
-  webpack-retry-chunk-load-plugin@3.1.1(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)):
+  webpack-retry-chunk-load-plugin@3.1.1(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       prettier: 2.8.8
-      webpack: 5.101.3(@swc/core@1.13.19)(esbuild@0.25.10)
+      webpack: 5.101.3(@swc/core@1.13.5)(esbuild@0.25.10)
 
   webpack-sources@3.3.3: {}
 
   webpack-stats-plugin@1.1.3: {}
 
-  webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10):
+  webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -19092,7 +19092,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.2
       tapable: 2.2.3
-      terser-webpack-plugin: 5.3.14(@swc/core@1.13.19)(esbuild@0.25.10)(webpack@5.101.3(@swc/core@1.13.19)(esbuild@0.25.10))
+      terser-webpack-plugin: 5.3.14(@swc/core@1.13.5)(esbuild@0.25.10)(webpack@5.101.3(@swc/core@1.13.5)(esbuild@0.25.10))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
     transitivePeerDependencies:

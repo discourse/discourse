@@ -1949,10 +1949,7 @@ ro:
   page_not_found:
     page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."
-    popular_topics: "Populare"
-    recent_topics: "Recente"
     see_more: "Mai multe"
-    search_title: "Caută în site"
     search_button: "Caută"
   login_required:
     welcome_message: "# Bine ai venit pe %{title}"
