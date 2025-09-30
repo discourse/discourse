@@ -939,6 +939,8 @@ def before_next_spec(&callback)
 end
 
 def global_setting(name, value)
+  SiteSetting.hidden_settings_provider.remove_hidden(name)
+  SiteSetting.shadowed_settings.delete(name)
   GlobalSetting.reset_s3_cache!
 
   GlobalSetting.stubs(name).returns(value)
