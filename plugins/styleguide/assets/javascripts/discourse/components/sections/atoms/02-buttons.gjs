@@ -159,7 +159,7 @@ const Buttons = <template>
       <DButton
         @icon="trash-can"
         @translatedLabel={{bs.text}}
-        @btnLink={{true}}
+        @display="link"
         class={{bs.class}}
         @disabled={{bs.disabled}}
       />
