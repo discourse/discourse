@@ -199,19 +199,28 @@ export default class AiTranslations extends Component {
     }
   }
 
+  get descriptionKey() {
+    return this.done === this.total
+      ? "discourse_ai.translations.stats.complete_language_detection_description"
+      : "discourse_ai.translations.stats.incomplete_language_detection_description";
+  }
+
+  get chartColors() {
+    const styles = getComputedStyle(document.querySelector(".ai-translations"));
+    return {
+      progress: styles.getPropertyValue("--chart-progress-color").trim(),
+      remaining: styles.getPropertyValue("--chart-remaining-color").trim(),
+      text: styles.getPropertyValue("--chart-text-color").trim(),
+      label: styles.getPropertyValue("--chart-label-color").trim(),
+    };
+  }
+
   get chartConfig() {
     if (!this.data?.length) {
       return {};
     }
 
-    const chartEl = document.querySelector(".ai-translations");
-    if (!chartEl) {
-      return {};
-    }
-
-    const backgroundColor = getComputedStyle(chartEl)
-      .getPropertyValue("--chart-progress-color")
-      .trim();
+    const colors = this.chartColors;
 
     const processedData = this.data.map(({ locale, total, done }) => {
       const donePercentage = (total > 0 ? (done / total) * 100 : 0).toFixed(0);
@@ -234,7 +243,7 @@ export default class AiTranslations extends Component {
           tooltip: processedData.map(({ tooltip }) => tooltip),
           data: processedData.map(({ donePercentage }) => donePercentage),
           totalItems: processedData.map(({ done }) => done),
-          backgroundColor,
+          backgroundColor: colors.progress,
           barThickness: 30,
           borderRadius: 4,
         },
@@ -250,6 +259,7 @@ export default class AiTranslations extends Component {
           afterDraw: ({ ctx, data, scales }) => {
             ctx.save();
             ctx.textBaseline = "middle";
+            ctx.fillStyle = colors.text;
             const items = data.datasets[0].totalItems;
             items.forEach((count, i) => {
               ctx.fillText(
@@ -278,6 +288,7 @@ export default class AiTranslations extends Component {
               display: false,
             },
             ticks: {
+              color: colors.text,
               callback: (percentage) =>
                 i18n("discourse_ai.translations.progress_chart.data_label", {
                   percentage,
@@ -287,6 +298,9 @@ export default class AiTranslations extends Component {
           y: {
             grid: {
               display: false,
+            },
+            ticks: {
+              color: colors.text,
             },
           },
         },
@@ -306,7 +320,7 @@ export default class AiTranslations extends Component {
                 : i18n("discourse_ai.translations.progress_chart.data_label", {
                     percentage,
                   }),
-            color: "white",
+            color: colors.label,
           },
         },
       },

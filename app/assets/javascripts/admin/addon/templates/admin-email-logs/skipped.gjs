@@ -38,7 +38,7 @@ export default RouteTemplate(
       @filters={{SKIPPED_FILTERS}}
     >
       <:default as |emailLog|>
-        <tr>
+        <tr data-test-email-log-row-id={{emailLog.id}}>
           <td>{{formatDate emailLog.created_at}}</td>
           <td>
             {{#if emailLog.user}}

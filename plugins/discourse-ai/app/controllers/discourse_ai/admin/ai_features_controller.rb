@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiFeaturesController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def index
         render json: serialize_modules(DiscourseAi::Configuration::Module.all)

@@ -338,6 +338,18 @@ module SystemHelpers
     page.evaluate_script(script, element, key)
   end
 
+  def expect_no_alert
+    opened_dialog = false
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.on("dialog", ->(dialog) { opened_dialog = true })
+
+      yield
+
+      expect(opened_dialog).to eq(false)
+    end
+  end
+
   def get_rgb_color(element, property = "backgroundColor")
     element.native.evaluate(<<~JS)
       (el) => {

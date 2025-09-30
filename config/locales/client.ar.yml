@@ -4556,6 +4556,9 @@ ar:
       title: "آخر المنشورات"
       empty: "لا توجد منشورات"
       aria_post_number: "%{title} - المنشور #%{postNumber}"
+      bulk:
+        clear_all: "مسح الكل"
+        actions: "الإجراءات الجماعية"
     post:
       confirm_delete: "هل تريد بالتأكيد حذف هذا المنشور؟"
       quote_reply: "اقتباس"

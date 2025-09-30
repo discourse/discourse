@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class DigestRagUpload < ::Jobs::Base
     CHUNK_SIZE = 1024
     CHUNK_OVERLAP = 64

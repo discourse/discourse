@@ -657,6 +657,13 @@ pl_PL:
       resume: "Kontynuuj"
       remove: "Usuń"
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
+      bulk_delete: "Usuń zaznaczone"
+      bulk_delete_confirmation: "Usuń wersje robocze"
+      bulk_delete_message:
+        one: "Czy na pewno chcesz usunąć ten szkic?"
+        few: "Czy na pewno chcesz usunąć te %{count} szkice?"
+        many: "Czy na pewno chcesz usunąć tych %{count} szkiców?"
+        other: "Czy na pewno chcesz usunąć tych %{count} szkiców?"
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
       edit_topic: "Edytuj szkic tematu"
@@ -4194,6 +4201,15 @@ pl_PL:
       title: "Aktualne wpisy"
       empty: "Brak wpisów"
       aria_post_number: "%{title} - wpis #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} zaznaczony post"
+          few: "%{count} zaznaczone posty"
+          many: "%{count} zaznaczonych postów"
+          other: "%{count} zaznaczonych postów"
+        select_all: "Zaznacz wszystkie"
+        clear_all: "Wyczyść wszystkie"
+        actions: "Działania zbiorcze"
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
@@ -5331,6 +5347,7 @@ pl_PL:
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
+    theme_preview_failed: "Nie można wyświetlić podglądu motywu, ponieważ motyw nie istnieje lub nie masz uprawnień dostępu do niego."
     image_removed: "(obraz usunięty)"
     pause_notifications:
       title: "Wstrzymaj powiadomienia na…"

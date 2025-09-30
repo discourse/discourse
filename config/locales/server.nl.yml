@@ -2462,7 +2462,6 @@ nl:
     view_raw_email_allowed_groups: "Groepen die de ruwe e-mailinhoud van een bericht kunnen bekijken als het is gemaakt door een inkomende e-mail. Dit omvat e-mailheaders en andere technische gegevens."
     rich_editor: "Schakel de rich text editor in, zodat alle gebruikers kunnen schakelen tussen de huidige Markdown-modus en de nieuwe rich text editor voor intuïtiever en gebruiksvriendelijker schrijven."
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
-    viewport_based_mobile_mode: "EXPERIMENTEEL: schakel de op user-agent gebaseerde mobiele/desktopmodus uit en gebruik in plaats daarvan de viewportbreedte."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
     content_localization_supported_locales: "Lijst van ondersteunde talen waarnaar gebruikerscontent kan worden vertaald. Vereist 'content localization enabled'."
@@ -2562,7 +2561,6 @@ nl:
   filter:
     description:
       status: "Filter topics op hun status"
-      in: "Filter topics in persoonlijke lijsten"
       order: "Sorteer topics op een specifiek veld"
       category: "Geef topics weer in een specifieke categorie"
       category_any: "Geef topics weer in een van de opgegeven categorieën (door komma's gescheiden)"

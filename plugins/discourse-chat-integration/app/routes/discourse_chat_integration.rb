@@ -2,7 +2,7 @@
 
 require_dependency "admin_constraint"
 
-module ::DiscourseChatIntegration
+module DiscourseChatIntegration
   AdminEngine.routes.draw do
     get "" => "chat#respond"
     get "/providers" => "chat#list_providers"

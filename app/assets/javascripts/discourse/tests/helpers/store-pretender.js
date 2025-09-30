@@ -111,10 +111,10 @@ export default function (helpers) {
     const qp = request.queryParams;
     if (qp) {
       if (qp.name) {
-        result = result.filterBy("name", qp.name);
+        result = result.filter((item) => item.name === qp.name);
       }
       if (qp.id) {
-        result = result.filterBy("id", parseInt(qp.id, 10));
+        result = result.filter((item) => item.id === parseInt(qp.id, 10));
       }
     }
 

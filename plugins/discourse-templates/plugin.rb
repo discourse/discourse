@@ -11,10 +11,10 @@ enabled_site_setting :discourse_templates_enabled
 
 register_asset "stylesheets/discourse-templates.scss"
 
-register_svg_icon "far-clipboard" if respond_to?(:register_svg_icon)
+register_svg_icon "far-clipboard"
 
 module ::DiscourseTemplates
-  PLUGIN_NAME = "discourse-templates".freeze
+  PLUGIN_NAME = "discourse-templates"
 end
 
 require_relative "lib/discourse_templates/engine"
@@ -29,7 +29,7 @@ after_initialize do
   require_relative "lib/discourse_templates/user_extension"
 
   Discourse::Application.routes.append do
-    mount ::DiscourseTemplates::Engine, at: "/discourse_templates"
+    mount DiscourseTemplates::Engine, at: "/discourse_templates"
   end
 
   reloadable_patch do |plugin|

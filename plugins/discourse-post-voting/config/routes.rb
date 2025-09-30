@@ -13,4 +13,4 @@ PostVoting::Engine.routes.draw do
   delete "vote/comment" => "votes#destroy_comment_vote"
 end
 
-Discourse::Application.routes.append { mount ::PostVoting::Engine, at: "post_voting" }
+Discourse::Application.routes.append { mount PostVoting::Engine, at: "post_voting" }

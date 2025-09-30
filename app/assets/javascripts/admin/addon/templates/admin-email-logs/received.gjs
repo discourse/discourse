@@ -41,7 +41,7 @@ export default RouteTemplate(
       <:default
         as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
       >
-        <tr>
+        <tr data-test-email-log-row-id={{emailLog.id}}>
           <td>{{formatDate emailLog.created_at}}</td>
           <td>{{emailLog.from_address}}</td>
           <td>{{emailLog.to_addresses}}</td>

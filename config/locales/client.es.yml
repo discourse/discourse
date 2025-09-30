@@ -3780,6 +3780,9 @@ es:
       title: "Últimas publicaciones"
       empty: "No hay publicaciones"
       aria_post_number: "%{title}, publicación n.º %{postNumber}"
+      bulk:
+        clear_all: "Limpiar todo"
+        actions: "Acciones en bloque"
     post:
       confirm_delete: "¿Seguro que quieres eliminar esta publicación?"
       quote_reply: "Citar"

@@ -34,7 +34,7 @@ after_initialize do
   require_relative "lib/extensions/user_option_extension"
   require_relative "lib/policy_mailer"
 
-  Discourse::Application.routes.append { mount ::DiscoursePolicy::Engine, at: "/policy" }
+  Discourse::Application.routes.append { mount DiscoursePolicy::Engine, at: "/policy" }
 
   Post.prepend DiscoursePolicy::PostExtension
   PostSerializer.prepend DiscoursePolicy::PostSerializerExtension

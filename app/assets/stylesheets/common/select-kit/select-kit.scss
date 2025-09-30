@@ -215,6 +215,11 @@
     justify-content: flex-start;
     padding: 0.5em;
 
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
     > * {
       pointer-events: none;
     }
