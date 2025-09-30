@@ -9,7 +9,7 @@
 enabled_site_setting :rss_polling_enabled
 add_admin_route "rss_polling.title", "rss_polling"
 register_asset "stylesheets/rss-polling.scss"
-register_svg_icon "floppy-disk" if respond_to?(:register_svg_icon)
+register_svg_icon "floppy-disk"
 
 module ::DiscourseRssPolling
   PLUGIN_NAME = "discourse_rss_polling"

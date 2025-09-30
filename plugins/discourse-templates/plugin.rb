@@ -11,7 +11,7 @@ enabled_site_setting :discourse_templates_enabled
 
 register_asset "stylesheets/discourse-templates.scss"
 
-register_svg_icon "far-clipboard" if respond_to?(:register_svg_icon)
+register_svg_icon "far-clipboard"
 
 module ::DiscourseTemplates
   PLUGIN_NAME = "discourse-templates".freeze
