@@ -1,4 +1,34 @@
 .ai-translations {
   --chart-progress-color: rgb(153, 102, 255, 0.8);
   --chart-remaining-color: rgb(153, 102, 255, 0.4);
+
+  &__charts {
+    margin-top: 2em;
+  }
+
+  &__locale-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    max-width: 50ch;
+
+    .multi-select {
+      flex: 1;
+    }
+
+    .setting-controls {
+      float: none;
+    }
+  }
+
+  .settings .setting {
+    padding: 0.5em;
+
+    .setting-label,
+    .setting-value {
+      float: none;
+      width: auto;
+      margin-right: 0;
+    }
+  }
 }

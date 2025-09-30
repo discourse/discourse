@@ -19,6 +19,9 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "returns translation progress data" do
+        SiteSetting.ai_translation_backfill_max_age_days = 30
+        SiteSetting.ai_translation_backfill_limit_to_public_content = false
+
         Fabricate.times(14, :post, locale: "en")
         Fabricate.times(1, :post, locale: "fr")
         Fabricate.times(4, :post)

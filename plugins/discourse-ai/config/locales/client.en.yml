@@ -327,20 +327,26 @@ en:
       translations:
         title: "Translations"
         description: "Automatically translate all content on your forum to the user's preferred language"
+        supported_locales: "Supported languages"
+        supported_locales_description: "This site setting also allows visitors to contribute post translations."
         admin_actions:
           translation_settings: "Translation settings"
           localization_settings: "Localization settings"
+          enable_translations: "Enable automatic translations"
           disabled_state:
-            configure: "Configure translations"
-            empty_label: "Automatic translations are disabled, click below to configure"
+            configure: "Translation Settings"
+            empty_label: "Automatic translations are disabled."
+            configure_locales: "Configure supported locales"
         stats:
           title: "Translation statistics"
           complete_language_detection_description: "All %{total} eligible posts have their language detected."
           incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
-          backfill_disabled: "Backfilling is currently disabled."
-          description_tooltip: "Eligible posts are determined by AI translation settings"
+          backfill_disabled: "Backfilling is disabled, only new posts will be translated."
+          description_tooltip:
+            one: 'There is %{count} post eligible for translation.'
+            other: 'There are %{count} posts eligible for translation.'
         progress_chart:
-          title: "Translation Progress %{tooltip}"
+          title: "Translation Progress"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} out of %{total} posts translated"
           bar_done:
