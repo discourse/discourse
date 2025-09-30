@@ -1769,11 +1769,10 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     gap: var(--space-2);
     color: var(--primary-medium);
     font-weight: 300;
+    align-items: center;
   }
 
   &__count-icon {
-    height: var(--liked-users-list-avatar-size);
-    width: var(--liked-users-list-avatar-size);
     color: var(--love);
   }
 
