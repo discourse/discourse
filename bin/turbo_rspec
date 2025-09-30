@@ -82,7 +82,7 @@ if ARGV.empty?
 
   run_system_tests = !!enable_system_tests
 
-  files = Dir.glob("#{Rails.root}/spec/**/*_spec.rb")
+  files = Dir.glob("spec/**/*_spec.rb")
   files.reject! { |file| File.fnmatch("*spec/system*", file) } if !run_system_tests
 
   use_runtime_info = true if use_runtime_info.nil?
