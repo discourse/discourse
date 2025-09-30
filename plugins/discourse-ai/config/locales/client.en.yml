@@ -333,10 +333,6 @@ en:
           translation_settings: "Translation settings"
           localization_settings: "Localization settings"
           enable_translations: "Enable automatic translations"
-          disabled_state:
-            configure: "Translation Settings"
-            empty_label: "Automatic translations are disabled."
-            configure_locales: "Configure supported locales"
         stats:
           title: "Translation statistics"
           complete_language_detection_description: "All %{total} eligible posts have their language detected."

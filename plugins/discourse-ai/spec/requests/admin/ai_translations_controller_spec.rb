@@ -56,6 +56,27 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(json["translation_progress"]).to eq([])
         expect(json["total"]).to eq(0)
         expect(json["posts_with_detected_locale"]).to eq(0)
+        expect(json["no_locales_configured"]).to eq(true)
+      end
+
+      it "returns translation_enabled field" do
+        SiteSetting.ai_translation_backfill_max_age_days = 30
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["translation_enabled"]).to eq(true)
+
+        SiteSetting.ai_translation_enabled = false
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["translation_enabled"]).to eq(false)
       end
 
       it "correctly indicates if backfill is enabled" do
