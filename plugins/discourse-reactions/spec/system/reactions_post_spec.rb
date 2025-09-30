@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-describe "Reactions | Post reactions", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+describe "Reactions | Post reactions" do
+  fab!(:current_user, :user)
   fab!(:topic)
-  fab!(:post_1) { Fabricate(:post, topic: topic) }
-  fab!(:post_2) { Fabricate(:post, topic: topic) }
+  fab!(:post_1) { Fabricate(:post, topic:) }
+  fab!(:post_2) { Fabricate(:post, topic:) }
 
   let(:reactions_button) do
     PageObjects::Components::PostReactionsButton.new("#post_#{post_2.post_number}")
