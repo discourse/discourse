@@ -38,7 +38,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
 
   def edit
     if params[:rewards_ids].nil? || !is_number?(params[:group_id])
-      return render json: { message: "Error" }, status: 500
+      return render json: { message: "Error" }, status: :internal_server_error
     end
 
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
@@ -51,7 +51,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def delete
-    return render json: { message: "Error" }, status: 500 unless is_number?(params[:group_id])
+    return render json: { message: "Error" }, status: :internal_server_error unless is_number?(params[:group_id])
 
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
 
@@ -67,7 +67,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
       Patreon::Patron.sync_groups
       render json: success_json
     rescue => e
-      render json: { message: e.message }, status: 500
+      render json: { message: e.message }, status: :internal_server_error
     end
   end
 

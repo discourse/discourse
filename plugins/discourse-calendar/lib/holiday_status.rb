@@ -27,7 +27,7 @@ module DiscourseCalendar
 
     def self.emoji_name
       emoji = SiteSetting.holiday_status_emoji
-      emoji.blank? ? "date" : emoji
+      (emoji.presence || "date")
     end
   end
 end

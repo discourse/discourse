@@ -39,9 +39,9 @@ class Upload < ActiveRecord::Base
   attr_accessor :for_gravatar
   attr_accessor :validate_file_size
 
-  validates_presence_of :filesize
-  validates_presence_of :original_filename
-  validates :dominant_color, length: { is: 6 }, allow_blank: true, allow_nil: true
+  validates :filesize, presence: true
+  validates :original_filename, presence: true
+  validates :dominant_color, length: { is: 6 }, allow_blank: true
 
   validates_with UploadValidator
 
@@ -337,11 +337,11 @@ class Upload < ActiveRecord::Base
   # on demand image size calculation, this allows us to null out image sizes
   # and still handle as needed
   def get_dimension(key)
-    if v = read_attribute(key)
+    if v = self[key]
       return v
     end
     fix_dimensions!
-    read_attribute(key)
+    self[key]
   end
 
   def width

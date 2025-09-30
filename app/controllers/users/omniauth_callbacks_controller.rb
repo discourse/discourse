@@ -104,7 +104,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
-  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].to_h { [_1, _1] }
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].index_by { _1 }
 
   def failure
     error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence

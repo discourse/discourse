@@ -2600,7 +2600,7 @@ RSpec.describe Admin::UsersController do
         provider_name: "github",
         provider_uid: "123456789",
         user_id: user.id,
-        last_used: 1.seconds.ago,
+        last_used: 1.second.ago,
       )
     end
 

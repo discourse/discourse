@@ -162,8 +162,7 @@ class ThemeSettingsMigrationsRunner
   def lookup_pending_migrations_fields
     @theme
       .migration_fields
-      .left_joins(:theme_settings_migration)
-      .where(theme_settings_migration: { id: nil })
+      .where.missing(:theme_settings_migration)
       .order(created_at: :asc)
   end
 

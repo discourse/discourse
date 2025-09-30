@@ -127,7 +127,7 @@ class EmbeddingDefinition < ActiveRecord::Base
   validates :provider, presence: true, inclusion: provider_names
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer_class, presence: true, inclusion: tokenizer_names
-  validates_presence_of :url, :api_key, :dimensions, :max_sequence_length, :pg_function
+  validates :url, :api_key, :dimensions, :max_sequence_length, :pg_function, presence: true
 
   after_create :create_indexes
 

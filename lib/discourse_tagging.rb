@@ -174,11 +174,7 @@ module DiscourseTagging
                     .map do |tag|
                       tag_name = tag.name
 
-                      if parent_child_names_map[tag_name].present?
-                        parent_child_names_map[tag_name]
-                      else
-                        tag_name
-                      end
+                      (parent_child_names_map[tag_name].presence || tag_name)
                     end
                     .uniq
                     .sort
@@ -587,7 +583,7 @@ module DiscourseTagging
       builder.where("id NOT IN (SELECT target_tag_id FROM tags WHERE target_tag_id IS NOT NULL)")
     end
 
-    builder.where("name NOT IN (?)", opts[:excluded_tag_names]) if opts[:excluded_tag_names]&.any?
+    builder.where.not(name: opts[:excluded_tag_names]) if opts[:excluded_tag_names]&.any?
 
     if opts[:limit]
       if required_tag_ids && term.blank?
@@ -600,7 +596,7 @@ module DiscourseTagging
 
     if opts[:order_popularity]
       builder.order_by("#{topic_count_column} DESC, name")
-    elsif opts[:order_search_results] && !term.blank?
+    elsif opts[:order_search_results] && term.present?
       builder.order_by("lower(name) = lower(:cleaned_term) DESC, #{topic_count_column} DESC, name")
     end
 

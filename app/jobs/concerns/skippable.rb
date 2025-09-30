@@ -15,7 +15,7 @@ module Skippable
     if reason_type == SkippedEmailLog.reason_types[:exceeded_emails_limit]
       exists =
         SkippedEmailLog.exists?(
-          { created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day) }.merge!(
+          { created_at: (Time.zone.now.all_day) }.merge!(
             attributes.except(:post_id),
           ),
         )

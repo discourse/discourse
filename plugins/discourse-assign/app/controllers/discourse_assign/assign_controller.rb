@@ -71,7 +71,7 @@ module DiscourseAssign
       if assign[:success]
         render json: success_json
       else
-        render json: translate_failure(assign[:reason], assign_to), status: 400
+        render json: translate_failure(assign[:reason], assign_to), status: :bad_request
       end
     end
 
@@ -232,7 +232,7 @@ module DiscourseAssign
 
     def recent_assignees
       User
-        .where("users.id <> ?", current_user.id)
+        .where.not(users: { id: current_user.id })
         .joins(<<~SQL)
           JOIN(
             SELECT assigned_to_id user_id, MAX(created_at) last_assigned

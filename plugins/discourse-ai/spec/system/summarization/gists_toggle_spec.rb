@@ -3,7 +3,7 @@
 describe "Gists Toggle Functionality", type: :system do
   fab!(:admin)
   fab!(:group)
-  fab!(:topic_with_gist) { Fabricate(:topic) }
+  fab!(:topic_with_gist, :topic)
   fab!(:topic_ai_gist) { Fabricate(:topic_ai_gist, target: topic_with_gist) }
 
   before do

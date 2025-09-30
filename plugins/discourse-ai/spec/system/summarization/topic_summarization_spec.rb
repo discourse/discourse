@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Summarize a topic ", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:group)
   fab!(:topic)
   fab!(:post) do

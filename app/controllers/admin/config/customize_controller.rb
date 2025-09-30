@@ -33,7 +33,7 @@ class Admin::Config::CustomizeController < Admin::AdminController
       when "used"
         components = components.joins(:parent_themes).distinct
       when "unused"
-        components = components.left_joins(:parent_themes).where(parent_themes: { id: nil })
+        components = components.where.missing(:parent_themes)
       when "updates_available"
         components = components.joins(:remote_theme).where(remote_theme: { commits_behind: 1.. })
       else

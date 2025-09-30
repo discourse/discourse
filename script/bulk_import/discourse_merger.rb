@@ -797,7 +797,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
             processed =
               (
                 if respond_to?(process_method_name)
-                  send(process_method_name, HashWithIndifferentAccess.new(row))
+                  send(process_method_name, ActiveSupport::HashWithIndifferentAccess.new(row))
                 else
                   row
                 end

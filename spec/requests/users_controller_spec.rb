@@ -250,7 +250,7 @@ RSpec.describe UsersController do
       end
 
       it "fails without a server session" do
-        user.update!(created_at: Time.zone.now - 8.minutes)
+        user.update!(created_at: 8.minutes.ago)
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(403)
       end
@@ -262,7 +262,7 @@ RSpec.describe UsersController do
       end
 
       it "succeeds with a newly-created user" do
-        user.update!(created_at: Time.zone.now - 1.minute)
+        user.update!(created_at: 1.minute.ago)
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
       end
@@ -293,7 +293,7 @@ RSpec.describe UsersController do
       end
 
       it "fails without a server session" do
-        user.update!(created_at: Time.zone.now - 8.minutes)
+        user.update!(created_at: 8.minutes.ago)
         put "/u/#{user.username}/remove-password.json" #
         expect(response.status).to eq(403)
       end
@@ -6904,7 +6904,7 @@ RSpec.describe UsersController do
       end
 
       it "returns unconfirmed session response when user was created more than N minutes ago" do
-        user1.created_at = Time.zone.now - 10.minutes
+        user1.created_at = 10.minutes.ago
         user1.save!(validate: false)
 
         post "/u/second_factors.json"
@@ -6915,7 +6915,7 @@ RSpec.describe UsersController do
       end
 
       it "returns empty list for a recently created user" do
-        user1.created_at = Time.zone.now - 1.minutes
+        user1.created_at = 1.minute.ago
         user1.save!(validate: false)
 
         post "/u/second_factors.json"
@@ -7820,7 +7820,7 @@ RSpec.describe UsersController do
         read: true,
         user: user,
         notification_type: Notification.types[:group_message_summary],
-        created_at: 1.minutes.ago,
+        created_at: 1.minute.ago,
       )
     end
 
@@ -7916,7 +7916,7 @@ RSpec.describe UsersController do
       end
 
       it "responds with an array of personal messages and user watching group messages that are not associated with any of the unread private_message notifications" do
-        group_message1.update!(bumped_at: 1.minutes.ago)
+        group_message1.update!(bumped_at: 1.minute.ago)
         message_without_notification.update!(bumped_at: 3.minutes.ago)
         group_message2.update!(bumped_at: 6.minutes.ago)
         message_with_read_notification.update!(bumped_at: 10.minutes.ago)

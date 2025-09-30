@@ -40,10 +40,10 @@ class RemoteTheme < ActiveRecord::Base
           )
         end
 
-  validates_format_of :minimum_discourse_version,
+  validates :minimum_discourse_version,
                       :maximum_discourse_version,
-                      with: Discourse::VERSION_REGEXP,
-                      allow_nil: true
+                      format: { with: Discourse::VERSION_REGEXP,
+                      allow_nil: true }
 
   def self.extract_theme_info(importer)
     if importer.file_size("about.json") > MAX_METADATA_FILE_SIZE
@@ -138,7 +138,7 @@ class RemoteTheme < ActiveRecord::Base
         if update_components == "sync"
           ChildTheme
             .joins(child_theme: :remote_theme)
-            .where("remote_themes.remote_url NOT IN (?)", child_components)
+            .where.not(remote_themes: { remote_url: child_components })
             .delete_all
         end
 
@@ -201,7 +201,7 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def self.unreachable_themes
-    self.joined_remotes.where("last_error_text IS NOT NULL").pluck("themes.name", "themes.id")
+    self.joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
   end
 
   def out_of_date?

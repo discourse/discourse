@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::GenerateLeaderboardPositions do
-  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
+  fab!(:leaderboard, :gamification_leaderboard)
   fab!(:score) { Fabricate(:gamification_score, user_id: leaderboard.created_by_id) }
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }
 

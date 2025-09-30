@@ -5,8 +5,8 @@ RSpec.describe DiscourseAi::Admin::AiFeaturesController do
   fab!(:admin)
   fab!(:group)
   fab!(:llm_model)
-  fab!(:summarizer_persona) { Fabricate(:ai_persona) }
-  fab!(:alternate_summarizer_persona) { Fabricate(:ai_persona) }
+  fab!(:summarizer_persona, :ai_persona)
+  fab!(:alternate_summarizer_persona, :ai_persona)
 
   before do
     enable_current_plugin

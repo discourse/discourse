@@ -122,7 +122,7 @@ module DiscourseAi
               partial_summary =
                 partial.read_buffered_property(json_summary_schema_key["key"]&.to_sym)
 
-              if !partial_summary.nil? && !partial_summary.empty?
+              if partial_summary.present?
                 summary << partial_summary
                 on_partial_blk.call(partial_summary) if on_partial_blk
               end

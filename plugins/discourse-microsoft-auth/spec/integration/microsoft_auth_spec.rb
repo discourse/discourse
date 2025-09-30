@@ -6,7 +6,7 @@ describe "Microsoft OAuth2" do
   let(:client_secret) { "adddcccdddd99922" }
   let(:temp_code) { "microsoft_temp_code_544254" }
 
-  fab!(:user1) { Fabricate(:user) }
+  fab!(:user1, :user)
 
   def setup_ms_emails_stub(email:)
     stub_request(:get, "https://graph.microsoft.com/v1.0/me").with(

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UserProfileView < ActiveRecord::Base
-  validates_presence_of :user_profile_id, :viewed_at
+  validates :user_profile_id, :viewed_at, presence: true
 
   belongs_to :user_profile
 

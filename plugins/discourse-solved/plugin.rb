@@ -205,10 +205,7 @@ after_initialize do
     report.data = []
 
     accepted_solutions =
-      DiscourseSolved::SolvedTopic.joins(:topic).where(
-        "topics.archetype <> ?",
-        Archetype.private_message,
-      )
+      DiscourseSolved::SolvedTopic.joins(:topic).where.not(topics: { archetype: Archetype.private_message })
 
     category_id, include_subcategories = report.add_category_filter
     if category_id
@@ -255,7 +252,7 @@ after_initialize do
   end
 
   register_modifier(:user_action_stream_builder) do |builder|
-    builder.where("t.deleted_at IS NULL").where("t.archetype <> ?", Archetype.private_message)
+    builder.where("t.deleted_at IS NULL").where.not(t: { archetype: Archetype.private_message })
   end
 
   add_to_serializer(:user_card, :accepted_answers) do

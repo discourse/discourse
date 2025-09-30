@@ -144,7 +144,7 @@ RSpec.describe Chat::ListChannelThreadMessages do
           Fabricate(
             :chat_message,
             chat_channel: thread.channel,
-            created_at: 1.days.from_now,
+            created_at: 1.day.from_now,
             thread:,
           )
         end

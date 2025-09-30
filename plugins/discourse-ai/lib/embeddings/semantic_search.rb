@@ -239,11 +239,7 @@ module DiscourseAi
             id: SiteSetting.ai_embeddings_semantic_search_hyde_persona,
           )&.default_llm_id
 
-        if persona_llm_id.present?
-          persona_llm_id
-        else
-          SiteSetting.ai_default_llm_model.to_i || LlmModel.last&.id
-        end
+        (persona_llm_id.presence || SiteSetting.ai_default_llm_model.to_i || LlmModel.last&.id)
       end
 
       private

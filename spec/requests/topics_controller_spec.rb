@@ -4973,7 +4973,7 @@ RSpec.describe TopicsController do
 
         post "/t/#{topic.id}/timer.json",
              params: {
-               time: Time.current - 1.day,
+               time: 1.day.ago,
                status_type: TopicTimer.types[1],
              }
         expect(response.status).to eq(400)

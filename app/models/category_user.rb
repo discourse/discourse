@@ -228,8 +228,8 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.create_lookup(category_users)
-    category_users.each_with_object({}) do |category_user, acc|
-      acc[category_user.category_id] = category_user
+    category_users.index_by do |category_user|
+      category_user.category_id
     end
   end
 
