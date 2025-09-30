@@ -5,12 +5,6 @@
     // { "path": "app/assets/javascripts/admin" },
   ],
   "include": [],
-  "glint": {
-    "environment": [
-      "ember-template-imports"
-    ],
-    "checkStandaloneTemplates": false
-  }
   // "include": [
   //   "./app/assets/javascripts/discourse/app",
   //   "./app/assets/javascripts/discourse/tests",

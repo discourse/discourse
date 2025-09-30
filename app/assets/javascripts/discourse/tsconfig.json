@@ -8,11 +8,5 @@
     "rootDir": "./app",
     "outDir": "./declarations",
     "types": ["ember-source/types"]
-  },
-  "glint": {
-    "environment": [
-      "ember-template-imports"
-    ],
-    "checkStandaloneTemplates": false
   }
 }

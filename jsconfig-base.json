@@ -10,11 +10,5 @@
     "noEmitOnError": false,
     "declaration": true,
     "emitDeclarationOnly": true
-  },
-  "glint": {
-    "environment": [
-      "ember-template-imports"
-    ],
-    "checkStandaloneTemplates": false
   }
 }
