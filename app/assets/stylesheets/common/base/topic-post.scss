@@ -373,8 +373,6 @@ nav.post-controls {
         &.like {
           // Like button with 0 likes
           &:hover {
-            background: var(--love-low);
-
             .d-icon {
               color: var(--love);
             }
