@@ -2382,15 +2382,10 @@ RSpec.describe TopicsController do
 
     it "handles pagination correctly with deleted posts" do
       topic_with_posts = Fabricate(:topic)
-      posts_to_delete = []
 
       24.times do |i|
-        post = Fabricate(:post, topic: topic_with_posts)
-        # mark every other post for deletion
-        posts_to_delete << post if i.even?
+        Fabricate(:post, topic: topic_with_posts, deleted_at: i.even? ? DateTime.now : nil)
       end
-
-      posts_to_delete.each(&:trash!)
 
       Topic.reset_highest(topic_with_posts.id)
       topic_with_posts.reload
