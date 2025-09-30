@@ -15,7 +15,7 @@ register_svg_icon "rocket" if respond_to?(:register_svg_icon)
 register_svg_icon "arrow-circle-o-right" if respond_to?(:register_svg_icon)
 
 module ::DiscourseChatIntegration
-  PLUGIN_NAME = "discourse-chat-integration".freeze
+  PLUGIN_NAME = "discourse-chat-integration"
 end
 
 # Site setting validators must be loaded before initialize

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 module DiscourseChatIntegration::Provider::GroupmeProvider
-  PROVIDER_NAME = "groupme".freeze
+  PROVIDER_NAME = "groupme"
   PROVIDER_ENABLED_SETTING = :chat_integration_groupme_enabled
-  CHANNEL_IDENTIFIER_KEY = "groupme_instance_name".freeze
+  CHANNEL_IDENTIFIER_KEY = "groupme_instance_name"
   CHANNEL_PARAMETERS = [{ key: "groupme_instance_name", regex: '[\s\S]*', unique: true }]
 
   def self.generate_groupme_message(post)

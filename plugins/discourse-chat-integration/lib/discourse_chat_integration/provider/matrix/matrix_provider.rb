@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module MatrixProvider
-      PROVIDER_NAME = "matrix".freeze
+      PROVIDER_NAME = "matrix"
       PROVIDER_ENABLED_SETTING = :chat_integration_matrix_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+' },
         { key: "room_id", regex: '^\!\S+$', unique: true, hidden: true },

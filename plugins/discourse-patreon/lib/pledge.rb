@@ -135,7 +135,7 @@ module Patreon
     end
 
     class Decline
-      KEY = "pledge-declines".freeze
+      KEY = "pledge-declines"
 
       def self.all
         Patreon.get(KEY) || {}

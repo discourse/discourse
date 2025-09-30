@@ -12,7 +12,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
   THREAD_LEGACY = "thread"
 
   PROVIDER_ENABLED_SETTING = :chat_integration_slack_enabled
-  CHANNEL_IDENTIFIER_KEY = "identifier".freeze
+  CHANNEL_IDENTIFIER_KEY = "identifier"
   CHANNEL_PARAMETERS = [{ key: "identifier", regex: '^[@#]?\S*$', unique: true }]
 
   require_dependency "topic"

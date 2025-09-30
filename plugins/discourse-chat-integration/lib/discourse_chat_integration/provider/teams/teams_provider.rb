@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module DiscourseChatIntegration::Provider::TeamsProvider
-  PROVIDER_NAME = "teams".freeze
+  PROVIDER_NAME = "teams"
   PROVIDER_ENABLED_SETTING = :chat_integration_teams_enabled
-  CHANNEL_IDENTIFIER_KEY = "name".freeze
+  CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [
     { key: "name", regex: '^\S+$', unique: true },
     { key: "webhook_url", regex: '^https:\/\/\S+$', unique: true, hidden: true },

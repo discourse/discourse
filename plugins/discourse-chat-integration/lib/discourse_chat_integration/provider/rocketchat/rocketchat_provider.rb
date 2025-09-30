@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 module DiscourseChatIntegration::Provider::RocketchatProvider
-  PROVIDER_NAME = "rocketchat".freeze
+  PROVIDER_NAME = "rocketchat"
 
   PROVIDER_ENABLED_SETTING = :chat_integration_rocketchat_enabled
-  CHANNEL_IDENTIFIER_KEY = "identifier".freeze
+  CHANNEL_IDENTIFIER_KEY = "identifier"
   CHANNEL_PARAMETERS = [{ key: "identifier", regex: '^[@#]\S*$', unique: true }]
 
   def self.rocketchat_message(post, channel)

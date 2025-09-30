@@ -19,7 +19,7 @@ register_svg_icon "patreon-new"
 require_relative "lib/validators/patreon_login_enabled_validator"
 
 module ::Patreon
-  PLUGIN_NAME = "discourse-patreon".freeze
+  PLUGIN_NAME = "discourse-patreon"
 end
 
 require_relative "lib/discourse_patreon/engine"
