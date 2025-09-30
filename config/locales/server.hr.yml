@@ -773,18 +773,25 @@ hr:
     spam:
       title: "Nepoželjno"
       description: "Ova tema je reklama. Nije korisno niti relevantno ovoj stranici već služi u promotivne svrhe."
-      long_form: "označio kao nepoželjno"
+      long_form: "označio/la ovo kao nepoželjno"
       short_description: "Ovo je oglas"
     inappropriate:
       title: "Neprikladno"
-      long_form: "označio ovo kao neprikladno"
+      description: 'Ova tema sadrži sadržaj koji bi razumna osoba smatrala uvredljivim, nasilnim, mržnjom ispunjenim ponašanjem ili kršenjem <a href="%{base_path}/guidelines">naših smjernica zajednice</a>.'
+      long_form: "označio/la ovo kao neprikladno"
+      short_description: 'Kršenje <a href="%{base_path}/guidelines">smjernica naše zajednice</a>'
     notify_moderators:
       title: "Nešto drugo"
-      long_form: "označio za moderatorsku pozornost"
+      description: 'Ova tema zahtijeva opću pozornost osoblja na temelju <a href="%{base_path}/guidelines">smjernica</a>, <a href="%{tos_url}">Uvjeta korištenja</a>ili iz drugog razloga koji nije naveden gore.'
+      long_form: "označio/la za pozornost moderatora"
+      short_description: "Zahtijeva pažnju osoblja iz drugog razloga"
       email_title: 'Tema "%{title}" zahtjeva moderatorsku pozornost'
       email_body: "%{link}\n\n%{message}"
     illegal:
-      short_description: "Ovo je nepravilno"
+      title: "Nezakonito"
+      description: "Ova tema zahtijeva pažnju osoblja jer vjerujem da sadrži sadržaj koji je nezakonit."
+      short_description: "Ovo je nezakonito"
+      email_title: 'Objava u "%{title}" zahtijeva pažnju osoblja'
       email_body: "%{link}\n\n%{message}"
   flagging:
     user_must_edit: "<p>Ovu je objavu zajednica označila zastavicom i privremeno je skrivena.</p>"
@@ -1153,6 +1160,8 @@ hr:
       host_names: "Vaša config/database.yml datoteka koristi standardno ime lokalnog domaćina (localhost hostname). Ažurirajte je da koristi ime vaše stranice."
       queue_size: "Broj predbilježenih zadataka je %{queue_size}, što je velik broj. Ovo može biti pokazatelj problema za Sidekiq procesom(ima), ili trebate dodati još Sidekiq \"radnika\"."
       ram: "Server vam radi s manje od 1 GB ukupne memorije. Barem 1 GB se preporuča."
+      out_of_date_themes: "Dostupna su ažuriranja sljedećih tema:%{themes_list}"
+      unreachable_themes: "Nismo uspjeli provjeriti ima li ažuriranja sljedećih tema:%{themes_list}"
   site_settings:
     disabled: "onemogućen"
     allow_user_locale: "Dopustite korisnicima da odaberu vlastite postavke jezika sučelja"
@@ -1670,13 +1679,13 @@ hr:
     title: "Otkaži pretplatu na Mailer"
     subject_template: "Potvrdite da više ne želite primati ažuriranja putem e-pošte od %{site_title}"
     text_body_template: |
-      Netko (možda vi?) je zatražio da se više ne šalju ažuriranja e-poštom od %{site_domain_name} na ovu adresu.
+      Netko (možda vi?) je zatražio da se više ne šalju ažuriranja e-mailom od %{site_domain_name} na ovu adresu.
       Ako to želite potvrditi, kliknite ovu poveznicu:
 
       %{confirm_unsubscribe_link}
 
 
-      Ako želite nastaviti primati ažuriranja e-poštom, možete zanemariti ovu e-poruku.
+      Ako želite nastaviti primati ažuriranja e-mailom, možete zanemariti ovu e-mail poruku.
   invite_mailer:
     title: "Pozovite Mailera"
     subject_template: "%{inviter_name} vas je pozvao na '%{topic_title}' na %{site_domain_name}"
