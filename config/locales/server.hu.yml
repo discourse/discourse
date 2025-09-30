@@ -2447,7 +2447,6 @@ hu:
     about_page_extra_groups_order: "Az extra csoportok sorrendje a névjegy oldalon."
     adobe_analytics_tags_url: "Adobe Analytics címkék URL-je (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Csoportok, amelyek megtekinthetik egy bejegyzés nyers e-mail tartalmát, ha azt bejövő e-mailből hozták létre. Ez magában foglalja az e-mail fejléceket és egyéb technikai információkat."
-    viewport_based_mobile_mode: "KÍSÉRLETI: Tiltsa le a felhasználói ügynök alapú mobil/asztali módokat, és használja helyettük a nézetablak szélességét."
     content_localization_enabled: "Lokalizált tartalmakat jelenít meg a felhasználók számára a böngésző vagy a felhasználói nyelvi beállítások alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. A támogatott helyi nyelvek a 'tartalom lokalizációja támogatott helyi nyelvek' menüpontban vannak beállítva."
     content_localization_supported_locales: "A támogatott helyi nyelvek listája, amelyekre a felhasználói tartalom lefordítható. Feltételezi, hogy a 'tartalom lokalizáció engedélyezve'."
     content_localization_allowed_groups: "Lokalizált tartalom frissítésére jogosult csoportok. Feltételezi a 'tartalom lokalizáció engedélyezve' opciót."

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class PatreonSyncPatronsToGroups < ::Jobs::Scheduled
     every 6.hours
     sidekiq_options retry: false
@@ -11,8 +11,8 @@ module ::Jobs
         return
       end
 
-      ::Patreon::Patron.update!
-      ::Patreon.set("last_sync", at: Time.now)
+      Patreon::Patron.update!
+      Patreon.set("last_sync", at: Time.now)
     end
   end
 end

@@ -55,7 +55,7 @@ export default RouteTemplate(
       @extraFilterCells={{array (hash)}}
     >
       <:default as |emailLog ccThreshold sortWithAddressFilter|>
-        <tr class="sent-email-item">
+        <tr class="sent-email-item" data-test-email-log-row-id={{emailLog.id}}>
           <td class="sent-email-date">{{formatDate emailLog.created_at}}</td>
           <td class="sent-email-username">
             {{#if emailLog.user}}

@@ -191,6 +191,38 @@ CREATE TABLE tags
     name        TEXT     NOT NULL
 );
 
+CREATE TABLE topic_allowed_users
+(
+    topic_id   NUMERIC  NOT NULL,
+    user_id    NUMERIC  NOT NULL,
+    created_at DATETIME,
+    PRIMARY KEY (topic_id, user_id)
+);
+
+CREATE TABLE topics
+(
+    original_id          NUMERIC  NOT NULL PRIMARY KEY,
+    archetype            TEXT,
+    archived             BOOLEAN,
+    bannered_until       DATETIME,
+    category_id          NUMERIC,
+    closed               BOOLEAN,
+    created_at           DATETIME,
+    deleted_at           DATETIME,
+    deleted_by_id        NUMERIC,
+    external_id          NUMERIC,
+    featured_link        TEXT,
+    pinned_at            DATETIME,
+    pinned_globally      BOOLEAN,
+    pinned_until         DATETIME,
+    subtype              TEXT,
+    title                TEXT     NOT NULL,
+    user_id              NUMERIC,
+    views                INTEGER,
+    visibility_reason_id NUMERIC,
+    visible              BOOLEAN
+);
+
 CREATE TABLE user_associated_accounts
 (
     provider_name TEXT      NOT NULL,

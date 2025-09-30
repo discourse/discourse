@@ -3780,6 +3780,9 @@ fi:
       title: "Uusimmat viestit"
       empty: "Viestejä ei ole"
       aria_post_number: "%{title} – viesti %{postNumber}"
+      bulk:
+        clear_all: "Tyhjennä kaikki"
+        actions: "Joukkotoiminnot"
     post:
       confirm_delete: "Oletko varma, että haluat poistaa tämän viestin?"
       quote_reply: "Lainaa"

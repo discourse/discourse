@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiLlmsController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def index
         llms = LlmModel.all.includes(:llm_quotas).order(:display_name)

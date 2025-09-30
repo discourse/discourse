@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 module DiscourseChatIntegration::Provider::FlowdockProvider
-  PROVIDER_NAME = "flowdock".freeze
+  PROVIDER_NAME = "flowdock"
   PROVIDER_ENABLED_SETTING = :chat_integration_flowdock_enabled
-  CHANNEL_IDENTIFIER_KEY = "flow_token".freeze # this is really weird but is the only way to identify a channel in this provider
+  CHANNEL_IDENTIFIER_KEY = "flow_token" # this is really weird but is the only way to identify a channel in this provider
   CHANNEL_PARAMETERS = [{ key: "flow_token", regex: '^\S+', unique: true, hidden: true }]
 
   def self.send_message(url, message)
@@ -20,7 +20,7 @@ module DiscourseChatIntegration::Provider::FlowdockProvider
   end
 
   def self.generate_flowdock_message(post, flow_token)
-    display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+    display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
     message = {
       flow_token: flow_token,
@@ -54,11 +54,11 @@ module DiscourseChatIntegration::Provider::FlowdockProvider
 
     unless response.kind_of?(Net::HTTPSuccess)
       error_key = nil
-      raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                            error_key: error_key,
-                                                            message: message,
-                                                            response_body: response.body,
-                                                          }
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key: error_key,
+                                                          message: message,
+                                                          response_body: response.body,
+                                                        }
     end
   end
 

@@ -12,7 +12,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
   THREAD_LEGACY = "thread"
 
   PROVIDER_ENABLED_SETTING = :chat_integration_slack_enabled
-  CHANNEL_IDENTIFIER_KEY = "identifier".freeze
+  CHANNEL_IDENTIFIER_KEY = "identifier"
   CHANNEL_PARAMETERS = [{ key: "identifier", regex: '^[@#]?\S*$', unique: true }]
 
   require_dependency "topic"
@@ -31,7 +31,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
   end
 
   def self.slack_message(post, channel, filter)
-    display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+    display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
     topic = post.topic
 
@@ -88,7 +88,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
   end
 
   def self.create_slack_message(context:, content:, url:, channel_name:)
-    sender = ::DiscourseChatIntegration::Helper.formatted_display_name(Discourse.system_user)
+    sender = DiscourseChatIntegration::Helper.formatted_display_name(Discourse.system_user)
 
     content = replace_placehoders(content, context) if context["kind"] ==
       DiscourseAutomation::Triggers::TOPIC_TAGS_CHANGED
@@ -188,11 +188,11 @@ module DiscourseChatIntegration::Provider::SlackProvider
     response = http.request(req)
 
     unless response.kind_of? Net::HTTPSuccess
-      raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                            request: uri,
-                                                            response_code: response.code,
-                                                            response_body: response.body,
-                                                          }
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          request: uri,
+                                                          response_code: response.code,
+                                                          response_body: response.body,
+                                                        }
     end
 
     json = JSON.parse(response.body)
@@ -204,12 +204,12 @@ module DiscourseChatIntegration::Provider::SlackProvider
       else
         error_key = nil
       end
-      raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                            error_key: error_key,
-                                                            request: uri,
-                                                            response_code: response.code,
-                                                            response_body: response.body,
-                                                          }
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key: error_key,
+                                                          request: uri,
+                                                          response_code: response.code,
+                                                          response_body: response.body,
+                                                        }
     end
 
     ts = json.dig("message", "thread_ts") || json["ts"]
@@ -237,12 +237,12 @@ module DiscourseChatIntegration::Provider::SlackProvider
       else
         error_key = nil
       end
-      raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                            error_key: error_key,
-                                                            request: req.body,
-                                                            response_code: response.code,
-                                                            response_body: response.body,
-                                                          }
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key: error_key,
+                                                          request: req.body,
+                                                          response_code: response.code,
+                                                          response_body: response.body,
+                                                        }
     end
   end
 

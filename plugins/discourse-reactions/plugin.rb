@@ -60,7 +60,7 @@ after_initialize do
     Notification.singleton_class.prepend DiscourseReactions::NotificationExtension
   end
 
-  Discourse::Application.routes.append { mount ::DiscourseReactions::Engine, at: "/" }
+  Discourse::Application.routes.append { mount DiscourseReactions::Engine, at: "/" }
 
   add_to_serializer(:post, :reactions) do
     reactions = []

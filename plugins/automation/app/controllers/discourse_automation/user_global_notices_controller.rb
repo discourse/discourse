@@ -2,7 +2,7 @@
 
 module DiscourseAutomation
   class UserGlobalNoticesController < ApplicationController
-    requires_plugin DiscourseAutomation::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
     requires_login
 
     def destroy

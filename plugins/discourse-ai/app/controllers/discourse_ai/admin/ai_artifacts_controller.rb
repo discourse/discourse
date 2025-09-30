@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiArtifactsController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       PER_PAGE_MAX = 100
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseUserNotes
+module DiscourseUserNotes
   COUNT_FIELD = "user_notes_count"
 
   class Engine < ::Rails::Engine
