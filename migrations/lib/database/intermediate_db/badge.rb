@@ -41,7 +41,8 @@ module Migrations::Database::IntermediateDB
     # @param allow_title           [Boolean, nil]
     # @param auto_revoke           [Boolean, nil]
     # @param badge_grouping_id     [Integer, String, nil]
-    # @param badge_type_id         [Integer, String]
+    # @param badge_type_id         [Integer]
+    #   Any constant from BadgeType (e.g. BadgeType::GOLD)
     # @param created_at            [Time, nil]
     # @param description           [String, nil]
     # @param enabled               [Boolean, nil]
@@ -59,6 +60,8 @@ module Migrations::Database::IntermediateDB
     # @param trigger               [Integer, nil]
     #
     # @return [void]
+    #
+    # @see Migrations::Database::IntermediateDB::Enums::BadgeType
     def self.create(
       original_id:,
       allow_title: nil,

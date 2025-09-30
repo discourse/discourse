@@ -26,9 +26,12 @@ module Migrations::Database::IntermediateDB
     # @param user_id              [Integer, String]
     # @param created_at           [Time, nil]
     # @param notification_level   [Integer, nil]
+    #   Any constant from GroupNotificationLevel (e.g. GroupNotificationLevel::MUTED)
     # @param owner                [Boolean, nil]
     #
     # @return [void]
+    #
+    # @see Migrations::Database::IntermediateDB::Enums::GroupNotificationLevel
     def self.create(group_id:, user_id:, created_at: nil, notification_level: nil, owner: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

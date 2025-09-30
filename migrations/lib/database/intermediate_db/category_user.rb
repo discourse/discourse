@@ -25,8 +25,11 @@ module Migrations::Database::IntermediateDB
     # @param user_id              [Integer, String]
     # @param last_seen_at         [Time, nil]
     # @param notification_level   [Integer]
+    #   Any constant from CategoryNotificationLevel (e.g. CategoryNotificationLevel::MUTED)
     #
     # @return [void]
+    #
+    # @see Migrations::Database::IntermediateDB::Enums::CategoryNotificationLevel
     def self.create(category_id:, user_id:, last_seen_at: nil, notification_level:)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
