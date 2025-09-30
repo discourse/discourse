@@ -4702,6 +4702,7 @@ en:
     search_title: "Try searching instead?"
     search_button: "Search"
     home: "Take me home"
+    placeholder: "Search topics by title or keywords…"
 
   offline:
     title: "Cannot load app"
