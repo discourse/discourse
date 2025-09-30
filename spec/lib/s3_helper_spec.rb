@@ -405,8 +405,9 @@ RSpec.describe "S3Helper" do
     context "when using IAM profiles" do
       it "includes profile when specified" do
         GlobalSetting.stubs(:s3_use_iam_profile).returns(true)
-        profile = "test-profile"
-        options = S3Helper.s3_options(GlobalSetting, profile: profile)
+        GlobalSetting.stubs(:s3_file_uploads_profile).returns("test-profile")
+
+        options = S3Helper.s3_options(GlobalSetting)
 
         expect(options[:profile]).to eq("test-profile")
         expect(options).not_to have_key(:access_key_id)
@@ -415,7 +416,9 @@ RSpec.describe "S3Helper" do
 
       it "allows blank profile for EC2 instance profiles" do
         GlobalSetting.stubs(:s3_use_iam_profile).returns(true)
-        options = S3Helper.s3_options(GlobalSetting, profile: nil)
+        GlobalSetting.stubs(:s3_file_uploads_profile).returns(nil)
+
+        options = S3Helper.s3_options(GlobalSetting)
 
         expect(options).not_to have_key(:profile)
         expect(options).not_to have_key(:access_key_id)
@@ -424,7 +427,9 @@ RSpec.describe "S3Helper" do
 
       it "works with empty string profile" do
         GlobalSetting.stubs(:s3_use_iam_profile).returns(true)
-        options = S3Helper.s3_options(GlobalSetting, profile: "")
+        GlobalSetting.stubs(:s3_file_uploads_profile).returns("")
+
+        options = S3Helper.s3_options(GlobalSetting)
 
         expect(options).not_to have_key(:profile)
         expect(options).not_to have_key(:access_key_id)
@@ -445,12 +450,13 @@ RSpec.describe "S3Helper" do
         expect(options).not_to have_key(:profile)
       end
 
-      it "includes access keys even if profile passed when not using IAM profiles" do
+      it "includes access keys even when profile setting exists but IAM profiles disabled" do
         GlobalSetting.stubs(:s3_use_iam_profile).returns(false)
+        GlobalSetting.stubs(:s3_file_uploads_profile).returns("ignored-profile")
         GlobalSetting.stubs(:s3_access_key_id).returns("test-key")
         GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
 
-        options = S3Helper.s3_options(GlobalSetting, profile: "ignored-profile")
+        options = S3Helper.s3_options(GlobalSetting)
 
         expect(options[:access_key_id]).to eq("test-key")
         expect(options[:secret_access_key]).to eq("test-secret")
