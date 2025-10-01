@@ -84,7 +84,7 @@ module ReviewableActionBuilder
 
   # Build actions for the reviewable based on the current state and guardian permissions.
   #
-  # @TODO (reviewable-refresh) Replace this method with {Reviewable#build_actions} once the new UI is fully implemented.
+  # TODO (reviewable-refresh) Replace this method with {Reviewable#build_actions} once the new UI is fully implemented.
   #
   # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
   # @param guardian [Guardian] Guardian instance to check permissions.
@@ -104,7 +104,7 @@ module ReviewableActionBuilder
   # Classes that include this module should implement this method to define
   # the legacy combined actions for their specific reviewable type.
   #
-  # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
+  # TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
   #
   # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
   # @param guardian [Guardian] Guardian instance to check permissions.
@@ -120,7 +120,7 @@ module ReviewableActionBuilder
   # Classes that include this module should implement this method to define
   # the new separated actions for their specific reviewable type.
   #
-  # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
+  # TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
   #
   # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
   # @param guardian [Guardian] Guardian instance to check permissions.
