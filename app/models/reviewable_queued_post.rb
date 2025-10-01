@@ -210,16 +210,25 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
+    perform_new_delete_user(performed_by, args)
+  end
+
+  def perform_delete_and_block_user(performed_by, args)
+    perform_new_delete_and_block_user(performed_by, args)
+  end
+
+  # TODO (reviewable-refresh): Rename once old actions are gone
+  def perform_new_delete_user(performed_by, args)
     reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = perform_new_delete_user(performed_by, args)
+    result = super
     result.remove_reviewable_ids += reviewable_ids
     update_column(:target_created_by_id, nil)
     result
   end
 
-  def perform_delete_and_block_user(performed_by, args)
+  def perform_new_delete_and_block_user(performed_by, args)
     reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = perform_new_delete_and_block_user(performed_by, args)
+    result = super
     result.remove_reviewable_ids += reviewable_ids
     update_column(:target_created_by_id, nil)
     result
