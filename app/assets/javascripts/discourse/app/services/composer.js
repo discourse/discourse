@@ -1561,7 +1561,7 @@ export default class ComposerService extends Service {
     }
 
     if (this.siteSettings.open_composer_without_category) {
-      this.model.set("categoryId", -1)
+      this.model.set("categoryId", -1);
     }
 
     if (opts.topicTags && this.site.can_tag_topics) {
