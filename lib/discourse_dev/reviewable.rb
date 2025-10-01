@@ -36,7 +36,7 @@ module DiscourseDev
       topics =
         ::Topic
           .listable_topics
-          .where("id NOT IN (?)", ::Category.pluck(:topic_id))
+          .where.not(id: ::Category.pluck(:topic_id))
           .limit(count)
           .to_a
 

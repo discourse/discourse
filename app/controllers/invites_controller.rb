@@ -461,7 +461,7 @@ class InvitesController < ApplicationController
 
     Invite
       .pending(current_user)
-      .where("invites.email IS NOT NULL")
+      .where.not(invites: { email: nil })
       .find_each { |invite| invite.resend_invite }
 
     render json: success_json
