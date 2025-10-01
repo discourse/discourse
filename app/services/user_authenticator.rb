@@ -9,7 +9,7 @@ class UserAuthenticator
   )
     @user = user
     @session = session
-    if session.try(:[], :authentication).is_a?(Hash)
+    if session&.dig(:authentication) && session[:authentication].is_a?(Hash)
       @auth_result = Auth::Result.from_session_data(session[:authentication], user: user)
     end
     @authenticator_finder = authenticator_finder
@@ -35,9 +35,8 @@ class UserAuthenticator
       authenticator.after_create_account(@user, @auth_result)
       confirm_email
     end
-    if @session.try(:[], :authentication)
-      @session.delete(:authentication)
-      @auth_result = nil
+    if @session&.dig(:authentication)
+      @session[:authentication] = @auth_result = nil
       @session[:authenticated_with_oauth] = true
     end
   end
