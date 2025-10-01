@@ -1,5 +1,6 @@
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { get } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { and, equal, not, or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -9,7 +10,6 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import deprecated from "discourse/lib/deprecated";
 import { deepMerge } from "discourse/lib/object";
-import PostsWithPlaceholders from "discourse/lib/posts-with-placeholders";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
@@ -19,6 +19,10 @@ import { loadTopicView } from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
 let _lastEditNotificationClick = null;
+
+export function Placeholder(viewName) {
+  this.viewName = viewName;
+}
 
 export function setLastEditNotificationClick(
   topicId,
@@ -37,27 +41,31 @@ export function resetLastEditNotificationClick() {
 }
 
 export default class PostStream extends RestModel {
+  static PLACEHOLDER = new Placeholder("post-placeholder");
+
   @service currentUser;
   @service store;
 
+  @tracked appendingPlaceholders = 0;
   @tracked filter;
-  @tracked filterRepliesToPostNumber;
-  @tracked filterUpwardsPostID;
+  @tracked
+  filterRepliesToPostNumber =
+    parseInt(this.get("topic.replies_to_post_number"), 10) || false;
+  @tracked filterUpwardsPostID = false;
   @tracked gaps;
   @tracked isMegaTopic;
   @tracked lastId;
-  @tracked loaded;
-  @tracked loadingAbove;
-  @tracked loadingBelow;
-  @tracked loadingFilter;
+  @tracked loaded = false;
+  @tracked loadingAbove = false;
+  @tracked loadingBelow = false;
+  @tracked loadingFilter = false;
   @tracked loadingNearPost;
-  @tracked postsWithPlaceholders;
-  @tracked stagingPost;
-  @tracked timelineLookup;
+  @tracked stagingPost = false;
+  @tracked timelineLookup = [];
 
   @trackedArray posts = [];
-  @trackedArray stream;
-  @trackedArray userFilters;
+  @trackedArray stream = [];
+  @trackedArray userFilters = [];
 
   @or("loadingAbove", "loadingBelow", "loadingFilter", "stagingPost") loading;
   @not("loading") notLoading;
@@ -67,29 +75,16 @@ export default class PostStream extends RestModel {
   @not("firstPostPresent") firstPostNotLoaded;
   @not("loadedAllPosts") lastPostNotLoaded;
 
-  _identityMap = null;
+  _identityMap = {};
 
-  init() {
-    this._identityMap = {};
-    const postsWithPlaceholders = PostsWithPlaceholders.create({
-      posts: this.posts,
-      store: this.store,
-    });
-
-    this.setProperties({
-      postsWithPlaceholders,
-      stream: [],
-      userFilters: [],
-      filterRepliesToPostNumber:
-        parseInt(this.get("topic.replies_to_post_number"), 10) || false,
-      filterUpwardsPostID: false,
-      loaded: false,
-      loadingAbove: false,
-      loadingBelow: false,
-      loadingFilter: false,
-      stagingPost: false,
-      timelineLookup: [],
-    });
+  @cached
+  get postsWithPlaceholders() {
+    return this.posts.concat(
+      Array.from(
+        { length: this.appendingPlaceholders },
+        () => PostStream.PLACEHOLDER
+      )
+    );
   }
 
   get filteredPostsCount() {
@@ -98,6 +93,7 @@ export default class PostStream extends RestModel {
       : this.stream.length;
   }
 
+  @dependentKeyCompat
   get hasPosts() {
     return this.posts.length > 0;
   }
@@ -106,6 +102,7 @@ export default class PostStream extends RestModel {
     return this.hasPosts && this.filteredPostsCount > 0;
   }
 
+  @dependentKeyCompat
   get firstPostPresent() {
     if (!this.hasLoadedData) {
       return false;
@@ -122,6 +119,7 @@ export default class PostStream extends RestModel {
     return this.isMegaTopic ? this.lastId : this.stream.at(-1);
   }
 
+  @dependentKeyCompat
   get loadedAllPosts() {
     if (!this.hasLoadedData) {
       return false;
@@ -402,9 +400,7 @@ export default class PostStream extends RestModel {
             const stored = this.storePost(p);
             if (!currentPosts.includes(stored)) {
               const insertAtIndex = postIdx++;
-              this.postsWithPlaceholders.insertPost(insertAtIndex, () => {
-                currentPosts.splice(insertAtIndex, 0, stored);
-              });
+              currentPosts.splice(insertAtIndex, 0, stored);
             }
           });
 
@@ -450,83 +446,74 @@ export default class PostStream extends RestModel {
   }
 
   // Appends the next window of posts to the stream. Call it when scrolling downwards.
-  appendMore() {
+  async appendMore() {
     // Make sure we can append more posts
     if (!this.canAppendMore) {
-      return Promise.resolve();
+      return;
     }
 
-    const postsWithPlaceholders = this.postsWithPlaceholders;
-
     if (this.isMegaTopic) {
-      this.set("loadingBelow", true);
+      this.loadingBelow = true;
+      this.appendingPlaceholders += this.get("topic.chunk_size") - 1;
 
-      const fakePostIds = [
-        ...Array(this.get("topic.chunk_size") - 1).keys(),
-      ].map((i) => -i - 1);
-      postsWithPlaceholders.appending(fakePostIds);
-
-      return this.fetchNextWindow(this.posts.at(-1).post_number, true, (p) => {
-        this.appendPost(p);
-      }).finally(() => {
-        postsWithPlaceholders.finishedAppending(fakePostIds);
-        this.set("loadingBelow", false);
-      });
+      try {
+        await this.fetchNextWindow(this.posts.at(-1).post_number, true, (p) => {
+          this.appendPost(p);
+        });
+      } finally {
+        this.appendingPlaceholders -= this.get("topic.chunk_size") - 1;
+        this.loadingBelow = false;
+      }
     } else {
       const postIds = this.nextWindow;
       if (isEmpty(postIds)) {
-        return Promise.resolve();
+        return;
       }
-      this.set("loadingBelow", true);
-      postsWithPlaceholders.appending(postIds);
 
-      return this.findPostsByIds(postIds)
-        .then((posts) => {
-          posts.forEach((p) => this.appendPost(p));
-          return posts;
-        })
-        .finally(() => {
-          postsWithPlaceholders.finishedAppending(postIds);
-          this.set("loadingBelow", false);
-        });
+      this.loadingBelow = true;
+      this.appendingPlaceholders += postIds.length;
+
+      try {
+        const posts = await this.findPostsByIds(postIds);
+        posts.forEach((p) => this.appendPost(p));
+        return posts;
+      } finally {
+        this.appendingPlaceholders -= postIds.length;
+        this.loadingBelow = false;
+      }
     }
   }
 
   // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
-  prependMore() {
+  async prependMore() {
     // Make sure we can append more posts
     if (!this.canPrependMore) {
-      return Promise.resolve();
+      return;
     }
 
     if (this.isMegaTopic) {
-      this.set("loadingAbove", true);
-      let prependedIds = [];
+      this.loadingAbove = true;
 
-      return this.fetchNextWindow(this.posts[0].post_number, false, (p) => {
-        this.prependPost(p);
-        prependedIds.push(p.id);
-      }).finally(() => {
-        const postsWithPlaceholders = this.postsWithPlaceholders;
-        postsWithPlaceholders.finishedPrepending(prependedIds);
-        this.set("loadingAbove", false);
-      });
+      try {
+        await this.fetchNextWindow(this.posts[0].post_number, false, (p) => {
+          this.prependPost(p);
+        });
+      } finally {
+        this.loadingAbove = false;
+      }
     } else {
       const postIds = this.previousWindow;
       if (isEmpty(postIds)) {
-        return Promise.resolve();
+        return;
       }
-      this.set("loadingAbove", true);
+      this.loadingAbove = true;
 
-      return this.findPostsByIds(postIds.reverse())
-        .then((posts) => {
-          posts.forEach((p) => this.prependPost(p));
-        })
-        .finally(() => {
-          const postsWithPlaceholders = this.postsWithPlaceholders;
-          postsWithPlaceholders.finishedPrepending(postIds);
-          this.set("loadingAbove", false);
-        });
+      try {
+        const posts = await this.findPostsByIds(postIds.reverse());
+        posts.forEach((p) => this.prependPost(p));
+      } finally {
+        this.loadingAbove = false;
+      }
     }
   }
 
@@ -588,7 +575,7 @@ export default class PostStream extends RestModel {
   **/
   undoPost(post) {
     this.stream.removeObject(-1);
-    this.postsWithPlaceholders.removePost(() => this.posts.removeObject(post));
+    this.posts.removeObject(post);
     this._identityMap[-1] = null;
 
     const topic = this.topic;
@@ -605,9 +592,9 @@ export default class PostStream extends RestModel {
   prependPost(post) {
     this._initUserModels(post);
     const stored = this.storePost(post);
-    if (stored) {
-      const posts = this.posts;
-      posts.unshiftObject(stored);
+
+    if (stored && !this.posts.includes(stored)) {
+      this.posts.unshift(stored);
     }
 
     return post;
@@ -616,21 +603,17 @@ export default class PostStream extends RestModel {
   appendPost(post) {
     this._initUserModels(post);
     const stored = this.storePost(post);
-    if (stored) {
-      const posts = this.posts;
 
-      if (!posts.includes(stored)) {
-        if (!this.loadingBelow) {
-          this.postsWithPlaceholders.appendPost(() => posts.push(stored));
-        } else {
-          posts.push(stored);
-        }
+    if (stored) {
+      if (!this.posts.includes(stored)) {
+        this.posts.push(stored);
       }
 
       if (stored.id !== -1) {
         this.set("lastAppended", stored);
       }
     }
+
     return post;
   }
 
@@ -639,15 +622,13 @@ export default class PostStream extends RestModel {
       return;
     }
 
-    this.postsWithPlaceholders.refreshAll(() => {
-      const allPosts = this.posts;
-      const postIds = posts.map((p) => p.id);
-      const identityMap = this._identityMap;
+    const allPosts = this.posts;
+    const postIds = posts.map((p) => p.id);
+    const identityMap = this._identityMap;
 
-      this.stream.removeObjects(postIds);
-      allPosts.removeObjects(posts);
-      postIds.forEach((id) => delete identityMap[id]);
-    });
+    this.stream.removeObjects(postIds);
+    allPosts.removeObjects(posts);
+    postIds.forEach((id) => delete identityMap[id]);
   }
 
   // Returns a post from the identity map if it's been inserted.
@@ -796,9 +777,7 @@ export default class PostStream extends RestModel {
         });
 
         if (index < posts.length) {
-          this.postsWithPlaceholders.refreshAll(() => {
-            posts.splice(index, 0, post);
-          });
+          posts.splice(index, 0, post);
         } else {
           if (post.post_number < posts[posts.length - 1].post_number + 5) {
             this.appendMore();
@@ -1047,10 +1026,7 @@ export default class PostStream extends RestModel {
   }
 
   updateFromJson(postStreamData) {
-    const posts = this.posts;
-
-    const postsWithPlaceholders = this.postsWithPlaceholders;
-    postsWithPlaceholders.clear(() => posts.clear());
+    this.posts.length = 0;
 
     this.set("gaps", null);
     if (postStreamData) {
