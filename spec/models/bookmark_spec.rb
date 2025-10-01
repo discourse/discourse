@@ -178,4 +178,100 @@ RSpec.describe Bookmark do
       end
     end
   end
+
+  describe "reminder notifications cleanup" do
+    fab!(:user)
+
+    it "deletes reminder notifications when bookmark is destroyed" do
+      bookmark = Fabricate(:bookmark, user: user, bookmarkable: post)
+
+      notification =
+        Fabricate(
+          :bookmark_reminder_notification,
+          user:,
+          post:,
+          data: {
+            bookmark_id: bookmark.id,
+            bookmarkable_type: "Post",
+            bookmarkable_id: post.id,
+            title: post.topic.title,
+            bookmarkable_url: post.url,
+          }.to_json,
+        )
+
+      expect { bookmark.destroy }.to change { Notification.find_by(id: notification.id) }.from(
+        notification,
+      ).to(nil)
+    end
+
+    it "does not delete other user's reminder notifications" do
+      other_user = Fabricate(:user)
+      bookmark = Fabricate(:bookmark, user: user, bookmarkable: post)
+
+      user_notification =
+        Fabricate(
+          :bookmark_reminder_notification,
+          user:,
+          post:,
+          data: {
+            bookmark_id: bookmark.id,
+            bookmarkable_type: "Post",
+            bookmarkable_id: post.id,
+            title: post.topic.title,
+            bookmarkable_url: post.url,
+          }.to_json,
+        )
+
+      other_notification =
+        Fabricate(
+          :bookmark_reminder_notification,
+          user: other_user,
+          post: post,
+          data: {
+            bookmark_id: bookmark.id,
+            bookmarkable_type: "Post",
+            bookmarkable_id: post.id,
+            title: post.topic.title,
+            bookmarkable_url: post.url,
+          }.to_json,
+        )
+
+      expect { bookmark.destroy }.to change { Notification.find_by(id: user_notification.id) }
+        .from(user_notification)
+        .to(nil)
+        .and(not_change { Notification.find_by(id: other_notification.id) })
+    end
+
+    it "does not delete non-reminder notifications" do
+      bookmark = Fabricate(:bookmark, user: user, bookmarkable: post)
+
+      reminder_notification =
+        Fabricate(
+          :bookmark_reminder_notification,
+          user:,
+          post:,
+          data: {
+            bookmark_id: bookmark.id,
+            bookmarkable_type: "Post",
+            bookmarkable_id: post.id,
+            title: post.topic.title,
+            bookmarkable_url: post.url,
+          }.to_json,
+        )
+
+      other_notification =
+        Fabricate(
+          :notification,
+          user:,
+          post:,
+          notification_type: Notification.types[:liked],
+          data: { post_number: post.post_number }.to_json,
+        )
+
+      expect { bookmark.destroy }.to change { Notification.find_by(id: reminder_notification.id) }
+        .from(reminder_notification)
+        .to(nil)
+        .and(not_change { Notification.find_by(id: other_notification.id) })
+    end
+  end
 end
