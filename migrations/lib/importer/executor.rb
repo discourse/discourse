@@ -6,6 +6,7 @@ module Migrations::Importer
       @intermediate_db = ::Migrations::Database.connect(config[:intermediate_db])
       @discourse_db = DiscourseDB.new
       @shared_data = SharedData.new(@discourse_db)
+      @options = options
 
       attach_mappings_db(config[:mappings_db], options[:reset])
       attach_uploads_db(config[:uploads_db])
@@ -45,7 +46,8 @@ module Migrations::Importer
           .constants
           .map { |c| steps_module.const_get(c) }
           .select { |klass| klass.is_a?(Class) && klass < ::Migrations::Importer::Step }
-      TopologicalSorter.sort(classes)
+
+      TopologicalSorter.sort(classes, only: @options[:only], skip: @options[:skip])
     end
 
     def execute_steps
