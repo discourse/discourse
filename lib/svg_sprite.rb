@@ -115,6 +115,7 @@ module SvgSprite
         fab-facebook
         fab-facebook-square
         fab-github
+        fab-google
         fab-instagram
         fab-linkedin-in
         fab-linux
