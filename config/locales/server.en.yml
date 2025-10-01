@@ -5905,6 +5905,16 @@ en:
         title: "Delete & block"
         description: "Delete the user and block their IP/email"
         complete: "User deleted and blocked"
+      # TODO (reviewable-refresh): Remove new_ variants in favor of the ones above.
+      new_delete_user:
+        title: "Delete user"
+        description: "Delete this user from the forum"
+        complete: "User deleted"
+        reason: "Deleted via review queue"
+      new_delete_and_block_user:
+        title: "Delete & block"
+        description: "Delete the user and block their IP/email"
+        complete: "User deleted and blocked"
 
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"
