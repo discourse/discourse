@@ -210,32 +210,16 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    # To maintain backwards compatibility, we need to use the old Reviewable status behaviour.
-    result = perform_new_delete_user(performed_by, args)
-    result.transition_to = :approved if result.success?
-    result
-  end
-
-  def perform_delete_and_block_user(performed_by, args)
-    # To maintain backwards compatibility, we need to use the old Reviewable status behaviour.
-    result = perform_new_delete_and_block_user(performed_by, args)
-    result.transition_to = :approved if result.success?
-    result
-  end
-
-  # TODO (reviewable-refresh): Replace perform_delete_user and perform_delete_and_block_user
-  # with these new methods once the new UI is fully deployed
-  def perform_new_delete_user(performed_by, args)
     reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super
+    result = perform_new_delete_user(performed_by, args)
     result.remove_reviewable_ids += reviewable_ids
     update_column(:target_created_by_id, nil)
     result
   end
 
-  def perform_new_delete_and_block_user(performed_by, args)
+  def perform_delete_and_block_user(performed_by, args)
     reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super
+    result = perform_new_delete_and_block_user(performed_by, args)
     result.remove_reviewable_ids += reviewable_ids
     update_column(:target_created_by_id, nil)
     result
