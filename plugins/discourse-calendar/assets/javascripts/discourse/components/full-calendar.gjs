@@ -33,6 +33,7 @@ export default class FullCalendar extends Component {
   @service menu;
   @service siteSettings;
   @service loadingSlider;
+  @service site;
 
   @controller topic;
 
@@ -84,6 +85,12 @@ export default class FullCalendar extends Component {
       weekends: this.args.weekends ?? true,
       initialDate: this.args.initialDate,
       height: this.args.height ?? "100%",
+      views: {
+        dayGridMonth: {
+          displayEventTime: this.site.desktopView,
+        },
+      },
+
       events: async (info, successCallback, failureCallback) => {
         if (this.args.onLoadEvents) {
           try {
