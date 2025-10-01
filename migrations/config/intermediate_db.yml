@@ -123,6 +123,14 @@ schema:
       columns:
         exclude:
           - "id"
+    topic_users:
+      primary_key_column_names: [ "topic_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+          - "bookmarked"
+          - "liked"
+          - "posted"
     topics:
       columns:
         exclude:
@@ -473,7 +481,6 @@ schema:
         - "topic_search_data"
         - "topic_thumbnails"
         - "topic_timers"
-        - "topic_users"
         - "topic_view_stats"
         - "topic_views"
         - "topic_voting_category_settings"
