@@ -3,7 +3,7 @@
 module DiscourseChatIntegration::Provider::PowerAutomateProvider
   PROVIDER_NAME = "powerautomate"
   PROVIDER_ENABLED_SETTING = :chat_integration_powerautomate_enabled
-  CHANNEL_IDENTIFIER_KEY = "name".freeze
+  CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [
     { key: "name", regex: '^\S+$', unique: true },
     { key: "webhook_url", regex: '^https:\/\/\S+$', unique: true, hidden: true },
@@ -26,12 +26,12 @@ module DiscourseChatIntegration::Provider::PowerAutomateProvider
       else
         error_key = nil
       end
-      raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                            error_key: error_key,
-                                                            request: req.body,
-                                                            response_code: response.code,
-                                                            response_body: response.body,
-                                                          }
+      raise DiscourseChatIntegration::ProviderError.new info: {
+                                                          error_key: error_key,
+                                                          request: req.body,
+                                                          response_code: response.code,
+                                                          response_body: response.body,
+                                                        }
     end
   end
 

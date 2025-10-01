@@ -59,8 +59,8 @@ export default class PostSmallAction extends Component {
   @cached
   get CustomComponent() {
     return applyValueTransformer("post-small-action-custom-component", null, {
-      actionCode: this.code,
-      post: this.post,
+      code: this.code,
+      post: this.args.post,
     });
   }
 
@@ -87,12 +87,12 @@ export default class PostSmallAction extends Component {
       : "";
 
     let who = "";
-    if (this.username) {
+    if (this.who) {
       if (this.isGroupAction) {
-        who = `<a class="mention-group" href="/g/${this.username}">@${this.username}</a>`;
+        who = `<a class="mention-group" href="/g/${this.who}">@${this.who}</a>`;
       } else {
-        who = `<a class="mention" href="${userPath(this.username)}">@${
-          this.username
+        who = `<a class="mention" href="${userPath(this.who)}">@${
+          this.who
         }</a>`;
       }
     }
@@ -124,7 +124,7 @@ export default class PostSmallAction extends Component {
     );
   }
 
-  get username() {
+  get who() {
     return this.args.post.action_code_who;
   }
 
@@ -162,10 +162,10 @@ export default class PostSmallAction extends Component {
             {{#if this.CustomComponent}}
               <this.CustomComponent
                 @code={{this.code}}
-                @post={{this.post}}
+                @post={{@post}}
                 @createdAt={{this.createdAt}}
                 @path={{this.path}}
-                @username={{this.username}}
+                @who={{this.who}}
               />
             {{else}}
               <p>{{htmlSafe this.description}}</p>

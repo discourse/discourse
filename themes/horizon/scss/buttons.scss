@@ -28,21 +28,11 @@
     color: var(--accent-color);
   }
 
+  &:focus-visible,
   &:hover {
-    border-color: transparent;
-    box-shadow: 0 0 8px 1px var(--button-box-shadow);
-    background: var(--d-content-background);
-    color: var(--accent-color);
-
-    .d-icon {
-      color: var(--accent-color);
-    }
-  }
-
-  &:focus-visible {
-    background: var(--d-content-background);
-    color: var(--accent-color);
-    box-shadow: 0 0 0 3px var(--button-box-shadow);
+    background: var(--primary-100);
+    color: var(--primary);
+    box-shadow: 0 0 0 4px var(--button-box-shadow);
 
     .d-icon {
       color: var(--accent-color);
@@ -69,13 +59,11 @@
     color: var(--accent-text-color);
   }
 
-  &:hover {
+  &:not([disabled]):focus-visible,
+  &:not([disabled]):hover {
     .discourse-no-touch & {
-      background: light-dark(
-        oklch(from var(--accent-color) 40% c h),
-        oklch(from var(--accent-color) 50% c h)
-      );
-      box-shadow: 0 0 6px 1px var(--button-box-shadow);
+      background-color: var(--accent-color);
+      box-shadow: 0 0 0 4px var(--button-box-shadow);
       color: var(--accent-text-color);
 
       .d-icon {
@@ -84,22 +72,25 @@
     }
   }
 
-  &:focus-visible {
-    .discourse-no-touch & {
-      background: light-dark(
-        oklch(from var(--accent-color) 40% c h),
-        oklch(from var(--accent-color) 50% c h)
-      );
-      box-shadow: 0 0 0 4px var(--button-box-shadow);
-      color: var(--accent-text-color);
-    }
-  }
-
   &:active {
     background: light-dark(
       oklch(from var(--accent-color) 40% c h),
       oklch(from var(--accent-color) 50% c h)
     );
+  }
+
+  &:visited {
+    color: var(--accent-text-color);
+  }
+}
+
+.btn-danger {
+  .discourse-no-touch & {
+    &:not([disabled]):focus-visible,
+    &:not([disabled]):hover {
+      background-color: var(--danger);
+      box-shadow: 0 0 0 4px var(--d-button-danger-bg-color--hover);
+    }
   }
 }
 

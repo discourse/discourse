@@ -227,7 +227,7 @@ export default class MoveToTopic extends Component {
                   @value="new_message"
                   @selection={{this.selection}}
                 />
-                <b>{{i18n "topic.move_to_new_message.radio_label"}}</b>
+                {{i18n "topic.move_to_new_message.radio_label"}}
               </label>
             {{/if}}
 
@@ -238,7 +238,7 @@ export default class MoveToTopic extends Component {
                 @value="existing_message"
                 @selection={{this.selection}}
               />
-              <b>{{i18n "topic.move_to_existing_message.radio_label"}}</b>
+              {{i18n "topic.move_to_existing_message.radio_label"}}
             </label>
           </div>
 
@@ -317,7 +317,7 @@ export default class MoveToTopic extends Component {
                   @value="new_topic"
                   @selection={{this.selection}}
                 />
-                <b>{{i18n "topic.split_topic.radio_label"}}</b>
+                {{i18n "topic.split_topic.radio_label"}}
               </label>
             {{/if}}
 
@@ -328,7 +328,7 @@ export default class MoveToTopic extends Component {
                 @value="existing_topic"
                 @selection={{this.selection}}
               />
-              <b>{{i18n "topic.merge_topic.radio_label"}}</b>
+              {{i18n "topic.merge_topic.radio_label"}}
             </label>
 
             {{#if this.canSplitToPM}}
@@ -339,7 +339,7 @@ export default class MoveToTopic extends Component {
                   @value="new_message"
                   @selection={{this.selection}}
                 />
-                <b>{{i18n "topic.move_to_new_message.radio_label"}}</b>
+                {{i18n "topic.move_to_new_message.radio_label"}}
               </label>
             {{/if}}
           </div>

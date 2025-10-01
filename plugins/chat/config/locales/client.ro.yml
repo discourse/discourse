@@ -248,3 +248,7 @@ ro:
         keyboard_shortcuts:
           switch__unread_channel_arrows: "%{shortcut} Comută canal necitit"
           open_insert_link_modal: "%{shortcut} Inserează legătură (doar pentru compozitor)"
+    sidebar:
+      start_new_dm:
+        text: Începe un mesaj direct nou
+        title: Creează o discuție personală

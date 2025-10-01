@@ -124,7 +124,7 @@ export default class BookmarkMenu extends Component {
     this.bookmarkCreatePromise = this.bookmarkManager.create();
     this.bookmarkCreatePromise
       .then(() => {
-        // We show the menu with Edit/Delete options if the bokmark exists,
+        // We show the menu with Edit/Delete options if the bookmark exists,
         // so this "quicksave" will do nothing in that case.
         // NOTE: Need a nicer way to handle this; otherwise as soon as you save
         // a bookmark, it switches to the other Edit/Delete menu.
@@ -313,7 +313,7 @@ export default class BookmarkMenu extends Component {
                 @icon="trash-can"
                 @label="delete"
                 @action={{this.onRemoveBookmark}}
-                class="bookmark-menu__row-btn btn-transparent btn-danger"
+                class="bookmark-menu__row-btn --danger"
               />
             </dropdown.item>
 

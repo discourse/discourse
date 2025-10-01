@@ -103,7 +103,9 @@ export default class BulkTopicActions extends Component {
     return new Promise((resolve, reject) => {
       const resolveNextTask = async () => {
         if (tasks.length === 0) {
-          const topics = topicIds.map((id) => allTopics.findBy("id", id));
+          const topics = topicIds.map((id) =>
+            allTopics.find((value) => value.id === id)
+          );
           return resolve(topics);
         }
 
@@ -159,7 +161,7 @@ export default class BulkTopicActions extends Component {
         }
 
         let groupPrivateMessages = getOwner(this).lookup(
-          "controller:group-messages"
+          "controller:group.messages"
         );
 
         if (groupPrivateMessages.isGroup) {

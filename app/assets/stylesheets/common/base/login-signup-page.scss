@@ -248,6 +248,29 @@ body.signup-page {
         border-color: var(--discourse_id-border);
       }
     }
+
+    .discourse-id__wrapper {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      .btn-discourse-id__suffix {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        color: var(--primary-500);
+        font-size: var(--font-down-1);
+
+        .btn-discourse-id__description {
+          max-width: 175px;
+
+          @include ellipsis;
+        }
+      }
+    }
   }
 
   .login-welcome-header {

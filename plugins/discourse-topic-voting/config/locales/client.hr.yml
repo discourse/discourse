@@ -10,6 +10,7 @@ hr:
       sort_options:
         votes: "Glasovi"
     topic_voting:
+      title: "Glasanje o temi"
       reached_limit: "Ponestalo vam je glasova, uklonite postojeći glas!"
       list_votes: "Prikažite svoje glasove"
       votes_nav_help: "teme s najviše glasova"
@@ -17,16 +18,32 @@ hr:
       allow_topic_voting: "Dopusti korisnicima da glasaju na temama u ovoj kategoriji?"
       vote_title: "Glasaj"
       vote_title_plural: "Glasovi"
-      voted_title: "Glasovao"
+      voted_title: "Glas dan"
       voting_closed_title: "\U0001F510"
       voting_limit: "Limit"
+      votes_left:
+        one: "Preostao vam je %{count} glas, pogledajte <a href='%{path}'>svoje glasove</a>."
+        few: "Preostala su vam %{count} glasa, pogledajte <a href='%{path}'>vaše glasove</a>."
+        other: "Preostalo vam je %{count} glasova, pogledajte <a href='%{path}'>vaše glasove</a>."
+      votes_left_button_title:
+        one: "Preostao vam je %{count} glas."
+        few: "Preostala su vam %{count} glasa."
+        other: "Preostalo vam je %{count} glasova."
+      votes:
+        one: "%{count} glas"
+        few: "%{count} glasa"
+        other: "%{count} glasova"
       anonymous_button:
         one: "Glas"
         few: "Glasa"
         other: "Glasova"
       remove_vote: "Ukloni glas"
-      no_votes_title_others: "%{username} još nije glasao niti za jednu temu"
+      no_votes_title_self: "Još niste glasali niti za jednu temu"
+      no_votes_title_others: "%{username} još nije glasao/la niti za jednu temu"
     filters:
       votes:
         title: "Glasovi"
         help: "teme s najviše glasova"
+      my_votes:
+        title: "Moji glasovi"
+        help: "teme o kojima ste glasali"

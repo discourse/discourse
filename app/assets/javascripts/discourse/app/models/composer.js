@@ -381,7 +381,7 @@ export default class Composer extends RestModel {
 
   @discourseComputed("archetypeId")
   archetype(archetypeId) {
-    return this.archetypes.findBy("id", archetypeId);
+    return this.archetypes.find((archetype) => archetype.id === archetypeId);
   }
 
   @observes("archetype")

@@ -81,6 +81,22 @@ RSpec.describe DiscourseId::Register do
         it { is_expected.to fail_a_step(:request_challenge) }
       end
 
+      context "when challenge response has path mismatch" do
+        before do
+          allow(Discourse).to receive(:base_path).and_return("/forum")
+          stub_request(:post, "#{discourse_id_url}/challenge").to_return(
+            status: 200,
+            body: {
+              domain: Discourse.current_hostname,
+              path: "/wrong-path",
+              token: challenge_token,
+            }.to_json,
+          )
+        end
+
+        it { is_expected.to fail_a_step(:request_challenge) }
+      end
+
       context "when challenge request succeeds" do
         before do
           stub_request(:post, "#{discourse_id_url}/challenge").with(
@@ -158,10 +174,6 @@ RSpec.describe DiscourseId::Register do
             result
             expect(SiteSetting.discourse_id_client_id).to eq("new_client_id_123")
             expect(SiteSetting.discourse_id_client_secret).to eq("new_client_secret_456")
-          end
-
-          it "enables Discourse ID" do
-            expect { result }.to change { SiteSetting.enable_discourse_id }.to(true)
           end
 
           it "sets Redis expiration for challenge token" do
@@ -242,7 +254,6 @@ RSpec.describe DiscourseId::Register do
         result
         expect(SiteSetting.discourse_id_client_id).to eq(client_id)
         expect(SiteSetting.discourse_id_client_secret).to eq(client_secret)
-        expect(SiteSetting.enable_discourse_id).to be(true)
       end
     end
 
@@ -270,6 +281,41 @@ RSpec.describe DiscourseId::Register do
         expect(WebMock).to have_requested(:post, "#{custom_url}/challenge")
         expect(WebMock).to have_requested(:post, "#{custom_url}/register")
       end
+    end
+
+    context "when site has a base_path" do
+      let(:path) { "/forum" }
+
+      before do
+        allow(Discourse).to receive(:base_path).and_return(path)
+        SiteSetting.discourse_id_client_id = ""
+        SiteSetting.discourse_id_client_secret = ""
+
+        stub_request(:post, "#{discourse_id_url}/challenge").with(
+          body: { domain: Discourse.current_hostname, path: }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        ).to_return(
+          status: 200,
+          body: { domain: Discourse.current_hostname, path:, token: challenge_token }.to_json,
+        )
+
+        stub_request(:post, "#{discourse_id_url}/register").to_return(
+          status: 200,
+          body: { client_id:, client_secret: }.to_json,
+        )
+      end
+
+      it "includes path in challenge request and validates path in response" do
+        result
+
+        expect(WebMock).to have_requested(:post, "#{discourse_id_url}/challenge").with { |req|
+          JSON.parse(req.body)["path"] == path
+        }
+      end
+
+      it { is_expected.to run_successfully }
     end
   end
 end

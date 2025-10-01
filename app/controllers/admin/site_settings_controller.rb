@@ -14,6 +14,8 @@ class Admin::SiteSettingsController < Admin::AdminController
           filter_plugin: params[:plugin],
           filter_names: params[:names],
         ),
+      default_theme:
+        BasicThemeSerializer.new(Theme.find_default, scope: guardian, root: false).as_json,
     )
   end
 

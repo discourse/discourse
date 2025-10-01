@@ -14,7 +14,11 @@ module Jobs
         return
       end
 
-      if SiteSetting.ai_translation_backfill_limit_to_public_content
+      force = args[:force] || false
+
+      if force
+        # no restrictions
+      elsif SiteSetting.ai_translation_backfill_limit_to_public_content
         return if topic.category&.read_restricted? || topic.archetype == Archetype.private_message
       else
         if topic.archetype == Archetype.private_message &&
@@ -52,7 +56,7 @@ module Jobs
         end
       end
 
-      MessageBus.publish("/topic/#{topic.id}", type: :localized, id: 1)
+      MessageBus.publish("/topic/#{topic.id}", reload_topic: true)
     end
   end
 end

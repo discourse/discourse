@@ -58,7 +58,7 @@ def create_user(seq, admin: false, username: nil)
   end
 end
 
-require File.expand_path(File.dirname(__FILE__) + "/../config/environment")
+require_relative "../config/environment"
 
 Jobs.run_immediately!
 

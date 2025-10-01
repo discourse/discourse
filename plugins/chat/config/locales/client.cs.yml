@@ -810,6 +810,9 @@ cs:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        text: Začít novou SZ
+        title: Vytvořit osobní chat
       panels:
         chat:
           label: "Chat"

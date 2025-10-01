@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class SmallPostWithExcerptSerializer < ApplicationSerializer
     attributes :id, :topic_id, :post_number, :excerpt, :username, :avatar_template
 

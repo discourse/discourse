@@ -1660,7 +1660,6 @@ fr:
     crawl_images: "Récupérer les images provenant de sources tierces pour y insérer les dimensions correctes (hauteur et largeur)."
     download_remote_images_to_local: "Convertissez des images distantes (hotlink) en images locales en les téléchargeant. Cela préserve le contenu même si les images sont supprimées du site distant à l'avenir."
     download_remote_images_threshold: "Quantité minimale d'espace disque requise pour télécharger localement des images distantes (en pourcentage)"
-    disabled_image_download_domains: "Les images distantes de ces domaines ne seront jamais téléchargées. Liste délimitée par des lignes verticales."
     block_hotlinked_media: "Empêchez les utilisateurs d'introduire des contenus multimédias distants (liens hypertexte) dans leurs messages. Les contenus mutimédias distants qui ne sont pas téléchargé via « download_remote_images_to_local » seront remplacés par un lien réservé."
     block_hotlinked_media_exceptions: "Liste des URL de base exemptées du paramètre block_hotlinked_media. Le protocole (p. ex., https://example.com) est inclus."
     editing_grace_period: "Pendant (n) secondes après sa publication, la modification du message ne créera pas de nouvelle version dans l'historique des messages."
@@ -1711,7 +1710,6 @@ fr:
     opengraph_image: "Image opengraph par défaut, utilisée lorsque la page n'a pas d'autre image appropriée. Si vous laissez ce champ vide, « large_icon » sera utilisée"
     x_summary_large_image: "Carte X « summary large image » (au moins 280 px de largeur et 150 px de hauteur, le format .svg n'est pas autorisé). Si ce champ est laissé vide, des métadonnées de carte classiques seront générées à partir de l'image opengraph_image, à condition que celle-ci ne soit pas elle-même au format .svg."
     notification_email: "L'adresse e-mail utilisée pour envoyer les e-mails systèmes essentiels et affichée dans le champ « De ». Le nom de domaine spécifié doit comprendre les informations SPF, DKIM et PTR inversé correctement renseignées pour que l'e-mail arrive à destination."
-    email_custom_headers: "Une liste délimitée par des barres verticales d'en-têtes d'e-mail"
     email_subject: "Format du sujet personnalisable pour les e-mails normaux. Voir <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Donne plus d'informations aux utilisateurs concernant la raison pour laquelle ils ne peuvent pas accéder à ce sujet en particulier. Note : cela est moins sécurisé car les utilisateurs sauront si une URL pointe vers un sujet valide ou non."
     enforce_second_factor: "Demandez aux utilisateurs d'activer l'authentification à deux facteurs avant de pouvoir accéder à l'interface utilisateur de Discourse. Ce paramètre n'affecte pas l'authentification de l'API ou du « fournisseur DiscourseConnect ». Si le paramètre enforce_second_factor_on_external_auth est activé, les utilisateurs ne pourront pas se connecter avec des fournisseurs d'authentification externes après avoir configuré l'authentification à deux facteurs."
@@ -1826,8 +1824,6 @@ fr:
     whispers_allowed_groups: "Autoriser la communication privée au sein des sujets pour les membres de groupes spécifiques."
     hidden_post_visible_groups: "Autorisez les membres de ces groupes à voir les messages masqués. Les responsables peuvent toujours voir les messages masqués."
     allow_index_in_robots_txt: "Indiquez dans le fichier robots.txt que ce site est autorisé à être indexé par les moteurs de recherche. Vous pouvez <a href='%{base_path}/admin/customize/robots'>remplacer votre fichier robots.txt ici.</a> <b>AVERTISSEMENT</b> : des règles mal configurées pourraient empêcher l'exploration de votre site comme prévu."
-    blocked_email_domains: "Liste délimitée par des barres verticales de domaines de messagerie avec lesquels les utilisateurs ne sont pas autorisés à créer des comptes. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge. Exemple : mailinator.com|trashmail.net"
-    allowed_email_domains: "Une liste délimitée par des barres verticales de domaines de messagerie avec lesquels les utilisateurs DOIVENT enregistrer des comptes. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge. AVERTISSEMENT : les utilisateurs dont les domaines de messagerie ne sont pas répertoriés ne seront pas autorisés !"
     normalize_emails: "Vérifiez que l'adresse e-mail normalisée n'est pas déjà utilisée. L'adresse normalisée s'obtient en ôtant tous les points et caractères éventuellement situés entre les symboles « + » et « @ » de l'adresse indiquée par l'utilisateur."
     auto_approve_email_domains: "Les utilisateurs dont les adresses e-mail figurent dans cette liste de domaines seront automatiquement approuvés. Les sous-domaines sont gérés automatiquement pour les domaines spécifiés. Les symboles de remplacement * et ? ne sont pas pris en charge."
     hide_email_address_taken: "Ne pas indiquer aux utilisateurs qu'un compte associé à une adresse e-mail donnée existe sur le serveur, au moment de l'inscription ou lors de la récupération d'un mot de passe perdu. Exiger une adresse e-mail complète lors de la récupération d'un mot de passe perdu."
@@ -2223,9 +2219,6 @@ fr:
     enable_category_group_moderation: "Autoriser les groupes à modérer le contenu dans des catégories spécifiques"
     group_in_subject: "Mettre %%{optional_pm} dans le sujet de l'e-mail au nom du premier groupe du message direct. Voir : <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>personnaliser le format du sujet des e-mails ordinaires</a>"
     allow_anonymous_mode: "Activez l'option permettant aux utilisateurs de passer en mode anonyme pour publier. Lorsque cette option est activée, les utilisateurs peuvent choisir de masquer leur identité lors de la création de publications ou de sujets sur le site. Voir aussi « allow_anonymous_likes »."
-    allow_likes_in_anonymous_mode: "Activez ce paramètre pour permettre aux utilisateurs qui naviguent sur votre site de manière anonyme d'ajouter des mentions J'aime aux publications. Lorsque cette option est activée, les utilisateurs peuvent choisir de masquer leur identité lorsqu'ils ajoutent une mention J'aime aux publications ou aux sujets du site. Voir aussi « allow_anonymous_mode »."
-    anonymous_posting_min_trust_level: "Le niveau de confiance minimal pour passer en mode anonyme."
-    anonymous_posting_allowed_groups: "Groupes autorisés à activer la publication anonyme"
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme toutes les N minutes pour chaque utilisateur. Exemple : si la valeur 600 est choisie, lorsque 600 minutes seront passées après le dernier message ET que l'utilisateur passera en mode anonyme, un nouveau compte anonyme lui sera créé."
     hide_user_profiles_from_public: "Désactiver les cartes, les profils et le répertoire d'utilisateurs pour les visiteurs."
     hide_new_user_profiles: "Masquez les profils d'utilisateurs de niveau de confiance 1 ou inférieur au public et les utilisateurs de niveau de confiance 1 jusqu'à ce qu'ils envoient une publication pour la première fois. Cette fonctionnalité est désactivée sans condition sur les sites must_approve_users et invite_only."
@@ -2243,7 +2236,6 @@ fr:
     clean_up_unused_staged_users_after_days: "Nombre de jours avant de supprimer un utilisateur distant inutilisé (sans aucun message). 0 pour désactiver le nettoyage."
     user_selected_primary_groups: "Autoriser les utilisateurs à définir leur groupe principal"
     max_notifications_per_user: "Volume maximal de notifications par utilisateur. Si ce seuil est dépassé, les notifications les plus anciennes seront supprimées. Applicable chaque semaine. La valeur 0 permet de désactiver cette fonction."
-    allowed_user_website_domains: "Le site Web de l'utilisateur sera vérifié par rapport à ces domaines. Liste délimitée par des barres verticales."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrière-plans de profil."
     get_a_room_threshold: "Nombre de messages qu'un utilisateur doit envoyer à la même personne dans un même sujet avant de recevoir un avertissement."
     dont_feed_the_trolls_threshold: "Nombre de signalements émis par d'autres utilisateurs avant d'être avertis."
@@ -2326,7 +2318,6 @@ fr:
     disable_watched_word_checking_in_user_fields: "désactiver la vérification des mots surveillés dans les champs d'utilisateur"
     watched_words_regular_expressions: "Permet d'utiliser des expressions régulières pour filtrer les mots. Si cette fonctionnalité est activée, elle regroupe les mots sensibles en fonction de leur sensibilité aux majuscules et minuscules. Elle compile ensuite tous les mots sélectionnés en une seule expression régulière, en ajoutant des limites de mots pour les mots surveillés réguliers. Ainsi, cette méthode de filtrage basée sur les expressions régulières ajoute une couche supplémentaire de contrôle sur la modération du contenu en prenant en charge des modèles de mots plus sophistiqués. Le réglage permet également de remplacer facilement le texte d'origine par le remplacement de votre choix."
     enable_fast_edit: "Ajoute un bouton au menu de sélection des messages pour modifier une petite sélection en ligne."
-    old_post_notice_days: "Nombre de jours après lesquels un avis de publication est considéré comme ancien. Cela le différencie visuellement des nouvelles notifications sur le site."
     new_user_notice_tl: "Niveau de confiance minimal requis pour voir les nouveaux avis de publication d'utilisateur."
     returning_user_notice_tl: "Niveau de confiance minimum requis pour voir les avis postés par les utilisateurs de retour."
     returning_users_days: "Combien de jours doivent s'écouler avant qu'un utilisateur soit considéré comme étant de retour."
@@ -2477,7 +2468,6 @@ fr:
     view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
     rich_editor: "Activer l'éditeur enrichi pour l'éditeur de rédaction afin que tous les utilisateurs puissent basculer entre le mode Markdown actuel et le nouvel éditeur de texte enrichi, pour une composition plus intuitive et conviviale."
     default_composition_mode: "Définir le mode par défaut de l'éditeur de rédaction de votre communauté. Le mode texte enrichi offre une expérience de rédaction plus moderne et familière pour la plupart des utilisateurs, tandis que le mode Markdown peut convenir à un public plus technique. Les membres peuvent utiliser un bouton dans la barre d'outils de l'éditeur pour basculer entre les modes."
-    viewport_based_mobile_mode: "EXPÉRIMENTAL : désactivez les modes mobile/bureau basés sur l'agent utilisateur et utilisez plutôt la largeur de la fenêtre d'affichage."
     reviewable_ui_refresh: "Groupes pouvant utiliser la nouvelle interface utilisateur expérimentale dans la file d'attente de révision."
     content_localization_enabled: "Affiche le contenu localisé pour les utilisateurs en fonction de leur navigateur ou de leurs préférences linguistiques. Ce contenu peut inclure des catégories, des étiquettes, des publications et des sujets. Les paramètres régionaux pris en charge sont définis dans « Paramètres régionaux pris en charge pour la localisation du contenu »."
     content_localization_supported_locales: "Liste des langues prises en charge dans lesquelles le contenu utilisateur peut être traduit. Nécessite que « la localisation du contenu soit activée »."
@@ -2577,7 +2567,6 @@ fr:
   filter:
     description:
       status: "Filtrer les sujets en fonction de leur statut"
-      in: "Filtrer les sujets en fonction des listes personnelles"
       order: "Trier les sujets par domaine spécifique"
       category: "Afficher les sujets dans une catégorie spécifique"
       category_any: "Afficher les sujets dans l'une des catégories spécifiées (séparés par des virgules)"
@@ -4229,10 +4218,7 @@ fr:
   page_not_found:
     page_title: "Page introuvable"
     title: "Oups ! Cette page n'existe pas ou est privée."
-    popular_topics: "Populaires"
-    recent_topics: "Récents"
     see_more: "Plus"
-    search_title: "Rechercher sur ce site"
     search_button: "Rechercher"
   offline:
     title: "Impossible de charger l'application"
@@ -5344,6 +5330,16 @@ fr:
       approve_and_unhide:
         title: "Approuver et afficher la publication"
         complete: "Publication approuvée et visible"
+      no_action_post:
+        title: "Aucune action"
+      delete_post:
+        title: "Supprimer la publication"
+        complete: "Publication supprimée"
+      hide_post:
+        title: "Masquer le message"
+      restore_post:
+        title: "Rétablir le message"
+        complete: "Publication restaurée"
       no_action_user:
         title: "Aucune action"
       silence_user:

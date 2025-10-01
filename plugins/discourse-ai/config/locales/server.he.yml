@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 he:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "מזהה מודל"
+        max_prompt_tokens: "חלון הקשר"
   discourse_automation:
     ai:
       flag_types:
@@ -36,6 +41,9 @@ he:
       llm_report:
         title: דוח תקופתי בעזרת בינה מלאכותית
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
+      llm_tagger:
+        title: תיוג נושאים באמצעות בינה מלאכותית
+        description: "לתייג נושאים אוטומטית באמצעות בינה מלאכותית"
   site_settings:
     discourse_ai_enabled: "הפעלת תוסף הבינה המלאכותית של Discourse."
     ai_default_llm_model: "מודל ה־LLM/מש״ג כברירת מחדל לשימוש ליכולות בינה מלאכותית"
@@ -583,6 +591,7 @@ he:
         set_llm_first: "קודם יש להגדיר את %{setting}"
         model_unreachable: "לא הצלחנו לקבל תגובה מהמודל הזה. נא לוודא שההגדרות שלך נכונות קודם."
         invalid_seeded_model: "אי אפשר להשתמש במודל הזה עם היכולת הזאת"
+        invalid_persona_response_format: "לדמות הנבחרת חייבת להיות תבנית תגובה עם שדה בוליאני בשם „spam”"
         must_select_model: "קודם יש לבחור LLM"
       endpoints:
         not_configured: "%{display_name} (לא מוגדר)"
@@ -605,12 +614,17 @@ he:
       configuration:
         disable_embeddings: "יש להשבית קודם את ‚הטמעת בינה מלאכותית פעילה’."
         choose_model: "יש לעדכן את ‚ai embeddings selected model’."
+        model_test_failed: "כשלנו בייצור הטמעות בדיקה עם המודל הזה. נא לבדוק שהוא מוגדר כראוי."
     llm_models:
       missing_provider_param: "%{param} לא יכול להישאר ריק"
       bedrock_invalid_url: "נא למלא את כל השדות די להשתמש במודל הזה."
     ai_staff_action_logger:
       updated: "עודכן"
+      set: "הגדרה"
       removed: "הוסרה"
+    translation:
+      errors:
+        disabled: "יכולת התרגום של הבינה המלאכותית אינה מוגדרת במלואה."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
       quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"

@@ -905,21 +905,12 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    if (this.siteSettings.floatkit_autocomplete_composer) {
-      return DAutocompleteModifier.setupAutocomplete(
-        getOwner(this),
-        this.textarea,
-        this.autocompleteHandler,
-        options
-      );
-    } else {
-      // @ts-ignore
-      this.$textarea.autocomplete(
-        options instanceof Object
-          ? { textHandler: this.autocompleteHandler, ...options }
-          : options
-      );
-    }
+    return DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      this.textarea,
+      this.autocompleteHandler,
+      options
+    );
   }
 }
 

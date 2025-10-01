@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseGamification
+module DiscourseGamification
   class GamificationLeaderboardController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 

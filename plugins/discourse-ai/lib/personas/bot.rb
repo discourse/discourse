@@ -19,7 +19,8 @@ module DiscourseAi
         @bot_user = bot_user
         @persona = persona
         @model =
-          model || self.class.guess_model(bot_user) || LlmModel.find(@persona.class.default_llm_id)
+          model || self.class.guess_model(bot_user) ||
+            LlmModel.find(@persona.class.default_llm_id || SiteSetting.ai_default_llm_model)
       end
 
       attr_reader :bot_user, :model

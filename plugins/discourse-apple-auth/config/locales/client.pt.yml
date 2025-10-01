@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 pt:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Iniciar sessão com Apple"
+        sr_title: "Iniciar sessão com Apple"
+        message: "Autenticar com Apple"

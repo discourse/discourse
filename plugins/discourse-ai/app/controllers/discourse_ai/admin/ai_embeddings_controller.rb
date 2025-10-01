@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiEmbeddingsController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def index
         embedding_defs = EmbeddingDefinition.all.order(:display_name)

@@ -61,12 +61,12 @@ module ::DiscourseAi
   end
 end
 
-Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: ::DiscourseAi)
+Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: DiscourseAi)
 
 require_relative "lib/engine"
 require_relative "lib/configuration/module"
 
-::DiscourseAi::Configuration::Module::NAMES.each do |module_name|
+DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end
 
@@ -94,6 +94,7 @@ after_initialize do
     DiscourseAi::AiBot::EntryPoint.new,
     DiscourseAi::AiModeration::EntryPoint.new,
     DiscourseAi::Translation::EntryPoint.new,
+    DiscourseAi::Discover::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus

@@ -2448,6 +2448,7 @@ fa_IR:
       topic_count:
         one: "%{count} موضوع در این دسته"
         other: "%{count} موضوع در این دسته"
+      read_only: "فقط خواندنی"
     select_kit:
       delete_item: "حذف %{name}"
       filter_by: "فیلتر توسط: %{name}"
@@ -3119,8 +3120,6 @@ fa_IR:
         one: "%{count} نوشته در این موضوع وجود دارد"
         other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
-      create_disabled_category: "شما مجاز به ایجاد موضوع در این دسته‌بندی نیستید"
-      create_disabled_tag: "شما مجاز به ایجاد موضوع با این برچسب نیستید"
       create_long: "ساخت یک موضوع جدید"
       open_draft: "بازکردن پیشنویس"
       private_message: "شروع یک پیام"
@@ -3557,6 +3556,9 @@ fa_IR:
       title: "آخرین فرسته‌ها"
       empty: "هیچ پستی وجود ندارد"
       aria_post_number: "%{title} - نوشته #%{postNumber}"
+      bulk:
+        clear_all: "پاکسازی همه"
+        actions: "عملیات گروهی"
     post:
       confirm_delete: "آیا مطمئن هستید که می‌خواهید این پست را حذف کنید؟"
       quote_reply: "نقل‌قول"
@@ -6063,6 +6065,8 @@ fa_IR:
         schema:
           title: "ویرایش تنظیمات %{name}"
           back_button: "بازگشت به %{name}"
+          move_up: "انتقال به بالا"
+          move_down: "انتقال به پایین"
           fields:
             required: "*مورد نیاز"
             groups:

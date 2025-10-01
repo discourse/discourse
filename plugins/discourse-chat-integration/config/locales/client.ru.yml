@@ -84,6 +84,7 @@ ru:
               help: "например, #channel, @username."
           errors:
             action_prohibited: "Бот не имеет разрешения на публикацию в этот канал"
+            channel_not_found: "Указанный канал не существует в Slack."
         telegram:
           title: "Telegram"
           param:
@@ -130,6 +131,7 @@ ru:
               help: "Имя для описания канала. Оно не используется для подключения к Matrix."
             room_id:
               title: "ID комнаты"
+              help: "«Личный идентификатор» комнаты. Он должен выглядеть примерно так: !abcdefghijkl"
           errors:
             unknown_token: "Неверный токен доступа"
             unknown_room: "Номер комнаты недействителен"

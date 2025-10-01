@@ -288,11 +288,10 @@ RSpec.describe InvitesController do
       expect(response.body).to include(I18n.t("invite.expired", base_url: Discourse.base_url))
     end
 
-    it "stores the invite key in the secure session if invite exists" do
+    it "stores the invite key in the server session if invite exists" do
       get "/invites/#{invite.invite_key}"
       expect(response.status).to eq(200)
-      invite_key = read_secure_session["invite-key"]
-      expect(invite_key).to eq(invite.invite_key)
+      expect(server_session["invite-key"]).to eq(invite.invite_key)
     end
 
     it "returns error if invite has already been redeemed" do

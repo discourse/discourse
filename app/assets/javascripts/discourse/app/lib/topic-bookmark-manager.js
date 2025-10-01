@@ -77,7 +77,9 @@ export default class TopicBookmarkManager {
       this.topicController.set("bookmarks", []);
     }
 
-    const bookmark = this.topicController.bookmarks.findBy("id", data.id);
+    const bookmark = this.topicController.bookmarks.find(
+      (b) => b.id === data.id
+    );
     if (!bookmark) {
       this.topicController.bookmarks.pushObject(Bookmark.create(data));
     } else {

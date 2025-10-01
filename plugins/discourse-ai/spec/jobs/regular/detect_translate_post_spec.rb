@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe Jobs::DetectTranslatePost do
-  fab!(:post)
   subject(:job) { described_class.new }
+
+  fab!(:post)
 
   let(:locales) { %w[en ja] }
 
@@ -175,6 +176,26 @@ describe Jobs::DetectTranslatePost do
           .with(personal_pm_post, any_parameters)
           .never
         job.execute({ post_id: personal_pm_post.id })
+      end
+
+      describe "force arg" do
+        it "processes private content when force is true" do
+          DiscourseAi::Translation::PostLocaleDetector
+            .expects(:detect_locale)
+            .with(group_pm_post)
+            .once
+
+          job.execute({ post_id: group_pm_post.id, force: true })
+        end
+
+        it "processes PM content when force is true" do
+          DiscourseAi::Translation::PostLocaleDetector
+            .expects(:detect_locale)
+            .with(personal_pm_post)
+            .once
+
+          job.execute({ post_id: personal_pm_post.id, force: true })
+        end
       end
     end
   end

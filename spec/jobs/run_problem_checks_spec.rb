@@ -31,6 +31,17 @@ RSpec.describe Jobs::RunProblemChecks do
     ProblemCheck.send(:remove_const, "DisabledCheck")
   end
 
+  context "when a tracker hasn't been created yet" do
+    it "still schedules checks" do
+      expect_enqueued_with(
+        job: :run_problem_check,
+        args: {
+          check_identifier: "scheduled_check",
+        },
+      ) { described_class.new.execute([]) }
+    end
+  end
+
   context "when the tracker determines the check is ready to run" do
     before do
       ProblemCheckTracker.create!(identifier: "scheduled_check", next_run_at: 5.minutes.ago)

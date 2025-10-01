@@ -1654,7 +1654,6 @@ nl:
     crawl_images: "Afbeeldingen van externe URL's ophalen om de juiste breedte- en hoogteafmetingen in te voegen"
     download_remote_images_to_local: "Externe afbeeldingen (gehotlinkt) converteren naar lokale afbeeldingen door ze te downloaden; Zo blijft de inhoud behouden, ook als de afbeeldingen in de toekomst van de externe website worden verwijderd."
     download_remote_images_threshold: "Minimaal vereiste schijfruimte om externe afbeeldingen lokaal te downloaden (percentage)"
-    disabled_image_download_domains: "Externe afbeeldingen worden nooit gedownload vanaf deze domeinen. Lijst gescheiden door pijpsymbolen."
     block_hotlinked_media: "Voorkomen dat gebruikers externe media (gehotlinkt) opnemen in hun berichten. Externe media die niet via 'download_remote_images_to_local' zijn gedownload, worden vervangen door een tijdelijke link."
     block_hotlinked_media_exceptions: "Een lijst van basis-URL's die zijn uitgezonderd van de instelling block_hotlinked_media. Voeg het protocol toe (bijvoorbeeld https://voorbeeld.com)."
     editing_grace_period: "De eerste (n) seconden na plaatsing van een bericht leidt bewerking ervan niet tot een nieuwe versie in de berichtgeschiedenis."
@@ -1705,7 +1704,6 @@ nl:
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
-    email_custom_headers: "Een lijst gescheiden door pijpsymbolen van aangepaste e-mailheaders"
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
     enforce_second_factor: "Verplicht gebruikers om tweeledige verificatie in te schakelen voordat ze toegang krijgen tot de Discourse-interface. Deze instelling heeft geen invloed op verificatie via API of 'DiscourseConnect-provider'. Als enforce_second_factor_on_external_auth is ingeschakeld, kunnen gebruikers zich niet aanmelden met externe verificatieproviders nadat ze tweeledige verificatie hebben ingesteld."
@@ -1820,8 +1818,6 @@ nl:
     whispers_allowed_groups: "Sta privécommunicatie binnen topics toe voor leden van bepaalde groepen."
     hidden_post_visible_groups: "Sta leden van deze groepen toe om verborgen berichten te bekijken. Personeelgebruikers kunnen altijd verborgen berichten bekijken."
     allow_index_in_robots_txt: "Geef in robots.txt aan dat deze site mag worden geïndexeerd door webzoekmachines. Je kunt <a href='%{base_path}/admin/customize/robots'>je robots.txt hier overschrijven</a>. <b>WAARSCHUWING</b>: onjuist geconfigureerde regels kunnen verhinderen dat je site wordt gecrawld zoals verwacht."
-    blocked_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers geen accounts mogen registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. Voorbeeld: mailinator.com|trashmail.net"
-    allowed_email_domains: "Een door sluistekens ('pijpsymbolen') gescheiden lijst van e-maildomeinen waarop gebruikers een account MOETEN registreren. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund. WAARSCHUWING: gebruikers met andere e-maildomeinen dan de vermelde zijn niet toegestaan!"
     normalize_emails: "Controleren of het genormaliseerde e-mailadres uniek is. Normalisering van e-mailadressen verwijdert alle punten uit de gebruikersnaam en alles tussen de symbolen + en @."
     auto_approve_email_domains: "Gebruikers met e-mailadressen uit deze domeinenlijst worden automatisch goedgekeurd. Subdomeinen worden automatisch afgehandeld voor de opgegeven domeinen. De jokertekens * en ? worden niet ondersteund."
     hide_email_address_taken: "Laat gebruikers niet weten dat er een account bestaat met een bepaald e-mailadres bij het registreren. bij het herstellen van een wachtwoord. Volledig e-mailadres wordt vereist voor wachtwoordherstelverzoeken."
@@ -2217,9 +2213,6 @@ nl:
     enable_category_group_moderation: "Groepen mogen inhoud in bepaalde categorieën modereren"
     group_in_subject: "Stel %%{optional_pm} in het e-mailonderwerp in op de naam van de eerste groep in PB; zie <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Onderwerpnotatie aanpassen voor standaard e-mails</a>"
     allow_anonymous_mode: "Schakel deze instelling in om gebruikers toe te staan naar de anonieme modus te schakelen voor het plaatsen van berichten. Als dit is ingeschakeld, kunnen gebruikers ervoor kiezen om hun identiteit te verbergen wanneer ze berichten of topics maken op de site. Zie ook `allow anonymous likes`."
-    allow_likes_in_anonymous_mode: "Schakel deze instelling in om gebruikers die uw site anoniem bezoeken toe te staan berichten te liken. Als dit is ingeschakeld, kunnen gebruikers ervoor kiezen om hun identiteit te verbergen wanneer ze berichten of topics liken op de site. Zie ook 'allow_anonymous_mode'."
-    anonymous_posting_min_trust_level: "Het minimale vertrouwensniveau dat nodig is om anonieme berichtplaatsing in te schakelen"
-    anonymous_posting_allowed_groups: "Groepen die anoniem plaatsen mogen inschakelen"
     anonymous_account_duration_minutes: "Om anonimiteit te beschermen, elke N minuten voor iedere gebruiker een nieuwe anoniem account maken. Voorbeeld: als dit is ingesteld op 600, wordt een nieuwe anonieme account gemaakt als er 600 minuten zijn verstreken na het laatste bericht EN de gebruiker naar anon overschakelt."
     hide_user_profiles_from_public: "Gebruikerskaarten, gebruikersprofielen en gebruikerslijst voor anonieme gebruikers uitschakelen."
     hide_new_user_profiles: "Verberg gebruikersprofielen met vertrouwensniveau 1 of lager voor het publiek en gebruikers met vertrouwensniveau 1 totdat ze voor het eerst een bericht plaatsen. Deze functie is onvoorwaardelijk uitgeschakeld op sites met must_approve_users en invite_only."
@@ -2237,7 +2230,6 @@ nl:
     clean_up_unused_staged_users_after_days: "Aantal dagen voordat een niet-gebruikte gefaseerde gebruiker (zonder berichten) wordt verwijderd. Stel dit in op 0 om opschonen uit te schakelen."
     user_selected_primary_groups: "Gebruikers mogen hun eigen primaire groep instellen"
     max_notifications_per_user: "Maximale aantal meldingen per gebruiker. Als dit aantal wordt overschreden, worden oude meldingen verwijderd. Wekelijks afgedwongen. Stel dit in op 0 om uit te schakelen."
-    allowed_user_website_domains: "Website van gebruiker wordt op deze domeinen gecontroleerd. Lijst gescheiden door pijpsymbolen."
     allow_profile_backgrounds: "Gebruikers mogen profielachtergronden uploaden."
     get_a_room_threshold: "Aantal berichten dat een gebruiker aan dezelfde persoon in hetzelfde topic moet richten voordat deze wordt gewaarschuwd."
     dont_feed_the_trolls_threshold: "Aantal markeringen van andere gebruikers voordat er wordt gewaarschuwd."
@@ -2320,7 +2312,6 @@ nl:
     disable_watched_word_checking_in_user_fields: "Schakel de controle van geobserveerde woorden uit in gebruikersvelden"
     watched_words_regular_expressions: "Staat het gebruik van reguliere expressies toe voor het filteren van woorden. Als deze functie is ingeschakeld, groepeert hij gevoelige woorden op basis van hun hoofdlettergevoeligheid. Vervolgens worden alle geselecteerde woorden samengevoegd tot een enkele reguliere expressie, waarbij woordgrenzen worden toegevoegd voor regelmatig geobserveerde woorden. Deze op regex gebaseerde filtermethode voegt dus een extra laag toe aan de controle over contentmoderatie door verfijndere woordpatronen te ondersteunen. De instelling maakt het ook mogelijk om eenvoudig de originele tekst te vervangen door de gewenste vervanging."
     enable_fast_edit: "Voegt een knop toe aan het berichtselectiemenu om een kleine selectie inline te bewerken."
-    old_post_notice_days: "Het aantal dagen waarna een berichtmelding als oud wordt beschouwd. Dit onderscheidt het visueel van nieuwere berichten op de site."
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."
     returning_users_days: "Het aantal dagen dat voorbij moet gaan voordat een gebruiker als terugkerend wordt beschouwd."
@@ -2471,7 +2462,6 @@ nl:
     view_raw_email_allowed_groups: "Groepen die de ruwe e-mailinhoud van een bericht kunnen bekijken als het is gemaakt door een inkomende e-mail. Dit omvat e-mailheaders en andere technische gegevens."
     rich_editor: "Schakel de rich text editor in, zodat alle gebruikers kunnen schakelen tussen de huidige Markdown-modus en de nieuwe rich text editor voor intuïtiever en gebruiksvriendelijker schrijven."
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
-    viewport_based_mobile_mode: "EXPERIMENTEEL: schakel de op user-agent gebaseerde mobiele/desktopmodus uit en gebruik in plaats daarvan de viewportbreedte."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
     content_localization_supported_locales: "Lijst van ondersteunde talen waarnaar gebruikerscontent kan worden vertaald. Vereist 'content localization enabled'."
@@ -2571,7 +2561,6 @@ nl:
   filter:
     description:
       status: "Filter topics op hun status"
-      in: "Filter topics in persoonlijke lijsten"
       order: "Sorteer topics op een specifiek veld"
       category: "Geef topics weer in een specifieke categorie"
       category_any: "Geef topics weer in een van de opgegeven categorieën (door komma's gescheiden)"
@@ -4216,10 +4205,7 @@ nl:
   page_not_found:
     page_title: "Pagina niet gevonden"
     title: "Oeps! Die pagina bestaat niet of is privé."
-    popular_topics: "Populair"
-    recent_topics: "Recent"
     see_more: "Meer"
-    search_title: "Zoeken op deze website"
     search_button: "Zoeken"
   offline:
     title: "Kan app niet laden"
@@ -5331,6 +5317,16 @@ nl:
       approve_and_unhide:
         title: "Bericht goedkeuren en zichtbaar maken"
         complete: "Bericht goedgekeurd en zichtbaar gemaakt"
+      no_action_post:
+        title: "Geen actie"
+      delete_post:
+        title: "Bericht verwijderen"
+        complete: "Bericht verwijderd"
+      hide_post:
+        title: "Bericht verbergen"
+      restore_post:
+        title: "Bericht herstellen"
+        complete: "Bericht hersteld"
       no_action_user:
         title: "Geen actie"
       silence_user:

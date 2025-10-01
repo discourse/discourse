@@ -1584,7 +1584,7 @@ zh_CN:
     crawl_images: "从远程 URL 检索图片以插入正确的宽度和高度尺寸。"
     download_remote_images_to_local: "通过下载将远程（热链接）图片转换为本地图片；即使图片将来从远程网站移除，这也会保留内容。"
     download_remote_images_threshold: "将远程图片下载到本地所需的最小磁盘空间（百分比）"
-    disabled_image_download_domains: "永远不会从这些网域下载远程图片。以 | 分隔的列表。"
+    disabled_image_download_domains: "永远不会从这些网域下载远程图片。"
     block_hotlinked_media: "阻止用户在他们的帖子中引入远程（热链接）媒体。未通过 'download_remote_images_to_local' 下载的远程媒体将被替换为占位符链接。"
     block_hotlinked_media_exceptions: "不受 block_hotlinked_media 设置影响的基础 URL 列表。包括协议（例如，https://example.com）。"
     editing_grace_period: "发帖后 (n) 秒内，编辑不会在帖子历史记录中创建新版本。"
@@ -1635,7 +1635,7 @@ zh_CN:
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
     x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
-    email_custom_headers: "以 | 分隔的自定义电子邮件标头列表。"
+    email_custom_headers: "自定义邮件头列表"
     email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
     enforce_second_factor: "要求用户在访问 Discourse UI 之前启用双重身份验证。此设置不会影响 API 或 'DiscourseConnect provider' 身份验证。如果启用了 enforce_second_factor_on_external_auth 设置，用户在设置双重身份验证后将无法使用外部身份验证提供商登录。"
@@ -1750,8 +1750,8 @@ zh_CN:
     whispers_allowed_groups: "允许指定群组的成员在话题内进行不公开交流。"
     hidden_post_visible_groups: "允许这些群组的成员查看隐藏的帖子。管理人员始终可以查看隐藏的帖子。"
     allow_index_in_robots_txt: "在 robots.txt 中指定允许网络搜索引擎索引本网站。您可以在<a href='%{base_path}/admin/customize/robots'>此处</a>覆盖 robots.txt。<b>警告</b>：错误配置的规则可能导致网站无法按预期被抓取。"
-    blocked_email_domains: "以竖线分隔的不允许用户用于注册帐户的电子邮件域的列表。系统会自动处理指定域的子域。不支持通配符 * 和 ?。示例：mailinator.com|trashmail.net"
-    allowed_email_domains: "以竖线分隔的电子邮件域列表，用户必须使用其中的域注册帐户。系统会自动处理指定域的子域。不支持通配符 * 和 ?。警告：使用列表以外的电子邮件域的用户将不被允许！"
+    blocked_email_domains: "用户不允许注册帐户的电子邮件域列表。 子域自动处理指定域名。不支持通配符 * 和 ? 。例如：mailinator.com"
+    allowed_email_domains: "用户必须注册帐户的电子邮件域列表。子域将自动处理指定域名。 Wildcard 符号 * 和 ? 不支持。警告: 电子邮件域名以外的用户将不被允许！"
     normalize_emails: "检查规范化电子邮件是否唯一。规范化电子邮件移除了用户名中的所有点以及 + 和 @ 符号之间的所有内容。"
     auto_approve_email_domains: "使用来自此域列表的电子邮件地址的用户将被自动批准。系统会自动处理指定域的子域。不支持通配符 * 和 ?。"
     hide_email_address_taken: "在注册或忘记密码的过程中，不要告知用户存在一个使用给定电子邮件地址的帐户。对于“忘记密码”请求，需要完整的电子邮件。"
@@ -2148,9 +2148,6 @@ zh_CN:
     enable_category_group_moderation: "允许群组审核特定类别的内容"
     group_in_subject: "在电子邮件主题中将 %%{optional_pm} 设置为私信中第一个群组的名称，请参阅：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>自定义标准电子邮件的主题格式</a>"
     allow_anonymous_mode: "启用可供用户切换到匿名发帖模式的选项。激活后，用户在网站上创建帖子或话题时可以选择隐藏身份。另请参阅 `allow anonymous likes`。"
-    allow_likes_in_anonymous_mode: "启用此设置可让匿名浏览站点的用户点赞帖子。激活后，用户在站点上点赞帖子或话题时可以选择隐藏自己的身份。另请参阅 `allow_anonymous_mode`。"
-    anonymous_posting_min_trust_level: "启用匿名发帖所需的最低信任级别"
-    anonymous_posting_allowed_groups: "能够启用匿名发帖的群组"
     anonymous_account_duration_minutes: "为了保护匿名性，每 N 分钟为每个用户创建一个新的匿名帐户。示例：如果设置为 600，则在距离上次发帖 600 分钟且用户切换到匿名时，将创建一个新的匿名帐户。"
     hide_user_profiles_from_public: "禁用匿名用户的用户卡片、用户个人资料和用户目录。"
     hide_new_user_profiles: "向公众隐藏信任级别 1 或更低的用户个人资料，并隐藏信任级别 1 的用户，直到他们首次发帖。此功能在 must_approve_users 和 invite_only 网站上无条件禁用。"
@@ -2168,7 +2165,7 @@ zh_CN:
     clean_up_unused_staged_users_after_days: "未使用的暂存用户（没有任何帖子）被移除前的等待天数。设为 0 将禁用清理。"
     user_selected_primary_groups: "允许用户设置自己的主要群组"
     max_notifications_per_user: "每个用户的最大通知数量，如果超过此数值，旧通知将被删除。每周强制执行。设置为 0 将禁用"
-    allowed_user_website_domains: "用户网站将针对这些网域进行验证。| 分隔列表。"
+    allowed_user_website_domains: "用户网站将根据这些域名进行验证。"
     allow_profile_backgrounds: "允许用户上传个人资料背景。"
     get_a_room_threshold: "在被警告之前，用户必须在同一话题中向同一个人发布的帖子数。"
     dont_feed_the_trolls_threshold: "被警告前来自其他用户的举报数量。"
@@ -2251,7 +2248,6 @@ zh_CN:
     disable_watched_word_checking_in_user_fields: "在用户字段中禁用关注词检查"
     watched_words_regular_expressions: "允许使用正则表达式筛选字词。如果启用，它会根据字词的大小写将敏感词分组。然后，它将所有选定字词编译成一个单一的正则表达式，并为常规关注词添加字词边界。因此，这种基于正则表达式的筛选方法通过支持更复杂的字词模式，对内容审核增加了额外一层控制。该设置还允许轻松地使用选择的替换文本替换原始文本。"
     enable_fast_edit: "在帖子选择菜单中添加一个按钮以内联编辑小部分内容。"
-    old_post_notice_days: "帖子通知被视为旧通知的天数。这可以直观地将其与网站上较新的通知区分开来。"
     new_user_notice_tl: "查看新用户帖子通知所需的最低信任级别。"
     returning_user_notice_tl: "查看回访用户帖子通知所需的最低信任级别。"
     returning_users_days: "在用户被视为回访之前应经过的天数。"
@@ -2403,7 +2399,6 @@ zh_CN:
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
     rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
     default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供了更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术能力更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
-    viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
@@ -2500,7 +2495,6 @@ zh_CN:
   filter:
     description:
       status: "按状态筛选话题"
-      in: "在个人列表中筛选话题"
       order: "按特定字段排列话题"
       category: "显示特定类别中的话题"
       category_any: "显示任意指定类别（以逗号分隔）中的话题"
@@ -4112,10 +4106,7 @@ zh_CN:
   page_not_found:
     page_title: "找不到页面"
     title: "糟糕！该页面不存在或者是一个不公开页面。"
-    popular_topics: "热门"
-    recent_topics: "最近"
     see_more: "更多"
-    search_title: "搜索此网站"
     search_button: "搜索"
   offline:
     title: "无法加载应用"
@@ -5217,6 +5208,18 @@ zh_CN:
       approve_and_unhide:
         title: "批准并取消隐藏帖子"
         complete: "帖子已获批准并取消隐藏"
+      post_actions:
+        bundle_title: "您想对这篇帖子做什么？"
+      no_action_post:
+        title: "无行动"
+      delete_post:
+        title: "删除帖子"
+      hide_post:
+        title: "隐藏帖子"
+      restore_post:
+        title: "恢复帖子"
+      user_actions:
+        bundle_title: "您想对这位用户做什么？"
       no_action_user:
         title: "无行动"
       silence_user:

@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 RSpec.describe ApplicationController do
+  fab!(:user)
+
+  context "when visiting an invalid URL" do
+    it "displays the not found page with the user's active theme" do
+      theme = Fabricate(:theme, user_selectable: true)
+      Fabricate(:theme_field, theme:, name: "header", value: "<a>html</a>")
+      user.user_option.update!(theme_ids: [theme.id])
+
+      sign_in(user)
+
+      get "/invalid-url"
+
+      expect(response.status).to eq(404)
+      expect(response.body).to include("<a>html</a>")
+      expect(response.body).to include(I18n.t("page_not_found.title"))
+    end
+  end
+
   describe "#redirect_to_login_if_required" do
     let(:admin) { Fabricate(:admin) }
 

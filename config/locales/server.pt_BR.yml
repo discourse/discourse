@@ -1654,7 +1654,6 @@ pt_BR:
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões corretas de largura e altura."
     download_remote_images_to_local: "Converta imagens remotas (hotlinked) em locais baixando-as. Isso preserva o conteúdo mesmo que estas sejam removidas do site remoto no futuro."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para baixar em modo local imagens remotas (em %)"
-    disabled_image_download_domains: "Imagens remotas hospedadas nestes domínios nunca serão baixadas. Lista delimitada por barras verticais."
     block_hotlinked_media: "Impedir que os usuários introduzam mídia remota (hotlinked) em suas publicações. A mídia remota que não for baixada via 'download_remote_images_to_local' será substituída por um link de espaço reservado."
     block_hotlinked_media_exceptions: "Uma lista de URLs de base, isentos da configuração block_hotlinked_media. Inclua o protocolo (por exemplo, https://example.com)."
     editing_grace_period: "Durante (n) segundos após a postagem, as edições não criarão uma nova versão no histórico da postagem."
@@ -1705,7 +1704,6 @@ pt_BR:
     opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
     x_summary_large_image: "Cartão do Twitter \"resumo de imagem grande\" (deve ter pelo menos 280 de largura e pelo menos 150 de altura, não pode ser .svg). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image, desde que também não sejam um .svg."
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
-    email_custom_headers: "Uma lista delimitada por barras de cabeçalhos de e-mail personalizados"
     email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Fornece mais detalhes aos(às) usuários(as) sobre o motivo de não poderem acessar um tópico específico. Observação: isso não é tão seguro porque os(as) usuários(as) saberão se uma URL estiver vinculada a um tópico válido."
     enforce_second_factor: "Exija que os(as) usuários(as) ativem autenticação de dois fatores antes de acessarem a IU do Discourse. Esta configuração não afeta a autenticação por API ou \"DiscourseConnect provider\". Se enforce_second_factor_on_external_auth estiver ativado, os(as) usuários(as) não poderão fazer login com provedores de autenticação externos após a configuração da autenticação de dois fatores."
@@ -1820,8 +1818,6 @@ pt_BR:
     whispers_allowed_groups: "Permitir comunicação privada dentro de tópicos para membros de grupos especificados."
     hidden_post_visible_groups: "Permita que membros destes grupos visualizem postagens ocultas. Usuários(as) da equipe sempre podem ser postagens ocultas."
     allow_index_in_robots_txt: "Especifique no robots.txt que este site tem permissão para ser indexado por mecanismos de pesquisa da web. Você pode <a href='%{base_path}/admin/customize/robots'>substituir seu robots.txt aqui.</a> <b>WARNING</b>: regras configuradas incorretamente poderão impedir que seu site seja rastreado como o esperado."
-    blocked_email_domains: "Uma lista de domínios de e-mail determinada por barras com que os usuários não têm permissão para registrar contas. Os subdomínios são tratados para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis. Exemplo: mailinator.com|trashmail.net"
-    allowed_email_domains: "Uma lista de domínios de e-mail determinada por barras com que os usuários DEVEM registrar contas. Os subdomínios são tratados para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis. AVISO: usuários(as) com domínios de e-mail que não sejam os listados aqui não são permitidos(as)!"
     normalize_emails: "Verifique se o e-mail normalizado é único. E-mails normalizados removem todos os pontos do nome do(a) usuário(a) e tudo entre os símbolos + e @."
     auto_approve_email_domains: "Usuários(as) com endereços de e-mail desta lista de domínios serão aprovados automaticamente. Subdomínios são tratados automaticamente para os domínios específicos. Os símbolos-curinga * e ? não são compatíveis."
     hide_email_address_taken: "Não informe ao(as) usuários(as) que uma conta existe com um determinado endereço de e-mail durante o cadastro ou processo de recuperação de senha. Exija o e-mail completo para solicitações de \"senha esquecida\"."
@@ -2217,9 +2213,6 @@ pt_BR:
     enable_category_group_moderation: "Permitir que grupos moderem conteúdo em categorias específicas"
     group_in_subject: "Definir %%{optional_pm} no assunto do e-mail como o nome do primeiro grupo em PM, consulte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar formato de assunto para e-mails padrão</a>"
     allow_anonymous_mode: "Ative esta opção para os(as) usuários(as) trocarem para o modo anônimo para postagem. Após a ativação, eles(as) podem escolher ocultar suas identidades ao criar postagens ou tópicos através do site. Consulte também \"allow anonymous likes\"."
-    allow_likes_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem navegando no seu site anonimamente curtam as postagens. Após a ativação, os(as) usuários(as) podem escolher ocultar suas identidades ao curtir postagens ou tópicos através do site. Consulte também \"allow_anonymous_mode\"."
-    anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar mensagens anônimas"
-    anonymous_posting_allowed_groups: "Grupos com permissão para ativar postagens anônimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato, crie uma conta anônima a cada N minutos para cada usuário(a). Exemplo: se for configurado para 600, assim que passar 600 minutos a partir da última postagen E o(a) usuário(a) trocar para anônimo(a), uma nova conta anônima será criada."
     hide_user_profiles_from_public: "Desative cartões de usuário(a), perfis de usuário(a) e diretório do(a) usuário(a) para usuários(as) anônimos(as)."
     hide_new_user_profiles: "Ocultar perfis de usuário(a) de nível de confiança 1 ou menor e confiar em usuários(as) de nível 1 até postarem pela primeira vez. Este recurso é desabilitado obrigatoriamente em caso de must_approve_users e invite_only sites."
@@ -2237,7 +2230,6 @@ pt_BR:
     clean_up_unused_staged_users_after_days: "Quantidade de dias antes de um(a) usuário(a) encenado(a) não usado(a) (sem nenhuma postagem) ser removido(a). Para desativar a limpeza, defina para 0."
     user_selected_primary_groups: "Permitir que os(as) usuários(as) definam seu próprio grupo primário"
     max_notifications_per_user: "Quantidade máxima de notificações por usuário(a). Se esse número for excedido, as notificações antigas serão excluídas. Aplicado semanalmente."
-    allowed_user_website_domains: "O site do(a) usuário(a) será verificado em comparação a estes domínios. Lista delimitada por barras."
     allow_profile_backgrounds: "Permita que os(as) usuários(as) enviem planos de fundo do perfil."
     get_a_room_threshold: "Quantidade de postagens que um(a) usuário(a) precisa fazer para a mesma pessoa no mesmo tópico antes de ser avisado(a)."
     dont_feed_the_trolls_threshold: "Número de sinalizadores de outros(as) usuários(as) antes de serem avisados(as)."
@@ -2320,7 +2312,6 @@ pt_BR:
     disable_watched_word_checking_in_user_fields: "desabilitar verificação de palavras monitoradas nos campos de usuário(a)"
     watched_words_regular_expressions: "Permite o uso de expressões regulares para filtrar palavras. Após a ativação, este recurso agrupa palavras sensíveis com distinção entre maiúsculas e minúsculas. Em seguida, compila todas as palavras selecionadas e forma uma única expressão regular, adicionando limites de palavra para as palavras monitoradas mais comuns. Consequentemente, este método de filtragem baseado em expressões regulares adiciona uma camada extra de controle sobre a moderação do conteúdo através da compatibilidade com padrões de palavras mais sofisticados. Com esta configuração, também é possível substituir facilmente o texto original pela opção escolhida."
     enable_fast_edit: "Adiciona um botão ao menu de seleção de postagem para editar um pequeno conteúdo embutido de seleção."
-    old_post_notice_days: "A quantidade de dias para o aviso de uma postagem ser considerado antigo. O visual varia em relação a avisos mais recentes no site."
     new_user_notice_tl: "Nível de confiança mínimo necessário para ver novos avisos de postagem do(a) usuário(a)."
     returning_user_notice_tl: "Nível de confiança mínimo necessário para ver os avisos de postagem do(a) usuário(a) retornando."
     returning_users_days: "Quantos dias devem passar antes que um(a) usuário(a) seja considerado(a) retornando."
@@ -2471,7 +2462,6 @@ pt_BR:
     view_raw_email_allowed_groups: "Grupos que podem visualizar o conteúdo do e-mail não processado de uma postagem se tiver sido criada por um e-mail recebido. Inclui cabeçalhos de e-mail e outras informações técnicas."
     rich_editor: "Ative o editor de rich text para o compositor, assim todos(as) usuários(as) poderão alternar entre o modo Markdown atual e o novo editor de rich text para tornar a composição mais intuitiva e amigável."
     default_composition_mode: "Defina o modo padrão para o compositor da sua comunidade. O modo rich text proporciona uma experiência de escrita mais moderna e familiar para a maioria dos(as) usuários(as), já o modo Markdown pode ser apropriado para públicos mais avançados. Os membros poderão usar um botão de alternância na barra de ferramentas do compositor para alternar entre os modos."
-    viewport_based_mobile_mode: "EXPERIMENTAL: Desative os modos baseados em agente e usuário para desktop e dispositivos móveis e use a largura da janela de visualização."
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
     content_localization_enabled: "Exibe o conteúdo localizado para os(as) usuários(as) com base no navegador ou nas preferências de idioma deles(as). Esse conteúdo pode incluir categorias, etiquetas, postagens e tópicos. Os locais compatíveis estão definidos em \"locais compatíveis com localização de conteúdo\"."
     content_localization_supported_locales: "As lista de locais compatíveis para os quais o conteúdo do usuário(a) pode ser traduzido. Requer \"content localization enabled\""
@@ -2571,7 +2561,6 @@ pt_BR:
   filter:
     description:
       status: "Filtrar tópicos por status"
-      in: "Filtrar tópicos por listas pessoais"
       order: "Classificar tópicos por campo específico"
       category: "Exibir tópicos em uma categoria específica"
       category_any: "Exibir tópicos em qualquer uma das categorias especificadas (separadas por vírgula)"
@@ -4204,10 +4193,7 @@ pt_BR:
   page_not_found:
     page_title: "Página não encontrada"
     title: "Oops! Essa página não existe ou é privada."
-    popular_topics: "Mais acessados(as)"
-    recent_topics: "Recente"
     see_more: "Mais"
-    search_title: "Pesquisar neste site"
     search_button: "Pesquisar"
   offline:
     title: "Não é possível carregar o aplicativo"
@@ -5319,6 +5305,16 @@ pt_BR:
       approve_and_unhide:
         title: "Aprovar e revelar postagem."
         complete: "Postagem aprovada e revelada"
+      no_action_post:
+        title: "Sem ação"
+      delete_post:
+        title: "Excluir postagem"
+        complete: "Postagem excluída"
+      hide_post:
+        title: "Ocultar postagem"
+      restore_post:
+        title: "Restaurar postagem"
+        complete: "Postagem restaurada"
       no_action_user:
         title: "Sem ação"
       silence_user:

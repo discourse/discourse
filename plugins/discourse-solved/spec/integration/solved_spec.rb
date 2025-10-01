@@ -18,7 +18,7 @@ RSpec.describe "Managing Posts solved status" do
 
       CategoryCustomField.create(
         category_id: category.id,
-        name: ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+        name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
         value: "true",
       )
 
@@ -142,7 +142,7 @@ RSpec.describe "Managing Posts solved status" do
         category_custom_field =
           CategoryCustomField.new(
             category_id: category.id,
-            name: ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+            name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
             value: "true",
           )
         category_custom_field.save
@@ -153,7 +153,7 @@ RSpec.describe "Managing Posts solved status" do
         category_custom_field =
           CategoryCustomField.new(
             category_id: category.id,
-            name: ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+            name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
             value: "false",
           )
         category_custom_field.save
@@ -351,7 +351,7 @@ RSpec.describe "Managing Posts solved status" do
 
       expect(topic.solved.answer_post_id).to eq(reply.id)
 
-      PostDestroyer.new(Discourse.system_user, reply).destroy
+      PostDestroyer.new(Discourse.system_user, reply, context: "spec").destroy
       reply.topic.reload
 
       expect(topic.solved).to be(nil)

@@ -53,12 +53,21 @@ export default class Types extends Component {
     } else if (event.key === "Enter") {
       event.preventDefault();
       event.stopPropagation();
+
       logSearchLinkClick({
         searchLogId: this.args.searchLogId,
         searchResultId: result.id,
         searchResultType: resultType.type,
       });
-      this.routeToSearchResult(event.target.href);
+
+      const link = event.currentTarget.querySelector("a.search-link");
+      if (link?.href) {
+        if (event.ctrlKey || event.metaKey) {
+          window.open(link.href, "_blank", "noopener,noreferrer");
+        } else {
+          this.routeToSearchResult(link.href);
+        }
+      }
       return false;
     }
 

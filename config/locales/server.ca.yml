@@ -1132,7 +1132,6 @@ ca:
     educate_until_posts: "Quan l'usuari comença a escriure les seves primeres (n) publicacions noves, mostra en l'editor la guia d'ús en menú emergent. "
     crawl_images: "Recupera imatges d'adreces URL remotes per a inserir-hi les dimensions correctes d'amplada i alçada."
     download_remote_images_threshold: "L'espai mínim necessari en el disc per a descarregar imatges remotes en local (percentatge)"
-    disabled_image_download_domains: "Les imatges remotes no es descarregaran mai des d'aquests dominis. Llista delimitada amb barres verticals."
     editing_grace_period: "Durant (n) segons després de publicar, l'edició no crearà una nova versió en l'historial de publicació."
     editing_grace_period_max_diff: "Nombre màxim de canvis de caràcter permesos en el període de gràcia d'edició. Si se'n canvien més, emmagatzema una altra revisió de publicació (nivells de confiança 0 i 1)."
     editing_grace_period_max_diff_high_trust: "Nombre màxim de canvis de caràcter permesos en el període de gràcia d'edició. Si se'n canvien més, emmagatzema una altra revisió de publicació (nivells de confiança 2 i superiors)."
@@ -1160,7 +1159,6 @@ ca:
     favicon: "Icona per al vostre lloc web (favicon). Vegeu <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://ca.wikipedia.org/wiki/Icona_de_web</a>. Per a treballar correctament sobre un CDN, ha de ser PNG. Es redimensionarà a 32x32. Si es deixa en blanc, s'utilitzarà large_icon."
     opengraph_image: "Imatge predeterminada opengraph, utilitzada quan la pàgina no té cap altra imatge adequada. Si es deixa en blanc, s'utilitzarà large_icon."
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
-    email_custom_headers: "Llista de capçaleres de correu personalitzades, delimitada amb barres verticals"
     email_subject: "Format d'assumpte personalitzable per a correus electrònics estàndard. Vegeu <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciona més detalls als usuaris sobre per què no poden accedir a un tema concret. Nota: això és menys segur perquè els usuaris sabran si un URL enllaça amb un tema vàlid."
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
@@ -1446,7 +1444,6 @@ ca:
     enable_user_directory: "Proporciona un directori d'usuaris per a navegar-hi"
     enable_group_directory: "Proporciona un directori de grups per a navegar-hi"
     group_in_subject: "Estableix %%{optional_pm} en l'assumpte del correu al nom del primer grup en MP. Vegeu: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalitza el format de l'assumpte en correus estàndard</a>."
-    anonymous_posting_min_trust_level: "Nivell de confiança mínim per a activar la publicació anònima"
     anonymous_account_duration_minutes: "Per a protegir l'anonimat, crea un compte anònim nou per a cada usuari cada N minuts. Per exemple: si és configurat a 600, tan bon punt passin 600 minuts des de la darrera publicació *i* l'usuari canviï a anònim, es crearà un nou compte anònim."
     hide_user_profiles_from_public: "Inhabilita targetes d'usuari, perfils d'usuari i directori d'usuaris per a usuaris anònims."
     show_inactive_accounts: "Permet que els usuaris que han iniciat la sessió explorin els perfils dels comptes inactius."
@@ -1456,7 +1453,6 @@ ca:
     ignored_users_message_gap_days: "Quant de temps haureu d'esperar abans de notificar de nou als moderadors sobre un usuari ignorat per molts altres."
     clean_up_inactive_users_after_days: "Nombre de dies abans d'eliminar un usuari inactiu (nivell de confiança 0 sense publicacions). Per a desactivar la neteja, poseu 0."
     user_selected_primary_groups: "Permet als usuaris configurar el seu propi grup principal"
-    allowed_user_website_domains: "El lloc web de l'usuari serà verificat contra aquests dominis. Llista delimitada amb barres verticals."
     allow_profile_backgrounds: "Permet que els usuaris carreguin fons de perfil."
     get_a_room_threshold: "Nombre de publicacions que un usuari ha de fer al mateix usuari en el mateix tema abans de ser advertit."
     enable_mobile_theme: "Els dispositius mòbils fan servir una aparença compatible amb els mòbils, amb la possibilitat de passar a la versió normal. Desactiveu-ho si voleu fer servir un full d'estils personalitzat totalment responsiu. "
@@ -2397,10 +2393,7 @@ ca:
   page_not_found:
     page_title: "Pàgina no trobada"
     title: "Ai! Aquesta pàgina no existeix o és privada."
-    popular_topics: "Populars"
-    recent_topics: "Recents"
     see_more: "Més"
-    search_title: "Cerca aquest lloc web"
     search_button: "Cerca"
   offline:
     title: "No es pot carregar l'aplicació"
@@ -2888,6 +2881,10 @@ ca:
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
       reject:
         title: "Rebutja"
+      no_action_post:
+        title: "Cap acció"
+      delete_post:
+        complete: "Publicació suprimida"
       no_action_user:
         title: "Cap acció"
       delete_user:

@@ -227,6 +227,7 @@ RSpec.describe DiscourseAi::Personas::Persona do
         DiscourseAi::Personas::Artist,
         DiscourseAi::Personas::Creative,
         DiscourseAi::Personas::DiscourseHelper,
+        DiscourseAi::Personas::Discover,
         DiscourseAi::Personas::GithubHelper,
         DiscourseAi::Personas::Researcher,
         DiscourseAi::Personas::SettingsExplorer,
@@ -239,6 +240,7 @@ RSpec.describe DiscourseAi::Personas::Persona do
         DiscourseAi::Personas::Artist,
         DiscourseAi::Personas::Creative,
         DiscourseAi::Personas::DiscourseHelper,
+        DiscourseAi::Personas::Discover,
         DiscourseAi::Personas::GithubHelper,
         DiscourseAi::Personas::Researcher,
         DiscourseAi::Personas::SettingsExplorer,
@@ -257,6 +259,7 @@ RSpec.describe DiscourseAi::Personas::Persona do
         DiscourseAi::Personas::SettingsExplorer,
         DiscourseAi::Personas::Creative,
         DiscourseAi::Personas::DiscourseHelper,
+        DiscourseAi::Personas::Discover,
         DiscourseAi::Personas::GithubHelper,
       )
 
@@ -269,6 +272,7 @@ RSpec.describe DiscourseAi::Personas::Persona do
         DiscourseAi::Personas::SettingsExplorer,
         DiscourseAi::Personas::Creative,
         DiscourseAi::Personas::DiscourseHelper,
+        DiscourseAi::Personas::Discover,
         DiscourseAi::Personas::GithubHelper,
       )
     end

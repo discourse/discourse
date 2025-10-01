@@ -25,6 +25,8 @@ export default class AdminBadgesShowRoute extends Route {
       });
     }
 
-    return this.adminBadges.badges.findBy("id", parseInt(params.badge_id, 10));
+    return this.adminBadges.badges.find(
+      (value) => value.id === parseInt(params.badge_id, 10)
+    );
   }
 }

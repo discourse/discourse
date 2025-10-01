@@ -15,26 +15,26 @@ class DiscourseConnect < DiscourseConnectBase
     SiteSetting.discourse_connect_secret
   end
 
-  def self.generate_sso(return_path = "/", secure_session:)
-    sso = new(secure_session: secure_session)
+  def self.generate_sso(return_path = "/", server_session:)
+    sso = new(server_session:)
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
     sso.return_sso_url = Discourse.base_url + "/session/sso_login"
     sso
   end
 
-  def self.generate_url(return_path = "/", secure_session:)
-    generate_sso(return_path, secure_session: secure_session).to_url
+  def self.generate_url(return_path = "/", server_session:)
+    generate_sso(return_path, server_session:).to_url
   end
 
-  def initialize(secure_session:)
-    @secure_session = secure_session
+  def initialize(server_session:)
+    @server_session = server_session
   end
 
   def register_nonce(return_path)
     if nonce
       if SiteSetting.discourse_connect_csrf_protection
-        @secure_session.set(nonce_key, return_path, expires: DiscourseConnectBase.nonce_expiry_time)
+        @server_session.set(nonce_key, return_path, expires: DiscourseConnectBase.nonce_expiry_time)
       else
         Discourse.cache.write(
           nonce_key,
@@ -47,7 +47,7 @@ class DiscourseConnect < DiscourseConnectBase
 
   def nonce_valid?
     if SiteSetting.discourse_connect_csrf_protection
-      nonce && @secure_session[nonce_key].present?
+      nonce && @server_session[nonce_key].present?
     else
       nonce && Discourse.cache.read(nonce_key).present?
     end
@@ -65,7 +65,7 @@ class DiscourseConnect < DiscourseConnectBase
 
   def return_path
     if SiteSetting.discourse_connect_csrf_protection
-      @secure_session[nonce_key] || "/"
+      @server_session[nonce_key] || "/"
     else
       Discourse.cache.read(nonce_key) || "/"
     end
@@ -74,9 +74,9 @@ class DiscourseConnect < DiscourseConnectBase
   def expire_nonce!
     if nonce
       if SiteSetting.discourse_connect_csrf_protection
-        @secure_session[nonce_key] = nil
+        @server_session.delete(nonce_key)
       else
-        Discourse.cache.delete nonce_key
+        Discourse.cache.delete(nonce_key)
       end
 
       Discourse.cache.write(

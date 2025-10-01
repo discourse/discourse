@@ -1431,7 +1431,6 @@ sv:
     crawl_images: "Hämta bilder från tredjepartskällor för att infoga korrekta bredd- och höjddimensioner."
     download_remote_images_to_local: "Konvertera fjärrbilder (med aktiva länkar) till lokala bilder genom att ladda ner dem. Detta bevarar innehållet även om bilderna tas bort från den fjärranslutna webbplatsen i framtiden."
     download_remote_images_threshold: "Minimalt diskutrymme nödvändigt för att hämta hem externa bilder lokalt (i procent)"
-    disabled_image_download_domains: "Externa bilder kommer aldrig att hämtas hem från dessa domän. Pipe-avgränsad lista."
     block_hotlinked_media: "Förhindra att användare infogar fjärransluten media (med aktiva länkar) i sina inlägg. Fjärranslutna media som inte hämtas via 'download_remote_images_to_local' kommer att ersättas med en platshållarlänk."
     block_hotlinked_media_exceptions: "En lista över baswebbadresser som undantas från inställningen block_hotlinked_media (Blockera media med aktiva länkar). Inkludera protokollet (t.ex. https://example.com)."
     editing_grace_period: "I (n) sekunder efter inlägg kommer redigeringar inte att skapa nya versioner i inläggshistoriken."
@@ -1478,7 +1477,6 @@ sv:
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
     x_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
-    email_custom_headers: "En lista över anpassade e-postrubriker, avgränsad med vertikalstreck"
     email_subject: "Anpassningsbart ämnesformat för vanliga e-postmeddelanden. Se <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Ger mer information till användarna om varför de inte kan komma åt ett visst ämne. Notera: Det här är mindre säkert eftersom användare vet om att en URL länkar till ett giltigt ämne."
     force_https: "Tvinga din webbplats att endast använda HTTPS. VARNING: bocka INTE i det här innan du kan verifiera att HTTPS verkligen fungerar överallt! Har du kontrollerat din CDN, alla sociala inloggningar och alla externa logotyper/beroenden för att säkerställa att de alla också är HTTPS-kompatibla?"
@@ -1570,8 +1568,6 @@ sv:
     max_favorite_badges: "Maximalt antal utmärkelser som användaren kan välja"
     whispers_allowed_groups: "Tillåt privat kommunikation inom ämnen för medlemmar i specificerade grupper."
     hidden_post_visible_groups: "Tillåt medlemmar i dessa grupper att se dolda inlägg. Personalanvändare kan alltid se dolda inlägg."
-    blocked_email_domains: "En lista över e-postdomäner, avgränsade med vertikalstreck, som användare inte får registrera konton med. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte. Exempel: mailinator.com|trashmail.net"
-    allowed_email_domains: "En lista över e-postdomäner, avgränsade med vertikalstreck, som användare MÅSTE registrera konton med. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte. VARNING: Användare med andra e-postdomäner än de som anges kommer inte att tillåtas!"
     normalize_emails: "Kontrollera om normaliserad e-post är unik. Normaliserad e-post tar bort alla punkter från användarnamnet och allt mellan symbolerna + och @."
     auto_approve_email_domains: "Användare med e-postadresser från den här listan över domäner kommer automatiskt att godkännas. Underdomäner hanteras automatiskt för de angivna domänerna. Jokertecknen * och ? stöds inte."
     hide_email_address_taken: "Informera inte användarna om att det finns ett konto med en given e-postadress under registreringen eller under flödet för glömda lösenord. Kräv fullständig e-post vid begäran om \"glömt lösenord\"."
@@ -1913,8 +1909,6 @@ sv:
     enable_group_directory: "Tillhandahåll en bläddringsbar gruppkatalog"
     enable_category_group_moderation: "Tillåt att grupper modererar innehåll i specifika kategorier"
     group_in_subject: "Ställ in %%{optional_pm} i e-postämnet till namnet på den första gruppen i PM, se: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Anpassa ämnesformat för standardmeddelanden</a>"
-    anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"
-    anonymous_posting_allowed_groups: "Grupper som får aktivera anonym publicering"
     anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N:e minut för varje användare för att skydda anonymiteten. Exempel: om detta ställs in till 600, så skapas ett nytt anonymt konto så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon."
     hide_user_profiles_from_public: "Inaktivera användarkort, användarprofiler och användarkataloger för anonyma användare."
     allow_users_to_hide_profile: "Tillåt att användare döljer sin profil och närvaro"
@@ -1929,7 +1923,6 @@ sv:
     clean_up_unused_staged_users_after_days: "Antal dagar innan en oanvänd arrangerad användare (utan några inlägg) tas bort. Ställ in till 0 för att inaktivera rensning."
     user_selected_primary_groups: "Tillåt att användare ställer in sin egna primära grupp"
     max_notifications_per_user: "Maximalt antal aviseringar per användare. Om detta värde överskrids kommer äldre aviseringar att raderas. Verkställs veckovis. Sätt till 0 för att inaktivera."
-    allowed_user_website_domains: "Användarens webbplats kommer att verifieras mot dessa domäner. Avgränsad textfil."
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
     get_a_room_threshold: "Antalet inlägg en användare kan göra till samma person inom samma ämne innan det ges en varning."
     dont_feed_the_trolls_threshold: "Antal flaggor från andra användare innan du varnas."
@@ -3449,10 +3442,7 @@ sv:
   page_not_found:
     page_title: "Sidan hittades inte"
     title: "Hoppsan! Den sidan finns inte eller så är den privat."
-    popular_topics: "Populära"
-    recent_topics: "Senaste"
     see_more: "Mer"
-    search_title: "Sök i webbplatsen"
     search_button: "Sök"
   offline:
     title: "Det går inte att ladda appen"
@@ -4395,6 +4385,15 @@ sv:
         title: "Behåll inlägg raderat"
       approve_and_restore:
         title: "Godkänn och återställ inlägg"
+      no_action_post:
+        title: "Ingen åtgärd"
+      delete_post:
+        title: "Radera inlägg"
+        complete: "Inlägg raderat"
+      hide_post:
+        title: "Dölj inlägg"
+      restore_post:
+        title: "Återställ inlägg"
       no_action_user:
         title: "Ingen åtgärd"
       silence_user:

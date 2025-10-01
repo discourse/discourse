@@ -18,54 +18,17 @@ register_svg_icon "patreon-new"
 # Site setting validators must be loaded before initialize
 require_relative "lib/validators/patreon_login_enabled_validator"
 
+module ::Patreon
+  PLUGIN_NAME = "discourse-patreon"
+end
+
+require_relative "lib/discourse_patreon/engine"
+
 after_initialize do
   require_dependency "admin_constraint"
 
-  module ::Patreon
-    PLUGIN_NAME = "discourse-patreon".freeze
-    USER_DETAIL_FIELDS = %w[id amount_cents rewards declined_since].freeze
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace Patreon
-    end
-
-    def self.store
-      @store ||= PluginStore.new(PLUGIN_NAME)
-    end
-
-    def self.get(key)
-      store.get(key)
-    end
-
-    def self.set(key, value)
-      store.set(key, value)
-    end
-
-    def self.show_donation_prompt_to_user?(user)
-      return false unless SiteSetting.patreon_donation_prompt_enabled?
-
-      filters = get("filters") || {}
-      filters = filters.keys.map(&:to_i)
-
-      (user.visible_groups.pluck(:id) & filters).size <= 0
-    end
-
-    class Reward
-      def self.all
-        Patreon.get("rewards") || {}
-      end
-    end
-
-    class RewardUser
-      def self.all
-        Patreon.get("reward-users") || {}
-      end
-    end
-  end
-
-  require_relative "app/controllers/patreon_admin_controller"
-  require_relative "app/controllers/patreon_webhook_controller"
+  require_relative "app/controllers/patreon/patreon_admin_controller"
+  require_relative "app/controllers/patreon/patreon_webhook_controller"
   require_relative "app/jobs/regular/sync_patron_groups"
   require_relative "app/jobs/scheduled/patreon_sync_patrons_to_groups"
   require_relative "app/jobs/scheduled/patreon_update_tokens"
@@ -77,17 +40,7 @@ after_initialize do
   require_relative "lib/patron"
   require_relative "lib/tokens"
 
-  Patreon::Engine.routes.draw do
-    get "/rewards" => "patreon_admin#rewards", :constraints => AdminConstraint.new
-    get "/list" => "patreon_admin#list", :constraints => AdminConstraint.new
-    post "/list" => "patreon_admin#edit", :constraints => AdminConstraint.new
-    delete "/list" => "patreon_admin#delete", :constraints => AdminConstraint.new
-    post "/sync_groups" => "patreon_admin#sync_groups", :constraints => AdminConstraint.new
-    post "/update_data" => "patreon_admin#update_data", :constraints => AdminConstraint.new
-    post "/webhook" => "patreon_webhook#index"
-  end
-
-  Discourse::Application.routes.prepend { mount ::Patreon::Engine, at: "/patreon" }
+  Discourse::Application.routes.prepend { mount Patreon::Engine, at: "/patreon" }
 
   add_admin_route "patreon.title", "patreon"
 
@@ -102,7 +55,7 @@ after_initialize do
   end
 
   on(:user_created) do |user|
-    filters = PluginStore.get(::Patreon::PLUGIN_NAME, "filters")
+    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
     patreon_id = Patreon::Patron.all.key(user.email)
 
     if filters.present? && patreon_id.present?
@@ -123,21 +76,21 @@ after_initialize do
     end
   end
 
-  ::Patreon::USER_DETAIL_FIELDS.each do |attribute|
+  Patreon::USER_DETAIL_FIELDS.each do |attribute|
     add_to_serializer(
       :admin_detailed_user,
       "patreon_#{attribute}".to_sym,
       include_condition: -> do
-        ::Patreon::Patron.attr(attribute, object).present? &&
+        Patreon::Patron.attr(attribute, object).present? &&
           (attribute != "amount_cents" || scope.is_admin?)
       end,
-    ) { ::Patreon::Patron.attr(attribute, object) }
+    ) { Patreon::Patron.attr(attribute, object) }
   end
 
   add_to_serializer(
     :admin_detailed_user,
     :patreon_email_exists,
-    include_condition: -> { ::Patreon::Patron.attr("email", object).present? },
+    include_condition: -> { Patreon::Patron.attr("email", object).present? },
   ) { true }
 
   add_to_serializer(:current_user, :show_donation_prompt?) do

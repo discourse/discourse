@@ -108,6 +108,8 @@ export function findAll() {
   // exclude FA icon for Google, uses custom SVG
   methods.forEach((m) => m.set("isGoogle", m.name === "google_oauth2"));
 
+  methods.forEach((m) => m.set("isDiscourseID", m.name === "discourse_id"));
+
   return methods;
 }
 

@@ -146,7 +146,7 @@ describe "Welcome banner", type: :system do
       end
     end
 
-    context "with background image setting" do
+    context "for background image setting" do
       fab!(:current_user, :admin)
       fab!(:bg_img) { Fabricate(:image_upload, color: "cyan") }
 
@@ -165,6 +165,22 @@ describe "Welcome banner", type: :system do
         sign_in(current_user)
         visit "/"
         expect(banner).to have_bg_img(bg_img.url)
+      end
+
+      context "for text color setting" do
+        let(:red) { "#ff0000" }
+        before { SiteSetting.welcome_banner_text_color = red }
+
+        it "doesn't set text color without background image" do
+          visit "/"
+          expect(banner).to have_no_custom_text_color(red)
+        end
+
+        it "applies text color if background image is set" do
+          SiteSetting.welcome_banner_image = bg_img
+          visit "/"
+          expect(banner).to have_custom_text_color(red)
+        end
       end
     end
 

@@ -1291,7 +1291,6 @@ da:
     educate_until_posts: "Når brugeren begynder at skrive deres første (n) nye indlæg, skal pop op panel med ny bruger undervisning vises i editoren."
     crawl_images: "Hent billeder fra eksterne URLs for at indsætte de korrekte bredde og højde dimensioner."
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
-    disabled_image_download_domains: "Eksterne billeder vil ikke blive hentet fra disse domæner. Afgrænset liste."
     editing_grace_period: "For (n) sekunder efter postering, vil redigering ikke skabe et nyt indlæg."
     staff_edit_locks_post: "Indlæg vil være låst fra redigering, hvis de redigeres af personalet"
     edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."
@@ -1310,7 +1309,6 @@ da:
     mobile_logo: "Logoet, der bruges på mobilversionen af dit websted. Brug et bredt rektangulært billede med en højde på 120 og et billedformat, der er større end 3: 1. Hvis det er tomt, bruges billedet fra 'logo'-indstillingen."
     favicon: "Et favicon til dit websted, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. For at fungere korrekt over et CDN skal det være en png. Ændres til 32x32. Hvis det er tomt, vil large_icon blive brugt."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
-    email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
     summary_score_threshold: "Påkrævet minimum score for et indlæg til at blive inkluderet i 'opsummering af emne'"
@@ -2760,10 +2758,7 @@ da:
   page_not_found:
     page_title: "Side ikke fundet"
     title: "Ups! Den side eksisterer ikke eller også er den privat."
-    popular_topics: "Populære"
-    recent_topics: "Nye"
     see_more: "Flere"
-    search_title: "Søg på dette websted"
     search_button: "Søg"
   upload:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
@@ -3286,6 +3281,11 @@ da:
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      no_action_post:
+        title: "Ingen handling"
+      delete_post:
+        title: "Slet indlæg"
+        complete: "Indlæg slettet"
       no_action_user:
         title: "Ingen handling"
       delete_user:

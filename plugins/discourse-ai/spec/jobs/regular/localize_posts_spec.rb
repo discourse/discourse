@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe Jobs::LocalizePosts do
-  fab!(:post)
   subject(:job) { described_class.new }
+
+  fab!(:post)
 
   let(:locales) { %w[en ja de] }
 

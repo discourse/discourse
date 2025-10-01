@@ -12,9 +12,11 @@ import { isNone } from "@ember/utils";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
+import basePath from "discourse/helpers/base-path";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
+import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import SettingValidationMessage from "admin/components/setting-validation-message";
@@ -55,6 +57,7 @@ export default class SiteSettingComponent extends Component {
   @service router;
   @service siteSettingChangeTracker;
   @service messageBus;
+  @service site;
 
   @tracked isSecret = null;
   @tracked status = null;
@@ -90,6 +93,10 @@ export default class SiteSettingComponent extends Component {
       settingName.includes("default_categories") ||
       settingName.includes("default_tags")
     );
+  }
+
+  get defaultTheme() {
+    return this.site.user_themes.find((theme) => theme.default);
   }
 
   @bind
@@ -129,6 +136,20 @@ export default class SiteSettingComponent extends Component {
 
   get displayDescription() {
     return this.componentType !== "bool";
+  }
+
+  get showThemeSiteSettingWarning() {
+    return this.setting.themeable;
+  }
+
+  get themeSiteSettingWarningText() {
+    return htmlSafe(
+      i18n("admin.theme_site_settings.site_setting_warning", {
+        basePath,
+        defaultThemeName: sanitize(this.defaultTheme.name),
+        defaultThemeId: this.defaultTheme.theme_id,
+      })
+    );
   }
 
   get dirty() {
@@ -266,6 +287,10 @@ export default class SiteSettingComponent extends Component {
   }
 
   get canUpdate() {
+    if (this.setting.themeable) {
+      return false;
+    }
+
     if (!this.status || this.status === "completed") {
       return true;
     } else {
@@ -429,6 +454,7 @@ export default class SiteSettingComponent extends Component {
         {{else}}
           <this.resolvedComponent
             {{on "keydown" this._handleKeydown}}
+            @disabled={{this.setting.themeable}}
             @setting={{this.setting}}
             @value={{this.buffered.value}}
             @preview={{this.preview}}
@@ -443,6 +469,14 @@ export default class SiteSettingComponent extends Component {
           {{#if this.displayDescription}}
             <Description @description={{this.setting.description}} />
             <JobStatus @status={{this.status}} @progress={{this.progress}} />
+          {{/if}}
+          {{#if this.showThemeSiteSettingWarning}}
+            <div class="setting-theme-warning">
+              <p class="setting-theme-warning__text">
+                {{icon "paintbrush"}}
+                {{this.themeSiteSettingWarningText}}
+              </p>
+            </div>
           {{/if}}
         {{/if}}
       </div>

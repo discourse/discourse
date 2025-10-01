@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -18,11 +19,22 @@ export default class ApplicationController extends Controller {
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
 
-  showSidebar = this.calculateShowSidebar();
   sidebarDisabledRouteOverride = false;
   navigationMenuQueryParamOverride = null;
   showSiteHeader = true;
   showSkipToContent = true;
+
+  @tracked _showSidebar;
+
+  // Some themes may need to override the default value provided by `calculateShowSidebar` using viewport properties.
+  // Accessing the value in a getter prevents static viewport initialization warnings.
+  get showSidebar() {
+    return this._showSidebar ?? this.calculateShowSidebar();
+  }
+
+  set showSidebar(value) {
+    this._showSidebar = value;
+  }
 
   get showFooter() {
     return this.footer.showFooter;

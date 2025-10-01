@@ -121,9 +121,8 @@ export default class Site extends RestModel {
       }
 
       deprecated(
-        "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase is deprecated. " +
-          "In future updates, the mobile mode will be determined by the viewport size and as consequence using " +
-          "these values during initialization can lead to errors and inconsistencies when the browser window is " +
+        "Accessing `site.mobileView` or `site.desktopView` during the site initialization " +
+          "can lead to errors and inconsistencies when the browser window is " +
           "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
           " rendering.",
         {
@@ -132,6 +131,10 @@ export default class Site extends RestModel {
           url: "https://meta.discourse.org/t/367810",
         }
       );
+    }
+
+    if (Mobile.mobileForced) {
+      return true;
     }
 
     if (this.siteSettings.viewport_based_mobile_mode) {
@@ -257,7 +260,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    return postActionTypes.filterBy("is_flag", true);
+    return postActionTypes.filter((type) => type.is_flag);
   }
 
   collectUserFields(fields) {
@@ -317,7 +320,7 @@ export default class Site extends RestModel {
 
   removeCategory(id) {
     const categories = this.categories;
-    const existingCategory = categories.findBy("id", id);
+    const existingCategory = categories.find((c) => c.id === id);
     if (existingCategory) {
       categories.removeObject(existingCategory);
     }
@@ -326,7 +329,7 @@ export default class Site extends RestModel {
   updateCategory(newCategory) {
     const categories = this.categories;
     const categoryId = get(newCategory, "id");
-    const existingCategory = categories.findBy("id", categoryId);
+    const existingCategory = categories.find((c) => c.id === categoryId);
 
     // Don't update null permissions
     if (newCategory.permission === null) {

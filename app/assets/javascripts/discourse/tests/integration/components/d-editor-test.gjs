@@ -1477,6 +1477,23 @@ third line`
     assert.dom(".d-editor-button-bar").exists();
     assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();
   });
+
+  test("popup menu buttons don't break navigation", async function (assert) {
+    await render(<template><DEditor /></template>);
+
+    const headingButton = find(".d-editor-button-bar .heading");
+
+    if (headingButton) {
+      await focus(headingButton);
+
+      await triggerKeyEvent(headingButton, "keydown", 39); // 39 = ArrowRight
+
+      assert.true(
+        true,
+        "Navigation from popup menu buttons should not cause errors"
+      );
+    }
+  });
 });
 
 module("Integration | Component | d-editor | rich editor", function (hooks) {

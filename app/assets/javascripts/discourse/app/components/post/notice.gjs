@@ -24,26 +24,21 @@ export default class PostNotice extends Component {
     );
   }
 
-  get classNames() {
-    const classes = [dasherize(this.type)];
-
-    if (
-      new Date() - new Date(this.args.post.created_at) >
-      this.siteSettings.old_post_notice_days * 86400000
-    ) {
-      classes.push("old");
-    }
-
-    return classes;
-  }
-
   get type() {
     return this.args.post.notice.type;
   }
 
+  get shouldRender() {
+    const postAge = new Date() - new Date(this.args.post.created_at);
+    const maxAge = this.siteSettings.old_post_notice_days * 86400000;
+    return this.args.post.notice.type === "custom" || postAge <= maxAge;
+  }
+
   <template>
-    <div class={{concatClass "post-notice" this.classNames}}>
-      <this.Component @notice={{@post.notice}} @post={{@post}} />
-    </div>
+    {{#if this.shouldRender}}
+      <div class={{concatClass "post-notice" (dasherize this.type)}}>
+        <this.Component @notice={{@post.notice}} @post={{@post}} />
+      </div>
+    {{/if}}
   </template>
 }

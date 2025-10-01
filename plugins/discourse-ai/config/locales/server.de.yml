@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 de:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Modell-ID"
+        max_prompt_tokens: "Kontextfenster"
   discourse_automation:
     ai:
       flag_types:
@@ -27,6 +32,14 @@ de:
           <div>Antwort des Modells:</div>
           <p>%{llm_response}</p>
           <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
+        notify_author_pm:
+          subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
+          body: |
+            Hallo @%{username},
+
+            Dein Beitrag in „%{topic_title}“ wurde vorübergehend entfernt und zu unserer Überprüfungswarteschlange hinzugefügt, damit ein Moderator ihn prüfen kann. Nach der Genehmigung wird er automatisch wiederhergestellt.
+
+            Referenz: %{post_url}
       llm_report:
         title: Regelmäßiger Bericht mit KI
         description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"
@@ -105,6 +118,8 @@ de:
     ai_bot_public_sharing_allowed_groups: "Erlaube diesen Gruppen, persönliche KI-Nachrichten über einen eindeutigen, öffentlich zugänglichen Link mit der Öffentlichkeit zu teilen. Hinweis: Wenn für deine Website eine Anmeldung erforderlich ist, ist auch zum Ansehen des geteilten Inhalts eine Anmeldung erforderlich."
     ai_bot_add_to_header: "Eine Schaltfläche in der Kopfzeile anzeigen, um eine PN mit einem KI-Bot zu starten"
     ai_bot_github_access_token: "GitHub-Zugangstoken für die Verwendung mit den GitHub-KI-Tools (erforderlich für die Suchunterstützung)"
+    ai_discover_enabled: "Aktivieren Sie die Entdeckungs-Suchfunktion"
+    ai_discover_persona: "Persona, die für die Entdeckungsfunktion verwendet werden soll"
     ai_stability_api_key: "API-Schlüssel für die stability.ai-API"
     ai_stability_engine: "Bildgenerierungsengine für die stability.ai-API"
     ai_stability_api_url: "URL für die stability.ai-API"
@@ -392,6 +407,9 @@ de:
         report_runner:
           name: "Berichtsausführer"
           description: "Standard-Persona, die im Automatisierungsskript für Berichte verwendet wird."
+        discover:
+          name: "Entdecken"
+          description: "Standard-Persona, die in der Entdeckungsfunktion verwendet wird (ergänzende Suche)"
       topic_not_found: "Zusammenfassung nicht verfügbar, Thema nicht gefunden!"
       summarizing: "Thema zusammenfassen"
       searching: "Suche nach: „%{query}“"

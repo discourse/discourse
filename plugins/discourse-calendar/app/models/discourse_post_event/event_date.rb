@@ -69,6 +69,7 @@ end
 # Indexes
 #
 #  idx_discourse_calendar_post_event_dates_event_id_starts_at_uniq  (event_id,starts_at) UNIQUE
+#  index_discourse_calendar_post_event_dates_on_event_id_and_dates  (event_id,finished_at DESC,starts_at DESC)
 #  index_discourse_calendar_post_event_dates_on_event_id            (event_id)
 #  index_discourse_calendar_post_event_dates_on_finished_at         (finished_at)
 #

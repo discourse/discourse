@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class QueryController < ApplicationController
     requires_plugin PLUGIN_NAME
 

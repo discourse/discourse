@@ -22,7 +22,7 @@ export default class TagList extends Component {
       @onChange={{this.changeSelectedTags}}
       @everyTag={{true}}
       @unlimitedTagCount={{true}}
-      @options={{hash allowAny=false}}
+      @options={{hash allowAny=false disabled=@disabled}}
     />
   </template>
 }

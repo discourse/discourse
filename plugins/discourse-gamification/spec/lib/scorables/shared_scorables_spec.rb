@@ -81,7 +81,7 @@ RSpec.shared_examples "No Score Value" do
   end
 end
 
-RSpec.describe ::DiscourseGamification::LikeReceived do
+RSpec.describe DiscourseGamification::LikeReceived do
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :post, user: current_user)
@@ -118,7 +118,7 @@ RSpec.describe ::DiscourseGamification::LikeReceived do
   end
 end
 
-RSpec.describe ::DiscourseGamification::LikeGiven do
+RSpec.describe DiscourseGamification::LikeGiven do
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :post, user: other_user)
@@ -161,7 +161,7 @@ RSpec.describe ::DiscourseGamification::LikeGiven do
   end
 end
 
-RSpec.describe ::DiscourseGamification::PostCreated do
+RSpec.describe DiscourseGamification::PostCreated do
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(2, :post, user: current_user, post_number: 2)
@@ -212,7 +212,7 @@ RSpec.describe ::DiscourseGamification::PostCreated do
   end
 end
 
-RSpec.describe ::DiscourseGamification::DayVisited do
+RSpec.describe DiscourseGamification::DayVisited do
   it_behaves_like "Scorable Type" do
     before do
       (Date.new(2022, 01, 01)..Date.new(2022, 01, 30)).each do |date|
@@ -225,7 +225,7 @@ RSpec.describe ::DiscourseGamification::DayVisited do
   end
 end
 
-RSpec.describe ::DiscourseGamification::PostRead do
+RSpec.describe DiscourseGamification::PostRead do
   it_behaves_like "Scorable Type" do
     before do
       (Date.new(2022, 01, 01)..Date.new(2022, 01, 30)).each do |date|
@@ -238,7 +238,7 @@ RSpec.describe ::DiscourseGamification::PostRead do
   end
 end
 
-RSpec.describe ::DiscourseGamification::TimeRead do
+RSpec.describe DiscourseGamification::TimeRead do
   it_behaves_like "Scorable Type" do
     before do
       (Date.new(2022, 01, 01)..Date.new(2022, 01, 30)).each do |date|
@@ -251,7 +251,7 @@ RSpec.describe ::DiscourseGamification::TimeRead do
   end
 end
 
-RSpec.describe ::DiscourseGamification::FlagCreated do
+RSpec.describe DiscourseGamification::FlagCreated do
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :reviewable, created_by: current_user) do
@@ -264,7 +264,7 @@ RSpec.describe ::DiscourseGamification::FlagCreated do
   end
 end
 
-RSpec.describe ::DiscourseGamification::TopicCreated do
+RSpec.describe DiscourseGamification::TopicCreated do
   it_behaves_like "Scorable Type" do
     before { Fabricate.times(10, :topic, user: current_user) }
 
@@ -287,7 +287,7 @@ RSpec.describe ::DiscourseGamification::TopicCreated do
   end
 end
 
-RSpec.describe ::DiscourseGamification::UserInvited do
+RSpec.describe DiscourseGamification::UserInvited do
   it_behaves_like "Scorable Type" do
     before do
       stub_request(
@@ -310,7 +310,7 @@ RSpec.describe ::DiscourseGamification::UserInvited do
   end
 end
 
-RSpec.describe ::DiscourseGamification::ChatReactionReceived do
+RSpec.describe DiscourseGamification::ChatReactionReceived do
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :chat_message, user: current_user)
@@ -336,7 +336,7 @@ RSpec.describe ::DiscourseGamification::ChatReactionReceived do
   end
 end
 
-RSpec.describe ::DiscourseGamification::ChatReactionGiven do
+RSpec.describe DiscourseGamification::ChatReactionGiven do
   it_behaves_like "Scorable Type" do
     before do
       Fabricate.times(10, :chat_message, user: other_user)
@@ -368,7 +368,7 @@ RSpec.describe ::DiscourseGamification::ChatReactionGiven do
   end
 end
 
-RSpec.describe ::DiscourseGamification::ChatMessageCreated do
+RSpec.describe DiscourseGamification::ChatMessageCreated do
   it_behaves_like "Scorable Type" do
     before { Fabricate.times(10, :chat_message, user: current_user) }
 
