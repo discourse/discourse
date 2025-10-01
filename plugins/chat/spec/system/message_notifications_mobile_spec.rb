@@ -85,6 +85,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               create_message(channel_1, user: user_1)
 
               expect(channels_index_page).to have_unread_channel(channel_1)
+              expect(chat_page.footer).to have_unread_channels
             end
           end
 
@@ -101,6 +102,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               )
 
               expect(channels_index_page).to have_unread_channel(channel_1, count: 1)
+              expect(chat_page.footer).to have_unread_channels
             end
 
             it "shows correct count when there are multiple messages but only 1 is urgent" do
@@ -117,6 +119,7 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
               3.times { create_message(channel_1, user: user_1) }
 
               expect(channels_index_page).to have_unread_channel(channel_1, count: 1)
+              expect(chat_page.footer).to have_unread_channels
             end
           end
         end
@@ -136,9 +139,11 @@ RSpec.describe "Message notifications - mobile", type: :system, mobile: true do
 
             create_message(dm_channel_1, user: user_1)
             expect(channels_index_page).to have_unread_channel(dm_channel_1, count: 1, wait: 25)
+            expect(chat_page.footer).to have_unread_dms("1")
 
             create_message(dm_channel_1, user: user_1)
             expect(channels_index_page).to have_unread_channel(dm_channel_1, count: 2, wait: 25)
+            expect(chat_page.footer).to have_unread_dms("2")
           end
 
           it "reorders channels" do

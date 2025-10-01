@@ -11,6 +11,10 @@ module PageObjects
         @sidebar ||= PageObjects::Components::Chat::Sidebar.new
       end
 
+      def footer
+        @footer ||= PageObjects::Components::Chat::Footer.new
+      end
+
       def prefers_full_page
         page.execute_script(
           "window.localStorage.setItem('discourse_chat_preferred_mode', '\"FULL_PAGE_CHAT\"');",
