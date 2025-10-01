@@ -4459,6 +4459,10 @@ en:
       style: "Styles"
       background_color: "Color"
       foreground_color: "Text color"
+      color_validations:
+        cant_be_empty: "can't be empty"
+        incorrect_length: "must match the format #RRGGBB or #RGB"
+        non_hexdecimal: "must only contain hexadecimal characters (0-9, A-F)"
       styles:
         type: "Style"
         icon: "Icon"
