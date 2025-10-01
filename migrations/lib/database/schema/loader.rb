@@ -78,16 +78,18 @@ module Migrations::Database::Schema
 
     def filtered_columns_of(table_name, config)
       columns_by_name = @db.columns(table_name).index_by(&:name)
-      columns_by_name.except!(*@global.excluded_column_names)
+      globally_excluded_columns = @global.excluded_column_names
 
       if (included_columns = config.dig(:columns, :include))
         modified_columns = config.dig(:columns, :modify)&.map { |c| c[:name] }
         included_columns = included_columns + modified_columns if modified_columns
+        globally_excluded_columns -= included_columns
         columns_by_name.slice!(*included_columns)
       elsif (excluded_columns = config.dig(:columns, :exclude))
         columns_by_name.except!(*excluded_columns)
       end
 
+      columns_by_name.except!(*globally_excluded_columns)
       columns_by_name.values
     end
 
