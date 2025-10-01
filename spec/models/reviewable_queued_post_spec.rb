@@ -402,8 +402,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         expect(actions.has?(:no_action_user)).to eq(true)
         expect(actions.has?(:silence_user)).to eq(true)
         expect(actions.has?(:suspend_user)).to eq(true)
-        expect(actions.has?(:delete_user)).to eq(true)
-        expect(actions.has?(:delete_and_block_user)).to eq(true)
+        expect(actions.has?(:new_delete_user)).to eq(true)
+        expect(actions.has?(:new_delete_and_block_user)).to eq(true)
       end
 
       it "includes a minimal user bundle when target_created_by is nil" do
@@ -413,8 +413,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
         expect(actions.has?(:no_action_user)).to eq(true)
         expect(actions.has?(:silence_user)).to eq(false)
         expect(actions.has?(:suspend_user)).to eq(false)
-        expect(actions.has?(:delete_user)).to eq(false)
-        expect(actions.has?(:delete_and_block_user)).to eq(false)
+        expect(actions.has?(:new_delete_user)).to eq(false)
+        expect(actions.has?(:new_delete_and_block_user)).to eq(false)
       end
 
       describe "perform methods" do
@@ -435,8 +435,8 @@ RSpec.describe ReviewableQueuedPost, type: :model do
           expect(result.success?).to eq(true)
         end
 
-        it "performs delete_and_block_user successfully" do
-          result = reviewable.perform(admin, :delete_and_block_user)
+        it "performs new_delete_and_block_user successfully" do
+          result = reviewable.perform(admin, :new_delete_and_block_user)
           expect(result.success?).to eq(true)
           expect(User.find_by(id: user.id)).to be_nil
         end

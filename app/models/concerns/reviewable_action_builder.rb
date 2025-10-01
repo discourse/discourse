@@ -2,6 +2,7 @@
 
 module ReviewableActionBuilder
   extend ActiveSupport::Concern
+  include ReviewableFlagHandling
 
   # Standard post-actions bundle. Consumers should use the returned
   # bundle value when adding post-focused actions.
@@ -28,7 +29,8 @@ module ReviewableActionBuilder
 
     if target_post.hidden?
       build_action(actions, :unhide_post, bundle:) if !target_post.user_deleted?
-    else
+    elsif target_post.is_flagged?
+      # We can only show the Hide option if the reviewable has a flag against it
       build_action(actions, :hide_post, bundle:)
     end
 
@@ -73,8 +75,8 @@ module ReviewableActionBuilder
     end
 
     if guardian.can_delete_user?(target_user)
-      build_action(actions, :delete_user, bundle:)
-      build_action(actions, :delete_and_block_user, bundle:)
+      build_action(actions, :new_delete_user, bundle:)
+      build_action(actions, :new_delete_and_block_user, bundle:)
     end
 
     bundle
@@ -166,59 +168,140 @@ module ReviewableActionBuilder
   end
 
   def perform_no_action_user(performed_by, args)
-    create_result(:success, :ignored)
+    create_result(
+      :success,
+      :ignored,
+      performed_by:,
+      args:,
+      flag_status: :ignored,
+      recalculate_score: false,
+    )
   end
 
   def perform_no_action_post(performed_by, args)
-    create_result(:success, :ignored)
+    create_result(
+      :success,
+      :ignored,
+      performed_by:,
+      args:,
+      flag_status: :ignored,
+      recalculate_score: false,
+    )
   end
 
   def perform_silence_user(performed_by, args)
-    create_result(:success, :rejected)
+    create_result(
+      :success,
+      :rejected,
+      performed_by:,
+      args:,
+      flag_status: :agreed,
+      recalculate_score: false,
+    )
   end
 
   def perform_suspend_user(performed_by, args)
-    create_result(:success, :rejected)
+    create_result(
+      :success,
+      :rejected,
+      performed_by:,
+      args:,
+      flag_status: :agreed,
+      recalculate_score: false,
+    )
   end
 
-  def perform_delete_user(performed_by, args, &)
+  # TODO(reviewable-refresh): Rename these methods to perform_delete_user and perform_delete_and_block_user
+  # once the old methods are removed.
+  def perform_new_delete_user(performed_by, args, &)
     delete_user(target_user, delete_opts, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    create_result(
+      :success,
+      :rejected,
+      performed_by:,
+      args:,
+      flag_status: :agreed,
+      recalculate_score: false,
+      &
+    )
   end
 
-  def perform_delete_and_block_user(performed_by, args, &)
+  def perform_new_delete_and_block_user(performed_by, args, &)
     delete_options = delete_opts
     delete_options.merge!(block_email: true, block_ip: true) if Rails.env.production?
 
     delete_user(target_user, delete_options, performed_by) if target_user
-    create_result(:success, :rejected, [], false, &)
+    create_result(
+      :success,
+      :rejected,
+      performed_by:,
+      args:,
+      flag_status: :agreed,
+      recalculate_score: false,
+      &
+    )
   end
 
   def perform_delete_post(performed_by, _args)
     PostDestroyer.new(performed_by, target_post, reviewable: self).destroy
-    create_result(:success, :rejected, [created_by_id], false)
+    create_result(
+      :success,
+      :rejected,
+      performed_by:,
+      flag_status: :agreed,
+      recalculate_score: false,
+    )
   end
 
-  def perform_hide_post(performed_by, _args)
-    # TODO (reviewable-refresh): This hard-coded post action type needs to make use of the
-    # original flag type. See ReviewableFlaggedPost::perform_agree_and_hide for reference.
-    target_post.hide!(PostActionType.types[:inappropriate])
-    create_result(:success, :rejected, [created_by_id], false)
+  def perform_delete_post_and_replies(performed_by, _args)
+    PostDestroyer.delete_with_replies(performed_by, target_post, self)
+    create_result(
+      :success,
+      :rejected,
+      performed_by:,
+      flag_status: :agreed,
+      recalculate_score: false,
+    )
   end
 
-  def perform_unhide_post(performed_by, _args)
-    target_post.unhide!
-    create_result(:success, :approved, [created_by_id], false)
+  def perform_hide_post(performed_by, args)
+    create_result(
+      :success,
+      :rejected,
+      performed_by: performed_by,
+      args: args,
+      flag_status: :agreed,
+      recalculate_score: false,
+    ) { |pa| target_post.hide!(pa.post_action_type_id) }
   end
 
-  def perform_restore_post(performed_by, _args)
+  def perform_unhide_post(performed_by, args)
+    # Disagreeing with the flag will automatically unhide the post if needed
+    create_result(
+      :success,
+      :approved,
+      performed_by: performed_by,
+      args: args,
+      flag_status: :disagreed,
+      recalculate_score: false,
+    )
+  end
+
+  def perform_restore_post(performed_by, args)
     PostDestroyer.new(performed_by, target_post).recover
-    create_result(:success, :approved, [created_by_id], false)
+    create_result(
+      :success,
+      :approved,
+      performed_by: performed_by,
+      args: args,
+      flag_status: :disagreed,
+      recalculate_score: false,
+    )
   end
 
   def perform_edit_post(performed_by, _args)
     # This is handled client-side, just transition the state
-    create_result(:success, :approved, [created_by_id], false)
+    create_result(:success, :approved)
   end
 
   def perform_convert_to_pm(performed_by, _args)
@@ -226,9 +309,11 @@ module ReviewableActionBuilder
 
     if topic && Guardian.new(performed_by).can_moderate?(topic)
       topic.convert_to_private_message(performed_by)
-      create_result(:success, :approved, [created_by_id], false)
+      create_result(:success, :approved)
     else
-      create_result(:failure, :approved) { |r| r.errors = ["Cannot convert to PM"] }
+      result = create_result(:failure, :approved)
+      result.errors = ["Cannot convert to PM"]
+      result
     end
   end
 
@@ -277,36 +362,49 @@ module ReviewableActionBuilder
     Email::Sender.new(message, :account_deleted).send
   end
 
-  def map_reviewable_status_to_flag_status(status)
-    case status
-    when :approved
-      :agreed
-    when :rejected
-      :disagreed
-    else
-      status
-    end
-  end
-
-  # Create a result object.
+  # Create a result object, optionally handling flags.
   #
-  # @param status [Symbol] The status of the result.
-  # @param transition_to [Symbol] The state to transition to.
+  # @param status [Symbol] The status of the result (e.g., :success, :failure).
+  # @param transition_to [Symbol] The state to transition to (e.g., :approved, :rejected, :ignored).
+  # @param performed_by [User, nil] The user performing the action (required if flag_status is present).
+  # @param args [Hash] Additional arguments for flag handling (e.g., post_was_deleted, expired).
+  # @param flag_status [Symbol, nil] The flag status to apply (:agreed, :disagreed, :ignored), or nil to skip flag handling.
   # @param recalculate_score [Boolean] Whether to recalculate the score.
-  # @yield [result] The result object.
+  # @yield [PostAction] Optional block to execute with first PostAction when the reviewable has flags.
   #
   # @return [Reviewable::PerformResult] The created result object.
-  def create_result(status, transition_to = nil, flagging_user_ids = [], recalculate_score = true)
+  def create_result(
+    status,
+    transition_to = nil,
+    performed_by: nil,
+    args: {},
+    flag_status: nil,
+    recalculate_score: true,
+    &
+  )
     result = Reviewable::PerformResult.new(self, status)
     result.transition_to = transition_to
-    if flagging_user_ids.any? && target_post
-      result.update_flag_stats = {
-        status: map_reviewable_status_to_flag_status(transition_to),
-        user_ids: flagging_user_ids,
-      }
-      result.recalculate_score = recalculate_score
+
+    # Handle flags if flag_status is provided and we have a target post
+    if flag_status && target_post
+      flagging_user_ids =
+        case flag_status
+        when :agreed
+          agree_with_flags(performed_by, args, &)
+        when :disagreed
+          disagree_with_flags(performed_by, args, &)
+        when :ignored
+          ignore_flags(performed_by, args, &)
+        else
+          []
+        end
+
+      if flagging_user_ids.any?
+        result.update_flag_stats = { status: flag_status, user_ids: flagging_user_ids }
+        result.recalculate_score = recalculate_score
+      end
     end
-    yield result if block_given?
+
     result
   end
 end

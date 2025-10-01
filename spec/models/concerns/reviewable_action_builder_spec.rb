@@ -24,8 +24,8 @@ RSpec.describe ReviewableActionBuilder do
       expect(action_ids).to include("post-no_action_user")
       expect(action_ids).to include("post-silence_user")
       expect(action_ids).to include("post-suspend_user")
-      expect(action_ids).to include("post-delete_user")
-      expect(action_ids).to include("post-delete_and_block_user")
+      expect(action_ids).to include("post-new_delete_user")
+      expect(action_ids).to include("post-new_delete_and_block_user")
 
       # client_action is set for moderation actions
       silence = bundle.actions.find { |a| a.id == "post-silence_user" }

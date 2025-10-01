@@ -132,7 +132,9 @@ class ReviewableQueuedPost < Reviewable
     created_post = creator.create
 
     unless created_post && creator.errors.blank?
-      return create_result(:failure) { |r| r.errors = creator.errors }
+      result = create_result(:failure, nil)
+      result.errors = creator.errors
+      return result
     end
 
     self.target = created_post
@@ -154,15 +156,16 @@ class ReviewableQueuedPost < Reviewable
       post_number: created_post.post_number,
     )
 
-    create_result(:success, :approved) do |result|
-      result.created_post = created_post
+    result = create_result(:success, :approved)
+    result.created_post = created_post
 
-      # Do sidekiq work outside of the transaction
-      result.after_commit = -> do
-        creator.enqueue_jobs
-        creator.trigger_after_events
-      end
+    # Do sidekiq work outside of the transaction
+    result.after_commit = -> do
+      creator.enqueue_jobs
+      creator.trigger_after_events
     end
+
+    result
   end
 
   def perform_approve_post_closed(performed_by, args)
@@ -207,15 +210,33 @@ class ReviewableQueuedPost < Reviewable
   end
 
   def perform_delete_user(performed_by, args)
-    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
-    update_column(:target_created_by_id, nil)
+    # To maintain backwards compatibility, we need to use the old Reviewable status behaviour.
+    result = perform_new_delete_user(performed_by, args)
+    result.transition_to = :approved if result.success?
     result
   end
 
   def perform_delete_and_block_user(performed_by, args)
+    # To maintain backwards compatibility, we need to use the old Reviewable status behaviour.
+    result = perform_new_delete_and_block_user(performed_by, args)
+    result.transition_to = :approved if result.success?
+    result
+  end
+
+  # TODO (reviewable-refresh): Replace perform_delete_user and perform_delete_and_block_user
+  # with these new methods once the new UI is fully deployed
+  def perform_new_delete_user(performed_by, args)
     reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
-    result = super { |r| r.remove_reviewable_ids += reviewable_ids }
+    result = super
+    result.remove_reviewable_ids += reviewable_ids
+    update_column(:target_created_by_id, nil)
+    result
+  end
+
+  def perform_new_delete_and_block_user(performed_by, args)
+    reviewable_ids = Reviewable.where(created_by: target_created_by).pluck(:id)
+    result = super
+    result.remove_reviewable_ids += reviewable_ids
     update_column(:target_created_by_id, nil)
     result
   end
