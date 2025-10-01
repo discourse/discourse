@@ -33,12 +33,7 @@ module DiscourseDev
     end
 
     def self.create_needed_topics(count)
-      topics =
-        ::Topic
-          .listable_topics
-          .where.not(id: ::Category.pluck(:topic_id))
-          .limit(count)
-          .to_a
+      topics = ::Topic.listable_topics.where.not(id: ::Category.pluck(:topic_id)).limit(count).to_a
 
       (count - topics.size).times { topics << Topic.new.create! } if topics.size < count
 

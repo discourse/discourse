@@ -35,10 +35,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
       notify_users(User.real.admins, all_updates[:admins])
 
       if reviewable.reviewable_by_moderator?
-        notify_users(
-          User.real.moderators.where.not(id: @contacted),
-          all_updates[:moderators],
-        )
+        notify_users(User.real.moderators.where.not(id: @contacted), all_updates[:moderators])
       end
 
       if SiteSetting.enable_category_group_moderation? && reviewable.category.present?

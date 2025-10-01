@@ -1955,9 +1955,7 @@ class UsersController < ApplicationController
         )
 
       bookmark_list.load do |query|
-        if exclude_bookmark_ids.present?
-          query.where.not(bookmarks: { id: exclude_bookmark_ids })
-        end
+        query.where.not(bookmarks: { id: exclude_bookmark_ids }) if exclude_bookmark_ids.present?
       end
     end
 

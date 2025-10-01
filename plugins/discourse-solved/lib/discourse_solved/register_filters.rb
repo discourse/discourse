@@ -4,9 +4,11 @@ module DiscourseSolved
   class RegisterFilters
     def self.register(plugin)
       solved_callback = ->(scope) do
-        scope.joins(
-          "INNER JOIN discourse_solved_solved_topics ON discourse_solved_solved_topics.topic_id = topics.id",
-        ).where.not(topics: { archetype: Archetype.private_message })
+        scope
+          .joins(
+            "INNER JOIN discourse_solved_solved_topics ON discourse_solved_solved_topics.topic_id = topics.id",
+          )
+          .where.not(topics: { archetype: Archetype.private_message })
       end
 
       unsolved_callback = ->(scope) do

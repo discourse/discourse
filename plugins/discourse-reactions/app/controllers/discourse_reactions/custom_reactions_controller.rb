@@ -186,7 +186,11 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           .joins(
             "LEFT JOIN discourse_reactions_reactions ON discourse_reactions_reactions.id = discourse_reactions_reaction_users.reaction_id",
           )
-          .where.not(discourse_reactions_reactions: { reaction_value: DiscourseReactions::Reaction.valid_reactions.to_a })
+          .where.not(
+            discourse_reactions_reactions: {
+              reaction_value: DiscourseReactions::Reaction.valid_reactions.to_a,
+            },
+          )
 
       likes = likes.where.not(id: historical_reaction_likes.select(:id))
     end

@@ -1188,8 +1188,9 @@ class TopicQuery
 
   def messages_for_groups_or_user(group_ids)
     if group_ids.present?
-      base_messages.joins(
-        "
+      base_messages
+        .joins(
+          "
           LEFT JOIN (
             SELECT * FROM topic_allowed_groups _tg
             LEFT JOIN group_users gu
@@ -1198,20 +1199,23 @@ class TopicQuery
             WHERE #{DB.sql_fragment("gu.group_id IN (?)", group_ids)}
           ) tg ON topics.id = tg.topic_id
         ",
-      ).where.not(tg: { topic_id: nil })
+        )
+        .where.not(tg: { topic_id: nil })
     else
       messages_for_user
     end
   end
 
   def messages_for_user
-    base_messages.joins(
-      "
+    base_messages
+      .joins(
+        "
         LEFT JOIN topic_allowed_users ta
         ON topics.id = ta.topic_id
         AND ta.user_id = #{@user.id.to_i}
       ",
-    ).where.not(ta: { topic_id: nil })
+      )
+      .where.not(ta: { topic_id: nil })
   end
 
   def base_messages
@@ -1232,8 +1236,7 @@ class TopicQuery
     else
       excluded_topic_ids += Category.topic_ids.to_a
     end
-    result =
-      result.where.not(topics: { id: excluded_topic_ids }) unless excluded_topic_ids.empty?
+    result = result.where.not(topics: { id: excluded_topic_ids }) unless excluded_topic_ids.empty?
 
     result = remove_muted(result, @user, @options)
 

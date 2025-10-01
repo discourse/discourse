@@ -866,9 +866,11 @@ class Search
       end
     elsif @order == :read && @guardian.user
       posts =
-        posts.joins(
-          "JOIN topic_users tu ON tu.topic_id = posts.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
-        ).where.not(tu: { last_visited_at: nil })
+        posts
+          .joins(
+            "JOIN topic_users tu ON tu.topic_id = posts.topic_id AND tu.user_id = #{@guardian.user.id.to_i}",
+          )
+          .where.not(tu: { last_visited_at: nil })
 
       if aggregate_search
         posts = posts.order("MAX(tu.last_visited_at) DESC")
