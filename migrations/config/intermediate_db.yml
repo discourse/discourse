@@ -113,6 +113,11 @@ schema:
           - "public_topic_count"
           - "staff_topic_count"
           - "target_tag_id"
+    topic_allowed_groups:
+      primary_key_column_names: [ "topic_id", "group_id" ]
+      columns:
+        exclude:
+          - "id"
     topic_allowed_users:
       primary_key_column_names: [ "topic_id", "user_id" ]
       columns:
@@ -452,7 +457,6 @@ schema:
         - "theme_translation_overrides"
         - "themes"
         - "top_topics"
-        - "topic_allowed_groups"
         - "topic_custom_fields"
         - "topic_embeds"
         - "topic_groups"
