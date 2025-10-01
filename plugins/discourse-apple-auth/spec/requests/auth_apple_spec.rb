@@ -124,7 +124,7 @@ describe "sign in with apple" do
       expect(response.status).to eq(302)
       expect(response.location).to eq("http://test.localhost/")
 
-      result = Auth::Result.from_session_data(server_session[:authentication], user: nil)
+      result = Auth::Result.from_session_data(session[:authentication], user: nil)
       expect(result.email).to eq("verified-email@example.com")
       expect(result.name).to eq("Disco Bot")
       expect(result.extra_data[:uid]).to eq("unique-user-id")

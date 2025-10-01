@@ -740,7 +740,7 @@ class UsersController < ApplicationController
       end
     end
 
-    authentication = UserAuthenticator.new(user, server_session)
+    authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins &&
          !(current_user&.admin? && is_api?)
@@ -754,7 +754,7 @@ class UsersController < ApplicationController
       return fail_with("login.incorrect_username_email_or_password")
     end
 
-    activation = UserActivator.new(user, request, server_session, cookies)
+    activation = UserActivator.new(user, request, session, cookies)
     activation.start
 
     if user.save
@@ -767,7 +767,7 @@ class UsersController < ApplicationController
       server_session.delete(CHALLENGE_KEY)
 
       # save user email in session, to show on account-created page
-      server_session["user_created_message"] = activation.message
+      session["user_created_message"] = activation.message
       session[SessionController::ACTIVATE_USER_KEY] = user.id
 
       # If the user was created as active this will
@@ -780,7 +780,7 @@ class UsersController < ApplicationController
              )
     elsif SiteSetting.hide_email_address_taken &&
           user.errors[:primary_email]&.include?(I18n.t("errors.messages.taken"))
-      server_session["user_created_message"] = activation.success_message
+      session["user_created_message"] = activation.success_message
 
       existing_user = User.find_by_email(user.primary_email&.email)
       if !existing_user && SiteSetting.normalize_emails
@@ -1091,7 +1091,7 @@ class UsersController < ApplicationController
     end
 
     @custom_body_class = "static-account-created"
-    @message = server_session["user_created_message"] || I18n.t("activation.missing_session")
+    @message = session["user_created_message"] || I18n.t("activation.missing_session")
     @account_created = { message: @message, show_controls: false }
 
     if session_user_id = session[SessionController::ACTIVATE_USER_KEY]
