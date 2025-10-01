@@ -61,8 +61,10 @@
 
   .mobile-view & {
     .topic-list-item .excerpt {
-      margin-top: -0.25em;
-      margin-bottom: 0.25em;
+      display: block;
+      margin-top: 0.5em;
+      margin-bottom: 0;
+      font-size: var(--font-down-1);
     }
 
     .topic-item-stats .num.activity {
