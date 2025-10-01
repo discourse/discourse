@@ -162,6 +162,9 @@ schema:
           - "highest_staff_post_number"
           - "reviewable_score"
           - "slow_mode_seconds"
+      indexes:
+        - name: "index_topics_on_archetype"
+          columns: [ "archetype" ]
     topic_tags:
       primary_key_column_names: [ "topic_id", "tag_id" ]
       columns:

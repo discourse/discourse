@@ -255,6 +255,8 @@ CREATE TABLE topics
     visible              BOOLEAN
 );
 
+CREATE INDEX index_topics_on_archetype ON topics (archetype);
+
 CREATE TABLE user_associated_accounts
 (
     provider_name TEXT      NOT NULL,
