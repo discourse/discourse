@@ -34,7 +34,7 @@ module Migrations::Importer::Steps
       @existing_category_users = Hash.new { |h, k| h[k] = Set.new }
 
       @discourse_db
-        .query_array("SELECT category_id, user_id FROM category_users WHERE user_id >= 0")
+        .query_array("SELECT category_id, user_id FROM category_users WHERE user_id > 0")
         .each { |row| @existing_category_users[row[0]].add(row[1]) }
 
       super
