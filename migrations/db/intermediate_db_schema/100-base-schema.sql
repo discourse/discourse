@@ -191,11 +191,43 @@ CREATE TABLE tags
     name        TEXT     NOT NULL
 );
 
+CREATE TABLE topic_allowed_groups
+(
+    group_id NUMERIC NOT NULL,
+    topic_id NUMERIC NOT NULL,
+    PRIMARY KEY (topic_id, group_id)
+);
+
 CREATE TABLE topic_allowed_users
 (
     topic_id   NUMERIC  NOT NULL,
     user_id    NUMERIC  NOT NULL,
     created_at DATETIME,
+    PRIMARY KEY (topic_id, user_id)
+);
+
+CREATE TABLE topic_tags
+(
+    tag_id     NUMERIC  NOT NULL,
+    topic_id   NUMERIC  NOT NULL,
+    created_at DATETIME,
+    PRIMARY KEY (topic_id, tag_id)
+);
+
+CREATE TABLE topic_users
+(
+    topic_id                 NUMERIC  NOT NULL,
+    user_id                  NUMERIC  NOT NULL,
+    cleared_pinned_at        DATETIME,
+    first_visited_at         DATETIME,
+    last_emailed_post_number INTEGER,
+    last_posted_at           DATETIME,
+    last_read_post_number    INTEGER,
+    last_visited_at          DATETIME,
+    notification_level       INTEGER,
+    notifications_changed_at DATETIME,
+    notifications_reason_id  NUMERIC,
+    total_msecs_viewed       INTEGER,
     PRIMARY KEY (topic_id, user_id)
 );
 
@@ -222,6 +254,8 @@ CREATE TABLE topics
     visibility_reason_id NUMERIC,
     visible              BOOLEAN
 );
+
+CREATE INDEX index_topics_on_archetype ON topics (archetype);
 
 CREATE TABLE user_associated_accounts
 (

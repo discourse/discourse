@@ -1052,8 +1052,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["active"]).to be_falsey
 
-        # should save user_created_message in session
-        expect(session["user_created_message"]).to be_present
+        # should save user_created_message in server session
+        expect(server_session["user_created_message"]).to be_present
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
 
         expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
@@ -1072,8 +1072,8 @@ RSpec.describe UsersController do
 
           expect(response.parsed_body["active"]).to be_falsey
 
-          # should save user_created_message in session
-          expect(session["user_created_message"]).to be_present
+          # should save user_created_message in server session
+          expect(server_session["user_created_message"]).to be_present
           expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
 
           expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
@@ -1114,7 +1114,7 @@ RSpec.describe UsersController do
           end.to_not change { User.count }
 
           expect(response.status).to eq(200)
-          expect(session["user_created_message"]).to be_present
+          expect(server_session["user_created_message"]).to be_present
         end
       end
 
@@ -1145,7 +1145,7 @@ RSpec.describe UsersController do
           }.to_not change { User.count }
 
           expect(response.status).to eq(200)
-          expect(session["user_created_message"]).to be_present
+          expect(server_session["user_created_message"]).to be_present
 
           json = response.parsed_body
           expect(json["active"]).to be_falsey
@@ -1365,8 +1365,8 @@ RSpec.describe UsersController do
         post_user
         expect(response.status).to eq(200)
 
-        # should save user_created_message in session
-        expect(session["user_created_message"]).to be_present
+        # should save user_created_message in server session
+        expect(server_session["user_created_message"]).to be_present
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
       end
 
@@ -1547,7 +1547,7 @@ RSpec.describe UsersController do
         expect(json["success"]).to eq(true)
 
         # should not change the session
-        expect(session["user_created_message"]).to be_blank
+        expect(server_session["user_created_message"]).to be_blank
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_blank
       end
     end
@@ -1607,7 +1607,7 @@ RSpec.describe UsersController do
         expect(json["success"]).not_to eq(true)
 
         # should not change the session
-        expect(session["user_created_message"]).to be_blank
+        expect(server_session["user_created_message"]).to be_blank
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_blank
       end
     end
@@ -7705,15 +7705,14 @@ RSpec.describe UsersController do
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
 
-      it "shows unread notifications even if the bookmark has been deleted if they have bookmarkable data" do
+      it "doesn’t show unread notifications when the bookmark has been deleted" do
         bookmark_with_reminder.destroy!
 
         get "/u/#{user.username}/user-menu-bookmarks"
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(1)
-        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
+        expect(notifications.size).to eq(0)
       end
 
       it "does not show unread notifications if the bookmark has been deleted if they only have the bookmark_id data" do

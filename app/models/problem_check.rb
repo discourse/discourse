@@ -112,6 +112,11 @@ class ProblemCheck
     Collection.new(checks.select(&:realtime?))
   end
 
+  def self.tracker(target = NO_TARGET)
+    ProblemCheckTracker[identifier, target]
+  end
+  delegate :tracker, to: :class
+
   def self.identifier
     name.demodulize.underscore.to_sym
   end
@@ -136,6 +141,11 @@ class ProblemCheck
     inline
   end
   delegate :inline?, to: :class
+
+  def self.ready_to_run?
+    tracker.ready_to_run?
+  end
+  delegate :ready_to_run?, to: :class
 
   def self.call(data = {})
     new(data).call
@@ -179,10 +189,6 @@ class ProblemCheck
   end
 
   private
-
-  def tracker(target = NO_TARGET)
-    ProblemCheckTracker[identifier, target]
-  end
 
   def targets
     [NO_TARGET]

@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { array, concat, fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
@@ -13,6 +14,8 @@ import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class ToolbarPopupmenuOptions extends Component {
+  @service capabilities;
+
   willDestroy() {
     super.willDestroy();
     this.dMenu?.destroy();
@@ -84,10 +87,13 @@ export default class ToolbarPopupmenuOptions extends Component {
 
     let htmlLabel = `<span class="d-button-label__text">${label}</span>`;
     if (content.shortcut) {
-      htmlLabel += ` <kbd class="shortcut ${
+      const separator = this.capabilities.isApple ? "" : " ";
+      const platformClass = this.capabilities.isApple ? "--apple" : "";
+      htmlLabel += ` <kbd class="shortcut ${platformClass} ${
         content.alwaysShowShortcut ? "--always-visible" : ""
       }">${translateModKey(
-        PLATFORM_KEY_MODIFIER + " " + content.shortcut.replace(/\+/g, " ")
+        PLATFORM_KEY_MODIFIER + "+" + content.shortcut,
+        separator
       )}</kbd>`;
     }
 
