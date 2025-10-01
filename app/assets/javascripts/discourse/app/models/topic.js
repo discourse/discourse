@@ -303,6 +303,9 @@ export default class Topic extends RestModel {
 
   @tracked deleted_by;
   @tracked deleted_at;
+  @tracked highest_post_number;
+  @tracked last_read_post_number;
+  @tracked posts_count;
 
   message = null;
   errorLoading = false;
@@ -666,7 +669,7 @@ export default class Topic extends RestModel {
 
   firstPost() {
     const postStream = this.postStream;
-    let firstPost = postStream.get("posts.firstObject");
+    let firstPost = postStream.posts[0];
 
     if (firstPost && firstPost.post_number === 1) {
       return Promise.resolve(firstPost);

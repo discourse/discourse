@@ -4,7 +4,7 @@ import {
 } from "@ember/-internals/metal";
 import EmberArray from "@ember/array";
 import EmberObject from "@ember/object";
-import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 
 export function Placeholder(viewName) {
   this.viewName = viewName;
@@ -13,14 +13,11 @@ export function Placeholder(viewName) {
 export default class PostsWithPlaceholders extends EmberObject.extend(
   EmberArray
 ) {
-  posts = null;
+  @trackedArray posts = null;
   _appendingIds = {};
 
-  @discourseComputed
-  length() {
-    return (
-      this.get("posts.length") + Object.keys(this._appendingIds || {}).length
-    );
+  get length() {
+    return this.posts.length + Object.keys(this._appendingIds || {}).length;
   }
 
   nextObject(index) {
@@ -35,15 +32,15 @@ export default class PostsWithPlaceholders extends EmberObject.extend(
   }
 
   clear(cb) {
-    this._changeArray(cb, 0, this.get("posts.length"), 0);
+    this._changeArray(cb, 0, this.posts.length, 0);
   }
 
   appendPost(cb) {
-    this._changeArray(cb, this.get("posts.length"), 0, 1);
+    this._changeArray(cb, this.posts.length, 0, 1);
   }
 
   removePost(cb) {
-    this._changeArray(cb, this.get("posts.length") - 1, 1, 0);
+    this._changeArray(cb, this.posts.length - 1, 1, 0);
   }
 
   insertPost(insertAtIndex, cb) {
@@ -51,7 +48,7 @@ export default class PostsWithPlaceholders extends EmberObject.extend(
   }
 
   refreshAll(cb) {
-    const length = this.get("posts.length");
+    const length = this.posts.length;
     this._changeArray(cb, 0, length, length);
   }
 
@@ -73,7 +70,7 @@ export default class PostsWithPlaceholders extends EmberObject.extend(
         const appendingIds = this._appendingIds;
         postIds.forEach((pid) => delete appendingIds[pid]);
       },
-      this.get("posts.length") - postIds.length,
+      this.posts.length - postIds.length,
       postIds.length,
       postIds.length
     );

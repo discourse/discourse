@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, sort } from "@ember/object/computed";
@@ -12,6 +12,7 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
@@ -85,7 +86,7 @@ export default class Site extends RestModel {
   @service currentUser;
   @service capabilities;
 
-  @tracked categories;
+  @trackedArray categories;
 
   @alias("is_readonly") isReadOnly;
 
@@ -279,9 +280,9 @@ export default class Site extends RestModel {
   }
 
   // Sort subcategories under parents
-  @discourseComputed("categoriesByCount", "categories.[]")
-  sortedCategories(categories) {
-    return Category.sortCategories(categories);
+  @cached
+  get sortedCategories() {
+    return Category.sortCategories(this.categories);
   }
 
   // Returns it in the correct order, by setting
