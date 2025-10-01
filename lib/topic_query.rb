@@ -166,7 +166,7 @@ class TopicQuery
           AND gu.user_id = #{@user.id.to_i}
         ",
           )
-          .where("gu.group_id IS NOT NULL")
+          .where.not(gu: { group_id: nil })
           .pluck(:group_id)
 
       target_group_ids = topic.topic_allowed_groups.pluck(:group_id)
@@ -327,7 +327,7 @@ class TopicQuery
 
   def list_read
     create_list(:read, unordered: true) do |topics|
-      topics.where("tu.last_visited_at IS NOT NULL").order("tu.last_visited_at DESC")
+      topics.where.not(tu: { last_visited_at: nil }).order("tu.last_visited_at DESC")
     end
   end
 
@@ -701,7 +701,7 @@ class TopicQuery
       )
     end
 
-    result.where("topics.category_id != ?", drafts_category_id)
+    result.where.not(topics: { category_id: drafts_category_id })
   end
 
   def apply_ordering(result, options = {})
@@ -1025,7 +1025,7 @@ class TopicQuery
       category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
       category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
 
-      list = list.where("categories.id NOT IN (?)", category_ids) if category_ids.present?
+      list = list.where.not(categories: { id: category_ids }) if category_ids.present?
     end
 
     list
@@ -1180,9 +1180,9 @@ class TopicQuery
       if user_ids.present? && group_ids.present?
         messages.where("ta2.topic_id IS NOT NULL OR tg2.topic_id IS NOT NULL")
       elsif user_ids.present?
-        messages.where("ta2.topic_id IS NOT NULL")
+        messages.where.not(ta2: { topic_id: nil })
       elsif group_ids.present?
-        messages.where("tg2.topic_id IS NOT NULL")
+        messages.where.not(tg2: { topic_id: nil })
       end
   end
 
@@ -1198,7 +1198,7 @@ class TopicQuery
             WHERE #{DB.sql_fragment("gu.group_id IN (?)", group_ids)}
           ) tg ON topics.id = tg.topic_id
         ",
-      ).where("tg.topic_id IS NOT NULL")
+      ).where.not(tg: { topic_id: nil })
     else
       messages_for_user
     end
@@ -1211,7 +1211,7 @@ class TopicQuery
         ON topics.id = ta.topic_id
         AND ta.user_id = #{@user.id.to_i}
       ",
-    ).where("ta.topic_id IS NOT NULL")
+    ).where.not(ta: { topic_id: nil })
   end
 
   def base_messages
@@ -1233,7 +1233,7 @@ class TopicQuery
       excluded_topic_ids += Category.topic_ids.to_a
     end
     result =
-      result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
+      result.where.not(topics: { id: excluded_topic_ids }) unless excluded_topic_ids.empty?
 
     result = remove_muted(result, @user, @options)
 

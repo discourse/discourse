@@ -315,9 +315,7 @@ after_initialize do
 
     if name == "*"
       next(
-        results.joins("JOIN assignments a ON a.topic_id = topics.id AND active").where(
-          "a.assigned_to_id IS NOT NULL",
-        )
+        results.joins("JOIN assignments a ON a.topic_id = topics.id AND active").where.not(a: { assigned_to_id: nil })
       )
     end
 

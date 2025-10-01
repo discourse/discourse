@@ -179,9 +179,7 @@ module DiscourseAi
               "a.assigned_to_id IS NULL",
             )
           elsif name == "*"
-            relation.joins("JOIN assignments a ON a.topic_id = topics.id AND a.active").where(
-              "a.assigned_to_id IS NOT NULL",
-            )
+            relation.joins("JOIN assignments a ON a.topic_id = topics.id AND a.active").where.not(a: { assigned_to_id: nil })
           else
             usernames = name.split(",").map(&:strip).map(&:downcase)
             relation.joins("JOIN assignments a ON a.topic_id = topics.id AND a.active").where(

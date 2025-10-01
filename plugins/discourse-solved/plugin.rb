@@ -205,10 +205,7 @@ after_initialize do
     report.data = []
 
     accepted_solutions =
-      DiscourseSolved::SolvedTopic.joins(:topic).where(
-        "topics.archetype <> ?",
-        Archetype.private_message,
-      )
+      DiscourseSolved::SolvedTopic.joins(:topic).where.not(topics: { archetype: Archetype.private_message })
 
     category_id, include_subcategories = report.add_category_filter
     if category_id

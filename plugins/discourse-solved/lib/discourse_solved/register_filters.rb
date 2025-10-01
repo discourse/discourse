@@ -6,7 +6,7 @@ module DiscourseSolved
       solved_callback = ->(scope) do
         scope.joins(
           "INNER JOIN discourse_solved_solved_topics ON discourse_solved_solved_topics.topic_id = topics.id",
-        ).where("topics.archetype <> ?", Archetype.private_message)
+        ).where.not(topics: { archetype: Archetype.private_message })
       end
 
       unsolved_callback = ->(scope) do
@@ -38,7 +38,7 @@ module DiscourseSolved
           SQL
         end
 
-        scope.where("topics.archetype <> ?", Archetype.private_message)
+        scope.where.not(topics: { archetype: Archetype.private_message })
       end
 
       plugin.register_custom_filter_by_status("solved", &solved_callback)
