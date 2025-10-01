@@ -206,6 +206,14 @@ CREATE TABLE topic_allowed_users
     PRIMARY KEY (topic_id, user_id)
 );
 
+CREATE TABLE topic_tags
+(
+    tag_id     NUMERIC  NOT NULL,
+    topic_id   NUMERIC  NOT NULL,
+    created_at DATETIME,
+    PRIMARY KEY (topic_id, tag_id)
+);
+
 CREATE TABLE topics
 (
     original_id          NUMERIC  NOT NULL PRIMARY KEY,

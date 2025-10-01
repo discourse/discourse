@@ -154,6 +154,11 @@ schema:
           - "highest_staff_post_number"
           - "reviewable_score"
           - "slow_mode_seconds"
+    topic_tags:
+      primary_key_column_names: [ "topic_id", "tag_id" ]
+      columns:
+        exclude:
+          - "id"
     user_associated_accounts:
       primary_key_column_names: [ "user_id", "provider_name" ]
       columns:
@@ -466,7 +471,6 @@ schema:
         - "topic_links"
         - "topic_localizations"
         - "topic_search_data"
-        - "topic_tags"
         - "topic_thumbnails"
         - "topic_timers"
         - "topic_users"
