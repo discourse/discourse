@@ -4222,11 +4222,13 @@ de:
   page_not_found:
     page_title: "Seite nicht gefunden"
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
+    subtitle: "Wir haben überall nachgeschaut, aber wir konnten die vor dir gesuchte Seite nicht finden."
     popular_topics: "Beliebte Themen"
     recent_topics: "Aktuelle Themen"
     see_more: "Mehr"
     search_title: "Versuche stattdessen zu suchen?"
     search_button: "Suche"
+    home: "Zurück zur Startseite"
   offline:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
@@ -5338,6 +5340,8 @@ de:
       approve_and_unhide:
         title: "Beitrag genehmigen und nicht länger verstecken"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
+      post_actions:
+        bundle_title: "Was willst du mit dem Beitrag machen?"
       no_action_post:
         title: "Keine Aktion"
         description: "Keine Maßnahmen bezüglich des Beitrags ergreifen"
