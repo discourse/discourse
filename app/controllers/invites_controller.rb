@@ -351,7 +351,7 @@ class InvitesController < ApplicationController
 
     if invite.present?
       begin
-        attrs = { ip_address: request.remote_ip, session: server_session }
+        attrs = { ip_address: request.remote_ip, session: session }
 
         if redeeming_user
           attrs[:redeeming_user] = redeeming_user
@@ -532,8 +532,8 @@ class InvitesController < ApplicationController
     # Show email if the user already authenticated their email
     different_external_email = false
 
-    if server_session[:authentication]
-      auth_result = Auth::Result.from_session_data(server_session[:authentication], user: nil)
+    if session[:authentication]
+      auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
       if invite.email == auth_result.email
         email = invite.email
       else
