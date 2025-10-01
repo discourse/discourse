@@ -282,7 +282,7 @@ export default class Site extends RestModel {
   // Sort subcategories under parents
   @cached
   get sortedCategories() {
-    return Category.sortCategories(this.categories);
+    return Category.sortCategories(this.categoriesByCount);
   }
 
   // Returns it in the correct order, by setting
