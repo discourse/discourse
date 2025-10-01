@@ -8,8 +8,6 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("User Preferences - Security", function (needs) {
-  let hasAssociatedAccounts = true;
-
   needs.user();
 
   needs.pretender((server, helper) => {
@@ -31,23 +29,6 @@ acceptance("User Preferences - Security", function (needs) {
 
     server.put("/u/eviltrout/remove-password", () => {
       return helper.response({ success: "Ok" });
-    });
-
-    server.get("/u/eviltrout/emails.json", () => {
-      const account = {
-        associated_accounts: [
-          {
-            name: "facebook",
-            description: "robin.ward@example.com",
-            can_revoke: true,
-          },
-        ],
-      };
-      const associatedAccounts = hasAssociatedAccounts ? [account] : [];
-
-      return helper.response({
-        associated_accounts: associatedAccounts,
-      });
     });
   });
 
@@ -248,18 +229,23 @@ acceptance("User Preferences - Security", function (needs) {
       .doesNotExist("does not show passkey options dropdown");
   });
 
-  test("Remove Password availability - with associated accounts", async function (assert) {
+  test("Remove Password availability", async function (assert) {
+    this.siteSettings.enable_passkeys = true;
     await visit("/u/eviltrout/preferences/security");
-
+    // eviltrout starts with an entry in associated_accounts, can remove password
     assert
       .dom("#remove-password-link:not(:disabled)")
       .exists("is enabled for user with associated account");
-  });
 
-  test("Remove Password availability - with passkeys", async function (assert) {
-    this.siteSettings.enable_passkeys = true;
+    updateCurrentUser({
+      associated_accounts: null,
+    });
 
-    hasAssociatedAccounts = false;
+    assert
+      .dom("#remove-password-link:disabled")
+      .exists(
+        "is disabled for user with no associated account and no passkeys"
+      );
 
     updateCurrentUser({
       user_passkeys: [
@@ -271,39 +257,14 @@ acceptance("User Preferences - Security", function (needs) {
         },
       ],
     });
-
-    await visit("/u/eviltrout/preferences/security");
-
     assert
       .dom("#remove-password-link:not(:disabled)")
-      .exists("is enabled for user with passkey");
-  });
-
-  test("Remove Password availability - without associated accounts or passkeys", async function (assert) {
-    this.siteSettings.enable_passkeys = true;
-
-    hasAssociatedAccounts = false;
-
-    await visit("/u/eviltrout/preferences/security");
-
-    assert
-      .dom("#remove-password-link:disabled")
       .exists("is enabled for user with passkey");
   });
 
   test("Removing User Password", async function (assert) {
-    updateCurrentUser({
-      user_passkeys: [
-        {
-          id: 1,
-          name: "Password Manager",
-          last_used: "2023-10-09T20:03:20.986Z",
-          created_at: "2023-10-09T20:01:37.578Z",
-        },
-      ],
-    });
-
     await visit("/u/eviltrout/preferences/security");
+    // eviltrout starts with an entry in associated_accounts, can remove password
 
     await click("#remove-password-link");
     assert

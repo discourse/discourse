@@ -8023,9 +8023,10 @@ RSpec.describe UsersController do
           number_of_suspensions
           warnings_received_count
           number_of_rejected_posts
+          can_remove_password?
         ].each do |info|
           user_instance.expects(info).returns(user.public_send(info))
-          result[info.to_s] = user.public_send(info)
+          result[info.to_s.delete_suffix("?")] = user.public_send(info)
         end
 
         sign_in(admin)
