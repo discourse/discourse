@@ -585,7 +585,6 @@ RSpec.describe ApplicationHelper do
         end
       end
     end
-
   end
 
   describe "crawlable_meta_data" do
