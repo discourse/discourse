@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class UpgradePgvector080 < ActiveRecord::Migration[8.0]
   def up
     minimum_target_version = "0.8.0"
@@ -7,6 +8,8 @@ class UpgradePgvector080 < ActiveRecord::Migration[8.0]
 
     if Gem::Version.new(installed_version) < Gem::Version.new(minimum_target_version)
       DB.exec("ALTER EXTENSION vector UPDATE TO '0.8.0';")
+
+      DB.exec("ALTER ROLE CURRENT_ROLE SET hnsw.iterative_scan = relaxed_order;")
     end
   end
 
