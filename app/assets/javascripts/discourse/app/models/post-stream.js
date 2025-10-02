@@ -78,6 +78,7 @@ export default class PostStream extends RestModel {
   _identityMap = {};
 
   @cached
+  @dependentKeyCompat
   get postsWithPlaceholders() {
     return this.posts.concat(
       Array.from(
@@ -87,6 +88,7 @@ export default class PostStream extends RestModel {
     );
   }
 
+  @dependentKeyCompat
   get filteredPostsCount() {
     return this.isMegaTopic
       ? this.topic.highest_post_number
@@ -98,6 +100,7 @@ export default class PostStream extends RestModel {
     return this.posts.length > 0;
   }
 
+  @dependentKeyCompat
   get hasLoadedData() {
     return this.hasPosts && this.filteredPostsCount > 0;
   }
@@ -111,10 +114,12 @@ export default class PostStream extends RestModel {
     return !!this.posts.find((item) => item.post_number === 1);
   }
 
+  @dependentKeyCompat
   get firstPostId() {
     return this.stream[0];
   }
 
+  @dependentKeyCompat
   get lastPostId() {
     return this.isMegaTopic ? this.lastId : this.stream.at(-1);
   }
@@ -135,6 +140,7 @@ export default class PostStream extends RestModel {
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
+  @dependentKeyCompat
   get streamFilters() {
     const result = {};
 
@@ -158,6 +164,7 @@ export default class PostStream extends RestModel {
     return result;
   }
 
+  @dependentKeyCompat
   get hasNoFilters() {
     const streamFilters = this.streamFilters;
     return !(
@@ -170,6 +177,7 @@ export default class PostStream extends RestModel {
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
   **/
+  @dependentKeyCompat
   get previousWindow() {
     if (!this.posts) {
       return [];
@@ -199,6 +207,7 @@ export default class PostStream extends RestModel {
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
   **/
+  @dependentKeyCompat
   get nextWindow() {
     const lastLoadedPost = this.posts.at(-1);
 
