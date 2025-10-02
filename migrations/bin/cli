@@ -73,7 +73,7 @@ module Migrations
       end
 
       def split_step_class_names(class_names)
-        class_names.presence&.split(",")&.map { |name| name.demodulize.underscore } || []
+        class_names.presence&.split(",")&.map { |name| name.strip.demodulize.underscore } || []
       end
     end
   end
