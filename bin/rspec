@@ -20,5 +20,6 @@ if ENV["LOAD_PLUGINS"].nil? && ARGV.any? { |pattern| pattern.include?("plugins/"
 end
 
 ENV["PLAYWRIGHT_HEADLESS"] = "0" if ARGV.delete("--headful")
+ENV["CAPYBARA_PLAYWRIGHT_DEBUG_EMBER_SETTLED"] = "1" if ARGV.delete("--debug-ember-settled")
 
 load Gem.bin_path("rspec-core", "rspec")
