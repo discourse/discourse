@@ -274,7 +274,7 @@ module("Unit | Service | presence | entering and leaving", function (hooks) {
   });
 
   hooks.afterEach(function () {
-    requests.clear();
+    requests.length = 0;
     responseWaitPromise = null;
     responseStartPromise = null;
   });

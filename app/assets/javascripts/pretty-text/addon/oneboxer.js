@@ -16,7 +16,7 @@ const loadingQueue = [];
 export const LOADING_ONEBOX_CSS_CLASS = "loading-onebox";
 
 export function resetCache() {
-  loadingQueue.clear();
+  loadingQueue.length = 0;
   resetLocalCache();
   resetFailedCache();
 }

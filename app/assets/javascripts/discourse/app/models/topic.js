@@ -990,5 +990,5 @@ export function registerCustomLastUnreadUrlCallback(fn) {
 
 // Should only be used in tests
 export function clearCustomLastUnreadUrlCallbacks() {
-  _customLastUnreadUrlCallbacks.clear();
+  _customLastUnreadUrlCallbacks.length = 0;
 }
