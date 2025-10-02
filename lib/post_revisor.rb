@@ -654,16 +654,29 @@ class PostRevisor
   end
 
   def bump_topic
-    return if bypass_bump?
+    return if !should_bump?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_unmuted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
-  def bypass_bump?
-    !@post_successfully_saved || post_changes.any? || @topic_changes.errored? ||
-      @opts[:bypass_bump] == true || @post.whisper? || only_hidden_tags_changed?
+  def should_bump?
+    return false if @opts[:bypass_bump] == true
+
+    should_bump_topic_modifier_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :should_bump_topic,
+        nil,
+        @post,
+        post_changes,
+        @topic_changes,
+      )
+    return should_bump_topic_modifier_result if !should_bump_topic_modifier_result.nil?
+
+    return true if @post.is_first_post? && @post.wiki? && post_changes.any?
+
+    false
   end
 
   def only_hidden_tags_changed?
