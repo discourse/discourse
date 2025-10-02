@@ -10,6 +10,7 @@ module Migrations::Importer
       @classes = classes
       @skip = skip
       @only = only
+
       @filtered_classes = filter_classes
       @dependency_graph = build_dependency_graph
     end
@@ -39,27 +40,23 @@ module Migrations::Importer
     private
 
     def filter_classes
-      classes_to_include =
-        (
-          if @only.empty?
-            @classes
-          else
-            @classes.select { |klass| @only.include?(klass.name.demodulize.underscore) }
-          end
-        )
-      classes_to_include =
-        classes_to_include.reject { |klass| @skip.include?(klass.name.demodulize.underscore) }
+      @normalized_class_names =
+        Hash[@classes.map { |klass| [klass, klass.name.demodulize.underscore] }]
 
-      with_dependencies = Set.new(classes_to_include)
-      classes_to_include.each { |klass| add_dependencies(klass, with_dependencies) }
+      classes_to_include = @classes.dup
+      classes_to_include.select! { |klass| class_included?(@only, klass) } if @only.any?
+      classes_to_include.reject! { |klass| class_included?(@skip, klass) } if @skip.any?
 
-      with_dependencies.to_a
+      classes_with_dependencies = Set.new(classes_to_include)
+      classes_to_include.each { |klass| add_dependencies(klass, classes_with_dependencies) }
+
+      classes_with_dependencies.to_a
     end
 
     def add_dependencies(klass, included_set)
       dependencies = klass.dependencies || []
       dependencies.each do |dependency|
-        next if @skip.include?(dependency.name.demodulize.underscore)
+        next if class_included?(@skip, dependency)
         next if included_set.include?(dependency)
 
         included_set << dependency
@@ -77,6 +74,10 @@ module Migrations::Importer
           graph[klass] ||= []
         end
       graph
+    end
+
+    def class_included?(class_names, klass)
+      class_names.include?(@normalized_class_names[klass])
     end
   end
 end
