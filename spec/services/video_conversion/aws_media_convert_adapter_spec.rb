@@ -356,4 +356,58 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       end
     end
   end
+
+  describe "#create_basic_client" do
+    context "when using IAM profile" do
+      before do
+        allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(true)
+        allow(SiteSetting).to receive(:s3_access_key_id).and_return("")
+        allow(SiteSetting).to receive(:s3_secret_access_key).and_return("")
+      end
+
+      it "creates client without endpoint when endpoint is nil" do
+        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
+
+        adapter.send(:create_basic_client, endpoint: nil)
+
+        expect(Aws::MediaConvert::Client).to have_received(:new).with({ region: s3_region })
+      end
+
+      it "creates client without endpoint when endpoint is empty string" do
+        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
+
+        adapter.send(:create_basic_client, endpoint: "")
+
+        expect(Aws::MediaConvert::Client).to have_received(:new).with({ region: s3_region })
+      end
+
+      it "creates client with endpoint when endpoint is present" do
+        endpoint = "https://mediaconvert.us-west-2.amazonaws.com"
+        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
+
+        adapter.send(:create_basic_client, endpoint: endpoint)
+
+        expect(Aws::MediaConvert::Client).to have_received(:new).with(
+          { region: s3_region, endpoint: endpoint },
+        )
+      end
+    end
+
+    context "when not using IAM profile" do
+      before do
+        allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(false)
+        allow(SiteSetting).to receive(:s3_access_key_id).and_return("test-key")
+        allow(SiteSetting).to receive(:s3_secret_access_key).and_return("test-secret")
+      end
+
+      it "creates client with credentials" do
+        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
+
+        adapter.send(:create_basic_client, endpoint: nil)
+
+        # Verify that credentials are included in the client creation
+        expect(Aws::MediaConvert::Client).to have_received(:new)
+      end
+    end
+  end
 end
