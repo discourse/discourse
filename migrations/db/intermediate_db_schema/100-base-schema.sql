@@ -148,6 +148,14 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE site_settings
+(
+    name            TEXT         NOT NULL PRIMARY KEY,
+    import_mode     ENUM_INTEGER NOT NULL,
+    last_changed_at DATETIME,
+    value           TEXT
+);
+
 CREATE TABLE tag_group_memberships
 (
     tag_group_id NUMERIC  NOT NULL,
