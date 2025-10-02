@@ -1,24 +1,6 @@
 import Component from "@glimmer/component";
 import { isBlank } from "@ember/utils";
-import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
-
-const animateOnFocus = modifierFn((element, [isFocused, char]) => {
-  if (isFocused && isBlank(char)) {
-    element.animate(
-      [
-        { transform: "scale(1)" },
-        { transform: "scale(1.1)" },
-        { transform: "scale(1)" },
-      ],
-      {
-        duration: 400,
-        easing: "ease-out",
-        fill: "none",
-      }
-    );
-  }
-});
 
 const PLACEHOLDER_CHAR = "-";
 
@@ -52,7 +34,6 @@ export default class Slot extends Component {
         (if this.isPlaceholder "--placeholder")
       }}
       data-index={{@index}}
-      {{animateOnFocus @isFocused @char}}
     >
       {{this.displayChar}}
     </div>
