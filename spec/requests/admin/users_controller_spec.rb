@@ -1038,7 +1038,17 @@ RSpec.describe Admin::UsersController do
 
       before { sign_in(admin) }
 
-      include_examples "trust level updates possible"
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        include_examples "trust level updates possible"
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        include_examples "trust level updates possible"
+      end
     end
 
     context "when logged in as a moderator" do
@@ -1046,7 +1056,23 @@ RSpec.describe Admin::UsersController do
 
       before { sign_in(moderator) }
 
-      include_examples "trust level updates possible"
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        include_examples "trust level updates possible"
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        it "prevents updates to trust level with a 422 response" do
+          another_user.update(trust_level: TrustLevel[1])
+          put "/admin/users/#{another_user.id}/trust_level.json", params: { level: TrustLevel[0] }
+
+          expect(response.status).to eq(422)
+          expect(another_user.reload.trust_level).to eq(TrustLevel[1])
+        end
+      end
     end
 
     context "when logged in as a non-staff user" do
