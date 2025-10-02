@@ -18,6 +18,7 @@ export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
       @tags={{this.value}}
       @onChange={{this.onInput}}
       @options={{this.tagChooserOption}}
+      @everyTag={{@spec.every_tag}}
       class={{if this.validationErrorMessage "--invalid"}}
     />
 
