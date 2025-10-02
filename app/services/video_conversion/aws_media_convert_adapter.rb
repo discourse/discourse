@@ -191,7 +191,8 @@ module VideoConversion
     end
 
     def create_basic_client(endpoint: nil)
-      client_options = { region: SiteSetting.s3_region, endpoint: endpoint }
+      client_options = { region: SiteSetting.s3_region }
+      client_options[:endpoint] = endpoint if endpoint.present?
 
       if !SiteSetting.s3_use_iam_profile
         client_options[:credentials] = Aws::Credentials.new(
