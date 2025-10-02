@@ -47,7 +47,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
               "INNER JOIN category_moderation_groups ON category_moderation_groups.group_id = group_users.group_id",
             )
             .where("category_moderation_groups.category_id": reviewable.category.id)
-            .where.not(users: { id: @contacted })
+            .where.not(id: @contacted)
             .distinct
 
         users.find_each do |user|

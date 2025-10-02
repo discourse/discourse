@@ -1064,7 +1064,7 @@ class GroupsController < ApplicationController
               category_users = []
               existing_users =
                 CategoryUser
-                  .where(category_id: category_id, user_id: user_ids)
+                  .where(category_id:, user_id: user_ids)
                   .where.not(notification_level: nil)
               skip_user_ids = existing_users.pluck(:user_id)
 
@@ -1089,7 +1089,7 @@ class GroupsController < ApplicationController
             tags.each do |tag_id, data|
               tag_users = []
               existing_users =
-                TagUser.where(tag_id: tag_id, user_id: user_ids).where.not(notification_level: nil)
+                TagUser.where(tag_id:, user_id: user_ids).where.not(notification_level: nil)
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|

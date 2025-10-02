@@ -485,7 +485,7 @@ class TopicView
   def has_deleted?
     @predelete_filtered_posts
       .with_deleted
-      .where.not(posts: { deleted_at: nil })
+      .where.not(deleted_at: nil)
       .where("posts.post_number > 1")
       .exists?
   end

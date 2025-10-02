@@ -106,7 +106,7 @@ class TopicQuery
       list = user_personal_private_messages(user)
       list = list.where("topics.subtype = ?", TopicSubtype.moderator_warning)
       # Exclude official warnings that the user created, instead of received
-      list = list.where.not(topics: { user_id: user.id })
+      list = list.where.not(topics: { user: })
       create_list(:private_messages, {}, list)
     end
 

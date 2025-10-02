@@ -277,7 +277,7 @@ class Invite < ActiveRecord::Base
     InvitedUser
       .joins("LEFT JOIN invites ON invites.id = invited_users.invite_id")
       .includes(user: :user_stat)
-      .where.not(invited_users: { user_id: nil })
+      .where.not(user_id: nil)
       .where("invites.invited_by_id = ?", inviter.id)
       .order("invited_users.redeemed_at DESC")
       .references("invite")

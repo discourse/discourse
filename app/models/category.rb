@@ -570,7 +570,7 @@ class Category < ActiveRecord::Base
 
     Category.all.each do |c|
       topics = c.topics.visible
-      topics = topics.where.not(topics: { id: c.topic_id }) if c.topic_id
+      topics = topics.where.not(id: c.topic_id) if c.topic_id
       c.topics_year = topics.created_since(1.year.ago).count
       c.topics_month = topics.created_since(1.month.ago).count
       c.topics_week = topics.created_since(1.week.ago).count
@@ -1223,7 +1223,7 @@ class Category < ActiveRecord::Base
 
     Category
       .joins("LEFT JOIN topics ON categories.topic_id = topics.id AND topics.deleted_at IS NULL")
-      .where.not(categories: { id: SiteSetting.uncategorized_category_id })
+      .where.not(id: SiteSetting.uncategorized_category_id)
       .where(topics: { id: nil })
       .find_each { |category| category.create_category_definition }
   end

@@ -536,8 +536,8 @@ class Theme < ActiveRecord::Base
       get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
         require_rebake =
           ThemeField
-            .where(theme_id: theme_ids, target_id: Theme.targets[:extra_js])
-            .where.not(compiler_version: Theme.compiler_version)
+            .where(theme_id: theme_ids, target_id: targets[:extra_js])
+            .where.not(compiler_version: compiler_version)
 
         ActiveRecord::Base.transaction do
           require_rebake.each { |tf| tf.ensure_baked! }

@@ -232,7 +232,7 @@ module DiscourseAssign
 
     def recent_assignees
       User
-        .where.not(users: { id: current_user.id })
+        .where.not(id: current_user.id)
         .joins(<<~SQL)
           JOIN(
             SELECT assigned_to_id user_id, MAX(created_at) last_assigned

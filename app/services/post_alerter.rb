@@ -1037,7 +1037,7 @@ class PostAlerter
     notify = notify.where(staged: false).staff if post.topic.private_message?
 
     exclude_user_ids = notified.map(&:id)
-    notify = notify.where.not(users: { id: exclude_user_ids }) if exclude_user_ids.present?
+    notify = notify.where.not(id: exclude_user_ids) if exclude_user_ids.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
 
