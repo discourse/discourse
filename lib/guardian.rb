@@ -613,8 +613,6 @@ class Guardian
   end
 
   def can_see_reviewable_ui_refresh?
-    # TODO (martin) Fix this once I add the _map method properly
-    return false
     @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_groups_map)
   end
 
