@@ -23,7 +23,9 @@
   transition: all 0.3s ease-out;
 
   &.--is-focused {
-    border-color: var(--primary-high);
+    @include default-focus;
+
+    box-shadow: 0 0 0 2px rgb(var(--tertiary-rgb), 0.25);
   }
 
   &.--show-cursor {
