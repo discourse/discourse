@@ -83,13 +83,8 @@ module Migrations::Converters::Base
       step_class.new(StepTracker.new, args)
     end
 
-    def filter_steps(steps, only_steps, skip_steps)
-      return steps if only_steps.empty? && skip_steps.empty?
-
-      steps.select do |step_class|
-        step_name = step_class.name.demodulize.underscore
-        (only_steps.empty? || only_steps.include?(step_name)) && !skip_steps.include?(step_name)
-      end
+    def filter_steps(step_classes, only_steps, skip_steps)
+      ::Migrations::ClassFilter.filter(step_classes, only: only_steps, skip: skip_steps)
     end
   end
 end
