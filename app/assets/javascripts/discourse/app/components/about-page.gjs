@@ -19,7 +19,7 @@ export function addAboutPageActivity(name, func) {
 }
 
 export function clearAboutPageActivities() {
-  pluginActivitiesFuncs.clear();
+  pluginActivitiesFuncs.length = 0;
 }
 
 export default class AboutPage extends Component {

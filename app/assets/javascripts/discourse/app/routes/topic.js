@@ -339,7 +339,7 @@ export default class TopicRoute extends DiscourseRoute {
 
   setupParams(topic, params) {
     const postStream = topic.get("postStream");
-    postStream.set("filter", get(params, "filter"));
+    postStream.filter = get(params, "filter");
 
     const usernames = get(params, "username_filters");
 

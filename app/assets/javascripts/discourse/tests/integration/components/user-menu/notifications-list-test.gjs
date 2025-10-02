@@ -43,7 +43,7 @@ module(
     });
 
     test("empty state when there are no notifications", async function (assert) {
-      notificationsData.clear();
+      notificationsData.length = 0;
       await render(<template><NotificationsList /></template>);
       assert.dom(".empty-state .empty-state__title").exists();
       assert.dom(".empty-state .empty-state__body").exists();
