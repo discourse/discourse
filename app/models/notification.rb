@@ -308,9 +308,7 @@ class Notification < ActiveRecord::Base
       [
         Notification.types[:liked],
         Notification.types[:liked_consolidated],
-      ].each do |notification_type|
-        notifications = notifications.where.not(notification_type:)
-      end
+      ].each { |notification_type| notifications = notifications.where.not(notification_type:) }
     end
 
     notifications = notifications.to_a

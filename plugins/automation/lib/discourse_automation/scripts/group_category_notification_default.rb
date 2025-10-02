@@ -37,9 +37,7 @@ DiscourseAutomation::Scriptable.add(
 
           category_users = []
           existing_users =
-            CategoryUser
-              .where(category_id:, user_id: user_ids)
-              .where.not(notification_level: nil)
+            CategoryUser.where(category_id:, user_id: user_ids).where.not(notification_level: nil)
           skip_user_ids = existing_users.pluck(:user_id)
 
           batch.each do |group_user|

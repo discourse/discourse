@@ -190,14 +190,10 @@ class DiscourseConnect < DiscourseConnectBase
     desired_groups = Group.where("LOWER(NAME) in (?) AND NOT automatic", names)
 
     to_be_added = desired_groups
-    if current_groups.present?
-      to_be_added = to_be_added.where.not(id: current_groups.map(&:id))
-    end
+    to_be_added = to_be_added.where.not(id: current_groups.map(&:id)) if current_groups.present?
 
     to_be_removed = current_groups
-    if desired_groups.present?
-      to_be_removed = to_be_removed.where.not(id: desired_groups.map(&:id))
-    end
+    to_be_removed = to_be_removed.where.not(id: desired_groups.map(&:id)) if desired_groups.present?
 
     if to_be_added.present? || to_be_removed.present?
       GroupUser.transaction do

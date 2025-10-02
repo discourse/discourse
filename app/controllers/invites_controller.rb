@@ -459,10 +459,7 @@ class InvitesController < ApplicationController
       return render_json_error(I18n.t("rate_limiter.slow_down"))
     end
 
-    Invite
-      .pending(current_user)
-      .where.not(email: nil)
-      .find_each { |invite| invite.resend_invite }
+    Invite.pending(current_user).where.not(email: nil).find_each { |invite| invite.resend_invite }
 
     render json: success_json
   end
