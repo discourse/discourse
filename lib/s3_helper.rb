@@ -458,9 +458,12 @@ class S3Helper
   end
 
   def check_missing_site_options
-    unless SiteSetting.s3_use_iam_profile
-      raise SettingMissing.new("access_key_id") if SiteSetting.s3_access_key_id.blank?
-      raise SettingMissing.new("secret_access_key") if SiteSetting.s3_secret_access_key.blank?
+    # Only validate if both credentials are provided together
+    if SiteSetting.s3_access_key_id.present? || SiteSetting.s3_secret_access_key.present?
+      if SiteSetting.s3_access_key_id.blank? || SiteSetting.s3_secret_access_key.blank?
+        raise Discourse::SiteSettingMissing.new("access_key_id, secret_access_key")
+      end
     end
+    # If neither provided, AWS SDK will auto-discover credentials
   end
 end
