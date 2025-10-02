@@ -636,12 +636,10 @@ export default class ChatApi extends Service {
   }
 
   #postRequest(endpoint, data = {}) {
-    const promise = ajax(`${this.#basePath}${endpoint}`, {
+    return ajax(`${this.#basePath}${endpoint}`, {
       type: "POST",
       data,
     });
-
-    return promise;
   }
 
   #deleteRequest(endpoint, data = {}) {
