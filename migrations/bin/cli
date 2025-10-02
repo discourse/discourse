@@ -86,5 +86,7 @@ else
 end
 
 # rubocop:disable Discourse/NoChdir
-Dir.chdir(File.expand_path("../..", __dir__)) { ::Migrations::CLI::Application.start }
+Dir.chdir(File.expand_path("../..", __dir__)) do
+  ::Migrations::CLI::ExceptionHandler.handle_and_exit { ::Migrations::CLI::Application.start }
+end
 # rubocop:enable Discourse/NoChdir

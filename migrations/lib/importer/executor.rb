@@ -47,7 +47,9 @@ module Migrations::Importer
           .map { |c| steps_module.const_get(c) }
           .select { |klass| klass.is_a?(Class) && klass < ::Migrations::Importer::Step }
 
-      TopologicalSorter.sort(classes, only: @options[:only], skip: @options[:skip])
+      filtered_classes =
+        ::Migrations::ClassFilter.filter(classes, only: @options[:only], skip: @options[:skip])
+      ::Migrations::TopologicalSorter.sort(filtered_classes)
     end
 
     def execute_steps
