@@ -420,7 +420,11 @@ class RemoteTheme < ActiveRecord::Base
     existing_schemes = ColorScheme.unscoped.where(theme_id: theme.id)
 
     missing_scheme_names =
-      Hash[*existing_schemes.reject(&:remote_copy).map { |cs| [cs.name, cs] }.flatten]
+      existing_schemes.reduce({}) do |hash, cs|
+        hash[cs.name] = cs if !cs.remote_copy
+        hash
+      end
+
     ordered_schemes = []
 
     schemes&.each do |name, colors|

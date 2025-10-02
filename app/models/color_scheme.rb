@@ -349,6 +349,7 @@ class ColorScheme < ActiveRecord::Base
   belongs_to :theme
   belongs_to :base_scheme, -> { unscope(where: :remote_copy) }, class_name: "ColorScheme"
 
+  validate :no_edits_for_remote_copies, on: :update
   validates_associated :color_scheme_colors
 
   BASE_COLORS_FILE = "#{Rails.root}/app/assets/stylesheets/common/foundation/colors.scss"
@@ -588,14 +589,18 @@ class ColorScheme < ActiveRecord::Base
     DistributedMutex.synchronize("color_scheme_fork_#{self.id}") do
       self.reload
       if self.base_scheme_id.blank?
-        new_scheme.save!
-        self.base_scheme_id = new_scheme.id
-        self.save!
+        self.transaction do
+          new_scheme.save!
+          self.base_scheme_id = new_scheme.id
+          self.save!
+        end
       end
     end
 
     self
   end
+
+  private
 
   def destroy_remote_original
     return if theme_id.blank?
@@ -605,6 +610,16 @@ class ColorScheme < ActiveRecord::Base
       .unscoped
       .where(theme_id: theme_id, id: base_scheme_id, remote_copy: true)
       .destroy_all
+  end
+
+  def no_edits_for_remote_copies
+    if remote_copy &&
+         (
+           will_save_change_to_base_scheme_id? || will_save_change_to_user_selectable? ||
+             will_save_change_to_remote_copy? || will_save_change_to_theme_id?
+         )
+      errors.add(:base, I18n.t("color_schemes.errors.cannot_edit_remote_copies"))
+    end
   end
 end
 

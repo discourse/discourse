@@ -214,9 +214,10 @@ RSpec.describe ColorScheme do
       expect(original_scheme.base_scheme.colors.map { |c| [c.name, c.hex] }.sort_by(&:first)).to eq(
         original_scheme.colors.map { |c| [c.name, c.hex] }.sort_by(&:first),
       )
-      expect(original_scheme.base_scheme.theme.id).to eq(theme.id)
+      expect(original_scheme.base_scheme.theme_id).to eq(theme.id)
       expect(original_scheme.base_scheme.user_selectable).to eq(false)
       expect(original_scheme.base_scheme.remote_copy).to eq(true)
+      expect(original_scheme.base_scheme.via_wizard).to eq(false)
     end
   end
 
@@ -237,6 +238,23 @@ RSpec.describe ColorScheme do
       expect do original_scheme.destroy! end.to change { ColorScheme.unscoped.count }.by(-2)
 
       expect(ColorScheme.unscoped.exists?(id: original_scheme.base_scheme_id)).to eq(false)
+    end
+  end
+
+  describe "#no_edits_for_remote_copies" do
+    it "prevents editing remote copies of color schemes" do
+      remote_copy =
+        Fabricate(
+          :color_scheme,
+          remote_copy: true,
+          user_selectable: false,
+          theme_id: Fabricate(:theme).id,
+        )
+      remote_copy.user_selectable = true
+      expect(remote_copy.valid?).to eq(false)
+      expect(remote_copy.errors.full_messages).to include(
+        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
+      )
     end
   end
 end

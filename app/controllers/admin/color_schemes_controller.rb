@@ -31,11 +31,7 @@ class Admin::ColorSchemesController < Admin::AdminController
       end
     end
 
-    diverge_from_remote =
-      update_params[:colors].present? && @color_scheme.theme_id.present? &&
-        @color_scheme.base_scheme_id.blank?
-
-    color_scheme = ColorSchemeRevisor.revise(@color_scheme, update_params, diverge_from_remote:)
+    color_scheme = ColorSchemeRevisor.revise(@color_scheme, update_params)
     update_theme_default_scheme!
     if color_scheme.valid?
       render json: color_scheme, root: false

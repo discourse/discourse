@@ -201,7 +201,7 @@ RSpec.describe Admin::ColorSchemesController do
                   colors: [{ name: "primary", hex: "7711EE" }],
                 },
               }
-        end.to change { ColorScheme.unscoped.count }.by(1)
+        end.to change { ColorScheme.unscoped.where(remote_copy: true).count }.by(1)
         expect(response.status).to eq(200)
         expect(response.parsed_body["colors"].find { |c| c["name"] == "primary" }["hex"]).to eq(
           "7711EE",

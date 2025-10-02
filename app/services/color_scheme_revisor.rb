@@ -6,11 +6,11 @@ class ColorSchemeRevisor
     @params = params
   end
 
-  def self.revise(color_scheme, params, diverge_from_remote: false)
-    self.new(color_scheme, params).revise(diverge_from_remote:)
+  def self.revise(color_scheme, params)
+    self.new(color_scheme, params).revise
   end
 
-  def revise(diverge_from_remote: false)
+  def revise
     ColorScheme.transaction do
       @color_scheme.name = @params[:name] if @params.has_key?(:name)
       @color_scheme.user_selectable = @params[:user_selectable] if @params.has_key?(
@@ -20,7 +20,10 @@ class ColorSchemeRevisor
       @color_scheme.base_scheme_id = @params[:base_scheme_id] if @params.has_key?(:base_scheme_id)
       has_colors = @params[:colors]
 
-      @color_scheme.diverge_from_remote if diverge_from_remote
+      if @params[:colors].present? && @color_scheme.theme_id.present? &&
+           @color_scheme.base_scheme_id.blank?
+        @color_scheme.diverge_from_remote
+      end
 
       if has_colors
         @params[:colors].each do |c|
