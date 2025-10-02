@@ -275,12 +275,8 @@ class S3Helper
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
     opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
-    profile = obj.s3_file_uploads_profile.presence
-
-    if obj.s3_use_iam_profile
-      opts[:profile] = profile if profile.present?
-    else
-      # Legacy behavior
+    # Only add keys if they exist, otherwise let AWS SDK auto-discover
+    if obj.s3_access_key_id.present? && obj.s3_secret_access_key.present?
       opts[:access_key_id] = obj.s3_access_key_id
       opts[:secret_access_key] = obj.s3_secret_access_key
     end

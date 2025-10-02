@@ -402,65 +402,37 @@ RSpec.describe "S3Helper" do
   end
 
   describe ".s3_options" do
-    context "when using IAM profiles" do
-      it "includes profile when specified" do
-        GlobalSetting.stubs(:s3_use_iam_profile).returns(true)
-        GlobalSetting.stubs(:s3_file_uploads_profile).returns("test-profile")
+    context "when S3 credentials are provided" do
+      it "includes access keys in options" do
+        GlobalSetting.stubs(:s3_access_key_id).returns("test-key")
+        GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
 
         options = S3Helper.s3_options(GlobalSetting)
 
-        expect(options[:profile]).to eq("test-profile")
-        expect(options).not_to have_key(:access_key_id)
-        expect(options).not_to have_key(:secret_access_key)
-      end
-
-      it "allows blank profile for EC2 instance profiles" do
-        GlobalSetting.stubs(:s3_use_iam_profile).returns(true)
-        GlobalSetting.stubs(:s3_file_uploads_profile).returns(nil)
-
-        options = S3Helper.s3_options(GlobalSetting)
-
-        expect(options).not_to have_key(:profile)
-        expect(options).not_to have_key(:access_key_id)
-        expect(options).not_to have_key(:secret_access_key)
-      end
-
-      it "works with empty string profile" do
-        GlobalSetting.stubs(:s3_use_iam_profile).returns(true)
-        GlobalSetting.stubs(:s3_file_uploads_profile).returns("")
-
-        options = S3Helper.s3_options(GlobalSetting)
-
-        expect(options).not_to have_key(:profile)
-        expect(options).not_to have_key(:access_key_id)
-        expect(options).not_to have_key(:secret_access_key)
+        expect(options[:access_key_id]).to eq("test-key")
+        expect(options[:secret_access_key]).to eq("test-secret")
       end
     end
 
-    context "when using legacy access keys" do
-      it "includes access keys when not using IAM profiles" do
-        GlobalSetting.stubs(:s3_use_iam_profile).returns(false)
-        GlobalSetting.stubs(:s3_access_key_id).returns("test-key")
-        GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
+    context "when S3 credentials are not provided" do
+      it "omits credentials to allow AWS SDK auto-discovery" do
+        GlobalSetting.stubs(:s3_access_key_id).returns(nil)
+        GlobalSetting.stubs(:s3_secret_access_key).returns(nil)
 
         options = S3Helper.s3_options(GlobalSetting)
 
-        expect(options[:access_key_id]).to eq("test-key")
-        expect(options[:secret_access_key]).to eq("test-secret")
-        expect(options).not_to have_key(:profile)
+        expect(options).not_to have_key(:access_key_id)
+        expect(options).not_to have_key(:secret_access_key)
       end
 
-      it "includes access keys even when profile setting exists but IAM profiles disabled" do
-        GlobalSetting.stubs(:s3_use_iam_profile).returns(false)
-        GlobalSetting.stubs(:s3_file_uploads_profile).returns("ignored-profile")
-        GlobalSetting.stubs(:s3_access_key_id).returns("test-key")
+      it "omits credentials when either key is blank" do
+        GlobalSetting.stubs(:s3_access_key_id).returns("")
         GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
 
         options = S3Helper.s3_options(GlobalSetting)
 
-        expect(options[:access_key_id]).to eq("test-key")
-        expect(options[:secret_access_key]).to eq("test-secret")
-        expect(options).not_to have_key(:profile)
+        expect(options).not_to have_key(:access_key_id)
+        expect(options).not_to have_key(:secret_access_key)
       end
     end
   end
