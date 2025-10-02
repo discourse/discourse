@@ -1,0 +1,88 @@
+.d-otp {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.d-otp-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.d-otp-slot {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-up-4);
+  border: var(--d-input-border);
+  border-radius: var(--d-border-radius);
+  position: relative;
+  transition: all 0.3s ease-out;
+
+  &.--is-focused {
+    border-color: var(--primary-high);
+  }
+
+  &.--show-cursor {
+    // fake input blinking cursor
+    &::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      width: 1px;
+      height: 50%;
+      background-color: currentcolor;
+      animation: otp-cursor-blink 1s infinite;
+    }
+  }
+
+  &.--placeholder {
+    font-size: var(--font-up-0);
+  }
+}
+
+.d-otp-input-wrapper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.d-otp-input {
+  position: absolute;
+  inset: 0;
+  width: calc(100% + 40px);
+  clip-path: inset(0 40px 0 0);
+  height: 100%;
+  display: flex;
+  text-align: left;
+  opacity: 1;
+  color: transparent;
+  pointer-events: all;
+  background: transparent;
+  caret-color: transparent;
+  border: 0 solid transparent;
+  outline: transparent solid 0;
+  box-shadow: none;
+  line-height: 1;
+  letter-spacing: -0.5em;
+  font-size: var(--root-height);
+  font-family: monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes otp-cursor-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
