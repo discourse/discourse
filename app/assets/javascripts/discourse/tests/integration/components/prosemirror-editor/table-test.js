@@ -15,7 +15,7 @@ module(
       ],
       "table with alignment": [
         `| Left | Center | Right |\n| :--- | :---: | ---: |\n| A | B | C |`,
-        `<table class="md-table"><thead><tr><th style="text-align: left">Left</th><th style="text-align: center">Center</th><th style="text-align: right">Right</th></tr></thead><tbody><tr><td style="text-align: left">A</td><td style="text-align: center">B</td><td style="text-align: right">C</td></tr></tbody></table>`,
+        `<table class="md-table"><thead><tr><th style="text-align: left;">Left</th><th style="text-align: center;">Center</th><th style="text-align: right;">Right</th></tr></thead><tbody><tr><td style="text-align: left;">A</td><td style="text-align: center;">B</td><td style="text-align: right;">C</td></tr></tbody></table>`,
         `| Left | Center | Right |\n|:---|:---:|---:|\n| A | B | C |\n\n`,
       ],
       "table within quotes": [

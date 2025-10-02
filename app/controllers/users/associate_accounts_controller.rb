@@ -25,7 +25,7 @@ class Users::AssociateAccountsController < ApplicationController
     auth_result = authenticator.after_authenticate(auth_hash, existing_account: current_user)
     DiscourseEvent.trigger(:after_auth, authenticator, auth_result, session, cookies, request)
 
-    server_session[self.class.key(params[:token])] = nil
+    server_session.delete(self.class.key(params[:token]))
 
     render json: success_json
   end

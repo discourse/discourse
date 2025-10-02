@@ -2,7 +2,7 @@ import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 
 /**
- * Base class representing a sidebar communtiy section link interface.
+ * Base class representing a sidebar community section link interface.
  */
 export default class BaseCommunitySectionLink {
   @service currentUser;

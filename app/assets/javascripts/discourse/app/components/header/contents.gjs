@@ -48,7 +48,8 @@ export default class Contents extends Component {
       ALL_PAGES_EXCLUDED_ROUTES.some(
         (name) => name === this.router.currentRouteName
       ) ||
-      this.search.welcomeBannerSearchInViewport
+      this.search.welcomeBannerSearchInViewport ||
+      this.router.currentRouteName.startsWith("admin")
     ) {
       return false;
     }

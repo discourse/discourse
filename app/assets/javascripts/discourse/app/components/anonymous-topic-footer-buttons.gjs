@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { computed } from "@ember/object";
+import { compare } from "@ember/utils";
 import { attributeBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -17,10 +18,14 @@ export default class AnonymousTopicFooterButtons extends Component {
 
   @computed("allButtons.[]")
   get buttons() {
-    return this.allButtons
-      .filterBy("anonymousOnly", true)
-      .sortBy("priority")
-      .reverse();
+    return (
+      this.allButtons
+        .filter((button) => button.anonymousOnly === true)
+        .sort((a, b) => compare(a?.priority, b?.priority))
+        // Reversing the array is necessary because when priorities are not set,
+        // we want to show the most recently added item first
+        .reverse()
+    );
   }
 
   <template>

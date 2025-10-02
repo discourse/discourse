@@ -2171,6 +2171,43 @@ cs:
     create_topic_allowed_groups: "Skupiny, které mohou vytvářet nová témata. Administrátoři a moderátoři mohou témata vytvářet vždy."
     allow_flagging_staff: "Pokud je povoleno, uživatelé mohou nahlašovat příspěvky členů redakce."
     min_trust_to_edit_wiki_post: "Minimální úroveň důvěry požadovaná pro úpravu příspěvku označeného jako wiki."
+    edit_wiki_post_allowed_groups: "Skupiny, které mohou upravovat příspěvky označené jako wiki. Administrátoři a moderátoři mohou příspěvky označené jako wiki upravovat vždy."
+    min_trust_to_edit_post: "Minimální úroveň důvěry požadovaná pro úpravu příspěvků."
+    edit_post_allowed_groups: "Skupiny, které mohou upravovat příspěvky. Administrátoři a moderátoři mohou příspěvky upravovat vždy."
+    min_trust_to_allow_self_wiki: "Minimální úroveň důvěry uživatele požadovaná pro vytvoření vlastního wiki příspěvku."
+    self_wiki_allowed_groups: "Povolit uživatelům v těchto skupinách vytvářet si vlastní wiki příspěvky. Administrátoři a moderátoři si mohou vytvořit vlastní wiki příspěvky kdykoli."
+    min_trust_to_send_messages: "ZASTARALÉ, použijte místo toho nastavení 'personal message enabled groups'. Minimální úroveň důvěry požadovaná pro vytváření nových soukromých zpráv."
+    min_trust_to_send_email_messages: "Minimální úroveň důvěry požadovaná pro odesílání osobních zpráv e-mailem."
+    send_email_messages_allowed_groups: "Skupiny, které mohou posílat soukromé zprávy e-mailem. Administrátoři a moderátoři mohou posílat soukromé zprávy e-mailem kdykoli."
+    min_trust_to_flag_posts: "Minimální úroveň důvěry požadovaná pro nahlašování příspěvků"
+    flag_post_allowed_groups: "Skupiny, které mohou nahlašovat příspěvky. Administrátoři a moderátoři mohou příspěvky nahlašovat vždy."
+    min_trust_to_post_links: "Minimální úroveň důvěry požadovaná pro vkládání odkazů do příspěvků"
+    post_links_allowed_groups: "Skupiny, které mohou vkládat odkazy do příspěvků. Administrátoři a moderátoři mohou odkazy zveřejňovat vždy."
+    min_trust_to_post_embedded_media: "Minimální úroveň důvěry požadovaná pro vkládání položek médií do příspěvku"
+    embedded_media_post_allowed_groups: "Uživatelé v těchto skupinách mohou vkládat položky médií do příspěvku. Administrátoři a moderátoři mohou položky médií vkládat vždy."
+    min_trust_level_to_allow_profile_background: "Minimální úroveň důvěry požadovaná pro nahrání pozadí profilu"
+    profile_background_allowed_groups: "Skupiny, které mohou nahrávat pozadí profilu. Administrátoři a moderátoři mohou pozadí profilu nahrát vždy."
+    min_trust_level_to_allow_user_card_background: "Minimální úroveň důvěry požadovaná pro nahrání pozadí uživatelské karty"
+    user_card_background_allowed_groups: "Skupiny, které mohou nahrávat pozadí uživatelské karty. Administrátoři a moderátoři mohou pozadí uživatelské karty nahrát vždy."
+    min_trust_level_to_allow_invite: "Minimální úroveň důvěry požadovaná pro zvaní uživatelů"
+    invite_allowed_groups: "Skupiny, které mohou zvát uživatele. Administrátoři a moderátoři mohou uživatele zvát vždy."
+    min_trust_level_to_allow_ignore: "Minimální úroveň důvěry požadovaná pro ignorování uživatelů"
+    ignore_allowed_groups: "Skupiny, které mohou ignorovat ostatní uživatele. Administrátoři a moderátoři mohou ostatní uživatele ignorovat vždy."
+    allowed_link_domains: "Domény, na které mohou uživatelé odkazovat, i když nemají odpovídající úroveň důvěry pro zveřejňování odkazů"
+    newuser_max_links: "Kolik odkazů může nový uživatel přidat do příspěvku."
+    newuser_max_embedded_media: "Kolik vložených položek médií může nový uživatel přidat do příspěvku."
+    newuser_max_attachments: "Kolik příloh může nový uživatel přidat k příspěvku."
+    newuser_max_mentions_per_post: "Maximální počet zmínek @name, která může nový uživatel použít v příspěvku."
+    newuser_max_replies_per_topic: "Maximální počet odpovědí, které může nový uživatel v jednom tématu odeslat, dokud mu někdo neodpoví."
+    max_mentions_per_post: "Maximální počet zmínek @name, která může kdokoli použít v příspěvku."
+    max_users_notified_per_group_mention: "Maximální počet uživatelů, kteří mohou obdržet oznámení, pokud je zmíněna skupina (pokud je dosaženo prahové hodnoty, nebudou se odesílat žádná oznámení)"
+    enable_mentions: "Umožňuje uživatelům vzájemně se označovat nebo odkazovat ve svých příspěvcích pomocí symbolu '@'."
+    here_mention: "Jméno použité pro @zmínku, které umožňuje privilegovaným uživatelům upozornit až maximálně 'max_here_mentioned' osob účastnících se tématu. Nesmí se jednat o existující uživatelské jméno."
+    max_here_mentioned: "Maximální počet zmíněných osob pomocí @here."
+    min_trust_level_for_here_mention: "Minimální úroveň důvěry potřebná k možnosti zmínit @here."
+    here_mention_allowed_groups: "Skupiny, které mohou zmínit @here. Administrátoři a moderátoři mohou @here zmínit vždy."
+    create_thumbnails: "Vytvářet miniatury a obrázky v lightboxu, které jsou příliš velké na to, aby se vešly do příspěvku."
+    email_time_window_mins: "Před odesláním jakýchkoli e-mailů s oznámením počkejte (n) minut, aby uživatelé měli možnost upravit a dokončit své příspěvky."
     mobile_category_page_style: "Toto nastavení určuje vizuální rozvržení stránky /categories na mobilních zařízeních."
     category_colors: "Seznam hexadecimálních barevných hodnot povolených pro kategorie."
     dark_mode_none: "Žádná"
@@ -2303,7 +2340,6 @@ cs:
   filter:
     description:
       status: "Filtrovat témata podle jejich stavu"
-      in: "Filtrovat témata v..."
       order: "Seřadit témata podle konkrétního pole"
       category: "Zobrazit témata v konkrétní kategorii"
       category_any: "Zobrazit témata v kterékoli ze zadaných kategorií (oddělené čárkami)"
@@ -3813,11 +3849,14 @@ cs:
   page_not_found:
     page_title: "Stránka nenalezena"
     title: "Jejda! Tato stránka neexistuje nebo je soukromá."
-    popular_topics: "Populární"
-    recent_topics: "Nedávné"
+    subtitle: "Hledali jsme všude možně, ale stránku, kterou hledáte, jsme nenašli."
+    popular_topics: "Populární témata"
+    recent_topics: "Nedávná témata"
     see_more: "Více"
-    search_title: "Hledat na tomto webu"
+    search_title: "Zkusíte raději hledat?"
     search_button: "Vyhledat"
+    home: "Pojďme domů"
+    placeholder: "Vyhledávání témat podle názvu nebo klíčových slov…"
   offline:
     title: "Nelze načíst aplikaci"
     offline_page_message: "Vypadá to, že jste offline! Zkontrolujte prosím připojení k síti a zkuste to znovu."
@@ -3839,6 +3878,7 @@ cs:
     images:
       too_large: "Litujeme, obrázek, který se pokoušíte nahrát, je příliš velký (maximální velikost je %{max_size_kb}kB), změňte jeho velikost a zkuste to znovu."
       too_large_humanized: "Omlouváme se, ale obrázek, který se snažíte nahrát, je příliš velký (maximální velikost je %{max_size}), změňte prosím jeho velikost a zkuste to znovu."
+      larger_than_x_megapixels: "Je nám láto, ale obrázek s názvem souboru %{original_filename} je příliš velký (maximální rozměr je %{max_image_megapixels} megapixelů). Změňte jeho velikost a zkuste to znovu."
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
     placeholders:
       too_large: "(obrázek větší než %{max_size_kb}KB)"
@@ -3861,6 +3901,34 @@ cs:
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
+  color_schemes:
+    base_theme_name: "Základní"
+    light: "Světlá"
+    dark: "Tmavá"
+    neutral: "Neutrální"
+    grey_amber: "Šedý jantar"
+    shades_of_blue: "Odstíny modré"
+    latte: "Latte"
+    summer: "Léto"
+    dark_rose: "Temná růže"
+    wcag: "WCAG světlá"
+    wcag_theme_name: "WCAG světlá"
+    dracula: "Drákula"
+    dracula_theme_name: "Drákula"
+    solarized_light: "Solarized světlá"
+    solarized_light_theme_name: "Solarized světlá"
+    solarized_dark: "Solarized tmavá"
+    solarized_dark_theme_name: "Solarized tmavá"
+    wcag_dark: "WCAG tmavá"
+    wcag_dark_theme_name: "WCAG tmavá"
+    light_theme_name: "Světlá"
+    dark_theme_name: "Tmavá"
+    neutral_theme_name: "Neutrální"
+    grey_amber_theme_name: "Šedý jantar"
+    shades_of_blue_theme_name: "Odstíny modré"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Léto"
+    dark_rose_theme_name: "Temná růže"
   edit_this_page: "Upravit tuto stránku"
   csv_export:
     boolean_yes: "Ano"
@@ -4365,8 +4433,12 @@ cs:
       message: "<p>Odeslali jsme aktivační e-mail na adresu <b>%{email}</b>. Při aktivaci účtu postupujte podle pokynů v e-mailu.</p><p>Pokud nedorazí, zkontrolujte složku s nevyžádanou poštou a <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ujistěte se, že jste e-mail nastavili správně</a>.</p>"
     resend_email:
       title: "Znovu odeslat aktivační email"
+      message: "<p>Aktivační e-mail jsme znovu odeslali na <b>%{email}</b>"
   safe_mode:
     title: "Vstup do bezpečného režimu"
+    description: "Bezpečný režim umožňuje otestovat vaše stránky bez načítání motivů nebo modifikací pluginy na straně klienta. Přizpůsobení pluginy na straně serveru zůstávají povolena."
+    no_themes: "Zakázat motivy a jejich komponenty"
+    no_unofficial_plugins: "Zakázat neoficiální úpravy pluginů na straně klienta"
     no_plugins: "Zakázat všechna přizpůsobení pluginů na straně klienta"
     deprecation_error_description: "Chcete-li zkontrolovat kompatibilitu s nadcházejícími aktualizacemi Discourse, můžete nastavit, že zastaralé Javascripty vyvolají chybu:"
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
@@ -4437,8 +4509,16 @@ cs:
             choices:
               latest:
                 label: "Nejnovější"
+                description: "Zobrazuje naposledy aktivní témata ve všech kategoriích, což pomáhá členům sledovat aktuální dění v diskusích, které je zajímají."
               hot:
                 label: "Žhavé"
+                description: "Zobrazuje populární témata kombinováním nedávné a celkové popularity. Ukazuje, o čem členové ve vaší komunitě právě mluví."
+              categories_and_latest_topics:
+                label: "Kategorie s nejnovějšími tématy"
+                description: "Kombinuje poslední aktivní témata ve všech kategoriích se seznamem kategorií, jejich popisem a celkovým počtem témat."
+              categories_boxes:
+                label: "Boxy s kategoriemi"
+                description: "Zobrazuje kategorie a jejich popis v mřížce, což je ideální pro členy, aby viděli přehled dílčích komunit vašeho webu."
       branding:
         title: "Logo webu"
         fields:
@@ -4613,6 +4693,11 @@ cs:
         title: "Ponechat příspěvek smazaný"
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
+      no_action_post:
+        title: "Bez akce"
+      delete_post:
+        title: "Odstranit příspěvek"
+        complete: "Příspěvek smazán"
       no_action_user:
         title: "Bez akce"
       silence_user:
@@ -4630,6 +4715,24 @@ cs:
     mute_error: "Je nám líto, tohoto uživatele nemůžete ztišit."
     error: "Je nám líto, ale úroveň upozorňování pro tohoto uživatele nelze změnit."
     invalid_value: '"%{value}" není platná úroveň upozornění.'
+  old_keys_reminder:
+    title: "Připomenutí starých přihlašovacích údajů"
+    body: |
+      Dobrý den! Toto je rutinní každoroční bezpečnostní připomínka z vaší instance Discourse.
+
+      Z laskavosti bychom vás chtěli informovat, že následující přihlašovací údaje používané ve vaší instanci Discourse nebyly aktualizovány více než dva roky:
+
+      %{keys}
+
+      V tuto chvíli není nutná žádná akce, nicméně se považuje za dobrou bezpečnostní praxi měnit všechny důležité přihlašovací údaje každých několik let.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (Část %{count})"
+      few: "%{topic_title} (Část %{count})"
+      many: "%{topic_title} (Část %{count})"
+      other: "%{topic_title} (Část %{count})"
+    post_raw: "Pokračování diskuse z %{parent_url}.\n\nPředchozí diskuse:\n\n%{previous_topics}"
+    small_action_post_raw: "Pokračujte v diskusi na %{new_title}."
   fallback_username: "uživatel"
   form_templates:
     errors:
@@ -4640,6 +4743,8 @@ cs:
       duplicate_ids: "má duplicitní ID"
       reserved_id: "má vyhrazené klíčové slovo id: %{id}"
       unsafe_description: "má nebezpečný popis HTML"
+  discourse_id:
+    already_registered: "Tento web je již v Discourse ID registrován"
   activemodel:
     errors:
       <<: *errors

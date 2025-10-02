@@ -4189,6 +4189,9 @@ he:
       title: "פוסטים אחרונים"
       empty: "אין פוסטים"
       aria_post_number: "%{title} - פוסט מס׳ %{postNumber}"
+      bulk:
+        clear_all: "לפנות הכול"
+        actions: "פעולות במרוכז"
     post:
       confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
@@ -5327,6 +5330,7 @@ he:
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
     theme_preview_notice: "זאת תצוגה מקדימה של ערכת עיצוב, יש לסגור את לשונית או חלון הדפדפן כדי לחזור להגדרות האתר הרגילות."
+    theme_preview_failed: "הצגה מקדימה של ערכת העיצוב נכשלה כי אינה קיימת או שאין לך הרשאה לגשת אליה."
     image_removed: "(התמונה הוסרה)"
     pause_notifications:
       title: "השהיית התראות למשך…"
@@ -6474,6 +6478,7 @@ he:
               suspend: השעיית חשבונות משתמשים.
               delete: מחיקת חשבונות משתמשים.
               list: קבלת רשימת משתמשים.
+              create: יצירת משתמש חדש.
             user_status:
               read: קריאת מצב המשתמש.
               update: עדכון מצב המשתמש.
@@ -7034,6 +7039,7 @@ he:
           title: "דוא״ל"
           subject: "נושא"
           multiple_subjects: "תבנית דוא״ל זו מכילה מספר נושאים."
+          multiple_bodies: "תבנית הדוא״ל הזאת מכילה מספר ערכות תוכן."
           body: "גוף"
           revert: "ביטול שינויים"
           revert_confirm: "לבטל את השינויים שלך?"

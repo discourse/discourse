@@ -576,4 +576,25 @@ module("Integration | Component | select-kit/single-select", function (hooks) {
       .hasAttribute("type", "hidden")
       .hasAttribute("value", "1");
   });
+
+  test("disabled", async function (assert) {
+    const self = this;
+
+    this.setProperties({
+      content: [{ id: 1, name: "john", disabled: true }],
+      value: null,
+    });
+
+    await render(
+      <template>
+        <SingleSelect @value={{self.value}} @content={{self.content}} />
+      </template>
+    );
+
+    await this.subject.expand();
+
+    assert
+      .dom('.select-kit-row.disabled[data-index="0"][aria-disabled]')
+      .exists();
+  });
 });

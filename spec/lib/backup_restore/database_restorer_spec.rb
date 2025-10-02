@@ -73,6 +73,10 @@ RSpec.describe BackupRestore::DatabaseRestorer do
         expect_restore_to_work("postgresql_12.1.sql")
       end
 
+      it "restores from PostgreSQL 15.14" do
+        expect_restore_to_work("postgresql_15.14.sql")
+      end
+
       it "detects error during restore" do
         expect { restore("error.sql", stub_migrate: false) }.to raise_error(
           BackupRestore::DatabaseRestoreError,

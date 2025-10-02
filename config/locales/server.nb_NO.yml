@@ -1155,10 +1155,7 @@ nb_NO:
   page_not_found:
     page_title: "Side Ikke funnet"
     title: "Oisann! Den siden finnes ikke eller er privat."
-    popular_topics: "Populært"
-    recent_topics: "Nylig"
     see_more: "Mer"
-    search_title: "Søk i denne siden"
     search_button: "Søk"
   upload:
     edit_reason: "Last ned lokal kopi av bilder"
@@ -1364,6 +1361,10 @@ nb_NO:
           complete: "Bruker slettet."
       reject:
         title: "Avvis"
+      no_action_post:
+        title: "Ingen handling"
+      delete_post:
+        complete: "Post slettet"
       no_action_user:
         title: "Ingen handling"
       delete_user:

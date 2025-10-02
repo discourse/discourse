@@ -7,9 +7,11 @@
 cs:
   admin_js:
     admin:
+      calendar: "Kalendář a události"
       site_settings:
         categories:
           discourse_post_event: "Událost Discourse"
+          discourse_calendar: "Kalendář a události"
   js:
     notifications:
       titles:
@@ -34,6 +36,7 @@ cs:
         header_title: "Svátky"
         pick_region_description: "Vyberte region a podívejte se na svátky pro tento region."
         disabled_holidays_description: "Zakázané svátky budou vyloučeny z kalendáře dovolených."
+        header_description: "Vyberte region a zobrazte si svátky pro daný region. Zakázané svátky budou z kalendáře svátků členů redakce vyloučeny."
       date: "Datum"
       add_to_calendar: "Přidat do Kalendáře Google"
       toggle_timezone_offset_title: "Přepnout posun časového pásma"

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 Fabricator(:incoming_email) do
-  message_id "12345@example.com"
-  subject "Hello world"
-  from_address "foo@example.com"
-  to_addresses "someone@else.com"
+  message_id { sequence(:message_id) { |n| "#{n}@example.com" } }
+  subject { sequence(:subject) { |n| "Hello world #{n}" } }
+  from_address { sequence(:from_address) { |n| "foo#{n}@example.com" } }
+  to_addresses { sequence(:to_addresses) { |n| "someone#{n}@else.com" } }
   imap_sync false
   created_via 0
 
@@ -21,4 +21,9 @@ Fabricator(:incoming_email) do
 
     The body contains "Hello world" too.
   EMAIL
+end
+
+Fabricator(:rejected_incoming_email, from: :incoming_email) do
+  is_bounce false
+  error { sequence(:error) { |n| "Error #{n}" } }
 end

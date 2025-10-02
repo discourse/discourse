@@ -14,7 +14,11 @@ import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
 export const ALL_PAGES_EXCLUDED_ROUTES = [
+  "account-created.edit-email",
+  "account-created.index",
+  "account-created.resent",
   "activate-account",
+  "full-page-search",
   "invites.show",
   "login",
   "password-reset",
@@ -66,14 +70,13 @@ export default class WelcomeBanner extends Component {
       case "top_menu_pages":
         return top_menu
           .split("|")
-          .any((menuItem) => `discovery.${menuItem}` === currentRouteName);
+          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
       case "homepage":
         return currentRouteName === `discovery.${defaultHomepage()}`;
       case "discovery":
         return currentRouteName.startsWith("discovery.");
       case "all_pages":
         return (
-          currentRouteName !== "full-page-search" &&
           !currentRouteName.startsWith("admin") &&
           !ALL_PAGES_EXCLUDED_ROUTES.some(
             (routeName) => routeName === currentRouteName

@@ -3579,6 +3579,9 @@ ja:
       title: "最新の投稿"
       empty: "投稿はありません"
       aria_post_number: "%{title} - 投稿 #%{postNumber}"
+      bulk:
+        clear_all: "すべてクリア"
+        actions: "一括操作"
     post:
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"

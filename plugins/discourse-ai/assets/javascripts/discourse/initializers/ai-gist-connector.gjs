@@ -88,7 +88,7 @@ export default apiInitializer((api) => {
 
   if (settings.discourse_ai_enabled && settings.ai_summarization_enabled) {
     const OUTLETS = {
-      mobile: "topic-list-before-category",
+      mobile: "topic-list-main-link-bottom",
       desktop: "topic-list-topic-cell-link-bottom-line__before",
     };
 

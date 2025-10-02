@@ -318,7 +318,7 @@ export function getUploadMarkdown(upload) {
 }
 
 export function displayErrorForBulkUpload(errors) {
-  const fileNames = humanizeList(errors.mapBy("fileName"));
+  const fileNames = humanizeList(errors.map((item) => item.fileName));
 
   dialog.alert(i18n("post.errors.upload", { file_name: fileNames }));
 }

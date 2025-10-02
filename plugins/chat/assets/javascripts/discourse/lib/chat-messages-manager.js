@@ -10,12 +10,12 @@ export default class ChatMessagesManager {
 
   @cached
   get stagedMessages() {
-    return this.messages.filterBy("staged");
+    return this.messages.filter((message) => message.staged);
   }
 
   @cached
   get selectedMessages() {
-    return this.messages.filterBy("selected");
+    return this.messages.filter((message) => message.selected);
   }
 
   clearSelectedMessages() {

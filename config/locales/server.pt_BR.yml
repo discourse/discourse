@@ -2213,9 +2213,6 @@ pt_BR:
     enable_category_group_moderation: "Permitir que grupos moderem conteúdo em categorias específicas"
     group_in_subject: "Definir %%{optional_pm} no assunto do e-mail como o nome do primeiro grupo em PM, consulte: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar formato de assunto para e-mails padrão</a>"
     allow_anonymous_mode: "Ative esta opção para os(as) usuários(as) trocarem para o modo anônimo para postagem. Após a ativação, eles(as) podem escolher ocultar suas identidades ao criar postagens ou tópicos através do site. Consulte também \"allow anonymous likes\"."
-    allow_likes_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem navegando no seu site anonimamente curtam as postagens. Após a ativação, os(as) usuários(as) podem escolher ocultar suas identidades ao curtir postagens ou tópicos através do site. Consulte também \"allow_anonymous_mode\"."
-    anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar mensagens anônimas"
-    anonymous_posting_allowed_groups: "Grupos com permissão para ativar postagens anônimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato, crie uma conta anônima a cada N minutos para cada usuário(a). Exemplo: se for configurado para 600, assim que passar 600 minutos a partir da última postagen E o(a) usuário(a) trocar para anônimo(a), uma nova conta anônima será criada."
     hide_user_profiles_from_public: "Desative cartões de usuário(a), perfis de usuário(a) e diretório do(a) usuário(a) para usuários(as) anônimos(as)."
     hide_new_user_profiles: "Ocultar perfis de usuário(a) de nível de confiança 1 ou menor e confiar em usuários(as) de nível 1 até postarem pela primeira vez. Este recurso é desabilitado obrigatoriamente em caso de must_approve_users e invite_only sites."
@@ -2315,7 +2312,6 @@ pt_BR:
     disable_watched_word_checking_in_user_fields: "desabilitar verificação de palavras monitoradas nos campos de usuário(a)"
     watched_words_regular_expressions: "Permite o uso de expressões regulares para filtrar palavras. Após a ativação, este recurso agrupa palavras sensíveis com distinção entre maiúsculas e minúsculas. Em seguida, compila todas as palavras selecionadas e forma uma única expressão regular, adicionando limites de palavra para as palavras monitoradas mais comuns. Consequentemente, este método de filtragem baseado em expressões regulares adiciona uma camada extra de controle sobre a moderação do conteúdo através da compatibilidade com padrões de palavras mais sofisticados. Com esta configuração, também é possível substituir facilmente o texto original pela opção escolhida."
     enable_fast_edit: "Adiciona um botão ao menu de seleção de postagem para editar um pequeno conteúdo embutido de seleção."
-    old_post_notice_days: "A quantidade de dias para o aviso de uma postagem ser considerado antigo. O visual varia em relação a avisos mais recentes no site."
     new_user_notice_tl: "Nível de confiança mínimo necessário para ver novos avisos de postagem do(a) usuário(a)."
     returning_user_notice_tl: "Nível de confiança mínimo necessário para ver os avisos de postagem do(a) usuário(a) retornando."
     returning_users_days: "Quantos dias devem passar antes que um(a) usuário(a) seja considerado(a) retornando."
@@ -2466,7 +2462,6 @@ pt_BR:
     view_raw_email_allowed_groups: "Grupos que podem visualizar o conteúdo do e-mail não processado de uma postagem se tiver sido criada por um e-mail recebido. Inclui cabeçalhos de e-mail e outras informações técnicas."
     rich_editor: "Ative o editor de rich text para o compositor, assim todos(as) usuários(as) poderão alternar entre o modo Markdown atual e o novo editor de rich text para tornar a composição mais intuitiva e amigável."
     default_composition_mode: "Defina o modo padrão para o compositor da sua comunidade. O modo rich text proporciona uma experiência de escrita mais moderna e familiar para a maioria dos(as) usuários(as), já o modo Markdown pode ser apropriado para públicos mais avançados. Os membros poderão usar um botão de alternância na barra de ferramentas do compositor para alternar entre os modos."
-    viewport_based_mobile_mode: "EXPERIMENTAL: Desative os modos baseados em agente e usuário para desktop e dispositivos móveis e use a largura da janela de visualização."
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
     content_localization_enabled: "Exibe o conteúdo localizado para os(as) usuários(as) com base no navegador ou nas preferências de idioma deles(as). Esse conteúdo pode incluir categorias, etiquetas, postagens e tópicos. Os locais compatíveis estão definidos em \"locais compatíveis com localização de conteúdo\"."
     content_localization_supported_locales: "As lista de locais compatíveis para os quais o conteúdo do usuário(a) pode ser traduzido. Requer \"content localization enabled\""
@@ -2566,7 +2561,6 @@ pt_BR:
   filter:
     description:
       status: "Filtrar tópicos por status"
-      in: "Filtrar tópicos por listas pessoais"
       order: "Classificar tópicos por campo específico"
       category: "Exibir tópicos em uma categoria específica"
       category_any: "Exibir tópicos em qualquer uma das categorias especificadas (separadas por vírgula)"
@@ -4199,10 +4193,7 @@ pt_BR:
   page_not_found:
     page_title: "Página não encontrada"
     title: "Oops! Essa página não existe ou é privada."
-    popular_topics: "Mais acessados(as)"
-    recent_topics: "Recente"
     see_more: "Mais"
-    search_title: "Pesquisar neste site"
     search_button: "Pesquisar"
   offline:
     title: "Não é possível carregar o aplicativo"
@@ -5314,6 +5305,16 @@ pt_BR:
       approve_and_unhide:
         title: "Aprovar e revelar postagem."
         complete: "Postagem aprovada e revelada"
+      no_action_post:
+        title: "Sem ação"
+      delete_post:
+        title: "Excluir postagem"
+        complete: "Postagem excluída"
+      hide_post:
+        title: "Ocultar postagem"
+      restore_post:
+        title: "Restaurar postagem"
+        complete: "Postagem restaurada"
       no_action_user:
         title: "Sem ação"
       silence_user:

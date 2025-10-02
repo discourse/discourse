@@ -37,3 +37,16 @@ index cd68afe479229ed77b4e4c93759aa90913cdc49c..6e7d71bbeb28f18259fa8afb48ef7827
    registerHandler = function registerHandler(type, callback) {
      let nextHandler = HANDLERS[type] || (() => {});
      HANDLERS[type] = (message, options) => {
+diff --git a/dist/packages/shared-chunks/array-BGH9y76r.js b/dist/packages/shared-chunks/array-BGH9y76r.js
+index 47fa056e935d4ddeae71a9a2d9ad801c4df21195..a8140f87cd68ab678a69a32921bcf70e93839b3f 100644
+--- a/dist/packages/shared-chunks/array-BGH9y76r.js
++++ b/dist/packages/shared-chunks/array-BGH9y76r.js
+@@ -67,7 +67,7 @@ const EMPTY_ARRAY = Object.freeze([]);
+ // Ideally, we'd use MutableArray.detect but for unknown reasons this causes
+ // the node tests to fail strangely.
+ function isMutableArray(obj) {
+-  return obj != null && typeof obj.replace === 'function';
++  return obj != null && typeof obj.replace === 'function' && !Array.isArray(obj);
+ }
+ function replace(array, start, deleteCount, items = EMPTY_ARRAY) {
+   if (isMutableArray(array)) {

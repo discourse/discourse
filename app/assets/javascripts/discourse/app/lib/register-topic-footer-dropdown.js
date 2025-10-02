@@ -58,7 +58,7 @@ export function registerTopicFooterDropdown(dropdown) {
 export function getTopicFooterDropdowns() {
   const dependentKeys = [].concat(
     ...Object.values(_topicFooterDropdowns)
-      .mapBy("dependentKeys")
+      .map((item) => item.dependentKeys)
       .filter(Boolean)
   );
 

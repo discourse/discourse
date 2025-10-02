@@ -4,6 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, reads } from "@ember/object/computed";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
@@ -27,7 +28,10 @@ export default class ValueList extends Component {
     super.didReceiveAttrs(...arguments);
 
     if (this.inputType === "array") {
-      this.set("collection", this.values ? [...this.values] : []);
+      this.set(
+        "collection",
+        new TrackedArray(this.values ? [...this.values] : [])
+      );
       return;
     }
 
@@ -94,7 +98,10 @@ export default class ValueList extends Component {
     this.collection.addObject(value);
 
     if (this.choices) {
-      this.set("choices", this.choices.rejectBy("id", value));
+      this.set(
+        "choices",
+        this.choices.filter((choice) => choice.id !== value)
+      );
     } else {
       this.set("choices", []);
     }
@@ -115,7 +122,7 @@ export default class ValueList extends Component {
   }
 
   _replaceValue(index, newValue) {
-    this.collection.replace(index, 1, [newValue]);
+    this.collection.splice(index, 1, newValue);
     this._saveValues();
   }
 

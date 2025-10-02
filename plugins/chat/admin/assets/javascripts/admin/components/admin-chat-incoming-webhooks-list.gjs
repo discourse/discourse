@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
@@ -17,7 +18,11 @@ export default class AdminChatIncomingWebhooksList extends Component {
   @tracked loading = false;
 
   get sortedWebhooks() {
-    return this.args.webhooks?.sortBy("updated_at").reverse() || [];
+    return (
+      this.args.webhooks?.sort(
+        (a, b) => compare(b?.updated_at, a?.updated_at) // sort descending
+      ) || []
+    );
   }
 
   @action

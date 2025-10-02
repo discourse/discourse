@@ -2143,9 +2143,6 @@ ja:
     enable_category_group_moderation: "グループが特定のカテゴリのコンテンツに介入することを許可する"
     group_in_subject: "メールの件名の %%{optional_pm} を PM の最初のグループの名前に設定する。「<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>標準メールの件名のフォーマットをカスタマイズする</a>」をご覧ください。"
     allow_anonymous_mode: "ユーザーが匿名モードに切り替えて投稿するオプションを有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックを作成する際に自分の ID を非表示することを選択できます。`allow anonymous likes` も参照してください。"
-    allow_likes_in_anonymous_mode: "サイトを匿名で閲覧しているユーザーが投稿に「いいね！」できるようにするには、この設定を有効にします。有効にすると、ユーザーはサイト全体で投稿またはトピックに「いいね！」する際に、自分の ID を非表示にすることを選択できます。`allow_anonymous_mode` も参照してください。"
-    anonymous_posting_min_trust_level: "匿名で投稿するために必要な最低信頼レベル"
-    anonymous_posting_allowed_groups: "匿名投稿を有効にできるグループ"
     anonymous_account_duration_minutes: "匿名性を守るため、N 分毎に各ユーザーの匿名アカウントを作成しなおします。例 : 600 に設定すると、最終投稿から 600 分が経過し、さらにユーザーが匿名に切り替えると、新しい匿名アカウントが作成されます。"
     hide_user_profiles_from_public: "匿名ユーザーのユーザーカード、ユーザープロファイル、およびユーザーディレクトリを無効にする。"
     hide_new_user_profiles: "信頼レベル 1 以下のユーザープロファイルは、そのユーザーが初めて投稿するまで一般ユーザーと信頼レベル 1 のユーザーに対して非表示になります。この機能は must_approve_users と invite_only サイトでは無条件に無効になります。"
@@ -2245,7 +2242,6 @@ ja:
     disable_watched_word_checking_in_user_fields: "ユーザーフィールドでのウォッチ中の単語のチェックを無効にする"
     watched_words_regular_expressions: "単語をフィルタリングするための正規表現の使用を許可します。有効にすると、この機能は大文字と小文字を区別して、慎重な扱いを要する単語をグループ化します。そして選択されたすべての単語を 1 つの正規表現にコンパイルし、通常のウォッチ中の単語に単語境界を追加します。そのため、この正規表現を使用するフィルタリング手法では、より洗練された単語パターンをサポートすることで、コンテンツモデレーションに対する制御レイヤーがさらに追加されます。この設定は、元もテキストを任意の文字で置換したテキストに簡単に置き換えることも可能です。"
     enable_fast_edit: "投稿選択メニューにインラインで小さな選択範囲を編集できるボタンを追加します。"
-    old_post_notice_days: "投稿の通知が古いと見なされるまでの日数。これにより、サイトの新しい通知と視覚的に区別されます。"
     new_user_notice_tl: "新しいユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_users_days: "ユーザーがリピートとみなされる経過日数。"
@@ -2396,7 +2392,6 @@ ja:
     view_raw_email_allowed_groups: "受信メールで作成された場合に、投稿の生のメールコンテンツを表示できるグループ。これには、メールのヘッダーやその他の技術情報が含まれます。"
     rich_editor: "作成ツールでリッチエディターを有効にして、すべてのユーザーがより直感的で使いやすく作成できるように、現在の Markdown モードと新しいリッチテキストエディターを切り替えられるようにする。"
     default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
-    viewport_based_mobile_mode: "実験的: ユーザーエージェントベースのモバイル/デスクトップモードを無効にし、代わりにビューポートの幅を使用する。"
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_enabled: "ユーザーのブラウザまたはユーザの言語設定に基づいて、ローカライズされたコンテンツを表示します。コンテンツには、カテゴリ、タグ、投稿、トピックが含まれる場合があります。サポートされているロケールは、'content localization supported locales' に設定されているロケールです。"
     content_localization_supported_locales: "ユーザーコンテンツを翻訳できるサポートされたロケールのリスト。'content localization enabled' が必要です。"
@@ -2493,7 +2488,6 @@ ja:
   filter:
     description:
       status: "ステータスでトピックを絞り込みます"
-      in: "個人リストでトピックを絞り込みます"
       order: "特定のフィールドでトピックを並べ替えます"
       category: "特定のカテゴリのトピックを表示します"
       category_any: "指定されたカテゴリのトピックを表示します (カンマ区切り)"
@@ -4090,10 +4084,7 @@ ja:
   page_not_found:
     page_title: "ページが見つかりません"
     title: "おっとっと！ページが存在しないか非公開です。"
-    popular_topics: "人気"
-    recent_topics: "最近"
     see_more: "もっと"
-    search_title: "このサイトを検索"
     search_button: "検索"
   offline:
     title: "アプリを読み込めません"
@@ -5195,6 +5186,15 @@ ja:
       approve_and_unhide:
         title: "投稿を承認して非表示を解除"
         complete: "投稿を承認して非表示状態を解除しました"
+      no_action_post:
+        title: "未対応"
+      delete_post:
+        title: "投稿を削除"
+        complete: "削除された投稿"
+      hide_post:
+        title: "投稿を非表示にする"
+      restore_post:
+        title: "投稿を復元する"
       no_action_user:
         title: "未対応"
       silence_user:

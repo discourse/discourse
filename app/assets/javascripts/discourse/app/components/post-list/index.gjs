@@ -13,6 +13,9 @@
  * @args {String} urlPath (optional) - The path to the key in the post object that contains the post URL
  * @args {String} titlePath (optional) - The path to the key in the post object that contains the post title
  * @args {String} usernamePath (optional) - The path to the key in the post object that contains the post author's username
+ * @args {Boolean} bulkSelectEnabled (optional) - Whether to enable bulk selection functionality
+ * @args {PostBulkSelectHelper} bulkSelectHelper (optional) - Helper for managing bulk selection state
+ * @args {Array} bulkActions (optional) - Array of bulk action objects for the bulk controls
  *
  * @template Usage Example:
  * ```
@@ -22,7 +25,9 @@
  *    @fetchMorePosts={{this.loadMorePosts}}
  *    @emptyText={{i18n "custom_identifier.empty"}}
  *    @additionalItemClasses="custom-class"
- *
+ *    @bulkSelectEnabled={{true}}
+ *    @bulkSelectHelper={{this.bulkSelectHelper}}
+ *    @bulkActions={{this.bulkActions}}
  * />
  * ```
  */
@@ -31,7 +36,9 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
+import PostListBulkControls from "discourse/components/post-list/bulk-controls";
 import PostListItem from "discourse/components/post-list/item";
+import concatClass from "discourse/helpers/concat-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
@@ -72,7 +79,22 @@ export default class PostList extends Component {
     {{/if}}
 
     <LoadMore @action={{this.loadMore}}>
-      <div class="post-list" ...attributes>
+      {{#if @bulkSelectEnabled}}
+        {{#if @bulkSelectHelper.hasSelection}}
+          <PostListBulkControls
+            @bulkSelectHelper={{@bulkSelectHelper}}
+            @bulkActions={{@bulkActions}}
+          />
+        {{/if}}
+      {{/if}}
+
+      <div
+        class={{concatClass
+          "post-list"
+          (if @bulkSelectEnabled "post-list--bulk-select")
+        }}
+        ...attributes
+      >
         {{#each @posts as |post|}}
           <PostListItem
             @post={{post}}
@@ -85,6 +107,8 @@ export default class PostList extends Component {
             @showUserInfo={{@showUserInfo}}
             @resumeDraft={{@resumeDraft}}
             @removeDraft={{@removeDraft}}
+            @bulkSelectEnabled={{@bulkSelectEnabled}}
+            @bulkSelectHelper={{@bulkSelectHelper}}
           >
             <:abovePostItemHeader>
               {{yield post to="abovePostItemHeader"}}

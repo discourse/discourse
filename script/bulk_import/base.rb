@@ -315,7 +315,7 @@ class BulkImport::Base
     @chat_message_mapping = load_index(MAPPING_TYPES[:chat_message])
     @last_chat_message_id = last_id(Chat::Message)
 
-    if defined?(::DiscourseReactions)
+    if defined?(DiscourseReactions)
       puts "Loading reaction indexes..."
       @discourse_reaction_mapping = load_index(MAPPING_TYPES[:discourse_reactions_reaction])
       @last_discourse_reaction_id = last_id(DiscourseReactions::Reaction)
@@ -516,7 +516,7 @@ class BulkImport::Base
     created_at
     updated_at
   ]
-  GROUP_COLUMNS << :assignable_level if defined?(::DiscourseAssign)
+  GROUP_COLUMNS << :assignable_level if defined?(DiscourseAssign)
 
   USER_COLUMNS = %i[
     id
@@ -2133,7 +2133,7 @@ class BulkImport::Base
       print "\r%7d - %6d/sec\n" % [rows_created, rows_created.to_f / (Time.now - start)]
     end
 
-    id_mapping_method_name = "#{name}_id_from_imported_id".freeze
+    id_mapping_method_name = "#{name}_id_from_imported_id"
     return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
       { record_id: send(id_mapping_method_name, imported_id), value: imported_id }

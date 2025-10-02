@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe Jobs::DetectTranslateTopic do
-  fab!(:topic)
   subject(:job) { described_class.new }
+
+  fab!(:topic)
 
   let(:locales) { %w[en ja] }
 

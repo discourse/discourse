@@ -17,7 +17,7 @@ describe DiscourseAi::Translation::CategoryCandidates do
     end
   end
 
-  describe ".get_completion_per_locale" do
+  describe ".calculate_completion_per_locale" do
     context "when (scenario A) completion determined by category's locale" do
       it "returns done = total if all categories are in the locale" do
         locale = "pt_BR"
@@ -25,7 +25,8 @@ describe DiscourseAi::Translation::CategoryCandidates do
         Category.update_all(locale: locale)
         Fabricate(:category, locale: "pt") # pt counts as pt_BR
 
-        completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
+        completion =
+          DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
         expect(completion).to eq({ done: Category.count, total: Category.count })
       end
 
@@ -36,7 +37,8 @@ describe DiscourseAi::Translation::CategoryCandidates do
         Fabricate(:category, locale:)
         Fabricate(:category, locale: "ar") # not portuguese
 
-        completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
+        completion =
+          DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
         expect(completion).to eq({ done: 1, total: Category.count })
       end
     end
@@ -52,7 +54,8 @@ describe DiscourseAi::Translation::CategoryCandidates do
         end
         CategoryLocalization.order("RANDOM()").first.update(locale: "pt") # pt counts as pt_BR
 
-        completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
+        completion =
+          DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
         expect(completion).to eq({ done: Category.count, total: Category.count })
       end
 
@@ -63,7 +66,8 @@ describe DiscourseAi::Translation::CategoryCandidates do
         Fabricate(:category_localization, category: category1, locale:)
         Fabricate(:category_localization, category: category2, locale: "ar") # not the target locale
 
-        completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
+        completion =
+          DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
         categories_with_locale = Category.where.not(locale: nil).count
         expect(completion).to eq({ done: 1, total: categories_with_locale })
       end
@@ -88,7 +92,8 @@ describe DiscourseAi::Translation::CategoryCandidates do
       category4 = Fabricate(:category, read_restricted: true, locale: "de")
       Fabricate(:category_localization, category: category4, locale:)
 
-      completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
+      completion =
+        DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
       translated_candidates = 2 # category1 + category2
       total_candidates = Category.count - 1 # excluding the read restricted category
       expect(completion).to eq({ done: translated_candidates, total: total_candidates })
@@ -100,7 +105,8 @@ describe DiscourseAi::Translation::CategoryCandidates do
       category = Fabricate(:category, locale:)
       Fabricate(:category_localization, category:, locale:)
 
-      completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale(locale)
+      completion =
+        DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale(locale)
       expect(completion).to eq({ done: Category.count, total: Category.count })
     end
 
@@ -108,7 +114,8 @@ describe DiscourseAi::Translation::CategoryCandidates do
       SiteSetting.ai_translation_backfill_limit_to_public_content = false
       Category.destroy_all
 
-      completion = DiscourseAi::Translation::CategoryCandidates.get_completion_per_locale("pt")
+      completion =
+        DiscourseAi::Translation::CategoryCandidates.calculate_completion_per_locale("pt")
       expect(completion).to eq({ done: 0, total: 0 })
     end
   end

@@ -2,7 +2,7 @@
 
 module DiscourseAssign
   class AssignController < ApplicationController
-    requires_plugin DiscourseAssign::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
     requires_login
     before_action :ensure_logged_in, :ensure_assign_allowed
 

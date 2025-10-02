@@ -1489,8 +1489,6 @@ te:
     enable_group_directory: "బ్రౌజింగ్ కోసం సమూహాల డైరెక్టరీని అందించండి"
     enable_category_group_moderation: "నిర్దిష్ట వర్గాలలోని కంటెంట్‌ను మోడరేట్ చేయడానికి సమూహాలను అనుమతించండి"
     group_in_subject: "PMలో మొదటి సమూహం పేరుకు లోబడి ఇమెయిల్‌లో %%{optional_pm} ని సెట్ చేయండి, చూడండి: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>ప్రామాణిక ఇమెయిల్‌ల కోసం సబ్జెక్ట్ ఆకృతిని అనుకూలీకరించండి</a>"
-    anonymous_posting_min_trust_level: "అనామక పోస్టింగ్‌ని ప్రారంభించడానికి కనీస విశ్వసనీయ స్థాయి అవసరం"
-    anonymous_posting_allowed_groups: "అనామక పోస్టింగ్‌ని ప్రారంభించడానికి అనుమతించబడిన సమూహాలు"
     anonymous_account_duration_minutes: "అనామకతను రక్షించడానికి ప్రతి వినియోగదారు కోసం ప్రతి N నిమిషాలకు కొత్త అనామక ఖాతాను సృష్టించండి. ఉదాహరణ: 600కి సెట్ చేస్తే, చివరి పోస్ట్ నుండి 600 నిమిషాలు గడిచిన వెంటనే మరియు వినియోగదారు anonకి మారిన వెంటనే, కొత్త అనామక ఖాతా సృష్టించబడుతుంది."
     hide_user_profiles_from_public: "అనామక వినియోగదారుల కోసం వినియోగదారు కార్డ్‌లు, వినియోగదారు ప్రొఫైల్‌లు మరియు వినియోగదారు డైరెక్టరీని నిలిపివేయండి."
     allow_users_to_hide_profile: "వారి ప్రొఫైల్ మరియు ఉనికిని దాచడానికి సభ్యులను అనుమతించండి"
@@ -2128,10 +2126,7 @@ te:
   site_setting_missing: "`%{name}` సైట్ సెట్టింగ్‌ని సెట్ చేయాలి."
   page_not_found:
     page_title: "పేజీ కనుగొనబడలేదు"
-    popular_topics: "ప్రముఖ"
-    recent_topics: "తాజా"
     see_more: "ఇంకా"
-    search_title: "ఈ సైట్ వెదుకు"
     search_button: "వెతుకు"
   offline:
     title: "యాప్ లోడ్ కాలేదు"
@@ -2654,6 +2649,14 @@ te:
         title: "పోస్ట్‌ను తొలగించి ఉంచండి"
       approve_and_restore:
         title: "పోస్ట్‌ను ఆమోదించండి మరియు పునరుద్ధరించండి"
+      no_action_post:
+        title: "చర్య తీసుకోలేదు"
+      delete_post:
+        title: "పోస్ట్ తొలగించండి"
+      hide_post:
+        title: "పోస్ట్ను దాచండి"
+      restore_post:
+        title: "పోస్ట్‌ని పునరుద్ధరించండి"
       no_action_user:
         title: "చర్య తీసుకోలేదు"
       silence_user:

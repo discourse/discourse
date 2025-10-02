@@ -661,6 +661,13 @@ cs:
       resume: "Pokračovat"
       remove: "Odstranit"
       remove_confirmation: "Opravdu chcete tento koncept smazat?"
+      bulk_delete: "Smazat vybrané"
+      bulk_delete_confirmation: "Odstranění konceptů"
+      bulk_delete_message:
+        one: "Opravdu chcete smazat tento koncept?"
+        few: "Opravdu chcete smazat tyto %{count} koncepty?"
+        many: "Opravdu chcete smazat těchto %{count} konceptů?"
+        other: "Opravdu chcete smazat těchto %{count} konceptů?"
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
       edit_topic: "Upravit koncept tématu"
@@ -2785,8 +2792,8 @@ cs:
         sr_title: "Přihlásit se přes Google"
       twitter:
         name: "X"
-        title: "Přihlásit se pomocí X"
-        sr_title: "Přihlásit se pomocí X"
+        title: "Přihlásit se přes X"
+        sr_title: "Přihlásit se přes X"
       instagram:
         name: "Instagram"
         title: "Přihlásit se přes Instagram"
@@ -4205,6 +4212,15 @@ cs:
       title: "Nejnovější příspěvky"
       empty: "Nejsou zde žádné příspěvky"
       aria_post_number: "%{title} - příspěvek #%{postNumber}"
+      bulk:
+        selected:
+          one: "Vybrán %{count} příspěvek"
+          few: "Vybrány %{count} příspěvky"
+          many: "Vybráno %{count} příspěvků"
+          other: "Vybráno %{count} příspěvků"
+        select_all: "Vybrat vše"
+        clear_all: "Zrušit vše"
+        actions: "Hromadné akce"
     post:
       confirm_delete: "Opravdu chcete tento příspěvek smazat?"
       quote_reply: "Citovat"
@@ -5354,6 +5370,7 @@ cs:
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavřete toto okno prohlížeče"
     theme_preview_notice: "V současné době prohlížíte náhled motivu, zavřete tuto kartu nebo okno prohlížeče a vraťte se do normální konfigurace webu."
+    theme_preview_failed: "Náhled motivu se nepodařilo zobrazit, protože neexistuje nebo k němu nemáte oprávnění."
     image_removed: "(obrázek odstraněn)"
     pause_notifications:
       title: "Ztlumit upozornění na…"
@@ -6509,6 +6526,7 @@ cs:
               suspend: Pozastavit uživatelské účty.
               delete: Odstranit uživatelské účty.
               list: Získat seznam uživatelů.
+              create: Vytvoření nového uživatele.
             user_status:
               read: Číst stav uživatele.
               update: Aktualizovat stav uživatele.
@@ -7069,6 +7087,7 @@ cs:
           title: "Email"
           subject: "Předmět"
           multiple_subjects: "Tato šablona emailu má více předmětů."
+          multiple_bodies: "Tato šablona e-mailu má více těl."
           body: "Tělo"
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"

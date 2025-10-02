@@ -600,13 +600,6 @@ acceptance("Search - Authenticated", function (needs) {
     assert
       .dom(".search-menu")
       .doesNotExist("search dropdown is collapsed after second Enter hit");
-
-    // new search launched, Enter key should be reset
-    await click("#search-button");
-    assert.dom(`${container} ul li`).exists("has a list of items");
-
-    await triggerKeyEvent("#icon-search-input", "keyup", "Enter");
-    assert.dom(`.search-menu`).exists("search dropdown is visible");
   });
 
   test("search menu keyboard navigation - while composer is open", async function (assert) {
@@ -654,6 +647,82 @@ acceptance("Search - Authenticated", function (needs) {
       "/t/development-mode-super-slow/2179",
       "redirects to selected search result url"
     );
+  });
+
+  test("search menu keyboard navigation - Ctrl+Enter opens in new tab", async function (assert) {
+    const originalWindowOpen = window.open;
+    let openedUrls = [];
+
+    window.open = (url, target, features) => {
+      openedUrls.push({ url, target, features });
+    };
+
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "J");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+
+    const focusedElement = document.activeElement;
+    assert
+      .dom(focusedElement)
+      .hasAttribute("href", "/t/development-mode-super-slow/2179");
+
+    assert.true(focusedElement.classList.contains("search-link"));
+
+    await triggerKeyEvent(focusedElement, "keydown", "Enter", {
+      ctrlKey: true,
+    });
+
+    assert.strictEqual(openedUrls.length, 1);
+    assert.strictEqual(
+      openedUrls[0].url,
+      `${window.location.origin}/t/development-mode-super-slow/2179`
+    );
+    assert.strictEqual(openedUrls[0].target, "_blank");
+    assert.strictEqual(openedUrls[0].features, "noopener,noreferrer");
+    assert.strictEqual(currentURL(), "/");
+
+    window.open = originalWindowOpen;
+  });
+
+  test("search menu keyboard navigation - Cmd+Enter opens in new tab", async function (assert) {
+    const originalWindowOpen = window.open;
+    let openedUrls = [];
+
+    window.open = (url, target, features) => {
+      openedUrls.push({ url, target, features });
+    };
+
+    await visit("/");
+    await triggerKeyEvent(document, "keypress", "J");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "Development");
+    await triggerKeyEvent(document.activeElement, "keyup", "Enter");
+    await triggerKeyEvent(document.activeElement, "keyup", "ArrowDown");
+
+    const focusedElement = document.activeElement;
+    assert
+      .dom(focusedElement)
+      .hasAttribute("href", "/t/development-mode-super-slow/2179");
+
+    assert.true(focusedElement.classList.contains("search-link"));
+
+    await triggerKeyEvent(focusedElement, "keydown", "Enter", {
+      metaKey: true,
+    });
+
+    assert.strictEqual(openedUrls.length, 1);
+    assert.strictEqual(
+      openedUrls[0].url,
+      `${window.location.origin}/t/development-mode-super-slow/2179`
+    );
+    assert.strictEqual(openedUrls[0].target, "_blank");
+    assert.strictEqual(openedUrls[0].features, "noopener,noreferrer");
+    assert.strictEqual(currentURL(), "/");
+
+    window.open = originalWindowOpen;
   });
 
   test("initial options - search history - no context", async function (assert) {

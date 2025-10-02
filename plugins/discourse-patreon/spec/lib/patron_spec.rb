@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::Patreon::Patron do
+RSpec.describe Patreon::Patron do
   Fabricator(:patreon_user_info, class_name: :user_associated_account) do
     provider_name "patreon"
     user

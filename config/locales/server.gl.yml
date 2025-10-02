@@ -1620,7 +1620,6 @@ gl:
     enable_group_directory: "Fornecer un directorio de grupos para explorar"
     enable_category_group_moderation: "Permitirlles aos grupos moderar contido en categorías específicas"
     group_in_subject: "Estabelece %%{optional_pm} no asunto do correo electrónico co nome do primeiro grupo en MP, véxase: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personaliza o formato do asunto para correos estándar</a>"
-    anonymous_posting_min_trust_level: "O nivel de confianza mínimo requirido para activar a publicación anónima"
     anonymous_account_duration_minutes: "Para protexer o anonimato, crear unha nova conta anónima cada N minutos para cada usuario. Exemplo: se se estabelece en 600, así que pasen 600 minutos desde a última publicación E o usuario cambie a anónimo, crearase unha nova conta anónima."
     hide_user_profiles_from_public: "Desactivar tarxetas de usuario, perfís de usuario e directorio de usuarios para usuarios anónimos."
     allow_users_to_hide_profile: "Permitirlles aos usuarios agochar o seu perfil e presenza"
@@ -3061,10 +3060,7 @@ gl:
   page_not_found:
     page_title: "Páxina non atopada"
     title: "Oopa! Esta páxina non existe ou é privada."
-    popular_topics: "Destacados"
-    recent_topics: "Recentes"
     see_more: "Máis"
-    search_title: "Buscar neste sitio"
     search_button: "Buscar"
   offline:
     title: "Non se pode cargar a aplicación"
@@ -3588,6 +3584,10 @@ gl:
           description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
       reject:
         title: "Rexeitar"
+      no_action_post:
+        title: "Sen acción"
+      delete_post:
+        complete: "Publicación eliminada"
       no_action_user:
         title: "Sen acción"
       delete_user:

@@ -245,7 +245,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
       source_raw_connection
         .exec(
           "SELECT #{columns.map { |c| "c.\"#{c}\"" }.join(", ")}
-             FROM categories c 
+             FROM categories c
              WHERE parent_category_id IS NULL",
         )
         .each do |row|
@@ -811,7 +811,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @sequences[klass.sequence_name] = last_id + 1 if last_id
 
     if has_custom_fields
-      id_mapping_method_name = "#{klass.name.downcase}_id_from_imported_id".freeze
+      id_mapping_method_name = "#{klass.name.downcase}_id_from_imported_id"
       return unless respond_to?(id_mapping_method_name)
       create_custom_fields(klass.name.downcase, "id", imported_ids) do |imported_id|
         { record_id: send(id_mapping_method_name, imported_id), value: imported_id }
@@ -868,7 +868,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     @sequences[klass.sequence_name] = last_id + 1 if last_id
 
     if has_custom_fields
-      id_mapping_method_name = "#{klass.name.downcase}_id_from_imported_id".freeze
+      id_mapping_method_name = "#{klass.name.downcase}_id_from_imported_id"
       return unless respond_to?(id_mapping_method_name)
       create_custom_fields(klass.name.downcase, "id", imported_ids) do |imported_id|
         { record_id: send(id_mapping_method_name, imported_id), value: imported_id }

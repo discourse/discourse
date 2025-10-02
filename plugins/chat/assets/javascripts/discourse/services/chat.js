@@ -395,7 +395,7 @@ export default class Chat extends Service {
 
   upsertDmChannelForUser(channel, user) {
     const usernames = (channel.chatable.users || [])
-      .mapBy("username")
+      .map((item) => item.username)
       .concat(user.username)
       .uniq();
 

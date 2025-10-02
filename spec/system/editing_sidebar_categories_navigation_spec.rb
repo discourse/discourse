@@ -277,6 +277,98 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     end
   end
 
+  context "when loading more subcategories with 3-level hierarchy" do
+    before_all { SiteSetting.max_category_nesting = 3 }
+
+    before do
+      SiteSetting.max_category_nesting = 3
+      Jobs.with_immediate_jobs do
+        SearchIndexer.with_indexing do
+          grandparent_category.index_search
+          parent1.index_search
+          parent2.index_search
+          parent3.index_search
+          parent4.index_search
+          parent5.index_search
+          parent6.index_search
+          child1_1.index_search
+          child1_2.index_search
+          child1_3.index_search
+          child1_4.index_search
+          child1_5.index_search
+          child1_6.index_search
+        end
+      end
+    end
+
+    fab!(:grandparent_category) { Fabricate(:category, name: "grandparent category") }
+
+    fab!(:parent1) do
+      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 1")
+    end
+
+    fab!(:parent2) do
+      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 2")
+    end
+
+    fab!(:parent3) do
+      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 3")
+    end
+
+    fab!(:parent4) do
+      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 4")
+    end
+
+    fab!(:parent5) do
+      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 5")
+    end
+
+    fab!(:parent6) do
+      Fabricate(:category, parent_category_id: grandparent_category.id, name: "parent 6")
+    end
+
+    fab!(:child1_1) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-1") }
+    fab!(:child1_2) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-2") }
+    fab!(:child1_3) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-3") }
+    fab!(:child1_4) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-4") }
+    fab!(:child1_5) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-5") }
+    fab!(:child1_6) { Fabricate(:category, parent_category_id: parent1.id, name: "child 1-6") }
+
+    around(:each) do |example|
+      stub_const(Object, :CategoriesController, CategoriesController.clone) do
+        stub_const(CategoriesController, :MAX_CATEGORIES_LIMIT, 5) { example.run }
+      end
+    end
+
+    it "shows 'Show more' button at grandparent level and loads additional parent categories" do
+      visit "/latest"
+
+      modal = sidebar.click_edit_categories_button
+
+      # Should show grandparent category and first 5 parent categories
+      expect(modal).to have_category_row(grandparent_category)
+      modal.scroll_to_category(grandparent_category)
+      expect(modal).to have_category_row(parent1)
+      expect(modal).to have_category_row(parent2)
+      expect(modal).to have_category_row(parent3)
+      modal.scroll_to_category(parent3)
+      expect(modal).to have_category_row(parent4)
+      expect(modal).to have_category_row(parent5)
+      expect(modal).to have_no_category_row(parent6)
+
+      # Should have a "Show more" button for grandparent's children
+      modal.scroll_to_category(parent5)
+      expect(modal).to have_show_more_button(level: 1)
+
+      # Click the "Show more" button to load more parent categories under grandparent
+      wait_for_timeout(300)
+      modal.click_show_more_button(level: 1)
+
+      expect(modal).to have_category_row(parent6)
+      expect(modal).to have_no_show_more_button(level: 1)
+    end
+  end
+
   context "when there are more categories than the page limit" do
     around(:each) do |example|
       search_calls = 0

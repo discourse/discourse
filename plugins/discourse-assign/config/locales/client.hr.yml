@@ -42,5 +42,6 @@ hr:
     notifications:
       assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:
+      title: "Uredi zadatke"
       topic: "Tema"
       post: "Objava"

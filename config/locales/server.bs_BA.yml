@@ -905,10 +905,7 @@ bs_BA:
       title: "Vaš post je odobren"
   page_not_found:
     page_title: "Stranica nije pronađena"
-    popular_topics: "Popularno"
-    recent_topics: "Nove"
     see_more: "Više"
-    search_title: "Pretraži stranicu"
     search_button: "Pretraži"
   upload:
     edit_reason: "downloaded local copies of images"
@@ -1088,6 +1085,8 @@ bs_BA:
           complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      delete_post:
+        complete: "Post izbrisan"
       delete_user:
         complete: "Korisnik izbrisan"
   fallback_username: "user"

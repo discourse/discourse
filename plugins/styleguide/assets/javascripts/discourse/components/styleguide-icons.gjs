@@ -20,7 +20,7 @@ export default class StyleguideIcons extends Component {
   setIconIds() {
     let symbols = document.querySelectorAll("#svg-sprites symbol");
     if (symbols.length > 0) {
-      let ids = Array.from(symbols).mapBy("id");
+      let ids = Array.from(symbols).map((item) => item.id);
       ids.push(...Object.keys(REPLACEMENTS));
       this.set("iconIds", [...new Set(ids.sort())]);
     } else {
