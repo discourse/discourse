@@ -383,10 +383,8 @@ task "posts:refresh_emails", [:topic_id] => [:environment] do |_, args|
 end
 
 desc "Reorders all posts based on their creation_date"
-task "posts:reorder_posts", %i[topic_id ignore_orphaned_posts] => [:environment] do |_, args|
+task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
   Post.transaction do
-    join_topics = args[:ignore_orphaned_posts] ? "INNER JOIN topics t ON t.id = p.topic_id" : ""
-
     builder = DB.build <<~SQL
       WITH ordered_posts AS (
         SELECT
@@ -399,8 +397,8 @@ task "posts:reorder_posts", %i[topic_id ignore_orphaned_posts] => [:environment]
               p.post_number
           ) AS new_post_number
         FROM
-          posts as p
-        #{join_topics}
+          posts p
+        INNER JOIN topics t ON t.id = p.topic_id
         /*where*/
       )
       UPDATE
@@ -432,7 +430,7 @@ task "posts:reorder_posts", %i[topic_id ignore_orphaned_posts] => [:environment]
           #{column} = p.sort_order * -1
         FROM
           posts AS p
-        #{join_topics}
+        INNER JOIN topics t ON t.id = p.topic_id
         /*where*/
       SQL
 
@@ -454,17 +452,17 @@ task "posts:reorder_posts", %i[topic_id ignore_orphaned_posts] => [:environment]
 
     builder = DB.build <<~SQL
       UPDATE
-        posts
+        posts AS p
       SET
         post_number = sort_order
+      FROM
+        topics t
       /*where*/
     SQL
 
-    if args[:ignore_orphaned_posts]
-      builder.where("EXISTS (SELECT 1 FROM topics t WHERE t.id = posts.topic_id)")
-    end
-    builder.where("topic_id = ?", args[:topic_id]) if args[:topic_id]
-    builder.where("post_number < 0")
+    builder.where("t.id = p.topic_id")
+    builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
+    builder.where("p.post_number < 0")
     builder.exec
   end
 
