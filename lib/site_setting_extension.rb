@@ -498,6 +498,7 @@ module SiteSettingExtension
   end
 
   SITE_SETTINGS_CHANNEL = "/site_settings"
+  CLIENT_SETTINGS_CHANNEL = "/client_settings"
 
   def ensure_listen_for_changes
     return if @listen_for_changes == false
@@ -659,12 +660,12 @@ module SiteSettingExtension
   end
 
   def notify_changed!
-    MessageBus.publish("/site_settings", process: process_id)
+    MessageBus.publish(SITE_SETTINGS_CHANNEL, process: process_id)
   end
 
   def notify_clients!(name, scoped_to = nil)
     MessageBus.publish(
-      "/client_settings",
+      CLIENT_SETTINGS_CHANNEL,
       name: name,
       # default_locale is a special case, it is not themeable and we define
       # a custom getter for it, so we can just use the normal getter

@@ -39,6 +39,12 @@
     }
   }
 
+  &__opt-in-groups-label {
+    display: block;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
   &__badges {
     display: flex;
     flex-wrap: wrap;
