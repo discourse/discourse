@@ -1149,7 +1149,7 @@ body:not(.has-sidebar-page) {
   }
 }
 
-body.has-sidebar-page {
+body.has-sidebar-page.open-composer {
   #reply-control:not(.fullscreen).hide-preview {
     margin-left: calc(var(--d-sidebar-width) + var(--layout-gap));
 

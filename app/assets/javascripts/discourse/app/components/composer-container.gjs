@@ -29,20 +29,28 @@ import loadingSpinner from "discourse/helpers/loading-spinner";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
-import resizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
+import resizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
 
 export default class ComposerContainer extends Component {
   @service composer;
   @service site;
   @service appEvents;
   @service keyValueStore;
+  @service capabilities;
 
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
+  }
+
+  /**
+   * @type {boolean}
+   */
+  get shouldShowHorizontalResizer() {
+    return this.capabilities.viewport.lg;
   }
 
   @bind
@@ -90,7 +98,7 @@ export default class ComposerContainer extends Component {
 
   @bind
   onHorizontalResizeDrag(element, { width }) {
-    if (width) {
+    if (width && this.shouldShowHorizontalResizer) {
       this.keyValueStore.set({
         key: "composerWidth",
         value: `${width}px`,
