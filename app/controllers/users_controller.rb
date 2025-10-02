@@ -1529,7 +1529,8 @@ class UsersController < ApplicationController
       number_of_suspensions
       warnings_received_count
       number_of_rejected_posts
-    ].each { |info| result[info] = @user.public_send(info) }
+      can_remove_password?
+    ].each { |info| result[info.delete_suffix("?")] = @user.public_send(info) }
 
     render json: result
   end
