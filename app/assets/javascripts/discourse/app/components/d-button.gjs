@@ -32,8 +32,6 @@ export default class DButton extends Component {
   get btnType() {
     if (this.args.icon) {
       return this.computedLabel ? "btn-icon-text" : "btn-icon";
-    } else if (this.computedLabel) {
-      return "btn-text";
     }
   }
 
