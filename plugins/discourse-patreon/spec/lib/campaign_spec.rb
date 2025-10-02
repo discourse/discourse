@@ -2,7 +2,7 @@
 
 require_relative "../spec_helper"
 
-RSpec.describe ::Patreon::Campaign do
+RSpec.describe Patreon::Campaign do
   before do
     campaigns_url =
       "https://api.patreon.com/oauth2/api/current_user/campaigns?include=rewards,creator,goals,pledges&page%5Bcount%5D=100"

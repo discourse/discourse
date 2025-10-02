@@ -2,6 +2,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import RouteTemplate from "ember-route-template";
 import formatDate from "discourse/helpers/format-date";
+import routeAction from "discourse/helpers/route-action";
 import EmailLogsList from "admin/components/email-logs-list";
 import IncomingEmail from "admin/models/incoming-email";
 
@@ -37,11 +38,12 @@ export default RouteTemplate(
       @sourceModel={{IncomingEmail}}
       @headers={{RECEIVED_HEADERS}}
       @filters={{RECEIVED_FILTERS}}
+      @onShowEmail={{routeAction "showIncomingEmail"}}
     >
       <:default
         as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
       >
-        <tr>
+        <tr data-test-email-log-row-id={{emailLog.id}}>
           <td>{{formatDate emailLog.created_at}}</td>
           <td>{{emailLog.from_address}}</td>
           <td>{{emailLog.to_addresses}}</td>

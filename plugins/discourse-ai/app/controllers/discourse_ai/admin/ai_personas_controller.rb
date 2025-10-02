@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiPersonasController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       before_action :find_ai_persona, only: %i[edit update destroy create_user export]
 

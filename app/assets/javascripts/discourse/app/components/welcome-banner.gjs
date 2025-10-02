@@ -70,7 +70,7 @@ export default class WelcomeBanner extends Component {
       case "top_menu_pages":
         return top_menu
           .split("|")
-          .any((menuItem) => `discovery.${menuItem}` === currentRouteName);
+          .some((menuItem) => `discovery.${menuItem}` === currentRouteName);
       case "homepage":
         return currentRouteName === `discovery.${defaultHomepage()}`;
       case "discovery":

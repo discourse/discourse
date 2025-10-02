@@ -4,6 +4,8 @@ output:
   schema_file: "db/intermediate_db_schema/100-base-schema.sql"
   models_directory: "lib/database/intermediate_db"
   models_namespace: Migrations::Database::IntermediateDB
+  enums_directory: "lib/database/intermediate_db/enums"
+  enums_namespace: Migrations::Database::IntermediateDB::Enums
 
 schema:
   tables:
@@ -113,6 +115,63 @@ schema:
           - "public_topic_count"
           - "staff_topic_count"
           - "target_tag_id"
+    topic_allowed_groups:
+      primary_key_column_names: [ "topic_id", "group_id" ]
+      columns:
+        exclude:
+          - "id"
+    topic_allowed_users:
+      primary_key_column_names: [ "topic_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+    topic_users:
+      primary_key_column_names: [ "topic_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+          - "bookmarked"
+          - "liked"
+          - "posted"
+    topics:
+      columns:
+        exclude:
+          - "last_posted_at"
+          - "last_post_user_id"
+          - "reply_count"
+          - "featured_user1_id"
+          - "featured_user2_id"
+          - "featured_user3_id"
+          - "featured_user4_id"
+          - "image_upload_id"
+          - "highest_post_number"
+          - "like_count"
+          - "locale"
+          - "incoming_link_count"
+          - "moderator_posts_count"
+          - "bumped_at"
+          - "has_summary"
+          - "notify_moderators_count"
+          - "spam_count"
+          - "percent_rank"
+          - "posts_count"
+          - "score"
+          - "slug"
+          - "participant_count"
+          - "word_count"
+          - "excerpt"
+          - "fancy_title"
+          - "highest_staff_post_number"
+          - "reviewable_score"
+          - "slow_mode_seconds"
+      indexes:
+        - name: "index_topics_on_archetype"
+          columns: [ "archetype" ]
+    topic_tags:
+      primary_key_column_names: [ "topic_id", "tag_id" ]
+      columns:
+        exclude:
+          - "id"
     user_associated_accounts:
       primary_key_column_names: [ "user_id", "provider_name" ]
       columns:
@@ -416,8 +475,6 @@ schema:
         - "theme_translation_overrides"
         - "themes"
         - "top_topics"
-        - "topic_allowed_groups"
-        - "topic_allowed_users"
         - "topic_custom_fields"
         - "topic_embeds"
         - "topic_groups"
@@ -427,16 +484,13 @@ schema:
         - "topic_links"
         - "topic_localizations"
         - "topic_search_data"
-        - "topic_tags"
         - "topic_thumbnails"
         - "topic_timers"
-        - "topic_users"
         - "topic_view_stats"
         - "topic_views"
         - "topic_voting_category_settings"
         - "topic_voting_topic_vote_count"
         - "topic_voting_votes"
-        - "topics"
         - "translation_overrides"
         - "unsubscribe_keys"
         - "upload_references"

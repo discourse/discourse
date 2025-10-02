@@ -533,7 +533,7 @@ export async function publishToMessageBus(channelPath, ...args) {
   args = cloneJSON(args);
 
   const promises = MessageBus.callbacks
-    .filterBy("channel", channelPath)
+    .filter((callback) => callback.channel === channelPath)
     .map((callback) => callback.func(...args));
 
   await Promise.allSettled(promises);

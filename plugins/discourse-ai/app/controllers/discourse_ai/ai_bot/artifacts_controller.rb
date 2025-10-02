@@ -3,7 +3,7 @@
 module DiscourseAi
   module AiBot
     class ArtifactsController < ApplicationController
-      requires_plugin DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
       before_action :require_site_settings!
 
       skip_before_action :preload_json, :check_xhr, only: %i[show]

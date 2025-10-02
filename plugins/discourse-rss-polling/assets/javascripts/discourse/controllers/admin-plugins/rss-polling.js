@@ -7,7 +7,7 @@ import { observes } from "@ember-decorators/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import RssPollingFeedSettings from "../../admin/models/rss-polling-feed-settings";
+import RssPollingFeedSettings from "../../../admin/models/rss-polling-feed-settings";
 
 export default class AdminPluginsRssPollingController extends Controller {
   @service dialog;

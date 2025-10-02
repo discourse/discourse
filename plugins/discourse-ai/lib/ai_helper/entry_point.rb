@@ -16,7 +16,15 @@ module DiscourseAi
         end
 
         plugin.add_to_serializer(:current_user, :can_use_custom_prompts) do
-          scope.user.in_any_groups?(SiteSetting.ai_helper_custom_prompts_allowed_groups_map)
+          return [] if !SiteSetting.ai_helper_enabled
+
+          custom_prompt_allowed_group_ids =
+            DB.query_single(
+              "SELECT allowed_group_ids FROM ai_personas WHERE id = :customp_prompt_persona_id",
+              customp_prompt_persona_id: SiteSetting.ai_helper_custom_prompt_persona,
+            ).flatten
+
+          scope.user.in_any_groups?(custom_prompt_allowed_group_ids)
         end
 
         plugin.on(:chat_message_created) do |message, channel, user, extra|

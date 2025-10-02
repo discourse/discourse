@@ -2468,7 +2468,6 @@ fr:
     view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
     rich_editor: "Activer l'éditeur enrichi pour l'éditeur de rédaction afin que tous les utilisateurs puissent basculer entre le mode Markdown actuel et le nouvel éditeur de texte enrichi, pour une composition plus intuitive et conviviale."
     default_composition_mode: "Définir le mode par défaut de l'éditeur de rédaction de votre communauté. Le mode texte enrichi offre une expérience de rédaction plus moderne et familière pour la plupart des utilisateurs, tandis que le mode Markdown peut convenir à un public plus technique. Les membres peuvent utiliser un bouton dans la barre d'outils de l'éditeur pour basculer entre les modes."
-    viewport_based_mobile_mode: "EXPÉRIMENTAL : désactivez les modes mobile/bureau basés sur l'agent utilisateur et utilisez plutôt la largeur de la fenêtre d'affichage."
     reviewable_ui_refresh: "Groupes pouvant utiliser la nouvelle interface utilisateur expérimentale dans la file d'attente de révision."
     content_localization_enabled: "Affiche le contenu localisé pour les utilisateurs en fonction de leur navigateur ou de leurs préférences linguistiques. Ce contenu peut inclure des catégories, des étiquettes, des publications et des sujets. Les paramètres régionaux pris en charge sont définis dans « Paramètres régionaux pris en charge pour la localisation du contenu »."
     content_localization_supported_locales: "Liste des langues prises en charge dans lesquelles le contenu utilisateur peut être traduit. Nécessite que « la localisation du contenu soit activée »."
@@ -2568,7 +2567,6 @@ fr:
   filter:
     description:
       status: "Filtrer les sujets en fonction de leur statut"
-      in: "Filtrer les sujets en fonction des listes personnelles"
       order: "Trier les sujets par domaine spécifique"
       category: "Afficher les sujets dans une catégorie spécifique"
       category_any: "Afficher les sujets dans l'une des catégories spécifiées (séparés par des virgules)"

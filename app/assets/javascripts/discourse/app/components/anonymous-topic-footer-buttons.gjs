@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
-import { computed } from "@ember/object";
 import { compare } from "@ember/utils";
 import { attributeBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
@@ -14,13 +13,14 @@ export default class AnonymousTopicFooterButtons extends Component {
   elementId = "topic-footer-buttons";
   role = "region";
 
-  @getTopicFooterButtons() allButtons;
+  get allButtons() {
+    return getTopicFooterButtons(this);
+  }
 
-  @computed("allButtons.[]")
   get buttons() {
     return (
       this.allButtons
-        .filterBy("anonymousOnly", true)
+        .filter((button) => button.anonymousOnly === true)
         .sort((a, b) => compare(a?.priority, b?.priority))
         // Reversing the array is necessary because when priorities are not set,
         // we want to show the most recently added item first

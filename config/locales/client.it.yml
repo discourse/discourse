@@ -3777,6 +3777,9 @@ it:
       title: "Ultimi messaggi"
       empty: "Non ci sono messaggi"
       aria_post_number: "%{title}, messaggio n. %{postNumber}"
+      bulk:
+        clear_all: "Deseleziona tutto"
+        actions: "Azioni collettive"
     post:
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"

@@ -436,6 +436,8 @@ describe "Composer Form Templates", type: :system do
     attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/logo.png",
                 make_visible: true
+    expect(find(".d-editor-preview")).to have_css("img[alt='logo.png']")
+
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Bruce Wayne")
     composer.create

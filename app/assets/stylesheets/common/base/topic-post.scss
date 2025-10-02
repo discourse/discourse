@@ -373,8 +373,6 @@ nav.post-controls {
         &.like {
           // Like button with 0 likes
           &:hover {
-            background: var(--love-low);
-
             .d-icon {
               color: var(--love);
             }
@@ -389,8 +387,6 @@ nav.post-controls {
 
           .discourse-no-touch & {
             &:hover {
-              background: var(--primary-low);
-
               .d-icon {
                 color: var(--primary-medium);
               }
@@ -407,13 +403,6 @@ nav.post-controls {
           + .toggle-like {
             // Like button when like count is present
             padding-left: 0.45em;
-
-            // Like button when like count is present
-            .discourse-no-touch & {
-              &:hover {
-                background: var(--d-hover);
-              }
-            }
           }
 
           // Like count button
@@ -1519,15 +1508,20 @@ span.mention {
   border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
-  max-width: calc(
-    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-      var(--topic-avatar-width)
-  );
-  padding: var(--topic-body-width-padding);
+  max-width: 100%;
+  padding: var(--space-2) var(--space-4);
   font-size: var(--font-down-1-rem);
   border-radius: var(--d-border-radius);
   gap: var(--space-2);
   box-sizing: border-box;
+
+  @include viewport.until(sm) {
+    margin-bottom: var(--space-4);
+  }
+
+  &.custom {
+    background: var(--danger-low);
+  }
 
   .emoji {
     width: 1.5em;
@@ -1548,6 +1542,7 @@ span.mention {
   &.custom {
     background: var(--danger-low);
   }
+
 
   .custom_created_by {
     display: inline-block;

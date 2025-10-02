@@ -2887,6 +2887,8 @@ ro:
           other: "Ai selectat <b>%{count}</b> de mesaje."
     post_list:
       title: "Ultimele postări"
+      bulk:
+        clear_all: "Șterge tot"
     post:
       quote_reply: "Citează"
       quote_reply_shortcut: "Citează (sau apasă q)"

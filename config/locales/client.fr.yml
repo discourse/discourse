@@ -3780,6 +3780,9 @@ fr:
       title: "Dernières publications"
       empty: "Il n'y a aucune publication"
       aria_post_number: "%{title} - publication #%{postNumber}"
+      bulk:
+        clear_all: "Tout effacer"
+        actions: "Actions groupées"
     post:
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"

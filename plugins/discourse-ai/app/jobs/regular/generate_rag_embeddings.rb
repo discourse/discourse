@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class GenerateRagEmbeddings < ::Jobs::Base
     sidekiq_options queue: "ultra_low"
     # we could also restrict concurrency but this takes so long if it is not concurrent

@@ -18,8 +18,6 @@ export default class extends DiscourseRoute {
   @service site;
   @service siteSettings;
 
-  #isRedirecting = false;
-
   beforeModel(transition) {
     const { from, wantsTo } = transition;
     const { currentUser, dialog, router } = this;
@@ -74,18 +72,18 @@ export default class extends DiscourseRoute {
     // Automatically kick off the external login if it's the only one available
     if (enable_discourse_connect) {
       if (redirect) {
-        this.#isRedirecting = true;
         const returnPath = cookie("destination_url")
           ? getURL("/")
           : encodeURIComponent(url);
         window.location = getURL(`/session/sso?return_path=${returnPath}`);
+        return new Promise(() => {}); // Prevents the transition from completing
       } else {
         router.replaceWith("discovery.login-required");
       }
     } else if (isOnlyOneExternalLoginMethod) {
       if (redirect) {
-        this.#isRedirecting = true;
         singleExternalLogin({ signup: true });
+        return new Promise(() => {}); // Prevents the transition from completing
       } else {
         router.replaceWith("discovery.login-required");
       }
@@ -95,12 +93,10 @@ export default class extends DiscourseRoute {
   setupController(controller) {
     super.setupController(...arguments);
 
-    // We're in the middle of an authentication flow
-    if (document.getElementById("data-authentication")) {
-      return;
+    if (cookie("email")) {
+      controller.accountEmail = cookie("email");
     }
 
-    // Shows the loading spinner while waiting for the redirection to external auth
-    controller.isRedirectingToExternalAuth = this.#isRedirecting;
+    controller.fetchConfirmationValue();
   }
 }

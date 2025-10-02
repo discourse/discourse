@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::AdPlugin
+module AdPlugin
   class HouseAdSetting
     DEFAULTS = {
       topic_list_top: "",

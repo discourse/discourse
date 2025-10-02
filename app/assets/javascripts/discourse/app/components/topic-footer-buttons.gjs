@@ -36,25 +36,31 @@ export default class TopicFooterButtons extends Component {
   elementId = "topic-footer-buttons";
   role = "region";
 
-  @getTopicFooterButtons() inlineButtons;
-  @getTopicFooterDropdowns() inlineDropdowns;
-
   @alias("currentUser.can_send_private_messages") canSendPms;
   @alias("topic.details.can_invite_to") canInviteTo;
   @alias("currentUser.user_option.enable_defer") canDefer;
   @or("topic.archived", "topic.closed", "topic.deleted") inviteDisabled;
+
+  get inlineButtons() {
+    return getTopicFooterButtons(this);
+  }
+
+  get inlineDropdowns() {
+    return getTopicFooterDropdowns(this);
+  }
 
   @discourseComputed("canSendPms", "topic.isPrivateMessage")
   canArchive(canSendPms, isPM) {
     return canSendPms && isPM;
   }
 
-  @computed("inlineButtons.[]", "inlineDropdowns.[]")
   get inlineActionables() {
     return (
       this.inlineButtons
-        .filterBy("dropdown", false)
-        .filterBy("anonymousOnly", false)
+        .filter(
+          (button) =>
+            button.dropdown === false && button.anonymousOnly === false
+        )
         .concat(this.inlineDropdowns)
         .sort((a, b) => compare(a?.priority, b?.priority))
         // Reversing the array is necessary because when priorities are not set,
@@ -68,15 +74,12 @@ export default class TopicFooterButtons extends Component {
     return new TopicBookmarkManager(getOwner(this), this.topic);
   }
 
-  // topic.assigned_to_user is for backward plugin support
-  @discourseComputed("inlineButtons.[]", "topic.assigned_to_user")
-  dropdownButtons(inlineButtons) {
-    return inlineButtons.filter((button) => button.dropdown);
+  get dropdownButtons() {
+    return this.inlineButtons.filter((button) => button.dropdown);
   }
 
-  @discourseComputed("dropdownButtons.[]")
-  loneDropdownButton(dropdownButtons) {
-    return dropdownButtons.length === 1 ? dropdownButtons[0] : null;
+  get loneDropdownButton() {
+    return this.dropdownButtons.length === 1 ? this.dropdownButtons[0] : null;
   }
 
   @discourseComputed("topic.isPrivateMessage")

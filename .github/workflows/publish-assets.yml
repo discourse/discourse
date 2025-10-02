@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - stable
+    tags:
+      - beta
 
 concurrency:
   group: publish-assets-${{ format('{0}-{1}', github.run_number, github.job) }}

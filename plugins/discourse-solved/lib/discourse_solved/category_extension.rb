@@ -8,6 +8,6 @@ module DiscourseSolved::CategoryExtension
   private
 
   def reset_accepted_cache
-    ::DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+    DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
   end
 end

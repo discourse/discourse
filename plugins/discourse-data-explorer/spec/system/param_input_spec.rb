@@ -64,7 +64,7 @@ RSpec.describe "Param input", type: :system do
   it "correctly displays parameter input boxes" do
     visit("/admin/plugins/explorer/queries/#{all_params_query.id}")
 
-    ::DiscourseDataExplorer::Parameter
+    DiscourseDataExplorer::Parameter
       .create_from_sql(ALL_PARAMS_SQL)
       .each do |param|
         expect(page).to have_css(".query-params .param [name=\"#{param.identifier}\"]")

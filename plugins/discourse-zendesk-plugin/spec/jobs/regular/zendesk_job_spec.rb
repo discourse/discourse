@@ -10,8 +10,8 @@ RSpec.describe Jobs::ZendeskJob do
   let(:post_user) { topic_user }
   let(:topic) do
     Fabricate(:topic, user: topic_user).tap do |topic|
-      topic.custom_fields[::DiscourseZendeskPlugin::ZENDESK_ID_FIELD] = ticket_id
-      topic.custom_fields[::DiscourseZendeskPlugin::ZENDESK_API_URL_FIELD] = ticket_url
+      topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_ID_FIELD] = ticket_id
+      topic.custom_fields[DiscourseZendeskPlugin::ZENDESK_API_URL_FIELD] = ticket_url
       topic.save_custom_fields
     end
   end
