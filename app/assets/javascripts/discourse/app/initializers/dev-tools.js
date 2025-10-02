@@ -68,6 +68,7 @@ export default {
 
       const incrementAjaxPendingRequests = (_event, xhr, settings) => {
         if (
+          // Ignore MessageBus and Presence requests as they are long-running and continuous respectively
           settings.url.includes("/message-bus") ||
           settings.url.includes("/presence/")
         ) {
