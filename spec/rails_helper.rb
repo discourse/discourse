@@ -476,7 +476,32 @@ RSpec.configure do |config|
       end
     end
 
+    module CapybaraPlaywrightBasePatch
+      private
+
+      def execute_async_ember_settled_script(session)
+        session.evaluate_async_script(
+          "window.emberSettled ? window.emberSettled().then(arguments[0]) : arguments[0]()",
+        )
+      end
+
+      def wait_for_ember_settled(method_name)
+        session = @driver.send(:session)
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_EMBER_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+          execute_async_ember_settled_script(session)
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        else
+          execute_async_ember_settled_script(session)
+        end
+      end
+    end
+
     module CapybaraPlaywrightNodePatch
+      include CapybaraPlaywrightBasePatch
+
       NODE_METHODS_TO_PATCH = %i[
         click
         right_click
@@ -493,27 +518,21 @@ RSpec.configure do |config|
       NODE_METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          # now = Time.now.to_f
-          @driver.send(:session).evaluate_async_script(
-            "window.emberSettled ? window.emberSettled().then(arguments[0]) : arguments[0]()",
-          )
-          # puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+          wait_for_ember_settled(method_name)
           result
         end
       end
     end
 
     module CapybaraPlaywrightBrowserPatch
+      include CapybaraPlaywrightBasePatch
+
       METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
 
       METHODS_TO_PATCH.each do |method_name|
         define_method(method_name) do |*args, **options|
           result = super(*args, **options)
-          # now = Time.now.to_f
-          @driver.send(:session).evaluate_async_script(
-            "window.emberSettled ? window.emberSettled('#{method_name}').then(arguments[0]) : arguments[0]()",
-          )
-          # puts "[#{Time.now.to_f}] #{method_name}: #{Time.now.to_f - now}"
+          wait_for_ember_settled(method_name)
           result
         end
       end

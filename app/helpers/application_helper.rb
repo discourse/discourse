@@ -835,6 +835,10 @@ module ApplicationHelper
       setup_data[:mb_last_file_change_id] = MessageBus.last_id("/file-change")
     end
 
+    if Rails.env.test? && ENV["CAPYBARA_PLAYWRIGHT_DEBUG_EMBER_SETTLED"].present?
+      setup_data[:capybara_playwright_debug_ember_settled] = true
+    end
+
     if guardian.can_enable_safe_mode? && params["safe_mode"]
       setup_data[:safe_mode] = normalized_safe_mode
     end

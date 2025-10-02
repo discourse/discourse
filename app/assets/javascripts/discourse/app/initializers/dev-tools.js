@@ -46,9 +46,23 @@ export default {
     };
 
     if (isRailsTesting()) {
-      _backburner.DEBUG = true;
+      const setupDataElement = document.getElementById("data-discourse-setup");
+      const isSettledDebugEnabled =
+        setupDataElement?.dataset.capybaraPlaywrightDebugEmberSettled ===
+        "true";
 
-      window.emberGetSettledState = getSettledState;
+      if (isSettledDebugEnabled) {
+        _backburner.DEBUG = true;
+      }
+
+      const logSettledDebug = (...args) => {
+        if (!isSettledDebugEnabled) {
+          return;
+        }
+
+        // eslint-disable-next-line no-console
+        console.log(`[${Date.now() / 1000}]`, ...args);
+      };
 
       const pendingRequests = [];
 
@@ -60,15 +74,16 @@ export default {
           return;
         }
 
-        // console.log(`[${Date.now() / 1000}] added`, settings.url);
+        logSettledDebug("AJAX request initiated", settings.url);
 
         pendingRequests.push(xhr);
       };
 
-      const decrementAjaxPendingRequests = (_event, xhr) => {
+      const decrementAjaxPendingRequests = (_event, xhr, settings) => {
         for (let i = 0; i < pendingRequests.length; i++) {
           if (xhr === pendingRequests[i]) {
-            // console.log(`[${Date.now() / 1000}] removed`, settings.url);
+            logSettledDebug("AJAX request completed", settings.url);
+
             pendingRequests.splice(i, 1);
             break;
           }
@@ -80,6 +95,8 @@ export default {
         .on("ajaxComplete ajaxError", decrementAjaxPendingRequests);
 
       window.emberSettled = async (timeoutSeconds) => {
+        // Wait for two request animation frames to workaround the limitation where we can't exactly determine
+        // when Ember's event dispatcher has dispatched an event as a result of a browser interaction.
         await new Promise((r) =>
           requestAnimationFrame(() => requestAnimationFrame(r))
         );
@@ -97,15 +114,15 @@ export default {
 
             const state = getSettledState();
 
-            // console.log(`[${Date.now() / 1000}]`, {
-            //   hasRunLoop: state.hasRunLoop,
-            //   hasPendingTransitions: state.hasPendingTransitions,
-            //   isRenderPending: state.isRenderPending,
-            //   pendingRequests: pendingRequests.length,
-            //   hasPendingWaiters: state.hasPendingWaiters,
-            // });
+            logSettledDebug({
+              hasRunLoop: state.hasRunLoop,
+              hasPendingTransitions: state.hasPendingTransitions,
+              isRenderPending: state.isRenderPending,
+              pendingRequests: pendingRequests.length,
+              hasPendingWaiters: state.hasPendingWaiters,
+            });
 
-            // console.log(`[${Date.now() / 1000}]`, _backburner.getDebugInfo());
+            logSettledDebug(_backburner.getDebugInfo());
 
             const settled =
               !state.hasRunLoop &&
@@ -114,9 +131,9 @@ export default {
               !state.hasPendingWaiters &&
               pendingRequests.length === 0;
 
-            // if (settled) {
-            //   console.log(`[${Date.now() / 1000}] SETTLED!`);
-            // }
+            if (settled) {
+              logSettledDebug("SETTLED!");
+            }
 
             return settled;
           },
