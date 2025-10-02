@@ -24,12 +24,13 @@ html:not(.fullscreen-composer) {
           display: none;
         }
 
+        .toggle-minimize {
+          transform: rotate(-90deg);
+        }
+
         .reply-area {
           padding-inline: 0.67em;
         }
-      }
-
-      #reply-control:not(.fullscreen).hide-preview {
         width: 100%;
         right: var(--main-grid-gap);
         top: var(--header-offset);
@@ -38,7 +39,12 @@ html:not(.fullscreen-composer) {
         height: unset;
         min-width: 320px;
 
-        @include viewport.between(lg, xl) {
+        @include viewport.from(xl) {
+          max-width: 36.5vw;
+        }
+
+        @include viewport.until(xl) {
+          max-width: 850px;
           position: fixed;
           box-shadow: var(--shadow-composer);
         }
@@ -66,6 +72,25 @@ html:not(.fullscreen-composer) {
 
       .sidebar-wrapper .sidebar-container {
         height: unset;
+      }
+    }
+  }
+}
+
+#reply-control.hide-preview {
+  &.draft {
+    .peek-mode-active & {
+      right: var(--main-grid-gap);
+      width: min-content !important;
+      margin: 0;
+      left: unset;
+      top: calc(var(--header-offset) + var(--main-outlet-padding-top));
+      border-radius: 0;
+      border-bottom-left-radius: var(--d-border-radius-large);
+      border-top-left-radius: var(--d-border-radius-large);
+
+      .toggle-fullscreen {
+        display: none;
       }
     }
   }

@@ -2991,7 +2991,7 @@ en:
       view_new_post: "View your new post."
       saving: "Saving"
       saved: "Saved!"
-      saved_draft: "Post draft in progress. Tap to resume."
+      saved_draft: "Resume draft."
       uploading: "Uploading…"
       show_preview: "show preview"
       hide_preview: "hide preview"
