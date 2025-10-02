@@ -30,12 +30,12 @@ import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
-import CategoryChooser from "discourse/select-kit/components/category-chooser";
-import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
-import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import { i18n } from "discourse-i18n";
+import CategoryChooser from "select-kit/components/category-chooser";
+import DropdownSelectBox from "select-kit/components/dropdown-select-box";
+import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
 import resizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
-import { i18n } from "discourse-i18n";
 
 export default class ComposerContainer extends Component {
   @service composer;
@@ -44,6 +44,7 @@ export default class ComposerContainer extends Component {
   @service siteSettings;
   @service appEvents;
   @service keyValueStore;
+  @service capabilities;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -97,6 +98,13 @@ export default class ComposerContainer extends Component {
     }
   }
 
+  /**
+   * @type {boolean}
+   */
+  get shouldShowHorizontalResizer() {
+    return this.capabilities.viewport.lg;
+  }
+
   @bind
   onResizeDragStart() {
     this.appEvents.trigger("composer:resize-started");
@@ -142,7 +150,7 @@ export default class ComposerContainer extends Component {
 
   @bind
   onHorizontalResizeDrag(element, { width }) {
-    if (width) {
+    if (width && this.shouldShowHorizontalResizer) {
       this.keyValueStore.set({
         key: "composerWidth",
         value: `${width}px`,
