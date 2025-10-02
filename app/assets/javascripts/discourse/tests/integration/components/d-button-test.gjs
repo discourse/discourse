@@ -33,7 +33,6 @@ module("Integration | Component | d-button", function (hooks) {
 
   test("link-styled button", async function (assert) {
     await render(<template><DButton @display="link" /></template>);
-
     assert.dom("button.btn-link:not(.btn)").exists("has the right classes");
   });
 
