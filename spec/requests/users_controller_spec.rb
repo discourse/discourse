@@ -7705,14 +7705,15 @@ RSpec.describe UsersController do
         expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
 
-      it "doesn’t show unread notifications when the bookmark has been deleted" do
+      it "shows unread notifications even if the bookmark has been deleted if they have bookmarkable data" do
         bookmark_with_reminder.destroy!
 
         get "/u/#{user.username}/user-menu-bookmarks"
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(0)
+        expect(notifications.size).to eq(1)
+        expect(notifications.first["data"]["bookmark_id"]).to eq(bookmark_with_reminder.id)
       end
 
       it "does not show unread notifications if the bookmark has been deleted if they only have the bookmark_id data" do
