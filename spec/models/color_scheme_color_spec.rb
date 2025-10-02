@@ -26,24 +26,4 @@ RSpec.describe ColorSchemeColor do
       "555 666",
     ].each { |hex| test_invalid_hex(hex) }
   end
-
-  describe "#no_edits_for_remote_copies" do
-    it "prevents editing colors of remote copies" do
-      remote_copy =
-        Fabricate(
-          :color_scheme,
-          remote_copy: true,
-          color_scheme_colors: [
-            Fabricate(:color_scheme_color, name: "primary", hex: "998877"),
-            Fabricate(:color_scheme_color, name: "secondary", hex: "553322"),
-          ],
-        )
-      color = remote_copy.color_scheme_colors.first
-      color.hex = "111111"
-      expect(color.valid?).to eq(false)
-      expect(color.errors.full_messages).to include(
-        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
-      )
-    end
-  end
 end

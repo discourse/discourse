@@ -8,18 +8,9 @@ class ColorSchemeColor < ActiveRecord::Base
   belongs_to :color_scheme, -> { unscope(where: :remote_copy) }
 
   validates :hex, format: { with: /\A([0-9a-fA-F]{3}|[0-9a-fA-F]{6})\z/ }
-  validate :no_edits_for_remote_copies, on: :update
 
   def hex_with_hash
     "##{hex}"
-  end
-
-  private
-
-  def no_edits_for_remote_copies
-    if color_scheme&.remote_copy && will_save_change_to_hex?
-      errors.add(:base, I18n.t("color_schemes.errors.cannot_edit_remote_copies"))
-    end
   end
 end
 
