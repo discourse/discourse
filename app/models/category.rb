@@ -104,6 +104,8 @@ class Category < ActiveRecord::Base
             },
             allow_nil: true
   validates :slug, exclusion: { in: RESERVED_SLUGS }
+  validates :color, format: { with: /\A(\h{6}|\h{3})\z/ }
+  validates :text_color, format: { with: /\A(\h{6}|\h{3})\z/ }
 
   after_create :create_category_definition
   after_destroy :trash_category_definition

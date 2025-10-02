@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
-import FlatButton from "discourse/components/flat-button";
 import concatClass from "discourse/helpers/concat-class";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
@@ -14,7 +13,7 @@ const Buttons = <template>
         @icon="xmark"
         @translatedTitle={{bs.text}}
         @disabled={{bs.disabled}}
-        class={{bs.class}}
+        class={{concatClass "btn-default" bs.class}}
       />
     {{/each}}
   </StyleguideExample>
@@ -25,7 +24,7 @@ const Buttons = <template>
         @icon="xmark"
         @translatedTitle={{bs.text}}
         @disabled={{bs.disabled}}
-        class={{bs.class}}
+        class={{concatClass "btn-default" bs.class}}
       />
     {{/each}}
   </StyleguideExample>
@@ -35,7 +34,7 @@ const Buttons = <template>
       <DButton
         @translatedLabel={{bs.text}}
         @disabled={{bs.disabled}}
-        class={{bs.class}}
+        class={{concatClass "btn-default" bs.class}}
       />
     {{/each}}
   </StyleguideExample>
@@ -45,7 +44,7 @@ const Buttons = <template>
       <DButton
         @translatedLabel={{bs.text}}
         @disabled={{bs.disabled}}
-        class={{bs.class}}
+        class={{concatClass "btn-default" bs.class}}
       />
     {{/each}}
   </StyleguideExample>
@@ -58,7 +57,7 @@ const Buttons = <template>
         @icon="plus"
         @translatedLabel={{bs.text}}
         @disabled={{bs.disabled}}
-        class={{bs.class}}
+        class={{concatClass "btn-default" bs.class}}
       />
     {{/each}}
   </StyleguideExample>
@@ -69,7 +68,7 @@ const Buttons = <template>
         @icon="plus"
         @translatedLabel={{bs.text}}
         @disabled={{bs.disabled}}
-        class={{bs.class}}
+        class={{concatClass "btn-default" bs.class}}
       />
     {{/each}}
   </StyleguideExample>
@@ -124,29 +123,19 @@ const Buttons = <template>
 
   <StyleguideExample @title=".btn-flat - sizes (large, default, small)">
     {{#each @dummy.buttonSizes as |bs|}}
-      <FlatButton
-        @icon="trash-can"
-        @disabled={{bs.disabled}}
-        @translatedTitle={{bs.title}}
-      />
-    {{/each}}
-  </StyleguideExample>
-
-  <StyleguideExample @title=".btn-flat - states">
-    {{#each @dummy.buttonStates as |bs|}}
-      <FlatButton
-        @icon="trash-can"
-        @disabled={{bs.disabled}}
-        @translatedTitle={{bs.title}}
-      />
-    {{/each}}
-  </StyleguideExample>
-
-  <StyleguideExample
-    @title="<DButton> btn-flat btn-text - sizes (large, default, small)"
-  >
-    {{#each @dummy.buttonSizes as |bs|}}
       <DButton
+        @icon="trash-can"
+        @disabled={{bs.disabled}}
+        @translatedTitle={{bs.title}}
+        class={{concatClass "btn-flat" bs.class}}
+      />
+    {{/each}}
+  </StyleguideExample>
+
+  <StyleguideExample @title="btn-flat - states">
+    {{#each @dummy.buttonStates as |bs|}}
+      <DButton
+        @icon="trash-can"
         @disabled={{bs.disabled}}
         @translatedLabel={{bs.text}}
         class={{concatClass "btn-flat" bs.class}}
@@ -154,12 +143,25 @@ const Buttons = <template>
     {{/each}}
   </StyleguideExample>
 
-  <StyleguideExample @title="<DButton> btn-flat btn-text - states">
+  <StyleguideExample @title="btn-transparent - states">
     {{#each @dummy.buttonStates as |bs|}}
       <DButton
+        @icon="trash-can"
         @disabled={{bs.disabled}}
         @translatedLabel={{bs.text}}
-        class={{concatClass "btn-flat" bs.class}}
+        class={{concatClass "btn-transparent" bs.class}}
+      />
+    {{/each}}
+  </StyleguideExample>
+
+  <StyleguideExample @title="Button link">
+    {{#each @dummy.buttonStates as |bs|}}
+      <DButton
+        @icon="trash-can"
+        @translatedLabel={{bs.text}}
+        @display="link"
+        class={{bs.class}}
+        @disabled={{bs.disabled}}
       />
     {{/each}}
   </StyleguideExample>

@@ -61,14 +61,6 @@ export default class EditCategoryTabsController extends Controller {
       return false;
     }
 
-    if (!transientData.color) {
-      return false;
-    }
-
-    if (transientData.text_color.length < 6) {
-      return false;
-    }
-
     if (this.saving || this.deleting) {
       return true;
     }
@@ -120,13 +112,12 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
-  saveCategory(transientData) {
+  saveCategory(data) {
     if (this.validators.some((validator) => validator())) {
       return;
     }
 
-    this.model.setProperties(transientData);
-
+    this.model.setProperties(data);
     this.set("saving", true);
 
     this.model

@@ -47,19 +47,6 @@ module("Integration | Component | Widget | button", function (hooks) {
     assert.dom("button span.d-button-label").exists("it renders the label");
   });
 
-  test("text only button", async function (assert) {
-    const self = this;
-
-    this.set("args", { label: "topic.create" });
-
-    await render(
-      <template><MountWidget @widget="button" @args={{self.args}} /></template>
-    );
-
-    assert.dom("button.btn.btn-text").exists("has all the classes");
-    assert.dom("button span.d-button-label").exists("has the label");
-  });
-
   test("translatedLabel", async function (assert) {
     const self = this;
 

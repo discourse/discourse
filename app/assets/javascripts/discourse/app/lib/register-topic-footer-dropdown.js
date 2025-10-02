@@ -1,5 +1,3 @@
-import { computed } from "@ember/object";
-
 let _topicFooterDropdowns = {};
 
 export function registerTopicFooterDropdown(dropdown) {
@@ -55,52 +53,59 @@ export function registerTopicFooterDropdown(dropdown) {
   _topicFooterDropdowns[normalizedDropdown.id] = normalizedDropdown;
 }
 
-export function getTopicFooterDropdowns() {
-  const dependentKeys = [].concat(
+export function getTopicFooterDropdowns(context) {
+  const legacyDependentKeys = [].concat(
     ...Object.values(_topicFooterDropdowns)
       .map((item) => item.dependentKeys)
       .filter(Boolean)
   );
+  legacyDependentKeys.forEach((key) => context.get(key));
 
-  return computed(...dependentKeys, {
-    get() {
-      const _isFunction = (descriptor) =>
-        descriptor && typeof descriptor === "function";
+  const _isFunction = (descriptor) =>
+    descriptor && typeof descriptor === "function";
 
-      const _compute = (dropdown, property) => {
-        const field = dropdown[property];
+  const _compute = (dropdown, property) => {
+    const field = dropdown[property];
 
-        if (_isFunction(field)) {
-          return field.apply(this);
-        }
+    if (_isFunction(field)) {
+      return field.apply(context);
+    }
 
-        return field;
+    return field;
+  };
+
+  return Object.values(_topicFooterDropdowns)
+    .filter((dropdown) => _compute(dropdown, "displayed"))
+    .map((dropdown) => {
+      return {
+        id: dropdown.id,
+        type: dropdown.type,
+        get classNames() {
+          return (_compute(dropdown, "classNames") || []).join(" ");
+        },
+        get icon() {
+          return _compute(dropdown, "icon");
+        },
+        get disabled() {
+          return _compute(dropdown, "disabled");
+        },
+        get priority() {
+          return _compute(dropdown, "priority");
+        },
+        get content() {
+          return _compute(dropdown, "content");
+        },
+        get value() {
+          return _compute(dropdown, "value");
+        },
+        get action() {
+          return dropdown.action;
+        },
+        get noneItem() {
+          return _compute(dropdown, "noneItem");
+        },
       };
-
-      return Object.values(_topicFooterDropdowns)
-        .filter((dropdown) => _compute(dropdown, "displayed"))
-        .map((dropdown) => {
-          const discourseComputedDropdown = {};
-
-          discourseComputedDropdown.id = dropdown.id;
-          discourseComputedDropdown.type = dropdown.type;
-
-          discourseComputedDropdown.classNames = (
-            _compute(dropdown, "classNames") || []
-          ).join(" ");
-
-          discourseComputedDropdown.icon = _compute(dropdown, "icon");
-          discourseComputedDropdown.disabled = _compute(dropdown, "disabled");
-          discourseComputedDropdown.priority = _compute(dropdown, "priority");
-          discourseComputedDropdown.content = _compute(dropdown, "content");
-          discourseComputedDropdown.value = _compute(dropdown, "value");
-          discourseComputedDropdown.action = dropdown.action;
-          discourseComputedDropdown.noneItem = _compute(dropdown, "noneItem");
-
-          return discourseComputedDropdown;
-        });
-    },
-  });
+    });
 }
 
 export function clearTopicFooterDropdowns() {

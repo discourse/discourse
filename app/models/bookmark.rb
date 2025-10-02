@@ -28,18 +28,6 @@ class Bookmark < ActiveRecord::Base
   belongs_to :user
   belongs_to :bookmarkable, polymorphic: true
 
-  has_many :reminder_notifications,
-           ->(bookmark) do
-             where(notification_type: Notification.types[:bookmark_reminder]).where(
-               "data::jsonb->>'bookmark_id' = ?",
-               bookmark.id.to_s,
-             )
-           end,
-           class_name: "Notification",
-           foreign_key: :user_id,
-           primary_key: :user_id,
-           dependent: :destroy
-
   def self.auto_delete_preferences
     @auto_delete_preferences ||=
       Enum.new(never: 0, when_reminder_sent: 1, on_owner_reply: 2, clear_reminder: 3)

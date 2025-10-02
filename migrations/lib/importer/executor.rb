@@ -14,6 +14,7 @@ module Migrations::Importer
     def start
       runtime =
         ::Migrations::DateHelper.track_time do
+          optimize_intermediate_db
           execute_steps
         ensure
           cleanup
@@ -36,6 +37,10 @@ module Migrations::Importer
     def migrate_and_attach(db_path, schema_path, alias_name)
       ::Migrations::Database.migrate(db_path, migrations_path: schema_path)
       @intermediate_db.execute("ATTACH DATABASE ? AS #{alias_name}", db_path)
+    end
+
+    def optimize_intermediate_db
+      @intermediate_db.execute("PRAGMA optimize=0x10002")
     end
 
     def step_classes
