@@ -4,6 +4,7 @@
   overflow: hidden;
 
   &:hover .meta {
+    user-select: none;
     opacity: 0.9;
     transition: opacity 0.5s;
   }
