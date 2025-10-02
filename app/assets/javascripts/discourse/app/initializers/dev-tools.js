@@ -76,7 +76,6 @@ export default {
         }
 
         logSettledDebug("AJAX request initiated", settings.url);
-
         pendingRequests.push(xhr);
       };
 
@@ -84,7 +83,6 @@ export default {
         for (let i = 0; i < pendingRequests.length; i++) {
           if (xhr === pendingRequests[i]) {
             logSettledDebug("AJAX request completed", settings.url);
-
             pendingRequests.splice(i, 1);
             break;
           }
