@@ -223,6 +223,13 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
+  def self.history_for(setting_name)
+    UserHistory.where(
+      action: UserHistory.actions[:change_site_setting],
+      subject: setting_name,
+    ).order(created_at: :desc)
+  end
+
   # helpers for getting s3 settings that fallback to global
   class Upload
     def self.s3_cdn_url

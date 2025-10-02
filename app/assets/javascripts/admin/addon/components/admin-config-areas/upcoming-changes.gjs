@@ -65,23 +65,6 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
     ];
   }
 
-  get riskFilterOptions() {
-    return [
-      {
-        name: i18n("admin.upcoming_changes.filter.all"),
-        value: "all",
-      },
-      {
-        name: i18n("admin.upcoming_changes.filter.medium_risk"),
-        value: "medium_risk",
-      },
-      {
-        name: i18n("admin.upcoming_changes.filter.high_risk"),
-        value: "high_risk",
-      },
-    ];
-  }
-
   <template>
     <AdminFilterControls
       @array={{this.upcomingChanges}}

@@ -25,7 +25,7 @@ class SiteSettings::DbProvider
   end
 
   def setting_group_ids
-    return {} unless table_exists?
+    return {} unless site_setting_groups_table_exists?
 
     DB
       .query("SELECT name, group_ids FROM site_setting_groups")
@@ -64,5 +64,12 @@ class SiteSettings::DbProvider
   def table_exists?
     @table_exists ||= {}
     @table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(@model.table_name)
+  end
+
+  def site_setting_groups_table_exists?
+    @site_setting_groups_table_exists ||= {}
+    @site_setting_groups_table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(
+      "site_setting_groups",
+    )
   end
 end
