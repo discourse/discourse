@@ -432,6 +432,7 @@ RSpec.configure do |config|
 
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
+
         begin
           super
         rescue StandardError => e
@@ -471,6 +472,74 @@ RSpec.configure do |config|
           pw_page.clock.set_fixed_time(example.metadata[:time])
         end
       end
+    end
+
+    module CapybaraPlaywrightBasePatch
+      private
+
+      def execute_async_ember_settled_script(session)
+        session.evaluate_async_script(
+          "window.emberSettled ? window.emberSettled().then(arguments[0]) : arguments[0]()",
+        )
+      end
+
+      def wait_for_ember_settled(method_name)
+        session = @driver.send(:session)
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_EMBER_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+          execute_async_ember_settled_script(session)
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        else
+          execute_async_ember_settled_script(session)
+        end
+      end
+    end
+
+    module CapybaraPlaywrightNodePatch
+      include CapybaraPlaywrightBasePatch
+
+      NODE_METHODS_TO_PATCH = %i[
+        click
+        right_click
+        double_click
+        send_keys
+        hover
+        drag_to
+        scroll_by
+        scroll_to
+        trigger
+        set
+      ]
+
+      NODE_METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_ember_settled(method_name)
+          result
+        end
+      end
+    end
+
+    module CapybaraPlaywrightBrowserPatch
+      include CapybaraPlaywrightBasePatch
+
+      METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
+
+      METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_ember_settled(method_name)
+          result
+        end
+      end
+    end
+
+    if ENV["CAPYBARA_PLAYWRIGHT_ENABLE_EMBER_SETTLED"].present?
+      puts "Enabling Capybara Playwright Ember Settled patches"
+      Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
+      Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
     end
 
     config.after(:each, type: :system) do |example|
