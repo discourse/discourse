@@ -3,8 +3,8 @@ import { isBlank } from "@ember/utils";
 import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 
-const animateOnFocus = modifierFn((element, [isFocused]) => {
-  if (isFocused) {
+const animateOnFocus = modifierFn((element, [isFocused, char]) => {
+  if (isFocused && isBlank(char)) {
     element.animate(
       [
         { transform: "scale(1)" },
@@ -52,7 +52,7 @@ export default class Slot extends Component {
         (if this.isPlaceholder "--placeholder")
       }}
       data-index={{@index}}
-      {{animateOnFocus @isFocused}}
+      {{animateOnFocus @isFocused @char}}
     >
       {{this.displayChar}}
     </div>
