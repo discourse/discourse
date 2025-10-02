@@ -1,32 +1,44 @@
-.composer-resizer {
-  position: absolute;
-  left: -5px;
-  top: 0;
-  bottom: 0;
-  width: 10px;
-  z-index: 1;
-  cursor: col-resize;
-  transition: background-color 0.15s;
-  background-color: transparent;
+@use "lib/viewport";
 
-  .rtl & {
-    left: auto;
-    right: -5px;
+.composer-resizer {
+  @include viewport.from(xl) {
+    display: none;
   }
 
-  .touch & {
-    width: 15px;
-    left: -7px;
+  .draft & {
+    display: none;
+  }
+
+  .peek-mode-active & {
+    position: absolute;
+    left: -5px;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    z-index: 1;
+    cursor: col-resize;
+    transition: background-color 0.15s;
+    background-color: transparent;
 
     .rtl & {
       left: auto;
-      right: -7px;
+      right: -5px;
     }
-  }
 
-  &:hover,
-  &:active {
-    background-color: var(--tertiary);
+    .touch & {
+      width: 15px;
+      left: -7px;
+
+      .rtl & {
+        left: auto;
+        right: -7px;
+      }
+    }
+
+    &:hover,
+    &:active {
+      background-color: var(--tertiary);
+    }
   }
 }
 
