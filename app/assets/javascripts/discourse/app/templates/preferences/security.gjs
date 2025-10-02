@@ -95,6 +95,8 @@ export default RouteTemplate(
       {{/if}}
     {{/if}}
 
+    <PluginOutlet @name="user-preferences-security-after-password" />
+
     {{#if @controller.canCheckEmails}}
       <div
         class="control-group pref-auth-tokens"
