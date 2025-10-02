@@ -2480,7 +2480,6 @@ de:
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
     rich_editor: "Aktiviere den Rich-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor wechseln können, um intuitiver und benutzerfreundlicher zu arbeiten."
     default_composition_mode: "Lege den Standardmodus für den Editor deiner Community fest. Der Rich-Text-Modus bietet den meisten Benutzern ein moderneres, vertrauteres Schreibgefühl, während der Markdown-Modus für ein eher technisches Publikum geeignet sein kann. Die Mitglieder können mit einem Schalter in der Editor-Symbolleiste zwischen den Modi wechseln."
-    viewport_based_mobile_mode: "EXPERIMENTELL: Deaktiviere die User-Agent-basierten Mobil-/Desktop-Modi und verwende stattdessen die Viewport-Breite."
     reviewable_ui_refresh: "Gruppen, die die experimentelle neue Benutzeroberfläche in der Warteschlange zur Überprüfung nutzen können."
     content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
     content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Erfordert, dass „content localization enabled“ aktiviert ist."
@@ -2582,7 +2581,6 @@ de:
   filter:
     description:
       status: "Themen nach ihrem Status filtern"
-      in: "Themen nach persönlichen Kriterien filtern"
       order: "Themen nach einem bestimmten Feld sortieren"
       category: "Themen aus einer bestimmten Kategorie anzeigen"
       category_any: "Themen aus jeder der angegebenen Kategorien anzeigen (durch Kommas getrennt)"
@@ -4224,8 +4222,13 @@ de:
   page_not_found:
     page_title: "Seite nicht gefunden"
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
+    subtitle: "Wir haben überall nachgeschaut, aber wir konnten die vor dir gesuchte Seite nicht finden."
+    popular_topics: "Beliebte Themen"
+    recent_topics: "Aktuelle Themen"
     see_more: "Mehr"
+    search_title: "Versuche stattdessen zu suchen?"
     search_button: "Suche"
+    home: "Zurück zur Startseite"
   offline:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
@@ -5337,16 +5340,36 @@ de:
       approve_and_unhide:
         title: "Beitrag genehmigen und nicht länger verstecken"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
+      post_actions:
+        bundle_title: "Was willst du mit dem Beitrag machen?"
       no_action_post:
         title: "Keine Aktion"
+        description: "Keine Maßnahmen bezüglich des Beitrags ergreifen"
+        complete: "Keine Aktion bezüglich des Beitrags ausgeführt"
       delete_post:
         title: "Beitrag löschen"
+        description: "Diesen Beitrag löschen"
         complete: "Beitrag gelöscht"
       hide_post:
         title: "Beitrag ausblenden"
+        description: "Diesen Beitrag vor der Öffentlichkeit verbergen"
+        complete: "Beitrag ausgeblendet"
+      unhide_post:
+        title: "Beitrag sichtbar machen"
+        description: "Diesen Beitrag für alle Benutzer sichtbar machen"
+        complete: "Beitrag sichtbar gemacht"
       restore_post:
         title: "Beitrag wiederherstellen"
+        description: "Diesen gelöschten Beitrag wiederherstellen"
         complete: "Beitrag wiederhergestellt"
+      edit_post:
+        title: "Beitrag bearbeiten"
+        description: "Den Inhalt dieses Beitrags bearbeiten"
+        complete: "Beitrag bearbeitet"
+      convert_to_pm:
+        title: "In PN umwandeln"
+        description: "Diesen Beitrag in eine persönliche Nachricht umwandeln"
+        complete: "Beitrag in persönliche Nachricht umgewandelt"
       user_actions:
         bundle_title: "Was willst du mit dem Benutzer machen?"
       no_action_user:

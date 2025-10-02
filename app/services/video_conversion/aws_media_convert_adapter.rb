@@ -191,12 +191,17 @@ module VideoConversion
     end
 
     def create_basic_client(endpoint: nil)
-      Aws::MediaConvert::Client.new(
-        region: SiteSetting.s3_region,
-        credentials:
-          Aws::Credentials.new(SiteSetting.s3_access_key_id, SiteSetting.s3_secret_access_key),
-        endpoint: endpoint,
-      )
+      client_options = { region: SiteSetting.s3_region }
+      client_options[:endpoint] = endpoint if endpoint.present?
+
+      if !SiteSetting.s3_use_iam_profile
+        client_options[:credentials] = Aws::Credentials.new(
+          SiteSetting.s3_access_key_id,
+          SiteSetting.s3_secret_access_key,
+        )
+      end
+
+      Aws::MediaConvert::Client.new(client_options)
     end
 
     def update_posts_with_optimized_video

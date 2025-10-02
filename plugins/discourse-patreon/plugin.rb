@@ -19,7 +19,7 @@ register_svg_icon "patreon-new"
 require_relative "lib/validators/patreon_login_enabled_validator"
 
 module ::Patreon
-  PLUGIN_NAME = "discourse-patreon".freeze
+  PLUGIN_NAME = "discourse-patreon"
 end
 
 require_relative "lib/discourse_patreon/engine"
@@ -40,7 +40,7 @@ after_initialize do
   require_relative "lib/patron"
   require_relative "lib/tokens"
 
-  Discourse::Application.routes.prepend { mount ::Patreon::Engine, at: "/patreon" }
+  Discourse::Application.routes.prepend { mount Patreon::Engine, at: "/patreon" }
 
   add_admin_route "patreon.title", "patreon"
 
@@ -55,7 +55,7 @@ after_initialize do
   end
 
   on(:user_created) do |user|
-    filters = PluginStore.get(::Patreon::PLUGIN_NAME, "filters")
+    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
     patreon_id = Patreon::Patron.all.key(user.email)
 
     if filters.present? && patreon_id.present?
@@ -76,21 +76,21 @@ after_initialize do
     end
   end
 
-  ::Patreon::USER_DETAIL_FIELDS.each do |attribute|
+  Patreon::USER_DETAIL_FIELDS.each do |attribute|
     add_to_serializer(
       :admin_detailed_user,
       "patreon_#{attribute}".to_sym,
       include_condition: -> do
-        ::Patreon::Patron.attr(attribute, object).present? &&
+        Patreon::Patron.attr(attribute, object).present? &&
           (attribute != "amount_cents" || scope.is_admin?)
       end,
-    ) { ::Patreon::Patron.attr(attribute, object) }
+    ) { Patreon::Patron.attr(attribute, object) }
   end
 
   add_to_serializer(
     :admin_detailed_user,
     :patreon_email_exists,
-    include_condition: -> { ::Patreon::Patron.attr("email", object).present? },
+    include_condition: -> { Patreon::Patron.attr("email", object).present? },
   ) { true }
 
   add_to_serializer(:current_user, :show_donation_prompt?) do

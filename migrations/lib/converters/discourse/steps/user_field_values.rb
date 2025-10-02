@@ -10,7 +10,7 @@ module Migrations::Converters::Discourse
       @source_db.count <<~SQL
         SELECT COUNT(*)
         FROM user_custom_fields
-        WHERE user_id >= 0
+        WHERE user_id > 0
           AND name LIKE '#{USER_FIELD_PREFIX}%'
       SQL
     end
@@ -21,7 +21,7 @@ module Migrations::Converters::Discourse
                CAST(REPLACE(name, '#{USER_FIELD_PREFIX}', '') AS INTEGER) AS field_id,
                (COUNT(*) OVER (PARTITION BY user_id, name) > 1)           AS is_multiselect_field
         FROM user_custom_fields
-        WHERE user_id >= 0
+        WHERE user_id > 0
           AND name LIKE '#{USER_FIELD_PREFIX}%'
         ORDER BY user_id, name
       SQL

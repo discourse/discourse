@@ -41,7 +41,7 @@
       <form action='<%= path "/search" %>' id='discourse-search'>
         <label for="search-input"><%= t 'page_not_found.search_title' %></label>
         <div class="search-input__wrapper">
-        <input type="text" id="search-input" class="search-input" placeholder="Search topics by title or keywords…" name="q" value="<%= @slug %>">
+        <input type="text" id="search-input" class="search-input" placeholder="<%= I18n.t('page_not_found.placeholder') %>" name="q" value="<%= @slug %>">
         <div class="search-input__icon" aria-hidden="true"><%= SvgSprite.raw_svg('magnifying-glass') %></div>
         </div>
         <button class="btn btn-primary"><%= t 'page_not_found.search_button' %></button>

@@ -4196,6 +4196,9 @@ ru:
       title: "Последние публикации"
       empty: "Публикаций нет"
       aria_post_number: "%{title} — публикация №%{postNumber}"
+      bulk:
+        clear_all: "Сбросить все"
+        actions: "Массовые действия"
     post:
       confirm_delete: "Действительно удалить сообщение?"
       quote_reply: "Ответить с цитированием"

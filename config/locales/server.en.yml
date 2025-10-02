@@ -2000,7 +2000,7 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
-    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, and Twitter are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
+    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and Github are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "The unique client ID provided by your Google application, used for the authentication process."
@@ -2578,7 +2578,7 @@ en:
     watched_words_regular_expressions: "Allows the use of regular expressions for filtering words. If enabled, this feature groups sensitive words by their case-sensitivity. It then compiles all selected words into a single regular expression, adding word boundaries for regular watched words. Consequently, this regex-based filtering method adds an extra layer of control over content moderation by supporting more sophisticated word patterns. The setting also allows to easily substitute the original text with the replacement of choice."
 
     enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
-    old_post_notice_days: "The number of days after which a post notice is considered old. Old notices will be hidden."
+    old_post_notice_days: "The number of days after which the new-user and returning-user post notices will be hidden. The official post notice will always remain visible."
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
@@ -2869,7 +2869,7 @@ en:
   filter:
     description:
       status: "Filter topics by their status"
-      in: "Filter topics by in personal lists"
+      in: "Filter topics in personal lists"
       order: "Sort topics by a specific field"
       category: "Show topics in a specific category"
       category_any: "Show topics in any of the specified categories (comma-separated)"
@@ -4704,6 +4704,7 @@ en:
     search_title: "Try searching instead?"
     search_button: "Search"
     home: "Take me home"
+    placeholder: "Search topics by title or keywords…"
 
   offline:
     title: "Cannot load app"

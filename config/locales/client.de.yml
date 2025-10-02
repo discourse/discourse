@@ -563,6 +563,11 @@ de:
       resume: "Fortsetzen"
       remove: "Entfernen"
       remove_confirmation: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
+      bulk_delete: "Ausgewählte löschen"
+      bulk_delete_confirmation: "Entwürfe löschen"
+      bulk_delete_message:
+        one: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
+        other: "Bist du sicher, dass du diese %{count} Entwürfe löschen willst?"
       new_topic: "Neuer Entwurf für Thema"
       new_private_message: "Neuer Entwurf für persönliche Nachricht"
       edit_topic: "Themenentwurf bearbeiten"
@@ -3793,6 +3798,13 @@ de:
       title: "Letzte Beiträge"
       empty: "Es gibt keine Beiträge"
       aria_post_number: "%{title} – Beitrag #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} Beitrag ausgewählt"
+          other: "%{count} Beiträge ausgewählt"
+        select_all: "Alle auswählen"
+        clear_all: "Alle löschen"
+        actions: "Massenaktionen"
     post:
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
@@ -5931,6 +5943,7 @@ de:
               suspend: Benutzerkonten sperren.
               delete: Benutzerkonten löschen.
               list: Benutzerliste abrufen.
+              create: Erstelle einen neuen Benutzer.
             user_status:
               read: Benutzerstatus lesen.
               update: Benutzerstatus aktualisieren.
@@ -6427,6 +6440,7 @@ de:
             confirm: "Möchtest du wirklich das Backup löschen?"
           restore:
             is_disabled: "Die Wiederherstellung ist derzeit deaktiviert. Um sie zu aktivieren, besuche die <a href='%{url}'>Website-Einstellungen</a>."
+            is_disabled_title: "Die Wiederherstellung ist derzeit deaktiviert. Um sie zu aktivieren, suche nach ‚allow restore‘ in den Website-Einstellungen."
             label: "Wiederherstellen"
             title: "Das Backup wiederherstellen"
             confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
@@ -6482,6 +6496,7 @@ de:
           title: "E-Mail"
           subject: "Betreff"
           multiple_subjects: "Diese E-Mail-Vorlage enthält mehrere Betreffzeilen."
+          multiple_bodies: "Diese E-Mail-Vorlage hat mehrere Textkörper."
           body: "Nachrichtentext"
           revert: "Änderungen verwerfen"
           revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"

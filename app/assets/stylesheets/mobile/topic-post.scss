@@ -417,16 +417,6 @@ span.highlighted {
   }
 }
 
-.post-notice {
-  box-sizing: border-box;
-  margin-bottom: 1em;
-
-  &.old {
-    border-top: none;
-    padding-top: 0;
-  }
-}
-
 .posts-filtered-notice {
   padding-right: 8.5em;
   padding-bottom: max(1em, env(safe-area-inset-bottom));

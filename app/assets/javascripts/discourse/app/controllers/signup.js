@@ -10,7 +10,7 @@ import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
-import cookie, { removeCookie } from "discourse/lib/cookie";
+import { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
@@ -69,16 +69,6 @@ export default class SignupPageController extends Controller {
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
-
-  init() {
-    super.init(...arguments);
-
-    if (cookie("email")) {
-      this.accountEmail = cookie("email");
-    }
-
-    this.fetchConfirmationValue();
-  }
 
   @dependentKeyCompat
   get userFields() {

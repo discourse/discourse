@@ -3780,6 +3780,9 @@ nl:
       title: "Nieuwste berichten"
       empty: "Er zijn geen berichten"
       aria_post_number: "%{title} - bericht %{postNumber}"
+      bulk:
+        clear_all: "Alles wissen"
+        actions: "Bulkacties"
     post:
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"

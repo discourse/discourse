@@ -6,7 +6,7 @@ module DiscourseLazyVideos
 
     PROVIDER_NAMES = { "youtube" => "YouTube", "vimeo" => "Vimeo", "tiktok" => "TikTok" }.freeze
     SCRIPT_ESCAPE_REGEX = %r{</script}i.freeze
-    LAZY_VIDEO_CONTAINER = "lazy-video-container".freeze
+    LAZY_VIDEO_CONTAINER = "lazy-video-container"
 
     def initialize(controller, post)
       @controller = controller
