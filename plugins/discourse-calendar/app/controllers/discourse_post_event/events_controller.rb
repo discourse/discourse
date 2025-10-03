@@ -18,7 +18,7 @@ module DiscoursePostEvent
 
       respond_to do |format|
         format.ics do
-          filename = "events-#{@events.map(&:id).join("-")}"
+          filename = "events-#{Digest::SHA1.hexdigest(@events.map(&:id).sort.join("-"))}"
           response.headers[
             "Content-Disposition"
           ] = "attachment; filename=\"#{filename}.#{request.format.symbol}\""
