@@ -60,11 +60,7 @@ if !system "pnpm", "--dir=#{RAILS_ROOT}", "install"
   exit 1
 end
 
-if ENV["INSTALL_CHROME_HEADLESS"] == "1"
-  system "pnpm", "playwright", "install", "--only-shell", "chromium", exception: true
-else
-  system "pnpm", "playwright", "install", "--no-shell", "chromium", exception: true
-end
+system "pnpm", "playwright", "install", "--no-shell", "chromium", exception: true
 
 pnpm_env = {
   "TERM" => "dumb", # simple output from ember-cli, so we can parse/forward it more easily
