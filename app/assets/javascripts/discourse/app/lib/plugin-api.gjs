@@ -1,10 +1,3 @@
-// If you add any methods to the API ensure you bump up the version number
-// based on Semantic Versioning 2.0.0. Please update the changelog at
-// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
-// using the format described at https://keepachangelog.com/en/1.0.0/.
-
-export const PLUGIN_API_VERSION = "2.1.1";
-
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -247,8 +240,7 @@ function wrapWithErrorHandler(func, messageKey) {
 }
 
 class PluginApi {
-  constructor(version, container) {
-    this.version = version;
+  constructor(container) {
     this.container = container;
     this.h = h;
   }
@@ -3453,72 +3445,41 @@ class PluginApi {
   }
 }
 
-// from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
-function cmpVersions(a, b) {
-  let i, diff;
-  let regExStrip0 = /(\.0+)+$/;
-  let segmentsA = a.replace(regExStrip0, "").split(".");
-  let segmentsB = b.replace(regExStrip0, "").split(".");
-  let l = Math.min(segmentsA.length, segmentsB.length);
+function getPluginApi() {
+  const owner = getOwnerWithFallback(this);
+  let pluginApi = owner.lookup("plugin-api:main");
 
-  for (i = 0; i < l; i++) {
-    diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
-    if (diff) {
-      return diff;
-    }
-  }
-  return segmentsA.length - segmentsB.length;
-}
-
-function getPluginApi(version) {
-  version = version.toString();
-
-  if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
-    const owner = getOwnerWithFallback(this);
-    let pluginApi = owner.lookup("plugin-api:main");
-
-    if (!pluginApi) {
-      pluginApi = new PluginApi(version, owner);
-      owner.registry.register("plugin-api:main", pluginApi, {
-        instantiate: false,
-      });
-    } else {
-      // If we are re-using an instance, make sure the container is correct
-      pluginApi.container = owner;
-    }
-
-    // We are recycling the compatible object, but let's update to the higher version
-    if (pluginApi.version < version) {
-      pluginApi.version = version;
-    }
-
-    return pluginApi;
+  if (!pluginApi) {
+    pluginApi = new PluginApi(owner);
+    owner.registry.register("plugin-api:main", pluginApi, {
+      instantiate: false,
+    });
   } else {
-    // eslint-disable-next-line no-console
-    console.warn(consolePrefix(), `Plugin API v${version} is not supported`);
+    // If we are re-using an instance, make sure the container is correct
+    pluginApi.container = owner;
   }
+
+  return pluginApi;
 }
 
 /**
- * Executes the provided callback function with the `PluginApi` object if the specified API version is available.
+ * Executes the provided callback function with the `PluginApi` object.
  *
- * @param {number} version - The version of the API that the plugin is coded against.
- * @param {(api: PluginApi, opts: object) => void} apiCodeCallback - The callback function to execute if the API version is available
+ * @param {(api: PluginApi, opts: object) => void} apiCodeCallback - The callback function to execute
  * @param {object} [opts] - Optional additional options to pass to the callback function.
  * @returns {*} The result of the `callback` function, if executed
  */
 export function withPluginApi(...args) {
-  let version, apiCodeCallback, opts;
+  let apiCodeCallback, opts;
   if (typeof args[0] === "function") {
-    [version, apiCodeCallback, opts] = ["0", ...args];
+    // Modern path. First argument is the callback
+    [apiCodeCallback, opts] = args;
   } else {
-    [version, apiCodeCallback, opts] = args;
+    // Old path. First argument is the version string. Silently ignore.
+    [, apiCodeCallback, opts] = args;
   }
 
   opts = opts || {};
 
-  const api = getPluginApi(version);
-  if (api) {
-    return apiCodeCallback(api, opts);
-  }
+  return apiCodeCallback(getPluginApi(), opts);
 }
