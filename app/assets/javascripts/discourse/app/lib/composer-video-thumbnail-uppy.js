@@ -56,6 +56,13 @@ export default class ComposerVideoThumbnailUppy {
     const eventName = this.capabilities.isIOS
       ? "onloadedmetadata"
       : "oncanplaythrough";
+
+    setTimeout(() => {
+      // in some cases, no video events are hit (for example, when browser disables autoplay)
+      // we need to give up in those cases, otherwise the upload will hang
+      return callback();
+    }, 3000);
+
     video[eventName] = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");

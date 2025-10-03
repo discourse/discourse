@@ -376,7 +376,7 @@ export default class UppyComposerUpload {
           file,
           upload.url,
 
-          // This callback is fired even if the thumbnail callnot be generated,
+          // This callback is fired even if the thumbnail cannot be generated,
           // e.g. if video_thumbnails_enabled is false or if the file is not a video.
           () => {
             this.#removeInProgressUpload(file.id);
