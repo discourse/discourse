@@ -216,7 +216,7 @@ after_initialize do
   add_to_serializer(
     :user_option,
     :chat_sound,
-    include_condition: -> { !object.chat_sound.blank? },
+    include_condition: -> { object.chat_sound.present? },
   ) { object.chat_sound }
 
   add_to_serializer(:user_option, :only_chat_push_notifications) do
@@ -516,6 +516,6 @@ after_initialize do
   end
 end
 
-if Rails.env == "test"
+if Rails.env.test?
   Dir[Rails.root.join("plugins/chat/spec/support/**/*.rb")].each { |f| require f }
 end

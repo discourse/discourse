@@ -504,7 +504,7 @@ RSpec.describe Notification do
     end
 
     fab!(:unread_high_priority_2) do
-      create(high_priority: true, read: false, created_at: 1.minutes.ago)
+      create(high_priority: true, read: false, created_at: 1.minute.ago)
     end
     fab!(:read_high_priority_2) do
       create(high_priority: true, read: true, created_at: 2.minutes.ago)

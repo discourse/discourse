@@ -57,11 +57,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
       end
 
     slack_username =
-      if SiteSetting.chat_integration_slack_username.present?
-        SiteSetting.chat_integration_slack_username
-      else
-        SiteSetting.title || "Discourse"
-      end
+      (SiteSetting.chat_integration_slack_username.presence || SiteSetting.title || "Discourse")
 
     message = { channel: channel, username: slack_username, icon_url: icon_url, attachments: [] }
 
@@ -108,11 +104,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
       end
 
     slack_username =
-      if SiteSetting.chat_integration_slack_username.present?
-        SiteSetting.chat_integration_slack_username
-      else
-        SiteSetting.title || "Discourse"
-      end
+      (SiteSetting.chat_integration_slack_username.presence || SiteSetting.title || "Discourse")
 
     message = {
       channel: "##{channel_name}",

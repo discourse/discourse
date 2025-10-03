@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::RecalculateScores do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   before { RateLimiter.enable }
 

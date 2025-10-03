@@ -22,7 +22,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   attr_accessor :created_new
-  validates_presence_of :type, :status, :created_by_id
+  validates :type, :status, :created_by_id, presence: true
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: "User"
   belongs_to :target_created_by, class_name: "User"

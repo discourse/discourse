@@ -439,7 +439,7 @@ class CookedPostProcessor
   def process_hotlinked_image(img)
     onebox = img.ancestors(".onebox, .onebox-body").first
 
-    @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).map { |r| [r.url, r] }.to_h
+    @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).index_by { |r| r.url }
     normalized_src =
       PostHotlinkedMedia.normalize_src(img["src"] || img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR])
     info = @hotlinked_map[normalized_src]

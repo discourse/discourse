@@ -190,7 +190,7 @@ after_initialize do
   register_modifier(:topic_embed_import_create_args) do |args|
     category_id = args[:category]
     next args unless category_id
-    next args if args[:archetype] != Archetype.default && !args[:archetype].blank?
+    next args if args[:archetype] != Archetype.default && args[:archetype].present?
 
     category = Category.find_by(id: category_id)
 

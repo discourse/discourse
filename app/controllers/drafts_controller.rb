@@ -148,7 +148,7 @@ class DraftsController < ApplicationController
       # nothing really we can do here, if try clearing a draft that is not ours, just skip it.
       # rendering an error causes issues in the composer
     rescue StandardError => e
-      return render json: failed_json.merge(errors: e), status: 401
+      return render json: failed_json.merge(errors: e), status: :unauthorized
     end
 
     render json: success_json
@@ -191,7 +191,7 @@ class DraftsController < ApplicationController
                failed_json.merge(
                  errors: "Draft sequence conflict for keys: #{sequence_errors.join(", ")}",
                ),
-             status: 409
+             status: :conflict
       return
     end
 
@@ -205,7 +205,7 @@ class DraftsController < ApplicationController
         UserStat.update_draft_count(user.id)
       end
     rescue StandardError => e
-      return render json: failed_json.merge(errors: e.message), status: 500
+      return render json: failed_json.merge(errors: e.message), status: :internal_server_error
     end
 
     render json: success_json.merge(deleted_count: deleted_count)

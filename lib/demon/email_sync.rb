@@ -178,7 +178,7 @@ class Demon::EmailSync < ::Demon::Base
       RailsMultisite::ConnectionManagement.each_connection do |db|
         next if !SiteSetting.enable_imap
 
-        groups = Group.with_imap_configured.map { |group| [group.id, group] }.to_h
+        groups = Group.with_imap_configured.index_by { |group| group.id }
 
         @sync_lock.synchronize do
           @sync_data[db] ||= {}

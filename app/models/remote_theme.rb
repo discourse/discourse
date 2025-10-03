@@ -40,10 +40,10 @@ class RemoteTheme < ActiveRecord::Base
           )
         end
 
-  validates_format_of :minimum_discourse_version,
+  validates :minimum_discourse_version,
                       :maximum_discourse_version,
-                      with: Discourse::VERSION_REGEXP,
-                      allow_nil: true
+                      format: { with: Discourse::VERSION_REGEXP,
+                      allow_nil: true }
 
   def self.extract_theme_info(importer)
     if importer.file_size("about.json") > MAX_METADATA_FILE_SIZE

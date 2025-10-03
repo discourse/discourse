@@ -39,14 +39,14 @@ module DiscourseAi
             current_user,
             "semantic-search",
             MAX_HYDE_SEARCHES_PER_MINUTE,
-            1.minutes,
+            1.minute,
           ).performed!
         else
           RateLimiter.new(
             current_user,
             "semantic-search-non-hyde",
             MAX_SEARCHES_PER_MINUTE,
-            1.minutes,
+            1.minute,
           ).performed!
         end
 
@@ -88,7 +88,7 @@ module DiscourseAi
         semantic_search = DiscourseAi::Embeddings::SemanticSearch.new(guardian)
 
         if !semantic_search.cached_query?(query)
-          RateLimiter.new(current_user, "semantic-search", 60, 1.minutes).performed!
+          RateLimiter.new(current_user, "semantic-search", 60, 1.minute).performed!
         end
 
         hijack do

@@ -4,7 +4,7 @@ RSpec.describe SiteController do
   fab!(:group)
   fab!(:private_category) { Fabricate(:private_category, group: group) }
   fab!(:user)
-  fab!(:group_2) { Fabricate(:group) }
+  fab!(:group_2, :group)
   fab!(:user_with_group) { Fabricate(:user, group_ids: [group.id]) }
 
   let!(:anon_ad) do

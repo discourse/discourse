@@ -51,7 +51,7 @@ def setup_test_env(
   success &&= run_or_fail("bundle exec rake plugin:install_all_official") if install_all_official
   success &&= run_or_fail("bundle exec rake plugin:update_all") if update_all_plugins
 
-  if !plugins_to_remove.blank?
+  if plugins_to_remove.present?
     plugins_to_remove
       .split(",")
       .map(&:strip)

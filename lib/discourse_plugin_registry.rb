@@ -60,8 +60,8 @@ class DiscoursePluginRegistry
   define_register :desktop_stylesheets, Hash
   define_register :color_definition_stylesheets, Hash
   define_register :serialized_current_user_fields, Set
-  define_register :seed_data, HashWithIndifferentAccess
-  define_register :locales, HashWithIndifferentAccess
+  define_register :seed_data, ActiveSupport::HashWithIndifferentAccess
+  define_register :locales, ActiveSupport::HashWithIndifferentAccess
   define_register :svg_icons, Set
   define_register :custom_html, Hash
   define_register :html_builders, Hash

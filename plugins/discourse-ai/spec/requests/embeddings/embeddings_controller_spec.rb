@@ -2,7 +2,7 @@
 
 describe DiscourseAi::Embeddings::EmbeddingsController do
   context "when performing a topic search" do
-    fab!(:vector_def) { Fabricate(:open_ai_embedding_def) }
+    fab!(:vector_def, :open_ai_embedding_def)
 
     before do
       enable_current_plugin

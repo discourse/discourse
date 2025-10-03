@@ -6,8 +6,8 @@ describe "Patreon Oauth2" do
   let(:client_secret) { "adddcccdddd99922" }
   let(:temp_code) { "patreon_temp_code_544254" }
 
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
 
   def setup_patreon_emails_stub(email:, verified:)
     stub_request(:get, "https://api.patreon.com/oauth2/api/current_user").with(

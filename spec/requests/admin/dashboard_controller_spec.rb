@@ -17,14 +17,14 @@ RSpec.describe Admin::DashboardController do
         "emoji" => "🤾",
         "title" => "Cool Beans",
         "description" => "Now beans are included",
-        "created_at" => date1 || (Time.zone.now - 40.minutes),
+        "created_at" => date1 || (40.minutes.ago),
       },
       {
         "id" => "2",
         "emoji" => "🙈",
         "title" => "Fancy Legumes",
         "description" => "Legumes too!",
-        "created_at" => date2 || (Time.zone.now - 20.minutes),
+        "created_at" => date2 || (20.minutes.ago),
       },
     ]
 

@@ -169,7 +169,7 @@ class InvitesController < ApplicationController
           show_warnings: true,
         )
       else
-        render json: failed_json, status: 422
+        render json: failed_json, status: :unprocessable_entity
       end
     rescue Invite::UserExists => e
       render_json_error(e.message)
@@ -378,11 +378,11 @@ class InvitesController < ApplicationController
              ActiveRecord::RecordNotSaved,
              ActiveRecord::LockWaitTimeout,
              Invite::UserExists => e
-        return render json: failed_json.merge(message: e.message), status: 412
+        return render json: failed_json.merge(message: e.message), status: :precondition_failed
       end
 
       if user.blank?
-        return render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: 404
+        return render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: :not_found
       end
 
       log_on_user(user) if !redeeming_user && user.active? && user.guardian.can_access_forum?
@@ -416,7 +416,7 @@ class InvitesController < ApplicationController
 
       render json: success_json.merge(response)
     else
-      render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: 404
+      render json: failed_json.merge(message: I18n.t("invite.not_found_json")), status: :not_found
     end
   end
 
@@ -495,7 +495,7 @@ class InvitesController < ApplicationController
             DiscoursePluginRegistry.apply_modifier(:invite_bulk_csv_custom_error, nil, invites)
 
           if custom_error.present?
-            return render json: failed_json.merge(errors: [custom_error]), status: 422
+            return render json: failed_json.merge(errors: [custom_error]), status: :unprocessable_entity
           end
 
           Jobs.enqueue(:bulk_invite, invites: invites, current_user_id: current_user.id)
@@ -510,12 +510,12 @@ class InvitesController < ApplicationController
                          ),
                        ],
                      ),
-                   status: 422
+                   status: :unprocessable_entity
           else
             render json: success_json
           end
         else
-          render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: 422
+          render json: failed_json.merge(errors: [I18n.t("bulk_invite.error")]), status: :unprocessable_entity
         end
       end
     end

@@ -13,7 +13,7 @@ describe Jobs::Chat::AutoJoinUsers do
   end
   fab!(:staged_user) { Fabricate(:user, staged: true) }
   fab!(:suspended_user) { Fabricate(:user, suspended_till: 1.day.from_now) }
-  fab!(:silenced_user) { Fabricate(:user, silenced_till: 2.day.from_now) }
+  fab!(:silenced_user) { Fabricate(:user, silenced_till: 2.days.from_now) }
   fab!(:inactive_user) { Fabricate(:user, active: false) }
   fab!(:anonymous_user) do
     # When using the `anonymous` fabricator, the `::Chat::AutoJoinChannels` is called in the

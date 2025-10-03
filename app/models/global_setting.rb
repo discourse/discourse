@@ -45,7 +45,7 @@ class GlobalSetting
             end
           end
         end
-        if !secret_key_base.blank? && token != secret_key_base
+        if secret_key_base.present? && token != secret_key_base
           STDERR.puts "WARNING: DISCOURSE_SECRET_KEY_BASE is invalid, it was re-generated"
         end
         token
@@ -219,7 +219,7 @@ class GlobalSetting
         c[:username] = redis_username if redis_username.present?
         c[:password] = redis_password if redis_password.present?
         c[:db] = redis_db if redis_db != 0
-        c[:db] = 1 if Rails.env == "test"
+        c[:db] = 1 if Rails.env.test?
         c[:id] = nil if redis_skip_client_commands
         c[:ssl] = true if redis_use_ssl
 
@@ -246,7 +246,7 @@ class GlobalSetting
         c[:username] = message_bus_redis_username if message_bus_redis_username.present?
         c[:password] = message_bus_redis_password if message_bus_redis_password.present?
         c[:db] = message_bus_redis_db if message_bus_redis_db != 0
-        c[:db] = 1 if Rails.env == "test"
+        c[:db] = 1 if Rails.env.test?
         c[:id] = nil if message_bus_redis_skip_client_commands
         c[:ssl] = true if redis_use_ssl
 
@@ -297,7 +297,7 @@ class GlobalSetting
         if current.present?
           current
         else
-          default.present? ? default : nil
+          (default.presence)
         end,
       )
     end
@@ -373,7 +373,7 @@ class GlobalSetting
   end
 
   def self.configure!
-    if Rails.env == "test"
+    if Rails.env.test?
       @provider = BlankProvider.new
     else
       @provider =

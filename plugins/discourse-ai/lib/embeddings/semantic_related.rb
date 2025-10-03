@@ -50,11 +50,11 @@ module DiscourseAi
 
       def results_ttl(topic)
         case topic.created_at
-        when 6.hour.ago..Time.now
+        when 6.hours.ago..Time.now
           15.minutes
-        when 3.day.ago..6.hour.ago
+        when 3.days.ago..6.hours.ago
           1.hour
-        when 15.days.ago..3.day.ago
+        when 15.days.ago..3.days.ago
           12.hours
         else
           1.week

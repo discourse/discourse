@@ -13,7 +13,7 @@ class ThemeModifierSet < ActiveRecord::Base
 
   def type_validator
     ThemeModifierSet.modifiers.each do |k, config|
-      value = read_attribute(k)
+      value = self[k]
       next if value.nil?
 
       case config[:type]
@@ -92,8 +92,8 @@ class ThemeModifierSet < ActiveRecord::Base
         value =
           target_setting_name.present? ? target_setting_value : theme.settings[setting_name]&.value
         value = coerce_setting_value(modifier_name, value)
-        if read_attribute(modifier_name) != value
-          write_attribute(modifier_name, value)
+        if self[modifier_name] != value
+          self[modifier_name] = value
           changed = true
         end
       end

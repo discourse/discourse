@@ -89,7 +89,7 @@ class ImportScripts::JForum < ImportScripts::Base
   def user_fields
     @user_fields ||=
       begin
-        Hash[UserField.all.map { |field| [field.name, field] }]
+        UserField.all.index_by { |field| field.name }
       end
   end
 

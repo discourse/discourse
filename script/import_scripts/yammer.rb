@@ -228,7 +228,7 @@ class ImportScripts::Yammer < ImportScripts::Base
   def import_categories
     puts "", "creating categories"
     parent_category = nil
-    if !PARENT_CATEGORY_NAME.blank?
+    if PARENT_CATEGORY_NAME.present?
       parent_category = Category.find_by(name: PARENT_CATEGORY_NAME)
       parent_category =
         Category.create(
@@ -311,11 +311,7 @@ class ImportScripts::Yammer < ImportScripts::Base
           id: import_topic_id(row["id"]),
           title:
             (
-              if row["title"].present?
-                row["title"]
-              else
-                row["raw"].split(/\W/)[0..(NUM_WORDS_IN_TITLE - 1)].join(" ")
-              end
+              row["title"].presence || row["raw"].split(/\W/)[0..(NUM_WORDS_IN_TITLE - 1)].join(" ")
             ),
           raw: normalize_raw(row["raw"]),
           category:
@@ -370,11 +366,7 @@ class ImportScripts::Yammer < ImportScripts::Base
           id: import_topic_id(row["id"]),
           title:
             (
-              if row["title"].present?
-                row["title"]
-              else
-                row["raw"].split(/\W/)[0..(NUM_WORDS_IN_TITLE - 1)].join(" ")
-              end
+              row["title"].presence || row["raw"].split(/\W/)[0..(NUM_WORDS_IN_TITLE - 1)].join(" ")
             ),
           raw: normalize_raw(row["raw"]),
           category:

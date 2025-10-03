@@ -9,7 +9,7 @@ class InlineOneboxController < ApplicationController
     urls = params[:urls] || []
 
     if urls.size > MAX_URLS_LIMIT
-      render json: failed_json.merge(errors: [I18n.t("inline_oneboxer.too_many_urls")]), status: 413
+      render json: failed_json.merge(errors: [I18n.t("inline_oneboxer.too_many_urls")]), status: :payload_too_large
       return
     end
 
@@ -18,7 +18,7 @@ class InlineOneboxController < ApplicationController
     if InlineOneboxer.is_previewing?(current_user_id)
       response.headers["Retry-After"] = "60"
       render json: failed_json.merge(errors: [I18n.t("inline_oneboxer.concurrency_not_allowed")]),
-             status: 429
+             status: :too_many_requests
       return
     end
 
