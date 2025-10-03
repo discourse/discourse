@@ -219,6 +219,16 @@ RSpec.describe ColorScheme do
       expect(original_scheme.base_scheme.remote_copy).to eq(true)
       expect(original_scheme.base_scheme.via_wizard).to eq(false)
     end
+
+    it "doesn't create multiple base schemes if called multiple times" do
+      expect do
+        original_scheme.diverge_from_remote
+        first_base_id = original_scheme.reload.base_scheme.id
+
+        original_scheme.diverge_from_remote
+        expect(original_scheme.reload.base_scheme.id).to eq(first_base_id)
+      end.to change { ColorScheme.unscoped.count }.by(1)
+    end
   end
 
   describe "#destroy_remote_original" do
@@ -250,7 +260,32 @@ RSpec.describe ColorScheme do
           user_selectable: false,
           theme_id: Fabricate(:theme).id,
         )
+
       remote_copy.user_selectable = true
+      expect(remote_copy.valid?).to eq(false)
+      expect(remote_copy.errors.full_messages).to include(
+        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
+      )
+
+      remote_copy.reload
+
+      remote_copy.base_scheme_id = 1
+      expect(remote_copy.valid?).to eq(false)
+      expect(remote_copy.errors.full_messages).to include(
+        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
+      )
+
+      remote_copy.reload
+
+      remote_copy.remote_copy = false
+      expect(remote_copy.valid?).to eq(false)
+      expect(remote_copy.errors.full_messages).to include(
+        I18n.t("color_schemes.errors.cannot_edit_remote_copies"),
+      )
+
+      remote_copy.reload
+
+      remote_copy.theme_id = 1
       expect(remote_copy.valid?).to eq(false)
       expect(remote_copy.errors.full_messages).to include(
         I18n.t("color_schemes.errors.cannot_edit_remote_copies"),

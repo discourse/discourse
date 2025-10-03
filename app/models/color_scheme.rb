@@ -586,9 +586,9 @@ class ColorScheme < ActiveRecord::Base
     new_scheme.skip_publish = true
     new_scheme.remote_copy = true
 
-    DistributedMutex.synchronize("color_scheme_fork_#{self.id}") do
+    DistributedMutex.synchronize("color_scheme_diverge_from_remote_#{self.id}") do
       self.reload
-      if self.base_scheme_id.blank?
+      if self.base_scheme.blank?
         self.transaction do
           new_scheme.save!
           self.base_scheme_id = new_scheme.id
@@ -613,10 +613,13 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def no_edits_for_remote_copies
-    if remote_copy &&
+    if (will_save_change_to_remote_copy? && remote_copy_was) ||
          (
-           will_save_change_to_base_scheme_id? || will_save_change_to_user_selectable? ||
-             will_save_change_to_remote_copy? || will_save_change_to_theme_id?
+           remote_copy &&
+             (
+               will_save_change_to_base_scheme_id? || will_save_change_to_user_selectable? ||
+                 will_save_change_to_theme_id?
+             )
          )
       errors.add(:base, I18n.t("color_schemes.errors.cannot_edit_remote_copies"))
     end
