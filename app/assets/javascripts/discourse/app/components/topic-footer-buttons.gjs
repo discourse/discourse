@@ -136,7 +136,7 @@ export default class TopicFooterButtons extends Component {
           @buttonClasses="topic-footer-button"
         />
 
-        {{#each this.inlineActionables as |actionable|}}
+        {{#each this.inlineActionables key="id" as |actionable|}}
           {{#if (eq actionable.type "inline-button")}}
             {{#if (eq actionable.id "bookmark")}}
               <BookmarkMenu
@@ -206,7 +206,7 @@ export default class TopicFooterButtons extends Component {
               </:trigger>
               <:content>
                 <DropdownMenu as |dropdown|>
-                  {{#each this.dropdownButtons as |button|}}
+                  {{#each this.dropdownButtons key="id" as |button|}}
                     <dropdown.item>
                       <DButton
                         @action={{button.action}}
