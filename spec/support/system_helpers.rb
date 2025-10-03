@@ -45,7 +45,7 @@ module SystemHelpers
       end
 
     result = ask("\n\e[33m#{msg}\e[0m")
-    binding.pry if result == "d" # rubocop:disable Lint/Debugger
+    debugger if result == "d" # rubocop:disable Lint/Debugger
     puts "\e[33mResuming...\e[0m"
     Process.kill("TERM", socat_pid) if socat_pid
     self
