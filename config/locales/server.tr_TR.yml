@@ -1868,7 +1868,6 @@ tr_TR:
     enable_local_logins_via_email: "Kullanıcıların kendilerine e-posta yoluyla gönderilecek tek tıklamayla giriş bağlantısını talep etmelerine izin verin."
     allow_new_registrations: "Yeni kullanıcı kayıtlarına izin verin. Herhangi birinin yeni bir hesap oluşturmasını önlemek için bunun işaretini kaldırın."
     enable_signup_cta: "Geri dönen anonim kullanıcılara bir hesap için kaydolmalarını isteyen bir bildirim gösterin."
-    enable_discourse_id: "Kullanıcıların tek bir hesap kullanarak birden fazla Discourse sitesine giriş yapmasına olanak tanıyan tek oturum açma hizmeti olan Discourse ID aracılığıyla kimlik doğrulamasını etkinleştirin. Google, Facebook ve Twitter gibi yaygın sosyal giriş yapma sağlayıcıları ek yapılandırmaya gerek kalmadan desteklenir. Daha fazla bilgi için <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> adresini ziyaret edin."
     enable_google_oauth2_logins: "Google Oauth2 kimlik doğrulamasını etkinleştirin. Bu, Google'ın şu anda desteklediği kimlik doğrulama yöntemidir. Anahtar ve gizli dizi gerektirir. Bkz. <a href='https://meta.discourse.org/t/15858' target='_blank'>Discourse için Google girişini yapılandırma</a>."
     google_oauth2_client_id: "Google uygulamanız tarafından sağlanan ve kimlik doğrulama işlemi için kullanılan benzersiz istemci kimliği."
     google_oauth2_client_secret: "Google uygulamanızın istemci gizli dizisi."

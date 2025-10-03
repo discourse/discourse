@@ -4454,6 +4454,8 @@ sk:
       style: "Štýly"
       background_color: "Farba"
       foreground_color: "Farba textu"
+      color_validations:
+        cant_be_empty: "nesmie byť prázdne"
       styles:
         type: "Štýl"
         icon: "Ikona"

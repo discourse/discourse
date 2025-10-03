@@ -4127,6 +4127,8 @@ it:
       style: "Stili"
       background_color: "Colore"
       foreground_color: "Colore del testo"
+      color_validations:
+        cant_be_empty: "non può essere vuoto"
       styles:
         type: "Stile"
         icon: "Icona"

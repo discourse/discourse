@@ -3729,6 +3729,8 @@ zh_TW:
       background_image: "分類背景圖片"
       background_image_dark: "深色類別背景圖片"
       background_color: "顏色"
+      color_validations:
+        cant_be_empty: "不能空白"
       styles:
         icon: "圖示"
         emoji: "Emoji"

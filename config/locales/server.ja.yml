@@ -1792,7 +1792,6 @@ ja:
     enable_local_logins_via_email: "メールで送信されるワンクリックログインリンクをユーザーがリクエストすることを許可する。"
     allow_new_registrations: "新しいユーザーの登録を許可。新規アカウントを作成できないようにするには、これをオフにします。"
     enable_signup_cta: "匿名のリピートユーザーにアカウント登録を促す通知を表示する。"
-    enable_discourse_id: "Discourse ID による認証を有効にします。これは、ユーザーが 1 つのアカウントで複数の Discourse サイトにログインできるようにするシングルサインオンサービスです。Google、Facebook、X などの一般的なソーシャルログインプロバイダーは、追加構成なしでサポートされています。詳細は、<a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> をご覧ください。"
     enable_google_oauth2_logins: "Google OAuth2 認証を有効にする。これは、Google が現在サポートしている認証方法です。キーとシークレットが必要です。「<a href='https://meta.discourse.org/t/15858' target='_blank'>Discourse 用に Google ログインを構成する</a>」をご覧ください。"
     google_oauth2_client_id: "認証プロセスに使用される Google アプリケーション提供の一意のクライアント ID。"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアントシークレット"

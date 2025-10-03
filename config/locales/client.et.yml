@@ -2208,6 +2208,8 @@ et:
       logo: "Kategooria logo"
       background_image: "Kategooria taustapilt"
       background_color: "Värv"
+      color_validations:
+        cant_be_empty: "ei tohi olla tühi"
       styles:
         icon: "Ikoon"
         emoji: "Emotikon"

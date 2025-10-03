@@ -3476,6 +3476,8 @@ te:
       background_image: "వర్గం నేపథ్య చిత్రం"
       background_image_dark: "డార్క్ వర్గం నేపథ్య చిత్రం"
       background_color: "రంగు"
+      color_validations:
+        cant_be_empty: "ఖాళీ ఉండకూడదు"
       styles:
         icon: "చిహ్నం"
         emoji: "ఇమోజి"

@@ -3524,6 +3524,8 @@ sq:
       logo: "Logo e kategorisë"
       background_image: "Imazhi i sfondit për kategorinë"
       background_color: "Ngjyra"
+      color_validations:
+        cant_be_empty: "nuk mund të lihet bosh"
       styles:
         icon: "Ikonë"
         emoji: "Emoji"

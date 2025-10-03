@@ -3143,6 +3143,8 @@ ro:
       style: "Stiluri"
       background_color: "Culoare"
       foreground_color: "Culoare text"
+      color_validations:
+        cant_be_empty: "nu poate fi gol"
       styles:
         type: "Stil"
         icon: "Icon"

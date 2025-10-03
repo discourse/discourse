@@ -1868,7 +1868,6 @@ fi:
     enable_local_logins_via_email: "Salli käyttäjän pyytää klikattava kirjautumislinkki, joka lähetetään hänen sähköpostiinsa."
     allow_new_registrations: "Salli uusien käyttäjien rekisteröityminen. Poista tämä asetus käytöstä estääksesi uusien tilien luomisen."
     enable_signup_cta: "Näytä palaaville kirjautumattomille käyttäjille ilmoitus, jossa heitä kehotetaan luomaan tili."
-    enable_discourse_id: "Ota käyttöön todennus Discourse ID:n kautta. Discourse ID on kertakirjautumispalvelu, jonka avulla käyttäjät voivat kirjautua useille Discourse-sivustoille yhdellä tilillä. Yleisiä yhteisökirjautumispalveluntarjoajia, kuten Googlea, Facebookia ja Twitteriä, tuetaan ilman lisämäärityksiä. Lisätietoja on osoitteessa <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
     enable_google_oauth2_logins: "Ota käyttöön Google Oauth2 -todennus. Tämä on todennustapa, jota Google tukee tällä hetkellä. Avain ja salainen koodi vaaditaan. Katso <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "Google-sovelluksesi antama yksilöllinen asiakastunnus, jota käytetään todennusprosessissa."
     google_oauth2_client_secret: "Google-sovelluksesi asiakkaan salatunnus."

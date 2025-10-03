@@ -3881,6 +3881,8 @@ fa_IR:
       logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
       background_color: "رنگ"
+      color_validations:
+        cant_be_empty: "نمی‌تواند خالی باشد"
       styles:
         icon: "آیکن"
         emoji: "شکلک"

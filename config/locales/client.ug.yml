@@ -4141,6 +4141,8 @@ ug:
       style: "ئۇسلۇب"
       background_color: "رەڭ"
       foreground_color: "تېكىست رەڭگى"
+      color_validations:
+        cant_be_empty: "قۇرۇق قالمايدۇ"
       styles:
         type: "ئۇسلۇب"
         icon: "سىنبەلگە"
