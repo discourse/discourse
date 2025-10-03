@@ -43,6 +43,16 @@ export default class LikedUsersList extends Component {
     this.slicedUsersVisible = !this.slicedUsersVisible;
   }
 
+  get icon() {
+    if (!this.args.post.showLike) {
+      return this.args.post.yours ? "d-liked" : "d-unliked";
+    }
+
+    if (this.args.post.yours) {
+      return "d-liked";
+    }
+  }
+
   get truncatedUsers() {
     return this.likedUsers?.slice(0, DISPLAY_MAX_USERS);
   }
@@ -75,6 +85,7 @@ export default class LikedUsersList extends Component {
         "highlight-action"
         (if @post.yours "my-likes" "regular-likes")
       }}
+      @icon={{if @post.yours "d-liked" ""}}
       @placement="top"
       label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
       id="post-like-users_{{@post.id}}"

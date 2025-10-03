@@ -370,7 +370,8 @@ nav.post-controls {
           border-radius: var(--d-post-control-border-radius);
         }
 
-        &.like {
+        &.like,
+        &.regular-likes {
           // Like button with 0 likes
           &:hover {
             .d-icon {
@@ -398,6 +399,10 @@ nav.post-controls {
           // Like count button
           &:not(.my-likes) {
             padding-right: 0;
+          }
+
+          &.my-likes {
+            flex-direction: row-reverse;
           }
 
           + .toggle-like {
