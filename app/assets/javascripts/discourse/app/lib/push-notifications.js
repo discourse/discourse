@@ -9,16 +9,6 @@ export function userSubscriptionKey(user) {
   return `subscribed-${user.get("id")}`;
 }
 
-function sendSubscriptionToServer(subscription, sendConfirmation) {
-  ajax("/push_notifications/subscribe", {
-    type: "POST",
-    data: {
-      subscription: subscription.toJSON(),
-      send_confirmation: sendConfirmation,
-    },
-  });
-}
-
 export const PushNotificationSupport = {
   Supported: "Supported",
   PWARequired: "PWARequired", // (iOS only) Push notifications are supported when the app is installed as a PWA.
@@ -26,6 +16,10 @@ export const PushNotificationSupport = {
 };
 
 export function isPushNotificationsSupported() {
+  return pushNotificationSupport() === PushNotificationSupport.Supported;
+}
+
+export function pushNotificationSupport() {
   let caps = helperContext().capabilities;
 
   if (caps.isAppWebview) {
@@ -69,14 +63,14 @@ export function isPushNotificationsEnabled(user) {
   return (
     user &&
     !user.isInDoNotDisturb() &&
-    isPushNotificationsSupported() === PushNotificationSupport.Supported &&
+    isPushNotificationsSupported() &&
     keyValueStore.getItem(userSubscriptionKey(user))
   );
 }
 
 // Register an existing subscription with the backend.
 export async function register(user, router, appEvents) {
-  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
+  if (!isPushNotificationsSupported()) {
     return;
   }
   if (Notification.permission === "denied" || !user) {
@@ -86,35 +80,62 @@ export async function register(user, router, appEvents) {
   const registration = getServiceWorkerRegistration();
   const subscription = await registration.pushManager.getSubscription();
 
-  if (subscription) {
-    sendSubscriptionToServer(subscription, false);
-    // Resync localStorage
-    keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
-    navigator.serviceWorker.addEventListener("message", (event) => {
-      if ("url" in event.data) {
-        router.transitionTo(event.data.url);
-        appEvents.trigger("push-notification-opened", { url: event.data.url });
-      }
-    });
-  }
-}
-
-export async function subscribe(callback, applicationServerKey) {
-  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
+  if (!subscription) {
+    // No active subscription, so nothing to do.
     return;
   }
 
-  const registration = getServiceWorkerRegistration();
-  const subscription = await registration.pushManager.subscribe({
+  ajax("/push_notifications/subscribe", {
+    type: "POST",
+    data: {
+      subscription: subscription.toJSON(),
+      send_confirmation: false, // Do not send a confirmation notification.
+    },
+  }).catch((e) => {
+    // eslint-disable-next-line no-console
+    console.error(e);
+  });
+
+  // Resync localStorage
+  keyValueStore.setItem(userSubscriptionKey(user), "subscribed");
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    if ("url" in event.data) {
+      router.transitionTo(event.data.url);
+      appEvents.trigger("push-notification-opened", { url: event.data.url });
+    }
+  });
+}
+
+export async function subscribe(callback, applicationServerKey) {
+  if (!isPushNotificationsSupported()) {
+    return;
+  }
+
+  // Wait for the service worker to be ready.
+  const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+  const subscription = await serviceWorkerRegistration.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: new Uint8Array(applicationServerKey.split("|")),
   });
 
   if (subscription) {
-    sendSubscriptionToServer(subscription, true);
-    if (callback) {
-      callback();
-    }
+    ajax("/push_notifications/subscribe", {
+      type: "POST",
+      data: {
+        subscription: subscription.toJSON(),
+        send_confirmation: true, // Have the backend send a confirmation notification.
+      },
+    })
+      .then(() => {
+        if (callback) {
+          callback();
+        }
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
+
     return true;
   }
 
@@ -122,31 +143,37 @@ export async function subscribe(callback, applicationServerKey) {
 }
 
 export async function unsubscribe(user, callback) {
-  if (isPushNotificationsSupported() !== PushNotificationSupport.Supported) {
+  if (!isPushNotificationsSupported()) {
     return;
   }
 
   const registration = getServiceWorkerRegistration();
   const subscription = await registration.pushManager.getSubscription();
 
-  if (subscription) {
-    keyValueStore.setItem(userSubscriptionKey(user), "");
-
-    subscription.unsubscribe().then((successful) => {
-      if (successful) {
-        ajax("/push_notifications/unsubscribe", {
-          type: "POST",
-          data: { subscription: subscription.toJSON() },
-        });
-      }
-    });
-
-    if (callback) {
-      callback();
-    }
-
-    return true;
-  } else {
+  if (!subscription) {
     return false;
   }
+
+  keyValueStore.setItem(userSubscriptionKey(user), "");
+
+  if (await subscription.unsubscribe()) {
+    ajax("/push_notifications/unsubscribe", {
+      type: "POST",
+      data: { subscription: subscription.toJSON() },
+    })
+      .then(() => {
+        if (callback) {
+          callback();
+        }
+      })
+      .catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
+  } else {
+    // eslint-disable-next-line no-console
+    console.error("PushSubscription.unsubscribe() failed");
+  }
+
+  return true;
 }

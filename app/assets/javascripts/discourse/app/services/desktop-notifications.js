@@ -11,6 +11,7 @@ import {
   isPushNotificationsSupported,
   keyValueStore as pushNotificationKeyValueStore,
   PushNotificationSupport,
+  pushNotificationSupport,
   subscribe as subscribePushNotification,
   unsubscribe as unsubscribePushNotification,
   userSubscriptionKey as pushNotificationUserSubscriptionKey,
@@ -59,15 +60,11 @@ export default class DesktopNotificationsService extends Service {
   }
 
   get isPushSupported() {
-    return (
-      isPushNotificationsSupported() !== PushNotificationSupport.NotSupported
-    );
+    return isPushNotificationsSupported();
   }
 
   get isPushPwaNeeded() {
-    return (
-      isPushNotificationsSupported() === PushNotificationSupport.PWARequired
-    );
+    return pushNotificationSupport() === PushNotificationSupport.PWARequired;
   }
 
   get notificationsPermission() {
@@ -167,7 +164,7 @@ export default class DesktopNotificationsService extends Service {
       }
 
       if (this.isPushNotificationsPreferred) {
-        switch (isPushNotificationsSupported()) {
+        switch (pushNotificationSupport()) {
           case PushNotificationSupport.Supported:
             // Subscribe to push notifications from the server. If successful, a notification will be sent.
             await subscribePushNotification(() => {
