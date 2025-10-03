@@ -657,6 +657,13 @@ pl_PL:
       resume: "Kontynuuj"
       remove: "Usuń"
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
+      bulk_delete: "Usuń zaznaczone"
+      bulk_delete_confirmation: "Usuń wersje robocze"
+      bulk_delete_message:
+        one: "Czy na pewno chcesz usunąć ten szkic?"
+        few: "Czy na pewno chcesz usunąć te %{count} szkice?"
+        many: "Czy na pewno chcesz usunąć tych %{count} szkiców?"
+        other: "Czy na pewno chcesz usunąć tych %{count} szkiców?"
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
       edit_topic: "Edytuj szkic tematu"
@@ -1885,6 +1892,7 @@ pl_PL:
         verify_identity: "Aby kontynuować, zweryfikuj swoją tożsamość."
         title: "Reset hasła"
         remove: "Usuń hasło"
+        remove_disabled: "Aby usunąć hasło, konto musi się logować co najmniej za pomocą innej metody (np. klucza dostępu lub powiązanego konta zewnętrznego)."
         remove_detail: "Twoje konto nie będzie już dostępne za pomocą hasła, chyba że je zresetujesz."
       second_factor_backup:
         title: "Kody zapasowe weryfikacji dwuskładnikowej"
@@ -2755,6 +2763,7 @@ pl_PL:
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
       omniauth_disallow_totp: "Twoje konto ma włączone uwierzytelnianie dwuskładnikowe. Zaloguj się za pomocą swojego hasła."
+      works_with: "Działa z"
       activate_account: "Aktywuj konto"
       resend_title: "Wyślij ponownie e-mail aktywacyjny"
       change_email: "Zmień adres e-mail"
@@ -4194,6 +4203,15 @@ pl_PL:
       title: "Aktualne wpisy"
       empty: "Brak wpisów"
       aria_post_number: "%{title} - wpis #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} zaznaczony post"
+          few: "%{count} zaznaczone posty"
+          many: "%{count} zaznaczonych postów"
+          other: "%{count} zaznaczonych postów"
+        select_all: "Zaznacz wszystkie"
+        clear_all: "Wyczyść wszystkie"
+        actions: "Działania zbiorcze"
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
@@ -4584,6 +4602,10 @@ pl_PL:
       style: "Style"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
+      color_validations:
+        cant_be_empty: "nie może być puste"
+        incorrect_length: "musi być zgodny z formatem #RRGGBB lub #RGB"
+        non_hexdecimal: "może zawierać wyłącznie znaki szesnastkowe (0-9, AF)"
       styles:
         type: "Styl"
         icon: "Ikona"
@@ -5331,6 +5353,7 @@ pl_PL:
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
+    theme_preview_failed: "Nie można wyświetlić podglądu motywu, ponieważ motyw nie istnieje lub nie masz uprawnień dostępu do niego."
     image_removed: "(obraz usunięty)"
     pause_notifications:
       title: "Wstrzymaj powiadomienia na…"

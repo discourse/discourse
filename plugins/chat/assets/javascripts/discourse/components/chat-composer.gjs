@@ -44,7 +44,7 @@ import DAutocompleteModifier, {
   SKIP,
 } from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import Button from "discourse/plugins/chat/discourse/components/chat/composer/button";
+import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";
 import ChatComposerMessageDetails from "discourse/plugins/chat/discourse/components/chat-composer-message-details";
 import ChatComposerUploads from "discourse/plugins/chat/discourse/components/chat-composer-uploads";
@@ -758,7 +758,7 @@ export default class ChatComposer extends Component {
 
             {{#if this.inlineButtons.length}}
               {{#each this.inlineButtons as |button|}}
-                <Button
+                <DButton
                   @icon={{button.icon}}
                   class="-{{button.id}}"
                   disabled={{or this.disabled button.disabled}}
@@ -780,7 +780,7 @@ export default class ChatComposer extends Component {
             />
 
             {{#if this.site.desktopView}}
-              <Button
+              <DButton
                 @icon="paper-plane"
                 class="-send"
                 title={{i18n "chat.composer.send"}}
@@ -794,7 +794,7 @@ export default class ChatComposer extends Component {
             {{/if}}
           </div>
           {{#if this.site.mobileView}}
-            <Button
+            <DButton
               @icon="paper-plane"
               class="-send"
               title={{i18n "chat.composer.send"}}

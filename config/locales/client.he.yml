@@ -1884,6 +1884,7 @@ he:
         verify_identity: "כדי להמשיך, יש לאמת את זהותך."
         title: "אתחול סיסמה"
         remove: "הסרת סיסמה"
+        remove_disabled: "החשבון זקוק לפחות לשיטת התחברות אחת נוספת (למשל, מפתח סיסמה/Passkey או חשבון חיצוני מקושר) לפני הסרת הסיסמה."
         remove_detail: "החשבון שלך לא יהיה נגיש יותר עם סיסמה אל אם כן תאופס."
       second_factor_backup:
         title: "קודים כגיבוי לאימות דו־שלבי"
@@ -2755,6 +2756,7 @@ he:
       admin_not_allowed_from_ip_address: "הכניסה לניהול מכתובת IP זו אסורה."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
       omniauth_disallow_totp: "בחשבון שלך מופעל אימות דו־שלבי. נא להיכנס עם הססמה שלך."
+      works_with: "עובד עם"
       activate_account: "הפעלת חשבון"
       resend_title: "שליחה מחדש של הודעת הפעלה בדוא״ל"
       change_email: "שינוי כתובת דוא״ל"
@@ -4189,6 +4191,9 @@ he:
       title: "פוסטים אחרונים"
       empty: "אין פוסטים"
       aria_post_number: "%{title} - פוסט מס׳ %{postNumber}"
+      bulk:
+        clear_all: "לפנות הכול"
+        actions: "פעולות במרוכז"
     post:
       confirm_delete: "למחוק את הפוסט הזה?"
       quote_reply: "ציטוט"
@@ -4578,6 +4583,10 @@ he:
       style: "סגנונות"
       background_color: "צבע"
       foreground_color: "צבע הטקסט"
+      color_validations:
+        cant_be_empty: "לא יכול להיות ריק"
+        incorrect_length: "חייב להתאים לתבנית ‎#RRGGBB‎ או ‎#RGB‎"
+        non_hexdecimal: "יכול להכיל תווים הקסדצימליים בלבד (0-9, A-F)"
       styles:
         type: "סגנון"
         icon: "סמל"
@@ -5327,6 +5336,7 @@ he:
     safe_mode:
       enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
     theme_preview_notice: "זאת תצוגה מקדימה של ערכת עיצוב, יש לסגור את לשונית או חלון הדפדפן כדי לחזור להגדרות האתר הרגילות."
+    theme_preview_failed: "הצגה מקדימה של ערכת העיצוב נכשלה כי אינה קיימת או שאין לך הרשאה לגשת אליה."
     image_removed: "(התמונה הוסרה)"
     pause_notifications:
       title: "השהיית התראות למשך…"

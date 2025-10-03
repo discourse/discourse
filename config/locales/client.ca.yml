@@ -2502,6 +2502,8 @@ ca:
       logo: "Imatge del logo de la categoria"
       background_image: "Imatge de fons de la categoria"
       background_color: "Color"
+      color_validations:
+        cant_be_empty: "no pot ser buit"
       styles:
         icon: "Icona"
         emoji: "Emoji"

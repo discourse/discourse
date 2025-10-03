@@ -661,6 +661,13 @@ cs:
       resume: "Pokračovat"
       remove: "Odstranit"
       remove_confirmation: "Opravdu chcete tento koncept smazat?"
+      bulk_delete: "Smazat vybrané"
+      bulk_delete_confirmation: "Odstranění konceptů"
+      bulk_delete_message:
+        one: "Opravdu chcete smazat tento koncept?"
+        few: "Opravdu chcete smazat tyto %{count} koncepty?"
+        many: "Opravdu chcete smazat těchto %{count} konceptů?"
+        other: "Opravdu chcete smazat těchto %{count} konceptů?"
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
       edit_topic: "Upravit koncept tématu"
@@ -1886,6 +1893,7 @@ cs:
         verify_identity: "Chcete-li pokračovat, ověřte prosím svoji totožnost."
         title: "Obnovení hesla"
         remove: "Odebrat heslo"
+        remove_disabled: "Účet potřebuje před odstraněním hesla alespoň jednu další metodu přihlášení (např. passkey nebo propojený externí účet)."
         remove_detail: "Váš účet již nebude přístupný pomocí hesla, dokud jej neobnovíte."
       second_factor_backup:
         title: "Dvoufaktorové záložní kódy"
@@ -2766,6 +2774,7 @@ cs:
       admin_not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit jako administrátor."
       resend_activation_email: "Klikněte sem pro zaslání aktivačního emailu."
       omniauth_disallow_totp: "Váš účet má povoleno dvoufaktorové ověřování. Přihlaste se prosím pomocí svého hesla."
+      works_with: "Funguje s"
       activate_account: "Aktivovat účet"
       resend_title: "Znovu odeslat aktivační email"
       change_email: "Změnit emailovou adresu"
@@ -2785,8 +2794,8 @@ cs:
         sr_title: "Přihlásit se přes Google"
       twitter:
         name: "X"
-        title: "Přihlásit se pomocí X"
-        sr_title: "Přihlásit se pomocí X"
+        title: "Přihlásit se přes X"
+        sr_title: "Přihlásit se přes X"
       instagram:
         name: "Instagram"
         title: "Přihlásit se přes Instagram"
@@ -4205,6 +4214,15 @@ cs:
       title: "Nejnovější příspěvky"
       empty: "Nejsou zde žádné příspěvky"
       aria_post_number: "%{title} - příspěvek #%{postNumber}"
+      bulk:
+        selected:
+          one: "Vybrán %{count} příspěvek"
+          few: "Vybrány %{count} příspěvky"
+          many: "Vybráno %{count} příspěvků"
+          other: "Vybráno %{count} příspěvků"
+        select_all: "Vybrat vše"
+        clear_all: "Zrušit vše"
+        actions: "Hromadné akce"
     post:
       confirm_delete: "Opravdu chcete tento příspěvek smazat?"
       quote_reply: "Citovat"
@@ -4595,6 +4613,10 @@ cs:
       style: "Styly"
       background_color: "Barva"
       foreground_color: "Barva textu"
+      color_validations:
+        cant_be_empty: "nemůže být prázdný"
+        incorrect_length: "musí odpovídat formátu #RRGGBB nebo #RGB"
+        non_hexdecimal: "musí obsahovat pouze hexadecimální znaky (0-9, AF)"
       styles:
         type: "Styl"
         icon: "Ikona"
@@ -5354,6 +5376,7 @@ cs:
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavřete toto okno prohlížeče"
     theme_preview_notice: "V současné době prohlížíte náhled motivu, zavřete tuto kartu nebo okno prohlížeče a vraťte se do normální konfigurace webu."
+    theme_preview_failed: "Náhled motivu se nepodařilo zobrazit, protože neexistuje nebo k němu nemáte oprávnění."
     image_removed: "(obrázek odstraněn)"
     pause_notifications:
       title: "Ztlumit upozornění na…"

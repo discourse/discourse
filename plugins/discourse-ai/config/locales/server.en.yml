@@ -85,7 +85,6 @@ en:
     composer_ai_helper_allowed_groups: "Users on these groups will see the AI helper button in the composer."
     ai_helper_allowed_in_pm: "Enable the composer's AI helper in PMs."
     ai_helper_model: "Model to use for the AI helper."
-    ai_helper_custom_prompts_allowed_groups: "Users on these groups will see the custom prompt option in the AI helper."
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
     ai_helper_illustrate_post_model: "Model to use for the composer AI helper's illustrate post feature"

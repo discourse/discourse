@@ -41,12 +41,6 @@ export default class AdminEmailLogsRejectedController extends AdminEmailLogsCont
   }
 
   @action
-  handleShowIncomingEmail(id, event) {
-    event?.preventDefault();
-    this.send("showIncomingEmail", id);
-  }
-
-  @action
   loadMore() {
     this.loadLogs(IncomingEmail, true);
   }

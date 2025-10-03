@@ -228,7 +228,7 @@ module("Unit | Controller | topic", function (hooks) {
       "no username when more than 1 user"
     );
 
-    controller.selectedPostIds.replace(2, 1, [42]);
+    controller.selectedPostIds.splice(2, 1, 42);
     assert.strictEqual(
       controller.selectedPostsUsername,
       undefined,
@@ -285,7 +285,7 @@ module("Unit | Controller | topic", function (hooks) {
       "false when can't delete one of the selected posts"
     );
 
-    controller.selectedPostIds.replace(0, 1, [2, 3]);
+    controller.selectedPostIds.splice(0, 1, 2, 3);
     assert.true(
       controller.canDeleteSelected,
       "true when all selected posts can be deleted"
@@ -445,13 +445,13 @@ module("Unit | Controller | topic", function (hooks) {
       "false when selected posts are from different users"
     );
 
-    controller.selectedPostIds.replace(1, 1, [3]);
+    controller.selectedPostIds.splice(1, 1, 3);
     assert.false(
       controller.canMergePosts,
       "false when selected posts can't be deleted"
     );
 
-    controller.selectedPostIds.replace(1, 1, [4]);
+    controller.selectedPostIds.splice(1, 1, 4);
     assert.true(
       controller.canMergePosts,
       "true when all selected posts are deletable and by the same user"

@@ -3579,6 +3579,9 @@ ja:
       title: "最新の投稿"
       empty: "投稿はありません"
       aria_post_number: "%{title} - 投稿 #%{postNumber}"
+      bulk:
+        clear_all: "すべてクリア"
+        actions: "一括操作"
     post:
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"
@@ -3905,6 +3908,8 @@ ja:
       style: "スタイル"
       background_color: "色"
       foreground_color: "テキストの色"
+      color_validations:
+        cant_be_empty: "空にできません"
       styles:
         type: "スタイル"
         icon: "アイコン"

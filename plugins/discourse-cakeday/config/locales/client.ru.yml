@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Сегодня ваш день рождения!"
+        title: "Сегодня мой день рождения!"
+        label: "День рождения"
+      anniversary:
+        user_title: "Сегодня годовщина вашей регистрации на форуме!"
+        title: "Сегодня годовщина моей регистрации на форуме!"
+    cakeday:
+      title: Годовщины
+      today: "Сегодня"
+      tomorrow: "Завтра"
+      upcoming: "Скоро"
+      all: "Все"
+    birthdays:
+      title: "Дни рождения"
+      month:
+        title: "Дни рождения за месяц"
+        empty: "Никто не отмечает свой день рождения в этом месяце."
+      upcoming:
+        title: "Дни рождения за период %{start_date} - %{end_date}"
+        empty: "Никто не отмечает свой день рождения в следующие 7 дней."
+      today:
+        title: "Дни рождения за %{date}"
+        empty: "Никто не отмечает свой день рождения сегодня."
+      tomorrow:
+        empty: "Никто не отмечает свой день рождения завтра."
+    anniversaries:
+      title: "Годовщины"
+      month:
+        title: "Годовщины за месяц"
+        empty: "Никто не отмечает свою годовщину на форуме в этом месяце."
+      upcoming:
+        title: "Годовщины за период %{start_date} - %{end_date}"
+        empty: "Никто не празднует свою годовщину на форуме в следующие 7 дней."
+      today:
+        title: "Годовщины за %{date}"
+        empty: "Никто не отмечает свою годовщину на форуме сегодня."
+      tomorrow:
+        empty: "Никто не отмечает свою годовщину на форуме завтра."

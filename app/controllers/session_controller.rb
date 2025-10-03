@@ -240,9 +240,9 @@ class SessionController < ApplicationController
           topic = invite.topics.first
           return_path = topic.present? ? path(topic.relative_url) : path("/")
         elsif !user.active?
-          activation = UserActivator.new(user, request, session, cookies)
+          activation = UserActivator.new(user, request, server_session, cookies)
           activation.finish
-          session["user_created_message"] = activation.message
+          server_session["user_created_message"] = activation.message
           return redirect_to(users_account_created_path)
         else
           login_sso_user(sso, user)
@@ -891,7 +891,7 @@ class SessionController < ApplicationController
       username: sso.username,
       name: sso.name,
       ip_address: request.remote_ip,
-      session: session,
+      session: server_session,
       email: sso.email,
       redeeming_user: redeeming_user,
     ).redeem

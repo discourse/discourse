@@ -3556,6 +3556,9 @@ fa_IR:
       title: "آخرین فرسته‌ها"
       empty: "هیچ پستی وجود ندارد"
       aria_post_number: "%{title} - نوشته #%{postNumber}"
+      bulk:
+        clear_all: "پاکسازی همه"
+        actions: "عملیات گروهی"
     post:
       confirm_delete: "آیا مطمئن هستید که می‌خواهید این پست را حذف کنید؟"
       quote_reply: "نقل‌قول"
@@ -3878,6 +3881,8 @@ fa_IR:
       logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
       background_color: "رنگ"
+      color_validations:
+        cant_be_empty: "نمی‌تواند خالی باشد"
       styles:
         icon: "آیکن"
         emoji: "شکلک"

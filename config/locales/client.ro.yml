@@ -2887,6 +2887,8 @@ ro:
           other: "Ai selectat <b>%{count}</b> de mesaje."
     post_list:
       title: "Ultimele postări"
+      bulk:
+        clear_all: "Șterge tot"
     post:
       quote_reply: "Citează"
       quote_reply_shortcut: "Citează (sau apasă q)"
@@ -3141,6 +3143,8 @@ ro:
       style: "Stiluri"
       background_color: "Culoare"
       foreground_color: "Culoare text"
+      color_validations:
+        cant_be_empty: "nu poate fi gol"
       styles:
         type: "Stil"
         icon: "Icon"

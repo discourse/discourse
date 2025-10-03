@@ -1868,7 +1868,6 @@ fr:
     enable_local_logins_via_email: "Permettre aux utilisateurs de demander qu'un lien de connexion en un clic leur soit envoyé par e-mail."
     allow_new_registrations: "Autoriser l'inscription des nouveaux utilisateurs. Décocher pour empêcher la création de nouveau compte."
     enable_signup_cta: "Afficher un rappel aux visiteurs pour les encourager à créer un compte."
-    enable_discourse_id: "Activer l'authentification via Discourse ID, un service d'authentification unique qui permet aux utilisateurs de se connecter à plusieurs sites Discourse avec un seul compte. Les fournisseurs de connexion via les réseaux sociaux courants comme Google, Facebook et X sont pris en charge sans configuration supplémentaire. Consultez <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> pour obtenir plus de détails."
     enable_google_oauth2_logins: "Activer l'authentification Google Oauth2. C'est la méthode d'authentification que Google prend désormais en charge. Nécessite un identifiant et une clé secrète. Voir <a href='https://meta.discourse.org/t/15858' target='_blank'>Comment configurer l'authentification Google pour Discourse</a> (en anglais)."
     google_oauth2_client_id: "L'identifiant client unique fourni par votre application Google, utilisé pour le processus d'authentification."
     google_oauth2_client_secret: "Clé secrète du client de votre application Google."
@@ -2468,7 +2467,6 @@ fr:
     view_raw_email_allowed_groups: "Groupes qui peuvent consulter le contenu brut d'un e-mail s'il a été créé par un e-mail entrant. Cela inclut les en-têtes des e-mails et d'autres informations techniques."
     rich_editor: "Activer l'éditeur enrichi pour l'éditeur de rédaction afin que tous les utilisateurs puissent basculer entre le mode Markdown actuel et le nouvel éditeur de texte enrichi, pour une composition plus intuitive et conviviale."
     default_composition_mode: "Définir le mode par défaut de l'éditeur de rédaction de votre communauté. Le mode texte enrichi offre une expérience de rédaction plus moderne et familière pour la plupart des utilisateurs, tandis que le mode Markdown peut convenir à un public plus technique. Les membres peuvent utiliser un bouton dans la barre d'outils de l'éditeur pour basculer entre les modes."
-    viewport_based_mobile_mode: "EXPÉRIMENTAL : désactivez les modes mobile/bureau basés sur l'agent utilisateur et utilisez plutôt la largeur de la fenêtre d'affichage."
     reviewable_ui_refresh: "Groupes pouvant utiliser la nouvelle interface utilisateur expérimentale dans la file d'attente de révision."
     content_localization_enabled: "Affiche le contenu localisé pour les utilisateurs en fonction de leur navigateur ou de leurs préférences linguistiques. Ce contenu peut inclure des catégories, des étiquettes, des publications et des sujets. Les paramètres régionaux pris en charge sont définis dans « Paramètres régionaux pris en charge pour la localisation du contenu »."
     content_localization_supported_locales: "Liste des langues prises en charge dans lesquelles le contenu utilisateur peut être traduit. Nécessite que « la localisation du contenu soit activée »."
@@ -2568,7 +2566,6 @@ fr:
   filter:
     description:
       status: "Filtrer les sujets en fonction de leur statut"
-      in: "Filtrer les sujets en fonction des listes personnelles"
       order: "Trier les sujets par domaine spécifique"
       category: "Afficher les sujets dans une catégorie spécifique"
       category_any: "Afficher les sujets dans l'une des catégories spécifiées (séparés par des virgules)"

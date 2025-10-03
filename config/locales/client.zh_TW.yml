@@ -3426,6 +3426,9 @@ zh_TW:
       title: " 最近貼文"
       empty: "沒有貼文"
       aria_post_number: "%{title} - 貼文 #%{postNumber}"
+      bulk:
+        clear_all: "清除全部"
+        actions: "批次操作"
     post:
       confirm_delete: "確定要刪除此貼文嗎？"
       quote_reply: "引用"
@@ -3726,6 +3729,8 @@ zh_TW:
       background_image: "分類背景圖片"
       background_image_dark: "深色類別背景圖片"
       background_color: "顏色"
+      color_validations:
+        cant_be_empty: "不能空白"
       styles:
         icon: "圖示"
         emoji: "Emoji"

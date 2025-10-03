@@ -3034,6 +3034,8 @@ ko:
       logo: "카테고리 로고 이미지"
       background_image: "카테고리 백그라운드 이미지"
       background_color: "색상"
+      color_validations:
+        cant_be_empty: "필수 작성"
       styles:
         icon: "아이콘"
         emoji: "이모티콘"

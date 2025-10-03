@@ -116,7 +116,7 @@ export default class History extends Component {
   }
 
   @action
-  async calculateBodyDiff(_, bodyDiff) {
+  async calculateBodyDiff(_, [bodyDiff]) {
     let html = bodyDiff;
     if (this.viewMode !== "side_by_side_markdown") {
       const opts = {

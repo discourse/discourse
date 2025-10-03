@@ -3181,6 +3181,8 @@ hy:
       logo: "Կատեգորիայի Լոգոյի Նկարը"
       background_image: "Կատեգորիայի Ֆոնի Նկարը"
       background_color: "Գույն"
+      color_validations:
+        cant_be_empty: "չի կարող դատարկ լինել"
       styles:
         icon: "Պատկերակ"
         emoji: "Էմոջի"

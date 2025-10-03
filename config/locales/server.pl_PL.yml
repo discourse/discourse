@@ -2028,7 +2028,7 @@ pl_PL:
     enable_local_logins_via_email: "Zezwalaj użytkownikom na żądanie linku logowania do jednego kliknięcia, który zostanie im przesłany pocztą e-mail."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
-    enable_discourse_id: "Włącz uwierzytelnianie za pomocą Discourse ID – usługi logowania jednokrotnego, która umożliwia użytkownikom logowanie się do wielu witryn Discourse za pomocą jednego konta. Popularne serwisy społecznościowe, takie jak Google, Facebook i Twitter, są obsługiwane bez dodatkowej konfiguracji. Więcej informacji znajdziesz na stronie <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
+    enable_discourse_id: "Włącz uwierzytelnianie za pomocą Discourse ID – usługi logowania jednokrotnego, która umożliwia użytkownikom logowanie się do wielu witryn Discourse za pomocą jednego konta. Popularni dostawcy logowania społecznościowego, tacy jak Google, Facebook, Apple i Github, są obsługiwani bez dodatkowej konfiguracji. Więcej informacji znajdziesz na stronie <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
     enable_google_oauth2_logins: "Włącz uwierzytelnianie Google Oauth2. Jest to metoda uwierzytelniania obsługiwana obecnie przez Google. Wymaga podania klucza i sekretu. Zobacz <a href='https://meta.discourse.org/t/15858' target='_blank'>Konfigurowanie logowania Google dla Discourse</a>."
     google_oauth2_client_id: "Unikalny identyfikator klienta udostępniany przez Twoją aplikację Google, wykorzystywany do procesu uwierzytelnienia."
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
@@ -2482,7 +2482,7 @@ pl_PL:
     disable_watched_word_checking_in_user_fields: "wyłącz sprawdzanie obserwowanych słów w polach użytkownika"
     watched_words_regular_expressions: "Włącza możliwość filtrowania słów za pomocą wyrażeń regularnych. Po włączeniu ta funkcja grupuje wrażliwe słowa według ich wielkości liter. Następnie kompiluje wszystkie wybrane słowa w jedno wyrażenie regularne, dodając granice słów dla regularnie obserwowanych słów. W rezultacie, ta metoda filtrowania oparta na wyrażeniach regularnych dodaje dodatkową warstwę kontroli nad moderowaniem treści, umożliwiając obsługę bardziej złożonych wzorców słów. Ustawienie pozwala również na łatwą zamianę oryginalnego tekstu na wybrany zamiennik."
     enable_fast_edit: "Dodaje przycisk do menu wyboru wpisu, umożliwiający bezpośrednią edycję zaznaczonego tekstu."
-    old_post_notice_days: "Liczba dni, po których ogłoszenie jest uznawane za stare. Stare ogłoszenia będą ukryte."
+    old_post_notice_days: "Liczba dni, po których powiadomienia o nowych i powracających użytkownikach będą ukryte. Oficjalne powiadomienie o wpisach pozostanie zawsze widoczne."
     new_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o wpisach nowych użytkowników."
     returning_user_notice_tl: "Minimalny poziom zaufania wymagany do wyświetlania powiadomień o postach powracających użytkowników."
     returning_users_days: "Ile dni powinno minąć, zanim użytkownik zostanie uznany za powracającego."
@@ -2637,7 +2637,7 @@ pl_PL:
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
     rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
     default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
-    viewport_based_mobile_mode: "EKSPERYMENTALNE: wyłącz tryby mobilne/komputerowe oparte na agencie użytkownika i zamiast tego użyj szerokości obszaru widoku."
+    viewport_based_mobile_mode: "Użyj szerokości pola widzenia, aby określić tryby mobilne/komputerowe. To ustawienie zostanie wkrótce usunięte. Jeśli uznasz, że musisz je wyłączyć, daj nam znać <a href='https://meta.discourse.org/t/384280'>na Meta</a>."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
     content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, do których można przetłumaczyć zawartość użytkownika. Wymaga 'włączonej lokalizacji zawartości'."
@@ -2745,7 +2745,7 @@ pl_PL:
   filter:
     description:
       status: "Filtruj tematy według ich statusu"
-      in: "Filtruj tematy według list osobistych"
+      in: "Filtruj tematy na listach osobistych"
       order: "Sortuj tematy według określonego pola"
       category: "Pokaż tematy w określonej kategorii"
       category_any: "Pokaż tematy w dowolnej z określonych kategorii (rozdzielone przecinkami)"
@@ -4465,6 +4465,7 @@ pl_PL:
     search_title: "Zamiast tego spróbuj wyszukać?"
     search_button: "Wyszukaj"
     home: "Wróć do strony głównej"
+    placeholder: "Szukaj tematów według tytułu lub słów kluczowych…"
   offline:
     title: "Nie można załadować aplikacji"
     offline_page_message: "Wygląda na to, że jesteś offline! Sprawdź połączenie sieciowe i spróbuj ponownie."

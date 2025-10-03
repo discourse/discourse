@@ -3581,6 +3581,9 @@ zh_CN:
       title: "最新帖子"
       empty: "没有帖子"
       aria_post_number: "%{title} - 帖子 #%{postNumber}"
+      bulk:
+        clear_all: "全部清除"
+        actions: "批量操作"
     post:
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
@@ -3908,6 +3911,8 @@ zh_CN:
       style: "样式"
       background_color: "颜色"
       foreground_color: "文本颜色"
+      color_validations:
+        cant_be_empty: "不能为空"
       styles:
         type: "样式"
         icon: "图标"
@@ -4567,6 +4572,7 @@ zh_CN:
     safe_mode:
       enabled: "安全模式已启用，要退出安全模式，请关闭此浏览器窗口"
     theme_preview_notice: "您当前正在预览主题，请关闭此浏览器标签页或窗口以返回到正常网站配置。"
+    theme_preview_failed: "无法预览主题，因为它不存在，或者您没有访问它的权限。"
     image_removed: "（图片被移除）"
     pause_notifications:
       title: "暂停通知…"

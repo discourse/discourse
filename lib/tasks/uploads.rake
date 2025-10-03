@@ -313,7 +313,7 @@ def regenerate_missing_optimized
   [
     default_scope.where("optimized_images.upload_id IN (?)", avatar_upload_ids),
     default_scope
-      .where("optimized_images.upload_id NOT IN (?)", avatar_upload_ids)
+      .where.not(upload_id: avatar_upload_ids)
       .where("LENGTH(COALESCE(url, '')) > 0")
       .where("width > 0 AND height > 0"),
   ].each do |scope|

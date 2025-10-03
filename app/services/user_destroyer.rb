@@ -31,7 +31,7 @@ class UserDestroyer
       Draft.where(user_id: user.id).delete_all
       Reviewable.where(created_by_id: user.id).delete_all
 
-      category_topic_ids = Category.where("topic_id IS NOT NULL").pluck(:topic_id)
+      category_topic_ids = Category.where.not(topic_id: nil).pluck(:topic_id)
 
       if opts[:delete_posts]
         DiscoursePluginRegistry.user_destroyer_on_content_deletion_callbacks.each do |cb|

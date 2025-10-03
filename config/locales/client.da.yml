@@ -3209,6 +3209,8 @@ da:
     post_list:
       title: "Seneste indlæg"
       aria_post_number: "%{title} - indlæg #%{postNumber}"
+      bulk:
+        clear_all: "Ryd alle"
     post:
       confirm_delete: "Er du sikker på, at du vil slette dette indlæg?"
       quote_reply: "Citér"
@@ -3490,6 +3492,8 @@ da:
       background_image: "Kategori logo baggrundsbillede"
       background_color: "Farve"
       foreground_color: "Tekst farve"
+      color_validations:
+        cant_be_empty: "kan ikke være tom"
       styles:
         type: "Stil"
         icon: "Ikon"

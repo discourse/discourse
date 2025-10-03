@@ -1969,6 +1969,8 @@ id:
       name: "Nama Kategori"
       description: "Deskripsi"
       background_image_dark: "Gambar Latar Belakang Kategori Gelap"
+      color_validations:
+        cant_be_empty: "tidak boleh kosong"
       permissions:
         reply: "Balas"
         create: "Buat"

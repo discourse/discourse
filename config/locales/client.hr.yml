@@ -35,7 +35,7 @@ hr:
       long_no_year: "MMM D, h:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM"
-      long_with_year: "D MMM, YYY h:mm"
+      long_with_year: "D MMM, YYYY h:mm"
       long_with_year_no_time: "D MMM, YYYY"
       full_with_year_no_time: "Do MMMM, YYYY"
       long_date_with_year: "MMM D, GGGG LV"
@@ -57,8 +57,8 @@ hr:
           other: "%{count} sek."
         less_than_x_minutes:
           one: "< %{count} minute"
-          few: "< %{count}minute"
-          other: "< %{count}minuta"
+          few: "< %{count} minute"
+          other: "< %{count} minuta"
         x_minutes:
           one: "%{count} minuta"
           few: "%{count} minute"
@@ -387,7 +387,7 @@ hr:
     age: "Dob"
     joined: "Prijavljen"
     admin_title: "Administrator"
-    show_more: "prikaži više"
+    show_more: "Prikaži više"
     show_help: "postavke"
     links: "Linkovi"
     links_lowercase:
@@ -2882,7 +2882,7 @@ hr:
           one: "Naslov ne smije imati više od %{count} znakova"
           few: "Naslov ne smije imati više od %{count} znakova"
           other: "Naslov ne smije imati više od %{count} znakova"
-        post_missing: "Post ne može biti prazan"
+        post_missing: "Objava ne može biti prazna"
         post_length:
           one: "Objava mora sadržavati najmanje %{count} znakova"
           few: "Objava mora sadržavati najmanje %{count} znakova"
@@ -2962,7 +2962,7 @@ hr:
       list_item: "Predmet popisa"
       toggle_direction: "Uključi/isključi smjer"
       help: "Markdown pomoć pri izmjenama"
-      collapse: "Smanjite ploču uređivača"
+      collapse: "Smanji površinu uređivača"
       open: "Otvorite ploču uređivača"
       abandon: "Zatvorite uređivač i odbacite skicu"
       enter_fullscreen: "Otvori uređivač preko cijelog zaslona"
@@ -3772,7 +3772,7 @@ hr:
           description: "Nikada nećete dobiti obavijesti o ovoj poruci."
         muted:
           title: "Utišano"
-          description: "Nikad nećete biti obaviješteni o bilo kojoj temi o ovoj temi, a ona se neće pojaviti zadnjim postovima."
+          description: "Nikada nećete biti obaviješteni o ovoj temi, a ona se neće pojavljivati u najnovijim vijestima."
       actions:
         title: "Akcije"
         recover: "Vrati obrisanu temu"
@@ -3800,7 +3800,7 @@ hr:
         remove_banner: "Ukloni istaknutu objavu"
       reply:
         title: "Odgovori"
-        help: "počni sastavljati odgovor za ovu temu"
+        help: "Počni sastavljati odgovor za ovu temu"
       share:
         title: "Podijelite temu"
         extended_title: "Podijelite vezu"
@@ -3817,7 +3817,7 @@ hr:
         help: "Otvorite verziju ove teme za pisač"
       flag_topic:
         title: "Označi zastavicom"
-        help: "privatno označite ovu temu za praćenje ili o njoj pošaljite osobnu poruku"
+        help: "Označite temu za praćenje ili je prijavite"
         success_message: "Uspješno ste označili ovu temu zastavicom"
       make_public:
         title: "Pretvori u javnu temu"
@@ -3996,6 +3996,8 @@ hr:
       title: "Najnovije objave"
       empty: "Nema objava"
       aria_post_number: "%{title} - članak #%{postNumber}"
+      bulk:
+        clear_all: "Obriši sve"
     post:
       confirm_delete: "Jeste li sigurni da želite izbrisati ovaj post?"
       quote_reply: "Citat"
@@ -4008,12 +4010,12 @@ hr:
       edit_reason: "Razlog:"
       post_number: "objava %{number}"
       ignored: "Zanemareni sadržaj"
-      wiki_last_edited_on: "wiki zadnji put uređeno %{dateTime}"
-      last_edited_on: "post zadnji put uređen %{dateTime}"
+      wiki_last_edited_on: "Wiki zadnji put uređen %{dateTime}"
+      last_edited_on: "Objava zadnji put uređena %{dateTime}"
       edit_history: "povijest uređivanja objave"
       reply_as_new_topic: "Odgovori u povezanoj temi"
       reply_as_new_private_message: "Odgovorite novom porukom istim primateljima."
-      continue_discussion: "Nastavak rasrave iz %{postLink}:"
+      continue_discussion: "Nastavak rasprave iz %{postLink}:"
       follow_quote: "idi na citiranu objavu"
       show_full: "Prikaži cijelu objavu"
       show_hidden: "Pogledajte zanemareni sadržaj."
@@ -4131,18 +4133,18 @@ hr:
         about: "ova objava je zajednička wiki objava"
       few_likes_left: "Hvala za dijeljenje ljubavi! Za danas vam je ostalo samo nekoliko lajkova."
       controls:
-        reply: "Počnite sa sastavljanjem odgovora na ovu objavu\n"
+        reply: "Počnite sastavljati odgovor na ovu objavu"
         like_action: "Lajkaj"
         like: "Lajkaj objavu"
         has_liked: "Sviđa vam se ova objava"
-        read_indicator: "Članovi koji su pročitali ovaj post"
-        undo_like_action: "Poništi lajk."
+        read_indicator: "Članovi koji su pročitali ovu objavu"
+        undo_like_action: "Poništi lajk"
         undo_like: "Poništi lajk"
         edit: "Izmijeni ovu objavu"
         edit_action: "Izmijeni"
         edit_anonymous: "Žao nam je, morate biti prijavljeni da bi ste izmjenili ovu objavu."
-        flag_action: "Označi zastavicom"
-        flag: "Privatno označite ovu temu za praćenje ili o njoj pošaljite osobnu poruku"
+        flag_action: "Prijavi"
+        flag: "Označite temu za praćenje ili je prijavite"
         anonymous_flag: "Pošaljite e-mail osoblju kako biste prijavili ovu objavu"
         delete_action: "Izbriši objavu"
         delete: "Izbriši ovu objavu"
@@ -4168,22 +4170,22 @@ hr:
         admin: "Objavi administratorske radnje"
         admin_action: "Administrator"
         permanently_delete: "Trajno izbriši"
-        permanently_delete_confirmation: "Jeste li sigurni da trajno želite izbrisati ovaj post? Nećete ga moći oporaviti."
-        wiki: "Učini zajedničkom, wiki objavom"
-        unwiki: "Ukloni status zajedničke objave"
+        permanently_delete_confirmation: "Jeste li sigurni da trajno želite izbrisati ovu objavu? Nećete je moći vratiti."
+        wiki: "Pretvori u Wiki"
+        unwiki: "Ukloni Wiki"
         convert_to_moderator: "Dodaj boje osoblja"
         revert_to_regular: "Ukloni boje osoblja"
         rebake: "Popravi HTML"
         publish_page: "Objava stranica"
-        unhide: "Poništi skrivanje"
+        unhide: "Otkrij"
         change_owner: "Promjena vlasništva"
         grant_badge: "Dodijelite značku"
-        lock_post: "Zaključaj post"
-        lock_post_description: "zabranite autoru uređivanje objave"
-        unlock_post: "Otključaj post"
+        lock_post: "Zaključaj objavu"
+        lock_post_description: "Spriječiti autora da uređuje ovu objavu"
+        unlock_post: "Otključaj objavu"
         unlock_post_description: "Dopusti autoru uređivanje objave"
-        delete_topic_disallowed_modal: "Nemate dozvolu za brisanje ove teme. Ako stvarno želite da se obriše, pošaljite zastavu za pažnju moderatora zajedno s obrazloženjem."
-        delete_topic_disallowed: "nemate dozvolu za brisanje ove teme"
+        delete_topic_disallowed_modal: "Nemate dozvolu za brisanje ove teme. Ako je stvarno želite obrisati, pošaljite prijavu moderatoru, zajedno s obrazloženjem."
+        delete_topic_disallowed: "Nemate dozvolu za brisanje ove teme"
         delete_topic_confirm_modal:
           one: "Ova tema trenutno ima više od %{count} pregleda i možda je popularno odredište za pretraživanje. Jeste li sigurni da želite u potpunosti izbrisati ovu temu, umjesto da je uređujete kako biste je poboljšali?"
           few: "Ova tema trenutno ima više od %{count} pregleda i možda je popularno odredište za pretraživanje. Jeste li sigurni da želite u potpunosti izbrisati ovu temu, umjesto da je uređujete kako biste je poboljšali?"
@@ -4196,7 +4198,7 @@ hr:
         change_post_notice: "Promijenite službenu obavijest"
         delete_post_notice: "Izbrišite službenu obavijest"
         remove_timer: "ukloni tajmer"
-        edit_timer: "uredi mjerač vremena"
+        edit_timer: "Uredi mjerač vremena"
       actions:
         people:
           like:
@@ -4364,6 +4366,8 @@ hr:
       style: "Stilovi"
       background_color: "Boja"
       foreground_color: "Boja teksta"
+      color_validations:
+        cant_be_empty: "ne može biti prazno"
       styles:
         type: "Stil"
         icon: "Ikona"
@@ -4488,7 +4492,7 @@ hr:
       description: "Za prijavu ilegalnog sadržaja obratite se na <a href='mailto:%{email}?subject=Illegal content: %{topic_title}&body=This post %{url} contains illegal content.'>%{email}</a>"
     flagging:
       title: "Hvala što pomažete održavati našu zajednicu pristojnom!"
-      review_process_description: "Sve oznake primaju moderatori i bit će pregledane u najkraćem mogućem roku."
+      review_process_description: "Sve prijave primaju moderatori i pregledat će ih u najkraćem mogućem roku."
       action: "Označi objavu zastavicom"
       take_action: "Poduzmite akciju"
       take_action_options:
@@ -4518,10 +4522,10 @@ hr:
         off_topic: "Van teme je."
         inappropriate: "Neprikladno je."
         spam: "Nepoželjno je."
-        illegal: "To je ilegalno"
+        illegal: "Nezakonito je."
       custom_placeholder_notify_user: "Budite specifični, konstruktivni i ljubazni."
       notify_user_textarea_label: "Poruka za korisnika"
-      custom_placeholder_notify_moderators: "Recite nam točno što vas brine, i gdje je moguće dajte relevantne poveznice i primjere."
+      custom_placeholder_notify_moderators: "Recite nam točno što vas brine i, gdje je moguće, dajte relevantne poveznice i primjere."
       notify_moderators_textarea_label: "Poruka za moderatore"
       custom_placeholder_illegal: "Navedite konkretno zašto smatrate da je ovaj sadržaj nezakonit i navedite relevantne poveznice i primjere gdje je to moguće."
       confirmation_illegal: "Ono što sam napisao/la je točno i potpuno."
@@ -6025,6 +6029,8 @@ hr:
               read_lists: Čitajte popise tema kao što su vrhunski, novi, najnoviji itd. RSS je također podržan.
             posts:
               edit: Uredite bilo koji post ili određeni.
+            tag_groups:
+              update: Ažurira grupu oznaka određenu ID-om.
             categories:
               list: Dohvatite popis kategorija.
               show: Dohvati jednu kategoriju prema ID-u.
@@ -6264,6 +6270,7 @@ hr:
             learn_more: "Saznajte više"
             edit: "Uredi"
             preview: "Pregled"
+            check_update: "Provjeri ažuriranja"
             export: "Izvoz"
             convert: "Pretvoriti"
             delete: "Pobriši"
@@ -6529,6 +6536,7 @@ hr:
             error: "Ova je tema automatski onemogućena jer nije kompatibilna s ovom verzijom Discoursa."
             minimum: "Zahtijeva verziju Discoursa %{version} ili noviju."
             maximum: "Zahtijeva verziju Discoursa %{version} ili nižu."
+          check_for_updates: "Provjeri ažuriranja"
           up_to_date: "Tema je ažurirana, zadnja provjera:"
           has_overwritten_history: "Trenutna verzija teme više ne postoji jer je povijest Gita prepisana prisilnim pritiskom."
           add: "Dodaj"

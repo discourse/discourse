@@ -2028,7 +2028,7 @@ cs:
     enable_local_logins_via_email: "Umožnit uživatelům požádat o přihlášení odesláním odkazu pro přihlášení jedním kliknutím prostřednictvím e-mailu."
     allow_new_registrations: "Povolit registraci nových uživatelů. Zrušte zaškrtnutí této možnosti, pokud chcete zabránit komukoli ve vytváření nového účtu."
     enable_signup_cta: "Zobrazit vracejícím se anonymním uživatelům oznámení s výzvou k registraci účtu."
-    enable_discourse_id: "Povolit ověřování prostřednictvím Discourse ID, což je služba jednotného přihlašování, která umožňuje uživatelům přihlásit se k více webům Discourse pomocí jednoho účtu. Běžní poskytovatelé sociálních služeb pro přihlašování, jako jsou Google, Facebook a Twitter, jsou podporováni bez další konfigurace. Další podrobnosti naleznete na <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
+    enable_discourse_id: "Povolit ověření pomocí Discourse ID, jednotné přihlašovací služby, která umožňuje uživatelům přihlásit se na více stránkách Discourse pomocí jediného účtu. Běžní poskytovatelé sociálních přihlášení jako Google, Facebook, Apple, Github jsou podporováni bez další konfigurace. Více informací naleznete na <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
     enable_google_oauth2_logins: "Povolit ověřování Google Oauth2. Toto je metoda ověřování, kterou Google aktuálně podporuje. Vyžaduje klíč a tajný kód. Viz <a href='https://meta.discourse.org/t/15858' target='_blank'>Konfigurace přihlášení Google pro Discourse</a>."
     google_oauth2_client_id: "Jedinečné ID klienta poskytnuté vaší aplikací Google, používané pro proces ověřování."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
@@ -2340,7 +2340,6 @@ cs:
   filter:
     description:
       status: "Filtrovat témata podle jejich stavu"
-      in: "Filtrovat témata v..."
       order: "Seřadit témata podle konkrétního pole"
       category: "Zobrazit témata v konkrétní kategorii"
       category_any: "Zobrazit témata v kterékoli ze zadaných kategorií (oddělené čárkami)"
@@ -3850,8 +3849,14 @@ cs:
   page_not_found:
     page_title: "Stránka nenalezena"
     title: "Jejda! Tato stránka neexistuje nebo je soukromá."
+    subtitle: "Hledali jsme všude možně, ale stránku, kterou hledáte, jsme nenašli."
+    popular_topics: "Populární témata"
+    recent_topics: "Nedávná témata"
     see_more: "Více"
+    search_title: "Zkusíte raději hledat?"
     search_button: "Vyhledat"
+    home: "Pojďme domů"
+    placeholder: "Vyhledávání témat podle názvu nebo klíčových slov…"
   offline:
     title: "Nelze načíst aplikaci"
     offline_page_message: "Vypadá to, že jste offline! Zkontrolujte prosím připojení k síti a zkuste to znovu."
@@ -3873,6 +3878,7 @@ cs:
     images:
       too_large: "Litujeme, obrázek, který se pokoušíte nahrát, je příliš velký (maximální velikost je %{max_size_kb}kB), změňte jeho velikost a zkuste to znovu."
       too_large_humanized: "Omlouváme se, ale obrázek, který se snažíte nahrát, je příliš velký (maximální velikost je %{max_size}), změňte prosím jeho velikost a zkuste to znovu."
+      larger_than_x_megapixels: "Je nám láto, ale obrázek s názvem souboru %{original_filename} je příliš velký (maximální rozměr je %{max_image_megapixels} megapixelů). Změňte jeho velikost a zkuste to znovu."
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
     placeholders:
       too_large: "(obrázek větší než %{max_size_kb}KB)"
@@ -3895,6 +3901,34 @@ cs:
     sender_message_to_blank: "message.to is blank"
     sender_text_part_body_blank: "text_part.body is blank"
     sender_body_blank: "body is blank"
+  color_schemes:
+    base_theme_name: "Základní"
+    light: "Světlá"
+    dark: "Tmavá"
+    neutral: "Neutrální"
+    grey_amber: "Šedý jantar"
+    shades_of_blue: "Odstíny modré"
+    latte: "Latte"
+    summer: "Léto"
+    dark_rose: "Temná růže"
+    wcag: "WCAG světlá"
+    wcag_theme_name: "WCAG světlá"
+    dracula: "Drákula"
+    dracula_theme_name: "Drákula"
+    solarized_light: "Solarized světlá"
+    solarized_light_theme_name: "Solarized světlá"
+    solarized_dark: "Solarized tmavá"
+    solarized_dark_theme_name: "Solarized tmavá"
+    wcag_dark: "WCAG tmavá"
+    wcag_dark_theme_name: "WCAG tmavá"
+    light_theme_name: "Světlá"
+    dark_theme_name: "Tmavá"
+    neutral_theme_name: "Neutrální"
+    grey_amber_theme_name: "Šedý jantar"
+    shades_of_blue_theme_name: "Odstíny modré"
+    latte_theme_name: "Latte"
+    summer_theme_name: "Léto"
+    dark_rose_theme_name: "Temná růže"
   edit_this_page: "Upravit tuto stránku"
   csv_export:
     boolean_yes: "Ano"
@@ -4399,8 +4433,12 @@ cs:
       message: "<p>Odeslali jsme aktivační e-mail na adresu <b>%{email}</b>. Při aktivaci účtu postupujte podle pokynů v e-mailu.</p><p>Pokud nedorazí, zkontrolujte složku s nevyžádanou poštou a <a href='https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326'>ujistěte se, že jste e-mail nastavili správně</a>.</p>"
     resend_email:
       title: "Znovu odeslat aktivační email"
+      message: "<p>Aktivační e-mail jsme znovu odeslali na <b>%{email}</b>"
   safe_mode:
     title: "Vstup do bezpečného režimu"
+    description: "Bezpečný režim umožňuje otestovat vaše stránky bez načítání motivů nebo modifikací pluginy na straně klienta. Přizpůsobení pluginy na straně serveru zůstávají povolena."
+    no_themes: "Zakázat motivy a jejich komponenty"
+    no_unofficial_plugins: "Zakázat neoficiální úpravy pluginů na straně klienta"
     no_plugins: "Zakázat všechna přizpůsobení pluginů na straně klienta"
     deprecation_error_description: "Chcete-li zkontrolovat kompatibilitu s nadcházejícími aktualizacemi Discourse, můžete nastavit, že zastaralé Javascripty vyvolají chybu:"
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
@@ -4471,8 +4509,16 @@ cs:
             choices:
               latest:
                 label: "Nejnovější"
+                description: "Zobrazuje naposledy aktivní témata ve všech kategoriích, což pomáhá členům sledovat aktuální dění v diskusích, které je zajímají."
               hot:
                 label: "Žhavé"
+                description: "Zobrazuje populární témata kombinováním nedávné a celkové popularity. Ukazuje, o čem členové ve vaší komunitě právě mluví."
+              categories_and_latest_topics:
+                label: "Kategorie s nejnovějšími tématy"
+                description: "Kombinuje poslední aktivní témata ve všech kategoriích se seznamem kategorií, jejich popisem a celkovým počtem témat."
+              categories_boxes:
+                label: "Boxy s kategoriemi"
+                description: "Zobrazuje kategorie a jejich popis v mřížce, což je ideální pro členy, aby viděli přehled dílčích komunit vašeho webu."
       branding:
         title: "Logo webu"
         fields:
@@ -4669,6 +4715,24 @@ cs:
     mute_error: "Je nám líto, tohoto uživatele nemůžete ztišit."
     error: "Je nám líto, ale úroveň upozorňování pro tohoto uživatele nelze změnit."
     invalid_value: '"%{value}" není platná úroveň upozornění.'
+  old_keys_reminder:
+    title: "Připomenutí starých přihlašovacích údajů"
+    body: |
+      Dobrý den! Toto je rutinní každoroční bezpečnostní připomínka z vaší instance Discourse.
+
+      Z laskavosti bychom vás chtěli informovat, že následující přihlašovací údaje používané ve vaší instanci Discourse nebyly aktualizovány více než dva roky:
+
+      %{keys}
+
+      V tuto chvíli není nutná žádná akce, nicméně se považuje za dobrou bezpečnostní praxi měnit všechny důležité přihlašovací údaje každých několik let.
+  create_linked_topic:
+    topic_title_with_sequence:
+      one: "%{topic_title} (Část %{count})"
+      few: "%{topic_title} (Část %{count})"
+      many: "%{topic_title} (Část %{count})"
+      other: "%{topic_title} (Část %{count})"
+    post_raw: "Pokračování diskuse z %{parent_url}.\n\nPředchozí diskuse:\n\n%{previous_topics}"
+    small_action_post_raw: "Pokračujte v diskusi na %{new_title}."
   fallback_username: "uživatel"
   form_templates:
     errors:
@@ -4679,6 +4743,8 @@ cs:
       duplicate_ids: "má duplicitní ID"
       reserved_id: "má vyhrazené klíčové slovo id: %{id}"
       unsafe_description: "má nebezpečný popis HTML"
+  discourse_id:
+    already_registered: "Tento web je již v Discourse ID registrován"
   activemodel:
     errors:
       <<: *errors

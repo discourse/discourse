@@ -82,7 +82,6 @@ zh_CN:
     composer_ai_helper_allowed_groups: "这些群组中的用户将在编辑器中看到 AI 助手按钮。"
     ai_helper_allowed_in_pm: "在私信中启用编辑器的 AI 助手。"
     ai_helper_model: "用于 AI 助手的模型。"
-    ai_helper_custom_prompts_allowed_groups: "这些群组中的用户将在 AI 助手中看到自定义提示选项。"
     ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天对话标题之前的延迟（以分钟为单位）。"
     ai_helper_automatic_chat_thread_title: "根据话题内容自动设置聊天对话标题。"
     ai_helper_illustrate_post_model: "用于编辑器 AI 助手的为帖子创建插图功能的模型"

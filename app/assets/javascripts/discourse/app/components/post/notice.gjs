@@ -31,7 +31,7 @@ export default class PostNotice extends Component {
   get shouldRender() {
     const postAge = new Date() - new Date(this.args.post.created_at);
     const maxAge = this.siteSettings.old_post_notice_days * 86400000;
-    return postAge <= maxAge;
+    return this.args.post.notice.type === "custom" || postAge <= maxAge;
   }
 
   <template>

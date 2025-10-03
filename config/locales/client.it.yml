@@ -3777,6 +3777,9 @@ it:
       title: "Ultimi messaggi"
       empty: "Non ci sono messaggi"
       aria_post_number: "%{title}, messaggio n. %{postNumber}"
+      bulk:
+        clear_all: "Deseleziona tutto"
+        actions: "Azioni collettive"
     post:
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
@@ -4124,6 +4127,8 @@ it:
       style: "Stili"
       background_color: "Colore"
       foreground_color: "Colore del testo"
+      color_validations:
+        cant_be_empty: "non può essere vuoto"
       styles:
         type: "Stile"
         icon: "Icona"

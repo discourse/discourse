@@ -355,7 +355,7 @@ class Topic < ActiveRecord::Base
           )
         end
 
-  scope :listable_topics, -> { where("topics.archetype <> ?", Archetype.private_message) }
+  scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
 
   scope :by_newest, -> { order("topics.created_at desc, topics.id desc") }
 
@@ -1407,7 +1407,7 @@ class Topic < ActiveRecord::Base
     previous_banner = Topic.where(archetype: Archetype.banner).first
     previous_banner.remove_banner!(user) if previous_banner.present?
 
-    UserProfile.where("dismissed_banner_key IS NOT NULL").update_all(dismissed_banner_key: nil)
+    UserProfile.where.not(dismissed_banner_key: nil).update_all(dismissed_banner_key: nil)
 
     self.archetype = Archetype.banner
     self.bannered_until = bannered_until

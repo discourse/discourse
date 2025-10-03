@@ -351,7 +351,7 @@ class InvitesController < ApplicationController
 
     if invite.present?
       begin
-        attrs = { ip_address: request.remote_ip, session: session }
+        attrs = { ip_address: request.remote_ip, session: server_session }
 
         if redeeming_user
           attrs[:redeeming_user] = redeeming_user
@@ -459,10 +459,7 @@ class InvitesController < ApplicationController
       return render_json_error(I18n.t("rate_limiter.slow_down"))
     end
 
-    Invite
-      .pending(current_user)
-      .where("invites.email IS NOT NULL")
-      .find_each { |invite| invite.resend_invite }
+    Invite.pending(current_user).where.not(email: nil).find_each { |invite| invite.resend_invite }
 
     render json: success_json
   end
@@ -532,8 +529,8 @@ class InvitesController < ApplicationController
     # Show email if the user already authenticated their email
     different_external_email = false
 
-    if session[:authentication]
-      auth_result = Auth::Result.from_session_data(session[:authentication], user: nil)
+    if server_session[:authentication]
+      auth_result = Auth::Result.from_session_data(server_session[:authentication], user: nil)
       if invite.email == auth_result.email
         email = invite.email
       else

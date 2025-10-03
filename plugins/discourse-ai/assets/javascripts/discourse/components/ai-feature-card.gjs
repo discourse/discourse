@@ -5,6 +5,13 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
+import DTooltip from "float-kit/components/d-tooltip";
+
+function isPreseeded(llm) {
+  if (llm.id < 0) {
+    return true;
+  }
+}
 
 class ExpandableList extends Component {
   @tracked isExpanded = false;
@@ -142,13 +149,24 @@ export default class AiFeatureCard extends Component {
               @maxItemsToShow={{5}}
               as |llm index isLastItem|
             >
-              <LinkTo
-                @route="adminPlugins.show.discourse-ai-llms.edit"
-                @model={{llm.id}}
-                class="ai-feature-card__llm-link"
-              >
-                {{concat llm.name (unless (isLastItem index) ", ")}}
-              </LinkTo>
+              {{#if (isPreseeded llm)}}
+                <DTooltip>
+                  <:trigger>
+                    {{concat llm.name (unless (isLastItem index) ", ")}}
+                  </:trigger>
+                  <:content>
+                    {{i18n "discourse_ai.llms.seeded_warning"}}
+                  </:content>
+                </DTooltip>
+              {{else}}
+                <LinkTo
+                  @route="adminPlugins.show.discourse-ai-llms.edit"
+                  @model={{llm.id}}
+                  class="ai-feature-card__llm-link"
+                >
+                  {{concat llm.name (unless (isLastItem index) ", ")}}
+                </LinkTo>
+              {{/if}}
             </ExpandableList>
           {{else}}
             <span class="ai-feature-card__label">

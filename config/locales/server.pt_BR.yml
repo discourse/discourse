@@ -1862,7 +1862,6 @@ pt_BR:
     enable_local_logins_via_email: "Permita que os(as) usuários(as) solicitem um link para entrar com um clique para ser enviado por e-mail."
     allow_new_registrations: "Permita cadastro de novos(as) usuários(as). Desmarque isso para evitar que qualquer pessoa crie uma nova conta."
     enable_signup_cta: "Exiba um aviso aos(as) usuários(as) anônimos(as) que voltaram ao solicitar que criem uma conta."
-    enable_discourse_id: "Ative a autenticação pelo Discourse ID, um serviço de cadastro único que permite aos(às) usuários(as) fazer login em mais de um site do Discourse com uma única conta. As empresas mais conhecidas que permitem login com sua conta, como Google, Facebook e Twitter, são compatíveis sem precisar de configurações adicionais. Consulte a <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> para obter mais detalhes."
     enable_google_oauth2_logins: "Ative a autenticação do Google Oauth2. Este é o método de autenticação que atualmente é compatível com o Google. Requer chave e segredo. Consulte <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuração para entrar com a conta Google no Discourse</a>."
     google_oauth2_client_id: "O ID de cliente único fornecido pelo seu aplicativo do Google, usado para o processo de autenticação."
     google_oauth2_client_secret: "Segredo de cliente do seu app Google."
@@ -2462,7 +2461,6 @@ pt_BR:
     view_raw_email_allowed_groups: "Grupos que podem visualizar o conteúdo do e-mail não processado de uma postagem se tiver sido criada por um e-mail recebido. Inclui cabeçalhos de e-mail e outras informações técnicas."
     rich_editor: "Ative o editor de rich text para o compositor, assim todos(as) usuários(as) poderão alternar entre o modo Markdown atual e o novo editor de rich text para tornar a composição mais intuitiva e amigável."
     default_composition_mode: "Defina o modo padrão para o compositor da sua comunidade. O modo rich text proporciona uma experiência de escrita mais moderna e familiar para a maioria dos(as) usuários(as), já o modo Markdown pode ser apropriado para públicos mais avançados. Os membros poderão usar um botão de alternância na barra de ferramentas do compositor para alternar entre os modos."
-    viewport_based_mobile_mode: "EXPERIMENTAL: Desative os modos baseados em agente e usuário para desktop e dispositivos móveis e use a largura da janela de visualização."
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
     content_localization_enabled: "Exibe o conteúdo localizado para os(as) usuários(as) com base no navegador ou nas preferências de idioma deles(as). Esse conteúdo pode incluir categorias, etiquetas, postagens e tópicos. Os locais compatíveis estão definidos em \"locais compatíveis com localização de conteúdo\"."
     content_localization_supported_locales: "As lista de locais compatíveis para os quais o conteúdo do usuário(a) pode ser traduzido. Requer \"content localization enabled\""
@@ -2562,7 +2560,6 @@ pt_BR:
   filter:
     description:
       status: "Filtrar tópicos por status"
-      in: "Filtrar tópicos por listas pessoais"
       order: "Classificar tópicos por campo específico"
       category: "Exibir tópicos em uma categoria específica"
       category_any: "Exibir tópicos em qualquer uma das categorias especificadas (separadas por vírgula)"
