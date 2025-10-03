@@ -1,63 +1,77 @@
 # frozen_string_literal: true
 
-desc "Deprecate Advanced Search Banner theme component"
-task "themes:deprecate_advanced_search_banner" => :environment do
-  puts "Deprecating Advanced Search Banner theme component..."
-
-  search_banner_themes = []
+desc "Migrate from Advanced search banner theme component to core Welcome banner"
+task "themes:migrate_to_welcome_banner" => :environment do
+  advanced_search_banners = []
 
   if ENV["RAILS_DB"].present?
-    search_banner_themes = find_and_deprecate_search_banner_themes
+    advanced_search_banners = find_advanced_search_banners(ENV["RAILS_DB"])
   else
     RailsMultisite::ConnectionManagement.all_dbs.each do |db|
+      puts "Accessing database: [#{db}]"
+
       RailsMultisite::ConnectionManagement.with_connection(db) do
-        puts "[#{db}] Searching for Advanced Search Banner themes..."
-        found_themes = find_and_deprecate_search_banner_themes
-        search_banner_themes.concat(found_themes.map { |theme| { db: db, theme: theme } })
+        found = find_advanced_search_banners
+        advanced_search_banners.concat(found.map { |tc| { db: db, tc: tc } })
       end
     end
   end
 
-  if search_banner_themes.empty?
-    puts "No Advanced Search Banner themes found to deprecate."
+  if advanced_search_banners.empty?
+    puts "No Advanced search banner theme components found."
   else
-    puts "Deprecation completed. Summary:"
-    search_banner_themes.each do |entry|
-      if entry.is_a?(Hash)
-        puts "Database: [#{entry[:db]}]\nTheme: #{entry[:theme][:name]}\nTheme ID: #{entry[:theme][:id]}\nTheme status: #{entry[:theme][:status]}"
-      else
-        puts "Theme: #{entry[:name]}\nTheme ID: #{entry[:id]}\nTheme status: #{entry[:status]}"
-      end
-    end
+    puts "Migration completed!"
+    # puts advanced_search_banners
+    # advanced_search_banners.each do |entry|
+    #   if entry.is_a?(Hash)
+    #     puts "Database: [#{entry[:db]}]\nTheme: #{entry[:theme][:name]}\nTheme ID: #{entry[:theme][:id]}\nTheme status: #{entry[:theme][:status]}"
+    #   else
+    #     puts "Theme: #{entry[:name]}\nTheme ID: #{entry[:id]}\nTheme status: #{entry[:status]}"
+    #   end
+    # end
   end
 end
 
-def find_and_deprecate_search_banner_themes
-  deprecated_themes = []
+def find_advanced_search_banners
+  advanced_search_banners = []
 
-  # Search for discourse-search-banner themes (handles both .git and non-.git URLs)
   RemoteTheme
     .where(remote_url: "https://github.com/discourse/discourse-search-banner.git")
-    .includes(:theme)
+    .includes(theme: :theme_translation_overrides)
     .each do |remote_theme|
       theme = remote_theme.theme
       next unless theme&.component? # Only process component themes
 
-      puts "  Found theme: #{theme.name} (ID: #{theme.id})"
+      puts "  Found theme component: #{theme.name} (Id: #{theme.id})"
 
-      # Get translation overrides for this theme
-      overrides = get_theme_translation_overrides(theme.id)
-      puts "    Translation overrides found: #{overrides.count}"
+      overrides =
+        theme.theme_translation_overrides.map do |override|
+          {
+            locale: override.locale,
+            translation_key: override.translation_key,
+            value: override.value,
+          }
+        end
 
-      # Display the overrides
-      if overrides.any?
+      if !overrides.any?
+        puts "  Migrating translation overrides..."
         overrides.each do |override|
-          puts "      #{override[:locale]}.#{override[:translation_key]} = '#{override[:value]}'"
+          mapped_keys = map_search_banner_to_welcome_banner(override[:translation_key])
+
+          if mapped_keys.any?
+            mapped_keys.each do |new_key|
+              TranslationOverride.upsert!(override[:locale], new_key, override[:value])
+              puts "    ✓ Migrated: #{override[:locale]}.#{new_key} = '#{override[:value]}'"
+            end
+          else
+            puts "    ⚠ No mapping found for key: #{override[:translation_key]}"
+          end
         end
       else
-        puts "      No translation overrides found for this theme"
+        puts "    No translation overrides found."
       end
 
+      # next
       # result = deprecate_theme(theme)
       result = {
         id: theme.id,
@@ -65,10 +79,46 @@ def find_and_deprecate_search_banner_themes
         status: "Found with #{overrides.count} translation overrides",
         overrides: overrides,
       }
-      deprecated_themes << result if result
+      advanced_search_banners << result if result
     end
+  puts "length #{advanced_search_banners.length}"
+  advanced_search_banners
+end
 
-  deprecated_themes
+def map_search_banner_to_welcome_banner(translation_key)
+  translation_mappings = {
+    "search_banner.headline" => %w[
+      js.welcome_banner.header.anonymous_members
+      js.welcome_banner.header.logged_in_members
+    ],
+    "search_banner.subhead" => %w[
+      js.welcome_banner.subheader.anonymous_members
+      js.welcome_banner.subheader.logged_in_members
+    ],
+    "search_banner.search_button_text" => "js.welcome_banner.search_placeholder",
+  }
+
+  mapping = translation_mappings[translation_key]
+  return [] unless mapping
+
+  Array(mapping)
+end
+
+def get_theme_translation_overrides(theme_id)
+  theme = Theme.find_by(id: theme_id)
+  return [] unless theme
+
+  overrides = []
+
+  theme.theme_translation_overrides.find_each do |override|
+    overrides << {
+      translation_key: override.translation_key,
+      value: override.value,
+      locale: override.locale,
+    }
+  end
+
+  overrides
 end
 
 # def deprecate_theme(theme)
@@ -106,65 +156,45 @@ end
 #   end
 # end
 
-def get_theme_translation_overrides(theme_id)
-  # Retrieve all translation overrides for the specified theme
-  # Returns an array of hashes with translation_key, value, and locale
+def migrate_search_banner_translations(theme)
+  puts "    Migrating translations..."
 
-  theme = Theme.find_by(id: theme_id)
-  return [] unless theme
+  # Translation key mappings from search_banner to welcome_banner
+  # Each source key can map to multiple destination keys (using arrays)
+  translation_mappings = {
+    "search_banner.headline" => %w[
+      js.welcome_banner.header.anonymous_members
+      js.welcome_banner.header.logged_in_members
+    ],
+    "search_banner.subhead" => %w[
+      js.welcome_banner.subheader.anonymous_members
+      js.welcome_banner.subheader.logged_in_members
+    ],
+    "search_banner.search_button_text" => "js.welcome_banner.search_placeholder",
+  }
 
-  overrides = []
+  migrated_count = 0
 
+  # Check for theme translation overrides first
   theme.theme_translation_overrides.find_each do |override|
-    overrides << {
-      translation_key: override.translation_key,
-      value: override.value,
-      locale: override.locale,
-    }
+    mapping_keys = translation_mappings[override.translation_key]
+    if mapping_keys
+      Array(mapping_keys).each do |mapping_key|
+        puts "      Migrating override: #{override.translation_key} (#{override.locale}) -> #{mapping_key}"
+        create_welcome_banner_translation(mapping_key, override.value, override.locale)
+        migrated_count += 1
+      end
+    end
   end
 
-  overrides
+  # Also check the git repository for default translations
+  if migrated_count == 0
+    puts "      No theme overrides found, checking git repository defaults..."
+    migrate_from_git_repository(translation_mappings)
+  end
+
+  puts "      Migration completed. #{migrated_count} translations migrated."
 end
-
-# def migrate_search_banner_translations(theme)
-#   puts "    Migrating translations from Advanced Search Banner to Welcome Banner..."
-
-#   # Translation key mappings from search_banner to welcome_banner
-#   # Each source key can map to multiple destination keys (using arrays)
-#   translation_mappings = {
-#     "search_banner.headline" => %w[
-#       js.welcome_banner.header.anonymous_members
-#       js.welcome_banner.header.logged_in_members
-#     ],
-#     "search_banner.subhead" => %w[
-#       js.welcome_banner.subheader.anonymous_members
-#       js.welcome_banner.subheader.logged_in_members
-#     ],
-#     "search_banner.search_button_text" => "js.welcome_banner.search_placeholder",
-#   }
-
-#   migrated_count = 0
-
-#   # Check for theme translation overrides first
-#   theme.theme_translation_overrides.find_each do |override|
-#     mapping_keys = translation_mappings[override.translation_key]
-#     if mapping_keys
-#       Array(mapping_keys).each do |mapping_key|
-#         puts "      Migrating override: #{override.translation_key} (#{override.locale}) -> #{mapping_key}"
-#         create_welcome_banner_translation(mapping_key, override.value, override.locale)
-#         migrated_count += 1
-#       end
-#     end
-#   end
-
-#   # Also check the git repository for default translations
-#   if migrated_count == 0
-#     puts "      No theme overrides found, checking git repository defaults..."
-#     migrate_from_git_repository(translation_mappings)
-#   end
-
-#   puts "      Migration completed. #{migrated_count} translations migrated."
-# end
 
 # def migrate_from_git_repository(translation_mappings)
 #   repo_path = "/Users/yuriy/Projects/discourse-search-banner/locales/en.yml"
@@ -200,19 +230,14 @@ def create_welcome_banner_translation(key_path, value, locale = "en")
   # Skip empty values
   return if value.blank?
 
-  if locale == "en"
-    # For English locale, update the client.en.yml file directly
-    update_client_locale_file(key_path, value)
-  else
-    # For other locales, use translation overrides
-    begin
-      translation_override = TranslationOverride.upsert!(locale, key_path, value)
-      puts "        ✓ Created override: #{locale}.#{key_path} = '#{value}'"
-      translation_override
-    rescue => e
-      puts "        ✗ Failed to create #{locale}.#{key_path}: #{e.message}"
-      nil
-    end
+  # Always use translation overrides for theme migration
+  begin
+    translation_override = TranslationOverride.upsert!(locale, key_path, value)
+    puts "        ✓ Created override: #{locale}.#{key_path} = '#{value}'"
+    translation_override
+  rescue => e
+    puts "        ✗ Failed to create #{locale}.#{key_path}: #{e.message}"
+    nil
   end
 end
 
