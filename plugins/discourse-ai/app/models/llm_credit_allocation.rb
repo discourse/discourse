@@ -3,7 +3,14 @@
 class LlmCreditAllocation < ActiveRecord::Base
   self.table_name = "llm_credit_allocations"
 
-  CreditLimitExceeded = Class.new(StandardError)
+  class CreditLimitExceeded < StandardError
+    attr_reader :allocation
+
+    def initialize(message, allocation: nil)
+      super(message)
+      @allocation = allocation
+    end
+  end
 
   belongs_to :llm_model
 
@@ -84,6 +91,7 @@ class LlmCreditAllocation < ActiveRecord::Base
                 "discourse_ai.llm_credit_allocation.limit_exceeded",
                 reset_time: format_reset_time,
               ),
+              allocation: self,
             )
     end
   end
@@ -102,6 +110,16 @@ class LlmCreditAllocation < ActiveRecord::Base
     total_tokens = request_tokens + response_tokens
     credit_cost = LlmFeatureCreditCost.calculate_credit_cost(llm_model, feature_name, total_tokens)
     llm_model.llm_credit_allocation.deduct_credits!(credit_cost)
+  end
+
+  def formatted_reset_time
+    return "" if next_reset_at.nil?
+    next_reset_at.strftime("%l:%M%P on %b %d, %Y").strip
+  end
+
+  def relative_reset_time
+    return "" if next_reset_at.nil?
+    "in " + AgeWords.distance_of_time_in_words(Time.current, next_reset_at)
   end
 
   private

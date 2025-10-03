@@ -3,6 +3,8 @@
 module DiscourseAi
   module Summarization
     class SummaryController < ::ApplicationController
+      include AiCreditLimitHandler
+
       requires_plugin PLUGIN_NAME
 
       def show

@@ -279,6 +279,8 @@ en:
     ai_helper:
       errors:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
+        credit_limit_exceeded_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets %{reset_time}."
+        credit_limit_exceeded_bot: "AI responses are currently unavailable due to credit limits. Please try again %{reset_time}."
       prompts:
         translate: Translate to %{language}
         generate_titles: Suggest topic titles
