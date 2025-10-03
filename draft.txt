@@ -1,0 +1,55 @@
+remote_themes by remote_url="https://github.com/discourse/discourse-search-banner.git" as rtid
+themes with remote_theme_id=rtid in table themes: get id tid
+---
+theme_settings with name show_on for theme id = tid
+1.
+{
+  "setting": "show_on",
+  "humanized_name": "Show on",
+  "type": "enum",
+  "default": "top_menu",
+  "value": "all",
+  "description": "top_menu refers to the <a href=\"/admin/site_settings/category/all_results?filter=top_menu\">top menu site setting</a>",
+  "valid_values": [
+    "top_menu",
+    "homepage",
+    "discovery",
+    "all"
+  ]
+}
+- valid_values should be mapped to values in app/models/welcome_banner_page_visibility.rb:
+value: "top_menu_pages",
+value: "homepage",
+value: "discovery",
+value: "all_pages",
+- value should be mapped to site setting welcome_banner_page_visibility
+---
+plugin-outlet setting should be transfered from
+{
+  "setting": "plugin_outlet",
+  "humanized_name": "Plugin outlet",
+  "type": "enum",
+  "default": "above-main-container",
+  "value": "above-main-container",
+  "valid_values": [
+    "above-main-container",
+    "below-site-header"
+  ]
+}
+to site setting welcome_banner_location
+with values set in app/models/welcome_banner_location.rb
+as available and only values
+value: "above_topic_content",
+value: "below_site_header"
+---
+background-image-light
+{
+  "setting": "background_image_light",
+  "humanized_name": "Background image light",
+  "type": "upload",
+  "default": null,
+  "value": null,
+  "description": "background image for the banner on light color palettes"
+}
+should be transferred to
+theme_translation_overrides contain overridden translations if they are present they are considered latest version which should be migrated to welcome banner
