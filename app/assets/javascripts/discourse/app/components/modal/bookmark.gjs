@@ -363,7 +363,7 @@ export default class BookmarkModal extends Component {
           @label="bookmarks.save"
           @action={{this.saveAndClose}}
           @title="modal.close"
-          class="btn-transparent btn-primary"
+          class="btn-transparent"
         />
       </:headerPrimaryAction>
 
