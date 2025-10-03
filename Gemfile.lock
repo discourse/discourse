@@ -477,6 +477,8 @@ GEM
       ffi (~> 1.0)
     rb_sys (0.9.117)
       rake-compiler-dock (= 1.9.1)
+    rbs (3.9.5)
+      logger
     rbtrace (0.5.2)
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
@@ -584,6 +586,12 @@ GEM
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
       rubocop-rspec (~> 3.5)
+    ruby-lsp (0.26.1)
+      language_server-protocol (~> 3.17.0)
+      prism (>= 1.2, < 2.0)
+      rbs (>= 3, < 5)
+    ruby-lsp-rails (0.4.8)
+      ruby-lsp (>= 0.26.0, < 0.27.0)
     ruby-prof (1.7.2)
       base64
     ruby-progressbar (1.13.0)
@@ -852,6 +860,8 @@ DEPENDENCIES
   rswag-specs
   rtlcss
   rubocop-discourse
+  ruby-lsp
+  ruby-lsp-rails
   ruby-prof
   ruby-progressbar
   ruby-rc4
@@ -1113,6 +1123,7 @@ CHECKSUMS
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
   rb_sys (0.9.117) sha256=755feaf6c640baceca7a9362dfb0ae87ff4ff16e3566d9ef86533896eb85cb59
+  rbs (3.9.5) sha256=eabaaf60aee84e38cbf94839c6e1b9cd145c7295fc3cc0e88c92e4069b1119b0
   rbtrace (0.5.2) sha256=a2d7d222ab81363aaa0e91337ddbf70df834885d401a80ea0339d86c71f31895
   rchardet (1.10.0) sha256=d5ea2ed61a720a220f1914778208e718a0c7ed2a484b6d357ba695aa7001390f
   rdoc (6.14.2) sha256=9fdd44df130f856ae70cc9a264dfd659b9b40de369b16581f4ab746e42439226
@@ -1149,6 +1160,8 @@ CHECKSUMS
   rubocop-rails (2.33.4) sha256=34ec8f6637706dc224483d949ccc88b3e41596a81a11a1ec0c7d74ecbea356b5
   rubocop-rspec (3.7.0) sha256=b7b214da112034db9c6d00f2d811a354847e870f7b6ed2482b29649c3d42058f
   rubocop-rspec_rails (2.31.0) sha256=775375e18a26a1184a812ef3054b79d218e85601b9ae897f38f8be24dddf1f45
+  ruby-lsp (0.26.1) sha256=d140c75df25cd1a6475c17a84ce650aa81608e77ca0642d4ef4363f2c6791814
+  ruby-lsp-rails (0.4.8) sha256=f09d1f926d4063deeb2f3049311925c20dfe6c912371e3bcd04a265a865c44ae
   ruby-prof (1.7.2) sha256=270424fcac37e611f2d15a55226c4628e234f8434e1d7c25ca8a2155b9fc4340
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby-rc4 (0.1.5) sha256=00cc40a39d20b53f5459e7ea006a92cf584e9bc275e2a6f7aa1515510e896c03
