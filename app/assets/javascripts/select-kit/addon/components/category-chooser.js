@@ -83,7 +83,7 @@ export default class CategoryChooser extends ComboBoxComponent {
             link: false,
             hideParent: category ? !!category.parent_category_id : true,
             allowUncategorized: true,
-            ancestors: category.predecessors,
+            ancestors: category?.predecessors,
           })
         )
       );
