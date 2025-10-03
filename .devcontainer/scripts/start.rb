@@ -6,6 +6,7 @@ puts "👋 Welcome to the Discourse devcontainer! Let's get everything ready..."
 puts "Setting permissions on volume mounts..."
 system "sudo chown discourse .", exception: true
 system "sudo chown discourse node_modules", exception: true
+system "sudo chown -R discourse .ruby-lsp", exception: true
 system "sudo chown -R postgres /shared/postgres_data", exception: true
 
 puts "Starting services..."

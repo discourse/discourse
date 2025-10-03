@@ -20,7 +20,8 @@
   "mounts": [
     "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",
     "source=${localWorkspaceFolderBasename}-pg,target=/shared/postgres_data,type=volume",
-    "source=${localWorkspaceFolderBasename}-redis,target=/shared/redis,type=volume"
+    "source=${localWorkspaceFolderBasename}-redis,target=/shared/redis,type=volume",
+    "source=${localWorkspaceFolderBasename}-ruby-lsp,target=${containerWorkspaceFolder}/.ruby-lsp,type=volume"
   ],
   "customizations": {
     "vscode": {
