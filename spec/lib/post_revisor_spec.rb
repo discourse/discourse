@@ -1651,7 +1651,7 @@ describe PostRevisor do
       let(:plugin_instance) { Plugin::Instance.new }
       let(:modifier_return_value) { nil }
       let(:modifier_block) do
-        Proc.new do |value, modifier_post, modifier_post_changes, modifier_topic_changes|
+        Proc.new do |value, modifier_post, modifier_post_changes, modifier_topic_changes, editor|
           modifier_return_value
         end
       end

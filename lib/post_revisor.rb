@@ -207,15 +207,20 @@ class PostRevisor
     tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
   end
 
-  # AVAILABLE OPTIONS:
-  # - revised_at: changes the date of the revision
-  # - force_new_version: bypass grace period edit window
-  # - bypass_rate_limiter:
-  # - bypass_bump: do not bump the topic, even if last post
-  # - skip_validations: ask ActiveRecord to skip validations
-  # - skip_revision: do not create a new PostRevision record
-  # - skip_staff_log: skip creating an entry in the staff action log
-  # - silent: don't send notifications to user
+  # Revises a post with the given fields and options.
+  #
+  # @param editor [User] The user performing the revision
+  # @param fields [Hash] Hash of fields to update
+  # @param opts [Hash] Optional parameters for the revision
+  # @option opts [Time] :revised_at Changes the date of the revision
+  # @option opts [Boolean] :force_new_version Bypass grace period edit window
+  # @option opts [Boolean] :bypass_rate_limiter Bypass the max limits per day rate limiter
+  # @option opts [Boolean] :bypass_bump Do not bump the topic. Takes precedence over should_bump_topic plugin modifier, and any other should_bump? logic
+  # @option opts [Boolean] :skip_validations Ask ActiveRecord to skip validations
+  # @option opts [Boolean] :skip_revision Do not create a new PostRevision record
+  # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
+  # @option opts [Boolean] :silent Don't send notifications to user
+  # @return [Boolean] Returns true if the revision was successful, false otherwise
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -671,6 +676,7 @@ class PostRevisor
         @post,
         post_changes,
         @topic_changes,
+        @editor,
       )
     return should_bump_topic_modifier_result if !should_bump_topic_modifier_result.nil?
 
