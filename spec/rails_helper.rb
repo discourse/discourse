@@ -379,6 +379,8 @@ RSpec.configure do |config|
       minio_runner_config.minio_console_port = 9_001 + 2 * test_i
     end
 
+    DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
+
     WebMock.disable_net_connect!(
       allow_localhost: true,
       allow: [
