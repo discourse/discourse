@@ -178,6 +178,7 @@ export default class Post extends RestModel {
   @trackedPostProperty excerpt;
   @trackedPostProperty expandedExcerpt;
   @trackedPostProperty group_moderator;
+  @trackedPostProperty hasGap;
   @trackedPostProperty hidden;
   @trackedPostProperty id;
   @trackedPostProperty is_auto_generated;
@@ -194,6 +195,7 @@ export default class Post extends RestModel {
   @trackedPostProperty primary_group_name;
   @trackedPostProperty quoted;
   @trackedPostProperty read;
+  @trackedPostProperty readers_count;
   @trackedPostProperty reply_count;
   @trackedPostProperty reply_to_user;
   @trackedPostProperty staff;
