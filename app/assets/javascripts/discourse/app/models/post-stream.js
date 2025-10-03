@@ -392,59 +392,60 @@ export default class PostStream extends RestModel {
   }
 
   // Fill in a gap of posts before a particular post
-  fillGapBefore(post, gap) {
-    const postId = post.id,
-      stream = this.stream,
-      idx = stream.indexOf(postId),
-      currentPosts = this.posts;
+  async fillGapBefore(post, gap) {
+    const postId = post.id;
+    const stream = this.stream;
+    const idx = stream.indexOf(postId);
+    const currentPosts = this.posts;
 
-    if (idx !== -1) {
-      // Insert the gap at the appropriate place
-
-      let postIdx = currentPosts.indexOf(post);
-
-      let headGap = gap.slice(0, this.topic.chunk_size);
-      let tailGap = gap.slice(this.topic.chunk_size);
-      stream.splice.apply(stream, [idx, 0].concat(headGap));
-      if (postIdx !== -1) {
-        return this.findPostsByIds(headGap).then((posts) => {
-          posts.forEach((p) => {
-            this._initUserModels(p);
-            const stored = this.storePost(p);
-            if (!currentPosts.includes(stored)) {
-              const insertAtIndex = postIdx++;
-              currentPosts.splice(insertAtIndex, 0, stored);
-            }
-          });
-
-          if (tailGap.length > 0) {
-            this.get("gaps.before")[postId] = tailGap;
-          } else {
-            delete this.get("gaps.before")[postId];
-          }
-
-          post.set("hasGap", false);
-          this.gapExpanded();
-        });
-      }
+    if (idx === -1) {
+      return;
     }
-    return Promise.resolve();
+
+    // Insert the gap at the appropriate place
+    let postIdx = currentPosts.indexOf(post);
+
+    const headGap = gap.slice(0, this.topic.chunk_size);
+    const tailGap = gap.slice(this.topic.chunk_size);
+    stream.splice.apply(stream, [idx, 0].concat(headGap));
+
+    if (postIdx !== -1) {
+      const posts = await this.findPostsByIds(headGap);
+      posts.forEach((p) => {
+        this._initUserModels(p);
+        const stored = this.storePost(p);
+        if (!currentPosts.includes(stored)) {
+          const insertAtIndex = postIdx++;
+          currentPosts.splice(insertAtIndex, 0, stored);
+        }
+      });
+
+      if (tailGap.length > 0) {
+        this.get("gaps.before")[postId] = tailGap;
+      } else {
+        delete this.get("gaps.before")[postId];
+      }
+
+      post.set("hasGap", false);
+      this.gapExpanded();
+    }
   }
 
   // Fill in a gap of posts after a particular post
-  fillGapAfter(post, gap) {
-    const postId = post.id,
-      stream = this.stream,
-      idx = stream.indexOf(postId);
+  async fillGapAfter(post, gap) {
+    const postId = post.id;
+    const stream = this.stream;
+    const idx = stream.indexOf(postId);
 
-    if (idx !== -1) {
-      stream.push(...gap);
-      return this.appendMore().then(() => {
-        delete this.get("gaps.after")[postId];
-        this.gapExpanded();
-      });
+    if (idx === -1) {
+      return;
     }
-    return Promise.resolve();
+
+    stream.push(...gap);
+
+    await this.appendMore();
+    delete this.get("gaps.after")[postId];
+    this.gapExpanded();
   }
 
   gapExpanded() {
@@ -704,110 +705,108 @@ export default class PostStream extends RestModel {
     from the message bus indicating there's a new post. We'll only insert it if we currently
     have no filters.
   **/
-  triggerNewPostsInStream(postIds, opts) {
-    const resolved = Promise.resolve();
-
+  async triggerNewPostsInStream(postIds, opts) {
+    // Early return if no posts or empty array
     if (!postIds || postIds.length === 0) {
-      return resolved;
+      return;
     }
 
-    // We only trigger if there are no filters active
+    // Early return if there are filters active
     if (!this.hasNoFilters) {
-      return resolved;
+      return;
     }
 
     const loadedAllPosts = this.loadedAllPosts;
     this._loadingPostIds = this._loadingPostIds || [];
 
-    let missingIds = [];
-
-    postIds.forEach((postId) => {
-      if (postId && !this.stream.includes(postId)) {
-        missingIds.push(postId);
-      }
-    });
+    // Find missing post IDs that aren't in the stream
+    const missingIds = postIds.filter(
+      (postId) => postId && !this.stream.includes(postId)
+    );
 
     if (missingIds.length === 0) {
-      return resolved;
+      return;
     }
 
     if (loadedAllPosts) {
+      // Add missing posts to loading queue if not already loading
       missingIds.forEach((postId) => {
         if (!this._loadingPostIds.includes(postId)) {
           this._loadingPostIds.push(postId);
         }
       });
+
       this.set("loadingLastPost", true);
-      return this.findPostsByIds(this._loadingPostIds, opts)
-        .then((posts) => {
-          this._loadingPostIds = null;
-          const ignoredUsers = this.currentUser?.ignored_users;
-          posts.forEach((p) => {
-            if (ignoredUsers?.includes(p.username)) {
-              removeValueFromArray(this.stream, p.id);
-              return;
-            }
-            if (!this.stream.includes(p.id)) {
-              this.stream.push(p.id);
-            }
-            this.appendPost(p);
-          });
-        })
-        .finally(() => {
-          this.set("loadingLastPost", false);
+
+      try {
+        const posts = await this.findPostsByIds(this._loadingPostIds, opts);
+        this._loadingPostIds = null;
+
+        const ignoredUsers = this.currentUser?.ignored_users;
+        posts.forEach((p) => {
+          if (ignoredUsers?.includes(p.username)) {
+            removeValueFromArray(this.stream, p.id);
+            return;
+          }
+
+          if (!this.stream.includes(p.id)) {
+            this.stream.push(p.id);
+          }
+          this.appendPost(p);
         });
+      } finally {
+        this.set("loadingLastPost", false);
+      }
     } else {
+      // Simply add missing post IDs to the stream
       missingIds.forEach((postId) => {
         if (!this.stream.includes(postId)) {
           this.stream.push(postId);
         }
       });
     }
-
-    return resolved;
   }
 
-  triggerRecoveredPost(postId) {
+  async triggerRecoveredPost(postId) {
     const existing = this._identityMap[postId];
 
     if (existing) {
       return this.triggerChangedPost(postId, new Date());
+    }
+
+    // need to insert into stream
+    const url = `/posts/${postId}`;
+    const store = this.store;
+
+    const p = await ajax(url);
+    const post = store.createRecord("post", p);
+    const stream = this.stream;
+    const posts = this.posts;
+    this.storePost(post);
+
+    // we need to zip this into the stream
+    let index = 0;
+    stream.forEach((pid) => {
+      if (pid < p.id) {
+        index += 1;
+      }
+    });
+
+    stream.splice(index, 0, p.id);
+
+    index = 0;
+    posts.forEach((_post) => {
+      if (_post.id < p.id) {
+        index += 1;
+      }
+    });
+
+    if (index < posts.length) {
+      posts.splice(index, 0, post);
     } else {
-      // need to insert into stream
-      const url = `/posts/${postId}`;
-      const store = this.store;
-
-      return ajax(url).then((p) => {
-        const post = store.createRecord("post", p);
-        const stream = this.stream;
-        const posts = this.posts;
-        this.storePost(post);
-
-        // we need to zip this into the stream
-        let index = 0;
-        stream.forEach((pid) => {
-          if (pid < p.id) {
-            index += 1;
-          }
-        });
-
-        stream.splice(index, 0, p.id);
-
-        index = 0;
-        posts.forEach((_post) => {
-          if (_post.id < p.id) {
-            index += 1;
-          }
-        });
-
-        if (index < posts.length) {
-          posts.splice(index, 0, post);
-        } else {
-          if (post.post_number < posts[posts.length - 1].post_number + 5) {
-            this.appendMore();
-          }
-        }
-      });
+      if (post.post_number < posts[posts.length - 1].post_number + 5) {
+        await this.appendMore();
+      }
     }
   }
 
