@@ -141,6 +141,10 @@ describe "Assign | Assigning topics", type: :system do
             expect(page).to have_no_css("#post_4")
             expect(page).to have_no_css("#topic .assigned-to")
 
+            expect(page).to have_css(
+              "#topic-footer-button-assign",
+              text: I18n.t("js.discourse_assign.assign.title"),
+            )
             topic_page.click_assign_topic
             assign_modal.assignee = admin2
             assign_modal.confirm
