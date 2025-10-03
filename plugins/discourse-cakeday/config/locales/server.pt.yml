@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt:
+  site_settings:
+    cakeday_enabled: "Mostrar emojis de bolo de aniversário junto do nome do utilizador na data de registo no site."
+    cakeday_emoji: "Os emojis que serão mostrados junto do nome do utilizador. Múltiplos emojis podem ser especificados com: smile!cake|smile"
+    cakeday_birthday_enabled: "Mostrar emojis de aniversário junto do nome do utilizador no dia de aniversário."
+    cakeday_birthday_emoji: "Os emojis que serão mostrados junto do nome do utilizador. Múltiplos emojis podem ser especificados com: smile!cake|smile"
