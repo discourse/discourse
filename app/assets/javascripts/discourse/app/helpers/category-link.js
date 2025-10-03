@@ -81,9 +81,12 @@ export function categoryBadgeHTML(category, opts) {
     const parentCategory = Category.findById(category.parent_category_id);
     const lastSubcategory = !opts.depth;
     opts.depth = depth;
-    const parentBadges = categoryBadgeHTML(parentCategory, { ...newOpts });
+    const parentBadge = categoryBadgeHTML(parentCategory, {
+      depth,
+      ...newOpts,
+    });
     opts.lastSubcategory = lastSubcategory;
-    return parentBadges + _renderer(category, opts);
+    return parentBadge + _renderer(category, opts);
   }
 
   return _renderer(category, opts);
