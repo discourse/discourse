@@ -400,6 +400,10 @@ nav.post-controls {
             padding-right: 0;
           }
 
+          &.my-likes {
+            flex-direction: row-reverse;
+          }
+
           + .toggle-like {
             // Like button when like count is present
             padding-left: 0.45em;

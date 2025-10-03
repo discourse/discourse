@@ -85,15 +85,13 @@ export default class LikedUsersList extends Component {
         "highlight-action"
         (if @post.yours "my-likes" "regular-likes")
       }}
+      @icon={{if @post.yours "d-liked" ""}}
       @placement="top"
       label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
       id="post-like-users_{{@post.id}}"
     >
       <:trigger>
         {{@post.likeCount}}
-        {{#if this.icon}}
-          {{~icon this.icon~}}
-        {{/if}}
       </:trigger>
       <:content>
         <ConditionalLoadingSpinner
