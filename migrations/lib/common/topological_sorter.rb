@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Migrations::Importer
+module Migrations
   class TopologicalSorter
     def self.sort(classes)
       new(classes).sort
@@ -15,7 +15,7 @@ module Migrations::Importer
       in_degree = Hash.new(0)
       @dependency_graph.each_value { |edges| edges.each { |edge| in_degree[edge] += 1 } }
 
-      queue = @classes.reject { |cls| in_degree[cls] > 0 }
+      queue = @classes.reject { |klass| in_degree[klass] > 0 }
       result = []
 
       while queue.any?
@@ -40,8 +40,11 @@ module Migrations::Importer
       @classes
         .sort_by(&:to_s)
         .each do |klass|
-          dependencies = klass.dependencies || []
-          dependencies.each { |dependency| graph[dependency] << klass }
+          if klass.respond_to?(:dependencies) && (dependencies = klass.dependencies).present?
+            dependencies
+              .select { |dep| @classes.include?(dep) }
+              .each { |dependency| graph[dependency] << klass }
+          end
           graph[klass] ||= []
         end
       graph
