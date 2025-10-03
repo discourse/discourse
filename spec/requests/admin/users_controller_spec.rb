@@ -1066,7 +1066,7 @@ RSpec.describe Admin::UsersController do
         before { SiteSetting.moderators_change_trust_levels = false }
 
         it "prevents updates to trust level with a 422 response" do
-          another_user.update(trust_level: TrustLevel[1])
+          another_user.update!(trust_level: TrustLevel[1])
           put "/admin/users/#{another_user.id}/trust_level.json", params: { level: TrustLevel[0] }
 
           expect(response.status).to eq(422)
