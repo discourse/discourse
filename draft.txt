@@ -53,3 +53,8 @@ background-image-light
 }
 should be transferred to
 theme_translation_overrides contain overridden translations if they are present they are considered latest version which should be migrated to welcome banner
+---
+translations:
+`search_banner.headline` -> [js.welcome_banner.header.anonymous_members, js.welcome_banner.header.logged_in_members]
+`search_banner.subhead` -> [js.welcome_banner.subheader.logged_in_members, js.welcome_banner.subheader.anonymous_members]
+`search_banner.search_button_text` -> js.welcome_banner.search_placeholder
