@@ -152,7 +152,7 @@ RSpec.describe Site do
 
       expect(site.categories.map { |c| c[:can_edit] }).to contain_exactly(false, false)
 
-      SiteSetting.moderators_manage_categories_and_groups = true
+      SiteSetting.moderators_manage_categories = true
 
       site = Site.new(Guardian.new(Fabricate(:moderator)))
 

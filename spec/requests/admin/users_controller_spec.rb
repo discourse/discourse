@@ -1273,14 +1273,14 @@ RSpec.describe Admin::UsersController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      context "when moderators_manage_categories_and_groups site setting is enabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = true }
+      context "when moderators_manage_groups site setting is enabled" do
+        before { SiteSetting.moderators_manage_groups = true }
 
         include_examples "primary group updates possible"
       end
 
-      context "when moderators_manage_categories_and_groups site setting is disabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = false }
+      context "when moderators_manage_groups site setting is disabled" do
+        before { SiteSetting.moderators_manage_groups = false }
 
         it "prevents setting primary group with a 403 response" do
           group.add(another_user)

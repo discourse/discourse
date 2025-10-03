@@ -1295,12 +1295,12 @@ RSpec.describe GroupsController do
 
     context "when user is a site moderator" do
       before do
-        SiteSetting.moderators_manage_categories_and_groups = true
+        SiteSetting.moderators_manage_groups = true
         sign_in(moderator)
       end
 
       it "should not be able to update the group if the SiteSetting is false" do
-        SiteSetting.moderators_manage_categories_and_groups = false
+        SiteSetting.moderators_manage_groups = false
 
         put "/groups/#{group.id}.json", params: { group: { name: "testing" } }
 
@@ -1960,8 +1960,8 @@ RSpec.describe GroupsController do
       context "when logged in as a moderator" do
         before { sign_in(moderator) }
 
-        context "with moderators_manage_categories_and_groups enabled" do
-          before { SiteSetting.moderators_manage_categories_and_groups = true }
+        context "with moderators_manage_groups enabled" do
+          before { SiteSetting.moderators_manage_groups = true }
 
           it "adds owners" do
             put "/groups/#{group.id}/owners.json",
@@ -1985,8 +1985,8 @@ RSpec.describe GroupsController do
           end
         end
 
-        context "with moderators_manage_categories_and_groups disabled" do
-          before { SiteSetting.moderators_manage_categories_and_groups = false }
+        context "with moderators_manage_groups disabled" do
+          before { SiteSetting.moderators_manage_groups = false }
 
           it "prevents adding of owners with a 403 response" do
             put "/groups/#{group.id}/owners.json",
