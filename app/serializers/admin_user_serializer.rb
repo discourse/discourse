@@ -7,6 +7,7 @@ class AdminUserSerializer < AdminUserListSerializer
              :can_activate,
              :can_deactivate,
              :can_approve,
+             :can_change_trust_level,
              :ip_address,
              :registration_ip_address,
              :include_ip
@@ -31,6 +32,10 @@ class AdminUserSerializer < AdminUserListSerializer
 
   def can_deactivate
     scope.can_deactivate?(object)
+  end
+
+  def can_change_trust_level
+    scope.can_change_trust_level?(object)
   end
 
   def ip_address
