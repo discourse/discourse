@@ -543,6 +543,7 @@ plugins:
   - "discourse-ai"
   - "discourse-apple-auth"
   - "discourse-assign"
+  - "discourse-cakeday"
   - "discourse-calendar"
   - "discourse-chat-integration"
   - "discourse-data-explorer"

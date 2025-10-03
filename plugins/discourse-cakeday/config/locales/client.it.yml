@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Oggi è il tuo compleanno!"
+        title: "Oggi è il mio compleanno!"
+        label: "Data di nascita"
+      anniversary:
+        user_title: "Oggi è l'anniversario della tua iscrizione a questa community!"
+        title: "Oggi è l'anniversario della mia iscrizione a questa community!"
+    cakeday:
+      title: Giorno di festa
+      today: "Oggi"
+      tomorrow: "Domani"
+      upcoming: "Prossimi"
+      all: "Tutti"
+    birthdays:
+      title: "Compleanni"
+      month:
+        title: "Compleanni nel mese di"
+        empty: "Non ci sono utenti che compiono gli anni questo mese."
+      upcoming:
+        title: "Compleanni dal %{start_date} al %{end_date}"
+        empty: "Non ci sono utenti che compiono gli anni nei prossimi 7 giorni."
+      today:
+        title: "Compleanni del %{date}"
+        empty: "Non ci sono utenti che compiono gli anni oggi."
+      tomorrow:
+        empty: "Non ci sono utenti che compiranno gli anni domani."
+    anniversaries:
+      title: "Anniversari"
+      month:
+        title: "Anniversari del mese di"
+        empty: "Non ci sono utenti che festeggiano anniversari questo mese."
+      upcoming:
+        title: "Anniversari dal %{start_date} al %{end_date}"
+        empty: "Non ci sono utenti che festeggiano anniversari nei prossimi 7 giorni."
+      today:
+        title: "Anniversari del %{date}"
+        empty: "Non ci sono utenti che festeggiano anniversari oggi."
+      tomorrow:
+        empty: "Non ci sono utenti che festeggiano anniversari domani."

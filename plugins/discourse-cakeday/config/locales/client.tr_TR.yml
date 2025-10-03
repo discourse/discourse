@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Bugün doğum gününüz!"
+        title: "Bugün benim doğum günüm!"
+        label: "Doğum Tarihi"
+      anniversary:
+        user_title: "Bugün, topluluğumuza katılmanızın yıl dönümü!"
+        title: "Bugün bu topluluğa katılmamın yıl dönümü!"
+    cakeday:
+      title: Pasta günü
+      today: "Bugün"
+      tomorrow: "Yarın"
+      upcoming: "Yaklaşan"
+      all: "Tümü"
+    birthdays:
+      title: "Doğum günleri"
+      month:
+        title: "Şu ayki doğum günleri:"
+        empty: "Bu ay doğum günü olan kullanıcı yok."
+      upcoming:
+        title: "%{start_date} - %{end_date} arası doğum günleri"
+        empty: "Gelecek 7 gün içinde doğum günü olan kullanıcı yok."
+      today:
+        title: "%{date} için doğum günleri"
+        empty: "Bugün doğum günü olan kullanıcı yok."
+      tomorrow:
+        empty: "Yarın doğum günü olan kullanıcı yok."
+    anniversaries:
+      title: "Yıl dönümleri"
+      month:
+        title: "Şu ayki yıl dönümleri:"
+        empty: "Bu ay yıl dönümü olan kullanıcı yok."
+      upcoming:
+        title: "%{start_date} - %{end_date} için yıl dönümleri"
+        empty: "Önümüzdeki 7 gün içinde yıl dönümü olan kullanıcı yok."
+      today:
+        title: "%{date} için yıl dönümleri"
+        empty: "Bugün yıl dönümü olan kullanıcı yok."
+      tomorrow:
+        empty: "Yarın yıl dönümü olan kullanıcı yok."

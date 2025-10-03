@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Tänään on syntymäpäiväsi!"
+        title: "Tänään on syntymäpäiväni!"
+        label: "Syntymäpäivä"
+      anniversary:
+        user_title: "Tänään on yhteisöön liittymisesi vuosipäivä!"
+        title: "Tänään on yhteisöön liittymiseni vuosipäivä!"
+    cakeday:
+      title: Merkkipäivät
+      today: "Tänään"
+      tomorrow: "Huomenna"
+      upcoming: "Tulossa"
+      all: "Kaikki"
+    birthdays:
+      title: "Syntymäpäivät"
+      month:
+        title: "Syntymäpäivät,"
+        empty: "Kukaan ei vietä syntymäpäiväänsä tässä kuussa."
+      upcoming:
+        title: "Syntymäpäivät %{start_date}–%{end_date}"
+        empty: "Kukaan ei vietä syntymäpäiväänsä seuraavien 7 päivän aikana."
+      today:
+        title: "Syntymäpäivät %{date}"
+        empty: "Kukaan ei vietä syntymäpäiväänsä tänään."
+      tomorrow:
+        empty: "Kukaan ei vietä syntymäpäiväänsä huomenna."
+    anniversaries:
+      title: "Vuosipäivät"
+      month:
+        title: "Vuosipäivät,"
+        empty: "Kukaan ei vietä vuosipäiväänsä tässä kuussa."
+      upcoming:
+        title: "Vuosipäivät %{start_date}–%{end_date}"
+        empty: "Kukaan ei vietä vuosipäiväänsä seuraavien 7 päivän aikana."
+      today:
+        title: "Vuosipäivät %{date}"
+        empty: "Kukaan ei vietä vuosipäiväänsä tänään."
+      tomorrow:
+        empty: "Kukaan ei vietä vuosipäiväänsä huomenna."
