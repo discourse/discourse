@@ -240,3 +240,39 @@ jobs:
         run: |
           RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
         shell: bash
+
+      - name: Check for failed system test artifacts
+        id: check-failed-system-test-artifacts
+        if: always() && matrix.build_type == 'system'
+        run: |
+          if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Upload failed system test artifacts
+        uses: actions/upload-artifact@v4
+        if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
+        with:
+          name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}-${{ matrix.CAPYBARA_PLAYWRIGHT_ENABLE_EMBER_SETTLED }}
+          path: |
+            tmp/capybara/*.png
+            tmp/capybara/*.zip
+            tmp/capybara/*.webm
+
+  merge:
+    if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: failed-system-test-artifacts
+          pattern: failed-system-test-artifacts-*
+          delete-merged: true
+          separate-directories: false
+        # Don't fail the job if there aren't any artifacts to merge.
+        continue-on-error: true
