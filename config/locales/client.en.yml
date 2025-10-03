@@ -1799,6 +1799,7 @@ en:
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
         remove: "Remove Password"
+        remove_disabled: "The account needs at least one other login method (e.g. a passkey or a linked external account) before removing the password."
         remove_detail: "Your account will no longer be accessible with a password unless you reset it."
 
       second_factor_backup:
@@ -4460,6 +4461,10 @@ en:
       style: "Styles"
       background_color: "Color"
       foreground_color: "Text color"
+      color_validations:
+        cant_be_empty: "can't be empty"
+        incorrect_length: "must match the format #RRGGBB or #RGB"
+        non_hexdecimal: "must only contain hexadecimal characters (0-9, A-F)"
       styles:
         type: "Style"
         icon: "Icon"

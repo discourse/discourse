@@ -1621,6 +1621,32 @@ describe PostRevisor do
       }.not_to change { post.topic.bumped_at }
     end
 
+    it "doesn't bump the topic when editing the topic title" do
+      expect {
+        post_revisor.revise!(
+          post.user,
+          { title: "This is an updated topic title" },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+        )
+      }.not_to change { post.topic.bumped_at }
+    end
+
+    it "doesn't bump the topic when editing the topic category" do
+      expect {
+        post_revisor.revise!(
+          post.user,
+          { category_id: Fabricate(:category).id },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+        )
+      }.not_to change { post.topic.bumped_at }
+    end
+
+    it "doesn't bump the topic when editing tags" do
+      expect { post_revisor.revise!(post.user, { tags: %w[totally update] }) }.not_to change {
+        post.topic.bumped_at
+      }
+    end
+
     describe "should_bump_topic plugin modifier" do
       let(:plugin_instance) { Plugin::Instance.new }
       let(:modifier_return_value) { nil }

@@ -15,6 +15,11 @@ module PageObjects
         self
       end
 
+      def visit_general(category)
+        page.visit("/c/#{category.slug}/edit/general")
+        self
+      end
+
       def visit_edit_template(category)
         page.visit("/c/#{category.slug}/edit/topic-template")
         self

@@ -225,7 +225,7 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
-      await this.validate(this.fields.values());
+      await this.validate([...this.fields.values()]);
 
       if (this.formData.isValid) {
         this.formData.save();

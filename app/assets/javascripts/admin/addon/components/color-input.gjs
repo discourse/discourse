@@ -32,16 +32,16 @@ export default class ColorInput extends Component {
   }
 
   @computed("hexValueWithFallback")
-  get normalizedValue() {
-    return this.normalize(this.hexValueWithFallback);
+  get valueForPicker() {
+    return this.normalize(this.hexValueWithFallback, { forPicker: true });
   }
 
-  normalize(color) {
+  normalize(color, { forPicker = false } = {}) {
     if (this._valid(color)) {
       if (!color.startsWith("#")) {
         color = "#" + color;
       }
-      if (color.length === 4) {
+      if (color.length === 4 && (!this.skipNormalize || forPicker)) {
         color =
           "#" +
           color
@@ -109,8 +109,8 @@ export default class ColorInput extends Component {
     <input
       class="picker"
       type="color"
-      value={{this.normalizedValue}}
-      title={{this.normalizedValue}}
+      value={{this.valueForPicker}}
+      title={{this.valueForPicker}}
       {{on "input" this.onPickerInput}}
       aria-labelledby={{this.ariaLabelledby}}
     />

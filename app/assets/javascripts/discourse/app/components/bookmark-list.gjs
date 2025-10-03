@@ -11,7 +11,6 @@ import { and } from "truth-helpers";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import FlatButton from "discourse/components/flat-button";
 import LoadMore from "discourse/components/load-more";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -214,9 +213,9 @@ export default class BookmarkList extends Component {
               <PluginOutlet @name="bookmark-list-table-header">
                 {{#if this.bulkSelectEnabled}}
                   <th class="bulk-select topic-list-data">
-                    <FlatButton
+                    <DButton
                       @action={{this.toggleBulkSelect}}
-                      @class="bulk-select"
+                      class="bulk-select btn-flat"
                       @icon="list-check"
                       @title="bookmarks.bulk.toggle"
                     />
@@ -252,9 +251,9 @@ export default class BookmarkList extends Component {
                       />
                     </span>
                   {{else}}
-                    <FlatButton
+                    <DButton
                       @action={{this.toggleBulkSelect}}
-                      @class="bulk-select"
+                      class="btn-flat bulk-select"
                       @icon="list-check"
                       @title="bookmarks.bulk.toggle"
                     />
