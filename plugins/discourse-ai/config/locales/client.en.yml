@@ -428,6 +428,7 @@ en:
           last_week: "Last week"
           last_month: "Last month"
           custom: "Custom..."
+        credit_allocations: "Credit allocations"
 
       ai_persona:
         ai_tools: "Tools"
@@ -643,6 +644,11 @@ en:
           max_tokens_required: "Must be set if max usages is not set"
           max_usages_help: "Maximum number of times each user in this group can use the AI model within the specified duration. This quota is tracked per individual user, not shared across the group."
           max_usages_required: "Must be set if max tokens is not set"
+        credit_allocation:
+          credits_remaining: "%{remaining} of %{total} credits remaining (%{percentage}%)"
+          soft_limit_warning: "This model has %{percentage}% of AI credits remaining this month"
+          hard_limit_warning: "You have run out of AI credits for this model. AI features using this model will be unavailable until %{reset_date}"
+          next_reset: "Credits reset on %{time}"
         usage:
           ai_bot: "AI bot"
           ai_helper: "Helper (%{persona})"

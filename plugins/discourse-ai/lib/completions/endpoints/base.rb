@@ -80,6 +80,8 @@ module DiscourseAi
           &blk
         )
           LlmQuota.check_quotas!(@llm_model, user)
+          LlmCreditAllocation.check_credits!(@llm_model)
+
           start_time = Time.now
 
           if cancel_manager && cancel_manager.cancelled?
@@ -281,6 +283,13 @@ module DiscourseAi
                 log.duration_msecs = (Time.now - start_time) * 1000
                 log.save!
                 LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
+                LlmCreditAllocation.deduct_credits!(
+                  @llm_model,
+                  feature_name,
+                  log.request_tokens,
+                  log.response_tokens,
+                )
+
                 if Rails.env.development? && !ENV["DISCOURSE_AI_NO_DEBUG"]
                   puts "#{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}"
                 end

@@ -1,0 +1,41 @@
+.ai-llm-list__credit-allocation .fk-d-tooltip__trigger {
+  width: 100%;
+  display: block;
+}
+
+.ai-credit-bar {
+  margin-top: 0.5em;
+  width: 100%;
+
+  &__progress {
+    height: 0.75rem;
+    background: var(--primary-low);
+    border-radius: var(--d-border-radius-large);
+    overflow: hidden;
+    margin-bottom: 0.25em;
+    width: 100%;
+  }
+
+  &__fill {
+    height: 100%;
+    background: var(--tertiary);
+    transition: width 0.3s ease;
+  }
+
+  &__text {
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &--warning {
+    .ai-credit-bar__fill {
+      background: var(--danger);
+    }
+  }
+}
+
+.ai-credit-warning {
+  margin-top: 0.5em;
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-1);
+}

@@ -649,6 +649,9 @@ en:
       errors:
         disabled: "The AI translation feature is not fully configured."
 
+    llm_credit_allocation:
+      limit_exceeded: "You have reached your AI credit limit. Please try again in %{reset_time}."
+
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
       quota_required: "You must specify maximum tokens or usages for this model"
@@ -668,3 +671,5 @@ en:
   dashboard:
     problem:
       ai_llm_status: "The LLM model: %{model_name} is encountering issues. Please check the <a href='%{url}'>model's configuration page</a>."
+      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"
