@@ -35,7 +35,8 @@ class BookmarksController < ApplicationController
 
     return render json: success_json.merge(id: bookmark.id) if bookmark_manager.errors.empty?
 
-    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: :bad_request
+    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages),
+           status: :bad_request
   end
 
   def destroy
@@ -61,7 +62,8 @@ class BookmarksController < ApplicationController
 
     return render json: success_json if bookmark_manager.errors.empty?
 
-    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: :bad_request
+    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages),
+           status: :bad_request
   end
 
   def toggle_pin
@@ -72,7 +74,8 @@ class BookmarksController < ApplicationController
 
     return render json: success_json if bookmark_manager.errors.empty?
 
-    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages), status: :bad_request
+    render json: failed_json.merge(errors: bookmark_manager.errors.full_messages),
+           status: :bad_request
   end
 
   def bulk

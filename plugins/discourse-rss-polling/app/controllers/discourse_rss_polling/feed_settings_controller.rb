@@ -24,7 +24,11 @@ module DiscourseRssPolling
         if rss_feed.save
           render json: { success: true }
         else
-          render json: { success: false, errors: rss_feed.errors.full_messages }, status: :unprocessable_entity
+          render json: {
+                   success: false,
+                   errors: rss_feed.errors.full_messages,
+                 },
+                 status: :unprocessable_entity
         end
       else
         render json: { success: false, error: "Invalid feed data" }, status: :bad_request

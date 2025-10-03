@@ -39,7 +39,8 @@ module DiscourseAi
           if upload.persisted?
             render json: UploadSerializer.new(upload)
           else
-            render json: failed_json.merge(errors: upload.errors.full_messages), status: :unprocessable_entity
+            render json: failed_json.merge(errors: upload.errors.full_messages),
+                   status: :unprocessable_entity
           end
         end
       end

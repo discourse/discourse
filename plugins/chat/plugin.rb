@@ -516,6 +516,4 @@ after_initialize do
   end
 end
 
-if Rails.env.test?
-  Dir[Rails.root.join("plugins/chat/spec/support/**/*.rb")].each { |f| require f }
-end
+Dir[Rails.root.join("plugins/chat/spec/support/**/*.rb")].each { |f| require f } if Rails.env.test?

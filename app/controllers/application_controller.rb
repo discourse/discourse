@@ -255,7 +255,9 @@ class ApplicationController < ActionController::Base
         format.json do
           render_json_error I18n.t("read_only_mode_enabled"), type: :read_only, status: 503
         end
-        format.html { render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only" }
+        format.html do
+          render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only"
+        end
       end
     end
   end

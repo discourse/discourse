@@ -30,9 +30,7 @@ module DiscourseAi
 
             endpoints << DiscourseAi::Completions::Endpoints::Ollama if !Rails.env.production?
 
-            if Rails.env.local?
-              endpoints << DiscourseAi::Completions::Endpoints::Fake
-            end
+            endpoints << DiscourseAi::Completions::Endpoints::Fake if Rails.env.local?
 
             endpoints.detect(-> { raise DiscourseAi::Completions::Llm::UNKNOWN_MODEL }) do |ek|
               ek.can_contact?(provider_name)

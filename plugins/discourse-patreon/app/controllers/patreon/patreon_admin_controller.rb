@@ -51,7 +51,9 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def delete
-    return render json: { message: "Error" }, status: :internal_server_error unless is_number?(params[:group_id])
+    unless is_number?(params[:group_id])
+      return render json: { message: "Error" }, status: :internal_server_error
+    end
 
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
 

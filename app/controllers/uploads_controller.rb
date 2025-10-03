@@ -81,7 +81,8 @@ class UploadsController < ApplicationController
             retain_hours: retain_hours,
           )
       rescue => e
-        render json: failed_json.merge(message: e.message&.split("\n")&.first), status: :unprocessable_entity
+        render json: failed_json.merge(message: e.message&.split("\n")&.first),
+               status: :unprocessable_entity
       else
         render json: UploadsController.serialize_upload(info), status: Upload === info ? 200 : 422
       end

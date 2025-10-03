@@ -359,7 +359,8 @@ class UsersController < ApplicationController
     new_primary = user.user_emails.find_by(email: params[:email])
     if new_primary.blank?
       return(
-        render json: failed_json.merge(errors: [I18n.t("change_email.doesnt_exist")]), status: :precondition_required
+        render json: failed_json.merge(errors: [I18n.t("change_email.doesnt_exist")]),
+               status: :precondition_required
       )
     end
 
@@ -1380,13 +1381,17 @@ class UsersController < ApplicationController
       return render json: failed_json, status: :unprocessable_entity
     end
 
-    return render json: failed_json, status: :unprocessable_entity if SiteSetting.selectable_avatars.blank?
+    if SiteSetting.selectable_avatars.blank?
+      return render json: failed_json, status: :unprocessable_entity
+    end
 
     unless upload = Upload.get_from_url(url)
       return render json: failed_json, status: :unprocessable_entity
     end
 
-    return render json: failed_json, status: :unprocessable_entity if SiteSetting.selectable_avatars.exclude?(upload)
+    if SiteSetting.selectable_avatars.exclude?(upload)
+      return render json: failed_json, status: :unprocessable_entity
+    end
 
     user.uploaded_avatar_id = upload.id
 

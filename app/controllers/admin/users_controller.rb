@@ -419,11 +419,13 @@ class Admin::UsersController < Admin::StaffController
         on_success { render json: { deleted: true } }
 
         on_failed_contract do |contract|
-          render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+          render json: failed_json.merge(errors: contract.errors.full_messages),
+                 status: :bad_request
         end
 
         on_failed_policy(:can_delete_users) do
-          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]), status: :forbidden
+          render json: failed_json.merge(errors: [I18n.t("user.cannot_bulk_delete")]),
+                 status: :forbidden
         end
 
         on_model_not_found(:users) { render json: failed_json, status: :not_found }

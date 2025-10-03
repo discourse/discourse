@@ -119,7 +119,6 @@ class Category < ActiveRecord::Base
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
 
-
   after_destroy :reset_topic_ids_cache
   after_destroy :clear_subcategory_ids
   after_destroy :publish_category_deletion
@@ -142,9 +141,6 @@ class Category < ActiveRecord::Base
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
-
-
-
 
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update

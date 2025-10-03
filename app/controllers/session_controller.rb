@@ -98,7 +98,8 @@ class SessionController < ApplicationController
   rescue DiscourseConnectProvider::BlankReturnUrl
     render plain: "return_sso_url is blank, it must be provided", status: :bad_request
   rescue DiscourseConnectProvider::InvalidParameterValueError => e
-    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param), status: :bad_request
+    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param),
+           status: :bad_request
   end
 
   # For use in development mode only when login options could be limited or disabled.

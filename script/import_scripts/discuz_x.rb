@@ -250,7 +250,8 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                   end
                 end
               end
-              if user["spacecss"].present? && newmember.user_profile.profile_background_upload.blank?
+              if user["spacecss"].present? &&
+                   newmember.user_profile.profile_background_upload.blank?
                 # profile background
                 if matched = user["spacecss"].match(/body\s*{[^}]*url\('?(.+?)'?\)/i)
                   body_background = matched[1].split(ORIGINAL_SITE_PREFIX, 2).last

@@ -3289,12 +3289,7 @@ RSpec.describe User do
     end
 
     it "is false when no dnd timing is present for the current time" do
-      Fabricate(
-        :do_not_disturb_timing,
-        user: user,
-        starts_at: 2.days.ago,
-        ends_at: 1.minute.ago,
-      )
+      Fabricate(:do_not_disturb_timing, user: user, starts_at: 2.days.ago, ends_at: 1.minute.ago)
       expect(user.do_not_disturb?).to eq(false)
     end
   end

@@ -337,10 +337,7 @@ describe DiscoursePostEvent::Event do
       context "when starts_at > current date" do
         it "is not ongoing" do
           post_event =
-            DiscoursePostEvent::Event.create!(
-              original_starts_at: 1.hour.from_now,
-              post: first_post,
-            )
+            DiscoursePostEvent::Event.create!(original_starts_at: 1.hour.from_now, post: first_post)
 
           expect(post_event.ongoing?).to be(false)
         end

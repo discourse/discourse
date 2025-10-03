@@ -1377,8 +1377,7 @@ class TopicsController < ApplicationController
 
         helpers.localize_topic_view_content(@topic_view) if SiteSetting.content_localization_enabled
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta =
-          (@topic_view.topic.excerpt.presence || @topic_view.summary)
+        @description_meta = (@topic_view.topic.excerpt.presence || @topic_view.summary)
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show
       end

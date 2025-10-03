@@ -193,10 +193,14 @@ class Admin::BackupsController < Admin::AdminController
 
     raise Discourse::InvalidParameters.new(:resumableIdentifier) unless valid_filename?(identifier)
     unless valid_extension?(filename)
-      return render status: :unsupported_media_type, plain: I18n.t("backup.backup_file_should_be_tar_gz")
+      return(
+        render status: :unsupported_media_type, plain: I18n.t("backup.backup_file_should_be_tar_gz")
+      )
     end
     unless has_enough_space_on_disk?(total_size)
-      return render status: :unsupported_media_type, plain: I18n.t("backup.not_enough_space_on_disk")
+      return(
+        render status: :unsupported_media_type, plain: I18n.t("backup.not_enough_space_on_disk")
+      )
     end
     unless valid_filename?(filename)
       return render status: :unsupported_media_type, plain: I18n.t("backup.invalid_filename")

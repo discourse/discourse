@@ -119,7 +119,9 @@ RSpec.describe Jobs::ExportCsvFile do
           .expects(:staff_action_records)
           .with(
             admin,
-            ActiveSupport::HashWithIndifferentAccess.new("action_id" => UserHistory.actions[:suspend_user].to_s),
+            ActiveSupport::HashWithIndifferentAccess.new(
+              "action_id" => UserHistory.actions[:suspend_user].to_s,
+            ),
           )
           .returns(res)
 
@@ -148,7 +150,10 @@ RSpec.describe Jobs::ExportCsvFile do
       exporter = Jobs::ExportCsvFile.new
       exporter.entity = "report"
       exporter.extra =
-        ActiveSupport::HashWithIndifferentAccess.new(start_date: "2010-01-01", end_date: "2011-01-01")
+        ActiveSupport::HashWithIndifferentAccess.new(
+          start_date: "2010-01-01",
+          end_date: "2011-01-01",
+        )
       exporter.current_user = User.find_by(id: user.id)
       exporter
     end

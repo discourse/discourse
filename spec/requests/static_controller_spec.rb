@@ -70,7 +70,7 @@ RSpec.describe StaticController do
 
     it "can serve assets" do
       begin
-        assets_path = Rails.public_path.join('assets')
+        assets_path = Rails.public_path.join("assets")
 
         FileUtils.mkdir_p(assets_path)
 

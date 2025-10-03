@@ -4,7 +4,15 @@ module Jobs
   class NotifyMailingListSubscribers < ::Jobs::Base
     include Skippable
 
-    RETRY_TIMES = [5.minutes, 15.minutes, 30.minutes, 45.minutes, 90.minutes, 180.minutes, 300.minutes]
+    RETRY_TIMES = [
+      5.minutes,
+      15.minutes,
+      30.minutes,
+      45.minutes,
+      90.minutes,
+      180.minutes,
+      300.minutes,
+    ]
 
     sidekiq_options queue: "low"
 
