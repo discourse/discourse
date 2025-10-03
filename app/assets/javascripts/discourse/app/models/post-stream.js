@@ -8,6 +8,10 @@ import { isEmpty } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import {
+  removeValueFromArray,
+  removeValuesFromArray,
+} from "discourse/lib/array-tools";
 import deprecated from "discourse/lib/deprecated";
 import { deepMerge } from "discourse/lib/object";
 import { trackedArray } from "discourse/lib/tracked-tools";
@@ -434,7 +438,7 @@ export default class PostStream extends RestModel {
       idx = stream.indexOf(postId);
 
     if (idx !== -1) {
-      stream.pushObjects(gap);
+      stream.push(...gap);
       return this.appendMore().then(() => {
         delete this.get("gaps.after")[postId];
         this.gapExpanded();
@@ -557,7 +561,10 @@ export default class PostStream extends RestModel {
     // If we're at the end of the stream, add the post
     if (this.loadedAllPosts) {
       this.appendPost(post);
-      this.stream.addObject(post.id);
+      if (!this.stream.includes(post.id)) {
+        this.stream.push(post.id);
+      }
+
       return "staged";
     }
 
@@ -569,11 +576,13 @@ export default class PostStream extends RestModel {
     if (this.get("topic.id") === post.get("topic_id")) {
       if (this.loadedAllPosts) {
         this.appendPost(post);
-        this.stream.addObject(post.id);
+        if (!this.stream.includes(post.id)) {
+          this.stream.push(post.id);
+        }
       }
     }
 
-    this.stream.removeObject(-1);
+    removeValueFromArray(this.stream, -1);
     this._identityMap[-1] = null;
     this.set("stagingPost", false);
   }
@@ -583,8 +592,8 @@ export default class PostStream extends RestModel {
     state we changed.
   **/
   undoPost(post) {
-    this.stream.removeObject(-1);
-    this.posts.removeObject(post);
+    removeValueFromArray(this.stream, -1);
+    removeValueFromArray(this.posts, post);
     this._identityMap[-1] = null;
 
     const topic = this.topic;
@@ -635,8 +644,8 @@ export default class PostStream extends RestModel {
     const postIds = posts.map((p) => p.id);
     const identityMap = this._identityMap;
 
-    this.stream.removeObjects(postIds);
-    allPosts.removeObjects(posts);
+    removeValuesFromArray(this.stream, postIds);
+    removeValuesFromArray(allPosts, posts);
     postIds.forEach((id) => delete identityMap[id]);
   }
 
@@ -735,10 +744,12 @@ export default class PostStream extends RestModel {
           const ignoredUsers = this.currentUser?.ignored_users;
           posts.forEach((p) => {
             if (ignoredUsers?.includes(p.username)) {
-              this.stream.removeObject(p.id);
+              removeValueFromArray(this.stream, p.id);
               return;
             }
-            this.stream.addObject(p.id);
+            if (!this.stream.includes(p.id)) {
+              this.stream.push(p.id);
+            }
             this.appendPost(p);
           });
         })
@@ -746,7 +757,11 @@ export default class PostStream extends RestModel {
           this.set("loadingLastPost", false);
         });
     } else {
-      missingIds.forEach((postId) => this.stream.addObject(postId));
+      missingIds.forEach((postId) => {
+        if (!this.stream.includes(postId)) {
+          this.stream.push(postId);
+        }
+      });
     }
 
     return resolved;
