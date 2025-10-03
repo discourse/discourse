@@ -27,8 +27,7 @@ module SystemHelpers
       .each do |result|
         devtools_url = result["devtoolsFrontendUrl"]
 
-        devtools_url =
-          devtools_url.gsub(":#{CHROME_REMOTE_DEBUGGING_PORT}", ":#{exposed_port}") if exposed_port
+        devtools_url.gsub!(":#{CHROME_REMOTE_DEBUGGING_PORT}", ":#{exposed_port}") if exposed_port
 
         if ENV["CODESPACE_NAME"]
           devtools_url =
