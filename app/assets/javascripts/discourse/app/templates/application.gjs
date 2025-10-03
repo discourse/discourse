@@ -130,7 +130,7 @@ export default RouteTemplate(
           </div>
 
           {{outlet}}
-
+          test
           <CardContainer />
           <PluginOutlet
             @name="main-outlet-bottom"
