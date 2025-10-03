@@ -88,10 +88,12 @@ export default class LikedUsersList extends Component {
       @placement="top"
       label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
       id="post-like-users_{{@post.id}}"
-      @icon={{this.icon}}
     >
       <:trigger>
         {{@post.likeCount}}
+        {{#if this.icon}}
+          {{~icon this.icon~}}
+        {{/if}}
       </:trigger>
       <:content>
         <ConditionalLoadingSpinner
