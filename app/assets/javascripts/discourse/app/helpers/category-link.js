@@ -62,24 +62,26 @@ export function categoryBadgeHTML(category, opts) {
     }
   }
 
+  // allow each ancestor to use its own styles
+  const newOpts = { ...opts };
+  ["styleType", "icon", "emoji"].forEach((k) => delete newOpts[k]);
+
   const depth = (opts.depth || 1) + 1;
   if (opts.ancestors) {
-    const { ancestors, ...otherOpts } = opts;
-
-    // allow each ancestor to use its own styles
-    ["styleType", "icon", "emoji"].forEach((k) => delete otherOpts[k]);
+    const { ancestors } = opts;
+    delete newOpts.ancestors;
 
     return [category, ...ancestors]
       .reverse()
       .map((c) => {
-        return categoryBadgeHTML(c, { ...otherOpts });
+        return categoryBadgeHTML(c, { ...newOpts });
       })
       .join("");
   } else if (opts.recursive && depth <= siteSettings.max_category_nesting) {
     const parentCategory = Category.findById(category.parent_category_id);
     const lastSubcategory = !opts.depth;
     opts.depth = depth;
-    const parentBadges = categoryBadgeHTML(parentCategory, opts);
+    const parentBadges = categoryBadgeHTML(parentCategory, { ...newOpts });
     opts.lastSubcategory = lastSubcategory;
     return parentBadges + _renderer(category, opts);
   }
