@@ -138,14 +138,14 @@ end
 #
 # Table name: llm_credit_allocations
 #
-#  id                      :bigint           not null, primary key
-#  llm_model_id            :bigint           not null
-#  monthly_credits         :bigint           not null
-#  monthly_used            :bigint           default(0), not null
-#  last_reset_at           :datetime         not null
-#  soft_limit_percentage   :integer          default(80), not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
+#  id                    :bigint           not null, primary key
+#  last_reset_at         :datetime         not null
+#  monthly_credits       :bigint           not null
+#  monthly_used          :bigint           default(0), not null
+#  soft_limit_percentage :integer          default(80), not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  llm_model_id          :bigint           not null
 #
 # Indexes
 #

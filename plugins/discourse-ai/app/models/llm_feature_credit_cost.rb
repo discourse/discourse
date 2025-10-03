@@ -30,15 +30,15 @@ end
 #
 # Table name: llm_feature_credit_costs
 #
-#  id                 :bigint           not null, primary key
-#  llm_model_id       :bigint           not null
-#  feature_name       :string           not null
-#  credits_per_token  :decimal(10, 4)   default(1.0), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                :bigint           not null, primary key
+#  credits_per_token :decimal(10, 4)   default(1.0), not null
+#  feature_name      :string           not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  llm_model_id      :bigint           not null
 #
 # Indexes
 #
-#  index_llm_feature_credit_costs_on_llm_model_id                 (llm_model_id)
-#  index_llm_feature_credit_costs_on_llm_model_id_and_feature_name (llm_model_id,feature_name) UNIQUE
+#  idx_on_llm_model_id_feature_name_2b0b794b27     (llm_model_id,feature_name) UNIQUE
+#  index_llm_feature_credit_costs_on_llm_model_id  (llm_model_id)
 #

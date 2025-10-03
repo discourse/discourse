@@ -281,5 +281,52 @@ RSpec.describe LlmCreditAllocation do
 
       expect { allocation.check_credits! }.not_to raise_error
     end
+
+    it "attaches allocation to raised exception" do
+      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1000)
+
+      begin
+        allocation.check_credits!
+        fail "Expected exception to be raised"
+      rescue LlmCreditAllocation::CreditLimitExceeded => e
+        expect(e.allocation).to eq(allocation)
+      end
+    end
+  end
+
+  describe "#formatted_reset_time" do
+    it "returns formatted reset time" do
+      freeze_time do
+        allocation = Fabricate(:llm_credit_allocation, last_reset_at: Time.current)
+        formatted = allocation.formatted_reset_time
+
+        expect(formatted).to match(/\d{1,2}:\d{2}[ap]m on \w+ \d{1,2}, \d{4}/)
+      end
+    end
+
+    it "returns empty string when next_reset_at is nil" do
+      allocation = Fabricate(:llm_credit_allocation)
+      allocation.stubs(:next_reset_at).returns(nil)
+
+      expect(allocation.formatted_reset_time).to eq("")
+    end
+  end
+
+  describe "#relative_reset_time" do
+    it "returns relative time until reset" do
+      freeze_time do
+        allocation = Fabricate(:llm_credit_allocation, last_reset_at: Time.current)
+        relative = allocation.relative_reset_time
+
+        expect(relative).to match(/in .+/)
+      end
+    end
+
+    it "returns empty string when next_reset_at is nil" do
+      allocation = Fabricate(:llm_credit_allocation)
+      allocation.stubs(:next_reset_at).returns(nil)
+
+      expect(allocation.relative_reset_time).to eq("")
+    end
   end
 end

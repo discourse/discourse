@@ -9,6 +9,10 @@ import { i18n } from "discourse-i18n";
  * @returns {boolean} - True if this is a credit limit error
  */
 export function isAiCreditLimitError(errorOrPayload) {
+  if (!errorOrPayload) {
+    return false;
+  }
+
   // AJAX error format:
   if (errorOrPayload.jqXHR?.responseJSON?.error === "credit_limit_exceeded") {
     return true;
