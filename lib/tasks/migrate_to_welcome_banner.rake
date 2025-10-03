@@ -41,7 +41,6 @@ def find_advanced_search_banners(db)
     .includes(theme: :theme_translation_overrides)
     .each do |remote_theme|
       theme = remote_theme.theme
-      next unless theme&.component? # Only process component themes
 
       puts "  ✓ Found theme component: #{theme.name} (ID: #{theme.id})"
       puts "  Searching for translation overrides..."
