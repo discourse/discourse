@@ -26,7 +26,7 @@ module Jobs
     ]
 
     HEADER_ATTRS_FOR =
-      ActiveSupport::HashWithIndifferentAccess.new(
+      HashWithIndifferentAccess.new(
         user_archive: %w[
           topic_title
           categories
@@ -130,7 +130,7 @@ module Jobs
         @requesting_user = @archive_for_user
       end
 
-      @extra = ActiveSupport::HashWithIndifferentAccess.new(args[:args]) if args[:args]
+      @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
 
       components = []

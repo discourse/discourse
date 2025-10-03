@@ -149,7 +149,11 @@ class BookmarkManager
     model_options = { pinned: options[:pinned] }
 
     if options[:auto_delete_preference].blank?
-      model_options[:auto_delete_preference] = (user_auto_delete_preference.presence || Bookmark.auto_delete_preferences[:clear_reminder])
+      model_options[:auto_delete_preference] = if user_auto_delete_preference.present?
+        user_auto_delete_preference
+      else
+        Bookmark.auto_delete_preferences[:clear_reminder]
+      end
     else
       model_options[:auto_delete_preference] = options[:auto_delete_preference]
     end

@@ -17,7 +17,7 @@ module DiscourseAi
 
         # this is unconditional, so it is clear that we always signal configuration
         AiPersona
-          .where.not(default_llm_id: nil)
+          .where("default_llm_id IS NOT NULL")
           .pluck(:default_llm_id, :name, :id)
           .each { |llm_id, name, id| rval[llm_id] << { type: :ai_persona, name: name, id: id } }
 

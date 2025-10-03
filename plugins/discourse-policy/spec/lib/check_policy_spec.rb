@@ -3,8 +3,8 @@
 describe Jobs::DiscoursePolicy::CheckPolicy do
   subject(:job) { described_class.new }
 
-  fab!(:user1, :user)
-  fab!(:user2, :user)
+  fab!(:user1) { Fabricate(:user) }
+  fab!(:user2) { Fabricate(:user) }
 
   fab!(:group) do
     group = Fabricate(:group)

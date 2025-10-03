@@ -45,7 +45,7 @@ module Email
       css = EmailStyle.new.compiled_css
       @custom_styles = {}
 
-      if css.present?
+      if !css.blank?
         # there is a minor race condition here, CssParser could be
         # loaded by ::CssParser::Parser not loaded
         require "css_parser" unless defined?(::CssParser::Parser)

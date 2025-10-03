@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::AiBot::ArtifactKeyValuesController do
   fab!(:user)
   fab!(:admin)
-  fab!(:other_user, :user)
+  fab!(:other_user) { Fabricate(:user) }
   fab!(:private_message_topic) { Fabricate(:private_message_topic, user: user) }
   fab!(:private_message_post) { Fabricate(:post, topic: private_message_topic, user: user) }
   fab!(:artifact) do

@@ -55,7 +55,7 @@ describe "Creating Invites", type: :system do
       max_redemption_count: 7,
     )
     expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
-      3.days.from_now,
+      Time.zone.now + 3.days,
     )
   end
 
@@ -126,7 +126,7 @@ describe "Creating Invites", type: :system do
       expect(user_invited_pending_page.latest_invite).to have_group(group)
       expect(user_invited_pending_page.latest_invite).to have_topic(topic)
       expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
-        90.days.from_now,
+        Time.zone.now + 90.days,
       )
     end
 
@@ -167,7 +167,7 @@ describe "Creating Invites", type: :system do
       expect(user_invited_pending_page.latest_invite).to have_group(another_group)
       expect(user_invited_pending_page.latest_invite).to have_topic(topic)
       expect(user_invited_pending_page.latest_invite.expiry_date).to be_within(2.minutes).of(
-        1.day.from_now,
+        Time.zone.now + 1.day,
       )
       sent_email = ActionMailer::Base.deliveries.first
       expect(sent_email.to).to contain_exactly("someone@discourse.org")

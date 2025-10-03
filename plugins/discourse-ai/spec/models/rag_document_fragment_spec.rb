@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe RagDocumentFragment do
-  fab!(:persona, :ai_persona)
-  fab!(:upload_1, :upload)
-  fab!(:upload_2, :upload)
-  fab!(:vector_def, :embedding_definition)
+  fab!(:persona) { Fabricate(:ai_persona) }
+  fab!(:upload_1) { Fabricate(:upload) }
+  fab!(:upload_2) { Fabricate(:upload) }
+  fab!(:vector_def) { Fabricate(:embedding_definition) }
 
   before do
     enable_current_plugin

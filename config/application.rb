@@ -84,7 +84,7 @@ module Discourse
     config.active_record.belongs_to_required_by_default = false
     config.active_record.yaml_column_permitted_classes = [
       Hash,
-      ActiveSupport::HashWithIndifferentAccess,
+      HashWithIndifferentAccess,
       Time,
       Symbol,
     ]

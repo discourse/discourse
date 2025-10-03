@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscoursePostEvent::EventFinder do
-  fab!(:current_user, :user)
+  fab!(:current_user) { Fabricate(:user) }
   fab!(:user)
 
   subject(:finder) { DiscoursePostEvent::EventFinder }
@@ -13,7 +13,7 @@ describe DiscoursePostEvent::EventFinder do
   end
 
   describe "by attending user" do
-    fab!(:attending_user, :user)
+    fab!(:attending_user) { Fabricate(:user) }
     fab!(:public_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
     fab!(:private_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:private]) }
     fab!(:another_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }

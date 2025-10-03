@@ -26,7 +26,7 @@ class Chat::Api::ChannelsArchivesController < Chat::Api::ChannelsController
         topic_params: topic_params,
       )
     rescue Chat::ChannelArchiveService::ArchiveValidationError => err
-      return render json: failed_json.merge(errors: err.errors), status: :bad_request
+      return render json: failed_json.merge(errors: err.errors), status: 400
     end
 
     render json: success_json

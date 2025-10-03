@@ -19,7 +19,7 @@ module DiscourseAi
         base_locale = "#{locale.split("_").first}%"
         sql = <<~SQL
           WITH eligible_categories AS (
-            #{get.where.not(categories: { locale: nil }).to_sql}
+            #{get.where("categories.locale IS NOT NULL").to_sql}
           ),
           total_count AS (
             SELECT COUNT(*) AS count FROM eligible_categories

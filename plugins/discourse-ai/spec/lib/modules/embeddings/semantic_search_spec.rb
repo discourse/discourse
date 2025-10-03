@@ -5,7 +5,7 @@ RSpec.describe DiscourseAi::Embeddings::SemanticSearch do
 
   fab!(:post)
   fab!(:user)
-  fab!(:vector_def, :embedding_definition)
+  fab!(:vector_def) { Fabricate(:embedding_definition) }
 
   let(:query) { "test_query" }
 

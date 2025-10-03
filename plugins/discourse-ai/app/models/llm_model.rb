@@ -11,7 +11,7 @@ class LlmModel < ActiveRecord::Base
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
   validates :url, presence: true, unless: -> { provider == BEDROCK_PROVIDER_NAME }
-  validates :name, :api_key, presence: true
+  validates_presence_of :name, :api_key
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
   validates :input_cost,
             :cached_input_cost,

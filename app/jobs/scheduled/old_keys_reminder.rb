@@ -67,9 +67,9 @@ module Jobs
 
     def keys_list
       messages =
-        old_site_settings_keys.map { |key| "#{key.name} - #{key.updated_at.to_date.to_formatted_s(:db)}" }
+        old_site_settings_keys.map { |key| "#{key.name} - #{key.updated_at.to_date.to_fs(:db)}" }
       old_api_keys.each_with_object(messages) do |key, array|
-        array << "#{[key.description, key.user&.username, key.created_at.to_date.to_formatted_s(:db)].compact.join(" - ")}"
+        array << "#{[key.description, key.user&.username, key.created_at.to_date.to_fs(:db)].compact.join(" - ")}"
       end
       messages.join("\n")
     end

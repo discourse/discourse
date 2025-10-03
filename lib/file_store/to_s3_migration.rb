@@ -161,7 +161,7 @@ module FileStore
       end
 
       bucket_has_folder_path = true if @s3_bucket.include? "/"
-      public_directory = Rails.public_path.to_s
+      public_directory = Rails.root.join("public").to_s
 
       s3 = Aws::S3::Client.new(@s3_client_options)
 

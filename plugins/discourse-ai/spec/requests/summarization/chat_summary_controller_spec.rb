@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Summarization::ChatSummaryController do
-  fab!(:current_user, :user)
+  fab!(:current_user) { Fabricate(:user) }
   fab!(:group)
 
   before do
@@ -20,7 +20,7 @@ RSpec.describe DiscourseAi::Summarization::ChatSummaryController do
 
   describe "#show" do
     context "when the user is not allowed to join the channel" do
-      fab!(:channel, :private_category_channel)
+      fab!(:channel) { Fabricate(:private_category_channel) }
 
       it "returns a 403" do
         get "/discourse-ai/summarization/channels/#{channel.id}", params: { since: 6 }

@@ -4,9 +4,9 @@ describe "RecurringDataExplorerResultPM" do
   fab!(:admin)
 
   fab!(:user)
-  fab!(:another_user, :user)
-  fab!(:group_user, :user)
-  fab!(:not_allowed_user, :user)
+  fab!(:another_user) { Fabricate(:user) }
+  fab!(:group_user) { Fabricate(:user) }
+  fab!(:not_allowed_user) { Fabricate(:user) }
 
   fab!(:group) { Fabricate(:group, users: [user, another_user]) }
   fab!(:another_group) { Fabricate(:group, users: [group_user]) }

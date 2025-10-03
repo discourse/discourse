@@ -30,7 +30,7 @@ module DiscourseAi
 
             endpoints << DiscourseAi::Completions::Endpoints::Ollama if !Rails.env.production?
 
-            if Rails.env.local?
+            if Rails.env.test? || Rails.env.development?
               endpoints << DiscourseAi::Completions::Endpoints::Fake
             end
 
@@ -453,7 +453,11 @@ module DiscourseAi
           if xml_stripper
             response_data.map! do |partial|
               stripped = (xml_stripper << partial) if partial.is_a?(String)
-              (stripped.presence || partial)
+              if stripped.present?
+                stripped
+              else
+                partial
+              end
             end
             response_data << xml_stripper.finish
           end

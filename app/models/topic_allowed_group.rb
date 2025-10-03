@@ -4,7 +4,7 @@ class TopicAllowedGroup < ActiveRecord::Base
   belongs_to :topic
   belongs_to :group
 
-  validates :topic_id, uniqueness: { scope: :group_id }
+  validates_uniqueness_of :topic_id, scope: :group_id
 end
 
 # == Schema Information

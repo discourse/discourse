@@ -296,7 +296,7 @@ class PostActionCreator
     }
 
     # First try to revive a trashed record
-    post_action = PostAction.where(where_attrs).with_deleted.where.not(deleted_at: nil).first
+    post_action = PostAction.where(where_attrs).with_deleted.where("deleted_at IS NOT NULL").first
 
     if post_action
       post_action.recover!

@@ -295,7 +295,7 @@ module ExternalUploadHelpers
         if upload.errors.empty?
           response_serialized = self.class.serialize_upload(upload)
           external_upload_stub.destroy!
-          render json: response_serialized, status: :ok
+          render json: response_serialized, status: 200
         else
           render_json_error(upload.errors.to_hash.values.flatten, status: 422)
         end

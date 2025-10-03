@@ -6,8 +6,8 @@ class UserOpenId < ActiveRecord::Base
 
   belongs_to :user
 
-  validates :email, presence: true
-  validates :url, presence: true
+  validates_presence_of :email
+  validates_presence_of :url
 
   private
 

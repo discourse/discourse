@@ -7,7 +7,7 @@ RSpec.describe Jobs::RemoveOrphanedEmbeddings do
 
   describe "#execute" do
     fab!(:embedding_definition)
-    fab!(:embedding_definition_2, :embedding_definition)
+    fab!(:embedding_definition_2) { Fabricate(:embedding_definition) }
     fab!(:topic)
     fab!(:post)
 

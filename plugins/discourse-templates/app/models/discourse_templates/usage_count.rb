@@ -6,7 +6,7 @@ module DiscourseTemplates
 
     belongs_to :topic
 
-    validates :topic_id, presence: true
+    validates_presence_of :topic_id
   end
 end
 

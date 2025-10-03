@@ -4,7 +4,7 @@ RSpec.describe Jobs::FastTrackTopicGist do
   subject(:job) { described_class.new }
 
   describe "#execute" do
-    fab!(:topic_1, :topic)
+    fab!(:topic_1) { Fabricate(:topic) }
     fab!(:post_1) { Fabricate(:post, topic: topic_1, post_number: 1) }
     fab!(:post_2) { Fabricate(:post, topic: topic_1, post_number: 2) }
 

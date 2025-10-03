@@ -61,7 +61,7 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes solutions for silenced users" do
-      user.update(silenced_till: 1.day.from_now)
+      user.update(silenced_till: Time.zone.now + 1.day)
 
       DiscourseSolved.accept_answer!(topic_post1, admin)
 
@@ -77,7 +77,7 @@ describe DirectoryItem, type: :model do
 
     it "excludes solutions for suspended users" do
       DiscourseSolved.accept_answer!(topic_post1, admin)
-      user.update(suspended_till: 1.day.from_now)
+      user.update(suspended_till: Time.zone.now + 1.day)
 
       DirectoryItem.refresh!
 

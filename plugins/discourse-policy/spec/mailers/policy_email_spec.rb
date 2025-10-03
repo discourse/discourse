@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::UserEmail do
-  fab!(:user1, :user)
+  fab!(:user1) { Fabricate(:user) }
 
   fab!(:group1) do
     group = Fabricate(:group)

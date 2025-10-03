@@ -355,7 +355,7 @@ class Topic < ActiveRecord::Base
           )
         end
 
-  scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
+  scope :listable_topics, -> { where("topics.archetype <> ?", Archetype.private_message) }
 
   scope :by_newest, -> { order("topics.created_at desc, topics.id desc") }
 
@@ -408,7 +408,7 @@ class Topic < ActiveRecord::Base
   before_save do
     ensure_topic_has_a_category unless skip_callbacks
 
-    self[:fancy_title] = Topic.fancy_title(title) if title_changed?
+    write_attribute(:fancy_title, Topic.fancy_title(title)) if title_changed?
 
     if category_id_changed? || new_record?
       inherit_auto_close_from_category
@@ -537,7 +537,7 @@ class Topic < ActiveRecord::Base
 
     unless fancy_title = read_attribute(:fancy_title)
       fancy_title = Topic.fancy_title(title)
-      self[:fancy_title] = fancy_title
+      write_attribute(:fancy_title, fancy_title)
 
       if !new_record? && !Discourse.readonly_mode?
         # make sure data is set in table, this also allows us to change algorithm
@@ -1407,7 +1407,7 @@ class Topic < ActiveRecord::Base
     previous_banner = Topic.where(archetype: Archetype.banner).first
     previous_banner.remove_banner!(user) if previous_banner.present?
 
-    UserProfile.where.not(dismissed_banner_key: nil).update_all(dismissed_banner_key: nil)
+    UserProfile.where("dismissed_banner_key IS NOT NULL").update_all(dismissed_banner_key: nil)
 
     self.archetype = Archetype.banner
     self.bannered_until = bannered_until
@@ -1461,7 +1461,7 @@ class Topic < ActiveRecord::Base
       return "" if title.blank?
       slug = slug_for_topic(title)
       if new_record?
-        self[:slug] = slug
+        write_attribute(:slug, slug)
       else
         update_column(:slug, slug)
       end
@@ -1481,8 +1481,8 @@ class Topic < ActiveRecord::Base
 
   def title=(t)
     slug = slug_for_topic(t.to_s)
-    self[:slug] = slug
-    self[:fancy_title] = nil
+    write_attribute(:slug, slug)
+    write_attribute(:fancy_title, nil)
     write_attribute(:title, t)
   end
 
@@ -1664,7 +1664,7 @@ class Topic < ActiveRecord::Base
     topic_timer.status_type = status_type
 
     time_now = Time.zone.now
-    topic_timer.based_on_last_post = based_on_last_post.present?
+    topic_timer.based_on_last_post = !based_on_last_post.blank?
 
     if status_type == TopicTimer.types[:publish_to_category]
       topic_timer.category = Category.find_by(id: category_id)

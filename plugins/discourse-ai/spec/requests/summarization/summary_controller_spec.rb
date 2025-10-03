@@ -50,7 +50,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     end
 
     context "when the user is a member of an allowlisted group" do
-      fab!(:user, :leader)
+      fab!(:user) { Fabricate(:leader) }
 
       before do
         sign_in(user)
@@ -140,7 +140,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
     fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
     fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
 
-    fab!(:topic_1, :topic)
+    fab!(:topic_1) { Fabricate(:topic) }
     fab!(:post_3) { Fabricate(:post, topic: topic_1, post_number: 1) }
     fab!(:post_4) { Fabricate(:post, topic: topic_1, post_number: 2) }
 

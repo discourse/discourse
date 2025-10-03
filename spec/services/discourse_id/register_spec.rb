@@ -10,8 +10,8 @@ RSpec.describe DiscourseId::Register do
     let(:client_secret) { "test_client_secret" }
     let(:discourse_id_url) { "https://id.discourse.com" }
 
-    fab!(:logo_upload, :upload)
-    fab!(:logo_small_upload, :upload)
+    fab!(:logo_upload) { Fabricate(:upload) }
+    fab!(:logo_small_upload) { Fabricate(:upload) }
 
     before do
       SiteSetting.discourse_id_provider_url = discourse_id_url

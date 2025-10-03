@@ -16,7 +16,7 @@ class RRuleGenerator
 
     ::RRule::Rule
       .new(stringify(rrule), dtstart: starts_at, tzid: timezone)
-      .between(Time.current, 14.months.from_now)
+      .between(Time.current, Time.current + 14.months)
       .first(RRuleConfigurator.how_many_recurring_events(recurrence:, max_years:))
   end
 

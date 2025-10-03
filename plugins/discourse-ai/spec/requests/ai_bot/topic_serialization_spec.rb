@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "AI Bot Post Serializer" do
-  fab!(:current_user, :user)
-  fab!(:bot_user, :user)
+  fab!(:current_user) { Fabricate(:user) }
+  fab!(:bot_user) { Fabricate(:user) }
 
   before do
     enable_current_plugin

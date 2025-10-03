@@ -40,7 +40,7 @@ module DiscourseAi
 
         head :no_content
       rescue ActiveRecord::RecordNotFound
-        render json: { error: I18n.t("not_found") }, status: :not_found
+        render json: { error: I18n.t("not_found") }, status: 404
       end
 
       private

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe TopicQuery do
-  fab!(:user0, :user)
-  fab!(:category1, :category)
+  fab!(:user0) { Fabricate(:user) }
+  fab!(:category1) { Fabricate(:category) }
   fab!(:topic0) { Fabricate(:topic, category: category1) }
   fab!(:topic1) { Fabricate(:topic, category: category1) }
   fab!(:vote) { DiscourseTopicVoting::Vote.create!(topic_id: topic1.id, user_id: user0.id) }

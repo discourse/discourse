@@ -28,8 +28,8 @@ class WatchedWord < ActiveRecord::Base
     end
   end
 
-  after_destroy -> { WordWatcher.clear_cache! }
   after_save -> { WordWatcher.clear_cache! }
+  after_destroy -> { WordWatcher.clear_cache! }
 
   scope :for,
         ->(word:) do

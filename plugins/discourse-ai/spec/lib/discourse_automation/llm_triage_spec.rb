@@ -4,8 +4,8 @@ return if !defined?(DiscourseAutomation)
 
 describe DiscourseAi::Automation::LlmTriage do
   fab!(:category)
-  fab!(:reply_user, :user)
-  fab!(:personal_message, :private_message_topic)
+  fab!(:reply_user) { Fabricate(:user) }
+  fab!(:personal_message) { Fabricate(:private_message_topic) }
   let(:canned_reply_text) { "Hello, this is a reply" }
 
   let(:automation) { Fabricate(:automation, script: "llm_triage", enabled: true) }

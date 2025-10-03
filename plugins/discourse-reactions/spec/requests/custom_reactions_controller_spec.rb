@@ -613,7 +613,7 @@ describe DiscourseReactions::CustomReactionsController do
             DiscourseReactions::ReactionUser.count
           }.by(1)
 
-    freeze_time(11.minutes.from_now)
+    freeze_time(Time.zone.now + 11.minutes)
     expect do
       put "/discourse-reactions/posts/#{post_1.id}/custom-reactions/hugs/toggle.json"
     end.to not_change { DiscourseReactions::Reaction.count }.and not_change {

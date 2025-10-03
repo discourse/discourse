@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "AI Post helper", type: :system do
-  fab!(:user, :admin)
-  fab!(:non_member_group, :group)
+  fab!(:user) { Fabricate(:admin) }
+  fab!(:non_member_group) { Fabricate(:group) }
   fab!(:topic)
   fab!(:post) do
     Fabricate(

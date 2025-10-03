@@ -44,7 +44,7 @@ module DiscourseAi
                      force_default_locale: force_default_locale,
                      custom_prompt: params[:custom_prompt],
                    ),
-                 status: :ok
+                 status: 200
         end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
         render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
@@ -67,7 +67,7 @@ module DiscourseAi
                      input,
                      current_user,
                    ),
-                 status: :ok
+                 status: 200
         end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
         render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
@@ -85,7 +85,7 @@ module DiscourseAi
         end
 
         render json: DiscourseAi::AiHelper::SemanticCategorizer.new(current_user, opts).categories,
-               status: :ok
+               status: 200
       end
 
       def suggest_tags
@@ -99,14 +99,14 @@ module DiscourseAi
         end
 
         render json: DiscourseAi::AiHelper::SemanticCategorizer.new(current_user, opts).tags,
-               status: :ok
+               status: 200
       end
 
       def suggest_thumbnails(input)
         hijack do
           thumbnails = DiscourseAi::AiHelper::Painter.new.commission_thumbnails(input, current_user)
 
-          render json: { thumbnails: thumbnails }, status: :ok
+          render json: { thumbnails: thumbnails }, status: 200
         end
       end
 
@@ -161,7 +161,7 @@ module DiscourseAi
           )
         end
 
-        render json: { success: true, progress_channel: }, status: :ok
+        render json: { success: true, progress_channel: }, status: 200
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed
         render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),
                           status: 502
@@ -193,7 +193,7 @@ module DiscourseAi
                    caption:
                      "#{caption} (#{I18n.t("discourse_ai.ai_helper.image_caption.attribution")})",
                  },
-                 status: :ok
+                 status: 200
         end
       rescue DiscourseAi::Completions::Endpoints::Base::CompletionFailed, Net::HTTPBadResponse
         render_json_error I18n.t("discourse_ai.ai_helper.errors.completion_request_failed"),

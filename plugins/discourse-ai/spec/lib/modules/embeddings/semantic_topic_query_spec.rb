@@ -9,9 +9,9 @@ describe DiscourseAi::Embeddings::EntryPoint do
     describe "#list_semantic_related_topics" do
       subject(:topic_query) { DiscourseAi::Embeddings::SemanticTopicQuery.new(user) }
 
-      fab!(:target, :topic)
+      fab!(:target) { Fabricate(:topic) }
 
-      fab!(:vector_def, :cloudflare_embedding_def)
+      fab!(:vector_def) { Fabricate(:cloudflare_embedding_def) }
 
       before do
         SiteSetting.ai_embeddings_enabled = true
@@ -44,7 +44,7 @@ describe DiscourseAi::Embeddings::EntryPoint do
       end
 
       context "when the semantic search returns a private topic" do
-        fab!(:private_topic, :private_message_topic)
+        fab!(:private_topic) { Fabricate(:private_message_topic) }
 
         before { seed_embeddings([private_topic]) }
 
@@ -101,9 +101,9 @@ describe DiscourseAi::Embeddings::EntryPoint do
       end
 
       context "when the semantic search returns public topics" do
-        fab!(:normal_topic_1, :topic)
-        fab!(:normal_topic_2, :topic)
-        fab!(:normal_topic_3, :topic)
+        fab!(:normal_topic_1) { Fabricate(:topic) }
+        fab!(:normal_topic_2) { Fabricate(:topic) }
+        fab!(:normal_topic_3) { Fabricate(:topic) }
         fab!(:closed_topic) { Fabricate(:topic, closed: true) }
 
         before { seed_embeddings([closed_topic, normal_topic_1, normal_topic_2, normal_topic_3]) }
@@ -125,8 +125,8 @@ describe DiscourseAi::Embeddings::EntryPoint do
       end
 
       context "with semantic_related_topics_query modifier registered" do
-        fab!(:included_topic, :topic)
-        fab!(:excluded_topic, :topic)
+        fab!(:included_topic) { Fabricate(:topic) }
+        fab!(:excluded_topic) { Fabricate(:topic) }
 
         before { seed_embeddings([included_topic, excluded_topic]) }
 

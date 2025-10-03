@@ -184,7 +184,7 @@ module DiscourseDataExplorer
           err_msg = "#{err_class}: #{err_msg}"
         end
 
-        render json: { success: false, errors: [err_msg] }, status: :unprocessable_entity
+        render json: { success: false, errors: [err_msg] }, status: 422
       else
         content_disposition =
           "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"

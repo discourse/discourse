@@ -72,7 +72,7 @@ class Plugin::Instance
   end
 
   def seed_data
-    @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
+    @seed_data ||= HashWithIndifferentAccess.new({})
   end
 
   def seed_fu_filter(filter = nil)

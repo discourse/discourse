@@ -98,7 +98,7 @@ RSpec.describe SiteSetting do
       end
 
       it "should_return_a_time_period" do
-        expect(SiteSetting.min_redirected_to_top_period(1.day.ago)).to eq(:daily)
+        expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).to eq(:daily)
       end
     end
 
@@ -110,7 +110,7 @@ RSpec.describe SiteSetting do
       end
 
       it "should_return_a_time_period" do
-        expect(SiteSetting.min_redirected_to_top_period(1.day.ago)).to eq(nil)
+        expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).to eq(nil)
       end
     end
   end

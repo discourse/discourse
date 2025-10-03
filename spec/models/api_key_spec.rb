@@ -94,7 +94,7 @@ RSpec.describe ApiKey do
     SiteSetting.revoke_api_keys_maxlife_days = 2
 
     older_key = Fabricate(:api_key, created_at: 3.days.ago)
-    newer_key = Fabricate(:api_key, created_at: 1.day.ago)
+    newer_key = Fabricate(:api_key, created_at: 1.days.ago)
     revoked_key = Fabricate(:api_key, created_at: 3.days.ago, revoked_at: 1.day.ago)
 
     expect { ApiKey.revoke_max_life_keys! }.to change { older_key.reload.revoked_at }.from(nil).to(

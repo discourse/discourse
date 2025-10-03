@@ -3,8 +3,8 @@
 class PostDetail < ActiveRecord::Base
   belongs_to :post
 
-  validates :key, :value, presence: true
-  validates :key, uniqueness: { scope: :post_id }
+  validates_presence_of :key, :value
+  validates_uniqueness_of :key, scope: :post_id
 end
 
 # == Schema Information

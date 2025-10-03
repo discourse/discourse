@@ -4,7 +4,7 @@ module DiscourseAi
   module Automation
     describe ReportRunner do
       fab!(:user)
-      fab!(:receiver, :user)
+      fab!(:receiver) { Fabricate(:user) }
       fab!(:post) { Fabricate(:post, user: user) }
       fab!(:group)
       fab!(:secure_category) { Fabricate(:private_category, group: group) }

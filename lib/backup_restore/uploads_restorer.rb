@@ -155,7 +155,7 @@ module BackupRestore
       SiteIconManager.ensure_optimized!
 
       User
-        .where.not(uploaded_avatar_id: nil)
+        .where("uploaded_avatar_id IS NOT NULL")
         .find_each do |user|
           Jobs.enqueue(:create_avatar_thumbnails, upload_id: user.uploaded_avatar_id)
         end

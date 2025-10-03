@@ -2,10 +2,10 @@
 
 describe ::TopicsController do
   fab!(:topic)
-  fab!(:topic1, :topic)
-  fab!(:topic2, :topic)
-  fab!(:topic3, :topic)
-  fab!(:user, :admin)
+  fab!(:topic1) { Fabricate(:topic) }
+  fab!(:topic2) { Fabricate(:topic) }
+  fab!(:topic3) { Fabricate(:topic) }
+  fab!(:user) { Fabricate(:admin) }
 
   before do
     enable_current_plugin

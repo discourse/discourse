@@ -9,7 +9,7 @@ RSpec.describe Jobs::StreamTopicAiSummary do
     fab!(:topic) { Fabricate(:topic, highest_post_number: 2) }
     fab!(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
     fab!(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
-    fab!(:user, :leader)
+    fab!(:user) { Fabricate(:leader) }
 
     before do
       Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)

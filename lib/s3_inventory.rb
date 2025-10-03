@@ -92,7 +92,7 @@ class S3Inventory
                 .joins(
                   "LEFT JOIN #{tmp_table_name} inventory2 ON inventory2.url = #{table_name}.url",
                 )
-                .where.not(inventory2: { etag: nil })
+                .where("inventory2.etag IS NOT NULL")
                 .pluck(:id)
 
             # marking as verified/not verified

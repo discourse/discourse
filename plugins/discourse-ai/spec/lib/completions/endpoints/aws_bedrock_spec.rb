@@ -11,7 +11,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   subject(:endpoint) { described_class.new(model) }
 
   fab!(:user)
-  fab!(:model, :bedrock_model)
+  fab!(:model) { Fabricate(:bedrock_model) }
 
   let(:bedrock_mock) { BedrockMock.new(endpoint) }
 

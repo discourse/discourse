@@ -20,7 +20,7 @@ class StepsController < ApplicationController
       updater.errors.messages.each do |field, msg|
         errors << { field: field, description: msg.join }
       end
-      render json: { errors: errors }, status: :unprocessable_entity
+      render json: { errors: errors }, status: 422
     end
   end
 end

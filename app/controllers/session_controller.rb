@@ -91,14 +91,14 @@ class SessionController < ApplicationController
       render json: success_json.merge(redirect_url: redirect_url)
     end
   rescue DiscourseConnectProvider::BlankSecret
-    render plain: I18n.t("discourse_connect.missing_secret"), status: :bad_request
+    render plain: I18n.t("discourse_connect.missing_secret"), status: 400
   rescue DiscourseConnectProvider::ParseError
     # Do NOT pass the error text to the client, it would give them the correct signature
-    render plain: I18n.t("discourse_connect.login_error"), status: :unprocessable_entity
+    render plain: I18n.t("discourse_connect.login_error"), status: 422
   rescue DiscourseConnectProvider::BlankReturnUrl
-    render plain: "return_sso_url is blank, it must be provided", status: :bad_request
+    render plain: "return_sso_url is blank, it must be provided", status: 400
   rescue DiscourseConnectProvider::InvalidParameterValueError => e
-    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param), status: :bad_request
+    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param), status: 400
   end
 
   # For use in development mode only when login options could be limited or disabled.
@@ -110,7 +110,7 @@ class SessionController < ApplicationController
       raise Discourse::InvalidAccess if Rails.env.production?
 
       if ENV["DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE"] != "1"
-        return render plain: <<~TEXT, status: :forbidden
+        return render plain: <<~TEXT, status: 403
           To enable impersonating any user without typing passwords set the following ENV var
 
           export DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE=1
@@ -122,9 +122,9 @@ class SessionController < ApplicationController
       user = User.find_by_username(params[:session_id])
 
       if user.blank?
-        return render plain: "User #{params[:session_id]} not found", status: :forbidden
+        return render plain: "User #{params[:session_id]} not found", status: 403
       elsif !user.active?
-        return render plain: "User #{params[:session_id]} is not active", status: :forbidden
+        return render plain: "User #{params[:session_id]} is not active", status: 403
       end
 
       log_on_user(user)
@@ -157,7 +157,7 @@ class SessionController < ApplicationController
       # but since this is a test route, we allow passing a bad value into the API, catch the error
       # and return a JSON response to assert against.
       if e.message == "running 2fa against another user is not allowed"
-        render json: { result: "wrong user" }, status: :bad_request
+        render json: { result: "wrong user" }, status: 400
       else
         raise e
       end
@@ -605,7 +605,7 @@ class SessionController < ApplicationController
             .deep_symbolize_keys
             .slice(:ok, :error, :reason)
             .merge(failed_json)
-        render json: error_json, status: :bad_request
+        render json: error_json, status: 400
         return
       end
     end
@@ -615,7 +615,7 @@ class SessionController < ApplicationController
              callback_path: challenge[:callback_path],
              redirect_url: challenge[:redirect_url],
            },
-           status: :ok
+           status: 200
   end
 
   def forgot_password
@@ -661,7 +661,7 @@ class SessionController < ApplicationController
     if current_user.present?
       render_serialized(current_user, CurrentUserSerializer, { login_method: login_method })
     else
-      render body: nil, status: :not_found
+      render body: nil, status: 404
     end
   end
 
@@ -716,7 +716,7 @@ class SessionController < ApplicationController
       api_key = ApiKey.active.with_key(key).first
       render_serialized(api_key.api_key_scopes, ApiKeyScopeSerializer, root: "scopes")
     else
-      render body: nil, status: :not_found
+      render body: nil, status: 404
     end
   end
 

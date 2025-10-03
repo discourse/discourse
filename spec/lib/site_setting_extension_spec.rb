@@ -996,8 +996,8 @@ RSpec.describe SiteSettingExtension do
   end
 
   describe "themeable settings" do
-    fab!(:theme_1, :theme)
-    fab!(:theme_2, :theme)
+    fab!(:theme_1) { Fabricate(:theme) }
+    fab!(:theme_2) { Fabricate(:theme) }
     fab!(:tss_1) do
       Fabricate(
         :theme_site_setting_with_service,

@@ -5,7 +5,7 @@ RSpec.describe PostGuardian do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:anon, :anonymous)
   fab!(:admin)
-  fab!(:another_admin, :admin)
+  fab!(:another_admin) { Fabricate(:admin) }
   fab!(:moderator)
   fab!(:trust_level_0) { Fabricate(:trust_level_0, refresh_auto_groups: true) }
   fab!(:trust_level_4) { Fabricate(:trust_level_4, refresh_auto_groups: true) }

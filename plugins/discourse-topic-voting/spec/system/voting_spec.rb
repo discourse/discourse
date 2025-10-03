@@ -3,8 +3,8 @@
 RSpec.describe "Topic voting", type: :system do
   fab!(:user)
   fab!(:admin) { Fabricate(:admin, trust_level: TrustLevel[4]) }
-  fab!(:category1, :category)
-  fab!(:category2, :category)
+  fab!(:category1) { Fabricate(:category) }
+  fab!(:category2) { Fabricate(:category) }
   fab!(:topic1) { Fabricate(:topic, category: category1) }
   fab!(:topic2) { Fabricate(:topic, category: category1) }
   fab!(:topic3) { Fabricate(:topic, category: category2) }

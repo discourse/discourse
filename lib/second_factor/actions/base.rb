@@ -10,7 +10,7 @@ module SecondFactor::Actions
       @current_user = guardian.user
       @target_user = target_user
       @request = request
-      @opts = ActiveSupport::HashWithIndifferentAccess.new(opts)
+      @opts = HashWithIndifferentAccess.new(opts)
     end
 
     def skip_second_factor_auth?(params)

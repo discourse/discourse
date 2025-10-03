@@ -45,8 +45,8 @@ class TranslationOverride < ActiveRecord::Base
 
   include HasSanitizableFields
 
-  validates :translation_key, uniqueness: { scope: :locale }
-  validates :locale, :translation_key, :value, presence: true
+  validates_uniqueness_of :translation_key, scope: :locale
+  validates_presence_of :locale, :translation_key, :value
 
   validate :check_interpolation_keys
   validate :check_MF_string, if: :message_format?

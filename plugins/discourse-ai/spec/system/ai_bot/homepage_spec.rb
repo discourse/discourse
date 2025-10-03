@@ -294,7 +294,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         end
 
         it "displays last_7_days label in the sidebar" do
-          pm.update!(last_posted_at: 5.days.ago)
+          pm.update!(last_posted_at: Time.zone.now - 5.days)
           visit "/"
           header.click_bot_button
 
@@ -303,7 +303,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         end
 
         it "displays last_30_days label in the sidebar" do
-          pm.update!(last_posted_at: 28.days.ago)
+          pm.update!(last_posted_at: Time.zone.now - 28.days)
           visit "/"
           header.click_bot_button
 

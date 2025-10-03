@@ -69,7 +69,11 @@ module DiscourseAi
         end
         @email_receivers = receivers&.filter { |r| r.include? "@" }
         @title =
-          (title.presence || I18n.t("discourse_automation.scriptables.llm_report.title"))
+          if title.present?
+            title
+          else
+            I18n.t("discourse_automation.scriptables.llm_report.title")
+          end
         @model = LlmModel.find_by(id: model)
         @persona = AiPersona.find(persona_id).class_instance.new
         @category_ids = category_ids

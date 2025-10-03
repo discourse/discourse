@@ -49,7 +49,7 @@ RSpec.describe SidebarSiteSettingsBackfiller do
 
   before do
     # Clean up random users created as part of fabrication to make assertions easier to understand.
-    User.real.where.not(id: [user.id, user2.id, user3.id, staged_user.id]).delete_all
+    User.real.where("id NOT IN (?)", [user.id, user2.id, user3.id, staged_user.id]).delete_all
   end
 
   it "raises an error when class is initialized with invalid setting name" do

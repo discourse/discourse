@@ -3,7 +3,7 @@
 RSpec.describe Jobs::GenerateEmbeddings do
   subject(:job) { described_class.new }
 
-  fab!(:vector_def, :embedding_definition)
+  fab!(:vector_def) { Fabricate(:embedding_definition) }
 
   before { enable_current_plugin }
 

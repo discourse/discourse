@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Bookmarking reports attached to a group", type: :system do
-  fab!(:current_user, :admin)
+  fab!(:current_user) { Fabricate(:admin) }
   fab!(:query_1) do
     Fabricate(
       :query,

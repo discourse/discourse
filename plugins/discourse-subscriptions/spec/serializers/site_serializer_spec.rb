@@ -18,7 +18,7 @@ describe SiteSerializer do
   end
 
   it "is true if the goal_met date is > 7 days old" do
-    Discourse.redis.set("subscriptions_goal_met_date", 1.day.ago)
+    Discourse.redis.set("subscriptions_goal_met_date", 1.days.ago)
     data = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
     expect(data[:show_campaign_banner]).to be true

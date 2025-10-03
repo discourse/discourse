@@ -36,7 +36,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
 
       if reviewable.reviewable_by_moderator?
         notify_users(
-          User.real.moderators.where.not(id: @contacted),
+          User.real.moderators.where("id NOT IN (?)", @contacted),
           all_updates[:moderators],
         )
       end
@@ -50,7 +50,7 @@ class Jobs::NotifyReviewable < ::Jobs::Base
               "INNER JOIN category_moderation_groups ON category_moderation_groups.group_id = group_users.group_id",
             )
             .where("category_moderation_groups.category_id": reviewable.category.id)
-            .where.not(users: { id: @contacted })
+            .where("users.id NOT IN (?)", @contacted)
             .distinct
 
         users.find_each do |user|

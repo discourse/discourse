@@ -4,7 +4,7 @@ describe "Recalculate Scores Form", type: :system do
   let(:recalculate_scores_modal) { PageObjects::Modals::RecalculateScoresForm.new }
 
   fab!(:admin)
-  fab!(:leaderboard, :gamification_leaderboard)
+  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
 
   before do
     RateLimiter.enable

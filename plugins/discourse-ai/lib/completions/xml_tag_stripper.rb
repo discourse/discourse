@@ -70,7 +70,7 @@ module DiscourseAi
         while true
           before, after = text.split("<", 2)
 
-          parsed << { type: :text, content: before } if before.present?
+          parsed << { type: :text, content: before } if before && !before.empty?
 
           break if after.nil?
 

@@ -423,7 +423,7 @@ module Jobs
 
       DB.after_commit { klass.client_push(hash) }
     else
-      if Rails.env.development?
+      if Rails.env == "development"
         Scheduler::Defer.later("job") { klass.new.perform(opts) }
       else
         # Run the job synchronously

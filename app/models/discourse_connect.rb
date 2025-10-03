@@ -191,12 +191,12 @@ class DiscourseConnect < DiscourseConnectBase
 
     to_be_added = desired_groups
     if current_groups.present?
-      to_be_added = to_be_added.where.not(groups: { id: current_groups.map(&:id) })
+      to_be_added = to_be_added.where("groups.id NOT IN (?)", current_groups.map(&:id))
     end
 
     to_be_removed = current_groups
     if desired_groups.present?
-      to_be_removed = to_be_removed.where.not(groups: { id: desired_groups.map(&:id) })
+      to_be_removed = to_be_removed.where("groups.id NOT IN (?)", desired_groups.map(&:id))
     end
 
     if to_be_added.present? || to_be_removed.present?
@@ -219,7 +219,7 @@ class DiscourseConnect < DiscourseConnectBase
       if split.length > 0
         to_be_added = Group.where("LOWER(name) in (?) AND NOT automatic", split)
         if already_member = GroupUser.where(user_id: user.id).pluck(:group_id).presence
-          to_be_added = to_be_added.where.not(id: already_member)
+          to_be_added = to_be_added.where("id NOT IN (?)", already_member)
         end
       end
     end
@@ -353,7 +353,7 @@ class DiscourseConnect < DiscourseConnectBase
     end
 
     if SiteSetting.auth_overrides_name && user.name != name && name.present?
-      user.name = name || User.suggest_name((username.presence || email))
+      user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
     if locale_force_update && SiteSetting.allow_user_locale && locale.present? &&

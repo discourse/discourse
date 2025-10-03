@@ -106,7 +106,7 @@ class TopicQuery
       list = user_personal_private_messages(user)
       list = list.where("topics.subtype = ?", TopicSubtype.moderator_warning)
       # Exclude official warnings that the user created, instead of received
-      list = list.where.not(topics: { user_id: user.id })
+      list = list.where("topics.user_id <> ?", user.id)
       create_list(:private_messages, {}, list)
     end
 
@@ -215,7 +215,7 @@ class TopicQuery
     end
 
     def not_archived_in_groups(list)
-      list.where.missing(:group_archived_messages)
+      list.left_joins(:group_archived_messages).where(group_archived_messages: { id: nil })
     end
 
     def have_posts_from_others(list, user)

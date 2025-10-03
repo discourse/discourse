@@ -162,7 +162,7 @@ class GroupsController < ApplicationController
         user_count = count_existing_users(group.group_users, notification_level, categories, tags)
         if user_count > 0
           return(
-            render status: :unprocessable_entity,
+            render status: 422,
                    json: {
                      user_count: user_count,
                      errors: [I18n.t("invalid_params", message: :update_existing_users)],
@@ -612,7 +612,7 @@ class GroupsController < ApplicationController
     rescue ActiveRecord::RecordNotUnique
       return(
         render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")),
-               status: :conflict
+               status: 409
       )
     end
 
@@ -1063,7 +1063,9 @@ class GroupsController < ApplicationController
             categories.each do |category_id, data|
               category_users = []
               existing_users =
-                CategoryUser.where(category_id: category_id, user_id: user_ids).where.not(notification_level: nil)
+                CategoryUser.where(category_id: category_id, user_id: user_ids).where(
+                  "notification_level IS NOT NULL",
+                )
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|
@@ -1087,7 +1089,9 @@ class GroupsController < ApplicationController
             tags.each do |tag_id, data|
               tag_users = []
               existing_users =
-                TagUser.where(tag_id: tag_id, user_id: user_ids).where.not(notification_level: nil)
+                TagUser.where(tag_id: tag_id, user_id: user_ids).where(
+                  "notification_level IS NOT NULL",
+                )
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|

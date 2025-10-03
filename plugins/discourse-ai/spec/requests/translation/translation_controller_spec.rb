@@ -3,7 +3,7 @@
 describe DiscourseAi::Translation::TranslationController do
   fab!(:user)
   fab!(:admin)
-  fab!(:test_post, :post)
+  fab!(:test_post) { Fabricate(:post) }
   fab!(:group)
 
   before do

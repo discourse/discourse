@@ -75,8 +75,8 @@ class SiteSetting < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :destroy
 
-  validates :name, presence: true
-  validates :data_type, presence: true
+  validates_presence_of :name
+  validates_presence_of :data_type
 
   after_save do
     if saved_change_to_value?

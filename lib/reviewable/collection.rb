@@ -27,7 +27,7 @@ class Reviewable < ActiveRecord::Base
     end
 
     def present?
-      present?
+      !blank?
     end
 
     def each

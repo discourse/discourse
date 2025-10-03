@@ -3,7 +3,7 @@
 RSpec.describe "AI Artifact with Data Attributes", type: :system do
   fab!(:admin)
   fab!(:user)
-  fab!(:author, :user)
+  fab!(:author) { Fabricate(:user) }
   fab!(:category) { Fabricate(:category, user: admin, read_restricted: false) }
   fab!(:topic) { Fabricate(:topic, category: category, user: author) }
   fab!(:post) { Fabricate(:post, topic: topic, user: author) }

@@ -6,7 +6,7 @@ describe DiscourseTemplates::UserExtension do
   fab!(:user)
 
   describe "can_use_category_templates?" do
-    fab!(:discourse_templates_category, :category_with_definition)
+    fab!(:discourse_templates_category) { Fabricate(:category_with_definition) }
     fab!(:templates_private_category) do
       Fabricate(:private_category_with_definition, group: Group[:moderators])
     end
@@ -61,7 +61,7 @@ describe DiscourseTemplates::UserExtension do
   end
 
   describe "can_use_private_templates?" do
-    fab!(:other_user, :user)
+    fab!(:other_user) { Fabricate(:user) }
 
     fab!(:group) do
       group = Fabricate(:group)

@@ -4,8 +4,8 @@ require_relative "../support/assign_allowed_group"
 
 describe TopicsBulkAction do
   fab!(:post)
-  fab!(:post1, :post)
-  fab!(:post2, :post)
+  fab!(:post1) { Fabricate(:post) }
+  fab!(:post2) { Fabricate(:post) }
 
   before { SiteSetting.assign_enabled = true }
 

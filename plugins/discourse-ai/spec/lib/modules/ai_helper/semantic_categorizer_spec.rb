@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::AiHelper::SemanticCategorizer do
-  fab!(:vector_def, :embedding_definition)
+  fab!(:vector_def) { Fabricate(:embedding_definition) }
   fab!(:user)
-  fab!(:muted_category, :category)
+  fab!(:muted_category) { Fabricate(:category) }
   fab!(:category_mute) do
     CategoryUser.create!(
       user: user,

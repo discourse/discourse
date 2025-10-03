@@ -3,7 +3,7 @@
 module Jobs
   module DiscourseAutomation
     class Trigger < ::Jobs::Base
-      RETRY_TIMES = [5.minutes, 15.minutes, 120.minutes]
+      RETRY_TIMES = [5.minute, 15.minute, 120.minute]
 
       sidekiq_options retry: RETRY_TIMES.size
 

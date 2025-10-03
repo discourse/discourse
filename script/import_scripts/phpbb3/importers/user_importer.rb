@@ -108,7 +108,7 @@ module ImportScripts::PhpBB3
     def user_fields
       @user_fields ||=
         begin
-          UserField.all.index_by { |field| field.name }
+          Hash[UserField.all.map { |field| [field.name, field] }]
         end
     end
 
@@ -153,7 +153,7 @@ module ImportScripts::PhpBB3
         user.suspended_at = Time.now
         user.suspended_till = 200.years.from_now
         ban_reason =
-          (row[:ban_reason].presence || "Account deactivated by administrator") # TODO i18n
+          row[:ban_reason].blank? ? "Account deactivated by administrator" : row[:ban_reason] # TODO i18n
       elsif row[:ban_start].present?
         user.suspended_at = Time.zone.at(row[:ban_start])
         user.suspended_till = row[:ban_end] > 0 ? Time.zone.at(row[:ban_end]) : 200.years.from_now

@@ -322,7 +322,7 @@ RSpec.describe Chat::Api::ChannelsController do
 
     describe "triggers the auto-join process" do
       fab!(:chatters_group, :group)
-      fab!(:user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
+      fab!(:user) { Fabricate(:user, last_seen_at: 15.minute.ago) }
 
       before do
         Jobs.run_immediately!
@@ -555,7 +555,7 @@ RSpec.describe Chat::Api::ChannelsController do
 
         describe "triggers the auto-join process" do
           fab!(:chatters_group, :group)
-          fab!(:another_user) { Fabricate(:user, last_seen_at: 15.minutes.ago) }
+          fab!(:another_user) { Fabricate(:user, last_seen_at: 15.minute.ago) }
 
           before do
             Jobs.run_immediately!

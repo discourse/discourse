@@ -2,7 +2,7 @@
 
 RSpec.describe "AI image caption", type: :system do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:non_member_group, :group)
+  fab!(:non_member_group) { Fabricate(:group) }
   let(:user_preferences_ai_page) { PageObjects::Pages::UserPreferencesAi.new }
   let(:topic_page) { PageObjects::Pages::Topic.new }
   fab!(:topic)

@@ -59,7 +59,7 @@ RSpec.describe S3Inventory do
         )
       end
 
-      @upload_1 = Fabricate(:upload, etag: "ETag", updated_at: 1.day.ago)
+      @upload_1 = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
       @upload_2 = Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
       @no_etag = Fabricate(:upload, updated_at: 2.days.ago)
 
@@ -228,7 +228,7 @@ RSpec.describe S3Inventory do
       Fabricate(:upload, etag: row[S3Inventory::CSV_ETAG_INDEX], updated_at: 2.days.ago)
     end
 
-    upload = Fabricate(:upload, etag: "ETag", updated_at: 1.day.ago)
+    upload = Fabricate(:upload, etag: "ETag", updated_at: 1.days.ago)
     Fabricate(:upload, etag: "ETag2", updated_at: Time.now)
     no_etag = Fabricate(:upload, updated_at: 2.days.ago)
 

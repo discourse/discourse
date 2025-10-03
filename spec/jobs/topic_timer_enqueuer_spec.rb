@@ -22,7 +22,7 @@ RSpec.describe Jobs::TopicTimerEnqueuer do
   fab!(:future_timer) do
     Fabricate(
       :topic_timer,
-      execute_at: 1.hour.from_now,
+      execute_at: 1.hours.from_now,
       created_at: 1.hour.ago,
       status_type: TopicTimer.types[:close],
     )
@@ -60,7 +60,7 @@ RSpec.describe Jobs::TopicTimerEnqueuer do
 
   it "does not re-enqueue a job that has already been scheduled ahead of time in sidekiq (legacy topic timers)" do
     expect_not_enqueued_with(job: :close_topic, args: { topic_timer_id: timer1.id })
-    Jobs.enqueue_at(1.hour.from_now, :close_topic, topic_timer_id: timer1.id)
+    Jobs.enqueue_at(1.hours.from_now, :close_topic, topic_timer_id: timer1.id)
     job.execute
   end
 

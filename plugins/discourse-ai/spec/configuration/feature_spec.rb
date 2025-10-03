@@ -61,7 +61,7 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     end
 
     context "with translation module" do
-      fab!(:translation_model, :llm_model)
+      fab!(:translation_model) { Fabricate(:llm_model) }
 
       let(:ai_feature) do
         described_class.new(
@@ -168,7 +168,7 @@ RSpec.describe DiscourseAi::Configuration::Feature do
 
     it "returns only personas with at least one bot permission enabled" do
       expected_ids = [chat_persona.id, dm_persona.id, topic_persona.id, pm_persona.id]
-      AiPersona.where.not(id: expected_ids).update_all(enabled: false)
+      AiPersona.where("id not in (:ids)", ids: expected_ids).update_all(enabled: false)
       expect(bot_feature.persona_ids).to match_array(expected_ids)
       expect(bot_feature.persona_ids).not_to include(inactive_persona.id)
     end

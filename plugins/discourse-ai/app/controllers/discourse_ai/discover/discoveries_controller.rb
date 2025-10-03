@@ -25,7 +25,7 @@ module DiscourseAi
 
         Jobs.enqueue(:stream_discover_reply, user_id: current_user.id, query: query)
 
-        render json: {}, status: :ok
+        render json: {}, status: 200
       end
 
       def continue_convo
@@ -59,7 +59,7 @@ module DiscourseAi
 
         render json: success_json.merge(topic_id: post.topic_id)
       rescue StandardError => e
-        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
+        render json: failed_json.merge(errors: [e.message]), status: 422
       end
     end
   end

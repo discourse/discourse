@@ -130,7 +130,7 @@ RSpec.describe "Managing LLM configurations", type: :system do
 
   context "with quotas" do
     fab!(:llm_model_1) { Fabricate(:llm_model, name: "claude-2") }
-    fab!(:group_1, :group)
+    fab!(:group_1) { Fabricate(:group) }
 
     before { Fabricate(:llm_quota, group: group_1, llm_model: llm_model_1, max_tokens: 1000) }
 
@@ -172,7 +172,7 @@ RSpec.describe "Managing LLM configurations", type: :system do
   end
 
   context "when seeded LLM is present" do
-    fab!(:llm_model, :seeded_model)
+    fab!(:llm_model) { Fabricate(:seeded_model) }
 
     it "shows the provider as CDCK in the UI" do
       visit "/admin/plugins/discourse-ai/ai-llms"

@@ -7,7 +7,7 @@ describe "TopicExtensions" do
   fab!(:topic_1) { Fabricate(:topic, user: user_1) }
 
   context "when an enabled category is set on the topic" do
-    fab!(:category_1, :category)
+    fab!(:category_1) { Fabricate(:category) }
 
     before { SiteSetting.zendesk_autogenerate_categories = "#{category_1.id}" }
 
@@ -17,7 +17,7 @@ describe "TopicExtensions" do
         args: {
           topic_id: topic_1.id,
         },
-        at: 5.seconds.from_now,
+        at: Time.zone.now + 5.seconds,
       ) do
         topic_1.category = category_1
         topic_1.save!
@@ -36,7 +36,7 @@ describe "TopicExtensions" do
           args: {
             topic_id: topic_1.id,
           },
-          at: 5.seconds.from_now,
+          at: Time.zone.now + 5.seconds,
         ) do
           topic_1.category = nil
           topic_1.save!

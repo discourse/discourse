@@ -7,7 +7,7 @@ describe DiscourseTemplates::GuardianExtension do
     moderator
   end
   fab!(:user)
-  fab!(:other_user, :user)
+  fab!(:other_user) { Fabricate(:user) }
   fab!(:group) do
     group = Fabricate(:group)
     Fabricate(:group_user, group: group, user: user)
@@ -18,7 +18,7 @@ describe DiscourseTemplates::GuardianExtension do
     Fabricate(:group_user, group: group, user: other_user)
     group
   end
-  fab!(:discourse_templates_category, :category_with_definition)
+  fab!(:discourse_templates_category) { Fabricate(:category_with_definition) }
   fab!(:templates_private_category) do
     Fabricate(:private_category_with_definition, group: Group[:moderators])
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscoursePolicy do
-  fab!(:user1, :user)
+  fab!(:user1) { Fabricate(:user) }
 
   before { enable_current_plugin }
 
@@ -62,7 +62,7 @@ describe DiscoursePolicy do
     end
 
     context "with add_users_to_group present" do
-      fab!(:group2, :group)
+      fab!(:group2) { Fabricate(:group) }
       fab!(:post) { Fabricate(:post, user: moderator) }
       fab!(:policy666) do
         policy = Fabricate(:post_policy, post: post, add_users_to_group: group2.id)

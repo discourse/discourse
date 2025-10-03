@@ -88,7 +88,7 @@ class UserSearch
           Post.types[:regular],
         )
 
-      in_topic = in_topic.where.not(users: { id: @searching_user.id }) if @searching_user.present?
+      in_topic = in_topic.where("users.id <> ?", @searching_user.id) if @searching_user.present?
 
       if @prioritized_user_id
         in_topic =
@@ -149,7 +149,7 @@ class UserSearch
           SQL
 
       if @searching_user.present?
-        in_category = in_category.where.not(users: { id: @searching_user.id })
+        in_category = in_category.where("users.id <> ?", @searching_user.id)
       end
 
       in_category

@@ -106,7 +106,7 @@ class Admin::SiteTextsController < Admin::AdminController
     else
       render json:
                failed_json.merge(message: translation_override.errors.full_messages.join("\n\n")),
-             status: :unprocessable_entity
+             status: 422
     end
   end
 
@@ -140,7 +140,7 @@ class Admin::SiteTextsController < Admin::AdminController
     if override.make_up_to_date!
       render json: success_json
     else
-      render json: failed_json.merge(message: "Can only dismiss outdated translations"), status: :unprocessable_entity
+      render json: failed_json.merge(message: "Can only dismiss outdated translations"), status: 422
     end
   end
 

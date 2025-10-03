@@ -3,8 +3,8 @@
 class PublishedPage < ActiveRecord::Base
   belongs_to :topic
 
-  validates :slug, presence: true
-  validates :slug, :topic_id, uniqueness: true
+  validates_presence_of :slug
+  validates_uniqueness_of :slug, :topic_id
 
   validate :slug_format
   def slug_format

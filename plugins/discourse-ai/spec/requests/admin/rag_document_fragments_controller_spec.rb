@@ -4,7 +4,7 @@ RSpec.describe DiscourseAi::Admin::RagDocumentFragmentsController do
   fab!(:admin)
   fab!(:ai_persona)
 
-  fab!(:vector_def, :embedding_definition)
+  fab!(:vector_def) { Fabricate(:embedding_definition) }
 
   before do
     enable_current_plugin

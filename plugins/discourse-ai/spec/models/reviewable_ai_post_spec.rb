@@ -3,7 +3,7 @@
 describe ReviewableAiPost do
   subject(:reviewable_ai_post) { described_class.new }
 
-  fab!(:target, :post)
+  fab!(:target) { Fabricate(:post) }
 
   before { enable_current_plugin }
 

@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ApiKeyScope < ActiveRecord::Base
-  validates :resource, presence: true
-  validates :action, presence: true
+  validates_presence_of :resource
+  validates_presence_of :action
 
   class << self
     def list_actions

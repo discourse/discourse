@@ -3,7 +3,7 @@
 require "post_revisor"
 
 describe PostRevisor do
-  fab!(:category, :category_with_definition)
+  fab!(:category) { Fabricate(:category_with_definition) }
   fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
 
   fab!(:category_solved) do
@@ -37,8 +37,8 @@ describe PostRevisor do
       SiteSetting.tagging_enabled = true
     end
 
-    fab!(:tag1, :tag)
-    fab!(:tag2, :tag)
+    fab!(:tag1) { Fabricate(:tag) }
+    fab!(:tag2) { Fabricate(:tag) }
 
     fab!(:topic)
     let(:post) { Fabricate(:post, topic: topic) }

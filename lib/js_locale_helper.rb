@@ -14,7 +14,7 @@ module JsLocaleHelper
   end
 
   def self.plugin_translations(locale_str)
-    @plugin_translations ||= ActiveSupport::HashWithIndifferentAccess.new
+    @plugin_translations ||= HashWithIndifferentAccess.new
 
     @plugin_translations[locale_str] ||= begin
       translations = {}
@@ -30,7 +30,7 @@ module JsLocaleHelper
   end
 
   def self.load_translations(locale)
-    @loaded_translations ||= ActiveSupport::HashWithIndifferentAccess.new
+    @loaded_translations ||= HashWithIndifferentAccess.new
     @loaded_translations[locale] ||= begin
       locale_str = locale.to_s
 
@@ -139,7 +139,7 @@ module JsLocaleHelper
 
     message_formats =
       I18n.fallbacks[locale]
-        .each_with_object(ActiveSupport::HashWithIndifferentAccess.new) do |l, hash|
+        .each_with_object(HashWithIndifferentAccess.new) do |l, hash|
           translations = translations_for(l, no_fallback: true)
           hash[l] = remove_message_formats!(translations, l).merge(
             TranslationOverride

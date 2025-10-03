@@ -2,7 +2,7 @@
 
 describe DiscourseReactions::CustomReactionsController do
   fab!(:user)
-  fab!(:post_1, :post)
+  fab!(:post_1) { Fabricate(:post) }
 
   let(:custom_emoji) { "wink" }
 

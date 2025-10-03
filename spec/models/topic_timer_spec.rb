@@ -56,7 +56,7 @@ RSpec.describe TopicTimer, type: :model do
           topic_timer =
             Fabricate.build(
               :topic_timer,
-              execute_at: 1.hour.from_now,
+              execute_at: Time.zone.now + 1.hour,
               user: Fabricate(:user),
               topic: Fabricate(:topic),
             )
@@ -70,7 +70,7 @@ RSpec.describe TopicTimer, type: :model do
           topic_timer =
             Fabricate.build(
               :topic_timer,
-              execute_at: 1.hour.ago,
+              execute_at: Time.zone.now - 1.hour,
               created_at: Time.zone.now,
               user: Fabricate(:user),
               topic: Fabricate(:topic),
@@ -180,7 +180,7 @@ RSpec.describe TopicTimer, type: :model do
       topic_timer =
         Fabricate.build(
           :topic_timer,
-          execute_at: 1.hour.from_now,
+          execute_at: Time.zone.now + 1.hour,
           user: Fabricate(:user),
           topic: Fabricate(:topic),
         )
@@ -192,8 +192,8 @@ RSpec.describe TopicTimer, type: :model do
       topic_timer =
         Fabricate.create(
           :topic_timer,
-          execute_at: 1.hour.ago,
-          created_at: 2.hours.ago,
+          execute_at: Time.zone.now - 1.hour,
+          created_at: Time.zone.now - 2.hour,
           user: Fabricate(:user),
           topic: Fabricate(:topic),
         )
@@ -206,8 +206,8 @@ RSpec.describe TopicTimer, type: :model do
       topic_timer =
         Fabricate.build(
           :topic_timer,
-          execute_at: 1.hour.ago,
-          created_at: 2.hours.ago,
+          execute_at: Time.zone.now - 1.hour,
+          created_at: Time.zone.now - 2.hour,
           user: Fabricate(:user),
           topic: Fabricate(:topic),
         )

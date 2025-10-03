@@ -87,7 +87,7 @@ class UserApiKeysController < ApplicationController
       api: AUTH_API_VERSION,
     }.to_json
 
-    public_key_str = (@client.public_key.presence || params[:public_key])
+    public_key_str = @client.public_key.present? ? @client.public_key : params[:public_key]
     public_key = OpenSSL::PKey::RSA.new(public_key_str)
 
     # by default, Ruby uses `PKCS1_PADDING` here

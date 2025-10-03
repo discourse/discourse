@@ -62,7 +62,7 @@ require_relative "../config/environment"
 
 Jobs.run_immediately!
 
-unless Rails.env.profile?
+unless Rails.env == "profile"
   puts "This script should only be used in the profile environment"
   exit
 end

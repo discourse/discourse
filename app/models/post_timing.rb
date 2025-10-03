@@ -4,8 +4,8 @@ class PostTiming < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
 
-  validates :post_number, presence: true
-  validates :msecs, presence: true
+  validates_presence_of :post_number
+  validates_presence_of :msecs
 
   def self.pretend_read(topic_id, actual_read_post_number, pretend_read_post_number, user_ids = nil)
     # This is done in SQL cause the logic is quite tricky and we want to do this in one db hit

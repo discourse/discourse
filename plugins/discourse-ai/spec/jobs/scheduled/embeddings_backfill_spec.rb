@@ -2,7 +2,7 @@
 
 RSpec.describe Jobs::EmbeddingsBackfill do
   fab!(:second_topic) do
-    topic = Fabricate(:topic, created_at: 1.year.ago, bumped_at: 2.days.ago)
+    topic = Fabricate(:topic, created_at: 1.year.ago, bumped_at: 2.day.ago)
     Fabricate(:post, topic: topic)
     topic
   end
@@ -14,13 +14,13 @@ RSpec.describe Jobs::EmbeddingsBackfill do
   end
 
   fab!(:third_topic) do
-    topic = Fabricate(:topic, created_at: 1.year.ago, bumped_at: 3.days.ago)
+    topic = Fabricate(:topic, created_at: 1.year.ago, bumped_at: 3.day.ago)
     Fabricate(:post, topic: topic)
     topic
   end
 
-  fab!(:vector_def, :embedding_definition)
-  fab!(:vector_def2, :embedding_definition)
+  fab!(:vector_def) { Fabricate(:embedding_definition) }
+  fab!(:vector_def2) { Fabricate(:embedding_definition) }
   fab!(:embedding_array) { Array.new(1024) { 1 } }
 
   before do

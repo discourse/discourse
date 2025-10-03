@@ -3,8 +3,8 @@
 require Rails.root.join("db/migrate/20250714010001_backfill_themeable_site_settings.rb")
 
 RSpec.describe BackfillThemeableSiteSettings do
-  fab!(:theme_1, :theme)
-  fab!(:theme_2, :theme)
+  fab!(:theme_1) { Fabricate(:theme) }
+  fab!(:theme_2) { Fabricate(:theme) }
   fab!(:theme_3) { Fabricate(:theme, component: true) }
 
   before do

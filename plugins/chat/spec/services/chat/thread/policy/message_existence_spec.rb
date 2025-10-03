@@ -4,7 +4,7 @@ RSpec.describe Chat::Thread::Policy::MessageExistence do
   subject(:policy) { described_class.new(context) }
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:thread, :chat_thread)
+  fab!(:thread) { Fabricate(:chat_thread) }
 
   let(:guardian) { user.guardian }
   let(:context) { Service::Base::Context.build(thread:, guardian:, target_message_id:) }

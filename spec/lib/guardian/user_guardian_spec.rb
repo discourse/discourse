@@ -437,7 +437,7 @@ RSpec.describe UserGuardian do
           user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 1.day.ago)
           expect(guardian.can_delete_user?(user)).to eq(true)
 
-          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.days.ago)
+          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.day.ago)
           expect(guardian.can_delete_user?(user)).to eq(false)
         end
       end
@@ -448,7 +448,7 @@ RSpec.describe UserGuardian do
         it "is allowed when even when user created the first post before delete_user_max_post_age days" do
           SiteSetting.delete_user_max_post_age = 2
 
-          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.days.ago)
+          user.user_stat = UserStat.new(new_since: 3.days.ago, first_post_created_at: 3.day.ago)
           expect(guardian.can_delete_user?(user)).to eq(true)
         end
       end

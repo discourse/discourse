@@ -86,7 +86,7 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#update" do
-      fab!(:user2, :user)
+      fab!(:user2) { Fabricate(:user) }
       fab!(:group2) { Fabricate(:group, users: [user2]) }
 
       it "allows group to access system query" do

@@ -104,8 +104,8 @@ RSpec.describe Sitemap do
       end
 
       it "order topics by bumped_at asc" do
-        topic_1 = Fabricate(:topic, bumped_at: 3.minutes.ago)
-        topic_2 = Fabricate(:topic, bumped_at: 1.minute.ago)
+        topic_1 = Fabricate(:topic, bumped_at: 3.minute.ago)
+        topic_2 = Fabricate(:topic, bumped_at: 1.minutes.ago)
         topic_3 = Fabricate(:topic, bumped_at: 20.minutes.ago)
 
         topic_ids = sitemap.topics.map { |td| td[0] }

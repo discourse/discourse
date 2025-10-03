@@ -15,7 +15,7 @@ class UniqueAmongValidator < ActiveRecord::Validations::UniquenessValidator
     if new_errors.size - old_errors.size != 0
       # now look only in the collection we care about.
       dupes = options[:collection].call(record).where("lower(#{attribute}) = ?", value.downcase)
-      dupes = dupes.where.not(id: record.id) if record.persisted?
+      dupes = dupes.where("id != ?", record.id) if record.persisted?
 
       # pop off the error, if it was a false positive
       if !dupes.exists?

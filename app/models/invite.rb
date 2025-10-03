@@ -31,7 +31,7 @@ class Invite < ActiveRecord::Base
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
 
-  validates :invited_by_id, presence: true
+  validates_presence_of :invited_by_id
   validates :email, email: true, allow_blank: true
   validates :custom_message, length: { maximum: 1000 }
   validates :domain, length: { maximum: 500 }
@@ -277,7 +277,7 @@ class Invite < ActiveRecord::Base
     InvitedUser
       .joins("LEFT JOIN invites ON invites.id = invited_users.invite_id")
       .includes(user: :user_stat)
-      .where.not(invited_users: { user_id: nil })
+      .where("invited_users.user_id IS NOT NULL")
       .where("invites.invited_by_id = ?", inviter.id)
       .order("invited_users.redeemed_at DESC")
       .references("invite")

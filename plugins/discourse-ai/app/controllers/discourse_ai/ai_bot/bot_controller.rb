@@ -11,7 +11,7 @@ module DiscourseAi
         raise Discourse::NotFound if !log.topic
 
         guardian.ensure_can_debug_ai_bot_conversation!(log.topic)
-        render json: AiApiAuditLogSerializer.new(log, root: false), status: :ok
+        render json: AiApiAuditLogSerializer.new(log, root: false), status: 200
       end
 
       def show_debug_info
@@ -26,7 +26,7 @@ module DiscourseAi
 
         debug_info = AiApiAuditLog.where(post: posts).order(created_at: :desc).first
 
-        render json: AiApiAuditLogSerializer.new(debug_info, root: false), status: :ok
+        render json: AiApiAuditLogSerializer.new(debug_info, root: false), status: 200
       end
 
       def stop_streaming_response
@@ -35,14 +35,14 @@ module DiscourseAi
 
         Discourse.redis.del("gpt_cancel:#{post.id}")
 
-        render json: {}, status: :ok
+        render json: {}, status: 200
       end
 
       def show_bot_username
         bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(params[:username])
         raise Discourse::InvalidParameters.new(:username) if !bot_user
 
-        render json: { bot_username: bot_user.username_lower }, status: :ok
+        render json: { bot_username: bot_user.username_lower }, status: 200
       end
     end
   end

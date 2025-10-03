@@ -24,10 +24,10 @@ module DiscourseRssPolling
         if rss_feed.save
           render json: { success: true }
         else
-          render json: { success: false, errors: rss_feed.errors.full_messages }, status: :unprocessable_entity
+          render json: { success: false, errors: rss_feed.errors.full_messages }, status: 422
         end
       else
-        render json: { success: false, error: "Invalid feed data" }, status: :bad_request
+        render json: { success: false, error: "Invalid feed data" }, status: 400
       end
     end
 
@@ -39,7 +39,7 @@ module DiscourseRssPolling
         rss_feed.destroy!
         render json: { success: true }
       else
-        render json: { success: false, error: "Feed not found" }, status: :not_found
+        render json: { success: false, error: "Feed not found" }, status: 404
       end
     end
 

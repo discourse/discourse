@@ -2,7 +2,7 @@
 
 describe "Post event", type: :system do
   fab!(:admin)
-  fab!(:user, :admin)
+  fab!(:user) { Fabricate(:admin) }
   fab!(:group)
 
   let(:composer) { PageObjects::Components::Composer.new }
@@ -186,7 +186,7 @@ describe "Post event", type: :system do
     #     -     - element is visible, enabled and stable
     visit "/new-topic"
     title = "My upcoming l33t event"
-    tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
+    tomorrow = (Time.zone.now + 1.day).strftime("%Y-%m-%d")
     composer.fill_title(title)
     composer.fill_content <<~MD
       [event start="#{tomorrow} 13:37" status="public"]
@@ -294,8 +294,8 @@ describe "Post event", type: :system do
       )
     end
 
-    fab!(:invitable_user_1, :user)
-    fab!(:invitable_user_2, :user)
+    fab!(:invitable_user_1) { Fabricate(:user) }
+    fab!(:invitable_user_2) { Fabricate(:user) }
 
     it "can invite users to an event" do
       visit(post.topic.url)

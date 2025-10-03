@@ -130,7 +130,7 @@ class TrustLevel3Requirements
     TopicViewItem
       .where(user_id: @user.id)
       .joins(:topic)
-      .where.not(topics: { archetype: Archetype.private_message })
+      .where("topics.archetype <> ?", Archetype.private_message)
       .select("topic_id")
   end
 
@@ -214,7 +214,7 @@ class TrustLevel3Requirements
       .where(user_id: @user.id, action_type: UserAction::LIKE)
       .where("user_actions.created_at > ?", time_period.days.ago)
       .joins(:target_topic)
-      .where.not(topics: { archetype: Archetype.private_message })
+      .where("topics.archetype <> ?", Archetype.private_message)
       .count
   end
 
@@ -227,7 +227,7 @@ class TrustLevel3Requirements
       .where(user_id: @user.id, action_type: UserAction::WAS_LIKED)
       .where("user_actions.created_at > ?", time_period.days.ago)
       .joins(:target_topic)
-      .where.not(topics: { archetype: Archetype.private_message })
+      .where("topics.archetype <> ?", Archetype.private_message)
   end
 
   def num_likes_received

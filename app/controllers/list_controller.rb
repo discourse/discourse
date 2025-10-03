@@ -430,7 +430,7 @@ class ListController < ApplicationController
         url = url.sub(ActionController::Base.config.relative_url_root, "")
       end
 
-      return redirect_to path(url), status: :moved_permanently
+      return redirect_to path(url), status: 301
     end
 
     @description_meta =

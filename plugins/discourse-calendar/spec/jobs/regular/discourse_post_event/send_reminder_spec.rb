@@ -363,7 +363,7 @@ describe Jobs::DiscoursePostEventSendReminder do
 
       def advance_to_next_occurrence
         freeze_time(recurring_event.original_starts_at + 1.day + 1.hour)
-        recurring_event.event_dates.pending.update_all(finished_at: 1.hour.ago)
+        recurring_event.event_dates.pending.update_all(finished_at: Time.current - 1.hour)
         recurring_event.set_next_date
       end
 

@@ -117,7 +117,7 @@ module DiscourseAi
             rescue StandardError => e
               # make it a tiny bit easier to debug in dev, this is tricky
               # multi-threaded code that exhibits various limitations in rails
-              p e if Rails.env.local?
+              p e if Rails.env.development? || Rails.env.test?
               Discourse.warn_exception(e, message: "Discourse AI: Unable to stream reply")
             ensure
               io.close

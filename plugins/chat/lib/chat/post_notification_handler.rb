@@ -20,7 +20,7 @@ module Chat
 
       quoted_users = extract_quoted_users(post)
       if @notified_users.present?
-        quoted_users = quoted_users.where.not(users: { id: @notified_users })
+        quoted_users = quoted_users.where("users.id NOT IN (?)", @notified_users)
       end
 
       opts = { user_id: post.user.id, display_username: post.user.username }

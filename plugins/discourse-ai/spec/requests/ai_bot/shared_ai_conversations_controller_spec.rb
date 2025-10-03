@@ -13,7 +13,7 @@ RSpec.describe DiscourseAi::AiBot::SharedAiConversationsController do
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic)
-  fab!(:pm, :private_message_topic)
+  fab!(:pm) { Fabricate(:private_message_topic) }
   fab!(:user_pm) { Fabricate(:private_message_topic, recipient: user) }
 
   fab!(:bot_user) do

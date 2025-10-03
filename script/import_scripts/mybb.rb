@@ -87,7 +87,7 @@ class ImportScripts::MyBB < ImportScripts::Base
           avatar_url: avatar_url,
           post_create_action:
             proc do |newuser|
-              if user["avatar"].present?
+              if !user["avatar"].blank?
                 avatar = user["avatar"].gsub(/\?.*/, "")
                 if avatar.match(/^http.*/)
                   UserAvatar.import_url_for_user(avatar, newuser)

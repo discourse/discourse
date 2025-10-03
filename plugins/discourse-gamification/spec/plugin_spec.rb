@@ -36,9 +36,9 @@ describe DiscourseGamification do
 end
 
 context "when merging users" do
-  fab!(:user_1, :user)
-  fab!(:user_2, :user)
-  fab!(:leaderboard, :gamification_leaderboard)
+  fab!(:user_1) { Fabricate(:user) }
+  fab!(:user_2) { Fabricate(:user) }
+  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
 
   before do
     SiteSetting.discourse_gamification_enabled = true

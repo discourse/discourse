@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe DiscourseGamification::DirectoryIntegration do
-  fab!(:user_1, :admin)
-  fab!(:user_2, :user)
-  fab!(:leaderboard, :gamification_leaderboard)
+  fab!(:user_1) { Fabricate(:admin) }
+  fab!(:user_2) { Fabricate(:user) }
+  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
   fab!(:score_1) { Fabricate(:gamification_score, user_id: user_1.id, score: 10, date: 8.days.ago) }
   fab!(:score_2) { Fabricate(:gamification_score, user_id: user_1.id, score: 40, date: 3.days.ago) }
   fab!(:score_3) { Fabricate(:gamification_score, user_id: user_2.id, score: 25, date: 5.days.ago) }

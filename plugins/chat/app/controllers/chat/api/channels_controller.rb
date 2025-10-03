@@ -33,9 +33,9 @@ class Chat::Api::ChannelsController < Chat::ApiController
       on_failed_policy(:invalid_access) { raise Discourse::InvalidAccess }
       on_model_not_found(:channel) { raise ActiveRecord::RecordNotFound }
       on_success { render(json: success_json) }
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: 422) }
       on_failed_contract do |contract|
-        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end
     end
   end
@@ -71,9 +71,9 @@ class Chat::Api::ChannelsController < Chat::ApiController
       on_model_errors(:membership) do |model|
         render_json_error(model, type: :record_invalid, status: 422)
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: 422) }
       on_failed_contract do |contract|
-        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
       end
     end
   end

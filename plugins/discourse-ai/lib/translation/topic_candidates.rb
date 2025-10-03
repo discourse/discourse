@@ -39,7 +39,7 @@ module DiscourseAi
 
         sql = <<~SQL
           WITH eligible_topics AS (
-            #{get.where.not(topics: { locale: nil }).to_sql}
+            #{get.where("topics.locale IS NOT NULL").to_sql}
           ),
           total_count AS (
             SELECT COUNT(*) AS count FROM eligible_topics

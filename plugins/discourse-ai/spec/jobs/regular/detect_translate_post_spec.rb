@@ -110,7 +110,7 @@ describe Jobs::DetectTranslatePost do
     fab!(:private_topic) { Fabricate(:topic, category: private_category) }
     fab!(:private_post) { Fabricate(:post, topic: private_topic) }
 
-    fab!(:personal_pm_topic, :private_message_topic)
+    fab!(:personal_pm_topic) { Fabricate(:private_message_topic) }
     fab!(:personal_pm_post) { Fabricate(:post, topic: personal_pm_topic) }
 
     fab!(:group_pm_topic) do

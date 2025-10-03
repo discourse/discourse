@@ -461,8 +461,8 @@ RSpec.describe PostCreator do
             Fabricate(
               :topic_timer,
               based_on_last_post: true,
-              execute_at: 12.hours.ago,
-              created_at: 24.hours.ago,
+              execute_at: Time.zone.now - 12.hours,
+              created_at: Time.zone.now - 24.hours,
               duration_minutes: 12 * 60,
             )
           end
@@ -479,7 +479,7 @@ RSpec.describe PostCreator do
 
             topic_timer.reload
 
-            expect(topic_timer.execute_at).to eq_time(12.hours.from_now)
+            expect(topic_timer.execute_at).to eq_time(Time.zone.now + 12.hours)
             expect(topic_timer.created_at).to eq_time(Time.zone.now)
           end
 
@@ -952,7 +952,7 @@ RSpec.describe PostCreator do
           coding_horror,
           raw: "first post in topic",
           topic_id: topic.id,
-          created_at: 24.hours.ago,
+          created_at: Time.zone.now - 24.hours,
         ).create
       end
 

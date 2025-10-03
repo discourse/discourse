@@ -3,7 +3,7 @@
 describe DiscourseSolved::GuardianExtensions do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:other_user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:topic, :topic_with_op)
+  fab!(:topic) { Fabricate(:topic_with_op) }
   fab!(:post) { Fabricate(:post, topic: topic, user: other_user) }
 
   let(:guardian) { user.guardian }

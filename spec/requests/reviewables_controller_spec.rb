@@ -329,7 +329,7 @@ RSpec.describe ReviewablesController do
         end
 
         it "returns reviewable content that matches the date range" do
-          reviewable = Fabricate(:reviewable, created_at: 2.days.ago)
+          reviewable = Fabricate(:reviewable, created_at: 2.day.ago)
 
           get "/review.json?from_date=#{from}&to_date=#{to}"
 

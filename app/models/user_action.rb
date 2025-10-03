@@ -7,8 +7,8 @@ class UserAction < ActiveRecord::Base
   belongs_to :target_post, class_name: "Post"
   belongs_to :target_topic, class_name: "Topic"
 
-  validates :action_type, presence: true
-  validates :user_id, presence: true
+  validates_presence_of :action_type
+  validates_presence_of :user_id
 
   LIKE = 1
   WAS_LIKED = 2
@@ -257,7 +257,7 @@ class UserAction < ActiveRecord::Base
       end
 
       unless SiteSetting.enable_mentions?
-        builder.where.not(a: { action_type: UserAction::MENTION })
+        builder.where("a.action_type <> :mention_type", mention_type: UserAction::MENTION)
       end
 
       builder.order_by("a.created_at desc").offset(offset.to_i).limit(limit.to_i)
@@ -425,7 +425,7 @@ class UserAction < ActiveRecord::Base
 
   def self.filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages || !guardian.user
-      builder.where.not(t: { archetype: Archetype.private_message })
+      builder.where("t.archetype <> :private_message", private_message: Archetype.private_message)
     else
       unless guardian.is_admin?
         sql = <<~SQL

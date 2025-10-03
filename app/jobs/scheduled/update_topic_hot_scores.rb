@@ -8,7 +8,7 @@ module Jobs
 
     def execute(args)
       if SiteSetting.top_menu_map.include?("hot") ||
-           Discourse.redis.set(HOT_SCORE_UPDATE_REDIS_KEY, 1, ex: 6.hours, nx: true)
+           Discourse.redis.set(HOT_SCORE_UPDATE_REDIS_KEY, 1, ex: 6.hour, nx: true)
         TopicHotScore.update_scores
       end
     end

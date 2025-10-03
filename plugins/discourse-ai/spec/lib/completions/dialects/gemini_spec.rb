@@ -3,7 +3,7 @@
 require_relative "dialect_context"
 
 RSpec.describe DiscourseAi::Completions::Dialects::Gemini do
-  fab!(:model, :gemini_model)
+  fab!(:model) { Fabricate(:gemini_model) }
   let(:context) { DialectContext.new(described_class, model) }
 
   before { enable_current_plugin }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscourseAi::AiHelper::EntryPoint do
-  fab!(:english_user, :user)
+  fab!(:english_user) { Fabricate(:user) }
   fab!(:french_user) { Fabricate(:user, locale: "fr") }
 
   before { enable_current_plugin }

@@ -7,7 +7,7 @@ module Jobs
     def execute(args)
       User
         .joins("LEFT JOIN groups ON lower(groups.name) = users.username_lower")
-        .where.not(groups: { id: nil })
+        .where("groups.id IS NOT NULL")
         .find_each do |user|
           suffix = 1
           old_username = user.username

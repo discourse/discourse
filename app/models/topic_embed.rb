@@ -7,8 +7,8 @@ class TopicEmbed < ActiveRecord::Base
 
   belongs_to :topic
   belongs_to :post
-  validates :embed_url, presence: true
-  validates :embed_url, uniqueness: true
+  validates_presence_of :embed_url
+  validates_uniqueness_of :embed_url
   validates :embed_content_cache, length: { maximum: EMBED_CONTENT_CACHE_MAX_LENGTH }
 
   before_validation(on: :create) do

@@ -67,9 +67,9 @@ RSpec.describe About do
   describe "#category_moderators" do
     fab!(:user)
     fab!(:public_cat_moderator) { Fabricate(:user, last_seen_at: 1.month.ago) }
-    fab!(:private_cat_moderator) { Fabricate(:user, last_seen_at: 2.months.ago) }
-    fab!(:common_moderator) { Fabricate(:user, last_seen_at: 3.months.ago) }
-    fab!(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.months.ago) }
+    fab!(:private_cat_moderator) { Fabricate(:user, last_seen_at: 2.month.ago) }
+    fab!(:common_moderator) { Fabricate(:user, last_seen_at: 3.month.ago) }
+    fab!(:common_moderator_2) { Fabricate(:user, last_seen_at: 4.month.ago) }
 
     fab!(:public_group) do
       Fabricate(:public_group, users: [public_cat_moderator, common_moderator, common_moderator_2])

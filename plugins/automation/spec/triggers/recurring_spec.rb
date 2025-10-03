@@ -243,7 +243,7 @@ describe "Recurring" do
 
           expect(automation.pending_automations.count).to eq(1)
           expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
-            2.days.from_now,
+            Time.zone.now + 2.days,
           )
         end
       end
@@ -287,7 +287,7 @@ describe "Recurring" do
 
           expect(automation.pending_automations.count).to eq(1)
           expect(automation.pending_automations.last.execute_at).to be_within_one_second_of(
-            2.hours.from_now,
+            Time.zone.now + 2.hour,
           )
         end
       end
@@ -390,7 +390,7 @@ describe "Recurring" do
 
         pending_automation = automation.pending_automations.last
         start_date = Time.parse(automation.trigger_field("start_date")["value"])
-        expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 3.days)
+        expect(pending_automation.execute_at).to be_within_one_minute_of(start_date + 3.day)
       end
 
       it "creates the next iteration three days after without Saturday/Sunday" do
@@ -422,7 +422,7 @@ describe "Recurring" do
 
         pending_automation = automation.pending_automations.last
         expect(pending_automation.execute_at).to be_within_one_minute_of(
-          (1.hour.from_now).beginning_of_hour,
+          (Time.zone.now + 1.hour).beginning_of_hour,
         )
       end
     end
@@ -435,7 +435,7 @@ describe "Recurring" do
 
         pending_automation = automation.pending_automations.last
         expect(pending_automation.execute_at).to be_within_one_minute_of(
-          (1.minute.from_now).beginning_of_minute,
+          (Time.zone.now + 1.minute).beginning_of_minute,
         )
       end
     end

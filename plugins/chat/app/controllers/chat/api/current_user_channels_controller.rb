@@ -11,7 +11,7 @@ class Chat::Api::CurrentUserChannelsController < Chat::ApiController
           post_allowed_category_ids: post_allowed_category_ids,
         )
       end
-      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+      on_failure { render(json: failed_json, status: 422) }
     end
   end
 end

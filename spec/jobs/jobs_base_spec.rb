@@ -111,7 +111,7 @@ RSpec.describe ::Jobs::Base do
   end
 
   it "converts to an indifferent access hash" do
-    ::Jobs::Base.any_instance.expects(:execute).with(instance_of(ActiveSupport::HashWithIndifferentAccess))
+    ::Jobs::Base.any_instance.expects(:execute).with(instance_of(HashWithIndifferentAccess))
     ::Jobs::Base.new.perform("hello" => "world")
   end
 

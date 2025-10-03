@@ -27,7 +27,7 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def show
-    api_key = ApiKey.includes(:api_key_scopes).find(params[:id])
+    api_key = ApiKey.includes(:api_key_scopes).find_by!(id: params[:id])
     render_serialized(api_key, ApiKeySerializer, root: "key")
   end
 
@@ -53,7 +53,7 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def update
-    api_key = ApiKey.find(params[:id])
+    api_key = ApiKey.find_by!(id: params[:id])
     ApiKey.transaction do
       api_key.update!(update_params)
       log_api_key(api_key, UserHistory.actions[:api_key_update], changes: api_key.saved_changes)
@@ -62,7 +62,7 @@ class Admin::ApiController < Admin::AdminController
   end
 
   def destroy
-    api_key = ApiKey.find(params[:id])
+    api_key = ApiKey.find_by!(id: params[:id])
     ApiKey.transaction do
       api_key.destroy
       log_api_key(api_key, UserHistory.actions[:api_key_destroy])

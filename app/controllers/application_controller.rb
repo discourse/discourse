@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
     unless is_api? || is_user_api?
       super
       clear_current_user
-      render plain: "[\"BAD CSRF\"]", status: :forbidden
+      render plain: "[\"BAD CSRF\"]", status: 403
     end
   end
 
@@ -255,14 +255,14 @@ class ApplicationController < ActionController::Base
         format.json do
           render_json_error I18n.t("read_only_mode_enabled"), type: :read_only, status: 503
         end
-        format.html { render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only" }
+        format.html { render status: 503, layout: "no_ember", template: "exceptions/read_only" }
       end
     end
   end
 
   rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
     if request.xhr?
-      render json: { second_factor_challenge_nonce: e.nonce }, status: :forbidden
+      render json: { second_factor_challenge_nonce: e.nonce }, status: 403
     else
       redirect_to session_2fa_path(nonce: e.nonce)
     end

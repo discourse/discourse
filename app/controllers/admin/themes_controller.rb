@@ -205,13 +205,13 @@ class Admin::ThemesController < Admin::AdminController
     ) do
       on_success { |theme:| render json: serialize_data(theme, ThemeSerializer), status: :created }
       on_failed_contract do |contract|
-        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
       on_failed_policy(:ensure_remote_themes_are_not_allowlisted) { raise Discourse::InvalidAccess }
       on_model_errors { |theme:| render json: theme.errors, status: :unprocessable_entity }
       on_model_not_found(:theme) do |result|
         raise Discourse::NotFound if !result.exception
-        render json: failed_json.merge(errors: result.exception.message), status: :bad_request
+        render json: failed_json.merge(errors: result.exception.message), status: 400
       end
     end
   end
@@ -291,7 +291,7 @@ class Admin::ThemesController < Admin::AdminController
     Themes::Destroy.call(service_params) do
       on_success { head :no_content }
       on_failed_contract do |contract|
-        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
       on_model_not_found(:theme) { raise Discourse::NotFound }
     end
@@ -301,7 +301,7 @@ class Admin::ThemesController < Admin::AdminController
     Themes::BulkDestroy.call(service_params) do
       on_success { head :no_content }
       on_failed_contract do |contract|
-        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
       on_model_not_found(:themes) { raise Discourse::NotFound }
     end
@@ -333,7 +333,7 @@ class Admin::ThemesController < Admin::AdminController
     Themes::GetTranslations.call(service_params) do
       on_success { |translations:| render(json: success_json.merge(translations:)) }
       on_failed_contract do |contract|
-        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: 400
       end
       on_failed_policy(:validate_locale) { raise Discourse::InvalidParameters.new(:locale) }
       on_model_not_found(:theme) { raise Discourse::NotFound }

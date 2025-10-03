@@ -15,7 +15,7 @@ module PostVoting
       if PostVoting::VoteManager.vote(@post, current_user, direction: vote_params[:direction])
         render json: success_json
       else
-        render json: failed_json, status: :unprocessable_entity
+        render json: failed_json, status: 422
       end
     end
 
@@ -31,7 +31,7 @@ module PostVoting
          )
         render json: success_json
       else
-        render json: failed_json, status: :unprocessable_entity
+        render json: failed_json, status: 422
       end
     end
 
@@ -59,7 +59,7 @@ module PostVoting
       if PostVoting::VoteManager.remove_vote(@post, current_user)
         render json: success_json
       else
-        render json: failed_json, status: :unprocessable_entity
+        render json: failed_json, status: 422
       end
     end
 
@@ -78,7 +78,7 @@ module PostVoting
       if PostVoting::VoteManager.remove_vote(comment, current_user)
         render json: success_json
       else
-        render json: failed_json, status: :unprocessable_entity
+        render json: failed_json, status: 422
       end
     end
 

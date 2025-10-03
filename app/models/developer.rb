@@ -3,8 +3,8 @@
 class Developer < ActiveRecord::Base
   belongs_to :user
 
-  after_destroy :rebuild_cache
   after_save :rebuild_cache
+  after_destroy :rebuild_cache
 
   def self.id_cache
     @id_cache ||= DistributedCache.new("developer_ids")

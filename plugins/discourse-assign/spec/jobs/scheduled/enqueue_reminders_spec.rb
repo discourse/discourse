@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::EnqueueReminders do
-  fab!(:assign_allowed_group, :group)
+  fab!(:assign_allowed_group) { Fabricate(:group) }
   fab!(:user) { Fabricate(:user, groups: [assign_allowed_group]) }
 
   before do
@@ -58,11 +58,11 @@ RSpec.describe Jobs::EnqueueReminders do
         user.custom_fields[
           PendingAssignsReminder::REMINDERS_FREQUENCY
         ] = RemindAssignsFrequencySiteSettings::DAILY_MINUTES
-        user.custom_fields[PendingAssignsReminder::REMINDED_AT] = 1.day.ago +
+        user.custom_fields[PendingAssignsReminder::REMINDED_AT] = 1.days.ago +
           (Jobs::EnqueueReminders::REMINDER_BUFFER_MINUTES - 1)
         user.save
 
-        assign_multiple_tasks_to(user, assigned_on: 2.days.ago)
+        assign_multiple_tasks_to(user, assigned_on: 2.day.ago)
 
         assert_reminders_enqueued(1)
       end
@@ -70,7 +70,7 @@ RSpec.describe Jobs::EnqueueReminders do
       it "does not enqueue a reminder if it's too soon" do
         user.upsert_custom_fields(
           PendingAssignsReminder::REMINDED_AT =>
-            1.day.ago + Jobs::EnqueueReminders::REMINDER_BUFFER_MINUTES,
+            1.days.ago + Jobs::EnqueueReminders::REMINDER_BUFFER_MINUTES,
         )
         assign_multiple_tasks_to(user)
 

@@ -2,7 +2,7 @@
 
 class TagGroup < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
-  validates :name, uniqueness: { case_sensitive: false }
+  validates_uniqueness_of :name, case_sensitive: false
 
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
@@ -17,9 +17,9 @@ class TagGroup < ActiveRecord::Base
 
   belongs_to :parent_tag, class_name: "Tag"
 
+  before_create :init_permissions
   before_save :apply_permissions
   before_save :remove_parent_from_group
-  before_create :init_permissions
 
   after_commit { DiscourseTagging.clear_cache! }
 

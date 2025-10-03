@@ -75,7 +75,7 @@ class UserNotifications < ActionMailer::Base
       template: "user_notifications.suspicious_login",
       locale: user_locale(user),
       client_ip: opts[:client_ip],
-      location: (location.presence || I18n.t("staff_action_logs.unknown")),
+      location: location.present? ? location : I18n.t("staff_action_logs.unknown"),
       browser: I18n.t("user_auth_tokens.browser.#{browser}"),
       device: I18n.t("user_auth_tokens.device.#{device}"),
       os: I18n.t("user_auth_tokens.os.#{os}"),

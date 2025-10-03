@@ -3,7 +3,7 @@
 RSpec.describe Jobs::DigestRagUpload do
   subject(:job) { described_class.new }
 
-  fab!(:persona, :ai_persona)
+  fab!(:persona) { Fabricate(:ai_persona) }
   fab!(:upload) { Fabricate(:upload, extension: "txt") }
   fab!(:image_upload) { Fabricate(:upload, extension: "png") }
   let(:document_file) { StringIO.new("some text" * 200) }

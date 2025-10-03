@@ -130,7 +130,7 @@ module DiscourseAi
                 "--heading",
                 success_status_codes: [0, 1],
               )
-            if result.present?
+            if !result.blank?
               path = search_path
               break
             end
@@ -145,7 +145,7 @@ module DiscourseAi
             filtered = []
 
             rows.each do |row|
-              if filtered.present?
+              if !filtered.blank?
                 break if row.match(/^\s*/)[0].length <= leading_spaces
               end
               filtered << row

@@ -56,7 +56,7 @@ describe DiscourseReactions::ReactionNotification do
     Fabricate(:reaction_user, reaction: thumbsup, user: user_2)
     expect { described_class.new(thumbsup, user_2).create }.not_to change { Notification.count }
 
-    freeze_time(1.day.from_now)
+    freeze_time(Time.zone.now + 1.day)
 
     cry = Fabricate(:reaction, post: post_1, reaction_value: "cry")
     Fabricate(:reaction_user, reaction: cry, user: user_2)

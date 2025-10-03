@@ -18,12 +18,12 @@ RSpec.describe RandomAssignUtils do
   describe ".automation_script!" do
     subject(:auto_assign) { described_class.automation_script!(ctx, fields, automation) }
 
-    fab!(:post_1, :post)
+    fab!(:post_1) { Fabricate(:post) }
     fab!(:topic_1) { post_1.topic }
-    fab!(:group_1, :group)
-    fab!(:user_1, :user)
-    fab!(:user_2, :user)
-    fab!(:user_3, :user)
+    fab!(:group_1) { Fabricate(:group) }
+    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_3) { Fabricate(:user) }
 
     let(:ctx) { {} }
     let(:fields) { {} }

@@ -238,7 +238,7 @@ module ImportExport
     end
 
     def fix_permissions
-      categories_by_id = @categories.index_by { |category| category[:id] }
+      categories_by_id = @categories.to_h { |category| [category[:id], category] }
 
       @categories.each do |category|
         if category[:permissions_params].blank?

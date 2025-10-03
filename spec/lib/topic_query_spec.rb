@@ -141,7 +141,7 @@ RSpec.describe TopicQuery do
           pinned_globally: true,
           like_count: 1,
         )
-      _topic = Fabricate(:topic, created_at: 5.minutes.ago, like_count: 100)
+      _topic = Fabricate(:topic, created_at: 5.minute.ago, like_count: 100)
       topic = Fabricate(:topic, created_at: 1.minute.ago, like_count: 100)
 
       # pinned topic is older so generally it would not hit the batch without
@@ -221,21 +221,21 @@ RSpec.describe TopicQuery do
       pinned1 =
         Fabricate(
           :topic,
-          bumped_at: 3.hours.ago,
-          pinned_at: 1.hour.ago,
+          bumped_at: 3.hour.ago,
+          pinned_at: 1.hours.ago,
           pinned_until: 10.days.from_now,
           pinned_globally: true,
         )
       pinned2 =
         Fabricate(
           :topic,
-          bumped_at: 2.hours.ago,
+          bumped_at: 2.hour.ago,
           pinned_at: 4.hours.ago,
           pinned_until: 10.days.from_now,
           pinned_globally: true,
         )
-      unpinned1 = Fabricate(:topic, bumped_at: 2.hours.ago)
-      unpinned2 = Fabricate(:topic, bumped_at: 3.hours.ago)
+      unpinned1 = Fabricate(:topic, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, bumped_at: 3.hour.ago)
 
       topic_query = TopicQuery.new(user)
       results = topic_query.send(:default_results)
@@ -252,20 +252,20 @@ RSpec.describe TopicQuery do
         Fabricate(
           :topic,
           category: cat,
-          bumped_at: 3.hours.ago,
-          pinned_at: 1.hour.ago,
+          bumped_at: 3.hour.ago,
+          pinned_at: 1.hours.ago,
           pinned_until: 10.days.from_now,
         )
       pinned2 =
         Fabricate(
           :topic,
           category: cat,
-          bumped_at: 2.hours.ago,
+          bumped_at: 2.hour.ago,
           pinned_at: 4.hours.ago,
           pinned_until: 10.days.from_now,
         )
-      unpinned1 = Fabricate(:topic, category: cat, bumped_at: 2.hours.ago)
-      unpinned2 = Fabricate(:topic, category: cat, bumped_at: 3.hours.ago)
+      unpinned1 = Fabricate(:topic, category: cat, bumped_at: 2.hour.ago)
+      unpinned2 = Fabricate(:topic, category: cat, bumped_at: 3.hour.ago)
 
       topic_query = TopicQuery.new(user)
       results = topic_query.send(:default_results)
@@ -2275,7 +2275,7 @@ RSpec.describe TopicQuery do
 
   describe "with topic_query_create_list_topics modifier" do
     fab!(:topic1) { Fabricate(:topic, created_at: 3.days.ago, bumped_at: 1.hour.ago) }
-    fab!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hours.ago) }
+    fab!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hour.ago) }
 
     it "allows changing" do
       original_topic_query = TopicQuery.new(user)

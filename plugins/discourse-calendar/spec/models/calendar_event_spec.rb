@@ -166,8 +166,8 @@ describe CalendarEvent do
         CalendarEvent.create!(
           topic_id: topic.id,
           user_id: user.id,
-          start_date: 1.day.ago,
-          end_date: 1.day.from_now,
+          start_date: Time.zone.now - 1.day,
+          end_date: Time.zone.now + 1.day,
         )
 
       UserDestroyer.new(Discourse.system_user).destroy(user)

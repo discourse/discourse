@@ -8,8 +8,8 @@ describe ListController do
     SiteSetting.assign_enabled = true
   end
 
-  fab!(:user, :active_user)
-  fab!(:user2, :user)
+  fab!(:user) { Fabricate(:active_user) }
+  fab!(:user2) { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
   let(:post) { Fabricate(:post) }
 
@@ -48,9 +48,9 @@ describe ListController do
   describe "#group_topics_assigned" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1, :post)
-    fab!(:post2, :post)
-    fab!(:post3, :post)
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
+    fab!(:post3) { Fabricate(:post) }
     fab!(:topic) { post3.topic }
     fab!(:topic1) { post1.topic }
     fab!(:topic2) { post2.topic }
@@ -110,9 +110,9 @@ describe ListController do
   describe "#sorting messages_assigned and group_topics_assigned" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1, :post)
-    fab!(:post2, :post)
-    fab!(:post3, :post)
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
+    fab!(:post3) { Fabricate(:post) }
     fab!(:topic1) { post1.topic }
     fab!(:topic2) { post2.topic }
     fab!(:topic3) { post3.topic }
@@ -131,7 +131,7 @@ describe ListController do
     it "group_topics_assigned returns sorted topicsList" do
       topic1.bumped_at = Time.now
       topic2.bumped_at = 1.day.ago
-      topic3.bumped_at = 3.days.ago
+      topic3.bumped_at = 3.day.ago
 
       topic1.views = 3
       topic2.views = 5
@@ -178,7 +178,7 @@ describe ListController do
 
     it "messages_assigned returns sorted topicsList" do
       topic1.bumped_at = Time.now
-      topic3.bumped_at = 3.days.ago
+      topic3.bumped_at = 3.day.ago
 
       topic1.views = 3
       topic3.views = 1
@@ -224,9 +224,9 @@ describe ListController do
   describe "filtering of topics as per parameter" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1, :post)
-    fab!(:post2, :post)
-    fab!(:post3, :post)
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
+    fab!(:post3) { Fabricate(:post) }
     fab!(:topic1) { post1.topic }
     fab!(:topic2) { post2.topic }
     fab!(:topic3) { post3.topic }
@@ -307,8 +307,8 @@ describe ListController do
   describe "#messages_assigned" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1, :post)
-    fab!(:post2, :post)
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
 
     before do
       add_to_assign_allowed_group(user)
@@ -360,9 +360,9 @@ describe ListController do
 
     fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:mods_and_admins]) }
 
-    fab!(:topic_1, :topic)
-    fab!(:topic_2, :topic)
-    fab!(:topic_3, :topic)
+    fab!(:topic_1) { Fabricate(:topic) }
+    fab!(:topic_2) { Fabricate(:topic) }
+    fab!(:topic_3) { Fabricate(:topic) }
 
     fab!(:post_1) { Fabricate(:post, topic: topic_1) }
     fab!(:post_2) { Fabricate(:post, topic: topic_2) }

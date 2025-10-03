@@ -45,7 +45,7 @@ RSpec.describe "Param input", type: :system do
     SELECT 1
   SQL
 
-  fab!(:current_user, :admin)
+  fab!(:current_user) { Fabricate(:admin) }
   fab!(:all_params_query) do
     Fabricate(
       :query,

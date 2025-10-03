@@ -38,10 +38,10 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
         "[{\"model_name\":\"SamLowe/roberta-base-go_emotions\",\"endpoint\":\"http://samlowe-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"j-hartmann/emotion-english-distilroberta-base\",\"endpoint\":\"http://jhartmann-emotion.com\",\"api_key\":\"123\"},{\"model_name\":\"cardiffnlp/twitter-roberta-base-sentiment-latest\",\"endpoint\":\"http://cardiffnlp-sentiment.com\",\"api_key\":\"123\"}]"
     end
 
-    fab!(:pm, :private_message_post)
+    fab!(:pm) { Fabricate(:private_message_post) }
 
-    fab!(:post_1, :post)
-    fab!(:post_2, :post)
+    fab!(:post_1) { Fabricate(:post) }
+    fab!(:post_2) { Fabricate(:post) }
 
     describe "overall_sentiment report" do
       let(:positive_classification) { { negative: 0.2, neutral: 0.3, positive: 0.7 } }
@@ -68,7 +68,7 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
 
         exporter = Jobs::ExportCsvFile.new
         exporter.entity = "report"
-        exporter.extra = ActiveSupport::HashWithIndifferentAccess.new(name: "overall_sentiment")
+        exporter.extra = HashWithIndifferentAccess.new(name: "overall_sentiment")
         exported_csv = []
         exporter.report_export { |entry| exported_csv << entry }
         expect(exported_csv[0]).to eq(["Day", "Overall sentiment (Positive - Negative)"])

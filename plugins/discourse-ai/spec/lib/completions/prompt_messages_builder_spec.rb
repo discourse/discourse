@@ -4,8 +4,8 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   let(:builder) { DiscourseAi::Completions::PromptMessagesBuilder.new }
   fab!(:user)
   fab!(:admin)
-  fab!(:bot_user, :user)
-  fab!(:other_user, :user)
+  fab!(:bot_user) { Fabricate(:user) }
+  fab!(:other_user) { Fabricate(:user) }
 
   fab!(:image_upload1) do
     Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
@@ -175,7 +175,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       Fabricate(:chat_message, chat_channel: dm_channel, user: user, message: "How are you?")
     end
 
-    fab!(:public_channel, :category_channel)
+    fab!(:public_channel) { Fabricate(:category_channel) }
     fab!(:public_message1) do
       Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "Hello everyone")
     end
@@ -312,8 +312,8 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   end
 
   describe "upload limits in messages_from_chat" do
-    fab!(:test_channel, :category_channel)
-    fab!(:test_user, :user)
+    fab!(:test_channel) { Fabricate(:category_channel) }
+    fab!(:test_user) { Fabricate(:user) }
 
     # Create MAX_CHAT_UPLOADS + 1 uploads
     fab!(:uploads) do

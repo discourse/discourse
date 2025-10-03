@@ -16,14 +16,14 @@ class EmbedController < ApplicationController
       @show_reason = true
       @hosts = EmbeddableHost.all
     end
-    render "embed_error", status: :bad_request
+    render "embed_error", status: 400
   end
 
   def topics
     discourse_expires_in 1.minute
 
     unless SiteSetting.embed_topics_list?
-      render "embed_topics_error", status: :bad_request
+      render "embed_topics_error", status: 400
       return
     end
 

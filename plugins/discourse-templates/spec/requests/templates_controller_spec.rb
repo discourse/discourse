@@ -8,8 +8,8 @@ describe DiscourseTemplates::TemplatesController do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:user_in_group1, :user)
-  fab!(:user_in_group2, :user)
+  fab!(:user_in_group1) { Fabricate(:user) }
+  fab!(:user_in_group2) { Fabricate(:user) }
   fab!(:group1) do
     group = Fabricate(:group)
     group.add(user_in_group1)
@@ -22,8 +22,8 @@ describe DiscourseTemplates::TemplatesController do
     group.save
     group
   end
-  fab!(:templates_parent_category, :category_with_definition)
-  fab!(:templates_other_parent_category, :category_with_definition)
+  fab!(:templates_parent_category) { Fabricate(:category_with_definition) }
+  fab!(:templates_other_parent_category) { Fabricate(:category_with_definition) }
   fab!(:templates_sub_category_moderators) do
     Fabricate(
       :private_category_with_definition,
@@ -59,9 +59,9 @@ describe DiscourseTemplates::TemplatesController do
   fab!(:template_item_from_other_parent) do
     Fabricate(:template_item, category: templates_other_parent_category)
   end
-  fab!(:other_topic1, :template_item) # uncategorized
-  fab!(:other_topic2, :template_item) # uncategorized
-  fab!(:other_topic3, :template_item) # uncategorized
+  fab!(:other_topic1) { Fabricate(:template_item) } # uncategorized
+  fab!(:other_topic2) { Fabricate(:template_item) } # uncategorized
+  fab!(:other_topic3) { Fabricate(:template_item) } # uncategorized
   fab!(:tag) do
     Fabricate(
       :tag,

@@ -46,7 +46,7 @@ module SecondFactorManager
       last_used = totp.last_used.to_i if totp.last_used
 
       authenticated =
-        token.present? &&
+        !token.blank? &&
           totp.totp_object.verify(
             token,
             drift_ahead: TOTP_ALLOWED_DRIFT_SECONDS,
@@ -243,7 +243,7 @@ module SecondFactorManager
   end
 
   def authenticate_backup_code(backup_code)
-    if backup_code.present?
+    if !backup_code.blank?
       codes = self.user_second_factors&.backup_codes
 
       codes.each do |code|

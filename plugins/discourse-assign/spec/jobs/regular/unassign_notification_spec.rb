@@ -2,11 +2,11 @@
 
 RSpec.describe Jobs::UnassignNotification do
   describe "#execute" do
-    fab!(:user1, :user)
-    fab!(:user2, :user)
+    fab!(:user1) { Fabricate(:user) }
+    fab!(:user2) { Fabricate(:user) }
     fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:pm_post, :private_message_post)
+    fab!(:pm_post) { Fabricate(:private_message_post) }
     fab!(:pm) { pm_post.topic }
     fab!(:assign_allowed_group) { Group.find_by(name: "staff") }
 
@@ -58,7 +58,7 @@ RSpec.describe Jobs::UnassignNotification do
 
     describe "Group" do
       fab!(:assign_allowed_group) { Group.find_by(name: "staff") }
-      fab!(:user3, :user)
+      fab!(:user3) { Fabricate(:user) }
       fab!(:group)
       fab!(:assignment) do
         Fabricate(:topic_assignment, topic: topic, assigned_to: group, assigned_by_user: user1)

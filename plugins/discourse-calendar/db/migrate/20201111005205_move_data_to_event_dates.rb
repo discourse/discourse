@@ -86,7 +86,7 @@ class MoveDataToEventDates < ActiveRecord::Migration[6.0]
         next if !extracted_event
 
         finished_at = (event.original_ends_at < Time.current) && event.original_ends_at
-        event_will_start_sent_at = event.original_starts_at - 1.hour
+        event_will_start_sent_at = event.original_starts_at - 1.hours
         event_started_sent_at = event.original_starts_at
         reminder_counter = due_reminders(event).length
 

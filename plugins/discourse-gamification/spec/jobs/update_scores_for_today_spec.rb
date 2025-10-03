@@ -2,7 +2,7 @@
 
 describe Jobs::UpdateScoresForToday do
   fab!(:user)
-  fab!(:user_2, :user)
+  fab!(:user_2) { Fabricate(:user) }
   fab!(:post) { Fabricate(:post, user: user, post_number: 2) }
   fab!(:gamification_score) { Fabricate(:gamification_score, user_id: user.id) }
   fab!(:gamification_score_2) do

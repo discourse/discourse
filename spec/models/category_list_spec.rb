@@ -305,7 +305,7 @@ RSpec.describe CategoryList do
         cat4 = Fabricate(:category_with_definition, position: 3)
         cat5 = Fabricate(:category_with_definition, parent_category_id: cat2.id)
 
-        Fabricate(:topic, category_id: cat3.id, bumped_at: 1.minute.ago)
+        Fabricate(:topic, category_id: cat3.id, bumped_at: 1.minutes.ago)
         Fabricate(:topic, category_id: cat5.id, bumped_at: 2.minutes.ago)
         Fabricate(:topic, category_id: cat1.id, bumped_at: 3.minutes.ago)
         Fabricate(:topic, category_id: cat2.id, bumped_at: 5.minutes.ago)
@@ -329,7 +329,7 @@ RSpec.describe CategoryList do
         sub_cat_private.set_permissions(admins: :full)
         sub_cat_private.save
 
-        Fabricate(:topic, category: sub_cat_private, bumped_at: 1.minute.ago)
+        Fabricate(:topic, category: sub_cat_private, bumped_at: 1.minutes.ago)
         Fabricate(:topic, category: public_cat, bumped_at: 3.minutes.ago)
         Fabricate(:topic, category: public_cat2, bumped_at: 4.minutes.ago)
 

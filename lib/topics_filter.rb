@@ -140,7 +140,7 @@ class TopicsFilter
       category = category_id.present? ? Category.find_by(id: category_id) : nil
 
       if @guardian.can_see_deleted_topics?(category)
-        @scope = @scope.unscope(where: :deleted_at).where.not(topics: { deleted_at: nil })
+        @scope = @scope.unscope(where: :deleted_at).where("topics.deleted_at IS NOT NULL")
       end
     when "public"
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
@@ -943,7 +943,7 @@ class TopicsFilter
       scope: -> do
         if @guardian.authenticated?
           ensure_topic_users_reference!
-          @scope.where.not(tu: { last_visited_at: nil })
+          @scope.where("tu.last_visited_at IS NOT NULL")
         else
           # make sure this works for anon (particularly selection)
           @scope.joins("LEFT JOIN topic_users tu ON 1 = 0")

@@ -25,7 +25,7 @@ describe DiscourseAi::Translation::TopicCandidates do
     end
 
     describe "SiteSetting.ai_translation_backfill_limit_to_public_content" do
-      fab!(:pm, :private_message_topic)
+      fab!(:pm) { Fabricate(:private_message_topic) }
       fab!(:group_pm) { Fabricate(:private_message_topic, allowed_groups: [Fabricate(:group)]) }
       fab!(:public_topic) do
         Fabricate(:topic, category: Fabricate(:category, read_restricted: false))

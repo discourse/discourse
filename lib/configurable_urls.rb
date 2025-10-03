@@ -2,7 +2,7 @@
 
 module ConfigurableUrls
   def faq_path
-    (SiteSetting.faq_url.presence || "#{Discourse.base_path}/faq")
+    SiteSetting.faq_url.blank? ? "#{Discourse.base_path}/faq" : SiteSetting.faq_url
   end
 
   def tos_url

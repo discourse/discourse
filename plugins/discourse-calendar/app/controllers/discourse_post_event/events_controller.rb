@@ -79,14 +79,14 @@ module DiscoursePostEvent
                      failed_json.merge(
                        errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                      ),
-                   status: :unprocessable_entity
+                   status: 422
           end
         rescue StandardError
           render json:
                    failed_json.merge(
                      errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                    ),
-                 status: :unprocessable_entity
+                 status: 422
         end
       end
     end
@@ -112,7 +112,7 @@ module DiscoursePostEvent
                  failed_json.merge(
                    errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                  ),
-               status: :unprocessable_entity
+               status: 422
       end
     end
 

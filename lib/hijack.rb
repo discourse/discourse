@@ -37,7 +37,7 @@ module Hijack
           &scheduled.method(:resolve)
         )
       rescue WorkQueue::WorkQueueFull
-        return render plain: "", status: :service_unavailable
+        return render plain: "", status: 503
       end
 
       # duplicate headers so other middleware does not mess with it

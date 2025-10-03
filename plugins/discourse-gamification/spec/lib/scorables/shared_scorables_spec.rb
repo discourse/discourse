@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples "Scorable Type" do
-  fab!(:leaderboard, :gamification_leaderboard)
+  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
   let(:current_user) { Fabricate(:user) }
   let(:other_user) { Fabricate(:user) }
   let(:third_user) { Fabricate(:user) }
@@ -21,7 +21,7 @@ RSpec.shared_examples "Scorable Type" do
 end
 
 RSpec.shared_examples "Category Scoped Scorable Type" do
-  fab!(:leaderboard, :gamification_leaderboard)
+  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
   let(:user) { Fabricate(:user) }
   let(:user_2) { Fabricate(:user) }
   let(:category_allowed) { Fabricate(:category) }
@@ -53,7 +53,7 @@ RSpec.shared_examples "Category Scoped Scorable Type" do
 end
 
 RSpec.shared_examples "No Score Value" do
-  fab!(:leaderboard, :gamification_leaderboard)
+  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
   let(:current_user) { Fabricate(:user) }
   let(:other_user) { Fabricate(:user) }
   let(:class_action_fabricator_for_pm) { nil }

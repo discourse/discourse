@@ -5,7 +5,7 @@ RSpec.describe TopicsBulkAction do
   fab!(:topic) { Fabricate(:topic, user: user) }
 
   describe "#dismiss_topics" do
-    fab!(:user) { Fabricate(:user, created_at: 1.day.ago, refresh_auto_groups: true) }
+    fab!(:user) { Fabricate(:user, created_at: 1.days.ago, refresh_auto_groups: true) }
     fab!(:category)
     fab!(:topic2) { Fabricate(:topic, category: category, created_at: 60.minutes.ago) }
     fab!(:topic3) { Fabricate(:topic, category: category, created_at: 120.minutes.ago) }
@@ -161,7 +161,7 @@ RSpec.describe TopicsBulkAction do
     fab!(:fist_post) { Fabricate(:post, topic: topic) }
 
     describe "option 'perform action silently'" do
-      fab!(:watcher, :user)
+      fab!(:watcher) { Fabricate(:user) }
       fab!(:admin)
 
       before do

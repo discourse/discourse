@@ -362,7 +362,11 @@ module ApplicationHelper
   private def generate_twitter_card_metadata(result, opts)
     img_url =
       (
-        opts[:x_summary_large_image].presence || opts[:image]
+        if opts[:x_summary_large_image].present?
+          opts[:x_summary_large_image]
+        else
+          opts[:image]
+        end
       )
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup

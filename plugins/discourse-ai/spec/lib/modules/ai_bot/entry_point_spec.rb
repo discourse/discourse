@@ -6,7 +6,7 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
   describe "#inject_into" do
     describe "subscribes to the post_created event" do
       fab!(:admin)
-      fab!(:bot_allowed_group, :group)
+      fab!(:bot_allowed_group) { Fabricate(:group) }
 
       fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
       let(:gpt_bot) { gpt_4.reload.user }

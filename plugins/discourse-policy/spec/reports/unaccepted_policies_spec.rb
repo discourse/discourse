@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Report do
-  fab!(:user1, :user)
-  fab!(:user2, :user)
+  fab!(:user1) { Fabricate(:user) }
+  fab!(:user2) { Fabricate(:user) }
 
   fab!(:group1) do
     group = Fabricate(:group)

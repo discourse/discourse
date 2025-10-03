@@ -483,7 +483,7 @@ RSpec.describe AiTool do
       SiteSetting.chat_enabled = true
     end
 
-    fab!(:chat_user, :user)
+    fab!(:chat_user) { Fabricate(:user) }
     fab!(:chat_channel) do
       Fabricate(:chat_channel).tap do |channel|
         Fabricate(
@@ -948,7 +948,7 @@ RSpec.describe AiTool do
 
   context "when creating topics" do
     fab!(:category)
-    fab!(:user, :admin)
+    fab!(:user) { Fabricate(:admin) }
 
     it "can create a topic" do
       script = <<~JS

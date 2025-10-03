@@ -23,7 +23,7 @@ module DiscourseAi
           return(
             render json:
                      failed_json.merge(error: I18n.t("discourse_ai.translation.errors.disabled")),
-                   status: :bad_request
+                   status: 400
           )
         end
 
