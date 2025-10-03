@@ -100,6 +100,6 @@ export default {
   name: "cakeday",
 
   initialize() {
-    withPluginApi("0.1", (api) => initializeCakeday(api));
+    withPluginApi((api) => initializeCakeday(api));
   },
 };

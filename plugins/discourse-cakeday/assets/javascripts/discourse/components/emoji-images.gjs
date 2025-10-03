@@ -1,7 +1,8 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import computed from "discourse/lib/decorators";
 import { emojiUnescape } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
