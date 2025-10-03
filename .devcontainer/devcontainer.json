@@ -16,6 +16,7 @@
     "RAILS_DEVELOPMENT_HOSTS": ".app.github.dev",
     "PGUSER": "discourse",
     "SELENIUM_FORWARD_DEVTOOLS_TO_PORT": "9229",
+    "INSTALL_CHROME_HEADLESS": "1"
   },
   "mounts": [
     "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",

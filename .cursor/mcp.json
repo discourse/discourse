@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "postgresql-mcp": {
+      "enabled": true,
+      "command": "npx",
+      "args": [
+        "@henkey/postgres-mcp-server",
+        "--connection-string",
+        "postgresql://localhost/discourse_development?host=/var/run/postgresql"
+      ]
+    }
+  }
+}
