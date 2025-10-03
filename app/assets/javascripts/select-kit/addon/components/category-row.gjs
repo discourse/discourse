@@ -124,7 +124,8 @@ export default class CategoryRow extends Component {
         link: false,
         allowUncategorized:
           this.allowUncategorizedTopics || this.allowUncategorized,
-        hideParent: !!this.parentCategory,
+        hideParent: true,
+        ancestors: this.category?.predecessors,
         topicCount: this.topicCount,
         subcategoryCount: this.args.item?.category
           ? this.category.subcategory_count
@@ -132,22 +133,6 @@ export default class CategoryRow extends Component {
         readOnly: this.isReadOnly,
       })
     );
-  }
-
-  @cached
-  get badgeForParentCategory() {
-    return htmlSafe(
-      categoryBadgeHTML(this.parentCategory, {
-        link: false,
-        allowUncategorized:
-          this.allowUncategorizedTopics || this.allowUncategorized,
-        recursive: true,
-      })
-    );
-  }
-
-  get parentCategory() {
-    return Category.findById(this.parentCategoryId);
   }
 
   get hasParentCategory() {
@@ -317,11 +302,6 @@ export default class CategoryRow extends Component {
 
       {{#if this.category}}
         <div class="category-status">
-          {{#if this.hasParentCategory}}
-            {{#unless this.hideParentCategory}}
-              {{this.badgeForParentCategory}}
-            {{/unless}}
-          {{/if}}
           {{this.badgeForCategory}}
         </div>
 
