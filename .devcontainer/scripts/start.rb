@@ -7,7 +7,8 @@ puts "Setting permissions on volume mounts..."
 system "sudo chown discourse .", exception: true
 system "sudo chown discourse node_modules", exception: true
 system "sudo chown -R postgres /shared/postgres_data", exception: true
-system "sudo ln -sf #{File.expand_path('.devcontainer/scripts/chrome_wrapper', Dir.pwd)} /usr/bin/google-chrome", exception: true
+system "sudo ln -sf #{File.expand_path(".devcontainer/scripts/chrome_wrapper", Dir.pwd)} /usr/bin/google-chrome",
+       exception: true
 
 puts "Starting services..."
 fork do
