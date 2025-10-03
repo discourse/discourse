@@ -4130,6 +4130,8 @@ tr_TR:
       style: "Stiller"
       background_color: "Renk"
       foreground_color: "Metin rengi"
+      color_validations:
+        cant_be_empty: "boş olamaz"
       styles:
         type: "Stil"
         icon: "Simge"

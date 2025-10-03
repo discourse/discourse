@@ -1,12 +1,20 @@
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
-import { i18n } from "discourse-i18n";
+import IncomingEmailModal from "admin/components/modal/incoming-email";
+import IncomingEmail from "admin/models/incoming-email";
 
 export default class AdminEmailLogsRoute extends DiscourseRoute {
-  titleToken() {
-    return i18n("admin.config.email_logs.title");
-  }
+  @service modal;
 
   setupController(controller) {
+    super.setupController(...arguments);
     controller.set("status", this.status);
+  }
+
+  @action
+  async showIncomingEmail(id) {
+    const model = await IncomingEmail.find(id);
+    this.modal.show(IncomingEmailModal, { model });
   }
 }

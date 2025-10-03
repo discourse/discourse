@@ -4589,6 +4589,8 @@ ru:
       style: "Стили"
       background_color: "Цвет"
       foreground_color: "Цвет текста"
+      color_validations:
+        cant_be_empty: "не может быть пустым"
       styles:
         type: "Стиль"
         icon: "Значок"

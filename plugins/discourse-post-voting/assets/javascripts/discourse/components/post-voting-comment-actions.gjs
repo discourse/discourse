@@ -16,7 +16,7 @@ export default class PostVotingCommentActions extends Component {
 
   comment = this.args.comment;
 
-  hasPermission() {
+  get hasPermission() {
     return (
       this.comment.user_id === this.currentUser.id ||
       this.currentUser.admin ||
@@ -83,7 +83,6 @@ export default class PostVotingCommentActions extends Component {
           @action={{this.deleteConfirm}}
           @icon="far-trash-can"
         />
-
         {{#if this.canFlag}}
           <DButton
             @display="link"

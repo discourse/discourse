@@ -112,7 +112,7 @@ class Post < ActiveRecord::Base
   scope :with_user, -> { includes(:user) }
   scope :created_since, ->(time_ago) { where("posts.created_at > ?", time_ago) }
   scope :public_posts,
-        -> { joins(:topic).where("topics.archetype <> ?", Archetype.private_message) }
+        -> { joins(:topic).where.not(topics: { archetype: Archetype.private_message }) }
   scope :private_posts,
         -> { joins(:topic).where("topics.archetype = ?", Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where("topics.subtype = ?", subtype) }

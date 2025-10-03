@@ -21,6 +21,16 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `user_associated_accounts` record in the IntermediateDB.
+    #
+    # @param provider_name   [String]
+    # @param user_id         [Integer, String, nil]
+    # @param created_at      [Time, nil]
+    # @param info            [Object, nil]
+    # @param last_used       [Time, nil]
+    # @param provider_uid    [String]
+    #
+    # @return [void]
     def self.create(
       provider_name:,
       user_id:,

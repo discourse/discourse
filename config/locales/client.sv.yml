@@ -3480,6 +3480,8 @@ sv:
       background_image: "Kategori bakgrundsbild"
       background_image_dark: "Bakgrundsbild för mörk kategori"
       background_color: "Färg"
+      color_validations:
+        cant_be_empty: "kan inte vara tomt"
       styles:
         icon: "Ikon"
         emoji: "Emoji"

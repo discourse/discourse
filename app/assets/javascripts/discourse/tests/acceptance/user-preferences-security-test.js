@@ -234,17 +234,17 @@ acceptance("User Preferences - Security", function (needs) {
     await visit("/u/eviltrout/preferences/security");
     // eviltrout starts with an entry in associated_accounts, can remove password
     assert
-      .dom("#remove-password-link")
-      .exists("shows for user with associated account");
+      .dom("#remove-password-link:not(:disabled)")
+      .exists("is enabled for user with associated account");
 
     updateCurrentUser({
       associated_accounts: null,
     });
 
     assert
-      .dom("#remove-password-link")
-      .doesNotExist(
-        "does not show for user with no associated account and no passkeys"
+      .dom("#remove-password-link:disabled")
+      .exists(
+        "is disabled for user with no associated account and no passkeys"
       );
 
     updateCurrentUser({
@@ -257,7 +257,9 @@ acceptance("User Preferences - Security", function (needs) {
         },
       ],
     });
-    assert.dom("#remove-password-link").exists("shows for user with passkey");
+    assert
+      .dom("#remove-password-link:not(:disabled)")
+      .exists("is enabled for user with passkey");
   });
 
   test("Removing User Password", async function (assert) {

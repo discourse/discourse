@@ -6,6 +6,7 @@ module Migrations::Importer
       @intermediate_db = ::Migrations::Database.connect(config[:intermediate_db])
       @discourse_db = DiscourseDB.new
       @shared_data = SharedData.new(@discourse_db)
+      @options = options
 
       attach_mappings_db(config[:mappings_db], options[:reset])
       attach_uploads_db(config[:uploads_db])
@@ -14,6 +15,7 @@ module Migrations::Importer
     def start
       runtime =
         ::Migrations::DateHelper.track_time do
+          optimize_intermediate_db
           execute_steps
         ensure
           cleanup
@@ -38,6 +40,10 @@ module Migrations::Importer
       @intermediate_db.execute("ATTACH DATABASE ? AS #{alias_name}", db_path)
     end
 
+    def optimize_intermediate_db
+      @intermediate_db.execute("PRAGMA optimize=0x10002")
+    end
+
     def step_classes
       steps_module = ::Migrations::Importer::Steps
       classes =
@@ -45,7 +51,10 @@ module Migrations::Importer
           .constants
           .map { |c| steps_module.const_get(c) }
           .select { |klass| klass.is_a?(Class) && klass < ::Migrations::Importer::Step }
-      TopologicalSorter.sort(classes)
+
+      filtered_classes =
+        ::Migrations::ClassFilter.filter(classes, only: @options[:only], skip: @options[:skip])
+      ::Migrations::TopologicalSorter.sort(filtered_classes)
     end
 
     def execute_steps

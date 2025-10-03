@@ -258,7 +258,7 @@ class BulkImport::Base
     @last_upload_id = last_id(Upload)
     @user_ids_by_username_lower = User.unscoped.pluck(:id, :username_lower).to_h
     @usernames_by_id = User.unscoped.pluck(:id, :username).to_h
-    @user_full_names_by_id = User.unscoped.where("name IS NOT NULL").pluck(:id, :name).to_h
+    @user_full_names_by_id = User.unscoped.where.not(name: nil).pluck(:id, :name).to_h
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)

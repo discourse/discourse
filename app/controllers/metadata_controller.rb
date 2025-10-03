@@ -33,9 +33,12 @@ class MetadataController < ApplicationController
     token = Discourse.redis.get("discourse_id_challenge_token")
     raise Discourse::NotFound if token.blank?
 
+    domain = Discourse.current_hostname
+    path = Discourse.base_path.presence
+
     expires_in 5.minutes
 
-    render json: { token:, domain: Discourse.current_hostname }
+    render json: { token:, domain:, path: }.compact
   end
 
   private

@@ -85,7 +85,6 @@ pl_PL:
     composer_ai_helper_allowed_groups: "Użytkownicy w tych grupach zobaczą przycisk pomocy AI w kompozytorze."
     ai_helper_allowed_in_pm: "Włącz asystenta AI kompozytora w PW."
     ai_helper_model: "Model do użycia dla pomocnika AI."
-    ai_helper_custom_prompts_allowed_groups: "Użytkownicy w tych grupach zobaczą opcję niestandardowego monitu w pomocniku AI."
     ai_helper_automatic_chat_thread_title_delay: "Opóźnienie w minutach, zanim pomocnik AI automatycznie ustawi tytuł wątku czatu."
     ai_helper_automatic_chat_thread_title: "Automatycznie ustawiaj tytuły wątków czatu na podstawie zawartości wątku."
     ai_helper_illustrate_post_model: "Model do wykorzystania w funkcji ilustrowania postów przez pomocnika kompozytora AI"

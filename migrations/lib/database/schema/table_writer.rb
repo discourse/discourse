@@ -51,12 +51,12 @@ module Migrations::Database::Schema
       has_composite_primary_key = table.primary_key_column_names.size > 1
 
       max_column_name_length = columns.map { |c| escape_identifier(c.name).length }.max
-      max_datatype_length = columns.map { |c| convert_datatype(c.datatype).length }.max
+      max_datatype_length = columns.map { |c| convert_datatype(c.datatype, c.enum).length }.max
 
       columns.map do |c|
         definition = [
           escape_identifier(c.name).ljust(max_column_name_length),
-          convert_datatype(c.datatype).ljust(max_datatype_length),
+          convert_datatype(c.datatype, c.enum).ljust(max_datatype_length),
         ]
 
         if c.is_primary_key && !has_composite_primary_key
@@ -73,10 +73,11 @@ module Migrations::Database::Schema
       end
     end
 
-    def convert_datatype(type)
+    def convert_datatype(type, enum)
       case type
       when :blob, :boolean, :date, :datetime, :float, :integer, :numeric, :text
-        type.to_s.upcase
+        datatype = type.to_s.upcase
+        enum ? "ENUM_#{datatype}" : datatype
       when :inet
         "INET_TEXT"
       when :json

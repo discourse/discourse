@@ -8,7 +8,7 @@ module Migrations::Converters::Discourse
       @source_db.count <<~SQL
         SELECT COUNT(*)
         FROM topic_allowed_users
-        WHERE user_id >= 0
+        WHERE user_id > 0
       SQL
     end
 
@@ -16,7 +16,7 @@ module Migrations::Converters::Discourse
       @source_db.query <<~SQL
         SELECT *
         FROM topic_allowed_users
-        WHERE user_id >= 0
+        WHERE user_id > 0
         ORDER BY topic_id, user_id
       SQL
     end

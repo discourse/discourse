@@ -3492,6 +3492,8 @@ da:
       background_image: "Kategori logo baggrundsbillede"
       background_color: "Farve"
       foreground_color: "Tekst farve"
+      color_validations:
+        cant_be_empty: "kan ikke være tom"
       styles:
         type: "Stil"
         icon: "Ikon"

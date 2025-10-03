@@ -2,8 +2,16 @@
 
 require "webrick"
 
-module SsoHelpers
-  def build_sso_payload(return_url)
+module DiscourseConnectHelpers
+  def self.provider_port=(port)
+    @provider_port = port
+  end
+
+  def self.provider_port
+    @provider_port
+  end
+
+  def build_discourse_connect_payload(return_url)
     secret = SiteSetting.discourse_connect_provider_secrets.split("|")[1]
     nonce = SecureRandom.hex
 
@@ -14,12 +22,17 @@ module SsoHelpers
     [sso, sig]
   end
 
-  def setup_test_sso_server(user:, sso_secret:, sso_port:, sso_url:)
+  def setup_test_discourse_connect_server(user:, sso_secret:)
+    raise "Provider port not set" unless DiscourseConnectHelpers.provider_port
+
+    before_next_spec { shutdown_test_discourse_connect_server }
+
     @server =
       WEBrick::HTTPServer.new(
-        Port: sso_port,
+        Port: DiscourseConnectHelpers.provider_port,
         Logger: WEBrick::Log.new(File.open(File::NULL, "w")),
         AccessLog: [],
+        BindAddress: "localhost",
       )
 
     @server.mount_proc "/sso" do |req, res|
@@ -39,10 +52,14 @@ module SsoHelpers
 
     @server_thread = Thread.new { @server.start }
 
-    sleep 0.1 until server_responding?(sso_url)
+    until server_responding?("http://localhost:#{DiscourseConnectHelpers.provider_port}/sso")
+      sleep 0.1
+    end
+
+    DiscourseConnectHelpers.provider_port
   end
 
-  def shutdown_test_sso_server
+  def shutdown_test_discourse_connect_server
     @server&.shutdown
     @server_thread&.kill
   end

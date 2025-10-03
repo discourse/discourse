@@ -1,4 +1,3 @@
-import { fn } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
@@ -93,6 +92,7 @@ export default RouteTemplate(
       <Form
         @data={{@controller.formData}}
         @onDirtyCheck={{@controller.isLeavingForm}}
+        @onSubmit={{@controller.saveCategory}}
         as |form transientData|
       >
         <form.Section
@@ -104,7 +104,7 @@ export default RouteTemplate(
               <Tab
                 @selectedTab={{@controller.selectedTab}}
                 @category={{@controller.model}}
-                @action={{@controller.registerValidator}}
+                @registerValidator={{@controller.registerValidator}}
                 @transientData={{transientData}}
                 @form={{form}}
               />
@@ -119,12 +119,10 @@ export default RouteTemplate(
         {{/if}}
 
         <form.Actions class="edit-category-footer">
-          <form.Button
+          <form.Submit
             @disabled={{not (@controller.canSaveForm transientData)}}
-            @action={{fn @controller.saveCategory transientData}}
             @label={{@controller.saveLabel}}
             id="save-category"
-            class="btn-primary"
           />
 
           {{#if @controller.model.can_delete}}

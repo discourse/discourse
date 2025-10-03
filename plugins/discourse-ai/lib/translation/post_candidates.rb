@@ -93,7 +93,7 @@ module DiscourseAi
             FROM (VALUES #{values_rows}) AS t(localestr)
           ),
           eligible_posts AS (
-            #{get.where("posts.locale IS NOT NULL").to_sql}
+            #{get.where.not(posts: { locale: nil }).to_sql}
           ),
           total_count AS (
             SELECT COUNT(*)::bigint AS count FROM eligible_posts

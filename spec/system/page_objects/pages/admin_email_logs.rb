@@ -27,6 +27,11 @@ module PageObjects
         def has_error?(error)
           element.has_css?("td:nth-of-type(5)", text: error)
         end
+
+        def open_incoming_email
+          element.find(".incoming-email-link").click
+          PageObjects::Modals::AdminIncomingEmailModal.new
+        end
       end
 
       class EmailLogRow < BaseRow

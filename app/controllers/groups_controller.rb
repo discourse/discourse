@@ -1063,9 +1063,9 @@ class GroupsController < ApplicationController
             categories.each do |category_id, data|
               category_users = []
               existing_users =
-                CategoryUser.where(category_id: category_id, user_id: user_ids).where(
-                  "notification_level IS NOT NULL",
-                )
+                CategoryUser
+                  .where(category_id:, user_id: user_ids)
+                  .where.not(notification_level: nil)
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|
@@ -1089,9 +1089,7 @@ class GroupsController < ApplicationController
             tags.each do |tag_id, data|
               tag_users = []
               existing_users =
-                TagUser.where(tag_id: tag_id, user_id: user_ids).where(
-                  "notification_level IS NOT NULL",
-                )
+                TagUser.where(tag_id:, user_id: user_ids).where.not(notification_level: nil)
               skip_user_ids = existing_users.pluck(:user_id)
 
               batch.each do |group_user|

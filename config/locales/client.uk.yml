@@ -2767,6 +2767,7 @@ uk:
       admin_not_allowed_from_ip_address: "З цієї IP адреси вхід адміністраторів заборонений."
       resend_activation_email: "Натисніть тут, щоб знову надіслати електронний лист для активації."
       omniauth_disallow_totp: "У вашому обліковому записі ввімкнено двофакторну автентифікацію. Будь ласка, увійдіть під своїм паролем."
+      works_with: "Працює з"
       activate_account: "Активувати обліковий запис"
       resend_title: "Повторно надіслати електронний лист для активації"
       change_email: "Змінити адресу електронної пошти"
@@ -4605,6 +4606,8 @@ uk:
       style: "Стилі"
       background_color: "Колір"
       foreground_color: "Колір тексту"
+      color_validations:
+        cant_be_empty: "но може бути порожнім"
       styles:
         type: "Стиль"
         icon: "Іконка"

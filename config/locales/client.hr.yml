@@ -4366,6 +4366,8 @@ hr:
       style: "Stilovi"
       background_color: "Boja"
       foreground_color: "Boja teksta"
+      color_validations:
+        cant_be_empty: "ne može biti prazno"
       styles:
         type: "Stil"
         icon: "Ikona"
