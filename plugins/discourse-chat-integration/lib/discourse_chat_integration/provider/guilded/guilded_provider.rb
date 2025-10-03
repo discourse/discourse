@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module GuildedProvider
-      PROVIDER_NAME = "guilded".freeze
+      PROVIDER_NAME = "guilded"
       PROVIDER_ENABLED_SETTING = :chat_integration_guilded_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+' },
         {

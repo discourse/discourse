@@ -4064,6 +4064,9 @@ sk:
       title: "Najnovšie príspevky"
       empty: "Neexistujú žiadne príspevky"
       aria_post_number: "%{title} – príspevok č.%{postNumber}"
+      bulk:
+        clear_all: "Vymazať všetko"
+        actions: "Hromadné akcie"
     post:
       confirm_delete: "Naozaj chcete odstrániť tento príspevok?"
       quote_reply: "Citácia"

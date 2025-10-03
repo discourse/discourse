@@ -159,7 +159,7 @@ class TopicsController < ApplicationController
     end
 
     page = params[:page]
-    if (page < 0) || ((page - 1) * @topic_view.chunk_size >= @topic_view.topic.highest_post_number)
+    if page < 0 || page > 1 && (page - 1) * @topic_view.chunk_size >= @topic_view.topic.posts_count
       raise Discourse::NotFound
     end
 
@@ -442,15 +442,12 @@ class TopicsController < ApplicationController
     success = true
 
     if changes.length > 0
-      bypass_bump = should_bypass_bump?(changes)
-
       first_post = topic.ordered_posts.first
       success =
         PostRevisor.new(first_post, topic).revise!(
           current_user,
           changes,
           validate_post: false,
-          bypass_bump: bypass_bump,
           keep_existing_draft: params[:keep_existing_draft].to_s == "true",
         )
 
@@ -1255,11 +1252,6 @@ class TopicsController < ApplicationController
 
   def consider_user_for_promotion
     Promotion.new(current_user).review if current_user.present?
-  end
-
-  def should_bypass_bump?(changes)
-    (changes[:category_id].present? && SiteSetting.disable_category_edit_notifications) ||
-      (changes[:tags].present? && SiteSetting.disable_tags_edit_notifications)
   end
 
   def slugs_do_not_match

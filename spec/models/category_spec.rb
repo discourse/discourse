@@ -38,6 +38,34 @@ RSpec.describe Category do
     expect(cats.errors[:name]).to be_present
   end
 
+  it "validates format of color" do
+    expect(Fabricate.build(:category, color: "fff", user:)).to be_valid
+    expect(Fabricate.build(:category, color: "1ac", user:)).to be_valid
+    expect(Fabricate.build(:category, color: "fffeee", user:)).to be_valid
+    expect(Fabricate.build(:category, color: "FF11CC", user:)).to be_valid
+    expect(Fabricate.build(:category, color: "ABC", user:)).to be_valid
+
+    expect(Fabricate.build(:category, color: "ffq1e1", user:)).to_not be_valid
+    expect(Fabricate.build(:category, color: "", user:)).to_not be_valid
+    expect(Fabricate.build(:category, color: "f", user:)).to_not be_valid
+    expect(Fabricate.build(:category, color: "21", user:)).to_not be_valid
+    expect(Fabricate.build(:category, color: "XCA", user:)).to_not be_valid
+  end
+
+  it "validates format of text_color" do
+    expect(Fabricate.build(:category, text_color: "fff", user:)).to be_valid
+    expect(Fabricate.build(:category, text_color: "1ac", user:)).to be_valid
+    expect(Fabricate.build(:category, text_color: "fffeee", user:)).to be_valid
+    expect(Fabricate.build(:category, text_color: "FF11CC", user:)).to be_valid
+    expect(Fabricate.build(:category, text_color: "ABC", user:)).to be_valid
+
+    expect(Fabricate.build(:category, text_color: "ffq1e1", user:)).to_not be_valid
+    expect(Fabricate.build(:category, text_color: "", user:)).to_not be_valid
+    expect(Fabricate.build(:category, text_color: "f", user:)).to_not be_valid
+    expect(Fabricate.build(:category, text_color: "21", user:)).to_not be_valid
+    expect(Fabricate.build(:category, text_color: "XCA", user:)).to_not be_valid
+  end
+
   describe "Associations" do
     it { is_expected.to have_one(:category_setting).dependent(:destroy) }
 

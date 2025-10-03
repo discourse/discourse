@@ -1,7 +1,7 @@
 import { i18n } from "discourse-i18n";
-import AdminEmailLogs from "admin/routes/admin-email-logs";
+import AdminEmailLogsRoute from "admin/routes/admin-email-logs";
 
-export default class AdminEmailLogsSkippedRoute extends AdminEmailLogs {
+export default class AdminEmailLogsSkippedRoute extends AdminEmailLogsRoute {
   status = "skipped";
 
   titleToken() {

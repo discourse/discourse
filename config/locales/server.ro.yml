@@ -1296,7 +1296,6 @@ ro:
     about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
     rich_editor: "Activează editorul îmbogățit pentru compoziție astfel încât toți utilizatorii să poată comuta între modul Markdown curent și noul editor de text îmbogățit pentru o compoziție mai intuitivă și mai ușor de utilizat."
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
-    viewport_based_mobile_mode: "EXPERIMENTAL: Dezactivează modurile mobil/desktop bazate pe agent utilizator și folosește, în schimb, lățimea spațiului vizibil."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
     content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
     content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
@@ -1346,7 +1345,7 @@ ro:
   filter:
     description:
       status: "Filtrează subiectele după starea lor"
-      in: "Filtrează subiectele după listele personale"
+      in: "Filtrează subiecte în listele personale"
       order: "Sortează subiectele după un anumit câmp"
       category: "Arată subiectele într-o anumită categorie"
       category_any: "Arată subiectele în oricare dintre categoriile specificate (separate prin virgulă)"

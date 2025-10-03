@@ -2604,7 +2604,6 @@ sk:
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
     rich_editor: "Povoľte editor formátovaného textu pre autora, aby všetci používatelia mohli prepínať medzi aktuálnym režimom Markdown a novým editorom formátovaného textu pre intuitívnejšiu a užívateľsky prívetivejšiu tvorbu textu."
     default_composition_mode: "Nastavenie predvoleného režimu pre skladateľa vašej komunity. Režim Rich text poskytuje modernejšie a známejšie písanie pre väčšinu používateľov, zatiaľ čo režim Markdown môže byť vhodný pre technickejšie publikum. Členovia môžu na prepínanie medzi režimami používať prepínač na paneli nástrojov kompozitora."
-    viewport_based_mobile_mode: "EXPERIMENTÁLNE: Vypnite režimy pre mobilné zariadenia/plochu založené na používateľskom agentovi a namiesto toho použite šírku zobrazenia."
     reviewable_ui_refresh: "Skupiny, ktoré môžu používať nové experimentálne používateľské rozhranie vo fronte revízií."
     content_localization_enabled: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich prehliadača alebo jazykových preferencií používateľa. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Podporované lokálne jazyky sú nastavené v položke 'content localization supported locales'."
     content_localization_supported_locales: "Zoznam podporovaných lokálnych jazykov, do ktorých možno preložiť obsah používateľa. Vyžaduje \"povolená lokalizácia obsahu\"."
@@ -2710,7 +2709,6 @@ sk:
   filter:
     description:
       status: "Filtrovať témy podľa ich stavu"
-      in: "Filtrovanie tém podľa v osobných zoznamoch"
       order: "Triedenie tém podľa konkrétneho poľa"
       category: "Zobrazenie tém v konkrétnej kategórii"
       category_any: "Zobraziť témy v niektorej zo zadaných kategórií (oddelených čiarkami)"

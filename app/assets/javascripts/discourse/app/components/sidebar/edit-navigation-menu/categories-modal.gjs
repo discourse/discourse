@@ -95,11 +95,19 @@ function findPartialCategories(categories) {
   }
 
   for (const [id, count] of subcategoryCounts) {
-    if (count === 5 && categoriesById.has(id)) {
-      partialCategoryInfos.set(id, {
-        level: categoriesById.get(id).level + 1,
-        offset: subcategoryCountsRecursive.get(id),
-      });
+    if (count === 5) {
+      if (id === undefined) {
+        // Root level categories (parent_category_id is undefined)
+        partialCategoryInfos.set(id, {
+          level: 0,
+          offset: subcategoryCountsRecursive.get(id),
+        });
+      } else if (categoriesById.has(id)) {
+        partialCategoryInfos.set(id, {
+          level: categoriesById.get(id).level + 1,
+          offset: subcategoryCountsRecursive.get(id),
+        });
+      }
     }
   }
 
@@ -232,12 +240,22 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
       // which is the default page size and indicates there might be more to load.
       // If we received fewer than 5, we've reached the end of the subcategories.
       if (subcategories.length === 5) {
-        const parentCategory = this.fetchedCategories.find((c) => c.id === id);
-        if (parentCategory) {
+        if (id === undefined) {
+          // Root level categories
           this.partialCategoryInfos.set(id, {
-            level: parentCategory.level + 1,
+            level: 0,
             offset: offset + subcategories.length,
           });
+        } else {
+          const parentCategory = this.fetchedCategories.find(
+            (c) => c.id === id
+          );
+          if (parentCategory) {
+            this.partialCategoryInfos.set(id, {
+              level: parentCategory.level + 1,
+              offset: offset + subcategories.length,
+            });
+          }
         }
       }
 
@@ -300,7 +318,12 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
         this.loadedPage = requestedPage;
       } else if (this.subcategoryLoadList.length !== 0) {
         const { id, offset } = this.subcategoryLoadList.shift();
-        const opts = { parentCategoryId: id, offset, ...this.searchOpts() };
+        const opts = { offset, ...this.searchOpts() };
+
+        // Only add parentCategoryId if it's not undefined (for root categories)
+        if (id !== undefined) {
+          opts.parentCategoryId = id;
+        }
 
         let subcategories = await Category.asyncHierarchicalSearch(
           requestedFilter,

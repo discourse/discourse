@@ -3793,6 +3793,9 @@ ug:
       title: "ئاخىرقى يازما"
       empty: "يازما يوق"
       aria_post_number: "%{title} - يازما #%{postNumber}"
+      bulk:
+        clear_all: "ھەممىنى تازىلا"
+        actions: "توپ مەشغۇلات"
     post:
       confirm_delete: "بۇ يازمىنى راستتىنلا ئۆچۈرەمسىز؟"
       quote_reply: "نەقىل"

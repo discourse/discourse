@@ -1,7 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
-import { computed } from "@ember/object";
 import { compare } from "@ember/utils";
 import { attributeBindings } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
@@ -14,9 +13,10 @@ export default class AnonymousTopicFooterButtons extends Component {
   elementId = "topic-footer-buttons";
   role = "region";
 
-  @getTopicFooterButtons() allButtons;
+  get allButtons() {
+    return getTopicFooterButtons(this);
+  }
 
-  @computed("allButtons.[]")
   get buttons() {
     return (
       this.allButtons
@@ -30,7 +30,7 @@ export default class AnonymousTopicFooterButtons extends Component {
 
   <template>
     <div class="topic-footer-main-buttons">
-      {{#each this.buttons as |button|}}
+      {{#each this.buttons key="id" as |button|}}
         <DButton
           @action={{button.action}}
           @icon={{button.icon}}

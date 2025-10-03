@@ -11,11 +11,11 @@ enabled_site_setting :chat_integration_enabled
 
 register_asset "stylesheets/chat-integration.scss"
 
-register_svg_icon "rocket" if respond_to?(:register_svg_icon)
-register_svg_icon "arrow-circle-o-right" if respond_to?(:register_svg_icon)
+register_svg_icon "rocket"
+register_svg_icon "arrow-circle-o-right"
 
 module ::DiscourseChatIntegration
-  PLUGIN_NAME = "discourse-chat-integration".freeze
+  PLUGIN_NAME = "discourse-chat-integration"
 end
 
 # Site setting validators must be loaded before initialize

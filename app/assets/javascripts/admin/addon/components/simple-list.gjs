@@ -82,7 +82,6 @@ export default class SimpleList extends Component {
     <div class="simple-list value-list" ...attributes>
       {{#if this.collection}}
         <div class="values">
-          {{this.collection.length}}
           {{#each this.collection as |value index|}}
             <div data-index={{index}} class="value">
               <DButton

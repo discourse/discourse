@@ -45,7 +45,7 @@ module SystemHelpers
       end
 
     result = ask("\n\e[33m#{msg}\e[0m")
-    binding.pry if result == "d" # rubocop:disable Lint/Debugger
+    debugger if result == "d" # rubocop:disable Lint/Debugger
     puts "\e[33mResuming...\e[0m"
     Process.kill("TERM", socat_pid) if socat_pid
     self
@@ -351,17 +351,14 @@ module SystemHelpers
   end
 
   def get_rgb_color(element, property = "backgroundColor")
-    element.native.evaluate(<<~JS)
-      (el) => {
-        const color = window.getComputedStyle(el).#{property};
-        const tempDiv = document.createElement('div');
-        tempDiv.style.#{property} = color;
-        document.body.appendChild(tempDiv);
-        const rgbColor = window.getComputedStyle(tempDiv).#{property};
-        document.body.removeChild(tempDiv);
-        return rgbColor;
-      }
-    JS
+    css_property = property.underscore.dasherize
+
+    try_until_success do
+      style_hash = element.style(css_property)
+      color = style_hash[css_property]
+      raise Capybara::ExpectationNotMet if color.blank?
+      color
+    end
   end
 
   # should be used only on very rare occasion when you need to wait for something

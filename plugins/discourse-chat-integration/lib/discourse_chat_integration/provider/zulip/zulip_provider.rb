@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module ZulipProvider
-      PROVIDER_NAME = "zulip".freeze
+      PROVIDER_NAME = "zulip"
       PROVIDER_ENABLED_SETTING = :chat_integration_zulip_enabled
-      CHANNEL_IDENTIFIER_KEY = "stream".freeze
+      CHANNEL_IDENTIFIER_KEY = "stream"
       CHANNEL_PARAMETERS = [
         { key: "stream", unique: true, regex: '^\S+' },
         { key: "subject", unique: true, regex: '^\S+' },

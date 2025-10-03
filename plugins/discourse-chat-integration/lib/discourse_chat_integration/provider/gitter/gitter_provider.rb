@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module GitterProvider
-      PROVIDER_NAME = "gitter".freeze
+      PROVIDER_NAME = "gitter"
       PROVIDER_ENABLED_SETTING = :chat_integration_gitter_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+$', unique: true },
         {

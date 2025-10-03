@@ -258,7 +258,7 @@ class BulkImport::Base
     @last_upload_id = last_id(Upload)
     @user_ids_by_username_lower = User.unscoped.pluck(:id, :username_lower).to_h
     @usernames_by_id = User.unscoped.pluck(:id, :username).to_h
-    @user_full_names_by_id = User.unscoped.where("name IS NOT NULL").pluck(:id, :name).to_h
+    @user_full_names_by_id = User.unscoped.where.not(name: nil).pluck(:id, :name).to_h
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
@@ -2133,7 +2133,7 @@ class BulkImport::Base
       print "\r%7d - %6d/sec\n" % [rows_created, rows_created.to_f / (Time.now - start)]
     end
 
-    id_mapping_method_name = "#{name}_id_from_imported_id".freeze
+    id_mapping_method_name = "#{name}_id_from_imported_id"
     return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
       { record_id: send(id_mapping_method_name, imported_id), value: imported_id }

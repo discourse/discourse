@@ -13,7 +13,7 @@ module Migrations::Database::Schema::Validation
       schema = load_json_schema
       schemer = ::JSONSchemer.schema(schema)
       response = schemer.validate(@config)
-      response.each { |r| @errors << transform_json_schema_errors(r.fetch("error")) }
+      response.each { |r| @errors << transform_json_schema_errors(r) }
     end
 
     private
@@ -23,9 +23,19 @@ module Migrations::Database::Schema::Validation
       JSON.load_file(schema_path)
     end
 
-    def transform_json_schema_errors(error_message)
+    def transform_json_schema_errors(response)
+      error_message = response.fetch("error")
+
       error_message.gsub!(/value at (`.+?`) matches `not` schema/) do
-        I18n.t("schema.validator.include_exclude_not_allowed", path: $1)
+        path = $1
+        schema_pointer = response.fetch("schema_pointer")
+
+        case schema_pointer
+        in %r{/tables/}
+          I18n.t("schema.validator.include_exclude_not_allowed", path:)
+        else
+          $1
+        end
       end
       error_message
     end

@@ -129,7 +129,7 @@ export default class ColorScheme extends EmberObject {
     if (this.originals.user_selectable !== user_selectable) {
       return true;
     }
-    if (this.colors.any((c) => c.get("changed"))) {
+    if (this.colors.some((c) => c.get("changed"))) {
       return true;
     }
 
@@ -142,7 +142,7 @@ export default class ColorScheme extends EmberObject {
       return false;
     }
 
-    return !changed || this.saving || this.colors.any((c) => !c.get("valid"));
+    return !changed || this.saving || this.colors.some((c) => !c.get("valid"));
   }
 
   save(opts) {

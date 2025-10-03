@@ -12,7 +12,7 @@ function isBotMessage(composer, currentUser) {
 
     return currentUser.ai_enabled_chat_bots
       .filter((bot) => bot.username)
-      .any((bot) => recipients.any((username) => username === bot.username));
+      .some((bot) => recipients.some((username) => username === bot.username));
   }
   return false;
 }

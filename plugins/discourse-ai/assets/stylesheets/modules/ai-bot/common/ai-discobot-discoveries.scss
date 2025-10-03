@@ -10,6 +10,10 @@
   }
 }
 
+.ai-discobot-discoveries {
+  padding: var(--search-result-element-padding);
+}
+
 .ai-search-discoveries {
   &__regular-results-title {
     margin-top: 0.5em;
@@ -146,7 +150,6 @@
         grid-column-start: 2;
         grid-row: 1 / -1;
         box-sizing: border-box;
-        padding: var(--search-result-element-padding);
         margin: 0.75em 0 0 0;
         border-left: 1px solid var(--primary-low);
 

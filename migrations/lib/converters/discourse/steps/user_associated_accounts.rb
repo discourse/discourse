@@ -6,7 +6,9 @@ module Migrations::Converters::Discourse
 
     def max_progress
       @source_db.count <<~SQL
-        SELECT COUNT(*) FROM user_associated_accounts
+        SELECT COUNT(*)
+        FROM user_associated_accounts
+        WHERE user_id > 0
       SQL
     end
 
@@ -14,7 +16,7 @@ module Migrations::Converters::Discourse
       @source_db.query <<~SQL
         SELECT *
         FROM user_associated_accounts
-        WHERE user_id >= 0
+        WHERE user_id > 0
         ORDER BY id
       SQL
     end

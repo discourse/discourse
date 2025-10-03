@@ -929,8 +929,12 @@ class User < ActiveRecord::Base
     @raw_password = pw # still required to maintain compatibility with usage of password-related User interface
   end
 
+  def can_remove_password?
+    associated_accounts.present? || passkey_credential_ids.present?
+  end
+
   def remove_password
-    raise Discourse::InvalidAccess if associated_accounts.blank? && passkey_credential_ids.blank?
+    raise Discourse::InvalidAccess if !can_remove_password?
 
     user_password.destroy if user_password
   end

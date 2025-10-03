@@ -2588,6 +2588,8 @@ security:
   moderators_view_ips:
     default: true
     client: true
+  moderators_change_trust_levels:
+    default: true
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"

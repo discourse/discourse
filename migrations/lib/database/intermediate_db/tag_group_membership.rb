@@ -18,6 +18,13 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `tag_group_memberships` record in the IntermediateDB.
+    #
+    # @param tag_group_id   [Integer, String]
+    # @param tag_id         [Integer, String]
+    # @param created_at     [Time, nil]
+    #
+    # @return [void]
     def self.create(tag_group_id:, tag_id:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

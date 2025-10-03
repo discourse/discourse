@@ -19,6 +19,14 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `user_custom_fields` record in the IntermediateDB.
+    #
+    # @param name         [String]
+    # @param user_id      [Integer, String]
+    # @param value        [String, nil]
+    # @param created_at   [Time, nil]
+    #
+    # @return [void]
     def self.create(name:, user_id:, value:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

@@ -3780,6 +3780,9 @@ tr_TR:
       title: "En son gönderiler"
       empty: "Gönderi yok"
       aria_post_number: "%{title} - gönderi #%{postNumber}"
+      bulk:
+        clear_all: "Tümünü temizle"
+        actions: "Toplu eylemler"
     post:
       confirm_delete: "Bu gönderiyi silmek istediğinize emin misiniz?"
       quote_reply: "Alıntı"

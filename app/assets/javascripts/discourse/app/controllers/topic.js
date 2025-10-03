@@ -1587,20 +1587,19 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed(
-    "selectedPostIds",
-    "model.postStream.posts",
-    "selectedPostIds.[]",
-    "model.postStream.posts.[]"
-  )
-  selectedPosts(selectedPostIds, loadedPosts) {
-    return selectedPostIds
+  get selectedPosts() {
+    const loadedPosts = this.model.postStream.posts;
+
+    return this.selectedPostIds
       .map((id) => loadedPosts.find((p) => p.id === id))
       .filter((post) => post !== undefined);
   }
 
-  @discourseComputed("selectedPostsCount", "selectedPosts", "selectedPosts.[]")
-  selectedPostsUsername(selectedPostsCount, selectedPosts) {
+  @dependentKeyCompat
+  get selectedPostsUsername() {
+    const selectedPosts = this.selectedPosts;
+    const selectedPostsCount = this.selectedPostsCount;
+
     if (selectedPosts.length < 1 || selectedPostsCount > selectedPosts.length) {
       return undefined;
     }
@@ -1634,23 +1633,14 @@ export default class TopicController extends Controller {
     return isMegaTopic ? false : !selectedAllPosts;
   }
 
-  @discourseComputed(
-    "currentUser.staff",
-    "selectedPostsCount",
-    "selectedAllPosts",
-    "selectedPosts",
-    "selectedPosts.[]"
-  )
-  canDeleteSelected(
-    isStaff,
-    selectedPostsCount,
-    selectedAllPosts,
-    selectedPosts
-  ) {
+  @dependentKeyCompat
+  get canDeleteSelected() {
+    const isStaff = this.currentUser?.staff;
+
     return (
-      selectedPostsCount > 0 &&
-      ((selectedAllPosts && isStaff) ||
-        selectedPosts.every((p) => p.can_delete))
+      this.selectedPostsCount > 0 &&
+      ((this.selectedAllPosts && isStaff) ||
+        this.selectedPosts.every((p) => p.can_delete))
     );
   }
 
@@ -1680,17 +1670,12 @@ export default class TopicController extends Controller {
     );
   }
 
-  @discourseComputed(
-    "selectedPostsCount",
-    "selectedPostsUsername",
-    "selectedPosts",
-    "selectedPosts.[]"
-  )
-  canMergePosts(selectedPostsCount, selectedPostsUsername, selectedPosts) {
+  @dependentKeyCompat
+  get canMergePosts() {
     return (
-      selectedPostsCount > 1 &&
-      selectedPostsUsername !== undefined &&
-      selectedPosts.every((p) => p.can_delete)
+      this.selectedPostsCount > 1 &&
+      this.selectedPostsUsername !== undefined &&
+      this.selectedPosts.every((p) => p.can_delete)
     );
   }
 

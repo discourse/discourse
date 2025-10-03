@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module GoogleProvider
-      PROVIDER_NAME = "google".freeze
+      PROVIDER_NAME = "google"
       PROVIDER_ENABLED_SETTING = :chat_integration_google_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+$', unique: true },
         {

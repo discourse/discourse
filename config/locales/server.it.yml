@@ -2461,7 +2461,6 @@ it:
     view_raw_email_allowed_groups: "Gruppi a cui è consentito visualizzare il contenuto email sorgente di un messaggio se questo viene generato da un'email in arrivo. Include l'intestazione dell'email e altre informazioni tecniche."
     rich_editor: "Abilita l'editor avanzato per il compositore in modo che tutti gli utenti possano passare dalla modalità Markdown attuale al nuovo editor di rich text per una composizione più intuitiva e facile da usare."
     default_composition_mode: "Imposta la modalità predefinita per il compositore della tua community. La modalità Rich Text offre un'esperienza di scrittura più moderna e familiare per la maggior parte degli utenti, mentre la modalità Markdown potrebbe essere adatta a un pubblico più tecnico. I membri possono utilizzare un interruttore nella barra degli strumenti del compositore per passare da una modalità all'altra."
-    viewport_based_mobile_mode: "SPERIMENTALE: disattiva le modalità mobile/desktop basate sull'agente utente e utilizza invece la larghezza della finestra di visualizzazione."
     reviewable_ui_refresh: "Gruppi che possono utilizzare la nuova interfaccia utente sperimentale nella coda di revisione."
     content_localization_enabled: "Mostra contenuti localizzati per gli utenti in base alle preferenze del browser o della lingua. Tali contenuti possono includere categorie, tag, post e argomenti. Le impostazioni locali supportate sono impostate in \"Impostazioni locali supportate per la localizzazione dei contenuti\"."
     content_localization_supported_locales: "Elenco delle lingue supportate in cui è possibile tradurre i contenuti utente. Richiede \"localizzazione dei contenuti abilitata\"."
@@ -2561,7 +2560,6 @@ it:
   filter:
     description:
       status: "Filtra gli argomenti in base al loro stato"
-      in: "Filtra gli argomenti in base agli elenchi personali"
       order: "Ordina gli argomenti in base a un campo specifico"
       category: "Mostra argomenti in una categoria specifica"
       category_any: "Mostra gli argomenti in una qualsiasi delle categorie specificate (separati da virgole)"
