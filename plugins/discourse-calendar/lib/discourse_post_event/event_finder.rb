@@ -27,11 +27,15 @@ module DiscoursePostEvent
         .merge(Post.secured(guardian))
         .merge(topics.or(pms))
         .joins(latest_event_date_join)
-        .select("discourse_post_event_events.*, latest_event_dates.starts_at")
+        .select(
+          "discourse_post_event_events.*, latest_event_dates.starts_at, latest_event_dates.finished_at",
+        )
         .where(
           "(discourse_post_event_events.recurrence IS NOT NULL) OR (latest_event_dates.starts_at IS NOT NULL) OR (discourse_post_event_events.original_starts_at IS NOT NULL)",
         )
-        .distinct
+        .group(
+          "discourse_post_event_events.id, latest_event_dates.starts_at, latest_event_dates.finished_at",
+        )
     end
 
     def self.latest_event_date_join
