@@ -10,7 +10,7 @@ module DiscoursePostEvent
         .then { |query| filter_by_attending_user(query, params, guardian, user) }
         .then { |query| filter_by_dates(query, params) }
         .then { |query| filter_by_category(query, params) }
-        .then { |query| apply_ordering(query) }
+        .then { |query| apply_ordering(query, params) }
         .then { |query| apply_limit(query, params) }
     end
 
@@ -143,8 +143,11 @@ module DiscoursePostEvent
       events.where(topics: { category_id: category_ids })
     end
 
-    def self.apply_ordering(events)
-      events.order("latest_event_dates.starts_at ASC, discourse_post_event_events.id ASC")
+    def self.apply_ordering(events, params)
+      order_direction = params[:order] == "desc" ? "DESC" : "ASC"
+      events.order(
+        "latest_event_dates.starts_at #{order_direction}, discourse_post_event_events.id #{order_direction}",
+      )
     end
 
     def self.apply_limit(events, params)

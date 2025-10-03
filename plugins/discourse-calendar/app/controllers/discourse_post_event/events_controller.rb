@@ -141,10 +141,10 @@ module DiscoursePostEvent
         :category_id,
         :include_subcategories,
         :limit,
-        :before,
         :attending_user,
         :before,
         :after,
+        :order,
       )
     end
   end
