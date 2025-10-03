@@ -5,7 +5,7 @@ task "themes:migrate_to_welcome_banner" => :environment do
   advanced_search_banners = []
 
   if ENV["RAILS_DB"].present?
-    advanced_search_banners = find_advanced_search_banners(ENV["RAILS_DB"])
+    advanced_search_banners = find_advanced_search_banners
   else
     RailsMultisite::ConnectionManagement.all_dbs.each do |db|
       puts "Accessing database: [#{db}]"
