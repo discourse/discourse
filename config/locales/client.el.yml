@@ -3584,6 +3584,8 @@ el:
       logo: "Εικονίδιο Κατηγορίας"
       background_image: "Εικόνα Φόντου Κατηγορίας"
       background_color: "Χρώμα"
+      color_validations:
+        cant_be_empty: "δεν μπορεί να είναι άδειο"
       styles:
         icon: "Σύμβολο"
         emoji: "Emoji"

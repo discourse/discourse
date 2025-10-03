@@ -4990,6 +4990,8 @@ ar:
       style: "الأنماط"
       background_color: "اللون"
       foreground_color: "لون النص"
+      color_validations:
+        cant_be_empty: "لا يمكن تركها خالية"
       styles:
         type: "النمط"
         icon: "الأيقونة"

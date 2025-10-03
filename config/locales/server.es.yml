@@ -1868,7 +1868,6 @@ es:
     enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión en un clic que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de usuarios nuevos. Desactiva esta opción para que nadie pueda crear una cuenta nueva."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
-    enable_discourse_id: "Activa la autenticación mediante Discourse ID, un servicio de inicio de sesión único que permite que los usuarios inicien sesión en varios sitios de Discourse con una única cuenta. Proveedores de inicio de sesión con red social comunes, como Google, Facebook y X son compatibles sin necesidad de configuración adicional. Consulta <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> para más detalles."
     enable_google_oauth2_logins: "Activa la autenticación con Google Oauth2. Este es el método de autenticación que Google soporta actualmente. Requiere de una clave de cliente y una clave secreta. Consulta <a href='https://meta.discourse.org/t/15858' target='_blank'>configuración del inicio de sesión mediante para Discourse</a>."
     google_oauth2_client_id: "El ID de cliente único proporcionado por tu aplicación de Google, utilizado para el proceso de autenticación."
     google_oauth2_client_secret: "Secreto del cliente de tu aplicación de Google."

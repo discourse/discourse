@@ -2782,6 +2782,8 @@ gl:
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
       background_color: "Cor"
+      color_validations:
+        cant_be_empty: "non pode quedar en branco"
       styles:
         icon: "Icona"
         emoji: "Emoji"

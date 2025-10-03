@@ -3911,6 +3911,8 @@ zh_CN:
       style: "样式"
       background_color: "颜色"
       foreground_color: "文本颜色"
+      color_validations:
+        cant_be_empty: "不能为空"
       styles:
         type: "样式"
         icon: "图标"

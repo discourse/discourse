@@ -4130,6 +4130,8 @@ pt_BR:
       style: "Estilos"
       background_color: "Cor"
       foreground_color: "Cor do texto"
+      color_validations:
+        cant_be_empty: "não pode estar vazio(a)"
       styles:
         type: "Estilo"
         icon: "Ícone"

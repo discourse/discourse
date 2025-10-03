@@ -1876,7 +1876,6 @@ de:
     enable_local_logins_via_email: "Erlaube Benutzern, einen Ein-Klick-Anmelde-Link anzufordern, der ihnen per E-Mail zugeschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige einen Hinweis für wiederkehrende anonyme Benutzer an, der sie auffordert, sich für ein Konto zu registrieren."
-    enable_discourse_id: "Aktiviere die Authentifizierung über Discourse ID, einen Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook und Twitter werden ohne zusätzliche Konfiguration unterstützt. Weitere Informationen findest du unter <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
     enable_google_oauth2_logins: "Google-OAuth2-Authentifizierung aktivieren. Dies ist der momentan von Google unterstützte Authentifizierungs-Mechanismus. Benötigt Schlüssel und Geheimnis. Siehe <a href='https://meta.discourse.org/t/15858' target='_blank'>Google-Anmeldung für Discourse konfigurieren</a>."
     google_oauth2_client_id: "Die eindeutige Client-ID, die von deiner Google-Anwendung bereitgestellt und für den Authentifizierungsprozess verwendet wird."
     google_oauth2_client_secret: "Client-Geheimnis deiner Google-Anwendung."

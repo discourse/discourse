@@ -1862,7 +1862,6 @@ nl:
     enable_local_logins_via_email: "Sta gebruikers toe te verzoeken een aanmeldlink met één klik te ontvangen via e-mail."
     allow_new_registrations: "Nieuwe gebruikersregistraties toestaan. Vink dit uit om te voorkomen dat iedereen een nieuwe account kan maken."
     enable_signup_cta: "Een melding weergeven voor terugkerende anonieme gebruikers waarin wordt gevraagd zich voor een account te registreren"
-    enable_discourse_id: "Schakel verificatie via Discourse ID in, een single sign-on-service waarmee gebruikers zich met één account kunnen aanmelden op meerdere Discourse-sites. Veelgebruikte aanbieders van sociale aanmelding zoals Google, Facebook en Twitter worden ondersteund zonder extra configuratie. Zie <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> voor meer informatie."
     enable_google_oauth2_logins: "Google Oauth2-verificatie inschakelen. Dit is de methode voor verificatie die Google momenteel ondersteunt. Vereist sleutel en geheim. Zie <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "De unieke client-ID die wordt verstrekt door je Google-toepassing en die voor het verificatieproces wordt gebruikt."
     google_oauth2_client_secret: "Client-geheim van je Google-toepassing."

@@ -1862,7 +1862,6 @@ pt_BR:
     enable_local_logins_via_email: "Permita que os(as) usuários(as) solicitem um link para entrar com um clique para ser enviado por e-mail."
     allow_new_registrations: "Permita cadastro de novos(as) usuários(as). Desmarque isso para evitar que qualquer pessoa crie uma nova conta."
     enable_signup_cta: "Exiba um aviso aos(as) usuários(as) anônimos(as) que voltaram ao solicitar que criem uma conta."
-    enable_discourse_id: "Ative a autenticação pelo Discourse ID, um serviço de cadastro único que permite aos(às) usuários(as) fazer login em mais de um site do Discourse com uma única conta. As empresas mais conhecidas que permitem login com sua conta, como Google, Facebook e Twitter, são compatíveis sem precisar de configurações adicionais. Consulte a <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> para obter mais detalhes."
     enable_google_oauth2_logins: "Ative a autenticação do Google Oauth2. Este é o método de autenticação que atualmente é compatível com o Google. Requer chave e segredo. Consulte <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuração para entrar com a conta Google no Discourse</a>."
     google_oauth2_client_id: "O ID de cliente único fornecido pelo seu aplicativo do Google, usado para o processo de autenticação."
     google_oauth2_client_secret: "Segredo de cliente do seu app Google."
