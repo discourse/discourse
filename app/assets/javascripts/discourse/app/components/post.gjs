@@ -54,7 +54,7 @@ export default class Post extends Component {
   /**
    * @type {boolean}
    */
-  @tracked isToggleRepliesInFlight = false;
+  @tracked isTogglingReplies = false;
 
   decoratorState = new TrackedMap();
 
@@ -321,26 +321,18 @@ export default class Post extends Component {
 
   @action
   async toggleReplies() {
-    if (this.isToggleRepliesInFlight) {
+    if (this.isTogglingReplies) {
       return;
     }
 
-    const isExpanding = this.filteredRepliesView
-      ? !this.filteredRepliesShown
-      : this.repliesBelow.length === 0;
-
-    if (isExpanding) {
-      this.isToggleRepliesInFlight = true;
-    }
+    this.isTogglingReplies = true;
 
     try {
       return this.filteredRepliesView
         ? await this.toggleFilteredRepliesView()
         : await this.toggleRepliesBelow();
     } finally {
-      if (isExpanding) {
-        this.isToggleRepliesInFlight = false;
-      }
+      this.isTogglingReplies = false;
     }
   }
 
@@ -608,7 +600,7 @@ export default class Post extends Component {
                           @rebakePost={{@rebakePost}}
                           @recoverPost={{@recoverPost}}
                           @repliesShown={{this.repliesShown}}
-                          @repliesButtonDisabled={{this.isToggleRepliesInFlight}}
+                          @repliesButtonDisabled={{this.isTogglingReplies}}
                           @replyToPost={{@replyToPost}}
                           @share={{this.share}}
                           @showFlags={{@showFlags}}
