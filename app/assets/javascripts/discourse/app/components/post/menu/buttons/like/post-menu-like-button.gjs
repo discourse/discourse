@@ -55,7 +55,13 @@ export default class PostMenuLikeButton extends Component {
 
   <template>
     {{#if @post.showLike}}
-      <div class="double-button">
+      <div
+        class={{concatClass
+          "double-button"
+          (if @post.liked "has-liked" "")
+          "post-action-menu__double-button"
+        }}
+      >
         {{#if @post.likeCount}}
           <LikedUsersList ...attributes @post={{@post}} />
         {{/if}}

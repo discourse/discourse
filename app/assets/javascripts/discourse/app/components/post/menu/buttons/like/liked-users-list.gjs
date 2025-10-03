@@ -22,7 +22,7 @@ export default class LikedUsersList extends Component {
 
   @action
   async fetchLikedUsers() {
-    if (this.likedUsers || this.loadingLikedUsers) {
+    if (this.loadingLikedUsers) {
       return;
     }
 

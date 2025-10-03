@@ -337,6 +337,15 @@ nav.post-controls {
     text-align: right;
     margin-left: auto;
 
+    .post-action-menu__double-button {
+      .discourse-no-touch & {
+        &:not(.has-liked):hover {
+          --d-post-control-background--hover: var(--love-low);
+          --d-button-flat-icon-color--hover: var(--love);
+        }
+      }
+    }
+
     // Some buttons can be doubled up, like likes or flags
     .double-button {
       display: inline-flex;
@@ -370,28 +379,10 @@ nav.post-controls {
           border-radius: var(--d-post-control-border-radius);
         }
 
-        &.like,
-        &.regular-likes {
-          // Like button with 0 likes
-          &:hover {
-            .d-icon {
-              color: var(--love);
-            }
-          }
-        }
-
         &.has-like {
           // Like button after I've liked
           .d-icon {
             color: var(--love);
-          }
-
-          .discourse-no-touch & {
-            &:hover {
-              .d-icon {
-                color: var(--primary-medium);
-              }
-            }
           }
         }
 
