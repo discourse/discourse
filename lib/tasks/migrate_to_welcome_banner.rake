@@ -5,13 +5,11 @@ task "themes:migrate_to_welcome_banner" => :environment do
   advanced_search_banners = []
 
   if ENV["RAILS_DB"].present?
-    advanced_search_banners = find_advanced_search_banners
+    advanced_search_banners = find_advanced_search_banners(ENV["RAILS_DB"])
   else
     RailsMultisite::ConnectionManagement.all_dbs.each do |db|
-      puts "Accessing database: [#{db}]"
-
       RailsMultisite::ConnectionManagement.with_connection(db) do
-        found = find_advanced_search_banners
+        found = find_advanced_search_banners(db)
         advanced_search_banners.concat(found.map { |asb| { db: db, asb: asb } })
       end
     end
@@ -32,7 +30,9 @@ task "themes:migrate_to_welcome_banner" => :environment do
   end
 end
 
-def find_advanced_search_banners
+def find_advanced_search_banners(db)
+  puts "Accessing database: [#{db}]"
+
   advanced_search_banners = []
 
   puts "  Searching for Advanced Search Banner theme components..."
