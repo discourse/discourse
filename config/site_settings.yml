@@ -2576,7 +2576,10 @@ security:
   allow_indexing_non_canonical_urls:
     default: true
     hidden: true
-  moderators_manage_categories_and_groups:
+  moderators_manage_categories:
+    default: false
+    client: true
+  moderators_manage_groups:
     default: false
     client: true
   moderators_change_post_ownership:
