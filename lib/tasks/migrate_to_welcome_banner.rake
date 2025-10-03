@@ -12,13 +12,13 @@ task "themes:migrate_to_welcome_banner" => :environment do
 
       RailsMultisite::ConnectionManagement.with_connection(db) do
         found = find_advanced_search_banners
-        advanced_search_banners.concat(found.map { |tc| { db: db, tc: tc } })
+        advanced_search_banners.concat(found.map { |asb| { db: db, asb: asb } })
       end
     end
   end
 
   if advanced_search_banners.empty?
-    puts "No Advanced search banner theme components found."
+    puts "No Advanced search banner theme components were found."
   else
     puts "Migration completed!"
     # puts advanced_search_banners
@@ -35,6 +35,7 @@ end
 def find_advanced_search_banners
   advanced_search_banners = []
 
+  puts "  Searching for Advanced Search Banner theme components..."
   RemoteTheme
     .where(remote_url: "https://github.com/discourse/discourse-search-banner.git")
     .includes(theme: :theme_translation_overrides)
@@ -42,7 +43,8 @@ def find_advanced_search_banners
       theme = remote_theme.theme
       next unless theme&.component? # Only process component themes
 
-      puts "  Found theme component: #{theme.name} (Id: #{theme.id})"
+      puts "  ✓ Found theme component: #{theme.name} (ID: #{theme.id})"
+      puts "  Searching for translation overrides..."
 
       overrides =
         theme.theme_translation_overrides.map do |override|
@@ -53,7 +55,7 @@ def find_advanced_search_banners
           }
         end
 
-      if !overrides.any?
+      if overrides.any?
         puts "  Migrating translation overrides..."
         overrides.each do |override|
           mapped_keys = map_search_banner_to_welcome_banner(override[:translation_key])
@@ -61,14 +63,14 @@ def find_advanced_search_banners
           if mapped_keys.any?
             mapped_keys.each do |new_key|
               TranslationOverride.upsert!(override[:locale], new_key, override[:value])
-              puts "    ✓ Migrated: #{override[:locale]}.#{new_key} = '#{override[:value]}'"
+              puts "    ✓ Migrated to: '#{override[:locale]}.#{new_key}' = '#{override[:value]}'"
             end
           else
-            puts "    ⚠ No mapping found for key: #{override[:translation_key]}"
+            puts "    × No mapping found for: '#{override[:translation_key]}'"
           end
         end
       else
-        puts "    No translation overrides found."
+        puts "  × No translation overrides found. Default translations will be used."
       end
 
       # next
@@ -81,7 +83,7 @@ def find_advanced_search_banners
       }
       advanced_search_banners << result if result
     end
-  puts "length #{advanced_search_banners.length}"
+
   advanced_search_banners
 end
 
@@ -102,23 +104,6 @@ def map_search_banner_to_welcome_banner(translation_key)
   return [] unless mapping
 
   Array(mapping)
-end
-
-def get_theme_translation_overrides(theme_id)
-  theme = Theme.find_by(id: theme_id)
-  return [] unless theme
-
-  overrides = []
-
-  theme.theme_translation_overrides.find_each do |override|
-    overrides << {
-      translation_key: override.translation_key,
-      value: override.value,
-      locale: override.locale,
-    }
-  end
-
-  overrides
 end
 
 # def deprecate_theme(theme)
