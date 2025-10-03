@@ -71,7 +71,7 @@ end
 
 task "topics:watch_all_replied_topics" => :environment do
   puts "Setting all topics to Watching on which a user has posted at least once..."
-  topics = Topic.where("archetype != ?", Archetype.private_message)
+  topics = Topic.where.not(archetype: Archetype.private_message)
   total = topics.count
   count = 0
 

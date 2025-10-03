@@ -15,7 +15,7 @@ module Jobs
       categories =
         DiscourseAi::Translation::CategoryCandidates
           .get
-          .where("locale IS NOT NULL")
+          .where.not(locale: nil)
           .order(:id)
           .limit(limit)
       return if categories.empty?

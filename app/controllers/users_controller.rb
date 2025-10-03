@@ -1956,9 +1956,7 @@ class UsersController < ApplicationController
         )
 
       bookmark_list.load do |query|
-        if exclude_bookmark_ids.present?
-          query.where("bookmarks.id NOT IN (?)", exclude_bookmark_ids)
-        end
+        query.where.not(id: exclude_bookmark_ids) if exclude_bookmark_ids.present?
       end
     end
 
@@ -2020,7 +2018,7 @@ class UsersController < ApplicationController
             groups_messages_notification_level: :watching,
           ) do |query|
             if exclude_topic_ids.present?
-              query.where("topics.id NOT IN (?)", exclude_topic_ids)
+              query.where.not(id: exclude_topic_ids)
             else
               query
             end

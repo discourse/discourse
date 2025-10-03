@@ -153,7 +153,7 @@ RSpec.describe PostActionUsersController do
         .new
         .register_modifier(:post_action_users_list) do |query, modifier_post|
           expect(modifier_post.id).to eq(post.id)
-          query.where("post_actions.id NOT IN (?)", excluded_post_action_ids)
+          query.where.not(post_actions: { id: excluded_post_action_ids })
         end
 
       get "/post_action_users.json",

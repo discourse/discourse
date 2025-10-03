@@ -152,7 +152,7 @@ class Bookmark < ActiveRecord::Base
     self.reminder_at.in_time_zone(timezone)
   end
 
-  scope :with_reminders, -> { where("reminder_at IS NOT NULL") }
+  scope :with_reminders, -> { where.not(reminder_at: nil) }
 
   scope :pending_reminders,
         ->(before_time = Time.now.utc) do
