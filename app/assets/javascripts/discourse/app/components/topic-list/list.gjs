@@ -32,7 +32,7 @@ import ItemViewsCell from "./item/views-cell";
 
 export default class TopicList extends Component {
   @service currentUser;
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service topicTrackingState; // accessed via `self` variable
 
   @cached

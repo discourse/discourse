@@ -24,7 +24,7 @@ export default class LoginPageController extends Controller {
   @service siteSettings;
   @service capabilities;
   @service dialog;
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service site; // used in the route template
   @service login;
   @service modal;

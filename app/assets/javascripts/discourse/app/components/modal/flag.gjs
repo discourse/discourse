@@ -24,7 +24,7 @@ export default class Flag extends Component {
   @service currentUser;
   @service siteSettings;
   @service appEvents;
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service site; // FIXME: used by flag-target objects
 
   @tracked userDetails;

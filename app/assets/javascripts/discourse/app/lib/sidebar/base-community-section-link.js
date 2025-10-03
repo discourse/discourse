@@ -6,15 +6,15 @@ import { service } from "@ember/service";
  */
 export default class BaseCommunitySectionLink {
   // TODO: All those are used by subclasses
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service currentUser;
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service appEvents;
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service router;
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service siteSettings;
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service topicTrackingState;
 
   constructor(owner, { inMoreDrawer, overriddenName, overriddenIcon } = {}) {

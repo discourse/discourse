@@ -11,7 +11,7 @@ import { isTesting } from "discourse/lib/environment";
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
-  // eslint-disable-next-line discourse/no-unused-services
+  // NOTE: eslint-disable-next-line discourse/no-unused-services
   @service router; // used in the route template
   @service footer;
   @service sidebarState;
