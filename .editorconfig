@@ -11,7 +11,7 @@ indent_style = space
 indent_size = 2
 
 [*.md]
-trim_trailing_whitespace = false
+trim_trailing_whitespace = falsee
 
 [*.hbs]
 insert_final_newline = false
