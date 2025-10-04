@@ -303,6 +303,23 @@ describe PostRevisor do
         expect(post.topic.ordered_posts.last.post_type).to eq(Post.types[:whisper])
       end
 
+      it "does not create a small_action when a restricted tag is rejected" do
+        allowed_tag = Fabricate(:tag, name: "allowed-tag")
+
+        post.topic.update!(tags: [allowed_tag])
+
+        category = post.topic.category
+        category.update!(allow_global_tags: false)
+        category.tags = [allowed_tag]
+        category.save!
+
+        expect do
+          post_revisor.revise!(admin, tags: [allowed_tag.name, "disallowed-tag"])
+        end.not_to change { Post.where(topic_id: post.topic_id, action_code: "tags_changed").count }
+
+        expect(post.topic.reload.tags.pluck(:name)).to contain_exactly(allowed_tag.name)
+      end
+
       describe "with PMs" do
         fab!(:pm, :private_message_topic)
         let(:first_post) { create_post(user: admin, topic: pm, allow_uncategorized_topics: false) }

@@ -114,30 +114,38 @@ class PostRevisor
         tc.check_result(false)
         next
       end
-      if prev_tags.sort != tags.sort
-        tc.record_change("tags", prev_tags, tags)
+      new_tag_names = Array(tc.topic.tags.map(&:name))
+
+      if prev_tags.sort != new_tag_names.sort
+        tc.record_change("tags", prev_tags, new_tag_names)
         DB.after_commit do
-          post = tc.topic.ordered_posts.first
+          topic = tc.topic.reload
+          post = topic.ordered_posts.first
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
 
-          added_tags = tags - prev_tags
-          removed_tags = prev_tags - tags
+          persisted_tag_names = topic.tags.pluck(:name)
+          added_tags = persisted_tag_names - prev_tags
+          removed_tags = prev_tags - persisted_tag_names
 
-          if !SiteSetting.disable_tags_edit_notifications
+          diff_tags = (added_tags | removed_tags)
+
+          if diff_tags.present? && !SiteSetting.disable_tags_edit_notifications
             Jobs.enqueue(
               :notify_tag_change,
               post_id: post.id,
               notified_user_ids: notified_user_ids,
-              diff_tags: (added_tags | removed_tags),
+              diff_tags: diff_tags,
             )
           end
 
-          create_small_action_for_tag_changes(
-            topic: tc.topic,
-            user: tc.user,
-            added_tags: added_tags,
-            removed_tags: removed_tags,
-          )
+          if diff_tags.present?
+            create_small_action_for_tag_changes(
+              topic: topic,
+              user: tc.user,
+              added_tags: added_tags,
+              removed_tags: removed_tags,
+            )
+          end
         end
       end
     end
