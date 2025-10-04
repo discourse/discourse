@@ -410,7 +410,11 @@ discourse_ai:
     refresh: true
     area: "ai-features/bot"
   ai_bot_add_to_header:
-    default: true
+    default: false
+    client: true
+    area: "ai-features/bot"
+  ai_bot_add_to_community_section:
+    default: false
     client: true
     area: "ai-features/bot"
   ai_bot_github_access_token:
