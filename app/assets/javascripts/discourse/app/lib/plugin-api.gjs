@@ -1076,6 +1076,31 @@ class PluginApi {
   }
 
   /**
+   * Listen for when a ProseMirror editor is ready and initialized.
+   * This is useful for plugins that need to interact with the ProseMirror view.
+   *
+   * The callback will receive an object containing:
+   * - `view`: The ProseMirror EditorView instance
+   * - `convertToMarkdown`: Function to convert ProseMirror document to markdown
+   * - `convertFromMarkdown`: Function to convert markdown to ProseMirror document
+   * - `textManipulation`: TextManipulation utility instance
+   *
+   * ```javascript
+   * api.onProseMirrorEditorReady(({ view, convertToMarkdown }) => {
+   *   console.log('ProseMirror editor is ready', view);
+   *   // Initialize your plugin's ProseMirror integration here
+   * });
+   * ```
+   **/
+  onProseMirrorEditorReady(fn) {
+    const callback = wrapWithErrorHandler(
+      fn,
+      "broken_prosemirror_editor_ready"
+    );
+    this.onAppEvent("prosemirror:editor-ready", callback);
+  }
+
+  /**
    * Registers a function to generate custom avatar CSS classes
    * for a particular user.
    *

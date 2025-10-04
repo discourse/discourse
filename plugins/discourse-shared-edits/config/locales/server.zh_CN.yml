@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  shared_edits:
+    reason: "编辑者：%{users}"
+  site_settings:
+    shared_edits_enabled: 在指定帖子上启用共享协作编辑。

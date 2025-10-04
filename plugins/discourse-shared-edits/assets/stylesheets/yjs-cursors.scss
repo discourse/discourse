@@ -1,0 +1,254 @@
+// YJS Cursor Tracking Styles
+// Styles for collaborative cursors from y-prosemirror
+
+// Cursor selection (highlighted text by other users)
+.ProseMirror .yjs-cursor-selection {
+  position: relative;
+  pointer-events: none;
+  user-select: none;
+}
+
+// Cursor caret (the blinking line)
+.ProseMirror .yjs-cursor {
+  position: absolute;
+  border-left: 2px solid;
+  border-color: inherit;
+  height: 1em;
+  margin-top: -0.1em;
+  pointer-events: none;
+  user-select: none;
+  z-index: 10;
+
+  // Smooth animations
+  transition: all 0.15s ease-out;
+}
+
+// User name label above cursor
+.ProseMirror .yjs-cursor-name {
+  position: absolute;
+  top: -1.5em;
+  left: 0;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  background-color: inherit;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 11;
+  opacity: 0.95;
+
+  // Smooth fade in
+  animation: cursor-name-fade-in 0.2s ease-out;
+
+  // Drop shadow for readability
+  box-shadow: 0 1px 3px rgb(0, 0, 0, 0.3);
+}
+
+@keyframes cursor-name-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 0.95;
+    transform: translateY(0);
+  }
+}
+
+// Hide cursor name after a delay (optional - can be removed if we want always-on labels)
+.ProseMirror .yjs-cursor-name-hidden {
+  opacity: 0;
+  transition: opacity 0.3s ease-out 2s;
+}
+
+// Selection colors for different users
+// The yCursorPlugin will set CSS variables for colors
+.ProseMirror .yjs-cursor-selection-user-1 {
+  background-color: rgb(255, 107, 107, 0.2); // Red
+}
+
+.ProseMirror .yjs-cursor-selection-user-2 {
+  background-color: rgb(78, 205, 196, 0.2); // Teal
+}
+
+.ProseMirror .yjs-cursor-selection-user-3 {
+  background-color: rgb(69, 183, 209, 0.2); // Blue
+}
+
+.ProseMirror .yjs-cursor-selection-user-4 {
+  background-color: rgb(255, 160, 122, 0.2); // Light Salmon
+}
+
+.ProseMirror .yjs-cursor-selection-user-5 {
+  background-color: rgb(152, 216, 200, 0.2); // Light Sea Green
+}
+
+.ProseMirror .yjs-cursor-selection-user-6 {
+  background-color: rgb(247, 220, 111, 0.2); // Yellow
+}
+
+.ProseMirror .yjs-cursor-selection-user-7 {
+  background-color: rgb(187, 143, 206, 0.2); // Purple
+}
+
+.ProseMirror .yjs-cursor-selection-user-8 {
+  background-color: rgb(133, 193, 226, 0.2); // Light Blue
+}
+
+.ProseMirror .yjs-cursor-selection-user-9 {
+  background-color: rgb(248, 183, 57, 0.2); // Orange
+}
+
+.ProseMirror .yjs-cursor-selection-user-10 {
+  background-color: rgb(82, 190, 128, 0.2); // Green
+}
+
+// Cursor colors (solid for the caret)
+.ProseMirror .yjs-cursor-user-1 {
+  border-color: rgb(255, 107, 107);
+}
+
+.ProseMirror .yjs-cursor-user-2 {
+  border-color: rgb(78, 205, 196);
+}
+
+.ProseMirror .yjs-cursor-user-3 {
+  border-color: rgb(69, 183, 209);
+}
+
+.ProseMirror .yjs-cursor-user-4 {
+  border-color: rgb(255, 160, 122);
+}
+
+.ProseMirror .yjs-cursor-user-5 {
+  border-color: rgb(152, 216, 200);
+}
+
+.ProseMirror .yjs-cursor-user-6 {
+  border-color: rgb(247, 220, 111);
+}
+
+.ProseMirror .yjs-cursor-user-7 {
+  border-color: rgb(187, 143, 206);
+}
+
+.ProseMirror .yjs-cursor-user-8 {
+  border-color: rgb(133, 193, 226);
+}
+
+.ProseMirror .yjs-cursor-user-9 {
+  border-color: rgb(248, 183, 57);
+}
+
+.ProseMirror .yjs-cursor-user-10 {
+  border-color: rgb(82, 190, 128);
+}
+
+// User name label background colors
+.ProseMirror .yjs-cursor-name-user-1 {
+  background-color: rgb(255, 107, 107);
+}
+
+.ProseMirror .yjs-cursor-name-user-2 {
+  background-color: rgb(78, 205, 196);
+}
+
+.ProseMirror .yjs-cursor-name-user-3 {
+  background-color: rgb(69, 183, 209);
+}
+
+.ProseMirror .yjs-cursor-name-user-4 {
+  background-color: rgb(255, 160, 122);
+}
+
+.ProseMirror .yjs-cursor-name-user-5 {
+  background-color: rgb(152, 216, 200);
+}
+
+.ProseMirror .yjs-cursor-name-user-6 {
+  background-color: rgb(247, 220, 111);
+}
+
+.ProseMirror .yjs-cursor-name-user-7 {
+  background-color: rgb(187, 143, 206);
+}
+
+.ProseMirror .yjs-cursor-name-user-8 {
+  background-color: rgb(133, 193, 226);
+}
+
+.ProseMirror .yjs-cursor-name-user-9 {
+  background-color: rgb(248, 183, 57);
+}
+
+.ProseMirror .yjs-cursor-name-user-10 {
+  background-color: rgb(82, 190, 128);
+}
+
+// Pulse animation for active cursors (optional)
+@keyframes cursor-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.ProseMirror .yjs-cursor-active {
+  animation: cursor-pulse 1s ease-in-out infinite;
+}
+
+// Dark mode support
+.dark-scheme {
+  .ProseMirror .yjs-cursor-name {
+    box-shadow: 0 1px 3px rgb(0, 0, 0, 0.5);
+  }
+
+  // Slightly brighter selections for dark mode
+  .ProseMirror .yjs-cursor-selection-user-1 {
+    background-color: rgb(255, 107, 107, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-2 {
+    background-color: rgb(78, 205, 196, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-3 {
+    background-color: rgb(69, 183, 209, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-4 {
+    background-color: rgb(255, 160, 122, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-5 {
+    background-color: rgb(152, 216, 200, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-6 {
+    background-color: rgb(247, 220, 111, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-7 {
+    background-color: rgb(187, 143, 206, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-8 {
+    background-color: rgb(133, 193, 226, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-9 {
+    background-color: rgb(248, 183, 57, 0.3);
+  }
+
+  .ProseMirror .yjs-cursor-selection-user-10 {
+    background-color: rgb(82, 190, 128, 0.3);
+  }
+}

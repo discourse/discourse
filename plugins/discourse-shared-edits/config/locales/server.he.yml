@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  shared_edits:
+    reason: "נערך על ידי: %{users}"
+  site_settings:
+    shared_edits_enabled: לאפשר עריכה בשיתוף פעולה של פוסטים יעודיים.

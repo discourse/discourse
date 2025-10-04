@@ -118,6 +118,7 @@ export default class DEditor extends Component {
       } else {
         this.editorComponent = TextareaEditor;
       }
+
       return;
     }
 
@@ -158,9 +159,12 @@ export default class DEditor extends Component {
     return null;
   }
 
-  @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
-  showEditorModeToggle() {
-    return this.siteSettings.rich_editor && !this.forceEditorMode;
+  get showEditorModeToggle() {
+    return (
+      this.siteSettings.rich_editor &&
+      !this.forceEditorMode &&
+      !this.args?.disableModeSwitching
+    );
   }
 
   _readyNow() {
@@ -237,7 +241,11 @@ export default class DEditor extends Component {
     // itsatrap expects the return value to be false to prevent default
     keymap["tab"] = () => !this.textManipulation.indentSelection("right");
     keymap["shift+tab"] = () => !this.textManipulation.indentSelection("left");
-    if (this.siteSettings.rich_editor && !this.forceEditorMode) {
+    if (
+      this.siteSettings.rich_editor &&
+      !this.forceEditorMode &&
+      !this.args?.disableModeSwitching
+    ) {
       keymap["ctrl+m"] = () => this.toggleRichEditor();
     }
 
@@ -635,6 +643,21 @@ export default class DEditor extends Component {
       return;
     }
 
+    // Prevent toggling if mode switching is disabled (e.g., for shared edits)
+    if (this.args?.disableModeSwitching) {
+      return;
+    }
+
+    // Notify plugins that we're switching modes (so they can clean up)
+    const wasProsemirror = this.isRichEditorEnabled;
+    this.appEvents.trigger("composer:editor-mode-switching", {
+      fromMode: wasProsemirror ? "rich" : "textarea",
+      toMode: wasProsemirror ? "textarea" : "rich",
+    });
+
+    // Wait a tick for cleanup to complete
+    await new Promise((resolve) => schedule("afterRender", resolve));
+
     // The ProsemirrorEditor component is loaded here, adding this comment because
     // otherwise it's hard to find where the component is rendered by name.
     this.editorComponent = this.isRichEditorEnabled
@@ -648,6 +671,11 @@ export default class DEditor extends Component {
   }
 
   #debounceSaveRichEditorPreference(preference) {
+    // Don't save preferences if mode switching is disabled (e.g., shared edits)
+    if (this.args?.disableModeSwitching) {
+      return;
+    }
+
     this._debounceSaveRichEditorPreference = discourseDebounce(
       this,
       this.#saveRichEditorPreference,
@@ -833,6 +861,7 @@ export default class DEditor extends Component {
             @id={{this.textAreaId}}
             @replaceToolbar={{this.replaceToolbar}}
           />
+
           <PopupInputTip @validation={{this.validation}} />
           <PluginOutlet
             @name="after-d-editor"

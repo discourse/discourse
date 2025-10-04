@@ -61,7 +61,10 @@
     "prosemirror-state": "^1.4.3",
     "prosemirror-transform": "^1.10.4",
     "prosemirror-view": "^1.40.0",
-    "rrule": "^2.8.1"
+    "rrule": "^2.8.1",
+    "y-prosemirror": "^1.2.12",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.27"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",

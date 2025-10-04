@@ -1,0 +1,19 @@
+@import "../yjs-cursors";
+
+#reply-control.composer-action-sharedEdit {
+  .save-or-cancel {
+    button,
+    a {
+      display: none;
+    }
+  }
+
+  .title-and-category,
+  .composer-actions {
+    display: none;
+  }
+
+  .d-editor-preview-wrapper {
+    margin-top: 0;
+  }
+}

@@ -1,0 +1,5 @@
+en:
+  shared_edits:
+    reason: "Edited By: %{users}"
+  site_settings:
+    shared_edits_enabled: Enable shared, collaborative, editing on designated posts.

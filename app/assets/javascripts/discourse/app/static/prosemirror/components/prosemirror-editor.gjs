@@ -190,16 +190,37 @@ export default class ProsemirrorEditor extends Component {
       attributes: { class: this.args.class ?? "" },
       editable: () => this.args.disabled !== true,
       dispatchTransaction: (tr) => {
-        this.view.updateState(this.view.state.apply(tr));
+        try {
+          // Apply the transaction and update state
+          const newState = this.view.state.apply(tr);
+          this.view.updateState(newState);
 
-        if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
-          // If this gets expensive, we can debounce it
-          const value = this.convertToMarkdown(this.view.state.doc);
-          this.#lastSerialized = value;
-          this.args.change?.({ target: { value } });
+          if (tr.docChanged && tr.getMeta("addToHistory") !== false) {
+            // If this gets expensive, we can debounce it
+            const value = this.convertToMarkdown(this.view.state.doc);
+            this.#lastSerialized = value;
+            this.args.change?.({ target: { value } });
+          }
+
+          this.textManipulation.updateState();
+        } catch (e) {
+          // Handle YJS position errors gracefully (can happen during mode switching)
+          if (
+            e.message?.includes("Unexpected case") ||
+            e.message?.includes("RelativePosition") ||
+            e.message?.includes("createAbsolutePositionFromRelativePosition")
+          ) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              "[ProseMirror] Suppressing YJS cursor position error (background editor):",
+              e.message
+            );
+            // Don't update state if there's a position error - just skip this transaction
+            return;
+          }
+          // Re-throw other errors
+          throw e;
         }
-
-        this.textManipulation.updateState();
       },
       handleDOMEvents: {
         focus: () => {
@@ -234,6 +255,24 @@ export default class ProsemirrorEditor extends Component {
     this.convertFromValue();
 
     this.textManipulation.updateState();
+
+    // Notify plugins that ProseMirror editor is ready
+    this.appEvents.trigger("prosemirror:editor-ready", {
+      view: this.view,
+      convertToMarkdown: this.convertToMarkdown,
+      convertFromMarkdown: this.convertFromMarkdown,
+      textManipulation: this.textManipulation,
+    });
+
+    // Also trigger composer-specific event if this is in composer context
+    // This allows plugins to know when composer's ProseMirror is ready
+    if (this.args.topicId || this.args.categoryId) {
+      this.appEvents.trigger("composer:prosemirror-ready", {
+        view: this.view,
+        convertToMarkdown: this.convertToMarkdown,
+        convertFromMarkdown: this.convertFromMarkdown,
+      });
+    }
   }
 
   @bind

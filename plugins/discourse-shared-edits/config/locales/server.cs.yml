@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  shared_edits:
+    reason: "Upravují: %{users}"
+  site_settings:
+    shared_edits_enabled: Povolit sdílení, spolupráci a úpravy určených příspěvků.

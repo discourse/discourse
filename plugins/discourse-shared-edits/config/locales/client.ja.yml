@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  js:
+    shared_edits:
+      enable_shared_edits: "共同編集を有効にする"
+      disable_shared_edits: "共同編集を無効にする"
+      edit: "編集"
+      button_title: "投稿を共同で編集する"
+      done: "完了"

@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    shared_edits:
+      enable_shared_edits: "启用共享编辑"
+      disable_shared_edits: "禁用共享编辑"
+      edit: "编辑"
+      button_title: "协作编辑帖子"
+      done: "完成"

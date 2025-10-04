@@ -1,0 +1,8 @@
+en:
+  js:
+    shared_edits:
+      enable_shared_edits: "Enable Shared Edits"
+      disable_shared_edits: "Disable Shared Edits"
+      edit: "Edit"
+      button_title: "Edit Post Collaboratively"
+      done: "Done"

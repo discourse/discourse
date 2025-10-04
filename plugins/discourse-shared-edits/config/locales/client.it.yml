@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    shared_edits:
+      enable_shared_edits: "Abilita modifiche condivise"
+      disable_shared_edits: "Disabilita modifiche condivise"
+      edit: "Modifica"
+      button_title: "Modifica messaggio in collaborazione"
+      done: "Fatto"

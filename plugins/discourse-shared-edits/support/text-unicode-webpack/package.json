@@ -1,0 +1,16 @@
+{
+  "name": "text-unicode-webpack",
+  "private": true,
+  "main": "index.js",
+  "dependencies": {
+    "ot-diff": "^1.1.1",
+    "ot-text-unicode": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "babel-loader": "^9.1.3",
+    "webpack": "^5.94.0",
+    "webpack-cli": "^5.1.4"
+  }
+}

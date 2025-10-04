@@ -1,0 +1,11 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  shared_edits:
+    reason: "Επεξεργάσθηκε από: %{users}"
+  site_settings:
+    shared_edits_enabled: Ενεργοποιήστε την κοινή, συνεργατική επεξεργασία σε καθορισμένες αναρτήσεις.

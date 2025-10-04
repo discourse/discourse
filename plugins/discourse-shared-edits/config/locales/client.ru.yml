@@ -1,0 +1,14 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ru:
+  js:
+    shared_edits:
+      enable_shared_edits: "Включить совместное редактирование"
+      disable_shared_edits: "Отключить совместное редактирование"
+      edit: "Редактировать"
+      button_title: "Совместное редактирование записи"
+      done: "Готово"
