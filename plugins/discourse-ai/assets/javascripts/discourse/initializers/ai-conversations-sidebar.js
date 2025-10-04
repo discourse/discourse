@@ -1,3 +1,4 @@
+import BackToForum from "discourse/components/sidebar/back-to-forum";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import AiBotSidebarNewConversation from "../components/ai-bot-sidebar-new-conversation";
 import { AI_CONVERSATIONS_PANEL } from "../services/ai-conversations-sidebar-manager";
@@ -32,6 +33,7 @@ export default {
           }
       );
 
+      api.renderInOutlet("before-sidebar-sections", BackToForum);
       api.renderInOutlet(
         "before-sidebar-sections",
         AiBotSidebarNewConversation
