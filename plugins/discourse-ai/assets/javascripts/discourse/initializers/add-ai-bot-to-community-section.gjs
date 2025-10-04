@@ -6,9 +6,21 @@ export default {
 
   initialize(container) {
     const siteSettings = container.lookup("service:site-settings");
+    const currentUser = container.lookup("service:current-user");
+
+    const getAvailableBots = () => {
+      const availableBots = currentUser.ai_enabled_chat_bots
+        .filter((bot) => !bot.is_persona || bot.has_default_llm)
+        .filter(Boolean);
+
+      return availableBots ? availableBots.map((bot) => bot.model_name) : [];
+    };
 
     const showSidebarLink = () => {
-      return siteSettings.ai_bot_add_to_community_section;
+      return (
+        getAvailableBots().length > 0 &&
+        siteSettings.ai_bot_add_to_community_section
+      );
     };
 
     if (showSidebarLink()) {
