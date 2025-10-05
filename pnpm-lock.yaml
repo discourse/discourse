@@ -233,8 +233,8 @@ importers:
         specifier: 8.1.4
         version: 8.1.4
       ember-auto-import:
-        specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+        specifier: ^2.11.0
+        version: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.4)
@@ -520,8 +520,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2)
       ember-auto-import:
-        specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+        specifier: ^2.11.0
+        version: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-buffered-proxy:
         specifier: ^2.1.1
         version: 2.1.1(@babel/core@7.28.4)
@@ -670,8 +670,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       ember-auto-import:
-        specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+        specifier: ^2.11.0
+        version: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       markdown-it:
         specifier: 14.0.0
         version: 14.0.0
@@ -722,8 +722,8 @@ importers:
         specifier: ^7.28.4
         version: 7.28.4(supports-color@8.1.1)
       ember-auto-import:
-        specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+        specifier: ^2.11.0
+        version: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.4)
@@ -794,8 +794,8 @@ importers:
         specifier: ^1.7.4
         version: 1.7.4
       ember-auto-import:
-        specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+        specifier: ^2.11.0
+        version: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.4)
@@ -876,8 +876,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       ember-auto-import:
-        specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+        specifier: ^2.11.0
+        version: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel:
         specifier: ^8.2.0
         version: 8.2.0(@babel/core@7.28.4)
@@ -961,8 +961,8 @@ importers:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
       ember-auto-import:
-        specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+        specifier: ^2.11.0
+        version: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cached-decorator-polyfill:
         specifier: ^1.0.2
         version: 1.0.2(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -1140,8 +1140,8 @@ importers:
         specifier: ^1.9.0
         version: 1.10.0
       ember-auto-import:
-        specifier: ^2.10.1
-        version: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+        specifier: ^2.11.0
+        version: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
 
 packages:
 
@@ -1915,6 +1915,15 @@ packages:
       '@glint/template':
         optional: true
 
+  '@embroider/macros@1.19.1':
+    resolution: {integrity: sha512-KgPan7fiyoDGfr6SMdMELhcgUXK6pU/QICSK0yFFzsXVBJYM2fHAXCic5WCBETtv7xsvi4byziahSz5HpqYs/A==}
+    engines: {node: 12.* || 14.* || >= 16}
+    peerDependencies:
+      '@glint/template': ^1.0.0
+    peerDependenciesMeta:
+      '@glint/template':
+        optional: true
+
   '@embroider/router@2.1.8':
     resolution: {integrity: sha512-Dvp8YdqAWT6T0yzBZfUe6SyaVNH7xoXBlrxF1LbqoF/Q2buNzDy9oAQ5tTnbX1x+5KOrM0ryOjfeF0GoqkfobA==}
     peerDependencies:
@@ -1933,6 +1942,10 @@ packages:
 
   '@embroider/shared-internals@3.0.0':
     resolution: {integrity: sha512-5J5ipUMCAinQS38WW7wedruq5Z4VnHvNo+ZgOduw0PtI9w0CQWx7/HE+98PBDW8jclikeF+aHwF317vc1hwuzg==}
+    engines: {node: 12.* || 14.* || >= 16}
+
+  '@embroider/shared-internals@3.0.1':
+    resolution: {integrity: sha512-d7RQwDwqqHo7YvjE9t1rtIrCCYtbSoO0uRq2ikVhRh4hGS5OojZNu2ZtS0Wqrg+V72CRtMFr/hibTvHNsRM2Lg==}
     engines: {node: 12.* || 14.* || >= 16}
 
   '@embroider/test-setup@4.0.0':
@@ -4542,8 +4555,8 @@ packages:
   ember-async-data@2.0.1:
     resolution: {integrity: sha512-yCQlVR3NLgjGA09LMc1NYX0XiAd0tHTM4/AmIHD0wq87QpHGmWcpMxyKGEe/TBczyCwBEJifaZNtAjMDsW1YdA==}
 
-  ember-auto-import@2.10.1:
-    resolution: {integrity: sha512-5K4lYSEBch3DKQn1VElFHDHcHTvhTJnB6aebf24VyIobLL+OMWORcCK1fiwyfPiVABztyuLXH2GiXDweNUtntA==}
+  ember-auto-import@2.11.0:
+    resolution: {integrity: sha512-6uM3v+pxvifR0wEMibF/F6/AjDK262JIEWPRvndaC1kaFERH29eXpeOVRVqowMhN9f4Spj3mKHpQjLLRM1macw==}
     engines: {node: 12.* || 14.* || >= 16}
 
   ember-buffered-proxy@2.1.1:
@@ -5452,6 +5465,10 @@ packages:
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
     deprecated: This package is no longer supported.
 
+  generator-function@2.0.1:
+    resolution: {integrity: sha512-SFdFmIJi+ybC0vjlHN0ZGVGHc3lgE0DxPAT0djjVg+kjOnSqclqmj0KQ7ykTOLP6YxoqOvuAODGdcHJn+43q3g==}
+    engines: {node: '>= 0.4'}
+
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
@@ -5974,6 +5991,10 @@ packages:
 
   is-generator-function@1.1.0:
     resolution: {integrity: sha512-nPUB5km40q9e8UfN/Zc24eLlzdSf9OfKByBw9CIdw4H1giPMeA0OIJvbchsCu4npfI2QcMVBsGEBHKZ7wLTWmQ==}
+    engines: {node: '>= 0.4'}
+
+  is-generator-function@1.1.2:
+    resolution: {integrity: sha512-upqt1SkGkODW9tsGNG5mtXTXtECizwtS2kA161M+gJPc1xdb/Ax629af6YrTwcOeQHbewrPNlE5Dx7kzvXTizA==}
     engines: {node: '>= 0.4'}
 
   is-git-url@1.0.0:
@@ -7982,6 +8003,10 @@ packages:
     resolution: {integrity: sha512-Gn/JaSk/Mt9gYubxTtSn/QCV4em9mpAPiR1rqy/Ocu19u/G9J5WWdNoUT4SiV6mFC3y6cxyFcFwdzPM3FgxGAQ==}
     engines: {node: '>= 10.13.0'}
 
+  schema-utils@4.3.3:
+    resolution: {integrity: sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==}
+    engines: {node: '>= 10.13.0'}
+
   semver@5.7.2:
     resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
     hasBin: true
@@ -8478,6 +8503,10 @@ packages:
 
   tapable@2.2.3:
     resolution: {integrity: sha512-ZL6DDuAlRlLGghwcfmSn9sK3Hr6ArtyudlSAiCqQ6IfE+b+HHbydbYDIG15IfS5do+7XQQBdBiubF/cV2dnDzg==}
+    engines: {node: '>=6'}
+
+  tapable@2.3.0:
+    resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
     engines: {node: '>=6'}
 
   tar-fs@3.1.1:
@@ -10382,6 +10411,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@embroider/macros@1.19.1(@glint/template@1.6.0-alpha.2)':
+    dependencies:
+      '@embroider/shared-internals': 3.0.1
+      assert-never: 1.4.0
+      babel-import-util: 3.0.1
+      ember-cli-babel: 7.26.11
+      find-up: 5.0.0
+      lodash: 4.17.21
+      resolve: 1.22.10
+      semver: 7.7.2
+    optionalDependencies:
+      '@glint/template': 1.6.0-alpha.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@embroider/router@2.1.8(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)':
     dependencies:
       '@ember/test-waiters': 4.1.1(@glint/template@1.6.0-alpha.2)
@@ -10427,6 +10471,24 @@ snapshots:
       - supports-color
 
   '@embroider/shared-internals@3.0.0':
+    dependencies:
+      babel-import-util: 3.0.1
+      debug: 4.4.3(supports-color@8.1.1)
+      ember-rfc176-data: 0.3.18
+      fs-extra: 9.1.0
+      is-subdir: 1.2.0
+      js-string-escape: 1.0.1
+      lodash: 4.17.21
+      minimatch: 3.1.2
+      pkg-entry-points: 1.1.1
+      resolve-package-path: 4.0.3
+      resolve.exports: 2.0.3
+      semver: 7.7.2
+      typescript-memoize: 1.1.1
+    transitivePeerDependencies:
+      - supports-color
+
+  '@embroider/shared-internals@3.0.1':
     dependencies:
       babel-import-util: 3.0.1
       debug: 4.4.3(supports-color@8.1.1)
@@ -12050,7 +12112,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       find-cache-dir: 4.0.0
-      schema-utils: 4.3.2
+      schema-utils: 4.3.3
       webpack: 5.99.9(@swc/core@1.13.5)(esbuild@0.25.10)
 
   babel-plugin-debug-macros@0.2.0(@babel/core@7.28.4):
@@ -13340,7 +13402,7 @@ snapshots:
       - '@glint/template'
       - supports-color
 
-  ember-auto-import@2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10)):
+  ember-auto-import@2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       '@babel/plugin-proposal-class-properties': 7.18.6(@babel/core@7.28.4)
@@ -13348,7 +13410,7 @@ snapshots:
       '@babel/plugin-proposal-private-methods': 7.18.6(@babel/core@7.28.4)
       '@babel/plugin-transform-class-static-block': 7.28.3(@babel/core@7.28.4)(supports-color@8.1.1)
       '@babel/preset-env': 7.28.3(@babel/core@7.28.4)(supports-color@8.1.1)
-      '@embroider/macros': 1.18.1(@glint/template@1.6.0-alpha.2)
+      '@embroider/macros': 1.19.1(@glint/template@1.6.0-alpha.2)
       '@embroider/shared-internals': 2.9.1
       babel-loader: 8.4.1(@babel/core@7.28.4)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       babel-plugin-ember-modules-api-polyfill: 3.5.0
@@ -13818,7 +13880,7 @@ snapshots:
       chalk: 5.6.0
       cli-table3: 0.6.5
       debug: 4.4.3(supports-color@8.1.1)
-      ember-auto-import: 2.10.1(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
+      ember-auto-import: 2.11.0(@glint/template@1.6.0-alpha.2)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       ember-cli-babel: 8.2.0(@babel/core@7.28.4)
       ember-qunit: 9.0.4(@ember/test-helpers@5.3.0(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)(qunit@2.24.1)
       ember-source: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
@@ -14994,6 +15056,8 @@ snapshots:
       strip-ansi: 6.0.1
       wide-align: 1.1.5
 
+  generator-function@2.0.1: {}
+
   gensync@1.0.0-beta.2: {}
 
   get-caller-file@2.0.5: {}
@@ -15584,6 +15648,14 @@ snapshots:
   is-generator-function@1.1.0:
     dependencies:
       call-bound: 1.0.4
+      get-proto: 1.0.1
+      has-tostringtag: 1.0.2
+      safe-regex-test: 1.1.0
+
+  is-generator-function@1.1.2:
+    dependencies:
+      call-bound: 1.0.4
+      generator-function: 2.0.1
       get-proto: 1.0.1
       has-tostringtag: 1.0.2
       safe-regex-test: 1.1.0
@@ -16336,8 +16408,8 @@ snapshots:
 
   mini-css-extract-plugin@2.9.4(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10)):
     dependencies:
-      schema-utils: 4.3.2
-      tapable: 2.2.3
+      schema-utils: 4.3.3
+      tapable: 2.3.0
       webpack: 5.99.9(@swc/core@1.13.5)(esbuild@0.25.10)
 
   minimatch@10.0.3:
@@ -17692,6 +17764,13 @@ snapshots:
       ajv-formats: 2.1.1
       ajv-keywords: 5.1.0(ajv@8.17.1)
 
+  schema-utils@4.3.3:
+    dependencies:
+      '@types/json-schema': 7.0.15
+      ajv: 8.17.1
+      ajv-formats: 2.1.1
+      ajv-keywords: 5.1.0(ajv@8.17.1)
+
   semver@5.7.2: {}
 
   semver@6.3.1: {}
@@ -18345,6 +18424,8 @@ snapshots:
       minipass: 2.9.0
 
   tapable@2.2.3: {}
+
+  tapable@2.3.0: {}
 
   tar-fs@3.1.1:
     dependencies:
@@ -19136,7 +19217,7 @@ snapshots:
       is-async-function: 2.1.1
       is-date-object: 1.1.0
       is-finalizationregistry: 1.1.1
-      is-generator-function: 1.1.0
+      is-generator-function: 1.1.2
       is-regex: 1.2.1
       is-weakref: 1.1.1
       isarray: 2.0.5
