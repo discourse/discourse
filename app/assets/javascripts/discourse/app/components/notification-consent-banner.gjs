@@ -8,9 +8,6 @@ import { i18n } from "discourse-i18n";
 
 const userDismissedPromptKey = "dismissed-prompt";
 
-// If the banner was dismissed before this time, reset the dismissal state.
-const RESET_MS = 1757104409520; // 9/5/2025
-
 export default class NotificationConsentBanner extends Component {
   @service capabilities;
   @service currentUser;
@@ -26,12 +23,11 @@ export default class NotificationConsentBanner extends Component {
       userDismissedPromptKey
     );
 
-    // Reset the dismissal state if the user dismissed it before `RESET_MS`.
-    // This allows us to re-prompt users if the notification functionality substantially changes.
     const parsedValue = parseInt(storedValue, 10);
-    if (!Number.isNaN(parsedValue)) {
-      this.bannerDismissed = parsedValue > RESET_MS;
-    } else {
+    if (Number.isNaN(parsedValue)) {
+      // This can only happen if the user dismissed this banner before we started storing a
+      // timestamp in their local storage.
+      // Just reset the dismissal state so they have the chance to dismiss this banner again.
       this.setBannerDismissed(false);
     }
   }
