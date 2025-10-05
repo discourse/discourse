@@ -431,7 +431,7 @@ importers:
         version: 3.5.5(@glint/template@1.6.0-alpha.2)
       '@embroider/macros':
         specifier: ^1.16.12
-        version: 1.18.1(@glint/template@1.6.0-alpha.2)
+        version: 1.19.1(@glint/template@1.6.0-alpha.2)
       '@embroider/router':
         specifier: ^2.1.8
         version: 2.1.8(@embroider/core@3.5.5(@glint/template@1.6.0-alpha.2))(@glint/template@1.6.0-alpha.2)
@@ -1906,15 +1906,6 @@ packages:
       '@glint/template':
         optional: true
 
-  '@embroider/macros@1.18.1':
-    resolution: {integrity: sha512-hOQyzFBT1Rd6RdY4AbRSSGSeXyUzUrU9o6GWGD/kxg7cggKQax4R486KE10ZVSPRNqhRiNUcqe2VWc/+e8Z0MQ==}
-    engines: {node: 12.* || 14.* || >= 16}
-    peerDependencies:
-      '@glint/template': ^1.0.0
-    peerDependenciesMeta:
-      '@glint/template':
-        optional: true
-
   '@embroider/macros@1.19.1':
     resolution: {integrity: sha512-KgPan7fiyoDGfr6SMdMELhcgUXK6pU/QICSK0yFFzsXVBJYM2fHAXCic5WCBETtv7xsvi4byziahSz5HpqYs/A==}
     engines: {node: 12.* || 14.* || >= 16}
@@ -1938,10 +1929,6 @@ packages:
 
   '@embroider/shared-internals@2.9.1':
     resolution: {integrity: sha512-8PJBsa37GD++SAfHf8rcJzlwDwuAQCBo0fr+eGxg9l8XhBXsTnE/7706dM4OqWew9XNqRXn39wfIGHZoBpjNMw==}
-    engines: {node: 12.* || 14.* || >= 16}
-
-  '@embroider/shared-internals@3.0.0':
-    resolution: {integrity: sha512-5J5ipUMCAinQS38WW7wedruq5Z4VnHvNo+ZgOduw0PtI9w0CQWx7/HE+98PBDW8jclikeF+aHwF317vc1hwuzg==}
     engines: {node: 12.* || 14.* || >= 16}
 
   '@embroider/shared-internals@3.0.1':
@@ -5989,10 +5976,6 @@ packages:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
     engines: {node: '>=8'}
 
-  is-generator-function@1.1.0:
-    resolution: {integrity: sha512-nPUB5km40q9e8UfN/Zc24eLlzdSf9OfKByBw9CIdw4H1giPMeA0OIJvbchsCu4npfI2QcMVBsGEBHKZ7wLTWmQ==}
-    engines: {node: '>= 0.4'}
-
   is-generator-function@1.1.2:
     resolution: {integrity: sha512-upqt1SkGkODW9tsGNG5mtXTXtECizwtS2kA161M+gJPc1xdb/Ax629af6YrTwcOeQHbewrPNlE5Dx7kzvXTizA==}
     engines: {node: '>= 0.4'}
@@ -7999,10 +7982,6 @@ packages:
     resolution: {integrity: sha512-pN/yOAvcC+5rQ5nERGuwrjLlYvLTbCibnZ1I7B1LaiAz9BRBlE9GMgE/eqV30P7aJQUf7Ddimy/RsbYO/GrVGg==}
     engines: {node: '>= 10.13.0'}
 
-  schema-utils@4.3.2:
-    resolution: {integrity: sha512-Gn/JaSk/Mt9gYubxTtSn/QCV4em9mpAPiR1rqy/Ocu19u/G9J5WWdNoUT4SiV6mFC3y6cxyFcFwdzPM3FgxGAQ==}
-    engines: {node: '>= 10.13.0'}
-
   schema-utils@4.3.3:
     resolution: {integrity: sha512-eflK8wEtyOE6+hsaRVPxvUKYCpRgzLqDTb8krvAsRIwOGlHoSgYLgBXoubGgLd2fT41/OUYdb48v4k4WWHQurA==}
     engines: {node: '>= 10.13.0'}
@@ -8500,10 +8479,6 @@ packages:
   tap-parser@7.0.0:
     resolution: {integrity: sha512-05G8/LrzqOOFvZhhAk32wsGiPZ1lfUrl+iV7+OkKgfofZxiceZWMHkKmow71YsyVQ8IvGBP2EjcIjE5gL4l5lA==}
     hasBin: true
-
-  tapable@2.2.3:
-    resolution: {integrity: sha512-ZL6DDuAlRlLGghwcfmSn9sK3Hr6ArtyudlSAiCqQ6IfE+b+HHbydbYDIG15IfS5do+7XQQBdBiubF/cV2dnDzg==}
-    engines: {node: '>=6'}
 
   tapable@2.3.0:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
@@ -10239,7 +10214,7 @@ snapshots:
   '@ember/render-modifiers@3.0.0(@glint/template@1.6.0-alpha.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))':
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
-      '@embroider/macros': 1.18.1(@glint/template@1.6.0-alpha.2)
+      '@embroider/macros': 1.19.1(@glint/template@1.6.0-alpha.2)
       ember-cli-babel: 8.2.0(@babel/core@7.28.4)
       ember-modifier-manager-polyfill: 1.2.0(@babel/core@7.28.4)
       ember-source: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
@@ -10254,7 +10229,7 @@ snapshots:
     dependencies:
       '@ember/test-waiters': 4.1.1(@glint/template@1.6.0-alpha.2)
       '@embroider/addon-shim': 1.10.0
-      '@embroider/macros': 1.18.1(@glint/template@1.6.0-alpha.2)
+      '@embroider/macros': 1.19.1(@glint/template@1.6.0-alpha.2)
       '@simple-dom/interface': 1.4.0
       decorator-transforms: 2.3.0(@babel/core@7.28.4)
       dom-element-descriptors: 0.5.1
@@ -10266,14 +10241,14 @@ snapshots:
   '@ember/test-waiters@4.1.1(@glint/template@1.6.0-alpha.2)':
     dependencies:
       '@embroider/addon-shim': 1.10.0
-      '@embroider/macros': 1.18.1(@glint/template@1.6.0-alpha.2)
+      '@embroider/macros': 1.19.1(@glint/template@1.6.0-alpha.2)
     transitivePeerDependencies:
       - '@glint/template'
       - supports-color
 
   '@embroider/addon-shim@1.10.0':
     dependencies:
-      '@embroider/shared-internals': 3.0.0
+      '@embroider/shared-internals': 3.0.1
       broccoli-funnel: 3.0.8
       common-ancestor-path: 1.0.1
       semver: 7.7.2
@@ -10396,21 +10371,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@embroider/macros@1.18.1(@glint/template@1.6.0-alpha.2)':
-    dependencies:
-      '@embroider/shared-internals': 3.0.0
-      assert-never: 1.4.0
-      babel-import-util: 3.0.1
-      ember-cli-babel: 7.26.11
-      find-up: 5.0.0
-      lodash: 4.17.21
-      resolve: 1.22.10
-      semver: 7.7.2
-    optionalDependencies:
-      '@glint/template': 1.6.0-alpha.2
-    transitivePeerDependencies:
-      - supports-color
-
   '@embroider/macros@1.19.1(@glint/template@1.6.0-alpha.2)':
     dependencies:
       '@embroider/shared-internals': 3.0.1
@@ -10465,24 +10425,6 @@ snapshots:
       minimatch: 3.1.2
       pkg-entry-points: 1.1.1
       resolve-package-path: 4.0.3
-      semver: 7.7.2
-      typescript-memoize: 1.1.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@embroider/shared-internals@3.0.0':
-    dependencies:
-      babel-import-util: 3.0.1
-      debug: 4.4.3(supports-color@8.1.1)
-      ember-rfc176-data: 0.3.18
-      fs-extra: 9.1.0
-      is-subdir: 1.2.0
-      js-string-escape: 1.0.1
-      lodash: 4.17.21
-      minimatch: 3.1.2
-      pkg-entry-points: 1.1.1
-      resolve-package-path: 4.0.3
-      resolve.exports: 2.0.3
       semver: 7.7.2
       typescript-memoize: 1.1.1
     transitivePeerDependencies:
@@ -13465,7 +13407,7 @@ snapshots:
 
   ember-cached-decorator-polyfill@1.0.2(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)):
     dependencies:
-      '@embroider/macros': 1.18.1(@glint/template@1.6.0-alpha.2)
+      '@embroider/macros': 1.19.1(@glint/template@1.6.0-alpha.2)
       '@glimmer/tracking': 1.1.2
       babel-import-util: 1.4.1
       ember-cache-primitive-polyfill: 1.0.1(@babel/core@7.28.4)
@@ -13924,7 +13866,7 @@ snapshots:
     dependencies:
       '@ember/test-helpers': 5.3.0(@babel/core@7.28.4)(@glint/template@1.6.0-alpha.2)
       '@embroider/addon-shim': 1.10.0
-      '@embroider/macros': 1.18.1(@glint/template@1.6.0-alpha.2)
+      '@embroider/macros': 1.19.1(@glint/template@1.6.0-alpha.2)
       qunit: 2.24.1
       qunit-theme-ember: 1.0.0
     transitivePeerDependencies:
@@ -14092,7 +14034,7 @@ snapshots:
   enhanced-resolve@5.18.3:
     dependencies:
       graceful-fs: 4.2.11
-      tapable: 2.2.3
+      tapable: 2.3.0
 
   ensure-posix-path@1.1.1: {}
 
@@ -15644,13 +15586,6 @@ snapshots:
   is-fullwidth-code-point@2.0.0: {}
 
   is-fullwidth-code-point@3.0.0: {}
-
-  is-generator-function@1.1.0:
-    dependencies:
-      call-bound: 1.0.4
-      get-proto: 1.0.1
-      has-tostringtag: 1.0.2
-      safe-regex-test: 1.1.0
 
   is-generator-function@1.1.2:
     dependencies:
@@ -17757,13 +17692,6 @@ snapshots:
       ajv: 6.12.6
       ajv-keywords: 3.5.2(ajv@6.12.6)
 
-  schema-utils@4.3.2:
-    dependencies:
-      '@types/json-schema': 7.0.15
-      ajv: 8.17.1
-      ajv-formats: 2.1.1
-      ajv-keywords: 5.1.0(ajv@8.17.1)
-
   schema-utils@4.3.3:
     dependencies:
       '@types/json-schema': 7.0.15
@@ -18423,8 +18351,6 @@ snapshots:
       js-yaml: 3.14.1
       minipass: 2.9.0
 
-  tapable@2.2.3: {}
-
   tapable@2.3.0: {}
 
   tar-fs@3.1.1:
@@ -18470,7 +18396,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
-      schema-utils: 4.3.2
+      schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.44.0
       webpack: 5.99.9(@swc/core@1.13.5)(esbuild@0.25.10)
@@ -18917,7 +18843,7 @@ snapshots:
     dependencies:
       inherits: 2.0.4
       is-arguments: 1.1.1
-      is-generator-function: 1.1.0
+      is-generator-function: 1.1.2
       is-typed-array: 1.1.15
       which-typed-array: 1.1.19
 
@@ -19167,8 +19093,8 @@ snapshots:
       loader-runner: 4.3.0
       mime-types: 2.1.35
       neo-async: 2.6.2
-      schema-utils: 4.3.2
-      tapable: 2.2.3
+      schema-utils: 4.3.3
+      tapable: 2.3.0
       terser-webpack-plugin: 5.3.14(@swc/core@1.13.5)(esbuild@0.25.10)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
