@@ -310,9 +310,7 @@ class ImportScripts::Yammer < ImportScripts::Base
         {
           id: import_topic_id(row["id"]),
           title:
-            (
-              row["title"].presence || row["raw"].split(/\W/)[0..(NUM_WORDS_IN_TITLE - 1)].join(" ")
-            ),
+            row["title"].presence || row["raw"].split(/\W/)[0..(NUM_WORDS_IN_TITLE - 1)].join(" "),
           raw: normalize_raw(row["raw"]),
           category:
             (
@@ -365,9 +363,7 @@ class ImportScripts::Yammer < ImportScripts::Base
         {
           id: import_topic_id(row["id"]),
           title:
-            (
-              row["title"].presence || row["raw"].split(/\W/)[0..(NUM_WORDS_IN_TITLE - 1)].join(" ")
-            ),
+            row["title"].presence || row["raw"].split(/\W/)[0..(NUM_WORDS_IN_TITLE - 1)].join(" "),
           raw: normalize_raw(row["raw"]),
           category:
             (
