@@ -6127,6 +6127,7 @@ ur:
         about:
           general_settings: "عمومی ترتیبات"
           community_name: "کمیونٹی کا نام"
+          community_name_placeholder: "کمیونٹی کی مثال"
           community_summary: "کمیونٹی کا خلاصہ"
           community_description: "کمیونٹی کی تفصیل"
           community_title: "کمیونٹی کا عنوان"
@@ -6291,6 +6292,7 @@ ur:
             title: "رنگ"
           save_changes: "تبدیلیاں محفوظ کریں"
           unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
+          delete_confirm: "کیا آپ کو یقین ہے کہ آپ یہ رنگوں کی پیلٹ حذف کرنا چاہتے ہیں؟"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
@@ -6301,6 +6303,7 @@ ur:
         not_enabled: "N"
         change_settings_short: "ترتیبات"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
+        official: "آفیشل ڈسکورس پلگ ان"
         author: "%{author} کی طرف سے"
         experimental_badge: "تجرباتی"
         learn_more: "مزید جانیں"
@@ -6310,6 +6313,7 @@ ur:
           enabled: "فعال شدہ"
           disabled: "غیر فعال"
           preinstalled: "پہلے سے انسٹال ہے"
+          search_placeholder: "پلگ ان تلاش کریں۔۔۔"
           reset: "رِی سَیٹ"
       navigation_menu:
         sidebar: "سائڈبار"
@@ -6317,8 +6321,10 @@ ur:
         legacy: "میراث"
       backups:
         title: "بیک اَپس"
+        files_title: "بیک اپ فائلیں"
         menu:
           backups: "بیک اَپس"
+          backup_files: "بیک اپ فائلیں"
           logs: "لاگز"
         none: "کوئی بیک اپ دستیاب نہیں"
         read_only:
@@ -6488,6 +6494,8 @@ ur:
           convert_theme_alert_generic: "کیا آپ واقعی اس تھیم کو جزو میں تبدیل کرنا چاہتے ہیں؟"
           convert_theme_tooltip: "اِس تِھیم کو کمپنَینٹ میں تبدیل کریں"
           inactive_themes: "غیر فعال تِھیمز:"
+          set_default_theme: "بطور ڈیفالٹ سیٹ کریں"
+          setting_was_saved: "تھیم کی سیٹنگ محفوظ ہو گئی"
           inactive_components: "غیر استعمال شدہ کمپنَینٹ:"
           cancel: "منسوخ"
           broken_theme_tooltip: "اِس تِھیم کے CSS، HTML یا YAML میں غلطیاں موجود ہیں"
@@ -6639,6 +6647,7 @@ ur:
             name: "چوتھے درجہ کے"
           header_background:
             name: "ہیڈر کا پسِ منظر"
+            description: "سر نامے کا پس منظر"
           header_primary:
             name: "ہیڈر بنیادی"
           highlight:
@@ -6656,6 +6665,7 @@ ur:
             name: "کامیابی"
           love:
             name: "محبت"
+            description: "پسندیدہ کا بٹن"
           selected:
             name: "منتخب کیا ہوا"
           editor:
@@ -6700,6 +6710,7 @@ ur:
         refresh: "رِیفریش"
         send_digest_label: "اس رِزَلٹ کو بھیجیں:"
         send_digest: "بھیجیں"
+        sending_email: "ای میل بھیجی جا رہی ہے۔۔۔"
         format: "فارمیٹ"
         html: "html"
         text: "ٹَیکسٹ"
@@ -6760,6 +6771,7 @@ ur:
         staff_actions:
           all: "تمام"
           filter: "فِلٹر:"
+          clear_filters: "سب کچھ دکھائیں"
           staff_user: "صارف"
           target_user: "ہدف صارف"
           subject: "موضوع"
