@@ -199,7 +199,7 @@ class SharedAiConversation < ActiveRecord::Base
   private
 
   def populate_user_info!(posts)
-    users = User.where(id: posts.map(&:user_id).uniq).index_by { |u| u.id }
+    users = User.where(id: posts.map(&:user_id).uniq).index_by(&:id)
     posts.each { |post| post.user = users[post.user_id] }
   end
 

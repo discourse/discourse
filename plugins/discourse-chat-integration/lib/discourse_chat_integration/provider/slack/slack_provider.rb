@@ -57,7 +57,7 @@ module DiscourseChatIntegration::Provider::SlackProvider
       end
 
     slack_username =
-      (SiteSetting.chat_integration_slack_username.presence || SiteSetting.title || "Discourse")
+      SiteSetting.chat_integration_slack_username.presence || SiteSetting.title || "Discourse"
 
     message = { channel: channel, username: slack_username, icon_url: icon_url, attachments: [] }
 

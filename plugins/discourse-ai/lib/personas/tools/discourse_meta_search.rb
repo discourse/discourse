@@ -112,12 +112,12 @@ module DiscourseAi
           else
             categories =
               if categories_json = json.dig("grouped_search_result", "extra", "categories")
-                categories_json.index_by { |c| c["id"] }
+                categories_json.index_by { _1["id"] }
               else
                 self.class.categories
               end
 
-            topics = (json["topics"]).index_by { |t| t["id"] }
+            topics = (json["topics"]).index_by { _1["id"] }
 
             format_results(posts, args: parameters) do |post|
               topic = topics[post["topic_id"]]

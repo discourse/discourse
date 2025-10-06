@@ -187,7 +187,7 @@ module FileStore
     end
 
     def s3_upload_host
-      (SiteSetting.Upload.s3_cdn_url.presence || "https:#{absolute_base_url}")
+      SiteSetting.Upload.s3_cdn_url.presence || "https:#{absolute_base_url}"
     end
 
     def external?

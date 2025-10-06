@@ -451,7 +451,7 @@ module DiscourseAi
           if xml_stripper
             response_data.map! do |partial|
               stripped = (xml_stripper << partial) if partial.is_a?(String)
-              (stripped.presence || partial)
+              stripped.presence || partial
             end
             response_data << xml_stripper.finish
           end

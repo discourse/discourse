@@ -297,7 +297,7 @@ class GlobalSetting
         if current.present?
           current
         else
-          (default.presence)
+          default.presence
         end,
       )
     end

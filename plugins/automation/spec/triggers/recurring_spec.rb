@@ -422,7 +422,7 @@ describe "Recurring" do
 
         pending_automation = automation.pending_automations.last
         expect(pending_automation.execute_at).to be_within_one_minute_of(
-          (1.hour.from_now).beginning_of_hour,
+          1.hour.from_now.beginning_of_hour,
         )
       end
     end
@@ -435,7 +435,7 @@ describe "Recurring" do
 
         pending_automation = automation.pending_automations.last
         expect(pending_automation.execute_at).to be_within_one_minute_of(
-          (1.minute.from_now).beginning_of_minute,
+          1.minute.from_now.beginning_of_minute,
         )
       end
     end

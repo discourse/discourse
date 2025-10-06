@@ -348,7 +348,7 @@ class Group < ActiveRecord::Base
   end
 
   def smtp_from_address
-    (self.email_from_alias.presence || self.email_username)
+    email_from_alias.presence || email_username
   end
 
   def downcase_incoming_email

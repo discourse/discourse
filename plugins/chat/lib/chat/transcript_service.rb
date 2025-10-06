@@ -142,7 +142,7 @@ module Chat
       def thread_title_attr(message, thread)
         range = thread_ranges[message.id] if thread_ranges.has_key?(message.id)
 
-        thread_title = (thread.title.presence || I18n.t("chat.transcript.default_thread_title"))
+        thread_title = thread.title.presence || I18n.t("chat.transcript.default_thread_title")
         thread_title += " (#{range})" if range.present?
         "threadTitle=\"#{thread_title}\""
       end

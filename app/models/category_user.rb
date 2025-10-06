@@ -228,7 +228,7 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.create_lookup(category_users)
-    category_users.index_by { |category_user| category_user.category_id }
+    category_users.index_by(&:category_id)
   end
 
   def self.muted_category_ids_query(user, include_direct: false)

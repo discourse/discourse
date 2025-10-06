@@ -174,7 +174,7 @@ module DiscourseTagging
                     .map do |tag|
                       tag_name = tag.name
 
-                      (parent_child_names_map[tag_name].presence || tag_name)
+                      parent_child_names_map[tag_name].presence || tag_name
                     end
                     .uniq
                     .sort
