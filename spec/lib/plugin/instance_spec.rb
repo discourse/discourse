@@ -151,6 +151,16 @@ TEXT
         plugin.git_repo.stubs(:latest_local_commit).returns(nil)
         expect(plugin.discourse_owned?).to eq(false)
       end
+
+      it "returns false if the commit_url has a nil path" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+        plugin.git_repo.stubs(:url).returns("invalid://url")
+        parsed_url = URI.parse("invalid://url")
+        parsed_url.stubs(:path).returns(nil)
+        UrlHelper.stubs(:relaxed_parse).returns(parsed_url)
+        expect(plugin.discourse_owned?).to eq(false)
+      end
     end
   end
 
