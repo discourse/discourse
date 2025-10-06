@@ -26,12 +26,11 @@ describe "Category Localizations", type: :system do
     SiteSetting.desktop_category_page_style = "categories_boxes"
   end
 
-  def get_parent_category_dropdown
-    PageObjects::Components::SelectKit.new(".category-breadcrumb li:nth-child(1) .category-drop")
-  end
-
-  def get_sub_category_dropdown
-    PageObjects::Components::SelectKit.new(".category-breadcrumb li:nth-child(2) .category-drop")
+  def get_category_dropdown(nth)
+    selector = ".category-breadcrumb li:nth-child(#{nth}) .category-drop"
+    expect(page).to have_css(selector)
+    el = find(selector, visible: :all)
+    PageObjects::Components::SelectKit.new(el)
   end
 
   context "when content localization setting is disabled" do
@@ -192,7 +191,7 @@ describe "Category Localizations", type: :system do
           expect(sidebar).to have_section_link("Solicitudes")
           sidebar.click_section_link("Solicitudes")
 
-          category_dropdown = get_parent_category_dropdown
+          category_dropdown = get_category_dropdown(1)
           expect(category_dropdown).to have_selected_name("Solicitudes")
           expect(category_page.category_box(subcat)).to have_text("Subcategoría")
           expect(category_page.category_box(subcat)).to have_text("Una subcategoría de un padre")
@@ -201,8 +200,8 @@ describe "Category Localizations", type: :system do
 
           category_page.category_box(subcat).click
 
-          parent_category_dropdown = get_parent_category_dropdown
-          sub_category_dropdown = get_sub_category_dropdown
+          parent_category_dropdown = get_category_dropdown(1)
+          sub_category_dropdown = get_category_dropdown(2)
           expect(parent_category_dropdown).to have_selected_name("Solicitudes")
           expect(sub_category_dropdown).to have_selected_name("Subcategoría")
         end
