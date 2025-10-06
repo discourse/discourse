@@ -42,7 +42,7 @@ hu:
         unsolved: "Szűrje ki a megoldatlan témákat"
   badges:
     solved_1:
-      name: "Megoldott!"
+      name: "Megoldva!"
       description: "Megoldásként megjelölt válasz"
       long_description: "Ez a jelvény akkor jár, ha a válasz egy téma megoldásaként van megjelölve. :white_check_mark: Szép munka. :+1:"
     solved_2:

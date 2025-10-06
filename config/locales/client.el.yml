@@ -5009,7 +5009,6 @@ el:
         copy_to_clipboard: "Αντιγραφή στο Clipboard"
         copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
-        theme_owner: "Μη επεξεργάσιμο, ανήκει σε:"
         email_templates:
           title: "Διεύθυνση Email"
           subject: "Θέμα"

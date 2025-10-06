@@ -19,7 +19,7 @@ hu:
       today: "Ma"
       tomorrow: "Holnap"
       upcoming: "Közelgő"
-      all: "Mind"
+      all: "Összes"
     birthdays:
       title: "Születésnapok"
       month:

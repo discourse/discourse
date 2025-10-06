@@ -563,6 +563,11 @@ hu:
       resume: "Folytatás"
       remove: "Eltávolítás"
       remove_confirmation: "Biztos, hogy törli ezt a vázlatot?"
+      bulk_delete: "Kiválasztottak törlése"
+      bulk_delete_confirmation: "Vázlatok törlése"
+      bulk_delete_message:
+        one: "Biztos, hogy törli ezt a vázlatot?"
+        other: "Biztos, hogy törli a %{count} darab vázlatot?"
       new_topic: "Új témavázlat"
       new_private_message: "Új személyesüzenet-vázlat"
       edit_topic: "Témavázlat szerkesztése"
@@ -1688,6 +1693,7 @@ hu:
         verify_identity: "A folytatáshoz igazolja személyazonosságát."
         title: "Jelszó-visszaállítás"
         remove: "Jelszó eltávolítása"
+        remove_disabled: "A fiókhoz legalább egy további bejelentkezési módszerre van szükség (pl. jelszóra vagy egy csatolt külső fiókra) a jelszó eltávolítása előtt."
         remove_detail: "A fiókja többé nem lesz elérhető jelszóval, hacsak nem állítja vissza azt."
       second_factor_backup:
         title: "Kétfaktoros biztonsági kódok"
@@ -3796,6 +3802,7 @@ hu:
       empty: "Nincsenek bejegyzések"
       aria_post_number: "%{title} – %{postNumber}. bejegyzés"
       bulk:
+        select_all: "Összes kiválasztása"
         clear_all: "Összes törlése"
         actions: "Csoportos műveletek"
     post:
@@ -4148,6 +4155,8 @@ hu:
       foreground_color: "Szöveg színe"
       color_validations:
         cant_be_empty: "nem lehet üres"
+        incorrect_length: "#RRGGBB vagy #RGB formátumnak kell lennie"
+        non_hexdecimal: "csak hexadecimális karaktereket tartalmazhat (0-9, AF)"
       styles:
         type: "Stílus"
         icon: "Ikon"
@@ -4843,6 +4852,7 @@ hu:
     safe_mode:
       enabled: "A biztonságos mód be van kapcsolva, a biztonságos módból való kilépéshez zárja be ezt a keresési lapot"
     theme_preview_notice: "Épp egy téma előnézetét nézi, zárba be a böngészőlapot vagy ablakot, hogy visszatérjen a webhelykonfigurációhoz."
+    theme_preview_failed: "Nem sikerült megtekinteni a témát, mert nem létezik, vagy nincs hozzáférési jogosultsága."
     image_removed: "(kép eltávolítva)"
     pause_notifications:
       title: "Értesítések szüneteltetése"
@@ -5242,6 +5252,7 @@ hu:
     content_localization:
       toggle_localized:
         translated: "Az oldal gépi fordítású. Kattintson az eredeti megtekintéséhez."
+        not_translated: "Az oldal nincs lefordítva. Kattintson a fordításhoz."
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
@@ -5270,7 +5281,7 @@ hu:
         appearance:
           title: "Megjelenés"
         email:
-          title: "E-mail:"
+          title: "E-mail"
         security:
           title: "Biztonság"
         plugins:
@@ -5302,6 +5313,7 @@ hu:
           header_description: "Jogi beállítások konfigurálása, például a szolgáltatási feltételek, adatvédelmi irányelvek, elérhetőségek és EU-specifikus szempontok."
         theme_site_settings:
           title: "Téma oldal beállításai"
+          header_description: "Megjeleníti az összes téma webhely beállítását és azokat a témákat, amelyek jelenleg felülírják őket"
         localization:
           title: "Lokalizáció"
           header_description: "A közösség kezelőfelületének nyelvének és a tagok egyéb lokalizációs beállításainak megadása"
@@ -5590,10 +5602,15 @@ hu:
           header_description: "A Discourse képes beágyazni egy téma hozzászólásait egy távoli webhelyre egy Javascript API segítségével, amely létrehoz egy IFRAME-t."
       theme_site_settings:
         setting: "Beállítás"
+        overridden_by: "Felülírta"
         default_value: "Alapértelmezett"
+        overridden_value: "Felülírt érték: %{value}"
         select_setting: "Válasszon ki egy webhelybeállítást az aktuális témaértékek megtekintéséhez"
         add: "Ugrás a téma webhely beállításaihoz"
         help: "A jelenleg használt téma a <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. A téma webhelybeállításainak módosításához lépjen a <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>téma konfigurációs oldalára</a> , vagy kattintson egy hivatkozott témára az alábbi táblázatban a beállítások szerkesztéséhez."
+        filter: "Szűrje a téma beállításait a beállítások neve, leírása vagy a téma neve alapján..."
+        filter_no_results: "Nincs olyan téma, amelynek beállításai megfelelnek a szűrőjének"
+        site_setting_warning: 'Ezt a beállítást a webhelyed alapértelmezett témája (%{defaultThemeName}) kezeli. Módosíthatod a <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">téma szerkesztőoldalán</a>.'
       search:
         modal_title: "Keresés adminban"
         title: "Keresés"
@@ -5647,10 +5664,18 @@ hu:
           only_experiments: "Csak kísérleti funkciók megjelenítése"
           experiment_enabled: "Engedélyezte a kísérleti funkciót."
           experiment_disabled: "Letiltotta a kísérleti funkciót."
+          feature_enabled: "Engedélyezted a funkciót."
+          feature_disabled: "Letiltottad a funkciót."
+          toggled_too_fast: "Túl gyorsan kapcsoltad a kapcsolót. Várj néhány másodpercet, mielőtt újra próbálkozol."
           experiment_tooltip:
+            title_disabled: "Próbálja ki ezt a kísérleti funkciót"
             title_enabled: "Kísérleti funkció kikapcsolása"
+            content_disabled: "Próbálja ki legújabb fejlesztés alatt álló funkciónkat! Még kísérleti stádiumban van, így bármikor eltávolíthatjuk. Bármikor leiratkozhat.<br/><br/>Ennek a módosítása minden felhasználó számára engedélyezi a funkciót."
             content_enabled: "Ennek módosítása letiltja a funkciót minden felhasználó számára."
           feature_tooltip:
+            title_disabled: "Próbálja ki ezt a funkciót"
+            title_enabled: "Kapcsolja ki a funkciót"
+            content_disabled: "Próbálja ki ezt az új funkciót! Bármikor leiratkozhat.<br/><br/>Megváltoztatása esetén a funkció minden felhasználó számára engedélyezve lesz."
             content_enabled: "Ennek módosítása letiltja a funkciót minden felhasználó számára."
         last_checked: "Utoljára ellenőrizve"
         refresh_problems: "Újratöltés"
@@ -5930,6 +5955,7 @@ hu:
               suspend: Felhasználói fiókok felfüggesztése.
               delete: Felhasználói fiókok törlése.
               list: A felhasználók listájának lekérdezése.
+              create: Új felhasználó létrehozása.
             user_status:
               read: Felhasználói státusz olvasása.
               update: Felhasználói állapot frissítése.
@@ -6265,6 +6291,7 @@ hu:
           install: "Telepítés"
           theme_site_settings:
             title: "Téma oldal beállításai"
+            description: "Beállítások, amelyek lehetővé teszik a témák számára, hogy nagyobb kontrollt gyakoroljanak a teljes webhelyélmény felett azáltal, hogy felülírják a webhely alapvető beállításainak egy kis részét."
           themes:
             title: "Témák"
             description: "Webhelyszintű témák, amelyek megváltoztatják a webhely általános megjelenését és hangulatát minden felhasználó számára."
@@ -6303,6 +6330,7 @@ hu:
             filter_by_used: "Használt"
             filter_by_unused: "Nem használt"
             filter_by_updates_available: "Frissítések elérhetők"
+            search_components: "Szűrés komponens neve vagy leírása szerint..."
             new_update_for_component: "%{name} Új frissítés érhető el"
             component_up_to_date: '"%{name}" naprakész.'
             updated_successfully: '"%{name}" sikeresen frissítve.'
@@ -6332,6 +6360,8 @@ hu:
             title: "Színbeállítások"
             toggle: "Felhasználó által választható"
             toggle_description: "A színpalettát a felhasználók választhatják ki"
+            toggle_default_light_on_theme: "A színpaletta az alapértelmezett világos paletta az alapértelmezett témában (%{themeName})."
+            toggle_default_dark_on_theme: "A színpaletta az alapértelmezett sötét paletta az alapértelmezett témában (%{themeName})."
           colors:
             title: "Színek"
           save_changes: "Módosítások mentése"
@@ -6422,6 +6452,7 @@ hu:
             confirm: "Biztosan törölni szeretnéd ezt a biztonsági mentést?"
           restore:
             is_disabled: "A visszaállítás jelenleg le van tiltva. Engedélyezéséhez látogasson el a <a href='%{url}'>webhely beállításaihoz</a>."
+            is_disabled_title: "A visszaállítás jelenleg le van tiltva. Ha engedélyezni szeretné, keresse meg a 'visszaállítás engedélyezése' lehetőséget a webhely beállításaiban."
             label: "Visszaállítás"
             title: "Biztonsági mentés visszaállítása"
             confirm: "Biztos vagy benne hogy vissza szeretnéd állítani a biztonsági mentést?"
@@ -6472,11 +6503,11 @@ hu:
         copy_to_clipboard: "Vágólapra másolás"
         copied_to_clipboard: "Vágólapra másolva"
         copy_to_clipboard_error: "Hiba történt a vágólapra másoláskor"
-        theme_owner: "Nem szerkeszthető, tulajdonosa:"
         email_templates:
           title: "E-mail"
           subject: "Tárgy"
           multiple_subjects: "Ennek az e-mail-sablonnak több tárgya van."
+          multiple_bodies: "Ennek az e-mail sablonnak több törzse van."
           body: "Törzs"
           revert: "Változtatások visszavonása"
           revert_confirm: "Biztos, hogy visszavonja a változtatásokat?"
@@ -6492,8 +6523,10 @@ hu:
           theme: "Téma"
           component: "Összetevő"
           components: "Összetevők"
+          search_placeholder: "Szűrés téma neve vagy leírása szerint..."
           filter_all: "Összes"
           filter_user_selectable: "Felhasználó által választható"
+          no_themes_found: "Egyik téma sem felel meg a szűrőknek"
           theme_name: "A téma neve"
           component_name: "Összetevő neve"
           themes_intro: "A kezdéshez válasszon egy meglévő témát, vagy telepítsen újat"
@@ -6530,12 +6563,16 @@ hu:
           user_selectable: "A téma a felhasználók által választható"
           user_selectable_badge_label: "Felhasználó által választható"
           user_selectable_button_label: "Felhasználók kiválaszthatják"
+          user_selectable_unavailable_button_label: "Ne engedélyezze a felhasználóknak a kiválasztást"
           broken_badge_label: "Hibás téma"
           color_scheme_user_selectable: "A színpalettát a felhasználók választhatják ki"
           auto_update: "Automatikus frissítés a Discourse frissítésekor"
           color_scheme: "Színpaletta"
+          dark_color_scheme: "Sötét színpaletta"
           default_light_scheme: "Világos (alapértelmezett)"
           color_scheme_select: "Válassz színeket a témához."
+          dark_color_scheme_select: "Válassza ki a sötét módban a téma által használandó színeket."
+          edit_colors: "Színek szerkesztése"
           custom_sections: "Egyéni részek:"
           theme_components: "Téma elemek"
           add_all_themes: "Adja hozzá az összes témát"
@@ -6547,10 +6584,12 @@ hu:
           convert_theme_alert_generic: "Biztos, hogy ezt a témát összetevővé akarja konvertálni?"
           convert_theme_tooltip: "A téma átalakítása összetevővé"
           inactive_themes: "Inaktív témák:"
+          set_default_theme: "Beállítás alapértelmezettként"
           default_theme: "Alapértelmezett téma"
           set_default_success: "Alapértelmezett téma: %{theme}"
           setting_was_saved: "A témabeállítás mentésre került"
           install_success: "%{theme} sikeresen telepítve!"
+          delete_success: "%{theme} sikeresen törölve!"
           inactive_components: "Nem használt összetevők:"
           selected:
             one: "%{count} kiválasztva"
@@ -6723,15 +6762,32 @@ hu:
           select_base:
             title: "Válassza ki az alapszín palettát"
             description: "Alap paletta:"
+          non_default_theme_warning: "A témához tartozó <a href='%{link}'>személyes beállításaid</a> eltérnek az alapértelmezettől. Az itt végrehajtott módosítások esetleg nem vonatkoznak rád, de mindenkire vonatkoznak, aki az alapértelmezett (%{themeName}) témát használja."
+          custom_schemes_warning: "A <a href='%{link}'>személyes beállításaid</a> a %{colorModes} színpalettához eltérnek az alapértelmezettől. A %{colorModes} paletta módosításai esetleg nem vonatkoznak rád, de mindenkire, aki az alapértelmezett színt használja, igen."
           light: "világos"
           dark: "sötét"
           title: "Színek"
           edit: "Szerkesztés"
+          view: "Megtekintés"
+          set_default_light: "Beállítás világos palettának az alapértelmezett témán (%{theme})"
+          set_default_dark: "Sötét paletta beállítása az alapértelmezett témán (%{theme})"
+          set_default_success: "%{schemeName} beállítva alapértelmezett palettának %{themeName} számára"
           saved_refreshing: "Mentve! Frissítő színek..."
           from_theme: "Téma forrása: %{name}"
           filters:
+            search_placeholder: "Szűrés paletta vagy téma neve szerint..."
             all: "Összes"
             user_selectable: "Felhasználó által választható"
+            no_results: "Nem található színpaletta"
+          default_light_badge:
+            text: "Alapértelmezett világos"
+            title: "Alapértelmezett világos színpaletta"
+            reset: "Szűrők visszaállítása"
+          default_dark_badge:
+            text: "Alapértelmezett sötét"
+            title: "Alapértelmezett sötét színpaletta"
+          system_palette: "Ez egy beépített színpaletta, nem szerkeszthető vagy törölhető."
+          back_to_colors: "Vissza a színpalettákhoz"
           long_title: "Színpaletták"
           about: "Módosítsa a témák által használt színeket. Kezdésként hozzon létre egy új színpalettát."
           new_name: "Új színpaletta"

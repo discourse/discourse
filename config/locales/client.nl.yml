@@ -6449,7 +6449,6 @@ nl:
         copy_to_clipboard: "Kopiëren naar klembord"
         copied_to_clipboard: "Gekopieerd naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
-        theme_owner: "Niet bewerkbaar, eigendom van:"
         email_templates:
           title: "E-mailadres"
           subject: "Onderwerp"

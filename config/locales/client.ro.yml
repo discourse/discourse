@@ -4667,7 +4667,7 @@ ro:
         copy_to_clipboard: "Copiază în memoria temporară"
         copied_to_clipboard: "Copiat în memoria temporară"
         copy_to_clipboard_error: "Eroare la copierea datelor în memoria temporară"
-        theme_owner: "Nemodificabil, deținut de:"
+        theme_owner: "Deținută de:"
         email_templates:
           title: "E-mail"
           subject: "Subiect"
