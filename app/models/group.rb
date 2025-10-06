@@ -50,6 +50,8 @@ class Group < ActiveRecord::Base
   before_save :downcase_incoming_email
   before_save :cook_bio
 
+  before_destroy :cache_group_users_for_destroyed_event, prepend: true
+  after_destroy :expire_cache
   after_save :destroy_deletions
   after_save :update_primary_group
   after_save :update_title
@@ -64,12 +66,10 @@ class Group < ActiveRecord::Base
   end
 
   after_save :expire_cache
-  after_destroy :expire_cache
 
   after_commit :automatic_group_membership, on: %i[create update]
   after_commit :trigger_group_created_event, on: :create
   after_commit :trigger_group_updated_event, on: :update
-  before_destroy :cache_group_users_for_destroyed_event, prepend: true
   after_commit :trigger_group_destroyed_event, on: :destroy
   after_commit :set_default_notifications, on: %i[create update]
 
@@ -348,7 +348,7 @@ class Group < ActiveRecord::Base
   end
 
   def smtp_from_address
-    self.email_from_alias.present? ? self.email_from_alias : self.email_username
+    (self.email_from_alias.presence || self.email_username)
   end
 
   def downcase_incoming_email

@@ -27,7 +27,7 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    if Rails.env.test? || Rails.env.development?
+    if Rails.env.local?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
       get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
     end

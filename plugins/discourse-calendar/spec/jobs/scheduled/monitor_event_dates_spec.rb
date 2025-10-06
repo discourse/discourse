@@ -3,9 +3,9 @@
 describe Jobs::DiscourseCalendar::MonitorEventDates do
   subject(:job) { described_class.new }
 
-  fab!(:post_1) { Fabricate(:post) }
-  fab!(:post_2) { Fabricate(:post) }
-  fab!(:post_3) { Fabricate(:post) }
+  fab!(:post_1, :post)
+  fab!(:post_2, :post)
+  fab!(:post_3, :post)
   fab!(:past_event) do
     Fabricate(
       :event,
@@ -188,7 +188,7 @@ describe Jobs::DiscourseCalendar::MonitorEventDates do
     end
 
     it "doesn’t list events with invalid reminders" do
-      freeze_time(7.days.after - 1.minutes)
+      freeze_time(7.days.after - 1.minute)
 
       expect(job.due_reminders(invalid_event.event_dates.first)).to be_blank
       expect(job.due_reminders(valid_event.event_dates.first).length).to eq(1)

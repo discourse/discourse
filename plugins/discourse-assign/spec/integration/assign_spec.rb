@@ -166,7 +166,7 @@ describe "integration tests" do
   end
 
   describe "move post" do
-    fab!(:old_topic) { Fabricate(:topic) }
+    fab!(:old_topic, :topic)
     fab!(:post) { Fabricate(:post, topic: old_topic) }
     fab!(:user)
     fab!(:assignment) do

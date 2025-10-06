@@ -81,9 +81,9 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         # If include_images is set, include the image in markdown
         characters("!") if @markdown_images
 
-        if !attributes["alt"].blank?
+        if attributes["alt"].present?
           characters("[#{attributes["alt"]}]")
-        elsif !attributes["title"].blank?
+        elsif attributes["title"].present?
           characters("[#{attributes["title"]}]")
         else
           characters("[#{I18n.t "excerpt_image"}]")

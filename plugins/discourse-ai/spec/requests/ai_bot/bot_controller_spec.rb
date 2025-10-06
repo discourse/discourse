@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseAi::AiBot::BotController do
   fab!(:user)
-  fab!(:pm_topic) { Fabricate(:private_message_topic) }
+  fab!(:pm_topic, :private_message_topic)
   fab!(:pm_post) { Fabricate(:post, topic: pm_topic) }
   fab!(:pm_post2) { Fabricate(:post, topic: pm_topic) }
   fab!(:pm_post3) { Fabricate(:post, topic: pm_topic) }

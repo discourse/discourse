@@ -143,7 +143,7 @@ RSpec.describe "List channels | Drawer", type: :system do
           chat_channel: dm_channel_4,
           user: user_3,
           use_service: true,
-          created_at: 1.days.ago,
+          created_at: 1.day.ago,
         )
         dm_channel_4.membership_for(current_user).mark_read!
 

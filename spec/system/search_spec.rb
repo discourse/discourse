@@ -269,7 +269,7 @@ describe "Search", type: :system do
 
   describe "Private Message Icon in Search Results" do
     fab!(:user)
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
     fab!(:pm_topic) do
       Fabricate(
         :private_message_topic,

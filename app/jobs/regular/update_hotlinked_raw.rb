@@ -13,7 +13,7 @@ module Jobs
       return if post.cook_method == Post.cook_methods[:raw_html]
       return if post.topic.nil?
 
-      hotlinked_map = post.post_hotlinked_media.preload(:upload).map { |r| [r.url, r] }.to_h
+      hotlinked_map = post.post_hotlinked_media.preload(:upload).index_by { |r| r.url }
 
       raw =
         InlineUploads.replace_hotlinked_image_urls(raw: post.raw) do |match_src|

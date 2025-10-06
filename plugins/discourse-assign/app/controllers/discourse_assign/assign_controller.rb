@@ -71,7 +71,7 @@ module DiscourseAssign
       if assign[:success]
         render json: success_json
       else
-        render json: translate_failure(assign[:reason], assign_to), status: 400
+        render json: translate_failure(assign[:reason], assign_to), status: :bad_request
       end
     end
 

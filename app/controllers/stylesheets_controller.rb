@@ -78,7 +78,7 @@ class StylesheetsController < ApplicationController
       end
     end
 
-    if Rails.env == "development"
+    if Rails.env.development?
       response.headers["Last-Modified"] = Time.zone.now.httpdate
       immutable_for(1.second)
     else

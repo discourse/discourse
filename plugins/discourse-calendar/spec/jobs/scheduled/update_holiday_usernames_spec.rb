@@ -150,7 +150,7 @@ describe Jobs::DiscourseCalendar::UpdateHolidayUsernames do
       custom_status[:ends_at],
     )
 
-    freeze_time tomorrow + 2.day
+    freeze_time tomorrow + 2.days
     job.execute(nil)
 
     post.user.reload

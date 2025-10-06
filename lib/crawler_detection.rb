@@ -6,7 +6,7 @@ module CrawlerDetection
   def self.to_matcher(string, type: nil)
     escaped = string.split("|").map { |agent| Regexp.escape(agent) }.join("|")
 
-    if type == :real && Rails.env == "test"
+    if type == :real && Rails.env.test?
       # we need this bypass so we properly render views
       escaped << "|Rails Testing"
     end

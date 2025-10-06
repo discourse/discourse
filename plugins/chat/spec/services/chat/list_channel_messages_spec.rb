@@ -143,7 +143,7 @@ RSpec.describe Chat::ListChannelMessages do
           Fabricate(:chat_message, chat_channel: channel, created_at: 3.days.ago)
         end
         fab!(:future_message) do
-          Fabricate(:chat_message, chat_channel: channel, created_at: 1.days.ago)
+          Fabricate(:chat_message, chat_channel: channel, created_at: 1.day.ago)
         end
 
         let(:optional_params) { { target_date: 2.days.ago } }

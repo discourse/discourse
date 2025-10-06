@@ -151,7 +151,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
   subject(:endpoint) { described_class.new(model) }
 
   fab!(:user)
-  fab!(:model) { Fabricate(:llm_model) }
+  fab!(:model, :llm_model)
 
   let(:echo_tool) do
     {

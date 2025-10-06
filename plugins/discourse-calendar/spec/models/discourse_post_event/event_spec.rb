@@ -33,7 +33,7 @@ describe DiscoursePostEvent::Event do
     let(:event) do
       DiscoursePostEvent::Event.create!(
         id: first_post.id,
-        original_starts_at: Time.now + 1.hours,
+        original_starts_at: Time.now + 1.hour,
         original_ends_at: Time.now + 2.hours,
       )
     end
@@ -277,7 +277,7 @@ describe DiscoursePostEvent::Event do
             post_event =
               DiscoursePostEvent::Event.create!(
                 original_starts_at: 2.hours.ago,
-                original_ends_at: 1.hours.ago,
+                original_ends_at: 1.hour.ago,
                 post: first_post,
               )
 
@@ -337,10 +337,7 @@ describe DiscoursePostEvent::Event do
       context "when starts_at > current date" do
         it "is not ongoing" do
           post_event =
-            DiscoursePostEvent::Event.create!(
-              original_starts_at: 1.hours.from_now,
-              post: first_post,
-            )
+            DiscoursePostEvent::Event.create!(original_starts_at: 1.hour.from_now, post: first_post)
 
           expect(post_event.ongoing?).to be(false)
         end
@@ -653,9 +650,9 @@ describe DiscoursePostEvent::Event do
           Fabricate(
             :event,
             recurrence: "every_week",
-            recurrence_until: Time.current - 1.day,
-            original_starts_at: Time.current - 1.week,
-            original_ends_at: Time.current - 1.week + 2.hours,
+            recurrence_until: 1.day.ago,
+            original_starts_at: 1.week.ago,
+            original_ends_at: 1.week.ago + 2.hours,
           )
         event
       end
@@ -701,8 +698,8 @@ describe DiscoursePostEvent::Event do
           :event,
           recurrence: "every_week",
           recurrence_until: nil,
-          original_starts_at: Time.current - 1.week,
-          original_ends_at: Time.current - 1.week + 2.hours,
+          original_starts_at: 1.week.ago,
+          original_ends_at: 1.week.ago + 2.hours,
         )
       end
 
@@ -720,8 +717,8 @@ describe DiscoursePostEvent::Event do
         Fabricate(
           :event,
           recurrence: nil,
-          original_starts_at: Time.current - 1.week,
-          original_ends_at: Time.current - 1.week + 2.hours,
+          original_starts_at: 1.week.ago,
+          original_ends_at: 1.week.ago + 2.hours,
         )
       end
 

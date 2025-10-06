@@ -11,9 +11,9 @@ describe DiscourseTemplates::TopicQueryExtension do
   end
 
   describe "list_category_templates" do
-    fab!(:other_category) { Fabricate(:category_with_definition) }
+    fab!(:other_category, :category_with_definition)
     fab!(:other_topics) { Fabricate.times(5, :topic, category: other_category) }
-    fab!(:discourse_templates_category) { Fabricate(:category_with_definition) }
+    fab!(:discourse_templates_category, :category_with_definition)
     fab!(:templates) do
       Fabricate.times(100, :template_item, category: discourse_templates_category)
     end
@@ -111,8 +111,8 @@ describe DiscourseTemplates::TopicQueryExtension do
   end
 
   describe "list_private_templates" do
-    fab!(:user_a) { Fabricate(:user) }
-    fab!(:user_b) { Fabricate(:user) }
+    fab!(:user_a, :user)
+    fab!(:user_b, :user)
     fab!(:group) do
       group = Fabricate(:group)
       Fabricate(:group_user, group: group, user: user)

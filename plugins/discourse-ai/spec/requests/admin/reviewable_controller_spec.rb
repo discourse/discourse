@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewablesController do
-  fab!(:post1) { Fabricate(:post) }
-  fab!(:post2) { Fabricate(:post) }
+  fab!(:post1, :post)
+  fab!(:post2, :post)
   fab!(:admin)
   fab!(:llm_model)
 

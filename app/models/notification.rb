@@ -11,8 +11,8 @@ class Notification < ActiveRecord::Base
 
   MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
 
-  validates_presence_of :data
-  validates_presence_of :notification_type
+  validates :data, presence: true
+  validates :notification_type, presence: true
 
   scope :unread, lambda { where(read: false) }
   scope :recent,

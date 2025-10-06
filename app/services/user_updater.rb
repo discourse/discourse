@@ -113,7 +113,7 @@ class UserUpdater
       user_notification_schedule.assign_attributes(attributes[:user_notification_schedule])
     end
 
-    old_user_name = user.name.present? ? user.name : ""
+    old_user_name = (user.name.presence || "")
 
     user.name = attributes.fetch(:name) { user.name } if guardian.can_edit_name?(user)
 

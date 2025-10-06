@@ -10,8 +10,8 @@ class UserField < ActiveRecord::Base
   deprecate_column :required, drop_from: "3.3"
   self.ignored_columns += %i[field_type]
 
-  validates_presence_of :description
-  validates_presence_of :name, unless: -> { field_type == "confirm" }
+  validates :description, presence: true
+  validates :name, presence: { unless: -> { field_type == "confirm" } }
   has_many :user_field_options, dependent: :destroy
   has_one :directory_column, dependent: :destroy
   accepts_nested_attributes_for :user_field_options
