@@ -331,19 +331,18 @@ module DiscourseAi
         return unless llm_model.seeded? && params[:ai_llm].key?(:llm_feature_credit_costs)
 
         if feature_credit_cost_params
-          existing_features = llm_model.llm_feature_credit_costs.pluck(:feature_name)
+          existing_costs = llm_model.llm_feature_credit_costs.index_by(&:feature_name)
           new_features = feature_credit_cost_params.map { |c| c[:feature_name] }
 
           llm_model
             .llm_feature_credit_costs
-            .where(feature_name: existing_features - new_features)
+            .where(feature_name: existing_costs.keys - new_features)
             .destroy_all
 
           feature_credit_cost_params.each do |cost_param|
             cost =
-              llm_model.llm_feature_credit_costs.find_or_initialize_by(
-                feature_name: cost_param[:feature_name],
-              )
+              existing_costs[cost_param[:feature_name]] ||
+                llm_model.llm_feature_credit_costs.build(feature_name: cost_param[:feature_name])
             cost.update!(cost_param)
           end
         else
