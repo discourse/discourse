@@ -55,7 +55,7 @@ module PageObjects
       end
 
       def has_selected_name?(name)
-        component.find(".select-kit-header[data-name='#{name}']")
+        component.find(".select-kit-header[data-name='#{name}'] .selected-name")
       end
 
       def has_no_selection?
