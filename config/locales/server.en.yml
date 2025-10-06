@@ -4806,6 +4806,8 @@ en:
     latte_theme_name: "Latte"
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
+    errors:
+      cannot_edit_remote_copies: "Edits to remote copies of color palettes are not allowed."
 
   edit_this_page: "Edit this page"
 
