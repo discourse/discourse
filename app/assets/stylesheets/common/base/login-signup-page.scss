@@ -53,6 +53,8 @@ body.signup-page {
 .signup-fullpage,
 .invites-show,
 .password-reset-page {
+  min-height: calc(90vh - var(--header-offset));
+
   @include viewport.until(md) {
     justify-content: flex-start;
   }
