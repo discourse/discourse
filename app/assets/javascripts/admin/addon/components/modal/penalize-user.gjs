@@ -87,8 +87,13 @@ export default class PenalizeUser extends Component {
       this.before();
     }
 
+    const penaltyType = this.args.model.penaltyType;
     let result;
+
     try {
+      const serverAction =
+        this.args.confirmCallback || this.args.model.user[penaltyType];
+
       const opts = {
         reason: this.reason,
         message: this.message,
@@ -96,28 +101,11 @@ export default class PenalizeUser extends Component {
         post_action: this.postAction,
         post_edit: this.postEdit,
         other_user_ids: this.otherUserIds,
+        suspend_until: this.penalizeUntil,
+        silenced_till: this.penalizeUntil,
       };
 
-      if (this.args.model.penaltyType === "suspend") {
-        opts.suspend_until = this.penalizeUntil;
-
-        if (this.args.confirmCallback) {
-          result = await this.args.confirmCallback(opts);
-        } else {
-          result = await this.args.model.user.suspend(opts);
-        }
-      } else if (this.args.model.penaltyType === "silence") {
-        opts.silenced_till = this.penalizeUntil;
-
-        if (this.args.confirmCallback) {
-          result = await this.args.confirmCallback(opts);
-        } else {
-          result = await this.args.model.user.silence(opts);
-        }
-      } else {
-        // eslint-disable-next-line no-console
-        console.error("Unknown penalty type:", this.args.model.penaltyType);
-      }
+      result = await serverAction.bind(this.args.model.user)(opts);
 
       this.args.closeModal({ success: true });
       if (this.successCallback) {
