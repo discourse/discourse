@@ -408,7 +408,7 @@ class Topic < ActiveRecord::Base
   before_save do
     ensure_topic_has_a_category unless skip_callbacks
 
-    write_attribute(:fancy_title, Topic.fancy_title(title)) if title_changed?
+    self[:fancy_title] = Topic.fancy_title(title) if title_changed?
 
     if category_id_changed? || new_record?
       inherit_auto_close_from_category
@@ -537,7 +537,7 @@ class Topic < ActiveRecord::Base
 
     unless fancy_title = read_attribute(:fancy_title)
       fancy_title = Topic.fancy_title(title)
-      write_attribute(:fancy_title, fancy_title)
+      self[:fancy_title] = fancy_title
 
       if !new_record? && !Discourse.readonly_mode?
         # make sure data is set in table, this also allows us to change algorithm
@@ -1461,7 +1461,7 @@ class Topic < ActiveRecord::Base
       return "" if title.blank?
       slug = slug_for_topic(title)
       if new_record?
-        write_attribute(:slug, slug)
+        self[:slug] = slug
       else
         update_column(:slug, slug)
       end
@@ -1481,8 +1481,8 @@ class Topic < ActiveRecord::Base
 
   def title=(t)
     slug = slug_for_topic(t.to_s)
-    write_attribute(:slug, slug)
-    write_attribute(:fancy_title, nil)
+    self[:slug] = slug
+    self[:fancy_title] = nil
     write_attribute(:title, t)
   end
 
@@ -1664,7 +1664,7 @@ class Topic < ActiveRecord::Base
     topic_timer.status_type = status_type
 
     time_now = Time.zone.now
-    topic_timer.based_on_last_post = !based_on_last_post.blank?
+    topic_timer.based_on_last_post = based_on_last_post.present?
 
     if status_type == TopicTimer.types[:publish_to_category]
       topic_timer.category = Category.find_by(id: category_id)

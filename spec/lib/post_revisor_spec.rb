@@ -533,7 +533,7 @@ describe PostRevisor do
         post_revisor.revise!(
           post.user,
           { raw: "updated body" },
-          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
         )
         # "roll back"
         post_revisor.revise!(
@@ -1605,7 +1605,7 @@ describe PostRevisor do
         post_revisor.revise!(
           post.user,
           { raw: "updated body" },
-          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
         )
       }.not_to change { post.topic.bumped_at }
     end
@@ -1616,7 +1616,7 @@ describe PostRevisor do
         post_revisor.revise!(
           post.user,
           { raw: "updated body" },
-          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
         )
       }.not_to change { post.topic.bumped_at }
     end
@@ -1626,7 +1626,7 @@ describe PostRevisor do
         post_revisor.revise!(
           post.user,
           { title: "This is an updated topic title" },
-          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
         )
       }.not_to change { post.topic.bumped_at }
     end
@@ -1636,7 +1636,7 @@ describe PostRevisor do
         post_revisor.revise!(
           post.user,
           { category_id: Fabricate(:category).id },
-          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
         )
       }.not_to change { post.topic.bumped_at }
     end
@@ -1674,7 +1674,7 @@ describe PostRevisor do
             post_revisor.revise!(
               post.user,
               { raw: "updated body" },
-              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
             )
           }.not_to change { post.topic.bumped_at }
         end
@@ -1688,7 +1688,7 @@ describe PostRevisor do
             post_revisor.revise!(
               post.user,
               { raw: "updated body" },
-              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
             )
           }.to change { post.topic.bumped_at }
         end
@@ -1703,7 +1703,7 @@ describe PostRevisor do
           post_revisor.revise!(
             post.user,
             { raw: "updated body" },
-            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
           )
         }.to change { post.topic.bumped_at }
       end
@@ -1716,7 +1716,7 @@ describe PostRevisor do
           post_revisor_other.revise!(
             post.user,
             { raw: "updated body" },
-            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
           )
         }.not_to change { post.topic.bumped_at }
       end

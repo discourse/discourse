@@ -67,7 +67,7 @@ describe "Category Localizations", type: :system do
       end
 
       describe "when editing a category with no category localizations" do
-        fab!(:mono_category) { Fabricate(:category) }
+        fab!(:mono_category, :category)
 
         it "should show info hint to add new localizations" do
           category_page.visit_edit_localizations(mono_category)

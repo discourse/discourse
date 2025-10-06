@@ -11,7 +11,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       name: "claude-2",
     )
   end
-  fab!(:opus_model) { Fabricate(:anthropic_model) }
+  fab!(:opus_model, :anthropic_model)
 
   fab!(:bot_user) do
     enable_current_plugin
@@ -310,7 +310,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
     end
 
     context "with chat channels" do
-      fab!(:channel) { Fabricate(:chat_channel) }
+      fab!(:channel, :chat_channel)
 
       fab!(:membership) do
         Fabricate(:user_chat_channel_membership, user: user, chat_channel: channel)

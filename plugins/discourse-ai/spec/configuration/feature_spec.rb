@@ -61,7 +61,7 @@ RSpec.describe DiscourseAi::Configuration::Feature do
     end
 
     context "with translation module" do
-      fab!(:translation_model) { Fabricate(:llm_model) }
+      fab!(:translation_model, :llm_model)
 
       let(:ai_feature) do
         described_class.new(

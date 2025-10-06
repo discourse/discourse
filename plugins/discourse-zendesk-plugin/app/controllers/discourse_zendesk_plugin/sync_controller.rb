@@ -16,7 +16,7 @@ module DiscourseZendeskPlugin
 
     def webhook
       unless SiteSetting.zendesk_enabled? && SiteSetting.sync_comments_from_zendesk
-        return render json: failed_json, status: 422
+        return render json: failed_json, status: :unprocessable_entity
       end
 
       ticket_id = params[:ticket_id]

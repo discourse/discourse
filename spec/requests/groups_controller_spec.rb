@@ -1406,21 +1406,11 @@ RSpec.describe GroupsController do
 
   describe "#members" do
     let(:user1) do
-      Fabricate(
-        :user,
-        last_seen_at: Time.zone.now,
-        last_posted_at: Time.zone.now - 1.day,
-        email: "b@test.org",
-      )
+      Fabricate(:user, last_seen_at: Time.zone.now, last_posted_at: 1.day.ago, email: "b@test.org")
     end
 
     let(:user2) do
-      Fabricate(
-        :user,
-        last_seen_at: Time.zone.now - 1.day,
-        last_posted_at: Time.zone.now,
-        email: "a@test.org",
-      )
+      Fabricate(:user, last_seen_at: 1.day.ago, last_posted_at: Time.zone.now, email: "a@test.org")
     end
 
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
@@ -2540,7 +2530,7 @@ RSpec.describe GroupsController do
 
     it "should create the right PM" do
       owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
-      owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1.day)
+      owner2 = Fabricate(:user, last_seen_at: 1.day.ago)
       [owner1, owner2].each { |owner| group.add_owner(owner) }
 
       sign_in(user)

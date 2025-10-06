@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Jobs::RefreshLeaderboardPositions do
-  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
+  fab!(:leaderboard, :gamification_leaderboard)
   let(:leaderboard_positions) { DiscourseGamification::LeaderboardCachedView.new(leaderboard) }
 
   before { leaderboard_positions.create }

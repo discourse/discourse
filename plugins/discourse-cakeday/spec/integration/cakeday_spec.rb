@@ -35,11 +35,11 @@ describe "Anniversaries and Birthdays" do
         freeze_time(time) do
           created_at = time - 1.year
 
-          user1 = Fabricate(:user, created_at: created_at - 2.year)
+          user1 = Fabricate(:user, created_at: created_at - 2.years)
           user2 = Fabricate(:user, created_at: created_at - 1.day)
           user3 = Fabricate(:user, created_at: created_at)
           user4 = Fabricate(:user, created_at: created_at + 1.day)
-          user5 = Fabricate(:user, created_at: created_at + 2.day)
+          user5 = Fabricate(:user, created_at: created_at + 2.days)
           user6 = Fabricate(:user, created_at: created_at + 1.year)
 
           hidden_user = Fabricate(:user, created_at: created_at - 1.year)

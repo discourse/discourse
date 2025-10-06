@@ -146,7 +146,7 @@ module AdPlugin
     end
 
     def self.publish_if_ads_enabled
-      if AdPlugin::HouseAdSetting.all.any? { |_, adsToShow| !adsToShow.blank? }
+      if AdPlugin::HouseAdSetting.all.any? { |_, adsToShow| adsToShow.present? }
         AdPlugin::HouseAdSetting.publish_settings
       end
     end

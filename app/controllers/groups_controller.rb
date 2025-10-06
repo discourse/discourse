@@ -162,7 +162,7 @@ class GroupsController < ApplicationController
         user_count = count_existing_users(group.group_users, notification_level, categories, tags)
         if user_count > 0
           return(
-            render status: 422,
+            render status: :unprocessable_entity,
                    json: {
                      user_count: user_count,
                      errors: [I18n.t("invalid_params", message: :update_existing_users)],
@@ -612,7 +612,7 @@ class GroupsController < ApplicationController
     rescue ActiveRecord::RecordNotUnique
       return(
         render json: failed_json.merge(error: I18n.t("groups.errors.already_requested_membership")),
-               status: 409
+               status: :conflict
       )
     end
 

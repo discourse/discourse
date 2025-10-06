@@ -9,7 +9,7 @@ module Jobs
     def execute(args)
       RedeliveringWebhookEvent
         .includes(web_hook_event: :web_hook)
-        .where("created_at < ?", 8.hour.ago)
+        .where("created_at < ?", 8.hours.ago)
         .delete_all
     end
   end

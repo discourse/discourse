@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if Rails.env == "production"
+if Rails.env.production?
   # This event happens quite a lot and fans out to ExplainSubscriber
   # and Logger, this cuts out 2 method calls that every time we run SQL
   #

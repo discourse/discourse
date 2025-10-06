@@ -7,7 +7,7 @@ RSpec.describe "AI Bot - Header Toggle", type: :system do
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:group)
-  fab!(:regular_topic) { Fabricate(:topic) }
+  fab!(:regular_topic, :topic)
 
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
   fab!(:gpt_3_5_turbo) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
