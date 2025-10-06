@@ -1031,7 +1031,6 @@ ro:
     auth_overrides_avatar: "Suprascrie avatarul local cu avatarul site-ului extern la fiecare conectare și previne modificările locale. Se aplică tuturor furnizorilor de autentificare."
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
-    enable_discourse_id: "Activează autentificarea prin Discourse ID, un serviciu de conectare unică ce permite utilizatorilor să se conecteze la mai multe site-uri Discourse folosind un singur cont. Furnizorii obișnuiți de conectare socială, cum ar fi Google, Facebook și Twitter, sunt acceptați fără configurare suplimentară. Consultă <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> pentru mai multe detalii."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
     google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     google_oauth2_verbose_logging: "Înregistrează diagnostice verbale legate de Google OAuth2 în <a href='%{base_path}/logs' target='_blank'>/logs</a>"

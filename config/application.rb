@@ -89,7 +89,7 @@ module Discourse
       Symbol,
     ]
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
-    config.action_dispatch.cookies_serializer = :hybrid
+    config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
 

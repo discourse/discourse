@@ -4146,6 +4146,8 @@ hu:
       style: "Stílusok"
       background_color: "Szín"
       foreground_color: "Szöveg színe"
+      color_validations:
+        cant_be_empty: "nem lehet üres"
       styles:
         type: "Stílus"
         icon: "Ikon"

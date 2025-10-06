@@ -10,7 +10,7 @@ module Jobs
 
         clients =
           UserApiKeyClient
-            .where("auth_redirect IS NOT NULL")
+            .where.not(auth_redirect: nil)
             .where(
               "id NOT IN (SELECT user_api_key_client_id FROM user_api_keys WHERE user_api_keys.last_used_at > ?)",
               destroy_days_ago,

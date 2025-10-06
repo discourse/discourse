@@ -572,7 +572,7 @@ class Category < ActiveRecord::Base
 
     Category.all.each do |c|
       topics = c.topics.visible
-      topics = topics.where(["topics.id <> ?", c.topic_id]) if c.topic_id
+      topics = topics.where.not(id: c.topic_id) if c.topic_id
       c.topics_year = topics.created_since(1.year.ago).count
       c.topics_month = topics.created_since(1.month.ago).count
       c.topics_week = topics.created_since(1.week.ago).count
@@ -596,7 +596,7 @@ class Category < ActiveRecord::Base
         .where("topics.visible = true")
         .where("posts.deleted_at IS NULL")
         .where("posts.user_deleted = false")
-    self.topic_id ? query.where(["topics.id <> ?", self.topic_id]) : query
+    self.topic_id ? query.where.not(topics: { id: self.topic_id }) : query
   end
 
   # Internal: Generate the text of post prompting to enter category description.
@@ -916,7 +916,7 @@ class Category < ActiveRecord::Base
         .listable_topics
         .exclude_scheduled_bump_topics
         .where(category_id: self.id)
-        .where("id <> ?", self.topic_id)
+        .where.not(id: self.topic_id)
         .where("bumped_at < ?", (self.auto_bump_cooldown_days || 1).days.ago)
         .where("pinned_at IS NULL AND NOT closed AND NOT archived")
         .order("bumped_at ASC")
@@ -1225,7 +1225,7 @@ class Category < ActiveRecord::Base
 
     Category
       .joins("LEFT JOIN topics ON categories.topic_id = topics.id AND topics.deleted_at IS NULL")
-      .where("categories.id <> ?", SiteSetting.uncategorized_category_id)
+      .where.not(id: SiteSetting.uncategorized_category_id)
       .where(topics: { id: nil })
       .find_each { |category| category.create_category_definition }
   end

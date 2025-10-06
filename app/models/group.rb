@@ -429,7 +429,7 @@ class Group < ActiveRecord::Base
         .preload(:topic, user: :groups, topic: :category)
         .references(:posts, :topics, :category)
         .where(groups: { id: id })
-        .where("topics.archetype <> ?", Archetype.private_message)
+        .where.not(topics: { archetype: Archetype.private_message })
         .where("topics.visible")
         .where(post_type: [Post.types[:regular], Post.types[:moderator_action]])
 
@@ -450,7 +450,7 @@ class Group < ActiveRecord::Base
         .joins(:group_mentions)
         .includes(:user, :topic, topic: :category)
         .references(:posts, :topics, :category)
-        .where("topics.archetype <> ?", Archetype.private_message)
+        .where.not(topics: { archetype: Archetype.private_message })
         .where(post_type: Post.types[:regular])
         .where("group_mentions.group_id = ?", self.id)
 

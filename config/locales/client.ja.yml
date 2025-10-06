@@ -3908,6 +3908,8 @@ ja:
       style: "スタイル"
       background_color: "色"
       foreground_color: "テキストの色"
+      color_validations:
+        cant_be_empty: "空にできません"
       styles:
         type: "スタイル"
         icon: "アイコン"

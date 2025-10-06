@@ -3407,6 +3407,8 @@ lt:
       logo: "Kategorijos logotipo paveiksliukas"
       background_image: "Kategorijos fono paveiksliukas"
       background_color: "Spalva"
+      color_validations:
+        cant_be_empty: "negali būti tuščia"
       styles:
         icon: "Ikona"
         emoji: "Emoji"

@@ -85,7 +85,6 @@ de:
     composer_ai_helper_allowed_groups: "Benutzer dieser Gruppen sehen die KI-Helfer-Schaltfläche im Composer."
     ai_helper_allowed_in_pm: "Aktiviere den Composer-KI-Helfer in PN."
     ai_helper_model: "Modell, das für den KI-Helfer verwendet werden soll."
-    ai_helper_custom_prompts_allowed_groups: "Die Benutzer dieser Gruppen sehen die Option „Benutzerdefinierte Eingabeaufforderung“ im KI-Helfer."
     ai_helper_automatic_chat_thread_title_delay: "Verzögerung in Minuten, bevor der KI-Helfer automatisch den Titel des Chat-Threads festlegt."
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
     ai_helper_illustrate_post_model: "Modell, das für die Funktion „Beitrag illustrieren“ des Composer-KI-Helfers verwendet wird"

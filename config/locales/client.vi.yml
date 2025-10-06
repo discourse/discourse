@@ -3081,6 +3081,8 @@ vi:
       logo: "Logo của chuyên mục"
       background_image: "Ảnh nền của chuyên mục"
       background_color: "Màu sắc"
+      color_validations:
+        cant_be_empty: "không thể để trống"
       styles:
         icon: "Biểu tượng"
         emoji: "Emoji"

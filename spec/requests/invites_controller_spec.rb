@@ -47,15 +47,7 @@ RSpec.describe InvitesController do
     end
 
     context "when email data is present in authentication data" do
-      let(:store) { ActionDispatch::Session::CookieStore.new({}) }
-      let(:session_stub) do
-        ActionDispatch::Request::Session.create(store, ActionDispatch::TestRequest.create, {})
-      end
-
-      before do
-        session_stub[:authentication] = { email: invite.email }
-        ActionDispatch::Request.any_instance.stubs(:session).returns(session_stub)
-      end
+      before { server_session[:authentication] = { email: invite.email } }
 
       it "shows unobfuscated email" do
         get "/invites/#{invite.invite_key}"

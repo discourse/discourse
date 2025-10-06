@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  site_settings:
+    cakeday_enabled: "Zobrazit emoji vedle uživatelského jména v den, kdy se připojili k Discourse."
+    cakeday_emoji: "Emoji, které bude zobrazeno vedle uživatelského jména v den, kdy se připojili k Discourse. Více emoji lze nastavit pomocí: smile|cake|smile"
+    cakeday_birthday_enabled: "Zobrazit narozeninové emoji vedle uživatelského jména v den jejich narozenin."
+    cakeday_birthday_emoji: "Emoji, které bude zobrazeno vedle uživatelského jména v den jejich narozenin. Více emoji může být nastaveno pomocí: smile|cake|smile"

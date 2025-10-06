@@ -2028,7 +2028,7 @@ cs:
     enable_local_logins_via_email: "Umožnit uživatelům požádat o přihlášení odesláním odkazu pro přihlášení jedním kliknutím prostřednictvím e-mailu."
     allow_new_registrations: "Povolit registraci nových uživatelů. Zrušte zaškrtnutí této možnosti, pokud chcete zabránit komukoli ve vytváření nového účtu."
     enable_signup_cta: "Zobrazit vracejícím se anonymním uživatelům oznámení s výzvou k registraci účtu."
-    enable_discourse_id: "Povolit ověřování prostřednictvím Discourse ID, což je služba jednotného přihlašování, která umožňuje uživatelům přihlásit se k více webům Discourse pomocí jednoho účtu. Běžní poskytovatelé sociálních služeb pro přihlašování, jako jsou Google, Facebook a Twitter, jsou podporováni bez další konfigurace. Další podrobnosti naleznete na <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
+    enable_discourse_id: "Povolit ověření pomocí Discourse ID, jednotné přihlašovací služby, která umožňuje uživatelům přihlásit se na více stránkách Discourse pomocí jediného účtu. Běžní poskytovatelé sociálních přihlášení jako Google, Facebook, Apple, Github jsou podporováni bez další konfigurace. Více informací naleznete na <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
     enable_google_oauth2_logins: "Povolit ověřování Google Oauth2. Toto je metoda ověřování, kterou Google aktuálně podporuje. Vyžaduje klíč a tajný kód. Viz <a href='https://meta.discourse.org/t/15858' target='_blank'>Konfigurace přihlášení Google pro Discourse</a>."
     google_oauth2_client_id: "Jedinečné ID klienta poskytnuté vaší aplikací Google, používané pro proces ověřování."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."

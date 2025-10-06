@@ -26,7 +26,7 @@ export default class PostMenuRepliesButton extends Component {
   @service site;
 
   get disabled() {
-    return !!this.args.post.deleted;
+    return !!this.args.post.deleted || this.args.state?.repliesButtonDisabled;
   }
 
   get translatedTitle() {

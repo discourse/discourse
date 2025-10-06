@@ -4130,6 +4130,8 @@ fr:
       style: "Styles"
       background_color: "Couleur"
       foreground_color: "Couleur du texte"
+      color_validations:
+        cant_be_empty: "ne peut pas être vide"
       styles:
         type: "Style"
         icon: "Icône"

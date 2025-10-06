@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  site_settings:
+    cakeday_enabled: "Εμφάνιση emoji[s] δίπλα στο όνομα του χρήστη την ημερομηνία που ξεκίνησε να συμμετέχει στο Discourse"
+    cakeday_emoji: "Το/τα emoji[s] που θα εμφανίζονται δίπλα στο όνομα του χρήστη την ημερομηνία που ξεκίνησε να συμμετέχει στο Discourse. Μπορείτε να προσδιορίσετε πολλαπλά emojis με: smile|cake|smile"
+    cakeday_birthday_enabled: "Εμφάνιση emoji[s] δίπλα στο όνομα του χρήστη στα γενέθλιά του"
+    cakeday_birthday_emoji: "Το/τα emoji[s] που θα εμφανίζονται δίπλα στο όνομα του χρήστη στα γενέθλιά του. Μπορείτε να προσδιορίσετε πολλαπλά emojis με: smile|cake|smile"

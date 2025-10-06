@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  site_settings:
+    cakeday_enabled: "Vis cakeday humørikon[er] ved siden af navnet på brugeren, på den dato, hvor de blev medlem af Discourse."
+    cakeday_emoji: "De humørikon[er], der vises ved siden af navnet på brugeren, på den dato, hvor de blev medlem af Discourse. Flere humørikoner kan specificeres ved: smile|cake|smile"
+    cakeday_birthday_enabled: "Vis fødselsdags humørikon[er] ved siden af navnet på brugeren, på deres fødselsdag."
+    cakeday_birthday_emoji: "De humørikon[er], der vises ved siden af navnet på brugeren, på deres fødselsdag. Flere humørikoner kan specificeres ved: smile|cake|smile"

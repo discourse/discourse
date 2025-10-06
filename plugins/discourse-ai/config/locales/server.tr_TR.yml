@@ -72,7 +72,6 @@ tr_TR:
     composer_ai_helper_allowed_groups: "Bu gruplardaki kullanıcılar, bestecide YZ yardımcı düğmesini görür."
     ai_helper_allowed_in_pm: "Kişisel mesajlarda bestecinin YZ yardımcıyı etkinleştirin."
     ai_helper_model: "YZ yardımcı için kullanılacak model."
-    ai_helper_custom_prompts_allowed_groups: "Bu gruplardaki kullanıcılar YZ yardımcıda özel istem seçeneğini görürler."
     ai_helper_automatic_chat_thread_title_delay: "YZ yardımcının sohbet dizisi başlığını otomatik olarak ayarlamasından önceki dakika cinsinden gecikme."
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
     ai_helper_illustrate_post_model: "Besteci YZ yardımcının gönderiyi çizme özelliği için kullanılacak model"
