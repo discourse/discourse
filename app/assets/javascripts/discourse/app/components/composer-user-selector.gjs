@@ -44,7 +44,9 @@ export default class ComposerUserSelector extends Component {
 
   @action
   updateRecipients(selected, content) {
-    const newGroups = content.filterBy("isGroup").mapBy("id");
+    const newGroups = content
+      .filter((group) => group.isGroup)
+      .map((item) => item.id);
     this._updateGroups(selected, newGroups);
     this.set("recipients", selected.join(","));
   }

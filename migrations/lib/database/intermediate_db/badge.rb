@@ -35,6 +35,30 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `badges` record in the IntermediateDB.
+    #
+    # @param original_id           [Integer, String]
+    # @param allow_title           [Boolean, nil]
+    # @param auto_revoke           [Boolean, nil]
+    # @param badge_grouping_id     [Integer, String, nil]
+    # @param badge_type_id         [Integer, String]
+    # @param created_at            [Time, nil]
+    # @param description           [String, nil]
+    # @param enabled               [Boolean, nil]
+    # @param existing_id           [Integer, String, nil]
+    # @param icon                  [String, nil]
+    # @param image_upload_id       [String, nil]
+    # @param listable              [Boolean, nil]
+    # @param long_description      [String, nil]
+    # @param multiple_grant        [Boolean, nil]
+    # @param name                  [String]
+    # @param query                 [String, nil]
+    # @param show_in_post_header   [Boolean, nil]
+    # @param show_posts            [Boolean, nil]
+    # @param target_posts          [Boolean, nil]
+    # @param trigger               [Integer, nil]
+    #
+    # @return [void]
     def self.create(
       original_id:,
       allow_title: nil,

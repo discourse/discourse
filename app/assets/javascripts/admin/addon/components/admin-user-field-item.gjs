@@ -35,6 +35,10 @@ export default class AdminUserFieldItem extends Component {
       .join(", ");
   }
 
+  get editUrl() {
+    return this.router.urlFor("adminUserFields.edit", this.args.userField);
+  }
+
   @action
   moveUp() {
     this.args.moveUpAction(this.args.userField);
@@ -66,9 +70,12 @@ export default class AdminUserFieldItem extends Component {
   <template>
     <tr class="d-table__row admin-user_field-item">
       <td class="d-table__cell --overview">
-        <div
+        <a
           class="d-table__overview-name admin-user_field-item__name"
-        >{{@userField.name}}</div>
+          href={{this.editUrl}}
+        >
+          {{@userField.name}}
+        </a>
         <div class="d-table__overview-about">{{htmlSafe
             @userField.description
           }}</div>

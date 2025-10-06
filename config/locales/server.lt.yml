@@ -1209,7 +1209,6 @@ lt:
     logo_small_dark: "Tamsios schemos alternatyva „mažo logotipo“ svetainės nustatymui."
     mobile_logo_dark: "Tamsios schemos alternatyva svetainės „mobiliojo logotipo“ nustatymui."
     large_icon: "Vaizdas naudojamas kaip kitų metaduomenų piktogramų pagrindas. Idealiu atveju turėtų būti didesnis nei 512 x 512. Jei paliksite tuščią, bus naudojamas logotipas_mažas."
-    email_custom_headers: "Brūkšniais atskirtas pasirinktinių el. laiškų antraščių sąrašas"
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
@@ -2189,10 +2188,7 @@ lt:
   page_not_found:
     page_title: "Puslapis nerastas"
     title: "Oi! Šis puslapis neegzistuoja arba yra privatus."
-    popular_topics: "Populiaros"
-    recent_topics: "Naujausios"
     see_more: "Daugiau"
-    search_title: "Ieškoti svetainėje"
     search_button: "Paieška"
   offline:
     title: "Nepavyko įkelti programos"
@@ -2673,6 +2669,10 @@ lt:
         title: "Atmesti ir ištrinti įrašą"
       reject_and_keep_deleted:
         title: "Palikti įrašą ištrintą"
+      no_action_post:
+        title: "Jokių veiksmų"
+      delete_post:
+        complete: "Įrašas ištrintas"
       no_action_user:
         title: "Jokių veiksmų"
       delete_user:

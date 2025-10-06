@@ -1322,7 +1322,7 @@ sl:
         invalid: "Uporabniško ime ni pravilno. Vsebuje lahko samo črke in številke. Preslednica in posebni znaki niso dovoljeni."
       add_email:
         title: "Dodaj e-naslov"
-        add: "dodaj"
+        add: "Dodaj"
       change_email:
         title: "Spremeni e-naslov"
         taken: "Ta e-naslov ni na voljo."

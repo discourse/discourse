@@ -1805,7 +1805,6 @@ sk:
     crawl_images: "Načítať obrázky z URL pre vloženie správnej výšky a šírky."
     download_remote_images_to_local: "Konverzia vzdialených obrázkov (s horúcimi odkazmi) na miestne obrázky ich stiahnutím; Tým sa zachová obsah aj v prípade, že sa obrázky v budúcnosti odstránia zo vzdialenej lokality."
     download_remote_images_threshold: "Minimálne miesto na lokálnom disku potrebné na stiahnutie obrázkov zo vzdialených zdrojov (v percentách)"
-    disabled_image_download_domains: "Nikdy nesťahovať obrázky z týchto domén. Zoznam oddeleny pipou \"|\"."
     block_hotlinked_media: "Zabráňte používateľom, aby vo svojich príspevkoch uvádzali vzdialené (horúce odkazy) médiá. Vzdialené médiá, ktoré nie sú stiahnuté prostredníctvom funkcie 'download_remote_images_to_local', budú nahradené zástupným odkazom."
     block_hotlinked_media_exceptions: "Zoznam základných adries URL, na ktoré sa nevzťahuje nastavenie block_hotlinked_media. Uveďte protokol (napr. https://example.com)."
     editing_grace_period: "Nevytvárať nové verzie editovaných príspevkov do (n) sekúnd po odoslaní príspevku."
@@ -1856,7 +1855,6 @@ sk:
     opengraph_image: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon"
     x_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
-    email_custom_headers: "Zoznam voliteľných emailových hlavičiek oddelených |"
     email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje používateľom podrobnejšie informácie o tom, prečo nemajú prístup k určitej téme. Poznámka: Je to menej bezpečné, pretože používatelia budú vedieť, či adresa URL odkazuje na platnú tému."
     enforce_second_factor: "Vyžadujte od používateľov, aby pred prístupom do používateľského rozhrania Discourse povolili dvojfaktorové overovanie. Toto nastavenie nemá vplyv na overovanie API alebo poskytovateľa DiscourseConnect. Ak je zapnutá možnosť enforce_second_factor_on_external_auth, používatelia sa nebudú môcť prihlásiť pomocou externých poskytovateľov overovania po nastavení dvojfaktorového overovania."
@@ -1970,8 +1968,6 @@ sk:
     whispers_allowed_groups: "Povolenie súkromnej komunikácie v rámci tém pre členov určených skupín."
     hidden_post_visible_groups: "Povoliť členom týchto skupín zobrazovať skryté príspevky. Členovia personálu môžu vždy zobraziť skryté príspevky."
     allow_index_in_robots_txt: "V súbore robots.txt uveďte, že túto stránku môžu webové vyhľadávače indexovať. Tu môžete <a href='%{base_path}/admin/customize/robots'>prepísať svoj súbor robots.txt.</a> <b>UPOZORNENIE</b>: Nesprávne nakonfigurované pravidlá môžu zabrániť prehľadávaniu vašej lokality podľa očakávania."
-    blocked_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, s ktorými si používatelia nemôžu registrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. Príklad: mailinator.com|trashmail.net"
-    allowed_email_domains: "Zoznam e-mailových domén oddelených zvislými čiarami, v ktorých si používatelia MUSIA zaregistrovať účty. Subdomény sú automaticky spracované pre zadané domény. Zástupné znaky * a ? nie sú podporované. UPOZORNENIE: Používatelia s inými e-mailovými doménami ako sú uvedené nebudú povolení!"
     normalize_emails: "Skontroluj, či je normalizovaný e-mail jedinečný. Normalizovaný e-mail odstraňuje všetky bodky z používateľského mena a všetko medzi znakmi + a @."
     auto_approve_email_domains: "Používatelia s e-mailovými adresami z tohto zoznamu domén budú automaticky schválení. Subdomény sú automaticky spracované pre zadané domény. Zástupné symboly * a ? nie sú podporované."
     hide_email_address_taken: "Neinformujte používateľov o tom, že existuje konto s danou e-mailovou adresou počas registrácie alebo počas toku zabudnutého hesla. Pri požiadavkách na \"zabudnuté heslo\" vyžadujte celý e-mail."
@@ -2365,9 +2361,6 @@ sk:
     enable_category_group_moderation: "Umožniť skupinám moderovať obsah v konkrétnych kategóriách"
     group_in_subject: "Nastavenie %%{optional_pm} v predmete e-mailu na názov prvej skupiny v PM, pozri: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Prispôsobenie formátu predmetu pre štandardné e-maily</a>"
     allow_anonymous_mode: "Povoľte používateľom možnosť prepnúť na anonymný režim odosielania príspevkov. Keď je táto možnosť aktivovaná, používatelia sa môžu rozhodnúť, že ich identita bude pri vytváraní príspevkov alebo tém na celom webe skrytá. Pozrite si tiež časť `povoliť anonymné lajky`."
-    allow_likes_in_anonymous_mode: "Toto nastavenie povoľte, ak chcete používateľom, ktorí si anonymne prezerajú vašu stránku, umožniť lajkovanie príspevkov. Ak je táto možnosť aktivovaná, používatelia sa môžu rozhodnúť, že ich identita bude pri lajkovaní príspevkov alebo tém na stránke skrytá. Pozri tiež `povoliť_anonymný_režim`."
-    anonymous_posting_min_trust_level: "Minimálna úroveň dôvery na zapnutie anonymného prispievania."
-    anonymous_posting_allowed_groups: "Skupiny, ktoré môžu povoliť anonymné uverejňovanie"
     anonymous_account_duration_minutes: "Každých N minút vytvor nový anonymný účet na ochranu používateľskej anonymity. Príklad: Ak je nastavené na 600, akonáhle uplynie 600 minút od posledného príspevku A používateľ prepne do anonymného režimu, vytvorí sa nový anonymný účet."
     hide_user_profiles_from_public: "Vypnúť používateľské karty, profily a adresár pre anonymných používateľov."
     hide_new_user_profiles: "Skryť používateľské profily úrovne 1 alebo nižšej pred verejnými používateľmi a používateľmi úrovne 1 dôveryhodnosti, kým nepridajú prvý príspevok. Táto funkcia je bezpodmienečne zakázaná na stránkach must_approve_users a iba na pozvaných stránkach."
@@ -2385,7 +2378,6 @@ sk:
     clean_up_unused_staged_users_after_days: "Počet dní pred odstránením nezaktívnených používateľa (bez príspevkov). Ak chcete vypnúť čistenie, nastavte hodnotu 0."
     user_selected_primary_groups: "Umožniť používateľom nastaviť vlastnú primárnu skupinu"
     max_notifications_per_user: "Maximálny počet oznámení na používateľa, ak sa tento počet prekročí, staré oznámenia sa vymažú. Vykonáva sa týždenne. Nastavte na 0, ak chcete vypnúť"
-    allowed_user_website_domains: "Webová stránka používateľa sa overí na základe týchto domén. Zoznam oddeľovaný potrubím."
     allow_profile_backgrounds: "Povoliť používateľov nahranie pozadia do profilu."
     get_a_room_threshold: "Počet príspevkov, ktoré musí používateľ odoslať tej istej osobe v rovnakej téme, kým bude upozornený."
     dont_feed_the_trolls_threshold: "Počet príznakov od iných používateľov pred upozornením."
@@ -2468,7 +2460,6 @@ sk:
     disable_watched_word_checking_in_user_fields: "vypnutie kontroly sledovaných slov v užívateľských poliach"
     watched_words_regular_expressions: "Umožňuje používať regulárne výrazy na filtrovanie slov. Ak je táto funkcia povolená, zoskupuje citlivé slová podľa citlivosti veľkých a malých písmen. Potom zostaví všetky vybrané slová do jedného regulárneho výrazu a pridá hranice slov pre regulárne sledované slová. Následne táto metóda filtrovania založená na regexoch pridáva ďalšiu úroveň kontroly nad moderovaním obsahu tým, že podporuje zložitejšie vzory slov. Nastavenie tiež umožňuje jednoducho nahradiť pôvodný text náhradou podľa výberu."
     enable_fast_edit: "Pridá tlačidlo do ponuky výberu príspevku na úpravu malého výberu inline."
-    old_post_notice_days: "Počet dní, po ktorých sa oznámenie o odoslaní považuje za staré. To ho vizuálne odlišuje od novších oznámení na stránke."
     new_user_notice_tl: "Minimálna úroveň dôveryhodnosti potrebná na zobrazenie oznámení o nových príspevkoch používateľov."
     returning_user_notice_tl: "Minimálna úroveň dôveryhodnosti potrebná na zobrazenie oznámení o odoslaní príspevku vracajúceho sa používateľa."
     returning_users_days: "Koľko dní by malo uplynúť, kým sa používateľ považuje za vracajúceho sa."
@@ -2613,7 +2604,6 @@ sk:
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
     rich_editor: "Povoľte editor formátovaného textu pre autora, aby všetci používatelia mohli prepínať medzi aktuálnym režimom Markdown a novým editorom formátovaného textu pre intuitívnejšiu a užívateľsky prívetivejšiu tvorbu textu."
     default_composition_mode: "Nastavenie predvoleného režimu pre skladateľa vašej komunity. Režim Rich text poskytuje modernejšie a známejšie písanie pre väčšinu používateľov, zatiaľ čo režim Markdown môže byť vhodný pre technickejšie publikum. Členovia môžu na prepínanie medzi režimami používať prepínač na paneli nástrojov kompozitora."
-    viewport_based_mobile_mode: "EXPERIMENTÁLNE: Vypnite režimy pre mobilné zariadenia/plochu založené na používateľskom agentovi a namiesto toho použite šírku zobrazenia."
     reviewable_ui_refresh: "Skupiny, ktoré môžu používať nové experimentálne používateľské rozhranie vo fronte revízií."
     content_localization_enabled: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich prehliadača alebo jazykových preferencií používateľa. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Podporované lokálne jazyky sú nastavené v položke 'content localization supported locales'."
     content_localization_supported_locales: "Zoznam podporovaných lokálnych jazykov, do ktorých možno preložiť obsah používateľa. Vyžaduje \"povolená lokalizácia obsahu\"."
@@ -2719,7 +2709,6 @@ sk:
   filter:
     description:
       status: "Filtrovať témy podľa ich stavu"
-      in: "Filtrovanie tém podľa v osobných zoznamoch"
       order: "Triedenie tém podľa konkrétneho poľa"
       category: "Zobrazenie tém v konkrétnej kategórii"
       category_any: "Zobraziť témy v niektorej zo zadaných kategórií (oddelených čiarkami)"
@@ -4427,10 +4416,7 @@ sk:
   page_not_found:
     page_title: "Stránka nenájdená"
     title: "Stránka neexistuje alebo je privátna."
-    popular_topics: "Populárne"
-    recent_topics: "Nedávne"
     see_more: "Viac"
-    search_title: "Prehľadať tieto stránky"
     search_button: "Hľadať"
   offline:
     title: "Nie je možné načítať aplikáciu"
@@ -5566,6 +5552,16 @@ sk:
       approve_and_unhide:
         title: "Schváliť a Odkryť príspevok"
         complete: "Príspevok schválený a odkrytý"
+      no_action_post:
+        title: "Žiadna akcia"
+      delete_post:
+        title: "Odstrániť príspevok"
+        complete: "Príspevok zmazaný"
+      hide_post:
+        title: "Skryť príspevok"
+      restore_post:
+        title: "Obnoviť príspevok"
+        complete: "Príspevok bol obnovený"
       no_action_user:
         title: "Žiadna akcia"
       silence_user:

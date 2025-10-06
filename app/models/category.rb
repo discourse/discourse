@@ -142,6 +142,7 @@ class Category < ActiveRecord::Base
 
   after_update :rename_category_definition, if: :saved_change_to_name?
   after_update :create_category_permalink, if: :saved_change_to_slug?
+  after_update :run_plugin_category_update_param_callbacks
 
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
@@ -1289,6 +1290,22 @@ class Category < ActiveRecord::Base
   end
 
   private
+
+  def run_plugin_category_update_param_callbacks
+    DiscoursePluginRegistry.category_update_param_with_callback.each do |param_name, opts|
+      next if !opts[:plugin].enabled?
+      next if !instance_variable_defined?(:"@#{param_name}_callback_value")
+
+      value = instance_variable_get(:"@#{param_name}_callback_value")
+      begin
+        opts[:callback].call(self, value)
+      ensure
+        if instance_variable_defined?(:"@#{param_name}_callback_value")
+          remove_instance_variable(:"@#{param_name}_callback_value")
+        end
+      end
+    end
+  end
 
   def ensure_category_setting
     self.build_category_setting if self.category_setting.blank?

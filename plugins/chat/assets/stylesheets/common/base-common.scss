@@ -290,3 +290,9 @@ html.has-full-page-chat {
     visibility: hidden;
   }
 }
+
+.sidebar-section-link-wrapper[data-list-item-name="new-chat-dm"] {
+  .prefix-icon {
+    color: var(--tertiary);
+  }
+}

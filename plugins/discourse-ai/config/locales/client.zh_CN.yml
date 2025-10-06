@@ -298,6 +298,12 @@ zh_CN:
           title: "翻译进度 %{tooltip}"
           bar_done:
             other: "%{count} 个帖子"
+        translations_menu:
+          translate:
+            label: "翻译帖子"
+            title: "将这篇帖子翻译成所有支持的语言"
+            confirm: "这将更新此帖子的所有现有翻译。你确定吗？"
+            success: "帖子已发送供翻译"
       spam:
         short_title: "垃圾信息"
         title: "配置垃圾信息处理"
@@ -622,6 +628,7 @@ zh_CN:
           title: "运行测试"
           running: "正在运行测试…"
           success: "成功！"
+          invalid_config: "首先修复配置中的以下错误："
           failure: "尝试联系模型时返回此错误：%{error}"
         hints:
           max_prompt_tokens: "模型在单个请求中可以处理的最大词元数"

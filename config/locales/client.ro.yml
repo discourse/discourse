@@ -1550,7 +1550,7 @@ ro:
         invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
       add_email:
         title: "Adaugă e-mail"
-        add: "adaugă"
+        add: "Adaugă"
       change_email:
         title: "Schimbă e-mail"
         taken: "Această adresă există deja în baza de date."
@@ -2579,7 +2579,6 @@ ro:
         few: "%{count} postări în subiect"
         other: "%{count} de postări în subiect"
       create: "Subiect nou"
-      create_disabled_tag: "Nu ai voie să creezi subiecte cu această etichetă"
       create_long: "Creează un subiect nou"
       open_draft: "Deschide schiță"
       private_message: "Scrie un mesaj."
@@ -2888,6 +2887,8 @@ ro:
           other: "Ai selectat <b>%{count}</b> de mesaje."
     post_list:
       title: "Ultimele postări"
+      bulk:
+        clear_all: "Șterge tot"
     post:
       quote_reply: "Citează"
       quote_reply_shortcut: "Citează (sau apasă q)"
@@ -4754,6 +4755,8 @@ ro:
         schema:
           title: "Editează setarea %{name}"
           back_button: "Înapoi la %{name}"
+          move_up: "Mută sus"
+          move_down: "Mută jos"
           fields:
             required: "*obligatoriu"
             groups:

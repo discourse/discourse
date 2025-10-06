@@ -298,6 +298,9 @@ de:
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
       search: "Suche"
+    impersonation:
+      notice: "Du verwendest derzeit die Rolle von %{username}"
+      stop: "Nutzerrolle verlassen"
     themes:
       default_description: "Standard"
       broken_theme_alert: "Es kann sein, dass deine Website nicht funktioniert, weil ein Theme oder eine Komponente Fehler aufweist. Überprüfe die Browser-Konsole für weitere Informationen."
@@ -560,6 +563,11 @@ de:
       resume: "Fortsetzen"
       remove: "Entfernen"
       remove_confirmation: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
+      bulk_delete: "Ausgewählte löschen"
+      bulk_delete_confirmation: "Entwürfe löschen"
+      bulk_delete_message:
+        one: "Bist du sicher, dass du diesen Entwurf löschen möchtest?"
+        other: "Bist du sicher, dass du diese %{count} Entwürfe löschen willst?"
       new_topic: "Neuer Entwurf für Thema"
       new_private_message: "Neuer Entwurf für persönliche Nachricht"
       edit_topic: "Themenentwurf bearbeiten"
@@ -1679,6 +1687,7 @@ de:
         in_progress: "(E-Mail wird gesendet)"
         error: "(Fehler)"
         action: "Sende eine E-Mail zum Zurücksetzen des Passworts"
+        staged_user: "Vorbereitete Benutzer können keine E-Mails zum Zurücksetzen des Passworts erhalten."
         set_password: "Passwort ändern"
         choose_new: "Wähle ein neues Passwort"
         choose: "Wähle ein Passwort"
@@ -1787,7 +1796,7 @@ de:
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
       add_email:
         title: "E-Mail hinzufügen"
-        add: "hinzufügen"
+        add: "Hinzufügen"
       change_email:
         title: "E-Mail-Adresse ändern"
         taken: "Entschuldige, diese E-Mail-Adresse ist nicht verfügbar."
@@ -2613,6 +2622,7 @@ de:
       topic_count:
         one: "%{count} Thema in dieser Kategorie"
         other: "%{count} Themen in dieser Kategorie"
+      read_only: "nur Lesen"
     timezone_input:
       ambiguous_ist: "IST ist zweideutig, bitte wähle eine bestimmte Zeitzone (z. B. Asien/Kolkata)"
     select_kit:
@@ -2675,6 +2685,9 @@ de:
       confirm_publish: "Bist du sicher, dass du diese Vorlage veröffentlichten möchtest?"
       publishing: "Thema wird veröffentlicht …"
     composer:
+      autocomplete:
+        username_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Benutzernamen."
+        name_missing: "Das ausgewählte Autovervollständigungsergebnis enthält keinen Namen."
       emoji: "Emoji :)"
       more_emoji: "mehr …"
       options: "Optionen"
@@ -3203,6 +3216,7 @@ de:
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
+        select: "Massenauswahl"
         confirm: "Bestätigen"
         select_all: "Alle auswählen"
         clear_all: "Auswahl aufheben"
@@ -3344,8 +3358,6 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
-      create_disabled_category: "Du darfst keine Themen in dieser Kategorie erstellen"
-      create_disabled_tag: "Du darfst keine Themen mit diesem Schlagwort erstellen"
       create_long: "Ein neues Thema erstellen"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
@@ -3786,6 +3798,13 @@ de:
       title: "Letzte Beiträge"
       empty: "Es gibt keine Beiträge"
       aria_post_number: "%{title} – Beitrag #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} Beitrag ausgewählt"
+          other: "%{count} Beiträge ausgewählt"
+        select_all: "Alle auswählen"
+        clear_all: "Alle löschen"
+        actions: "Massenaktionen"
     post:
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
@@ -4694,7 +4713,7 @@ de:
       choose_for_topic_required_group:
         one: "%{count} Schlagwort von „%{name}“ auswählen …"
         other: "%{count} Schlagwörter von „%{name}“ auswählen …"
-      info: "Info"
+      info: "Informationen zum Schlagwort anzeigen"
       default_info: "Dieses Schlagwort ist nicht auf Kategorien beschränkt und hat keine Synonyme."
       staff_info: "Um Einschränkungen hinzuzufügen, füge dieses Schlagwort einer <a href=%{basePath}/tag_groups>Schlagwortgruppe</a> hinzu."
       category_restricted: "Dieses Schlagwort ist auf Kategorien beschränkt, für die du keine Zugriffsberechtigung hast."
@@ -4725,6 +4744,7 @@ de:
         one: "Das Synonym wird ebenfalls gelöscht."
         other: "Es werden %{count} weitere Synonyme ebenfalls gelöscht."
       edit_tag: "Name und Beschreibung des Schlagwortes bearbeiten"
+      edit: "Dieses Schlagwort bearbeiten"
       description: "Beschreibung (max. 1000 Zeichen)"
       sort_by: "Sortieren nach:"
       sort_by_count: "Anzahl"
@@ -5638,6 +5658,7 @@ de:
           experiment_tooltip:
             title_disabled: "Probiere diese experimentelle Funktion aus"
             title_enabled: "Experimentelle Funktion ausschalten"
+            content_disabled: "Teste unsere neueste Funktion, die sich gerade in der Entwicklung befindet! Sie ist noch im Experimentierstadium und kann daher wieder entfernt werden. Du kannst dich jederzeit abmelden, wenn du willst.<br/><br/>Wenn du dies änderst, wird die Funktion für alle Benutzer aktiv."
             content_enabled: "Wenn du dies änderst, wird die Funktion für alle Benutzer deaktiviert."
           feature_tooltip:
             title_disabled: "Probiere diese Funktion aus"
@@ -5922,6 +5943,7 @@ de:
               suspend: Benutzerkonten sperren.
               delete: Benutzerkonten löschen.
               list: Benutzerliste abrufen.
+              create: Erstelle einen neuen Benutzer.
             user_status:
               read: Benutzerstatus lesen.
               update: Benutzerstatus aktualisieren.
@@ -6260,7 +6282,7 @@ de:
             description: "Einstellungen, die es Themes ermöglichen, mehr Kontrolle über das gesamte Website-Erlebnis zu haben, indem sie eine kleine Teilmenge der wichtigsten Website-Einstellungen überschreiben."
           themes:
             title: "Themes"
-            description: 'Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern.'
+            description: "Website-weite Themes, die das Gesamtbild deiner Website für alle Nutzer verändern."
             themes_intro: "Installiere ein neues Theme, um loszulegen, oder erstelle dein eigenes von Grund auf mit diesen Ressourcen."
             new_theme: "Neues Theme"
             back: "Zurück zu Themes"
@@ -6326,6 +6348,8 @@ de:
             title: "Farboptionen"
             toggle: "Vom Benutzer wählbar"
             toggle_description: "Farbpalette kann von Benutzern ausgewählt werden"
+            toggle_default_light_on_theme: "Die Farbpalette ist die standardmäßige helle Palette des Standarddesigns (%{themeName})"
+            toggle_default_dark_on_theme: "Die Farbpalette ist die standardmäßige dunkle Palette des Standarddesigns (%{themeName})"
           colors:
             title: "Farben"
           save_changes: "Änderungen speichern"
@@ -6416,6 +6440,7 @@ de:
             confirm: "Möchtest du wirklich das Backup löschen?"
           restore:
             is_disabled: "Die Wiederherstellung ist derzeit deaktiviert. Um sie zu aktivieren, besuche die <a href='%{url}'>Website-Einstellungen</a>."
+            is_disabled_title: "Die Wiederherstellung ist derzeit deaktiviert. Um sie zu aktivieren, suche nach ‚allow restore‘ in den Website-Einstellungen."
             label: "Wiederherstellen"
             title: "Das Backup wiederherstellen"
             confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
@@ -6471,6 +6496,7 @@ de:
           title: "E-Mail"
           subject: "Betreff"
           multiple_subjects: "Diese E-Mail-Vorlage enthält mehrere Betreffzeilen."
+          multiple_bodies: "Diese E-Mail-Vorlage hat mehrere Textkörper."
           body: "Nachrichtentext"
           revert: "Änderungen verwerfen"
           revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
@@ -6698,6 +6724,8 @@ de:
         schema:
           title: "Einstellung „%{name}“ bearbeiten"
           back_button: "Zurück zu %{name}"
+          move_up: "Nach oben"
+          move_down: "Nach unten"
           fields:
             required: "*erforderlich"
             groups:
@@ -6730,6 +6758,7 @@ de:
           view: "Ansehen"
           set_default_light: "Als helle Palette im Standard-Theme festlegen (%{theme})"
           set_default_dark: "Als dunkle Palette im Standard-Theme festlegen (%{theme})"
+          set_default_success: "%{schemeName} als Standard-Palette für %{themeName} festgelegt"
           saved_refreshing: "Gespeichert! Aktualisiere Farben …"
           from_theme: "Vom Theme: %{name}"
           filters:
@@ -7064,6 +7093,7 @@ de:
             tag_group_change: "Schlagwortgruppe ändern"
             delete_associated_accounts: "verknüpfte Konten löschen"
             change_theme_site_setting: "Theme-spezifische Website-Einstellung ändern"
+            stop_impersonating: "Nutzerrolle verlassen"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -7629,6 +7659,10 @@ de:
           title: "Auf Benutzerkarte anzeigen"
           enabled: "Wird auf Benutzerkarte angezeigt"
           disabled: "Wird nicht auf Benutzerkarte angezeigt"
+        show_on_signup:
+          title: "Auf dem Registrierungsformular anzeigen"
+          enabled: "Wird auf dem Registrierungsformular angezeigt"
+          disabled: "Wird auf dem Registrierungsformular nicht angezeigt"
         searchable:
           title: "In Suche einschließen"
           enabled: "In Suche einschließen"

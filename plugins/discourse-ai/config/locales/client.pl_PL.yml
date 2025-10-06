@@ -343,6 +343,12 @@ pl_PL:
             few: "%{count} wpisy"
             many: "%{count} wpisów"
             other: "%{count} wpisów"
+        translations_menu:
+          translate:
+            label: "Przetłumacz post"
+            title: "Tłumaczy ten post na wszystkie obsługiwane języki"
+            confirm: "Spowoduje to zaktualizowanie wszystkich istniejących tłumaczeń w tym poście. Czy na pewno chcesz to zrobić?"
+            success: "Post został wysłany do przetłumaczenia"
       spam:
         short_title: "Spam"
         title: "Skonfiguruj obsługę spamu"
@@ -681,6 +687,7 @@ pl_PL:
           title: "Przeprowadź test"
           running: "Przeprowadzam test..."
           success: "Powodzenie!"
+          invalid_config: "Najpierw napraw następujące błędy w konfiguracji:"
           failure: "Próba nawiązania kontaktu z modelem zwróciła następujący błąd: %{error}"
         hints:
           max_prompt_tokens: "Maksymalna liczba tokenów, jaką model może przetworzyć w jednym żądaniu"

@@ -346,6 +346,12 @@ en:
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
+        translations_menu:
+          translate:
+            label: "Translate post"
+            title: "Translates this post to all supported languages"
+            confirm: "This will update any existing translations on this post. Are you sure?"
+            success: "Post has been sent for translation"
 
       spam:
         short_title: "Spam"
@@ -694,6 +700,7 @@ en:
           title: "Run test"
           running: "Running test..."
           success: "Success!"
+          invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
 
         hints:

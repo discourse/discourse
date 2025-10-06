@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { array, fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import { service } from "@ember/service";
 import { not } from "truth-helpers";
 import ColorPalettePreview from "discourse/components/color-palette-preview";
 import DButton from "discourse/components/d-button";
@@ -15,6 +16,8 @@ import DMenu from "float-kit/components/d-menu";
 import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ColorPaletteListItem extends Component {
+  @service router;
+
   @tracked isLoading = false;
 
   get isBuiltInDefault() {
@@ -69,6 +72,16 @@ export default class ColorPaletteListItem extends Component {
     );
   }
 
+  get editUrl() {
+    if (!this.canEdit) {
+      return null;
+    }
+    return this.router.urlFor(
+      "adminConfig.colorPalettes.show",
+      this.args.scheme.id
+    );
+  }
+
   @bind
   setAsDefaultLabel(mode) {
     const themeName = this.args.defaultTheme?.name || "Default";
@@ -106,7 +119,11 @@ export default class ColorPaletteListItem extends Component {
         />
 
         <div class="color-palette__details">
-          <h3>{{@scheme.description}}</h3>
+          {{#if this.editUrl}}
+            <h3><a href={{this.editUrl}}>{{@scheme.description}}</a></h3>
+          {{else}}
+            <h3>{{@scheme.description}}</h3>
+          {{/if}}
           <div class="color-palette__theme-link">
             {{#if @scheme.theme_id}}
               <LinkTo

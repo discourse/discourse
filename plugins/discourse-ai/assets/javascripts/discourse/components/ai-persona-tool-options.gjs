@@ -10,8 +10,8 @@ export default class AiPersonaToolOptions extends Component {
     if (!allTools || !this.args.data.tools) {
       return false;
     }
-    return this.args.data?.tools.any(
-      (tool) => allTools.findBy("id", tool)?.options
+    return this.args.data?.tools.some(
+      (tool) => allTools.find((item) => item.id === tool)?.options
     );
   }
 

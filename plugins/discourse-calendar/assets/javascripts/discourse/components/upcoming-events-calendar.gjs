@@ -75,7 +75,7 @@ export default class UpcomingEventsCalendar extends Component {
       if (!backgroundColor) {
         const categoryColorEntry = tagsColorsMap.find(
           (entry) =>
-            entry.type === "category" && entry.slug === post.topic.category_slug
+            entry.type === "category" && entry.slug === post.category_slug
         );
         backgroundColor = categoryColorEntry?.color;
       }
@@ -83,11 +83,6 @@ export default class UpcomingEventsCalendar extends Component {
       const categoryColor = Category.findById(categoryId)?.color;
       if (!backgroundColor && categoryColor) {
         backgroundColor = `#${categoryColor}`;
-      }
-
-      let classNames;
-      if (moment(endsAt || startsAt).isBefore(moment())) {
-        classNames = "fc-past-event";
       }
 
       return {
@@ -100,7 +95,6 @@ export default class UpcomingEventsCalendar extends Component {
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,
-        classNames,
       };
     });
   }

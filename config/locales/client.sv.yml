@@ -1437,7 +1437,7 @@ sv:
         invalid: "Det användarnamnet är ogiltigt. Det får bara innehålla siffror och bokstäver"
       add_email:
         title: "Lägg till e-post"
-        add: "lägg till"
+        add: "Lägg till"
       change_email:
         title: "Byt e-post"
         taken: "Tyvärr är den e-postadressen inte tillgänglig."
@@ -2118,6 +2118,7 @@ sv:
       topic_count:
         one: "%{count} ämne i den här kategorin"
         other: "%{count} ämnen i den här kategorin"
+      read_only: "skrivskyddad"
     select_kit:
       delete_item: "Radera %{name}"
       filter_by: "Filtrera efter: %{name}"
@@ -2748,7 +2749,6 @@ sv:
         one: "%{count} inlägg i ämnet"
         other: "%{count} inlägg i ämnet"
       create: "Nytt ämne"
-      create_disabled_category: "Du får inte skapa ämnen i den här kategorin"
       create_long: "Skapa ett nytt ämne"
       open_draft: "Öppna utkast"
       private_message: "Skriv meddelande"
@@ -3965,7 +3965,6 @@ sv:
       choose_for_topic_required_group:
         one: "välj %{count} tagg från '%{name}'…"
         other: "välj %{count} taggar från '%{name}'…"
-      info: "Info"
       default_info: "Denna tagg är inte begränsad till någon kategori, och har inga synonymer."
       staff_info: "För att lägga till begränsningar, placera denna tagg i en <a href=%{basePath}/tag_groups>tagggrupp</a>."
       category_restricted: "Denna tagg är begränsad till kategorier som du inte har tillträde till."

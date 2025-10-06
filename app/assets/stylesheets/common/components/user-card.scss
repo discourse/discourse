@@ -241,8 +241,9 @@
     }
   }
 
-  // featured topic
   .featured-topic {
+    text-align: left;
+
     .desc {
       color: var(--primary-high);
     }
@@ -291,6 +292,7 @@
   // custom user fields
   .public-user-fields {
     margin: 0;
+    text-align: left;
 
     .user-field-value-list-item:not(:last-of-type) {
       &::after {
@@ -303,12 +305,16 @@
   // badges
   .badge-section {
     line-height: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
 
     .user-badge {
       @include ellipsis;
       background: var(--primary-very-low);
       border: 1px solid var(--content-border-color);
       color: var(--primary);
+      border-radius: var(--d-border-radius);
     }
 
     .user-card-badge-link {

@@ -122,6 +122,7 @@ import {
 import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
+import { _addCategoryPropertyForSave } from "discourse/models/category";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -3396,6 +3397,24 @@ class PluginApi {
    */
   registerRichEditorExtension(extension) {
     registerRichEditorExtension(extension);
+  }
+
+  /**
+   * Registers a property that will be included when saving a category.
+   *
+   * This is useful for plugins that are adding additional parameters to the category
+   * and want to save the new property alongside the default category properties
+   * (all under the same save call), and are not using custom fields for that.
+   *
+   * ```
+   * api.registerCategorySaveProperty("property_one");
+   * api.registerCategorySaveProperty("property_two");
+   * ```
+   *
+   * @param {string} property - The name of the property to include when saving a category.
+   */
+  registerCategorySaveProperty(property) {
+    _addCategoryPropertyForSave(property);
   }
 
   #deprecateModifyClass(className) {

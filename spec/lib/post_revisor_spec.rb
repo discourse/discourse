@@ -549,46 +549,25 @@ describe PostRevisor do
         expect(post.revisions.size).to eq(0)
       end
 
-      it "should bump the topic" do
+      it "doesn't bump the topic when editing the last post" do
         expect {
           post_revisor.revise!(
             post.user,
             { raw: "updated body" },
             revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
           )
-        }.to change { post.topic.bumped_at }
+        }.not_to change { post.topic.bumped_at }
       end
 
-      it "should bump topic when no topic category" do
-        topic_with_no_category = Fabricate(:topic, category_id: nil)
-        post_from_topic_with_no_category = Fabricate(:post, topic: topic_with_no_category)
+      it "doesn't bump the topic when editing a post that isn't the last post" do
+        create_post(topic_id: post.topic.id)
         expect {
-          result =
-            post_revisor.revise!(
-              Fabricate(:admin),
-              raw: post_from_topic_with_no_category.raw,
-              tags: ["foo"],
-            )
-          expect(result).to eq(true)
-        }.to change { topic.reload.bumped_at }
-      end
-
-      it "should send muted and latest message" do
-        TopicUser.create!(topic: post.topic, user: post.user, notification_level: 0)
-        messages =
-          MessageBus.track_publish("/latest") do
-            post_revisor.revise!(
-              post.user,
-              { raw: "updated body" },
-              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
-            )
-          end
-
-        muted_message = messages.find { |message| message.data["message_type"] == "muted" }
-        latest_message = messages.find { |message| message.data["message_type"] == "latest" }
-
-        expect(muted_message.data["topic_id"]).to eq(topic.id)
-        expect(latest_message.data["topic_id"]).to eq(topic.id)
+          post_revisor.revise!(
+            post.user,
+            { raw: "updated body" },
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          )
+        }.not_to change { post.topic.bumped_at }
       end
     end
 
@@ -1438,7 +1417,7 @@ describe PostRevisor do
               }.to_not change { topic.reload.bumped_at }
             end
 
-            it "should bump topic if non staff-only tags are added" do
+            it "bumps topic if non staff-only tags are added" do
               expect {
                 result =
                   post_revisor.revise!(

@@ -52,7 +52,7 @@ function initializeAutoGroupFlair(site) {
     "trust_level_3",
     "trust_level_4",
   ].forEach((groupName) => {
-    const group = site.groups?.findBy("name", groupName);
+    const group = site.groups?.find((item) => item.name === groupName);
     if (group && group.flair_url) {
       _noAutoFlair = false;
       _autoGroupFlair[groupName] = {

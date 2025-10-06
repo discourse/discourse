@@ -180,7 +180,7 @@ RSpec.describe DiscourseAi::AiBot::EntryPoint do
 
     it "will include ai_search_discoveries field in the user_option if discover persona is enabled" do
       SiteSetting.ai_bot_enabled = true
-      SiteSetting.ai_bot_discover_persona = Fabricate(:ai_persona).id
+      SiteSetting.ai_discover_persona = Fabricate(:ai_persona).id
 
       serializer =
         CurrentUserSerializer.new(Fabricate(:user), scope: Guardian.new(Fabricate(:user)))

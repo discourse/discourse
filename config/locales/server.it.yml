@@ -1654,7 +1654,6 @@ it:
     crawl_images: "Recupera le immagini dagli URL remoti per inserire le dimensioni corrette di ampiezza e altezza nel tag."
     download_remote_images_to_local: "Converti immagini remote (linkate) in immagini locali scaricandole; ciò preserva il contenuto anche se le immagini vengono rimosse dal sito remoto in futuro."
     download_remote_images_threshold: "Minimo spazio su disco necessario per scaricare le immagini remote in locale (in percentuale)"
-    disabled_image_download_domains: "Le immagini non verranno mai scaricate dai seguenti domini. Elenco delimitato dal carattere pipe |"
     block_hotlinked_media: "Impedisci agli utenti di introdurre contenuti multimediali remoti (linkati) nei loro messaggi. Il contenuto remoto che non viene scaricato tramite l'opzione 'download_remote_images_to_local' verrà sostituito con un link segnaposto."
     block_hotlinked_media_exceptions: "Un elenco di URL di base esenti dall'impostazione block_hotlinked_media. Includere il protocollo (ad es. https://example.com)."
     editing_grace_period: "Per (n) secondi dopo la creazione del messaggio, le modifiche non saranno tracciate nella cronologia."
@@ -1705,7 +1704,6 @@ it:
     opengraph_image: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon"
     x_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
-    email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
     email_subject: "Formato oggetto personalizzabile per email standard. Vedi <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Fornisce maggiori dettagli agli utenti sul perché non possono accedere a un argomento specifico. Nota: questo metodo è meno sicuro perché gli utenti sapranno se un URL si collega a un argomento valido."
     enforce_second_factor: "Richiede all'utente di abilitare l'autenticazione a due fattori per poter accedere all'interfaccia utente di Discourse. Questa impostazione non interessa l'autenticazione via API o \"'DiscourseConnect provider\". Se enforce_second_factor_on_external_auth è abilitata, l'utente non sarà più in grado di accedere con provider di autenticazione esterni dopo aver configurato l'autenticazione a due fattori."
@@ -1820,8 +1818,6 @@ it:
     whispers_allowed_groups: "Consenti la comunicazione privata all'interno degli argomenti per i membri di gruppi specifici."
     hidden_post_visible_groups: "Consenti ai membri di questi gruppi di visualizzare i messaggi nascosti. Gli utenti dello staff possono sempre visualizzare i messaggi nascosti."
     allow_index_in_robots_txt: "Specifica in robots.txt che questo sito può essere indicizzato dai motori di ricerca web. Puoi <a href='%{base_path}/admin/customize/robots'>sovrascrivere il tuo robots.txt qui.</a> <b>AVVISO</b>: Regole non configurate correttamente potrebbero impedire che il tuo sito venga scansionato come previsto."
-    blocked_email_domains: "Un elenco delimitato da barre verticali di domini e-mail con cui gli utenti non sono autorizzati a registrare account. I sottodomini vengono gestiti automaticamente per i domini specificati. Simboli jolly * e ? non sono supportati. Esempio: mailinator.com|trashmail.net"
-    allowed_email_domains: "Un elenco delimitato da barre verticali di domini e-mail con cui gli utenti DEVONO registrare account. I sottodomini vengono gestiti automaticamente per i domini specificati. Simboli jolly * e ? non sono supportati. ATTENZIONE: non saranno ammessi utenti con domini e-mail diversi da quelli elencati!"
     normalize_emails: "Controlla se l'email normalizzata è univoca. L'email normalizzata è il nome utente senza tutti i puntini e senza tutto ciò che è compreso tra i simboli + e @."
     auto_approve_email_domains: "Gli utenti con indirizzi e-mail appartenenti a questo elenco di domini verranno approvati automaticamente. I sottodomini vengono gestiti automaticamente per i domini specificati. Simboli jolly * e ? non sono supportati."
     hide_email_address_taken: "Non informare gli utenti dell'esistenza di un account con un determinato indirizzo e-mail durante la registrazione o la procedura di reimpostazione della password. Richiede l'e-mail completa per le richieste di \"password dimenticata\"."
@@ -2217,9 +2213,6 @@ it:
     enable_category_group_moderation: "Consenti ai gruppi di moderare i contenuti in categorie specifiche"
     group_in_subject: "Imposta %%{optional_pm} nell'oggetto dell'email con il nome del primo gruppo in Messaggio Privato, vedi: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizza il formato oggetto per le e-mail standard</a>"
     allow_anonymous_mode: "Abilita l'opzione che consente all'utente di passare alla modalità anonima per pubblicare. Se attiva, l'utente può scegliere di mantenere privata la propria identità quando pubblica messaggi o argomenti sul sito. Vedi anche `allow anonymous likes`."
-    allow_likes_in_anonymous_mode: "Abilita l'opzione che consente all'utente che naviga sul tuo sito di mettere \"mi piace\" anonimi. Se attiva, l'utente può scegliere di mantenere privata la propria identità quando mette \"mi piace\" a messaggi o argomenti sul sito. Vedi anche `allow_anonymous_mode`."
-    anonymous_posting_min_trust_level: "Livello di attendibilità minimo richiesto per abilitare la pubblicazione in modalità anonima"
-    anonymous_posting_allowed_groups: "Gruppi a cui è consentito abilitare la pubblicazione anonima"
     anonymous_account_duration_minutes: "Per proteggere l'anonimato creare un nuovo account anonimo ogni N minuti per ogni utente. Esempio: se impostato a 600, non appena passano 600 minuti dall'ultimo messaggio E l'utente passa in modalità anonima, viene creato un nuovo account anonimo."
     hide_user_profiles_from_public: "Disabilita schede utenti, profili utenti e directory utenti per gli utenti anonimi."
     hide_new_user_profiles: "Nascondi i profili utente di livello di attendibilità 1 o inferiore al pubblico e considera attendibili gli utenti di livello 1 finché non pubblicano per la prima volta. Questa funzionalità è disabilitata incondizionatamente sui siti must_appprove_users e invite_only."
@@ -2237,7 +2230,6 @@ it:
     clean_up_unused_staged_users_after_days: "Numero di giorni prima che l'account di un utente provvisorio non utilizzato (senza messaggi) venga rimosso. Per disabilitare la cancellazione, impostare il valore a 0."
     user_selected_primary_groups: "Consenti agli utenti di impostare il proprio gruppo principale"
     max_notifications_per_user: "Quantità massima di notifiche per utente. Se questo numero viene superato, le vecchie notifiche verranno eliminate. Controllo settimanale. Impostare il valore a 0 per disabilitare l'opzione"
-    allowed_user_website_domains: "Verrà verificato il sito web dell'utente rispetto a questi domini. Lista delimitata dal carattere pipe."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     get_a_room_threshold: "Numero di messaggi che un utente deve inviare alla stessa persona nello stesso argomento prima di essere avvertito."
     dont_feed_the_trolls_threshold: "Numero di segnalazioni da parte di altri utenti prima di essere avvisati."
@@ -2320,7 +2312,6 @@ it:
     disable_watched_word_checking_in_user_fields: "disabilita il controllo delle parole osservate nei campi utente"
     watched_words_regular_expressions: "Consente l'utilizzo di espressioni regolari per filtrare le parole. Se abilitata, questa funzione raggruppa le parole con distinzioni per distinzione tra maiuscole e minuscole, quindi compila tutte le parole selezionate creando un'unica espressione regolare che aggiunge i confini di parola per le parole osservate. Il metodo di filtraggio mediante espressioni regolari aggiunge un livello di controllo supplementare alla moderazione, introducendo il supporto per pattern di espressioni più sofisticate. Questa impostazione consente inoltre di sostituire facilmente il testo originale con un testo sostitutivo a tua scelta."
     enable_fast_edit: "Aggiunge al menu di selezione messaggio un pulsante per modificare una piccola selezione in linea."
-    old_post_notice_days: "Il numero di giorni trascorsi i quali l'avviso di un messaggio viene considerato vecchio. L'avviso viene così differenziato visivamente dagli avvisi più recenti del sito."
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
     returning_users_days: "Quanti giorni devono trascorrere prima che un utente venga considerato ritornato."
@@ -2470,7 +2461,6 @@ it:
     view_raw_email_allowed_groups: "Gruppi a cui è consentito visualizzare il contenuto email sorgente di un messaggio se questo viene generato da un'email in arrivo. Include l'intestazione dell'email e altre informazioni tecniche."
     rich_editor: "Abilita l'editor avanzato per il compositore in modo che tutti gli utenti possano passare dalla modalità Markdown attuale al nuovo editor di rich text per una composizione più intuitiva e facile da usare."
     default_composition_mode: "Imposta la modalità predefinita per il compositore della tua community. La modalità Rich Text offre un'esperienza di scrittura più moderna e familiare per la maggior parte degli utenti, mentre la modalità Markdown potrebbe essere adatta a un pubblico più tecnico. I membri possono utilizzare un interruttore nella barra degli strumenti del compositore per passare da una modalità all'altra."
-    viewport_based_mobile_mode: "SPERIMENTALE: disattiva le modalità mobile/desktop basate sull'agente utente e utilizza invece la larghezza della finestra di visualizzazione."
     reviewable_ui_refresh: "Gruppi che possono utilizzare la nuova interfaccia utente sperimentale nella coda di revisione."
     content_localization_enabled: "Mostra contenuti localizzati per gli utenti in base alle preferenze del browser o della lingua. Tali contenuti possono includere categorie, tag, post e argomenti. Le impostazioni locali supportate sono impostate in \"Impostazioni locali supportate per la localizzazione dei contenuti\"."
     content_localization_supported_locales: "Elenco delle lingue supportate in cui è possibile tradurre i contenuti utente. Richiede \"localizzazione dei contenuti abilitata\"."
@@ -2570,7 +2560,6 @@ it:
   filter:
     description:
       status: "Filtra gli argomenti in base al loro stato"
-      in: "Filtra gli argomenti in base agli elenchi personali"
       order: "Ordina gli argomenti in base a un campo specifico"
       category: "Mostra argomenti in una categoria specifica"
       category_any: "Mostra gli argomenti in una qualsiasi delle categorie specificate (separati da virgole)"
@@ -4072,10 +4061,7 @@ it:
   page_not_found:
     page_title: "Pagina Non Trovata"
     title: "Ops! La pagina richiesta non esiste oppure è privata."
-    popular_topics: "Popolari"
-    recent_topics: "Recenti"
     see_more: "Altro"
-    search_title: "Cerca nel sito"
     search_button: "Cerca"
   offline:
     title: "Impossibile caricare l'app"
@@ -4930,6 +4916,16 @@ it:
       approve_and_unhide:
         title: "Approva e mostra il messaggio"
         complete: "Messaggio approvato e reso visibile"
+      no_action_post:
+        title: "Nessuna azione"
+      delete_post:
+        title: "Elimina messaggio"
+        complete: "Messaggio eliminato"
+      hide_post:
+        title: "Nascondi messaggio"
+      restore_post:
+        title: "Ripristina messaggio"
+        complete: "Messaggio ripristinato"
       no_action_user:
         title: "Nessuna azione"
       silence_user:

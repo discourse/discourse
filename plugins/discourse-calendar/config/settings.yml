@@ -24,6 +24,14 @@ discourse_calendar:
     list_type: simple
     client: true
     default: ""
+  calendar_event_display:
+    client: true
+    default: "auto"
+    type: enum
+    choices:
+      - auto
+      - block
+      - list-item
   calendar_categories_outlet:
     client: true
     default: "discovery-list-container-top"

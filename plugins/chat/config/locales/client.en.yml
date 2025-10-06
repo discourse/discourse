@@ -775,6 +775,9 @@ en:
           title: Chat
 
     sidebar:
+      start_new_dm:
+        text: Start new DM
+        title: Create a personal chat
       panels:
         chat:
           label: "Chat"

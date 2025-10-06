@@ -1255,7 +1255,6 @@ ko:
     educate_until_posts: "사용자가 첫 (n)개의 새 게시물을 작성하기 시작하면 작성기에 신규 사용자 교육 패널 팝업을 표시합니다."
     crawl_images: "원격 URL에서 이미지를 가져와 올바른 너비 및 높이 치수를 삽입합니다."
     download_remote_images_threshold: "원격 이미지를 로컬에 다운로드하기 위한 최소 디스크 공간(%)"
-    disabled_image_download_domains: "이 도메인에서 원격 이미지를 다운로드하지 않습니다. 목록은 | 기호를 사용하여 구분하세요."
     editing_grace_period: "게시 후 (n)초 동안은 편집해도 게시 히스토리에 새 버전이 생성되지 않습니다."
     editing_grace_period_max_diff: "편집 유예 기간에 허용되는 최대 문자 변경사항 수입니다. 더 많이 변경한 경우 다른 게시물 수정 버전을 저장하세요(신뢰 레벨 0 및 1)."
     editing_grace_period_max_diff_high_trust: "편집 유예 기간에 허용되는 최대 문자 변경사항 수입니다. 더 많이 변경한 경우 다른 게시물 수정 버전을 저장하세요(신뢰 레벨 2 이상)."
@@ -1291,7 +1290,6 @@ ko:
     favicon: "사이트의 즐겨찾기 아이콘은 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>을 참조하세요. CDN에서 올바르게 작동하려면 png여야 합니다. 32x32로 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
     opengraph_image: "페이지에 다른 적절한 이미지가 없을 때 사용되는 디폴트 오픈그래프 이미지입니다. 비워두면 large_icon이 사용됩니다"
     notification_email: "from: 이메일 주소는 모든 필수 시스템 이메일을 전송하는 데 사용됩니다. 여기에 지정된 도메인은 SPF, DKIM이 있어야 하며, 리버스 PTR 레코드가 제대로 설정되어 있어야 메일이 도착할 수 있습니다."
-    email_custom_headers: "사용자 지정 이메일 헤더의 파이프(|)로 구분된 목록"
     email_subject: "표준 이메일에 대한 사용자 정의 가능한 주제 형식. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323을</a> 참조 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>하십시오.</a>"
     detailed_404: "특정 주제에 액세스할 수 없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고: URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
     force_https: "사이트가 HTTPS만을 사용하도록 강제합니다. 경고: HTTPS가 완벽히 구성되어 제대로 작동하는 것을 확인하기 전까지는 이 옵션을 활성화하지 마세요. CDN, 소셜 로그인, 외부 로고 / 종속성이 HTTPS와 호환하는지 확인하셨나요?"
@@ -1664,7 +1662,6 @@ ko:
     enable_group_directory: "탐색을 위해 그룹의 디렉터리 제공"
     enable_category_group_moderation: "그룹이 특정 카테고리의 콘텐츠를 관리하도록 허용"
     group_in_subject: "PM의 첫 번째 그룹 이름으로 이메일 제목에 %%{optional_pm} 을 설정합니다. 참조: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>표준 이메일의 제목 형식 사용자 지정</a>"
-    anonymous_posting_min_trust_level: "익명 게시를 활성화하기 위한 최소 신뢰 레벨"
     anonymous_account_duration_minutes: "익명성을 보호하기 위해 각 사용자에 대해 N분마다 새 익명 계정을 만듭니다. 예: 600으로 설정하면 마지막 게시물로부터 600분이 경과하고 사용자가 익명으로 전환하는 즉시 새 익명 계정이 생성됩니다."
     hide_user_profiles_from_public: "익명 사용자의 사용자 카드, 사용자 프로필 및 사용자 디렉터리를 비활성화합니다."
     allow_users_to_hide_profile: "사용자가 자신의 프로필과 현재 상태를 숨기도록 허용"
@@ -1678,7 +1675,6 @@ ko:
     clean_up_unused_staged_users_after_days: "사용이 없는 스테이징된 사용자(게시물 없음)가 제거되기까지의 일 수입니다. 정리를 비활성화하려면 0으로 설정하세요."
     user_selected_primary_groups: "사용자가 자체 기본 그룹을 설정하도록 허용합니다."
     max_notifications_per_user: "사용자당 최대 알림 수입니다. 이 수를 초과하면 오래된 알림이 삭제됩니다. 매주 시행되며 비활성화하려면 0으로 설정하세요."
-    allowed_user_website_domains: "이 도메인에서 사용자 웹사이트가 검증됩니다. 파이프(|)로 구분된 목록입니다."
     allow_profile_backgrounds: "사용자가 프로필 배경을 업로드하도록 허용합니다."
     get_a_room_threshold: "사용자가 경고를 받기 전에 동일한 주제에서 동일한 사람에게 작성해야 하는 게시물 수입니다."
     dont_feed_the_trolls_threshold: "경고를 받기 전, 다른 사용자로부터 받은 경고(flag)의 수"
@@ -3152,10 +3148,7 @@ ko:
   page_not_found:
     page_title: "페이지를 찾을 수 없음"
     title: "이 페이지가 존재하지 않거나 비공개입니다."
-    popular_topics: "인기"
-    recent_topics: "최근"
     see_more: "더 보기"
-    search_title: "이 사이트 검색"
     search_button: "검색"
   offline:
     title: "앱을 로드할 수 없음"
@@ -3732,6 +3725,10 @@ ko:
         title: "게시물 삭제 유지"
       approve_and_restore:
         title: "게시물 승인 및 복원"
+      no_action_post:
+        title: "조치 없음"
+      delete_post:
+        complete: "게시물 삭제됨"
       no_action_user:
         title: "조치 없음"
       delete_user:

@@ -119,10 +119,8 @@ RSpec.describe SessionController do
           expect(response_body_parsed["allowed_credential_ids"]).to eq(
             [user_security_key.credential_id],
           )
-          secure_session = SecureSession.new(session["secure_session_id"])
-
           expect(response_body_parsed["challenge"]).to eq(
-            DiscourseWebauthn.challenge(user, secure_session),
+            DiscourseWebauthn.challenge(user, request.server_session),
           )
           expect(DiscourseWebauthn.rp_id).to eq("localhost")
         end
@@ -435,7 +433,7 @@ RSpec.describe SessionController do
           simulate_localhost_webauthn_challenge
           DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
-          # store challenge in secure session by visiting the email login page
+          # store challenge in server session by visiting the email login page
           get "/session/email-login/#{email_token.token}.json"
         end
 
@@ -622,7 +620,7 @@ RSpec.describe SessionController do
 
     def get_sso(return_path)
       nonce = SecureRandom.hex
-      dso = DiscourseConnect.new(secure_session: read_secure_session)
+      dso = DiscourseConnect.new(server_session:)
       dso.nonce = nonce
       dso.register_nonce(return_path)
 
@@ -813,10 +811,7 @@ RSpec.describe SessionController do
       ScreenedIpAddress.all.destroy_all
       get "/"
       sso = sso_for_ip_specs
-      DiscourseConnect.parse(
-        sso.payload,
-        secure_session: read_secure_session,
-      ).lookup_or_create_user(request.remote_ip)
+      DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user(request.remote_ip)
 
       sso = sso_for_ip_specs
       _screened_ip =
@@ -1103,14 +1098,14 @@ RSpec.describe SessionController do
       let(:invite_email) { nil }
 
       def login_with_sso_and_invite(invite_key = invite.invite_key)
-        write_secure_session("invite-key", invite_key)
+        server_session["invite-key"] = invite_key
         sso = get_sso("/")
         sso.external_id = "666"
         sso.email = "bob@bob.com"
         sso.name = "Sam Saffron"
         sso.username = "sam"
 
-        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers: headers
+        get "/session/sso_login", params: Rack::Utils.parse_query(sso.payload), headers:
       end
 
       it "errors if the invite key is invalid" do
@@ -1166,7 +1161,7 @@ RSpec.describe SessionController do
         user = User.find_by_email("bob@bob.com")
         expect(user.active).to eq(true)
         expect(session[:current_user_id]).to eq(user.id)
-        expect(read_secure_session["invite-key"]).to eq(nil)
+        expect(server_session["invite-key"]).to eq(nil)
       end
 
       it "creates the user account and redeems the invite but does not approve the user if must_approve_users is enabled" do
@@ -1484,7 +1479,7 @@ RSpec.describe SessionController do
              xhr: true,
              headers: headers
 
-        location = response.cookies["destination_url"]
+        location = response.cookies["sso_destination_url"]
         # javascript code will handle redirection of user to return_sso_url
         expect(location).to match(%r{^http://somewhere.over.rainbow/sso})
 
@@ -1808,8 +1803,8 @@ RSpec.describe SessionController do
                xhr: true,
                headers: headers
           expect(response.status).to eq(200)
-          # the frontend will take care of actually redirecting the user
-          redirect_url = response.cookies["destination_url"]
+          # the backend will take care of actually redirecting the user
+          redirect_url = response.cookies["sso_destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
           expect(sso.confirmed_2fa).to eq(true)
@@ -1831,7 +1826,7 @@ RSpec.describe SessionController do
                },
                xhr: true,
                headers: headers
-          redirect_url = response.cookies["destination_url"]
+          redirect_url = response.cookies["sso_destination_url"]
           expect(redirect_url).to start_with("http://somewhere.over.rainbow/sso?sso=")
           sso = DiscourseConnectProvider.parse(URI(redirect_url).query)
           expect(sso.confirmed_2fa).to eq(nil)
@@ -2060,10 +2055,10 @@ RSpec.describe SessionController do
         before do
           DiscourseWebauthn.stubs(:origin).returns("http://localhost:3000")
 
-          # store challenge in secure session by failing login once
+          # store challenge in server session by failing login once
           post "/session.json", params: { login: user.username, password: "myawesomepassword" }
 
-          read_secure_session[
+          server_session[
             DiscourseWebauthn.session_challenge_key(user)
           ] = valid_security_key_challenge_data[:challenge]
         end

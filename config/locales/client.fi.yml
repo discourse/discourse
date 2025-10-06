@@ -1787,7 +1787,7 @@ fi:
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
       add_email:
         title: "Lisää sähköpostiosoite"
-        add: "lisää"
+        add: "Lisää"
       change_email:
         title: "Vaihda sähköposti"
         taken: "Tämä sähköpostiosoite ei valitettavasti ole saatavilla."
@@ -2614,6 +2614,7 @@ fi:
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"
+      read_only: "vain luku"
     timezone_input:
       ambiguous_ist: "IST on moniselitteinen, valitse tietty aikavyöhyke (esim. Aasia/Kolkata)."
     select_kit:
@@ -3339,8 +3340,6 @@ fi:
         one: "%{count} viesti ketjussa"
         other: "%{count} viestiä ketjussa"
       create: "Uusi ketju"
-      create_disabled_category: "Et saa luoda ketjuja tälle alueelle"
-      create_disabled_tag: "Et saa luoda ketjuja tällä tunnisteella"
       create_long: "Aloita uusi ketju"
       open_draft: "Avaa luonnos"
       private_message: "Luo viesti"
@@ -3781,6 +3780,9 @@ fi:
       title: "Uusimmat viestit"
       empty: "Viestejä ei ole"
       aria_post_number: "%{title} – viesti %{postNumber}"
+      bulk:
+        clear_all: "Tyhjennä kaikki"
+        actions: "Joukkotoiminnot"
     post:
       confirm_delete: "Oletko varma, että haluat poistaa tämän viestin?"
       quote_reply: "Lainaa"
@@ -4689,7 +4691,6 @@ fi:
       choose_for_topic_required_group:
         one: "valitse %{count} tunniste joukosta %{name}…"
         other: "valitse %{count} tunnistetta joukosta %{name}…"
-      info: "Tietoa"
       default_info: "Tätä tunnistetta ei ole rajattu millekään alueelle, eikä sillä ole synonyymejä."
       staff_info: "Lisää rajoituksia asettamalla tämä tunniste <a href=%{basePath}/tag_groups>-tunnisteryhmään</a>."
       category_restricted: "Tämä tunniste on rajoitettu alueille, joille sinulla ei ole pääsyoikeutta."
@@ -6248,7 +6249,7 @@ fi:
             title: "Teeman sivustoasetukset"
           themes:
             title: "Teemat"
-            description: 'Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille.'
+            description: "Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille."
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
             new_theme: "Uusi teema"
             back: "Takaisin teemoihin"
@@ -6685,6 +6686,8 @@ fi:
         schema:
           title: "Muokkaa asetusta %{name}"
           back_button: "Takaisin kohteeseen %{name}"
+          move_up: "Siirrä ylös"
+          move_down: "Siirrä alas"
           fields:
             required: "*pakollinen"
             groups:

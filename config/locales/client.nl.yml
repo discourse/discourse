@@ -1787,7 +1787,7 @@ nl:
         invalid: "Die gebruikersnaam is ongeldig. De naam mag alleen cijfers en letters bevatten."
       add_email:
         title: "E-mailadres toevoegen"
-        add: "toevoegen"
+        add: "Toevoegen"
       change_email:
         title: "E-mailadres wijzigen"
         taken: "Sorry, dat e-mailadres is niet beschikbaar."
@@ -2614,6 +2614,7 @@ nl:
       topic_count:
         one: "%{count} topic in deze categorie"
         other: "%{count} topics in deze categorie"
+      read_only: "alleen-lezen"
     timezone_input:
       ambiguous_ist: "IST is ambigu, selecteer een specifieke tijdzone (bijvoorbeeld Azië/Kolkata)"
     select_kit:
@@ -3339,8 +3340,6 @@ nl:
         one: "%{count} bericht in topic"
         other: "%{count} berichten in topic"
       create: "Nieuw topic"
-      create_disabled_category: "Je mag geen topics maken in deze categorie"
-      create_disabled_tag: "Je mag geen topics maken met deze tag"
       create_long: "Nieuw topic maken"
       open_draft: "Concept openen"
       private_message: "Bericht sturen"
@@ -3781,6 +3780,9 @@ nl:
       title: "Nieuwste berichten"
       empty: "Er zijn geen berichten"
       aria_post_number: "%{title} - bericht %{postNumber}"
+      bulk:
+        clear_all: "Alles wissen"
+        actions: "Bulkacties"
     post:
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"
@@ -4689,7 +4691,6 @@ nl:
       choose_for_topic_required_group:
         one: "selecteer %{count} tag uit '%{name}…"
         other: "selecteer %{count} tags uit '%{name}…"
-      info: "Info"
       default_info: "Deze tag is niet beperkt tot categorieën en heeft geen synoniemen."
       staff_info: "Om beperkingen toe te voegen, moet je deze tag in een <a href=%{basePath}/tag_groups>taggroep</a> plaatsen."
       category_restricted: "Deze tag is beperkt tot categorieën waartoe je geen toegang hebt."
@@ -6675,6 +6676,8 @@ nl:
         schema:
           title: "Instelling %{name} bewerken"
           back_button: "Terug naar %{name}"
+          move_up: "Omhoog verplaatsen"
+          move_down: "Omlaag verplaatsen"
           fields:
             required: "*vereist"
             groups:

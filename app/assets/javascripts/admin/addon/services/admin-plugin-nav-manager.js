@@ -31,7 +31,9 @@ export default class AdminPluginNavManager extends Service {
 
     // Automatically inject the settings link.
     if (
-      !configNav.links.mapBy("route").includes("adminPlugins.show.settings")
+      !configNav.links
+        .map((item) => item.route)
+        .includes("adminPlugins.show.settings")
     ) {
       configNav.links.unshift(settingsNav.links[0]);
     }
@@ -40,8 +42,8 @@ export default class AdminPluginNavManager extends Service {
 
   get currentPluginDefaultRoute() {
     const currentConfigNavLinks = this.currentConfigNav.links;
-    const linksExceptSettings = currentConfigNavLinks.reject(
-      (link) => link.route === "adminPlugins.show.settings"
+    const linksExceptSettings = currentConfigNavLinks.filter(
+      (link) => link.route !== "adminPlugins.show.settings"
     );
 
     // Some plugins only have the Settings route, if so it's fine to use it as default.

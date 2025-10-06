@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostActionDescription from "discourse/components/post-action-description";
@@ -12,6 +13,7 @@ import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ClickTrack from "discourse/lib/click-track";
+import PostBulkSelectHelper from "discourse/lib/post-bulk-select-helper";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
@@ -21,6 +23,46 @@ export default class UserStreamComponent extends Component {
   @service dialog;
   @service composer;
   @service router;
+
+  bulkSelectHelper = new PostBulkSelectHelper(this);
+
+  constructor() {
+    super(...arguments);
+    this.updateBulkSelectPosts();
+  }
+
+  @action
+  updateBulkSelectPosts() {
+    if (this.isDraftsRoute && this.args.stream?.content) {
+      this.bulkSelectHelper.updatePosts(this.args.stream.content);
+    }
+  }
+
+  get isDraftsRoute() {
+    return this.router.currentRouteName === "userActivity.drafts";
+  }
+
+  get bulkSelectEnabled() {
+    return this.isDraftsRoute && this.args.stream?.content?.length > 0;
+  }
+
+  get showBulkSelectHelper() {
+    return this.isDraftsRoute ? this.bulkSelectHelper : null;
+  }
+
+  get bulkActions() {
+    if (this.isDraftsRoute) {
+      return [
+        {
+          label: "drafts.bulk_delete",
+          icon: "trash-can",
+          action: this.bulkDeleteDrafts,
+          class: "btn-danger",
+        },
+      ];
+    }
+    return [];
+  }
 
   get filterClassName() {
     const filter = this.args.stream?.filter;
@@ -33,7 +75,7 @@ export default class UserStreamComponent extends Component {
   get usernamePath() {
     // We want the draft_username for the drafts route,
     // in-case you are editing a post that was created by another user
-    // the draft usernmae will show the post item to show the editing user
+    // the draft username will show the post item to show the editing user
     if (this.router.currentRouteName === "userActivity.drafts") {
       return "draft_username";
     }
@@ -92,6 +134,30 @@ export default class UserStreamComponent extends Component {
   }
 
   @action
+  async bulkDeleteDrafts(selectedDrafts) {
+    const count = selectedDrafts.length;
+    this.dialog.deleteConfirm({
+      title: i18n("drafts.bulk_delete_confirmation"),
+      message: i18n("drafts.bulk_delete_message", { count }),
+      didConfirm: async () => {
+        try {
+          await Draft.bulkClear(selectedDrafts);
+
+          // Batch DOM updates after successful bulk delete
+          selectedDrafts.forEach((draft) => {
+            this.args.stream.remove(draft);
+          });
+
+          // Clear the bulk selection after successful deletion
+          this.showBulkSelectHelper?.clearAll();
+        } catch (error) {
+          popupAjaxError(error);
+        }
+      },
+    });
+  }
+
+  @action
   async loadMore() {
     await this.args.stream.findItems();
 
@@ -126,8 +192,12 @@ export default class UserStreamComponent extends Component {
       @showUserInfo={{false}}
       @resumeDraft={{this.resumeDraft}}
       @removeDraft={{this.removeDraft}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @bulkSelectHelper={{this.showBulkSelectHelper}}
+      @bulkActions={{this.bulkActions}}
       class={{concatClass "user-stream" this.filterClassName}}
       {{on "click" this.handleClick}}
+      {{didUpdate this.updateBulkSelectPosts @stream.content}}
     >
       <:abovePostItemHeader as |post|>
         <PluginOutlet

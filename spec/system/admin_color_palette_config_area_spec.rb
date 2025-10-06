@@ -12,6 +12,11 @@ describe "Admin Color Palette Config Area Page", type: :system do
 
   before { sign_in(admin) }
 
+  after do
+    Stylesheet::Manager.rm_cache_folder
+    Stylesheet::Manager.cache.clear
+  end
+
   it "allows editing the palette name" do
     config_area.visit(color_scheme.id)
 
@@ -171,11 +176,9 @@ describe "Admin Color Palette Config Area Page", type: :system do
       visible: false,
     )
 
-    try_until_success do
-      expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
-        "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
-      )
-    end
+    expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
+      "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
+    )
   end
 
   it "doesn't apply changes when editing a palette that's not currently active" do

@@ -84,7 +84,10 @@ export default class AdminUser extends User {
     return ajax(`/admin/users/${this.id}/groups/${groupId}`, {
       type: "DELETE",
     }).then(() => {
-      this.set("groups.[]", this.groups.rejectBy("id", groupId));
+      this.set(
+        "groups.[]",
+        this.groups.filter((group) => group.id !== groupId)
+      );
       if (this.primary_group_id === groupId) {
         this.set("primary_group_id", null);
       }

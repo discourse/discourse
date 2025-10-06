@@ -295,7 +295,7 @@ pl_PL:
         name: chiński uproszczony
     share:
       topic_html: 'Temat: <span class="topic-title">%{topicTitle}</span>'
-      post: "post #%{postNumber} od @%{username}"
+      post: "wpis #%{postNumber} od @%{username}"
       close: "zamknij"
       twitter: "Udostępnij na X"
       facebook: "Udostępnij na Facebooku"
@@ -307,7 +307,7 @@ pl_PL:
     action_codes:
       public_topic: "Upublicznij ten temat %{when}"
       open_topic: "Przekonwertowano to na temat %{when}"
-      private_topic: "Przekształcił(a) ten temat w wiadomość prywatną %{when}"
+      private_topic: "Przekształcił(a) ten temat w prywatną wiadomość %{when}"
       split_topic: "Podziel ten temat %{when}"
       invited_user: "%{who} Został zaproszony %{when}"
       invited_group: "%{who} Został zaproszony %{when}"
@@ -362,7 +362,7 @@ pl_PL:
       broken_theme_alert: "Twoja witryna może nie działać, ponieważ motyw/komponent zawiera błędy. Sprawdź konsolę przeglądarki, aby uzyskać więcej informacji."
       error_caused_by: "Spowodowane przez '%{name}'. <a target='blank' href='%{path}'>Kliknij tutaj</a>, aby zaktualizować, zmienić konfigurację lub wyłączyć."
       only_admins: "(ta wiadomość jest wyświetlana tylko administratorom witryny)"
-    broken_decorator_alert: "Posty mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści postów w Twojej witrynie zgłosił błąd."
+    broken_decorator_alert: "Wpisy mogą nie wyświetlać się poprawnie, ponieważ jeden z dekoratorów treści wpisów w Twojej witrynie zgłosił błąd."
     broken_page_change_alert: "Procedura obsługi onPageChange zgłosiła błąd. Aby uzyskać więcej informacji, sprawdź narzędzia programistyczne przeglądarki."
     broken_plugin_alert: "Spowodowane przez wtyczkę '%{name}'"
     broken_transformer_alert: "Wystąpił błąd. Twoja witryna może nie działać prawidłowo."
@@ -577,7 +577,7 @@ pl_PL:
       clear_bookmarks: "Wyczyść zakładki"
       help:
         bookmark: "Kliknij, aby dodać ten temat do zakładek"
-        edit_bookmark: "Kliknij, aby edytować zakładkę w poście w tym temacie"
+        edit_bookmark: "Kliknij, aby edytować zakładkę we wpisie tego tematu"
         edit_bookmark_for_topic: "Kliknij, aby edytować zakładkę dla tego tematu"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
         unbookmark_with_reminder: "Kliknij, aby usunąć wszystkie zakładki i przypomnienia w tym temacie"
@@ -612,7 +612,7 @@ pl_PL:
         clear_reminder: "Zachowaj zakładkę i wyczyść przypomnienie"
         after_reminder_label: "Po przypomnieniu powinniśmy..."
         after_reminder_checkbox: "Ustaw to jako domyślne dla wszystkich przyszłych przypomnień o zakładkach"
-      search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści postu"
+      search_placeholder: "Wyszukiwanie zakładek według nazwy, tytułu tematu lub treści wpisu"
       search: "Wyszukaj"
       bookmark: "Zakładka"
       bulk:
@@ -657,6 +657,13 @@ pl_PL:
       resume: "Kontynuuj"
       remove: "Usuń"
       remove_confirmation: "Czy na pewno chcesz usunąć ten szkic?"
+      bulk_delete: "Usuń zaznaczone"
+      bulk_delete_confirmation: "Usuń wersje robocze"
+      bulk_delete_message:
+        one: "Czy na pewno chcesz usunąć ten szkic?"
+        few: "Czy na pewno chcesz usunąć te %{count} szkice?"
+        many: "Czy na pewno chcesz usunąć tych %{count} szkiców?"
+        other: "Czy na pewno chcesz usunąć tych %{count} szkiców?"
       new_topic: "Nowy szkic tematu"
       new_private_message: "Nowy szkic wiadomości osobistej"
       edit_topic: "Edytuj szkic tematu"
@@ -738,6 +745,7 @@ pl_PL:
     review:
       show_more: "Pokaż więcej"
       show_less: "Pokaż mniej"
+      back_to_queue: "Powrót do kolejki"
       order_by: "Segreguj według:"
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
@@ -926,7 +934,7 @@ pl_PL:
         approved_user:
           title: "Użytkownik zatwierdzony"
         approved_post:
-          title: "Post zatwierdzony"
+          title: "Wpis zatwierdzony"
         rejected:
           title: "Odrzucony"
         rejected_flag:
@@ -934,11 +942,11 @@ pl_PL:
         rejected_user:
           title: "Użytkownik odrzucony"
         rejected_post:
-          title: "Post odrzucony"
+          title: "Wpis odrzucony"
         ignored:
           title: "Flaga zignorowana"
         deleted:
-          title: "Temat lub post usunięty"
+          title: "Temat lub wpis usunięty"
         reviewed:
           title: "Wszystkie sprawdzone"
         all:
@@ -951,26 +959,26 @@ pl_PL:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
           flagged_by: "Oflagowany przez"
-          noun: "post"
+          noun: "wpis"
         reviewable_queued_topic:
           title: "Temat w kolejce"
           noun: "temat"
         reviewable_queued_post:
           title: "Wpis w kolejce"
-          noun: "post"
+          noun: "wpis"
         reviewable_user:
           title: "Użytkownik"
           noun: "użytkownik"
         reviewable_post:
-          title: "Post"
-          noun: "post"
+          title: "Wpis"
+          noun: "wpis"
       flagged_as: "Oflagowany jako"
       assigned_to: "Przypisany do"
       moderator_actions: "Działania moderatora"
       timeline_and_notes: "Oś czasu i uwagi"
       timeline:
-        target_created: "Post utworzony"
-        target_created_by: "Post utworzony przez %{username} · %{relativeDate}"
+        target_created: "Wpis utworzony"
+        target_created_by: "Wpis utworzony przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
         claimed: "Zgłoszony"
@@ -1004,7 +1012,7 @@ pl_PL:
           few: "Oflagowany przez %{count} unikalnych użytkowników"
           many: "Oflagowany przez %{count} unikalnych użytkowników"
           other: "Oflagowany przez %{count} unikalnych użytkowników"
-        similar_posts: "Podobne poprzednie posty"
+        similar_posts: "Podobne poprzednie wpisy"
         flagged_in_timeframe: "%{count} oflagowano wcześniej"
         user_activity: "Aktywność użytkownika"
         activities:
@@ -1072,7 +1080,7 @@ pl_PL:
       three_days: "Za trzy dni"
       next_business_day: "Następny dzień roboczy"
       tomorrow: "Jutro"
-      post_local_date: "Data w poście"
+      post_local_date: "Data we wpisie"
       later_this_week: "Później w tym tygodniu"
       this_weekend: "W ten weekend"
       start_of_next_business_week: "Poniedziałek"
@@ -1708,7 +1716,7 @@ pl_PL:
       muted_users: "Uciszeni"
       muted_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
       allowed_pm_users: "Dozwolone"
-      allowed_pm_users_instructions: "Zezwalaj tylko na PM od tych użytkowników."
+      allowed_pm_users_instructions: "Zezwalaj tylko na PW od tych użytkowników."
       allow_private_messages_from_specific_users: "Zezwalaj tylko określonym użytkownikom na wysyłanie mi osobistych wiadomości"
       ignored_users: "Zignorowany"
       ignored_users_instructions: "Wstrzymaj wszystkie wpisy, powiadomienia i wiadomości od tych użytkowników."
@@ -1990,7 +1998,7 @@ pl_PL:
         invalid: "Ta nazwa jest niepoprawna. Powinna zawierać jedynie liczby i litery."
       add_email:
         title: "Dodaj e-mail"
-        add: "dodaj"
+        add: "Dodaj"
       change_email:
         title: "Zmień adres e-mail"
         taken: "Przykro nam, ale ten adres e-mail nie jest dostępny."
@@ -2468,7 +2476,7 @@ pl_PL:
         title: "Oś czasu tematu"
         content: "Szybko przewijaj długie tematy, korzystając z osi czasu tematu."
       post_menu:
-        title: "Menu postu"
+        title: "Menu wpisu"
         content: "Zobacz, jak jeszcze możesz wejść w interakcję z postem, klikając trzy kropki!"
       topic_notification_levels:
         title: "Obserwujesz teraz ten temat"
@@ -2622,10 +2630,10 @@ pl_PL:
       model_used: "Użyta AI: %{model}"
       outdated: "Podsumowanie jest nieaktualne"
       outdated_posts:
-        one: "(brakuje %{count} postu)"
-        few: "(brakuje %{count} postów)"
-        many: "(brakuje %{count} postów)"
-        other: "(brakuje %{count} postów)"
+        one: "(brakuje %{count} wpisu)"
+        few: "(brakuje %{count} wpisów)"
+        many: "(brakuje %{count} wpisów)"
+        other: "(brakuje %{count} wpisów)"
       enabled_description: "Przeglądasz najlepsze odpowiedzi w tym temacie: najciekawsze posty określone przez społeczność."
       description:
         one: "Jest <b>%{count}</b> odpowiedź."
@@ -2875,6 +2883,8 @@ pl_PL:
         few: "%{count} tematy w tej kategorii"
         many: "%{count} tematów w tej kategorii"
         other: "%{count} tematów w tej kategorii"
+      read_only: "tylko do odczytu"
+      read_only_description: "Ta kategoria jest tylko do odczytu, więc nie możesz jej wybrać dla tego tematu"
     timezone_input:
       ambiguous_ist: "IST jest niejednoznaczny, wybierz konkretną strefę czasową (np.: Asia/Kolkata)"
     select_kit:
@@ -2963,11 +2973,11 @@ pl_PL:
       esc_label: "odrzuć wiadomość"
       ok_proceed: "Ok, kontynuuj."
       translations:
-        title: "Tłumaczenie postu"
+        title: "Tłumaczenie wpisu"
         select: "Wybierz tłumaczenie"
         save: "Zapisz tłumaczenie"
-        original_content: "Oryginalna treść posta"
-        placeholder: "Tutaj wprowadź tłumaczenie postu..."
+        original_content: "Oryginalna treść wpisu"
+        placeholder: "Tutaj wprowadź tłumaczenie wpisu..."
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         few: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -3124,7 +3134,7 @@ pl_PL:
         draft: Szkic
         edit: Edycja
         reply_to_post:
-          label: Odpowiedz na post %{postUsername}
+          label: Odpowiedz na wpis %{postUsername}
           desc: Odpowiedz na określony wpis
         reply_as_new_topic:
           label: Odpowiedz jako powiązany temat
@@ -3233,10 +3243,10 @@ pl_PL:
         other: "polubił %{count} twoich postów"
       liked_consolidated: "<span>%{username}</span> %{description}"
       linked_consolidated_description:
-        one: "połączono %{count} z Twoich postów"
-        few: "połączono %{count} z Twoich postów"
-        many: "połączono %{count} z Twoich postów"
-        other: "połączono %{count} z Twoich postów"
+        one: "połączono %{count} z Twoich wpisów"
+        few: "połączono %{count} z Twoich wpisów"
+        many: "połączono %{count} z Twoich wpisów"
+        other: "połączono %{count} z Twoich wpisów"
       linked_consolidated: "<span>%{username}</span> %{description}"
       private_message: "<span>%{username}</span> %{description}"
       invited_to_private_message: "<p><span>%{username}</span> %{description}"
@@ -3373,17 +3383,17 @@ pl_PL:
       in_this_topic_tooltip: "przełącz się na przeszukiwanie wszystkich tematów"
       in_messages: "w wiadomościach"
       in_messages_tooltip: "przełącz się na wyszukiwanie regularnych tematów"
-      in_topics_posts: "we wszystkich tematach i postach"
+      in_topics_posts: "we wszystkich tematach i wpisach"
       enter_hint: "lub naciśnij Enter"
       mobile_enter_hint: "lub dotknij Szukaj"
-      in_posts_by: "w postach %{username}"
+      in_posts_by: "we wpisach %{username}"
       recent: "Ostatnie wyszukiwania"
       clear_recent: "Wyczyść ostatnie wyszukiwania"
       experience:
         search_field: "Pole wyszukiwania w nagłówku strony"
         search_icon: "Ikona wyszukiwania obok awatara profilu"
       type:
-        default: "Tematy/posty"
+        default: "Tematy/wpisy"
         users: "Użytkownicy"
         categories: "Kategorie"
         categories_and_tags: "Kategorie/tagi"
@@ -3395,17 +3405,17 @@ pl_PL:
         private_messages: "Wyszukiwanie wiadomości"
       tips:
         category_tag: "filtry według kategorii lub tagu"
-        author: "filtry według autora posta"
+        author: "filtry według autora wpisu"
         in: "filtruje według metadanych (np. in:title, in:personal, in:pinned)"
         status: "filtry według statusu tematu"
         full_search: "uruchamia wyszukiwanie pełnej strony"
         full_search_key: "%{modifier} + Enter"
-        me: "pokazuje tylko twoje posty"
+        me: "pokazuje tylko twoje wpisy"
       advanced:
         title: Zaawansowane filtry
         posted_by:
           label: Wysłane przez
-          aria_label: Filtruj według autora posta
+          aria_label: Filtruj według autora wpisu
         in_category:
           label: Skategoryzowane
         in_group:
@@ -3416,7 +3426,7 @@ pl_PL:
           label: Otagowane
           aria_label: Filtruj za pomocą tagów
         filters:
-          label: Zwracaj tylko tematy/posty…
+          label: Zwracaj tylko tematy/wpisy…
           title: Dopasowanie tylko w tytule
           likes: Lubię
           posted: Opublikowałem w
@@ -3445,10 +3455,10 @@ pl_PL:
             label: Wpisy
           min:
             placeholder: minimum
-            aria_label: filtruj według minimalnej liczby postów
+            aria_label: filtruj według minimalnej liczby wpisów
           max:
             placeholder: maksimum
-            aria_label: filtruj według maksymalnej liczby postów
+            aria_label: filtruj według maksymalnej liczby wpisów
           time:
             label: Opublikowano
             aria_label: Filtruj według daty opublikowania
@@ -3463,7 +3473,7 @@ pl_PL:
           placeholder: maksimum
           aria_label: filtrować według maksymalnych wyświetleń
         additional_options:
-          label: "Filtruj według liczby postów i wyświetleń tematu"
+          label: "Filtruj według liczby wpisów i wyświetleń tematu"
     hamburger_menu: "Menu nawigacyjne"
     new_item: "nowy"
     go_back: "wróć"
@@ -3532,13 +3542,14 @@ pl_PL:
         queue: "Kolejka"
         deleted_user: "(usunięty użytkownik)"
         deleted_post: "(usunięty post)"
-        post_number_with_topic_title: "post #%{post_number} - %{title}"
-        new_post_in_topic: "nowy post w %{title}"
+        post_number_with_topic_title: "wpis #%{post_number} - %{title}"
+        new_post_in_topic: "nowy wpis w %{title}"
         user_requires_approval: "%{username} wymaga zatwierdzenia"
         default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
       new_messages_marker: "ostatnia wizyta"
       bulk:
+        select: "Wybór zbiorczy"
         confirm: "Potwierdź"
         select_all: "Zaznacz wszystkie"
         clear_all: "Wyczyść wszystko"
@@ -3702,8 +3713,6 @@ pl_PL:
         many: "%{count} postów w temacie"
         other: "%{count} postów w temacie"
       create: "Nowy temat"
-      create_disabled_category: "Nie masz uprawnień do tworzenia tematów w tej kategorii"
-      create_disabled_tag: "Nie możesz tworzyć tematów z tym tagiem"
       create_long: "Utwórz nowy temat"
       open_draft: "Otwórz szkic"
       private_message: "Napisz wiadomość"
@@ -3812,7 +3821,7 @@ pl_PL:
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Przeglądaj wszystkie tagi</a> lub <a href='%{basePath}/latest'>zobacz najnowsze tematy</a>."
       browse_latest_topics: "Przeglądaj najnowsze tematy"
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
-      jump_reply: "Przejdź do pierwotnej lokalizacji posta"
+      jump_reply: "Przejdź do pierwotnej lokalizacji wpisu"
       jump_reply_aria: "Przejdź do postu @%{username} w jego oryginalnej lokalizacji"
       jump_reply_button: "Przejdź do postu"
       deleted: "Temat został usunięty"
@@ -3904,10 +3913,10 @@ pl_PL:
         title: postęp tematu
         jump_prompt: "przejdź do…"
         jump_prompt_of:
-          one: "z %{count} postu"
-          few: "z %{count} postów"
-          many: "z %{count} postów"
-          other: "z %{count} postów"
+          one: "z %{count} wpisu"
+          few: "z %{count} wpisów"
+          many: "z %{count} wpisów"
+          other: "z %{count} wpisów"
         jump_prompt_long: "Przejdź do…"
         jump_prompt_to_date: "do daty"
         jump_prompt_or: "lub"
@@ -3925,7 +3934,7 @@ pl_PL:
           "3": "Będziesz otrzymywać powiadomienia o każdym nowym wpisie, ponieważ obserwujesz ten temat."
           "2_8": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz kategorię wątku."
           "2_8_stale": "Zobaczysz liczbę nowych odpowiedzi, ponieważ śledziłeś tę kategorię w przeszłości."
-          "2_4": "Widzisz ilość nowych odpowiedzi, ponieważ wypowiedziałeś/łaś się w tym wątku."
+          "2_4": "Widzisz liczbę nowych odpowiedzi, ponieważ wypowiedziałeś/łaś się w tym wątku."
           "2_2": "Widzisz ilość nowych odpowiedzi, ponieważ śledzisz ten wątek."
           "2": 'Zobaczysz liczbę nowych odpowiedzi, ponieważ <a href="%{basePath}/u/%{username}/preferences/notifications">przeczytałeś/łaś ten temat</a>.'
           "1_2": "Otrzymasz powiadomienie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
@@ -4190,8 +4199,17 @@ pl_PL:
       deleted_by_author_simple: "(temat usunięty przez autora)"
     post_list:
       title: "Aktualne wpisy"
-      empty: "Brak postów"
-      aria_post_number: "%{title} - post #%{postNumber}"
+      empty: "Brak wpisów"
+      aria_post_number: "%{title} - wpis #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} zaznaczony post"
+          few: "%{count} zaznaczone posty"
+          many: "%{count} zaznaczonych postów"
+          other: "%{count} zaznaczonych postów"
+        select_all: "Zaznacz wszystkie"
+        clear_all: "Wyczyść wszystkie"
+        actions: "Działania zbiorcze"
     post:
       confirm_delete: "Czy na pewno chcesz usunąć ten post?"
       quote_reply: "Cytuj"
@@ -4205,8 +4223,8 @@ pl_PL:
       post_number: "wpis %{number}"
       ignored: "Zignorowana treść"
       wiki_last_edited_on: "wiki ostatnio edytowane %{dateTime}"
-      last_edited_on: "post ostatnio edytowany %{dateTime}"
-      edit_history: "historia edycji posta"
+      last_edited_on: "wpis ostatnio edytowany %{dateTime}"
+      edit_history: "historia edycji wpisu"
       reply_as_new_topic: "Odpowiedz w nowym temacie"
       reply_as_new_private_message: "Odpowiedź w nowej wiadomości do tego samego odbiorcy"
       continue_discussion: "Kontynuując dyskusję z %{postLink}:"
@@ -4220,12 +4238,12 @@ pl_PL:
       sr_load_more_replies: "Załaduj więcej osadzonych odpowiedzi"
       sr_date: "Data wysłania"
       sr_expand_replies:
-        one: "Ten post ma %{count} odpowiedź"
-        few: "Ten post ma %{count} odpowiedzi"
-        many: "Ten post ma %{count} odpowiedzi"
-        other: "Ten post ma %{count} odpowiedzi"
+        one: "Ten wpis ma %{count} odpowiedź"
+        few: "Ten wpis ma %{count} odpowiedzi"
+        many: "Ten wpis ma %{count} odpowiedzi"
+        other: "Ten wpis ma %{count} odpowiedzi"
       expand_collapse: "rozwiń/zwiń"
-      sr_below_embedded_posts_description: "post #%{post_number} odpowiedzi"
+      sr_below_embedded_posts_description: "wpis #%{post_number} odpowiedzi"
       sr_embedded_reply_description: "odpowiedź od @%{username} na post #%{post_number}"
       locked: "członek zespołu zablokował edytowanie tego wpisu"
       gap:
@@ -4283,7 +4301,7 @@ pl_PL:
         many: "Przeglądanie %{count} odpowiedzi do"
         other: "Przeglądanie %{count} odpowiedzi do"
       in_reply_to: "Załaduj post nadrzędny"
-      view_all_posts: "Wyświetl wszystkie posty"
+      view_all_posts: "Wyświetl wszystkie wpisy"
       badge_granted_tooltip: "%{username} zdobył odznakę '%{badge_name}' za ten post!"
       localizations:
         table:
@@ -4292,20 +4310,21 @@ pl_PL:
           edit: "Edytuj"
           delete: "Usuń"
         add: "Dodaj nowe tłumaczenie"
+        manage: "Zarządzaj tłumaczeniami (istniejące: %{count})"
         view:
           one: "Wyświetl %{count} przetłumaczone ustawienia regionalne"
           few: "Wyświetl %{count} przetłumaczone ustawienia regionalne"
           many: "Wyświetl %{count} przetłumaczonych ustawień regionalnych"
           other: "Wyświetl %{count} przetłumaczonych ustawień regionalnych"
         modal:
-          title: "Tłumaczenia dla postu"
+          title: "Tłumaczenia dla wpisu"
           confirm_delete: "Czy na pewno chcesz usunąć tłumaczenia dla '%{languageCode}'?"
         success: "Tłumaczenia zostały pomyślnie zaktualizowane"
         post_language_selector:
           none: "Brak"
         edit_warning:
           message: "To jest przetłumaczony post.<br><br> Chcesz edytować oryginalny post w języku %{language} czy edytować to konkretne tłumaczenie?"
-          action_original: "Edytuj oryginalny post"
+          action_original: "Edytuj oryginalny wpis"
           action_translation: "Edytuj to tłumaczenie"
       errors:
         create: "Przepraszamy, podczas tworzenia twojego wpisu wystąpił błąd. Spróbuj ponownie."
@@ -4352,9 +4371,9 @@ pl_PL:
         flag_action: "Oflaguj"
         flag: "oznacz ten post prywatnie, aby zwrócić na niego uwagę lub wyślij prywatną wiadomość na jego temat"
         anonymous_flag: "wyślij e-mail do personelu, aby oflagować ten post"
-        delete_action: "Usuń post"
+        delete_action: "Usuń wpis"
         delete: "usuń ten wpis"
-        undelete_action: "Cofnij usunięcie postu"
+        undelete_action: "Cofnij usunięcie wpisu"
         undelete: "przywróc ten wpis"
         share_action: "Udostępnij"
         share: "udostępnij odnośnik do tego wpisu"
@@ -4710,7 +4729,7 @@ pl_PL:
       take_action: "Podejmij działanie…"
       take_action_options:
         default:
-          title: "Ukryj post"
+          title: "Ukryj wpis"
           details: "Natychmiast osiągnij poziom flagowania, ukryj post i zaakceptuj wszystkie oczekujące flagi"
         suspend:
           title: "Zawieś użytkownika"
@@ -4730,7 +4749,7 @@ pl_PL:
       submit_tooltip: "Zapisz prywatną flagę."
       take_action_tooltip: "Natychmiast osiągnij poziom flagowania, ukryj post i zaakceptuj wszystkie oczekujące flagi"
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
-      notify_staff: "Powiadom zespół wiadomością prywatną"
+      notify_staff: "Powiadom zespół prywatną wiadomością"
       formatted_name:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
@@ -4815,8 +4834,8 @@ pl_PL:
       unlisted:
         help: "Ten temat jest zastrzeżony; nie będzie wyświetlany na listach tematów i można uzyskać do niego dostęp tylko za pośrednictwem bezpośredniego łącza. %{unlistedReason}"
       personal_message:
-        title: "Ten temat jest wiadomością prywatną"
-        help: "Ten temat jest wiadomością prywatną"
+        title: "Ten temat jest prywatną wiadomością"
+        help: "Ten temat jest prywatną wiadomością"
       visibility_reasons:
         op_flag_threshold_reached: "Ten temat został automatycznie zastrzeżony, ponieważ osiągnięto próg zgłoszeń"
         op_unhidden: "Temat ten został ponownie poruszony przez autora"
@@ -4943,7 +4962,7 @@ pl_PL:
       new_new:
         help: "tematy utworzone lub na które odpowiedziano w ciągu ostatnich kilku dni"
       posted:
-        title: "Moje posty"
+        title: "Moje wpisy"
         help: "tematy w których pisałeś"
       bookmarks:
         title: "Zakładki"
@@ -5186,7 +5205,7 @@ pl_PL:
         few: "wybierz %{count} tagi z '%{name}'…"
         many: "wybierz %{count} tagi z '%{name}'…"
         other: "wybierz %{count} tagi z '%{name}'…"
-      info: "Informacje"
+      info: "Pokaż informacje o tagu"
       default_info: "Ten tag nie jest ograniczony do żadnych kategorii i nie ma synonimów."
       staff_info: "Aby dodać ograniczenia, umieść ten znacznik w <a href=%{basePath}/tag_groups>grupie znaczników</a>."
       category_restricted: "Ten tag jest ograniczony do kategorii, do których nie masz uprawnień dostępu."
@@ -5227,6 +5246,7 @@ pl_PL:
         many: "Jego %{count} synonimów również zostanie usuniętych."
         other: "Jego %{count} synonimów również zostanie usuniętych."
       edit_tag: "Edytuj nazwę tagu i opis"
+      edit: "Edytuj ten tag"
       description: "Opis (maks. 1000 znaków)"
       sort_by: "Sortuj po:"
       sort_by_count: "Liczba"
@@ -5327,6 +5347,7 @@ pl_PL:
     safe_mode:
       enabled: "Tryb bezpieczny jest włączony, aby z niego wyjść zamknij to okno przeglądrki"
     theme_preview_notice: "Aktualnie wyświetlany jest podgląd motywu. Zamknij tę kartę lub okno przeglądarki, aby powrócić do normalnej konfiguracji witryny."
+    theme_preview_failed: "Nie można wyświetlić podglądu motywu, ponieważ motyw nie istnieje lub nie masz uprawnień dostępu do niego."
     image_removed: "(obraz usunięty)"
     pause_notifications:
       title: "Wstrzymaj powiadomienia na…"
@@ -5523,7 +5544,7 @@ pl_PL:
               content: "Użytkownicy"
               title: "Lista wszystkich użytkowników"
             my_posts:
-              content: "Moje posty"
+              content: "Moje wpisy"
               content_drafts: "Moje szkice"
               title: "Moja ostatnia aktywność w temacie"
               title_drafts: "Moje nieopublikowane szkice"
@@ -5983,14 +6004,14 @@ pl_PL:
         content:
           title: "Treść"
           header_description: "Skonfiguruj sposób zarządzania tematami i postami oraz dostosuj sposób tworzenia treści dla swoich członków"
-          keywords: "tematy|posty|kategorie|tagi"
+          keywords: "tematy|wpisy|kategorie|tagi"
           sub_pages:
             categories_and_tags:
               title: "Kategorie i tagi"
             sharing:
               title: "Udostępnianie"
             posts_and_topics:
-              title: "Posty i tematy"
+              title: "Wpisy i tematy"
             stats_and_thresholds:
               title: "Statystyki i progi"
         permalinks:
@@ -6111,6 +6132,7 @@ pl_PL:
         help: "Aktualnie używany motyw to <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Przejdź na stronę konfiguracji motywu <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'></a> , aby zmienić ustawienia witryny motywu, lub kliknij powiązany motyw w poniższej tabeli, aby edytować jego ustawienia."
         filter: "Filtruj ustawienia witryny motywu według nazwy ustawienia, opisu lub nazwy motywu..."
         filter_no_results: "Żadne ustawienia witryny tematycznej nie pasują do Twojego filtra"
+        site_setting_warning: 'To ustawienie jest zarządzane przez domyślny motyw Twojej witryny (%{defaultThemeName}). Możesz je zmodyfikować na stronie edycji motywu <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}"></a>.'
       search:
         modal_title: "Wyszukaj wszystko w panelu administracyjnym"
         title: "Szukaj"
@@ -6451,8 +6473,8 @@ pl_PL:
               status: "Zaktualizuj status tematu. Status: zamknięty, archiwalny, widoczny, przypięty. Włączone: prawda, fałsz. Określ identyfikator category_id tutaj i w żądaniu payload, aby zezwalać na zmiany statusu tylko w tematach z tej kategorii."
             posts:
               edit: Edytuj dowolny post lub konkretny.
-              delete: Usuń post.
-              recover: Odzyskaj post.
+              delete: Usuń wpis.
+              recover: Odzyskaj wpis.
               list: Lista najnowszych postów i postów prywatnych. Obsługiwany jest również RSS.
             revisions:
               read: "Pobierz najnowszą lub określoną wersję."
@@ -6481,6 +6503,7 @@ pl_PL:
               suspend: Zawieś konta użytkowników.
               delete: Usuń konta użytkowników.
               list: Uzyskaj listę użytkowników.
+              create: Utwórz nowego użytkownika.
             user_status:
               read: Przeczytaj status użytkownika.
               update: Zaktualizuj status użytkownika.
@@ -6553,11 +6576,11 @@ pl_PL:
           topic_destroyed: "Temat został usunięty"
           topic_recovered: "Temat został odzyskany"
         post_event:
-          group_name: "Zdarzenia postu"
-          post_created: "Post został utworzony"
-          post_edited: "Post został zaktualizowany"
-          post_destroyed: "Post został usunięty"
-          post_recovered: "Post został odzyskany"
+          group_name: "Zdarzenia wpisu"
+          post_created: "Wpis został utworzony"
+          post_edited: "Wpis został zaktualizowany"
+          post_destroyed: "Wpis został usunięty"
+          post_recovered: "Wpis został odzyskany"
         group_event:
           group_name: "Zdarzenia grupy"
           group_created: "Grupa została utworzona"
@@ -6594,7 +6617,7 @@ pl_PL:
           user_badge_revoked: "Odznaka użytkownika została cofnięta"
         like_event:
           group_name: "Zdarzenia polubień"
-          post_liked: "Gdy użytkownik polubi post."
+          post_liked: "Gdy użytkownik polubi wpis."
         notification_event:
           group_name: "Zdarzenia powiadomień"
           notification_created: "Użytkownik otrzymuje powiadomienie w swoim kanale"
@@ -6825,7 +6848,7 @@ pl_PL:
             description: "Ustawienia umożliwiające motywom większą kontrolę nad całym działaniem witryny poprzez nadpisanie niewielkiego podzbioru podstawowych ustawień witryny."
           themes:
             title: "Motywy"
-            description: 'Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd i charakter dla wszystkich użytkowników.'
+            description: "Motywy obejmujące całą witrynę, które zmieniają jej ogólny wygląd i charakter dla wszystkich użytkowników."
             themes_intro: "Zainstaluj nowy motyw, aby rozpocząć, lub stwórz własny od podstaw, korzystając z tych zasobów."
             new_theme: "Nowy motyw"
             back: "Powrót do motywów"
@@ -6985,6 +7008,7 @@ pl_PL:
             confirm: "Czy na pewno chcesz zniszczyć tę kopię zapasową?"
           restore:
             is_disabled: "Przywracanie jest obecnie wyłączone. Aby je włączyć, przejdź do <a href='%{url}'>ustawień witryny</a>."
+            is_disabled_title: "Funkcja przywracania jest obecnie wyłączona. Aby ją włączyć, wyszukaj opcję „zezwól na przywracanie” w ustawieniach witryny."
             label: "Przywróć"
             title: "Przywróć kopię zapasową"
             confirm: "Czy na pewno chcesz przywrócić tę kopię zapasową?"
@@ -7040,6 +7064,7 @@ pl_PL:
           title: "E-mail"
           subject: "Temat"
           multiple_subjects: "Ten szablon e-mail zawiera wiele tematów."
+          multiple_bodies: "Ten szablon wiadomości e-mail ma wiele treści."
           body: "Treść"
           revert: "Cofnij zmiany"
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
@@ -7273,6 +7298,8 @@ pl_PL:
         schema:
           title: "Edytuj ustawienie %{name}"
           back_button: "Powrót do %{name}"
+          move_up: "Przenieś wyżej"
+          move_down: "Przenieś niżej"
           fields:
             required: "*wymagane"
             groups:
@@ -7368,7 +7395,7 @@ pl_PL:
             description: "Tekst nagłówka i ikony"
           highlight:
             name: "zaznacz"
-            description: "Wyróżnione posty lub tematy"
+            description: "Wyróżnione wpisy lub tematy"
           highlight-high:
             name: "highlight-high"
             description: "Silne wyróżnienie"
@@ -7486,7 +7513,7 @@ pl_PL:
             smtp_transaction_response_placeholder: "SMTP ID"
           email_addresses:
             see_more: "[Zobacz więcej...]"
-          post_id: "(ID postu: %{post_id})"
+          post_id: "(ID wpisu: %{post_id})"
       moderation_history:
         performed_by: "Wykonane przez"
         no_results: "Brak dostępnej historii moderacji."
@@ -7534,7 +7561,7 @@ pl_PL:
           deleted: "Nie ma nowej wartości. Zapis został usunięty."
           filter_date_time: "Filtruj datę i godzinę"
           actions:
-            permanently_delete_post_revisions: "trwale usuń wersje posta"
+            permanently_delete_post_revisions: "trwale usuń wersje wpisu"
             delete_user: "usunięcie użytkownika"
             change_trust_level: "zmiana poziomu zaufania"
             change_username: "zmień nazwę użytkownika"
@@ -7579,15 +7606,15 @@ pl_PL:
             change_readonly_mode: "Zmień tryb tylko do otczytu"
             backup_download: "pobierz kopię zapasową"
             backup_destroy: "zniszcz kopię zapasową"
-            reviewed_post: "przejrzane posty"
+            reviewed_post: "przejrzane wpisy"
             custom_staff: "spersonalizowana akcja wtyczki"
             post_locked: "wpis zablokowany"
             post_edit: "edycja wpisu"
             post_unlocked: "wpis odblokowany"
-            check_personal_message: "sprawdź wiadomości prywatne"
+            check_personal_message: "sprawdź prywatne wiadomości"
             disabled_second_factor: "wyłącz dwuskładnikowe uwierzytelnienie"
             topic_published: "wątek opublikowany"
-            post_approved: "post zatwierdzony"
+            post_approved: "wpis zatwierdzony"
             post_rejected: "wpis odrzucony"
             create_badge: "stwórz odznakę"
             change_badge: "zmień odznakę"
@@ -7643,7 +7670,7 @@ pl_PL:
             topic_slow_mode_removed: "usuń tryb spowolnienia tematu"
             custom_emoji_create: "utwórz niestandardowe emoji"
             custom_emoji_destroy: "usuń niestandardowe emoji"
-            delete_post_permanently: "trwale usuń post"
+            delete_post_permanently: "trwale usuń wpis"
             delete_topic_permanently: "trwale usuń temat"
             tag_group_create: "utwórz grupę tagów"
             tag_group_destroy: "usuń grupę tagów"
@@ -8238,6 +8265,10 @@ pl_PL:
           title: "Pokaż na karcie użytkownika"
           enabled: "Widoczne na karcie użytkownika"
           disabled: "Niewidoczne na karcie użytkownika"
+        show_on_signup:
+          title: "Pokaż w formularzu rejestracyjnym"
+          enabled: "Pokazany formularz rejestracyjny"
+          disabled: "Nie pokazano w formularzu rejestracyjnym"
         searchable:
           title: "Możliwe do wyszukania"
           enabled: "Możliwe do wyszukania"
@@ -8535,8 +8566,8 @@ pl_PL:
         edit: "Edytuj"
         category: "Publikuj w kategorii"
         tags: "Tagi tematu"
-        post_author: "Autor postu"
-        post_author_with_default: "Autor postu (domyślnie %{author})"
+        post_author: "Autor wpisu"
+        post_author_with_default: "Autor wpisu (domyślnie %{author})"
         add_host: "Dodaj host"
         posts_and_topics: "Konfiguracja postów i tematów"
         crawlers: "Konfiguracja robotów"
@@ -8561,7 +8592,7 @@ pl_PL:
         nav:
           hosts: "Hosty"
           settings: "Ustawienia"
-          posts_and_topics: "Posty i tematy"
+          posts_and_topics: "Wpisy i tematy"
           crawlers: "Botów indeksujących"
       permalink:
         title: "Permalinki"

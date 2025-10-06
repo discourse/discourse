@@ -1787,7 +1787,7 @@ fr:
         invalid: "Ce nom d'utilisateur est invalide. Il ne doit être composé que de lettres et de chiffres."
       add_email:
         title: "Ajouter une adresse e-mail"
-        add: "ajouter"
+        add: "Ajouter"
       change_email:
         title: "Modifier l'adresse e-mail"
         taken: "Nous sommes désolés, cette adresse e-mail est indisponible."
@@ -2614,6 +2614,7 @@ fr:
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
+      read_only: "lecture seule"
     timezone_input:
       ambiguous_ist: "L'heure IST est ambiguë. Veuillez sélectionner un fuseau horaire spécifique (p. ex., Asie/Calcutta)"
     select_kit:
@@ -3339,8 +3340,6 @@ fr:
         one: "%{count} message dans le sujet"
         other: "%{count} messages dans le sujet"
       create: "Créer un sujet"
-      create_disabled_category: "Vous n'êtes pas autorisé(e) à créer des sujets dans cette catégorie"
-      create_disabled_tag: "Vous n'avez pas l'autorisation de créer des sujets avec cette étiquette"
       create_long: "Créer un nouveau sujet"
       open_draft: "Ouvrir le brouillon"
       private_message: "Démarrer un message direct"
@@ -3781,6 +3780,9 @@ fr:
       title: "Dernières publications"
       empty: "Il n'y a aucune publication"
       aria_post_number: "%{title} - publication #%{postNumber}"
+      bulk:
+        clear_all: "Tout effacer"
+        actions: "Actions groupées"
     post:
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"
@@ -4689,7 +4691,6 @@ fr:
       choose_for_topic_required_group:
         one: "sélectionnez %{count} étiquette de « %{name} »…"
         other: "sélectionnez %{count} étiquettes de « %{name} »…"
-      info: "Détails"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
@@ -6675,6 +6676,8 @@ fr:
         schema:
           title: "Modifier le paramètre %{name}"
           back_button: "Retour à %{name}"
+          move_up: "Déplacer vers le haut"
+          move_down: "Déplacer vers le bas"
           fields:
             required: "*requis"
             groups:

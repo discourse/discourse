@@ -223,7 +223,8 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
   end
 
   describe "#suggest_title" do
-    fab!(:topic)
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, category: category) }
     fab!(:post_1) { Fabricate(:post, topic: topic, raw: "I love apples") }
     fab!(:post_3) { Fabricate(:post, topic: topic, raw: "I love mangos") }
     fab!(:post_2) { Fabricate(:post, topic: topic, raw: "I love bananas") }
@@ -264,6 +265,14 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
             expect(response.status).to eq(200)
             expect(response.parsed_body["suggestions"]).to eq(title_suggestions_array)
           end
+        end
+
+        it "returns a 403 when the user cannot see the topic" do
+          private_topic = Fabricate(:private_message_topic)
+
+          post "/discourse-ai/ai-helper/suggest_title", params: { topic_id: private_topic.id }
+
+          expect(response.status).to eq(403)
         end
       end
 
@@ -486,6 +495,45 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
           request_caption({ image_url: image_url, image_url_type: "long_url" }) do |r|
             expect(r.status).to eq(429)
           end
+        end
+      end
+    end
+  end
+
+  describe "semantic suggestions" do
+    fab!(:embedding_definition)
+    fab!(:private_message_topic)
+
+    before do
+      sign_in(user)
+      user.group_ids = [Group::AUTO_GROUPS[:trust_level_1]]
+      SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+      SiteSetting.ai_embeddings_enabled = true
+    end
+
+    describe "#semantic_tags" do
+      context "when passing a topic the user doesn't have access to" do
+        it "returns a 403" do
+          post "/discourse-ai/ai-helper/suggest_tags",
+               params: {
+                 topic_id: private_message_topic.id,
+               }
+
+          expect(response.status).to eq(403)
+        end
+      end
+    end
+
+    describe "#semantic_categories" do
+      context "when passing a topic the user doesn't have access to" do
+        it "returns a 403" do
+          post "/discourse-ai/ai-helper/suggest_category",
+               params: {
+                 topic_id: private_message_topic.id,
+               }
+
+          expect(response.status).to eq(403)
         end
       end
     end

@@ -1136,7 +1136,7 @@ bs_BA:
         invalid: "To korisničko ime nije validno. Mora sadržavati samo brojeve i slova"
       add_email:
         title: "Dodaj e-poštu"
-        add: "Dodaj"
+        add: "Add"
       change_email:
         title: "Promijeni Email"
         taken: "Nažalost, taj email nije dostupan."
@@ -2943,7 +2943,6 @@ bs_BA:
       selector_remove_filter: "show all posts in this topic again."
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
-      info: "Informacija"
       default_info: "Ovaj oznaka nije predodređena ni za jednu kategoriju i nema sinonime."
       category_restricted: "Ova oznaka je predodređena za kategorije na koje nemate pravo pristupa."
       synonyms: "Sinonimi"

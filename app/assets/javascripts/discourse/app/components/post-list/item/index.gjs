@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { or } from "truth-helpers";
@@ -73,6 +75,33 @@ export default class PostListItem extends Component {
     }
   }
 
+  get isSelected() {
+    if (!this.args.bulkSelectEnabled || !this.args.bulkSelectHelper) {
+      return false;
+    }
+    return this.args.bulkSelectHelper.isSelected(this.args.post);
+  }
+
+  get itemClasses() {
+    return concatClass(
+      "post-list-item",
+      this.moderatorActionClass,
+      this.primaryGroupClass,
+      this.hiddenClass,
+      this.args.additionalItemClasses,
+      this.isSelected ? "post-list-item--selected" : ""
+    );
+  }
+
+  @action
+  toggleSelection(event) {
+    if (this.args.bulkSelectHelper) {
+      this.args.bulkSelectHelper.togglePost(this.args.post, {
+        shiftKey: event?.shiftKey || false,
+      });
+    }
+  }
+
   @bind
   decoratePostContent(element, helper) {
     this.appEvents.trigger(
@@ -83,18 +112,21 @@ export default class PostListItem extends Component {
   }
 
   <template>
-    <div
-      class="post-list-item
-        {{concatClass
-          this.moderatorActionClass
-          this.primaryGroupClass
-          this.hiddenClass
-          @additionalItemClasses
-        }}"
-    >
+    <div class={{this.itemClasses}}>
       {{yield to="abovePostItemHeader"}}
 
       <div class="post-list-item__header info">
+        {{#if @bulkSelectEnabled}}
+          <div class="post-list-item__bulk-select">
+            <input
+              type="checkbox"
+              checked={{this.isSelected}}
+              {{on "click" this.toggleSelection}}
+              class="bulk-select-checkbox"
+            />
+          </div>
+        {{/if}}
+
         {{#if this.isDraft}}
           <div class="draft-icon">
             {{icon this.draftIcon class="icon"}}

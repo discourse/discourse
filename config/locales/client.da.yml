@@ -1583,7 +1583,7 @@ da:
         invalid: "Det brugernavn er ugyldigt. Det må kun bestå af bogstaver og tal."
       add_email:
         title: "Tilføj e-mail"
-        add: "tilføj"
+        add: "Tilføj"
       change_email:
         title: "Skift e-mail-adresse"
         taken: "Beklager, denne e-mail er ikke tilgængelig."
@@ -2265,6 +2265,7 @@ da:
       topic_count:
         one: "%{count} emne i denne kategori"
         other: "%{count} emner i denne kategori"
+      read_only: "læs kun"
     select_kit:
       delete_item: "Slet %{name}"
       filter_by: "Filtrer efter: %{name}"
@@ -2823,7 +2824,6 @@ da:
         one: "%{count} indlæg i emnet"
         other: "%{count} indlæg i emnet"
       create: "Nyt emne"
-      create_disabled_category: "Du har ikke tilladelse til at oprette emner i denne kategori"
       create_long: "Opret et nyt emne i debatten"
       open_draft: "Åbn kladde"
       private_message: "Start en besked"
@@ -3209,6 +3209,8 @@ da:
     post_list:
       title: "Seneste indlæg"
       aria_post_number: "%{title} - indlæg #%{postNumber}"
+      bulk:
+        clear_all: "Ryd alle"
     post:
       confirm_delete: "Er du sikker på, at du vil slette dette indlæg?"
       quote_reply: "Citér"
@@ -3963,7 +3965,6 @@ da:
       choose_for_topic_required_group:
         one: "vælg %{count} mærke fra '%{name}'…"
         other: "vælg %{count} mærker fra '%{name}'…"
-      info: "Info"
       default_info: "Dette mærke er ikke begrænset til nogen kategorier og har ingen synonymer."
       category_restricted: "Dette mærke er begrænset til kategorier, som du ikke har adgang til."
       synonyms: "Synonymer"
@@ -5310,6 +5311,8 @@ da:
           inactive_filter: "Inaktiv"
           updates_available_filter: "Opdateringer Tilgængelige"
         schema:
+          move_up: "Flyt op"
+          move_down: "Flyt ned"
           fields:
             required: "*obligatoriske"
             number:

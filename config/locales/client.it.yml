@@ -1787,7 +1787,7 @@ it:
         invalid: "Nome utente non valido: usa solo lettere e cifre"
       add_email:
         title: "Aggiungi email"
-        add: "aggiungi"
+        add: "Aggiungi"
       change_email:
         title: "Cambia email"
         taken: "Spiacenti, questa email non è disponibile."
@@ -2614,6 +2614,7 @@ it:
       topic_count:
         one: "%{count} argomento in questa categoria"
         other: "%{count} argomenti in questa categoria"
+      read_only: "sola lettura"
     timezone_input:
       ambiguous_ist: "IST è ambiguo, seleziona un fuso orario specifico (ad esempio: Asia/Kolkata)"
     select_kit:
@@ -3336,8 +3337,6 @@ it:
         one: "%{count} messaggio in questo argomento"
         other: "%{count} messaggi in questo argomento"
       create: "Nuovo Argomento"
-      create_disabled_category: "Non hai l'autorizzazione per creare argomenti in questa categoria"
-      create_disabled_tag: "Non hai l'autorizzazione per creare argomenti con questa etichetta"
       create_long: "Crea un nuovo Argomento"
       open_draft: "Apri Bozza"
       private_message: "Inizia a scrivere un messaggio"
@@ -3778,6 +3777,9 @@ it:
       title: "Ultimi messaggi"
       empty: "Non ci sono messaggi"
       aria_post_number: "%{title}, messaggio n. %{postNumber}"
+      bulk:
+        clear_all: "Deseleziona tutto"
+        actions: "Azioni collettive"
     post:
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
@@ -4686,7 +4688,6 @@ it:
       choose_for_topic_required_group:
         one: "Seleziona %{count} etichetta da '%{name}'…"
         other: "Seleziona %{count} etichette da '%{name}'…"
-      info: "Info"
       default_info: "Questa etichetta non è limitata a nessuna categoria e non ha sinonimi."
       staff_info: "Per aggiungere restrizioni, metti questa etichetta in un <a href=%{basePath}/tag_groups>gruppo di etichette</a>"
       category_restricted: "Questa etichetta è limitata a categorie a cui non sei autorizzato ad accedere."
@@ -6672,6 +6673,8 @@ it:
         schema:
           title: "Modifica l'impostazione %{name}"
           back_button: "Torna a %{name}"
+          move_up: "Sposta su"
+          move_down: "Sposta giù"
           fields:
             required: "*obbligatorio"
             groups:

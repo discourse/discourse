@@ -3,7 +3,7 @@ import EmberObject, { action, computed, set } from "@ember/object";
 import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import { isEmpty } from "@ember/utils";
+import { compare, isEmpty } from "@ember/utils";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
@@ -160,8 +160,8 @@ export default class UserController extends Controller {
     if (!isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
       return siteUserFields
-        .filterBy("show_on_profile", true)
-        .sortBy("position")
+        .filter((field) => field.show_on_profile)
+        .sort((a, b) => compare(a?.position, b?.position))
         .map((field) => {
           set(field, "dasherized_name", dasherize(field.get("name")));
           const value = userFields

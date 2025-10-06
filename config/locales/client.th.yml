@@ -2390,7 +2390,6 @@ th:
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
-      info: "ข้อมูล"
       tag_groups_info:
         other: "แท็กนี้เป็นของกลุ่มเหล่านี้: %{tag_groups}"
       category_restrictions:

@@ -7,6 +7,7 @@
 de:
   site_settings:
     sign_in_with_apple_enabled: 'Anmeldung mit Apple aktivieren?'
+    apple_client_id: "(Mit Apple anmelden) Der Apple „Service Identifier“ aus der Entwicklerkonsole. Normalerweise eine Zeichenkette im Stil eines umgekehrten Domain-Namens (z. B. com.example.auth)"
     apple_team_id: '(Mit Apple anmelden) Apple Team ID (10 Zeichen)'
     apple_key_id: '(Mit Apple anmelden) Apple Key ID (10 Zeichen)'
     apple_pem: '(Mit Apple anmelden) Inhalt der Apple Pem-Datei. Füge die Zeilen BEGIN und END ein'

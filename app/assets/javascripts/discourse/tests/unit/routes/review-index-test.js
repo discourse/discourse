@@ -12,7 +12,7 @@ module("Unit | Route | review-index", function (hooks) {
       instantiate: false,
     });
 
-    const reviewIndexRoute = this.owner.lookup("route:review-index");
+    const reviewIndexRoute = this.owner.lookup("route:review.index");
     const messageBus = this.owner.lookup("service:message-bus");
 
     let channels = messageBus.callbacks.map((c) => c.channel);

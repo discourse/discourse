@@ -150,7 +150,7 @@ RSpec.describe DiscourseAssign do
       let!(:assignment) { Fabricate(:post_assignment) }
       let(:post) { assignment.target }
 
-      before { PostDestroyer.new(Discourse.system_user, post).destroy }
+      before { PostDestroyer.new(Discourse.system_user, post, context: "spec").destroy }
 
       it "deactivates the existing assignment" do
         assignment.reload
@@ -174,7 +174,7 @@ RSpec.describe DiscourseAssign do
       before do
         SiteSetting.reassign_on_open = true
         post.trash!
-        PostDestroyer.new(Discourse.system_user, post).recover
+        PostDestroyer.new(Discourse.system_user, post, context: "spec").recover
       end
 
       it "reactivates the existing assignment" do

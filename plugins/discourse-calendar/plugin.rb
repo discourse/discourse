@@ -10,8 +10,8 @@
 libdir = File.join(File.dirname(__FILE__), "vendor/holidays/lib")
 $LOAD_PATH.unshift(libdir) if $LOAD_PATH.exclude?(libdir)
 
-require_relative "lib/calendar_settings_validator.rb"
-require_relative "lib/calendar_first_day_of_week.rb"
+require_relative "lib/calendar_settings_validator"
+require_relative "lib/calendar_first_day_of_week"
 
 enabled_site_setting :calendar_enabled
 
@@ -126,7 +126,7 @@ after_initialize do
 
   # DISCOURSE CALENDAR HOLIDAYS
 
-  add_admin_route "admin.calendar", "calendar"
+  add_admin_route "admin.calendar", "discourse-calendar", use_new_show_route: true
 
   # DISCOURSE POST EVENT
 

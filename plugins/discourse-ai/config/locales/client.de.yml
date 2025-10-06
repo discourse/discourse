@@ -167,7 +167,11 @@ de:
             flag_post:
               label: "Beitrag melden"
               description: "Meldet den Beitrag (entweder als Spam oder zur Überprüfung)"
+            notify_author_pm:
+              label: "Autor per PN benachrichtigen"
+              description: "Sende dem Autor des Beitrags eine persönliche Nachricht, wenn sein Beitrag zur Warteschlange hinzugefügt und gelöscht wird."
             notify_author_pm_user:
+              label: "PN-Absender"
               description: "Benutzer, der die PN sendet (Standard: System)"
             notify_author_pm_message:
               label: "PN-Nachrichtentext"
@@ -192,6 +196,24 @@ de:
             tagger_persona:
               label: "KI-Persona"
               description: "Die KI-Persona, die Beiträge analysiert und Schlagwörter hinzufügt"
+            tag_mode:
+              label: "Schlagwort-Auswahlmodus"
+              description: "Wähle, wie die KI Schlagwörter auswählt"
+            available_tags:
+              label: "Verfügbare Schlagwörter"
+              description: "Schlagwörter, aus denen die KI wählen kann (wird nur im manuellen Modus verwendet)"
+            confidence_threshold:
+              label: "Vertrauensschwelle"
+              description: "Minimaler Prozentsatz für Vertrauen (0-100), um vorgeschlagene Schlagwörter anzuwenden"
+            max_tags_per_post:
+              label: "Maximale Anzahl an Schlagwörtern pro Beitrag"
+              description: "Maximale Anzahl an Schlagwörtern, mit denen ein einzelner Beitrag versehen werden kann"
+            max_post_tokens:
+              label: "Maximale Beitrags-Token"
+              description: "Maximale Anzahl von Token aus dem Beitrags-Inhalt, die analysiert werden sollen"
+            allow_restricted_tags:
+              label: "Eingeschränkte Schlagwörter zulassen"
+              description: "Erlaube der KI, Schlagwörter mit eingeschränkten Berechtigungen oder Sichtbarkeit vorzuschlagen und anzuwenden."
             max_posts_for_context:
               label: "Maximale Beiträge für Kontext"
               description: "Maximale Anzahl von Beiträgen aus dem Thema, die in den Analysekontext einbezogen werden sollen (Standard: 5)"
@@ -302,11 +324,19 @@ de:
             empty_label: "Automatische Übersetzungen sind deaktiviert, klicke unten, um sie zu konfigurieren"
         stats:
           title: "Übersetzungsstatistiken"
+          backfill_disabled: "Rückwirkende Übersetzung ist derzeit deaktiviert."
         progress_chart:
+          title: "Übersetzungsfortschritt %{tooltip}"
           data_label: "%{percentage}%"
           bar_done:
             one: "%{count} Beitrag"
             other: "%{count} Beiträge"
+        translations_menu:
+          translate:
+            label: "Beitrag übersetzen"
+            title: "Übersetzt diesen Beitrag in alle unterstützten Sprachen"
+            confirm: "Dadurch werden alle vorhandenen Übersetzungen in diesem Beitrag aktualisiert. Bist du sicher?"
+            success: "Der Beitrag wurde zur Übersetzung gesendet"
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
@@ -608,6 +638,8 @@ de:
           google-gemini-2-0-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation (vorherige Generation)"
           google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
           google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
+          google-gemini-2-5-flash-image-preview: "Neuestes Bilderzeugungsmodell mit Bildverarbeitungsfunktionen"
+          open_ai-o3: "OpenAIs leistungsstärkstes Argumentationsmodell"
           open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
           open_ai-gpt-5: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
           open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
@@ -637,6 +669,7 @@ de:
           title: "Test ausführen"
           running: "Test wird aufgeführt …"
           success: "Erfolg!"
+          invalid_config: "Behebe zunächst die folgenden Fehler in deiner Konfiguration:"
           failure: "Beim Versuch, das Modell zu kontaktieren, wurde dieser Fehler zurückgegeben: %{error}"
         hints:
           max_prompt_tokens: "Die maximale Anzahl von Token, die das Modell in einer einzigen Anfrage verarbeiten kann"

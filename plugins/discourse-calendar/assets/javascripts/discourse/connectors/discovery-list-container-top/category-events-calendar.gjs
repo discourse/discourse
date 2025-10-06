@@ -10,6 +10,9 @@ export default class CategoryEventsCalendar extends Component {
   }
 
   <template>
-    <div id="category-events-calendar"><CategoryCalendar /></div>
+    <div
+      id="category-events-calendar"
+      class="--discovery-list-container-top"
+    ><CategoryCalendar /></div>
   </template>
 }

@@ -683,7 +683,11 @@ describe DiscoursePostEvent::Event do
 
       it "basic serializer handles expired recurring events correctly" do
         serializer =
-          DiscoursePostEvent::BasicEventSerializer.new(expired_recurring_event, root: false)
+          DiscoursePostEvent::BasicEventSerializer.new(
+            expired_recurring_event,
+            root: false,
+            scope: Guardian.new,
+          )
         json = JSON.parse(serializer.to_json)
 
         expect(json["starts_at"]).to be_nil

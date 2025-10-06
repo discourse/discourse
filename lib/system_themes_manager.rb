@@ -13,16 +13,16 @@ class SystemThemesManager
 
     is_initial_install = !Theme.exists?(id: theme_id)
 
-    remote_theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
-    remote_theme.update_column(:enabled, true)
+    theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
+    theme.update_column(:enabled, true)
 
     if is_initial_install
       if theme_id == Theme::CORE_THEMES["horizon"]
-        remote_theme.update!(
-          dark_color_scheme: remote_theme.color_schemes.find_by(name: "Horizon Dark"),
-        )
+        theme.update!(dark_color_scheme: theme.color_schemes.find_by(name: "Horizon Dark"))
       end
     end
+
+    theme.save!
 
     Stylesheet::Manager.clear_theme_cache!
   end

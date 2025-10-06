@@ -3,6 +3,10 @@
 .reviewable {
   background: var(--d-content-background);
 
+  .reviewable-top-nav {
+    margin-bottom: 1em;
+  }
+
   .flagged-post-header {
     width: 100%;
     display: flex;

@@ -74,6 +74,7 @@ class DiscoursePluginRegistry
   define_register :mail_pollers, Set
   define_register :site_setting_areas, Set
   define_register :discourse_dev_populate_reviewable_types, Set
+  define_register :category_update_param_with_callback, Hash
 
   define_filtered_register :staff_user_custom_fields
   define_filtered_register :public_user_custom_fields

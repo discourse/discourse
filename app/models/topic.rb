@@ -303,7 +303,7 @@ class Topic < ActiveRecord::Base
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
-  has_many :topic_timers, dependent: :destroy
+  has_many :topic_timers, dependent: :destroy, foreign_key: :timerable_id
   has_many :reviewables
   has_many :user_profiles
 

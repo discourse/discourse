@@ -844,6 +844,8 @@ ar:
         chat:
           title: الدردشة
     sidebar:
+      start_new_dm:
+        title: إنشاء دردشة شخصية
       panels:
         chat:
           label: "الدردشة"

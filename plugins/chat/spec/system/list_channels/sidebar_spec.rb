@@ -136,8 +136,15 @@ RSpec.describe "List channels | sidebar", type: :system do
   context "when no direct message channels" do
     before { visit("/") }
 
-    it "shows the section" do
-      expect(page).to have_css(".sidebar-section[data-section-name='chat-dms']")
+    it "shows the start new dm button" do
+      selector =
+        ".sidebar-section[data-section-name='chat-dms'] .sidebar-section-link[data-link-name='new-chat-dm']"
+
+      expect(page).to have_selector(selector)
+
+      find(selector).click
+
+      expect(page).to have_selector(".chat-modal-new-message")
     end
   end
 

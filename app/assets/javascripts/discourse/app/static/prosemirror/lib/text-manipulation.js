@@ -3,7 +3,6 @@ import { getOwner, setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import { liftListItem, sinkListItem } from "prosemirror-schema-list";
@@ -105,21 +104,12 @@ export default class ProsemirrorTextManipulation {
   }
 
   autocomplete(options) {
-    if (this.siteSettings.floatkit_autocomplete_composer) {
-      return DAutocompleteModifier.setupAutocomplete(
-        getOwner(this),
-        this.view.dom,
-        this.autocompleteHandler,
-        options
-      );
-    } else {
-      // @ts-ignore
-      $(this.view.dom).autocomplete(
-        options instanceof Object
-          ? { textHandler: this.autocompleteHandler, ...options }
-          : options
-      );
-    }
+    return DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      this.view.dom,
+      this.autocompleteHandler,
+      options
+    );
   }
 
   applySurroundSelection(head, tail, exampleKey) {

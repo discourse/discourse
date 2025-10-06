@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::AdPlugin
+module AdPlugin
   module GuardianExtensions
     def show_dfp_ads?
       !self.user.in_any_groups?(SiteSetting.dfp_exclude_groups_map)

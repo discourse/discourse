@@ -31,6 +31,7 @@ ru:
         few: "решения"
         many: "решения"
         other: "решения"
+      accepted_answer_solver_info: "Решено с помощью %{user} в %{post}"
       accepted_answer_post_number: "публикация %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:

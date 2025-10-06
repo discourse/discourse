@@ -47,10 +47,24 @@ export function buildKeymap(
     return false;
   };
 
+  const unsetHashtags = (state) => {
+    const { $from } = state.selection;
+
+    if ($from.parent.type.name === "paragraph") {
+      $from.parent.descendants((node) => {
+        if (node.type.name !== "hashtag") {
+          return;
+        }
+        node.attrs.processed = false;
+      });
+    }
+  };
+
   chainWithExisting(
     "Backspace",
     undoInputRule,
     backspaceUnset,
+    unsetHashtags,
     joinTextblockBackward
   );
 
@@ -102,6 +116,7 @@ export function buildKeymap(
   chainWithExisting(
     "Enter",
     doubleSpaceHardBreak,
+    unsetHashtags,
     splitListItem(schema.nodes.list_item)
   );
 

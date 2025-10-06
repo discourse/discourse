@@ -7,11 +7,9 @@
 fr:
   admin_js:
     admin:
-      calendar: "Calendrier"
       site_settings:
         categories:
           discourse_post_event: "Événement Discourse"
-          discourse_calendar: "Calendrier Discourse"
   js:
     notifications:
       titles:
@@ -44,6 +42,7 @@ fr:
         title: "Région"
         none: "Aucune"
         use_current_region: "Utiliser la région actuelle"
+        select_region: "Choisir une région..."
         names:
           ae: "Émirats arabes unis"
           ar: "Argentine"

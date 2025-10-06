@@ -1068,7 +1068,6 @@ zh_TW:
     educate_until_posts: "當使用者開始鍵入他們的前幾個 (n) 新貼文時，在編輯器上顯示教育面板視窗。"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
     download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
-    disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
     editing_grace_period: "在 (n) 秒之內，對貼文的編輯不生成貼文歷史。"
     editing_grace_period_max_diff: "編輯寬限期允許的字元更改的最大數量，如果有更多的更改，將另儲存為另一個版本的修訂（信任等級0和1）"
     editing_grace_period_max_diff_high_trust: "編輯寬限期允許的最大字元更改數，如果更改將另存為另一個修訂版（信任級別2和更高）"
@@ -1094,7 +1093,6 @@ zh_TW:
     favicon: "您網頁的圖示（favicon），請參閱<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>。 要在CDN上正常工作，favicon 副檔名必須為 .png，圖示將調整為32x32。如果留空，將使用large_icon。"
     opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
-    email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
     email_subject: "客製化自訂郵件標題格式，請參閱 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
@@ -1364,7 +1362,6 @@ zh_TW:
     enable_user_directory: "提供可供瀏覽的使用者目錄"
     enable_group_directory: "提供可供瀏覽的群組目錄"
     group_in_subject: "在電子郵件中設定%%{optional_pm} ，取決於私訊中第一個群組的名稱，請參閱：<a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>客製化標準電子郵件的格式</a>"
-    anonymous_posting_min_trust_level: "啟用匿名發帖所需的最小信任等級"
     anonymous_account_duration_minutes: "為了匿名性，為每個使用者每 N 分鐘創建一個匿名帳號。例如：如果設置為 600，只要發帖後 600 分鐘到了，並且使用者切換至了匿名模式，就會創建一個新的匿名帳號。"
     hide_user_profiles_from_public: "不對來訪使用者顯示使用者信息卡、使用者資料和使用者目錄。"
     show_inactive_accounts: "允許登入使用者瀏覽未啟用帳戶的使用者個人檔案。"
@@ -1373,7 +1370,6 @@ zh_TW:
     ignored_users_count_message_threshold: "如果特定使用者被這麽多的其他使用者忽略，則通知版主。"
     ignored_users_message_gap_days: "被許多使用者忽略的使用者，再次通知版主此事件需要等待的時間。"
     clean_up_inactive_users_after_days: "刪除尚未認證電子郵件的使用者（沒有發表任何討論主題、信任級別為0）之前的天數。要禁用自動刪除，請設定為0。"
-    allowed_user_website_domains: "使用者網站要屬於這些域名中。用 | 分割。"
     allow_profile_backgrounds: "允許使用者上傳個人檔案背景圖片"
     get_a_room_threshold: "在收到警告之前，使用者必須向同一主題中的同一個人發佈的討論話題數。"
     enable_mobile_theme: "為移動設備啟用移動友好的主題，但也能切換回完整站點。如果你想要使用自定義的響應式主題請禁用它。"
@@ -2442,10 +2438,7 @@ zh_TW:
   page_not_found:
     page_title: "找不到頁面"
     title: "抱歉！這個頁面不存在或者是私密的。"
-    popular_topics: "熱門"
-    recent_topics: "最近"
     see_more: "更多"
-    search_title: "搜尋該網頁"
     search_button: "搜索"
   offline:
     title: "無法載入App"
@@ -2935,6 +2928,10 @@ zh_TW:
           description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
       reject:
         title: "拒絕"
+      no_action_post:
+        title: "沒有動作"
+      delete_post:
+        title: "刪除貼文"
       no_action_user:
         title: "沒有動作"
       silence_user:

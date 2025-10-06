@@ -159,7 +159,7 @@ class TopicsController < ApplicationController
     end
 
     page = params[:page]
-    if (page < 0) || ((page - 1) * @topic_view.chunk_size >= @topic_view.topic.highest_post_number)
+    if page < 0 || page > 1 && (page - 1) * @topic_view.chunk_size >= @topic_view.topic.posts_count
       raise Discourse::NotFound
     end
 

@@ -26,7 +26,7 @@ describe DiscourseReactions do
 
   describe "on_setting_change(discourse_reactions_excluded_from_like)" do
     it "kicks off the background job to sync post actions when site setting changes" do
-      expect_enqueued_with(job: ::Jobs::DiscourseReactions::LikeSynchronizer) do
+      expect_enqueued_with(job: Jobs::DiscourseReactions::LikeSynchronizer) do
         SiteSetting.discourse_reactions_excluded_from_like = "confetti_ball|-1"
       end
     end
