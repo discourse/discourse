@@ -1018,9 +1018,9 @@ export default class PostStream extends RestModel {
 
   // Find a postId for a postNumber, respecting gaps
   findPostIdForPostNumber(postNumber) {
-    const stream = this.stream,
-      beforeLookup = this.gaps.before,
-      streamLength = stream.length;
+    const stream = this.stream;
+    const beforeLookup = this.gaps?.before;
+    const streamLength = stream.length;
 
     let sum = 1;
     for (let i = 0; i < streamLength; i++) {
