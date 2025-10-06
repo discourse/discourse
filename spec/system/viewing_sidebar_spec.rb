@@ -221,7 +221,10 @@ describe "Viewing sidebar", type: :system do
           user_private_messages_page.visit(admin)
           user_private_messages_page.click_unseen_private_mesage(private_message.id)
           expect(sidebar).to have_my_messages_link_with_unread_icon
-          try_until_success { expect(sidebar).to have_my_messages_link_without_unread_icon }
+
+          try_until_success(reason: "Liking relying on messagebus updates") do
+            expect(sidebar).to have_my_messages_link_without_unread_icon
+          end
         end
       end
     end
