@@ -7029,7 +7029,6 @@ ru:
         copy_to_clipboard: "Скопировать в буфер"
         copied_to_clipboard: "Скопировано в буфер"
         copy_to_clipboard_error: "Ошибка при копировании данных в буфер обмена"
-        theme_owner: "Нередактируемо, владелец:"
         email_templates:
           title: "Эл. почта"
           subject: "Тема"

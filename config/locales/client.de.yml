@@ -6494,7 +6494,6 @@ de:
         copy_to_clipboard: "In Zwischenablage kopieren"
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
-        theme_owner: "Nicht bearbeitbar, Eigentümer:"
         email_templates:
           title: "E-Mail"
           subject: "Betreff"

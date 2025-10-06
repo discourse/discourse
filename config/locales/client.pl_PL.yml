@@ -7065,7 +7065,6 @@ pl_PL:
         copy_to_clipboard: "Skopiuj do schowka"
         copied_to_clipboard: "Tekst skopiowany do schowka."
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."
-        theme_owner: "Nie możliwe do edycji, należy do:"
         email_templates:
           title: "E-mail"
           subject: "Temat"

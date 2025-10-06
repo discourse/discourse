@@ -6896,7 +6896,6 @@ sk:
         copy_to_clipboard: "Skopírovať do schránky"
         copied_to_clipboard: "Skopírované do schránky"
         copy_to_clipboard_error: "Chyba pri kopírovaní dát do schránky"
-        theme_owner: "Nie je možné upravovať, vlastníkom je:"
         email_templates:
           title: "Email"
           subject: "Predmet"
