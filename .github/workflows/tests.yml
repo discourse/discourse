@@ -29,6 +29,7 @@ jobs:
     timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
 
     env:
+      DISCOURSE_INCLUDE_GEMS_IN_RSPEC_BACKTRACE: 1
       RAILS_ENV: test
       PGUSER: discourse
       PGPASSWORD: discourse
