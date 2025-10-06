@@ -29,14 +29,12 @@ RSpec.describe "Rss Polling - admin", type: :system do
     tag.select_row_by_value(tag_1.name)
     find(".save-rss-polling-feed").click
 
-    try_until_success do
-      expect(DiscourseRssPolling::RssFeed.last).to have_attributes(
-        url:,
-        author: current_user.username,
-        category_filter: "updates",
-        category_id: category_1.id,
-        tags: tag_1.name,
-      )
-    end
+    expect(DiscourseRssPolling::RssFeed.last).to have_attributes(
+      url:,
+      author: current_user.username,
+      category_filter: "updates",
+      category_id: category_1.id,
+      tags: tag_1.name,
+    )
   end
 end

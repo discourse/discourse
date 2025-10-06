@@ -20,15 +20,12 @@ describe "User preferences | Interface", type: :system do
       dropdown.select_row_by_value(Bookmark.auto_delete_preferences[:when_reminder_sent])
       click_button(I18n.t("js.save"))
 
-      # the preference page reloads after saving, so we need to poll the db
-      try_until_success(timeout: 20) do
-        expect(
-          UserOption.exists?(
-            user_id: user.id,
-            bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
-          ),
-        ).to be_truthy
-      end
+      expect(
+        UserOption.exists?(
+          user_id: user.id,
+          bookmark_auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
+        ),
+      ).to be_truthy
     end
   end
 
