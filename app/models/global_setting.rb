@@ -293,13 +293,7 @@ class GlobalSetting
     end
 
     def resolve(current, default)
-      BaseProvider.coerce(
-        if current.present?
-          current
-        else
-          default.presence
-        end,
-      )
+      BaseProvider.coerce(current.presence || default.presence)
     end
   end
 
