@@ -69,10 +69,13 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   def reset_if_needed!
-    return unless should_reset?
+    with_lock do
+      reload
+      return unless should_reset?
 
-    now = Time.current
-    update!(monthly_used: 0, last_reset_at: now)
+      now = Time.current
+      update!(monthly_used: 0, last_reset_at: now)
+    end
   end
 
   def should_reset?
@@ -81,7 +84,10 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   def deduct_credits!(credits)
-    increment!(:monthly_used, credits)
+    with_lock do
+      self.monthly_used += credits
+      save!
+    end
   end
 
   def check_credits!
