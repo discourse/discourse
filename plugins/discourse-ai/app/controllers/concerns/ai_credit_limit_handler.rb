@@ -25,6 +25,6 @@ module AiCreditLimitHandler
              message: exception.message,
              details: details,
            },
-           status: 429
+           status: :too_many_requests
   end
 end

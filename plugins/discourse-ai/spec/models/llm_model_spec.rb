@@ -15,7 +15,7 @@ RSpec.describe LlmModel do
 
   describe "#credit_system_enabled?" do
     fab!(:seeded_model)
-    fab!(:regular_model) { Fabricate(:llm_model) }
+    fab!(:regular_model, :llm_model)
 
     it "returns false for non-seeded models" do
       expect(regular_model.credit_system_enabled?).to be false

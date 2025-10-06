@@ -205,7 +205,7 @@ RSpec.describe LlmCreditAllocation do
     it "returns one month after last_reset_at" do
       freeze_time
       allocation = Fabricate(:llm_credit_allocation, last_reset_at: Time.current)
-      expect(allocation.next_reset_at).to eq_time(Time.current + 1.month)
+      expect(allocation.next_reset_at).to eq_time(1.month.from_now)
     end
   end
 
