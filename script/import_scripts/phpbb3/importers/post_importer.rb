@@ -31,7 +31,7 @@ module ImportScripts::PhpBB3
     def map_post(row)
       return if @settings.category_mappings.dig(row[:forum_id].to_s, :skip)
 
-      imported_user_id = @settings.prefix((row[:post_username].presence || row[:poster_id]))
+      imported_user_id = @settings.prefix(row[:post_username].presence || row[:poster_id])
       user_id = @lookup.user_id_from_imported_user_id(imported_user_id) || -1
       is_first_post = row[:post_id] == row[:topic_first_post_id]
 

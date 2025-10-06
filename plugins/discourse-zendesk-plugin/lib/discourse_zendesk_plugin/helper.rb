@@ -96,7 +96,7 @@ module DiscourseZendeskPlugin
       result = zendesk_client.users.search(query: user.email)
       return result.first if result.present? && result.size == 1
       zendesk_client.users.create(
-        name: (user.name.presence || user.username),
+        name: user.name.presence || user.username,
         email: user.email,
         verified: true,
         role: "end-user",

@@ -89,7 +89,7 @@ class ImportScripts::JForum < ImportScripts::Base
   def user_fields
     @user_fields ||=
       begin
-        UserField.all.index_by { |field| field.name }
+        UserField.all.index_by(&:name)
       end
   end
 

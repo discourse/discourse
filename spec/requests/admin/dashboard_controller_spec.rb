@@ -17,7 +17,7 @@ RSpec.describe Admin::DashboardController do
         "emoji" => "🤾",
         "title" => "Cool Beans",
         "description" => "Now beans are included",
-        "created_at" => date1 || (40.minutes.ago),
+        "created_at" => date1 || 40.minutes.ago,
       },
       {
         "id" => "2",
