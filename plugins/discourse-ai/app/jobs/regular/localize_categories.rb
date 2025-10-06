@@ -12,18 +12,6 @@ module Jobs
       raise Discourse::InvalidParameters.new(:limit) if limit.nil?
       return if limit <= 0
 
-      llm_model = find_llm_model
-      return if llm_model.blank?
-
-      begin
-        LlmCreditAllocation.check_credits!(llm_model)
-      rescue LlmCreditAllocation::CreditLimitExceeded => e
-        Rails.logger.info(
-          "Category localization backfill skipped: #{e.message}. Will resume when credits reset.",
-        )
-        return
-      end
-
       categories =
         DiscourseAi::Translation::CategoryCandidates
           .get
@@ -60,16 +48,6 @@ module Jobs
           CategoryLocalization.find_by(category_id: category.id, locale: category.locale).destroy
         end
       end
-    end
-
-    private
-
-    def find_llm_model
-      ai_persona = AiPersona.find_by(id: SiteSetting.ai_translation_persona)
-      return nil if ai_persona.blank?
-
-      persona_klass = ai_persona.class_instance
-      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end
 end

@@ -11,18 +11,6 @@ module Jobs
 
       return if !DiscourseAi::Translation.backfill_enabled?
 
-      llm_model = find_llm_model
-      return if llm_model.blank?
-
-      begin
-        LlmCreditAllocation.check_credits!(llm_model)
-      rescue LlmCreditAllocation::CreditLimitExceeded => e
-        Rails.logger.info(
-          "Topic localization backfill skipped: #{e.message}. Will resume when credits reset.",
-        )
-        return
-      end
-
       locales = SiteSetting.content_localization_supported_locales.split("|")
       locales.each do |locale|
         base_locale = locale.split("_").first
@@ -54,16 +42,6 @@ module Jobs
 
         DiscourseAi::Translation::VerboseLogger.log("Translated #{topics.size} topics to #{locale}")
       end
-    end
-
-    private
-
-    def find_llm_model
-      ai_persona = AiPersona.find_by(id: SiteSetting.ai_translation_persona)
-      return nil if ai_persona.blank?
-
-      persona_klass = ai_persona.class_instance
-      DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end
 end
