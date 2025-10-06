@@ -111,46 +111,6 @@ module("Unit | Utility | category-badge", function (hooks) {
     assert.strictEqual(dirSpan.dir, "auto");
   });
 
-  test("recursive", function (assert) {
-    const store = getOwner(this).lookup("service:store");
-    const siteSettings = getOwner(this).lookup("service:site-settings");
-
-    const foo = store.createRecord("category", {
-      name: "foo",
-      id: 1,
-    });
-
-    const bar = store.createRecord("category", {
-      name: "bar",
-      id: 2,
-      parent_category_id: foo.id,
-    });
-
-    const baz = store.createRecord("category", {
-      name: "baz",
-      id: 3,
-      parent_category_id: bar.id,
-    });
-
-    siteSettings.max_category_nesting = 0;
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-
-    siteSettings.max_category_nesting = 1;
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-
-    siteSettings.max_category_nesting = 2;
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
-
-    siteSettings.max_category_nesting = 3;
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
-  });
-
   test("category style types", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const category = store.createRecord("category", { name: "hello", id: 123 });

@@ -31,8 +31,6 @@ export function addExtraIconRenderer(renderer) {
     @param {Boolean} [opts.allowUncategorized] If false, returns an empty string for the uncategorized category.
     @param {Boolean} [opts.link] If false, the category badge will not be a link.
     @param {Boolean} [opts.hideParent] If true, parent category will be hidden in the badge.
-    @param {Boolean} [opts.recursive] If true, the function will be called recursively for all parent categories
-    @param {Number}  [opts.depth] Current category depth, used for limiting recursive calls
     @param {Boolean} [opts.previewColor] If true, category color will be set as an inline style.
     @param {Array}   [opts.ancestors] The ancestors of the category to generate the badge for.
     @param {String}  [opts.styleType] Badge style, either "icon", "emoji" or "square" (default).
@@ -62,14 +60,11 @@ export function categoryBadgeHTML(category, opts) {
     }
   }
 
-  // allow each ancestor to use its own styles
-  const newOpts = { ...opts };
-  ["styleType", "icon", "emoji"].forEach((k) => delete newOpts[k]);
-
-  const depth = (opts.depth || 1) + 1;
   if (opts.ancestors) {
-    const { ancestors } = opts;
-    delete newOpts.ancestors;
+    const { ancestors, ...newOpts } = opts;
+
+    // allow each ancestor to use its own style
+    ["styleType", "icon", "emoji"].forEach((k) => delete newOpts[k]);
 
     return [category, ...ancestors]
       .reverse()
@@ -77,16 +72,6 @@ export function categoryBadgeHTML(category, opts) {
         return categoryBadgeHTML(c, { ...newOpts });
       })
       .join("");
-  } else if (opts.recursive && depth <= siteSettings.max_category_nesting) {
-    const parentCategory = Category.findById(category.parent_category_id);
-    const lastSubcategory = !opts.depth;
-    opts.depth = depth;
-    const parentBadge = categoryBadgeHTML(parentCategory, {
-      depth,
-      ...newOpts,
-    });
-    opts.lastSubcategory = lastSubcategory;
-    return parentBadge + _renderer(category, opts);
   }
 
   return _renderer(category, opts);
@@ -116,9 +101,6 @@ export function categoryLinkHTML(category, options) {
     }
     if (options.hideParent) {
       categoryOptions.hideParent = true;
-    }
-    if (options.recursive) {
-      categoryOptions.recursive = true;
     }
     if (options.ancestors) {
       categoryOptions.ancestors = options.ancestors;
