@@ -58,6 +58,30 @@ module DiscoursePostEvent
 
         expect(event_ids).to match_array([active_event1.id, active_event2.id])
       end
+
+      it "should return events in ics format" do
+        event1 = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event 1")
+        event2 = Fabricate(:event, original_starts_at: 2.days.from_now, name: "Test Event 2")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to include("text/calendar")
+
+        event_ids_sorted = [event1.id, event2.id].sort.join("-")
+        expected_filename = "events-#{Digest::SHA1.hexdigest(event_ids_sorted)}.ics"
+        expect(response.headers["Content-Disposition"]).to eq(
+          "attachment; filename=\"#{expected_filename}\"",
+        )
+
+        body = response.body
+        expect(body).to include("BEGIN:VCALENDAR")
+        expect(body).to include("END:VCALENDAR")
+        expect(body).to include("BEGIN:VEVENT")
+        expect(body).to include("END:VEVENT")
+        expect(body).to include("SUMMARY:Test Event 1")
+        expect(body).to include("SUMMARY:Test Event 2")
+      end
     end
 
     context "with an existing post" do
