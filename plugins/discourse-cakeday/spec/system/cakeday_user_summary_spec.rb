@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Cakeday/Birthday emojis", type: :system do
+RSpec.describe "Cakeday/Birthday emojis" do
   CONTROL_DATE = Time.zone.local(2020, 6, 10)
   fab!(:current_user) { Fabricate(:admin, date_of_birth: CONTROL_DATE.prev_year(14)) }
 
