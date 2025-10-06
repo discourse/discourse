@@ -175,7 +175,7 @@ describe "Category Localizations", type: :system do
 
       before { SiteSetting.content_localization_language_switcher = "all" }
 
-      describe "for anonymous users" do
+      shared_examples_for "navigating the site via various category links" do
         it "keeps the translated category name when navigating sidebar" do
           visit("/")
           switcher.expand
@@ -221,6 +221,30 @@ describe "Category Localizations", type: :system do
           sidebar.click_topics_button
 
           expect(topic_list.topic(cat_topic)).to have_text("Solicitudes")
+        end
+      end
+
+      describe "for anonymous users" do
+        it_behaves_like "navigating the site via various category links"
+      end
+
+      describe "logged in users" do
+        describe "lazy loaded categories" do
+          before do
+            SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+            sign_in(admin)
+          end
+
+          it_behaves_like "navigating the site via various category links"
+        end
+
+        describe "no lazy loaded categories" do
+          before do
+            SiteSetting.lazy_load_categories_groups = ""
+            sign_in(admin)
+          end
+
+          it_behaves_like "navigating the site via various category links"
         end
       end
     end
