@@ -325,6 +325,7 @@ de:
         stats:
           title: "Übersetzungsstatistiken"
           backfill_disabled: "Rückwirkende Übersetzung ist derzeit deaktiviert."
+          description_tooltip: "Geeignete Beiträge werden durch KI-Übersetzungseinstellungen bestimmt"
         progress_chart:
           title: "Übersetzungsfortschritt %{tooltip}"
           data_label: "%{percentage}%"

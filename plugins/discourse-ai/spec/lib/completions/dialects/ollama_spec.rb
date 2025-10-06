@@ -3,7 +3,7 @@
 require_relative "dialect_context"
 
 RSpec.describe DiscourseAi::Completions::Dialects::Ollama do
-  fab!(:model) { Fabricate(:ollama_model) }
+  fab!(:model, :ollama_model)
   let(:context) { DialectContext.new(described_class, model) }
   let(:dialect_class) { DiscourseAi::Completions::Dialects::Dialect.dialect_for(model) }
 

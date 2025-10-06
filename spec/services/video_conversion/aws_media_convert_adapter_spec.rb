@@ -45,7 +45,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(SiteSetting).to receive(:mediaconvert_endpoint).and_return(
       "https://mediaconvert.endpoint",
     )
-    allow(SiteSetting).to receive(:s3_upload_bucket).and_return(s3_bucket)
+    allow(SiteSetting.Upload).to receive(:s3_upload_bucket).and_return(s3_bucket)
     allow(SiteSetting).to receive(:s3_region).and_return(s3_region)
     allow(SiteSetting).to receive(:s3_access_key_id).and_return("test-key")
     allow(SiteSetting).to receive(:s3_secret_access_key).and_return("test-secret")

@@ -3687,6 +3687,8 @@ nb_NO:
       background_image: "Kategori bakgrunnsbilde"
       background_image_dark: "Mørk kategori bakgrunnsbilde"
       background_color: "Farge"
+      color_validations:
+        cant_be_empty: "kan ikke være tom"
       styles:
         icon: "Ikon"
         emoji: "Emoji"
@@ -4921,7 +4923,6 @@ nb_NO:
         copy_to_clipboard: "Kopier til utklippstavle"
         copied_to_clipboard: "Kopiert til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"
-        theme_owner: "Kan ikke endres, eid av:"
         email_templates:
           title: "E-post"
           subject: "Emne"

@@ -212,7 +212,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
             first_exists(
               user["address"],
               (
-                if !user["resideprovince"].blank?
+                if user["resideprovince"].present?
                   [
                     user["resideprovince"],
                     user["residecity"],
@@ -250,7 +250,8 @@ class ImportScripts::DiscuzX < ImportScripts::Base
                   end
                 end
               end
-              if !user["spacecss"].blank? && newmember.user_profile.profile_background_upload.blank?
+              if user["spacecss"].present? &&
+                   newmember.user_profile.profile_background_upload.blank?
                 # profile background
                 if matched = user["spacecss"].match(/body\s*{[^}]*url\('?(.+?)'?\)/i)
                   body_background = matched[1].split(ORIGINAL_SITE_PREFIX, 2).last
@@ -310,7 +311,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
               if newmember.email_digests
                 newmember.update(email_digests: user["email_confirmed"] == 1)
               end
-              if !newmember.name.blank? && newmember.name == (newmember.username)
+              if newmember.name.present? && newmember.name == (newmember.username)
                 newmember.update(name: "")
               end
             end,
@@ -341,8 +342,8 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     max_position = Category.all.max_by(&:position).position
     create_categories(results) do |row|
       next if row["type"] == ("group") || row["status"] == (2) # or row['status'].to_i == 3 # 如果不想导入群组，取消注释
-      extra = PHP.unserialize(row["extra"]) if !row["extra"].blank?
-      color = extra["namecolor"][1, 6] if extra && !extra["namecolor"].blank?
+      extra = PHP.unserialize(row["extra"]) if row["extra"].present?
+      color = extra["namecolor"][1, 6] if extra && extra["namecolor"].present?
 
       Category.all.max_by(&:position).position
 
@@ -1156,7 +1157,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   end
 
   def first_exists(*items)
-    items.find { |item| !item.blank? } || ""
+    items.find { |item| item.present? } || ""
   end
 
   def mysql_query(sql)

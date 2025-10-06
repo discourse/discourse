@@ -3034,6 +3034,8 @@ ko:
       logo: "카테고리 로고 이미지"
       background_image: "카테고리 백그라운드 이미지"
       background_color: "색상"
+      color_validations:
+        cant_be_empty: "필수 작성"
       styles:
         icon: "아이콘"
         emoji: "이모티콘"
@@ -4356,7 +4358,6 @@ ko:
         copy_to_clipboard: "클립보드에 복사"
         copied_to_clipboard: "클립보드로 복사됨"
         copy_to_clipboard_error: "클립보드로 복사하는 중 에러가 발생하였습니다"
-        theme_owner: "편집 불가, 소유자:"
         email_templates:
           title: "이메일"
           subject: "제목"

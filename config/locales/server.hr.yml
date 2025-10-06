@@ -1245,7 +1245,6 @@ hr:
     ga_universal_domain_name: "Google Universal Analytics naziv domene, npr.: mysite.com; pogledajte <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Omogućite Google Universal Analytics praćenje među domenama. Odlazne veze na te domene imat će dodan ID klijenta. Pogledajte <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Googleov vodič za praćenje među domenama.</a>"
     enable_escaped_fragments: "Vratite se na Googleov Ajax-Crawling API ako se ne otkrije alat za indeksiranje. Pogledajte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Dopustite moderatorima stvaranje i upravljanje kategorijama i grupama"
     moderators_change_post_ownership: "Dopusti moderatorima promjenu vlasništva posta"
     cors_origins: "Dopušteni izvori za zahtjeve s različitim izvorima (CORS). Svako podrijetlo mora sadržavati http:// ili https://. Varijabla env DISCOURSE_ENABLE_CORS mora biti postavljena na true da bi se omogućio CORS."
     use_admin_ip_allowlist: "Administratori se mogu prijaviti samo ako su na IP adresi definiranoj na popisu Screened IPs (Administrator > Dnevnici > Screened Ips)."

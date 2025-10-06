@@ -3705,7 +3705,6 @@ bs_BA:
         copy_to_clipboard: "Kopirati u clipboard"
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
-        theme_owner: "Nije moguće uređivati, vlasništvo:"
         email_templates:
           title: "Email"
           subject: "Naslov"

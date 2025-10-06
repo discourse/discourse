@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Այսօր Ձեր ծննդյան օրն է!"
+        title: "Այսօր իմ ծննդյան օրն է!"
+        label: "Ծննդյան ամսաթիվ"
+      anniversary:
+        user_title: "Այսօր մեր համայնքին Ձեր միանալու տարեդարձն է!"
+        title: "Այսօր լրանում է այս համայնքին իմ միանալու տարեդարձը!"
+    cakeday:
+      title: Տարթի օր
+      today: "Այսօր"
+      tomorrow: "Վաղը"
+      upcoming: "Առաջիկա"
+      all: "Բոլոր"
+    birthdays:
+      title: "Ծննդյան օրեր"
+      month:
+        title: "Հետևյալ Ամսվա Ծննդյան օրեր"
+        empty: "Այս ամիս ծննդյան օր նշող օգտատերեր չկան:"
+      upcoming:
+        title: "%{start_date} - %{end_date} -ի ծննդյան օրեր"
+        empty: "Հաջորդ 7 օրերին ծննդյան օր նշող օգտատերեր չկան:"
+      today:
+        title: "%{date} -ի ծննդյան օրեր"
+        empty: "Այսօր ծննդյան օր նշող օգտատերեր չկան:"
+      tomorrow:
+        empty: "Վաղը ծննդյան օր նշող օգտատերեր չկան:"
+    anniversaries:
+      title: "Տարեդարձներ"
+      month:
+        title: "Հետևյալ Ամսվա Տարեդարձեր՝"
+        empty: "Այս ամիս տարեդարձ նշող օգտատերեր չկան:"
+      upcoming:
+        title: " %{start_date} - %{end_date} -ի տարեդարձներ"
+        empty: " Հաջորդ 7 օրվա ընթացքում տարեդարձ նշող օգտատերեր չկան:"
+      today:
+        title: "%{date}-ի տարեդարձներ"
+        empty: "Այսօր տարեդարձ նշող օգտատերեր չկան:"
+      tomorrow:
+        empty: "Վաղը տարեդարձ նշող օգտատերեր չկան:"

@@ -150,7 +150,7 @@ fa_IR:
       en:
         name: انگلیسی (لهجه آمریکایی)
       en_GB:
-        name: انگلیسی
+        name: انگلیسی (بریتانیا)
       es:
         name: اسپانیایی
       et:
@@ -3881,6 +3881,8 @@ fa_IR:
       logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
       background_color: "رنگ"
+      color_validations:
+        cant_be_empty: "نمی‌تواند خالی باشد"
       styles:
         icon: "آیکن"
         emoji: "شکلک"
@@ -5876,7 +5878,6 @@ fa_IR:
         copy_to_clipboard: "کپی در clipboard"
         copied_to_clipboard: "کپی شد"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
-        theme_owner: "قابل ویرایش نیست، مالک:"
         email_templates:
           title: "ایمیل"
           subject: "عنوان"

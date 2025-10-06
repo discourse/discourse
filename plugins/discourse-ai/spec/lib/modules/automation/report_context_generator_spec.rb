@@ -5,7 +5,7 @@ module DiscourseAi
     describe ReportContextGenerator do
       describe ".generate" do
         fab!(:private_message_post)
-        fab!(:post_in_other_category) { Fabricate(:post) }
+        fab!(:post_in_other_category, :post)
 
         fab!(:category)
         fab!(:topic) { Fabricate(:topic, category: category) }
@@ -23,7 +23,7 @@ module DiscourseAi
         end
 
         fab!(:tag)
-        fab!(:tag2) { Fabricate(:tag) }
+        fab!(:tag2, :tag)
         fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag, tag2]) }
         fab!(:post_with_tag) { Fabricate(:post, topic: topic_with_tag) }
 
@@ -49,7 +49,7 @@ module DiscourseAi
           it "will correctly denote solved topics" do
             Fabricate(:solved_topic, topic: topic_with_likes, answer_post: post_with_likes2)
 
-            context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.day)
+            context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.days)
 
             expect(context).to include("solved: true")
             expect(context).to include("solution: true")
@@ -59,28 +59,28 @@ module DiscourseAi
         it "will exclude non visible topics" do
           post_with_likes3.topic.update(visible: false)
 
-          context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.day)
+          context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.days)
 
           expect(context).not_to include("topic_id: #{topic_with_likes.id}")
         end
 
         it "always includes info from last posts on topic" do
           context =
-            ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.day, max_posts: 1)
+            ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.days, max_posts: 1)
 
           expect(context).to include("...")
           expect(context).to include("post_number: 3")
         end
 
         it "includes a summary" do
-          context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.day)
+          context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.days)
 
           expect(context).to include("New posts: 8")
           expect(context).to include("New topics: 5")
         end
 
         it "orders so most liked are first" do
-          context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.day)
+          context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.days)
 
           regex = "topic_id: #{topic_with_likes.id}.*topic_id: #{long_post.topic.id}"
           expect(context).to match(Regexp.new(regex, Regexp::MULTILINE))
@@ -90,7 +90,7 @@ module DiscourseAi
           context =
             ReportContextGenerator.generate(
               start_date: 1.day.ago,
-              duration: 2.day,
+              duration: 2.days,
               prioritized_group_ids: [group.id],
               allow_secure_categories: true,
               max_posts: 1,
@@ -102,7 +102,7 @@ module DiscourseAi
         end
 
         it "can generate context (excluding PMs)" do
-          context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.day)
+          context = ReportContextGenerator.generate(start_date: 1.day.ago, duration: 2.days)
 
           expect(context).to include(post_in_other_category.topic.title)
           expect(context).to include(topic.title)
@@ -114,7 +114,7 @@ module DiscourseAi
           context =
             ReportContextGenerator.generate(
               start_date: 1.day.ago,
-              duration: 2.day,
+              duration: 2.days,
               tags: [tag.name],
             )
 
@@ -129,7 +129,7 @@ module DiscourseAi
           context =
             ReportContextGenerator.generate(
               start_date: 1.day.ago,
-              duration: 2.day,
+              duration: 2.days,
               allow_secure_categories: true,
             )
           expect(context).to include(post_in_other_category.topic.title)
@@ -142,7 +142,7 @@ module DiscourseAi
           context =
             ReportContextGenerator.generate(
               start_date: 1.day.ago,
-              duration: 2.day,
+              duration: 2.days,
               category_ids: [category.id],
             )
 

@@ -8,24 +8,24 @@ class MetadataController < ApplicationController
                      :redirect_to_profile_if_required
 
   def manifest
-    expires_in 1.minutes
+    expires_in 1.minute
     render json: default_manifest.to_json, content_type: "application/manifest+json"
   end
 
   def opensearch
-    expires_in 1.minutes
+    expires_in 1.minute
     render template: "metadata/opensearch", formats: [:xml]
   end
 
   def app_association_android
     raise Discourse::NotFound if SiteSetting.app_association_android.blank?
-    expires_in 1.minutes
+    expires_in 1.minute
     render plain: SiteSetting.app_association_android, content_type: "application/json"
   end
 
   def app_association_ios
     raise Discourse::NotFound if SiteSetting.app_association_ios.blank?
-    expires_in 1.minutes
+    expires_in 1.minute
     render plain: SiteSetting.app_association_ios, content_type: "application/json"
   end
 

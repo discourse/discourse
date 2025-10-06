@@ -4130,6 +4130,8 @@ fi:
       style: "Tyylit"
       background_color: "Väri"
       foreground_color: "Tekstin väri"
+      color_validations:
+        cant_be_empty: "ei voi olla tyhjä"
       styles:
         type: "Tyyli"
         icon: "Kuvake"
@@ -6455,7 +6457,6 @@ fi:
         copy_to_clipboard: "Kopioi leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
-        theme_owner: "Et voi muokata, omistaja:"
         email_templates:
           title: "Sähköposti"
           subject: "Aihe"

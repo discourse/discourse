@@ -2950,6 +2950,8 @@ bg:
       logo: "Изображение за категория "
       background_image: "Изображение за фон на категорията "
       background_color: "Цвят"
+      color_validations:
+        cant_be_empty: "не може да бъде празно"
       styles:
         icon: "Икона"
         emoji: "Емотикони"

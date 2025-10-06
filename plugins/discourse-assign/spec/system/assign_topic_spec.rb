@@ -3,8 +3,8 @@
 describe "Assign | Assigning topics", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
-  fab!(:admin1) { Fabricate(:admin) }
-  fab!(:admin2) { Fabricate(:admin) }
+  fab!(:admin1, :admin)
+  fab!(:admin2, :admin)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 

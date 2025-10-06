@@ -2506,6 +2506,7 @@ de:
       admin_not_allowed_from_ip_address: "Von dieser IP-Adresse aus darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       omniauth_disallow_totp: "Für dein Benutzerkonto ist die Zwei-Faktor-Authentifizierung aktiviert. Bitte melde dich mit deinem Passwort an."
+      works_with: "Funktioniert mit"
       activate_account: "Konto aktivieren"
       resend_title: "Aktivierungs-E-Mail erneut senden"
       change_email: "E-Mail-Adresse ändern"
@@ -4152,6 +4153,8 @@ de:
       style: "Stile"
       background_color: "Farbe"
       foreground_color: "Textfarbe"
+      color_validations:
+        cant_be_empty: "darf nicht leer sein"
       styles:
         type: "Stil"
         icon: "Symbol"
@@ -6491,7 +6494,6 @@ de:
         copy_to_clipboard: "In Zwischenablage kopieren"
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
-        theme_owner: "Nicht bearbeitbar, Eigentümer:"
         email_templates:
           title: "E-Mail"
           subject: "Betreff"

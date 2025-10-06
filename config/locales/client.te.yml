@@ -3476,6 +3476,8 @@ te:
       background_image: "వర్గం నేపథ్య చిత్రం"
       background_image_dark: "డార్క్ వర్గం నేపథ్య చిత్రం"
       background_color: "రంగు"
+      color_validations:
+        cant_be_empty: "ఖాళీ ఉండకూడదు"
       styles:
         icon: "చిహ్నం"
         emoji: "ఇమోజి"
@@ -5145,7 +5147,6 @@ te:
         copy_to_clipboard: "క్లిప్‌బోర్డ్‌కు కాపీ చేయండి"
         copied_to_clipboard: "క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
         copy_to_clipboard_error: "క్లిప్‌బోర్డ్‌కి డేటాను కాపీ చేయడంలో లోపం"
-        theme_owner: "సవరించలేనిది, దీని యజమాని:"
         email_templates:
           title: "ఈమెయిల్"
           subject: "విషయం"

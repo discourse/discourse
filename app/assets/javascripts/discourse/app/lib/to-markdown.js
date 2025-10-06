@@ -365,6 +365,16 @@ export class Tag {
             href = `upload://${base62SHA1}`;
           }
 
+          const width = img.attributes.width;
+          const height = img.attributes.height;
+
+          if (width && height) {
+            const pipe = this.element.parentNames.includes("table")
+              ? "\\|"
+              : "|";
+            text = `${text}${pipe}${width}x${height}`;
+          }
+
           return `![${text}](${href})`;
         }
 

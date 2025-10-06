@@ -71,7 +71,6 @@ sk:
     composer_ai_helper_allowed_groups: "Používatelia v týchto skupinách uvidia v kompozitore tlačidlo pomocníka AI."
     ai_helper_allowed_in_pm: "Povolenie pomocníka AI skladateľa v PM."
     ai_helper_model: "Model, ktorý sa má použiť pre pomocníka AI."
-    ai_helper_custom_prompts_allowed_groups: "Používatelia týchto skupín uvidia v pomocníkovi AI možnosť vlastnej výzvy."
     ai_helper_automatic_chat_thread_title_delay: "Oneskorenie v minútach, kým pomocník AI automaticky nastaví názov chatového vlákna."
     ai_helper_automatic_chat_thread_title: "Automatické nastavenie názvov chatových vlákien na základe obsahu vlákna."
     ai_helper_illustrate_post_model: "Model, ktorý sa má použiť pre funkciu ilustrácie príspevku v pomocníkovi kompozície AI"

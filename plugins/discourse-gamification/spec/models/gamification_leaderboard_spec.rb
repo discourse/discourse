@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseGamification::GamificationLeaderboard, type: :model do
-  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
+  fab!(:leaderboard, :gamification_leaderboard)
 
   describe ".resolve_period" do
     it "returns default period given a blank period" do

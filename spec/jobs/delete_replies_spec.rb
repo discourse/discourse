@@ -27,7 +27,7 @@ RSpec.describe Jobs::DeleteReplies do
     }.by(-2)
 
     topic_timer.reload
-    expect(topic_timer.execute_at).to eq_time(2.day.from_now)
+    expect(topic_timer.execute_at).to eq_time(2.days.from_now)
   end
 
   it "does not delete posts with likes over the threshold" do

@@ -8,7 +8,7 @@ RSpec.describe Jobs::ProcessShelvedNotifications do
 
   it "removes all past do not disturb timings" do
     future = Fabricate(:do_not_disturb_timing, ends_at: 1.day.from_now)
-    past = Fabricate(:do_not_disturb_timing, starts_at: 2.day.ago, ends_at: 1.minute.ago)
+    past = Fabricate(:do_not_disturb_timing, starts_at: 2.days.ago, ends_at: 1.minute.ago)
 
     expect { job.execute({}) }.to change { DoNotDisturbTiming.count }.by(-1)
     expect(DoNotDisturbTiming.find_by(id: future.id)).to eq(future)
@@ -42,7 +42,7 @@ RSpec.describe Jobs::ProcessShelvedNotifications do
         data: "{}",
         notification_type: 1,
       )
-    user.do_not_disturb_timings.last.update(ends_at: 1.days.ago)
+    user.do_not_disturb_timings.last.update(ends_at: 1.day.ago)
 
     expect(notification.shelved_notification).to be_present
     job.execute({})

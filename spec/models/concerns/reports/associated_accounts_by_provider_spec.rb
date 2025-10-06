@@ -2,12 +2,12 @@
 
 RSpec.describe "Reports::AssociatedAccountsByProvider" do
   describe "associated_accounts_by_provider report" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
-    fab!(:user4) { Fabricate(:user) } # User with no associated accounts
-    fab!(:user5) { Fabricate(:user) } # User with disabled provider
-    fab!(:user6) { Fabricate(:user) } # User with DiscourseConnect
+    fab!(:user1, :user)
+    fab!(:user2, :user)
+    fab!(:user3, :user)
+    fab!(:user4, :user) # User with no associated accounts
+    fab!(:user5, :user) # User with disabled provider
+    fab!(:user6, :user) # User with DiscourseConnect
 
     before do
       # Mock enabled authenticators to only include specific providers

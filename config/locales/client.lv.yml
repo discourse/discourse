@@ -3280,7 +3280,6 @@ lv:
         copy_to_clipboard: "Kopēt uz starpliktuvi (clipboard)"
         copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
         copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"
-        theme_owner: "Nevar labot; īpašnieks ir"
         email_templates:
           title: "E-pasts"
           subject: "Virsraksts"

@@ -63,6 +63,10 @@
         "./plugins/discourse-assign/assets/javascripts/*",
         "./plugins/discourse-assign/test/javascripts/*"
       ],
+      "discourse/plugins/discourse-cakeday/*": [
+        "./plugins/discourse-cakeday/assets/javascripts/*",
+        "./plugins/discourse-cakeday/test/javascripts/*"
+      ],
       "discourse/plugins/discourse-calendar/*": [
         "./plugins/discourse-calendar/assets/javascripts/*",
         "./plugins/discourse-calendar/test/javascripts/*"

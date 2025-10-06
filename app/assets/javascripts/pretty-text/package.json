@@ -16,7 +16,7 @@
   "dependencies": {
     "@babel/core": "^7.28.4",
     "discourse-i18n": "workspace:1.0.0",
-    "ember-auto-import": "^2.10.1",
+    "ember-auto-import": "^2.11.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^6.3.0",
     "xss": "^1.0.15"

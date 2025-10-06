@@ -72,7 +72,6 @@ ja:
     composer_ai_helper_allowed_groups: "これらのグループのユーザーの作成ツールには、AI ヘルパーボタンが表示されます。"
     ai_helper_allowed_in_pm: "PM で作成ツールの AI ヘルパーを有効にします。"
     ai_helper_model: "AI ヘルパーに使用するモデル。"
-    ai_helper_custom_prompts_allowed_groups: "これらのグループのユーザーには、AI ヘルパーにカスタムプロンプトオプションが表示されます。"
     ai_helper_automatic_chat_thread_title_delay: "AI ヘルパーがチャットスレッドのタイトルを自動的に設定するまでの遅延 (分単位)。"
     ai_helper_automatic_chat_thread_title: "スレッドのコンテンツに基づいてチャットスレッドのタイトルを自動的に設定する。"
     ai_helper_illustrate_post_model: "作成ツールの AI ヘルパーのイラスト投稿機能に使用するモデル"

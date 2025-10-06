@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ListController do
-  fab!(:p1) { Fabricate(:post) }
+  fab!(:p1, :post)
   fab!(:p2) { Fabricate(:post, topic: p1.topic) }
   fab!(:p3) { Fabricate(:post, topic: p1.topic) }
 

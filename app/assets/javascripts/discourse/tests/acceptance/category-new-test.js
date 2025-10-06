@@ -13,12 +13,12 @@ acceptance("New category access for moderators", function (needs) {
   needs.user({ moderator: true, admin: false, trust_level: 1 });
 
   test("Authorizes access based on site setting", async function (assert) {
-    this.siteSettings.moderators_manage_categories_and_groups = false;
+    this.siteSettings.moderators_manage_categories = false;
     await visit("/new-category");
 
     assert.strictEqual(currentURL(), "/404");
 
-    this.siteSettings.moderators_manage_categories_and_groups = true;
+    this.siteSettings.moderators_manage_categories = true;
     await visit("/new-category");
 
     assert.strictEqual(

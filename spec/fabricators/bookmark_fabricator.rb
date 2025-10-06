@@ -12,11 +12,11 @@ Fabricator(:bookmark_next_business_day_reminder, from: :bookmark) do
   reminder_at do
     date =
       if Time.zone.now.friday?
-        Time.zone.now + 3.days
+        3.days.from_now
       elsif Time.zone.now.saturday?
-        Time.zone.now + 2.days
+        2.days.from_now
       else
-        Time.zone.now + 1.day
+        1.day.from_now
       end
     date.iso8601
   end

@@ -72,7 +72,6 @@ fi:
     composer_ai_helper_allowed_groups: "Näiden ryhmien käyttäjät näkevät tekoälyavustajan painikkeen kirjoitustoiminnossa."
     ai_helper_allowed_in_pm: "Ota kirjoitustoiminnon tekoälyavustaja käyttöön yksityisviesteissä."
     ai_helper_model: "Tekoälyavustajassa käytettävä malli."
-    ai_helper_custom_prompts_allowed_groups: "Näiden ryhmien käyttäjät näkevät mukautetun kehotteen vaihtoehdon tekoälyapuohjelmassa."
     ai_helper_automatic_chat_thread_title_delay: "Viive minuuteissa ennen kuin tekoälyapuohjelma asettaa chat-ketjun otsikon automaattisesti."
     ai_helper_automatic_chat_thread_title: "Aseta chat-ketjujen otsikot automaattisesti ketjun sisällön perusteella."
     ai_helper_illustrate_post_model: "Malli, jota käytetään tekstieditorin tekoälyapuohjelman viestin havainnollistamisominaisuudessa"

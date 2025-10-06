@@ -14,6 +14,7 @@ export default class NoneCategoryRow extends CategoryRowComponent {
         link: false,
         allowUncategorized: true,
         hideParent: true,
+        ancestors: category?.predecessors,
       })
     );
   }
@@ -21,11 +22,6 @@ export default class NoneCategoryRow extends CategoryRowComponent {
   <template>
     {{#if this.category}}
       <div class="category-status" aria-hidden="true">
-        {{#if this.hasParentCategory}}
-          {{#unless this.hideParentCategory}}
-            {{this.badgeForParentCategory}}
-          {{/unless}}
-        {{/if}}
         {{this.badgeForCategory}}
       </div>
 

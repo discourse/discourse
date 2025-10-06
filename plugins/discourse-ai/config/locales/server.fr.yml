@@ -72,7 +72,6 @@ fr:
     composer_ai_helper_allowed_groups: "Les utilisateurs de ces groupes verront le bouton d'assistance IA dans l'éditeur."
     ai_helper_allowed_in_pm: "Activez l'assistant IA de l'éditeur dans les messages privés."
     ai_helper_model: "Modèle à utiliser pour l'assistant IA."
-    ai_helper_custom_prompts_allowed_groups: "Les utilisateurs de ces groupes verront l'option d'invite personnalisée dans l'assistant IA."
     ai_helper_automatic_chat_thread_title_delay: "Délai en minutes avant que l'assistant IA définisse automatiquement le titre du fil de discussion."
     ai_helper_automatic_chat_thread_title: "Définissez automatiquement les titres des fils de discussion en fonction du contenu du fil."
     ai_helper_illustrate_post_model: "Modèle à utiliser pour la fonction d'illustration de publication de l'assistant IA de l'éditeur"

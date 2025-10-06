@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Completions::Endpoints::SambaNova do
-  fab!(:llm_model) { Fabricate(:samba_nova_model) }
+  fab!(:llm_model, :samba_nova_model)
   let(:llm) { llm_model.to_llm }
 
   before { enable_current_plugin }

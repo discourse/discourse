@@ -2,7 +2,7 @@
 
 RSpec.describe "AI Composer helper", type: :system do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:non_member_group) { Fabricate(:group) }
+  fab!(:non_member_group, :group)
   fab!(:embedding_definition)
 
   fab!(:custom_prompts_persona) do
@@ -28,12 +28,12 @@ RSpec.describe "AI Composer helper", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   fab!(:category)
-  fab!(:category_2) { Fabricate(:category) }
-  fab!(:video) { Fabricate(:tag) }
-  fab!(:music) { Fabricate(:tag) }
-  fab!(:cloud) { Fabricate(:tag) }
-  fab!(:feedback) { Fabricate(:tag) }
-  fab!(:review) { Fabricate(:tag) }
+  fab!(:category_2, :category)
+  fab!(:video, :tag)
+  fab!(:music, :tag)
+  fab!(:cloud, :tag)
+  fab!(:feedback, :tag)
+  fab!(:review, :tag)
   fab!(:topic) { Fabricate(:topic, category: category, tags: [video, music]) }
   fab!(:post) do
     Fabricate(

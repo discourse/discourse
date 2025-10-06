@@ -5,13 +5,13 @@ describe DiscourseDataExplorer::QueryGroupBookmarkable do
     RegisteredBookmarkable.new(DiscourseDataExplorer::QueryGroupBookmarkable)
   end
 
-  fab!(:admin_user) { Fabricate(:admin) }
+  fab!(:admin_user, :admin)
   fab!(:user)
   fab!(:guardian) { Guardian.new(user) }
-  fab!(:group0) { Fabricate(:group) }
-  fab!(:group1) { Fabricate(:group) }
-  fab!(:group2) { Fabricate(:group) }
-  fab!(:group3) { Fabricate(:group) }
+  fab!(:group0, :group)
+  fab!(:group1, :group)
+  fab!(:group2, :group)
+  fab!(:group3, :group)
   fab!(:query1) do
     Fabricate(
       :query,

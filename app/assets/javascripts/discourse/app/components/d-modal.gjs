@@ -380,7 +380,7 @@ export default class DModal extends Component {
                     @label="cancel"
                     @action={{this.handleCloseButton}}
                     @title="modal.close"
-                    class="btn-transparent btn-primary d-modal__dismiss-action-button"
+                    class="btn-transparent d-modal__dismiss-action-button"
                   />
                 </div>
               {{/if}}

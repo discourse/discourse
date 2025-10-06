@@ -5,7 +5,7 @@ RSpec.describe "AI Composer helper", type: :system do
   let(:query) { "apple_pie" }
   let(:hypothetical_post) { "This is an hypothetical post generated from the keyword apple_pie" }
 
-  fab!(:user) { Fabricate(:admin) }
+  fab!(:user, :admin)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic, raw: "Apple pie is a delicious dessert to eat") }
 
