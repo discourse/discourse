@@ -548,47 +548,6 @@ describe PostRevisor do
         expect(post.public_version).to eq(1)
         expect(post.revisions.size).to eq(0)
       end
-
-      it "doesn't bump the topic when editing the last post" do
-        expect {
-          post_revisor.revise!(
-            post.user,
-            { raw: "updated body" },
-            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
-          )
-        }.not_to change { post.topic.bumped_at }
-      end
-
-      it "doesn't bump the topic when editing a post that isn't the last post" do
-        create_post(topic_id: post.topic.id)
-        expect {
-          post_revisor.revise!(
-            post.user,
-            { raw: "updated body" },
-            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
-          )
-        }.not_to change { post.topic.bumped_at }
-      end
-
-      it "doesn't bump the topic when editing the topic title" do
-        expect {
-          post_revisor.revise!(
-            post.user,
-            { title: "This is an updated topic title" },
-            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
-          )
-        }.not_to change { post.topic.bumped_at }
-      end
-
-      it "doesn't bump the topic when editing the topic category" do
-        expect {
-          post_revisor.revise!(
-            post.user,
-            { category_id: Fabricate(:category).id },
-            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
-          )
-        }.not_to change { post.topic.bumped_at }
-      end
     end
 
     describe "edit reasons" do
@@ -1298,12 +1257,6 @@ describe PostRevisor do
             expect(post.topic.tags.size).to eq(0)
           end
 
-          it "doesn't bump the topic when editing tags" do
-            expect { post_revisor.revise!(post.user, { tags: %w[totally update] }) }.not_to change {
-              post.topic.bumped_at
-            }
-          end
-
           it "can't add staff-only tags" do
             create_staff_only_tags(["important"])
             result =
@@ -1401,58 +1354,6 @@ describe PostRevisor do
                 Tag.where(name: "important").first,
                 Fabricate(:tag, name: "stuff"),
               ]
-            end
-
-            it "doesn't bump topic if only staff-only tags are added" do
-              expect {
-                result =
-                  post_revisor.revise!(
-                    Fabricate(:admin),
-                    raw: post.raw,
-                    tags: topic.tags.map(&:name) + ["secret"],
-                  )
-                expect(result).to eq(true)
-              }.to_not change { topic.reload.bumped_at }
-            end
-
-            it "doesn't bump topic if only staff-only tags are removed" do
-              expect {
-                result =
-                  post_revisor.revise!(
-                    Fabricate(:admin),
-                    raw: post.raw,
-                    tags: topic.tags.map(&:name) - %w[important secret],
-                  )
-                expect(result).to eq(true)
-              }.to_not change { topic.reload.bumped_at }
-            end
-
-            it "doesn't bump topic if only staff-only tags are removed and there are no tags left" do
-              topic.tags = Tag.where(name: %w[important secret]).to_a
-              expect {
-                result = post_revisor.revise!(Fabricate(:admin), raw: post.raw, tags: [])
-                expect(result).to eq(true)
-              }.to_not change { topic.reload.bumped_at }
-            end
-
-            it "doesn't bump topic if empty string is given" do
-              topic.tags = Tag.where(name: %w[important secret]).to_a
-              expect {
-                result = post_revisor.revise!(Fabricate(:admin), raw: post.raw, tags: [""])
-                expect(result).to eq(true)
-              }.to_not change { topic.reload.bumped_at }
-            end
-
-            it "doesn't bump topic if non staff-only tags are added" do
-              expect {
-                result =
-                  post_revisor.revise!(
-                    Fabricate(:admin),
-                    raw: post.raw,
-                    tags: topic.tags.map(&:name) + [Fabricate(:tag).name],
-                  )
-                expect(result).to eq(true)
-              }.to_not change { topic.reload.bumped_at }
             end
 
             it "creates a hidden revision" do
@@ -1691,6 +1592,200 @@ describe PostRevisor do
           revised_at: post.updated_at + 10.seconds,
         )
       }.not_to change(ReviewablePost, :count)
+    end
+  end
+
+  describe "topic bumping" do
+    subject(:post_revisor) { PostRevisor.new(post) }
+
+    let(:post) { Fabricate(:post, post_args) }
+
+    it "doesn't bump the topic when editing the last post" do
+      expect {
+        post_revisor.revise!(
+          post.user,
+          { raw: "updated body" },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+        )
+      }.not_to change { post.topic.bumped_at }
+    end
+
+    it "doesn't bump the topic when editing a post that isn't the last post" do
+      create_post(topic_id: post.topic.id)
+      expect {
+        post_revisor.revise!(
+          post.user,
+          { raw: "updated body" },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+        )
+      }.not_to change { post.topic.bumped_at }
+    end
+
+    it "doesn't bump the topic when editing the topic title" do
+      expect {
+        post_revisor.revise!(
+          post.user,
+          { title: "This is an updated topic title" },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+        )
+      }.not_to change { post.topic.bumped_at }
+    end
+
+    it "doesn't bump the topic when editing the topic category" do
+      expect {
+        post_revisor.revise!(
+          post.user,
+          { category_id: Fabricate(:category).id },
+          revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+        )
+      }.not_to change { post.topic.bumped_at }
+    end
+
+    it "doesn't bump the topic when editing tags" do
+      expect { post_revisor.revise!(post.user, { tags: %w[totally update] }) }.not_to change {
+        post.topic.bumped_at
+      }
+    end
+
+    describe "should_bump_topic plugin modifier" do
+      let(:plugin_instance) { Plugin::Instance.new }
+      let(:modifier_return_value) { nil }
+      let(:modifier_block) do
+        Proc.new do |value, modifier_post, modifier_post_changes, modifier_topic_changes, editor|
+          modifier_return_value
+        end
+      end
+
+      before { plugin_instance.register_modifier(:should_bump_topic, &modifier_block) }
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :should_bump_topic,
+          &modifier_block
+        )
+      end
+
+      context "when the modifier returns false" do
+        let(:modifier_return_value) { false }
+
+        it "prevents bumping" do
+          expect {
+            post_revisor.revise!(
+              post.user,
+              { raw: "updated body" },
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+            )
+          }.not_to change { post.topic.bumped_at }
+        end
+      end
+
+      context "when the modifier returns true" do
+        let(:modifier_return_value) { true }
+
+        it "bumps the topic" do
+          expect {
+            post_revisor.revise!(
+              post.user,
+              { raw: "updated body" },
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+            )
+          }.to change { post.topic.bumped_at }
+        end
+      end
+    end
+
+    context "for a wiki topic" do
+      before { post.update!(wiki: true) }
+
+      it "bumps the topic when the OP is edited" do
+        expect {
+          post_revisor.revise!(
+            post.user,
+            { raw: "updated body" },
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          )
+        }.to change { post.topic.bumped_at }
+      end
+
+      it "doesn't bump the topic when another post is edited" do
+        other_post = Fabricate(:post, topic: topic)
+        post_revisor_other = PostRevisor.new(other_post)
+
+        expect {
+          post_revisor_other.revise!(
+            post.user,
+            { raw: "updated body" },
+            revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.seconds,
+          )
+        }.not_to change { post.topic.bumped_at }
+      end
+    end
+
+    context "with hidden tags" do
+      let(:bumped_at) { 1.day.ago }
+
+      before do
+        post.topic.update!(bumped_at: bumped_at)
+        create_hidden_tags(%w[important secret])
+        post.topic.tags = [
+          Fabricate(:tag, name: "super"),
+          Tag.where(name: "important").first,
+          Fabricate(:tag, name: "stuff"),
+        ]
+      end
+
+      it "doesn't bump topic if only staff-only tags are added" do
+        expect {
+          result =
+            post_revisor.revise!(
+              Fabricate(:admin),
+              raw: post.raw,
+              tags: post.topic.tags.map(&:name) + ["secret"],
+            )
+          expect(result).to eq(true)
+        }.to_not change { post.topic.reload.bumped_at }
+      end
+
+      it "doesn't bump topic if only staff-only tags are removed" do
+        expect {
+          result =
+            post_revisor.revise!(
+              Fabricate(:admin),
+              raw: post.raw,
+              tags: post.topic.tags.map(&:name) - %w[important secret],
+            )
+          expect(result).to eq(true)
+        }.to_not change { post.topic.reload.bumped_at }
+      end
+
+      it "doesn't bump topic if only staff-only tags are removed and there are no tags left" do
+        post.topic.tags = Tag.where(name: %w[important secret]).to_a
+        expect {
+          result = post_revisor.revise!(Fabricate(:admin), raw: post.raw, tags: [])
+          expect(result).to eq(true)
+        }.to_not change { post.topic.reload.bumped_at }
+      end
+
+      it "doesn't bump topic if empty string is given" do
+        post.topic.tags = Tag.where(name: %w[important secret]).to_a
+        expect {
+          result = post_revisor.revise!(Fabricate(:admin), raw: post.raw, tags: [""])
+          expect(result).to eq(true)
+        }.to_not change { post.topic.reload.bumped_at }
+      end
+
+      it "doesn't bump topic if non staff-only tags are added" do
+        expect {
+          result =
+            post_revisor.revise!(
+              Fabricate(:admin),
+              raw: post.raw,
+              tags: post.topic.tags.map(&:name) + [Fabricate(:tag).name],
+            )
+          expect(result).to eq(true)
+        }.not_to change { post.topic.reload.bumped_at }
+      end
     end
   end
 end

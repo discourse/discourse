@@ -1992,6 +1992,8 @@ ro:
     wcag_theme_name: "WCAG deschis"
     wcag_dark: "WCAG Închis"
     wcag_dark_theme_name: "WCAG Închis"
+    errors:
+      cannot_edit_remote_copies: "Modificările în copiile la distanță ale paletelor de culori nu sunt permise."
   edit_this_page: "Editează această pagină"
   csv_export:
     boolean_yes: "Da"

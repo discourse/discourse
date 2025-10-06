@@ -27,7 +27,7 @@ export default class NewCategory extends DiscourseRoute {
     if (!this.currentUser.admin) {
       if (
         !this.currentUser.moderator ||
-        this.siteSettings.moderators_manage_categories_and_groups === false
+        this.siteSettings.moderators_manage_categories === false
       ) {
         this.router.replaceWith("/404");
       }

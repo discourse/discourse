@@ -661,6 +661,8 @@ he:
       resume: "המשך"
       remove: "הסרה"
       remove_confirmation: "למחוק את הטיוטה הזאת?"
+      bulk_delete: "מחיקת הנבחרים"
+      bulk_delete_confirmation: "מחיקת טיוטות"
       new_topic: "טיוטת נושא חדשה"
       new_private_message: "טיוטת הודעה אישית חדשה"
       edit_topic: "עריכת טיוטת נושא"
@@ -4294,6 +4296,7 @@ he:
           edit: "עריכה"
           delete: "מחיקה"
         add: "הוספת תרגום חדש"
+        manage: "ניהול תרגומים (%{count} קיימים)"
         view:
           one: "הצגת שפה מתורגמת"
           two: "הצגת שתי שפות מתורגמות"
@@ -7040,7 +7043,6 @@ he:
         copy_to_clipboard: "העתקה ללוח"
         copied_to_clipboard: "הועתק ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
-        theme_owner: "לא ניתן לעריכה, שייך ל:"
         email_templates:
           title: "דוא״ל"
           subject: "נושא"

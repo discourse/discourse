@@ -9,6 +9,7 @@ describe "Flagging post", type: :system do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:flag_modal) { PageObjects::Modals::Flag.new }
+  let(:silence_user_modal) { PageObjects::Modals::PenalizeUser.new("silence") }
 
   describe "Using Take Action" do
     before { sign_in(current_user) }
@@ -29,6 +30,31 @@ describe "Flagging post", type: :system do
       ).to be_present
 
       visit "/review/#{other_flag_reviewable.id}"
+
+      expect(page).to have_content(I18n.t("js.review.statuses.approved_flag.title"))
+      expect(page).to have_css(".reviewable-meta-data .status .approved")
+    end
+
+    it "can choose to immediately silence the user" do
+      expect(Reviewable.count).to eq(0)
+
+      topic_page.visit_topic(topic)
+      topic_page.expand_post_actions(post_to_flag)
+      topic_page.click_post_action_button(post_to_flag, :flag)
+      flag_modal.choose_type(:off_topic)
+      flag_modal.take_action(:agree_and_silence)
+
+      silence_user_modal.fill_in_silence_reason("spamming")
+      silence_user_modal.set_future_date("tomorrow")
+      silence_user_modal.perform
+
+      expect(silence_user_modal).to be_closed
+
+      expect(
+        topic_page.post_by_number(post_to_flag).ancestor(".topic-post.post-hidden"),
+      ).to be_present
+
+      visit "/review/#{Reviewable.sole.id}"
 
       expect(page).to have_content(I18n.t("js.review.statuses.approved_flag.title"))
       expect(page).to have_css(".reviewable-meta-data .status .approved")

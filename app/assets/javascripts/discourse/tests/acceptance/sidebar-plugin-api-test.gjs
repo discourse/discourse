@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   resetCustomCategoryLockIcon,
   resetCustomCategorySectionLinkPrefix,
@@ -31,7 +31,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("Multiple header actions and links", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
           return class extends BaseCustomSidebarSection {
@@ -273,7 +273,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("Single header action and no links", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
           name = "test-chat-channels";
@@ -317,7 +317,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       </template>
     };
 
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
           name = "test-empty-state";
@@ -339,7 +339,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("Section that is not displayed via displaySection", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.addSidebarSection((BaseCustomSidebarSection) => {
         return class extends BaseCustomSidebarSection {
           name = "test-chat-channels";
@@ -367,7 +367,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
   test("Registering a custom countable for a section link in the user's sidebar categories section", async function (assert) {
     try {
-      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+      return await withPluginApi(async (api) => {
         const { categories } = this.container.lookup("service:site");
         const category1 = categories[0];
         const category2 = categories[1];
@@ -491,7 +491,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
   test("Customizing the icon used in a category section link to indicate that a category is read restricted", async function (assert) {
     try {
-      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+      return await withPluginApi(async (api) => {
         const { categories } = this.container.lookup("service:site");
         const category1 = categories[0];
         category1.read_restricted = true;
@@ -519,7 +519,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
   test("Customizing the prefix used in a category section link for a particular category", async function (assert) {
     try {
-      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+      return await withPluginApi(async (api) => {
         const { categories } = this.container.lookup("service:site");
         const category1 = categories[0];
         category1.read_restricted = true;
@@ -561,7 +561,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
 
   test("Customizing the prefix icon used in a tag section link for a particular tag", async function (assert) {
     try {
-      return await withPluginApi(PLUGIN_API_VERSION, async (api) => {
+      return await withPluginApi(async (api) => {
         updateCurrentUser({
           display_sidebar_tags: true,
           sidebar_tags: [
@@ -610,7 +610,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("New custom sidebar panel and option to set default and show/hide switch buttons", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         const ChatSidebarPanel = class extends BaseCustomSidebarPanel {
           key = "new-panel";
@@ -690,7 +690,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       )
       .doesNotExist();
 
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.setCombinedSidebarMode();
     });
 
@@ -703,7 +703,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       )
       .exists();
 
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.setSidebarPanel("new-panel");
       api.hideSidebarSwitchPanelButtons();
     });
@@ -711,7 +711,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
     await visit("/");
     assert.dom(".sidebar__panel-switch-button").doesNotExist();
 
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.setSidebarPanel("new-panel");
       api.hideSidebarSwitchPanelButtons();
       api.showSidebarSwitchPanelButtons();
@@ -722,7 +722,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("New hidden custom sidebar panel", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         const AdminSidebarPanel = class extends BaseCustomSidebarPanel {
           key = "admin";
@@ -770,7 +770,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
       .hasText("test admin section", "displays header with correct text");
     assert.dom(".admin-panel").exists();
 
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.setSidebarPanel("main-panel");
       api.setCombinedSidebarMode();
     });
@@ -784,7 +784,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("Auto expand active sections", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         return class extends BaseCustomSidebarPanel {
           key = "new-panel";
@@ -843,7 +843,7 @@ acceptance("Sidebar - Plugin API", function (needs) {
   });
 
   test("Scroll active link into view", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.addSidebarPanel((BaseCustomSidebarPanel) => {
         return class extends BaseCustomSidebarPanel {
           key = "new-panel";

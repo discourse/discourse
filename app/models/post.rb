@@ -1338,10 +1338,6 @@ class Post < ActiveRecord::Base
     get_localization(locale).present?
   end
 
-  def in_user_locale?
-    LocaleNormalizer.is_same?(locale, I18n.locale)
-  end
-
   private
 
   def parse_quote_into_arguments(quote)

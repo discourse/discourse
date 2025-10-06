@@ -7088,7 +7088,6 @@ cs:
         copy_to_clipboard: "Kopírovat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"
-        theme_owner: "není editovatelné, vlastněno:"
         email_templates:
           title: "Email"
           subject: "Předmět"
@@ -7610,7 +7609,7 @@ cs:
             delete_post: "smazat příspěvek"
             impersonate: "impersonifikovat"
             anonymize_user: "anonymizovat uživatele"
-            roll_up: "sbalit zablokované IP"
+            roll_up: "sloučit boloky IP adres"
             change_category_settings: "změnit nastavení kategorie"
             delete_category: "smazat kategorii"
             create_category: "vytvořit kategorii"
@@ -7732,7 +7731,7 @@ cs:
             add: "Přidat"
             filter: "Vyhledat"
           roll_up:
-            text: "srolovat "
+            text: "Sloučit"
             title: "Vytvoří ban k přístupu do podsítě, pokud existují alespoň: 'min_ban_entries_for_roll_up' vstupy."
         search_logs:
           title: "Protokoly vyhledávání"

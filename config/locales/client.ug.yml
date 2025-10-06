@@ -6459,7 +6459,6 @@ ug:
         copy_to_clipboard: "چاپلاش تاختىسىغا كۆچۈر"
         copied_to_clipboard: "چاپلاش تاختىسىغا كۆچۈرۈلدى"
         copy_to_clipboard_error: "سانلىق مەلۇماتنى چاپلاش تاختىسىغا كۆچۈرۈۋاتقاندا خاتالىق كۆرۈلدى"
-        theme_owner: "تەھرىرلەشكە بولمايدۇ، ئىگىسى:"
         email_templates:
           title: "ئېلخەت"
           subject: "ماۋزۇ"

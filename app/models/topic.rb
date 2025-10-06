@@ -2182,10 +2182,6 @@ class Topic < ActiveRecord::Base
     localizations.exists?(locale: locale.to_s.sub("-", "_"))
   end
 
-  def in_user_locale?
-    LocaleNormalizer.is_same?(locale, I18n.locale)
-  end
-
   private
 
   def invite_to_private_message(invited_by, target_user, guardian)

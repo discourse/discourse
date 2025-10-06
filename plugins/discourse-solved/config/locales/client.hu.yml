@@ -9,7 +9,7 @@ hu:
     admin:
       site_settings:
         categories:
-          discourse_solved: "Discourse Megoldott"
+          discourse_solved: "Discourse Megoldások"
   js:
     notifications:
       alt:
@@ -17,7 +17,7 @@ hu:
           accepted_notification: "elfogadva"
     solutions: "Megoldások"
     solved:
-      title: "Megoldott"
+      title: "Megoldva"
       allow_accepted_answers: "Engedélyezi a téma tulajdonosának és a stábnak, hogy megoldásként jelöljenek meg egy bejegyzést"
       solved_topics_auto_close_hours: "Automatikusan zárja le a témát (n) órával az utolsó válasz után, miután a témát megoldották."
       accept_answer: "Válassza ezt, ha ez a válasz megoldja a problémát"
@@ -51,7 +51,7 @@ hu:
     search:
       advanced:
         statuses:
-          solved: "megoldott"
+          solved: "megoldva"
           unsolved: "megoldatlan"
     admin:
       web_hooks:
