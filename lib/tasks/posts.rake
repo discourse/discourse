@@ -428,9 +428,9 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
           #{table} AS x
         SET
           #{column} = x.#{column} * -1
-          FROM
-            posts AS p
-          INNER JOIN topics t ON t.id = p.topic_id
+        FROM
+          posts AS p
+        INNER JOIN topics t ON t.id = p.topic_id
           /*where*/
         SQL
 
@@ -444,8 +444,10 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
       # Only do this for post_timings table, not for other tables
       if table == "post_timings"
         orphan_builder = DB.build <<~SQL
-          UPDATE #{table} AS x
-          SET #{column} = x.#{column} * -1
+          UPDATE 
+            #{table} AS x
+          SET 
+            #{column} = x.#{column} * -1
           FROM topics t
           /*where*/
         SQL
@@ -455,20 +457,13 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
         orphan_builder.where("x.topic_id = ?", args[:topic_id]) if args[:topic_id]
         orphan_builder.where(<<~SQL)
           NOT EXISTS (
-            SELECT 1
-            FROM posts p
-            INNER JOIN topics t ON t.id = p.topic_id
-            WHERE p.topic_id = x.topic_id
-              AND (ABS(p.post_number) = x.#{column} OR p.post_number = x.#{column})
-          )
-        SQL
-        orphan_builder.where(<<~SQL)
-          NOT EXISTS (
-            SELECT 1
-            FROM #{table} x2
-            WHERE x2.topic_id = x.topic_id
-              AND x2.#{column} = x.#{column} * -1
-              AND x2.user_id = x.user_id
+            SELECT 
+              1
+            FROM 
+              posts p
+            WHERE
+              p.topic_id = x.topic_id
+              AND p.post_number = x.#{column}
           )
         SQL
         orphan_builder.exec
