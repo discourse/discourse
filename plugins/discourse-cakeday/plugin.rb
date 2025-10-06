@@ -9,28 +9,25 @@
 register_asset "stylesheets/cakeday.scss"
 register_asset "stylesheets/emoji-images.scss"
 
-register_svg_icon "cake-candles" if respond_to?(:register_svg_icon)
+register_svg_icon "cake-candles"
 
 enabled_site_setting :cakeday_enabled
 
+module ::DiscourseCakeday
+  PLUGIN_NAME = "discourse-cakeday"
+end
+
+require_relative "lib/discourse_cakeday/engine"
+
 after_initialize do
-  module ::DiscourseCakeday
-    PLUGIN_NAME = "discourse-cakeday"
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscourseCakeday
-    end
-  end
-
-  ::DiscourseCakeday::Engine.routes.draw do
+  DiscourseCakeday::Engine.routes.draw do
     get "birthdays" => "birthdays#index"
     get "birthdays/:filter" => "birthdays#index"
     get "anniversaries" => "anniversaries#index"
     get "anniversaries/:filter" => "anniversaries#index"
   end
 
-  Discourse::Application.routes.append { mount ::DiscourseCakeday::Engine, at: "/cakeday" }
+  Discourse::Application.routes.append { mount DiscourseCakeday::Engine, at: "/cakeday" }
 
   require_relative "app/jobs/onceoff/fix_invalid_date_of_birth"
   require_relative "app/jobs/onceoff/migrate_date_of_birth_to_users_table"

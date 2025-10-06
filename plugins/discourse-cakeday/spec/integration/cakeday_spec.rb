@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-describe "Anniversaries and Birthdays" do
+RSpec.describe "Anniversaries and Birthdays" do
   describe "when not logged in" do
-    it "should return the right response" do
+    it "returns the right response" do
       get "/cakeday/anniversaries.json"
       expect(response.status).to eq(403)
     end
@@ -16,14 +14,14 @@ describe "Anniversaries and Birthdays" do
 
     before { sign_in(current_user) }
 
-    it "should return 404 when viewing anniversaries and cakeday_enabled is false" do
+    it "returns 404 when viewing anniversaries and cakeday_enabled is false" do
       SiteSetting.cakeday_enabled = false
 
       get "/cakeday/anniversaries.json"
       expect(response.status).to eq(404)
     end
 
-    it "should return 404 when viewing birthdays and cakeday_birthday_enabled is false" do
+    it "returns 404 when viewing birthdays and cakeday_birthday_enabled is false" do
       SiteSetting.cakeday_birthday_enabled = false
 
       get "/cakeday/birthdays.json"
@@ -31,7 +29,7 @@ describe "Anniversaries and Birthdays" do
     end
 
     describe "when viewing anniversaries" do
-      it "should return the right payload" do
+      it "returns the right payload" do
         freeze_time(time) do
           created_at = time - 1.year
 
@@ -67,7 +65,7 @@ describe "Anniversaries and Birthdays" do
         end
       end
 
-      it "should account for the current user's timezone" do
+      it "accounts for the current user's timezone" do
         # Asia/Calcutta is +5.5 hours from UTC
         current_user.user_option.update!(timezone: "Asia/Calcutta")
 
@@ -98,7 +96,7 @@ describe "Anniversaries and Birthdays" do
     describe "when viewing birthdays" do
       let(:time) { Time.zone.local(2016, 9, 30) }
 
-      it "should return the right payload" do
+      it "returns the right payload" do
         freeze_time(time) do
           user1 = Fabricate(:user, date_of_birth: "1904-9-28")
           user2 = Fabricate(:user, date_of_birth: "1904-9-29")
