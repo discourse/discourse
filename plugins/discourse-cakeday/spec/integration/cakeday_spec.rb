@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "Anniversaries and Birthdays" do
+  before do
+    SiteSetting.cakeday_enabled = true
+    SiteSetting.cakeday_birthday_enabled = true
+  end
+
   describe "when not logged in" do
     it "returns the right response" do
       get "/cakeday/anniversaries.json"
@@ -45,22 +50,22 @@ RSpec.describe "Anniversaries and Birthdays" do
 
           get "/cakeday/anniversaries.json", params: { month: time.month }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to eq [user2.id, user1.id, user3.id]
 
           get "/cakeday/anniversaries.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to eq [user1.id, user3.id]
 
           get "/cakeday/anniversaries.json", params: { filter: "tomorrow" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to eq [user4.id]
 
           get "/cakeday/anniversaries.json", params: { filter: "upcoming" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to eq [user5.id]
         end
       end
@@ -82,12 +87,12 @@ RSpec.describe "Anniversaries and Birthdays" do
 
           get "/cakeday/anniversaries.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user1.id, user2.id)
 
           get "/cakeday/anniversaries.json", params: { filter: "tomorrow" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user3.id, user4.id)
         end
       end
@@ -106,22 +111,22 @@ RSpec.describe "Anniversaries and Birthdays" do
 
           get "/cakeday/birthdays.json", params: { month: time.month }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user1.id, user2.id, user3.id]
 
           get "/cakeday/birthdays.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user3.id]
 
           get "/cakeday/birthdays.json", params: { filter: "tomorrow" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user4.id]
 
           get "/cakeday/birthdays.json", params: { filter: "upcoming" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user5.id]
         end
       end
@@ -137,14 +142,14 @@ RSpec.describe "Anniversaries and Birthdays" do
 
           get "/cakeday/birthdays.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user1.id, user3.id, user2.id]
 
           SiteSetting.prioritize_username_in_ux = false
 
           get "/cakeday/birthdays.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user2.id, user3.id, user1.id]
         end
       end

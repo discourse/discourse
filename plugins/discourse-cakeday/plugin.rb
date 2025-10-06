@@ -20,13 +20,6 @@ end
 require_relative "lib/discourse_cakeday/engine"
 
 after_initialize do
-  DiscourseCakeday::Engine.routes.draw do
-    get "birthdays" => "birthdays#index"
-    get "birthdays/:filter" => "birthdays#index"
-    get "anniversaries" => "anniversaries#index"
-    get "anniversaries/:filter" => "anniversaries#index"
-  end
-
   Discourse::Application.routes.append { mount DiscourseCakeday::Engine, at: "/cakeday" }
 
   require_relative "app/jobs/onceoff/fix_invalid_date_of_birth"

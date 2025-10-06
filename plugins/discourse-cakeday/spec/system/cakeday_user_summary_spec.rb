@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Cakeday/Birthday emojis" do
-  let(:control_date) { Time.zone.local(2020, 6, 10) }
-  fab!(:current_user) { Fabricate(:admin, date_of_birth: control_date.prev_year(14)) }
+  CONTROL_DATE = Time.zone.local(2020, 6, 10)
+  fab!(:current_user) { Fabricate(:admin, date_of_birth: CONTROL_DATE.prev_year(14)) }
 
   let(:user_page) { PageObjects::Pages::User.new }
   let(:user_menu) { PageObjects::Components::UserMenu.new }
@@ -10,7 +10,7 @@ RSpec.describe "Cakeday/Birthday emojis" do
   before { sign_in(current_user) }
 
   context "for users with `created_at` and `date_of_birth` dates" do
-    fab!(:user_with_cakeday) { Fabricate(:user, created_at: control_date.prev_year) }
+    fab!(:user_with_cakeday) { Fabricate(:user, created_at: CONTROL_DATE.prev_year) }
 
     it "correctly shows emojis in users' profiles" do
       page.driver.with_playwright_page { |pw_page| pw_page.clock.install(time: CONTROL_DATE) }
