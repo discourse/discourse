@@ -9,7 +9,7 @@ module Migrations::Converters::Discourse
 
       @upload_creator = UploadCreator.new
 
-      @uploads_by_id = @source_db.query(<<~SQL).map { |row| [row[:id], row] }.to_h
+      @uploads_by_id = @source_db.query(<<~SQL).index_by { |row| row[:id] }
         SELECT u.id,
                u.url,
                u.original_filename AS filename,
