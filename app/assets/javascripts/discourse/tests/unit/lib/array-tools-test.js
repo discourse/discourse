@@ -1,12 +1,12 @@
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
-import { removeObject } from "discourse/lib/array-tools";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 
 module("Unit | Lib | array-tools", function () {
-  module("removeObject()", function () {
+  module("removeValueFromArray()", function () {
     test("removes all occurrences of a primitive value from a plain array", function (assert) {
       const input = [1, 2, 3, 2, 4, 2, 5];
-      const result = removeObject(input, 2);
+      const result = removeValueFromArray(input, 2);
 
       assert.strictEqual(result, input, "returns the same array reference");
       assert.deepEqual(result, [1, 3, 4, 5], "removes all matching entries");
@@ -14,7 +14,7 @@ module("Unit | Lib | array-tools", function () {
 
     test("does nothing if the value is not found", function (assert) {
       const input = [1, 2, 3];
-      const result = removeObject(input, 99);
+      const result = removeValueFromArray(input, 99);
 
       assert.strictEqual(result, input, "returns the same array reference");
       assert.deepEqual(result, [1, 2, 3], "array remains unchanged");
@@ -22,7 +22,7 @@ module("Unit | Lib | array-tools", function () {
 
     test("works with an empty array", function (assert) {
       const input = [];
-      const result = removeObject(input, "x");
+      const result = removeValueFromArray(input, "x");
 
       assert.strictEqual(result, input, "returns the same array reference");
       assert.deepEqual(result, [], "still empty");
@@ -33,7 +33,7 @@ module("Unit | Lib | array-tools", function () {
       const sameShape = { a: 1 };
       const input = [obj, sameShape, obj];
 
-      const result = removeObject(input, obj);
+      const result = removeValueFromArray(input, obj);
 
       assert.strictEqual(result, input, "returns the same array reference");
       assert.deepEqual(
@@ -45,7 +45,7 @@ module("Unit | Lib | array-tools", function () {
 
     test("removes all occurrences from a TrackedArray", function (assert) {
       const tracked = new TrackedArray([1, 2, 3, 2, 4]);
-      const result = removeObject(tracked, 2);
+      const result = removeValueFromArray(tracked, 2);
 
       assert.strictEqual(
         result,
@@ -63,21 +63,21 @@ module("Unit | Lib | array-tools", function () {
       const sym = Symbol("s");
       const input = [0, false, null, undefined, "", sym, 0, false];
 
-      let result = removeObject(input, 0);
+      let result = removeValueFromArray(input, 0);
       assert.deepEqual(
         result,
         [false, null, undefined, "", sym, false],
         "removes all 0 but keeps falsy non-zero values"
       );
 
-      result = removeObject(result, false);
+      result = removeValueFromArray(result, false);
       assert.deepEqual(
         result,
         [null, undefined, "", sym],
         "removes all false but keeps other falsy values"
       );
 
-      result = removeObject(result, sym);
+      result = removeValueFromArray(result, sym);
       assert.deepEqual(
         result,
         [null, undefined, ""],
@@ -88,10 +88,10 @@ module("Unit | Lib | array-tools", function () {
     test("idempotent if called repeatedly with same value", function (assert) {
       const input = [1, 1, 2, 3, 1];
 
-      const once = removeObject(input, 1);
+      const once = removeValueFromArray(input, 1);
       assert.deepEqual(once, [2, 3], "first removal removes all occurrences");
 
-      const twice = removeObject(once, 1);
+      const twice = removeValueFromArray(once, 1);
       assert.strictEqual(twice, once, "same reference returned");
       assert.deepEqual(twice, [2, 3], "second removal is a no-op");
     });

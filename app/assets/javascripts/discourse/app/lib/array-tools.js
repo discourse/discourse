@@ -5,7 +5,7 @@
  * @param {*} value - The value to be removed from the array.
  * @return {Array} The modified array with the specified value removed.
  */
-export function removeObject(array, value) {
+export function removeValueFromArray(array, value) {
   let loc = array.length || 0;
   while (--loc >= 0) {
     if (array[loc] === value) {

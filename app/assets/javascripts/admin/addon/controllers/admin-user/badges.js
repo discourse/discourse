@@ -5,7 +5,7 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { removeObject } from "discourse/lib/array-tools";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
 import { trackedArray } from "discourse/lib/tracked-tools";
@@ -115,7 +115,7 @@ export default class AdminUserBadgesController extends Controller {
       message: i18n("admin.badges.revoke_confirm"),
       didConfirm: () => {
         return userBadge.revoke().then(() => {
-          removeObject(this.model, userBadge);
+          removeValueFromArray(this.model, userBadge);
         });
       },
     });
