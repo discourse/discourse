@@ -5,7 +5,15 @@
 # https://translate.discourse.org/
 
 hu:
+  discourse_automation:
+    scriptables:
+      llm_triage:
+        flagged_post: |
+          <div>A modell válasza:</div>
+          <p>%%LLM_RESPONSE%%</p>
+          <b>A <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> szabály által kiváltva.</b>
   site_settings:
+    ai_helper_custom_prompts_allowed_groups: "Az ezekhez a csoportokhoz tartozó felhasználók az egyéni prompt opciót látják az AI helperben."
     ai_translation_max_post_length: "A lefordítandó bejegyzés maximális hossza. Az ennél hosszabb bejegyzések nem kerülnek fordításra."
   reports:
     overall_sentiment:

@@ -62,6 +62,10 @@ hu:
         table: "Táblázat"
       translations:
         title: "Fordítások"
+        progress_chart:
+          title: "Fordítási folyamat"
+          completed: "Befejezve"
+          remaining: "Hátralevő"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"
@@ -137,6 +141,9 @@ hu:
         usage:
           ai_summarization: "Összefoglalás"
           ai_spam: "Kéretlen tartalom"
+        model_description:
+          open_ai-o3: "Az Open AI leghatékonyabb érvelési modellje"
+          open_ai-gpt-5: "Az Open AI zászlóshajó modellje. Jól alkalmazható a problémamegoldásra minden területen."
         next:
           title: "Következő"
         tests:
