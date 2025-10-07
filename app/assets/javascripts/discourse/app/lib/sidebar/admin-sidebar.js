@@ -345,27 +345,28 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         installedPluginsLinkKeywords()
       );
 
-      const adminLoginRoutesToAdd = () => {
-        const routes = [];
+      if (site.admin_config_login_routes) {
+        const adminLoginRoutesToAdd = () => {
+          const routes = [];
 
-        site.admin_config_login_routes.forEach((routeName) => {
-          routes.push({
-            name: `admin_login_${routeName}`,
-            route: `adminConfig.login.plugin-tab`,
-            routeModels: [routeName],
-            icon: "unlock",
-            label: `admin.config.login.sub_pages.${routeName}`,
-            settings_area: routeName,
+          site.admin_config_login_routes.forEach((routeName) => {
+            routes.push({
+              name: `admin_login_${routeName}`,
+              route: `adminConfig.login.plugin-tab`,
+              routeModels: [routeName],
+              icon: "unlock",
+              label: `admin.config.login.sub_pages.${routeName}`,
+              settings_area: routeName,
+            });
           });
-        });
+          return routes;
+        };
 
-        return routes;
-      };
-
-      this.adminNavManager.amendLinksToSubSection(
-        "admin_login",
-        adminLoginRoutesToAdd()
-      );
+        this.adminNavManager.amendLinksToSubSection(
+          "admin_login",
+          adminLoginRoutesToAdd()
+        );
+      }
     }
 
     // Mods cannot access themes
