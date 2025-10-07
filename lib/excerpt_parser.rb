@@ -4,16 +4,19 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   attr_reader :excerpt
 
   CUSTOM_EXCERPT_REGEX = /<\s*(span|div)[^>]*class\s*=\s*['"]excerpt['"][^>]*>/
+  IMAGE_MODES = [
+    %i[strip_images strip],
+    %i[markdown_images markdown],
+    %i[keep_img_tags keep],
+  ].freeze
 
   def initialize(length, options = nil)
     @length = length
     @excerpt = +""
     @current_length = 0
-    options || {}
+    options ||= {}
     @strip_links = options[:strip_links] == true
-    @strip_images = options[:strip_images] == true
     @text_entities = options[:text_entities] == true
-    @markdown_images = options[:markdown_images] == true
     @keep_newlines = options[:keep_newlines] == true
     @keep_emoji_images = options[:keep_emoji_images] == true
     @keep_onebox_source = options[:keep_onebox_source] == true
@@ -21,10 +24,15 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @keep_quotes = options[:keep_quotes] == true
     @keep_svg = options[:keep_svg] == true
     @remap_emoji = options[:remap_emoji] == true
-    @keep_img_tags = options[:keep_img_tags] == true
     @start_excerpt = false
     @start_hashtag_icon = false
     @in_details_depth = 0
+    @image_mode = normalize_image_mode(options)
+  end
+
+  def normalize_image_mode(options)
+    IMAGE_MODES.each { |key, mode| return mode if options[key] }
+    :default
   end
 
   def self.get_excerpt(html, length, options)
@@ -78,21 +86,25 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         end
       end
 
-      return include_tag(name, attributes) if @keep_img_tags
-
-      unless @strip_images
-        # If include_images is set, include the image in markdown
-        characters("!") if @markdown_images
-
-        if attributes["alt"].present?
+      case @image_mode
+      when :keep
+        include_tag(name, attributes)
+      when :strip
+        # do nothing
+      when :markdown
+        characters("!")
+        characters(
+          "[#{attributes["alt"].presence || attributes["title"].presence || I18n.t("excerpt_image")}]",
+        )
+        characters("(#{attributes["src"]})")
+      else
+        if !attributes["alt"].present?
           characters("[#{attributes["alt"]}]")
         elsif attributes["title"].present?
           characters("[#{attributes["title"]}]")
         else
           characters("[#{I18n.t "excerpt_image"}]")
         end
-
-        characters("(#{attributes["src"]})") if @markdown_images
       end
     when "a"
       unless @strip_links
