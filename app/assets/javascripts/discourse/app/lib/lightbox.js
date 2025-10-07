@@ -6,7 +6,6 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
-import loadScript from "discourse/lib/load-script";
 import {
   escapeExpression,
   postRNWebviewMessage,
