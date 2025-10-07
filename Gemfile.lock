@@ -155,7 +155,7 @@ GEM
     dry-initializer (3.2.0)
     ed25519 (1.4.0)
     email_reply_trimmer (0.2.0)
-    erb (5.0.2)
+    erb (5.0.3)
     erubi (1.13.1)
     excon (1.2.5)
       logger
@@ -959,7 +959,7 @@ CHECKSUMS
   dry-initializer (3.2.0) sha256=37d59798f912dc0a1efe14a4db4a9306989007b302dcd5f25d0a2a20c166c4e3
   ed25519 (1.4.0) sha256=16e97f5198689a154247169f3453ef4cfd3f7a47481fde0ae33206cdfdcac506
   email_reply_trimmer (0.2.0) sha256=05843fa5ee1a2037235f1f3c876e922f613e2b4406fea5bb14212d1708d6c525
-  erb (5.0.2) sha256=d30f258143d4300fb4ecf430042ac12970c9bb4b33c974a545b8f58c1ec26c0f
+  erb (5.0.3) sha256=a3b6eb7a1b1dfaa7567a503bb70bd5d4c2279644b4bad660cd9201fa05e43775
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   excon (1.2.5) sha256=ca040bb61bc0059968f34a17115a00d2db8562e3c0c5c5c7432072b551c85a9d
   exifr (1.4.1) sha256=768374cc6b6ff3743acba57c1c35229bdd8c6b9fbc1285952047fc1215c4b894
