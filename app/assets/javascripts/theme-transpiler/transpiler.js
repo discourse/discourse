@@ -6,6 +6,7 @@ import DecoratorTransforms from "decorator-transforms";
 import EMBER_PACKAGE from "ember-source/package.json";
 import { minify as terserMinify } from "terser";
 import { browsers } from "../discourse/config/targets";
+import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 
 globalThis.emberVersion = function () {
   return EMBER_PACKAGE.version;
@@ -19,6 +20,7 @@ globalThis.transpile = function (source, options = {}) {
     plugins.push(["transform-modules-amd", { noInterop: true }]);
   }
   plugins.push([DecoratorTransforms, { runEarly: true }]);
+  plugins.push(babelTransformModuleRenames);
 
   try {
     const result = babelTransform(source, {

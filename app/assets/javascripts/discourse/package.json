@@ -7,6 +7,7 @@
   "author": "Discourse",
   "exports": {
     "./tests/*": "./tests/*",
+    "./admin/*": "./admin/*",
     "./*": "./app/*"
   },
   "directories": {
@@ -100,11 +101,11 @@
     "@uppy/utils": "^6.0.3",
     "@uppy/xhr-upload": "^4.2.1",
     "a11y-dialog": "8.1.4",
-    "admin": "workspace:1.0.0",
     "autosize": "^6.0.1",
     "babel-import-util": "^3.0.1",
     "babel-plugin-ember-template-compilation": "^3.0.1",
     "broccoli-asset-rev": "^3.0.0",
+    "broccoli-merge-files": "^0.8.0",
     "custom-proxy": "workspace:1.0.0",
     "deepmerge": "^4.3.1",
     "deprecation-silencer": "workspace:1.0.0",
