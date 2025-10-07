@@ -67,7 +67,7 @@ def dependencies
   [
     { source: "chart.js/dist/chart.min.js", public: true },
     { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
-    { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true }
+    { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
   ]
 end
 
