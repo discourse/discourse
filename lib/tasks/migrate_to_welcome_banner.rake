@@ -42,10 +42,10 @@ def find_advanced_search_banners(db)
     .each do |remote_theme|
       theme = remote_theme.theme
 
-      puts "  ✓ Found theme component: #{theme.name} (ID: #{theme.id})"
+      puts "  ✓ Found: #{theme.name} (ID: #{theme.id})"
       puts "  Searching for translation overrides..."
 
-      if theme.theme_translation_overrides.any?
+      if !theme.theme_translation_overrides.any?
         puts "  Migrating translation overrides..."
         theme.theme_translation_overrides.each do |override|
           mapped_keys = map_translation_keys(override.translation_key)
@@ -59,7 +59,8 @@ def find_advanced_search_banners(db)
           puts "    ● Deleted old override: #{override.locale}.#{override.translation_key}"
         end
       else
-        puts "  ✗ No translation overrides found. Default translations will be used."
+        puts "  ✗ No translation overrides found, thus migrating to default translations..."
+        apply_default_translations
       end
     end
 
@@ -80,4 +81,20 @@ def map_translation_keys(translation_key)
   }
 
   translation_mappings[translation_key] || []
+end
+
+def apply_default_translations(locale = "en")
+  default_translations = {
+    "js.welcome_banner.header.anonymous_members" => "Welcome to our community",
+    "js.welcome_banner.header.logged_in_members" => "Welcome to our community",
+    "js.welcome_banner.subheader.anonymous_members" =>
+      "We're happy to have you here. If you need help, please search before you post.",
+    "js.welcome_banner.subheader.logged_in_members" =>
+      "We're happy to have you here. If you need help, please search before you post.",
+  }
+
+  default_translations.each do |key, value|
+    TranslationOverride.upsert!(locale, key, value)
+    puts "    ✓ Migrated to: '#{locale}.#{key}' = '#{value}'"
+  end
 end
