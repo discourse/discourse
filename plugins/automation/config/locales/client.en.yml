@@ -145,6 +145,14 @@ en:
           fields:
             restricted_topic:
               label: Topic ID
+        topic_manual_button:
+          fields:
+            categories:
+              label: Limited to categories
+              description: Optional, only expose the manual button on topics in these categories
+            allowed_groups:
+              label: Allowed groups
+              description: Optional, restrict who can trigger this automation to members of these groups
         post_created_edited:
           fields:
             original_post_only:
@@ -323,6 +331,31 @@ en:
             update_existing_members:
               label: Update existing members
               description: Updates the notification level for existing group members
+        manual_topic_button:
+          fields:
+            button_label:
+              label: Button text
+              description: Text shown for the topic menu button
+            button_icon:
+              label: Button icon
+              description: Optional icon name for the button
+            timer_type:
+              label: Timer action
+              description: Choose which timer to schedule when the button is used
+              choices:
+                close: Close topic
+                open: Reopen topic
+                none: No timer
+            topic_timer:
+              label: Topic timer
+              description: Optional, schedule the selected timer action after this period when the button is used
+              choices:
+                minute: minute
+                hour: hour
+                day: day
+                week: week
+            tags:
+              label: Tags to add
         user_global_notice:
           fields:
             level:
