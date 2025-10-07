@@ -50,6 +50,8 @@ if defined?(DiscourseAutomation)
 
     field :max_posts_for_context, component: :text, default: "5"
 
+    field :allow_system_posts, component: :boolean, default: false
+
     script do |context, fields|
       post = context["post"]
       next if post&.user&.bot?
