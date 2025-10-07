@@ -585,6 +585,9 @@ importers:
       float-kit:
         specifier: workspace:1.0.0
         version: link:../float-kit
+      glob:
+        specifier: ^11.0.3
+        version: 11.0.3
       html-entities:
         specifier: ^2.6.0
         version: 2.6.0
