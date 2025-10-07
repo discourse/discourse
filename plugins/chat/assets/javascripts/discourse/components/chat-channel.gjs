@@ -35,7 +35,6 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { stackingContextFix } from "../lib/chat-ios-hacks";
 import ChatComposerChannel from "./chat/composer/channel";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
@@ -173,9 +172,7 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    stackingContextFix(this.scroller, () => {
-      this.messagesManager.addMessages([message]);
-    });
+    this.messagesManager.addMessages([message]);
     this.debouncedUpdateLastReadMessage();
   }
 
@@ -237,9 +234,7 @@ export default class ChatChannel extends Component {
     }
 
     const targetMessageId = this.messagesManager.messages.lastObject.id;
-    stackingContextFix(this.scroller, () => {
-      this.messagesManager.addMessages(messages);
-    });
+    this.messagesManager.addMessages(messages);
 
     if (direction === FUTURE && !opts.noScroll) {
       this.scrollToMessageId(targetMessageId, {
@@ -534,9 +529,7 @@ export default class ChatChannel extends Component {
     this.resetComposerMessage();
 
     try {
-      stackingContextFix(this.scroller, async () => {
-        await this.chatApi.editMessage(this.args.channel.id, message.id, data);
-      });
+      await this.chatApi.editMessage(this.args.channel.id, message.id, data);
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -548,9 +541,7 @@ export default class ChatChannel extends Component {
   async #sendNewMessage(message) {
     this.pane.sending = true;
 
-    stackingContextFix(this.scroller, async () => {
-      await this.args.channel.stageMessage(message);
-    });
+    await this.args.channel.stageMessage(message);
 
     message.manager = this.args.channel.messagesManager;
     this.resetComposerMessage();
