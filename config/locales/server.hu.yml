@@ -1778,7 +1778,7 @@ hu:
     enable_escaped_fragments: "Ha nem észlelhető webrobot, használja a Google Ajax-Crawling API-ját tartalék megoldásként. Lásd <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Engedélyezze a moderátoroknak a bejegyzések tulajdonjogának megváltoztatását"
     cors_origins: "Megengedett források a kereszteredetű kérelmek (CORS) számára. Minden eredetnek tartalmaznia kell a http:// vagy https:// címet. A CORS engedélyezéséhez a DISCOURSE_ENABLE_CORS env változót igaz értékre kell állítani."
-    use_admin_ip_allowlist: "Az adminokk csak akkor tudnak bejelentkezni, ha a Screened IPs listában megadott IP-címmel vannak megadva (Admin > Naplók > Screened Ips)."
+    use_admin_ip_allowlist: "Az adminisztrátorok csak akkor tudnak bejelentkezni, ha a Szűrt IP-címek listában (Admin > Naplók > Szűrt IP-címek) meghatározott IP-címen tartózkodnak."
     blocked_ip_blocks: "Privát IP-címtartományok listája, amelyeket a Discourse soha nem indexelhet"
     allowed_internal_hosts: "Belső kiszolgálók listája, amelyeket a Discourse biztonságosan indexelhet oneboxing és egyéb célokra"
     allowed_onebox_iframes: "Az iframe src domainek listája, amelyek engedélyezettek a Onebox beágyazásokon keresztül. A * minden alapértelmezett Onebox motort engedélyez."

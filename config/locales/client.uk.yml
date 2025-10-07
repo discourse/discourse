@@ -7072,6 +7072,7 @@ uk:
         copy_to_clipboard: "Скопіювати в буфер"
         copied_to_clipboard: "Скопійовано у буфер обміну"
         copy_to_clipboard_error: "Помилка під час копіювання даних у буфер обміну"
+        theme_owner: "Власник:"
         email_templates:
           title: "Електронна пошта"
           subject: "Тема"
