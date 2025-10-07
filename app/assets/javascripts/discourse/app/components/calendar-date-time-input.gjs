@@ -80,7 +80,7 @@ export default class CalendarDateTimeInput extends Component {
   }
 
   async #setupPicker(element) {
-    const { default: Pikaday } = waitForPromise(await import("pikaday"));
+    const { default: Pikaday } = await waitForPromise(import("pikaday"));
 
     const options = {
       field: element.querySelector(".fake-input"),
