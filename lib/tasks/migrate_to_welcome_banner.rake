@@ -45,18 +45,9 @@ def find_advanced_search_banners(db)
       puts "  ✓ Found theme component: #{theme.name} (ID: #{theme.id})"
       puts "  Searching for translation overrides..."
 
-      overrides =
-        theme.theme_translation_overrides.map do |override|
-          {
-            locale: override.locale,
-            translation_key: override.translation_key,
-            value: override.value,
-          }
-        end
-
-      if overrides.any?
+      if theme.theme_translation_overrides.any?
         puts "  Migrating translation overrides..."
-        overrides.each do |override|
+        theme.theme_translation_overrides.each do |override|
           mapped_keys = map_search_banner_to_welcome_banner(override[:translation_key])
 
           if mapped_keys.any?
@@ -71,16 +62,6 @@ def find_advanced_search_banners(db)
       else
         puts "  ✗ No translation overrides found. Default translations will be used."
       end
-
-      # next
-      # result = deprecate_theme(theme)
-      result = {
-        id: theme.id,
-        name: theme.name,
-        status: "Found with #{overrides.count} translation overrides",
-        overrides: overrides,
-      }
-      advanced_search_banners << result if result
     end
 
   advanced_search_banners
@@ -96,11 +77,8 @@ def map_search_banner_to_welcome_banner(translation_key)
       js.welcome_banner.subheader.anonymous_members
       js.welcome_banner.subheader.logged_in_members
     ],
-    "search_banner.search_button_text" => "js.welcome_banner.search_placeholder",
+    "search_banner.search_button_text" => ["js.welcome_banner.search_placeholder"],
   }
 
-  mapping = translation_mappings[translation_key]
-  return [] unless mapping
-
-  Array(mapping)
+  translation_mappings[translation_key] || []
 end
