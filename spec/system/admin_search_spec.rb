@@ -112,4 +112,22 @@ describe "Admin Search", type: :system do
       "/admin/config/login-and-authentication/discourseconnect?filter=enable_discourse_connect",
     )
   end
+
+  it "works for OIDC" do
+    visit "/admin"
+    sidebar.click_search_input
+    search_modal.search("oidc")
+    search_modal.find_result("page", 0).click
+
+    expect(page).to have_current_path("/admin/config/login-and-authentication/oidc")
+  end
+
+  it "works for Oauth2" do
+    visit "/admin"
+    sidebar.click_search_input
+    search_modal.search("oauth2")
+    search_modal.find_result("page", 0).click
+
+    expect(page).to have_current_path("/admin/config/login-and-authentication/oauth2")
+  end
 end
