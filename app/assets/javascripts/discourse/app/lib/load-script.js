@@ -3,7 +3,6 @@ import { buildWaiter } from "@ember/test-waiters";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import getURL, { getURLWithCDN } from "discourse/lib/get-url";
-import { PUBLIC_JS_VERSIONS } from "discourse/lib/public-js-versions";
 
 const WAITER = buildWaiter("load-script");
 const _loaded = {};
@@ -49,8 +48,6 @@ export default function loadScript(url, opts = {}) {
   if (_loaded[url]) {
     return Promise.resolve();
   }
-
-  url = cacheBuster(url);
 
   // Scripts should always load from CDN
   // CSS is type text, to accept it from a CDN we would need to handle CORS
@@ -106,19 +103,4 @@ export default function loadScript(url, opts = {}) {
       loadWithTag(fullUrl, cb);
     }
   });
-}
-
-export function cacheBuster(url) {
-  if (PUBLIC_JS_VERSIONS) {
-    let [folder, ...lib] = url.split("/").filter(Boolean);
-    if (folder === "javascripts") {
-      lib = lib.join("/").toLowerCase();
-      const versionedPath = PUBLIC_JS_VERSIONS[lib];
-      if (versionedPath) {
-        return `/javascripts/${versionedPath}`;
-      }
-    }
-  }
-
-  return url;
 }
