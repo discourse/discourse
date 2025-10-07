@@ -130,7 +130,7 @@ module.exports = function (defaults) {
           publicPath: "auto",
           filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
           chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
-          assetModuleFilename: `assets/[hash].${cachebusterHash}[ext][query]`,
+          assetModuleFilename: `assets/chunk.[hash].${cachebusterHash}[ext][query]`,
         },
         optimization: {
           minimize: isProduction,
