@@ -4517,6 +4517,8 @@ uk:
     latte_theme_name: "Латте"
     summer_theme_name: "Літо"
     dark_rose_theme_name: "Темна троянда"
+    errors:
+      cannot_edit_remote_copies: "Редагування віддалених копій кольорових палітр не дозволяється."
   edit_this_page: "Редагувати цю сторінку"
   csv_export:
     boolean_yes: "Так"

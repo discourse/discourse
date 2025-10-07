@@ -4516,6 +4516,8 @@ he:
     latte_theme_name: "לאטה"
     summer_theme_name: "קיץ"
     dark_rose_theme_name: "ורד כהה"
+    errors:
+      cannot_edit_remote_copies: "עריכות לעותקים מרוחקים של מערכות צבעים אסורות"
   edit_this_page: "עריכת עמוד זה"
   csv_export:
     boolean_yes: "כן"
