@@ -23,7 +23,7 @@ module("Unit | Utility | load-script", function (hooks) {
       `/javascripts/${jsVersions["pikaday.js"]}`
     );
     assert.strictEqual(
-      cacheBuster("/javascripts/ace/ace.js"),
+      cacheBuster("/javascripts/chart.js/chart.min.js"),
       `/javascripts/${jsVersions["ace/ace.js"]}`
     );
   });
