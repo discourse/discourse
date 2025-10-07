@@ -11,3 +11,5 @@ window.virtualDom = virtualDom;
 if (!window.$) {
   window.$ = window.jQuery = jQuery;
 }
+
+console.log(import.meta.glob("./components/**/*", { eager: true }));
