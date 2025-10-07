@@ -29,6 +29,8 @@
     "@glimmer/syntax": "0.93.1",
     "@highlightjs/cdn-assets": "11.11.1",
     "@json-editor/json-editor": "2.15.2",
+    "@jsquash/jpeg": "^1.6.0",
+    "@jsquash/resize": "^2.1.0",
     "@messageformat/core": "^3.4.0",
     "@messageformat/runtime": "^3.0.1",
     "ace-builds": "^1.43.3",
