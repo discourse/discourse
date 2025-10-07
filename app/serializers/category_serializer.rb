@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CategorySerializer < SiteCategorySerializer
+  include BasicCategoryAttributes
+
   class CategorySettingSerializer < ApplicationSerializer
     attributes :auto_bump_cooldown_days,
                :num_auto_bump_daily,
