@@ -274,7 +274,7 @@ function pluginAdminRouteLinks(router) {
                 return;
               }
             })
-            .compact();
+            .filter((item) => item != null);
         }
       }
 
@@ -336,7 +336,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
             return pluginLink;
           }
         })
-        .compact();
+        .filter((item) => item != null);
       this.adminNavManager.amendLinksToSection("plugins", pluginLinksToAdd);
 
       this.adminSidebarStateManager.setLinkKeywords(
