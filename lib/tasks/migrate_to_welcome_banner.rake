@@ -48,16 +48,15 @@ def find_advanced_search_banners(db)
       if theme.theme_translation_overrides.any?
         puts "  Migrating translation overrides..."
         theme.theme_translation_overrides.each do |override|
-          mapped_keys = map_search_banner_to_welcome_banner(override[:translation_key])
+          mapped_keys = map_translation_keys(override.translation_key)
 
-          if mapped_keys.any?
-            mapped_keys.each do |new_key|
-              TranslationOverride.upsert!(override[:locale], new_key, override[:value])
-              puts "    ✓ Migrated to: '#{override[:locale]}.#{new_key}' = '#{override[:value]}'"
-            end
-          else
-            puts "    ✗ No mapping found for: '#{override[:translation_key]}'"
+          mapped_keys.each do |new_key|
+            TranslationOverride.upsert!(override.locale, new_key, override.value)
+            puts "    ✓ Migrated to: '#{override.locale}.#{new_key}' = '#{override.value}'"
           end
+
+          # override.destroy!
+          puts "    ● Deleted old override: #{override.locale}.#{override.translation_key}"
         end
       else
         puts "  ✗ No translation overrides found. Default translations will be used."
@@ -67,7 +66,7 @@ def find_advanced_search_banners(db)
   advanced_search_banners
 end
 
-def map_search_banner_to_welcome_banner(translation_key)
+def map_translation_keys(translation_key)
   translation_mappings = {
     "search_banner.headline" => %w[
       js.welcome_banner.header.anonymous_members
