@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { waitForPromise } from "@ember/test-waiters";
 import { isEmpty } from "@ember/utils";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -79,7 +80,7 @@ export default class CalendarDateTimeInput extends Component {
   }
 
   async #setupPicker(element) {
-    const { default: Pikaday } = await import("pikaday");
+    const { default: Pikaday } = waitForPromise(await import("pikaday"));
 
     const options = {
       field: element.querySelector(".fake-input"),

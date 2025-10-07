@@ -2,6 +2,7 @@
 import Component, { Input } from "@ember/component";
 import { computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { waitForPromise } from "@ember/test-waiters";
 import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import discourseComputed from "discourse/lib/decorators";
@@ -32,7 +33,7 @@ export default class DatePicker extends Component {
   }
 
   async _loadPikadayPicker(container) {
-    const { default: Pikaday } = await import("pikaday");
+    const { default: Pikaday } = await waitForPromise(import("pikaday"));
 
     schedule("afterRender", () => {
       const options = {

@@ -3,6 +3,7 @@ import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { waitForPromise } from "@ember/test-waiters";
 import { classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import { Promise } from "rsvp";
@@ -85,7 +86,7 @@ export default class DateInput extends Component {
   }
 
   async _loadPikadayPicker(container) {
-    const { default: Pikaday } = await import("pikaday");
+    const { default: Pikaday } = await waitForPromise(import("pikaday"));
 
     const defaultOptions = {
       field: this.element.querySelector(".date-picker"),
