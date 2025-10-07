@@ -30,7 +30,7 @@ module PageObjects
 
         def open_incoming_email
           element.find(".incoming-email-link").click
-          PageObjects::Modals::AdminIncomingEmailModal.new
+          PageObjects::Modals::AdminIncomingEmailDetailsModal.new
         end
       end
 
