@@ -115,9 +115,6 @@ importers:
       puppeteer-core:
         specifier: ^24.23.0
         version: 24.23.0
-      squoosh:
-        specifier: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
-        version: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d
       stylelint:
         specifier: 16.23.1
         version: 16.23.1(typescript@5.6.3)
@@ -290,6 +287,12 @@ importers:
       '@json-editor/json-editor':
         specifier: 2.15.2
         version: 2.15.2
+      '@jsquash/jpeg':
+        specifier: ^1.6.0
+        version: 1.6.0
+      '@jsquash/resize':
+        specifier: ^2.1.0
+        version: 2.1.0
       '@messageformat/core':
         specifier: ^3.4.0
         version: 3.4.0
@@ -2436,6 +2439,12 @@ packages:
 
   '@jspreadsheet/formula@2.0.2':
     resolution: {integrity: sha512-PDQYf9REQA53I7tVYkvkeyQxrd5jcjUeHgItYnRpjN2QiIQwawSqBDtGGEVQTSboTG+JwgGCuhvOpj7FxeKwew==}
+
+  '@jsquash/jpeg@1.6.0':
+    resolution: {integrity: sha512-zwN46Awh1VM6gXlIcALwb5WzqK5H2e6+Awcs1QP8AvS8ohsK/sbE4esvmH4jhlhW7+CgiUUww66vg0aTnlSIMA==}
+
+  '@jsquash/resize@2.1.0':
+    resolution: {integrity: sha512-UxF45pe5a84GrleHichsnGHyFAJhOu4Ms9L1UQYXhhmDifRm4U3pMEzgly+m3xDe+h4XZyDlpr9f8FBB1LZ+LA==}
 
   '@keyv/serialize@1.1.0':
     resolution: {integrity: sha512-RlDgexML7Z63Q8BSaqhXdCYNBy/JQnqYIwxofUrNLGCblOMHp+xux2Q8nLMLlPpgHQPoU0Do8Z6btCpRBEqZ8g==}
@@ -8247,10 +8256,6 @@ packages:
   sprintf-js@1.1.3:
     resolution: {integrity: sha512-Oo+0REFV59/rz3gfJNKQiBlwfHaSESl1pcGyABQsnnIfWOFt6JNj5gCog2U6MLZ//IGYD+nA8nI+mTShREReaA==}
 
-  squoosh@https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d:
-    resolution: {tarball: https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d}
-    version: 2.0.0
-
   sri-toolbox@0.2.0:
     resolution: {integrity: sha512-DQIMWCAr/M7phwo+d3bEfXwSBEwuaJL+SJx9cuqt1Ty7K96ZFoHpYnSbhrQZEr0+0/GtmpKECP8X/R4RyeTAfw==}
     engines: {node: '>= 0.10.4'}
@@ -9040,9 +9045,6 @@ packages:
 
   walker@1.0.8:
     resolution: {integrity: sha512-ts/8E8l5b7kY0vlWLewOkDXMmPdLcVV4GmOQLyxuSswIJsweeFZtAsMF7k1Nszz+TYBQrlYRmzOnr398y1JemQ==}
-
-  wasm-feature-detect@1.5.1:
-    resolution: {integrity: sha512-GHr23qmuehNXHY4902/hJ6EV5sUANIJC3R/yMfQ7hWDg3nfhlcJfnIL96R2ohpIwa62araN6aN4bLzzzq5GXkg==}
 
   watch-detector@1.0.2:
     resolution: {integrity: sha512-MrJK9z7kD5Gl3jHBnnBVHvr1saVGAfmkyyrvuNzV/oe0Gr1nwZTy5VSA0Gw2j2Or0Mu8HcjUa44qlBvC2Ofnpg==}
@@ -10976,6 +10978,10 @@ snapshots:
       tslib: 2.8.1
 
   '@jspreadsheet/formula@2.0.2': {}
+
+  '@jsquash/jpeg@1.6.0': {}
+
+  '@jsquash/resize@2.1.0': {}
 
   '@keyv/serialize@1.1.0': {}
 
@@ -18052,10 +18058,6 @@ snapshots:
 
   sprintf-js@1.1.3: {}
 
-  squoosh@https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d:
-    dependencies:
-      wasm-feature-detect: 1.5.1
-
   sri-toolbox@0.2.0: {}
 
   ssri@10.0.6:
@@ -19035,8 +19037,6 @@ snapshots:
   walker@1.0.8:
     dependencies:
       makeerror: 1.0.12
-
-  wasm-feature-detect@1.5.1: {}
 
   watch-detector@1.0.2:
     dependencies:

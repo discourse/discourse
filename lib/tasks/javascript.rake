@@ -67,31 +67,7 @@ def dependencies
   [
     { source: "chart.js/dist/chart.min.js", public: true },
     { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
-    { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
-    {
-      source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
-      destination: "squoosh",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.wasm",
-      destination: "squoosh",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "squoosh/codecs/resize/pkg/squoosh_resize.js",
-      destination: "squoosh",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "squoosh/codecs/resize/pkg/squoosh_resize_bg.wasm",
-      destination: "squoosh",
-      public: true,
-      skip_versioning: true,
-    },
+    { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true }
   ]
 end
 

@@ -33,7 +33,6 @@
     "playwright": "1.56.0",
     "prettier": "3.5.3",
     "puppeteer-core": "^24.23.0",
-    "squoosh": "https://codeload.github.com/discourse/squoosh/tar.gz/dc9649d",
     "stylelint": "16.23.1",
     "terser": "^5.44.0",
     "typescript": "5.6.x"
