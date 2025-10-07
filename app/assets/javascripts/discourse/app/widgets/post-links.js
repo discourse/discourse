@@ -1,4 +1,5 @@
 import { h } from "virtual-dom";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { iconNode } from "discourse/lib/icon-library";
 import { replaceEmoji } from "discourse/widgets/emoji";
 import { createWidget } from "discourse/widgets/widget";
@@ -41,7 +42,10 @@ export default createWidget("post-links", {
     }
 
     // only show incoming
-    const links = this.attrs.links.filter((l) => l.reflection).uniqBy("title");
+    const links = uniqueItemsFromArray(
+      this.attrs.links.filter((l) => l.reflection),
+      "title"
+    );
 
     if (links.length === 0) {
       return;

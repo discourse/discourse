@@ -3,6 +3,7 @@ import EmberObject, { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 
 const ALL_FILTER = "all";
@@ -35,7 +36,9 @@ export default class AdminEmojis extends Service {
   }
 
   get emojiGroups() {
-    return [DEFAULT_GROUP].concat(this.emojis.map((e) => e.group)).uniq();
+    return uniqueItemsFromArray(
+      [DEFAULT_GROUP].concat(this.emojis.map((e) => e.group))
+    );
   }
 
   get filteringGroups() {
