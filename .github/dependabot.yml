@@ -75,6 +75,7 @@ updates:
       - dependency-name: "@discourse/moment-timezone-names-translations"
       - dependency-name: "@glint/*" # Using unstable version - don't auto-upgrade to stable
       - dependency-name: "typescript" # Very sensitive to glint/volar version
+      - dependency-name: "webpack" # Recent versions have bugs with `/static` loading. We're working to move away from webpack anyway.
     groups:
       babel:
         patterns:
