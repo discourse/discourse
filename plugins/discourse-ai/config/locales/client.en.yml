@@ -217,7 +217,7 @@ en:
               description: "Maximum number of posts from the topic to include for analysis context (default: 5)"
             allow_system_posts:
               label: "Allow System Posts"
-              description: "Allow tagging of posts created by system users (user_id < 0). This is useful for automated content imports."
+              description: "Allow tagging of posts created by the system user."
 
     discourse_ai:
       title: "AI"
