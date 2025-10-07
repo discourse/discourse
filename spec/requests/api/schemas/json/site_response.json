@@ -913,6 +913,9 @@
     },
     "full_name_visible_in_signup": {
       "type": "boolean"
+    },
+    "admin_config_login_routes" : {
+      "type": "array"
     }
   },
   "required": [

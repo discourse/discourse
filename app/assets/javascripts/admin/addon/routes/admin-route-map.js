@@ -244,7 +244,7 @@ export default function () {
           });
           this.route("authenticators");
           this.route("discourseconnect");
-          // Routes registered in plugins
+          // Lets plugins register routes via register_admin_config_login_route
           this.route("plugin-tab", {
             path: "/*wildcard",
           });
