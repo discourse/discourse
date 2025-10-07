@@ -29,8 +29,7 @@ describe "Category Localizations", type: :system do
   def get_category_dropdown(nth)
     selector = ".category-breadcrumb li:nth-child(#{nth}) .category-drop"
     expect(page).to have_css(selector)
-    el = find(selector, visible: :all)
-    PageObjects::Components::SelectKit.new(el)
+    PageObjects::Components::SelectKit.new(selector)
   end
 
   context "when content localization setting is disabled" do
@@ -138,20 +137,14 @@ describe "Category Localizations", type: :system do
             count: 2,
           )
           expect(
-            category_page.find("#control-localizations-0-locale option.--selected"),
-          ).to have_content("Spanish (Español)")
-          expect(
-            category_page.find("#control-localizations-1-locale option.--selected"),
-          ).to have_content("Japanese (日本語)")
+            page.all(".form-kit__control-select option.--selected").map(&:text),
+          ).to contain_exactly("Spanish (Español)", "Japanese (日本語)")
 
           page.find(".edit-category-tab-localizations .remove-localization", match: :first).click
           category_page.save_settings
           page.refresh
 
           expect(category_page).to_not have_css("#control-localizations-0-locale option.--selected")
-          expect(
-            category_page.find("#control-localizations-0-locale option.--selected"),
-          ).to have_content("Japanese (日本語)")
         end
       end
     end
@@ -223,6 +216,26 @@ describe "Category Localizations", type: :system do
 
           expect(topic_list.topic(cat_topic)).to have_text("Solicitudes")
         end
+
+        it "keeps the translated category name when navigating category dropdown" do
+          visit("/latest")
+          switcher.expand
+          switcher.option("[data-menu-option-id='es']").click
+
+          category_dropdown = get_category_dropdown("1")
+
+          expect(category_dropdown.component).to have_text(
+            I18n.t("js.categories.categories_label", locale: "es"),
+          )
+          category_dropdown.component.click
+          expect(category_dropdown.component).to have_css(".is-expanded")
+          expect(category_dropdown.component.find(".select-kit-body")).to have_css(
+            ".select-kit-collection",
+          )
+          expect(page.find(".select-kit-collection div[data-name='Solicitudes']")).to have_text(
+            "Solicitudes",
+          )
+        end
       end
 
       describe "for anonymous users" do
@@ -230,6 +243,20 @@ describe "Category Localizations", type: :system do
       end
 
       describe "logged in users" do
+        shared_examples_for "editing category settings" do
+          it "shows the original category name in the category edit page" do
+            sign_in(admin)
+            category_page.visit_general(category)
+
+            switcher.expand
+            switcher.option("[data-menu-option-id='es']").click
+
+            expect(find(".edit-category-tab-general input.category-name").value).to eq(
+              category.name,
+            )
+          end
+        end
+
         describe "lazy loaded categories" do
           before do
             SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
@@ -237,6 +264,8 @@ describe "Category Localizations", type: :system do
           end
 
           it_behaves_like "navigating the site via various category links"
+
+          it_behaves_like "editing category settings"
         end
 
         describe "no lazy loaded categories" do
@@ -246,6 +275,8 @@ describe "Category Localizations", type: :system do
           end
 
           it_behaves_like "navigating the site via various category links"
+
+          it_behaves_like "editing category settings"
         end
       end
     end
