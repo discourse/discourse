@@ -1,5 +1,4 @@
 /* eslint-disable ember/no-classic-components */
-/* global Pikaday:true */
 import Component, { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
@@ -8,7 +7,6 @@ import { classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import discourseComputed from "discourse/lib/decorators";
-import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 
 function isInputDateSupported() {
@@ -86,30 +84,30 @@ export default class DateInput extends Component {
     }
   }
 
-  _loadPikadayPicker(container) {
-    return loadScript("/javascripts/pikaday.js").then(() => {
-      let defaultOptions = {
-        field: this.element.querySelector(".date-picker"),
-        container: container || this.element.querySelector(".picker-container"),
-        bound: container === null,
-        format: "LL",
-        firstDay: 1,
-        i18n: {
-          previousMonth: i18n("dates.previous_month"),
-          nextMonth: i18n("dates.next_month"),
-          months: moment.months(),
-          weekdays: moment.weekdays(),
-          weekdaysShort: moment.weekdaysShort(),
-        },
-        onSelect: (date) => this._handleSelection(date),
-      };
+  async _loadPikadayPicker(container) {
+    const { default: Pikaday } = await import("pikaday");
 
-      if (this.relativeDate) {
-        defaultOptions.minDate = moment(this.relativeDate).toDate();
-      }
+    const defaultOptions = {
+      field: this.element.querySelector(".date-picker"),
+      container: container || this.element.querySelector(".picker-container"),
+      bound: container === null,
+      format: "LL",
+      firstDay: 1,
+      i18n: {
+        previousMonth: i18n("dates.previous_month"),
+        nextMonth: i18n("dates.next_month"),
+        months: moment.months(),
+        weekdays: moment.weekdays(),
+        weekdaysShort: moment.weekdaysShort(),
+      },
+      onSelect: (date) => this._handleSelection(date),
+    };
 
-      return new Pikaday({ ...defaultOptions, ...this._opts() });
-    });
+    if (this.relativeDate) {
+      defaultOptions.minDate = moment(this.relativeDate).toDate();
+    }
+
+    return new Pikaday({ ...defaultOptions, ...this._opts() });
   }
 
   _loadNativePicker(container) {

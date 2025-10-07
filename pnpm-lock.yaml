@@ -106,9 +106,6 @@ importers:
       magnific-popup:
         specifier: 1.1.0
         version: 1.1.0
-      pikaday:
-        specifier: 1.8.2
-        version: 1.8.2
       playwright:
         specifier: 1.56.0
         version: 1.56.0
@@ -344,6 +341,9 @@ importers:
       orderedmap:
         specifier: ^2.1.1
         version: 2.1.1
+      pikaday:
+        specifier: ^1.8.2
+        version: 1.8.2
       pretty-text:
         specifier: workspace:1.0.0
         version: link:../pretty-text

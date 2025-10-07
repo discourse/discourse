@@ -70,7 +70,6 @@ updates:
       - dependency-name: "chart.js"
       - dependency-name: "chartjs-plugin-datalabels"
       - dependency-name: "magnific-popup"
-      - dependency-name: "pikaday"
       - dependency-name: "moment"
       - dependency-name: "moment-timezone"
       - dependency-name: "@discourse/moment-timezone-names-translations"

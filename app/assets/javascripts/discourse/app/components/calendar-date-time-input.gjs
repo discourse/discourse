@@ -1,4 +1,3 @@
-/* global Pikaday:true */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
@@ -7,9 +6,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { isEmpty } from "@ember/utils";
-import { Promise } from "rsvp";
 import icon from "discourse/helpers/d-icon";
-import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 
 export default class CalendarDateTimeInput extends Component {
@@ -81,36 +78,34 @@ export default class CalendarDateTimeInput extends Component {
     }
   }
 
-  #setupPicker(element) {
-    return new Promise((resolve) => {
-      loadScript("/javascripts/pikaday.js").then(() => {
-        const options = {
-          field: element.querySelector(".fake-input"),
-          container: element.querySelector(
-            `#picker-container-${this.args.datePickerId}`
-          ),
-          bound: false,
-          format: "YYYY-MM-DD",
-          reposition: false,
-          firstDay: 1,
-          setDefaultDate: true,
-          keyboardInput: false,
-          i18n: {
-            previousMonth: i18n("dates.previous_month"),
-            nextMonth: i18n("dates.next_month"),
-            months: moment.months(),
-            weekdays: moment.weekdays(),
-            weekdaysShort: moment.weekdaysMin(),
-          },
-          onSelect: (date) => {
-            const formattedDate = moment(date).format("YYYY-MM-DD");
-            this.args.onChangeDate(formattedDate);
-          },
-        };
+  async #setupPicker(element) {
+    const { default: Pikaday } = await import("pikaday");
 
-        resolve(new Pikaday(options));
-      });
-    });
+    const options = {
+      field: element.querySelector(".fake-input"),
+      container: element.querySelector(
+        `#picker-container-${this.args.datePickerId}`
+      ),
+      bound: false,
+      format: "YYYY-MM-DD",
+      reposition: false,
+      firstDay: 1,
+      setDefaultDate: true,
+      keyboardInput: false,
+      i18n: {
+        previousMonth: i18n("dates.previous_month"),
+        nextMonth: i18n("dates.next_month"),
+        months: moment.months(),
+        weekdays: moment.weekdays(),
+        weekdaysShort: moment.weekdaysMin(),
+      },
+      onSelect: (date) => {
+        const formattedDate = moment(date).format("YYYY-MM-DD");
+        this.args.onChangeDate(formattedDate);
+      },
+    };
+
+    return new Pikaday(options);
   }
 
   <template>
