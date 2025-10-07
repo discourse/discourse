@@ -121,27 +121,6 @@ export const ADMIN_NAV_MAP = [
             icon: "gear",
             settings_area: "discourseconnect",
           },
-          {
-            name: "admin_login_oauth2",
-            route: "adminConfig.login.oauth2",
-            label: "admin.config.login.sub_pages.oauth2.title",
-            icon: "gear",
-            settings_area: "oauth2",
-          },
-          {
-            name: "admin_login_oidc",
-            route: "adminConfig.login.oidc",
-            label: "admin.config.login.sub_pages.oidc.title",
-            icon: "gear",
-            settings_area: "oidc",
-          },
-          {
-            name: "admin_login_saml",
-            route: "adminConfig.login.saml",
-            label: "admin.config.login.sub_pages.saml.title",
-            icon: "gear",
-            settings_area: "saml",
-          },
         ],
       },
       {

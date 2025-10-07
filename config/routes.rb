@@ -423,9 +423,11 @@ Discourse::Application.routes.draw do
         get "login-and-authentication" => "site_settings#index"
         get "login-and-authentication/authenticators" => "site_settings#index"
         get "login-and-authentication/discourseconnect" => "site_settings#index"
-        get "login-and-authentication/oauth2" => "site_settings#index"
-        get "login-and-authentication/oidc" => "site_settings#index"
-        get "login-and-authentication/saml" => "site_settings#index"
+
+        DiscoursePluginRegistry.admin_config_login_routes.each do |location|
+          get "login-and-authentication/#{location}" => "site_settings#index"
+        end
+
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"

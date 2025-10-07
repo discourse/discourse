@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import RouteTemplate from "ember-route-template";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -9,10 +10,7 @@ import { i18n } from "discourse-i18n";
 export default RouteTemplate(
   class extends Component {
     @service siteSettings;
-
-    get samlPluginPresent() {
-      return "saml_enabled" in this.siteSettings;
-    }
+    @service site;
 
     <template>
       <DPageHeader
@@ -39,20 +37,13 @@ export default RouteTemplate(
             @route="adminConfig.login.discourseconnect"
             @label="admin.config.login.sub_pages.discourseconnect.title"
           />
-          <NavItem
-            @route="adminConfig.login.oauth2"
-            @label="admin.config.login.sub_pages.oauth2.title"
-          />
-          <NavItem
-            @route="adminConfig.login.oidc"
-            @label="admin.config.login.sub_pages.oidc.title"
-          />
-          {{#if this.samlPluginPresent}}
+          {{#each this.site.admin_config_login_routes as |login_route|}}
             <NavItem
-              @route="adminConfig.login.saml"
-              @label="admin.config.login.sub_pages.saml.title"
+              @route="adminConfig.login.plugin-tab"
+              @routeParam={{login_route}}
+              @label={{concat "admin.config.login.sub_pages." login_route}}
             />
-          {{/if}}
+          {{/each}}
         </:tabs>
       </DPageHeader>
 
