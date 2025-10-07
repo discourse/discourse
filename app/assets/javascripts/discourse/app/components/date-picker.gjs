@@ -1,12 +1,11 @@
 /* eslint-disable ember/no-classic-components */
-/* global Pikaday:true */
 import Component, { Input } from "@ember/component";
 import { computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
+import { waitForPromise } from "@ember/test-waiters";
 import { classNames } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import discourseComputed from "discourse/lib/decorators";
-import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 
 const DATE_FORMAT = "YYYY-MM-DD";
@@ -33,35 +32,35 @@ export default class DatePicker extends Component {
     }
   }
 
-  _loadPikadayPicker(container) {
-    loadScript("/javascripts/pikaday.js").then(() => {
-      schedule("afterRender", () => {
-        const options = {
-          field: this.element.querySelector(".date-picker"),
-          container: container || null,
-          bound: container === null,
-          format: DATE_FORMAT,
-          firstDay: 1,
-          minDate: this.minDate,
-          maxDate: this.maxDate,
-          i18n: {
-            previousMonth: i18n("dates.previous_month"),
-            nextMonth: i18n("dates.next_month"),
-            months: moment.months(),
-            weekdays: moment.weekdays(),
-            weekdaysShort: moment.weekdaysMin(),
-          },
-          onSelect: (date) => this._handleSelection(date),
-        };
+  async _loadPikadayPicker(container) {
+    const { default: Pikaday } = await waitForPromise(import("pikaday"));
 
-        this._picker = new Pikaday(Object.assign(options, this._opts()));
+    schedule("afterRender", () => {
+      const options = {
+        field: this.element.querySelector(".date-picker"),
+        container: container || null,
+        bound: container === null,
+        format: DATE_FORMAT,
+        firstDay: 1,
+        minDate: this.minDate,
+        maxDate: this.maxDate,
+        i18n: {
+          previousMonth: i18n("dates.previous_month"),
+          nextMonth: i18n("dates.next_month"),
+          months: moment.months(),
+          weekdays: moment.weekdays(),
+          weekdaysShort: moment.weekdaysMin(),
+        },
+        onSelect: (date) => this._handleSelection(date),
+      };
 
-        if (this.value) {
-          this._picker.setDate(moment(this.value).toDate(), true);
-        } else {
-          this._picker.setDate(null);
-        }
-      });
+      this._picker = new Pikaday(Object.assign(options, this._opts()));
+
+      if (this.value) {
+        this._picker.setDate(moment(this.value).toDate(), true);
+      } else {
+        this._picker.setDate(null);
+      }
     });
   }
 

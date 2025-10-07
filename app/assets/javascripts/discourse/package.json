@@ -46,6 +46,7 @@
     "moment-timezone": "0.5.45",
     "morphlex": "^0.0.16",
     "orderedmap": "^2.1.1",
+    "pikaday": "^1.8.2",
     "pretty-text": "workspace:1.0.0",
     "prosemirror-codemark": "^0.4.2",
     "prosemirror-commands": "^1.7.1",

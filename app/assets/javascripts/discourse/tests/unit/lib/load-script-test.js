@@ -19,10 +19,6 @@ module("Unit | Utility | load-script", function (hooks) {
 
   test("generates URLs with version number in the query params", function (assert) {
     assert.strictEqual(
-      cacheBuster("/javascripts/pikaday.js"),
-      `/javascripts/${jsVersions["pikaday.js"]}`
-    );
-    assert.strictEqual(
       cacheBuster("/javascripts/chart.min.js"),
       `/javascripts/${jsVersions["chart.min.js"]}`
     );

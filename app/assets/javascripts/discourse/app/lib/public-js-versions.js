@@ -7,5 +7,4 @@ export const PUBLIC_JS_VERSIONS = {
     "chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js",
   "jquery.magnific-popup.min.js":
     "magnific-popup/1.1.0/jquery.magnific-popup.min.js",
-  "pikaday.js": "pikaday/1.8.2/pikaday.js",
 };
