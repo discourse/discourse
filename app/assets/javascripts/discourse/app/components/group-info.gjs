@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 
 export default class GroupInfo extends Component {
   <template>
@@ -24,7 +25,9 @@ export default class GroupInfo extends Component {
 
   get names() {
     const { full_name, display_name, name } = this.args.group;
-    return [...new Set([full_name, display_name, name].filter(Boolean))];
+    return uniqueItemsFromArray(
+      [full_name, display_name, name].filter(Boolean)
+    );
   }
 
   get name() {
