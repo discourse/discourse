@@ -97,9 +97,6 @@ importers:
       lint-to-the-future-eslint:
         specifier: ^3.2.0
         version: 3.2.0(eslint@9.34.0)
-      magnific-popup:
-        specifier: 1.1.0
-        version: 1.1.0
       playwright:
         specifier: 1.56.0
         version: 1.56.0
@@ -332,6 +329,9 @@ importers:
       jspreadsheet-ce:
         specifier: ^4.15.0
         version: 4.15.0
+      magnific-popup:
+        specifier: 1.1.0
+        version: 1.1.0
       moment:
         specifier: 2.30.1
         version: 2.30.1
