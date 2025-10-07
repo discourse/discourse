@@ -107,7 +107,7 @@
     "discourse-markdown-it": "workspace:1.0.0",
     "discourse-plugins": "workspace:1.0.0",
     "ember-async-data": "^2.0.1",
-    "ember-auto-import": "^2.11.0",
+    "ember-auto-import": "^2.11.1",
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^1.0.2",
     "ember-cli": "~6.6.0",
