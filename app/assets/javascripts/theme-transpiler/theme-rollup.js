@@ -9,6 +9,7 @@ import { memfs } from "memfs";
 import transformActionSyntax from "discourse-plugins/transform-action-syntax";
 import { WidgetHbsCompiler } from "discourse-widget-hbs/lib/widget-hbs-compiler";
 import { browsers } from "../discourse/config/targets";
+import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
 import { precompile } from "./node_modules/ember-source/dist/ember-template-compiler";
@@ -57,6 +58,7 @@ globalThis.rollup = function (modules, opts) {
         compact: false,
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
+          babelTransformModuleRenames,
           AddThemeGlobals,
           colocatedBabelPlugin,
           WidgetHbsCompiler,

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 const fs = require("fs");
 const { execSync, execFileSync } = require("child_process");
 
@@ -15,6 +17,31 @@ if (fs.existsSync(`${discourseRoot}/node_modules/.yarn-integrity`)) {
   );
 
   console.log("cleanup done");
+}
+
+const oldAdminPath = `${discourseRoot}/app/assets/javascripts/admin`;
+if (fs.existsSync(`${oldAdminPath}/node_modules`)) {
+  console.log(
+    "Detected old admin node_modules. Performing one-time cleanup..."
+  );
+
+  fs.rmSync(`${oldAdminPath}/node_modules`, {
+    recursive: true,
+  });
+
+  const anyFiles = fs
+    .globSync(`${oldAdminPath}/**/*`, {
+      withFileTypes: true,
+    })
+    .some((dirent) => dirent.isFile());
+
+  if (!anyFiles) {
+    fs.rmSync(oldAdminPath, {
+      recursive: true,
+    });
+  }
+
+  console.log("admin cleanup done");
 }
 
 const pluginBase = `${discourseRoot}/plugins/`;
