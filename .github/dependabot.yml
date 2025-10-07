@@ -67,8 +67,6 @@ updates:
     open-pull-requests-limit: 20
     versioning-strategy: increase
     ignore: # These are all vendored so need to be updated manually. See lib/tasks/javascript.rake
-      - dependency-name: "chart.js"
-      - dependency-name: "chartjs-plugin-datalabels"
       - dependency-name: "magnific-popup"
       - dependency-name: "moment"
       - dependency-name: "moment-timezone"

@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import loadScript from "discourse/lib/load-script";
+import loadChartJS from "discourse/lib/load-chart-js";
 import I18n, { i18n } from "discourse-i18n";
 
 const oneDay = 86400000; // day in milliseconds
@@ -76,7 +76,7 @@ export default class TopicViewsChart extends Component {
 
   @action
   async renderChart(element) {
-    await loadScript("/javascripts/Chart.min.js");
+    const Chart = await loadChartJS();
 
     if (!this.args.views?.stats || this.args.views?.stats?.length === 0) {
       this.noData = true;
@@ -124,7 +124,7 @@ export default class TopicViewsChart extends Component {
       this.chart.destroy();
     }
 
-    this.chart = new window.Chart(context, {
+    this.chart = new Chart(context, {
       type: "line",
       data: {
         datasets: [

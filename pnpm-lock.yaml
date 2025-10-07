@@ -61,12 +61,6 @@ importers:
       '@swc/core':
         specifier: ^1.13.5
         version: 1.13.5
-      chart.js:
-        specifier: 3.5.1
-        version: 3.5.1
-      chartjs-plugin-datalabels:
-        specifier: 2.2.0
-        version: 2.2.0(chart.js@3.5.1)
       chrome-launcher:
         specifier: ^1.2.1
         version: 1.2.1
@@ -302,6 +296,12 @@ importers:
       ace-builds:
         specifier: ^1.43.3
         version: 1.43.3
+      chart.js:
+        specifier: 3.5.1
+        version: 3.5.1
+      chartjs-plugin-datalabels:
+        specifier: 2.2.0
+        version: 2.2.0(chart.js@3.5.1)
       decorator-transforms:
         specifier: ^2.3.0
         version: 2.3.0(@babel/core@7.28.4)

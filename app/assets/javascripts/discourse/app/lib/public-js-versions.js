@@ -2,9 +2,6 @@
 // Update it by running `rake javascript:update`
 
 export const PUBLIC_JS_VERSIONS = {
-  "chart.min.js": "chart.js/3.5.1/chart.min.js",
-  "chartjs-plugin-datalabels.min.js":
-    "chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js",
   "jquery.magnific-popup.min.js":
     "magnific-popup/1.1.0/jquery.magnific-popup.min.js",
 };
