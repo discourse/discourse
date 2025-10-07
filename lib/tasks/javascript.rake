@@ -221,8 +221,6 @@ task "javascript:update_constants" => :environment do
 end
 
 task "javascript:update" => "clean_up" do
-  require "uglifier"
-
   system("pnpm install", exception: true)
 
   versions = {}
