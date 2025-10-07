@@ -159,6 +159,13 @@ export default class AiTranslations extends Component {
 
     this.isTogglingTranslation = true;
     try {
+      if (!this.translationEnabled && this.originalLocales.length > 0) {
+        await ajax("/admin/site_settings/content_localization_enabled", {
+          type: "PUT",
+          data: { content_localization_enabled: true },
+        });
+      }
+
       await ajax("/admin/site_settings/ai_translation_enabled", {
         type: "PUT",
         data: { ai_translation_enabled: !this.translationEnabled },
