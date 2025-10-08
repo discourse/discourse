@@ -4166,6 +4166,19 @@ experimental:
     area: "group_permissions|experimental"
   reviewable_ui_refresh:
     client: true
-    type: group_list
-    default: ""
+    default: false
     area: "experimental"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,staff"
+      promote_at_version: ""
+      learn_more_url: ""
+  formkit_site_settings:
+    client: true
+    default: false
+    hidden: true
+    upcoming_change:
+      status: "pre_alpha"
+      impact: "other,admins"
+      promote_at_version: ""
+      learn_more_url: ""

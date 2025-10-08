@@ -18,7 +18,8 @@ import FilterInput from "discourse/components/filter-input";
  * @component AdminFilterControls
  * @param {Array} array - The dataset to display
  * @param {Array} [searchableProps] - Property names to search for client-side text filtering
- * @param {Array} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]
+ * @param {Array} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]. Or, if you
+ *                                   want multiple dropdowns, format is: { dropdown1: [...], dropdown2: [...] }
  * @param {String} [inputPlaceholder] - Placeholder text for search input
  * @param {String} [defaultDropdown="all"] - Default dropdown value
  * @param {String} [noResultsMessage] - Message shown when no results found
@@ -43,6 +44,14 @@ export default class AdminFilterControls extends Component {
       : [];
   }
 
+  get hasMultipleDropdowns() {
+    return (
+      this.dropdownOptions &&
+      !Array.isArray(this.dropdownOptions) &&
+      typeof this.dropdownOptions === "object"
+    );
+  }
+
   get dropdownOptions() {
     return Array.isArray(this.args.dropdownOptions)
       ? this.args.dropdownOptions
@@ -50,7 +59,7 @@ export default class AdminFilterControls extends Component {
   }
 
   get showDropdownFilter() {
-    return this.dropdownOptions.length > 1;
+    return this.dropdownOptions.length > 1 || this.hasMultipleDropdowns;
   }
 
   get defaultDropdown() {
@@ -156,19 +165,21 @@ export default class AdminFilterControls extends Component {
         />
 
         {{#if this.showDropdownFilter}}
-          <DSelect
-            @value={{this.dropdownFilter}}
-            @includeNone={{false}}
-            @onChange={{this.onDropdownFilterChange}}
-            class="admin-filter-controls__dropdown"
-            as |select|
-          >
-            {{#each this.dropdownOptions as |option|}}
-              <select.Option @value={{option.value}}>
-                {{option.label}}
-              </select.Option>
-            {{/each}}
-          </DSelect>
+          {{#unless this.hasMultipleDropdowns}}
+            <DSelect
+              @value={{this.dropdownFilter}}
+              @includeNone={{false}}
+              @onChange={{this.onDropdownFilterChange}}
+              class="admin-filter-controls__dropdown"
+              as |select|
+            >
+              {{#each this.dropdownOptions as |option|}}
+                <select.Option @value={{option.value}}>
+                  {{option.label}}
+                </select.Option>
+              {{/each}}
+            </DSelect>
+          {{/unless}}
         {{/if}}
 
         {{yield to="actions"}}
