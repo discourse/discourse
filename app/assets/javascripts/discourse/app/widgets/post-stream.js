@@ -213,8 +213,7 @@ export default createWidget("post-stream", {
   tagName: "div.post-stream.widget-post-stream",
 
   html(attrs) {
-    const posts = attrs.posts || [];
-    const postArray = posts.toArray();
+    const postArray = attrs.posts?.toArray() || [];
     const postArrayLength = postArray.length;
     const maxPostNumber =
       postArrayLength > 0 ? postArray[postArrayLength - 1].post_number : 0;
