@@ -244,7 +244,10 @@ describe "Category Localizations", type: :system do
 
       describe "logged in users" do
         shared_examples_for "editing category settings" do
-          it "shows the original category name in the category edit page" do
+          # TODO: Fix this test as it doesn't actually work.
+          # The assertion to check the category name input runs immediately after clicking the language option leading
+          # to a false positive.
+          xit "shows the original category name in the category edit page" do
             sign_in(admin)
             category_page.visit_general(category)
 
