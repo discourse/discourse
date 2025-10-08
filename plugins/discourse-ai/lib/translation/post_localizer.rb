@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "localized_cooked_post_processor"
-
 module DiscourseAi
   module Translation
     class PostLocalizer
