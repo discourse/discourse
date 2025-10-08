@@ -64,7 +64,7 @@ def write_hbs_template(path, task_name, template)
 end
 
 def dependencies
-  [{ source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true }]
+  [] # All gone! todo: delete this rake task
 end
 
 def node_package_name(f)
