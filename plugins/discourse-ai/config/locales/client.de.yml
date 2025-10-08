@@ -316,18 +316,15 @@ de:
       translations:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
+        supported_locales: "Unterstützte Sprachen"
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"
-          disabled_state:
-            configure: "Übersetzungen konfigurieren"
-            empty_label: "Automatische Übersetzungen sind deaktiviert, klicke unten, um sie zu konfigurieren"
+          enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
-          backfill_disabled: "Rückwirkende Übersetzung ist derzeit deaktiviert."
-          description_tooltip: "Geeignete Beiträge werden durch KI-Übersetzungseinstellungen bestimmt"
         progress_chart:
-          title: "Übersetzungsfortschritt %{tooltip}"
+          title: "Übersetzungsfortschritt"
           data_label: "%{percentage}%"
           bar_done:
             one: "%{count} Beitrag"

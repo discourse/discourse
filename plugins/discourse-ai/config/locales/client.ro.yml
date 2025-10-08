@@ -81,16 +81,12 @@ ro:
         admin_actions:
           translation_settings: "Setări traducere"
           localization_settings: "Setări localizare"
-          disabled_state:
-            configure: "Configurează traduceri"
-            empty_label: "Traducerile automate sunt dezactivate, dă clic mai jos pentru a le configura"
         stats:
           title: "Statistici traducere"
           complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
           incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
-          description_tooltip: "Postările eligibile sunt determinate de setările de traducere AI"
         progress_chart:
-          title: "Progres traducere %{tooltip}"
+          title: "Progresul traducerii"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} din %{total} postări traduse"
           bar_done:
