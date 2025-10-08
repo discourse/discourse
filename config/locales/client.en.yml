@@ -4249,6 +4249,9 @@ en:
         copy_action: "Copy link"
         copy_title: "copy a link to this post to clipboard"
         link_copied: "Link copied!"
+        copy_markdown: "Copy Markdown"
+        copy_markdown_title: "copy this post as markdown to clipboard"
+        markdown_copied: "Markdown copied!"
         more: "More"
         delete_replies:
           confirm: "Do you also want to delete the replies to this post?"

@@ -272,6 +272,7 @@ basic:
     choices:
       - read
       - copyLink
+      - copyMarkdown
       - share
       - like
       - edit
@@ -286,7 +287,7 @@ basic:
     client: true
     type: list
     list_type: simple
-    default: "flag|bookmark|edit|delete|admin"
+    default: "copyMarkdown|flag|bookmark|edit|delete|admin"
     allow_any: false
     choices:
       - like
@@ -298,6 +299,7 @@ basic:
       - admin
       - reply
       - addTranslation
+      - copyMarkdown
     area: "posts_and_topics"
   share_links:
     client: true

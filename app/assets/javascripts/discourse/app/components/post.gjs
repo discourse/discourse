@@ -217,6 +217,36 @@ export default class Post extends Component {
   }
 
   @action
+  async copyMarkdown() {
+    const post = this.args.post;
+    const postId = post.id;
+
+    let actionCallback = async () => {
+      // If raw markdown is already available, use it
+      if (post.raw) {
+        return clipboardCopy(post.raw);
+      }
+
+      // Otherwise fetch it from the API
+      const response = await fetch(`/posts/${postId}.json`);
+      const data = await response.json();
+      return clipboardCopy(data.raw);
+    };
+
+    // Can't use clipboard in JS tests.
+    if (isTesting()) {
+      actionCallback = () => {};
+    }
+
+    postActionFeedback({
+      postId,
+      actionClass: "post-action-menu__copy-markdown",
+      messageKey: "post.controls.markdown_copied",
+      actionCallback,
+    });
+  }
+
+  @action
   async loadMoreReplies() {
     const after = this.repliesBelow.length
       ? this.repliesBelow.at(-1).post_number
@@ -591,6 +621,7 @@ export default class Post extends Component {
                           @changeNotice={{@changeNotice}}
                           @changePostOwner={{@changePostOwner}}
                           @copyLink={{this.copyLink}}
+                          @copyMarkdown={{this.copyMarkdown}}
                           @deletePost={{@deletePost}}
                           @editPost={{@editPost}}
                           @filteredRepliesView={{this.filteredRepliesView}}

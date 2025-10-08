@@ -10,7 +10,7 @@ module("Unit | Component | post-menu", function (hooks) {
 
   hooks.beforeEach(function () {
     this.siteSettings.post_menu =
-      "read|like|copyLink|share|flag|edit|bookmark|delete|admin|reply";
+      "read|like|copyLink|copyMarkdown|share|flag|edit|bookmark|delete|admin|reply";
     this.siteSettings.post_menu_hidden_items = "";
 
     const store = getOwner(this).lookup("service:store");
@@ -116,5 +116,27 @@ module("Unit | Component | post-menu", function (hooks) {
         .dom(".post-action-menu__share")
         .doesNotExist("share is now hidden");
     });
+  });
+
+  test("copyMarkdown button appears when configured", async function (assert) {
+    this.siteSettings.post_menu_hidden_items = "";
+
+    const post = this.post;
+    await render(<template><PostMenu @post={{post}} /></template>);
+
+    assert
+      .dom(".post-action-menu__copy-markdown")
+      .exists("copyMarkdown button is displayed");
+  });
+
+  test("copyMarkdown button can be hidden", async function (assert) {
+    this.siteSettings.post_menu_hidden_items = "bookmark|copyMarkdown";
+
+    const post = this.post;
+    await render(<template><PostMenu @post={{post}} /></template>);
+
+    assert
+      .dom(".post-action-menu__copy-markdown")
+      .doesNotExist("copyMarkdown button is hidden");
   });
 });

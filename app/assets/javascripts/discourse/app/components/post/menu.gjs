@@ -28,6 +28,7 @@ import PostMenuAddTranslationButton from "./menu/buttons/add-translation";
 import PostMenuAdminButton from "./menu/buttons/admin";
 import PostMenuBookmarkButton from "./menu/buttons/bookmark";
 import PostMenuCopyLinkButton from "./menu/buttons/copy-link";
+import PostMenuCopyMarkdownButton from "./menu/buttons/copy-markdown";
 import PostMenuDeleteButton from "./menu/buttons/delete";
 import PostMenuEditButton from "./menu/buttons/edit";
 import PostMenuFlagButton from "./menu/buttons/flag";
@@ -45,6 +46,7 @@ const buttonKeys = Object.freeze({
   ADMIN: "admin",
   BOOKMARK: "bookmark",
   COPY_LINK: "copyLink",
+  COPY_MARKDOWN: "copyMarkdown",
   DELETE: "delete",
   EDIT: "edit",
   FLAG: "flag",
@@ -61,6 +63,7 @@ const coreButtonComponents = new Map([
   [buttonKeys.ADMIN, PostMenuAdminButton],
   [buttonKeys.BOOKMARK, PostMenuBookmarkButton],
   [buttonKeys.COPY_LINK, PostMenuCopyLinkButton],
+  [buttonKeys.COPY_MARKDOWN, PostMenuCopyMarkdownButton],
   [buttonKeys.DELETE, PostMenuDeleteButton],
   [buttonKeys.EDIT, PostMenuEditButton],
   [buttonKeys.FLAG, PostMenuFlagButton],
@@ -103,6 +106,7 @@ export default class PostMenu extends Component {
   get buttonActions() {
     return {
       copyLink: this.args.copyLink,
+      copyMarkdown: this.args.copyMarkdown,
       deletePost: this.args.deletePost,
       editPost: this.args.editPost,
       toggleLike: this.toggleLike,
