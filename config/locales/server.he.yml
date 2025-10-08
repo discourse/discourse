@@ -5372,6 +5372,8 @@ he:
     imap_email_deleted: "הודעת הדוא״ל נמחקה משרת ה־IMAP"
     imap_email_marked_as_spam: "הודעת הדוא״ל הועברה לספאם בשרת ה־IMAP"
     auto_deleted_hidden_posts: "פוסטים מוסתרים שהושמדו אוטומטית"
+    seed_data_topic_updated: "הנושא עם נתונים מההקמה עודכן"
+    seed_data_topic_deleted: "הנושא עם נתונים מההקמה נמחק"
   reviewables:
     already_handled: "תודה לך, כבר בדקנו את הפוסט הזה והחלטנו שאין צורך לסמן אותו בדגל פעם נוספת."
     already_handled_and_user_not_exist: "תודה, אבל כבר נערכה בדיקה והמשתמש הזה אינו קיים עוד."
