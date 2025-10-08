@@ -11,11 +11,9 @@ module Jobs
       post_raw_llm =
         find_llm_model_for_persona(SiteSetting.ai_translation_post_raw_translator_persona)
 
-      begin
-        LlmCreditAllocation.check_credits!(post_raw_llm) if post_raw_llm
-      rescue LlmCreditAllocation::CreditLimitExceeded => e
+      if post_raw_llm && !LlmCreditAllocation.credits_available?(post_raw_llm)
         Rails.logger.info(
-          "Post localization backfill skipped: #{e.message}. Will resume when credits reset.",
+          "Post localization backfill skipped: insufficient credits. Will resume when credits reset.",
         )
         return
       end

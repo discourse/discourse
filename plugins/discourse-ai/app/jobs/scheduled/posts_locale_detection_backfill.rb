@@ -12,11 +12,9 @@ module Jobs
       llm_model = find_llm_model
       return if llm_model.blank?
 
-      begin
-        LlmCreditAllocation.check_credits!(llm_model)
-      rescue LlmCreditAllocation::CreditLimitExceeded => e
+      unless LlmCreditAllocation.credits_available?(llm_model)
         Rails.logger.info(
-          "Posts locale detection backfill skipped: #{e.message}. Will resume when credits reset.",
+          "Posts locale detection backfill skipped: insufficient credits. Will resume when credits reset.",
         )
         return
       end

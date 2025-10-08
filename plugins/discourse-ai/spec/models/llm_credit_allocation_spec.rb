@@ -149,6 +149,23 @@ RSpec.describe LlmCreditAllocation do
     end
   end
 
+  describe "#credits_available?" do
+    it "returns true when credits are available" do
+      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 500)
+      expect(allocation.credits_available?).to be true
+    end
+
+    it "returns false when hard limit is reached" do
+      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1000)
+      expect(allocation.credits_available?).to be false
+    end
+
+    it "returns false when hard limit is exceeded" do
+      allocation = Fabricate(:llm_credit_allocation, monthly_credits: 1000, monthly_used: 1100)
+      expect(allocation.credits_available?).to be false
+    end
+  end
+
   describe "#soft_limit_reached?" do
     it "returns true when percentage equals soft limit" do
       allocation =
@@ -290,6 +307,62 @@ RSpec.describe LlmCreditAllocation do
         fail "Expected exception to be raised"
       rescue LlmCreditAllocation::CreditLimitExceeded => e
         expect(e.allocation).to eq(allocation)
+      end
+    end
+  end
+
+  describe ".credits_available?" do
+    fab!(:llm_model) { Fabricate(:llm_model, id: -1) }
+
+    it "returns true when model has no credit system" do
+      regular_model = Fabricate(:llm_model)
+      expect(LlmCreditAllocation.credits_available?(regular_model)).to be true
+    end
+
+    it "returns true when model is nil" do
+      expect(LlmCreditAllocation.credits_available?(nil)).to be true
+    end
+
+    it "returns true when model has no allocation" do
+      expect(LlmCreditAllocation.credits_available?(llm_model)).to be true
+    end
+
+    it "returns true when credits are available" do
+      Fabricate(
+        :llm_credit_allocation,
+        llm_model: llm_model,
+        monthly_credits: 1000,
+        monthly_used: 500,
+      )
+      expect(LlmCreditAllocation.credits_available?(llm_model)).to be true
+    end
+
+    it "returns false when hard limit reached" do
+      Fabricate(
+        :llm_credit_allocation,
+        llm_model: llm_model,
+        monthly_credits: 1000,
+        monthly_used: 1000,
+      )
+      expect(LlmCreditAllocation.credits_available?(llm_model)).to be false
+    end
+
+    it "resets and returns true when reset is needed" do
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          llm_model: llm_model,
+          monthly_credits: 1000,
+          monthly_used: 1000,
+          last_reset_at: 2.months.ago,
+        )
+
+      freeze_time do
+        result = LlmCreditAllocation.credits_available?(llm_model)
+
+        allocation.reload
+        expect(result).to be true
+        expect(allocation.monthly_used).to eq(0)
       end
     end
   end

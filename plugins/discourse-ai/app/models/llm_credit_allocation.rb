@@ -90,6 +90,10 @@ class LlmCreditAllocation < ActiveRecord::Base
     end
   end
 
+  def credits_available?
+    !hard_limit_reached?
+  end
+
   def check_credits!
     if hard_limit_reached?
       raise CreditLimitExceeded.new(
@@ -100,6 +104,16 @@ class LlmCreditAllocation < ActiveRecord::Base
               allocation: self,
             )
     end
+  end
+
+  def self.credits_available?(llm_model)
+    return true unless llm_model&.credit_system_enabled?
+
+    allocation = llm_model.llm_credit_allocation
+    return true unless allocation
+
+    allocation.reset_if_needed!
+    allocation.credits_available?
   end
 
   def self.check_credits!(llm_model)
