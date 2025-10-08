@@ -37,7 +37,7 @@ function buildSelector(selector) {
     default:
       throw new Error(
         "uniqueItemsFromArray: the `selector` argument must be a string/number key " +
-        `or a function, got ${typeof selector} instead`
+          `or a function, got ${typeof selector} instead`
       );
   }
 }
