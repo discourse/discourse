@@ -440,10 +440,10 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
       builder.where("x.#{column} = ABS(p.post_number)")
       builder.exec
 
-      # Mark orphaned PostTimings as negative so they don't collide when reordering
-      # Only do this for post_timings table, not for other tables
-      if table == "post_timings"
-        orphan_builder = DB.build <<~SQL
+      # Mark orphaned records from the current table as negative so they
+      # don't collide (PostTimings) or are mismatched when reordering
+
+      orphan_builder = DB.build <<~SQL
           UPDATE 
             #{table} AS x
           SET 
@@ -452,10 +452,10 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
           /*where*/
         SQL
 
-        orphan_builder.where("t.id = x.topic_id")
-        orphan_builder.where("x.#{column} > 0")
-        orphan_builder.where("x.topic_id = ?", args[:topic_id]) if args[:topic_id]
-        orphan_builder.where(<<~SQL)
+      orphan_builder.where("t.id = x.topic_id")
+      orphan_builder.where("x.#{column} > 0")
+      orphan_builder.where("x.topic_id = ?", args[:topic_id]) if args[:topic_id]
+      orphan_builder.where(<<~SQL)
           NOT EXISTS (
             SELECT 
               1
@@ -466,8 +466,7 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
               AND p.post_number = x.#{column}
           )
         SQL
-        orphan_builder.exec
-      end
+      orphan_builder.exec
 
       builder = DB.build <<~SQL
         UPDATE
