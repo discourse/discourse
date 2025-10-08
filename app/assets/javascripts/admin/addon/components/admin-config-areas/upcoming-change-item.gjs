@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -8,6 +9,8 @@ import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import UpcomingChangeEditGroups from "admin/components/admin-config-areas/upcoming-change-edit-groups";
@@ -15,6 +18,9 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class UpcomingChangeItem extends Component {
   @service modal;
+  @service toasts;
+
+  @tracked toggleSettingDisabled = false;
 
   registeredMenu = null;
 
@@ -34,8 +40,44 @@ export default class UpcomingChangeItem extends Component {
   }
 
   @action
-  toggleChange() {
+  async toggleChange() {
+    if (this.toggleSettingDisabled) {
+      this.toasts.error({
+        duration: "short",
+        data: {
+          message: i18n("admin.upcoming_changes.toggled_too_fast"),
+        },
+      });
+      return;
+    }
+
     this.args.change.value = !this.args.change.value;
+    this.toggleSettingDisabled = true;
+
+    setTimeout(() => {
+      this.toggleSettingDisabled = false;
+    }, 5000);
+
+    try {
+      await ajax("/admin/config/upcoming-changes/toggle", {
+        type: "POST",
+        data: {
+          setting_name: this.args.change.setting,
+        },
+      });
+
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: this.args.change.value
+            ? i18n("admin.upcoming_changes.change_enabled")
+            : i18n("admin.upcoming_changes.change_disabled"),
+        },
+      });
+    } catch (error) {
+      this.args.change.value = !this.args.change.value;
+      return popupAjaxError(error);
+    }
   }
 
   @action

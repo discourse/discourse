@@ -5669,6 +5669,9 @@ en:
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
+        toggled_too_fast: "You have toggled this change too quickly. Please wait a few seconds before trying again."
+        change_enabled: "You have opted-in to this change"
+        change_disabled: "You have opted-out of this change"
         statuses:
           pre_alpha: "Pre-Alpha"
           alpha: "Alpha"

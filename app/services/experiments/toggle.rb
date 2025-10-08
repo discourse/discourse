@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO (martin) Refactor this into UpcomingChange::Toggle
 class Experiments::Toggle
   include Service::Base
 
