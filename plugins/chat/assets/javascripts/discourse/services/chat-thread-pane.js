@@ -2,7 +2,6 @@ import { service } from "@ember/service";
 import ChatChannelPane from "./chat-channel-pane";
 
 export default class ChatThreadPane extends ChatChannelPane {
-  @service chat;
   @service router;
 
   get thread() {

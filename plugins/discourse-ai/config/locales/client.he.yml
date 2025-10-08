@@ -243,6 +243,7 @@ he:
           description: "צ׳אט בוט שיכול לענות על שאלות ולסייע למשתמשים בהודעות אישיות, בפורום ובצ׳אט"
         nav:
           configured: "מוגדר"
+          unconfigured: "לא מוגדר"
         filters:
           all: "הכול"
           text: "חיפוש יכולות, דמויות, LLMים/מש״גים או קבוצות…"
@@ -301,19 +302,24 @@ he:
         card: "כרטיס"
       translations:
         title: "תרגומים"
+        supported_locales: "שפות נתמכות"
+        supported_locales_description: "הגדרת האתר הזאת מאפשרת גם למבקרים לתרום תרגומים לפוסטים."
         admin_actions:
           translation_settings: "הגדרות תרגום"
           localization_settings: "הגדרות התאמת שפה"
-          disabled_state:
-            configure: "הגדרת תרגומים"
-            empty_label: "תרגומים אוטומטיים מושבתים, למטה אפשר ללחוץ כדי להגדיר"
+          enable_translations: "הפעלת תרגומים אוטומטיים"
         stats:
           title: "סטטיסטיקת תרגום"
           complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
           incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
-          description_tooltip: "פוסטים זכאים נקבעים על ידי הגדרות תרגום הבינה המלאכותית"
+          backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
+          description_tooltip:
+            one: 'יש פוסט שזכאי לתרגום.'
+            two: 'יש שני פוסטים שזכאים לתרגום.'
+            many: 'יש %{count} פוסטים שזכאים לתרגום.'
+            other: 'יש %{count} פוסטים שזכאים לתרגום.'
         progress_chart:
-          title: "תהליך התרגום %{tooltip}"
+          title: "התקדמות התרגום"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} מתוך %{total} פוסטים תורגמו"
           bar_done:

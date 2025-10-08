@@ -6,7 +6,6 @@ export default class ChatIndexRoute extends DiscourseRoute {
   @service chatChannelsManager;
   @service router;
   @service siteSettings;
-  @service currentUser;
 
   get hasThreads() {
     if (!this.siteSettings.chat_threads_enabled) {

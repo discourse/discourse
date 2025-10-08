@@ -6,7 +6,6 @@ import { observes, on } from "@ember-decorators/object";
 
 @classNames("contents")
 export default class DiscoveryTopicsList extends Component {
-  @service appEvents;
   @service documentTitle;
 
   @on("didInsertElement")

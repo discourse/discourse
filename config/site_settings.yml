@@ -238,6 +238,9 @@ basic:
     default: ""
     regex: "^GTM-"
     area: "analytics"
+  google_site_verification_token:
+    default: ""
+    area: "analytics"
   top_menu:
     client: true
     refresh: true

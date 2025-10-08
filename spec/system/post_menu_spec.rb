@@ -305,6 +305,20 @@ describe "Post menu", type: :system do
       topic_page.click_post_action_button(post2, :recover)
       expect(topic_page).to have_no_deleted_post(post2)
     end
+
+    it "allows regular users to recover their own deleted topic" do
+      user_topic = Fabricate(:topic, user: user)
+      user_first_post = Fabricate(:post, topic: user_topic, user: user, post_number: 1)
+      PostDestroyer.new(user, user_first_post).destroy
+
+      sign_in(user)
+
+      topic_page.visit_topic(user_topic)
+
+      expect(topic_page).to have_post_action_button(user_first_post, :recover)
+      topic_page.click_post_action_button(user_first_post, :recover)
+      expect(topic_page).to have_no_deleted_post(user_first_post)
+    end
   end
 
   describe "edit" do

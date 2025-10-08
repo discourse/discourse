@@ -129,6 +129,10 @@ module Service
       def try(*exceptions, &block)
         steps << TryStep.new(exceptions, &block)
       end
+
+      def only_if(name, &block)
+        steps << OnlyIfStep.new(name, &block)
+      end
     end
 
     # @!visibility private
@@ -173,7 +177,7 @@ module Service
       end
 
       def type
-        self.class.name.split("::").last.downcase.sub(/^(\w+)step$/, "\\1")
+        self.class.name.split("::").last.underscore.sub(/^(\w+)_step$/, "\\1")
       end
 
       def with_runtime
@@ -343,6 +347,24 @@ module Service
         context[@current_step.result_key].fail(raised_exception?: true, exception: e)
         context[result_key][:exception] = e
         context.fail!
+      end
+    end
+
+    # @!visibility private
+    class OnlyIfStep < Step
+      include StepsHelpers
+
+      attr_reader :steps
+
+      def initialize(name, &block)
+        super(name)
+        @steps = []
+        instance_exec(&block)
+      end
+
+      def run_step
+        return context[result_key][:skipped?] = true unless super
+        steps.each { |step| step.call(instance, context) }
       end
     end
 

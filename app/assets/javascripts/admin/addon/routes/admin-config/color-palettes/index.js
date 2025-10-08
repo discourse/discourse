@@ -1,12 +1,9 @@
 import Route from "@ember/routing/route";
-import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import ColorScheme from "admin/models/color-scheme";
 import Theme from "admin/models/theme";
 
 export default class AdminConfigColorPalettesIndexRoute extends Route {
-  @service store;
-
   async model() {
     return await ajax("/admin/config/colors");
   }

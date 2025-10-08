@@ -25,7 +25,14 @@ RSpec.describe "Admin viewing email logs" do
 
       row = admin_email_logs_page.row_for(rejected_incoming_email)
 
-      expect(row.open_incoming_email).to be_open
+      details_modal = row.open_incoming_email
+
+      expect(details_modal).to be_open
+      expect(details_modal).to have_error_message(rejected_incoming_email.error)
+
+      expect(details_modal).to have_error_description(
+        I18n.t("emails.incoming.errors.bad_destination_address"),
+      )
     end
   end
 
@@ -46,7 +53,10 @@ RSpec.describe "Admin viewing email logs" do
 
       row = admin_email_logs_page.row_for(incoming_email)
 
-      expect(row.open_incoming_email).to be_open
+      details_modal = row.open_incoming_email
+
+      expect(details_modal).to be_open
+      expect(details_modal).to have_no_error
     end
   end
 

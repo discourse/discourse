@@ -4,7 +4,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default class UserIndex extends DiscourseRoute {
   @service router;
-  @service site;
   @service currentUser;
   @service siteSettings;
 

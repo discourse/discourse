@@ -14,8 +14,6 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
   @service dialog;
   @service toasts;
   @service session;
-  @service site;
-  @service siteSettings;
   @service interfaceColor;
 
   @tracked defaultTheme = null;

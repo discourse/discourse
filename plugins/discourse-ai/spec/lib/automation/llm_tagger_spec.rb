@@ -357,5 +357,31 @@ RSpec.describe DiscourseAi::Automation::LlmTagger do
         expect(topic.reload.tags.map(&:name)).to include("question")
       end
     end
+
+    describe "with system posts" do
+      fab!(:system_topic) { Fabricate(:topic, user: Discourse.system_user) }
+      fab!(:system_post) do
+        Fabricate(:post, topic: system_topic, user: Discourse.system_user, post_number: 1)
+      end
+
+      it "can process posts from system users when automation has allow_system_posts enabled" do
+        mock_response = { "tags" => ["bug"], "confidence" => 90 }.to_json
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([mock_response]) do
+          described_class.handle(
+            post: system_post,
+            tagger_persona_id: ai_persona.id,
+            available_tags: available_tags,
+            confidence_threshold: 70,
+            max_tags: 3,
+            max_post_tokens: 4000,
+            allow_restricted_tags: false,
+            max_posts_for_context: 5,
+          )
+        end
+
+        expect(system_topic.reload.tags.map(&:name)).to include("bug")
+      end
+    end
   end
 end

@@ -1,3 +1,4 @@
+import { waitForPromise } from "@ember/test-waiters";
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { isTesting } from "discourse/lib/environment";
@@ -5,7 +6,6 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
-import loadScript from "discourse/lib/load-script";
 import {
   escapeExpression,
   postRNWebviewMessage,
@@ -23,7 +23,11 @@ export function cleanupLightboxes() {
   return lightboxService.cleanupLightboxes();
 }
 
-export default function lightbox(elem, siteSettings) {
+export async function loadMagnificPopup() {
+  await waitForPromise(import("magnific-popup"));
+}
+
+export default async function lightbox(elem, siteSettings) {
   if (!elem) {
     return;
   }
@@ -37,98 +41,98 @@ export default function lightbox(elem, siteSettings) {
   const caps = helperContext().capabilities;
   const imageClickNavigation = caps.touch;
 
-  loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
-    $(lightboxes).magnificPopup({
-      type: "image",
-      closeOnContentClick: false,
-      removalDelay: isTesting() ? 0 : 300,
-      mainClass: "mfp-zoom-in",
-      tClose: i18n("lightbox.close"),
-      tLoading: spinnerHTML,
-      prependTo: isTesting() && document.getElementById("ember-testing"),
+  await loadMagnificPopup();
 
-      gallery: {
-        enabled: true,
-        tPrev: i18n("lightbox.previous"),
-        tNext: i18n("lightbox.next"),
-        tCounter: i18n("lightbox.counter"),
-        navigateByImgClick: imageClickNavigation,
-      },
+  $(lightboxes).magnificPopup({
+    type: "image",
+    closeOnContentClick: false,
+    removalDelay: isTesting() ? 0 : 300,
+    mainClass: "mfp-zoom-in",
+    tClose: i18n("lightbox.close"),
+    tLoading: spinnerHTML,
+    prependTo: isTesting() && document.getElementById("ember-testing"),
 
-      ajax: {
-        tError: i18n("lightbox.content_load_error"),
-      },
+    gallery: {
+      enabled: true,
+      tPrev: i18n("lightbox.previous"),
+      tNext: i18n("lightbox.next"),
+      tCounter: i18n("lightbox.counter"),
+      navigateByImgClick: imageClickNavigation,
+    },
 
-      callbacks: {
-        open() {
-          if (!imageClickNavigation) {
-            const wrap = this.wrap,
-              img = this.currItem.img,
-              maxHeight = img.css("max-height");
+    ajax: {
+      tError: i18n("lightbox.content_load_error"),
+    },
 
-            wrap.on("click.pinhandler", "img", function () {
-              wrap.toggleClass("mfp-force-scrollbars");
-              img.css(
-                "max-height",
-                wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
-              );
-            });
-          }
+    callbacks: {
+      open() {
+        if (!imageClickNavigation) {
+          const wrap = this.wrap,
+            img = this.currItem.img,
+            maxHeight = img.css("max-height");
 
-          if (caps.isAppWebview) {
-            postRNWebviewMessage(
-              "headerBg",
-              $(".mfp-bg").css("background-color")
+          wrap.on("click.pinhandler", "img", function () {
+            wrap.toggleClass("mfp-force-scrollbars");
+            img.css(
+              "max-height",
+              wrap.hasClass("mfp-force-scrollbars") ? "none" : maxHeight
             );
-          }
-        },
-        change() {
-          this.wrap.removeClass("mfp-force-scrollbars");
-        },
-        beforeClose() {
-          this.wrap.off("click.pinhandler");
-          this.wrap.removeClass("mfp-force-scrollbars");
-          if (caps.isAppWebview) {
-            postRNWebviewMessage(
-              "headerBg",
-              $(".d-header").css("background-color")
-            );
-          }
-        },
-      },
+          });
+        }
 
-      image: {
-        tError: i18n("lightbox.image_load_error"),
-        titleSrc(item) {
-          const href = item.el.data("download-href") || item.src;
-          let src = [
-            escapeExpression(item.el.attr("title")),
-            $("span.informations", item.el).text(),
-          ];
-          if (
-            !siteSettings.prevent_anons_from_downloading_files ||
-            User.current()
-          ) {
-            src.push(
-              '<a class="image-source-link" href="' +
-                href +
-                '">' +
-                renderIcon("string", "download") +
-                i18n("lightbox.download") +
-                "</a>"
-            );
-          }
+        if (caps.isAppWebview) {
+          postRNWebviewMessage(
+            "headerBg",
+            $(".mfp-bg").css("background-color")
+          );
+        }
+      },
+      change() {
+        this.wrap.removeClass("mfp-force-scrollbars");
+      },
+      beforeClose() {
+        this.wrap.off("click.pinhandler");
+        this.wrap.removeClass("mfp-force-scrollbars");
+        if (caps.isAppWebview) {
+          postRNWebviewMessage(
+            "headerBg",
+            $(".d-header").css("background-color")
+          );
+        }
+      },
+    },
+
+    image: {
+      tError: i18n("lightbox.image_load_error"),
+      titleSrc(item) {
+        const href = item.el.data("download-href") || item.src;
+        let src = [
+          escapeExpression(item.el.attr("title")),
+          $("span.informations", item.el).text(),
+        ];
+        if (
+          !siteSettings.prevent_anons_from_downloading_files ||
+          User.current()
+        ) {
           src.push(
             '<a class="image-source-link" href="' +
-              item.src +
+              href +
               '">' +
-              renderIcon("string", "image") +
-              i18n("lightbox.open") +
+              renderIcon("string", "download") +
+              i18n("lightbox.download") +
               "</a>"
           );
-          return src.join(" &middot; ");
-        },
+        }
+        src.push(
+          '<a class="image-source-link" href="' +
+            item.src +
+            '">' +
+            renderIcon("string", "image") +
+            i18n("lightbox.open") +
+            "</a>"
+        );
+        return src.join(" &middot; ");
       },
-    });
+    },
   });
 }

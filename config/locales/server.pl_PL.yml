@@ -1929,6 +1929,8 @@ pl_PL:
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach za pomocą Google Analythics. Wychodzące linki do tych domen będą miały dodatkowy identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>poradnik Cross-Domain Tracking od Google.</a>"
     gtm_container_id: "Identyfikator kontenera menedżera tagów Google. np.: GTM-ABCD12E. <br/>Uwaga: Aby korzystać z GTM, gdy włączona jest polityka bezpieczeństwa treści (CSP), zapoznaj się z dokumentacją: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories: "Zezwól moderatorom na tworzenie i zarządzanie kategoriami"
+    moderators_manage_groups: "Zezwól moderatorom na tworzenie i zarządzanie grupami"
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     use_admin_ip_allowlist: "Administratorzy mogą się zalogować tylko wtedy, gdy używają adresu IP zdefiniowanego na liście sprawdzonych adresów IP (Administrator > Logi > Sprawdzone adresy IP)."
@@ -4561,6 +4563,8 @@ pl_PL:
     latte_theme_name: "Latte"
     summer_theme_name: "Lato"
     dark_rose_theme_name: "Ciemna róża"
+    errors:
+      cannot_edit_remote_copies: "Edycja zdalnych kopii palet kolorów jest niedozwolona."
   edit_this_page: "Edytuj tę stronę"
   csv_export:
     boolean_yes: "Tak"

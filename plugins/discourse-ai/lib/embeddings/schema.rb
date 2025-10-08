@@ -15,6 +15,8 @@ module DiscourseAi
       EMBEDDING_TARGETS = %w[topics posts document_fragments]
       EMBEDDING_TABLES = [TOPICS_TABLE, POSTS_TABLE, RAG_DOCS_TABLE]
 
+      DEFAULT_HNSW_EF_SEARCH = 40
+
       MissingEmbeddingError = Class.new(StandardError)
 
       class << self
@@ -135,6 +137,8 @@ module DiscourseAi
       end
 
       def asymmetric_similarity_search(embedding, limit:, offset:)
+        before_query = hnsw_search_workaround(limit)
+
         builder = DB.build(<<~SQL)
           WITH candidates AS (
             SELECT
@@ -175,7 +179,7 @@ module DiscourseAi
         end
 
         ActiveRecord::Base.transaction do
-          DB.exec(hnsw_scan_relaxed_order)
+          DB.exec(before_query) if before_query.present?
 
           builder.query(
             query_embedding: embedding,
@@ -191,6 +195,7 @@ module DiscourseAi
 
       def symmetric_similarity_search(record, age_penalty: 0.0)
         limit = 200
+        before_query = hnsw_search_workaround(limit)
 
         # For topics table, we can apply age penalty. For other tables, ignore the penalty.
         use_age_penalty = age_penalty > 0.0 && table == TOPICS_TABLE
@@ -268,7 +273,7 @@ module DiscourseAi
         end
 
         ActiveRecord::Base.transaction do
-          DB.exec(hnsw_scan_relaxed_order)
+          DB.exec(before_query) if before_query.present?
 
           builder.query(query_params)
         end
@@ -302,6 +307,13 @@ module DiscourseAi
       end
 
       private
+
+      def hnsw_search_workaround(limit)
+        threshold = limit * 2
+
+        return "" if threshold < DEFAULT_HNSW_EF_SEARCH
+        "SET LOCAL hnsw.ef_search = #{threshold};"
+      end
 
       def hnsw_scan_relaxed_order
         # https://github.com/pgvector/pgvector?tab=readme-ov-file#iterative-index-scans

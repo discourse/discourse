@@ -1,28 +1,32 @@
 import Component from "@glimmer/component";
 import { modifier } from "ember-modifier";
-import loadScript from "discourse/lib/load-script";
+import loadChartJS, {
+  loadChartJSDatalabels,
+} from "discourse/lib/load-chart-js";
 
 // args:
 // chartConfig - object
-export default class Chart extends Component {
+export default class ChartComponent extends Component {
   renderChart = modifier((element) => {
-    const { chartConfig, loadChartDataLabelsPlugin } = this.args;
-
-    loadScript("/javascripts/Chart.min.js")
-      .then(
-        () =>
-          loadChartDataLabelsPlugin &&
-          loadScript("/javascripts/chartjs-plugin-datalabels.min.js")
-      )
-      .then(() => {
-        if (loadChartDataLabelsPlugin) {
-          (chartConfig.plugins ??= []).push(window.ChartDataLabels);
-        }
-        this.chart = new window.Chart(element.getContext("2d"), chartConfig);
-      });
-
+    this.loadAndInit(element);
     return () => this.chart?.destroy();
   });
+
+  async loadAndInit(element) {
+    const chartConfig = { ...this.args.chartConfig };
+
+    const Chart = await loadChartJS();
+
+    if (this.args.loadChartDataLabelsPlugin) {
+      const ChartDataLabelsPlugin = await loadChartJSDatalabels();
+      chartConfig.plugins = [
+        ...(chartConfig.plugins || []),
+        ChartDataLabelsPlugin,
+      ];
+    }
+
+    this.chart = new Chart(element.getContext("2d"), chartConfig);
+  }
 
   <template>
     <div ...attributes>

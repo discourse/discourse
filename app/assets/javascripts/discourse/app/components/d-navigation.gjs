@@ -28,7 +28,6 @@ import CategoriesAdminDropdown from "select-kit/components/categories-admin-drop
 @tagName("")
 export default class DNavigation extends Component {
   @service router;
-  @service dialog;
   @service site;
 
   @tracked filterMode;

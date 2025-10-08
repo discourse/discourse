@@ -10,17 +10,25 @@ const IncomingEmail = <template>
     @bodyClass="incoming-emails"
   >
     <:body>
-      <div class="control-group">
-        <label>{{i18n "admin.email.incoming_emails.modal.error"}}</label>
-        <div class="controls">
-          <p>{{@model.error}}</p>
-          {{#if @model.error_description}}
-            <p class="error-description">{{@model.error_description}}</p>
-          {{/if}}
-        </div>
-      </div>
+      {{#if @model.error}}
+        <div class="control-group admin-incoming-email-modal__error">
+          <label>{{i18n "admin.email.incoming_emails.modal.error"}}</label>
 
-      <hr />
+          <div class="controls admin-incoming-email-modal__error-content">
+            <p
+              class="admin-incoming-email-modal__error-message"
+            >{{@model.error}}</p>
+
+            {{#if @model.error_description}}
+              <p
+                class="error-description admin-incoming-email-modal__error-description"
+              >{{@model.error_description}}</p>
+            {{/if}}
+          </div>
+        </div>
+
+        <hr />
+      {{/if}}
 
       <div class="control-group">
         <label>{{i18n "admin.email.incoming_emails.modal.headers"}}</label>
