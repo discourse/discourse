@@ -323,10 +323,7 @@ export default class Category extends RestModel {
   }
 
   static _includePermissions(category, store, site) {
-    const record = store.createRecord("category", category);
-    record.setupGroupsAndPermissions();
-    site.updateCategory(record);
-    return record;
+    return site.updateCategory(category);
   }
 
   static search(term, opts) {
@@ -479,21 +476,15 @@ export default class Category extends RestModel {
   }
 
   setupGroupsAndPermissions() {
-    if (!this.available_groups) {
-      return;
-    }
-
     this.set("availableGroups", this.available_groups);
 
-    if (this.group_permissions) {
-      this.set(
-        "permissions",
-        this.group_permissions.map((elem) => {
-          this.available_groups.removeObject(elem.group_name);
-          return elem;
-        })
-      );
-    }
+    this.set(
+      "permissions",
+      this.group_permissions?.map((elem) => {
+        this.available_groups.removeObject(elem.group_name);
+        return elem;
+      }) || []
+    );
   }
 
   get descriptionText() {
