@@ -7,7 +7,7 @@ import ChatComposer from "../../chat-composer";
 
 export default class ChatComposerThread extends ChatComposer {
   @service("chat-channel-composer") channelComposer;
-  // NOTE: eslint-disable-next-line discourse/no-unused-services
+  // eslint-disable-next-line discourse/no-unused-services
   @service("chat-thread-composer") composer; // used in the parent class
   @service("chat-thread-pane") pane;
   @service currentUser;
