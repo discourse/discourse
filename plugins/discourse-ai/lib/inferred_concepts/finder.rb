@@ -69,7 +69,7 @@ module DiscourseAi
           )
 
         # Apply additional filters
-        query = query.where("topics.id NOT IN (?)", exclude_topic_ids) if exclude_topic_ids.present?
+        query = query.where.not(id: exclude_topic_ids) if exclude_topic_ids.present?
         query = query.where("topics.category_id IN (?)", category_ids) if category_ids.present?
         query = query.where("topics.created_at >= ?", created_after) if created_after.present?
 
@@ -118,7 +118,7 @@ module DiscourseAi
         query = query.where("posts.post_number > 1") if exclude_first_posts
 
         # Apply additional filters
-        query = query.where("posts.id NOT IN (?)", exclude_post_ids) if exclude_post_ids.present?
+        query = query.where.not(id: exclude_post_ids) if exclude_post_ids.present?
         query = query.where("posts.created_at >= ?", created_after) if created_after.present?
 
         # Filter by category if specified

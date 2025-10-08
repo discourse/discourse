@@ -4130,6 +4130,8 @@ tr_TR:
       style: "Stiller"
       background_color: "Renk"
       foreground_color: "Metin rengi"
+      color_validations:
+        cant_be_empty: "boş olamaz"
       styles:
         type: "Stil"
         icon: "Simge"
@@ -6447,7 +6449,6 @@ tr_TR:
         copy_to_clipboard: "Panoya kopyala"
         copied_to_clipboard: "Panoya Kopyalandı"
         copy_to_clipboard_error: "Veriler Panoya kopyalanırken hata oluştu"
-        theme_owner: "Düzenlenebilir değil, sahibi:"
         email_templates:
           title: "E-posta"
           subject: "Konu"

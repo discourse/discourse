@@ -4,7 +4,7 @@ RSpec.describe Jobs::CleanUpUserApiKeysMaxLife do
   fab!(:older_key) { Fabricate(:readonly_user_api_key, created_at: 3.days.ago) }
   fab!(:newer_key) { Fabricate(:readonly_user_api_key, created_at: 1.day.ago) }
   fab!(:revoked_key) do
-    Fabricate(:readonly_user_api_key, created_at: 4.day.ago, revoked_at: 1.day.ago)
+    Fabricate(:readonly_user_api_key, created_at: 4.days.ago, revoked_at: 1.day.ago)
   end
 
   context "when user api key was created before the max life period" do

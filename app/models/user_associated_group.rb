@@ -4,8 +4,8 @@ class UserAssociatedGroup < ActiveRecord::Base
   belongs_to :user
   belongs_to :associated_group
 
-  after_commit :add_to_associated_groups, on: %i[create update]
   before_destroy :remove_from_associated_groups
+  after_commit :add_to_associated_groups, on: %i[create update]
 
   def add_to_associated_groups
     associated_group.groups.each do |group|

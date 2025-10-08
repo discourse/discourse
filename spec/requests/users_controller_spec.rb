@@ -250,7 +250,7 @@ RSpec.describe UsersController do
       end
 
       it "fails without a server session" do
-        user.update!(created_at: Time.zone.now - 8.minutes)
+        user.update!(created_at: 8.minutes.ago)
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(403)
       end
@@ -262,7 +262,7 @@ RSpec.describe UsersController do
       end
 
       it "succeeds with a newly-created user" do
-        user.update!(created_at: Time.zone.now - 1.minute)
+        user.update!(created_at: 1.minute.ago)
         put "/u/#{user.username}/remove-password.json"
         expect(response.status).to eq(200)
       end
@@ -293,7 +293,7 @@ RSpec.describe UsersController do
       end
 
       it "fails without a server session" do
-        user.update!(created_at: Time.zone.now - 8.minutes)
+        user.update!(created_at: 8.minutes.ago)
         put "/u/#{user.username}/remove-password.json" #
         expect(response.status).to eq(403)
       end
@@ -1052,8 +1052,8 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["active"]).to be_falsey
 
-        # should save user_created_message in session
-        expect(session["user_created_message"]).to be_present
+        # should save user_created_message in server session
+        expect(server_session["user_created_message"]).to be_present
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
 
         expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
@@ -1072,8 +1072,8 @@ RSpec.describe UsersController do
 
           expect(response.parsed_body["active"]).to be_falsey
 
-          # should save user_created_message in session
-          expect(session["user_created_message"]).to be_present
+          # should save user_created_message in server session
+          expect(server_session["user_created_message"]).to be_present
           expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
 
           expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
@@ -1114,7 +1114,7 @@ RSpec.describe UsersController do
           end.to_not change { User.count }
 
           expect(response.status).to eq(200)
-          expect(session["user_created_message"]).to be_present
+          expect(server_session["user_created_message"]).to be_present
         end
       end
 
@@ -1145,7 +1145,7 @@ RSpec.describe UsersController do
           }.to_not change { User.count }
 
           expect(response.status).to eq(200)
-          expect(session["user_created_message"]).to be_present
+          expect(server_session["user_created_message"]).to be_present
 
           json = response.parsed_body
           expect(json["active"]).to be_falsey
@@ -1365,8 +1365,8 @@ RSpec.describe UsersController do
         post_user
         expect(response.status).to eq(200)
 
-        # should save user_created_message in session
-        expect(session["user_created_message"]).to be_present
+        # should save user_created_message in server session
+        expect(server_session["user_created_message"]).to be_present
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_present
       end
 
@@ -1547,7 +1547,7 @@ RSpec.describe UsersController do
         expect(json["success"]).to eq(true)
 
         # should not change the session
-        expect(session["user_created_message"]).to be_blank
+        expect(server_session["user_created_message"]).to be_blank
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_blank
       end
     end
@@ -1607,7 +1607,7 @@ RSpec.describe UsersController do
         expect(json["success"]).not_to eq(true)
 
         # should not change the session
-        expect(session["user_created_message"]).to be_blank
+        expect(server_session["user_created_message"]).to be_blank
         expect(session[SessionController::ACTIVATE_USER_KEY]).to be_blank
       end
     end
@@ -6904,7 +6904,7 @@ RSpec.describe UsersController do
       end
 
       it "returns unconfirmed session response when user was created more than N minutes ago" do
-        user1.created_at = Time.zone.now - 10.minutes
+        user1.created_at = 10.minutes.ago
         user1.save!(validate: false)
 
         post "/u/second_factors.json"
@@ -6915,7 +6915,7 @@ RSpec.describe UsersController do
       end
 
       it "returns empty list for a recently created user" do
-        user1.created_at = Time.zone.now - 1.minutes
+        user1.created_at = 1.minute.ago
         user1.save!(validate: false)
 
         post "/u/second_factors.json"
@@ -7819,7 +7819,7 @@ RSpec.describe UsersController do
         read: true,
         user: user,
         notification_type: Notification.types[:group_message_summary],
-        created_at: 1.minutes.ago,
+        created_at: 1.minute.ago,
       )
     end
 
@@ -7915,7 +7915,7 @@ RSpec.describe UsersController do
       end
 
       it "responds with an array of personal messages and user watching group messages that are not associated with any of the unread private_message notifications" do
-        group_message1.update!(bumped_at: 1.minutes.ago)
+        group_message1.update!(bumped_at: 1.minute.ago)
         message_without_notification.update!(bumped_at: 3.minutes.ago)
         group_message2.update!(bumped_at: 6.minutes.ago)
         message_with_read_notification.update!(bumped_at: 10.minutes.ago)
@@ -8022,9 +8022,10 @@ RSpec.describe UsersController do
           number_of_suspensions
           warnings_received_count
           number_of_rejected_posts
+          can_remove_password?
         ].each do |info|
           user_instance.expects(info).returns(user.public_send(info))
-          result[info.to_s] = user.public_send(info)
+          result[info.to_s.delete_suffix("?")] = user.public_send(info)
         end
 
         sign_in(admin)

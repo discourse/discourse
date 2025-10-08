@@ -72,7 +72,6 @@ es:
     composer_ai_helper_allowed_groups: "Los usuarios de estos grupos verán el botón del asistente de IA en el compositor."
     ai_helper_allowed_in_pm: "Activar el asistente de IA del compositor en los MP."
     ai_helper_model: "Modelo que se utilizará para el asistente de IA."
-    ai_helper_custom_prompts_allowed_groups: "Los usuarios de estos grupos verán la opción de instrucción personalizada en el ayudante de IA."
     ai_helper_automatic_chat_thread_title_delay: "Retraso en minutos antes de que el ayudante de la IA establezca automáticamente el título del hilo del chat."
     ai_helper_automatic_chat_thread_title: "Establecer automáticamente los títulos de los hilos del chat en función de su contenido."
     ai_helper_illustrate_post_model: "Modelo a utilizar para la función ilustrar publicación del ayudante de IA del compositor"

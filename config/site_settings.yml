@@ -2210,14 +2210,17 @@ files:
     default: 95
     min: 1
     max: 100
+    hidden: true
   recompress_original_jpg_quality:
     default: 90
     min: 1
     max: 100
+    hidden: true
   image_preview_jpg_quality:
     default: 90
     min: 1
     max: 100
+    hidden: true
   allow_staff_to_upload_any_file_in_pm:
     default: true
     client: true
@@ -2261,6 +2264,7 @@ files:
   composer_media_optimization_image_encode_quality:
     default: 75
     client: true
+    hidden: true
   composer_media_optimization_debug_mode:
     default: false
     client: true
@@ -2576,7 +2580,10 @@ security:
   allow_indexing_non_canonical_urls:
     default: true
     hidden: true
-  moderators_manage_categories_and_groups:
+  moderators_manage_categories:
+    default: false
+    client: true
+  moderators_manage_groups:
     default: false
     client: true
   moderators_change_post_ownership:
@@ -2588,6 +2595,8 @@ security:
   moderators_view_ips:
     default: true
     client: true
+  moderators_change_trust_levels:
+    default: true
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"

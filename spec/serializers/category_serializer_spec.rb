@@ -84,7 +84,7 @@ RSpec.describe CategorySerializer do
     end
 
     it "returns the right category group permissions for a user that can edit the category" do
-      SiteSetting.moderators_manage_categories_and_groups = true
+      SiteSetting.moderators_manage_categories = true
       user.update!(moderator: true)
 
       json = described_class.new(category, scope: Guardian.new(user), root: false).as_json

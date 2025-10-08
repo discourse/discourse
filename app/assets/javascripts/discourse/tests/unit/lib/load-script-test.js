@@ -19,23 +19,19 @@ module("Unit | Utility | load-script", function (hooks) {
 
   test("generates URLs with version number in the query params", function (assert) {
     assert.strictEqual(
-      cacheBuster("/javascripts/pikaday.js"),
-      `/javascripts/${jsVersions["pikaday.js"]}`
-    );
-    assert.strictEqual(
-      cacheBuster("/javascripts/ace/ace.js"),
-      `/javascripts/${jsVersions["ace/ace.js"]}`
+      cacheBuster("/javascripts/jquery.magnific-popup.min.js"),
+      `/javascripts/${jsVersions["jquery.magnific-popup.min.js"]}`
     );
   });
 
   test("lookups are case-insensitive", (assert) => {
     assert.strictEqual(
-      cacheBuster("/javascripts/Chart.min.js"),
-      `/javascripts/${jsVersions["chart.min.js"]}`
+      cacheBuster("/javascripts/JQuery.magnific-popup.min.js"),
+      `/javascripts/${jsVersions["jquery.magnific-popup.min.js"]}`
     );
     assert.strictEqual(
-      cacheBuster("/javascripts/chart.min.js"),
-      `/javascripts/${jsVersions["chart.min.js"]}`
+      cacheBuster("/javascripts/jquery.magnific-popup.min.js"),
+      `/javascripts/${jsVersions["jquery.magnific-popup.min.js"]}`
     );
   });
 });

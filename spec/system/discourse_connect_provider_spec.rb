@@ -2,10 +2,10 @@
 require "rotp"
 
 describe "Discourse Connect Provider", type: :system do
-  include SsoHelpers
+  include DiscourseConnectHelpers
 
   let(:sso_secret) { SecureRandom.alphanumeric(32) }
-  let(:sso_port) { 9876 }
+  let(:sso_port) { setup_test_discourse_connect_server(user:, sso_secret:) }
   let(:sso_url) { "http://localhost:#{sso_port}/sso" }
 
   fab!(:user) { Fabricate(:user, username: "john", password: "supersecurepassword") }
@@ -16,14 +16,10 @@ describe "Discourse Connect Provider", type: :system do
     SiteSetting.discourse_connect_provider_secrets = "localhost|Test"
     SiteSetting.enable_discourse_connect = false
     Jobs.run_immediately!
-
-    setup_test_sso_server(user: user, sso_secret:, sso_port:, sso_url:)
   end
 
-  after { shutdown_test_sso_server }
-
   it "redirects back to the return_sso_url after successful login" do
-    sso, sig = build_sso_payload(return_url)
+    sso, sig = build_discourse_connect_payload(return_url)
     EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
     visit "/"
@@ -44,7 +40,7 @@ describe "Discourse Connect Provider", type: :system do
     fab!(:other_user) { Fabricate(:user, username: "jane", password: "supersecurepassword") }
 
     it "redirects back to the return_sso_url" do
-      sso, sig = build_sso_payload(return_url)
+      sso, sig = build_discourse_connect_payload(return_url)
       EmailToken.confirm(Fabricate(:email_token, user: user).token)
 
       visit "/"

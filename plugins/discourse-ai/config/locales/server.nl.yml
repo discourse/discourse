@@ -72,7 +72,6 @@ nl:
     composer_ai_helper_allowed_groups: "Gebruikers in deze groepen zien de AI-hulpknop in de editor."
     ai_helper_allowed_in_pm: "Schakel de AI-hulp van de editor in in PB's."
     ai_helper_model: "Te gebruiken model voor de AI-hulp."
-    ai_helper_custom_prompts_allowed_groups: "Gebruikers in deze groepen zien de optie voor een aangepaste prompt in de AI-helper."
     ai_helper_automatic_chat_thread_title_delay: "Vertraging in minuten voordat de AI-helper automatisch de titel van de chatthread instelt."
     ai_helper_automatic_chat_thread_title: "Stel automatisch de titel van chatthreads in op basis van de threadinhoud."
     ai_helper_illustrate_post_model: "Te gebruiken model voor de berichtillustratiefunctie van de opstellings-AI-helper"

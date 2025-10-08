@@ -41,6 +41,7 @@ export default class BookmarkModal extends Component {
   @service currentUser;
   @service capabilities;
   @service bookmarkApi;
+  @service site;
 
   @tracked postDetectedLocalDate = null;
   @tracked postDetectedLocalTime = null;
@@ -363,7 +364,7 @@ export default class BookmarkModal extends Component {
           @label="bookmarks.save"
           @action={{this.saveAndClose}}
           @title="modal.close"
-          class="btn-transparent btn-primary"
+          class="btn-transparent"
         />
       </:headerPrimaryAction>
 
@@ -435,13 +436,15 @@ export default class BookmarkModal extends Component {
       </:body>
 
       <:footer>
-        <DButton
-          @label="bookmarks.save"
-          @action={{this.saveAndClose}}
-          id="save-bookmark"
-          class="btn-primary"
-        />
-        <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
+        {{#if this.site.desktopView}}
+          <DButton
+            @label="bookmarks.save"
+            @action={{this.saveAndClose}}
+            id="save-bookmark"
+            class="btn-primary"
+          />
+          <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
+        {{/if}}
         {{#if this.showDelete}}
           <DButton
             @icon="trash-can"

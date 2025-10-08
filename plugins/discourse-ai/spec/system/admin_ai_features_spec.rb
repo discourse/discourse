@@ -3,9 +3,9 @@
 RSpec.describe "Admin AI features configuration", type: :system do
   fab!(:admin)
   fab!(:llm_model)
-  fab!(:summarization_persona) { Fabricate(:ai_persona) }
-  fab!(:group_1) { Fabricate(:group) }
-  fab!(:group_2) { Fabricate(:group) }
+  fab!(:summarization_persona, :ai_persona)
+  fab!(:group_1, :group)
+  fab!(:group_2, :group)
   let(:page_header) { PageObjects::Components::DPageHeader.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
   let(:ai_features_page) { PageObjects::Pages::AdminAiFeatures.new }

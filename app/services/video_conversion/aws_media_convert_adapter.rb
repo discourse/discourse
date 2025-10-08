@@ -25,13 +25,13 @@ module VideoConversion
         domain, path = url.split("/", 2)
 
         # Verify the domain contains our bucket
-        if !domain&.include?(SiteSetting.s3_upload_bucket)
+        if !domain&.include?(s3_upload_bucket)
           raise Discourse::InvalidParameters.new(
-                  "Upload URL domain for upload ID #{@upload.id} does not contain expected bucket name: #{SiteSetting.s3_upload_bucket}",
+                  "Upload URL domain for upload ID #{@upload.id} does not contain expected bucket name: #{s3_upload_bucket}",
                 )
         end
 
-        input_path = "s3://#{SiteSetting.s3_upload_bucket}/#{path}"
+        input_path = "s3://#{s3_upload_bucket}/#{path}"
         settings = build_conversion_settings(input_path, output_path)
 
         begin
@@ -102,7 +102,10 @@ module VideoConversion
       when "COMPLETE"
         STATUS_COMPLETE
       when "ERROR"
-        Rails.logger.error("MediaConvert job #{job_id} failed")
+        Rails.logger.error(
+          "MediaConvert job #{job_id} failed. Error Code: #{response.job.error_code}, " \
+            "Error Message: #{response.job.error_message}, Upload ID: #{@upload.id}",
+        )
         STATUS_ERROR
       when "SUBMITTED", "PROGRESSING"
         STATUS_PENDING
@@ -215,6 +218,14 @@ module VideoConversion
         end
     end
 
+    def s3_upload_bucket
+      self.class.s3_upload_bucket
+    end
+
+    def self.s3_upload_bucket
+      SiteSetting.Upload.s3_upload_bucket
+    end
+
     def build_conversion_settings(input_path, output_path)
       self.class.build_conversion_settings(input_path, output_path)
     end
@@ -230,7 +241,7 @@ module VideoConversion
             output_group_settings: {
               type: "FILE_GROUP_SETTINGS",
               file_group_settings: {
-                destination: "s3://#{SiteSetting.s3_upload_bucket}/#{output_path}",
+                destination: "s3://#{s3_upload_bucket}/#{output_path}",
               },
             },
             outputs: [

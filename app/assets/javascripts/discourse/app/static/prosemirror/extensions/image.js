@@ -206,7 +206,9 @@ const extension = {
           return [];
         },
         apply(tr, value) {
-          let updated = value.slice();
+          let updated = value
+            .map(({ pos, src }) => ({ pos: tr.mapping.map(pos), src }))
+            .filter(({ pos }) => pos !== null);
 
           getChangedRanges(tr).forEach(({ new: { from, to } }) => {
             tr.doc.nodesBetween(from, to, (node, pos) => {
@@ -265,7 +267,7 @@ const extension = {
             }
 
             const node = view.state.doc.nodeAt(pos);
-            if (!node) {
+            if (!node || node.type.name !== "image") {
               continue;
             }
 
@@ -313,42 +315,44 @@ const extension = {
     const dataImageUploader = new Plugin({
       state: {
         init() {
-          return new Map();
+          return new Map(); // dataURI -> Set of positions
         },
-        apply(tr, uriNodesMap) {
-          getChangedRanges(tr).forEach(({ new: { from, to } }) => {
-            tr.doc.nodesBetween(from, to, (node, pos) => {
-              if (
-                node.type.name === "image" &&
-                node.attrs.src?.startsWith("data:")
-              ) {
-                if (!uriNodesMap.has(node.attrs.src)) {
-                  uriNodesMap.set(node.attrs.src, []);
-                }
-                uriNodesMap.get(node.attrs.src).push({ node, pos });
-              } else if (node.type.name === "image" && node.attrs.src) {
-                for (const [dataURI, nodes] of uriNodesMap) {
-                  uriNodesMap.set(
-                    dataURI,
-                    nodes.filter((n) => n.pos !== pos)
-                  );
-                  if (uriNodesMap.get(dataURI).length === 0) {
-                    uriNodesMap.delete(dataURI);
-                  }
-                }
-              }
-            });
+        apply(tr, dataURIMap) {
+          if (!tr.docChanged) {
+            return dataURIMap;
+          }
+
+          const updated = new Map();
+          tr.doc.descendants((node, pos) => {
+            if (
+              node.type.name === "image" &&
+              node.attrs.src?.startsWith("data:")
+            ) {
+              const positions = updated.get(node.attrs.src) || new Set();
+              positions.add(pos);
+              updated.set(node.attrs.src, positions);
+            }
           });
 
-          return uriNodesMap;
+          return updated;
         },
       },
 
       view() {
-        const { appEvents } = getContext();
+        const { appEvents, siteSettings } = getContext();
         const pendingUploads = new Set();
+        const processingDataURIs = new Set();
 
-        const uploadDataImage = async (dataURI, nodes, view) => {
+        const uploadDataImage = async (dataURI, view) => {
+          if (
+            processingDataURIs.has(dataURI) ||
+            pendingUploads.size >= siteSettings.simultaneous_uploads
+          ) {
+            return;
+          }
+
+          processingDataURIs.add(dataURI);
+
           const mimeMatch = dataURI.match(/data:image\/([^;]+)/);
           let fileExtension = "png";
           if (mimeMatch) {
@@ -359,11 +363,12 @@ const extension = {
 
           const fileName = `image-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExtension}`;
 
+          pendingUploads.add(fileName);
+
           const res = await fetch(dataURI);
           const blob = await res.blob();
           const file = new File([blob], fileName, { type: blob.type });
           file.id = fileName;
-          pendingUploads.add(fileName);
 
           const handleSuccess = (uploadedFileName, upload) => {
             if (uploadedFileName === fileName && pendingUploads.has(fileName)) {
@@ -372,19 +377,18 @@ const extension = {
               }
 
               const tr = view.state.tr;
+              const dataURIMap = dataImageUploader.getState(view.state);
 
-              nodes.forEach(({ pos }) => {
+              dataURIMap.get(dataURI)?.forEach((pos) => {
                 const node = view.state.doc.nodeAt(pos);
-                if (node && node.type.name === "image") {
-                  tr.setNodeMarkup(pos, null, {
-                    ...node.attrs,
-                    alt:
-                      node.attrs.alt ||
-                      i18n("upload_selector.default_image_alt_text"),
-                    src: upload.url || upload.short_url,
-                    originalSrc: upload.short_url || upload.url,
-                  });
-                }
+                tr.setNodeMarkup(pos, null, {
+                  ...node.attrs,
+                  alt:
+                    node.attrs.alt ||
+                    i18n("upload_selector.default_image_alt_text"),
+                  src: upload.url || upload.short_url,
+                  originalSrc: upload.short_url || upload.url,
+                });
               });
 
               if (tr.docChanged) {
@@ -400,16 +404,17 @@ const extension = {
               pendingUploads.has(fileName)
             ) {
               const tr = view.state.tr;
-              nodes.forEach(({ pos }) => {
+              const dataURIMap = dataImageUploader.getState(view.state);
+
+              dataURIMap.get(dataURI)?.forEach((pos) => {
                 const node = view.state.doc.nodeAt(pos);
-                if (node && node.type.name === "image") {
-                  tr.replaceWith(
-                    pos,
-                    pos + node.nodeSize,
-                    view.state.schema.text("[Upload failed]")
-                  );
-                }
+                tr.replaceWith(
+                  pos,
+                  pos + node.nodeSize,
+                  view.state.schema.text("[Upload failed]")
+                );
               });
+
               if (tr.docChanged) {
                 view.dispatch(tr);
               }
@@ -419,8 +424,12 @@ const extension = {
 
           const cleanup = () => {
             pendingUploads.delete(fileName);
+            processingDataURIs.delete(dataURI);
             appEvents.off("composer:upload-success", handleSuccess);
             appEvents.off("composer:upload-error", handleError);
+
+            // Process remaining queued uploads now that a slot is free
+            processQueuedUploads(view);
           };
 
           appEvents.on("composer:upload-success", handleSuccess);
@@ -437,13 +446,23 @@ const extension = {
           }, UPLOAD_TIMEOUT);
         };
 
+        const processQueuedUploads = (view) => {
+          const dataURIMap = dataImageUploader.getState(view.state);
+
+          for (const dataURI of dataURIMap.keys()) {
+            if (!processingDataURIs.has(dataURI)) {
+              if (pendingUploads.size >= siteSettings.simultaneous_uploads) {
+                break;
+              }
+
+              uploadDataImage(dataURI, view);
+            }
+          }
+        };
+
         return {
           update(view) {
-            dataImageUploader
-              .getState(view.state)
-              .forEach((nodes, dataURI) =>
-                uploadDataImage(dataURI, nodes, view)
-              );
+            processQueuedUploads(view);
           },
         };
       },

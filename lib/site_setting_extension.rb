@@ -39,7 +39,7 @@ module SiteSettingExtension
     # note optimised cause this is called a lot so avoiding .presence which
     # adds 2 method calls
     locale = current[:default_locale]
-    if locale && !locale.blank?
+    if locale && locale.present?
       locale
     else
       SiteSettings::DefaultsProvider::DEFAULT_LOCALE

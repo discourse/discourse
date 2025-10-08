@@ -561,8 +561,8 @@ RSpec.describe Assigner do
   end
 
   describe "assign_self_regex" do
-    fab!(:me) { Fabricate(:admin) }
-    fab!(:op) { Fabricate(:post) }
+    fab!(:me, :admin)
+    fab!(:op, :post)
     fab!(:reply) do
       Fabricate(:post, topic: op.topic, user: me, raw: "Will fix. Added to my list ;)")
     end
@@ -602,9 +602,9 @@ RSpec.describe Assigner do
   end
 
   describe "assign_other_regex" do
-    fab!(:me) { Fabricate(:admin) }
-    fab!(:other) { Fabricate(:admin) }
-    fab!(:op) { Fabricate(:post) }
+    fab!(:me, :admin)
+    fab!(:other, :admin)
+    fab!(:op, :post)
     fab!(:reply) do
       Fabricate(
         :post,

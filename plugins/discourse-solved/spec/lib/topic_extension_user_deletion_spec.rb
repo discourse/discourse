@@ -5,7 +5,7 @@ RSpec.describe DiscourseSolved::TopicExtension do
 
   fab!(:topic)
   fab!(:answer_post) { Fabricate(:post, topic:) }
-  fab!(:accepter) { Fabricate(:user) }
+  fab!(:accepter, :user)
 
   describe "#accepted_answer_post_info" do
     let(:solved_topic) { Fabricate(:solved_topic, topic:, answer_post:, accepter:) }

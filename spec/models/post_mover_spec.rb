@@ -2055,7 +2055,7 @@ RSpec.describe PostMover do
             Fabricate(:post, topic: source_2_topic, user: user, created_at: 2.hours.ago)
             create_post_timing(source_2_topic.first_post, user, 400)
             source_2_post =
-              Fabricate(:post, topic: source_2_topic, user: user, created_at: 1.hours.ago)
+              Fabricate(:post, topic: source_2_topic, user: user, created_at: 1.hour.ago)
             create_post_timing(source_2_topic.posts.second, user, 500)
 
             moved_to =

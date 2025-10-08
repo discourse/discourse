@@ -195,8 +195,8 @@ RSpec.describe TopicsFilter do
     end
 
     describe "ordering by hot score" do
-      fab!(:t1) { Fabricate(:topic) }
-      fab!(:t2) { Fabricate(:topic) }
+      fab!(:t1, :topic)
+      fab!(:t2, :topic)
 
       before do
         TopicHotScore.create!(topic_id: t1.id, score: 2.0)
@@ -244,7 +244,7 @@ RSpec.describe TopicsFilter do
       end
 
       fab!(:expired_pinned_topic) do
-        Fabricate(:topic, pinned_at: 2.hour.ago, pinned_until: 1.hour.ago)
+        Fabricate(:topic, pinned_at: 2.hours.ago, pinned_until: 1.hour.ago)
       end
 
       describe "when query string is `in:pinned`" do
@@ -270,7 +270,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "new / unread operators" do
-        fab!(:user_for_new_filters) { Fabricate(:user) }
+        fab!(:user_for_new_filters, :user)
         let!(:new_topic) { Fabricate(:topic) }
         let!(:unread_topic) do
           Fabricate(:topic, created_at: 2.days.ago).tap do |t|

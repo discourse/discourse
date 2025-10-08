@@ -180,6 +180,7 @@ module DiscourseAi
 
         ActiveRecord::Base.transaction do
           DB.exec(before_query) if before_query.present?
+
           builder.query(
             query_embedding: embedding,
             candidates_limit: candidates_limit,
@@ -273,6 +274,7 @@ module DiscourseAi
 
         ActiveRecord::Base.transaction do
           DB.exec(before_query) if before_query.present?
+
           builder.query(query_params)
         end
       rescue PG::Error => e
@@ -311,6 +313,11 @@ module DiscourseAi
 
         return "" if threshold < DEFAULT_HNSW_EF_SEARCH
         "SET LOCAL hnsw.ef_search = #{threshold};"
+      end
+
+      def hnsw_scan_relaxed_order
+        # https://github.com/pgvector/pgvector?tab=readme-ov-file#iterative-index-scans
+        "SET LOCAL hnsw.iterative_scan = relaxed_order;"
       end
 
       delegate :dimensions, :pg_function, to: :vector_def

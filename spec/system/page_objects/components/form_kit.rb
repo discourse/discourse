@@ -80,7 +80,7 @@ module PageObjects
       end
 
       def has_no_errors?
-        !has_css?(".form-kit__errors")
+        has_no_css?(".form-kit__errors")
       end
 
       def control_type

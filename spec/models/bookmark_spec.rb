@@ -273,5 +273,32 @@ RSpec.describe Bookmark do
         .to(nil)
         .and(not_change { Notification.find_by(id: other_notification.id) })
     end
+
+    it "does not delete reminder notifications for bookmarks with auto_delete_preference when_reminder_sent" do
+      bookmark =
+        Fabricate(
+          :bookmark,
+          user: user,
+          bookmarkable: post,
+          auto_delete_preference: Bookmark.auto_delete_preferences[:when_reminder_sent],
+        )
+
+      notification =
+        Fabricate(
+          :bookmark_reminder_notification,
+          user:,
+          post:,
+          data: {
+            bookmark_id: bookmark.id,
+            bookmarkable_type: "Post",
+            bookmarkable_id: post.id,
+            title: post.topic.title,
+            bookmarkable_url: post.url,
+          }.to_json,
+        )
+
+      expect { bookmark.destroy }.not_to change { Notification.find_by(id: notification.id) }
+      expect(Notification.find_by(id: notification.id)).to eq(notification)
+    end
   end
 end

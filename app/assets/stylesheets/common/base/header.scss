@@ -181,10 +181,6 @@
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
       background-color: var(--d-hover);
-
-      > .d-icon {
-        color: var(--primary-medium);
-      }
     }
   }
 

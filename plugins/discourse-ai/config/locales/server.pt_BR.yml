@@ -72,7 +72,6 @@ pt_BR:
     composer_ai_helper_allowed_groups: "Os(as) usuários(as) desses grupos visualizarão o botão de assistência por IA no compositor."
     ai_helper_allowed_in_pm: "Ative o ajudante de IA do compositor em MPs."
     ai_helper_model: "Modelo usado para o ajudante de IA."
-    ai_helper_custom_prompts_allowed_groups: "Os(as) usuários(as) que estiverem nestes grupos verão um prompt personalizado no ajudante da IA."
     ai_helper_automatic_chat_thread_title_delay: "O atraso, em minutos, até que o ajudante de IA defina automaticamente o título da thread do bate-papo."
     ai_helper_automatic_chat_thread_title: "Defina automaticamente os títulos das linhas de discussão do bate-papo com base no conteúdo delas."
     ai_helper_illustrate_post_model: "O modelo a ser usado para o ajudante de IA ilustrar o recurso da postagem"

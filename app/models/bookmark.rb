@@ -28,12 +28,19 @@ class Bookmark < ActiveRecord::Base
   belongs_to :user
   belongs_to :bookmarkable, polymorphic: true
 
-  has_many :reminder_notifications,
+  has_many :dependent_reminder_notifications,
            ->(bookmark) do
-             where(notification_type: Notification.types[:bookmark_reminder]).where(
-               "data::jsonb->>'bookmark_id' = ?",
-               bookmark.id.to_s,
-             )
+             # we keep these notifications otherwise they would be deleted when the bookmark is deleted
+             # and user would never have a chance to see them
+             if bookmark.auto_delete_preference ==
+                  Bookmark.auto_delete_preferences[:when_reminder_sent]
+               where("false")
+             else
+               where(notification_type: Notification.types[:bookmark_reminder]).where(
+                 "data::jsonb->>'bookmark_id' = ?",
+                 bookmark.id.to_s,
+               )
+             end
            end,
            class_name: "Notification",
            foreign_key: :user_id,
@@ -145,7 +152,7 @@ class Bookmark < ActiveRecord::Base
     self.reminder_at.in_time_zone(timezone)
   end
 
-  scope :with_reminders, -> { where("reminder_at IS NOT NULL") }
+  scope :with_reminders, -> { where.not(reminder_at: nil) }
 
   scope :pending_reminders,
         ->(before_time = Time.now.utc) do

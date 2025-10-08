@@ -379,6 +379,8 @@ RSpec.configure do |config|
       minio_runner_config.minio_console_port = 9_001 + 2 * test_i
     end
 
+    DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
+
     WebMock.disable_net_connect!(
       allow_localhost: true,
       allow: [
@@ -904,12 +906,14 @@ RSpec.configure do |config|
 
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
     def log_on_user(user, session, cookies, opts = {})
-      session[:current_user_id] = user.id
+      # Try using the main session as `session` sometimes is a server session
+      (cookies.try(:request).try(:session) || session)[:current_user_id] = user.id
       super
     end
 
     def log_off_user(session, cookies)
-      session[:current_user_id] = nil
+      # Try using the main session as `session` sometimes is a server session
+      (cookies.try(:request).try(:session) || session).delete(:current_user_id)
       super
     end
   end
@@ -1130,7 +1134,7 @@ def swap_2_different_characters(str)
 end
 
 def create_request_env(path: nil)
-  env = Rails.application.env_config.dup
+  env = Rails.application.env_config.dup.merge("rack.session" => ActionController::TestSession.new)
   env.merge!(Rack::MockRequest.env_for(path)) if path
   env
 end

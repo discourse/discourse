@@ -563,6 +563,8 @@ ur:
       resume: "جاری رکھیں"
       remove: "خارج کریں"
       remove_confirmation: "کیا آپ واقعی یہ مسودہ حذف کرنا چاہتے ہیں؟"
+      bulk_delete: "منتخب کردہ کو حذف کر دیں"
+      bulk_delete_confirmation: "مسودہ حذف کریں"
       new_topic: "نئے موضوع کا مسودہ"
       new_private_message: "نیے ذاتی پیغام کا مسودہ"
       edit_topic: "موضوع کے مسودے میں ترمیم کریں"
@@ -2508,6 +2510,7 @@ ur:
       admin_not_allowed_from_ip_address: "آپ ایڈمن کے طور پر اِس آئی پی ایڈریس سے لاگ اِن نہیں ہو سکتے۔"
       resend_activation_email: "دوبارہ ایکٹیویشن ای میل بھیجنے کے لئے یہاں کلک کریں۔"
       omniauth_disallow_totp: "آپ کے اکاؤنٹ میں دو عنصری توثیق فعال ہے۔ براہ کرم اپنے پاس ورڈ کے ساتھ لاگ ان کریں۔"
+      works_with: "ساتھ کام کرتا ہے"
       activate_account: "اکاؤنٹ فعال کریں"
       resend_title: "ایکٹیویشن اِیمیل دوبارہ بھیجییں"
       change_email: "اِیمیل ایڈریس تبدیل کریں"
@@ -3803,6 +3806,9 @@ ur:
       title: "تازہ ترین پوسٹس"
       empty: "کوئی پوسٹس نہیں"
       aria_post_number: "%{title} - پوسٹ #%{postNumber}"
+      bulk:
+        select_all: "سبھی منتخب کریں"
+        clear_all: "سبھی ہٹا دیں"
     post:
       confirm_delete: "کیا آپ واقعی اس پوسٹ کو حذف کرنا چاہتے ہیں؟"
       quote_reply: "اقتباس کریں"
@@ -4151,6 +4157,8 @@ ur:
       style: "طرزیں"
       background_color: "رنگ"
       foreground_color: "متن کا رنگ"
+      color_validations:
+        cant_be_empty: "خالی نہیں ہو سکتا"
       styles:
         type: "ظرز"
         icon: "آئیکن"
@@ -4840,6 +4848,7 @@ ur:
     safe_mode:
       enabled: "سیف موڈ فعال ہے، سیف موڈ سے باہر نکلنے کے لئے اِس براؤزر وِنڈو کو بند کریں"
     theme_preview_notice: "آپ فی الحال ایک تھیم کی جھلک دیکھ رہے ہیں، اس براؤزر ٹیب یا ونڈو کو اپنی عام سائٹ کی ترتیب پر واپس آنے کے لیے بند کریں۔"
+    theme_preview_failed: "تھیم دکھانے میں ناکام رہا کیونکہ یہ موجود نہیں یا آپ کے پاس اس تک رسائی کی اجازت نہیں۔"
     image_removed: "(تصویر ہٹا دی گئی)"
     pause_notifications:
       title: "کے لیے اطلاعات کو روکیں۔۔۔"
@@ -6146,6 +6155,7 @@ ur:
         about:
           general_settings: "عمومی ترتیبات"
           community_name: "کمیونٹی کا نام"
+          community_name_placeholder: "کمیونٹی کی مثال"
           community_summary: "کمیونٹی کا خلاصہ"
           community_description: "کمیونٹی کی تفصیل"
           community_title: "کمیونٹی کا عنوان"
@@ -6311,6 +6321,7 @@ ur:
             title: "رنگ"
           save_changes: "تبدیلیاں محفوظ کریں"
           unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
+          delete_confirm: "کیا آپ کو یقین ہے کہ آپ یہ رنگوں کی پیلٹ حذف کرنا چاہتے ہیں؟"
       plugins:
         title: "پلَگ اِنز"
         name: "نام"
@@ -6321,6 +6332,7 @@ ur:
         not_enabled: "N"
         change_settings_short: "ترتیبات"
         howto: "میں پلَگ اِنز کیسے انسٹال کروں؟"
+        official: "آفیشل ڈسکورس پلگ ان"
         author: "%{author} کی طرف سے"
         experimental_badge: "تجرباتی"
         learn_more: "مزید جانیں"
@@ -6330,6 +6342,7 @@ ur:
           enabled: "فعال شدہ"
           disabled: "غیر فعال"
           preinstalled: "پہلے سے انسٹال ہے"
+          search_placeholder: "پلگ ان تلاش کریں۔۔۔"
           reset: "رِی سَیٹ"
       navigation_menu:
         sidebar: "سائڈبار"
@@ -6337,8 +6350,10 @@ ur:
         legacy: "میراث"
       backups:
         title: "بیک اَپس"
+        files_title: "بیک اپ فائلیں"
         menu:
           backups: "بیک اَپس"
+          backup_files: "بیک اپ فائلیں"
           logs: "لاگز"
         none: "کوئی بیک اپ دستیاب نہیں"
         read_only:
@@ -6434,7 +6449,6 @@ ur:
         copy_to_clipboard: "کلِپ بورڈ میں کاپی کریں"
         copied_to_clipboard: "کلِپ بورڈ میں کاپی کر لیا گیا"
         copy_to_clipboard_error: "کلِپ بورڈ میں ڈیٹا کاپی کرنے پر خرابی کا سامنا کر نا پرا"
-        theme_owner: "ناقابلِ ترمیم، ملکیت:"
         email_templates:
           title: "اِی میل"
           subject: "موضوع"
@@ -6483,6 +6497,7 @@ ur:
           extra_files_upload: "ان فائلوں کو دیکھنے کے لیے تھیم برآمد کریں۔"
           extra_files_remote: "ان فائلوں کو دیکھنے کے لیے تھیم ایکسپورٹ کریں یا گٹ ریپوزٹری کو چیک کریں۔"
           preview: "جھلک دیکھیں"
+          default: "ڈیفالٹ تھیم"
           settings_editor: "ترتیبات ایڈیٹر"
           show_advanced: "مزید دکھائیں"
           is_default: "تِھیم ڈیفالٹ کے طور پر فعال ہے"
@@ -6508,6 +6523,8 @@ ur:
           convert_theme_alert_generic: "کیا آپ واقعی اس تھیم کو جزو میں تبدیل کرنا چاہتے ہیں؟"
           convert_theme_tooltip: "اِس تِھیم کو کمپنَینٹ میں تبدیل کریں"
           inactive_themes: "غیر فعال تِھیمز:"
+          set_default_theme: "بطور ڈیفالٹ سیٹ کریں"
+          setting_was_saved: "تھیم کی سیٹنگ محفوظ ہو گئی"
           inactive_components: "غیر استعمال شدہ کمپنَینٹ:"
           cancel: "منسوخ"
           broken_theme_tooltip: "اِس تِھیم کے CSS، HTML یا YAML میں غلطیاں موجود ہیں"
@@ -6661,6 +6678,7 @@ ur:
             name: "چوتھے درجہ کے"
           header_background:
             name: "ہیڈر کا پسِ منظر"
+            description: "سر نامے کا پس منظر"
           header_primary:
             name: "ہیڈر بنیادی"
           highlight:
@@ -6678,6 +6696,7 @@ ur:
             name: "کامیابی"
           love:
             name: "محبت"
+            description: "پسندیدہ کا بٹن"
           selected:
             name: "منتخب کیا ہوا"
           editor:
@@ -6722,6 +6741,7 @@ ur:
         refresh: "رِیفریش"
         send_digest_label: "اس رِزَلٹ کو بھیجیں:"
         send_digest: "بھیجیں"
+        sending_email: "ای میل بھیجی جا رہی ہے۔۔۔"
         format: "فارمیٹ"
         html: "html"
         text: "ٹَیکسٹ"
@@ -6782,6 +6802,7 @@ ur:
         staff_actions:
           all: "تمام"
           filter: "فِلٹر:"
+          clear_filters: "سب کچھ دکھائیں"
           staff_user: "صارف"
           target_user: "ہدف صارف"
           subject: "موضوع"

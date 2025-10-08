@@ -125,4 +125,32 @@ describe "Admin User Page", type: :system do
       end
     end
   end
+
+  context "when logged in as a moderator" do
+    fab!(:current_user, :moderator)
+
+    context "when visiting a regular user's page" do
+      fab!(:user)
+
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        it "the dropdown to change trust level is enabled" do
+          admin_user_page.visit(user)
+
+          expect(admin_user_page).to have_change_trust_level_dropdown_enabled
+        end
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        it "the dropdown to change trust level is disabled" do
+          admin_user_page.visit(user)
+
+          expect(admin_user_page).to have_change_trust_level_dropdown_disabled
+        end
+      end
+    end
+  end
 end

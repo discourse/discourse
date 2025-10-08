@@ -548,6 +548,12 @@ ro:
       resume: "Reia"
       remove: "Elimină"
       remove_confirmation: "Sigur vrei să ștergi această ciornă?"
+      bulk_delete: "Șterge selecția"
+      bulk_delete_confirmation: "Șterge ciornele"
+      bulk_delete_message:
+        one: "Sigur vrei să ștergi această ciornă?"
+        few: "Sigur vrei să ștergi aceste %{count} ciorne?"
+        other: "Sigur vrei să ștergi aceste %{count} de ciorne?"
       new_topic: "Ciornă subiect nou"
       new_private_message: "Ciornă mesaj personal nou"
       edit_topic: "Editează ciornă subiect"
@@ -1511,6 +1517,7 @@ ro:
         choose: "Alege o parolă"
         title: "Resetare parolă"
         remove: "Elimină parolă"
+        remove_disabled: "Contul necesită cel puțin o altă metodă de conectare (de exemplu, o cheie de acces sau un cont extern conectat) înainte de a elimina parola."
         remove_detail: "Contul tău nu va mai fi accesibil cu o parolă decât dacă o resetezi."
       second_factor_backup:
         regenerate: "Regenerare"
@@ -2058,6 +2065,7 @@ ro:
       admin_not_allowed_from_ip_address: "Nu te poți conecta ca administrator cu această adresă IP."
       resend_activation_email: "Click aici pentru a retrimite emailul de activare."
       omniauth_disallow_totp: "Contul tău are autentificarea în doi pași (2FA) activată. Te rog să te autentifici cu parola"
+      works_with: "Funcționează cu"
       activate_account: "Activare cont"
       resend_title: "Retrimite emailul de activare"
       change_email: "Schimbă adresa de email"
@@ -2888,7 +2896,13 @@ ro:
     post_list:
       title: "Ultimele postări"
       bulk:
+        selected:
+          one: "o postare selectată"
+          few: "%{count} postări selectate"
+          other: "%{count} de postări selectate"
+        select_all: "Selectează tot"
         clear_all: "Șterge tot"
+        actions: "Acțiuni în bloc"
     post:
       quote_reply: "Citează"
       quote_reply_shortcut: "Citează (sau apasă q)"
@@ -3143,6 +3157,10 @@ ro:
       style: "Stiluri"
       background_color: "Culoare"
       foreground_color: "Culoare text"
+      color_validations:
+        cant_be_empty: "nu poate fi gol"
+        incorrect_length: "trebuie să corespundă formatului #RRGGBB sau #RGB"
+        non_hexdecimal: "trebuie să conțină doar caractere hexazecimale (0-9, A-F)"
       styles:
         type: "Stil"
         icon: "Icon"
@@ -3628,6 +3646,7 @@ ro:
     safe_mode:
       enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
     theme_preview_notice: "Momentan previzualizezi o temă, închide această filă sau fereastră de navigator pentru a reveni la configurația normală a site-ului."
+    theme_preview_failed: "Previzualizarea temei a eșuat pentru că nu există, sau nu ai permisiunea de a o accesa."
     pause_notifications:
       options:
         half_hour: "30 de minute"
@@ -4665,7 +4684,7 @@ ro:
         copy_to_clipboard: "Copiază în memoria temporară"
         copied_to_clipboard: "Copiat în memoria temporară"
         copy_to_clipboard_error: "Eroare la copierea datelor în memoria temporară"
-        theme_owner: "Nemodificabil, deținut de:"
+        theme_owner: "Deținută de:"
         email_templates:
           title: "E-mail"
           subject: "Subiect"

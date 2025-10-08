@@ -92,7 +92,7 @@ RSpec.describe Group do
 
     it "filters results by datetime using the before parameter" do
       p1 = Fabricate(:post)
-      p2 = Fabricate(:post, created_at: p1.created_at + 2.minute)
+      p2 = Fabricate(:post, created_at: p1.created_at + 2.minutes)
       group.add(p1.user)
 
       posts = group.posts_for(Guardian.new, before: p1.created_at + 1.minute)
@@ -757,7 +757,7 @@ RSpec.describe Group do
     end
 
     describe "when a user has qualified for trust level 1" do
-      fab!(:user) { Fabricate(:user, trust_level: 1, created_at: Time.zone.now - 10.years) }
+      fab!(:user) { Fabricate(:user, trust_level: 1, created_at: 10.years.ago) }
 
       fab!(:group) { Fabricate(:group, grant_trust_level: 3) }
       fab!(:group2) { Fabricate(:group, grant_trust_level: 2) }

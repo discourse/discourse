@@ -388,16 +388,17 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
     builder = DB.build <<~SQL
       WITH ordered_posts AS (
         SELECT
-          id,
+          p.id,
           ROW_NUMBER() OVER (
             PARTITION BY
-              topic_id
+              p.topic_id
             ORDER BY
-              created_at,
-              post_number
+              p.created_at,
+              p.post_number
           ) AS new_post_number
         FROM
-          posts
+          posts p
+        INNER JOIN topics t ON t.id = p.topic_id
         /*where*/
       )
       UPDATE
@@ -412,7 +413,7 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
         p.post_number <> o.new_post_number
     SQL
 
-    builder.where("topic_id = ?", args[:topic_id]) if args[:topic_id]
+    builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
     builder.exec
 
     [
@@ -429,6 +430,7 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
           #{column} = p.sort_order * -1
         FROM
           posts AS p
+        INNER JOIN topics t ON t.id = p.topic_id
         /*where*/
       SQL
 
@@ -450,14 +452,17 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
 
     builder = DB.build <<~SQL
       UPDATE
-        posts
+        posts AS p
       SET
         post_number = sort_order
+      FROM
+        topics t
       /*where*/
     SQL
 
-    builder.where("topic_id = ?", args[:topic_id]) if args[:topic_id]
-    builder.where("post_number < 0")
+    builder.where("t.id = p.topic_id")
+    builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
+    builder.where("p.post_number < 0")
     builder.exec
   end
 

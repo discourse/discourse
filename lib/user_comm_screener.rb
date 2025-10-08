@@ -103,7 +103,7 @@ class UserCommScreener
 
   def initialize(acting_user: nil, acting_user_id: nil, target_user_ids:)
     raise ArgumentError if acting_user.blank? && acting_user_id.blank?
-    @acting_user = acting_user.present? ? acting_user : User.find(acting_user_id)
+    @acting_user = acting_user.presence || User.find(acting_user_id)
     target_user_ids = Array.wrap(target_user_ids) - [@acting_user.id]
     @target_users = User.where(id: target_user_ids).pluck(:id, :username).to_h
     @preferences = load_preference_map

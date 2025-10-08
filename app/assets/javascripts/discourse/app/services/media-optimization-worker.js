@@ -1,6 +1,6 @@
 import Service, { service } from "@ember/service";
 import { Promise } from "rsvp";
-import { getAbsoluteURL, getURLWithCDN } from "discourse/lib/get-url";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { fileToImageData } from "discourse/lib/media-optimization-utils";
 
@@ -25,6 +25,7 @@ export default class MediaOptimizationWorkerService extends Service {
   @service appEvents;
   @service siteSettings;
   @service capabilities;
+  @service session;
 
   worker = null;
   workerUrl = getAbsoluteURL("/javascripts/media-optimization-worker.js");
@@ -125,14 +126,7 @@ export default class MediaOptimizationWorkerService extends Service {
       this.worker.postMessage({
         type: "install",
         settings: {
-          mozjpeg_script: getURLWithCDN("/javascripts/squoosh/mozjpeg_enc.js"),
-          mozjpeg_wasm: getURLWithCDN("/javascripts/squoosh/mozjpeg_enc.wasm"),
-          resize_script: getURLWithCDN(
-            "/javascripts/squoosh/squoosh_resize.js"
-          ),
-          resize_wasm: getURLWithCDN(
-            "/javascripts/squoosh/squoosh_resize_bg.wasm"
-          ),
+          mediaOptimizationBundle: this.session.mediaOptimizationBundle,
         },
       });
       this.appEvents.on("composer:closed", this, "stopWorker");

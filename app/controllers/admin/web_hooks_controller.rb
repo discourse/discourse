@@ -39,20 +39,20 @@ class Admin::WebHooksController < Admin::AdminController
         admin_web_hooks_path(limit: limit, offset: offset + limit, format: :json),
     }
 
-    render json: MultiJson.dump(json), status: 200
+    render json: MultiJson.dump(json), status: :ok
   end
 
   def show
     data = serialize_data(@web_hook, AdminWebHookSerializer, root: "web_hook")
     web_hook = data.delete("web_hook")
     data = { "extras" => data, "web_hook" => web_hook }
-    render json: MultiJson.dump(data), status: 200
+    render json: MultiJson.dump(data), status: :ok
   end
 
   def edit
     data = serialize_data(@web_hook, AdminWebHookSerializer, root: "web_hook")
     data["extras"] = { "categories" => data.delete(:categories) }
-    render json: MultiJson.dump(data), status: 200
+    render json: MultiJson.dump(data), status: :ok
   end
 
   def create
@@ -120,7 +120,7 @@ class Admin::WebHooksController < Admin::AdminController
       },
     }
 
-    render json: MultiJson.dump(json), status: 200
+    render json: MultiJson.dump(json), status: :ok
   end
 
   def bulk_events

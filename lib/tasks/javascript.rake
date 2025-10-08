@@ -64,36 +64,7 @@ def write_hbs_template(path, task_name, template)
 end
 
 def dependencies
-  [
-    { source: "chart.js/dist/chart.min.js", public: true },
-    { source: "chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js", public: true },
-    { source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true },
-    { source: "pikaday/pikaday.js", public: true },
-    {
-      source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.js",
-      destination: "squoosh",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "squoosh/codecs/mozjpeg/enc/mozjpeg_enc.wasm",
-      destination: "squoosh",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "squoosh/codecs/resize/pkg/squoosh_resize.js",
-      destination: "squoosh",
-      public: true,
-      skip_versioning: true,
-    },
-    {
-      source: "squoosh/codecs/resize/pkg/squoosh_resize_bg.wasm",
-      destination: "squoosh",
-      public: true,
-      skip_versioning: true,
-    },
-  ]
+  [{ source: "magnific-popup/dist/jquery.magnific-popup.min.js", public: true }]
 end
 
 def node_package_name(f)
@@ -221,8 +192,6 @@ task "javascript:update_constants" => :environment do
 end
 
 task "javascript:update" => "clean_up" do
-  require "uglifier"
-
   system("pnpm install", exception: true)
 
   versions = {}
