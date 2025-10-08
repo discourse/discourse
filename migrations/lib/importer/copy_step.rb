@@ -2,9 +2,6 @@
 
 module Migrations::Importer
   class CopyStep < Step
-    MappingType = ::Migrations::Importer::MappingType
-    Enums = ::Migrations::Database::IntermediateDB::Enums
-
     NOW = "NOW()"
     SYSTEM_USER_ID = Discourse::SYSTEM_USER_ID
 
