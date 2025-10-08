@@ -33,6 +33,7 @@ end
 def find_advanced_search_banners(db)
   puts "Accessing database: [#{db}]"
 
+  required_keys = %w[search_banner.headline search_banner.subhead]
   advanced_search_banners = []
 
   puts "  Searching for Advanced Search Banner theme components..."
@@ -45,26 +46,63 @@ def find_advanced_search_banners(db)
       puts "  ✓ Found: #{theme.name} (ID: #{theme.id})"
       puts "  Searching for translation overrides..."
 
-      if !theme.theme_translation_overrides.any?
+      if theme.theme_translation_overrides.any?
         puts "  Migrating translation overrides..."
-        theme.theme_translation_overrides.each do |override|
-          mapped_keys = map_translation_keys(override.translation_key)
 
-          mapped_keys.each do |new_key|
-            TranslationOverride.upsert!(override.locale, new_key, override.value)
-            puts "    ✓ Migrated to: '#{override.locale}.#{new_key}' = '#{override.value}'"
-          end
+        processed_keys_by_locale = Hash.new { |h, k| h[k] = Set.new }
+
+        theme.theme_translation_overrides.each do |override|
+          migrate_translations(
+            locale: override.locale,
+            key: override.translation_key,
+            value: override.value,
+          )
+
+          processed_keys_by_locale[override.locale].add(override.translation_key)
 
           # override.destroy!
           puts "    ● Deleted old override: #{override.locale}.#{override.translation_key}"
         end
+
+        shown = false
+        processed_keys_by_locale.each do |locale, processed_keys|
+          missing_keys = required_keys - processed_keys.to_a
+
+          if missing_keys.any?
+            unless shown
+              puts "  Migrating to default translations..."
+              shown = true
+            end
+
+            missing_keys.each do |missing_key|
+              migrate_translations(locale: locale, key: missing_key)
+            end
+          end
+        end
       else
-        puts "  ✗ No translation overrides found, thus migrating to default translations..."
-        apply_default_translations
+        puts "  ✗ No translation overrides found. Migrating to default translations..."
+        required_keys.each { |required_key| migrate_translations(key: required_key) }
       end
     end
 
   advanced_search_banners
+end
+
+def migrate_translations(locale: "en", key:, value: nil)
+  default_translations = {
+    "js.welcome_banner.header.anonymous_members" => "Welcome to our community",
+    "js.welcome_banner.header.logged_in_members" => "Welcome to our community",
+    "js.welcome_banner.subheader.anonymous_members" =>
+      "We're happy to have you here. If you need help, please search before you post.",
+    "js.welcome_banner.subheader.logged_in_members" =>
+      "We're happy to have you here. If you need help, please search before you post.",
+  }
+  mapped_keys = map_translation_keys(key)
+  mapped_keys.each do |new_key|
+    new_value = value || default_translations[new_key]
+    TranslationOverride.upsert!(locale, new_key, new_value)
+    puts "    ✓ Migrated to: '#{locale}.#{new_key}' = '#{new_value}'"
+  end
 end
 
 def map_translation_keys(translation_key)
@@ -81,20 +119,4 @@ def map_translation_keys(translation_key)
   }
 
   translation_mappings[translation_key] || []
-end
-
-def apply_default_translations(locale = "en")
-  default_translations = {
-    "js.welcome_banner.header.anonymous_members" => "Welcome to our community",
-    "js.welcome_banner.header.logged_in_members" => "Welcome to our community",
-    "js.welcome_banner.subheader.anonymous_members" =>
-      "We're happy to have you here. If you need help, please search before you post.",
-    "js.welcome_banner.subheader.logged_in_members" =>
-      "We're happy to have you here. If you need help, please search before you post.",
-  }
-
-  default_translations.each do |key, value|
-    TranslationOverride.upsert!(locale, key, value)
-    puts "    ✓ Migrated to: '#{locale}.#{key}' = '#{value}'"
-  end
 end
