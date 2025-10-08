@@ -17,7 +17,7 @@ acceptance("Implicit injections shims", function () {
 
   test("it allows overlaying explicit injections", function (assert) {
     class MyService extends Service {
-      // NOTE: eslint-disable-next-line discourse/no-unused-services
+      // eslint-disable-next-line discourse/no-unused-services
       @service session;
     }
     const serviceInstance = MyService.create();
