@@ -420,11 +420,15 @@ describe "Composer Form Templates", type: :system do
     composer.create
 
     expect(topic_page).to have_topic_title(topic_title)
-    expect(find("#{topic_page.post_by_number_selector(1)} .cooked p")).to have_content(
-      "Bruce Wayne",
+
+    expect(page).to have_css(
+      "#{topic_page.post_by_number_selector(1)} .cooked p",
+      text: "Bruce Wayne",
     )
-    expect(find("#{topic_page.post_by_number_selector(1)} .cooked h3")).to have_content(
-      "What is your full name?",
+
+    expect(page).to have_css(
+      "#{topic_page.post_by_number_selector(1)} .cooked h3",
+      text: "What is your full name?",
     )
   end
 
@@ -436,15 +440,14 @@ describe "Composer Form Templates", type: :system do
     attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/logo.png",
                 make_visible: true
-    expect(find(".d-editor-preview")).to have_css("img[alt='logo.png']")
+
+    expect(page).to have_css(".d-editor-preview img[alt='logo.png']")
 
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Bruce Wayne")
     composer.create
 
-    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
-      "img[alt='logo.png']",
-    )
+    expect(page).to have_css("#{topic_page.post_by_number_selector(1)} .cooked img[alt='logo.png']")
   end
 
   it "doesn't allow uploading an invalid file type" do
@@ -453,9 +456,13 @@ describe "Composer Form Templates", type: :system do
     attach_file "prescription-uploader",
                 "#{Rails.root}/spec/fixtures/images/animated.gif",
                 make_visible: true
-    expect(find("#dialog-holder .dialog-body p", visible: :all)).to have_content(
-      I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
+
+    expect(page).to have_css(
+      "#dialog-holder .dialog-body p",
+      text: I18n.t("js.pick_files_button.unsupported_file_picked", { types: ".jpg, .png" }),
+      visible: :all,
     )
+
     expect(page).to have_no_css(".form-template-field__uploaded-files")
   end
 
@@ -478,13 +485,11 @@ describe "Composer Form Templates", type: :system do
     composer.fill_form_template_field("input", "Peter Parker}")
     composer.create
 
-    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
-      "img[alt='logo.png']",
-    )
-    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("a.attachment")
-    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css("audio")
-    expect(find("#{topic_page.post_by_number_selector(1)} .cooked")).to have_css(
-      ".video-placeholder-container",
+    expect(page).to have_css("#{topic_page.post_by_number_selector(1)} .cooked img[alt='logo.png']")
+    expect(page).to have_css("#{topic_page.post_by_number_selector(1)} .cooked a.attachment")
+    expect(page).to have_css("#{topic_page.post_by_number_selector(1)} .cooked audio")
+    expect(page).to have_css(
+      "#{topic_page.post_by_number_selector(1)} .cooked .video-placeholder-container",
     )
   end
 
@@ -501,7 +506,7 @@ describe "Composer Form Templates", type: :system do
                 "#{Rails.root}/spec/fixtures/images/fake.jpg",
                 make_visible: true
 
-    expect(find(".form-template-field__uploaded-files")).to have_css("li", count: 1)
+    expect(page).to have_css(".form-template-field__uploaded-files li", count: 1)
   end
 
   it "shows labels and descriptions when a form template is assigned to the category" do
@@ -526,21 +531,21 @@ describe "Composer Form Templates", type: :system do
     composer.fill_title(topic_title)
     composer.fill_form_template_field("input", "Peter Parker")
 
-    expect(find(".d-editor-preview")).to have_content("Peter Parker")
+    expect(page).to have_css(".d-editor-preview", text: "Peter Parker")
 
     find(:select, "4").find(:option, "Option 2").select_option
     find(:select, "4").find(:option, "Option 1").select_option
 
-    expect(find(".d-editor-preview")).to have_content("Option 1")
+    expect(page).to have_css(".d-editor-preview", text: "Option 1")
 
     find(:select, "6").find(:option, "Option 4").select_option
 
-    expect(find(".d-editor-preview")).to have_content("Option 4")
+    expect(page).to have_css(".d-editor-preview", text: "Option 4")
 
     message = "This is a test message!"
     find("textarea").fill_in(with: message)
 
-    expect(find(".d-editor-preview")).to have_content(message)
+    expect(page).to have_css(".d-editor-preview", text: message)
 
     attach_file("5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true)
     expect(page).to have_css(".d-editor-preview img")
@@ -597,8 +602,8 @@ describe "Composer Form Templates", type: :system do
       category_page.visit(category_with_tagchooser_template)
       category_page.new_topic_button.click
 
-      expect(find("[name='1']")).to have_content("#{tag3.name.upcase}")
-      expect(find("[name='2']")).to have_content("#{tag4.name.upcase}")
+      expect(page).to have_css("[name='1']", text: tag3.name.upcase)
+      expect(page).to have_css("[name='2']", text: tag4.name.upcase)
 
       find(:select, "1").find(:option, tag1.description).select_option
       find(:select, "2").find(:option, tag2.description).select_option
