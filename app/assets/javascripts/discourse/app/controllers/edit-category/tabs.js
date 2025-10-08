@@ -124,17 +124,10 @@ export default class EditCategoryTabsController extends Controller {
       .save()
       .then((result) => {
         if (!this.model.id) {
-          this.model.setProperties({
-            slug: result.category.slug,
-            id: result.category.id,
-            can_edit: result.category.can_edit,
-            permission: PermissionType.FULL,
-            notification_level: NotificationLevels.REGULAR,
-          });
-          this.site.updateCategory(this.model);
+          const updatedModel = this.site.updateCategory(result.category);
           this.router.transitionTo(
             "editCategory",
-            Category.slugFor(this.model)
+            Category.slugFor(updatedModel)
           );
         }
         // force a reload of the category list to track changes to style type
