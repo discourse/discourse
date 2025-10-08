@@ -3,8 +3,8 @@ class DeletePostLocalizationsWithLinks < ActiveRecord::Migration[8.0]
   def up
     execute <<~SQL
       DELETE FROM post_localizations
-      WHERE raw LIKE '%https://%'
-         OR cooked LIKE '%https://%'
+      WHERE raw ~ 'https?://'
+         OR cooked ~ 'https?://'
     SQL
   end
 
