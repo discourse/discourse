@@ -80,9 +80,9 @@ RSpec.describe "Post rake tasks" do
   describe "posts:reorder_posts" do
     fab!(:topic)
 
-    fab!(:p1) { Fabricate(:post, topic: topic, created_at: 1.days.ago, post_number: 5) }
+    fab!(:p1) { Fabricate(:post, topic: topic, created_at: 1.day.ago, post_number: 5) }
     fab!(:p2) { Fabricate(:post, topic: topic, created_at: 2.days.ago, post_number: 1) }
-    fab!(:p3) { Fabricate(:post, topic: topic, created_at: 3.day.ago, post_number: 3) }
+    fab!(:p3) { Fabricate(:post, topic: topic, created_at: 3.days.ago, post_number: 3) }
 
     # PostTimings pointing at existing posts
     fab!(:pt1) do
