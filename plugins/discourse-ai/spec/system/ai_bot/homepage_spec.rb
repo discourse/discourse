@@ -103,6 +103,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
 
     SiteSetting.ai_bot_enable_dedicated_ux = true
     SiteSetting.ai_bot_enabled = true
+    SiteSetting.ai_bot_add_to_header = true
     SiteSetting.navigation_menu = "sidebar"
     Jobs.run_immediately!
     SiteSetting.ai_bot_allowed_groups = "#{Group::AUTO_GROUPS[:trust_level_0]}"
