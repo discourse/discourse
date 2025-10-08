@@ -203,14 +203,16 @@ export default class UpcomingChangeItem extends Component {
           >
             <:content>
               <DropdownMenu as |dropdown|>
-                <dropdown.item>
-                  <DButton
-                    class="btn-transparent upcoming-change__show-image"
-                    @label="admin.upcoming_changes.show_image"
-                    @icon="image"
-                    @action={{this.showImage}}
-                  />
-                </dropdown.item>
+                {{#if @change.upcoming_change.image_url}}
+                  <dropdown.item>
+                    <DButton
+                      class="btn-transparent upcoming-change__show-image"
+                      @label="admin.upcoming_changes.show_image"
+                      @icon="image"
+                      @action={{this.showImage}}
+                    />
+                  </dropdown.item>
+                {{/if}}
                 <dropdown.item>
                   <DButton
                     class="btn-transparent edit-groups"
