@@ -90,7 +90,7 @@ export default class EmailLogsList extends Component {
 
   @action
   async loadLogs(loadMore = false) {
-    if ((loadMore && this.loading) || (loadMore && this.allLoaded)) {
+    if (loadMore && (this.loading || this.allLoaded)) {
       return;
     }
 
