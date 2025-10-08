@@ -39,6 +39,10 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
     SiteSetting.openid_connect_match_by_email
   end
 
+  def match_by_username
+    SiteSetting.openid_connect_match_by_username
+  end
+
   def discovery_document
     document_url = SiteSetting.openid_connect_discovery_document.presence
     if !document_url
@@ -149,4 +153,84 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
   def request_timeout_seconds
     GlobalSetting.openid_connect_request_timeout_seconds
   end
+
+  def set_oidc_mapped_groups(user, auth)
+    return unless SiteSetting.openid_connect_groups_enabled
+
+    if !(auth && auth.dig(:extra, :raw_info, :groups))
+      oidc_log("OpenID Connect groups enabled but no group information passed by provider. Not changing groups.")
+      return
+    end
+
+    user_oidc_groups = auth[:extra][:raw_info][:groups]
+    group_map = {}
+    check_groups = {}
+
+    SiteSetting.openid_connect_groups_maps.split("|").each do |map|
+      keyval = map.split(":", 2)
+      group_map[keyval[0]] = keyval[1]
+      keyval[1].split(",").each { |discourse_group|
+        check_groups[discourse_group] = 0
+      }
+    end
+
+    if !(user_oidc_groups == nil || group_map.empty?)
+      user_oidc_groups.each { |user_oidc_group|
+        if group_map.has_key?(user_oidc_group) #??? || !SiteSetting.openid_connect_groups_remove_unmapped_groups
+          result = nil
+
+          discourse_groups = group_map[user_oidc_group] || ""
+          discourse_groups.split(",").each { |discourse_group|
+            next unless discourse_group
+
+            actual_group = Group.find_by(name: discourse_group)
+            if (!actual_group)
+              oidc_log("OIDC group '#{user_oidc_group}' maps to Group '#{discourse_group}' but this does not seem to exist")
+              next
+            end
+            if actual_group.automatic # skip if it's an auto_group
+              oidc_log("Group '#{discourse_group}' is an automatic, cannot change membership")
+              next
+            end
+            check_groups[discourse_group] = 1
+            result = actual_group.add(user)
+            oidc_log("OIDC group '#{user_oidc_group}' mapped to Group '#{discourse_group}'. User '#{user.username}' has been added") if result
+          }
+        end
+      }
+    end
+
+    if SiteSetting.openid_connect_groups_remove_unmapped_groups
+      check_groups.keys.each { |discourse_group|
+        actual_group = Group.find_by(name: discourse_group)
+        if check_groups[discourse_group] > 0
+          next
+        end
+        if !actual_group
+          oidc_log("DEBUG: Group '#{discourse_group}' can't be found, cannot remove user '#{user.username}'")
+          next
+        end
+        if actual_group.automatic # skip if it's an auto_group
+          oidc_log("DEBUG: Group '#{discourse_group}' is automatic, cannot change membership")
+          next
+        end
+        result = actual_group.remove(user)
+        oidc_log("DEBUG: User '#{user.username}' removed from Group '#{discourse_group}'") if result
+      }
+    end
+  end
+
+  def after_authenticate(auth, existing_account: nil)
+    result = super(auth, existing_account: existing_account)
+    if result.user != nil
+      set_oidc_mapped_groups(result.user, auth)
+    end
+    result
+  end
+
+  def after_create_account(user, auth)
+    super(user, auth)
+    set_groups(user, auth)
+  end
+
 end
