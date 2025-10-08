@@ -56,6 +56,7 @@ module PageObjects
 
       def save_settings
         find("#save-category").click
+        expect(page).to have_css("#save-category", text: I18n.t("js.category.save"))
         self
       end
 

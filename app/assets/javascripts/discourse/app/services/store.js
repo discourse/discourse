@@ -302,7 +302,13 @@ export default class StoreService extends Service {
     obj.__state = obj[adapter.primaryKey] ? "created" : "new";
 
     const klass = this.register.lookupFactory("model:" + type) || RestModel;
+
+    console.log("BEFORE OBJ", obj.name, obj.color);
+
     const model = klass.create(obj);
+
+    console.log("AFTER OBJ", obj.name, obj.color);
+    console.log("AFTER MODEL", model.name, model.color);
 
     storeMap(type, obj[adapter.primaryKey], model);
     return model;
