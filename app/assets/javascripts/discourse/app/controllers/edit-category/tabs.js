@@ -124,11 +124,8 @@ export default class EditCategoryTabsController extends Controller {
       .save()
       .then((result) => {
         if (!this.model.id) {
-          const updatedModel = this.site.updateCategory({
-            ...result.category,
-            permission: PermissionType.FULL,
-            notification_level: NotificationLevels.REGULAR,
-          });
+          const updatedModel = this.site.updateCategory(result.category);
+          updatedModel.setupGroupsAndPermissions();
           this.router.transitionTo(
             "editCategory",
             Category.slugFor(updatedModel)
