@@ -22,6 +22,7 @@ RSpec.describe "AI chat channel summarization", type: :system do
   it "shows the AI bot button, which is clickable (even if group is hidden)" do
     # test was authored with this in mind
     SiteSetting.ai_bot_enable_dedicated_ux = false
+    SiteSetting.ai_bot_add_to_header = true
     group.add(user)
     group.save
 

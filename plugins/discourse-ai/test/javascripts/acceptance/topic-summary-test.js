@@ -30,7 +30,9 @@ acceptance("Topic - Summary", function (needs) {
       });
     });
 
-    server.get("/discourse-ai/ai-bot/conversations.json", () => {});
+    server.get("/discourse-ai/ai-bot/conversations.json", () => {
+      return helper.response({ conversations: [], meta: { has_more: false } });
+    });
   });
 
   needs.hooks.beforeEach(() => {
