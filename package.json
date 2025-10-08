@@ -44,7 +44,7 @@
     "lint:js:fix": "eslint --fix ./app/assets/javascripts $(script/list_bundled_plugins) ./themes --no-error-on-unmatched-pattern",
     "lint:hbs": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/admin/assets/javascripts/**/*.{gjs,hbs}' 'themes/**/*.{gjs,hbs}'",
     "lint:hbs:fix": "ember-template-lint 'app/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/assets/javascripts/**/*.{gjs,hbs}' 'plugins/*/admin/assets/javascripts/**/*.{gjs,hbs}' 'themes/**/*.{gjs,hbs}' --fix",
-    "lint:prettier": "pnpm pprettier --list-different --no-error-on-unmatched-pattern 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,hbs}') 'themes/**/*.{js,gjs,hbs,scss}'",
+    "lint:prettier": "pnpm pprettier --list-different 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,hbs}') 'themes/**/*.{js,gjs,hbs,scss}'",
     "lint:prettier:fix": "pnpm prettier -w --no-error-on-unmatched-pattern 'app/assets/stylesheets/**/*.scss' 'app/assets/javascripts/**/*.{js,gjs,hbs,css}' $(script/list_bundled_plugins '/assets/stylesheets/**/*.scss') $(script/list_bundled_plugins '/{assets,admin/assets,test}/javascripts/**/*.{js,gjs,hbs}') 'themes/**/*.{js,gjs,hbs,scss}'",
     "lint:glint": "glint -p jsconfig.json --noEmit",
     "lttf:ignore": "lint-to-the-future ignore",
