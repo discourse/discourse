@@ -412,7 +412,11 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         end
 
         context "with hamburger menu" do
-          before { SiteSetting.navigation_menu = "header dropdown" }
+          before do
+            SiteSetting.navigation_menu = "header dropdown"
+            SiteSetting.ai_bot_add_to_header = true
+          end
+
           it "keeps robot icon in the header and doesn't display sidebar back link" do
             visit "/"
             expect(header).to have_icon_in_bot_button(icon: "robot")
@@ -433,7 +437,10 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       end
 
       context "when `ai_bot_enable_dedicated_ux` is disabled" do
-        before { SiteSetting.ai_bot_enable_dedicated_ux = false }
+        before do
+          SiteSetting.ai_bot_enable_dedicated_ux = false
+          SiteSetting.ai_bot_add_to_header = true
+        end
 
         it "opens composer on bot click" do
           visit "/"
