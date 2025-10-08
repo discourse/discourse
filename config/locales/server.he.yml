@@ -2723,6 +2723,7 @@ he:
   filter:
     description:
       status: "סינון נושאים לפי המצב שלהם"
+      in: "סינון נושאים ברשימות אישיות"
       order: "מיון נושאים לפי שדה מסוים"
       category: "הצגת נושאים בקטגוריה מסוימת"
       category_any: "הצגת נושאים בלפחות אחת מבין הקטגוריות שצוינו (מופרדות בפסיקים)"
@@ -4421,6 +4422,8 @@ he:
     see_more: "עוד"
     search_title: "לנסות לחפש במקום?"
     search_button: "חיפוש"
+    home: "אני רוצה הביתה"
+    placeholder: "חיפוש נושאים לפי כותרת או מילות מפתח…"
   offline:
     title: "לא ניתן לטעון את היישום"
     offline_page_message: "נראה כאילו אין לך תקשורת לאינטרנט! נא לבדוק את חיבור הרשת שלך ולנסות שוב."
@@ -5382,6 +5385,8 @@ he:
     imap_email_deleted: "הודעת הדוא״ל נמחקה משרת ה־IMAP"
     imap_email_marked_as_spam: "הודעת הדוא״ל הועברה לספאם בשרת ה־IMAP"
     auto_deleted_hidden_posts: "פוסטים מוסתרים שהושמדו אוטומטית"
+    seed_data_topic_updated: "הנושא עם נתונים מההקמה עודכן"
+    seed_data_topic_deleted: "הנושא עם נתונים מההקמה נמחק"
   reviewables:
     already_handled: "תודה לך, כבר בדקנו את הפוסט הזה והחלטנו שאין צורך לסמן אותו בדגל פעם נוספת."
     already_handled_and_user_not_exist: "תודה, אבל כבר נערכה בדיקה והמשתמש הזה אינו קיים עוד."
