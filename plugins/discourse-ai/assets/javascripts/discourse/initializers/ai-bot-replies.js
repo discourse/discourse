@@ -2,6 +2,7 @@ import { hbs } from "ember-cli-htmlbars";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerWidgetShim } from "discourse/widgets/render-glimmer";
+import { i18n } from "discourse-i18n";
 import AiBotHeaderIcon from "../components/ai-bot-header-icon";
 import AiPersonaFlair from "../components/post/ai-persona-flair";
 import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming-button";
@@ -159,6 +160,34 @@ function initializeShareTopicButton(api) {
   });
 }
 
+function initializeSidebarBotButton(api) {
+  const siteSettings = api.container.lookup("service:site-settings");
+  const currentUser = api.container.lookup("service:current-user");
+
+  if (!siteSettings.ai_bot_add_to_community_section || !currentUser) {
+    return;
+  }
+
+  const hasAvailableBots =
+    currentUser?.ai_enabled_chat_bots?.some(
+      (bot) => !bot.is_persona || bot.has_default_llm
+    ) ?? false;
+
+  if (!hasAvailableBots) {
+    return;
+  }
+
+  api.addCommunitySectionLink((baseSectionLink) => {
+    return class AiBotSectionLink extends baseSectionLink {
+      name = "ai-bot";
+      route = "discourse-ai-bot-conversations";
+      text = i18n("discourse_ai.ai_bot.shortcut_link");
+      title = i18n("discourse_ai.ai_bot.shortcut_title");
+      defaultPrefixValue = "robot";
+    };
+  });
+}
+
 export default {
   name: "discourse-ai-bot-replies",
 
@@ -175,6 +204,7 @@ export default {
         initializeDebugButton(api, container);
         initializeShareButton(api, container);
         initializeShareTopicButton(api, container);
+        initializeSidebarBotButton(api);
       });
     }
   },

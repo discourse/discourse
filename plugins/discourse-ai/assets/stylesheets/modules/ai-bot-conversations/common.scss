@@ -23,6 +23,23 @@ body.has-ai-conversations-sidebar {
     }
   }
 
+  .sidebar-panel-header {
+    border-bottom: 1px solid var(--primary-low);
+    padding-bottom: 0.35em;
+
+    .sidebar-sections__back-to-forum {
+      padding-left: 0.5em;
+
+      svg {
+        margin-right: 0.5em;
+      }
+    }
+  }
+
+  .sidebar-section-header-wrapper {
+    padding-left: 0.5em;
+  }
+
   // When the sidebar is empty, we want to hide the "Today" header
   // and only show the empty state component
   &.has-empty-ai-conversations-sidebar
@@ -34,14 +51,12 @@ body.has-ai-conversations-sidebar {
   // When the sidebar isn't empty, BUT "today" is empty, hide
   // the entire section
   &:not(.has-empty-ai-conversations-sidebar)
-    .sidebar-section[data-section-name="today"]:has(
-      .ai-bot-sidebar-empty-state
-    ) {
+    .sidebar-section[data-section-name="today"]:not(:has(li)) {
     display: none;
   }
 
-  .sidebar-toggle-all-sections {
-    display: none;
+  .ai-bot-sidebar-empty-state {
+    padding-top: 0.5em;
   }
 
   // topic elements

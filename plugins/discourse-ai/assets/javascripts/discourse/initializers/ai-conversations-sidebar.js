@@ -27,7 +27,7 @@ export default {
           class AiConversationsSidebarPanel extends BaseCustomSidebarPanel {
             key = AI_CONVERSATIONS_PANEL;
             hidden = true;
-            displayHeader = false; // this would add a misplaced back to forum button
+            displayHeader = true;
             expandActiveSection = true;
           }
       );

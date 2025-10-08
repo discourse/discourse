@@ -886,6 +886,7 @@ en:
         cancel_streaming: "Stop reply"
         default_pm_prefix: "[Untitled AI bot PM]"
         shortcut_title: "Start a PM with an AI bot"
+        shortcut_link: "AI bot"
         exit: "exit AI bot"
         share: "Copy AI conversation"
         conversation_shared: "Conversation copied"
