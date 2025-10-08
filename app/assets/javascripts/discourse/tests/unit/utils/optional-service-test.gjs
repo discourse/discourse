@@ -25,9 +25,9 @@ const EmberObjectComponent = Component.extend({
 });
 
 class NativeComponent extends Component {
-  // NOTE: eslint-disable-next-line discourse/no-unused-services
+  // eslint-disable-next-line discourse/no-unused-services
   @optionalService foo;
-  // NOTE: eslint-disable-next-line discourse/no-unused-services
+  // eslint-disable-next-line discourse/no-unused-services
   @optionalService("bar") baz;
 
   name = "";
