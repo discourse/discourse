@@ -1936,6 +1936,8 @@ sw:
       logo: "Nembo ya Kategoria"
       background_image: "Mandharinyuma ya Kategoria"
       background_color: "Rangi"
+      color_validations:
+        cant_be_empty: "haiwezi kuachwa wazi"
       styles:
         icon: "ikoni"
         emoji: "Emoji"
@@ -2831,7 +2833,6 @@ sw:
         copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copied_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copy_to_clipboard_error: "Hitilafu imetokea wakati wa kunakili taarifa kwenye ubao nakili."
-        theme_owner: "haiwezi kufanyiwa uhariri, inamilikiwa na:"
         email_templates:
           title: "Barua Pepe"
           subject: "Maudhui"

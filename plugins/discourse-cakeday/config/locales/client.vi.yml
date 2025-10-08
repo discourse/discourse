@@ -1,0 +1,26 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Hôm nay là sinh nhật của bạn! "
+        title: "Hôm nay là sinh nhật của tôi!"
+        label: "Ngày sinh nhật"
+      anniversary:
+        user_title: "Hôm nay là ngày kỷ niệm bạn gia nhập cộng đồng của chúng tôi!"
+        title: "Hôm nay là ngày kỷ niệm tôi gia nhập cộng đồng này!"
+    cakeday:
+      today: "Hôm nay"
+      tomorrow: "Ngày mai"
+      upcoming: "Sắp tới"
+      all: "Tất cả"
+    birthdays:
+      title: "Sinh nhật"
+      month:
+        title: "Sinh nhật trong tháng của"
+        empty: "Không có thành viên nào có sinh nhật tháng này."

@@ -229,12 +229,17 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     context "when job has error" do
       before do
         allow(mediaconvert_job).to receive(:status).and_return("ERROR")
+        allow(mediaconvert_job).to receive(:error_code).and_return("1517")
+        allow(mediaconvert_job).to receive(:error_message).and_return("S3 Write Error")
+        allow(mediaconvert_job).to receive(:settings).and_return(nil)
         allow(mediaconvert_client).to receive(:get_job).and_return(mediaconvert_job_response)
       end
 
       it "returns :error and logs the error" do
         adapter.check_status(job_id)
-        expect(Rails.logger).to have_received(:error).with(/MediaConvert job #{job_id} failed/)
+        expect(Rails.logger).to have_received(:error).with(
+          /MediaConvert job #{job_id} failed\. Error Code: 1517, Error Message: S3 Write Error, Upload ID: #{upload.id}/,
+        )
         expect(adapter.check_status(job_id)).to eq(:error)
       end
     end

@@ -48,9 +48,9 @@ RSpec.describe Jobs::OldKeysReminder do
 
       As a courtesy, we wanted to let you know that the following credentials used on your Discourse instance have not been updated in more than two years:
 
-      google_oauth2_client_secret - #{google_secret.updated_at.to_date.to_fs(:db)}
-      github_client_secret - #{github_secret.updated_at.to_date.to_fs(:db)}
-      api key description - #{api_key.created_at.to_date.to_fs(:db)}
+      google_oauth2_client_secret - #{google_secret.updated_at.to_date.to_formatted_s(:db)}
+      github_client_secret - #{github_secret.updated_at.to_date.to_formatted_s(:db)}
+      api key description - #{api_key.created_at.to_date.to_formatted_s(:db)}
 
       No action is required at this time, however, it is considered good security practice to cycle all your important credentials every few years.
     TEXT
@@ -65,11 +65,11 @@ RSpec.describe Jobs::OldKeysReminder do
 
       As a courtesy, we wanted to let you know that the following credentials used on your Discourse instance have not been updated in more than two years:
 
-      google_oauth2_client_secret - #{google_secret.updated_at.to_date.to_fs(:db)}
-      github_client_secret - #{github_secret.updated_at.to_date.to_fs(:db)}
-      twitter_consumer_secret - #{recent_twitter_secret.updated_at.to_date.to_fs(:db)}
-      api key description - #{api_key.created_at.to_date.to_fs(:db)}
-      recent api key description - #{admin.username} - #{recent_api_key.created_at.to_date.to_fs(:db)}
+      google_oauth2_client_secret - #{google_secret.updated_at.to_date.to_formatted_s(:db)}
+      github_client_secret - #{github_secret.updated_at.to_date.to_formatted_s(:db)}
+      twitter_consumer_secret - #{recent_twitter_secret.updated_at.to_date.to_formatted_s(:db)}
+      api key description - #{api_key.created_at.to_date.to_formatted_s(:db)}
+      recent api key description - #{admin.username} - #{recent_api_key.created_at.to_date.to_formatted_s(:db)}
 
       No action is required at this time, however, it is considered good security practice to cycle all your important credentials every few years.
     TEXT
@@ -88,7 +88,7 @@ RSpec.describe Jobs::OldKeysReminder do
     expect { described_class.new.execute({}) }.to change { Post.count }.by(1)
     Topic.last.trash!
     expect { described_class.new.execute({}) }.not_to change { Post.count }
-    freeze_time 1.years.from_now
+    freeze_time 1.year.from_now
     expect { described_class.new.execute({}) }.not_to change { Post.count }
     freeze_time 3.days.from_now
     expect { described_class.new.execute({}) }.to change { Post.count }.by(1)

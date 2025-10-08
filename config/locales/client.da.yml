@@ -3492,6 +3492,8 @@ da:
       background_image: "Kategori logo baggrundsbillede"
       background_color: "Farve"
       foreground_color: "Tekst farve"
+      color_validations:
+        cant_be_empty: "kan ikke være tom"
       styles:
         type: "Stil"
         icon: "Ikon"
@@ -5136,7 +5138,6 @@ da:
         copy_to_clipboard: "Kopiér til udklipsholder"
         copied_to_clipboard: "Kopierede til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
-        theme_owner: "Kan ikke redigeres, ejes af:"
         email_templates:
           title: "Email"
           subject: "Emne"

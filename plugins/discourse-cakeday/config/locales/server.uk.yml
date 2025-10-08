@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  site_settings:
+    cakeday_enabled: "Показуйте emoji[s] 'cakeday' :cakeday: поруч із іменем користувача в день, коли він приєднався до дискурсу."
+    cakeday_emoji: "Emoji[s], які відображатимуться біля імені користувача в день, коли він приєднався до дискурсу. Кілька емоцій можна задати за :smile|cake|smile"
+    cakeday_birthday_enabled: "Показуйте іконку emoji[s] поруч із іменем користувача в день народження."
+    cakeday_birthday_emoji: "Emoji[s], які відображатимуться біля імені користувача в день народження. Кілька емоцій можна задати одночасно: smile|cake|smile"

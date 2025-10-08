@@ -72,7 +72,7 @@ class Plugin::Instance
   end
 
   def seed_data
-    @seed_data ||= HashWithIndifferentAccess.new({})
+    @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
 
   def seed_fu_filter(filter = nil)
@@ -624,7 +624,7 @@ class Plugin::Instance
   def discourse_owned?
     return false if commit_hash.blank?
     parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
-    return false if parsed_commit_url.blank?
+    return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
     github_org = parsed_commit_url.path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
       parsed_commit_url.host == "github.com"

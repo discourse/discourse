@@ -28,7 +28,7 @@ RSpec.describe JsLocaleHelper do
 
   module StubLoadTranslations
     def set_translations(locale, translations)
-      @loaded_translations ||= HashWithIndifferentAccess.new
+      @loaded_translations ||= ActiveSupport::HashWithIndifferentAccess.new
       @loaded_translations[locale] = translations
     end
 

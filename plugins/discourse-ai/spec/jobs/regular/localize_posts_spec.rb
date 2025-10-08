@@ -145,7 +145,7 @@ describe Jobs::LocalizePosts do
 
     fab!(:public_post) { Fabricate(:post, locale: "es") }
 
-    fab!(:personal_pm_topic) { Fabricate(:private_message_topic) }
+    fab!(:personal_pm_topic, :private_message_topic)
     fab!(:personal_pm_post) { Fabricate(:post, topic: personal_pm_topic, locale: "es") }
 
     fab!(:group)

@@ -9,7 +9,7 @@ RSpec.describe ListController do
   end
   fab!(:post_1) { Fabricate(:post, topic: topic_1) }
   fab!(:post_event_1) do
-    Fabricate(:event, name: "event1", post: post_1, original_starts_at: 1.days.from_now)
+    Fabricate(:event, name: "event1", post: post_1, original_starts_at: 1.day.from_now)
   end
   fab!(:topic_2) do
     Fabricate(:topic, title: "This is the second topic", user: user, category: category)

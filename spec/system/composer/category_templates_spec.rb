@@ -543,7 +543,7 @@ describe "Composer Form Templates", type: :system do
     expect(find(".d-editor-preview")).to have_content(message)
 
     attach_file("5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true)
-    expect(find(".d-editor-preview")).to have_css("img")
+    expect(page).to have_css(".d-editor-preview img")
   end
 
   context "when using tagchooser" do

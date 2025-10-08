@@ -1,18 +1,13 @@
 # frozen_string_literal: true
 
 describe "Discourse Connect", type: :system do
-  include SsoHelpers
+  include DiscourseConnectHelpers
 
   let(:sso_secret) { SecureRandom.alphanumeric(32) }
-  let(:sso_port) { 9876 }
+  let!(:sso_port) { setup_test_discourse_connect_server(user:, sso_secret:) }
   let(:sso_url) { "http://localhost:#{sso_port}/sso" }
 
-  before do
-    configure_discourse_connect
-    setup_test_sso_server(user:, sso_secret:, sso_port:, sso_url:)
-  end
-
-  after { shutdown_test_sso_server }
+  before { configure_discourse_connect }
 
   shared_examples "redirects to SSO" do
     it "redirects to SSO" do

@@ -1645,6 +1645,8 @@ be:
       name: "Назва катэгорыі"
       description: "апісанне"
       background_color: "колер"
+      color_validations:
+        cant_be_empty: "не можа быць пустым"
       styles:
         icon: "Абразка"
         emoji: "Emoji"

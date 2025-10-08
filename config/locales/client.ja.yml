@@ -3908,6 +3908,8 @@ ja:
       style: "スタイル"
       background_color: "色"
       foreground_color: "テキストの色"
+      color_validations:
+        cant_be_empty: "空にできません"
       styles:
         type: "スタイル"
         icon: "アイコン"
@@ -6173,7 +6175,6 @@ ja:
         copy_to_clipboard: "クリップボードにコピー"
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"
-        theme_owner: "編集できません。オーナー:"
         email_templates:
           title: "メール"
           subject: "件名"

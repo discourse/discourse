@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Discourse Math - post", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   before do
     SiteSetting.discourse_math_enabled = true

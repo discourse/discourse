@@ -141,7 +141,7 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
     ai_bot_enable_dedicated_ux: "Allow for full screen bot interface, instead of a PM"
 
-    ai_translation_enabled: "Enables the AI translation feature"
+    ai_translation_enabled: "Enable the AI translation feature"
     ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
     ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."

@@ -360,14 +360,7 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url =
-      (
-        if opts[:x_summary_large_image].present?
-          opts[:x_summary_large_image]
-        else
-          opts[:image]
-        end
-      )
+    img_url = (opts[:x_summary_large_image].presence || opts[:image])
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
@@ -822,6 +815,10 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_id),
+      media_optimization_bundle:
+        script_asset_path(
+          EmberCli.script_chunks["media-optimization-bundle"]&.first || "media-optimization-bundle",
+        ),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: user_scheme_id || -1,

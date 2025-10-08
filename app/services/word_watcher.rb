@@ -86,6 +86,8 @@ class WordWatcher
             .select { |r| r.present? }
             .join("|")
 
+        next if regexp.blank?
+
         # Add word boundaries to the regexp for regular watched words
         regexp =
           match_word_regexp(
@@ -96,6 +98,7 @@ class WordWatcher
         # Add case insensitive flag if needed
         Regexp.new(regexp, group_key == :case_sensitive ? nil : Regexp::IGNORECASE)
       end
+      .compact
   end
 
   def self.serialized_regexps_for_action(action, engine: :ruby)

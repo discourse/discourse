@@ -17,7 +17,7 @@ module Migrations::Database::Schema
 
     def load_enums
       enums = EnumResolver.new(@schema_config[:enums]).resolve
-      @enums_by_name = enums.map { |enum| [enum.name, enum] }.to_h
+      @enums_by_name = enums.index_by(&:name)
       enums
     end
 

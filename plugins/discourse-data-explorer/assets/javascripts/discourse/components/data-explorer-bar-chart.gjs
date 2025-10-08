@@ -3,7 +3,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { bind } from "discourse/lib/decorators";
-import loadScript from "discourse/lib/load-script";
+import loadChartJS from "discourse/lib/load-chart-js";
 import themeColor from "../lib/themeColor";
 
 export default class DataExplorerBarChart extends Component {
@@ -80,9 +80,8 @@ export default class DataExplorerBarChart extends Component {
 
   @bind
   async initChart(canvas) {
-    await loadScript("/javascripts/Chart.min.js");
+    const Chart = await loadChartJS();
     const context = canvas.getContext("2d");
-    // eslint-disable-next-line
     this.chart = new Chart(context, this.config);
   }
 

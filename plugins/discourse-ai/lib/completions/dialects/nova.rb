@@ -111,7 +111,7 @@ module DiscourseAi
           config[:top_k] = ic[:top_k] if ic[:top_k]
           config[:stopSequences] = ic[:stop_sequences] if ic[:stop_sequences]
 
-          config.present? ? config : nil
+          config.presence
         end
 
         def detect_format(mime_type)

@@ -29,6 +29,10 @@ module PageObjects
           community_section.has_no_button?('[data-list-item-name="customize"]')
         end
 
+        def click_topics_button
+          page.find("[data-list-item-name='everything']").click
+        end
+
         def click_customize_community_section_button
           community_section.click_button(
             I18n.t("js.sidebar.sections.community.edit_section.sidebar"),

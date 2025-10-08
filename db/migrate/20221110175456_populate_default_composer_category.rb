@@ -10,7 +10,7 @@ class PopulateDefaultComposerCategory < ActiveRecord::Migration[7.0]
     return if general_category_id.blank? || general_category_id[0].to_i < 0
     default_composer_category =
       DB.query_single("SELECT value FROM site_settings where name = 'default_composer_category'")
-    return if !default_composer_category.blank?
+    return if default_composer_category.present?
     DB.exec(
       "INSERT INTO site_settings(name, value, data_type, created_at, updated_at)
       VALUES('default_composer_category', :setting, '16', NOW(), NOW())",

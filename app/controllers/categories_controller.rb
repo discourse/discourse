@@ -100,7 +100,7 @@ class CategoriesController < ApplicationController
       category.move_to(params["position"].to_i)
       render json: success_json
     else
-      render status: 500, json: failed_json
+      render status: :internal_server_error, json: failed_json
     end
   end
 
@@ -143,7 +143,7 @@ class CategoriesController < ApplicationController
       begin
         Category.new(required_create_params.merge(user: current_user))
       rescue ArgumentError => e
-        return render json: { errors: [e.message] }, status: 422
+        return render json: { errors: [e.message] }, status: :unprocessable_entity
       end
 
     if @category.save

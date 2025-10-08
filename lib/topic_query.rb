@@ -244,7 +244,7 @@ class TopicQuery
     if DiscoursePluginRegistry.list_suggested_for_providers.any?
       DiscoursePluginRegistry.list_suggested_for_providers.each do |provider|
         suggested = provider.call(topic, pm_params, self)
-        builder.add_results(suggested[:result]) if suggested && !suggested[:result].blank?
+        builder.add_results(suggested[:result]) if suggested && suggested[:result].present?
       end
     end
 

@@ -25,5 +25,5 @@ end
 
 Fabricator(:rejected_incoming_email, from: :incoming_email) do
   is_bounce false
-  error { sequence(:error) { |n| "Error #{n}" } }
+  error "Email::Receiver::BadDestinationAddress"
 end

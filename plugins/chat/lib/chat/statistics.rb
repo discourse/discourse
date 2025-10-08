@@ -4,7 +4,7 @@ module Chat
   class Statistics
     def self.about_messages
       {
-        last_day: Chat::Message.where("created_at > ?", 1.days.ago).count,
+        last_day: Chat::Message.where("created_at > ?", 1.day.ago).count,
         "7_days": Chat::Message.where("created_at > ?", 7.days.ago).count,
         "30_days": Chat::Message.where("created_at > ?", 30.days.ago).count,
         previous_30_days:
@@ -15,7 +15,7 @@ module Chat
 
     def self.about_channels
       {
-        last_day: Chat::Channel.where(status: :open).where("created_at > ?", 1.days.ago).count,
+        last_day: Chat::Channel.where(status: :open).where("created_at > ?", 1.day.ago).count,
         "7_days": Chat::Channel.where(status: :open).where("created_at > ?", 7.days.ago).count,
         "30_days": Chat::Channel.where(status: :open).where("created_at > ?", 30.days.ago).count,
         previous_30_days:
@@ -29,7 +29,7 @@ module Chat
 
     def self.about_users
       {
-        last_day: Chat::Message.where("created_at > ?", 1.days.ago).distinct.count(:user_id),
+        last_day: Chat::Message.where("created_at > ?", 1.day.ago).distinct.count(:user_id),
         "7_days": Chat::Message.where("created_at > ?", 7.days.ago).distinct.count(:user_id),
         "30_days": Chat::Message.where("created_at > ?", 30.days.ago).distinct.count(:user_id),
         previous_30_days:
@@ -46,7 +46,7 @@ module Chat
         Chat::Message.joins(:chat_channel).where.not(chat_channel: { type: "DirectMessageChannel" })
 
       {
-        last_day: query.where("chat_messages.created_at > ?", 1.days.ago).count,
+        last_day: query.where("chat_messages.created_at > ?", 1.day.ago).count,
         "7_days": query.where("chat_messages.created_at > ?", 7.days.ago).count,
         "28_days": query.where("chat_messages.created_at > ?", 28.days.ago).count,
         "30_days": query.where("chat_messages.created_at > ?", 30.days.ago).count,
@@ -59,7 +59,7 @@ module Chat
         Chat::Message.joins(:chat_channel).where(chat_channel: { type: "DirectMessageChannel" })
 
       {
-        last_day: query.where("chat_messages.created_at > ?", 1.days.ago).count,
+        last_day: query.where("chat_messages.created_at > ?", 1.day.ago).count,
         "7_days": query.where("chat_messages.created_at > ?", 7.days.ago).count,
         "28_days": query.where("chat_messages.created_at > ?", 28.days.ago).count,
         "30_days": query.where("chat_messages.created_at > ?", 30.days.ago).count,
@@ -77,7 +77,7 @@ module Chat
       query = Chat::Message.where.not(thread: nil)
 
       {
-        last_day: query.where("chat_messages.created_at > ?", 1.days.ago).count,
+        last_day: query.where("chat_messages.created_at > ?", 1.day.ago).count,
         "7_days": query.where("chat_messages.created_at > ?", 7.days.ago).count,
         "28_days": query.where("chat_messages.created_at > ?", 28.days.ago).count,
         "30_days": query.where("chat_messages.created_at > ?", 30.days.ago).count,

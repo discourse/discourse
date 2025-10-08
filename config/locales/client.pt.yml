@@ -563,6 +563,11 @@ pt:
       resume: "Continuar"
       remove: "Remover"
       remove_confirmation: "Tem a certeza que pretende eliminar este rascunho?"
+      bulk_delete: "Eliminar seleção"
+      bulk_delete_confirmation: "Eliminar rascunhos"
+      bulk_delete_message:
+        one: "Tem a certeza que pretende eliminar este rascunho?"
+        other: "Tem a certeza que pretende eliminar estes %{count} rascunhos?"
       new_topic: "Novo rascunho de tópico"
       new_private_message: "Novo rascunho de mensagem pessoal"
       edit_topic: "Editar o rascunho do tópico"
@@ -2301,6 +2306,15 @@ pt:
       logout_disabled: "Enquanto o site se encontrar no modo só de leitura, a opção de terminar a sessão está desativada."
     staff_writes_only_mode:
       enabled: "Este sítio está em modo de acesso reservado aos funcionários. Continua a navegar, mas as respostas, os gostos e outras acções estão limitados apenas aos membros da equipa."
+    logs_error_rate_notice:
+      reached_hour_MF: |
+        <b>{relativeAge}</b> – <a href="{url}" target="_blank">{ rate, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }</a> atingiu o limite da definição do site de {limit, plural,
+            one {# erro/hora}
+          other {# erros/hora}
+        }.
     learn_more: "Saber mais"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Mais informações em…</a>"
     mute: Silenciar
@@ -2457,6 +2471,7 @@ pt:
       admin_not_allowed_from_ip_address: "Não pode iniciar a sessão como administrador a partir desse endereço de IP."
       resend_activation_email: "Clique aqui para enviar novamente a mensagem de ativação."
       omniauth_disallow_totp: "A sua conta tem a autenticação em dois passos ativa. Por favor entre com a sua senha."
+      works_with: "Funciona com"
       activate_account: "Ativar Conta"
       resend_title: "Reenviar Mensagem de Ativação"
       change_email: "Alterar Endereço de E-mail"
@@ -2825,6 +2840,7 @@ pt:
         new_message_notification:
           one: "%{count} nova notificação de mensagem"
           other: "%{count} novas notificações de mensagem"
+      paused: "Notificações pausadas"
       title: "notificações de menções de @name, respostas às suas publicações e tópicos, mensagens, etc"
       none: "De momento, não é possível carregar as notificações."
       empty: "Não foram encontradas notificações."
@@ -3054,6 +3070,7 @@ pt:
           placeholder: mínimo
         max_views:
           placeholder: máximo
+    hamburger_menu: "Menu de Navegação"
     new_item: "novo"
     go_back: "voltar atrás"
     not_logged_in_user: "página de utilizador com resumo da atividade atual e preferências "
@@ -3154,6 +3171,11 @@ pt:
         name: "Substituir Etiquetas"
       delete_topics:
         name: "Eliminar"
+      defer:
+        name: "Marcar como Não Lido"
+        description: "Marcar tópicos como não lido"
+      update_notifications:
+        name: "Notificações de Atualização"
     topic:
       filter_to:
         one: "%{count} publicação no tópico"
@@ -3168,6 +3190,9 @@ pt:
       move_to_inbox:
         title: "Mover para Caixa de Entrada"
         help: "Mover mensagem de volta para a Caixa de Entrada"
+      defer:
+        help: "Marcar tópico como não lido"
+        title: "Marcar como não lido"
       list: "Tópicos"
       new: "novo tópico"
       unread: "não lido"
@@ -3200,6 +3225,7 @@ pt:
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
+      participant_groups: "Grupos participantes"
       created_at: "Criado: %{date}"
       bumped_at: "Mais recente: %{date}"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Navegue por todas as etiquetas</a> ou <a href='%{basePath}/latest'>visualize os tópicos mais recentes</a>."
@@ -3352,7 +3378,10 @@ pt:
         unpin: "Desafixar Tópico..."
         unarchive: "Desarquivar Tópico"
         archive: "Arquivar Tópico"
+        invisible: "Remover Tópico"
+        visible: "Listar Tópico"
         reset_read: "Repor Data de Leitura"
+        make_public: "Tornar Tópico Público"
         make_private: "Tornar Mensagem Pessoal"
         reset_bump_date: "Reset à Data do Bump"
       feature:
@@ -3364,6 +3393,7 @@ pt:
         title: "Responder"
         help: "comece a escrever uma resposta a este tópico"
       share:
+        title: "Partilhar Tópico"
         extended_title: "Partilhar uma ligação"
         help: "Partilhar uma ligação para este tópico"
         instructions: "Compartilhe um link para este tópico:"
@@ -3535,6 +3565,9 @@ pt:
       title: "Últimas mensagens"
       empty: "Não existem publicações"
       aria_post_number: "%{title} - publicação #%{postNumber}"
+      bulk:
+        select_all: "Selecionar tudo"
+        clear_all: "Limpar tudo"
     post:
       confirm_delete: "Tem a certeza que deseja eliminar esta publicação?"
       quote_reply: "Citar"
@@ -3608,6 +3641,9 @@ pt:
         view:
           one: "Ver %{count} idioma traduzido"
           other: "Ver %{count} idiomas traduzidos"
+        modal:
+          title: "Traduções para publicação"
+          confirm_delete: "Tem a certeza que pretende eliminar as traduções para '%{languageCode}'?"
         success: "As traduções foram atualizadas com sucesso"
         post_language_selector:
           none: "Nenhuma"
@@ -3707,6 +3743,9 @@ pt:
           notify_moderators: "Denunciou isto para moderação"
           notify_user: "Enviou uma mensagem a este utilizador"
       revisions:
+        locale:
+          no_locale_set: "Nenhum idioma definido"
+          locale_removed: "Idioma removido"
         controls:
           first: "Primeira revisão"
           previous: "Revisão anterior"
@@ -3719,6 +3758,7 @@ pt:
           revert: "Reverter para a versão %{revision}"
           edit_wiki: "Editar Wiki"
           edit_post: "Editar Mensagem"
+          comparing_previous_to_current_out_of_total: "<strong>%{previous}</strong> %{icon} <strong>%{current}</strong> / %{total}"
         displays:
           inline:
             title: "Mostrar o resultado renderizado com inserções e remoções em-linha."
@@ -3742,10 +3782,13 @@ pt:
             button: "HTML"
       bookmarks:
         create: "Criar favorito"
+        create_for_topic: "Criar marcador para tópico"
         edit: "Editar favorito"
+        edit_for_topic: "Editar marcador para tópico"
         updated: "Atualização"
         name: "Nome"
         name_placeholder: "Para que serve este favorito?"
+        name_input_label: "Nome do marcador"
         set_reminder: "Me lembrar"
         options: "Opções"
         actions:
@@ -3755,6 +3798,9 @@ pt:
           edit_bookmark:
             name: "Editar favorito"
             description: "Edite o nome do favorito ou altere a data e hora do lembrete"
+          clear_bookmark_reminder:
+            name: "Limpar lembrete"
+            description: "Limpar a data e hora do lembrete"
           pin_bookmark:
             name: "Fixar favorito"
             description: "Fixar o favorito. Isto o fará aparecer no topo da sua lista de favoritos."
@@ -3771,15 +3817,20 @@ pt:
       all: "Todas as categorias"
       choose: "categoria&hellip;"
       edit: "Editar"
+      edit_title: "Editar esta categoria"
       edit_dialog_title: "Editar: %{categoryName}"
       view: "Visualizar Tópicos na Categoria"
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
+      topic_template: "Modelo"
       tags: "Etiquetas"
+      localizations: "Localizações"
       localization:
+        locale: "Idioma"
         name: "Nome"
         description: "Descrição"
+        add: "Adicionar novo idioma"
         remove: "Remover"
       tags_allowed_tags_new_category: "Restringir essas tags a esta categoria:"
       tags_allowed_tag_groups_new_category: "Restringir esses grupos de tags a esta categoria:"
@@ -3804,12 +3855,17 @@ pt:
       logo: "Logótipo da Categoria"
       background_image: "Imagem de Fundo da Categoria"
       background_color: "Cor"
+      color_validations:
+        cant_be_empty: "não pode estar vazio"
       styles:
+        type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
         options:
+          square: "Quadrado"
           icon: "Ícone"
           emoji: "Emoji"
+      color_used: "Cor em utilização"
       name_placeholder: "Máximo de uma ou duas palavras"
       color_placeholder: "Qualquer cor da internet"
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
@@ -5068,7 +5124,6 @@ pt:
         copy_to_clipboard: "Copiar para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
-        theme_owner: "Não editável, propriedade de:"
         email_templates:
           title: "E-mail"
           subject: "Assunto"

@@ -102,7 +102,10 @@ module VideoConversion
       when "COMPLETE"
         STATUS_COMPLETE
       when "ERROR"
-        Rails.logger.error("MediaConvert job #{job_id} failed")
+        Rails.logger.error(
+          "MediaConvert job #{job_id} failed. Error Code: #{response.job.error_code}, " \
+            "Error Message: #{response.job.error_message}, Upload ID: #{@upload.id}",
+        )
         STATUS_ERROR
       when "SUBMITTED", "PROGRESSING"
         STATUS_PENDING

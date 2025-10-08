@@ -82,6 +82,10 @@ module PageObjects
         "#{TOPIC_LIST_ITEM_SELECTOR}[data-topic-id='#{topic.id}']"
       end
 
+      def topic(topic)
+        find(topic_list_item_class(topic))
+      end
+
       def had_new_topics_alert?
         page.has_css?(".show-more.has-topics")
       end

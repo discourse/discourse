@@ -1,13 +1,13 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { PLUGIN_API_VERSION, withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("More topics - Plugin API", function (needs) {
   needs.user();
 
   test("displays the tabs", async function (assert) {
-    withPluginApi(PLUGIN_API_VERSION, (api) => {
+    withPluginApi((api) => {
       api.registerMoreTopicsTab({
         id: "my-tab",
         name: "News",

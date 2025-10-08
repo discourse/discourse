@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Embeddings::Schema do
   subject(:posts_schema) { described_class.for(Post) }
 
-  fab!(:vector_def) { Fabricate(:cloudflare_embedding_def) }
+  fab!(:vector_def, :cloudflare_embedding_def)
   let(:embeddings) { [0.0038490295] * vector_def.dimensions }
   fab!(:post) { Fabricate(:post, post_number: 1) }
   let(:digest) { OpenSSL::Digest.hexdigest("SHA1", "test") }
@@ -33,7 +33,7 @@ RSpec.describe DiscourseAi::Embeddings::Schema do
   end
 
   describe "similarity searches" do
-    fab!(:post_2) { Fabricate(:post) }
+    fab!(:post_2, :post)
     let(:similar_embeddings) { [0.0038490294] * vector_def.dimensions }
 
     describe "#symmetric_similarity_search" do
