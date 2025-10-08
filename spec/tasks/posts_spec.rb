@@ -81,7 +81,7 @@ RSpec.describe "Post rake tasks" do
     fab!(:topic)
 
     fab!(:p1) { Fabricate(:post, topic: topic, created_at: 1.days.ago, post_number: 5) }
-    fab!(:p2) { Fabricate(:post, topic: topic, created_at: 2.days.ago, post_number: 2) }
+    fab!(:p2) { Fabricate(:post, topic: topic, created_at: 2.days.ago, post_number: 1) }
     fab!(:p3) { Fabricate(:post, topic: topic, created_at: 3.day.ago, post_number: 3) }
 
     # PostTimings pointing at existing posts
@@ -96,8 +96,10 @@ RSpec.describe "Post rake tasks" do
     end
 
     # Orphaned PostTiming (no post with this post_number exists in topic)
+    # This orphaned PostTiming will cause duplicate key errors if not taken
+    # into account when the rake task is run
     fab!(:pt_orphan) do
-      PostTiming.create!(topic_id: topic.id, post_number: 4, user_id: -2, msecs: 999)
+      PostTiming.create!(topic_id: topic.id, post_number: 2, user_id: -2, msecs: 999)
     end
 
     it "reorders posts and fixes orphaned PostTimings" do
@@ -106,7 +108,7 @@ RSpec.describe "Post rake tasks" do
       expect(topic.posts.order(:created_at).pluck(:post_number)).to eq([1, 2, 3])
 
       # Orphaned PostTiming should have been negated
-      pt_orphan_updated = PostTiming.find_by(topic_id: topic.id, user_id: -2, post_number: -4)
+      pt_orphan_updated = PostTiming.find_by(topic_id: topic.id, user_id: -2, post_number: -2)
       expect(pt_orphan_updated).to be_present
 
       p1.reload
