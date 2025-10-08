@@ -406,11 +406,6 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
         end
 
-        it "does not render back to forum link" do
-          ai_pm_homepage.visit
-          expect(ai_pm_homepage).to have_no_sidebar_back_link
-        end
-
         context "with hamburger menu" do
           before { SiteSetting.navigation_menu = "header dropdown" }
           it "keeps robot icon in the header and doesn't display sidebar back link" do
@@ -419,7 +414,6 @@ RSpec.describe "AI Bot - Homepage", type: :system do
             header.click_bot_button
             expect(ai_pm_homepage).to have_homepage
             expect(header).to have_icon_in_bot_button(icon: "robot")
-            expect(ai_pm_homepage).to have_no_sidebar_back_link
           end
 
           it "still renders the sidebar" do

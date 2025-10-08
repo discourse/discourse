@@ -67,10 +67,6 @@ module PageObjects
       def has_sidebar_back_link?
         page.has_css?(".sidebar-sections__back-to-forum")
       end
-
-      def has_no_sidebar_back_link?
-        page.has_no_css?(".sidebar-sections__back-to-forum")
-      end
     end
   end
 end
