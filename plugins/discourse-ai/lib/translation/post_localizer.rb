@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "localized_cooked_post_processor"
+
 module DiscourseAi
   module Translation
     class PostLocalizer
@@ -17,7 +19,12 @@ module DiscourseAi
           PostLocalization.find_or_initialize_by(post_id: post.id, locale: target_locale)
 
         localization.raw = translated_raw
-        localization.cooked = PrettyText.cook(translated_raw)
+        localization.cooked = post.post_analyzer.cook(translated_raw, post.cooking_options || {})
+
+        cooked_processor = LocalizedCookedPostProcessor.new(localization, post, {})
+        cooked_processor.post_process
+        localization.cooked = cooked_processor.html
+
         localization.post_version = post.version
         localization.localizer_user_id = Discourse.system_user.id
         localization.save!
