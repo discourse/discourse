@@ -207,7 +207,8 @@ describe "Category Localizations", type: :system do
           expect(category_list.category_box(category)).to have_text("Solicitudes")
 
           category_list.category_box(category).click
-          category_dropdown = PageObjects::Components::SelectKit.new(".category-drop")
+          category_dropdown = get_category_dropdown("1")
+
           expect(category_dropdown).to have_selected_name("Solicitudes")
           expect(sidebar).to have_section_link("Solicitudes")
           expect(category_page.category_box(subcat)).to have_text("Subcategoría")
@@ -244,7 +245,10 @@ describe "Category Localizations", type: :system do
 
       describe "logged in users" do
         shared_examples_for "editing category settings" do
-          it "shows the original category name in the category edit page" do
+          # TODO: Fix this test as it doesn't actually work.
+          # The assertion to check the category name input runs immediately after clicking the language option leading
+          # to a false positive.
+          xit "shows the original category name in the category edit page" do
             sign_in(admin)
             category_page.visit_general(category)
 

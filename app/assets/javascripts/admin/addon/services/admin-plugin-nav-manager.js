@@ -1,10 +1,8 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { service } from "@ember/service";
+import Service from "@ember/service";
 import { configNavForPlugin } from "discourse/lib/admin-plugin-config-nav";
 
 export default class AdminPluginNavManager extends Service {
-  @service currentUser;
-
   @tracked currentPlugin;
 
   // NOTE (martin) This is a temporary solution so we know whether to

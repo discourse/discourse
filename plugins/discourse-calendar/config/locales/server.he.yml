@@ -61,6 +61,7 @@ he:
     calendar_automatic_holidays_enabled: "להגדיר מצב חופשה לפי האזור של המשתמש (לתשומת לבך: ניתן להשבית חגים אוטומטיים מסוימים בהגדרות התוסף)"
     event_participation_buttons: "רשימת כפתורי השתתפות באירועים לשימוש המשתמשים."
     sidebar_show_upcoming_events: "הצגת קישור לאירועים קרובים בסרגל הצד תחת ‚עוד’."
+    calendar_first_day_of_week: "הגדרת היום הראשון בשבוע לתצוגת לוח שנה. האפשרויות הן שבת, ראשון או שני."
   discourse_calendar:
     invite_user_notification: "קיבלת הזמנה מאת %{username} אל: %{description}"
     calendar_must_be_in_first_post: "ניתן להשתמש בתגית יומן רק בפוסט הראשון של נושא."

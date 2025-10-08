@@ -45,7 +45,6 @@ export function registerFullPageSearchType(
 
 export default class FullPageSearchController extends Controller {
   @service composer;
-  @service modal;
   @service appEvents;
   @service siteSettings;
   @service searchPreferencesManager;

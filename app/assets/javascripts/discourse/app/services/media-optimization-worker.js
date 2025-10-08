@@ -98,6 +98,7 @@ export default class MediaOptimizationWorkerService extends Service {
                 .composer_media_optimization_image_encode_quality,
             debug_mode:
               this.siteSettings.composer_media_optimization_debug_mode,
+            mediaOptimizationBundle: this.session.mediaOptimizationBundle,
           },
         },
         [imageData.data.buffer]

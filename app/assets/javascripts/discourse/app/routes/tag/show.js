@@ -20,7 +20,6 @@ const ALL = "all";
 
 @disableImplicitInjections
 export default class TagShowRoute extends DiscourseRoute {
-  @service composer;
   @service router;
   @service currentUser;
   @service store;

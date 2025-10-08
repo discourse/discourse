@@ -15,7 +15,6 @@ import AdminUser from "admin/models/admin-user";
 const MAX_BULK_SELECT_LIMIT = 100;
 
 export default class AdminUsersListShowController extends Controller {
-  @service dialog;
   @service modal;
   @service toasts;
 
