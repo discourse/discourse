@@ -327,6 +327,12 @@ export default class Site extends RestModel {
   }
 
   updateCategory(newCategory) {
+    if (newCategory instanceof Category) {
+      throw new Error(
+        "updateCategory should be passed a pojo, not a category model instance"
+      );
+    }
+
     const categories = this.categories;
     const categoryId = get(newCategory, "id");
     const existingCategory = categories.find((c) => c.id === categoryId);
