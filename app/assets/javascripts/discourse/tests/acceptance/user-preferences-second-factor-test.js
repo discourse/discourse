@@ -81,6 +81,22 @@ acceptance("User Preferences - Second Factor", function (needs) {
       );
   });
 
+  test("backup codes become available after adding first totp", async function (assert) {
+    updateCurrentUser({ second_factor_enabled: false });
+    await visit("/u/eviltrout/preferences/second-factor");
+
+    assert
+      .dom(".pref-second-factor-backup")
+      .includesText(
+        "You must enable a primary two-factor method",
+        "shows prerequisite message when no 2FA enabled"
+      );
+
+    assert
+      .dom(".new-second-factor-backup")
+      .doesNotExist("backup codes button is not shown");
+  });
+
   test("second factor security keys", async function (assert) {
     await visit("/u/eviltrout/preferences/second-factor");
 
@@ -171,6 +187,70 @@ acceptance(
         "preferences.security",
         "it transitions to security preferences"
       );
+    });
+  }
+);
+
+acceptance(
+  "User Preferences - Second Factor - Backup Codes After TOTP",
+  function (needs) {
+    needs.user();
+
+    needs.pretender((server, helper) => {
+      server.post("/u/second_factors.json", () => {
+        return helper.response({
+          success: "OK",
+          totps: [],
+          security_keys: [],
+        });
+      });
+
+      server.post("/u/create_second_factor_totp.json", () => {
+        return helper.response({
+          key: "rcyryaqage3jexfj",
+          qr: "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
+        });
+      });
+
+      server.post("/u/enable_second_factor_totp.json", () => {
+        return helper.response({ success: "OK" });
+      });
+
+      server.get("/u/trusted-session.json", () => {
+        return helper.response({ success: "OK" });
+      });
+    });
+
+    test("backup codes button appears after adding first TOTP", async function (assert) {
+      updateCurrentUser({ second_factor_enabled: false });
+      await visit("/u/eviltrout/preferences/second-factor");
+
+      assert
+        .dom(".pref-second-factor-backup")
+        .includesText(
+          "You must enable a primary two-factor method",
+          "shows prerequisite message when no 2FA enabled"
+        );
+
+      assert
+        .dom(".new-second-factor-backup")
+        .doesNotExist("backup codes button is not shown initially");
+
+      await click(".new-totp");
+      await fillIn("#second-factor-name", "My Authenticator");
+      await fillIn("#second-factor-token", "123456");
+      await click(".add-totp");
+
+      assert
+        .dom(".new-second-factor-backup")
+        .exists("backup codes button appears after adding TOTP");
+
+      assert
+        .dom(".pref-second-factor-backup")
+        .doesNotIncludeText(
+          "You must enable a primary two-factor method",
+          "prerequisite message is hidden after adding TOTP"
+        );
     });
   }
 );
