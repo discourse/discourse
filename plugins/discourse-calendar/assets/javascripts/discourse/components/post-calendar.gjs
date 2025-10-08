@@ -11,11 +11,9 @@ import { colorToHex, contrastColor, stringToColor } from "../lib/colors";
 import FullCalendar from "./full-calendar";
 
 export default class PostCalendar extends Component {
-  @service currentUser;
   @service siteSettings;
   @service capabilities;
   @service postCalendar;
-  @service store;
 
   @tracked post = this.args.post;
 

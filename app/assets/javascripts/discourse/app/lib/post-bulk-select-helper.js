@@ -1,7 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
-import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 /**
@@ -15,8 +14,6 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
  * - Bulk action execution
  */
 export default class PostBulkSelectHelper {
-  @service modal;
-
   @tracked loading = false;
   @tracked lastClickedPost = null;
   @tracked posts = null;

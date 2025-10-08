@@ -24,7 +24,6 @@ export function resetChatDrawerStateCallbacks() {
 
 export default class ChatStateManager extends Service {
   @service chat;
-  @service chatHistory;
   @service router;
   @service site;
   @service chatDrawerRouter;
