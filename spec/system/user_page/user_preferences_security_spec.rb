@@ -154,7 +154,7 @@ describe "User preferences | Security", type: :system do
     it "shows backup codes button after adding first TOTP" do
       user_preferences_security_page.visit(user).visit_second_factor(user, password)
 
-      expect(page).to have_text("You must enable a primary two-factor method")
+      expect(page).to have_text(I18n.t("js.user.second_factor_backup.enable_prerequisites"))
       expect(page).to have_no_css(".new-second-factor-backup")
 
       find(".totp .new-totp").click
@@ -165,7 +165,7 @@ describe "User preferences | Security", type: :system do
       find(".add-totp").click
 
       expect(page).to have_css(".new-second-factor-backup")
-      expect(page).to have_no_text("You must enable a primary two-factor method")
+      expect(page).to have_no_text(I18n.t("js.user.second_factor_backup.enable_prerequisites"))
     end
   end
 
