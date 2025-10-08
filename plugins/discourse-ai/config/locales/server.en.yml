@@ -11,6 +11,7 @@ en:
         review: "Add post to review queue"
         review_hide: "Add post to review queue and hide post"
         review_delete: "Add post to review queue and delete post"
+        review_delete_silence: "Add post to review queue, delete post and silence user"
         spam: "Flag as spam and hide post"
         spam_silence: "Flag as spam, hide post and silence user"
     scriptables:
