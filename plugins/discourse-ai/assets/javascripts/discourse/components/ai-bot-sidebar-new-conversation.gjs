@@ -11,9 +11,14 @@ export default class AiBotSidebarNewConversation extends Component {
   @service appEvents;
   @service router;
   @service sidebarState;
+  @service siteSettings;
 
   get shouldRender() {
     return this.sidebarState.isCurrentPanel(AI_CONVERSATIONS_PANEL);
+  }
+
+  get shouldShowBackLink() {
+    return !this.siteSettings.ai_bot_add_to_header;
   }
 
   @action
@@ -36,7 +41,9 @@ export default class AiBotSidebarNewConversation extends Component {
 
   <template>
     {{#if this.shouldRender}}
-      <BackToForum />
+      {{#if this.shouldShowBackLink}}
+        <BackToForum />
+      {{/if}}
       <div class="ai-new-question-button__wrapper">
         <DButton
           @label="discourse_ai.ai_bot.conversations.new"

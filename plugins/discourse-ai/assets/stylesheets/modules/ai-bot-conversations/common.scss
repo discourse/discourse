@@ -9,6 +9,10 @@ body.has-ai-conversations-sidebar {
   .sidebar-sections__back-to-forum {
     order: -1;
     padding: var(--space-6) var(--space-4) var(--space-3);
+
+    + .ai-new-question-button__wrapper {
+      margin-top: 0;
+    }
   }
 
   .ai-new-question-button {
@@ -16,7 +20,7 @@ body.has-ai-conversations-sidebar {
 
     &__wrapper {
       background: var(--secondary);
-      margin-inline: var(--space-4);
+      margin: var(--space-6) var(--space-4) 0;
 
       .mobile-view & {
         padding: 1em;

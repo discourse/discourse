@@ -406,9 +406,9 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
         end
 
-        it "does not render back to forum link" do
+        it "renders back to forum link when header button is disabled" do
           ai_pm_homepage.visit
-          expect(ai_pm_homepage).to have_no_sidebar_back_link
+          expect(ai_pm_homepage).to have_sidebar_back_link
         end
 
         context "with hamburger menu" do
