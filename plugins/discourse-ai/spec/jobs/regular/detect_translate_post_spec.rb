@@ -9,6 +9,12 @@ describe Jobs::DetectTranslatePost do
 
   before do
     assign_fake_provider_to(:ai_default_llm_model)
+    # fake provider (Completions::Endpoints::Fake) returns translated text that includes this svg
+    stub_request(:get, "https://meta.discourse.org/images/discourse-logo.svg").to_return(
+      status: 200,
+      body: "",
+    )
+
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = locales.join("|")

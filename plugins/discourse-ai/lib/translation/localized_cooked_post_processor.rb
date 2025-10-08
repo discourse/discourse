@@ -16,10 +16,12 @@ module DiscourseAi
         @model = @post
         @category_id = @post&.topic&.category_id
         @omit_nofollow = @post.omit_nofollow?
+        @size_cache = {}
       end
 
       def post_process
         post_process_oneboxes
+        post_process_images
       end
 
       def html
