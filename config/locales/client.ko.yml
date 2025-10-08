@@ -4358,7 +4358,6 @@ ko:
         copy_to_clipboard: "클립보드에 복사"
         copied_to_clipboard: "클립보드로 복사됨"
         copy_to_clipboard_error: "클립보드로 복사하는 중 에러가 발생하였습니다"
-        theme_owner: "편집 불가, 소유자:"
         email_templates:
           title: "이메일"
           subject: "제목"

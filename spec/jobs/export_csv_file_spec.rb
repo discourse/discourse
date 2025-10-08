@@ -90,8 +90,8 @@ RSpec.describe Jobs::ExportCsvFile do
             entity: "staff_action",
             args: {
               # Fine-tuning for 1 minute to ensure we capture the correct range
-              start_date: (5.days.ago - 1.minutes).iso8601,
-              end_date: (2.days.ago + 1.minutes).iso8601,
+              start_date: (5.days.ago - 1.minute).iso8601,
+              end_date: (2.days.ago + 1.minute).iso8601,
             },
           )
         end.to change { Upload.count }.by(1)
@@ -119,7 +119,9 @@ RSpec.describe Jobs::ExportCsvFile do
           .expects(:staff_action_records)
           .with(
             admin,
-            HashWithIndifferentAccess.new("action_id" => UserHistory.actions[:suspend_user].to_s),
+            ActiveSupport::HashWithIndifferentAccess.new(
+              "action_id" => UserHistory.actions[:suspend_user].to_s,
+            ),
           )
           .returns(res)
 
@@ -148,7 +150,10 @@ RSpec.describe Jobs::ExportCsvFile do
       exporter = Jobs::ExportCsvFile.new
       exporter.entity = "report"
       exporter.extra =
-        HashWithIndifferentAccess.new(start_date: "2010-01-01", end_date: "2011-01-01")
+        ActiveSupport::HashWithIndifferentAccess.new(
+          start_date: "2010-01-01",
+          end_date: "2011-01-01",
+        )
       exporter.current_user = User.find_by(id: user.id)
       exporter
     end

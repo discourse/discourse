@@ -302,3 +302,10 @@ files:
   - source_path: plugins/discourse-ai/config/locales/server.en.yml
     destination_path: plugins/ai/server.yml
     label: ai
+
+  - source_path: plugins/discourse-cakeday/config/locales/client.en.yml
+    destination_path: plugins/cakeday/client.yml
+    label: cakeday
+  - source_path: plugins/discourse-cakeday/config/locales/server.en.yml
+    destination_path: plugins/cakeday/server.yml
+    label: cakeday

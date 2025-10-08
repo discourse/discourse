@@ -1051,7 +1051,7 @@ class Post < ActiveRecord::Base
     post_revision = PostRevision.find_by(post_id: id, number: (number + 1))
     post_revision.modifications.each do |attribute, change|
       attribute = "version" if attribute == "cached_version"
-      write_attribute(attribute, change[0])
+      self[attribute] = change[0]
     end
   end
 
@@ -1338,15 +1338,11 @@ class Post < ActiveRecord::Base
     get_localization(locale).present?
   end
 
-  def in_user_locale?
-    LocaleNormalizer.is_same?(locale, I18n.locale)
-  end
-
   private
 
   def parse_quote_into_arguments(quote)
     return {} if quote.blank?
-    args = HashWithIndifferentAccess.new
+    args = ActiveSupport::HashWithIndifferentAccess.new
     quote.first.scan(/([a-z]+)\:(\d+)/).each { |arg| args[arg[0]] = arg[1].to_i }
     args
   end

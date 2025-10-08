@@ -325,10 +325,9 @@ export default class Category extends RestModel {
   }
 
   static _includePermissions(category, store, site) {
-    const record = store.createRecord("category", category);
-    record.setupGroupsAndPermissions();
-    site.updateCategory(record);
-    return record;
+    const model = site.updateCategory(category);
+    model.setupGroupsAndPermissions();
+    return model;
   }
 
   static search(term, opts) {

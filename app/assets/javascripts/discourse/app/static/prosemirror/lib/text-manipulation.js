@@ -1,7 +1,6 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
@@ -22,8 +21,6 @@ import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
 /** @implements {TextManipulation} */
 export default class ProsemirrorTextManipulation {
-  @service siteSettings;
-
   allowPreview = false;
 
   /** @type {import("prosemirror-model").Schema} */

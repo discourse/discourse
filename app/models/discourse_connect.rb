@@ -349,7 +349,7 @@ class DiscourseConnect < DiscourseConnectBase
     end
 
     if SiteSetting.auth_overrides_name && user.name != name && name.present?
-      user.name = name || User.suggest_name(username.blank? ? email : username)
+      user.name = name || User.suggest_name(username.presence || email)
     end
 
     if locale_force_update && SiteSetting.allow_user_locale && locale.present? &&

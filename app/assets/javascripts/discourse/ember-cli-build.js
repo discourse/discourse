@@ -130,6 +130,7 @@ module.exports = function (defaults) {
           publicPath: "auto",
           filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
           chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+          assetModuleFilename: `assets/chunk.[hash].${cachebusterHash}[ext][query]`,
         },
         optimization: {
           minimize: isProduction,
@@ -149,6 +150,10 @@ module.exports = function (defaults) {
           "assets/discourse.js/features/markdown-it.js": {
             import: "./static/markdown-it",
             dependOn: "assets/discourse.js",
+            runtime: false,
+          },
+          "assets/media-optimization-bundle.js": {
+            import: "./static/media-optimization-bundle",
             runtime: false,
           },
         },
@@ -217,6 +222,9 @@ module.exports = function (defaults) {
             maxRetries: 2,
           }),
         ],
+        experiments: {
+          asyncWebAssembly: true,
+        },
       },
     },
     skipBabel: [

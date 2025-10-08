@@ -70,7 +70,11 @@ export default class PmsField extends BaseField {
             <DAFieldLabel @label={{this.rawLabel}} @field={{@field}} />
             <div class="controls">
               <div class="field-wrapper">
-                <DEditor @value={{pm.raw}} />
+                <DEditor
+                  @value={{pm.raw}}
+                  @forceEditorMode="rich"
+                  @processPreview={{false}}
+                />
 
                 {{#if this.displayPlaceholders}}
                   <PlaceholdersList

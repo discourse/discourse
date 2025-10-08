@@ -3,8 +3,8 @@ class GroupAssociatedGroup < ActiveRecord::Base
   belongs_to :group
   belongs_to :associated_group
 
-  after_commit :add_associated_users, on: %i[create update]
   before_destroy :remove_associated_users
+  after_commit :add_associated_users, on: %i[create update]
 
   def add_associated_users
     with_mutex do

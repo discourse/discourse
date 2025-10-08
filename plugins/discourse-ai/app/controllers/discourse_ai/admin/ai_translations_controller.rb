@@ -13,7 +13,12 @@ module DiscourseAi
           return(
             render json:
                      base_result.merge(
-                       { translation_progress: [], total: 0, posts_with_detected_locale: 0 },
+                       {
+                         translation_progress: [],
+                         total: 0,
+                         posts_with_detected_locale: 0,
+                         no_locales_configured: true,
+                       },
                      )
           )
         end
@@ -41,6 +46,7 @@ module DiscourseAi
             DiscourseAi::Translation.enabled? &&
               SiteSetting.ai_translation_backfill_max_age_days > 0,
           backfill_enabled: DiscourseAi::Translation.backfill_enabled?,
+          translation_enabled: SiteSetting.ai_translation_enabled,
         }
       end
     end

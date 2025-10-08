@@ -146,7 +146,7 @@ RSpec.describe TopicStatusUpdater do
           timer = TopicTimer.find_by(topic: topic)
           expect(timer).not_to eq(nil)
           expect(timer.duration_minutes).to eq(72 * 60)
-          expect(timer.execute_at).to be_within_one_second_of(Time.zone.now + 72.hours)
+          expect(timer.execute_at).to be_within_one_second_of(72.hours.from_now)
         end
       end
     end

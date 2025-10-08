@@ -5,7 +5,7 @@ module DiscourseSubscriptions
     requires_plugin PLUGIN_NAME
 
     def index
-      head 200
+      head :ok
     end
   end
 end

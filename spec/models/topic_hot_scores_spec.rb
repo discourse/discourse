@@ -13,7 +13,7 @@ RSpec.describe TopicHotScore do
 
       # this will come in with a score
       topic = Fabricate(:topic, created_at: 1.hour.ago, bumped_at: 2.minutes.ago)
-      post = Fabricate(:post, topic: topic, created_at: 2.minute.ago)
+      post = Fabricate(:post, topic: topic, created_at: 2.minutes.ago)
       PostActionCreator.like(user, post)
 
       TopicHotScore.update_scores

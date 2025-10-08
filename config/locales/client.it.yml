@@ -6446,7 +6446,6 @@ it:
         copy_to_clipboard: "Copia negli Appunti"
         copied_to_clipboard: "Copiato negli Appunti"
         copy_to_clipboard_error: "Errore durante la copia negli appunti"
-        theme_owner: "Non modificabile, di proprietà di:"
         email_templates:
           title: "Email"
           subject: "Oggetto"

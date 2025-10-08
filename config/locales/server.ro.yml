@@ -999,6 +999,8 @@ ro:
     show_signup_form_username_instructions: Afișează instrucțiunile pentru numele de utilizator în formularul de înscriere.
     show_signup_form_full_name_instructions: Afișează instrucțiunile pentru numele complet în formularul de înscriere.
     show_signup_form_password_instructions: Afișează instrucțiunile pentru parolă în formularul de înscriere.
+    moderators_manage_categories: "Permite moderatorilor să creeze și să gestioneze categorii"
+    moderators_manage_groups: "Permite moderatorilor să creeze și să gestioneze grupuri"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
     use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL sursă pentru iframe pe care Discourse le poate permite în siguranță în postări. * poate fi folosit pentru a potrivi orice număr de caractere diferite de /."
@@ -1015,6 +1017,7 @@ ro:
     topics_per_period_in_top_page: "Numărul celor mai bune subiecte afișat când se selectează 'Afișează mai multe' cele mai bune subiecte."
     top_page_default_timeframe: "Perioada de timp implicită din prima pagină pentru utilizatorii anonimi (se ajustează automat pentru utilizatorii conectați pe baza ultimei lor vizite)."
     moderators_view_ips: "Permite moderatorilor să vadă adresele IP ale utilizatorilor."
+    moderators_change_trust_levels: "Permite moderatorilor să modifice nivelurile de încredere ale utilizatorilor."
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
     enable_rich_text_paste: "Activează conversia automată din HTML în Markdown la lipirea textului în compozitor."
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
@@ -1031,6 +1034,7 @@ ro:
     auth_overrides_avatar: "Suprascrie avatarul local cu avatarul site-ului extern la fiecare conectare și previne modificările locale. Se aplică tuturor furnizorilor de autentificare."
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
+    enable_discourse_id: "Activează autentificarea prin Discourse ID, un serviciu de conectare unică ce permite utilizatorilor să se conecteze la mai multe site-uri Discourse folosind un singur cont. Furnizorii comuni de conectare socială, cum ar fi Google, Facebook, Apple și GitHub, sunt acceptați fără configurare suplimentară. Consultă <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> pentru mai multe detalii."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
     google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     google_oauth2_verbose_logging: "Înregistrează diagnostice verbale legate de Google OAuth2 în <a href='%{base_path}/logs' target='_blank'>/logs</a>"
@@ -1238,6 +1242,7 @@ ro:
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
     auto_close_topics_post_count: "Numărul maxim de postări permise într-un subiect înainte ca acesta să fie închis automat (0 pentru dezactivare)"
     code_formatting_style: "Butonul Cod din cadrul editorului va fi setat cu opțiunea implicită pe acest stil de formatare cod "
+    old_post_notice_days: "Numărul de zile după care notificările privind postările pentru utilizatorii noi și cei care revin vor fi ascunse. Notificarea oficială privind postarea va rămâne întotdeauna vizibilă."
     default_email_digest_frequency: "Frecvența implicită cu care utilizatorii primesc emailuri-rezumat."
     default_include_tl0_in_digests: "Implicit, include postări de la utilizatori noi în emailurile-rezumat. Utilizatorii pot schimba această opțiune din preferințele lor."
     default_email_mailing_list_mode: "Implicit, trimite un email pentru fiecare nou mesaj."
@@ -1295,6 +1300,7 @@ ro:
     about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
     rich_editor: "Activează editorul îmbogățit pentru compoziție astfel încât toți utilizatorii să poată comuta între modul Markdown curent și noul editor de text îmbogățit pentru o compoziție mai intuitivă și mai ușor de utilizat."
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
+    viewport_based_mobile_mode: "Folosește lățimea ferestrei de vizualizare pentru a determina modurile mobil sau desktop. Această setare va fi eliminată în curând. Dacă ai nevoie să o dezactivezi, te rog să ne anunți <a href='https://meta.discourse.org/t/384280'>pe Meta</a>."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
     content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
     content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
@@ -1947,8 +1953,14 @@ ro:
   page_not_found:
     page_title: "Pagina nu a fost găsită"
     title: "Oops! Această pagină nu există sau este privată."
+    subtitle: "Am căutat peste tot, dar nu am găsit pagina pe care o cauți."
+    popular_topics: "Subiecte populare"
+    recent_topics: "Subiecte recente"
     see_more: "Mai multe"
+    search_title: "Sau încerci căutarea?"
     search_button: "Caută"
+    home: "Du-mă acasă"
+    placeholder: "Caută subiecte după titlu sau cuvinte cheie…"
   login_required:
     welcome_message: "# Bine ai venit pe %{title}"
   upload:
@@ -1992,6 +2004,8 @@ ro:
     wcag_theme_name: "WCAG deschis"
     wcag_dark: "WCAG Închis"
     wcag_dark_theme_name: "WCAG Închis"
+    errors:
+      cannot_edit_remote_copies: "Modificările în copiile la distanță ale paletelor de culori nu sunt permise."
   edit_this_page: "Editează această pagină"
   csv_export:
     boolean_yes: "Da"

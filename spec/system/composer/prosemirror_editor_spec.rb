@@ -826,6 +826,8 @@ describe "Composer - ProseMirror editor", type: :system do
     end
 
     it "handles multiple data URI images pasted simultaneously" do
+      SiteSetting.simultaneous_uploads = 1
+
       valid_png_data_uri =
         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
       valid_jpeg_data_uri =

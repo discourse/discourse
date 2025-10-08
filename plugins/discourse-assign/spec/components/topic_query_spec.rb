@@ -6,9 +6,9 @@ describe TopicQuery do
   before { SiteSetting.assign_enabled = true }
 
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
-  fab!(:user4) { Fabricate(:user) }
+  fab!(:user2, :user)
+  fab!(:user3, :user)
+  fab!(:user4, :user)
 
   include_context "with group that is allowed to assign"
 

@@ -4679,7 +4679,6 @@ lt:
         copy_to_clipboard: "Nukopijuoti į iškarpinę"
         copied_to_clipboard: "Nukopijuota į iškirptę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
-        theme_owner: "Neredaguojama, priklauso:"
         email_templates:
           title: "Epaštas"
           subject: "Tema"

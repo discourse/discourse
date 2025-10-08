@@ -3,7 +3,7 @@ import DButton from "discourse/components/d-button";
 
 export const DPageActionButton = <template>
   <DButton
-    class="d-page-action-button btn-small btn-default"
+    class="d-page-action-button btn-small"
     ...attributes
     @action={{@action}}
     @route={{@route}}

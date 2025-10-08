@@ -108,7 +108,7 @@ class StaticController < ApplicationController
         end
       @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
-      @faq_overridden = !SiteSetting.faq_url.blank?
+      @faq_overridden = SiteSetting.faq_url.present?
       @experimental_rename_faq_to_guidelines = rename_faq
 
       render :show, layout: !request.xhr?, formats: [:html]
@@ -203,7 +203,7 @@ class StaticController < ApplicationController
               file&.unlink
             end
           else
-            File.read(Rails.root.join("public", favicon.url[1..-1]))
+            File.read(Rails.public_path.join(favicon.url[1..-1]))
           end
         end
 
@@ -265,7 +265,7 @@ class StaticController < ApplicationController
       rescue Errno::ENOENT
         expires_in 1.second, public: true, must_revalidate: false
 
-        render plain: "can not find #{params[:path]}", status: 404
+        render plain: "can not find #{params[:path]}", status: :not_found
         return
       end
     end

@@ -5,7 +5,6 @@ import Badge from "discourse/models/badge";
 import { i18n } from "discourse-i18n";
 
 export default class AdminBadgesShowRoute extends Route {
-  @service dialog;
   @service adminBadges;
 
   serialize(model) {

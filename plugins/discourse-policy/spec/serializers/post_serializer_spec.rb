@@ -3,8 +3,8 @@
 describe PostSerializer do
   fab!(:group)
   fab!(:admin)
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
 
   before do
     enable_current_plugin

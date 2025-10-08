@@ -199,7 +199,7 @@ describe "About page", type: :system do
 
     it "displays only the 6 most recently seen admins when there are more than 6 admins" do
       admins[0].update!(last_seen_at: 4.minutes.ago)
-      admins[1].update!(last_seen_at: 1.minutes.ago)
+      admins[1].update!(last_seen_at: 1.minute.ago)
       admins[2].update!(last_seen_at: 10.minutes.ago)
 
       about_page.visit

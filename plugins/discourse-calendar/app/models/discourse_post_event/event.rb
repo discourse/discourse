@@ -19,9 +19,9 @@ module DiscoursePostEvent
     scope :visible, -> { where(deleted_at: nil) }
     scope :open, -> { where(closed: false) }
 
+    before_save :chat_channel_sync
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
-    before_save :chat_channel_sync
 
     validate :raw_invitees_are_groups
     validates :original_starts_at, presence: true

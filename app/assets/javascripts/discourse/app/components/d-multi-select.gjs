@@ -39,6 +39,7 @@ export default class DMultiSelect extends Component {
   @tracked preselectedItem = null;
 
   compareKey = "id";
+  #promise = null;
 
   get hasSelection() {
     return this.args.selection?.length > 0;
@@ -54,19 +55,33 @@ export default class DMultiSelect extends Component {
       return;
     }
 
-    const value = new Promise((resolve, reject) => {
-      discourseDebounce(
-        this,
-        this.#resolveAsyncData,
-        this.args.loadFn,
-        this.searchTerm,
-        resolve,
-        reject,
-        INPUT_DELAY
-      );
-    });
+    let promise = this.#promise?.promise;
 
-    return new TrackedAsyncData(value);
+    if (promise) {
+      this.#debounceSearch();
+    } else {
+      let resolve, reject;
+
+      promise = new Promise((res, rej) => {
+        this.#debounceSearch();
+        resolve = res;
+        reject = rej;
+      });
+
+      this.#promise = { promise, resolve, reject };
+    }
+
+    return new TrackedAsyncData(promise);
+  }
+
+  #debounceSearch() {
+    discourseDebounce(
+      this,
+      this.#resolveAsyncData,
+      this.args.loadFn,
+      this.searchTerm,
+      INPUT_DELAY
+    );
   }
 
   get availableOptions() {
@@ -197,8 +212,15 @@ export default class DMultiSelect extends Component {
     return item?.name;
   }
 
-  #resolveAsyncData(asyncData, context, resolve, reject) {
-    return asyncData(context).then(resolve).catch(reject);
+  #resolveAsyncData(asyncData, context) {
+    const { resolve, reject } = this.#promise;
+
+    return asyncData(context)
+      .then(resolve)
+      .catch(reject)
+      .finally(() => {
+        this.#promise = null;
+      });
   }
 
   <template>

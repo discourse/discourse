@@ -18,7 +18,7 @@ RSpec.describe "Admin Chat CSV exports", type: :system do
     Jobs.run_immediately!
     message_1 = Fabricate(:chat_message, created_at: 12.months.ago)
     message_2 = Fabricate(:chat_message, created_at: 6.months.ago)
-    message_3 = Fabricate(:chat_message, created_at: 1.months.ago)
+    message_3 = Fabricate(:chat_message, created_at: 1.month.ago)
     message_4 = Fabricate(:chat_message, created_at: Time.now)
 
     visit "/admin/plugins/chat"

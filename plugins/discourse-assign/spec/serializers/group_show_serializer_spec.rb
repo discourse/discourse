@@ -6,7 +6,7 @@ RSpec.describe GroupShowSerializer do
   fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
-  fab!(:topic2) { Fabricate(:topic) }
+  fab!(:topic2, :topic)
   fab!(:post2) { Fabricate(:post, topic: topic2) }
   let(:guardian) { Guardian.new(user) }
   let(:serializer) { described_class.new(group, scope: guardian) }

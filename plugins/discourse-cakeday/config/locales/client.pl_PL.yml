@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Dzisiaj są Twoje urodziny!"
+        title: "Dzisiaj są moje urodziny!"
+        label: "Data urodzenia"
+      anniversary:
+        user_title: "Dzisiaj jest rocznica Twojego dołączenia do społeczności!"
+        title: "Dzisiaj jest rocznica mojego dołączenia do społeczności!"
+    cakeday:
+      title: Urodziny
+      today: "Dzisiaj"
+      tomorrow: "Jutro"
+      upcoming: "Nadchodzące"
+      all: "Wszystkie"
+    birthdays:
+      title: "Urodziny"
+      month:
+        title: "Urodziny w miesiącu"
+        empty: "Nie ma użytkowników obchodzących swoje urodziny w tym miesiącu"
+      upcoming:
+        title: "Urodziny od %{start_date}do %{end_date}"
+        empty: "Nie ma użytkowników obchodzących swoje urodziny w następnych 7 dniach."
+      today:
+        title: "Urodziny%{date}"
+        empty: "Nie ma użytkowników obchodzących dzisiaj swoje urodziny."
+      tomorrow:
+        empty: "Nie ma użytkowników obchodzących jutro swoje urodziny."
+    anniversaries:
+      title: "Rocznice"
+      month:
+        title: "Rocznice w miesiącu"
+        empty: "Nie ma użytkowników obchodzących rocznice w tym miesiącu."
+      upcoming:
+        title: "Rocznice od %{start_date} do %{end_date} "
+        empty: "Nie ma użytkowników obchodzących rocznice w następnych 7 dniach."
+      today:
+        title: "Rocznice %{date}"
+        empty: " Nie ma użytkowników obchodzących dzisiaj rocznicę"
+      tomorrow:
+        empty: "Nie ma użytkowników obchodzących jutro rocznicę"

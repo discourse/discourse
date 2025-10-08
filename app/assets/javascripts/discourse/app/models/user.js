@@ -212,7 +212,6 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   @service appEvents;
-  @service userTips;
 
   @tracked do_not_disturb_until;
   @tracked status;

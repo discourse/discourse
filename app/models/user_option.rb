@@ -23,9 +23,9 @@ class UserOption < ActiveRecord::Base
 
   self.primary_key = :user_id
   belongs_to :user
+  before_save :update_hide_profile_and_presence
   before_create :set_defaults
 
-  before_save :update_hide_profile_and_presence
   after_save :update_tracked_topics
 
   scope :human_users, -> { where("user_id > 0") }

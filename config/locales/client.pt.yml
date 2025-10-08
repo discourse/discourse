@@ -5124,7 +5124,6 @@ pt:
         copy_to_clipboard: "Copiar para a Área de Transferência"
         copied_to_clipboard: "Copiado para a Área de Transferência"
         copy_to_clipboard_error: "Erro a copiar dados para a Área de Transferência"
-        theme_owner: "Não editável, propriedade de:"
         email_templates:
           title: "E-mail"
           subject: "Assunto"

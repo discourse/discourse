@@ -6,7 +6,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class DiscourseChatIncomingWebhooksNew extends DiscourseRoute {
-  @service adminPluginNavManager;
   @service currentUser;
 
   async model() {

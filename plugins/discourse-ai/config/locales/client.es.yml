@@ -281,9 +281,6 @@ es:
         admin_actions:
           translation_settings: "Ajustes de traducción"
           localization_settings: "Ajustes de localización"
-          disabled_state:
-            configure: "Configurar traducciones"
-            empty_label: "Las traducciones automáticas están desactivadas, haz clic a continuación para configurarlas"
         progress_chart:
           bar_done:
             one: "%{count} publicación"

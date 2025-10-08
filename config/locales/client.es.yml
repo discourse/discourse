@@ -6456,7 +6456,6 @@ es:
         copy_to_clipboard: "Copiar al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"
-        theme_owner: "No editable, propiedad de:"
         email_templates:
           title: "Correo electrónico"
           subject: "Asunto"

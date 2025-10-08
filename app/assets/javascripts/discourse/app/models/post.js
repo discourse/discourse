@@ -364,11 +364,20 @@ export default class Post extends RestModel {
   }
 
   get canRecoverTopic() {
-    return this.firstPost && this.deleted && this.topic.details.can_recover;
+    return (
+      this.firstPost &&
+      (this.deleted || this.user_deleted) &&
+      this.topic.details.can_recover
+    );
   }
 
   get isRecoveringTopic() {
-    return this.firstPost && !this.deleted && this.topic.details.can_recover;
+    return (
+      this.firstPost &&
+      !this.deleted &&
+      !this.user_deleted &&
+      this.topic.details.can_recover
+    );
   }
 
   get canRecover() {
