@@ -121,3 +121,41 @@
       0 2px 10px 0 rgb(var(--always-black-rgb), 0.2);
   }
 }
+
+// photoswipe custom caption
+.pswp__caption {
+  left: 50%;
+  bottom: 1em;
+  position: absolute;
+  color: var(--primary);
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  gap: 0.5em;
+  line-height: var(--line-height-high);
+  transform: translateX(-50%);
+
+  .title {
+    max-width: 400px;
+
+    @include ellipsis;
+  }
+
+  .details {
+    white-space: nowrap;
+  }
+
+  a .d-icon {
+    padding-right: 5px;
+  }
+
+  a {
+    white-space: nowrap;
+    color: var(--tertiary-high);
+    text-transform: capitalize;
+  }
+
+  .hidden-caption-content {
+    display: none;
+  }
+}

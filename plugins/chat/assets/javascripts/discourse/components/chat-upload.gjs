@@ -42,7 +42,13 @@ export default class ChatUpload extends Component {
       this.siteSettings.max_image_width / width,
       this.siteSettings.max_image_height / height
     );
-    return { width: width * ratio, height: height * ratio };
+
+    return {
+      width,
+      thumb_width: width * ratio,
+      height,
+      thumb_height: height * ratio,
+    };
   }
 
   get imageUrl() {
@@ -70,15 +76,18 @@ export default class ChatUpload extends Component {
   <template>
     {{#if (eq this.type this.IMAGE_TYPE)}}
       <img
-        class="chat-img-upload"
+        class="chat-img-upload lightbox"
         data-orig-src={{@upload.short_url}}
         data-large-src={{@upload.url}}
-        height={{this.size.height}}
-        width={{this.size.width}}
+        height={{this.size.thumb_height}}
+        width={{this.size.thumb_width}}
         src={{this.imageUrl}}
         style={{this.imageStyle}}
         loading="lazy"
         tabindex="0"
+        alt={{@upload.original_filename}}
+        data-target-width={{this.size.width}}
+        data-target-height={{this.size.height}}
         data-dominant-color={{@upload.dominant_color}}
         {{on "load" this.imageLoaded}}
       />

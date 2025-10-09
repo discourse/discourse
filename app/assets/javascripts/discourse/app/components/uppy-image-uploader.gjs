@@ -60,7 +60,12 @@ export default class UppyImageUploader extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
-    $.magnificPopup?.instance.close();
+
+    if (this.siteSettings.experimental_lightbox) {
+      // close Photoswipe instance
+    } else {
+      $.magnificPopup?.instance.close();
+    }
   }
 
   get disabled() {
@@ -147,12 +152,17 @@ export default class UppyImageUploader extends Component {
       return;
     }
 
-    const lightboxElement = document.querySelector(
-      `#${this.args.id} a.lightbox`
-    );
+    const lightboxImage = document.querySelector(`#${this.args.id} a.lightbox`);
 
-    if (lightboxElement) {
-      $(lightboxElement).magnificPopup("open");
+    if (!lightboxImage) {
+      return;
+    }
+
+    if (this.siteSettings.experimental_lightbox) {
+      lightbox(lightboxImage, this.siteSettings);
+      lightboxImage.click();
+    } else {
+      $(lightboxImage).magnificPopup("open");
     }
   }
 
