@@ -63,12 +63,9 @@ export default class PostStream extends Component {
 
   @cached
   get posts() {
-    const postsToRender = this.capabilities.isAndroid
+    return this.capabilities.isAndroid
       ? this.args.postStream.posts
       : this.args.postStream.postsWithPlaceholders;
-
-    // TODO (glimmer-post-stream) ideally args.posts should be a TrackedArray
-    return postsToRender.toArray();
   }
 
   get firstAvailablePost() {
