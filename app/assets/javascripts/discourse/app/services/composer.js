@@ -1650,14 +1650,7 @@ export default class ComposerService extends Service {
                   resolve(true);
                 });
             },
-            onSaveDraft: () => {
-              this._saveDraft();
-              this.model.clearState();
-              this.close();
-              this.appEvents.trigger("composer:cancelled");
-              return resolve(true);
-            },
-            onCancel: () => resolve(false),
+            onCancelDiscard: () => resolve(false),
           },
         });
       } else {

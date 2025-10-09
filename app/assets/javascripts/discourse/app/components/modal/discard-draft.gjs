@@ -12,8 +12,8 @@ export default class DiscardDraftModal extends Component {
   }
 
   @action
-  async cancel() {
-    await this.args.model.onCancel();
+  async cancelDiscard() {
+    await this.args.model.onCancelDiscard();
     this.args.closeModal();
   }
 
@@ -38,8 +38,8 @@ export default class DiscardDraftModal extends Component {
         />
         <DButton
           @label="post.cancel_composer.cancel"
-          @action={{this.cancel}}
-          class="btn-transparent btn-close-modal"
+          @action={{this.cancelDiscard}}
+          class="btn-transparent btn-cancel-discard"
         />
       </:footer>
     </DModal>

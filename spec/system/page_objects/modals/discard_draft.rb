@@ -17,7 +17,7 @@ module PageObjects
       end
 
       def click_cancel
-        footer.find(".btn-close-modal").click
+        footer.find(".btn-cancel-discard").click
       end
     end
   end
