@@ -7,7 +7,6 @@ const KEEP_ALIVE = 10 * 1000; // 10 seconds
 export default class ComposerPresenceManager extends Service {
   @service currentUser;
   @service presence;
-  @service siteSettings;
 
   notifyState(name, replying = true, keepAlive = KEEP_ALIVE) {
     if (!replying) {
@@ -15,10 +14,7 @@ export default class ComposerPresenceManager extends Service {
       return;
     }
 
-    const canHideProfile = this.siteSettings.allow_users_to_hide_profile;
-    const isHidingPresence = this.currentUser.user_option.hide_presence;
-
-    if (canHideProfile && isHidingPresence) {
+    if (this.currentUser.user_option.hide_presence) {
       return;
     }
 
