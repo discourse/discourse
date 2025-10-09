@@ -911,12 +911,11 @@ import { i18n } from "discourse-i18n";
           );
       });
 
-      test("Composer draft can switch to draft in new context without destroying current draft", async function (assert) {
+      test("Composer draft shows confirmation dialog in new context (when creating a new topic)", async function (assert) {
         await visit("/t/this-is-a-test-topic/9");
 
         await click(".topic-post[data-post-number='1'] button.reply");
         await fillIn(".d-editor-input", "This is a dirty reply");
-        // await this.pauseTest();
 
         await click("#site-logo");
         await click("#create-topic");
@@ -924,19 +923,12 @@ import { i18n } from "discourse-i18n";
         assert
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
-        // await this.pauseTest();
-        // assert
-        //   .dom(".d-modal__footer button.save-draft")
-        //   .hasText(
-        //     i18n("post.cancel_composer.save_draft"),
-        //     "has save draft button"
-        //   );
+        assert
+          .dom(".d-modal__footer button.discard-draft")
+          .hasText(i18n("post.cancel_composer.discard"), "has Discard button");
         assert
           .dom(".d-modal__footer button.close-modal")
           .hasText(i18n("post.cancel_composer.cancel"), "has Cancel button");
-
-        // await click(".d-modal__footer button.save-draft");
-        // assert.dom(".d-editor-input").hasNoValue("clears the composer input");
       });
 
       test("Does not check for existing draft", async function (assert) {
