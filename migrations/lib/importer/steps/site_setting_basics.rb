@@ -46,8 +46,11 @@ module Migrations::Importer::Steps
           setting = @all_settings_by_name[name.to_sym]
 
           next unless importable?(setting, name, import_mode)
+
           import(setting, value, last_changed_at, import_mode)
         end
+
+        retry_failed_settings
       end
     end
 
@@ -132,40 +135,43 @@ module Migrations::Importer::Steps
 
       while @failed_settings.any? && @failed_settings.size != previous_count
         previous_count = @failed_settings.size
-        previously_failed_settings = @failed_settings.shuffle
+        shuffled_failed_settings = @failed_settings.shuffle
         @failed_settings = []
 
-        previously_failed_settings.each { |failed| set_and_log(failed[:setting], failed[:value]) }
+        shuffled_failed_settings.each { |f| set_and_log(f[:setting], f[:value]) }
       end
 
       @failed_settings.each do |failed|
-        name = failed[:setting][:name]
+        name = failed[:setting][:setting]
         exception = failed[:exception]
 
-        puts "Failed to update site setting: #{name}"
-        puts exception.message
-        puts exception.backtrace.join("\n")
+        puts "Failed to update site setting: #{name} -- #{exception.message}"
+      end
+    end
+
+    def with_overridden_deprecate(impl)
+      original = Discourse.method(:deprecate)
+      Discourse.define_singleton_method(:deprecate, impl)
+      begin
+        yield
+      ensure
+        Discourse.define_singleton_method(:deprecate, original)
       end
     end
 
     def without_deprecate_warnings
-      original = Discourse.method(:deprecate)
-      Discourse.define_singleton_method(:deprecate) { |warning, **kwargs| }
-      begin
-        yield
-      ensure
-        Discourse.define_singleton_method(:deprecate, original)
-      end
+      with_overridden_deprecate(->(_warning, **_kwargs) {}) { yield }
     end
 
     def log_deprecations
-      original = Discourse.method(:deprecate)
-      Discourse.define_singleton_method(:deprecate) { |warning, **kwargs| puts warning }
-      begin
-        yield
-      ensure
-        Discourse.define_singleton_method(:deprecate, original)
-      end
+      logged_site_settings = Set.new
+      with_overridden_deprecate(
+        ->(warning, **_kwargs) do
+          setting_name = warning[/`SiteSetting\.(.*?)=?`.*/, 1]
+          puts warning if logged_site_settings.exclude?(setting_name)
+          logged_site_settings << setting_name
+        end,
+      ) { yield }
     end
   end
 end
