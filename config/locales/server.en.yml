@@ -2952,6 +2952,9 @@ en:
       group: "Filter topics by groups"
       groups_any: "Show topics with any of the specified groups (comma-separated)"
       groups_all: "Show topics with all of the specified groups (plus-separated)"
+      locale: "Filter topics by original language"
+      locale_any: "Show topics originally written in any of the specified languages (comma-separated)"
+      exclude_locale: "Exclude topics originally written in a specific language"
 
   discourse_connect:
     login_error: "Login Error"
