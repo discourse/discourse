@@ -11,6 +11,7 @@ en:
         review: "Add post to review queue"
         review_hide: "Add post to review queue and hide post"
         review_delete: "Add post to review queue and delete post"
+        review_delete_silence: "Add post to review queue, delete post and silence user"
         spam: "Flag as spam and hide post"
         spam_silence: "Flag as spam, hide post and silence user"
     scriptables:
@@ -142,7 +143,7 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
     ai_bot_enable_dedicated_ux: "Allow for full screen bot interface, instead of a PM"
 
-    ai_translation_enabled: "Enables the AI translation feature"
+    ai_translation_enabled: "Enable the AI translation feature"
     ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
     ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."

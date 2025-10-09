@@ -60,8 +60,8 @@ class DiscoursePluginRegistry
   define_register :desktop_stylesheets, Hash
   define_register :color_definition_stylesheets, Hash
   define_register :serialized_current_user_fields, Set
-  define_register :seed_data, HashWithIndifferentAccess
-  define_register :locales, HashWithIndifferentAccess
+  define_register :seed_data, ActiveSupport::HashWithIndifferentAccess
+  define_register :locales, ActiveSupport::HashWithIndifferentAccess
   define_register :svg_icons, Set
   define_register :custom_html, Hash
   define_register :html_builders, Hash
@@ -73,6 +73,7 @@ class DiscoursePluginRegistry
   define_register :groups_callback_for_users_search_controller_action, Hash
   define_register :mail_pollers, Set
   define_register :site_setting_areas, Set
+  define_register :admin_config_login_routes, Set
   define_register :discourse_dev_populate_reviewable_types, Set
   define_register :category_update_param_with_callback, Hash
 

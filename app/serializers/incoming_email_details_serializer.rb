@@ -15,13 +15,17 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
     @error_string.presence || I18n.t("emails.incoming.unrecognized_error")
   end
 
+  def include_error?
+    !object.error.nil?
+  end
+
   def error_description
     error_name = @error_string.sub(EMAIL_RECEIVER_ERROR_PREFIX, "").underscore
     I18n.t("emails.incoming.errors.#{error_name}")
   end
 
   def include_error_description?
-    @error_string && @error_string[EMAIL_RECEIVER_ERROR_PREFIX]
+    !object.error.nil? && @error_string && @error_string[EMAIL_RECEIVER_ERROR_PREFIX]
   end
 
   def headers

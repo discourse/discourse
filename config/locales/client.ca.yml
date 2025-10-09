@@ -3612,7 +3612,6 @@ ca:
         copy_to_clipboard: "Copia al porta-retalls"
         copied_to_clipboard: "Copiat al porta-retalls."
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"
-        theme_owner: "No editable, el propietari és:"
         email_templates:
           title: "Correu electrònic"
           subject: "Assumpte"

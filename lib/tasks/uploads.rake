@@ -181,7 +181,7 @@ def clean_up_uploads
     exit 1 unless backuper.success
   end
 
-  public_directory = Rails.root.join("public").to_s
+  public_directory = Rails.public_path.to_s
 
   ##
   ## DATABASE vs FILE SYSTEM
@@ -404,7 +404,7 @@ task "uploads:analyze", %i[cache_path limit] => :environment do |_, args|
   cache_path = args[:cache_path]
 
   current_db = RailsMultisite::ConnectionManagement.current_db
-  uploads_path = Rails.root.join("public", "uploads", current_db)
+  uploads_path = Rails.public_path.join("uploads", current_db)
 
   path =
     if cache_path
@@ -1137,7 +1137,7 @@ def fix_missing_s3
       tempfile =
         FileHelper.download(
           upload.url,
-          max_file_size: 30.megabyte,
+          max_file_size: 30.megabytes,
           tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}",
         )
       downloaded_from = upload.url
@@ -1147,7 +1147,7 @@ def fix_missing_s3
           tempfile =
             FileHelper.download(
               upload.origin,
-              max_file_size: 30.megabyte,
+              max_file_size: 30.megabytes,
               tmp_file_name: "#{SecureRandom.hex}.#{upload.extension}",
             )
           downloaded_from = upload.origin

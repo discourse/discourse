@@ -3542,7 +3542,7 @@ describe Topic do
         from_address: "discourse@example.com",
         topic: topic,
         post: topic.posts.first,
-        created_at: 1.minutes.ago,
+        created_at: 1.minute.ago,
       )
     end
 

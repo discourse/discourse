@@ -195,8 +195,8 @@ RSpec.describe TopicsFilter do
     end
 
     describe "ordering by hot score" do
-      fab!(:t1) { Fabricate(:topic) }
-      fab!(:t2) { Fabricate(:topic) }
+      fab!(:t1, :topic)
+      fab!(:t2, :topic)
 
       before do
         TopicHotScore.create!(topic_id: t1.id, score: 2.0)
@@ -244,7 +244,7 @@ RSpec.describe TopicsFilter do
       end
 
       fab!(:expired_pinned_topic) do
-        Fabricate(:topic, pinned_at: 2.hour.ago, pinned_until: 1.hour.ago)
+        Fabricate(:topic, pinned_at: 2.hours.ago, pinned_until: 1.hour.ago)
       end
 
       describe "when query string is `in:pinned`" do
@@ -270,7 +270,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "new / unread operators" do
-        fab!(:user_for_new_filters) { Fabricate(:user) }
+        fab!(:user_for_new_filters, :user)
         let!(:new_topic) { Fabricate(:topic) }
         let!(:unread_topic) do
           Fabricate(:topic, created_at: 2.days.ago).tap do |t|
@@ -1419,6 +1419,93 @@ RSpec.describe TopicsFilter do
         ).to eq([])
       end
     end
+
+    describe "when filtering by locale" do
+      fab!(:en_topic) { Fabricate(:topic, locale: "en") }
+      fab!(:ja_topic) { Fabricate(:topic, locale: "ja") }
+      fab!(:es_topic) { Fabricate(:topic, locale: "es") }
+      fab!(:no_locale_topic, :topic)
+
+      describe "when query string is `locale:en`" do
+        it "should only return topics with locale en" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:en")
+              .pluck(:id),
+          ).to contain_exactly(en_topic.id)
+        end
+      end
+
+      describe "when query string is `locale:ja,es`" do
+        it "should return topics with locale ja or es" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:ja,es")
+              .pluck(:id),
+          ).to contain_exactly(ja_topic.id, es_topic.id)
+        end
+      end
+
+      describe "when query string is `locale:ja locale:es`" do
+        it "should return topics with locale ja or es" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:ja locale:es")
+              .pluck(:id),
+          ).to contain_exactly(ja_topic.id, es_topic.id)
+        end
+      end
+
+      describe "when query string is `-locale:en`" do
+        it "should return topics without locale en" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-locale:en")
+              .pluck(:id),
+          ).to contain_exactly(ja_topic.id, es_topic.id, no_locale_topic.id)
+        end
+      end
+
+      describe "when query string is `-locale:en,ja`" do
+        it "should return topics without locale en or ja" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-locale:en,ja")
+              .pluck(:id),
+          ).to contain_exactly(es_topic.id, no_locale_topic.id)
+        end
+      end
+
+      describe "when query string is `locale:invalid`" do
+        it "should return no topics" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:invalid")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when combining with other filters" do
+        before { en_topic.update!(closed: true) }
+
+        it "should work with status:closed" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:en status:closed")
+              .pluck(:id),
+          ).to contain_exactly(en_topic.id)
+        end
+      end
+    end
+
     describe "when filtering by topic author" do
       fab!(:user2) { Fabricate(:user, username: "username2") }
       fab!(:topic_by_user) { Fabricate(:topic, user: user) }

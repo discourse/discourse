@@ -23,7 +23,6 @@ class Admin::ColorSchemesController < Admin::AdminController
 
     if @color_scheme.theme_id.present?
       if (update_params.key?(:name) && update_params[:name] != @color_scheme.name) ||
-           update_params[:colors].present? ||
            (
              update_params.key?(:base_scheme_id) &&
                update_params[:base_scheme_id] != @color_scheme.base_scheme_id

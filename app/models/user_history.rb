@@ -28,7 +28,7 @@ class UserHistory < ActiveRecord::Base
   validates :previous_value, length: { maximum: MAX_JSON_LENGTH }
   validates :new_value, length: { maximum: MAX_JSON_LENGTH }
 
-  validates_presence_of :action
+  validates :action, presence: true
 
   scope :only_staff_actions, -> { where("action IN (?)", UserHistory.staff_action_ids) }
 

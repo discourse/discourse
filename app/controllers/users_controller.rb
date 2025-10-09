@@ -288,7 +288,7 @@ class UsersController < ApplicationController
     if current_user&.staff?
       render_json_error(I18n.t("errors.messages.auth_overrides_username"))
     else
-      render json: failed_json, status: 403
+      render json: failed_json, status: :forbidden
     end
   end
 
@@ -310,7 +310,7 @@ class UsersController < ApplicationController
              associated_accounts: user.associated_accounts,
            }
   rescue Discourse::InvalidAccess
-    render json: failed_json, status: 403
+    render json: failed_json, status: :forbidden
   end
 
   def check_sso_email
@@ -326,7 +326,7 @@ class UsersController < ApplicationController
 
     render json: { email: email }
   rescue Discourse::InvalidAccess
-    render json: failed_json, status: 403
+    render json: failed_json, status: :forbidden
   end
 
   def check_sso_payload
@@ -342,11 +342,11 @@ class UsersController < ApplicationController
 
     render json: { payload: payload }
   rescue Discourse::InvalidAccess
-    render json: failed_json, status: 403
+    render json: failed_json, status: :forbidden
   end
 
   def update_primary_email
-    return render json: failed_json, status: 410 if !SiteSetting.enable_secondary_emails
+    return render json: failed_json, status: :gone if !SiteSetting.enable_secondary_emails
 
     params.require(:email)
 
@@ -359,7 +359,8 @@ class UsersController < ApplicationController
     new_primary = user.user_emails.find_by(email: params[:email])
     if new_primary.blank?
       return(
-        render json: failed_json.merge(errors: [I18n.t("change_email.doesnt_exist")]), status: 428
+        render json: failed_json.merge(errors: [I18n.t("change_email.doesnt_exist")]),
+               status: :precondition_required
       )
     end
 
@@ -379,7 +380,7 @@ class UsersController < ApplicationController
   end
 
   def destroy_email
-    return render json: failed_json, status: 410 if !SiteSetting.enable_secondary_emails
+    return render json: failed_json, status: :gone if !SiteSetting.enable_secondary_emails
 
     params.require(:email)
 
@@ -392,7 +393,7 @@ class UsersController < ApplicationController
       elsif user.user_emails.where(email: params[:email], primary: false).destroy_all.present?
         DiscourseEvent.trigger(:user_updated, user)
       else
-        return render json: failed_json, status: 428
+        return render json: failed_json, status: :precondition_required
       end
 
       if current_user.staff? && current_user != user
@@ -1075,7 +1076,7 @@ class UsersController < ApplicationController
       log_on_user(user)
       render json: success_json
     else
-      render json: failed_json, status: 403
+      render json: failed_json, status: :forbidden
     end
   end
 
@@ -1324,23 +1325,23 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if SiteSetting.discourse_connect_overrides_avatar || SiteSetting.auth_overrides_avatar
-      return render json: failed_json, status: 422
+      return render json: failed_json, status: :unprocessable_entity
     end
 
     type = params[:type]
 
     if type == "gravatar" && !SiteSetting.gravatar_enabled?
-      return render json: failed_json, status: 422
+      return render json: failed_json, status: :unprocessable_entity
     end
 
     invalid_type = type.present? && !AVATAR_TYPES_WITH_UPLOAD.include?(type) && type != "system"
-    return render json: failed_json, status: 422 if invalid_type
+    return render json: failed_json, status: :unprocessable_entity if invalid_type
 
     if type.blank? || type == "system"
       upload_id = nil
     elsif !user.in_any_groups?(SiteSetting.uploaded_avatars_allowed_groups_map) &&
           !user.is_system_user?
-      return render json: failed_json, status: 422
+      return render json: failed_json, status: :unprocessable_entity
     else
       upload_id = params[:upload_id]
       upload = Upload.find_by(id: upload_id)
@@ -1374,19 +1375,23 @@ class UsersController < ApplicationController
 
     url = params[:url]
 
-    return render json: failed_json, status: 422 if url.blank?
+    return render json: failed_json, status: :unprocessable_entity if url.blank?
 
     if SiteSetting.selectable_avatars_mode == "disabled"
-      return render json: failed_json, status: 422
+      return render json: failed_json, status: :unprocessable_entity
     end
 
-    return render json: failed_json, status: 422 if SiteSetting.selectable_avatars.blank?
+    if SiteSetting.selectable_avatars.blank?
+      return render json: failed_json, status: :unprocessable_entity
+    end
 
     unless upload = Upload.get_from_url(url)
-      return render json: failed_json, status: 422
+      return render json: failed_json, status: :unprocessable_entity
     end
 
-    return render json: failed_json, status: 422 if SiteSetting.selectable_avatars.exclude?(upload)
+    if SiteSetting.selectable_avatars.exclude?(upload)
+      return render json: failed_json, status: :unprocessable_entity
+    end
 
     user.uploaded_avatar_id = upload.id
 
@@ -1494,7 +1499,7 @@ class UsersController < ApplicationController
     if !SiteSetting.log_search_queries
       return(
         render json: failed_json.merge(error: I18n.t("user_activity.no_log_search_queries")),
-               status: 403
+               status: :forbidden
       )
     end
 
@@ -1722,7 +1727,7 @@ class UsersController < ApplicationController
     user_security_key = current_user.security_keys.find_by(id: params[:id].to_i)
     raise Discourse::InvalidParameters unless user_security_key
 
-    user_security_key.update!(name: params[:name]) if params[:name] && !params[:name].blank?
+    user_security_key.update!(name: params[:name]) if params[:name] && params[:name].present?
     user_security_key.update!(enabled: false) if params[:disable] == "true"
 
     render json: success_json
@@ -1743,7 +1748,7 @@ class UsersController < ApplicationController
     rate_limit_second_factor!(current_user)
 
     authenticated =
-      !auth_token.blank? &&
+      auth_token.present? &&
         totp_object.verify(
           auth_token,
           drift_ahead: SecondFactorManager::TOTP_ALLOWED_DRIFT_SECONDS,
@@ -1784,7 +1789,7 @@ class UsersController < ApplicationController
 
     raise Discourse::InvalidParameters unless user_second_factor
 
-    user_second_factor.update!(name: params[:name]) if params[:name] && !params[:name].blank?
+    user_second_factor.update!(name: params[:name]) if params[:name] && params[:name].present?
     if params[:disable] == "true"
       # Disabling backup codes deletes *all* backup codes
       if update_second_factor_method == UserSecondFactor.methods[:backup_codes]

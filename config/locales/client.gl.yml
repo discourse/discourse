@@ -4014,7 +4014,6 @@ gl:
         copy_to_clipboard: "Copiar ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
         copy_to_clipboard_error: "Erro ao copiar os datos ao portapapeis"
-        theme_owner: "Non editábel, propiedade de:"
         email_templates:
           title: "Correo electrónico"
           subject: "Asunto"

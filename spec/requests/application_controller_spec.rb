@@ -1855,4 +1855,30 @@ RSpec.describe ApplicationController do
       end
     end
   end
+
+  describe "google site verification" do
+    it "is omitted by default" do
+      get "/"
+      expect(response.body).not_to include("google-site-verification")
+    end
+
+    it "is included when the site setting is set" do
+      SiteSetting.google_site_verification_token = "verification_token"
+      get "/"
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
+
+      SiteSetting.login_required = true
+      get "/"
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
+
+      get "/", headers: { "User-Agent" => "Googlebot" }
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
+    end
+  end
 end

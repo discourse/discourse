@@ -178,7 +178,7 @@ class OptimizedImage < ActiveRecord::Base
     else
       size = calculate_filesize
 
-      write_attribute(:filesize, size)
+      self[:filesize] = size
       update_columns(filesize: size) if !new_record?
       size
     end

@@ -2897,7 +2897,6 @@ th:
         delete: "ลบ"
         delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{theme_name}"'
         color: "สี"
-        theme_owner: "ไม่สามารถแก้ไขได้ เป็นเจ้าของโดย:"
         email_templates:
           title: "อีเมล"
           subject: "หัวข้อ"

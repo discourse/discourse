@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Data explorer group serializer additions" do
-  fab!(:group_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:group_user, :user)
+  fab!(:other_user, :user)
   fab!(:group)
   let!(:query) { DiscourseDataExplorer::Query.create!(name: "My query", sql: "") }
 

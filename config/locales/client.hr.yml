@@ -6409,7 +6409,6 @@ hr:
         copy_to_clipboard: "Kopirati u međuspremnik"
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Greška pri kopiranju podataka u međuspremnik"
-        theme_owner: "Nije moguće uređivati, u vlasništvu:"
         email_templates:
           title: "Email"
           subject: "predmet"

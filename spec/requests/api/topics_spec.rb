@@ -1040,7 +1040,7 @@ RSpec.describe "topics" do
                  },
                }
 
-        let(:request_body) { { time: Time.current + 1.day, status_type: "close" } }
+        let(:request_body) { { time: 1.day.from_now, status_type: "close" } }
         let!(:topic_post) { Fabricate(:post) }
         let(:id) { topic_post.topic.id }
 

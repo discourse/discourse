@@ -319,13 +319,9 @@ ru:
         admin_actions:
           translation_settings: "Настройки перевода"
           localization_settings: "Настройки перевода"
-          disabled_state:
-            configure: "Настроить переводы"
-            empty_label: "Автоматические переводы отключены, нажмите ниже, чтобы настроить"
         stats:
           title: "Статистика переводов"
         progress_chart:
-          title: "Прогресс перевода %{tooltip}"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} из %{total} сообщений переведено"
           bar_done:

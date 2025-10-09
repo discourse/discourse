@@ -1583,7 +1583,7 @@ RSpec.describe User do
 
     it "is false if first post was more than 24 hours ago" do
       u = create_test_user(created_at: 28.hours.ago)
-      u.user_stat.update!(first_post_created_at: 25.hour.ago)
+      u.user_stat.update!(first_post_created_at: 25.hours.ago)
       expect(u.new_user_posting_on_first_day?).to eq(false)
     end
   end
@@ -3289,12 +3289,7 @@ RSpec.describe User do
     end
 
     it "is false when no dnd timing is present for the current time" do
-      Fabricate(
-        :do_not_disturb_timing,
-        user: user,
-        starts_at: Time.zone.now - 2.day,
-        ends_at: 1.minute.ago,
-      )
+      Fabricate(:do_not_disturb_timing, user:, starts_at: 2.days.ago, ends_at: 1.minute.ago)
       expect(user.do_not_disturb?).to eq(false)
     end
   end
@@ -3318,7 +3313,7 @@ RSpec.describe User do
 
     it "excludes invites redeemed after user creation" do
       invite = Fabricate(:invite, invited_by: Fabricate(:user))
-      Fabricate(:invited_user, invite: invite, user: user, redeemed_at: user.created_at + 6.second)
+      Fabricate(:invited_user, invite: invite, user:, redeemed_at: user.created_at + 6.seconds)
 
       expect(user.invited_by).to eq(nil)
     end

@@ -8,7 +8,7 @@ module DiscourseAi
         # This general limit is mainly a security feature to avoid tools
         # forcing infinite downloads or causing memory exhaustion.
         # The limit is somewhat arbitrary and can be increased in future if needed.
-        MAX_RESPONSE_BODY_LENGTH = 30.megabyte
+        MAX_RESPONSE_BODY_LENGTH = 30.megabytes
 
         class << self
           def signature
@@ -87,7 +87,7 @@ module DiscourseAi
         end
 
         def options
-          result = HashWithIndifferentAccess.new
+          result = ActiveSupport::HashWithIndifferentAccess.new
           self.class.accepted_options.each do |option|
             val = @persona_options[option.name]
             if val

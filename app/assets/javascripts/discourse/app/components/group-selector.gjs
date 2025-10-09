@@ -2,14 +2,11 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DMultiSelect from "discourse/components/d-multi-select";
 import { i18n } from "discourse-i18n";
 
 export default class GroupSelector extends Component {
-  @service siteSettings;
-
   @tracked selectedGroups = [];
 
   constructor() {

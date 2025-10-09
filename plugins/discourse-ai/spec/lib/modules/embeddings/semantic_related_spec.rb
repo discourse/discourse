@@ -3,17 +3,17 @@
 describe DiscourseAi::Embeddings::SemanticRelated do
   subject(:semantic_related) { described_class.new }
 
-  fab!(:target) { Fabricate(:topic) }
-  fab!(:normal_topic_1) { Fabricate(:topic) }
-  fab!(:normal_topic_2) { Fabricate(:topic) }
-  fab!(:normal_topic_3) { Fabricate(:topic) }
+  fab!(:target, :topic)
+  fab!(:normal_topic_1, :topic)
+  fab!(:normal_topic_2, :topic)
+  fab!(:normal_topic_3, :topic)
   fab!(:unlisted_topic) { Fabricate(:topic, visible: false) }
-  fab!(:private_topic) { Fabricate(:private_message_topic) }
+  fab!(:private_topic, :private_message_topic)
   fab!(:secured_category) { Fabricate(:category, read_restricted: true) }
   fab!(:secured_category_topic) { Fabricate(:topic, category: secured_category) }
   fab!(:closed_topic) { Fabricate(:topic, closed: true) }
 
-  fab!(:vector_def) { Fabricate(:embedding_definition) }
+  fab!(:vector_def, :embedding_definition)
 
   before do
     enable_current_plugin

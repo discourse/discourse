@@ -207,15 +207,20 @@ class PostRevisor
     tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
   end
 
-  # AVAILABLE OPTIONS:
-  # - revised_at: changes the date of the revision
-  # - force_new_version: bypass grace period edit window
-  # - bypass_rate_limiter:
-  # - bypass_bump: do not bump the topic, even if last post
-  # - skip_validations: ask ActiveRecord to skip validations
-  # - skip_revision: do not create a new PostRevision record
-  # - skip_staff_log: skip creating an entry in the staff action log
-  # - silent: don't send notifications to user
+  # Revises a post with the given fields and options.
+  #
+  # @param editor [User] The user performing the revision
+  # @param fields [Hash] Hash of fields to update
+  # @param opts [Hash] Optional parameters for the revision
+  # @option opts [Time] :revised_at Changes the date of the revision
+  # @option opts [Boolean] :force_new_version Bypass grace period edit window
+  # @option opts [Boolean] :bypass_rate_limiter Bypass the max limits per day rate limiter
+  # @option opts [Boolean] :bypass_bump Do not bump the topic. Takes precedence over should_bump_topic plugin modifier, and any other should_bump? logic
+  # @option opts [Boolean] :skip_validations Ask ActiveRecord to skip validations
+  # @option opts [Boolean] :skip_revision Do not create a new PostRevision record
+  # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
+  # @option opts [Boolean] :silent Don't send notifications to user
+  # @return [Boolean] Returns true if the revision was successful, false otherwise
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -654,19 +659,28 @@ class PostRevisor
   end
 
   def bump_topic
-    return if bypass_bump?
+    return if !should_bump?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_unmuted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
-  def bypass_bump?
-    return true if @opts[:bypass_bump] == true
-    return true if @post.whisper? || !@post_successfully_saved || post_changes.any?
-    return true if @topic_changes.errored?
-    return true if topic_title_changed? || topic_category_changed? || topic_tags_changed?
-    return true if only_hidden_tags_changed?
+  def should_bump?
+    return false if @opts[:bypass_bump] == true
+
+    should_bump_topic_modifier_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :should_bump_topic,
+        nil,
+        @post,
+        post_changes,
+        @topic_changes,
+        @editor,
+      )
+    return should_bump_topic_modifier_result if !should_bump_topic_modifier_result.nil?
+
+    return true if @post.is_first_post? && @post.wiki? && post_changes.any?
 
     false
   end

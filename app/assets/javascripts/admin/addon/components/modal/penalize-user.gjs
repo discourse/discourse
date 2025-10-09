@@ -83,8 +83,9 @@ export default class PenalizeUser extends Component {
     }
     this.penalizing = true;
     this.confirmClose = true;
-    if (this.before) {
-      this.before();
+
+    if (this.args.model.before) {
+      this.args.model.before();
     }
 
     let result;

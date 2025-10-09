@@ -82,8 +82,7 @@ class TopicCreator
   def create_shared_draft(topic)
     return if @opts[:shared_draft].blank? || @opts[:shared_draft] == "false"
 
-    category_id =
-      @opts[:category].blank? ? SiteSetting.shared_drafts_category.to_i : @opts[:category]
+    category_id = @opts[:category].presence || SiteSetting.shared_drafts_category.to_i
     SharedDraft.create(topic_id: topic.id, category_id: category_id)
   end
 

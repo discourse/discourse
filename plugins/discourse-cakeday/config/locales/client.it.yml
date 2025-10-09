@@ -19,7 +19,7 @@ it:
       today: "Oggi"
       tomorrow: "Domani"
       upcoming: "Prossimi"
-      all: "Tutti"
+      all: "Tutte"
     birthdays:
       title: "Compleanni"
       month:

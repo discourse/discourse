@@ -54,7 +54,7 @@ RSpec.describe Admin::StaffActionLogsController do
         end
 
         it "filter logs by end_date" do
-          get "/admin/logs/staff_action_logs.json", params: { end_date: 1.days.ago.iso8601 }
+          get "/admin/logs/staff_action_logs.json", params: { end_date: 1.day.ago.iso8601 }
 
           json = response.parsed_body
           expect(response.status).to eq(200)
@@ -68,7 +68,7 @@ RSpec.describe Admin::StaffActionLogsController do
           get "/admin/logs/staff_action_logs.json",
               params: {
                 start_date: 3.days.ago.iso8601,
-                end_date: 1.days.ago.iso8601,
+                end_date: 1.day.ago.iso8601,
               }
 
           json = response.parsed_body

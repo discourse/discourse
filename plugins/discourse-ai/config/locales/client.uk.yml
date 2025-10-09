@@ -217,6 +217,9 @@ uk:
             max_posts_for_context:
               label: "Максимальна кількість постів для контексту"
               description: "Максимальна кількість публікацій з теми для включення до контексту аналізу (за замовчуванням: 5)"
+            allow_system_posts:
+              label: "Дозволити системні повідомлення"
+              description: "Дозволити тегування повідомлень, створених системним користувачем."
     discourse_ai:
       title: "ШІ"
       default_llm:
@@ -322,20 +325,24 @@ uk:
       translations:
         title: "Переклади"
         description: "Автоматично перекладати весь вміст на вашому форумі на бажану мову користувача"
+        supported_locales: "Підтримувані мови"
+        supported_locales_description: "Це налаштування сайту також дозволяє відвідувачам долучатися до перекладу публікацій."
         admin_actions:
           translation_settings: "Налаштування перекладу"
           localization_settings: "Налаштування локалізації"
-          disabled_state:
-            configure: "Налаштування перекладів"
-            empty_label: "Автоматичні переклади вимкнено, натисніть нижче, щоб налаштувати"
+          enable_translations: "Увімкнути автоматичний переклад"
         stats:
           title: "Статистика перекладів"
           complete_language_detection_description: "Усі повідомленнях, що відповідають вимогам %{total} мають можливість використовувати свою мову."
           incomplete_language_detection_description: "%{done} з %{total} дописів, які відповідають вимогам, визначено їхню мову."
-          backfill_disabled: "Заповнення бекапу зараз вимкнено."
-          description_tooltip: "Відповідні публікації визначаються налаштуваннями перекладу ШІ"
+          backfill_disabled: "Автозаповнення вимкнено, перекладатимуться лише нові публікації."
+          description_tooltip:
+            one: 'Є %{count} публікація, яку можна перекласти.'
+            few: 'Є %{count} публікації, які можна перекласти.'
+            many: 'Є %{count} публікацій, які можна перекласти.'
+            other: 'Є %{count} публікацій, які можна перекласти.'
         progress_chart:
-          title: "Прогрес перекладу %{tooltip}"
+          title: "Прогрес перекладу"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} з %{total} дописів перекладено"
           bar_done:

@@ -717,7 +717,7 @@ LEFT OUTER JOIN #{TABLE_PREFIX}avatar a ON a.avatarid = u.avatarid
     puts "", "creating category moderator groups..."
     forums = mysql_query("SELECT forumid, parentid, title FROM #{TABLE_PREFIX}forum").to_a
     forums.each { |f| f["children"] = forums.select { |c| c["parentid"] == f["forumid"] } }
-    forum_map = forums.map { |f| [f["forumid"], f] }.to_h
+    forum_map = forums.index_by { _1["forumid"] }
     modentries = mysql_query(<<-SQL).to_a
       SELECT m.forumid, m.userid, u.usergroupid IN (5,6) is_staff
         FROM #{TABLE_PREFIX}moderator m

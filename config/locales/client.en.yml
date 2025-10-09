@@ -5689,10 +5689,16 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-
+          sub_pages:
+            common_settings:
+              title: "Settings"
+            authenticators:
+              title: "Social logins"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"
@@ -6898,7 +6904,7 @@ en:
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
-        theme_owner: "Not editable, owned by:"
+        theme_owner: "Owned by:"
         email_templates:
           title: "Email"
           subject: "Subject"

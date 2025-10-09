@@ -6449,7 +6449,6 @@ pt_BR:
         copy_to_clipboard: "Copiar para área de transferência"
         copied_to_clipboard: "Copiou para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"
-        theme_owner: "Não editável, pertence a:"
         email_templates:
           title: "E-mail"
           subject: "Assunto"
