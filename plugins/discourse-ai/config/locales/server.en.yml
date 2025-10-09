@@ -139,7 +139,6 @@ en:
     ai_discord_search_mode: "Select the search mode to use for Discord search"
     ai_discord_search_persona: "The persona to use for Discord search."
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
-    ai_bot_enable_dedicated_ux: "Allow for full screen bot interface, instead of a PM"
 
     ai_translation_enabled: "Enable the AI translation feature"
     ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
