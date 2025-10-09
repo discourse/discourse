@@ -15,7 +15,7 @@ function ensureBotMap() {
       "service:current-user"
     );
     enabledChatBotMap = {};
-    currentUser.ai_enabled_chat_bots.forEach((bot) => {
+    currentUser?.ai_enabled_chat_bots?.forEach((bot) => {
       enabledChatBotMap[bot.id] = bot;
     });
   }
