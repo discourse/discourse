@@ -622,14 +622,26 @@ export default class TopicController extends Controller {
   }
 
   @action
-  removeAllowedUser(user) {
-    return this.get("model.details")
-      .removeAllowedUser(user)
-      .then(() => {
-        if (this.currentUser.id === user.id) {
-          this.router.transitionTo("userPrivateMessages", user);
-        }
+  async removeAllowedUser(user) {
+    if (this.currentUser.id === user.id) {
+      const isConfirmed = await this.dialog.yesNoConfirm({
+        message: i18n("post.controls.remove_yourself_from_pm"),
       });
+
+      if (!isConfirmed) {
+        return;
+      }
+    }
+
+    try {
+      await this.get("model.details").removeAllowedUser(user);
+
+      if (this.currentUser.id === user.id) {
+        this.router.transitionTo("userPrivateMessages", user);
+      }
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action

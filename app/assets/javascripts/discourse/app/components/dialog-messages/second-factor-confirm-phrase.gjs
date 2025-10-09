@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -11,12 +10,11 @@ export default class SecondFactorConfirmPhrase extends Component {
   @service dialog;
   @service currentUser;
 
-  @tracked confirmPhraseInput = "";
   disabledString = i18n("user.second_factor.disable");
 
   @action
-  onConfirmPhraseInput() {
-    if (this.confirmPhraseInput === this.disabledString) {
+  onConfirmPhraseInput(event) {
+    if (event.target.value === this.disabledString) {
       this.dialog.set("confirmButtonDisabled", false);
     } else {
       this.dialog.set("confirmButtonDisabled", true);
@@ -50,7 +48,6 @@ export default class SecondFactorConfirmPhrase extends Component {
     </p>
 
     <TextField
-      @value={{this.confirmPhraseInput}}
       {{on "input" this.onConfirmPhraseInput}}
       @id="confirm-phrase"
       @autocorrect="off"
