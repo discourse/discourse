@@ -307,31 +307,32 @@ export default class DiscoveryTopics extends Component {
         />
       </span>
 
+      <List
+        @highlightLastVisited={{true}}
+        @top={{this.top}}
+        @hot={{this.hot}}
+        @showTopicPostBadges={{this.showTopicPostBadges}}
+        @showPosters={{true}}
+        @canBulkSelect={{@canBulkSelect}}
+        @bulkSelectHelper={{@bulkSelectHelper}}
+        @changeSort={{@changeSort}}
+        @hideCategory={{@model.hideCategory}}
+        @order={{this.order}}
+        @ascending={{this.ascending}}
+        @expandGloballyPinned={{this.expandGloballyPinned}}
+        @expandAllPinned={{this.expandAllPinned}}
+        @category={{@category}}
+        @topics={{@model.topics}}
+        @discoveryList={{true}}
+        @focusLastVisitedTopic={{true}}
+        @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
+        @newListSubset={{@model.params.subset}}
+        @changeNewListSubset={{@changeNewListSubset}}
+        @newRepliesCount={{this.newRepliesCount}}
+        @newTopicsCount={{this.newTopicsCount}}
+      />
+
       {{#if this.hasTopics}}
-        <List
-          @highlightLastVisited={{true}}
-          @top={{this.top}}
-          @hot={{this.hot}}
-          @showTopicPostBadges={{this.showTopicPostBadges}}
-          @showPosters={{true}}
-          @canBulkSelect={{@canBulkSelect}}
-          @bulkSelectHelper={{@bulkSelectHelper}}
-          @changeSort={{@changeSort}}
-          @hideCategory={{@model.hideCategory}}
-          @order={{this.order}}
-          @ascending={{this.ascending}}
-          @expandGloballyPinned={{this.expandGloballyPinned}}
-          @expandAllPinned={{this.expandAllPinned}}
-          @category={{@category}}
-          @topics={{@model.topics}}
-          @discoveryList={{true}}
-          @focusLastVisitedTopic={{true}}
-          @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-          @newListSubset={{@model.params.subset}}
-          @changeNewListSubset={{@changeNewListSubset}}
-          @newRepliesCount={{this.newRepliesCount}}
-          @newTopicsCount={{this.newTopicsCount}}
-        />
         <LoadMore @action={{this.loadMore}} />
       {{/if}}
 
@@ -412,6 +413,12 @@ export default class DiscoveryTopics extends Component {
                 <EmptyTopicFilter
                   @newFilter={{this.new}}
                   @unreadFilter={{this.unread}}
+                  @trackingCounts={{hash
+                    newTopics=this.newTopicsCount
+                    newReplies=this.newRepliesCount
+                  }}
+                  @changeNewListSubset={{@changeNewListSubset}}
+                  @newListSubset={{@model.params.subset}}
                 />
               {{/if}}
             </:afterMessage>
