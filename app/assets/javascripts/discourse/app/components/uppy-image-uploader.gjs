@@ -62,7 +62,7 @@ export default class UppyImageUploader extends Component {
     super.willDestroy(...arguments);
 
     if (this.siteSettings.experimental_lightbox) {
-      // close Photoswipe instance
+      window.pswp?.close();
     } else {
       $.magnificPopup?.instance.close();
     }

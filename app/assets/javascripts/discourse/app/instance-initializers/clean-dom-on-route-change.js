@@ -15,6 +15,11 @@ function _clean(transition) {
     element.parentElement.classList.remove("open");
   });
 
+  // Close PhotoSwipe
+  if (window.pswp) {
+    window.pswp.close();
+  }
+
   // Close the lightbox
   if ($.magnificPopup?.instance) {
     $.magnificPopup.instance.close();
