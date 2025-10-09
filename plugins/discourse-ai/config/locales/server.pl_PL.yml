@@ -16,6 +16,7 @@ pl_PL:
         review: "Dodaj post do kolejki recenzji"
         review_hide: "Dodaj post do kolejki recenzji i ukryj post"
         review_delete: "Dodaj wpis do kolejki recenzji i usuń post"
+        review_delete_silence: "Dodaj wpis do kolejki recenzji, usuń wpis i ucisz użytkownika"
         spam: "Oznacz jako spam i ukryj post"
         spam_silence: "Oznacz jako spam, ukryj post i wycisz użytkownika"
     scriptables:

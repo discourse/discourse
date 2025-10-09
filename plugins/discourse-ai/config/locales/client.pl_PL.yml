@@ -217,6 +217,9 @@ pl_PL:
             max_posts_for_context:
               label: "Maksymalna liczba postów dla kontekstu"
               description: "Maksymalna liczba postów z tematu do uwzględnienia w kontekście analizy (domyślnie: 5)"
+            allow_system_posts:
+              label: "Zezwalaj na wpisy systemowe"
+              description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
       default_llm:
