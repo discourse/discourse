@@ -62,6 +62,14 @@ class BasicCategorySerializer < ApplicationSerializer
     end
   end
 
+  def name
+    category_name
+  end
+
+  def description
+    category_description
+  end
+
   def can_edit
     true
   end
