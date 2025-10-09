@@ -491,7 +491,7 @@ export default class Post extends Component {
                     </section>
                   </div>
                 {{/if}}
-                {{#if (and (not @post.deletedAt) @post.notice)}}
+                {{#if (PostNotice.shouldRender @post this.siteSettings)}}
                   <div class="post__row row">
                     <PostNotice @post={{@post}} />
                   </div>
