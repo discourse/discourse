@@ -4215,6 +4215,7 @@ en:
         discard: "Discard"
         save_draft: "Save draft for later"
         keep_editing: "Keep editing"
+        cancel: "Cancel"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"

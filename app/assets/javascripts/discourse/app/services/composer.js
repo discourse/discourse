@@ -1630,21 +1630,15 @@ export default class ComposerService extends Service {
     this.appEvents.trigger("draft:destroyed", key);
   }
 
-  cancelComposer(opts = {}) {
+  cancelComposer() {
     this.skipAutoSave = true;
 
     cancel(this._saveDraftDebounce);
 
     return new Promise((resolve) => {
       if (this.get("model.anyDirty")) {
-        const overridesDraft =
-          this.model.composeState === Composer.OPEN &&
-          this.model.draftKey === opts.draftKey &&
-          [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
-        const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
         this.modal.show(DiscardDraftModal, {
           model: {
-            showSaveDraftButton,
             onDestroyDraft: () => {
               return this.destroyDraft()
                 .then(() => {
@@ -1663,7 +1657,7 @@ export default class ComposerService extends Service {
               this.appEvents.trigger("composer:cancelled");
               return resolve(true);
             },
-            onKeepEditing: () => resolve(false),
+            onCancel: () => resolve(false),
           },
         });
       } else {

@@ -12,20 +12,14 @@ export default class DiscardDraftModal extends Component {
   }
 
   @action
-  async saveDraftAndClose() {
-    await this.args.model.onSaveDraft();
-    this.args.closeModal();
-  }
-
-  @action
-  async keepEditing() {
-    await this.args.model.onKeepEditing();
+  async cancel() {
+    await this.args.model.onCancel();
     this.args.closeModal();
   }
 
   <template>
     <DModal
-      @closeModal={{this.keepEditing}}
+      @closeModal={{this.cancel}}
       class="discard-draft-modal --stacked"
       @hideHeader={{true}}
     >
@@ -42,17 +36,10 @@ export default class DiscardDraftModal extends Component {
           @action={{this.discardDraft}}
           class="btn-danger discard-draft"
         />
-        {{#if @model.showSaveDraftButton}}
-          <DButton
-            @label="post.cancel_composer.save_draft"
-            @action={{this.saveDraftAndClose}}
-            class="btn-default save-draft"
-          />
-        {{/if}}
         <DButton
-          @label="post.cancel_composer.keep_editing"
-          @action={{this.keepEditing}}
-          class="btn-default keep-editing"
+          @label="post.cancel_composer.cancel"
+          @action={{this.cancel}}
+          class="btn-flat btn-transparent close-modal"
         />
       </:footer>
     </DModal>
