@@ -99,9 +99,7 @@ RSpec.describe MiniSchedulerLongRunningJobLogger do
 
         wait_for { loops == 1 }
 
-        expect(fake_logger.warnings.size).to eq(1)
-
-        expect(fake_logger.warnings.first).to match(
+        expect(fake_logger.warnings.map { |warning| warning.split("\n").first }).to contain_exactly(
           "Sidekiq scheduled job `DailyJob` has been running for more than 120 minutes",
         )
       ensure
