@@ -360,7 +360,7 @@ import { i18n } from "discourse-i18n";
         );
         await click(".topic-post[data-post-number='1'] button.edit");
 
-        await click(".d-modal__footer button.close-modal");
+        await click(".d-modal__footer .btn-cancel-discard");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
         assert
           .dom(".d-editor-input")
