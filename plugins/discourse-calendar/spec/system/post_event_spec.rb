@@ -63,7 +63,7 @@ describe "Post event", type: :system do
     it "correctly builds a multiline description", timezone: "Europe/Paris" do
       visit("/new-topic")
 
-      time = Time.now.strftime("%Y-%m-%d %H:%M")
+      time = Time.now.in_time_zone("Europe/Paris").strftime("%Y-%m-%d %H:%M")
 
       EXPECTED_BBCODE = <<~EVENT
         [event start="#{time}" status="public" timezone="Europe/Paris"]
