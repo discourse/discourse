@@ -116,9 +116,9 @@ describe "Admin Customize Themes", type: :system do
   end
 
   it "hides unecessary sections and buttons for system themes" do
-    theme.theme_fields.create!(
-      name: "js",
-      target_id: Theme.targets[:extra_js],
+    theme.set_field(
+      target: :extra_js,
+      name: "discourse/api-initializers/test.js",
       value: "console.log('second test')",
     )
     yaml = <<~YAML
@@ -147,6 +147,24 @@ describe "Admin Customize Themes", type: :system do
     expect(page).to have_no_css(".export")
     expect(page).to have_no_css(".extra-files")
     expect(page).to have_css(".theme-settings")
+  end
+
+  it "shows both JS and SCSS extra files with canonical paths" do
+    theme.set_field(
+      target: :extra_js,
+      name: "discourse/api-initializers/canvas.js",
+      value: "console.log('extra js')",
+    )
+    theme.set_field(target: :extra_scss, name: "properties", value: ".custom { color: red; }")
+    theme.save!
+
+    theme_page.visit(theme)
+
+    extra_files = find(".extra-files")
+    extra_files.find("summary").click
+
+    expect(extra_files).to have_content("javascripts/discourse/api-initializers/canvas.js")
+    expect(extra_files).to have_content("stylesheets/properties.scss")
   end
 
   describe "when editing theme translations" do
