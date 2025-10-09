@@ -560,19 +560,19 @@ ro:
           few: "încă %{count} ciorne"
           other: "încă %{count} de ciorne"
     topic_count_all:
-      one: "Afișați %{count} subiect nou"
-      few: "Afișați %{count} subiecte noi"
-      other: "Afișați %{count} subiecte noi"
+      one: "Vezi un subiect nou"
+      few: "Vezi %{count} subiecte noi"
+      other: "Vezi %{count} de subiecte noi"
     topic_count_categories:
-      one: "Vezi %{count} subiect nou sau actualizat"
+      one: "Vezi un subiect nou sau actualizat"
       few: "Vezi %{count} subiecte noi sau actualizate"
       other: "Vezi %{count} de subiecte noi sau actualizate"
     topic_count_latest:
-      one: "Vezi %{count} subiect nou sau actualizat"
+      one: "Vezi un subiect nou sau actualizat"
       few: "Vezi %{count} subiecte noi sau actualizate"
       other: "Vezi %{count} de subiecte noi sau actualizate"
     topic_count_unseen:
-      one: "Vezi %{count} subiect nou sau actualizat"
+      one: "Vezi un subiect nou sau actualizat"
       few: "Vezi %{count} subiecte noi sau actualizate"
       other: "Vezi %{count} de subiecte noi sau actualizate"
     topic_count_unread:
@@ -610,7 +610,7 @@ ro:
     choose_message:
       none_found: "Niciun mesaj găsit."
       title:
-        search: "Căutați un mesaj"
+        search: "Caută mesaj"
         placeholder: "scrie aici titlul mesajului, URL-ul sau ID-ul"
     review:
       show_more: "Arată mai multe"
