@@ -606,6 +606,7 @@ login:
   enable_discourse_id:
     default: false
     validator: "EnableDiscourseIdValidator"
+    area: "authenticators"
   discourse_id_client_id:
     default: ""
     hidden: true
