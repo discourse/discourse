@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module BasicCategoryAttributes
-  def name
+  def category_name
     if object.uncategorized?
       I18n.t("uncategorized_category_name", locale: SiteSetting.default_locale)
     else
@@ -9,7 +9,7 @@ module BasicCategoryAttributes
     end
   end
 
-  def description
+  def category_description
     if object.uncategorized?
       I18n.t("category.uncategorized_description", locale: SiteSetting.default_locale)
     else
