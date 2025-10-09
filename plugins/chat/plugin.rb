@@ -21,10 +21,13 @@ register_svg_icon "comment-slash"
 register_svg_icon "comment-dots"
 register_svg_icon "lock"
 register_svg_icon "clipboard"
+register_svg_icon "sort"
 register_svg_icon "file-audio"
 register_svg_icon "file-video"
 register_svg_icon "file-image"
 register_svg_icon "circle-stop"
+register_svg_icon "filter"
+register_svg_icon "filter-circle-xmark"
 
 # route: /admin/plugins/chat
 add_admin_route "chat.admin.title", "chat", use_new_show_route: true
@@ -48,6 +51,33 @@ after_initialize do
   UserNotifications.append_view_path(File.expand_path("../app/views", __FILE__))
 
   register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
+
+  register_search_index(
+    model_class: Chat::Message,
+    search_data_class: Chat::MessageSearchData,
+    index_version: 1,
+    enabled: -> { SiteSetting.chat_search_enabled },
+    search_data:
+      proc do |message, indexer_helper|
+        {
+          a_weight: message.message,
+          d_weight: indexer_helper.scrub_html(message.cooked)[0..600_000],
+        }
+      end,
+    load_unindexed_record_ids:
+      proc do |limit:, index_version:|
+        Chat::Message
+          .joins("LEFT JOIN chat_message_search_data ON chat_message_id = chat_messages.id")
+          .where(
+            "chat_message_search_data.locale IS NULL OR chat_message_search_data.locale != ? OR chat_message_search_data.version != ?",
+            SiteSetting.default_locale,
+            index_version,
+          )
+          .order("chat_messages.id ASC")
+          .limit(limit)
+          .pluck(:id)
+      end,
+  )
 
   register_user_custom_field_type(Chat::LAST_CHAT_CHANNEL_ID, :integer)
   DiscoursePluginRegistry.serialized_current_user_fields << Chat::LAST_CHAT_CHANNEL_ID

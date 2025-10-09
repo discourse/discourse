@@ -16,6 +16,11 @@ export default function (elem, term, opts = {}) {
     if (!opts.defaultClassName) {
       highlightOpts.className = CLASS_NAME;
     }
+
+    if (opts.partialMatch) {
+      highlightOpts.partialMatch = true;
+    }
+
     highlightHTML(elem, words, highlightOpts);
   }
 }
