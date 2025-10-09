@@ -438,38 +438,6 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         end
       end
 
-      context "when `ai_bot_enable_dedicated_ux` is disabled" do
-        before do
-          SiteSetting.ai_bot_enable_dedicated_ux = false
-          SiteSetting.ai_bot_add_to_header = true
-        end
-
-        it "opens composer on bot click" do
-          visit "/"
-          header.click_bot_button
-
-          expect(ai_pm_homepage).to have_no_homepage
-          expect(composer).to be_opened
-        end
-
-        it "does not render sidebar when navigation menu is set to header on pm" do
-          SiteSetting.navigation_menu = "header dropdown"
-          topic_page.visit_topic(pm)
-
-          expect(ai_pm_homepage).to have_no_homepage
-          expect(sidebar).to be_not_visible
-          expect(header_dropdown).to be_visible
-        end
-
-        it "shows default content in the sidebar" do
-          topic_page.visit_topic(pm)
-
-          expect(sidebar).to have_section("categories")
-          expect(sidebar).to have_section("chat-dms")
-          expect(sidebar).to have_no_css("button.ai-new-question-button")
-        end
-      end
-
       context "with header dropdown on mobile", mobile: true do
         before { SiteSetting.navigation_menu = "header dropdown" }
 
