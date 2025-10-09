@@ -44,6 +44,7 @@ he:
             create_ai_embedding: "יצירת הטמעת בינה מלאכותית"
             update_ai_embedding: "עדכון הטמעת בינה מלאכותית"
             delete_ai_embedding: "מחיקת הטמעת בינה מלאכותית"
+            update_ai_spam_settings: "עדכון הגדרות ספאם בינה מלאכותית"
   js:
     discourse_automation:
       scriptables:
@@ -116,21 +117,26 @@ he:
           fields:
             model:
               label: "מודל"
+              description: "מודל שפה כברירת מחדל שישמש למיון ראשוני"
             tool:
               label: "כלי"
+              description: "כלי לשימוש למיון ראשוני (אסור שלכלי יהיו מוגדרים משתנים)"
         llm_persona_triage:
           fields:
             persona:
               label: "דמות"
+              description: "דמות בינה מלאכותית למיון ראשוני (חייב להיות לה LLM/מש״ג ומשתמש מוגדרים כברירת מחדל)"
             whisper:
               label: "להגיב בלחישה"
               description: "האם התגובה של הדמות צריכה להיות בלחישה"
             silent_mode:
               label: "מצב שקט"
+              description: "במצב שקט הדמות תקבל את התוכן אבל לא תפרסם שום דבר בפורום - שימושי לביצוע מיון ראשוני באמצעות כלים"
         llm_triage:
           fields:
             triage_persona:
               label: "דמות"
+              description: "הדמות שתשמש למיון ראשוני, נא לוודא שהתשובה היא מילה אחת בה ניתן להשתמש כדי להקפיץ את הפקודה"
             max_post_tokens:
               label: "כמות אסימונים מרבית לפוסט"
               description: "מספר האסימונים המרבי לסריקה בעזרת מיון ראשוני עם LLM"
@@ -184,14 +190,17 @@ he:
         llm_tagger:
           tag_mode:
             manual: "להשתמש ברשימת תגיות מסוימת (מוגדרת להלן)"
+            discover: "לאפשר לבינה מלאכותית לגלות ולהשתמש בתגיות אתר כלשהן"
           fields:
             tagger_persona:
               label: "דמות בינה מלאכותית"
+              description: "דמות הבינה המלאכותית לשימוש לניתוח ותיוג פוסטים"
             tag_mode:
               label: "מצב בחירת תגיות"
               description: "בחירה איך הבינה המלאכותית בוחר תגיות"
             available_tags:
               label: "תגיות זמינות"
+              description: "התגיות שהבינה המלאכותית יכולה לבחור מביניהן (בשימוש במצב ידני בלבד)"
             confidence_threshold:
               label: "סף ביטחון"
               description: "אחוז הביטחון המזערי (0-‏100) הנדרש כדי להחיל תגיות מוצעות"
@@ -207,6 +216,9 @@ he:
             max_posts_for_context:
               label: "כמות פוסטים מרבית להקשר"
               description: "כמות פוסטים מרבית מהנושא שיש לכלול בהקשר האבחון (ברירת מחדל: 5)"
+            allow_system_posts:
+              label: "לאפשר פוסטים של המערכת"
+              description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
       default_llm:
@@ -295,6 +307,9 @@ he:
           inspect_posts: "בדיקת פוסטים"
         automation_reports:
           name: "דוחות אוטומטיים"
+        automation_triage:
+          name: "מיון ראשוני של פוסטים"
+          description: "אוטומציית פיקוח וניהול פוסטים על ידי שימוש בכללי אוטומציה שניתן להגדיר"
       modals:
         select_option: "בחירת אפשרות…"
       layout:
@@ -302,6 +317,7 @@ he:
         card: "כרטיס"
       translations:
         title: "תרגומים"
+        description: "תרגום כל התוכן של הפורום שלך לשפת המשתמש המועדפת אוטומטית"
         supported_locales: "שפות נתמכות"
         supported_locales_description: "הגדרת האתר הזאת מאפשרת גם למבקרים לתרום תרגומים לפוסטים."
         admin_actions:
@@ -339,6 +355,7 @@ he:
         select_llm: "בחירת LLM"
         select_persona: "בחירת דמות"
         custom_instructions: "הנחיות מותאמות אישית"
+        custom_instructions_help: "הנחיות שמותאמות נקודתית לאתר שלך כדי לסייע להנחות את הבינה המלאכותית בזיהוי ספאם/זבל, למשל ‚להיות יותר תקיף בנוגע לסריקת פוסטים שאינם באנגלית/עברית’."
         last_seven_days: "7 הימים האחרונים"
         scanned_count: "פוסטים נסרקו"
         false_positives: "סימון שגוי"
@@ -346,6 +363,7 @@ he:
         spam_detected: "ספאם זוהה"
         custom_instructions_placeholder: "הנחיות נקודתיות לאתר עבור הבינה המלאכותית כדי לזהות ספאם בצורה יותר מדויקת"
         enable: "הפעלה"
+        spam_tip: "זיהוי ספאם/זבל יסרוק את 3 הפוסטים החדשים שנכתבו על ידי כל אחד מהמשתמשים החדשים בנושאים ציבוריים. הוא יסמן אותם בדגל לסקירה ויחסום את המשתמשים אם יש סיכוי גדול שזה ספאם/זבל."
         settings_saved: "הגדרות נשמרו"
         no_llms: "אין LLMים זמינים"
         test_button: "בדיקה…"
@@ -885,6 +903,11 @@ he:
           disclaimer: "בינה מלאכותית מחוללת עלולה לשגות. כדאי לאמת פרטים חשובים."
           placeholder: "הגשת שאלה…"
           new: "שאלה חדשה"
+          min_input_length_message:
+            one: "אורך ההודעה חייב להיות באורך של תו ומעלה"
+            two: "אורך ההודעה חייב להיות באורך של שני תווים ומעלה"
+            many: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
+            other: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
           messages_sidebar_title: "שיחות"
           today: "היום"
           last_7_days: "7 הימים האחרונים"
@@ -930,6 +953,11 @@ he:
             two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
             many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
             other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
+          regenerate_error:
+            one: "יצירת תקציר מחדש נכשלה"
+            two: "יצירת שני תקצירים מחדש נכשלה"
+            many: "יצירת %{count} תקצירים מחדש נכשלה"
+            other: "יצירת %{count} תקצירים מחדש נכשלה"
         topic_list_layout:
           button:
             compact: "מצומצם"

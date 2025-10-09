@@ -87,6 +87,8 @@ class TopicsFilter
         filter_tag_groups(values: key_prefixes.zip(filter_values))
       when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
+      when "locale"
+        filter_locale(values: key_prefixes.zip(filter_values))
       when "views-min"
         filter_by_number_of_views(min: filter_values)
       when "views-max"
@@ -340,6 +342,17 @@ class TopicsFilter
           { name: ",", description: I18n.t("filter.description.groups_any") },
           { name: "+", description: I18n.t("filter.description.groups_all") },
         ],
+      },
+    )
+
+    # Locale filter
+    results.push(
+      {
+        name: "locale:",
+        description: I18n.t("filter.description.locale"),
+        type: "text",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.locale_any") }],
+        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_locale") }],
       },
     )
 
@@ -900,6 +913,28 @@ class TopicsFilter
         .joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id")
         .where("#{sql_alias}.tag_id IN (?)", tag_ids)
         .distinct(:id)
+  end
+
+  def filter_locale(values:)
+    include_locales = []
+    exclude_locales = []
+
+    values.each do |key_prefix, value|
+      locales = value.split(",").map(&:strip).reject(&:blank?)
+      next if locales.empty?
+
+      if key_prefix == "-"
+        exclude_locales.concat(locales)
+      else
+        include_locales.concat(locales)
+      end
+    end
+
+    @scope = @scope.where(locale: include_locales) if include_locales.present?
+
+    if exclude_locales.present?
+      @scope = @scope.where("topics.locale IS NULL OR topics.locale NOT IN (?)", exclude_locales)
+    end
   end
 
   ORDER_BY_MAPPINGS = {
