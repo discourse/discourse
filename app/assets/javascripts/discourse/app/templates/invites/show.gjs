@@ -2,7 +2,7 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
-import { and, not, or } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FullnameInput from "discourse/components/fullname-input";
 import InputTip from "discourse/components/input-tip";
@@ -28,18 +28,14 @@ export default RouteTemplate(
     {{hideApplicationSidebar}}
     <section>
       <div class="container invites-show clearfix">
-        {{#unless @controller.existingUserId}}
-          {{#unless
-            (or
-              @controller.externalAuthsOnly @controller.discourseConnectEnabled
-            )
-          }}
+        {{#if @controller.showWelcomeHeader}}
+          {{#if @controller.showSignupProgressBar}}
             <SignupProgressBar
               @step={{if @controller.successMessage "activate" "signup"}}
             />
             <WelcomeHeader @header={{@controller.welcomeTitle}} />
-          {{/unless}}
-        {{/unless}}
+          {{/if}}
+        {{/if}}
 
         <div
           class={{if @controller.successMessage "invite-success" "invite-form"}}
