@@ -79,6 +79,7 @@ export default class ChatUpload extends Component {
         class="chat-img-upload lightbox"
         data-orig-src={{@upload.short_url}}
         data-large-src={{@upload.url}}
+        data-download-href={{@upload.short_path}}
         height={{this.size.thumb_height}}
         width={{this.size.thumb_width}}
         src={{this.imageUrl}}

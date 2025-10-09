@@ -21,9 +21,6 @@ export default async function lightbox(elem, siteSettings) {
     return;
   }
 
-  const dlText = renderIcon("string", "download") + i18n("lightbox.download");
-  const origImgText = renderIcon("string", "image") + i18n("lightbox.open");
-
   if (siteSettings.experimental_lightbox) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
 
@@ -33,48 +30,74 @@ export default async function lightbox(elem, siteSettings) {
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
       errorMsg: i18n("lightbox.content_load_error", { url: elem.href }),
-      padding: { top: 20, bottom: 50, left: 20, right: 20 },
       pswpModule: async () => await import("photoswipe"),
     });
 
     // adds a custom caption to lightbox
     lightboxEl.on("uiRegister", function () {
-      const canDownload =
-        !siteSettings.prevent_anons_from_downloading_files || User.current();
-
       lightboxEl.pswp.ui.registerElement({
         name: "caption",
-        order: 9,
+        order: 7,
         isButton: false,
         appendTo: "root",
         html: "",
         onInit: (caption, pswp) => {
           pswp.on("change", () => {
-            const slideEl = pswp.currSlide.data.element;
+            const { element, isChat, inlineSVG } = pswp.currSlide.data;
 
-            if (!slideEl || pswp.currSlide.data.inlineSVG) {
+            if (!element || isChat || inlineSVG) {
               return;
             }
 
-            const data = slideEl.dataset;
-            const slideImg = slideEl.querySelector("img");
-            const alt = slideEl.alt || slideImg?.getAttribute("alt");
-            const info = slideEl.querySelector(".informations")?.innerText;
-            const origSrc = data.largeSrc || slideEl.href || slideImg?.src;
-            const dlHref = data.downloadHref || data.largeSrc || slideImg?.src;
+            const text = escapeExpression(element.alt || element.title);
+            const info = element.querySelector(".informations")?.innerText;
+            const title = text ? `<div class='title'>${text}</div>` : null;
+            const details = info ? `<div class='details'>${info}</div>` : null;
 
-            let captionHTML, details, download, origImg, title;
+            caption.innerHTML = [title, details].filter(Boolean).join("");
+          });
+        },
+      });
 
-            title = alt ? `<div class='title'>${alt}</div>` : null;
-            details = info ? `<div class='details'>${info}</div>` : null;
-            download = canDownload ? `<a href="${dlHref}">${dlText}</a>` : null;
-            origImg = `<a href="${origSrc}">${origImgText}</a>`;
+      lightboxEl.pswp.ui.registerElement({
+        name: "download-image",
+        order: 8,
+        isButton: true,
+        tagName: "a",
+        title: i18n("lightbox.download"),
+        html: renderIcon("string", "download"),
 
-            captionHTML = [title, details, download, origImg]
-              .filter(Boolean)
-              .join(" &middot; ");
+        onInit: (el, pswp) => {
+          if (
+            siteSettings.prevent_anons_from_downloading_files ||
+            !User.current()
+          ) {
+            return false;
+          }
 
-            caption.innerHTML = captionHTML;
+          el.setAttribute("target", "_blank");
+          el.setAttribute("rel", "noopener");
+
+          pswp.on("change", () => {
+            el.href = pswp.currSlide.data.element.dataset.downloadHref;
+          });
+        },
+      });
+
+      lightboxEl.pswp.ui.registerElement({
+        name: "original-image",
+        order: 9,
+        isButton: true,
+        tagName: "a",
+        title: i18n("lightbox.open"),
+        html: renderIcon("string", "image"),
+
+        onInit: (el, pswp) => {
+          el.setAttribute("target", "_blank");
+          el.setAttribute("rel", "noopener");
+
+          pswp.on("change", () => {
+            el.href = pswp.currSlide.data.src;
           });
         },
       });
@@ -112,6 +135,7 @@ export default async function lightbox(elem, siteSettings) {
       }
 
       data.src = data.src || el.getAttribute("data-large-src");
+      data.isChat = el.classList.contains("chat-img-upload");
       data.w = data.width = width;
       data.h = data.height = height;
 
@@ -195,16 +219,22 @@ export default async function lightbox(elem, siteSettings) {
         tError: i18n("lightbox.image_load_error"),
         titleSrc(item) {
           const href = item.el.data("download-href") || item.src;
+          const downloadText =
+            renderIcon("string", "download") + i18n("lightbox.download");
+          const origImgText =
+            renderIcon("string", "image") + i18n("lightbox.open");
+
           let src = [
             escapeExpression(item.el.attr("title")),
             $("span.informations", item.el).text(),
           ];
+
           if (
             !siteSettings.prevent_anons_from_downloading_files ||
             User.current()
           ) {
             src.push(
-              `<a class="image-source-link" href="${href}">${dlText}</a>`
+              `<a class="image-source-link" href="${href}">${downloadText}</a>`
             );
           }
           src.push(

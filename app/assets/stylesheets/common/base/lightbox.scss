@@ -124,38 +124,34 @@
 
 // photoswipe custom caption
 .pswp__caption {
-  left: 50%;
-  bottom: 1em;
-  position: absolute;
-  color: var(--primary);
-  border-radius: 8px;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 0.75em;
   text-align: center;
-  display: flex;
-  gap: 0.5em;
-  line-height: var(--line-height-high);
-  transform: translateX(-50%);
+  position: absolute;
+  background-color: rgb(0, 0, 0, 0.75);
 
   .title {
-    max-width: 400px;
-
-    @include ellipsis;
+    left: 50%;
+    color: #fff;
+    position: relative;
+    max-width: 800px;
+    padding: 0 1em 0.5em;
+    transform: translateX(-50%);
   }
 
   .details {
-    white-space: nowrap;
+    color: var(--secondary-high);
+    font-size: var(--font-down-1);
   }
+}
 
-  a .d-icon {
-    padding-right: 5px;
-  }
-
-  a {
-    white-space: nowrap;
-    color: var(--tertiary-high);
-    text-transform: capitalize;
-  }
-
-  .hidden-caption-content {
-    display: none;
-  }
+.pswp__button--download-image svg,
+.pswp__button--original-image svg {
+  top: 50%;
+  left: 50%;
+  color: var(--pswp-icon-color);
+  position: absolute;
+  transform: translate(-50%, -50%);
 }
