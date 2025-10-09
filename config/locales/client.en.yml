@@ -5699,12 +5699,6 @@ en:
               title: "Social logins"
             discourseconnect:
               title: "Discourse Connect"
-            oauth2:
-              title: "OAuth2.0"
-            oidc:
-              title: "OIDC"
-            saml:
-              title: "SAML"
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"
