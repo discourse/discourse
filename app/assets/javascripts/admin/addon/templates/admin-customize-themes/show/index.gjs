@@ -342,7 +342,7 @@ export default RouteTemplate(
           </summary>
           <ul>
             {{#each @controller.extraFiles as |extraFile|}}
-              <li>{{extraFile.name}}</li>
+              <li>{{extraFile.file_path}}</li>
             {{/each}}
           </ul>
         </details>
