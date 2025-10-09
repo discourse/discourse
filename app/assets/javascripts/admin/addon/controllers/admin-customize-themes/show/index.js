@@ -57,21 +57,13 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
 
   @discourseComputed("model.theme_fields.[]")
   extraFiles() {
-    const filtered = this.model.theme_fields?.filter((field) => {
-      if (!field || typeof field !== "object") {
-        return false;
-      }
-      return (
-        (field.target === "extra_js" && field.type_id === 6) ||
-        (field.target === "extra_scss" && field.type_id === 1)
-      );
-    });
-
-    return filtered?.sort((a, b) => {
-      const pathA = a.file_path || "";
-      const pathB = b.file_path || "";
-      return pathA.localeCompare(pathB);
-    });
+    return this.model.theme_fields
+      ?.filter(
+        ({ target, type_id }) =>
+          (target === "extra_js" && type_id === 6) ||
+          (target === "extra_scss" && type_id === 1)
+      )
+      ?.sort((a, b) => (a.file_path || "").localeCompare(b.file_path || ""));
   }
 
   @discourseComputed("model.editedFields")
