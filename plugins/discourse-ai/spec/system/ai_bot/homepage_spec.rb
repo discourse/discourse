@@ -141,6 +141,8 @@ RSpec.describe "AI Bot - Homepage", type: :system do
       end
 
       context "when `ai_bot_enable_dedicated_ux` is enabled" do
+        before { SiteSetting.ai_bot_add_to_header = true }
+
         it "allows uploading files to a new conversation" do
           ai_pm_homepage.visit
           expect(ai_pm_homepage).to have_homepage

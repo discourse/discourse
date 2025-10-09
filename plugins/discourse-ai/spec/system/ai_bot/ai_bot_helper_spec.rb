@@ -9,6 +9,7 @@ RSpec.describe "AI chat channel summarization", type: :system do
   before do
     enable_current_plugin
     SiteSetting.ai_bot_enabled = true
+    SiteSetting.ai_bot_add_to_header = true
     toggle_enabled_bots(bots: [gpt_4, gpt_3_5_turbo])
     SiteSetting.ai_bot_allowed_groups = group.id.to_s
     sign_in(user)
