@@ -8,7 +8,6 @@ const extension = {
       code: true,
       defining: true,
       marks: "",
-      isolating: true,
       selectable: true,
       parseDOM: [{ tag: "pre.html-block", preserveWhitespace: "full" }],
       toDOM() {
