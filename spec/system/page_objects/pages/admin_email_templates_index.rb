@@ -16,6 +16,10 @@ module PageObjects
         def name_cell
           @element.find(".admin-email-templates__name")
         end
+
+        def overridden?
+          @element[:class].include?("overridden")
+        end
       end
 
       def visit
@@ -28,6 +32,10 @@ module PageObjects
 
       def filter_controls
         PageObjects::Components::AdminFilterControls.new(".admin-filter-controls")
+      end
+
+      def only_overridden_checkbox
+        find("#toggle-overridden")
       end
 
       def has_exact_count_templates_shown?(count)

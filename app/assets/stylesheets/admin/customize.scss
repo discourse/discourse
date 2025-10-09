@@ -844,6 +844,14 @@
   .d-editor {
     height: 50vh;
   }
+
+  .email-templates-list {
+    &__row {
+      &.overridden {
+        border-left: 3px solid var(--highlight-medium);
+      }
+    }
+  }
 }
 
 .admin-customize-email-style {

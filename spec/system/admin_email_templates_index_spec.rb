@@ -45,5 +45,21 @@ describe "Admin Email Templates Page", type: :system do
         email_templates_page.template("user_notifications.account_exists").name_cell.text.strip,
       ).to eq("Account already exists")
     end
+
+    it "can filter templates to only show overridden ones" do
+      TranslationOverride.upsert!(
+        I18n.locale,
+        "user_notifications.user_replied_pm.text_body_template",
+        "some new body",
+      )
+      email_templates_page.visit
+
+      expect(email_templates_page.only_overridden_checkbox.checked?).to be_falsey
+
+      email_templates_page.only_overridden_checkbox.click
+
+      expect(email_templates_page).to have_exact_count_templates_shown(1)
+      expect(email_templates_page.template("user_notifications.user_replied_pm")).to be_overridden
+    end
   end
 end
