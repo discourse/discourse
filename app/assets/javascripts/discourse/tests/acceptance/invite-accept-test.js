@@ -25,6 +25,7 @@ function preloadInvite({
   email_verified_by_link = false,
   different_external_email = false,
   hidden_email = false,
+  existing_user = false,
 } = {}) {
   const info = {
     invited_by: {
@@ -46,6 +47,11 @@ function preloadInvite({
   } else {
     info.email = "foobar@example.com";
     info.is_invite_link = false;
+  }
+
+  if (existing_user) {
+    info.existing_user_id = 456;
+    info.existing_user_can_redeem = true;
   }
 
   PreloadStore.store("invite_info", info);
@@ -242,6 +248,29 @@ acceptance(
           "does not show the email message with the prefilled email"
         );
       assert.dom(".discourse-connect").exists("shows the Continue button");
+      assert
+        .dom(".accept-invitation")
+        .doesNotExist("does not show the Accept Invite button");
+    });
+
+    test("invite link (as logged in user)", async function (assert) {
+      preloadInvite({ link: true, existing_user: true });
+
+      await visit("/invites/my-valid-invite-token");
+
+      assert
+        .dom(".btn-social.facebook")
+        .doesNotExist("does not show Facebook login button");
+      assert.dom("form").doesNotExist("does not display the form");
+      assert
+        .dom(".email-message")
+        .doesNotExist(
+          "does not show the email message with the prefilled email"
+        );
+      assert.dom(".discourse-connect").exists("shows the Continue button");
+      assert
+        .dom(".accept-invitation")
+        .doesNotExist("does not show the Accept Invite button");
     });
 
     test("email invite link", async function (assert) {
@@ -258,6 +287,28 @@ acceptance(
         .exists("shows the email message with the prefilled email");
       assert.dom(".discourse-connect").exists("shows the Continue button");
       assert.dom(".email-message").includesText("foobar@example.com");
+      assert
+        .dom(".accept-invitation")
+        .doesNotExist("does not show the Accept Invite button");
+    });
+
+    test("email invite link (as logged in user)", async function (assert) {
+      preloadInvite({ existing_user: true });
+
+      await visit("/invites/my-valid-invite-token");
+
+      assert
+        .dom(".btn-social.facebook")
+        .doesNotExist("does not show Facebook login button");
+      assert.dom("form").doesNotExist("does not display the form");
+      assert
+        .dom(".email-message")
+        .exists("shows the email message with the prefilled email");
+      assert.dom(".discourse-connect").exists("shows the Continue button");
+      assert.dom(".email-message").includesText("foobar@example.com");
+      assert
+        .dom(".accept-invitation")
+        .doesNotExist("does not show the Accept Invite button");
     });
   }
 );
@@ -275,6 +326,9 @@ acceptance(
 
       await visit("/invites/my-valid-invite-token");
       assert.dom("form").doesNotExist("does not display the form");
+      assert
+        .dom(".accept-invitation")
+        .doesNotExist("does not show the Accept Invite button");
     });
   }
 );

@@ -28,14 +28,18 @@ export default RouteTemplate(
     {{hideApplicationSidebar}}
     <section>
       <div class="container invites-show clearfix">
-        {{#unless
-          (or @controller.externalAuthsOnly @controller.existingUserId)
-        }}
-          <SignupProgressBar
-            @step={{if @controller.successMessage "activate" "signup"}}
-          />
+        {{#unless @controller.existingUserId}}
+          {{#unless
+            (or
+              @controller.externalAuthsOnly @controller.discourseConnectEnabled
+            )
+          }}
+            <SignupProgressBar
+              @step={{if @controller.successMessage "activate" "signup"}}
+            />
+            <WelcomeHeader @header={{@controller.welcomeTitle}} />
+          {{/unless}}
         {{/unless}}
-        <WelcomeHeader @header={{@controller.welcomeTitle}} />
 
         <div
           class={{if @controller.successMessage "invite-success" "invite-form"}}
@@ -257,21 +261,24 @@ export default RouteTemplate(
                   {{/if}}
                 </form>
               {{/if}}
-              {{#if @controller.existingUserRedeeming}}
-                {{#if @controller.existingUserCanRedeem}}
-                  <DButton
-                    @action={{@controller.submit}}
-                    @disabled={{@controller.submitDisabled}}
-                    @label="invites.accept_invite"
-                    type="submit"
-                    class="btn-primary"
-                  />
-                {{else}}
-                  <div
-                    class="alert alert-error"
-                  >{{@controller.existingUserCanRedeemError}}</div>
+              {{! When using DiscourseConnect, all invite acceptance has to go through the SSO flow }}
+              {{#unless @controller.discourseConnectEnabled}}
+                {{#if @controller.existingUserRedeeming}}
+                  {{#if @controller.existingUserCanRedeem}}
+                    <DButton
+                      @action={{@controller.submit}}
+                      @disabled={{@controller.submitDisabled}}
+                      @label="invites.accept_invite"
+                      type="submit"
+                      class="btn-primary accept-invitation"
+                    />
+                  {{else}}
+                    <div
+                      class="alert alert-error"
+                    >{{@controller.existingUserCanRedeemError}}</div>
+                  {{/if}}
                 {{/if}}
-              {{/if}}
+              {{/unless}}
             {{/if}}
           </div>
         </div>
