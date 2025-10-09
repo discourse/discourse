@@ -439,9 +439,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   }
 
   @action
-  async loadSubcategories(id, offset) {
+  loadSubcategories(id, offset) {
     this.subcategoryLoadList.push({ id, offset });
-    this.debouncedSendRequest();
+    this.performSearch();
   }
 
   debouncedSendRequest() {
@@ -605,6 +605,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                     {{didInsert this.didInsert}}
                     data-category-level={{c.level}}
                     class="sidebar-categories-form__category-row"
+                    data-test-category-id={{c.id}}
                   >
                     <label class="sidebar-categories-form__category-label">
                       <div class="sidebar-categories-form__category-wrapper">
