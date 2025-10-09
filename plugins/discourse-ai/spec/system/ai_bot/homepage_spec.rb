@@ -101,7 +101,6 @@ RSpec.describe "AI Bot - Homepage", type: :system do
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
     pm.save!
 
-    SiteSetting.ai_bot_enable_dedicated_ux = true
     SiteSetting.ai_bot_enabled = true
     SiteSetting.navigation_menu = "sidebar"
     Jobs.run_immediately!
