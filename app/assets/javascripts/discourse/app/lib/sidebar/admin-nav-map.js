@@ -100,12 +100,28 @@ export const ADMIN_NAV_MAP = [
         icon: "certificate",
       },
       {
-        name: "admin_login_and_authentication",
-        route: "adminConfig.loginAndAuthentication.settings",
-        label: "admin.config.login_and_authentication.title",
-        description: "admin.config.login_and_authentication.header_description",
+        name: "admin_login",
+        route: "adminConfig.login",
+        label: "admin.config.login.title",
+        description: "admin.config.login.header_description",
         icon: "unlock",
-        settings_category: "login",
+        multi_tabbed: true,
+        links: [
+          {
+            name: "admin_login_authenticators",
+            route: "adminConfig.login.authenticators",
+            label: "admin.config.login.sub_pages.authenticators.title",
+            icon: "unlock",
+            settings_area: "authenticators",
+          },
+          {
+            name: "admin_login_discourseconnect",
+            route: "adminConfig.login.discourseconnect",
+            label: "admin.config.login.sub_pages.discourseconnect.title",
+            icon: "unlock",
+            settings_area: "discourseconnect",
+          },
+        ],
       },
       {
         name: "admin_notifications",
