@@ -22,7 +22,10 @@ module Migrations::Importer::Steps::Base
         Enums::SiteSettingDatatype::UPLOADED_IMAGE_LIST,
         Enums::SiteSettingDatatype::USERNAME,
       ].map { |number| ::SiteSettings::TypeSupervisor.types[number].to_s }
-    private_constant :DATATYPES_WITH_DEPENDENCY
+
+    DISALLOWED_SITE_SETTINGS = Set.new([:permalink_normalizations]).freeze
+
+    private_constant :DATATYPES_WITH_DEPENDENCY, :DISALLOWED_SITE_SETTINGS
 
     def execute
       super
@@ -87,10 +90,16 @@ module Migrations::Importer::Steps::Base
 
     def row_importable?(row)
       row in { name:, import_mode: }
-      setting = @settings_index[name.to_sym]
+      name_symbol = row[:name].to_sym
+      setting = @settings_index[name_symbol]
 
       if setting.nil?
         log_warning "Ignoring unknown site setting: #{name}"
+        return false
+      end
+
+      if DISALLOWED_SITE_SETTINGS.include?(name_symbol)
+        log_warning "Ignoring disallowed site setting: #{name}"
         return false
       end
 
