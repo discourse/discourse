@@ -411,7 +411,7 @@ GEM
       prettyprint
     prettier_print (1.2.1)
     prettyprint (0.2.0)
-    prism (1.5.1)
+    prism (1.5.2)
     progress (3.6.0)
     propshaft (1.3.1)
       actionpack (>= 7.0.0)
@@ -1096,7 +1096,7 @@ CHECKSUMS
   pp (0.6.3) sha256=2951d514450b93ccfeb1df7d021cae0da16e0a7f95ee1e2273719669d0ab9df6
   prettier_print (1.2.1) sha256=a72838b5f23facff21f90a5423cdcdda19e4271092b41f4ea7f50b83929e6ff9
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
-  prism (1.5.1) sha256=b40c1b76ccb9fcccc3d1553967cda6e79fa7274d8bfea0d98b15d27a6d187134
+  prism (1.5.2) sha256=192741663a55af1ac1b987caa1092deb666e4ff46a30c5064ad5456acd05df1d
   progress (3.6.0) sha256=360ed306dfa43d6174e847d563c70736dca249e2333cfec4b0387306c86cd573
   propshaft (1.3.1) sha256=9acc664ef67e819ffa3d95bd7ad4c3623ea799110c5f4dee67fa7e583e74c392
   pry (0.15.2) sha256=12d54b8640d3fa29c9211dd4ffb08f3fd8bf7a4fd9b5a73ce5b59c8709385b6b
