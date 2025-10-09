@@ -5,7 +5,6 @@ module Migrations::Importer::Steps::Base
     class << self
       def inherited(klass)
         super
-
         klass.requires_mapping :last_change_dates, "SELECT name, updated_at FROM site_settings"
       end
     end
@@ -29,58 +28,66 @@ module Migrations::Importer::Steps::Base
       super
 
       @log_messages = []
-      @log_message = I18n.t("importer.site_setting_log_message")
+      @audit_message = I18n.t("importer.site_setting_log_message")
+      @failed_settings = []
 
-      @all_settings_by_name =
-        without_deprecate_warnings do
+      @settings_index =
+        silence_deprecation_warnings do
           SiteSetting.all_settings(include_hidden: true)
         end.index_by { |hash| hash[:setting] }
 
-      @failed_settings = []
+      import_rows = fetch_rows.reject { |row| skip_row?(row) }
 
-      rows = @intermediate_db.query <<~SQL
-        SELECT name, value, last_changed_at, import_mode
-        FROM site_settings
-        ORDER BY ROWID
-      SQL
-
-      rows = rows.reject { |row| skipped_row?(row) }
-
-      with_progressbar(rows.size) do
-        log_deprecations do
-          rows.each do |row|
-            @stats.reset
-            failed_setting_size = @failed_settings.size
-
-            import(row) if importable?(row)
-            update_progressbar if failed_setting_size == @failed_settings.size
-          end
-
-          failed_setting_size = @failed_settings.size
-          retry_failed_settings
-          update_progressbar(increment_by: failed_setting_size)
-        end
+      with_progressbar(import_rows.size) do
+        capture_deprecation_warnings { process_rows(import_rows) }
       end
 
-      # TODO Use logging framework when it's implemented
+      # TODO: Replace with logging when available
       @log_messages.each { |message| puts "      #{message}" }
     end
 
     protected
 
-    def skipped_row?(row)
+    # Override in subclasses to skip rows that should be handled in a later step.
+    def skip_row?(_row)
       false
     end
 
-    def transform_value(value, type)
+    # Override in subclasses to adapt/normalize values by type.
+    def transform_value(value, _type)
       value
     end
 
     private
 
-    def importable?(row)
+    def fetch_rows
+      @intermediate_db.query <<~SQL
+        SELECT name, value, last_changed_at, import_mode
+        FROM site_settings
+        ORDER BY ROWID
+      SQL
+    end
+
+    def process_rows(rows)
+      rows.each do |row|
+        @stats.reset
+        before_fail_count = @failed_settings.size
+
+        import_row(row) if row_importable?(row)
+
+        # Only advance the progress bar if the row didn't get deferred due to failure.
+        update_progressbar if before_fail_count == @failed_settings.size
+      end
+
+      # Re-attempt failed updates (often due to dependency ordering).
+      failures_before_retry = @failed_settings.size
+      retry_failed_updates
+      update_progressbar(increment_by: failures_before_retry)
+    end
+
+    def row_importable?(row)
       row in { name:, import_mode: }
-      setting = @all_settings_by_name[name.to_sym]
+      setting = @settings_index[name.to_sym]
 
       if setting.nil?
         log_warning "Ignoring unknown site setting: #{name}"
@@ -106,21 +113,21 @@ module Migrations::Importer::Steps::Base
       true
     end
 
-    def import(row)
+    def import_row(row)
       row in { name:, value:, last_changed_at:, import_mode: }
-      setting = @all_settings_by_name[name.to_sym]
+      setting = @settings_index[name.to_sym]
 
       case import_mode
       when Enums::SiteSettingImportMode::AUTO
-        smart_import(setting, value, last_changed_at)
+        auto_import(setting, value, last_changed_at)
       when Enums::SiteSettingImportMode::APPEND
-        append(setting, value)
+        append_to_list(setting, value)
       when Enums::SiteSettingImportMode::OVERRIDE
         set_and_log(setting, transform_value(value, setting[:type]))
       end
     end
 
-    def smart_import(setting, value, last_changed_at)
+    def auto_import(setting, value, last_changed_at)
       name = setting[:setting]
       last_changed_at ||= Time.now
       existing_last_changed_at = @last_change_dates[name]
@@ -132,7 +139,7 @@ module Migrations::Importer::Steps::Base
       end
     end
 
-    def append(setting, value)
+    def append_to_list(setting, value)
       name = setting[:setting]
       type = setting[:type]
       existing_values = (SiteSetting.get(name) || "").split("|").to_set
@@ -152,32 +159,30 @@ module Migrations::Importer::Steps::Base
       name = setting[:setting]
 
       begin
-        SiteSetting.set_and_log(name, value, Discourse.system_user, @log_message)
+        SiteSetting.set_and_log(name, value, Discourse.system_user, @audit_message)
       rescue StandardError => exception
         @failed_settings << { setting:, value:, exception: }
       end
     end
 
-    def retry_failed_settings
+    def retry_failed_updates
       previous_count = nil
 
       while @failed_settings.any? && @failed_settings.size != previous_count
         previous_count = @failed_settings.size
-        shuffled_failed_settings = @failed_settings.shuffle
+        shuffled = @failed_settings.shuffle
         @failed_settings = []
-
-        shuffled_failed_settings.each { |f| set_and_log(f[:setting], f[:value]) }
+        shuffled.each { |f| set_and_log(f[:setting], f[:value]) }
       end
 
       @failed_settings.each do |failed|
         name = failed[:setting][:setting]
         exception = failed[:exception]
-
         log_error "Failed to update site setting '#{name}': #{exception.message}"
       end
     end
 
-    def with_overridden_deprecate(impl)
+    def with_temporary_deprecate_handler(impl)
       original = Discourse.method(:deprecate)
       Discourse.define_singleton_method(:deprecate, impl)
       begin
@@ -187,17 +192,17 @@ module Migrations::Importer::Steps::Base
       end
     end
 
-    def without_deprecate_warnings
-      with_overridden_deprecate(->(_warning, **_kwargs) {}) { yield }
+    def silence_deprecation_warnings
+      with_temporary_deprecate_handler(->(_warning, **_kwargs) {}) { yield }
     end
 
-    def log_deprecations
-      logged_site_settings = Set.new
-      with_overridden_deprecate(
+    def capture_deprecation_warnings
+      logged_settings = Set.new
+
+      with_temporary_deprecate_handler(
         ->(warning, **_kwargs) do
           setting_name = warning[/`SiteSetting\.(.*?)=?`.*/, 1]
-          log_warning warning if logged_site_settings.exclude?(setting_name)
-          logged_site_settings << setting_name
+          log_warning warning if setting_name && logged_settings.add?(setting_name)
         end,
       ) { yield }
     end

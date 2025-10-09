@@ -7,11 +7,11 @@ module Migrations::Importer::Steps
 
     protected
 
-    def skipped_row?(row)
+    def skip_row?(row)
       name = row[:name].to_sym
-      setting = @all_settings_by_name[name]
+      setting = @settings_index[name]
 
-      # we can't skip unknown settings here, we need to handle them within the progressbar
+      # Can't skip unknown settings here; we need to count them in the progress bar.
       return false if setting.nil?
 
       DATATYPES_WITH_DEPENDENCY.include?(setting[:type])
