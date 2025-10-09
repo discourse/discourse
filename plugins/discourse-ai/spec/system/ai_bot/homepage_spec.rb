@@ -409,6 +409,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         end
 
         it "renders back to forum link when header button is disabled" do
+          SiteSetting.ai_bot_add_to_header = false
           ai_pm_homepage.visit
           expect(ai_pm_homepage).to have_sidebar_back_link
         end
