@@ -13,11 +13,11 @@ module PageObjects
       end
 
       def click_discard
-        footer.find("button.discard-draft").click
+        footer.find(".btn-discard-draft").click
       end
 
       def click_cancel
-        footer.find("button.close-modal").click
+        footer.find(".btn-close-modal").click
       end
     end
   end

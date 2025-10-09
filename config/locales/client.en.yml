@@ -4213,8 +4213,6 @@ en:
       cancel_composer:
         confirm: "What would you like to do with your post?"
         discard: "Discard"
-        save_draft: "Save draft for later"
-        keep_editing: "Keep editing"
         cancel: "Cancel"
 
       via_email: "this post arrived via email"

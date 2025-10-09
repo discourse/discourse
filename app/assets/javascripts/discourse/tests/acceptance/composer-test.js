@@ -230,7 +230,7 @@ import { i18n } from "discourse-i18n";
         await click("#reply-control .discard-button");
         assert.dom(".d-modal").exists("pops up a confirmation dialog");
 
-        await click(".d-modal__footer .discard-draft");
+        await click(".d-modal__footer .btn-discard-draft");
         assert
           .dom(".d-modal__body")
           .doesNotExist("the confirmation can be cancelled");
@@ -370,8 +370,7 @@ import { i18n } from "discourse-i18n";
           );
 
         await click(".topic-post[data-post-number='1'] button.edit");
-        assert.dom(".d-modal__footer button.save-draft").doesNotExist();
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .btn-discard-draft");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
 
         assert
@@ -392,7 +391,7 @@ import { i18n } from "discourse-i18n";
         await click("#topic-footer-buttons .create");
         assert.dom(".discard-draft-modal.modal").exists();
 
-        await click(".d-modal__footer button.close-modal");
+        await click(".d-modal__footer .btn-close-modal");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
 
         assert
@@ -457,7 +456,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up the discard drafts modal");
 
-        await click(".d-modal__footer button.close-modal");
+        await click(".d-modal__footer .btn-close-modal");
 
         assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
         await click("#topic-footer-buttons .btn.create");
@@ -465,7 +464,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up the modal again");
 
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .btn-discard-draft");
 
         assert
           .dom(".d-editor-input")
@@ -508,7 +507,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up the discard drafts modal");
 
-        await click(".d-modal__footer button.close-modal");
+        await click(".d-modal__footer .btn-close-modal");
         assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
 
         assert
@@ -684,7 +683,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
 
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .btn-discard-draft");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -898,11 +897,10 @@ import { i18n } from "discourse-i18n";
         assert
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
-        assert.dom(".d-modal__footer button.save-draft").doesNotExist();
         assert
-          .dom(".d-modal__footer button.close-modal")
+          .dom(".d-modal__footer .btn-close-modal")
           .hasText(i18n("post.cancel_composer.cancel"), "has Cancel button");
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .btn-discard-draft");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -924,10 +922,10 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
         assert
-          .dom(".d-modal__footer button.discard-draft")
+          .dom(".d-modal__footer .btn-discard-draft")
           .hasText(i18n("post.cancel_composer.discard"), "has Discard button");
         assert
-          .dom(".d-modal__footer button.close-modal")
+          .dom(".d-modal__footer .btn-close-modal")
           .hasText(i18n("post.cancel_composer.cancel"), "has Cancel button");
       });
 
@@ -1111,8 +1109,13 @@ import { i18n } from "discourse-i18n";
         await click("#create-topic");
         await fillIn("#reply-title", "Something");
         await fillIn(".d-editor-input", "Something");
-        await click(".discard-button");
-        assert.dom(".discard-draft-modal .save-draft").doesNotExist();
+        await click("button.create");
+        assert.dom(".d-editor-textarea-wrapper .popup-tip.bad").hasText(
+          i18n("composer.error.post_length.other", {
+            count: this.siteSettings.min_first_post_length,
+          }),
+          "shows error"
+        );
       });
 
       test("Saves drafts that only contain quotes", async function (assert) {
