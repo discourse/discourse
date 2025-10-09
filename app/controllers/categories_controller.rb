@@ -162,7 +162,7 @@ class CategoriesController < ApplicationController
           execute_at: Time.now,
         }
 
-        @category.set_or_create_default_timer timer_opts
+        @category.set_or_create_default_timer(timer_opts)
       end
 
       Scheduler::Defer.later "Log staff action create category" do
