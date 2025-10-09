@@ -64,10 +64,9 @@ describe "Admin Badges Page", type: :system do
       expect(badges_page).to have_saved_form
 
       badge = Badge.find(Badge::Autobiographer)
-      try_until_success do
-        expect(badge.image_upload_id).to be_present
-        expect(badge.icon).to be_blank
-      end
+
+      expect(badge.image_upload_id).to be_present
+      expect(badge.icon).to be_blank
     end
 
     it "can change to an icon for the badge" do

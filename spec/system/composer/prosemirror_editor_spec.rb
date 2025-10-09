@@ -59,7 +59,7 @@ describe "Composer - ProseMirror editor", type: :system do
     composer.toggle_rich_editor
     expect(composer).to have_markdown_editor_active
 
-    try_until_success(frequency: 0.5) do
+    try_until_success(reason: "Relies on an Ember timer to update the user option") do
       expect(current_user.user_option.reload.composition_mode).to eq(
         UserOption.composition_mode_types[:markdown],
       )
@@ -93,7 +93,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
     expect(composer).to have_rich_editor
 
-    try_until_success(frequency: 0.5) do
+    try_until_success(reason: "Relies on an Ember timer to update the user option") do
       expect(current_user.user_option.reload.composition_mode).to eq(
         UserOption.composition_mode_types[:rich],
       )

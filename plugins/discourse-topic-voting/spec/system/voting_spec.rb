@@ -31,7 +31,7 @@ RSpec.describe "Topic voting", type: :system do
       .toggle_setting("enable-topic-voting", "Allow users to vote on topics in this category")
       .save_settings
 
-    try_until_success { expect(Category.can_vote?(category1.id)).to eq(true) }
+    expect(Category.can_vote?(category1.id)).to eq(true)
 
     # make a vote
     category_page.visit(category1)

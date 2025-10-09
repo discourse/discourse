@@ -97,7 +97,7 @@ module PageObjects
       end
 
       def has_value?(value)
-        try_until_success { expect(composer_input.value).to eq(value) }
+        expect(composer_input.value).to eq(value)
       end
 
       def has_popup_content?(content)

@@ -450,11 +450,12 @@ describe "About page", type: :system do
       sign_in(admin)
 
       about_page.visit
+
       expect(about_page).to have_edit_link
 
       about_page.edit_link.click
 
-      try_until_success { expect(current_url).to end_with("/admin/config/about") }
+      expect(current_url).to end_with("/admin/config/about")
     end
 
     it "doesn't appear for moderators" do

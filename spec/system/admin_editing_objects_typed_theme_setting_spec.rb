@@ -147,16 +147,14 @@ RSpec.describe "Admin editing objects type theme setting", type: :system do
 
       theme_settings_editor.save
 
-      try_until_success do
-        expect(theme.reload.settings[:objects_setting].value).to eq(
-          [
-            {
-              "links" => [{ "name" => "new link", "url" => "https://example.com" }],
-              "name" => "new section",
-            },
-          ],
-        )
-      end
+      expect(theme.reload.settings[:objects_setting].value).to eq(
+        [
+          {
+            "links" => [{ "name" => "new link", "url" => "https://example.com" }],
+            "name" => "new section",
+          },
+        ],
+      )
     end
   end
 end

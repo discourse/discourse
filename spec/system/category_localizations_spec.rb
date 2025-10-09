@@ -97,9 +97,7 @@ describe "Category Localizations", type: :system do
           category_page.save_settings
           page.refresh
 
-          try_until_success do
-            expect(CategoryLocalization.where(category_id: mono_category.id).count).to eq(2)
-          end
+          expect(CategoryLocalization.where(category_id: mono_category.id).count).to eq(2)
           expect(
             CategoryLocalization.where(category_id: mono_category.id, locale: "es").count,
           ).to eq(1)

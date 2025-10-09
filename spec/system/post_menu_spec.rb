@@ -441,7 +441,7 @@ describe "Post menu", type: :system do
       topic_page.click_post_action_button(unliked_post, :like)
 
       # we need this because the find_post_action_button will target the like button on or off
-      try_until_success do
+      try_until_success(reason: "Relies on Ember debounce") do
         like_button = topic_page.find_post_action_button(unliked_post, :like)
         expect(like_button[:class].split("\s")).to include("has-like")
       end
@@ -453,7 +453,7 @@ describe "Post menu", type: :system do
       topic_page.click_post_action_button(unliked_post, :like)
 
       # we need this because the find_post_action_button will target the like button on or off
-      try_until_success do
+      try_until_success(reason: "Relies on Ember debounce") do
         like_button = topic_page.find_post_action_button(unliked_post, :like)
         expect(like_button[:class].split("\s")).to include("like")
       end

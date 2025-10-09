@@ -58,9 +58,7 @@ describe "Admin Logo Page", type: :system do
 
       logo_page.form.submit
 
-      try_until_success do
-        primary_section_logos.each { |image_type| expect(SiteSetting.send(image_type)).to eq(nil) }
-      end
+      primary_section_logos.each { |image_type| expect(SiteSetting.send(image_type)).to eq(nil) }
     end
   end
 

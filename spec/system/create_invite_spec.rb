@@ -74,7 +74,7 @@ describe "Creating Invites", type: :system do
       create_invite_modal.save_button.click
       create_invite_modal.close
 
-      try_until_success { expect(user_invited_pending_page.invites_list.size).to eq(2) }
+      expect(user_invited_pending_page.invites_list.size).to eq(2)
 
       user_invited_pending_page.latest_invite.edit_button.click
     end

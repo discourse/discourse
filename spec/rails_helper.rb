@@ -434,6 +434,7 @@ RSpec.configure do |config|
 
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
+
         begin
           super
         rescue StandardError => e
@@ -474,6 +475,81 @@ RSpec.configure do |config|
         end
       end
     end
+
+    module CapybaraPlaywrightBasePatch
+      private
+
+      def execute_async_client_settled_script(session)
+        result = session.evaluate_async_script(<<~JS)
+            const done = arguments[0];
+
+            if (window.clientSettled) {
+              window.clientSettled(#{Capybara.default_max_wait_time * 1000})
+                .then(done)
+                .catch((error) => { done(error.message) });
+            } else {
+              done();
+            }
+          JS
+
+        raise result if result.is_a? String
+      end
+
+      def wait_for_client_settled(method_name)
+        session = @driver.send(:session)
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+          execute_async_client_settled_script(session)
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        else
+          execute_async_client_settled_script(session)
+        end
+      end
+    end
+
+    module CapybaraPlaywrightNodePatch
+      include CapybaraPlaywrightBasePatch
+
+      NODE_METHODS_TO_PATCH = %i[
+        click
+        right_click
+        double_click
+        send_keys
+        hover
+        drag_to
+        scroll_by
+        scroll_to
+        trigger
+        set
+      ]
+
+      NODE_METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_client_settled(method_name)
+          result
+        end
+      end
+    end
+
+    module CapybaraPlaywrightBrowserPatch
+      include CapybaraPlaywrightBasePatch
+
+      METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
+
+      METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_client_settled(method_name)
+          result
+        end
+      end
+    end
+
+    Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
 
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now

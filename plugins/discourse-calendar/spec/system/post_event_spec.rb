@@ -176,14 +176,7 @@ describe "Post event", type: :system do
     expect(page).to have_css(".event-info .name", text: "<script>alert(1);</script>")
   end
 
-  xit "can create, close, and open an event" do
-    # failing on:
-    #   Playwright::Error:
-    # Element is not attached to the DOM
-    #   Call log:
-    #     - attempting click action
-    #     -     - waiting for element to be visible, enabled and stable
-    #     -     - element is visible, enabled and stable
+  it "can create, close, and open an event" do
     visit "/new-topic"
     title = "My upcoming l33t event"
     tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
@@ -204,12 +197,10 @@ describe "Post event", type: :system do
     find(".d-modal .add-invitee").click
 
     topic_page = PageObjects::Pages::Topic.new
-    try_until_success do
-      topic = Topic.find(topic_page.current_topic_id)
-      event = topic.posts.first.event
 
-      expect(event.invitees.count).to eq(2)
-    end
+    topic = Topic.find(topic_page.current_topic_id)
+    event = topic.posts.first.event
+    expect(event.invitees.count).to eq(2)
   end
 
   it "does not show participants button when event is standalone" do

@@ -87,11 +87,9 @@ describe "Admin Customize Themes", type: :system do
       find(".ace_text-input", visible: false).fill_in(with: "console.log('test')\n")
       find(".save-theme").click
 
-      try_until_success do
-        expect(
-          theme.theme_fields.find_by(target_id: Theme.targets[:extra_js])&.value,
-        ).to start_with("console.log('test')\n")
-      end
+      expect(theme.theme_fields.find_by(target_id: Theme.targets[:extra_js])&.value).to start_with(
+        "console.log('test')\n",
+      )
 
       # Check content is loaded from db correctly
       theme
