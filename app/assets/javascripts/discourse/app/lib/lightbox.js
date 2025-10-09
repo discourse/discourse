@@ -21,6 +21,9 @@ export default async function lightbox(elem, siteSettings) {
     return;
   }
 
+  const canDownload =
+    !siteSettings.prevent_anons_from_downloading_files || User.current();
+
   if (siteSettings.experimental_lightbox) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
 
@@ -33,8 +36,8 @@ export default async function lightbox(elem, siteSettings) {
       pswpModule: async () => await import("photoswipe"),
     });
 
-    // adds a custom caption to lightbox
     lightboxEl.on("uiRegister", function () {
+      // adds a custom caption to lightbox
       lightboxEl.pswp.ui.registerElement({
         name: "caption",
         order: 7,
@@ -59,6 +62,7 @@ export default async function lightbox(elem, siteSettings) {
         },
       });
 
+      // adds a download button
       lightboxEl.pswp.ui.registerElement({
         name: "download-image",
         order: 8,
@@ -68,10 +72,7 @@ export default async function lightbox(elem, siteSettings) {
         html: renderIcon("string", "download"),
 
         onInit: (el, pswp) => {
-          if (
-            siteSettings.prevent_anons_from_downloading_files ||
-            !User.current()
-          ) {
+          if (!canDownload) {
             return false;
           }
 
@@ -84,6 +85,7 @@ export default async function lightbox(elem, siteSettings) {
         },
       });
 
+      // adds a view original image button
       lightboxEl.pswp.ui.registerElement({
         name: "original-image",
         order: 9,
@@ -229,10 +231,7 @@ export default async function lightbox(elem, siteSettings) {
             $("span.informations", item.el).text(),
           ];
 
-          if (
-            !siteSettings.prevent_anons_from_downloading_files ||
-            User.current()
-          ) {
+          if (canDownload) {
             src.push(
               `<a class="image-source-link" href="${href}">${downloadText}</a>`
             );

@@ -1,7 +1,6 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import lightbox from "discourse/lib/lightbox";
-import loadScript from "discourse/lib/load-script";
+import lightbox, { loadMagnificPopup } from "discourse/lib/lightbox";
 import { i18n } from "discourse-i18n";
 
 export default function loadLightbox(element, siteSettings) {
@@ -20,7 +19,7 @@ export default function loadLightbox(element, siteSettings) {
     return;
   }
 
-  loadScript("/javascripts/jquery.magnific-popup.min.js").then(function () {
+  loadMagnificPopup().then(function () {
     $(images).magnificPopup({
       type: "image",
       closeOnContentClick: false,
