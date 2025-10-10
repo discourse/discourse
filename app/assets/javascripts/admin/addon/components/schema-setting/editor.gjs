@@ -13,6 +13,7 @@ import FieldInput from "admin/components/schema-setting/field";
 
 export default class SchemaSettingNewEditor extends Component {
   @service router;
+  @service dialog;
 
   @tracked history = [];
   @tracked activeIndex = 0;
@@ -204,7 +205,17 @@ export default class SchemaSettingNewEditor extends Component {
   }
 
   @action
-  removeItem() {
+  async removeItem() {
+    let confirm = true;
+
+    if (this.args.schema.deleteWarning) {
+      confirm = await this._confirmRemove(this.args.schema.deleteWarning);
+    }
+
+    if (!confirm) {
+      return;
+    }
+
     this.activeData.removeAt(this.activeIndex);
 
     if (this.activeData.length > 0) {
@@ -280,6 +291,17 @@ export default class SchemaSettingNewEditor extends Component {
         }
       })
       .finally(() => (this.saveButtonDisabled = false));
+  }
+
+  async _confirmRemove(warning) {
+    return new Promise((resolve) => {
+      this.dialog.deleteConfirm({
+        title: warning?.title,
+        message: warning?.message,
+        didCancel: () => resolve(false),
+        didConfirm: () => resolve(true),
+      });
+    });
   }
 
   <template>
