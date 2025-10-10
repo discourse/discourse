@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
+import { i18n } from "discourse-i18n";
 import LazyIframe from "./lazy-iframe";
 
 export default class LazyVideo extends Component {
@@ -27,7 +28,7 @@ export default class LazyVideo extends Component {
 
   @action
   onKeyPress(event) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       this.loadEmbed();
     }
@@ -55,8 +56,13 @@ export default class LazyVideo extends Component {
       {{else}}
         <div
           {{on "click" this.loadEmbed}}
-          {{on "keypress" this.loadEmbed}}
+          {{on "keypress" this.onKeyPress}}
+          role="button"
           tabindex="0"
+          aria-label={{i18n
+            "lazy_videos.play_video"
+            title=@videoAttributes.title
+          }}
           style={{this.thumbnailStyle}}
           class={{concatClass "video-thumbnail" @videoAttributes.providerName}}
         >
