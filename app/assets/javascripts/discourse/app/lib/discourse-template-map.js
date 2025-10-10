@@ -5,7 +5,7 @@ const pluginRegex =
 const themeRegex =
   /^discourse\/theme-([^\/]+)\/(?:discourse\/templates\/)?(.*)$/;
 
-const NAMESPACES = ["discourse/", "admin/"];
+const NAMESPACES = ["discourse/"];
 
 function isInRecognisedNamespace(moduleName) {
   for (const ns of NAMESPACES) {

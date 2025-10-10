@@ -38,7 +38,7 @@ import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 import ReviewableScores from "./reviewable-scores";
 
-const IpLookup = optionalRequire("admin/components/ip-lookup");
+const IpLookup = optionalRequire("discourse/admin/components/ip-lookup");
 
 let _components = {};
 
