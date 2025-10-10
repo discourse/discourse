@@ -869,6 +869,7 @@ en:
           none: "Sorry, our AI search found no matching topics"
           new: "Press 'search' to begin looking for new results with AI"
           unavailable: "AI results unavailable"
+          zero_results_expanded: "Zero results found, showing %{count} AI results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
           invalid_sort: "Search results must be sorted by Relevance to display AI results"

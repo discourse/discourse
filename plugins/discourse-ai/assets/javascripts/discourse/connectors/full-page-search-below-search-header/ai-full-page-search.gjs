@@ -12,6 +12,7 @@ export default class AiFullPageSearchConnector extends Component {
       @searchTerm={{@outletArgs.search}}
       @searchType={{@outletArgs.type}}
       @addSearchResults={{@outletArgs.addSearchResults}}
+      @model={{@outletArgs.model}}
     />
   </template>
 }
