@@ -27,7 +27,6 @@
     "lint-to-the-future": "^2.6.4",
     "lint-to-the-future-ember-template": "^3.1.0",
     "lint-to-the-future-eslint": "^3.2.0",
-    "photoswipe": "5.4.4",
     "playwright": "1.56.0",
     "prettier": "3.6.2",
     "puppeteer-core": "^24.23.0",
@@ -72,7 +71,6 @@
     "peerDependencyRules": {
       "allowedVersions": {
         "lint-to-the-future-eslint>eslint": "*",
-        "photoswipe>eslint": "*",
         "@mixer/parallel-prettier>prettier": "*",
         "lint-to-the-future-ember-template>ember-template-lint": "*",
         "ember-this-fallback>ember-source": "*"

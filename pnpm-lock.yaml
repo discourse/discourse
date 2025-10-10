@@ -97,9 +97,6 @@ importers:
       lint-to-the-future-eslint:
         specifier: ^3.2.0
         version: 3.2.0(eslint@9.37.0)
-      photoswipe:
-        specifier: 5.4.4
-        version: 5.4.4
       playwright:
         specifier: 1.56.0
         version: 1.56.0
@@ -347,6 +344,9 @@ importers:
       orderedmap:
         specifier: ^2.1.1
         version: 2.1.1
+      photoswipe:
+        specifier: 5.4.4
+        version: 5.4.4
       pikaday:
         specifier: ^1.8.2
         version: 1.8.2
