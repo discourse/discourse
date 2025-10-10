@@ -22,6 +22,8 @@ export default {
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
+    const siteSettings = container.lookup("service:site-settings");
+
     const openQuickChannelSelector = (e) => {
       if (isInputSelection(event.target) && !isChatComposer(event.target)) {
         return;
@@ -101,9 +103,11 @@ export default {
     };
 
     const closeChat = (event) => {
-      // TODO (joffrey): removes this when we move from magnific popup
-      // there's no proper way to prevent propagation in mfp
-      if (event.srcElement?.classList?.value?.includes("mfp-wrap")) {
+      // when escaping from lightbox, do not close chat
+      const lightboxClass = siteSettings.experimental_lightbox
+        ? "lightbox"
+        : "mfp-wrap";
+      if (event.srcElement?.classList?.value?.includes(lightboxClass)) {
         return;
       }
 

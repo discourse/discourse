@@ -5,7 +5,7 @@ import highlightSyntax from "discourse/lib/highlight-syntax";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
-import lightbox from "../lib/lightbox";
+import loadLightbox from "../lib/lightbox";
 
 export default {
   name: "chat-decorators",
@@ -64,13 +64,9 @@ export default {
     api.decorateChatMessage(this.forceLinksToOpenNewTab, {
       id: "linksNewTab",
     });
-    api.decorateChatMessage(
-      (element) =>
-        lightbox(element.querySelectorAll("img:not(.emoji, .avatar)")),
-      {
-        id: "lightbox",
-      }
-    );
+    api.decorateChatMessage((element) => loadLightbox(element, siteSettings), {
+      id: "lightbox",
+    });
     api.decorateChatMessage((element) => decorateHashtags(element, site), {
       id: "hashtagIcons",
     });

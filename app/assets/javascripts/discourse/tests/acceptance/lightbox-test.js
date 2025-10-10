@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, visit, waitFor } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
@@ -55,5 +55,44 @@ acceptance("Lightbox", function (needs) {
     await click(".lightbox");
 
     assert.dom(".mfp-title").hasHtml(/^&lt;script&gt;image&lt;\/script&gt; · /);
+  });
+
+  // PhotoSwipe
+  test("Shows download and Original Image Buttons", async function (assert) {
+    this.siteSettings.experimental_lightbox = true;
+
+    await visit("/t/internationalization-localization/280");
+    await click(".lightbox");
+
+    await waitFor(".pswp--open");
+
+    assert.dom(".pswp__caption .title").hasText("<script>image</script>");
+    assert.dom(".pswp__caption .details").hasText("1500×842 234 KB");
+
+    assert
+      .dom(".pswp__button--download-image")
+      .hasAttribute(
+        "href",
+        "//discourse.local/uploads/default/ad768537789cdf4679a18161ac0b0b6f0f4ccf9e"
+      );
+
+    assert
+      .dom(".pswp__button--original-image")
+      .hasAttribute("href", /\/images\/d-logo-sketch\.png$/);
+
+    await click(".pswp__button--close");
+  });
+
+  test("Correctly escapes image caption", async function (assert) {
+    this.siteSettings.experimental_lightbox = true;
+
+    await visit("/t/internationalization-localization/280");
+    await click(".lightbox");
+
+    await waitFor(".pswp--open");
+
+    assert
+      .dom(".pswp__caption .title")
+      .hasHtml(/^&lt;script&gt;image&lt;\/script&gt;/);
   });
 });

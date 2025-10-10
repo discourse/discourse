@@ -52,6 +52,7 @@
     "morphlex": "^0.0.16",
     "orderedmap": "^2.1.1",
     "pikaday": "^1.8.2",
+    "photoswipe": "5.4.4",
     "pretty-text": "workspace:1.0.0",
     "prosemirror-codemark": "^0.4.2",
     "prosemirror-commands": "^1.7.1",

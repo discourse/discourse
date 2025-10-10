@@ -23,7 +23,7 @@ export default {
       const site = owner.lookup("service:site");
       const capabilities = owner.lookup("service:capabilities");
       const modal = owner.lookup("service:modal");
-      // will eventually just be called lightbox
+
       api.decorateCookedElement((elem) => {
         return highlightSyntax(elem, siteSettings, session);
       });

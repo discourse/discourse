@@ -4203,6 +4203,11 @@ experimental:
     default: 15
     hidden: true
     area: "experimental"
+  experimental_lightbox:
+    client: true
+    default: false
+    hidden: true
+    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
