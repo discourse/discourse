@@ -5,7 +5,13 @@ document.addEventListener("discourse-init", async (e) => {
     `${config.modulePrefix}/app`
   );
 
-  await loadAdmin();
+  if (
+    document.querySelector(
+      'link[rel="modulepreload"][data-discourse-entrypoint="admin"]'
+    )
+  ) {
+    await loadAdmin();
+  }
   await loadThemes();
 
   const app = klass.create(config);
