@@ -20,6 +20,8 @@ const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
 const pluginSaveProperties = new Set();
 
+let _uncategorized;
+
 /**
  * @internal
  * Adds a tracked property to the post model.
@@ -40,7 +42,7 @@ export default class Category extends RestModel {
     categories.forEach((category) => {
       const parentId = parseInt(category.parent_category_id, 10) || -1;
       const group = children.get(parentId) || [];
-      group.pushObject(category);
+      group.push(category);
 
       children.set(parentId, group);
     });
@@ -906,8 +908,6 @@ export default class Category extends RestModel {
     );
   }
 }
-
-let _uncategorized;
 
 const categoryMultiCache = new MultiCache(async (ids) => {
   const result = await ajax("/categories/find", { data: { ids } });

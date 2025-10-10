@@ -385,7 +385,7 @@ export default class FullPageSearchController extends Controller {
     if (args.page === 1) {
       this.set("bulkSelectEnabled", false);
 
-      this.bulkSelectHelper.selected.clear();
+      this.bulkSelectHelper.clear();
       this.set("searching", true);
       scrollTop();
     } else {

@@ -16,7 +16,7 @@ export function addOnKeyUpCallback(fn) {
   onKeyUpCallbacks.push(fn);
 }
 export function resetOnKeyUpCallbacks() {
-  onKeyUpCallbacks.clear();
+  onKeyUpCallbacks.length = 0;
 }
 
 export default class SearchTerm extends Component {

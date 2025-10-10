@@ -301,11 +301,22 @@ export default class Topic extends RestModel {
   @service currentUser;
   @service siteSettings;
 
-  @tracked deleted_by;
+  @tracked chunk_size;
   @tracked deleted_at;
+  @tracked deleted_by;
+  @tracked errorHtml;
+  @tracked errorLoading = false;
+  @tracked errorMessage;
+  @tracked errorTitle;
+  @tracked highest_post_number;
+  @tracked last_posted_at;
+  @tracked last_read_post_number;
+  @tracked noRetry;
+  @tracked posts_count;
+  @tracked replies_to_post_number;
+  @tracked suggested_topics;
 
   message = null;
-  errorLoading = false;
 
   @alias("lastPoster.user") lastPosterUser;
   @alias("lastPoster.primary_group") lastPosterGroup;
@@ -666,7 +677,7 @@ export default class Topic extends RestModel {
 
   firstPost() {
     const postStream = this.postStream;
-    let firstPost = postStream.get("posts.firstObject");
+    let firstPost = postStream.posts[0];
 
     if (firstPost && firstPost.post_number === 1) {
       return Promise.resolve(firstPost);
@@ -979,5 +990,5 @@ export function registerCustomLastUnreadUrlCallback(fn) {
 
 // Should only be used in tests
 export function clearCustomLastUnreadUrlCallbacks() {
-  _customLastUnreadUrlCallbacks.clear();
+  _customLastUnreadUrlCallbacks.length = 0;
 }

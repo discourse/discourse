@@ -21,7 +21,7 @@ module("Unit | Utils | multi-cache", function (hooks) {
     assert.strictEqual(requests.length, 1, "one triggered request");
 
     const [request] = requests;
-    requests.clear();
+    requests.length = 0;
 
     assert.deepEqual(request.ids, [10], "request has correct ids");
 
@@ -52,7 +52,7 @@ module("Unit | Utils | multi-cache", function (hooks) {
 
     assert.strictEqual(requests.length, 1);
     const [request1] = requests;
-    requests.clear();
+    requests.length = 0;
     assert.deepEqual(request1.ids, [10]);
 
     request1.reject();
