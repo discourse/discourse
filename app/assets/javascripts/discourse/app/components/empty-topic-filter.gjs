@@ -21,12 +21,61 @@ export default class EmptyTopicFilter extends Component {
     }
   }
 
+  get ctaLabel() {
+    if (this.currentUser.new_new_view_enabled) {
+      if (this.args.newListSubset === "topics") {
+        if (this.args.trackingCounts.newReplies > 0) {
+          return i18n("topic.browse_new_replies");
+        } else {
+          return i18n("topic.browse_latest_topics");
+        }
+      }
+
+      if (this.args.newListSubset === "replies") {
+        if (this.args.trackingCounts.newTopics > 0) {
+          return i18n("topic.browse_new_topics");
+        } else {
+          return i18n("topic.browse_latest_topics");
+        }
+      }
+    }
+
+    return i18n("topic.browse_latest_topics");
+  }
+
+  get ctaRoute() {
+    if (this.currentUser.new_new_view_enabled) {
+      if (this.args.newListSubset === undefined) {
+        return "discovery.latest";
+      }
+
+      return;
+    }
+
+    return "discovery.latest";
+  }
+
+  get ctaAction() {
+    if (this.args.newListSubset === "topics") {
+      if (this.args.trackingCounts.newReplies > 0) {
+        return () => this.args.changeNewListSubset("replies");
+      }
+    }
+
+    if (this.args.newListSubset === "replies") {
+      if (this.args.trackingCounts.newTopics > 0) {
+        return () => this.args.changeNewListSubset("topics");
+      }
+    }
+  }
+
   <template>
     <EmptyState
       @identifier="empty-topic-filter"
       @title={{this.educationText}}
-      @ctaLabel={{i18n "topic.browse_latest_topics"}}
-      @ctaRoute="discovery.latest"
+      @ctaLabel={{this.ctaLabel}}
+      @ctaRoute={{this.ctaRoute}}
+      @ctaAction={{this.ctaAction}}
       @tipIcon="circle-info"
       @tipText={{htmlSafe
         (i18n
