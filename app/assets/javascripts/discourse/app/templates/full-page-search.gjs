@@ -45,7 +45,9 @@ export default RouteTemplate(
               id="search-result-count"
               aria-live="polite"
             >
-              {{htmlSafe @controller.resultCountLabel}}
+              {{#unless @controller.searching}}
+                {{htmlSafe @controller.resultCountLabel}}
+              {{/unless}}
             </div>
           {{else}}
             <div class="search-page-heading__page-title">
