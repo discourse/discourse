@@ -6,12 +6,21 @@
 }
 
 body.has-ai-conversations-sidebar {
+  .sidebar-sections__back-to-forum {
+    order: -1;
+    padding: var(--space-6) var(--space-4) var(--space-3);
+
+    + .ai-new-question-button__wrapper {
+      margin-top: 0;
+    }
+  }
+
   .ai-new-question-button {
     width: 100%;
 
     &__wrapper {
       background: var(--secondary);
-      margin: 1.8em 1em 0;
+      margin: var(--space-6) var(--space-4) 0;
 
       .mobile-view & {
         padding: 1em;
