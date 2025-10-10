@@ -146,6 +146,11 @@ module.exports = function (defaults) {
             dependOn: "assets/discourse.js",
             runtime: false,
           },
+          "assets/admin.js": {
+            import: "./admin/admin-compat-modules",
+            dependOn: "assets/discourse.js",
+            runtime: false,
+          },
           "assets/media-optimization-bundle.js": {
             import: "./static/media-optimization-bundle",
             runtime: false,
