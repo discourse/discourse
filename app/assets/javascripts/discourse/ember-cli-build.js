@@ -3,7 +3,6 @@
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
-const concat = require("broccoli-concat");
 const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
@@ -86,8 +85,6 @@ module.exports = function (defaults) {
     .findAddonByName("discourse-plugins")
     .generatePluginsTree(app.tests);
 
-  const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
-
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
@@ -102,12 +99,6 @@ module.exports = function (defaults) {
   let extraPublicTrees = [
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    applyTerser(
-      concat(adminTree, {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/admin.js`,
-      })
-    ),
     applyTerser(generateScriptsTree(app)),
     pluginTrees,
   ];
@@ -171,8 +162,7 @@ module.exports = function (defaults) {
               callback(null, request, "commonjs");
             } else if (
               !request.includes("-embroider-implicit") &&
-              (request.startsWith("admin/") ||
-                request.startsWith("discourse/plugins/") ||
+              (request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {
               callback(null, request, "commonjs");
