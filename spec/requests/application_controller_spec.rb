@@ -1222,7 +1222,14 @@ RSpec.describe ApplicationController do
           it "serves a 404 page in the preferred locale" do
             get "/missingroute", headers: headers("fr")
             expect(response.status).to eq(404)
-            expect(response.body).to include(I18n.t("page_not_found.title", locale: :fr))
+            expect(response.body).to include(
+              # converts non-breaking space to &nbsp;
+              ActionController::Base.helpers.sanitize(
+                I18n.t("page_not_found.title", locale: :fr),
+                tags: %w[a],
+                attributes: %w[href class target rel],
+              ),
+            )
           end
 
           it "serves a RenderEmpty page in the preferred locale" do
