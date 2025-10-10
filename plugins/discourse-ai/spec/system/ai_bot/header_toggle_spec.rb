@@ -17,7 +17,6 @@ RSpec.describe "AI Bot - Header Toggle", type: :system do
     SiteSetting.ai_bot_enabled = true
     toggle_enabled_bots(bots: [gpt_4, gpt_3_5_turbo])
     SiteSetting.ai_bot_allowed_groups = group.id.to_s
-    SiteSetting.ai_bot_enable_dedicated_ux = true
     SiteSetting.ai_bot_add_to_header = true
     SiteSetting.navigation_menu = "sidebar"
 

@@ -493,10 +493,6 @@ discourse_ai:
     default: false
     hidden: true
 
-  ai_bot_enable_dedicated_ux:
-    default: true
-    client: true
-
   ai_translation_enabled:
     default: false
     client: true

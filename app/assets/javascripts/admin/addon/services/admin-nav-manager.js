@@ -37,6 +37,14 @@ export default class AdminNavManager extends Service {
     return this.#adminNavMap.find((section) => section.name === sectionName);
   }
 
+  findSubSection(subSectionName) {
+    this.#guardFilteredNavAccess();
+
+    return this.#adminNavMap
+      .flatMap((section) => section.links)
+      .find((subSection) => subSection.name === subSectionName);
+  }
+
   amendLinksToSection(sectionName, links) {
     this.#guardFilteredNavAccess();
 
@@ -48,6 +56,19 @@ export default class AdminNavManager extends Service {
     }
 
     section.links.push(...links);
+  }
+
+  amendLinksToSubSection(subSectionName, links) {
+    this.#guardFilteredNavAccess();
+
+    const subSection = this.findSubSection(subSectionName);
+    if (!subSection) {
+      // eslint-disable-next-line no-console
+      console.warn(`[AdminNavManager] SubSection ${subSectionName} not found`);
+      return;
+    }
+
+    subSection.links.push(...links);
   }
 
   overrideSectionLink(sectionName, linkName, newAttrs = {}) {

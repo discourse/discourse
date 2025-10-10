@@ -33,9 +33,7 @@ describe "Bookmarking posts and topics", type: :system do
     expect(bookmark_menu).to be_open
     expect(page).to have_content(I18n.t("js.bookmarks.bookmarked_success"))
     expect(topic_page).to have_post_bookmarked(post, with_reminder: false)
-    try_until_success(frequency: 0.5) do
-      expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
-    end
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user)).to be_truthy
   end
 
   it "updates the created bookmark with a selected reminder option from the bookmark menu" do
@@ -48,9 +46,7 @@ describe "Bookmarking posts and topics", type: :system do
 
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
     expect(page).to have_no_css(".bookmark-menu-content.-expanded")
-    try_until_success(frequency: 0.5) do
-      expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
-    end
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
   it "can set a reminder from the bookmark modal using the custom bookmark menu option" do
@@ -58,9 +54,7 @@ describe "Bookmarking posts and topics", type: :system do
     bookmark_menu.click_menu_option("custom")
     bookmark_modal.select_preset_reminder(:tomorrow)
     expect(topic_page).to have_post_bookmarked(post, with_reminder: true)
-    try_until_success(frequency: 0.5) do
-      expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
-    end
+    expect(Bookmark.find_by(bookmarkable: post, user: current_user).reminder_at).not_to be_blank
   end
 
   it "allows choosing a different auto_delete_preference to the user preference and remembers it when reopening the modal" do
@@ -107,9 +101,7 @@ describe "Bookmarking posts and topics", type: :system do
       bookmark_modal.fill_name("something important")
       bookmark_modal.click_primary_button
 
-      try_until_success(frequency: 0.5) do
-        expect(bookmark.reload.name).to eq("something important")
-      end
+      expect(bookmark.reload.name).to eq("something important")
     end
 
     it "allows to set a relative time" do

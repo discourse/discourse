@@ -329,9 +329,11 @@ class InvitesController < ApplicationController
     render json: success_json
   end
 
-  # For DiscourseConnect SSO, all invite acceptance is done
-  # via the SessionController#sso_login route
   def perform_accept_invitation
+    # When DiscourseConnect is enabled, all invite acceptance is done
+    # via the SSO flow (SessionController#sso_login)
+    raise Discourse::NotFound if SiteSetting.enable_discourse_connect
+
     params.require(:id)
     params.permit(
       :email,
@@ -343,8 +345,6 @@ class InvitesController < ApplicationController
       user_custom_fields: {
       },
     )
-
-    raise Discourse::NotFound if SiteSetting.enable_discourse_connect
 
     invite = Invite.find_by(invite_key: params[:id])
     redeeming_user = current_user
@@ -613,20 +613,20 @@ class InvitesController < ApplicationController
   end
 
   def ensure_invites_allowed
-    if (
-         !SiteSetting.enable_local_logins && Discourse.enabled_auth_providers.count == 0 &&
-           !SiteSetting.enable_discourse_connect
-       )
-      raise Discourse::NotFound
-    end
+    return if SiteSetting.enable_local_logins
+    return if SiteSetting.enable_discourse_connect
+    return if Discourse.enabled_auth_providers.present?
+
+    raise Discourse::NotFound
   end
 
   def ensure_new_registrations_allowed
-    unless SiteSetting.allow_new_registrations
-      flash[:error] = I18n.t("login.new_registrations_disabled")
-      render layout: "no_ember"
-      false
-    end
+    return if SiteSetting.allow_new_registrations
+
+    flash[:error] = I18n.t("login.new_registrations_disabled")
+    render layout: "no_ember"
+
+    false
   end
 
   def groups_can_see_topic?(groups, topic)

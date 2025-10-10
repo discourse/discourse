@@ -205,7 +205,7 @@ class SessionController < ApplicationController
     sso.expire_nonce!
 
     begin
-      invite = validate_invitiation!(sso)
+      invite = validate_invitation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
         raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
@@ -223,6 +223,7 @@ class SessionController < ApplicationController
           else
             render_sso_error(text: I18n.t("discourse_connect.account_not_approved"), status: 403)
           end
+
           return
 
           # we only want to redeem the invite if
@@ -857,14 +858,14 @@ class SessionController < ApplicationController
   # not want to complete the SSO process of creating a user
   # and redeeming the invite if the invite is not redeemable or
   # for the wrong user
-  def validate_invitiation!(sso)
-    invite_key = server_session["invite-key"]
-    return if invite_key.blank?
+  def validate_invitation!(sso)
+    return unless invite_key = server_session["invite-key"]
 
-    invite = Invite.find_by(invite_key: invite_key)
+    base_url = Discourse.base_url
+    site_name = SiteSetting.title
 
-    if invite.blank?
-      raise Invite::ValidationFailed.new(I18n.t("invite.not_found", base_url: Discourse.base_url))
+    unless invite = Invite.find_by(invite_key:)
+      raise Invite::ValidationFailed.new(I18n.t("invite.not_found", base_url:))
     end
 
     if invite.redeemable?
@@ -872,15 +873,9 @@ class SessionController < ApplicationController
         raise Invite::ValidationFailed.new(I18n.t("invite.not_matching_email"))
       end
     elsif invite.expired?
-      raise Invite::ValidationFailed.new(I18n.t("invite.expired", base_url: Discourse.base_url))
+      raise Invite::ValidationFailed.new(I18n.t("invite.expired", base_url:))
     elsif invite.redeemed?
-      raise Invite::ValidationFailed.new(
-              I18n.t(
-                "invite.not_found_template",
-                site_name: SiteSetting.title,
-                base_url: Discourse.base_url,
-              ),
-            )
+      raise Invite::ValidationFailed.new(I18n.t("invite.not_found_template", site_name:, base_url:))
     end
 
     invite
@@ -888,14 +883,15 @@ class SessionController < ApplicationController
 
   def redeem_invitation(invite, sso, redeeming_user)
     InviteRedeemer.new(
-      invite: invite,
+      invite:,
       username: sso.username,
       name: sso.name,
       ip_address: request.remote_ip,
       session: server_session,
       email: sso.email,
-      redeeming_user: redeeming_user,
+      redeeming_user:,
     ).redeem
+
     server_session.delete("invite-key")
 
     # note - more specific errors are handled in the sso_login method

@@ -314,6 +314,7 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
     const siteSettings = getOwnerWithFallback(this).lookup(
       "service:site-settings"
     );
+    const site = getOwnerWithFallback(this).lookup("service:site");
     const store = getOwnerWithFallback(this).lookup("service:store");
     const router = getOwnerWithFallback(this).lookup("service:router");
     const session = getOwnerWithFallback(this).lookup("service:session");
@@ -343,6 +344,29 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         "admin_installed_plugins",
         installedPluginsLinkKeywords()
       );
+
+      if (site.admin_config_login_routes) {
+        const adminLoginRoutesToAdd = () => {
+          const routes = [];
+
+          site.admin_config_login_routes.forEach((routeName) => {
+            routes.push({
+              name: `admin_login_${routeName}`,
+              route: `adminConfig.login.plugin-tab`,
+              routeModels: [routeName],
+              icon: "unlock",
+              label: `admin.config.login.sub_pages.${routeName}`,
+              settings_area: routeName,
+            });
+          });
+          return routes;
+        };
+
+        this.adminNavManager.amendLinksToSubSection(
+          "admin_login",
+          adminLoginRoutesToAdd()
+        );
+      }
     }
 
     // Mods cannot access themes

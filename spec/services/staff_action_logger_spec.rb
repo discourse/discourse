@@ -238,6 +238,7 @@ RSpec.describe StaffActionLogger do
       expect(json["theme_fields"]).to eq(
         [
           {
+            "file_path" => "common/common.scss",
             "name" => "scss",
             "target" => "common",
             "value" => "body{margin: 10px;}",
@@ -278,6 +279,7 @@ RSpec.describe StaffActionLogger do
       expect(json["theme_fields"]).to eq(
         [
           {
+            "file_path" => "common/common.scss",
             "name" => "scss",
             "target" => "common",
             "value" => "body{margin: 10px;}",

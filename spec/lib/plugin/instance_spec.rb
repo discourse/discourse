@@ -1216,4 +1216,15 @@ TEXT
       end
     end
   end
+
+  describe "#register_admin_config_login_route" do
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "registers a new admin config login route" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_admin_config_login_route("plugin_route")
+
+      expect(DiscoursePluginRegistry.admin_config_login_routes).to include("plugin_route")
+    end
+  end
 end
