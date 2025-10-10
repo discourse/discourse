@@ -141,27 +141,27 @@ export default class ChatChannel {
   }
 
   get canDeleteSelf() {
-    return this.meta.can_delete_self;
+    return this.meta?.can_delete_self;
   }
 
   get canDeleteOthers() {
-    return this.meta.can_delete_others;
+    return this.meta?.can_delete_others;
   }
 
   get canFlag() {
-    return this.meta.can_flag;
+    return this.meta?.can_flag;
   }
 
   get userSilenced() {
-    return this.meta.user_silenced;
+    return this.meta?.user_silenced;
   }
 
   get canModerate() {
-    return this.meta.can_moderate;
+    return this.meta?.can_moderate;
   }
 
   get canRemoveMembers() {
-    return this.meta.can_remove_members;
+    return this.meta?.can_remove_members;
   }
 
   get escapedTitle() {
