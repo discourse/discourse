@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -34,10 +33,6 @@ export default class PostMetaDataReplyToTab extends Component {
       class="reply-to-tab"
       disabled={{@repliesAbove.isPending}}
       role={{if this.site.desktopView "button"}}
-      aria-controls={{if
-        this.site.desktopView
-        (concat "embedded-posts__top--" @post.post_number)
-      }}
       aria-expanded={{if this.site.desktopView @hasRepliesAbove}}
       title="post.in_reply_to"
       {{on "click" this.handleClick}}
