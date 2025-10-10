@@ -10,6 +10,10 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
 
   private
 
+  def targets
+    LlmModel.in_use
+  end
+
   def llm_errors
     return [] if !SiteSetting.discourse_ai_enabled
     LlmModel.in_use.find_each.filter_map do |model|
