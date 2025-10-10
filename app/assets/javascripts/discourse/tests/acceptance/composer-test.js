@@ -366,7 +366,7 @@ import { i18n } from "discourse-i18n";
           .dom(".d-editor-input")
           .hasValue(
             "this is the content of my reply",
-            "composer does not switch on dismissed Discard confirmation modal"
+            "composer does not switch on dismissed Discard draft confirmation modal"
           );
 
         await click(".topic-post[data-post-number='1'] button.edit");
@@ -381,7 +381,7 @@ import { i18n } from "discourse-i18n";
           );
       });
 
-      test("Can dismiss Discard confirmation modal when replying on a different topic", async function (assert) {
+      test("Can dismiss Discard draft confirmation modal when replying on a different topic", async function (assert) {
         await visit("/t/internationalization-localization/280");
 
         await click("#topic-footer-buttons .create");
@@ -398,7 +398,7 @@ import { i18n } from "discourse-i18n";
           .dom(".d-editor-input")
           .hasValue(
             "this is the content of my reply",
-            "composer does not switch on dismissed Discard confirmation modal"
+            "composer does not switch on dismissed Discard draft confirmation modal"
           );
       });
 
@@ -484,7 +484,7 @@ import { i18n } from "discourse-i18n";
           .hasValue("This is a draft of the first post");
       });
 
-      test("Autosaves drafts after cancelling Discard confirmation modal", async function (assert) {
+      test("Autosaves drafts after cancelling Discard draft confirmation modal", async function (assert) {
         pretender.post("/drafts.json", function () {
           assert.step("saveDraft");
           return response(200, {});
@@ -494,22 +494,19 @@ import { i18n } from "discourse-i18n";
         });
 
         await visit("/t/internationalization-localization/280");
-
         await click("#topic-footer-buttons .btn.create");
-
         await fillIn(".d-editor-input", "this is draft content of the reply");
-
         assert.verifySteps(["saveDraft"], "first draft is auto saved");
 
         await click("#reply-control .discard-button");
-
         assert
           .dom(".discard-draft-modal.modal")
-          .exists("pops up the discard drafts modal");
+          .exists("shows Discard draft confirmation modal");
 
         await click(".d-modal__footer .btn-cancel-discard");
-        assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
-
+        assert
+          .dom(".discard-draft-modal.modal")
+          .doesNotExist("hides modal on Cancel button click");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -522,28 +519,26 @@ import { i18n } from "discourse-i18n";
           "this is the first update to the draft content",
           "update content in the composer"
         );
-
         assert.verifySteps(["saveDraft"], "second draft is saved");
 
         await click("#reply-control .discard-button");
-
         assert
           .dom(".discard-draft-modal.modal")
           .exists("pops up the discard drafts modal");
 
         await triggerKeyEvent(".discard-draft-modal", "keydown", "Escape");
-        assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
+        assert
+          .dom(".discard-draft-modal.modal")
+          .doesNotExist("hides modal on Esc key stroke");
 
         await fillIn(
           ".d-editor-input",
           "this is the second update to the draft content",
           "update content in the composer"
         );
-
         assert.verifySteps(["saveDraft"], "third draft is saved");
 
         await click("#reply-control button.create");
-
         assert
           .dom(".topic-post:nth-last-child(1 of .topic-post) .cooked p")
           .hasText("this is the second update to the draft content");
@@ -909,7 +904,7 @@ import { i18n } from "discourse-i18n";
           );
       });
 
-      test("Composer draft shows confirmation dialog in new context (when creating a new topic)", async function (assert) {
+      test("Composer shows Discard draft confirmation dialog in new context (when creating a new topic)", async function (assert) {
         await visit("/t/this-is-a-test-topic/9");
 
         await click(".topic-post[data-post-number='1'] button.reply");

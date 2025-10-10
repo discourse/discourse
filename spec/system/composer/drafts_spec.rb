@@ -95,7 +95,7 @@ describe "Composer - Drafts", type: :system do
       fab!(:category_1, :category)
       fab!(:category_2, :category)
 
-      it "shows discard confirmation" do
+      it "shows Discard draft confirmation modal" do
         visit "/new-topic"
 
         expect(composer).to be_opened
