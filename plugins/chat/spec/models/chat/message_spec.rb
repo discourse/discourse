@@ -4,6 +4,7 @@ describe Chat::Message do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
+  it { is_expected.to have_one(:message_search_data).dependent(:destroy) }
 
   it "supports custom fields" do
     message.custom_fields["test"] = "test"
@@ -749,6 +750,20 @@ describe Chat::Message do
       message_1.destroy!
 
       expect { upload_reference_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "destroys message_search_data" do
+      message_1 = Fabricate(:chat_message)
+      search_data_1 =
+        Chat::MessageSearchData.create!(
+          chat_message_id: message_1.id,
+          search_data: "test search data",
+          raw_data: "test",
+        )
+
+      message_1.destroy!
+
+      expect { search_data_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     describe "bookmarks" do

@@ -73,6 +73,7 @@ module Chat
             dependent: :destroy,
             class_name: "Chat::HereMention",
             foreign_key: :chat_message_id
+    has_one :message_search_data, dependent: :destroy, foreign_key: :chat_message_id
 
     scope :in_public_channel,
           -> do

@@ -94,6 +94,8 @@ export default class ChatMessage {
     this.bookmark = args.bookmark ? Bookmark.create(args.bookmark) : null;
     this.mentionedUsers = this.#initMentionedUsers(args.mentioned_users);
     this.blocks = args.blocks;
+    this.threadTitle = args.thread_title;
+    this.threadId = args.thread_id;
 
     if (args.thread) {
       this.thread = args.thread;

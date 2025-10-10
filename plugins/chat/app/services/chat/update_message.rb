@@ -60,6 +60,8 @@ module Chat
       step :publish
     end
 
+    step :index_message
+
     private
 
     def enforce_membership(guardian:, message:)
@@ -182,6 +184,12 @@ module Chat
 
       if message.thread.present?
         ::Chat::Publisher.publish_thread_original_message_metadata!(message.thread)
+      end
+    end
+
+    def index_message(message:)
+      Scheduler::Defer.later "Index chat message for search" do
+        SearchIndexer.index(message)
       end
     end
   end
