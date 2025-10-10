@@ -78,6 +78,10 @@ module UserNotificationsHelper
 
   def format_for_email(post, use_excerpt)
     html = use_excerpt ? post.excerpt : post.cooked
+
+    html =
+      DiscoursePluginRegistry.apply_modifier(:format_for_email_modifier, html, post, use_excerpt)
+
     PrettyText.format_for_email(html, post).html_safe
   end
 
