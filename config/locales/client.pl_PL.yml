@@ -4348,10 +4348,8 @@ pl_PL:
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
       cancel_composer:
-        confirm: "Co chcesz zrobić ze swoim wpisem?"
+        confirm: "Czy chcesz usunąć swój wpis?"
         discard: "Odrzuć"
-        save_draft: "Zapisz szkic na później"
-        keep_editing: "Kontynuuj edycję"
       via_email: "ten wpis został dodany emailem"
       via_auto_generated_email: "ten wpis został dodany poprzez automatycznie wygenerowaną wiadomość e-mail"
       whisper: "ten wpis jest prywatnym szeptem do moderatorów"
@@ -5843,9 +5841,16 @@ pl_PL:
           title: "Lokalizacja"
           header_description: "Skonfiguruj język interfejsu społeczności i inne opcje lokalizacji dla swoich członków"
           keywords: "ustawienia regionalne|strefa czasowa|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Logowanie i uwierzytelnianie"
           header_description: "Skonfiguruj sposób logowania i uwierzytelniania użytkowników, sekrety i klucze, dostawców OAuth2 i nie tylko."
+          sub_pages:
+            common_settings:
+              title: "Ustawień"
+            authenticators:
+              title: "Logowania społecznościowe"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Skonfiguruj logo i ikony używane w całej witrynie"

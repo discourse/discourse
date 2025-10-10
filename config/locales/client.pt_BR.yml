@@ -3894,10 +3894,7 @@ pt_BR:
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários(as) novos(as) não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa entrar para baixar arquivos anexos."
       cancel_composer:
-        confirm: "O que gostaria de fazer com sua postagem?"
         discard: "Descartar"
-        save_draft: "Salvar rascunho para mais tarde"
-        keep_editing: "Continuar editando"
       via_email: "postagem recebida via e-mail"
       via_auto_generated_email: "esta mensagem chegou por um e-mail gerado automaticamente"
       whisper: "esta mensagem é um sussuro privado para a moderação"
@@ -5280,9 +5277,12 @@ pt_BR:
           title: "Localização"
           header_description: "Configure o idioma da interface da sua comunidade e outras opções de localização para seus membros"
           keywords: "local|idioma|fuso_horário|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
+          sub_pages:
+            common_settings:
+              title: "Definições"
         logo:
           title: "Logotipo"
           header_description: "Configure os ícones e logotipos usados no seu site"

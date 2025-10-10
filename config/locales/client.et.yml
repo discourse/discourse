@@ -2750,6 +2750,10 @@ et:
           title: "Failid"
         legal:
           title: "Õiguslik"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Seaded"
         logo:
           form:
             mobile: "Mobiil"

@@ -2321,6 +2321,10 @@ id:
         email:
           title: "Surel"
       config:
+        login:
+          sub_pages:
+            common_settings:
+              title: "Pengaturan"
         logo:
           form:
             email: "Surel"

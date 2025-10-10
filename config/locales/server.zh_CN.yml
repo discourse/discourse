@@ -2568,6 +2568,9 @@ zh_CN:
       order_read: "按最后阅读时间排序（时间最近的优先）"
       order_read_asc: "按最后阅读时间排序（时间最早的优先）"
       exclude_users: "排除特定用户的话题"
+      locale: "按原始语言过滤话题"
+      locale_any: "显示以任何指定语言撰写的原始话题（以逗号分隔）"
+      exclude_locale: "排除最初以特定语言撰写的话题"
   discourse_connect:
     login_error: "登录错误"
     not_found: "找不到您的帐户。请联系网站管理员。"

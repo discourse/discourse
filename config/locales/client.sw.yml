@@ -2426,6 +2426,10 @@ sw:
           title: "Mafaili"
         legal:
           title: "Halali"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Mipangilio"
         logo:
           form:
             mobile: "Kifaa cha kiganjani"

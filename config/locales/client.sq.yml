@@ -4007,6 +4007,10 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Rregullimet"
         logo:
           form:
             mobile: "Mobile"
