@@ -20,7 +20,7 @@ import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import ColorPicker from "./color-picker";
 
-const ColorInput = optionalRequire("admin/components/color-input");
+const ColorInput = optionalRequire("discourse/admin/components/color-input");
 
 export default class EditCategoryGeneral extends Component {
   @service site;

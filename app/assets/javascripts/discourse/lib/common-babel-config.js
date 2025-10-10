@@ -16,6 +16,7 @@ module.exports = function generateCommonBabelConfig() {
           },
         ],
         require.resolve("./babel-transform-import-meta-glob"),
+        require.resolve("./babel-transform-module-renames"),
       ],
     },
   };

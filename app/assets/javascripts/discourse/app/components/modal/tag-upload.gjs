@@ -3,7 +3,9 @@ import routeAction from "discourse/helpers/route-action";
 import { optionalRequire } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
-const TagsUploader = optionalRequire("admin/components/tags-uploader");
+const TagsUploader = optionalRequire(
+  "discourse/admin/components/tags-uploader"
+);
 
 const TagUpload = <template>
   <DModal @title={{i18n "tagging.upload"}} @closeModal={{@closeModal}}>

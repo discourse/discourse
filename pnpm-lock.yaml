@@ -483,9 +483,6 @@ importers:
       a11y-dialog:
         specifier: 8.1.4
         version: 8.1.4
-      admin:
-        specifier: workspace:1.0.0
-        version: link:../admin
       autosize:
         specifier: ^6.0.1
         version: 6.0.1
