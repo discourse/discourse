@@ -212,7 +212,15 @@ export default RouteTemplate(
         {{#if @controller.searching}}
           {{loadingSpinner size="medium"}}
         {{else}}
-          <div class="search-results" role="region">
+          <div
+            class="search-results"
+            role="region"
+            aria-label={{if
+              @controller.q
+              (i18n "search.results_page" term=@controller.q)
+              (i18n "search.results")
+            }}
+          >
             <LoadMore @action={{@controller.loadMore}}>
               {{#if
                 (or
