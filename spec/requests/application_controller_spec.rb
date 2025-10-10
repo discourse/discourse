@@ -442,6 +442,29 @@ RSpec.describe ApplicationController do
         expect(response.body).to_not include("google.com/search")
       end
 
+      it "should allow anchor tags in title" do
+        I18n.backend.store_translations(
+          :en,
+          { page_not_found: { title: 'Visit <a href="/search">search</a> page' } },
+        )
+
+        get "/t/nope-nope/99999999"
+        expect(response.status).to eq(404)
+        expect(response.body).to include('<a href="/search">search</a>')
+      end
+
+      it "should sanitize unsafe HTML in title" do
+        I18n.backend.store_translations(
+          :en,
+          { page_not_found: { title: 'Page <script>alert("xss")</script> not found' } },
+        )
+
+        get "/t/nope-nope/99999999"
+        expect(response.status).to eq(404)
+        expect(response.body).to_not include("<script>")
+        expect(response.body).to include("Page")
+      end
+
       describe "no logspam" do
         let(:fake_logger) { FakeLogger.new }
 
@@ -1199,8 +1222,7 @@ RSpec.describe ApplicationController do
           it "serves a 404 page in the preferred locale" do
             get "/missingroute", headers: headers("fr")
             expect(response.status).to eq(404)
-            expected_title = I18n.t("page_not_found.title", locale: :fr)
-            expect(response.body).to include(CGI.escapeHTML(expected_title))
+            expect(response.body).to include(I18n.t("page_not_found.title", locale: :fr))
           end
 
           it "serves a RenderEmpty page in the preferred locale" do
