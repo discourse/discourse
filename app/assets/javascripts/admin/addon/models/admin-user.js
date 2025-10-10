@@ -346,6 +346,12 @@ export default class AdminUser extends User {
     return AdminUser.find(this.id).then((result) => {
       const userProperties = Object.assign(result, { loadedDetails: true });
       this.setProperties(userProperties);
+
+      // this is far from ideal, but we provided an `AdminUser` object to the `.setProperties` call above
+      // Any tracked property in the object won't be properly assigned because these properties are not
+      // enumerable.
+      // To work around this, we need to assign them manually.
+      this.groups = userProperties.groups;
     });
   }
 
