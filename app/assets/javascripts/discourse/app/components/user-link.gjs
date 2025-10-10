@@ -33,11 +33,11 @@ export default class UserLink extends Component {
   }
 
   get ariaHidden() {
-    return this.args.ariaHidden ?? !!this.args.ariaLabel;
+    return this.args.ariaHidden === true ? "true" : undefined;
   }
 
   get ariaLabel() {
-    if (this.args.ariaHidden) {
+    if (this.args.ariaHidden === true) {
       return;
     }
 
