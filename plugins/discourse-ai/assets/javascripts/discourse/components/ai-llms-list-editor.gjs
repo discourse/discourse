@@ -5,10 +5,12 @@ import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import icon from "discourse/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
 import DTooltip from "float-kit/components/d-tooltip";
+import AiCreditBar from "./ai-credit-bar";
 import AiDefaultLlmSelector from "./ai-default-llm-selector";
 import AiLlmEditor from "./ai-llm-editor";
 
@@ -21,6 +23,17 @@ function isPreseeded(llm) {
 export default class AiLlmsListEditor extends Component {
   @service adminPluginNavManager;
   @service router;
+
+  formatResetDate(dateString) {
+    const resetDate = new Date(dateString);
+    const options = {
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    };
+    return resetDate.toLocaleString(undefined, options);
+  }
 
   @action
   modelDescription(llm) {
@@ -177,6 +190,34 @@ export default class AiLlmsListEditor extends Component {
                             <li>{{this.localizeUsage usage}}</li>
                           {{/each}}
                         </ul>
+                      {{/if}}
+                      {{#if llm.llm_credit_allocation}}
+                        <div class="ai-llm-list__credit-allocation">
+                          <AiCreditBar
+                            @allocation={{llm.llm_credit_allocation}}
+                          />
+                          {{#if llm.llm_credit_allocation.hard_limit_reached}}
+                            <div class="alert alert-danger ai-credit-warning">
+                              {{icon "circle-info"}}
+                              {{i18n
+                                "discourse_ai.llms.credit_allocation.hard_limit_warning"
+                                reset_date=(this.formatResetDate
+                                  llm.llm_credit_allocation.next_reset_at
+                                )
+                              }}
+                            </div>
+                          {{else if
+                            llm.llm_credit_allocation.soft_limit_reached
+                          }}
+                            <div class="alert alert-warning ai-credit-warning">
+                              {{icon "circle-info"}}
+                              {{i18n
+                                "discourse_ai.llms.credit_allocation.soft_limit_warning"
+                                percentage=llm.llm_credit_allocation.percentage_remaining
+                              }}
+                            </div>
+                          {{/if}}
+                        </div>
                       {{/if}}
                     </td>
                     <td class="d-admin-row__detail">

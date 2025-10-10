@@ -3,6 +3,8 @@
 module DiscourseAi
   module Translation
     class TranslationController < ::ApplicationController
+      include AiCreditLimitHandler
+
       requires_plugin PLUGIN_NAME
 
       before_action :ensure_logged_in

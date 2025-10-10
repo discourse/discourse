@@ -40,21 +40,45 @@ module Jobs
           feature_name: "discover",
         )
 
-      bot.reply(context) do |partial|
-        streamed_reply << partial
+      begin
+        bot.reply(context) do |partial|
+          streamed_reply << partial
 
-        # Throttle updates.
-        if (Time.now - start > 0.3) || Rails.env.test?
-          payload = base.merge(done: false, ai_discover_reply: streamed_reply)
-          publish_update(user, payload)
-          start = Time.now
+          # Throttle updates.
+          if (Time.now - start > 0.3) || Rails.env.test?
+            payload = base.merge(done: false, ai_discover_reply: streamed_reply)
+            publish_update(user, payload)
+            start = Time.now
+          end
         end
-      end
 
-      publish_update(user, base.merge(done: true, ai_discover_reply: streamed_reply))
+        publish_update(user, base.merge(done: true, ai_discover_reply: streamed_reply))
+      rescue LlmCreditAllocation::CreditLimitExceeded => e
+        publish_error_update(user, e)
+      end
     end
 
     def publish_update(user, payload)
+      MessageBus.publish("/discourse-ai/discoveries", payload, user_ids: [user.id])
+    end
+
+    def publish_error_update(user, exception)
+      allocation = exception.allocation
+
+      details = {}
+      if allocation
+        details[:reset_time_relative] = allocation.relative_reset_time
+        details[:reset_time_absolute] = allocation.formatted_reset_time
+      end
+
+      payload = {
+        error: true,
+        error_type: "credit_limit_exceeded",
+        message: exception.message,
+        details: details,
+        done: true,
+      }
+
       MessageBus.publish("/discourse-ai/discoveries", payload, user_ids: [user.id])
     end
   end

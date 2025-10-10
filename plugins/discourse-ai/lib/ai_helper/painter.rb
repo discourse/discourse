@@ -21,6 +21,9 @@ module DiscourseAi
 
           base64_to_image(artifacts, user.id)
         elsif model == "dall_e_3"
+          llm_model = find_llm_model_for_feature("illustrate_post")
+          LlmCreditAllocation.check_credits!(llm_model) if llm_model
+
           attribution =
             I18n.t(
               "discourse_ai.ai_helper.painter.attribution.#{SiteSetting.ai_helper_illustrate_post_model}",
@@ -37,6 +40,16 @@ module DiscourseAi
       end
 
       private
+
+      def find_llm_model_for_feature(feature_name)
+        persona_id = SiteSetting.ai_helper_post_illustrator_persona
+        return nil if persona_id.blank?
+
+        persona = AiPersona.find_by(id: persona_id)
+        return nil if persona.blank?
+
+        LlmModel.find_by(id: persona.default_llm_id)
+      end
 
       def base64_to_image(artifacts, user_id)
         attribution =

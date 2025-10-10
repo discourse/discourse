@@ -22,9 +22,11 @@ import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import Chart from "admin/components/chart";
 import ComboBox from "select-kit/components/combo-box";
+import AiCreditBar from "./ai-credit-bar";
 
 export default class AiUsage extends Component {
   @service currentUser;
+  @service store;
 
   @tracked startDate = moment().subtract(30, "days").toDate();
   @tracked endDate = new Date();
@@ -34,10 +36,36 @@ export default class AiUsage extends Component {
   @tracked selectedPeriod = "month";
   @tracked isCustomDateActive = false;
   @tracked loadingData = true;
+  @tracked llmsWithCredits = [];
 
   constructor() {
     super(...arguments);
     this.fetchData();
+    this.fetchLlmsWithCredits();
+  }
+
+  formatResetDate(dateString) {
+    const resetDate = new Date(dateString);
+    const options = {
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    };
+    return resetDate.toLocaleString(undefined, options);
+  }
+
+  @action
+  async fetchLlmsWithCredits() {
+    try {
+      const llms = await this.store.findAll("ai-llm");
+      this.llmsWithCredits = llms.filter(
+        (llm) => llm.llm_credit_allocation != null
+      );
+    } catch {
+      // Silently fail if LLMs can't be loaded
+      this.llmsWithCredits = [];
+    }
   }
 
   @action
@@ -653,6 +681,33 @@ export default class AiUsage extends Component {
               </:content>
             </AdminConfigAreaCard>
           </div>
+
+          {{#if this.llmsWithCredits.length}}
+            <AdminConfigAreaCard
+              class="ai-usage__credit-allocations"
+              @heading="discourse_ai.usage.credit_allocations"
+            >
+              <:content>
+                {{#each this.llmsWithCredits as |llm|}}
+                  <div class="ai-usage__credit-model">
+                    <h4>{{llm.display_name}}</h4>
+                    <AiCreditBar
+                      @allocation={{llm.llm_credit_allocation}}
+                      @showTooltip={{false}}
+                    />
+                    <div class="ai-usage__credit-details">
+                      <span>{{i18n
+                          "discourse_ai.llms.credit_allocation.next_reset"
+                          time=(this.formatResetDate
+                            llm.llm_credit_allocation.next_reset_at
+                          )
+                        }}</span>
+                    </div>
+                  </div>
+                {{/each}}
+              </:content>
+            </AdminConfigAreaCard>
+          {{/if}}
         </ConditionalLoadingSpinner>
       </div>
     </div>

@@ -151,4 +151,29 @@
     padding: 0.5em;
     border-bottom: 1px solid var(--primary-low);
   }
+
+  &__credit-allocations {
+    margin-top: 2em;
+    grid-column: span 2;
+  }
+
+  &__credit-model {
+    padding: 1em;
+    border-bottom: 1px solid var(--primary-low);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    h4 {
+      margin: 0 0 0.5em 0;
+      font-size: var(--font-0);
+    }
+  }
+
+  &__credit-details {
+    margin-top: 0.5em;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
 }

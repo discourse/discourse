@@ -3,6 +3,8 @@
 module DiscourseAi
   module AiBot
     class BotController < ::ApplicationController
+      include AiCreditLimitHandler
+
       requires_plugin PLUGIN_NAME
       requires_login
 

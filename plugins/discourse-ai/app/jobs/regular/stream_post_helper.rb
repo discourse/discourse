@@ -29,14 +29,40 @@ module Jobs
         input = args[:text]
       end
 
-      DiscourseAi::AiHelper::Assistant.new.stream_prompt(
-        helper_mode,
-        input,
-        user,
-        args[:progress_channel],
-        custom_prompt: args[:custom_prompt],
-        client_id: args[:client_id],
-      )
+      begin
+        DiscourseAi::AiHelper::Assistant.new.stream_prompt(
+          helper_mode,
+          input,
+          user,
+          args[:progress_channel],
+          custom_prompt: args[:custom_prompt],
+          client_id: args[:client_id],
+        )
+      rescue LlmCreditAllocation::CreditLimitExceeded => e
+        publish_error(args[:progress_channel], user, e)
+      end
+    end
+
+    private
+
+    def publish_error(channel, user, exception)
+      allocation = exception.allocation
+
+      details = {}
+      if allocation
+        details[:reset_time_relative] = allocation.relative_reset_time
+        details[:reset_time_absolute] = allocation.formatted_reset_time
+      end
+
+      payload = {
+        error: true,
+        error_type: "credit_limit_exceeded",
+        message: exception.message,
+        details: details,
+        done: true,
+      }
+
+      MessageBus.publish(channel, payload, user_ids: [user.id], max_backlog_age: 60)
     end
   end
 end
