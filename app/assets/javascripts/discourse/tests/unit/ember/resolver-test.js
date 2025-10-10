@@ -332,6 +332,7 @@ module("Unit | Ember | resolver", function (hooks) {
       "discourse/admin/templates/dashboard_general",
       "discourse/templates/admin-baz-qux",
       "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
+      "discourse/plugins/my-plugin/admin/templates/other-plugin-template",
       "discourse/admin/templates/components/my-admin-component",
     ]);
 
@@ -425,7 +426,19 @@ module("Unit | Ember | resolver", function (hooks) {
           assert,
           "template:admin-plugin/template",
           "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
-          "looks up templates in plugins"
+          "looks up templates in plugin discourse namespace"
+        );
+      }
+    );
+
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:admin/other-plugin-template",
+          "discourse/plugins/my-plugin/admin/templates/other-plugin-template",
+          "looks up templates in plugin admin namespace"
         );
       }
     );
