@@ -95,7 +95,7 @@ describe "Composer - Drafts", type: :system do
       fab!(:category_1, :category)
       fab!(:category_2, :category)
 
-      it "shows discard confirmation and allows saving the draft" do
+      it "shows Discard draft confirmation modal and hides it on Cancel button click" do
         visit "/new-topic"
 
         expect(composer).to be_opened
@@ -104,11 +104,9 @@ describe "Composer - Drafts", type: :system do
         composer.discard
 
         expect(discard_draft_modal).to be_open
-        discard_draft_modal.click_save
+        discard_draft_modal.click_cancel
 
         expect(discard_draft_modal).to be_closed
-        expect(composer).to be_closed
-        expect(Draft.where(user: current_user).count).to eq(1)
       end
     end
   end
