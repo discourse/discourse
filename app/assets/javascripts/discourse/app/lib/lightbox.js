@@ -34,6 +34,7 @@ export default async function lightbox(elem, siteSettings) {
       arrowNextTitle: i18n("lightbox.next"),
       errorMsg: i18n("lightbox.content_load_error", { url: elem.href }),
       pswpModule: async () => await import("photoswipe"),
+      appendToEl: isTesting() && document.getElementById("ember-testing"),
     });
 
     lightboxEl.on("uiRegister", function () {
