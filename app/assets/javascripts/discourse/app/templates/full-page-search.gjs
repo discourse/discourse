@@ -59,7 +59,6 @@ export default RouteTemplate(
             @aria-label={{i18n "search.search_term_label"}}
             @enter={{fn @controller.search (hash collapseFilters=true)}}
             @hasAutofocus={{@controller.hasAutofocus}}
-            @aria-controls="search-result-count"
             type="search"
             class="full-page-search search no-blur search-query"
           />
