@@ -73,6 +73,7 @@ class DiscoursePluginRegistry
   define_register :groups_callback_for_users_search_controller_action, Hash
   define_register :mail_pollers, Set
   define_register :site_setting_areas, Set
+  define_register :admin_config_login_routes, Set
   define_register :discourse_dev_populate_reviewable_types, Set
   define_register :category_update_param_with_callback, Hash
 

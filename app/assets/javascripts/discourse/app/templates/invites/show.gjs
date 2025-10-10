@@ -2,7 +2,7 @@ import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
-import { and, not, or } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import FullnameInput from "discourse/components/fullname-input";
 import InputTip from "discourse/components/input-tip";
@@ -28,14 +28,14 @@ export default RouteTemplate(
     {{hideApplicationSidebar}}
     <section>
       <div class="container invites-show clearfix">
-        {{#unless
-          (or @controller.externalAuthsOnly @controller.existingUserId)
-        }}
-          <SignupProgressBar
-            @step={{if @controller.successMessage "activate" "signup"}}
-          />
-        {{/unless}}
-        <WelcomeHeader @header={{@controller.welcomeTitle}} />
+        {{#if @controller.showWelcomeHeader}}
+          {{#if @controller.showSignupProgressBar}}
+            <SignupProgressBar
+              @step={{if @controller.successMessage "activate" "signup"}}
+            />
+            <WelcomeHeader @header={{@controller.welcomeTitle}} />
+          {{/if}}
+        {{/if}}
 
         <div
           class={{if @controller.successMessage "invite-success" "invite-form"}}
@@ -257,21 +257,24 @@ export default RouteTemplate(
                   {{/if}}
                 </form>
               {{/if}}
-              {{#if @controller.existingUserRedeeming}}
-                {{#if @controller.existingUserCanRedeem}}
-                  <DButton
-                    @action={{@controller.submit}}
-                    @disabled={{@controller.submitDisabled}}
-                    @label="invites.accept_invite"
-                    type="submit"
-                    class="btn-primary"
-                  />
-                {{else}}
-                  <div
-                    class="alert alert-error"
-                  >{{@controller.existingUserCanRedeemError}}</div>
+              {{! When using DiscourseConnect, all invite acceptance has to go through the SSO flow }}
+              {{#unless @controller.discourseConnectEnabled}}
+                {{#if @controller.existingUserRedeeming}}
+                  {{#if @controller.existingUserCanRedeem}}
+                    <DButton
+                      @action={{@controller.submit}}
+                      @disabled={{@controller.submitDisabled}}
+                      @label="invites.accept_invite"
+                      type="submit"
+                      class="btn-primary accept-invitation"
+                    />
+                  {{else}}
+                    <div
+                      class="alert alert-error"
+                    >{{@controller.existingUserCanRedeemError}}</div>
+                  {{/if}}
                 {{/if}}
-              {{/if}}
+              {{/unless}}
             {{/if}}
           </div>
         </div>

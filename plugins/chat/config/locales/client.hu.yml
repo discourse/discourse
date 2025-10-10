@@ -684,7 +684,7 @@ hu:
           title: Csevegés
     sidebar:
       start_new_dm:
-        text: Új DM indítása
+        text: Új privát beszélgetés
         title: Személyes csevegés létrehozása
       panels:
         chat:

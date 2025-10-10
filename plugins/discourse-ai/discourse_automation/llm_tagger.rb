@@ -54,7 +54,7 @@ if defined?(DiscourseAutomation)
 
     script do |context, fields|
       post = context["post"]
-      next if post&.user&.bot?
+      next if post&.user&.bot? && !fields.dig("allow_system_posts", "value")
 
       next if post.post_number != 1
 
