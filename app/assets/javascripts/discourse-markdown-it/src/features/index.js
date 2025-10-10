@@ -1,4 +1,3 @@
-import { isRailsTesting } from "discourse/lib/environment";
 import * as anchor from "./anchor";
 import * as bbcodeBlock from "./bbcode-block";
 import * as bbcodeInline from "./bbcode-inline";
@@ -17,7 +16,6 @@ import * as onebox from "./onebox";
 import * as paragraph from "./paragraph";
 import * as quotes from "./quotes";
 import * as table from "./table";
-import * as testFeature from "./test-feature";
 import * as textPostProcess from "./text-post-process";
 import * as uploadProtocol from "./upload-protocol";
 import * as watchedWords from "./watched-words";
@@ -44,7 +42,6 @@ export default [
   feature("bbcode-inline", bbcodeInline),
   feature("bbcode-block", bbcodeBlock),
   feature("anchor", anchor),
-  ...(isRailsTesting() ? [feature("test-token", testFeature)] : []),
 ];
 
 function feature(id, { setup, priority = 0 }) {

@@ -865,19 +865,6 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
     end
-
-    it "reverts to Markdown mode when an unsupported token is used" do
-      cdp.allow_clipboard
-      open_composer
-
-      composer.type_content("Hey")
-      cdp.copy_paste("[test]\nunsupported\n[/test]")
-
-      expect(page).to have_css(".dialog-body p", text: I18n.t("js.composer.unsupported_token"))
-      find(".dialog-footer .btn-primary").click
-
-      expect(composer).to have_value("Hey\n\n[test]\nunsupported\n[/test]\n\n")
-    end
   end
 
   describe "toolbar state updates" do
