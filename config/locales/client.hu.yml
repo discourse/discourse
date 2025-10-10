@@ -3917,10 +3917,7 @@ hu:
         attachment_upload_not_allowed_for_new_user: "Sajnos az új felhasználók nem tölthetnek fel mellékleteket."
         attachment_download_requires_login: "Sajnos be kell jelentkeznie, hogy letölthesse a mellékleteket."
       cancel_composer:
-        confirm: "Mit szeretne tenni a bejegyzésével?"
         discard: "Elvetés"
-        save_draft: "Vázlat mentése későbbre"
-        keep_editing: "Szerkesztés tovább"
       via_email: "ez a válasz e-mailben érkezett"
       via_auto_generated_email: "ez a bejegyzés egy automatikusan előállított e-mailen keresztül érkezett"
       whisper: "ez a hozzászólás egy privát suttogás a moderátorok számára."
@@ -5318,9 +5315,12 @@ hu:
           title: "Lokalizáció"
           header_description: "A közösség kezelőfelületének nyelvének és a tagok egyéb lokalizációs beállításainak megadása"
           keywords: "\nhely|területi beállítás|nyelv|időzóna|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Bejelentkezés és hitelesítés"
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
+          sub_pages:
+            common_settings:
+              title: "Beállítások"
         logo:
           title: "Logó"
           header_description: "A webhelyen használt logók és ikonok testreszabása"

@@ -2571,6 +2571,10 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
+        login:
+          sub_pages:
+            common_settings:
+              title: "การตั้งค่า"
         logo:
           form:
             mobile: "โทรศัพท์"

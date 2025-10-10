@@ -2830,6 +2830,9 @@ pl_PL:
       group: "Filtruj tematy według grup"
       groups_any: "Pokaż tematy z dowolną ze wskazanych grup (rozdzielone przecinkami)"
       groups_all: "Pokaż tematy ze wszystkimi określonymi grupami (rozdzielone znakiem plus)"
+      locale: "Filtruj tematy według języka oryginału"
+      locale_any: "Pokaż tematy pierwotnie napisane w dowolnym z podanych języków (rozdzielone przecinkami)"
+      exclude_locale: "Wyklucz tematy pierwotnie napisane w określonym języku"
   discourse_connect:
     login_error: "Błąd logowania"
     not_found: "Nie można znaleźć Twojego konta. Skontaktuj się z administratorem serwisu."

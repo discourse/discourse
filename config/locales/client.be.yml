@@ -2000,6 +2000,10 @@ be:
           title: "файлы"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Налады"
         logo:
           form:
             mobile: "Мабільны"

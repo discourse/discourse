@@ -3684,10 +3684,8 @@ zh_CN:
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，您需要登录才能下载附件。"
       cancel_composer:
-        confirm: "您想对您的帖子做什么？"
+        confirm: "你想放弃你的帖子吗？"
         discard: "舍弃"
-        save_draft: "保存草稿供以后使用"
-        keep_editing: "继续编辑"
       via_email: "此帖子通过电子邮件送达"
       via_auto_generated_email: "此帖子通过自动生成的电子邮件送达"
       whisper: "此帖子是对版主的密语"
@@ -5026,9 +5024,16 @@ zh_CN:
           title: "本地化"
           header_description: "为您的成员配置社区的界面语言和其他本地化选项"
           keywords: "语言区域|语言|时区|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "登录与身份验证"
           header_description: "配置用户登录与身份验证方式、秘密与密钥、OAuth2 提供商等。"
+          sub_pages:
+            common_settings:
+              title: "设置"
+            authenticators:
+              title: "社交登录"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "徽标"
           header_description: "配置整个站点使用的徽标和图标"

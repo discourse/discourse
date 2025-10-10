@@ -4359,10 +4359,7 @@ cs:
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
       cancel_composer:
-        confirm: "Co chcete udělat s vaším příspěvkem?"
         discard: "Zahodit"
-        save_draft: "Uložit koncept na později"
-        keep_editing: "Pokračovat v úpravách"
       via_email: "tento příspěvek byl přijat přes email"
       via_auto_generated_email: "tento příspěvek byl přijat přes automaticky generovaný email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"
@@ -5866,9 +5863,12 @@ cs:
           title: "Lokalizace"
           header_description: "Nastavte uživatelské rozhraní vaší komunity z pohledu jazyka a dalších možností lokalizace"
           keywords: "locale|language|timezone|unicode|ltr|jazyk|časová|zóna"
-        login_and_authentication:
+        login:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
+          sub_pages:
+            common_settings:
+              title: "Nastavení"
         logo:
           title: "Logo"
           header_description: "Nakonfigurujte loga a ikony používané na celém webu"

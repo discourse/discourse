@@ -4719,10 +4719,7 @@ ar:
         attachment_upload_not_allowed_for_new_user: "عذرًا، لا يمكن للمستخدمين الجُدد تحميل المرفقات."
         attachment_download_requires_login: "عذرًا، عليك تسجيل الدخول لتنزيل المرفقات."
       cancel_composer:
-        confirm: "ماذا تريد أن تفعل بمنشورك؟"
         discard: "تجاهل"
-        save_draft: "حفظ المسودة لوقتٍ لاحق"
-        keep_editing: "الاستمرار في التعديل"
       via_email: "لقد وصل هذا المنشور عبر البريد الإلكتروني"
       via_auto_generated_email: "لقد وصل هذا المنشور عبر رسالة إلكترونية تم إنشاؤها تلقائيًا"
       whisper: "هذا المنشور عبارة عن همسة خاصة للمشرفين"
@@ -6308,9 +6305,12 @@ ar:
           title: "التوطين"
           header_description: "ضبط لغة واجهة المنتدى وخيارات التوطين الأخرى لأعضاء مجتمعك"
           keywords: "اللغة|اللغة|المنطقة الزمنية|unicode|من اليسار إلى اليمين"
-        login_and_authentication:
+        login:
           title: "تسجيل الدخول والمصادقة"
           header_description: "تكوين كيفية تسجيل دخول المستخدمين ومصادقتهم، والعبارات السرية، والمفاتيح، ومقِّدمي OAuth2، وغير ذلك"
+          sub_pages:
+            common_settings:
+              title: "الإعدادان"
         logo:
           title: "الشعار"
           header_description: "ضبط الشعارات والرموز المستخدمة في جميع أنحاء موقعك"

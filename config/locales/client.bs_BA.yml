@@ -3192,6 +3192,10 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Postavke"
         logo:
           form:
             mobile: "Mobilno"
