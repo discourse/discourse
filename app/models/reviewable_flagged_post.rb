@@ -158,161 +158,150 @@ class ReviewableFlaggedPost < Reviewable
     perform_ignore_and_do_nothing(performed_by, args)
   end
 
-  def post_action_type_view
-    @post_action_type_view ||= PostActionTypeView.new
-  end
-
   def perform_ignore_and_do_nothing(performed_by, args)
-    actions =
-      PostAction
-        .active
-        .where(post_id: target_id)
-        .where(post_action_type_id: post_action_type_view.notify_flag_type_ids)
-
-    actions.each do |action|
-      action.deferred_at = Time.zone.now
-      action.deferred_by_id = performed_by.id
-      # so callback is called
-      action.save
-      unless args[:expired]
-        action.add_moderator_post_if_needed(performed_by, :ignored, args[:post_was_deleted])
-      end
-    end
-
-    if actions.first.present?
-      unassign_topic performed_by, post
-      DiscourseEvent.trigger(:flag_reviewed, post)
-      DiscourseEvent.trigger(:flag_deferred, actions.first)
-    end
-
-    create_result(:success, :ignored, actions.map(&:user_id), false)
+    result =
+      create_result(
+        :success,
+        :ignored,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :ignored,
+        recalculate_score: false,
+      )
+    unassign_topic(performed_by, post)
+    result
   end
 
   def perform_agree_and_keep(performed_by, args)
-    agree(performed_by, args)
+    result =
+      create_result(
+        :success,
+        :approved,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :agreed,
+        recalculate_score: false,
+      )
+    unassign_topic(performed_by, post)
+    result
   end
 
   def perform_delete_user(performed_by, args)
-    super
-    agree(performed_by, args)
+    # To maintain backwards compatibility, we need to use the old Reviewable status behaviour.
+    result = perform_new_delete_user(performed_by, args)
+    result.transition_to = :approved if result.success?
+    result
   end
 
   def perform_delete_and_block_user(performed_by, args)
-    super
-    agree(performed_by, args)
+    # To maintain backwards compatibility, we need to use the old Reviewable status behaviour.
+    result = perform_new_delete_and_block_user(performed_by, args)
+    result.transition_to = :approved if result.success?
+    result
   end
 
   def perform_agree_and_hide(performed_by, args)
-    agree(performed_by, args) { |pa| post.hide!(pa.post_action_type_id) }
+    result =
+      create_result(
+        :success,
+        :approved,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :agreed,
+        recalculate_score: false,
+      ) { |pa| target_post.hide!(pa.post_action_type_id) }
+    unassign_topic(performed_by, post)
+    result
   end
 
   def perform_agree_and_restore(performed_by, args)
-    agree(performed_by, args) { PostDestroyer.new(performed_by, post).recover }
+    result =
+      create_result(
+        :success,
+        :approved,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :agreed,
+        recalculate_score: false,
+      ) { |_| PostDestroyer.new(performed_by, post).recover }
+    unassign_topic(performed_by, post)
+    result
   end
 
   def perform_disagree(performed_by, args)
-    # -1 is the automatic system clear
-    action_type_ids =
-      if performed_by.id == Discourse::SYSTEM_USER_ID
-        post_action_type_view.auto_action_flag_types.values
-      else
-        post_action_type_view.notify_flag_type_ids
-      end
-
-    actions =
-      PostAction.active.where(post_id: target_id).where(post_action_type_id: action_type_ids)
-
-    actions.each do |action|
-      action.disagreed_at = Time.zone.now
-      action.disagreed_by_id = performed_by.id
-      # so callback is called
-      action.save
-      action.add_moderator_post_if_needed(performed_by, :disagreed)
-    end
-
-    # reset all cached counters
-    cached = {}
-    action_type_ids.each do |atid|
-      column = "#{post_action_type_view.types[atid]}_count"
-      cached[column] = 0 if ActiveRecord::Base.connection.column_exists?(:posts, column)
-    end
-
-    Post.with_deleted.where(id: target_id).update_all(cached)
-
-    if actions.first.present?
-      unassign_topic performed_by, post
-      DiscourseEvent.trigger(:flag_reviewed, post)
-      DiscourseEvent.trigger(:flag_disagreed, actions.first)
-    end
-
-    # Undo hide/silence if applicable
-    if post&.hidden?
-      notify_poster(performed_by)
-      post.unhide!
-      UserSilencer.unsilence(post.user) if UserSilencer.was_silenced_for?(post)
-    end
-
-    create_result(:success, :rejected, actions.map(&:user_id), false)
+    post_was_hidden = post.hidden?
+    result =
+      create_result(
+        :success,
+        :rejected,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :disagreed,
+        recalculate_score: false,
+      )
+    unassign_topic(performed_by, post)
+    notify_poster(performed_by) if post_was_hidden
+    result
   end
 
   def perform_delete_and_ignore(performed_by, args)
-    result = perform_ignore_and_do_nothing(performed_by, args)
     destroyer(performed_by, post).destroy
+    result =
+      create_result(
+        :success,
+        :ignored,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :ignored,
+        recalculate_score: false,
+      )
+    unassign_topic(performed_by, post)
     result
   end
 
   def perform_delete_and_ignore_replies(performed_by, args)
-    result = perform_ignore_and_do_nothing(performed_by, args)
     PostDestroyer.delete_with_replies(performed_by, post, self)
-
+    result =
+      create_result(
+        :success,
+        :ignored,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :ignored,
+        recalculate_score: false,
+      )
+    unassign_topic(performed_by, post)
     result
   end
 
   def perform_delete_and_agree(performed_by, args)
-    result = agree(performed_by, args)
     destroyer(performed_by, post).destroy
+    result =
+      create_result(
+        :success,
+        :approved,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :agreed,
+        recalculate_score: false,
+      )
+    unassign_topic(performed_by, post)
     result
   end
 
   def perform_delete_and_agree_replies(performed_by, args)
-    result = agree(performed_by, args)
     PostDestroyer.delete_with_replies(performed_by, post, self)
+    result =
+      create_result(
+        :success,
+        :approved,
+        performed_by: performed_by,
+        args: args,
+        flag_status: :agreed,
+        recalculate_score: false,
+      )
+    unassign_topic(performed_by, post)
     result
-  end
-
-  protected
-
-  def agree(performed_by, args)
-    actions =
-      PostAction
-        .active
-        .where(post_id: target_id)
-        .where(post_action_type_id: post_action_type_view.notify_flag_types.values)
-
-    trigger_spam = false
-    actions.each do |action|
-      ActiveRecord::Base.transaction do
-        action.agreed_at = Time.zone.now
-        action.agreed_by_id = performed_by.id
-        # so callback is called
-        action.save
-        DB.after_commit do
-          action.add_moderator_post_if_needed(performed_by, :agreed, args[:post_was_deleted])
-          trigger_spam = true if action.post_action_type_id == post_action_type_view.types[:spam]
-        end
-      end
-    end
-
-    DiscourseEvent.trigger(:confirmed_spam_post, post) if trigger_spam
-
-    if actions.first.present?
-      unassign_topic performed_by, post
-      DiscourseEvent.trigger(:flag_reviewed, post)
-      DiscourseEvent.trigger(:flag_agreed, actions.first)
-      yield(actions.first) if block_given?
-    end
-
-    create_result(:success, :approved, actions.map(&:user_id), false)
   end
 
   def unassign_topic(performed_by, post)

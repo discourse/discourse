@@ -334,14 +334,14 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
         expect(user_bundle).to be_present
         expect(actions.has?(:silence_user)).to eq(true)
         expect(actions.has?(:suspend_user)).to eq(true)
-        expect(actions.has?(:delete_user)).to eq(true)
+        expect(actions.has?(:new_delete_user)).to eq(true)
       end
 
       it "omits user deletion when reviewer cannot delete user" do
         allow(guardian).to receive(:can_delete_user?).and_return(false)
         actions = reviewable.actions_for(guardian)
-        expect(actions.has?(:delete_user)).to eq(false)
-        expect(actions.has?(:delete_and_block_user)).to eq(false)
+        expect(actions.has?(:new_delete_user)).to eq(false)
+        expect(actions.has?(:new_delete_and_block_user)).to eq(false)
       end
 
       it "shows unhide_post when post hidden" do
