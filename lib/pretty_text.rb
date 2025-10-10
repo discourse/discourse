@@ -85,6 +85,7 @@ module PrettyText
 
     %w[
       discourse/app/deprecation-workflow
+      discourse/app/lib/environment
       discourse/app/lib/get-url
       discourse/app/lib/object
       discourse/app/lib/deprecated
