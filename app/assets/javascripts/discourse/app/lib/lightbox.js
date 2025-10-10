@@ -40,7 +40,7 @@ export default async function lightbox(elem, siteSettings) {
       // adds a custom caption to lightbox
       lightboxEl.pswp.ui.registerElement({
         name: "caption",
-        order: 7,
+        order: 6,
         isButton: false,
         appendTo: "root",
         html: "",
@@ -63,32 +63,31 @@ export default async function lightbox(elem, siteSettings) {
       });
 
       // adds a download button
-      lightboxEl.pswp.ui.registerElement({
-        name: "download-image",
-        order: 8,
-        isButton: true,
-        tagName: "a",
-        title: i18n("lightbox.download"),
-        html: renderIcon("string", "download"),
+      if (canDownload) {
+        lightboxEl.pswp.ui.registerElement({
+          name: "download-image",
+          order: 7,
+          isButton: true,
+          tagName: "a",
+          title: i18n("lightbox.download"),
+          html: renderIcon("string", "download"),
 
-        onInit: (el, pswp) => {
-          if (!canDownload) {
-            return false;
-          }
+          onInit: (el, pswp) => {
+            el.setAttribute("download", "");
+            el.setAttribute("target", "_blank");
+            el.setAttribute("rel", "noopener");
 
-          el.setAttribute("target", "_blank");
-          el.setAttribute("rel", "noopener");
-
-          pswp.on("change", () => {
-            el.href = pswp.currSlide.data.element.dataset.downloadHref;
-          });
-        },
-      });
+            pswp.on("change", () => {
+              el.href = pswp.currSlide.data.element.dataset.downloadHref;
+            });
+          },
+        });
+      }
 
       // adds a view original image button
       lightboxEl.pswp.ui.registerElement({
         name: "original-image",
-        order: 9,
+        order: 8,
         isButton: true,
         tagName: "a",
         title: i18n("lightbox.open"),
