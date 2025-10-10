@@ -46,13 +46,13 @@ export default class DiscardDraftModal extends Component {
           <DButton
             @label="post.cancel_composer.save_draft"
             @action={{this.saveDraftAndClose}}
-            class="save-draft"
+            class="btn-default save-draft"
           />
         {{/if}}
         <DButton
           @label="post.cancel_composer.keep_editing"
           @action={{this.keepEditing}}
-          class="keep-editing"
+          class="btn-default keep-editing"
         />
       </:footer>
     </DModal>
