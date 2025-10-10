@@ -2108,7 +2108,7 @@ files:
     list_type: file_types
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
+    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg"
     refresh: true
     type: list
     list_type: file_types
