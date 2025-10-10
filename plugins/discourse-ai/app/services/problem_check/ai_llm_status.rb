@@ -10,6 +10,10 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
 
   private
 
+  def targets
+    LlmModel.in_use
+  end
+
   def llm_errors
     return [] if !SiteSetting.discourse_ai_enabled
     LlmModel.in_use.find_each.filter_map do |model|
@@ -22,22 +26,14 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
       blk.call
       nil
     rescue => e
-      details = {
+      override_data = {
         model_id: model.id,
         model_name: model.display_name,
         error: parse_error_message(e.message),
         url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms/#{model.id}/edit",
       }
 
-      message = I18n.t("dashboard.problem.ai_llm_status", details)
-
-      Problem.new(
-        message,
-        priority: "high",
-        identifier: "ai_llm_status",
-        target: model.id,
-        details:,
-      )
+      problem(model, override_data:)
     end
   end
 

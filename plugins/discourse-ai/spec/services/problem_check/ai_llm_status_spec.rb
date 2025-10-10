@@ -52,7 +52,7 @@ RSpec.describe ProblemCheck::AiLlmStatus do
 
         expect(described_class.new.call).to contain_exactly(
           have_attributes(
-            identifier: "ai_llm_status",
+            identifier: :ai_llm_status,
             target: llm_model.id,
             priority: "high",
             message: message,

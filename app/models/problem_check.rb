@@ -207,6 +207,7 @@ class ProblemCheck
         priority: self.config.priority,
         identifier:,
         target: target&.id,
+        details: override_data,
       )
 
     target.present? ? problem : [problem]
