@@ -132,10 +132,8 @@ RSpec.describe "AI Bot - Homepage", type: :system do
             "article[data-post-id='#{post_with_link.id}'] .cooked a[href='#{post_url}']",
           ).click
 
-          try_until_success do
-            expect(topic_page.current_topic).to eq(regular_topic)
-            expect(page).to have_css("article[data-post-id='#{regular_post.id}']")
-          end
+          expect(topic_page.current_topic).to eq(regular_topic)
+          expect(page).to have_css("article[data-post-id='#{regular_post.id}']")
         end
       end
 
