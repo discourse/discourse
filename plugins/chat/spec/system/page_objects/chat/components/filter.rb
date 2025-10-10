@@ -10,63 +10,47 @@ module PageObjects
           @parent_locator = parent_locator || locator(".chat-channel")
         end
 
-        # def visible?
-        #   parent_locator.locator(".chat-channel__filter-bar").visible?
-        # end
+        def filter_bar
+          @filter_bar ||= parent_locator.locator(".chat-channel__filter-bar")
+        end
 
-        # def not_visible?
-        #   !visible?
-        # end
+        def toggle
+          parent_locator.locator(".c-navbar__filter").click
+          self
+        end
 
-        # def input
-        #   parent_locator.locator(".chat-channel__filter-bar input")
-        # end
+        def not_visible?
+          expect(filter_bar).to be_hidden
+        end
 
-        # def fill_in(query)
-        #   parent_locator.locator(".chat-channel__filter-bar input").fill(query)
-        # end
+        def visible?
+          expect(filter_bar).to be_visible
+        end
 
-        # def clear
-        #   parent_locator.locator(".chat-channel__filter-bar input").clear
-        # end
+        def fill_in(query)
+          filter_bar.locator("input").fill(query)
+          self
+        end
 
-        # def has_query?(expected)
-        #   parent_locator.locator(".chat-channel__filter-bar input").input_value == expected
-        # end
+        def has_no_results?
+          toasts = PageObjects::Components::Toasts.new
+          toasts.has_error?(I18n.t("js.chat.search.no_results"))
+        end
 
-        # def results_count
-        #   text = parent_locator.locator(".chat-channel__filter-bar span").text_content
-        #   text.split("/").last.to_i
-        # end
+        def has_state?(results: nil, position: nil)
+          parent_locator.locator(".chat-channel__filter-position-total", hasText: results) &&
+            parent_locator.locator(".chat-channel__filter-position-index", hasText: position)
+        end
 
-        # def current_result_position
-        #   text = parent_locator.locator(".chat-channel__filter-bar span").text_content
-        #   text.split("/").first.to_i
-        # end
+        def navigate_to_previous_result
+          filter_bar.locator(".chat-channel__prev-result").click
+          self
+        end
 
-        # def navigate_to_previous_result
-        #   parent_locator.locator(
-        #     ".chat-channel__filter-bar .btn-small[data-icon='chevron-up']",
-        #   ).click
-        # end
-
-        # def navigate_to_next_result
-        #   parent_locator.locator(
-        #     ".chat-channel__filter-bar .btn-small[data-icon='chevron-down']",
-        #   ).click
-        # end
-
-        # def close
-        #   parent_locator.locator(".chat-channel__filter-bar .btn-primary").click
-        # end
-
-        # def has_results?
-        #   parent_locator.locator(".chat-channel__filter-bar span").count > 0
-        # end
-
-        # def has_no_results?
-        #   !has_results?
-        # end
+        def navigate_to_next_result
+          filter_bar.locator(".chat-channel__next-result").click
+          self
+        end
       end
     end
   end

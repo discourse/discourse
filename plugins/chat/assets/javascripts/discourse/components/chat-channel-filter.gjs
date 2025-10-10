@@ -17,7 +17,6 @@ import { i18n } from "discourse-i18n";
 
 export default class ChatChannelFilter extends Component {
   @service capabilities;
-  @service router;
   @service loadingSlider;
   @service toasts;
 
@@ -151,18 +150,25 @@ export default class ChatChannelFilter extends Component {
         />
 
         {{#if this.channelFilterResults.length}}
-          <span
-          >{{this.currentFilterResultPosition}}/{{this.channelFilterResults.length}}</span>
+          <span class="chat-channel__filter-position">
+            <span
+              class="chat-channel__filter-position-index"
+            >{{this.currentFilterResultPosition}}</span>
+            <span class="chat-channel__filter-position-separator">/</span>
+            <span
+              class="chat-channel__filter-position-total"
+            >{{this.channelFilterResults.length}}</span>
+          </span>
 
           <DButton
             @action={{this.navigateToPreviousResult}}
             @icon="chevron-up"
-            class="btn-small"
+            class="btn-small chat-channel__prev-result"
           />
           <DButton
             @action={{this.navigateToNextResult}}
             @icon="chevron-down"
-            class="btn-small"
+            class="btn-small chat-channel__next-result"
           />
         {{/if}}
 

@@ -12,7 +12,7 @@ module PageObjects
       end
 
       def filter
-        @filter ||= PageObjects::Components::Chat::Filter.new(".chat-channel")
+        @filter ||= PageObjects::Components::Chat::Filter.new(locator(".full-page-chat"))
       end
 
       def selection_management
