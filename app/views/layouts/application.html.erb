@@ -44,6 +44,7 @@
 
     <%- if staff? %>
       <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
+      <link rel="modulepreload" href="dunno" as="script" data-discourse-entrypoint="admin">
     <%- end %>
 
     <%- if admin? %>
