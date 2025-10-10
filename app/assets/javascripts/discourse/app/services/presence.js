@@ -1,8 +1,10 @@
-import EmberObject, { computed } from "@ember/object";
+import { cached, tracked } from "@glimmer/tracking";
+import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import Evented from "@ember/object/evented";
 import { cancel, debounce, next, once, throttle } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
@@ -42,12 +44,16 @@ export class PresenceChannelNotFound extends Error {}
 // convenient proxies to the PresenceService and PresenceServiceState
 // The 'change' event is fired whenever the users list or the count change
 class PresenceChannel extends EmberObject.extend(Evented) {
+  @tracked present = false;
+  @tracked subscribed = false;
+
+  #presenceService;
+  @tracked _presenceState;
+
   init({ name, presenceService }) {
     super.init(...arguments);
     this.name = name;
-    this.presenceService = presenceService;
-    this.set("present", false);
-    this.set("subscribed", false);
+    this.#presenceService = presenceService;
   }
 
   // Mark the current user as 'present' in this channel
@@ -68,16 +74,16 @@ class PresenceChannel extends EmberObject.extend(Evented) {
 
     this.setProperties({ activeOptions });
     if (!this.present) {
-      this.set("present", true);
-      await this.presenceService._enter(this);
+      this.present = true;
+      await this.#presenceService._enter(this);
     }
   }
 
   // Mark the current user as leaving this channel
   async leave() {
     if (this.present) {
-      this.set("present", false);
-      await this.presenceService._leave(this);
+      this.present = false;
+      await this.#presenceService._leave(this);
     }
   }
 
@@ -85,9 +91,9 @@ class PresenceChannel extends EmberObject.extend(Evented) {
     if (this.subscribed) {
       return;
     }
-    const state = await this.presenceService._subscribe(this, initialData);
-    this.set("subscribed", true);
-    this.set("_presenceState", state);
+    const state = await this.#presenceService._subscribe(this, initialData);
+    this.subscribed = true;
+    this._presenceState = state;
 
     this._publishChange();
     state.on("change", this._publishChange);
@@ -97,10 +103,10 @@ class PresenceChannel extends EmberObject.extend(Evented) {
     if (!this.subscribed) {
       return;
     }
-    await this.presenceService._unsubscribe(this);
-    this.set("subscribed", false);
+    await this.#presenceService._unsubscribe(this);
+    this.subscribed = false;
     this._presenceState.off("change", this._publishChange);
-    this.set("_presenceState", null);
+    this._presenceState = null;
     this._publishChange();
   }
 
@@ -110,13 +116,17 @@ class PresenceChannel extends EmberObject.extend(Evented) {
   }
 
   @dependentKeyCompat
+  @cached
   get users() {
-    if (this.get("subscribed")) {
-      return this.get("_presenceState.users");
+    if (this.subscribed) {
+      return (
+        this._presenceState.users &&
+        Array.from(this._presenceState.users.values())
+      );
     }
   }
 
-  @computed("_presenceState.count", "subscribed")
+  @dependentKeyCompat
   get count() {
     if (!this.subscribed) {
       return;
@@ -124,7 +134,7 @@ class PresenceChannel extends EmberObject.extend(Evented) {
     return this._presenceState?.count;
   }
 
-  @computed("_presenceState.count", "subscribed")
+  @dependentKeyCompat
   get countOnly() {
     if (!this.subscribed) {
       return;
@@ -134,18 +144,22 @@ class PresenceChannel extends EmberObject.extend(Evented) {
 }
 
 class PresenceChannelState extends EmberObject.extend(Evented) {
+  @tracked count;
+  @tracked countOnly;
+  @tracked lastSeenId;
+  @tracked users;
+
+  #presenceService;
+  @tracked _subscribedCallback;
+
   init({ name, presenceService }) {
     super.init(...arguments);
     this.name = name;
-    this.set("users", null);
-    this.set("count", null);
-    this.set("countOnly", null);
-    this.presenceService = presenceService;
+    this.#presenceService = presenceService;
   }
 
   // Is this PresenceChannel object currently subscribed to updates
   // from the server.
-  @computed("_subscribedCallback")
   get subscribed() {
     return !!this._subscribedCallback;
   }
@@ -161,40 +175,40 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
     }
 
     if (!initialData) {
-      initialData = await this.presenceService._getInitialData(this.name);
+      initialData = await this.#presenceService._getInitialData(this.name);
     }
 
-    this.set("count", initialData.count);
+    this.count = initialData.count;
     if (initialData.users) {
-      this.set("users", initialData.users);
-      this.set("countOnly", false);
+      this.users = new TrackedMap(initialData.users.map((u) => [u.id, u]));
+      this.countOnly = false;
     } else {
-      this.set("users", null);
-      this.set("countOnly", true);
+      this.users = null;
+      this.countOnly = true;
     }
 
     this.lastSeenId = initialData.last_message_id;
 
-    this.presenceService.messageBus.subscribe(
+    this.#presenceService.messageBus.subscribe(
       `/presence${this.name}`,
       this._processMessage,
       this.lastSeenId
     );
 
-    this.set("_subscribedCallback", this._processMessage);
+    this._subscribedCallback = this._processMessage;
     this.trigger("change");
   }
 
   // Stop subscribing to updates from the server about this channel
   unsubscribe() {
     if (this.subscribed) {
-      this.presenceService.messageBus.unsubscribe(
+      this.#presenceService.messageBus.unsubscribe(
         `/presence${this.name}`,
         this._subscribedCallback
       );
-      this.set("_subscribedCallback", null);
-      this.set("users", null);
-      this.set("count", null);
+      this._subscribedCallback = null;
+      this.users = null;
+      this.count = null;
       this.trigger("change");
     }
   }
@@ -223,24 +237,28 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
     this.lastSeenId = message_id;
 
     if (this.countOnly && data.count_delta !== undefined) {
-      this.set("count", this.count + data.count_delta);
+      this.count = this.count + data.count_delta;
       this.trigger("change");
     } else if (
       !this.countOnly &&
       (data.entering_users || data.leaving_user_ids)
     ) {
       if (data.entering_users) {
-        const users = data.entering_users.map((u) => User.create(u));
-        this.users.addObjects(users);
+        data.entering_users.forEach((u) => {
+          if (!this.users.has(u.id)) {
+            this.users.set(u.id, User.create(u));
+          }
+        });
       }
 
       if (data.leaving_user_ids) {
         const leavingIds = new Set(data.leaving_user_ids);
-        const toRemove = this.users.filter((u) => leavingIds.has(u.id));
-        this.users.removeObjects(toRemove);
+        leavingIds.forEach((id) => {
+          this.users.delete(id);
+        });
       }
 
-      this.set("count", this.users.length);
+      this.count = this.users.length;
       this.trigger("change");
     } else {
       // Unexpected message
