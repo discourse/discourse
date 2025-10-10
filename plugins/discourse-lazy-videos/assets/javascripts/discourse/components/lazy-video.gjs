@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
+import { i18n } from "discourse-i18n";
 import LazyIframe from "./lazy-iframe";
 
 export default class LazyVideo extends Component {
@@ -58,7 +59,10 @@ export default class LazyVideo extends Component {
           {{on "keypress" this.onKeyPress}}
           role="button"
           tabindex="0"
-          aria-label={{concat "Play " @videoAttributes.title}}
+          aria-label={{i18n
+            "lazy_videos.play_video"
+            title=@videoAttributes.title
+          }}
           style={{this.thumbnailStyle}}
           class={{concatClass "video-thumbnail" @videoAttributes.providerName}}
         >
