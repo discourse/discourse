@@ -1,5 +1,5 @@
 import { i18n } from "discourse-i18n";
-import AdminConfigWithSettingsRoute from "./admin-config-with-settings-route";
+import AdminConfigWithSettingsRoute from "../admin-config-with-settings-route";
 
 export default class AdminConfigLoginPluginTabRoute extends AdminConfigWithSettingsRoute {
   titleToken() {
