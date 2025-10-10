@@ -432,7 +432,7 @@ GEM
     puma (7.0.4)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (2.2.19)
+    rack (2.2.20)
     rack-mini-profiler (4.0.1)
       rack (>= 1.2.0)
     rack-protection (3.2.0)
@@ -1106,7 +1106,7 @@ CHECKSUMS
   public_suffix (6.0.2) sha256=bfa7cd5108066f8c9602e0d6d4114999a5df5839a63149d3e8b0f9c1d3558394
   puma (7.0.4) sha256=b4c6ae11d1458052eeaa415176c3bf0000f4232287f413525ab2504446154b7a
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
-  rack (2.2.19) sha256=aa1c8956f8851abeeb13fa3affeb1aab914a3c213cf9e8088b6868e7686fcddc
+  rack (2.2.20) sha256=85da3447a4845230a00803d47413ed4d1dd9823f948a8d93c0b2d1e149c07170
   rack-mini-profiler (4.0.1) sha256=485810c23211f908196c896ea10cad72ed68780ee2998bec1f1dfd7558263d78
   rack-protection (3.2.0) sha256=3c74ba7fc59066453d61af9bcba5b6fe7a9b3dab6f445418d3b391d5ea8efbff
   rack-session (1.0.2) sha256=a02115e5420b4de036839b9811e3f7967d73446a554b42aa45106af335851d76
