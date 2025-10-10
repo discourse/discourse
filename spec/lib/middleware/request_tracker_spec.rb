@@ -133,6 +133,39 @@ RSpec.describe Middleware::RequestTracker do
       expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
     end
 
+    it "adds the appropriate response headers for message bus requests with deferred tracking" do
+      app =
+        lambda do |env|
+          headers = MessageBus.extra_response_headers_lookup.call(env)
+          [200, headers, ["OK"]]
+        end
+
+      middleware = Middleware::RequestTracker.new(app)
+
+      status, headers, response =
+        middleware.call(
+          env("HTTP_DISCOURSE_DEFERRED_TRACK_VIEW" => "1", :path => "/message-bus/poll"),
+        )
+
+      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+    end
+
+    it "adds the appropriate response headers for message bus requests with regular tracking" do
+      app =
+        lambda do |env|
+          headers = MessageBus.extra_response_headers_lookup.call(env)
+          [200, headers, ["OK"]]
+        end
+
+      middleware = Middleware::RequestTracker.new(app)
+
+      status, headers, response =
+        middleware.call(env("HTTP_DISCOURSE_TRACK_VIEW" => "1", :path => "/message-bus/poll"))
+
+      expect(headers["X-Discourse-BrowserPageView"]).to eq("1")
+      expect(headers["X-Discourse-TrackView"]).to eq("1")
+    end
+
     it "can log requests correctly" do
       data =
         Middleware::RequestTracker.get_data(
