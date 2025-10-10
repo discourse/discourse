@@ -5422,6 +5422,8 @@ en:
           light: "Light"
           dark: "Dark"
           auto: "Auto"
+          title: "Color mode"
+          aria_label: "Color mode, currently %{mode}"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
