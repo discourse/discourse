@@ -142,6 +142,10 @@ This step uses `DistributedMutex` under the hood to create a lock around the ste
 
 This step is another special one, as it’s similar to a contract (without the validations part), but for options your service can take. This is useful if you need to change your service behavior depending on certain conditions. Also, that step can’t fail.
 
+### `only_if`
+
+This step will only run the steps defined in its block if the provided condition is true. That’s another step that can’t fail by itself.
+
 ### Steps arguments
 
 Each step is called with the service context. To access a value in it, just provide its key as a keyword argument.
@@ -391,6 +395,17 @@ This step wraps other steps. If any of the wrapped steps raises an exception, th
 This step wraps other steps. If the lock can't be acquired for any reason, the execution flow will be halted.
 
 The `keys` provided are matched against the `params` object of the service. The corresponding values are used to provide the underlying lock with a unique name. For example, if the provided key is `user_id` and its value is `1`, then the resulting lock name will be `user_id:1`, so if the same service is called with `2` as the `user_id` value, it will not wait on the first lock.
+
+### `only_if(condition_name, &block)`
+
+**Arguments**
+
+- _condition_name_: the name of the condition to check.
+- _block_: a block containing other steps.
+
+This step wraps other steps. If the condition is not met (meaning the related method returns a falsy value), the steps inside its block will be skipped but the execution flow won’t be halted.
+
+That step is very useful when you have several steps depending on the same condition to be run, as it allows to keep all the error handling provided by steps like `model`, `policy`, etc.
 
 ### `step(name)`
 
