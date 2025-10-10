@@ -27,7 +27,7 @@ export default class LazyVideo extends Component {
 
   @action
   onKeyPress(event) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       this.loadEmbed();
     }
@@ -55,8 +55,10 @@ export default class LazyVideo extends Component {
       {{else}}
         <div
           {{on "click" this.loadEmbed}}
-          {{on "keypress" this.loadEmbed}}
+          {{on "keypress" this.onKeyPress}}
+          role="button"
           tabindex="0"
+          aria-label={{concat "Play " @videoAttributes.title}}
           style={{this.thumbnailStyle}}
           class={{concatClass "video-thumbnail" @videoAttributes.providerName}}
         >
