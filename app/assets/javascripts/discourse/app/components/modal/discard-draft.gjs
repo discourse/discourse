@@ -34,12 +34,12 @@ export default class DiscardDraftModal extends Component {
           @icon="trash-can"
           @label="post.cancel_composer.discard"
           @action={{this.discardDraft}}
-          class="btn-danger btn-discard-draft"
+          class="btn-danger discard-draft-modal__discard-btn"
         />
         <DButton
-          @label="post.cancel_composer.cancel"
+          @label="cancel_value"
           @action={{this.cancelDiscard}}
-          class="btn-transparent btn-cancel-discard"
+          class="btn-transparent discard-draft-modal__cancel-btn"
         />
       </:footer>
     </DModal>
