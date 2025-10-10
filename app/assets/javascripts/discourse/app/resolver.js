@@ -388,7 +388,7 @@ export function buildResolver(baseName) {
         const candidates = [
           [parsedName, "discourse/admin/templates/"],
           [adminParsedName, "discourse/admin/templates/"],
-          [adminParsedName, "discourse/admin/"],
+          [adminParsedName, "admin/"],
         ];
 
         for (const [candidate, prefix] of candidates) {
