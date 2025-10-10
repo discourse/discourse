@@ -25,7 +25,7 @@ module Jobs
       end
 
       def trigger_events(event_date)
-        if event_date.starts_at - 1.hour <= Time.current &&
+        if event_date.starts_at.present? && event_date.starts_at - 1.hour <= Time.current &&
              event_date.event_will_start_sent_at.blank?
           event_date.update!(event_will_start_sent_at: DateTime.now)
           DiscourseEvent.trigger(:discourse_post_event_event_will_start, event_date.event)
@@ -54,7 +54,7 @@ module Jobs
       end
 
       def due_reminders(event_date)
-        return [] if event_date.event.reminders.blank?
+        return [] if event_date.event.reminders.blank? || event_date.starts_at.blank?
         event_date
           .event
           .reminders
