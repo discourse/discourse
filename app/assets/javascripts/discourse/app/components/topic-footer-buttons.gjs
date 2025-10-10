@@ -31,10 +31,11 @@ function bind(fn, context) {
   return fn.bind(context);
 }
 
-@attributeBindings("role")
+@attributeBindings("role", "aria-label")
 export default class TopicFooterButtons extends Component {
   elementId = "topic-footer-buttons";
   role = "region";
+  "aria-label" = i18n("topic.footer_buttons.region_label");
 
   @alias("currentUser.can_send_private_messages") canSendPms;
   @alias("topic.details.can_invite_to") canInviteTo;
