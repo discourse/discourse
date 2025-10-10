@@ -1577,6 +1577,63 @@ RSpec.describe UserNotifications do
     end
   end
 
+  describe ".account_deleted" do
+    fab!(:reviewable) { Fabricate(:reviewable_flagged_post, reviewable_scores: []) }
+
+    it "includes flag reason for standard flags" do
+      Fabricate(
+        :reviewable_score,
+        reviewable: reviewable,
+        reviewable_score_type: PostActionType.types[:spam],
+      )
+
+      reviewable.reload
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.spam"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.illegal"))
+    end
+
+    it "includes flag reason for automated system flags" do
+      Fabricate(
+        :reviewable_score,
+        reviewable: reviewable,
+        reviewable_score_type: ReviewableScore.types[:needs_approval],
+      )
+      reviewable.reload
+
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.needs_approval"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
+    end
+
+    it "falls back to the default spam reason if no score is present" do
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(I18n.t("flag_reasons.spam"))
+      expect(mail.body).to_not include(I18n.t("flag_reasons.illegal"))
+    end
+
+    it "falls back to the flag's description for custom flags" do
+      custom_flag =
+        Fabricate(
+          :flag,
+          name_key: "custom_delete_flag",
+          description: "This is a custom deletion reason.",
+          applies_to: %w[Post],
+        )
+
+      Fabricate(:reviewable_score, reviewable: reviewable, reviewable_score_type: custom_flag.id)
+      reviewable.reload
+
+      mail = UserNotifications.account_deleted("user@example.com", reviewable)
+
+      expect(mail.body).to include(custom_flag.description)
+      expect(mail.body).to_not include(I18n.t("flag_reasons.spam"))
+    end
+  end
+
   describe ".account_suspended" do
     fab!(:user_history) { Fabricate(:user_history, action: UserHistory.actions[:suspend_user]) }
 
