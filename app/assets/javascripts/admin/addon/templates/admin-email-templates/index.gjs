@@ -63,7 +63,7 @@ export default RouteTemplate(
                 <td class="d-table__cell --controls">
                   <div class="d-table__cell-actions">
                     <DButton
-                      class="admin-email-templates__edit-button"
+                      class="btn-default admin-email-templates__edit-button"
                       @label="admin.customize.email_templates.edit"
                       @route="adminEmailTemplates.edit"
                       @routeModels={{array template.id}}
