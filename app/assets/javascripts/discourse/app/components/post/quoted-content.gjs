@@ -201,8 +201,7 @@ export default class PostQuotedContent extends Component {
         {{(if
           @wrapperElement
           (modifier
-            this.applyWrapperDataAttributes
-            @wrapperElement
+            (modifier this.applyWrapperDataAttributes @wrapperElement)
             expanded=this.expanded
           )
         )}}

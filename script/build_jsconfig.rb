@@ -43,12 +43,7 @@ def write_config(package_dir, extras: {})
     "exclude" => [
       "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js", # Native class decorators - unsupported by ts/glint
       "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs", # hbs`` tagged templates - https://github.com/typed-ember/glint/issues/705
-      "**/*.hbs",
     ],
-    "glint" => {
-      "environment" => %w[ember-loose ember-template-imports],
-      "checkStandaloneTemplates" => false,
-    },
   }
 
   output = <<~JSON
