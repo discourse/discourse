@@ -175,6 +175,7 @@ export default class AdminFilterControls extends Component {
       </div>
     {{/if}}
 
+    {{yield to="aboveContent"}}
     {{#if this.filteredData.length}}
       {{yield this.filteredData to="content"}}
     {{else if this.showFilters}}

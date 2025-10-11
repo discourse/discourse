@@ -5,19 +5,18 @@ import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import SaveControls from "discourse/components/save-controls";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default RouteTemplate(
   <template>
-    <ComboBox
-      @value={{@controller.emailTemplate.id}}
-      @content={{@controller.adminEmailTemplates.sortedTemplates}}
-      @onChange={{@controller.adminEmailTemplates.onSelectTemplate}}
-      @nameProperty="title"
-    />
-
     <div class="email-template">
+      <div class="back-to-email-templates">
+        <LinkTo @route="adminEmailTemplates">
+          {{icon "angle-left"}}
+          {{i18n "admin.customize.email_templates.back"}}
+        </LinkTo>
+      </div>
       <label>{{i18n "admin.customize.email_templates.subject"}}</label>
       {{#if @controller.hasMultipleSubjects}}
         <h3><LinkTo
