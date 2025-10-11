@@ -1751,6 +1751,7 @@ en:
     category_search_priority_low_weight: "Weight applied to ranking for low category search priority."
     category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
+    open_composer_without_category: "Enabling it will make the composer always open without a category."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be disabled."
