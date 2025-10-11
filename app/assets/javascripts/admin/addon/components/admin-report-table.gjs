@@ -37,7 +37,7 @@ export default class AdminReportTable extends Component {
     // check if we have at least one cell which contains a value
     const sum = totalsForSample
       .map((t) => t.value)
-      .compact()
+      .filter((item) => item != null)
       .reduce((s, v) => s + v, 0);
 
     return sum >= 1 && total && datesFiltering;

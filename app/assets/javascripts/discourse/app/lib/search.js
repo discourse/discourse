@@ -73,7 +73,7 @@ export function translateResults(results, opts) {
         (c) => c.id === (category.id || category.model.id)
       );
     })
-    .compact();
+    .filter((item) => item != null);
 
   results.grouped_search_result?.extra?.categories?.forEach((category) =>
     Site.current().updateCategory(category)
@@ -99,7 +99,7 @@ export function translateResults(results, opts) {
         url: getURL(`/g/${name}`),
       };
     })
-    .compact();
+    .filter((item) => item != null);
 
   results.tags = results.tags
     .map(function (tag) {
@@ -109,7 +109,7 @@ export function translateResults(results, opts) {
         url: getURL("/tag/" + tagName),
       });
     })
-    .compact();
+    .filter((item) => item != null);
 
   return translateResultsCallbacks
     .reduce(

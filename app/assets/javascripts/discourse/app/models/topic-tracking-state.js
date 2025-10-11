@@ -1110,7 +1110,7 @@ export default class TopicTrackingState extends EmberObject {
           return { topic, newTopic, unreadTopic };
         }
       })
-      .compact();
+      .filter((item) => item != null);
   }
 
   _stateKey(topicOrId) {

@@ -365,7 +365,7 @@ export default class StoreService extends Service {
 
           const hydrated = obj[k]
             .map((id) => this._lookupSubType(subType, type, id, root))
-            .compact();
+            .filter((item) => item != null);
 
           obj[this.pluralize(subType)] = hydrated;
           if (hydrated.length !== 0) {

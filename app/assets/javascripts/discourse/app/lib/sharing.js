@@ -86,7 +86,7 @@ export default {
       .split("|")
       .concat(_customSharingIds)
       .map((s) => _sources[s])
-      .compact();
+      .filter((item) => item != null);
 
     return privateContext
       ? sources.filter((s) => s.showInPrivateContext)

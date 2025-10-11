@@ -169,7 +169,7 @@ export default class UserController extends Controller {
             : null;
           return isEmpty(value) ? null : EmberObject.create({ value, field });
         })
-        .compact();
+        .filter((item) => item != null);
     }
   }
 

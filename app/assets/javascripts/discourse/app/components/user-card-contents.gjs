@@ -166,7 +166,7 @@ export default class UserCardContents extends CardContentsBase {
           const value = userFields ? userFields[field.get("id")] : null;
           return isEmpty(value) ? null : EmberObject.create({ value, field });
         })
-        .compact();
+        .filter((item) => item != null);
     }
   }
 

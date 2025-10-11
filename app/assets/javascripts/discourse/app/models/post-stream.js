@@ -1161,7 +1161,7 @@ export default class PostStream extends RestModel {
 
     // Load our unloaded posts by id
     return this.loadIntoIdentityMap(unloaded, opts).then(() => {
-      return postIds.map((p) => identityMap[p]).compact();
+      return postIds.map((p) => identityMap[p]).filter((item) => item != null);
     });
   }
 
