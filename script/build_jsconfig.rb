@@ -42,7 +42,6 @@ def write_config(package_dir, extras: {})
     "include" => namespaces.flat_map { |ns, paths| paths.map { |p| relative(package_dir, p) } },
     "exclude" => [
       "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js", # Native class decorators - unsupported by ts/glint
-      "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs", # hbs`` tagged templates - https://github.com/typed-ember/glint/issues/705
     ],
   }
 
