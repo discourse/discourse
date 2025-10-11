@@ -289,13 +289,9 @@ export default class ProsemirrorEditor extends Component {
   <template>
     <div
       class="ProseMirror-container"
-      {{! @glint-expect-error: Possible bug in glint?}}
       {{didInsert this.setup}}
-      {{! @glint-expect-error: Possible bug in glint?}}
       {{didUpdate this.convertFromValue @value}}
-      {{! @glint-expect-error: Possible bug in glint?}}
       {{didUpdate this.updateContext "placeholder" @placeholder}}
-      {{! @glint-expect-error: Possible bug in glint?}}
       {{willDestroy this.teardown}}
     ></div>
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
