@@ -832,6 +832,7 @@ export default class DEditor extends Component {
             @topicId={{@topicId}}
             @id={{this.textAreaId}}
             @replaceToolbar={{this.replaceToolbar}}
+            @toggleRichEditor={{this.toggleRichEditor}}
           />
           <PopupInputTip @validation={{this.validation}} />
           <PluginOutlet
