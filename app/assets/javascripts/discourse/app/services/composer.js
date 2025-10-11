@@ -859,7 +859,7 @@ export default class ComposerService extends Service {
 
     // If there is no current post, use the first post id from the stream
     if (!postId && postStream) {
-      postId = postStream.get("stream.firstObject");
+      postId = postStream.firstPostId;
     }
 
     // If we're editing a post, fetch the reply when importing a quote

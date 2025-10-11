@@ -341,12 +341,12 @@ export default class TopicRoute extends DiscourseRoute {
     const postStream = topic.get("postStream");
     postStream.set("filter", get(params, "filter"));
 
-    const usernames = get(params, "username_filters"),
-      userFilters = postStream.get("userFilters");
+    const usernames = get(params, "username_filters");
 
-    userFilters.clear();
     if (!isEmpty(usernames) && usernames !== "undefined") {
-      userFilters.addObjects(usernames.split(","));
+      postStream.userFilters = [...new Set(usernames.split(","))];
+    } else {
+      postStream.userFilters = [];
     }
 
     return topic;
