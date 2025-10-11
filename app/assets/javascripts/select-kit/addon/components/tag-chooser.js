@@ -1,6 +1,7 @@
 import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { attributeBindings, classNames } from "@ember-decorators/component";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -67,14 +68,14 @@ export default class TagChooser extends MultiSelectComponent {
 
   @computed("tags.[]")
   get value() {
-    return makeArray(this.tags).uniq();
+    return uniqueItemsFromArray(makeArray(this.tags));
   }
 
   @computed("tags.[]")
   get content() {
-    return makeArray(this.tags)
-      .uniq()
-      .map((t) => this.defaultItem(t, t));
+    return uniqueItemsFromArray(makeArray(this.tags)).map((t) =>
+      this.defaultItem(t, t)
+    );
   }
 
   @action
@@ -112,10 +113,9 @@ export default class TagChooser extends MultiSelectComponent {
     };
 
     if (selectedTags.length || this.blockedTags.length) {
-      data.selected_tags = selectedTags
-        .concat(this.blockedTags)
-        .uniq()
-        .slice(0, 100);
+      data.selected_tags = uniqueItemsFromArray(
+        selectedTags.concat(this.blockedTags)
+      ).slice(0, 100);
     }
 
     if (!this.everyTag) {
@@ -158,6 +158,6 @@ export default class TagChooser extends MultiSelectComponent {
       results = results.sort((a, b) => a.id > b.id);
     }
 
-    return results.uniqBy("id");
+    return uniqueItemsFromArray(results, "id");
   }
 }

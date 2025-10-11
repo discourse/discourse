@@ -1,6 +1,7 @@
 import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
 import {
@@ -41,7 +42,9 @@ export default class ListSetting extends MultiSelectComponent {
 
   deselect(value) {
     this.onChangeChoices &&
-      this.onChangeChoices([...new Set([value, ...makeArray(this.choices)])]);
+      this.onChangeChoices(
+        uniqueItemsFromArray([value, ...makeArray(this.choices)])
+      );
 
     super.deselect(...arguments);
   }

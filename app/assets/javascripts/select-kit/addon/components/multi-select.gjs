@@ -5,6 +5,7 @@ import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import { and, not } from "truth-helpers";
 import componentForCollection from "discourse/helpers/component-for-collection";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import SelectKitComponent, {
@@ -131,7 +132,7 @@ export default class MultiSelect extends SelectKitComponent {
       );
 
       this.selectKit.change(
-        [...new Set(newValues)],
+        uniqueItemsFromArray(newValues),
         newContent.length
           ? newContent
           : makeArray(this.defaultItem(value, value))

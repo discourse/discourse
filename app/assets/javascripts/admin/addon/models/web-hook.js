@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import Group from "discourse/models/group";
 import RestModel from "discourse/models/rest";
@@ -19,7 +20,10 @@ class WebHookExtras {
   }
 
   addCategories(categories) {
-    this.categories = this.categories.concat(categories).uniqBy((c) => c.id);
+    this.categories = uniqueItemsFromArray(
+      this.categories.concat(categories),
+      "id"
+    );
   }
 
   get categoriesById() {

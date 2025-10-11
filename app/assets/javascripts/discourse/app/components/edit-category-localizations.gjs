@@ -2,6 +2,7 @@ import { fn, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
 import { buildCategoryPanel } from "discourse/components/edit-category-panel";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryLocalizations extends buildCategoryPanel(
@@ -16,7 +17,7 @@ export default class EditCategoryLocalizations extends buildCategoryPanel(
         (obj) => obj.value
       );
     const committed = this.transientData.localizations.map((obj) => obj.locale);
-    const allLocales = [...supported, ...committed].uniq();
+    const allLocales = uniqueItemsFromArray([...supported, ...committed]);
 
     return allLocales.map((value) => ({
       name: this.languageNameLookup.getLanguageName(value),

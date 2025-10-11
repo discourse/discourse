@@ -9,6 +9,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import {
   CATEGORY_STYLE_TYPES,
   CATEGORY_TEXT_COLORS,
@@ -47,12 +48,13 @@ export default class EditCategoryGeneral extends Component {
   @cached
   get backgroundColors() {
     const categories = this.site.get("categoriesList");
-    return this.siteSettings.category_colors
-      .split("|")
-      .filter(Boolean)
-      .map((i) => i.toUpperCase())
-      .concat(categories.map((c) => c.color.toUpperCase()))
-      .uniq();
+    return uniqueItemsFromArray(
+      this.siteSettings.category_colors
+        .split("|")
+        .filter(Boolean)
+        .map((i) => i.toUpperCase())
+        .concat(categories.map((c) => c.color.toUpperCase()))
+    );
   }
 
   @cached

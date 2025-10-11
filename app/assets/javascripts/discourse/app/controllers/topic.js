@@ -23,6 +23,7 @@ import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summar
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -1071,9 +1072,11 @@ export default class TopicController extends Controller {
   selectReplies(post) {
     ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
       const replyIds = replies.map((r) => r.id);
-      this.selectedPostIds = [
-        ...new Set([...this.selectedPostIds, post.id, ...replyIds]),
-      ];
+      this.selectedPostIds = uniqueItemsFromArray([
+        ...this.selectedPostIds,
+        post.id,
+        ...replyIds,
+      ]);
       this._forceRefreshPostStream();
     });
   }

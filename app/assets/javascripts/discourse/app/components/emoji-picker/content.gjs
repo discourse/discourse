@@ -19,6 +19,7 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import {
   disableBodyScroll,
   enableBodyScroll,
@@ -90,9 +91,9 @@ export default class EmojiPicker extends Component {
   });
 
   addVisibleSections(sections) {
-    this.visibleSections = makeArray(this.visibleSections)
-      .concat(makeArray(sections))
-      .uniq();
+    this.visibleSections = uniqueItemsFromArray(
+      makeArray(this.visibleSections).concat(makeArray(sections))
+    );
   }
 
   get sections() {

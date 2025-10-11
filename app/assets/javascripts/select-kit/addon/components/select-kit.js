@@ -13,6 +13,7 @@ import {
 } from "@ember-decorators/component";
 import { createPopper } from "@popperjs/core";
 import { Promise } from "rsvp";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind as bindDecorator } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -729,9 +730,9 @@ export default class SelectKit extends Component {
         content = this.selectKit.modifyContent(content).filter(Boolean);
 
         if (this.selectKit.valueProperty) {
-          content = content.uniqBy(this.selectKit.valueProperty);
+          content = uniqueItemsFromArray(content, this.selectKit.valueProperty);
         } else {
-          content = content.uniq();
+          content = uniqueItemsFromArray(content);
         }
 
         if (this.selectKit.options.limitMatches) {

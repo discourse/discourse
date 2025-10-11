@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { classNames, tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { afterRender } from "discourse/lib/decorators";
 import { REPLACEMENTS } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
@@ -22,7 +23,7 @@ export default class StyleguideIcons extends Component {
     if (symbols.length > 0) {
       let ids = Array.from(symbols).map((item) => item.id);
       ids.push(...Object.keys(REPLACEMENTS));
-      this.set("iconIds", [...new Set(ids.sort())]);
+      this.set("iconIds", uniqueItemsFromArray(ids).sort());
     } else {
       // Let's try again a short time later if there are no svgs loaded yet
       discourseLater(this, this.setIconIds, 1500);

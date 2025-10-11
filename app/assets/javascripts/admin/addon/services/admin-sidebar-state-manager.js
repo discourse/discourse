@@ -1,4 +1,5 @@
 import Service, { service } from "@ember/service";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import scrollLock from "discourse/lib/scroll-lock";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
 import AdminSearchModal from "admin/components/modal/admin-search";
@@ -17,13 +18,11 @@ export default class AdminSidebarStateManager extends Service {
       return;
     }
 
-    this.keywords[link_name].navigation = [
-      ...new Set(
-        this.keywords[link_name].navigation.concat(
-          keywords.map((keyword) => keyword.toLowerCase())
-        )
-      ),
-    ];
+    this.keywords[link_name].navigation = uniqueItemsFromArray(
+      this.keywords[link_name].navigation.concat(
+        keywords.map((keyword) => keyword.toLowerCase())
+      )
+    );
   }
 
   maybeForceAdminSidebar(opts = {}) {

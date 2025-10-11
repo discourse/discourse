@@ -1,3 +1,5 @@
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+
 export default class MentionsParser {
   constructor(engine) {
     this.engine = engine;
@@ -6,7 +8,7 @@ export default class MentionsParser {
   parse(markdown) {
     const tokens = this.engine.parse(markdown);
     const mentions = this.#parse(tokens);
-    return [...new Set(mentions)];
+    return uniqueItemsFromArray(mentions);
   }
 
   #parse(tokens) {

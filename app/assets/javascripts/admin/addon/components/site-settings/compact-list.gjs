@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import ListSetting from "select-kit/components/list-setting";
 
@@ -17,13 +18,11 @@ export default class CompactList extends Component {
   }
 
   get settingChoices() {
-    return [
-      ...new Set([
-        ...makeArray(this.settingValue),
-        ...makeArray(this.args.setting.choices),
-        ...makeArray(this.createdChoices),
-      ]),
-    ];
+    return uniqueItemsFromArray([
+      ...makeArray(this.settingValue),
+      ...makeArray(this.args.setting.choices),
+      ...makeArray(this.createdChoices),
+    ]);
   }
 
   @action
@@ -33,9 +32,10 @@ export default class CompactList extends Component {
 
   @action
   onChangeChoices(choices) {
-    this.createdChoices = [
-      ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)]),
-    ];
+    this.createdChoices = uniqueItemsFromArray([
+      ...makeArray(this.createdChoices),
+      ...makeArray(choices),
+    ]);
   }
 
   <template>

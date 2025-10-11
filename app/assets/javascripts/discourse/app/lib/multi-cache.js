@@ -1,6 +1,8 @@
 // Used for Category.asyncFindByIds
 //
 // It's a cache that handles multiple lookups at a time.
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+
 export class MultiCache {
   constructor(cb) {
     this.cb = cb;
@@ -22,7 +24,7 @@ export class MultiCache {
     this.fetchTimes = [this.fetchTimes[this.fetchTimes.length - 1], new Date()];
 
     const notFound = [];
-    ids = ids.uniq();
+    ids = uniqueItemsFromArray(ids);
 
     for (const id of ids) {
       if (!this.values.has(id)) {
