@@ -6910,6 +6910,7 @@ en:
           search_templates: "Filter by template name..."
           no_templates_found: "No templates match your filters."
           edit: "Edit"
+          back: "Back to templates"
         component:
           all_filter: "All"
           used_filter: "Used"
