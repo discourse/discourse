@@ -52,7 +52,7 @@ module DiscourseAi
           end
 
           # If system instructions are disabled, prepend them to the last user message
-          if disable_system_instructions? && system_instruction_text.present?
+          if disable_system_instructions? && system_instruction.present?
             last_user = interleving_messages.reverse.find { |m| m[:role] == "user" }
             if last_user
               text_part = last_user[:parts].first
@@ -60,7 +60,7 @@ module DiscourseAi
             end
           end
 
-          { messages: interleving_messages, system_instruction: system_instruction_text }
+          { messages: interleving_messages, system_instruction: system_instruction }
         end
 
         def tools
