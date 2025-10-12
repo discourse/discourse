@@ -70,7 +70,7 @@ module DiscourseAi
             end
           end
 
-          payload = default_options.merge(contents: prompt[:messages])
+          payload = default_options.merge(contents: messages)
 
           payload[:systemInstruction] = {
             role: "system",
