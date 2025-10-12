@@ -53,8 +53,14 @@ module DiscourseAi
 
           # If system instructions are disabled, prepend them to the last user message
           if disable_system_instructions? && system_instruction.present? && interleving_messages.any?
-            last_message = interleving_messages.last
-            last_message[:parts][:text] = "#{system_instruction.strip}\n\n#{last_message[:parts][:text]}"
+            # Find the last user or function message (skip noop model responses)
+            last_user_message = interleving_messages.reverse.find do |msg|
+              msg[:role] == "user" || msg[:role] == "function"
+            end
+
+            if last_user_message && last_user_message[:parts]&.[](:text)
+              last_user_message[:parts][:text] = "#{system_instruction.strip}\n\n#{last_user_message[:parts][:text]}"
+            end
           end
 
           { messages: interleving_messages, system_instruction: system_instruction }
