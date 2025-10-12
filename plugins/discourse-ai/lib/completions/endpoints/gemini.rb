@@ -65,19 +65,10 @@ module DiscourseAi
 
           payload = default_options.merge(contents: prompt[:messages])
 
-          if prompt[:system_instruction].present?
-            system_instruction = {
-              role: llm_model.lookup_custom_param("disable_system_instruction") ? "user" : "system",
-              parts: [{ text: prompt[:system_instruction].to_s }],
-            }
-
-            if llm_model.lookup_custom_param("disable_system_instruction")
-              payload[:contents] = [system_instruction] + Array(prompt[:messages])
-            else
-              payload[:systemInstruction] = system_instruction
-            end
-          end
-
+          payload[:systemInstruction] = {
+            role: "system",
+            parts: [{ text: prompt[:system_instruction].to_s }],
+          } if prompt[:system_instruction].present? && !llm_model.lookup_custom_param("disable_system_instruction")
           if tools.present?
             payload[:tools] = tools
 
