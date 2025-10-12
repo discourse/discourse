@@ -47,6 +47,9 @@ module DiscourseAi
                 interleving_messages << noop_model_response.dup
               end
             end
+            if disable_system_instructions? && message[:role] == "user"
+              message[:content] = "#{system_instruction&.strip}\n\nFINDME\n\n#{message[:content]}"
+            end
             interleving_messages << message
             previous_message = message
           end
