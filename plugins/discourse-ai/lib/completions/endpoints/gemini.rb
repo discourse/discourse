@@ -62,6 +62,13 @@ module DiscourseAi
           @native_tool_support = dialect.native_tool_support?
 
           tools = dialect.tools if @native_tool_support
+          messages = prompt[:messages]
+          if prompt[:system_instruction].present?
+            last_user_message = messages.reverse.find { |m| m[:role] == "user" }
+            if last_user_message&.dig(:parts)&.first&.dig(:text)
+              last_user_message[:parts].first[:text] = "#{prompt[:system_instruction].strip}\n\n#{last_user_message[:parts].first[:text]}"
+            end
+          end
 
           payload = default_options.merge(contents: prompt[:messages])
 
