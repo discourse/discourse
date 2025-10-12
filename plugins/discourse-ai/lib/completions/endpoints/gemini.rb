@@ -35,6 +35,7 @@ module DiscourseAi
 
           model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
           model_params.delete(:topP) if llm_model.lookup_custom_param("disable_top_p")
+          model_params.delete(:systemInstruction) if llm_model.lookup_custom_param("disable_system_instruction")
 
           model_params
         end

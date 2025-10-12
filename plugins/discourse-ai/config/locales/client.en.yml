@@ -749,6 +749,7 @@ en:
           reasoning_effort: "Reasoning effort (only applicable to reasoning models)"
           enable_reasoning: "Enable reasoning (only applicable to reasoning models)"
           enable_thinking: "Enable thinking (only on applicable models eg: flash 2.5)"
+          disable_system_instruction: "Disabled system instructions to use Gemma models (only if using Gemma Models)"
           thinking_tokens: "Number of tokens used for thinking"
           reasoning_tokens: "Number of tokens used for reasoning"
           disable_temperature: "Disable temperature (some thinking models don't support temperature)"

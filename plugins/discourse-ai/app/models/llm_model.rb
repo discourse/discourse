@@ -78,6 +78,7 @@ class LlmModel < ActiveRecord::Base
         enable_thinking: :checkbox,
         disable_temperature: :checkbox,
         disable_top_p: :checkbox,
+        disable_system_instruction: :checkbox,
         thinking_tokens: :number,
       },
       azure: {
