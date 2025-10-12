@@ -22,6 +22,10 @@ module DiscourseAi
           !llm_model.lookup_custom_param("disable_native_tools")
         end
 
+        def disable_system_instructions?
+          llm_model.lookup_custom_param("disable_system_instructions")
+        end
+
         def translate
           # Gemini complains if we don't alternate model/user roles.
           noop_model_response = { role: "model", parts: { text: "Ok." } }
@@ -47,7 +51,16 @@ module DiscourseAi
             previous_message = message
           end
 
-          { messages: interleving_messages, system_instruction: system_instruction }
+          # If system instructions are disabled, prepend them to the last user message
+          if disable_system_instructions? && system_instruction_text.present?
+            last_user = interleving_messages.reverse.find { |m| m[:role] == "user" }
+            if last_user
+              text_part = last_user[:parts].first
+              text_part[:text] = "#{system_instruction.strip}\n\n#{text_part[:text]}"
+            end
+          end
+
+          { messages: interleving_messages, system_instruction: system_instruction_text }
         end
 
         def tools
