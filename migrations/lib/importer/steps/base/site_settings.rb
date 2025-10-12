@@ -24,6 +24,7 @@ module Migrations::Importer::Steps::Base
       ].map { |number| ::SiteSettings::TypeSupervisor.types[number].to_s }
 
     DISALLOWED_SITE_SETTINGS = Set.new([:permalink_normalizations]).freeze
+    LIST_SEPARATOR = "|"
 
     private_constant :DATATYPES_WITH_DEPENDENCY, :DISALLOWED_SITE_SETTINGS
 
@@ -151,12 +152,12 @@ module Migrations::Importer::Steps::Base
     def append_to_list(setting, value)
       name = setting[:setting]
       type = setting[:type]
-      existing_values = (SiteSetting.get(name) || "").split("|").to_set
+      existing_values = (SiteSetting.get(name) || "").split(LIST_SEPARATOR).to_set
 
-      values_to_append = (value || "").split("|").map { |v| transform_value(v, type) }
+      values_to_append = (value || "").split(LIST_SEPARATOR).map { |v| transform_value(v, type) }
       values = existing_values.merge(values_to_append)
 
-      set_and_log(setting, values.join("|"))
+      set_and_log(setting, values.join(LIST_SEPARATOR))
     end
 
     def set_and_log(setting, value)
