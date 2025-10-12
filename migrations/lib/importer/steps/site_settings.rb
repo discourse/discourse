@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer::Steps
-  class SiteSettingBasics < Base::SiteSettings
+  class SiteSettings < Base::SiteSettings
     title "Importing basic site settings"
     priority 0
 

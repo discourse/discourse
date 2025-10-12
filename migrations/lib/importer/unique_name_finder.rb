@@ -43,7 +43,7 @@ module Migrations::Importer
 
       return false if @used_usernames_lower.include?(name_lower)
       return false if @used_group_names_lower.include?(name_lower)
-      return false if !allow_reserved_username && User.reserved_username?(name_lower)
+      # return false if !allow_reserved_username && User.reserved_username?(name_lower)
       true
     end
 
