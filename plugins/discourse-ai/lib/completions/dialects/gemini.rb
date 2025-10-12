@@ -58,7 +58,7 @@ module DiscourseAi
               msg[:role] == "user" || msg[:role] == "function"
             end
 
-            if last_user_message && last_user_message[:parts]&.[](:text)
+            if last_user_message&.dig(:parts, :text)
               last_user_message[:parts][:text] = "#{system_instruction.strip}\n\n#{last_user_message[:parts][:text]}"
             end
           end
