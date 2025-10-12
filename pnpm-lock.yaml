@@ -2892,9 +2892,6 @@ packages:
   '@types/minimatch@3.0.5':
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
 
-  '@types/node@24.6.1':
-    resolution: {integrity: sha512-ljvjjs3DNXummeIaooB4cLBKg2U6SPI6Hjra/9rRIy7CpM0HpLtG9HptkMKAb4HYWy5S7HUvJEuWgr/y0U8SHw==}
-
   '@types/node@24.7.2':
     resolution: {integrity: sha512-/NbVmcGTP+lj5oa4yiYxxeBjRivKQ5Ns1eSZeB99ExsEQ6rX5XYU1Zy/gGxY/ilqtD4Etx9mKyrPxZRetiahhA==}
 
@@ -7994,11 +7991,6 @@ packages:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
 
-  semver@7.7.2:
-    resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.7.3:
     resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
     engines: {node: '>=10'}
@@ -8794,9 +8786,6 @@ packages:
 
   underscore@1.13.7:
     resolution: {integrity: sha512-GMXzWtsc57XAtguZgaQViUOzs0KTkk8ojr3/xAxXLITqf/3EMwxC0inyETfDFjH/Krbhuep0HNbbjI9i/q3F3g==}
-
-  undici-types@7.13.0:
-    resolution: {integrity: sha512-Ov2Rr9Sx+fRgagJ5AX0qvItZG/JKKoBRAVITs1zk7IqZGTJUwgUr7qoYBpWwakpWilTZFM98rG/AFRocu10iIQ==}
 
   undici-types@7.14.0:
     resolution: {integrity: sha512-QQiYxHuyZ9gQUIrmPo3IA+hUl4KYk8uSA7cHrcKd/l3p1OTpZcM0Tbp9x7FAtXdAYhlasd60ncPpgu6ihG6TOA==}
@@ -10280,7 +10269,7 @@ snapshots:
       '@embroider/shared-internals': 3.0.1
       broccoli-funnel: 3.0.8
       common-ancestor-path: 1.0.1
-      semver: 7.7.2
+      semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
 
@@ -10333,7 +10322,7 @@ snapshots:
       pkg-up: 3.1.0
       resolve: 1.22.10
       resolve-package-path: 4.0.3
-      semver: 7.7.2
+      semver: 7.7.3
       symlink-or-copy: 1.3.1
       tree-sync: 2.1.0
       typescript-memoize: 1.1.1
@@ -10370,7 +10359,7 @@ snapshots:
       lodash: 4.17.21
       resolve: 1.22.10
       resolve-package-path: 4.0.3
-      semver: 7.7.2
+      semver: 7.7.3
       typescript-memoize: 1.1.1
       walk-sync: 3.0.0
     transitivePeerDependencies:
@@ -10394,7 +10383,7 @@ snapshots:
       find-up: 5.0.0
       lodash: 4.17.21
       resolve: 1.22.10
-      semver: 7.7.2
+      semver: 7.7.3
     optionalDependencies:
       '@glint/template': 1.6.1
     transitivePeerDependencies:
@@ -10409,7 +10398,7 @@ snapshots:
       find-up: 5.0.0
       lodash: 4.17.21
       resolve: 1.22.10
-      semver: 7.7.2
+      semver: 7.7.3
     optionalDependencies:
       '@glint/template': 1.6.1
     transitivePeerDependencies:
@@ -10437,7 +10426,7 @@ snapshots:
       minimatch: 3.1.2
       pkg-entry-points: 1.1.1
       resolve-package-path: 4.0.3
-      semver: 7.7.2
+      semver: 7.7.3
       typescript-memoize: 1.1.1
     transitivePeerDependencies:
       - supports-color
@@ -10454,7 +10443,7 @@ snapshots:
       minimatch: 3.1.2
       pkg-entry-points: 1.1.1
       resolve-package-path: 4.0.3
-      semver: 7.7.2
+      semver: 7.7.3
       typescript-memoize: 1.1.1
     transitivePeerDependencies:
       - supports-color
@@ -10472,7 +10461,7 @@ snapshots:
       pkg-entry-points: 1.1.1
       resolve-package-path: 4.0.3
       resolve.exports: 2.0.3
-      semver: 7.7.2
+      semver: 7.7.3
       typescript-memoize: 1.1.1
     transitivePeerDependencies:
       - supports-color
@@ -10505,7 +10494,7 @@ snapshots:
       jsdom: 25.0.1(supports-color@8.1.1)
       lodash: 4.17.21
       mini-css-extract-plugin: 2.9.4(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
-      semver: 7.7.2
+      semver: 7.7.3
       source-map-url: 0.4.1
       style-loader: 2.0.0(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       supports-color: 8.1.1
@@ -10872,7 +10861,7 @@ snapshots:
       computeds: 0.0.1
       content-tag: 3.1.3
       escape-string-regexp: 4.0.0
-      semver: 7.7.2
+      semver: 7.7.3
       silent-error: 1.1.1
       typescript: 5.6.3
       uuid: 8.3.2
@@ -11092,7 +11081,7 @@ snapshots:
       promise-all-reject-late: 1.0.1
       promise-call-limit: 3.0.2
       read-package-json-fast: 3.0.2
-      semver: 7.7.2
+      semver: 7.7.3
       ssri: 10.0.6
       treeverse: 3.0.0
       walk-up-path: 3.0.1
@@ -11102,7 +11091,7 @@ snapshots:
 
   '@npmcli/fs@3.1.1':
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   '@npmcli/git@5.0.8':
     dependencies:
@@ -11136,7 +11125,7 @@ snapshots:
       json-parse-even-better-errors: 3.0.2
       pacote: 18.0.6
       proc-log: 4.2.0
-      semver: 7.7.2
+      semver: 7.7.3
     transitivePeerDependencies:
       - bluebird
       - supports-color
@@ -11153,7 +11142,7 @@ snapshots:
       json-parse-even-better-errors: 3.0.2
       normalize-package-data: 6.0.2
       proc-log: 4.2.0
-      semver: 7.7.2
+      semver: 7.7.3
     transitivePeerDependencies:
       - bluebird
 
@@ -11428,7 +11417,7 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
 
   '@types/chai-as-promised@7.1.8':
     dependencies:
@@ -11442,11 +11431,11 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
 
   '@types/cors@2.8.18':
     dependencies:
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
 
   '@types/deep-eql@4.0.2': {}
 
@@ -11469,7 +11458,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.5
@@ -11483,11 +11472,11 @@ snapshots:
 
   '@types/fs-extra@5.1.0':
     dependencies:
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
 
   '@types/fs-extra@8.1.5':
     dependencies:
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
 
   '@types/glob@9.0.0':
     dependencies:
@@ -11516,14 +11505,9 @@ snapshots:
 
   '@types/minimatch@3.0.5': {}
 
-  '@types/node@24.6.1':
-    dependencies:
-      undici-types: 7.13.0
-
   '@types/node@24.7.2':
     dependencies:
       undici-types: 7.14.0
-    optional: true
 
   '@types/qs@6.14.0': {}
 
@@ -11536,19 +11520,19 @@ snapshots:
   '@types/rimraf@2.0.5':
     dependencies:
       '@types/glob': 9.0.0
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
 
   '@types/rsvp@4.0.9': {}
 
   '@types/send@0.17.5':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
 
   '@types/serve-static@1.15.8':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
       '@types/send': 0.17.5
 
   '@types/sizzle@2.3.10': {}
@@ -12876,7 +12860,7 @@ snapshots:
 
   chrome-launcher@1.2.1:
     dependencies:
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 2.0.2
@@ -13173,7 +13157,7 @@ snapshots:
       postcss-modules-values: 4.0.0(postcss@8.5.6)
       postcss-value-parser: 4.2.0
       schema-utils: 3.3.0
-      semver: 7.7.2
+      semver: 7.7.3
       webpack: 5.99.9(@swc/core@1.13.5)(esbuild@0.25.10)
 
   css-tree@1.1.3:
@@ -13413,7 +13397,7 @@ snapshots:
       pkg-entry-points: 1.1.1
       resolve: 1.22.10
       resolve-package-path: 4.0.3
-      semver: 7.7.2
+      semver: 7.7.3
       style-loader: 2.0.0(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.10))
       typescript-memoize: 1.1.1
       walk-sync: 3.0.0
@@ -13528,7 +13512,7 @@ snapshots:
       ember-cli-version-checker: 5.1.2
       ensure-posix-path: 1.1.1
       resolve-package-path: 4.0.3
-      semver: 7.7.2
+      semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
 
@@ -13556,7 +13540,7 @@ snapshots:
       hash-for-dep: 1.5.1
       heimdalljs-logger: 0.1.10
       json-stable-stringify: 1.3.0
-      semver: 7.7.2
+      semver: 7.7.3
       silent-error: 1.1.1
       strip-bom: 4.0.0
       walk-sync: 2.2.0
@@ -13576,7 +13560,7 @@ snapshots:
       hash-for-dep: 1.5.1
       heimdalljs-logger: 0.1.10
       js-string-escape: 1.0.1
-      semver: 7.7.2
+      semver: 7.7.3
       silent-error: 1.1.1
       walk-sync: 2.2.0
     transitivePeerDependencies:
@@ -13634,7 +13618,7 @@ snapshots:
       fs-extra: 9.1.0
       resolve: 1.22.10
       rsvp: 4.8.5
-      semver: 7.7.2
+      semver: 7.7.3
       stagehand: 1.0.1
       walk-sync: 2.2.0
     transitivePeerDependencies:
@@ -13661,7 +13645,7 @@ snapshots:
   ember-cli-version-checker@5.1.2:
     dependencies:
       resolve-package-path: 3.1.0
-      semver: 7.7.2
+      semver: 7.7.3
       silent-error: 1.1.1
     transitivePeerDependencies:
       - supports-color
@@ -13738,7 +13722,7 @@ snapshots:
       resolve-package-path: 4.0.3
       safe-stable-stringify: 2.5.0
       sane: 5.0.1
-      semver: 7.7.2
+      semver: 7.7.3
       silent-error: 1.1.1
       sort-package-json: 2.15.1
       symlink-or-copy: 1.3.1
@@ -13867,7 +13851,7 @@ snapshots:
       npmlog: 7.0.1
       qunit: 2.24.1
       rimraf: 5.0.10
-      semver: 7.7.2
+      semver: 7.7.3
       silent-error: 1.1.1
     transitivePeerDependencies:
       - '@glint/template'
@@ -13976,7 +13960,7 @@ snapshots:
       inflection: 2.0.1
       route-recognizer: 0.3.4
       router_js: 8.0.6(route-recognizer@0.3.4)(rsvp@4.8.5)
-      semver: 7.7.2
+      semver: 7.7.3
       silent-error: 1.1.1
       simple-html-tokenizer: 0.5.11
     transitivePeerDependencies:
@@ -14053,7 +14037,7 @@ snapshots:
   engine.io@6.6.4:
     dependencies:
       '@types/cors': 2.8.18
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.7.2
@@ -15794,7 +15778,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 24.6.1
+      '@types/node': 24.7.2
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -16016,7 +16000,7 @@ snapshots:
       docopt: 0.6.2
       hasown: 2.0.2
       npm-license-corrections: 1.6.2
-      semver: 7.7.2
+      semver: 7.7.3
       spdx-expression-parse: 4.0.0
       spdx-expression-validate: 2.0.0
       spdx-osi: 3.0.0
@@ -16581,7 +16565,7 @@ snapshots:
     dependencies:
       growly: 1.3.0
       is-wsl: 2.2.0
-      semver: 7.7.2
+      semver: 7.7.3
       shellwords: 0.1.1
       uuid: 8.3.2
       which: 2.0.2
@@ -16618,7 +16602,7 @@ snapshots:
 
   npm-install-checks@6.3.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   npm-license-corrections@1.6.2: {}
 
@@ -16628,14 +16612,14 @@ snapshots:
     dependencies:
       hosted-git-info: 7.0.2
       proc-log: 4.2.0
-      semver: 7.7.2
+      semver: 7.7.3
       validate-npm-package-name: 5.0.1
 
   npm-package-arg@12.0.2:
     dependencies:
       hosted-git-info: 8.1.0
       proc-log: 5.0.0
-      semver: 7.7.2
+      semver: 7.7.3
       validate-npm-package-name: 6.0.2
 
   npm-packlist@8.0.2:
@@ -16647,7 +16631,7 @@ snapshots:
       npm-install-checks: 6.3.0
       npm-normalize-package-bin: 3.0.1
       npm-package-arg: 11.0.3
-      semver: 7.7.2
+      semver: 7.7.3
 
   npm-registry-fetch@17.1.0:
     dependencies:
@@ -17745,8 +17729,6 @@ snapshots:
 
   semver@6.3.1: {}
 
-  semver@7.7.2: {}
-
   semver@7.7.3: {}
 
   send@0.19.0:
@@ -18013,7 +17995,7 @@ snapshots:
       get-stdin: 9.0.0
       git-hooks-list: 3.2.0
       is-plain-obj: 4.1.0
-      semver: 7.7.2
+      semver: 7.7.3
       sort-object-keys: 1.1.3
       tinyglobby: 0.2.14
 
@@ -18792,7 +18774,7 @@ snapshots:
 
   typescript-auto-import-cache@0.3.6:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   typescript-memoize@1.1.1: {}
 
@@ -18821,10 +18803,7 @@ snapshots:
 
   underscore@1.13.7: {}
 
-  undici-types@7.13.0: {}
-
-  undici-types@7.14.0:
-    optional: true
+  undici-types@7.14.0: {}
 
   unicode-canonical-property-names-ecmascript@2.0.1: {}
 
@@ -19015,7 +18994,7 @@ snapshots:
   volar-service-typescript@0.0.65(@volar/language-service@2.4.23):
     dependencies:
       path-browserify: 1.0.1
-      semver: 7.7.2
+      semver: 7.7.3
       typescript-auto-import-cache: 0.3.6
       vscode-languageserver-textdocument: 1.0.12
       vscode-nls: 5.2.0
