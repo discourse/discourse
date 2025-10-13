@@ -29,7 +29,7 @@ export function addLogSearchLinkClickedCallbacks(fn) {
 }
 
 export function resetLogSearchLinkClickedCallbacks() {
-  logSearchLinkClickedCallbacks.clear();
+  logSearchLinkClickedCallbacks.length = 0;
 }
 
 export function addSearchResultsCallback(callback) {
