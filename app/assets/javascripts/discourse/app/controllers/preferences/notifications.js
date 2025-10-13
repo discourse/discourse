@@ -10,13 +10,14 @@ export default class NotificationsController extends Controller {
     super.init(...arguments);
 
     this.saveAttrNames = [
+      "allow_private_messages",
+      "auto_track_topics_after_msecs",
+      "enable_allowed_pm_users",
+      "like_notification_frequency",
       "muted_usernames",
       "new_topic_duration_minutes",
-      "auto_track_topics_after_msecs",
       "notification_level_when_replying",
-      "like_notification_frequency",
-      "allow_private_messages",
-      "enable_allowed_pm_users",
+      "notify_on_linked_posts",
       "user_notification_schedule",
     ];
 
