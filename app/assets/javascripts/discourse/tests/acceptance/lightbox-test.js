@@ -33,7 +33,7 @@ acceptance("Lightbox", function (needs) {
     assert
       .dom(".mfp-title")
       .hasText(
-        "<script>image</script> · 1500×842 234 KB · download · original image"
+        "<script>image</script> · 1500×842 234 KB · Download · Original image"
       );
 
     assert
@@ -58,7 +58,7 @@ acceptance("Lightbox", function (needs) {
   });
 
   // PhotoSwipe
-  test("Shows download and Original Image Buttons", async function (assert) {
+  test("Shows 'download' and 'original image' buttons", async function (assert) {
     this.siteSettings.experimental_lightbox = true;
 
     await visit("/t/internationalization-localization/280");
@@ -66,8 +66,12 @@ acceptance("Lightbox", function (needs) {
 
     await waitFor(".pswp--open");
 
-    assert.dom(".pswp__caption .title").hasText("<script>image</script>");
-    assert.dom(".pswp__caption .details").hasText("1500×842 234 KB");
+    assert
+      .dom(".pswp__caption .pswp__caption-title")
+      .hasText("<script>image</script>");
+    assert
+      .dom(".pswp__caption .pswp__caption-details")
+      .hasText("1500×842 234 KB");
 
     assert
       .dom(".pswp__button--download-image")
@@ -92,7 +96,7 @@ acceptance("Lightbox", function (needs) {
     await waitFor(".pswp--open");
 
     assert
-      .dom(".pswp__caption .title")
+      .dom(".pswp__caption .pswp__caption-title")
       .hasHtml(/^&lt;script&gt;image&lt;\/script&gt;/);
   });
 });

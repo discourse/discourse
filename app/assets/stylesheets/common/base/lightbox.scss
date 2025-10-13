@@ -127,21 +127,20 @@
   left: 0;
   bottom: 0;
   width: 100%;
-  padding: 0.75em;
+  padding: 0.5em;
   text-align: center;
   position: absolute;
-  background-color: rgb(0, 0, 0, 0.75);
 
-  .title {
+  .pswp__caption-title {
     left: 50%;
     color: #fff;
     position: relative;
     max-width: 800px;
-    padding: 0 1em 0.5em;
+    padding: 0 1em 0.25em;
     transform: translateX(-50%);
   }
 
-  .details {
+  .pswp__caption-details {
     color: var(--secondary-high);
     font-size: var(--font-down-1);
   }
@@ -149,9 +148,5 @@
 
 .pswp__button--download-image svg,
 .pswp__button--original-image svg {
-  top: 50%;
-  left: 50%;
-  color: var(--pswp-icon-color);
-  position: absolute;
-  transform: translate(-50%, -50%);
+  padding: 0.4em;
 }

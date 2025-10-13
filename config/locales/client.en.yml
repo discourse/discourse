@@ -4865,8 +4865,8 @@ en:
     preloader_text: "Loading"
 
     lightbox:
-      download: "download"
-      open: "original image"
+      download: "Download"
+      open: "Original image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"

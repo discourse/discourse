@@ -33,6 +33,7 @@ export default async function lightbox(elem, siteSettings) {
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
       errorMsg: i18n("lightbox.content_load_error", { url: elem.href }),
+      padding: { top: 20, bottom: 60, left: 20, right: 20 },
       pswpModule: async () => await import("photoswipe"),
       appendToEl: isTesting() && document.getElementById("ember-testing"),
     });
@@ -55,8 +56,12 @@ export default async function lightbox(elem, siteSettings) {
 
             const text = escapeExpression(element.alt || element.title);
             const info = element.querySelector(".informations")?.innerText;
-            const title = text ? `<div class='title'>${text}</div>` : null;
-            const details = info ? `<div class='details'>${info}</div>` : null;
+            const title = text
+              ? `<div class='pswp__caption-title'>${text}</div>`
+              : null;
+            const details = info
+              ? `<div class='pswp__caption-details'>${info}</div>`
+              : null;
 
             caption.innerHTML = [title, details].filter(Boolean).join("");
           });
@@ -71,7 +76,7 @@ export default async function lightbox(elem, siteSettings) {
           isButton: true,
           tagName: "a",
           title: i18n("lightbox.download"),
-          html: renderIcon("string", "download"),
+          html: renderIcon("string", "download", { class: "pswp__icn" }),
 
           onInit: (el, pswp) => {
             el.setAttribute("download", "");
@@ -79,7 +84,12 @@ export default async function lightbox(elem, siteSettings) {
             el.setAttribute("rel", "noopener");
 
             pswp.on("change", () => {
-              el.href = pswp.currSlide.data.element.dataset.downloadHref;
+              const href = pswp.currSlide.data.element.dataset.downloadHref;
+              if (!href) {
+                el.style.display = "none";
+                return;
+              }
+              el.href = href;
             });
           },
         });
@@ -92,7 +102,7 @@ export default async function lightbox(elem, siteSettings) {
         isButton: true,
         tagName: "a",
         title: i18n("lightbox.open"),
-        html: renderIcon("string", "image"),
+        html: renderIcon("string", "image", { class: "pswp__icn" }),
 
         onInit: (el, pswp) => {
           el.setAttribute("target", "_blank");
@@ -129,11 +139,9 @@ export default async function lightbox(elem, siteSettings) {
 
       if (!width || !height) {
         const imgInfo = el.querySelector(".informations")?.innerText || "";
-
-        if (imgInfo?.includes("×")) {
-          const imgSize = imgInfo.split(" ")[0].split("×");
-          [width, height] = imgSize.map(Number);
-        }
+        const dimensions = imgInfo.trim().split(" ")[0];
+        const separator = dimensions.includes("×") ? "×" : "x";
+        [width, height] = dimensions.split(separator).map(Number);
       }
 
       data.src = data.src || el.getAttribute("data-large-src");
@@ -147,9 +155,9 @@ export default async function lightbox(elem, siteSettings) {
     lightboxEl.init();
   } else {
     // Magnific lightbox
-    const lightboxes = elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR);
+    const images = elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR);
 
-    if (!lightboxes.length) {
+    if (!images.length) {
       return;
     }
 
@@ -158,7 +166,7 @@ export default async function lightbox(elem, siteSettings) {
 
     await loadMagnificPopup();
 
-    $(lightboxes).magnificPopup({
+    $(images).magnificPopup({
       type: "image",
       closeOnContentClick: false,
       removalDelay: isTesting() ? 0 : 300,

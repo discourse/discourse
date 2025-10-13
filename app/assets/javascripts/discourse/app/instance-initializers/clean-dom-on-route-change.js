@@ -16,9 +16,7 @@ function _clean(transition) {
   });
 
   // Close PhotoSwipe
-  if (window.pswp) {
-    window.pswp.close();
-  }
+  window.pswp?.close();
 
   // Close the lightbox
   if ($.magnificPopup?.instance) {
