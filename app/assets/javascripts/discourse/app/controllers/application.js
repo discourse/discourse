@@ -15,6 +15,8 @@ export default class ApplicationController extends Controller {
   @service router; // used in the route template
   @service footer;
   @service sidebarState;
+  @service appEvents;
+  @service accessibilityAnnouncer;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
