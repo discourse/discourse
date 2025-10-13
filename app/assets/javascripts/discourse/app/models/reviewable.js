@@ -1,6 +1,7 @@
 import { dasherize, underscore } from "@ember/string";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
 import I18n, { i18n } from "discourse-i18n";
@@ -50,8 +51,10 @@ export default class Reviewable extends RestModel {
 
   @discourseComputed("humanNoun")
   flaggedReviewableContextQuestion(humanNoun) {
-    const uniqueReviewableScores =
-      this.reviewable_scores.uniqBy("score_type.type");
+    const uniqueReviewableScores = uniqueItemsFromArray(
+      this.reviewable_scores,
+      "score_type.type"
+    );
 
     if (uniqueReviewableScores.length === 1) {
       if (uniqueReviewableScores[0].score_type.type === "notify_moderators") {
@@ -62,9 +65,11 @@ export default class Reviewable extends RestModel {
     }
 
     const listOfQuestions = I18n.listJoiner(
-      uniqueReviewableScores
-        .map((score) => score.score_type.title.toLowerCase())
-        .uniq(),
+      uniqueItemsFromArray(
+        uniqueReviewableScores.map((score) =>
+          score.score_type.title.toLowerCase()
+        )
+      ),
       i18n("review.context_question.delimiter")
     );
 

@@ -5,6 +5,7 @@ import { cancel, next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import discourseLater from "discourse/lib/later";
@@ -392,10 +393,11 @@ export default class Chat extends Service {
   }
 
   upsertDmChannelForUser(channel, user) {
-    const usernames = (channel.chatable.users || [])
-      .map((item) => item.username)
-      .concat(user.username)
-      .uniq();
+    const usernames = uniqueItemsFromArray(
+      (channel.chatable.users || [])
+        .map((item) => item.username)
+        .concat(user.username)
+    );
 
     return this.upsertDmChannel({ usernames });
   }
@@ -411,8 +413,12 @@ export default class Chat extends Service {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
       data: {
-        target_usernames: targets.usernames?.uniq(),
-        target_groups: targets.groups?.uniq(),
+        target_usernames: targets.usernames
+          ? uniqueItemsFromArray(targets.usernames)
+          : null,
+        target_groups: targets.groups
+          ? uniqueItemsFromArray(targets.groups)
+          : null,
         upsert: opts.upsert,
         name: opts.name,
       },
@@ -434,7 +440,7 @@ export default class Chat extends Service {
   // participant to fetch the channel for.
   getDmChannelForUsernames(usernames) {
     return ajax("/chat/direct_messages.json", {
-      data: { usernames: usernames.uniq().join(",") },
+      data: { usernames: uniqueItemsFromArray(usernames).join(",") },
     });
   }
 

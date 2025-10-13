@@ -1,5 +1,6 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { setOwner } from "@ember/owner";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 
 export default class ChatMessagesManager {
   @tracked messages = [];
@@ -27,10 +28,10 @@ export default class ChatMessagesManager {
   }
 
   addMessages(messages = []) {
-    this.messages = this.messages
-      .concat(messages)
-      .uniqBy("id")
-      .sort((a, b) => a.createdAt - b.createdAt);
+    this.messages = uniqueItemsFromArray(
+      this.messages.concat(messages),
+      "id"
+    ).sort((a, b) => a.createdAt - b.createdAt);
   }
 
   findMessage(messageId) {
