@@ -33,7 +33,6 @@ export default class DiscoveryTopics extends Component {
   @service documentTitle;
   @service currentUser;
   @service topicTrackingState;
-  @service site;
 
   @tracked loadingNew;
 
@@ -184,11 +183,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get renderNewListHeaderControls() {
-    return (
-      this.site.mobileView &&
-      this.showTopicsAndRepliesToggle &&
-      !this.args.bulkSelectEnabled
-    );
+    return this.showTopicsAndRepliesToggle && !this.args.bulkSelectEnabled;
   }
 
   get expandGloballyPinned() {
@@ -307,32 +302,27 @@ export default class DiscoveryTopics extends Component {
         />
       </span>
 
-      <List
-        @highlightLastVisited={{true}}
-        @top={{this.top}}
-        @hot={{this.hot}}
-        @showTopicPostBadges={{this.showTopicPostBadges}}
-        @showPosters={{true}}
-        @canBulkSelect={{@canBulkSelect}}
-        @bulkSelectHelper={{@bulkSelectHelper}}
-        @changeSort={{@changeSort}}
-        @hideCategory={{@model.hideCategory}}
-        @order={{this.order}}
-        @ascending={{this.ascending}}
-        @expandGloballyPinned={{this.expandGloballyPinned}}
-        @expandAllPinned={{this.expandAllPinned}}
-        @category={{@category}}
-        @topics={{@model.topics}}
-        @discoveryList={{true}}
-        @focusLastVisitedTopic={{true}}
-        @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-        @newListSubset={{@model.params.subset}}
-        @changeNewListSubset={{@changeNewListSubset}}
-        @newRepliesCount={{this.newRepliesCount}}
-        @newTopicsCount={{this.newTopicsCount}}
-      />
-
       {{#if this.hasTopics}}
+        <List
+          @highlightLastVisited={{true}}
+          @top={{this.top}}
+          @hot={{this.hot}}
+          @showTopicPostBadges={{this.showTopicPostBadges}}
+          @showPosters={{true}}
+          @canBulkSelect={{@canBulkSelect}}
+          @bulkSelectHelper={{@bulkSelectHelper}}
+          @changeSort={{@changeSort}}
+          @hideCategory={{@model.hideCategory}}
+          @order={{this.order}}
+          @ascending={{this.ascending}}
+          @expandGloballyPinned={{this.expandGloballyPinned}}
+          @expandAllPinned={{this.expandAllPinned}}
+          @category={{@category}}
+          @topics={{@model.topics}}
+          @discoveryList={{true}}
+          @focusLastVisitedTopic={{true}}
+        />
+
         <LoadMore @action={{this.loadMore}} />
       {{/if}}
 
