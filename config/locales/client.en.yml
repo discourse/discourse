@@ -3878,6 +3878,9 @@ en:
         title: "Reply"
         help: "begin composing a reply to this topic"
 
+      footer_buttons:
+        region_label: "Topic actions"
+
       share:
         title: "Share Topic"
         extended_title: "Share a link"
@@ -4213,10 +4216,8 @@ en:
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
       cancel_composer:
-        confirm: "What would you like to do with your post?"
+        confirm: "Do you want to discard your post?"
         discard: "Discard"
-        save_draft: "Save draft for later"
-        keep_editing: "Keep editing"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -5426,6 +5427,8 @@ en:
           light: "Light"
           dark: "Dark"
           auto: "Auto"
+          title: "Color mode"
+          aria_label: "Color mode, currently %{mode}"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -5691,10 +5694,16 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-
+          sub_pages:
+            common_settings:
+              title: "Settings"
+            authenticators:
+              title: "Social logins"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"

@@ -999,6 +999,7 @@ ro:
     show_signup_form_username_instructions: Afișează instrucțiunile pentru numele de utilizator în formularul de înscriere.
     show_signup_form_full_name_instructions: Afișează instrucțiunile pentru numele complet în formularul de înscriere.
     show_signup_form_password_instructions: Afișează instrucțiunile pentru parolă în formularul de înscriere.
+    google_site_verification_token: Jeton de verificare pentru consola de căutare Google. Va fi inclus ca meta etichetă în antetul HTML.
     moderators_manage_categories: "Permite moderatorilor să creeze și să gestioneze categorii"
     moderators_manage_groups: "Permite moderatorilor să creeze și să gestioneze grupuri"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."

@@ -230,7 +230,7 @@ import { i18n } from "discourse-i18n";
         await click("#reply-control .discard-button");
         assert.dom(".d-modal").exists("pops up a confirmation dialog");
 
-        await click(".d-modal__footer .discard-draft");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
         assert
           .dom(".d-modal__body")
           .doesNotExist("the confirmation can be cancelled");
@@ -360,18 +360,17 @@ import { i18n } from "discourse-i18n";
         );
         await click(".topic-post[data-post-number='1'] button.edit");
 
-        await click(".d-modal__footer button.keep-editing");
+        await click(".d-modal__footer .discard-draft-modal__cancel-btn");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
         assert
           .dom(".d-editor-input")
           .hasValue(
             "this is the content of my reply",
-            "composer does not switch when using Keep Editing button"
+            "composer does not switch on dismissed Discard draft confirmation modal"
           );
 
         await click(".topic-post[data-post-number='1'] button.edit");
-        assert.dom(".d-modal__footer button.save-draft").doesNotExist();
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
 
         assert
@@ -382,7 +381,7 @@ import { i18n } from "discourse-i18n";
           );
       });
 
-      test("Can Keep Editing when replying on a different topic", async function (assert) {
+      test("Can dismiss Discard draft confirmation modal when replying on a different topic", async function (assert) {
         await visit("/t/internationalization-localization/280");
 
         await click("#topic-footer-buttons .create");
@@ -392,14 +391,14 @@ import { i18n } from "discourse-i18n";
         await click("#topic-footer-buttons .create");
         assert.dom(".discard-draft-modal.modal").exists();
 
-        await click(".d-modal__footer button.keep-editing");
+        await click(".d-modal__footer .discard-draft-modal__cancel-btn");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
 
         assert
           .dom(".d-editor-input")
           .hasValue(
             "this is the content of my reply",
-            "composer does not switch when using Keep Editing button"
+            "composer does not switch on dismissed Discard draft confirmation modal"
           );
       });
 
@@ -457,7 +456,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up the discard drafts modal");
 
-        await click(".d-modal__footer button.keep-editing");
+        await click(".d-modal__footer .discard-draft-modal__cancel-btn");
 
         assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
         await click("#topic-footer-buttons .btn.create");
@@ -465,7 +464,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up the modal again");
 
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
 
         assert
           .dom(".d-editor-input")
@@ -485,7 +484,7 @@ import { i18n } from "discourse-i18n";
           .hasValue("This is a draft of the first post");
       });
 
-      test("Autosaves drafts after clicking keep editing or escaping modal", async function (assert) {
+      test("Autosaves drafts after cancelling Discard draft confirmation modal", async function (assert) {
         pretender.post("/drafts.json", function () {
           assert.step("saveDraft");
           return response(200, {});
@@ -495,22 +494,19 @@ import { i18n } from "discourse-i18n";
         });
 
         await visit("/t/internationalization-localization/280");
-
         await click("#topic-footer-buttons .btn.create");
-
         await fillIn(".d-editor-input", "this is draft content of the reply");
-
         assert.verifySteps(["saveDraft"], "first draft is auto saved");
 
         await click("#reply-control .discard-button");
-
         assert
           .dom(".discard-draft-modal.modal")
-          .exists("pops up the discard drafts modal");
+          .exists("shows Discard draft confirmation modal");
 
-        await click(".d-modal__footer button.keep-editing");
-        assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
-
+        await click(".d-modal__footer .discard-draft-modal__cancel-btn");
+        assert
+          .dom(".discard-draft-modal.modal")
+          .doesNotExist("hides modal on Cancel button click");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -523,32 +519,26 @@ import { i18n } from "discourse-i18n";
           "this is the first update to the draft content",
           "update content in the composer"
         );
-
         assert.verifySteps(["saveDraft"], "second draft is saved");
 
         await click("#reply-control .discard-button");
-
         assert
           .dom(".discard-draft-modal.modal")
           .exists("pops up the discard drafts modal");
 
-        await triggerKeyEvent(
-          ".discard-draft-modal .save-draft",
-          "keydown",
-          "Escape"
-        );
-        assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
+        await triggerKeyEvent(".discard-draft-modal", "keydown", "Escape");
+        assert
+          .dom(".discard-draft-modal.modal")
+          .doesNotExist("hides modal on Esc key stroke");
 
         await fillIn(
           ".d-editor-input",
           "this is the second update to the draft content",
           "update content in the composer"
         );
-
         assert.verifySteps(["saveDraft"], "third draft is saved");
 
         await click("#reply-control button.create");
-
         assert
           .dom(".topic-post:nth-last-child(1 of .topic-post) .cooked p")
           .hasText("this is the second update to the draft content");
@@ -688,7 +678,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
 
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -902,14 +892,10 @@ import { i18n } from "discourse-i18n";
         assert
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
-        assert.dom(".d-modal__footer button.save-draft").doesNotExist();
         assert
-          .dom(".d-modal__footer button.keep-editing")
-          .hasText(
-            i18n("post.cancel_composer.keep_editing"),
-            "has keep editing button"
-          );
-        await click(".d-modal__footer button.discard-draft");
+          .dom(".d-modal__footer .discard-draft-modal__cancel-btn")
+          .hasText(i18n("cancel_value"), "has Cancel button");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -918,7 +904,7 @@ import { i18n } from "discourse-i18n";
           );
       });
 
-      test("Composer draft can switch to draft in new context without destroying current draft", async function (assert) {
+      test("Composer shows Discard draft confirmation dialog in new context (when creating a new topic)", async function (assert) {
         await visit("/t/this-is-a-test-topic/9");
 
         await click(".topic-post[data-post-number='1'] button.reply");
@@ -931,20 +917,11 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
         assert
-          .dom(".d-modal__footer button.save-draft")
-          .hasText(
-            i18n("post.cancel_composer.save_draft"),
-            "has save draft button"
-          );
+          .dom(".d-modal__footer .discard-draft-modal__discard-btn")
+          .hasText(i18n("post.cancel_composer.discard"), "has Discard button");
         assert
-          .dom(".d-modal__footer button.keep-editing")
-          .hasText(
-            i18n("post.cancel_composer.keep_editing"),
-            "has keep editing button"
-          );
-
-        await click(".d-modal__footer button.save-draft");
-        assert.dom(".d-editor-input").hasNoValue("clears the composer input");
+          .dom(".d-modal__footer .discard-draft-modal__cancel-btn")
+          .hasText(i18n("cancel_value"), "has Cancel button");
       });
 
       test("Does not check for existing draft", async function (assert) {
@@ -1127,8 +1104,13 @@ import { i18n } from "discourse-i18n";
         await click("#create-topic");
         await fillIn("#reply-title", "Something");
         await fillIn(".d-editor-input", "Something");
-        await click(".discard-button");
-        assert.dom(".discard-draft-modal .save-draft").doesNotExist();
+        await click("button.create");
+        assert.dom(".d-editor-textarea-wrapper .popup-tip.bad").hasText(
+          i18n("composer.error.post_length.other", {
+            count: this.siteSettings.min_first_post_length,
+          }),
+          "shows error"
+        );
       });
 
       test("Saves drafts that only contain quotes", async function (assert) {
@@ -1138,7 +1120,7 @@ import { i18n } from "discourse-i18n";
         await fillIn(".d-editor-input", "[quote]some quote[/quote]");
 
         await click(".discard-button");
-        assert.dom(".discard-draft-modal .save-draft").exists();
+        assert.dom(".discard-draft-modal").exists();
       });
 
       test("Discard drafts modal can be dismissed via keyboard", async function (assert) {
@@ -1148,13 +1130,9 @@ import { i18n } from "discourse-i18n";
         await fillIn(".d-editor-input", "[quote]some quote[/quote]");
 
         await click(".discard-button");
-        assert.dom(".discard-draft-modal .save-draft").exists();
+        assert.dom(".discard-draft-modal").exists();
 
-        await triggerKeyEvent(
-          ".discard-draft-modal .save-draft",
-          "keydown",
-          "Escape"
-        );
+        await triggerKeyEvent(".discard-draft-modal", "keydown", "Escape");
 
         assert.dom(".discard-draft-modal").doesNotExist();
 

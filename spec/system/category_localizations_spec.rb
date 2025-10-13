@@ -97,9 +97,7 @@ describe "Category Localizations", type: :system do
           category_page.save_settings
           page.refresh
 
-          try_until_success do
-            expect(CategoryLocalization.where(category_id: mono_category.id).count).to eq(2)
-          end
+          expect(CategoryLocalization.where(category_id: mono_category.id).count).to eq(2)
           expect(
             CategoryLocalization.where(category_id: mono_category.id, locale: "es").count,
           ).to eq(1)
@@ -245,15 +243,17 @@ describe "Category Localizations", type: :system do
 
       describe "logged in users" do
         shared_examples_for "editing category settings" do
-          # TODO: Fix this test as it doesn't actually work.
-          # The assertion to check the category name input runs immediately after clicking the language option leading
-          # to a false positive.
-          xit "shows the original category name in the category edit page" do
+          it "shows the original category name in the category edit page" do
             sign_in(admin)
-            category_page.visit_general(category)
+            visit("/")
 
             switcher.expand
             switcher.option("[data-menu-option-id='es']").click
+            expect(sidebar).to have_section_link("Solicitudes")
+
+            category_page.visit(category)
+            category_page.click_edit_category
+            category_page.click_setting_tab("general")
 
             expect(find(".edit-category-tab-general input.category-name").value).to eq(
               category.name,

@@ -1928,6 +1928,7 @@ uk:
     ga_universal_domain_name: "Доменне ім’я Google Universal Analytics, наприклад: mysite.com; див. <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Увімкніть міждоменне відстеження Google Universal Analytics. До вихідних посилань на ці домени буде додано ідентифікатор клієнта. Див. <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Посібник міждоменного відстеження Google.</a>"
     gtm_container_id: "Ідентифікатор контейнера Google Tag Manager, напр: GTM-ABCD12E. <br/>Примітка: Щоб використовувати GTM, коли увімкнено політику безпеки вмісту (CSP), див. документацію про метадані: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Використання нонсів у скриптах Google Tag Manager</a>."
+    google_site_verification_token: Токен верифікації пошукової консолі Google. Буде включений як мета-тег в заголовок HTML.
     enable_escaped_fragments: "Поверніться до API Ajax-Crawling від Google, якщо вебсканер не виявлено. Див. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories: "Дозволити модераторам створювати категорії та керувати ними"
     moderators_manage_groups: "Дозволити модераторам створювати групи та керувати ними"

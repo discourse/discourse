@@ -8,8 +8,9 @@ describe "Admin Search", type: :system do
   before { sign_in(current_user) }
 
   it "can search for settings, pages, themes, components, and reports" do
-    theme = Fabricate(:theme, name: "Discourse Invincible Theme")
-    component = Fabricate(:theme, name: "Discourse Redacted", component: true)
+    Fabricate(:theme, name: "Discourse Invincible Theme")
+    Fabricate(:theme, name: "Discourse Redacted", component: true)
+
     Theme
       .any_instance
       .stubs(:internal_translations)
@@ -88,5 +89,27 @@ describe "Admin Search", type: :system do
     search_modal.find_result("setting", 0).click
 
     expect(page).to have_current_path("/admin/config/content?filter=tag_style")
+  end
+
+  it "works for social logins" do
+    visit "/admin"
+    sidebar.click_search_input
+    search_modal.search("google oauth2 logins")
+    search_modal.find_result("setting", 0).click
+
+    expect(page).to have_current_path(
+      "/admin/config/login-and-authentication/authenticators?filter=enable_google_oauth2_logins",
+    )
+  end
+
+  it "works for discourse connect" do
+    visit "/admin"
+    sidebar.click_search_input
+    search_modal.search("enable discourse connect")
+    search_modal.find_result("setting", 0).click
+
+    expect(page).to have_current_path(
+      "/admin/config/login-and-authentication/discourseconnect?filter=enable_discourse_connect",
+    )
   end
 end

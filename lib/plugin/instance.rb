@@ -45,7 +45,7 @@ end
 
 class Plugin::Instance
   attr_accessor :path, :metadata
-  attr_reader :admin_route
+  attr_reader :admin_route, :admin_login_route
 
   # Memoized array readers
   %i[
@@ -900,6 +900,10 @@ class Plugin::Instance
   # grouping related settings in the UI.
   def register_site_setting_area(area)
     DiscoursePluginRegistry.site_setting_areas << area
+  end
+
+  def register_admin_config_login_route(location)
+    DiscoursePluginRegistry.admin_config_login_routes << location
   end
 
   def javascript_includes

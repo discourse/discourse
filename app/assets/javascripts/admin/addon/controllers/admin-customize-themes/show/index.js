@@ -44,7 +44,6 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @mapBy("availableChildThemes", "name") availableComponentsNames;
   @mapBy("availableActiveChildThemes", "name") availableActiveComponentsNames;
   @mapBy("model.childThemes", "name") childThemesNames;
-  @filterBy("model.theme_fields", "target", "extra_js") extraFiles;
   @notEmpty("settings") hasSettings;
   @notEmpty("translations") hasTranslations;
   @notEmpty("model.themeable_site_settings") hasThemeableSiteSettings;
@@ -54,6 +53,17 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   @discourseComputed("model.component", "model.remote_theme")
   showCheckboxes() {
     return !this.model.component || this.model.remote_theme;
+  }
+
+  @discourseComputed("model.theme_fields.[]")
+  extraFiles() {
+    return this.model.theme_fields
+      ?.filter(
+        ({ target, type_id }) =>
+          (target === "extra_js" && type_id === 6) ||
+          (target === "extra_scss" && type_id === 1)
+      )
+      ?.sort((a, b) => (a.file_path || "").localeCompare(b.file_path || ""));
   }
 
   @discourseComputed("model.editedFields")
