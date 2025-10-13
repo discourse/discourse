@@ -82,6 +82,42 @@ module DiscoursePostEvent
         expect(body).to include("SUMMARY:Test Event 1")
         expect(body).to include("SUMMARY:Test Event 2")
       end
+
+      it "should include location and description in ics format" do
+        event =
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            name: "Tech Conference",
+            location: "https://meet.google.com/abc-defg-hij",
+            description: "Bring your laptop and questions!",
+            url: "https://example.com/event-info",
+          )
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to include("text/calendar")
+
+        body = response.body
+        expect(body).to include("SUMMARY:Tech Conference")
+        expect(body).to include("LOCATION:https://meet.google.com/abc-defg-hij")
+        expect(body).to include("DESCRIPTION:Bring your laptop and questions!")
+        expect(body).to include("URL:https://example.com/event-info")
+      end
+
+      it "should handle events without location and description in ics format" do
+        event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Simple Event")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        body = response.body
+        expect(body).to include("SUMMARY:Simple Event")
+        # Should still generate valid ICS even without LOCATION/DESCRIPTION
+        expect(body).to include("BEGIN:VEVENT")
+        expect(body).to include("END:VEVENT")
+      end
     end
 
     context "with an existing post" do
