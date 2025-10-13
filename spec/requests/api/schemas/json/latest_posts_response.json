@@ -236,21 +236,6 @@
           },
           "post_url": {
             "type": "string"
-          },
-          "can_accept_answer": {
-            "type": "boolean"
-          },
-          "can_unaccept_answer": {
-            "type": "boolean"
-          },
-          "accepted_answer": {
-            "type": "boolean"
-          },
-          "topic_accepted_answer": {
-            "type": [
-              "string",
-              "null"
-            ]
           }
         },
         "required": [
@@ -311,11 +296,7 @@
           "reviewable_id",
           "reviewable_score_count",
           "reviewable_score_pending_count",
-          "post_url",
-          "can_accept_answer",
-          "can_unaccept_answer",
-          "accepted_answer",
-          "topic_accepted_answer"
+          "post_url"
         ]
       }
     }
