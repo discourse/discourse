@@ -19,6 +19,22 @@ export function removeValueFromArray(array, value) {
 }
 
 /**
+ * Removes multiple objects from an array by iterating through the provided values
+ * and removing each value from the given array.
+ *
+ * @param {Array} array - The array from which objects will be removed.
+ * @param {Array} values - An array of objects to be removed from the given array.
+ * @return {Array} The updated array with specified objects removed.
+ */
+export function removeValuesFromArray(array, values) {
+  for (let i = values.length - 1; i >= 0; i--) {
+    removeValueFromArray(array, values[i]);
+  }
+
+  return array;
+}
+
+/**
  * Normalizes the selector argument into a callable function.
  * @param {(string|number|Function)} selector
  * @returns {Function}

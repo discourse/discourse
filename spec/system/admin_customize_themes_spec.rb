@@ -345,7 +345,7 @@ describe "Admin Customize Themes", type: :system do
         theme_page.toggle_theme_site_setting("enable_welcome_banner")
       end
 
-      expect(banner).to be_hidden
+      try_until_success(reason: "Relies on MessageBus updates") { expect(banner).to be_hidden }
     end
   end
 end

@@ -71,7 +71,7 @@ export default class EditCategoryGeneral extends Component {
           ? null
           : c.color.toUpperCase();
       })
-      .compact();
+      .filter((item) => item != null);
   }
 
   @cached

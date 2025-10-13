@@ -554,7 +554,7 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
-    const firstLoadedPost = postStream.get("posts.firstObject");
+    const firstLoadedPost = postStream.posts[0];
 
     if (post.get && post.get("post_number") === 1) {
       return;
@@ -571,7 +571,7 @@ export default class TopicController extends Controller {
     const { post, refresh } = event;
 
     const postStream = this.get("model.postStream");
-    const lastLoadedPost = postStream.get("posts.lastObject");
+    const lastLoadedPost = postStream.posts.at(-1);
 
     if (
       lastLoadedPost &&

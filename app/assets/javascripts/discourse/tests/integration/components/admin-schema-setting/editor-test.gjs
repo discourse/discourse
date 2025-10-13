@@ -1,4 +1,5 @@
 import { click, fillIn, render } from "@ember/test-helpers";
+import DialogHolder from "dialog-holder/components/dialog-holder";
 import { module, test } from "qunit";
 import schemaAndData, {
   SCHEMA_MODES,
@@ -1663,6 +1664,44 @@ module(
       assert.strictEqual(inputFields.count, 0);
       assert.dom(REMOVE_ITEM_BTN).doesNotExist();
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
+    });
+
+    test("removing an object with delete warning from the root list of objects", async function (assert) {
+      const setting = schemaAndData(4);
+
+      await render(
+        <template>
+          <DialogHolder />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
+        </template>
+      );
+
+      const tree = new TreeFromDOM();
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.strictEqual(tree.nodes.length, 3);
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+
+      await click(REMOVE_ITEM_BTN);
+
+      assert.dom("#dialog-title").hasText("Delete warning title");
+      assert.dom(".dialog-body").includesText("Delete warning message");
+      assert.dom(".dialog-footer .btn-danger").hasText(i18n("delete"));
+      assert.dom(".dialog-footer .btn-default").hasText(i18n("cancel_value"));
+
+      await click(".dialog-footer .btn-danger");
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.dom(tree.nodes[0].textElement).hasText("item 2");
     });
 
     test("navigating 1 level deep and removing an object from the child list of objects", async function (assert) {
