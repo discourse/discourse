@@ -1049,8 +1049,8 @@ importers:
         specifier: ^4.52.4
         version: 4.52.4
       '@rollup/plugin-babel':
-        specifier: ^6.0.4
-        version: 6.0.4(@babel/core@7.28.4)(rollup@4.44.0)
+        specifier: ^6.1.0
+        version: 6.1.0(@babel/core@7.28.4)(rollup@4.44.0)
       abort-controller:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2553,8 +2553,8 @@ packages:
   '@rollup/browser@4.52.4':
     resolution: {integrity: sha512-N9IYkGkDhr8Drq3Dbs3B07jrgJzMnVmhw4HxiZyFjU3jd7yA7Wu3wJS6crlWJQVc6AInkVqzUm0vH/T8EpDI6A==}
 
-  '@rollup/plugin-babel@6.0.4':
-    resolution: {integrity: sha512-YF7Y52kFdFT/xVSuVdjkV5ZdX/3YtmX0QulG+x0taQOtJdHYzVU61aSSkAgVJ7NOv6qPkIYiJSgSWWN/DM5sGw==}
+  '@rollup/plugin-babel@6.1.0':
+    resolution: {integrity: sha512-dFZNuFD2YRcoomP4oYf+DvQNSUA9ih+A3vUqopQx5EdtPGo3WBnQcI/S8pwpz91UsGfL0HsMSOlaMld8HrbubA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -2566,8 +2566,8 @@ packages:
       rollup:
         optional: true
 
-  '@rollup/pluginutils@5.1.4':
-    resolution: {integrity: sha512-USm05zrsFxYLPdWWq+K3STlWiT/3ELn3RcV5hJMghpeAIhxfsUIg6mt12CBJBInWMV4VneoV7SfGv8xIwo2qNQ==}
+  '@rollup/pluginutils@5.3.0':
+    resolution: {integrity: sha512-5EdhGZtnu3V88ces7s53hhfK5KSASnJZv8Lulpc04cWO3REESroJXg73DFsOmgbU2BhwV0E20bu2IDZb3VKW4Q==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
@@ -7329,6 +7329,10 @@ packages:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
 
+  picomatch@4.0.3:
+    resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
+    engines: {node: '>=12'}
+
   pikaday@1.8.2:
     resolution: {integrity: sha512-TNtsE+34BIax3WtkB/qqu5uepV1McKYEgvL3kWzU7aqPCpMEN6rBF3AOwu4WCwAealWlBGobXny/9kJb49C1ew==}
 
@@ -11213,21 +11217,21 @@ snapshots:
     dependencies:
       '@types/estree': 1.0.8
 
-  '@rollup/plugin-babel@6.0.4(@babel/core@7.28.4)(rollup@4.44.0)':
+  '@rollup/plugin-babel@6.1.0(@babel/core@7.28.4)(rollup@4.44.0)':
     dependencies:
       '@babel/core': 7.28.4(supports-color@8.1.1)
       '@babel/helper-module-imports': 7.27.1(supports-color@8.1.1)
-      '@rollup/pluginutils': 5.1.4(rollup@4.44.0)
+      '@rollup/pluginutils': 5.3.0(rollup@4.44.0)
     optionalDependencies:
       rollup: 4.44.0
     transitivePeerDependencies:
       - supports-color
 
-  '@rollup/pluginutils@5.1.4(rollup@4.44.0)':
+  '@rollup/pluginutils@5.3.0(rollup@4.44.0)':
     dependencies:
       '@types/estree': 1.0.8
       estree-walker: 2.0.2
-      picomatch: 4.0.2
+      picomatch: 4.0.3
     optionalDependencies:
       rollup: 4.44.0
 
@@ -16992,6 +16996,8 @@ snapshots:
   picomatch@2.3.1: {}
 
   picomatch@4.0.2: {}
+
+  picomatch@4.0.3: {}
 
   pikaday@1.8.2: {}
 
