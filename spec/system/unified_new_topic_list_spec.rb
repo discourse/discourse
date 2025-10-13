@@ -334,14 +334,14 @@ describe "Unified new topic list", type: :system do
         expect(tabs_toggle.topics_tab).to be_visible
       end
 
-      it "shows a CTA to show topics when on the new replies tab" do
-        visit("/new?subset=replies")
+      it "shows a CTA to show replies when on the new topics tab" do
+        visit("/new?subset=topics")
 
-        expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_topics"))
+        expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_replies"))
         empty_state.click_cta
 
-        expect(tabs_toggle.topics_tab).to be_active
-        expect(page).to have_current_path("/new?subset=topics")
+        expect(tabs_toggle.replies_tab).to be_active
+        expect(page).to have_current_path("/new?subset=replies")
       end
     end
 
@@ -363,14 +363,14 @@ describe "Unified new topic list", type: :system do
         expect(tabs_toggle.topics_tab).to be_visible
       end
 
-      it "shows a CTA to show replies when on the new topics tab" do
-        visit("/new?subset=topics")
+      it "shows a CTA to show topics when on the new replies tab" do
+        visit("/new?subset=replies")
 
-        expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_replies"))
+        expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_topics"))
         empty_state.click_cta
 
-        expect(tabs_toggle.replies_tab).to be_active
-        expect(page).to have_current_path("/new?subset=replies")
+        expect(tabs_toggle.topics_tab).to be_active
+        expect(page).to have_current_path("/new?subset=topics")
       end
     end
   end
