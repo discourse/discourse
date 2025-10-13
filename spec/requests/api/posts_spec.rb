@@ -105,8 +105,8 @@ RSpec.describe "posts" do
           post.id
         end
 
-        let(:moderator) { Fabricate(:moderator) }
-        before { sign_in(moderator) }
+        let(:admin_user) { Fabricate(:admin) }
+        before { sign_in(admin_user) }
 
         run_test!
 
