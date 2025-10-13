@@ -139,17 +139,27 @@ export default class DiscoveryTopics extends Component {
       return;
     }
 
+    const split = (this.args.model.get("filter") || "").split("/");
     const { category, tag } = this.args;
     if (category) {
+      // We have a different custom display for the empty new + unread filter education.
+      if (split.at(-1) === "new" || split.at(-1) === "unread") {
+        return;
+      }
+
       return i18n("topics.bottom.category", {
         category: category.get("name"),
       });
     } else if (tag) {
+      // We have a different custom display for the empty new + unread filter education.
+      if (split.at(-1) === "new" || split.at(-1) === "unread") {
+        return;
+      }
+
       return i18n("topics.bottom.tag", {
         tag: tag.id,
       });
     } else {
-      const split = (this.args.model.get("filter") || "").split("/");
       if (topicsLength === 0) {
         // We have a different custom display for the empty new + unread filter education.
         if (split[0] === "new" || split[0] === "unread") {
