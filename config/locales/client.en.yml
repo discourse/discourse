@@ -6916,6 +6916,10 @@ en:
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
+          search_templates: "Filter by template name..."
+          no_templates_found: "No templates match your filters."
+          edit: "Edit"
+          back: "Back to templates"
         component:
           all_filter: "All"
           used_filter: "Used"
