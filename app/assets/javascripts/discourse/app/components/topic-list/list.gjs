@@ -208,11 +208,6 @@ export default class TopicList extends Component {
           @bulkSelectHelper={{@bulkSelectHelper}}
           @bulkSelectEnabled={{this.bulkSelectEnabled}}
           @canDoBulkActions={{this.canDoBulkActions}}
-          @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
-          @newListSubset={{@newListSubset}}
-          @newRepliesCount={{@newRepliesCount}}
-          @newTopicsCount={{@newTopicsCount}}
-          @changeNewListSubset={{@changeNewListSubset}}
         />
       </thead>
 
