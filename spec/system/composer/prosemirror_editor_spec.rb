@@ -877,6 +877,17 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("a", text: "lin")
     end
 
+    it "clears closed marks from stored marks when using markInputRule" do
+      open_composer
+
+      composer.type_content("[`something`](link) word")
+
+      expect(rich).to have_css("a", text: "something")
+      expect(rich).to have_css("a code", text: "something")
+      expect(rich).to have_content("word")
+      expect(rich).to have_no_css("code", text: "word")
+    end
+
     it "parses html inline tags from pasted HTML" do
       cdp.allow_clipboard
       open_composer

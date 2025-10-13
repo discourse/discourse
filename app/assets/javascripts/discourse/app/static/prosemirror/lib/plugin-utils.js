@@ -23,8 +23,8 @@ export function markInputRule(regexp, markType, getAttrs) {
       start += attrsStart ?? 0;
 
       if (match[1]) {
-        let textStart = start + match[0].indexOf(match[1]);
-        let textEnd = textStart + match[1].length;
+        const textStart = start + match[0].indexOf(match[1]);
+        const textEnd = textStart + match[1].length;
         if (textEnd < end) {
           tr.delete(textEnd, end);
         }
@@ -33,7 +33,7 @@ export function markInputRule(regexp, markType, getAttrs) {
         }
 
         tr.addMark(start, start + match[1].length, markType.create(markAttrs));
-        tr.removeStoredMark(markType);
+        tr.setStoredMarks(tr.doc.resolve(textEnd).marks());
       } else {
         tr.delete(start, end);
         tr.insertText(" ");
