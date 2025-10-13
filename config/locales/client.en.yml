@@ -3120,6 +3120,8 @@ en:
         visit: "Open link in external tab"
         link_copied: "Link copied!"
 
+      unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
+
     notifications:
       tooltip:
         regular:

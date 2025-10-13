@@ -40,7 +40,14 @@ export default class Parser {
     // Adding function parse handlers directly
     Object.assign(parser.tokenHandlers, this.postParseTokens);
 
-    return parser.parse(text);
+    try {
+      return parser.parse(text);
+    } catch (e) {
+      if (e.message?.startsWith("Token type")) {
+        throw new UnsupportedTokenError();
+      }
+      throw e;
+    }
   }
 
   #extractParsers(extensions) {
@@ -80,11 +87,9 @@ export default class Parser {
         }
       }
 
-      throw new Error(
-        `No parser processed ${tokenName} token for tag: ${
-          token.tag
-        }, attrs: ${JSON.stringify(token.attrs)}`
-      );
+      throw new UnsupportedTokenError();
     };
   }
 }
+
+export class UnsupportedTokenError extends Error {}
