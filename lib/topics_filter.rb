@@ -698,32 +698,7 @@ class TopicsFilter
   end
 
   def watching_first_post_scope
-    category_scope =
-      @scope.where(
-        "topics.category_id IN (
-          SELECT category_id FROM category_users
-          WHERE user_id = :user_id AND notification_level = :notification_level
-        )",
-        user_id: @guardian.user.id,
-        notification_level: CategoryUser.notification_levels[:watching_first_post],
-      )
-
-    return category_scope if !SiteSetting.tagging_enabled
-
-    tag_scope =
-      @scope.where(
-        "topics.id IN (
-          SELECT DISTINCT topic_id FROM topic_tags
-          WHERE tag_id IN (
-            SELECT tag_id FROM tag_users
-            WHERE user_id = :user_id AND notification_level = :notification_level
-          )
-        )",
-        user_id: @guardian.user.id,
-        notification_level: TagUser.notification_levels[:watching_first_post],
-      )
-
-    category_scope.or(tag_scope)
+    TopicQuery.watching_first_post_filter(@scope, @guardian.user)
   end
 
   def combine_scopes_with_or(scope1, scope2)
