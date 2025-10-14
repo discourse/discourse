@@ -2601,6 +2601,7 @@ hu:
       created_before: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) előtt létrehozott témák megjelenítése"
       created_after: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) után létrehozott témák megjelenítése"
       created_by: "Egy adott felhasználó által létrehozott témák megjelenítése"
+      created_by_user: "A felhasználónév által létrehozott témák megjelenítése (@ nélkül)"
       created_by_multiple: "A megadott felhasználók által létrehozott témák megjelenítése (vesszővel elválasztva)"
       latest_post_before: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum előtt történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
       latest_post_after: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum után történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."

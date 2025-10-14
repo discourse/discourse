@@ -4851,7 +4851,7 @@ pt_BR:
       no_drafts_title: "Você ainda não iniciou nenhum rascunho"
       no_drafts_body: "Ainda não está pronto(a) para postar? Salvaremos automaticamente um novo rascunho e o listaremos aqui sempre que você começar a escrever um tópico, resposta ou mensagem pessoal. Selecione o botão de cancelamento para descartar ou salvar seu rascunho para continuar mais tarde."
       no_likes_title: "Você ainda não curtiu nenhum tópico"
-      no_likes_title_others: "%{username} ainda não respondeu a nenhum tópico"
+      no_likes_title_others: "%{username} ainda não curtiu nenhum tópico"
       no_likes_body: "Uma ótima maneira de participar e começar a contribuir é iniciar a leitura das conversas que já aconteceram e selecionar %{heartIcon} nas postagens de que você gostou!"
       no_topics_title: "Você ainda não iniciou nenhum tópico"
       no_topics_body: "É sempre melhor <a href='%{searchUrl}'>pesquisar</a> por tópicos de conversa existentes antes de iniciar um novo, mas, se você tiver certeza de que o tópico que deseja ainda não está disponível, vá em frente e crie um novo tópico próprio. Procure o botão <kbd>+ Novo Tópico</kbd> no canto superior direito da lista de tópicos, categoria ou etiqueta para começar a criar um novo tópico nessa área."
