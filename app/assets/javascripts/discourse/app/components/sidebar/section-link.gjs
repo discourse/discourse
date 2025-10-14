@@ -31,7 +31,6 @@ export function isHex(input) {
 
 export default class SectionLink extends Component {
   @service currentUser;
-  @service router;
 
   constructor() {
     super(...arguments);
