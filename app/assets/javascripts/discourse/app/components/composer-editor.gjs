@@ -132,7 +132,10 @@ export default class ComposerEditor extends Component {
     return this.composer.get("model.topic");
   }
 
-  @discourseComputed("composer.model.requiredCategoryMissing")
+  @discourseComputed(
+    "composer.model.requiredCategoryMissing",
+    "currentUser.user_option.composition_mode"
+  )
   replyPlaceholder(requiredCategoryMissing) {
     let placeholder = "composer.reply_placeholder_choose_category";
 

@@ -141,11 +141,14 @@ export default class DEditor extends Component {
       return;
     }
 
-    await this.#saveRichEditorPreference(
+    const preference =
       oldValue === "true"
         ? USER_OPTION_COMPOSITION_MODES.rich
-        : USER_OPTION_COMPOSITION_MODES.markdown
-    ).finally(() => {
+        : USER_OPTION_COMPOSITION_MODES.markdown;
+
+    this.currentUser.set("user_option.composition_mode", preference);
+
+    await this.#saveRichEditorPreference().finally(() => {
       this.keyValueStore.remove("d-editor-prefers-rich-editor");
     });
   }
@@ -644,21 +647,30 @@ export default class DEditor extends Component {
     const preference = this.isRichEditorEnabled
       ? USER_OPTION_COMPOSITION_MODES.rich
       : USER_OPTION_COMPOSITION_MODES.markdown;
-    this.#debounceSaveRichEditorPreference(preference);
+
+    const oldPreference = this.currentUser.get("user_option.composition_mode");
+
+    this.currentUser.set("user_option.composition_mode", preference);
+
+    this.#debounceSaveRichEditorPreference(preference, oldPreference);
   }
 
-  #debounceSaveRichEditorPreference(preference) {
+  #debounceSaveRichEditorPreference(newPreference, oldPreference) {
     this._debounceSaveRichEditorPreference = discourseDebounce(
       this,
       this.#saveRichEditorPreference,
-      preference,
+      oldPreference,
       1000
     );
   }
 
-  #saveRichEditorPreference(preference) {
-    this.currentUser.set("user_option.composition_mode", preference);
-    return this.currentUser.save(["composition_mode"]);
+  #saveRichEditorPreference(oldPreference) {
+    return this.currentUser.save(["composition_mode"]).catch(() => {
+      // revert if save fails
+      if (oldPreference) {
+        this.currentUser.set("user_option.composition_mode", oldPreference);
+      }
+    });
   }
 
   @action
