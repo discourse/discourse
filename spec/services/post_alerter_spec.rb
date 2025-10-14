@@ -733,6 +733,24 @@ RSpec.describe PostAlerter do
         staged_user.notifications.where(notification_type: Notification.types[:linked]).count,
       ).to eq(0)
     end
+
+    it "does not notify when user has disabled linked post notifications" do
+      user.user_option.update!(notify_on_linked_posts: false)
+      linking_post
+
+      expect(user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(
+        0,
+      )
+    end
+
+    it "still notifies when user has enabled linked post notifications (default)" do
+      expect(user.user_option.notify_on_linked_posts).to eq(true)
+      linking_post
+
+      expect(user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(
+        1,
+      )
+    end
   end
 
   context "with @here" do

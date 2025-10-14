@@ -35,6 +35,13 @@ Discourse is large with long history. Understand context before changes.
 - Don't write obvious tests
 - Ruby: use `fab!()` over `let()`, system tests for UI (`spec/system`), use page objects for system spec finders (`spec/system/page_objects`)
 
+### Page Objects (System Specs)
+- Located in `spec/system/page_objects/pages/`, inherit from `PageObjects::Pages::Base`
+- NEVER store `find()` results - causes stale element references after re-renders
+- Use `has_x?` / `has_no_x?` patterns for state checks (finds fresh each time)
+- Action methods find+interact atomically, return `self` for chaining
+- Don't assert immediate UI feedback after clicks (tests browser, not app logic)
+
 ### Commands
 ```bash
 # Ruby tests
