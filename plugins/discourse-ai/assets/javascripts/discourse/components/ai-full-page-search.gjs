@@ -25,17 +25,29 @@ export default class AiFullPageSearch extends Component {
   @tracked AiResults = [];
   @tracked showingAiResults = false;
   @tracked sortOrder = this.args.sortOrder;
+  @tracked autoEnabledForZeroResults = false;
+  @tracked shouldAutoEnableWhenAiReady = false;
   initialSearchTerm = this.args.searchTerm;
 
   constructor() {
     super(...arguments);
     this.appEvents.on("full-page-search:trigger-search", this, this.onSearch);
+    this.appEvents.on(
+      "search:search_result_view",
+      this,
+      this.onSearchResultsLoaded
+    );
     this.onSearch();
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("full-page-search:trigger-search", this, this.onSearch);
+    this.appEvents.off(
+      "search:search_result_view",
+      this,
+      this.onSearchResultsLoaded
+    );
   }
 
   @action
@@ -46,8 +58,37 @@ export default class AiFullPageSearch extends Component {
 
     this.initialSearchTerm = this.args.searchTerm;
     this.searching = true;
+    this.autoEnabledForZeroResults = false;
+    this.shouldAutoEnableWhenAiReady = false;
     this.resetAiResults();
     return this.performHyDESearch();
+  }
+
+  @action
+  onSearchResultsLoaded() {
+    // enable AI results if we have zero regular results and AI results are ready
+    if (
+      this.hasZeroRegularResults &&
+      !this.showingAiResults &&
+      !this.autoEnabledForZeroResults &&
+      this.AiResults.length > 0
+    ) {
+      this.autoEnabledForZeroResults = true;
+      this.showingAiResults = true;
+      this.args.addSearchResults(this.AiResults, "topic_id");
+      this.appEvents.trigger(AI_RESULTS_TOGGLED, {
+        enabled: true,
+      });
+    }
+    // AI results not ready yet, auto-enable when ready
+    else if (
+      this.hasZeroRegularResults &&
+      !this.showingAiResults &&
+      !this.autoEnabledForZeroResults &&
+      this.AiResults.length === 0
+    ) {
+      this.shouldAutoEnableWhenAiReady = true;
+    }
   }
 
   get disableToggleSwitch() {
@@ -64,10 +105,35 @@ export default class AiFullPageSearch extends Component {
     return this.sortOrder === 0;
   }
 
+  get hasZeroRegularResults() {
+    if (!this.args.model) {
+      return false;
+    }
+    const postsCount = this.args.model.posts?.length || 0;
+    const categoriesCount = this.args.model.categories?.length || 0;
+    const tagsCount = this.args.model.tags?.length || 0;
+    const usersCount = this.args.model.users?.length || 0;
+    return postsCount + categoriesCount + tagsCount + usersCount === 0;
+  }
+
   get searchStateText() {
     if (!this.validSearchOrder) {
       return i18n(
         "discourse_ai.embeddings.semantic_search_results.unavailable"
+      );
+    }
+
+    // Auto-enabled and showing results:
+    if (
+      this.autoEnabledForZeroResults &&
+      this.showingAiResults &&
+      this.AiResults.length > 0
+    ) {
+      return i18n(
+        "discourse_ai.embeddings.semantic_search_results.zero_results_expanded",
+        {
+          count: this.AiResults.length,
+        }
       );
     }
 
@@ -160,6 +226,7 @@ export default class AiFullPageSearch extends Component {
     });
     if (this.showingAiResults) {
       this.args.addSearchResults([], "topic_id");
+      this.autoEnabledForZeroResults = false;
     } else {
       this.args.addSearchResults(this.AiResults, "topic_id");
     }
@@ -191,6 +258,21 @@ export default class AiFullPageSearch extends Component {
         });
 
         this.AiResults = model.posts;
+
+        if (
+          this.shouldAutoEnableWhenAiReady &&
+          !this.showingAiResults &&
+          !this.autoEnabledForZeroResults &&
+          this.AiResults.length > 0
+        ) {
+          this.autoEnabledForZeroResults = true;
+          this.showingAiResults = true;
+          this.shouldAutoEnableWhenAiReady = false;
+          this.args.addSearchResults(this.AiResults, "topic_id");
+          this.appEvents.trigger(AI_RESULTS_TOGGLED, {
+            enabled: true,
+          });
+        }
       })
       .catch(popupAjaxError)
       .finally(() => {

@@ -21,9 +21,7 @@ class ChatSetupInit {
   @service router;
   @service("chat") chatService;
   @service chatHistory;
-  @service site;
   @service siteSettings;
-  @service currentUser;
   @service appEvents;
 
   constructor(owner) {

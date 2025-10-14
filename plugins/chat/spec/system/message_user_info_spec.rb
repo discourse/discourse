@@ -74,7 +74,7 @@ RSpec.describe "Message user info", type: :system do
 
   context "with large time difference between messages" do
     fab!(:message_1) do
-      Fabricate(:chat_message, chat_channel: channel_1, user: current_user, created_at: 1.days.ago)
+      Fabricate(:chat_message, chat_channel: channel_1, user: current_user, created_at: 1.day.ago)
     end
     fab!(:message_2) { Fabricate(:chat_message, chat_channel: channel_1, user: current_user) }
 

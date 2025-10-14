@@ -21,9 +21,9 @@ class Chat::Api::DirectMessagesController < Chat::ApiController
       on_model_errors(:channel) do |model|
         render_json_error(model, type: :record_invalid, status: 422)
       end
-      on_failure { render(json: failed_json, status: 422) }
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_failed_contract do |contract|
-        render(json: failed_json.merge(errors: contract.errors.full_messages), status: 400)
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
     end
   end

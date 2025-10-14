@@ -18,7 +18,7 @@ RSpec.describe Jobs::StreamPostHelper do
           "I like to eat pie. It is a very good dessert. Some people are wasteful by throwing pie at others but I do not do that. I always eat the pie.",
       )
     end
-    fab!(:user) { Fabricate(:leader) }
+    fab!(:user, :leader)
 
     before do
       Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)

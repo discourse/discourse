@@ -5,10 +5,10 @@ import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { iconNode } from "discourse/lib/icon-library";
-import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
+import { Placeholder } from "discourse/models/post-stream";
 import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import {
@@ -213,8 +213,7 @@ export default createWidget("post-stream", {
   tagName: "div.post-stream.widget-post-stream",
 
   html(attrs) {
-    const posts = attrs.posts || [];
-    const postArray = posts.toArray();
+    const postArray = attrs.posts || [];
     const postArrayLength = postArray.length;
     const maxPostNumber =
       postArrayLength > 0 ? postArray[postArrayLength - 1].post_number : 0;

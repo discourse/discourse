@@ -2,7 +2,7 @@ import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
-import { and, gt } from "truth-helpers";
+import { and, gt, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -476,10 +476,14 @@ export default RouteTemplate(
         <div class="field">{{i18n "trust_level"}}</div>
         <div class="value">
           <ComboBox
+            class="change-trust-level-dropdown"
             @content={{@controller.site.trustLevels}}
             @nameProperty="detailedName"
             @value={{@controller.model.trustLevel.id}}
             @onChange={{fn (mut @controller.model.trust_level)}}
+            @options={{hash
+              disabled=(not @controller.model.can_change_trust_level)
+            }}
           />
 
           {{#if @controller.model.dirty}}
@@ -498,31 +502,33 @@ export default RouteTemplate(
           {{/if}}
         </div>
         <div class="controls">
-          {{#if @controller.model.canLockTrustLevel}}
-            {{#if @controller.hasLockedTrustLevel}}
-              {{icon "lock" title="admin.user.trust_level_locked_tip"}}
-              <DButton
-                @action={{fn @controller.lockTrustLevel false}}
-                @label="admin.user.unlock_trust_level"
-                class="btn-default"
-              />
-            {{else}}
-              {{icon "unlock" title="admin.user.trust_level_unlocked_tip"}}
-              <DButton
-                @action={{fn @controller.lockTrustLevel true}}
-                @label="admin.user.lock_trust_level"
-                class="btn-default"
-              />
+          {{#if @controller.model.can_change_trust_level}}
+            {{#if @controller.model.canLockTrustLevel}}
+              {{#if @controller.hasLockedTrustLevel}}
+                {{icon "lock" title="admin.user.trust_level_locked_tip"}}
+                <DButton
+                  @action={{fn @controller.lockTrustLevel false}}
+                  @label="admin.user.unlock_trust_level"
+                  class="btn-default"
+                />
+              {{else}}
+                {{icon "unlock" title="admin.user.trust_level_unlocked_tip"}}
+                <DButton
+                  @action={{fn @controller.lockTrustLevel true}}
+                  @label="admin.user.lock_trust_level"
+                  class="btn-default"
+                />
+              {{/if}}
             {{/if}}
-          {{/if}}
-          {{#if @controller.model.tl3Requirements}}
-            <LinkTo
-              @route="adminUser.tl3Requirements"
-              @model={{@controller.model}}
-              class="btn btn-default"
-            >
-              {{i18n "admin.user.trust_level_3_requirements"}}
-            </LinkTo>
+            {{#if @controller.model.tl3Requirements}}
+              <LinkTo
+                @route="adminUser.tl3Requirements"
+                @model={{@controller.model}}
+                class="btn btn-default"
+              >
+                {{i18n "admin.user.trust_level_3_requirements"}}
+              </LinkTo>
+            {{/if}}
           {{/if}}
         </div>
       </div>
@@ -674,7 +680,7 @@ export default RouteTemplate(
     {{#if @controller.currentUser.admin}}
       <section class="details">
         <h1>{{i18n "admin.groups.title"}}</h1>
-        <div class="display-row">
+        <div class="display-row admin-user__automatic-groups">
           <div class="field">{{i18n "admin.groups.automatic"}}</div>
           <div class="value">{{htmlSafe @controller.automaticGroups}}</div>
         </div>

@@ -11,7 +11,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
   describe "GET #index" do
     fab!(:llm_model) { Fabricate(:llm_model, enabled_chat_bot: true) }
-    fab!(:llm_model2) { Fabricate(:llm_model) }
+    fab!(:llm_model2, :llm_model)
     fab!(:ai_persona) do
       Fabricate(
         :ai_persona,

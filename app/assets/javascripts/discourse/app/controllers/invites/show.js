@@ -133,9 +133,19 @@ export default class InvitesShowController extends Controller {
   externalAuthsOnly() {
     return (
       !this.siteSettings.enable_local_logins &&
-      this.externalAuthsEnabled &&
-      !this.siteSettings.enable_discourse_connect
+      !this.siteSettings.enable_discourse_connect &&
+      this.externalAuthsEnabled
     );
+  }
+
+  @discourseComputed("existingUserId")
+  showWelcomeHeader(existingUserId) {
+    return !existingUserId;
+  }
+
+  @discourseComputed("externalAuthsOnly", "discourseConnectEnabled")
+  showSignupProgressBar(externalAuthsOnly, discourseConnectEnabled) {
+    return !(externalAuthsOnly || discourseConnectEnabled);
   }
 
   @discourseComputed(

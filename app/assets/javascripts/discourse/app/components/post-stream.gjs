@@ -13,7 +13,7 @@ import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import offsetCalculator from "discourse/lib/offset-calculator";
-import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import Post from "./post";
 import PostGap from "./post/gap";
@@ -63,12 +63,9 @@ export default class PostStream extends Component {
 
   @cached
   get posts() {
-    const postsToRender = this.capabilities.isAndroid
+    return this.capabilities.isAndroid
       ? this.args.postStream.posts
       : this.args.postStream.postsWithPlaceholders;
-
-    // TODO (glimmer-post-stream) ideally args.posts should be a TrackedArray
-    return postsToRender.toArray();
   }
 
   get firstAvailablePost() {

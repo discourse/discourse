@@ -56,6 +56,7 @@ module PageObjects
 
       def save_settings
         find("#save-category").click
+        expect(page).to have_css("#save-category", text: I18n.t("js.category.save"))
         self
       end
 
@@ -98,6 +99,10 @@ module PageObjects
         find("#create-topic")
       end
 
+      def category_box(category)
+        find(".category-boxes .category-box[data-category-id='#{category.id}']")
+      end
+
       CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR = ".category-navigation .nav-item_new"
 
       def has_no_new_topics?
@@ -110,6 +115,16 @@ module PageObjects
 
       def click_new
         page.find(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR).click
+      end
+
+      def click_setting_tab(name)
+        find(".edit-category-nav .edit-category-#{name}").click
+        self
+      end
+
+      def click_edit_category
+        find(".navigation-controls .edit-category").click
+        self
       end
 
       def has_public_access_message?
@@ -128,6 +143,10 @@ module PageObjects
       def has_no_setting_tab?(tab_name)
         tab_css = ".edit-category-#{tab_name}"
         page.has_no_css?(tab_css)
+      end
+
+      def has_category_title?(title)
+        page.has_css?(".category-header h1", text: title)
       end
     end
   end

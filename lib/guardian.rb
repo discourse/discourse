@@ -397,7 +397,7 @@ class Guardian
   end
 
   def can_change_trust_level?(user)
-    user && is_staff?
+    user && (is_admin? || (is_moderator? && SiteSetting.moderators_change_trust_levels))
   end
 
   # Support sites that have to approve users
@@ -545,7 +545,7 @@ class Guardian
     return false if !@user.admin?
 
     allowed_repos = GlobalSetting.allowed_theme_repos
-    if !allowed_repos.blank?
+    if allowed_repos.present?
       urls = allowed_repos.split(",").map(&:strip)
       return urls.include?(repo)
     end

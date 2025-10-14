@@ -2782,6 +2782,8 @@ gl:
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
       background_color: "Cor"
+      color_validations:
+        cant_be_empty: "non pode quedar en branco"
       styles:
         icon: "Icona"
         emoji: "Emoji"
@@ -4012,7 +4014,6 @@ gl:
         copy_to_clipboard: "Copiar ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
         copy_to_clipboard_error: "Erro ao copiar os datos ao portapapeis"
-        theme_owner: "Non editábel, propiedade de:"
         email_templates:
           title: "Correo electrónico"
           subject: "Asunto"

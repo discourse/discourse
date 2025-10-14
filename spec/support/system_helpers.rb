@@ -18,8 +18,7 @@ module SystemHelpers
            ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"].presence
       socat_pid =
         fork do
-          chrome_port = uri.port
-          exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
+          exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{CHROME_REMOTE_DEBUGGING_PORT}"
         end
     end
 
@@ -28,7 +27,7 @@ module SystemHelpers
       .each do |result|
         devtools_url = result["devtoolsFrontendUrl"]
 
-        devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
+        devtools_url.gsub!(":#{CHROME_REMOTE_DEBUGGING_PORT}", ":#{exposed_port}") if exposed_port
 
         if ENV["CODESPACE_NAME"]
           devtools_url =
@@ -75,7 +74,7 @@ module SystemHelpers
       ).join("|")
   end
 
-  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
+  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01, reason: nil)
     start ||= Time.zone.now
     backoff ||= frequency
     yield

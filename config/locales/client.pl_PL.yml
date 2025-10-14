@@ -1892,6 +1892,7 @@ pl_PL:
         verify_identity: "Aby kontynuować, zweryfikuj swoją tożsamość."
         title: "Reset hasła"
         remove: "Usuń hasło"
+        remove_disabled: "Aby usunąć hasło, konto musi się logować co najmniej za pomocą innej metody (np. klucza dostępu lub powiązanego konta zewnętrznego)."
         remove_detail: "Twoje konto nie będzie już dostępne za pomocą hasła, chyba że je zresetujesz."
       second_factor_backup:
         title: "Kody zapasowe weryfikacji dwuskładnikowej"
@@ -2762,6 +2763,7 @@ pl_PL:
       admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
       omniauth_disallow_totp: "Twoje konto ma włączone uwierzytelnianie dwuskładnikowe. Zaloguj się za pomocą swojego hasła."
+      works_with: "Działa z"
       activate_account: "Aktywuj konto"
       resend_title: "Wyślij ponownie e-mail aktywacyjny"
       change_email: "Zmień adres e-mail"
@@ -4600,6 +4602,10 @@ pl_PL:
       style: "Style"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
+      color_validations:
+        cant_be_empty: "nie może być puste"
+        incorrect_length: "musi być zgodny z formatem #RRGGBB lub #RGB"
+        non_hexdecimal: "może zawierać wyłącznie znaki szesnastkowe (0-9, AF)"
       styles:
         type: "Styl"
         icon: "Ikona"
@@ -7059,7 +7065,7 @@ pl_PL:
         copy_to_clipboard: "Skopiuj do schowka"
         copied_to_clipboard: "Tekst skopiowany do schowka."
         copy_to_clipboard_error: "Wystąpił błąd w trakcie kopiowania do schowka."
-        theme_owner: "Nie możliwe do edycji, należy do:"
+        theme_owner: "Własność:"
         email_templates:
           title: "E-mail"
           subject: "Temat"

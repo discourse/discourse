@@ -83,7 +83,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
     end
 
     describe "#gen_bulk_reprensentations" do
-      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:topic_2, :topic)
       fab!(:post_2_1) { Fabricate(:post, post_number: 1, topic: topic_2) }
       fab!(:post_2_2) { Fabricate(:post, post_number: 2, topic: topic_2) }
 
@@ -140,7 +140,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   end
 
   context "with open_ai as the provider" do
-    fab!(:vdef) { Fabricate(:open_ai_embedding_def) }
+    fab!(:vdef, :open_ai_embedding_def)
 
     def stub_vector_mapping(text, expected_embedding, result_status: 200)
       EmbeddingsGenerationStubs.openai_service(
@@ -175,7 +175,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   end
 
   context "with hugging_face as the provider" do
-    fab!(:vdef) { Fabricate(:embedding_definition) }
+    fab!(:vdef, :embedding_definition)
 
     def stub_vector_mapping(text, expected_embedding, result_status: 200)
       EmbeddingsGenerationStubs.hugging_face_service(
@@ -189,7 +189,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   end
 
   context "with google as the provider" do
-    fab!(:vdef) { Fabricate(:gemini_embedding_def) }
+    fab!(:vdef, :gemini_embedding_def)
 
     def stub_vector_mapping(text, expected_embedding, result_status: 200)
       EmbeddingsGenerationStubs.gemini_service(
@@ -204,7 +204,7 @@ RSpec.describe DiscourseAi::Embeddings::Vector do
   end
 
   context "with cloudflare as the provider" do
-    fab!(:vdef) { Fabricate(:cloudflare_embedding_def) }
+    fab!(:vdef, :cloudflare_embedding_def)
 
     def stub_vector_mapping(text, expected_embedding, result_status: 200)
       EmbeddingsGenerationStubs.cloudflare_service(

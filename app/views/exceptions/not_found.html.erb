@@ -29,8 +29,7 @@
 </div>
 
 <div class="title_wrapper">
-  <h1 class="title"><%= @title %></h1>
-  <p class="subtitle"><%= @subtitle %></p>
+  <h1 class="title"><%= sanitize(@title, tags: %w[a], attributes: %w[href class target rel]) %></h1>
   <a class="btn btn-primary btn-large --home" href="<%= Discourse.base_url %>"> <%= SvgSprite.raw_svg('house') %> <%= I18n.t('page_not_found.home') %>
   </a>
   </div>

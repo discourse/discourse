@@ -752,6 +752,7 @@ ar:
       resume: "استئناف"
       remove: "إزالة"
       remove_confirmation: "هل تريد بالتأكيد حذف هذه المسودة؟"
+      bulk_delete_confirmation: "احذف المسودات"
       new_topic: "مسودة موضوع جديد"
       new_private_message: "مسودة رسالة خاصة جديدة"
       edit_topic: "تعديل مسودة الموضوع"
@@ -4990,6 +4991,8 @@ ar:
       style: "الأنماط"
       background_color: "اللون"
       foreground_color: "لون النص"
+      color_validations:
+        cant_be_empty: "لا يمكن تركها خالية"
       styles:
         type: "النمط"
         icon: "الأيقونة"
@@ -7554,7 +7557,6 @@ ar:
         copy_to_clipboard: "نسخ الى الحافظة"
         copied_to_clipboard: "تم النسخ إلى الحافظة"
         copy_to_clipboard_error: "حدث خطأ في نسخ البيانات إلى الحافظة"
-        theme_owner: "غير قابلة للتعديل، مملوكة بواسطة:"
         email_templates:
           title: "البريد الإلكتروني"
           subject: "الموضوع"

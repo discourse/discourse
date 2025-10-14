@@ -30,7 +30,7 @@ export default class AnonymousTopicFooterButtons extends Component {
 
   <template>
     <div class="topic-footer-main-buttons">
-      {{#each this.buttons as |button|}}
+      {{#each this.buttons key="id" as |button|}}
         <DButton
           @action={{button.action}}
           @icon={{button.icon}}

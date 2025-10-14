@@ -379,6 +379,8 @@ RSpec.configure do |config|
       minio_runner_config.minio_console_port = 9_001 + 2 * test_i
     end
 
+    DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
+
     WebMock.disable_net_connect!(
       allow_localhost: true,
       allow: [
@@ -432,6 +434,7 @@ RSpec.configure do |config|
 
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
+
         begin
           super
         rescue StandardError => e
@@ -472,6 +475,81 @@ RSpec.configure do |config|
         end
       end
     end
+
+    module CapybaraPlaywrightBasePatch
+      private
+
+      def execute_async_client_settled_script(session)
+        result = session.evaluate_async_script(<<~JS)
+            const done = arguments[0];
+
+            if (window.clientSettled) {
+              window.clientSettled(#{Capybara.default_max_wait_time * 1000})
+                .then(done)
+                .catch((error) => { done(error.message) });
+            } else {
+              done();
+            }
+          JS
+
+        raise result if result.is_a? String
+      end
+
+      def wait_for_client_settled(method_name)
+        session = @driver.send(:session)
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+          execute_async_client_settled_script(session)
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        else
+          execute_async_client_settled_script(session)
+        end
+      end
+    end
+
+    module CapybaraPlaywrightNodePatch
+      include CapybaraPlaywrightBasePatch
+
+      NODE_METHODS_TO_PATCH = %i[
+        click
+        right_click
+        double_click
+        send_keys
+        hover
+        drag_to
+        scroll_by
+        scroll_to
+        trigger
+        set
+      ]
+
+      NODE_METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_client_settled(method_name)
+          result
+        end
+      end
+    end
+
+    module CapybaraPlaywrightBrowserPatch
+      include CapybaraPlaywrightBasePatch
+
+      METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
+
+      METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_client_settled(method_name)
+          result
+        end
+      end
+    end
+
+    Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
 
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
@@ -904,12 +982,14 @@ RSpec.configure do |config|
 
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
     def log_on_user(user, session, cookies, opts = {})
-      session[:current_user_id] = user.id
+      # Try using the main session as `session` sometimes is a server session
+      (cookies.try(:request).try(:session) || session)[:current_user_id] = user.id
       super
     end
 
     def log_off_user(session, cookies)
-      session[:current_user_id] = nil
+      # Try using the main session as `session` sometimes is a server session
+      (cookies.try(:request).try(:session) || session).delete(:current_user_id)
       super
     end
   end
@@ -1130,7 +1210,7 @@ def swap_2_different_characters(str)
 end
 
 def create_request_env(path: nil)
-  env = Rails.application.env_config.dup
+  env = Rails.application.env_config.dup.merge("rack.session" => ActionController::TestSession.new)
   env.merge!(Rack::MockRequest.env_for(path)) if path
   env
 end

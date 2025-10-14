@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import domFromString from "discourse/lib/dom-from-string";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
@@ -48,10 +49,9 @@ export function linkSeenHashtagsInContext(
     );
   });
 
-  return slugs
-    .map((slug) => slug.toLowerCase())
-    .uniq()
-    .filter((slug) => !checkedHashtags.has(slug));
+  return uniqueItemsFromArray(slugs.map((slug) => slug.toLowerCase())).filter(
+    (slug) => !checkedHashtags.has(slug)
+  );
 }
 
 function _findAndReplaceSeenHashtagPlaceholder(

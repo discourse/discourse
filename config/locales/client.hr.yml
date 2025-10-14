@@ -4366,6 +4366,8 @@ hr:
       style: "Stilovi"
       background_color: "Boja"
       foreground_color: "Boja teksta"
+      color_validations:
+        cant_be_empty: "ne može biti prazno"
       styles:
         type: "Stil"
         icon: "Ikona"
@@ -6407,7 +6409,6 @@ hr:
         copy_to_clipboard: "Kopirati u međuspremnik"
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Greška pri kopiranju podataka u međuspremnik"
-        theme_owner: "Nije moguće uređivati, u vlasništvu:"
         email_templates:
           title: "Email"
           subject: "predmet"

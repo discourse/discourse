@@ -3,8 +3,8 @@
 describe "Assign | Assigning topics", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
-  fab!(:admin1) { Fabricate(:admin) }
-  fab!(:admin2) { Fabricate(:admin) }
+  fab!(:admin1, :admin)
+  fab!(:admin2, :admin)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
 
@@ -180,7 +180,8 @@ describe "Assign | Assigning topics", type: :system do
                 I18n.t("js.action_codes.closed.disabled", when: "just now"),
               )
               expect(page).to have_no_css("#post_5")
-              try_until_success do
+
+              try_until_success(reason: "Relies on MessageBus updates") do
                 expect(find("#topic .assigned-to")).to have_content(admin2.username)
               end
             end

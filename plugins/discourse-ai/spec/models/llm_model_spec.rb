@@ -4,7 +4,7 @@ RSpec.describe LlmModel do
   before { enable_current_plugin }
 
   describe "api_key" do
-    fab!(:llm_model) { Fabricate(:seeded_model) }
+    fab!(:llm_model, :seeded_model)
 
     before { ENV["DISCOURSE_AI_SEEDED_LLM_API_KEY_2"] = "blabla" }
 

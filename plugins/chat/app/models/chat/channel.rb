@@ -57,9 +57,9 @@ module Chat
           end
     scope :public_channels,
           -> do
-            with_categories.where(chatable_type: public_channel_chatable_types).where(
-              "categories.id IS NOT NULL",
-            )
+            with_categories
+              .where(chatable_type: public_channel_chatable_types)
+              .where.not(categories: { id: nil })
           end
 
     delegate :empty?, to: :chat_messages, prefix: true

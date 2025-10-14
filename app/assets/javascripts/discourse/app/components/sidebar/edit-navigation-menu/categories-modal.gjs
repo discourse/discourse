@@ -17,103 +17,54 @@ import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { serializedAction, splitWhere } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
-class ActionSerializer {
-  constructor(perform) {
-    this.perform = perform;
-    this.processing = false;
-    this.queued = false;
-  }
-
-  async trigger() {
-    this.queued = true;
-
-    if (!this.processing) {
-      this.processing = true;
-
-      while (this.queued) {
-        this.queued = false;
-        await this.perform();
-      }
-
-      this.processing = false;
-    }
-  }
-}
-
-// Given an async method that takes no parameters, produce a method that
-// triggers the original method only if it is not currently executing it,
-// otherwise it will queue up to one execution of the method
-function serialized(target, key, descriptor) {
-  const originalMethod = descriptor.value;
-
-  descriptor.value = function () {
-    this[`_${key}_serializer`] ||= new ActionSerializer(() =>
-      originalMethod.apply(this)
-    );
-    this[`_${key}_serializer`].trigger();
-  };
-
-  return descriptor;
-}
-
-// Given a list, break into chunks starting a new chunk whenever the predicate
-// is true for an element.
-function splitWhere(elements, f) {
-  return elements.reduce((acc, el, i) => {
-    if (i === 0 || f(el)) {
-      acc.push([]);
-    }
-    acc[acc.length - 1].push(el);
-    return acc;
-  }, []);
-}
-
-// categories must be topologically sorted so that the parents appear before
-// the children
-function findPartialCategories(categories) {
-  const categoriesById = new Map(
-    categories.map((category) => [category.id, category])
-  );
-  const subcategoryCounts = new Map();
-  const subcategoryCountsRecursive = new Map();
-  const partialCategoryInfos = new Map();
-
-  for (const category of categories.slice().reverse()) {
-    const count = subcategoryCounts.get(category.parent_category_id) || 0;
-    subcategoryCounts.set(category.parent_category_id, count + 1);
-
-    const recursiveCount =
-      subcategoryCountsRecursive.get(category.parent_category_id) || 0;
-
-    subcategoryCountsRecursive.set(
-      category.parent_category_id,
-      recursiveCount + (subcategoryCountsRecursive.get(category.id) || 0) + 1
-    );
-  }
-
-  for (const [id, count] of subcategoryCounts) {
-    if (count === 5) {
-      if (id === undefined) {
-        // Root level categories (parent_category_id is undefined)
-        partialCategoryInfos.set(id, {
-          level: 0,
-          offset: subcategoryCountsRecursive.get(id),
-        });
-      } else if (categoriesById.has(id)) {
-        partialCategoryInfos.set(id, {
-          level: categoriesById.get(id).level + 1,
-          offset: subcategoryCountsRecursive.get(id),
-        });
-      }
-    }
-  }
-
-  return partialCategoryInfos;
-}
-
+// This modal is used to display a deep category tree (categories →
+// subcategories → sub-subcategories) but only load 5 items at a time for
+// performance, so there are some contortions we have to perform to load the
+// categories in the correct place.
+//
+// The key properties are:
+//
+// - fetchedCategories - Flat array of all loaded categories, stored in
+//     hierarchical order (parents before children)
+// - partialCategoryInfos - Map tracking which parents have exactly 5 children
+//     (meaning "might have more to load")
+//
+// The overall algorithm is:
+//
+// 1. Initial Load: Fetch first 5 categories from server in hierarchical order
+//   - Example:
+//     - grandparent
+//       - parent1
+//         - child1
+//         - child2
+//         - child3
+//       - parent2
+//       - parent3
+//       - ...
+//
+// 2. Detect partially loaded categories (findPartialCategories):
+//   - Count how many children each category has
+//   - If there are exactly 5, mark as "partial" (might have more since 5 is the page size)
+//   - Store the parent's ID and offset (how many to skip when loading more)
+//
+// 3. Display with buttons (recomputeGroupings):
+//   - Loop through fetchedCategories
+//   - Insert "Show more" button after the last child of any partial parent
+//   - Button contains parent ID, level, and offset
+//
+// 4. Click "Show more":
+//   - Call backend to get more children of parent X, starting at offset Y
+//   - Backend returns next batch (e.g., [child6, child7, ...])
+//
+// 5. Insert new categories (substituteInFetchedCategories):
+//   - Find where the last child of that parent is
+//   - Scan past any descendants (grandchildren, etc.)
+//   - Insert new categories after all existing descendants
+//   - Recalculate which parents are still partial
 export default class SidebarEditNavigationMenuCategoriesModal extends Component {
   @service currentUser;
   @service siteSettings;
@@ -127,6 +78,8 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   ]);
   selectedFilter = "";
   selectedMode = "everything";
+  fetchedCategories;
+  partialCategoryInfos;
   loadedFilter;
   loadedMode;
   loadedPage;
@@ -157,24 +110,49 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
       const elID = el.id;
       const elParentID = el.parent_category_id;
-      const nextParentID = this.fetchedCategories[i + 1]?.parent_category_id;
+      const nextCategory = this.fetchedCategories[i + 1];
+      const nextParentID = nextCategory?.parent_category_id;
 
       const nextIsSibling = nextParentID === elParentID;
       const nextIsChild = nextParentID === elID;
 
-      if (
-        !nextIsSibling &&
-        !nextIsChild &&
-        this.partialCategoryInfos.has(elParentID)
-      ) {
-        const { level, offset } = this.partialCategoryInfos.get(elParentID);
+      if (!nextIsSibling && !nextIsChild) {
+        // When leaving a subtree, check all ancestor levels to see if any need
+        // a "Show more" button. This handles cases where the last sibling has
+        // descendants - we need to show the parent's button after those descendants.
+        const categoriesById = new Map(
+          this.fetchedCategories.map((c) => [c.id, c])
+        );
 
-        result.push({
-          type: "show-more",
-          id: elParentID,
-          level,
-          offset,
-        });
+        const checkAncestor = (ancestorId) => {
+          if (this.partialCategoryInfos.has(ancestorId)) {
+            // Check if there are more children of this ancestor after the current element
+            const hasMoreChildrenAfter = this.fetchedCategories
+              .slice(i + 1)
+              .some((cat) => cat.parent_category_id === ancestorId);
+
+            if (!hasMoreChildrenAfter) {
+              const { level, offset } =
+                this.partialCategoryInfos.get(ancestorId);
+
+              result.push({
+                type: "show-more",
+                id: ancestorId,
+                level,
+                offset,
+              });
+            }
+          }
+        };
+
+        let currentAncestorId = elParentID;
+        while (currentAncestorId !== undefined) {
+          checkAncestor(currentAncestorId);
+
+          // Move up to the next ancestor
+          const ancestor = categoriesById.get(currentAncestorId);
+          currentAncestorId = ancestor?.parent_category_id;
+        }
       }
 
       return result;
@@ -189,7 +167,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
 
   setFetchedCategories(categories) {
     this.fetchedCategories = categories;
-    this.partialCategoryInfos = findPartialCategories(categories);
+    this.partialCategoryInfos = this.findPartialCategories(categories);
     this.recomputeGroupings();
   }
 
@@ -211,7 +189,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     // Recalculate the partialCategoryInfos using the full set of categories
     // to properly identify categories that now have exactly 5 subcategories
     // after loading more via the intersection observer
-    this.partialCategoryInfos = findPartialCategories(this.fetchedCategories);
+    this.partialCategoryInfos = this.findPartialCategories(
+      this.fetchedCategories
+    );
 
     this.recomputeGroupings();
   }
@@ -221,20 +201,69 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     this.recomputeGroupings();
 
     if (subcategories.length !== 0) {
-      const index =
-        this.fetchedCategories.findLastIndex(
-          (c) => c.parent_category_id === id
-        ) + 1;
+      // Find the last direct child of the parent
+      const lastDirectChildIndex = this.fetchedCategories.findLastIndex(
+        (c) => c.parent_category_id === id
+      );
 
-      this.fetchedCategories = [
-        ...this.fetchedCategories.slice(0, index),
-        ...subcategories,
-        ...this.fetchedCategories.slice(index),
-      ];
+      if (lastDirectChildIndex === -1) {
+        // No existing children, insert after the parent itself if it exists
+        const parentIndex = this.fetchedCategories.findIndex(
+          (c) => c.id === id
+        );
+        const index = parentIndex !== -1 ? parentIndex + 1 : 0;
+        this.fetchedCategories = [
+          ...this.fetchedCategories.slice(0, index),
+          ...subcategories,
+          ...this.fetchedCategories.slice(index),
+        ];
+      } else {
+        // Find the last descendant of the last direct child by looking for the
+        // next category that is not a descendant of any child of id
+        const childrenIds = this.fetchedCategories
+          .filter((c) => c.parent_category_id === id)
+          .map((c) => c.id);
+
+        const categoriesById = new Map(
+          this.fetchedCategories.map((c) => [c.id, c])
+        );
+
+        const isDescendantOfChild = (category) => {
+          let currentCategory = category;
+          while (
+            currentCategory &&
+            currentCategory.parent_category_id !== undefined
+          ) {
+            if (childrenIds.includes(currentCategory.parent_category_id)) {
+              return true;
+            }
+            currentCategory = categoriesById.get(
+              currentCategory.parent_category_id
+            );
+          }
+          return false;
+        };
+
+        let insertIndex = lastDirectChildIndex + 1;
+        while (insertIndex < this.fetchedCategories.length) {
+          if (!isDescendantOfChild(this.fetchedCategories[insertIndex])) {
+            break;
+          }
+          insertIndex++;
+        }
+
+        this.fetchedCategories = [
+          ...this.fetchedCategories.slice(0, insertIndex),
+          ...subcategories,
+          ...this.fetchedCategories.slice(insertIndex),
+        ];
+      }
 
       // Recalculate partial categories based on the full set of categories
       // to ensure we properly identify categories with exactly 5 subcategories
-      this.partialCategoryInfos = findPartialCategories(this.fetchedCategories);
+      this.partialCategoryInfos = this.findPartialCategories(
+        this.fetchedCategories
+      );
 
       // Only show "Show more" button if exactly 5 subcategories were returned,
       // which is the default page size and indicates there might be more to load.
@@ -263,6 +292,54 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     }
   }
 
+  // Count how many children each category has:
+  //
+  //  - If there are exactly 5, mark as "partial" (might have more since 5 is the page size)
+  //  - Store the parent's ID and offset (how many to skip when loading more)
+  //
+  // Categories must be topologically sorted so that the parents appear before
+  // the children.
+  findPartialCategories(categories) {
+    const categoriesById = new Map(
+      categories.map((category) => [category.id, category])
+    );
+    const subcategoryCounts = new Map();
+    const subcategoryCountsRecursive = new Map();
+    const partialCategoryInfos = new Map();
+
+    for (const category of categories.slice().reverse()) {
+      const count = subcategoryCounts.get(category.parent_category_id) || 0;
+      subcategoryCounts.set(category.parent_category_id, count + 1);
+
+      const recursiveCount =
+        subcategoryCountsRecursive.get(category.parent_category_id) || 0;
+
+      subcategoryCountsRecursive.set(
+        category.parent_category_id,
+        recursiveCount + (subcategoryCountsRecursive.get(category.id) || 0) + 1
+      );
+    }
+
+    for (const [id, count] of subcategoryCounts) {
+      if (count === 5) {
+        if (id === undefined) {
+          // Root level categories (parent_category_id is undefined)
+          partialCategoryInfos.set(id, {
+            level: 0,
+            offset: subcategoryCountsRecursive.get(id),
+          });
+        } else if (categoriesById.has(id)) {
+          partialCategoryInfos.set(id, {
+            level: categoriesById.get(id).level + 1,
+            offset: subcategoryCountsRecursive.get(id),
+          });
+        }
+      }
+    }
+
+    return partialCategoryInfos;
+  }
+
   @action
   didInsert(element) {
     this.observer.disconnect();
@@ -283,7 +360,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
     return opts;
   }
 
-  @serialized
+  @serializedAction
   async performSearch() {
     this.filtered = false;
 
@@ -362,9 +439,9 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
   }
 
   @action
-  async loadSubcategories(id, offset) {
+  loadSubcategories(id, offset) {
     this.subcategoryLoadList.push({ id, offset });
-    this.debouncedSendRequest();
+    this.performSearch();
   }
 
   debouncedSendRequest() {
@@ -528,6 +605,7 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                     {{didInsert this.didInsert}}
                     data-category-level={{c.level}}
                     class="sidebar-categories-form__category-row"
+                    data-test-category-id={{c.id}}
                   >
                     <label class="sidebar-categories-form__category-label">
                       <div class="sidebar-categories-form__category-wrapper">

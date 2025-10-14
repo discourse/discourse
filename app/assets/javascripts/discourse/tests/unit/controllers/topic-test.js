@@ -5,7 +5,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { forceMobile } from "discourse/lib/mobile";
-import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import { Placeholder } from "discourse/models/post-stream";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 function topicWithStream(streamDetails) {

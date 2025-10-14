@@ -3,7 +3,7 @@
 require_relative "dialect_context"
 
 RSpec.describe DiscourseAi::Completions::Dialects::Mistral do
-  fab!(:model) { Fabricate(:mistral_model) }
+  fab!(:model, :mistral_model)
   let(:context) { DialectContext.new(described_class, model) }
   let(:image100x100) { plugin_file_from_fixtures("100x100.jpg") }
   let(:upload100x100) do

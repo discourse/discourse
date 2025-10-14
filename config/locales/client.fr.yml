@@ -4130,6 +4130,8 @@ fr:
       style: "Styles"
       background_color: "Couleur"
       foreground_color: "Couleur du texte"
+      color_validations:
+        cant_be_empty: "ne peut pas être vide"
       styles:
         type: "Style"
         icon: "Icône"
@@ -6447,7 +6449,6 @@ fr:
         copy_to_clipboard: "Copier dans le presse-papier"
         copied_to_clipboard: "Copié dans le presse-papier"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
-        theme_owner: "Non modifiable, appartient à :"
         email_templates:
           title: "E-mail"
           subject: "Objet"

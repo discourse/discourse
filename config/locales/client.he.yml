@@ -661,6 +661,13 @@ he:
       resume: "המשך"
       remove: "הסרה"
       remove_confirmation: "למחוק את הטיוטה הזאת?"
+      bulk_delete: "מחיקת הנבחרים"
+      bulk_delete_confirmation: "מחיקת טיוטות"
+      bulk_delete_message:
+        one: "למחוק את הטיוטה הזאת?"
+        two: "למחוק את שתי הטיוטות האלה?"
+        many: "למחוק את %{count} הטיוטות האלה?"
+        other: "למחוק את %{count} הטיוטות האלה?"
       new_topic: "טיוטת נושא חדשה"
       new_private_message: "טיוטת הודעה אישית חדשה"
       edit_topic: "עריכת טיוטת נושא"
@@ -1884,6 +1891,7 @@ he:
         verify_identity: "כדי להמשיך, יש לאמת את זהותך."
         title: "אתחול סיסמה"
         remove: "הסרת סיסמה"
+        remove_disabled: "החשבון זקוק לפחות לשיטת התחברות אחת נוספת (למשל, מפתח סיסמה/Passkey או חשבון חיצוני מקושר) לפני הסרת הסיסמה."
         remove_detail: "החשבון שלך לא יהיה נגיש יותר עם סיסמה אל אם כן תאופס."
       second_factor_backup:
         title: "קודים כגיבוי לאימות דו־שלבי"
@@ -2755,6 +2763,7 @@ he:
       admin_not_allowed_from_ip_address: "הכניסה לניהול מכתובת IP זו אסורה."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
       omniauth_disallow_totp: "בחשבון שלך מופעל אימות דו־שלבי. נא להיכנס עם הססמה שלך."
+      works_with: "עובד עם"
       activate_account: "הפעלת חשבון"
       resend_title: "שליחה מחדש של הודעת הפעלה בדוא״ל"
       change_email: "שינוי כתובת דוא״ל"
@@ -4190,6 +4199,12 @@ he:
       empty: "אין פוסטים"
       aria_post_number: "%{title} - פוסט מס׳ %{postNumber}"
       bulk:
+        selected:
+          one: "פוסט נבחר"
+          two: "שני פוסטים נבחרו"
+          many: "%{count} פוסטים נבחרו"
+          other: "%{count} פוסטים נבחרו"
+        select_all: "בחירה בהכול"
         clear_all: "לפנות הכול"
         actions: "פעולות במרוכז"
     post:
@@ -4292,6 +4307,7 @@ he:
           edit: "עריכה"
           delete: "מחיקה"
         add: "הוספת תרגום חדש"
+        manage: "ניהול תרגומים (%{count} קיימים)"
         view:
           one: "הצגת שפה מתורגמת"
           two: "הצגת שתי שפות מתורגמות"
@@ -4581,6 +4597,10 @@ he:
       style: "סגנונות"
       background_color: "צבע"
       foreground_color: "צבע הטקסט"
+      color_validations:
+        cant_be_empty: "לא יכול להיות ריק"
+        incorrect_length: "חייב להתאים לתבנית ‎#RRGGBB‎ או ‎#RGB‎"
+        non_hexdecimal: "יכול להכיל תווים הקסדצימליים בלבד (0-9, A-F)"
       styles:
         type: "סגנון"
         icon: "סמל"
@@ -7034,7 +7054,7 @@ he:
         copy_to_clipboard: "העתקה ללוח"
         copied_to_clipboard: "הועתק ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
-        theme_owner: "לא ניתן לעריכה, שייך ל:"
+        theme_owner: "בבעלות:"
         email_templates:
           title: "דוא״ל"
           subject: "נושא"

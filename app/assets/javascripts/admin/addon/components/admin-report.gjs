@@ -15,6 +15,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import number from "discourse/helpers/number";
 import { reportModeComponent } from "discourse/lib/admin-report-additional-modes";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { exportEntity } from "discourse/lib/export-csv";
@@ -381,7 +382,7 @@ export default class AdminReport extends Component {
     // T and T+x, and all the ajax responses would occur after T+(x+y)
     // to avoid any inconsistencies we filter by period and make sure
     // the array contains only unique values
-    let filteredReports = this._reports.uniqBy("report_key");
+    let filteredReports = uniqueItemsFromArray(this._reports, "report_key");
     let foundReport;
 
     const sort = (report) => {

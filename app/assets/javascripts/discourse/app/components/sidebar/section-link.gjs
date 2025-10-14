@@ -6,7 +6,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { eq, or } from "truth-helpers";
+import { and, eq, not, or } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
@@ -64,6 +64,10 @@ export default class SectionLink extends Component {
         dropFrom: "3.3.0.beta1",
       });
       classNames.push(this.args.class);
+    }
+
+    if (this.args.href && this.args.href === this.args.exactUrlMatch?.value) {
+      classNames.push("exact-url-match");
     }
 
     if (
@@ -168,7 +172,7 @@ export default class SectionLink extends Component {
             @route={{@route}}
             @query={{or @query (hash)}}
             @models={{this.models}}
-            @current-when={{@currentWhen}}
+            @current-when={{and (not @exactUrlMatch) @currentWhen}}
             title={{@title}}
             data-link-name={{@linkName}}
             class={{this.linkClass}}

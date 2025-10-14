@@ -4141,6 +4141,8 @@ ug:
       style: "ئۇسلۇب"
       background_color: "رەڭ"
       foreground_color: "تېكىست رەڭگى"
+      color_validations:
+        cant_be_empty: "قۇرۇق قالمايدۇ"
       styles:
         type: "ئۇسلۇب"
         icon: "سىنبەلگە"
@@ -6457,7 +6459,6 @@ ug:
         copy_to_clipboard: "چاپلاش تاختىسىغا كۆچۈر"
         copied_to_clipboard: "چاپلاش تاختىسىغا كۆچۈرۈلدى"
         copy_to_clipboard_error: "سانلىق مەلۇماتنى چاپلاش تاختىسىغا كۆچۈرۈۋاتقاندا خاتالىق كۆرۈلدى"
-        theme_owner: "تەھرىرلەشكە بولمايدۇ، ئىگىسى:"
         email_templates:
           title: "ئېلخەت"
           subject: "ماۋزۇ"

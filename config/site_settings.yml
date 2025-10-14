@@ -238,6 +238,9 @@ basic:
     default: ""
     regex: "^GTM-"
     area: "analytics"
+  google_site_verification_token:
+    default: ""
+    area: "analytics"
   top_menu:
     client: true
     refresh: true
@@ -566,25 +569,31 @@ basic:
     area: "interface"
 
 login:
-  invite_only:
-    refresh: true
-    client: true
-    default: false
   login_required:
     refresh: true
     client: true
     default: false
+    area: "login"
   must_approve_users:
     client: true
     default: false
-  invite_code: ""
+  invite_only:
+    refresh: true
+    client: true
+    default: false
+    area: "login"
+  invite_code:
+    default: ""
+    area: "login"
   enable_local_logins:
     client: true
     default: true
+    area: "login"
   enable_local_logins_via_email:
     client: true
     default: true
     validator: "EnableLocalLoginsViaEmailValidator"
+    area: "login"
   enable_passkeys:
     client: true
     default: true
@@ -592,12 +601,15 @@ login:
   allow_new_registrations:
     client: true
     default: true
+    area: "login"
   enable_signup_cta:
     client: true
     default: true
+    area: "login"
   enable_discourse_id:
     default: false
     validator: "EnableDiscourseIdValidator"
+    area: "authenticators"
   discourse_id_client_id:
     default: ""
     hidden: true
@@ -613,10 +625,14 @@ login:
     hidden: true
   enable_google_oauth2_logins:
     default: false
-  google_oauth2_client_id: ""
+    area: "authenticators"
+  google_oauth2_client_id:
+    default: ""
+    area: "authenticators"
   google_oauth2_client_secret:
     default: ""
     secret: true
+    area: "authenticators"
   google_oauth2_prompt:
     default: ""
     type: list
@@ -625,87 +641,123 @@ login:
       - "none"
       - "consent"
       - "select_account"
+    area: "authenticators"
   google_oauth2_hd:
     default: ""
+    area: "authenticators"
   google_oauth2_hd_groups_service_account_admin_email:
     default: ""
+    area: "authenticators"
   google_oauth2_hd_groups_service_account_json:
     default: ""
     textarea: true
+    area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
+    area: "authenticators"
   enable_twitter_logins:
     default: false
+    area: "authenticators"
   twitter_consumer_key:
     default: ""
     regex: "^[\\w+-]+$"
+    area: "authenticators"
   twitter_consumer_secret:
     default: ""
     regex: "^[\\w+-]+$"
     secret: true
+    area: "authenticators"
   enable_facebook_logins:
     default: false
+    area: "authenticators"
   facebook_app_id:
     client: true
     default: ""
     regex: "^\\d+$"
+    area: "authenticators"
   facebook_app_secret:
     default: ""
     regex: "^[a-f0-9]+$"
     secret: true
+    area: "authenticators"
   enable_github_logins:
     default: false
+    area: "authenticators"
   github_client_id:
     default: ""
     regex: "^[a-zA-Z0-9\\.]+$"
+    area: "authenticators"
   github_client_secret:
     default: ""
     regex: "^[a-f0-9]+$"
     secret: true
+    area: "authenticators"
   enable_discord_logins:
     default: false
+    area: "authenticators"
   discord_client_id:
     default: ""
+    area: "authenticators"
   discord_secret:
     default: ""
     secret: true
+    area: "authenticators"
   discord_trusted_guilds:
     default: ""
     type: list
     list_type: simple
+    area: "authenticators"
   enable_linkedin_oidc_logins:
     default: false
     validator: "LinkedinOidcCredentialsValidator"
+    area: "authenticators"
   linkedin_oidc_client_id:
     default: ""
     regex: "^[a-z0-9]+$"
+    area: "authenticators"
   linkedin_oidc_client_secret:
     default: ""
     regex: "^[a-zA-Z0-9_=\\.]+$"
     secret: true
+    area: "authenticators"
   auth_skip_create_confirm:
     default: false
     client: true
+    area: "authenticators"
   auth_immediately:
     default: true
     client: true
+    area: "authenticators"
   auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
     client: true
-  auth_overrides_username: false
-  auth_overrides_name: false
-  auth_overrides_avatar: false
-  auth_require_interaction: true
+    area: "authenticators"
+  auth_overrides_username:
+    default: false
+    area: "authenticators"
+  auth_overrides_avatar:
+    default: false
+    area: "authenticators"
+  auth_overrides_name:
+    default: false
+    area: "authenticators"
+  auth_require_interaction:
+    default: true
+    area: "authenticators"
   enable_discourse_connect:
     client: true
     default: false
     validator: "EnableSsoValidator"
+    area: "discourseconnect"
   discourse_connect_allowed_redirect_domains:
     default: ""
     type: list
     list_type: simple
-  verbose_discourse_connect_logging: false
+    area: "discourseconnect"
+  verbose_discourse_connect_logging:
+    default: false
+    area: "discourseconnect"
   verbose_upload_logging:
     hidden: true
     default: false
@@ -718,23 +770,43 @@ login:
   discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+    area: "discourseconnect"
   discourse_connect_secret:
     default: ""
     secret: true
-  discourse_connect_overrides_groups: false
-  discourse_connect_overrides_bio: false
+    area: "discourseconnect"
+  discourse_connect_overrides_groups:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_overrides_bio:
+    default: false
+    area: "discourseconnect"
   discourse_connect_overrides_avatar:
     default: false
     client: true
-  discourse_connect_overrides_profile_background: false
-  discourse_connect_overrides_location: false
-  discourse_connect_overrides_website: false
-  discourse_connect_overrides_card_background: false
-  discourse_connect_not_approved_url: ""
+    area: "authenticators"
+  discourse_connect_overrides_profile_background:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_overrides_location:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_overrides_website:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_overrides_card_background:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_not_approved_url:
+    default: ""
+    area: "discourseconnect"
   discourse_connect_csrf_protection:
     default: true
     hidden: true
-  enable_discourse_connect_provider: false
+    area: "discourseconnect"
+  enable_discourse_connect_provider:
+    default: false
+    area: "discourseconnect"
   discourse_connect_provider_secrets:
     default: ""
     type: list
@@ -743,44 +815,60 @@ login:
     placeholder:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
+    area: "discourseconnect"
   blocked_email_domains:
     default: "mailinator.com"
     type: host_list
     list_type: simple
+    area: "login"
   allowed_email_domains:
     default: ""
     type: host_list
     list_type: simple
+    area: "login"
   normalize_emails:
     default: true
+    area: "login"
   auto_approve_email_domains:
     default: ""
     type: host_list
     list_type: simple
+    area: "login"
   hide_email_address_taken:
     client: true
     default: true
-  log_out_strict: false
+    area: "login"
+  log_out_strict:
+    default: false
+    area: "login"
   pending_users_reminder_delay_minutes:
     min: -1
     default: 480
-  persistent_sessions: true
+    area: "login"
+  persistent_sessions:
+    default: true
+    area: "login"
   maximum_session_age:
     default: 1440
     min: 1
     max: 175200
+    area: "login"
   show_signup_form_email_instructions:
     client: true
     default: true
+    area: "login"
   show_signup_form_username_instructions:
     client: true
     default: false
+    area: "login"
   show_signup_form_full_name_instructions:
     client: true
     default: false
+    area: "login"
   show_signup_form_password_instructions:
     client: true
     default: false
+    area: "login"
 
 users:
   min_username_length:
@@ -2020,7 +2108,7 @@ files:
     list_type: file_types
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
+    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg"
     refresh: true
     type: list
     list_type: file_types
@@ -2210,14 +2298,17 @@ files:
     default: 95
     min: 1
     max: 100
+    hidden: true
   recompress_original_jpg_quality:
     default: 90
     min: 1
     max: 100
+    hidden: true
   image_preview_jpg_quality:
     default: 90
     min: 1
     max: 100
+    hidden: true
   allow_staff_to_upload_any_file_in_pm:
     default: true
     client: true
@@ -2261,6 +2352,7 @@ files:
   composer_media_optimization_image_encode_quality:
     default: 75
     client: true
+    hidden: true
   composer_media_optimization_debug_mode:
     default: false
     client: true
@@ -2576,7 +2668,10 @@ security:
   allow_indexing_non_canonical_urls:
     default: true
     hidden: true
-  moderators_manage_categories_and_groups:
+  moderators_manage_categories:
+    default: false
+    client: true
+  moderators_manage_groups:
     default: false
     client: true
   moderators_change_post_ownership:
@@ -2588,6 +2683,8 @@ security:
   moderators_view_ips:
     default: true
     client: true
+  moderators_change_trust_levels:
+    default: true
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"

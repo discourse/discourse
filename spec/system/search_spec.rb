@@ -143,8 +143,8 @@ describe "Search", type: :system do
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
       find(".search-menu-container .search-result-topic", text: topic.title).click
 
-      try_until_success { expect(SearchLog.count).to eq(1) }
-      try_until_success { expect(SearchLog.last.search_result_id).not_to eq(nil) }
+      expect(SearchLog.count).to eq(1)
+      expect(SearchLog.last.search_result_id).not_to eq(nil)
 
       log = SearchLog.last
       expect(log.term).to eq("test")
@@ -269,7 +269,7 @@ describe "Search", type: :system do
 
   describe "Private Message Icon in Search Results" do
     fab!(:user)
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
     fab!(:pm_topic) do
       Fabricate(
         :private_message_topic,

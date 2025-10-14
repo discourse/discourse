@@ -2,27 +2,6 @@ nav.post-controls .actions button.cancel-streaming {
   display: none;
 }
 
-.ai-bot-chat {
-  #reply-control {
-    .user-selector,
-    .title-and-category,
-    #private-message-users {
-      display: none;
-    }
-  }
-
-  .persona-llm-selector {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .select-kit.single-select.dropdown-select-box ul.select-kit-collection {
-      max-height: 200px;
-    }
-    margin-bottom: 1em;
-  }
-}
-
 .ai-bot-pm {
   .gpt-persona {
     margin-bottom: 5px;

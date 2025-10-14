@@ -3911,6 +3911,8 @@ zh_CN:
       style: "样式"
       background_color: "颜色"
       foreground_color: "文本颜色"
+      color_validations:
+        cant_be_empty: "不能为空"
       styles:
         type: "样式"
         icon: "图标"
@@ -6189,7 +6191,7 @@ zh_CN:
         copy_to_clipboard: "复制到剪贴板"
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
-        theme_owner: "不可编辑，拥有者："
+        theme_owner: "拥有者："
         email_templates:
           title: "电子邮件"
           subject: "主题"

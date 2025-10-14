@@ -34,7 +34,7 @@ module DiscourseGamification
                  .new(leaderboard)
                  .as_json
                  .merge({ users: [], reason: e.message }),
-             status: 202
+             status: :accepted
     end
   end
 end

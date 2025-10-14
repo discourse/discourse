@@ -7,7 +7,7 @@
 de:
   admin_js:
     admin:
-      calendar: "Kalender und Ereignisse"
+      calendar: "Kalender & Ereignisse"
       site_settings:
         categories:
           discourse_post_event: "Discourse – Ereignis"

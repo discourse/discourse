@@ -3181,6 +3181,8 @@ hy:
       logo: "Կատեգորիայի Լոգոյի Նկարը"
       background_image: "Կատեգորիայի Ֆոնի Նկարը"
       background_color: "Գույն"
+      color_validations:
+        cant_be_empty: "չի կարող դատարկ լինել"
       styles:
         icon: "Պատկերակ"
         emoji: "Էմոջի"
@@ -4391,7 +4393,6 @@ hy:
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copied_to_clipboard: "Կրկնօրինակված է Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման Հարթակում տվյալների կրկնօրինակման սխալ"
-        theme_owner: "Խմբագրելի չէ, սեփականատերն է՝ "
         email_templates:
           title: "Էլ. հասցե"
           subject: "Թեմա"

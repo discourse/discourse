@@ -13,9 +13,7 @@ import { i18n } from "discourse-i18n";
 //
 // https://github.com/discourse/discourse/blob/110a3025dbf5c7205cec498c7d83dc258d994cfe/app/models/post.rb#L1013-L1035
 export default class ComposerVideoThumbnailUppy {
-  @service dialog;
   @service siteSettings;
-  @service session;
   @service capabilities;
 
   @tracked _uppyUpload;
@@ -56,7 +54,16 @@ export default class ComposerVideoThumbnailUppy {
     const eventName = this.capabilities.isIOS
       ? "onloadedmetadata"
       : "oncanplaythrough";
+
+    const stalledEventsTimer = setTimeout(() => {
+      // in some cases, no video events are hit (for example, when browser disables autoplay)
+      // we need to give up in those cases, otherwise the upload will hang
+      return callback();
+    }, 3000);
+
     video[eventName] = () => {
+      clearTimeout(stalledEventsTimer);
+
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 

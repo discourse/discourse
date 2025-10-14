@@ -44,6 +44,11 @@ export default class InterfaceColorSelector extends Component {
       @triggerClass="btn-flat sidebar-footer-actions-button"
       @identifier="interface-color-selector"
       @animated={{false}}
+      @ariaLabel={{i18n
+        "sidebar.footer.interface_color_selector.aria_label"
+        mode=this.interfaceColor.colorMode
+      }}
+      @title={{i18n "sidebar.footer.interface_color_selector.title"}}
       class="interface-color-selector icon"
       data-current-mode={{this.interfaceColor.colorMode}}
     >

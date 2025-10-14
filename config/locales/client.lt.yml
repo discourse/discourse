@@ -3407,6 +3407,8 @@ lt:
       logo: "Kategorijos logotipo paveiksliukas"
       background_image: "Kategorijos fono paveiksliukas"
       background_color: "Spalva"
+      color_validations:
+        cant_be_empty: "negali būti tuščia"
       styles:
         icon: "Ikona"
         emoji: "Emoji"
@@ -4677,7 +4679,6 @@ lt:
         copy_to_clipboard: "Nukopijuoti į iškarpinę"
         copied_to_clipboard: "Nukopijuota į iškirptę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
-        theme_owner: "Neredaguojama, priklauso:"
         email_templates:
           title: "Epaštas"
           subject: "Tema"

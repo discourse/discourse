@@ -14,6 +14,7 @@ import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import basePath from "discourse/helpers/base-path";
 import icon from "discourse/helpers/d-icon";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
 import { sanitize } from "discourse/lib/text";
@@ -383,7 +384,9 @@ export default class SiteSettingComponent extends Component {
   setDefaultValues() {
     this.buffered.set(
       "value",
-      this.bufferedValues.concat(this.defaultValues).uniq().join("|")
+      uniqueItemsFromArray(this.bufferedValues.concat(this.defaultValues)).join(
+        "|"
+      )
     );
     this.setting.validationMessage = null;
   }
@@ -504,7 +507,7 @@ export default class SiteSettingComponent extends Component {
             @action={{this.toggleSecret}}
             @icon={{if this.isSecret "far-eye" "far-eye-slash"}}
             @ariaLabel="admin.settings.unmask"
-            class="setting-toggle-secret"
+            class="btn-default setting-toggle-secret"
           />
         {{/if}}
 

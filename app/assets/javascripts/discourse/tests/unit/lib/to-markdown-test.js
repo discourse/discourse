@@ -424,7 +424,7 @@ helloWorld();</code>consectetur.`;
     <span class="filename">sherlock3_sig.jpg</span><span class="informations">5496×3664 2 MB</span><span class="expand"></span>
     </div></a>
     `;
-    let markdown = `![sherlock3_sig.jpg](https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg)`;
+    let markdown = `![sherlock3_sig.jpg|689x459](https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg)`;
 
     assert.strictEqual(toMarkdown(html), markdown);
 
@@ -437,7 +437,7 @@ helloWorld();</code>consectetur.`;
     <span class="filename">sherlock3_sig.jpg</span><span class="informations">5496×3664 2 MB</span><span class="expand"></span>
     </div></a>
     `;
-    markdown = `![sherlock3_sig.jpg](upload://1frsimI7TOtFJyD2LLyKSHM8JWe)`;
+    markdown = `![sherlock3_sig.jpg|689x459](upload://1frsimI7TOtFJyD2LLyKSHM8JWe)`;
 
     assert.strictEqual(toMarkdown(html), markdown);
   });

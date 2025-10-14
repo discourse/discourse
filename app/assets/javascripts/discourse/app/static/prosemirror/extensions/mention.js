@@ -1,5 +1,6 @@
 import { mentionRegex } from "pretty-text/mentions";
 import { ajax } from "discourse/lib/ajax";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
 import { i18n } from "discourse-i18n";
@@ -159,7 +160,7 @@ const extension = {
 
 async function fetchMentions(names, context) {
   // only fetch new mentions that are not already validated
-  names = names.uniq().filter((name) => {
+  names = uniqueItemsFromArray(names).filter((name) => {
     return !VALID_MENTIONS.has(name) && !INVALID_MENTIONS.has(name);
   });
 

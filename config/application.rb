@@ -84,12 +84,12 @@ module Discourse
     config.active_record.belongs_to_required_by_default = false
     config.active_record.yaml_column_permitted_classes = [
       Hash,
-      HashWithIndifferentAccess,
+      ActiveSupport::HashWithIndifferentAccess,
       Time,
       Symbol,
     ]
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
-    config.action_dispatch.cookies_serializer = :hybrid
+    config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
 
@@ -222,6 +222,14 @@ module Discourse
           controller.action_methods
         end
       end
+
+      puts <<~WARNING if Rails.env.local? && Rails.application.assets.config.manifest_path.exist?
+          \e[1;31m==========================================================================
+          WARNING: an asset manifest file exists. This means the assets won’t be
+          compiled automatically, and will be served statically instead.
+          To re-enable automatic compilation, you can run `bin/rails assets:clobber`
+          ==========================================================================\e[0m
+        WARNING
     end
 
     require "rbtrace" if ENV["RBTRACE"] == "1"

@@ -341,9 +341,9 @@ export function customNavItemHref(cb) {
 }
 
 export function clearNavItems() {
-  NavItem.customNavItemHrefs.clear();
-  NavItem.extraArgsCallbacks.clear();
-  NavItem.extraNavItemDescriptors.clear();
+  NavItem.customNavItemHrefs.length = 0;
+  NavItem.extraArgsCallbacks.length = 0;
+  NavItem.extraNavItemDescriptors.length = 0;
 }
 
 export function addNavItem(item) {

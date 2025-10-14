@@ -10,7 +10,6 @@ import { i18n } from "discourse-i18n";
 
 export default class SolvedAcceptedAnswer extends Component {
   @service siteSettings;
-  @service store;
 
   get topic() {
     return this.args.post.topic;

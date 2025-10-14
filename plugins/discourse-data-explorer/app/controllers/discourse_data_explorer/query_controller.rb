@@ -152,7 +152,10 @@ module DiscourseDataExplorer
       response.sending_file = true if params[:download]
 
       query_params = {}
-      query_params = MultiJson.load(params[:params]) if params[:params]
+      if params[:params]
+        query_params =
+          params[:params].is_a?(String) ? MultiJson.load(params[:params]) : params[:params]
+      end
 
       opts = { current_user: current_user&.username }
       opts[:explain] = true if params[:explain] == "true"
@@ -184,7 +187,7 @@ module DiscourseDataExplorer
           err_msg = "#{err_class}: #{err_msg}"
         end
 
-        render json: { success: false, errors: [err_msg] }, status: 422
+        render json: { success: false, errors: [err_msg] }, status: :unprocessable_entity
       else
         content_disposition =
           "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"

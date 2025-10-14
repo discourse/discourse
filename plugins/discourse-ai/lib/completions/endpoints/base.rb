@@ -30,9 +30,7 @@ module DiscourseAi
 
             endpoints << DiscourseAi::Completions::Endpoints::Ollama if !Rails.env.production?
 
-            if Rails.env.test? || Rails.env.development?
-              endpoints << DiscourseAi::Completions::Endpoints::Fake
-            end
+            endpoints << DiscourseAi::Completions::Endpoints::Fake if Rails.env.local?
 
             endpoints.detect(-> { raise DiscourseAi::Completions::Llm::UNKNOWN_MODEL }) do |ek|
               ek.can_contact?(provider_name)
@@ -290,7 +288,7 @@ module DiscourseAi
                   log.response_tokens,
                 )
 
-                if Rails.env.development? && !ENV["DISCOURSE_AI_NO_DEBUG"]
+                if Rails.env.development? && ENV["DISCOURSE_AI_DEBUG"]
                   puts "#{self.class.name}: request_tokens #{log.request_tokens} response_tokens #{log.response_tokens}"
                 end
               end
@@ -462,11 +460,7 @@ module DiscourseAi
           if xml_stripper
             response_data.map! do |partial|
               stripped = (xml_stripper << partial) if partial.is_a?(String)
-              if stripped.present?
-                stripped
-              else
-                partial
-              end
+              stripped.presence || partial
             end
             response_data << xml_stripper.finish
           end

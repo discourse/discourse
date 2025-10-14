@@ -77,10 +77,7 @@ RSpec.describe "Admin AI persona configuration", type: :system do
     form.field("name").fill_in("Test Persona 1")
     form.field("enabled").toggle
 
-    try_until_success { expect(persona.reload.enabled).to eq(true) }
-
-    persona.reload
-    expect(persona.enabled).to eq(true)
+    expect(persona.reload.enabled).to eq(true)
     expect(persona.name).not_to eq("Test Persona 1")
   end
 
@@ -93,8 +90,7 @@ RSpec.describe "Admin AI persona configuration", type: :system do
     form.field("name").fill_in(updated_name)
     form.field("enabled").toggle
 
-    try_until_success { expect(persona.reload.enabled).to eq(true) }
-
+    expect(persona.reload.enabled).to eq(true)
     expect(form.field("name").value).to eq(updated_name)
   end
 
@@ -107,8 +103,7 @@ RSpec.describe "Admin AI persona configuration", type: :system do
     form.field("name").fill_in(updated_name)
     form.field("priority").toggle
 
-    try_until_success { expect(persona.reload.priority).to eq(true) }
-
+    expect(persona.reload.priority).to eq(true)
     expect(form.field("name").value).to eq(updated_name)
   end
 

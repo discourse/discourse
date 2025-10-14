@@ -1223,6 +1223,7 @@ pt:
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
+    old_post_notice_days: "O número de dias após os quais os avisos de publicação de novo utilizador e utilizador existente serão ocultados. O aviso oficial de publicação permanecerá sempre visível."
     blur_tl0_flagged_posts_media: "Desfocar imagens sinalizadas para ocultar conteúdo potencialmente NSPT."
     default_email_digest_frequency: "Por defeito, quantas frequentemente os utilizadores recebem emails de resumo."
     default_include_tl0_in_digests: "Incluir publicações de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
@@ -1284,6 +1285,9 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
+  filter:
+    description:
+      in: "Filtrar tópicos nas listas pessoais"
   discourse_connect:
     login_error: "Erro de Início de Sessão"
     not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
@@ -1796,6 +1800,7 @@ pt:
     title: "Oops! Essa página não existe or é privada."
     see_more: "Mais"
     search_button: "Pesquisar"
+    placeholder: "Procurar tópicos pelo título ou palavras-chave…"
   upload:
     edit_reason: "cópias das imagens locais transferidas"
     unauthorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."

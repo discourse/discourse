@@ -267,7 +267,7 @@ class TagsController < ::ApplicationController
         end
         render json: success_json
       rescue Discourse::InvalidParameters => e
-        render json: failed_json.merge(errors: [e.message]), status: 422
+        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
       end
     end
   end
@@ -328,7 +328,7 @@ class TagsController < ::ApplicationController
 
     filter_params[:category] = Category.find_by_id(params[:categoryId]) if params[:categoryId]
 
-    if !params[:q].blank?
+    if params[:q].present?
       clean_name = DiscourseTagging.clean_tag(params[:q])
       filter_params[:term] = clean_name
       filter_params[:order_search_results] = true
@@ -444,7 +444,7 @@ class TagsController < ::ApplicationController
       synonym.update!(target_tag: nil)
       render json: success_json
     else
-      render json: failed_json, status: 400
+      render json: failed_json, status: :bad_request
     end
   end
 

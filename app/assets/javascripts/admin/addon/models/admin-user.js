@@ -1,21 +1,28 @@
 import { filter, gt, lt, not, or } from "@ember/object/computed";
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { propertyNotEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { userPath } from "discourse/lib/url";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class AdminUser extends User {
-  static find(user_id) {
-    return ajax(`/admin/users/${user_id}.json`).then((result) => {
-      result.loadedDetails = true;
-      return AdminUser.create(result);
-    });
+  /**
+   * Retrieves user details for the specified user ID and formats the result based on the provided options.
+   *
+   * @param {string|number} user_id - The ID of the user to be retrieved.
+   * @param {Object} [opts] - Options to customize the result format.
+   * @param {boolean} [opts.raw=false] - If true, returns the raw response instead of formatting it using AdminUser.create.
+   * @return {Promise<Object|AdminUser>} A promise that resolves with either the raw response object or an instance of AdminUser.
+   */
+  static async find(user_id, opts = { raw: false }) {
+    const result = await ajax(`/admin/users/${user_id}.json`);
+    result.loadedDetails = true;
+    return opts?.raw ? result : AdminUser.create(result);
   }
 
   static findAll(query, userFilter) {
@@ -25,6 +32,8 @@ export default class AdminUser extends User {
   }
 
   adminUserView = true;
+
+  @trackedArray groups;
 
   @filter("groups", (g) => !g.automatic && Group.create(g)) customGroups;
   @filter("groups", (g) => g.automatic && Group.create(g)) automaticGroups;
@@ -84,10 +93,7 @@ export default class AdminUser extends User {
     return ajax(`/admin/users/${this.id}/groups/${groupId}`, {
       type: "DELETE",
     }).then(() => {
-      this.set(
-        "groups.[]",
-        this.groups.filter((group) => group.id !== groupId)
-      );
+      this.groups = this.groups.filter((group) => group.id !== groupId);
       if (this.primary_group_id === groupId) {
         this.set("primary_group_id", null);
       }
@@ -338,15 +344,17 @@ export default class AdminUser extends User {
     });
   }
 
-  loadDetails() {
+  async loadDetails() {
     if (this.loadedDetails) {
-      return Promise.resolve(this);
+      return this;
     }
 
-    return AdminUser.find(this.id).then((result) => {
-      const userProperties = Object.assign(result, { loadedDetails: true });
-      this.setProperties(userProperties);
-    });
+    // we need to ask find to provide a raw object instead of AdminUser model because we're using
+    // setProperties to update the values. Otherwise we would miss tracked properties which are not enumerable.
+    const userProperties = await AdminUser.find(this.id, { raw: true });
+    this.setProperties(userProperties);
+
+    return this;
   }
 
   @discourseComputed("tl3_requirements")

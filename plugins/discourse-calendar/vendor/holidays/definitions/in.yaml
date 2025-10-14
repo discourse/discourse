@@ -119,7 +119,7 @@ months:
       limited: [2025]
   - name: Diwali
     regions: [in]
-    mday: 21
+    mday: 20
     year_ranges:
       limited: [2025]
   - name: Govardhan Puja

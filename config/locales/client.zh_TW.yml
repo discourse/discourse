@@ -3729,6 +3729,8 @@ zh_TW:
       background_image: "分類背景圖片"
       background_image_dark: "深色類別背景圖片"
       background_color: "顏色"
+      color_validations:
+        cant_be_empty: "不能空白"
       styles:
         icon: "圖示"
         emoji: "Emoji"
@@ -5740,7 +5742,6 @@ zh_TW:
         copy_to_clipboard: "複製至剪貼簿"
         copied_to_clipboard: "已複製至剪貼簿"
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"
-        theme_owner: "無法編輯，擁有者為："
         email_templates:
           title: "電子信箱"
           subject: "主旨"

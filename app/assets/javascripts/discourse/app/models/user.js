@@ -12,6 +12,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import {
   INTERFACE_COLOR_MODES,
@@ -69,30 +70,30 @@ export function extendTextSizeCookie() {
 const isForever = (dt) => moment().diff(dt, "years") < -100;
 
 let userFields = [
-  "bio_raw",
-  "website",
-  "location",
-  "name",
-  "title",
-  "locale",
-  "custom_fields",
-  "user_fields",
-  "muted_usernames",
-  "ignored_usernames",
   "allowed_pm_usernames",
-  "profile_background_upload_url",
+  "bio_raw",
   "card_background_upload_url",
-  "muted_tags",
-  "tracked_tags",
-  "watched_tags",
-  "watching_first_post_tags",
+  "custom_fields",
   "date_of_birth",
-  "primary_group_id",
   "flair_group_id",
-  "user_notification_schedule",
+  "ignored_usernames",
+  "locale",
+  "location",
+  "muted_tags",
+  "muted_usernames",
+  "name",
+  "primary_group_id",
+  "profile_background_upload_url",
   "sidebar_category_ids",
   "sidebar_tag_names",
   "status",
+  "title",
+  "tracked_tags",
+  "user_fields",
+  "user_notification_schedule",
+  "watched_tags",
+  "watching_first_post_tags",
+  "website",
 ];
 
 export function addSaveableUserField(fieldName) {
@@ -100,47 +101,48 @@ export function addSaveableUserField(fieldName) {
 }
 
 let userOptionFields = [
-  "mailing_list_mode",
-  "mailing_list_mode_frequency",
-  "external_links_in_new_tab",
+  "allow_private_messages",
+  "auto_track_topics_after_msecs",
+  "automatically_unpin_topics",
+  "bookmark_auto_delete_preference",
+  "color_scheme_id",
+  "composition_mode",
+  "dark_scheme_id",
+  "default_calendar",
+  "digest_after_minutes",
+  "dynamic_favicon",
   "email_digests",
   "email_in_reply_to",
-  "email_messages_level",
   "email_level",
+  "email_messages_level",
   "email_previous_replies",
-  "color_scheme_id",
-  "dark_scheme_id",
-  "interface_color_mode",
-  "dynamic_favicon",
-  "enable_quoting",
-  "enable_smart_lists",
+  "enable_allowed_pm_users",
   "enable_defer",
   "enable_markdown_monospace_font",
-  "automatically_unpin_topics",
-  "digest_after_minutes",
-  "new_topic_duration_minutes",
-  "auto_track_topics_after_msecs",
-  "notification_level_when_replying",
-  "like_notification_frequency",
-  "include_tl0_in_digests",
-  "theme_ids",
-  "allow_private_messages",
-  "enable_allowed_pm_users",
-  "homepage_id",
-  "hide_profile",
+  "enable_quoting",
+  "enable_smart_lists",
+  "external_links_in_new_tab",
   "hide_presence",
-  "text_size",
-  "title_count_mode",
-  "timezone",
-  "skip_new_user_tips",
+  "hide_profile",
+  "homepage_id",
+  "include_tl0_in_digests",
+  "interface_color_mode",
+  "like_notification_frequency",
+  "mailing_list_mode",
+  "mailing_list_mode_frequency",
+  "new_topic_duration_minutes",
+  "notification_level_when_replying",
+  "notify_on_linked_posts",
   "seen_popups",
-  "default_calendar",
-  "bookmark_auto_delete_preference",
   "sidebar_link_to_filtered_list",
   "sidebar_show_count_of_new_items",
-  "watched_precedence_over_muted",
+  "skip_new_user_tips",
+  "text_size",
+  "theme_ids",
+  "timezone",
+  "title_count_mode",
   "topics_unread_when_closed",
-  "composition_mode",
+  "watched_precedence_over_muted",
 ];
 
 export function addSaveableUserOptionField(fieldName) {
@@ -212,7 +214,6 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   @service appEvents;
-  @service userTips;
 
   @tracked do_not_disturb_until;
   @tracked status;
@@ -1161,8 +1162,7 @@ export default class User extends RestModel.extend(Evented) {
       }
     });
 
-    return titles
-      .uniq()
+    return uniqueItemsFromArray(titles)
       .sort()
       .map((title) => {
         return {
@@ -1241,7 +1241,7 @@ export default class User extends RestModel.extend(Evented) {
   calculateMutedIds(notificationLevel, id, type) {
     const muted_ids = this.get(type);
     if (notificationLevel === NotificationLevels.MUTED) {
-      return muted_ids.concat(id).uniq();
+      return uniqueItemsFromArray(muted_ids.concat(id));
     } else {
       return muted_ids.filter((existing_id) => existing_id !== id);
     }
