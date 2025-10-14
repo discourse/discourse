@@ -484,6 +484,9 @@ module CookedProcessorMixin
   def process_hotlinked_image(img)
     onebox = img.ancestors(".onebox, .onebox-body").first
 
+    # Skip hotlinked media processing if @post is not available (e.g., for chat messages)
+    return true if @post.nil?
+
     @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).index_by(&:url)
     normalized_src =
       PostHotlinkedMedia.normalize_src(img["src"] || img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR])
