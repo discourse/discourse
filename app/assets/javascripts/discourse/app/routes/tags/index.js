@@ -39,12 +39,6 @@ export default class TagsIndex extends DiscourseRoute {
   }
 
   @action
-  showTagGroups() {
-    this.router.transitionTo("tagGroups");
-    return true;
-  }
-
-  @action
   triggerRefresh() {
     this.refresh();
   }
