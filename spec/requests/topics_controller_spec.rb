@@ -1194,9 +1194,15 @@ RSpec.describe TopicsController do
         expect(response.status).to eq(200)
         expect(closed_user_topic.reload.closed).to eq(true)
 
-        body = response.parsed_body
+        put "/t/#{closed_user_topic.id}/status.json", params: { status: "closed", enabled: "0" }
 
-        expect(body["topic_status_update"]).to eq(nil)
+        expect(response.status).to eq(200)
+        expect(closed_user_topic.reload.closed).to eq(false)
+
+        put "/t/#{closed_user_topic.id}/status.json", params: { status: "closed", enabled: true }
+
+        expect(response.status).to eq(200)
+        expect(closed_user_topic.reload.closed).to eq(true)
       end
     end
 
