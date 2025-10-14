@@ -2,36 +2,76 @@ import { get } from "@ember/object";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
 /**
+ * Adds a value to the array if it does not already exist in the array.
+ *
+ * @param {Array} target - The array to check and add the value to.
+ * @param {*} value - The value to add to the array if it doesn't already exist.
+ * @return {Array} The updated array containing the value if it was not already present.
+ */
+export function addUniqueValueToArray(target, value) {
+  if (!target.includes(value)) {
+    target.push(value);
+  }
+
+  return target;
+}
+
+/**
+ * Adds multiple values to the specified array only if they do not already exist in the array.
+ * This function iterates through the provided values and ensures each value is checked and added individually.
+ *
+ * @param {Array} target The array to which values will be added if they do not already exist.
+ * @param {Array} values The array of values to check and add to the target array if they are not present.
+ * @return {void} This function does not return a value; it directly modifies the input array.
+ */
+export function addUniqueValuesToArray(target, values) {
+  if (!Array.isArray(target)) {
+    throw new TypeError("addUniqueValuesToArray: 'target' must be an array");
+  }
+  if (!Array.isArray(values)) {
+    throw new TypeError("addUniqueValuesToArray: 'values' must be an array");
+  }
+
+  for (const value of values) {
+    addUniqueValueToArray(target, value);
+  }
+}
+
+/**
  * Removes all occurrences of a specified value from an array.
  *
- * @param {Array} array - The array from which the value needs to be removed.
+ * @param {Array} target - The array from which the value needs to be removed.
  * @param {*} value - The value to be removed from the array.
  * @return {Array} The modified array with the specified value removed.
  */
-export function removeValueFromArray(array, value) {
-  let loc = array.length || 0;
+export function removeValueFromArray(target, value) {
+  if (!Array.isArray(target)) {
+    throw new TypeError("removeValueFromArray: 'target' must be an array");
+  }
+
+  let loc = target.length || 0;
   while (--loc >= 0) {
-    if (array[loc] === value) {
-      array.splice(loc, 1);
+    if (target[loc] === value) {
+      target.splice(loc, 1);
     }
   }
-  return array;
+  return target;
 }
 
 /**
  * Removes multiple objects from an array by iterating through the provided values
  * and removing each value from the given array.
  *
- * @param {Array} array - The array from which objects will be removed.
+ * @param {Array} target - The array from which objects will be removed.
  * @param {Array} values - An array of objects to be removed from the given array.
  * @return {Array} The updated array with specified objects removed.
  */
-export function removeValuesFromArray(array, values) {
+export function removeValuesFromArray(target, values) {
   for (let i = values.length - 1; i >= 0; i--) {
-    removeValueFromArray(array, values[i]);
+    removeValueFromArray(target, values[i]);
   }
 
-  return array;
+  return target;
 }
 
 /**

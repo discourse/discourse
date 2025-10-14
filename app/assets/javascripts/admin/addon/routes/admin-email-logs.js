@@ -7,11 +7,6 @@ import IncomingEmail from "admin/models/incoming-email";
 export default class AdminEmailLogsRoute extends DiscourseRoute {
   @service modal;
 
-  setupController(controller) {
-    super.setupController(...arguments);
-    controller.set("status", this.status);
-  }
-
   @action
   async showIncomingEmail(id) {
     const model = await IncomingEmail.find(id);
