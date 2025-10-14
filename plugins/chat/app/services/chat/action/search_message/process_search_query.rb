@@ -28,6 +28,8 @@ module Chat
 
         def call
           filters = []
+          filtered_messages = messages
+
           processed_query =
             query
               .to_s
@@ -39,11 +41,23 @@ module Chat
 
                 # Check for @username filter
                 if word =~ /\A\@(\S+)\z/i
-                  (filters ||= []) << [:username, $1]
+                  filters << [:username, $1]
+                  filtered_messages =
+                    Chat::Action::SearchMessage::ApplyUsernameFilter.call(
+                      messages: filtered_messages,
+                      match: $1,
+                      guardian:,
+                    )
                   found = true
                   # Check for #channel filter
                 elsif word =~ /\A\#(\S+)\z/i
-                  (filters ||= []) << [:channel, $1]
+                  filters << [:channel, $1]
+                  filtered_messages =
+                    Chat::Action::SearchMessage::ApplyChannelFilter.call(
+                      messages: filtered_messages,
+                      match: $1,
+                      guardian:,
+                    )
                   found = true
                 end
 
@@ -52,35 +66,7 @@ module Chat
               .compact
               .join(" ")
 
-          filtered_messages = apply_filters(messages, guardian, filters)
-
           Result.new(processed_query, filters, filtered_messages)
-        end
-
-        private
-
-        def apply_filters(messages, guardian, filters)
-          filters&.each do |filter_type, match|
-            messages =
-              case filter_type
-              when :username
-                Chat::Action::SearchMessage::ApplyUsernameFilter.call(
-                  messages: messages,
-                  match: match,
-                  guardian: guardian,
-                )
-              when :channel
-                Chat::Action::SearchMessage::ApplyChannelFilter.call(
-                  messages: messages,
-                  match: match,
-                  guardian: guardian,
-                )
-              else
-                messages
-              end
-          end
-
-          messages
         end
       end
     end
