@@ -71,6 +71,14 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end
 
+# We don't use ActiveRecord for these models, so no need to include in schema cache
+# Avoids the "unknown OID" warnings
+ActiveRecord.schema_cache_ignored_tables.push(
+  "ai_topics_embeddings",
+  "ai_posts_embeddings",
+  "ai_document_fragments_embeddings",
+)
+
 after_initialize do
   if defined?(Rack::MiniProfiler)
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
