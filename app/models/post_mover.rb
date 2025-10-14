@@ -277,8 +277,9 @@ class PostMover
         created_at: post.created_at,
         guardian: Guardian.new(user),
         skip_jobs: true,
+        no_bump: true,
       )
-    new_post = @post_creator.create!
+    new_post = @post_creator.create! # !! This line
 
     move_email_logs(post, new_post)
 
