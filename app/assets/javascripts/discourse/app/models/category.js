@@ -864,9 +864,7 @@ export default class Category extends RestModel {
   @discourseComputed("topics")
   featuredTopics(topics) {
     if (topics && topics.length) {
-      return topics
-        .slice(0, this.num_featured_topics || 2)
-        .map((t) => Topic.create(t));
+      return topics.slice(0, this.num_featured_topics || 2);
     }
   }
 
