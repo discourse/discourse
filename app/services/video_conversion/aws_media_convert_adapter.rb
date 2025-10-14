@@ -127,6 +127,10 @@ module VideoConversion
       begin
         url = "//#{s3_store.s3_bucket}.s3.dualstack.#{SiteSetting.s3_region}.amazonaws.com/#{path}"
 
+        # Set the correct ACL based on the original upload's security status
+        # This ensures the optimized video has the same permissions as the original
+        s3_store.update_access_control(path, @upload.secure?)
+
         optimized_video = create_optimized_video_record(output_path, new_sha1, object.size, url)
 
         if optimized_video

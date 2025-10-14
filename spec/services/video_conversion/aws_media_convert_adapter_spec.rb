@@ -280,11 +280,16 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       allow(s3_object).to receive(:exists?).and_return(true)
       allow(s3_object).to receive(:size).and_return(1024)
       allow(OptimizedVideo).to receive(:create_for).and_return(true)
+      allow(s3_store).to receive(:update_access_control)
 
       adapter.handle_completion(job_id, output_path, new_sha1)
 
       expect(s3_object).to have_received(:exists?)
       expect(s3_object).to have_received(:size)
+      expect(s3_store).to have_received(:update_access_control).with(
+        "#{output_path}.mp4",
+        upload.secure?,
+      )
       expect(OptimizedVideo).to have_received(:create_for).with(
         upload,
         "video_converted.mp4",
@@ -352,11 +357,15 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
         allow(SiteSetting).to receive(:s3_use_acls).and_return(false)
         allow(s3_object).to receive(:exists?).and_return(true)
         allow(OptimizedVideo).to receive(:create_for).and_return(true)
+        allow(s3_store).to receive(:update_access_control)
       end
 
-      it "skips ACL update and completes successfully" do
+      it "still calls update_access_control but it handles the disabled ACL setting internally" do
         adapter.handle_completion(job_id, output_path, new_sha1)
-        expect(s3_object).not_to have_received(:acl)
+        expect(s3_store).to have_received(:update_access_control).with(
+          "#{output_path}.mp4",
+          upload.secure?,
+        )
         expect(adapter.handle_completion(job_id, output_path, new_sha1)).to be true
       end
     end
