@@ -10,6 +10,16 @@ module Jobs
       return if !SiteSetting.ai_summarization_enabled
       return if SiteSetting.ai_summary_backfill_maximum_topics_per_hour.zero?
 
+      llm_model = find_llm_model
+      return if llm_model.blank?
+
+      unless LlmCreditAllocation.credits_available?(llm_model)
+        Rails.logger.info(
+          "Summaries backfill skipped: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       system_user = Discourse.system_user
 
       if SiteSetting.ai_summary_gists_enabled
@@ -86,6 +96,14 @@ module Jobs
       return 0 if current_budget < 0
 
       current_budget
+    end
+
+    def find_llm_model
+      ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)
+      return nil if ai_persona.blank?
+
+      persona_klass = ai_persona.class_instance
+      DiscourseAi::Summarization.find_summarization_model(persona_klass)
     end
   end
 end

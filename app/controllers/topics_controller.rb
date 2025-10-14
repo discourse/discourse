@@ -499,7 +499,7 @@ class TopicsController < ApplicationController
 
     status = params[:status]
     topic_id = params[:topic_id].to_i
-    enabled = params[:enabled] == "true"
+    enabled = ActiveModel::Type::Boolean.new.cast(params[:enabled])
 
     check_for_status_presence(:status, status)
     @topic =

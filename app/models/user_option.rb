@@ -292,6 +292,7 @@ end
 #  mailing_list_mode_frequency      :integer          default(1), not null
 #  new_topic_duration_minutes       :integer
 #  notification_level_when_replying :integer
+#  notify_on_linked_posts           :boolean          default(TRUE), not null
 #  oldest_search_log_date           :datetime
 #  seen_popups                      :integer          is an Array
 #  sidebar_link_to_filtered_list    :boolean          default(FALSE), not null

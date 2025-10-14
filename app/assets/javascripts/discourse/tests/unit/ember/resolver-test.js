@@ -433,8 +433,8 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo",
-      undefined,
-      "doesn't return admin templates for regular controllers"
+      "admin/templates/foo",
+      "will return admin templates for regular controllers, if no normal match exists"
     );
 
     lookupTemplate(

@@ -101,9 +101,8 @@ export default RouteTemplate(
                   @columns={{@controller.columns}}
                   @showTimeRead={{@controller.showTimeRead}}
                   @order={{@controller.order}}
-                  @updateOrder={{fn (mut @controller.order)}}
                   @asc={{@controller.asc}}
-                  @updateAsc={{fn (mut @controller.asc)}}
+                  @updateOrderAndAsc={{@controller.updateOrderAndAsc}}
                 />
                 <ConditionalLoadingSpinner
                   @condition={{@controller.model.loadingMore}}

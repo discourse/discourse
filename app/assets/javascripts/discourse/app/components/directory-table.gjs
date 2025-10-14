@@ -22,8 +22,7 @@ export default class DirectoryTable extends Component {
 
   @action
   updateOrderAndAsc(field, asc) {
-    this.args.updateOrder(field);
-    this.args.updateAsc(asc);
+    this.args.updateOrderAndAsc(field, asc);
   }
 
   <template>

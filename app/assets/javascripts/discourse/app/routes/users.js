@@ -35,6 +35,7 @@ export default class Users extends DiscourseRoute {
         exclude_usernames: null,
         exclude_groups: null,
         lastUpdatedAt: null,
+        groupOptions: null,
       });
     }
   }
@@ -45,23 +46,30 @@ export default class Users extends DiscourseRoute {
     }
   }
 
-  model(params) {
-    return ajax("/directory-columns.json")
-      .then((response) => {
-        params.order =
-          params.order ||
-          response.directory_columns[0]?.name ||
-          "likes_received";
-        return { params, columns: response.directory_columns };
-      })
-      .catch(popupAjaxError);
+  async model(params) {
+    if (!this.columns) {
+      try {
+        const response = await ajax("/directory-columns.json");
+        this.columns = response.directory_columns;
+      } catch (error) {
+        popupAjaxError(error);
+        throw error;
+      }
+    }
+
+    params.order ||= this.columns[0]?.name || "likes_received";
+    return { params, columns: this.columns };
   }
 
-  setupController(controller, model) {
-    controller.set("columns", model.columns);
-    return Promise.all([
-      controller.loadGroups(),
-      controller.loadUsers(model.params),
-    ]);
+  setupController(controller, { columns, params }) {
+    controller.set("columns", columns);
+    const promises = [controller.loadUsers(params)];
+
+    // Only load groups on first load, not on every refresh
+    if (!controller.groupOptions) {
+      promises.push(controller.loadGroups());
+    }
+
+    return Promise.all(promises);
   }
 }

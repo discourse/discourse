@@ -105,6 +105,22 @@ module PageObjects
         def has_my_messages_link_with_unread_count?
           page.has_css?("#{my_messages_link_css} .sidebar-section-link-content-badge")
         end
+
+        def has_active_link?(name)
+          page.has_css?(".sidebar-section-link[data-link-name='#{name}'].active")
+        end
+
+        def has_no_active_links?
+          page.has_no_css?(".sidebar-section-link.active")
+        end
+
+        def has_exact_url_match_link?(name)
+          page.has_css?(".sidebar-section-link[data-link-name='#{name}'].exact-url-match")
+        end
+
+        def has_no_exact_url_match_link?(name)
+          page.has_no_css?(".sidebar-section-link[data-link-name='#{name}'].exact-url-match")
+        end
       end
     end
   end

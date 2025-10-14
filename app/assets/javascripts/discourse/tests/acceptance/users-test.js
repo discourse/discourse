@@ -148,6 +148,52 @@ acceptance("User Directory", function () {
   });
 });
 
+acceptance("User directory - Request optimization", function (needs) {
+  needs.user();
+
+  test("Only makes one request when sorting changes", async function (assert) {
+    await visit("/u");
+
+    // Clear request history after initial page load
+    pretender.handledRequests.length = 0;
+
+    await click(
+      ".users-directory .directory-table__header div:nth-child(2) .header-contents"
+    );
+
+    // Count requests by URL
+    const directoryRequests = pretender.handledRequests.filter(({ url }) =>
+      url.startsWith("/directory_items")
+    );
+
+    const groupsRequests = pretender.handledRequests.filter(({ url }) =>
+      url.startsWith("/groups/search.json")
+    );
+
+    const columnsRequests = pretender.handledRequests.filter(({ url }) =>
+      url.startsWith("/directory-columns.json")
+    );
+
+    assert.strictEqual(
+      directoryRequests.length,
+      1,
+      "makes exactly one directory_items request when sorting changes"
+    );
+
+    assert.strictEqual(
+      groupsRequests.length,
+      0,
+      "does not make additional groups/search.json requests when sorting changes"
+    );
+
+    assert.strictEqual(
+      columnsRequests.length,
+      0,
+      "does not refetch directory-columns.json when sorting changes"
+    );
+  });
+});
+
 acceptance("User directory - Editing columns", function (needs) {
   needs.user({ moderator: true, admin: true });
 
