@@ -59,7 +59,10 @@ export default class UserAction extends RestModel {
       if (found === void 0) {
         let current;
         if (UserAction.TO_COLLAPSE.includes(item.action_type)) {
-          current = UserAction.create(item);
+          current = UserAction.create({
+            topic_id: item.topic_id,
+            post_number: item.post_number,
+          });
           item.switchToActing();
           current.addChild(item);
         } else {
