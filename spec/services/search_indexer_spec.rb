@@ -369,4 +369,122 @@ RSpec.describe SearchIndexer do
       expect(user2.reload.user_search_data.version).to eq(SearchIndexer::USER_INDEX_VERSION)
     end
   end
+
+  describe "registered search handlers" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:mock_model_class) do
+      Class.new do
+        def self.name
+          "TestModel"
+        end
+
+        def self.table_name
+          "test_models"
+        end
+
+        attr_accessor :id
+
+        def initialize(id:)
+          @id = id
+        end
+
+        def is_a?(klass)
+          klass == self.class || super
+        end
+      end
+    end
+
+    let(:mock_search_data_class) do
+      klass =
+        Class.new do
+          @params = nil
+
+          class << self
+            attr_accessor :params
+
+            def upsert(params)
+              @params = params
+            end
+          end
+        end
+      klass
+    end
+
+    before { mock_search_data_class.params = nil }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "uses registered search handler in SearchIndexer.index" do
+      plugin.register_search_index(
+        model_class: mock_model_class,
+        search_data_class: mock_search_data_class,
+        index_version: 2,
+        search_data: ->(record, indexer_helper) { { a_weight: "test #{record.id}" } },
+        load_unindexed_record_ids: -> { [] },
+      )
+
+      record = mock_model_class.new(id: 123)
+      SearchIndexer.index(record, force: true)
+
+      params = mock_search_data_class.params
+      expect(params).to be_present
+      expect(params["test_model_id"]).to eq(123)
+      expect(params["version"]).to eq(2)
+      expect(params["raw_data"]).to include("test 123")
+    end
+
+    it "usesregistered search handler in SearchIndexer.update_index" do
+      plugin.register_search_index(
+        model_class: mock_model_class,
+        search_data_class: mock_search_data_class,
+        index_version: 3,
+        search_data: ->(record, indexer_helper) { { a_weight: "content" } },
+        load_unindexed_record_ids: -> { [] },
+      )
+
+      SearchIndexer.update_index(table: "test_model", id: 456, a_weight: "custom data")
+
+      params = mock_search_data_class.params
+      expect(params).to be_present
+      expect(params["test_model_id"]).to eq(456)
+      expect(params["version"]).to eq(3)
+      expect(params["raw_data"]).to include("custom data")
+    end
+
+    it "uses handler's index_version" do
+      plugin.register_search_index(
+        model_class: mock_model_class,
+        search_data_class: mock_search_data_class,
+        index_version: 5,
+        search_data: ->(record, indexer_helper) { { d_weight: "test" } },
+        load_unindexed_record_ids: -> { [] },
+      )
+
+      SearchIndexer.update_index(table: "test_model", id: 789, d_weight: "data")
+
+      params = mock_search_data_class.params
+      expect(params["version"]).to eq(5)
+    end
+
+    it "provides IndexerHelper to search_data callback" do
+      indexer_helper_received = nil
+
+      plugin.register_search_index(
+        model_class: mock_model_class,
+        search_data_class: mock_search_data_class,
+        index_version: 1,
+        search_data:
+          lambda do |record, indexer_helper|
+            indexer_helper_received = indexer_helper
+            { a_weight: "test" }
+          end,
+        load_unindexed_record_ids: -> { [] },
+      )
+
+      record = mock_model_class.new(id: 1)
+      SearchIndexer.index(record, force: true)
+
+      expect(indexer_helper_received).to be_a(SearchIndexer::IndexerHelper)
+    end
+  end
 end

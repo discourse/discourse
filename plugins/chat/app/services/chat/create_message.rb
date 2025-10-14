@@ -89,6 +89,7 @@ module Chat
     step :publish_new_thread
     step :process
     step :publish_user_tracking_state
+    step :index_message
 
     private
 
@@ -272,6 +273,12 @@ module Chat
       message_to_publish =
         membership.last_read_message || message_instance if message_instance.in_thread?
       Chat::Publisher.publish_user_tracking_state!(guardian.user, channel, message_to_publish)
+    end
+
+    def index_message(message_instance:)
+      Scheduler::Defer.later "Index chat message for search" do
+        SearchIndexer.index(message_instance)
+      end
     end
   end
 end
