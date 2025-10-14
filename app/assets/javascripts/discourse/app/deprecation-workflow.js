@@ -259,7 +259,19 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   },
   {
     handler: "log",
+    matchId: "discourse.native-array-extensions.[]",
+  },
+  {
+    handler: "log",
     matchId: "discourse.native-array-extensions.any",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.clear",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.compact",
   },
   {
     handler: "log",
@@ -268,6 +280,10 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   {
     handler: "log",
     matchId: "discourse.native-array-extensions.findBy",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.get",
   },
   {
     handler: "log",
@@ -291,7 +307,23 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   },
   {
     handler: "log",
+    matchId: "discourse.native-array-extensions.set",
+  },
+  {
+    handler: "log",
     matchId: "discourse.native-array-extensions.sortBy",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.toArray",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.uniq",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.uniqBy",
   },
   {
     handler: "log",

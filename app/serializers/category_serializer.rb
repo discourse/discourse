@@ -133,4 +133,12 @@ class CategorySerializer < SiteCategorySerializer
   def include_custom_fields?
     true
   end
+
+  def name
+    category_name
+  end
+
+  def description
+    category_description
+  end
 end

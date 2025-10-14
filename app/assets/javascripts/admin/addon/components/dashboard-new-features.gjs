@@ -66,7 +66,7 @@ export default class DashboardNewFeatures extends Component {
           features: visibleFeatures,
         };
       })
-      .compact();
+      .filter((item) => item != null);
   }
 
   @bind

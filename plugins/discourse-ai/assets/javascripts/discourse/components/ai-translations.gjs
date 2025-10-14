@@ -16,7 +16,6 @@ import MultiSelect from "select-kit/components/multi-select";
 
 export default class AiTranslations extends Component {
   @service router;
-  @service store;
   @service languageNameLookup;
   @service site;
   @service siteSettings;

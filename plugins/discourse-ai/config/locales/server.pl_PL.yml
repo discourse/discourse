@@ -16,6 +16,7 @@ pl_PL:
         review: "Dodaj post do kolejki recenzji"
         review_hide: "Dodaj post do kolejki recenzji i ukryj post"
         review_delete: "Dodaj wpis do kolejki recenzji i usuń post"
+        review_delete_silence: "Dodaj wpis do kolejki recenzji, usuń wpis i ucisz użytkownika"
         spam: "Oznacz jako spam i ukryj post"
         spam_silence: "Oznacz jako spam, ukryj post i wycisz użytkownika"
     scriptables:
@@ -133,7 +134,7 @@ pl_PL:
     ai_discord_search_persona: "Osobowość, której należy używać do wyszukiwania w serwisie Discord."
     ai_discord_allowed_guilds: "Gildie (serwery) Discord, na których bot może wyszukiwać"
     ai_bot_enable_dedicated_ux: "Zezwól na interfejs bota na pełnym ekranie zamiast wiadomości prywatnej"
-    ai_translation_enabled: "Włącza funkcję tłumaczenia AI"
+    ai_translation_enabled: "Włącz funkcję tłumaczenia AI"
     ai_translation_model: "Model używany do tłumaczenia. Ten model musi obsługiwać tłumaczenie. Osobowości mogą nadpisać to ustawienie."
     ai_translation_backfill_limit_to_public_content: "Po włączeniu tej opcji tłumaczone będą tylko treści z kategorii publicznych. Po wyłączeniu tej opcji do tłumaczenia będą wysyłane również treści z prywatnych wiadomości grupowych i kategorii."
     ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."

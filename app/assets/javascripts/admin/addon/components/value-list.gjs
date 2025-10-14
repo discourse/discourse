@@ -7,6 +7,7 @@ import { empty, reads } from "@ember/object/computed";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import ComboBox from "select-kit/components/combo-box";
@@ -113,7 +114,7 @@ export default class ValueList extends Component {
     this.collection.removeObject(value);
 
     if (this.choices) {
-      this.set("choices", this.choices.concat([value]).uniq());
+      this.set("choices", uniqueItemsFromArray(this.choices.concat([value])));
     } else {
       this.set("choices", makeArray(value));
     }

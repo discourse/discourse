@@ -97,9 +97,7 @@ describe "Category Localizations", type: :system do
           category_page.save_settings
           page.refresh
 
-          try_until_success do
-            expect(CategoryLocalization.where(category_id: mono_category.id).count).to eq(2)
-          end
+          expect(CategoryLocalization.where(category_id: mono_category.id).count).to eq(2)
           expect(
             CategoryLocalization.where(category_id: mono_category.id, locale: "es").count,
           ).to eq(1)
@@ -207,7 +205,8 @@ describe "Category Localizations", type: :system do
           expect(category_list.category_box(category)).to have_text("Solicitudes")
 
           category_list.category_box(category).click
-          category_dropdown = PageObjects::Components::SelectKit.new(".category-drop")
+          category_dropdown = get_category_dropdown("1")
+
           expect(category_dropdown).to have_selected_name("Solicitudes")
           expect(sidebar).to have_section_link("Solicitudes")
           expect(category_page.category_box(subcat)).to have_text("Subcategoría")
@@ -246,10 +245,15 @@ describe "Category Localizations", type: :system do
         shared_examples_for "editing category settings" do
           it "shows the original category name in the category edit page" do
             sign_in(admin)
-            category_page.visit_general(category)
+            visit("/")
 
             switcher.expand
             switcher.option("[data-menu-option-id='es']").click
+            expect(sidebar).to have_section_link("Solicitudes")
+
+            category_page.visit(category)
+            category_page.click_edit_category
+            category_page.click_setting_tab("general")
 
             expect(find(".edit-category-tab-general input.category-name").value).to eq(
               category.name,

@@ -680,7 +680,7 @@ export default RouteTemplate(
     {{#if @controller.currentUser.admin}}
       <section class="details">
         <h1>{{i18n "admin.groups.title"}}</h1>
-        <div class="display-row">
+        <div class="display-row admin-user__automatic-groups">
           <div class="field">{{i18n "admin.groups.automatic"}}</div>
           <div class="value">{{htmlSafe @controller.automaticGroups}}</div>
         </div>

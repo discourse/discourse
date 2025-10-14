@@ -178,6 +178,7 @@ export default class Post extends RestModel {
   @trackedPostProperty excerpt;
   @trackedPostProperty expandedExcerpt;
   @trackedPostProperty group_moderator;
+  @trackedPostProperty hasGap;
   @trackedPostProperty hidden;
   @trackedPostProperty id;
   @trackedPostProperty is_auto_generated;
@@ -194,6 +195,7 @@ export default class Post extends RestModel {
   @trackedPostProperty primary_group_name;
   @trackedPostProperty quoted;
   @trackedPostProperty read;
+  @trackedPostProperty readers_count;
   @trackedPostProperty reply_count;
   @trackedPostProperty reply_to_user;
   @trackedPostProperty staff;
@@ -362,11 +364,20 @@ export default class Post extends RestModel {
   }
 
   get canRecoverTopic() {
-    return this.firstPost && this.deleted && this.topic.details.can_recover;
+    return (
+      this.firstPost &&
+      (this.deleted || this.user_deleted) &&
+      this.topic.details.can_recover
+    );
   }
 
   get isRecoveringTopic() {
-    return this.firstPost && !this.deleted && this.topic.details.can_recover;
+    return (
+      this.firstPost &&
+      !this.deleted &&
+      !this.user_deleted &&
+      this.topic.details.can_recover
+    );
   }
 
   get canRecover() {

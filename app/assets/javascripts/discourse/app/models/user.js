@@ -12,6 +12,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import {
   INTERFACE_COLOR_MODES,
@@ -212,7 +213,6 @@ export default class User extends RestModel.extend(Evented) {
   }
 
   @service appEvents;
-  @service userTips;
 
   @tracked do_not_disturb_until;
   @tracked status;
@@ -1161,8 +1161,7 @@ export default class User extends RestModel.extend(Evented) {
       }
     });
 
-    return titles
-      .uniq()
+    return uniqueItemsFromArray(titles)
       .sort()
       .map((title) => {
         return {
@@ -1241,7 +1240,7 @@ export default class User extends RestModel.extend(Evented) {
   calculateMutedIds(notificationLevel, id, type) {
     const muted_ids = this.get(type);
     if (notificationLevel === NotificationLevels.MUTED) {
-      return muted_ids.concat(id).uniq();
+      return uniqueItemsFromArray(muted_ids.concat(id));
     } else {
       return muted_ids.filter((existing_id) => existing_id !== id);
     }

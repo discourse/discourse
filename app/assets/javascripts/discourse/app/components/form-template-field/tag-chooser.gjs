@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { not } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 
 export default class TagChooserField extends Component {
@@ -111,10 +112,10 @@ export default class TagChooserField extends Component {
     set(
       this.composer.model,
       "tags",
-      [
+      uniqueItemsFromArray([
         ...this.tags.filter((tag) => !this.selectedTags.includes(tag)),
         ...selectedTags,
-      ].uniq()
+      ])
     );
   }
 

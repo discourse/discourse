@@ -24,10 +24,11 @@ import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 import { buildCommands, buildCustomState } from "../core/commands";
 import { buildInputRules } from "../core/inputrules";
 import { buildKeymap } from "../core/keymap";
-import Parser from "../core/parser";
+import Parser, { UnsupportedTokenError } from "../core/parser";
 import { extractNodeViews, extractPlugins } from "../core/plugin";
 import { createSchema } from "../core/schema";
 import Serializer from "../core/serializer";
@@ -53,6 +54,7 @@ const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab"];
  * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
  * @property {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]} [extensions] A list of extensions to be used with the editor INSTEAD of the ones registered through the API
  * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} [replaceToolbar] A function that replaces the default toolbar in a container with a custom/temporary one
+ * @property {() => void} [toggleRichEditor] A callback to toggle the rich editor on and off if in such a context
  */
 
 /**
@@ -92,6 +94,7 @@ export default class ProsemirrorEditor extends Component {
         ...utils,
         convertFromMarkdown: this.convertFromMarkdown,
         convertToMarkdown: this.convertToMarkdown,
+        toggleRichEditor: this.args.toggleRichEditor,
       },
       schema: this.schema,
       pmState: ProsemirrorState,
@@ -112,6 +115,7 @@ export default class ProsemirrorEditor extends Component {
         site: this.site,
         siteSettings: this.siteSettings,
         appEvents: this.appEvents,
+        dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
         addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
         removeGlimmerNodeView: (nodeView) =>
@@ -238,12 +242,7 @@ export default class ProsemirrorEditor extends Component {
 
   @bind
   convertFromMarkdown(markdown) {
-    try {
-      return this.parser.convert(this.schema, markdown);
-    } catch (e) {
-      next(() => this.dialog.alert(e.message));
-      throw e;
-    }
+    return this.parser.convert(this.schema, markdown);
   }
 
   @bind
@@ -255,15 +254,27 @@ export default class ProsemirrorEditor extends Component {
       return;
     }
 
-    const doc = this.convertFromMarkdown(value);
+    try {
+      const doc = this.convertFromMarkdown(value);
 
-    const tr = this.view.state.tr;
-    tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(
-      "addToHistory",
-      false
-    );
+      const tr = this.view.state.tr;
+      tr.replaceWith(0, this.view.state.doc.content.size, doc.content).setMeta(
+        "addToHistory",
+        false
+      );
 
-    this.view.updateState(this.view.state.apply(tr));
+      this.view.updateState(this.view.state.apply(tr));
+    } catch (e) {
+      if (e instanceof UnsupportedTokenError) {
+        this.dialog.alert({
+          message: i18n("composer.unsupported_token"),
+          didConfirm: this.args.toggleRichEditor,
+          didCancel: this.args.toggleRichEditor,
+        });
+      } else {
+        throw e;
+      }
+    }
   }
 
   @bind

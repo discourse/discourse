@@ -150,13 +150,11 @@ RSpec.describe "List channels | Drawer", type: :system do
         drawer_page.visit_index
         drawer_page.click_direct_messages
 
-        try_until_success do
-          expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
-          expect(drawer_page).to have_urgent_channel(dm_channel_2)
-          expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
-          expect(drawer_page).to have_channel_at_position(dm_channel_1, 3)
-          expect(drawer_page).to have_channel_at_position(dm_channel_3, 4)
-        end
+        expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
+        expect(drawer_page).to have_urgent_channel(dm_channel_2)
+        expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
+        expect(drawer_page).to have_channel_at_position(dm_channel_1, 3)
+        expect(drawer_page).to have_channel_at_position(dm_channel_3, 4)
       end
 
       context "with unread threads" do

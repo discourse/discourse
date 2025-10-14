@@ -17,6 +17,10 @@ module DiscourseAi
           id: "review_delete",
           translated_name: I18n.t("discourse_automation.ai.flag_types.review_delete"),
         },
+        {
+          id: "review_delete_silence",
+          translated_name: I18n.t("discourse_automation.ai.flag_types.review_delete_silence"),
+        },
         { id: "spam", translated_name: I18n.t("discourse_automation.ai.flag_types.spam") },
         {
           id: "spam_silence",

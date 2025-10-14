@@ -51,6 +51,7 @@ class SiteSerializer < ApplicationSerializer
     :valid_flag_applies_to_types,
     :full_name_required_for_signup,
     :full_name_visible_in_signup,
+    :admin_config_login_routes,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -403,6 +404,14 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_valid_flag_applies_to_types?
+    scope.is_admin?
+  end
+
+  def admin_config_login_routes
+    DiscoursePluginRegistry.admin_config_login_routes
+  end
+
+  def include_admin_config_routes?
     scope.is_admin?
   end
 

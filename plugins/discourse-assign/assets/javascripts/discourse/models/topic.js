@@ -46,7 +46,9 @@ export function extendTopicModel(api) {
         }
 
         assignments() {
-          return [this.topicAssignment(), ...this.postAssignments()].compact();
+          return [this.topicAssignment(), ...this.postAssignments()].filter(
+            (item) => item != null
+          );
         }
 
         postAssignments() {

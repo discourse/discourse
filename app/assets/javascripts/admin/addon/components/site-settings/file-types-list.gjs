@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
 import ListSetting from "select-kit/components/list-setting";
@@ -39,13 +40,11 @@ export default class FileTypesList extends Component {
   }
 
   get settingChoices() {
-    return [
-      ...new Set([
-        ...makeArray(this.settingValue),
-        ...makeArray(this.args.setting.choices),
-        ...makeArray(this.createdChoices),
-      ]),
-    ];
+    return uniqueItemsFromArray([
+      ...makeArray(this.settingValue),
+      ...makeArray(this.args.setting.choices),
+      ...makeArray(this.createdChoices),
+    ]);
   }
 
   @action
@@ -55,9 +54,10 @@ export default class FileTypesList extends Component {
 
   @action
   onChangeChoices(choices) {
-    this.createdChoices = [
-      ...new Set([...makeArray(this.createdChoices), ...makeArray(choices)]),
-    ];
+    this.createdChoices = uniqueItemsFromArray([
+      ...makeArray(this.createdChoices),
+      ...makeArray(choices),
+    ]);
   }
 
   @action
@@ -79,7 +79,7 @@ export default class FileTypesList extends Component {
     }
 
     const oldTypes = this.args.value.split(TOKEN_SEPARATOR);
-    const newTypes = [...new Set([...oldTypes, ...types])];
+    const newTypes = uniqueItemsFromArray([...oldTypes, ...types]);
     const diffTypes = newTypes.filter((type) => !oldTypes.includes(type));
 
     if (isEmpty(diffTypes)) {

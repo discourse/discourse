@@ -427,7 +427,52 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
         UPDATE
           #{table} AS x
         SET
-          #{column} = p.sort_order * -1
+          #{column} = x.#{column} * -1
+        FROM
+          posts AS p
+        INNER JOIN topics t ON t.id = p.topic_id
+          /*where*/
+        SQL
+
+      builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
+      builder.where("p.post_number < 0")
+      builder.where("x.topic_id = p.topic_id")
+      builder.where("x.#{column} = ABS(p.post_number)")
+      builder.exec
+
+      # Mark orphaned records from the current table as negative so they
+      # don't collide (PostTimings) or are mismatched when reordering
+
+      orphan_builder = DB.build <<~SQL
+          UPDATE 
+            #{table} AS x
+          SET 
+            #{column} = x.#{column} * -1
+          FROM topics t
+          /*where*/
+        SQL
+
+      orphan_builder.where("t.id = x.topic_id")
+      orphan_builder.where("x.#{column} > 0")
+      orphan_builder.where("x.topic_id = ?", args[:topic_id]) if args[:topic_id]
+      orphan_builder.where(<<~SQL)
+          NOT EXISTS (
+            SELECT 
+              1
+            FROM 
+              posts p
+            WHERE
+              p.topic_id = x.topic_id
+              AND p.post_number = x.#{column}
+          )
+        SQL
+      orphan_builder.exec
+
+      builder = DB.build <<~SQL
+        UPDATE
+          #{table} AS x
+        SET
+          #{column} = p.sort_order
         FROM
           posts AS p
         INNER JOIN topics t ON t.id = p.topic_id
@@ -436,18 +481,10 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
 
       builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
       builder.where("p.post_number < 0")
+      builder.where("x.#{column} < 0")
       builder.where("x.topic_id = p.topic_id")
-      builder.where("x.#{column} = ABS(p.post_number)")
+      builder.where("ABS(x.#{column}) = ABS(p.post_number)")
       builder.exec
-
-      DB.exec <<~SQL
-        UPDATE
-          #{table}
-        SET
-          #{column} = #{column} * -1
-        WHERE
-          #{column} < 0
-      SQL
     end
 
     builder = DB.build <<~SQL

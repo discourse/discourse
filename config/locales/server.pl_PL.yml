@@ -1928,6 +1928,7 @@ pl_PL:
     ga_universal_domain_name: "Domena śledzenia analityki Google, np: mojawitryna.pl; zobacz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach za pomocą Google Analythics. Wychodzące linki do tych domen będą miały dodatkowy identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>poradnik Cross-Domain Tracking od Google.</a>"
     gtm_container_id: "Identyfikator kontenera menedżera tagów Google. np.: GTM-ABCD12E. <br/>Uwaga: Aby korzystać z GTM, gdy włączona jest polityka bezpieczeństwa treści (CSP), zapoznaj się z dokumentacją: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
+    google_site_verification_token: Token weryfikacji konsoli wyszukiwania Google. Zostanie dołączony jako metatag w nagłówku HTML.
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories: "Zezwól moderatorom na tworzenie i zarządzanie kategoriami"
     moderators_manage_groups: "Zezwól moderatorom na tworzenie i zarządzanie grupami"

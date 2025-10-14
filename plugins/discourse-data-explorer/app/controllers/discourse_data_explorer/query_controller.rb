@@ -152,7 +152,10 @@ module DiscourseDataExplorer
       response.sending_file = true if params[:download]
 
       query_params = {}
-      query_params = MultiJson.load(params[:params]) if params[:params]
+      if params[:params]
+        query_params =
+          params[:params].is_a?(String) ? MultiJson.load(params[:params]) : params[:params]
+      end
 
       opts = { current_user: current_user&.username }
       opts[:explain] = true if params[:explain] == "true"

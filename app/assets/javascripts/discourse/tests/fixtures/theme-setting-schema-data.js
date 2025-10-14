@@ -208,6 +208,29 @@ export default function schemaAndData(version = 1, mode = SCHEMA_MODES.THEME) {
         boolean_field: false,
       },
     ];
+  } else if (version === 4) {
+    schema = {
+      name: "schema with delete warning",
+      identifier: "name",
+      deleteWarning: {
+        title: "Delete warning title",
+        message: "Delete warning message",
+      },
+      properties: {
+        name: {
+          type: "string",
+        },
+      },
+    };
+
+    data = [
+      {
+        name: "item 1",
+      },
+      {
+        name: "item 2",
+      },
+    ];
   } else {
     throw new Error("unknown fixture version");
   }

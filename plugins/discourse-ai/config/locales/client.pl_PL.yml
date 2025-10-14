@@ -217,6 +217,9 @@ pl_PL:
             max_posts_for_context:
               label: "Maksymalna liczba postów dla kontekstu"
               description: "Maksymalna liczba postów z tematu do uwzględnienia w kontekście analizy (domyślnie: 5)"
+            allow_system_posts:
+              label: "Zezwalaj na wpisy systemowe"
+              description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
       default_llm:
@@ -322,20 +325,24 @@ pl_PL:
       translations:
         title: "Tłumaczenia"
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
+        supported_locales: "Obsługiwane języki"
+        supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"
-          disabled_state:
-            configure: "Konfiguruj tłumaczenia"
-            empty_label: "Tłumaczenia automatyczne są wyłączone, kliknij poniżej, aby je skonfigurować"
+          enable_translations: "Włącz automatyczne tłumaczenia"
         stats:
           title: "Statystyki tłumaczeń"
           complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język."
           incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język."
-          backfill_disabled: "Uzupełnianie danych jest obecnie wyłączone."
-          description_tooltip: "Kwalifikujące się posty są określane na podstawie ustawień tłumaczenia AI"
+          backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
+          description_tooltip:
+            one: 'Jest %{count} wpis nadający się do przetłumaczenia.'
+            few: 'Są %{count} wpisy nadające się do przetłumaczenia.'
+            many: 'Jest %{count} wpisów nadających się do przetłumaczenia.'
+            other: 'Jest %{count} wpisów nadających się do przetłumaczenia.'
         progress_chart:
-          title: "Postęp tłumaczenia %{tooltip}"
+          title: "Postęp tłumaczenia"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} z %{total} przetłumaczonych postów"
           bar_done:

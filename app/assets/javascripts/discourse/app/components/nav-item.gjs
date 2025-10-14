@@ -49,6 +49,12 @@ export default class NavItem extends Component {
         );
       }
 
+      if (this.router.currentRoute.name === "adminConfig.login.plugin-tab") {
+        return (
+          this.router.currentRoute.params.wildcard === this.args.routeParam
+        );
+      }
+
       if (this.router.currentRoute.params.filter) {
         return this.router.currentRoute.params.filter === this.args.routeParam;
       }
