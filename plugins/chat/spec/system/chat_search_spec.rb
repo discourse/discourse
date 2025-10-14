@@ -58,8 +58,7 @@ RSpec.describe "Chat search", type: :system do
     end
 
     it "shows no results message when no matches found" do
-      chat_search_page.visit
-      chat_search_page.fill_in("nonexistent message query")
+      chat_search_page.visit.fill_in("aaaaaaaa")
 
       expect(chat_search_page).to have_no_results
     end
