@@ -7,9 +7,9 @@ import { schedule } from "@ember/runloop";
 import { observes } from "@ember-decorators/object";
 import DEditor from "discourse/components/d-editor";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
-import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import { buildCategoryPanel } from "admin/components/edit-category-panel";
 import FormTemplateChooser from "select-kit/components/form-template-chooser";
 
 export default class EditCategoryTopicTemplate extends buildCategoryPanel(

@@ -1,14 +1,35 @@
-import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import { and, not } from "truth-helpers";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import DButton from "discourse/components/d-button";
-import EditCategoryTab from "discourse/components/edit-category-tab";
 import Form from "discourse/components/form";
+import EditCategoryGeneral from "admin/components/edit-category-general";
+import EditCategoryImages from "admin/components/edit-category-images";
+import EditCategoryLocalizations from "admin/components/edit-category-localizations";
+import EditCategorySecurity from "admin/components/edit-category-security";
+import EditCategorySettings from "admin/components/edit-category-settings";
+import EditCategoryTab from "admin/components/edit-category-tab";
+import EditCategoryTags from "admin/components/edit-category-tags";
+import EditCategoryTopicTemplate from "admin/components/edit-category-topic-template";
 
-function lookupComponent(context, name) {
-  return getOwner(context).resolveRegistration(`component:${name}`);
+const TAB_COMPONENTS = {
+  general: EditCategoryGeneral,
+  security: EditCategorySecurity,
+  settings: EditCategorySettings,
+  images: EditCategoryImages,
+  "topic-template": EditCategoryTopicTemplate,
+  tags: EditCategoryTags,
+  localizations: EditCategoryLocalizations,
+};
+
+function componentFor(name) {
+  name = name.replace("edit-category-", "");
+
+  if (!TAB_COMPONENTS[name]) {
+    throw new Error(`No category-tab component found for tab name: ${name}`);
+  }
+  return TAB_COMPONENTS[name];
 }
 
 export default RouteTemplate(
@@ -100,7 +121,7 @@ export default RouteTemplate(
           class="edit-category-content"
         >
           {{#each @controller.panels as |tabName|}}
-            {{#let (lookupComponent @controller tabName) as |Tab|}}
+            {{#let (componentFor tabName) as |Tab|}}
               <Tab
                 @selectedTab={{@controller.selectedTab}}
                 @category={{@controller.model}}

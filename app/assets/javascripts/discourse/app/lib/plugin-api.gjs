@@ -11,7 +11,6 @@ import {
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
-import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
@@ -127,7 +126,6 @@ import {
   addSaveableUserOptionField,
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
@@ -1910,7 +1908,9 @@ class PluginApi {
    * categorySortCriteria("votes");
    */
   addCategorySortCriteria(criteria) {
-    addCategorySortCriteria(criteria);
+    this.registerValueTransformer("category-sort-orders", ({ value }) => {
+      value.push(criteria);
+    });
   }
 
   /**
@@ -2348,7 +2348,9 @@ class PluginApi {
    *
    **/
   setNewCategoryDefaultColors(backgroundColor, textColor) {
-    setNewCategoryDefaultColors(backgroundColor, textColor);
+    this.registerValueTransformer("category-default-colors", () => {
+      return { backgroundColor, textColor };
+    });
   }
 
   /**
