@@ -28,7 +28,9 @@ RSpec.describe "posts" do
         expected_response_schema = load_spec_schema("latest_posts_response")
         schema expected_response_schema
 
-        let!(:post) { Fabricate(:post) }
+        let!(:category) { Fabricate(:category) }
+        let!(:topic) { Fabricate(:topic, category: category) }
+        let!(:post) { Fabricate(:post, topic: topic) }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -105,8 +107,8 @@ RSpec.describe "posts" do
           post.id
         end
 
-        let(:moderator) { Fabricate(:moderator) }
-        before { sign_in(moderator) }
+        let(:admin_user) { Fabricate(:admin) }
+        before { sign_in(admin_user) }
 
         run_test!
 
