@@ -1,9 +1,9 @@
 import { fn, hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
-import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
+import { buildCategoryPanel } from "admin/components/edit-category-panel";
 
 export default class EditCategoryLocalizations extends buildCategoryPanel(
   "localizations"

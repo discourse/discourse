@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import TextField from "discourse/components/text-field";
@@ -17,13 +16,9 @@ import discourseComputed from "discourse/lib/decorators";
 import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import { buildCategoryPanel } from "admin/components/edit-category-panel";
 import ComboBox from "select-kit/components/combo-box";
 import GroupChooser from "select-kit/components/group-chooser";
-
-const categorySortCriteria = [];
-export function addCategorySortCriteria(criteria) {
-  categorySortCriteria.push(criteria);
-}
 
 export default class EditCategorySettings extends buildCategoryPanel(
   "settings"
@@ -120,7 +115,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
 
   @discourseComputed
   availableSorts() {
-    return [
+    return applyMutableValueTransformer("category-sort-orders", [
       "likes",
       "op_likes",
       "views",
@@ -129,8 +124,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
       "posters",
       "category",
       "created",
-    ]
-      .concat(categorySortCriteria)
+    ])
       .map((s) => ({ name: i18n("category.sort_options." + s), value: s }))
       .sort((a, b) => a.name.localeCompare(b.name));
   }

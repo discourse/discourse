@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { eq } from "truth-helpers";
+import ColorPicker from "discourse/components/color-picker";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -15,13 +16,10 @@ import {
   CATEGORY_TEXT_COLORS,
 } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
-import { optionalRequire } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
+import ColorInput from "admin/components/color-input";
 import CategoryChooser from "select-kit/components/category-chooser";
-import ColorPicker from "./color-picker";
-
-const ColorInput = optionalRequire("admin/components/color-input");
 
 export default class EditCategoryGeneral extends Component {
   @service site;

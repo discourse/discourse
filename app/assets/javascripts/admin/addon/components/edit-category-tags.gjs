@@ -4,9 +4,9 @@ import { action, set } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
-import { buildCategoryPanel } from "discourse/components/edit-category-panel";
 import TextField from "discourse/components/text-field";
 import { i18n } from "discourse-i18n";
+import { buildCategoryPanel } from "admin/components/edit-category-panel";
 import TagChooser from "select-kit/components/tag-chooser";
 import TagGroupChooser from "select-kit/components/tag-group-chooser";
 
