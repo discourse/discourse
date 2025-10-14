@@ -160,16 +160,6 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
     hidden: true
-  ai_helper_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
-    default: ""
-    hidden: true
-    type: list
-    list_type: compact
-  ai_helper_image_caption_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
-    default: ""
-    hidden: true
-    type: list
-    list_type: compact
   ai_helper_proofreader_persona:
     default: "-22"
     type: enum
@@ -279,11 +269,6 @@ discourse_ai:
     type: enum
     allow_any: false
     enum: "DiscourseAi::Configuration::LlmEnumerator"
-  ai_embeddings_semantic_search_hyde_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
-    default: ""
-    hidden: true
-    type: list
-    list_type: compact
   ai_embeddings_semantic_quick_search_enabled:
     default: false
     client: true
@@ -363,11 +348,6 @@ discourse_ai:
     list_type: compact
     default: "0" #everyone
     hidden: true
-  ai_summarization_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
-    default: ""
-    hidden: true
-    type: list
-    list_type: compact
   ai_summary_backfill_topic_max_age_days:
     default: 30
     min: 1
@@ -417,12 +397,6 @@ discourse_ai:
     default: ""
     secret: true
     area: "ai-features/bot"
-  ai_bot_allowed_seeded_models:
-    default: ""
-    hidden: true
-    type: list
-    list_type: compact
-    area: "ai-features/bot"
   ai_discover_enabled:
     default: false
     client: true
@@ -442,12 +416,6 @@ discourse_ai:
   ai_automation_max_triage_per_post_per_minute:
     default: 2
     hidden: true
-  ai_automation_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
-    default: ""
-    hidden: true
-    type: list
-    list_type: compact
-
   ai_discord_search_enabled:
     default: false
     client: true
@@ -484,11 +452,6 @@ discourse_ai:
   ai_spam_detection_user_id:
     default: ""
     hidden: true
-  ai_spam_detection_model_allowed_seeded_models: # Deprecated. TODO(roman): Remove 2025-09-01
-    default: ""
-    hidden: true
-    type: list
-
   ai_rag_images_enabled:
     default: false
     hidden: true
