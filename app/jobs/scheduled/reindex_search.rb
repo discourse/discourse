@@ -82,7 +82,7 @@ module Jobs
           handler[:load_unindexed_record_ids].call(limit:, index_version: handler[:index_version])
 
         if @verbose
-          puts "rebuilding #{unindexed_record_ids.size} records for #{handler[:model_class]}"
+          puts "rebuilding #{unindexed_record_ids.size} records for #{handler[:table_name]}"
         end
 
         unindexed_record_ids.each do |id|
