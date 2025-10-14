@@ -496,6 +496,40 @@ class TopicQuery
     list.where(sql, user_id: user_id, tracking: NotificationLevels.all[:tracking])
   end
 
+  def self.watching_first_post_filter(list, user)
+    return list.none if user.nil?
+
+    category_scope =
+      list.where(
+        "topics.category_id IN (
+          SELECT category_id
+          FROM category_users
+          WHERE user_id = ? AND notification_level = ?
+        )",
+        user.id,
+        CategoryUser.notification_levels[:watching_first_post],
+      )
+
+    return category_scope if !SiteSetting.tagging_enabled
+
+    tag_scope =
+      list.where(
+        "topics.id IN (
+          SELECT topic_id
+          FROM topic_tags
+          WHERE tag_id IN (
+            SELECT tag_id
+            FROM tag_users
+            WHERE user_id = ? AND notification_level = ?
+          )
+        )",
+        user.id,
+        TagUser.notification_levels[:watching_first_post],
+      )
+
+    category_scope.or(tag_scope)
+  end
+
   def prioritize_pinned_topics(topics, options)
     pinned_clause =
       if options[:category_id]
@@ -880,21 +914,23 @@ class TopicQuery
         )
     end
 
-    # NOTE protect against SYM attack can be removed with Ruby 2.2
-    #
-    state = options[:state]
-    if @user && state && TopicUser.notification_levels.keys.map(&:to_s).include?(state)
-      level = TopicUser.notification_levels[state.to_sym]
-      result =
-        result.where(
-          "topics.id IN (
-                                SELECT topic_id
-                                FROM topic_users
-                                WHERE user_id = ? AND
-                                      notification_level = ?)",
-          @user.id,
-          level,
-        )
+    if state = options[:state]
+      # Special handling for watching_first_post - it's a category/tag level notification
+      # not a topic level notification, so we need to query CategoryUser and TagUser tables
+      if state == "watching_first_post"
+        result = TopicQuery.watching_first_post_filter(result, @user)
+      elsif @user && TopicUser.notification_levels.keys.map(&:to_s).include?(state)
+        result =
+          result.where(
+            "topics.id IN (
+              SELECT topic_id
+              FROM topic_users
+              WHERE user_id = ? AND notification_level = ?
+            )",
+            @user.id,
+            TopicUser.notification_levels[state.to_sym],
+          )
+      end
     end
 
     if before = options[:before]

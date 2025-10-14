@@ -2386,6 +2386,69 @@ RSpec.describe TopicQuery do
     end
   end
 
+  describe "state parameter" do
+    describe "state=watching_first_post" do
+      fab!(:test_user, :user)
+      fab!(:category_watching_first_post, :category)
+      fab!(:category_regular, :category)
+      fab!(:tag_watching_first_post, :tag)
+      fab!(:tag_regular, :tag)
+
+      fab!(:topic_in_watched_category) { Fabricate(:topic, category: category_watching_first_post) }
+
+      fab!(:topic_in_regular_category) { Fabricate(:topic, category: category_regular) }
+      fab!(:topic_with_watched_tag) { Fabricate(:topic, tags: [tag_watching_first_post]) }
+      fab!(:topic_with_regular_tag) { Fabricate(:topic, tags: [tag_regular]) }
+
+      fab!(:topic_with_both) do
+        Fabricate(:topic, category: category_watching_first_post, tags: [tag_watching_first_post])
+      end
+
+      before do
+        SiteSetting.tagging_enabled = true
+        CategoryUser.set_notification_level_for_category(
+          test_user,
+          CategoryUser.notification_levels[:watching_first_post],
+          category_watching_first_post.id,
+        )
+        TagUser.change(
+          test_user.id,
+          tag_watching_first_post.id,
+          TagUser.notification_levels[:watching_first_post],
+        )
+      end
+
+      it "should not return any topics if the user is anonymous" do
+        expect(
+          TopicQuery.new(nil, state: "watching_first_post").list_latest.topics.map(&:id),
+        ).to eq([])
+      end
+
+      it "should return the union of topics in watched categories and topics with watched tags" do
+        ids = TopicQuery.new(test_user, state: "watching_first_post").list_latest.topics.map(&:id)
+
+        expect(ids).to contain_exactly(
+          topic_in_watched_category.id,
+          topic_with_watched_tag.id,
+          topic_with_both.id,
+        )
+      end
+
+      it "should work when combined with other filters" do
+        topic_in_watched_category.update!(closed: true)
+
+        ids =
+          TopicQuery
+            .new(test_user, state: "watching_first_post", status: "closed")
+            .list_latest
+            .topics
+            .map(&:id)
+
+        expect(ids).to contain_exactly(topic_in_watched_category.id)
+      end
+    end
+  end
+
   describe "content_localization enabled" do
     fab!(:user)
     fab!(:topics) { Fabricate.times(3, :topic) }
