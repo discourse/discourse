@@ -115,7 +115,7 @@ acceptance("Admin - Site Settings", function (needs) {
     // navigate back to the "Settings" page, the title filter
     // has been removed from navigation
     await click(".sidebar-section-link-wrapper:nth-child(4) a");
-    assert.dom(".row.setting").exists({ count: 4 });
+    assert.dom(".row.setting").exists({ count: 6 });
   });
 
   test("filtering overridden settings", async function (assert) {
