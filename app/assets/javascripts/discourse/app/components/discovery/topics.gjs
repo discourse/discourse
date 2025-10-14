@@ -309,6 +309,7 @@ export default class DiscoveryTopics extends Component {
 
       {{#if this.hasTopics}}
         <List
+          @ariaLabelledby="topic-list-heading"
           @highlightLastVisited={{true}}
           @top={{this.top}}
           @hot={{this.hot}}
