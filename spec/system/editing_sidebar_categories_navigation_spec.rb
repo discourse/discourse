@@ -257,21 +257,15 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(modal).to have_category_row(subcategory2)
       expect(modal).to have_category_row(subcategory3)
       modal.scroll_to_category(subcategory3)
-      wait_for_timeout(300)
 
       expect(modal).to have_category_row(subcategory4)
       expect(modal).to have_category_row(subcategory5)
-      modal.scroll_to_category(subcategory5)
 
-      # We need to briefly wait for things to settle, otherwise clicking the button doesn't work.
-      wait_for_timeout(300)
-      expect(modal).to have_show_more_button
-      modal.click_show_more_button
+      modal.click_show_more_button(parent_category)
 
       expect(page).to have_content(subcategory6.name)
-
       # The 'Show more' button should disappear after loading all subcategories
-      expect(modal).to have_no_show_more_button
+      expect(modal).to have_no_show_more_button(parent_category)
     end
   end
 
@@ -354,16 +348,10 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(modal).to have_category_row(parent5)
       expect(modal).to have_no_category_row(parent6)
 
-      # Should have a "Show more" button for grandparent's children
-      modal.scroll_to_category(parent5)
-      expect(modal).to have_show_more_button(level: 1)
-
-      # Click the "Show more" button to load more parent categories under grandparent
-      wait_for_timeout(300)
-      modal.click_show_more_button(level: 1)
+      modal.click_show_more_button(grandparent_category)
 
       expect(modal).to have_category_row(parent6)
-      expect(modal).to have_no_show_more_button(level: 1)
+      expect(modal).to have_no_show_more_button(grandparent_category)
     end
   end
 
@@ -437,31 +425,22 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
       expect(modal).to have_no_category_row(sub6)
 
       # No Show more button initially since top_category doesn't have 5 direct children yet
-      expect(modal).to have_no_show_more_button
+      expect(modal).to have_no_show_more_button(top_category)
 
       # Scroll down to trigger intersection observer to load more pages
       # We need to load until top_category has exactly 5 direct children (sub1-sub5)
       # This happens after loading sub5, which comes in page 3
       modal.scroll_to_category(subsub1_1)
-      wait_for_timeout(300)
-
       modal.scroll_to_category(sub2)
-      wait_for_timeout(300)
-
       modal.scroll_to_category(sub4)
-      wait_for_timeout(300)
-
       modal.scroll_to_category(sub5)
-      wait_for_timeout(300)
 
       # After loading enough pages, top_category should have 5 direct children (sub1-sub5)
       # and the "Show more" button should appear
       expect(modal).to have_category_row(sub5)
-      expect(modal).to have_show_more_button
 
       # Click the "Show more" button to load sub6
-      modal.click_show_more_button
-      wait_for_timeout(300)
+      modal.click_show_more_button(top_category)
 
       expect(modal).to have_category_row(sub6)
     end

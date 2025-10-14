@@ -4,6 +4,12 @@ class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
     analytics
+    login
+    authenticators
+    discourseconnect
+    oauth2
+    oidc
+    saml
     badges
     categories_and_tags
     email

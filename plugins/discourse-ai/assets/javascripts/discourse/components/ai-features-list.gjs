@@ -11,8 +11,7 @@ export default class AiFeaturesList extends Component {
   @service router;
 
   get sortedModules() {
-    const modules = this.args.modules?.toArray() || this.args.modules;
-    return [...(modules || [])].toSorted((a, b) =>
+    return (this.args.modules || []).toSorted((a, b) =>
       (a.module_name || "").localeCompare(b.module_name || "")
     );
   }

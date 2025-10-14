@@ -3,6 +3,7 @@
 describe "Admin User Page", type: :system do
   fab!(:current_user, :admin)
 
+  let(:admin_users_page) { PageObjects::Pages::AdminUsers.new }
   let(:admin_user_page) { PageObjects::Pages::AdminUser.new }
   let(:suspend_user_modal) { PageObjects::Modals::PenalizeUser.new("suspend") }
   let(:silence_user_modal) { PageObjects::Modals::PenalizeUser.new("silence") }
@@ -151,6 +152,20 @@ describe "Admin User Page", type: :system do
           expect(admin_user_page).to have_change_trust_level_dropdown_disabled
         end
       end
+    end
+  end
+
+  context "when navigating to a user's page from the list" do
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+
+    it "displays the groups correctly" do
+      admin_users_page.visit
+
+      # navigate to the user page
+      admin_users_page.user_row(user.id).username.click
+
+      # ensure the automatic groups are displayed
+      page.find(".admin-user__automatic-groups").has_text?("trust_level")
     end
   end
 end

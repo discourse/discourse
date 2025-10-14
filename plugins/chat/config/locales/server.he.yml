@@ -170,6 +170,7 @@ he:
     mention_warning:
       dismiss: "התעלמות"
       cannot_see: "ל־%{first_identifier} אין גישה לערוץ הזה ולא נשלחה התראה."
+      cannot_see_group: "חלק מהחברים בקבוצה %{group_name} לא יכולים לגשת לערוץ הזה והם לא קיבלו על כך הודעה."
       cannot_see_multiple:
         one: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
         two: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."

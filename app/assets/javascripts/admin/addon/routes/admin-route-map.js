@@ -239,15 +239,18 @@ export default function () {
 
         this.route("about");
         this.route("upcomingChanges", { path: "/upcoming-changes" });
-        this.route(
-          "loginAndAuthentication",
-          { path: "/login-and-authentication" },
-          function () {
-            this.route("settings", {
-              path: "/",
-            });
-          }
-        );
+
+        this.route("login", { path: "/login-and-authentication" }, function () {
+          this.route("settings", {
+            path: "/",
+          });
+          this.route("authenticators");
+          this.route("discourseconnect");
+          // Lets plugins register routes via register_admin_config_login_route
+          this.route("plugin-tab", {
+            path: "/*wildcard",
+          });
+        });
         this.route("content", function () {
           this.route("categoriesAndTags", { path: "/" });
           this.route("settings");

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import concatClass from "discourse/helpers/concat-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
@@ -14,7 +13,16 @@ const POST_NOTICE_COMPONENTS = {
 };
 
 export default class PostNotice extends Component {
-  @service siteSettings;
+  static shouldRender(post, siteSettings) {
+    if (!post.notice || post.deletedAt) {
+      return false;
+    }
+
+    const postAge = new Date() - new Date(post.created_at);
+    const maxAge = siteSettings.old_post_notice_days * 86400000;
+
+    return post.notice.type === "custom" || postAge <= maxAge;
+  }
 
   get Component() {
     return applyValueTransformer(
@@ -28,17 +36,9 @@ export default class PostNotice extends Component {
     return this.args.post.notice.type;
   }
 
-  get shouldRender() {
-    const postAge = new Date() - new Date(this.args.post.created_at);
-    const maxAge = this.siteSettings.old_post_notice_days * 86400000;
-    return this.args.post.notice.type === "custom" || postAge <= maxAge;
-  }
-
   <template>
-    {{#if this.shouldRender}}
-      <div class={{concatClass "post-notice" (dasherize this.type)}}>
-        <this.Component @notice={{@post.notice}} @post={{@post}} />
-      </div>
-    {{/if}}
+    <div class={{concatClass "post-notice" (dasherize this.type)}}>
+      <this.Component @notice={{@post.notice}} @post={{@post}} />
+    </div>
   </template>
 }

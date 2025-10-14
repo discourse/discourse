@@ -169,6 +169,27 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(post.reload.trashed?).to eq(true)
   end
 
+  it "can handle flag + delete post + silence" do
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review_delete_silence,
+        automation: nil,
+      )
+    end
+
+    reviewable = ReviewablePost.last
+
+    expect(reviewable.target_id).to eq(post.id)
+    expect(reviewable.target_type).to eq("Post")
+    expect(reviewable.reviewable_scores.first.reason).to include("bad")
+    expect(post.reload.trashed?).to eq(true)
+    expect(post.user.silenced?).to eq(true)
+  end
+
   it "restores deleted post when moderator approves" do
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
       triage(

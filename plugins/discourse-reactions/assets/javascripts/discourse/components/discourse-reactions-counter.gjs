@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
@@ -26,7 +27,7 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   reactionsChanged(data) {
-    data.reactions.uniq().forEach((reaction) => {
+    uniqueItemsFromArray(data.reactions).forEach((reaction) => {
       this.getUsers(reaction);
     });
   }

@@ -22,7 +22,7 @@ export function addUserMenuProfileTabItem(item) {
 }
 
 export function resetUserMenuProfileTabItems() {
-  _extraItems.clear();
+  _extraItems.length = 0;
 }
 
 export default class UserMenuProfileTabContent extends Component {

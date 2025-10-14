@@ -61,7 +61,6 @@ export default class TextareaTextManipulation {
   @service appEvents;
   @service siteSettings;
   @service capabilities;
-  @service currentUser;
 
   allowPreview = true;
 

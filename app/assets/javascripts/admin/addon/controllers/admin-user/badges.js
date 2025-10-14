@@ -5,8 +5,10 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
@@ -14,6 +16,9 @@ import AdminUser from "admin/models/admin-user";
 export default class AdminUserBadgesController extends Controller {
   @service dialog;
   @controller adminUser;
+
+  @trackedArray expandedBadges = [];
+  @trackedArray model;
 
   @alias("adminUser.model") user;
   @alias("model") userBadges;
@@ -28,8 +33,7 @@ export default class AdminUserBadgesController extends Controller {
     return grantableBadges(this.get("allBadges"), this.get("userBadges"));
   }
 
-  @discourseComputed("model", "model.[]", "model.expandedBadges.[]")
-  groupedBadges() {
+  get groupedBadges() {
     const allBadges = this.model;
 
     let grouped = {};
@@ -39,9 +43,8 @@ export default class AdminUserBadgesController extends Controller {
     });
 
     let expanded = [];
-    const expandedBadges = allBadges.get("expandedBadges") || [];
 
-    Object.values(grouped).forEach(function (badges) {
+    Object.values(grouped).forEach((badges) => {
       let lastGranted = badges[0].granted_at;
 
       badges.forEach((badge) => {
@@ -49,7 +52,10 @@ export default class AdminUserBadgesController extends Controller {
           lastGranted < badge.granted_at ? badge.granted_at : lastGranted;
       });
 
-      if (badges.length === 1 || expandedBadges.includes(badges[0].badge.id)) {
+      if (
+        badges.length === 1 ||
+        this.expandedBadges.includes(badges[0].badge.id)
+      ) {
         badges.forEach((badge) => expanded.push(badge));
         return;
       }
@@ -76,9 +82,7 @@ export default class AdminUserBadgesController extends Controller {
 
   @action
   expandGroup(userBadge) {
-    const model = this.model;
-    model.set("expandedBadges", model.get("expandedBadges") || []);
-    model.get("expandedBadges").pushObject(userBadge.badge.id);
+    this.expandedBadges.push(userBadge.badge.id);
   }
 
   @action
@@ -111,7 +115,7 @@ export default class AdminUserBadgesController extends Controller {
       message: i18n("admin.badges.revoke_confirm"),
       didConfirm: () => {
         return userBadge.revoke().then(() => {
-          this.model.removeObject(userBadge);
+          removeValueFromArray(this.model, userBadge);
         });
       },
     });

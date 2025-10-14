@@ -8,6 +8,7 @@ import formatUsername from "discourse/helpers/format-username";
 import routeAction from "discourse/helpers/route-action";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 import PostVotingButton from "./post-voting-button";
 import PostVotingCommentActions from "./post-voting-comment-actions";
@@ -131,6 +132,7 @@ export default class PostVotingComment extends Component {
 
           {{#if @comment.username}}
             <a
+              href={{userPath @comment.username}}
               class="post-voting-comment-info-username"
               data-user-card={{@comment.username}}
             >

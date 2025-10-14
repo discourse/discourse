@@ -37,7 +37,7 @@ export default class ThemesListItem extends Component {
   }
 
   get children() {
-    let children = this.args.theme?.get("childThemes.[]");
+    let children = this.args.theme?.get("childThemes");
     if (this.args.theme?.get("component") || !children) {
       return [];
     }

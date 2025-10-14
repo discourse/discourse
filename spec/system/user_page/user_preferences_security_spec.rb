@@ -150,6 +150,23 @@ describe "User preferences | Security", type: :system do
     include_examples "security keys"
     include_examples "passkeys"
     include_examples "enforced second factor"
+
+    it "shows backup codes button after adding first TOTP" do
+      user_preferences_security_page.visit(user).visit_second_factor(user, password)
+
+      expect(page).to have_text(I18n.t("js.user.second_factor_backup.enable_prerequisites"))
+      expect(page).to have_no_css(".new-second-factor-backup")
+
+      find(".totp .new-totp").click
+      find(".show-second-factor-key").click
+      totp = ROTP::TOTP.new(find(".second-factor-key").text.gsub(/\s+/, ""))
+      find("#second-factor-name").fill_in(with: "My Authenticator")
+      find("#second-factor-token").fill_in(with: totp.now)
+      find(".add-totp").click
+
+      expect(page).to have_css(".new-second-factor-backup")
+      expect(page).to have_no_text(I18n.t("js.user.second_factor_backup.enable_prerequisites"))
+    end
   end
 
   context "when mobile", mobile: true do

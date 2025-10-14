@@ -27,7 +27,7 @@ export default class PostQuotedContent extends Component {
     this.args.expanded ??
     false;
 
-  applyWrapperDataAttributes = modifierFn((_, [target], data) => {
+  applyWrapperDataAttributes = modifierFn((_, [target, data]) => {
     const attributes = Object.entries(data);
     if (!target || attributes.length === 0) {
       return null;
@@ -203,7 +203,7 @@ export default class PostQuotedContent extends Component {
           (modifier
             this.applyWrapperDataAttributes
             @wrapperElement
-            expanded=this.expanded
+            (hash expanded=this.expanded)
           )
         )}}
       >

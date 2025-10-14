@@ -23,6 +23,7 @@ import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summar
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -553,7 +554,7 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
-    const firstLoadedPost = postStream.get("posts.firstObject");
+    const firstLoadedPost = postStream.posts[0];
 
     if (post.get && post.get("post_number") === 1) {
       return;
@@ -570,7 +571,7 @@ export default class TopicController extends Controller {
     const { post, refresh } = event;
 
     const postStream = this.get("model.postStream");
-    const lastLoadedPost = postStream.get("posts.lastObject");
+    const lastLoadedPost = postStream.posts.at(-1);
 
     if (
       lastLoadedPost &&
@@ -1071,9 +1072,11 @@ export default class TopicController extends Controller {
   selectReplies(post) {
     ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
       const replyIds = replies.map((r) => r.id);
-      this.selectedPostIds = [
-        ...new Set([...this.selectedPostIds, post.id, ...replyIds]),
-      ];
+      this.selectedPostIds = uniqueItemsFromArray([
+        ...this.selectedPostIds,
+        post.id,
+        ...replyIds,
+      ]);
       this._forceRefreshPostStream();
     });
   }

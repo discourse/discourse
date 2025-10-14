@@ -87,9 +87,7 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .doesNotExist();
 
-    await click(
-      ".sidebar-section-link[data-link-name='admin_login_and_authentication']"
-    );
+    await click(".sidebar-section-link[data-link-name='admin_login']");
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
     assert

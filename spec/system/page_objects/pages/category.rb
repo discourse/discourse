@@ -56,6 +56,7 @@ module PageObjects
 
       def save_settings
         find("#save-category").click
+        expect(page).to have_css("#save-category", text: I18n.t("js.category.save"))
         self
       end
 
@@ -114,6 +115,16 @@ module PageObjects
 
       def click_new
         page.find(CATEGORY_NAVIGATION_NEW_NAV_ITEM_SELECTOR).click
+      end
+
+      def click_setting_tab(name)
+        find(".edit-category-nav .edit-category-#{name}").click
+        self
+      end
+
+      def click_edit_category
+        find(".navigation-controls .edit-category").click
+        self
       end
 
       def has_public_access_message?

@@ -38,6 +38,7 @@ he:
     filter:
       description:
         solved: "סינון נושאים שנפתרו"
+        unsolved: "סינון נושאים שלא נפתרו"
   badges:
     solved_1:
       name: "נפתר!"

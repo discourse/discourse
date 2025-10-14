@@ -1,8 +1,12 @@
 import { tracked } from "@glimmer/tracking";
+import { service } from "@ember/service";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { i18n } from "discourse-i18n";
 
 export default class EverythingSectionLink extends BaseSectionLink {
+  @service currentUser;
+  @service topicTrackingState;
+
   @tracked totalUnread = 0;
   @tracked totalNew = 0;
 

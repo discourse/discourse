@@ -1,4 +1,3 @@
-import ArrayProxy from "@ember/array/proxy";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
@@ -541,9 +540,9 @@ module("Unit | Model | post-stream", function (hooks) {
     // Find posts by ids uses the identity map
     const result = await postStream.findPostsByIds([1, 2, 3]);
     assert.strictEqual(result.length, 3);
-    assert.strictEqual(result.objectAt(0), p1);
-    assert.strictEqual(result.objectAt(1).post_number, 2);
-    assert.strictEqual(result.objectAt(2), p3);
+    assert.strictEqual(result[0], p1);
+    assert.strictEqual(result[1].post_number, 2);
+    assert.strictEqual(result[2], p3);
   });
 
   test("loadIntoIdentityMap with no data", async function (assert) {
@@ -947,10 +946,8 @@ module("Unit | Model | post-stream", function (hooks) {
       4964,
       [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     );
-    const postsWithPlaceholders = postStream.postsWithPlaceholders;
-    const store = getOwner(this).lookup("service:store");
 
-    const testProxy = ArrayProxy.create({ content: postsWithPlaceholders });
+    const store = getOwner(this).lookup("service:store");
 
     const p1 = store.createRecord("post", { id: 1, post_number: 1 });
     const p2 = store.createRecord("post", { id: 2, post_number: 2 });
@@ -962,36 +959,31 @@ module("Unit | Model | post-stream", function (hooks) {
     postStream.appendPost(p3);
 
     // Test enumerable and array access
-    assert.strictEqual(postsWithPlaceholders.length, 3);
-    assert.strictEqual(testProxy.length, 3);
-    assert.strictEqual(postsWithPlaceholders.nextObject(0), p1);
-    assert.strictEqual(postsWithPlaceholders.objectAt(0), p1);
-    assert.strictEqual(postsWithPlaceholders.nextObject(1, p1), p2);
-    assert.strictEqual(postsWithPlaceholders.objectAt(1), p2);
-    assert.strictEqual(postsWithPlaceholders.nextObject(2, p2), p3);
-    assert.strictEqual(postsWithPlaceholders.objectAt(2), p3);
+    assert.strictEqual(postStream.postsWithPlaceholders.length, 3);
+    assert.strictEqual(postStream.postsWithPlaceholders[0], p1);
+    assert.strictEqual(postStream.postsWithPlaceholders[1], p2);
+    assert.strictEqual(postStream.postsWithPlaceholders[2], p3);
 
     const promise = postStream.appendMore();
     assert.strictEqual(
-      postsWithPlaceholders.length,
+      postStream.postsWithPlaceholders.length,
       8,
       "we immediately have a larger placeholder window"
     );
-    assert.strictEqual(testProxy.length, 8);
-    assert.true(!!postsWithPlaceholders.nextObject(3, p3));
-    assert.true(!!postsWithPlaceholders.objectAt(4));
-    assert.notStrictEqual(postsWithPlaceholders.objectAt(3), p4);
-    assert.notStrictEqual(testProxy.objectAt(3), p4);
+    assert.strictEqual(postStream.postsWithPlaceholders.length, 8);
+    assert.true(!!postStream.postsWithPlaceholders[3]);
+    assert.true(!!postStream.postsWithPlaceholders[4]);
+    assert.notStrictEqual(postStream.postsWithPlaceholders[3], p4);
 
     await promise;
-    assert.strictEqual(postsWithPlaceholders.objectAt(3), p4);
+    assert.strictEqual(postStream.postsWithPlaceholders[3], p4);
     assert.strictEqual(
-      postsWithPlaceholders.length,
+      postStream.postsWithPlaceholders.length,
       8,
       "have a larger placeholder window when loaded"
     );
-    assert.strictEqual(testProxy.length, 8);
-    assert.strictEqual(testProxy.objectAt(3), p4);
+    assert.strictEqual(postStream.postsWithPlaceholders.length, 8);
+    assert.strictEqual(postStream.postsWithPlaceholders[3], p4);
   });
 
   test("filteredPostsCount", function (assert) {
