@@ -5671,6 +5671,8 @@ en:
         enabled: "Enabled"
         show_image: "Show image"
         edit_groups: "Edit opt-in groups"
+        groups_updated: "Groups updated!"
+        save_groups: "Save groups"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
@@ -5733,7 +5735,7 @@ en:
           keywords: "locale|language|timezone|unicode|ltr"
         upcoming_changes:
           title: "Upcoming changes"
-          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by impact, change type, and status."
+          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by impact, change type, and status.\n\nOpt-in groups can be used to let a certain group of users to test a change before it is released to everyone, though these groups will be irrelevant once a change progresses to the Stable status."
         login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"

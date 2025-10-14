@@ -1,14 +1,11 @@
 import Component from "@glimmer/component";
 import { array } from "@ember/helper";
-import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { i18n } from "discourse-i18n";
 import UpcomingChangeItem from "admin/components/admin-config-areas/upcoming-change-item";
 import AdminFilterControls from "admin/components/admin-filter-controls";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
-  @service site;
-
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
       return new TrackedObject(change);
@@ -89,13 +86,10 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
                 class="d-table__header-cell upcoming-change__name-header"
               >{{i18n "admin.upcoming_changes.name"}}</th>
               <th
-                class="d-table__header-cell upcoming-change__metadata-header"
-              ></th>
+                class="d-table__header-cell upcoming-change__groups-header"
+              >{{i18n "admin.upcoming_changes.opt_in_groups"}}</th>
               <th
                 class="d-table__header-cell upcoming-change__enabled-header"
-              ></th>
-              <th
-                class="d-table__header-cell upcoming-change__actions-header"
               ></th>
             </tr>
           </thead>

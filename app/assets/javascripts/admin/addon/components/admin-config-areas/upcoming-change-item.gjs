@@ -5,22 +5,22 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DropdownMenu from "discourse/components/dropdown-menu";
+import GroupSelector from "discourse/components/group-selector";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import Group from "discourse/models/group";
 import { i18n } from "discourse-i18n";
-import UpcomingChangeEditGroups from "admin/components/admin-config-areas/upcoming-change-edit-groups";
-import DMenu from "float-kit/components/d-menu";
 
 export default class UpcomingChangeItem extends Component {
-  @service modal;
   @service toasts;
 
   @tracked toggleSettingDisabled = false;
+  @tracked bufferedGroups = this.args.change.groups;
 
   registeredMenu = null;
 
@@ -36,6 +36,33 @@ export default class UpcomingChangeItem extends Component {
         return "users";
       case "developers":
         return "code";
+    }
+  }
+
+  @action
+  groupFinder(term) {
+    return Group.findAll({ term, ignore_automatic: false });
+  }
+
+  @action
+  async saveGroups() {
+    try {
+      await ajax("/admin/config/upcoming-changes/groups", {
+        type: "PUT",
+        data: {
+          setting: this.args.change.setting,
+          groups: this.args.change.groups.split(","),
+        },
+      });
+      this.bufferedGroups = this.args.change.groups;
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n("admin.upcoming_changes.groups_updated"),
+        },
+      });
+    } catch (err) {
+      popupAjaxError(err);
     }
   }
 
@@ -88,28 +115,30 @@ export default class UpcomingChangeItem extends Component {
     }
   }
 
-  @action
-  async editGroups() {
-    const closeData = await this.modal.show(UpcomingChangeEditGroups, {
-      model: {
-        setting: this.args.change.setting,
-        groups: this.args.change.groups || [],
-      },
-    });
-    this.args.change.groups = closeData?.groups;
-  }
-
   @bind
   onRegisterMenuForRow(menuApi) {
     this.registeredMenu = menuApi;
   }
 
+  @action
+  groupsChanged(newGroups) {
+    this.args.change.groups = newGroups;
+  }
+
   <template>
     <tr class="d-table__row upcoming-change-row">
       <td class="d-table__cell --overview">
+        {{#if @change.plugin}}
+          <span class="upcoming-change__plugin">
+            {{icon "plug"}}
+            {{@change.plugin}}
+          </span>
+        {{/if}}
+
         <div class="d-table__overview-name">
           {{@change.humanized_name}}
         </div>
+
         {{#if @change.description}}
           <div class="d-table__overview-about upcoming-change__description">
             {{@change.description}}
@@ -124,27 +153,9 @@ export default class UpcomingChangeItem extends Component {
                 }}
               </span>
             {{/if}}
-
-            {{#if @change.groups}}
-              <span class="upcoming-change__opt-in-groups-label">
-                {{i18n "admin.upcoming_changes.opt_in_groups"}}:
-                {{@change.groups}}
-              </span>
-            {{/if}}
           </div>
         {{/if}}
 
-        {{#if @change.plugin}}
-          <span class="upcoming-change__plugin upcoming-change__badge --plugin">
-            {{icon "plug"}}
-            {{@change.plugin}}
-          </span>
-        {{/if}}
-      </td>
-      <td class="d-table__cell --detail upcoming-change__labels">
-        <div class="d-table__mobile-label">
-          {{i18n "admin.upcoming_changes.labels"}}
-        </div>
         <div class="upcoming-change__badges">
           <span
             title={{i18n
@@ -183,7 +194,29 @@ export default class UpcomingChangeItem extends Component {
           </span>
         </div>
       </td>
-      <td class="d-table__cell --detail">
+      <td class="d-table__cell --detail upcoming-change__groups">
+        <div class="d-table__mobile-label">
+          {{i18n "admin.upcoming_changes.opt_in_groups"}}
+        </div>
+
+        <GroupSelector
+          @groupFinder={{this.groupFinder}}
+          @groupNames={{@change.groups}}
+          @onChange={{this.groupsChanged}}
+          @placeholderKey="admin.upcoming_changes.select_groups"
+        />
+
+        {{#if (notEq @change.groups this.bufferedGroups)}}
+          <DButton
+            class="upcoming-change__save-groups btn-primary"
+            @icon="check"
+            @size="small"
+            @title="admin.upcoming_changes.save_groups"
+            {{on "click" this.saveGroups}}
+          />
+        {{/if}}
+      </td>
+      <td class="d-table__cell --detail upcoming-change__toggle-cell">
         <div class="d-table__mobile-label">
           {{i18n "admin.upcoming_changes.enabled"}}
         </div>
@@ -192,39 +225,6 @@ export default class UpcomingChangeItem extends Component {
           class="upcoming-change__toggle"
           {{on "click" this.toggleChange}}
         />
-      </td>
-      <td class="d-table__cell --controls">
-        <div class="d-table__cell-actions">
-          <DMenu
-            @identifier="upcoming-change-menu"
-            @icon="ellipsis"
-            @class="btn-default upcoming-change__more-actions"
-            @onRegisterApi={{this.onRegisterMenuForRow}}
-          >
-            <:content>
-              <DropdownMenu as |dropdown|>
-                {{#if @change.upcoming_change.image_url}}
-                  <dropdown.item>
-                    <DButton
-                      class="btn-transparent upcoming-change__show-image"
-                      @label="admin.upcoming_changes.show_image"
-                      @icon="image"
-                      @action={{this.showImage}}
-                    />
-                  </dropdown.item>
-                {{/if}}
-                <dropdown.item>
-                  <DButton
-                    class="btn-transparent edit-groups"
-                    @label="admin.upcoming_changes.edit_groups"
-                    @icon="users"
-                    @action={{this.editGroups}}
-                  />
-                </dropdown.item>
-              </DropdownMenu>
-            </:content>
-          </DMenu>
-        </div>
       </td>
     </tr>
   </template>

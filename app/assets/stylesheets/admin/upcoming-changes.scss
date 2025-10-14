@@ -17,20 +17,12 @@
     width: 45%;
   }
 
-  &__plugin-header {
-    width: 15%;
-  }
-
-  &__metadata-header {
-    width: 25%;
+  &__groups-header {
+    width: 35%;
   }
 
   &__enabled-header {
-    width: 8%;
-  }
-
-  &__actions-header {
-    width: 7%;
+    width: 10%;
   }
 
   &__learn-more {
@@ -50,7 +42,6 @@
     flex-wrap: wrap;
     gap: 0.5rem;
     align-items: center;
-    justify-content: center;
     min-height: 2rem;
   }
 
@@ -69,10 +60,30 @@
       height: 0.75em;
       color: var(--primary-high);
     }
+  }
 
-    &.--plugin {
-      background: var(--primary-300);
+  &__groups {
+    display: flex;
+    flex-direction: row;
+
+    .group-selector-wrapper {
+      width: 100%;
     }
+  }
+
+  &__save-groups {
+    align-self: center;
+    margin-left: 0.5em;
+  }
+
+  &__toggle-cell {
+    vertical-align: top !important;
+  }
+
+  &__plugin {
+    font-size: var(--font-down-2);
+    color: var(--primary-high);
+    margin-bottom: 0.5em;
   }
 
   &__labels &__badges {
@@ -82,9 +93,5 @@
     height: 100%;
     margin: 0;
     padding: 0.5rem 0;
-  }
-
-  &__plugin {
-    margin-top: 0.5em;
   }
 }
