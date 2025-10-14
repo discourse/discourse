@@ -21,61 +21,49 @@ export default class EmptyTopicFilter extends Component {
     }
   }
 
-  get ctaLabel() {
+  get ctaLabelWithAction() {
     if (this.currentUser.new_new_view_enabled) {
       if (this.args.newListSubset === "topics") {
         if (this.args.trackingCounts.newReplies > 0) {
-          return i18n("topic.browse_new_replies");
+          return {
+            action: () => this.args.changeNewListSubset("replies"),
+            label: i18n("topic.browse_new_replies"),
+          };
         } else {
-          return i18n("topic.browse_latest_topics");
+          return { action: null, label: i18n("topic.browse_latest_topics") };
         }
       }
 
       if (this.args.newListSubset === "replies") {
         if (this.args.trackingCounts.newTopics > 0) {
-          return i18n("topic.browse_new_topics");
+          return {
+            action: () => this.args.changeNewListSubset("topics"),
+            label: i18n("topic.browse_new_topics"),
+          };
         } else {
-          return i18n("topic.browse_latest_topics");
+          return { action: null, label: i18n("topic.browse_latest_topics") };
         }
       }
     }
 
-    return i18n("topic.browse_latest_topics");
+    return { action: null, label: i18n("topic.browse_latest_topics") };
   }
 
   get ctaRoute() {
-    if (this.currentUser.new_new_view_enabled) {
-      if (this.args.newListSubset === undefined) {
-        return "discovery.latest";
-      }
-
+    if (this.currentUser.new_new_view_enabled && this.args.newListSubset) {
       return;
     }
 
     return "discovery.latest";
   }
 
-  get ctaAction() {
-    if (this.args.newListSubset === "topics") {
-      if (this.args.trackingCounts.newReplies > 0) {
-        return () => this.args.changeNewListSubset("replies");
-      }
-    }
-
-    if (this.args.newListSubset === "replies") {
-      if (this.args.trackingCounts.newTopics > 0) {
-        return () => this.args.changeNewListSubset("topics");
-      }
-    }
-  }
-
   <template>
     <EmptyState
       @identifier="empty-topic-filter"
       @title={{this.educationText}}
-      @ctaLabel={{this.ctaLabel}}
+      @ctaLabel={{this.ctaLabelWithAction.label}}
       @ctaRoute={{this.ctaRoute}}
-      @ctaAction={{this.ctaAction}}
+      @ctaAction={{this.ctaLabelWithAction.action}}
       @tipIcon="circle-info"
       @tipText={{htmlSafe
         (i18n
