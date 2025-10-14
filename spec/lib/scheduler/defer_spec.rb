@@ -90,7 +90,7 @@ RSpec.describe Scheduler::Defer do
 
     @defer.later { x = 3 }
 
-    wait_for(1000) { x == 3 }
+    @defer.do_all_work
 
     expect(x).to eq(3)
   end
