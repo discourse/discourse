@@ -49,11 +49,21 @@ RSpec.describe "Chat channel search", type: :system do
     end
   end
 
-  context "when filter is not visible" do
+  context "when filter is not toggled" do
     it "does not show search functionality" do
       chat_page.visit_channel(channel_1)
 
       expect(channel_page.filter).to be_not_visible
+    end
+  end
+
+  context "when search is not enabled" do
+    before { SiteSetting.chat_search_enabled = false }
+
+    it "does not show the filter button" do
+      chat_page.visit_channel(channel_1)
+
+      expect(channel_page.filter).to be_not_available
     end
   end
 end

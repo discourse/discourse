@@ -33,7 +33,6 @@ export default class ChatRoutesChannel extends Component {
         {{/if}}
         <navbar.ChannelTitle @channel={{@channel}} />
         <navbar.Actions as |a|>
-
           {{#if this.siteSettings.chat_search_enabled}}
             <a.Filter
               @channel={{@channel}}

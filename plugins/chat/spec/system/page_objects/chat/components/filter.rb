@@ -14,6 +14,14 @@ module PageObjects
           @filter_bar ||= parent_locator.locator(".chat-channel__filter-bar")
         end
 
+        def available?
+          expect(parent_locator.locator(".c-navbar__filter")).to be_visible
+        end
+
+        def not_available?
+          expect(parent_locator.locator(".c-navbar__filter")).to be_hidden
+        end
+
         def toggle
           parent_locator.locator(".c-navbar__filter").click
           self

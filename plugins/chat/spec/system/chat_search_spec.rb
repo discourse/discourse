@@ -82,4 +82,14 @@ RSpec.describe "Chat search", type: :system do
       expect(chat_search_page).to have_x_results(21)
     end
   end
+
+  context "with search disabled" do
+    before { SiteSetting.chat_search_enabled = false }
+
+    it "can't access search" do
+      chat_search_page.visit
+
+      expect(page).to have_current_path("/chat/browse/open")
+    end
+  end
 end
