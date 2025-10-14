@@ -86,6 +86,11 @@ export default class AiTranslations extends Component {
     });
   }
 
+  get showDefaultLocaleNote() {
+    const defaultLocale = this.siteSettings.default_locale;
+    return this.selectedLocales.includes(defaultLocale);
+  }
+
   @action
   navigateToLocalizationSettings() {
     this.router.transitionTo("adminConfig.localization.settings", {
@@ -227,11 +232,15 @@ export default class AiTranslations extends Component {
     }
 
     const colors = this.chartColors;
+    const defaultLocale = this.siteSettings.default_locale;
 
     const processedData = this.data.map(({ locale, total, done }) => {
       const donePercentage = (total > 0 ? (done / total) * 100 : 0).toFixed(0);
+      const isDefault = locale === defaultLocale;
+      const localeName = this.languageNameLookup.getLanguageName(locale);
+
       return {
-        locale: this.languageNameLookup.getLanguageName(locale),
+        locale: isDefault ? `${localeName}*` : localeName,
         done,
         donePercentage,
         tooltip: [
@@ -445,6 +454,13 @@ export default class AiTranslations extends Component {
                 class="ai-translations__chart"
               />
             </div>
+            {{#if this.showDefaultLocaleNote}}
+              <div class="ai-translations__default-locale-note">
+                {{i18n
+                  "discourse_ai.translations.progress_chart.default_locale_note"
+                }}
+              </div>
+            {{/if}}
           </:content>
         </AdminConfigAreaCard>
 

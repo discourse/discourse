@@ -348,6 +348,7 @@ en:
           title: "Translation Progress"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} out of %{total} posts translated"
+          default_locale_note: "*This is the site's default locale. Only posts needing translation into it are shown."
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
