@@ -72,6 +72,9 @@ DiscourseAi::Configuration::Module::NAMES.each do |module_name|
 end
 
 after_initialize do
+  # No ActiveRecord for these models. Avoids the "unknown OID" warnings.
+  ActiveRecord.schema_cache_ignored_tables.push(*DiscourseAi::Embeddings::Schema::EMBEDDING_TABLES)
+
   if defined?(Rack::MiniProfiler)
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end
