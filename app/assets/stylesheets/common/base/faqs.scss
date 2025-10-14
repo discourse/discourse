@@ -29,6 +29,11 @@
   ol:not(.nav-pills) {
     margin-left: 40px;
   }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 .body-page-button-container {
