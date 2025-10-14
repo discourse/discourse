@@ -1,12 +1,9 @@
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import Tag from "discourse/models/tag";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
 export default class TagsIndex extends DiscourseRoute {
-  @service router;
-
   model() {
     return this.store.findAll("tag").then((result) => {
       if (result.extras) {
@@ -36,12 +33,6 @@ export default class TagsIndex extends DiscourseRoute {
         ? ["id"]
         : ["totalCount:desc", "id"],
     });
-  }
-
-  @action
-  showTagGroups() {
-    this.router.transitionTo("tagGroups");
-    return true;
   }
 
   @action
