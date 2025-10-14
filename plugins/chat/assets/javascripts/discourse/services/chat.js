@@ -13,7 +13,6 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -26,7 +25,6 @@ export default class Chat extends Service {
   @service currentUser;
   @service chatSubscriptionsManager;
   @service chatStateManager;
-  @service chatDraftsManager;
   @service presence;
   @service router;
   @service chatChannelsManager;
@@ -221,24 +219,6 @@ export default class Chat extends Service {
       ...channelsView.direct_message_channels,
     ].forEach((channelObject) => {
       const storedChannel = this.chatChannelsManager.store(channelObject);
-      const storedDrafts = (this.currentUser?.chat_drafts || []).filter(
-        (draft) => draft.channel_id === storedChannel.id
-      );
-
-      storedDrafts.forEach((storedDraft) => {
-        this.chatDraftsManager.add(
-          ChatMessage.createDraftMessage(
-            storedChannel,
-            Object.assign(
-              { user: this.currentUser },
-              JSON.parse(storedDraft.data)
-            )
-          ),
-          storedDraft.channel_id,
-          storedDraft.thread_id,
-          false
-        );
-      });
 
       if (channelsView.unread_thread_overview?.[storedChannel.id]) {
         storedChannel.threadsManager.unreadThreadOverview =
