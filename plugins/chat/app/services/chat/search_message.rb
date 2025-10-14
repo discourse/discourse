@@ -27,37 +27,6 @@ module Chat
     #   @option params [String] :sort Sort order for results ("relevance" or "latest", defaults to "relevance")
     #   @return [Service::Base::Context]
 
-    def self.advanced_filter(trigger, &block)
-      advanced_filters[trigger] = block
-    end
-
-    def self.advanced_filters
-      @advanced_filters ||= {}
-    end
-
-    advanced_filter(/\A\@(\S+)\z/i) do |messages, match, guardian|
-      username = User.normalize_username(match)
-      user_id = User.not_staged.where(username_lower: username).pick(:id)
-      user_id = guardian.user&.id if !user_id && username == "me"
-
-      if user_id
-        messages.where(user_id: user_id)
-      else
-        messages.where("1 = 0")
-      end
-    end
-
-    advanced_filter(/\A\#(\S+)\z/i) do |messages, match, guardian|
-      channel_slug = match.downcase
-      channel_id = ::Chat::Channel.where(slug: channel_slug).pick(:id)
-
-      if channel_id && guardian.can_preview_chat_channel?(::Chat::Channel.find(channel_id))
-        messages.where("chat_channels.id = ?", channel_id)
-      else
-        messages.where("1 = 0")
-      end
-    end
-
     params do
       attribute :query, :string, default: ""
       attribute :channel_id, :integer
@@ -92,10 +61,6 @@ module Chat
     def fetch_messages(params:, guardian:, channel:)
       return ::Chat::Message.none if params.query.blank?
 
-      filters = []
-      cleaned_query = Search.clean_term(params.query)
-      processed_query = process_advanced_search!(cleaned_query, filters)
-
       messages = ::Chat::Message.joins(:chat_channel)
 
       if channel
@@ -108,22 +73,33 @@ module Chat
           )
       end
 
-      messages = apply_filters(messages, guardian, filters)
-      messages = apply_thread_exclusion(messages, params.exclude_threads)
+      result =
+        Chat::Action::SearchMessage::ProcessSearchQuery.call(
+          query: Search.clean_term(params.query),
+          messages:,
+          guardian:,
+        )
 
-      if processed_query.present?
-        prepared_query = Search.prepare_data(processed_query)
+      messages = result.messages
+
+      if result.processed_query.present?
+        prepared_query = Search.prepare_data(result.processed_query)
         ts_config = Search.ts_config
         ts_query = Search.ts_query(term: prepared_query, ts_config: ts_config)
         messages =
           messages.joins(:message_search_data).where(
             "chat_message_search_data.search_data @@ #{ts_query}",
           )
-      elsif filters.blank?
+      elsif result.filters.blank?
         return ::Chat::Message.none
       end
 
-      messages = apply_sorting(messages, params.sort)
+      messages =
+        Chat::Action::SearchMessage::ApplyFiltersAndSorting.call(
+          messages:,
+          exclude_threads: params.exclude_threads,
+          sort: params.sort,
+        )
 
       # Fetch one extra to check if there are more results
       results = messages.offset(params.offset).limit(params.limit + 1).to_a
@@ -131,80 +107,6 @@ module Chat
       context[:has_more] = results.size > params.limit
 
       results.take(params.limit)
-    end
-
-    private
-
-    def process_advanced_search!(query, filters)
-      query
-        .to_s
-        .split(/\s+/)
-        .map do |word|
-          next if word.blank?
-
-          found = false
-
-          self.class.advanced_filters.each do |matcher, block|
-            if word =~ matcher
-              (filters ||= []) << [block, $1]
-              found = true
-              break
-            end
-          end
-
-          found ? nil : word
-        end
-        .compact
-        .join(" ")
-    end
-
-    def apply_filters(messages, guardian, filters)
-      filters&.each do |block, match|
-        messages = instance_exec(messages, match, guardian, &block) || messages
-      end
-
-      messages
-    end
-
-    # Applies thread exclusion filtering to messages when requested.
-    #
-    # When exclude_threads is true, this method filters out thread reply messages
-    # while preserving:
-    # 1. Messages that are not part of any thread (thread_id IS NULL)
-    # 2. Original messages that started threads (these have thread_id but are
-    #    referenced as original_message_id in the chat_threads table)
-    #
-    # This allows searching in channel messages and thread starters without
-    # getting overwhelmed by thread replies.
-    #
-    # @param [ActiveRecord::Relation] messages The messages query to filter
-    # @param [Boolean] exclude_threads Whether to apply thread exclusion
-    # @return [ActiveRecord::Relation] The filtered messages query
-    def apply_thread_exclusion(messages, exclude_threads)
-      return messages unless exclude_threads
-
-      # Exclude messages that have a thread_id unless they are the original message of the thread
-      messages.where(
-        "chat_messages.thread_id IS NULL OR chat_messages.id IN (
-          SELECT ct.original_message_id
-          FROM chat_threads ct
-          WHERE ct.id = chat_messages.thread_id
-        )",
-      )
-    end
-
-    # Applies sorting to messages based on the specified sort option.
-    #
-    # @param [ActiveRecord::Relation] messages The messages query to sort
-    # @param [String] sort The sort option ("relevance" or "latest")
-    # @return [ActiveRecord::Relation] The sorted messages query
-    def apply_sorting(messages, sort)
-      case sort
-      when "latest"
-        messages = messages.order(created_at: :desc)
-      end
-
-      messages
     end
   end
 end
