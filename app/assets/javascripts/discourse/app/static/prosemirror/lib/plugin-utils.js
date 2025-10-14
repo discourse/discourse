@@ -33,7 +33,7 @@ export function markInputRule(regexp, markType, getAttrs) {
         }
 
         tr.addMark(start, start + match[1].length, markType.create(markAttrs));
-        tr.setStoredMarks(tr.doc.resolve(textEnd).marks());
+        tr.setStoredMarks(tr.doc.resolve(start + match[1].length + 1).marks());
       } else {
         tr.delete(start, end);
         tr.insertText(" ");
