@@ -140,7 +140,6 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
   init({ name, presenceService }) {
     super.init(...arguments);
     this.name = name;
-    // this.set("users", null);
     this.set("count", null);
     this.set("countOnly", null);
     this.presenceService = presenceService;
@@ -169,10 +168,7 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
     this.set("count", initialData.count);
     if (initialData.users) {
-      this.set(
-        "users",
-        initialData.users?.map((u) => User.create(u))
-      );
+      this.users = initialData.users?.map((u) => User.create(u));
       this.set("countOnly", false);
     } else {
       this.set("users", null);
