@@ -52,7 +52,8 @@ export async function loadThemes() {
 }
 
 export async function loadAdmin() {
-  const compatModules = (await import("./admin/admin-compat-modules")).default;
+  const compatModules = (await import("discourse/admin/admin-compat-modules"))
+    .default;
   for (const [key, mod] of Object.entries(compatModules)) {
     define(`discourse/admin/${key.slice(2)}`, () => mod);
   }

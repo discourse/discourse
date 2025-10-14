@@ -18,6 +18,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 const {
   CustomizeChunkUrlPlugin,
 } = require("./lib/webpack-customize-chunk-url-plugin");
+const { BroccoliMergeFiles } = require("broccoli-merge-files");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -31,6 +32,31 @@ module.exports = function (defaults) {
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
   const isProduction = EmberApp.env().includes("production");
+
+  const adminTree = funnel("admin", { destDir: "admin" });
+  const adminCompatModulesTree = funnel(
+    new BroccoliMergeFiles(["admin"], {
+      outputFileName: "admin-compat-modules.js",
+      async merge(files) {
+        const lines = [`const compatModules = {};`];
+
+        let i = 1;
+        for (const [filename] of files) {
+          const withoutExtension = filename.replace(/\..*$/, "");
+          lines.push(
+            `import * as Module${i} from "./${withoutExtension}";`,
+            `compatModules["./${withoutExtension}"] = Module${i};`
+          );
+          i++;
+        }
+
+        lines.push("export default compatModules;");
+
+        return lines.join("\n");
+      },
+    }),
+    { destDir: "admin" }
+  );
 
   const app = new EmberApp(defaults, {
     autoRun: false,
@@ -67,9 +93,12 @@ module.exports = function (defaults) {
     ...commonBabelConfig(),
 
     trees: {
-      app: withSideWatch("app", {
-        watching: ["../discourse-markdown-it", "../truth-helpers"],
-      }),
+      app: withSideWatch(
+        mergeTrees(["app", adminTree, adminCompatModulesTree]),
+        {
+          watching: ["../discourse-markdown-it", "../truth-helpers"],
+        }
+      ),
     },
   });
 

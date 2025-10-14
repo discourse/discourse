@@ -7,6 +7,7 @@
   "author": "Discourse",
   "exports": {
     "./tests/*": "./tests/*",
+    "./admin/*": "./admin/*",
     "./*": "./app/*"
   },
   "directories": {
@@ -104,6 +105,7 @@
     "babel-import-util": "^3.0.1",
     "babel-plugin-ember-template-compilation": "^3.0.1",
     "broccoli-asset-rev": "^3.0.0",
+    "broccoli-merge-files": "^0.8.0",
     "custom-proxy": "workspace:1.0.0",
     "deepmerge": "^4.3.1",
     "deprecation-silencer": "workspace:1.0.0",
