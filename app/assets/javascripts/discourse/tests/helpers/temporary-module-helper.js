@@ -38,5 +38,5 @@ export function cleanupTemporaryModuleRegistrations() {
     expireConnectorCache();
     DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
   }
-  modifications.clear();
+  modifications.length = 0;
 }
