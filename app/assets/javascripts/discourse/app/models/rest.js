@@ -14,7 +14,9 @@ export default class RestModel extends EmberObject {
 
   static create(args) {
     if (args instanceof RestModel) {
-      throw "Cannot create a model from another model instance. Pass a plain JS object instead.";
+      throw new Error(
+        "Cannot create a model from another model instance. Pass a plain JS object instead."
+      );
     }
 
     args = args || {};
@@ -124,7 +126,9 @@ export default class RestModel extends EmberObject {
 
   setProperties(props) {
     if (props instanceof RestModel) {
-      throw "Cannot setProperties on a model using another model instance. Pass a plain JS object instead.";
+      throw new Error(
+        "Cannot setProperties on a model using another model instance. Pass a plain JS object instead."
+      );
     }
     super.setProperties(props);
   }
