@@ -279,7 +279,7 @@ class PostMover
         skip_jobs: true,
         no_bump: true,
       )
-    new_post = @post_creator.create! # !! This line
+    new_post = @post_creator.create!
 
     move_email_logs(post, new_post)
 
