@@ -35,10 +35,10 @@ module Chat
       @advanced_filters ||= {}
     end
 
-    advanced_filter(/\A\@(\S+)\z/i) do |messages, match|
+    advanced_filter(/\A\@(\S+)\z/i) do |messages, match, guardian|
       username = User.normalize_username(match)
       user_id = User.not_staged.where(username_lower: username).pick(:id)
-      user_id = @guardian.user&.id if !user_id && username == "me"
+      user_id = guardian.user&.id if !user_id && username == "me"
 
       if user_id
         messages.where(user_id: user_id)
@@ -47,11 +47,11 @@ module Chat
       end
     end
 
-    advanced_filter(/\A\#(\S+)\z/i) do |messages, match|
+    advanced_filter(/\A\#(\S+)\z/i) do |messages, match, guardian|
       channel_slug = match.downcase
       channel_id = ::Chat::Channel.where(slug: channel_slug).pick(:id)
 
-      if channel_id && @guardian.can_preview_chat_channel?(::Chat::Channel.find(channel_id))
+      if channel_id && guardian.can_preview_chat_channel?(::Chat::Channel.find(channel_id))
         messages.where("chat_channels.id = ?", channel_id)
       else
         messages.where("1 = 0")
@@ -92,10 +92,9 @@ module Chat
     def fetch_messages(params:, guardian:, channel:)
       return ::Chat::Message.none if params.query.blank?
 
-      @filters = []
-      @guardian = guardian
+      filters = []
       cleaned_query = Search.clean_term(params.query)
-      processed_query = process_advanced_search!(cleaned_query)
+      processed_query = process_advanced_search!(cleaned_query, filters)
 
       messages = ::Chat::Message.joins(:chat_channel)
 
@@ -109,7 +108,7 @@ module Chat
           )
       end
 
-      messages = apply_filters(messages)
+      messages = apply_filters(messages, guardian, filters)
       messages = apply_thread_exclusion(messages, params.exclude_threads)
 
       if processed_query.present?
@@ -120,7 +119,7 @@ module Chat
           messages.joins(:message_search_data).where(
             "chat_message_search_data.search_data @@ #{ts_query}",
           )
-      elsif @filters.blank?
+      elsif filters.blank?
         return ::Chat::Message.none
       end
 
@@ -136,7 +135,7 @@ module Chat
 
     private
 
-    def process_advanced_search!(query)
+    def process_advanced_search!(query, filters)
       query
         .to_s
         .split(/\s+/)
@@ -147,7 +146,7 @@ module Chat
 
           self.class.advanced_filters.each do |matcher, block|
             if word =~ matcher
-              (@filters ||= []) << [block, $1]
+              (filters ||= []) << [block, $1]
               found = true
               break
             end
@@ -159,13 +158,9 @@ module Chat
         .join(" ")
     end
 
-    def apply_filters(messages)
-      @filters&.each do |block, match|
-        if block.arity == 1
-          messages = instance_exec(messages, &block) || messages
-        else
-          messages = instance_exec(messages, match, &block) || messages
-        end
+    def apply_filters(messages, guardian, filters)
+      filters&.each do |block, match|
+        messages = instance_exec(messages, match, guardian, &block) || messages
       end
 
       messages
