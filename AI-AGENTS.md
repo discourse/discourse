@@ -85,7 +85,7 @@ ALWAYS lint any changes you make
 - Queries: use `explain`, specify columns, strategic indexing, `counter_cache` for counts
 
 ## HTTP Response Codes
-- **204 No Content**: Use `render_success_no_content` (or `head :no_content`) for successful operations that don't return data
+- **204 No Content**: Use `head :no_content` for successful operations that don't return data
   - DELETE operations that successfully remove a resource
   - UPDATE/PUT operations that succeed but don't need to return modified data
   - POST operations that perform an action without creating/returning resources (mark as read, clear notifications)

@@ -650,20 +650,6 @@ class ApplicationController < ActionController::Base
     { failed: "FAILED" }
   end
 
-  # Renders an HTTP 204 No Content response for successful operations that don't need to return data.
-  # Use this for:
-  # - DELETE operations that successfully remove a resource
-  # - UPDATE/PUT operations that succeed but don't need to return modified data
-  # - POST operations that perform an action but don't create/return resources (e.g., mark as read)
-  #
-  # Do NOT use for:
-  # - Creating resources (use 201 Created with data)
-  # - Operations that return modified/useful data to the client
-  # - Operations where the client expects confirmation data beyond success/failure
-  def render_success_no_content
-    head :no_content
-  end
-
   def json_result(obj, opts = {})
     if yield(obj)
       json = success_json
