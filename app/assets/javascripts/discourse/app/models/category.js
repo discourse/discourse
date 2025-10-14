@@ -13,7 +13,6 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
-import Topic from "discourse/models/topic";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
@@ -864,9 +863,7 @@ export default class Category extends RestModel {
   @discourseComputed("topics")
   featuredTopics(topics) {
     if (topics && topics.length) {
-      return topics
-        .slice(0, this.num_featured_topics || 2)
-        .map((t) => Topic.create(t));
+      return topics.slice(0, this.num_featured_topics || 2);
     }
   }
 
