@@ -151,42 +151,38 @@ function convertSelectionToCodeBlock(schema) {
   };
 }
 
-function formatCode(schema) {
-  return (state, dispatch) => {
-    const { selection } = state;
-
-    // Case 1: Already in code block - convert back to paragraphs
-    if (selection.$from.parent.type === schema.nodes.code_block) {
-      return convertCodeBlockToParagraphs(schema)(state, dispatch);
-    }
-
-    // Case 2: Empty selection
-    if (selection.empty) {
-      const isEmptyBlock = selection.$from.parent.content.size === 0;
-      const command = isEmptyBlock
-        ? setBlockType(schema.nodes.code_block)
-        : toggleMark(schema.marks.code);
-      return command(state, dispatch);
-    }
-
-    // Case 3: Selection spans multiple blocks OR covers entire block content
-    if (isBlockLevelSelection(selection)) {
-      return convertSelectionToCodeBlock(schema)(state, dispatch);
-    }
-
-    // Case 4: Inline text selection - toggle code mark
-    return toggleMark(schema.marks.code)(state, dispatch);
-  };
-}
-
 /** @type {RichEditorExtension} */
 const extension = {
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
-  commands({ schema }) {
-    return {
-      formatCode: formatCode(schema),
-    };
-  },
+  commands: ({ schema }) => ({
+    formatCode() {
+      return (state, dispatch) => {
+        const { selection } = state;
+
+        // Case 1: Already in code block - convert back to paragraphs
+        if (selection.$from.parent.type === schema.nodes.code_block) {
+          return convertCodeBlockToParagraphs(schema)(state, dispatch);
+        }
+
+        // Case 2: Empty selection
+        if (selection.empty) {
+          const isEmptyBlock = selection.$from.parent.content.size === 0;
+          const command = isEmptyBlock
+            ? setBlockType(schema.nodes.code_block)
+            : toggleMark(schema.marks.code);
+          return command(state, dispatch);
+        }
+
+        // Case 3: Selection spans multiple blocks OR covers entire block content
+        if (isBlockLevelSelection(selection)) {
+          return convertSelectionToCodeBlock(schema)(state, dispatch);
+        }
+
+        // Case 4: Inline text selection - toggle code mark
+        return toggleMark(schema.marks.code)(state, dispatch);
+      };
+    },
+  }),
   async plugins({ getContext }) {
     return highlightPlugin(
       (hljs = await ensureHighlightJs(getContext().session.highlightJsPath)),
