@@ -89,7 +89,12 @@ end
 
 MessageBus.extra_response_headers_lookup do |env|
   setup_message_bus_env(env)
-  env["__mb"][:extra_headers]
+  headers = env["__mb"][:extra_headers]
+  if view_tracking_data = env["discourse.view_tracking_data"]
+    headers["X-Discourse-TrackView"] = "1" if view_tracking_data[:track_view]
+    headers["X-Discourse-BrowserPageView"] = "1" if view_tracking_data[:browser_page_view]
+  end
+  headers
 end
 
 MessageBus.user_id_lookup do |env|
