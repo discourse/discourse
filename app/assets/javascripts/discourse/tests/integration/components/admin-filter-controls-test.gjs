@@ -548,4 +548,241 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
       .dom(".admin-filter-controls__dropdown")
       .doesNotExist("hides dropdown when only one option");
   });
+
+  test("renders multiple dropdowns", async function (assert) {
+    const self = this;
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: [
+        { label: "All", value: "all" },
+        { label: "Feature", value: "feature" },
+      ],
+      enabled: [
+        { label: "All", value: "all" },
+        { label: "Enabled", value: "enabled" },
+      ],
+    });
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{self.data}}
+          @dropdownOptions={{self.dropdownOptions}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item">{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    assert
+      .dom(".admin-filter-controls__dropdown")
+      .exists({ count: 2 }, "renders two dropdowns");
+    assert
+      .dom(".admin-filter-controls__dropdown--category")
+      .exists("renders category dropdown");
+    assert
+      .dom(".admin-filter-controls__dropdown--enabled")
+      .exists("renders enabled dropdown");
+  });
+
+  test("filters data by multiple dropdowns (client-side)", async function (assert) {
+    const self = this;
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: [
+        { label: "All", value: "all", filterFn: () => true },
+        {
+          label: "Feature",
+          value: "feature",
+          filterFn: (item) => item.category === "feature",
+        },
+      ],
+      enabled: [
+        { label: "All", value: "all", filterFn: () => true },
+        {
+          label: "Enabled",
+          value: "enabled",
+          filterFn: (item) => item.enabled,
+        },
+      ],
+    });
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{self.data}}
+          @dropdownOptions={{self.dropdownOptions}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    assert.dom(".item").exists({ count: 3 }, "shows all items initially");
+
+    await select(".admin-filter-controls__dropdown--category", "feature");
+
+    assert
+      .dom(".item")
+      .exists({ count: 2 }, "shows only feature items after category filter");
+
+    await select(".admin-filter-controls__dropdown--enabled", "enabled");
+
+    assert
+      .dom(".item")
+      .exists(
+        { count: 2 },
+        "shows only enabled feature items after both filters"
+      );
+    assert.dom(".item[data-id='1']").exists("shows first enabled feature");
+    assert.dom(".item[data-id='3']").exists("shows second enabled feature");
+  });
+
+  test("resets multiple dropdowns correctly", async function (assert) {
+    const self = this;
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+    this.set("dropdownOptions", {
+      category: [
+        { label: "All", value: "all", filterFn: () => true },
+        {
+          label: "Feature",
+          value: "feature",
+          filterFn: (item) => item.category === "feature",
+        },
+      ],
+    });
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{self.data}}
+          @searchableProps={{self.searchableProps}}
+          @dropdownOptions={{self.dropdownOptions}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    await select(".admin-filter-controls__dropdown--category", "feature");
+    await fillIn(".filter-input", "first");
+
+    assert.dom(".item").exists({ count: 1 }, "shows filtered results");
+
+    await fillIn(".filter-input", "firstblah");
+    await click(".admin-filter-controls__reset");
+
+    assert.dom(".item").exists({ count: 3 }, "shows all items after reset");
+  });
+
+  test("calls onDropdownFilterChange with key and value for multiple dropdowns", async function (assert) {
+    const self = this;
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: [
+        { label: "All", value: "all" },
+        { label: "Feature", value: "feature" },
+      ],
+      enabled: [
+        { label: "All", value: "all" },
+        { label: "Enabled", value: "enabled" },
+      ],
+    });
+    this.set("dropdownFilterCallback", (key, value) => {
+      assert.step(`dropdown-filter:${key}:${value}`);
+    });
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{self.data}}
+          @dropdownOptions={{self.dropdownOptions}}
+          @onDropdownFilterChange={{self.dropdownFilterCallback}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item">{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    await select(".admin-filter-controls__dropdown--category", "feature");
+    await select(".admin-filter-controls__dropdown--enabled", "enabled");
+
+    assert.verifySteps(
+      ["dropdown-filter:category:feature", "dropdown-filter:enabled:enabled"],
+      "calls callback with key and value for each dropdown"
+    );
+  });
+
+  test("supports custom default values for multiple dropdowns", async function (assert) {
+    const self = this;
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: [
+        { label: "All", value: "all", filterFn: () => true },
+        {
+          label: "Feature",
+          value: "feature",
+          filterFn: (item) => item.category === "feature",
+        },
+      ],
+    });
+    this.set("defaultDropdownValue", { category: "feature" });
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{self.data}}
+          @dropdownOptions={{self.dropdownOptions}}
+          @defaultDropdownValue={{self.defaultDropdownValue}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    assert
+      .dom(".item")
+      .exists(
+        { count: 3 },
+        "shows all items initially - custom defaults work after user interaction"
+      );
+
+    await select(".admin-filter-controls__dropdown--category", "all");
+    await select(".admin-filter-controls__dropdown--category", "feature");
+
+    assert
+      .dom(".item")
+      .exists({ count: 2 }, "shows only feature items after selecting filter");
+  });
 });

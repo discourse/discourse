@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { schedule } from "@ember/runloop";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
@@ -19,21 +20,24 @@ import FilterInput from "discourse/components/filter-input";
  * @param {Array} array - The dataset to display
  * @param {Array} [searchableProps] - Property names to search for client-side text filtering, can be dot-separated
  *                                for nested properties (e.g. "user.name")
- * @param {Array} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]. Or, if you
+ * @param {Array|Object} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]. Or, if you
  *                                   want multiple dropdowns, format is: { dropdown1: [...], dropdown2: [...] }
  * @param {String} [inputPlaceholder] - Placeholder text for search input
- * @param {String} [defaultDropdownValue="all"] - Default dropdown value
+ * @param {String|Object} [defaultDropdownValue="all"] - Default dropdown value(s). For single dropdown: "all",
+ *                                                       for multiple: { dropdown1: "all", dropdown2: "all" }
  * @param {String} [noResultsMessage] - Message shown when no results found
  * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
  * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
  * @param {Function} [onTextFilterChange] - Callback for text changes (enables server-side mode)
- * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode)
+ * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode).
+ *                                              For multiple dropdowns: receives (key, value)
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  */
 
 export default class AdminFilterControls extends Component {
   @tracked textFilter = "";
   @tracked dropdownFilter = "all";
+  @tracked dropdownFilters = new TrackedObject();
 
   get array() {
     return Array.isArray(this.args.array) ? this.args.array : [];
@@ -54,9 +58,12 @@ export default class AdminFilterControls extends Component {
   }
 
   get dropdownOptions() {
+    if (!this.args.dropdownOptions) {
+      return [];
+    }
     return Array.isArray(this.args.dropdownOptions)
       ? this.args.dropdownOptions
-      : [];
+      : this.args.dropdownOptions;
   }
 
   get showDropdownFilter() {
@@ -74,10 +81,17 @@ export default class AdminFilterControls extends Component {
   }
 
   get hasActiveFilters() {
-    return (
-      this.textFilter.length > 0 ||
-      this.dropdownFilter !== this.defaultDropdownValue
-    );
+    if (this.textFilter.length > 0) {
+      return true;
+    }
+
+    if (this.hasMultipleDropdowns) {
+      return Object.keys(this.dropdownFilters).some((key) => {
+        return this.dropdownFilters[key] !== this.defaultValue(key);
+      });
+    }
+
+    return this.dropdownFilter !== this.defaultDropdownValue;
   }
 
   get filteredData() {
@@ -100,7 +114,21 @@ export default class AdminFilterControls extends Component {
       });
     }
 
-    if (this.dropdownFilter !== this.defaultDropdownValue) {
+    if (this.hasMultipleDropdowns) {
+      Object.keys(this.dropdownFilters).forEach((key) => {
+        const selectedValue = this.dropdownFilters[key];
+
+        if (selectedValue !== this.defaultValue(key)) {
+          const options = this.dropdownOptions[key] || [];
+          const selectedOption = options.find(
+            (option) => option.value === selectedValue
+          );
+          if (selectedOption?.filterFn) {
+            filtered = filtered.filter(selectedOption.filterFn);
+          }
+        }
+      });
+    } else if (this.dropdownFilter !== this.defaultDropdownValue) {
       const selectedOption = this.dropdownOptions.find(
         (option) => option.value === this.dropdownFilter
       );
@@ -124,9 +152,23 @@ export default class AdminFilterControls extends Component {
     return path.split(".").reduce((current, key) => current?.[key], obj);
   }
 
+  defaultValue(key) {
+    const defaults =
+      typeof this.defaultDropdownValue === "object"
+        ? this.defaultDropdownValue
+        : {};
+    return defaults[key] || "all";
+  }
+
   @action
   setupComponent() {
-    this.dropdownFilter = this.defaultDropdownValue;
+    if (this.hasMultipleDropdowns) {
+      Object.keys(this.dropdownOptions).forEach((key) => {
+        this.dropdownFilters[key] = this.defaultValue(key);
+      });
+    } else {
+      this.dropdownFilter = this.defaultDropdownValue;
+    }
   }
 
   @action
@@ -137,16 +179,27 @@ export default class AdminFilterControls extends Component {
   }
 
   @action
-  onDropdownFilterChange(value) {
-    this.dropdownFilter = value;
-
-    this.args.onDropdownFilterChange?.(value);
+  onDropdownFilterChange(keyOrValue, value) {
+    if (this.hasMultipleDropdowns) {
+      this.dropdownFilters[keyOrValue] = value;
+      this.args.onDropdownFilterChange?.(keyOrValue, value);
+    } else {
+      this.dropdownFilter = keyOrValue;
+      this.args.onDropdownFilterChange?.(keyOrValue);
+    }
   }
 
   @action
   resetFilters() {
     this.textFilter = "";
-    this.dropdownFilter = this.defaultDropdownValue;
+
+    if (this.hasMultipleDropdowns) {
+      Object.keys(this.dropdownFilters).forEach((key) => {
+        this.dropdownFilters[key] = this.defaultValue(key);
+      });
+    } else {
+      this.dropdownFilter = this.defaultDropdownValue;
+    }
 
     if (this.args.onResetFilters) {
       this.args.onResetFilters();
@@ -169,7 +222,24 @@ export default class AdminFilterControls extends Component {
         />
 
         {{#if this.showDropdownFilter}}
-          {{#unless this.hasMultipleDropdowns}}
+          {{#if this.hasMultipleDropdowns}}
+            {{#each-in this.dropdownOptions as |key options|}}
+              <DSelect
+                @value={{get this.dropdownFilters key}}
+                @includeNone={{false}}
+                @onChange={{fn this.onDropdownFilterChange key}}
+                class="admin-filter-controls__dropdown admin-filter-controls__dropdown--{{key}}"
+                data-dropdown-key={{key}}
+                as |select|
+              >
+                {{#each options as |option|}}
+                  <select.Option @value={{option.value}}>
+                    {{option.label}}
+                  </select.Option>
+                {{/each}}
+              </DSelect>
+            {{/each-in}}
+          {{else}}
             <DSelect
               @value={{this.dropdownFilter}}
               @includeNone={{false}}
@@ -183,7 +253,7 @@ export default class AdminFilterControls extends Component {
                 </select.Option>
               {{/each}}
             </DSelect>
-          {{/unless}}
+          {{/if}}
         {{/if}}
 
         {{yield to="actions"}}

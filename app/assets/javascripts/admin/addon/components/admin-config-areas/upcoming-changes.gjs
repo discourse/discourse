@@ -13,58 +13,75 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
   }
 
   get dropdownOptions() {
-    return [
-      {
-        label: i18n("admin.upcoming_changes.filter.all"),
-        value: "all",
-        filterFn: () => true,
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.enabled"),
-        value: "enabled",
-        filterFn: (change) => change.value,
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.disabled"),
-        value: "disabled",
-        filterFn: (change) => !change.value,
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.impact_type_feature"),
-        value: "feature",
-        filterFn: (change) => change.upcoming_change.impact_type === "feature",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.impact_type_other"),
-        value: "other",
-        filterFn: (change) => change.upcoming_change.impact_type === "other",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.status_pre_alpha"),
-        value: "pre_alpha",
-        filterFn: (change) => change.upcoming_change.status === "pre_alpha",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.status_alpha"),
-        value: "alpha",
-        filterFn: (change) => change.upcoming_change.status === "alpha",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.status_beta"),
-        value: "beta",
-        filterFn: (change) => change.upcoming_change.status === "beta",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.status_stable"),
-        value: "stable",
-        filterFn: (change) => change.upcoming_change.status === "stable",
-      },
-      {
-        label: i18n("admin.upcoming_changes.filter.status_permanent"),
-        value: "permanent",
-        filterFn: (change) => change.upcoming_change.status === "permanent",
-      },
-    ];
+    return {
+      status: [
+        {
+          label: i18n("admin.upcoming_changes.filter.all"),
+          value: "all",
+          filterFn: () => true,
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.status_pre_alpha"),
+          value: "pre_alpha",
+          filterFn: (change) => change.upcoming_change.status === "pre_alpha",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.status_alpha"),
+          value: "alpha",
+          filterFn: (change) => change.upcoming_change.status === "alpha",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.status_beta"),
+          value: "beta",
+          filterFn: (change) => change.upcoming_change.status === "beta",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.status_stable"),
+          value: "stable",
+          filterFn: (change) => change.upcoming_change.status === "stable",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.status_permanent"),
+          value: "permanent",
+          filterFn: (change) => change.upcoming_change.status === "permanent",
+        },
+      ],
+      type: [
+        {
+          label: i18n("admin.upcoming_changes.filter.all"),
+          value: "all",
+          filterFn: () => true,
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_type_feature"),
+          value: "feature",
+          filterFn: (change) =>
+            change.upcoming_change.impact_type === "feature",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_type_other"),
+          value: "other",
+          filterFn: (change) => change.upcoming_change.impact_type === "other",
+        },
+      ],
+      enabled: [
+        {
+          label: i18n("admin.upcoming_changes.filter.all"),
+          value: "all",
+          filterFn: () => true,
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.enabled"),
+          value: "enabled",
+          filterFn: (change) => change.value,
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.disabled"),
+          value: "disabled",
+          filterFn: (change) => !change.value,
+        },
+      ],
+    };
   }
 
   <template>
