@@ -99,6 +99,8 @@ en:
           title: "Header Icons"
         spinners:
           title: "Spinners"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Empty State"
         tooltips:
