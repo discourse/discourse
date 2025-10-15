@@ -73,6 +73,7 @@ export default class ChatChannelFilter extends Component {
 
   @action
   clearFilteringState() {
+    this.currentChannelFilter = "";
     this.channelFilterResults = null;
     this.currentChannelFilterResult = null;
     this.currentChannelFilterResultIndex = 0;
@@ -144,6 +145,7 @@ export default class ChatChannelFilter extends Component {
       >
         <FilterInput
           {{autoFocus}}
+          @value={{this.currentChannelFilter}}
           placeholder={{i18n "chat.search.title"}}
           @filterAction={{this.loadSearchResults}}
           class="no-blur"
@@ -169,6 +171,14 @@ export default class ChatChannelFilter extends Component {
             @action={{this.navigateToNextResult}}
             @icon="chevron-down"
             class="btn-small chat-channel__next-result"
+          />
+        {{/if}}
+
+        {{#if this.currentChannelFilter.length}}
+          <DButton
+            @icon="xmark"
+            class="btn-small"
+            @action={{this.clearFilteringState}}
           />
         {{/if}}
 
