@@ -199,7 +199,8 @@ describe DiscourseDataExplorer::QueryController do
                  foo: 42,
                  bar: "test",
                },
-             }
+             },
+             as: :json
         expect(response.status).to eq(200)
         expect(response_json["success"]).to eq(true)
         expect(response_json["columns"]).to eq(%w[my_value text_value])
