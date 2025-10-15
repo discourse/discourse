@@ -17,7 +17,7 @@ module Chat
         def call
           channel = ::Chat::Channel.find_by(slug: channel_slug.downcase)
 
-          if channel_id && guardian.can_preview_chat_channel?(::Chat::Channel.find(channel_id))
+          if channel.present? && guardian.can_preview_chat_channel?(channel)
             messages.where("chat_channels.id = ?", channel_id)
           else
             messages.where("1 = 0")
