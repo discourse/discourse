@@ -2090,6 +2090,7 @@ en:
         first_time_and_daily: "First time a post is liked and daily"
         first_time: "First time a post is liked"
         never: "Never"
+      notify_on_linked_posts: "Notify when someone shares a link to one of my posts"
       email_previous_replies:
         title: "Include previous replies at the bottom of emails"
         unless_emailed: "unless previously sent"
@@ -3120,6 +3121,8 @@ en:
         visit: "Open link in external tab"
         link_copied: "Link copied!"
 
+      unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
+
     notifications:
       tooltip:
         regular:
@@ -3698,6 +3701,8 @@ en:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
       browse_latest_topics: "Browse latest topics"
+      browse_new_replies: "Browse new replies"
+      browse_new_topics: "Browse new topics"
 
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
@@ -6916,6 +6921,10 @@ en:
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
+          search_templates: "Filter by template name..."
+          no_templates_found: "No templates match your filters."
+          edit: "Edit"
+          back: "Back to templates"
         component:
           all_filter: "All"
           used_filter: "Used"

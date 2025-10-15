@@ -109,7 +109,7 @@ RSpec.describe "groups" do
   path "/groups/by-id/{id}.json" do
     get "Get a group by id" do
       tags "Groups"
-      operationId "getGroup"
+      operationId "getGroupById"
       consumes "application/json"
       parameter name: :id,
                 in: :path,

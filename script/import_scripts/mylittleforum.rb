@@ -3,6 +3,8 @@
 require "mysql2"
 require_relative "base"
 require "htmlentities"
+require "uri"
+require "json"
 
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
@@ -15,6 +17,39 @@ export TABLE_PREFIX="forum_"
 export IMPORT_AFTER="1970-01-01"
 export IMAGE_BASE="http://www.example.com/forum"
 export BASE="forum"
+
+# Optional: set a parent category in Discourse. When set, all imported MLF
+# categories will be created as subcategories under this one.
+# export PARENT_CATEGORY="Existing Discourse Category Name"
+
+# Optional: rewrite absolute legacy links (index.php?id=...) to Discourse permalinks
+# using IMAGE_BASE as the legacy base.
+# export REWRITE_LINKS="true"
+#
+# Optional: local path to the legacy uploads directory (flat namespace; files like 20250706095752686a48a0d33d0.pdf).
+# If the original forum is behind auth or lacks disk space, this folder can be mounted via sshfs.
+# Note: The path may only contain ASCII letters, digits, underscores (_), hyphens (-), dots (.) and slashes (/).
+# Characters such as spaces, German umlauts (ä, ö, ü, ß) or any other special characters are not allowed,
+# otherwise JPG and PNG files may cause an "InvalidAccess" error.
+# The files mlf_missing_uploads.txt and mlf_upload_map.json are created in the script directory to keep track of uploads.
+# If you update the Docker container and perform another import afterwards, make sure to back up these files beforehand.
+# export UPLOADS_DIR="/path/to/mlf/uploads"
+#
+# Optional: repair pass to update already-imported posts that still contain legacy upload links
+# (e.g., files became available only after the first run). When enabled, only posts imported by
+# this script are scanned, and only links under IMAGE_BASE/…/images/uploaded are rewritten.
+# export REPAIR_UPLOAD_LINKS="true"
+#
+# Optional: temporarily relax upload constraints during the uploads phase. When enabled, increases
+# max_attachment_size_kb / max_image_size_kb to a generous value and temporarily allows all file
+# extensions ('*') so the import won't fail on extension checks. All settings are restored after
+# the uploads step.
+# export LOOSEN_UPLOAD_CONSTRAINTS="true"
+#
+# Optional: import users as staged. When enabled, users are created as staged instead of full accounts.
+# Useful for historical migrations or when email delivery should be suppressed until first login.
+# Set to "true" (case-insensitive) to enable.
+# export STAGE_IMPORTED_USERS="true"
 =end
 
 class ImportScripts::MylittleforumSQL < ImportScripts::Base
@@ -24,18 +59,72 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   DB_USER = ENV["DB_USER"] || "root"
   TABLE_PREFIX = ENV["TABLE_PREFIX"] || "forum_"
   IMPORT_AFTER = ENV["IMPORT_AFTER"] || "1970-01-01"
-  IMAGE_BASE = ENV["IMAGE_BASE"] || ""
+  IMAGE_BASE = (ENV["IMAGE_BASE"] || "").strip
   BASE = ENV["BASE"] || "forum/"
+  PARENT_CATEGORY = (ENV["PARENT_CATEGORY"] || "").strip
+  REWRITE_LINKS = (ENV["REWRITE_LINKS"] || "").strip.casecmp?("true")
+  UPLOADS_DIR = (ENV["UPLOADS_DIR"] || "").strip
+  REPAIR_UPLOAD_LINKS = (ENV["REPAIR_UPLOAD_LINKS"] || "").strip.casecmp?("true")
+  LOOSEN_UPLOAD_CONSTRAINTS = (ENV["LOOSEN_UPLOAD_CONSTRAINTS"] || "").strip.casecmp?("true")
+
   BATCH_SIZE = 1000
   CONVERT_HTML = true
   QUIET = nil || ENV["VERBOSE"] == "TRUE"
   FORCE_HOSTNAME = nil || ENV["FORCE_HOSTNAME"]
+  STAGE_IMPORTED_USERS = (ENV["STAGE_IMPORTED_USERS"] || "").strip.upcase == "TRUE"
 
   QUIET = true
 
   # Site settings
   SiteSetting.disable_emails = "non-staff"
   SiteSetting.force_hostname = FORCE_HOSTNAME if FORCE_HOSTNAME
+
+  def get_site_settings_for_import
+    settings = super
+
+    return settings unless LOOSEN_UPLOAD_CONSTRAINTS
+
+    max_file_size_kb = 102_400
+    settings[:max_image_size_kb] = [max_file_size_kb, SiteSetting.max_image_size_kb].max
+    settings[:max_attachment_size_kb] = [max_file_size_kb, SiteSetting.max_attachment_size_kb].max
+    settings[:authorized_extensions] = "*"
+    settings[:authorized_extensions_for_staff] = "*"
+
+    # allow the bumped limits to pass validations during the import
+    begin
+      SiteSetting.type_supervisor.load_setting(
+        :max_image_size_kb,
+        max: settings[:max_image_size_kb],
+      )
+      SiteSetting.type_supervisor.load_setting(
+        :max_attachment_size_kb,
+        max: settings[:max_attachment_size_kb],
+      )
+    rescue => e
+      print_warning("Could not widen validation caps: #{e.message}")
+    end
+    settings
+  end
+
+  def resolve_parent_category_id
+    # Find existing Discourse category by name or slug; return id or nil
+    return nil if PARENT_CATEGORY.empty?
+
+    name = PARENT_CATEGORY
+    parent =
+      Category.where("lower(name) = ?", name.downcase).first ||
+        Category.where("lower(slug) = ?", name.parameterize.downcase).first
+
+    unless parent
+      print_warning(
+        "Note: PARENT_CATEGORY='#{PARENT_CATEGORY}' not found. " \
+          "Import will create top-level categories.",
+      )
+      return nil
+    end
+
+    parent.id
+  end
 
   def initialize
     print_warning("Importing data after #{IMPORT_AFTER}") if IMPORT_AFTER > "1970-01-01"
@@ -71,21 +160,48 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       TEXT
       exit
     end
+
+    @parent_category_id = resolve_parent_category_id
+    build_legacy_link_rewriter
+
+    # uploads
+    @script_dir = File.expand_path(File.dirname(__FILE__))
+    @upload_map_path = File.join(@script_dir, "mlf_upload_map.json")
+    @missing_uploads_path = File.join(@script_dir, "mlf_missing_uploads.txt")
+    @upload_map = load_upload_map(@upload_map_path)
+    build_legacy_upload_rewriter
   end
 
   def execute
     import_users
     import_categories
+
+    # Uploads first, so posts can link to already-imported Discourse uploads.
+    import_uploads
+
     import_topics
     import_posts
+
+    repair_legacy_upload_links if REPAIR_UPLOAD_LINKS
 
     update_tl0
 
     create_permalinks
+
+    # persist the upload map at the very end
+    save_upload_map(@upload_map_path, @upload_map)
   end
 
   def import_users
     puts "", "creating users"
+
+    # MLF 1.x used 'user_place', MLF 2.x uses 'user_location'
+    location_col =
+      if mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}userdata LIKE 'user_place'").any?
+        "user_place"
+      else
+        "user_location"
+      end
 
     total_count =
       mysql_query(
@@ -102,7 +218,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                 user_real_name as Name,
                 user_email as Email,
                 user_hp as website,
-                user_place as Location,
+                #{location_col} as Location,
                 profile as bio_raw,
                 last_login as DateLastActive,
                 user_ip as InsertIPAddress,
@@ -123,7 +239,12 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       next if all_records_exist? :users, results.map { |u| u["UserID"].to_i }
 
       create_users(results, total: total_count, offset: offset) do |user|
+        # respect already "prepared" users created earlier (e.g. via mbox import)
         next if user["Email"].blank?
+        if existing = User.find_by_email(user["Email"])
+          @lookup.add_user(user["UserID"].to_s, existing)
+          next
+        end
         next if @lookup.user_id_from_imported_user_id(user["UserID"])
 
         # username = fix_username(user['username'])
@@ -133,6 +254,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           email: user["Email"],
           username: user["username"],
           name: user["Name"],
+          staged: STAGE_IMPORTED_USERS,
           created_at: user["DateInserted"] == nil ? 0 : Time.zone.at(user["DateInserted"]),
           bio_raw: user["bio_raw"],
           registration_ip_address: user["InsertIPAddress"],
@@ -176,11 +298,15 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                             ",
       ).to_a
 
+    parent_id = @parent_category_id
+
     create_categories(categories) do |category|
       {
         id: category["CategoryID"],
         name: CGI.unescapeHTML(category["Name"]),
         description: CGI.unescapeHTML(category["Description"]),
+        # When parent_id is nil, Discourse creates a top-level category (default behavior).
+        parent_category_id: parent_id,
       }
     end
   end
@@ -197,6 +323,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         "count"
       ]
 
+    # Optional youtube_link column (not present in standard MLF 2.x)
+    youtube_available =
+      mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'").any?
+    optional_youtube_column = youtube_available ? ", youtube_link as youtube" : ""
+
     batches(BATCH_SIZE) do |offset|
       discussions =
         mysql_query(
@@ -205,7 +336,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                 subject as Name,
                 text as Body,
                 time as DateInserted,
-                youtube_link as youtube,
+				 #{optional_youtube_column}
                 user_id as InsertUserID
          FROM #{TABLE_PREFIX}entries
          WHERE pid = 0
@@ -229,6 +360,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           raw += "\n#{youtube}\n"
           print_warning(raw)
         end
+
+        raw = rewrite_legacy_links(raw)
+        raw = rewrite_legacy_uploads(raw)
 
         {
           id: "discussion#" + discussion["DiscussionID"].to_s,
@@ -256,6 +390,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         "count"
       ]
 
+    # Optional youtube_link column (not present in standard MLF 2.x)
+    youtube_available =
+      mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'").any?
+    optional_youtube_column = youtube_available ? ", youtube_link as youtube" : ""
+
     batches(BATCH_SIZE) do |offset|
       comments =
         mysql_query(
@@ -263,7 +402,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                 tid as DiscussionID,
                 text as Body,
                 time as DateInserted,
-                youtube_link as youtube,
+				#{optional_youtube_column}
                 user_id as InsertUserID
          FROM #{TABLE_PREFIX}entries
          WHERE pid > 0
@@ -290,6 +429,10 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           youtube = clean_youtube(comment["youtube"])
           raw += "\n#{youtube}\n"
         end
+
+        raw = rewrite_legacy_links(raw)
+        raw = rewrite_legacy_uploads(raw)
+
         {
           id: "comment#" + comment["CommentID"].to_s,
           user_id:
@@ -366,6 +509,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw.gsub!(/\[div\]/mix, "[quote]")
     raw.gsub!(%r{\[/div\]}mix, "[/quote]")
 
+    # BBCode list to Markdown (unordered)
+    raw.gsub!(/\[list\]/i, "")
+    raw.gsub!(%r{\[/list\]}i, "")
+    raw.gsub!(/\[\*\]\s*/i, "* ")
+
     # [postedby] -> link to @user
     raw.gsub(%r{\[postedby\](.+?)\[b\](.+?)\[/b\]\[/postedby\]}i) { "#{$1}@#{$2}" }
 
@@ -385,6 +533,15 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     # fix whitespaces
     raw = raw.gsub(/(\\r)?\\n/, "\n").gsub("\\t", "\t")
+
+    # enforce block boundaries so BBCode [quote] is parsed reliably
+    raw.gsub!(/[ \t]*\n?[ \t]*\[quote\][ \t]*/i) { "\n\n[quote]\n" }
+    raw.gsub!(%r{[ \t]*\[/quote\][ \t]*\n?}i) { "\n[/quote]\n\n" }
+
+    # end a Markdown blockquote unless the next line intentionally continues it
+    # (next line starts with '>' or a list marker like '- ', '* ', '1. ')
+    # prevent Markdown lazy-continuation from pulling the next paragraph into the quote
+    raw = ensure_quote_breaks(raw)
 
     unless CONVERT_HTML
       # replace all chevrons with HTML entities
@@ -487,6 +644,377 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
   def print_warning(message)
     $stderr.puts "#{message}"
+  end
+
+  # ensure a blank line after a quoted block unless the next line intentionally continues it
+  def ensure_quote_breaks(text)
+    return text if text.blank?
+
+    out = []
+    in_quote = false
+    lines = text.split("\n", -1) # keep trailing empties
+
+    lines.each do |line|
+      if line =~ /\A\s*>/
+        in_quote = true
+        out << line
+        next
+      end
+
+      if in_quote
+        # leaving a quote: if the current non-quote line is NOT a continuation marker, insert a blank line before it
+        unless line =~ /\A\s*(?:>|[-*]\s|\d+\.\s)/
+          out << "" unless out.last == ""
+        end
+      end
+
+      in_quote = false
+      out << line
+    end
+
+    out.join("\n")
+  end
+
+  private
+
+  def build_legacy_link_rewriter
+    @rewrite_links_enabled = false
+    return unless REWRITE_LINKS
+    return if IMAGE_BASE.empty?
+
+    begin
+      u = URI.parse(IMAGE_BASE)
+      host = u.host&.downcase
+      path = u.path.to_s
+      return unless host
+
+      # normalize host (allow matching with/without www)
+      host = host.delete_prefix("www.")
+      # normalize path (no trailing slash)
+      path = path.delete_suffix("/")
+
+      host_esc = Regexp.escape(host)
+      path_esc = Regexp.escape(path)
+
+      # match absolute legacy links: http(s)://(www.)?host/path/index.php?id=123...
+      @legacy_link_regex =
+        %r{https?://(?:www\.)?#{host_esc}#{path_esc}/index\.php\?id=(\d+)(?:[&#][^"\s<]*)?}i
+
+      @rewrite_links_enabled = true
+    rescue => e
+      print_warning(
+        "Note: REWRITE_LINKS enabled but IMAGE_BASE invalid (#{e.message}). Skipping link rewrite.",
+      )
+      @rewrite_links_enabled = false
+    end
+  end
+
+  def rewrite_legacy_links(raw)
+    return raw unless @rewrite_links_enabled
+    return raw if raw.blank?
+
+    prefix = "/#{BASE.to_s.strip.sub(%r{\A/}, "").sub(%r{/\z}, "")}"
+    prefix = "" if prefix == "/"
+
+    # 1) rewrite only href="LEGACY..."
+    raw =
+      raw.gsub(/(\bhref\s*=\s*["'])#{@legacy_link_regex}/i) do
+        %(#{$1}#{prefix}/forum_entry-id-#{$2}.html)
+      end
+
+    # 2) rewrite naked legacy URLs to clickable anchors (avoid attr contexts)
+    raw =
+      raw.gsub(/(?<![="'=])#{@legacy_link_regex}/i) do
+        path = "#{prefix}/forum_entry-id-#{$1}.html"
+        %(<a href="#{path}">#{path}</a>)
+      end
+
+    raw
+  end
+
+  #
+  # uploads support
+  #
+
+  def build_legacy_upload_rewriter
+    @rewrite_uploads_enabled = false
+    return if IMAGE_BASE.empty?
+
+    begin
+      u = URI.parse(IMAGE_BASE)
+      host = u.host
+      path = u.path || ""
+      return unless host
+
+      host = host.sub(/\Awww\./i, "")
+      path = path.sub(%r{/\z}, "")
+
+      host_esc = Regexp.escape(host)
+      path_esc = Regexp.escape(path)
+
+      # match absolute legacy uploads: http(s)://(www.)?host/path/images/uploaded/<filename>
+      @legacy_upload_regex =
+        %r{https?://(?:www\.)?#{host_esc}#{path_esc}/images/uploaded/([^\s"'<>\?#]+)}i
+
+      @rewrite_uploads_enabled = true
+    rescue => e
+      print_warning(
+        "Note: IMAGE_BASE invalid for upload rewrite (#{e.message}). Skipping upload link rewrite.",
+      )
+      @rewrite_uploads_enabled = false
+    end
+  end
+
+  def relative_upload_url(url)
+    return url if url.blank?
+    url.sub(%r{\Ahttps?://[^/]+}, "")
+  end
+
+  def load_upload_map(path)
+    if File.exist?(path)
+      JSON.parse(File.read(path))
+    else
+      {}
+    end
+  rescue => e
+    print_warning("Could not read upload map at #{path}: #{e.message}")
+    {}
+  end
+
+  def save_upload_map(path, map)
+    File.open(path, "w") { |f| f.write(JSON.pretty_generate(map)) }
+  rescue => e
+    print_warning("Could not write upload map at #{path}: #{e.message}")
+  end
+
+  def append_missing_upload(filename)
+    begin
+      File.open(@missing_uploads_path, "a") { |f| f.puts(filename) }
+    rescue => e
+      print_warning(
+        "Could not append to missing uploads list #{@missing_uploads_path}: #{e.message}",
+      )
+    end
+  end
+
+  def find_uploads_table_name
+    # try common variants
+    candidates = ["#{TABLE_PREFIX}uploads", "mlf_uploads", "#{TABLE_PREFIX}mlf_uploads"]
+    names = @client.query("SHOW TABLES").map { |r| r.values.first.to_s }
+    candidates.find { |t| names.include?(t) }
+  end
+
+  def import_uploads
+    return if UPLOADS_DIR.empty?
+
+    table = find_uploads_table_name
+    unless table
+      print_warning(
+        "No uploads table found (tried '#{TABLE_PREFIX}uploads', 'mlf_uploads'). Skipping uploads import.",
+      )
+      return
+    end
+
+    puts "", "importing uploads from #{table}..."
+
+    # only import uploads newer than IMPORT_AFTER (consistent with topics/posts)
+    total =
+      mysql_query(
+        "SELECT count(*) AS c
+       FROM #{table}
+       WHERE tstamp > '#{IMPORT_AFTER}'",
+      ).first[
+        "c"
+      ]
+    offset = 0
+
+    missing = 0
+    created = 0
+    skipped = 0
+
+    while offset < total
+      rows =
+        mysql_query(
+          "SELECT id, uploader, filename, tstamp
+         FROM #{table}
+         WHERE tstamp > '#{IMPORT_AFTER}'
+         ORDER BY id ASC
+         LIMIT #{BATCH_SIZE}
+         OFFSET #{offset}",
+        ).to_a
+      break if rows.empty?
+
+      rows.each do |row|
+        fn = row["filename"].to_s
+        next if fn.blank?
+
+        if @upload_map.key?(fn)
+          skipped += 1
+          next
+        end
+
+        base_fn = fn
+        path = File.join(UPLOADS_DIR, fn)
+        actual_fn = fn
+
+        # handle filenames without extension in DB: try to find "<filename>.*" on disk
+        unless File.exist?(path)
+          if File.extname(base_fn).to_s.empty?
+            candidates = Dir.glob(File.join(UPLOADS_DIR, "#{base_fn}.*"))
+            if candidates.any?
+              path = candidates.first
+              actual_fn = File.basename(path)
+              # don't double-import if we already mapped the on-disk name somehow
+              if @upload_map.key?(actual_fn)
+                @upload_map[base_fn] = @upload_map[actual_fn]
+                skipped += 1
+                next
+              end
+              print_warning("Resolved extensionless '#{base_fn}' to '#{actual_fn}'")
+            end
+          end
+        end
+
+        unless File.exist?(path)
+          missing += 1
+          append_missing_upload(fn)
+          next
+        end
+
+        uploader_id = user_id_from_imported_user_id(row["uploader"]) || Discourse::SYSTEM_USER_ID
+
+        begin
+          File.open(path, "rb") do |file|
+            # create an Upload in Discourse; Discourse deduplicates identical files internally
+            # note: the uploader context is determined by the argument to `create_for`
+            upload =
+              UploadCreator.new(file, File.basename(path), type: "attachment").create_for(
+                uploader_id,
+              )
+
+            if upload && upload.url
+              url = relative_upload_url(upload.url)
+              # map both keys: the DB name (possibly without extension) and the actual filename
+              @upload_map[base_fn] = url
+              @upload_map[actual_fn] = url unless actual_fn == base_fn
+              created += 1
+            else
+              missing += 1
+              append_missing_upload(fn)
+              begin
+                print_warning(
+                  "Upload returned no URL for #{actual_fn} (ext='#{File.extname(actual_fn).delete(".")}', size=#{File.size(path)} bytes)",
+                )
+              rescue StandardError
+                nil
+              end
+            end
+          end
+        rescue => e
+          bt = (e.backtrace && e.backtrace.first) ? " @ #{e.backtrace.first}" : ""
+          print_warning("Upload failed for #{actual_fn}: #{e.class}: #{e.message}#{bt}")
+          missing += 1
+          append_missing_upload(base_fn)
+        end
+      end
+
+      offset += rows.length
+      save_upload_map(@upload_map_path, @upload_map) # persist incrementally
+    end
+
+    puts "uploads: created=#{created}, skipped=#{skipped}, missing=#{missing}"
+  end
+
+  def rewrite_legacy_uploads(raw)
+    return raw if raw.blank?
+    return raw unless @rewrite_uploads_enabled
+    return raw if @upload_map.nil? || @upload_map.empty?
+
+    # 0) [img]LEGACY[/img] -> [img]NEW[/img]
+    raw =
+      raw.gsub(%r{\[img\]\s*(#{@legacy_upload_regex})\s*\[/img\]}i) do
+        legacy = $1 # full legacy URL
+        filename = $2 # captured filename from @legacy_upload_regex
+        new_url = @upload_map[filename]
+        new_url ? "[img]#{new_url}[/img]" : $&
+      end
+
+    # 0b) <img ... src="LEGACY" ...> -> src="NEW"
+    raw =
+      raw.gsub(/(<img[^>]*\bsrc\s*=\s*["'])(#{@legacy_upload_regex})(["'][^>]*>)/i) do
+        pre = $1
+        filename = $3 # 1=pre, 2=full legacy URL, 3=filename, 4=post
+        post = $4
+        new_url = @upload_map[filename]
+        new_url ? "#{pre}#{new_url}#{post}" : $&
+      end
+
+    # 1) rewrite only href="LEGACY_UPLOAD..." (1=href prefix, 2=full legacy URL, 3=filename)
+    raw =
+      raw.gsub(/(\bhref\s*=\s*["'])#{@legacy_upload_regex}/i) do
+        # @legacy_upload_regex exposes the filename as its single capture group
+        filename = $2
+        new_url = @upload_map[filename]
+        new_url ? "#{$1}#{new_url}" : $&
+      end
+
+    # 2) rewrite naked legacy upload URLs in plain text (groups: 1=prefix, 2=filename)
+    raw =
+      raw.gsub(/(^|[\s\(\[\{>"'])#{@legacy_upload_regex}(?=$|[\s\)\]\}',\.\!\?:;])/i) do
+        prefix = $1
+        filename = $2
+        new_url = @upload_map[filename]
+        new_url ? %(#{prefix}<a href="#{new_url}">#{new_url}</a>) : $&
+      end
+    raw
+  end
+
+  def repair_legacy_upload_links
+    puts "", "repairing legacy upload links in imported posts...", ""
+
+    return unless @rewrite_uploads_enabled
+
+    ids = PostCustomField.where(name: "import_id").pluck(:post_id)
+    return if ids.empty?
+
+    Post
+      .where(id: ids)
+      .where("raw LIKE '%/images/uploaded/%'")
+      .find_in_batches(batch_size: BATCH_SIZE) do |posts|
+        posts.each do |post|
+          begin
+            old_raw = post.raw.to_s
+            next if old_raw.blank?
+            #next unless old_raw =~ @legacy_upload_regex
+            next if old_raw.exclude?("/images/uploaded/")
+            begin
+              total_legacy = old_raw.scan(@legacy_upload_regex).length
+              mapped_legacy =
+                old_raw
+                  .scan(@legacy_upload_regex)
+                  .count { |m| @upload_map[m.is_a?(Array) ? m.last : m] }
+              if total_legacy > 0
+                print_warning(
+                  "Repair post #{post.id}: legacy=#{total_legacy}, mapped=#{mapped_legacy}",
+                )
+              end
+            rescue StandardError
+            end
+
+            new_raw = rewrite_legacy_uploads(old_raw)
+            next if new_raw == old_raw
+
+            post.raw = new_raw
+            post.save!
+            post.rebake!
+            print "."
+          rescue => e
+            print_warning("Repair failed for post #{post.id}: #{e.message}")
+          end
+        end
+      end
+
+    puts "", "repair pass finished", ""
   end
 end
 

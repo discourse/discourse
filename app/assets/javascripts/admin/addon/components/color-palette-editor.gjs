@@ -58,6 +58,12 @@ const Picker = class extends Component {
   onTextKeypress(event) {
     const currentValue = event.target.value;
 
+    // In Safari, hitting Cmd + C or Cmd + V will trigger an onKeyPress
+    // event, but we want to handle that entirely in the onPaste listener.
+    if ((event.keyCode === 118 || event.keyCode === 99) && event.metaKey) {
+      return;
+    }
+
     if (event.keyCode === 13) {
       event.preventDefault();
 

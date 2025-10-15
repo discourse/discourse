@@ -1183,6 +1183,93 @@ RSpec.describe PostMover do
           end
         end
 
+        context "when moving old posts to an existing topic" do
+          fab!(:from_topic) do
+            Fabricate(
+              :topic,
+              user: user,
+              created_at: 21.days.ago,
+              bumped_at: 21.days.ago,
+              updated_at: 21.days.ago,
+            )
+          end
+
+          fab!(:to_topic) do
+            Fabricate(
+              :topic,
+              user: user,
+              created_at: 22.days.ago,
+              bumped_at: 22.days.ago,
+              updated_at: 22.days.ago,
+            )
+          end
+
+          fab!(:to_p1) do
+            Fabricate(
+              :post,
+              topic: to_topic,
+              user: user,
+              created_at: 9.days.ago,
+              updated_at: 9.days.ago,
+            )
+          end
+
+          fab!(:to_p2) do
+            Fabricate(
+              :post,
+              topic: to_topic,
+              user: user,
+              created_at: 7.days.ago,
+              updated_at: 7.days.ago,
+            )
+          end
+
+          fab!(:from_p1) do
+            Fabricate(
+              :post,
+              topic: from_topic,
+              user: user,
+              created_at: 8.days.ago,
+              updated_at: 8.days.ago,
+            )
+          end
+
+          fab!(:from_p2) do
+            Fabricate(
+              :post,
+              topic: from_topic,
+              user: user,
+              created_at: 6.days.ago,
+              updated_at: 6.days.ago,
+            )
+          end
+
+          it "sets bumped_at correctly when first post gets moved" do
+            # from_p1 was the first post in from_topic
+            to_topic_bumped_at = to_topic.bumped_at
+            moved_to =
+              from_topic.move_posts(
+                user,
+                [from_p1.id],
+                destination_topic_id: to_topic.id,
+                chronological_order: true,
+              )
+            expect(moved_to.bumped_at).to eq_time(to_topic_bumped_at)
+          end
+
+          it "sets bumped_at correctly when moved post becomes latest post" do
+            # from_p2 will be the latest post once moved
+            moved_to =
+              from_topic.move_posts(
+                user,
+                [from_p2.id],
+                destination_topic_id: to_topic.id,
+                chronological_order: true,
+              )
+            expect(moved_to.bumped_at).to eq_time(Time.zone.now)
+          end
+        end
+
         context "when moved to a message" do
           it "works correctly" do
             topic.expects(:add_moderator_post).once

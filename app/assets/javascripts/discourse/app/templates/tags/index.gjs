@@ -3,7 +3,6 @@ import RouteTemplate from "ember-route-template";
 import DiscourseBanner from "discourse/components/discourse-banner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagList from "discourse/components/tag-list";
-import TagsAdminDropdown from "discourse/components/tags-admin-dropdown";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
@@ -17,7 +16,7 @@ export default RouteTemplate(
 
       <div class="container tags-controls">
         {{#if @controller.canAdminTags}}
-          <TagsAdminDropdown @actionsMapping={{@controller.actionsMapping}} />
+          <@controller.TagsAdminDropdownComponent />
         {{/if}}
         <h2>{{i18n "tagging.tags"}}</h2>
       </div>

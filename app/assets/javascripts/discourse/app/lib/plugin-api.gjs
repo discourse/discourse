@@ -11,7 +11,6 @@ import {
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
-import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
@@ -127,7 +126,6 @@ import {
   addSaveableUserOptionField,
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
@@ -239,6 +237,9 @@ function wrapWithErrorHandler(func, messageKey) {
   };
 }
 
+/**
+ * @typedef {PluginApi} PluginApi
+ */
 class PluginApi {
   constructor(container) {
     this.container = container;
@@ -1907,7 +1908,9 @@ class PluginApi {
    * categorySortCriteria("votes");
    */
   addCategorySortCriteria(criteria) {
-    addCategorySortCriteria(criteria);
+    this.registerValueTransformer("category-sort-orders", ({ value }) => {
+      value.push(criteria);
+    });
   }
 
   /**
@@ -2345,7 +2348,9 @@ class PluginApi {
    *
    **/
   setNewCategoryDefaultColors(backgroundColor, textColor) {
-    setNewCategoryDefaultColors(backgroundColor, textColor);
+    this.registerValueTransformer("category-default-colors", () => {
+      return { backgroundColor, textColor };
+    });
   }
 
   /**
@@ -3465,18 +3470,14 @@ function getPluginApi() {
 /**
  * Executes the provided callback function with the `PluginApi` object.
  *
- * @param {(api: PluginApi, opts: object) => void} apiCodeCallback - The callback function to execute
+ * @param {(api: PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
  * @param {object} [opts] - Optional additional options to pass to the callback function.
- * @returns {*} The result of the `callback` function, if executed
+ * @returns {any} The result of the `callback` function, if executed
  */
-export function withPluginApi(...args) {
-  let apiCodeCallback, opts;
-  if (typeof args[0] === "function") {
-    // Modern path. First argument is the callback
-    [apiCodeCallback, opts] = args;
-  } else {
+export function withPluginApi(apiCodeCallback, opts) {
+  if (typeof arguments[0] === "string") {
     // Old path. First argument is the version string. Silently ignore.
-    [, apiCodeCallback, opts] = args;
+    [, apiCodeCallback, opts] = arguments;
   }
 
   opts = opts || {};

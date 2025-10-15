@@ -1,8 +1,9 @@
-import { fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ComposerEditor from "discourse/components/composer-editor";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
+import { i18n } from "discourse-i18n";
 
 module("Integration | Component | ComposerEditor", function (hooks) {
   setupRenderingTest(hooks);
@@ -50,5 +51,28 @@ module("Integration | Component | ComposerEditor", function (hooks) {
 
     await fillIn(".d-editor-input", `"><svg onload="prompt(/xss/)"></svg>`);
     assert.dom(".d-editor-preview").hasHtml('<p>"&gt;<svg></svg></p>');
+  });
+
+  test("placeholder text changes when toggling rich editor", async function (assert) {
+    await render(<template><ComposerEditor /></template>);
+
+    const markdownPlaceholder = find(".d-editor-input").placeholder;
+
+    assert.strictEqual(
+      markdownPlaceholder,
+      i18n("composer.reply_placeholder"),
+      "Markdown editor placeholder text is correct"
+    );
+
+    await click(".composer-toggle-switch");
+
+    const richPlaceholder = find(".d-editor-input [data-placeholder]").dataset
+      .placeholder;
+
+    assert.strictEqual(
+      richPlaceholder,
+      i18n("composer.reply_placeholder_rte"),
+      "Rich editor placeholder text is correct"
+    );
   });
 });

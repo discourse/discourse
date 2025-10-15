@@ -26,11 +26,6 @@ export default function () {
     resetNamespace: true,
   });
 
-  this.route("newCategory", { path: "/new-category" });
-  this.route("editCategory", { path: "/c/*slug/edit" }, function () {
-    this.route("tabs", { path: "/:tab" });
-  });
-
   this.route("discovery", { path: "/", resetNamespace: true }, function () {
     // top by periods - legacy route
     Site.currentProp("periods").forEach((period) => {

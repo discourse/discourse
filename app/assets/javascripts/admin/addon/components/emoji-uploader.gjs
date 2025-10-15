@@ -9,6 +9,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
@@ -66,7 +67,7 @@ export default class EmojiUploader extends Component {
   createEmojiGroup(group) {
     let newEmojiGroups = this.newEmojiGroups;
     if (group !== DEFAULT_GROUP) {
-      newEmojiGroups = this.emojiGroups.concat([group]).uniq();
+      newEmojiGroups = uniqueItemsFromArray(this.emojiGroups.concat([group]));
     }
     this.setProperties({
       newEmojiGroups,

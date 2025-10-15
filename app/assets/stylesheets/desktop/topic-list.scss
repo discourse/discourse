@@ -77,19 +77,6 @@
     }
   }
 
-  .topics-replies-toggle {
-    background: none;
-    border: none;
-    line-height: var(--line-height-large);
-    padding-left: var(--space-2);
-    padding-right: var(--space-2);
-    position: relative;
-
-    &.active {
-      @include nav-active;
-    }
-  }
-
   $td-posters-height: 29px; // min-height of td with avatar glow
   $td-posters-more-lh: $td-posters-height - 4;
 
@@ -287,6 +274,20 @@
           margin: 0 auto;
         }
       }
+    }
+  }
+}
+
+.topic-replies-toggle-wrapper {
+  .topics-replies-toggle {
+    background: none;
+    border: none;
+    line-height: var(--line-height-large);
+    padding: var(--space-2);
+    position: relative;
+
+    &.active {
+      @include nav-active;
     }
   }
 }

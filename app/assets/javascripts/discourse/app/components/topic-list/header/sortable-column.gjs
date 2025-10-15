@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import NewListHeaderControls from "discourse/components/topic-list/new-list-header-controls";
 import TopicBulkSelectDropdown from "discourse/components/topic-list/topic-bulk-select-dropdown";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -116,26 +115,17 @@ export default class SortableColumn extends Component {
       {{/if}}
 
       {{#unless @bulkSelectEnabled}}
-        {{#if @showTopicsAndRepliesToggle}}
-          <NewListHeaderControls
-            @current={{@newListSubset}}
-            @newRepliesCount={{@newRepliesCount}}
-            @newTopicsCount={{@newTopicsCount}}
-            @changeNewListSubset={{@changeNewListSubset}}
-          />
+        {{#if @sortable}}
+          <button aria-pressed={{this.isSorting}}>
+            {{this.localizedName}}
+            {{#if this.isSorting}}
+              {{icon (if @ascending "chevron-up" "chevron-down")}}
+            {{/if}}
+          </button>
         {{else}}
-          {{#if @sortable}}
-            <button aria-pressed={{this.isSorting}}>
-              {{this.localizedName}}
-              {{#if this.isSorting}}
-                {{icon (if @ascending "chevron-up" "chevron-down")}}
-              {{/if}}
-            </button>
-          {{else}}
-            <span class={{if @screenreaderOnly "sr-only"}}>
-              {{this.localizedName}}
-            </span>
-          {{/if}}
+          <span class={{if @screenreaderOnly "sr-only"}}>
+            {{this.localizedName}}
+          </span>
         {{/if}}
       {{/unless}}
 

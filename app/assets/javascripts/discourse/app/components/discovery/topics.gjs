@@ -33,7 +33,6 @@ export default class DiscoveryTopics extends Component {
   @service documentTitle;
   @service currentUser;
   @service topicTrackingState;
-  @service site;
 
   @tracked loadingNew;
 
@@ -194,11 +193,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get renderNewListHeaderControls() {
-    return (
-      this.site.mobileView &&
-      this.showTopicsAndRepliesToggle &&
-      !this.args.bulkSelectEnabled
-    );
+    return this.showTopicsAndRepliesToggle && !this.args.bulkSelectEnabled;
   }
 
   get expandGloballyPinned() {
@@ -319,6 +314,7 @@ export default class DiscoveryTopics extends Component {
 
       {{#if this.hasTopics}}
         <List
+          @ariaLabelledby="topic-list-heading"
           @highlightLastVisited={{true}}
           @top={{this.top}}
           @hot={{this.hot}}
@@ -336,12 +332,8 @@ export default class DiscoveryTopics extends Component {
           @topics={{@model.topics}}
           @discoveryList={{true}}
           @focusLastVisitedTopic={{true}}
-          @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-          @newListSubset={{@model.params.subset}}
-          @changeNewListSubset={{@changeNewListSubset}}
-          @newRepliesCount={{this.newRepliesCount}}
-          @newTopicsCount={{this.newTopicsCount}}
         />
+
         <LoadMore @action={{this.loadMore}} />
       {{/if}}
 
@@ -422,6 +414,12 @@ export default class DiscoveryTopics extends Component {
                 <EmptyTopicFilter
                   @newFilter={{this.new}}
                   @unreadFilter={{this.unread}}
+                  @trackingCounts={{hash
+                    newTopics=this.newTopicsCount
+                    newReplies=this.newRepliesCount
+                  }}
+                  @changeNewListSubset={{@changeNewListSubset}}
+                  @newListSubset={{@model.params.subset}}
                 />
               {{/if}}
             </:afterMessage>

@@ -13,12 +13,13 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
-import Topic from "discourse/models/topic";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
 const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
 const pluginSaveProperties = new Set();
+
+let _uncategorized;
 
 /**
  * @internal
@@ -40,7 +41,7 @@ export default class Category extends RestModel {
     categories.forEach((category) => {
       const parentId = parseInt(category.parent_category_id, 10) || -1;
       const group = children.get(parentId) || [];
-      group.pushObject(category);
+      group.push(category);
 
       children.set(parentId, group);
     });
@@ -862,9 +863,7 @@ export default class Category extends RestModel {
   @discourseComputed("topics")
   featuredTopics(topics) {
     if (topics && topics.length) {
-      return topics
-        .slice(0, this.num_featured_topics || 2)
-        .map((t) => Topic.create(t));
+      return topics.slice(0, this.num_featured_topics || 2);
     }
   }
 
@@ -906,8 +905,6 @@ export default class Category extends RestModel {
     );
   }
 }
-
-let _uncategorized;
 
 const categoryMultiCache = new MultiCache(async (ids) => {
   const result = await ajax("/categories/find", { data: { ids } });

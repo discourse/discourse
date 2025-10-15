@@ -1,15 +1,15 @@
 import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
-let _newCategoryColor = "0088CC";
-let _newCategoryTextColor = "FFFFFF";
-
-export function setNewCategoryDefaultColors(backgroundColor, textColor) {
-  _newCategoryColor = backgroundColor;
-  _newCategoryTextColor = textColor;
+function getNewCategoryDefaultColors() {
+  return applyValueTransformer("category-default-colors", {
+    backgroundColor: "0088CC",
+    textColor: "FFFFFF",
+  });
 }
 
 export default class NewCategory extends DiscourseRoute {
@@ -45,9 +45,10 @@ export default class NewCategory extends DiscourseRoute {
   }
 
   newCategoryWithPermissions(group_permissions) {
+    const { backgroundColor, textColor } = getNewCategoryDefaultColors();
     return this.store.createRecord("category", {
-      color: _newCategoryColor,
-      text_color: _newCategoryTextColor,
+      color: backgroundColor,
+      text_color: textColor,
       group_permissions,
       available_groups: this.site.groups.map((g) => g.name),
       allow_badges: true,

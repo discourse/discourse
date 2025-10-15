@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "New topic list", type: :system do
+describe "Unified new topic list", type: :system do
   fab!(:user)
   fab!(:group) { Fabricate(:group, users: [user]) }
   fab!(:category)
@@ -26,11 +26,12 @@ describe "New topic list", type: :system do
 
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:tabs_toggle) { PageObjects::Components::NewTopicListToggle.new }
+  let(:empty_state) { PageObjects::Components::EmptyState.new }
 
   before { sign_in(user) }
 
   shared_examples "new list new topics and replies toggle" do
-    context "when the new new view is enabled" do
+    context "when unified new is enabled" do
       before { SiteSetting.experimental_new_new_view_groups = group.name }
 
       it "shows all new topics and replies by default" do
@@ -302,7 +303,7 @@ describe "New topic list", type: :system do
       end
     end
 
-    context "when the new new view is not enabled" do
+    context "when unified new is not enabled" do
       before { SiteSetting.experimental_new_new_view_groups = "" }
 
       it "doesn't show the tabs toggle" do
@@ -324,15 +325,23 @@ describe "New topic list", type: :system do
         end
       end
 
-      it "keeps the Topics tab even when there are no new topics" do
+      it "shows All, Topics, and Replies tabs" do
         visit("/new")
 
+        expect(tabs_toggle).to be_rendered
         expect(tabs_toggle.all_tab).to be_visible
         expect(tabs_toggle.replies_tab).to be_visible
         expect(tabs_toggle.topics_tab).to be_visible
+      end
 
-        expect(tabs_toggle.replies_tab).to have_count(3)
-        expect(tabs_toggle.topics_tab).to have_count(0)
+      it "shows a CTA to show replies when on the new topics tab" do
+        visit("/new?subset=topics")
+
+        expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_replies"))
+        empty_state.click_cta
+
+        expect(tabs_toggle.replies_tab).to be_active
+        expect(page).to have_current_path("/new?subset=replies")
       end
     end
 
@@ -345,15 +354,23 @@ describe "New topic list", type: :system do
         end
       end
 
-      it "keeps the Replies tab even when there are no new replies" do
+      it "shows All, Topics, and Replies tabs" do
         visit("/new")
 
+        expect(tabs_toggle).to be_rendered
         expect(tabs_toggle.all_tab).to be_visible
         expect(tabs_toggle.replies_tab).to be_visible
         expect(tabs_toggle.topics_tab).to be_visible
+      end
 
-        expect(tabs_toggle.replies_tab).to have_count(0)
-        expect(tabs_toggle.topics_tab).to have_count(3)
+      it "shows a CTA to show topics when on the new replies tab" do
+        visit("/new?subset=replies")
+
+        expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_topics"))
+        empty_state.click_cta
+
+        expect(tabs_toggle.topics_tab).to be_active
+        expect(page).to have_current_path("/new?subset=topics")
       end
     end
   end
@@ -370,13 +387,23 @@ describe "New topic list", type: :system do
         end
       end
 
-      it "doesn't render the toggle and only shows a static label for new topics" do
+      it "shows All, Topics, and Replies tabs" do
         visit("/new")
 
-        expect(tabs_toggle).to be_not_rendered
-        expect(find(".topic-list-header .static-label").text).to eq(
-          I18n.t("js.filters.new.topics_with_count", count: 3),
-        )
+        expect(tabs_toggle).to be_rendered
+        expect(tabs_toggle.all_tab).to be_visible
+        expect(tabs_toggle.replies_tab).to be_visible
+        expect(tabs_toggle.topics_tab).to be_visible
+      end
+
+      it "shows a CTA to show topics when on the new replies tab" do
+        visit("/new?subset=replies")
+
+        expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_topics"))
+        empty_state.click_cta
+
+        expect(tabs_toggle.topics_tab).to be_active
+        expect(page).to have_current_path("/new?subset=topics")
       end
     end
 
@@ -389,13 +416,23 @@ describe "New topic list", type: :system do
         end
       end
 
-      it "doesn't render the toggle and only shows a static label for new replies" do
+      it "shows All, Topics, and Replies tabs" do
         visit("/new")
 
-        expect(tabs_toggle).to be_not_rendered
-        expect(find(".topic-list-header .static-label").text).to eq(
-          I18n.t("js.filters.new.replies_with_count", count: 3),
-        )
+        expect(tabs_toggle).to be_rendered
+        expect(tabs_toggle.all_tab).to be_visible
+        expect(tabs_toggle.replies_tab).to be_visible
+        expect(tabs_toggle.topics_tab).to be_visible
+      end
+
+      it "shows a CTA to show replies when on the new topics tab" do
+        visit("/new?subset=topics")
+
+        expect(empty_state).to have_cta_text(I18n.t("js.topic.browse_new_replies"))
+        empty_state.click_cta
+
+        expect(tabs_toggle.replies_tab).to be_active
+        expect(page).to have_current_path("/new?subset=replies")
       end
     end
   end
