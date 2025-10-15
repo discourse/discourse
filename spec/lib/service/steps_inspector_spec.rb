@@ -341,7 +341,10 @@ RSpec.describe Service::StepsInspector do
       end
 
       it "returns the provided paramaters" do
-        expect(error).to match(/{"parameter"=>nil, "other_param"=>nil}/)
+        # first option is for ruby 3.3 and the other for 3.4
+        expect(error).to match(/{"parameter"=>nil, "other_param"=>nil}/).or match(
+               /{"parameter" => nil, "other_param" => nil}/,
+             )
       end
     end
 
@@ -404,6 +407,9 @@ RSpec.describe Service::StepsInspector do
     let(:parameter) { nil }
 
     it "outputs the service class name, the steps results and the specific error" do
+      # first option is for ruby 3.3 and the other for 3.4
+      # the only difference between them is in the last line where the hash
+      # arrows are surrounded with spaces
       expect(inspector.inspect.gsub(%r{ \(\d+\.\d+ ms\)}, "").gsub(/\e\[\d+(;\d+)?m/, "")).to eq(
         <<~OUTPUT,
         Inspecting DummyService result object:
@@ -421,7 +427,22 @@ RSpec.describe Service::StepsInspector do
 
         Provided parameters: {"parameter"=>nil, "other_param"=>nil}
       OUTPUT
-      )
+      ).or eq(<<~OUTPUT)
+        Inspecting DummyService result object:
+
+        [ 1/13] [options] default ✅
+        [ 2/13] [model] model ✅
+        [ 3/13] [policy] policy ✅
+        [ 4/13] [params] default ❌
+
+        (9 more steps not shown as the execution flow was stopped before reaching them)
+
+        Why it failed:
+
+        #<ActiveModel::Errors [#<ActiveModel::Error attribute=parameter, type=blank, options={}>]>
+
+        Provided parameters: {"parameter" => nil, "other_param" => nil}
+        OUTPUT
     end
   end
 end
