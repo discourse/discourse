@@ -1,6 +1,5 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import RouteTemplate from "ember-route-template";
 import formatDate from "discourse/helpers/format-date";
 import routeAction from "discourse/helpers/route-action";
 import EmailLogsList from "admin/components/email-logs-list";
@@ -36,35 +35,33 @@ const REJECTED_FILTERS = [
   },
 ];
 
-export default RouteTemplate(
-  <template>
-    <EmailLogsList
-      @status="rejected"
-      @logType="rejected"
-      @sourceModel={{IncomingEmail}}
-      @headers={{REJECTED_HEADERS}}
-      @filters={{REJECTED_FILTERS}}
-      @onShowEmail={{routeAction "showIncomingEmail"}}
+<template>
+  <EmailLogsList
+    @status="rejected"
+    @logType="rejected"
+    @sourceModel={{IncomingEmail}}
+    @headers={{REJECTED_HEADERS}}
+    @filters={{REJECTED_FILTERS}}
+    @onShowEmail={{routeAction "showIncomingEmail"}}
+  >
+    <:default
+      as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
     >
-      <:default
-        as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
-      >
-        <tr data-test-email-log-row-id={{emailLog.id}}>
-          <td>{{formatDate emailLog.created_at}}</td>
-          <td>{{emailLog.from_address}}</td>
-          <td>{{emailLog.to_addresses}}</td>
-          <td>
-            <a
-              href
-              {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
-              class="incoming-email-link"
-            >
-              {{emailLog.subject}}
-            </a>
-          </td>
-          <td>{{emailLog.error}}</td>
-        </tr>
-      </:default>
-    </EmailLogsList>
-  </template>
-);
+      <tr data-test-email-log-row-id={{emailLog.id}}>
+        <td>{{formatDate emailLog.created_at}}</td>
+        <td>{{emailLog.from_address}}</td>
+        <td>{{emailLog.to_addresses}}</td>
+        <td>
+          <a
+            href
+            {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
+            class="incoming-email-link"
+          >
+            {{emailLog.subject}}
+          </a>
+        </td>
+        <td>{{emailLog.error}}</td>
+      </tr>
+    </:default>
+  </EmailLogsList>
+</template>

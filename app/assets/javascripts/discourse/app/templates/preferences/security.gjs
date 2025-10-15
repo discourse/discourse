@@ -1,7 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
-import RouteTemplate from "ember-route-template";
 import { not } from "truth-helpers";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
 import DButton from "discourse/components/d-button";
@@ -13,189 +12,180 @@ import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 
-export default RouteTemplate(
-  <template>
-    {{#if @controller.canChangePassword}}
-      <div
-        class="control-group pref-password"
-        data-setting-name="user-password"
-      >
-        <label class="control-label">{{i18n "user.password.title"}}</label>
+<template>
+  {{#if @controller.canChangePassword}}
+    <div class="control-group pref-password" data-setting-name="user-password">
+      <label class="control-label">{{i18n "user.password.title"}}</label>
+      <div class="controls">
+        <button
+          {{on "click" @controller.changePassword}}
+          disabled={{not @controller.canResetPassword}}
+          class="btn btn-default"
+          id="change-password-button"
+        >
+          {{icon "envelope"}}
+          {{#if @controller.model.no_password}}
+            {{i18n "user.change_password.set_password"}}
+          {{else}}
+            {{i18n "user.change_password.action"}}
+          {{/if}}
+        </button>
+
+        {{#unless @controller.canResetPassword}}
+          <div class="instructions">
+            {{i18n "user.change_password.staged_user"}}
+          </div>
+        {{/unless}}
+
+        {{@controller.passwordProgress}}
+      </div>
+
+      {{#unless @controller.model.no_password}}
         <div class="controls">
           <button
-            {{on "click" @controller.changePassword}}
-            disabled={{not @controller.canResetPassword}}
-            class="btn btn-default"
-            id="change-password-button"
+            {{on "click" @controller.removePassword}}
+            disabled={{not @controller.canRemovePassword}}
+            hidden={{@controller.removePasswordInProgress}}
+            class="btn btn-transparent"
+            id="remove-password-link"
           >
-            {{icon "envelope"}}
-            {{#if @controller.model.no_password}}
-              {{i18n "user.change_password.set_password"}}
-            {{else}}
-              {{i18n "user.change_password.action"}}
-            {{/if}}
+            {{icon "trash-can"}}
+            {{i18n "user.change_password.remove"}}
           </button>
-
-          {{#unless @controller.canResetPassword}}
-            <div class="instructions">
-              {{i18n "user.change_password.staged_user"}}
-            </div>
-          {{/unless}}
-
-          {{@controller.passwordProgress}}
         </div>
 
-        {{#unless @controller.model.no_password}}
-          <div class="controls">
-            <button
-              {{on "click" @controller.removePassword}}
-              disabled={{not @controller.canRemovePassword}}
-              hidden={{@controller.removePasswordInProgress}}
-              class="btn btn-transparent"
-              id="remove-password-link"
-            >
-              {{icon "trash-can"}}
-              {{i18n "user.change_password.remove"}}
-            </button>
-          </div>
-
-          {{#unless @controller.canRemovePassword}}
-            <div class="instructions">
-              {{i18n "user.change_password.remove_disabled"}}
-            </div>
-          {{/unless}}
-        {{/unless}}
-      </div>
-
-      {{#if @controller.canUsePasskeys}}
-        <UserPasskeys @model={{@model}} />
-      {{/if}}
-
-      {{#if @controller.isCurrentUser}}
-        <div
-          class="control-group pref-second-factor"
-          data-setting-name="user-second-factor"
-        >
-          <label class="control-label">{{i18n
-              "user.second_factor.title"
-            }}</label>
+        {{#unless @controller.canRemovePassword}}
           <div class="instructions">
-            {{i18n "user.second_factor.short_description"}}
+            {{i18n "user.change_password.remove_disabled"}}
           </div>
+        {{/unless}}
+      {{/unless}}
+    </div>
 
-          <div class="controls pref-second-factor">
-            <DButton
-              @action={{@controller.manage2FA}}
-              @icon="lock"
-              @label="user.second_factor.enable"
-              class="btn-default btn-second-factor"
-            />
-          </div>
-        </div>
-      {{/if}}
+    {{#if @controller.canUsePasskeys}}
+      <UserPasskeys @model={{@model}} />
     {{/if}}
 
-    <PluginOutlet @name="user-preferences-security-after-password" />
-
-    {{#if @controller.canCheckEmails}}
+    {{#if @controller.isCurrentUser}}
       <div
-        class="control-group pref-auth-tokens"
-        data-setting-name="user-auth-tokens"
+        class="control-group pref-second-factor"
+        data-setting-name="user-second-factor"
       >
-        <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
+        <label class="control-label">{{i18n "user.second_factor.title"}}</label>
         <div class="instructions">
-          {{i18n "user.auth_tokens.short_description"}}
+          {{i18n "user.second_factor.short_description"}}
         </div>
-        <div class="auth-tokens">
-          {{#each @controller.authTokens as |token|}}
-            <div class="row auth-token">
-              <div class="auth-token-icon">{{icon token.icon}}</div>
-              {{#unless token.is_active}}
-                <AuthTokenDropdown
-                  @token={{token}}
-                  @revokeAuthToken={{@controller.revokeAuthToken}}
-                  @showToken={{@controller.showToken}}
-                />
-              {{/unless}}
-              <div class="auth-token-first">
+
+        <div class="controls pref-second-factor">
+          <DButton
+            @action={{@controller.manage2FA}}
+            @icon="lock"
+            @label="user.second_factor.enable"
+            class="btn-default btn-second-factor"
+          />
+        </div>
+      </div>
+    {{/if}}
+  {{/if}}
+
+  <PluginOutlet @name="user-preferences-security-after-password" />
+
+  {{#if @controller.canCheckEmails}}
+    <div
+      class="control-group pref-auth-tokens"
+      data-setting-name="user-auth-tokens"
+    >
+      <label class="control-label">{{i18n "user.auth_tokens.title"}}</label>
+      <div class="instructions">
+        {{i18n "user.auth_tokens.short_description"}}
+      </div>
+      <div class="auth-tokens">
+        {{#each @controller.authTokens as |token|}}
+          <div class="row auth-token">
+            <div class="auth-token-icon">{{icon token.icon}}</div>
+            {{#unless token.is_active}}
+              <AuthTokenDropdown
+                @token={{token}}
+                @revokeAuthToken={{@controller.revokeAuthToken}}
+                @showToken={{@controller.showToken}}
+              />
+            {{/unless}}
+            <div class="auth-token-first">
+              {{htmlSafe
+                (i18n
+                  "user.auth_tokens.device_location"
+                  device=token.device
+                  ip=token.client_ip
+                  location=token.location
+                )
+              }}
+            </div>
+            <div class="auth-token-second">
+              {{#if token.is_active}}
+                {{htmlSafe
+                  (i18n "user.auth_tokens.browser_active" browser=token.browser)
+                }}
+              {{else}}
                 {{htmlSafe
                   (i18n
-                    "user.auth_tokens.device_location"
-                    device=token.device
-                    ip=token.client_ip
-                    location=token.location
+                    "user.auth_tokens.browser_last_seen"
+                    browser=token.browser
+                    date=(formatDate token.seen_at)
                   )
                 }}
-              </div>
-              <div class="auth-token-second">
-                {{#if token.is_active}}
-                  {{htmlSafe
-                    (i18n
-                      "user.auth_tokens.browser_active" browser=token.browser
-                    )
-                  }}
-                {{else}}
-                  {{htmlSafe
-                    (i18n
-                      "user.auth_tokens.browser_last_seen"
-                      browser=token.browser
-                      date=(formatDate token.seen_at)
-                    )
-                  }}
-                {{/if}}
-              </div>
+              {{/if}}
             </div>
-          {{/each}}
-        </div>
-
-        {{#if @controller.canShowAllAuthTokens}}
-          <a href {{on "click" @controller.toggleShowAllAuthTokens}}>
-            {{#if @controller.showAllAuthTokens}}
-              {{icon "caret-up"}}
-              <span>{{i18n "user.auth_tokens.show_few"}}</span>
-            {{else}}
-              {{icon "caret-down"}}
-              <span>
-                {{i18n
-                  "user.auth_tokens.show_all"
-                  count=@controller.model.user_auth_tokens.length
-                }}
-              </span>
-            {{/if}}
-          </a>
-        {{/if}}
-
-        <a
-          href
-          {{on "click" (fn @controller.revokeAuthToken null)}}
-          class="pull-right text-danger"
-        >
-          {{icon "right-from-bracket"}}
-          <span>
-            {{i18n "user.auth_tokens.log_out_all"}}
-          </span>
-        </a>
+          </div>
+        {{/each}}
       </div>
-    {{/if}}
 
-    <UserApiKeys @model={{@model}} />
+      {{#if @controller.canShowAllAuthTokens}}
+        <a href {{on "click" @controller.toggleShowAllAuthTokens}}>
+          {{#if @controller.showAllAuthTokens}}
+            {{icon "caret-up"}}
+            <span>{{i18n "user.auth_tokens.show_few"}}</span>
+          {{else}}
+            {{icon "caret-down"}}
+            <span>
+              {{i18n
+                "user.auth_tokens.show_all"
+                count=@controller.model.user_auth_tokens.length
+              }}
+            </span>
+          {{/if}}
+        </a>
+      {{/if}}
 
-    <span>
-      <PluginOutlet
-        @name="user-preferences-security"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash model=@controller.model save=this.save}}
-      />
-    </span>
+      <a
+        href
+        {{on "click" (fn @controller.revokeAuthToken null)}}
+        class="pull-right text-danger"
+      >
+        {{icon "right-from-bracket"}}
+        <span>
+          {{i18n "user.auth_tokens.log_out_all"}}
+        </span>
+      </a>
+    </div>
+  {{/if}}
 
-    <br />
+  <UserApiKeys @model={{@model}} />
 
-    <span>
-      <PluginOutlet
-        @name="user-custom-controls"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash model=@controller.model}}
-      />
-    </span>
-  </template>
-);
+  <span>
+    <PluginOutlet
+      @name="user-preferences-security"
+      @connectorTagName="div"
+      @outletArgs={{lazyHash model=@controller.model save=this.save}}
+    />
+  </span>
+
+  <br />
+
+  <span>
+    <PluginOutlet
+      @name="user-custom-controls"
+      @connectorTagName="div"
+      @outletArgs={{lazyHash model=@controller.model}}
+    />
+  </span>
+</template>
