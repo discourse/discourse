@@ -62,11 +62,11 @@ module Chat
       guardian.can_preview_chat_channel?(channel)
     end
 
-    def fetch_messages(params:, guardian:, channel:)
+    def fetch_messages(params:, guardian:)
       messages = ::Chat::Message.joins(:chat_channel)
 
-      if channel
-        messages = messages.where("chat_channels.id IN (?)", channel.id)
+      if context[:channel]
+        messages = messages.where("chat_channels.id IN (?)", context[:channel].id)
       else
         messages =
           messages.where(

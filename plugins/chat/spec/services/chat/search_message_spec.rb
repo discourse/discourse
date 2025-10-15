@@ -38,11 +38,7 @@ RSpec.describe Chat::SearchMessage do
       context "when query is blank" do
         let(:query) { "" }
 
-        it { is_expected.to be_a_success }
-
-        it "returns no messages" do
-          expect(result.messages).to be_empty
-        end
+        it { is_expected.to be_a_failure }
       end
 
       context "when no messages match" do
