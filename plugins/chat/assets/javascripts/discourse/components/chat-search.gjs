@@ -42,14 +42,12 @@ export default class ChatSearch extends Component {
 
   @bind
   async searchMessages(resetResults = true) {
+    this.searchPromise?.abort();
+
     if (isBlank(this.args.query)) {
       this.messages = [];
       this.offset = 0;
       this.hasMoreResults = false;
-      return;
-    }
-
-    if (this.isLoading) {
       return;
     }
 
@@ -61,7 +59,7 @@ export default class ChatSearch extends Component {
     }
 
     try {
-      const response = await ajax("/chat/api/search", {
+      this.searchPromise = ajax("/chat/api/search", {
         data: {
           query: this.args.query,
           channel_id: this.args.scopedChannelId,
@@ -70,6 +68,8 @@ export default class ChatSearch extends Component {
           limit: LIMIT,
         },
       });
+
+      const response = await this.searchPromise;
 
       const newMessages = (response.messages || []).map((messageObject) => {
         return ChatMessage.create(
@@ -155,11 +155,6 @@ export default class ChatSearch extends Component {
     }
   }
 
-  /**
-   * Generate accessible label for a chat message search result
-   * @param {Object} message - The chat message object
-   * @returns {string} - Screen reader friendly description
-   */
   accessibleMessageLabel(message) {
     const username = message.user?.username || i18n("chat.deleted_user");
     const messagePreview =
