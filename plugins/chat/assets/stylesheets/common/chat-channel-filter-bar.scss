@@ -15,4 +15,11 @@
     width: 100%;
     max-width: 320px;
   }
+
+  .chat-channel__filter-position {
+    white-space: nowrap;
+    min-width: 40px;
+    text-align: center;
+    font-size: var(--font-down-1);
+  }
 }
