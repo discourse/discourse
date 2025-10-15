@@ -138,20 +138,24 @@ export default class DiscoveryTopics extends Component {
       return;
     }
 
-    const split = (this.args.model.get("filter") || "").split("/");
+    const lastFilterSegment = (this.args.model.get("filter") || "")
+      .split("/")
+      .at(-1);
+    const newOrUnreadFilter =
+      lastFilterSegment === "new" || lastFilterSegment === "unread";
     const { category, tag } = this.args;
     if (category) {
       // We have a different custom display for the empty new + unread filter education.
-      if (split.at(-1) === "new" || split.at(-1) === "unread") {
+      if (topicsLength === 0 && newOrUnreadFilter) {
         return;
       }
 
       return i18n("topics.bottom.category", {
-        category: category.get("name"),
+        category: category.name,
       });
     } else if (tag) {
       // We have a different custom display for the empty new + unread filter education.
-      if (split.at(-1) === "new" || split.at(-1) === "unread") {
+      if (topicsLength === 0 && newOrUnreadFilter) {
         return;
       }
 
@@ -161,16 +165,16 @@ export default class DiscoveryTopics extends Component {
     } else {
       if (topicsLength === 0) {
         // We have a different custom display for the empty new + unread filter education.
-        if (split[0] === "new" || split[0] === "unread") {
+        if (newOrUnreadFilter) {
           return;
         }
 
-        return i18n("topics.none." + split[0], {
-          category: split[1],
+        return i18n(`topics.none.${lastFilterSegment}`, {
+          category: category.name,
         });
       } else {
-        return i18n("topics.bottom." + split[0], {
-          category: split[1],
+        return i18n(`topics.bottom.${lastFilterSegment}`, {
+          category: category.name,
         });
       }
     }
@@ -184,7 +188,7 @@ export default class DiscoveryTopics extends Component {
     }
 
     const segments = (this.args.model.get("filter") || "").split("/");
-    const tab = segments[segments.length - 1];
+    const tab = segments.at(-1);
     if (tab === "new" || tab === "unread") {
       return true;
     }
