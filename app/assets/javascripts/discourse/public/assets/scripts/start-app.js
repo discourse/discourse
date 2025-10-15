@@ -7,7 +7,7 @@ document.addEventListener("discourse-init", async (e) => {
 
   if (
     document.querySelector(
-      'link[rel="modulepreload"][data-discourse-entrypoint="admin"]'
+      'link[rel="preload"][data-discourse-entrypoint="admin"]'
     )
   ) {
     await loadAdmin();
