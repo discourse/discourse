@@ -13,6 +13,12 @@ export default class RestModel extends EmberObject {
   }
 
   static create(args) {
+    if (args instanceof RestModel) {
+      throw new Error(
+        "Cannot create a model from another model instance. Pass a plain JS object instead."
+      );
+    }
+
     args = args || {};
 
     args.__munge = this.munge;
@@ -116,5 +122,14 @@ export default class RestModel extends EmberObject {
 
   destroyRecord() {
     return this.store.destroyRecord(this.__type, this);
+  }
+
+  setProperties(props) {
+    if (props instanceof RestModel) {
+      throw new Error(
+        "Cannot setProperties on a model using another model instance. Pass a plain JS object instead."
+      );
+    }
+    super.setProperties(props);
   }
 }
