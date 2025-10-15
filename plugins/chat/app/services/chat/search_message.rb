@@ -28,39 +28,41 @@ module Chat
     #   @return [Service::Base::Context]
 
     params do
-      attribute :query, :string, default: ""
+      attribute :query, :string
       attribute :channel_id, :integer
       attribute :limit, :integer, default: 20
       attribute :offset, :integer, default: 0
       attribute :exclude_threads, :boolean, default: false
       attribute :sort, :string, default: "relevance"
 
+      validates :query, presence: true
       validates :limit, numericality: { in: 1..40 }
       validates :offset, numericality: { greater_than_or_equal_to: 0 }
       validates :sort, inclusion: { in: %w[relevance latest] }
     end
 
-    model :channel, optional: true
-    policy :can_view_channel
+    only_if(:provided_channel_id) do
+      model :channel
+      policy :can_view_channel
+    end
+
     model :messages, optional: true
 
     private
 
-    def fetch_channel(params:)
-      return nil unless params.channel_id
+    def provided_channel_id(params:)
+      params.channel_id.present?
+    end
 
-      channel = ::Chat::Channel.find_by(id: params.channel_id)
-      raise ActiveRecord::RecordNotFound if channel.nil?
-      channel
+    def fetch_channel(params:)
+      ::Chat::Channel.find_by(id: params.channel_id)
     end
 
     def can_view_channel(guardian:, channel:)
-      channel ? guardian.can_preview_chat_channel?(channel) : true
+      guardian.can_preview_chat_channel?(channel)
     end
 
     def fetch_messages(params:, guardian:, channel:)
-      return ::Chat::Message.none if params.query.blank?
-
       messages = ::Chat::Message.joins(:chat_channel)
 
       if channel
