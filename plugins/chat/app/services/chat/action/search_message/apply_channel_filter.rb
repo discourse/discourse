@@ -15,8 +15,7 @@ module Chat
         option :guardian
 
         def call
-          channel_slug = match.downcase
-          channel_id = ::Chat::Channel.where(slug: channel_slug).pick(:id)
+          channel = ::Chat::Channel.find_by(slug: channel_slug.downcase)
 
           if channel_id && guardian.can_preview_chat_channel?(::Chat::Channel.find(channel_id))
             messages.where("chat_channels.id = ?", channel_id)
