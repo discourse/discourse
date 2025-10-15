@@ -3218,16 +3218,16 @@ uk:
     title: "Нова версія Mailer з примітками"
     subject_template: "[%{email_prefix}] доступне оновлення"
     text_body_template: |
-      Ура, нова версія [Дискурсу](https://www.discourse.org) доступна!
+      Ура, доступна нова версія [Discourse](https://www.discourse.org)!
 
       Ваша версія: %{installed_version}
       Нова версія: **%{new_version}**
 
-      - Оновлення за допомогою нашого простого **[оновлення браузера в один клік](%{base_url}/admin/update)**
+      - Оновіть за допомогою нашого легкого **[оновлення в оглядачі в один клік](%{base_url}/admin/upgrade)**
 
-      - Дізнайтеся, що нового у [примітках до випуску](https://meta.discourse.org/tag/release-notes) або перегляньте [сирий журнал змін на GitHub](https://github.com/discourse/discourse/commits/main)
+      - Подивіться, що нового в [примітках до випуску](https://meta.discourse.org/tag/release-notes) або перегляньте [журнал змін GitHub](https://github.com/discourse/discourse/commits/main)
 
-      - Відвідайте [meta.discourse.org](https://meta.discourse.org) для отримання новин, обговорення та підтримки Discourse
+      - Відвідайте [meta.discourse.org](https:// meta.discourse.org) для новин, обговорень і підтримки для Discourse
 
       ### Примітки до випуску
 

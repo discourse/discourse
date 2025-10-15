@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      calendar: "Lịch"
+      site_settings:
+        categories:
+          discourse_calendar: "Lịch cộng đồng"
   js:
     discourse_automation:
       triggerables:
@@ -23,6 +29,7 @@ vi:
         month: "Tháng"
         week: "Tuần"
         day: "Ngày"
+        list: "Danh sách"
     group_timezones:
       search: "Tìm kiếm..."
     discourse_post_event:
