@@ -408,7 +408,7 @@ export function buildResolver(baseName) {
           }
         }
       } else {
-        return this.findTemplate(parsedName, "admin/templates/");
+        return this.findTemplate(parsedName, "discourse/admin/templates/");
       }
     }
   };
