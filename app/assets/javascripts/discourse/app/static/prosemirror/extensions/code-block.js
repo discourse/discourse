@@ -1,5 +1,6 @@
 import { setBlockType, toggleMark } from "prosemirror-commands";
 import { highlightPlugin } from "prosemirror-highlightjs";
+import { schema as markdownSchema } from "prosemirror-markdown";
 import { TextSelection } from "prosemirror-state";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 
@@ -153,6 +154,12 @@ function convertSelectionToCodeBlock(schema) {
 
 /** @type {RichEditorExtension} */
 const extension = {
+  nodeSpec: {
+    code_block: {
+      createGapCursor: true,
+      ...markdownSchema.nodes.code_block.spec,
+    },
+  },
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
   commands: ({ schema }) => ({
     formatCode() {
