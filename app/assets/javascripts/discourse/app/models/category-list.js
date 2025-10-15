@@ -1,4 +1,5 @@
-import ArrayProxy from "@ember/array/proxy";
+import { tracked } from "@glimmer/tracking";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
@@ -8,7 +9,7 @@ import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
-export default class CategoryList extends ArrayProxy {
+export default class CategoryList extends TrackedArray {
   static categoriesFrom(store, result, parentCategory = null) {
     // Find the period that is most relevant
     const statPeriod =
@@ -33,7 +34,7 @@ export default class CategoryList extends ArrayProxy {
         (parentCategory && c.parent_category_id === parentCategory.id) ||
         (!parentCategory && !c.parent_category_id)
       ) {
-        categories.pushObject(c);
+        categories.push(c);
       }
     });
     return categories;
@@ -88,29 +89,59 @@ export default class CategoryList extends ArrayProxy {
     return CategoryList.list(store, category);
   }
 
-  static list(store, parentCategory = null) {
-    return PreloadStore.getAndRemove("categories_list", () => {
-      const data = {};
-      if (parentCategory) {
-        data.parent_category_id = parentCategory?.id;
+  static async list(store, parentCategory = null) {
+    const result = await PreloadStore.getAndRemove(
+      "categories_list",
+      async () => {
+        const data = {};
+        if (parentCategory) {
+          data.parent_category_id = parentCategory?.id;
+        }
+        return await ajax("/categories.json", { data });
       }
-      return ajax("/categories.json", { data });
-    }).then((result) => {
-      return CategoryList.create({
-        store,
-        categories: this.categoriesFrom(store, result, parentCategory),
-        parentCategory,
-        can_create_category: result.category_list.can_create_category,
-        can_create_topic: result.category_list.can_create_topic,
-      });
+    );
+
+    return CategoryList.create({
+      store,
+      categories: this.categoriesFrom(store, result, parentCategory),
+      parentCategory,
+      can_create_category: result.category_list.can_create_category,
+      can_create_topic: result.category_list.can_create_topic,
     });
   }
 
-  init() {
-    this.set("content", this.categories || []);
-    super.init(...arguments);
-    this.set("page", 1);
-    this.set("fetchedLastPage", false);
+  static create(attrs) {
+    return new CategoryList(attrs);
+  }
+
+  @tracked can_create_category;
+  @tracked can_create_topic;
+  @tracked fetchedLastPage = false;
+  @tracked isLoading = false;
+  @tracked page = 1;
+  @tracked parentCategory;
+
+  constructor({ categories, attrs } = {}) {
+    super(categories || []);
+
+    this.page = 1;
+    this.fetchedLastPage = false;
+
+    Object.keys(attrs).forEach((key) => {
+      this[key] = attrs[key];
+    });
+  }
+
+  // for compatibility with the old category list based on ArrayProxy
+  get categories() {
+    // TODO deprecate this
+    return this;
+  }
+
+  // for compatibility with the old category list based on ArrayProxy
+  get content() {
+    // TODO deprecate this
+    return this;
   }
 
   @bind
@@ -119,7 +150,7 @@ export default class CategoryList extends ArrayProxy {
       return;
     }
 
-    this.set("isLoading", true);
+    this.isLoading = true;
 
     const data = { page: this.page + 1 };
     if (this.parentCategory) {
@@ -127,16 +158,16 @@ export default class CategoryList extends ArrayProxy {
     }
     const result = await ajax("/categories.json", { data });
 
-    this.set("page", data.page);
+    this.page = data.page;
     if (result.category_list.categories.length === 0) {
-      this.set("fetchedLastPage", true);
+      this.fetchedLastPage = true;
     }
-    this.set("isLoading", false);
+    this.isLoading = false;
 
     CategoryList.categoriesFrom(
       this.store,
       result,
       this.parentCategory
-    ).forEach((c) => this.categories.pushObject(c));
+    ).forEach((c) => this.push(c));
   }
 }
