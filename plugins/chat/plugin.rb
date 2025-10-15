@@ -56,7 +56,6 @@ after_initialize do
     model_class: Chat::Message,
     search_data_class: Chat::MessageSearchData,
     index_version: 1,
-    enabled: -> { SiteSetting.chat_search_enabled },
     search_data:
       proc do |message, indexer_helper|
         {
