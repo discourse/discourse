@@ -1869,8 +1869,6 @@ cs:
     email_custom_headers: "Seznam vlastních záhlaví e-mailů (headers)"
     email_subject: "Přizpůsobitelný formát předmětu pro standardní e-maily. Viz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje uživatelům více podrobností o tom, proč nemají přístup k určitému tématu. Poznámka: Toto je méně bezpečné, protože uživatelé budou vědět, zda URL odkazuje na platné téma."
-    enforce_second_factor: "Vyžadovat, aby uživatelé před přístupem k uživatelskému rozhraní Discourse povolili dvoufaktorové ověřování. Toto nastavení neovlivňuje ověřování přes API nebo „DiscourseConnect provider“. Pokud je povolena možnost enforce_second_factor_on_external_auth, uživatelé se po nastavení dvoufaktorového ověřování nebudou moci přihlásit pomocí externích poskytovatelů ověřování."
-    enforce_second_factor_on_external_auth: "Vyžadovat, aby uživatelé vždy používali dvoufaktorové ověřování. Pokud je tato možnost povolena, zabrání se uživatelům v přihlašování pomocí externích metod ověřování, jako je přihlášení přes sociální sítě, pokud mají povoleno dvoufaktorové ověřování. Pokud je tato možnost zakázána, uživatelé budou muset dvoufaktorové ověřování potvrdit pouze při přihlašování pomocí uživatelského jména a hesla. Viz také nastavení `enforce_second_factor`."
     force_https: "Vynuťte, aby váš web používal pouze HTTPS. VAROVÁNÍ: NEPOVOLUJTE tuto funkci, dokud neověříte, zda je HTTPS plně nastaven a funguje naprosto všude! Zkontrolovali jste také svou CDN, všechna přihlášení k sociálním sítím a všechna externí loga/závislosti, abyste se ujistili, že jsou také kompatibilní s HTTPS?"
     summary_score_threshold: "Minimální skóre potřebné pro zařazení příspěvku do „Shrnout toto téma“"
     summary_posts_required: "Minimální počet příspěvků v tématu před aktivací možnosti „Shrnout toto téma“. Změny tohoto nastavení se projeví zpětně do týdne."
@@ -1929,6 +1927,8 @@ cs:
     ga_universal_auto_link_domains: "Povolit sledování napříč doménami Google Universal Analytics. K odchozím odkazům na tyto domény bude přidáno ID klienta. Viz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "ID kontejneru Google Tag Manager. např.: GTM-ABCD12E. <br/>Poznámka: Chcete-li použít GTM, když je povolena Zásada zabezpečení obsahu (CSP), přečtěte si dokumentaci k meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Použití nonces ve skriptech Google Tag Manageru</a>."
     enable_escaped_fragments: "Pokud není detekován žádný webcrawler, vrátit se zpět k rozhraní Ajax-Crawling API společnosti Google. Viz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories: "Povolit moderátorům vytvářet a spravovat kategorie"
+    moderators_manage_groups: "Povolit moderátorům vytvářet a spravovat skupiny"
     moderators_change_post_ownership: "Povolit moderátorům změnit vlastnictví příspěvku"
     cors_origins: "Povolené origins pro cross-origin požadavky (CORS). Každý origin musí obsahovat http:// nebo https://. Proměnná prostředí DISCOURSE_ENABLE_CORS musí být nastavena na hodnotu true, aby bylo možné povolit CORS."
     use_admin_ip_allowlist: "Administrátoři se mohou přihlásit pouze v případě, že se nacházejí na IP adrese definované v seznamu filtrovaných IP adres (Administrace > Protokoly a monitoring > Filtrované IP)."
@@ -3679,13 +3679,6 @@ cs:
         Pokud jste se nepokoušeli vytvořit účet pro %{email} nebo změnit svou e-mailovou adresu, nebojte se – tuto zprávu můžete bezpečně ignorovat.
 
         Máte-li jakékoli dotazy, [kontaktujte náši přátelskou redakci](%{base_url}/about).
-    account_second_factor_disabled:
-      text_body_template: |
-        Na vašem účtu na %{site_name} bylo vypnuto dvoufaktorové ověřování. Nyní se můžete přihlásit pouze pomocí hesla; další ověřovací kód již není vyžadován.
-
-        Pokud jste se nerozhodli dvoufaktorové ověřování vypnout, mohl někdo váš účet kompromitovat.
-
-        Máte-li jakékoli dotazy, [obraťte se na naši přátelskou redakci](%{base_url}/about).
     digest:
       why: "Stručné shrnutí %{site_link} od %{since}"
       since_last_visit: "Od vaší poslední návštěvy"

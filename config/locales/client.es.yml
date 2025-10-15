@@ -3894,10 +3894,7 @@ es:
         attachment_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir archivos adjuntos."
         attachment_download_requires_login: "Lo sentimos, necesitas haber iniciado sesión para descargar archivos adjuntos."
       cancel_composer:
-        confirm: "¿Qué te gustaría hacer con tu publicación?"
         discard: "Descartar"
-        save_draft: "Guardar borrador para más tarde"
-        keep_editing: "Seguir editando"
       via_email: "esta publicación llegó por correo electrónico"
       via_auto_generated_email: "esta publicación llegó a través de un correo electrónico generado automáticamente"
       whisper: "esta publicación es un susurro privado para los moderadores"
@@ -5280,9 +5277,12 @@ es:
           title: "Localización"
           header_description: "Configura el idioma de la interfaz de tu comunidad y otras opciones de localización para tus miembros"
           keywords: "idioma local|idioma|zona horaria|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Inicio de sesión y autenticación"
           header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
+          sub_pages:
+            common_settings:
+              title: "Ajustes"
         logo:
           title: "Logo"
           header_description: "Configura los logotipos e iconos utilizados en todo tu sitio"
@@ -6463,6 +6463,7 @@ es:
           body: "Cuerpo del correo electrónico"
           revert: "Revertir los cambios"
           revert_confirm: "¿Seguro que quieres revertir los cambios?"
+          edit: "Editar"
         component:
           all_filter: "Todo"
           used_filter: "Usado"

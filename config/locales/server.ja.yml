@@ -1635,8 +1635,6 @@ ja:
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
     email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a> をご覧ください"
     detailed_404: "特定のトピックにアクセスできない詳細な理由をユーザーに提供します。注意: URL が有効なトピックにリンクしているかどうかがユーザーにわかるため、安全性が低くなります。"
-    enforce_second_factor: "ユーザーに Discourse UI にアクセスする前に二要素認証を有効にするように要求します。この設定は API または 'DiscourseConnect プロバイダー' 認証に影響しません。enforce_second_factor_on_external_auth が有効である場合、ユーザーは二要素認証をセットアップした後、外部認証プロバイダーを使用してログインできなくなります。"
-    enforce_second_factor_on_external_auth: "ユーザーに常に二要素認証を使用するように要求します。これを有効にすると、二要素認証が有効である場合に、ソーシャルログインなどの外部認証方法でログインできなくなります。無効にすると、ユーザー名とパスワードでログインする際に二要素認証のみを確認する必要があります。`enforce_second_factor` 設定も参照してください。"
     force_https: "サイトが HTTPS のみを使用するように強制する。警告: HTTPS が完全にセットアップ済みであり、すべての場所で機能していることを確認するまで、これを有効にしないでください！CDN、すべてのソーシャルログイン、および外部ロゴ/依存関係がすべて HTTPS 対応であることを確認しましたか？"
     summary_score_threshold: "「このトピックを要約」に含まれるために必要な投稿の最低スコア"
     summary_posts_required: "'このトピックを要約' を有効にするために最低限必要なトピック内の投稿数。この設定を変更すると、1 週間以内で遡って適用されます。"
@@ -3890,12 +3888,6 @@ ja:
     account_second_factor_disabled:
       title: "二要素認証が無効です"
       subject_template: "[%{email_prefix}] 二要素認証が無効です"
-      text_body_template: |
-        %{site_name} のアカウントの二要素認証が無効になったため、パスワードのみでログインできるようになりました。今後、追加の認証コードは不要です。
-
-        二要素認証を無効にしなかった場合、誰かがあなたのアカウントを侵害した可能性があります。
-
-        不明な点がございましたら、[スタッフにお問い合わせください](%{base_url}/about)。
     digest:
       why: "%{since} 以降の %{site_link} の簡単な要約"
       since_last_visit: "最終アクセス以降"

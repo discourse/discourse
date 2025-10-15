@@ -9,6 +9,6 @@ uk:
     admin:
       site_settings:
         categories:
-          discourse_github: "Дискурс GitHub"
+          discourse_github: "Discourse GitHub"
   replace_github_link:
     edit_reason: "Github посилання замінено постійним посиланням"

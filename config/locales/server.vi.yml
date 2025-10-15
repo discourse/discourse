@@ -1799,12 +1799,6 @@ vi:
     account_second_factor_disabled:
       title: "Xác thực hai yếu tố bị vô hiệu hóa"
       subject_template: "[%{email_prefix}] Đã tắt Xác thực hai yếu tố"
-      text_body_template: |
-        Xác thực hai yếu tố đã bị vô hiệu hóa trên tài khoản của bạn lúc %{site_name}. Bây giờ bạn có thể đăng nhập chỉ bằng mật khẩu của mình; một mã xác thực bổ sung không còn cần thiết.
-
-        Nếu bạn không chọn tắt xác thực hai yếu tố, ai đó có thể đã xâm phạm tài khoản của bạn.
-
-        Nếu bạn có bất kỳ câu hỏi nào, [liên hệ với nhân viên thân thiện của chúng tôi](%{base_url}/about).
     digest:
       since_last_visit: "Kể từ lần thăm cuối cùng của bạn"
       new_topics: "Chủ đề mới"

@@ -1711,8 +1711,6 @@ tr_TR:
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
     email_subject: "Standart e-postalar için özelleştirilebilir konu formatı. Bkz. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kullanıcılara belirli bir konuya neden erişemedikleri hakkında daha fazla ayrıntı sağlar. Not: Bu daha az güvenlidir çünkü kullanıcılar bir URL'nin geçerli bir konuya bağlanıp bağlanmadığını bilir."
-    enforce_second_factor: "Kullanıcıların Discourse kullanıcı arayüzüne erişebilmeleri için iki adımlı kimlik doğrulamayı etkinleştirmelerini zorunlu kılın. Bu ayar API veya \"DiscourseConnect sağlayıcısı\" kimlik doğrulamasını etkilemez. enforce_second_factor_on_external_auth etkinse kullanıcılar iki adımlı kimlik doğrulamayı ayarladıktan sonra harici kimlik doğrulama sağlayıcılarıyla giriş yapamazlar."
-    enforce_second_factor_on_external_auth: "Kullanıcıların her zaman iki adımlı kimlik doğrulama kullanmalarını zorunlu kılın. Bu özellik etkinleştirildiğinde, iki adımlı kimlik doğrulama etkinleştirilmişse kullanıcıların sosyal giriş yapma gibi harici kimlik doğrulama yöntemleriyle giriş yapmaları engellenir. Devre dışı bırakıldığında, kullanıcıların yalnızca bir kullanıcı adı ve şifreyle giriş yaparken iki adımlı kimlik doğrulamalarını onaylamaları gerekir. Ayrıca `enforce_second_factor` ayarına da bakın."
     force_https: "Sitenizi yalnızca HTTPS kullanmaya zorlayın. UYARI: HTTPS'nin tamamen kurulduğunu ve kesinlikle her yerde çalıştığını doğrulayana kadar bunu etkinleştirmeyin! CDN'nizi, tüm sosyal girişlerinizi ve tüm harici logoları / bağımlılıkları da HTTPS uyumlu olduklarından emin olmak için kontrol ettiniz mi?"
     summary_score_threshold: "Bir gönderinin \"Bu Konuyu Özetleyin\" bölümüne dahil edilmesi için gereken minimum puan"
     summary_posts_required: "\"Bu Konuyu Özetle\" etkinleştirilmeden önce bir konudaki minimum gönderi sayısı. Bu ayarda yapılan değişiklikler bir hafta içinde geriye dönük olarak uygulanır."
@@ -3990,12 +3988,6 @@ tr_TR:
     account_second_factor_disabled:
       title: "İki Adımlı Kimlik Doğrulama devre dışı"
       subject_template: "[%{email_prefix}] İki Adımlı Kimlik Doğrulama devre dışı"
-      text_body_template: |
-        %{site_name} hesabınızda iki adımlı kimlik doğrulama devre dışı bırakıldı. Artık yalnızca şifrenizle giriş yapabilirsiniz; ek bir kimlik doğrulama kodu artık gerekli değil.
-
-        İki adımlı kimlik doğrulamayı devre dışı bırakmayı seçmediyseniz biri hesabınızı ele geçirmiş olabilir.
-
-        Herhangi bir sorunuz varsa [güler yüzlü personelimizle iletişime geçin](%{base_url}/about).
     digest:
       why: "%{since} tarihinden bu yana %{site_link} adresinin kısa bir özeti"
       since_last_visit: "Son ziyaretinizden bu yana"

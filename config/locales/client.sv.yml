@@ -3267,10 +3267,7 @@ sv:
         attachment_upload_not_allowed_for_new_user: "Tyvärr kan nya användare inte bifoga filer."
         attachment_download_requires_login: "Tyvärr måste du vara inloggad för att kunna ladda ned bifogade filer."
       cancel_composer:
-        confirm: "Vad vill du göra med ditt inlägg?"
         discard: "Förkasta"
-        save_draft: "Spara utkast till senare"
-        keep_editing: "Fortsätt redigera"
       via_email: "det här inlägget har gjorts via e-post"
       via_auto_generated_email: "det här inlägget kom i ett autogenererat e-postmeddelande"
       whisper: "det här inlägget är en privat viskning för moderatorer"
@@ -4431,6 +4428,10 @@ sv:
           title: "Filer"
         legal:
           title: "Juridik"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Inställningar"
         logo:
           form:
             logo:
@@ -5165,6 +5166,7 @@ sv:
           body: "Huvuddel"
           revert: "Ångra ändringar"
           revert_confirm: "Är du säker på att du vill ångra dina ändringar?"
+          edit: "Redigera"
         component:
           all_filter: "Alla"
           used_filter: "Använt"
