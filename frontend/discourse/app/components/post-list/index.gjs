@@ -66,6 +66,7 @@ export default class PostList extends Component {
       const newPosts = await this.args.fetchMorePosts();
       if (this.args.posts) {
         if (this.args.posts instanceof ResultSet) {
+          // keep using `.addObjects` for now to preserve the reactivity on ResultSets
           this.args.posts.addObjects(newPosts);
         } else {
           addUniqueValuesToArray(this.args.posts, newPosts);
