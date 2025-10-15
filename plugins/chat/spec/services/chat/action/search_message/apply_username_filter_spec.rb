@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
-  subject(:result) { described_class.call(messages: messages, match: match, guardian: guardian) }
+  subject(:result) { described_class.call(messages:, username:, guardian:) }
 
   fab!(:current_user, :user)
   fab!(:channel, :chat_channel)
@@ -10,7 +10,6 @@ RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
 
   let(:guardian) { Guardian.new(current_user) }
   let(:messages) { Chat::Message.where(chat_channel: channel) }
-  let(:match) { "alice" }
 
   before do
     channel.add(current_user)
@@ -28,6 +27,8 @@ RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
       Fabricate(:chat_message, chat_channel: channel, user: bob, message: "bob's message")
     end
 
+    let(:username) { "alice" }
+
     it "returns only messages from that user" do
       expect(result).to contain_exactly(alice_message_1, alice_message_2)
     end
@@ -38,7 +39,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
       Fabricate(:chat_message, chat_channel: channel, user: alice, message: "alice's message")
     end
 
-    let(:match) { "ALICE" }
+    let(:username) { "ALICE" }
 
     it "filters messages correctly regardless of case" do
       expect(result).to contain_exactly(alice_message)
@@ -56,7 +57,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
       Fabricate(:chat_message, chat_channel: channel, user: alice, message: "alice's message")
     end
 
-    let(:match) { "me" }
+    let(:username) { "me" }
 
     it "returns messages from the current user" do
       expect(result).to contain_exactly(current_user_message_1, current_user_message_2)
@@ -68,7 +69,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
       Fabricate(:chat_message, chat_channel: channel, user: alice, message: "alice's message")
     end
 
-    let(:match) { "nonexistent" }
+    let(:username) { "nonexistent" }
 
     it "returns no messages" do
       expect(result).to be_empty
@@ -84,7 +85,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
       Fabricate(:chat_message, chat_channel: channel, user: alice, message: "alice's message")
     end
 
-    let(:match) { "staged" }
+    let(:username) { "staged" }
 
     it "excludes messages from staged users" do
       expect(result).to be_empty
@@ -93,7 +94,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
 
   context "when user is nil" do
     let(:guardian) { Guardian.new(nil) }
-    let(:match) { "me" }
+    let(:username) { "me" }
 
     fab!(:alice_message) do
       Fabricate(:chat_message, chat_channel: channel, user: alice, message: "alice's message")
@@ -110,7 +111,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyUsernameFilter do
       Fabricate(:chat_message, chat_channel: channel, user: user_underscore, message: "message")
     end
 
-    let(:match) { "user_underscore" }
+    let(:username) { "user_underscore" }
 
     it "normalizes and filters correctly" do
       expect(result).to contain_exactly(message)

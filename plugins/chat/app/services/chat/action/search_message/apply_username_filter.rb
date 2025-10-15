@@ -17,12 +17,13 @@ module Chat
         option :guardian
 
         def call
-          username = User.normalize_username(username)
-          user_id = if username == "me"
-             guardian.user&.id
-          else
-              user_id = User.not_staged.where(username_lower: username).pick(:id)
-          end
+          normalized_username = User.normalize_username(username)
+          user_id =
+            if normalized_username == "me"
+              guardian.user&.id
+            else
+              User.not_staged.where(username_lower: normalized_username).pick(:id)
+            end
 
           if user_id
             messages.where(user_id: user_id)

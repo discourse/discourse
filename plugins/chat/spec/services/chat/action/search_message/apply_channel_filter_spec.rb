@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
-  subject(:result) { described_class.call(messages: messages, match: match, guardian: guardian) }
+  subject(:result) do
+    described_class.call(messages: messages, channel_slug: channel_slug, guardian: guardian)
+  end
 
   fab!(:current_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, slug: "general") }
@@ -9,7 +11,6 @@ RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
 
   let(:guardian) { Guardian.new(current_user) }
   let(:messages) { Chat::Message.joins(:chat_channel) }
-  let(:match) { channel_1.slug }
 
   before do
     channel_1.add(current_user)
@@ -28,6 +29,8 @@ RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
       Fabricate(:chat_message, chat_channel: channel_2, message: "message in channel 2")
     end
 
+    let(:channel_slug) { channel_1.slug }
+
     it "returns only messages from that channel" do
       expect(result).to contain_exactly(message_1, message_2)
     end
@@ -36,7 +39,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
   context "with case insensitive channel slug" do
     fab!(:message) { Fabricate(:chat_message, chat_channel: channel_1, message: "message") }
 
-    let(:match) { channel_1.slug.upcase }
+    let(:channel_slug) { channel_1.slug.upcase }
 
     it "filters messages correctly regardless of case" do
       expect(result).to contain_exactly(message)
@@ -46,7 +49,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
   context "with non-existent channel slug" do
     fab!(:message) { Fabricate(:chat_message, chat_channel: channel_1, message: "message") }
 
-    let(:match) { "nonexistent" }
+    let(:channel_slug) { "nonexistent" }
 
     it "returns no messages" do
       expect(result).to be_empty
@@ -62,7 +65,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
       Fabricate(:chat_message, chat_channel: channel_1, message: "public message")
     end
 
-    let(:match) { private_channel.slug }
+    let(:channel_slug) { private_channel.slug }
 
     it "returns no messages" do
       expect(result).to be_empty
@@ -77,7 +80,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
 
     before { channel_3.add(current_user) }
 
-    let(:match) { channel_2.slug }
+    let(:channel_slug) { channel_2.slug }
 
     it "filters to only the specified channel" do
       expect(result).to contain_exactly(message_2)
@@ -90,7 +93,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
     fab!(:private_channel, :private_category_channel)
     fab!(:message) { Fabricate(:chat_message, chat_channel: private_channel, message: "message") }
 
-    let(:match) { private_channel.slug }
+    let(:channel_slug) { private_channel.slug }
 
     it "returns no messages" do
       expect(result).to be_empty
@@ -103,7 +106,7 @@ RSpec.describe Chat::Action::SearchMessage::ApplyChannelFilter do
 
     before { channel_special.add(current_user) }
 
-    let(:match) { "my-special-channel" }
+    let(:channel_slug) { "my-special-channel" }
 
     it "filters correctly with special characters" do
       expect(result).to contain_exactly(message)
