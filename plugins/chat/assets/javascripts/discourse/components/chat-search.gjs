@@ -187,6 +187,10 @@ export default class ChatSearch extends Component {
           class="no-blur"
         />
 
+        {{#if @query}}
+          <DButton @icon="xmark" @action={{fn this.debounceFilterChange ""}} />
+        {{/if}}
+
         <DMenu
           @identifier="search-sort-options"
           @label={{this.sortLabel this.currentSort}}
