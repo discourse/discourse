@@ -13,7 +13,7 @@ module Chat
         # @param [String] match The username to filter by (without the @ symbol)
         # @param [Guardian] guardian The current user's guardian
         option :messages
-        option :match
+        option :username
         option :guardian
 
         def call
