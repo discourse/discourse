@@ -11,7 +11,7 @@ module Chat
         # @param [String] match The channel slug to filter by (without the # symbol)
         # @param [Guardian] guardian The current user's guardian
         option :messages
-        option :match
+        option :channel_slug
         option :guardian
 
         def call
