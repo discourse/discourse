@@ -107,10 +107,8 @@ export default class ChatChannel extends Component {
 
     // Cancel any pending search request and debounced calls
     cancel(this, this._performSearch);
-    if (this.searchRequest) {
-      this.searchRequest.abort();
-      this.searchRequest = null;
-    }
+    this.searchRequest?.abort?.();
+    this.searchRequest = null;
   }
 
   @action
