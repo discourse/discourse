@@ -250,6 +250,7 @@ export default class ChatSearch extends Component {
                   @disableMouseEvents={{true}}
                   @includeSeparator={{false}}
                   @interactive={{false}}
+                  @dateMode="long"
                 />
               </li>
             {{/each}}

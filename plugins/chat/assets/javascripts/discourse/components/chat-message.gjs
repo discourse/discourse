@@ -628,6 +628,7 @@ export default class ChatMessage extends Component {
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
                   @threadContext={{this.threadContext}}
+                  @dateMode={{@dateMode}}
                 />
 
                 <ChatMessageText
