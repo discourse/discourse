@@ -153,7 +153,12 @@ module ReviewableActionBuilder
     require_reject_reason: false
   )
     actions.add(id, bundle: bundle) do |action|
-      prefix = "reviewables.actions.#{id}"
+      if self.type_source == "core"
+        prefix = "reviewables.actions.#{id}"
+      else
+        prefix = "#{self.type_source.underscore}.reviewables.actions.#{id}"
+      end
+
       action.icon = icon if icon
       action.button_class = button_class if button_class
       action.label = "#{prefix}.title"
