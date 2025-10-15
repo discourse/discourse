@@ -321,7 +321,7 @@ RSpec.describe Chat::Action::SearchMessage::ProcessSearchQuery do
     end
   end
 
-  context "SQL query performance" do
+  context "for SQL query performance" do
     fab!(:user1) { Fabricate(:user, username: "user1") }
     fab!(:user2) { Fabricate(:user, username: "user2") }
     fab!(:user3) { Fabricate(:user, username: "user3") }
