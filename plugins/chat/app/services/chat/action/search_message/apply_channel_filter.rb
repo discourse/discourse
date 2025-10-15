@@ -18,7 +18,7 @@ module Chat
           channel = ::Chat::Channel.find_by(slug: channel_slug.downcase)
 
           if channel.present? && guardian.can_preview_chat_channel?(channel)
-            messages.where("chat_channels.id = ?", channel_id)
+            messages.where("chat_channels.id = ?", channel.id)
           else
             messages.where("1 = 0")
           end
