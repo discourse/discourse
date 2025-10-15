@@ -138,9 +138,8 @@ export default class DiscoveryTopics extends Component {
       return;
     }
 
-    const lastFilterSegment = (this.args.model.get("filter") || "")
-      .split("/")
-      .at(-1);
+    const filterSegments = (this.args.model.get("filter") || "").split("/");
+    const lastFilterSegment = filterSegments.at(-1);
     const newOrUnreadFilter =
       lastFilterSegment === "new" || lastFilterSegment === "unread";
     const { category, tag } = this.args;
@@ -170,11 +169,11 @@ export default class DiscoveryTopics extends Component {
         }
 
         return i18n(`topics.none.${lastFilterSegment}`, {
-          category: category.name,
+          category: filterSegments[1],
         });
       } else {
         return i18n(`topics.bottom.${lastFilterSegment}`, {
-          category: category.name,
+          category: filterSegments[1],
         });
       }
     }
