@@ -8,7 +8,7 @@ module Chat
       # Only returns messages from channels the guardian can preview.
       class ApplyChannelFilter < Service::ActionBase
         # @param [ActiveRecord::Relation] messages The messages relation to filter
-        # @param [String] match The channel slug to filter by (without the # symbol)
+        # @param [String] channel_slug The channel slug to filter by (without the # symbol)
         # @param [Guardian] guardian The current user's guardian
         option :messages
         option :channel_slug
