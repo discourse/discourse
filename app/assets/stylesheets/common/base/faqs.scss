@@ -13,6 +13,13 @@
     }
   }
 
+  .static-faq & {
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
   .mobile-view & {
     font-size: var(--font-0);
   }
@@ -28,12 +35,7 @@
   ul:not(.nav-pills),
   ol:not(.nav-pills) {
     margin-left: 40px;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
+  }  
 }
 
 .body-page-button-container {
