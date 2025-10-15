@@ -14,7 +14,7 @@ RSpec.describe PostGuardian do
   fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
-  fab!(:post) { Fabricate(:post, topic: topic) }
+  fab!(:post) { Fabricate(:post, topic: topic, user: user) }
   fab!(:second_post) { Fabricate(:post, topic: topic) }
   fab!(:hidden_post) { Fabricate(:post, topic: topic, hidden: true) }
   fab!(:staff_post) { Fabricate(:post, topic: topic, user: moderator) }
@@ -1305,6 +1305,31 @@ RSpec.describe PostGuardian do
 
       post.topic.allowed_users << admin
       expect(Guardian.new(admin).can_receive_post_notifications?(post)).to be_truthy
+    end
+  end
+
+  ###### ACTING ######
+
+  describe "#post_can_act?" do
+    it "isn't allowed on nil" do
+      expect(Guardian.new(user).post_can_act?(nil, nil)).to be_falsey
+    end
+
+    describe "a Post" do
+      let(:guardian) { Guardian.new(user) }
+
+      it "isn't allowed when not logged in" do
+        expect(Guardian.new(nil).post_can_act?(post, :vote)).to be_falsey
+      end
+
+      it "is allowed as a regular user" do
+        expect(guardian.post_can_act?(post, :vote)).to be_truthy
+      end
+
+      it "isn't allowed on archived topics" do
+        topic.archived = true
+        expect(Guardian.new(user).post_can_act?(post, :like)).to be_falsey
+      end
     end
   end
 end
