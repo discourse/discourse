@@ -133,7 +133,6 @@ pl_PL:
     ai_discord_search_mode: "Wybierz tryb wyszukiwania, którego chcesz użyć do wyszukiwania w serwisie Discord"
     ai_discord_search_persona: "Osobowość, której należy używać do wyszukiwania w serwisie Discord."
     ai_discord_allowed_guilds: "Gildie (serwery) Discord, na których bot może wyszukiwać"
-    ai_bot_enable_dedicated_ux: "Zezwól na interfejs bota na pełnym ekranie zamiast wiadomości prywatnej"
     ai_translation_enabled: "Włącz funkcję tłumaczenia AI"
     ai_translation_model: "Model używany do tłumaczenia. Ten model musi obsługiwać tłumaczenie. Osobowości mogą nadpisać to ustawienie."
     ai_translation_backfill_limit_to_public_content: "Po włączeniu tej opcji tłumaczone będą tylko treści z kategorii publicznych. Po wyłączeniu tej opcji do tłumaczenia będą wysyłane również treści z prywatnych wiadomości grupowych i kategorii."
@@ -269,6 +268,8 @@ pl_PL:
     ai_helper:
       errors:
         completion_request_failed: "Coś poszło nie tak podczas próby przedstawienia sugestii. Spróbuj ponownie."
+        credit_limit_exceeded_user: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu %{reset_time}."
+        credit_limit_exceeded_bot: "Odpowiedzi AI są obecnie niedostępne z powodu limitów kredytów. Spróbuj ponownie %{reset_time}."
       prompts:
         translate: Przetłumacz na %{language}
         generate_titles: Zaproponuj tytuły tematu
@@ -648,6 +649,8 @@ pl_PL:
     translation:
       errors:
         disabled: "Funkcja tłumaczenia AI nie jest w pełni skonfigurowana."
+    llm_credit_allocation:
+      limit_exceeded: "Osiągnąłeś limit kredytów AI. Spróbuj ponownie za %{reset_time}."
     errors:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
       quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"
@@ -669,3 +672,5 @@ pl_PL:
   dashboard:
     problem:
       ai_llm_status: "Model LLM: %{model_name} napotyka problemy. Proszę sprawdzić stronę konfiguracji modelu <a href='%{url}'></a>."
+      ai_credit_soft_limit: "%{model_name} ma tylko %{percentage_remaining}% pozostałych kredytów. Kredyty zostaną zresetowane o %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"
+      ai_credit_hard_limit: "Skończyły Ci się kredyty AI na %{model_name}. Funkcje AI będą niedostępne do %{reset_date}. <a href='%{url}'>Zobacz modele AI</a>"

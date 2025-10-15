@@ -2225,12 +2225,6 @@ hr:
     account_second_factor_disabled:
       title: "Dvofaktorska autentikacija onemogućena"
       subject_template: "[%{email_prefix}] Dvofaktorska autentikacija onemogućena"
-      text_body_template: |
-        Dvofaktorska autentikacija je onemogućena na vašem korisničkom računu na %{site_name}. Sada se možete prijaviti samo svojom zaporkom; dodatni autentikacijski kod više nije potreban.
-
-        Ako niste odabrali onemogućiti dvofaktorsku autentikaciju, netko je možda ugrozio vaš korisnički račun.
-
-        Ako imate pitanja, [kontaktirajte naše ljubazno osoblje](%{base_url}/o).
     digest:
       since_last_visit: "Od vašeg posljednjeg posjeta"
       new_topics: "Nove teme"

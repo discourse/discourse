@@ -1637,8 +1637,6 @@ zh_CN:
     email_custom_headers: "自定义邮件头列表"
     email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
-    enforce_second_factor: "要求用户在访问 Discourse UI 之前启用双重身份验证。此设置不会影响 API 或 'DiscourseConnect provider' 身份验证。如果启用了 enforce_second_factor_on_external_auth 设置，用户在设置双重身份验证后将无法使用外部身份验证提供商登录。"
-    enforce_second_factor_on_external_auth: "要求用户始终使用双重身份验证。启用后，如果用户启用了双重身份验证，将无法使用外部身份验证方法（如社交登录）登录。禁用后，用户只需在使用用户名和密码登录时确认双重身份验证。另请参见 `enforce_second_factor` 设置。"
     force_https: "强制您的网站仅使用 HTTPS。警告：在您验证 HTTPS 已完全设置并在任何地方都可以正常工作之前，请勿启用此功能！您是否检查过您的 CDN、所有社交登录以及任何外部徽标/依赖项，以确保它们都与 HTTPS 兼容？"
     summary_score_threshold: "将帖子包含在“总结此话题”中所需的最低分数"
     summary_posts_required: "启用“总结此话题”之前话题中的最少帖子数。对此设置的更改将在一周内追溯应用。"
@@ -2568,6 +2566,9 @@ zh_CN:
       order_read: "按最后阅读时间排序（时间最近的优先）"
       order_read_asc: "按最后阅读时间排序（时间最早的优先）"
       exclude_users: "排除特定用户的话题"
+      locale: "按原始语言过滤话题"
+      locale_any: "显示以任何指定语言撰写的原始话题（以逗号分隔）"
+      exclude_locale: "排除最初以特定语言撰写的话题"
   discourse_connect:
     login_error: "登录错误"
     not_found: "找不到您的帐户。请联系网站管理员。"
@@ -3905,12 +3906,6 @@ zh_CN:
     account_second_factor_disabled:
       title: "双重身份验证已禁用"
       subject_template: "[%{email_prefix}] 双重身份验证已禁用"
-      text_body_template: |
-        您在 %{site_name} 的帐户的双重身份验证已被禁用。您现在可以仅使用您的密码登录；不再需要额外的身份验证代码。
-
-        如果您没有选择禁用双重身份验证，则可能有人盗用了您的帐户。
-
-        如果您有任何问题，请[联系我们友好的管理人员](%{base_url}/about)。
     digest:
       why: "自 %{since} 以来 %{site_link} 的简要摘要"
       since_last_visit: "自从您上次访问以来"
@@ -5214,12 +5209,32 @@ zh_CN:
         bundle_title: "您想对这篇帖子做什么？"
       no_action_post:
         title: "无行动"
+        description: "不对帖子采取任何行动"
+        complete: "未对帖子采取任何行动"
       delete_post:
         title: "删除帖子"
+        description: "删除此帖子"
+        complete: "帖子已删除"
       hide_post:
         title: "隐藏帖子"
+        description: "隐藏此帖子，不让公众查看"
+        complete: "帖子已隐藏"
+      unhide_post:
+        title: "取消隐藏帖子"
+        description: "让所有用户都可以看到此帖子"
+        complete: "帖子取消隐藏"
       restore_post:
         title: "恢复帖子"
+        description: "恢复已删除的帖子"
+        complete: "帖子已恢复"
+      edit_post:
+        title: "编辑帖子"
+        description: "编辑此帖内容"
+        complete: "帖子已编辑"
+      convert_to_pm:
+        title: "转换为 PM"
+        description: "将此帖子转换为个人消息"
+        complete: "帖子已转换为私人消息"
       user_actions:
         bundle_title: "您想对这位用户做什么？"
       no_action_user:

@@ -1711,8 +1711,6 @@ fi:
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
     email_subject: "Mukautettava tavallisten sähköpostiviestien aiheen muoto. Katso englanninkielinen ohje: <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Kertoo käyttäjälle tarkemmin, miksi hän ei pääse tiettyyn ketjuun. Huomioi: tämä vaarantaa tietoturvaa, koska käyttäjä saa tietää, että URL osoittaa olemassa olevaan ketjuun."
-    enforce_second_factor: "Vaadi käyttäjiä ottamaan käyttöön kaksivaiheinen tunnistus ennen kuin he voivat käyttää Discoursen käyttöliittymää. Tämä asetus ei vaikuta API- tai DiscourseConnect-palveluntarjoajatodennukseen. Jos enforce_second_factor_on_external_auth on käytössä, käyttäjät eivät voi kirjautua sisään ulkoisilla todennuspalveluilla kaksivaiheisen tunnistuksen määrittämisen jälkeen."
-    enforce_second_factor_on_external_auth: "Vaadi käyttäjiä käyttämään aina kaksivaiheista tunnistusta. Kun tämä on käytössä, tämä estää käyttäjiä kirjautumasta sisään ulkoisilla todennusmenetelmillä, kuten yhteisökirjautumisella, jos heillä on kaksivaiheinen tunnistus käytössä. Käytöstä poistettujen käyttäjien tarvitsee vain vahvistaa kaksivaiheinen tunnistus kirjautuessaan sisään käyttäjätunnuksella ja salasanalla. Katso myös \"enforce_second_factor\"-asetus."
     force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN:n, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot ja muut riippuvuudet varmistaaksesi, että ne ovat myös HTTPS-yhteensopivia?"
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
     summary_posts_required: "Vähimmäismäärä viestejä ketjussa ennen kuin Näytä ketjun tiivistelmä otetaan käyttöön. Muutokset tähän asetukseen otetaan käyttöön taannehtivasti viikon kuluessa."
@@ -4001,12 +3999,6 @@ fi:
     account_second_factor_disabled:
       title: "Kaksivaiheinen tunnistus poistettu käytöstä"
       subject_template: "[%{email_prefix}] Kaksivaiheinen tunnistus poistettu käytöstä"
-      text_body_template: |
-        Kaksivaiheinen tunnistus poistettiin käytöstä tililtäsi sivustolla %{site_name}. Voit nyt kirjautua pelkällä salasanallasi; erillistä todennuskoodia ei enää vaadita lisäksi.
-
-        Jos et poistanut kaksivaiheista tunnistusta käytöstä, joku on saattanut murtautua tilillesi.
-
-        Jos sinulla on kysyttävää, [ota yhteyttä avuliaaseen henkilökuntaamme](%{base_url}/about).
     digest:
       why: "%{site_link} – lyhyt yhteenveto %{since} lähtien"
       since_last_visit: "Viime vierailusi jälkeen"

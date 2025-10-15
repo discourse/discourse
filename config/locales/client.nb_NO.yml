@@ -3474,10 +3474,7 @@ nb_NO:
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."
         attachment_download_requires_login: "Beklager, du må være innlogget for å laste ned vedlegg."
       cancel_composer:
-        confirm: "Hva vil du gjøre med innlegget ditt?"
         discard: "Forkast"
-        save_draft: "Lagre utkast til senere"
-        keep_editing: "Fortsett å redigere"
       via_email: "Dette innlegget ankom via e-post"
       via_auto_generated_email: "dette innlegget kom fra en automatisk generert e-post"
       whisper: "dette innlegget er en privat hvisking for moderatorer"
@@ -4414,6 +4411,10 @@ nb_NO:
           title: "Filer"
         legal:
           title: "Juridisk"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Innstillinger"
         logo:
           form:
             mobile: "Mobil"
@@ -4930,6 +4931,7 @@ nb_NO:
           body: "Meldingstekst"
           revert: "Tilbakestill endringer"
           revert_confirm: "Er du sikker på at du vil tilbakestille dine endringer?"
+          edit: "Rediger"
         component:
           all_filter: "Alle"
           enabled_filter: "Aktivert"
