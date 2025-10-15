@@ -326,4 +326,38 @@ module("Integration | Component | dialog-holder", function (hooks) {
       "correct message is shown in dialog"
     );
   });
+
+  test("confirm dialogs return a promise resolving to a boolean", async function (assert) {
+    await render(<template><DialogHolder /></template>);
+
+    const dialogMethods = ["confirm", "deleteConfirm", "yesNoConfirm"];
+
+    for (const method of dialogMethods) {
+      // Test confirm (true) case
+      const confirmPromise = this.dialog[method]({
+        message: "test",
+      });
+      await settled();
+      await click(".dialog-footer .btn-primary, .dialog-footer .btn-danger");
+      const isConfirmed = await confirmPromise;
+      assert.true(isConfirmed, `${method} promise resolved to true`);
+
+      // Test cancel (false) case
+      const cancelPromise = this.dialog[method]({ message: "test" });
+      await settled();
+      await click(".dialog-footer .btn-default");
+      const isCancelled = await cancelPromise;
+      assert.false(isCancelled, `${method} promise resolved to false`);
+
+      // Test modal cancel (false) case
+      const overlayCancelPromise = this.dialog[method]({ message: "test" });
+      await settled();
+      await click(".dialog-overlay");
+      const isOverlayCancelled = await overlayCancelPromise;
+      assert.false(
+        isOverlayCancelled,
+        `${method} promise resolved to false when modal cancelled`
+      );
+    }
+  });
 });

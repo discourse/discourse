@@ -90,9 +90,8 @@ export default class DialogService extends Service {
   }
 
   confirm(params) {
-    return this.dialog({
+    return this._promiseDialog({
       ...params,
-      shouldDisplayCancel: true,
       buttons: null,
       type: "confirm",
     });
@@ -106,18 +105,41 @@ export default class DialogService extends Service {
   }
 
   yesNoConfirm(params) {
-    return this.confirm({
+    return this._promiseDialog({
       ...params,
       confirmButtonLabel: "yes_value",
       cancelButtonLabel: "no_value",
+      buttons: null,
+      type: "confirm",
     });
   }
 
   deleteConfirm(params) {
-    return this.confirm({
+    return this._promiseDialog({
       ...params,
       confirmButtonClass: "btn-danger",
       confirmButtonLabel: params.confirmButtonLabel || "delete",
+      buttons: null,
+      type: "confirm",
+    });
+  }
+
+  _promiseDialog(params) {
+    return new Promise((resolve) => {
+      const { didConfirm, didCancel } = params;
+
+      this.dialog({
+        ...params,
+        shouldDisplayCancel: true,
+        didConfirm: () => {
+          didConfirm?.();
+          resolve(true);
+        },
+        didCancel: () => {
+          didCancel?.();
+          resolve(false);
+        },
+      });
     });
   }
 
