@@ -17,11 +17,12 @@ import FilterInput from "discourse/components/filter-input";
  *
  * @component AdminFilterControls
  * @param {Array} array - The dataset to display
- * @param {Array} [searchableProps] - Property names to search for client-side text filtering
+ * @param {Array} [searchableProps] - Property names to search for client-side text filtering, can be dot-separated
+ *                                for nested properties (e.g. "user.name")
  * @param {Array} [dropdownOptions] - Dropdown options. Format: [{value, label, filterFn?}]. Or, if you
  *                                   want multiple dropdowns, format is: { dropdown1: [...], dropdown2: [...] }
  * @param {String} [inputPlaceholder] - Placeholder text for search input
- * @param {String} [defaultDropdown="all"] - Default dropdown value
+ * @param {String} [defaultDropdownValue="all"] - Default dropdown value
  * @param {String} [noResultsMessage] - Message shown when no results found
  * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
  * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
@@ -62,8 +63,8 @@ export default class AdminFilterControls extends Component {
     return this.dropdownOptions.length > 1 || this.hasMultipleDropdowns;
   }
 
-  get defaultDropdown() {
-    return this.args.defaultDropdown || "all";
+  get defaultDropdownValue() {
+    return this.args.defaultDropdownValue || "all";
   }
 
   get showFilters() {
@@ -74,7 +75,8 @@ export default class AdminFilterControls extends Component {
 
   get hasActiveFilters() {
     return (
-      this.textFilter.length > 0 || this.dropdownFilter !== this.defaultDropdown
+      this.textFilter.length > 0 ||
+      this.dropdownFilter !== this.defaultDropdownValue
     );
   }
 
@@ -98,7 +100,7 @@ export default class AdminFilterControls extends Component {
       });
     }
 
-    if (this.dropdownFilter !== this.defaultDropdown) {
+    if (this.dropdownFilter !== this.defaultDropdownValue) {
       const selectedOption = this.dropdownOptions.find(
         (option) => option.value === this.dropdownFilter
       );
@@ -111,7 +113,9 @@ export default class AdminFilterControls extends Component {
   }
 
   /**
-   * get nested value
+   * Allows searchable props in the format user.name, this function gets the
+   * nested value based on a dot-separated path.
+   *
    * @param {Object} obj - The object to get value from
    * @param {String} path - The property path (e.g. "user.name")
    * @returns {*} The value at the path
@@ -122,7 +126,7 @@ export default class AdminFilterControls extends Component {
 
   @action
   setupComponent() {
-    this.dropdownFilter = this.defaultDropdown;
+    this.dropdownFilter = this.defaultDropdownValue;
   }
 
   @action
@@ -142,7 +146,7 @@ export default class AdminFilterControls extends Component {
   @action
   resetFilters() {
     this.textFilter = "";
-    this.dropdownFilter = this.defaultDropdown;
+    this.dropdownFilter = this.defaultDropdownValue;
 
     if (this.args.onResetFilters) {
       this.args.onResetFilters();
@@ -187,6 +191,7 @@ export default class AdminFilterControls extends Component {
     {{/if}}
 
     {{yield to="aboveContent"}}
+
     {{#if this.filteredData.length}}
       {{yield this.filteredData to="content"}}
     {{else if this.showFilters}}
