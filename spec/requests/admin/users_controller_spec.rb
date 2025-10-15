@@ -2643,7 +2643,10 @@ RSpec.describe Admin::UsersController do
           target_user_id: user.id,
           action: UserHistory.actions[:delete_associated_accounts],
         )
-        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"')
+        # first option is for ruby 3.3 and the other for 3.4
+        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"').or include(
+               'uid: "123456789"',
+             )
       end
     end
 
