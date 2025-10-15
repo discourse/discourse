@@ -1149,6 +1149,19 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
     end
+
+    it "parses white-space pre from pasted HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("<span style='white-space: pre'>   leading\ntrailing   </span>", html: true)
+
+      expect(rich).to have_css("code", text: "leading\ntrailing")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("```\n   leading\ntrailing   \n```")
+    end
   end
 
   describe "toolbar state updates" do
