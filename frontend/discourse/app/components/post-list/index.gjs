@@ -42,6 +42,7 @@ import PostListItem from "discourse/components/post-list/item";
 import concatClass from "discourse/helpers/concat-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import ResultSet from "discourse/models/result-set";
 import { i18n } from "discourse-i18n";
 import { addUniqueValuesToArray } from "../../lib/array-tools";
 
@@ -64,7 +65,11 @@ export default class PostList extends Component {
     try {
       const newPosts = await this.args.fetchMorePosts();
       if (this.args.posts) {
-        addUniqueValuesToArray(this.args.posts, newPosts);
+        if (this.args.posts instanceof ResultSet) {
+          this.args.posts.addObjects(newPosts);
+        } else {
+          addUniqueValuesToArray(this.args.posts, newPosts);
+        }
       }
 
       if (newPosts.length === 0) {
