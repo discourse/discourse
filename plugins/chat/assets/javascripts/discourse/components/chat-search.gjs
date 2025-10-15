@@ -29,6 +29,8 @@ import ChatThreadHeading from "discourse/plugins/chat/discourse/components/chat-
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
+const LIMIT = 20;
+
 export default class ChatSearch extends Component {
   @service router;
 
@@ -38,8 +40,6 @@ export default class ChatSearch extends Component {
   @tracked offset = 0;
   @tracked hasMoreResults = false;
   @tracked lastQuery = null;
-
-  limit = 20;
 
   @bind
   async searchMessages(resetResults = true) {
@@ -68,7 +68,7 @@ export default class ChatSearch extends Component {
           channel_id: this.args.scopedChannelId,
           sort: this.currentSort,
           offset: this.offset,
-          limit: this.limit,
+          limit: LIMIT,
         },
       });
 
