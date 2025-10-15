@@ -5679,11 +5679,14 @@ en:
         toggled_too_fast: "You have toggled this change too quickly. Please wait a few seconds before trying again."
         change_enabled: "You have opted-in to this change"
         change_disabled: "You have opted-out of this change"
+        permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
+        permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         statuses:
           pre_alpha: "Pre-Alpha"
           alpha: "Alpha"
           beta: "Beta"
           stable: "Stable"
+          permanent: "Permanent"
         impact_roles:
           admins: "Admins"
           moderators: "Moderators"
@@ -5702,6 +5705,7 @@ en:
           status_alpha: "Status: Alpha"
           status_beta: "Status: Beta"
           status_stable: "Status: Stable"
+          status_permanent: "Status: Permanent"
 
       config:
         about:

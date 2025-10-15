@@ -5,10 +5,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { notEq } from "truth-helpers";
+import { eq, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import GroupSelector from "discourse/components/group-selector";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -156,6 +157,13 @@ export default class UpcomingChangeItem extends Component {
           </div>
         {{/if}}
 
+        {{#if (eq @change.upcoming_change.status "permanent")}}
+          <div class="upcoming-change__permanent-notice">
+            {{icon "triangle-exclamation"}}
+            {{i18n "admin.upcoming_changes.permanent_notice"}}
+          </div>
+        {{/if}}
+
         <div class="upcoming-change__badges">
           <span
             title={{i18n
@@ -164,9 +172,18 @@ export default class UpcomingChangeItem extends Component {
                 @change.upcoming_change.status
               )
             }}
-            class="upcoming-change__badge"
+            class={{concatClass
+              "upcoming-change__badge"
+              (concat "--status-" @change.upcoming_change.status)
+            }}
           >
-            {{icon "far-circle-dot"}}
+            {{icon
+              (if
+                (eq @change.upcoming_change.status "permanent")
+                "lock"
+                "far-circle-dot"
+              )
+            }}
             {{i18n
               (concat
                 "admin.upcoming_changes.statuses."
@@ -199,12 +216,16 @@ export default class UpcomingChangeItem extends Component {
           {{i18n "admin.upcoming_changes.opt_in_groups"}}
         </div>
 
-        <GroupSelector
-          @groupFinder={{this.groupFinder}}
-          @groupNames={{@change.groups}}
-          @onChange={{this.groupsChanged}}
-          @placeholderKey="admin.upcoming_changes.select_groups"
-        />
+        {{#if (eq @change.upcoming_change.status "permanent")}}
+          {{i18n "admin.upcoming_changes.permanent_no_group_selection"}}
+        {{else}}
+          <GroupSelector
+            @groupFinder={{this.groupFinder}}
+            @groupNames={{@change.groups}}
+            @onChange={{this.groupsChanged}}
+            @placeholderKey="admin.upcoming_changes.select_groups"
+          />
+        {{/if}}
 
         {{#if (notEq @change.groups this.bufferedGroups)}}
           <DButton
@@ -224,6 +245,7 @@ export default class UpcomingChangeItem extends Component {
           @state={{@change.value}}
           class="upcoming-change__toggle"
           {{on "click" this.toggleChange}}
+          disabled={{eq @change.upcoming_change.status "permanent"}}
         />
       </td>
     </tr>

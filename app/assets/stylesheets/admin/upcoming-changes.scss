@@ -60,6 +60,10 @@
       height: 0.75em;
       color: var(--primary-high);
     }
+
+    &.--status-permanent {
+      background-color: var(--success-low);
+    }
   }
 
   &__groups {
@@ -93,5 +97,11 @@
     height: 100%;
     margin: 0;
     padding: 0.5rem 0;
+  }
+
+  &__permanent-notice {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    margin-top: 0.5rem;
   }
 }
