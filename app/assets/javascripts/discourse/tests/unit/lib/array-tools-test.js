@@ -1,12 +1,153 @@
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { module, test } from "qunit";
 import {
+  addUniqueValuesToArray,
+  addUniqueValueToArray,
   removeValueFromArray,
   removeValuesFromArray,
   uniqueItemsFromArray,
 } from "discourse/lib/array-tools";
 
 module("Unit | Lib | array-tools", function () {
+  module("addUniqueValueToArray()", function () {
+    test("adds a value when not present and returns same reference", function (assert) {
+      const arr = [1, 2];
+      const result = addUniqueValueToArray(arr, 3);
+
+      assert.strictEqual(result, arr, "returns the same array reference");
+      assert.deepEqual(arr, [1, 2, 3], "value appended");
+    });
+
+    test("does not add duplicate values", function (assert) {
+      const arr = [1, 2, 3];
+      const result = addUniqueValueToArray(arr, 2);
+
+      assert.strictEqual(result, arr, "returns the same array reference");
+      assert.deepEqual(arr, [1, 2, 3], "no duplicate added");
+    });
+
+    test("works with objects by reference identity", function (assert) {
+      const a = { id: 1 };
+      const b = { id: 1 };
+      const arr = [a];
+
+      addUniqueValueToArray(arr, b);
+      assert.deepEqual(arr, [a, b], "different references are both kept");
+
+      addUniqueValueToArray(arr, a);
+      assert.deepEqual(arr, [a, b], "existing reference not duplicated");
+    });
+
+    test("works with TrackedArray and preserves instance", function (assert) {
+      const tracked = new TrackedArray([1]);
+      const result = addUniqueValueToArray(tracked, 2);
+
+      assert.strictEqual(
+        result,
+        tracked,
+        "same TrackedArray instance returned"
+      );
+      assert.deepEqual(Array.from(tracked), [1, 2], "value added");
+    });
+
+    test("handles heterogeneous arrays and NaN", function (assert) {
+      const sym = Symbol("s");
+      const arr = [0, false, null, undefined, "", sym, NaN];
+
+      addUniqueValueToArray(arr, 0);
+      addUniqueValueToArray(arr, false);
+      addUniqueValueToArray(arr, null);
+      addUniqueValueToArray(arr, undefined);
+      addUniqueValueToArray(arr, "");
+      addUniqueValueToArray(arr, sym);
+      addUniqueValueToArray(arr, NaN); // includes treats NaN as true
+
+      assert.deepEqual(
+        arr.slice(0, 7),
+        [0, false, null, undefined, "", sym, NaN],
+        "no duplicates for existing heterogeneous values including NaN"
+      );
+      addUniqueValueToArray(arr, "x");
+      assert.strictEqual(
+        arr[arr.length - 1],
+        "x",
+        "new distinct value appended"
+      );
+    });
+  });
+
+  module("addUniqueValuesToArray()", function () {
+    test("adds multiple values only when not present", function (assert) {
+      const arr = [1, 3];
+      addUniqueValuesToArray(arr, [1, 2, 3, 4]);
+
+      assert.deepEqual(arr, [1, 3, 2, 4], "only missing values appended");
+    });
+
+    test("no-op when all values already present", function (assert) {
+      const arr = ["a", "b"];
+      const result = addUniqueValuesToArray(arr, ["a", "b"]);
+
+      assert.strictEqual(result, undefined, "function returns void");
+      assert.deepEqual(arr, ["a", "b"], "array remains unchanged");
+    });
+
+    test("works with empty values list", function (assert) {
+      const arr = [1, 2, 3];
+      addUniqueValuesToArray(arr, []);
+
+      assert.deepEqual(arr, [1, 2, 3], "unchanged");
+    });
+
+    test("throws when target is not an array", function (assert) {
+      assert.throws(
+        () => addUniqueValuesToArray(null, [1]),
+        /'target' must be an array/,
+        "null target rejected"
+      );
+      assert.throws(
+        () => addUniqueValuesToArray({}, [1]),
+        /'target' must be an array/,
+        "object target rejected"
+      );
+    });
+
+    test("throws when values is not an array", function (assert) {
+      assert.throws(
+        () => addUniqueValuesToArray([], null),
+        /'values' must be an array/,
+        "null values rejected"
+      );
+      assert.throws(
+        () => addUniqueValuesToArray([], "x"),
+        /'values' must be an array/,
+        "string values rejected"
+      );
+    });
+
+    test("preserves TrackedArray instance and appends only missing entries", function (assert) {
+      const tracked = new TrackedArray([1, 2]);
+      const result = addUniqueValuesToArray(tracked, [2, 3, 4, 3]);
+
+      assert.strictEqual(result, undefined, "function returns void");
+      assert.true(tracked instanceof TrackedArray, "still a TrackedArray");
+      assert.deepEqual(
+        Array.from(tracked),
+        [1, 2, 3, 4],
+        "only unique additions appended"
+      );
+    });
+
+    test("idempotent across repeated calls with same values", function (assert) {
+      const arr = [1];
+      addUniqueValuesToArray(arr, [1, 2]);
+      assert.deepEqual(arr, [1, 2], "first call adds 2");
+
+      addUniqueValuesToArray(arr, [1, 2]);
+      assert.deepEqual(arr, [1, 2], "second call no-ops");
+    });
+  });
+
   module("removeValueFromArray()", function () {
     test("removes all occurrences of a primitive value from a plain array", function (assert) {
       const input = [1, 2, 3, 2, 4, 2, 5];
