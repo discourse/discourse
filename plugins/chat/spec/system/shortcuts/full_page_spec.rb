@@ -36,6 +36,8 @@ RSpec.describe "Shortcuts | full page", type: :system do
     end
 
     context "when enabled" do
+      before { SiteSetting.chat_search_enabled = true }
+
       it "shows the link the /chat/search" do
         visit("/")
 

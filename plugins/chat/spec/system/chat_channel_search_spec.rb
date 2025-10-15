@@ -3,6 +3,7 @@
 RSpec.describe "Chat channel search", type: :system do
   before do
     SearchIndexer.enable
+    SiteSetting.chat_search_enabled = true
     chat_system_bootstrap
     channel_1.add(current_user)
     sign_in(current_user)
