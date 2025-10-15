@@ -92,8 +92,10 @@ class TopicEmbed < ActiveRecord::Base
         #   args # returning args is important to prevent errors
         # end
         create_args =
-          DiscoursePluginRegistry.apply_modifier(:topic_embed_import_create_args, create_args) ||
-            create_args
+          DiscoursePluginRegistry.apply_modifier(
+            :topic_embed_import_create_args,
+            create_args,
+          ).presence || create_args
 
         post = PostCreator.create(user, create_args)
         post.topic.topic_embed.update!(embed_content_cache: original_contents)
