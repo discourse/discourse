@@ -443,9 +443,10 @@ RSpec.describe ApplicationController do
       end
 
       it "should allow anchor tags in title" do
-        I18n.backend.store_translations(
-          :en,
-          { page_not_found: { title: 'Visit <a href="/search">search</a> page' } },
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "page_not_found.title",
+          'Visit <a href="/search">search</a> page',
         )
 
         get "/t/nope-nope/99999999"
@@ -454,9 +455,10 @@ RSpec.describe ApplicationController do
       end
 
       it "should sanitize unsafe HTML in title" do
-        I18n.backend.store_translations(
-          :en,
-          { page_not_found: { title: 'Page <script>alert("xss")</script> not found' } },
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "page_not_found.title",
+          'Page <script>alert("xss")</script> not found',
         )
 
         get "/t/nope-nope/99999999"
