@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 def brotli_s3_path(path)
-  ext = File.extname(path)
-  "#{path[0..-ext.length]}br#{ext}"
+  path.sub("/assets/", "/assets/br/")
 end
 
 def gzip_s3_path(path)
-  ext = File.extname(path)
-  "#{path[0..-ext.length]}gz#{ext}"
+  path.sub("/assets/", "/assets/gz/")
 end
 
 def existing_assets
