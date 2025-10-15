@@ -1,39 +1,52 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class AdminApiKeysIndexController extends Controller {
-  loading = false;
+  @tracked loading = false;
 
   @action
-  revokeKey(key) {
-    key.revoke().catch(popupAjaxError);
+  async revokeKey(key) {
+    try {
+      await key.revoke();
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
-  undoRevokeKey(key) {
-    key.undoRevoke().catch(popupAjaxError);
+  async undoRevokeKey(key) {
+    try {
+      await key.undoRevoke();
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
-  loadMore() {
+  async loadMore() {
     if (this.loading || this.model.loaded) {
       return;
     }
 
     const limit = 50;
 
-    this.set("loading", true);
-    this.store
-      .findAll("api-key", { offset: this.model.length, limit })
-      .then((keys) => {
-        this.model.addObjects(keys);
-        if (keys.length < limit) {
-          this.model.set("loaded", true);
-        }
-      })
-      .finally(() => {
-        this.set("loading", false);
+    try {
+      this.loading = true;
+      const keys = await this.store.findAll("api-key", {
+        offset: this.model.length,
+        limit,
       });
+
+      // this.model is an instance of a ResultSet. We need to keep using `.addObjects` for now to preserve the
+      // KVO-compliant behavior of the model.
+      this.model.addObjects(keys);
+      if (keys.length < limit) {
+        this.model.set("loaded", true);
+      }
+    } finally {
+      this.loading = false;
+    }
   }
 }
