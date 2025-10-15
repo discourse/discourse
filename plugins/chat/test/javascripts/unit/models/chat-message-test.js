@@ -24,4 +24,14 @@ module("Discourse Chat | Unit | Models | chat-message", function (hooks) {
     });
     assert.true(message.persisted);
   });
+
+  test(".url", function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).channel({ id: 123 });
+
+    let message = ChatMessage.create(channel, { id: 1 });
+    assert.strictEqual(message.url, "/chat/c/-/123/1");
+
+    message = ChatMessage.create(channel, { id: 1, thread_id: 456 });
+    assert.strictEqual(message.url, "/chat/c/-/123/t/456/1");
+  });
 });

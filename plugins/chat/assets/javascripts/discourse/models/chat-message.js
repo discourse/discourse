@@ -1,6 +1,7 @@
 import { cached, tracked } from "@glimmer/tracking";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import { generateCookFunction, parseMentions } from "discourse/lib/text";
 import Bookmark from "discourse/models/bookmark";
@@ -100,6 +101,20 @@ export default class ChatMessage {
     if (args.thread) {
       this.thread = args.thread;
     }
+  }
+
+  get url() {
+    let url;
+
+    if (this.threadId) {
+      url = getURL(
+        `/chat/c/-/${this.channel.id}/t/${this.threadId}/${this.id}`
+      );
+    } else {
+      url = getURL(`/chat/c/-/${this.channel.id}/${this.id}`);
+    }
+
+    return url;
   }
 
   get persisted() {

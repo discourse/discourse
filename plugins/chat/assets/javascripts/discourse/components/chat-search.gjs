@@ -17,7 +17,6 @@ import { ajax } from "discourse/lib/ajax";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
-import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import autoFocus from "discourse/modifiers/auto-focus";
 import tabToSibling from "discourse/modifiers/tab-to-sibling";
@@ -145,17 +144,7 @@ export default class ChatSearch extends Component {
 
   @action
   visitMessage(message) {
-    let url;
-
-    if (message.threadId) {
-      url = getURL(
-        `/chat/c/-/${message.channel.id}/t/${message.threadId}/${message.id}`
-      );
-    } else {
-      url = getURL(`/chat/c/-/${message.channel.id}/${message.id}`);
-    }
-
-    DiscourseURL.routeTo(url);
+    DiscourseURL.routeTo(message.url);
   }
 
   @action
