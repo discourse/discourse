@@ -23,4 +23,24 @@ RSpec.describe "Shortcuts | full page", type: :system do
       expect(channel_page.composer).to have_value("e")
     end
   end
+
+  context "with chat search" do
+    context "when disabled" do
+      before { SiteSetting.chat_search_enabled = false }
+
+      it "doesn't show the link to /chat/search" do
+        visit("/")
+
+        expect(page).to have_no_selector(".sidebar-section[data-section-name=\"chat-search\"]")
+      end
+    end
+
+    context "when enabled" do
+      it "shows the link the /chat/search" do
+        visit("/")
+
+        expect(page).to have_selector(".sidebar-section[data-section-name=\"chat-search\"]")
+      end
+    end
+  end
 end
