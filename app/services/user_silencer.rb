@@ -66,6 +66,7 @@ class UserSilencer
   def auto_silence
     if silence
       notify_moderators
+      true
     else
       false
     end
