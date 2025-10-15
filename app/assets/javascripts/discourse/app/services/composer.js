@@ -477,19 +477,8 @@ export default class ComposerService extends Service {
     "model.targetRecipients",
     "model.warningsDisabled"
   )
-  showWarning(creatingPrivateMessage, usernames, warningsDisabled) {
+  canToggleWarning(creatingPrivateMessage, usernames, warningsDisabled) {
     if (!this.get("currentUser.staff") || warningsDisabled) {
-      return false;
-    }
-
-    const hasTargetGroups = this.get("model.hasTargetGroups");
-
-    // We need exactly one user to issue a warning
-    if (
-      isEmpty(usernames) ||
-      usernames.split(",").length !== 1 ||
-      hasTargetGroups
-    ) {
       return false;
     }
 
