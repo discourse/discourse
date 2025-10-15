@@ -18,8 +18,11 @@ module Chat
 
         def call
           username = User.normalize_username(match)
-          user_id = User.not_staged.where(username_lower: username).pick(:id)
-          user_id = guardian.user&.id if !user_id && username == "me"
+          user_id = if username == "me"
+             guardian.user&.id
+          else
+              user_id = User.not_staged.where(username_lower: username).pick(:id)
+          end
 
           if user_id
             messages.where(user_id: user_id)
