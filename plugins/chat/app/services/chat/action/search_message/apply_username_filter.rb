@@ -17,7 +17,7 @@ module Chat
         option :guardian
 
         def call
-          username = User.normalize_username(match)
+          username = User.normalize_username(username)
           user_id = if username == "me"
              guardian.user&.id
           else
