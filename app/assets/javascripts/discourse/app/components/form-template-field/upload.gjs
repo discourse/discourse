@@ -7,7 +7,13 @@ import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import {
+  attachmentLabelFromFileName,
+  isAudio,
+  isImage,
+  isVideo,
+  markdownNameFromFileName,
+} from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
 export default class FormTemplateFieldUpload extends Component {
@@ -80,18 +86,18 @@ export default class FormTemplateFieldUpload extends Component {
 
   buildMarkdown(upload) {
     if (isImage(upload.url)) {
-      return `![${upload.file_name}|${upload.width}x${upload.height}](${upload.short_url})`;
+      return `![${markdownNameFromFileName(upload.file_name)}|${upload.width}x${upload.height}](${upload.short_url})`;
     }
 
     if (isAudio(upload.url)) {
-      return `![${upload.file_name}|audio](${upload.short_url})`;
+      return `![${markdownNameFromFileName(upload.file_name)}|audio](${upload.short_url})`;
     }
 
     if (isVideo(upload.url)) {
-      return `![${upload.file_name}|video](${upload.short_url})`;
+      return `![${markdownNameFromFileName(upload.file_name)}|video](${upload.short_url})`;
     }
 
-    return `[${upload.file_name}|attachment](${upload.short_url}) (${upload.human_filesize})`;
+    return `[${attachmentLabelFromFileName(upload.file_name)}|attachment](${upload.short_url}) (${upload.human_filesize})`;
   }
 
   <template>

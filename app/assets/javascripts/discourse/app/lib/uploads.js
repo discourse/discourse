@@ -42,6 +42,15 @@ export function markdownNameFromFileName(fileName) {
   return name.replace(/\[|\]|\|/g, "");
 }
 
+/**
+ * Build a safe attachment label that preserves the file extension
+ * while removing characters that interfere with Discourse's
+ * attachment syntax (square brackets and pipes).
+ */
+export function attachmentLabelFromFileName(fileName) {
+  return fileName.replace(/\[|\]|\|/g, "");
+}
+
 export function validateUploadedFiles(files, opts) {
   if (!files || files.length === 0) {
     return false;
@@ -300,7 +309,7 @@ function playableMediaMarkdown(upload, type) {
 }
 
 function attachmentMarkdown(upload) {
-  return `[${upload.original_filename}|attachment](${
+  return `[${attachmentLabelFromFileName(upload.original_filename)}|attachment](${
     upload.short_url
   }) (${I18n.toHumanSize(upload.filesize)})`;
 }
