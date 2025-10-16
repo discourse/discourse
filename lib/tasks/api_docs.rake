@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Only define this task when rswag-specs and rspec-core are available (typically in development/test environments)
+# Only define this task when in development/test environments
 # This prevents LoadError when running other rake tasks in environments without test gems
-if %w[rswag-specs rspec-core].all? { |gem| Gem.loaded_specs.key?(gem) }
+if Rails.env.local?
   require "rspec/core/rake_task"
 
   # Override the default rswag:specs:swaggerize task to include plugin API specs
