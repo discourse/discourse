@@ -18,6 +18,7 @@ const SELECTED_CLASS = "selected";
  * @param {number} data.selectedIndex - Currently selected index
  * @param {Function} data.onSelect - Callback for item selection
  * @param {Function} data.template - Template function for rendering
+ * @param {Object} data.component - Glimmer/Ember component class for rendering results
  */
 export default class DAutocompleteResults extends Component {
   isInitialRender = true;
@@ -75,6 +76,11 @@ export default class DAutocompleteResults extends Component {
 
   @action
   handleClick(event) {
+    // Skip handling for component-based approach, the component will handle clicks
+    if (this.hasComponent) {
+      return;
+    }
+
     if (!this.args.data.template) {
       return;
     }
@@ -115,12 +121,25 @@ export default class DAutocompleteResults extends Component {
   @action
   handleUpdate(wrapperElement) {
     this.isInitialRender = false;
-    this.scrollToSelected(wrapperElement);
+
+    // Only handle scrolling and selection for template-based approach
+    if (!this.hasComponent) {
+      this.scrollToSelected(wrapperElement);
+    }
+
     // Call onRender callback after DOM is ready
     this.args.data.onRender?.(this.results);
   }
 
+  get hasComponent() {
+    return !!this.args.data.component;
+  }
+
   get templateHTML() {
+    if (this.hasComponent) {
+      return ""; // Return empty string when using component
+    }
+
     if (!this.args.data.template) {
       return "";
     }
@@ -145,7 +164,15 @@ export default class DAutocompleteResults extends Component {
       {{on "click" this.handleClick}}
       tabindex="-1"
     >
-      {{this.templateHTML}}
+      {{#if this.hasComponent}}
+        <this.args.data.component
+          @results={{this.results}}
+          @selectedIndex={{this.selectedIndex}}
+          @onSelect={{this.args.data.onSelect}}
+        />
+      {{else}}
+        {{this.templateHTML}}
+      {{/if}}
     </div>
   </template>
 }
