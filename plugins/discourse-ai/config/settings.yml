@@ -272,7 +272,6 @@ discourse_ai:
   ai_embeddings_semantic_quick_search_enabled:
     default: false
     client: true
-    hidden: true
     area: "ai-features/embeddings"
   ai_embeddings_semantic_search_hyde_persona:
     default: "-32"
