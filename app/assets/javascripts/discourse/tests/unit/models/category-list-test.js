@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import PreloadStore from "discourse/lib/preload-store";
 import CategoryList from "discourse/models/category-list";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
@@ -152,7 +153,7 @@ module("Unit | Model | CategoryList", function (hooks) {
     Site.current = originalSiteCurrent;
   });
 
-  test("list fetches categories from PreloadStore", async function (assert) {
+  test("list fetches and clears categories from PreloadStore", async function (assert) {
     const mockResult = {
       category_list: {
         categories: [{ id: 1, name: "Test", topics_all_time: 10 }],
@@ -160,16 +161,30 @@ module("Unit | Model | CategoryList", function (hooks) {
         can_create_topic: true,
       },
     };
+    // Store the mock result in PreloadStore under the correct key
+    PreloadStore.store("categories_list", mockResult);
 
+    // Spy on AJAX to ensure it is NOT called
+    let ajaxCalled = false;
     pretender.get("/categories.json", () => {
-      return response(mockResult);
+      ajaxCalled = true;
+      return response({});
     });
 
     const categoryList = await CategoryList.list(this.store);
 
-    assert.true(categoryList instanceof CategoryList);
-    assert.true(categoryList.can_create_category);
-    assert.true(categoryList.can_create_topic);
+    assert.true(categoryList instanceof CategoryList, "Returns a CategoryList");
+    assert.true(categoryList.can_create_category, "can_create_category is set");
+    assert.true(categoryList.can_create_topic, "can_create_topic is set");
+    assert.false(
+      ajaxCalled,
+      "AJAX should not be called if PreloadStore is used"
+    );
+    assert.strictEqual(
+      PreloadStore.get("categories_list"),
+      undefined,
+      "PreloadStore key is cleared after use"
+    );
   });
 
   test("list includes parent category ID in request", async function (assert) {
