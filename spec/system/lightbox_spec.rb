@@ -7,7 +7,7 @@ describe "Lightbox | Photoswipe", type: :system do
   fab!(:post) { Fabricate(:post, topic: topic, raw: "![first image](#{upload_1.url})") }
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
-  let(:lightbox) { PageObjects::Components::PhotoSwipe.new(".pswp") }
+  let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
   let(:cpp) { CookedPostProcessor.new(post, disable_dominant_color: true) }
 
   before do

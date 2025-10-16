@@ -17,12 +17,8 @@ module PageObjects
       CAPTION_TITLE = ".pswp__caption-title"
       CAPTION_DETAILS = ".pswp__caption-details"
 
-      def initialize(input)
-        if input.is_a?(Capybara::Node::Element)
-          @component = input
-        else
-          @component = find(input)
-        end
+      def initialize()
+        @component = find(SELECTOR)
       end
 
       def visible?
