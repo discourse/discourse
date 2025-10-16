@@ -146,10 +146,12 @@ class Admin::UsersController < Admin::StaffController
   end
 
   def unsuspend
-    guardian.ensure_can_suspend!(@user)
+    guardian.ensure_can_unsuspend!(@user)
+
     @user.suspended_till = nil
     @user.suspended_at = nil
     @user.save!
+
     StaffActionLogger.new(current_user).log_user_unsuspend(@user)
 
     DiscourseEvent.trigger(:user_unsuspended, user: @user)

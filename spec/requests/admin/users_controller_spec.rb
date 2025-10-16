@@ -648,6 +648,23 @@ RSpec.describe Admin::UsersController do
           expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
         end
       end
+
+      it "can unsuspend a user who was granted moderation while suspended" do
+        user.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+        user.grant_moderation!
+
+        expect(user.reload).to be_suspended
+        expect(user).to be_moderator
+
+        put "/admin/users/#{user.id}/unsuspend.json"
+
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.suspended_till).to eq(nil)
+        expect(user.suspended_at).to eq(nil)
+        expect(user).not_to be_suspended
+        expect(user).to be_moderator
+      end
     end
   end
 
