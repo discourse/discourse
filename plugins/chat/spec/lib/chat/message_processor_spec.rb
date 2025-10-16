@@ -27,11 +27,12 @@ RSpec.describe Chat::MessageProcessor do
 
   describe "#add_lightbox_to_images" do
     fab!(:upload) { Fabricate(:upload, width: 800, height: 600) }
+    let(:base62) { Upload.base62_sha1(upload.sha1) }
 
     it "adds lightbox class to quoted images" do
       cooked_html = <<~HTML
       <blockquote>
-        <img src="#{upload.url}" width="500" height="300">
+        <img src="#{upload.url}" width="500" height="300" data-base62-sha1="#{base62}">
       </blockquote>
     HTML
 

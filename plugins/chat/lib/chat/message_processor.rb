@@ -60,15 +60,18 @@ module Chat
       @doc
         .css("img")
         .each do |img|
-          next if img["class"]&.include?("emoji") || img["class"]&.include?("avatar")
+          if img["class"]&.include?("emoji") || img["class"]&.include?("avatar") ||
+               img["data-base62-sha1"].blank?
+            next
+          end
 
-          upload = Upload.find_by(url: img["src"])
-          next if !upload
-
-          img["data-large-src"] = upload.url
-          img["data-target-width"] = upload.width
-          img["data-target-height"] = upload.height
-          img["class"] = "#{img["class"]} lightbox".strip
+          sha1 = Upload.sha1_from_base62_encoded(img["data-base62-sha1"])
+          if upload = Upload.find_by(sha1: sha1)
+            img["data-large-src"] = upload.url
+            img["data-target-width"] = upload.width
+            img["data-target-height"] = upload.height
+            img["class"] = "#{img["class"]} lightbox".strip
+          end
         end
     end
 
