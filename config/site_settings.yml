@@ -2643,6 +2643,7 @@ security:
   enforce_second_factor_on_external_auth:
     client: true
     default: true
+    area: "login"
   enforce_second_factor:
     client: true
     type: enum
@@ -2651,6 +2652,7 @@ security:
       - "no"
       - "staff"
       - "all"
+    area: "login"
   force_https:
     default: false
   same_site_cookies:
