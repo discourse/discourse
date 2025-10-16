@@ -9,12 +9,14 @@ import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
+const STAT_PERIODS = ["week", "month"];
+
 export default class CategoryList {
   static categoriesFrom(store, result, parentCategory = null) {
     // Find the period that is most relevant
     const list = result?.category_list?.categories || [];
     const statPeriod =
-      ["week", "month"].find(
+      STAT_PERIODS.find(
         (period) =>
           list.filter((c) => c?.[`topics_${period}`] > 0).length >=
           list.length * 0.66
@@ -43,7 +45,8 @@ export default class CategoryList {
     }
 
     const stat = c[`topics_${statPeriod}`];
-    if ((statPeriod === "week" || statPeriod === "month") && stat > 0) {
+    const isTimedPeriod = statPeriod === "week" || statPeriod === "month";
+    if (isTimedPeriod && stat > 0) {
       const unit = i18n(`categories.topic_stat_unit.${statPeriod}`);
 
       c.stat = i18n("categories.topic_stat", {
@@ -77,13 +80,13 @@ export default class CategoryList {
     return record;
   }
 
-  static listForParent(store, category) {
+  static listForParent(store, parentCategory) {
     deprecated(
       "The listForParent method of CategoryList is deprecated. Use list instead",
       { id: "discourse.category-list.listForParent" }
     );
 
-    return CategoryList.list(store, category);
+    return CategoryList.list(store, parentCategory);
   }
 
   static async list(store, parentCategory = null) {
@@ -121,10 +124,8 @@ export default class CategoryList {
 
   #content;
   #proxy;
-  #test;
 
   constructor({ categories, ...attrs } = {}) {
-    // debugger;
     this.#content = new TrackedArray(categories || []);
 
     // assign all the other properties
@@ -162,16 +163,6 @@ export default class CategoryList {
     return this.#proxy;
   }
 
-  get test() {
-    // console.log("getting test", this.#test);
-    return this.#test;
-  }
-
-  set test(value) {
-    // console.log("setting test", value);
-    this.#test = value;
-  }
-
   // for compatibility with the old category list based on ArrayProxy
   get categories() {
     // TODO deprecate this
@@ -194,11 +185,13 @@ export default class CategoryList {
 
     try {
       const nextPage = this.page + 1;
-      const data = { page: nextPage };
+      const data = {
+        page: nextPage,
+        ...(this.parentCategory && {
+          parent_category_id: this.parentCategory.id,
+        }),
+      };
 
-      if (this.parentCategory) {
-        data.parent_category_id = this.parentCategory.id;
-      }
       const result = await ajax("/categories.json", { data });
 
       this.page = nextPage;
