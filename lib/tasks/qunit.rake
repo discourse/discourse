@@ -5,11 +5,12 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
   require "socket"
   require "chrome_installed_checker"
 
-  begin
-    ChromeInstalledChecker.run
-  rescue ChromeInstalledChecker::ChromeError => err
-    abort err.message
-  end
+  detected_browser =
+    begin
+      ChromeInstalledChecker.run
+    rescue ChromeInstalledChecker::ChromeError => err
+      abort err.message
+    end
 
   unless system("command -v pnpm >/dev/null;")
     abort "pnpm is not installed. See https://pnpm.io/installation"
@@ -99,7 +100,10 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
     end
     puts "Rails server is warmed up"
 
-    env = { "UNICORN_PORT" => unicorn_port.to_s }
+    env = {
+      "UNICORN_PORT" => unicorn_port.to_s,
+      "TESTEM_DEFAULT_BROWSER" => ENV["TESTEM_DEFAULT_BROWSER"].presence || detected_browser,
+    }
     cmd = []
 
     parallel = ENV["QUNIT_PARALLEL"]
