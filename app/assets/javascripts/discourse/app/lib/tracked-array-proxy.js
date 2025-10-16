@@ -5,14 +5,13 @@ export default class ArrayModel {
 
   constructor(items = [], properties = {}) {
     // Validate inputs
-    if (!Array.isArray(items) && !items[Symbol.iterator]) {
-      throw new TypeError("items must be array-like");
+    if (!Array.isArray(items)) {
+      throw new TypeError("items must be an array");
     }
 
-    this.#items = new TrackedArray(items);
-
-    const ownKeys = buildOwnKeysSet(this, this.constructor.prototype);
-    const proxy = createProxy(this, this.#items, ownKeys);
+    this.#items =
+      items instanceof TrackedArray ? items : new TrackedArray(items);
+    const proxy = createProxy(this, this.#items);
 
     // Validate properties before assignment
     if (properties && typeof properties === "object") {
@@ -25,49 +24,24 @@ export default class ArrayModel {
   }
 }
 
-function buildOwnKeysSet(instance, stopAtPrototype) {
-  const ownKeys = new Set();
-  let proto = instance.constructor.prototype;
-
-  while (proto && proto !== Object.prototype) {
-    [
-      ...Object.getOwnPropertyNames(proto),
-      ...Object.getOwnPropertySymbols(proto),
-    ].forEach((item) => {
-      // Skip constructor and prototype properties
-      if (item !== "constructor" && item !== "prototype") {
-        ownKeys.add(item);
-      }
-    });
-
-    if (proto === stopAtPrototype) {
-      break;
-    }
-
-    proto = Object.getPrototypeOf(proto);
-  }
-
-  return ownKeys;
-}
-
-function createProxy(instance, trackedItems, ownKeys) {
+function createProxy(instance, trackedItems) {
   return new Proxy(trackedItems, {
     get(target, prop, receiver) {
-      if (ownKeys.has(prop)) {
+      if (Reflect.has(instance, prop)) {
         return Reflect.get(instance, prop, receiver);
       }
       return Reflect.get(target, prop, receiver);
     },
 
     set(target, prop, value, receiver) {
-      if (ownKeys.has(prop)) {
+      if (Reflect.has(instance, prop)) {
         return Reflect.set(instance, prop, value, receiver);
       }
       return Reflect.set(target, prop, value, receiver);
     },
 
     has(target, prop) {
-      return ownKeys.has(prop) || Reflect.has(target, prop);
+      return Reflect.has(instance, prop) || Reflect.has(target, prop);
     },
 
     getPrototypeOf() {
@@ -75,28 +49,22 @@ function createProxy(instance, trackedItems, ownKeys) {
     },
 
     ownKeys(target) {
+      const instanceKeys = Reflect.ownKeys(instance);
       const targetKeys = Reflect.ownKeys(target);
-      const instanceKeys = Array.from(ownKeys);
 
-      return [...new Set([...targetKeys, ...instanceKeys])];
+      return [...new Set([...instanceKeys, ...targetKeys])];
     },
 
     defineProperty(target, prop, descriptor) {
-      if (ownKeys.has(prop)) {
-        return Reflect.defineProperty(instance, prop, descriptor);
-      }
-      return Reflect.defineProperty(target, prop, descriptor);
+      return Reflect.defineProperty(instance, prop, descriptor);
     },
 
     deleteProperty(target, prop) {
-      if (ownKeys.has(prop)) {
-        return Reflect.deleteProperty(instance, prop);
-      }
-      return Reflect.deleteProperty(target, prop);
+      return Reflect.deleteProperty(instance, prop);
     },
 
     getOwnPropertyDescriptor(target, prop) {
-      if (ownKeys.has(prop)) {
+      if (Reflect.has(instance, prop)) {
         return Reflect.getOwnPropertyDescriptor(instance, prop);
       }
       return Reflect.getOwnPropertyDescriptor(target, prop);
