@@ -128,7 +128,12 @@ module DiscourseAi
           LEFT JOIN non_target_locale_counts ntl ON ntl.base = s.base
         SQL
 
-        DB.query(sql).map { |r| { locale: r.locale, done: r.done, total: r.total } }
+        results = DB.query(sql).map { |r| { locale: r.locale, done: r.done, total: r.total } }
+
+        results.sort_by do |r|
+          percentage = r[:total] > 0 ? r[:done].to_f / r[:total] : 0
+          -percentage
+        end
       end
 
       def self.cache_key_for_type
