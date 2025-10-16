@@ -192,17 +192,17 @@ export default class Chat extends Service {
         return;
       }
 
-      if (this.loadingChannels) {
-        return this.loadingChannels;
+      if (!this.loadingChannels) {
+        this.loadingChannels = new Promise((resolve) => {
+          this.chatApi.listCurrentUserChannels().then((result) => {
+            this.setupWithPreloadedChannels(result);
+            this.chatStateManager.hasPreloadedChannels = true;
+            resolve();
+          });
+        });
       }
 
-      this.loadingChannels = new Promise((resolve) => {
-        this.chatApi.listCurrentUserChannels().then((result) => {
-          this.setupWithPreloadedChannels(result);
-          this.chatStateManager.hasPreloadedChannels = true;
-          resolve();
-        });
-      });
+      return this.loadingChannels;
     } catch (e) {
       popupAjaxError(e);
     }
