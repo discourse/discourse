@@ -889,7 +889,6 @@ en:
         ai_generated_result: "Search result found using AI"
         quick_search:
           suffix: "in all topics and posts with AI"
-          searching_with_ai: "Zero results found, searching with AI..."
 
       ai_artifact:
         expand_view_label: "Expand view"
