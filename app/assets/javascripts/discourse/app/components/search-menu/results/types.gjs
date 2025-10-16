@@ -30,11 +30,13 @@ export default class Types extends Component {
 
   @action
   onClick({ resultType, result }, event) {
-    logSearchLinkClick({
-      searchLogId: this.args.searchLogId,
-      searchResultId: result.id,
-      searchResultType: resultType.type,
-    });
+    if (this.args.searchLogId) {
+      logSearchLinkClick({
+        searchLogId: this.args.searchLogId,
+        searchResultId: result.id,
+        searchResultType: resultType.type,
+      });
+    }
 
     if (wantsNewWindow(event)) {
       return;
