@@ -1,10 +1,10 @@
 import { tracked } from "@glimmer/tracking";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { number } from "discourse/lib/formatter";
 import PreloadStore from "discourse/lib/preload-store";
+import ArrayModel from "discourse/lib/tracked-array-proxy";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
@@ -15,7 +15,7 @@ const STAT_PERIODS = ["week", "month"];
 /**
  * Represents a list of categories with their related metadata and functionality
  */
-export default class CategoryList {
+export default class CategoryList extends ArrayModel {
   /**
    * Creates category objects from API result data
    *
@@ -164,8 +164,7 @@ export default class CategoryList {
   @trackedArray topics;
   store;
 
-  #items;
-  #proxy;
+  #instance;
 
   /**
    * Initializes a new CategoryList instance
@@ -174,42 +173,13 @@ export default class CategoryList {
    * @param {Array} param0.categories - Initial array of categories
    * @param {Object} param0.attrs - Additional attributes to set
    */
-  constructor({ categories, ...attrs } = {}) {
-    this.#items = new TrackedArray(categories || []);
+  constructor(properties) {
+    const { categories, ...attrs } = properties;
 
-    // assign all the other properties
-    Object.keys(attrs).forEach((key) => {
-      this[key] = attrs[key];
-    });
+    const instance = super(categories, attrs);
+    this.#instance = instance; // for backward compatibility
 
-    const self = this;
-    const ownKeys = Object.getOwnPropertyNames(self.constructor.prototype);
-
-    this.#proxy = new Proxy(this.#items, {
-      get(target, prop) {
-        if (ownKeys.includes(prop)) {
-          return self[prop];
-        }
-
-        return Reflect.get(target, prop);
-      },
-      set(target, prop, value) {
-        if (ownKeys.includes(prop)) {
-          self[prop] = value;
-          return true;
-        }
-
-        return Reflect.set(target, prop, value);
-      },
-      has(target, prop) {
-        return ownKeys.includes(prop) || prop in target;
-      },
-      getPrototypeOf() {
-        return self.constructor.prototype;
-      },
-    });
-
-    return this.#proxy;
+    return instance;
   }
 
   /**
@@ -221,7 +191,7 @@ export default class CategoryList {
       "Using `CategoryList.categories` property directly is deprecated. Access the item directly from the CategoryList instance instead.",
       { id: "discourse.category-list.legacy-properties" }
     );
-    return this.#proxy;
+    return this.#instance;
   }
 
   /**
@@ -233,7 +203,7 @@ export default class CategoryList {
       "Using `CategoryList.content` property directly is deprecated. Access the item directly from the CategoryList instance instead.",
       { id: "discourse.category-list.legacy-properties" }
     );
-    return this.#proxy;
+    return this.#instance;
   }
 
   /**
