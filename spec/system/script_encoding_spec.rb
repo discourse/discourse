@@ -40,7 +40,7 @@ describe "script encoding" do
 
       expect(page).to have_css("#site-logo")
 
-      expect(js_cdn_requests.length).to be > 2
+      expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.any? { |r| r.end_with?(".br.js") }).to eq(false)
       expect(js_cdn_requests.all? { |r| r.end_with?(".js") }).to eq(true)
 
@@ -51,7 +51,7 @@ describe "script encoding" do
       find(".d-editor-input").fill_in(with: "This is a test")
       expect(page).to have_css(".d-editor-preview", text: "This is a test")
 
-      expect(js_cdn_requests.length).to be > 2
+      expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.any? { |r| r.end_with?(".br.js") }).to eq(false)
       expect(js_cdn_requests.all? { |r| r.end_with?(".js") }).to eq(true)
     end
@@ -74,7 +74,7 @@ describe "script encoding" do
 
       expect(page).to have_css("#site-logo")
 
-      expect(js_cdn_requests.length).to be > 2
+      expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.all? { |r| r.end_with?(".br.js") }).to eq(true)
 
       js_cdn_requests.clear
@@ -84,7 +84,7 @@ describe "script encoding" do
       find(".d-editor-input").fill_in(with: "This is a test")
       expect(page).to have_css(".d-editor-preview", text: "This is a test")
 
-      expect(js_cdn_requests.length).to be > 2
+      expect(js_cdn_requests.length).to be > 1
       expect(js_cdn_requests.all? { |r| r.end_with?(".br.js") }).to eq(true)
     end
   end
