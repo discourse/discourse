@@ -9,7 +9,7 @@ import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
-export default class CategoryList extends TrackedArray {
+export default class CategoryList {
   static categoriesFrom(store, result, parentCategory = null) {
     // Find the period that is most relevant
     const statPeriod =
@@ -121,27 +121,67 @@ export default class CategoryList extends TrackedArray {
   @tracked page = 1;
   @tracked parentCategory;
 
-  constructor({ categories, attrs } = {}) {
-    super(categories || []);
+  #content;
+  #proxy;
+  #test;
 
-    this.page = 1;
-    this.fetchedLastPage = false;
+  constructor({ categories, ...attrs } = {}) {
+    // debugger;
+    this.#content = new TrackedArray(categories || []);
 
+    // assign all the other properties
     Object.keys(attrs).forEach((key) => {
       this[key] = attrs[key];
     });
+
+    const self = this;
+    const ownKeys = Object.getOwnPropertyNames(self.constructor.prototype);
+
+    this.#proxy = new Proxy(this.#content, {
+      get(target, prop) {
+        if (ownKeys.includes(prop)) {
+          return self[prop];
+        }
+
+        return target[prop];
+      },
+      set(target, prop, value) {
+        if (ownKeys.includes(prop)) {
+          self[prop] = value;
+        }
+
+        target[prop] = value;
+
+        return true;
+      },
+      getPrototypeOf() {
+        return self.constructor.prototype;
+      },
+    });
+
+    return this.#proxy;
+  }
+
+  get test() {
+    // console.log("getting test", this.#test);
+    return this.#test;
+  }
+
+  set test(value) {
+    // console.log("setting test", value);
+    this.#test = value;
   }
 
   // for compatibility with the old category list based on ArrayProxy
   get categories() {
     // TODO deprecate this
-    return this;
+    return this.#proxy;
   }
 
   // for compatibility with the old category list based on ArrayProxy
   get content() {
     // TODO deprecate this
-    return this;
+    return this.#proxy;
   }
 
   @bind
