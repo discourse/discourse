@@ -4,8 +4,17 @@ export default modifier(
   (
     element,
     [callback],
-    { threshold = 1, rootMargin = "0px 0px 0px 0px", root = null }
+    {
+      threshold = 1,
+      rootMargin = "0px 0px 0px 0px",
+      root = null,
+      isLoading = false,
+    }
   ) => {
+    if (isLoading) {
+      return () => {};
+    }
+
     if (Array.isArray(rootMargin)) {
       rootMargin = rootMargin
         .map((margin) => (typeof margin === "number" ? `${margin}px` : margin))
