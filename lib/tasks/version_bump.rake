@@ -100,14 +100,18 @@ def make_commits(commits:, branch:, base:)
   )
 end
 
-def make_pr(base:, branch:, title:)
+def make_pr(base:, branch:, title:, gh_cli: false)
   params = { expand: 1, title: title, body: <<~MD }
       > :warning: This PR should not be merged via the GitHub web interface
       >
       > It should only be merged (via fast-forward) using the associated `bin/rake version_bump:*` task.
     MD
 
-  if !test_mode?
+  return if test_mode?
+
+  if gh_cli
+    system("gh pr create --base #{base} --head #{branch} --title #{title} --body #{params[:body]}")
+  else
     open_command =
       case RbConfig::CONFIG["host_os"]
       when /darwin|mac os/
@@ -125,9 +129,9 @@ def make_pr(base:, branch:, title:)
       "https://github.com/discourse/discourse/compare/#{base}...#{branch}?#{params.to_query}",
       exception: true,
     )
-  end
 
-  puts "Do not merge the PR via the GitHub web interface. Get it approved, then come back here to continue."
+    puts "Do not merge the PR via the GitHub web interface. Get it approved, then come back here to continue."
+  end
 end
 
 def fastforward(base:, branch:)
@@ -407,3 +411,4 @@ task "version_bump:stage_security_fixes", [:base] do |t, args|
     fastforward(base: base, branch: branch)
   end
 end
+
