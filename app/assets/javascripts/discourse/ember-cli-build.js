@@ -251,29 +251,30 @@ module.exports = function (defaults) {
 
   class RemapVendorAndTestSupport extends Filter {
     processString(contents, relativePath) {
-      if (relativePath === "assets/vendor.js") {
+      if (relativePath.startsWith("assets/vendor.")) {
         contents = contents.replace(
           /sourceMappingURL=(.*)/,
-          `sourceMappingURL=../map/vendor.js.map`
+          `sourceMappingURL=../map/vendor.map`
         );
-      } else if (relativePath === "assets/test-support.js") {
+      } else if (relativePath.startsWith("assets/test-support.")) {
         contents = contents.replace(
           /sourceMappingURL=(.*)/,
-          `sourceMappingURL=../map/test-support.js.map`
+          `sourceMappingURL=../map/test-support.map`
         );
       }
       return contents;
     }
 
     getDestFilePath(relativePath) {
-      if (relativePath === "assets/vendor.js") {
-        return "assets/js/vendor.js";
-      } else if (relativePath === "assets/vendor.map") {
-        return "assets/map/vendor.js.map";
-      } else if (relativePath === "assets/test-support.js") {
-        return "assets/js/test-support.js";
-      } else if (relativePath === "assets/test-support.map") {
-        return "assets/map/test-support.js.map";
+      if (
+        relativePath.startsWith("assets/vendor.") ||
+        relativePath.startsWith("assets/test-support.")
+      ) {
+        if (relativePath.endsWith(".js")) {
+          return relativePath.replace("assets/", "assets/js/");
+        } else {
+          return relativePath.replace("assets/", "assets/map/");
+        }
       }
     }
   }
