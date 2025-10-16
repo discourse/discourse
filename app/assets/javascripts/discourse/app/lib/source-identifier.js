@@ -60,7 +60,7 @@ export default function identifySource(error) {
 
   // Production (with fingerprints)
   plugin ??= stack.match(
-    /assets\/(?:(?:br|gz)\/)?plugins\/_?([\w-]+)-[0-9a-f]+\.js/
+    /assets\/(?:br|gz|js)\/plugins\/_?([\w-]+)-[0-9a-f]+\.js/
   )?.[1];
 
   if (plugin) {

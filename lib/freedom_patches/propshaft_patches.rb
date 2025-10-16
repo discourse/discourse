@@ -39,11 +39,11 @@ Propshaft::Compiler::SourceMappingUrls.prepend(
       # to recompile them
       regex = /sourceMappingURL=(\S+\.map)/
 
-      map_url = super.match(regex)[1]
+      map_url = super[regex, 1]
+      return super if !map_url
 
       js_file_path = File.dirname(map_url.sub("/map/", "/js/"))
       new_url = Pathname.new(map_url).relative_path_from(js_file_path)
-
       super.gsub(regex, "sourceMappingURL=#{new_url}")
     end
   end,
