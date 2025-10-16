@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 def brotli_s3_path(path)
-  path.sub("/assets/", "/assets/br/").delete_suffix(".br")
+  path.sub("/assets/js/", "/assets/br/").delete_suffix(".br")
 end
 
 def gzip_s3_path(path)
-  path.sub("/assets/", "/assets/gz/").delete_suffix(".gz")
+  path.sub("/assets/js/", "/assets/gz/").delete_suffix(".gz")
 end
 
 def existing_assets
