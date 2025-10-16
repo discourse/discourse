@@ -38,7 +38,7 @@ RSpec.describe ProblemCheck::AiCreditSoftLimit do
       problems = described_class.new.call
 
       expect(problems.size).to eq(1)
-      expect(problems.first.identifier).to eq("ai_credit_soft_limit")
+      expect(problems.first.identifier).to eq(:ai_credit_soft_limit)
       expect(problems.first.priority).to eq("low")
       expect(problems.first.target).to eq(llm_model.id)
     end
