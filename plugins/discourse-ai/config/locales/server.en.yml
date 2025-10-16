@@ -27,7 +27,7 @@ en:
         flagged_post: |
           <div>Response from the model:</div>
           <p>%{llm_response}</p>
-          <b>Triggered by the <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> rule.</b>
+          <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
           subject: "Your post was temporarily removed for review"
           body: |
