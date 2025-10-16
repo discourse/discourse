@@ -41,8 +41,38 @@ describe DiscourseAi::Admin::AiTranslationsController do
         # Check structure of first locale data
         locale_data = json["translation_progress"].first
         expect(locale_data["locale"]).to eq("en")
-        expect(locale_data["total"]).to eq(15)
+        # en is the default locale, so total should only be posts requiring translation (1 French post)
+        expect(locale_data["total"]).to eq(1)
         expect(locale_data["done"]).to eq(14)
+      end
+
+      it "shows all posts for non-default locales but only posts requiring translation for the default locale" do
+        SiteSetting.ai_translation_backfill_max_age_days = 30
+        SiteSetting.ai_translation_backfill_limit_to_public_content = false
+        SiteSetting.default_locale = "en"
+
+        Fabricate.times(100, :post, locale: "en")
+        Fabricate.times(10, :post, locale: "fr")
+        Fabricate.times(5, :post, locale: "es")
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        progress = json["translation_progress"]
+
+        en_data = progress.find { |p| p["locale"] == "en" }
+        fr_data = progress.find { |p| p["locale"] == "fr" }
+        es_data = progress.find { |p| p["locale"] == "es" }
+
+        expect(en_data["total"]).to eq(15)
+        expect(en_data["done"]).to eq(100)
+
+        expect(fr_data["total"]).to eq(115)
+        expect(fr_data["done"]).to eq(10)
+
+        expect(es_data["total"]).to eq(115)
+        expect(es_data["done"]).to eq(5)
       end
 
       it "returns empty when no locales are supported" do
