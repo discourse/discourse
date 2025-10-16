@@ -219,28 +219,20 @@ RSpec.describe "posts" do
       parameter name: "Api-Username", in: :header, type: :string, required: true
       parameter name: :id, in: :path, schema: { type: :string }
 
-      parameter name: :post_body,
-                in: :body,
-                schema: {
-                  type: :object,
-                  properties: {
-                    locked: {
-                      type: :string,
-                    },
-                  },
-                  required: ["locked"],
-                }
+      expected_request_schema = load_spec_schema("post_lock_request")
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces "application/json"
       response "200", "post updated" do
-        schema type: :object, properties: { locked: { type: :boolean } }
+        expected_response_schema = load_spec_schema("post_lock_response")
+        schema expected_response_schema
 
-        let(:post_body) { { locked: "true" } }
+        let(:params) { { locked: "true" } }
         let(:id) { Fabricate(:post).id }
 
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data["locked"]).to eq(true)
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
         end
       end
     end
