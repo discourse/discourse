@@ -7,6 +7,13 @@ import {
   popupAiCreditLimitError,
 } from "../lib/ai-errors";
 
+function isAiCaptionableImage(uploadUrl) {
+  if (!uploadUrl) {
+    return false;
+  }
+  return /\.(png|jpe?g|gif|webp)$/i.test(uploadUrl);
+}
+
 export default apiInitializer((api) => {
   const buttonAttrs = {
     label: i18n("discourse_ai.ai_helper.image_caption.button_label"),
@@ -87,6 +94,7 @@ export default apiInitializer((api) => {
             imageCaptionPopup.toggleLoadingState(false);
           });
       }
-    }
+    },
+    isAiCaptionableImage
   );
 });
