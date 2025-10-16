@@ -25,7 +25,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
 
     # Special case - vendor.js is fingerprinted by Embroider in production, but not run through Webpack
     if !assets.include?("vendor.js") &&
-         fingerprinted = assets.find { |a| a.match?(/^vendor\..*\.js$/) }
+         fingerprinted = assets.find { |a| a.match?(%r{^js/vendor\..*\.js$}) }
       chunk_infos["vendor"] = [fingerprinted.delete_suffix(".js")]
     end
 
