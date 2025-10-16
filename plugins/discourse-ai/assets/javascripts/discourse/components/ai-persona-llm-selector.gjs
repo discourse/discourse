@@ -137,7 +137,7 @@ export default class AiPersonaLlmSelector extends Component {
     return (
       this.allowLLMSelector &&
       this.llmOptions.length > 1 &&
-      !this.args?.hidePersonaSelector
+      !this.args?.hideDropdowns
     );
   }
 
