@@ -140,8 +140,7 @@ export default async function lightbox(elem, siteSettings) {
       if (!width || !height) {
         const imgInfo = el.querySelector(".informations")?.innerText || "";
         const dimensions = imgInfo.trim().split(" ")[0];
-        const separator = dimensions.includes("×") ? "×" : "x";
-        [width, height] = dimensions.split(separator).map(Number);
+        [width, height] = dimensions.split(/x|×/).map(Number);
       }
 
       data.src = data.src || el.getAttribute("data-large-src");
