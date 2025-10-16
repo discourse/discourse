@@ -16,6 +16,9 @@ const withSideWatch = require("./lib/with-side-watch");
 const crypto = require("crypto");
 const commonBabelConfig = require("./lib/common-babel-config");
 const TerserPlugin = require("terser-webpack-plugin");
+const {
+  CustomizeChunkUrlPlugin,
+} = require("./lib/webpack-customize-chunk-url-plugin");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -217,6 +220,7 @@ module.exports = function (defaults) {
               return JSON.stringify(output, null, 2);
             },
           }),
+          new CustomizeChunkUrlPlugin(),
           new RetryChunkLoadPlugin({
             retryDelay: 200,
             maxRetries: 2,
