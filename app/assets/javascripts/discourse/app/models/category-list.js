@@ -5,6 +5,7 @@ import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { number } from "discourse/lib/formatter";
 import PreloadStore from "discourse/lib/preload-store";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -160,8 +161,10 @@ export default class CategoryList {
   @tracked isLoading = false;
   @tracked page = 1;
   @tracked parentCategory;
+  @trackedArray topics;
+  store;
 
-  #content;
+  #items;
   #proxy;
 
   /**
@@ -172,7 +175,7 @@ export default class CategoryList {
    * @param {Object} param0.attrs - Additional attributes to set
    */
   constructor({ categories, ...attrs } = {}) {
-    this.#content = new TrackedArray(categories || []);
+    this.#items = new TrackedArray(categories || []);
 
     // assign all the other properties
     Object.keys(attrs).forEach((key) => {
@@ -182,7 +185,7 @@ export default class CategoryList {
     const self = this;
     const ownKeys = Object.getOwnPropertyNames(self.constructor.prototype);
 
-    this.#proxy = new Proxy(this.#content, {
+    this.#proxy = new Proxy(this.#items, {
       get(target, prop) {
         if (ownKeys.includes(prop)) {
           return self[prop];
