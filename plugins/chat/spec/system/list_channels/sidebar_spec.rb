@@ -142,7 +142,7 @@ RSpec.describe "List channels | sidebar", type: :system do
       expect(page).to have_selector(".chat-modal-new-message")
     end
 
-    context "user can't dm" do
+    context "when user can't dm" do
       fab!(:group)
 
       before { SiteSetting.direct_message_enabled_groups = group.id }
