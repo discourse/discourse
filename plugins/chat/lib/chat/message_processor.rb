@@ -68,6 +68,7 @@ module Chat
           sha1 = Upload.sha1_from_base62_encoded(img["data-base62-sha1"])
           if upload = Upload.find_by(sha1: sha1)
             img["data-large-src"] = upload.url
+            img["data-download-href"] = upload.short_path
             img["data-target-width"] = upload.width
             img["data-target-height"] = upload.height
             img["class"] = "#{img["class"]} lightbox".strip
