@@ -501,7 +501,7 @@ export default {
                       currentUser: this.currentUser,
                     })
                 );
-              } else {
+              } else if (this.currentUser.can_direct_message) {
                 return [new SidebarChatNewDirectMessagesSectionLink()];
               }
             }
@@ -545,7 +545,7 @@ export default {
             get displaySection() {
               return (
                 this.chatStateManager.hasPreloadedChannels &&
-                (this.sectionLinks.length > 0 || this.userCanDirectMessage)
+                (this.sectionLinks?.length > 0 || this.userCanDirectMessage)
               );
             }
           };
