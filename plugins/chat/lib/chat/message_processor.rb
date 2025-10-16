@@ -19,6 +19,7 @@ module Chat
     def run!
       post_process_oneboxes
       process_thumbnails
+      add_lightbox_to_images
       DiscourseEvent.trigger(:chat_message_processed, @doc, @model)
     end
 
@@ -53,6 +54,15 @@ module Chat
           end
         end
       end
+    end
+
+    def add_lightbox_to_images
+      @doc
+        .css("img")
+        .each do |img|
+          next if img["class"]&.include?("emoji") || img["class"]&.include?("avatar")
+          img["class"] = "#{img["class"]} lightbox".strip
+        end
     end
 
     def large_images
