@@ -11,7 +11,7 @@ export class CustomizeChunkUrlPlugin {
             ${source}
             (function(){
               // Rewrite chunk URLs to match the encoding of the current script
-              if(typeof __webpack_require__ !== "undefined") {
+              if(typeof __webpack_require__ !== "undefined" && typeof document !== "undefined" && document.currentScript) {
                 const currentScriptUrl = document.currentScript.src;
 
                 let targetExt = ".js";
