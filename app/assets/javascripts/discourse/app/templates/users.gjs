@@ -29,6 +29,7 @@ export default RouteTemplate(
       <LoadMore
         @action={{@controller.loadMore}}
         @enabled={{@controller.model.canLoadMore}}
+        @isLoading={{@controller.isLoading}}
       >
         <div class="container">
           <div class="users-directory directory">
