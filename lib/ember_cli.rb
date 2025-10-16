@@ -20,7 +20,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
     chunk_infos.transform_keys! { |key| key.delete_prefix("assets/").delete_suffix(".js") }
 
     chunk_infos.transform_values! do |value|
-      value["assets"].map { |chunk| chunk.delete_prefix("assets/").delete_suffix(".js") }
+      value["assets"].map { |chunk| chunk.delete_prefix("assets/js/").delete_suffix(".js") }
     end
 
     # Special case - vendor.js is fingerprinted by Embroider in production, but not run through Webpack

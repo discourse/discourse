@@ -16,6 +16,7 @@ const withSideWatch = require("./lib/with-side-watch");
 const crypto = require("crypto");
 const commonBabelConfig = require("./lib/common-babel-config");
 const TerserPlugin = require("terser-webpack-plugin");
+const Filter = require("broccoli-persistent-filter");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -248,5 +249,35 @@ module.exports = function (defaults) {
     ],
   });
 
-  return mergeTrees([appTree, mergeTrees(extraPublicTrees)]);
+  class RemapVendorAndTestSupport extends Filter {
+    processString(contents, relativePath) {
+      if (relativePath === "assets/vendor.js") {
+        contents = contents.replace(
+          /sourceMappingURL=(.*)/,
+          `sourceMappingURL=../map/vendor.js.map`
+        );
+      } else if (relativePath === "assets/test-support.js") {
+        contents = contents.replace(
+          /sourceMappingURL=(.*)/,
+          `sourceMappingURL=../map/test-support.js.map`
+        );
+      }
+      return contents;
+    }
+
+    getDestFilePath(relativePath) {
+      if (relativePath === "assets/vendor.js") {
+        return "assets/js/vendor.js";
+      } else if (relativePath === "assets/vendor.map") {
+        return "assets/map/vendor.js.map";
+      } else if (relativePath === "assets/test-support.js") {
+        return "assets/js/test-support.js";
+      } else if (relativePath === "assets/test-support.map") {
+        return "assets/map/test-support.js.map";
+      }
+    }
+  }
+
+  const appTreeWithRemappedVendor = new RemapVendorAndTestSupport(appTree);
+  return mergeTrees([appTreeWithRemappedVendor, mergeTrees(extraPublicTrees)]);
 };
