@@ -194,7 +194,7 @@ class ProblemCheck
     [NO_TARGET]
   end
 
-  def problem(target = nil, override_key: nil, override_data: {})
+  def problem(target = nil, override_key: nil, override_data: {}, details: {})
     problem =
       Problem.new(
         I18n.t(
@@ -207,6 +207,7 @@ class ProblemCheck
         priority: self.config.priority,
         identifier:,
         target: target&.id,
+        details:,
       )
 
     target.present? ? problem : [problem]

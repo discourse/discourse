@@ -50,19 +50,14 @@ RSpec.describe ProblemCheck::AiLlmStatus do
             },
           )
 
-        expect(described_class.new.call).to contain_exactly(
-          have_attributes(
-            identifier: "ai_llm_status",
-            target: llm_model.id,
-            priority: "high",
-            message: message,
-            details: {
-              model_id: llm_model.id,
-              model_name: llm_model.display_name,
-              url: "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}/edit",
-              error: JSON.parse(error_response)["message"],
-            },
-          ),
+        expect(described_class.new.call.first).to have_attributes(
+          identifier: :ai_llm_status,
+          target: llm_model.id,
+          priority: "high",
+          message: message,
+          details: {
+            error: JSON.parse(error_response)["message"],
+          },
         )
       end
 
@@ -113,7 +108,7 @@ RSpec.describe ProblemCheck::AiLlmStatus do
         problems = described_class.new.call
         expect(problems.length).to eq(1)
         expect(problems.first).to have_attributes(
-          identifier: "ai_llm_status",
+          identifier: :ai_llm_status,
           target: llm_model.id,
           priority: "high",
         )
@@ -125,7 +120,7 @@ RSpec.describe ProblemCheck::AiLlmStatus do
         problems = described_class.new.call
         expect(problems.length).to eq(1)
         expect(problems.first).to have_attributes(
-          identifier: "ai_llm_status",
+          identifier: :ai_llm_status,
           target: llm_model.id,
           priority: "high",
         )
