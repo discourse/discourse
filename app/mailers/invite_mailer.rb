@@ -36,6 +36,7 @@ class InviteMailer < ActionMailer::Base
         topic_excerpt = ""
       end
 
+
       build_email(
         invite.email,
         template: sanitized_message ? "custom_invite_mailer" : "invite_mailer",
@@ -49,9 +50,10 @@ class InviteMailer < ActionMailer::Base
         user_custom_message: sanitized_message,
       )
     else
+      template = DiscoursePluginRegistry.apply_modifier(:invite_forum_mailer_template, "invite_forum_mailer", invite)
       build_email(
         invite.email,
-        template: sanitized_message ? "custom_invite_forum_mailer" : "invite_forum_mailer",
+        template: sanitized_message ? "custom_invite_forum_mailer" : template,
         inviter_name: inviter_name,
         site_domain_name: Discourse.current_hostname,
         invite_link: invite.link(with_email_token: true),
