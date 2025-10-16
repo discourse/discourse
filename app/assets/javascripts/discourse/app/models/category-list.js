@@ -11,7 +11,18 @@ import { i18n } from "discourse-i18n";
 
 const STAT_PERIODS = ["week", "month"];
 
+/**
+ * Represents a list of categories with their related metadata and functionality
+ */
 export default class CategoryList {
+  /**
+   * Creates category objects from API result data
+   *
+   * @param {Object} store - The store instance
+   * @param {Object} result - The API result containing category data
+   * @param {Object} parentCategory - Optional parent category
+   * @returns {CategoryList} A new CategoryList instance with the processed categories
+   */
   static categoriesFrom(store, result, parentCategory = null) {
     // Find the period that is most relevant
     const list = result?.category_list?.categories || [];
@@ -39,47 +50,62 @@ export default class CategoryList {
     return categories;
   }
 
-  static _buildCategoryResult(c, statPeriod) {
-    if (c.topics?.length) {
-      c.topics = c.topics.map((t) => Topic.create(t));
+  /**
+   * Builds a category result object with stats and topic data
+   * @param {Object} rawCategoryData - The raw category data
+   * @param {string} statPeriod - The period to use for stats ('week', 'month', or 'all')
+   * @returns {Category} The processed category object
+   * @private
+   */
+  static _buildCategoryResult(rawCategoryData, statPeriod) {
+    if (rawCategoryData.topics?.length) {
+      rawCategoryData.topics = rawCategoryData.topics.map((t) =>
+        Topic.create(t)
+      );
     }
 
-    const stat = c[`topics_${statPeriod}`];
+    const stat = rawCategoryData[`topics_${statPeriod}`];
     const isTimedPeriod = statPeriod === "week" || statPeriod === "month";
     if (isTimedPeriod && stat > 0) {
       const unit = i18n(`categories.topic_stat_unit.${statPeriod}`);
 
-      c.stat = i18n("categories.topic_stat", {
+      rawCategoryData.stat = i18n("categories.topic_stat", {
         count: stat, // only used to correctly pluralize the string
         number: `<span class="value">${number(stat)}</span>`,
         unit: `<span class="unit">${unit}</span>`,
       });
 
-      c.statTitle = i18n(`categories.topic_stat_sentence_${statPeriod}`, {
-        count: stat,
-      });
+      rawCategoryData.statTitle = i18n(
+        `categories.topic_stat_sentence_${statPeriod}`,
+        {
+          count: stat,
+        }
+      );
 
-      c.pickAll = false;
+      rawCategoryData.pickAll = false;
     } else {
-      c.stat = `<span class="value">${number(c.topics_all_time)}</span>`;
-      c.statTitle = i18n("categories.topic_sentence", {
-        count: c.topics_all_time,
+      rawCategoryData.stat = `<span class="value">${number(rawCategoryData.topics_all_time)}</span>`;
+      rawCategoryData.statTitle = i18n("categories.topic_sentence", {
+        count: rawCategoryData.topics_all_time,
       });
-      c.pickAll = true;
+      rawCategoryData.pickAll = true;
     }
 
     if (Site.current().mobileView) {
-      c.statTotal = i18n("categories.topic_stat_all_time", {
-        count: c.topics_all_time,
-        number: `<span class="value">${number(c.topics_all_time)}</span>`,
+      rawCategoryData.statTotal = i18n("categories.topic_stat_all_time", {
+        count: rawCategoryData.topics_all_time,
+        number: `<span class="value">${number(rawCategoryData.topics_all_time)}</span>`,
       });
     }
 
-    const record = Site.current().updateCategory(c);
+    const record = Site.current().updateCategory(rawCategoryData);
     record.setupGroupsAndPermissions();
     return record;
   }
 
+  /**
+   * @deprecated Use list() instead
+   */
   static listForParent(store, parentCategory) {
     deprecated(
       "The listForParent method of CategoryList is deprecated. Use list instead",
@@ -89,6 +115,13 @@ export default class CategoryList {
     return CategoryList.list(store, parentCategory);
   }
 
+  /**
+   * Fetches and creates a list of categories
+   *
+   * @param {Object} store - The store instance
+   * @param {Object} parentCategory - Optional parent category to filter by
+   * @returns {Promise<CategoryList>} A promise that resolves to the CategoryList
+   */
   static async list(store, parentCategory = null) {
     const result = await PreloadStore.getAndRemove(
       "categories_list",
@@ -111,6 +144,12 @@ export default class CategoryList {
     });
   }
 
+  /**
+   * Creates a new CategoryList instance
+   *
+   * @param {Object} attrs - The attributes to initialize with
+   * @returns {CategoryList} A new CategoryList instance
+   */
   static create(attrs) {
     return new CategoryList(attrs);
   }
@@ -125,6 +164,13 @@ export default class CategoryList {
   #content;
   #proxy;
 
+  /**
+   * Initializes a new CategoryList instance
+   *
+   * @param {Object} param0 - The initialization parameters
+   * @param {Array} param0.categories - Initial array of categories
+   * @param {Object} param0.attrs - Additional attributes to set
+   */
   constructor({ categories, ...attrs } = {}) {
     this.#content = new TrackedArray(categories || []);
 
@@ -163,18 +209,28 @@ export default class CategoryList {
     return this.#proxy;
   }
 
-  // for compatibility with the old category list based on ArrayProxy
+  /**
+   * @returns {Proxy} The proxied content for compatibility
+   * @deprecated use the category list instance instead
+   */
   get categories() {
     // TODO deprecate this
     return this.#proxy;
   }
 
-  // for compatibility with the old category list based on ArrayProxy
+  /**
+   * @returns {Proxy} The proxied content for compatibility
+   * @deprecated use the category list instance instead
+   */
   get content() {
     // TODO deprecate this
     return this.#proxy;
   }
 
+  /**
+   * Loads more categories from the server
+   * @returns {Promise<void>}
+   */
   @bind
   async loadMore() {
     if (this.isLoading || this.fetchedLastPage) {
