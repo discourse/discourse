@@ -170,16 +170,6 @@ module.exports = function (defaults) {
               maxGenerations: 1,
             },
         entry: {
-          "assets/discourse.js/features/markdown-it.js": {
-            import: "./static/markdown-it",
-            dependOn: "assets/discourse.js",
-            runtime: false,
-          },
-          "assets/admin.js": {
-            import: "./admin/admin-compat-modules",
-            dependOn: "assets/discourse.js",
-            runtime: false,
-          },
           "assets/media-optimization-bundle.js": {
             import: "./static/media-optimization-bundle",
             runtime: false,
@@ -219,8 +209,9 @@ module.exports = function (defaults) {
             stats: {
               all: false,
               entrypoints: true,
+              chunks: true,
             },
-            transform({ entrypoints }) {
+            transform({ chunks, entrypoints }) {
               let names = Object.keys(entrypoints);
               let output = {};
 
@@ -238,6 +229,17 @@ module.exports = function (defaults) {
                   output[parent][name] = { assets };
                 } else {
                   output[name] = { assets };
+                }
+              }
+
+              for (const chunk of chunks) {
+                if (chunk.entry) {
+                  continue;
+                }
+                for (const name of chunk.names) {
+                  const outputName = `assets/chunk.${name}.js`;
+                  output[outputName] ??= { assets: [] };
+                  output[outputName].assets.push(...chunk.files);
                 }
               }
 
