@@ -12,23 +12,20 @@ import { i18n } from "discourse-i18n";
 export default class CategoryList {
   static categoriesFrom(store, result, parentCategory = null) {
     // Find the period that is most relevant
+    const list = result?.category_list?.categories || [];
     const statPeriod =
       ["week", "month"].find(
         (period) =>
-          result.category_list.categories.filter(
-            (c) => c[`topics_${period}`] > 0
-          ).length >=
-          result.category_list.categories.length * 0.66
+          list.filter((c) => c?.[`topics_${period}`] > 0).length >=
+          list.length * 0.66
       ) || "all";
 
     // Update global category list to make sure that `findById` works as
     // expected later
-    result.category_list.categories.forEach((c) =>
-      Site.current().updateCategory(c)
-    );
+    list.forEach((c) => Site.current().updateCategory(c));
 
     const categories = CategoryList.create({ store });
-    result.category_list.categories.forEach((c) => {
+    list.forEach((c) => {
       c = this._buildCategoryResult(c, statPeriod);
       if (
         (parentCategory && c.parent_category_id === parentCategory.id) ||
@@ -41,7 +38,7 @@ export default class CategoryList {
   }
 
   static _buildCategoryResult(c, statPeriod) {
-    if (c.topics) {
+    if (c.topics?.length) {
       c.topics = c.topics.map((t) => Topic.create(t));
     }
 
@@ -95,18 +92,19 @@ export default class CategoryList {
       async () => {
         const data = {};
         if (parentCategory) {
-          data.parent_category_id = parentCategory?.id;
+          data.parent_category_id = parentCategory.id;
         }
-        return await ajax("/categories.json", { data });
+        return ajax("/categories.json", { data });
       }
     );
 
+    const categoryList = result?.category_list || {};
     return CategoryList.create({
       store,
       categories: this.categoriesFrom(store, result, parentCategory),
       parentCategory,
-      can_create_category: result.category_list.can_create_category,
-      can_create_topic: result.category_list.can_create_topic,
+      can_create_category: categoryList.can_create_category,
+      can_create_topic: categoryList.can_create_topic,
     });
   }
 
@@ -143,16 +141,18 @@ export default class CategoryList {
           return self[prop];
         }
 
-        return target[prop];
+        return Reflect.get(target, prop);
       },
       set(target, prop, value) {
         if (ownKeys.includes(prop)) {
           self[prop] = value;
+          return true;
         }
 
-        target[prop] = value;
-
-        return true;
+        return Reflect.set(target, prop, value);
+      },
+      has(target, prop) {
+        return ownKeys.includes(prop) || prop in target;
       },
       getPrototypeOf() {
         return self.constructor.prototype;
@@ -192,22 +192,30 @@ export default class CategoryList {
 
     this.isLoading = true;
 
-    const data = { page: this.page + 1 };
-    if (this.parentCategory) {
-      data.parent_category_id = this.parentCategory.id;
-    }
-    const result = await ajax("/categories.json", { data });
+    try {
+      const nextPage = this.page + 1;
+      const data = { page: nextPage };
 
-    this.page = data.page;
-    if (result.category_list.categories.length === 0) {
-      this.fetchedLastPage = true;
-    }
-    this.isLoading = false;
+      if (this.parentCategory) {
+        data.parent_category_id = this.parentCategory.id;
+      }
+      const result = await ajax("/categories.json", { data });
 
-    CategoryList.categoriesFrom(
-      this.store,
-      result,
-      this.parentCategory
-    ).forEach((c) => this.push(c));
+      this.page = nextPage;
+
+      const newItems = CategoryList.categoriesFrom(
+        this.store,
+        result,
+        this.parentCategory
+      );
+
+      if (!newItems.length) {
+        this.fetchedLastPage = true;
+      } else {
+        newItems.forEach((c) => this.push(c));
+      }
+    } finally {
+      this.isLoading = false;
+    }
   }
 }
