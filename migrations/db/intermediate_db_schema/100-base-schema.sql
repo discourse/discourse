@@ -148,6 +148,35 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE posts
+(
+    original_id          NUMERIC  NOT NULL PRIMARY KEY,
+    action_code          TEXT,
+    created_at           DATETIME,
+    deleted_at           DATETIME,
+    deleted_by_id        NUMERIC,
+    hidden               BOOLEAN,
+    hidden_at            DATETIME,
+    hidden_reason_id     NUMERIC,
+    image_upload_id      TEXT,
+    last_editor_id       NUMERIC,
+    like_count           INTEGER,
+    locked_by_id         NUMERIC,
+    original_raw         TEXT,
+    post_number          INTEGER  NOT NULL,
+    post_type            INTEGER,
+    raw                  TEXT     NOT NULL,
+    reply_to_post_number INTEGER,
+    reply_to_user_id     NUMERIC,
+    sort_order           INTEGER,
+    topic_id             NUMERIC  NOT NULL,
+    user_deleted         BOOLEAN,
+    user_id              NUMERIC,
+    wiki                 BOOLEAN
+);
+
+CREATE INDEX index_posts_on_topic_id_and_post_number ON posts (topic_id, post_number);
+
 CREATE TABLE tag_group_memberships
 (
     tag_group_id NUMERIC  NOT NULL,

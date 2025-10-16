@@ -92,6 +92,45 @@ schema:
       columns:
         exclude:
           - "id"
+    posts:
+      columns:
+        add:
+          - name: "original_raw"
+            datatype: text
+        exclude:
+          - "cooked"
+          - "reply_count"
+          - "quote_count"
+          - "off_topic_count"
+          - "incoming_link_count"
+          - "bookmark_count"
+          - "score"
+          - "reads"
+          - "notify_moderators_count"
+          - "spam_count"
+          - "illegal_count"
+          - "inappropriate_count"
+          - "last_version_at"
+          - "percent_rank"
+          - "notify_user_count"
+          - "like_score"
+          - "edit_reason"
+          - "word_count"
+          - "version"
+          - "cook_method"
+          - "baked_at"
+          - "baked_version"
+          - "self_edits"
+          - "reply_quoted"
+          - "via_email"
+          - "raw_email"
+          - "public_version"
+          - "outbound_message_id"
+          - "locale"
+          - "qa_vote_count"
+      indexes:
+        - name: "index_posts_on_topic_id_and_post_number"
+          columns: [ "topic_id", "post_number" ]
     tag_group_memberships:
       primary_key_column_names: [ "tag_group_id", "tag_id" ]
       columns:
@@ -431,7 +470,6 @@ schema:
         - "post_voting_comment_custom_fields"
         - "post_voting_comments"
         - "post_voting_votes"
-        - "posts"
         - "problem_check_trackers"
         - "published_pages"
         - "push_subscriptions"
