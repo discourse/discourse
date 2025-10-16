@@ -1117,21 +1117,29 @@ export default class PostStream extends RestModel {
     data = deepMerge(data, this.streamFilters);
     const store = this.store;
 
-    return ajax(url, { data }).then((result) => {
-      this._setSuggestedTopics(result);
+    return ajax(url, { data })
+      .then((result) => {
+        this._setSuggestedTopics(result);
 
-      const posts = get(result, "post_stream.posts");
+        const posts = get(result, "post_stream.posts");
 
-      if (posts) {
-        posts.forEach((p) => {
-          p = this.storePost(store.createRecord("post", p));
+        if (posts) {
+          posts.forEach((p) => {
+            p = this.storePost(store.createRecord("post", p));
 
-          if (callback) {
-            callback.call(this, p);
-          }
-        });
-      }
-    });
+            if (callback) {
+              callback.call(this, p);
+            }
+          });
+        }
+      })
+      .catch((error) => {
+        // If we get a 403 error, refresh the window to prevent continuous retries
+        if (error.jqXHR && error.jqXHR.status === 403) {
+          window.location.reload();
+          return;
+        }
+      });
   }
 
   findPostsByIds(postIds, opts) {
