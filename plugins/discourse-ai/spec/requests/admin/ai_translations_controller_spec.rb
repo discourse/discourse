@@ -22,9 +22,18 @@ describe DiscourseAi::Admin::AiTranslationsController do
         SiteSetting.ai_translation_backfill_max_age_days = 30
         SiteSetting.ai_translation_backfill_limit_to_public_content = false
 
-        Fabricate.times(14, :post, locale: "en")
-        Fabricate.times(1, :post, locale: "fr")
+        english_posts = Fabricate.times(14, :post, locale: "en")
+        french_post = Fabricate(:post, locale: "fr")
         Fabricate.times(4, :post)
+
+        PostLocalization.create!(
+          post: french_post,
+          locale: "en",
+          raw: "Translated to English",
+          cooked: "<p>Translated to English</p>",
+          post_version: french_post.version,
+          localizer_user_id: admin.id,
+        )
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
@@ -43,17 +52,70 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(locale_data["locale"]).to eq("en")
         # en is the default locale, so total should only be posts requiring translation (1 French post)
         expect(locale_data["total"]).to eq(1)
-        expect(locale_data["done"]).to eq(14)
+        # done should be 1 because we translated the French post to English
+        expect(locale_data["done"]).to eq(1)
       end
 
-      it "shows all posts for non-default locales but only posts requiring translation for the default locale" do
+      it "shows only posts requiring translation for all locales (consistent behavior)" do
         SiteSetting.ai_translation_backfill_max_age_days = 30
         SiteSetting.ai_translation_backfill_limit_to_public_content = false
         SiteSetting.default_locale = "en"
 
-        Fabricate.times(100, :post, locale: "en")
-        Fabricate.times(10, :post, locale: "fr")
-        Fabricate.times(5, :post, locale: "es")
+        english_posts = Fabricate.times(100, :post, locale: "en")
+        french_posts = Fabricate.times(10, :post, locale: "fr")
+        spanish_posts = Fabricate.times(5, :post, locale: "es")
+
+        french_posts
+          .take(8)
+          .each do |post|
+            PostLocalization.create!(
+              post: post,
+              locale: "en",
+              raw: "Translated to English",
+              cooked: "<p>Translated to English</p>",
+              post_version: post.version,
+              localizer_user_id: admin.id,
+            )
+          end
+        spanish_posts
+          .take(3)
+          .each do |post|
+            PostLocalization.create!(
+              post: post,
+              locale: "en",
+              raw: "Translated to English",
+              cooked: "<p>Translated to English</p>",
+              post_version: post.version,
+              localizer_user_id: admin.id,
+            )
+          end
+
+        english_posts
+          .take(50)
+          .each do |post|
+            PostLocalization.create!(
+              post: post,
+              locale: "fr",
+              raw: "Translated to French",
+              cooked: "<p>Translated to French</p>",
+              post_version: post.version,
+              localizer_user_id: admin.id,
+            )
+          end
+
+        english_posts
+          .drop(50)
+          .take(30)
+          .each do |post|
+            PostLocalization.create!(
+              post: post,
+              locale: "es",
+              raw: "Translated to Spanish",
+              cooked: "<p>Translated to Spanish</p>",
+              post_version: post.version,
+              localizer_user_id: admin.id,
+            )
+          end
 
         get "/admin/plugins/discourse-ai/ai-translations.json"
 
@@ -65,14 +127,20 @@ describe DiscourseAi::Admin::AiTranslationsController do
         fr_data = progress.find { |p| p["locale"] == "fr" }
         es_data = progress.find { |p| p["locale"] == "es" }
 
+        # 15 non-English posts (10 fr + 5 es)
         expect(en_data["total"]).to eq(15)
-        expect(en_data["done"]).to eq(100)
+        # 11 translated to English (8 fr + 3 es)
+        expect(en_data["done"]).to eq(11)
 
-        expect(fr_data["total"]).to eq(115)
-        expect(fr_data["done"]).to eq(10)
+        # 105 non-French posts (100 en + 5 es)
+        expect(fr_data["total"]).to eq(105)
+        # 50 translated to French
+        expect(fr_data["done"]).to eq(50)
 
-        expect(es_data["total"]).to eq(115)
-        expect(es_data["done"]).to eq(5)
+        # 110 non-Spanish posts (100 en + 10 fr)
+        expect(es_data["total"]).to eq(110)
+        # 30 translated to Spanish
+        expect(es_data["done"]).to eq(30)
       end
 
       it "returns empty when no locales are supported" do

@@ -342,13 +342,12 @@ en:
           incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
           description_tooltip:
-            one: 'There is %{count} post eligible for translation.'
-            other: 'There are %{count} posts eligible for translation.'
+            one: 'There is %{count} post ready to translate.'
+            other: 'There are %{count} posts ready to translate.'
         progress_chart:
           title: "Translation Progress"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} out of %{total} posts translated"
-          default_locale_note: "*This is the site's default locale. Only posts needing translation into it are shown."
+          tooltip_translated: "%{done} out of %{total} non-%{language} posts translated"
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
