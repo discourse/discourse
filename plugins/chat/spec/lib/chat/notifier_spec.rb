@@ -577,6 +577,14 @@ describe Chat::Notifier do
         )
       end
 
+      it "sends notifications to non-members when they are mentioned" do
+        msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
+
+        to_notify = described_class.new(msg, msg.created_at).notify_new
+
+        expect(to_notify[:direct_mentions]).to contain_exactly(user_3.id)
+      end
+
       it "cannot invite chat user without channel membership if they are ignoring the user who created the message" do
         Fabricate(:ignored_user, user: user_3, ignored_user: user_1)
         msg = build_cooked_msg("Hello @#{user_3.username}", user_1)

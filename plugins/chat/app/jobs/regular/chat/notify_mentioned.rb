@@ -24,13 +24,40 @@ module Jobs
       private
 
       def get_memberships(user_ids)
-        query =
+        target_user_ids = user_ids - @already_notified_user_ids
+
+        # Get existing memberships
+        existing_memberships =
           ::Chat::UserChatChannelMembership.includes(:user).where(
-            user_id: (user_ids - @already_notified_user_ids),
+            user_id: target_user_ids,
             chat_channel_id: @chat_message.chat_channel_id,
           )
-        query = query.where(following: true) if @chat_channel.public_channel?
-        query
+        existing_memberships =
+          existing_memberships.where(following: true) if @chat_channel.public_channel?
+
+        # For non-members who were mentioned, create membership records so they can be notified
+        existing_user_ids = existing_memberships.map(&:user_id)
+        non_member_user_ids = target_user_ids - existing_user_ids
+
+        if non_member_user_ids.any?
+          non_member_users = ::User.where(id: non_member_user_ids)
+          new_memberships =
+            non_member_users.map do |user|
+              ::Chat::UserChatChannelMembership.find_or_create_by!(
+                user_id: user.id,
+                chat_channel_id: @chat_message.chat_channel_id,
+              ) do |membership|
+                membership.following = false
+                membership.muted = false
+                membership.notification_level =
+                  ::Chat::UserChatChannelMembership.notification_levels[:mention]
+                membership.last_viewed_at = Time.zone.now
+              end
+            end
+          existing_memberships.to_a + new_memberships
+        else
+          existing_memberships
+        end
       end
 
       def build_data_for(membership, identifier_type:)

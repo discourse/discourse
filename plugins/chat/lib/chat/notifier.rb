@@ -191,7 +191,7 @@ module Chat
 
       grouped = group_users_to_notify(direct_mentions)
 
-      to_notify[:direct_mentions] = grouped[:members].map(&:id)
+      to_notify[:direct_mentions] = (grouped[:members] + grouped[:welcome_to_join]).map(&:id)
       inaccessible[:welcome_to_join] = grouped[:welcome_to_join]
       inaccessible[:unreachable] = grouped[:unreachable]
       already_covered_ids.concat(to_notify[:direct_mentions])
