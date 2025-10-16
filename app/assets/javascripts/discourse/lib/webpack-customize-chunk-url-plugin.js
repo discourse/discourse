@@ -3,7 +3,7 @@ const pluginName = "CustomizeChunkUrlPlugin";
 export class CustomizeChunkUrlPlugin {
   apply(compiler) {
     compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
-      const { mainTemplate, runtimeTemplate } = compilation;
+      const { mainTemplate } = compilation;
       mainTemplate.hooks.localVars.tap(
         { name: pluginName, stage: 1 },
         (source) => {
