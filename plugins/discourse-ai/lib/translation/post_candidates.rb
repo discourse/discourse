@@ -85,14 +85,12 @@ module DiscourseAi
 
       def self.completion_all_locales
         supported = SiteSetting.content_localization_supported_locales.split("|")
-        default_locale = SiteSetting.default_locale
         values_rows = supported.map { |loc| "('#{loc}')" }.join(", ")
 
         sql = <<~SQL
           WITH supported AS (
             SELECT localestr,
-                   split_part(localestr, '_', 1) AS base,
-                   (localestr = '#{default_locale}') AS is_default
+                   split_part(localestr, '_', 1) AS base
             FROM (VALUES #{values_rows}) AS t(localestr)
           ),
           eligible_posts AS (
@@ -101,12 +99,12 @@ module DiscourseAi
           all_posts_count AS (
             SELECT COUNT(*)::bigint AS count FROM eligible_posts
           ),
-          non_default_locale_counts AS (
+          non_target_locale_counts AS (
             SELECT s.base,
                    COUNT(*)::bigint AS count
             FROM eligible_posts p
             CROSS JOIN supported s
-            WHERE s.is_default AND split_part(p.locale, '_', 1) != s.base
+            WHERE split_part(p.locale, '_', 1) != s.base
             GROUP BY s.base
           ),
           done_per_base AS (
@@ -114,25 +112,20 @@ module DiscourseAi
                    COUNT(*)::bigint AS done
             FROM eligible_posts p
             JOIN supported s ON TRUE
-            WHERE split_part(p.locale, '_', 1) = s.base
-               OR EXISTS (
-                    SELECT 1
-                    FROM post_localizations pl
-                    WHERE pl.post_id = p.id
-                      AND split_part(pl.locale, '_', 1) = s.base
-                  )
+            WHERE split_part(p.locale, '_', 1) != s.base AND EXISTS (
+              SELECT 1
+              FROM post_localizations pl
+              WHERE pl.post_id = p.id
+                AND split_part(pl.locale, '_', 1) = s.base
+            )
             GROUP BY s.base
           )
           SELECT s.localestr AS locale,
                  COALESCE(d.done, 0) AS done,
-                 CASE
-                   WHEN s.is_default THEN COALESCE(ndl.count, 0)
-                   ELSE a.count
-                 END AS total
+                 COALESCE(ntl.count, 0) AS total
           FROM supported s
           LEFT JOIN done_per_base d ON d.base = s.base
-          LEFT JOIN non_default_locale_counts ndl ON ndl.base = s.base
-          CROSS JOIN all_posts_count a
+          LEFT JOIN non_target_locale_counts ntl ON ntl.base = s.base
         SQL
 
         DB.query(sql).map { |r| { locale: r.locale, done: r.done, total: r.total } }

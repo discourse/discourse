@@ -86,11 +86,6 @@ export default class AiTranslations extends Component {
     });
   }
 
-  get showDefaultLocaleNote() {
-    const defaultLocale = this.siteSettings.default_locale;
-    return this.selectedLocales.includes(defaultLocale);
-  }
-
   @action
   navigateToLocalizationSettings() {
     this.router.transitionTo("adminConfig.localization.settings", {
@@ -197,7 +192,7 @@ export default class AiTranslations extends Component {
   }
 
   get chartRightPadding() {
-    const max = Math.max(...this.data.map(({ done }) => done));
+    const max = Math.max(...this.data.map(({ total }) => total));
     switch (true) {
       case max >= 100000:
         return 90;
@@ -232,21 +227,21 @@ export default class AiTranslations extends Component {
     }
 
     const colors = this.chartColors;
-    const defaultLocale = this.siteSettings.default_locale;
-
     const processedData = this.data.map(({ locale, total, done }) => {
       const donePercentage = (total > 0 ? (done / total) * 100 : 0).toFixed(0);
-      const isDefault = locale === defaultLocale;
       const localeName = this.languageNameLookup.getLanguageName(locale);
+      const languageNameForTooltip = localeName.split(" (")[0];
 
       return {
-        locale: isDefault ? `${localeName}*` : localeName,
+        locale: localeName,
         done,
+        total,
         donePercentage,
         tooltip: [
           i18n("discourse_ai.translations.progress_chart.tooltip_translated", {
             done,
             total,
+            language: languageNameForTooltip,
           }),
         ],
       };
@@ -257,7 +252,7 @@ export default class AiTranslations extends Component {
         {
           tooltip: processedData.map(({ tooltip }) => tooltip),
           data: processedData.map(({ donePercentage }) => donePercentage),
-          totalItems: processedData.map(({ done }) => done),
+          totalItems: processedData.map(({ total }) => total),
           backgroundColor: colors.progress,
           barThickness: 30,
           borderRadius: 4,
@@ -454,13 +449,6 @@ export default class AiTranslations extends Component {
                 class="ai-translations__chart"
               />
             </div>
-            {{#if this.showDefaultLocaleNote}}
-              <div class="ai-translations__default-locale-note">
-                {{i18n
-                  "discourse_ai.translations.progress_chart.default_locale_note"
-                }}
-              </div>
-            {{/if}}
           </:content>
         </AdminConfigAreaCard>
 

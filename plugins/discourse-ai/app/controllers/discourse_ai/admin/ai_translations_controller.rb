@@ -23,15 +23,21 @@ module DiscourseAi
           )
         end
 
-        candidates = DiscourseAi::Translation::PostCandidates
-        candidates.get_total_and_with_locale_count in { total:, posts_with_detected_locale: }
+        # TEMPORARY: Fake data for testing
+        # Simulates: 100 English posts, 10 French posts, 5 Spanish posts
+        # ALL locales show only posts requiring translation
+        fake_progress = [
+          { locale: "en", total: 15, done: 11 }, # 15 non-English posts, 11 translated to English
+          { locale: "fr", total: 105, done: 50 }, # 105 non-French posts, 50 translated to French
+          { locale: "es", total: 110, done: 30 }, # 110 non-Spanish posts, 30 translated to Spanish
+        ]
 
         render json:
                  base_result.merge(
                    {
-                     translation_progress: candidates.get_completion_all_locales,
-                     total:,
-                     posts_with_detected_locale:,
+                     translation_progress: fake_progress,
+                     total: 115,
+                     posts_with_detected_locale: 115,
                    },
                  )
       end
