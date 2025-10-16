@@ -136,7 +136,7 @@ module.exports = function (defaults) {
           filename: `assets/js/chunk.[chunkhash].${cachebusterHash}.js`,
           chunkFilename: `assets/js/chunk.[chunkhash].${cachebusterHash}.js`,
           assetModuleFilename: `assets/js/chunk.[hash].${cachebusterHash}[ext][query]`,
-          sourceMapFilename: `assets/map/chunk.[chunkhash].${cachebusterHash}.js.map`,
+          sourceMapFilename: `assets/map/[base].map`,
         },
         optimization: {
           minimize: isProduction,
