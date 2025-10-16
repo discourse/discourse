@@ -68,6 +68,43 @@ module Migrations::Importer
       name = fallback_name.dup if name.blank?
       name = UserNameSuggester.truncate(name, max_name_length)
 
+      return name, name.downcase if name_available?(name, allow_reserved_username:)
+
+      original_base_name = name
+      current_base_name = original_base_name
+      current_base_clusters = current_base_name.grapheme_clusters
+      current_base_length = current_base_clusters.size
+
+      while !name_available?(name, allow_reserved_username:)
+        # if the name ends with a number, then use an underscore before appending the suffix
+        suffix_separator = name.match?(/\d$/) ? "_" : ""
+        suffix = next_suffix(name).to_s
+
+        required_length = current_base_length + suffix_separator.length + suffix.length
+
+        if required_length > max_name_length
+          # Truncate base further and reset suffix tracking
+          chars_to_remove = required_length - max_name_length
+          current_base_length -= chars_to_remove
+          current_base_clusters = current_base_clusters[0...current_base_length]
+          current_base_name = current_base_clusters.join
+          # Reset suffix for the new base
+          @last_suffixes[current_base_name.downcase] = 0
+          suffix = next_suffix(current_base_name).to_s
+          suffix_separator = current_base_name.match?(/\d$/) ? "_" : ""
+        end
+      end
+
+      # if !name_available?(name, allow_reserved_username:)
+      #   # if the name ends with a number, then use an underscore before appending the suffix
+      #   suffix_separator = name.match?(/\d$/) ? "_" : ""
+      #   suffix = next_suffix(name).to_s
+      #
+      #   # TODO This needs better logic, because it's possible that the max username length is exceeded
+      #   name = +"#{name}#{suffix_separator}#{suffix}"
+      #   name.next! until name_available?(name, allow_reserved_username:)
+      # end
+
       [name, name.downcase]
     end
 
