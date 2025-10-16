@@ -1,0 +1,27 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+deleted file mode 100644
+index 24fa276b9e4804b02221fa94bea9e73113df3c0a..0000000000000000000000000000000000000000
+diff --git a/concat.js b/concat.js
+index a2c6cd2ea6ed7f293318fb4bb6354a25a2af5909..c9e19ccee796e731415ffc2bba120c5c93deb6ac 100644
+--- a/concat.js
++++ b/concat.js
+@@ -170,13 +170,18 @@ module.exports = class Concat extends Plugin {
+     let separator = this.separator;
+     let firstSection = true;
+     let outputFile = path.join(this.outputPath, this.outputFile);
++    let mapFile;
++    if(this.sourceMapConfig.mapFile){
++      mapFile = path.join(this.outputPath, this.sourceMapConfig.mapFile);
++    }
+ 
+     fs.mkdirpSync(path.dirname(outputFile));
+     let options = merge(this.sourceMapConfig, {
+       outputFile: outputFile,
+       baseDir: this.inputPaths[0],
+       cache: this.encoderCache,
+-      pluginId: this.id
++      pluginId: this.id,
++      mapFile
+     });
+ 
+     options.fs = this.input;

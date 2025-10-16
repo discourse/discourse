@@ -202,7 +202,8 @@ module.exports = {
         this._buildAppTree({
           directory: jsDirectory,
           pluginName,
-          outputFile: `assets/plugins/${directoryName}.js`,
+          outputFile: `assets/js/plugins/${directoryName}.js`,
+          mapFile: `assets/map/plugins/${directoryName}.js.map`,
         })
       );
     return mergeTrees(trees);
@@ -215,13 +216,14 @@ module.exports = {
         this._buildAppTree({
           directory: adminJsDirectory,
           pluginName,
-          outputFile: `assets/plugins/${directoryName}_admin.js`,
+          outputFile: `assets/js/plugins/${directoryName}_admin.js`,
+          mapFile: `assets/map/plugins/${directoryName}_admin.js.map`,
         })
       );
     return mergeTrees(trees);
   },
 
-  _buildAppTree({ directory, pluginName, outputFile }) {
+  _buildAppTree({ directory, pluginName, outputFile, mapFile }) {
     let tree = new WatchedDir(directory);
 
     tree = fixLegacyExtensions(tree);
@@ -244,6 +246,10 @@ module.exports = {
     return concat(mergeTrees([tree]), {
       inputFiles: ["**/*.js"],
       outputFile,
+      sourceMapConfig: {
+        mapFile,
+        mapURL: path.relative(path.dirname(outputFile), mapFile),
+      },
       allowNone: true,
     });
   },
@@ -258,10 +264,17 @@ module.exports = {
         tree = namespaceModules(tree, pluginName);
         tree = this.processedAddonJsFiles(tree);
 
+        const outputFile = `assets/js/plugins/test/${directoryName}_tests.js`;
+        const mapFile = `assets/map/plugins/${directoryName}_tests.js.map`;
+
         return concat(mergeTrees([tree]), {
           inputFiles: ["**/*.js"],
-          outputFile: `assets/plugins/test/${directoryName}_tests.js`,
+          outputFile,
           allowNone: true,
+          sourceMapConfig: {
+            mapFile,
+            mapURL: path.relative(path.dirname(outputFile), mapFile),
+          },
         });
       });
     return mergeTrees(trees);

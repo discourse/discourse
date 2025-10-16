@@ -37,7 +37,14 @@ Propshaft::Compiler::SourceMappingUrls.prepend(
       # Propshaft insists on converting sourcemap URLs to absolute paths. We want to keep
       # relative paths so that we can serve assets from different subdirectories without needing
       # to recompile them
-      super.gsub(%r{sourceMappingURL=\S+/([^/]+\.map)}, 'sourceMappingURL=\1')
+      regex = /sourceMappingURL=(\S+\.map)/
+
+      map_url = super.match(regex)[1]
+
+      js_file_path = File.dirname(map_url.sub("/map/", "/js/"))
+      new_url = Pathname.new(map_url).relative_path_from(js_file_path)
+
+      super.gsub(regex, "sourceMappingURL=#{new_url}")
     end
   end,
 )

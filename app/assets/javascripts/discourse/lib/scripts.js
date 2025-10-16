@@ -20,7 +20,7 @@ module.exports = function scriptsTree(app) {
   for (let script of scripts) {
     let source = funnel(`scripts`, {
       files: [script.name],
-      destDir: "scripts",
+      destDir: "js/scripts",
     });
 
     // Babel will append a base64 sourcemap to the file
@@ -29,7 +29,11 @@ module.exports = function scriptsTree(app) {
     // We don't actually need to concat any source files... but this will move the base64
     // source map into its own file
     let transpiledWithDecodedSourcemap = concat(transpiled, {
-      outputFile: `assets/${script.name}`,
+      outputFile: `assets/js/${script.name}`,
+      sourceMapConfig: {
+        mapFile: `assets/map/${script.name}.js.map`,
+        mapURL: `../map/${script.name}.js.map`,
+      },
     });
 
     trees.push(transpiledWithDecodedSourcemap);
@@ -45,9 +49,13 @@ module.exports = function scriptsTree(app) {
     babelConfig
   );
   startDiscourseTree = concat(startDiscourseTree, {
-    outputFile: `assets/start-discourse.js`,
+    outputFile: `assets/js/start-discourse.js`,
     headerFiles: [`scripts/start-app.js`],
     inputFiles: [`scripts/discourse-boot.js`],
+    sourceMapConfig: {
+      mapFile: `assets/map/start-discourse.js.map`,
+      mapURL: `../map/start-discourse.js.map`,
+    },
   });
   trees.push(startDiscourseTree);
 

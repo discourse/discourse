@@ -91,7 +91,7 @@ module ApplicationHelper
   end
 
   def script_asset_path(script)
-    path = ActionController::Base.helpers.asset_path("#{script}.js")
+    path = ActionController::Base.helpers.asset_path("js/#{script}.js")
 
     if GlobalSetting.use_s3? && GlobalSetting.s3_cdn_url
       resolved_s3_asset_cdn_url =
@@ -120,9 +120,9 @@ module ApplicationHelper
       # seconds.
       if !script.start_with?("discourse/tests/")
         if is_brotli_req?
-          path = path.gsub("/assets/", "/assets/br/")
+          path = path.gsub("/assets/js/", "/assets/br/")
         elsif is_gzip_req?
-          path = path.gsub("/assets/", "/assets/gz/")
+          path = path.gsub("/assets/js/", "/assets/gz/")
         end
       end
     end

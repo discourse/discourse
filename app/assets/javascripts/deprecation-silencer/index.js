@@ -41,7 +41,10 @@ class DeprecationSilencer {
   }
 
   shouldSilence(message) {
-    return SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix));
+    return (
+      typeof message === "string" &&
+      SILENCED_WARN_PREFIXES.some((prefix) => message.startsWith(prefix))
+    );
   }
 }
 

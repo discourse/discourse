@@ -89,7 +89,11 @@ module.exports.parsePluginClientSettings = function (
     inputFiles: [],
     headerFiles: [],
     footerFiles: [],
-    outputFile: `assets/test-site-settings.js`,
+    outputFile: `assets/js/test-site-settings.js`,
+    sourceMapConfig: {
+      mapFile: `assets/map/test-site-settings.js.map`,
+      mapURL: `../../map/test-site-settings.js.map`,
+    },
   });
 };
 

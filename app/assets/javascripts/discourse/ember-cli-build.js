@@ -102,7 +102,11 @@ module.exports = function (defaults) {
     applyTerser(
       concat(adminTree, {
         inputFiles: ["**/*.js"],
-        outputFile: `assets/admin.js`,
+        outputFile: `assets/js/admin.js`,
+        sourceMapConfig: {
+          mapFile: `assets/map/admin.js.map`,
+          mapURL: `../map/admin.js.map`,
+        },
       })
     ),
     applyTerser(generateScriptsTree(app)),
@@ -128,9 +132,10 @@ module.exports = function (defaults) {
             : "source-map",
         output: {
           publicPath: "auto",
-          filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
-          chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
-          assetModuleFilename: `assets/chunk.[hash].${cachebusterHash}[ext][query]`,
+          filename: `assets/js/chunk.[chunkhash].${cachebusterHash}.js`,
+          chunkFilename: `assets/js/chunk.[chunkhash].${cachebusterHash}.js`,
+          assetModuleFilename: `assets/js/chunk.[hash].${cachebusterHash}[ext][query]`,
+          sourceMapFilename: `assets/map/chunk.[chunkhash].${cachebusterHash}.js.map`,
         },
         optimization: {
           minimize: isProduction,
