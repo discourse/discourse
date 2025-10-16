@@ -24,4 +24,24 @@ RSpec.describe Chat::MessageProcessor do
       expect { processor.run! }.not_to raise_error
     end
   end
+
+  describe "#add_lightbox_to_images" do
+    it "adds lightbox class to quoted images" do
+      cooked_html = <<~HTML
+      <blockquote>
+        <img src="https://example.com/image.jpg" width="500" height="300">
+      </blockquote>
+    HTML
+
+      Chat::Message.stubs(:cook).returns(cooked_html)
+      processor = described_class.new(message)
+
+      processor.run!
+
+      doc = processor.instance_variable_get(:@doc)
+      img = doc.at_css("img")
+
+      expect(img["class"]).to include("lightbox")
+    end
+  end
 end

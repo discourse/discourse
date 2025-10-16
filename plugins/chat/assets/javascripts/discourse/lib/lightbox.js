@@ -13,7 +13,8 @@ export default function loadLightbox(element, siteSettings) {
     return;
   }
 
-  const images = element?.querySelectorAll("img.chat-img-upload");
+  // catches chat message uploads and quoted images
+  const images = element?.querySelectorAll("img:not(.emoji, .avatar)");
 
   if (!images.length) {
     return;
