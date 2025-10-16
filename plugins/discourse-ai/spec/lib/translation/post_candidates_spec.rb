@@ -70,13 +70,8 @@ describe DiscourseAi::Translation::PostCandidates do
       Post.delete_all
 
       result = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
-      expect(result).to eq(
-        [
-          { done: 0, locale: "en_GB", total: 0 },
-          { done: 0, locale: "pt", total: 0 },
-          { done: 0, locale: "es", total: 0 },
-        ],
-      )
+      expect(result.length).to eq(3)
+      expect(result).to all(include(done: 0, total: 0))
     end
 
     it "returns progress grouped by base locale (of en_GB) and correct totals" do
@@ -99,6 +94,8 @@ describe DiscourseAi::Translation::PostCandidates do
       expect(result.length).to eq(3)
 
       expect(result).to all(include(:locale, :done, :total))
+
+      expect(result.first[:locale]).to eq("en_GB")
 
       en_entry = result.find { |r| r[:locale] == "en_GB" }
       expect(en_entry).to be_present
