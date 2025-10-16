@@ -217,7 +217,10 @@ export default class CategoryList {
    * @deprecated use the category list instance instead
    */
   get categories() {
-    // TODO deprecate this
+    deprecated(
+      "Using `CategoryList.categories` property directly is deprecated. Access the item directly from the CategoryList instance instead.",
+      { id: "discourse.category-list.legacy-properties" }
+    );
     return this.#proxy;
   }
 
@@ -226,7 +229,10 @@ export default class CategoryList {
    * @deprecated use the category list instance instead
    */
   get content() {
-    // TODO deprecate this
+    deprecated(
+      "Using `CategoryList.content` property directly is deprecated. Access the item directly from the CategoryList instance instead.",
+      { id: "discourse.category-list.legacy-properties" }
+    );
     return this.#proxy;
   }
 

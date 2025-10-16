@@ -39,7 +39,7 @@ export default RouteTemplate(
       <:header>
         {{#if @controller.model.subcategoryList}}
           <CategoriesDisplay
-            @categories={{@controller.model.subcategoryList.categories}}
+            @categories={{@controller.model.subcategoryList}}
             @parentCategory={{@controller.model.subcategoryList.parentCategory}}
             @loadMore={{@controller.model.subcategoryList.loadMore}}
           />
