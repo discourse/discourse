@@ -3,7 +3,7 @@
 Propshaft::Asset.prepend(
   Module.new do
     def already_digested?
-      logical_path.to_s.start_with?("js/chunk.") || super
+      logical_path.to_s.include?("/chunk.") || super
     end
   end,
 )
