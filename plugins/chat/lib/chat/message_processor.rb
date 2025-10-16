@@ -61,6 +61,13 @@ module Chat
         .css("img")
         .each do |img|
           next if img["class"]&.include?("emoji") || img["class"]&.include?("avatar")
+
+          upload = Upload.find_by(url: img["src"])
+          next if !upload
+
+          img["data-large-src"] = upload.url
+          img["data-target-width"] = upload.width
+          img["data-target-height"] = upload.height
           img["class"] = "#{img["class"]} lightbox".strip
         end
     end

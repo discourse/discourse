@@ -26,10 +26,12 @@ RSpec.describe Chat::MessageProcessor do
   end
 
   describe "#add_lightbox_to_images" do
+    fab!(:upload) { Fabricate(:upload, width: 800, height: 600) }
+
     it "adds lightbox class to quoted images" do
       cooked_html = <<~HTML
       <blockquote>
-        <img src="https://example.com/image.jpg" width="500" height="300">
+        <img src="#{upload.url}" width="500" height="300">
       </blockquote>
     HTML
 
@@ -42,6 +44,9 @@ RSpec.describe Chat::MessageProcessor do
       img = doc.at_css("img")
 
       expect(img["class"]).to include("lightbox")
+      expect(img["data-large-src"]).to eq(upload.url)
+      expect(img["data-target-width"]).to eq("800")
+      expect(img["data-target-height"]).to eq("600")
     end
   end
 end
