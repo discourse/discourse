@@ -5,6 +5,7 @@ RSpec.describe "List channels | sidebar", type: :system do
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
+  let(:chat_sidebar) { PageObjects::Components::Chat::Sidebar.new }
 
   before do
     chat_system_bootstrap
@@ -134,17 +135,23 @@ RSpec.describe "List channels | sidebar", type: :system do
   end
 
   context "when no direct message channels" do
-    before { visit("/") }
-
     it "shows the start new dm button" do
-      selector =
-        ".sidebar-section[data-section-name='chat-dms'] .sidebar-section-link[data-link-name='new-chat-dm']"
-
-      expect(page).to have_selector(selector)
-
-      find(selector).click
+      visit("/")
+      chat_sidebar.click_start_new_dm
 
       expect(page).to have_selector(".chat-modal-new-message")
+    end
+
+    context "user can't dm" do
+      fab!(:group)
+
+      before { SiteSetting.direct_message_enabled_groups = group.id }
+
+      it "doesn't show the start new dm button" do
+        visit("/")
+
+        expect(chat_sidebar).to have_no_start_new_dm
+      end
     end
   end
 
