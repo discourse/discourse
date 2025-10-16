@@ -1,6 +1,6 @@
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 
-export default class ArrayModel {
+export default class ArrayLikeObject {
   #items;
 
   constructor(items = [], properties = {}) {
