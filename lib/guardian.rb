@@ -342,9 +342,13 @@ class Guardian
   end
 
   def can_suspend?(user)
-    user && is_staff? && user.regular?
+    can_unsuspend?(user) && user.regular?
   end
   alias can_deactivate? can_suspend?
+
+  def can_unsuspend?(user)
+    user && is_staff?
+  end
 
   def can_revoke_admin?(admin)
     can_administer_user?(admin) && admin.admin?
