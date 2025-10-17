@@ -7,6 +7,7 @@ export default function withChatChannel(extendedClass) {
     @service router;
 
     async model(params) {
+      await this.chat.loadChannels();
       return this.chatChannelsManager.find(params.channelId);
     }
 
