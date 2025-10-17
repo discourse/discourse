@@ -82,9 +82,9 @@ module.exports = function (defaults) {
       "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
   );
 
-  const discoursePluginsTree = app.project
-    .findAddonByName("discourse-plugins")
-    .generatePluginsTree(app.tests);
+  // const discoursePluginsTree = app.project
+  //   .findAddonByName("discourse-plugins")
+  //   .generatePluginsTree(app.tests);
 
   const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
 
@@ -93,10 +93,11 @@ module.exports = function (defaults) {
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
   const applyTerser = (tree) => terserPlugin.postprocessTree("all", tree);
 
-  const pluginTrees = applyTerser(discoursePluginsTree);
+  // const pluginTrees = applyTerser(discoursePluginsTree);
 
   if (process.env.SKIP_CORE_BUILD) {
-    return pluginTrees;
+    return;
+    // return pluginTrees;
   }
 
   let extraPublicTrees = [
@@ -109,7 +110,7 @@ module.exports = function (defaults) {
       })
     ),
     applyTerser(generateScriptsTree(app)),
-    pluginTrees,
+    // pluginTrees,
   ];
 
   const assetCachebuster = process.env["DISCOURSE_ASSET_URL_SALT"] || "";

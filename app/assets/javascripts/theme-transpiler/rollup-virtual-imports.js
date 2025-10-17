@@ -4,11 +4,13 @@ const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
 export default {
   "virtual:main": (tree, { themeId }) => {
-    let output = cleanMultiline(`
-      import "virtual:init-settings";
+    let output = `const compatModules = {};`;
 
-      const themeCompatModules = {};
-    `);
+    if (themeId) {
+      output += cleanMultiline(`
+        import "virtual:init-settings";
+      `);
+    }
 
     let i = 1;
     for (const moduleFilename of Object.keys(tree)) {
@@ -46,12 +48,12 @@ export default {
         ? moduleFilename
         : filenameWithoutExtension;
       output += `import * as Mod${i} from "./${importPath}";\n`;
-      output += `themeCompatModules["${compatModuleName}"] = Mod${i};\n\n`;
+      output += `compatModules["${compatModuleName}"] = Mod${i};\n\n`;
 
       i += 1;
     }
 
-    output += "export default themeCompatModules;\n";
+    output += "export default compatModules;\n";
 
     return output;
   },
