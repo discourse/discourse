@@ -429,6 +429,14 @@ acceptance(
           () => {},
           (uploadUrl) => uploadUrl && uploadUrl.endsWith(".svg")
         );
+
+        // Button without condition that should show for all images
+        api.addComposerImageWrapperButton(
+          "Always Show",
+          "always-show-button",
+          "check",
+          () => {}
+        );
       });
     });
 
@@ -468,16 +476,6 @@ acceptance(
     test("button without includeCondition shows for all images", async function (assert) {
       await visit("/");
       await click("#create-topic");
-
-      withPluginApi((api) => {
-        // Add button without condition
-        api.addComposerImageWrapperButton(
-          "Always Show",
-          "always-show-button",
-          "check",
-          () => {}
-        );
-      });
 
       // Test with JPEG
       await fillIn(
