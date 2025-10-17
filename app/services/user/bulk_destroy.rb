@@ -4,12 +4,10 @@ class User::BulkDestroy
   include Service::Base
 
   params do
-    attribute :user_ids, :array
+    attribute :user_ids, :array, compact_blank: true
     attribute :block_ip_and_email, :boolean, default: false
 
     validates :user_ids, length: { minimum: 1, maximum: 100 }
-
-    after_validation { user_ids&.compact_blank! }
   end
 
   model :users

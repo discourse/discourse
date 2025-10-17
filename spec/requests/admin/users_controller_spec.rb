@@ -1523,8 +1523,8 @@ RSpec.describe Admin::UsersController do
         expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
       end
 
-      it "responds with 404 when sending an empty user_ids list" do
-        delete "/admin/users/destroy-bulk.json", params: { user_ids: [] }
+      it "responds with 404 when sending non-existent user ids" do
+        delete "/admin/users/destroy-bulk.json", params: { user_ids: [0] }
 
         expect(response.status).to eq(404)
       end
