@@ -4,6 +4,8 @@ import { schema as markdownSchema } from "prosemirror-markdown";
 import { TextSelection } from "prosemirror-state";
 import { ensureHighlightJs } from "discourse/lib/highlight-syntax";
 
+const PRE_STYLE_VALUES = ["pre", "pre-wrap", "pre-line"];
+
 // cached hljs instance with custom plugins/languages
 let hljs;
 
@@ -158,6 +160,25 @@ const extension = {
     code_block: {
       createGapCursor: true,
       ...markdownSchema.nodes.code_block.spec,
+      parseDOM: [
+        {
+          tag: "pre",
+          preserveWhitespace: "full",
+          getAttrs: (node) => ({
+            params: node.getAttribute("data-params") || "",
+          }),
+        },
+        {
+          tag: "*",
+          preserveWhitespace: "full",
+          consuming: false,
+          getAttrs(node) {
+            return PRE_STYLE_VALUES.includes(node.style.whiteSpace)
+              ? null
+              : false;
+          },
+        },
+      ],
     },
   },
   nodeViews: { code_block: CodeBlockWithLangSelectorNodeView },
