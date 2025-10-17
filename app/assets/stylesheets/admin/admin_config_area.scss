@@ -4,12 +4,6 @@
   border-radius: var(--d-border-radius);
   background-color: var(--secondary);
 
-  img {
-    max-width: 100%;
-    height: auto;
-    margin-bottom: 1em;
-  }
-
   &__label-optional {
     color: var(--primary-medium);
     font-size: var(--font-down-1);

@@ -20,4 +20,11 @@ module UpcomingChanges
   def self.change_status_value(change_setting_name)
     UpcomingChanges.statuses[change_metadata(change_setting_name)[:status]]
   end
+
+  def self.history_for(change_setting_name)
+    UserHistory.where(
+      action: UserHistory.actions[:upcoming_change_toggled],
+      subject: change_setting_name,
+    ).order(created_at: :desc)
+  end
 end

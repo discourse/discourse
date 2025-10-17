@@ -29,8 +29,8 @@ class ProblemCheck::UpcomingChangeStableOptedOut < ProblemCheck
         next if UpcomingChanges.not_yet_stable?(upcoming_change)
 
         # At this point, we have an upcoming change that is stable or permanent,
-        # and the site is opted out of it. This is a problem we want to report
-        # to the admin.
+        # and the site is opted out of it. Admins need to know that the change
+        # will either become permanent or be removed soon.
         problem(upcoming_change)
       end
       .compact

@@ -360,11 +360,6 @@ module SiteSettingExtension
           true
         end
       end
-      .reject do |setting_name, _|
-        # Do not show themeable site settings all_settings list or in the UI, they
-        # are managed separately via the ThemeSiteSetting model.
-        themeable[setting_name]
-      end
       .map do |s, v|
         type_hash = type_supervisor.type_hash(s)
         default = defaults.get(s, default_locale).to_s
