@@ -43,9 +43,27 @@ class DiscourseJsProcessor
       ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
 
       # General shims
-      ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
-      ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
-      ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+      ctx.attach(
+        "rails.logger.info",
+        proc do |err|
+          Rails.logger.info(err.to_s)
+          nil
+        end,
+      )
+      ctx.attach(
+        "rails.logger.warn",
+        proc do |err|
+          Rails.logger.warn(err.to_s)
+          nil
+        end,
+      )
+      ctx.attach(
+        "rails.logger.error",
+        proc do |err|
+          Rails.logger.error(err.to_s)
+          nil
+        end,
+      )
 
       source =
         if Rails.env.production?
