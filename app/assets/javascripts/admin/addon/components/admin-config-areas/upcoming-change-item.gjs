@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { modifier } from "ember-modifier";
 import { eq, notEq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -14,16 +15,20 @@ import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import lightbox from "discourse/lib/lightbox";
 import Group from "discourse/models/group";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
   @service toasts;
+  @service siteSettings;
 
   @tracked toggleSettingDisabled = false;
   @tracked bufferedGroups = this.args.change.groups;
 
   registeredMenu = null;
+
+  applyLightbox = modifier((element) => lightbox(element, this.siteSettings));
 
   impactRoleIcon(impactRole) {
     switch (impactRole) {
@@ -144,16 +149,30 @@ export default class UpcomingChangeItem extends Component {
           <div class="d-table__overview-about upcoming-change__description">
             {{@change.description}}
 
-            {{#if @change.upcoming_change.learn_more_url}}
-              <span class="upcoming-change__learn-more">
-                {{htmlSafe
-                  (i18n
-                    "learn_more_with_link"
-                    url=@change.upcoming_change.learn_more_url
-                  )
-                }}
-              </span>
-            {{/if}}
+            <div
+              class="upcoming-change__description-details"
+              {{this.applyLightbox}}
+            >
+              {{#if @change.upcoming_change.image_url}}
+                <a
+                  href={{@change.upcoming_change.image_url}}
+                  class="lightbox upcoming-change__image-preview"
+                  rel="nofollow ugc noopener"
+                >{{icon "far-image"}}
+                  {{i18n "admin.upcoming_changes.preview"}}</a>
+              {{/if}}
+
+              {{#if @change.upcoming_change.learn_more_url}}
+                <span class="upcoming-change__learn-more">
+                  {{htmlSafe
+                    (i18n
+                      "learn_more_with_link"
+                      url=@change.upcoming_change.learn_more_url
+                    )
+                  }}
+                </span>
+              {{/if}}
+            </div>
           </div>
         {{/if}}
 
