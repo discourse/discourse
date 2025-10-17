@@ -101,6 +101,12 @@ module PageObjects
           messages.all? { |message| has_message?(id: message.id, deleted: 1) }
         end
 
+        def has_highlighted_message?(message)
+          locator(context).locator(
+            ".chat-message-container.-highlighted[data-id=\"#{message.id}\"]",
+          )
+        end
+
         def has_deleted_message?(message, count: 1)
           has_message?(id: message.id, deleted: count)
         end

@@ -38,6 +38,7 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 import ChatComposerChannel from "./chat/composer/channel";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
+import ChatChannelFilter from "./chat-channel-filter";
 import ChatChannelPreviewCard from "./chat-channel-preview-card";
 import ChatMentionWarnings from "./chat-mention-warnings";
 import Message from "./chat-message";
@@ -84,7 +85,7 @@ export default class ChatChannel extends Component {
   }
 
   get currentUserMembership() {
-    return this.args.channel.currentUserMembership;
+    return this.args.channel?.currentUserMembership;
   }
 
   get hasSavedScrollPosition() {
@@ -103,6 +104,11 @@ export default class ChatChannel extends Component {
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
     this.updateLastReadMessage();
+
+    // Cancel any pending search request and debounced calls
+    cancel(this, this._performSearch);
+    this.searchRequest?.abort?.();
+    this.searchRequest = null;
   }
 
   @action
@@ -142,7 +148,7 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  loadMessages() {
+  loadMessages(targetMessageId = this.args.targetMessageId) {
     if (!this.args.channel?.id) {
       return;
     }
@@ -153,8 +159,8 @@ export default class ChatChannel extends Component {
       { onNewMessage: this.onNewMessage }
     );
 
-    if (this.args.targetMessageId) {
-      this.debounceHighlightOrFetchMessage(this.args.targetMessageId);
+    if (targetMessageId) {
+      this.debounceHighlightOrFetchMessage(targetMessageId);
     } else if (this.chatChannelScrollPositions.get(this.args.channel.id)) {
       this.debounceHighlightOrFetchMessage(
         this.chatChannelScrollPositions.get(this.args.channel.id)
@@ -694,9 +700,16 @@ export default class ChatChannel extends Component {
       {{didUpdate this.loadMessages @targetMessageId}}
       data-id={{@channel.id}}
     >
+
       <ChatChannelStatus @channel={{@channel}} />
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
+      <ChatChannelFilter
+        @isFiltering={{@isFiltering}}
+        @onToggleFilter={{@onToggleFilter}}
+        @channel={{@channel}}
+        @onLoadTargetMessageId={{this.loadMessages}}
+      />
 
       <ChatMessagesScroller
         @onRegisterScroller={{this.registerScroller}}

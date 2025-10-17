@@ -1,0 +1,25 @@
+.chat-channel__filter-bar {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+  border-bottom: 1px solid var(--content-border-color);
+  background: var(--secondary);
+  padding: 0.25rem 0.67em;
+  box-sizing: border-box;
+
+  .filter-input-container {
+    margin-right: auto;
+    border-color: var(--primary-low);
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .chat-channel__filter-position {
+    white-space: nowrap;
+    min-width: 40px;
+    text-align: center;
+    font-size: var(--font-down-1);
+  }
+}
