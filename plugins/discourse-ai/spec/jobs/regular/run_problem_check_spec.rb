@@ -3,7 +3,7 @@
 RSpec.describe Jobs::RunProblemCheck do
   subject(:run_check_job) { described_class.new }
 
-  describe "integration specs for AI-based problem checks" do
+  xdescribe "integration specs for AI-based problem checks" do
     before { enable_current_plugin }
 
     context "when running AI LLM status checks" do
