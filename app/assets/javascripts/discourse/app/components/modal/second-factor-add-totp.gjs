@@ -14,6 +14,8 @@ import {
   MAX_SECOND_FACTOR_NAME_LENGTH,
   SECOND_FACTOR_METHODS,
 } from "discourse/models/user";
+import lazyHash from "discourse/helpers/lazy-hash";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorAddTotp extends Component {
@@ -98,74 +100,86 @@ export default class SecondFactorAddTotp extends Component {
             </div>
           {{/if}}
 
-          <div class="control-group">
-            <div class="controls">
-              {{htmlSafe (i18n "user.second_factor.enable_description")}}
-            </div>
-          </div>
+          <PluginOutlet
+            @name="user-second-factor-totp-modal-wrapper"
+            @outletArgs={{lazyHash
+              secondFactorImage=this.secondFactorImage
+              secondFactorKey=this.secondFactorKey
+            }}>
 
-          <div class="control-group">
-            <div class="controls">
-              <div class="qr-code">
-                <img src={{htmlSafe this.secondFactorImage}} />
+            <PluginOutlet
+              @name="user-second-factor-totp-modal-above-content"
+              @connectorTagName="div" />
+
+            <div id="totp-description" class="control-group">
+              <div class="controls">
+                {{htmlSafe (i18n "user.second_factor.enable_description")}}
               </div>
-              <p>
-                {{#if this.showSecondFactorKey}}
-                  <div class="second-factor-key">
-                    {{this.secondFactorKey}}
-                  </div>
-                {{else}}
-                  <a
-                    href
-                    class="show-second-factor-key"
-                    {{on "click" this.enableShowSecondFactorKey}}
-                  >{{i18n "user.second_factor.show_key_description"}}</a>
-                {{/if}}
-              </p>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <label class="control-label input-prepend">{{i18n
-                "user.second_factor.name"
-              }}</label>
-            <div class="controls">
-              <input
-                {{on "input" (withEventValue (fn (mut this.secondFactorName)))}}
-                value={{this.secondFactorName}}
-                type="text"
-                placeholder={{i18n "user.second_factor.totp.default_name"}}
-                maxlength={{this.maxSecondFactorNameLength}}
-                id="second-factor-name"
-              />
             </div>
 
-            <label class="control-label input-prepend">
-              {{i18n "user.second_factor.label"}}
-            </label>
-            <div class="controls">
-              <SecondFactorInput
-                {{on
-                  "input"
-                  (withEventValue (fn (mut this.secondFactorToken)))
-                }}
-                @secondFactorMethod={{this.totpType}}
-                value={{this.secondFactorToken}}
-                placeholder="123456"
-                id="second-factor-token"
-              />
+            <div id="totp-qr" class="control-group">
+              <div class="controls">
+                <div class="qr-code">
+                  <img src={{htmlSafe this.secondFactorImage}} />
+                </div>
+                <p class="key-code">
+                  {{#if this.showSecondFactorKey}}
+                    <div class="second-factor-key">
+                      {{this.secondFactorKey}}
+                    </div>
+                  {{else}}
+                    <a
+                      href
+                      class="show-second-factor-key"
+                      {{on "click" this.enableShowSecondFactorKey}}
+                    >{{i18n "user.second_factor.show_key_description"}}</a>
+                  {{/if}}
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div class="control-group">
-            <div class="controls">
-              <DButton
-                class="btn-primary add-totp"
-                @action={{this.enableSecondFactor}}
-                @label="enable"
-              />
+            <div id="totp-inputs" class="control-group">
+              <label class="control-label input-prepend">{{i18n
+                  "user.second_factor.name"
+                }}</label>
+              <div class="controls totp-app-name">
+                <input
+                  {{on "input" (withEventValue (fn (mut this.secondFactorName)))}}
+                  value={{this.secondFactorName}}
+                  type="text"
+                  placeholder={{i18n "user.second_factor.totp.default_name"}}
+                  maxlength={{this.maxSecondFactorNameLength}}
+                  id="second-factor-name"
+                />
+              </div>
+
+              <label class="control-label input-prepend">
+                {{i18n "user.second_factor.label"}}
+              </label>
+              <div class="controls totp-app-token">
+                <SecondFactorInput
+                  {{on
+                    "input"
+                    (withEventValue (fn (mut this.secondFactorToken)))
+                  }}
+                  @secondFactorMethod={{this.totpType}}
+                  value={{this.secondFactorToken}}
+                  placeholder="123456"
+                  id="second-factor-token"
+                />
+              </div>
             </div>
-          </div>
+
+            <div id="totp-actions" class="control-group">
+              <div class="controls totp-enable">
+                <DButton
+                  class="btn-primary add-totp"
+                  @action={{this.enableSecondFactor}}
+                  @label="enable"
+                />
+              </div>
+            </div>
+          </PluginOutlet>
         </ConditionalLoadingSpinner>
       </:body>
     </DModal>
