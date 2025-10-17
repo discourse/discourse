@@ -95,4 +95,16 @@ RSpec.describe "Setting changes" do
       expect(first_post.reload.raw).to include("New Name")
     end
   end
+
+  describe "#image_quality" do
+    it "updates the related, hidden quality settings" do
+      expect { SiteSetting.image_quality = "low" }.to change {
+        SiteSetting.recompress_original_jpg_quality
+      }.to(50).and change { SiteSetting.composer_media_optimization_image_encode_quality }.to(
+              50,
+            ).and change { SiteSetting.png_to_jpg_quality }.to(50).and change {
+                          SiteSetting.image_preview_jpg_quality
+                        }.to(50)
+    end
+  end
 end

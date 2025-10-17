@@ -87,4 +87,17 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   end
 
   Theme.expire_site_cache! if name == :default_theme_id
+
+  if name === :image_quality
+    quality_settings = { maximum: 99, high: 90, medium: 70, low: 50 }
+
+    value = quality_settings[new_value.to_sym]
+
+    break if value.blank?
+
+    SiteSetting.recompress_original_jpg_quality = value
+    SiteSetting.composer_media_optimization_image_encode_quality = value
+    SiteSetting.png_to_jpg_quality = value
+    SiteSetting.image_preview_jpg_quality = value
+  end
 end

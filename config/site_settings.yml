@@ -2294,6 +2294,14 @@ files:
     client: true
     type: uploaded_image_list
   allow_all_attachments_for_group_messages: false
+  image_quality:
+    type: enum
+    default: high
+    choices:
+      - maximum
+      - high
+      - medium
+      - low
   png_to_jpg_quality:
     default: 95
     min: 1
