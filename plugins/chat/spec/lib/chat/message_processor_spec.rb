@@ -47,8 +47,8 @@ RSpec.describe Chat::MessageProcessor do
       expect(img["class"]).to include("lightbox")
       expect(img["data-large-src"]).to eq(upload.url)
       expect(img["data-download-href"]).to eq(upload.short_path)
-      expect(img["data-target-width"]).to eq(upload.width)
-      expect(img["data-target-height"]).to eq(upload.height)
+      expect(img["data-target-width"]).to eq(upload.width.to_s)
+      expect(img["data-target-height"]).to eq(upload.height.to_s)
     end
   end
 end
