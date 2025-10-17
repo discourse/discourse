@@ -1,20 +1,25 @@
+# frozen_string_literal: true
+
 module Plugin
   class JsManager
-    def compile!
-      # concurrency = 2
+    def self.digested_logical_path_for(script)
+      return if !script.start_with?("plugins/")
+      Rails
+        .application
+        .assets
+        .load_path
+        .assets
+        .find do |a|
+          a.logical_path.to_s.start_with?("#{script}-") && a.logical_path.extname == ".js"
+        end
+        &.logical_path
+    end
 
-      # MiniRacer::Platform.set_flags!(:single_threaded)
-      # js_processors = concurrency.times.map { DiscourseJsProcessor::Transpiler.create_new_context }
+    def compile!
       puts "Running initial compilation of plugins..."
       start = Time.now
 
-      # js_processors = concurrency.times.map { DiscourseJsProcessor::Transpiler.create_new_context }
-      # processor = nil
-
-      Discourse.plugins.each do |plugin|
-        # processor = js_processors[Parallel.worker_number]
-        compile_js_bundle(plugin)
-      end
+      Parallel.each(Discourse.plugins, in_threads: 8) { |plugin| compile_js_bundle(plugin) }
 
       puts "Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
     end
@@ -31,36 +36,58 @@ module Plugin
       ]
 
       bundles.each do |js_path, output_name|
-        output_js_file = "#{output_dir}/#{output_name}.js"
-        output_map_file = "#{output_dir}/#{output_name}.js.map"
+        output_path = "#{output_dir}/#{output_name}-"
+        # output_map_file = "#{output_dir}/#{output_name}.js.map"
 
         js_base = "#{plugin.directory}/#{js_path}"
 
         files = Dir.glob("**/*", base: js_base)
 
         if files.empty?
-          # puts "No JS files found for plugin '#{plugin.directory_name}', skipping."
-          File.delete(output_js_file) if File.exist?(output_js_file)
-          File.delete(output_map_file) if File.exist?(output_map_file)
+          Dir.glob("#{output_path}*").each { |f| File.delete(f) }
           next
         end
 
         tree = {}
-        files.each do |file|
+        files.sort.each do |file|
           full_path = File.join(js_base, file)
           tree[file] = File.read(full_path) if File.file?(full_path)
         end
 
-        compiler = PluginJavascriptCompiler.new(plugin.directory_name, minify: false)
-        compiler.append_tree(tree)
-        compiler.compile!
+        hex_digest =
+          Digest::SHA1.hexdigest(
+            [
+              *tree.keys,
+              *tree.values,
+              Theme::BASE_COMPILER_VERSION,
+              #DiscourseJsProcessor::Transpiler.new.ember_version,
+            ].join,
+          )
+        base36_digest = hex_digest.to_i(16).to_s(36).first(8)
 
-        FileUtils.mkdir_p(output_dir)
-        File.write(
-          output_js_file,
-          compiler.content + "\n//# sourceMappingURL=#{output_name}.js.map\n",
-        )
-        File.write(output_map_file, compiler.source_map)
+        output_js_file = "#{output_path}#{base36_digest}.digested.js"
+        output_map_file = "#{output_path}#{base36_digest}.digested.js.map"
+
+        if !(File.exist?(output_js_file) && File.exist?(output_map_file))
+          puts "COMPILING"
+          compiler = PluginJavascriptCompiler.new(plugin.directory_name, minify: false)
+          compiler.append_tree(tree)
+          compiler.compile!
+
+          FileUtils.mkdir_p(output_dir)
+          File.write(
+            output_js_file,
+            compiler.content + "\n//# sourceMappingURL=#{output_name}.js.map\n",
+          )
+          File.write(output_map_file, compiler.source_map)
+        end
+
+        # Delete any old versions
+        Dir
+          .glob("#{output_path}*")
+          .reject { |f| f == output_js_file || f == output_map_file }
+          .each { |f| File.delete(f) }
+        next
       end
       puts "done (#{(Time.now - start).round(2)}s)"
     end
@@ -90,7 +117,7 @@ module Plugin
       begin
         listener.start
         compile!
-        sleep
+        yield
       ensure
         listener.stop
       end
