@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Importer::UniqueNameFinder do
+  subject(:finder) { described_class.new(shared_data) }
+
   fab!(:admin)
 
   let(:usernames) { Set.new }
@@ -11,7 +13,6 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       allow(sd).to receive(:load).with(:group_names).and_return(group_names)
     end
   end
-  let(:finder) { described_class.new(shared_data) }
 
   before do
     SiteSetting.reserved_usernames = "admin|moderator|system*|test_*"
@@ -35,9 +36,20 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       expect(username.length).to be <= 60
     end
 
-    it "uses fallback username for blank input" do
+    it "uses fallback username with suffix for blank input" do
       username = finder.find_available_username("")
-      expect(username).to eq(I18n.t("fallback_username"))
+      fallback = I18n.t("fallback_username")
+      expect(username).to eq("#{fallback}_1")
+    end
+
+    it "generates sequential suffixes for duplicates" do
+      username1 = finder.find_available_username("john")
+      username2 = finder.find_available_username("john")
+      username3 = finder.find_available_username("john")
+
+      expect(username1).to eq("john")
+      expect(username2).to eq("john_1")
+      expect(username3).to eq("john_2")
     end
 
     it "marks username as used" do
@@ -49,22 +61,43 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       finder.find_available_username("JohnDoe")
       username = finder.find_available_username("johndoe")
       expect(username).not_to eq("johndoe")
+      expect(username).to eq("johndoe_1")
+    end
+
+    it "truncates name to fit suffix when needed" do
+      long_name = "a" * 60
+      finder.find_available_username(long_name)
+      username = finder.find_available_username(long_name)
+
+      expect(username.length).to eq(60)
+      expect(username).to eq("#{"a" * 58}_1")
+    end
+
+    it "uses fallback when truncation results in empty string" do
+      usernames.add("a" * 60)
+      username = finder.find_available_username("a")
+
+      fallback = I18n.t("fallback_username")
+      expect(username).to eq("#{fallback}_1")
     end
 
     context "with reserved usernames" do
       it "avoids exact reserved usernames" do
         username = finder.find_available_username("admin")
         expect(username).not_to eq("admin")
+        expect(username).to eq("admin_1")
       end
 
       it "avoids wildcard reserved usernames" do
         username = finder.find_available_username("system_user")
         expect(username).not_to eq("system_user")
+        expect(username).to eq("system_user_1")
       end
 
       it "avoids here mention" do
         username = finder.find_available_username("here")
         expect(username).not_to eq("here")
+        expect(username).to eq("here_1")
       end
 
       it "allows reserved usernames when explicitly permitted" do
@@ -78,6 +111,20 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       finder = described_class.new(shared_data)
       username = finder.find_available_username("café")
       expect(username).not_to eq("café")
+      expect(username).to eq("café_1")
+    end
+
+    it "handles grapheme clusters correctly" do
+      name_with_emoji = "user👨‍👩‍👧‍👦test"
+      username = finder.find_available_username(name_with_emoji)
+      expect(username).to be_valid_encoding
+    end
+
+    it "truncates at grapheme boundaries for multi-byte characters" do
+      long_name = "user👨‍👩‍👧‍👦" * 20
+      username = finder.find_available_username(long_name)
+      expect(username).to be_valid_encoding
+      expect(username.length).to be <= 60
     end
   end
 
@@ -98,21 +145,64 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       expect(group_name.length).to be <= 60
     end
 
-    it "uses fallback group name for blank input" do
+    it "uses fallback group name with suffix for blank input" do
       group_name = finder.find_available_group_name("")
-      expect(group_name).to eq("group")
+      expect(group_name).to eq("group_1")
+    end
+
+    it "generates sequential suffixes for duplicates" do
+      group_name1 = finder.find_available_group_name("developers")
+      group_name2 = finder.find_available_group_name("developers")
+      group_name3 = finder.find_available_group_name("developers")
+
+      expect(group_name1).to eq("developers")
+      expect(group_name2).to eq("developers_1")
+      expect(group_name3).to eq("developers_2")
     end
 
     it "marks group name as used" do
       finder.find_available_group_name("developers")
       group_name = finder.find_available_group_name("developers")
       expect(group_name).not_to eq("developers")
+      expect(group_name).to eq("developers_1")
     end
 
     it "prevents conflicts between usernames and group names" do
       finder.find_available_username("team")
       group_name = finder.find_available_group_name("team")
       expect(group_name).not_to eq("team")
+      expect(group_name).to eq("team_1")
+    end
+
+    it "truncates name to fit suffix when needed" do
+      long_name = "a" * 60
+      finder.find_available_group_name(long_name)
+      group_name = finder.find_available_group_name(long_name)
+
+      expect(group_name.length).to eq(60)
+      expect(group_name).to eq("#{"a" * 58}_1")
+    end
+  end
+
+  describe "suffix caching" do
+    it "maintains suffix counter per base name" do
+      finder.find_available_username("john")
+      finder.find_available_username("jane")
+
+      expect(finder.find_available_username("john")).to eq("john_1")
+      expect(finder.find_available_username("jane")).to eq("jane_1")
+    end
+
+    it "handles suffix cache overflow correctly" do
+      stub_const("Migrations::Importer::UniqueNameFinder::SUFFIX_CACHE_SIZE", 2)
+      finder = described_class.new(shared_data)
+
+      finder.find_available_username("user1")
+      finder.find_available_username("user2")
+      finder.find_available_username("user3")
+
+      # Cache should still work, oldest entry evicted
+      expect(finder.find_available_username("user2")).to eq("user2_1")
     end
   end
 
@@ -133,6 +223,17 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       finder2 = described_class.new(shared_data)
       group_name = finder2.find_available_group_name("admins")
       expect(group_name).not_to eq("admins")
+    end
+
+    it "does not share suffix cache across instances" do
+      finder1 = described_class.new(shared_data)
+      finder1.find_available_username("john")
+      finder1.find_available_username("john")
+
+      finder2 = described_class.new(shared_data)
+      # New instance starts suffix counter fresh, but still avoids taken names
+      username = finder2.find_available_username("john")
+      expect(username).to eq("john_1")
     end
   end
 
@@ -161,35 +262,57 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
     it "avoids usernames already in shared_data" do
       username = finder.find_available_username("existing_user")
       expect(username).not_to eq("existing_user")
+      expect(username).to eq("existing_user_1")
     end
 
     it "avoids group names already in shared_data" do
       group_name = finder.find_available_group_name("existing_group")
       expect(group_name).not_to eq("existing_group")
+      expect(group_name).to eq("existing_group_1")
     end
 
     it "treats usernames as case-insensitive in shared_data" do
       usernames.add("testuser")
       username = finder.find_available_username("TestUser")
       expect(username).not_to eq("TestUser")
+      expect(username).to eq("TestUser_1")
     end
 
     it "treats group names as case-insensitive in shared_data" do
       group_names.add("testgroup")
       group_name = finder.find_available_group_name("TestGroup")
       expect(group_name).not_to eq("TestGroup")
+      expect(group_name).to eq("TestGroup_1")
     end
 
     it "avoids conflicts between existing usernames and new group names" do
       usernames.add("team")
       group_name = finder.find_available_group_name("team")
       expect(group_name).not_to eq("team")
+      expect(group_name).to eq("team_1")
     end
 
     it "avoids conflicts between existing group names and new usernames" do
       group_names.add("admin")
       username = finder.find_available_username("admin", allow_reserved_username: true)
       expect(username).not_to eq("admin")
+      expect(username).to eq("admin_1")
+    end
+  end
+
+  describe "edge cases" do
+    it "returns nil after MAX_ATTEMPTS" do
+      stub_const("Migrations::Importer::UniqueNameFinder::MAX_ATTEMPTS", 3)
+      finder = described_class.new(shared_data)
+
+      # Fill up all possible names
+      usernames.add("test")
+      usernames.add("test_1")
+      usernames.add("test_2")
+      usernames.add("test_3")
+
+      username = finder.find_available_username("test")
+      expect(username).to be_nil
     end
   end
 end
