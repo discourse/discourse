@@ -97,7 +97,7 @@ RSpec.describe ReviewablePost do
         actions = reviewable_actions(guardian)
 
         expect(actions.has?(:no_action_post)).to eq(true)
-        expect(actions.has?(:hide_post)).to eq(true)
+        expect(actions.has?(:hide_post)).to eq(false)
         expect(actions.has?(:edit_post)).to eq(true)
       end
 
@@ -146,8 +146,8 @@ RSpec.describe ReviewablePost do
       it "includes delete user actions for admins" do
         actions = reviewable_actions(admin_guardian)
 
-        expect(actions.has?(:delete_user)).to eq(true)
-        expect(actions.has?(:delete_and_block_user)).to eq(true)
+        expect(actions.has?(:new_delete_user)).to eq(true)
+        expect(actions.has?(:new_delete_and_block_user)).to eq(true)
       end
 
       it "includes a minimal user actions bundle when no target_created_by" do
@@ -157,8 +157,8 @@ RSpec.describe ReviewablePost do
         expect(actions.has?(:no_action_user)).to eq(true)
         expect(actions.has?(:silence_user)).to eq(false)
         expect(actions.has?(:suspend_user)).to eq(false)
-        expect(actions.has?(:delete_user)).to eq(false)
-        expect(actions.has?(:delete_and_block_user)).to eq(false)
+        expect(actions.has?(:new_delete_user)).to eq(false)
+        expect(actions.has?(:new_delete_and_block_user)).to eq(false)
       end
 
       def reviewable_actions(guardian)
@@ -250,15 +250,6 @@ RSpec.describe ReviewablePost do
         end
       end
 
-      describe "#perform_hide_post" do
-        it "hides the post and transitions to rejected" do
-          result = reviewable.perform admin, :hide_post
-
-          expect(result.transition_to).to eq :rejected
-          expect(post.reload.hidden).to eq(true)
-        end
-      end
-
       describe "#perform_unhide_post" do
         it "unhides the post and transitions to approved" do
           post.update!(hidden: true)
@@ -266,7 +257,7 @@ RSpec.describe ReviewablePost do
           result = reviewable.reload.perform admin, :unhide_post
 
           expect(result.transition_to).to eq :approved
-          expect(post.reload.hidden).to eq(false)
+          expect(post.reload).not_to be_hidden
         end
       end
 
