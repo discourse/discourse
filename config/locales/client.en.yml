@@ -7571,6 +7571,7 @@ en:
             delete_associated_accounts: "delete associated accounts"
             change_theme_site_setting: "change theme site setting"
             stop_impersonating: "stop impersonating"
+            upcoming_change_toggled: "upcoming change toggled"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

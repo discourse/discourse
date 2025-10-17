@@ -204,7 +204,7 @@ export default RouteTemplate(
                       {{/if}}
                     </div>
                   </td>
-                  <td class="col value context">{{item.context}}</td>
+                  <td class="col value context">{{htmlSafe item.context}}</td>
                 </tr>
               {{/each}}
             </tbody>
