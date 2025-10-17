@@ -13,7 +13,6 @@ import categoryLink, {
   categoryBadgeHTML,
 } from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("section")
 @classNameBindings(
@@ -22,14 +21,12 @@ import discourseComputed from "discourse/lib/decorators";
   "hasSubcategories:with-subcategories"
 )
 export default class CategoriesBoxes extends Component {
-  @discourseComputed("categories.[].uploaded_logo.url")
-  anyLogos() {
-    return this.categories.any((c) => !isEmpty(c.get("uploaded_logo.url")));
+  get anyLogos() {
+    return this.categories.some((c) => !isEmpty(c.get("uploaded_logo.url")));
   }
 
-  @discourseComputed("categories.[].subcategories")
-  hasSubcategories() {
-    return this.categories.any((c) => !isEmpty(c.get("subcategories")));
+  get hasSubcategories() {
+    return this.categories.some((c) => !isEmpty(c.get("subcategories")));
   }
 
   categoryName(category) {
