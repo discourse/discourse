@@ -344,6 +344,16 @@ en:
           description_tooltip:
             one: 'There is %{count} post ready to translate.'
             other: 'There are %{count} posts ready to translate.'
+          eta_label: "Estimated completion time"
+          eta_minutes:
+            one: "%{count} minute"
+            other: "%{count} minutes"
+          eta_hours:
+            one: "%{count} hour"
+            other: "%{count} hours"
+          eta_days:
+            one: "%{count} day"
+            other: "%{count} days"
         progress_chart:
           title: "Translation Progress"
           data_label: "%{percentage}%"

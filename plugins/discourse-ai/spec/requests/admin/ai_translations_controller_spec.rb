@@ -21,6 +21,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
       it "returns translation progress data" do
         SiteSetting.ai_translation_backfill_max_age_days = 30
         SiteSetting.ai_translation_backfill_limit_to_public_content = false
+        SiteSetting.ai_translation_backfill_hourly_rate = 100
 
         english_posts = Fabricate.times(14, :post, locale: "en")
         french_post = Fabricate(:post, locale: "fr")
@@ -46,6 +47,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(json["enabled"]).to be_in([true, false])
         expect(json["total"]).to eq(19)
         expect(json["posts_with_detected_locale"]).to eq(15)
+        expect(json["hourly_rate"]).to eq(100)
 
         # Check structure of first locale data
         locale_data = json["translation_progress"].first
