@@ -2,16 +2,16 @@
 
 module Migrations::Importer
   class UniqueNameFinder
-    MAX_USERNAME_LENGTH = 60
-    MAX_GROUP_NAME_LENGTH = 60
+    MAX_LENGTH = ::UsernameValidator::MAX_CHARS
     MAX_ATTEMPTS = 500
+    SUFFIX_CACHE_SIZE = 1000
 
-    private_constant :MAX_USERNAME_LENGTH, :MAX_GROUP_NAME_LENGTH, :MAX_ATTEMPTS
+    private_constant :MAX_LENGTH, :MAX_ATTEMPTS, :SUFFIX_CACHE_SIZE
 
     def initialize(shared_data)
       @used_usernames_lower = shared_data.load(:usernames)
       @used_group_names_lower = shared_data.load(:group_names)
-      @last_suffixes = {}
+      @last_suffixes = ::LruRedux::Cache.new(SUFFIX_CACHE_SIZE)
 
       @fallback_username =
         UserNameSuggester.sanitize_username(I18n.t("fallback_username")).presence ||
@@ -26,7 +26,7 @@ module Migrations::Importer
         find_available_name(
           username,
           fallback_name: @fallback_username,
-          max_name_length: MAX_USERNAME_LENGTH,
+          max_name_length: MAX_LENGTH,
           allow_reserved_username:,
         )
 
@@ -39,7 +39,7 @@ module Migrations::Importer
         find_available_name(
           group_name,
           fallback_name: @fallback_group_name,
-          max_name_length: MAX_GROUP_NAME_LENGTH,
+          max_name_length: MAX_LENGTH,
         )
 
       @used_group_names_lower.add(group_name_lower)
@@ -48,9 +48,7 @@ module Migrations::Importer
 
     private
 
-    def name_available?(name, allow_reserved_username: false)
-      name_lower = name.downcase
-
+    def name_available?(name_lower, allow_reserved_username: false)
       return false if @used_usernames_lower.include?(name_lower)
       return false if @used_group_names_lower.include?(name_lower)
       return false if !allow_reserved_username && reserved_username?(name_lower)
@@ -65,57 +63,60 @@ module Migrations::Importer
 
     def find_available_name(name, fallback_name:, max_name_length:, allow_reserved_username: false)
       name = UserNameSuggester.sanitize_username(name)
-      name = fallback_name.dup if name.blank?
-      name = UserNameSuggester.truncate(name, max_name_length)
 
-      return name, name.downcase if name_available?(name, allow_reserved_username:)
-
-      original_base_name = name
-      current_base_name = original_base_name
-      current_base_clusters = current_base_name.grapheme_clusters
-      current_base_length = current_base_clusters.size
-
-      while !name_available?(name, allow_reserved_username:)
-        # if the name ends with a number, then use an underscore before appending the suffix
-        suffix_separator = name.match?(/\d$/) ? "_" : ""
-        suffix = next_suffix(name).to_s
-
-        required_length = current_base_length + suffix_separator.length + suffix.length
-
-        if required_length > max_name_length
-          # Truncate base further and reset suffix tracking
-          chars_to_remove = required_length - max_name_length
-          current_base_length -= chars_to_remove
-          current_base_clusters = current_base_clusters[0...current_base_length]
-          current_base_name = current_base_clusters.join
-          # Reset suffix for the new base
-          @last_suffixes[current_base_name.downcase] = 0
-          suffix = next_suffix(current_base_name).to_s
-          suffix_separator = current_base_name.match?(/\d$/) ? "_" : ""
-        end
+      if name.present?
+        name = truncate(name, max_length: max_name_length)
+        name_lower = name.downcase
+        return name, name_lower if name_available?(name_lower, allow_reserved_username:)
+      else
+        name = fallback_name
+        name_lower = name.downcase
       end
 
-      # if !name_available?(name, allow_reserved_username:)
-      #   # if the name ends with a number, then use an underscore before appending the suffix
-      #   suffix_separator = name.match?(/\d$/) ? "_" : ""
-      #   suffix = next_suffix(name).to_s
-      #
-      #   # TODO This needs better logic, because it's possible that the max username length is exceeded
-      #   name = +"#{name}#{suffix_separator}#{suffix}"
-      #   name.next! until name_available?(name, allow_reserved_username:)
-      # end
+      suffix = next_suffix(name_lower)
+      name_candidate_lower = +"#{name_lower}_#{suffix}"
+      attempts = 0
 
-      [name, name.downcase]
+      while attempts < MAX_ATTEMPTS
+        if (overflow = name_candidate_lower.length - max_name_length) > 0
+          store_last_suffix(name_lower, suffix)
+
+          name = truncate(name, max_length: max_name_length - overflow)
+          name = fallback_name if name.length == 0
+          name_lower = name.downcase
+
+          suffix = next_suffix(name_lower)
+          name_candidate_lower.replace("#{name_lower}_#{suffix}")
+        elsif name_available?(name_candidate_lower, allow_reserved_username:)
+          store_last_suffix(name_lower, suffix)
+          return "#{name}_#{suffix}", name_candidate_lower
+        else
+          name_candidate_lower.next!
+        end
+
+        attempts += 1
+      end
+
+      nil
     end
 
-    def next_suffix(name)
-      name_lower = name.downcase
-      @last_suffixes.fetch(name_lower, 0) + 1
+    def next_suffix(name_lower)
+      ((@last_suffixes.fetch(name_lower) || 0) + 1).to_s
     end
 
-    def store_last_suffix(name)
-      name_lower = name.downcase
-      @last_suffixes[$1] = $2.to_i if name_lower =~ /^(.+?)(\d+)$/
+    def store_last_suffix(name_lower, suffix)
+      @last_suffixes[name_lower] = suffix.to_i
+    end
+
+    def truncate(name, max_length:)
+      return name if name.length <= max_length
+
+      result = +""
+      name.each_grapheme_cluster do |cluster|
+        break if result.length + cluster.length > max_length
+        result << cluster
+      end
+      result
     end
 
     def build_reserved_username_cache
