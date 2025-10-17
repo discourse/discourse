@@ -65,6 +65,13 @@ module Jobs
           .destroy_all
 
         regions_and_user_ids.each do |region, user_ids|
+          if Holidays.available_regions.exclude?(region.to_sym)
+            Rails.logger.warn(
+              "Skipping invalid region '#{region}' for users: #{user_ids.join(", ")}.",
+            )
+            next
+          end
+
           ::DiscourseCalendar::Holiday
             .find_holidays_for(
               region_code: region,
