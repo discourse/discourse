@@ -17,7 +17,7 @@ module("Integration | Component | CategoryList", function (hooks) {
       <template>
         <div data-test-category-list>
           <ul>
-            {{#each this.categoryList as |cat|}}
+            {{#each this.categoryList.content as |cat|}}
               <li data-test-category>{{cat.name}}</li>
             {{/each}}
           </ul>
@@ -34,8 +34,8 @@ module("Integration | Component | CategoryList", function (hooks) {
     assert.dom("[data-test-category]:nth-child(1)").hasText("Cat 1");
     assert.dom("[data-test-category]:nth-child(2)").hasText("Cat 2");
 
-    // Add a category
-    this.categoryList.push({ id: 3, name: "Cat 3" });
+    // Add a category (mutate .content, not the proxy)
+    this.categoryList.content.push({ id: 3, name: "Cat 3" });
     await settled();
     assert
       .dom("[data-test-category]")
@@ -43,7 +43,7 @@ module("Integration | Component | CategoryList", function (hooks) {
     assert.dom("[data-test-category]:nth-child(3)").hasText("Cat 3");
 
     // Remove a category
-    this.categoryList.splice(0, 1);
+    this.categoryList.content.splice(0, 1);
     await settled();
     assert
       .dom("[data-test-category]")

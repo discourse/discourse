@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import PreloadStore from "discourse/lib/preload-store";
 import CategoryList from "discourse/models/category-list";
 import Site from "discourse/models/site";
@@ -42,7 +43,18 @@ module("Unit | Model | CategoryList", function (hooks) {
     const categoryList = CategoryList.categoriesFrom(this.store, result);
 
     assert.true(categoryList instanceof CategoryList);
-    assert.strictEqual(categoryList.length, 2);
+    assert.strictEqual(
+      categoryList.content.length,
+      2,
+      ".content provides clean access to the array"
+    );
+
+    withSilencedDeprecations(
+      "discourse.array-like-object.proxied-array",
+      () => {
+        assert.strictEqual(categoryList.length, 2, "proxy length works");
+      }
+    );
   });
 
   test("categoriesFrom filters categories by parent category", function (assert) {
@@ -72,7 +84,14 @@ module("Unit | Model | CategoryList", function (hooks) {
       parentCategory
     );
 
-    assert.strictEqual(categoryList.length, 1);
+    assert.strictEqual(categoryList.content.length, 1);
+
+    withSilencedDeprecations(
+      "discourse.array-like-object.proxied-array",
+      () => {
+        assert.strictEqual(categoryList.length, 1, "proxy length works");
+      }
+    );
   });
 
   test("categoriesFrom handles empty category list", function (assert) {
@@ -80,7 +99,21 @@ module("Unit | Model | CategoryList", function (hooks) {
     const categoryList = CategoryList.categoriesFrom(this.store, result);
 
     assert.true(categoryList instanceof CategoryList);
-    assert.strictEqual(categoryList.length, 0);
+    assert.strictEqual(categoryList.content.length, 0);
+    withSilencedDeprecations(
+      "discourse.array-like-object.proxied-array",
+      () => {
+        assert.strictEqual(categoryList.length, 0, "proxy length works");
+      }
+    );
+  });
+
+  test("array methods on .content work and do not warn", function (assert) {
+    const categoryList = CategoryList.create({ categories: [] });
+    categoryList.content.push({ id: 1 });
+    assert.strictEqual(categoryList.content.length, 1);
+    categoryList.content.splice(0, 1);
+    assert.strictEqual(categoryList.content.length, 0);
   });
 
   test("_buildCategoryResult builds category with week stats", function (assert) {
@@ -214,22 +247,6 @@ module("Unit | Model | CategoryList", function (hooks) {
     assert.true(categoryList instanceof CategoryList);
   });
 
-  test("constructor initializes properly", function (assert) {
-    const properties = {
-      categories: [],
-      store: this.store,
-      can_create_category: true,
-      parentCategory: { id: 1 },
-    };
-
-    const categoryList = new CategoryList(properties);
-
-    assert.true(categoryList instanceof CategoryList);
-    // assert.strictEqual(categoryList.store, this.store);
-    assert.true(categoryList.can_create_category);
-    assert.strictEqual(categoryList.parentCategory.id, 1);
-  });
-
   test("loadMore loads more categories successfully", async function (assert) {
     let requestData = {};
 
@@ -242,7 +259,7 @@ module("Unit | Model | CategoryList", function (hooks) {
       });
     });
 
-    const categoryList = new CategoryList({
+    const categoryList = CategoryList.create({
       categories: [],
       store: this.store,
       page: 1,
@@ -262,7 +279,7 @@ module("Unit | Model | CategoryList", function (hooks) {
       });
     });
 
-    const categoryList = new CategoryList({
+    const categoryList = CategoryList.create({
       categories: [],
       store: this.store,
     });
@@ -283,7 +300,7 @@ module("Unit | Model | CategoryList", function (hooks) {
       });
     });
 
-    const categoryList = new CategoryList({
+    const categoryList = CategoryList.create({
       categories: [],
       store: this.store,
       parentCategory,
@@ -303,7 +320,7 @@ module("Unit | Model | CategoryList", function (hooks) {
       return response({});
     });
 
-    const categoryList = new CategoryList({
+    const categoryList = CategoryList.create({
       categories: [],
       store: this.store,
       isLoading: true,
@@ -322,7 +339,7 @@ module("Unit | Model | CategoryList", function (hooks) {
       return response({});
     });
 
-    const categoryList = new CategoryList({
+    const categoryList = CategoryList.create({
       categories: [],
       store: this.store,
       fetchedLastPage: true,
@@ -338,7 +355,7 @@ module("Unit | Model | CategoryList", function (hooks) {
       return response(500, { errors: ["Network error"] });
     });
 
-    const categoryList = new CategoryList({
+    const categoryList = CategoryList.create({
       categories: [],
       store: this.store,
     });
@@ -353,92 +370,120 @@ module("Unit | Model | CategoryList", function (hooks) {
   });
 
   test("CategoryList behaves like an array", function (assert) {
-    const categories = [
-      { id: 1, name: "Cat 1", topics_all_time: 10 },
-      { id: 2, name: "Cat 2", topics_all_time: 20 },
-      { id: 3, name: "Cat 3", topics_all_time: 30 },
-    ];
-    const list = CategoryList.create({ categories });
+    withSilencedDeprecations(
+      "discourse.array-like-object.proxied-array",
+      () => {
+        const categories = [
+          { id: 1, name: "Cat 1", topics_all_time: 10 },
+          { id: 2, name: "Cat 2", topics_all_time: 20 },
+          { id: 3, name: "Cat 3", topics_all_time: 30 },
+        ];
+        const list = CategoryList.create({ categories });
 
-    // list[0] returns the first element
-    assert.strictEqual(list[0].id, 1, "list[0] returns first category");
+        // list[0] returns the first element
+        assert.strictEqual(list[0].id, 1, "list[0] returns first category");
 
-    // list.length returns correct length
-    assert.strictEqual(list.length, 3, "list.length returns correct length");
+        // list.length returns correct length
+        assert.strictEqual(
+          list.length,
+          3,
+          "list.length returns correct length"
+        );
 
-    // forEach works
-    let ids = [];
-    list.forEach((cat) => ids.push(cat.id));
-    assert.deepEqual(ids, [1, 2, 3], "forEach iterates over all categories");
+        // forEach works
+        let ids = [];
+        list.forEach((cat) => ids.push(cat.id));
+        assert.deepEqual(
+          ids,
+          [1, 2, 3],
+          "forEach iterates over all categories"
+        );
 
-    // map works
-    const names = list.map((cat) => cat.name);
-    assert.deepEqual(names, ["Cat 1", "Cat 2", "Cat 3"], "map returns names");
+        // map works
+        const names = list.map((cat) => cat.name);
+        assert.deepEqual(
+          names,
+          ["Cat 1", "Cat 2", "Cat 3"],
+          "map returns names"
+        );
 
-    // filter works
-    const filtered = list.filter((cat) => cat.topics_all_time > 10);
-    assert.strictEqual(filtered.length, 2, "filter returns correct number");
-    assert.strictEqual(filtered[0].id, 2, "filter returns correct category");
+        // filter works
+        const filtered = list.filter((cat) => cat.topics_all_time > 10);
+        assert.strictEqual(filtered.length, 2, "filter returns correct number");
+        assert.strictEqual(
+          filtered[0].id,
+          2,
+          "filter returns correct category"
+        );
 
-    // find works
-    const found = list.find((cat) => cat.id === 2);
-    assert.strictEqual(found.name, "Cat 2", "find returns correct category");
+        // find works
+        const found = list.find((cat) => cat.id === 2);
+        assert.strictEqual(
+          found.name,
+          "Cat 2",
+          "find returns correct category"
+        );
 
-    // findIndex works
-    const foundIdx = list.findIndex((cat) => cat.id === 3);
-    assert.strictEqual(foundIdx, 2, "findIndex returns correct index");
+        // findIndex works
+        const foundIdx = list.findIndex((cat) => cat.id === 3);
+        assert.strictEqual(foundIdx, 2, "findIndex returns correct index");
 
-    // some works
-    assert.true(
-      list.some((cat) => cat.topics_all_time === 20),
-      "some returns true if any match"
+        // some works
+        assert.true(
+          list.some((cat) => cat.topics_all_time === 20),
+          "some returns true if any match"
+        );
+
+        // every works
+        assert.true(
+          list.every((cat) => cat.id > 0),
+          "every returns true if all match"
+        );
+        assert.false(
+          list.every((cat) => cat.topics_all_time > 10),
+          "every returns false if not all match"
+        );
+
+        // reduce works
+        const totalTopics = list.reduce(
+          (sum, cat) => sum + cat.topics_all_time,
+          0
+        );
+        assert.strictEqual(totalTopics, 60, "reduce sums topics_all_time");
+
+        // slice works
+        const sliced = list.slice(1);
+        assert.strictEqual(sliced.length, 2, "slice returns correct length");
+        assert.strictEqual(sliced[0].id, 2, "slice returns correct element");
+
+        // concat works
+        const extra = { id: 4, name: "Cat 4", topics_all_time: 40 };
+        const combined = list.concat([extra]);
+        assert.strictEqual(combined.length, 4, "concat returns correct length");
+        assert.strictEqual(combined[3].id, 4, "concat returns correct element");
+
+        // reverse works
+        const reversed = list.slice().reverse();
+        assert.deepEqual(
+          reversed.map((cat) => cat.id),
+          [3, 2, 1],
+          "reverse returns reversed array"
+        );
+
+        // includes works
+        assert.true(
+          list.includes(list[1]),
+          "includes returns true for contained element"
+        );
+        assert.false(
+          list.includes({ id: 99 }),
+          "includes returns false for non-contained element"
+        );
+
+        // at works
+        assert.strictEqual(list.at(0).id, 1, "at(0) returns first element");
+        assert.strictEqual(list.at(-1).id, 3, "at(-1) returns last element");
+      }
     );
-
-    // every works
-    assert.true(
-      list.every((cat) => cat.id > 0),
-      "every returns true if all match"
-    );
-    assert.false(
-      list.every((cat) => cat.topics_all_time > 10),
-      "every returns false if not all match"
-    );
-
-    // reduce works
-    const totalTopics = list.reduce((sum, cat) => sum + cat.topics_all_time, 0);
-    assert.strictEqual(totalTopics, 60, "reduce sums topics_all_time");
-
-    // slice works
-    const sliced = list.slice(1);
-    assert.strictEqual(sliced.length, 2, "slice returns correct length");
-    assert.strictEqual(sliced[0].id, 2, "slice returns correct element");
-
-    // concat works
-    const extra = { id: 4, name: "Cat 4", topics_all_time: 40 };
-    const combined = list.concat([extra]);
-    assert.strictEqual(combined.length, 4, "concat returns correct length");
-    assert.strictEqual(combined[3].id, 4, "concat returns correct element");
-
-    // reverse works
-    const reversed = list.slice().reverse();
-    assert.deepEqual(
-      reversed.map((cat) => cat.id),
-      [3, 2, 1],
-      "reverse returns reversed array"
-    );
-
-    // includes works
-    assert.true(
-      list.includes(list[1]),
-      "includes returns true for contained element"
-    );
-    assert.false(
-      list.includes({ id: 99 }),
-      "includes returns false for non-contained element"
-    );
-
-    // at works
-    assert.strictEqual(list.at(0).id, 1, "at(0) returns first element");
-    assert.strictEqual(list.at(-1).id, 3, "at(-1) returns last element");
   });
 });

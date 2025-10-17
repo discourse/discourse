@@ -45,7 +45,7 @@ export default class CategoryList extends ArrayLikeObject {
         (parentCategory && c.parent_category_id === parentCategory.id) ||
         (!parentCategory && !c.parent_category_id)
       ) {
-        categories.push(c);
+        categories.content.push(c);
       }
     });
     return categories;
@@ -138,7 +138,7 @@ export default class CategoryList extends ArrayLikeObject {
     const categoryList = result?.category_list || {};
     return CategoryList.create({
       store,
-      categories: this.categoriesFrom(store, result, parentCategory),
+      categories: this.categoriesFrom(store, result, parentCategory).content,
       parentCategory,
       can_create_category: categoryList.can_create_category,
       can_create_topic: categoryList.can_create_topic,
@@ -151,8 +151,9 @@ export default class CategoryList extends ArrayLikeObject {
    * @param {Object} attrs - The attributes to initialize with
    * @returns {CategoryList} A new CategoryList instance
    */
-  static create(attrs) {
-    return new CategoryList(attrs);
+  static create(attrs = {}) {
+    const { categories, ...properties } = attrs;
+    return super.create({ content: categories, ...properties });
   }
 
   @tracked can_create_category;
@@ -164,46 +165,16 @@ export default class CategoryList extends ArrayLikeObject {
   @trackedArray topics;
   store;
 
-  #instance;
-
-  /**
-   * Initializes a new CategoryList instance
-   *
-   * @param {Object} param0 - The initialization parameters
-   * @param {Array} param0.categories - Initial array of categories
-   * @param {Object} param0.attrs - Additional attributes to set
-   */
-  constructor(properties) {
-    const { categories, ...attrs } = properties;
-
-    const instance = super(categories, attrs);
-    this.#instance = instance; // for backward compatibility
-
-    return instance;
-  }
-
   /**
    * @returns {Proxy} The proxied content for compatibility
    * @deprecated use the category list instance instead
    */
   get categories() {
     deprecated(
-      "Using `CategoryList.categories` property directly is deprecated. Access the item directly from the CategoryList instance instead.",
-      { id: "discourse.category-list.legacy-properties" }
+      "Using `CategoryList.categories` property is deprecated. Use `CategoryList.content` instead",
+      { id: "discourse.category-list.categories" }
     );
-    return this.#instance;
-  }
-
-  /**
-   * @returns {Proxy} The proxied content for compatibility
-   * @deprecated use the category list instance instead
-   */
-  get content() {
-    deprecated(
-      "Using `CategoryList.content` property directly is deprecated. Access the item directly from the CategoryList instance instead.",
-      { id: "discourse.category-list.legacy-properties" }
-    );
-    return this.#instance;
+    return this.content;
   }
 
   /**
@@ -235,12 +206,12 @@ export default class CategoryList extends ArrayLikeObject {
         this.store,
         result,
         this.parentCategory
-      );
+      ).content;
 
       if (!newItems.length) {
         this.fetchedLastPage = true;
       } else {
-        newItems.forEach((c) => this.push(c));
+        newItems.forEach((c) => this.content.push(c));
       }
     } finally {
       this.isLoading = false;
