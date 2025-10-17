@@ -68,6 +68,10 @@ cs:
         select_option: "Vyberte možnost..."
       translations:
         title: "Překlady"
+        admin_actions:
+          disabled_state:
+            configure: "Nastavit překlady"
+            empty_label: "Automatické překlady jsou zakázány, klikněte níže pro nastavení"
         progress_chart:
           title: "Průběh překladu"
           completed: "Dokončeno"
