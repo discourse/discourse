@@ -90,7 +90,7 @@ module Chat
     end
 
     # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
-    def build_new_separated_actions(actions, guardian, args)
+    def build_new_separated_actions
       bundle_actions = { no_action_message: {} }
       if chat_message.deleted_at?
         bundle_actions[:restore_message] = {}
@@ -98,13 +98,12 @@ module Chat
         bundle_actions[:delete_message] = {}
       end
       build_bundle(
-        actions,
         "#{id}-message-actions",
         "chat.reviewables.actions.message_actions.bundle_title",
         bundle_actions,
       )
 
-      build_user_actions_bundle(actions, guardian)
+      build_user_actions_bundle
     end
 
     # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI

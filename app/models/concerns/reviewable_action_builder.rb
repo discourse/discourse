@@ -3,17 +3,16 @@
 module ReviewableActionBuilder
   extend ActiveSupport::Concern
 
+  attr_accessor :actions, :guardian, :action_args
+
   # Standard post-actions bundle. Consumers should use the returned
   # bundle value when adding post-focused actions.
   #
-  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
-  # @param guardian [Guardian] Guardian instance to check permissions.
-  #
   # @return [Reviewable::Actions::Bundle] The created post actions bundle.
-  def build_post_actions_bundle(actions, guardian)
+  def build_post_actions_bundle
     bundle_actions = { no_action_post: {} }
     if target_post
-      if target_post.trashed? && guardian.can_recover_post?(target_post)
+      if target_post.trashed? && @guardian.can_recover_post?(target_post)
         bundle_actions[:restore_post] = {}
       end
 
@@ -23,7 +22,7 @@ module ReviewableActionBuilder
         bundle_actions[:hide_post] = {}
       end
 
-      if guardian.can_delete_post_or_topic?(target_post)
+      if @guardian.can_delete_post_or_topic?(target_post)
         bundle_actions[:delete_post] = {}
         bundle_actions[:delete_post_and_replies] = { confirm: true } if target_post.reply_count > 0
       end
@@ -36,7 +35,6 @@ module ReviewableActionBuilder
     end
 
     build_bundle(
-      actions,
       "#{id}-post-actions",
       "reviewables.actions.post_actions.bundle_title",
       bundle_actions,
@@ -46,29 +44,25 @@ module ReviewableActionBuilder
 
   # Standard user-actions bundle and default user actions.
   #
-  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
-  # @param guardian [Guardian] Guardian instance to check permissions.
-  #
   # @return [Reviewable::Actions::Bundle] The created user actions bundle.
-  def build_user_actions_bundle(actions, guardian)
+  def build_user_actions_bundle
     bundle_actions = { no_action_user: {} }
     if target_user
-      if guardian.can_silence_user?(target_user)
+      if @guardian.can_silence_user?(target_user)
         bundle_actions[:silence_user] = { client_action: "silence" }
       end
 
-      if guardian.can_suspend?(target_user)
+      if @guardian.can_suspend?(target_user)
         bundle_actions[:suspend_user] = { client_action: "suspend" }
       end
 
-      if guardian.can_delete_user?(target_user)
+      if @guardian.can_delete_user?(target_user)
         bundle_actions[:delete_user] = {}
         bundle_actions[:delete_and_block_user] = {}
       end
     end
 
     build_bundle(
-      actions,
       "#{id}-user-actions",
       "reviewables.actions.user_actions.bundle_title",
       bundle_actions,
@@ -86,8 +80,12 @@ module ReviewableActionBuilder
   #
   # @return [void]
   def build_actions(actions, guardian, args)
+    @actions = actions
+    @guardian = guardian
+    @action_args = args
+
     if guardian.can_see_reviewable_ui_refresh?
-      build_new_separated_actions(actions, guardian, args)
+      build_new_separated_actions
     else
       build_legacy_combined_actions(actions, guardian, args)
     end
@@ -116,18 +114,13 @@ module ReviewableActionBuilder
   #
   # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
   #
-  # @param actions [Reviewable::Actions] Actions instance to add the bundle to.
-  # @param guardian [Guardian] Guardian instance to check permissions.
-  # @param args [Hash] Additional arguments for building actions.
-  #
   # @return [void]
-  def build_new_separated_actions(actions, guardian, args)
+  def build_new_separated_actions
     raise NotImplementedError, "Including class must implement #build_new_separated_actions"
   end
 
   # Build a bundle of actions and add it to the provided actions list.
   #
-  # @param actions [Reviewable::Actions] Actions instance to add to.
   # @param id [String] ID for the bundle, used to derive I18n keys.
   # @param label [String] I18n key for the bundle label.
   # @param bundle_actions [Hash] Hash of action IDs and optional params to pass to build_action.
@@ -137,10 +130,10 @@ module ReviewableActionBuilder
   # @param source [String] Optional source string for namespacing I18n keys. Will default to `type_source`.
   #
   # @return [Reviewable::Actions::Bundle] The created bundle.
-  def build_bundle(actions, id, label, bundle_actions = {}, source: nil)
-    bundle = actions.add_bundle(id, label:)
+  def build_bundle(id, label, bundle_actions = {}, source: nil)
+    bundle = @actions.add_bundle(id, label:)
     bundle_actions.each do |action_id, action_params|
-      build_action(actions, action_id, bundle:, **action_params || {}, source:)
+      build_action(@actions, action_id, bundle:, **action_params || {}, source:)
     end
     bundle
   end
