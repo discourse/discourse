@@ -3663,10 +3663,7 @@ pt:
         attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
         attachment_download_requires_login: "Desculpe, tem de estar autenticado para transferir os anexos."
       cancel_composer:
-        confirm: "O que gostaria de fazer com a sua publicação?"
         discard: "Descartar"
-        save_draft: "Salvar rascunho para mais tarde"
-        keep_editing: "Prosseguir a edição"
       via_email: "esta mensagem chegou por ''e-mail''"
       via_auto_generated_email: "esta publicação chegou via um email gerado automaticamente"
       whisper: "esta publicação é um susurro privado para os moderadores"
@@ -4545,8 +4542,11 @@ pt:
         localization:
           title: "Tradução"
           header_description: "Configure o seu idioma da interface da comunidade e outras opções de tradução para os seus membros"
-        login_and_authentication:
+        login:
           title: "Início de sessão e autenticação"
+          sub_pages:
+            common_settings:
+              title: "Configurações"
         logo:
           title: "Logótipo"
           header_description: "Configure os logótipos e ícones utilizados no seu ''site''"
@@ -5131,6 +5131,7 @@ pt:
           body: "Corpo"
           revert: "Reverter Alterações"
           revert_confirm: "Tem a certeza que quer reverter as suas alterações?"
+          edit: "Editar"
         component:
           all_filter: "Tudo"
           enabled_filter: "Ativado"

@@ -192,7 +192,7 @@ export default class AiTranslations extends Component {
   }
 
   get chartRightPadding() {
-    const max = Math.max(...this.data.map(({ done }) => done));
+    const max = Math.max(...this.data.map(({ total }) => total));
     switch (true) {
       case max >= 100000:
         return 90;
@@ -227,17 +227,26 @@ export default class AiTranslations extends Component {
     }
 
     const colors = this.chartColors;
-
     const processedData = this.data.map(({ locale, total, done }) => {
-      const donePercentage = (total > 0 ? (done / total) * 100 : 0).toFixed(0);
+      const rawPercentage = total > 0 ? (done / total) * 100 : 0;
+      // Show one decimal place when between 99.0 and 99.9 to avoid showing 100% when not complete
+      const donePercentage =
+        rawPercentage >= 99 && rawPercentage < 100 && rawPercentage % 1 !== 0
+          ? rawPercentage.toFixed(1)
+          : rawPercentage.toFixed(0);
+      const localeName = this.languageNameLookup.getLanguageName(locale);
+      const languageNameForTooltip = localeName.split(" (")[0];
+
       return {
-        locale: this.languageNameLookup.getLanguageName(locale),
+        locale: localeName,
         done,
+        total,
         donePercentage,
         tooltip: [
           i18n("discourse_ai.translations.progress_chart.tooltip_translated", {
             done,
             total,
+            language: languageNameForTooltip,
           }),
         ],
       };
@@ -248,7 +257,7 @@ export default class AiTranslations extends Component {
         {
           tooltip: processedData.map(({ tooltip }) => tooltip),
           data: processedData.map(({ donePercentage }) => donePercentage),
-          totalItems: processedData.map(({ done }) => done),
+          totalItems: processedData.map(({ total }) => total),
           backgroundColor: colors.progress,
           barThickness: 30,
           borderRadius: 4,

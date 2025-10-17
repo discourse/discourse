@@ -19,8 +19,13 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
 
   def healthy?
     connection =
-      Faraday.new(url: "https://api.twitter.com") do |config|
-        config.basic_auth(SiteSetting.twitter_consumer_key, SiteSetting.twitter_consumer_secret)
+      Faraday.new(url: "https://api.twitter.com") do |connection|
+        connection.request(
+          :authorization,
+          :basic,
+          SiteSetting.twitter_consumer_key,
+          SiteSetting.twitter_consumer_secret,
+        )
       end
     connection.post("/oauth2/token").status == 200
   rescue Faraday::Error

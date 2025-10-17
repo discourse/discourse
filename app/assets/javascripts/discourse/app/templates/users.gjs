@@ -29,6 +29,7 @@ export default RouteTemplate(
       <LoadMore
         @action={{@controller.loadMore}}
         @enabled={{@controller.model.canLoadMore}}
+        @isLoading={{@controller.isLoading}}
       >
         <div class="container">
           <div class="users-directory directory">
@@ -101,9 +102,8 @@ export default RouteTemplate(
                   @columns={{@controller.columns}}
                   @showTimeRead={{@controller.showTimeRead}}
                   @order={{@controller.order}}
-                  @updateOrder={{fn (mut @controller.order)}}
                   @asc={{@controller.asc}}
-                  @updateAsc={{fn (mut @controller.asc)}}
+                  @updateOrderAndAsc={{@controller.updateOrderAndAsc}}
                 />
                 <ConditionalLoadingSpinner
                   @condition={{@controller.model.loadingMore}}

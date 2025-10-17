@@ -32,8 +32,6 @@ import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
-// const IpLookup = optionalRequire("admin/components/ip-lookup");
-
 let _components = {};
 
 const pluginReviewableParams = {};

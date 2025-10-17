@@ -1702,6 +1702,7 @@ hu:
     logo: "A webhelye bal felső sarkában megjelenő logó kép. Használjon széles, téglalap alakú képet 120 pixel magassággal és 3:1-nél nagyobb képaránnyal. Ha üresen hagyja, a webhely címének szövege fog megjelenni."
     logo_small: "A webhelye bal felső sarkában megjelenő kis logó kép, amely görgetéskor látható. Használjon 120 × 120 pixeles négyzet alakú képet. Ha üresen hagyja, egy házikó ikon fog megjelenni."
     digest_logo: "A webhelye e-mailes összefoglalójának tetején használt alternatív logó kép. Használjon széles, téglalap alakú képet. Ne használjon SVG képet. Ha üresen hagyja, a logo beállításból származó kép lesz használva."
+    mobile_logo: "A webhely mobil verzióján használt logó. Javasoljuk egy négyzet alakú ikon használatát a fejléc zsúfoltságának elkerülése érdekében, de használhat egy széles, téglalap alakú képet is, amelynek magassága 120 képpont, és képaránya nagyobb, mint 3:1. Ha üresen hagyja, a logóbeállításban szereplő kép lesz használva."
     logo_dark: "Logó alternatíva sötét oldal sémánál."
     logo_small_dark: "Kis logó alternatíva sötét oldal sémánál."
     mobile_logo_dark: "Mobil logó alternatíva sötét oldal sémánál."
@@ -1716,8 +1717,6 @@ hu:
     email_custom_headers: "Egyéni e-mail fejlécek listája"
     email_subject: "Testreszabható tárgyformátum a szabványos e-mailekhez. Lásd <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Részletesebb tájékoztatást nyújt a felhasználóknak arról, hogy miért nem férhetnek hozzá egy adott témához. Megjegyzés: Ez kevésbé biztonságos, mert a felhasználók tudni fogják, ha egy URL érvényes témára mutat."
-    enforce_second_factor: "Megköveteli a felhasználóktól a kétfaktoros hitelesítés engedélyezését, mielőtt hozzáférhetnének a Discourse felhasználói felületéhez. Ez a beállítás nem érinti az API vagy a 'DiscourseConnect szolgáltató' hitelesítést. Ha az enforce_second_factor_on_external_auth be van kapcsolva, a felhasználók nem tudnak bejelentkezni külső hitelesítési szolgáltatókkal, miután beállították a kétfaktoros hitelesítést."
-    enforce_second_factor_on_external_auth: "Megköveteli a felhasználóktól a kétfaktoros hitelesítés használatát minden esetben. Ha ez be van kapcsolva, megakadályozza, hogy a felhasználók külső hitelesítési módszerekkel jelentkezzenek be, ha a kétfaktoros hitelesítésük engedélyezve van. Ha ki van kapcsolva, a felhasználóknak csak akkor kell megerősíteniük a kétfaktoros hitelesítésüket, amikor felhasználónévvel és jelszóval jelentkeznek be. Lásd még az enforce_second_factor beállítást."
     force_https: "Kényszeríti a webhelyét, hogy kizárólag HTTPS-t használjon. FIGYELMEZTETÉS: NE engedélyezze ezt, amíg nem ellenőrizte, hogy a HTTPS teljesen be van állítva és tökéletesen működik mindenhol! Ellenőrizte a CDN-jét, az összes közösségi bejelentkezést, és minden külső logót / függőséget, hogy megbizonyosodjon arról, hogy ezek is mind HTTPS-kompatibilisek?"
     summary_score_threshold: "A minimális pontszám, ami szükséges ahhoz, hogy egy bejegyzés bekerüljön a 'Téma összefoglalása' funkcióba."
     summary_posts_required: "Minimális bejegyzésszám egy témában, mielőtt a 'Téma összefoglalása' funkció engedélyezve lenne. Ezen beállítás változtatásai visszamenőlegesen lesznek alkalmazva egy héten belül."
@@ -1775,7 +1774,10 @@ hu:
     ga_universal_domain_name: "Google Universal Analytics domain név, pl.: mysite.com; lásd <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Engedélyezze a Google Universal Analytics domainek közötti követését. A kimenő linkek ezekre a domainekre tartalmazzák majd az ügyfél azonosítóját. Lásd <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google útmutatóját a domainek közötti követésről.</a>"
     gtm_container_id: "Google Tag Manager konténer azonosító. Például: GTM-ABCD12E. <br/>Megjegyzés: Ha a Tartalombiztonsági Szabályzat (CSP) engedélyezve van, a GTM használatához lásd a dokumentációt a meta oldalon: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonce-ok használata a Google Tag Manager szkriptekben</a>."
+    google_site_verification_token: Google keresőkonzol ellenőrző token. Meta tagként kerül a HTML fejbe.
     enable_escaped_fragments: "Ha nem észlelhető webrobot, használja a Google Ajax-Crawling API-ját tartalék megoldásként. Lásd <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories: "Lehetővé teszi a moderátorok számára a kategóriák létrehozását és kezelését"
+    moderators_manage_groups: "Lehetővé teszi a moderátorok számára a csoportok létrehozását és kezelését"
     moderators_change_post_ownership: "Engedélyezze a moderátoroknak a bejegyzések tulajdonjogának megváltoztatását"
     cors_origins: "Megengedett források a kereszteredetű kérelmek (CORS) számára. Minden eredetnek tartalmaznia kell a http:// vagy https:// címet. A CORS engedélyezéséhez a DISCOURSE_ENABLE_CORS env változót igaz értékre kell állítani."
     use_admin_ip_allowlist: "Az adminisztrátorok csak akkor tudnak bejelentkezni, ha a Szűrt IP-címek listában (Admin > Naplók > Szűrt IP-címek) meghatározott IP-címen tartózkodnak."
@@ -2604,6 +2606,7 @@ hu:
       created_before: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) előtt létrehozott témák megjelenítése"
       created_after: "Egy adott dátum (ÉÉÉÉ-HH-NN vagy nappal ezelőtt) után létrehozott témák megjelenítése"
       created_by: "Egy adott felhasználó által létrehozott témák megjelenítése"
+      created_by_user: "A felhasználónév által létrehozott témák megjelenítése (@ nélkül)"
       created_by_multiple: "A megadott felhasználók által létrehozott témák megjelenítése (vesszővel elválasztva)"
       latest_post_before: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum előtt történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
       latest_post_after: "Olyan témák megjelenítése, amelyekben az utolsó hozzászólás egy dátum után történt (ÉÉÉÉÉ-HH-HH-NN vagy napokkal ezelőtt)."
@@ -2664,6 +2667,9 @@ hu:
       group: "Témák szűrése csoportok szerint"
       groups_any: "A megadott csoportok bármelyikével rendelkező témák megjelenítése (vesszővel elválasztva)"
       groups_all: "Az összes megadott csoportot tartalmazó témák megjelenítése (pluszjellel elválasztva)"
+      locale: "Témák szűrése eredeti nyelv szerint"
+      locale_any: "Eredetileg a megadott nyelvek bármelyikén írt témák megjelenítése (vesszővel elválasztva)"
+      exclude_locale: "Eredetileg egy adott nyelven írt témák kizárása"
   discourse_connect:
     login_error: "Bejelentkezési hiba"
     not_found: "A fiókod nem található. Kérjük, lépj kapcsolatba a webhely rendszergazdájával."
@@ -3982,12 +3988,6 @@ hu:
     account_second_factor_disabled:
       title: "Kéttényezős hitelesítés kikapcsolva"
       subject_template: "[%{email_prefix}] A kéttényezős hitelesítés letiltva"
-      text_body_template: |
-        A kétfaktoros hitelesítést letiltottuk fiókjában %{site_name}. Most már csak a jelszavaddal is be tud jelentkezni; további hitelesítési kód már nem szükséges.
-
-        Ha nem te kapcsoltad ki a kétfaktoros hitelesítést, akkor valaki feltörhette a fiókodat.
-
-        Ha kérdésed van, [vedd fel a kapcsolatot barátságos munkatársainkkal] (%{base_url}/about).
     digest:
       why: "A %{site_link} rövid összefoglalója %{since} óta."
       since_last_visit: "Utolsó látogatása óta"
@@ -4286,6 +4286,8 @@ hu:
     latte_theme_name: "Tejeskávé"
     summer_theme_name: "Nyár"
     dark_rose_theme_name: "Sötét rózsa"
+    errors:
+      cannot_edit_remote_copies: "A színpaletták távoli másolatainak szerkesztése nem engedélyezett."
   edit_this_page: "Lap szerkesztése"
   csv_export:
     boolean_yes: "Igen"

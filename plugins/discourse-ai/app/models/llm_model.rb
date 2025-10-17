@@ -5,6 +5,8 @@ class LlmModel < ActiveRecord::Base
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
 
   has_many :llm_quotas, dependent: :destroy
+  has_one :llm_credit_allocation, dependent: :destroy
+  has_many :llm_feature_credit_costs, dependent: :destroy
   belongs_to :user
 
   validates :display_name, presence: true, length: { maximum: 100 }
@@ -180,6 +182,10 @@ class LlmModel < ActiveRecord::Base
     else
       self[:api_key]
     end
+  end
+
+  def credit_system_enabled?
+    seeded? && llm_credit_allocation.present?
   end
 
   private

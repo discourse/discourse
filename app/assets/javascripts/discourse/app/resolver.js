@@ -406,6 +406,8 @@ export function buildResolver(baseName) {
             return result;
           }
         }
+      } else {
+        return this.findTemplate(parsedName, "admin/templates/");
       }
     }
   };

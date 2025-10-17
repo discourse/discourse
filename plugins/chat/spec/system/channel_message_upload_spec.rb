@@ -36,4 +36,13 @@ RSpec.describe "Channel message selection", type: :system do
     # visible false is because the upload doesn’t exist but it's enough to know lightbox is working
     expect(page).to have_css(".mfp-image-holder img[src*='#{image.url}']", visible: :hidden)
   end
+
+  it "can open image in lightbox when using PhotoSwipe" do
+    SiteSetting.experimental_lightbox = true
+
+    chat.visit_channel(channel_1)
+    find(".chat-img-upload").click
+
+    expect(page).to have_css(".pswp")
+  end
 end

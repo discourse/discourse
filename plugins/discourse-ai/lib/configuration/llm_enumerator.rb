@@ -100,39 +100,18 @@ module DiscourseAi
       end
 
       # returns an array of hashes (id: , name:, vision_enabled:)
-      def self.values_for_serialization(allowed_seeded_llm_ids: nil)
-        builder = DB.build(<<~SQL)
+      def self.values_for_serialization
+        DB.query_hash(<<~SQL).map(&:symbolize_keys)
           SELECT id, display_name AS name, vision_enabled
           FROM llm_models
-          /*where*/
         SQL
-
-        if allowed_seeded_llm_ids.is_a?(Array) && !allowed_seeded_llm_ids.empty?
-          builder.where(
-            "id > 0 OR id IN (:allowed_seeded_llm_ids)",
-            allowed_seeded_llm_ids: allowed_seeded_llm_ids,
-          )
-        else
-          builder.where("id > 0")
-        end
-
-        builder.query_hash.map(&:symbolize_keys)
       end
 
-      def self.values(allowed_seeded_llms: nil)
-        values = DB.query_hash(<<~SQL).map(&:symbolize_keys)
+      def self.values
+        DB.query_hash(<<~SQL).map(&:symbolize_keys)
           SELECT display_name AS name, id AS value
           FROM llm_models
         SQL
-
-        if allowed_seeded_llms.is_a?(Array)
-          values =
-            values.filter do |value_h|
-              value_h[:value] > 0 || allowed_seeded_llms.include?("#{value_h[:value]}")
-            end
-        end
-
-        values
       end
     end
   end

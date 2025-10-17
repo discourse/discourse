@@ -8,10 +8,16 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
   self.max_blips = 2
 
   def call
+    return [] if !SiteSetting.discourse_ai_enabled
+
     llm_errors
   end
 
   private
+
+  def targets
+    LlmModel.in_use.pluck(:id)
+  end
 
   def llm_errors
     return [] if !SiteSetting.discourse_ai_enabled
@@ -43,22 +49,13 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
         )
       end
 
-      details = {
+      override_data = {
         model_id: model.id,
         model_name: model.display_name,
-        error: parse_error_message(e.message),
         url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms/#{model.id}/edit",
       }
 
-      message = I18n.t("dashboard.problem.ai_llm_status", details)
-
-      Problem.new(
-        message,
-        priority: "high",
-        identifier: "ai_llm_status",
-        target: model.id,
-        details:,
-      )
+      problem(model, override_data:, details: { error: parse_error_message(e.message) })
     end
   end
 

@@ -189,7 +189,7 @@ export default class TopicList extends Component {
         (if this.bulkSelectEnabled "sticky-header bulk-select-enabled")
         this.additionalClasses
       }}
-      aria-labelledby="topic-list-heading"
+      aria-labelledby={{@ariaLabelledby}}
       ...attributes
     >
       <caption class="sr-only">{{i18n "sr_topic_list_caption"}}</caption>
@@ -208,11 +208,6 @@ export default class TopicList extends Component {
           @bulkSelectHelper={{@bulkSelectHelper}}
           @bulkSelectEnabled={{this.bulkSelectEnabled}}
           @canDoBulkActions={{this.canDoBulkActions}}
-          @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
-          @newListSubset={{@newListSubset}}
-          @newRepliesCount={{@newRepliesCount}}
-          @newTopicsCount={{@newTopicsCount}}
-          @changeNewListSubset={{@changeNewListSubset}}
         />
       </thead>
 

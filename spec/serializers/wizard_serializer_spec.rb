@@ -37,8 +37,8 @@ RSpec.describe WizardSerializer do
       json = MultiJson.load(MultiJson.dump(serializer.as_json))
 
       expect(json["wizard"]["current_color_scheme"].to_s).to include(
-        '{"name"=>"header_background", "hex"=>"00FF00"}',
-      )
+        '{"name"=>"header_background", "hex"=>"00FF00"}', # ruby 3.3
+      ).or include('{"name" => "header_background", "hex" => "00FF00"}') # ruby 3.4
     end
   end
 

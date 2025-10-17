@@ -1705,8 +1705,6 @@ nl:
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
     email_subject: "Aanpasbare onderwerpnotatie voor standaard-e-mails. Zie <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Biedt gebruikers meer informatie over waarom ze geen toegang hebben tot een bepaald topic. Opmerking: dit is minder veilig, omdat gebruikers dan weten of een URL naar een geldig topic verwijst."
-    enforce_second_factor: "Verplicht gebruikers om tweeledige verificatie in te schakelen voordat ze toegang krijgen tot de Discourse-interface. Deze instelling heeft geen invloed op verificatie via API of 'DiscourseConnect-provider'. Als enforce_second_factor_on_external_auth is ingeschakeld, kunnen gebruikers zich niet aanmelden met externe verificatieproviders nadat ze tweeledige verificatie hebben ingesteld."
-    enforce_second_factor_on_external_auth: "Verplicht gebruikers om altijd tweeledige verificatie te gebruiken. Als dit is ingeschakeld, verhindert dit dat gebruikers zich aanmelden met externe verificatiemethoden zoals sociale aanmelding als ze tweeledige verificatie hebben ingeschakeld. Als dit is uitgeschakeld, hoeven gebruikers hun tweeledige verificatie alleen te bevestigen als ze zich aanmelden met een gebruikersnaam en wachtwoord. Zie ook de instelling 'enforce_second_factor'."
     force_https: "Dwing gebruik van alleen HTTPS af voor je website. WAARSCHUWING: schakel dit NIET in voordat je hebt geverifieerd dat HTTPS volledig is geconfigureerd en echt overal werkt! Heb je ook je CDN, alle sociale aanmeldingen en eventuele externe logo's / afhankelijkheden gecontroleerd om zeker te weten dat ze allemaal compatibel met HTTPS zijn?"
     summary_score_threshold: "De minimaal vereiste score voor een bericht om in 'Dit topic samenvatten' te worden opgenomen"
     summary_posts_required: "Het minimale aantal berichten in een topic voordat 'Dit topic samenvatten' wordt ingeschakeld. Wijzigingen in deze instelling worden binnen een week met terugwerkende kracht toegepast."
@@ -3995,12 +3993,6 @@ nl:
     account_second_factor_disabled:
       title: "Tweeledige verificatie uitgeschakeld"
       subject_template: "[%{email_prefix}] Tweeledige verificatie uitgeschakeld"
-      text_body_template: |
-        Tweeledige verificatie is uitgeschakeld voor je account op %{site_name}. Je kunt je nu aanmelden met alleen je wachtwoord; een extra verificatiemethode is niet meer nodig.
-
-        Als je er niet voor hebt gekozen om tweeledige verificatie uit te schakelen, kan het zijn dat iemand je account heeft gehackt.
-
-        Als je vragen hebt, [neem dan contact op met onze vriendelijke medewerkers](%{base_url}/about).
     digest:
       why: "Een kort overzicht van %{site_link} sinds %{since}"
       since_last_visit: "Sinds je laatste bezoek"

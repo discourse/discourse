@@ -2891,6 +2891,10 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
+        login:
+          sub_pages:
+            common_settings:
+              title: "Iestatījumi"
         logo:
           form:
             mobile: "Mobilais"
@@ -3287,6 +3291,7 @@ lv:
           body: "Saturs"
           revert: "Atcelt izmaiņas"
           revert_confirm: "Vai jūs esat drošs, ka vēlaties atcelt jūsu veiktās izmaiņas"
+          edit: "Labot"
         component:
           all_filter: "Viss"
           enabled_filter: "Ieslēgts"

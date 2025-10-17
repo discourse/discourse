@@ -690,6 +690,22 @@ class TopicsFilter
     end
   end
 
+  def topic_user_scope
+    @scope.where(
+      "tu.notification_level IN (:topic_notification_levels)",
+      topic_notification_levels: @topic_notification_levels.to_a,
+    )
+  end
+
+  def watching_first_post_scope
+    TopicQuery.watching_first_post_filter(@scope, @guardian.user)
+  end
+
+  def combine_scopes_with_or(scope1, scope2)
+    @scope.joins_values.concat(scope1.joins_values, scope2.joins_values).uniq!
+    @scope.merge(scope1.or(scope2))
+  end
+
   def filter_in(values:)
     values.uniq!
 
@@ -715,10 +731,12 @@ class TopicsFilter
             treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
       end
+
       if values.delete("new-replies")
         ensure_topic_users_reference!
         @scope = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
       end
+
       if values.delete("new")
         ensure_topic_users_reference!
         new_topics =
@@ -727,10 +745,7 @@ class TopicsFilter
             treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
         unread_topics = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
-        base = @scope
-        base.joins_values.dup.concat(new_topics.joins_values, unread_topics.joins_values)
-        base.joins_values.uniq!
-        @scope = base.merge(new_topics.or(unread_topics))
+        @scope = combine_scopes_with_or(new_topics, unread_topics)
       end
 
       if values.delete("unseen")
@@ -753,15 +768,20 @@ class TopicsFilter
               end
             end
         end
+      end
 
-        if @topic_notification_levels.present?
-          ensure_topic_users_reference!
-          @scope =
-            @scope.where(
-              "tu.notification_level IN (:topic_notification_levels)",
-              topic_notification_levels: @topic_notification_levels.to_a,
-            )
-        end
+      # watching_first_post is a category/tag-level notification, not a topic-level one
+      # We need to handle it separately from regular notification levels and combine with OR
+      has_watching_first_post = values.delete("watching_first_post")
+
+      if has_watching_first_post && @topic_notification_levels.present?
+        ensure_topic_users_reference!
+        @scope = combine_scopes_with_or(topic_user_scope, watching_first_post_scope)
+      elsif has_watching_first_post
+        @scope = @scope.merge(watching_first_post_scope)
+      elsif @topic_notification_levels.present?
+        ensure_topic_users_reference!
+        @scope = @scope.merge(topic_user_scope)
       end
     elsif values.present?
       @scope = @scope.none

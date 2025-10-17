@@ -4007,6 +4007,10 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Rregullimet"
         logo:
           form:
             mobile: "Mobile"
@@ -4371,6 +4375,7 @@ sq:
           body: "Përmbajtja"
           revert: "Rikthe ndryshimet"
           revert_confirm: "A jeni i sigurtë që doni të riktheni ndryshimet?"
+          edit: "Redaktoni"
         component:
           all_filter: "Të Gjithë"
           enabled_filter: "Aktivizuar"

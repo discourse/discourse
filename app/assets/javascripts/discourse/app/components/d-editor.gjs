@@ -644,6 +644,10 @@ export default class DEditor extends Component {
     const preference = this.isRichEditorEnabled
       ? USER_OPTION_COMPOSITION_MODES.rich
       : USER_OPTION_COMPOSITION_MODES.markdown;
+
+    // optimistically set the preference
+    this.currentUser.set("user_option.composition_mode", preference);
+
     this.#debounceSaveRichEditorPreference(preference);
   }
 

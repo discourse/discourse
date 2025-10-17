@@ -648,6 +648,23 @@ RSpec.describe Admin::UsersController do
           expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
         end
       end
+
+      it "can unsuspend a user who was granted moderation while suspended" do
+        user.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+        user.grant_moderation!
+
+        expect(user.reload).to be_suspended
+        expect(user).to be_moderator
+
+        put "/admin/users/#{user.id}/unsuspend.json"
+
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.suspended_till).to eq(nil)
+        expect(user.suspended_at).to eq(nil)
+        expect(user).not_to be_suspended
+        expect(user).to be_moderator
+      end
     end
   end
 
@@ -2643,7 +2660,10 @@ RSpec.describe Admin::UsersController do
           target_user_id: user.id,
           action: UserHistory.actions[:delete_associated_accounts],
         )
-        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"')
+        # first option is for ruby 3.3 and the other for 3.4
+        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"').or include(
+               'uid: "123456789"',
+             )
       end
     end
 

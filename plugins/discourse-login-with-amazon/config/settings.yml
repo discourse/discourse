@@ -21,3 +21,9 @@ plugins:
     hidden: true
     default: true
     area: "authenticators"
+  login_with_amazon_user_can_connect:
+    default: true
+    area: "authenticators"
+  login_with_amazon_user_can_revoke:
+    default: true
+    area: "authenticators"

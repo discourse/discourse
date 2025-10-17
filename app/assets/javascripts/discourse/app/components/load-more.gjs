@@ -23,11 +23,16 @@ export function enableLoadMoreObserver() {
  * in additional options to customize the observer's behavior;
  * Refer to https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver/IntersectionObserver#options for a full list.
  *
- * Additionally, an @enabled boolean can be passed to allow for cases where
- * the element is visible in the viewport but you don't want to allow the `loadMore`
- * behaviour. A use case for this is when our controllers return some `canLoadMore`
- * boolean. There is no use attempting to load more from the server in this case,
- * there will be nothing else.
+ * @param {Function} action - The action to trigger when more content should be loaded
+ * @param {boolean} [enabled=true] - Whether to allow the loadMore action to trigger.
+ *   Use this when you know there's no more content available (e.g., `model.canLoadMore`).
+ *   When false, the observer continues to run but the action won't be triggered.
+ * @param {boolean} [isLoading=false] - Whether content is currently loading.
+ *   When true, the IntersectionObserver won't be created, preventing premature triggers
+ *   during initial content load. Pass this to avoid race conditions during page initialization.
+ * @param {string} [rootMargin="0px 0px 0px 0px"] - Margin around the root element for intersection detection
+ * @param {number} [threshold=0.0] - Threshold at which the intersection callback is triggered
+ * @param {string} [root=null] - CSS selector for the root element to observe intersection within
  *
  * @example Basic usage with a block:
  * ```gjs
@@ -47,13 +52,24 @@ export function enableLoadMoreObserver() {
  * <LoadMore @action={{this.loadMore}} />
  * ```
  *
- * @example With custom options:
+ * @example With enabled and isLoading to prevent premature loading:
+ * ```gjs
+ * <LoadMore
+ *   @action={{this.loadMoreUsers}}
+ *   @enabled={{this.model.canLoadMore}}
+ *   @isLoading={{this.isLoading}}
+ * >
+ *   <UserList @users={{this.model}} />
+ * </LoadMore>
+ * ```
+ *
+ * @example With custom IntersectionObserver options:
  * ```gjs
  * <LoadMore
  *   @action={{this.fetchMoreUsers}}
  *   @rootMargin="100px"
  *   @threshold={{0.2}}
- *   @root={{this.root}}
+ *   @root={{this.scrollContainer}}
  *   class="users-container"
  * />
  * ```
@@ -85,6 +101,7 @@ export default class LoadMore extends Component {
             threshold=this.threshold
             rootMargin=this.rootMargin
             root=this.root
+            isLoading=@isLoading
           }}
           class="load-more-sentinel"
           aria-hidden="true"

@@ -140,7 +140,7 @@ jobs:
 
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
-        run: bin/rake plugin:pull_compatible_all
+        run: LOAD_PLUGINS=0 bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
         if: matrix.target == 'themes'

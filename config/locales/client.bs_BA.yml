@@ -3192,6 +3192,10 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Postavke"
         logo:
           form:
             mobile: "Mobilno"
@@ -3712,6 +3716,7 @@ bs_BA:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
+          edit: "Izmijeni"
         component:
           all_filter: "All"
           enabled_filter: "Omogućen"

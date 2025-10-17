@@ -8,18 +8,20 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import HorizontalScrollSyncWrapper from "discourse/components/horizontal-scroll-sync-wrapper";
 import LoadMore from "discourse/components/load-more";
 import TextField from "discourse/components/text-field";
+import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 import EmailLog from "admin/models/email-log";
 
 export default class EmailLogsList extends Component {
   @tracked allLoaded = false;
   @tracked loading = false;
-  @tracked model = null;
   @tracked filterValues = {};
   @tracked initialized = false;
   @tracked loadMoreEnabled = false;
+  @trackedArray model;
 
   sortWithAddressFilter = (addresses) => {
     if (!Array.isArray(addresses) || addresses.length === 0) {
@@ -107,7 +109,8 @@ export default class EmailLogsList extends Component {
       );
 
       if (this.model && loadMore) {
-        this.model.addObjects(logs);
+        addUniqueValuesToArray(this.model, logs);
+
         if (logs.length < 50) {
           this.allLoaded = true;
         }

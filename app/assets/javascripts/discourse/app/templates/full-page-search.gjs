@@ -45,7 +45,9 @@ export default RouteTemplate(
               id="search-result-count"
               aria-live="polite"
             >
-              {{htmlSafe @controller.resultCountLabel}}
+              {{#unless @controller.searching}}
+                {{htmlSafe @controller.resultCountLabel}}
+              {{/unless}}
             </div>
           {{else}}
             <div class="search-page-heading__page-title">
@@ -59,7 +61,6 @@ export default RouteTemplate(
             @aria-label={{i18n "search.search_term_label"}}
             @enter={{fn @controller.search (hash collapseFilters=true)}}
             @hasAutofocus={{@controller.hasAutofocus}}
-            @aria-controls="search-result-count"
             type="search"
             class="full-page-search search no-blur search-query"
           />
@@ -212,7 +213,15 @@ export default RouteTemplate(
         {{#if @controller.searching}}
           {{loadingSpinner size="medium"}}
         {{else}}
-          <div class="search-results" role="region">
+          <div
+            class="search-results"
+            role="region"
+            aria-label={{if
+              @controller.q
+              (i18n "search.results_page" term=@controller.q)
+              (i18n "search.results")
+            }}
+          >
             <LoadMore @action={{@controller.loadMore}}>
               {{#if
                 (or

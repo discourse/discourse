@@ -69,13 +69,10 @@ RSpec.describe Auth::TwitterAuthenticator do
   describe "#healthy?" do
     let(:authenticator) { described_class.new }
 
-    let(:connection) { mock("Faraday::Connection") }
-    let(:response) { mock("Faraday::Response") }
-
     before do
-      Faraday.stubs(:new).returns(connection)
-      connection.stubs(:post).returns(response)
-      response.stubs(:status).returns(status)
+      stub_request(:post, "https://api.twitter.com/oauth2/token").with(
+        basic_auth: [SiteSetting.twitter_consumer_key, SiteSetting.twitter_consumer_secret],
+      ).to_return(status:)
     end
 
     context "when endpoint is reachable" do
@@ -93,7 +90,7 @@ RSpec.describe Auth::TwitterAuthenticator do
     context "when an unexpected error happens" do
       let(:status) { anything }
 
-      before { connection.stubs(:post).raises(Faraday::ServerError) }
+      before { Faraday::Connection.any_instance.stubs(:post).raises(Faraday::ServerError) }
 
       it { expect(authenticator).not_to be_healthy }
     end

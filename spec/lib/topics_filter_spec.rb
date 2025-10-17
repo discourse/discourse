@@ -490,6 +490,95 @@ RSpec.describe TopicsFilter do
           end
         end
       end
+
+      describe "when query string is `in:watching_first_post`" do
+        fab!(:category_watching_first_post, :category)
+        fab!(:category_regular, :category)
+        fab!(:tag_watching_first_post, :tag)
+        fab!(:tag_regular, :tag)
+
+        fab!(:topic_in_watched_category) do
+          Fabricate(:topic, category: category_watching_first_post)
+        end
+        fab!(:topic_in_regular_category) { Fabricate(:topic, category: category_regular) }
+        fab!(:topic_with_watched_tag) { Fabricate(:topic, tags: [tag_watching_first_post]) }
+        fab!(:topic_with_regular_tag) { Fabricate(:topic, tags: [tag_regular]) }
+        fab!(:topic_with_both) do
+          Fabricate(:topic, category: category_watching_first_post, tags: [tag_watching_first_post])
+        end
+
+        before do
+          CategoryUser.set_notification_level_for_category(
+            user,
+            CategoryUser.notification_levels[:watching_first_post],
+            category_watching_first_post.id,
+          )
+          TagUser.change(
+            user.id,
+            tag_watching_first_post.id,
+            TagUser.notification_levels[:watching_first_post],
+          )
+        end
+
+        it "should not return any topics if the user is anonymous" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("in:watching_first_post")
+              .pluck(:id),
+          ).to be_empty
+        end
+
+        it "should return the union of topics in watched categories and topics with watched tags" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:watching_first_post")
+              .pluck(:id)
+
+          expect(ids).to contain_exactly(
+            topic_in_watched_category.id,
+            topic_with_watched_tag.id,
+            topic_with_both.id,
+          )
+        end
+
+        it "should work when combined with other filters" do
+          topic_in_watched_category.update!(closed: true)
+
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:watching_first_post status:closed")
+              .pluck(:id)
+
+          expect(ids).to contain_exactly(topic_in_watched_category.id)
+        end
+
+        it "should work with comma-separated notification levels" do
+          user_watching_topic =
+            Fabricate(:topic).tap do |topic|
+              TopicUser.change(
+                user.id,
+                topic.id,
+                notification_level: TopicUser.notification_levels[:watching],
+              )
+            end
+
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:watching,watching_first_post")
+              .pluck(:id)
+
+          expect(ids).to contain_exactly(
+            user_watching_topic.id,
+            topic_in_watched_category.id,
+            topic_with_watched_tag.id,
+            topic_with_both.id,
+          )
+        end
+      end
     end
 
     describe "when filtering with custom filters" do

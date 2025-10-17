@@ -3894,10 +3894,7 @@ tr_TR:
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar ek yükleyemez."
         attachment_download_requires_login: "Üzgünüz, ekleri indirebilmek için giriş yapmanız gerekiyor."
       cancel_composer:
-        confirm: "Gönderinizle ilgili ne yapmak istersiniz?"
         discard: "Kapat"
-        save_draft: "Taslağı sonrası için kaydet"
-        keep_editing: "Düzenlemeye devam et"
       via_email: "bu gönderi e-posta yoluyla geldi"
       via_auto_generated_email: "bu gönderi otomatik olarak oluşturulmuş bir e-posta yoluyla geldi"
       whisper: "bu gönderi moderatörler için özel bir fısıltıdır"
@@ -5280,9 +5277,12 @@ tr_TR:
           title: "Yerelleştirme"
           header_description: "Topluluğunuzun arayüz dilini ve üyeleriniz için diğer yerelleştirme seçeneklerini yapılandırın"
           keywords: "yerel|dil|zaman dilimi|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Giriş ve kimlik doğrulama"
           header_description: "Kullanıcıların oturum açma ve kimlik doğrulama yöntemlerini, gizli dizileri ve anahtarları, OAuth2 sağlayıcılarını ve daha fazlasını yapılandırın"
+          sub_pages:
+            common_settings:
+              title: "Ayarlar"
         logo:
           title: "Logo"
           header_description: "Sitenizde kullanılan logoları ve simgeleri yapılandırın"
@@ -6456,6 +6456,7 @@ tr_TR:
           body: "Gövde"
           revert: "Değişiklikleri Geri Al"
           revert_confirm: "Değişikliklerinizi geri almak istediğinizden emin misiniz?"
+          edit: "Düzenle"
         component:
           all_filter: "Tümü"
           used_filter: "Kullanılmış"

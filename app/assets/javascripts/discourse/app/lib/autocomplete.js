@@ -74,6 +74,7 @@ export default function (options) {
       {
         id: "discourse.jquery-autocomplete",
         since: "3.6.0.beta1-dev",
+        url: "https://meta.discourse.org/t/385527",
       }
     );
   }

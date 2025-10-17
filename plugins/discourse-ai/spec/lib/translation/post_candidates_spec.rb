@@ -60,40 +60,48 @@ describe DiscourseAi::Translation::PostCandidates do
   end
 
   describe ".get_completion_all_locales" do
-    before { SiteSetting.content_localization_supported_locales = "en_GB|pt|es" }
+    before do
+      SiteSetting.content_localization_supported_locales = "en_GB|pt|es"
+      SiteSetting.ai_translation_backfill_max_age_days = 30
+      SiteSetting.ai_translation_backfill_limit_to_public_content = false
+    end
 
     it "returns empty state when no posts exist" do
       Post.delete_all
 
       result = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
-      expect(result).to eq(
-        [
-          { done: 0, locale: "en_GB", total: 0 },
-          { done: 0, locale: "pt", total: 0 },
-          { done: 0, locale: "es", total: 0 },
-        ],
-      )
+      expect(result.length).to eq(3)
+      expect(result).to all(include(done: 0, total: 0))
     end
 
     it "returns progress grouped by base locale (of en_GB) and correct totals" do
       post1 = Fabricate(:post, locale: "en_GB")
       post2 = Fabricate(:post, locale: "fr")
-      Fabricate(:post, locale: "es")
+      post3 = Fabricate(:post, locale: "es")
       Fabricate(:post, locale: nil) # not eligible
 
       # add an en_GB localization to a non-en base post
-      Fabricate(:post_localization, post: post2, locale: "en")
+      PostLocalization.create!(
+        post: post2,
+        locale: "en",
+        raw: "Translated to English",
+        cooked: "<p>Translated to English</p>",
+        post_version: post2.version,
+        localizer_user_id: Discourse.system_user.id,
+      )
 
       result = DiscourseAi::Translation::PostCandidates.completion_all_locales
       expect(result.length).to eq(3)
 
       expect(result).to all(include(:locale, :done, :total))
 
+      expect(result.first[:locale]).to eq("en_GB")
+
       en_entry = result.find { |r| r[:locale] == "en_GB" }
       expect(en_entry).to be_present
-      # post1 (en_GB base=en) + post2 (localization en_GB base=en)
-      expect(en_entry[:done]).to eq(2)
-      expect(en_entry[:total]).to eq(3)
+      # total is non-English posts (post2 + post3)
+      expect(en_entry[:done]).to eq(1)
+      expect(en_entry[:total]).to eq(2)
 
       pt_entry = result.find { |r| r[:locale] == "pt" }
       expect(pt_entry).to be_present
@@ -101,8 +109,8 @@ describe DiscourseAi::Translation::PostCandidates do
       expect(pt_entry[:total]).to eq(3)
       es_entry = result.find { |r| r[:locale] == "es" }
       expect(es_entry).to be_present
-      expect(es_entry[:done]).to eq(1)
-      expect(es_entry[:total]).to eq(3)
+      expect(es_entry[:done]).to eq(0)
+      expect(es_entry[:total]).to eq(2)
       fr_entry = result.find { |r| r[:locale] == "fr" }
       expect(fr_entry).to be_nil
     end

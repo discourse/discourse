@@ -4121,10 +4121,7 @@ hr:
         attachment_upload_not_allowed_for_new_user: "Žao nam je, novi korisnici ne mogu učitavati privitke."
         attachment_download_requires_login: "Žao nam je, morate biti prijavljeni da biste preuzimali privitke."
       cancel_composer:
-        confirm: "Što biste željeli učiniti sa svojim postom?"
         discard: "Odbaci"
-        save_draft: "Spremi skicu za kasnije"
-        keep_editing: "Nastavite uređivati"
       via_email: "ova objava stigla je preko e-maila"
       via_auto_generated_email: "ovaj je post stigao putem automatski generirane e-pošte"
       whisper: "ovu objavu potiho pošaljite moderatorima"
@@ -5560,9 +5557,12 @@ hr:
           title: "Lokalizacija"
           header_description: "Konfigurirajte jezik sučelja svoje zajednice i ostale opcije lokalizacije za svoje članove"
           keywords: "lokacija|jezik|vremenska zona|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Prijava i autentifikacija"
           header_description: "Konfigurirajte način na koji se korisnici prijavljuju i autentificiraju, tajne i ključeve, pružatelje usluga OAuth2 i još mnogo toga"
+          sub_pages:
+            common_settings:
+              title: "Postavke"
         logo:
           title: "Logo"
           header_description: "Konfigurirajte logotipe i ikone koje se koriste na vašoj web stranici"
@@ -6416,6 +6416,7 @@ hr:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite poništiti svoje promjene?"
+          edit: "Uredi"
         component:
           all_filter: "Sve"
           used_filter: "Korišteno"

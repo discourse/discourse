@@ -2426,6 +2426,10 @@ sw:
           title: "Mafaili"
         legal:
           title: "Halali"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Mipangilio"
         logo:
           form:
             mobile: "Kifaa cha kiganjani"
@@ -2839,6 +2843,7 @@ sw:
           body: "Mwili"
           revert: "Ondoa Mabadiliko"
           revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
+          edit: "Hariri"
         component:
           all_filter: "Vyote"
           enabled_filter: "Imeruhusiwa"

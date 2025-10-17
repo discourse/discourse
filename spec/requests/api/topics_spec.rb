@@ -4,6 +4,9 @@ require "swagger_helper"
 RSpec.describe "topics" do
   let(:"Api-Key") { Fabricate(:api_key).key }
   let(:"Api-Username") { "system" }
+  let(:user) { Fabricate(:user) }
+
+  before { sign_in(user) }
 
   path "/t/{id}/posts.json" do
     get "Get specific posts from a topic" do
@@ -1062,7 +1065,11 @@ RSpec.describe "topics" do
         expected_response_schema = nil
         schema expected_response_schema
 
-        let(:topic) { Fabricate(:topic, external_id: "external_id_1") }
+        let(:category) { Fabricate(:category) }
+        let(:topic) do
+          Fabricate(:topic, external_id: "external_id_1", user: user, category: category)
+        end
+
         let(:external_id) { topic.external_id }
 
         run_test! { |response| expect(response).to redirect_to(topic.relative_url + ".json") }

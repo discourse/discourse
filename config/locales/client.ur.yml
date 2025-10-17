@@ -3921,10 +3921,7 @@ ur:
         attachment_upload_not_allowed_for_new_user: "معذرت، نئے صارفین اٹیچمنٹس اَپ لوڈ نہیں کر سکتے۔"
         attachment_download_requires_login: "معذرت، اٹیچمنٹس ڈائونلوڈ کرنے کیلیے آپ کا لاگ اِن ہونا ضروری ہے۔"
       cancel_composer:
-        confirm: "آپ اپنی پوسٹ کے ساتھ کیا کرنا چاہیں گے؟"
         discard: "منسوخ"
-        save_draft: "بعد کے لیے مسودہ محفوظ کریں"
-        keep_editing: "ترمیم کرتے رہیں"
       via_email: "یہ پوسٹ بذریعہ اِی میل پہنچی"
       via_auto_generated_email: "یہ پوسٹ ایک خود کار طریقے سے تخلیق کردہ اِی میل کے ذریعے پہنچی"
       whisper: "یہ پوسٹ نگرانوں کے لئے ایک نجی سرگوشی ہے"
@@ -5312,9 +5309,12 @@ ur:
           title: "لوکلائزیشن"
           header_description: "اپنی کمیونٹی کی انٹرفیس زبان اور اپنے اراکین کے لیے لوکلائزیشن کے دیگر اختیارات کو ترتیب دیں"
           keywords: "علاقائی ترتیبات|زبان|خطہ کے وقت|یونی کوڈ|ایل ٹی آر"
-        login_and_authentication:
+        login:
           title: "لاگ ان اور تصدیق"
           header_description: "کنفیگر کریں کہ اراکین کس طرح لاگ ان اور تصدیق کرتے ہیں، راز اور چابیاں، او آتھ2 فراہم کنندگان اور مزید"
+          sub_pages:
+            common_settings:
+              title: "سیٹِنگ"
         logo:
           title: "لوگو"
           header_description: "اپنی پوری سائٹ میں استعمال ہونے والے لوگو اور شبیہیں ترتیب دیں"
@@ -6456,6 +6456,7 @@ ur:
           body: "متن"
           revert: "تبدیلیاں لوٹائیں"
           revert_confirm: "کیا آپ واقعی تبدیلیاں لوٹانا چاہتے ہیں؟"
+          edit: "ترمیم کریں"
         component:
           all_filter: "تمام"
           used_filter: "استعمال شدہ"

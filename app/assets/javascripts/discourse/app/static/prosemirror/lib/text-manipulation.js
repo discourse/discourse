@@ -220,23 +220,13 @@ export default class ProsemirrorTextManipulation {
     this.focus();
   }
 
+  /**
+   * Bridge method from pre-existing API to the new command system
+   *
+   * @returns {boolean} whether the command was applied
+   */
   formatCode() {
-    let command;
-
-    const selection = this.view.state.selection;
-
-    if (selection.$from.parent.type === this.schema.nodes.code_block) {
-      command = setBlockType(this.schema.nodes.paragraph);
-    } else if (
-      selection.$from.pos !== selection.$to.pos &&
-      selection.$from.parent === selection.$to.parent
-    ) {
-      command = toggleMark(this.schema.marks.code);
-    } else {
-      command = setBlockType(this.schema.nodes.code_block);
-    }
-
-    command?.(this.view.state, this.view.dispatch);
+    return this.commands.formatCode(this.view.state, this.view.dispatch);
   }
 
   emojiSelected(code) {

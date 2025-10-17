@@ -348,7 +348,6 @@ export default class ComposerContainer extends Component {
                   <DButton
                     @action={{this.composer.cancel}}
                     class="discard-button btn-transparent"
-                    @preventFocus={{true}}
                     @title="composer.discard"
                     @label="composer.discard"
                   />
@@ -359,7 +358,6 @@ export default class ComposerContainer extends Component {
                     @action={{this.composer.cancel}}
                     @icon="trash-can"
                     class="discard-button btn-transparent"
-                    @preventFocus={{true}}
                     @title="composer.discard"
                   />
 

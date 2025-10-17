@@ -2896,6 +2896,7 @@ hu:
         remove: "Hivatkozás eltávolítása"
         visit: "Hivatkozás megnyitása külső lapon"
         link_copied: "Hivatkozás másolva!"
+      unsupported_token: "A szövegszerkesztő nem támogatja a bejegyzésben használt összes funkciót; a Markdown szerkesztőre váltunk."
     notifications:
       tooltip:
         regular:
@@ -3618,6 +3619,8 @@ hu:
       reply:
         title: "Válasz"
         help: "kezdjen el választ írni ehhez a témához"
+      footer_buttons:
+        region_label: "Témaműveletek"
       share:
         title: "Téma megosztása"
         extended_title: "Hivatkozás megosztása"
@@ -3802,6 +3805,9 @@ hu:
       empty: "Nincsenek bejegyzések"
       aria_post_number: "%{title} – %{postNumber}. bejegyzés"
       bulk:
+        selected:
+          one: "%{count} bejegyzés kiválasztva"
+          other: "%{count} bejegyzés kiválasztva"
         select_all: "Összes kiválasztása"
         clear_all: "Összes törlése"
         actions: "Csoportos műveletek"
@@ -3917,10 +3923,8 @@ hu:
         attachment_upload_not_allowed_for_new_user: "Sajnos az új felhasználók nem tölthetnek fel mellékleteket."
         attachment_download_requires_login: "Sajnos be kell jelentkeznie, hogy letölthesse a mellékleteket."
       cancel_composer:
-        confirm: "Mit szeretne tenni a bejegyzésével?"
+        confirm: "Elveted a bejegyzést?"
         discard: "Elvetés"
-        save_draft: "Vázlat mentése későbbre"
-        keep_editing: "Szerkesztés tovább"
       via_email: "ez a válasz e-mailben érkezett"
       via_auto_generated_email: "ez a bejegyzés egy automatikusan előállított e-mailen keresztül érkezett"
       whisper: "ez a hozzászólás egy privát suttogás a moderátorok számára."
@@ -5074,6 +5078,8 @@ hu:
           light: "Világos"
           dark: "Sötét"
           auto: "Automatikus"
+          title: "Színmód"
+          aria_label: "Színmód, jelenleg %{mode}"
     welcome_topic_banner:
       title: "Hozzon létre üdvözlő témát"
       description: "Az üdvözlő téma az első dolog, amit az új tagok elolvasnak. Gondoljon rá úgy, mint egy \"lendületbe hozó beszéd\"-re vagy \"küldetésnyilatkozat\"-ra. Tudassa mindenkivel, kiknek szól ez a közösség, mire számíthatnak itt, és mit szeretne, mit csináljanak először."
@@ -5318,9 +5324,16 @@ hu:
           title: "Lokalizáció"
           header_description: "A közösség kezelőfelületének nyelvének és a tagok egyéb lokalizációs beállításainak megadása"
           keywords: "\nhely|területi beállítás|nyelv|időzóna|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Bejelentkezés és hitelesítés"
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"
+          sub_pages:
+            common_settings:
+              title: "Beállítások"
+            authenticators:
+              title: "Közösségi bejelentkezések"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logó"
           header_description: "A webhelyen használt logók és ikonok testreszabása"
@@ -6503,6 +6516,7 @@ hu:
         copy_to_clipboard: "Vágólapra másolás"
         copied_to_clipboard: "Vágólapra másolva"
         copy_to_clipboard_error: "Hiba történt a vágólapra másoláskor"
+        theme_owner: "Tulajdonos:"
         email_templates:
           title: "E-mail"
           subject: "Tárgy"
@@ -6511,6 +6525,10 @@ hu:
           body: "Törzs"
           revert: "Változtatások visszavonása"
           revert_confirm: "Biztos, hogy visszavonja a változtatásokat?"
+          search_templates: "Szűrés sablon neve alapján..."
+          no_templates_found: "Egyik sablon sem felel meg a szűrőknek."
+          edit: "Szerkesztés"
+          back: "Vissza a sablonokhoz"
         component:
           all_filter: "Összes"
           used_filter: "Használt"
