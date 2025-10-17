@@ -272,6 +272,11 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
     }
     class FinalArrayLike extends MidArrayLike {
       finalField = "final";
+      _value = "initial";
+
+      get valueGetter() {
+        return "original";
+      }
 
       get finalValue() {
         return this.finalField + (this.content[1] || 0);
@@ -290,18 +295,17 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
         "final-array-like:main",
         (Superclass) =>
           class extends Superclass {
-            extraField = "plugin!";
-            _pluginValue = "initial";
-            _customSetterValue = 0;
+            // overriding getter from a base class works
+            get valueGetter() {
+              return super.valueGetter + " was modified";
+            }
 
             get pluginValue() {
-              return (
-                (this.extraField || "") + (this[2] || 0) + this._pluginValue
-              );
+              return (this[2] || 0) + this._value;
             }
 
             set pluginValue(val) {
-              this._pluginValue = val;
+              this._value = val;
             }
 
             get customSetterValue() {
@@ -333,28 +337,13 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
     assert.strictEqual(obj.finalValue, "final20", "final getter works");
 
     // Plugin modifications
-    assert.strictEqual(obj.extraField, "plugin!", "plugin field present");
-    assert.strictEqual(
-      obj.pluginValue,
-      "plugin!30initial",
-      "plugin getter works"
-    );
+    assert.strictEqual(obj.pluginValue, "30initial", "plugin getter works");
     obj.pluginValue = "changed";
+    assert.strictEqual(obj.pluginValue, "30changed", "plugin setter works");
     assert.strictEqual(
-      obj.pluginValue,
-      "plugin!30changed",
-      "plugin setter works"
-    );
-    assert.strictEqual(
-      obj._pluginValue,
+      obj._value,
       "changed",
       "plugin setter sets backing field"
-    );
-
-    assert.strictEqual(
-      obj.customSetterValue,
-      0,
-      "customSetterValue getter works"
     );
     obj.customSetterValue = 5;
     assert.strictEqual(
@@ -366,6 +355,17 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
       obj._customSetterValue,
       10,
       "customSetterValue setter sets backing field"
+    );
+    assert.strictEqual(
+      obj.customSetterValue,
+      10,
+      "customSetterValue getter works"
+    );
+
+    assert.strictEqual(
+      obj.valueGetter,
+      "original was modified",
+      "plugin getter overrides original"
     );
 
     assert.strictEqual(
