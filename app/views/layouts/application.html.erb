@@ -44,7 +44,9 @@
 
     <%- if staff? %>
       <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
-      <%= preload_script "admin" %>
+      <% EmberCli.script_chunks["chunk.admin"]&.each do |script_name| %>
+        <link rel="preload" href="<%= script_asset_path(script_name) %>" as="script" nonce="<%= csp_nonce_placeholder %>" data-discourse-entrypoint="admin">
+      <% end %>
     <%- end %>
 
     <%- if admin? %>

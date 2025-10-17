@@ -15,6 +15,7 @@ module.exports = function generateCommonBabelConfig() {
             runEarly: true,
           },
         ],
+        require.resolve("./babel-transform-module-renames"),
       ],
     },
   };

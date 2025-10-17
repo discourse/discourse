@@ -1,5 +1,4 @@
 packages:
-- "app/assets/javascripts/admin"
 - "app/assets/javascripts/custom-proxy"
 - "app/assets/javascripts/deprecation-silencer"
 - "app/assets/javascripts/dialog-holder"

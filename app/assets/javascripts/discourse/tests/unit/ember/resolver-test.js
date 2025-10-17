@@ -324,15 +324,16 @@ module("Unit | Ember | resolver", function (hooks) {
 
   test("resolves templates with 'admin' prefix", function (assert) {
     setTemplates([
-      "admin/templates/foo",
+      "discourse/admin/templates/foo",
       "discourse/templates/adminBar",
       "discourse/templates/admin_bar",
       "discourse/templates/admin.bar",
-      "admin/templates/bar",
-      "admin/templates/dashboard_general",
+      "discourse/admin/templates/bar",
+      "discourse/admin/templates/dashboard_general",
       "discourse/templates/admin-baz-qux",
       "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
-      "admin/templates/components/my-admin-component",
+      "discourse/plugins/my-plugin/admin/templates/other-plugin-template",
+      "discourse/admin/templates/components/my-admin-component",
     ]);
 
     // Switches prefix to admin/templates when camelized
@@ -342,7 +343,7 @@ module("Unit | Ember | resolver", function (hooks) {
         lookupTemplate(
           assert,
           "template:adminFoo",
-          "admin/templates/foo",
+          "discourse/admin/templates/foo",
           "when prefix is separated by camel case"
         );
       }
@@ -355,7 +356,7 @@ module("Unit | Ember | resolver", function (hooks) {
         lookupTemplate(
           assert,
           "template:admin_foo",
-          "admin/templates/foo",
+          "discourse/admin/templates/foo",
           "when prefix is separated by underscore"
         );
       }
@@ -368,7 +369,7 @@ module("Unit | Ember | resolver", function (hooks) {
         lookupTemplate(
           assert,
           "template:admin.foo",
-          "admin/templates/foo",
+          "discourse/admin/templates/foo",
           "when prefix is separated by dot"
         );
       }
@@ -425,7 +426,19 @@ module("Unit | Ember | resolver", function (hooks) {
           assert,
           "template:admin-plugin/template",
           "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
-          "looks up templates in plugins"
+          "looks up templates in plugin discourse namespace"
+        );
+      }
+    );
+
+    withSilencedDeprecations(
+      "discourse.deprecated-resolver-normalization",
+      () => {
+        lookupTemplate(
+          assert,
+          "template:admin/other-plugin-template",
+          "discourse/plugins/my-plugin/admin/templates/other-plugin-template",
+          "looks up templates in plugin admin namespace"
         );
       }
     );
@@ -433,30 +446,30 @@ module("Unit | Ember | resolver", function (hooks) {
     lookupTemplate(
       assert,
       "template:foo",
-      "admin/templates/foo",
+      "discourse/admin/templates/foo",
       "will return admin templates for regular controllers, if no normal match exists"
     );
 
     lookupTemplate(
       assert,
       "template:components/my-admin-component",
-      "admin/templates/components/my-admin-component",
+      "discourse/admin/templates/components/my-admin-component",
       "returns admin-defined component templates"
     );
   });
 
   test("resolves component templates with 'admin' prefix to 'admin/templates/' namespace", function (assert) {
     setTemplates([
-      "admin/templates/components/foo",
+      "discourse/admin/templates/components/foo",
       "discourse/templates/components/bar",
-      "admin/templates/components/bar",
+      "discourse/admin/templates/components/bar",
     ]);
 
     // Looks for components in admin/templates
     lookupTemplate(
       assert,
       "template:components/foo",
-      "admin/templates/components/foo",
+      "discourse/admin/templates/components/foo",
       "uses admin template component when no standard match"
     );
 

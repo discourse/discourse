@@ -140,7 +140,7 @@ function lookupModuleBySuffix(suffix) {
     const searchPaths = [
       "discourse/", // Includes themes/plugins
       "select-kit/",
-      "admin/",
+      "discourse/admin/",
     ];
     Object.keys(requirejs.entries).forEach((name) => {
       if (
@@ -365,14 +365,14 @@ export function buildResolver(baseName) {
     // (similar to how discourse lays out templates)
     findAdminTemplate(parsedName) {
       if (parsedName.fullNameWithoutType === "admin") {
-        return this.discourseTemplateModule("admin/templates/admin");
+        return this.discourseTemplateModule("discourse/admin/templates/admin");
       }
 
       let namespaced, match;
 
       if (parsedName.fullNameWithoutType.startsWith("components/")) {
         return (
-          this.findTemplate(parsedName, "admin/templates/") ||
+          this.findTemplate(parsedName, "discourse/admin/templates/") ||
           this.findTemplate(parsedName, "admin/") // Nested under discourse/templates/admin (e.g. from plugins)
         );
       } else if (/^admin[_\.\/-]/.test(parsedName.fullNameWithoutType)) {
@@ -386,8 +386,9 @@ export function buildResolver(baseName) {
       if (namespaced) {
         let adminParsedName = this.parseName(`template:${namespaced}`);
         const candidates = [
-          [parsedName, "admin/templates/"],
+          [parsedName, "discourse/admin/templates/"],
           [adminParsedName, "admin/templates/"],
+          [adminParsedName, "discourse/admin/templates/"],
           [adminParsedName, "admin/"],
         ];
 
@@ -407,7 +408,7 @@ export function buildResolver(baseName) {
           }
         }
       } else {
-        return this.findTemplate(parsedName, "admin/templates/");
+        return this.findTemplate(parsedName, "discourse/admin/templates/");
       }
     }
   };
