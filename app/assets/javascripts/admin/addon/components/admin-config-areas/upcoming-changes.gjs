@@ -16,7 +16,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
     return {
       status: [
         {
-          label: i18n("admin.upcoming_changes.filter.all"),
+          label: i18n("admin.upcoming_changes.filter.status_all"),
           value: "all",
           filterFn: () => true,
         },
@@ -48,7 +48,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       ],
       type: [
         {
-          label: i18n("admin.upcoming_changes.filter.all"),
+          label: i18n("admin.upcoming_changes.filter.impact_type_all"),
           value: "all",
           filterFn: () => true,
         },
@@ -66,7 +66,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       ],
       enabled: [
         {
-          label: i18n("admin.upcoming_changes.filter.all"),
+          label: i18n("admin.upcoming_changes.filter.enabled_all"),
           value: "all",
           filterFn: () => true,
         },

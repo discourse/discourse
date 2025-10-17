@@ -5630,6 +5630,8 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
+    reset_filter: "Reset"
+    toggle_filters: "Toggle dropdown filters"
 
     admin:
       title: "Discourse Admin"
@@ -5700,15 +5702,18 @@ en:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
           all: "All"
+          enabled_all: "Enabled or disabled"
           enabled: "Enabled"
           disabled: "Disabled"
-          impact_type_feature: "Type: Feature"
-          impact_type_other: "Type: Other"
-          status_pre_alpha: "Status: Pre-Alpha"
-          status_alpha: "Status: Alpha"
-          status_beta: "Status: Beta"
-          status_stable: "Status: Stable"
-          status_permanent: "Status: Permanent"
+          impact_type_all: "All impact types"
+          impact_type_feature: "Feature"
+          impact_type_other: "Other"
+          status_all: "All statuses"
+          status_pre_alpha: "Pre-Alpha"
+          status_alpha: "Alpha"
+          status_beta: "Beta"
+          status_stable: "Stable"
+          status_permanent: "Permanent"
 
       config:
         about:

@@ -9,6 +9,7 @@ import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import FilterInput from "discourse/components/filter-input";
+import concatClass from "discourse/helpers/concat-class";
 
 /**
  * admin filter controls component that support both client-side and server-side filtering
@@ -38,6 +39,7 @@ export default class AdminFilterControls extends Component {
   @tracked textFilter = "";
   @tracked dropdownFilter = "all";
   @tracked dropdownFilters = new TrackedObject();
+  @tracked showFilterDropdowns = false;
 
   get array() {
     return Array.isArray(this.args.array) ? this.args.array : [];
@@ -67,7 +69,10 @@ export default class AdminFilterControls extends Component {
   }
 
   get showDropdownFilter() {
-    return this.dropdownOptions.length > 1 || this.hasMultipleDropdowns;
+    return (
+      this.dropdownOptions.length > 1 ||
+      (this.hasMultipleDropdowns && this.showFilterDropdowns)
+    );
   }
 
   get defaultDropdownValue() {
@@ -210,50 +215,74 @@ export default class AdminFilterControls extends Component {
     });
   }
 
+  @action
+  toggleFilters() {
+    this.showFilterDropdowns = !this.showFilterDropdowns;
+  }
+
   <template>
     {{#if this.showFilters}}
-      <div class="admin-filter-controls" {{didInsert this.setupComponent}}>
-        <FilterInput
-          placeholder={{@inputPlaceholder}}
-          @filterAction={{this.onTextFilterChange}}
-          @value={{this.textFilter}}
-          class="admin-filter-controls__input"
-          @icons={{hash left="magnifying-glass"}}
-        />
+      <div
+        class={{concatClass
+          "admin-filter-controls"
+          (if this.hasMultipleDropdowns "--multiple-dropdowns")
+        }}
+        {{didInsert this.setupComponent}}
+      >
+        <div class="admin-filter-controls__inputs">
+          <FilterInput
+            placeholder={{@inputPlaceholder}}
+            @filterAction={{this.onTextFilterChange}}
+            @value={{this.textFilter}}
+            class="admin-filter-controls__input"
+            @icons={{hash left="magnifying-glass"}}
+          />
+
+          {{#if this.hasMultipleDropdowns}}
+            <DButton
+              class="btn-transparent admin-filter-controls__toggle-filters"
+              @icon="filter"
+              @title="admin.toggle_filters"
+              @action={{this.toggleFilters}}
+            />
+          {{/if}}
+        </div>
 
         {{#if this.showDropdownFilter}}
-          {{#if this.hasMultipleDropdowns}}
-            {{#each-in this.dropdownOptions as |key options|}}
+          <div class="admin-filter-controls__dropdowns">
+            {{#if this.hasMultipleDropdowns}}
+              {{#each-in this.dropdownOptions as |key options|}}
+                <DSelect
+                  @value={{get this.dropdownFilters key}}
+                  @includeNone={{false}}
+                  @onChange={{fn this.onDropdownFilterChange key}}
+                  class="admin-filter-controls__dropdown admin-filter-controls__dropdown--{{key}}"
+                  data-dropdown-key={{key}}
+                  as |select|
+                >
+                  {{#each options as |option|}}
+                    <select.Option @value={{option.value}}>
+                      {{option.label}}
+                    </select.Option>
+                  {{/each}}
+                </DSelect>
+              {{/each-in}}
+            {{else}}
               <DSelect
-                @value={{get this.dropdownFilters key}}
+                @value={{this.dropdownFilter}}
                 @includeNone={{false}}
-                @onChange={{fn this.onDropdownFilterChange key}}
-                class="admin-filter-controls__dropdown admin-filter-controls__dropdown--{{key}}"
-                data-dropdown-key={{key}}
+                @onChange={{this.onDropdownFilterChange}}
+                class="admin-filter-controls__dropdown"
                 as |select|
               >
-                {{#each options as |option|}}
+                {{#each this.dropdownOptions as |option|}}
                   <select.Option @value={{option.value}}>
                     {{option.label}}
                   </select.Option>
                 {{/each}}
               </DSelect>
-            {{/each-in}}
-          {{else}}
-            <DSelect
-              @value={{this.dropdownFilter}}
-              @includeNone={{false}}
-              @onChange={{this.onDropdownFilterChange}}
-              class="admin-filter-controls__dropdown"
-              as |select|
-            >
-              {{#each this.dropdownOptions as |option|}}
-                <select.Option @value={{option.value}}>
-                  {{option.label}}
-                </select.Option>
-              {{/each}}
-            </DSelect>
-          {{/if}}
+            {{/if}}
+          </div>
         {{/if}}
 
         {{yield to="actions"}}
@@ -272,7 +301,7 @@ export default class AdminFilterControls extends Component {
           {{/if}}
           <DButton
             @icon="arrow-rotate-left"
-            @label="admin.plugins.filters.reset"
+            @label="admin.filters.reset"
             @action={{this.resetFilters}}
             class="btn-default admin-filter-controls__reset"
           />
