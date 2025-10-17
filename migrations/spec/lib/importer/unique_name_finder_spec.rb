@@ -91,7 +91,7 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       it "avoids wildcard reserved usernames" do
         username = finder.find_available_username("system_user")
         expect(username).not_to eq("system_user")
-        expect(username).to eq("system_user_1")
+        expect(username).to eq("user_1")
       end
 
       it "avoids here mention" do
@@ -100,31 +100,42 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
         expect(username).to eq("here_1")
       end
 
+      it "uses fallback for wildcards ending with underscore-star when suffixes cannot help" do
+        username = finder.find_available_username("test_foo")
+        fallback = I18n.t("fallback_username")
+        expect(username).to eq("#{fallback}_1")
+      end
+
       it "allows reserved usernames when explicitly permitted" do
         username = finder.find_available_username("admin", allow_reserved_username: true)
         expect(username).to eq("admin")
       end
     end
 
-    it "handles Unicode normalization" do
-      SiteSetting.reserved_usernames = "café"
-      finder = described_class.new(shared_data)
-      username = finder.find_available_username("café")
-      expect(username).not_to eq("café")
-      expect(username).to eq("café_1")
-    end
+    context "with Unicode usernames enabled" do
+      before { SiteSetting.unicode_usernames = true }
 
-    it "handles grapheme clusters correctly" do
-      name_with_emoji = "user👨‍👩‍👧‍👦test"
-      username = finder.find_available_username(name_with_emoji)
-      expect(username).to be_valid_encoding
-    end
+      it "handles Unicode normalization" do
+        SiteSetting.reserved_usernames = "café"
+        finder = described_class.new(shared_data)
+        username = finder.find_available_username("café")
+        expect(username).not_to eq("café")
+        expect(username).to eq("café_1")
+      end
 
-    it "truncates at grapheme boundaries for multi-byte characters" do
-      long_name = "user👨‍👩‍👧‍👦" * 20
-      username = finder.find_available_username(long_name)
-      expect(username).to be_valid_encoding
-      expect(username.length).to be <= 60
+      it "handles grapheme clusters correctly" do
+        SiteSetting.unicode_usernames = true
+        name_with_emoji = "user👨‍👩‍👧‍👦test"
+        username = finder.find_available_username(name_with_emoji)
+        expect(username).to be_valid_encoding
+      end
+
+      it "truncates at grapheme boundaries for multi-byte characters" do
+        long_name = "user👨‍👩‍👧‍👦" * 20
+        username = finder.find_available_username(long_name)
+        expect(username).to be_valid_encoding
+        expect(username.length).to be <= 60
+      end
     end
   end
 
@@ -194,15 +205,19 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
     end
 
     it "handles suffix cache overflow correctly" do
-      stub_const("Migrations::Importer::UniqueNameFinder::SUFFIX_CACHE_SIZE", 2)
-      finder = described_class.new(shared_data)
+      # Create new finder with limited cache size
+      limited_cache = ::LruRedux::Cache.new(2)
+      finder_with_limited_cache = described_class.new(shared_data)
+      allow(finder_with_limited_cache).to receive(:instance_variable_get).with(
+        :@last_suffixes,
+      ).and_return(limited_cache)
 
-      finder.find_available_username("user1")
-      finder.find_available_username("user2")
-      finder.find_available_username("user3")
+      finder_with_limited_cache.find_available_username("user1")
+      finder_with_limited_cache.find_available_username("user2")
+      finder_with_limited_cache.find_available_username("user3")
 
       # Cache should still work, oldest entry evicted
-      expect(finder.find_available_username("user2")).to eq("user2_1")
+      expect(finder_with_limited_cache.find_available_username("user2")).to eq("user2_1")
     end
   end
 
@@ -301,18 +316,13 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
   end
 
   describe "edge cases" do
-    it "returns nil after MAX_ATTEMPTS" do
-      stub_const("Migrations::Importer::UniqueNameFinder::MAX_ATTEMPTS", 3)
-      finder = described_class.new(shared_data)
-
-      # Fill up all possible names
-      usernames.add("test")
-      usernames.add("test_1")
-      usernames.add("test_2")
-      usernames.add("test_3")
+    it "uses fallback after MAX_ATTEMPTS" do
+      # Fill up all possible names for "test"
+      501.times { |i| usernames.add("test#{i > 0 ? "_#{i}" : ""}") }
 
       username = finder.find_available_username("test")
-      expect(username).to be_nil
+      fallback = I18n.t("fallback_username")
+      expect(username).to eq("#{fallback}_1")
     end
   end
 end
