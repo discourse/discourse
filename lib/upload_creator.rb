@@ -318,7 +318,8 @@ class UploadCreator
   def convert_png_to_jpeg?
     return false unless @image_info.type == :png
     return true if @opts[:pasted]
-    return false if SiteSetting.png_to_jpg_quality == 100
+    target_quality = SiteSetting.png_to_jpg_quality.presence || SiteSetting.image_quality
+    return false if target_quality == 100
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
 
@@ -367,11 +368,14 @@ class UploadCreator
     to = OptimizedImage.prepend_decoder!(to)
 
     opts = {}
+
     desired_quality = [
-      SiteSetting.png_to_jpg_quality,
-      SiteSetting.recompress_original_jpg_quality,
+      SiteSetting.png_to_jpg_quality.presence,
+      SiteSetting.recompress_original_jpg_quality.presence,
     ].compact.min
-    target_quality = @upload.target_image_quality(from, desired_quality)
+
+    target_quality =
+      @upload.target_image_quality(from, desired_quality || SiteSetting.image_quality)
     opts = { quality: target_quality } if target_quality
 
     begin
@@ -443,7 +447,11 @@ class UploadCreator
           SiteSetting.recompress_original_jpg_quality
         end
       )
-    @upload.target_image_quality(@file.path, desired_quality).present?
+
+    @upload.target_image_quality(
+      @file.path,
+      desired_quality.presence || SiteSetting.image_quality,
+    ).present?
   end
 
   def should_downsize?

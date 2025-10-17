@@ -2298,18 +2298,22 @@ files:
     client: true
     type: uploaded_image_list
   allow_all_attachments_for_group_messages: false
+  image_quality:
+    enum: "ImageQualitySetting"
+    client: true
+    default: 70
   png_to_jpg_quality:
-    default: 95
+    default: ""
     min: 1
     max: 100
     hidden: true
   recompress_original_jpg_quality:
-    default: 90
+    default: ""
     min: 1
     max: 100
     hidden: true
   image_preview_jpg_quality:
-    default: 90
+    default: ""
     min: 1
     max: 100
     hidden: true
@@ -2354,7 +2358,7 @@ files:
     hidden: true
     client: true
   composer_media_optimization_image_encode_quality:
-    default: 75
+    default: ""
     client: true
     hidden: true
   composer_media_optimization_debug_mode:

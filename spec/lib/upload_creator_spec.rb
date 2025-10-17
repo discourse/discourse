@@ -165,7 +165,7 @@ RSpec.describe UploadCreator do
       let(:animated_webp_filename) { "animated.webp" }
       let(:animated_webp_file) { file_from_fixtures(animated_webp_filename) }
 
-      before { SiteSetting.png_to_jpg_quality = 1 }
+      before { SiteSetting.image_quality = 50 }
 
       it "should not store file as jpeg if it does not meet absolute byte saving requirements" do
         # logo.png is 2297 bytes, converting to jpeg saves 30% but does not meet
@@ -215,23 +215,17 @@ RSpec.describe UploadCreator do
       end
 
       context "with jpeg image quality settings" do
-        before do
-          SiteSetting.png_to_jpg_quality = 75
-          SiteSetting.recompress_original_jpg_quality = 40
-          SiteSetting.image_preview_jpg_quality = 10
-        end
+        before { SiteSetting.image_quality = 50 }
 
         it "should alter the image quality" do
           upload = UploadCreator.new(file, filename, force_optimize: true).create_for(user.id)
 
-          expect(image_quality(upload.url)).to eq(SiteSetting.recompress_original_jpg_quality)
+          expect(image_quality(upload.url)).to eq(SiteSetting.image_quality)
 
           upload.create_thumbnail!(100, 100)
           upload.reload
 
-          expect(image_quality(upload.optimized_images.first.url)).to eq(
-            SiteSetting.image_preview_jpg_quality,
-          )
+          expect(image_quality(upload.optimized_images.first.url)).to eq(SiteSetting.image_quality)
         end
 
         it "should not convert animated images" do
@@ -249,13 +243,9 @@ RSpec.describe UploadCreator do
         end
 
         context "with png image quality settings" do
-          before do
-            SiteSetting.png_to_jpg_quality = 100
-            SiteSetting.recompress_original_jpg_quality = 90
-            SiteSetting.image_preview_jpg_quality = 10
-          end
+          before { SiteSetting.image_quality = 100 }
 
-          it "should not convert to jpeg when png_to_jpg_quality is 100" do
+          it "should not convert to jpeg when image quality is original (100)" do
             upload =
               UploadCreator.new(large_file, large_filename, force_optimize: true).create_for(
                 user.id,
