@@ -88,6 +88,7 @@ class ProblemCheck
     ProblemCheck::TwitterLogin,
     ProblemCheck::UnreachableThemes,
     ProblemCheck::WatchedWords,
+    ProblemCheck::UpcomingChangeStableOptedOut,
   ].freeze
 
   # To enforce the unique constraint in Postgres <15 we need a dummy
@@ -178,9 +179,13 @@ class ProblemCheck
       problems
         .uniq(&:target)
         .each do |problem|
+          problem_translation_data =
+            problem.target.present? ? translation_data(problem.target) : translation_data
+
           tracker(problem.target).problem!(
             next_run_at:,
-            details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
+            details:
+              problem_translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
           )
         end
     end
@@ -195,6 +200,8 @@ class ProblemCheck
   end
 
   def problem(target = nil, override_key: nil, override_data: {}, details: {})
+    target_identifier = target.kind_of?(ActiveRecord::Base) ? target.id : target
+
     problem =
       Problem.new(
         I18n.t(
@@ -206,7 +213,7 @@ class ProblemCheck
         ),
         priority: self.config.priority,
         identifier:,
-        target: target&.id,
+        target: target_identifier,
         details:,
       )
 

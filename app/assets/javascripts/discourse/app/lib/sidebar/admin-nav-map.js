@@ -45,6 +45,15 @@ export const ADMIN_NAV_MAP = [
         keywords: "admin.config.whats_new.keywords",
         moderator: true,
       },
+      {
+        name: "admin_upcoming_changes",
+        route: "adminConfig.upcomingChanges",
+        label: "admin.config.upcoming_changes.title",
+        description: "admin.config.upcoming_changes.header_description",
+        icon: "flask",
+        keywords: "admin.config.upcoming_changes.keywords",
+        moderator: true,
+      },
     ],
   },
   {

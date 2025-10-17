@@ -24,6 +24,14 @@ class SiteSettings::DbProvider
     DB.query("SELECT name, data_type, value FROM #{@model.table_name} WHERE name = ?", name).first
   end
 
+  def setting_group_ids
+    return {} unless site_setting_groups_table_exists?
+
+    DB
+      .query("SELECT name, group_ids FROM site_setting_groups")
+      .each_with_object({}) { |row, hash| hash[row.name] = row.group_ids.split("|").map(&:to_i) }
+  end
+
   def save(name, value, data_type)
     return unless table_exists?
 
@@ -56,5 +64,12 @@ class SiteSettings::DbProvider
   def table_exists?
     @table_exists ||= {}
     @table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(@model.table_name)
+  end
+
+  def site_setting_groups_table_exists?
+    @site_setting_groups_table_exists ||= {}
+    @site_setting_groups_table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(
+      "site_setting_groups",
+    )
   end
 end

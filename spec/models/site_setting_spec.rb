@@ -197,6 +197,51 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe ".history_for" do
+    fab!(:admin)
+
+    it "returns an empty relation when no changes have been made" do
+      expect(SiteSetting.history_for(:title)).to be_empty
+    end
+
+    it "returns UserHistory records for the specified setting" do
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "Old Title", "New Title")
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "New Title", "Newer Title")
+
+      history = SiteSetting.history_for(:title)
+
+      expect(history.count).to eq(2)
+      expect(history.first.action).to eq(UserHistory.actions[:change_site_setting])
+      expect(history.first.subject).to eq("title")
+      expect(history.first.new_value).to eq("Newer Title")
+      expect(history.last.new_value).to eq("New Title")
+    end
+
+    it "returns only records for the specified setting" do
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "Old", "New")
+      StaffActionLogger.new(admin).log_site_setting_change(
+        :contact_email,
+        "old@test.com",
+        "new@test.com",
+      )
+
+      history = SiteSetting.history_for(:title)
+
+      expect(history.count).to eq(1)
+      expect(history.first.subject).to eq("title")
+    end
+
+    it "returns records ordered by most recent first" do
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "First", "Second")
+      StaffActionLogger.new(admin).log_site_setting_change(:title, "Second", "Third")
+
+      history = SiteSetting.history_for(:title)
+
+      expect(history.first.new_value).to eq("Third")
+      expect(history.last.new_value).to eq("Second")
+    end
+  end
+
   describe "Upload" do
     before { setup_s3 }
 
