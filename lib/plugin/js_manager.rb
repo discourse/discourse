@@ -60,7 +60,8 @@ module Plugin
               *tree.keys,
               *tree.values,
               Theme::BASE_COMPILER_VERSION,
-              #DiscourseJsProcessor::Transpiler.new.ember_version,
+              DiscourseJsProcessor::Transpiler.new.ember_version,
+              minify?.to_s,
             ].join,
           )
         base36_digest = hex_digest.to_i(16).to_s(36).first(8)
@@ -69,8 +70,7 @@ module Plugin
         output_map_file = "#{output_path}#{base36_digest}.digested.js.map"
 
         if !(File.exist?(output_js_file) && File.exist?(output_map_file))
-          puts "COMPILING"
-          compiler = PluginJavascriptCompiler.new(plugin.directory_name, minify: false)
+          compiler = PluginJavascriptCompiler.new(plugin.directory_name, minify: minify?)
           compiler.append_tree(tree)
           compiler.compile!
 
@@ -121,6 +121,10 @@ module Plugin
       ensure
         listener.stop
       end
+    end
+
+    def minify?
+      Rails.env.production?
     end
   end
 end
