@@ -43,7 +43,7 @@ describe Chat::Api::CurrentUserChannelsController do
       end
 
       context "with multiple channels and category group moderation" do
-        fab!(:group, :group)
+        fab!(:group)
         fab!(:channel_1, :category_channel)
         fab!(:channel_2, :category_channel)
         fab!(:channel_3, :category_channel)
