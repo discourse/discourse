@@ -56,9 +56,13 @@ module Migrations::Importer
     end
 
     # Optimized version of User.reserved_username?
-    def reserved_username?(username)
-      @exact_reserved_usernames.include?(username) ||
-        @wildcard_reserved_patterns.any? { |pattern| username.match?(pattern) }
+    def reserved_username?(name_lower)
+      @exact_reserved_usernames.include?(name_lower) ||
+        @wildcard_reserved_patterns.any? { |pattern| name_lower.match?(pattern) }
+    end
+
+    def matches_suffix_wildcard?(name_lower)
+      @suffix_wildcard_patterns.any? { |pattern| name_lower.match?(pattern) }
     end
 
     def find_available_name(name, fallback_name:, max_name_length:, allow_reserved_username: false)
@@ -67,12 +71,36 @@ module Migrations::Importer
       if name.present?
         name = truncate(name, max_length: max_name_length)
         name_lower = name.downcase
+
+        # Early return if name is available without suffix
         return name, name_lower if name_available?(name_lower, allow_reserved_username:)
+
+        # Switch to fallback if suffixes won't help (matches _* wildcard)
+        if !allow_reserved_username && matches_suffix_wildcard?(name_lower)
+          name = fallback_name
+          name_lower = name.downcase
+        end
       else
         name = fallback_name
         name_lower = name.downcase
       end
 
+      find_name_with_suffix(
+        name,
+        name_lower,
+        fallback_name,
+        max_name_length,
+        allow_reserved_username,
+      )
+    end
+
+    def find_name_with_suffix(
+      name,
+      name_lower,
+      fallback_name,
+      max_name_length,
+      allow_reserved_username
+    )
       suffix = next_suffix(name_lower)
       name_candidate_lower = +"#{name_lower}_#{suffix}"
       attempts = 0
@@ -92,6 +120,7 @@ module Migrations::Importer
           return "#{name}_#{suffix}", name_candidate_lower
         else
           name_candidate_lower.next!
+          suffix += 1
         end
 
         attempts += 1
@@ -101,11 +130,11 @@ module Migrations::Importer
     end
 
     def next_suffix(name_lower)
-      ((@last_suffixes.fetch(name_lower) || 0) + 1).to_s
+      (@last_suffixes.fetch(name_lower) || 0) + 1
     end
 
     def store_last_suffix(name_lower, suffix)
-      @last_suffixes[name_lower] = suffix.to_i
+      @last_suffixes[name_lower] = suffix
     end
 
     def truncate(name, max_length:)
@@ -122,18 +151,21 @@ module Migrations::Importer
     def build_reserved_username_cache
       @exact_reserved_usernames = Set.new
       @wildcard_reserved_patterns = []
+      @suffix_wildcard_patterns = []
 
       if SiteSetting.here_mention.present?
-        @exact_reserved_usernames.add(SiteSetting.here_mention.unicode_normalize)
+        @exact_reserved_usernames << SiteSetting.here_mention.unicode_normalize.downcase
       end
 
       SiteSetting.reserved_usernames_map.each do |reserved|
-        normalized = reserved.unicode_normalize
+        normalized = reserved.unicode_normalize.downcase
+
         if normalized.include?("*")
           pattern = /\A#{Regexp.escape(normalized).gsub('\*', ".*")}\z/
           @wildcard_reserved_patterns << pattern
+          @suffix_wildcard_patterns << pattern if normalized.end_with?("*")
         else
-          @exact_reserved_usernames.add(normalized)
+          @exact_reserved_usernames << normalized
         end
       end
     end
