@@ -140,15 +140,8 @@ class Guardian
     return false if !category
     return false if !category_group_moderation_allowed?
 
-    @group_moderator_categories ||= {}
-
-    if @group_moderator_categories.key?(category.id)
-      @group_moderator_categories[category.id]
-    else
-      @group_moderator_categories[category.id] = category_group_moderator_scope.exists?(
-        id: category.id,
-      )
-    end
+    @moderated_category_ids ||= category_group_moderator_scope.pluck(:id).to_set
+    @moderated_category_ids.include?(category.id)
   end
 
   def is_silenced?
@@ -672,9 +665,10 @@ class Guardian
   end
 
   def category_group_moderator_scope
-    Category
-      .joins(:category_moderation_groups)
-      .joins("INNER JOIN group_users ON group_users.group_id = category_moderation_groups.group_id")
-      .where("group_users.user_id": user.id)
+    Category.joins(category_moderation_groups: { group: :group_users }).where(
+      group_users: {
+        user_id: user.id,
+      },
+    )
   end
 end
