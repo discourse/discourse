@@ -91,6 +91,18 @@ ALWAYS lint any changes you make
 - Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns
 - Queries: use `explain`, specify columns, strategic indexing, `counter_cache` for counts
 
+## HTTP Response Codes
+- **204 No Content**: Use `head :no_content` for successful operations that don't return data
+  - DELETE operations that successfully remove a resource
+  - UPDATE/PUT operations that succeed but don't need to return modified data
+  - POST operations that perform an action without creating/returning resources (mark as read, clear notifications)
+- **200 OK**: Use `render json: success_json` when returning confirmation data or when clients expect a response body
+- **201 Created**: Use when creating resources, include location header or resource data
+- **Do NOT use 204 when**:
+  - Creating resources (use 201 with data)
+  - Returning modified/useful data to the client
+  - Clients expect confirmation data beyond success/failure
+
 ## Security
 - XSS: use `{{}}` (escaped) not `{{{ }}}`, sanitize with `sanitize`/`cook`, no `innerHTML`, careful with `@html`
 - Auth: Guardian classes (`lib/guardian.rb`), POST/PUT/DELETE for state changes, CSRF tokens, `protect_from_forgery`

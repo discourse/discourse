@@ -230,7 +230,7 @@ RSpec.describe Admin::SiteSettingsController do
 
       it "sets the value when the param is present" do
         put "/admin/site_settings/title.json", params: { title: "hello" }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
         expect(SiteSetting.title).to eq("hello")
       end
 
@@ -246,7 +246,7 @@ RSpec.describe Admin::SiteSettingsController do
                 },
               },
             }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
         expect(SiteSetting.title).to eq("hello")
         expect(SiteSetting.site_description).to eq("world")
       end
@@ -266,7 +266,7 @@ RSpec.describe Admin::SiteSettingsController do
         stub_deprecated_settings!(override: true) do
           put "/admin/site_settings/old_one.json", params: { old_one: true }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
           expect(SiteSetting.new_one).to eq(true)
         end
       end
@@ -299,28 +299,28 @@ RSpec.describe Admin::SiteSettingsController do
 
       it "allows value to be a blank string" do
         put "/admin/site_settings/title.json", params: { title: "" }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
         expect(SiteSetting.title).to eq("")
       end
 
       it "allows value to be a blank string for selectable_avatars" do
         SiteSetting.selectable_avatars = [Fabricate(:image_upload)]
         put "/admin/site_settings/selectable_avatars.json", params: { selectable_avatars: "" }
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
         expect(SiteSetting.selectable_avatars).to eq([])
       end
 
       xit "sanitizes integer values" do
         put "/admin/site_settings/suggested_topics.json", params: { suggested_topics: "1,000" }
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
         expect(SiteSetting.suggested_topics).to eq(1000)
       end
 
       it "sanitizes file_size_restriction values" do
         put "/admin/site_settings/max_image_size_kb.json", params: { max_image_size_kb: "4096" }
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
         expect(SiteSetting.max_image_size_kb).to eq(4096)
       end
 
@@ -330,7 +330,7 @@ RSpec.describe Admin::SiteSettingsController do
               pending_users_reminder_delay_minutes: "-1",
             }
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
         expect(SiteSetting.pending_users_reminder_delay_minutes).to eq(-1)
       end
 
@@ -392,7 +392,7 @@ RSpec.describe Admin::SiteSettingsController do
                   default_navigation_menu_categories: "1|2",
                 }
 
-            expect(response.status).to eq(200)
+            expect(response.status).to eq(204)
           end
         end
 
@@ -413,7 +413,7 @@ RSpec.describe Admin::SiteSettingsController do
                   update_existing_user: true,
                 }
 
-            expect(response.status).to eq(200)
+            expect(response.status).to eq(204)
           end
         end
 
@@ -434,7 +434,7 @@ RSpec.describe Admin::SiteSettingsController do
                   update_existing_user: true,
                 }
 
-            expect(response.status).to eq(200)
+            expect(response.status).to eq(204)
           end
         end
       end
@@ -473,7 +473,7 @@ RSpec.describe Admin::SiteSettingsController do
             },
           )
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
 
           put "/admin/site_settings/default_categories_watching.json",
               params: {
@@ -490,7 +490,7 @@ RSpec.describe Admin::SiteSettingsController do
             },
           )
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
         end
 
         it "should not update existing users user preference" do
@@ -512,7 +512,7 @@ RSpec.describe Admin::SiteSettingsController do
             },
           )
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
 
           put "/admin/site_settings/default_categories_watching.json",
               params: {
@@ -528,7 +528,7 @@ RSpec.describe Admin::SiteSettingsController do
             },
           )
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
         end
 
         it "should publish a MessageBus informing the correct groups" do
@@ -576,7 +576,7 @@ RSpec.describe Admin::SiteSettingsController do
             },
           )
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
         end
 
         it "should not update existing users user preference" do
@@ -598,7 +598,7 @@ RSpec.describe Admin::SiteSettingsController do
             },
           )
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
         end
 
         it "should publish a MessageBus informing the correct groups" do
@@ -624,7 +624,7 @@ RSpec.describe Admin::SiteSettingsController do
                 push_notifications_icon: nil,
               }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
           expect(SiteSetting.push_notifications_icon).to eq(nil)
         end
 
@@ -637,7 +637,7 @@ RSpec.describe Admin::SiteSettingsController do
                 push_notifications_icon: default_upload.url,
               }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
           expect(SiteSetting.push_notifications_icon).to eq(default_upload)
         end
 
@@ -649,7 +649,7 @@ RSpec.describe Admin::SiteSettingsController do
                 push_notifications_icon: upload.url,
               }
 
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
           expect(SiteSetting.push_notifications_icon).to eq(upload)
 
           user_history = UserHistory.last
@@ -668,7 +668,7 @@ RSpec.describe Admin::SiteSettingsController do
           UserHistory.where(action: UserHistory.actions[:change_site_setting]).count
         }.by(1)
 
-        expect(response.status).to eq(200)
+        expect(response.status).to eq(204)
         expect(SiteSetting.title).to eq("hello")
       end
 
@@ -712,7 +712,7 @@ RSpec.describe Admin::SiteSettingsController do
           put "/admin/site_settings/plugin_setting.json", params: { plugin_setting: "new value" }
 
           expect(SiteSetting.plugin_setting).to eq("new value")
-          expect(response.status).to eq(200)
+          expect(response.status).to eq(204)
         end
 
         it "does not allow changing of non-configurable settings" do
