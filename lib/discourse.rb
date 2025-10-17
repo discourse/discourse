@@ -932,9 +932,7 @@ module Discourse
 
     # get rid of rubbish so we don't share it
     # longer term we will use compact! here
-    GC.start
-    GC.start
-    GC.start
+    Process.warmup
   end
 
   # all forking servers must call this

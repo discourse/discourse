@@ -109,12 +109,14 @@ class Demon::Sidekiq < ::Demon::Base
     require "sidekiq/cli"
     cli = Sidekiq::CLI.instance
 
-    # Unicorn uses USR1 to indicate that log files have been rotated
-    Signal.trap("USR1") { reopen_logs }
+    if defined?(Unicorn)
+      # Unicorn uses USR1 to indicate that log files have been rotated
+      Signal.trap("USR1") { reopen_logs }
 
-    Signal.trap("USR2") do
-      sleep 1
-      reopen_logs
+      Signal.trap("USR2") do
+        sleep 1
+        reopen_logs
+      end
     end
 
     options = [
