@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -213,36 +214,64 @@ export default class AiTranslations extends Component {
       : "discourse_ai.translations.stats.incomplete_language_detection_description";
   }
 
-  get estimatedCompletionTime() {
-    if (!this.args.model?.backfill_enabled || this.hourlyRate === 0) {
-      return null;
+  get backfillStatusMessage() {
+    if (
+      this.args.model?.backfill_enabled &&
+      this.args.model?.backfill_max_age_days &&
+      this.hourlyRate > 0
+    ) {
+      const totalRemaining = this.data?.reduce(
+        (sum, { total, done }) => sum + (total - done),
+        0
+      );
+
+      if (totalRemaining && totalRemaining > 0) {
+        const hoursRemaining = totalRemaining / this.hourlyRate;
+
+        const cutoffDate = new Date();
+        cutoffDate.setDate(
+          cutoffDate.getDate() - this.args.model.backfill_max_age_days
+        );
+
+        const formattedDate = cutoffDate.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        let timeKey;
+        if (hoursRemaining < 1) {
+          const minutes = Math.ceil(hoursRemaining * 60);
+          timeKey = i18n("discourse_ai.translations.stats.eta_minutes", {
+            count: minutes,
+          });
+        } else if (hoursRemaining < 24) {
+          const hours = Math.ceil(hoursRemaining);
+          timeKey = i18n("discourse_ai.translations.stats.eta_hours", {
+            count: hours,
+          });
+        } else {
+          const days = Math.ceil(hoursRemaining / 24);
+          timeKey = i18n("discourse_ai.translations.stats.eta_days", {
+            count: days,
+          });
+        }
+
+        return htmlSafe(
+          i18n("discourse_ai.translations.stats.backfill_message", {
+            date: formattedDate,
+            eta: timeKey,
+            settingsUrl: this.settingsUrl,
+          })
+        );
+      }
     }
 
-    const totalRemaining = this.data?.reduce(
-      (sum, { total, done }) => sum + (total - done),
-      0
-    );
-
-    if (!totalRemaining || totalRemaining === 0) {
-      return null;
+    if (!this.args.model?.backfill_enabled) {
+      return i18n("discourse_ai.translations.stats.backfill_disabled");
     }
 
-    const hoursRemaining = totalRemaining / this.hourlyRate;
-
-    if (hoursRemaining < 1) {
-      const minutes = Math.ceil(hoursRemaining * 60);
-      return i18n("discourse_ai.translations.stats.eta_minutes", {
-        count: minutes,
-      });
-    } else if (hoursRemaining < 24) {
-      const hours = Math.ceil(hoursRemaining);
-      return i18n("discourse_ai.translations.stats.eta_hours", {
-        count: hours,
-      });
-    } else {
-      const days = Math.ceil(hoursRemaining / 24);
-      return i18n("discourse_ai.translations.stats.eta_days", { count: days });
-    }
+    return null;
   }
 
   get chartColors() {
@@ -472,18 +501,13 @@ export default class AiTranslations extends Component {
           </:header>
           <:content>
             <div class="ai-translations__stats-container">
-              <div class="ai-translations__stat-item">
-                <span class="ai-translations__stat-label">
-                  {{this.descriptionTooltip}}
-                  {{#if this.estimatedCompletionTime}}
-                    ({{i18n "discourse_ai.translations.stats.eta_label"}}:
-                    {{this.estimatedCompletionTime}})
-                  {{/if}}
-                  {{#unless @model.backfill_enabled}}
-                    {{i18n "discourse_ai.translations.stats.backfill_disabled"}}
-                  {{/unless}}
-                </span>
-              </div>
+              {{#if this.backfillStatusMessage}}
+                <div class="ai-translations__stat-item">
+                  <span class="ai-translations__stat-label">
+                    {{this.backfillStatusMessage}}
+                  </span>
+                </div>
+              {{/if}}
             </div>
             <div class="ai-translations__chart-container">
               <Chart
