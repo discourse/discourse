@@ -133,5 +133,4 @@ discourse_calendar:
     upcoming_change:
       status: "beta"
       impact: "other,all_members"
-      promote_at_version: ""
       learn_more_url: "https://meta.discourse.org/t/-/380311"

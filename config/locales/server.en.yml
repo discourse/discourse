@@ -1680,6 +1680,7 @@ en:
     problem:
       twitter_login: 'Twitter login appears to not be working at the moment. Check the credentials in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.'
       group_email_credentials: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
+      upcoming_change_stable_opted_out: 'Your site has opted-out of the "%{upcoming_change}" upcoming change. This change has now reached the "Stable" status and may soon be removed or made permanent. Visit <a href="%{base_path}/admin/config/upcoming-changes">the upcoming changes page</a> to review details about this change.'
       rails_env: "Your server is running in %{env} mode."
       host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
       sidekiq: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'

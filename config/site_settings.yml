@@ -4261,9 +4261,8 @@ experimental:
     default: false
     area: "experimental"
     upcoming_change:
-      status: "alpha"
+      status: "stable"
       impact: "feature,staff"
-      promote_at_version: ""
       learn_more_url: ""
   formkit_site_settings:
     client: true
@@ -4272,5 +4271,4 @@ experimental:
     upcoming_change:
       status: "pre_alpha"
       impact: "other,admins"
-      promote_at_version: ""
       learn_more_url: ""

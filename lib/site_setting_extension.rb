@@ -219,6 +219,10 @@ module SiteSettingExtension
     themeable.select { |_, value| value }.keys.sort
   end
 
+  def upcoming_change_site_settings
+    upcoming_change_metadata.keys.sort
+  end
+
   def client_settings_json
     key = SiteSettingExtension.client_settings_cache_key
     json = Discourse.cache.fetch(key, expires_in: 30.minutes) { client_settings_json_uncached }
@@ -997,6 +1001,7 @@ module SiteSettingExtension
         impact_type, impact_role = upcoming_change_metadata[name][:impact].split(",")
         upcoming_change_metadata[name][:impact_type] = impact_type
         upcoming_change_metadata[name][:impact_role] = impact_role
+        upcoming_change_metadata[name][:status] = opts[:upcoming_change][:status].to_sym
       end
 
       categories[name] = opts[:category] || :uncategorized
