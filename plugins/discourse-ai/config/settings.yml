@@ -489,7 +489,7 @@ discourse_ai:
   ai_translation_backfill_hourly_rate:
     default: 0
     min: 0
-    max: 1000
+    max: 100000
     client: false
     hidden: true
     area: "ai-features/translation"
