@@ -4009,7 +4009,7 @@ nb_NO:
       readonly: "Se"
     preloader_text: "Laster"
     lightbox:
-      download: "last ned"
+      download: "Last ned"
       previous: "Forrige (Venstre pil-nøkkel)"
       next: "Neste (pil-nøkkel)"
       counter: "%curr% av %total%"

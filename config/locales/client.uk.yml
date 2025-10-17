@@ -3829,6 +3829,8 @@ uk:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Перегляньте всі категорії</a>, <a href='%{basePath}/latest'>перегляньте останні теми</a> або перегляньте топ:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Переглянути всі теги</a> або <a href='%{basePath}/latest'>переглянути останні теми</a>."
       browse_latest_topics: "Переглянути найновіші теми"
+      browse_new_replies: "Переглянути нові відповіді"
+      browse_new_topics: "Переглянути нові теми"
       suggest_create_topic: Готові <a href>почати нову розмову?</a>
       jump_reply: "Перейти до початкового розташування публікації"
       jump_reply_aria: "Перейти до повідомлення @%{username} в його оригінальному розташуванні"
@@ -5020,8 +5022,7 @@ uk:
       readonly: "Бачити"
     preloader_text: "Завантаження"
     lightbox:
-      download: "завантажити"
-      open: "оригінальне зображення"
+      download: "Завантажити"
       previous: "Попередній (клавіша зі стрілкою вліво)"
       next: "Наступний (клавіша зі стрілкою вправо)"
       counter: "%curr% з %total%"

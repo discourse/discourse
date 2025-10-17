@@ -4756,8 +4756,7 @@ hr:
       readonly: "Vidjeti"
     preloader_text: "Učitavanje"
     lightbox:
-      download: "preuzmi"
-      open: "izvorna slika"
+      download: "Preuzmi"
       previous: "Prethodno (tipka sa strelicom ulijevo)"
       next: "Sljedeće (tipka sa strelicom desno)"
       counter: "%curr% od %total%"

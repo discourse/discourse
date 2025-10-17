@@ -29,10 +29,6 @@ uk:
       llm_triage:
         title: Сортування повідомлень за допомогою ШІ
         description: "Сортування повідомлень за допомогою великої мовної моделі"
-        flagged_post: |
-          <div>Відповідь від моделі:</div>
-          <p>%{llm_response}</p>
-          <b>Запущено правилом <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Вашу публікацію тимчасово видалено для перевірки"
           body: |

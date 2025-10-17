@@ -4527,7 +4527,6 @@ ug:
     preloader_text: "يۈكلەۋاتىدۇ"
     lightbox:
       download: "چۈشۈر"
-      open: "ئەسلى سۈرەت"
       previous: "ئالدىنقى (سول يا ئوق كۇنۇپكىسى)"
       next: "كېيىنكى (ئوڭ يا ئوق كۇنۇپكىسى)"
       counter: "%curr% / %total%"

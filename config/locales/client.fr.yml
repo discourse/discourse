@@ -4504,8 +4504,7 @@ fr:
       readonly: "Voir"
     preloader_text: "Chargement"
     lightbox:
-      download: "télécharger"
-      open: "image originale"
+      download: "Télécharger"
       previous: "Précédent (touche flèche gauche)"
       next: "Suivant (touche flèche droite)"
       counter: "%curr% sur %total%"

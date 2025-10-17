@@ -4101,6 +4101,8 @@ zh_CN:
   page_not_found:
     page_title: "找不到页面"
     title: "糟糕！该页面不存在或者是一个不公开页面。"
+    subtitle: "我们找遍了所有地方，但没有找到您要找的页面。"
+    popular_topics: "热门话题"
     see_more: "更多"
     search_button: "搜索"
   offline:

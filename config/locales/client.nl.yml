@@ -4504,8 +4504,7 @@ nl:
       readonly: "Weergeven"
     preloader_text: "Laden"
     lightbox:
-      download: "downloaden"
-      open: "originele afbeelding"
+      download: "Downloaden"
       previous: "Vorige (pijltoets naar links)"
       next: "Volgende (pijltoets naar rechts)"
       counter: "%curr% van %total%"

@@ -336,15 +336,9 @@ uk:
           complete_language_detection_description: "Усі повідомленнях, що відповідають вимогам %{total} мають можливість використовувати свою мову."
           incomplete_language_detection_description: "%{done} з %{total} дописів, які відповідають вимогам, визначено їхню мову."
           backfill_disabled: "Автозаповнення вимкнено, перекладатимуться лише нові публікації."
-          description_tooltip:
-            one: 'Є %{count} публікація, яку можна перекласти.'
-            few: 'Є %{count} публікації, які можна перекласти.'
-            many: 'Є %{count} публікацій, які можна перекласти.'
-            other: 'Є %{count} публікацій, які можна перекласти.'
         progress_chart:
           title: "Прогрес перекладу"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} з %{total} дописів перекладено"
           bar_done:
             one: "%{count} повідомлення"
             few: "%{count} дописів"

@@ -28,10 +28,6 @@ zh_CN:
       llm_triage:
         title: 使用 AI 对帖子进行分类
         description: "使用大语言模型对帖子进行分类"
-        flagged_post: |
-          <div>模型的回答：</div>
-          <p>%{llm_response}</p>
-          <b>由 <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> 规则触发</b>。
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |

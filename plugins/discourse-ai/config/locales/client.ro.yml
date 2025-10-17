@@ -92,14 +92,9 @@ ro:
           complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
           incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
           backfill_disabled: "Completarea este dezactivată, doar postările noi vor fi traduse."
-          description_tooltip:
-            one: 'Există o postare eligibilă pentru traducere.'
-            few: 'Există %{count} postări eligibile pentru traducere.'
-            other: 'Există %{count} de postări eligibile pentru traducere.'
         progress_chart:
           title: "Progresul traducerii"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} din %{total} postări traduse"
           bar_done:
             one: "o postare"
             few: "%{count} postări"

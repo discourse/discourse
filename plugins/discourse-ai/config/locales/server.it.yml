@@ -26,10 +26,6 @@ it:
       llm_triage:
         title: Triage dei messaggi con IA
         description: "Triage dei messaggi con LLM"
-        flagged_post: |
-          <div>Risposta dal modello:</div>
-          <p>%{llm_response}</p>
-          <b>Innescato dalla regola <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Report periodico con IA
         description: "Report periodico basato su LLM"

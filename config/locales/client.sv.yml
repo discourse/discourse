@@ -3806,8 +3806,7 @@ sv:
       readonly: "Se"
     preloader_text: "Laddar"
     lightbox:
-      download: "ladda ned"
-      open: "originalbild"
+      download: "Ladda ner"
       previous: "Föregående (Vänster piltangent)"
       next: "Nästa (höger piltangent)"
       counter: "%curr% av %total%"

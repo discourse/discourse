@@ -5441,7 +5441,6 @@ ar:
     preloader_text: "جارٍ التحميل"
     lightbox:
       download: "تنزيل"
-      open: "الصورة الأصلية"
       previous: "السابق (مفتاح السهم الأيسر)"
       next: "التالي (مفتاح السهم الأيمن)"
       counter: "%curr% من %total%"

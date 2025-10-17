@@ -4501,8 +4501,7 @@ it:
       readonly: "Visualizza"
     preloader_text: "Caricamento"
     lightbox:
-      download: "scarica"
-      open: "immagine originale"
+      download: "Scarica"
       previous: "Precedente (tasto freccia a sinistra)"
       next: "Successivo (tasto freccia a destra)"
       counter: "%curr% di %total%"

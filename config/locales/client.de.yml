@@ -3300,7 +3300,7 @@ de:
         hot: "Es gibt keine heißen Themen."
         filter: "Es gibt keine Themen."
         education:
-          topic_tracking_preferences: 'Du kannst deine Einstellungen für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
+          topic_tracking_preferences: 'Du kannst deine Konfiguration für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
           unread: "Nichts ungelesen … beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
@@ -3616,6 +3616,8 @@ de:
       reply:
         title: "Antworten"
         help: "beginne damit, eine Antwort auf dieses Thema zu verfassen"
+      footer_buttons:
+        region_label: "Themenaktionen"
       share:
         title: "Thema teilen"
         extended_title: "Link teilen"
@@ -3917,6 +3919,7 @@ de:
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Anhänge hochladen."
         attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Anhänge herunterladen zu können."
       cancel_composer:
+        confirm: "Willst du deinen Beitrag verwerfen?"
         discard: "Verwerfen"
       via_email: "dieser Beitrag ist per E-Mail eingetroffen"
       via_auto_generated_email: "dieser Beitrag ist per automatisch generierter E-Mail eingegangen"
@@ -4152,6 +4155,8 @@ de:
       foreground_color: "Textfarbe"
       color_validations:
         cant_be_empty: "darf nicht leer sein"
+        incorrect_length: "muss dem Format #RRGGBB oder #RGB entsprechen"
+        non_hexdecimal: "darf nur Hexadezimalzeichen (0-9, A-F) enthalten"
       styles:
         type: "Stil"
         icon: "Symbol"
@@ -4527,7 +4532,7 @@ de:
       readonly: "Ansehen"
     preloader_text: "Wird geladen"
     lightbox:
-      download: "herunterladen"
+      download: "Herunterladen"
       open: "Originalbild"
       previous: "Zurück (linke Pfeiltaste)"
       next: "Weiter (rechte Pfeiltaste)"
@@ -4841,6 +4846,7 @@ de:
     safe_mode:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
     theme_preview_notice: "Du siehst gerade eine Vorschau eines Themes. Schließe diese Browser-Registerkarte oder dieses Fenster, um zur normalen Konfiguration deiner Website zurückzukehren."
+    theme_preview_failed: "Die Vorschau des Themes kann nicht angezeigt werden, da es nicht existiert oder du nicht berechtigt bist, darauf zuzugreifen."
     image_removed: "(Bild entfernt)"
     pause_notifications:
       title: "Benachrichtigungen pausieren für …"
@@ -5062,6 +5068,8 @@ de:
           light: "Hell"
           dark: "Dunkel"
           auto: "Automatisch"
+          title: "Farbmodus"
+          aria_label: "Farbmodus, derzeit %{mode}"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -5312,6 +5320,10 @@ de:
           sub_pages:
             common_settings:
               title: "Einstellungen"
+            authenticators:
+              title: "Soziale Netzwerke"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Konfiguriere die Logos und Symbole, die auf deiner Website verwendet werden"
@@ -6494,6 +6506,7 @@ de:
         copy_to_clipboard: "In Zwischenablage kopieren"
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
+        theme_owner: "Im Besitz von:"
         email_templates:
           title: "E-Mail"
           subject: "Betreff"
@@ -6502,7 +6515,10 @@ de:
           body: "Nachrichtentext"
           revert: "Änderungen verwerfen"
           revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
+          search_templates: "Nach Vorlagennamen filtern ..."
+          no_templates_found: "Keine Vorlage entspricht deinen Filtern."
           edit: "Bearbeiten"
+          back: "Zurück zu Vorlagen"
         component:
           all_filter: "Alle"
           used_filter: "Verwendet"

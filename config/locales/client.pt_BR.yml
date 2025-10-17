@@ -4504,8 +4504,7 @@ pt_BR:
       readonly: "Ver"
     preloader_text: "Carregando"
     lightbox:
-      download: "download"
-      open: "imagem original"
+      download: "Download"
       previous: "Anterior (seta para a esquerda)"
       next: "Próximo (seta para a direita)"
       counter: "%curr% de %total%"

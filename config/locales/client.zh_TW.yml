@@ -4084,7 +4084,6 @@ zh_TW:
     preloader_text: "載入中"
     lightbox:
       download: "下載"
-      open: "原始圖片"
       previous: "上一個（左箭頭鍵）"
       next: "下一個（右箭頭鍵）"
       counter: "%curr%的%total%"

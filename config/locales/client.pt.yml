@@ -4135,7 +4135,7 @@ pt:
       readonly: "Ver"
     preloader_text: "A carregar"
     lightbox:
-      download: "transferir"
+      download: "Transferir"
       counter: "%curr% de %total%"
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'

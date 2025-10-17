@@ -26,10 +26,6 @@ tr_TR:
       llm_triage:
         title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
-        flagged_post: |
-          <div>Modelden gelen yanıt:</div>
-          <p>%{llm_response}</p>
-          <b><a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> kuralı ile tetiklenir.</b>
       llm_report:
         title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"

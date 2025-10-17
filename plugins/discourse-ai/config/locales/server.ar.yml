@@ -26,10 +26,6 @@ ar:
       llm_triage:
         title: فرز المنشورات باستخدام الذكاء الاصطناعي
         description: "فرز المنشورات باستخدام نموذج اللغة الكبير"
-        flagged_post: |
-          <div>استجابة من النموذج:</div>
-          <p>%{llm_response}</p>
-          <b>تم تشغيله من قِبل <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> القاعدة.</b>
       llm_report:
         title: التقرير الدوري باستخدام الذكاء الاصطناعي
         description: "تقرير دوري قائم على نموذج اللغة الكبير"

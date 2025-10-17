@@ -5036,8 +5036,7 @@ cs:
       readonly: "Prohlížet"
     preloader_text: "Nahrávám"
     lightbox:
-      download: "stáhnout"
-      open: "původní obrázek"
+      download: "Stáhnout"
       previous: "Předchozí (klávesa šipka vlevo)"
       next: "Další (klávesa šipka vpravo)"
       counter: "%curr% z %total%"

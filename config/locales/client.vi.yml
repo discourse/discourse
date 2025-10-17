@@ -3371,8 +3371,7 @@ vi:
       readonly: "Xem"
     preloader_text: "Đang tải"
     lightbox:
-      download: "tải về"
-      open: "ảnh gốc"
+      download: "Tải xuống"
       previous: "Trước (Phím mũi tên trái)"
       next: "Tiếp theo (Phím mũi tên phải)"
       counter: "%curr% trên %total%"

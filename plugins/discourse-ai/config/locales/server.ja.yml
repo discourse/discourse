@@ -26,10 +26,6 @@ ja:
       llm_triage:
         title: AI を使った投稿のトリアージ
         description: "大規模言語モデルを使って投稿に優先順位を付けます"
-        flagged_post: |
-          <div>モデルからの応答:</div>
-          <p>%{llm_response}</p>
-          <b><a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> ルールによってトリガーされました。</b>
       llm_report:
         title: AI を使った定期レポート
         description: "大規模言語モデルに基づく定期レポート"

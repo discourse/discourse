@@ -26,10 +26,6 @@ fi:
       llm_triage:
         title: Luokittele viestit tekoälyllä
         description: "Luokittele viestit suurella kielimallilla"
-        flagged_post: |
-          <div>Mallin vastaus::</div>
-          <p>%{llm_response}</p>
-          <b>Säännön <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> käynnistämä.</b>
       llm_report:
         title: Säännöllinen raportti tekoälyllä
         description: "Säännöllinen raportti laajan kielimallin perusteella"

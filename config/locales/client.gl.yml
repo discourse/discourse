@@ -3072,7 +3072,7 @@ gl:
       readonly: "Ver"
     preloader_text: "Cargando"
     lightbox:
-      download: "descargar"
+      download: "Descargar"
       previous: "Anterior (tecla de frecha cara á esquerda)"
       next: "Seguinte (tecla de frecha cara á dereita)"
       counter: "%curr% de %total%"

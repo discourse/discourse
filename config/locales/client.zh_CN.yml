@@ -4284,7 +4284,6 @@ zh_CN:
     preloader_text: "正在加载"
     lightbox:
       download: "下载"
-      open: "原始图片"
       previous: "上一个（左方向键）"
       next: "下一个（右方向键）"
       counter: "%curr%/%total%"

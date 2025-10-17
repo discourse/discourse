@@ -4866,8 +4866,7 @@ sk:
       readonly: "Zobraz"
     preloader_text: "Načítava sa"
     lightbox:
-      download: "stiahnuť"
-      open: "pôvodný obrázok"
+      download: "Stiahnuť"
       previous: "Predchádzajúci (kláves so šípkou doľava)"
       next: "Ďalej (kláves so šípkou doprava)"
       counter: "%curr% z %total%"

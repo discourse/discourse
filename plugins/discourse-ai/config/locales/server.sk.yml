@@ -26,10 +26,6 @@ sk:
       llm_triage:
         title: Triážne príspevky pomocou AI
         description: "Triedenie príspevkov pomocou rozsiahleho jazykového modelu"
-        flagged_post: |
-          <div>Odpoveď modelu:</div>
-          <p>%{llm_response}</p>
-          <b>Spúšťa sa <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> pravidlom.</b>
       llm_report:
         title: Pravidelná správa s použitím AI
         description: "Pravidelná správa na základe rozsiahleho jazykového modelu"

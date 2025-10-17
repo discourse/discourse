@@ -2471,7 +2471,7 @@ et:
       readonly: "Vaata"
     preloader_text: "Laaditakse"
     lightbox:
-      download: "laadi alla"
+      download: "Laadi alla"
       counter: "%curr% %total%-st"
     keyboard_shortcuts_help:
       title: "Klaviatuuri kiirvalikud"

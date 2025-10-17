@@ -323,7 +323,6 @@ ru:
           title: "Статистика переводов"
         progress_chart:
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} из %{total} сообщений переведено"
           bar_done:
             one: "%{count} публикация"
             few: "%{count} публикации"

@@ -3451,7 +3451,7 @@ ro:
       readonly: "Doar citire"
     preloader_text: "Se încarcă"
     lightbox:
-      download: "descărcare"
+      download: "Descărcare"
       counter: "%curr% din %total%"
     invalid_video_url: Acest videoclip nu poate fi redat deoarece adresa URL este nevalidă sau indisponibilă.
     keyboard_shortcuts_help:

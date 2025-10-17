@@ -4504,8 +4504,7 @@ fi:
       readonly: "Nähdä"
     preloader_text: "Ladataan"
     lightbox:
-      download: "lataa"
-      open: "alkuperäinen kuva"
+      download: "Lataa"
       previous: "Edellinen (vasen nuolinäppäin)"
       next: "Seuraava (oikea nuolinäppäin)"
       counter: "%curr% / %total%"

@@ -26,10 +26,6 @@ fr:
       llm_triage:
         title: Trier les publications à l'aide de l'IA
         description: "Triez les publications à l'aide d'un grand modèle linguistique"
-        flagged_post: |
-          <div>Réponse du modèle :</div>
-          <p>%{llm_response}</p>
-          <b>Déclenché par la règle <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Rapport périodique utilisant l'IA
         description: "Rapport périodique basé sur un grand modèle linguistique"

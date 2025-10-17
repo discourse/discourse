@@ -5015,8 +5015,8 @@ pl_PL:
       readonly: "przeglądać"
     preloader_text: "Ładowanie"
     lightbox:
-      download: "pobierz"
-      open: "oryginalny obraz"
+      download: "Pobierz"
+      open: "Oryginalny obraz"
       previous: "Poprzedni (klawisz strzałki w lewo)"
       next: "Następny (klawisz strzałki w prawo)"
       counter: "%curr% z %total%"

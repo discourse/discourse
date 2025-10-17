@@ -2164,6 +2164,7 @@ he:
         first_time_and_daily: "בפעם הראשונה שפוסט מקבל לייק ובאופן יומי"
         first_time: "בפעם הראשונה שמישהו אוהב פוסט"
         never: "אף פעם"
+      notify_on_linked_posts: "להודיע כשקישור לאחד הפוסטים שלי משותף"
       email_previous_replies:
         title: "לכלול תגובות קודמות בתחתית הודעות הדוא״ל"
         unless_emailed: "אלא אם נשלח לפני כן"
@@ -5006,7 +5007,6 @@ he:
     preloader_text: "בטעינה"
     lightbox:
       download: "הורדה"
-      open: "תמונה מקורית"
       previous: "הקודם (מקש שמאלה)"
       next: "הבא (מקש ימינה)"
       counter: "%curr% מתוך %total%"
@@ -7063,7 +7063,10 @@ he:
           body: "גוף"
           revert: "ביטול שינויים"
           revert_confirm: "לבטל את השינויים שלך?"
+          search_templates: "סינון לפי שם תבנית…"
+          no_templates_found: "אין תבניות שעונות על המסננים שלך."
           edit: "עריכה"
+          back: "חזרה לתבניות"
         component:
           all_filter: "הכול"
           used_filter: "בשימוש"

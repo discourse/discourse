@@ -28,10 +28,6 @@ ru:
       llm_triage:
         title: Сортировка публикаций с помощью AI
         description: "Сортировка публикаций с использованием большой языковой модели"
-        flagged_post: |
-          <div>Ответ модели:</div>
-          <p>%{llm_response}</p>
-          <b>Срабатывает по правилу: <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Ваш пост был временно удален для проверки"
           body: |

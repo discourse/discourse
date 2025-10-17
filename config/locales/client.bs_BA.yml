@@ -2816,7 +2816,7 @@ bs_BA:
       readonly: "Vidi"
     preloader_text: "Učitava"
     lightbox:
-      download: "skini"
+      download: "Skinuti"
       previous: "Prošlo (Tipka sa strelicom lijevo)"
       next: "Sljedeće (tipka sa strelicom udesno)"
       counter: "%curr% od %total%"

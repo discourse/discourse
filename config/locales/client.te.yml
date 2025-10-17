@@ -3807,8 +3807,7 @@ te:
       readonly: "చూడు"
     preloader_text: "లోడవుతోంది"
     lightbox:
-      download: "డౌన్‌లోడ్ చేయండి"
-      open: "అసలు చిత్రం"
+      download: "దిగుమతి"
       previous: "మునుపటి (లెఫ్ట్ అర్రౌ కీ)"
       next: "తదుపరి (రైట్ అర్రౌ కీ)"
       counter: "%total% లో %curr%"

@@ -4252,7 +4252,6 @@ fa_IR:
     preloader_text: "بارگیری..."
     lightbox:
       download: "دانلود"
-      open: "تصویر اصلی"
       previous: "قبلی (مکان‌نمای چپ)"
       next: "بعدی (مکان‌نمای راست)"
       counter: "%curr% از %total%"

@@ -294,8 +294,6 @@ zh_CN:
           complete_language_detection_description: "所有符合 %{total} 条件的帖子均已检测到其语言。"
           incomplete_language_detection_description: "%{done} 个符合条件的帖子中的 %{total} 个已检测到其语言。"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
-          description_tooltip:
-            other: '有 %{count} 个帖子可供翻译。'
         progress_chart:
           title: "翻译进度"
           bar_done:

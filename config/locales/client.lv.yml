@@ -2621,7 +2621,7 @@ lv:
       readonly: "Skatīt"
     preloader_text: "Ielāde"
     lightbox:
-      download: "lejuplādēt"
+      download: "Lejuplādēt"
       counter: "%curr% no %total%"
     keyboard_shortcuts_help:
       title: "Klaviatūras saīsnes"

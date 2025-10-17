@@ -4504,8 +4504,7 @@ tr_TR:
       readonly: "Bak"
     preloader_text: "Yükleniyor"
     lightbox:
-      download: "indir"
-      open: "orijinal görüntü"
+      download: "İndir"
       previous: "Önceki (Sol ok tuşu)"
       next: "Sonraki (Sağ ok tuşu)"
       counter: "%curr% / %total%"

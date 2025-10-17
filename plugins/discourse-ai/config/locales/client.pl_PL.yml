@@ -344,7 +344,7 @@ pl_PL:
         progress_chart:
           title: "Postęp tłumaczenia"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} z %{total} przetłumaczonych postów"
+          tooltip_translated: "%{done} z %{total} wpisów w języku innym niż %{language} przetłumaczono"
           bar_done:
             one: "%{count} wpis"
             few: "%{count} wpisy"

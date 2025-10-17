@@ -3471,7 +3471,7 @@ hy:
       readonly: "Դիտել"
     preloader_text: "Բեռնում"
     lightbox:
-      download: "ներբեռնել"
+      download: "Ներբեռնել"
       previous: "Նախորդ (սլաքի Ձախ ստեղնը)"
       next: "Հաջորդ (սլաքի Աջ ստեղնը)"
       counter: "%curr% %total% -ից"

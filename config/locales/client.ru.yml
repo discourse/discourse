@@ -4995,8 +4995,7 @@ ru:
       readonly: "Просматривать"
     preloader_text: "Загрузка…"
     lightbox:
-      download: "скачать"
-      open: "исходное изображение"
+      download: "Скачать"
       previous: "Назад (клавиша со стрелкой влево)"
       next: "Далее (клавиша со стрелкой вправо)"
       counter: "%curr% из %total%"

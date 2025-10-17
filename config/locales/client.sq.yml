@@ -3748,7 +3748,7 @@ sq:
       readonly: "Shiko"
     preloader_text: "Loading"
     lightbox:
-      download: "shkarko"
+      download: "Shkarko"
       counter: "%curr% nga %total%"
     keyboard_shortcuts_help:
       title: "Shkurtimet e tastierës "

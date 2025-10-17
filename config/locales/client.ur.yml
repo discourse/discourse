@@ -4532,7 +4532,6 @@ ur:
     preloader_text: "لوڈ ہو رہا ہے"
     lightbox:
       download: "ڈاؤن لوڈ"
-      open: "اصل تصویر"
       previous: "پچھلا (بائیں تیر کلید)"
       next: "اگلا (بائیں تیر کلید)"
       counter: "%curr% of %total%"

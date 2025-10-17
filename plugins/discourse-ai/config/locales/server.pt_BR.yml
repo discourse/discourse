@@ -26,10 +26,6 @@ pt_BR:
       llm_triage:
         title: Postagens de triagem usando IA
         description: "Postagens de triagem usando um modelo de linguagem grande"
-        flagged_post: |
-          <div>Resposta do modelo:</div>
-          <p>%{llm_response}</p>
-          <b>Acionada pela regra <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Relatório periódico usando IA
         description: "Relatório periódico baseado em um modelo de linguagem grande"

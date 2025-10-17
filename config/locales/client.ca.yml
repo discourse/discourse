@@ -2775,7 +2775,7 @@ ca:
       readonly: "Mira"
     preloader_text: "Carregant"
     lightbox:
-      download: "descarrega"
+      download: "Descarrega"
       previous: "Anterior (tecla de fletxa esquerra)"
       next: "Següent (tecla de fletxa dreta)"
       counter: "%curr% de %total%"

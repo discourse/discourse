@@ -3193,7 +3193,7 @@ bg:
       readonly: "Виж"
     preloader_text: "Зареждане"
     lightbox:
-      download: "изтегли"
+      download: "Изтегли"
       previous: "Назад (стрелка наляво)"
       next: "Напред (стрелка надясно)"
     keyboard_shortcuts_help:
