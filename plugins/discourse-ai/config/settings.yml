@@ -487,7 +487,7 @@ discourse_ai:
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/translation"
   ai_translation_backfill_hourly_rate:
-    default: 0
+    default: 10
     min: 0
     max: 100000
     client: false
@@ -502,7 +502,7 @@ discourse_ai:
     client: false
     area: "ai-features/translation"
   ai_translation_backfill_max_age_days:
-    default: 5
+    default: 100
     min: 0
     max: 20000
     client: false
