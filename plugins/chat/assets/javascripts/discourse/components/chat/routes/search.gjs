@@ -7,6 +7,9 @@ const ChatRoutesSearch = <template>
     <Navbar as |navbar|>
       <navbar.BackButton />
       <navbar.Title @title={{i18n "chat.search.title"}} />
+      <navbar.Actions as |action|>
+        <action.OpenDrawerButton />
+      </navbar.Actions>
     </Navbar>
     <ChatSearch @query={{@query}} />
   </div>

@@ -31,6 +31,7 @@ import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 const LIMIT = 20;
 
 export default class ChatSearch extends Component {
+  @service chatSearchQuery;
   @service router;
 
   @tracked currentSort = "relevance";
@@ -39,6 +40,10 @@ export default class ChatSearch extends Component {
   @tracked offset = 0;
   @tracked hasMoreResults = false;
   @tracked lastQuery = null;
+
+  get enableQueryParams() {
+    return this.args.enableQueryParams ?? true;
+  }
 
   @bind
   async searchMessages(resetResults = true) {
@@ -126,7 +131,11 @@ export default class ChatSearch extends Component {
 
   @action
   debounceFilterChange(query) {
-    this.router.replaceWith({ queryParams: { q: query } });
+    this.chatSearchQuery.query = query;
+
+    if (this.enableQueryParams) {
+      this.router.replaceWith({ queryParams: { q: query } });
+    }
   }
 
   @action
