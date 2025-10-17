@@ -40,6 +40,7 @@ module DiscourseAi
               SiteSetting.ai_translation_backfill_max_age_days > 0,
           backfill_enabled: DiscourseAi::Translation.backfill_enabled?,
           translation_enabled: SiteSetting.ai_translation_enabled,
+          hourly_rate: SiteSetting.ai_translation_backfill_hourly_rate,
         }
       end
     end

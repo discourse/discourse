@@ -38,6 +38,7 @@ export default class AiTranslations extends Component {
     : [];
   @tracked isSavingLocales = false;
   @tracked isTogglingTranslation = false;
+  @tracked hourlyRate = this.args.model?.hourly_rate || 0;
 
   get localesChanged() {
     const current = [...this.selectedLocales].sort().join("|");
@@ -180,6 +181,7 @@ export default class AiTranslations extends Component {
           this.total = response.total;
           this.done = response.posts_with_detected_locale;
           this.enabled = response.enabled;
+          this.hourlyRate = response.hourly_rate || 0;
         }
       } else {
         this.enabled = false;
@@ -209,6 +211,38 @@ export default class AiTranslations extends Component {
     return this.done === this.total
       ? "discourse_ai.translations.stats.complete_language_detection_description"
       : "discourse_ai.translations.stats.incomplete_language_detection_description";
+  }
+
+  get estimatedCompletionTime() {
+    if (!this.args.model?.backfill_enabled || this.hourlyRate === 0) {
+      return null;
+    }
+
+    const totalRemaining = this.data?.reduce(
+      (sum, { total, done }) => sum + (total - done),
+      0
+    );
+
+    if (!totalRemaining || totalRemaining === 0) {
+      return null;
+    }
+
+    const hoursRemaining = totalRemaining / this.hourlyRate;
+
+    if (hoursRemaining < 1) {
+      const minutes = Math.ceil(hoursRemaining * 60);
+      return i18n("discourse_ai.translations.stats.eta_minutes", {
+        count: minutes,
+      });
+    } else if (hoursRemaining < 24) {
+      const hours = Math.ceil(hoursRemaining);
+      return i18n("discourse_ai.translations.stats.eta_hours", {
+        count: hours,
+      });
+    } else {
+      const days = Math.ceil(hoursRemaining / 24);
+      return i18n("discourse_ai.translations.stats.eta_days", { count: days });
+    }
   }
 
   get chartColors() {
@@ -441,6 +475,10 @@ export default class AiTranslations extends Component {
               <div class="ai-translations__stat-item">
                 <span class="ai-translations__stat-label">
                   {{this.descriptionTooltip}}
+                  {{#if this.estimatedCompletionTime}}
+                    ({{i18n "discourse_ai.translations.stats.eta_label"}}:
+                    {{this.estimatedCompletionTime}})
+                  {{/if}}
                   {{#unless @model.backfill_enabled}}
                     {{i18n "discourse_ai.translations.stats.backfill_disabled"}}
                   {{/unless}}
