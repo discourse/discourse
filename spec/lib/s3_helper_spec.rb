@@ -400,4 +400,40 @@ RSpec.describe "S3Helper" do
       )
     end
   end
+
+  describe ".s3_options" do
+    context "when S3 credentials are provided" do
+      it "includes access keys in options" do
+        GlobalSetting.stubs(:s3_access_key_id).returns("test-key")
+        GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
+
+        options = S3Helper.s3_options(GlobalSetting)
+
+        expect(options[:access_key_id]).to eq("test-key")
+        expect(options[:secret_access_key]).to eq("test-secret")
+      end
+    end
+
+    context "when S3 credentials are not provided" do
+      it "omits credentials to allow AWS SDK auto-discovery" do
+        GlobalSetting.stubs(:s3_access_key_id).returns(nil)
+        GlobalSetting.stubs(:s3_secret_access_key).returns(nil)
+
+        options = S3Helper.s3_options(GlobalSetting)
+
+        expect(options).not_to have_key(:access_key_id)
+        expect(options).not_to have_key(:secret_access_key)
+      end
+
+      it "omits credentials when either key is blank" do
+        GlobalSetting.stubs(:s3_access_key_id).returns("")
+        GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
+
+        options = S3Helper.s3_options(GlobalSetting)
+
+        expect(options).not_to have_key(:access_key_id)
+        expect(options).not_to have_key(:secret_access_key)
+      end
+    end
+  end
 end

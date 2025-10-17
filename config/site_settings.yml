@@ -2177,8 +2177,6 @@ files:
   enable_s3_transfer_acceleration:
     default: false
     hidden: true
-  s3_use_iam_profile:
-    default: false
   s3_access_key_id:
     default: ""
     secret: true
@@ -2232,6 +2230,8 @@ files:
     hidden: true
     min: 60
     max: 604800
+  s3_file_uploads_profile:
+    default: ""
   allow_profile_backgrounds:
     client: true
     default: true
