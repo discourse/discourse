@@ -14,9 +14,8 @@ export default class AiBotConversationsHiddenSubmit extends Service {
   @service siteSettings;
 
   @tracked loading = false;
-
-  personaId;
-  targetUsername;
+  @tracked personaId;
+  @tracked targetUsername;
 
   inputValue = "";
 
