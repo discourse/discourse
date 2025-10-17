@@ -49,10 +49,12 @@ globalThis.rollup = function (modules, opts) {
       discourseColocation({ themeBase }),
       getBabelOutputPlugin({
         plugins: [BabelReplaceImports],
+        compact: false,
       }),
       babel({
         extensions: [".js", ".gjs", ".hbs"],
         babelHelpers: "bundled",
+        compact: false,
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
           AddThemeGlobals,
