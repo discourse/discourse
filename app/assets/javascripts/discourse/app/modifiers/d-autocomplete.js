@@ -21,6 +21,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {string} key - Trigger character (e.g., "@", "#", ":")
  * @param {Function} dataSource - Async function to fetch results: (term) => Promise<Array>
  * @param {Function} template - Template function that receives {options: results} and returns HTML
+ * @param {object} [component] - Glimmer/Ember component class to use for rendering results instead of template
  * @param {Function} [transformComplete] - Transform completion before insertion
  * @param {Function} [afterComplete] - Callback after completion
  * @param {boolean} [debounced=false] - Enable debounced search
@@ -30,6 +31,8 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {Function} [onKeyUp] - Function to extract search patterns from text on keyup: (text, caretPosition) => Array<string>
  * @param {boolean} [fixedTextareaPosition=false] - If true, positions autocomplete relative to textarea bounds instead of cursor position
  * @param {number} [offset] - Displaces the content from its reference trigger in pixels
+ * @param {Function} [onRender] - Callback when results are rendered
+ * @param {Function} [onClose] - Callback when menu is closed
  */
 export default class DAutocompleteModifier extends Modifier {
   /**
@@ -39,6 +42,13 @@ export default class DAutocompleteModifier extends Modifier {
    * @param {HTMLElement} element - The element to modify with autocomplete functionality
    * @param {Object} autocompleteHandler - Handler for text operations
    * @param {Object} options - Autocomplete options
+   * @param {string} [options.key] - Trigger character (e.g., "@", "#", ":")
+   * @param {Function} [options.dataSource] - Async function to fetch results: (term) => Promise<Array>
+   * @param {Function} [options.template] - Template function for HTML rendering
+   * @param {Object} [options.component] - Glimmer/Ember component class for rendering results
+   * @param {boolean} [options.debounced] - Enable debounced search
+   * @param {boolean} [options.preserveKey] - Include trigger key in completion
+   * @param {boolean} [options.autoSelectFirstSuggestion] - Auto-select first result
    */
   static setupAutocomplete(owner, element, autocompleteHandler, options) {
     const modifier = new DAutocompleteModifier(owner, {
@@ -439,6 +449,7 @@ export default class DAutocompleteModifier extends Modifier {
           getSelectedIndex: () => this.selectedIndex,
           onSelect: (result, index, event) => this.selectResult(result, event),
           template: this.options.template,
+          component: this.options.component,
           onRender: this.options.onRender,
         },
         modalForMobile: false,
