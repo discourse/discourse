@@ -36,7 +36,6 @@ class InviteMailer < ActionMailer::Base
         topic_excerpt = ""
       end
 
-
       build_email(
         invite.email,
         template: sanitized_message ? "custom_invite_mailer" : "invite_mailer",

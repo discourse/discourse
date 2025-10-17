@@ -3262,22 +3262,7 @@ en:
       >
       > %{site_description}
 
-      If you're interested, click the link below
-
-      %{invite_link}
-
-  invite_forum_mailer_de:
-    title: "DE Invite Forum Mailer"
-    subject_template: "DE %{inviter_name} invited you to join %{site_domain_name}"
-    text_body_template: |
-      GERMAN
-      %{inviter_name} invited you to join
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      If you're interested, click the link below
+      If you're interested, click the link below:
 
       %{invite_link}
 
