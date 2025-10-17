@@ -9,7 +9,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
   setupTest(hooks);
 
   test("constructs with default values", function (assert) {
-    let obj = new ArrayLikeObject();
+    const obj = new ArrayLikeObject();
     assert.true(
       obj instanceof ArrayLikeObject,
       "returns an ArrayLikeObject instance"
@@ -18,21 +18,21 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
   });
 
   test("accepts initial items", function (assert) {
-    let obj = new ArrayLikeObject([1, 2, 3]);
+    const obj = new ArrayLikeObject([1, 2, 3]);
     assert.deepEqual([...obj], [1, 2, 3], "contains initial items");
     assert.strictEqual(obj.length, 3, "length is correct");
   });
 
   test("accepts TrackedArray as items", function (assert) {
-    let arr = new TrackedArray([4, 5]);
-    let obj = new ArrayLikeObject(arr);
+    const arr = new TrackedArray([4, 5]);
+    const obj = new ArrayLikeObject(arr);
     assert.strictEqual(obj[0], 4);
     assert.strictEqual(obj[1], 5);
     assert.strictEqual(obj.length, 2);
   });
 
   test("assigns custom properties", function (assert) {
-    let obj = new ArrayLikeObject([1], { foo: "bar" });
+    const obj = new ArrayLikeObject([1], { foo: "bar" });
     assert.strictEqual(obj.foo, "bar", "property is assigned");
     obj.foo = "baz";
     assert.strictEqual(obj.foo, "baz", "property is settable");
@@ -128,7 +128,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
         return "custom";
       }
     }
-    let obj = new CustomArrayLike([1, 2]);
+    const obj = new CustomArrayLike([1, 2]);
     assert.strictEqual(obj.first, "custom");
   });
 
@@ -153,7 +153,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
         return this.length * 10;
       }
     }
-    let obj = new CustomArrayLike([5, 6, 7]);
+    const obj = new CustomArrayLike([5, 6, 7]);
 
     // Custom field
     assert.strictEqual(obj.customField, "foo", "custom field is present");
@@ -214,7 +214,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
         return this.baseValue + this.midValue + this.finalValue;
       }
     }
-    let obj = new FinalArrayLike([10, 20]);
+    const obj = new FinalArrayLike([10, 20]);
 
     // Base class field and getter
     assert.strictEqual(obj.baseField, "base", "base field present");
@@ -371,5 +371,131 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
       [11, 21, 31],
       "map works"
     );
+  });
+
+  test("Array.isArray checks", function (assert) {
+    const obj = new ArrayLikeObject([1, 2, 3]);
+    assert.true(Array.isArray(obj), "ArrayLikeObject is considered an array");
+    assert.true(Array.isArray([...obj]), "spread result is a true array");
+  });
+
+  test("spread, for..of, for..in iteration", function (assert) {
+    const obj = new ArrayLikeObject([10, 20, 30]);
+
+    // Spread
+    assert.deepEqual([...obj], [10, 20, 30], "array spread works");
+
+    // for..of
+    const values = [];
+    for (const v of obj) {
+      values.push(v);
+    }
+    assert.deepEqual(values, [10, 20, 30], "for..of works");
+
+    // for..in
+    const keys = [];
+    for (const k in obj) {
+      // Only collect numeric keys
+      if (!isNaN(Number(k))) {
+        keys.push(Number(k));
+      }
+    }
+    assert.deepEqual(keys, [0, 1, 2], "for..in yields array indices");
+
+    // for..in also yields custom properties
+    obj.foo = "bar";
+    const props = [];
+    for (const k in obj) {
+      if (obj.hasOwnProperty(k)) {
+        props.push(k);
+      }
+    }
+    assert.true(props.includes("foo"), "for..in yields custom properties");
+
+    // Subclass
+    class SubArrayLike extends ArrayLikeObject {
+      custom = true;
+    }
+
+    const sub = new SubArrayLike([1, 2]);
+    const subKeys = [];
+    for (const k in sub) {
+      if (!sub.hasOwnProperty(k)) {
+        continue;
+      }
+      subKeys.push(k);
+    }
+    assert.true(
+      subKeys.includes("custom"),
+      "for..in yields subclass properties"
+    );
+
+    // Empty
+    const empty = new ArrayLikeObject();
+    assert.deepEqual([...empty], [], "spread works for empty");
+    const emptyVals = [];
+    for (const v of empty) {
+      emptyVals.push(v);
+    }
+    assert.deepEqual(emptyVals, [], "for..of works for empty");
+  });
+
+  test("object spread operator", function (assert) {
+    const obj = new ArrayLikeObject([1, 2, 3]);
+
+    // No custom properties
+    let spread = { ...obj };
+    assert.deepEqual(
+      Object.keys(spread),
+      ["0", "1", "2"],
+      "array indices are enumerable own properties by default"
+    );
+    assert.deepEqual(
+      spread,
+      { 0: 1, 1: 2, 2: 3 },
+      "spread result contains array elements by default"
+    );
+
+    // Add custom property
+    obj.foo = "bar";
+    spread = { ...obj };
+    assert.true(spread.hasOwnProperty("foo"), "custom property is present");
+    assert.strictEqual(spread.foo, "bar", "custom property value is correct");
+    assert.strictEqual(spread[0], 1, "array element still present");
+
+    // Add numeric property (overrides array element)
+    obj[0] = 99;
+    spread = { ...obj };
+    assert.true(
+      spread.hasOwnProperty("0"),
+      "numeric property is present if own"
+    );
+    assert.strictEqual(
+      spread[0],
+      99,
+      "numeric property value overrides array element"
+    );
+
+    // Subclass
+    class SubArrayLike extends ArrayLikeObject {
+      custom = 42;
+    }
+    const sub = new SubArrayLike([5, 6]);
+    let subSpread = { ...sub };
+    assert.true(
+      subSpread.hasOwnProperty("custom"),
+      "subclass own property is present"
+    );
+    assert.strictEqual(
+      subSpread.custom,
+      42,
+      "subclass property value is correct"
+    );
+    assert.strictEqual(subSpread[0], 5, "subclass array element present");
+
+    // Empty object
+    const empty = new ArrayLikeObject();
+    const emptySpread = { ...empty };
+    assert.deepEqual(emptySpread, {}, "spread of empty object is empty");
   });
 });
