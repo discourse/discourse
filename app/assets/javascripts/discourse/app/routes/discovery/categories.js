@@ -129,7 +129,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
             this.store,
             result,
             parentCategory
-          ),
+          ).content,
           parentCategory,
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,

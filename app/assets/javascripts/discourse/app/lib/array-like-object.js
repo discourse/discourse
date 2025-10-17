@@ -3,6 +3,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import deprecated from "discourse/lib/deprecated";
 
 const EMBER_OBJECT_PROPERTIES = new Set([
+  "constructor",
   "addObserver",
   "cacheFor",
   "decrementProperty",
