@@ -41,7 +41,7 @@ module Jobs
               end
 
               users_to_email(post).find_each do |user|
-                DiscoursePolicy::PolicyMailer.send_email(user, post)
+                ::DiscoursePolicy::PolicyMailer.send_email(user, post)
               end
             end
         end
