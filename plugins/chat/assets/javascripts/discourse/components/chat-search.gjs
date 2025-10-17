@@ -139,11 +139,6 @@ export default class ChatSearch extends Component {
   }
 
   @action
-  loadExistingQuery() {
-    this.checkQueryChange();
-  }
-
-  @action
   checkQueryChange() {
     if (this.lastQuery !== this.args.query) {
       this.lastQuery = this.args.query;
@@ -183,7 +178,7 @@ export default class ChatSearch extends Component {
   <template>
     <div
       class="c-search"
-      {{didInsert this.loadExistingQuery}}
+      {{didInsert this.checkQueryChange}}
       {{didUpdate this.checkQueryChange @query}}
     >
       <div class="chat-search__filters">
