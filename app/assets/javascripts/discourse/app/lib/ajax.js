@@ -1,6 +1,5 @@
 import { run } from "@ember/runloop";
 import $ from "jquery";
-import { Promise } from "rsvp";
 import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import userPresent from "discourse/lib/user-presence";
@@ -134,6 +133,7 @@ export function ajax() {
     };
 
     args.error = (xhr, textStatus, errorThrown) => {
+      console.log("Discourse internal error", xhr, textStatus, errorThrown);
       // 0 represents the `UNSENT` state
       if (ignoreUnsent && xhr.readyState === 0) {
         // Make sure we log pretender errors in test mode
