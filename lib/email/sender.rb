@@ -302,6 +302,13 @@ module Email
         end
       rescue *SMTP_CLIENT_ERRORS => e
         return skip(SkippedEmailLog.reason_types[:custom], custom_reason: e.message)
+      rescue Net::SMTPError => e
+        Rails.logger.error("SMTP Error (#{e.class}): #{e.message}")
+        # Extract server response if available - based on net-smtp source research
+        if e.respond_to?(:response) && e.response
+          Rails.logger.error("SMTP Server Response: #{e.response}")
+        end
+        raise
       end
 
       DiscourseEvent.trigger(:after_email_send, @message, @email_type)

@@ -1,0 +1,218 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Test SMTP error logging with mail-relay-simulator
+
+require "fileutils"
+
+class SMTPErrorTester
+  def self.find_simulator_path
+    # Check environment variable first
+    return File.expand_path(ENV["MAIL_RELAY_SIMULATOR_PATH"]) if ENV["MAIL_RELAY_SIMULATOR_PATH"]
+
+    # Check common locations
+    possible_paths = [
+      "~/dev/mail-relay-simulator",
+      "../mail-relay-simulator",
+      "../../mail-relay-simulator",
+    ].map { |p| File.expand_path(p) }
+
+    possible_paths.find { |p| Dir.exist?(p) } || possible_paths.first
+  end
+
+  SIMULATOR_PATH = find_simulator_path
+  CONFIG_PATH = "config/discourse.conf"
+
+  def start
+    puts "Starting mail-relay-simulator..."
+    puts ""
+
+    unless Dir.exist?(SIMULATOR_PATH)
+      puts "Error: mail-relay-simulator not found at #{SIMULATOR_PATH}"
+      exit 1
+    end
+
+    system("docker-compose", "up", "-d", chdir: SIMULATOR_PATH)
+
+    puts ""
+    puts "✓ Mail relay simulator started"
+    puts "  SMTP ports: 5025 (plain), 5465 (TLS), 5587 (STARTTLS)"
+    puts "  Mailpit UI: http://localhost:5080"
+    puts ""
+    puts "Test users:"
+    puts "  bilbo / ring"
+    puts "  frodo / mail"
+    puts ""
+  end
+
+  def stop
+    puts "Stopping mail-relay-simulator..."
+
+    system("docker-compose", "down", chdir: SIMULATOR_PATH)
+
+    puts "✓ Mail relay simulator stopped"
+  end
+
+  def config(scenario = "auth_fail")
+    puts "Configuring Discourse for '#{scenario}' scenario..."
+    puts ""
+
+    config_lines = []
+    if File.exist?(CONFIG_PATH)
+      config_lines = File.readlines(CONFIG_PATH)
+      # Remove existing test SMTP settings
+      config_lines.reject! { |line| line.match?(/# SMTP Error Testing|smtp_(address|port|authentication|user_name|password|enable_start_tls|openssl_verify_mode|domain)/) }
+    end
+
+    # Add scenario-specific config
+    config_lines << "\n# SMTP Error Testing - #{scenario}\n"
+
+    case scenario
+    when "auth_fail"
+      config_lines << "smtp_address = localhost\n"
+      config_lines << "smtp_port = 5587\n"
+      config_lines << "smtp_authentication = plain\n"
+      config_lines << "smtp_user_name = bilbo\n"
+      config_lines << "smtp_password = WRONG_PASSWORD\n"
+      config_lines << "smtp_enable_start_tls = true\n"
+      config_lines << "smtp_openssl_verify_mode = none\n"
+      config_lines << "smtp_domain = localhost\n"
+      puts "Scenario: Wrong password (will trigger Net::SMTPAuthenticationError)"
+
+    when "no_auth"
+      config_lines << "smtp_address = localhost\n"
+      config_lines << "smtp_port = 5025\n"
+      config_lines << "smtp_enable_start_tls = false\n"
+      config_lines << "smtp_domain = localhost\n"
+      puts "Scenario: No authentication on port requiring it"
+
+    when "wrong_user"
+      config_lines << "smtp_address = localhost\n"
+      config_lines << "smtp_port = 5587\n"
+      config_lines << "smtp_authentication = plain\n"
+      config_lines << "smtp_user_name = gollum\n"
+      config_lines << "smtp_password = precious\n"
+      config_lines << "smtp_enable_start_tls = true\n"
+      config_lines << "smtp_openssl_verify_mode = none\n"
+      config_lines << "smtp_domain = localhost\n"
+      puts "Scenario: Non-existent user"
+
+    when "success"
+      config_lines << "smtp_address = localhost\n"
+      config_lines << "smtp_port = 5587\n"
+      config_lines << "smtp_authentication = plain\n"
+      config_lines << "smtp_user_name = bilbo\n"
+      config_lines << "smtp_password = ring\n"
+      config_lines << "smtp_enable_start_tls = true\n"
+      config_lines << "smtp_openssl_verify_mode = none\n"
+      config_lines << "smtp_domain = localhost\n"
+      puts "Scenario: Valid credentials (emails should work)"
+
+    else
+      puts "Unknown scenario: #{scenario}"
+      exit 1
+    end
+
+    File.write(CONFIG_PATH, config_lines.join)
+
+    puts ""
+    puts "✓ #{CONFIG_PATH} updated"
+    puts ""
+    puts "IMPORTANT: Restart Discourse for config to take effect"
+    puts "  Ctrl+C to stop rails server"
+    puts "  bundle exec rails s"
+    puts ""
+  end
+
+  def logs
+    puts "Watching Discourse logs for SMTP errors..."
+    puts "Press Ctrl+C to stop"
+    puts ""
+
+    log_file = File.exist?("log/development.log") ? "log/development.log" : "log/production.log"
+    exec("tail", "-f", log_file)
+  end
+
+  def test_email
+    puts "Send a test email from Discourse:"
+    puts ""
+    puts "Option 1: Via admin panel"
+    puts "  1. Go to http://localhost:3000/admin/email"
+    puts "  2. Click 'Send Test Email'"
+    puts "  3. Watch the logs with: bin/test-smtp-errors logs"
+    puts ""
+    puts "Option 2: Register a new user"
+    puts "  1. Go to http://localhost:3000"
+    puts "  2. Click 'Sign Up'"
+    puts "  3. Fill in details (triggers welcome email)"
+    puts "  4. Watch the logs with: bin/test-smtp-errors logs"
+    puts ""
+    puts "Option 3: Trigger from Rails console"
+    puts "  rails c"
+    puts "  UserEmail.create!(user: User.first, email_type: :welcome)"
+    puts ""
+  end
+
+  def cleanup
+    puts "Cleaning up SMTP test config..."
+
+    if File.exist?(CONFIG_PATH)
+      config_lines = File.readlines(CONFIG_PATH)
+      config_lines.reject! { |line| line.match?(/# SMTP Error Testing|smtp_(address|port|authentication|user_name|password|enable_start_tls|openssl_verify_mode|domain)/) }
+      File.write(CONFIG_PATH, config_lines.join)
+      puts "✓ Test config removed from #{CONFIG_PATH}"
+    end
+
+    puts "✓ Restart Discourse to use original SMTP settings"
+  end
+
+  def usage
+    puts "Usage: #{$0} {start|stop|config|logs|test|cleanup} [scenario]"
+    puts ""
+    puts "Commands:"
+    puts "  start              - Start mail-relay-simulator"
+    puts "  stop               - Stop mail-relay-simulator"
+    puts "  config [scenario]  - Configure Discourse SMTP (default: auth_fail)"
+    puts "  logs               - Watch Discourse logs for SMTP errors"
+    puts "  test               - Show how to trigger test emails"
+    puts "  cleanup            - Remove test SMTP config"
+    puts ""
+    puts "Scenarios:"
+    puts "  auth_fail   - Wrong password (Net::SMTPAuthenticationError)"
+    puts "  no_auth     - No authentication on port requiring it"
+    puts "  wrong_user  - Non-existent user"
+    puts "  success     - Valid credentials (control test)"
+    puts ""
+    puts "Example workflow:"
+    puts "  #{$0} start                    # Start simulator"
+    puts "  #{$0} config auth_fail         # Configure for auth failure"
+    puts "  # Restart Discourse"
+    puts "  #{$0} test                     # See how to trigger email"
+    puts "  #{$0} logs                     # Watch for errors"
+    puts "  #{$0} cleanup                  # Remove test config"
+    puts "  #{$0} stop                     # Stop simulator"
+  end
+end
+
+# Main
+tester = SMTPErrorTester.new
+command = ARGV[0]
+
+case command
+when "start"
+  tester.start
+when "stop"
+  tester.stop
+when "config"
+  scenario = ARGV[1] || "auth_fail"
+  tester.config(scenario)
+when "logs"
+  tester.logs
+when "test"
+  tester.test_email
+when "cleanup"
+  tester.cleanup
+else
+  tester.usage
+  exit 1
+end
