@@ -101,6 +101,17 @@ en:
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
+        message_actions:
+          bundle_title: "What do you want to do with the message?"
+        no_action_message:
+          title: "No action"
+          description: "Leave the message as is."
+        delete_message:
+          title: "Delete message"
+          description: "Permanently delete the message."
+        restore_message:
+          title: "Restore message"
+          description: "Restore the message so that users can see it."
         agree:
           title: "Agree..."
         agree_and_keep_message:

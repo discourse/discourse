@@ -22,8 +22,8 @@ class ReviewableUser < Reviewable
     delete_user_actions(actions, require_reject_reason: !is_a_suspect_user?)
   end
 
-  def build_new_separated_actions(actions, guardian, args)
-    build_legacy_combined_actions(actions, guardian, args)
+  def build_new_separated_actions
+    build_legacy_combined_actions(@actions, @guardian, @action_args)
   end
 
   def perform_approve_user(performed_by, args)

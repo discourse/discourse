@@ -12,8 +12,14 @@ RSpec.describe ReviewableActionBuilder do
     end
     fab!(:post_actions) { Reviewable::Actions.new(reviewable_post, guardian) }
 
+    before do
+      reviewable_post.instance_variable_set(:@actions, post_actions)
+      reviewable_post.instance_variable_set(:@guardian, guardian)
+      reviewable_post.instance_variable_set(:@action_args, {})
+    end
+
     it "creates a user bundle with standard actions when allowed" do
-      bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
+      bundle = reviewable_post.build_user_actions_bundle
 
       # bundle id and label
       expect(bundle.id).to eq("#{reviewable_post.id}-user-actions")
@@ -37,7 +43,7 @@ RSpec.describe ReviewableActionBuilder do
     it "includes only the no-op action when user is nil" do
       allow(reviewable_post).to receive(:target_created_by).and_return(nil)
 
-      bundle = reviewable_post.build_user_actions_bundle(post_actions, guardian)
+      bundle = reviewable_post.build_user_actions_bundle
       server_actions = bundle.actions.map(&:server_action)
 
       expect(server_actions).to include("no_action_user")

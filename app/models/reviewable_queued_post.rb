@@ -71,9 +71,9 @@ class ReviewableQueuedPost < Reviewable
     build_action(actions, :delete) if guardian.can_delete?(self)
   end
 
-  def build_new_separated_actions(actions, guardian, args)
+  def build_new_separated_actions
     # Because a queued post isn't a real post, we need to create our own post actions bundle
-    post_actions_bundle = build_post_actions_bundle(actions, guardian)
+    post_actions_bundle = build_post_actions_bundle
 
     unless approved?
       if topic&.closed?
@@ -89,7 +89,7 @@ class ReviewableQueuedPost < Reviewable
     end
 
     # User actions bundle
-    build_user_actions_bundle(actions, guardian) if pending?
+    build_user_actions_bundle if pending?
   end
 
   def build_editable_fields(fields, guardian, args)
