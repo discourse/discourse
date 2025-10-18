@@ -87,4 +87,19 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   end
 
   Theme.expire_site_cache! if name == :default_theme_id
+
+  # Update Discourse ID metadata
+  if SiteSetting.discourse_id_client_id.present? && SiteSetting.discourse_id_client_secret.present?
+    if %i[title logo logo_small site_description].include?(name)
+      Scheduler::Defer.later("Update Discourse ID metadata") do
+        begin
+          DiscourseId::Register.call(update: true)
+        rescue StandardError => e
+          Rails.logger.error(
+            "Failed to update Discourse ID metadata after #{name} change: #{e.message}",
+          )
+        end
+      end
+    end
+  end
 end
