@@ -324,7 +324,7 @@ en:
       subheader:
         logged_in_members: ""
         anonymous_members: ""
-      search: "Search"
+      search_placeholder: "Search"
 
     impersonation:
       notice: "You are impersonating %{username}"
