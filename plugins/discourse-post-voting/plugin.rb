@@ -51,6 +51,11 @@ after_initialize do
 
   register_reviewable_type ReviewablePostVotingComment
 
+  if Rails.env.local? && enabled?
+    require_relative "lib/discourse_dev/reviewable_post_voting_comment"
+    DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewablePostVotingComment
+  end
+
   reloadable_patch do
     Post.include(PostVoting::PostExtension)
     Topic.include(PostVoting::TopicExtension)
