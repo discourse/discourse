@@ -133,7 +133,6 @@ export function ajax() {
     };
 
     args.error = (xhr, textStatus, errorThrown) => {
-      console.log("Discourse internal error", xhr, textStatus, errorThrown);
       // 0 represents the `UNSENT` state
       if (ignoreUnsent && xhr.readyState === 0) {
         // Make sure we log pretender errors in test mode
