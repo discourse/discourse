@@ -137,15 +137,12 @@ RSpec.describe TopicStatusUpdater do
 
       before do
         # auto close after 3 days, topic was created a day ago
-        topic.update(
-          category:
-            Fabricate(
-              :category,
-              auto_close_hours: 72,
-              auto_close_based_on_last_post: based_on_last_post,
-            ),
-          created_at: 1.day.ago,
-        )
+        topic.update(category: Fabricate(:category), created_at: 1.day.ago)
+        topic.category.set_or_create_default_timer duration_minutes: 72 * 60,
+                                                   execute_at: Time.now,
+                                                   status_type: BaseTimer.types[:close],
+                                                   user: Discourse.system_user,
+                                                   based_on_last_post: based_on_last_post
       end
 
       it "inherits auto close from the topic category, based on the created_at date of the topic" do
@@ -163,7 +160,10 @@ RSpec.describe TopicStatusUpdater do
       end
 
       it "does not inherit auto close from the topic category if it has already been X hours since topic creation" do
-        topic.category.update(auto_close_hours: 1)
+        topic.category.set_or_create_default_timer duration_minutes: 60,
+                                                   execute_at: Time.now,
+                                                   status_type: BaseTimer.types[:close],
+                                                   user: Discourse.system_user
 
         # close the topic manually, and set a timer to automatically open
         TopicStatusUpdater.new(topic, admin).update!("closed", true)

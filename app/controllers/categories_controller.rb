@@ -139,6 +139,10 @@ class CategoriesController < ApplicationController
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
 
+    # TODO: move these params to somewhere
+    auto_close_hours = category_params.delete(:auto_close_hours)
+    based_on_last_post = category_params.delete(:auto_close_based_on_last_post)
+
     @category =
       begin
         Category.new(required_create_params.merge(user: current_user))
@@ -148,6 +152,18 @@ class CategoriesController < ApplicationController
 
     if @category.save
       @category.move_to(position.to_i) if position
+
+      if auto_close_hours.present?
+        timer_opts = {
+          status_type: CategoryDefaultTimer.types[:close],
+          duration_minutes: auto_close_hours.to_f.hours.in_minutes,
+          based_on_last_post:,
+          user: current_user,
+          execute_at: Time.now,
+        }
+
+        @category.set_or_create_default_timer(timer_opts)
+      end
 
       Scheduler::Defer.later "Log staff action create category" do
         @staff_action_logger.log_category_creation(@category)
@@ -183,6 +199,24 @@ class CategoriesController < ApplicationController
       # properly null the value so the database constraint doesn't catch us
       category_params[:email_in] = nil if category_params[:email_in]&.blank?
       category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
+
+      auto_close_hours = category_params.delete(:auto_close_hours)
+      auto_close_based_on_last_post = category_params.delete(:auto_close_based_on_last_post)
+
+      if auto_close_hours
+        timer_params = {
+          duration_minutes: auto_close_hours.to_f.hours.in_minutes,
+          execute_at: Time.now,
+          status_type: CategoryDefaultTimer.types[:close],
+          user: current_user,
+        }
+
+        if auto_close_based_on_last_post
+          timer_params[:based_on_last_post] = auto_close_based_on_last_post
+        end
+
+        cat.set_or_create_default_timer(timer_params)
+      end
 
       old_permissions = cat.permissions_params
       old_permissions = { "everyone" => 1 } if old_permissions.empty?
