@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { modifier } from "ember-modifier";
 import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -135,19 +136,23 @@ export default class AdminReportSentimentAnalysis extends Component {
   }
 
   get filteredPosts() {
+    let list;
+
     if (!this.posts || !this.posts.length) {
-      return [];
+      list = [];
+    } else {
+      list = this.posts.filter((post) => {
+        post.topic_title = replaceEmoji(post.topic_title);
+        post.category = Category.findById(post.category_id);
+
+        if (this.activeFilter === "all") {
+          return true;
+        }
+        return post.sentiment === this.activeFilter;
+      });
     }
 
-    return this.posts.filter((post) => {
-      post.topic_title = replaceEmoji(post.topic_title);
-      post.category = Category.findById(post.category_id);
-
-      if (this.activeFilter === "all") {
-        return true;
-      }
-      return post.sentiment === this.activeFilter;
-    });
+    return new TrackedArray(list);
   }
 
   get postFilters() {
@@ -278,7 +283,7 @@ export default class AdminReportSentimentAnalysis extends Component {
       this.nextOffset = response.next_offset;
 
       const mappedPosts = response.posts.map((post) => Post.create(post));
-      this.posts.pushObjects(mappedPosts);
+      this.posts.push(mappedPosts);
       return mappedPosts;
     } catch (e) {
       popupAjaxError(e);

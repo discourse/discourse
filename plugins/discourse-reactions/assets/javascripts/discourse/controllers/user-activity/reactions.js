@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import CustomReaction from "../../models/discourse-reactions-custom-reaction";
 
 export default class UserActivityReactions extends Controller {
@@ -42,7 +43,7 @@ export default class UserActivityReactions extends Controller {
   }
 
   @action
-  loadMore() {
+  async loadMore() {
     if (!this.canLoadMore || this.loading) {
       return;
     }
@@ -50,27 +51,32 @@ export default class UserActivityReactions extends Controller {
     this.loading = true;
     const reactionUsers = this.model;
 
-    if (!this.beforeReactionUserId) {
-      this.#updateBeforeIds(reactionUsers);
+    try {
+      if (!this.beforeReactionUserId) {
+        this.#updateBeforeIds(reactionUsers);
+      }
+
+      const opts = {
+        actingUsername: this.actingUsername,
+        includeLikes: this.includeLikes,
+        beforeLikeId: this.beforeLikeId,
+        beforeReactionUserId: this.beforeReactionUserId,
+      };
+
+      const newReactionUsers = await CustomReaction.findReactions(
+        this.reactionsUrl,
+        this.username,
+        opts
+      );
+
+      addUniqueValuesToArray(reactionUsers, newReactionUsers);
+      this.#updateBeforeIds(newReactionUsers);
+
+      if (newReactionUsers.length === 0) {
+        this.canLoadMore = false;
+      }
+    } finally {
+      this.loading = false;
     }
-
-    const opts = {
-      actingUsername: this.actingUsername,
-      includeLikes: this.includeLikes,
-      beforeLikeId: this.beforeLikeId,
-      beforeReactionUserId: this.beforeReactionUserId,
-    };
-
-    CustomReaction.findReactions(this.reactionsUrl, this.username, opts)
-      .then((newReactionUsers) => {
-        reactionUsers.addObjects(newReactionUsers);
-        this.#updateBeforeIds(newReactionUsers);
-        if (newReactionUsers.length === 0) {
-          this.canLoadMore = false;
-        }
-      })
-      .finally(() => {
-        this.loading = false;
-      });
   }
 }
