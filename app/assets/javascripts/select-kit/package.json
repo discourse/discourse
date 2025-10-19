@@ -17,7 +17,7 @@
     "@babel/core": "^7.28.4",
     "@ember-decorators/component": "*",
     "@ember/string": "^4.0.1",
-    "@popperjs/core": "^2.11.8",
+    "@floating-ui/dom": "^1.7.4",
     "discourse-i18n": "workspace:1.0.0",
     "ember-auto-import": "^2.11.1",
     "ember-cached-decorator-polyfill": "^1.0.2",

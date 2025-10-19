@@ -191,6 +191,10 @@
     display: none;
     background: var(--secondary);
     box-sizing: border-box;
+    width: max-content;
+    position: absolute;
+    top: 0;
+    left: 0;
 
     .selected-content {
       max-height: 300px;

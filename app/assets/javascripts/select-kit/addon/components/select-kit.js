@@ -11,11 +11,17 @@ import {
   classNames,
   tagName,
 } from "@ember-decorators/component";
-import { createPopper } from "@popperjs/core";
+import {
+  autoUpdate,
+  computePosition,
+  flip,
+  limitShift,
+  offset,
+  shift,
+} from "@floating-ui/dom";
 import { Promise } from "rsvp";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
-import { bind as bindDecorator } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
@@ -324,12 +330,14 @@ export default class SelectKit extends Component {
 
     this._cancelSearch();
 
-    this.appEvents.off("keyboard-visibility-change", this, this._updatePopper);
+    // this.appEvents.off("keyboard-visibility-change", this, this._updatePopper);
 
-    if (this.popper) {
-      this.popper.destroy();
-      this.popper = null;
-    }
+    this.cleanupFloatingUi?.();
+
+    // if (this.popper) {
+    //   this.popper.destroy();
+    //   this.popper = null;
+    // }
   }
 
   didReceiveAttrs() {
@@ -449,7 +457,7 @@ export default class SelectKit extends Component {
       this.errorsCollection.pushObject(error);
     }
 
-    this._safeAfterRender(() => this._updatePopper());
+    // this._safeAfterRender(() => this._updatePopper());
   }
 
   clearErrors() {
@@ -483,7 +491,7 @@ export default class SelectKit extends Component {
   }
 
   _onInput(event) {
-    this._updatePopper();
+    // this._updatePopper();
 
     if (this._searchPromise) {
       cancel(this._searchPromise);
@@ -552,7 +560,7 @@ export default class SelectKit extends Component {
         if (this.selectKit.options.focusAfterOnChange) {
           this._safeAfterRender(() => {
             this._focusFilter();
-            this._updatePopper();
+            // this._updatePopper();
           });
         }
       }
@@ -710,7 +718,7 @@ export default class SelectKit extends Component {
       "selectKit.isLoading": true,
       "selectKit.enterDisabled": true,
     });
-    this._safeAfterRender(() => this._updatePopper());
+    // this._safeAfterRender(() => this._updatePopper());
 
     let content = [];
 
@@ -776,7 +784,7 @@ export default class SelectKit extends Component {
 
         this._safeAfterRender(() => {
           if (this.selectKit.isExpanded) {
-            this._updatePopper();
+            // this._updatePopper();
             this._focusFilter();
           }
         });
@@ -962,137 +970,25 @@ export default class SelectKit extends Component {
     this.clearErrors();
     this.selectKit.onOpen(event);
 
-    if (!this.popper) {
-      const inModal = this.element.closest(".fixed-modal .modal-body");
-      const anchor = document.querySelector(
-        `#${this.selectKit.uniqueID}-header`
+    // TODO
+    const referenceElement = document.querySelector(
+      `#${this.selectKit.uniqueID}-header`
+    );
+    const floatingElement = document.querySelector(
+      `#${this.selectKit.uniqueID}-body`
+    );
+
+    if (this.site.desktopView) {
+      this.cleanupFloatingUi?.();
+      this.cleanupFloatingUi = autoUpdate(
+        referenceElement,
+        floatingElement,
+        () => {
+          this.updateFloatingUiPosition(referenceElement, floatingElement);
+        }
       );
-      const popper = document.querySelector(`#${this.selectKit.uniqueID}-body`);
-      const strategy = this._computePlacementStrategy();
-
-      let bottomOffset = 0;
-      if (this.capabilities.isIOS) {
-        bottomOffset +=
-          parseInt(
-            getComputedStyle(document.documentElement)
-              .getPropertyValue("--safe-area-inset-bottom")
-              .trim(),
-            10
-          ) || 0;
-      }
-      if (this.site.mobileView) {
-        bottomOffset +=
-          parseInt(
-            getComputedStyle(document.documentElement)
-              .getPropertyValue("--footer-nav-height")
-              .trim(),
-            10
-          ) || 0;
-      }
-
-      this.popper = createPopper(anchor, popper, {
-        eventsEnabled: false,
-        strategy,
-        placement: this.selectKit.options.placement,
-        modifiers: [
-          {
-            name: "eventListeners",
-            options: {
-              resize: this.site.desktopView,
-              scroll: this.site.desktopView,
-            },
-          },
-          {
-            name: "flip",
-            enabled: !inModal,
-            options: {
-              padding: {
-                top:
-                  parseInt(
-                    document.documentElement.style.getPropertyValue(
-                      "--header-offset"
-                    ),
-                    10
-                  ) || 0,
-                bottom: bottomOffset,
-              },
-            },
-          },
-          {
-            name: "offset",
-            options: {
-              offset: [0, this.selectKit.options.verticalOffset],
-            },
-          },
-          {
-            name: "applySmallScreenOffset",
-            enabled: window.innerWidth <= 450,
-            phase: "main",
-            fn({ state }) {
-              if (!inModal) {
-                let { x } = state.elements.reference.getBoundingClientRect();
-                if (strategy === "fixed") {
-                  state.modifiersData.popperOffsets.x = 0 + 10;
-                } else {
-                  state.modifiersData.popperOffsets.x = -x + 10;
-                }
-              }
-            },
-          },
-          {
-            name: "applySmallScreenMaxWidth",
-            enabled: window.innerWidth <= 450,
-            phase: "beforeWrite",
-            fn: ({ state }) => {
-              if (inModal) {
-                const innerModal = document.querySelector(
-                  ".fixed-modal div.modal-inner-container"
-                );
-
-                if (innerModal) {
-                  if (this.multiSelect) {
-                    state.styles.popper.width = `${this.element.offsetWidth}px`;
-                  } else {
-                    state.styles.popper.width = `${
-                      innerModal.clientWidth - 20
-                    }px`;
-                  }
-                }
-              } else {
-                state.styles.popper.width = `${window.innerWidth - 20}px`;
-              }
-            },
-          },
-          {
-            name: "minWidth",
-            enabled: window.innerWidth > 450,
-            phase: "beforeWrite",
-            requires: ["computeStyles"],
-            fn: ({ state }) => {
-              state.styles.popper.minWidth = `${Math.max(
-                state.rects.reference.width,
-                220
-              )}px`;
-            },
-            effect: ({ state }) => {
-              state.elements.popper.style.minWidth = `${Math.max(
-                state.elements.reference.offsetWidth,
-                220
-              )}px`;
-            },
-          },
-          {
-            name: "modalHeight",
-            enabled: !!(inModal && this.site.mobileView),
-            phase: "afterWrite",
-            fn: ({ state }) => {
-              inModal.style = "";
-              inModal.style.height =
-                inModal.clientHeight + state.rects.popper.height + "px";
-            },
-          },
-        ],
-      });
+    } else {
+      this.updateFloatingUiPosition(referenceElement, floatingElement);
     }
 
     this.selectKit.setProperties({
@@ -1110,7 +1006,148 @@ export default class SelectKit extends Component {
     this._safeAfterRender(() => {
       this._focusFilter();
       this._scrollToCurrent();
-      this._updatePopper();
+      // this._updatePopper();
+    });
+  }
+
+  updateFloatingUiPosition(referenceElement, floatingElement) {
+    const inModal = this.element.closest(".fixed-modal .modal-body");
+    const strategy = this._computePlacementStrategy();
+
+    let bottomOffset = 0;
+    if (this.capabilities.isIOS) {
+      bottomOffset +=
+        parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue("--safe-area-inset-bottom")
+            .trim(),
+          10
+        ) || 0;
+    }
+    if (this.site.mobileView) {
+      bottomOffset +=
+        parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue("--footer-nav-height")
+            .trim(),
+          10
+        ) || 0;
+    }
+
+    const middleware = [];
+
+    middleware.push({
+      name: "flip",
+      fn(state) {
+        if (inModal) {
+          return { x: state.x, y: state.y };
+        } else {
+          return flip({
+            padding: {
+              top:
+                // TODO: could use safe areas/virtual elements or whatever that's called in floating-ui
+                parseInt(
+                  document.documentElement.style.getPropertyValue(
+                    "--header-offset"
+                  ),
+                  10
+                ) || 0,
+              bottom: bottomOffset,
+            },
+          }).fn(state);
+        }
+      },
+    });
+
+    middleware.push({
+      name: "shift",
+      fn(state) {
+        if (inModal) {
+          return { x: state.x, y: state.y };
+        } else {
+          return shift({ limiter: limitShift() }).fn(state);
+        }
+      },
+    });
+
+    middleware.push(offset(this.selectKit.options.verticalOffset));
+
+    middleware.push({
+      name: "applySmallScreenOffset",
+      fn({ x, y, rects }) {
+        if (window.innerWidth <= 450 && !inModal) {
+          if (strategy === "fixed") {
+            return { x: 10, y };
+          } else {
+            // return { x: -referenceElement.getBoundingClientRect().x + 10, y };
+            return { x: -rects.reference.x + 10, y };
+          }
+        } else {
+          return { x, y };
+        }
+      },
+    });
+
+    middleware.push({
+      name: "applySmallScreenMaxWidth",
+      fn: ({ x, y }) => {
+        if (window.innerWidth > 450) {
+          return { x, y };
+        }
+
+        if (inModal) {
+          const innerModal = document.querySelector(
+            ".fixed-modal .modal-inner-container"
+          );
+          if (innerModal) {
+            if (this.multiSelect) {
+              // should this (and similar) be done in the promise after?
+              floatingElement.style.width = `${this.element.offsetWidth}px`;
+            } else {
+              floatingElement.style.width = `${innerModal.clientWidth - 20}px`;
+            }
+          }
+        } else {
+          floatingElement.style.width = `${window.innerWidth - 20}px`;
+        }
+
+        return { x, y };
+      },
+    });
+
+    middleware.push({
+      name: "minWidth",
+      fn({ x, y, rects }) {
+        if (window.innerWidth > 450) {
+          floatingElement.style.minWidth = `${Math.max(
+            rects.reference.offsetWidth,
+            220
+          )}px`;
+        }
+
+        return { x, y };
+      },
+    });
+
+    middleware.push({
+      name: "modalHeight",
+      fn: ({ x, y, rects }) => {
+        if (inModal && this.site.mobileView) {
+          inModal.style = "";
+          inModal.style.height =
+            inModal.clientHeight + rects.floating.height + "px";
+        }
+
+        return { x, y };
+      },
+    });
+
+    computePosition(referenceElement, floatingElement, {
+      placement: this.selectKit.options.placement,
+      strategy,
+      middleware,
+    }).then(({ x, y }) => {
+      Object.assign(floatingElement.style, { left: `${x}px`, top: `${y}px` });
     });
   }
 
@@ -1187,10 +1224,10 @@ export default class SelectKit extends Component {
     this._handleDeprecatedArgs();
   }
 
-  @bindDecorator
-  _updatePopper() {
-    this.popper?.update?.();
-  }
+  // @bindDecorator
+  // _updatePopper() {
+  //   this.popper?.update?.();
+  // }
 
   _computePlacementStrategy() {
     let placementStrategy = this.selectKit.options.placementStrategy;

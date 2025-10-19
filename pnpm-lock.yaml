@@ -951,9 +951,9 @@ importers:
       '@ember/string':
         specifier: ^4.0.1
         version: 4.0.1
-      '@popperjs/core':
-        specifier: ^2.11.8
-        version: 2.11.8
+      '@floating-ui/dom':
+        specifier: ^1.7.4
+        version: 1.7.4
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
