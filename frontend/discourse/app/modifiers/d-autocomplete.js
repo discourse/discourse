@@ -21,6 +21,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {string} key - Trigger character (e.g., "@", "#", ":")
  * @param {Function} dataSource - Async function to fetch results: (term) => Promise<Array>
  * @param {Function} template - Template function that receives {options: results} and returns HTML
+ * @param {Component} component - Component for rendering results (takes precedence over template if provided)
  * @param {Function} [transformComplete] - Transform completion before insertion
  * @param {Function} [afterComplete] - Callback after completion
  * @param {boolean} [debounced=false] - Enable debounced search
