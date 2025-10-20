@@ -22,7 +22,7 @@ export default function discourseVirtualLoader({ basePath, modules, opts }) {
       const fromBase = id.slice(basePath.length);
 
       if (availableVirtualImports[fromBase]) {
-        return availableVirtualImports[fromBase](modules, opts);
+        return availableVirtualImports[fromBase](modules, opts, basePath, this);
       }
     },
   };

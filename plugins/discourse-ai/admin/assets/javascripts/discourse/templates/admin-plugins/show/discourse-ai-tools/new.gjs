@@ -1,5 +1,5 @@
 import RouteTemplate from "ember-route-template";
-import AiToolEditor from "../../../../../discourse/components/ai-tool-editor";
+import AiToolEditor from "discourse/plugins/discourse-ai/discourse/components/ai-tool-editor";
 
 export default RouteTemplate(
   <template>
