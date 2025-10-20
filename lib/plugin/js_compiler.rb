@@ -1,25 +1,10 @@
 # frozen_string_literal: true
 
-class PluginJavascriptCompiler
-  class CompileError < StandardError
-  end
-
-  @@terser_disabled = false
-  def self.disable_terser!
-    raise "Tests only" if !Rails.env.test?
-    @@terser_disabled = true
-  end
-
-  def self.enable_terser!
-    raise "Tests only" if !Rails.env.test?
-    @@terser_disabled = false
-  end
-
+class Plugin::JsCompiler
   def initialize(plugin_name, minify: true)
     @plugin_name = plugin_name
     @input_tree = {}
     @minify = minify
-    # @processor = processor
   end
 
   def compile!
@@ -28,7 +13,7 @@ class PluginJavascriptCompiler
       @input_tree.freeze
 
       output =
-        DiscourseJsProcessor::Transpiler.new.rollup(
+        AssetProcessor.new.rollup(
           @input_tree.transform_keys { |k| k.sub(/\.js\.es6$/, ".js") },
           { pluginName: @plugin_name, minify: @minify && !@@terser_disabled },
         )
@@ -59,7 +44,7 @@ class PluginJavascriptCompiler
       @source_map = output["map"]
     end
     [@content, @source_map]
-  rescue DiscourseJsProcessor::TranspileError => e
+  rescue AssetProcessor::TranspileError => e
     message = "[PLUGIN #{@plugin_name}] Compile error: #{e.message}"
     @content = "throw new Error(#{message.to_json});\n"
     [@content, @source_map]

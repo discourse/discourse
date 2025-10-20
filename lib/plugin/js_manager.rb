@@ -60,7 +60,7 @@ module Plugin
               *tree.keys,
               *tree.values,
               Theme::BASE_COMPILER_VERSION,
-              DiscourseJsProcessor::Transpiler.new.ember_version,
+              # AssetProcessor.new.ember_version, # TODO: This is annoyingly slow
               minify?.to_s,
             ].join,
           )
@@ -69,8 +69,8 @@ module Plugin
         output_js_file = "#{output_path}#{base36_digest}.digested.js"
         output_map_file = "#{output_path}#{base36_digest}.digested.js.map"
 
-        if !(File.exist?(output_js_file) && File.exist?(output_map_file))
-          compiler = PluginJavascriptCompiler.new(plugin.directory_name, minify: minify?)
+        if !(cache? && File.exist?(output_js_file) && File.exist?(output_map_file))
+          compiler = Plugin::JsCompiler.new(plugin.directory_name, minify: minify?)
           compiler.append_tree(tree)
           compiler.compile!
 
@@ -125,6 +125,10 @@ module Plugin
 
     def minify?
       Rails.env.production?
+    end
+
+    def cache?
+      true
     end
   end
 end
