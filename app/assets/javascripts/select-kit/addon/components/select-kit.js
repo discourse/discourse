@@ -1017,7 +1017,7 @@ export default class SelectKit extends Component {
     const middleware = [
       {
         name: "minWidth",
-        fn(state) {
+        fn: (state) => {
           if (window.innerWidth <= 450) {
             return { x: state.x, y: state.y };
           }
@@ -1069,7 +1069,7 @@ export default class SelectKit extends Component {
       },
       {
         name: "shift",
-        fn(state) {
+        fn: (state) => {
           if (inModal) {
             return { x: state.x, y: state.y };
           } else {
@@ -1080,7 +1080,7 @@ export default class SelectKit extends Component {
       offset(this.selectKit.options.verticalOffset),
       {
         name: "applySmallScreenOffset",
-        fn({ x, y, rects }) {
+        fn: ({ x, y, rects }) => {
           if (window.innerWidth > 450 || inModal) {
             return { x, y };
           }
