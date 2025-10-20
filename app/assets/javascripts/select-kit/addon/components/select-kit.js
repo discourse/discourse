@@ -951,9 +951,9 @@ export default class SelectKit extends Component {
 
     this.clearErrors();
 
-    const inModal = this.element.closest(".fixed-modal");
-    if (inModal && this.site.mobileView) {
-      const modalBody = inModal.querySelector(".modal-body");
+    const parentModal = this.element.closest(".fixed-modal");
+    if (parentModal && this.site.mobileView) {
+      const modalBody = parentModal.querySelector(".modal-body");
       modalBody.style = "";
     }
 
@@ -1010,7 +1010,7 @@ export default class SelectKit extends Component {
       `#${this.selectKit.uniqueID}-body`
     );
 
-    const inModal = this.element.closest(".fixed-modal .modal-body");
+    const parentModal = this.element.closest(".fixed-modal .modal-body");
     const strategy = this._computePlacementStrategy();
     floatingElement.style.position = strategy;
 
@@ -1032,7 +1032,7 @@ export default class SelectKit extends Component {
       {
         name: "flip",
         fn: (state) => {
-          if (inModal) {
+          if (parentModal) {
             return state;
           }
 
@@ -1070,7 +1070,7 @@ export default class SelectKit extends Component {
       {
         name: "shift",
         fn: (state) => {
-          if (inModal) {
+          if (parentModal) {
             return state;
           } else {
             return shift({ limiter: limitShift() }).fn(state);
@@ -1081,7 +1081,7 @@ export default class SelectKit extends Component {
       {
         name: "applySmallScreenOffset",
         fn: (state) => {
-          if (window.innerWidth > 450 || inModal) {
+          if (window.innerWidth > 450 || parentModal) {
             return state;
           }
 
@@ -1099,7 +1099,7 @@ export default class SelectKit extends Component {
             return state;
           }
 
-          if (inModal) {
+          if (parentModal) {
             const innerModal = document.querySelector(
               ".fixed-modal .modal-inner-container"
             );
@@ -1120,10 +1120,10 @@ export default class SelectKit extends Component {
       {
         name: "modalHeight",
         fn: (state) => {
-          if (inModal && this.site.mobileView) {
-            inModal.style = "";
-            inModal.style.height =
-              inModal.clientHeight + state.rects.floating.height + "px";
+          if (parentModal && this.site.mobileView) {
+            parentModal.style = "";
+            parentModal.style.height =
+              parentModal.clientHeight + state.rects.floating.height + "px";
           }
 
           return state;
