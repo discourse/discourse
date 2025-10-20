@@ -491,7 +491,7 @@ export default class SelectKit extends Component {
   }
 
   _onInput(event) {
-    // this._updatePopper();
+    this.updateFloatingUiPosition();
 
     if (this._searchPromise) {
       cancel(this._searchPromise);
@@ -560,7 +560,7 @@ export default class SelectKit extends Component {
         if (this.selectKit.options.focusAfterOnChange) {
           this._safeAfterRender(() => {
             this._focusFilter();
-            // this._updatePopper();
+            this.updateFloatingUiPosition();
           });
         }
       }
@@ -784,7 +784,7 @@ export default class SelectKit extends Component {
 
         this._safeAfterRender(() => {
           if (this.selectKit.isExpanded) {
-            // this._updatePopper();
+            this.updateFloatingUiPosition();
             this._focusFilter();
           }
         });
@@ -996,7 +996,7 @@ export default class SelectKit extends Component {
     this._safeAfterRender(() => {
       this._focusFilter();
       this._scrollToCurrent();
-      // this._updatePopper();
+      this.updateFloatingUiPosition();
     });
   }
 
