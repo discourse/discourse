@@ -1012,6 +1012,7 @@ export default class SelectKit extends Component {
 
     const inModal = this.element.closest(".fixed-modal .modal-body");
     const strategy = this._computePlacementStrategy();
+    floatingElement.style.position = strategy;
 
     const middleware = [
       {
