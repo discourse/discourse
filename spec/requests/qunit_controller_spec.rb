@@ -11,9 +11,9 @@ RSpec.describe QunitController do
   end
 
   # rubocop:disable RSpec/BeforeAfterAll
-  before(:all) { DiscourseJsProcessor::Transpiler.build_production_theme_transpiler }
+  before(:all) { DiscourseJsProcessor::Transpiler.build_production_asset_processor }
 
-  after(:all) { File.delete(DiscourseJsProcessor::Transpiler::TRANSPILER_PATH) }
+  after(:all) { File.delete(DiscourseJsProcessor::Transpiler::PROCESSOR_PATH) }
 
   it "hides page for regular users in production" do
     production_sign_in(Fabricate(:user))

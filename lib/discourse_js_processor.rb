@@ -14,7 +14,7 @@ class DiscourseJsProcessor
   end
 
   class Transpiler
-    TRANSPILER_PATH = "tmp/theme-transpiler.js"
+    PROCESSOR_PATH = "tmp/asset-processor.js"
 
     @mutex = Mutex.new
     @ctx_init = Mutex.new
@@ -24,18 +24,18 @@ class DiscourseJsProcessor
       @mutex
     end
 
-    def self.build_theme_transpiler
+    def self.build_asset_processor
       Discourse::Utils.execute_command(
         "pnpm",
-        "-C=app/assets/javascripts/theme-transpiler",
+        "-C=app/assets/javascripts/asset-processor",
         "node",
         "build.js",
       )
     end
 
-    def self.build_production_theme_transpiler
-      File.write(TRANSPILER_PATH, build_theme_transpiler)
-      TRANSPILER_PATH
+    def self.build_production_asset_processor
+      File.write(PROCESSOR_PATH, build_asset_processor)
+      PROCESSOR_PATH
     end
 
     def self.create_new_context
@@ -67,12 +67,12 @@ class DiscourseJsProcessor
 
       source =
         if Rails.env.production?
-          File.read(TRANSPILER_PATH)
+          File.read(PROCESSOR_PATH)
         else
-          @processor_mutex.synchronize { build_theme_transpiler }
+          @processor_mutex.synchronize { build_asset_processor }
         end
 
-      ctx.eval(source, filename: "theme-transpiler.js")
+      ctx.eval(source, filename: "asset-processor.js")
 
       ctx
     end

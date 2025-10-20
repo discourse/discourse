@@ -1,8 +1,8 @@
 {
-  "name": "theme-transpiler",
+  "name": "asset-processor",
   "version": "1.0.0",
   "private": true,
-  "description": "Uses esbuild to create a 'theme transpiler' bundle for loading into mini-racer",
+  "description": "Uses esbuild to create a 'asset processor' bundle for loading into mini-racer",
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "keywords": [],
