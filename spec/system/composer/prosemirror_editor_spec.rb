@@ -1178,7 +1178,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(page).to have_css(".toolbar__button.code.--active", count: 0)
       expect(page).to have_css(".toolbar__button.blockquote.--active", count: 0)
 
-      composer.type_content("> - ` [***many styles***](https://example.com)`")
+      composer.type_content("> - [***many `styles`***](https://example.com)")
       composer.send_keys(:left, :left)
 
       expect(page).to have_css(".toolbar__button.bold.--active", count: 1)
