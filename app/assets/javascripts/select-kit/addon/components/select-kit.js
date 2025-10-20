@@ -311,7 +311,11 @@ export default class SelectKit extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    this.appEvents.on("keyboard-visibility-change", this, this._updatePopper);
+    this.appEvents.on(
+      "keyboard-visibility-change",
+      this,
+      this.updateFloatingUiPosition
+    );
 
     if (this.selectKit.options.expandedOnInsert) {
       next(() => {
@@ -330,14 +334,13 @@ export default class SelectKit extends Component {
 
     this._cancelSearch();
 
-    // this.appEvents.off("keyboard-visibility-change", this, this._updatePopper);
+    this.appEvents.off(
+      "keyboard-visibility-change",
+      this,
+      this.updateFloatingUiPosition
+    );
 
     this.cleanupFloatingUi?.();
-
-    // if (this.popper) {
-    //   this.popper.destroy();
-    //   this.popper = null;
-    // }
   }
 
   didReceiveAttrs() {
