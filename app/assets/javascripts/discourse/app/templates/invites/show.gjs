@@ -8,6 +8,7 @@ import FullnameInput from "discourse/components/fullname-input";
 import InputTip from "discourse/components/input-tip";
 import LoginButtons from "discourse/components/login-buttons";
 import PasswordField from "discourse/components/password-field";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
 import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import UserField from "discourse/components/user-field";
@@ -17,6 +18,7 @@ import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
+import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
 import { i18n } from "discourse-i18n";
@@ -124,24 +126,29 @@ export default RouteTemplate(
                   {{/if}}
 
                   <div class="input username-input input-group">
-                    <input
-                      {{on "focusin" @controller.scrollInputIntoView}}
-                      {{on "input" @controller.setAccountUsername}}
-                      type="text"
-                      value={{@controller.accountUsername}}
-                      class={{valueEntered @controller.accountUsername}}
-                      id="new-account-username"
-                      name="username"
-                      maxlength={{@controller.maxUsernameLength}}
-                      autocomplete="off"
-                    />
-                    <label class="alt-placeholder" for="new-account-username">
-                      {{i18n "user.username.title"}}
-                    </label>
-                    <InputTip
-                      @validation={{@controller.usernameValidation}}
-                      id="username-validation"
-                    />
+                    <PluginOutlet
+                      @name="username-input-invite"
+                      @outletArgs={{lazyHash controller=@controller}}
+                    >
+                      <input
+                        {{on "focusin" @controller.scrollInputIntoView}}
+                        {{on "input" @controller.setAccountUsername}}
+                        type="text"
+                        value={{@controller.accountUsername}}
+                        class={{valueEntered @controller.accountUsername}}
+                        id="new-account-username"
+                        name="username"
+                        maxlength={{@controller.maxUsernameLength}}
+                        autocomplete="off"
+                      />
+                      <label class="alt-placeholder" for="new-account-username">
+                        {{i18n "user.username.title"}}
+                      </label>
+                      <InputTip
+                        @validation={{@controller.usernameValidation}}
+                        id="username-validation"
+                      />
+                    </PluginOutlet>
                   </div>
 
                   {{#if
