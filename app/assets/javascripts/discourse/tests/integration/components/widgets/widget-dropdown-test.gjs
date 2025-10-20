@@ -22,6 +22,10 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
 
   let _translations = I18n.translations;
 
+  hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
+  });
+
   hooks.afterEach(function () {
     I18n.translations = _translations;
   });

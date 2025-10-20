@@ -29,6 +29,7 @@ function postStreamTest(name, attrs) {
 
       hooks.beforeEach(function () {
         this.siteSettings.glimmer_post_stream_mode = postStreamMode;
+        this.siteSettings.deactivate_widgets_rendering = false;
       });
 
       const CustomPostMenuButton = <template>

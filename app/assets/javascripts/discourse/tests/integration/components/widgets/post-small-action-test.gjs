@@ -15,6 +15,7 @@ module(
 
     hooks.beforeEach(function () {
       this.siteSettings.glimmer_post_stream_mode = "disabled";
+      this.siteSettings.deactivate_widgets_rendering = false;
     });
 
     test("does not have delete/edit/recover buttons by default", async function (assert) {
