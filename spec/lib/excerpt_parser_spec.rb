@@ -152,4 +152,27 @@ RSpec.describe ExcerptParser do
       )
     end
   end
+
+  describe "keep_img_tags parameter" do
+    it "should keep the images in the html" do
+      html = <<~HTML.strip
+        <img src="/uploads/default/original/1X/10c0f1565ee5b6ca3fe43f3183529bc0afd26003.jpeg" class="thumbnail">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        <a href="https://github.com/oblakeerickson" target="_blank" rel="noopener">
+          <img alt="oblakeerickson" src="//localhost:3000/uploads/default/original/1X/741ac99d6a66d71cdd46dd99fb5156506e13fdf2.jpeg" class="onebox-avatar-inline" width="20" height="20" data-dominant-color="3C3C3C">
+          oblakeerickson
+        </a>
+      HTML
+
+      # Using squish here to normalize output and ignore added whitespace added when processing p tags
+      expect(ExcerptParser.get_excerpt(html, 200, keep_img_tags: true).squish).to eq(<<~HTML.squish)
+        <img src="/uploads/default/original/1X/10c0f1565ee5b6ca3fe43f3183529bc0afd26003.jpeg" class="thumbnail">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        <a href="https://github.com/oblakeerickson" target="_blank" rel="noopener">
+          <img alt="oblakeerickson" src="//localhost:3000/uploads/default/original/1X/741ac99d6a66d71cdd46dd99fb5156506e13fdf2.jpeg" class="onebox-avatar-inline" width="20" height="20" data-dominant-color="3C3C3C">
+          oblakeerickson
+        </a>
+      HTML
+    end
+  end
 end
