@@ -271,6 +271,16 @@ export default function setupTests(config) {
   let app;
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
+
+    // TODO (deactivate_widgets_rendering) - remove this conditional while removing the legacy widget code
+    // This is a temporary fix to prevent the legacy widget integration tests from failing
+    // Unfortunately, we need a way to override the settings very early in the app lifecycle.
+    // It's not possible to use beforeEach hooks because by the time they run the app is already booted,
+    // and the widget were not registered properly.
+    if (ctx.module.startsWith("Integration | Component | Widget")) {
+      settings.deactivate_widgets_rendering = false;
+    }
+
     resetThemeSettings();
 
     app = createApplication(config, settings);
