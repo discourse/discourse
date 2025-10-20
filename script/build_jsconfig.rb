@@ -7,9 +7,10 @@ require "json"
 Dir.chdir("#{__dir__}/..") # rubocop:disable Discourse/NoChdir because this is not part of the app
 
 CORE_NAMESPACES = {
+  "discourse/admin/*" => ["app/assets/javascripts/discourse/admin"],
   "discourse/*" => ["app/assets/javascripts/discourse/app"],
   "discourse/tests/*" => ["app/assets/javascripts/discourse/tests"],
-  "admin/*" => ["app/assets/javascripts/admin/addon"],
+  "admin/*" => ["app/assets/javascripts/discourse/admin"], # TODO: remove once all core code is migrated to new import path
   "pretty-text/*" => ["app/assets/javascripts/pretty-text/addon"],
   "select-kit/*" => ["app/assets/javascripts/select-kit/addon"],
   "float-kit/*" => ["app/assets/javascripts/float-kit/addon"],

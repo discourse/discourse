@@ -152,7 +152,7 @@ module JsLocaleHelper
         .compact_blank
     js_message_formats = message_formats.transform_keys(&:dasherize)
     compiled = MessageFormat.compile(js_message_formats.keys, js_message_formats, strict: false)
-    transpiled = DiscourseJsProcessor.transpile(<<~JS, "", "discourse-mf")
+    transpiled = AssetProcessor.transpile(<<~JS, "", "discourse-mf")
       import Messages from '@messageformat/runtime/messages';
       #{compiled.sub("export default", "const msgData =")};
       const messages = new Messages(msgData, "#{locale.to_s.dasherize}");

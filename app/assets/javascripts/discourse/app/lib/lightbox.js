@@ -21,6 +21,8 @@ export default async function lightbox(elem, siteSettings) {
     return;
   }
 
+  const caps = helperContext().capabilities;
+  const imageClickNavigation = caps.touch;
   const canDownload =
     !siteSettings.prevent_anons_from_downloading_files || User.current();
 
@@ -33,7 +35,17 @@ export default async function lightbox(elem, siteSettings) {
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
       errorMsg: i18n("lightbox.content_load_error", { url: elem.href }),
-      padding: { top: 20, bottom: 60, left: 20, right: 20 },
+      paddingFn: (viewportSize, itemData) => {
+        if (viewportSize.x < 1200 || caps.isMobileDevice) {
+          return { top: 0, bottom: 0, left: 0, right: 0 };
+        }
+        return {
+          top: 20,
+          bottom: itemData.title ? 75 : 20,
+          left: 20,
+          right: 20,
+        };
+      },
       pswpModule: async () => await import("photoswipe"),
       appendToEl: isTesting() && document.getElementById("ember-testing"),
     });
@@ -48,22 +60,23 @@ export default async function lightbox(elem, siteSettings) {
         html: "",
         onInit: (caption, pswp) => {
           pswp.on("change", () => {
-            const { element, isChat, inlineSVG } = pswp.currSlide.data;
+            const { element, title, inlineSVG } = pswp.currSlide.data;
 
-            if (!element || isChat || inlineSVG) {
+            if (!element || !title || inlineSVG) {
               return;
             }
 
-            const text = escapeExpression(element.alt || element.title);
-            const info = element.querySelector(".informations")?.innerText;
-            const title = text
-              ? `<div class='pswp__caption-title'>${text}</div>`
+            const captionTitle = escapeExpression(title);
+            const captionDetails =
+              element.querySelector(".informations")?.innerText;
+            const titleEl = captionTitle
+              ? `<div class='pswp__caption-title'>${captionTitle}</div>`
               : null;
-            const details = info
-              ? `<div class='pswp__caption-details'>${info}</div>`
+            const detailsEl = captionDetails
+              ? `<div class='pswp__caption-details'>${captionDetails}</div>`
               : null;
 
-            caption.innerHTML = [title, details].filter(Boolean).join("");
+            caption.innerHTML = [titleEl, detailsEl].filter(Boolean).join("");
           });
         },
       });
@@ -144,7 +157,7 @@ export default async function lightbox(elem, siteSettings) {
       }
 
       data.src = data.src || el.getAttribute("data-large-src");
-      data.isChat = el.classList.contains("chat-img-upload");
+      data.title = el.title || el.alt;
       data.w = data.width = width;
       data.h = data.height = height;
 
@@ -159,9 +172,6 @@ export default async function lightbox(elem, siteSettings) {
     if (!images.length) {
       return;
     }
-
-    const caps = helperContext().capabilities;
-    const imageClickNavigation = caps.touch;
 
     await loadMagnificPopup();
 

@@ -86,7 +86,6 @@ export default class ChatUpload extends Component {
         style={{this.imageStyle}}
         loading="lazy"
         tabindex="0"
-        alt={{@upload.original_filename}}
         data-target-width={{this.size.width}}
         data-target-height={{this.size.height}}
         data-dominant-color={{@upload.dominant_color}}

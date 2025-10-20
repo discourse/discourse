@@ -953,7 +953,7 @@ module Discourse
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
 
-    DiscourseJsProcessor::Transpiler.reset_context if defined?(DiscourseJsProcessor::Transpiler)
+    AssetProcessor.reset_context if defined?(AssetProcessor)
 
     # warm up v8 after fork, that way we do not fork a v8 context
     # it may cause issues if bg threads in a v8 isolate randomly stop

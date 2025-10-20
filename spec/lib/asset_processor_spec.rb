@@ -1,22 +1,18 @@
 # frozen_string_literal: true
 
-require "discourse_js_processor"
-
-RSpec.describe DiscourseJsProcessor do
+RSpec.describe AssetProcessor do
   describe "skip_module?" do
     it "returns false for empty strings" do
-      expect(DiscourseJsProcessor.skip_module?(nil)).to eq(false)
-      expect(DiscourseJsProcessor.skip_module?("")).to eq(false)
+      expect(AssetProcessor.skip_module?(nil)).to eq(false)
+      expect(AssetProcessor.skip_module?("")).to eq(false)
     end
 
     it "returns true if the header is present" do
-      expect(DiscourseJsProcessor.skip_module?("// cool comment\n// discourse-skip-module")).to eq(
-        true,
-      )
+      expect(AssetProcessor.skip_module?("// cool comment\n// discourse-skip-module")).to eq(true)
     end
 
     it "returns false if the header is not present" do
-      expect(DiscourseJsProcessor.skip_module?("// just some JS\nconsole.log()")).to eq(false)
+      expect(AssetProcessor.skip_module?("// just some JS\nconsole.log()")).to eq(false)
     end
 
     it "works end-to-end" do
@@ -24,7 +20,7 @@ RSpec.describe DiscourseJsProcessor do
         // discourse-skip-module
         console.log("hello world");
       JS
-      expect(DiscourseJsProcessor.transpile(source, "test", "test")).to eq(source)
+      expect(AssetProcessor.transpile(source, "test", "test")).to eq(source)
     end
   end
 
@@ -50,7 +46,7 @@ RSpec.describe DiscourseJsProcessor do
       };
     JS
 
-    result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
+    result = AssetProcessor.transpile(script, "blah", "blah/mymodule")
     expect(result).to eq <<~JS.strip
       define("blah/mymodule", [], function () {
         "use strict";
@@ -74,7 +70,7 @@ RSpec.describe DiscourseJsProcessor do
       }
     JS
 
-    result = DiscourseJsProcessor.transpile(script, "blah", "blah/mymodule")
+    result = AssetProcessor.transpile(script, "blah", "blah/mymodule")
     expect(result).to include("dt7948.n(")
   end
 
@@ -85,11 +81,7 @@ RSpec.describe DiscourseJsProcessor do
         "add.js" => "let add = (firstValue, secondValue) => firstValue + secondValue;",
       }
 
-      result =
-        DiscourseJsProcessor::Transpiler.new.terser(
-          sources,
-          { sourceMap: { includeSources: true } },
-        )
+      result = AssetProcessor.new.terser(sources, { sourceMap: { includeSources: true } })
       expect(result.keys).to contain_exactly("code", "decoded_map", "map")
 
       begin
@@ -123,7 +115,7 @@ RSpec.describe DiscourseJsProcessor do
           }
         JS
 
-      result = DiscourseJsProcessor::Transpiler.new.rollup(sources, {})
+      result = AssetProcessor.new.rollup(sources, {})
 
       code = result["code"]
       expect(code).to include('"hello world"')
@@ -146,11 +138,7 @@ RSpec.describe DiscourseJsProcessor do
         }
       JS
 
-      result =
-        DiscourseJsProcessor::Transpiler.new.rollup(
-          { "discourse/initializers/foo.js" => script },
-          {},
-        )
+      result = AssetProcessor.new.rollup({ "discourse/initializers/foo.js" => script }, {})
       expect(result["code"]).to include("dt7948.n")
     end
 
@@ -166,11 +154,7 @@ RSpec.describe DiscourseJsProcessor do
         }
       JS
 
-      result =
-        DiscourseJsProcessor::Transpiler.new.rollup(
-          { "discourse/initializers/foo.js" => script },
-          {},
-        )
+      result = AssetProcessor.new.rollup({ "discourse/initializers/foo.js" => script }, {})
       expect(result["code"]).to include("dt7948")
     end
 
@@ -183,10 +167,7 @@ RSpec.describe DiscourseJsProcessor do
       JS
 
       result =
-        DiscourseJsProcessor::Transpiler.new.rollup(
-          { "discourse/initializers/foo.gjs" => script },
-          { themeId: 22 },
-        )
+        AssetProcessor.new.rollup({ "discourse/initializers/foo.gjs" => script }, { themeId: 22 })
       expect(result["code"]).to include(
         'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
       )
@@ -200,10 +181,7 @@ RSpec.describe DiscourseJsProcessor do
       JS
 
       result =
-        DiscourseJsProcessor::Transpiler.new.rollup(
-          { "discourse/initializers/foo.js" => script },
-          { themeId: 22 },
-        )
+        AssetProcessor.new.rollup({ "discourse/initializers/foo.js" => script }, { themeId: 22 })
       expect(result["code"]).to include(
         'window.moduleBroker.lookup("discourse/lib/theme-settings-store")',
       )
@@ -216,7 +194,7 @@ RSpec.describe DiscourseJsProcessor do
     HBS
 
     result =
-      DiscourseJsProcessor::Transpiler.new.rollup(
+      AssetProcessor.new.rollup(
         { "discourse/connectors/outlet-name/foo.hbs" => template },
         { themeId: 22 },
       )
@@ -238,7 +216,7 @@ RSpec.describe DiscourseJsProcessor do
     HBS
 
     result =
-      DiscourseJsProcessor::Transpiler.new.rollup(
+      AssetProcessor.new.rollup(
         {
           "discourse/components/foo.js" => js,
           "discourse/components/foo.hbs" => template,
@@ -264,7 +242,7 @@ RSpec.describe DiscourseJsProcessor do
     JS
 
     result =
-      DiscourseJsProcessor::Transpiler.new.rollup(
+      AssetProcessor.new.rollup(
         {
           "discourse/components/my-component.js" => mod_1,
           "discourse/components/other-component.js" => mod_2,
@@ -286,7 +264,7 @@ RSpec.describe DiscourseJsProcessor do
     JS
 
     result =
-      DiscourseJsProcessor::Transpiler.new.rollup(
+      AssetProcessor.new.rollup(
         {
           "discourse/components/my-component.js" => mod_1,
           "discourse/components/other-component/index.js" => mod_2,
@@ -308,7 +286,7 @@ RSpec.describe DiscourseJsProcessor do
     JS
 
     result =
-      DiscourseJsProcessor::Transpiler.new.rollup(
+      AssetProcessor.new.rollup(
         {
           "discourse/components/my-component.gjs" => mod_1,
           "discourse/components/other-component/index.gjs" => mod_2,
@@ -320,6 +298,6 @@ RSpec.describe DiscourseJsProcessor do
   end
 
   it "returns the ember version" do
-    expect(DiscourseJsProcessor::Transpiler.new.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
+    expect(AssetProcessor.new.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
   end
 end
