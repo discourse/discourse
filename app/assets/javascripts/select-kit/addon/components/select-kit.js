@@ -1035,9 +1035,17 @@ export default class SelectKit extends Component {
             return { x: state.x, y: state.y };
           }
 
-          let bottomOffset = 0;
+          const top =
+            parseInt(
+              document.documentElement.style.getPropertyValue(
+                "--header-offset"
+              ),
+              10
+            ) || 0;
+
+          let bottom = 0;
           if (this.capabilities.isIOS) {
-            bottomOffset +=
+            bottom +=
               parseInt(
                 getComputedStyle(document.documentElement)
                   .getPropertyValue("--safe-area-inset-bottom")
@@ -1046,7 +1054,7 @@ export default class SelectKit extends Component {
               ) || 0;
           }
           if (this.site.mobileView) {
-            bottomOffset +=
+            bottom +=
               parseInt(
                 getComputedStyle(document.documentElement)
                   .getPropertyValue("--footer-nav-height")
@@ -1055,18 +1063,7 @@ export default class SelectKit extends Component {
               ) || 0;
           }
 
-          return flip({
-            padding: {
-              top:
-                parseInt(
-                  document.documentElement.style.getPropertyValue(
-                    "--header-offset"
-                  ),
-                  10
-                ) || 0,
-              bottom: bottomOffset,
-            },
-          }).fn(state);
+          return flip({ padding: { top, bottom } }).fn(state);
         },
       },
       {
