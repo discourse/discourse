@@ -373,13 +373,9 @@ export default class ChatComposer extends Component {
     clone.style.setProperty("top", "0");
     clone.style.setProperty("transform", "translateY(-3000px) scale(0)");
     document.documentElement.appendChild(clone);
-
     clone.focus({ preventScroll: true });
-
-    setTimeout(() => {
-      event.target.focus({ preventScroll: true });
-      clone.remove();
-    }, 32);
+    event.target.focus({ preventScroll: true });
+    clone.remove();
   }
 
   @action
