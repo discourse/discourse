@@ -91,7 +91,7 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       expect(username).to eq("#{long_name[0, 57]}_1")
 
       # Continue with the 57-char base through _99
-      98.times { finder.find_available_username(long_name) }
+      97.times { finder.find_available_username(long_name) }
       username = finder.find_available_username(long_name)
       expect(username).to eq("#{long_name[0, 57]}_99")
 

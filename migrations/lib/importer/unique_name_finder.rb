@@ -5,13 +5,15 @@ module Migrations::Importer
     MAX_LENGTH = ::UsernameValidator::MAX_CHARS
     MAX_ATTEMPTS = 500
     SUFFIX_CACHE_SIZE = 1000
+    TRUNCATION_CACHE_SIZE = 500
 
-    private_constant :MAX_LENGTH, :MAX_ATTEMPTS, :SUFFIX_CACHE_SIZE
+    private_constant :MAX_LENGTH, :MAX_ATTEMPTS, :SUFFIX_CACHE_SIZE, :TRUNCATION_CACHE_SIZE
 
     def initialize(shared_data)
       @used_usernames_lower = shared_data ? shared_data.load(:usernames) : Set.new
       @used_group_names_lower = shared_data ? shared_data.load(:group_names) : Set.new
       @last_suffixes = ::LruRedux::Cache.new(SUFFIX_CACHE_SIZE)
+      @truncations = ::LruRedux::Cache.new(TRUNCATION_CACHE_SIZE)
 
       @fallback_username =
         UserNameSuggester.sanitize_username(I18n.t("fallback_username")).presence ||
@@ -23,12 +25,7 @@ module Migrations::Importer
 
     def find_available_username(username, allow_reserved_username: false)
       username, username_lower =
-        find_available_name(
-          username,
-          fallback_name: @fallback_username,
-          max_name_length: MAX_LENGTH,
-          allow_reserved_username:,
-        )
+        find_available_name(username, fallback_name: @fallback_username, allow_reserved_username:)
 
       @used_usernames_lower.add(username_lower)
       username
@@ -36,11 +33,7 @@ module Migrations::Importer
 
     def find_available_group_name(group_name)
       group_name, group_name_lower =
-        find_available_name(
-          group_name,
-          fallback_name: @fallback_group_name,
-          max_name_length: MAX_LENGTH,
-        )
+        find_available_name(group_name, fallback_name: @fallback_group_name)
 
       @used_group_names_lower.add(group_name_lower)
       group_name
@@ -65,11 +58,11 @@ module Migrations::Importer
       @suffix_wildcard_patterns.any? { |pattern| name_lower.match?(pattern) }
     end
 
-    def find_available_name(name, fallback_name:, max_name_length:, allow_reserved_username: false)
+    def find_available_name(name, fallback_name:, allow_reserved_username: false)
       name = UserNameSuggester.sanitize_username(name)
 
       if name.present?
-        name = truncate_to(name, max_length: max_name_length)
+        name = truncate_to(name, max_length: MAX_LENGTH)
         name_lower = name.downcase
 
         # Early return if name is available without suffix
@@ -85,38 +78,38 @@ module Migrations::Importer
         name_lower = name.downcase
       end
 
-      find_name_with_suffix(
-        name,
-        name_lower,
-        fallback_name,
-        max_name_length,
-        allow_reserved_username,
-      )
+      find_name_with_suffix(name, name_lower, allow_reserved_username)
     end
 
-    def find_name_with_suffix(
-      name,
-      name_lower,
-      fallback_name,
-      max_name_length,
-      allow_reserved_username
-    )
-      original_suffix = suffix = next_suffix(name_lower)
+    def find_name_with_suffix(name, name_lower, allow_reserved_username)
+      original_name_lower = name_lower
+
+      if (truncation_length = @truncations[original_name_lower])
+        name = truncate_to(name, max_length: truncation_length)
+        name_lower = name.downcase
+      end
+
+      suffix = next_suffix(name_lower)
       name_candidate_lower = +"#{name_lower}_#{suffix}"
+
       attempts = 0
 
       while attempts < MAX_ATTEMPTS
-        if (overflow = name_candidate_lower.length - max_name_length) > 0
-          store_last_suffix(name_lower, suffix) if original_suffix != suffix
-
+        if (overflow = name_candidate_lower.length - MAX_LENGTH) > 0
           name = truncate_by(name, chars: overflow)
-          name = fallback_name if name.length == 0
-          name_lower = name.downcase
+          break if name.length == 0
 
+          name_lower = name.downcase
           suffix = next_suffix(name_lower)
-          name_candidate_lower.replace("#{name_lower}_#{suffix}")
-        elsif name_available?(name_candidate_lower, allow_reserved_username:)
-          store_last_suffix(name_lower, suffix)
+          name_candidate_lower = "#{name_lower}_#{suffix}"
+        end
+
+        if name_available?(name_candidate_lower, allow_reserved_username:)
+          if original_name_lower.length != name_lower.length
+            @truncations[original_name_lower] = name_lower.length
+          end
+          @last_suffixes[name_lower] = suffix
+
           return "#{name}_#{suffix}", name_candidate_lower
         else
           name_candidate_lower.next!
@@ -131,10 +124,6 @@ module Migrations::Importer
 
     def next_suffix(name_lower)
       (@last_suffixes.fetch(name_lower) || 0) + 1
-    end
-
-    def store_last_suffix(name_lower, suffix)
-      @last_suffixes[name_lower] = suffix
     end
 
     def truncate_to(name, max_length:)
