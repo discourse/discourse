@@ -125,7 +125,7 @@
 // photoswipe custom caption
 .pswp__caption {
   left: 0;
-  bottom: 0;
+  bottom: var(--safe-area-inset-bottom);
   width: 100%;
   padding: 0.5em;
   text-align: center;
@@ -134,6 +134,7 @@
   .pswp__caption-title {
     left: 50%;
     color: #fff;
+    line-height: 1.25em;
     position: relative;
     max-width: 800px;
     padding: 0 1em 0.25em;
