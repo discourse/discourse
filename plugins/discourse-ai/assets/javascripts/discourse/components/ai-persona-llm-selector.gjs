@@ -130,15 +130,11 @@ export default class AiPersonaLlmSelector extends Component {
   }
 
   get showPersonaSelector() {
-    return this.botOptions?.length > 1 && !this.args?.hideDropdowns;
+    return this.botOptions?.length > 1;
   }
 
   get showLLMSelector() {
-    return (
-      this.allowLLMSelector &&
-      this.llmOptions.length > 1 &&
-      !this.args?.hideDropdowns
-    );
+    return this.allowLLMSelector && this.llmOptions.length > 1;
   }
 
   #getPersonaIdFromAttrs() {
