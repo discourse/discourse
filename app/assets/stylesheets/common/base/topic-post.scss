@@ -1777,9 +1777,10 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     color: var(--primary-medium);
   }
 
-  &__more-button {
+  &__more-button.btn-flat.btn {
     padding: 0;
     width: var(--liked-users-list-avatar-size);
+    border-radius: var(--d-button-border-radius);
     height: var(--liked-users-list-avatar-size);
   }
 }
