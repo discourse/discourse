@@ -3,7 +3,7 @@
 module DiscourseDev
   class ReviewablePostVotingComment < Reviewable
     def populate!
-      topic = Topic.new().create!
+      topic = Topic.new.create!
       topic.update_column(:subtype, ::Topic::POST_VOTING_SUBTYPE)
       post = topic.posts.first
       comment =
