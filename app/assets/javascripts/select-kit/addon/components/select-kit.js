@@ -1019,7 +1019,7 @@ export default class SelectKit extends Component {
         name: "minWidth",
         fn: (state) => {
           if (window.innerWidth <= 450) {
-            return { x: state.x, y: state.y };
+            return state;
           }
 
           return size({
@@ -1033,7 +1033,7 @@ export default class SelectKit extends Component {
         name: "flip",
         fn: (state) => {
           if (inModal) {
-            return { x: state.x, y: state.y };
+            return state;
           }
 
           const top =
@@ -1071,7 +1071,7 @@ export default class SelectKit extends Component {
         name: "shift",
         fn: (state) => {
           if (inModal) {
-            return { x: state.x, y: state.y };
+            return state;
           } else {
             return shift({ limiter: limitShift() }).fn(state);
           }
@@ -1080,23 +1080,23 @@ export default class SelectKit extends Component {
       offset(this.selectKit.options.verticalOffset),
       {
         name: "applySmallScreenOffset",
-        fn: ({ x, y, rects }) => {
+        fn: (state) => {
           if (window.innerWidth > 450 || inModal) {
-            return { x, y };
+            return state;
           }
 
           if (strategy === "fixed") {
-            return { x: 10, y };
+            return { x: 10, y: state.y };
           } else {
-            return { x: -rects.reference.x + 10, y };
+            return { x: -state.rects.reference.x + 10, y: state.y };
           }
         },
       },
       {
         name: "applySmallScreenMaxWidth",
-        fn: ({ x, y }) => {
+        fn: (state) => {
           if (window.innerWidth > 450) {
-            return { x, y };
+            return state;
           }
 
           if (inModal) {
@@ -1114,19 +1114,19 @@ export default class SelectKit extends Component {
             floatingElement.style.width = `${window.innerWidth - 20}px`;
           }
 
-          return { x, y };
+          return state;
         },
       },
       {
         name: "modalHeight",
-        fn: ({ x, y, rects }) => {
+        fn: (state) => {
           if (inModal && this.site.mobileView) {
             inModal.style = "";
             inModal.style.height =
-              inModal.clientHeight + rects.floating.height + "px";
+              inModal.clientHeight + state.rects.floating.height + "px";
           }
 
-          return { x, y };
+          return state;
         },
       },
     ];
