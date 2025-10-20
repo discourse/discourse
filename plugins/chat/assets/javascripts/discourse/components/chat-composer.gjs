@@ -356,19 +356,30 @@ export default class ChatComposer extends Component {
   onTextareaFocusIn(event) {
     this.isFocused = true;
 
+    // hack to prevent the whole viewport to move on focus input
     if (!this.capabilities.isIOS) {
       return;
     }
 
-    // hack to prevent the whole viewport to move on focus input
-    const textarea = event.target;
-    textarea.style.transform = "translateY(-99999px)";
-    textarea.focus();
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        textarea.style.transform = "";
-      });
-    });
+    if (event.relatedTarget?.matches("[data-ios-input-clone]")) {
+      return;
+    }
+
+    const clone = event.target.cloneNode(false);
+    clone.removeAttribute("id");
+    clone.dataset.iosInputClone = true;
+    clone.style.setProperty("position", "fixed");
+    clone.style.setProperty("left", "0");
+    clone.style.setProperty("top", "0");
+    clone.style.setProperty("transform", "translateY(-3000px) scale(0)");
+    document.documentElement.appendChild(clone);
+
+    clone.focus({ preventScroll: true });
+
+    setTimeout(() => {
+      event.target.focus({ preventScroll: true });
+      clone.remove();
+    }, 32);
   }
 
   @action
