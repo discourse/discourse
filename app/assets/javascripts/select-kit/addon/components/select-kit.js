@@ -1055,21 +1055,21 @@ export default class SelectKit extends Component {
         fn(state) {
           if (inModal) {
             return { x: state.x, y: state.y };
-          } else {
-            return flip({
-              padding: {
-                top:
-                  // TODO: could use safe areas/virtual elements or whatever that's called in floating-ui
-                  parseInt(
-                    document.documentElement.style.getPropertyValue(
-                      "--header-offset"
-                    ),
-                    10
-                  ) || 0,
-                bottom: bottomOffset,
-              },
-            }).fn(state);
           }
+
+          return flip({
+            padding: {
+              top:
+                // TODO: could use safe areas/virtual elements or whatever that's called in floating-ui
+                parseInt(
+                  document.documentElement.style.getPropertyValue(
+                    "--header-offset"
+                  ),
+                  10
+                ) || 0,
+              bottom: bottomOffset,
+            },
+          }).fn(state);
         },
       },
       {
