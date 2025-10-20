@@ -29,11 +29,10 @@ if (fs.existsSync(`${oldAdminPath}/node_modules`)) {
     recursive: true,
   });
 
-  const anyFiles = fs
-    .globSync(`${oldAdminPath}/**/*`, {
-      withFileTypes: true,
-    })
-    .some((dirent) => dirent.isFile());
+  const anyFiles = !!execSync(
+    `find "${oldAdminPath}" -mindepth 1 -type f -print -quit`,
+    { encoding: "utf8" }
+  ).trim();
 
   if (!anyFiles) {
     fs.rmSync(oldAdminPath, {
