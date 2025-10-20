@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Importer
+  # TODO Refactor, see https://github.com/discourse/discourse/pull/33067#discussion_r2164701106
   class UniqueNameFinder
     MAX_LENGTH = ::UsernameValidator::MAX_CHARS
     MAX_ATTEMPTS = 500
