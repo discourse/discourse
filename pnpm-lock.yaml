@@ -107,6 +107,103 @@ importers:
         specifier: 5.6.x
         version: 5.6.3
 
+  app/assets/javascripts/asset-processor:
+    dependencies:
+      '@babel/core':
+        specifier: ^7.28.4
+        version: 7.28.4(supports-color@8.1.1)
+      '@babel/preset-env':
+        specifier: ^7.28.3
+        version: 7.28.3(@babel/core@7.28.4)(supports-color@8.1.1)
+      '@babel/standalone':
+        specifier: ^7.28.4
+        version: 7.28.4
+      '@csstools/postcss-light-dark-function':
+        specifier: ^2.0.11
+        version: 2.0.11(postcss@8.5.6)
+      '@rollup/browser':
+        specifier: ^4.52.5
+        version: 4.52.5
+      '@rollup/plugin-babel':
+        specifier: ^6.1.0
+        version: 6.1.0(@babel/core@7.28.4)(rollup@4.44.0)
+      abort-controller:
+        specifier: ^3.0.0
+        version: 3.0.0
+      autoprefixer:
+        specifier: ^10.4.21
+        version: 10.4.21(postcss@8.5.6)
+      babel-plugin-ember-template-compilation:
+        specifier: ^3.0.1
+        version: 3.0.1
+      content-tag:
+        specifier: ^4.0.0
+        version: 4.0.0
+      core-js:
+        specifier: ^3.46.0
+        version: 3.46.0
+      decorator-transforms:
+        specifier: ^2.3.0
+        version: 2.3.0(@babel/core@7.28.4)
+      discourse:
+        specifier: workspace:0.0.0
+        version: link:../discourse
+      discourse-plugins:
+        specifier: workspace:1.0.0
+        version: link:../discourse-plugins
+      discourse-widget-hbs:
+        specifier: workspace:1.0.0
+        version: link:../discourse-widget-hbs
+      ember-cli-htmlbars:
+        specifier: ^6.3.0
+        version: 6.3.0
+      ember-source:
+        specifier: ~6.6.0
+        version: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
+      ember-this-fallback:
+        specifier: ^0.4.0
+        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
+      fastestsmallesttextencoderdecoder:
+        specifier: ^1.0.22
+        version: 1.0.22
+      magic-string:
+        specifier: ^0.30.19
+        version: 0.30.19
+      memfs:
+        specifier: ^4.39.0
+        version: 4.39.0
+      path-browserify:
+        specifier: ^1.0.1
+        version: 1.0.1
+      polyfill-crypto.getrandomvalues:
+        specifier: ^1.0.0
+        version: 1.0.0
+      postcss:
+        specifier: ^8.5.6
+        version: 8.5.6
+      postcss-js:
+        specifier: ^5.0.1
+        version: 5.0.1(postcss@8.5.6)
+      postcss-media-minmax:
+        specifier: ^5.0.0
+        version: 5.0.0(postcss@8.5.6)
+      postcss-nesting:
+        specifier: ^13.0.2
+        version: 13.0.2(postcss@8.5.6)
+      readable-stream:
+        specifier: ^4.7.0
+        version: 4.7.0
+      source-map-js:
+        specifier: ^1.2.1
+        version: 1.2.1
+      terser:
+        specifier: ^5.44.0
+        version: 5.44.0
+    devDependencies:
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.4(@types/node@24.8.0)(jsdom@25.0.1)(terser@5.44.0)
+
   app/assets/javascripts/custom-proxy:
     devDependencies:
       clean-base-url:
@@ -960,103 +1057,6 @@ importers:
       webpack:
         specifier: 5.99.9
         version: 5.99.9(@swc/core@1.13.5)(esbuild@0.25.11)
-
-  app/assets/javascripts/theme-transpiler:
-    dependencies:
-      '@babel/core':
-        specifier: ^7.28.4
-        version: 7.28.4(supports-color@8.1.1)
-      '@babel/preset-env':
-        specifier: ^7.28.3
-        version: 7.28.3(@babel/core@7.28.4)(supports-color@8.1.1)
-      '@babel/standalone':
-        specifier: ^7.28.4
-        version: 7.28.4
-      '@csstools/postcss-light-dark-function':
-        specifier: ^2.0.11
-        version: 2.0.11(postcss@8.5.6)
-      '@rollup/browser':
-        specifier: ^4.52.5
-        version: 4.52.5
-      '@rollup/plugin-babel':
-        specifier: ^6.1.0
-        version: 6.1.0(@babel/core@7.28.4)(rollup@4.44.0)
-      abort-controller:
-        specifier: ^3.0.0
-        version: 3.0.0
-      autoprefixer:
-        specifier: ^10.4.21
-        version: 10.4.21(postcss@8.5.6)
-      babel-plugin-ember-template-compilation:
-        specifier: ^3.0.1
-        version: 3.0.1
-      content-tag:
-        specifier: ^4.0.0
-        version: 4.0.0
-      core-js:
-        specifier: ^3.46.0
-        version: 3.46.0
-      decorator-transforms:
-        specifier: ^2.3.0
-        version: 2.3.0(@babel/core@7.28.4)
-      discourse:
-        specifier: workspace:0.0.0
-        version: link:../discourse
-      discourse-plugins:
-        specifier: workspace:1.0.0
-        version: link:../discourse-plugins
-      discourse-widget-hbs:
-        specifier: workspace:1.0.0
-        version: link:../discourse-widget-hbs
-      ember-cli-htmlbars:
-        specifier: ^6.3.0
-        version: 6.3.0
-      ember-source:
-        specifier: ~6.6.0
-        version: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
-      ember-this-fallback:
-        specifier: ^0.4.0
-        version: 0.4.0(patch_hash=znalyv6akdxlqfpmxunrdi3osa)(ember-cli-htmlbars@6.3.0)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      fastestsmallesttextencoderdecoder:
-        specifier: ^1.0.22
-        version: 1.0.22
-      magic-string:
-        specifier: ^0.30.19
-        version: 0.30.19
-      memfs:
-        specifier: ^4.39.0
-        version: 4.39.0
-      path-browserify:
-        specifier: ^1.0.1
-        version: 1.0.1
-      polyfill-crypto.getrandomvalues:
-        specifier: ^1.0.0
-        version: 1.0.0
-      postcss:
-        specifier: ^8.5.6
-        version: 8.5.6
-      postcss-js:
-        specifier: ^5.0.1
-        version: 5.0.1(postcss@8.5.6)
-      postcss-media-minmax:
-        specifier: ^5.0.0
-        version: 5.0.0(postcss@8.5.6)
-      postcss-nesting:
-        specifier: ^13.0.2
-        version: 13.0.2(postcss@8.5.6)
-      readable-stream:
-        specifier: ^4.7.0
-        version: 4.7.0
-      source-map-js:
-        specifier: ^1.2.1
-        version: 1.2.1
-      terser:
-        specifier: ^5.44.0
-        version: 5.44.0
-    devDependencies:
-      vitest:
-        specifier: ^3.2.4
-        version: 3.2.4(@types/node@24.8.0)(jsdom@25.0.1)(terser@5.44.0)
 
   app/assets/javascripts/truth-helpers:
     dependencies:
