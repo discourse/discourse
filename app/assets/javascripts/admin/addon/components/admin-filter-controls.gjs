@@ -310,7 +310,7 @@ export default class AdminFilterControls extends Component {
           {{/if}}
           <DButton
             @icon="arrow-rotate-left"
-            @label="admin.filters.reset"
+            @label="reset_filter"
             @action={{this.resetFilters}}
             class="btn-default admin-filter-controls__reset"
           />

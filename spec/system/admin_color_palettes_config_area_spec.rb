@@ -130,7 +130,7 @@ describe "Admin Color Palettes Config Area Page", type: :system do
       find(".admin-filter-controls__input").fill_in(with: "bananas")
 
       expect(page).to have_css(".admin-filter-controls__no-results")
-      expect(page).to have_css("button", text: I18n.t("admin_js.admin.plugins.filters.reset"))
+      expect(page).to have_css("button", text: I18n.t("admin_js.admin.filters.reset"))
     end
   end
 
