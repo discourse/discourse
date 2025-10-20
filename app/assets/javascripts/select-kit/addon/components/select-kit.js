@@ -970,25 +970,15 @@ export default class SelectKit extends Component {
     this.clearErrors();
     this.selectKit.onOpen(event);
 
-    // TODO
-    const referenceElement = document.querySelector(
-      `#${this.selectKit.uniqueID}-header`
-    );
-    const floatingElement = document.querySelector(
-      `#${this.selectKit.uniqueID}-body`
-    );
-
     if (this.site.desktopView) {
       this.cleanupFloatingUi?.();
       this.cleanupFloatingUi = autoUpdate(
-        referenceElement,
-        floatingElement,
-        () => {
-          this.updateFloatingUiPosition(referenceElement, floatingElement);
-        }
+        document.querySelector(`#${this.selectKit.uniqueID}-header`),
+        document.querySelector(`#${this.selectKit.uniqueID}-body`),
+        () => this.updateFloatingUiPosition()
       );
     } else {
-      this.updateFloatingUiPosition(referenceElement, floatingElement);
+      this.updateFloatingUiPosition();
     }
 
     this.selectKit.setProperties({
@@ -1010,7 +1000,14 @@ export default class SelectKit extends Component {
     });
   }
 
-  updateFloatingUiPosition(referenceElement, floatingElement) {
+  updateFloatingUiPosition() {
+    const referenceElement = document.querySelector(
+      `#${this.selectKit.uniqueID}-header`
+    );
+    const floatingElement = document.querySelector(
+      `#${this.selectKit.uniqueID}-body`
+    );
+
     const inModal = this.element.closest(".fixed-modal .modal-body");
     const strategy = this._computePlacementStrategy();
 
