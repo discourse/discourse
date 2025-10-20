@@ -397,3 +397,105 @@ acceptance("Composer - Image Preview - Plugin API", function (needs) {
       );
   });
 });
+
+acceptance(
+  "Composer - Image Preview - Plugin API - includeCondition",
+  function (needs) {
+    needs.user({});
+    needs.settings({ allow_uncategorized_topics: true });
+    needs.site({ can_tag_topics: true });
+    needs.pretender((server, helper) => {
+      server.post("/uploads/lookup-urls", () => {
+        return helper.response([]);
+      });
+    });
+
+    needs.hooks.beforeEach(() => {
+      withPluginApi((api) => {
+        // Button that only shows for JPEG images
+        api.addComposerImageWrapperButton(
+          "JPEG Only",
+          "jpeg-only-button",
+          "image",
+          () => {},
+          (uploadUrl) => uploadUrl && uploadUrl.endsWith(".jpeg")
+        );
+
+        // Button that only shows for SVG images
+        api.addComposerImageWrapperButton(
+          "SVG Only",
+          "svg-only-button",
+          "file",
+          () => {},
+          (uploadUrl) => uploadUrl && uploadUrl.endsWith(".svg")
+        );
+
+        // Button without condition that should show for all images
+        api.addComposerImageWrapperButton(
+          "Always Show",
+          "always-show-button",
+          "check",
+          () => {}
+        );
+      });
+    });
+
+    test("buttons with includeCondition only show for matching image types", async function (assert) {
+      await visit("/");
+      await click("#create-topic");
+
+      // Add a JPEG image
+      await fillIn(
+        ".d-editor-input",
+        "![jpeg-image|666x500](upload://abc123.jpeg)"
+      );
+
+      assert
+        .dom(".image-wrapper .jpeg-only-button")
+        .exists("JPEG button appears for JPEG image");
+
+      assert
+        .dom(".image-wrapper .svg-only-button")
+        .doesNotExist("SVG button does not appear for JPEG image");
+
+      // Replace with an SVG image
+      await fillIn(
+        ".d-editor-input",
+        "![svg-image|666x500](upload://xyz789.svg)"
+      );
+
+      assert
+        .dom(".image-wrapper .svg-only-button")
+        .exists("SVG button appears for SVG image");
+
+      assert
+        .dom(".image-wrapper .jpeg-only-button")
+        .doesNotExist("JPEG button does not appear for SVG image");
+    });
+
+    test("button without includeCondition shows for all images", async function (assert) {
+      await visit("/");
+      await click("#create-topic");
+
+      // Test with JPEG
+      await fillIn(
+        ".d-editor-input",
+        "![jpeg-image|666x500](upload://abc123.jpeg)"
+      );
+
+      assert
+        .dom(".image-wrapper .always-show-button")
+        .exists("Button without condition appears for JPEG");
+
+      // Test with SVG
+      await fillIn(
+        ".d-editor-input",
+        "![svg-image|666x500](upload://xyz789.svg)"
+      );
+
+      assert
+        .dom(".image-wrapper .always-show-button")
+        .exists("Button without condition appears for SVG");
+    });
+  }
+);

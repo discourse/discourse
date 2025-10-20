@@ -341,9 +341,16 @@ en:
           complete_language_detection_description: "All %{total} eligible posts have their language detected."
           incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
-          description_tooltip:
-            one: 'There is %{count} post ready to translate.'
-            other: 'There are %{count} posts ready to translate.'
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          eta_minutes:
+            one: "%{count} minute"
+            other: "%{count} minutes"
+          eta_hours:
+            one: "%{count} hour"
+            other: "%{count} hours"
+          eta_days:
+            one: "%{count} day"
+            other: "%{count} days"
         progress_chart:
           title: "Translation Progress"
           data_label: "%{percentage}%"

@@ -38,7 +38,7 @@ module Chat
     def fetch_post_allowed_category_ids(guardian:, structured:)
       ::Category
         .post_create_allowed(guardian)
-        .where(id: structured[:public_channels].map { |c| c.chatable_id })
+        .where(id: structured[:public_channels].map(&:chatable_id))
         .pluck(:id)
     end
   end

@@ -224,6 +224,7 @@ module DiscoursePostEvent
 
     def create_notification!(user, post, predefined_attendance: false)
       return if post.event.starts_at.nil? || post.event.starts_at < Time.current
+      return if !Guardian.new(user).can_see?(post)
 
       message =
         if predefined_attendance
@@ -383,6 +384,8 @@ module DiscoursePostEvent
             .where.not(id: excluded_ids)
             .select(:id)
         User.where(id: user_ids)
+      elsif self.private?
+        User.none
       else
         users.where.not(id: excluded_ids)
       end

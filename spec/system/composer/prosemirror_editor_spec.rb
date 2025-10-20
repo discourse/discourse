@@ -330,6 +330,14 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_no_css("aside.quote")
       expect(rich).to have_content("This [quote] should not trigger")
     end
+
+    it "avoids applying input rules in inline code if part of the matched text" do
+      open_composer
+      composer.type_content("This `__code` should not__ be bold")
+
+      expect(rich).to have_no_css("strong")
+      expect(rich).to have_css("code", text: "__code")
+    end
   end
 
   context "with oneboxing" do

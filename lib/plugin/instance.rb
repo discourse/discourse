@@ -395,7 +395,7 @@ class Plugin::Instance
   # Example usage:
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
-    Site.preloaded_category_custom_fields << field
+    reloadable_patch { Site.preloaded_category_custom_fields << field }
   end
 
   def register_problem_check(klass)
