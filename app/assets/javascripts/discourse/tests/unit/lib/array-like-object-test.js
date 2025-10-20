@@ -301,7 +301,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
             }
 
             get pluginValue() {
-              return (this[2] || 0) + this._value;
+              return (this.content[2] || 0) + this._value;
             }
 
             set pluginValue(val) {
