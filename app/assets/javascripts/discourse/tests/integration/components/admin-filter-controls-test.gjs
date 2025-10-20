@@ -774,15 +774,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     assert
       .dom(".item")
       .exists(
-        { count: 3 },
-        "shows all items initially - custom defaults work after user interaction"
+        { count: 2 },
+        "shows only feature items initially because of defaultDropdownValue"
       );
 
     await select(".admin-filter-controls__dropdown--category", "all");
-    await select(".admin-filter-controls__dropdown--category", "feature");
 
     assert
       .dom(".item")
-      .exists({ count: 2 }, "shows only feature items after selecting filter");
+      .exists({ count: 3 }, "shows all items after changing filter");
   });
 });

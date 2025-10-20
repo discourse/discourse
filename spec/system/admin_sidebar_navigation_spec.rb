@@ -65,6 +65,7 @@ describe "Admin | Sidebar Navigation", type: :system do
         I18n.t("admin_js.admin.config.groups.title"),
         I18n.t("admin_js.admin.config.site_settings.title"),
         I18n.t("admin_js.admin.config.whats_new.title"),
+        I18n.t("admin_js.admin.config.upcoming_changes.title"),
       ],
     )
   end
@@ -98,7 +99,7 @@ describe "Admin | Sidebar Navigation", type: :system do
     )
 
     sidebar.toggle_all_sections
-    expect(page).to have_selector(".sidebar-section-link-content-text", count: 5)
+    expect(page).to have_selector(".sidebar-section-link-content-text", count: 6)
     expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
       [
         I18n.t("admin_js.admin.dashboard.title"),
@@ -106,6 +107,7 @@ describe "Admin | Sidebar Navigation", type: :system do
         I18n.t("admin_js.admin.config.groups.title"),
         I18n.t("admin_js.admin.config.site_settings.title"),
         I18n.t("admin_js.admin.config.whats_new.title"),
+        I18n.t("admin_js.admin.config.upcoming_changes.title"),
       ],
     )
 

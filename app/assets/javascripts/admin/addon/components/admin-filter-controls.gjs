@@ -10,6 +10,7 @@ import DButton from "discourse/components/d-button";
 import DSelect from "discourse/components/d-select";
 import FilterInput from "discourse/components/filter-input";
 import concatClass from "discourse/helpers/concat-class";
+import { isTesting } from "discourse/lib/environment";
 
 /**
  * admin filter controls component that support both client-side and server-side filtering
@@ -39,7 +40,18 @@ export default class AdminFilterControls extends Component {
   @tracked textFilter = "";
   @tracked dropdownFilter = "all";
   @tracked dropdownFilters = new TrackedObject();
-  @tracked showFilterDropdowns = false;
+  @tracked
+  showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
+
+  constructor() {
+    super(...arguments);
+
+    if (this.hasMultipleDropdowns) {
+      Object.keys(this.dropdownOptions).forEach((key) => {
+        this.dropdownFilters[key] = this.defaultValue(key);
+      });
+    }
+  }
 
   get array() {
     return Array.isArray(this.args.array) ? this.args.array : [];
@@ -122,15 +134,12 @@ export default class AdminFilterControls extends Component {
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownFilters).forEach((key) => {
         const selectedValue = this.dropdownFilters[key];
-
-        if (selectedValue !== this.defaultValue(key)) {
-          const options = this.dropdownOptions[key] || [];
-          const selectedOption = options.find(
-            (option) => option.value === selectedValue
-          );
-          if (selectedOption?.filterFn) {
-            filtered = filtered.filter(selectedOption.filterFn);
-          }
+        const options = this.dropdownOptions[key] || [];
+        const selectedOption = options.find(
+          (option) => option.value === selectedValue
+        );
+        if (selectedOption?.filterFn) {
+          filtered = filtered.filter(selectedOption.filterFn);
         }
       });
     } else if (this.dropdownFilter !== this.defaultDropdownValue) {
@@ -242,7 +251,7 @@ export default class AdminFilterControls extends Component {
             <DButton
               class="btn-transparent admin-filter-controls__toggle-filters"
               @icon="filter"
-              @title="admin.toggle_filters"
+              @title="toggle_filters"
               @action={{this.toggleFilters}}
             />
           {{/if}}

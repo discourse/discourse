@@ -52,7 +52,6 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.upcoming_changes.header_description",
         icon: "flask",
         keywords: "admin.config.upcoming_changes.keywords",
-        moderator: true,
       },
     ],
   },
