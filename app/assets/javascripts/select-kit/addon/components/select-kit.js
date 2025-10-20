@@ -1058,7 +1058,6 @@ export default class SelectKit extends Component {
           return flip({
             padding: {
               top:
-                // TODO: could use safe areas/virtual elements or whatever that's called in floating-ui
                 parseInt(
                   document.documentElement.style.getPropertyValue(
                     "--header-offset"
@@ -1091,7 +1090,6 @@ export default class SelectKit extends Component {
           if (strategy === "fixed") {
             return { x: 10, y };
           } else {
-            // return { x: -referenceElement.getBoundingClientRect().x + 10, y };
             return { x: -rects.reference.x + 10, y };
           }
         },
