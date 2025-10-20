@@ -333,10 +333,16 @@ describe "Composer - ProseMirror editor", type: :system do
 
     it "avoids applying input rules in inline code if part of the matched text" do
       open_composer
-      composer.type_content("This `__code` should not__ be bold")
+      composer.type_content("This `__code` should not__ be bold. `and this, ")
+      page.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "e"])
+      # should not trigger the conversion of "and this, " to code as the 2nd ` is typed inside inline code
+      composer.type_content("not code`")
 
       expect(rich).to have_no_css("strong")
       expect(rich).to have_css("code", text: "__code")
+
+      expect(rich).to have_css("code", text: "not code")
+      expect(rich).to have_no_css("code", text: "and this, not code")
     end
   end
 
