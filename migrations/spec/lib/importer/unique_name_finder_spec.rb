@@ -174,20 +174,22 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
         # 94 characters, 67 .grapheme clusters
         long_name =
           "बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्य_अभियंता_सर्वोच्च_कमांडर_महोदय_जी"
-        username1 = finder.find_available_username(long_name)
-        username2 = finder.find_available_username(long_name)
-
-        100.times { finder.find_available_username(long_name) }
-        username3 = finder.find_available_username(long_name)
 
         # 60 characters, 43 grapheme clusters
-        expect(username1).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्")
+        username = finder.find_available_username(long_name)
+        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्")
 
         # 60 characters, 42 original grapheme clusters plus suffix ("_1")
-        expect(username2).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मु_1")
+        username = finder.find_available_username(long_name)
+        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मु_1")
+        8.times { finder.find_available_username(long_name) }
 
-        # 58 characters, 41 original grapheme clusters plus suffix ("_11")
-        expect(username3).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के__11")
+        # 58 characters, 41 original grapheme clusters plus suffix
+        username = finder.find_available_username(long_name)
+        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_1")
+        110.times { finder.find_available_username(long_name) }
+        username = finder.find_available_username(long_name)
+        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_112")
       end
     end
   end

@@ -134,6 +134,8 @@ module Migrations::Importer
         break if result.length + cluster.length > max_length
         result << cluster
       end
+
+      result.gsub!(UsernameValidator::INVALID_TRAILING_CHAR_PATTERN, "")
       result
     end
 
