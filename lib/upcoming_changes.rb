@@ -1,8 +1,17 @@
 # frozen_string_literal: true
 
+# TODO (martin) Test all of this class
 module UpcomingChanges
   def self.statuses
     @statuses ||= Enum.new(pre_alpha: 0, alpha: 100, beta: 200, stable: 300, permanent: 500)
+  end
+
+  def self.image_exists?(change_setting_name)
+    File.exist?(self.image_path(change_setting_name))
+  end
+
+  def self.image_path(change_setting_name)
+    Rails.public_path.join("public", "images", "upcoming_changes", "#{change_setting_name}.png")
   end
 
   def self.change_metadata(change_setting_name)

@@ -2765,8 +2765,6 @@ en:
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
     reviewable_ui_refresh: "A monumental undertaking to refresh the reviewable UI, making it faster and easier to use."
-    formkit_site_settings: "Refactoring our site setting components and UI to use FormKit"
-    fullcalendar_v6: "Migrating Calendar from FullCalendar v3 to v6"
     viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."

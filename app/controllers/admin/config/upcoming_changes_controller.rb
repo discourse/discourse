@@ -1,41 +1,13 @@
 # frozen_string_literal: true
+# TODO (martin) Add controller tests
 class Admin::Config::UpcomingChangesController < Admin::AdminController
   def index
-    # TODO (martin) Move this into a service
-    render json:
-             SiteSetting
-               .all_settings(
-                 only_upcoming_changes: true,
-                 include_hidden: true,
-                 include_locale_setting: false,
-               )
-               .each { |setting|
-                 setting[:value] = setting[:value] == "true"
-
-                 if File.exist?(
-                      Rails.root.join("public/images/upcoming_change_#{setting[:setting]}.png"),
-                    )
-                   setting[:upcoming_change][
-                     :image_url
-                   ] = "#{Discourse.base_url}/images/upcoming_change_#{setting[:setting]}.png"
-                 end
-
-                 if setting[:plugin]
-                   plugin = Discourse.plugins_by_name[setting[:plugin]]
-
-                   # TODO (martin) Maybe later we add a URL or something? Not sure.
-                   # Then the plugin name could be clicked in the UI
-                   setting[:plugin] = plugin.humanized_name
-                 end
-
-                 if SiteSetting.site_setting_group_ids.key?(setting[:setting]) &&
-                      SiteSetting.site_setting_group_ids[setting[:setting]].present?
-                   setting[:groups] = Group.where(
-                     id: SiteSetting.site_setting_group_ids[setting[:setting]],
-                   ).pluck(:name)
-                 end
-               }
-               .sort_by { |s| s[:setting] } if request.xhr?
+    if request.xhr?
+      UpcomingChanges::List.call(guardian: current_user.guardian) do
+        on_success { |upcoming_changes:| render(json: upcoming_changes) }
+        on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
+      end
+    end
   end
 
   # TODO (martin) Move this into a service

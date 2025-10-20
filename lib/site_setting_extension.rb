@@ -127,12 +127,15 @@ module SiteSettingExtension
     @requires_confirmation_settings ||= {}
   end
 
-  # Valid upcoming change metadata looks like this:
+  # Valid upcoming change metadata looks like this
+  # in site_settings.yml:
   #
-  # upcoming_change:
-  #   status: "alpha" (see UpcomingChanges.statuses.keys)
-  #   impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
-  #   learn_more_url: ""
+  # setting_name:
+  #   setting_options...
+  #   upcoming_change:
+  #     status: "alpha" (see UpcomingChanges.statuses.keys)
+  #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
+  #     learn_more_url: ""
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end
@@ -463,6 +466,7 @@ module SiteSettingExtension
             )
           ]
 
+        # TODO (martin) Add tests for this
         provider.setting_group_ids.each do |name, group_ids|
           site_setting_group_ids[name.to_sym] = group_ids
         end
