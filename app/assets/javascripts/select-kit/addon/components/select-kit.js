@@ -1036,13 +1036,20 @@ export default class SelectKit extends Component {
     }
 
     const middleware = [
-      size({
-        apply({ rects, elements }) {
-          Object.assign(elements.floating.style, {
-            minWidth: `${rects.reference.width}px`,
-          });
+      {
+        name: "minWidth",
+        fn(state) {
+          if (window.innerWidth <= 450) {
+            return { x: state.x, y: state.y };
+          }
+
+          return size({
+            apply({ rects, elements }) {
+              elements.floating.style.minWidth = `${Math.max(rects.reference.width, 220)}px`;
+            },
+          }).fn(state);
         },
-      }),
+      },
       {
         name: "flip",
         fn(state) {
@@ -1112,19 +1119,6 @@ export default class SelectKit extends Component {
             }
           } else {
             floatingElement.style.width = `${window.innerWidth - 20}px`;
-          }
-
-          return { x, y };
-        },
-      },
-      {
-        name: "minWidth",
-        fn({ x, y, rects }) {
-          if (window.innerWidth > 450) {
-            floatingElement.style.minWidth = `${Math.max(
-              rects.reference.offsetWidth,
-              220
-            )}px`;
           }
 
           return { x, y };
