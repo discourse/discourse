@@ -1,5 +1,4 @@
 import { registerDestructor } from "@ember/destroyable";
-import { later } from "@ember/runloop";
 import { service } from "@ember/service";
 import Modifier from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
@@ -66,7 +65,7 @@ export default class PreventScrollOnFocus extends Modifier {
     document.documentElement.appendChild(clone);
     clone.focus({ preventScroll: true });
 
-    later(() => {
+    setTimeout(() => {
       event.target.focus({ preventScroll: true });
       clone.remove();
     }, 32);
