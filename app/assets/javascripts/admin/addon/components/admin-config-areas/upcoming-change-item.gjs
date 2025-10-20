@@ -28,6 +28,7 @@ export default class UpcomingChangeItem extends Component {
 
   registeredMenu = null;
 
+  // TODO (martin) We need a better system to get the width + height of the image.
   applyLightbox = modifier((element) => lightbox(element, this.siteSettings));
 
   impactRoleIcon(impactRole) {
@@ -113,14 +114,6 @@ export default class UpcomingChangeItem extends Component {
     }
   }
 
-  @action
-  showImage() {
-    if (this.args.change.upcoming_change.image_url) {
-      window.open(this.args.change.upcoming_change.image_url, "_blank");
-      this.registeredMenu?.close();
-    }
-  }
-
   @bind
   onRegisterMenuForRow(menuApi) {
     this.registeredMenu = menuApi;
@@ -158,6 +151,9 @@ export default class UpcomingChangeItem extends Component {
                   href={{@change.upcoming_change.image_url}}
                   class="lightbox upcoming-change__image-preview"
                   rel="nofollow ugc noopener"
+                  data-target-width="1280"
+                  data-target-height="720"
+                  data-large-src={{@change.upcoming_change.image_url}}
                 >{{icon "far-image"}}
                   {{i18n "admin.upcoming_changes.preview"}}</a>
               {{/if}}
