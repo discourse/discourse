@@ -29,9 +29,7 @@ module ReviewableActionBuilder
 
       bundle_actions[:edit_post] = { client_action: "edit" }
 
-      if target_post.topic && !target_post.topic.private_message?
-        bundle_actions[:convert_to_pm] = {}
-      end
+      bundle_actions[:convert_to_pm] = {}
     end
 
     build_bundle(
