@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "discourse_js_processor"
-
 RSpec.describe AssetProcessor do
   describe "skip_module?" do
     it "returns false for empty strings" do
