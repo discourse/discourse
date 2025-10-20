@@ -2,21 +2,21 @@ import { getOwner } from "@ember/owner";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import ArrayLikeObject from "discourse/lib/array-like-object";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
-module("Unit | lib | ArrayLikeObject", function (hooks) {
+module("Unit | lib | LegacyArrayLikeObject", function (hooks) {
   setupTest(hooks);
 
   test("constructs with default values", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        const obj = ArrayLikeObject.create();
+        const obj = LegacyArrayLikeObject.create();
         assert.true(
-          obj instanceof ArrayLikeObject,
-          "returns an ArrayLikeObject instance"
+          obj instanceof LegacyArrayLikeObject,
+          "returns an LegacyArrayLikeObject instance"
         );
         assert.strictEqual(obj.length, 0, "empty by default");
       }
@@ -25,9 +25,9 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("accepts initial items", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        const obj = ArrayLikeObject.create({ content: [1, 2, 3] });
+        const obj = LegacyArrayLikeObject.create({ content: [1, 2, 3] });
         assert.deepEqual([...obj], [1, 2, 3], "contains initial items");
         assert.strictEqual(obj.length, 3, "length is correct");
       }
@@ -36,10 +36,10 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("accepts TrackedArray as items", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
         const arr = new TrackedArray([4, 5]);
-        const obj = ArrayLikeObject.create({ content: arr });
+        const obj = LegacyArrayLikeObject.create({ content: arr });
         assert.strictEqual(obj[0], 4);
         assert.strictEqual(obj[1], 5);
         assert.strictEqual(obj.length, 2);
@@ -49,9 +49,9 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("assigns custom properties", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        const obj = ArrayLikeObject.create({ content: [1], foo: "bar" });
+        const obj = LegacyArrayLikeObject.create({ content: [1], foo: "bar" });
         assert.strictEqual(obj.foo, "bar", "property is assigned");
         obj.foo = "baz";
         assert.strictEqual(obj.foo, "baz", "property is settable");
@@ -61,10 +61,10 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("throws if content is not an array", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
         assert.throws(
-          () => ArrayLikeObject.create({ content: "not an array" }),
+          () => LegacyArrayLikeObject.create({ content: "not an array" }),
           /must be an array/
         );
       }
@@ -73,14 +73,14 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("array methods work", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        let obj = ArrayLikeObject.create({ content: [1, 2] });
+        let obj = LegacyArrayLikeObject.create({ content: [1, 2] });
         obj.push(3);
         assert.deepEqual([...obj], [1, 2, 3]);
         assert.strictEqual(obj.pop(), 3);
         assert.deepEqual([...obj], [1, 2]);
-        obj = ArrayLikeObject.create({ content: [1, 2, 3, 4] });
+        obj = LegacyArrayLikeObject.create({ content: [1, 2, 3, 4] });
         assert.deepEqual(
           obj.map((x) => x * 2),
           [2, 4, 6, 8],
@@ -135,9 +135,9 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("instance properties take precedence over array", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        class CustomArrayLike extends ArrayLikeObject {
+        class CustomArrayLike extends LegacyArrayLikeObject {
           get first() {
             return "custom";
           }
@@ -150,9 +150,9 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("subclassing works", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        class CustomArrayLike extends ArrayLikeObject {
+        class CustomArrayLike extends LegacyArrayLikeObject {
           customField = "foo";
           #bar = 42;
 
@@ -199,9 +199,9 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("multiple levels of inheritance work as expected", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        class BaseArrayLike extends ArrayLikeObject {
+        class BaseArrayLike extends LegacyArrayLikeObject {
           baseField = "base";
 
           get baseValue() {
@@ -256,7 +256,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
   });
 
   test("pluginApi.modifyClass works", function (assert) {
-    class BaseArrayLike extends ArrayLikeObject {
+    class BaseArrayLike extends LegacyArrayLikeObject {
       baseField = "base";
 
       get baseValue() {
@@ -389,12 +389,12 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("Array.isArray checks", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        const obj = ArrayLikeObject.create([1, 2, 3]);
+        const obj = LegacyArrayLikeObject.create([1, 2, 3]);
         assert.true(
           Array.isArray(obj),
-          "ArrayLikeObject is considered an array"
+          "LegacyArrayLikeObject is considered an array"
         );
         assert.true(Array.isArray([...obj]), "spread result is a true array");
       }
@@ -403,9 +403,9 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("spread, for..of, for..in iteration", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        const obj = ArrayLikeObject.create([10, 20, 30]);
+        const obj = LegacyArrayLikeObject.create([10, 20, 30]);
         assert.deepEqual([...obj], [10, 20, 30], "array spread works");
         const values = [];
         for (const v of obj) {
@@ -427,7 +427,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
           }
         }
         assert.true(props.includes("foo"), "for..in yields custom properties");
-        class SubArrayLike extends ArrayLikeObject {
+        class SubArrayLike extends LegacyArrayLikeObject {
           custom = true;
         }
         const sub = SubArrayLike.create({ content: [1, 2] });
@@ -442,7 +442,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
           subKeys.includes("custom"),
           "for..in yields subclass properties"
         );
-        const empty = ArrayLikeObject.create();
+        const empty = LegacyArrayLikeObject.create();
         assert.deepEqual([...empty], [], "spread works for empty");
         const emptyVals = [];
         for (const v of empty) {
@@ -455,9 +455,9 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("object spread operator", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
-        const obj = ArrayLikeObject.create([1, 2, 3]);
+        const obj = LegacyArrayLikeObject.create([1, 2, 3]);
         let spread = { ...obj };
         assert.deepEqual(
           Object.keys(spread),
@@ -489,7 +489,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
           99,
           "numeric property value overrides array element"
         );
-        class SubArrayLike extends ArrayLikeObject {
+        class SubArrayLike extends LegacyArrayLikeObject {
           custom = 42;
         }
         const sub = SubArrayLike.create({ content: [5, 6] });
@@ -504,7 +504,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
           "subclass property value is correct"
         );
         assert.strictEqual(subSpread[0], 5, "subclass array element present");
-        const empty = ArrayLikeObject.create();
+        const empty = LegacyArrayLikeObject.create();
         const emptySpread = { ...empty };
         assert.deepEqual(emptySpread, {}, "spread of empty object is empty");
       }
@@ -513,10 +513,10 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
 
   test("content property returns underlying array", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
         const arr = [1, 2, 3];
-        const obj = ArrayLikeObject.create(arr);
+        const obj = LegacyArrayLikeObject.create(arr);
         assert.deepEqual(
           obj.content,
           arr,
@@ -535,7 +535,7 @@ module("Unit | lib | ArrayLikeObject", function (hooks) {
   test("constructor is private and cannot be called directly", function (assert) {
     assert.throws(() => {
       // eslint-disable-next-line no-new
-      new ArrayLikeObject([1, 2, 3]);
+      new LegacyArrayLikeObject([1, 2, 3]);
     }, /private constructor|is not a constructor|TypeError/);
   });
 });

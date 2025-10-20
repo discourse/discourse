@@ -33,29 +33,29 @@ const ARRAY_PROPERTIES = new Set(
 );
 
 /**
- * ArrayLikeObject is an EmberObject that proxies array-like behavior to a TrackedArray,
+ * LegacyArrayLikeObject is an EmberObject that proxies array-like behavior to a TrackedArray,
  * while exposing additional properties and methods. Access array methods via `.content`.
  *
- * @class ArrayLikeObject
+ * @class LegacyArrayLikeObject
  * @extends EmberObject
  * @example
- *   const obj = ArrayLikeObject.create({ content: [1,2,3], foo: 'bar' });
+ *   const obj = LegacyArrayLikeObject.create({ content: [1,2,3], foo: 'bar' });
  *   obj.content.push(4); // Use .content for array operations
  *   obj.foo // 'bar'
  *
- * Note: Must be instantiated via ArrayLikeObject.create().
+ * Note: Must be instantiated via LegacyArrayLikeObject.create().
  */
-export default class ArrayLikeObject extends EmberObject {
+export default class LegacyArrayLikeObject extends EmberObject {
   static #isConstructing = false; // to simulate a private constructor
 
   /**
-   * Creates an instance of ArrayLikeObject. Must be used instead of `new`.
+   * Creates an instance of LegacyArrayLikeObject. Must be used instead of `new`.
    *
    * @param {Object} attrs - Properties to set on the instance. `content` must be an array.
-   * @returns {ArrayLikeObject}
+   * @returns {LegacyArrayLikeObject}
    */
   static create(attrs = {}) {
-    ArrayLikeObject.#isConstructing = true;
+    LegacyArrayLikeObject.#isConstructing = true;
 
     const { content, ...properties } = attrs;
     const object = new this(content);
@@ -73,7 +73,7 @@ export default class ArrayLikeObject extends EmberObject {
   #content;
 
   /**
-   * Constructor is private. Use ArrayLikeObject.create() instead.
+   * Constructor is private. Use LegacyArrayLikeObject.create() instead.
    *
    * @param {Array} content - The array to wrap. Must be an array.
    * @throws {TypeError} If not called via .create or if content is not an array.
@@ -82,12 +82,12 @@ export default class ArrayLikeObject extends EmberObject {
   constructor(content = []) {
     super();
 
-    if (!ArrayLikeObject.#isConstructing) {
+    if (!LegacyArrayLikeObject.#isConstructing) {
       throw new TypeError(
         `${this.constructor.name} is not constructable. Use the static \`${this.constructor.name}.create()\` method instead.`
       );
     }
-    ArrayLikeObject.#isConstructing = false;
+    LegacyArrayLikeObject.#isConstructing = false;
 
     // Validate inputs
     if (!Array.isArray(content)) {
@@ -158,17 +158,17 @@ function warnArrayDeprecation(instanceName, prop, isIndex = false) {
       `Access the array directly via \`.content\` instead. ` +
       `For example, use \`(${instanceName} instance).content${propName}\` instead of \`(${instanceName} instance)${propName}\`.`,
     {
-      id: "discourse.array-like-object.proxied-array",
+      id: "discourse.legacy-array-like-object.proxied-array",
     }
   );
 }
 
 /**
- * Creates a proxy that intercepts property access, forwarding instance properties to the ArrayLikeObject
+ * Creates a proxy that intercepts property access, forwarding instance properties to the LegacyArrayLikeObject
  * and array properties to the underlying array.
  * Emits deprecation warnings for direct array property access.
  *
- * @param {ArrayLikeObject} instance - The ArrayLikeObject instance.
+ * @param {LegacyArrayLikeObject} instance - The LegacyArrayLikeObject instance.
  * @param {TrackedArray} trackedItems - The underlying tracked array.
  * @returns {Proxy} Proxy object that combines instance and array behaviors.
  */

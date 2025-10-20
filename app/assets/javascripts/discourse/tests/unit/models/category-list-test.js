@@ -50,7 +50,7 @@ module("Unit | Model | CategoryList", function (hooks) {
     );
 
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
         assert.strictEqual(categoryList.length, 2, "proxy length works");
       }
@@ -87,7 +87,7 @@ module("Unit | Model | CategoryList", function (hooks) {
     assert.strictEqual(categoryList.content.length, 1);
 
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
         assert.strictEqual(categoryList.length, 1, "proxy length works");
       }
@@ -101,7 +101,7 @@ module("Unit | Model | CategoryList", function (hooks) {
     assert.true(categoryList instanceof CategoryList);
     assert.strictEqual(categoryList.content.length, 0);
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
         assert.strictEqual(categoryList.length, 0, "proxy length works");
       }
@@ -371,7 +371,7 @@ module("Unit | Model | CategoryList", function (hooks) {
 
   test("CategoryList behaves like an array", function (assert) {
     withSilencedDeprecations(
-      "discourse.array-like-object.proxied-array",
+      "discourse.legacy-array-like-object.proxied-array",
       () => {
         const categories = [
           { id: 1, name: "Cat 1", topics_all_time: 10 },

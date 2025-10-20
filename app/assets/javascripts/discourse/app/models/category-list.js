@@ -1,9 +1,9 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
-import ArrayLikeObject from "discourse/lib/array-like-object";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { number } from "discourse/lib/formatter";
+import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import PreloadStore from "discourse/lib/preload-store";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import Site from "discourse/models/site";
@@ -15,7 +15,7 @@ const STAT_PERIODS = ["week", "month"];
 /**
  * Represents a list of categories with their related metadata and functionality
  */
-export default class CategoryList extends ArrayLikeObject {
+export default class CategoryList extends LegacyArrayLikeObject {
   /**
    * Creates category objects from API result data
    *
