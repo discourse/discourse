@@ -65,7 +65,6 @@ describe "Admin | Sidebar Navigation", type: :system do
         I18n.t("admin_js.admin.config.groups.title"),
         I18n.t("admin_js.admin.config.site_settings.title"),
         I18n.t("admin_js.admin.config.whats_new.title"),
-        I18n.t("admin_js.admin.config.upcoming_changes.title"),
       ],
     )
   end
@@ -107,7 +106,6 @@ describe "Admin | Sidebar Navigation", type: :system do
         I18n.t("admin_js.admin.config.groups.title"),
         I18n.t("admin_js.admin.config.site_settings.title"),
         I18n.t("admin_js.admin.config.whats_new.title"),
-        I18n.t("admin_js.admin.config.upcoming_changes.title"),
       ],
     )
 

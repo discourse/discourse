@@ -4258,17 +4258,10 @@ experimental:
     area: "group_permissions|experimental"
   reviewable_ui_refresh:
     client: true
-    default: false
+    type: group_list
+    default: ""
     area: "experimental"
-    upcoming_change:
-      status: "alpha"
-      impact: "feature,staff"
-      learn_more_url: ""
-  formkit_site_settings:
-    client: true
+  enable_upcoming_changes:
     default: false
     hidden: true
-    upcoming_change:
-      status: "pre_alpha"
-      impact: "other,admins"
-      learn_more_url: ""
+    client: true

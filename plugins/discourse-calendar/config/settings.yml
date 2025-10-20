@@ -126,11 +126,3 @@ discourse_calendar:
     enum: "CalendarFirstDayOfWeek"
     default: monday
     client: true
-  fullcalendar_v6:
-    client: true
-    default: false
-    hidden: true
-    upcoming_change:
-      status: "beta"
-      impact: "other,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/380311"

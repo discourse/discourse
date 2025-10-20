@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { array } from "@ember/helper";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { i18n } from "discourse-i18n";
+import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "admin/components/admin-config-areas/upcoming-change-item";
 import AdminFilterControls from "admin/components/admin-filter-controls";
 
@@ -123,5 +124,11 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
         </table>
       </:content>
     </AdminFilterControls>
+
+    {{#unless this.upcomingChanges}}
+      <AdminConfigAreaEmptyList
+        @emptyLabel="admin.upcoming_changes.no_changes"
+      />
+    {{/unless}}
   </template>
 }

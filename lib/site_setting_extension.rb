@@ -127,6 +127,12 @@ module SiteSettingExtension
     @requires_confirmation_settings ||= {}
   end
 
+  # Valid upcoming change metadata looks like this:
+  #
+  # upcoming_change:
+  #   status: "alpha" (see UpcomingChanges.statuses.keys)
+  #   impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
+  #   learn_more_url: ""
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end

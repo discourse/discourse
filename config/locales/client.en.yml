@@ -5686,6 +5686,7 @@ en:
         change_disabled: "You have opted-out of this change"
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
+        no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
         statuses:
           pre_alpha: "Pre-Alpha"
