@@ -16,7 +16,6 @@ export default class SelectKitBody extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    // this.element.style.position = "relative";
     document.addEventListener("click", this.handleClick, true);
     this.selectKit
       .mainElement()
