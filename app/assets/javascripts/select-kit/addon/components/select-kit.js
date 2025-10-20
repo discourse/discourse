@@ -1107,7 +1107,6 @@ export default class SelectKit extends Component {
             );
             if (innerModal) {
               if (this.multiSelect) {
-                // should this (and similar) be done in the promise after?
                 floatingElement.style.width = `${this.element.offsetWidth}px`;
               } else {
                 floatingElement.style.width = `${innerModal.clientWidth - 20}px`;
