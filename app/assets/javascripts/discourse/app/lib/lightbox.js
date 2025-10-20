@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import { waitForPromise } from "@ember/test-waiters";
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
@@ -5,6 +6,7 @@ import { isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { buildQuote } from "discourse/lib/quote";
 import {
   escapeExpression,
   postRNWebviewMessage,
@@ -68,11 +70,93 @@ export default async function lightbox(elem, siteSettings) {
         },
       });
 
+      // adds a quote button
+      if (User.current()) {
+        lightboxEl.pswp.ui.registerElement({
+          name: "quote-image",
+          order: 7,
+          isButton: true,
+          tagName: "button",
+          title: i18n("lightbox.quote"),
+          html: renderIcon("string", "quote-right", { class: "pswp__icn" }),
+
+          onInit: (el, pswp) => {
+            el.addEventListener("click", async () => {
+              const { element } = pswp.currSlide.data;
+              if (!element) {
+                return;
+              }
+
+              const postElement = element.closest(".topic-post");
+              if (!postElement) {
+                return;
+              }
+
+              const postNumber = parseInt(postElement.dataset.postNumber, 10);
+
+              const owner = getOwner(helperContext());
+              const composer = owner.lookup("service:composer");
+              const appEvents = owner.lookup("service:app-events");
+
+              const topicController = owner.lookup("controller:topic");
+              const topic = topicController?.model;
+              const postStream = topic?.get("postStream");
+
+              let post = postStream?.postForPostNumber(postNumber);
+
+              if (!post) {
+                try {
+                  post = await postStream?.loadPostByPostNumber(postNumber);
+                } catch (e) {
+                  // eslint-disable-next-line no-console
+                  console.error("Failed to load post for quoting", e);
+                }
+              }
+
+              const imgElement = element.querySelector("img");
+              const imgAlt = imgElement?.alt || "";
+              const imgWidth = imgElement?.width;
+              const imgHeight = imgElement?.height;
+              const imgSrc = element.dataset.largeSrc || element.href;
+
+              let altTextWithDimensions = imgAlt;
+              if (imgWidth && imgHeight) {
+                altTextWithDimensions = imgAlt
+                  ? `${imgAlt}|${imgWidth}x${imgHeight}`
+                  : `|${imgWidth}x${imgHeight}`;
+              }
+
+              const imageMarkdown = `![${altTextWithDimensions}](${imgSrc})`;
+
+              const quotedText = post
+                ? buildQuote(post, imageMarkdown)
+                : imageMarkdown + "\n\n";
+
+              if (composer.get("model.viewOpen")) {
+                appEvents.trigger("composer:insert-block", quotedText);
+              } else {
+                if (topic) {
+                  composer.open({
+                    action: "reply",
+                    draftKey: topic.draft_key,
+                    draftSequence: topic.draft_sequence,
+                    topic,
+                    quote: quotedText,
+                  });
+                }
+              }
+
+              pswp.close();
+            });
+          },
+        });
+      }
+
       // adds a download button
       if (canDownload) {
         lightboxEl.pswp.ui.registerElement({
           name: "download-image",
-          order: 7,
+          order: 8,
           isButton: true,
           tagName: "a",
           title: i18n("lightbox.download"),
@@ -98,7 +182,7 @@ export default async function lightbox(elem, siteSettings) {
       // adds a view original image button
       lightboxEl.pswp.ui.registerElement({
         name: "original-image",
-        order: 8,
+        order: 9,
         isButton: true,
         tagName: "a",
         title: i18n("lightbox.open"),
