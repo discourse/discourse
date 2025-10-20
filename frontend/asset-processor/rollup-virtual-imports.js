@@ -1,3 +1,5 @@
+import { federatedExportNameFor } from "./federated-modules-helper";
+
 const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
@@ -52,31 +54,27 @@ export default {
 
       const resolvedId = await context.resolve(
         `./${importPath}`,
-        `${basePath}/virtual:main`
+        `${basePath}virtual:main`
       );
       const loadedModule = await context.load(resolvedId);
 
       const reexportPairs = loadedModule.exports.map((exportedName) => {
-        // Todo: 100% safe transformation from module name to federated export name
-        const federatedExportName =
-          compatModuleName.replaceAll("/", "$").replaceAll("-", "__") +
-          "$$" +
-          exportedName;
-        return `${exportedName} as ${federatedExportName}`;
+        return `${exportedName} as ${federatedExportNameFor(compatModuleName, exportedName)}`;
       });
 
-      // if (compatModuleName.endsWith("/index") && !tree.) {
-      //   loadedModule.exports.forEach((exportedName) => {
-      //     const federatedExportName =
-      //       compatModuleName
-      //         .replace(/\/index$/, "")
-      //         .replaceAll("/", "$")
-      //         .replaceAll("-", "__") +
-      //       "$$" +
-      //       exportedName;
-      //     reexportPairs.push(`${exportedName} as ${federatedExportName}`);
-      //   });
-      // }
+      const isIndexModule =
+        compatModuleName.endsWith("/index") &&
+        !tree[moduleFilename.replace("/index", "")];
+
+      if (isIndexModule) {
+        loadedModule.exports.forEach((exportedName) => {
+          const federatedExportName = federatedExportNameFor(
+            compatModuleName.replace(/\/index$/, ""),
+            exportedName
+          );
+          reexportPairs.push(`${exportedName} as ${federatedExportName}`);
+        });
+      }
 
       output += `export { ${reexportPairs.join(", ")} } from "./${importPath}";\n`;
 
