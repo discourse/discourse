@@ -10,6 +10,7 @@ module PageObjects
       ZOOM_BTN = ".pswp__button--zoom"
       NEXT_BTN = ".pswp__button--arrow--next"
       PREV_BTN = ".pswp__button--arrow--prev"
+      QUOTE_BTN = ".pswp__button--quote-image"
       DOWNLOAD_BTN = ".pswp__button--download-image"
       ORIGINAL_IMAGE_BTN = ".pswp__button--original-image"
       COUNTER = ".pswp__counter"
@@ -91,6 +92,18 @@ module PageObjects
 
       def has_no_original_image_button?
         component.has_no_css?(ORIGINAL_IMAGE_BTN)
+      end
+
+      def quote_button
+        component.find(QUOTE_BTN)
+      end
+
+      def has_quote_button?
+        component.has_css?(QUOTE_BTN)
+      end
+
+      def has_no_quote_button?
+        component.has_no_css?(QUOTE_BTN)
       end
     end
   end
