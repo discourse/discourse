@@ -26,7 +26,7 @@ end
 
 common_env = { "DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS" => "0", "LOAD_PLUGINS" => "0" }
 
-Dir.chdir("#{__dir__}/../app/assets/javascripts/discourse")
+Dir.chdir("#{__dir__}/../js/discourse")
 FileUtils.rm_rf("dist")
 
 system({ **common_env, "EMBER_ENV" => "production" }, "#{__dir__}/assemble_ember_build.rb")

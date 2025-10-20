@@ -7,15 +7,15 @@ require "json"
 Dir.chdir("#{__dir__}/..") # rubocop:disable Discourse/NoChdir because this is not part of the app
 
 CORE_NAMESPACES = {
-  "discourse/admin/*" => ["app/assets/javascripts/discourse/admin"],
-  "discourse/*" => ["app/assets/javascripts/discourse/app"],
-  "discourse/tests/*" => ["app/assets/javascripts/discourse/tests"],
-  "admin/*" => ["app/assets/javascripts/discourse/admin"], # TODO: remove once all core code is migrated to new import path
-  "pretty-text/*" => ["app/assets/javascripts/pretty-text/addon"],
-  "select-kit/*" => ["app/assets/javascripts/select-kit/addon"],
-  "float-kit/*" => ["app/assets/javascripts/float-kit/addon"],
-  "truth-helpers/*" => ["app/assets/javascripts/truth-helpers/addon"],
-  "dialog-holder/*" => ["app/assets/javascripts/dialog-holder/addon"],
+  "discourse/admin/*" => ["js/discourse/admin"],
+  "discourse/*" => ["js/discourse/app"],
+  "discourse/tests/*" => ["js/discourse/tests"],
+  "admin/*" => ["js/discourse/admin"], # TODO: remove once all core code is migrated to new import path
+  "pretty-text/*" => ["js/pretty-text/addon"],
+  "select-kit/*" => ["js/select-kit/addon"],
+  "float-kit/*" => ["js/float-kit/addon"],
+  "truth-helpers/*" => ["js/truth-helpers/addon"],
+  "dialog-holder/*" => ["js/dialog-holder/addon"],
 }
 
 def relative(from, to)
@@ -42,7 +42,7 @@ def write_config(package_dir, extras: {})
     },
     "include" => namespaces.flat_map { |ns, paths| paths.map { |p| relative(package_dir, p) } },
     "exclude" => [
-      "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js", # Native class decorators - unsupported by ts/glint
+      "js/discourse/tests/unit/utils/decorators-test.js", # Native class decorators - unsupported by ts/glint
     ],
   }
 

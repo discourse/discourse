@@ -108,7 +108,6 @@ yarn-error.log
 /lint-progress
 
 # Auto-generated plugin JS assets
-/app/assets/javascripts/plugins/*
 /app/assets/generated
 
 # Generated API documentation files

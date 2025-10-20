@@ -11,7 +11,7 @@ export default [
   },
   {
     ignores: [
-      "app/assets/javascripts/ember-addons/",
+      "js/ember-addons/",
       "lib/javascripts/locale/*",
       "lib/javascripts/messageformat.js",
       "lib/javascripts/messageformat-lookup.js",
@@ -19,10 +19,10 @@ export default [
       "plugins/discourse-math/public",
       "public/",
       "vendor/",
-      "app/assets/javascripts/discourse/tests/fixtures",
+      "js/discourse/tests/fixtures",
       "**/node_modules/",
       "spec/",
-      "app/assets/javascripts/discourse/dist/",
+      "js/discourse/dist/",
       "tmp/",
     ],
   },

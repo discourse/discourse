@@ -1,5 +1,5 @@
 app/assets/stylesheets/vendor/
-app/assets/javascripts/plugins/
+js/plugins/
 plugins/**/assets/stylesheets/vendor/
 plugins/**/assets/javascripts/vendor/
 plugins/**/config/locales/**/*.yml
@@ -10,18 +10,18 @@ config/locales/**/*.yml
 !config/locales/**/*.en*.yml
 script/import_scripts/**/*.yml
 
-app/assets/javascripts/browser-update.js
-app/assets/javascripts/ember-addons/
-app/assets/javascripts/discourse/lib/autosize.js
+js/browser-update.js
+js/ember-addons/
+js/discourse/lib/autosize.js
 lib/javascripts/locale/
 lib/javascripts/messageformat.js
 lib/highlight_js/
 plugins/**/lib/javascripts/locale
 public/
-!/app/assets/javascripts/discourse/public
+!/js/discourse/public
 vendor/
-app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js
-app/assets/javascripts/discourse/tests/fixtures
+js/discourse/tests/unit/utils/decorators-test.js
+js/discourse/tests/fixtures
 spec/
 node_modules/
 dist/

@@ -278,7 +278,7 @@ jobs:
 
       - name: Asset Processor Tests
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        working-directory: app/assets/javascripts/asset-processor
+        working-directory: js/asset-processor
         run: pnpm test
 
       - name: Plugin QUnit
@@ -292,8 +292,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend'
         with:
-          name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
-          path: ./app/assets/javascripts/discourse/test-execution-*.json
+          name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./js/discourse/test-execution-*.json') }}
+          path: ./js/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'

@@ -113,13 +113,7 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
       # Bypass `ember test` - it only works properly for the `/tests` path.
       # We have to trigger a `build` manually so that JS is available for rails to serve.
       if !reuse_build
-        system(
-          "pnpm",
-          "ember",
-          "build",
-          chdir: "#{Rails.root}/app/assets/javascripts/discourse",
-          exception: true,
-        )
+        system("pnpm", "ember", "build", chdir: "#{Rails.root}/js/discourse", exception: true)
       end
 
       env["THEME_TEST_PAGES"] = if ENV["THEME_IDS"]
@@ -144,7 +138,7 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
 
     # Print out all env for debugging purposes
     p env
-    system(env, *cmd, chdir: "#{Rails.root}/app/assets/javascripts/discourse")
+    system(env, *cmd, chdir: "#{Rails.root}/js/discourse")
 
     success &&= $?.success?
   ensure

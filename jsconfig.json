@@ -8,31 +8,31 @@
     "allowJs": true,
     "paths": {
       "discourse/admin/*": [
-        "./app/assets/javascripts/discourse/admin/*"
+        "./js/discourse/admin/*"
       ],
       "discourse/*": [
-        "./app/assets/javascripts/discourse/app/*"
+        "./js/discourse/app/*"
       ],
       "discourse/tests/*": [
-        "./app/assets/javascripts/discourse/tests/*"
+        "./js/discourse/tests/*"
       ],
       "admin/*": [
-        "./app/assets/javascripts/discourse/admin/*"
+        "./js/discourse/admin/*"
       ],
       "pretty-text/*": [
-        "./app/assets/javascripts/pretty-text/addon/*"
+        "./js/pretty-text/addon/*"
       ],
       "select-kit/*": [
-        "./app/assets/javascripts/select-kit/addon/*"
+        "./js/select-kit/addon/*"
       ],
       "float-kit/*": [
-        "./app/assets/javascripts/float-kit/addon/*"
+        "./js/float-kit/addon/*"
       ],
       "truth-helpers/*": [
-        "./app/assets/javascripts/truth-helpers/addon/*"
+        "./js/truth-helpers/addon/*"
       ],
       "dialog-holder/*": [
-        "./app/assets/javascripts/dialog-holder/addon/*"
+        "./js/dialog-holder/addon/*"
       ],
       "discourse/plugins/automation/*": [
         "./plugins/automation/assets/javascripts/*",
@@ -213,15 +213,15 @@
     }
   },
   "include": [
-    "./app/assets/javascripts/discourse/admin",
-    "./app/assets/javascripts/discourse/app",
-    "./app/assets/javascripts/discourse/tests",
-    "./app/assets/javascripts/discourse/admin",
-    "./app/assets/javascripts/pretty-text/addon",
-    "./app/assets/javascripts/select-kit/addon",
-    "./app/assets/javascripts/float-kit/addon",
-    "./app/assets/javascripts/truth-helpers/addon",
-    "./app/assets/javascripts/dialog-holder/addon",
+    "./js/discourse/admin",
+    "./js/discourse/app",
+    "./js/discourse/tests",
+    "./js/discourse/admin",
+    "./js/pretty-text/addon",
+    "./js/select-kit/addon",
+    "./js/float-kit/addon",
+    "./js/truth-helpers/addon",
+    "./js/dialog-holder/addon",
     "./plugins/automation/assets/javascripts",
     "./plugins/automation/test/javascripts",
     "./plugins/chat/assets/javascripts",
@@ -312,6 +312,6 @@
     "./themes/horizon/test"
   ],
   "exclude": [
-    "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js"
+    "js/discourse/tests/unit/utils/decorators-test.js"
   ]
 }

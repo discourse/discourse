@@ -266,7 +266,7 @@ module JsLocaleHelper
       path = "#{Rails.root}/node_modules/@discourse/moment-timezone-names-translations/locales"
       type = :moment_js_timezones
     else
-      path = "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale"
+      path = "#{Rails.root}/js/discourse/node_modules/moment/locale"
       type = :moment_js
     end
 

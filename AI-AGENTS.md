@@ -20,7 +20,7 @@ Discourse is large with long history. Understand context before changes.
 
 ### JavaScript
 - No empty backing classes for template-only components unless requested
-- Use FormKit for forms: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439 (`app/assets/javascripts/discourse/app/form-kit`)
+- Use FormKit for forms: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439 (`js
 
 ### JSDoc
 - Required for classes, methods, members (except `@service` members, constructors)

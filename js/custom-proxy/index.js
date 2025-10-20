@@ -267,7 +267,7 @@ to serve API requests. For example:
       express.static(
         path.join(
           __dirname,
-          "../../../../../../public/images/discourse-logo-sketch-small.png"
+          "../../../../public/images/discourse-logo-sketch-small.png"
         )
       )
     );

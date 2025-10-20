@@ -82,9 +82,9 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    root_path = "#{Rails.root}/app/assets/javascripts"
-    d_node_modules = "#{Rails.root}/app/assets/javascripts/discourse/node_modules"
-    md_node_modules = "#{Rails.root}/app/assets/javascripts/discourse-markdown-it/node_modules"
+    root_path = "#{Rails.root}/js"
+    d_node_modules = "#{Rails.root}/js/discourse/node_modules"
+    md_node_modules = "#{Rails.root}/js/discourse-markdown-it/node_modules"
     ctx.load("#{d_node_modules}/loader.js/dist/loader/loader.js")
     ctx.load("#{md_node_modules}/markdown-it/dist/markdown-it.js")
     ctx.load("#{md_node_modules}/xss/dist/xss.js")

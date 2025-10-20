@@ -24,12 +24,7 @@ class AssetProcessor
   end
 
   def self.build_asset_processor
-    Discourse::Utils.execute_command(
-      "pnpm",
-      "-C=app/assets/javascripts/asset-processor",
-      "node",
-      "build.js",
-    )
+    Discourse::Utils.execute_command("pnpm", "-C=js/asset-processor", "node", "build.js")
   end
 
   def self.build_production_asset_processor

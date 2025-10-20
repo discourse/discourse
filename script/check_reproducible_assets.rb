@@ -7,7 +7,7 @@
 
 require "digest"
 
-DIST_DIR = File.expand_path("#{__dir__}/../app/assets/javascripts/discourse/dist")
+DIST_DIR = File.expand_path("#{__dir__}/../js/discourse/dist")
 
 def collect_asset_info
   files =

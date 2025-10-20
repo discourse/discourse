@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 module HighlightJs
-  HIGHLIGHTJS_DIR =
-    "#{Rails.root}/app/assets/javascripts/discourse/node_modules/@highlightjs/cdn-assets/"
+  HIGHLIGHTJS_DIR = "#{Rails.root}/js/discourse/node_modules/@highlightjs/cdn-assets/"
   VERSION = 1 # bump to invalidate caches following core changes
 
   def self.languages

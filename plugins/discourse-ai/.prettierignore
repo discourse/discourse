@@ -6,9 +6,9 @@ script/import_scripts/**/*.yml
 
 plugins/**/lib/javascripts/locale
 public/
-!/app/assets/javascripts/discourse/public
+!/js/discourse/public
 vendor/
-app/assets/javascripts/discourse/tests/fixtures
+js/discourse/tests/fixtures
 spec/
 dist/
 tmp/

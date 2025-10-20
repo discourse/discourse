@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # The server-side implementation of PresenceChannels. See also {PresenceController}
-# and +app/assets/javascripts/discourse/app/services/presence.js+
+# and +js/discourse/app/services/presence.js+
 class PresenceChannel
   class NotFound < StandardError
   end

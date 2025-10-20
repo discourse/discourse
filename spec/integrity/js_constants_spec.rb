@@ -5,7 +5,7 @@ RSpec.describe "constants match ruby" do
 
   def parse(file)
     # mini racer doesn't handle JS modules so we'll do this hack
-    source = File.read("#{Rails.root}/app/assets/javascripts/#{file}")
+    source = File.read("#{Rails.root}/js/#{file}")
     source.gsub!(/^export */, "")
     ctx.eval(source)
   end
