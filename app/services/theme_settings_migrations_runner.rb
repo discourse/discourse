@@ -210,11 +210,7 @@ class ThemeSettingsMigrationsRunner
     end
 
     context.eval(
-      AssetProcessor.transpile(
-        "export default __helpers",
-        "",
-        "discourse/theme/migration-helpers",
-      ),
+      AssetProcessor.transpile("export default __helpers", "", "discourse/theme/migration-helpers"),
       filename: "theme-#{@theme.id}-migration-helpers.js",
     )
 
