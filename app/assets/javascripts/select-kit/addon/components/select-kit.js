@@ -1086,15 +1086,15 @@ export default class SelectKit extends Component {
       {
         name: "applySmallScreenOffset",
         fn({ x, y, rects }) {
-          if (window.innerWidth <= 450 && !inModal) {
-            if (strategy === "fixed") {
-              return { x: 10, y };
-            } else {
-              // return { x: -referenceElement.getBoundingClientRect().x + 10, y };
-              return { x: -rects.reference.x + 10, y };
-            }
-          } else {
+          if (window.innerWidth > 450 || inModal) {
             return { x, y };
+          }
+
+          if (strategy === "fixed") {
+            return { x: 10, y };
+          } else {
+            // return { x: -referenceElement.getBoundingClientRect().x + 10, y };
+            return { x: -rects.reference.x + 10, y };
           }
         },
       },
