@@ -18,6 +18,7 @@ import {
   limitShift,
   offset,
   shift,
+  size,
 } from "@floating-ui/dom";
 import { Promise } from "rsvp";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
@@ -1035,6 +1036,16 @@ export default class SelectKit extends Component {
     }
 
     const middleware = [];
+
+    middleware.push(
+      size({
+        apply({ rects, elements }) {
+          Object.assign(elements.floating.style, {
+            minWidth: `${rects.reference.width}px`,
+          });
+        },
+      })
+    );
 
     middleware.push({
       name: "flip",
