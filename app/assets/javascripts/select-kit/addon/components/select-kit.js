@@ -977,7 +977,7 @@ export default class SelectKit extends Component {
     if (this.site.desktopView) {
       this.cleanupFloatingUi?.();
       this.cleanupFloatingUi = autoUpdate(
-        document.querySelector(`#${this.selectKit.uniqueID}-header`),
+        this.getHeader(),
         document.querySelector(`#${this.selectKit.uniqueID}-body`),
         () => this.updateFloatingUiPosition()
       );
@@ -1005,9 +1005,7 @@ export default class SelectKit extends Component {
   }
 
   updateFloatingUiPosition() {
-    const referenceElement = document.querySelector(
-      `#${this.selectKit.uniqueID}-header`
-    );
+    const referenceElement = this.getHeader();
     const floatingElement = document.querySelector(
       `#${this.selectKit.uniqueID}-body`
     );
