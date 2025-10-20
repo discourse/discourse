@@ -148,8 +148,8 @@ module Chat
       end
     end
 
-    def perform_restore_message(performed_by, args)
-      chat_message.trash!(performed_by)
+    def perform_restore_message(_performed_by, args)
+      chat_message.recover!
       create_result(:success, :rejected, [created_by_id], true)
     end
 
