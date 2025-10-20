@@ -33,7 +33,7 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
     it "truncates long usernames" do
       long_name = "a" * 70
       username = finder.find_available_username(long_name)
-      expect(username.length).to be <= 60
+      expect(username.length).to eq(60)
     end
 
     it "uses fallback username with suffix for blank input" do
@@ -52,31 +52,28 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       expect(username3).to eq("john_2")
     end
 
-    it "marks username as used" do
-      finder.find_available_username("john")
-      expect(finder.find_available_username("john")).not_to eq("john")
-    end
-
     it "handles case-insensitive duplicates" do
-      finder.find_available_username("JohnDoe")
-      username = finder.find_available_username("johndoe")
-      expect(username).not_to eq("johndoe")
-      expect(username).to eq("johndoe_1")
+      username1 = finder.find_available_username("JohnDoe")
+      username2 = finder.find_available_username("johndoe")
+      username3 = finder.find_available_username("johnDoe")
+
+      expect(username1).to eq("JohnDoe")
+      expect(username2).to eq("johndoe_1")
+      expect(username3).to eq("johnDoe_2")
     end
 
     it "truncates name to fit suffix when needed" do
-      long_name = "a" * 60
+      long_name = "a" * 50 + "1234567890"
       finder.find_available_username(long_name)
       username = finder.find_available_username(long_name)
 
+      expected_truncated_username = "a" * 50 + "12345678"
       expect(username.length).to eq(60)
-      expect(username).to eq("#{"a" * 58}_1")
+      expect(username).to eq("#{expected_truncated_username}_1")
     end
 
-    it "uses fallback when truncation results in empty string" do
-      usernames.add("a" * 60)
-      username = finder.find_available_username("a")
-
+    it "uses fallback when sanitization results in empty string" do
+      username = finder.find_available_username("___")
       fallback = I18n.t("fallback_username")
       expect(username).to eq("#{fallback}_1")
     end
@@ -84,23 +81,38 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
     context "with reserved usernames" do
       it "avoids exact reserved usernames" do
         username = finder.find_available_username("admin")
-        expect(username).not_to eq("admin")
         expect(username).to eq("admin_1")
+      end
+
+      it "treats reserved usernames as case-insensitive" do
+        username = finder.find_available_username("ADMIN")
+        expect(username).to eq("ADMIN_1")
       end
 
       it "avoids wildcard reserved usernames" do
         username = finder.find_available_username("system_user")
-        expect(username).not_to eq("system_user")
         expect(username).to eq("user_1")
+      end
+
+      it "avoids wildcard reserved usernames with wildcard at the end" do
+        SiteSetting.reserved_usernames = "*bar"
+        username = finder.find_available_username("foobar")
+        expect(username).to eq("foobar_1")
+      end
+
+      it "avoids wildcard reserved usernames with wildcard in the middle" do
+        SiteSetting.reserved_usernames = "test_*_user"
+        finder = described_class.new(shared_data)
+        username = finder.find_available_username("test_foo_user")
+        expect(username).to eq("test_foo_user_1")
       end
 
       it "avoids here mention" do
         username = finder.find_available_username("here")
-        expect(username).not_to eq("here")
         expect(username).to eq("here_1")
       end
 
-      it "uses fallback for wildcards ending with underscore-star when suffixes cannot help" do
+      it "uses fallback for wildcards ending with star when suffixes cannot help" do
         username = finder.find_available_username("test_foo")
         fallback = I18n.t("fallback_username")
         expect(username).to eq("#{fallback}_1")
@@ -116,25 +128,22 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       before { SiteSetting.unicode_usernames = true }
 
       it "handles Unicode normalization" do
-        SiteSetting.reserved_usernames = "café"
-        finder = described_class.new(shared_data)
-        username = finder.find_available_username("café")
-        expect(username).not_to eq("café")
-        expect(username).to eq("café_1")
+        actual = "Löwe" # NFD, "Lo\u0308we"
+        expected = "Löwe" # NFC, "L\u00F6we"
+
+        SiteSetting.reserved_usernames = expected
+
+        username = finder.find_available_username(actual)
+        expect(username).to eq("#{expected}_1")
       end
 
-      it "handles grapheme clusters correctly" do
-        SiteSetting.unicode_usernames = true
-        name_with_emoji = "user👨‍👩‍👧‍👦test"
-        username = finder.find_available_username(name_with_emoji)
-        expect(username).to be_valid_encoding
+      it "removes invalid grapheme clusters during sanitization" do
+        username = finder.find_available_username("user👨‍👩‍👧‍👦test")
+        expect(username).to eq("user_test")
       end
 
       it "truncates at grapheme boundaries for multi-byte characters" do
-        long_name = "user👨‍👩‍👧‍👦" * 20
-        username = finder.find_available_username(long_name)
-        expect(username).to be_valid_encoding
-        expect(username.length).to be <= 60
+        raise NotImplementedError
       end
     end
   end
@@ -174,14 +183,12 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
     it "marks group name as used" do
       finder.find_available_group_name("developers")
       group_name = finder.find_available_group_name("developers")
-      expect(group_name).not_to eq("developers")
       expect(group_name).to eq("developers_1")
     end
 
     it "prevents conflicts between usernames and group names" do
       finder.find_available_username("team")
       group_name = finder.find_available_group_name("team")
-      expect(group_name).not_to eq("team")
       expect(group_name).to eq("team_1")
     end
 
@@ -276,41 +283,35 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
 
     it "avoids usernames already in shared_data" do
       username = finder.find_available_username("existing_user")
-      expect(username).not_to eq("existing_user")
       expect(username).to eq("existing_user_1")
     end
 
     it "avoids group names already in shared_data" do
       group_name = finder.find_available_group_name("existing_group")
-      expect(group_name).not_to eq("existing_group")
       expect(group_name).to eq("existing_group_1")
     end
 
     it "treats usernames as case-insensitive in shared_data" do
       usernames.add("testuser")
       username = finder.find_available_username("TestUser")
-      expect(username).not_to eq("TestUser")
       expect(username).to eq("TestUser_1")
     end
 
     it "treats group names as case-insensitive in shared_data" do
       group_names.add("testgroup")
       group_name = finder.find_available_group_name("TestGroup")
-      expect(group_name).not_to eq("TestGroup")
       expect(group_name).to eq("TestGroup_1")
     end
 
     it "avoids conflicts between existing usernames and new group names" do
       usernames.add("team")
       group_name = finder.find_available_group_name("team")
-      expect(group_name).not_to eq("team")
       expect(group_name).to eq("team_1")
     end
 
     it "avoids conflicts between existing group names and new usernames" do
       group_names.add("admin")
       username = finder.find_available_username("admin", allow_reserved_username: true)
-      expect(username).not_to eq("admin")
       expect(username).to eq("admin_1")
     end
   end
