@@ -15,6 +15,47 @@ export default function (babel) {
           return;
         }
 
+        if (moduleName.startsWith("discourse/plugins/")) {
+          const parts = moduleName.split("/");
+          path.node.source = t.stringLiteral(`discourse/plugins/${parts[2]}`);
+          // For each import, make
+
+          const getFederatedExportName = (importedModuleName, exportedName) =>
+            importedModuleName
+              .replace(/^discourse\/plugins\/.+?\//, "")
+              .replaceAll("/", "$")
+              .replaceAll("-", "__") +
+            "$$" +
+            exportedName;
+
+          const newImportSpecifiers = path.node.specifiers.map((specifier) => {
+            if (specifier.type === "ImportDefaultSpecifier") {
+              const federatedExportName = getFederatedExportName(
+                moduleName,
+                "default"
+              );
+
+              return t.importSpecifier(
+                t.identifier(specifier.local.name),
+                t.identifier(federatedExportName)
+              );
+            } else if (specifier.type === "ImportNamespaceSpecifier") {
+              throw "Don't know how to do this yet";
+            } else {
+              const federatedExportName = getFederatedExportName(
+                moduleName,
+                specifier.imported.name
+              );
+              return t.importSpecifier(
+                t.identifier(specifier.local.name),
+                t.identifier(federatedExportName)
+              );
+            }
+          });
+          path.node.specifiers = newImportSpecifiers;
+          return;
+        }
+
         const namespaceImports = [];
         const properties = path.node.specifiers
           .map((specifier) => {

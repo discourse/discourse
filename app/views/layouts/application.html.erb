@@ -32,13 +32,21 @@
 
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
+    <% importmap_assets = {} %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request, include_admin_asset: staff?).each do |info| %>
       <%if info[:asset].end_with?("_extra") %>
         <%= preload_script info[:asset] %>
       <% else %>
         <link rel="modulepreload" href="<%= script_asset_path(info[:asset]) %>" nonce="<%= csp_nonce_placeholder %>" data-plugin-name="<%= info[:plugin].directory_name %>">
+        <% importmap_assets["discourse/plugins/#{info[:plugin].directory_name}"] = script_asset_path(info[:asset]) unless info[:asset].end_with?("_admin") %>
       <% end %>
     <%- end %>
+
+    <script type="importmap" nonce="<%= csp_nonce_placeholder %>">
+      {
+        "imports": <%= importmap_assets.to_json.html_safe %>
+      }
+    </script>
 
     <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
     <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>

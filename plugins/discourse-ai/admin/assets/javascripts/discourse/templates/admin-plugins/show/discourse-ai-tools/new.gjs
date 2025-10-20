@@ -1,4 +1,4 @@
-import AiToolEditor from "../../../../../discourse/components/ai-tool-editor";
+import AiToolEditor from "discourse/plugins/discourse-ai/discourse/components/ai-tool-editor";
 
 export default <template>
   <section class="ai-persona-tool-editor__current admin-detail pull-left">
