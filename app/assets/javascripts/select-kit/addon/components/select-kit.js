@@ -1030,7 +1030,7 @@ export default class SelectKit extends Component {
       },
       {
         name: "flip",
-        fn(state) {
+        fn: (state) => {
           if (inModal) {
             return { x: state.x, y: state.y };
           }
