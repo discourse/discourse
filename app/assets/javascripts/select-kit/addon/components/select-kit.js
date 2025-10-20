@@ -1013,26 +1013,6 @@ export default class SelectKit extends Component {
     const inModal = this.element.closest(".fixed-modal .modal-body");
     const strategy = this._computePlacementStrategy();
 
-    let bottomOffset = 0;
-    if (this.capabilities.isIOS) {
-      bottomOffset +=
-        parseInt(
-          getComputedStyle(document.documentElement)
-            .getPropertyValue("--safe-area-inset-bottom")
-            .trim(),
-          10
-        ) || 0;
-    }
-    if (this.site.mobileView) {
-      bottomOffset +=
-        parseInt(
-          getComputedStyle(document.documentElement)
-            .getPropertyValue("--footer-nav-height")
-            .trim(),
-          10
-        ) || 0;
-    }
-
     const middleware = [
       {
         name: "minWidth",
@@ -1053,6 +1033,26 @@ export default class SelectKit extends Component {
         fn(state) {
           if (inModal) {
             return { x: state.x, y: state.y };
+          }
+
+          let bottomOffset = 0;
+          if (this.capabilities.isIOS) {
+            bottomOffset +=
+              parseInt(
+                getComputedStyle(document.documentElement)
+                  .getPropertyValue("--safe-area-inset-bottom")
+                  .trim(),
+                10
+              ) || 0;
+          }
+          if (this.site.mobileView) {
+            bottomOffset +=
+              parseInt(
+                getComputedStyle(document.documentElement)
+                  .getPropertyValue("--footer-nav-height")
+                  .trim(),
+                10
+              ) || 0;
           }
 
           return flip({
