@@ -1035,123 +1035,114 @@ export default class SelectKit extends Component {
         ) || 0;
     }
 
-    const middleware = [];
-
-    middleware.push(
+    const middleware = [
       size({
         apply({ rects, elements }) {
           Object.assign(elements.floating.style, {
             minWidth: `${rects.reference.width}px`,
           });
         },
-      })
-    );
-
-    middleware.push({
-      name: "flip",
-      fn(state) {
-        if (inModal) {
-          return { x: state.x, y: state.y };
-        } else {
-          return flip({
-            padding: {
-              top:
-                // TODO: could use safe areas/virtual elements or whatever that's called in floating-ui
-                parseInt(
-                  document.documentElement.style.getPropertyValue(
-                    "--header-offset"
-                  ),
-                  10
-                ) || 0,
-              bottom: bottomOffset,
-            },
-          }).fn(state);
-        }
-      },
-    });
-
-    middleware.push({
-      name: "shift",
-      fn(state) {
-        if (inModal) {
-          return { x: state.x, y: state.y };
-        } else {
-          return shift({ limiter: limitShift() }).fn(state);
-        }
-      },
-    });
-
-    middleware.push(offset(this.selectKit.options.verticalOffset));
-
-    middleware.push({
-      name: "applySmallScreenOffset",
-      fn({ x, y, rects }) {
-        if (window.innerWidth <= 450 && !inModal) {
-          if (strategy === "fixed") {
-            return { x: 10, y };
+      }),
+      {
+        name: "flip",
+        fn(state) {
+          if (inModal) {
+            return { x: state.x, y: state.y };
           } else {
-            // return { x: -referenceElement.getBoundingClientRect().x + 10, y };
-            return { x: -rects.reference.x + 10, y };
+            return flip({
+              padding: {
+                top:
+                  // TODO: could use safe areas/virtual elements or whatever that's called in floating-ui
+                  parseInt(
+                    document.documentElement.style.getPropertyValue(
+                      "--header-offset"
+                    ),
+                    10
+                  ) || 0,
+                bottom: bottomOffset,
+              },
+            }).fn(state);
           }
-        } else {
-          return { x, y };
-        }
+        },
       },
-    });
-
-    middleware.push({
-      name: "applySmallScreenMaxWidth",
-      fn: ({ x, y }) => {
-        if (window.innerWidth > 450) {
-          return { x, y };
-        }
-
-        if (inModal) {
-          const innerModal = document.querySelector(
-            ".fixed-modal .modal-inner-container"
-          );
-          if (innerModal) {
-            if (this.multiSelect) {
-              // should this (and similar) be done in the promise after?
-              floatingElement.style.width = `${this.element.offsetWidth}px`;
+      {
+        name: "shift",
+        fn(state) {
+          if (inModal) {
+            return { x: state.x, y: state.y };
+          } else {
+            return shift({ limiter: limitShift() }).fn(state);
+          }
+        },
+      },
+      offset(this.selectKit.options.verticalOffset),
+      {
+        name: "applySmallScreenOffset",
+        fn({ x, y, rects }) {
+          if (window.innerWidth <= 450 && !inModal) {
+            if (strategy === "fixed") {
+              return { x: 10, y };
             } else {
-              floatingElement.style.width = `${innerModal.clientWidth - 20}px`;
+              // return { x: -referenceElement.getBoundingClientRect().x + 10, y };
+              return { x: -rects.reference.x + 10, y };
             }
+          } else {
+            return { x, y };
           }
-        } else {
-          floatingElement.style.width = `${window.innerWidth - 20}px`;
-        }
-
-        return { x, y };
+        },
       },
-    });
+      {
+        name: "applySmallScreenMaxWidth",
+        fn: ({ x, y }) => {
+          if (window.innerWidth > 450) {
+            return { x, y };
+          }
 
-    middleware.push({
-      name: "minWidth",
-      fn({ x, y, rects }) {
-        if (window.innerWidth > 450) {
-          floatingElement.style.minWidth = `${Math.max(
-            rects.reference.offsetWidth,
-            220
-          )}px`;
-        }
+          if (inModal) {
+            const innerModal = document.querySelector(
+              ".fixed-modal .modal-inner-container"
+            );
+            if (innerModal) {
+              if (this.multiSelect) {
+                // should this (and similar) be done in the promise after?
+                floatingElement.style.width = `${this.element.offsetWidth}px`;
+              } else {
+                floatingElement.style.width = `${innerModal.clientWidth - 20}px`;
+              }
+            }
+          } else {
+            floatingElement.style.width = `${window.innerWidth - 20}px`;
+          }
 
-        return { x, y };
+          return { x, y };
+        },
       },
-    });
+      {
+        name: "minWidth",
+        fn({ x, y, rects }) {
+          if (window.innerWidth > 450) {
+            floatingElement.style.minWidth = `${Math.max(
+              rects.reference.offsetWidth,
+              220
+            )}px`;
+          }
 
-    middleware.push({
-      name: "modalHeight",
-      fn: ({ x, y, rects }) => {
-        if (inModal && this.site.mobileView) {
-          inModal.style = "";
-          inModal.style.height =
-            inModal.clientHeight + rects.floating.height + "px";
-        }
-
-        return { x, y };
+          return { x, y };
+        },
       },
-    });
+      {
+        name: "modalHeight",
+        fn: ({ x, y, rects }) => {
+          if (inModal && this.site.mobileView) {
+            inModal.style = "";
+            inModal.style.height =
+              inModal.clientHeight + rects.floating.height + "px";
+          }
+
+          return { x, y };
+        },
+      },
+    ];
 
     computePosition(referenceElement, floatingElement, {
       placement: this.selectKit.options.placement,
