@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
@@ -38,6 +39,7 @@ export default class AiTranslations extends Component {
     : [];
   @tracked isSavingLocales = false;
   @tracked isTogglingTranslation = false;
+  @tracked hourlyRate = this.args.model?.hourly_rate || 0;
 
   get localesChanged() {
     const current = [...this.selectedLocales].sort().join("|");
@@ -180,6 +182,7 @@ export default class AiTranslations extends Component {
           this.total = response.total;
           this.done = response.posts_with_detected_locale;
           this.enabled = response.enabled;
+          this.hourlyRate = response.hourly_rate || 0;
         }
       } else {
         this.enabled = false;
@@ -192,7 +195,7 @@ export default class AiTranslations extends Component {
   }
 
   get chartRightPadding() {
-    const max = Math.max(...this.data.map(({ done }) => done));
+    const max = Math.max(...this.data.map(({ total }) => total));
     switch (true) {
       case max >= 100000:
         return 90;
@@ -211,6 +214,66 @@ export default class AiTranslations extends Component {
       : "discourse_ai.translations.stats.incomplete_language_detection_description";
   }
 
+  get backfillStatusMessage() {
+    if (
+      this.args.model?.backfill_enabled &&
+      this.args.model?.backfill_max_age_days &&
+      this.hourlyRate > 0
+    ) {
+      const totalRemaining = this.data?.reduce(
+        (sum, { total, done }) => sum + (total - done),
+        0
+      );
+
+      if (totalRemaining && totalRemaining > 0) {
+        const hoursRemaining = totalRemaining / this.hourlyRate;
+
+        const cutoffDate = new Date();
+        cutoffDate.setDate(
+          cutoffDate.getDate() - this.args.model.backfill_max_age_days
+        );
+
+        const formattedDate = cutoffDate.toLocaleDateString(undefined, {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+
+        let timeKey;
+        if (hoursRemaining < 1) {
+          const minutes = Math.ceil(hoursRemaining * 60);
+          timeKey = i18n("discourse_ai.translations.stats.eta_minutes", {
+            count: minutes,
+          });
+        } else if (hoursRemaining < 24) {
+          const hours = Math.ceil(hoursRemaining);
+          timeKey = i18n("discourse_ai.translations.stats.eta_hours", {
+            count: hours,
+          });
+        } else {
+          const days = Math.ceil(hoursRemaining / 24);
+          timeKey = i18n("discourse_ai.translations.stats.eta_days", {
+            count: days,
+          });
+        }
+
+        return htmlSafe(
+          i18n("discourse_ai.translations.stats.backfill_message", {
+            date: formattedDate,
+            eta: timeKey,
+            settingsUrl: this.settingsUrl,
+          })
+        );
+      }
+    }
+
+    if (!this.args.model?.backfill_enabled) {
+      return i18n("discourse_ai.translations.stats.backfill_disabled");
+    }
+
+    return null;
+  }
+
   get chartColors() {
     const styles = getComputedStyle(document.querySelector(".ai-translations"));
     return {
@@ -227,17 +290,26 @@ export default class AiTranslations extends Component {
     }
 
     const colors = this.chartColors;
-
     const processedData = this.data.map(({ locale, total, done }) => {
-      const donePercentage = (total > 0 ? (done / total) * 100 : 0).toFixed(0);
+      const rawPercentage = total > 0 ? (done / total) * 100 : 0;
+      // Show one decimal place when between 99.0 and 99.9 to avoid showing 100% when not complete
+      const donePercentage =
+        rawPercentage >= 99 && rawPercentage < 100 && rawPercentage % 1 !== 0
+          ? rawPercentage.toFixed(1)
+          : rawPercentage.toFixed(0);
+      const localeName = this.languageNameLookup.getLanguageName(locale);
+      const languageNameForTooltip = localeName.split(" (")[0];
+
       return {
-        locale: this.languageNameLookup.getLanguageName(locale),
+        locale: localeName,
         done,
+        total,
         donePercentage,
         tooltip: [
           i18n("discourse_ai.translations.progress_chart.tooltip_translated", {
             done,
             total,
+            language: languageNameForTooltip,
           }),
         ],
       };
@@ -248,7 +320,7 @@ export default class AiTranslations extends Component {
         {
           tooltip: processedData.map(({ tooltip }) => tooltip),
           data: processedData.map(({ donePercentage }) => donePercentage),
-          totalItems: processedData.map(({ done }) => done),
+          totalItems: processedData.map(({ total }) => total),
           backgroundColor: colors.progress,
           barThickness: 30,
           borderRadius: 4,
@@ -429,14 +501,13 @@ export default class AiTranslations extends Component {
           </:header>
           <:content>
             <div class="ai-translations__stats-container">
-              <div class="ai-translations__stat-item">
-                <span class="ai-translations__stat-label">
-                  {{this.descriptionTooltip}}
-                  {{#unless @model.backfill_enabled}}
-                    {{i18n "discourse_ai.translations.stats.backfill_disabled"}}
-                  {{/unless}}
-                </span>
-              </div>
+              {{#if this.backfillStatusMessage}}
+                <div class="ai-translations__stat-item">
+                  <span class="ai-translations__stat-label">
+                    {{this.backfillStatusMessage}}
+                  </span>
+                </div>
+              {{/if}}
             </div>
             <div class="ai-translations__chart-container">
               <Chart

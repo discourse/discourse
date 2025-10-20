@@ -1,9 +1,25 @@
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { loadMagnificPopup } from "discourse/lib/lightbox";
+import lightbox, { loadMagnificPopup } from "discourse/lib/lightbox";
 import { i18n } from "discourse-i18n";
 
-export default function lightbox(images) {
+export default function loadLightbox(element, siteSettings) {
+  if (!element) {
+    return;
+  }
+
+  if (siteSettings.experimental_lightbox) {
+    lightbox(element, siteSettings);
+    return;
+  }
+
+  // catches chat message uploads and quoted images
+  const images = element?.querySelectorAll("img:not(.emoji, .avatar)");
+
+  if (!images.length) {
+    return;
+  }
+
   loadMagnificPopup().then(function () {
     $(images).magnificPopup({
       type: "image",

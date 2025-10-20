@@ -3287,7 +3287,6 @@ sv:
     account_second_factor_disabled:
       title: "Tvåfaktorsautentisering inaktiverad"
       subject_template: "[%{email_prefix}] Tvåfaktorsautentisering inaktiverad"
-      text_body_template: "Tvåfaktorsautentisering har stängts av för ditt konto hos %{site_name}. Du kan nu enbart logga in genom ditt lösenord; en ytterligare autentiseringskod behövs inte längre.\n\nOm du inte valde att stänga av tvåfaktorsautentisering kan någon ha äventyrat ditt konto. \n\nOm du har några frågor, [kontakta din trevliga personal](%{base_url}/about).\n"
     digest:
       since_last_visit: "Sedan ditt senaste besök"
       new_topics: "Nya ämnen"

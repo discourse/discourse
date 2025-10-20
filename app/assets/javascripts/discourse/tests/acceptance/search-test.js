@@ -11,6 +11,7 @@ import { test } from "qunit";
 import { DEFAULT_TYPE_FILTER } from "discourse/components/search-menu";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import searchFixtures from "discourse/tests/fixtures/search-fixtures";
+import pretender from "discourse/tests/helpers/create-pretender";
 import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -854,6 +855,17 @@ acceptance("Search - with tagging enabled", function (needs) {
     assert
       .dom(".search-menu .results ul li:nth-of-type(1) .discourse-tags")
       .hasText("dev,slow", "tags displayed in search results");
+  });
+
+  test("don't try to click-track when clicking one of the initial suggestions", async function (assert) {
+    pretender.post("/search/click", () => assert.false("should not be called"));
+
+    await visit("/");
+    await click("#search-button");
+    await fillIn("#icon-search-input", "dev");
+    await click(".search-result-category a.search-link");
+
+    assert.strictEqual(currentURL(), "/c/dev/7");
   });
 
   test("initial options - topic search scope - selecting a tag defaults to searching 'in all topics'", async function (assert) {

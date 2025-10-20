@@ -29,8 +29,8 @@ module PrettyText
 
   def self.apply_es6_file(ctx:, path:, module_name:)
     source = File.read(path)
-    transpiler = DiscourseJsProcessor::Transpiler.new
-    transpiled = transpiler.perform(source, nil, module_name)
+    processor = AssetProcessor.new
+    transpiled = processor.perform(source, nil, module_name)
     ctx.eval(transpiled, filename: module_name)
   end
 
@@ -46,9 +46,27 @@ module PrettyText
 
     ctx.eval("window = globalThis; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
-    ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
-    ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
-    ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+    ctx.attach(
+      "rails.logger.info",
+      proc do |err|
+        Rails.logger.info(err.to_s)
+        nil
+      end,
+    )
+    ctx.attach(
+      "rails.logger.warn",
+      proc do |err|
+        Rails.logger.warn(err.to_s)
+        nil
+      end,
+    )
+    ctx.attach(
+      "rails.logger.error",
+      proc do |err|
+        Rails.logger.error(err.to_s)
+        nil
+      end,
+    )
     ctx.eval <<~JS
       console = {
         prefix: "[PrettyText] ",

@@ -419,7 +419,10 @@ module CookedProcessorMixin
     limit_size!(img)
 
     src = img["src"]
-    return if src.blank? || is_a_hyperlink?(img) || is_svg?(img)
+    return if src.blank? || is_a_hyperlink?(img)
+
+    # SVG images can only use the zoom feature in the new lightbox
+    return if is_svg?(img) && !SiteSetting.experimental_lightbox
 
     upload = Upload.get_from_url(src)
 
@@ -474,7 +477,7 @@ module CookedProcessorMixin
       return if upload.animated?
 
       if img.ancestors(".onebox, .onebox-body").blank? && !img.classes.include?("onebox")
-        add_lightbox!(img, original_width, original_height, upload)
+        add_lightbox!(img, original_width, original_height, upload, crop)
       end
 
       optimize_image!(img, upload, cropped: crop) if generate_thumbnail
@@ -483,6 +486,9 @@ module CookedProcessorMixin
 
   def process_hotlinked_image(img)
     onebox = img.ancestors(".onebox, .onebox-body").first
+
+    # Skip hotlinked media processing if @post is not available (e.g., for chat messages)
+    return true if @post.nil?
 
     @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).index_by(&:url)
     normalized_src =
@@ -559,7 +565,7 @@ module CookedProcessorMixin
     end
   end
 
-  def add_lightbox!(img, original_width, original_height, upload)
+  def add_lightbox!(img, original_width, original_height, upload, crop)
     return if original_width < MIN_LIGHTBOX_WIDTH || original_height < MIN_LIGHTBOX_HEIGHT
 
     # first, create a div to hold our lightbox
@@ -574,6 +580,7 @@ module CookedProcessorMixin
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
+    a["data-cropped"] = "true" if crop
     a["data-download-href"] = Discourse.store.download_url(upload) if upload
 
     a.add_child(img)

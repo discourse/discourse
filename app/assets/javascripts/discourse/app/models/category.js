@@ -13,6 +13,7 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
+import Topic from "./topic";
 
 const STAFF_GROUP_NAME = "staff";
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
@@ -543,7 +544,13 @@ export default class Category extends RestModel {
 
   @computed("subcategory_list")
   get serializedSubcategories() {
-    return this.subcategory_list?.map((c) => Category.create(c));
+    return this.subcategory_list?.map((c) => {
+      const subcategory = Category.create({
+        ...c,
+        topics: c.topics?.map((t) => Topic.create(t)),
+      });
+      return subcategory;
+    });
   }
 
   @discourseComputed("required_tag_groups", "minimum_required_tags")

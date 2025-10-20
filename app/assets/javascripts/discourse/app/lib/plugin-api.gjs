@@ -3237,20 +3237,25 @@ class PluginApi {
   /**
    * Adds a custom button to the composer preview's image wrapper
    *
+   * @param {string} label - The button label text
+   * @param {string} btnClass - The CSS class for the button
+   * @param {string} icon - The icon name (optional)
+   * @param {Function} fn - The click handler function
+   * @param {Function} includeCondition - Optional function that receives the image src and returns true if the button should be shown (optional)
    *
    * ```
    * api.addComposerImageWrapperButton(
    *   "My Custom Button",
-   *   "custom-button-class"
-   *   "lock"
-   *   (event) => { console.log("Custom button clicked", event)
-   * });
-   *
+   *   "custom-button-class",
+   *   "lock",
+   *   (event) => { console.log("Custom button clicked", event); },
+   *   (imageSrc) => imageSrc.endsWith('.jpg') // Only show for JPG images
+   * );
    * ```
    *
    */
-  addComposerImageWrapperButton(label, btnClass, icon, fn) {
-    addImageWrapperButton(label, btnClass, icon);
+  addComposerImageWrapperButton(label, btnClass, icon, fn, includeCondition) {
+    addImageWrapperButton(label, btnClass, icon, includeCondition);
     addApiImageWrapperButtonClickEvent(fn);
   }
 

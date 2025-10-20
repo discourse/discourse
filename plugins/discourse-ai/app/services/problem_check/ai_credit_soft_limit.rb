@@ -28,8 +28,12 @@ class ProblemCheck::AiCreditSoftLimit < ProblemCheck
 
   private
 
+  def targets
+    LlmModel.joins(:llm_credit_allocation).where("llm_models.id < 0").pluck("llm_models.id")
+  end
+
   def soft_limit_problem(model, allocation)
-    details = {
+    override_data = {
       model_id: model.id,
       model_name: model.display_name,
       percentage_remaining: allocation.percentage_remaining.round,
@@ -37,15 +41,7 @@ class ProblemCheck::AiCreditSoftLimit < ProblemCheck
       url: "#{Discourse.base_path}/admin/plugins/discourse-ai/ai-llms",
     }
 
-    message = I18n.t("dashboard.problem.ai_credit_soft_limit", details)
-
-    Problem.new(
-      message,
-      priority: "low",
-      identifier: "ai_credit_soft_limit",
-      target: model.id,
-      details:,
-    )
+    problem(model, override_data:)
   end
 
   def format_reset_date(date)

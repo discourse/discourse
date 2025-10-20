@@ -13,3 +13,7 @@ uk:
       site_settings:
         categories:
           discourse_oauth2_basic: "Вхід з OAuth2"
+      config:
+        login:
+          sub_pages:
+            oauth2: "OAuth2"

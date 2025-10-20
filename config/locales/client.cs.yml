@@ -2166,6 +2166,7 @@ cs:
         first_time_and_daily: "Poprvé, kdy příspěvek dostane Líbí se a denně"
         first_time: "Poprvé, kdy příspěvek dostane Líbí se"
         never: "Nikdy"
+      notify_on_linked_posts: "Upozornit, když někdo sdílí odkaz na jeden z mých příspěvků"
       email_previous_replies:
         title: "Zahrnout předchozí reakce na konci emailů"
         unless_emailed: "pokud již nebyly odeslány dříve"
@@ -3193,6 +3194,7 @@ cs:
         remove: "Odebrat odkaz"
         visit: "Otevřít odkaz na novém panelu"
         link_copied: "Odkaz zkopírován!"
+      unsupported_token: "Editor formátovaného textu nepodporuje všechny funkce použité v tomto příspěvku; přepínám vás na editor Markdown."
     notifications:
       tooltip:
         regular:
@@ -4007,6 +4009,8 @@ cs:
       reply:
         title: "Odpovědět"
         help: "Začít psát odpověď na toto téma"
+      footer_buttons:
+        region_label: "Akce tématu"
       share:
         title: "Sdílet téma"
         extended_title: "Sdílet odkaz"
@@ -4359,10 +4363,8 @@ cs:
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
       cancel_composer:
-        confirm: "Co chcete udělat s vaším příspěvkem?"
+        confirm: "Chcete svůj příspěvek zahodit?"
         discard: "Zahodit"
-        save_draft: "Uložit koncept na později"
-        keep_editing: "Pokračovat v úpravách"
       via_email: "tento příspěvek byl přijat přes email"
       via_auto_generated_email: "tento příspěvek byl přijat přes automaticky generovaný email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"
@@ -5614,6 +5616,8 @@ cs:
           light: "Světlý režim"
           dark: "Tmavý režim"
           auto: "Automaticky"
+          title: "Barevný režim"
+          aria_label: "Barevný režim, aktuálně %{mode}"
     welcome_topic_banner:
       title: "Vytvořte si uvítací téma"
       description: "Vaše uvítací téma je to první, co si noví členové přečtou. Považujte ho za svůj \"elevator pitch\" nebo \"poslání\". Dejte všem vědět, pro koho je tato komunita určena, co zde mohou očekávat a co byste chtěli, aby udělali jako první."
@@ -5866,9 +5870,16 @@ cs:
           title: "Lokalizace"
           header_description: "Nastavte uživatelské rozhraní vaší komunity z pohledu jazyka a dalších možností lokalizace"
           keywords: "locale|language|timezone|unicode|ltr|jazyk|časová|zóna"
-        login_and_authentication:
+        login:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
+          sub_pages:
+            common_settings:
+              title: "Nastavení"
+            authenticators:
+              title: "Přihlášení přes sociální sítě"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Nakonfigurujte loga a ikony používané na celém webu"
@@ -7088,6 +7099,7 @@ cs:
         copy_to_clipboard: "Kopírovat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"
+        theme_owner: "Vlastník:"
         email_templates:
           title: "Email"
           subject: "Předmět"
@@ -7096,6 +7108,10 @@ cs:
           body: "Tělo"
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
+          search_templates: "Filtrovat podle názvu šablony..."
+          no_templates_found: "Vašim filtrům neodpovídají žádné šablony."
+          edit: "Upravit"
+          back: "Zpět na šablony"
         component:
           all_filter: "Vše"
           used_filter: "Použitý"

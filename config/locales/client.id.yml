@@ -2321,6 +2321,10 @@ id:
         email:
           title: "Surel"
       config:
+        login:
+          sub_pages:
+            common_settings:
+              title: "Pengaturan"
         logo:
           form:
             email: "Surel"
@@ -2568,6 +2572,7 @@ id:
           title: "Email"
           subject: "Judul"
           body: "Konten"
+          edit: "Ubah"
         component:
           all_filter: "Semua"
           enabled_filter: "Diaktifkan"

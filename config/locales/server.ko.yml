@@ -2959,12 +2959,6 @@ ko:
     account_second_factor_disabled:
       title: "2단계 인증 비활성화됨"
       subject_template: "[%{email_prefix}] 2단계 인증 비활성화됨"
-      text_body_template: |
-        %{site_name} 계정에서 2단계 인증이 비활성화되었습니다. 이제 비밀번호만으로 로그인할 수 있으며 추가 인증 코드가 더 이상 필요하지 않습니다.
-
-        2단계 인증 비활성화를 선택하지 않은 경우 누군가가 계정을 도용했을 수 있습니다.
-
-        궁금한 점이 있으면 [운영진에게 문의하세요](%{base_url}/about).
     digest:
       since_last_visit: "마지막 방문 이후"
       new_topics: "새 주제"

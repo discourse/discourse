@@ -2578,12 +2578,6 @@ da:
     account_second_factor_disabled:
       title: "To-Faktor godkendelse deaktiveret"
       subject_template: "[%{email_prefix}] To-Faktor godkendelse deaktiveret"
-      text_body_template: |
-        To-faktor-godkendelse er blevet deaktiveret for din konto på %{site_name}. Du kan nu logge ind ved kun at bruge din adgangskode; en ekstra godkendelseskode er ikke længere påkrævet.
-
-        Hvis du ikke valgte at deaktivere tofaktorautentificering, kan nogen have kompromitteret din konto.
-
-        Hvis du har spørgsmål, [kontakt vores venlige personale](%{base_url}/about).
     digest:
       since_last_visit: "Siden dit sidste besøg"
       new_topics: "Nye Emner"

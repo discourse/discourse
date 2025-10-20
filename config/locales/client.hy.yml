@@ -3019,10 +3019,7 @@ hy:
         attachment_upload_not_allowed_for_new_user: "Ներողություն, նոր օգտատերերը չեն կարող ֆայլեր կցել:"
         attachment_download_requires_login: "Ներողություն, Դուք պետք է մուտք գործեք՝ կցված ֆայլերը ներբեռնելու համար:"
       cancel_composer:
-        confirm: "Ի՞նչ անել գրառման հետ։"
         discard: "Չեղարկել"
-        save_draft: "Պահպանել որպես սևագիր"
-        keep_editing: "Շարունակել խմբագրումը"
       via_email: "այս գրառումը եկել է էլ. նամակով"
       via_auto_generated_email: "այս գրառումը եկել է ավտոմատ գեներացված էլ. նամակով"
       whisper: "այս գրառումը գաղտնի շշուկ է մոդերատորների համար"
@@ -3867,6 +3864,10 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Կարգավորումներ"
         logo:
           form:
             mobile: "Հեռախոսային"
@@ -4400,6 +4401,7 @@ hy:
           body: "Բովանդակություն"
           revert: "Վերադարձնել Փոփոխությունները"
           revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել Ձեր փոփոխությունները:"
+          edit: "Խմբագրել"
         component:
           all_filter: "Բոլորը"
           disabled_filter: "Անջատված"

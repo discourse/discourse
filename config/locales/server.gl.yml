@@ -2870,12 +2870,6 @@ gl:
     account_second_factor_disabled:
       title: "Autenticación en dous pasos desactivada"
       subject_template: "[%{email_prefix}] Autenticación en dous pasos desactivada"
-      text_body_template: |
-        A autenticación de dobre paso desactivouse na súa conta en %{site_name}. Agora pode iniciar sesión con só o seu contrasinal; xa non se vai precisar un código adicional de autenticación.
-
-        Se non elixiu desactivar a autenticación de dobre paso, pode que alguén comprometese a seguridade da súa conta.
-
-        Se ten calquera pregunta, [contacte co noso equipo](%{base_url}/about).
     digest:
       since_last_visit: "Desde a súa última visita"
       new_topics: "Novos temas"

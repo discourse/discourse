@@ -341,13 +341,20 @@ en:
           complete_language_detection_description: "All %{total} eligible posts have their language detected."
           incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
           backfill_disabled: "Backfilling is disabled, only new posts will be translated."
-          description_tooltip:
-            one: 'There is %{count} post eligible for translation.'
-            other: 'There are %{count} posts eligible for translation.'
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          eta_minutes:
+            one: "%{count} minute"
+            other: "%{count} minutes"
+          eta_hours:
+            one: "%{count} hour"
+            other: "%{count} hours"
+          eta_days:
+            one: "%{count} day"
+            other: "%{count} days"
         progress_chart:
           title: "Translation Progress"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} out of %{total} posts translated"
+          tooltip_translated: "%{done} out of %{total} non-%{language} posts translated"
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
@@ -902,6 +909,7 @@ en:
         cancel_streaming: "Stop reply"
         default_pm_prefix: "[Untitled AI bot PM]"
         shortcut_title: "Start a PM with an AI bot"
+        shortcut_link: "AI bot"
         exit: "exit AI bot"
         share: "Copy AI conversation"
         conversation_shared: "Conversation copied"

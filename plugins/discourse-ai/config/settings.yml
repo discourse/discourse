@@ -272,7 +272,6 @@ discourse_ai:
   ai_embeddings_semantic_quick_search_enabled:
     default: false
     client: true
-    hidden: true
     area: "ai-features/embeddings"
   ai_embeddings_semantic_search_hyde_persona:
     default: "-32"
@@ -390,6 +389,10 @@ discourse_ai:
     refresh: true
     area: "ai-features/bot"
   ai_bot_add_to_header:
+    default: false
+    client: true
+    area: "ai-features/bot"
+  ai_bot_add_to_community_section:
     default: true
     client: true
     area: "ai-features/bot"
@@ -490,7 +493,7 @@ discourse_ai:
   ai_translation_backfill_hourly_rate:
     default: 0
     min: 0
-    max: 1000
+    max: 100000
     client: false
     hidden: true
     area: "ai-features/translation"

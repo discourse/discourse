@@ -84,7 +84,16 @@ export async function testMarkdown(
     multiToggle
   );
 
-  assert.strictEqual(html, expectedHtml, `HTML should match for "${markdown}"`);
+  if (typeof expectedHtml === "function") {
+    expectedHtml(assert);
+  } else {
+    assert.strictEqual(
+      html,
+      expectedHtml,
+      `HTML should match for "${markdown}"`
+    );
+  }
+
   assert.strictEqual(
     editorClass.value,
     expectedMarkdown,

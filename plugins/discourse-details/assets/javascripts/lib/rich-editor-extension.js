@@ -2,7 +2,6 @@
 const extension = {
   nodeSpec: {
     details: {
-      allowGapCursor: true,
       attrs: { open: { default: true } },
       content: "summary block+",
       group: "block",

@@ -2165,6 +2165,7 @@ pl_PL:
         first_time_and_daily: "Pierwsze polubienie i raz dziennie"
         first_time: "Pierwsze polubienie"
         never: "Nigdy"
+      notify_on_linked_posts: "Powiadom, gdy ktoś udostępni link do jednego z moich postów"
       email_previous_replies:
         title: "Dołącz poprzednie odpowiedzi na końcu e-maili."
         unless_emailed: "chyba wcześniej wysłany"
@@ -3182,6 +3183,7 @@ pl_PL:
         remove: "Usuń link"
         visit: "Otwórz link w karcie zewnętrznej"
         link_copied: "Link skopiowany!"
+      unsupported_token: "Edytor tekstu sformatowanego nie obsługuje wszystkich funkcji przedstawionych w tym poście; w związku z tym przełączymy Cię do edytora Markdown."
     notifications:
       tooltip:
         regular:
@@ -3822,6 +3824,8 @@ pl_PL:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Przeglądaj wszystkie kategorie</a>, <a href='%{basePath}/latest'>zobacz najnowsze tematy</a> lub zobacz popularne:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Przeglądaj wszystkie tagi</a> lub <a href='%{basePath}/latest'>zobacz najnowsze tematy</a>."
       browse_latest_topics: "Przeglądaj najnowsze tematy"
+      browse_new_replies: "Przeglądaj nowe odpowiedzi"
+      browse_new_topics: "Przeglądaj nowe tematy"
       suggest_create_topic: Gotowy na <a href>rozpoczęcie nowej rozmowy?</a>
       jump_reply: "Przejdź do pierwotnej lokalizacji wpisu"
       jump_reply_aria: "Przejdź do postu @%{username} w jego oryginalnej lokalizacji"
@@ -3996,6 +4000,8 @@ pl_PL:
       reply:
         title: "Odpowiedz"
         help: "zacznij tworzyć odpowiedź do tego tematu"
+      footer_buttons:
+        region_label: "Akcje tematu"
       share:
         title: "Udostępnij temat"
         extended_title: "Udostępnij link"
@@ -4348,10 +4354,8 @@ pl_PL:
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."
       cancel_composer:
-        confirm: "Co chcesz zrobić ze swoim wpisem?"
+        confirm: "Czy chcesz usunąć swój wpis?"
         discard: "Odrzuć"
-        save_draft: "Zapisz szkic na później"
-        keep_editing: "Kontynuuj edycję"
       via_email: "ten wpis został dodany emailem"
       via_auto_generated_email: "ten wpis został dodany poprzez automatycznie wygenerowaną wiadomość e-mail"
       whisper: "ten wpis jest prywatnym szeptem do moderatorów"
@@ -5591,6 +5595,8 @@ pl_PL:
           light: "Jasny"
           dark: "Ciemny"
           auto: "Automatyczny"
+          title: "Tryb kolorów"
+          aria_label: "Tryb kolorów, obecnie %{mode}"
     welcome_topic_banner:
       title: "Stwórz swój temat powitalny"
       description: "Twój temat powitalny to pierwsza rzecz, którą przeczytają nowi członkowie. Pomyśl o tym jako o swoim „przemówieniu” lub „deklaracji misji”. Poinformuj wszystkich, dla kogo jest ta społeczność, czego mogą się tu spodziewać, i co chcesz, aby zrobili najpierw."
@@ -5843,9 +5849,16 @@ pl_PL:
           title: "Lokalizacja"
           header_description: "Skonfiguruj język interfejsu społeczności i inne opcje lokalizacji dla swoich członków"
           keywords: "ustawienia regionalne|strefa czasowa|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Logowanie i uwierzytelnianie"
           header_description: "Skonfiguruj sposób logowania i uwierzytelniania użytkowników, sekrety i klucze, dostawców OAuth2 i nie tylko."
+          sub_pages:
+            common_settings:
+              title: "Ustawień"
+            authenticators:
+              title: "Logowania społecznościowe"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Skonfiguruj logo i ikony używane w całej witrynie"
@@ -7074,6 +7087,10 @@ pl_PL:
           body: "Treść"
           revert: "Cofnij zmiany"
           revert_confirm: "Czy na pewno chcesz wycofać swoje zmiany?"
+          search_templates: "Filtruj według nazwy szablonu..."
+          no_templates_found: "Brak szablonów spełniających wybrane filtry."
+          edit: "Edytuj"
+          back: "Powrót do szablonów"
         component:
           all_filter: "Wszystkie"
           used_filter: "Używany"

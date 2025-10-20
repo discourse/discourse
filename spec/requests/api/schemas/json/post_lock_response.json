@@ -1,0 +1,12 @@
+{
+    "type": "object",
+    "properties": {
+        "locked": {
+            "type": "boolean",
+            "description": "Whether the post is locked"
+        }
+    },
+    "required": [
+        "locked"
+    ]
+}

@@ -1685,6 +1685,7 @@ ro:
         first_time_and_daily: "Prima dată când o postare este apreciată și zilnic"
         first_time: "Prima dată când o postare este apreciată"
         never: "Niciodată"
+      notify_on_linked_posts: "Notifică-mă când cineva partajează o legătură către una dintre postările mele"
       email_previous_replies:
         title: "Include răspunsurile precedente la sfârșitul e-mailurilor"
         unless_emailed: "dacă nu a fost trimis anterior"
@@ -2983,10 +2984,7 @@ ro:
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."
       cancel_composer:
-        confirm: "Ce ai vrea să faci cu postarea ta?"
         discard: "Renunță"
-        save_draft: "Salvează schița pentru mai târziu"
-        keep_editing: "Continuă editarea"
       via_email: "această postare a sosit via email"
       via_auto_generated_email: "Această postare a sosit prin intermediul unui email auto-generat"
       whisper: "această postare este doar pentru moderatori (modul discret)"
@@ -3915,8 +3913,11 @@ ro:
           title: "Localizare"
           header_description: "Configurează limba interfeței comunității tale și alte opțiuni de localizare pentru membrii tăi"
           keywords: "locale|language|timezone|unicode|ltr"
-        login_and_authentication:
+        login:
           header_description: "Configurează modul în care utilizatorii se conectează și se autentifică, secretele și cheile, furnizorii OAuth2 și multe altele"
+          sub_pages:
+            common_settings:
+              title: "Setări"
         logo:
           title: "Logo"
           header_description: "Configurează logourile și iconurile utilizate pe întregul tău site"
@@ -4692,6 +4693,7 @@ ro:
           body: "Body"
           revert: "Revocă schimbările"
           revert_confirm: "Ești sigur că vrei să revoci schimbările?"
+          edit: "Editează"
         component:
           all_filter: "Toate"
           enabled_filter: "Activat"

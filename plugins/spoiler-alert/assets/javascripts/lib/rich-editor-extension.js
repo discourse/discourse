@@ -9,6 +9,7 @@ const extension = {
       attrs: { blurred: { default: true } },
       group: "block",
       content: "block+",
+      createGapCursor: true,
       parseDOM: [{ tag: "div.spoiled" }],
       toDOM: () => ["div", { class: "spoiled" }, 0],
     },

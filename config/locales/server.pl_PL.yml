@@ -1869,8 +1869,8 @@ pl_PL:
     email_custom_headers: "Lista niestandardowych nagłówków wiadomości e-mail"
     email_subject: "Konfigurowalny format tematów standardowych wiadomości e-mail. Zobacz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
-    enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego, zanim będą mogli uzyskać dostęp do interfejsu Discourse. To ustawienie nie ma wpływu na uwierzytelnianie API lub 'dostawcy DiscourseConnect'. Jeśli opcja enforce_second_factor_on_external_auth jest włączona, użytkownicy nie będą mogli logować się za pomocą zewnętrznych dostawców uwierzytelniania po skonfigurowaniu uwierzytelniania dwuskładnikowego."
-    enforce_second_factor_on_external_auth: "Wymagaj od użytkowników korzystania z uwierzytelniania dwuskładnikowego przez cały czas. Po włączeniu uniemożliwi to użytkownikom logowanie się za pomocą zewnętrznych metod uwierzytelniania, takich jak logowanie społecznościowe, jeśli mają włączone uwierzytelnianie dwuskładnikowe. Po wyłączeniu użytkownicy będą musieli potwierdzić uwierzytelnianie dwuskładnikowe tylko podczas logowania przy użyciu nazwy użytkownika i hasła. Zobacz także ustawienie `enforce_second_factor`."
+    enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego (2FA) przed uzyskaniem dostępu do interfejsu użytkownika Discourse. To ustawienie nie wpływa na uwierzytelnianie API ani dostawcy DiscourseConnect. Jeśli opcja „execute_second_factor_on_external_auth” jest włączona, użytkownicy nie będą mogli logować się za pomocą zewnętrznych dostawców uwierzytelniania po skonfigurowaniu uwierzytelniania dwuskładnikowego."
+    enforce_second_factor_on_external_auth: "Wymagaj od użytkowników stałego korzystania z uwierzytelniania dwuskładnikowego (2FA). Po włączeniu tej opcji użytkownicy nie będą mogli logować się za pomocą zewnętrznych metod uwierzytelniania, takich jak logowanie za pośrednictwem mediów społecznościowych, jeśli mają włączoną funkcję 2FA. Po wyłączeniu tej opcji użytkownicy będą musieli potwierdzić uwierzytelnianie dwuskładnikowe tylko podczas logowania za pomocą nazwy użytkownika i hasła. Zobacz również ustawienie `enforce_second_factor`."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś/łaś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
     summary_posts_required: "Minimalna liczba wpisów w temacie przed „Podsumowaniem tego tematu” jest włączona. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
@@ -2830,6 +2830,9 @@ pl_PL:
       group: "Filtruj tematy według grup"
       groups_any: "Pokaż tematy z dowolną ze wskazanych grup (rozdzielone przecinkami)"
       groups_all: "Pokaż tematy ze wszystkimi określonymi grupami (rozdzielone znakiem plus)"
+      locale: "Filtruj tematy według języka oryginału"
+      locale_any: "Pokaż tematy pierwotnie napisane w dowolnym z podanych języków (rozdzielone przecinkami)"
+      exclude_locale: "Wyklucz tematy pierwotnie napisane w określonym języku"
   discourse_connect:
     login_error: "Błąd logowania"
     not_found: "Nie można znaleźć Twojego konta. Skontaktuj się z administratorem serwisu."
@@ -4260,11 +4263,11 @@ pl_PL:
       title: "Uwierzytelnianie dwuskładnikowe wyłączone"
       subject_template: "[%{email_prefix}] Uwierzytelnianie dwuskładnikowe wyłączone"
       text_body_template: |
-        Uwierzytelnianie dwuskładnikowe zostało wyłączone na Twoim koncie na %{site_name}. Teraz możesz zalogować się tylko przy użyciu hasła; dodatkowy kod uwierzytelniania nie jest już wymagany.
+        Uwierzytelnianie dwuskładnikowe zostało wyłączone na Twoim koncie pod adresem %{site_name}. Możesz teraz logować się tylko za pomocą hasła; dodatkowy kod uwierzytelniający nie jest już wymagany.
 
-        Jeśli nie zdecydowałeś/łaś się wyłączyć uwierzytelniania dwuskładnikowego, ktoś uzyskać niepowołany dostęp do Twojego konta.
+        Jeśli nie wyłączyłeś uwierzytelniania dwuskładnikowego (2FA), ktoś mógł włamać się na Twoje konto.
 
-        Jeśli masz jakieś pytania, [skontaktuj się z naszym przyjaznym personelem](%{base_url}/about).
+        W razie pytań [skontaktuj się z naszą przyjazną obsługą] (%{base_url}/about).
     digest:
       why: "Krótkie podsumowanie %{site_link} od %{since}"
       since_last_visit: "Od twojej ostatniej wizyty"

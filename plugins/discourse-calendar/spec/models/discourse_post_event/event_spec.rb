@@ -104,6 +104,31 @@ describe DiscoursePostEvent::Event do
               }
             end
           end
+
+          describe "with private message topics" do
+            let(:pm_owner) { Fabricate(:user) }
+            let(:allowed_user) { Fabricate(:user) }
+            let(:disallowed_user) { Fabricate(:user) }
+            let(:pm_topic) do
+              Fabricate(:private_message_topic, user: pm_owner, recipient: allowed_user)
+            end
+            let(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_owner) }
+            let(:pm_event) { Fabricate(:event, post: pm_post) }
+
+            it "does not send notifications to users without access to the PM" do
+              expect(Guardian.new(disallowed_user).can_see?(pm_topic)).to be(false)
+              expect { pm_event.create_notification!(disallowed_user, pm_post) }.not_to change {
+                Notification.count
+              }
+            end
+
+            it "does send notifications to users with access to the PM" do
+              expect(Guardian.new(allowed_user).can_see?(pm_topic)).to be(true)
+              expect { pm_event.create_notification!(allowed_user, pm_post) }.to change {
+                Notification.count
+              }.by(1)
+            end
+          end
         end
       end
 
@@ -609,12 +634,28 @@ describe DiscoursePostEvent::Event do
 
     before { DiscoursePostEvent::Invitee.create_attendance!(user_3.id, post_1.id, :going) }
 
-    it "doesn’t return already attending user" do
+    it "doesn't return already attending user" do
       expect(event_1.missing_users.pluck(:id)).to_not include(user_3.id)
     end
 
     it "return users from groups with no duplicates" do
       expect(event_1.missing_users.pluck(:id)).to match_array([user_1.id, user_2.id])
+    end
+
+    context "with private event with empty raw_invitees" do
+      let!(:event_without_invitees) do
+        Fabricate(
+          :event,
+          post: Fabricate(:post),
+          status: DiscoursePostEvent::Event.statuses[:private],
+          raw_invitees: [],
+        )
+      end
+
+      it "does not return all site users" do
+        expect(event_without_invitees.missing_users.count).to eq(0)
+        expect(User.real.activated.not_silenced.not_suspended.not_staged.count).not_to eq(0)
+      end
     end
   end
 

@@ -140,7 +140,7 @@ jobs:
 
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
-        run: bin/rake plugin:pull_compatible_all
+        run: LOAD_PLUGINS=0 bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
         if: matrix.target == 'themes'
@@ -276,9 +276,9 @@ jobs:
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
-      - name: Theme Transpiler Tests
+      - name: Asset Processor Tests
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        working-directory: app/assets/javascripts/theme-transpiler
+        working-directory: app/assets/javascripts/asset-processor
         run: pnpm test
 
       - name: Plugin QUnit

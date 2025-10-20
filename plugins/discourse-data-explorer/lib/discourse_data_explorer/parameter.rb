@@ -110,6 +110,9 @@ module DiscourseDataExplorer
 
     def cast_to_ruby(string)
       string = @default unless string
+      # Since we allow passing a JSON object for the params, the most straightforward way to
+      # check that the value is valid is to convert it back to a string.
+      string = string.to_s
 
       if string.blank?
         if @nullable
