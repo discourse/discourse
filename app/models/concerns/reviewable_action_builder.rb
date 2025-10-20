@@ -239,14 +239,8 @@ module ReviewableActionBuilder
   end
 
   def perform_convert_to_pm(performed_by, _args)
-    topic = target_post.topic
-
-    if topic && Guardian.new(performed_by).can_moderate?(topic)
-      topic.convert_to_private_message(performed_by)
-      create_result(:success, :approved, [created_by_id], false)
-    else
-      create_result(:failure, :approved) { |r| r.errors = ["Cannot convert to PM"] }
-    end
+    # TODO (reviewable-refresh): Implement convert to PM logic
+    create_result(:success, :rejected, [created_by_id], false)
   end
 
   private
