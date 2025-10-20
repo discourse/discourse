@@ -132,7 +132,7 @@ task "multisite:migrate" => %w[
        db:load_config
        environment
        set_locale
-       assets:precompile:theme_transpiler
+       assets:precompile:asset_processor
      ] do |_, args|
   raise "Multisite migrate is only supported in production" if ENV["RAILS_ENV"] != "production"
 
@@ -237,7 +237,7 @@ task "db:migrate" => %w[
        load_config
        environment
        set_locale
-       assets:precompile:theme_transpiler
+       assets:precompile:asset_processor
      ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",

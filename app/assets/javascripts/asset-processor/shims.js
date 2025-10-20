@@ -6,7 +6,7 @@ import path from "path";
 import getRandomValues from "polyfill-crypto.getrandomvalues";
 import BindingsWasm from "./node_modules/@rollup/browser/dist/bindings_wasm_bg.wasm";
 
-const CONSOLE_PREFIX = "[DiscourseJsProcessor] ";
+const CONSOLE_PREFIX = "[AssetProcessor] ";
 globalThis.window = {};
 globalThis.console = {
   debug(...args) {
