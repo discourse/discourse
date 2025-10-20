@@ -152,7 +152,7 @@ task "assets:precompile:compress_js": "environment" do
 end
 
 task "assets:precompile:asset_processor": "environment" do
-  DiscourseJsProcessor::Transpiler.build_production_asset_processor
+  AssetProcessor.build_production_asset_processor
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task
