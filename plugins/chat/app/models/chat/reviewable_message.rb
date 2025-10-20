@@ -154,7 +154,7 @@ module Chat
     end
 
     def perform_delete_message(performed_by, args)
-      chat_message.recover!
+      chat_message.trash!(performed_by)
       create_result(:success, :approved, [created_by_id], true)
     end
 
