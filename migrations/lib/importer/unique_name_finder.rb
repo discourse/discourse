@@ -9,8 +9,8 @@ module Migrations::Importer
     private_constant :MAX_LENGTH, :MAX_ATTEMPTS, :SUFFIX_CACHE_SIZE
 
     def initialize(shared_data)
-      @used_usernames_lower = shared_data.load(:usernames)
-      @used_group_names_lower = shared_data.load(:group_names)
+      @used_usernames_lower = shared_data ? shared_data.load(:usernames) : Set.new
+      @used_group_names_lower = shared_data ? shared_data.load(:group_names) : Set.new
       @last_suffixes = ::LruRedux::Cache.new(SUFFIX_CACHE_SIZE)
 
       @fallback_username =
@@ -69,7 +69,7 @@ module Migrations::Importer
       name = UserNameSuggester.sanitize_username(name)
 
       if name.present?
-        name = truncate(name, max_length: max_name_length)
+        name = truncate_to(name, max_length: max_name_length)
         name_lower = name.downcase
 
         # Early return if name is available without suffix
@@ -101,15 +101,15 @@ module Migrations::Importer
       max_name_length,
       allow_reserved_username
     )
-      suffix = next_suffix(name_lower)
+      original_suffix = suffix = next_suffix(name_lower)
       name_candidate_lower = +"#{name_lower}_#{suffix}"
       attempts = 0
 
       while attempts < MAX_ATTEMPTS
         if (overflow = name_candidate_lower.length - max_name_length) > 0
-          store_last_suffix(name_lower, suffix)
+          store_last_suffix(name_lower, suffix) if original_suffix != suffix
 
-          name = truncate(name, max_length: max_name_length - overflow)
+          name = truncate_by(name, chars: overflow)
           name = fallback_name if name.length == 0
           name_lower = name.downcase
 
@@ -137,7 +137,7 @@ module Migrations::Importer
       @last_suffixes[name_lower] = suffix
     end
 
-    def truncate(name, max_length:)
+    def truncate_to(name, max_length:)
       return name if name.length <= max_length
 
       result = +""
@@ -146,6 +146,10 @@ module Migrations::Importer
         result << cluster
       end
       result
+    end
+
+    def truncate_by(name, chars:)
+      truncate_to(name, max_length: name.length - chars)
     end
 
     def build_reserved_username_cache

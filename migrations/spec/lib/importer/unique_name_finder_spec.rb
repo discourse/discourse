@@ -46,10 +46,13 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       username1 = finder.find_available_username("john")
       username2 = finder.find_available_username("john")
       username3 = finder.find_available_username("john")
+      11.times { finder.find_available_username("john") }
+      username4 = finder.find_available_username("john")
 
       expect(username1).to eq("john")
       expect(username2).to eq("john_1")
       expect(username3).to eq("john_2")
+      expect(username4).to eq("john_14")
     end
 
     it "handles case-insensitive duplicates" do
@@ -70,6 +73,31 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       expected_truncated_username = "a" * 50 + "12345678"
       expect(username.length).to eq(60)
       expect(username).to eq("#{expected_truncated_username}_1")
+    end
+
+    it "truncates further when suffix length increases" do
+      long_name = "a" * 50 + "1234567890"
+
+      # Create 9 usernames: "aaa...aaa1234567890", "aaa...aaa12345678_1" through "aaa...aaa12345678_8"
+      9.times { finder.find_available_username(long_name) }
+
+      # Next one should be "aaa...aaa12345678_9", which fits in 60 chars
+      username = finder.find_available_username(long_name)
+      expect(username).to eq("#{long_name[0, 58]}_9")
+
+      # After that, "_10" requires more space, so truncate to 57 chars
+      # Since this is a new truncated base name, suffix restarts at _1
+      username = finder.find_available_username(long_name)
+      expect(username).to eq("#{long_name[0, 57]}_1")
+
+      # Continue with the 57-char base through _99
+      98.times { finder.find_available_username(long_name) }
+      username = finder.find_available_username(long_name)
+      expect(username).to eq("#{long_name[0, 57]}_99")
+
+      # "_100" requires truncating to 56 chars, suffix restarts at _1 again
+      username = finder.find_available_username(long_name)
+      expect(username).to eq("#{long_name[0, 56]}_1")
     end
 
     it "uses fallback when sanitization results in empty string" do
@@ -143,7 +171,23 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       end
 
       it "truncates at grapheme boundaries for multi-byte characters" do
-        raise NotImplementedError
+        # 94 characters, 67 .grapheme clusters
+        long_name =
+          "बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्य_अभियंता_सर्वोच्च_कमांडर_महोदय_जी"
+        username1 = finder.find_available_username(long_name)
+        username2 = finder.find_available_username(long_name)
+
+        100.times { finder.find_available_username(long_name) }
+        username3 = finder.find_available_username(long_name)
+
+        # 60 characters, 43 grapheme clusters
+        expect(username1).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्")
+
+        # 60 characters, 42 original grapheme clusters plus suffix ("_1")
+        expect(username2).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मु_1")
+
+        # 58 characters, 41 original grapheme clusters plus suffix ("_11")
+        expect(username3).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के__11")
       end
     end
   end
