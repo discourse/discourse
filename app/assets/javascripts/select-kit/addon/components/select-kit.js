@@ -460,7 +460,7 @@ export default class SelectKit extends Component {
       this.errorsCollection.pushObject(error);
     }
 
-    // this._safeAfterRender(() => this._updatePopper());
+    this._safeAfterRender(() => this.updateFloatingUiPosition());
   }
 
   clearErrors() {
@@ -721,7 +721,7 @@ export default class SelectKit extends Component {
       "selectKit.isLoading": true,
       "selectKit.enterDisabled": true,
     });
-    // this._safeAfterRender(() => this._updatePopper());
+    this._safeAfterRender(() => this.updateFloatingUiPosition());
 
     let content = [];
 
@@ -1223,11 +1223,6 @@ export default class SelectKit extends Component {
     this._deprecateMutations();
     this._handleDeprecatedArgs();
   }
-
-  // @bindDecorator
-  // _updatePopper() {
-  //   this.popper?.update?.();
-  // }
 
   _computePlacementStrategy() {
     let placementStrategy = this.selectKit.options.placementStrategy;
