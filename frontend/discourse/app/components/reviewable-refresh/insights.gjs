@@ -66,7 +66,7 @@ export default class ReviewableInsights extends Component {
     });
 
     // Visibility insight
-    if (!reviewable?.topic?.visible) {
+    if (reviewable?.topic && !reviewable?.topic?.visible) {
       insights.push({
         icon: "far-eye-slash",
         label: i18n("review.insights.visibility"),
