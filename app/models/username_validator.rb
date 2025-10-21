@@ -9,20 +9,22 @@ class UsernameValidator
   #
   # Example: UsernameValidator.perform_validation(user, 'name')
   def self.perform_validation(object, field_name, opts = {})
-    validator = UsernameValidator.new(object.public_send(field_name), **opts)
+    validator = UsernameValidator.new(object.public_send(field_name), object: object, **opts)
     unless validator.valid_format?
       validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }
     end
   end
 
-  def initialize(username, skip_length_validation: false)
+  def initialize(username, skip_length_validation: false, object: nil)
     @username = username&.unicode_normalize
     @skip_length_validation = skip_length_validation
+    @object = object
     @errors = []
   end
 
   attr_accessor :errors
   attr_reader :username
+  attr_reader :object
   attr_reader :skip_length_validation
 
   def user
