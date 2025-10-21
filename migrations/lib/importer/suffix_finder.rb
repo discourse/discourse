@@ -43,7 +43,7 @@ module Migrations::Importer
     # the maximum suffix from the first range that is >= large_range_threshold in size.
     # If no range meets the threshold, returns the maximum suffix from the first range.
     #
-    # @param names_lower [Enumerable<String>] collection of lowercase names with numeric suffixes
+    # @param names_lower_collections [Array<Enumerable<String>>] one or more collections of lowercase names with numeric suffixes
     # @return [Hash<String, Integer>] mapping of base names to their selected maximum suffix
     #
     # @example Multiple ranges with gap
@@ -55,8 +55,13 @@ module Migrations::Importer
     #   names = (1..400).map { |i| "user_#{i}" }
     #   find_max_suffixes(names)
     #   # => { "user" => 400 }
-    def find_max_suffixes(names_lower)
-      suffixes_by_base = extract_suffixes(names_lower)
+    #
+    # @example Multiple collections
+    #   find_max_suffixes(["user_1", "user_2"], ["user_3", "user_100"])
+    #   # => { "user" => 3 }
+    def find_max_suffixes(*names_lower_collections)
+      suffixes_by_base = extract_suffixes(names_lower_collections)
+
       suffixes_by_base.transform_values! do |suffixes|
         next if suffixes.empty?
 
@@ -83,14 +88,16 @@ module Migrations::Importer
     private
 
     # Extracts numeric suffixes from names following the pattern "base_123"
-    # @param names_lower [Enumerable<String>] list of lowercase names to analyze
+    # @param names_lower_collections [Array<Enumerable<String>>] one or more collections of lowercase names to analyze
     # @return [Hash<String, Array<Integer>>] base names mapped to their suffixes
-    def extract_suffixes(names_lower)
+    def extract_suffixes(names_lower_collections)
       suffixes_by_base = Hash.new { |h, k| h[k] = [] }
 
-      names_lower.each do |name|
-        base_name, suffix = name.match(/\A(.+?)_(\d+)\z/)&.captures
-        suffixes_by_base[base_name] << suffix.to_i if base_name
+      names_lower_collections.each do |names_lower|
+        names_lower.each do |name|
+          base_name, suffix = name.match(/\A(.+?)_(\d+)\z/)&.captures
+          suffixes_by_base[base_name] << suffix.to_i if base_name
+        end
       end
 
       suffixes_by_base

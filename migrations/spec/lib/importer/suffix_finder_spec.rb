@@ -3,7 +3,7 @@
 RSpec.describe Migrations::Importer::SuffixFinder do
   subject(:finder) { described_class.new }
 
-  describe "#find" do
+  describe "#find_max_suffixes" do
     it "returns the end of the first range for each base" do
       names = %w[john_1 john_2 john_3 john_4 john_1983 john_2001 john_9999]
       result = finder.find_max_suffixes(names)
@@ -117,6 +117,44 @@ RSpec.describe Migrations::Importer::SuffixFinder do
         result = finder.find_max_suffixes(names)
 
         expect(result).to eq({ "user" => 1 })
+      end
+    end
+
+    context "with multiple collections" do
+      it "combines suffixes from multiple collections" do
+        collection1 = %w[user_1 user_2]
+        collection2 = %w[user_3 user_4]
+        result = finder.find_max_suffixes(collection1, collection2)
+
+        expect(result).to eq({ "user" => 4 })
+      end
+
+      it "handles different bases across collections" do
+        collection1 = %w[alice_1 alice_2]
+        collection2 = %w[bob_5 bob_6]
+        result = finder.find_max_suffixes(collection1, collection2)
+
+        expect(result).to eq({ "alice" => 2, "bob" => 6 })
+      end
+
+      it "detects gaps across collection boundaries" do
+        collection1 = %w[user_1 user_2]
+        collection2 = %w[user_150 user_151]
+        result = finder.find_max_suffixes(collection1, collection2)
+
+        expect(result).to eq({ "user" => 2 })
+      end
+
+      it "handles empty collections" do
+        result = finder.find_max_suffixes([], %w[user_1 user_2], [])
+
+        expect(result).to eq({ "user" => 2 })
+      end
+
+      it "works with three or more collections" do
+        result = finder.find_max_suffixes(%w[user_1 user_2], %w[user_3 user_4], %w[user_5 user_6])
+
+        expect(result).to eq({ "user" => 6 })
       end
     end
   end
