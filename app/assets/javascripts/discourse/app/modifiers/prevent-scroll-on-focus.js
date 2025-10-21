@@ -64,8 +64,11 @@ export default class PreventScrollOnFocus extends Modifier {
     clone.style.setProperty("transform", "translateY(-3000px) scale(0)");
     document.documentElement.appendChild(clone);
     clone.focus({ preventScroll: true });
-    event.target.focus({ preventScroll: true });
-    clone.remove();
+
+    setTimeout(() => {
+      event.target.focus({ preventScroll: true });
+      clone.remove();
+    }, 32);
   }
 
   cleanup() {
