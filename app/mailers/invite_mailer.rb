@@ -49,7 +49,12 @@ class InviteMailer < ActionMailer::Base
         user_custom_message: sanitized_message,
       )
     else
-      template = DiscoursePluginRegistry.apply_modifier(:invite_forum_mailer_template, "invite_forum_mailer", invite)
+      template =
+        DiscoursePluginRegistry.apply_modifier(
+          :invite_forum_mailer_template,
+          "invite_forum_mailer",
+          invite,
+        )
       build_email(
         invite.email,
         template: sanitized_message ? "custom_invite_forum_mailer" : template,
