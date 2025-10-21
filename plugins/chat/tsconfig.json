@@ -1,0 +1,24 @@
+{
+  "include": [
+    "./assets/javascripts/**/*"
+  ],
+  "exclude": [],
+  "compilerOptions": {
+    "target": "es2021",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "experimentalDecorators": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "noEmitOnError": false,
+    "declaration": false,
+    // "outDir": "",
+    // "composite": true,
+    "rootDir": "./",
+    "types": ["ember-source/types"],
+    "paths": {
+      "discourse/plugins/chat/*": ["./assets/javascripts/*"]
+    }
+  }
+}

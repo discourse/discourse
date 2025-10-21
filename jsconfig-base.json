@@ -10,7 +10,6 @@
     "noEmitOnError": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "declarationMap": true,
-    "customConditions": ["vscode"]
+    "declarationMap": true
   }
 }

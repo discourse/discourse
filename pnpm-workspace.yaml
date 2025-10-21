@@ -13,3 +13,4 @@ packages:
 - "app/assets/javascripts/select-kit"
 - "app/assets/javascripts/asset-processor"
 - "app/assets/javascripts/truth-helpers"
+- "plugins/chat"

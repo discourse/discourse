@@ -6,9 +6,18 @@
   "license": "GPL-2.0-only",
   "author": "Discourse",
   "exports": {
-    "./tests/*": "./tests/*",
-    "./admin/*": "./admin/*",
-    "./*": "./app/*"
+    "./tests/*": {
+      "default": "./tests/*",
+      "types": "./declarations/tests/*.d.ts"
+    },
+    "./admin/*": {
+      "default": "./admin/*",
+      "types": "./declarations/admin/*.d.ts"
+    },
+    "./*": {
+      "default": "./app/*",
+      "types": "./declarations/app/*.d.ts"
+    }
   },
   "directories": {
     "doc": "doc",

@@ -1067,6 +1067,19 @@ importers:
         specifier: ^2.11.1
         version: 2.11.1(@glint/template@1.6.1)(webpack@5.99.9(@swc/core@1.13.5)(esbuild@0.25.11))
 
+  plugins/chat:
+    dependencies:
+      discourse:
+        specifier: workspace:discourse
+        version: link:../../app/assets/javascripts/discourse
+    devDependencies:
+      '@glimmer/component':
+        specifier: ^2.0.0
+        version: 2.0.0
+      ember-source:
+        specifier: ~6.6.0
+        version: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
+
 packages:
 
   '@asamuzakjp/css-color@3.1.1':
