@@ -39,6 +39,7 @@ class UsernameValidator
     username_last_char_valid?
     username_no_double_special?
     username_does_not_end_with_confusing_suffix?
+    username_plugin_validations
     errors.empty?
   end
 
@@ -150,6 +151,12 @@ class UsernameValidator
     if CONFUSING_EXTENSIONS.match?(username)
       self.errors << I18n.t(:"user.username.must_not_end_with_confusing_suffix")
     end
+  end
+
+  def username_plugin_validations
+    return unless errors.empty?
+
+    DiscoursePluginRegistry.apply_modifier(:username_validator_extras, self.errors, self)
   end
 
   def username_grapheme_clusters
