@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# TODO (martin) Test all of this class
 module UpcomingChanges
   def self.statuses
     @statuses ||= Enum.new(pre_alpha: 0, alpha: 100, beta: 200, stable: 300, permanent: 500)
