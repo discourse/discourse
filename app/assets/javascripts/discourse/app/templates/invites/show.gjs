@@ -127,7 +127,7 @@ export default RouteTemplate(
 
                   <div class="input username-input input-group">
                     <PluginOutlet
-                      @name="username-input-invite"
+                      @name="invite-username-input"
                       @outletArgs={{lazyHash controller=@controller}}
                     >
                       <input
