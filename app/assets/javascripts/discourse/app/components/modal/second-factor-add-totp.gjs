@@ -92,20 +92,25 @@ export default class SecondFactorAddTotp extends Component {
     >
       <:body>
         <ConditionalLoadingSpinner @condition={{this.loading}}>
-          {{#if this.errorMessage}}
-            <div class="control-group">
-              <div class="controls">
-                <div class="alert alert-error">{{this.errorMessage}}</div>
-              </div>
-            </div>
-          {{/if}}
-
           <PluginOutlet
             @name="user-second-factor-totp-modal-wrapper"
             @outletArgs={{lazyHash
               secondFactorImage=this.secondFactorImage
               secondFactorKey=this.secondFactorKey
+              secondFactorModel=this.args.model.secondFactor
+              enforcedSecondFactor=this.args.model.enforcedSecondFactor
+              markDirty=this.args.model.markDirty
+              onError=this.args.model.onError
+              closeModal=this.args.closeModal
             }}>
+
+            {{#if this.errorMessage}}
+              <div class="control-group">
+                <div class="controls">
+                  <div class="alert alert-error">{{this.errorMessage}}</div>
+                </div>
+              </div>
+            {{/if}}
 
             <PluginOutlet
               @name="user-second-factor-totp-modal-above-content"
