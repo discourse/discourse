@@ -19,16 +19,98 @@ RSpec.describe Migrations::Importer::UsernameFinder do
   end
 
   describe "#find_available_name" do
-    it "sanitizes usernames using UserNameSuggester" do
-      username = finder.find_available_name("John Doe!")
-      expect(username).to eq("John_Doe")
+    describe "basic functionality" do
+      it "returns the username when available" do
+        username = finder.find_available_name("john_doe")
+        expect(username).to eq("john_doe")
+      end
+
+      it "sanitizes usernames" do
+        username = finder.find_available_name("John Doe!")
+        expect(username).to eq("John_Doe")
+      end
+
+      it "uses fallback username with suffix for blank input" do
+        username = finder.find_available_name("")
+        fallback = I18n.t("importer.fallback_names.user")
+        expect(username).to eq("#{fallback}_1")
+      end
+
+      it "uses fallback when sanitization results in empty string" do
+        username = finder.find_available_name("___")
+        fallback = I18n.t("importer.fallback_names.user")
+        expect(username).to eq("#{fallback}_1")
+      end
     end
 
-    it "removes invalid trailing characters after truncation" do
-      long_name = "a" * 59 + "."
-      username = finder.find_available_name(long_name)
-      expect(username.length).to eq(59)
-      expect(username).not_to end_with(".")
+    describe "truncation" do
+      it "truncates long usernames to max length" do
+        long_name = "a" * 70
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("a" * 60)
+      end
+
+      it "removes invalid trailing characters after truncation" do
+        long_name = "a" * 58 + "_."
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("a" * 58)
+      end
+    end
+
+    describe "suffix generation" do
+      it "generates sequential suffixes for duplicates" do
+        username1 = finder.find_available_name("john")
+        username2 = finder.find_available_name("john")
+        username3 = finder.find_available_name("john")
+        11.times { finder.find_available_name("john") }
+        username4 = finder.find_available_name("john")
+
+        expect(username1).to eq("john")
+        expect(username2).to eq("john_1")
+        expect(username3).to eq("john_2")
+        expect(username4).to eq("john_14")
+      end
+
+      it "handles case-insensitive duplicates" do
+        username1 = finder.find_available_name("JohnDoe")
+        username2 = finder.find_available_name("johndoe")
+        username3 = finder.find_available_name("johnDoe")
+
+        expect(username1).to eq("JohnDoe")
+        expect(username2).to eq("johndoe_1")
+        expect(username3).to eq("johnDoe_2")
+      end
+
+      it "truncates name to fit suffix when needed" do
+        long_name = "a" * 50 + "1234567890"
+        finder.find_available_name(long_name)
+        username = finder.find_available_name(long_name)
+
+        expected_truncated_username = "a" * 50 + "12345678"
+        expect(username).to eq("#{expected_truncated_username}_1")
+      end
+
+      it "truncates further when suffix length increases" do
+        long_name = "a" * 50 + "1234567890"
+
+        9.times { finder.find_available_name(long_name) }
+
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("#{long_name[0, 58]}_9")
+
+        # Suffix increases to _10, requires more truncation
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("#{long_name[0, 57]}_1")
+
+        # Continue with 57-char base through _99
+        97.times { finder.find_available_name(long_name) }
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("#{long_name[0, 57]}_99")
+
+        # Suffix increases to _100, requires more truncation
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("#{long_name[0, 56]}_1")
+      end
     end
 
     context "with reserved usernames" do
@@ -42,19 +124,19 @@ RSpec.describe Migrations::Importer::UsernameFinder do
         expect(username).to eq("ADMIN_1")
       end
 
-      it "avoids wildcard reserved usernames" do
+      it "avoids wildcard reserved usernames with star at start" do
         username = finder.find_available_name("system_user")
         expect(username).to eq("user_1")
       end
 
-      it "avoids wildcard reserved usernames with wildcard at the end" do
+      it "avoids wildcard reserved usernames with star at end" do
         SiteSetting.reserved_usernames = "*bar"
         finder = described_class.new(shared_data)
         username = finder.find_available_name("foobar")
         expect(username).to eq("foobar_1")
       end
 
-      it "avoids wildcard reserved usernames with wildcard in the middle" do
+      it "avoids wildcard reserved usernames with star in middle" do
         SiteSetting.reserved_usernames = "test_*_user"
         finder = described_class.new(shared_data)
         username = finder.find_available_name("test_foo_user")
@@ -96,20 +178,11 @@ RSpec.describe Migrations::Importer::UsernameFinder do
       end
     end
 
+    # Unicode handling
     context "with Unicode usernames enabled" do
       before { SiteSetting.unicode_usernames = true }
 
-      it "removes invalid grapheme clusters during sanitization" do
-        username = finder.find_available_name("user👨‍👩‍👧‍👦test")
-        expect(username).to eq("user_test")
-      end
-
-      it "removes invalid trailing characters at grapheme boundaries" do
-        username = finder.find_available_name("café" + "." * 60)
-        expect(username).not_to end_with(".")
-      end
-
-      it "respects Unicode normalization for reserved usernames" do
+      it "handles Unicode normalization in reserved usernames" do
         actual = "Löwe" # NFD
         expected = "Löwe" # NFC
 
@@ -119,8 +192,38 @@ RSpec.describe Migrations::Importer::UsernameFinder do
         username = finder.find_available_name(actual)
         expect(username).to eq("#{expected}_1")
       end
+
+      it "removes invalid grapheme clusters during sanitization" do
+        username = finder.find_available_name("user👨‍👩‍👧‍👦test")
+        expect(username).to eq("user_test")
+      end
+
+      it "truncates at grapheme boundaries for multi-byte characters" do
+        # 94 characters, 67 grapheme clusters
+        long_name =
+          "बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्य_अभियंता_सर्वोच्च_कमांडर_महोदय_जी"
+
+        # 60 characters, 43 grapheme clusters
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मुख्")
+
+        # 60 characters, 42 original grapheme clusters plus suffix
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_मु_1")
+        8.times { finder.find_available_name(long_name) }
+
+        # 58 characters, 41 original grapheme clusters plus suffix
+        username = finder.find_available_name(long_name)
+        expect(username).to eq("बग_उत्पादन_और_पेशेवर_कॉफी_उपभोग_सेवा_प्रभाग_के_विभाग_के_1")
+      end
+
+      it "removes invalid trailing characters at grapheme boundaries" do
+        username = finder.find_available_name("café" + "." * 60)
+        expect(username).not_to end_with(".")
+      end
     end
 
+    # Group name conflicts
     it "prevents conflicts between usernames and group names" do
       group_names.add("team")
       username = finder.find_available_name("team")
@@ -134,11 +237,58 @@ RSpec.describe Migrations::Importer::UsernameFinder do
     end
   end
 
-  describe "fallback behavior" do
-    it "uses user-specific fallback name from I18n" do
-      username = finder.find_available_name("")
-      fallback = I18n.t("importer.fallback_names.user")
-      expect(username).to eq("#{fallback}_1")
+  # Persistence
+  describe "persistence across instances" do
+    it "shares used usernames via shared_data" do
+      finder1 = described_class.new(shared_data)
+      finder1.find_available_name("john")
+
+      finder2 = described_class.new(shared_data)
+      username = finder2.find_available_name("john")
+      expect(username).to eq("john_1")
+    end
+  end
+
+  # Existing shared data
+  describe "with existing shared data" do
+    let(:usernames) { Set.new(%w[existing_user another_user]) }
+    let(:group_names) { Set.new(["existing_group"]) }
+
+    it "avoids usernames already in shared_data" do
+      username = finder.find_available_name("existing_user")
+      expect(username).to eq("existing_user_1")
+    end
+
+    it "treats usernames as case-insensitive in shared_data" do
+      usernames.add("testuser")
+      username = finder.find_available_name("TestUser")
+      expect(username).to eq("TestUser_1")
+    end
+
+    it "avoids conflicts between existing group names and new usernames" do
+      group_names.add("admin")
+      username = finder.find_available_name("admin", allow_reserved_username: true)
+      expect(username).to eq("admin_1")
+    end
+  end
+
+  # Suffix extraction optimization
+  describe "suffix extraction from existing names" do
+    it "extracts max suffix from dense sequences" do
+      usernames.add("foo")
+      2000.times { |i| usernames.add("foo_#{i + 1}") }
+
+      username = finder.find_available_name("foo")
+      expect(username).to eq("foo_2001")
+    end
+
+    it "handles sparse sequences efficiently" do
+      usernames.add("foo")
+      usernames.add("foo_5")
+      usernames.add("foo_1000")
+
+      username = finder.find_available_name("foo")
+      expect(username).to eq("foo_6")
     end
   end
 end
