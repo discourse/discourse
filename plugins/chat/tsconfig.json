@@ -16,7 +16,7 @@
     // "outDir": "",
     // "composite": true,
     "rootDir": "./",
-    "types": ["ember-source/types"],
+    "types": ["ember-source/types", "discourse/types"],
     "paths": {
       "discourse/plugins/chat/*": ["./assets/javascripts/*"]
     }
