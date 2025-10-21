@@ -65,12 +65,16 @@ RSpec.describe UpcomingChanges::List do
       end
 
       it "includes the image_url if there is an image for the change in public/images" do
-        allow(UpcomingChanges).to receive(:image_exists?).and_return(true)
+        Rails.stubs(:public_path).returns(File.join(Rails.root, "spec", "fixtures"))
 
         results = result.upcoming_changes
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
-        expect(mock_setting[:upcoming_change][:image_url]).to eq(
-          "#{Discourse.base_url}/#{UpcomingChanges.image_path(mock_setting[:setting])}",
+        expect(mock_setting[:upcoming_change][:image]).to eq(
+          {
+            url: "#{Discourse.base_url}/#{UpcomingChanges.image_path(mock_setting[:setting])}",
+            width: 244,
+            height: 66,
+          },
         )
       end
 

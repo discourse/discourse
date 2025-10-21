@@ -37,10 +37,6 @@ class SiteSettings::LocalProcessProvider
     settings[name]
   end
 
-  def setting_group_ids
-    {}
-  end
-
   def save(name, value, data_type)
     # NOTE: convert to string to simulate the conversion that is happening
     # when using DbProvider
