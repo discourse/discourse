@@ -3,11 +3,13 @@
 module Migrations::Importer
   # TODO Refactor, see https://github.com/discourse/discourse/pull/33067#discussion_r2164701106
   class UniqueNameFinder
+    MIN_LENGTH = 3
     MAX_LENGTH = ::UsernameValidator::MAX_CHARS
+
     MAX_ATTEMPTS = 500
     TRUNCATION_CACHE_SIZE = 500
 
-    private_constant :MAX_LENGTH, :MAX_ATTEMPTS, :TRUNCATION_CACHE_SIZE
+    private_constant :MIN_LENGTH, :MAX_LENGTH, :MAX_ATTEMPTS, :TRUNCATION_CACHE_SIZE
 
     def initialize(shared_data)
       @used_usernames_lower = shared_data&.load(:usernames) || Set.new
@@ -79,7 +81,8 @@ module Migrations::Importer
         name_lower = name.downcase
       end
 
-      find_name_with_suffix(name, name_lower, allow_reserved_username)
+      find_name_with_suffix(name, name_lower, allow_reserved_username) ||
+        find_fallback_name(fallback_name, allow_reserved_username)
     end
 
     def find_name_with_suffix(name, name_lower, allow_reserved_username)
@@ -98,9 +101,11 @@ module Migrations::Importer
       while attempts < MAX_ATTEMPTS
         if (overflow = name_candidate_lower.length - MAX_LENGTH) > 0
           name = truncate(name, max_length: name.length - overflow)
-          break if name.length == 0
+          break if name.length < MIN_LENGTH
 
           name_lower = name.downcase
+          break if matches_suffix_wildcard?(name_lower)
+
           suffix = next_suffix(name_lower)
           name_candidate_lower = "#{name_lower}_#{suffix}"
         end
@@ -121,6 +126,17 @@ module Migrations::Importer
       end
 
       nil
+    end
+
+    def find_fallback_name(fallback_name, allow_reserved_username)
+      fallback_name_lower = fallback_name.downcase
+
+      suffix = next_suffix(fallback_name_lower)
+      name_candidate = "#{fallback_name}_#{suffix}"
+      name_candidate_lower = name_candidate.downcase
+
+      @last_suffixes[fallback_name_lower] = suffix
+      [name_candidate, name_candidate_lower]
     end
 
     def next_suffix(name_lower)
@@ -146,13 +162,39 @@ module Migrations::Importer
     end
 
     def extract_max_suffixes(name_set)
+      # Group suffixes by base name
+      suffixes_by_base = Hash.new { |h, k| h[k] = [] }
+
       name_set.each do |name_lower|
         if (match = name_lower.match(/\A(.+)_(\d+)\z/))
           base_name = match[1]
           suffix = match[2].to_i
-          current_max = @last_suffixes.fetch(base_name, 0)
-          @last_suffixes[base_name] = suffix if suffix > current_max
+          suffixes_by_base[base_name] << suffix
         end
+      end
+
+      # For each base, find the max suffix in the largest contiguous range
+      suffixes_by_base.each do |base_name, suffixes|
+        sorted = suffixes.sort
+
+        # Find contiguous ranges (suffixes within MAX_SUFFIX_GAP of each other)
+        ranges = []
+        current_range_max = sorted.first
+
+        sorted.each_cons(2) do |prev, curr|
+          if curr - prev <= MAX_SUFFIX_GAP
+            # Continue current range
+            current_range_max = curr
+          else
+            # Gap too large, save current range and start new one
+            ranges << current_range_max
+            current_range_max = curr
+          end
+        end
+        ranges << current_range_max # Add final range
+
+        # Use the highest value from all ranges
+        @last_suffixes[base_name] = ranges.max if ranges.any?
       end
     end
 

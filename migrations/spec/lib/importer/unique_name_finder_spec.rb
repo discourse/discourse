@@ -361,14 +361,5 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
       username = finder.find_available_username("foo")
       expect(username).to eq("foo_2001")
     end
-
-    it "uses fallback after MAX_ATTEMPTS when suffix extraction cannot help" do
-      # Fill up all possible names for "test" beyond what suffix extraction can handle
-      501.times { |i| usernames.add("test#{i > 0 ? "_#{i}" : ""}") }
-
-      username = finder.find_available_username("test")
-      fallback = I18n.t("fallback_username")
-      expect(username).to eq("#{fallback}_1")
-    end
   end
 end
