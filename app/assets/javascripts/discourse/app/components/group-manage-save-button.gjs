@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
@@ -12,6 +13,7 @@ import { i18n } from "discourse-i18n";
 export default class GroupManageSaveButton extends Component {
   @service modal;
   @service groupAutomaticMembersDialog;
+  @service router;
 
   saving = null;
   disabled = false;
@@ -25,6 +27,13 @@ export default class GroupManageSaveButton extends Component {
   @action
   setUpdateExistingUsers(value) {
     this.updateExistingUsers = value;
+  }
+
+  get shouldRenderWarningFlair() {
+    if (this.router.currentRoute.name === "group.manage.membership") {
+      return false;
+    }
+    return true;
   }
 
   @action
@@ -86,6 +95,9 @@ export default class GroupManageSaveButton extends Component {
   }
 
   <template>
+    {{#if this.shouldRenderWarningFlair}}
+      <GroupFlairVisibilityWarning @model={{this.model}} />
+    {{/if}}
     <div class="control-group buttons group-manage-save-button">
       <DButton
         @action={{this.save}}
