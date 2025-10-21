@@ -389,6 +389,10 @@ discourse_ai:
     refresh: true
     area: "ai-features/bot"
   ai_bot_add_to_header:
+    default: false
+    client: true
+    area: "ai-features/bot"
+  ai_bot_add_to_community_section:
     default: true
     client: true
     area: "ai-features/bot"

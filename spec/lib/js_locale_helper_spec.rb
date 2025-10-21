@@ -4,7 +4,7 @@ RSpec.describe JsLocaleHelper do
   let(:v8_ctx) do
     discourse_node_modules = "#{Rails.root}/app/assets/javascripts/discourse/node_modules"
     mf_runtime = "#{discourse_node_modules}/@messageformat/runtime"
-    transpiler = DiscourseJsProcessor::Transpiler.new
+    processor = AssetProcessor.new
     ctx = MiniRacer::Context.new
     ctx.load("#{discourse_node_modules}/loader.js/dist/loader/loader.js")
     ctx.eval("var window = globalThis;")
@@ -15,7 +15,7 @@ RSpec.describe JsLocaleHelper do
       "make-plural/cardinals": "#{discourse_node_modules}/make-plural/cardinals.mjs",
       "discourse-i18n": "#{Rails.root}/app/assets/javascripts/discourse-i18n/src/index.js",
     }.each do |module_name, path|
-      ctx.eval(transpiler.perform(File.read(path), "", module_name.to_s))
+      ctx.eval(processor.perform(File.read(path), "", module_name.to_s))
     end
     ctx.eval <<~JS
       define("discourse/loader-shims", () => {})

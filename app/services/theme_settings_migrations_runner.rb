@@ -112,7 +112,7 @@ class ThemeSettingsMigrationsRunner
       current_settings = migrated_settings
       current_migration_version = migration.version
       results
-    rescue DiscourseJsProcessor::TranspileError => error
+    rescue AssetProcessor::TranspileError => error
       raise_error(
         "themes.import_error.migrations.syntax_error",
         name: migration.original_name,
@@ -201,7 +201,7 @@ class ThemeSettingsMigrationsRunner
     context.eval(self.class.loader_js_lib_content, filename: "loader.js")
 
     context.eval(
-      DiscourseJsProcessor.transpile(migration.code, "", "discourse/theme/migration"),
+      AssetProcessor.transpile(migration.code, "", "discourse/theme/migration"),
       filename: "theme-#{@theme.id}-migration.js",
     )
 
@@ -210,11 +210,7 @@ class ThemeSettingsMigrationsRunner
     end
 
     context.eval(
-      DiscourseJsProcessor.transpile(
-        "export default __helpers",
-        "",
-        "discourse/theme/migration-helpers",
-      ),
+      AssetProcessor.transpile("export default __helpers", "", "discourse/theme/migration-helpers"),
       filename: "theme-#{@theme.id}-migration-helpers.js",
     )
 

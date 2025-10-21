@@ -29,7 +29,7 @@ class ThemeJavascriptCompiler
       @input_tree.freeze
 
       output =
-        DiscourseJsProcessor::Transpiler.new.rollup(
+        AssetProcessor.new.rollup(
           @input_tree.transform_keys { |k| k.sub(/\.js\.es6$/, ".js") },
           { themeId: @theme_id, settings: @settings, minify: @minify && !@@terser_disabled },
         )
@@ -38,7 +38,7 @@ class ThemeJavascriptCompiler
       @source_map = output["map"]
     end
     [@content, @source_map]
-  rescue DiscourseJsProcessor::TranspileError => e
+  rescue AssetProcessor::TranspileError => e
     message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{e.message}"
     @content = "throw new Error(#{message.to_json});\n"
     [@content, @source_map]

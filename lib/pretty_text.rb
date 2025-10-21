@@ -29,8 +29,8 @@ module PrettyText
 
   def self.apply_es6_file(ctx:, path:, module_name:)
     source = File.read(path)
-    transpiler = DiscourseJsProcessor::Transpiler.new
-    transpiled = transpiler.perform(source, nil, module_name)
+    processor = AssetProcessor.new
+    transpiled = processor.perform(source, nil, module_name)
     ctx.eval(transpiled, filename: module_name)
   end
 

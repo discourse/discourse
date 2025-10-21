@@ -33,7 +33,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     end
 
     SiteSetting::Update.call(params: { settings: }, guardian:) do
-      on_success { render body: nil }
+      on_success { head :no_content }
       on_failed_policy(:settings_are_not_deprecated) do |policy|
         raise Discourse::InvalidParameters, policy.reason
       end
