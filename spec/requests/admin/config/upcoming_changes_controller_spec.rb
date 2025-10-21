@@ -71,9 +71,8 @@ RSpec.describe Admin::Config::UpcomingChangesController do
       end
 
       it "includes group names when site setting groups are configured" do
-        allow(SiteSetting).to receive(:site_setting_group_ids).and_return(
-          { enable_upload_debug_mode: [10, 11] },
-        )
+        SiteSettingGroup.create!(name: "enable_upload_debug_mode", group_ids: "10|11")
+        SiteSetting.refresh!
 
         get "/admin/config/upcoming-changes.json", xhr: true
 

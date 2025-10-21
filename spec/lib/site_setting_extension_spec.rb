@@ -995,6 +995,20 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "site setting groups" do
+    before do
+      SiteSettingGroup.create!(
+        name: "enable_upload_debug_mode",
+        group_ids: "#{Group::AUTO_GROUPS[:trust_level_0]}|#{Group::AUTO_GROUPS[:trust_level_1]}",
+      )
+    end
+
+    it "returns the correct group for a setting" do
+      SiteSetting.refresh!
+      expect(SiteSetting.site_setting_group_ids[:enable_upload_debug_mode]).to eq([10, 11])
+    end
+  end
+
   describe "themeable settings" do
     fab!(:theme_1, :theme)
     fab!(:theme_2, :theme)

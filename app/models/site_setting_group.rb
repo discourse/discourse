@@ -8,6 +8,19 @@ class SiteSettingGroup < ActiveRecord::Base
   belongs_to :site_setting
 
   validates :name, presence: true, uniqueness: true
+
+  def self.setting_group_ids
+    return {} unless can_access_db?
+
+    DB
+      .query("SELECT name, group_ids FROM site_setting_groups")
+      .each_with_object({}) { |row, hash| hash[row.name] = row.group_ids.split("|").map(&:to_i) }
+  end
+
+  def self.can_access_db?
+    !GlobalSetting.skip_redis? && !GlobalSetting.skip_db? &&
+      ActiveRecord::Base.connection.table_exists?(self.table_name)
+  end
 end
 
 # == Schema Information

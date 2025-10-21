@@ -82,11 +82,8 @@ RSpec.describe UpcomingChanges::List do
       end
 
       it "includes the group names if there are site setting group IDs for the change" do
-        # This must be done because the LocalProcessProvider used in tests
-        # does not have access to SiteSettingGroup records.
-        allow(SiteSetting).to receive(:site_setting_group_ids).and_return(
-          { enable_upload_debug_mode: [10, 11] },
-        )
+        SiteSettingGroup.create!(name: "enable_upload_debug_mode", group_ids: "10|11")
+        SiteSetting.refresh!
         results = result.upcoming_changes
         mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
 

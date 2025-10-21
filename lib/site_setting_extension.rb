@@ -466,8 +466,7 @@ module SiteSettingExtension
             )
           ]
 
-        # TODO (martin) Add tests for this
-        provider.setting_group_ids.each do |name, group_ids|
+        SiteSettingGroup.setting_group_ids.each do |name, group_ids|
           site_setting_group_ids[name.to_sym] = group_ids
         end
 
