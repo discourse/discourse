@@ -1135,8 +1135,13 @@ export default class SelectKit extends Component {
       placement: this.selectKit.options.placement,
       strategy,
       middleware,
-    }).then(({ x, y }) => {
-      Object.assign(floatingElement.style, { left: `${x}px`, top: `${y}px` });
+    }).then((args) => {
+      const { x, y } = args;
+      Object.assign(floatingElement.style, {
+        top: "0",
+        left: "0",
+        transform: `translate(${roundByDPR(x)}px,${roundByDPR(y)}px)`,
+      });
     });
   }
 
