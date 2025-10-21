@@ -1,0 +1,10 @@
+en:
+  rake:
+    db_lint:
+      reexec: "RAILS_ENV not set; re-running with RAILS_ENV=test"
+      starting: "Linting database associations for type mismatches…"
+      ok: "No type mismatches detected."
+      error_header: "Database type mismatches detected:"
+      mismatch: "%{owner}.%{assoc} → %{target}: %{owner_table}.%{fk} is %{fk_type}, but %{target_table}.%{pk} is %{pk_type}"
+      summary: "Found %{count} mismatch(s)."
+
