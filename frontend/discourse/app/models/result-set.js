@@ -16,6 +16,10 @@ export default class ResultSet extends LegacyArrayLikeObject {
   store = null;
   __type;
 
+  get warnContext() {
+    return "__type: " + this.__type;
+  }
+
   @dependentKeyCompat
   get canLoadMore() {
     return this.content.length < this.totalRows;
