@@ -58,7 +58,7 @@ export default class UpcomingChangeItem extends Component {
         type: "PUT",
         data: {
           setting: this.args.change.setting,
-          groups: this.args.change.groups.split(","),
+          group_names: this.args.change.groups.split(","),
         },
       });
       this.bufferedGroups = this.args.change.groups;

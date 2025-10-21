@@ -275,6 +275,20 @@ class StaffActionLogger
     )
   end
 
+  def log_site_setting_groups_change(setting_name, previous_value, new_value, opts = {})
+    unless setting_name.present? && SiteSetting.respond_to?(setting_name)
+      raise Discourse::InvalidParameters.new(:setting_name)
+    end
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:change_site_setting_groups],
+        subject: setting_name,
+        previous_value: previous_value&.to_s,
+        new_value: new_value&.to_s,
+      ),
+    )
+  end
+
   def theme_json(theme)
     ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end
