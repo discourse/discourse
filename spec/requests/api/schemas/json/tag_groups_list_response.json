@@ -30,15 +30,9 @@
                     },
                     "permissions": {
                         "type": "object",
-                        "additionalProperties": false,
-                        "properties": {
-                            "staff": {
-                                "type": "integer"
-                            }
-                        },
-                        "required": [
-                            "staff"
-                        ]
+                        "additionalProperties": {
+                            "type": "integer"
+                        }
                     }
                 },
                 "required": [
