@@ -25,9 +25,7 @@ class UpcomingChanges::List
         setting[:value] = setting[:value] == "true"
 
         if UpcomingChanges.image_exists?(setting[:setting])
-          setting[:upcoming_change][
-            :image_url
-          ] = "#{Discourse.base_url}/#{UpcomingChanges.image_path(setting[:setting])}"
+          setting[:upcoming_change][:image] = UpcomingChanges.image_data(setting[:setting])
         end
 
         if setting[:plugin]

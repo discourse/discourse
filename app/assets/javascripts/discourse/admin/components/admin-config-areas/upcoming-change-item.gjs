@@ -146,14 +146,14 @@ export default class UpcomingChangeItem extends Component {
               class="upcoming-change__description-details"
               {{this.applyLightbox}}
             >
-              {{#if @change.upcoming_change.image_url}}
+              {{#if @change.upcoming_change.image.url}}
                 <a
-                  href={{@change.upcoming_change.image_url}}
+                  href={{@change.upcoming_change.image.url}}
                   class="lightbox upcoming-change__image-preview"
                   rel="nofollow ugc noopener"
-                  data-target-width="1280"
-                  data-target-height="720"
-                  data-large-src={{@change.upcoming_change.image_url}}
+                  data-target-width={{@change.upcoming_change.image.width}}
+                  data-target-height={{@change.upcoming_change.image.width}}
+                  data-large-src={{@change.upcoming_change.image.url}}
                 >{{icon "far-image"}}
                   {{i18n "admin.upcoming_changes.preview"}}</a>
               {{/if}}

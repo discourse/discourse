@@ -7,11 +7,22 @@ module UpcomingChanges
   end
 
   def self.image_exists?(change_setting_name)
-    File.exist?(self.image_path(change_setting_name))
+    File.exist?(File.join(Rails.public_path, self.image_path(change_setting_name)))
   end
 
   def self.image_path(change_setting_name)
-    Rails.public_path.join("public", "images", "upcoming_changes", "#{change_setting_name}.png")
+    File.join("images", "upcoming_changes", "#{change_setting_name}.png")
+  end
+
+  def self.image_data(change_setting_name)
+    width, height = nil, nil
+
+    File.open(File.join(Rails.public_path, image_path(change_setting_name)), "rb") do |file|
+      image_info = FastImage.new(file)
+      width, height = image_info.size
+    end
+
+    { url: "#{Discourse.base_url}/#{image_path(change_setting_name)}", width:, height: }
   end
 
   def self.change_metadata(change_setting_name)
