@@ -2,29 +2,44 @@
 
 module Migrations::Importer
   class SuffixFinder
+    MAX_GAP = 100
+    LARGE_RANGE_THRESHOLD = 300
+
+    private_constant :MAX_GAP, :LARGE_RANGE_THRESHOLD
+
     def find(names_lower)
       suffixes_by_base = extract_suffixes(names_lower)
       suffixes_by_base.transform_values! do |suffixes|
+        next if suffixes.empty?
+
         suffixes.sort!
 
         ranges = []
-        current_range = [suffixes[0]]
+        range_start = 1
+        current_max = suffixes[0]
 
-        suffixes.each_cons(2) do |a, b|
-          if b - a < 100
-            current_range << b
+        suffixes.each_cons(2) do |previous_suffix, current_suffix|
+          if current_suffix - previous_suffix < MAX_GAP
+            current_max = current_suffix
           else
-            ranges << current_range
-            current_range = [b]
+            ranges << [current_max, current_max - range_start]
+            range_start = current_suffix
+            current_max = current_suffix
           end
         end
-        ranges << current_range # Don't forget the last range
+        ranges << [current_max, current_max - range_start]
 
-        # Filter: keep first range always, others only if size >= 300
-        filtered_ranges = ranges.select.with_index { |range, idx| idx == 0 || range.size >= 300 }
+        result = nil
+        last_index = ranges.size - 1
 
-        # Return the end (max) of the last range
-        filtered_ranges.last.max
+        ranges.reverse_each.with_index do |(max_suffix, range_size), index|
+          if index == last_index || range_size >= LARGE_RANGE_THRESHOLD
+            result = max_suffix
+            break
+          end
+        end
+
+        result
       end
     end
 
