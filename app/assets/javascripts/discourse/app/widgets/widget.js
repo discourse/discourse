@@ -142,9 +142,8 @@ export function createWidget(name, opts) {
       ?.deactivate_widgets_rendering
   ) {
     warnWidgetsDeprecation(
-      `Widgets are deactivated and can't be created. Your site may not work properly. Affected widget: ${name}.`
+      `Widgets are deactivated. Your site may not work properly. Affected widget: ${name}.`
     );
-    return;
   } else {
     warnWidgetsDeprecation(
       `Using \`api.createWidget\` is deprecated and will soon stop working. Use Glimmer components instead. Affected widget: ${name}.`

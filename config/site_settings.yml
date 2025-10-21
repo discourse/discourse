@@ -4238,11 +4238,11 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: "auto"
+    default: "enabled"
     area: "experimental"
   deactivate_widgets_rendering:
     client: true
-    default: false
+    default: true
     area: "experimental"
   enable_rich_text_paste:
     client: true
