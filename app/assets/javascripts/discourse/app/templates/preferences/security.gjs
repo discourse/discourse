@@ -51,7 +51,7 @@ export default RouteTemplate(
               {{on "click" @controller.removePassword}}
               disabled={{not @controller.canRemovePassword}}
               hidden={{@controller.removePasswordInProgress}}
-              class="btn btn-transparent"
+              class="btn btn-danger"
               id="remove-password-link"
             >
               {{icon "trash-can"}}
