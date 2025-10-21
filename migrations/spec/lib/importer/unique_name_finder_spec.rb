@@ -255,26 +255,6 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
     end
   end
 
-  describe "suffix extraction" do
-    let(:usernames) { Set.new(%w[john john_1 john_2 john_5000 jane_10]) }
-
-    it "extracts maximum suffix for each base name from existing names" do
-      expect(finder.find_available_username("john")).to eq("john_5001")
-      expect(finder.find_available_username("jane")).to eq("jane")
-      expect(finder.find_available_username("jane")).to eq("jane_11")
-    end
-
-    it "starts at _1 when no existing suffixes" do
-      expect(finder.find_available_username("bob")).to eq("bob")
-      expect(finder.find_available_username("bob")).to eq("bob_1")
-    end
-
-    it "handles base names without suffixes" do
-      usernames.add("alice")
-      expect(finder.find_available_username("alice")).to eq("alice_1")
-    end
-  end
-
   describe "persistence across instances" do
     it "shares used usernames via shared_data" do
       finder1 = described_class.new(shared_data)

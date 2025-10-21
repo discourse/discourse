@@ -157,45 +157,8 @@ module Migrations::Importer
     end
 
     def extract_max_suffixes_from_existing_names
-      extract_max_suffixes(@used_usernames_lower)
-      extract_max_suffixes(@used_group_names_lower)
-    end
-
-    def extract_max_suffixes(name_set)
-      # Group suffixes by base name
-      suffixes_by_base = Hash.new { |h, k| h[k] = [] }
-
-      name_set.each do |name_lower|
-        if (match = name_lower.match(/\A(.+)_(\d+)\z/))
-          base_name = match[1]
-          suffix = match[2].to_i
-          suffixes_by_base[base_name] << suffix
-        end
-      end
-
-      # For each base, find the max suffix in the largest contiguous range
-      suffixes_by_base.each do |base_name, suffixes|
-        sorted = suffixes.sort
-
-        # Find contiguous ranges (suffixes within MAX_SUFFIX_GAP of each other)
-        ranges = []
-        current_range_max = sorted.first
-
-        sorted.each_cons(2) do |prev, curr|
-          if curr - prev <= MAX_SUFFIX_GAP
-            # Continue current range
-            current_range_max = curr
-          else
-            # Gap too large, save current range and start new one
-            ranges << current_range_max
-            current_range_max = curr
-          end
-        end
-        ranges << current_range_max # Add final range
-
-        # Use the highest value from all ranges
-        @last_suffixes[base_name] = ranges.max if ranges.any?
-      end
+      finder = SuffixFinder.new
+      @last_suffixes = finder.find_max_suffixes(@used_usernames_lower, @used_group_names_lower)
     end
 
     def build_reserved_username_cache
