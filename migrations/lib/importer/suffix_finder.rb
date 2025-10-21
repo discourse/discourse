@@ -2,47 +2,46 @@
 
 module Migrations::Importer
   class SuffixFinder
-    MAX_SAFE_SPAN = 500
+    def find(names_lower)
+      suffixes_by_base = extract_suffixes(names_lower)
+      suffixes_by_base.transform_values! do |suffixes|
+        suffixes.sort!
 
-    private_constant :MAX_SAFE_SPAN
+        ranges = []
+        current_range = [suffixes[0]]
 
-    def find_highest_in_range(suffixes)
-      return nil if suffixes.empty?
+        suffixes.each_cons(2) do |a, b|
+          if b - a < 100
+            current_range << b
+          else
+            ranges << current_range
+            current_range = [b]
+          end
+        end
+        ranges << current_range # Don't forget the last range
 
-      sorted = suffixes.sort
-      ranges = find_contiguous_ranges(sorted)
+        # Filter: keep first range always, others only if size >= 300
+        filtered_ranges = ranges.select.with_index { |range, idx| idx == 0 || range.size >= 300 }
 
-      # Find ranges with span > MAX_SAFE_SPAN (problematic ranges we need to account for)
-      large_ranges = ranges.select { |range| range_span(range) > MAX_SAFE_SPAN }
-
-      # If we have problematic large ranges, return the max from those
-      return large_ranges.map(&:max).max unless large_ranges.empty?
-
-      # Otherwise, all ranges are small enough to ignore, return max from first range
-      ranges.first.max
+        # Return the end (max) of the last range
+        filtered_ranges.last.max
+      end
     end
 
     private
 
-    def range_span(range)
-      range.max - range.min
-    end
+    # Extracts numeric suffixes from names following the pattern "base_123"
+    # @param names_lower [Enumerable<String>] list of lower-case names to analyze
+    # @return [Hash<String, Array<Integer>>] base names mapped to their suffixes
+    def extract_suffixes(names_lower)
+      suffixes_by_base = Hash.new { |h, k| h[k] = [] }
 
-    def find_contiguous_ranges(sorted_suffixes)
-      ranges = []
-      current_range = [sorted_suffixes.first]
-
-      sorted_suffixes.each_cons(2) do |prev, curr|
-        if curr - prev <= @max_suffix_gap
-          current_range << curr
-        else
-          ranges << current_range
-          current_range = [curr]
-        end
+      names_lower.each do |name|
+        base_name, suffix = name.match(/\A(.+?)_(\d+)\z/)&.captures
+        suffixes_by_base[base_name] << suffix.to_i if base_name
       end
 
-      ranges << current_range
-      ranges
+      suffixes_by_base
     end
   end
 end
