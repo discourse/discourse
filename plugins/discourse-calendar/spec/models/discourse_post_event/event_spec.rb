@@ -684,6 +684,7 @@ describe DiscoursePostEvent::Event do
 
           it "returns the next occurrence in UTC+3 timezone" do
             event.timezone = "Europe/Kyiv"
+
             expect(next_date).not_to be_blank
             expect(next_date).to be_an(Array)
             expect(next_date.length).to eq(2)
@@ -694,16 +695,15 @@ describe DiscoursePostEvent::Event do
           end
 
           it "returns the next occurrence in UTC-7 timezone" do
-            # event.timezone = "Atlantic/South_Georgia" # UTC-2
-            event.timezone = "America/Sao_Paulo" # UTC-3
-            # event.timezone = "America/Los_Angeles"
+            event.timezone = "America/Los_Angeles"
+
             expect(next_date).not_to be_blank
             expect(next_date).to be_an(Array)
             expect(next_date.length).to eq(2)
             expect(next_date[0]).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
             expect(next_date[1]).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
-            expect(next_date[0]).to eq(Time.parse("2020-04-25 10:00:00 -0300"))
-            expect(next_date[1]).to eq(Time.parse("2020-04-25 11:00:00 -0300"))
+            expect(next_date[0]).to eq(Time.parse("2020-04-25 06:00:00 -0700"))
+            expect(next_date[1]).to eq(Time.parse("2020-04-25 07:00:00 -0700"))
           end
         end
       end
