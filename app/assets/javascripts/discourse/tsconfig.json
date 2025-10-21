@@ -1,17 +1,20 @@
 {
   "include": [
-    "./app/**/*"
+    "./app/**/*",
+    "./admin/**/*",
+    "./tests/**/*",
   ],
-  "exclude": ["./declarations"],
+  "exclude": ["./declarations", "./tests/unit/utils/decorators-test.js"],
   "extends": "../../../../jsconfig-base.json",
   "compilerOptions": {
     "composite": true,
-    "rootDir": "./app",
+    "rootDir": "./",
     "outDir": "./declarations",
     "types": ["ember-source/types"],
     "paths": {
+      "discourse/admin/*": ["./admin/*"],
+      "discourse/tests/*": ["./tests/*"],
       "discourse/*": ["./app/*"],
     }
-
   }
 }
