@@ -116,5 +116,37 @@ describe "Viewing reviewable item", type: :system do
         expect(page).to have_text("This is a review note.")
       end
     end
+
+    describe "when the reviewable item is a user" do
+      fab!(:user)
+      let(:rejection_reason_modal) { PageObjects::Modals::RejectReasonReviewable.new }
+      let(:scrub_user_modal) { PageObjects::Modals::ScrubRejectedUser.new }
+
+      before do
+        SiteSetting.must_approve_users = true
+        Jobs.run_immediately!
+        user.update!(approved: false)
+        user.activate
+      end
+
+      it "shows the user's name and admin profile link" do
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+
+        review_page.visit_reviewable(reviewable)
+        expect(page).to have_text(user.name)
+        expect(page).to have_link(user.username, href: "/admin/users/#{user.id}/#{user.username}")
+      end
+
+      it "allows to add notes and persists them when toggle tabs" do
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+
+        review_page.visit_reviewable(reviewable)
+        review_page.click_timeline_tab
+        review_note_form.add_note("This is a review note.")
+        review_page.click_insights_tab
+        review_page.click_timeline_tab
+        expect(page).to have_text("This is a review note.")
+      end
+    end
   end
 end
