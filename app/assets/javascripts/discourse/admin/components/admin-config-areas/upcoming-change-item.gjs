@@ -28,7 +28,6 @@ export default class UpcomingChangeItem extends Component {
 
   registeredMenu = null;
 
-  // TODO (martin) We need a better system to get the width + height of the image.
   applyLightbox = modifier((element) => lightbox(element, this.siteSettings));
 
   impactRoleIcon(impactRole) {

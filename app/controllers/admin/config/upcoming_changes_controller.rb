@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# TODO (martin) Add controller tests
+#
 class Admin::Config::UpcomingChangesController < Admin::AdminController
   def index
     if request.xhr?
