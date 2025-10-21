@@ -58,6 +58,11 @@ function concatProtoProperty(target, key, value) {
   ];
 }
 
+function roundByDPR(value) {
+  const dpr = window.devicePixelRatio || 1;
+  return Math.round(value * dpr) / dpr;
+}
+
 /**
  * @decorator
  *
