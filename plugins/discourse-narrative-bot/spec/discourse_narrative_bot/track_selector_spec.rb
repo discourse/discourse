@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseNarrativeBot::TrackSelector do
   let(:user) { Fabricate(:user) }
-  let(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  let(:narrative_bot) { DiscourseNarrativeBot::Base.new }
   let(:discobot_user) { narrative_bot.discobot_user }
   let(:discobot_username) { narrative_bot.discobot_username }
   let(:narrative) { DiscourseNarrativeBot::NewUserNarrative.new }

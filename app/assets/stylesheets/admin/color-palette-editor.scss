@@ -64,6 +64,10 @@
     border-radius: 50%;
   }
 
+  input[type="color"]::-webkit-color-swatch {
+    border-radius: 50%;
+  }
+
   input[type="text"] {
     font-family: monospace;
     margin: 0;

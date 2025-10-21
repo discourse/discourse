@@ -45,7 +45,6 @@ export function registerFullPageSearchType(
 
 export default class FullPageSearchController extends Controller {
   @service composer;
-  @service modal;
   @service appEvents;
   @service siteSettings;
   @service searchPreferencesManager;
@@ -386,7 +385,7 @@ export default class FullPageSearchController extends Controller {
     if (args.page === 1) {
       this.set("bulkSelectEnabled", false);
 
-      this.bulkSelectHelper.selected.clear();
+      this.bulkSelectHelper.clear();
       this.set("searching", true);
       scrollTop();
     } else {
@@ -550,7 +549,7 @@ export default class FullPageSearchController extends Controller {
   @action
   selectAll() {
     this.bulkSelectHelper.selected.addObjects(
-      this.get("searchResultPosts").mapBy("topic")
+      this.get("searchResultPosts").map((item) => item.topic)
     );
 
     // Doing this the proper way is a HUGE pain,

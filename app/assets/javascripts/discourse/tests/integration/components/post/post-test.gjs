@@ -717,7 +717,7 @@ module("Integration | Component | Post", function (hooks) {
 
     await renderComponent(this.post);
 
-    assert.dom(".post-notice.returning-user:not(.old)").hasText(
+    assert.dom(".post-notice.returning-user").hasText(
       i18n("post.notice.returning_user", {
         user: "codinghorror",
         time: "2 days ago",
@@ -732,14 +732,30 @@ module("Integration | Component | Post", function (hooks) {
 
     this.post.username = "codinghorror";
     this.post.name = "Jeff";
-    this.post.created_at = new Date(2019, 0, 1);
+    this.post.created_at = new Date(); // Use current date to ensure it's within the 14-day limit
     this.post.notice = { type: "new_user" };
 
     await renderComponent(this.post);
 
     assert
-      .dom(".post-notice.old.new-user")
-      .hasText(i18n("post.notice.new_user", { user: "Jeff", time: "Jan '10" }));
+      .dom(".post-notice.new-user")
+      .exists("notice should render for recent posts");
+  });
+
+  test("post notice - not rendered when post is older than old_post_notice_days", async function (assert) {
+    this.siteSettings.old_post_notice_days = 14;
+
+    const twentyDaysAgo = new Date();
+    twentyDaysAgo.setDate(twentyDaysAgo.getDate() - 20);
+
+    this.post.created_at = twentyDaysAgo;
+    this.post.notice = { type: "new_user" };
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".post-notice.new-user")
+      .doesNotExist("notice should not render for old posts");
   });
 
   test("show group request in post", async function (assert) {

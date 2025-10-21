@@ -7,11 +7,9 @@
 ar:
   admin_js:
     admin:
-      calendar: "التقويم"
       site_settings:
         categories:
           discourse_post_event: "حدث Discourse"
-          discourse_calendar: "تقويم Discourse"
   js:
     notifications:
       titles:

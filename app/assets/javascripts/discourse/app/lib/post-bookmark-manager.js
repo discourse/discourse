@@ -10,7 +10,6 @@ import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import Bookmark from "discourse/models/bookmark";
 
 export default class PostBookmarkManager {
-  @service currentUser;
   @service bookmarkApi;
   @controller("topic") topicController;
 
@@ -91,7 +90,9 @@ export default class PostBookmarkManager {
       this.topicController.set("bookmarks", []);
     }
 
-    const bookmark = this.topicController.bookmarks.findBy("id", data.id);
+    const bookmark = this.topicController.bookmarks.find(
+      (b) => b.id === data.id
+    );
     if (!bookmark) {
       this.topicController.bookmarks.pushObject(Bookmark.create(data));
     } else {

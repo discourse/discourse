@@ -1,4 +1,3 @@
-import { computed } from "@ember/object";
 import { i18n } from "discourse-i18n";
 
 let _topicFooterButtons = {};
@@ -71,80 +70,79 @@ export function registerTopicFooterButton(button) {
   _topicFooterButtons[normalizedButton.id] = normalizedButton;
 }
 
-export function getTopicFooterButtons() {
-  const dependentKeys = [].concat(
+export function getTopicFooterButtons(context) {
+  const legacyDependentKeys = [].concat(
     ...Object.values(_topicFooterButtons)
       .map((tfb) => tfb.dependentKeys)
       .filter((x) => x)
   );
 
-  return computed(...dependentKeys, {
-    get() {
-      const _isFunction = (descriptor) =>
-        descriptor && typeof descriptor === "function";
+  legacyDependentKeys.forEach((k) => context.get(k));
 
-      const _compute = (button, property) => {
-        const field = button[property];
+  const _isFunction = (descriptor) =>
+    descriptor && typeof descriptor === "function";
 
-        if (_isFunction(field)) {
-          return field.apply(this);
-        }
+  const _compute = (button, property) => {
+    const field = button[property];
 
-        return field;
-      };
+    if (_isFunction(field)) {
+      return field.apply(context);
+    }
 
-      return Object.values(_topicFooterButtons)
-        .filter((button) => _compute(button, "displayed"))
-        .map((button) => {
-          const discourseComputedButton = {};
+    return field;
+  };
 
-          discourseComputedButton.id = button.id;
-          discourseComputedButton.type = button.type;
-
+  return Object.values(_topicFooterButtons)
+    .filter((button) => _compute(button, "displayed"))
+    .map((button) => {
+      return {
+        id: button.id,
+        type: button.type,
+        get label() {
           const label = _compute(button, "label");
-          discourseComputedButton.label = label
-            ? i18n(label)
-            : _compute(button, "translatedLabel");
-
+          return label ? i18n(label) : _compute(button, "translatedLabel");
+        },
+        get ariaLabel() {
           const ariaLabel = _compute(button, "ariaLabel");
           if (ariaLabel) {
-            discourseComputedButton.ariaLabel = i18n(ariaLabel);
+            return i18n(ariaLabel);
           } else {
             const translatedAriaLabel = _compute(button, "translatedAriaLabel");
-            discourseComputedButton.ariaLabel =
-              translatedAriaLabel || discourseComputedButton.label;
+            return translatedAriaLabel || this.label;
           }
-
+        },
+        get title() {
           const title = _compute(button, "title");
-          discourseComputedButton.title = title
-            ? i18n(title)
-            : _compute(button, "translatedTitle");
-
-          discourseComputedButton.classNames = (
-            _compute(button, "classNames") || []
-          ).join(" ");
-
-          discourseComputedButton.icon = _compute(button, "icon");
-          discourseComputedButton.disabled = _compute(button, "disabled");
-          discourseComputedButton.dropdown = _compute(button, "dropdown");
-          discourseComputedButton.priority = _compute(button, "priority");
-
-          discourseComputedButton.anonymousOnly = _compute(
-            button,
-            "anonymousOnly"
-          );
-
+          return title ? i18n(title) : _compute(button, "translatedTitle");
+        },
+        get classNames() {
+          return (_compute(button, "classNames") || []).join(" ");
+        },
+        get icon() {
+          return _compute(button, "icon");
+        },
+        get disabled() {
+          return _compute(button, "disabled");
+        },
+        get dropdown() {
+          return _compute(button, "dropdown");
+        },
+        get priority() {
+          return _compute(button, "priority");
+        },
+        get anonymousOnly() {
+          return _compute(button, "anonymousOnly");
+        },
+        get action() {
           if (_isFunction(button.action)) {
-            discourseComputedButton.action = () => button.action.apply(this);
+            return () => button.action.apply(context);
           } else {
             const actionName = button.action;
-            discourseComputedButton.action = () => this[actionName]();
+            return () => context[actionName]();
           }
-
-          return discourseComputedButton;
-        });
-    },
-  });
+        },
+      };
+    });
 }
 
 export function clearTopicFooterButtons() {

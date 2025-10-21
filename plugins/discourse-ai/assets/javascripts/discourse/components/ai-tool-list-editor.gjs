@@ -84,7 +84,7 @@ export default class AiToolListEditor extends Component {
     })
       .then((result) => {
         let tool = AiTool.create(result.ai_tool);
-        let existingTool = this.args.tools.findBy("id", tool.id);
+        let existingTool = this.args.tools.find((item) => item.id === tool.id);
         if (existingTool) {
           this.args.tools.removeObject(existingTool);
         }
@@ -120,7 +120,7 @@ export default class AiToolListEditor extends Component {
           <DButton
             @translatedLabel={{i18n "discourse_ai.tools.import"}}
             @icon="upload"
-            class="btn btn-small ai-tool-list-editor__import-button"
+            class="btn btn-default btn-small ai-tool-list-editor__import-button"
             @action={{this.importTool}}
           />
           <DMenu

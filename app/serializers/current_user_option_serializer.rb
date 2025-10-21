@@ -18,6 +18,7 @@ class CurrentUserOptionSerializer < ApplicationSerializer
              :skip_new_user_tips,
              :default_calendar,
              :bookmark_auto_delete_preference,
+             :notify_on_linked_posts,
              :seen_popups,
              :should_be_redirected_to_top,
              :redirected_to_top,

@@ -6,12 +6,18 @@
 
 ur:
   site_settings:
-    chat_allowed_groups: "ان گروپس کے صارفین گپ شپ کر سکتے ہیں۔ نوٹ کریں کہ منتظمین اور نگران ہمیشہ گپ شپ تک رسائی حاصل کر سکتے ہیں۔"
-    chat_message_flag_allowed_groups: "ان گروپس کے صارفین کو گپ شپ کے پیغامات کو نشاندہ کرنے کی اجازت ہے۔ نوٹ کریں کہ منتظمین اور نگران ہمیشہ گپشپ کے پیغامات کو نشاندہ کر سکتے ہیں۔"
+    chat_allowed_groups: "ان گروپس کے اراکین گپ شپ کر سکتے ہیں۔ نوٹ کریں کہ منتظمین اور نگران ہمیشہ گپ شپ تک رسائی حاصل کر سکتے ہیں۔"
+    chat_channel_retention_days: "ریگولر چینلز میں چیٹ پیغامات کواتنے دنوں تک محفوظ رکھا جائے گا۔ پیغامات کو ہمیشہ کے لیے محفوظ رکھنے کے لیے '0' پر سیٹ کریں۔"
+    chat_dm_retention_days: "نجی چیٹ چینلز میں چیٹ پیغامات کواتنے دنوں تک محفوظ رکھا جائے گا۔ پیغامات کو ہمیشہ کے لیے محفوظ رکھنے کے لیے '0' پر سیٹ کریں۔"
+    direct_message_enabled_groups: "ان گروپس میں موجود اراکین کو رکن سے رکن کی نجی چیٹ بنانے کی اجازت دیں۔ نوٹ: عملہ ہمیشہ نجی چیٹ بنا سکتا ہے، اور اراکین نجی چیٹ کا جواب دے سکتے ہیں جنہیں ان اجازت یافتہ اراکین نے بنایا ہے۔"
+    chat_message_flag_allowed_groups: "ان گروپس کے اراکین کو گپ شپ کے پیغامات کو نشاندہ کرنے کی اجازت ہے۔ نوٹ کریں کہ منتظمین اور نگران ہمیشہ گپشپ کے پیغامات کو نشاندہ کر سکتے ہیں۔"
+    errors:
+      chat_upload_not_allowed_secure_uploads: "محفوظ اپ لوڈز کی، سائٹ کی ترتیب فعال ہونے پر چیٹ اپ لوڈز کی اجازت نہیں ہے۔"
   chat:
     deleted_chat_username: حذف کردہ
     errors:
       not_accepting_dms: "معذرت، %{username} اِس وقت پیغامات قبول نہیں کر رہا ہے۔"
+      actor_disallowed_dms: "آپ نے اراکین کو ذاتی اور براہ راست پیغامات بھیجنے سے روکنے کا انتخاب کیا ہے، لہذا آپ نئے براہ راست پیغامات نہیں بنا سکتے۔"
     reviewables:
       actions:
         agree:
@@ -34,6 +40,12 @@ ur:
         slug_contains_non_ascii_chars: "غیر ascii حروف پر مشتمل ہے"
     onebox:
       thread_title_connector: "میں"
+  discourse_push_notifications:
+    popup:
+      chat_mention:
+        direct: '%{username} نے آپ کا تذکرہ "%{channel}" میں کیا'
+      direct_message_chat_mention:
+        direct: "%{username} نے نجی چیٹ میں آپ کا تذکرہ کیا"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

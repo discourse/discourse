@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { getOwner, setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import Topic from "discourse/models/topic";
 
@@ -33,7 +34,7 @@ export default class BulkSelectHelper {
   }
 
   get selectedCategoryIds() {
-    return this.selected.mapBy("category_id").uniq();
+    return uniqueItemsFromArray(this.selected.map((item) => item.category_id));
   }
 
   @action

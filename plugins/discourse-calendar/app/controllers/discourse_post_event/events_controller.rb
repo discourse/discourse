@@ -2,21 +2,35 @@
 
 module DiscoursePostEvent
   class EventsController < DiscoursePostEventController
+    skip_before_action :check_xhr, only: [:index], if: :ics_request?
+
     def index
       @events =
         DiscoursePostEvent::EventFinder.search(current_user, filtered_events_params).includes(
-          post: :topic,
+          :event_dates,
+          post: {
+            topic: %i[tags category],
+          },
         )
 
       # The detailed serializer is currently not used anywhere in the frontend, but available via API
       serializer = params[:include_details] == "true" ? EventSerializer : BasicEventSerializer
 
-      render json:
-               ActiveModel::ArraySerializer.new(
-                 @events,
-                 each_serializer: serializer,
-                 scope: guardian,
-               ).as_json
+      respond_to do |format|
+        format.ics do
+          filename = "events-#{Digest::SHA1.hexdigest(@events.map(&:id).sort.join("-"))}.ics"
+          response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
+        end
+
+        format.json do
+          render json:
+                   ActiveModel::ArraySerializer.new(
+                     @events,
+                     each_serializer: serializer,
+                     scope: guardian,
+                   ).as_json
+        end
+      end
     end
 
     def invite
@@ -76,14 +90,14 @@ module DiscoursePostEvent
                      failed_json.merge(
                        errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                      ),
-                   status: 422
+                   status: :unprocessable_entity
           end
         rescue StandardError
           render json:
                    failed_json.merge(
                      errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                    ),
-                 status: 422
+                 status: :unprocessable_entity
         end
       end
     end
@@ -109,11 +123,15 @@ module DiscoursePostEvent
                  failed_json.merge(
                    errors: [I18n.t("discourse_post_event.errors.bulk_invite.error")],
                  ),
-               status: 422
+               status: :unprocessable_entity
       end
     end
 
     private
+
+    def ics_request?
+      request.format.symbol == :ics
+    end
 
     def filtered_events_params
       params.permit(
@@ -121,10 +139,10 @@ module DiscoursePostEvent
         :category_id,
         :include_subcategories,
         :limit,
-        :before,
         :attending_user,
         :before,
         :after,
+        :order,
       )
     end
   end

@@ -7,7 +7,7 @@ en:
   js:
     poll:
       dynamic:
-        enabled_hint: "This poll is dynamic. Options can be edited after posting."
+        enabled_hint: "Options can be added or removed."
       voters:
         one: "voter"
         other: "voters"
@@ -164,7 +164,7 @@ en:
         poll_public:
           label: Show who voted
         poll_dynamic:
-          label: Allow editing options after posting (dynamic poll)
+          label: Allow options to be added or removed after posting
         poll_title:
           label: Title (optional)
         poll_options:

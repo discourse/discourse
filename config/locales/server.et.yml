@@ -860,10 +860,7 @@ et:
   page_not_found:
     page_title: "Lehekülge ei leitud"
     title: "Oih! Soovitud lehte ei ole või on see privaatne."
-    popular_topics: "Populaarsed"
-    recent_topics: "Viimased"
     see_more: "Veel"
-    search_title: "Otsi sellelt saidilt"
     search_button: "Otsi"
   upload:
     unauthorized: "Vabandust, fail mida püüad üles laadida, ei ole lubatud (lubatud faililaiendid: %{authorized_extensions})."
@@ -1105,6 +1102,10 @@ et:
           complete: "Kasutaja kustutatud."
       reject:
         title: "Lükka tagasi"
+      no_action_post:
+        title: "Tegevust pole"
+      delete_post:
+        complete: "Postitus kustutatud"
       no_action_user:
         title: "Tegevust pole"
       delete_user:

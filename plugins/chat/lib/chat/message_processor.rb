@@ -19,6 +19,7 @@ module Chat
     def run!
       post_process_oneboxes
       process_thumbnails
+      add_lightbox_to_images
       DiscourseEvent.trigger(:chat_message_processed, @doc, @model)
     end
 
@@ -53,6 +54,26 @@ module Chat
           end
         end
       end
+    end
+
+    def add_lightbox_to_images
+      @doc
+        .css("img")
+        .each do |img|
+          if img["class"]&.include?("emoji") || img["class"]&.include?("avatar") ||
+               img["data-base62-sha1"].blank?
+            next
+          end
+
+          sha1 = Upload.sha1_from_base62_encoded(img["data-base62-sha1"])
+          if upload = Upload.find_by(sha1: sha1)
+            img["data-large-src"] = upload.url
+            img["data-download-href"] = upload.short_path
+            img["data-target-width"] = upload.width
+            img["data-target-height"] = upload.height
+            img["class"] = "#{img["class"]} lightbox".strip
+          end
+        end
     end
 
     def large_images

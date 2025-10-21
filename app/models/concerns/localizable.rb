@@ -19,4 +19,8 @@ module Localizable
 
     localizations.find { |l| LocaleNormalizer.is_same?(l.locale, locale_str) }
   end
+
+  def in_user_locale?
+    LocaleNormalizer.is_same?(locale, I18n.locale)
+  end
 end

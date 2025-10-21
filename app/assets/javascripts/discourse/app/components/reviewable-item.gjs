@@ -38,8 +38,6 @@ import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 import ReviewableScores from "./reviewable-scores";
 
-const IpLookup = optionalRequire("admin/components/ip-lookup");
-
 let _components = {};
 
 const pluginReviewableParams = {};
@@ -251,6 +249,10 @@ export default class ReviewableItem extends Component {
       this.currentUser.staff &&
       this.reviewable.target_created_by
     );
+  }
+
+  get IpLookupComponent() {
+    return optionalRequire("admin/components/ip-lookup");
   }
 
   @bind
@@ -693,7 +695,7 @@ export default class ReviewableItem extends Component {
         {{/if}}
 
         {{#if this.showIpLookup}}
-          <IpLookup
+          <this.IpLookupComponent
             @ip="adminLookup"
             @userId={{this.reviewable.target_created_by.id}}
           />

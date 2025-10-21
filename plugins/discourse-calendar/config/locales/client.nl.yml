@@ -7,11 +7,9 @@
 nl:
   admin_js:
     admin:
-      calendar: "Kalender"
       site_settings:
         categories:
           discourse_post_event: "Discourse-evenement"
-          discourse_calendar: "Discourse-kalender"
   js:
     notifications:
       titles:

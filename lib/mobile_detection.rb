@@ -24,8 +24,8 @@ module MobileDetection
 
   MODERN_MOBILE_REGEX =
     %r{
-    \(.*iPhone\ OS\ 1[5-9].*\)|
-    \(.*iPad.*OS\ 1[5-9].*\)|
+    \(.*iPhone\ OS\ 1[6-9].*\)|
+    \(.*iPad.*OS\ 1[6-9].*\)|
     Chrome\/8[89]|
     Chrome\/9[0-9]|
     Chrome\/1[0-9][0-9]|

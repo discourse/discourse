@@ -1,11 +1,9 @@
 import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import getURL from "discourse/lib/get-url";
-import { deepMerge } from "discourse/lib/object";
 import { emojiUnescape } from "discourse/lib/text";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import { userPath } from "discourse/lib/url";
@@ -31,7 +29,7 @@ export function addLogSearchLinkClickedCallbacks(fn) {
 }
 
 export function resetLogSearchLinkClickedCallbacks() {
-  logSearchLinkClickedCallbacks.clear();
+  logSearchLinkClickedCallbacks.length = 0;
 }
 
 export function addSearchResultsCallback(callback) {
@@ -71,9 +69,11 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
-      return Category.list().findBy("id", category.id || category.model.id);
+      return Category.list().find(
+        (c) => c.id === (category.id || category.model.id)
+      );
     })
-    .compact();
+    .filter((item) => item != null);
 
   results.grouped_search_result?.extra?.categories?.forEach((category) =>
     Site.current().updateCategory(category)
@@ -99,7 +99,7 @@ export function translateResults(results, opts) {
         url: getURL(`/g/${name}`),
       };
     })
-    .compact();
+    .filter((item) => item != null);
 
   results.tags = results.tags
     .map(function (tag) {
@@ -109,7 +109,7 @@ export function translateResults(results, opts) {
         url: getURL("/tag/" + tagName),
       });
     })
-    .compact();
+    .filter((item) => item != null);
 
   return translateResultsCallbacks
     .reduce(
@@ -228,40 +228,6 @@ export function isValidSearchTerm(searchTerm, siteSettings) {
 }
 
 export function applySearchAutocomplete(inputElement, siteSettings, owner) {
-  if (!siteSettings.floatkit_autocomplete_input_fields) {
-    const $input = $(inputElement);
-
-    $input.autocomplete(
-      deepMerge({
-        template: categoryTagAutocomplete,
-        key: "#",
-        width: "100%",
-        treatAsTextarea: true,
-        autoSelectFirstSuggestion: false,
-        transformComplete: (obj) => obj.text,
-        dataSource: (term) => searchCategoryTag(term, siteSettings),
-      })
-    );
-
-    if (siteSettings.enable_mentions) {
-      $input.autocomplete(
-        deepMerge({
-          template: userAutocomplete,
-          key: "@",
-          width: "100%",
-          treatAsTextarea: true,
-          autoSelectFirstSuggestion: false,
-          transformComplete: (v) => {
-            validateSearchResult(v);
-            return v.username || v.name;
-          },
-          dataSource: (term) => userSearch({ term, includeGroups: true }),
-        })
-      );
-    }
-    return;
-  }
-
   const autocompleteHandler = new TextareaAutocompleteHandler(inputElement);
   DAutocompleteModifier.setupAutocomplete(
     owner,
@@ -306,7 +272,7 @@ export function updateRecentSearches(currentUser, term) {
   let recentSearches = Object.assign(currentUser.recent_searches || []);
 
   if (recentSearches.includes(term)) {
-    recentSearches = recentSearches.without(term);
+    recentSearches = recentSearches.filter((item) => item !== term);
   } else if (recentSearches.length === MAX_RECENT_SEARCHES) {
     recentSearches.popObject();
   }

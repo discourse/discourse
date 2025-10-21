@@ -278,9 +278,8 @@ export default class TopicTimelineScrollArea extends Component {
 
     let date;
     if (daysAgo === undefined) {
-      const post = postStream.posts.findBy(
-        "id",
-        postStream.stream[this.current]
+      const post = postStream.posts.find(
+        (p) => p.id === postStream.stream[this.current]
       );
 
       if (post) {
@@ -650,7 +649,7 @@ export default class TopicTimelineScrollArea extends Component {
             @icon="layer-group"
             @label="summary.short_label"
             title={{i18n "summary.short_title"}}
-            class="show-summary btn-small"
+            class="show-summary btn-default btn-small"
           />
         {{/if}}
 

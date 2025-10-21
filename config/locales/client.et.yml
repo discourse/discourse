@@ -1001,7 +1001,7 @@ et:
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
       add_email:
         title: "Lisa meiliaadress"
-        add: "lisa"
+        add: "isa"
       change_email:
         title: "Muuda meiliaadressi"
         taken: "Vabandust, see meiliaadress ei ole saadaval."
@@ -2208,6 +2208,8 @@ et:
       logo: "Kategooria logo"
       background_image: "Kategooria taustapilt"
       background_color: "Värv"
+      color_validations:
+        cant_be_empty: "ei tohi olla tühi"
       styles:
         icon: "Ikoon"
         emoji: "Emotikon"
@@ -2748,6 +2750,10 @@ et:
           title: "Failid"
         legal:
           title: "Õiguslik"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Seaded"
         logo:
           form:
             mobile: "Mobiil"
@@ -3192,6 +3198,7 @@ et:
           body: "Sisu"
           revert: "Loobu muudatustest"
           revert_confirm: "Kas oled kindel, et soovid oma muudatustest loobuda?"
+          edit: "Muuda"
         component:
           all_filter: "Kõik"
           enabled_filter: "Sisse lülitatud"

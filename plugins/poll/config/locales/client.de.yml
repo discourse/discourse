@@ -13,7 +13,7 @@ de:
   js:
     poll:
       dynamic:
-        enabled_hint: "Diese Umfrage ist dynamisch. Optionen können nach dem Veröffentlichen bearbeitet werden."
+        enabled_hint: "Optionen können hinzugefügt oder entfernt werden."
       voters:
         one: "Teilnehmer"
         other: "Teilnehmer"
@@ -151,7 +151,7 @@ de:
         poll_public:
           label: Anzeigen, wer abgestimmt hat
         poll_dynamic:
-          label: Bearbeiten der Optionen nach dem Veröffentlichen zulassen (dynamische Umfrage)
+          label: Erlaube das Hinzufügen oder Entfernen von Optionen nach der Veröffentlichung
         poll_title:
           label: Titel (optional)
         poll_options:

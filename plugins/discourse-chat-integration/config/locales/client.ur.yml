@@ -30,7 +30,7 @@ ur:
       channel_delete_confirm: "کیا آپ واقعی یہ چینل حذف کرنا چاہتے ہیں؟ تمام منسلک اصول حذف ہو جائیں گے۔"
       test_modal:
         title: "ایک ٹیسٹ پیغام بھیجیں"
-        topic: "ٹاپک"
+        topic: "موضوع"
         send: "ٹیسٹ پیغام بھیجیں"
         close: "بند کریں"
         error: "پیغام بھیجنے پر ایک نامعلوم خرابی کا سامنا کرنا پڑا۔ مزید جاننے کیلئے سائٹ لاگز چیک کریں۔"
@@ -80,7 +80,7 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             action_prohibited: "بَوٹ کو اُس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
         telegram:
@@ -115,7 +115,7 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             channel_not_found: "یہ مخصوص چینل مَیٹرمَوسٹ پر موجود نہیں ہے"
         matrix:
@@ -145,7 +145,7 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             invalid_channel: "وہ چینل راکٹ چَیٹ پر موجود نہیں ہے"
         gitter:
@@ -199,5 +199,7 @@ ur:
               label: چَینل
         send_chat_integration_message:
           fields:
+            channel_name:
+              description: "آپ چیٹ انٹیگریشن ترتیبات میں چینل کا نام تلاش کر سکتے ہیں۔"
             provider:
               label: پرووَائیڈر

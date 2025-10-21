@@ -605,6 +605,11 @@ en:
       resume: "Resume"
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"
+      bulk_delete: "Delete selected"
+      bulk_delete_confirmation: "Delete drafts"
+      bulk_delete_message:
+        one: "Are you sure you want to delete this draft?"
+        other: "Are you sure you want to delete these %{count} drafts?"
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
@@ -691,6 +696,7 @@ en:
     review:
       show_more: "Show more"
       show_less: "Show less"
+      back_to_queue: "Back to queue"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
@@ -1793,6 +1799,7 @@ en:
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
         remove: "Remove Password"
+        remove_disabled: "The account needs at least one other login method (e.g. a passkey or a linked external account) before removing the password."
         remove_detail: "Your account will no longer be accessible with a password unless you reset it."
 
       second_factor_backup:
@@ -1900,7 +1907,7 @@ en:
 
       add_email:
         title: "Add Email"
-        add: "add"
+        add: "Add"
 
       change_email:
         title: "Change Email"
@@ -2083,6 +2090,7 @@ en:
         first_time_and_daily: "First time a post is liked and daily"
         first_time: "First time a post is liked"
         never: "Never"
+      notify_on_linked_posts: "Notify when someone shares a link to one of my posts"
       email_previous_replies:
         title: "Include previous replies at the bottom of emails"
         unless_emailed: "unless previously sent"
@@ -2692,6 +2700,7 @@ en:
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
       omniauth_disallow_totp: "Your account has two-factor authentication enabled. Please log in with your password."
+      works_with: "Works with"
 
       activate_account: "Activate Account"
       resend_title: "Resend Activation Email"
@@ -2817,6 +2826,8 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
+      read_only: "read-only"
+      read_only_description: "This category is read-only so you cannot choose it for this topic"
 
     timezone_input:
       ambiguous_ist: "IST is ambiguous, please select a specific timezone (eg: Asia/Kolkata)"
@@ -3109,6 +3120,8 @@ en:
         remove: "Remove link"
         visit: "Open link in external tab"
         link_copied: "Link copied!"
+
+      unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
     notifications:
       tooltip:
@@ -3445,6 +3458,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
+        select: "Bulk select"
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
@@ -3590,8 +3604,6 @@ en:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
-      create_disabled_category: "You're not allowed to create topics in this category"
-      create_disabled_tag: "You're not allowed to create topics with this tag"
       create_long: "Create a new Topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
@@ -3689,6 +3701,8 @@ en:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
       browse_latest_topics: "Browse latest topics"
+      browse_new_replies: "Browse new replies"
+      browse_new_topics: "Browse new topics"
 
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
@@ -3866,6 +3880,9 @@ en:
       reply:
         title: "Reply"
         help: "begin composing a reply to this topic"
+
+      footer_buttons:
+        region_label: "Topic actions"
 
       share:
         title: "Share Topic"
@@ -4071,6 +4088,13 @@ en:
       title: "Latest posts"
       empty: "There are no posts"
       aria_post_number: "%{title} - post #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} post selected"
+          other: "%{count} posts selected"
+        select_all: "Select all"
+        clear_all: "Clear all"
+        actions: "Bulk actions"
 
     post:
       confirm_delete: "Are you sure you want to delete this post?"
@@ -4161,6 +4185,7 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
+        manage: "Manage translations (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
@@ -4194,10 +4219,8 @@ en:
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
       cancel_composer:
-        confirm: "What would you like to do with your post?"
+        confirm: "Do you want to discard your post?"
         discard: "Discard"
-        save_draft: "Save draft for later"
-        keep_editing: "Keep editing"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -4444,6 +4467,10 @@ en:
       style: "Styles"
       background_color: "Color"
       foreground_color: "Text color"
+      color_validations:
+        cant_be_empty: "can't be empty"
+        incorrect_length: "must match the format #RRGGBB or #RGB"
+        non_hexdecimal: "must only contain hexadecimal characters (0-9, A-F)"
       styles:
         type: "Style"
         icon: "Icon"
@@ -4844,8 +4871,8 @@ en:
     preloader_text: "Loading"
 
     lightbox:
-      download: "download"
-      open: "original image"
+      download: "Download"
+      open: "Original image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
@@ -5034,7 +5061,7 @@ en:
       choose_for_topic_required_group:
         one: "select %{count} tag from '%{name}'…"
         other: "select %{count} tags from '%{name}'…"
-      info: "Info"
+      info: "Show tag info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
@@ -5065,6 +5092,7 @@ en:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
       edit_tag: "Edit tag name and description"
+      edit: "Edit this tag"
       description: "Description (max 1000 characters)"
       sort_by: "Sort by:"
       sort_by_count: "count"
@@ -5170,6 +5198,7 @@ en:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
     theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+    theme_preview_failed: "Failed to preview theme because it doesn't exist, or you don't have permission to access it."
 
     image_removed: "(image removed)"
 
@@ -5401,6 +5430,8 @@ en:
           light: "Light"
           dark: "Dark"
           auto: "Auto"
+          title: "Color mode"
+          aria_label: "Color mode, currently %{mode}"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -5666,10 +5697,16 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-
+          sub_pages:
+            common_settings:
+              title: "Settings"
+            authenticators:
+              title: "Social logins"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"
@@ -5962,6 +5999,7 @@ en:
         help: "The theme you are currently using is <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Go to the <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>theme config page</a> to alter theme site settings, or click on a linked theme in the table below to edit its settings."
         filter: "Filter theme site settings by setting name, description, or theme name..."
         filter_no_results: "No theme site settings match your filter"
+        site_setting_warning: 'This setting is managed by the default theme for your site (%{defaultThemeName}). You can modify it from <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">the theme''s edit page</a>.'
 
       search:
         modal_title: "Search everything in admin"
@@ -6313,6 +6351,7 @@ en:
               suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
+              create: Create a new user.
             user_status:
               read: Read user status.
               update: Update user status.
@@ -6658,7 +6697,7 @@ en:
             description: "Settings that allow themes to have greater control over the full site experience by overriding a small subset of core site settings."
           themes:
             title: "Themes"
-            description: 'Site-wide themes that change the overall look and feel of your site for all users.'
+            description: "Site-wide themes that change the overall look and feel of your site for all users."
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
@@ -6819,6 +6858,7 @@ en:
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
+            is_disabled_title: "Restore is currently disabled. To enable it, search for 'allow restore' in site settings."
             label: "Restore"
             title: "Restore the backup"
             confirm: "Are you sure you want to restore this backup?"
@@ -6872,14 +6912,19 @@ en:
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
-        theme_owner: "Not editable, owned by:"
+        theme_owner: "Owned by:"
         email_templates:
           title: "Email"
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
+          multiple_bodies: "This email template has multiple bodies."
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
+          search_templates: "Filter by template name..."
+          no_templates_found: "No templates match your filters."
+          edit: "Edit"
+          back: "Back to templates"
         component:
           all_filter: "All"
           used_filter: "Used"
@@ -7105,6 +7150,8 @@ en:
         schema:
           title: "Edit %{name} setting"
           back_button: "Back to %{name}"
+          move_up: "Move up"
+          move_down: "Move down"
           fields:
             required: "*required"
             groups:
@@ -8075,6 +8122,10 @@ en:
           title: "Show on user card"
           enabled: "Shown on user card"
           disabled: "Not shown on user card"
+        show_on_signup:
+          title: "Show on signup form"
+          enabled: "Shown signup form"
+          disabled: "Not shown on signup form"
         searchable:
           title: "Searchable"
           enabled: "Searchable"

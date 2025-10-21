@@ -99,4 +99,34 @@ module("Integration | Component | load-more", function (hooks) {
       "loadMore action should be called never"
     );
   });
+
+  test("does not call loadMore action when isLoading is true", async function (assert) {
+    let actionCalled = 0;
+    const loadMore = () => actionCalled++;
+
+    await render(
+      <template>
+        <LoadMore
+          @action={{loadMore}}
+          @root="#ember-testing"
+          @isLoading={{true}}
+        >
+          <table class="numbers">
+            <tbody>
+              <tr />
+            </tbody>
+          </table>
+        </LoadMore>
+      </template>
+    );
+
+    // Wait to ensure the observer callback would have fired if it was created
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    assert.strictEqual(
+      actionCalled,
+      0,
+      "loadMore action should not be called when isLoading is true"
+    );
+  });
 });

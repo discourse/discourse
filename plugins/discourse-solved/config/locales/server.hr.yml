@@ -12,3 +12,15 @@ hr:
   badges:
     solved_1:
       name: "Riješeno!"
+      long_description: "Ova značka se dodjeljuje za odgovor označen kao Rješenje teme. :white_check_mark: Odličan posao. :+1:"
+  education:
+    topic_is_solved: |
+      ### Ova tema je riješena
+
+      Ovdje odgovorite samo ako:
+
+      - Imate dodatne detalje
+
+      - Rješenje vam ne odgovara
+
+      Ako imate nepovezan problem, molimo [započnite novu temu] (%{base_url}/nova tema) umjesto toga.

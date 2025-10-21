@@ -41,9 +41,9 @@ hr:
         group_mention: Spomena grupe
       filter:
         mute: 'Utišaj'
-        follow: 'Samo prvi post'
-        watch: 'Svi postovi i odgovori'
-        thread: 'Svi postovi s navojnim odgovorima'
+        follow: 'Samo prva objava'
+        watch: 'Sve objave i odgovori'
+        thread: 'Sve objave s odgovorima u nizu'
       rule_table:
         filter: "Filter"
         category: "Kategorija"
@@ -91,7 +91,7 @@ hr:
               title: "Ime"
               help: "Naziv za opis kanala. Ne koristi se za vezu s Telegramom."
             chat_id:
-              title: ID chata
+              title: Chat ID
               help: Broj koji vam je dodijelio bot ili identifikator kanala emitiranog kanala u obliku @channelname
           errors:
             channel_not_found: "Navedeni kanal ne postoji na Telegramu"

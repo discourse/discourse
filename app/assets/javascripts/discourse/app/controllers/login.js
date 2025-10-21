@@ -22,10 +22,10 @@ import { i18n } from "discourse-i18n";
 
 export default class LoginPageController extends Controller {
   @service siteSettings;
-  @service router;
   @service capabilities;
   @service dialog;
-  @service site;
+  // eslint-disable-next-line discourse/no-unused-services
+  @service site; // used in the route template
   @service login;
   @service modal;
 
@@ -260,6 +260,7 @@ export default class LoginPageController extends Controller {
           set("password", this.loginPassword);
 
           const destinationUrl = cookie("destination_url");
+
           if (destinationUrl) {
             removeCookie("destination_url");
             set("redirect", destinationUrl);

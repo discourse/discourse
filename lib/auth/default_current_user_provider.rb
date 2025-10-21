@@ -113,11 +113,11 @@ class Auth::DefaultCurrentUserProvider
     user_api_key = @env[USER_API_KEY]
     api_key = @env[HEADER_API_KEY]
 
-    if !@env.blank? && request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
+    if @env.present? && request[PARAMETER_USER_API_KEY] && api_parameter_allowed?
       user_api_key ||= request[PARAMETER_USER_API_KEY]
     end
 
-    api_key ||= request[API_KEY] if !@env.blank? && request[API_KEY] && api_parameter_allowed?
+    api_key ||= request[API_KEY] if @env.present? && request[API_KEY] && api_parameter_allowed?
 
     auth_token = find_auth_token
     current_user = nil
@@ -209,7 +209,7 @@ class Auth::DefaultCurrentUserProvider
     # under no conditions to suspended or inactive accounts get current_user
     current_user = nil if current_user && (current_user.suspended? || !current_user.active)
 
-    if current_user && should_update_last_seen?
+    if current_user && !current_user.is_impersonating && should_update_last_seen?
       ip = request.ip
       user_id = current_user.id
       old_ip = current_user.ip_address

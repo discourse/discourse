@@ -240,7 +240,7 @@ export default class PersonaEditor extends Component {
     const updatedOptions = Object.assign({}, currentOptions);
 
     toolNames.forEach((toolId) => {
-      const tool = this.allTools.findBy("id", toolId);
+      const tool = this.allTools.find((item) => item.id === toolId);
       const toolOptions = tool?.options;
 
       if (!toolOptions || updatedOptions[toolId]) {

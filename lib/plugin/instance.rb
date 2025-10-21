@@ -45,7 +45,7 @@ end
 
 class Plugin::Instance
   attr_accessor :path, :metadata
-  attr_reader :admin_route
+  attr_reader :admin_route, :admin_login_route
 
   # Memoized array readers
   %i[
@@ -72,7 +72,7 @@ class Plugin::Instance
   end
 
   def seed_data
-    @seed_data ||= HashWithIndifferentAccess.new({})
+    @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
 
   def seed_fu_filter(filter = nil)
@@ -362,6 +362,27 @@ class Plugin::Instance
     Site.add_categories_callbacks(&block)
   end
 
+  # Add a category parameter that includes both controller param permission
+  # and transactional callback. This allows plugins to extend category updates
+  # with custom logic that runs within the same database transaction.
+  #
+  # The callback block receives the category instance and the parameter value.
+  # If the callback raises an exception, the entire category update will be rolled back.
+  #
+  # Example usage:
+  #   register_category_update_param_with_callback(:doc_index_topic_id) do |category, value|
+  #     DocCategories::CategoryIndexManager.new(category).assign!(value)
+  #   end
+  #
+  def register_category_update_param_with_callback(param_name, &callback)
+    reloadable_patch do |plugin|
+      DiscoursePluginRegistry.category_update_param_with_callback[param_name] = {
+        plugin: plugin,
+        callback: callback,
+      }
+    end
+  end
+
   def register_upload_unused(&block)
     Upload.add_unused_callback(&block)
   end
@@ -374,7 +395,7 @@ class Plugin::Instance
   # Example usage:
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
-    Site.preloaded_category_custom_fields << field
+    reloadable_patch { Site.preloaded_category_custom_fields << field }
   end
 
   def register_problem_check(klass)
@@ -603,7 +624,7 @@ class Plugin::Instance
   def discourse_owned?
     return false if commit_hash.blank?
     parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
-    return false if parsed_commit_url.blank?
+    return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
     github_org = parsed_commit_url.path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
       parsed_commit_url.host == "github.com"
@@ -879,6 +900,10 @@ class Plugin::Instance
   # grouping related settings in the UI.
   def register_site_setting_area(area)
     DiscoursePluginRegistry.site_setting_areas << area
+  end
+
+  def register_admin_config_login_route(location)
+    DiscoursePluginRegistry.admin_config_login_routes << location
   end
 
   def javascript_includes

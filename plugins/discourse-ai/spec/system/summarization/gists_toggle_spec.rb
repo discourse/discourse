@@ -3,7 +3,7 @@
 describe "Gists Toggle Functionality", type: :system do
   fab!(:admin)
   fab!(:group)
-  fab!(:topic_with_gist) { Fabricate(:topic) }
+  fab!(:topic_with_gist, :topic)
   fab!(:topic_ai_gist) { Fabricate(:topic_ai_gist, target: topic_with_gist) }
 
   before do
@@ -136,7 +136,24 @@ describe "Gists Toggle Functionality - Mobile", type: :system, mobile: true do
         text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.expanded"),
       ).click
 
-      expect(page).to have_css(".topic-item-stats__category-tags .excerpt__contents")
+      expect(page).to have_css(".main-link .excerpt__contents")
+    end
+  end
+
+  context "when viewing PMs on mobile" do
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: admin, recipient: Fabricate(:user)) }
+    fab!(:pm_gist) { Fabricate(:topic_ai_gist, target: pm_topic) }
+
+    it "renders gist component in mobile PM list" do
+      visit("/u/#{admin.username}/messages/new")
+
+      find(".topic-list-layout-trigger").click
+      find(
+        ".dropdown-menu__item .d-button-label",
+        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.expanded"),
+      ).click
+
+      expect(page).to have_css(".main-link .excerpt__contents")
     end
   end
 end

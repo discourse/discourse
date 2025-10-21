@@ -19,12 +19,7 @@ const Header = <template>
         @showBulkToggle={{@toggleInTitle}}
         @canBulkSelect={{@canBulkSelect}}
         @canDoBulkActions={{@canDoBulkActions}}
-        @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
-        @newListSubset={{@newListSubset}}
-        @newRepliesCount={{@newRepliesCount}}
-        @newTopicsCount={{@newTopicsCount}}
         @bulkSelectHelper={{@bulkSelectHelper}}
-        @changeNewListSubset={{@changeNewListSubset}}
       />
     {{/each}}
   </tr>

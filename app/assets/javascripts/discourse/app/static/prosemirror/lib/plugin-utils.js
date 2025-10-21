@@ -5,51 +5,87 @@ export { getLinkify, isBoundary, isWhiteSpace } from "../lib/markdown-it";
 
 export { buildBBCodeAttrs } from "discourse/lib/text";
 
-// https://discuss.prosemirror.net/t/input-rules-for-wrapping-marks/537
+/**
+ * Creates an InputRule that applies a mark based on a regex pattern.
+ *
+ * Makes assumptions about having a single matching group, which can be rewritten with getAttrs
+ *
+ * Initially from https://discuss.prosemirror.net/t/input-rules-for-wrapping-marks/537
+ *
+ * For usage examples,
+ * @see discourse/app/static/prosemirror/core/inputrules.js
+ *
+ * @param {RegExp} regexp
+ * @param {import("prosemirror-model").MarkType} markType
+ * @param {Function} getAttrs
+ *
+ * @returns {import("prosemirror-inputrules").InputRule}
+ */
 export function markInputRule(regexp, markType, getAttrs) {
-  return new InputRule(
-    regexp,
-    (state, match, start, end) => {
-      const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
-      const tr = state.tr;
+  return new InputRule(regexp, (state, match, start, end) => {
+    const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
+    const tr = state.tr;
 
-      // attrs may override match or start
-      const {
-        match: attrsMatch,
-        start: attrsStart,
-        ...markAttrs
-      } = attrs ?? {};
-      match = attrsMatch ?? match;
-      start += attrsStart ?? 0;
+    // attrs may override match or start
+    const { match: attrsMatch, start: attrsStart, ...markAttrs } = attrs ?? {};
 
-      if (match[1]) {
-        let textStart = start + match[0].indexOf(match[1]);
-        let textEnd = textStart + match[1].length;
-        if (textEnd < end) {
-          tr.delete(textEnd, end);
-        }
-        if (textStart > start) {
-          tr.delete(start, textStart);
-        }
+    match = attrsMatch ?? match;
+    start = start + (attrsStart ?? 0);
 
-        tr.addMark(start, start + match[1].length, markType.create(markAttrs));
-        tr.removeStoredMark(markType);
-      } else {
-        tr.delete(start, end);
-        tr.insertText(" ");
-        tr.addMark(start, start + 1, markType.create(markAttrs));
-        tr.removeStoredMark(markType);
-        tr.insertText(" ");
+    if (match[1]) {
+      const fullMatch = match[0];
+      const capturedContent = match[1];
+      const contentStart = fullMatch.indexOf(capturedContent);
+      const contentEnd = contentStart + capturedContent.length;
 
-        tr.setSelection(
-          state.selection.constructor.create(tr.doc, start, start + 1)
-        );
+      const ranges = [];
+      if (contentStart > 0) {
+        ranges.push([start, start + contentStart]);
+      }
+      if (contentEnd < fullMatch.length) {
+        ranges.push([start + contentEnd, start + fullMatch.length]);
       }
 
-      return tr;
-    },
-    { inCodeMark: false }
-  );
+      for (const [rangeStart, rangeEnd] of ranges) {
+        let hasCodeMark = false;
+        state.doc.nodesBetween(rangeStart, rangeEnd, (node) => {
+          if (node.isInline && node.marks.some((m) => m.type.spec.code)) {
+            hasCodeMark = true;
+            return false;
+          }
+        });
+        if (hasCodeMark) {
+          return null;
+        }
+      }
+    }
+
+    if (match[1]) {
+      const textStart = start + match[0].indexOf(match[1]);
+      const textEnd = textStart + match[1].length;
+      if (textEnd < end) {
+        tr.delete(textEnd, end);
+      }
+      if (textStart > start) {
+        tr.delete(start, textStart);
+      }
+
+      tr.addMark(start, start + match[1].length, markType.create(markAttrs));
+      tr.setStoredMarks(tr.doc.resolve(start + match[1].length + 1).marks());
+    } else {
+      tr.delete(start, end);
+      tr.insertText(" ");
+      tr.addMark(start, start + 1, markType.create(markAttrs));
+      tr.removeStoredMark(markType);
+      tr.insertText(" ");
+
+      tr.setSelection(
+        state.selection.constructor.create(tr.doc, start, start + 1)
+      );
+    }
+
+    return tr;
+  });
 }
 
 export function getChangedRanges(tr) {

@@ -94,7 +94,7 @@ RSpec.describe ApiKey do
     SiteSetting.revoke_api_keys_maxlife_days = 2
 
     older_key = Fabricate(:api_key, created_at: 3.days.ago)
-    newer_key = Fabricate(:api_key, created_at: 1.days.ago)
+    newer_key = Fabricate(:api_key, created_at: 1.day.ago)
     revoked_key = Fabricate(:api_key, created_at: 3.days.ago, revoked_at: 1.day.ago)
 
     expect { ApiKey.revoke_max_life_keys! }.to change { older_key.reload.revoked_at }.from(nil).to(
@@ -173,6 +173,26 @@ RSpec.describe ApiKey do
 
       it "rejects the request when the main parameter and the alias are both used" do
         request.path_parameters = { controller: "topics", action: "show", topic_id: "3", id: "3" }
+        expect(key.request_allowed?(env)).to eq(false)
+      end
+    end
+
+    context "with users:create scope" do
+      let(:scope) { ApiKeyScope.new(resource: "users", action: "create") }
+
+      let(:request) do
+        ActionDispatch::TestRequest.create.tap do |request|
+          request.path_parameters = { controller: "users", action: "create" }
+          request.request_method = "POST"
+        end
+      end
+
+      it "allows user creation requests" do
+        expect(key.request_allowed?(env)).to eq(true)
+      end
+
+      it "rejects non-user creation requests" do
+        request.path_parameters = { controller: "topics", action: "create" }
         expect(key.request_allowed?(env)).to eq(false)
       end
     end

@@ -1,5 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
@@ -15,7 +16,7 @@ export default class ShowController extends Controller {
 
   @discourseComputed("userBadgesAll")
   filteredList(userBadgesAll) {
-    return userBadgesAll.filterBy("badge.allow_title", true);
+    return userBadgesAll.filter((item) => item.badge.allow_title);
   }
 
   @discourseComputed("filteredList")
@@ -25,7 +26,7 @@ export default class ShowController extends Controller {
         id: 0,
         badge: Badge.create({ name: i18n("badges.none") }),
       }),
-      ...filteredList.uniqBy("badge.name"),
+      ...uniqueItemsFromArray(filteredList, "badge.name"),
     ];
   }
 

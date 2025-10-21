@@ -1,5 +1,4 @@
 import { tracked } from "@glimmer/tracking";
-import { service } from "@ember/service";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";
@@ -33,8 +32,6 @@ export default class ChatChatable {
       identifier: `c-${model.id}`,
     });
   }
-
-  @service chatChannelsManager;
 
   @tracked identifier;
   @tracked type;

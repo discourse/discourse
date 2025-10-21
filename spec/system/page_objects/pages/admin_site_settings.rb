@@ -141,6 +141,17 @@ module PageObjects
         setting = find_setting(setting_name)
         setting.find(".setting-value .validation-error").text
       end
+
+      def has_theme_warning?(setting_name, theme_name, theme_id)
+        find_setting(setting_name).find(".setting-theme-warning__text").has_text?(theme_name) &&
+          find_setting(setting_name).find(".setting-theme-warning__text").has_link?(
+            href: "/admin/customize/themes/#{theme_id}",
+          )
+      end
+
+      def has_disabled_input?(setting_name)
+        find_setting(setting_name).has_css?("input[disabled]")
+      end
     end
   end
 end

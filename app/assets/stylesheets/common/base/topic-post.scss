@@ -373,8 +373,6 @@ nav.post-controls {
         &.like {
           // Like button with 0 likes
           &:hover {
-            background: var(--love-low);
-
             .d-icon {
               color: var(--love);
             }
@@ -389,8 +387,6 @@ nav.post-controls {
 
           .discourse-no-touch & {
             &:hover {
-              background: var(--primary-low);
-
               .d-icon {
                 color: var(--primary-medium);
               }
@@ -407,13 +403,6 @@ nav.post-controls {
           + .toggle-like {
             // Like button when like count is present
             padding-left: 0.45em;
-
-            // Like button when like count is present
-            .discourse-no-touch & {
-              &:hover {
-                background: var(--primary-low);
-              }
-            }
           }
 
           // Like count button
@@ -1115,6 +1104,8 @@ kbd {
 // will remove margins from first (top) and last (bottom) child elements
 blockquote,
 blockquote .post__contents-cooked-quote {
+  overflow-wrap: break-word;
+
   > *:first-child {
     margin-top: 0 !important;
   }
@@ -1512,47 +1503,44 @@ span.mention {
 }
 
 .post-notice {
-  box-sizing: border-box;
   align-items: center;
-  background-color: var(--tertiary-low);
+  background-color: var(--tertiary-very-low);
   border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
-  max-width: calc(
-    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-      var(--topic-avatar-width)
-  );
-  padding: var(--topic-body-width-padding);
-  padding-left: 0;
+  max-width: 100%;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-down-1-rem);
+  border-radius: var(--d-border-radius);
+  gap: var(--space-2);
+  box-sizing: border-box;
 
-  &.old {
-    background-color: unset;
-    color: var(--primary-medium);
-
-    .d-icon {
-      color: var(--primary-medium);
-    }
+  @include viewport.until(sm) {
+    margin-bottom: var(--space-4);
   }
 
-  .post-notice-message {
-    p {
-      display: inline;
-    }
-
-    .custom_created_by {
-      display: inline-block;
-    }
+  &.custom {
+    background: var(--danger-low);
   }
 
-  p {
-    margin: 0;
+  .emoji {
+    width: 1.5em;
+    height: 1.5em;
   }
 
   .d-icon {
-    font-size: 2em;
-    width: var(--topic-avatar-width);
+    width: 1.25em;
+    height: 1.25em;
     color: var(--primary-high);
-    margin-right: var(--topic-body-width-padding);
+  }
+
+  p {
+    display: inline;
+    margin: 0;
+  }
+
+  .custom_created_by {
+    display: inline-block;
   }
 }
 

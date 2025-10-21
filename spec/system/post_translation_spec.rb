@@ -30,7 +30,8 @@ describe "Post translations", type: :system do
       post.update!(locale: "en")
 
       topic_page.visit_topic(topic)
-      find("#post_#{post.post_number} .post-action-menu__add-translation").click
+      find("#post_1 .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
       translation_selector.expand
       expect(all(".translation-selector-dropdown .select-kit-collection li").count).to eq(3)
       expect(translation_selector).to have_option_value("fr")
@@ -41,26 +42,21 @@ describe "Post translations", type: :system do
 
     it "allows a user to translate a post" do
       topic_page.visit_topic(topic)
-      find("#post_#{post.post_number} .post-action-menu__add-translation").click
+      find("#post_1 .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
       expect(composer).to be_opened
       translation_selector.expand
       translation_selector.select_row_by_value("fr")
       find("#translated-topic-title").fill_in(with: "Ceci est un sujet de test 0")
       composer.fill_content("Bonjour le monde")
       composer.submit
-      post.reload
-      topic.reload
 
-      try_until_success do
-        expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
-        expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
-        expect(PostLocalization.find_by(post_id: post.id, locale: "fr").raw).to eq(
-          "Bonjour le monde",
-        )
-        expect(TopicLocalization.find_by(topic_id: topic.id, locale: "fr").title).to eq(
-          "Ceci est un sujet de test 0",
-        )
-      end
+      expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
+      expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
+      expect(PostLocalization.find_by(post_id: post.id, locale: "fr").raw).to eq("Bonjour le monde")
+      expect(TopicLocalization.find_by(topic_id: topic.id, locale: "fr").title).to eq(
+        "Ceci est un sujet de test 0",
+      )
     end
   end
 
@@ -80,17 +76,13 @@ describe "Post translations", type: :system do
       find("#translated-topic-title").fill_in(with: "Este es un tema de prueba 0")
       composer.fill_content("Hola mundo")
       composer.submit
-      post.reload
-      topic.reload
 
-      try_until_success do
-        expect(TopicLocalization.exists?(topic_id: topic.id, locale: "es")).to be true
-        expect(PostLocalization.exists?(post_id: post.id, locale: "es")).to be true
-        expect(PostLocalization.find_by(post_id: post.id, locale: "es").raw).to eq("Hola mundo")
-        expect(TopicLocalization.find_by(topic_id: topic.id, locale: "es").title).to eq(
-          "Este es un tema de prueba 0",
-        )
-      end
+      expect(TopicLocalization.exists?(topic_id: topic.id, locale: "es")).to be true
+      expect(PostLocalization.exists?(post_id: post.id, locale: "es")).to be true
+      expect(PostLocalization.find_by(post_id: post.id, locale: "es").raw).to eq("Hola mundo")
+      expect(TopicLocalization.find_by(topic_id: topic.id, locale: "es").title).to eq(
+        "Este es un tema de prueba 0",
+      )
     end
 
     it "allows a user to see locales translated" do
@@ -117,19 +109,13 @@ describe "Post translations", type: :system do
       find("#translated-topic-title").fill_in(with: "C'est un sujet de test 0.")
       composer.fill_content("Bonjour le monde")
       composer.submit
-      post.reload
-      topic.reload
 
-      try_until_success do
-        expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
-        expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
-        expect(PostLocalization.find_by(post_id: post.id, locale: "fr").raw).to eq(
-          "Bonjour le monde",
-        )
-        expect(TopicLocalization.find_by(topic_id: topic.id, locale: "fr").title).to eq(
-          "C'est un sujet de test 0.",
-        )
-      end
+      expect(TopicLocalization.exists?(topic_id: topic.id, locale: "fr")).to be true
+      expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be true
+      expect(PostLocalization.find_by(post_id: post.id, locale: "fr").raw).to eq("Bonjour le monde")
+      expect(TopicLocalization.find_by(topic_id: topic.id, locale: "fr").title).to eq(
+        "C'est un sujet de test 0.",
+      )
     end
 
     it "allows a user in content_localization_allowed_groups to delete a translation" do
@@ -142,12 +128,7 @@ describe "Post translations", type: :system do
       expect(confirmation_dialog).to be_open
       confirmation_dialog.click_yes
 
-      post.reload
-      topic.reload
-
-      try_until_success do
-        expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
-      end
+      expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
     end
   end
 
@@ -174,10 +155,8 @@ describe "Post translations", type: :system do
       composer.fill_content("Bonjour le monde")
       composer.submit
 
-      try_until_success do
-        updated_post = Topic.last.posts.first
-        expect(updated_post.locale).to eq("fr")
-      end
+      updated_post = Topic.last.posts.first
+      expect(updated_post.locale).to eq("fr")
     end
 
     it "should not have a locale set by default" do

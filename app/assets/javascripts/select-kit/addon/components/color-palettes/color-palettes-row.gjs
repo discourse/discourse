@@ -21,7 +21,9 @@ export default class ColorPalettesRow extends SelectKitRowComponent {
 
   @computed("item.colors.[]")
   get backgroundColor() {
-    const secondary = (this.item.colors || []).findBy("name", "secondary");
+    const secondary = (this.item.colors || []).find(
+      (color) => color.name === "secondary"
+    );
 
     if (secondary && secondary.hex) {
       return htmlSafe(`background-color:#${escape(secondary.hex)}`);

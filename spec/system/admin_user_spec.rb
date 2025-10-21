@@ -3,6 +3,7 @@
 describe "Admin User Page", type: :system do
   fab!(:current_user, :admin)
 
+  let(:admin_users_page) { PageObjects::Pages::AdminUsers.new }
   let(:admin_user_page) { PageObjects::Pages::AdminUser.new }
   let(:suspend_user_modal) { PageObjects::Modals::PenalizeUser.new("suspend") }
   let(:silence_user_modal) { PageObjects::Modals::PenalizeUser.new("silence") }
@@ -123,6 +124,48 @@ describe "Admin User Page", type: :system do
         admin_user_page.click_unsilence_button
         expect(page).not_to have_css(".silence-info")
       end
+    end
+  end
+
+  context "when logged in as a moderator" do
+    fab!(:current_user, :moderator)
+
+    context "when visiting a regular user's page" do
+      fab!(:user)
+
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        it "the dropdown to change trust level is enabled" do
+          admin_user_page.visit(user)
+
+          expect(admin_user_page).to have_change_trust_level_dropdown_enabled
+        end
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        it "the dropdown to change trust level is disabled" do
+          admin_user_page.visit(user)
+
+          expect(admin_user_page).to have_change_trust_level_dropdown_disabled
+        end
+      end
+    end
+  end
+
+  context "when navigating to a user's page from the list" do
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+
+    it "displays the groups correctly" do
+      admin_users_page.visit
+
+      # navigate to the user page
+      admin_users_page.user_row(user.id).username.click
+
+      # ensure the automatic groups are displayed
+      page.find(".admin-user__automatic-groups").has_text?("trust_level")
     end
   end
 end

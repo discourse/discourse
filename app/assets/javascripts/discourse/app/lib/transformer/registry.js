@@ -14,8 +14,10 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "admin-reports-show-query-params",
   "bulk-select-in-nav-controls",
   "category-available-views",
+  "category-default-colors",
   "category-description-text",
   "category-display-name",
+  "category-sort-orders",
   "category-text-color",
   "composer-editor-quoted-post-avatar-template",
   "composer-editor-reply-placeholder",
@@ -80,4 +82,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-style",
   "user-field-components",
   "user-menu-notification-item-acting-user-avatar",
+  "user-notes-modal-subtitle",
 ]);

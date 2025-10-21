@@ -57,10 +57,8 @@ RSpec.describe "Share conversation", type: :system do
 
     find("#post_2 .post-action-menu__share-ai").click
 
-    try_until_success do
-      clip_text = cdp.read_clipboard
-      expect(clip_text).not_to eq("")
-    end
+    clip_text = cdp.read_clipboard
+    expect(clip_text).not_to eq("")
 
     conversation = (<<~TEXT).strip
       <details class='ai-quote'>
@@ -92,10 +90,8 @@ RSpec.describe "Share conversation", type: :system do
 
     find("#post_2 .post-action-menu__share-ai").click
 
-    try_until_success do
-      clip_text = cdp.read_clipboard
-      expect(clip_text).not_to eq("")
-    end
+    clip_text = cdp.read_clipboard
+    expect(clip_text).not_to eq("")
 
     conversation = (<<~TEXT).strip
       <details class='ai-quote'>
@@ -122,10 +118,8 @@ RSpec.describe "Share conversation", type: :system do
     find(".ai-share-modal__slider input").set("2")
     find(".ai-share-modal button.btn-primary").click
 
-    try_until_success do
-      clip_text = cdp.read_clipboard
-      expect(clip_text).not_to eq("")
-    end
+    clip_text = cdp.read_clipboard
+    expect(clip_text).not_to eq("")
 
     conversation = (<<~TEXT).strip
       <details class='ai-quote'>

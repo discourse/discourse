@@ -2,7 +2,7 @@ import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { isEmpty } from "@ember/utils";
+import { compare, isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -57,13 +57,15 @@ export default class ProfileController extends Controller {
 
     // Staff can edit fields that are not `editable`
     if (!this.currentUser.staff) {
-      siteUserFields = siteUserFields.filterBy("editable", true);
+      siteUserFields = siteUserFields.filter((field) => field.editable);
     }
 
-    return siteUserFields.sortBy("position").map((field) => {
-      const value = this.model.user_fields?.[field.id.toString()];
-      return EmberObject.create({ field, value });
-    });
+    return siteUserFields
+      .sort((a, b) => compare(a?.position, b?.position))
+      .map((field) => {
+        const value = this.model.user_fields?.[field.id.toString()];
+        return EmberObject.create({ field, value });
+      });
   }
 
   @discourseComputed("currentUser.needs_required_fields_check")

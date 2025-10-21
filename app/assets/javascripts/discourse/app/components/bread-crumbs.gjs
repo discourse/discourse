@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { filter } from "@ember/object/computed";
+import { compare } from "@ember/utils";
 import { classNameBindings, tagName } from "@ember-decorators/component";
 //  A breadcrumb including category drop downs
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -87,7 +88,9 @@ export default class BreadCrumbs extends Component {
       return parentCategories;
     }
 
-    return parentCategories.sortBy("totalTopicCount").reverse();
+    return parentCategories.sort(
+      (a, b) => compare(b?.totalTopicCount, a?.totalTopicCount) // sort descending
+    );
   }
 
   @discourseComputed("category")

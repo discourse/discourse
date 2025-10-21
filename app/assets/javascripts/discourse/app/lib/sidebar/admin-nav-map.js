@@ -30,7 +30,8 @@ export const ADMIN_NAV_MAP = [
       },
       {
         name: "admin_all_site_settings",
-        route: "adminSiteSettings",
+        route: "adminSiteSettingsCategory",
+        routeModels: ["all_settings"],
         label: "admin.config.site_settings.title",
         description: "admin.config.site_settings.header_description",
         icon: "gear",
@@ -100,12 +101,28 @@ export const ADMIN_NAV_MAP = [
         icon: "certificate",
       },
       {
-        name: "admin_login_and_authentication",
-        route: "adminConfig.loginAndAuthentication.settings",
-        label: "admin.config.login_and_authentication.title",
-        description: "admin.config.login_and_authentication.header_description",
+        name: "admin_login",
+        route: "adminConfig.login",
+        label: "admin.config.login.title",
+        description: "admin.config.login.header_description",
         icon: "unlock",
-        settings_category: "login",
+        multi_tabbed: true,
+        links: [
+          {
+            name: "admin_login_authenticators",
+            route: "adminConfig.login.authenticators",
+            label: "admin.config.login.sub_pages.authenticators.title",
+            icon: "unlock",
+            settings_area: "authenticators",
+          },
+          {
+            name: "admin_login_discourseconnect",
+            route: "adminConfig.login.discourseconnect",
+            label: "admin.config.login.sub_pages.discourseconnect.title",
+            icon: "unlock",
+            settings_area: "discourseconnect",
+          },
+        ],
       },
       {
         name: "admin_notifications",
@@ -272,6 +289,8 @@ export const ADMIN_NAV_MAP = [
         description: "admin.config.themes_and_components.header_description",
         icon: "paintbrush",
         keywords: "admin.config.themes_and_components.keywords",
+        currentWhen:
+          "adminConfig.customize.themes adminConfig.customize.components adminConfig.customize.themeSiteSettings",
         links: [
           {
             name: "admin_theme_site_settings",

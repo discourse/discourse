@@ -16,7 +16,7 @@ RSpec.describe UserOption do
 
   describe "#ai_search_discoveries" do
     before do
-      SiteSetting.ai_bot_discover_persona = ai_persona.id
+      SiteSetting.ai_discover_persona = ai_persona.id
       group.add(user)
     end
 

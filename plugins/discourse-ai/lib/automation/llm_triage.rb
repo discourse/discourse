@@ -134,11 +134,13 @@ module DiscourseAi
 
           if flag_post
             score_reason =
-              I18n
-                .t("discourse_automation.scriptables.llm_triage.flagged_post")
-                .sub("%%LLM_RESPONSE%%", result)
-                .sub("%%AUTOMATION_ID%%", automation&.id.to_s)
-                .sub("%%AUTOMATION_NAME%%", automation&.name.to_s)
+              I18n.t(
+                "discourse_automation.scriptables.llm_triage.flagged_post",
+                base_path: Discourse.base_path,
+                llm_response: result,
+                automation_id: automation&.id.to_s,
+                automation_name: automation&.name.to_s,
+              )
 
             if flag_type == :spam || flag_type == :spam_silence
               result =
@@ -171,13 +173,22 @@ module DiscourseAi
               )
 
               # We cannot do this through the PostActionCreator because hiding a post is reserved for auto action flags.
-              # Those flags are off_topic, inappropiate, and spam. We want a more generic type for triage, so none of those
+              # Those flags are off_topic, inappropriate, and spam. We want a more generic type for triage, so none of those
               # fit here.
               if flag_type == :review_hide
                 post.hide!(PostActionType.types[:notify_moderators])
-              elsif flag_type == :review_delete
+              elsif flag_type == :review_delete || flag_type == :review_delete_silence
                 # Soft-delete the post so it is hidden from users until a moderator handles it in review.
                 PostDestroyer.new(Discourse.system_user, post, context: "llm_triage").destroy
+
+                if flag_type == :review_delete_silence
+                  UserSilencer.silence(
+                    post.user,
+                    Discourse.system_user,
+                    message: :silenced_by_staff,
+                    post_id: @post&.id,
+                  )
+                end
               end
 
               if notify_author_pm && action != :edit

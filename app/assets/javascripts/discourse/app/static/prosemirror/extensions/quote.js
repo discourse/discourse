@@ -1,9 +1,16 @@
+import { schema } from "prosemirror-markdown";
+
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
+    blockquote: {
+      createGapCursor: true,
+      ...schema.nodes.blockquote.spec,
+    },
     quote: {
       content: "block+",
       group: "block",
+      createGapCursor: true,
       defining: true,
       attrs: {
         username: { default: null },

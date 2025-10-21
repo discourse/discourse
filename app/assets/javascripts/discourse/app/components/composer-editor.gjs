@@ -132,7 +132,10 @@ export default class ComposerEditor extends Component {
     return this.composer.get("model.topic");
   }
 
-  @discourseComputed("composer.model.requiredCategoryMissing")
+  @discourseComputed(
+    "composer.model.requiredCategoryMissing",
+    "currentUser.useRichEditor"
+  )
   replyPlaceholder(requiredCategoryMissing) {
     let placeholder = "composer.reply_placeholder_choose_category";
 
@@ -188,7 +191,7 @@ export default class ComposerEditor extends Component {
 
         const posts = topic.get("postStream.posts");
         if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.findBy("post_number", postNumber);
+          const quotedPost = posts.find((p) => p.post_number === postNumber);
           if (quotedPost) {
             const avatarTemplate = applyValueTransformer(
               "composer-editor-quoted-post-avatar-template",
@@ -208,7 +211,7 @@ export default class ComposerEditor extends Component {
 
         const posts = topic.get("postStream.posts");
         if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.findBy("post_number", postNumber);
+          const quotedPost = posts.find((p) => p.post_number === postNumber);
           if (quotedPost) {
             return quotedPost.primary_group_name;
           }

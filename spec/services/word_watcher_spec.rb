@@ -115,6 +115,28 @@ RSpec.describe WordWatcher do
         }.to raise_error(RegexpError)
       end
     end
+
+    context "when there's a wildcard watched word" do
+      before do
+        SiteSetting.watched_words_regular_expressions = false
+        WatchedWord.where(action: WatchedWord.actions[:block]).delete_all
+        Fabricate(:watched_word, word: "*abc", action: WatchedWord.actions[:block])
+      end
+
+      it "works correctly when regular expressions are disabled" do
+        regexps = described_class.compiled_regexps_for_action(:block)
+        expect(regexps).to be_an(Array)
+        expect(regexps).to contain_exactly(/(?:[^[:word:]]|^)(\S*abc)(?=[^[:word:]]|$)/i)
+      end
+
+      it "skips invalid watched words when regular expression are enabled" do
+        SiteSetting.watched_words_regular_expressions = true
+
+        regexps = described_class.compiled_regexps_for_action(:block)
+        expect(regexps).to be_an(Array)
+        expect(regexps).to be_empty
+      end
+    end
   end
 
   describe "#word_matches_for_action?" do

@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { userPath } from "discourse/lib/url";
 import { formatUsername } from "discourse/lib/utilities";
@@ -80,12 +81,9 @@ export function linkSeenMentions(element, siteSettings) {
   const names = mentions.map((mention) => mention.innerText.slice(1));
   updateFound(mentions, names);
 
-  return names
-    .uniq()
-    .filter(
-      (name) =>
-        !checked[name] && name.length >= siteSettings.min_username_length
-    );
+  return uniqueItemsFromArray(names).filter(
+    (name) => !checked[name] && name.length >= siteSettings.min_username_length
+  );
 }
 
 export async function fetchUnseenMentions({ names, topicId, allowedNames }) {

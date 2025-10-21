@@ -1,11 +1,11 @@
 en:
   admin_js:
     admin:
-      calendar: "Calendar"
+      calendar: "Calendar and Events"
       site_settings:
         categories:
           discourse_post_event: "Discourse Event"
-          discourse_calendar: "Discourse Calendar"
+          discourse_calendar: "Calendar and Events"
   js:
     notifications:
       titles:
@@ -30,6 +30,7 @@ en:
         header_title: "Holidays"
         pick_region_description: "Pick a region to see the holidays for that region."
         disabled_holidays_description: "Disabled holidays will be excluded from the staff holiday calendar."
+        header_description: "Pick a region to see the holidays for that region. Disabled holidays will be excluded from the staff holiday calendar."
       date: "Date"
       add_to_calendar: "Add to Google Calendar"
       toggle_timezone_offset_title: "Toggle timezone offset"
@@ -38,6 +39,7 @@ en:
         title: "Region"
         none: "None"
         use_current_region: "Use Current Region"
+        select_region: "Select a region..."
         names:
           ae: "United Arab Emirates"
           ar: "Argentina"

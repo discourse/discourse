@@ -1660,7 +1660,6 @@ es:
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas (hotlinked) a imágenes locales descargándolas. Esto preserva el contenido incluso si las imágenes son eliminadas de su sitio remoto original en el futuro."
     download_remote_images_threshold: "Espacio mínimo en el disco necesario para descargar imágenes remotas de forma local (porcentaje)"
-    disabled_image_download_domains: "Las imágenes remotas que provengan de estos dominios no serán descargadas. Lista delimitada por barras."
     block_hotlinked_media: "Evitar que los usuarios incluyan archivos multimedia (hotlinking) en sus publicaciones. Los archivos multimedia no descargados según el ajuste «download_remote_images_to_local» serán reemplazados por un enlace."
     block_hotlinked_media_exceptions: "Lista de comienzos de URL que están exentas del ajuste block_hotlinked_media. Incluye el protocolo (ej.: https://ejemplo.com)"
     editing_grace_period: "Durante (n) segundos después de que se publique algún mensaje, se puede editar la publicación sin crear una nueva versión en el historial."
@@ -1699,7 +1698,6 @@ es:
     logo: "La imagen del logotipo en la parte superior izquierda de tu sitio. Utiliza una imagen rectangular ancha con una altura de 120 y una relación de aspecto superior a 3:1. Si se deja en blanco, se mostrará el texto del título del sitio."
     logo_small: "La pequeña imagen del logotipo en la parte superior izquierda de tu sitio al desplazarse hacia abajo. Utiliza un cuadrado de 120 x 120. Si se deja en blanco, se mostrará un glifo local."
     digest_logo: "La imagen de logotipo alternativa utilizada en la parte superior del resumen de correo electrónico de su sitio. Utiliza un rectángulo ancho. No debe ser una imagen SVG. Si se deja en blanco, se utilizará la imagen del «logo»."
-    mobile_logo: "El logo utilizado en la versión móvil de su sitio. Utiliza una imagen rectangular ancha de 120 y un ratio mayor a 3:1. Si se deja en blanco, se usará la imagen que se configuró en «logo»."
     logo_dark: "Alternativa de esquema oscuro para la configuración del sitio 'logo'."
     logo_small_dark: "Alternativa de esquema oscuro para la configuración del sitio 'logo pequeño'."
     mobile_logo_dark: "Alternativa para el ajuste «mobile logo» en la paleta de colores oscura."
@@ -1711,11 +1709,8 @@ es:
     opengraph_image: "Imagen de gráfico abierto predeterminada, utilizada cuando la página no tiene otra imagen adecuada. Si se deja en blanco, se utilizará large_icon"
     x_summary_large_image: "«Imagen grande de resumen» de la tarjeta de Twitter (debe tener al menos 280 de ancho y al menos 150 de alto, no puede ser .svg). Si se deja en blanco, los metadatos de la tarjeta normal se generan utilizando opengraph_image, siempre que no sea también un .svg."
     notification_email: "La dirección de correo electrónico remitente utilizada al enviar todos los correos electrónicos esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los correos electrónicos se reciban correctamente."
-    email_custom_headers: "Lista de correos electrónicos separados por barras"
     email_subject: "Formato de asunto personalizable para correos electrónicos estándar. Consulta <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Proporciona más detalles a los usuarios acerca de por qué no pueden acceder a un tema en particular. Nota: esto es menos seguro dado que los usuarios sabrán si una URL enlaza a un tema válido."
-    enforce_second_factor: "Requiere que los usuarios activen la autenticación de dos factores antes de que puedan acceder a la interfaz de usuario de Discourse. Este ajuste no afecta a la autenticación de la API o del «proveedor de DiscourseConnect». Si enforce_second_factor_on_external_auth está activado, los usuarios no podrán iniciar sesión con proveedores de autenticación externos después de configurar la autenticación de dos factores."
-    enforce_second_factor_on_external_auth: "Requiere que los usuarios utilicen la autenticación de dos factores en todo momento. Si está activada, impedirá que los usuarios inicien sesión con métodos de autenticación externos, como inicios de sesión sociales, si tienen activada la autenticación de dos factores. Si está desactivada, los usuarios solo tendrán que confirmar su autenticación de doble factor cuando inicien sesión con un nombre de usuario y una contraseña. Consulta también el ajuste «enforece_second_factor»."
     force_https: "Forzar al sitio a utilizar solo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión a través de redes sociales y cualquier logo externo / dependencia son compatibles con HTTPS?"
     summary_score_threshold: "La puntuación mínima requerida para que una publicación se incluya en el «resumen de este tema»"
     summary_posts_required: "Cantidad mínima de publicaciones antes de que 'Resumen de este tema' esté activado. Los cambios a esta configuración se aplicarán retroactivamente dentro de una semana."
@@ -1774,7 +1769,6 @@ es:
     ga_universal_auto_link_domains: "Activar seguimiento multi-dominio de Google Universal Analytics. Los enlaces salientes a estos dominios tendrán la id de cliente añadida a ellos. Ver <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "ID del contenedor de Google Tag Manager, p. ej: GTM-ABCD12E. <br/>Nota: Para utilizar GTM cuando la Política de Seguridad de Contenidos (CSP) está activada, consulta la documentación sobre meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Utilizar nonces en los scripts de Google Tag Manager</a>."
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Visita <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permitir que los moderadores creen y gestionen grupos y categorías"
     moderators_change_post_ownership: "Permitir que los moderadores cambien el autor de las publicaciones."
     cors_origins: "Orígenes permitidos para las solicitudes de origen cruzado (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse como verdadero para activar CORS."
     use_admin_ip_allowlist: "Los administradores solo pueden iniciar sesión si están en una dirección IP definida en la lista de direcciones IP revisadas (Administrados > Registros > Direcciones IP)."
@@ -1826,8 +1820,6 @@ es:
     whispers_allowed_groups: "Permitir la comunicación privada dentro de los temas para los miembros de los grupos especificados."
     hidden_post_visible_groups: "Permitir a los miembros de estos grupos ver los mensajes ocultos. Los usuarios del personal siempre pueden ver los mensajes ocultos."
     allow_index_in_robots_txt: "Especifica en robots.txt que este sitio puede ser indexado por los motores de búsqueda web. Puedes <a href='%{base_path}/admin/customize/robots'>reemplazar tu archivo robots.txt aquí.</a> <b>ADVERTENCIA</b>: Unas reglas mal configuradas pueden impedir que tu sitio sea rastreado como se espera."
-    blocked_email_domains: "Una lista delimitada por barras de dominios de correo electrónico en los que los usuarios no pueden registrar cuentas. Los subdominios se gestionan automáticamente para los dominios especificados. No se admiten los símbolos comodín * y ? Ejemplo: mailinator.com|trashmail.net"
-    allowed_email_domains: "Una lista delimitada por barras de dominios de correo electrónico en los que los usuarios DEBEN registrar cuentas. Los subdominios se gestionan automáticamente para los dominios especificados. No se admiten los símbolos comodín * y ? ADVERTENCIA: ¡No se permitirán usuarios con dominios de correo electrónico distintos de los indicados!"
     normalize_emails: "Comprobar si la dirección de correo normalizada es única. Para normalizar las direcciones se eliminan los puntos y todo lo que haya entre los caracteres + y @."
     auto_approve_email_domains: "Los usuarios con direcciones de correo electrónico de esta lista de dominios se aprobarán automáticamente. Los subdominios se gestionan automáticamente para los dominios especificados. No se admiten los símbolos comodín * y ?"
     hide_email_address_taken: "No informar a los usuarios si ya existe una cuenta con un correo electrónico al registrarse o al restablecer la contraseña. Pedir la dirección de correo completa para solicitudes de restablecimiento de contraseña."
@@ -1872,7 +1864,6 @@ es:
     enable_local_logins_via_email: "Permitir a los usuarios que soliciten un enlace de inicio de sesión en un clic que se les enviará por correo electrónico."
     allow_new_registrations: "Permitir el registro de usuarios nuevos. Desactiva esta opción para que nadie pueda crear una cuenta nueva."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
-    enable_discourse_id: "Activa la autenticación mediante Discourse ID, un servicio de inicio de sesión único que permite que los usuarios inicien sesión en varios sitios de Discourse con una única cuenta. Proveedores de inicio de sesión con red social comunes, como Google, Facebook y X son compatibles sin necesidad de configuración adicional. Consulta <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> para más detalles."
     enable_google_oauth2_logins: "Activa la autenticación con Google Oauth2. Este es el método de autenticación que Google soporta actualmente. Requiere de una clave de cliente y una clave secreta. Consulta <a href='https://meta.discourse.org/t/15858' target='_blank'>configuración del inicio de sesión mediante para Discourse</a>."
     google_oauth2_client_id: "El ID de cliente único proporcionado por tu aplicación de Google, utilizado para el proceso de autenticación."
     google_oauth2_client_secret: "Secreto del cliente de tu aplicación de Google."
@@ -2223,9 +2214,6 @@ es:
     enable_category_group_moderation: "Permitir que los grupos moderen contenido en categorías específicas"
     group_in_subject: "Configura %%{optional_pm} en el título del correo electrónico para nombrar el primer grupo en MP, consulta: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Personalizar el formato del asunto para correos electrónicos estándar</a>"
     allow_anonymous_mode: "Activa la opción de que los usuarios cambien al modo anónimo para publicar. Cuando está activada, los usuarios pueden optar por ocultar su identidad al crear publicaciones o temas en todo el sitio. Véase también «allow_anonymous_likes»."
-    allow_likes_in_anonymous_mode: "Activa esta opción para permitir que los usuarios que navegan por tu sitio de forma anónima puedan dar «me gusta» a tus publicaciones. Cuando está activada, los usuarios pueden optar por ocultar su identidad al dar «me gusta» a entradas o temas en todo el sitio. Consulta también «allow_anonymous_mode»."
-    anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para permitir la publicación anónima"
-    anonymous_posting_allowed_groups: "Grupos que pueden permitir la publicación anónima"
     anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde la última publicación Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
     hide_user_profiles_from_public: "Desactiva las tarjetas de usuario, los perfiles y el directorio de usuarios para usuarios anónimos."
     hide_new_user_profiles: "Oculta los perfiles de usuarios de nivel de confianza 1 o inferior al público y a los usuarios de nivel de confianza 1 hasta que publiquen por primera vez. Esta característica está desactivada incondicionalmente en los sitios must_approve_users y invite_only."
@@ -2243,7 +2231,6 @@ es:
     clean_up_unused_staged_users_after_days: "Cantidad de días antes de que un usuario temporal (sin ninguna publicación) sea eliminado. Para desactivar esta limpieza de usuarios, establece el valor en 0."
     user_selected_primary_groups: "Permitir a los usuarios establecer su propio grupo principal"
     max_notifications_per_user: "Cantidad máxima de notificaciones por usuario. Si se supera este número, las notificaciones antiguas se eliminarán. Aplicado semanalmente. Establece el valor en 0 para desactivar."
-    allowed_user_website_domains: "El sitio web del usuario deberá ser uno de estos dominios. Lista delimitada por barras verticales."
     allow_profile_backgrounds: "Permitir a los usuarios subir fondos de perfil."
     get_a_room_threshold: "Número de publicaciones que un usuario deber hacer a la misma persona en un mismo tema para recibir una advertencia."
     dont_feed_the_trolls_threshold: "Número de denuncias de otros usuarios antes de ser advertido."
@@ -2326,7 +2313,6 @@ es:
     disable_watched_word_checking_in_user_fields: "desactivar la comprobación de palabras vigiladas en los campos de usuario"
     watched_words_regular_expressions: "Permite utilizar expresiones regulares para filtrar palabras. Si está activada, esta función agrupa las palabras sensibles según su distinción entre mayúsculas y minúsculas. A continuación, compila todas las palabras seleccionadas en una única expresión regular, añadiendo límites de palabra para las palabras regulares vigiladas. En consecuencia, este método de filtrado basado en expresiones regulares añade una capa adicional de control sobre la moderación de contenidos, al admitir patrones de palabras más sofisticados. También permite sustituir fácilmente el texto original por el sustituto elegido."
     enable_fast_edit: "Añade un botón al menú de selección de publicaciones para editar una pequeña selección en línea."
-    old_post_notice_days: "El número de días tras los cuales un aviso se considera antiguo. Esto lo diferencia visualmente de los avisos más recientes del sitio."
     new_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de publicaciones de usuarios nuevos."
     returning_user_notice_tl: "Nivel de confianza mínimo requerido para ver avisos de usuarios que vuelven."
     returning_users_days: "Cuántos días deben transcurrir antes de que se considere que un usuario está regresando."
@@ -2478,7 +2464,6 @@ es:
     view_raw_email_allowed_groups: "Grupos que pueden ver el contenido sin procesar de un correo electrónico si se creó mediante un correo electrónico entrante. Esto incluye los encabezados del correo electrónico y otra información técnica."
     rich_editor: "Activa el editor enriquecido del compositor para que todos los usuarios puedan cambiar entre el modo Markdown actual y el nuevo editor de texto enriquecido para una edición más intuitiva y fácil de usar."
     default_composition_mode: "Establece el modo predeterminado para el compositor de tu comunidad. El modo de texto enriquecido ofrece una experiencia de escritura más moderna y familiar para la mayoría de los usuarios, mientras que el modo Markdown puede ser adecuado para usuarios con conocimientos técnicos. Los miembros pueden usar un interruptor en la barra de herramientas del compositor para cambiar de un modo a otro."
-    viewport_based_mobile_mode: "EXPERIMENTAL: Desactiva los modos móvil/escritorio basados en agente de usuario y usa el ancho de la ventana gráfica en su lugar."
     reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
     content_localization_enabled: "Muestra contenido localizado para los usuarios según sus preferencias de navegador o idioma. Este contenido puede incluir categorías, etiquetas, publicaciones y temas. Los idiomas locales se configuran en «idiomas compatibles con la localización de contenido»."
     content_localization_supported_locales: "Lista de idiomas regionales compatibles a los que se puede traducir el contenido del usuario. Requiere «content localization enabled»."
@@ -2578,7 +2563,6 @@ es:
   filter:
     description:
       status: "Filtrar temas por estado"
-      in: "Filtrar temas por listas personales"
       order: "Ordenar temas por un campo específico"
       category: "Mostrar temas en una categoría específica"
       category_any: "Mostrar temas en cualquiera de las categorías especificadas (separadas por comas)"
@@ -4020,12 +4004,6 @@ es:
     account_second_factor_disabled:
       title: "Autenticación de dos factores desactivada"
       subject_template: "[%{email_prefix}] Autenticación de dos factores desactivada"
-      text_body_template: |
-        La autenticación de dos factores ha sido desactivada en tu cuenta en %{site_name}. Ahora podrás iniciar sesión tan solo con tu contraseña, ya no hace falta que introduzcas tu código de autenticación.
-
-        Si no has sido tú quien ha desactivado la autenticación en dos factores, puede que alguien más tenga acceso a tu cuenta.
-
-        Si tienes alguna pregunta, [ponte en contacto con nosotros](%{base_url}/about).
     digest:
       why: "Un breve resumen de %{site_link} desde %{since}"
       since_last_visit: "Desde tu última visita"
@@ -4220,10 +4198,7 @@ es:
   page_not_found:
     page_title: "Página no encontrada"
     title: "¡Ups! Esa página no existe o es privada."
-    popular_topics: "Popular"
-    recent_topics: "Recientes"
     see_more: "Más"
-    search_title: "Buscar en este sitio"
     search_button: "Buscar"
   offline:
     title: "Se se puede cargar la app"
@@ -5335,6 +5310,16 @@ es:
       approve_and_unhide:
         title: "Aprobar y dejar de ocultar publicación"
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
+      no_action_post:
+        title: "Ninguna acción"
+      delete_post:
+        title: "Eliminar publicación"
+        complete: "Publicación eliminada"
+      hide_post:
+        title: "Ocultar publicación"
+      restore_post:
+        title: "Restaurar publicación"
+        complete: "Publicación restaurada"
       no_action_user:
         title: "Ninguna acción"
       silence_user:

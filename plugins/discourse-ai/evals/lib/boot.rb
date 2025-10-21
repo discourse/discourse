@@ -31,6 +31,5 @@ Dir.chdir(discourse_path)
 
 require "#{discourse_path}/config/environment"
 
-ENV["DISCOURSE_AI_NO_DEBUG"] = "1"
 module DiscourseAi::Evals
 end

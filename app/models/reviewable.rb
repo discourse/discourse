@@ -22,7 +22,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   attr_accessor :created_new
-  validates_presence_of :type, :status, :created_by_id
+  validates :type, :status, :created_by_id, presence: true
   belongs_to :target, polymorphic: true
   belongs_to :created_by, class_name: "User"
   belongs_to :target_created_by, class_name: "User"
@@ -350,17 +350,10 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-    # Support this action or any aliases
-    aliases = self.class.action_aliases
-    valid = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
-
-    # Ensure the user has access to the action
-    guardian = args[:guardian] || Guardian.new(performed_by)
-    actions = actions_for(guardian, args)
-    raise InvalidAction.new(action_id, self.class) unless valid.any? { |a| actions.has?(a) }
-
     perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
-    raise InvalidAction.new(action_id, self.class) unless respond_to?(perform_method)
+    guardian = args[:guardian] || Guardian.new(performed_by)
+
+    validate_action!(guardian, action_id, perform_method, args)
 
     result = nil
     update_count = false
@@ -826,6 +819,22 @@ class Reviewable < ActiveRecord::Base
   end
 
   private
+
+  def aliases
+    self.class.action_aliases
+  end
+
+  def validate_action!(guardian, action_id, perform_method, args)
+    # Support this action or any aliases
+    action_aliases = [action_id, aliases.to_a.select { |k, v| v == action_id }.map(&:first)].flatten
+
+    # Ensure the user has access to the action
+    actions = actions_for(guardian, args)
+
+    if action_aliases.none? { |a| actions.has?(a) } || !respond_to?(perform_method)
+      raise InvalidAction.new(action_id, self.class)
+    end
+  end
 
   def update_flag_stats(status:, user_ids:)
     return if %i[agreed disagreed ignored].exclude?(status)

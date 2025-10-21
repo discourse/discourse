@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe Jobs::TopicsLocaleDetectionBackfill do
-  fab!(:topic) { Fabricate(:topic, locale: nil) }
   subject(:job) { described_class.new }
+
+  fab!(:topic) { Fabricate(:topic, locale: nil) }
 
   before do
     assign_fake_provider_to(:ai_default_llm_model)
@@ -43,8 +44,8 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     topic_3 = Fabricate(:topic, locale: nil)
 
     topic.update!(updated_at: 3.days.ago)
-    topic_2.update!(updated_at: 2.day.ago)
-    topic_3.update!(updated_at: 4.day.ago)
+    topic_2.update!(updated_at: 2.days.ago)
+    topic_3.update!(updated_at: 4.days.ago)
 
     SiteSetting.ai_translation_backfill_hourly_rate = 12
 
@@ -86,7 +87,7 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     fab!(:group)
     fab!(:group_pm_topic) { Fabricate(:private_message_topic, allowed_groups: [group]) }
 
-    fab!(:pm_topic) { Fabricate(:private_message_topic) }
+    fab!(:pm_topic, :private_message_topic)
 
     fab!(:public_topic) { Fabricate(:topic, locale: nil) }
 

@@ -18,7 +18,7 @@ module DiscourseNarrativeBot
         end
 
       @date = I18n.l(date, format: :date_only)
-      @discobot_user = ::DiscourseNarrativeBot::Base.new.discobot_user
+      @discobot_user = DiscourseNarrativeBot::Base.new.discobot_user
     end
 
     def new_user_track

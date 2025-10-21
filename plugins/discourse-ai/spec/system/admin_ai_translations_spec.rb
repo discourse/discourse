@@ -10,8 +10,14 @@ RSpec.describe "Admin AI translations", type: :system do
 
     allow(DiscourseAi::Translation).to receive(:has_llm_model?).and_return(true)
     allow(DiscourseAi::Translation::PostCandidates).to receive(
-      :get_completion_per_locale,
-    ).and_return({ total: 100, done: 50 })
+      :get_completion_all_locales,
+    ).and_return(
+      [
+        { done: 50, locale: "en", total: 100 },
+        { done: 50, locale: "fr", total: 100 },
+        { done: 50, locale: "es", total: 100 },
+      ],
+    )
 
     sign_in(admin)
   end
@@ -36,8 +42,8 @@ RSpec.describe "Admin AI translations", type: :system do
       expect(page).to have_css(".ai-localization-settings-button")
 
       # Verify chart container is present
-      expect(page).to have_css(".ai-translation__charts")
-      expect(page).to have_css(".ai-translation__chart")
+      expect(page).to have_css(".ai-translations__charts")
+      expect(page).to have_css(".ai-translations__chart")
     end
 
     it "navigates to translation settings when clicking the settings button" do
@@ -63,28 +69,98 @@ RSpec.describe "Admin AI translations", type: :system do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr|es"
+      SiteSetting.ai_translation_backfill_max_age_days = 30
 
       visit "/admin/plugins/discourse-ai/ai-translations"
     end
 
-    it "displays the disabled state message and configure button" do
-      expect(page).to have_content(
-        I18n.t("js.discourse_ai.translations.admin_actions.disabled_state.empty_label"),
-      )
-      expect(page).to have_css(".ai-translations__configure-button")
+    it "shows the toggle in off state and no chart" do
+      expect(page).to have_css(".d-toggle-switch")
 
-      # Verify chart is NOT shown
-      expect(page).to have_no_css(".ai-translation__chart")
+      expect(page).to have_no_css(".ai-translations__chart")
     end
 
-    it "navigates to translation settings when clicking the configure button" do
-      translation_id = DiscourseAi::Configuration::Module::TRANSLATION_ID
-      find(".ai-translations__configure-button").click
+    it "shows localization settings button" do
+      expect(page).to have_css(".ai-localization-settings-button")
+    end
+  end
 
-      # Verify we navigated to the correct route
-      expect(page).to have_current_path(
-        "/admin/plugins/discourse-ai/ai-features/#{translation_id}/edit",
-      )
+  describe "when locales are not configured" do
+    before do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.content_localization_supported_locales = ""
+      SiteSetting.ai_translation_backfill_max_age_days = 30
+
+      visit "/admin/plugins/discourse-ai/ai-translations"
+    end
+
+    it "displays the alert with locale selector" do
+      expect(page).to have_css(".alert.alert-info")
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.supported_locales"))
+      expect(page).to have_css(".multi-select")
+    end
+
+    it "allows adding and saving languages" do
+      find(".multi-select").click
+
+      find(".select-kit-row[data-value='en']").click
+
+      expect(page).to have_css(".setting-controls__ok")
+
+      find(".setting-controls__ok").click
+
+      expect(page).to have_no_css(".setting-controls__ok")
+
+      expect(SiteSetting.content_localization_supported_locales).to eq("en")
+    end
+  end
+
+  describe "translation toggle" do
+    before do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.content_localization_supported_locales = "en|fr"
+      SiteSetting.ai_translation_backfill_max_age_days = 30
+
+      allow(DiscourseAi::Translation::PostCandidates).to receive(
+        :get_completion_all_locales,
+      ).and_return([{ done: 50, locale: "en", total: 100 }, { done: 50, locale: "fr", total: 100 }])
+    end
+
+    it "displays the translation toggle" do
+      SiteSetting.ai_translation_enabled = false
+
+      visit "/admin/plugins/discourse-ai/ai-translations"
+
+      expect(page).to have_css(".ai-translations__toggle-container .d-toggle-switch")
+    end
+
+    it "shows charts when translations are enabled" do
+      SiteSetting.ai_translation_enabled = true
+      SiteSetting.ai_translation_backfill_hourly_rate = 10
+
+      visit "/admin/plugins/discourse-ai/ai-translations"
+
+      expect(page).to have_css(".ai-translations__toggle-container")
+      expect(page).to have_css(".ai-translations__charts")
+    end
+
+    it "hides charts when translations are disabled" do
+      SiteSetting.ai_translation_enabled = false
+
+      visit "/admin/plugins/discourse-ai/ai-translations"
+
+      expect(page).to have_css(".ai-translations__toggle-container")
+      expect(page).to have_no_css(".ai-translations__charts")
+    end
+
+    it "keeps toggle disabled when no locales are configured" do
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.content_localization_supported_locales = ""
+
+      visit "/admin/plugins/discourse-ai/ai-translations"
+
+      expect(page).to have_css(".d-toggle-switch__checkbox[disabled]")
     end
   end
 end

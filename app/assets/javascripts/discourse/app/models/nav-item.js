@@ -131,7 +131,7 @@ export default class NavItem extends EmberObject {
 
     const user = getOwnerWithFallback(this).lookup("service:current-user");
     if (user?.new_new_view_enabled) {
-      items = items.reject((item) => item === "unread");
+      items = items.filter((item) => item !== "unread");
     }
     const filterType = (args.filterMode || "").split("/").pop();
 
@@ -341,9 +341,9 @@ export function customNavItemHref(cb) {
 }
 
 export function clearNavItems() {
-  NavItem.customNavItemHrefs.clear();
-  NavItem.extraArgsCallbacks.clear();
-  NavItem.extraNavItemDescriptors.clear();
+  NavItem.customNavItemHrefs.length = 0;
+  NavItem.extraArgsCallbacks.length = 0;
+  NavItem.extraNavItemDescriptors.length = 0;
 }
 
 export function addNavItem(item) {

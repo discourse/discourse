@@ -7,9 +7,10 @@ require "json"
 Dir.chdir("#{__dir__}/..") # rubocop:disable Discourse/NoChdir because this is not part of the app
 
 CORE_NAMESPACES = {
+  "discourse/admin/*" => ["app/assets/javascripts/discourse/admin"],
   "discourse/*" => ["app/assets/javascripts/discourse/app"],
   "discourse/tests/*" => ["app/assets/javascripts/discourse/tests"],
-  "admin/*" => ["app/assets/javascripts/admin/addon"],
+  "admin/*" => ["app/assets/javascripts/discourse/admin"], # TODO: remove once all core code is migrated to new import path
   "pretty-text/*" => ["app/assets/javascripts/pretty-text/addon"],
   "select-kit/*" => ["app/assets/javascripts/select-kit/addon"],
   "float-kit/*" => ["app/assets/javascripts/float-kit/addon"],
@@ -42,13 +43,7 @@ def write_config(package_dir, extras: {})
     "include" => namespaces.flat_map { |ns, paths| paths.map { |p| relative(package_dir, p) } },
     "exclude" => [
       "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js", # Native class decorators - unsupported by ts/glint
-      "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs", # hbs`` tagged templates - https://github.com/typed-ember/glint/issues/705
-      "**/*.hbs",
     ],
-    "glint" => {
-      "environment" => %w[ember-loose ember-template-imports],
-      "checkStandaloneTemplates" => false,
-    },
   }
 
   output = <<~JSON

@@ -15,14 +15,15 @@
  */
 
 /**
- * @typedef {Object} MarkdownConversionHelpers
+ * @typedef {Object} EditorInstanceUtils
  * @property {(markdown: string) => import("prosemirror-model").Node} convertFromMarkdown
  * @property {(doc: import("prosemirror-model").Node) => string} convertToMarkdown
+ * @property {() => void} toggleRichEditor
  */
 
 /**
  * @typedef PluginParams
- * @property {typeof import("discourse/static/prosemirror/lib/plugin-utils") & MarkdownConversionHelpers} utils
+ * @property {typeof import("discourse/static/prosemirror/lib/plugin-utils") & EditorInstanceUtils} utils
  * @property {typeof import('prosemirror-model')} pmModel
  * @property {typeof import('prosemirror-view')} pmView
  * @property {typeof import('prosemirror-state')} pmState

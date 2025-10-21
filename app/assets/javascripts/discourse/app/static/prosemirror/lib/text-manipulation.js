@@ -1,9 +1,7 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
-import { service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import { liftListItem, sinkListItem } from "prosemirror-schema-list";
@@ -23,8 +21,6 @@ import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
 /** @implements {TextManipulation} */
 export default class ProsemirrorTextManipulation {
-  @service siteSettings;
-
   allowPreview = false;
 
   /** @type {import("prosemirror-model").Schema} */
@@ -105,21 +101,12 @@ export default class ProsemirrorTextManipulation {
   }
 
   autocomplete(options) {
-    if (this.siteSettings.floatkit_autocomplete_composer) {
-      return DAutocompleteModifier.setupAutocomplete(
-        getOwner(this),
-        this.view.dom,
-        this.autocompleteHandler,
-        options
-      );
-    } else {
-      // @ts-ignore
-      $(this.view.dom).autocomplete(
-        options instanceof Object
-          ? { textHandler: this.autocompleteHandler, ...options }
-          : options
-      );
-    }
+    return DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      this.view.dom,
+      this.autocompleteHandler,
+      options
+    );
   }
 
   applySurroundSelection(head, tail, exampleKey) {
@@ -233,23 +220,13 @@ export default class ProsemirrorTextManipulation {
     this.focus();
   }
 
+  /**
+   * Bridge method from pre-existing API to the new command system
+   *
+   * @returns {boolean} whether the command was applied
+   */
   formatCode() {
-    let command;
-
-    const selection = this.view.state.selection;
-
-    if (selection.$from.parent.type === this.schema.nodes.code_block) {
-      command = setBlockType(this.schema.nodes.paragraph);
-    } else if (
-      selection.$from.pos !== selection.$to.pos &&
-      selection.$from.parent === selection.$to.parent
-    ) {
-      command = toggleMark(this.schema.marks.code);
-    } else {
-      command = setBlockType(this.schema.nodes.code_block);
-    }
-
-    command?.(this.view.state, this.view.dispatch);
+    return this.commands.formatCode(this.view.state, this.view.dispatch);
   }
 
   emojiSelected(code) {

@@ -18,7 +18,7 @@ export default class GroupManageSaveButton extends Component {
   disabled = false;
   updateExistingUsers = null;
 
-  @computedOr("model.flair_icon", "model.flair_upload_id") hasFlair;
+  @computedOr("model.flair_icon", "model.flair_url") hasFlair;
 
   @discourseComputed("saving")
   savingText(saving) {

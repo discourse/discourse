@@ -2390,7 +2390,6 @@ th:
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
-      info: "ข้อมูล"
       tag_groups_info:
         other: "แท็กนี้เป็นของกลุ่มเหล่านี้: %{tag_groups}"
       category_restrictions:
@@ -2572,6 +2571,10 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
+        login:
+          sub_pages:
+            common_settings:
+              title: "การตั้งค่า"
         logo:
           form:
             mobile: "โทรศัพท์"
@@ -2898,12 +2901,12 @@ th:
         delete: "ลบ"
         delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{theme_name}"'
         color: "สี"
-        theme_owner: "ไม่สามารถแก้ไขได้ เป็นเจ้าของโดย:"
         email_templates:
           title: "อีเมล"
           subject: "หัวข้อ"
           revert: "ย้อนกลับการแก้ไข"
           revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
+          edit: "แก้ไข"
         component:
           all_filter: "ทั้งหมด"
           disabled_filter: "ปิดใช้งานแล้ว"

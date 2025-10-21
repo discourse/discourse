@@ -661,6 +661,13 @@ cs:
       resume: "Pokračovat"
       remove: "Odstranit"
       remove_confirmation: "Opravdu chcete tento koncept smazat?"
+      bulk_delete: "Smazat vybrané"
+      bulk_delete_confirmation: "Odstranění konceptů"
+      bulk_delete_message:
+        one: "Opravdu chcete smazat tento koncept?"
+        few: "Opravdu chcete smazat tyto %{count} koncepty?"
+        many: "Opravdu chcete smazat těchto %{count} konceptů?"
+        other: "Opravdu chcete smazat těchto %{count} konceptů?"
       new_topic: "Nový koncept tématu"
       new_private_message: "Nový koncept soukromé zprávy"
       edit_topic: "Upravit koncept tématu"
@@ -742,6 +749,7 @@ cs:
     review:
       show_more: "Zobrazit více"
       show_less: "Zobrazit méně"
+      back_to_queue: "Zpět do fronty"
       order_by: "Seřadit podle"
       date_filter: "Publikováno mezi"
       in_reply_to: "v odpovědi na"
@@ -1885,6 +1893,7 @@ cs:
         verify_identity: "Chcete-li pokračovat, ověřte prosím svoji totožnost."
         title: "Obnovení hesla"
         remove: "Odebrat heslo"
+        remove_disabled: "Účet potřebuje před odstraněním hesla alespoň jednu další metodu přihlášení (např. passkey nebo propojený externí účet)."
         remove_detail: "Váš účet již nebude přístupný pomocí hesla, dokud jej neobnovíte."
       second_factor_backup:
         title: "Dvoufaktorové záložní kódy"
@@ -2157,6 +2166,7 @@ cs:
         first_time_and_daily: "Poprvé, kdy příspěvek dostane Líbí se a denně"
         first_time: "Poprvé, kdy příspěvek dostane Líbí se"
         never: "Nikdy"
+      notify_on_linked_posts: "Upozornit, když někdo sdílí odkaz na jeden z mých příspěvků"
       email_previous_replies:
         title: "Zahrnout předchozí reakce na konci emailů"
         unless_emailed: "pokud již nebyly odeslány dříve"
@@ -2765,6 +2775,7 @@ cs:
       admin_not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit jako administrátor."
       resend_activation_email: "Klikněte sem pro zaslání aktivačního emailu."
       omniauth_disallow_totp: "Váš účet má povoleno dvoufaktorové ověřování. Přihlaste se prosím pomocí svého hesla."
+      works_with: "Funguje s"
       activate_account: "Aktivovat účet"
       resend_title: "Znovu odeslat aktivační email"
       change_email: "Změnit emailovou adresu"
@@ -2784,8 +2795,8 @@ cs:
         sr_title: "Přihlásit se přes Google"
       twitter:
         name: "X"
-        title: "Přihlásit se pomocí X"
-        sr_title: "Přihlásit se pomocí X"
+        title: "Přihlásit se přes X"
+        sr_title: "Přihlásit se přes X"
       instagram:
         name: "Instagram"
         title: "Přihlásit se přes Instagram"
@@ -2886,6 +2897,8 @@ cs:
         few: "%{count} témata v této kategorii"
         many: "%{count} témat v této kategorii"
         other: "%{count} témat v této kategorii"
+      read_only: "pouze pro čtení"
+      read_only_description: "Tato kategorie je pouze pro čtení, takže si ji pro toto téma nemůžete vybrat."
     timezone_input:
       ambiguous_ist: "Časový pásmo IST je nejednoznačné, vyberte prosím konkrétní časové pásmo (např. Asie/Kalkata)"
     select_kit:
@@ -3181,6 +3194,7 @@ cs:
         remove: "Odebrat odkaz"
         visit: "Otevřít odkaz na novém panelu"
         link_copied: "Odkaz zkopírován!"
+      unsupported_token: "Editor formátovaného textu nepodporuje všechny funkce použité v tomto příspěvku; přepínám vás na editor Markdown."
     notifications:
       tooltip:
         regular:
@@ -3550,6 +3564,7 @@ cs:
     topics:
       new_messages_marker: "poslední návštěva"
       bulk:
+        select: "Hromadný výběr"
         confirm: "Potvrdit"
         select_all: "Vybrat vše"
         clear_all: "Zrušit vše"
@@ -3713,8 +3728,6 @@ cs:
         many: "%{count} příspěvků v tématu"
         other: "%{count} příspěvků v tématu"
       create: "Nové téma"
-      create_disabled_category: "V této kategorii nemáte povoleno vytvářet témata"
-      create_disabled_tag: "Nemáte povoleno vytvářet témata s tímto štítkem"
       create_long: "Vytvořit nové téma"
       open_draft: "Otevřít koncept"
       private_message: "Vytvořit zprávu"
@@ -3996,6 +4009,8 @@ cs:
       reply:
         title: "Odpovědět"
         help: "Začít psát odpověď na toto téma"
+      footer_buttons:
+        region_label: "Akce tématu"
       share:
         title: "Sdílet téma"
         extended_title: "Sdílet odkaz"
@@ -4203,6 +4218,15 @@ cs:
       title: "Nejnovější příspěvky"
       empty: "Nejsou zde žádné příspěvky"
       aria_post_number: "%{title} - příspěvek #%{postNumber}"
+      bulk:
+        selected:
+          one: "Vybrán %{count} příspěvek"
+          few: "Vybrány %{count} příspěvky"
+          many: "Vybráno %{count} příspěvků"
+          other: "Vybráno %{count} příspěvků"
+        select_all: "Vybrat vše"
+        clear_all: "Zrušit vše"
+        actions: "Hromadné akce"
     post:
       confirm_delete: "Opravdu chcete tento příspěvek smazat?"
       quote_reply: "Citovat"
@@ -4303,6 +4327,7 @@ cs:
           edit: "Upravit"
           delete: "Smazat"
         add: "Přidat nový překlad"
+        manage: "Správa překladů (%{count} existujících)"
         view:
           one: "Zobrazit %{count} překlad"
           few: "Zobrazit %{count} překlady"
@@ -4338,10 +4363,8 @@ cs:
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
       cancel_composer:
-        confirm: "Co chcete udělat s vaším příspěvkem?"
+        confirm: "Chcete svůj příspěvek zahodit?"
         discard: "Zahodit"
-        save_draft: "Uložit koncept na později"
-        keep_editing: "Pokračovat v úpravách"
       via_email: "tento příspěvek byl přijat přes email"
       via_auto_generated_email: "tento příspěvek byl přijat přes automaticky generovaný email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"
@@ -4592,6 +4615,10 @@ cs:
       style: "Styly"
       background_color: "Barva"
       foreground_color: "Barva textu"
+      color_validations:
+        cant_be_empty: "nemůže být prázdný"
+        incorrect_length: "musí odpovídat formátu #RRGGBB nebo #RGB"
+        non_hexdecimal: "musí obsahovat pouze hexadecimální znaky (0-9, AF)"
       styles:
         type: "Styl"
         icon: "Ikona"
@@ -5209,7 +5236,7 @@ cs:
         few: "vyberte %{count} štítky z '%{name}'..."
         many: "vyberte %{count} štítků z '%{name}'..."
         other: "vyberte %{count} štítků z '%{name}'..."
-      info: "Informace"
+      info: "Zobrazit informace o štítku"
       default_info: "Tento štítek není omezen na žádné kategorie a nemá žádná synonyma."
       staff_info: "Chcete-li přidat omezení, vložte tento štítek do <a href=%{basePath}/tag_groups>skupiny štítků</a>."
       category_restricted: "Tento štítek je omezen na kategorie, ke kterým nemáte oprávnění k přístupu."
@@ -5250,6 +5277,7 @@ cs:
         many: "Jeho %{count} synonym bude také smazáno."
         other: "Jeho %{count} synonym bude také smazáno."
       edit_tag: "Upravit název a popis štítku"
+      edit: "Upravit tento štítek"
       description: "Popis (max. 1000 znaků)"
       sort_by: "Seřadit dle:"
       sort_by_count: "počtu"
@@ -5350,6 +5378,7 @@ cs:
     safe_mode:
       enabled: "Bezpečný režim je povolený, k jeho zakázání zavřete toto okno prohlížeče"
     theme_preview_notice: "V současné době prohlížíte náhled motivu, zavřete tuto kartu nebo okno prohlížeče a vraťte se do normální konfigurace webu."
+    theme_preview_failed: "Náhled motivu se nepodařilo zobrazit, protože neexistuje nebo k němu nemáte oprávnění."
     image_removed: "(obrázek odstraněn)"
     pause_notifications:
       title: "Ztlumit upozornění na…"
@@ -5587,6 +5616,8 @@ cs:
           light: "Světlý režim"
           dark: "Tmavý režim"
           auto: "Automaticky"
+          title: "Barevný režim"
+          aria_label: "Barevný režim, aktuálně %{mode}"
     welcome_topic_banner:
       title: "Vytvořte si uvítací téma"
       description: "Vaše uvítací téma je to první, co si noví členové přečtou. Považujte ho za svůj \"elevator pitch\" nebo \"poslání\". Dejte všem vědět, pro koho je tato komunita určena, co zde mohou očekávat a co byste chtěli, aby udělali jako první."
@@ -5839,9 +5870,16 @@ cs:
           title: "Lokalizace"
           header_description: "Nastavte uživatelské rozhraní vaší komunity z pohledu jazyka a dalších možností lokalizace"
           keywords: "locale|language|timezone|unicode|ltr|jazyk|časová|zóna"
-        login_and_authentication:
+        login:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
+          sub_pages:
+            common_settings:
+              title: "Nastavení"
+            authenticators:
+              title: "Přihlášení přes sociální sítě"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Nakonfigurujte loga a ikony používané na celém webu"
@@ -6134,6 +6172,7 @@ cs:
         help: "Motiv, který právě používáte, je <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Přejděte na <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>stránku konfigurace motivu</a> a změňte nastavení webu motivem nebo klikněte na odkazovaný motiv v tabulce níže a upravte jeho nastavení."
         filter: "Filtrujte nastavení motivu pomocí názvu nastavení, popisu nebo názvu motivu..."
         filter_no_results: "Vašemu filtru neodpovídá žádné nastavení"
+        site_setting_warning: 'Toto nastavení je spravováno výchozím motivem vašeho webu (%{defaultThemeName}). Můžete jej upravit na <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">stránce úprav motivu</a>.'
       search:
         modal_title: "Hledat vše v administraci"
         title: "Vyhledat"
@@ -6504,6 +6543,7 @@ cs:
               suspend: Pozastavit uživatelské účty.
               delete: Odstranit uživatelské účty.
               list: Získat seznam uživatelů.
+              create: Vytvoření nového uživatele.
             user_status:
               read: Číst stav uživatele.
               update: Aktualizovat stav uživatele.
@@ -6848,7 +6888,7 @@ cs:
             description: "Nastavení, která umožňují motivům mít větší kontrolu nad celým webem přepsáním malé podmnožiny základních nastavení."
           themes:
             title: "Motivy"
-            description: 'Motivy pro celý web, které změní celkový vzhled webu pro všechny uživatele.'
+            description: "Motivy pro celý web, které změní celkový vzhled webu pro všechny uživatele."
             themes_intro: "Chcete-li začít, nainstalujte si nový motiv, nebo si pomocí těchto zdrojů vytvořte vlastní od začátku."
             new_theme: "Nový motiv"
             back: "Zpět na motivy"
@@ -7008,6 +7048,7 @@ cs:
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Obnovení je aktuálně zakázáno. Chcete-li jej povolit, navštivte <a href='%{url}'>nastavení webu</a>."
+            is_disabled_title: "Obnovení je momentálně zakázáno. Chcete-li ho povolit, vyhledejte v nastavení webu „allow restore“."
             label: "Obnovit"
             title: "Obnovit zálohu"
             confirm: "Opravdu chcete obnovit tuto zálohu?"
@@ -7058,14 +7099,19 @@ cs:
         copy_to_clipboard: "Kopírovat do schránky"
         copied_to_clipboard: "Zkopírováno do schránky"
         copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"
-        theme_owner: "není editovatelné, vlastněno:"
+        theme_owner: "Vlastník:"
         email_templates:
           title: "Email"
           subject: "Předmět"
           multiple_subjects: "Tato šablona emailu má více předmětů."
+          multiple_bodies: "Tato šablona e-mailu má více těl."
           body: "Tělo"
           revert: "Vrátit změny"
           revert_confirm: "Opravdu chcete vrátit změny?"
+          search_templates: "Filtrovat podle názvu šablony..."
+          no_templates_found: "Vašim filtrům neodpovídají žádné šablony."
+          edit: "Upravit"
+          back: "Zpět na šablony"
         component:
           all_filter: "Vše"
           used_filter: "Použitý"
@@ -7296,6 +7342,8 @@ cs:
         schema:
           title: "Upravit nastavení %{name}"
           back_button: "Zpět na %{name}"
+          move_up: "Posunout nahoru"
+          move_down: "Posunout dolů"
           fields:
             required: "*povinné"
             groups:
@@ -7577,7 +7625,7 @@ cs:
             delete_post: "smazat příspěvek"
             impersonate: "impersonifikovat"
             anonymize_user: "anonymizovat uživatele"
-            roll_up: "sbalit zablokované IP"
+            roll_up: "sloučit boloky IP adres"
             change_category_settings: "změnit nastavení kategorie"
             delete_category: "smazat kategorii"
             create_category: "vytvořit kategorii"
@@ -7699,7 +7747,7 @@ cs:
             add: "Přidat"
             filter: "Vyhledat"
           roll_up:
-            text: "srolovat "
+            text: "Sloučit"
             title: "Vytvoří ban k přístupu do podsítě, pokud existují alespoň: 'min_ban_entries_for_roll_up' vstupy."
         search_logs:
           title: "Protokoly vyhledávání"
@@ -8113,6 +8161,7 @@ cs:
             cancel: "Zrušit"
         merging_user: "Sloučení uživatele…"
         merge_failed: "Při slučování uživatelů došlo k chybě."
+        delete_forbidden_because_staff: "Nelze smazat správce."
         delete_posts_forbidden_because_staff: "Nelze smazat všechny příspěvky administrátorů a moderátorů."
         delete_forbidden:
           one: "Uživatele nelze odstranit, pokud mají příspěvky. Než se pokusíte uživatele odstranit, smažte všechny příspěvky. (Příspěvky starší než %{count} den nelze smazat.)"
@@ -8270,6 +8319,10 @@ cs:
           title: "Zobrazit na kartě uživatele"
           enabled: "Zobrazeno na kartě uživatele"
           disabled: "Nezobrazeno na kartě uživatele"
+        show_on_signup:
+          title: "Zobrazit na registračním formuláři"
+          enabled: "Zobrazeno na registračním formuláři"
+          disabled: "Nezobrazeno na registračním formuláři"
         searchable:
           title: "Prohledávatelné"
           enabled: "Prohledávatelné"

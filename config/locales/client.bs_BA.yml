@@ -1136,7 +1136,7 @@ bs_BA:
         invalid: "To korisničko ime nije validno. Mora sadržavati samo brojeve i slova"
       add_email:
         title: "Dodaj e-poštu"
-        add: "Dodaj"
+        add: "Add"
       change_email:
         title: "Promijeni Email"
         taken: "Nažalost, taj email nije dostupan."
@@ -2943,7 +2943,6 @@ bs_BA:
       selector_remove_filter: "show all posts in this topic again."
       tags: "Oznake"
       choose_for_topic: "neobavezne oznake"
-      info: "Informacija"
       default_info: "Ovaj oznaka nije predodređena ni za jednu kategoriju i nema sinonime."
       category_restricted: "Ova oznaka je predodređena za kategorije na koje nemate pravo pristupa."
       synonyms: "Sinonimi"
@@ -3193,6 +3192,10 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Postavke"
         logo:
           form:
             mobile: "Mobilno"
@@ -3706,7 +3709,6 @@ bs_BA:
         copy_to_clipboard: "Kopirati u clipboard"
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
-        theme_owner: "Nije moguće uređivati, vlasništvo:"
         email_templates:
           title: "Email"
           subject: "Naslov"
@@ -3714,6 +3716,7 @@ bs_BA:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
+          edit: "Izmijeni"
         component:
           all_filter: "All"
           enabled_filter: "Omogućen"

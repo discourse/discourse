@@ -19,6 +19,7 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import {
   disableBodyScroll,
   enableBodyScroll,
@@ -90,9 +91,9 @@ export default class EmojiPicker extends Component {
   });
 
   addVisibleSections(sections) {
-    this.visibleSections = makeArray(this.visibleSections)
-      .concat(makeArray(sections))
-      .uniq();
+    this.visibleSections = uniqueItemsFromArray(
+      makeArray(this.visibleSections).concat(makeArray(sections))
+    );
   }
 
   get sections() {
@@ -168,6 +169,10 @@ export default class EmojiPicker extends Component {
 
   @action
   focusFilter(target) {
+    if (this.capabilities.isIOS) {
+      return;
+    }
+
     target?.focus({ preventScroll: true });
   }
 
@@ -262,7 +267,7 @@ export default class EmojiPicker extends Component {
 
       const nextEmoji = allEmojis()
         .filter((c) => c.offsetTop > event.target.offsetTop)
-        .findBy("offsetLeft", event.target.offsetLeft);
+        .find((value) => value.offsetLeft === event.target.offsetLeft);
 
       if (nextEmoji) {
         nextEmoji.focus();
@@ -283,7 +288,7 @@ export default class EmojiPicker extends Component {
       const prevEmoji = allEmojis()
         .reverse()
         .filter((c) => c.offsetTop < event.target.offsetTop)
-        .findBy("offsetLeft", event.target.offsetLeft);
+        .find((value) => value.offsetLeft === event.target.offsetLeft);
 
       if (prevEmoji) {
         prevEmoji.focus();

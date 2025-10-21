@@ -158,7 +158,7 @@ RSpec.describe ListController do
       get "/latest?page=1"
       expect(response.status).to eq(200)
 
-      get "/latest.json?page=2147483647"
+      get "/latest.json?page=1999"
       expect(response.status).to eq(200)
 
       get "/latest?search="

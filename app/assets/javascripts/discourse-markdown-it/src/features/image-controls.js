@@ -5,7 +5,12 @@ const SCALES = ["100", "75", "50"];
 let apiExtraButton = [];
 let apiExtraButtonAllowList = [];
 
-export function addImageWrapperButton(label, btnClass, icon = null) {
+export function addImageWrapperButton(
+  label,
+  btnClass,
+  icon = null,
+  includeCondition = null
+) {
   const markup = [];
   markup.push(`<span class="${btnClass}">`);
   if (icon) {
@@ -18,7 +23,10 @@ export function addImageWrapperButton(label, btnClass, icon = null) {
   markup.push(label);
   markup.push("</span>");
 
-  apiExtraButton.push(markup.join(""));
+  apiExtraButton.push({
+    markup: markup.join(""),
+    condition: includeCondition,
+  });
   apiExtraButtonAllowList.push(`span.${btnClass}`);
   apiExtraButtonAllowList.push(
     `svg[class=fa d-icon d-icon-${icon} svg-icon svg-string]`
@@ -182,7 +190,17 @@ function ruleWithImageControls(oldRule) {
       result += `</span>`;
       result += buildImageDeleteButton();
 
-      result += apiExtraButton.join("");
+      // Get upload URL from token for conditional button rendering
+      const origSrcIndex = token.attrIndex("data-orig-src");
+      const uploadUrl =
+        origSrcIndex !== -1 ? token.attrs[origSrcIndex][1] : null;
+
+      // Add API extra buttons with optional conditions
+      apiExtraButton.forEach((button) => {
+        if (!button.condition || button.condition(uploadUrl)) {
+          result += button.markup;
+        }
+      });
 
       result += "</span></span>";
 

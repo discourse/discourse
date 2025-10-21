@@ -16,8 +16,8 @@ describe DiscoursePostEvent::EventSerializer do
       Fabricate(:event, post: post, status: DiscoursePostEvent::Event.statuses[:private])
     end
 
-    fab!(:invitee_1) { Fabricate(:user) }
-    fab!(:invitee_2) { Fabricate(:user) }
+    fab!(:invitee_1, :user)
+    fab!(:invitee_2, :user)
     fab!(:group_1) do
       Fabricate(:group).tap do |g|
         g.add(invitee_1)

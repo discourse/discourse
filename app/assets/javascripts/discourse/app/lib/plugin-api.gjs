@@ -1,10 +1,3 @@
-// If you add any methods to the API ensure you bump up the version number
-// based on Semantic Versioning 2.0.0. Please update the changelog at
-// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
-// using the format described at https://keepachangelog.com/en/1.0.0/.
-
-export const PLUGIN_API_VERSION = "2.1.1";
-
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -18,7 +11,6 @@ import {
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
-import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
@@ -122,6 +114,7 @@ import {
 import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
+import { _addCategoryPropertyForSave } from "discourse/models/category";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -133,7 +126,6 @@ import {
   addSaveableUserOptionField,
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
@@ -245,9 +237,11 @@ function wrapWithErrorHandler(func, messageKey) {
   };
 }
 
+/**
+ * @typedef {PluginApi} PluginApi
+ */
 class PluginApi {
-  constructor(version, container) {
-    this.version = version;
+  constructor(container) {
     this.container = container;
     this.h = h;
   }
@@ -1914,7 +1908,9 @@ class PluginApi {
    * categorySortCriteria("votes");
    */
   addCategorySortCriteria(criteria) {
-    addCategorySortCriteria(criteria);
+    this.registerValueTransformer("category-sort-orders", ({ value }) => {
+      value.push(criteria);
+    });
   }
 
   /**
@@ -2352,7 +2348,9 @@ class PluginApi {
    *
    **/
   setNewCategoryDefaultColors(backgroundColor, textColor) {
-    setNewCategoryDefaultColors(backgroundColor, textColor);
+    this.registerValueTransformer("category-default-colors", () => {
+      return { backgroundColor, textColor };
+    });
   }
 
   /**
@@ -3239,20 +3237,25 @@ class PluginApi {
   /**
    * Adds a custom button to the composer preview's image wrapper
    *
+   * @param {string} label - The button label text
+   * @param {string} btnClass - The CSS class for the button
+   * @param {string} icon - The icon name (optional)
+   * @param {Function} fn - The click handler function
+   * @param {Function} includeCondition - Optional function that receives the image src and returns true if the button should be shown (optional)
    *
    * ```
    * api.addComposerImageWrapperButton(
    *   "My Custom Button",
-   *   "custom-button-class"
-   *   "lock"
-   *   (event) => { console.log("Custom button clicked", event)
-   * });
-   *
+   *   "custom-button-class",
+   *   "lock",
+   *   (event) => { console.log("Custom button clicked", event); },
+   *   (imageSrc) => imageSrc.endsWith('.jpg') // Only show for JPG images
+   * );
    * ```
    *
    */
-  addComposerImageWrapperButton(label, btnClass, icon, fn) {
-    addImageWrapperButton(label, btnClass, icon);
+  addComposerImageWrapperButton(label, btnClass, icon, fn, includeCondition) {
+    addImageWrapperButton(label, btnClass, icon, includeCondition);
     addApiImageWrapperButtonClickEvent(fn);
   }
 
@@ -3398,6 +3401,24 @@ class PluginApi {
     registerRichEditorExtension(extension);
   }
 
+  /**
+   * Registers a property that will be included when saving a category.
+   *
+   * This is useful for plugins that are adding additional parameters to the category
+   * and want to save the new property alongside the default category properties
+   * (all under the same save call), and are not using custom fields for that.
+   *
+   * ```
+   * api.registerCategorySaveProperty("property_one");
+   * api.registerCategorySaveProperty("property_two");
+   * ```
+   *
+   * @param {string} property - The name of the property to include when saving a category.
+   */
+  registerCategorySaveProperty(property) {
+    _addCategoryPropertyForSave(property);
+  }
+
   #deprecateModifyClass(className) {
     if (DEPRECATED_POST_STREAM_CLASSES.includes(className)) {
       deprecated(
@@ -3434,72 +3455,37 @@ class PluginApi {
   }
 }
 
-// from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
-function cmpVersions(a, b) {
-  let i, diff;
-  let regExStrip0 = /(\.0+)+$/;
-  let segmentsA = a.replace(regExStrip0, "").split(".");
-  let segmentsB = b.replace(regExStrip0, "").split(".");
-  let l = Math.min(segmentsA.length, segmentsB.length);
+function getPluginApi() {
+  const owner = getOwnerWithFallback(this);
+  let pluginApi = owner.lookup("plugin-api:main");
 
-  for (i = 0; i < l; i++) {
-    diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
-    if (diff) {
-      return diff;
-    }
-  }
-  return segmentsA.length - segmentsB.length;
-}
-
-function getPluginApi(version) {
-  version = version.toString();
-
-  if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
-    const owner = getOwnerWithFallback(this);
-    let pluginApi = owner.lookup("plugin-api:main");
-
-    if (!pluginApi) {
-      pluginApi = new PluginApi(version, owner);
-      owner.registry.register("plugin-api:main", pluginApi, {
-        instantiate: false,
-      });
-    } else {
-      // If we are re-using an instance, make sure the container is correct
-      pluginApi.container = owner;
-    }
-
-    // We are recycling the compatible object, but let's update to the higher version
-    if (pluginApi.version < version) {
-      pluginApi.version = version;
-    }
-
-    return pluginApi;
+  if (!pluginApi) {
+    pluginApi = new PluginApi(owner);
+    owner.registry.register("plugin-api:main", pluginApi, {
+      instantiate: false,
+    });
   } else {
-    // eslint-disable-next-line no-console
-    console.warn(consolePrefix(), `Plugin API v${version} is not supported`);
+    // If we are re-using an instance, make sure the container is correct
+    pluginApi.container = owner;
   }
+
+  return pluginApi;
 }
 
 /**
- * Executes the provided callback function with the `PluginApi` object if the specified API version is available.
+ * Executes the provided callback function with the `PluginApi` object.
  *
- * @param {number} version - The version of the API that the plugin is coded against.
- * @param {(api: PluginApi, opts: object) => void} apiCodeCallback - The callback function to execute if the API version is available
+ * @param {(api: PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
  * @param {object} [opts] - Optional additional options to pass to the callback function.
- * @returns {*} The result of the `callback` function, if executed
+ * @returns {any} The result of the `callback` function, if executed
  */
-export function withPluginApi(...args) {
-  let version, apiCodeCallback, opts;
-  if (typeof args[0] === "function") {
-    [version, apiCodeCallback, opts] = ["0", ...args];
-  } else {
-    [version, apiCodeCallback, opts] = args;
+export function withPluginApi(apiCodeCallback, opts) {
+  if (typeof arguments[0] === "string") {
+    // Old path. First argument is the version string. Silently ignore.
+    [, apiCodeCallback, opts] = arguments;
   }
 
   opts = opts || {};
 
-  const api = getPluginApi(version);
-  if (api) {
-    return apiCodeCallback(api, opts);
-  }
+  return apiCodeCallback(getPluginApi(), opts);
 }

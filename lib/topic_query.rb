@@ -16,13 +16,15 @@ class TopicQuery
       begin
         int = lambda { |x| Integer === x || (String === x && x.match?(/\A-?[0-9]+\z/)) }
         zero_up_to_max_int = lambda { |x| int.call(x) && x.to_i.between?(0, PG_MAX_INT) }
+        zero_up_to_max_page =
+          lambda { |x| int.call(x) && x.to_i.between?(0, SiteSetting.max_topic_query_page_param) }
         one_up_to_one_hundred = lambda { |x| int.call(x) && x.to_i.between?(1, 100) }
         array_or_string = lambda { |x| Array === x || String === x }
         string = lambda { |x| String === x }
         true_or_false = lambda { |x| x == true || x == false || x == "true" || x == "false" }
 
         {
-          page: zero_up_to_max_int,
+          page: zero_up_to_max_page,
           per_page: one_up_to_one_hundred,
           before: zero_up_to_max_int,
           bumped_before: zero_up_to_max_int,
@@ -164,7 +166,7 @@ class TopicQuery
           AND gu.user_id = #{@user.id.to_i}
         ",
           )
-          .where("gu.group_id IS NOT NULL")
+          .where.not(gu: { group_id: nil })
           .pluck(:group_id)
 
       target_group_ids = topic.topic_allowed_groups.pluck(:group_id)
@@ -242,7 +244,7 @@ class TopicQuery
     if DiscoursePluginRegistry.list_suggested_for_providers.any?
       DiscoursePluginRegistry.list_suggested_for_providers.each do |provider|
         suggested = provider.call(topic, pm_params, self)
-        builder.add_results(suggested[:result]) if suggested && !suggested[:result].blank?
+        builder.add_results(suggested[:result]) if suggested && suggested[:result].present?
       end
     end
 
@@ -325,7 +327,7 @@ class TopicQuery
 
   def list_read
     create_list(:read, unordered: true) do |topics|
-      topics.where("tu.last_visited_at IS NOT NULL").order("tu.last_visited_at DESC")
+      topics.where.not(tu: { last_visited_at: nil }).order("tu.last_visited_at DESC")
     end
   end
 
@@ -492,6 +494,40 @@ class TopicQuery
       SQL
 
     list.where(sql, user_id: user_id, tracking: NotificationLevels.all[:tracking])
+  end
+
+  def self.watching_first_post_filter(list, user)
+    return list.none if user.nil?
+
+    category_scope =
+      list.where(
+        "topics.category_id IN (
+          SELECT category_id
+          FROM category_users
+          WHERE user_id = ? AND notification_level = ?
+        )",
+        user.id,
+        CategoryUser.notification_levels[:watching_first_post],
+      )
+
+    return category_scope if !SiteSetting.tagging_enabled
+
+    tag_scope =
+      list.where(
+        "topics.id IN (
+          SELECT topic_id
+          FROM topic_tags
+          WHERE tag_id IN (
+            SELECT tag_id
+            FROM tag_users
+            WHERE user_id = ? AND notification_level = ?
+          )
+        )",
+        user.id,
+        TagUser.notification_levels[:watching_first_post],
+      )
+
+    category_scope.or(tag_scope)
   end
 
   def prioritize_pinned_topics(topics, options)
@@ -699,7 +735,7 @@ class TopicQuery
       )
     end
 
-    result.where("topics.category_id != ?", drafts_category_id)
+    result.where.not(topics: { category_id: drafts_category_id })
   end
 
   def apply_ordering(result, options = {})
@@ -878,21 +914,23 @@ class TopicQuery
         )
     end
 
-    # NOTE protect against SYM attack can be removed with Ruby 2.2
-    #
-    state = options[:state]
-    if @user && state && TopicUser.notification_levels.keys.map(&:to_s).include?(state)
-      level = TopicUser.notification_levels[state.to_sym]
-      result =
-        result.where(
-          "topics.id IN (
-                                SELECT topic_id
-                                FROM topic_users
-                                WHERE user_id = ? AND
-                                      notification_level = ?)",
-          @user.id,
-          level,
-        )
+    if state = options[:state]
+      # Special handling for watching_first_post - it's a category/tag level notification
+      # not a topic level notification, so we need to query CategoryUser and TagUser tables
+      if state == "watching_first_post"
+        result = TopicQuery.watching_first_post_filter(result, @user)
+      elsif @user && TopicUser.notification_levels.keys.map(&:to_s).include?(state)
+        result =
+          result.where(
+            "topics.id IN (
+              SELECT topic_id
+              FROM topic_users
+              WHERE user_id = ? AND notification_level = ?
+            )",
+            @user.id,
+            TopicUser.notification_levels[state.to_sym],
+          )
+      end
     end
 
     if before = options[:before]
@@ -1023,7 +1061,7 @@ class TopicQuery
       category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
       category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
 
-      list = list.where("categories.id NOT IN (?)", category_ids) if category_ids.present?
+      list = list.where.not(categories: { id: category_ids }) if category_ids.present?
     end
 
     list
@@ -1178,16 +1216,17 @@ class TopicQuery
       if user_ids.present? && group_ids.present?
         messages.where("ta2.topic_id IS NOT NULL OR tg2.topic_id IS NOT NULL")
       elsif user_ids.present?
-        messages.where("ta2.topic_id IS NOT NULL")
+        messages.where.not(ta2: { topic_id: nil })
       elsif group_ids.present?
-        messages.where("tg2.topic_id IS NOT NULL")
+        messages.where.not(tg2: { topic_id: nil })
       end
   end
 
   def messages_for_groups_or_user(group_ids)
     if group_ids.present?
-      base_messages.joins(
-        "
+      base_messages
+        .joins(
+          "
           LEFT JOIN (
             SELECT * FROM topic_allowed_groups _tg
             LEFT JOIN group_users gu
@@ -1196,20 +1235,23 @@ class TopicQuery
             WHERE #{DB.sql_fragment("gu.group_id IN (?)", group_ids)}
           ) tg ON topics.id = tg.topic_id
         ",
-      ).where("tg.topic_id IS NOT NULL")
+        )
+        .where.not(tg: { topic_id: nil })
     else
       messages_for_user
     end
   end
 
   def messages_for_user
-    base_messages.joins(
-      "
+    base_messages
+      .joins(
+        "
         LEFT JOIN topic_allowed_users ta
         ON topics.id = ta.topic_id
         AND ta.user_id = #{@user.id.to_i}
       ",
-    ).where("ta.topic_id IS NOT NULL")
+      )
+      .where.not(ta: { topic_id: nil })
   end
 
   def base_messages
@@ -1230,8 +1272,7 @@ class TopicQuery
     else
       excluded_topic_ids += Category.topic_ids.to_a
     end
-    result =
-      result.where("topics.id NOT IN (?)", excluded_topic_ids) unless excluded_topic_ids.empty?
+    result = result.where.not(topics: { id: excluded_topic_ids }) unless excluded_topic_ids.empty?
 
     result = remove_muted(result, @user, @options)
 

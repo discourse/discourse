@@ -101,18 +101,14 @@
       font-size: var(--font-up-1);
     }
 
-    .user-nav-messages-dropdown {
-      // manage long group names
-      max-width: 20vw;
-      min-width: 7em;
-
-      .select-kit-selected-name,
-      .name {
-        @include ellipsis;
+    .messages-dropdown-trigger {
+      @include viewport.from(sm) {
+        max-width: clamp(100px, 20vw, 200px);
       }
+      box-sizing: border-box;
 
-      .name {
-        min-width: 0;
+      .d-button-label {
+        @include ellipsis;
       }
     }
 
@@ -135,10 +131,6 @@
 
       @include viewport.until(xl) {
         font-size: var(--font-down-1);
-      }
-
-      span {
-        display: inline-flex;
       }
     }
 

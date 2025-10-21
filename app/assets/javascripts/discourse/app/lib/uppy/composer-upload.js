@@ -338,7 +338,9 @@ export default class UppyComposerUpload {
             })
           );
 
-          this.placeholderHandler.insert(file);
+          if (!file.meta.skipPlaceholder) {
+            this.placeholderHandler.insert(file);
+          }
 
           this.appEvents.trigger(
             `${this.composerEventPrefix}:upload-started`,
@@ -374,12 +376,14 @@ export default class UppyComposerUpload {
           file,
           upload.url,
 
-          // This callback is fired even if the thumbnail callnot be generated,
+          // This callback is fired even if the thumbnail cannot be generated,
           // e.g. if video_thumbnails_enabled is false or if the file is not a video.
           () => {
             this.#removeInProgressUpload(file.id);
 
-            this.placeholderHandler.success(file, markdown);
+            if (!file.meta.skipPlaceholder) {
+              this.placeholderHandler.success(file, markdown);
+            }
 
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
@@ -581,7 +585,10 @@ export default class UppyComposerUpload {
             name: file.name,
             type: file.type,
             data: file,
-            meta: { pasted: opts.pasted },
+            meta: {
+              pasted: opts.pasted,
+              skipPlaceholder: opts.skipPlaceholder,
+            },
           };
         })
       );

@@ -51,6 +51,11 @@ export default class Post extends Component {
   @tracked repliesAbove;
   @tracked repliesBelow = new TrackedArray();
 
+  /**
+   * @type {boolean}
+   */
+  @tracked isTogglingReplies = false;
+
   decoratorState = new TrackedMap();
 
   addEventListeners = modifier((element, [listeners]) => {
@@ -316,9 +321,19 @@ export default class Post extends Component {
 
   @action
   async toggleReplies() {
-    return this.filteredRepliesView
-      ? await this.toggleFilteredRepliesView()
-      : await this.toggleRepliesBelow();
+    if (this.isTogglingReplies) {
+      return;
+    }
+
+    this.isTogglingReplies = true;
+
+    try {
+      return this.filteredRepliesView
+        ? await this.toggleFilteredRepliesView()
+        : await this.toggleRepliesBelow();
+    } finally {
+      this.isTogglingReplies = false;
+    }
   }
 
   @action
@@ -476,7 +491,7 @@ export default class Post extends Component {
                     </section>
                   </div>
                 {{/if}}
-                {{#if (and (not @post.deletedAt) @post.notice)}}
+                {{#if (PostNotice.shouldRender @post this.siteSettings)}}
                   <div class="post__row row">
                     <PostNotice @post={{@post}} />
                   </div>
@@ -585,6 +600,7 @@ export default class Post extends Component {
                           @rebakePost={{@rebakePost}}
                           @recoverPost={{@recoverPost}}
                           @repliesShown={{this.repliesShown}}
+                          @repliesButtonDisabled={{this.isTogglingReplies}}
                           @replyToPost={{@replyToPost}}
                           @share={{this.share}}
                           @showFlags={{@showFlags}}

@@ -227,6 +227,7 @@ RSpec.describe DiscourseAi::Personas::Persona do
         DiscourseAi::Personas::Artist,
         DiscourseAi::Personas::Creative,
         DiscourseAi::Personas::DiscourseHelper,
+        DiscourseAi::Personas::Discover,
         DiscourseAi::Personas::GithubHelper,
         DiscourseAi::Personas::Researcher,
         DiscourseAi::Personas::SettingsExplorer,
@@ -239,6 +240,7 @@ RSpec.describe DiscourseAi::Personas::Persona do
         DiscourseAi::Personas::Artist,
         DiscourseAi::Personas::Creative,
         DiscourseAi::Personas::DiscourseHelper,
+        DiscourseAi::Personas::Discover,
         DiscourseAi::Personas::GithubHelper,
         DiscourseAi::Personas::Researcher,
         DiscourseAi::Personas::SettingsExplorer,
@@ -257,6 +259,7 @@ RSpec.describe DiscourseAi::Personas::Persona do
         DiscourseAi::Personas::SettingsExplorer,
         DiscourseAi::Personas::Creative,
         DiscourseAi::Personas::DiscourseHelper,
+        DiscourseAi::Personas::Discover,
         DiscourseAi::Personas::GithubHelper,
       )
 
@@ -269,13 +272,14 @@ RSpec.describe DiscourseAi::Personas::Persona do
         DiscourseAi::Personas::SettingsExplorer,
         DiscourseAi::Personas::Creative,
         DiscourseAi::Personas::DiscourseHelper,
+        DiscourseAi::Personas::Discover,
         DiscourseAi::Personas::GithubHelper,
       )
     end
   end
 
   describe "#craft_prompt" do
-    fab!(:vector_def) { Fabricate(:embedding_definition) }
+    fab!(:vector_def, :embedding_definition)
 
     before do
       Group.refresh_automatic_groups!
@@ -304,7 +308,7 @@ RSpec.describe DiscourseAi::Personas::Persona do
     context "when RAG is running with a question consolidator" do
       let(:consolidated_question) { "what is the time in france?" }
 
-      fab!(:llm_model) { Fabricate(:fake_model) }
+      fab!(:llm_model, :fake_model)
 
       fab!(:custom_ai_persona) do
         Fabricate(

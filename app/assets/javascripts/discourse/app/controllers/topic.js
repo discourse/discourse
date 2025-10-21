@@ -23,6 +23,7 @@ import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summar
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -299,9 +300,8 @@ export default class TopicController extends Controller {
           this.model.removeBookmark(post.bookmark_id);
         });
     }
-    const forTopicBookmark = this.model.bookmarks.findBy(
-      "bookmarkable_type",
-      "Topic"
+    const forTopicBookmark = this.model.bookmarks.find(
+      (b) => b.bookmarkable_type === "Topic"
     );
     if (
       forTopicBookmark?.auto_delete_preference ===
@@ -554,7 +554,7 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
-    const firstLoadedPost = postStream.get("posts.firstObject");
+    const firstLoadedPost = postStream.posts[0];
 
     if (post.get && post.get("post_number") === 1) {
       return;
@@ -571,7 +571,7 @@ export default class TopicController extends Controller {
     const { post, refresh } = event;
 
     const postStream = this.get("model.postStream");
-    const lastLoadedPost = postStream.get("posts.lastObject");
+    const lastLoadedPost = postStream.posts.at(-1);
 
     if (
       lastLoadedPost &&
@@ -1072,9 +1072,11 @@ export default class TopicController extends Controller {
   selectReplies(post) {
     ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
       const replyIds = replies.map((r) => r.id);
-      this.selectedPostIds = [
-        ...new Set([...this.selectedPostIds, post.id, ...replyIds]),
-      ];
+      this.selectedPostIds = uniqueItemsFromArray([
+        ...this.selectedPostIds,
+        post.id,
+        ...replyIds,
+      ]);
       this._forceRefreshPostStream();
     });
   }
@@ -1405,7 +1407,9 @@ export default class TopicController extends Controller {
 
   _jumpToPostNumber(postNumber) {
     const postStream = this.get("model.postStream");
-    const post = postStream.get("posts").findBy("post_number", postNumber);
+    const post = postStream
+      .get("posts")
+      .find((item) => item.post_number === postNumber);
 
     if (post) {
       DiscourseURL.routeTo(
@@ -1512,7 +1516,7 @@ export default class TopicController extends Controller {
       this.model.set("bookmarks", []);
     }
 
-    const bookmark = this.model.bookmarks.findBy("id", data.id);
+    const bookmark = this.model.bookmarks.find((b) => b.id === data.id);
     if (!bookmark) {
       this.model.bookmarks.pushObject(Bookmark.create(data));
     } else {
@@ -1532,9 +1536,8 @@ export default class TopicController extends Controller {
     }
 
     if (this.model.bookmarkCount === 1) {
-      const topicBookmark = this.model.bookmarks.findBy(
-        "bookmarkable_type",
-        "Topic"
+      const topicBookmark = this.model.bookmarks.find(
+        (b) => b.bookmarkable_type === "Topic"
       );
       if (topicBookmark) {
         return this._modifyTopicBookmark(topicBookmark);
@@ -1587,20 +1590,19 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed(
-    "selectedPostIds",
-    "model.postStream.posts",
-    "selectedPostIds.[]",
-    "model.postStream.posts.[]"
-  )
-  selectedPosts(selectedPostIds, loadedPosts) {
-    return selectedPostIds
+  get selectedPosts() {
+    const loadedPosts = this.model.postStream.posts;
+
+    return this.selectedPostIds
       .map((id) => loadedPosts.find((p) => p.id === id))
       .filter((post) => post !== undefined);
   }
 
-  @discourseComputed("selectedPostsCount", "selectedPosts", "selectedPosts.[]")
-  selectedPostsUsername(selectedPostsCount, selectedPosts) {
+  @dependentKeyCompat
+  get selectedPostsUsername() {
+    const selectedPosts = this.selectedPosts;
+    const selectedPostsCount = this.selectedPostsCount;
+
     if (selectedPosts.length < 1 || selectedPostsCount > selectedPosts.length) {
       return undefined;
     }
@@ -1634,23 +1636,14 @@ export default class TopicController extends Controller {
     return isMegaTopic ? false : !selectedAllPosts;
   }
 
-  @discourseComputed(
-    "currentUser.staff",
-    "selectedPostsCount",
-    "selectedAllPosts",
-    "selectedPosts",
-    "selectedPosts.[]"
-  )
-  canDeleteSelected(
-    isStaff,
-    selectedPostsCount,
-    selectedAllPosts,
-    selectedPosts
-  ) {
+  @dependentKeyCompat
+  get canDeleteSelected() {
+    const isStaff = this.currentUser?.staff;
+
     return (
-      selectedPostsCount > 0 &&
-      ((selectedAllPosts && isStaff) ||
-        selectedPosts.every((p) => p.can_delete))
+      this.selectedPostsCount > 0 &&
+      ((this.selectedAllPosts && isStaff) ||
+        this.selectedPosts.every((p) => p.can_delete))
     );
   }
 
@@ -1680,17 +1673,12 @@ export default class TopicController extends Controller {
     );
   }
 
-  @discourseComputed(
-    "selectedPostsCount",
-    "selectedPostsUsername",
-    "selectedPosts",
-    "selectedPosts.[]"
-  )
-  canMergePosts(selectedPostsCount, selectedPostsUsername, selectedPosts) {
+  @dependentKeyCompat
+  get canMergePosts() {
     return (
-      selectedPostsCount > 1 &&
-      selectedPostsUsername !== undefined &&
-      selectedPosts.every((p) => p.can_delete)
+      this.selectedPostsCount > 1 &&
+      this.selectedPostsUsername !== undefined &&
+      this.selectedPosts.every((p) => p.can_delete)
     );
   }
 
@@ -1831,13 +1819,16 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
+    const currentPostNumber = topic.get("currentPost");
+    const opts =
+      currentPostNumber > 1 ? { post_number: currentPostNumber } : {};
 
     if (data.reload_topic) {
-      topic.reload().then(() => {
-        this.send("postChangedRoute", topic.get("post_number") || 1);
+      topic.reload(opts).then(() => {
         this.appEvents.trigger("header:update-topic", topic);
         if (data.refresh_stream) {
-          postStream.refresh();
+          this.send("postChangedRoute", currentPostNumber || 1);
+          postStream.refresh({ nearPost: currentPostNumber });
         }
       });
 

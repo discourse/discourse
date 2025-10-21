@@ -72,6 +72,7 @@ export default class SecondFactorAddTotp extends Component {
           return;
         }
         this.args.model.markDirty();
+        this.args.model.secondFactor.set("second_factor_enabled", true);
         this.errorMessage = null;
         this.args.closeModal();
         if (this.args.model.enforcedSecondFactor) {

@@ -118,15 +118,23 @@ export default class SecurityController extends Controller {
     "model.no_password",
     "siteSettings",
     "model.user_passkeys",
-    "model.associated_accounts"
+    "model.associated_accounts",
+    "model.can_remove_password"
   )
   canRemovePassword(
     isAnonymous,
     noPassword,
     siteSettings,
     userPasskeys,
-    associatedAccounts
+    associatedAccounts,
+    canRemove
   ) {
+    // Hint returned from staff-info controller that
+    // works even if staff hasn't revealed e-mails.
+    if (canRemove) {
+      return true;
+    }
+
     if (
       isAnonymous ||
       noPassword ||

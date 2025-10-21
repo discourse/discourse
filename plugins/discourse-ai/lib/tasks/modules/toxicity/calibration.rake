@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 def classify(content)
-  ::DiscourseAi::Inference::DiscourseClassifier.perform!(
+  DiscourseAi::Inference::DiscourseClassifier.perform!(
     "#{SiteSetting.ai_toxicity_inference_service_api_endpoint}/api/v1/classify",
     SiteSetting.ai_toxicity_inference_service_api_model,
     content,
@@ -17,7 +17,7 @@ task "ai:toxicity:calibration_stats", [:set_size] => [:environment] do |_, args|
       .where("post_actions.user_id > 0")
       .includes(:post, :user)
       .where(user: { admin: false, moderator: false })
-      .where("posts.raw IS NOT NULL")
+      .where.not(posts: { raw: nil })
       .order(created_at: :desc)
       .limit(args[:set_size])
       .pluck(:raw)
@@ -29,7 +29,7 @@ task "ai:toxicity:calibration_stats", [:set_size] => [:environment] do |_, args|
       .where("post_actions.user_id > 0")
       .includes(:post, :user)
       .where(user: { admin: false, moderator: false })
-      .where("posts.raw IS NOT NULL")
+      .where.not(posts: { raw: nil })
       .order(created_at: :desc)
       .limit(args[:set_size])
       .pluck(:raw)

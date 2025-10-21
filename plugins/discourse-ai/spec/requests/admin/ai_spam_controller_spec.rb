@@ -219,7 +219,7 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
   end
 
   describe "#test" do
-    fab!(:spam_post) { Fabricate(:post) }
+    fab!(:spam_post, :post)
     fab!(:spam_post2) { Fabricate(:post, topic: spam_post.topic, raw: "something special 123") }
     fab!(:setting) do
       AiModerationSetting.create(

@@ -10,7 +10,6 @@ class DiscourseId::Register
   step :store_challenge_token
   step :register_with_challenge
   step :store_credentials
-  step :enable_discourse_id
 
   private
 
@@ -24,9 +23,12 @@ class DiscourseId::Register
     uri = URI("#{discourse_id_url}/challenge")
     use_ssl = Rails.env.production? || uri.scheme == "https"
 
+    body = { domain: Discourse.current_hostname }
+    body[:path] = Discourse.base_path if Discourse.base_path.present?
+
     request = Net::HTTP::Post.new(uri)
     request.content_type = "application/json"
-    request.body = { domain: Discourse.current_hostname }.to_json
+    request.body = body.to_json
 
     begin
       response = Net::HTTP.start(uri.hostname, uri.port, use_ssl:) { |http| http.request(request) }
@@ -46,6 +48,10 @@ class DiscourseId::Register
 
     if json["domain"] != Discourse.current_hostname
       return fail!(error: "Domain mismatch in challenge response")
+    end
+
+    if Discourse.base_path.present? && json["path"] != Discourse.base_path
+      return fail!(error: "Path mismatch in challenge response")
     end
 
     context[:token] = json["token"]
@@ -92,11 +98,7 @@ class DiscourseId::Register
     SiteSetting.discourse_id_client_secret = data["client_secret"]
   end
 
-  def enable_discourse_id
-    SiteSetting.enable_discourse_id = true
-  end
-
   def discourse_id_url
-    SiteSetting.discourse_id_provider_url.presence || "https://id.discourse.com"
+    @url ||= SiteSetting.discourse_id_provider_url.presence || "https://id.discourse.com"
   end
 end

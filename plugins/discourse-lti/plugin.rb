@@ -22,7 +22,7 @@ after_initialize do
   # Check for invite URL in LTI custom fields
   # If present, and this is a new user, redirect the user to the invite url.
   # Otherwise, continue as normal
-  on(:after_auth) do |authenticator, auth_result, session|
+  on(:after_auth) do |authenticator, auth_result, session, cookies, request|
     next if !(authenticator.name.to_sym == :lti)
     next if auth_result.user # Only redirect new users to invite
 
@@ -33,11 +33,11 @@ after_initialize do
       )
     next if uaa.nil?
 
-    custom_data = uaa.extra.dig("raw_info", ::DiscourseLti::CUSTOM_DATA_CLAIM)
+    custom_data = uaa.extra.dig("raw_info", DiscourseLti::CUSTOM_DATA_CLAIM)
     next if custom_data.nil?
 
     invite = nil
-    ::DiscourseLti::DISCOURSE_INVITE_KEYS.each { |k| break if invite = custom_data[k] }
+    DiscourseLti::DISCOURSE_INVITE_KEYS.each { |k| break if invite = custom_data[k] }
     next if invite.nil?
 
     parsed =
@@ -52,18 +52,18 @@ after_initialize do
     route = Discourse.route_for(parsed.path)
     next if !(route[:controller] == "invites" && route[:action] == "show")
 
-    session[:destination_url] = parsed.to_s
+    request.server_session[:destination_url] = parsed.to_s
   end
 
   on(:after_auth) do |authenticator, auth_result, session, cookies|
     next if !(authenticator.name.to_sym == :lti)
     if !auth_result.user && cookies["_t"] # User (probably) already logged in
-      raise ::DiscourseLti::ShouldReconnect.new
+      raise DiscourseLti::ShouldReconnect.new
     end
   end
 
   reloadable_patch do
-    ::Users::OmniauthCallbacksController.rescue_from(::DiscourseLti::ShouldReconnect) do
+    ::Users::OmniauthCallbacksController.rescue_from(DiscourseLti::ShouldReconnect) do
       session[:auth_reconnect] = true
       complete
     end
@@ -73,4 +73,4 @@ end
 require_relative "lib/discourse_lti/lti_omniauth_strategy"
 require_relative "lib/discourse_lti/lti_authenticator"
 
-auth_provider authenticator: ::DiscourseLti::LtiAuthenticator.new
+auth_provider authenticator: DiscourseLti::LtiAuthenticator.new

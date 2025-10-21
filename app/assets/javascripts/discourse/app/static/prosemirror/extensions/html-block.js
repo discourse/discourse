@@ -4,11 +4,11 @@ const extension = {
     html_block: {
       attrs: { params: { default: "html" } },
       group: "block",
+      createGapCursor: true,
       content: "text*",
       code: true,
       defining: true,
       marks: "",
-      isolating: true,
       selectable: true,
       parseDOM: [{ tag: "pre.html-block", preserveWhitespace: "full" }],
       toDOM() {

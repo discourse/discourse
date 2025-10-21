@@ -171,14 +171,17 @@ export class DiscourseDeprecationWorkflow {
   /**
    * Checks if a deprecation should throw an error.
    * @param {string} deprecationId - ID of the deprecation
-   * @param {boolean} [includeUnhandled=false] - Whether to throw for unhandled deprecations
+   * @param {boolean} [includeUnsilenced=false] - Whether to throw for unsilenced deprecations
    * @return {boolean} True if deprecation should throw
    */
-  shouldThrow(deprecationId, includeUnhandled = false) {
+  shouldThrow(deprecationId, includeUnsilenced = false) {
     const workflow = this.#find(deprecationId);
-    return (
-      (!workflow && includeUnhandled) || !!workflow?.handler?.includes("throw")
-    );
+
+    if (includeUnsilenced) {
+      return !this.shouldSilence(deprecationId);
+    }
+
+    return !!workflow?.handler?.includes("throw");
   }
 
   /**
@@ -253,6 +256,78 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   {
     handler: "silence",
     matchId: "deprecate-import-meta-from-ember",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.[]",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.any",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.clear",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.compact",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.filterBy",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.findBy",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.get",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.isAny",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.mapBy",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.reject",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.rejectBy",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.replace",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.set",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.sortBy",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.toArray",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.uniq",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.uniqBy",
+  },
+  {
+    handler: "log",
+    matchId: "discourse.native-array-extensions.without",
   },
   {
     handler: ["silence", "counter"],

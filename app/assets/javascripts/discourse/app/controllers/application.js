@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -10,19 +11,30 @@ import { isTesting } from "discourse/lib/environment";
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
-  @service router;
+  // eslint-disable-next-line discourse/no-unused-services
+  @service router; // used in the route template
   @service footer;
-  @service header;
   @service sidebarState;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
 
-  showSidebar = this.calculateShowSidebar();
   sidebarDisabledRouteOverride = false;
   navigationMenuQueryParamOverride = null;
   showSiteHeader = true;
   showSkipToContent = true;
+
+  @tracked _showSidebar;
+
+  // Some themes may need to override the default value provided by `calculateShowSidebar` using viewport properties.
+  // Accessing the value in a getter prevents static viewport initialization warnings.
+  get showSidebar() {
+    return this._showSidebar ?? this.calculateShowSidebar();
+  }
+
+  set showSidebar(value) {
+    this._showSidebar = value;
+  }
 
   get showFooter() {
     return this.footer.showFooter;

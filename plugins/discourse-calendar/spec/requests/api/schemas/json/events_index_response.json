@@ -1,0 +1,103 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "category_id": {
+            "type": ["integer", "null"]
+          },
+          "name": {
+            "type": ["string", "null"]
+          },
+          "recurrence": {
+            "type": ["string", "null"]
+          },
+          "recurrence_until": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "starts_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "ends_at": {
+            "type": ["string", "null"],
+            "format": "date-time"
+          },
+          "rrule": {
+            "type": "string"
+          },
+          "show_local_time": {
+            "type": "boolean"
+          },
+          "timezone": {
+            "type": ["string", "null"]
+          },
+          "duration": {
+            "type": "string",
+            "pattern": "^\\d{2}:\\d{2}:\\d{2}$"
+          },
+          "post": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "post_number": {
+                "type": "integer"
+              },
+              "url": {
+                "type": "string"
+              },
+              "category_slug": {
+                "type": "string"
+              },
+              "topic": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tags_descriptions": {
+                    "type": "object"
+                  }
+                },
+                "required": ["id", "title", "tags", "tags_descriptions"]
+              }
+            },
+            "required": ["id", "post_number", "url", "category_slug", "topic"]
+          }
+        },
+        "required": [
+          "id",
+          "category_id",
+          "starts_at",
+          "ends_at",
+          "show_local_time",
+          "timezone",
+          "post"
+        ]
+      }
+    }
+  },
+  "required": ["events"]
+}

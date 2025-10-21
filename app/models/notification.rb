@@ -11,8 +11,8 @@ class Notification < ActiveRecord::Base
 
   MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
 
-  validates_presence_of :data
-  validates_presence_of :notification_type
+  validates :data, presence: true
+  validates :notification_type, presence: true
 
   scope :unread, lambda { where(read: false) }
   scope :recent,
@@ -290,7 +290,7 @@ class Notification < ActiveRecord::Base
     elsif user.user_option.like_notification_frequency ==
           UserOption.like_notification_frequency_type[:never]
       like_types.each do |notification_type|
-        notifications = notifications.where("notification_type <> ?", notification_type)
+        notifications = notifications.where.not(notification_type:)
       end
     end
     notifications.to_a
@@ -308,9 +308,7 @@ class Notification < ActiveRecord::Base
       [
         Notification.types[:liked],
         Notification.types[:liked_consolidated],
-      ].each do |notification_type|
-        notifications = notifications.where("notification_type <> ?", notification_type)
-      end
+      ].each { |notification_type| notifications = notifications.where.not(notification_type:) }
     end
 
     notifications = notifications.to_a

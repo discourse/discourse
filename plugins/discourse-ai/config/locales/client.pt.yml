@@ -7,24 +7,56 @@
 pt:
   admin_js:
     admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "Permite a procura com IA"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
       dashboard:
+        emotion:
+          title: "Emoção"
         reports:
           filters:
+            group_by:
+              label: "Agrupar por"
             sort_by:
               label: "Ordenar por"
+            tag:
+              label: "Etiqueta"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_tool: "Criar ferramenta de IA"
+            update_ai_tool: "Atualizar ferramenta de IA"
+            delete_ai_tool: "Eliminar ferramenta de IA"
   js:
     discourse_automation:
       scriptables:
         llm_report:
           fields:
+            sender:
+              label: "Remetente"
+            receivers:
+              label: "Destinatários"
             topic_id:
               label: "ID do Tópico"
             title:
               label: "Título"
+            days:
+              label: "Dias"
+            instructions:
+              label: "Instruções"
+            model:
+              label: "Modelo"
             categories:
               label: "Categorias"
             tags:
               label: "Etiquetas"
+            debug_mode:
+              label: "Modo de Depuração"
         llm_triage:
           fields:
             category:
@@ -34,10 +66,18 @@ pt:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      title: "IA"
+      default_llm:
+        title: "Modelo de LLM Predefinido"
       features:
-        back: "Retroceder"
+        short_title: "Funcionalidades"
+        back: "Voltar"
         disabled: "(desativado)"
         groups: "Grupos:"
+        llm:
+          one: "LLM:"
+          other: "LLMs:"
+        no_llm: "Nenhum LLM selecionado"
         no_persona: "Não definido"
         no_groups: "Nenhuma"
         edit: "Editar"
@@ -45,29 +85,69 @@ pt:
           one: "(%{count} mais)"
           other: "(%{count} mais)"
         collapse_list: "(mostrar menos)"
+        bot:
+          bot: "Robô de Conversação"
+          name: "Robô"
+          description: "Um robô de conversação pode responder a perguntas e assistir os utilizadores nas mensagens pessoais, fórum e na conversação"
+        nav:
+          configured: "Configurada"
+          unconfigured: "Não configurada"
         filters:
           all: "Todos"
           reset: "Repor"
+        summarization:
+          name: "Resumos"
+          topic_summaries: "Resumos de tópico"
         search:
           name: "Pesquisar"
+          discoveries: "Descobertas"
+        embeddings:
+          hyde: "HyDE"
+        discord:
+          name: "Integração do Discord"
+          search: "Procura do Discord"
+        ai_helper:
+          name: "Assistente"
+          description: "Auxilia os utilizadores na interação com a comunidade, como criar tópicos, escrever artigos, e ler conteúdo"
+          proofread: Rever texto
+          title_suggestions: "Sugerir títulos"
+          explain: "Explicar"
+          illustrate_post: "Ilustrar artigo"
+          smart_dates: "Datas inteligentes"
+          translate: "Traduzir"
+          markdown_tables: "Gerar tabela de Marcação"
+          custom_prompt: "Janela personalizada"
+          image_caption: "Imagens de legenda"
+          translator: "Tradutor"
+        translation:
+          name: "Tradução"
+          description: "Traduz o conteúdo para os idiomas suportados"
+          locale_detector: "Detetor de idioma"
         spam:
-          name: "Spam"
+          name: "Lixo Eletrónico"
+          inspect_posts: "Inspecionar publicações"
       modals:
         select_option: "Selecione uma opção..."
       translations:
         title: "Traduções"
+        stats:
+          title: "Estatísticas da tradução"
         progress_chart:
           bar_done:
             one: "%{count} mensagem"
             other: "%{count} mensagens"
       spam:
         short_title: "Spam"
+        title: "Configurar manipulação do lixo eletrónico"
+        select_llm: "Selecionar LLM"
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:
           spam: "Spam"
       usage:
         summary: "Resumo"
+        feature: "Funcionalidade"
+        all_features: "Todas as funcionalidades"
         username: "Nome de Utilizador"
         total_requests: "Total de pedidos"
         periods:
@@ -91,6 +171,10 @@ pt:
             key_title: "Chave"
         filters:
           reset: "Repor"
+          all_features: "Qualquer funcionalidade"
+        features_list:
+          one: "Funcionalidade:"
+          other: "Funcionalidades:"
       rag:
         uploads:
           title: "Uploads"
@@ -130,6 +214,8 @@ pt:
           ai_spam: "Spam"
         next:
           title: "Próximo"
+        tests:
+          invalid_config: "Corrija primeiro os seguintes erros na sua configuração:"
         providers:
           google: "Google"
           fake: "Personalizar"

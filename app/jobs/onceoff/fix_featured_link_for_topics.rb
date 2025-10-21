@@ -4,7 +4,7 @@ module Jobs
   class FixFeaturedLinkForTopics < ::Jobs::Onceoff
     def execute_onceoff(args)
       Topic
-        .where("featured_link IS NOT NULL")
+        .where.not(featured_link: nil)
         .find_each do |topic|
           featured_link = topic.featured_link
 

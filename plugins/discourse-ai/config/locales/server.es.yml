@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 es:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "Ventana de contexto"
   discourse_automation:
     ai:
       flag_types:
@@ -24,8 +28,8 @@ es:
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
         flagged_post: |
           <div>Respuesta del modelo:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Activada por la regla<a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a></b>
+          <p>%{llm_response}</p>
+          <b>Activada por la regla<a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a></b>
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"
@@ -68,7 +72,6 @@ es:
     composer_ai_helper_allowed_groups: "Los usuarios de estos grupos verán el botón del asistente de IA en el compositor."
     ai_helper_allowed_in_pm: "Activar el asistente de IA del compositor en los MP."
     ai_helper_model: "Modelo que se utilizará para el asistente de IA."
-    ai_helper_custom_prompts_allowed_groups: "Los usuarios de estos grupos verán la opción de instrucción personalizada en el ayudante de IA."
     ai_helper_automatic_chat_thread_title_delay: "Retraso en minutos antes de que el ayudante de la IA establezca automáticamente el título del hilo del chat."
     ai_helper_automatic_chat_thread_title: "Establecer automáticamente los títulos de los hilos del chat en función de su contenido."
     ai_helper_illustrate_post_model: "Modelo a utilizar para la función ilustrar publicación del ayudante de IA del compositor"
@@ -112,8 +115,6 @@ es:
     ai_discord_search_mode: "Selecciona el modo de búsqueda que se utilizará para la búsqueda de Discord"
     ai_discord_search_persona: "La persona que se usará para la búsqueda de Discord"
     ai_discord_allowed_guilds: "Gremios (servidores) de Discord en los que el bot puede buscar"
-    ai_bot_enable_dedicated_ux: "Permite la interfaz de bot en pantalla completa, en lugar de un MP"
-    ai_translation_enabled: "Activa la función de traducción de IA"
     ai_translation_model: "El modelo que se usará para la traducción. Este modelo debe ser compatible con la traducción. Las personas pueden anular este ajuste."
     ai_translation_backfill_limit_to_public_content: "Al activar esta función, solo se traducirá el contenido de las categorías públicas. Al desactivarla, también se enviará a traducir el contenido de los mensajes privados grupales y las categorías privadas."
     ai_translation_backfill_max_age_days: "La antigüedad máxima de una publicación y tema que se traducirá. Las publicaciones y temas más antiguos no se traducirán. 0 desactiva el relleno, pero no desactivará la traducción de publicaciones nuevas."

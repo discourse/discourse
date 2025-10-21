@@ -112,7 +112,7 @@ export default class CardContentsBase extends Component {
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
-        .addEventListener("click", this._cardClickHandler);
+        ?.addEventListener("click", this._cardClickHandler);
     });
 
     this.appEvents.on(
@@ -279,7 +279,7 @@ export default class CardContentsBase extends Component {
     _cardClickListenerSelectors.forEach((selector) => {
       document
         .querySelector(selector)
-        .removeEventListener("click", this._cardClickHandler);
+        ?.removeEventListener("click", this._cardClickHandler);
     });
 
     this.appEvents.off(

@@ -165,6 +165,11 @@
     color: var(--primary);
     cursor: pointer;
   }
+
+  &__meta-topic-title {
+    display: flex;
+    gap: 0 var(--space-2);
+  }
 }
 
 .review-item__status {
@@ -473,5 +478,28 @@
 
   textarea {
     resize: vertical;
+  }
+}
+
+.reviewable-topic-link {
+  display: flex;
+  flex-direction: column;
+
+  &__title-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 var(--space-2);
+
+    &-tags {
+      display: flex;
+      align-items: center;
+    }
   }
 }

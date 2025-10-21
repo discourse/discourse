@@ -26,8 +26,8 @@ export default class PostFlag extends Flag {
     });
 
     // "message user" option should be at the top
-    const notifyUserIndex = flagsAvailable.indexOf(
-      flagsAvailable.filterBy("name_key", "notify_user")[0]
+    const notifyUserIndex = flagsAvailable.findIndex(
+      (flag) => flag.name_key === "notify_user"
     );
 
     if (notifyUserIndex !== -1) {
@@ -45,9 +45,8 @@ export default class PostFlag extends Flag {
   }
 
   postActionFor(flagModal) {
-    return flagModal.args.model.flagModel.actions_summary.findBy(
-      "id",
-      flagModal.selected.id
+    return flagModal.args.model.flagModel.actions_summary.find(
+      (item) => item.id === flagModal.selected.id
     );
   }
 }

@@ -39,6 +39,19 @@
 
     h3 {
       margin-bottom: var(--space-1);
+
+      a {
+        color: var(--primary);
+
+        &:visited {
+          color: currentcolor;
+        }
+
+        &:hover,
+        &:focus {
+          color: var(--tertiary);
+        }
+      }
     }
 
     .color-palette__theme-link {

@@ -11,7 +11,7 @@ RSpec.describe DiscourseAi::Completions::Llm do
   end
 
   fab!(:user)
-  fab!(:model) { Fabricate(:llm_model) }
+  fab!(:model, :llm_model)
 
   before { enable_current_plugin }
 

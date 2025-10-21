@@ -1787,7 +1787,7 @@ fr:
         invalid: "Ce nom d'utilisateur est invalide. Il ne doit être composé que de lettres et de chiffres."
       add_email:
         title: "Ajouter une adresse e-mail"
-        add: "ajouter"
+        add: "Ajouter"
       change_email:
         title: "Modifier l'adresse e-mail"
         taken: "Nous sommes désolés, cette adresse e-mail est indisponible."
@@ -2614,6 +2614,7 @@ fr:
       topic_count:
         one: "%{count} sujet dans cette catégorie"
         other: "%{count} sujets dans cette catégorie"
+      read_only: "lecture seule"
     timezone_input:
       ambiguous_ist: "L'heure IST est ambiguë. Veuillez sélectionner un fuseau horaire spécifique (p. ex., Asie/Calcutta)"
     select_kit:
@@ -3339,8 +3340,6 @@ fr:
         one: "%{count} message dans le sujet"
         other: "%{count} messages dans le sujet"
       create: "Créer un sujet"
-      create_disabled_category: "Vous n'êtes pas autorisé(e) à créer des sujets dans cette catégorie"
-      create_disabled_tag: "Vous n'avez pas l'autorisation de créer des sujets avec cette étiquette"
       create_long: "Créer un nouveau sujet"
       open_draft: "Ouvrir le brouillon"
       private_message: "Démarrer un message direct"
@@ -3781,6 +3780,9 @@ fr:
       title: "Dernières publications"
       empty: "Il n'y a aucune publication"
       aria_post_number: "%{title} - publication #%{postNumber}"
+      bulk:
+        clear_all: "Tout effacer"
+        actions: "Actions groupées"
     post:
       confirm_delete: "Voulez-vous vraiment supprimer ce message ?"
       quote_reply: "Citer"
@@ -3892,10 +3894,7 @@ fr:
         attachment_upload_not_allowed_for_new_user: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas envoyer de fichiers."
         attachment_download_requires_login: "Nous sommes désolés, vous devez être connecté(e) pour télécharger une pièce jointe."
       cancel_composer:
-        confirm: "Que souhaitez-vous faire de votre message ?"
         discard: "Abandonner"
-        save_draft: "Enregistrer le brouillon pour plus tard"
-        keep_editing: "Continuer à rédiger"
       via_email: "ce message est arrivé par e-mail"
       via_auto_generated_email: "ce message est arrivé via un e-mail généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
@@ -4128,6 +4127,8 @@ fr:
       style: "Styles"
       background_color: "Couleur"
       foreground_color: "Couleur du texte"
+      color_validations:
+        cant_be_empty: "ne peut pas être vide"
       styles:
         type: "Style"
         icon: "Icône"
@@ -4689,7 +4690,6 @@ fr:
       choose_for_topic_required_group:
         one: "sélectionnez %{count} étiquette de « %{name} »…"
         other: "sélectionnez %{count} étiquettes de « %{name} »…"
-      info: "Détails"
       default_info: "Cette étiquette n'est pas limitée à une catégorie et n'a aucun synonyme."
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
@@ -5277,9 +5277,12 @@ fr:
           title: "Localisation"
           header_description: "Configurez la langue de l'interface de votre communauté et d'autres options de localisation pour vos membres"
           keywords: "paramètre régional|langue|fuseau horaire|Unicode|gauche à droite"
-        login_and_authentication:
+        login:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
+          sub_pages:
+            common_settings:
+              title: "Paramètres"
         logo:
           title: "Logo"
           header_description: "Configurez les logos et les icônes utilisés sur votre site"
@@ -6446,7 +6449,6 @@ fr:
         copy_to_clipboard: "Copier dans le presse-papier"
         copied_to_clipboard: "Copié dans le presse-papier"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
-        theme_owner: "Non modifiable, appartient à :"
         email_templates:
           title: "E-mail"
           subject: "Objet"
@@ -6454,6 +6456,7 @@ fr:
           body: "Corps"
           revert: "Annuler les changements"
           revert_confirm: "Voulez-vous vraiment annuler vos changements ?"
+          edit: "Modifier"
         component:
           all_filter: "Tout"
           used_filter: "Utilisé"
@@ -6675,6 +6678,8 @@ fr:
         schema:
           title: "Modifier le paramètre %{name}"
           back_button: "Retour à %{name}"
+          move_up: "Déplacer vers le haut"
+          move_down: "Déplacer vers le bas"
           fields:
             required: "*requis"
             groups:
