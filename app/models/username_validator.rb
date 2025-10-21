@@ -158,7 +158,7 @@ class UsernameValidator
   def username_plugin_validations
     return unless errors.empty?
 
-    DiscoursePluginRegistry.apply_modifier(:username_validator_extras, self.errors, self)
+    DiscoursePluginRegistry.apply_modifier(:username_validations, self.errors, self)
   end
 
   def username_grapheme_clusters
