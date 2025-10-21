@@ -15,6 +15,7 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
   end
 
   before do
+    allow(SiteSetting).to receive(:mandatory_values).and_return({})
     SiteSetting.reserved_usernames = "admin|moderator|system*|test_*"
     SiteSetting.here_mention = "here"
   end
@@ -135,9 +136,15 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
         expect(username).to eq("test_foo_user_1")
       end
 
-      it "avoids here mention" do
+      it "avoids `here` mention" do
         username = finder.find_available_username("here")
         expect(username).to eq("here_1")
+      end
+
+      it "handles empty `here` mentions" do
+        SiteSetting.here_mention = ""
+        username = finder.find_available_username("here")
+        expect(username).to eq("here")
       end
 
       it "uses fallback for wildcards ending with star when suffixes cannot help" do
@@ -249,28 +256,34 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
   end
 
   describe "suffix caching" do
+    subject(:finder) { described_class.new(shared_data, suffix_cache_size: 2) }
+
     it "maintains suffix counter per base name" do
-      finder.find_available_username("john")
+      2.times { finder.find_available_username("john") }
       finder.find_available_username("jane")
 
-      expect(finder.find_available_username("john")).to eq("john_1")
+      expect(finder.find_available_username("john")).to eq("john_2")
       expect(finder.find_available_username("jane")).to eq("jane_1")
     end
 
     it "handles suffix cache overflow correctly" do
-      # Create new finder with limited cache size
-      limited_cache = ::LruRedux::Cache.new(2)
-      finder_with_limited_cache = described_class.new(shared_data)
-      allow(finder_with_limited_cache).to receive(:instance_variable_get).with(
-        :@last_suffixes,
-      ).and_return(limited_cache)
+      2.times do
+        finder.find_available_username("user1")
+        finder.find_available_username("user2")
+      end
+      finder.find_available_username("user3")
 
-      finder_with_limited_cache.find_available_username("user1")
-      finder_with_limited_cache.find_available_username("user2")
-      finder_with_limited_cache.find_available_username("user3")
+      expect(finder.find_available_username("user2")).to eq("user2_2")
+      expect(finder.find_available_username("user1")).to eq("user1_2")
+    end
 
-      # Cache should still work, oldest entry evicted
-      expect(finder_with_limited_cache.find_available_username("user2")).to eq("user2_1")
+    it "still avoids taken names and uses correct suffix in new instance" do
+      finder = described_class.new(shared_data)
+      3.times { finder.find_available_username("john") }
+
+      finder2 = described_class.new(shared_data)
+      username = finder2.find_available_username("john")
+      expect(username).to eq("john_3")
     end
   end
 
@@ -281,7 +294,7 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
 
       finder2 = described_class.new(shared_data)
       username = finder2.find_available_username("john")
-      expect(username).not_to eq("john")
+      expect(username).to eq("john_1")
     end
 
     it "shares used group names via shared_data" do
@@ -290,18 +303,7 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
 
       finder2 = described_class.new(shared_data)
       group_name = finder2.find_available_group_name("admins")
-      expect(group_name).not_to eq("admins")
-    end
-
-    it "does not share suffix cache across instances" do
-      finder1 = described_class.new(shared_data)
-      finder1.find_available_username("john")
-      finder1.find_available_username("john")
-
-      finder2 = described_class.new(shared_data)
-      # New instance starts suffix counter fresh, but still avoids taken names
-      username = finder2.find_available_username("john")
-      expect(username).to eq("john_1")
+      expect(group_name).to eq("admins_1")
     end
   end
 

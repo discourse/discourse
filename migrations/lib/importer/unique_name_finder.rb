@@ -5,16 +5,23 @@ module Migrations::Importer
   class UniqueNameFinder
     MAX_LENGTH = ::UsernameValidator::MAX_CHARS
     MAX_ATTEMPTS = 500
-    SUFFIX_CACHE_SIZE = 1000
-    TRUNCATION_CACHE_SIZE = 500
+    DEFAULT_SUFFIX_CACHE_SIZE = 1000
+    DEFAULT_TRUNCATION_CACHE_SIZE = 500
 
-    private_constant :MAX_LENGTH, :MAX_ATTEMPTS, :SUFFIX_CACHE_SIZE, :TRUNCATION_CACHE_SIZE
+    private_constant :MAX_LENGTH,
+                     :MAX_ATTEMPTS,
+                     :DEFAULT_SUFFIX_CACHE_SIZE,
+                     :DEFAULT_TRUNCATION_CACHE_SIZE
 
-    def initialize(shared_data)
-      @used_usernames_lower = shared_data ? shared_data.load(:usernames) : Set.new
-      @used_group_names_lower = shared_data ? shared_data.load(:group_names) : Set.new
-      @last_suffixes = ::LruRedux::Cache.new(SUFFIX_CACHE_SIZE)
-      @truncations = ::LruRedux::Cache.new(TRUNCATION_CACHE_SIZE)
+    def initialize(
+      shared_data,
+      suffix_cache_size: DEFAULT_SUFFIX_CACHE_SIZE,
+      truncation_cache_size: DEFAULT_TRUNCATION_CACHE_SIZE
+    )
+      @used_usernames_lower = shared_data&.load(:usernames) || Set.new
+      @used_group_names_lower = shared_data&.load(:group_names) || Set.new
+      @last_suffixes = ::LruRedux::Cache.new(suffix_cache_size)
+      @truncations = ::LruRedux::Cache.new(truncation_cache_size)
 
       @fallback_username =
         UserNameSuggester.sanitize_username(I18n.t("fallback_username")).presence ||
