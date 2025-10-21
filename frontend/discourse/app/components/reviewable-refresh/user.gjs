@@ -93,7 +93,7 @@ export default class ReviewableUser extends Component {
                   href={{getUrl
                     (concat
                       "/admin/users/"
-                      this.reviewable.user_id
+                      this.reviewable.target_id
                       "/"
                       this.reviewable.payload.username
                     )
