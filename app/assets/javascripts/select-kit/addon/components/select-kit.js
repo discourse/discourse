@@ -1090,10 +1090,11 @@ export default class SelectKit extends Component {
             return state;
           }
 
+          let { x } = state.elements.reference.getBoundingClientRect();
           if (strategy === "fixed") {
             return { x: 10, y: state.y };
           } else {
-            return { x: -state.rects.reference.x + 10, y: state.y };
+            return { x: -x + 10, y: state.y };
           }
         },
       },
