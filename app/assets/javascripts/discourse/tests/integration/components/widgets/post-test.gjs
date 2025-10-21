@@ -12,6 +12,7 @@ module("Integration | Component | Widget | post", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
     this.siteSettings.post_menu_hidden_items = "";
 
     const store = getOwner(this).lookup("service:store");

@@ -6,6 +6,10 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Widget | avatar-flair", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
+  });
+
   test("avatar flair with an icon", async function (assert) {
     const args = {
       flair_url: "bars",

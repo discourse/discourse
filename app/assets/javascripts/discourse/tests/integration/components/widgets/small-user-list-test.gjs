@@ -7,6 +7,10 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Widget | small-user-list", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
+  });
+
   test("renders avatars and support for unknown", async function (assert) {
     const args = {
       users: [

@@ -132,6 +132,8 @@ module("Integration | Component | Widget | render-glimmer", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
+
     DemoComponent.eventLog = [];
     DemoWidget.actionTriggered = false;
     this.registry.register("widget:demo-widget", DemoWidget);

@@ -271,6 +271,7 @@ export default function setupTests(config) {
   let app;
   QUnit.testStart(function (ctx) {
     let settings = resetSettings();
+
     resetThemeSettings();
 
     app = createApplication(config, settings);
