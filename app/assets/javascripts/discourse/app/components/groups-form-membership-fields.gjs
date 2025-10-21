@@ -3,7 +3,7 @@ import Component, { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { not, readOnly } from "@ember/object/computed";
+import { not, or as computedOr, readOnly } from "@ember/object/computed";
 import ExpandingTextArea from "discourse/components/expanding-text-area";
 import GroupFlairInputs from "discourse/components/group-flair-inputs";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -20,6 +20,7 @@ export default class GroupsFormMembershipFields extends Component {
 
   @readOnly("site.can_associate_groups") showAssociatedGroups;
   @not("model.automatic") canEdit;
+  @computedOr("model.flair_icon", "model.flair_url") hasFlair;
 
   trustLevelOptions = [
     {
@@ -61,6 +62,27 @@ export default class GroupsFormMembershipFields extends Component {
   disablePublicSetting(visibility_level, allowMembershipRequests) {
     visibility_level = parseInt(visibility_level, 10);
     return allowMembershipRequests || visibility_level > 1;
+  }
+
+  @discourseComputed(
+    "model.visibility_level",
+    "model.primary_group",
+    "hasFlair"
+  )
+  privateGroupNameNotice(visibilityLevel, isPrimaryGroup, hasFlair) {
+    if (visibilityLevel === 0) {
+      return;
+    }
+
+    if (isPrimaryGroup) {
+      return i18n("admin.groups.manage.alert.primary_group", {
+        group_name: this.model.name,
+      });
+    } else if (hasFlair) {
+      return i18n("admin.groups.manage.alert.flair_group", {
+        group_name: this.model.name,
+      });
+    }
   }
 
   @computed("model.emailDomains")
@@ -233,6 +255,13 @@ export default class GroupsFormMembershipFields extends Component {
       <div class="control-group">
         <GroupFlairInputs @model={{this.model}} />
       </div>
+      {{#if this.privateGroupNameNotice}}
+        <div class="row">
+          <div class="alert alert-warning alert-private-group-name">
+            {{this.privateGroupNameNotice}}
+          </div>
+        </div>
+      {{/if}}
     {{/if}}
   </template>
 }
