@@ -255,35 +255,23 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
     end
   end
 
-  describe "suffix caching" do
-    subject(:finder) { described_class.new(shared_data, suffix_cache_size: 2) }
+  describe "suffix extraction" do
+    let(:usernames) { Set.new(%w[john john_1 john_2 john_5000 jane_10]) }
 
-    it "maintains suffix counter per base name" do
-      2.times { finder.find_available_username("john") }
-      finder.find_available_username("jane")
-
-      expect(finder.find_available_username("john")).to eq("john_2")
-      expect(finder.find_available_username("jane")).to eq("jane_1")
+    it "extracts maximum suffix for each base name from existing names" do
+      expect(finder.find_available_username("john")).to eq("john_5001")
+      expect(finder.find_available_username("jane")).to eq("jane")
+      expect(finder.find_available_username("jane")).to eq("jane_11")
     end
 
-    it "handles suffix cache overflow correctly" do
-      2.times do
-        finder.find_available_username("user1")
-        finder.find_available_username("user2")
-      end
-      finder.find_available_username("user3")
-
-      expect(finder.find_available_username("user2")).to eq("user2_2")
-      expect(finder.find_available_username("user1")).to eq("user1_2")
+    it "starts at _1 when no existing suffixes" do
+      expect(finder.find_available_username("bob")).to eq("bob")
+      expect(finder.find_available_username("bob")).to eq("bob_1")
     end
 
-    it "still avoids taken names and uses correct suffix in new instance" do
-      finder = described_class.new(shared_data)
-      3.times { finder.find_available_username("john") }
-
-      finder2 = described_class.new(shared_data)
-      username = finder2.find_available_username("john")
-      expect(username).to eq("john_3")
+    it "handles base names without suffixes" do
+      usernames.add("alice")
+      expect(finder.find_available_username("alice")).to eq("alice_1")
     end
   end
 
@@ -365,8 +353,17 @@ RSpec.describe Migrations::Importer::UniqueNameFinder do
   end
 
   describe "edge cases" do
-    it "uses fallback after MAX_ATTEMPTS" do
-      # Fill up all possible names for "test"
+    it "uses suffix extraction instead of fallback for dense sequences" do
+      # Create dense sequence: foo, foo_1, ..., foo_2000
+      usernames.add("foo")
+      2000.times { |i| usernames.add("foo_#{i + 1}") }
+
+      username = finder.find_available_username("foo")
+      expect(username).to eq("foo_2001")
+    end
+
+    it "uses fallback after MAX_ATTEMPTS when suffix extraction cannot help" do
+      # Fill up all possible names for "test" beyond what suffix extraction can handle
       501.times { |i| usernames.add("test#{i > 0 ? "_#{i}" : ""}") }
 
       username = finder.find_available_username("test")

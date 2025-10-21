@@ -5,29 +5,22 @@ module Migrations::Importer
   class UniqueNameFinder
     MAX_LENGTH = ::UsernameValidator::MAX_CHARS
     MAX_ATTEMPTS = 500
-    DEFAULT_SUFFIX_CACHE_SIZE = 1000
-    DEFAULT_TRUNCATION_CACHE_SIZE = 500
+    TRUNCATION_CACHE_SIZE = 500
 
-    private_constant :MAX_LENGTH,
-                     :MAX_ATTEMPTS,
-                     :DEFAULT_SUFFIX_CACHE_SIZE,
-                     :DEFAULT_TRUNCATION_CACHE_SIZE
+    private_constant :MAX_LENGTH, :MAX_ATTEMPTS, :TRUNCATION_CACHE_SIZE
 
-    def initialize(
-      shared_data,
-      suffix_cache_size: DEFAULT_SUFFIX_CACHE_SIZE,
-      truncation_cache_size: DEFAULT_TRUNCATION_CACHE_SIZE
-    )
+    def initialize(shared_data)
       @used_usernames_lower = shared_data&.load(:usernames) || Set.new
       @used_group_names_lower = shared_data&.load(:group_names) || Set.new
-      @last_suffixes = ::LruRedux::Cache.new(suffix_cache_size)
-      @truncations = ::LruRedux::Cache.new(truncation_cache_size)
+      @last_suffixes = {}
+      @truncations = ::LruRedux::Cache.new(TRUNCATION_CACHE_SIZE)
 
       @fallback_username =
         UserNameSuggester.sanitize_username(I18n.t("fallback_username")).presence ||
           UserNameSuggester::LAST_RESORT_USERNAME
       @fallback_group_name = "group"
 
+      extract_max_suffixes_from_existing_names
       build_reserved_username_cache
     end
 
@@ -70,7 +63,7 @@ module Migrations::Importer
       name = UserNameSuggester.sanitize_username(name)
 
       if name.present?
-        name = truncate_to(name, max_length: MAX_LENGTH)
+        name = truncate(name, max_length: MAX_LENGTH)
         name_lower = name.downcase
 
         # Early return if name is available without suffix
@@ -93,7 +86,7 @@ module Migrations::Importer
       original_name_lower = name_lower
 
       if (truncation_length = @truncations[original_name_lower])
-        name = truncate_to(name, max_length: truncation_length)
+        name = truncate(name, max_length: truncation_length)
         name_lower = name.downcase
       end
 
@@ -104,7 +97,7 @@ module Migrations::Importer
 
       while attempts < MAX_ATTEMPTS
         if (overflow = name_candidate_lower.length - MAX_LENGTH) > 0
-          name = truncate_by(name, chars: overflow)
+          name = truncate(name, max_length: name.length - overflow)
           break if name.length == 0
 
           name_lower = name.downcase
@@ -131,10 +124,10 @@ module Migrations::Importer
     end
 
     def next_suffix(name_lower)
-      (@last_suffixes.fetch(name_lower) || 0) + 1
+      @last_suffixes.fetch(name_lower, 0) + 1
     end
 
-    def truncate_to(name, max_length:)
+    def truncate(name, max_length:)
       return name if name.length <= max_length
 
       result = +""
@@ -147,8 +140,20 @@ module Migrations::Importer
       result
     end
 
-    def truncate_by(name, chars:)
-      truncate_to(name, max_length: name.length - chars)
+    def extract_max_suffixes_from_existing_names
+      extract_max_suffixes(@used_usernames_lower)
+      extract_max_suffixes(@used_group_names_lower)
+    end
+
+    def extract_max_suffixes(name_set)
+      name_set.each do |name_lower|
+        if (match = name_lower.match(/\A(.+)_(\d+)\z/))
+          base_name = match[1]
+          suffix = match[2].to_i
+          current_max = @last_suffixes.fetch(base_name, 0)
+          @last_suffixes[base_name] = suffix if suffix > current_max
+        end
+      end
     end
 
     def build_reserved_username_cache
