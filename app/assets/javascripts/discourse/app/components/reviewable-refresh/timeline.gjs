@@ -184,6 +184,7 @@ export default class ReviewableTimeline extends Component {
     }
 
     this.reviewableNotes = [...this.reviewableNotes, noteData];
+    this.args.reviewable.reviewable_notes = this.reviewableNotes;
   }
 
   /**
