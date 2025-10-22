@@ -11,7 +11,6 @@ import {
   callOnRenderCallback,
   handleAutocompleteResultClick,
 } from "discourse/lib/autocomplete-result-helpers";
-import userSearch from "discourse/lib/user-search";
 import { formatUsername } from "discourse/lib/utilities";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
 
@@ -28,16 +27,7 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
  * @param {Function} onRender - Optional callback function triggered after component renders
  */
 export default class UserAutocompleteResults extends Component {
-  // Static properties for use with DAutocompleteModifier
   static TRIGGER_KEY = "@";
-
-  static transformComplete(user) {
-    return user.username || user.name;
-  }
-
-  static dataSource(term, options = {}) {
-    return userSearch({ term, ...options });
-  }
 
   @action
   handleResultClick(result, index, event) {

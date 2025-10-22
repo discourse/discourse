@@ -8,7 +8,7 @@ import getURL from "discourse/lib/get-url";
 import { emojiUnescape } from "discourse/lib/text";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import { userPath } from "discourse/lib/url";
-import { validateSearchResult } from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
@@ -254,10 +254,9 @@ export function applySearchAutocomplete(inputElement, siteSettings, owner) {
         autoSelectFirstSuggestion: false,
         transformComplete: (v) => {
           validateSearchResult(v);
-          return UserAutocompleteResults.transformComplete(v);
+          return v.username || v.name;
         },
-        dataSource: (term) =>
-          UserAutocompleteResults.dataSource(term, { includeGroups: true }),
+        dataSource: (term) => userSearch({ term, includeGroups: true }),
         fixedTextareaPosition: true,
         offset: 2,
       }
