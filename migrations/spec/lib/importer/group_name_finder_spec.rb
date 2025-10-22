@@ -208,5 +208,28 @@ RSpec.describe Migrations::Importer::GroupNameFinder do
         expect(name).to eq("team_6")
       end
     end
+
+    context "when ensuring minimum length" do
+      subject(:finder) { described_class.new(shared_data, min_length: 5) }
+
+      it "pads suffix with leading zeros for short names" do
+        name1 = finder.find_available_name("ab")
+        name2 = finder.find_available_name("ab")
+        name3 = finder.find_available_name("ab")
+
+        expect(name1).to eq("ab_01")
+        expect(name2).to eq("ab_02")
+        expect(name3).to eq("ab_03")
+      end
+
+      it "stops padding when suffix grows naturally" do
+        name = finder.find_available_name("a")
+        expect(name).to eq("a_001")
+
+        98.times { finder.find_available_name("a") }
+        name = finder.find_available_name("a")
+        expect(name).to eq("a_100")
+      end
+    end
   end
 end

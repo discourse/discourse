@@ -269,5 +269,31 @@ RSpec.describe Migrations::Importer::UsernameFinder do
         expect(username).to eq("foo_6")
       end
     end
+
+    context "when ensuring minimum length" do
+      subject(:finder) { described_class.new(shared_data, min_length: 5) }
+
+      it "pads suffix with leading zeros for short names" do
+        username1 = finder.find_available_name("ab")
+        username2 = finder.find_available_name("ab")
+        username3 = finder.find_available_name("ab")
+        8.times { finder.find_available_name("ab") }
+        username4 = finder.find_available_name("ab")
+
+        expect(username1).to eq("ab_01")
+        expect(username2).to eq("ab_02")
+        expect(username3).to eq("ab_03")
+        expect(username4).to eq("ab_12")
+      end
+
+      it "stops padding when suffix grows to fill minimum length" do
+        username = finder.find_available_name("a")
+        expect(username).to eq("a_001")
+
+        98.times { finder.find_available_name("a") }
+        username = finder.find_available_name("a")
+        expect(username).to eq("a_100")
+      end
+    end
   end
 end

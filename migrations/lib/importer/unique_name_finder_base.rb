@@ -7,11 +7,6 @@ module Migrations::Importer
     DEFAULT_MAX_ATTEMPTS = 500
     TRUNCATION_CACHE_SIZE = 500
 
-    private_constant :DEFAULT_MIN_LENGTH,
-                     :DEFAULT_MAX_LENGTH,
-                     :DEFAULT_MAX_ATTEMPTS,
-                     :TRUNCATION_CACHE_SIZE
-
     def initialize(
       shared_data,
       min_length: DEFAULT_MIN_LENGTH,
@@ -80,7 +75,7 @@ module Migrations::Importer
           name = truncate(name, max_length: @max_length)
           name_lower = name.downcase
 
-          if name_available?(name_lower)
+          if name.length >= @min_length && name_available?(name_lower)
             [name, name_lower]
           elsif !should_skip_suffix_attempts?(name_lower)
             find_name_with_suffix(name, name_lower)
@@ -98,8 +93,10 @@ module Migrations::Importer
         name_lower = name.downcase
       end
 
+      name_length = name.length
       suffix = next_suffix(name_lower)
-      name_candidate_lower = +"#{name_lower}_#{suffix}"
+      suffix_str = format_suffix(name_length, suffix)
+      name_candidate_lower = +"#{name_lower}#{suffix_str}"
 
       attempts = 0
 
@@ -107,7 +104,7 @@ module Migrations::Importer
         if (overflow = name_candidate_lower.length - @max_length) > 0
           name = truncate(name, max_length: name.length - overflow)
           name_length = name.length
-          break if name_length < @min_length
+          break if name_length == 0
 
           name_lower = name.downcase
           @truncations[original_name_lower] = name_length
@@ -115,21 +112,37 @@ module Migrations::Importer
           return nil if should_skip_suffix_attempts?(name_lower)
 
           suffix = next_suffix(name_lower)
-          name_candidate_lower = "#{name_lower}_#{suffix}"
+          suffix_str = format_suffix(name_length, suffix)
+          name_candidate_lower = "#{name_lower}#{suffix_str}"
         end
 
         if name_available?(name_candidate_lower)
           @last_suffixes[name_lower] = suffix
-          return "#{name}_#{suffix}", name_candidate_lower
+          return "#{name}#{suffix_str}", name_candidate_lower
         else
           name_candidate_lower.next!
           suffix += 1
+          suffix_str = format_suffix(name_length, suffix)
+          name_candidate_lower = "#{name_lower}#{suffix_str}"
         end
 
         attempts += 1
       end
 
       nil
+    end
+
+    def format_suffix(base_length, suffix)
+      suffix_str = "_#{suffix}"
+      total_length = base_length + suffix_str.length
+
+      if total_length < @min_length
+        # Pad with leading zeros: "_01", "_001", etc.
+        padding_needed = @min_length - base_length - 1
+        "_#{suffix.to_s.rjust(padding_needed, "0")}"
+      else
+        suffix_str
+      end
     end
 
     def find_fallback_name

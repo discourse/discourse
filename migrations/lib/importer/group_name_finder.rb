@@ -2,16 +2,13 @@
 
 module Migrations::Importer
   class GroupNameFinder < UniqueNameFinderBase
-    def initialize(shared_data)
-      super(shared_data)
-      build_reserved_username_cache
-    end
-
     private
 
     def load_from_shared_data(shared_data)
       @used_usernames_lower = shared_data&.load(:usernames) || Set.new
       @used_group_names_lower = shared_data&.load(:group_names) || Set.new
+
+      build_reserved_username_cache
     end
 
     def store_used_name(name_lower)
