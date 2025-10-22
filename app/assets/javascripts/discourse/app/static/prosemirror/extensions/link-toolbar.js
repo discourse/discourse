@@ -82,6 +82,7 @@ class LinkToolbarPluginView {
   #toolbarReplaced = false;
   #linkToolbar;
   #linkState;
+  #calculatingCoords = false;
 
   #view;
 
@@ -307,12 +308,17 @@ class LinkToolbarPluginView {
     const { head } = this.#linkState;
     const { doc } = this.#view.state;
 
-    if (!docView || head > doc.content.size) {
+    if (this.#calculatingCoords || !docView || head > doc.content.size) {
       return { left: 0, top: 0, width: 0, height: 0 };
     }
 
-    const { left, top } = this.#view.coordsAtPos(head);
-    return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
+    this.#calculatingCoords = true;
+    try {
+      const { left, top } = this.#view.coordsAtPos(head);
+      return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
+    } finally {
+      this.#calculatingCoords = false;
+    }
   }
 
   /**
