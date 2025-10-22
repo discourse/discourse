@@ -67,7 +67,7 @@ module Migrations::Importer::Steps
            LEFT JOIN sanitized_usernames ON u.original_id = sanitized_usernames.user_id
       WHERE mu.original_id IS NULL
       GROUP BY u.original_id
-      ORDER BY CASE WHEN sanitized_usernames.username = u.username THEN 0 ELSE 1 END, u.ROWID
+      ORDER BY CASE WHEN sanitized_usernames.user_id IS NULL THEN 0 ELSE 1 END, u.ROWID
     SQL
 
     private
@@ -82,12 +82,11 @@ module Migrations::Importer::Steps
       @intermediate_db.execute <<~SQL
         CREATE TEMP TABLE sanitized_usernames
         (
-            user_id  NUMERIC PRIMARY KEY NOT NULL,
-            username TEXT
+            user_id NUMERIC PRIMARY KEY NOT NULL
         )
       SQL
 
-      rows = @intermediate_db.query <<~SQL
+      rows = @intermediate_db.query <<~SQL, MappingType::USERS
         SELECT u.original_id, u.username
         FROM users u
              LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?1
@@ -96,15 +95,14 @@ module Migrations::Importer::Steps
       SQL
 
       insert_sql = <<~SQL
-        INSERT INTO sanitized_usernames (user_id, username)
-        VALUES (?, ?)
+        INSERT INTO sanitized_usernames (user_id)
+        VALUES (?)
       SQL
 
       rows.each do |row|
-        @intermediate_db.insert(
-          insert_sql,
-          [row[:original_id], UserNameSuggester.sanitize_username(row[:username])],
-        )
+        username = row[:username]
+        sanitized_username = UserNameSuggester.sanitize_username()
+        @intermediate_db.insert(insert_sql, [row[:original_id]]) if username != sanitized_username
       end
 
       @intermediate_db.commit_transaction
