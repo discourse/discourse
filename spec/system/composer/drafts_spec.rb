@@ -41,17 +41,31 @@ describe "Composer - Drafts", type: :system do
       end
     end
 
-    context "when only title is specified and it is too short" do
-      it "does not save the draft or show a toast" do
+    context "when only title is specified and it is less than min_topic_title_length" do
+      it "does saves the draft and shows a toast" do
         visit "/new-topic"
 
         expect(composer).to be_opened
-        composer.fill_title("test")
+        composer.fill_title("x")
         composer.close
         expect(composer).to be_closed
 
-        expect(toasts).to have_no_message
-        expect(Draft.where(user: current_user).count).to eq(0)
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+        expect(Draft.where(user: current_user).count).to eq(1)
+      end
+    end
+
+    context "when only body is specified and it is less than min_post_length" do
+      it "does saves the draft and shows a toast" do
+        visit "/new-topic"
+
+        expect(composer).to be_opened
+        composer.fill_content("x")
+        composer.close
+        expect(composer).to be_closed
+
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+        expect(Draft.where(user: current_user).count).to eq(1)
       end
     end
   end

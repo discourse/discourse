@@ -1336,23 +1336,16 @@ export default class Composer extends RestModel {
       return false;
     }
 
-    // Do not save when drafts are disabled
     if (this.disableDrafts) {
       return false;
     }
 
+    // Title is only edited when editing topic OP or making a new topic.
     if (this.canEditTitle) {
-      // Save title and/or post body
       if (isEmpty(this.title) && isEmpty(this.reply)) {
         return false;
       }
-
-      // Do not save when both title and reply's length are too small
-      if (!this.titleLengthValid && this.replyLength < this.minimumPostLength) {
-        return false;
-      }
     } else {
-      // Do not save when there is no reply
       if (isEmpty(this.reply)) {
         return false;
       }
