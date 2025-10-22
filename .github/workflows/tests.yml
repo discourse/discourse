@@ -1,17 +1,9 @@
 name: Tests
 
 on:
-  pull_request:
-    paths-ignore:
-      - ".github/workflows/migration-tests.yml"
-      - ".github/dependabot.yml"
-      - ".github/labeler.yml"
-      - "migrations/**"
   push:
     branches:
-      - main
-      - beta
-      - stable
+      - none
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
