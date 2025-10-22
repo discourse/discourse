@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import bodyClass from "discourse/helpers/body-class";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import ContentsPrimary from "./contents-primary";
