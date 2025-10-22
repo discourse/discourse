@@ -54,6 +54,13 @@ describe Migrations::SetStore::KeyValueSet do
       expect(set.include?("key2", 2)).to be true
     end
 
+    it "handles nil keys correctly" do
+      set.bulk_add([[nil, 1], [nil, 2], ["key1", 3]])
+      expect(set.include?(nil, 1)).to be true
+      expect(set.include?(nil, 2)).to be true
+      expect(set.include?("key1", 3)).to be true
+    end
+
     it "returns nil" do
       expect(set.bulk_add([["key1", 1]])).to be_nil
     end
