@@ -252,7 +252,7 @@ export default class ReviewableItem extends Component {
   }
 
   get IpLookupComponent() {
-    return optionalRequire("admin/components/ip-lookup");
+    return optionalRequire("discourse/admin/components/ip-lookup");
   }
 
   @bind

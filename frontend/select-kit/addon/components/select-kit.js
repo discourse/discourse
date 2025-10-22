@@ -957,12 +957,6 @@ export default class SelectKit extends Component {
 
     this.clearErrors();
 
-    const parentModal = this.element.closest(".fixed-modal");
-    if (parentModal && this.site.mobileView) {
-      const modalBody = parentModal.querySelector(".modal-body");
-      modalBody.style = "";
-    }
-
     this.selectKit.onClose(event);
 
     this.selectKit.setProperties({
@@ -1016,7 +1010,6 @@ export default class SelectKit extends Component {
       `#${this.selectKit.uniqueID}-body`
     );
 
-    const parentModal = this.element.closest(".fixed-modal .modal-body");
     const strategy = this._computePlacementStrategy();
     floatingElement.style.position = strategy;
 
@@ -1038,10 +1031,6 @@ export default class SelectKit extends Component {
       {
         name: "flip",
         fn: (state) => {
-          if (parentModal) {
-            return state;
-          }
-
           const top =
             parseInt(
               document.documentElement.style.getPropertyValue(
@@ -1076,18 +1065,14 @@ export default class SelectKit extends Component {
       {
         name: "shift",
         fn: (state) => {
-          if (parentModal) {
-            return state;
-          } else {
-            return shift({ limiter: limitShift() }).fn(state);
-          }
+          return shift({ limiter: limitShift() }).fn(state);
         },
       },
       offset(this.selectKit.options.verticalOffset),
       {
         name: "applySmallScreenOffset",
         fn: (state) => {
-          if (window.innerWidth > 450 || parentModal) {
+          if (window.innerWidth > 450) {
             return state;
           }
 
@@ -1102,35 +1087,8 @@ export default class SelectKit extends Component {
       {
         name: "applySmallScreenMaxWidth",
         fn: (state) => {
-          if (window.innerWidth > 450) {
-            return state;
-          }
-
-          if (parentModal) {
-            const innerModal = document.querySelector(
-              ".fixed-modal .modal-inner-container"
-            );
-            if (innerModal) {
-              if (this.multiSelect) {
-                floatingElement.style.width = `${this.element.offsetWidth}px`;
-              } else {
-                floatingElement.style.width = `${innerModal.clientWidth - 20}px`;
-              }
-            }
-          } else {
+          if (window.innerWidth <= 450) {
             floatingElement.style.width = `${window.innerWidth - 20}px`;
-          }
-
-          return state;
-        },
-      },
-      {
-        name: "modalHeight",
-        fn: (state) => {
-          if (parentModal && this.site.mobileView) {
-            parentModal.style = "";
-            parentModal.style.height =
-              parentModal.clientHeight + state.rects.floating.height + "px";
           }
 
           return state;
