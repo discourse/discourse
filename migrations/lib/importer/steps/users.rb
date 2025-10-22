@@ -69,13 +69,12 @@ module Migrations::Importer::Steps
       ORDER BY u.ROWID
     SQL
 
-    def initialize(intermediate_db, discourse_db, shared_data)
-      super
+    private
+
+    def setup
       @unique_name_finder = ::Migrations::Importer::UsernameFinder.new(@shared_data)
       @always_allow_reserved_names = @config[:always_allow_reserved_usernames] || false
     end
-
-    private
 
     def transform_row(row)
       if row[:emails].present?

@@ -78,6 +78,8 @@ module Migrations::Importer
       @config = config
 
       @stats = StepStats.new(skip_count: 0, warning_count: 0, error_count: 0)
+
+      setup
     end
 
     def execute
@@ -85,6 +87,10 @@ module Migrations::Importer
     end
 
     private
+
+    # Override in subclasses if necessary
+    def setup
+    end
 
     def load_required_data
       required_mappings = self.class.required_mappings
