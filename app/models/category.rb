@@ -107,15 +107,22 @@ class Category < ActiveRecord::Base
   validates :color, format: { with: /\A(\h{6}|\h{3})\z/ }
   validates :text_color, format: { with: /\A(\h{6}|\h{3})\z/ }
 
-  after_create :create_category_definition
-  after_destroy :trash_category_definition
-  after_destroy :clear_related_site_settings
-
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
   before_save :ensure_category_setting
+  after_create :create_category_definition
+  after_create :delete_category_permalink
+  after_update :rename_category_definition, if: :saved_change_to_name?
+  after_update :create_category_permalink, if: :saved_change_to_slug?
+  after_update :run_plugin_category_update_param_callbacks
+  after_destroy :trash_category_definition
+  after_destroy :clear_related_site_settings
 
+  after_destroy :reset_topic_ids_cache
+  after_destroy :clear_subcategory_ids
+  after_destroy :publish_category_deletion
+  after_destroy :remove_site_settings
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
@@ -134,17 +141,6 @@ class Category < ActiveRecord::Base
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
-
-  after_destroy :reset_topic_ids_cache
-  after_destroy :clear_subcategory_ids
-  after_destroy :publish_category_deletion
-  after_destroy :remove_site_settings
-
-  after_create :delete_category_permalink
-
-  after_update :rename_category_definition, if: :saved_change_to_name?
-  after_update :create_category_permalink, if: :saved_change_to_slug?
-  after_update :run_plugin_category_update_param_callbacks
 
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
@@ -638,7 +634,7 @@ class Category < ActiveRecord::Base
 
   def topic_url
     if has_attribute?("topic_slug")
-      Topic.relative_url(topic_id, read_attribute(:topic_slug))
+      Topic.relative_url(topic_id, self[:topic_slug])
     else
       topic_only_relative_url.try(:relative_url)
     end

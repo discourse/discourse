@@ -39,14 +39,14 @@ module DiscourseAi
             current_user,
             "semantic-search",
             MAX_HYDE_SEARCHES_PER_MINUTE,
-            1.minutes,
+            1.minute,
           ).performed!
         else
           RateLimiter.new(
             current_user,
             "semantic-search-non-hyde",
             MAX_SEARCHES_PER_MINUTE,
-            1.minutes,
+            1.minute,
           ).performed!
         end
 
@@ -68,9 +68,6 @@ module DiscourseAi
       end
 
       def quick_search
-        # this search function searches posts (vs: topics)
-        # it requires post embeddings and a reranker
-        # it will not perform a hyde expantion
         query = params[:q].to_s
 
         if query.length < SiteSetting.min_search_term_length
@@ -83,16 +80,19 @@ module DiscourseAi
             term: query,
             search_context: guardian,
             use_pg_headlines_for_excerpt: false,
+            can_lazy_load_categories: guardian.can_lazy_load_categories?,
           )
 
         semantic_search = DiscourseAi::Embeddings::SemanticSearch.new(guardian)
 
         if !semantic_search.cached_query?(query)
-          RateLimiter.new(current_user, "semantic-search", 60, 1.minutes).performed!
+          RateLimiter.new(current_user, "semantic-search", 60, 1.minute).performed!
         end
 
         hijack do
-          semantic_search.quick_search(query).each { |topic_post| grouped_results.add(topic_post) }
+          semantic_search
+            .search_for_topics(query, _page = 1, hyde: false)
+            .each { |topic_post| grouped_results.add(topic_post) }
 
           render_serialized(grouped_results, GroupedSearchResultSerializer, result: grouped_results)
         end

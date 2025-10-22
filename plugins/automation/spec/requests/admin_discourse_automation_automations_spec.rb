@@ -257,7 +257,7 @@ describe DiscourseAutomation::AdminAutomationsController do
         automation.upsert_field!(
           "execute_at",
           "date_time",
-          { value: 1.hours.from_now },
+          { value: 1.hour.from_now },
           target: "trigger",
         )
       end
@@ -265,7 +265,7 @@ describe DiscourseAutomation::AdminAutomationsController do
       it "updates the associated pending automation execute_at" do
         expect(automation.pending_automations.count).to eq(1)
         expect(automation.pending_automations.last.execute_at).to be_within_one_minute_of(
-          1.hours.from_now,
+          1.hour.from_now,
         )
 
         expect {

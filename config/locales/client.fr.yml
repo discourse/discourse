@@ -3894,10 +3894,7 @@ fr:
         attachment_upload_not_allowed_for_new_user: "Nous sommes désolés, les nouveaux utilisateurs ne peuvent pas envoyer de fichiers."
         attachment_download_requires_login: "Nous sommes désolés, vous devez être connecté(e) pour télécharger une pièce jointe."
       cancel_composer:
-        confirm: "Que souhaitez-vous faire de votre message ?"
         discard: "Abandonner"
-        save_draft: "Enregistrer le brouillon pour plus tard"
-        keep_editing: "Continuer à rédiger"
       via_email: "ce message est arrivé par e-mail"
       via_auto_generated_email: "ce message est arrivé via un e-mail généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
@@ -5280,9 +5277,12 @@ fr:
           title: "Localisation"
           header_description: "Configurez la langue de l'interface de votre communauté et d'autres options de localisation pour vos membres"
           keywords: "paramètre régional|langue|fuseau horaire|Unicode|gauche à droite"
-        login_and_authentication:
+        login:
           title: "Connexion et authentification"
           header_description: "Configurez la manière dont les utilisateurs se connectent et s'authentifient, les secrets et les clés, les fournisseurs OAuth2, etc."
+          sub_pages:
+            common_settings:
+              title: "Paramètres"
         logo:
           title: "Logo"
           header_description: "Configurez les logos et les icônes utilisés sur votre site"
@@ -6449,7 +6449,6 @@ fr:
         copy_to_clipboard: "Copier dans le presse-papier"
         copied_to_clipboard: "Copié dans le presse-papier"
         copy_to_clipboard_error: "Erreur en copiant les données dans le presse-papier"
-        theme_owner: "Non modifiable, appartient à :"
         email_templates:
           title: "E-mail"
           subject: "Objet"
@@ -6457,6 +6456,7 @@ fr:
           body: "Corps"
           revert: "Annuler les changements"
           revert_confirm: "Voulez-vous vraiment annuler vos changements ?"
+          edit: "Modifier"
         component:
           all_filter: "Tout"
           used_filter: "Utilisé"

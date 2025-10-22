@@ -45,7 +45,7 @@ end
 
 class Plugin::Instance
   attr_accessor :path, :metadata
-  attr_reader :admin_route
+  attr_reader :admin_route, :admin_login_route
 
   # Memoized array readers
   %i[
@@ -72,7 +72,7 @@ class Plugin::Instance
   end
 
   def seed_data
-    @seed_data ||= HashWithIndifferentAccess.new({})
+    @seed_data ||= ActiveSupport::HashWithIndifferentAccess.new({})
   end
 
   def seed_fu_filter(filter = nil)
@@ -395,7 +395,7 @@ class Plugin::Instance
   # Example usage:
   #   register_preloaded_category_custom_fields("custom_field")
   def register_preloaded_category_custom_fields(field)
-    Site.preloaded_category_custom_fields << field
+    reloadable_patch { Site.preloaded_category_custom_fields << field }
   end
 
   def register_problem_check(klass)
@@ -624,7 +624,7 @@ class Plugin::Instance
   def discourse_owned?
     return false if commit_hash.blank?
     parsed_commit_url = UrlHelper.relaxed_parse(self.commit_url)
-    return false if parsed_commit_url.blank?
+    return false if parsed_commit_url.blank? || parsed_commit_url.path.blank?
     github_org = parsed_commit_url.path.split("/")[1]
     (github_org == "discourse" || github_org == "discourse-org") &&
       parsed_commit_url.host == "github.com"
@@ -900,6 +900,10 @@ class Plugin::Instance
   # grouping related settings in the UI.
   def register_site_setting_area(area)
     DiscoursePluginRegistry.site_setting_areas << area
+  end
+
+  def register_admin_config_login_route(location)
+    DiscoursePluginRegistry.admin_config_login_routes << location
   end
 
   def javascript_includes
@@ -1303,6 +1307,64 @@ class Plugin::Instance
 
   def register_search_group_query_callback(callback)
     DiscoursePluginRegistry.register_search_groups_set_query_callback(callback, self)
+  end
+
+  # Register a search index for a custom content type
+  #
+  # @param model_class [Class] The ActiveRecord model class
+  # @param search_data_class [Class] The search data class (e.g., Chat::MessageSearchData)
+  # @param index_version [Integer] The version number for this search index
+  # @param search_data [Proc] Block that extracts search data from an object, receives (object, indexer_helper)
+  #                          Should return hash with :a_weight, :b_weight, :c_weight, :d_weight keys
+  # @param load_unindexed_record_ids [Proc] Block that loads record IDs needing reindexing, receives (limit:, index_version:)
+  # @param enabled [Proc] Optional block that returns true/false to enable/disable the search index (default: -> { true })
+  #
+  # Example:
+  #   register_search_index(
+  #     enabled: -> { SiteSetting.chat_search_enabled },
+  #     model_class: Chat::Message,
+  #     search_data_class: Chat::MessageSearchData,
+  #     index_version: 1,
+  #     search_data: proc { |message, indexer_helper|
+  #       {
+  #         a_weight: message.message,
+  #         d_weight: indexer_helper.scrub_html(message.cooked)[0..600_000]
+  #       }
+  #     },
+  #     load_unindexed_record_ids: proc { |limit:, index_version:|
+  #       Chat::Message
+  #         .joins("LEFT JOIN chat_message_search_data ON chat_message_id = chat_messages.id")
+  #         .where(
+  #           "chat_message_search_data.locale IS NULL OR chat_message_search_data.locale != ? OR chat_message_search_data.version != ?",
+  #           SiteSetting.default_locale,
+  #           index_version,
+  #         )
+  #         .order("chat_messages.id ASC")
+  #         .limit(limit)
+  #         .pluck(:id)
+  #     }
+  #   )
+  def register_search_index(
+    model_class:,
+    search_data_class:,
+    index_version:,
+    search_data:,
+    load_unindexed_record_ids:,
+    enabled: -> { true }
+  )
+    table_name = model_class.table_name.singularize
+
+    handler = {
+      table_name:,
+      model_class:,
+      search_data_class:,
+      index_version:,
+      search_data:,
+      load_unindexed_record_ids: load_unindexed_record_ids,
+      enabled:,
+    }
+
+    DiscoursePluginRegistry.register_search_handler(handler, self)
   end
 
   # This is an experimental API and may be changed or removed in the future without deprecation.

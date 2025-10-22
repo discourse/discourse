@@ -734,7 +734,7 @@ RSpec.describe Report do
 
         exporter = Jobs::ExportCsvFile.new
         exporter.entity = "report"
-        exporter.extra = HashWithIndifferentAccess.new(name: "flags_status")
+        exporter.extra = ActiveSupport::HashWithIndifferentAccess.new(name: "flags_status")
         exporter.current_user = flagger
         exported_csv = []
         exporter.report_export { |entry| exported_csv << entry }
@@ -1882,35 +1882,35 @@ RSpec.describe Report do
           topic: topic_1,
           anonymous_views: 4,
           logged_in_views: 2,
-          viewed_at: Time.zone.now - 5.days,
+          viewed_at: 5.days.ago,
         )
         Fabricate(
           :topic_view_stat,
           topic: topic_1,
           anonymous_views: 5,
           logged_in_views: 18,
-          viewed_at: Time.zone.now - 3.days,
+          viewed_at: 3.days.ago,
         )
         Fabricate(
           :topic_view_stat,
           topic: topic_2,
           anonymous_views: 14,
           logged_in_views: 21,
-          viewed_at: Time.zone.now - 5.days,
+          viewed_at: 5.days.ago,
         )
         Fabricate(
           :topic_view_stat,
           topic: topic_2,
           anonymous_views: 9,
           logged_in_views: 13,
-          viewed_at: Time.zone.now - 1.days,
+          viewed_at: 1.day.ago,
         )
         Fabricate(
           :topic_view_stat,
           topic: Fabricate(:topic),
           anonymous_views: 1,
           logged_in_views: 34,
-          viewed_at: Time.zone.now - 40.days,
+          viewed_at: 40.days.ago,
         )
       end
 

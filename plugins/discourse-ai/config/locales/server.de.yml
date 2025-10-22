@@ -100,6 +100,8 @@ de:
     ai_embeddings_semantic_search_use_hyde: "Verwende HyDE für die semantische Ganzseitensuche. Verwendet ein LLM, um einen hypothetischen Beitrag aus dem Suchbegriff des Benutzers zu erstellen, der bei der Suche nach Treffern hilft."
     ai_embeddings_semantic_quick_search_enabled: "Aktiviere die semantische Suchoption im Such-Menü-Pop-up."
     ai_embeddings_semantic_related_include_closed_topics: "Geschlossene Themen in semantische Suchergebnisse einbeziehen"
+    ai_embeddings_semantic_related_age_penalty: "Wende eine exponentielle Altersstrafe auf Themen in semantischen Suchergebnissen an. 0,0 = kein Abzug, 0,3 = leichte Tendenz zu kürzlich aktiven Inhalten, 1,0+ = starke Tendenz zur Aktualität."
+    ai_embeddings_semantic_related_age_time_scale: "Zeitskala in Tagen für die Berechnung der Altersstrafe. Themen, die so viele Tage inaktiv sind, erhalten ~50 % Strafe bei \"penalty\"=1,0. Verwende 365 für die jährliche Skala, 90 für die vierteljährliche Skala."
     ai_embeddings_semantic_search_hyde_model: "Modell zur Erweiterung von Schlüsselwörtern, um bessere Ergebnisse bei der semantischen Suche zu erzielen"
     ai_embeddings_per_post_enabled: Erstelle Einbettungen für jeden Beitrag
     ai_summarization_enabled: "Aktiviere die Zusammenfassungsfunktion"
@@ -130,8 +132,6 @@ de:
     ai_discord_search_mode: "Wähle den Suchmodus für die Discord-Suche aus"
     ai_discord_search_persona: "Die Persona, die für die Discord-Suche verwendet wird."
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
-    ai_bot_enable_dedicated_ux: "Erlaube eine Vollbild-Bot-Oberfläche anstelle einer PM"
-    ai_translation_enabled: "Aktiviert die KI-Übersetzungsfunktion"
     ai_translation_model: "Das Modell, das für die Übersetzung verwendet werden soll. Dieses Modell muss die Übersetzung unterstützen. Personas können diese Einstellung überschreiben."
     ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
     ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
@@ -618,6 +618,9 @@ de:
       updated: "aktualisiert"
       set: "gesetzt"
       removed: "entfernt"
+    translation:
+      errors:
+        disabled: "Die KI-Übersetzungsfunktion ist nicht vollständig konfiguriert."
     errors:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
       quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"

@@ -28,7 +28,9 @@ RSpec.describe "posts" do
         expected_response_schema = load_spec_schema("latest_posts_response")
         schema expected_response_schema
 
-        let!(:post) { Fabricate(:post) }
+        let!(:category) { Fabricate(:category) }
+        let!(:topic) { Fabricate(:topic, category: category) }
+        let!(:post) { Fabricate(:post, topic: topic) }
 
         it_behaves_like "a JSON endpoint", 200 do
           let(:expected_response_schema) { expected_response_schema }
@@ -105,8 +107,8 @@ RSpec.describe "posts" do
           post.id
         end
 
-        let(:moderator) { Fabricate(:moderator) }
-        before { sign_in(moderator) }
+        let(:admin_user) { Fabricate(:admin) }
+        before { sign_in(admin_user) }
 
         run_test!
 
@@ -217,28 +219,20 @@ RSpec.describe "posts" do
       parameter name: "Api-Username", in: :header, type: :string, required: true
       parameter name: :id, in: :path, schema: { type: :string }
 
-      parameter name: :post_body,
-                in: :body,
-                schema: {
-                  type: :object,
-                  properties: {
-                    locked: {
-                      type: :string,
-                    },
-                  },
-                  required: ["locked"],
-                }
+      expected_request_schema = load_spec_schema("post_lock_request")
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces "application/json"
       response "200", "post updated" do
-        schema type: :object, properties: { locked: { type: :boolean } }
+        expected_response_schema = load_spec_schema("post_lock_response")
+        schema expected_response_schema
 
-        let(:post_body) { { locked: "true" } }
+        let(:params) { { locked: "true" } }
         let(:id) { Fabricate(:post).id }
 
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data["locked"]).to eq(true)
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
         end
       end
     end
@@ -252,198 +246,20 @@ RSpec.describe "posts" do
       parameter name: "Api-Key", in: :header, type: :string, required: true
       parameter name: "Api-Username", in: :header, type: :string, required: true
 
-      parameter name: :post_body,
-                in: :body,
-                schema: {
-                  type: :object,
-                  properties: {
-                    id: {
-                      type: :integer,
-                    },
-                    post_action_type_id: {
-                      type: :integer,
-                    },
-                    flag_topic: {
-                      type: :boolean,
-                    },
-                  },
-                  required: %w[id post_action_type_id],
-                }
+      expected_request_schema = load_spec_schema("post_action_request")
+      parameter name: :params, in: :body, schema: expected_request_schema
 
       produces "application/json"
       response "200", "post updated" do
-        schema type: :object,
-               properties: {
-                 id: {
-                   type: :integer,
-                 },
-                 name: {
-                   type: :string,
-                 },
-                 username: {
-                   type: :string,
-                 },
-                 avatar_template: {
-                   type: :string,
-                 },
-                 created_at: {
-                   type: :string,
-                 },
-                 cooked: {
-                   type: :string,
-                 },
-                 post_number: {
-                   type: :integer,
-                 },
-                 post_type: {
-                   type: :integer,
-                 },
-                 updated_at: {
-                   type: :string,
-                 },
-                 reply_count: {
-                   type: :integer,
-                 },
-                 reply_to_post_number: {
-                   type: %i[string null],
-                 },
-                 quote_count: {
-                   type: :integer,
-                 },
-                 incoming_link_count: {
-                   type: :integer,
-                 },
-                 reads: {
-                   type: :integer,
-                 },
-                 readers_count: {
-                   type: :integer,
-                 },
-                 score: {
-                   type: :number,
-                 },
-                 yours: {
-                   type: :boolean,
-                 },
-                 topic_id: {
-                   type: :integer,
-                 },
-                 topic_slug: {
-                   type: :string,
-                 },
-                 display_username: {
-                   type: :string,
-                 },
-                 primary_group_name: {
-                   type: %i[string null],
-                 },
-                 flair_name: {
-                   type: %i[string null],
-                 },
-                 flair_url: {
-                   type: %i[string null],
-                 },
-                 flair_bg_color: {
-                   type: %i[string null],
-                 },
-                 flair_color: {
-                   type: %i[string null],
-                 },
-                 version: {
-                   type: :integer,
-                 },
-                 can_edit: {
-                   type: :boolean,
-                 },
-                 can_delete: {
-                   type: :boolean,
-                 },
-                 can_recover: {
-                   type: :boolean,
-                 },
-                 can_wiki: {
-                   type: :boolean,
-                 },
-                 user_title: {
-                   type: %i[string null],
-                 },
-                 actions_summary: {
-                   type: :array,
-                   items: {
-                     type: :object,
-                     properties: {
-                       id: {
-                         type: :integer,
-                       },
-                       count: {
-                         type: :integer,
-                       },
-                       acted: {
-                         type: :boolean,
-                       },
-                       can_undo: {
-                         type: :boolean,
-                       },
-                     },
-                   },
-                 },
-                 moderator: {
-                   type: :boolean,
-                 },
-                 admin: {
-                   type: :boolean,
-                 },
-                 staff: {
-                   type: :boolean,
-                 },
-                 user_id: {
-                   type: :integer,
-                 },
-                 hidden: {
-                   type: :boolean,
-                 },
-                 trust_level: {
-                   type: :integer,
-                 },
-                 deleted_at: {
-                   type: %i[string null],
-                 },
-                 user_deleted: {
-                   type: :boolean,
-                 },
-                 edit_reason: {
-                   type: %i[string null],
-                 },
-                 can_view_edit_history: {
-                   type: :boolean,
-                 },
-                 wiki: {
-                   type: :boolean,
-                 },
-                 notice: {
-                   type: :object,
-                 },
-                 notice_created_by_user: {
-                   type: %i[object null],
-                 },
-                 reviewable_id: {
-                   type: %i[integer null],
-                 },
-                 reviewable_score_count: {
-                   type: :integer,
-                 },
-                 reviewable_score_pending_count: {
-                   type: :integer,
-                 },
-               }
+        expected_response_schema = load_spec_schema("post_action_response")
+        schema expected_response_schema
 
         let(:id) { Fabricate(:post).id }
-        let(:post_body) { { id: id, post_action_type_id: 2 } }
+        let(:params) { { id: id, post_action_type_id: 2 } }
 
-        run_test! do |response|
-          data = JSON.parse(response.body)
-          expect(data["actions_summary"][0]["id"]).to eq(2)
-          expect(data["actions_summary"][0]["count"]).to eq(1)
+        it_behaves_like "a JSON endpoint", 200 do
+          let(:expected_response_schema) { expected_response_schema }
+          let(:expected_request_schema) { expected_request_schema }
         end
       end
     end

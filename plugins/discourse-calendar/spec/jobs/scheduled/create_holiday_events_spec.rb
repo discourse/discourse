@@ -257,4 +257,17 @@ describe Jobs::DiscourseCalendar::CreateHolidayEvents do
       end
     end
   end
+
+  it "skips invalid regions and continues processing valid ones" do
+    frenchy
+    invalid_region_user =
+      Fabricate(:user, custom_fields: { DiscourseCalendar::REGION_CUSTOM_FIELD => "invalid_xx" })
+
+    freeze_time Time.zone.local(2019, 8, 1)
+
+    expect { job.execute(nil) }.not_to raise_error
+
+    expect(CalendarEvent.where(user_id: frenchy.id).count).to be > 0
+    expect(CalendarEvent.where(user_id: invalid_region_user.id).count).to eq(0)
+  end
 end

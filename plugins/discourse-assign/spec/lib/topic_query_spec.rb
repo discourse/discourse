@@ -5,7 +5,7 @@ require "topic_view"
 describe TopicQuery do
   fab!(:user)
   fab!(:admin)
-  fab!(:other_admin) { Fabricate(:admin) }
+  fab!(:other_admin, :admin)
 
   fab!(:user_pm) { Fabricate(:private_message_topic, user: user) }
   fab!(:admin_pm) { Fabricate(:private_message_topic, user: admin) }

@@ -115,8 +115,6 @@ fr:
     ai_discord_search_mode: "Sélectionnez le mode de recherche à utiliser pour la recherche Discord"
     ai_discord_search_persona: "Le personnage à utiliser pour la recherche sur Discord."
     ai_discord_allowed_guilds: "Guildes Discord (serveurs) dans lesquelles le robot est autorisé à effectuer des recherches"
-    ai_bot_enable_dedicated_ux: "Autoriser une interface de robot en plein écran, au lieu d'un PM"
-    ai_translation_enabled: "Active la fonction de traduction par IA"
     ai_translation_model: "Le modèle à utiliser pour la traduction. Ce modèle doit prendre en charge la traduction. Les personnages peuvent modifier ce paramètre."
     ai_translation_backfill_limit_to_public_content: "Lorsque cette option est activée, seul le contenu des catégories publiques sera traduit. Lorsque cette option est désactivée, le contenu des MP de groupe et des catégories privées sera également envoyé pour traduction."
     ai_translation_backfill_max_age_days: "L'âge maximal des publications et sujets à traduire. Les publications et sujets antérieurs à cette date ne seront pas traduits. 0 désactive le remplissage, mais ne désactive pas la traduction des nouvelles publications."

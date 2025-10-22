@@ -661,6 +661,13 @@ he:
       resume: "המשך"
       remove: "הסרה"
       remove_confirmation: "למחוק את הטיוטה הזאת?"
+      bulk_delete: "מחיקת הנבחרים"
+      bulk_delete_confirmation: "מחיקת טיוטות"
+      bulk_delete_message:
+        one: "למחוק את הטיוטה הזאת?"
+        two: "למחוק את שתי הטיוטות האלה?"
+        many: "למחוק את %{count} הטיוטות האלה?"
+        other: "למחוק את %{count} הטיוטות האלה?"
       new_topic: "טיוטת נושא חדשה"
       new_private_message: "טיוטת הודעה אישית חדשה"
       edit_topic: "עריכת טיוטת נושא"
@@ -4192,6 +4199,12 @@ he:
       empty: "אין פוסטים"
       aria_post_number: "%{title} - פוסט מס׳ %{postNumber}"
       bulk:
+        selected:
+          one: "פוסט נבחר"
+          two: "שני פוסטים נבחרו"
+          many: "%{count} פוסטים נבחרו"
+          other: "%{count} פוסטים נבחרו"
+        select_all: "בחירה בהכול"
         clear_all: "לפנות הכול"
         actions: "פעולות במרוכז"
     post:
@@ -4294,6 +4307,7 @@ he:
           edit: "עריכה"
           delete: "מחיקה"
         add: "הוספת תרגום חדש"
+        manage: "ניהול תרגומים (%{count} קיימים)"
         view:
           one: "הצגת שפה מתורגמת"
           two: "הצגת שתי שפות מתורגמות"
@@ -4329,10 +4343,7 @@ he:
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
       cancel_composer:
-        confirm: "מה לעשות עם הפוסט שלך?"
         discard: "להשליך"
-        save_draft: "לשמור טיוטה להמשך"
-        keep_editing: "להמשיך לערוך"
       via_email: "פוסט זה הגיע בדוא״ל"
       via_auto_generated_email: "פוסט זה הגיע דרך הודעת דוא״ל שנוצרה אוטומטית"
       whisper: "פוסט זה הוא לחישה פרטית למפקחים"
@@ -5825,9 +5836,12 @@ he:
           title: "תרגום"
           header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
           keywords: "מקום|שפה|אזור זמן|unicode|rtl"
-        login_and_authentication:
+        login:
           title: "כניסה ואימות"
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
+          sub_pages:
+            common_settings:
+              title: "הגדרות"
         logo:
           title: "לוגו"
           header_description: "הגדרת הלוגואים והסמלים בהם נעשה שימוש ברחבי האתר שלך"
@@ -7040,7 +7054,7 @@ he:
         copy_to_clipboard: "העתקה ללוח"
         copied_to_clipboard: "הועתק ללוח"
         copy_to_clipboard_error: "שגיאה בהעתקת מידע ללוח"
-        theme_owner: "לא ניתן לעריכה, שייך ל:"
+        theme_owner: "בבעלות:"
         email_templates:
           title: "דוא״ל"
           subject: "נושא"
@@ -7049,6 +7063,7 @@ he:
           body: "גוף"
           revert: "ביטול שינויים"
           revert_confirm: "לבטל את השינויים שלך?"
+          edit: "עריכה"
         component:
           all_filter: "הכול"
           used_filter: "בשימוש"

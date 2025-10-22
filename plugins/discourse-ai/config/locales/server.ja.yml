@@ -115,8 +115,6 @@ ja:
     ai_discord_search_mode: "Discord 検索に使用する検索モードを選択する"
     ai_discord_search_persona: "Discord 検索に使用するペルソナ。"
     ai_discord_allowed_guilds: "ボットが検索できる Discord ギルド (サーバー)"
-    ai_bot_enable_dedicated_ux: "PM の代わりに、全画面表示のボットインターフェースを許可する"
-    ai_translation_enabled: "AI 翻訳機能を有効にします"
     ai_translation_model: "翻訳に使用するモデル。このモデルは翻訳をサポートしている必要があります。ペルソナはこの設定を上書きできます。"
     ai_translation_backfill_limit_to_public_content: "有効にすると、公開カテゴリのコンテンツのみが翻訳されます。無効にすると、グループ PM と非公開カテゴリのコンテンツも翻訳対象として送信されます。"
     ai_translation_backfill_max_age_days: "翻訳する投稿とトピックの最大経過日数。これより古い投稿とトピックは翻訳されません。0 にするとバックファイルは無効になりますが、新しい投稿の翻訳は無効になりません。"

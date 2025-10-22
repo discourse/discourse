@@ -143,20 +143,18 @@ RSpec.describe "List channels | Drawer", type: :system do
           chat_channel: dm_channel_4,
           user: user_3,
           use_service: true,
-          created_at: 1.days.ago,
+          created_at: 1.day.ago,
         )
         dm_channel_4.membership_for(current_user).mark_read!
 
         drawer_page.visit_index
         drawer_page.click_direct_messages
 
-        try_until_success do
-          expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
-          expect(drawer_page).to have_urgent_channel(dm_channel_2)
-          expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
-          expect(drawer_page).to have_channel_at_position(dm_channel_1, 3)
-          expect(drawer_page).to have_channel_at_position(dm_channel_3, 4)
-        end
+        expect(drawer_page).to have_channel_at_position(dm_channel_2, 1)
+        expect(drawer_page).to have_urgent_channel(dm_channel_2)
+        expect(drawer_page).to have_channel_at_position(dm_channel_4, 2)
+        expect(drawer_page).to have_channel_at_position(dm_channel_1, 3)
+        expect(drawer_page).to have_channel_at_position(dm_channel_3, 4)
       end
 
       context "with unread threads" do

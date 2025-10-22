@@ -345,9 +345,12 @@ shared_examples "signup scenarios" do
   it "correctly loads the invites page" do
     inviter = Fabricate(:user)
     invite = Fabricate(:invite, invited_by: inviter)
+    Fabricate(:user_field, name: "test", show_on_signup: false)
+
     visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
+    expect(page).to have_no_css(".user-field-test")
     find(".invitation-cta__sign-in").click
     expect(page).to have_css("#login-form")
     page.go_back

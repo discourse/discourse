@@ -3,8 +3,8 @@
 RSpec.describe "Topic voting", type: :system do
   fab!(:user)
   fab!(:admin) { Fabricate(:admin, trust_level: TrustLevel[4]) }
-  fab!(:category1) { Fabricate(:category) }
-  fab!(:category2) { Fabricate(:category) }
+  fab!(:category1, :category)
+  fab!(:category2, :category)
   fab!(:topic1) { Fabricate(:topic, category: category1) }
   fab!(:topic2) { Fabricate(:topic, category: category1) }
   fab!(:topic3) { Fabricate(:topic, category: category2) }
@@ -31,7 +31,7 @@ RSpec.describe "Topic voting", type: :system do
       .toggle_setting("enable-topic-voting", "Allow users to vote on topics in this category")
       .save_settings
 
-    try_until_success { expect(Category.can_vote?(category1.id)).to eq(true) }
+    expect(Category.can_vote?(category1.id)).to eq(true)
 
     # make a vote
     category_page.visit(category1)

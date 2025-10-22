@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
     unless is_api? || is_user_api?
       super
       clear_current_user
-      render plain: "[\"BAD CSRF\"]", status: 403
+      render plain: "[\"BAD CSRF\"]", status: :forbidden
     end
   end
 
@@ -255,14 +255,16 @@ class ApplicationController < ActionController::Base
         format.json do
           render_json_error I18n.t("read_only_mode_enabled"), type: :read_only, status: 503
         end
-        format.html { render status: 503, layout: "no_ember", template: "exceptions/read_only" }
+        format.html do
+          render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only"
+        end
       end
     end
   end
 
   rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
     if request.xhr?
-      render json: { second_factor_challenge_nonce: e.nonce }, status: 403
+      render json: { second_factor_challenge_nonce: e.nonce }, status: :forbidden
     else
       redirect_to session_2fa_path(nonce: e.nonce)
     end
@@ -732,7 +734,7 @@ class ApplicationController < ActionController::Base
     raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
   end
 
-  # Keep in sync with `NO_DESTINATION_COOKIE` in `app/assets/javascripts/discourse/app/lib/utilities.js`
+  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.js`
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
 
   def is_valid_destination_url?(url)

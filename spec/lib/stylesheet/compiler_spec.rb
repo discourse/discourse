@@ -258,7 +258,7 @@ RSpec.describe Stylesheet::Compiler do
       SCSS
 
       expect { Stylesheet::Compiler.compile(bad_css, "test.scss") }.to raise_error(
-        DiscourseJsProcessor::TranspileError,
+        AssetProcessor::TranspileError,
         /Missed semicolon/,
       )
     end

@@ -514,6 +514,10 @@ zh_CN:
       resume: "恢复"
       remove: "移除"
       remove_confirmation: "确定要删除此草稿吗？"
+      bulk_delete: "删除选中内容"
+      bulk_delete_confirmation: "删除草稿"
+      bulk_delete_message:
+        other: "确定要删除这 %{count} 个帖子吗？"
       new_topic: "新话题草稿"
       new_private_message: "新个人消息草稿"
       edit_topic: "编辑话题草稿"
@@ -1590,6 +1594,7 @@ zh_CN:
         verify_identity: "要继续，请验证您的身份。"
         title: "密码重置"
         remove: "移除密码"
+        remove_disabled: "在删除密码之前，该账户至少需要一种其他登录方法（例如密钥或关联的外部账户）。"
         remove_detail: "除非您重置密码，否则您将无法再使用密码访问您的帐户。"
       second_factor_backup:
         title: "双重备份代码"
@@ -1853,6 +1858,7 @@ zh_CN:
         first_time_and_daily: "每日帖子第一次被赞"
         first_time: "帖子第一次被赞"
         never: "从不"
+      notify_on_linked_posts: "当有人分享我的帖子链接时发出通知"
       email_previous_replies:
         title: "在电子邮件底部包含以前的回复"
         unless_emailed: "除非之前发送过"
@@ -2359,6 +2365,7 @@ zh_CN:
       admin_not_allowed_from_ip_address: "您无法从该 IP 地址以管理员身份登录。"
       resend_activation_email: "点击此处重新发送激活电子邮件。"
       omniauth_disallow_totp: "您的帐户已启用双重身份验证。请使用您的密码登录。"
+      works_with: "适用于"
       activate_account: "激活帐户"
       resend_title: "重新发送激活电子邮件"
       change_email: "更改电子邮件地址"
@@ -2734,6 +2741,7 @@ zh_CN:
         remove: "移除链接"
         visit: "在外部标签页中打开链接"
         link_copied: "链接已复制！"
+      unsupported_token: "富文本编辑器不支持此帖子中使用的所有功能；将您切换到 Markdown 编辑器。"
     notifications:
       tooltip:
         regular:
@@ -3410,6 +3418,8 @@ zh_CN:
       reply:
         title: "回复"
         help: "开始撰写此话题的回复"
+      footer_buttons:
+        region_label: "话题行动"
       share:
         title: "分享话题"
         extended_title: "分享链接"
@@ -3582,6 +3592,7 @@ zh_CN:
       empty: "没有帖子"
       aria_post_number: "%{title} - 帖子 #%{postNumber}"
       bulk:
+        select_all: "全选"
         clear_all: "全部清除"
         actions: "批量操作"
     post:
@@ -3684,10 +3695,8 @@ zh_CN:
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，您需要登录才能下载附件。"
       cancel_composer:
-        confirm: "您想对您的帖子做什么？"
+        confirm: "你想放弃你的帖子吗？"
         discard: "舍弃"
-        save_draft: "保存草稿供以后使用"
-        keep_editing: "继续编辑"
       via_email: "此帖子通过电子邮件送达"
       via_auto_generated_email: "此帖子通过自动生成的电子邮件送达"
       whisper: "此帖子是对版主的密语"
@@ -3913,6 +3922,8 @@ zh_CN:
       foreground_color: "文本颜色"
       color_validations:
         cant_be_empty: "不能为空"
+        incorrect_length: "必须匹配格式#RRGGBB 或#RGB"
+        non_hexdecimal: "必须仅包含十六进制字符（0-9、AF）"
       styles:
         type: "样式"
         icon: "图标"
@@ -4786,6 +4797,8 @@ zh_CN:
           light: "浅色"
           dark: "深色"
           auto: "自动"
+          title: "颜色模式"
+          aria_label: "颜色模式，当前为 %{mode}"
     welcome_topic_banner:
       title: "创建您的欢迎话题"
       description: "您的欢迎话题是新成员首先会阅读的内容。把它想象成您的“电梯推销”或“使命宣言”。让每个人都知道这个社区是为谁服务的，他们可以在这里找到什么，以及您希望他们首先做什么。"
@@ -5026,9 +5039,16 @@ zh_CN:
           title: "本地化"
           header_description: "为您的成员配置社区的界面语言和其他本地化选项"
           keywords: "语言区域|语言|时区|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "登录与身份验证"
           header_description: "配置用户登录与身份验证方式、秘密与密钥、OAuth2 提供商等。"
+          sub_pages:
+            common_settings:
+              title: "设置"
+            authenticators:
+              title: "社交登录"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "徽标"
           header_description: "配置整个站点使用的徽标和图标"
@@ -6051,6 +6071,7 @@ zh_CN:
             title: "颜色选项"
             toggle: "可由用户选择"
             toggle_description: "用户可以选择调色板"
+            toggle_default_light_on_theme: "调色板是默认主题上的默认浅色调色板（%{themeName}）"
           colors:
             title: "颜色"
           save_changes: "保存更改"
@@ -6191,7 +6212,7 @@ zh_CN:
         copy_to_clipboard: "复制到剪贴板"
         copied_to_clipboard: "已复制到剪贴板"
         copy_to_clipboard_error: "复制到剪贴板时出错"
-        theme_owner: "不可编辑，拥有者："
+        theme_owner: "拥有者："
         email_templates:
           title: "电子邮件"
           subject: "主题"
@@ -6200,6 +6221,10 @@ zh_CN:
           body: "正文"
           revert: "还原变更"
           revert_confirm: "确定要还原您的变更吗？"
+          search_templates: "按模板名称筛选..."
+          no_templates_found: "没有符合您筛选条件的模板。"
+          edit: "编辑"
+          back: "返回模板"
         component:
           all_filter: "所有"
           used_filter: "已使用"
@@ -6787,6 +6812,7 @@ zh_CN:
             tag_group_change: "修改标签组"
             delete_associated_accounts: "删除关联帐户"
             change_theme_site_setting: "更改主题站点设置"
+            stop_impersonating: "停止模拟"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"

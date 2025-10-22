@@ -2750,6 +2750,10 @@ et:
           title: "Failid"
         legal:
           title: "Õiguslik"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Seaded"
         logo:
           form:
             mobile: "Mobiil"
@@ -3194,6 +3198,7 @@ et:
           body: "Sisu"
           revert: "Loobu muudatustest"
           revert_confirm: "Kas oled kindel, et soovid oma muudatustest loobuda?"
+          edit: "Muuda"
         component:
           all_filter: "Kõik"
           enabled_filter: "Sisse lülitatud"

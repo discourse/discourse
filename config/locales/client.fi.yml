@@ -3894,10 +3894,7 @@ fi:
         attachment_upload_not_allowed_for_new_user: "Uudet käyttäjät eivät saa ladata liitteitä."
         attachment_download_requires_login: "Sinun täytyy kirjautua sisään, jotta voit ladata liitetiedostoja."
       cancel_composer:
-        confirm: "Mitä haluaisit tehdä viestillesi?"
         discard: "Hylkää"
-        save_draft: "Tallenna luonnos myöhempää käyttöä varten"
-        keep_editing: "Jatka muokkaamista"
       via_email: "tämä viesti lähetettiin sähköpostitse"
       via_auto_generated_email: "tämä viesti saapui automaattisesti luotuna sähköpostina"
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
@@ -5280,9 +5277,12 @@ fi:
           title: "Lokalisointi"
           header_description: "Määritä yhteisösi käyttöliittymän kieli ja muut lokalisointivaihtoehdot jäsenillesi"
           keywords: "maa-asetus|kieli|aikavyöhyke|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Kirjautuminen ja todennus"
           header_description: "Määritä käyttäjien kirjautumis- ja todennustavat, salatunnukset ja avaimet, OAuth2-palveluntarjoajat ja muuta"
+          sub_pages:
+            common_settings:
+              title: "Asetukset"
         logo:
           title: "Logo"
           header_description: "Määritä koko sivuston logot ja kuvakkeet"
@@ -6457,7 +6457,6 @@ fi:
         copy_to_clipboard: "Kopioi leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
-        theme_owner: "Et voi muokata, omistaja:"
         email_templates:
           title: "Sähköposti"
           subject: "Aihe"
@@ -6465,6 +6464,7 @@ fi:
           body: "Leipäteksti"
           revert: "Palauta muutokset"
           revert_confirm: "Haluatko varmasti palauttaa muutokset?"
+          edit: "Muokkaa"
         component:
           all_filter: "Kaikki"
           used_filter: "Käytetty"

@@ -3,7 +3,7 @@
 describe TopicQuery do
   describe "sorts events" do
     fab!(:user) { Fabricate(:user, admin: true) }
-    fab!(:notified_user) { Fabricate(:user) }
+    fab!(:notified_user, :user)
     fab!(:topic_1) { Fabricate(:topic, user: user) }
     fab!(:topic_2) { Fabricate(:topic, user: user) }
     fab!(:topic_3) { Fabricate(:topic, user: user) }
@@ -23,7 +23,7 @@ describe TopicQuery do
     fab!(:future_event_2) do
       DiscoursePostEvent::Event.create!(
         id: post_2.id,
-        original_starts_at: Time.now + 1.hours,
+        original_starts_at: Time.now + 1.hour,
         original_ends_at: Time.now + 2.hours,
       )
     end

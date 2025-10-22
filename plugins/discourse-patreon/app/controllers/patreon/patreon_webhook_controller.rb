@@ -56,7 +56,7 @@ class Patreon::PatreonWebhookController < ApplicationController
 
     Jobs.enqueue(:sync_patron_groups, patreon_id: patreon_id)
 
-    render body: nil, status: 200
+    render body: nil, status: :ok
   end
 
   def event

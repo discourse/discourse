@@ -284,18 +284,20 @@ zh_CN:
       translations:
         title: "翻译"
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
+        supported_locales: "支持的语言"
+        supported_locales_description: "该网站的设置还允许游客提供帖子翻译。"
         admin_actions:
           translation_settings: "翻译设置"
           localization_settings: "本地化设置"
-          disabled_state:
-            configure: "配置翻译"
-            empty_label: "自动翻译已禁用，点击下方进行配置"
+          enable_translations: "启用自动翻译"
         stats:
           complete_language_detection_description: "所有符合 %{total} 条件的帖子均已检测到其语言。"
           incomplete_language_detection_description: "%{done} 个符合条件的帖子中的 %{total} 个已检测到其语言。"
-          backfill_disabled: "回填功能目前已禁用。"
+          backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
+          description_tooltip:
+            other: '有 %{count} 个帖子可供翻译。'
         progress_chart:
-          title: "翻译进度 %{tooltip}"
+          title: "翻译进度"
           bar_done:
             other: "%{count} 个帖子"
         translations_menu:

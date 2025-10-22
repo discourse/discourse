@@ -2895,10 +2895,7 @@ vi:
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
       cancel_composer:
-        confirm: "Bạn muốn làm gì với bài đăng của mình?"
         discard: "Hủy bỏ"
-        save_draft: "Lưu bản nháp để sử dụng sau"
-        keep_editing: "Tiếp tục chỉnh sửa"
       via_email: "bài viết này đăng qua email"
       via_auto_generated_email: "bài đăng này đến qua một email được tạo tự động"
       whisper: "bài viết này là lời nhắn từ điều hành viên"
@@ -3820,6 +3817,10 @@ vi:
           title: "Tập tin"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Cài đặt"
         logo:
           form:
             mobile: "Điện thoại"
@@ -4440,7 +4441,6 @@ vi:
         copy_to_clipboard: "Sao chép vào clipboard"
         copied_to_clipboard: "Sao chép vào Clipboard"
         copy_to_clipboard_error: "Lỗi sao chép dữ liệu vào Clipboard"
-        theme_owner: "Không thể chỉnh sửa, thuộc sở hữu của:"
         email_templates:
           title: "Email"
           subject: "Chủ đề"
@@ -4448,6 +4448,7 @@ vi:
           body: "Nội dung"
           revert: "Hoàn nguyên thay đổi"
           revert_confirm: "Bạn có chắc chắn muốn hoàn nguyên các thay đổi?"
+          edit: "Sửa"
         component:
           all_filter: "All"
           disabled_filter: "Vô hiệu hóa"

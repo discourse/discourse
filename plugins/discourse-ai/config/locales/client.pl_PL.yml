@@ -217,6 +217,9 @@ pl_PL:
             max_posts_for_context:
               label: "Maksymalna liczba postów dla kontekstu"
               description: "Maksymalna liczba postów z tematu do uwzględnienia w kontekście analizy (domyślnie: 5)"
+            allow_system_posts:
+              label: "Zezwalaj na wpisy systemowe"
+              description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
       default_llm:
@@ -322,20 +325,24 @@ pl_PL:
       translations:
         title: "Tłumaczenia"
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
+        supported_locales: "Obsługiwane języki"
+        supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"
-          disabled_state:
-            configure: "Konfiguruj tłumaczenia"
-            empty_label: "Tłumaczenia automatyczne są wyłączone, kliknij poniżej, aby je skonfigurować"
+          enable_translations: "Włącz automatyczne tłumaczenia"
         stats:
           title: "Statystyki tłumaczeń"
           complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język."
           incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język."
-          backfill_disabled: "Uzupełnianie danych jest obecnie wyłączone."
-          description_tooltip: "Kwalifikujące się posty są określane na podstawie ustawień tłumaczenia AI"
+          backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
+          description_tooltip:
+            one: 'Jest %{count} wpis nadający się do przetłumaczenia.'
+            few: 'Są %{count} wpisy nadające się do przetłumaczenia.'
+            many: 'Jest %{count} wpisów nadających się do przetłumaczenia.'
+            other: 'Jest %{count} wpisów nadających się do przetłumaczenia.'
         progress_chart:
-          title: "Postęp tłumaczenia %{tooltip}"
+          title: "Postęp tłumaczenia"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} z %{total} przetłumaczonych postów"
           bar_done:
@@ -423,6 +430,7 @@ pl_PL:
           last_week: "Ostatni tydzień"
           last_month: "Ostatni miesiąc"
           custom: "Niestandardowy..."
+        credit_allocations: "Alokacje kredytów"
       ai_persona:
         ai_tools: "Narzędzia"
         tool_strategies:
@@ -632,6 +640,11 @@ pl_PL:
           max_tokens_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnego użycia"
           max_usages_help: "Maksymalna liczba przypadków, w których każdy użytkownik w tej grupie może użyć modelu AI w określonym czasie. Ten limit jest śledzony dla poszczególnych użytkowników, a nie współdzielony przez grupę."
           max_usages_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnej liczby tokenów"
+        credit_allocation:
+          credits_remaining: "Pozostało %{remaining} z %{total} kredytów (%{percentage}%)"
+          soft_limit_warning: "Ten model ma %{percentage}% kredytów AI pozostałych w tym miesiącu"
+          hard_limit_warning: "Wyczerpały się kredyty AI dla tego modelu. Funkcje SI wykorzystujące ten model będą niedostępne do %{reset_date}."
+          next_reset: "Zresetowano kredyty na %{time}"
         usage:
           ai_bot: "Bot AI"
           ai_helper: "Pomocnik (%{persona})"
@@ -786,6 +799,11 @@ pl_PL:
           credits: "Napisy z AI"
           save_caption: "Zapisz"
         no_content_error: "Najpierw dodaj zawartość, aby wykonać na niej działania AI."
+      errors:
+        credit_limit_dialog:
+          title: "Osiągnięto limit kredytów AI"
+          message: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu na stronie %{reset_time}."
+          message_without_time: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu."
       reviewables:
         model_used: "Zastosowany model:"
         accuracy: "Dokładność:"
@@ -846,6 +864,7 @@ pl_PL:
           none: "Przepraszamy, nasze wyszukiwanie AI nie znalazło pasujących tematów"
           new: "Naciśnij „Szukaj”, aby rozpocząć wyszukiwanie nowych wyników za pomocą sztucznej inteligencji"
           unavailable: "Wyniki AI są niedostępne"
+          zero_results_expanded: "Znaleziono zero wyników, pokazano %{count} wyników AI"
         semantic_search_tooltips:
           results_explanation: "Po włączeniu tej opcji poniżej zostaną dodane dodatkowe wyniki wyszukiwania AI."
           invalid_sort: "Aby wyświetlić wyniki AI, wyniki wyszukiwania muszą być sortowane według trafności"

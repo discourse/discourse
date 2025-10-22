@@ -3,7 +3,7 @@
 class SearchLog < ActiveRecord::Base
   MAXIMUM_USER_AGENT_LENGTH = 2000
 
-  validates_presence_of :term
+  validates :term, presence: true
   validates :user_agent, length: { maximum: MAXIMUM_USER_AGENT_LENGTH }
 
   belongs_to :user

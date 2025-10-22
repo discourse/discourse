@@ -1854,7 +1854,7 @@ pl_PL:
     logo: "Obraz logo w lewym górnym rogu witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku kształtu większym niż 3: 1. Jeśli pole pozostanie puste, wyświetlony zostanie tekst tytułu witryny."
     logo_small: "Mały obraz logo w lewym górnym rogu witryny, widoczny podczas przewijania w dół. Użyj kwadratowego obrazu 120 × 120. Jeśli pole pozostanie puste, wyświetlony zostanie glif domowy."
     digest_logo: "Alternatywne logo użyte w górnej części podsumowania e-mail witryny. Użyj szerokiego obrazu prostokąta. Nie używaj obrazu SVG. Jeśli pole pozostanie puste, zostanie użyty obraz z ustawienia „logo”."
-    mobile_logo: "Logo używane w mobilnej wersji Twojej witryny. Użyj szerokiego prostokątnego obrazu o wysokości 120 i współczynniku kształtu większym niż 3: 1. Jeśli pole pozostanie puste, zostanie użyty obraz z ustawienia „logo”."
+    mobile_logo: "Logo używane w mobilnej wersji witryny. Zalecamy użycie kwadratowej ikony, aby nie przytłaczać nagłówka, ale możesz użyć szerokiego, prostokątnego obrazu o wysokości 120 i proporcjach większych niż 3:1. Jeśli pozostawisz puste pole, zostanie użyty obraz z ustawień logo."
     logo_dark: "Ciemna alternatywa dla ustawienia 'logo'."
     logo_small_dark: "Ciemna alternatywa dla ustawienia witryny 'logo small'."
     mobile_logo_dark: "Ciemna alternatywa dla ustawienia witryny 'mobile logo'."
@@ -1869,8 +1869,8 @@ pl_PL:
     email_custom_headers: "Lista niestandardowych nagłówków wiadomości e-mail"
     email_subject: "Konfigurowalny format tematów standardowych wiadomości e-mail. Zobacz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Dostarcza użytkownikom więcej informacji o tym, dlaczego nie mogą uzyskać dostępu do określonego tematu. Uwaga: jest to mniej bezpieczne, ponieważ użytkownicy będą wiedzieć, czy adres URL prowadzi do prawidłowego tematu."
-    enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego, zanim będą mogli uzyskać dostęp do interfejsu Discourse. To ustawienie nie ma wpływu na uwierzytelnianie API lub 'dostawcy DiscourseConnect'. Jeśli opcja enforce_second_factor_on_external_auth jest włączona, użytkownicy nie będą mogli logować się za pomocą zewnętrznych dostawców uwierzytelniania po skonfigurowaniu uwierzytelniania dwuskładnikowego."
-    enforce_second_factor_on_external_auth: "Wymagaj od użytkowników korzystania z uwierzytelniania dwuskładnikowego przez cały czas. Po włączeniu uniemożliwi to użytkownikom logowanie się za pomocą zewnętrznych metod uwierzytelniania, takich jak logowanie społecznościowe, jeśli mają włączone uwierzytelnianie dwuskładnikowe. Po wyłączeniu użytkownicy będą musieli potwierdzić uwierzytelnianie dwuskładnikowe tylko podczas logowania przy użyciu nazwy użytkownika i hasła. Zobacz także ustawienie `enforce_second_factor`."
+    enforce_second_factor: "Wymagaj od użytkowników włączenia uwierzytelniania dwuskładnikowego (2FA) przed uzyskaniem dostępu do interfejsu użytkownika Discourse. To ustawienie nie wpływa na uwierzytelnianie API ani dostawcy DiscourseConnect. Jeśli opcja „execute_second_factor_on_external_auth” jest włączona, użytkownicy nie będą mogli logować się za pomocą zewnętrznych dostawców uwierzytelniania po skonfigurowaniu uwierzytelniania dwuskładnikowego."
+    enforce_second_factor_on_external_auth: "Wymagaj od użytkowników stałego korzystania z uwierzytelniania dwuskładnikowego (2FA). Po włączeniu tej opcji użytkownicy nie będą mogli logować się za pomocą zewnętrznych metod uwierzytelniania, takich jak logowanie za pośrednictwem mediów społecznościowych, jeśli mają włączoną funkcję 2FA. Po wyłączeniu tej opcji użytkownicy będą musieli potwierdzić uwierzytelnianie dwuskładnikowe tylko podczas logowania za pomocą nazwy użytkownika i hasła. Zobacz również ustawienie `enforce_second_factor`."
     force_https: "Wymuś używanie wyłącznie HTTPS na stronie. UWAGA: NIE włączaj tego dopóki nie zweryfikujesz, że HTTPS jest w pełni skonfigurowany i działa absolutnie wszędzie! Czy sprawdziłeś/łaś swoje CDN, loginy z portali społecznościowych i wszystkie zewnętrzne loga / zależności żeby być pewnym, że są kompatybilne z HTTPS?"
     summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
     summary_posts_required: "Minimalna liczba wpisów w temacie przed „Podsumowaniem tego tematu” jest włączona. Zmiany tego ustawienia zostaną zastosowane z mocą wsteczną w ciągu tygodnia."
@@ -1928,8 +1928,10 @@ pl_PL:
     ga_universal_domain_name: "Domena śledzenia analityki Google, np: mojawitryna.pl; zobacz <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Włącz śledzenie w wielu domenach za pomocą Google Analythics. Wychodzące linki do tych domen będą miały dodatkowy identyfikator klienta. Zobacz <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>poradnik Cross-Domain Tracking od Google.</a>"
     gtm_container_id: "Identyfikator kontenera menedżera tagów Google. np.: GTM-ABCD12E. <br/>Uwaga: Aby korzystać z GTM, gdy włączona jest polityka bezpieczeństwa treści (CSP), zapoznaj się z dokumentacją: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
+    google_site_verification_token: Token weryfikacji konsoli wyszukiwania Google. Zostanie dołączony jako metatag w nagłówku HTML.
     enable_escaped_fragments: "Wróć do Google Ajax-Crawling API, jeśli nie zostanie wykryty żaden webcrawler. Zobacz <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Zezwalaj moderatorom na tworzenie kategorii i grup oraz zarządzanie nimi"
+    moderators_manage_categories: "Zezwól moderatorom na tworzenie i zarządzanie kategoriami"
+    moderators_manage_groups: "Zezwól moderatorom na tworzenie i zarządzanie grupami"
     moderators_change_post_ownership: "Zezwalaj moderatorom na zmianę właściciela posta"
     cors_origins: "Dozwolone źródła dla zapytać cross-origin (CORS). Każde źródło musi zawierać http:// lub https://. Zmienna środowiskowa DISCOURSE_ENABLE_CORS musi być ustawiona na true żeby włączyć CORS."
     use_admin_ip_allowlist: "Administratorzy mogą się zalogować tylko wtedy, gdy używają adresu IP zdefiniowanego na liście sprawdzonych adresów IP (Administrator > Logi > Sprawdzone adresy IP)."
@@ -1971,6 +1973,7 @@ pl_PL:
     top_page_default_timeframe: "Domyślny okres górnej strony dla anonimowych użytkowników (automatycznie dostosowuje się do zalogowanych użytkowników na podstawie ich ostatniej wizyty)."
     moderators_view_emails: "Zezwalaj moderatorom na przeglądanie adresów e-mail użytkowników."
     moderators_view_ips: "Zezwól moderatorom na przeglądanie adresów IP użytkowników."
+    moderators_change_trust_levels: "Zezwól moderatorom na zmianę poziomu zaufania użytkowników."
     prioritize_username_in_ux: "Pokaż nazwę użytkownika jako pierwszą na stronie użytkownika, jego karcie i w postach (gdy opcja jest wyłączona, pełna nazwa jest wyświetlana jako pierwsza)"
     enable_rich_text_paste: "Włącz automatyczną konwersję HTML na Markdown podczas wklejania tekstu do kompozytora."
     send_old_credential_reminder_days: "Przypomnij o starych danych logowania po dniach"
@@ -2827,6 +2830,9 @@ pl_PL:
       group: "Filtruj tematy według grup"
       groups_any: "Pokaż tematy z dowolną ze wskazanych grup (rozdzielone przecinkami)"
       groups_all: "Pokaż tematy ze wszystkimi określonymi grupami (rozdzielone znakiem plus)"
+      locale: "Filtruj tematy według języka oryginału"
+      locale_any: "Pokaż tematy pierwotnie napisane w dowolnym z podanych języków (rozdzielone przecinkami)"
+      exclude_locale: "Wyklucz tematy pierwotnie napisane w określonym języku"
   discourse_connect:
     login_error: "Błąd logowania"
     not_found: "Nie można znaleźć Twojego konta. Skontaktuj się z administratorem serwisu."
@@ -4257,11 +4263,11 @@ pl_PL:
       title: "Uwierzytelnianie dwuskładnikowe wyłączone"
       subject_template: "[%{email_prefix}] Uwierzytelnianie dwuskładnikowe wyłączone"
       text_body_template: |
-        Uwierzytelnianie dwuskładnikowe zostało wyłączone na Twoim koncie na %{site_name}. Teraz możesz zalogować się tylko przy użyciu hasła; dodatkowy kod uwierzytelniania nie jest już wymagany.
+        Uwierzytelnianie dwuskładnikowe zostało wyłączone na Twoim koncie pod adresem %{site_name}. Możesz teraz logować się tylko za pomocą hasła; dodatkowy kod uwierzytelniający nie jest już wymagany.
 
-        Jeśli nie zdecydowałeś/łaś się wyłączyć uwierzytelniania dwuskładnikowego, ktoś uzyskać niepowołany dostęp do Twojego konta.
+        Jeśli nie wyłączyłeś uwierzytelniania dwuskładnikowego (2FA), ktoś mógł włamać się na Twoje konto.
 
-        Jeśli masz jakieś pytania, [skontaktuj się z naszym przyjaznym personelem](%{base_url}/about).
+        W razie pytań [skontaktuj się z naszą przyjazną obsługą] (%{base_url}/about).
     digest:
       why: "Krótkie podsumowanie %{site_link} od %{since}"
       since_last_visit: "Od twojej ostatniej wizyty"
@@ -4561,6 +4567,8 @@ pl_PL:
     latte_theme_name: "Latte"
     summer_theme_name: "Lato"
     dark_rose_theme_name: "Ciemna róża"
+    errors:
+      cannot_edit_remote_copies: "Edycja zdalnych kopii palet kolorów jest niedozwolona."
   edit_this_page: "Edytuj tę stronę"
   csv_export:
     boolean_yes: "Tak"

@@ -115,8 +115,6 @@ pt_BR:
     ai_discord_search_mode: "Selecione o modo de pesquisa a ser usado para a pesquisa do Discord"
     ai_discord_search_persona: "A persona a ser usada para pesquisa do Discord."
     ai_discord_allowed_guilds: "As guildas do Discord (servidores) nas quais o bot tem permissão para pesquisar"
-    ai_bot_enable_dedicated_ux: "Permitir interface do bot em tela cheia em vez de MP"
-    ai_translation_enabled: "Ativa o recurso de tradução por IA"
     ai_translation_model: "O modelo a ser usado para tradução. Esse modelo precisa ter compatível com tradução. Essa configuração pode ser substituída por personas."
     ai_translation_backfill_limit_to_public_content: "Quando ativado, somente o contéudo nas categorias públicas será traduzido. Quando desativado, o conteúdo nas MPs de grupo e categorias privadas também será enviado para tradução."
     ai_translation_backfill_max_age_days: "A idade máxima da postagem ou tópico a ser traduzido. Postagens e tópicos mais antigos que esta não serão traduzidos. O valor 0 desativa o preenchimento sem desativar a tradução de postagens novas."

@@ -15,9 +15,9 @@ DOWNLOAD_TEMP_FILE = "#{__dir__}/../tmp/assets.tar.gz"
 
 PRE_BUILD_ROOT = "https://get.discourse.org/discourse-assets"
 
-JS_SOURCE_PATHS = %w[app/assets/javascripts package.json pnpm-lock.yaml]
+JS_SOURCE_PATHS = %w[frontend package.json pnpm-lock.yaml]
 
-EMBER_APP_DIR = "app/assets/javascripts/discourse"
+EMBER_APP_DIR = "frontend/discourse"
 BUILD_INFO_FILE = "#{EMBER_APP_DIR}/dist/BUILD_INFO.json"
 
 Dir.chdir("#{__dir__}/..")

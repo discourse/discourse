@@ -1692,7 +1692,6 @@ pt_BR:
     logo: "A imagem do logotipo no canto superior à esquerda do seu site. Use uma imagem retangular larga com 120 de altura e proporção maior que 3:1. Se for deixada em branco, o texto do título do site será exibido."
     logo_small: "A pequena imagem do logotipo no canto superior à esquerda do site, exibida ao rolar para baixo. Use uma imagem quadrada de 120×120. Se for deixada em branco, um glifo de página inicial será exibido."
     digest_logo: "A imagem do logotipo alternativo usada na parte superior do resumo de e-mail do seu site. Use uma imagem retangular larga. Não use uma imagem SVG. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
-    mobile_logo: "O logotipo usado na versão do seu site para dispositivos móveis. Use uma imagem retangular larga com 120 de altura e proporção maior que 3:1. Se for deixada em branco, a imagem da configuração \"logotipo\" será usada."
     logo_dark: "Esquema escuro alternativo para a configuração do site \"logotipo\"."
     logo_small_dark: "Esquema escuro alternativo para a configuração do site \"logotipo pequeno\"."
     mobile_logo_dark: "Esquema escuro alternativo para a configuração do site \"logotipo para dispositivo móvel\"."
@@ -1706,8 +1705,6 @@ pt_BR:
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
     email_subject: "Formato de assunto personalizável para e-mails padrão. Acesse <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Fornece mais detalhes aos(às) usuários(as) sobre o motivo de não poderem acessar um tópico específico. Observação: isso não é tão seguro porque os(as) usuários(as) saberão se uma URL estiver vinculada a um tópico válido."
-    enforce_second_factor: "Exija que os(as) usuários(as) ativem autenticação de dois fatores antes de acessarem a IU do Discourse. Esta configuração não afeta a autenticação por API ou \"DiscourseConnect provider\". Se enforce_second_factor_on_external_auth estiver ativado, os(as) usuários(as) não poderão fazer login com provedores de autenticação externos após a configuração da autenticação de dois fatores."
-    enforce_second_factor_on_external_auth: "Exija que os(as) usuários(as) ativem autenticação de dois fatores todas as vezes. Quando ativada, esta funcionalidade impede o acesso com métodos de autenticação externos, como plugins de redes sociais, se houver autenticação de dois fatores ativada. Quando desativada, os(as) usuários(as) precisam apenas confirmar a autenticação de dois fatores ao acessarem com nome de usuário(a) e senha. Confira também a configuração \"enforce_second_factor\"."
     force_https: "Obrigue seu site a usar apenas HTTPS. AVISO: NÃO ative até ter verificado se o HTTPS está totalmente configurado e funcionando em todos os lugares! Você verificou se seu CDN, todas as entradas com conta de rede social e logotipos e dependências externas também são compatíveis com HTTPS?"
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída em \"Resumir este tópico\" "
     summary_posts_required: "Quantidade mínima de postagens em um tópico antes de ativar \"Resumir este tópico\". As alterações desta configuração serão aplicadas de forma retroativa dentro de uma semana."
@@ -1766,7 +1763,6 @@ pt_BR:
     ga_universal_auto_link_domains: "Ative o monitoramento de domínio cruzado do Google Universal Analytics. Os links de saída para estes domínios conterão a ID de cliente. Consulte <a href='https://support.google.com/analytics/answer/1034342?hl=pt-BR' target='_blank'>Guia de acompanhamento de vários domínios do Google.</a>"
     gtm_container_id: "A id de contêiner do Google Tag Manager, ex.: GTM-ABCD12E. <br/>Observação: para usar o GTM quando a Política de Segurança de Conteúdo (CSP) estiver ativada, consulte a documentação na Meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces em scripts do Google Tag Manager</a>."
     enable_escaped_fragments: "Voltar para a API do Google Ajax-Crawling se um webcrawler não for encontrado. Consulte <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permitir que moderadores criem e gerenciem grupos e categorias"
     moderators_change_post_ownership: "Permitirem que moderadores(as) alterem a propriedade da postagem"
     cors_origins: "Origens permitidas para pedidos de origem cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS deve ser definida como verdadeira para ativar CORS."
     use_admin_ip_allowlist: "Administradores(as) só podem entrar com a conta se estiverem na lista de IPs filtrados (Administração > Registros > IPs filtrados)."
@@ -3996,12 +3992,6 @@ pt_BR:
     account_second_factor_disabled:
       title: "Autenticação de dois fatores desativada"
       subject_template: "[%{email_prefix}] Autenticação de dois fatores desativada"
-      text_body_template: |
-        A autenticação de dois fatores foi desativada na sua conta em %{site_name}. Agora você pode entrar com a conta somente usando a senha. Não é mais necessário um código de autenticação adicional.
-
-        Se você não tiver optado por desativar a autenticação de dois fatores, alguém pode ter comprometido sua conta.
-
-        Se você tiver alguma dúvida, [entre em contato com nossa equipe prestativa](%{base_url}/sobre).
     digest:
       why: "Um breve resumo de %{site_link} desde %{since}"
       since_last_visit: "Desde a sua última visita"

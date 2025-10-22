@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 module CookedProcessorMixin
+  GIF_SOURCES_REGEXP = %r{(giphy|tenor)\.com/}
+  LIGHTBOX_WRAPPER_CSS_CLASS = "lightbox-wrapper"
+  MIN_LIGHTBOX_WIDTH = 100
+  MIN_LIGHTBOX_HEIGHT = 100
+
   def post_process_oneboxes
     limit = SiteSetting.max_oneboxes_per_post - @doc.css("aside.onebox, a.inline-onebox").size
     oneboxes = {}
@@ -120,6 +125,22 @@ module CookedProcessorMixin
     end
   end
 
+  def post_process_images
+    extract_images.each do |img|
+      still_an_image = process_hotlinked_image(img)
+      convert_to_link!(img) if still_an_image
+    end
+  end
+
+  def extract_images
+    # all images with a src attribute
+    @doc.css("img[src], img[#{PrettyText::BLOCKED_HOTLINKED_SRC_ATTR}]") -
+      # minus data images
+      @doc.css("img[src^='data']") -
+      # minus emojis
+      @doc.css("img.emoji")
+  end
+
   def limit_size!(img)
     # retrieve the size from
     #  1) the width/height attributes
@@ -197,6 +218,12 @@ module CookedProcessorMixin
     end
   rescue Zlib::BufError, URI::Error, OpenSSL::SSL::SSLError
     # FastImage.size raises BufError for some gifs, leave it.
+  end
+
+  def get_filename(upload, src)
+    return File.basename(src) unless upload
+    return upload.original_filename unless upload.original_filename =~ /\Ablob(\.png)?\z/i
+    I18n.t("upload.pasted_image_filename")
   end
 
   def is_valid_image_url?(url)
@@ -370,5 +397,207 @@ module CookedProcessorMixin
       .map(&:to_f)
       .sort
       .each { |r| yield r if r > 1 }
+  end
+
+  def is_svg?(img)
+    path =
+      begin
+        URI(img["src"]).path
+      rescue URI::Error
+        nil
+      end
+
+    File.extname(path) == ".svg" if path
+  end
+
+  def convert_to_link!(img)
+    w, h = img["width"].to_i, img["height"].to_i
+    user_width, user_height =
+      (w > 0 && h > 0 && [w, h]) || get_size_from_attributes(img) ||
+        get_size_from_image_sizes(img["src"], @opts[:image_sizes])
+
+    limit_size!(img)
+
+    src = img["src"]
+    return if src.blank? || is_a_hyperlink?(img)
+
+    # SVG images can only use the zoom feature in the new lightbox
+    return if is_svg?(img) && !SiteSetting.experimental_lightbox
+
+    upload = Upload.get_from_url(src)
+
+    original_width, original_height = nil
+
+    if (upload.present?)
+      original_width = upload.width || 0
+      original_height = upload.height || 0
+    else
+      original_width, original_height = (get_size(src) || [0, 0]).map(&:to_i)
+      if original_width == 0 || original_height == 0
+        Rails.logger.info "Can't reach '#{src}' to get its dimension."
+        return
+      end
+    end
+
+    if (upload.present? && upload.animated?) || src.match?(GIF_SOURCES_REGEXP)
+      img.add_class("animated")
+    end
+
+    generate_thumbnail =
+      original_width > SiteSetting.max_image_width || original_height > SiteSetting.max_image_height
+
+    user_width, user_height = [original_width, original_height] if user_width.to_i <= 0 &&
+      user_height.to_i <= 0
+    width, height = user_width, user_height
+
+    crop =
+      SiteSetting.min_ratio_to_crop > 0 && width.to_f / height.to_f < SiteSetting.min_ratio_to_crop
+
+    if crop
+      width, height = ImageSizer.crop(width, height)
+      img["width"], img["height"] = width, height
+    else
+      width, height = ImageSizer.resize(width, height)
+    end
+
+    if upload.present?
+      if generate_thumbnail
+        upload.create_thumbnail!(width, height, crop: crop)
+
+        each_responsive_ratio do |ratio|
+          resized_w = (width * ratio).to_i
+          resized_h = (height * ratio).to_i
+
+          if upload.width && resized_w <= upload.width
+            upload.create_thumbnail!(resized_w, resized_h, crop: crop)
+          end
+        end
+      end
+
+      return if upload.animated?
+
+      if img.ancestors(".onebox, .onebox-body").blank? && !img.classes.include?("onebox")
+        add_lightbox!(img, original_width, original_height, upload, crop)
+      end
+
+      optimize_image!(img, upload, cropped: crop) if generate_thumbnail
+    end
+  end
+
+  def process_hotlinked_image(img)
+    onebox = img.ancestors(".onebox, .onebox-body").first
+
+    # Skip hotlinked media processing if @post is not available (e.g., for chat messages)
+    return true if @post.nil?
+
+    @hotlinked_map ||= @post.post_hotlinked_media.preload(:upload).index_by(&:url)
+    normalized_src =
+      PostHotlinkedMedia.normalize_src(img["src"] || img[PrettyText::BLOCKED_HOTLINKED_SRC_ATTR])
+    info = @hotlinked_map[normalized_src]
+
+    still_an_image = true
+
+    if info&.too_large?
+      if !onebox || onebox.element_children.size == 1
+        add_large_image_placeholder!(img)
+      else
+        img.remove
+      end
+
+      still_an_image = false
+    elsif info&.download_failed?
+      if !onebox || onebox.element_children.size == 1
+        add_broken_image_placeholder!(img)
+      else
+        img.remove
+      end
+
+      still_an_image = false
+    elsif info&.downloaded? && upload = info&.upload
+      img["src"] = UrlHelper.cook_url(upload.url, secure: @should_secure_uploads)
+      img["data-dominant-color"] = upload.dominant_color(calculate_if_missing: true).presence
+      img.delete(PrettyText::BLOCKED_HOTLINKED_SRC_ATTR)
+    end
+
+    still_an_image
+  end
+
+  def optimize_image!(img, upload, cropped: false)
+    w, h = img["width"].to_i, img["height"].to_i
+    onebox = img.ancestors(".onebox, .onebox-body").first
+
+    # note: optimize_urls cooks the src further after this
+    thumbnail = upload.thumbnail(w, h)
+    if thumbnail && thumbnail.filesize.to_i < upload.filesize
+      img["src"] = thumbnail.url
+
+      srcset = +""
+
+      # Skip srcset for onebox images. Because onebox thumbnails by default
+      # are fairly small the width/height of the smallest thumbnail is likely larger
+      # than what the onebox thumbnail size will be displayed at, so we shouldn't
+      # need to upscale for retina devices
+      if !onebox
+        each_responsive_ratio do |ratio|
+          resized_w = (w * ratio).to_i
+          resized_h = (h * ratio).to_i
+
+          if !cropped && upload.width && resized_w > upload.width
+            cooked_url = UrlHelper.cook_url(upload.url, secure: @should_secure_uploads)
+            srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
+          elsif t = upload.thumbnail(resized_w, resized_h)
+            cooked_url = UrlHelper.cook_url(t.url, secure: @should_secure_uploads)
+            srcset << ", #{cooked_url} #{ratio.to_s.sub(/\.0\z/, "")}x"
+          end
+
+          img[
+            "srcset"
+          ] = "#{UrlHelper.cook_url(img["src"], secure: @should_secure_uploads)}#{srcset}" if srcset.present?
+        end
+      end
+    else
+      img["src"] = upload.url
+    end
+
+    if !@disable_dominant_color &&
+         (color = upload.dominant_color(calculate_if_missing: true).presence)
+      img["data-dominant-color"] = color
+    end
+  end
+
+  def add_lightbox!(img, original_width, original_height, upload, crop)
+    return if original_width < MIN_LIGHTBOX_WIDTH || original_height < MIN_LIGHTBOX_HEIGHT
+
+    # first, create a div to hold our lightbox
+    lightbox = create_node("div", LIGHTBOX_WRAPPER_CSS_CLASS)
+    img.add_next_sibling(lightbox)
+    lightbox.add_child(img)
+
+    # then, the link to our larger image
+    src_url = Upload.secure_uploads_url?(img["src"]) ? upload&.url || img["src"] : img["src"]
+    src = UrlHelper.cook_url(src_url, secure: @should_secure_uploads)
+
+    a = create_link_node("lightbox", src)
+    img.add_next_sibling(a)
+
+    a["data-cropped"] = "true" if crop
+    a["data-download-href"] = Discourse.store.download_url(upload) if upload
+
+    a.add_child(img)
+
+    # then, some overlay informations
+    meta = create_node("div", "meta")
+    img.add_next_sibling(meta)
+
+    filename = get_filename(upload, img["src"])
+    informations = +"#{original_width}×#{original_height}"
+    informations << " #{upload.human_filesize}" if upload
+
+    a["title"] = img["title"] || img["alt"] || filename
+
+    meta.add_child create_icon_node("far-image")
+    meta.add_child create_span_node("filename", a["title"])
+    meta.add_child create_span_node("informations", informations)
+    meta.add_child create_icon_node("discourse-expand")
   end
 end

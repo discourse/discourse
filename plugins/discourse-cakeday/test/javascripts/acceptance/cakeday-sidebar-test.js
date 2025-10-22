@@ -24,7 +24,7 @@ acceptance("Cakeday - Sidebar with cakeday disabled", function (needs) {
 
     assert
       .dom(".sidebar-section-link[data-link-name='anniversaries']")
-      .doesNotExist("it does not display the anniversaries link in sidebar");
+      .doesNotExist("does not display the anniversaries link in sidebar");
   });
 
   test("birthdays sidebar link is hidden", async function (assert) {
@@ -36,7 +36,7 @@ acceptance("Cakeday - Sidebar with cakeday disabled", function (needs) {
 
     assert
       .dom(".sidebar-section-link[data-link-name='birthdays']")
-      .doesNotExist("it does not display the birthdays link in sidebar");
+      .doesNotExist("does not display the birthdays link in sidebar");
   });
 });
 
@@ -91,7 +91,7 @@ acceptance("Cakeday - Sidebar with cakeday enabled", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/cakeday/anniversaries/today",
-      "it navigates to the right page"
+      "navigates to the right page"
     );
   });
 
@@ -125,7 +125,7 @@ acceptance("Cakeday - Sidebar with cakeday enabled", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/cakeday/birthdays/today",
-      "it navigates to the right page"
+      "navigates to the right page"
     );
   });
 });

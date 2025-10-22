@@ -89,38 +89,51 @@ module DiscourseAi
 
         sql = <<~SQL
           WITH supported AS (
-            SELECT localestr, split_part(localestr, '_', 1) AS base
+            SELECT localestr,
+                   split_part(localestr, '_', 1) AS base
             FROM (VALUES #{values_rows}) AS t(localestr)
           ),
           eligible_posts AS (
             #{get.where.not(posts: { locale: nil }).to_sql}
           ),
-          total_count AS (
+          all_posts_count AS (
             SELECT COUNT(*)::bigint AS count FROM eligible_posts
+          ),
+          non_target_locale_counts AS (
+            SELECT s.base,
+                   COUNT(*)::bigint AS count
+            FROM eligible_posts p
+            CROSS JOIN supported s
+            WHERE split_part(p.locale, '_', 1) != s.base
+            GROUP BY s.base
           ),
           done_per_base AS (
             SELECT s.base,
                    COUNT(*)::bigint AS done
             FROM eligible_posts p
             JOIN supported s ON TRUE
-            WHERE split_part(p.locale, '_', 1) = s.base
-               OR EXISTS (
-                    SELECT 1
-                    FROM post_localizations pl
-                    WHERE pl.post_id = p.id
-                      AND split_part(pl.locale, '_', 1) = s.base
-                  )
+            WHERE split_part(p.locale, '_', 1) != s.base AND EXISTS (
+              SELECT 1
+              FROM post_localizations pl
+              WHERE pl.post_id = p.id
+                AND split_part(pl.locale, '_', 1) = s.base
+            )
             GROUP BY s.base
           )
           SELECT s.localestr AS locale,
                  COALESCE(d.done, 0) AS done,
-                 t.count AS total
+                 COALESCE(ntl.count, 0) AS total
           FROM supported s
           LEFT JOIN done_per_base d ON d.base = s.base
-          CROSS JOIN total_count t
+          LEFT JOIN non_target_locale_counts ntl ON ntl.base = s.base
         SQL
 
-        DB.query(sql).map { |r| { locale: r.locale, done: r.done, total: r.total } }
+        results = DB.query(sql).map { |r| { locale: r.locale, done: r.done, total: r.total } }
+
+        results.sort_by do |r|
+          percentage = r[:total] > 0 ? r[:done].to_f / r[:total] : 0
+          -percentage
+        end
       end
 
       def self.cache_key_for_type

@@ -48,6 +48,7 @@ register_asset "stylesheets/modules/embeddings/common/ai-embedding-editor.scss"
 register_asset "stylesheets/modules/llms/common/usage.scss"
 register_asset "stylesheets/modules/llms/common/spam.scss"
 register_asset "stylesheets/modules/llms/common/ai-llm-quotas.scss"
+register_asset "stylesheets/modules/llms/common/ai-credit-bar.scss"
 
 register_asset "stylesheets/modules/ai-bot/common/ai-tools.scss"
 
@@ -97,7 +98,9 @@ after_initialize do
     DiscourseAi::Discover::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
-  register_problem_check ProblemCheck::AiLlmStatus
+  #register_problem_check ProblemCheck::AiLlmStatus
+  #register_problem_check ProblemCheck::AiCreditSoftLimit
+  #register_problem_check ProblemCheck::AiCreditHardLimit
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
@@ -148,6 +151,7 @@ after_initialize do
     face-smile
     face-meh
     face-angry
+    circle-info
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 

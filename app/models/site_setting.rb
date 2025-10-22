@@ -4,6 +4,12 @@ class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
     analytics
+    login
+    authenticators
+    discourseconnect
+    oauth2
+    oidc
+    saml
     badges
     categories_and_tags
     email
@@ -75,8 +81,8 @@ class SiteSetting < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :destroy
 
-  validates_presence_of :name
-  validates_presence_of :data_type
+  validates :name, presence: true
+  validates :data_type, presence: true
 
   after_save do
     if saved_change_to_value?

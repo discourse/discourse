@@ -3,6 +3,8 @@
 module DiscourseAi
   module Translation
     class TranslationController < ::ApplicationController
+      include AiCreditLimitHandler
+
       requires_plugin PLUGIN_NAME
 
       before_action :ensure_logged_in
@@ -23,7 +25,7 @@ module DiscourseAi
           return(
             render json:
                      failed_json.merge(error: I18n.t("discourse_ai.translation.errors.disabled")),
-                   status: 400
+                   status: :bad_request
           )
         end
 

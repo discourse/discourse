@@ -40,6 +40,15 @@ module Migrations::Importer
         @dependencies || []
       end
 
+      # stree-ignore
+      def priority(value = (getter = true; nil))
+        if getter
+          @priority
+        else
+          @priority = value
+        end
+      end
+
       def requires_mapping(name, sql)
         @required_mappings ||= {}
         @required_mappings[name] = sql

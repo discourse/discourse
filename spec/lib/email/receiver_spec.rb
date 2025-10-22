@@ -1746,6 +1746,18 @@ RSpec.describe Email::Receiver do
       expect { process(:new_user) }.to change(Topic, :count)
     end
 
+    it "raises an UserNotFoundError if enable_staged_users is false " do
+      SiteSetting.enable_staged_users = false
+      expect { process(:new_user) }.to raise_error(Email::Receiver::UserNotFoundError)
+    end
+
+    it "uses system user if enable_staged_users is false and fallback_to_system_user_for_category_emails is true" do
+      SiteSetting.enable_staged_users = false
+      SiteSetting.email_in_allow_system_user_fallback = true
+      expect { process(:new_user) }.to change(Topic, :count)
+      expect(Topic.last.user).to eq(Discourse.system_user)
+    end
+
     it "lets an email in from a high-TL user" do
       Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
       expect { process(:tl4_user) }.to change(Topic, :count)

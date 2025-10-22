@@ -88,7 +88,7 @@ module PostVoting
     end
 
     def flag
-      RateLimiter.new(current_user, "flag_post_voting_comment", 4, 1.minutes).performed!
+      RateLimiter.new(current_user, "flag_post_voting_comment", 4, 1.minute).performed!
       permitted_params =
         params.permit(%i[comment_id flag_type_id message is_warning take_action queue_for_review])
 

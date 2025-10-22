@@ -3103,6 +3103,10 @@ ca:
           title: "Fitxers"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Configuració"
         logo:
           form:
             mobile: "Mòbil"
@@ -3612,7 +3616,6 @@ ca:
         copy_to_clipboard: "Copia al porta-retalls"
         copied_to_clipboard: "Copiat al porta-retalls."
         copy_to_clipboard_error: "Error copiant dades al porta-retalls"
-        theme_owner: "No editable, el propietari és:"
         email_templates:
           title: "Correu electrònic"
           subject: "Assumpte"
@@ -3620,6 +3623,7 @@ ca:
           body: "Cos"
           revert: "Reverteix canvis"
           revert_confirm: "Esteu segur que voleu revertir els canvis?"
+          edit: "Edita"
         component:
           all_filter: "Tot"
           enabled_filter: "Activat"

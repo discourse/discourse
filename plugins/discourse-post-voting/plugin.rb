@@ -51,6 +51,11 @@ after_initialize do
 
   register_reviewable_type ReviewablePostVotingComment
 
+  if Rails.env.local? && enabled?
+    require_relative "lib/discourse_dev/reviewable_post_voting_comment"
+    DiscoursePluginRegistry.discourse_dev_populate_reviewable_types.add DiscourseDev::ReviewablePostVotingComment
+  end
+
   reloadable_patch do
     Post.include(PostVoting::PostExtension)
     Topic.include(PostVoting::TopicExtension)
@@ -190,7 +195,7 @@ after_initialize do
   register_modifier(:topic_embed_import_create_args) do |args|
     category_id = args[:category]
     next args unless category_id
-    next args if args[:archetype] != Archetype.default && !args[:archetype].blank?
+    next args if args[:archetype] != Archetype.default && args[:archetype].present?
 
     category = Category.find_by(id: category_id)
 
@@ -202,12 +207,8 @@ after_initialize do
   end
 
   register_category_custom_field_type(PostVoting::CREATE_AS_POST_VOTING_DEFAULT, :boolean)
-  if respond_to?(:register_preloaded_category_custom_fields)
-    register_preloaded_category_custom_fields(PostVoting::CREATE_AS_POST_VOTING_DEFAULT)
-  else
-    # TODO: Drop the if-statement and this if-branch in Discourse v3.2
-    Site.preloaded_category_custom_fields << PostVoting::CREATE_AS_POST_VOTING_DEFAULT
-  end
+  register_preloaded_category_custom_fields(PostVoting::CREATE_AS_POST_VOTING_DEFAULT)
+
   add_to_class(:category, :create_as_post_voting_default) do
     ActiveModel::Type::Boolean.new.cast(
       self.custom_fields[PostVoting::CREATE_AS_POST_VOTING_DEFAULT],
@@ -222,10 +223,9 @@ after_initialize do
   end
 
   register_category_custom_field_type(PostVoting::ONLY_POST_VOTING_IN_THIS_CATEGORY, :boolean)
-  if Site.respond_to? :preloaded_category_custom_fields
-    Site.preloaded_category_custom_fields << PostVoting::ONLY_POST_VOTING_IN_THIS_CATEGORY
-    Site.preloaded_category_custom_fields << PostVoting::CREATE_AS_POST_VOTING_DEFAULT
-  end
+  register_preloaded_category_custom_fields PostVoting::ONLY_POST_VOTING_IN_THIS_CATEGORY
+  register_preloaded_category_custom_fields PostVoting::CREATE_AS_POST_VOTING_DEFAULT
+
   add_to_class(:category, :only_post_voting_in_this_category) do
     ActiveModel::Type::Boolean.new.cast(
       self.custom_fields[PostVoting::ONLY_POST_VOTING_IN_THIS_CATEGORY],

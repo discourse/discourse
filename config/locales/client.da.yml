@@ -3287,10 +3287,7 @@ da:
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke overføre vedhæftede filer."
         attachment_download_requires_login: "Beklager, du skal være logget på for at hente vedhæftede filer."
       cancel_composer:
-        confirm: "Hvad vil du gerne gøre med dit indlæg?"
         discard: "Kassér"
-        save_draft: "Gem kladde til senere"
-        keep_editing: "Fortsæt redigering"
       via_email: "dette indlæg blev oprettet via email"
       via_auto_generated_email: "dette indlæg blev oprettet af en auto genereret e-mail"
       whisper: "dette indlæg er en privat hvisken for moderatorer"
@@ -4373,8 +4370,11 @@ da:
           title: "Jura"
         localization:
           title: "Lokalisering"
-        login_and_authentication:
-          title: "Login og godkendelse"
+        login:
+          title: "Login- og autentificering"
+          sub_pages:
+            common_settings:
+              title: "Indstillinger"
         logo:
           title: "Logo"
           form:
@@ -5138,7 +5138,6 @@ da:
         copy_to_clipboard: "Kopiér til udklipsholder"
         copied_to_clipboard: "Kopierede til udklipsholder"
         copy_to_clipboard_error: "Fejl ved kopiering til udklipsholder"
-        theme_owner: "Kan ikke redigeres, ejes af:"
         email_templates:
           title: "Email"
           subject: "Emne"
@@ -5146,6 +5145,7 @@ da:
           body: "Indhold"
           revert: "Rul ændringer tilbage"
           revert_confirm: "Er du sikker på, at du vil rulle ændringerne tilbage?"
+          edit: "Rediger"
         component:
           all_filter: "Alle"
           enabled_filter: "Aktiveret"

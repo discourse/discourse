@@ -115,8 +115,6 @@ nl:
     ai_discord_search_mode: "Selecteer de zoekmodus die je wilt gebruiken voor de Discord-zoekfunctie"
     ai_discord_search_persona: "De persona om te gebruiken voor de Discord-zoekfunctie"
     ai_discord_allowed_guilds: "Discord-gilden (servers) waar de bot mag zoeken"
-    ai_bot_enable_dedicated_ux: "Sta dit toe voor een botinterface op het volledig scherm, in plaats van een PB"
-    ai_translation_enabled: "Schakelt de AI-vertaalfunctie in"
     ai_translation_model: "Het model om te gebruiken voor vertaling. Dit model moet vertaling ondersteunen. Persona's kunnen deze instelling overschrijven."
     ai_translation_backfill_limit_to_public_content: "Als dit is ingeschakeld, wordt alleen content in openbare categorieën vertaald. Als dit is uitgeschakeld, wordt ook content in groeps-PB's en privécategorieën vertaald."
     ai_translation_backfill_max_age_days: "De maximale leeftijd van een bericht en topic dat vertaald moet worden. Berichten en topics die ouder zijn dan dit worden niet vertaald. 0 schakelt het vertalen van eerdere berichten uit, maar niet van nieuwe berichten."

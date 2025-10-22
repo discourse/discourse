@@ -647,6 +647,7 @@ en:
 
     preview: "preview"
     cancel: "Cancel"
+    done: "Done"
 
     deleting: "Deleting…"
 
@@ -2090,6 +2091,7 @@ en:
         first_time_and_daily: "First time a post is liked and daily"
         first_time: "First time a post is liked"
         never: "Never"
+      notify_on_linked_posts: "Notify when someone shares a link to one of my posts"
       email_previous_replies:
         title: "Include previous replies at the bottom of emails"
         unless_emailed: "unless previously sent"
@@ -3120,6 +3122,8 @@ en:
         visit: "Open link in external tab"
         link_copied: "Link copied!"
 
+      unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
+
     notifications:
       tooltip:
         regular:
@@ -3698,6 +3702,8 @@ en:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
       browse_latest_topics: "Browse latest topics"
+      browse_new_replies: "Browse new replies"
+      browse_new_topics: "Browse new topics"
 
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
@@ -3779,10 +3785,6 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
-      auto_close_momentarily:
-        one: "The last post in the topic is already %{count} hour old, so the topic will be closed momentarily."
-        other: "The last post in the topic is already %{count} hours old, so the topic will be closed momentarily."
-
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
@@ -3875,6 +3877,9 @@ en:
       reply:
         title: "Reply"
         help: "begin composing a reply to this topic"
+
+      footer_buttons:
+        region_label: "Topic actions"
 
       share:
         title: "Share Topic"
@@ -4211,10 +4216,8 @@ en:
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
       cancel_composer:
-        confirm: "What would you like to do with your post?"
+        confirm: "Do you want to discard your post?"
         discard: "Discard"
-        save_draft: "Save draft for later"
-        keep_editing: "Keep editing"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -4865,8 +4868,8 @@ en:
     preloader_text: "Loading"
 
     lightbox:
-      download: "download"
-      open: "original image"
+      download: "Download"
+      open: "Original image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
@@ -5424,6 +5427,8 @@ en:
           light: "Light"
           dark: "Dark"
           auto: "Auto"
+          title: "Color mode"
+          aria_label: "Color mode, currently %{mode}"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -5689,10 +5694,16 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-
+          sub_pages:
+            common_settings:
+              title: "Settings"
+            authenticators:
+              title: "Social logins"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"
@@ -6898,7 +6909,7 @@ en:
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
-        theme_owner: "Not editable, owned by:"
+        theme_owner: "Owned by:"
         email_templates:
           title: "Email"
           subject: "Subject"
@@ -6907,6 +6918,10 @@ en:
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
+          search_templates: "Filter by template name..."
+          no_templates_found: "No templates match your filters."
+          edit: "Edit"
+          back: "Back to templates"
         component:
           all_filter: "All"
           used_filter: "Used"

@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
-require "rails_helper"
+RSpec.describe "Anniversaries and Birthdays" do
+  before do
+    SiteSetting.cakeday_enabled = true
+    SiteSetting.cakeday_birthday_enabled = true
+  end
 
-describe "Anniversaries and Birthdays" do
   describe "when not logged in" do
-    it "should return the right response" do
+    it "returns the right response" do
       get "/cakeday/anniversaries.json"
       expect(response.status).to eq(403)
     end
@@ -16,14 +19,14 @@ describe "Anniversaries and Birthdays" do
 
     before { sign_in(current_user) }
 
-    it "should return 404 when viewing anniversaries and cakeday_enabled is false" do
+    it "returns 404 when viewing anniversaries and cakeday_enabled is false" do
       SiteSetting.cakeday_enabled = false
 
       get "/cakeday/anniversaries.json"
       expect(response.status).to eq(404)
     end
 
-    it "should return 404 when viewing birthdays and cakeday_birthday_enabled is false" do
+    it "returns 404 when viewing birthdays and cakeday_birthday_enabled is false" do
       SiteSetting.cakeday_birthday_enabled = false
 
       get "/cakeday/birthdays.json"
@@ -31,15 +34,15 @@ describe "Anniversaries and Birthdays" do
     end
 
     describe "when viewing anniversaries" do
-      it "should return the right payload" do
+      it "returns the right payload" do
         freeze_time(time) do
           created_at = time - 1.year
 
-          user1 = Fabricate(:user, created_at: created_at - 2.year)
+          user1 = Fabricate(:user, created_at: created_at - 2.years)
           user2 = Fabricate(:user, created_at: created_at - 1.day)
           user3 = Fabricate(:user, created_at: created_at)
           user4 = Fabricate(:user, created_at: created_at + 1.day)
-          user5 = Fabricate(:user, created_at: created_at + 2.day)
+          user5 = Fabricate(:user, created_at: created_at + 2.days)
           user6 = Fabricate(:user, created_at: created_at + 1.year)
 
           hidden_user = Fabricate(:user, created_at: created_at - 1.year)
@@ -47,27 +50,27 @@ describe "Anniversaries and Birthdays" do
 
           get "/cakeday/anniversaries.json", params: { month: time.month }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to eq [user2.id, user1.id, user3.id]
 
           get "/cakeday/anniversaries.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to eq [user1.id, user3.id]
 
           get "/cakeday/anniversaries.json", params: { filter: "tomorrow" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to eq [user4.id]
 
           get "/cakeday/anniversaries.json", params: { filter: "upcoming" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to eq [user5.id]
         end
       end
 
-      it "should account for the current user's timezone" do
+      it "accounts for the current user's timezone" do
         # Asia/Calcutta is +5.5 hours from UTC
         current_user.user_option.update!(timezone: "Asia/Calcutta")
 
@@ -84,12 +87,12 @@ describe "Anniversaries and Birthdays" do
 
           get "/cakeday/anniversaries.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user1.id, user2.id)
 
           get "/cakeday/anniversaries.json", params: { filter: "tomorrow" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["anniversaries"].map { |u| u["id"] }).to contain_exactly(user3.id, user4.id)
         end
       end
@@ -98,7 +101,7 @@ describe "Anniversaries and Birthdays" do
     describe "when viewing birthdays" do
       let(:time) { Time.zone.local(2016, 9, 30) }
 
-      it "should return the right payload" do
+      it "returns the right payload" do
         freeze_time(time) do
           user1 = Fabricate(:user, date_of_birth: "1904-9-28")
           user2 = Fabricate(:user, date_of_birth: "1904-9-29")
@@ -108,22 +111,22 @@ describe "Anniversaries and Birthdays" do
 
           get "/cakeday/birthdays.json", params: { month: time.month }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user1.id, user2.id, user3.id]
 
           get "/cakeday/birthdays.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user3.id]
 
           get "/cakeday/birthdays.json", params: { filter: "tomorrow" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user4.id]
 
           get "/cakeday/birthdays.json", params: { filter: "upcoming" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user5.id]
         end
       end
@@ -139,14 +142,14 @@ describe "Anniversaries and Birthdays" do
 
           get "/cakeday/birthdays.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user1.id, user3.id, user2.id]
 
           SiteSetting.prioritize_username_in_ux = false
 
           get "/cakeday/birthdays.json", params: { filter: "today" }
 
-          body = JSON.parse(response.body)
+          body = response.parsed_body
           expect(body["birthdays"].map { |u| u["id"] }).to eq [user2.id, user3.id, user1.id]
         end
       end

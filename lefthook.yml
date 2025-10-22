@@ -20,11 +20,11 @@ pre-commit:
       run: pnpm pprettier --list-different {staged_files}
     eslint:
       glob: "*.{js,gjs}"
-      include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
+      include: "frontend|plugins/.+?/assets/javascripts"
       run: pnpm eslint --quiet {staged_files}
     ember-template-lint:
       glob: "*.{hbs,gjs}"
-      include: "app/assets/javascripts|plugins/.+?/assets/javascripts"
+      include: "frontend|plugins/.+?/assets/javascripts"
       run: pnpm ember-template-lint {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
@@ -48,11 +48,11 @@ fix-staged:
       run: pnpm pprettier --write {staged_files}
     eslint:
       glob: "*.{js,gjs}"
-      include: "app/assets/javascripts|plugins/.+?/assets/javascripts|themes"
+      include: "frontend|plugins/.+?/assets/javascripts|themes"
       run: pnpm eslint --fix {staged_files}
     ember-template-lint:
       glob: "*.{gjs,hbs}"
-      include: "app/assets/javascripts|plugins/.+?/assets/javascripts|themes"
+      include: "frontend|plugins/.+?/assets/javascripts|themes"
       run: pnpm ember-template-lint --fix {staged_files}
     stylelint:
       glob: "*.scss"

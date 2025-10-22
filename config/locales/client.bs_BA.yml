@@ -3192,6 +3192,10 @@ bs_BA:
           title: "Files"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Postavke"
         logo:
           form:
             mobile: "Mobilno"
@@ -3705,7 +3709,6 @@ bs_BA:
         copy_to_clipboard: "Kopirati u clipboard"
         copied_to_clipboard: "Kopirano u međuspremnik"
         copy_to_clipboard_error: "Pogreška pri kopiranju podataka u međuspremnik"
-        theme_owner: "Nije moguće uređivati, vlasništvo:"
         email_templates:
           title: "Email"
           subject: "Naslov"
@@ -3713,6 +3716,7 @@ bs_BA:
           body: "Tijelo"
           revert: "Vrati promjene"
           revert_confirm: "Jeste li sigurni da želite vratiti promjene?"
+          edit: "Izmijeni"
         component:
           all_filter: "All"
           enabled_filter: "Omogućen"

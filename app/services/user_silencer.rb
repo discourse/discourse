@@ -11,6 +11,10 @@ class UserSilencer
     UserSilencer.new(user, by_user, opts).silence
   end
 
+  def self.auto_silence(user, by_user = nil, opts = {})
+    UserSilencer.new(user, by_user, opts).auto_silence
+  end
+
   def self.unsilence(user, by_user = nil, opts = {})
     UserSilencer.new(user, by_user, opts).unsilence
   end
@@ -59,6 +63,15 @@ class UserSilencer
     end
   end
 
+  def auto_silence
+    if silence
+      notify_moderators
+      true
+    else
+      false
+    end
+  end
+
   def hide_posts
     return unless @user.trust_level == TrustLevel[0]
 
@@ -86,5 +99,18 @@ class UserSilencer
       SystemMessage.create(@user, :unsilenced)
       StaffActionLogger.new(@by_user).log_unsilence_user(@user) if @by_user
     end
+  end
+
+  private
+
+  def notify_moderators
+    return if !SiteSetting.notify_mods_when_user_silenced
+
+    GroupMessage.create(
+      Group[:moderators].name,
+      :user_automatically_silenced,
+      user: @user,
+      limit_once_per: false,
+    )
   end
 end
