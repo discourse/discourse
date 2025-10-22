@@ -939,12 +939,6 @@ export default class SelectKit extends Component {
 
     this.clearErrors();
 
-    const inModal = this.element.closest(".fixed-modal");
-    if (inModal && this.site.mobileView) {
-      const modalBody = inModal.querySelector(".modal-body");
-      modalBody.style = "";
-    }
-
     this.selectKit.onClose(event);
 
     this.selectKit.setProperties({
@@ -963,7 +957,6 @@ export default class SelectKit extends Component {
     this.selectKit.onOpen(event);
 
     if (!this.popper) {
-      const inModal = this.element.closest(".fixed-modal .modal-body");
       const anchor = document.querySelector(
         `#${this.selectKit.uniqueID}-header`
       );
@@ -1004,7 +997,6 @@ export default class SelectKit extends Component {
           },
           {
             name: "flip",
-            enabled: !inModal,
             options: {
               padding: {
                 top:
@@ -1029,13 +1021,11 @@ export default class SelectKit extends Component {
             enabled: window.innerWidth <= 450,
             phase: "main",
             fn({ state }) {
-              if (!inModal) {
-                let { x } = state.elements.reference.getBoundingClientRect();
-                if (strategy === "fixed") {
-                  state.modifiersData.popperOffsets.x = 0 + 10;
-                } else {
-                  state.modifiersData.popperOffsets.x = -x + 10;
-                }
+              let { x } = state.elements.reference.getBoundingClientRect();
+              if (strategy === "fixed") {
+                state.modifiersData.popperOffsets.x = 0 + 10;
+              } else {
+                state.modifiersData.popperOffsets.x = -x + 10;
               }
             },
           },
@@ -1044,23 +1034,7 @@ export default class SelectKit extends Component {
             enabled: window.innerWidth <= 450,
             phase: "beforeWrite",
             fn: ({ state }) => {
-              if (inModal) {
-                const innerModal = document.querySelector(
-                  ".fixed-modal div.modal-inner-container"
-                );
-
-                if (innerModal) {
-                  if (this.multiSelect) {
-                    state.styles.popper.width = `${this.element.offsetWidth}px`;
-                  } else {
-                    state.styles.popper.width = `${
-                      innerModal.clientWidth - 20
-                    }px`;
-                  }
-                }
-              } else {
-                state.styles.popper.width = `${window.innerWidth - 20}px`;
-              }
+              state.styles.popper.width = `${window.innerWidth - 20}px`;
             },
           },
           {
@@ -1079,16 +1053,6 @@ export default class SelectKit extends Component {
                 state.elements.reference.offsetWidth,
                 220
               )}px`;
-            },
-          },
-          {
-            name: "modalHeight",
-            enabled: !!(inModal && this.site.mobileView),
-            phase: "afterWrite",
-            fn: ({ state }) => {
-              inModal.style = "";
-              inModal.style.height =
-                inModal.clientHeight + state.rects.popper.height + "px";
             },
           },
         ],
