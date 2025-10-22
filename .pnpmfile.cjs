@@ -26,15 +26,17 @@ if (fs.existsSync(`${discourseRoot}/${oldFrontendPath}`)) {
   );
   execSync(`git clean -f -X ${oldFrontendPath}`, { cwd: discourseRoot });
 
-  const anyFiles = !!execSync(
-    `find "${oldFrontendPath}" -mindepth 1 -type f -print -quit`,
-    { encoding: "utf8", cwd: discourseRoot }
-  ).trim();
+  if (fs.existsSync(`${discourseRoot}/${oldFrontendPath}`)) {
+    const anyFiles = !!execSync(
+      `find "${oldFrontendPath}" -mindepth 1 -type f -print -quit`,
+      { encoding: "utf8", cwd: discourseRoot }
+    ).trim();
 
-  if (!anyFiles) {
-    fs.rmSync(oldFrontendPath, {
-      recursive: true,
-    });
+    if (!anyFiles) {
+      fs.rmSync(oldFrontendPath, {
+        recursive: true,
+      });
+    }
   }
 }
 
