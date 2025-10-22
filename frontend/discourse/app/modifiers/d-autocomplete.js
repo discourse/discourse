@@ -439,7 +439,6 @@ export default class DAutocompleteModifier extends Modifier {
           getResults: () => this.results,
           getSelectedIndex: () => this.selectedIndex,
           onSelect: (result, index, event) => this.selectResult(result, event),
-          template: this.options.template,
           onRender: this.options.onRender,
         },
         modalForMobile: false,
@@ -448,6 +447,13 @@ export default class DAutocompleteModifier extends Modifier {
           this.options.onClose?.();
         },
       };
+
+      // Pass component or template through data
+      if (this.options.component) {
+        menuOptions.data.component = this.options.component;
+      } else {
+        menuOptions.data.template = this.options.template;
+      }
 
       // Add offset if specified
       if (this.options.offset !== undefined) {
