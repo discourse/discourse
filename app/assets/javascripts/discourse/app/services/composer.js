@@ -10,7 +10,7 @@ import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
-import TopicLabelContent from "discourse/components/topic-label-content";
+import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -20,6 +20,7 @@ import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { isRailsTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
@@ -1125,7 +1126,7 @@ export default class ComposerService extends Service {
       ) {
         this.dialog.alert({
           title: i18n("composer.posting_not_on_topic"),
-          bodyComponent: TopicLabelContent,
+          bodyComponent: TopicReplyChoiceDialog,
           bodyComponentModel: {
             originalTopic,
             replyOnOriginal: () => {
@@ -1146,6 +1147,12 @@ export default class ComposerService extends Service {
             },
           ],
           class: "reply-where-modal",
+          didCancel: () => {
+            composer.set("disableDrafts", false);
+            this.skipAutoSave = true;
+            this._saveDraft(true);
+            this.skipAutoSave = false;
+          },
         });
         return;
       }
@@ -1749,7 +1756,12 @@ export default class ComposerService extends Service {
         // pretend so we get a save unconditionally in 15 secs
         this._lastDraftSaved = Date.now();
       }
-      if (Date.now() - this._lastDraftSaved > 15000) {
+
+      // Speed this up a bit in system specs so we don't have to wait as long
+      if (
+        Date.now() - this._lastDraftSaved >
+        (isRailsTesting() ? 3000 : 15000)
+      ) {
         this._saveDraft();
       } else {
         this._saveDraftDebounce = discourseDebounce(
