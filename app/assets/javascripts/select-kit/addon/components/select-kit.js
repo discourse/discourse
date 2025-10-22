@@ -15,6 +15,7 @@ import {
   autoUpdate,
   computePosition,
   flip,
+  hide,
   limitShift,
   offset,
   shift,
@@ -1135,19 +1136,31 @@ export default class SelectKit extends Component {
           return state;
         },
       },
+      hide(),
     ];
 
     computePosition(referenceElement, floatingElement, {
       placement: this.selectKit.options.placement,
       strategy,
       middleware,
-    }).then((args) => {
-      const { x, y } = args;
-      Object.assign(floatingElement.style, {
+    }).then(({ x, y, middlewareData }) => {
+      const style = {
         top: "0",
         left: "0",
         transform: `translate(${roundByDPR(x)}px,${roundByDPR(y)}px)`,
-      });
+      };
+
+      if (middlewareData.hide && !this.capabilities.isIOS) {
+        if (middlewareData.hide.referenceHidden) {
+          style.visibility = "hidden";
+          style.pointerEvents = "none";
+        } else {
+          style.visibility = "visible";
+          style.pointerEvents = "auto";
+        }
+      }
+
+      Object.assign(floatingElement.style, style);
     });
   }
 

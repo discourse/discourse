@@ -199,13 +199,6 @@
       max-height: 300px;
       overflow-y: auto;
     }
-
-    &[data-popper-reference-hidden] {
-      html:not(.ios-device) & {
-        visibility: hidden;
-        pointer-events: none;
-      }
-    }
   }
 
   .select-kit-row {
