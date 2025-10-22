@@ -72,6 +72,7 @@ module Migrations::Importer::Steps
     def initialize(intermediate_db, discourse_db, shared_data)
       super
       @unique_name_finder = ::Migrations::Importer::UsernameFinder.new(@shared_data)
+      @always_allow_reserved_names = @config[:always_allow_reserved_usernames] || false
     end
 
     private
@@ -96,7 +97,7 @@ module Migrations::Importer::Steps
       row[:original_username] ||= row[:username]
       row[:username] = @unique_name_finder.find_available_name(
         row[:username],
-        allow_reserved_username: row[:admin] == 1,
+        allow_reserved_username: @always_allow_reserved_names || row[:admin] == 1,
       )
       row[:username_lower] = row[:username].downcase
 

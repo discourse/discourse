@@ -55,7 +55,7 @@ module Migrations::Importer
       end
     end
 
-    def initialize(intermediate_db, discourse_db, shared_data)
+    def initialize(intermediate_db, discourse_db, shared_data, config)
       super
 
       @last_id = 0

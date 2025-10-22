@@ -71,10 +71,11 @@ module Migrations::Importer
       end
     end
 
-    def initialize(intermediate_db, discourse_db, shared_data)
+    def initialize(intermediate_db, discourse_db, shared_data, config)
       @intermediate_db = intermediate_db
       @discourse_db = discourse_db
       @shared_data = shared_data
+      @config = config
 
       @stats = StepStats.new(skip_count: 0, warning_count: 0, error_count: 0)
     end
