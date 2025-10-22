@@ -128,7 +128,14 @@ export default RouteTemplate(
                   <div class="input username-input input-group">
                     <PluginOutlet
                       @name="invite-username-input"
-                      @outletArgs={{lazyHash controller=@controller}}
+                      @outletArgs={{lazyHash
+                        accountUsername=@controller.accountUsername
+                        accountName=@controller.accountName
+                        scrollInputIntoView=@controller.scrollInputIntoView
+                        setAccountUsername=@controller.setAccountUsername
+                        maxLength=@controller.maxUsernameLength
+                        validation=@controller.usernameValidation
+                      }}
                     >
                       <input
                         {{on "focusin" @controller.scrollInputIntoView}}
