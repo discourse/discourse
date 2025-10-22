@@ -5,6 +5,7 @@ import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { iconHTML, renderIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import toASCIIDigits from "discourse/lib/to-ascii-numerals";
 import {
   addTagDecorateCallback,
   addTextDecorateCallback,
@@ -177,7 +178,9 @@ function initializeDiscourseLocalDates(api) {
       const time = moment().format("HH:mm:ss");
       const date = moment().format("YYYY-MM-DD");
 
-      event.addText(`[date=${date} time=${time} timezone="${timezone}"]`);
+      event.addText(
+        `[date=${toASCIIDigits(date)} time=${toASCIIDigits(time)} timezone="${timezone}"]`
+      );
     },
   });
 
