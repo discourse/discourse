@@ -7,7 +7,7 @@ export default RouteTemplate(
   <template>
     <div class="tag-group-content">
       <h3>
-        {{#if @controller.model}}
+        {{#if @controller.model.content}}
           {{i18n "tagging.groups.about_heading"}}
         {{else}}
           {{i18n "tagging.groups.about_heading_empty"}}
@@ -17,7 +17,7 @@ export default RouteTemplate(
         <p>{{i18n "tagging.groups.about_description"}}</p>
       </section>
       <section>
-        {{#unless @controller.model}}
+        {{#unless @controller.model.content}}
           <LinkTo @route="tagGroups.new" class="btn btn-primary">
             {{icon "plus"}}
             {{i18n "tagging.groups.new"}}
