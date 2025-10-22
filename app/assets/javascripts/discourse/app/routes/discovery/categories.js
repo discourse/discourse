@@ -18,7 +18,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
   controllerName = "discovery/categories";
 
   async findCategories(parentCategory) {
-    let model;
+    let categoryList;
 
     let style =
       this.site.desktopView && this.siteSettings.desktop_category_page_style;
@@ -30,17 +30,20 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
       style === "categories_and_latest_topics" ||
       style === "categories_and_latest_topics_created_date"
     ) {
-      model = await this._findCategoriesAndTopics("latest", parentCategory);
+      categoryList = await this._findCategoriesAndTopics(
+        "latest",
+        parentCategory
+      );
     } else if (style === "categories_and_top_topics") {
-      model = await this._findCategoriesAndTopics("top", parentCategory);
+      categoryList = await this._findCategoriesAndTopics("top", parentCategory);
     } else {
       // The server may have serialized this. Based on the logic above, we don't need it
       // so remove it to avoid it being used later by another TopicList route.
       PreloadStore.remove("topic_list");
-      model = await CategoryList.list(this.store, parentCategory);
+      categoryList = await CategoryList.list(this.store, parentCategory);
     }
 
-    return model;
+    return categoryList;
   }
 
   async model(params) {
@@ -53,14 +56,15 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
         : Category.findBySlugPathWithID(params.category_slug_path_with_id);
     }
 
-    return this.findCategories(parentCategory).then((model) => {
-      const tracking = this.topicTrackingState;
-      if (tracking) {
-        tracking.sync(model, "categories");
-        tracking.trackIncoming("categories");
-      }
-      return model;
-    });
+    const model = await this.findCategories(parentCategory);
+
+    const tracking = this.topicTrackingState;
+    if (tracking) {
+      tracking.sync(model, "categories");
+      tracking.trackIncoming("categories");
+    }
+
+    return model;
   }
 
   _loadBefore(store) {
@@ -125,7 +129,7 @@ export default class DiscoveryCategoriesRoute extends DiscourseRoute {
             this.store,
             result,
             parentCategory
-          ),
+          ).content,
           parentCategory,
           topics: TopicList.topicsFrom(this.store, result),
           can_create_category: result.category_list.can_create_category,

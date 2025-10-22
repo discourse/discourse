@@ -10,7 +10,6 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryColorVariable from "discourse/helpers/category-color-variable";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("section")
 @classNameBindings(
@@ -18,9 +17,8 @@ import discourseComputed from "discourse/lib/decorators";
   "anyLogos:with-logos:no-logos"
 )
 export default class CategoriesBoxesWithTopics extends Component {
-  @discourseComputed("categories.[].uploaded_logo.url")
-  anyLogos() {
-    return this.categories.any((c) => {
+  get anyLogos() {
+    return this.categories.some((c) => {
       return !isEmpty(c.get("uploaded_logo.url"));
     });
   }

@@ -37,9 +37,9 @@ export default RouteTemplate(
       </:navigation>
 
       <:header>
-        {{#if @controller.model.subcategoryList}}
+        {{#if @controller.model.subcategoryList.content}}
           <CategoriesDisplay
-            @categories={{@controller.model.subcategoryList.categories}}
+            @categories={{@controller.model.subcategoryList.content}}
             @parentCategory={{@controller.model.subcategoryList.parentCategory}}
             @loadMore={{@controller.model.subcategoryList.loadMore}}
           />
