@@ -48,7 +48,7 @@ if ARGV.include?("-h") || ARGV.include?("--help")
   exec "pnpm ember #{command} --help"
 end
 
-args = ["--dir=app/assets/javascripts/discourse", "ember", command] + (ARGV - CUSTOM_ARGS)
+args = ["--dir=frontend/discourse", "ember", command] + (ARGV - CUSTOM_ARGS)
 
 if !args.include?("test") && !args.include?("build") && !args.include?("--proxy")
   args << "--proxy"

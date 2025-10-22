@@ -23,7 +23,7 @@ const { BroccoliMergeFiles } = require("broccoli-merge-files");
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
 module.exports = function (defaults) {
-  const discourseRoot = path.resolve("../../../..");
+  const discourseRoot = path.resolve("../..");
   const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
@@ -103,11 +103,10 @@ module.exports = function (defaults) {
   });
 
   // WARNING: We should only import scripts here if they are not in NPM.
-  app.import(discourseRoot + "/app/assets/javascripts/polyfills.js");
+  app.import(discourseRoot + "/frontend/polyfills.js");
 
   app.import(
-    discourseRoot +
-      "/app/assets/javascripts/discourse/public/assets/scripts/module-shims.js"
+    discourseRoot + "/frontend/discourse/public/assets/scripts/module-shims.js"
   );
 
   const discoursePluginsTree = app.project

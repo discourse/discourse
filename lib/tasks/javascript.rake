@@ -7,7 +7,7 @@ def write_template(path, task_name, template)
   JS
 
   basename = File.basename(path)
-  output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
+  output_path = "#{Rails.root}/frontend/#{path}"
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"

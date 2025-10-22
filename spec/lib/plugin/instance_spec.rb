@@ -350,7 +350,7 @@ TEXT
       plugin.send :register_assets!
 
       expect(DiscoursePluginRegistry.vendored_core_pretty_text.first).to eq(
-        "app/assets/javascripts/discourse/node_modules/moment/moment.js",
+        "frontend/discourse/node_modules/moment/moment.js",
       )
     end
   end
@@ -577,10 +577,7 @@ TEXT
 
       expect(locale[:fallbackLocale]).to eq("pt_BR")
       expect(locale[:moment_js]).to eq(
-        [
-          "pt-br",
-          "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale/pt-br.js",
-        ],
+        ["pt-br", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/pt-br.js"],
       )
       expect(locale[:moment_js_timezones]).to eq(
         [
@@ -601,7 +598,7 @@ TEXT
 
       expect(locale[:fallbackLocale]).to be_nil
       expect(locale[:moment_js]).to eq(
-        ["tlh", "#{Rails.root}/app/assets/javascripts/discourse/node_modules/moment/locale/tlh.js"],
+        ["tlh", "#{Rails.root}/frontend/discourse/node_modules/moment/locale/tlh.js"],
       )
       expect(locale[:plural]).to eq(plural.with_indifferent_access)
 
