@@ -139,7 +139,7 @@ export default class EditTopicTimerForm extends Component {
         (new Date() - new Date(this.args.topic.last_posted_at)) /
           (1000 * 60 * 60)
       );
-      return i18n("topic.auto_close_momentarily", { count: diff });
+      return i18n("topic.auto_close_immediate", { count: diff });
     }
   }
 
@@ -227,7 +227,7 @@ export default class EditTopicTimerForm extends Component {
       {{/if}}
 
       {{#if this.useDuration}}
-        <div class="controls">
+        <div class="control-group">
           <label class="control-label">
             {{i18n "topic.topic_status_update.duration"}}
           </label>
