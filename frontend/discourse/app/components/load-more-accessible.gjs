@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import LoadMore from "discourse/components/load-more";
 import { i18n } from "discourse-i18n";
@@ -28,7 +27,6 @@ export default class LoadMoreAccessible extends Component {
 
   @tracked isLoading = false;
   @tracked pendingFocusContext = null;
-  @tracked loadTriggeredByIntersection = false;
 
   #hasPostsAppendedListener = false;
 
@@ -67,8 +65,6 @@ export default class LoadMoreAccessible extends Component {
       return;
     }
 
-    const focusContext = this.pendingFocusContext;
-
     // Clear the pending context
     this.pendingFocusContext = null;
     if (this.#hasPostsAppendedListener) {
@@ -80,10 +76,10 @@ export default class LoadMoreAccessible extends Component {
       this.#hasPostsAppendedListener = false;
     }
 
-    // Schedule focus for next render cycle
-    schedule("afterRender", () => {
-      this.#focusAppropriateNewPost(focusContext);
-    });
+    this.accessibilityAnnouncer.announce(
+      i18n("post.loading_complete"),
+      "polite"
+    );
   }
 
   get buttonLabel() {
@@ -98,11 +94,6 @@ export default class LoadMoreAccessible extends Component {
 
   @action
   async handleIntersectionLoad() {
-    this.loadTriggeredByIntersection = true;
-    return this.#loadWithFocusManagement();
-  }
-
-  async #loadWithFocusManagement() {
     if (!this.enabled || !this.canLoadMore || this.isLoading) {
       return;
     }
@@ -110,86 +101,20 @@ export default class LoadMoreAccessible extends Component {
     try {
       this.isLoading = true;
 
-      const existingPostNumbers = this.args.existingPostNumbers;
-      const currentFocusContext =
-        this.#getCurrentFocusContext(existingPostNumbers);
-
       await this.args.action();
 
-      if (this.loadTriggeredByIntersection) {
-        this.pendingFocusContext = currentFocusContext;
+      this.pendingFocusContext = true;
 
-        if (!this.#hasPostsAppendedListener) {
-          this.appEvents.on(
-            "post-stream:posts-appended",
-            this,
-            this.#handlePostsAppended
-          );
-          this.#hasPostsAppendedListener = true;
-        }
+      if (!this.#hasPostsAppendedListener) {
+        this.appEvents.on(
+          "post-stream:posts-appended",
+          this,
+          this.#handlePostsAppended
+        );
+        this.#hasPostsAppendedListener = true;
       }
     } finally {
       this.isLoading = false;
-      this.loadTriggeredByIntersection = false;
-    }
-  }
-
-  #getCurrentFocusContext(existingPostNumbers) {
-    if (this.isLoadingAbove) {
-      // For loading above, use the first available post from PostStream if provided
-      const firstPostNumber =
-        this.args.firstAvailablePost?.post_number ||
-        (existingPostNumbers.length > 0
-          ? Math.min(...existingPostNumbers)
-          : null);
-
-      return {
-        direction: "above",
-        nearestPost: firstPostNumber,
-      };
-    } else {
-      // For loading below, use the last available post from PostStream if provided
-      const lastPostNumber =
-        this.args.lastAvailablePost?.post_number ||
-        (existingPostNumbers.length > 0
-          ? Math.max(...existingPostNumbers)
-          : null);
-
-      return {
-        direction: "below",
-        nearestPost: lastPostNumber,
-      };
-    }
-  }
-
-  #focusAppropriateNewPost(focusContext) {
-    let targetPostNumber;
-
-    if (focusContext.direction === "above") {
-      targetPostNumber = focusContext.nearestPost - 1;
-    } else {
-      targetPostNumber = focusContext.nearestPost + 1;
-    }
-
-    // Try to find the target post heading first
-    let targetElement = document.getElementById(
-      `post-heading-${targetPostNumber}`
-    );
-
-    // Fallback to the post element if heading not found
-    if (!targetElement) {
-      targetElement = document.querySelector(
-        `[data-post-number="${targetPostNumber}"]`
-      );
-    }
-
-    this.accessibilityAnnouncer.announce(
-      i18n("post.loading_complete"),
-      "polite"
-    );
-
-    if (targetElement) {
-      targetElement.focus();
     }
   }
 

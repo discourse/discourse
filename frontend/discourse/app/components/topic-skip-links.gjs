@@ -15,156 +15,100 @@ class TopicSkipLinks extends Component {
     return getOwner(this).lookup("controller:application");
   }
 
-  get showTopicSkipLinks() {
-    const currentRouteName = this.router.currentRouteName;
-    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
-      return false;
+  #getTopicController() {
+    if (!this.router.currentRouteName?.startsWith("topic.")) {
+      return null;
     }
-
     try {
-      const topicController = getOwner(this).lookup("controller:topic");
-      return (
-        topicController?.userLastReadPostNumber &&
-        topicController.userLastReadPostNumber > 0
-      );
+      return getOwner(this).lookup("controller:topic");
     } catch {
-      return false;
+      return null;
     }
   }
 
+  get showTopicSkipLinks() {
+    const topicController = this.#getTopicController();
+    return (
+      topicController?.userLastReadPostNumber &&
+      topicController.userLastReadPostNumber > 0
+    );
+  }
+
   get resumePostNumber() {
-    const currentRouteName = this.router.currentRouteName;
-    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
-      return null;
+    const topicController = this.#getTopicController();
+    if (
+      topicController?.userLastReadPostNumber &&
+      topicController.userLastReadPostNumber > 1
+    ) {
+      return topicController.userLastReadPostNumber;
     }
-
-    try {
-      const topicController = getOwner(this).lookup("controller:topic");
-      if (
-        topicController?.userLastReadPostNumber &&
-        topicController.userLastReadPostNumber > 1
-      ) {
-        return topicController.userLastReadPostNumber;
-      }
-    } catch {
-      // Ignore if controller doesn't exist yet
-    }
-
     return null;
   }
 
   get lastPostNumber() {
-    const currentRouteName = this.router.currentRouteName;
-    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
-      return null;
-    }
-
-    try {
-      const topicController = getOwner(this).lookup("controller:topic");
-      return (
-        topicController?.get("model.highest_post_number") ||
-        topicController?.get("model.posts_count")
-      );
-    } catch {
-      return null;
-    }
+    const topicController = this.#getTopicController();
+    return (
+      topicController?.get("model.highest_post_number") ||
+      topicController?.get("model.posts_count") ||
+      null
+    );
   }
 
   get topicUrl() {
-    const currentRouteName = this.router.currentRouteName;
-    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
-      return null;
-    }
+    const topicController = this.#getTopicController();
+    const topicId = topicController?.get("model.id");
+    const topicSlug = topicController?.get("model.slug");
 
-    try {
-      const topicController = getOwner(this).lookup("controller:topic");
-      const topicId = topicController?.get("model.id");
-      const topicSlug = topicController?.get("model.slug");
-
-      if (topicId && topicSlug) {
-        return `/t/${topicSlug}/${topicId}`;
-      }
-      return topicId ? `/t/${topicId}` : null;
-    } catch {
-      return null;
+    if (topicId && topicSlug) {
+      return `/t/${topicSlug}/${topicId}`;
     }
+    return topicId ? `/t/${topicId}` : null;
   }
 
   get resumeIsLastReply() {
-    const currentRouteName = this.router.currentRouteName;
-    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
+    const topicController = this.#getTopicController();
+    if (!topicController) {
       return false;
     }
 
-    try {
-      const topicController = getOwner(this).lookup("controller:topic");
-      const resumePostNumber = topicController?.userLastReadPostNumber;
-      const lastPostNumber =
-        topicController?.get("model.highest_post_number") ||
-        topicController?.get("model.posts_count");
+    const resumePostNumber = topicController.userLastReadPostNumber;
+    const lastPostNumber =
+      topicController.get("model.highest_post_number") ||
+      topicController.get("model.posts_count");
 
-      return (
-        resumePostNumber && lastPostNumber && resumePostNumber >= lastPostNumber
-      );
-    } catch {
-      return false;
-    }
+    return (
+      resumePostNumber && lastPostNumber && resumePostNumber >= lastPostNumber
+    );
   }
 
   get topicHasMultiplePosts() {
-    const currentRouteName = this.router.currentRouteName;
-    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
-      return false;
-    }
-
-    try {
-      const topicController = getOwner(this).lookup("controller:topic");
-      const postsCount = topicController?.get("model.posts_count");
-      return postsCount && postsCount > 1;
-    } catch {
-      return false;
-    }
+    const topicController = this.#getTopicController();
+    const postsCount = topicController?.get("model.posts_count");
+    return postsCount && postsCount > 1;
   }
 
   get currentPostNumber() {
-    const currentRouteName = this.router.currentRouteName;
-    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
-      return null;
-    }
-
-    try {
-      const topicController = getOwner(this).lookup("controller:topic");
-      return (
-        topicController?.get("currentPost") ||
-        topicController?.get("model.currentPost") ||
-        parseInt(this.router.currentRoute?.params?.nearPost, 10) ||
-        1
-      );
-    } catch {
-      return null;
-    }
+    const topicController = this.#getTopicController();
+    return (
+      topicController?.get("currentPost") ||
+      topicController?.get("model.currentPost") ||
+      parseInt(this.router.currentRoute?.params?.nearPost, 10) ||
+      1
+    );
   }
 
   get isDirectUrlToArbitraryPost() {
-    const currentRouteName = this.router.currentRouteName;
-    if (!currentRouteName || !currentRouteName.startsWith("topic.")) {
+    const topicController = this.#getTopicController();
+    if (!topicController) {
       return false;
     }
 
-    try {
-      const topicController = getOwner(this).lookup("controller:topic");
-      const currentPost = this.currentPostNumber;
-      const resumePost = topicController?.userLastReadPostNumber;
+    const currentPost = this.currentPostNumber;
+    const resumePost = topicController.userLastReadPostNumber;
 
-      return (
-        currentPost &&
-        currentPost > 1 &&
-        resumePost &&
-        currentPost !== resumePost
-      );
-    } catch {
-      return false;
-    }
+    return (
+      currentPost && currentPost > 1 && resumePost && currentPost !== resumePost
+    );
   }
 
   #setupFocusAfterNavigation(focusCallback) {
