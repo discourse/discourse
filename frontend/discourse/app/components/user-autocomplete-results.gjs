@@ -1,10 +1,11 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { eq } from "truth-helpers";
+import { and, eq, not } from "truth-helpers";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import {
@@ -29,27 +30,24 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
 export default class UserAutocompleteResults extends Component {
   static TRIGGER_KEY = "@";
 
+  @tracked isInitialRender = true;
+
   @action
   handleResultClick(result, index, event) {
-    // Use utility function for consistent behavior
     handleAutocompleteResultClick(this.args.onSelect, result, index, event);
   }
 
   @action
   handleInsert() {
-    // Use utility function for onRender callback
     callOnRenderCallback(this.args.onRender, this.args.results);
   }
 
   @action
   handleUpdate() {
-    // Use utility function for onRender callback
+    this.isInitialRender = false;
     callOnRenderCallback(this.args.onRender, this.args.results);
   }
 
-  // TODO: initialRender hack might be needed here too to handle the scroll bug on first render
-  // see hackery from:
-  // https://github.com/discourse/discourse/blob/50f80d9809158f191e2b214ece7abd1cf298aab3/app/assets/javascripts/discourse/app/components/d-autocomplete-results.gjs#L118-L120
   <template>
     <div
       class="autocomplete ac-user"
@@ -61,8 +59,7 @@ export default class UserAutocompleteResults extends Component {
           {{#if result.isUser}}
             <li
               {{scrollIntoView
-                (eq index @selectedIndex)
-                (hash block="nearest" behavior="smooth")
+                (and (not this.isInitialRender) (eq index @selectedIndex))
               }}
             >
               <a
@@ -88,8 +85,7 @@ export default class UserAutocompleteResults extends Component {
           {{else if result.isEmail}}
             <li
               {{scrollIntoView
-                (eq index @selectedIndex)
-                (hash block="nearest" behavior="smooth")
+                (and (not this.isInitialRender) (eq index @selectedIndex))
               }}
             >
               <a
@@ -106,8 +102,7 @@ export default class UserAutocompleteResults extends Component {
           {{else if result.isGroup}}
             <li
               {{scrollIntoView
-                (eq index @selectedIndex)
-                (hash block="nearest" behavior="smooth")
+                (and (not this.isInitialRender) (eq index @selectedIndex))
               }}
             >
               <a
