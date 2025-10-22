@@ -60,16 +60,30 @@ class AiPersona < ActiveRecord::Base
     end
   end
 
+  def self.all_persona_records(enabled_only: true)
+    persona_cache[:records] ||= AiPersona
+      .ordered
+      .includes(:user)
+      .all
+      .limit(MAX_PERSONAS_PER_SITE)
+      .to_a
+
+    if enabled_only
+      persona_cache[:records].select(&:enabled)
+    else
+      persona_cache[:records]
+    end
+  end
+
   def self.find_by_id_from_cache(persona_id)
     return nil if persona_id.blank?
 
-    # Try to find in cache first
-    cached_persona = all_personas(enabled_only: false).find { |p| p.id == persona_id }
+    # Try to find in record cache first
+    cached_persona = all_persona_records(enabled_only: false).find { |p| p.id == persona_id }
     return cached_persona if cached_persona
 
     # Fallback to database if not found in cache (e.g., in tests or if cache is stale)
-    persona = find_by(id: persona_id)
-    persona&.class_instance
+    find_by(id: persona_id)
   end
 
   def self.persona_users(user: nil)
