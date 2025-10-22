@@ -31,7 +31,7 @@ module Jobs
     def find_llm_model_for_persona(persona_id)
       return nil if persona_id.blank?
 
-      ai_persona = AiPersona.find_by(id: persona_id)
+      ai_persona = AiPersona.find_by_id_from_cache(persona_id)
       return nil if ai_persona.blank?
 
       persona_klass = ai_persona.class_instance

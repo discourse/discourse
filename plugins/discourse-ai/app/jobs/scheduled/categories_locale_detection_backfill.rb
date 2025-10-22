@@ -46,7 +46,8 @@ module Jobs
     private
 
     def find_llm_model
-      ai_persona = AiPersona.find_by(id: SiteSetting.ai_translation_locale_detector_persona)
+      ai_persona =
+        AiPersona.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_persona)
       return nil if ai_persona.blank?
 
       persona_klass = ai_persona.class_instance

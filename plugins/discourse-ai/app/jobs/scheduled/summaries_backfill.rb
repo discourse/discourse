@@ -99,7 +99,7 @@ module Jobs
     end
 
     def find_llm_model
-      ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)
+      ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
       return nil if ai_persona.blank?
 
       persona_klass = ai_persona.class_instance

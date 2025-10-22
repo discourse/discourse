@@ -15,7 +15,11 @@ module DiscourseAi
         SiteSetting.ai_translation_short_text_translator_persona,
       ]
 
-      persona_default_llms = AiPersona.where(id: persona_ids).pluck(:default_llm_id)
+      persona_default_llms =
+        AiPersona
+          .all_personas(enabled_only: false)
+          .select { |p| persona_ids.include?(p.id) }
+          .map(&:default_llm_id)
       default_llm_model = SiteSetting.ai_default_llm_model
 
       if persona_default_llms.any?(&:blank?) && default_llm_model.blank?

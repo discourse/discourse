@@ -60,6 +60,11 @@ class AiPersona < ActiveRecord::Base
     end
   end
 
+  def self.find_by_id_from_cache(persona_id)
+    return nil if persona_id.blank?
+    all_personas(enabled_only: false).find { |p| p.id == persona_id }
+  end
+
   def self.persona_users(user: nil)
     persona_users =
       persona_cache[:persona_users] ||= AiPersona
