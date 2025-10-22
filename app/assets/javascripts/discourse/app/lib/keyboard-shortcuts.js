@@ -263,7 +263,7 @@ export default {
    *                  category: String,
    *                  name: String,
    *                  definition: (See function `buildShortcut` in
-   *                    app/assets/javascripts/discourse/app/controllers/keyboard-shortcuts-help.js
+   *                    frontend/discourse/app/controllers/keyboard-shortcuts-help.js
    *                    for definition structure)
    *                }
    *

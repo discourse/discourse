@@ -19,28 +19,23 @@ if (fs.existsSync(`${discourseRoot}/node_modules/.yarn-integrity`)) {
   console.log("cleanup done");
 }
 
-const oldAdminPath = `${discourseRoot}/app/assets/javascripts/admin`;
-if (fs.existsSync(`${oldAdminPath}/node_modules`)) {
+const oldFrontendPath = `app/assets/javascripts`;
+if (fs.existsSync(`${discourseRoot}/${oldFrontendPath}`)) {
   console.log(
-    "Detected old admin node_modules. Performing one-time cleanup..."
+    `[.pnpmfile.cjs] Detected old ${oldFrontendPath} directory. Cleaning up gitignored files...`
   );
-
-  fs.rmSync(`${oldAdminPath}/node_modules`, {
-    recursive: true,
-  });
+  execSync(`git clean -f -X ${oldFrontendPath}`, { cwd: discourseRoot });
 
   const anyFiles = !!execSync(
-    `find "${oldAdminPath}" -mindepth 1 -type f -print -quit`,
-    { encoding: "utf8" }
+    `find "${oldFrontendPath}" -mindepth 1 -type f -print -quit`,
+    { encoding: "utf8", cwd: discourseRoot }
   ).trim();
 
   if (!anyFiles) {
-    fs.rmSync(oldAdminPath, {
+    fs.rmSync(oldFrontendPath, {
       recursive: true,
     });
   }
-
-  console.log("admin cleanup done");
 }
 
 const pluginBase = `${discourseRoot}/plugins/`;

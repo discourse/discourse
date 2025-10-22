@@ -5,7 +5,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   attribute :request_cache
 
   def self.dist_dir
-    "#{Rails.root}/app/assets/javascripts/discourse/dist"
+    "#{Rails.root}/frontend/discourse/dist"
   end
 
   def self.assets

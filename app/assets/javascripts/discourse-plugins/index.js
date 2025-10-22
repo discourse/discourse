@@ -127,7 +127,7 @@ module.exports = {
   },
 
   pluginInfos() {
-    const root = path.resolve("../../../../plugins");
+    const root = path.resolve("../../plugins");
     const pluginDirectories = fs
       .readdirSync(root, { withFileTypes: true })
       .filter(
