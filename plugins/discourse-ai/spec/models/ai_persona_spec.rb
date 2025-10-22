@@ -271,6 +271,23 @@ RSpec.describe AiPersona do
 
       expect(query_count).to eq(0)
     end
+
+    it "falls back to database when cache is cleared after initial load" do
+      result_before = AiPersona.find_by_id_from_cache(persona.id)
+      expect(result_before).to be_present
+
+      AiPersona.persona_cache.flush!
+
+      query_count =
+        track_sql_queries do
+          result_after = AiPersona.find_by_id_from_cache(persona.id)
+          expect(result_after).to be_present
+          expect(result_after.id).to eq(persona.id)
+          expect(result_after.name).to eq("cached_persona")
+        end.count
+
+      expect(query_count).to be > 0
+    end
   end
 
   describe "system persona validations" do
