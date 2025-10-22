@@ -20,24 +20,24 @@ module Migrations::Importer
     private
 
     def with_parent_scope(parent_id)
+      @parent_id = parent_id
       @last_suffixes = @last_suffixes_by_parent_id[parent_id]
       @truncations = @truncations_by_parent_id[parent_id]
-      @used_category_names_lower = @used_category_names_lower_by_parent_id[parent_id]
 
       yield
     ensure
-      @last_suffixes = @truncations = @used_category_names_lower = nil
+      @parent_id = @last_suffixes = @truncations = nil
     end
 
     def load_from_shared_data(shared_data)
-      @used_category_names_lower_by_parent_id = shared_data.load_set <<~SQL
+      @used_category_names_lower = shared_data.load_set <<~SQL
         SELECT parent_category_id, LOWER(name)
         FROM categories
       SQL
     end
 
     def store_used_name(name_lower)
-      @used_category_names_lower.add(name_lower)
+      @used_category_names_lower.add(@parent_id, name_lower)
     end
 
     def init_caches
@@ -53,11 +53,11 @@ module Migrations::Importer
     end
 
     def sanitize_name(name)
-      name.scrub.strip
+      name.scrub.strip if name.present?
     end
 
     def name_available?(name_lower)
-      !@used_category_names_lower.include?(name_lower)
+      !@used_category_names_lower.include?(@parent_id, name_lower)
     end
   end
 end
