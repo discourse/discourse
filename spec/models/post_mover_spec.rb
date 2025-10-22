@@ -162,15 +162,6 @@ RSpec.describe PostMover do
           TopicLink.extract_from(p2)
         end
 
-        def create_post_timing(post, user, msecs)
-          PostTiming.create!(
-            topic_id: post.topic_id,
-            user_id: user.id,
-            post_number: post.post_number,
-            msecs: msecs,
-          )
-        end
-
         context "with post replies" do
           describe "when a post with replies is moved" do
             it "should update post replies correctly" do
@@ -1194,6 +1185,16 @@ RSpec.describe PostMover do
             )
           end
 
+          fab!(:from_topic_with_newer_op) do
+            Fabricate(
+              :topic,
+              user: user,
+              created_at: 1.day.ago,
+              bumped_at: 1.day.ago,
+              updated_at: 1.day.ago,
+            )
+          end
+
           fab!(:to_topic) do
             Fabricate(
               :topic,
@@ -1244,7 +1245,17 @@ RSpec.describe PostMover do
             )
           end
 
-          it "sets bumped_at correctly when first post gets moved" do
+          fab!(:from_topic_with_newer_op_p1) do
+            Fabricate(
+              :post,
+              topic: from_topic_with_newer_op,
+              user: user,
+              created_at: 1.day.ago,
+              updated_at: 1.day.ago,
+            )
+          end
+
+          it "does not change bumped_at when first post gets moved and is older" do
             # from_p1 was the first post in from_topic
             to_topic_bumped_at = to_topic.bumped_at
             moved_to =
@@ -1257,7 +1268,7 @@ RSpec.describe PostMover do
             expect(moved_to.bumped_at).to eq_time(to_topic_bumped_at)
           end
 
-          it "sets bumped_at correctly when moved post becomes latest post" do
+          it "sets bumped_at to now when moved post becomes latest post" do
             # from_p2 will be the latest post once moved
             moved_to =
               from_topic.move_posts(
@@ -1265,6 +1276,28 @@ RSpec.describe PostMover do
                 [from_p2.id],
                 destination_topic_id: to_topic.id,
                 chronological_order: true,
+              )
+            expect(moved_to.bumped_at).to eq_time(Time.zone.now)
+          end
+
+          it "sets bumped_at to now if first post gets moved and is newer (chronological)" do
+            moved_to =
+              from_topic_with_newer_op.move_posts(
+                user,
+                [from_topic_with_newer_op_p1.id],
+                destination_topic_id: to_topic.id,
+                chronological_order: true,
+              )
+            expect(moved_to.bumped_at).to eq_time(Time.zone.now)
+          end
+
+          it "sets bumped_at to now if first post gets moved and is newer (sequential)" do
+            moved_to =
+              from_topic_with_newer_op.move_posts(
+                user,
+                [from_topic_with_newer_op_p1.id],
+                destination_topic_id: to_topic.id,
+                chronological_order: false,
               )
             expect(moved_to.bumped_at).to eq_time(Time.zone.now)
           end
@@ -3063,6 +3096,18 @@ RSpec.describe PostMover do
       it "keeps posts when moving all posts to a new topic" do
         all_posts_from_original_topic = original_topic.ordered_posts.map(&:raw)
 
+        create_post_timing(op, Discourse.system_user, 100)
+        create_post_timing(first_post, Discourse.system_user, 200)
+        create_post_timing(second_post, Discourse.system_user, 300)
+        create_post_timing(third_post, Discourse.system_user, 400)
+
+        expect(
+          PostTiming.where(topic_id: original_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 100], [2, 200], [3, 300], [4, 400])
+
         new_topic =
           PostMover.new(
             original_topic,
@@ -3078,11 +3123,45 @@ RSpec.describe PostMover do
 
         expect(original_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
         expect(new_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
+
+        expect(
+          PostTiming.where(topic_id: original_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to include([1, 100], [2, 200], [3, 300], [4, 400])
+
+        expect(
+          PostTiming.where(topic_id: new_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 100], [2, 200], [3, 300], [4, 400])
       end
 
       it "does not get deleted when moved all posts to topic" do
         SiteSetting.delete_merged_stub_topics_after_days = 0
         all_posts_from_original_topic = original_topic.posts.map(&:raw)
+
+        create_post_timing(op, Discourse.system_user, 100)
+        create_post_timing(first_post, Discourse.system_user, 200)
+        create_post_timing(second_post, Discourse.system_user, 300)
+        create_post_timing(third_post, Discourse.system_user, 400)
+        create_post_timing(op_of_destination, Discourse.system_user, 1000)
+
+        expect(
+          PostTiming.where(topic_id: original_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 100], [2, 200], [3, 300], [4, 400])
+
+        expect(
+          PostTiming.where(topic_id: destination_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 1000])
 
         PostMover.new(
           original_topic,
@@ -3098,6 +3177,20 @@ RSpec.describe PostMover do
 
         expect(original_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
         expect(destination_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
+
+        expect(
+          PostTiming.where(topic_id: original_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to include([1, 100], [2, 200], [3, 300], [4, 400])
+
+        expect(
+          PostTiming.where(topic_id: destination_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 1000], [2, 100], [3, 200], [4, 300], [5, 400])
       end
 
       it "keeps all posts when moving to a new PM" do
@@ -3292,6 +3385,15 @@ RSpec.describe PostMover do
           )
         end
       end
+    end
+
+    def create_post_timing(post, user, msecs)
+      PostTiming.create!(
+        topic_id: post.topic_id,
+        user_id: user.id,
+        post_number: post.post_number,
+        msecs: msecs,
+      )
     end
   end
 end
