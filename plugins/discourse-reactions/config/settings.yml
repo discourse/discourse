@@ -27,3 +27,8 @@ discourse_reactions:
     default: false
     client: true
     area: "experimental"
+  discourse_reactions_recent_any_reactions_count:
+    default: 6
+    client: true
+    min: 1
+    max: 20

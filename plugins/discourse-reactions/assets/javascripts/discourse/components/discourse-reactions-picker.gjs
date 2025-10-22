@@ -11,6 +11,7 @@ import { i18n } from "discourse-i18n";
 
 export default class DiscourseReactionsPicker extends Component {
   @service siteSettings;
+  @service recentAnyReactionsStore;
 
   emojiPickerIsOpen = false;
 
@@ -86,11 +87,58 @@ export default class DiscourseReactionsPicker extends Component {
     });
   }
 
+  get recentAnyReactionsInfo() {
+    if (!this.siteSettings.discourse_reactions_experimental_allow_any_emoji) {
+      return [];
+    }
+
+    const { post } = this.args;
+    const currentUserReaction = post.current_user_reaction;
+    const recentReactions =
+      this.recentAnyReactionsStore.getRecentAnyReactions();
+
+    // Get the list of enabled reactions to exclude duplicates
+    const enabledReactions =
+      this.siteSettings.discourse_reactions_enabled_reactions
+        .split("|")
+        .filter(Boolean);
+    const mainReaction =
+      this.siteSettings.discourse_reactions_reaction_for_like;
+
+    // Filter out reactions that are already in the main list
+    const filteredRecentReactions = recentReactions.filter((reaction) => {
+      return !enabledReactions.includes(reaction) && reaction !== mainReaction;
+    });
+
+    return filteredRecentReactions.map((reaction) => {
+      const isUsed = currentUserReaction && currentUserReaction.id === reaction;
+      const canUndo = post.likeAction.canToggle;
+
+      let title;
+      let titleOptions;
+      if (canUndo) {
+        title = "discourse_reactions.picker.react_with";
+        titleOptions = { reaction };
+      } else {
+        title = "discourse_reactions.picker.cant_remove_reaction";
+      }
+
+      return {
+        id: reaction,
+        title: i18n(title, titleOptions),
+        canUndo,
+        isUsed,
+        isRecent: true,
+      };
+    });
+  }
+
   get optimalColsCount() {
     let count = this.reactionInfo.length;
 
     if (this.siteSettings.discourse_reactions_experimental_allow_any_emoji) {
-      count += 1;
+      count += 1; // for the emoji picker button
+      count += this.recentAnyReactionsInfo.length; // for recent any reactions
     }
 
     let x;
@@ -127,6 +175,9 @@ export default class DiscourseReactionsPicker extends Component {
 
   @action
   onSelectEmoji(selected_emoji) {
+    // Track this as a recent any reaction
+    this.recentAnyReactionsStore.trackAnyReaction(selected_emoji);
+
     this.args.toggle({
       reaction: selected_emoji,
       postId: this.args.post.id,
@@ -181,9 +232,35 @@ export default class DiscourseReactionsPicker extends Component {
               {{emoji reaction.id}}
             </DButton>
           {{/each}}
+
           {{#if
             this.siteSettings.discourse_reactions_experimental_allow_any_emoji
           }}
+            {{#each this.recentAnyReactionsInfo as |reaction|}}
+              <DButton
+                class={{concatClass
+                  "btn-flat"
+                  "pickable-reaction"
+                  "recent-any-reaction"
+                  reaction.id
+                  (if reaction.canUndo "can-undo")
+                  (if reaction.isUsed "is-used")
+                }}
+                data-reaction={{reaction.id}}
+                @action={{fn
+                  @toggle
+                  (hash
+                    reaction=reaction.id
+                    postId=@post.id
+                    canUndo=reaction.canUndo
+                  )
+                }}
+                @translatedTitle={{reaction.title}}
+              >
+                {{emoji reaction.id}}
+              </DButton>
+            {{/each}}
+
             <EmojiPicker
               ...attributes
               @icon="far-face-smile"

@@ -178,6 +178,22 @@ html.discourse-reactions-no-select {
     &.is-used {
       border-color: var(--tertiary-low) !important;
     }
+
+    &.recent-any-reaction {
+      position: relative;
+      
+      &::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        width: 6px;
+        height: 6px;
+        background: var(--tertiary);
+        border-radius: 50%;
+        border: 1px solid var(--secondary);
+      }
+    }
   }
 }
 
