@@ -49,7 +49,7 @@ module Migrations::Importer
     end
 
     def fallback_name
-      I18n.t("importer.fallback_names.group")
+      I18n.t("importer.fallback_names.category")
     end
 
     def sanitize_name(name)

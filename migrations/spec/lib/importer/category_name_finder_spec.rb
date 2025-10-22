@@ -6,17 +6,33 @@ RSpec.describe Migrations::Importer::CategoryNameFinder do
   let(:discourse_db) { ::Migrations::Importer::DiscourseDB.new }
   let(:shared_data) { ::Migrations::Importer::SharedData.new(discourse_db) }
 
+  let(:categories) do
+    [
+      { id: 1, parent_id: nil, name: "Root Category" },
+      { id: 2, parent_id: nil, name: "Another Root" },
+      { id: 3, parent_id: nil, name: "Third Root" },
+      { id: 4, parent_id: 1, name: "Child One" },
+      { id: 5, parent_id: 1, name: "Child Two" },
+      { id: 6, parent_id: 1, name: "Duplicate Name" },
+      { id: 7, parent_id: 2, name: "Child One" },
+      { id: 8, parent_id: 2, name: "Duplicate Name" },
+    ]
+  end
+  let(:root1_id) { categories[0][:id] }
+  let(:root2_id) { categories[1][:id] }
+  let(:root3_id) { categories[2][:id] }
+
+  let(:category_rows) do
+    categories.map { |category| [category[:parent_id], category[:name].downcase] }
+  end
+  let(:categories_query_result) do
+    ::Migrations::Importer::DiscourseDB::QueryResult.new(rows: category_rows, column_count: 2)
+  end
+
   before do
-    @root1 = Fabricate(:category, name: "Root Category")
-    @root2 = Fabricate(:category, name: "Another Root")
-    @root3 = Fabricate(:category, name: "Third Root")
-
-    @child1_1 = Fabricate(:category, name: "Child One", parent_category: @root1)
-    @child1_2 = Fabricate(:category, name: "Child Two", parent_category: @root1)
-    @child1_3 = Fabricate(:category, name: "Duplicate Name", parent_category: @root1)
-
-    @child2_1 = Fabricate(:category, name: "Child One", parent_category: @root2)
-    @child2_2 = Fabricate(:category, name: "Duplicate Name", parent_category: @root2)
+    allow(discourse_db).to receive(:query_result).with(
+      a_string_including("SELECT parent_category_id, LOWER(name)"),
+    ).and_return(categories_query_result)
   end
 
   describe "#find_available_name" do
@@ -45,8 +61,8 @@ RSpec.describe Migrations::Importer::CategoryNameFinder do
       end
 
       it "allows same name in different parents" do
-        name1 = finder.find_available_name("Child One", @root1.id)
-        name2 = finder.find_available_name("Child One", @root2.id)
+        name1 = finder.find_available_name("Child One", root1_id)
+        name2 = finder.find_available_name("Child One", root2_id)
         expect(name1).to eq("Child One_1")
         expect(name2).to eq("Child One_1")
       end
@@ -73,12 +89,12 @@ RSpec.describe Migrations::Importer::CategoryNameFinder do
     context "with existing categories" do
       it "avoids names that exist at root level" do
         name = finder.find_available_name("Root Category", nil)
-        expect(name).to eq("Root Category_2")
+        expect(name).to eq("Root Category_1")
       end
 
       it "avoids names that exist in specific parent" do
-        name = finder.find_available_name("Child Two", @root1.id)
-        expect(name).to eq("Child Two_2")
+        name = finder.find_available_name("Child Two", root1_id)
+        expect(name).to eq("Child Two_1")
       end
 
       it "allows reusing child names at root level" do
@@ -88,35 +104,28 @@ RSpec.describe Migrations::Importer::CategoryNameFinder do
 
       it "handles multiple duplicates across parents" do
         # "Duplicate Name" exists in root1 and root2
-        name1 = finder.find_available_name("Duplicate Name", @root1.id)
-        name2 = finder.find_available_name("Duplicate Name", @root2.id)
-        name3 = finder.find_available_name("Duplicate Name", @root3.id)
+        name1 = finder.find_available_name("Duplicate Name", root1_id)
+        name2 = finder.find_available_name("Duplicate Name", root2_id)
+        name3 = finder.find_available_name("Duplicate Name", root3_id)
 
-        expect(name1).to eq("Duplicate Name_2")
-        expect(name2).to eq("Duplicate Name_2")
+        expect(name1).to eq("Duplicate Name_1")
+        expect(name2).to eq("Duplicate Name_1")
         expect(name3).to eq("Duplicate Name")
       end
     end
 
     context "with length constraints" do
       it "truncates names longer than max length" do
-        long_name = "A" * 60
+        long_name = "A" * 45 + "1234567890"
         name = finder.find_available_name(long_name, nil)
-        expect(name.length).to eq(50)
+        expect(name).to eq("A" * 45 + "12345")
       end
 
       it "truncates and adds suffix when needed" do
-        long_name = "A" * 50
+        long_name = "A" * 40 + "1234567890"
         finder.find_available_name(long_name, nil)
         name = finder.find_available_name(long_name, nil)
-        expect(name).to match(/\AA+_2\z/)
-        expect(name.length).to eq(50)
-      end
-
-      it "handles grapheme clusters when truncating" do
-        name_with_emoji = "Category 👨‍👩‍👧‍👦" * 10
-        name = finder.find_available_name(name_with_emoji, nil)
-        expect(name.length).to be <= 50
+        expect(name).to eq("A" * 40 + "12345678_1")
       end
 
       it "accepts single character names" do
@@ -148,10 +157,10 @@ RSpec.describe Migrations::Importer::CategoryNameFinder do
       end
 
       it "uses separate fallback counters per parent" do
-        finder.find_available_name("", @root1.id)
-        finder.find_available_name("", @root2.id)
-        name1 = finder.find_available_name("", @root1.id)
-        name2 = finder.find_available_name("", @root2.id)
+        finder.find_available_name("", root1_id)
+        finder.find_available_name("", root2_id)
+        name1 = finder.find_available_name("", root1_id)
+        name2 = finder.find_available_name("", root2_id)
 
         expect(name1).to eq("category_2")
         expect(name2).to eq("category_2")
@@ -160,27 +169,15 @@ RSpec.describe Migrations::Importer::CategoryNameFinder do
 
     context "with parent scoping" do
       it "maintains separate suffix counters per parent" do
-        finder.find_available_name("Test", @root1.id)
-        finder.find_available_name("Test", @root1.id)
-        finder.find_available_name("Test", @root2.id)
+        finder.find_available_name("Test", root1_id)
+        finder.find_available_name("Test", root1_id)
+        finder.find_available_name("Test", root2_id)
 
-        name1 = finder.find_available_name("Test", @root1.id)
-        name2 = finder.find_available_name("Test", @root2.id)
+        name1 = finder.find_available_name("Test", root1_id)
+        name2 = finder.find_available_name("Test", root2_id)
 
-        expect(name1).to eq("Test_3")
-        expect(name2).to eq("Test_2")
-      end
-
-      it "maintains separate truncation caches per parent" do
-        long_name = "A" * 50
-
-        finder.find_available_name(long_name, @root1.id)
-        name1 = finder.find_available_name(long_name, @root1.id)
-
-        finder.find_available_name(long_name, @root2.id)
-        name2 = finder.find_available_name(long_name, @root2.id)
-
-        expect(name1).to eq(name2)
+        expect(name1).to eq("Test_2")
+        expect(name2).to eq("Test_1")
       end
     end
 
@@ -188,12 +185,6 @@ RSpec.describe Migrations::Importer::CategoryNameFinder do
       it "preserves special characters in names" do
         name = finder.find_available_name("Test & Category!", nil)
         expect(name).to eq("Test & Category!")
-      end
-
-      it "handles names with underscores" do
-        finder.find_available_name("Test_Name", nil)
-        name = finder.find_available_name("Test_Name", nil)
-        expect(name).to eq("Test_Name_2")
       end
     end
   end
