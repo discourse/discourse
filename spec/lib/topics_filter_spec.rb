@@ -192,6 +192,37 @@ RSpec.describe TopicsFilter do
             .pluck(:id)
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
       end
+
+      context "with whispers" do
+        fab!(:whisperer_group, :group)
+        fab!(:whisperer_user) { Fabricate(:user).tap { |u| whisperer_group.add(u) } }
+        fab!(:regular_user, :user)
+        fab!(:topic_with_whisper_only) do
+          Fabricate(:post, user: u1, post_type: Post.types[:whisper]).topic
+        end
+
+        before { SiteSetting.whispers_allowed_groups = "#{whisperer_group.id}" }
+
+        it "users:alice should not return topics where alice only whispered when viewed by non-whisperer" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(regular_user))
+              .filter_from_query_string("users:alice")
+              .pluck(:id)
+          expect(ids).not_to include(topic_with_whisper_only.id)
+          expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
+        end
+
+        it "group:group1 should not return topics where group members only whispered when viewed by non-whisperer" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(regular_user))
+              .filter_from_query_string("group:group1")
+              .pluck(:id)
+          expect(ids).not_to include(topic_with_whisper_only.id)
+          expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
+        end
+      end
     end
 
     describe "ordering by hot score" do
