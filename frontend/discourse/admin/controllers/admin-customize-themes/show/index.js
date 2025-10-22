@@ -153,7 +153,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
   availableChildThemes(allThemes) {
     if (!this.get("model.component")) {
       const themeId = this.get("model.id");
-      return allThemes.filter(
+      return allThemes.content.filter(
         (theme) => theme.get("id") !== themeId && theme.get("component")
       );
     }
