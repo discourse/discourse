@@ -116,6 +116,7 @@ class DiscoursePluginRegistry
   define_filtered_register :hashtag_autocomplete_contextual_type_priorities
 
   define_filtered_register :search_groups_set_query_callbacks
+  define_filtered_register :search_handlers
 
   define_filtered_register :stats
   define_filtered_register :bookmarkables

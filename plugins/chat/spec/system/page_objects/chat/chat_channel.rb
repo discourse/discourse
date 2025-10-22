@@ -11,6 +11,10 @@ module PageObjects
         @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
       end
 
+      def filter
+        @filter ||= PageObjects::Components::Chat::Filter.new
+      end
+
       def selection_management
         @selection_management ||=
           PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
