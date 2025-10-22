@@ -64,17 +64,49 @@ module Migrations::Importer::Steps
            LEFT JOIN user_suspensions us ON u.original_id = us.user_id AND us.suspended_at < DATETIME() AND
                                             (us.suspended_till IS NULL OR us.suspended_till > DATETIME())
            LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?1
+           LEFT JOIN sanitized_users ON u.original_id = sanitized_users.user_id
       WHERE mu.original_id IS NULL
       GROUP BY u.original_id
-      ORDER BY u.ROWID
+      ORDER BY CASE WHEN sanitized_users.user_id IS NULL THEN 0 ELSE 1 END, u.ROWID
     SQL
 
-    def initialize(intermediate_db, discourse_db, shared_data)
-      super
-      @unique_name_finder = ::Migrations::Importer::UniqueNameFinder.new(@shared_data)
+    private
+
+    def setup
+      @unique_name_finder = ::Migrations::Importer::UsernameFinder.new(@shared_data)
+      @always_allow_reserved_names = @config[:always_allow_reserved_usernames] || false
+      insert_sanitized_users
     end
 
-    private
+    def insert_sanitized_users
+      @intermediate_db.execute <<~SQL
+        CREATE TEMP TABLE sanitized_users
+        (
+            user_id NUMERIC PRIMARY KEY NOT NULL
+        )
+      SQL
+
+      rows = @intermediate_db.query <<~SQL, MappingType::USERS
+        SELECT u.original_id, u.username
+        FROM users u
+             LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?1
+        WHERE mu.original_id IS NULL
+        ORDER BY u.ROWID
+      SQL
+
+      insert_sql = <<~SQL
+        INSERT INTO sanitized_users (user_id)
+        VALUES (?)
+      SQL
+
+      rows.each do |row|
+        username = row[:username]
+        sanitized_username = UserNameSuggester.sanitize_username(username)
+        @intermediate_db.insert(insert_sql, [row[:original_id]]) if username != sanitized_username
+      end
+
+      @intermediate_db.commit_transaction
+    end
 
     def transform_row(row)
       if row[:emails].present?
@@ -94,9 +126,9 @@ module Migrations::Importer::Steps
       end
 
       row[:original_username] ||= row[:username]
-      row[:username] = @unique_name_finder.find_available_username(
+      row[:username] = @unique_name_finder.find_available_name(
         row[:username],
-        allow_reserved_username: row[:admin] == 1,
+        allow_reserved_username: @always_allow_reserved_names || row[:admin] == 1,
       )
       row[:username_lower] = row[:username].downcase
 

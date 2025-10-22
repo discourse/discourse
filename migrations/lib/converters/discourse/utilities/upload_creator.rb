@@ -2,11 +2,13 @@
 
 module Migrations::Converters::Discourse
   class UploadCreator
-    def initialize(column_prefix:, upload_type: nil)
-      @url_column = :"#{column_prefix}_url"
-      @filename_column = :"#{column_prefix}_filename"
-      @origin_column = :"#{column_prefix}_origin"
-      @user_id_column = :"#{column_prefix}_user_id"
+    def initialize(column_prefix: nil, upload_type: nil)
+      column_prefix = "#{column_prefix}_" if column_prefix.present?
+
+      @url_column = :"#{column_prefix}url"
+      @filename_column = :"#{column_prefix}filename"
+      @origin_column = :"#{column_prefix}origin"
+      @user_id_column = :"#{column_prefix}user_id"
 
       @upload_type = upload_type # TODO Enum
     end

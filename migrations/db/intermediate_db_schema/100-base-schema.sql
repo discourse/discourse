@@ -148,6 +148,14 @@ CREATE TABLE muted_users
     user_id       NUMERIC  NOT NULL
 );
 
+CREATE TABLE site_settings
+(
+    name            TEXT         NOT NULL PRIMARY KEY,
+    import_mode     ENUM_INTEGER NOT NULL,
+    last_changed_at DATETIME,
+    value           TEXT
+);
+
 CREATE TABLE tag_group_memberships
 (
     tag_group_id NUMERIC  NOT NULL,
@@ -374,6 +382,7 @@ CREATE TABLE user_options
     new_topic_duration_minutes           INTEGER,
     notification_level_when_assigned     INTEGER,
     notification_level_when_replying     INTEGER,
+    notify_on_linked_posts               BOOLEAN,
     oldest_search_log_date               DATETIME,
     only_chat_push_notifications         BOOLEAN,
     policy_email_frequency               INTEGER,
