@@ -523,6 +523,8 @@ RSpec.configure do |config|
         scroll_to
         trigger
         set
+        select_option
+        unselect_option
       ]
 
       NODE_METHODS_TO_PATCH.each do |method_name|
