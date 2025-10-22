@@ -97,11 +97,11 @@ export default class SecondFactorAddTotp extends Component {
             @outletArgs={{lazyHash
               secondFactorImage=this.secondFactorImage
               secondFactorKey=this.secondFactorKey
-              secondFactorModel=this.args.model.secondFactor
-              enforcedSecondFactor=this.args.model.enforcedSecondFactor
-              markDirty=this.args.model.markDirty
-              onError=this.args.model.onError
-              closeModal=this.args.closeModal
+              secondFactorModel=@model.secondFactor
+              enforcedSecondFactor=@model.enforcedSecondFactor
+              markDirty=@model.markDirty
+              onError=@model.onError
+              closeModal=@closeModal
             }}>
 
             {{#if this.errorMessage}}
@@ -114,15 +114,15 @@ export default class SecondFactorAddTotp extends Component {
 
             <PluginOutlet
               @name="user-second-factor-totp-modal-above-content"
-              @connectorTagName="div" />
+            />
 
-            <div id="totp-description" class="control-group">
+            <div class="control-group totp-description">
               <div class="controls">
                 {{htmlSafe (i18n "user.second_factor.enable_description")}}
               </div>
             </div>
 
-            <div id="totp-qr" class="control-group">
+            <div class="control-group totp-qr">
               <div class="controls">
                 <div class="qr-code">
                   <img src={{htmlSafe this.secondFactorImage}} />
@@ -143,7 +143,7 @@ export default class SecondFactorAddTotp extends Component {
               </div>
             </div>
 
-            <div id="totp-inputs" class="control-group">
+            <div class="control-group totp-inputs">
               <label class="control-label input-prepend">{{i18n
                   "user.second_factor.name"
                 }}</label>
@@ -175,7 +175,7 @@ export default class SecondFactorAddTotp extends Component {
               </div>
             </div>
 
-            <div id="totp-actions" class="control-group">
+            <div class="control-group totp-actions">
               <div class="controls totp-enable">
                 <DButton
                   class="btn-primary add-totp"
