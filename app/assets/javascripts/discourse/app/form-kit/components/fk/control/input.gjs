@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { modifier as modifierFn } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
 
 const SUPPORTED_TYPES = [

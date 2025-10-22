@@ -8,9 +8,10 @@
   &__fieldset-title {
     display: flex;
     align-items: center;
-    margin: 0 0 0.25rem;
+    margin: 0 0 0.5rem;
     font-size: var(--font-down-1-rem);
-    color: var(--primary-high);
+    color: var(--primary);
+    font-weight: 500;
   }
 
   &__fieldset-description {

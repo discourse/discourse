@@ -21,12 +21,7 @@ const FKContainer = <template>
       <FormText class="form-kit__container-subtitle">{{@subtitle}}</FormText>
     {{/if}}
 
-    <div
-      class={{concatClass
-        "form-kit__container-content"
-        (if @format (concat "--" @format))
-      }}
-    >
+    <div class="form-kit__container-content">
       {{yield}}
     </div>
   </div>
