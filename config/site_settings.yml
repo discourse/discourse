@@ -2715,6 +2715,9 @@ security:
   use_admin_ip_allowlist:
     default: false
     client: true
+  screened_ip_apply_to_all_requests:
+    default: false
+    hidden: true
   blocked_ip_blocks:
     default: ""
     type: list

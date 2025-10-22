@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
   around_action :with_resolved_locale
   before_action :set_mobile_view
   before_action :block_if_readonly_mode
+  before_action :check_screened_ip_address
   before_action :authorize_mini_profiler
   before_action :redirect_to_login_if_required
   before_action :block_if_requires_login
@@ -1061,5 +1062,19 @@ class ApplicationController < ActionController::Base
 
   def set_crawler_header
     response.headers["X-Discourse-Crawler-View"] = "true" if use_crawler_layout?
+  end
+
+  def check_screened_ip_address
+    return if !SiteSetting.screened_ip_apply_to_all_requests
+
+    ip_address = request.remote_ip
+    return if ip_address.blank?
+
+    if ScreenedIpAddress.should_block?(ip_address, cached: true)
+      render json: {
+               error: I18n.t("login.not_allowed_from_ip_address", username: "anonymous"),
+             },
+             status: :forbidden
+    end
   end
 end
