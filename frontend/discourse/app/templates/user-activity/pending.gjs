@@ -5,7 +5,7 @@ export default RouteTemplate(
   <template>
     <ul class="user-stream">
       <PostList
-        @posts={{@controller.model}}
+        @posts={{@controller.model.content}}
         @urlPath="postUrl"
         @showUserInfo={{false}}
         @additionalItemClasses="user-stream-item"
