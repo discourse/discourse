@@ -49,7 +49,7 @@ const TopicLabelButton = <template>
   </DButton>
 </template>;
 
-export default class TopicLabelContent extends Component {
+export default class TopicReplyChoiceDialog extends Component {
   @action
   replyOnOriginal() {
     this.args.model.replyOnOriginal();
