@@ -514,6 +514,53 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     );
   });
 
+  test("sync - all missing states are updated even when some topics match the server list", function (assert) {
+    const trackingState = this.store.createRecord("topic-tracking-state");
+
+    trackingState.loadStates([
+      {
+        topic_id: 100,
+        last_read_post_number: null,
+        notification_level: NotificationLevels.TRACKING,
+        created_in_new_period: true,
+      },
+      {
+        topic_id: 105,
+        last_read_post_number: null,
+        notification_level: NotificationLevels.TRACKING,
+        created_in_new_period: true,
+      },
+      {
+        topic_id: 106,
+        last_read_post_number: null,
+        notification_level: NotificationLevels.TRACKING,
+        created_in_new_period: true,
+      },
+    ]);
+
+    const list = {
+      topics: [
+        this.store.createRecord("topic", {
+          id: 100,
+          unseen: true,
+        }),
+      ],
+    };
+
+    trackingState.sync(list, "new");
+
+    assert.strictEqual(
+      trackingState.findState(105).last_read_post_number,
+      1,
+      "topic 105 marked as not new even though topic 100 was in server list"
+    );
+    assert.strictEqual(
+      trackingState.findState(106).last_read_post_number,
+      1,
+      "topic 106 marked as not new even though topic 100 was in server list"
+    );
+  });
+
   test("establishChannels - /delete MessageBus channel payloads processed", async function (assert) {
     const trackingState = this.store.createRecord("topic-tracking-state", {
       messageBus: MessageBus,

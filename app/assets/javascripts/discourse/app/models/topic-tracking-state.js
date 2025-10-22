@@ -951,7 +951,7 @@ export default class TopicTrackingState extends EmberObject {
       // no compensation needed; we already have latest state
       // from the backend
       if (ids[topicKey]) {
-        return;
+        continue;
       }
 
       const newState = { ...this.findState(topicKey) };
