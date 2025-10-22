@@ -409,6 +409,8 @@ schema:
         - "invites"
         - "javascript_caches"
         - "linked_topics"
+        - "llm_credit_allocations"
+        - "llm_feature_credit_costs"
         - "llm_models"
         - "llm_quota_usages"
         - "llm_quotas"
