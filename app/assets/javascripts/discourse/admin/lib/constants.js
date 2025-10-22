@@ -24,6 +24,12 @@ export const SYSTEM_FLAG_IDS = {
   spam: 8,
   illegal: 10,
   notify_moderators: 7,
+  custom_incorrect_content: 1010,
+  trolling: 1001,
+  real_life_threat: 1002,
+  inappropriate_name: 1003,
+  violent: 1011,
+  abuse: 1012,
 };
 
 export const REPORT_MODES = {
@@ -40,6 +46,7 @@ export const REPORT_MODES = {
 export const USER_FIELD_FLAGS = [
   "editable",
   "show_on_profile",
+  "show_on_signup",
   "show_on_user_card",
   "searchable",
 ];
