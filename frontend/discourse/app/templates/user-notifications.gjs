@@ -85,7 +85,7 @@ export default RouteTemplate(
 
       </HorizontalOverflowNav>
 
-      {{#if @controller.model}}
+      {{#if @controller.model.content}}
         <div class="navigation-controls">
           <DButton
             @title="user.dismiss_notifications_tooltip"
