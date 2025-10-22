@@ -378,7 +378,9 @@ export default class Post extends Component {
       postId: this.args.post.id,
     });
 
-    return replies.map((reply) => this.store.createRecord("post", reply));
+    return replies.content.map((reply) =>
+      this.store.createRecord("post", reply)
+    );
   }
 
   <template>
