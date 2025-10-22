@@ -227,7 +227,7 @@ export default class Post extends Component {
       after,
     });
 
-    replies.forEach((reply) => {
+    replies.content.forEach((reply) => {
       // the components expect a post model instance
       const replyAsPost = this.store.createRecord("post", reply);
       this.repliesBelow.push(replyAsPost);
