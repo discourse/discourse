@@ -144,6 +144,7 @@ export default class DOTP extends Component {
           {{on "focus" this.onFocus}}
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
+          ...attributes
         />
       </div>
     </div>

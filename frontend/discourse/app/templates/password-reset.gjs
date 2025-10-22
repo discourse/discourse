@@ -12,7 +12,6 @@ import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -66,10 +65,7 @@ export default RouteTemplate(
                 @isLogin={{false}}
               >
                 <SecondFactorInput
-                  {{on
-                    "input"
-                    (withEventValue (fn (mut @controller.secondFactorToken)))
-                  }}
+                  @onFilled={{fn (mut @controller.secondFactorToken)}}
                   @secondFactorMethod={{@controller.selectedSecondFactorMethod}}
                   value={{@controller.secondFactorToken}}
                   id="second-factor"
