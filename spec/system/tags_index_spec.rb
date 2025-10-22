@@ -18,6 +18,7 @@ describe "Tags index page", type: :system do
       sign_in(user)
       visit("/tags")
 
+      expect(page).to have_css(".tags-index")
       expect(page).to have_no_css(".tags-admin-dropdown")
     end
   end
