@@ -4868,6 +4868,7 @@ en:
 
     lightbox:
       download: "Download"
+      quote: "Quote"
       open: "Original image"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"

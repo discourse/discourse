@@ -68,4 +68,105 @@ describe "Lightbox | Photoswipe", type: :system do
       expect(lightbox).to have_original_image_button
     end
   end
+
+  context "with quote button" do
+    let(:composer) { PageObjects::Components::Composer.new }
+
+    before do
+      cpp.post_process
+      post.update(cooked: cpp.html)
+    end
+
+    it "quotes the image when clicking the quote button with composer closed" do
+      topic_page.visit_topic(topic)
+
+      find("#post_1 a.lightbox").click
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_quote_button
+
+      lightbox.quote_button.click
+
+      try_until_success do
+        expect(composer).to be_opened
+        composer_value = composer.composer_input.value
+        expect(composer_value).to include("![first image|")
+      end
+
+      composer_value = composer.composer_input.value
+
+      expect(composer_value).to include("[quote=")
+      expect(composer_value).to include("post:1")
+      expect(composer_value).to include("topic:#{topic.id}")
+      expect(composer_value).to include("![first image|")
+      expect(composer_value).to include(upload_1.url)
+      expect(composer_value).to match(/\|(\d+)x(\d+)\]/)
+      expect(composer_value).to include("[/quote]")
+    end
+
+    it "quotes the image when clicking the quote button with composer open" do
+      topic_page.visit_topic(topic)
+
+      topic_page.click_reply_button
+
+      expect(composer).to be_opened
+
+      find("#post_1 a.lightbox").click
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_quote_button
+
+      lightbox.quote_button.click
+
+      try_until_success do
+        composer_value = composer.composer_input.value
+        expect(composer_value).to include("![first image|")
+      end
+
+      composer_value = composer.composer_input.value
+
+      expect(composer_value).to include("[quote=")
+      expect(composer_value).to include("post:1")
+      expect(composer_value).to include("topic:#{topic.id}")
+      expect(composer_value).to include("![first image|")
+      expect(composer_value).to include(upload_1.url)
+      expect(composer_value).to match(/\|(\d+)x(\d+)\]/)
+      expect(composer_value).to include("[/quote]")
+    end
+
+    it "quotes the image when clicking the quote button with composer minimized" do
+      topic_page.visit_topic(topic)
+
+      topic_page.click_reply_button
+
+      expect(composer).to be_opened
+
+      composer.minimize
+
+      expect(composer).to be_minimized
+
+      find("#post_1 a.lightbox").click
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_quote_button
+
+      lightbox.quote_button.click
+
+      try_until_success do
+        expect(composer).to be_opened
+        composer_value = composer.composer_input.value
+        expect(composer_value).to include("![first image|")
+      end
+
+      composer_value = composer.composer_input.value
+
+      expect(composer_value).to include("[quote=")
+      expect(composer_value).to include("post:1")
+      expect(composer_value).to include("topic:#{topic.id}")
+      expect(composer_value).to include("![first image|")
+      expect(composer_value).to include(upload_1.url)
+      expect(composer_value).to match(/\|(\d+)x(\d+)\]/)
+      expect(composer_value).to include("[/quote]")
+    end
+  end
 end
