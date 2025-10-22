@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
-  fab!(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  fab!(:narrative_bot) { DiscourseNarrativeBot::Base.new }
   fab!(:discobot_user) { narrative_bot.discobot_user }
   fab!(:discobot_username) { narrative_bot.discobot_username }
   fab!(:first_post) { Fabricate(:post, user: discobot_user) }
@@ -20,7 +20,7 @@ RSpec.describe DiscourseNarrativeBot::AdvancedUserNarrative do
 
   fab!(:post) { Fabricate(:post, topic: topic, user: user) }
   fab!(:narrative) { described_class.new }
-  fab!(:other_topic) { Fabricate(:topic) }
+  fab!(:other_topic, :topic)
   fab!(:other_post) { Fabricate(:post, topic: other_topic) }
   fab!(:skip_trigger) { DiscourseNarrativeBot::TrackSelector.skip_trigger }
   fab!(:reset_trigger) { DiscourseNarrativeBot::TrackSelector.reset_trigger }

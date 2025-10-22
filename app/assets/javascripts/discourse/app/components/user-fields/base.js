@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { classNameBindings } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";

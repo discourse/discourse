@@ -4,14 +4,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import ForgotPassword from "discourse/components/modal/forgot-password";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { setting } from "discourse/lib/computed";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
-import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { areCookiesEnabled } from "discourse/lib/utilities";
 import {
   getPasskeyCredential,
@@ -23,10 +22,10 @@ import { i18n } from "discourse-i18n";
 
 export default class LoginPageController extends Controller {
   @service siteSettings;
-  @service router;
   @service capabilities;
   @service dialog;
-  @service site;
+  // eslint-disable-next-line discourse/no-unused-services
+  @service site; // used in the route template
   @service login;
   @service modal;
 
@@ -39,9 +38,6 @@ export default class LoginPageController extends Controller {
   @tracked showSecondFactor = false;
   @tracked loginPassword = "";
   @tracked loginName = "";
-  @tracked canLoginLocal = this.siteSettings.enable_local_logins;
-  @tracked
-  canLoginLocalWithEmail = this.siteSettings.enable_local_logins_via_email;
   @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
   @tracked securityKeyCredential;
   @tracked otherMethodAllowed;
@@ -54,6 +50,9 @@ export default class LoginPageController extends Controller {
   @tracked secondFactorToken;
   @tracked flash;
   @tracked flashType;
+
+  @setting("enable_local_logins") canLoginLocal;
+  @setting("enable_local_logins_via_email") canLoginLocalWithEmail;
 
   get isAwaitingApproval() {
     return (
@@ -109,22 +108,11 @@ export default class LoginPageController extends Controller {
   }
 
   get showSignupLink() {
-    return this.canSignUp && !this.showSecondFactor;
+    return this.application.canSignUp && !this.showSecondFactor;
   }
 
   get adminLoginPath() {
     return getURL("/u/admin-login");
-  }
-
-  get shouldTriggerRouteAction() {
-    return (
-      this.siteSettings.enable_discourse_connect || this.singleExternalLogin
-    );
-  }
-
-  @action
-  showFullPageLogin() {
-    this.showLogin = true;
   }
 
   @action
@@ -150,16 +138,9 @@ export default class LoginPageController extends Controller {
 
         if (authResult && !authResult.error) {
           const destinationUrl = cookie("destination_url");
-          const ssoDestinationUrl = cookie("sso_destination_url");
-
-          if (ssoDestinationUrl) {
-            removeCookie("sso_destination_url");
-            window.location.assign(ssoDestinationUrl);
-          } else if (destinationUrl) {
+          if (destinationUrl) {
             removeCookie("destination_url");
             window.location.assign(destinationUrl);
-          } else if (this.referrerTopicUrl) {
-            window.location.assign(this.referrerTopicUrl);
           } else {
             window.location.reload();
           }
@@ -169,21 +150,6 @@ export default class LoginPageController extends Controller {
       }
     } catch (e) {
       popupAjaxError(e);
-    }
-  }
-
-  @action
-  preloadLogin() {
-    const prefillUsername = document.querySelector(
-      "#hidden-login-form input[name=username]"
-    )?.value;
-    if (prefillUsername) {
-      this.loginName = prefillUsername;
-      this.loginPassword = document.querySelector(
-        "#hidden-login-form input[name=password]"
-      ).value;
-    } else if (cookie("email")) {
-      this.loginName = cookie("email");
     }
   }
 
@@ -208,35 +174,8 @@ export default class LoginPageController extends Controller {
   }
 
   @action
-  showCreateAccount(createAccountProps = {}) {
-    if (this.site.isReadOnly) {
-      this.dialog.alert(i18n("read_only_mode.login_disabled"));
-    } else {
-      this.handleShowCreateAccount(createAccountProps);
-    }
-  }
-
-  handleShowCreateAccount(createAccountProps) {
-    if (this.siteSettings.enable_discourse_connect) {
-      const returnPath = encodeURIComponent(window.location.pathname);
-      window.location = getURL("/session/sso?return_path=" + returnPath);
-    } else {
-      if (
-        this.isOnlyOneExternalLoginMethod &&
-        this.siteSettings.auth_immediately
-      ) {
-        // we will automatically redirect to the external auth service
-        this.login.externalLogin(this.externalLoginMethods[0], {
-          signup: true,
-        });
-      } else {
-        this.router.transitionTo("signup").then((signup) => {
-          Object.keys(createAccountProps || {}).forEach((key) => {
-            signup.controller.set(key, createAccountProps[key]);
-          });
-        });
-      }
-    }
+  loginPasswordChanged(event) {
+    this.loginPassword = event.target.value;
   }
 
   @action
@@ -245,11 +184,10 @@ export default class LoginPageController extends Controller {
   }
 
   @action
-  async triggerLogin() {
+  async localLogin() {
     if (this.loginDisabled) {
       return;
     }
-
     if (isEmpty(this.loginName) || isEmpty(this.loginPassword)) {
       this.flash = i18n("login.blank_username_or_password");
       this.flashType = "error";
@@ -269,9 +207,10 @@ export default class LoginPageController extends Controller {
           timezone: moment.tz.guess(),
         },
       });
-      if (result && result.error) {
+      if (result?.error) {
         this.loggingIn = false;
         this.flash = null;
+        this.flashType = "error";
 
         if (
           (result.security_key_enabled || result.totp_enabled) &&
@@ -305,119 +244,80 @@ export default class LoginPageController extends Controller {
               reset_url: getURL("/password-reset"),
             })
           );
-          this.flashType = "error";
         } else {
           this.flash = result.error;
-          this.flashType = "error";
         }
       } else {
         this.loggedIn = true;
         // Trigger the browser's password manager using the hidden static login form:
-        const hiddenLoginForm = document.getElementById("hidden-login-form");
-        const applyHiddenFormInputValue = (value, key) => {
-          if (!hiddenLoginForm) {
-            return;
+        const _form = document.getElementById("hidden-login-form");
+        if (_form) {
+          const set = (key, value) => {
+            _form.querySelector(`input[name=${key}]`).value = value;
+          };
+
+          set("username", this.loginName);
+          set("password", this.loginPassword);
+
+          const destinationUrl = cookie("destination_url");
+
+          if (destinationUrl) {
+            removeCookie("destination_url");
+            set("redirect", destinationUrl);
+          } else {
+            set("redirect", window.location.href);
           }
 
-          hiddenLoginForm.querySelector(`input[name=${key}]`).value = value;
-        };
-
-        const destinationUrl = cookie("destination_url");
-        const ssoDestinationUrl = cookie("sso_destination_url");
-
-        applyHiddenFormInputValue(this.loginName, "username");
-        applyHiddenFormInputValue(this.loginPassword, "password");
-
-        if (ssoDestinationUrl) {
-          removeCookie("sso_destination_url");
-          window.location.assign(ssoDestinationUrl);
-          return;
-        } else if (destinationUrl) {
-          // redirect client to the original URL
-          removeCookie("destination_url");
-
-          applyHiddenFormInputValue(destinationUrl, "redirect");
-        } else if (this.referrerTopicUrl) {
-          applyHiddenFormInputValue(this.referrerTopicUrl, "redirect");
-        } else {
-          applyHiddenFormInputValue(window.location.href, "redirect");
-        }
-
-        if (hiddenLoginForm) {
-          if (
-            navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
-            navigator.userAgent.match(/Safari/g)
-          ) {
+          if (this.capabilities.isIOS && this.capabilities.isSafari) {
             // In case of Safari on iOS do not submit hidden login form
-            window.location.href = hiddenLoginForm.querySelector(
+            window.location.href = _form.querySelector(
               "input[name=redirect]"
             ).value;
           } else {
-            hiddenLoginForm.submit();
+            _form.submit();
           }
         }
-        return;
       }
     } catch (e) {
       // Failed to login
-      if (e.jqXHR && e.jqXHR.status === 429) {
+      this.loggingIn = false;
+      this.flashType = "error";
+      if (e.jqXHR?.status === 429) {
         this.flash = i18n("login.rate_limit");
-        this.flashType = "error";
       } else if (
-        e.jqXHR &&
-        e.jqXHR.status === 503 &&
-        e.jqXHR.responseJSON.error_type === "read_only"
+        e.jqXHR?.status === 503 &&
+        e.jqXHR?.responseJSON?.error_type === "read_only"
       ) {
         this.flash = i18n("read_only_mode.login_disabled");
-        this.flashType = "error";
       } else if (!areCookiesEnabled()) {
         this.flash = i18n("login.cookies_error");
-        this.flashType = "error";
       } else {
         this.flash = i18n("login.error");
-        this.flashType = "error";
       }
-      this.loggingIn = false;
     }
   }
 
   @action
-  externalLoginAction(loginMethod) {
-    if (this.loginDisabled) {
-      return;
+  externalLogin(loginMethod) {
+    if (!this.loginDisabled) {
+      this.login.externalLogin(loginMethod, {
+        setLoggingIn: (value) => (this.loggingIn = value),
+      });
     }
-    this.login.externalLogin(loginMethod, {
-      signup: false,
-      setLoggingIn: (value) => (this.loggingIn = value),
-    });
   }
 
   @action
   createAccount() {
-    let createAccountProps = {};
-    if (this.loginName && this.loginName.indexOf("@") > 0) {
-      createAccountProps.accountEmail = this.loginName;
-      createAccountProps.accountUsername = null;
+    // This makes the UX a little bit nicer by auto-filling the email/username when switching from /login to /signup
+    if (this.loginName?.indexOf("@") > 0) {
+      this.send("showCreateAccount", {
+        accountEmail: this.loginName,
+        accountUsername: "",
+      });
     } else {
-      createAccountProps.accountUsername = this.loginName;
-      createAccountProps.accountEmail = null;
-    }
-    this.showCreateAccount(createAccountProps);
-  }
-
-  @action
-  interceptResetLink(event) {
-    if (
-      !wantsNewWindow(event) &&
-      event.target.href &&
-      new URL(event.target.href).pathname === getURL("/password-reset")
-    ) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.modal.show(ForgotPassword, {
-        model: {
-          emailOrUsername: this.loginName,
-        },
+      this.send("showCreateAccount", {
+        accountEmail: "",
+        accountUsername: this.loginName,
       });
     }
   }

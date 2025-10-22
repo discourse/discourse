@@ -228,14 +228,14 @@ acceptance("Tags listed by group", function (needs) {
       );
   });
 
-  test("new topic button is not available for staff-only tags", async function (assert) {
+  test("new topic button works when viewing staff-only tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
     await visit("/tag/regular-tag");
     assert.dom("#create-topic").isEnabled();
 
     await visit("/tag/staff-only-tag");
-    assert.dom("#create-topic").isDisabled();
+    assert.dom("#create-topic").isEnabled();
 
     updateCurrentUser({ moderator: true });
 
@@ -443,7 +443,7 @@ acceptance("Tag info", function (needs) {
   });
 
   test("tag info hides only current tag in synonyms dropdown", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true });
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
     await visit("/tag/happy-monkey");
     assert.dom("#show-tag-info").exists();
@@ -465,7 +465,7 @@ acceptance("Tag info", function (needs) {
   });
 
   test("edit tag is showing input for name and description", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true });
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
     await visit("/tag/happy-monkey");
     assert.dom("#show-tag-info").exists();
@@ -577,7 +577,7 @@ acceptance("Tag info", function (needs) {
   });
 
   test("admin can manage tags", async function (assert) {
-    updateCurrentUser({ moderator: false, admin: true });
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
     await visit("/tag/planters");
     assert.dom("#show-tag-info").exists();
@@ -730,7 +730,7 @@ acceptance("Tag separator customization", function (needs) {
   });
 
   test("applying a value transformation for custom tag separator", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer("tag-separator", () => {
         return " | ";
       });

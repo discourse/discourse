@@ -4,9 +4,9 @@ RSpec.describe "Navigation", type: :system do
   fab!(:category)
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
-  fab!(:user) { Fabricate(:admin) }
+  fab!(:user, :admin)
   fab!(:category_channel)
-  fab!(:category_channel_2) { Fabricate(:category_channel) }
+  fab!(:category_channel_2, :category_channel)
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:sidebar_page) { PageObjects::Pages::Sidebar.new }
 
@@ -33,9 +33,8 @@ RSpec.describe "Navigation", type: :system do
       expect(page).to have_no_css(".channels-list")
     end
 
-    context "when visiting on mobile" do
+    context "when visiting on mobile", mobile: true do
       it "has no sidebar" do
-        visit("/?mobile_view=1")
         chat_page.visit_channel(category_channel_2)
 
         expect(page).to have_no_css("#d-sidebar")
@@ -53,9 +52,8 @@ RSpec.describe "Navigation", type: :system do
     end
   end
 
-  context "when visiting on mobile" do
+  context "when visiting on mobile", mobile: true do
     it "has no sidebar" do
-      visit("/?mobile_view=1")
       chat_page.visit_channel(category_channel_2)
 
       expect(page).to have_no_css(".channels-list")

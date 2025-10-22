@@ -1,4 +1,5 @@
 import "./setup-deprecation-workflow";
+import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
 import "./discourse-common-loader-shims";
@@ -18,6 +19,48 @@ import { buildResolver } from "discourse/resolver";
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
+
+window.moduleBroker = {
+  async lookup(moduleName) {
+    return require(moduleName);
+  },
+};
+
+async function loadThemeFromModulePreload(link) {
+  const themeId = link.dataset.themeId;
+  try {
+    const compatModules = (await import(/* webpackIgnore: true */ link.href))
+      .default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/theme-${themeId}/${key}`, () => mod);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
+      String(error)
+    );
+    fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
+  }
+}
+
+export async function loadThemes() {
+  const promises = [
+    ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
+  ].map(loadThemeFromModulePreload);
+  await Promise.all(promises);
+}
+
+export async function loadAdmin() {
+  const compatModules = (
+    await import(
+      /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
+    )
+  ).default;
+  for (const [key, mod] of Object.entries(compatModules)) {
+    define(`discourse/admin/${key.slice(2)}`, () => mod);
+  }
+}
 
 class Discourse extends Application {
   modulePrefix = "discourse";

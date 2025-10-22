@@ -44,7 +44,6 @@ export default class UppyComposerUpload {
   editorInputClass = ".d-editor-input";
   mobileFileUploaderId = "mobile-file-upload";
   fileUploadElementId;
-  editorClass = ".d-editor";
 
   composerEventPrefix;
   composerModel;
@@ -136,7 +135,7 @@ export default class UppyComposerUpload {
   }
 
   setup(element) {
-    this.#editorEl = element.querySelector(this.editorClass);
+    this.#editorEl = element;
     this.#fileInputEl = document.getElementById(this.fileUploadElementId);
 
     this.appEvents.on(`${this.composerEventPrefix}:add-files`, this._addFiles);
@@ -339,7 +338,9 @@ export default class UppyComposerUpload {
             })
           );
 
-          this.placeholderHandler.insert(file);
+          if (!file.meta.skipPlaceholder) {
+            this.placeholderHandler.insert(file);
+          }
 
           this.appEvents.trigger(
             `${this.composerEventPrefix}:upload-started`,
@@ -375,12 +376,14 @@ export default class UppyComposerUpload {
           file,
           upload.url,
 
-          // This callback is fired even if the thumbnail callnot be generated,
+          // This callback is fired even if the thumbnail cannot be generated,
           // e.g. if video_thumbnails_enabled is false or if the file is not a video.
           () => {
             this.#removeInProgressUpload(file.id);
 
-            this.placeholderHandler.success(file, markdown);
+            if (!file.meta.skipPlaceholder) {
+              this.placeholderHandler.success(file, markdown);
+            }
 
             this.appEvents.trigger(
               `${this.composerEventPrefix}:upload-success`,
@@ -485,7 +488,7 @@ export default class UppyComposerUpload {
           optionsResolverFn({
             composerModel: this.composerModel,
             capabilities: this.capabilities,
-            isMobileDevice: this.site.isMobileDevice,
+            isMobileDevice: this.capabilities.isMobileDevice,
           })
         );
       });
@@ -582,7 +585,10 @@ export default class UppyComposerUpload {
             name: file.name,
             type: file.type,
             data: file,
-            meta: { pasted: opts.pasted },
+            meta: {
+              pasted: opts.pasted,
+              skipPlaceholder: opts.skipPlaceholder,
+            },
           };
         })
       );
@@ -633,14 +639,18 @@ export default class UppyComposerUpload {
     const uploadingText = i18n("uploading_filename", {
       filename: "%placeholder%",
     });
-    const uploadingTextMatch = uploadingText.match(/^.*(?=: %placeholder%…)/);
+    const uploadingTextMatch = uploadingText.match(
+      /^.*(?=: %placeholder%\s?…)/
+    );
 
     if (!uploadingTextMatch || !uploadingTextMatch[0]) {
       return;
     }
 
     const uploadingImagePattern = new RegExp(
-      "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\.\\w+…\\]\\(\\)",
+      "\\[" +
+        uploadingTextMatch[0].trim() +
+        "\\s?: ([^\\]]+?)\\.\\w+\\s?…\\]\\(\\)",
       "g"
     );
 
@@ -654,7 +664,9 @@ export default class UppyComposerUpload {
       imagePlaceholder = imagePlaceholder.trim();
 
       const filenamePattern = new RegExp(
-        "\\[" + uploadingTextMatch[0].trim() + ": ([^\\]]+?)\\…\\]\\(\\)"
+        "\\[" +
+          uploadingTextMatch[0].trim() +
+          "\\s?: ([^\\]]+?)\\s?\\…\\]\\(\\)"
       );
 
       const filenameMatch = imagePlaceholder.match(filenamePattern);

@@ -12,7 +12,8 @@ class SessionController < ApplicationController
 
   skip_before_action :check_xhr, only: %i[second_factor_auth_show]
 
-  allow_in_staff_writes_only_mode :create, :email_login, :forgot_password
+  allow_in_readonly_mode :email_login
+  allow_in_staff_writes_only_mode :create, :forgot_password
 
   ACTIVATE_USER_KEY = "activate_user"
   FORGOT_PASSWORD_EMAIL_LIMIT_PER_DAY = 6
@@ -24,7 +25,7 @@ class SessionController < ApplicationController
   def sso
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect?
 
-    destination_url = cookies[:destination_url] || session[:destination_url]
+    destination_url = cookies[:destination_url] || server_session[:destination_url]
     return_path = params[:return_path] || path("/")
 
     if destination_url && return_path == path("/")
@@ -32,10 +33,10 @@ class SessionController < ApplicationController
       return_path = "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
     end
 
-    session.delete(:destination_url)
+    server_session.delete(:destination_url)
     cookies.delete(:destination_url)
 
-    sso = DiscourseConnect.generate_sso(return_path, secure_session: secure_session)
+    sso = DiscourseConnect.generate_sso(return_path, server_session:)
     connect_verbose_warn { "Verbose SSO log: Started SSO process\n\n#{sso.diagnostics}" }
     redirect_to sso_url(sso), allow_other_host: true
   end
@@ -72,7 +73,7 @@ class SessionController < ApplicationController
       end
 
       if request.xhr?
-        # for the login modal
+        # This is needed for DiscourseConnect provider to redirect users correctly
         cookies[:sso_destination_url] = data[:sso_redirect_url]
         render json: success_json.merge(redirect_url: data[:sso_redirect_url])
       else
@@ -80,7 +81,7 @@ class SessionController < ApplicationController
       end
     elsif result.no_second_factors_enabled?
       if request.xhr?
-        # for the login modal
+        # This is needed for DiscourseConnect provider to redirect users correctly
         cookies[:sso_destination_url] = result.data[:sso_redirect_url]
       else
         redirect_to result.data[:sso_redirect_url], allow_other_host: true
@@ -90,14 +91,15 @@ class SessionController < ApplicationController
       render json: success_json.merge(redirect_url: redirect_url)
     end
   rescue DiscourseConnectProvider::BlankSecret
-    render plain: I18n.t("discourse_connect.missing_secret"), status: 400
+    render plain: I18n.t("discourse_connect.missing_secret"), status: :bad_request
   rescue DiscourseConnectProvider::ParseError
     # Do NOT pass the error text to the client, it would give them the correct signature
-    render plain: I18n.t("discourse_connect.login_error"), status: 422
+    render plain: I18n.t("discourse_connect.login_error"), status: :unprocessable_entity
   rescue DiscourseConnectProvider::BlankReturnUrl
-    render plain: "return_sso_url is blank, it must be provided", status: 400
+    render plain: "return_sso_url is blank, it must be provided", status: :bad_request
   rescue DiscourseConnectProvider::InvalidParameterValueError => e
-    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param), status: 400
+    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param),
+           status: :bad_request
   end
 
   # For use in development mode only when login options could be limited or disabled.
@@ -107,10 +109,9 @@ class SessionController < ApplicationController
 
     def become
       raise Discourse::InvalidAccess if Rails.env.production?
-      raise Discourse::ReadOnly if @readonly_mode
 
       if ENV["DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE"] != "1"
-        return render plain: <<~TEXT, status: 403
+        return render plain: <<~TEXT, status: :forbidden
           To enable impersonating any user without typing passwords set the following ENV var
 
           export DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE=1
@@ -122,9 +123,9 @@ class SessionController < ApplicationController
       user = User.find_by_username(params[:session_id])
 
       if user.blank?
-        return render plain: "User #{params[:session_id]} not found", status: 403
+        return render plain: "User #{params[:session_id]} not found", status: :forbidden
       elsif !user.active?
-        return render plain: "User #{params[:session_id]} is not active", status: 403
+        return render plain: "User #{params[:session_id]} is not active", status: :forbidden
       end
 
       log_on_user(user)
@@ -157,7 +158,7 @@ class SessionController < ApplicationController
       # but since this is a test route, we allow passing a bad value into the API, catch the error
       # and return a JSON response to assert against.
       if e.message == "running 2fa against another user is not allowed"
-        render json: { result: "wrong user" }, status: 400
+        render json: { result: "wrong user" }, status: :bad_request
       else
         raise e
       end
@@ -166,13 +167,13 @@ class SessionController < ApplicationController
 
   def sso_login
     raise Discourse::NotFound unless SiteSetting.enable_discourse_connect
-    raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
+    raise Discourse::ReadOnly if @readonly_mode && !@staff_writes_only_mode
 
     params.require(:sso)
     params.require(:sig)
 
     begin
-      sso = DiscourseConnect.parse(request.query_string, secure_session: secure_session)
+      sso = DiscourseConnect.parse(request.query_string, server_session:)
     rescue DiscourseConnect::PayloadParseError => e
       connect_verbose_warn do
         "Verbose SSO log: Payload is not base64\n\n#{e.message}\n\n#{sso&.diagnostics}"
@@ -204,10 +205,10 @@ class SessionController < ApplicationController
     sso.expire_nonce!
 
     begin
-      invite = validate_invitiation!(sso)
+      invite = validate_invitation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
-        raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
+        raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
 
         if user.suspended?
           render_sso_error(text: failed_to_login(user)[:error], status: 403)
@@ -222,6 +223,7 @@ class SessionController < ApplicationController
           else
             render_sso_error(text: I18n.t("discourse_connect.account_not_approved"), status: 403)
           end
+
           return
 
           # we only want to redeem the invite if
@@ -240,9 +242,9 @@ class SessionController < ApplicationController
           topic = invite.topics.first
           return_path = topic.present? ? path(topic.relative_url) : path("/")
         elsif !user.active?
-          activation = UserActivator.new(user, request, session, cookies)
+          activation = UserActivator.new(user, request, server_session, cookies)
           activation.finish
-          session["user_created_message"] = activation.message
+          server_session["user_created_message"] = activation.message
           return redirect_to(users_account_created_path)
         else
           login_sso_user(sso, user)
@@ -332,7 +334,7 @@ class SessionController < ApplicationController
 
     user = User.find_by_username_or_email(normalized_login_param)
 
-    raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
 
     rate_limit_second_factor!(user)
 
@@ -380,7 +382,7 @@ class SessionController < ApplicationController
   end
 
   def passkey_challenge
-    render json: DiscourseWebauthn.stage_challenge(current_user, secure_session)
+    render json: DiscourseWebauthn.stage_challenge(current_user, server_session)
   end
 
   def passkey_login
@@ -392,7 +394,7 @@ class SessionController < ApplicationController
       ::DiscourseWebauthn::AuthenticationService.new(
         nil,
         params[:publicKeyCredential],
-        session: secure_session,
+        session: server_session,
         factor_type: UserSecurityKey.factor_types[:first_factor],
       ).authenticate_security_key
 
@@ -427,9 +429,9 @@ class SessionController < ApplicationController
       end
 
       if matched_user&.security_keys_enabled?
-        DiscourseWebauthn.stage_challenge(matched_user, secure_session)
+        DiscourseWebauthn.stage_challenge(matched_user, server_session)
         response.merge!(
-          DiscourseWebauthn.allowed_credentials(matched_user, secure_session).merge(
+          DiscourseWebauthn.allowed_credentials(matched_user, server_session).merge(
             security_key_required: true,
           ),
         )
@@ -446,11 +448,9 @@ class SessionController < ApplicationController
 
   def email_login
     token = params[:token]
-    matched_token = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])
-    user = matched_token&.user
+    user = EmailToken.confirmable(token, scope: EmailToken.scopes[:email_login])&.user
 
     check_local_login_allowed(user: user, check_login_via_email: true)
-
     rate_limit_second_factor!(user)
 
     if user.present? && !authenticate_second_factor(user).ok
@@ -458,12 +458,17 @@ class SessionController < ApplicationController
     end
 
     if user = EmailToken.confirm(token, scope: EmailToken.scopes[:email_login])
+      if @staff_writes_only_mode
+        raise Discourse::ReadOnly unless user.staff?
+      elsif @readonly_mode
+        raise Discourse::ReadOnly unless user.admin?
+      end
+
       if login_not_approved_for?(user)
         return render json: login_not_approved
       elsif payload = login_error_check(user)
         return render json: payload
       else
-        raise Discourse::ReadOnly if staff_writes_only_mode? && !user&.staff?
         user.update_timezone_if_missing(params[:timezone])
         log_on_user(user)
         return render json: success_json
@@ -504,7 +509,7 @@ class SessionController < ApplicationController
       challenge =
         SecondFactor::AuthManager.find_second_factor_challenge(
           nonce: nonce,
-          secure_session: secure_session,
+          server_session:,
           target_user: current_user,
         )
     rescue SecondFactor::BadChallenge => exception
@@ -521,8 +526,8 @@ class SessionController < ApplicationController
         allowed_methods: challenge[:allowed_methods],
       )
       if user.security_keys_enabled?
-        DiscourseWebauthn.stage_challenge(user, secure_session)
-        json.merge!(DiscourseWebauthn.allowed_credentials(user, secure_session))
+        DiscourseWebauthn.stage_challenge(user, server_session)
+        json.merge!(DiscourseWebauthn.allowed_credentials(user, server_session))
         json[:security_keys_enabled] = true
       else
         json[:security_keys_enabled] = false
@@ -552,7 +557,7 @@ class SessionController < ApplicationController
       challenge =
         SecondFactor::AuthManager.find_second_factor_challenge(
           nonce: nonce,
-          secure_session: secure_session,
+          server_session:,
           target_user: current_user,
         )
       user = User.find(challenge[:target_user_id])
@@ -590,11 +595,11 @@ class SessionController < ApplicationController
 
     if !challenge[:successful]
       rate_limit_second_factor!(user)
-      second_factor_auth_result = user.authenticate_second_factor(params, secure_session)
+      second_factor_auth_result = user.authenticate_second_factor(params, server_session)
       if second_factor_auth_result.ok
         challenge[:successful] = true
         challenge[:generated_at] += 1.minute.to_i
-        secure_session["current_second_factor_auth_challenge"] = challenge.to_json
+        server_session["current_second_factor_auth_challenge"] = challenge.to_json
       else
         error_json =
           second_factor_auth_result
@@ -602,7 +607,7 @@ class SessionController < ApplicationController
             .deep_symbolize_keys
             .slice(:ok, :error, :reason)
             .merge(failed_json)
-        render json: error_json, status: 400
+        render json: error_json, status: :bad_request
         return
       end
     end
@@ -612,7 +617,7 @@ class SessionController < ApplicationController
              callback_path: challenge[:callback_path],
              redirect_url: challenge[:redirect_url],
            },
-           status: 200
+           status: :ok
   end
 
   def forgot_password
@@ -636,7 +641,7 @@ class SessionController < ApplicationController
       end
 
     if user
-      raise Discourse::ReadOnly if staff_writes_only_mode? && !user.staff?
+      raise Discourse::ReadOnly if @staff_writes_only_mode && !user.staff?
       enqueue_password_reset_for_user(user)
     else
       RateLimiter.new(
@@ -658,7 +663,7 @@ class SessionController < ApplicationController
     if current_user.present?
       render_serialized(current_user, CurrentUserSerializer, { login_method: login_method })
     else
-      render body: nil, status: 404
+      render body: nil, status: :not_found
     end
   end
 
@@ -697,13 +702,13 @@ class SessionController < ApplicationController
   end
 
   def get_honeypot_value
-    secure_session.set(HONEYPOT_KEY, honeypot_value, expires: 1.hour)
-    secure_session.set(CHALLENGE_KEY, challenge_value, expires: 1.hour)
+    server_session[HONEYPOT_KEY] = honeypot_value
+    server_session[CHALLENGE_KEY] = challenge_value
 
     render json: {
              value: honeypot_value,
              challenge: challenge_value,
-             expires_in: SecureSession.expiry,
+             expires_in: ServerSession.expiry,
            }
   end
 
@@ -713,7 +718,7 @@ class SessionController < ApplicationController
       api_key = ApiKey.active.with_key(key).first
       render_serialized(api_key.api_key_scopes, ApiKeyScopeSerializer, root: "scopes")
     else
-      render body: nil, status: 404
+      render body: nil, status: :not_found
     end
   end
 
@@ -746,12 +751,12 @@ class SessionController < ApplicationController
   end
 
   def authenticate_second_factor(user)
-    second_factor_authentication_result = user.authenticate_second_factor(params, secure_session)
+    second_factor_authentication_result = user.authenticate_second_factor(params, server_session)
     if !second_factor_authentication_result.ok
       failure_payload = second_factor_authentication_result.to_h
       if user.security_keys_enabled?
-        DiscourseWebauthn.stage_challenge(user, secure_session)
-        failure_payload.merge!(DiscourseWebauthn.allowed_credentials(user, secure_session))
+        DiscourseWebauthn.stage_challenge(user, server_session)
+        failure_payload.merge!(DiscourseWebauthn.allowed_credentials(user, server_session))
       end
       @second_factor_failure_payload = failed_json.merge(failure_payload)
       return second_factor_authentication_result
@@ -853,14 +858,14 @@ class SessionController < ApplicationController
   # not want to complete the SSO process of creating a user
   # and redeeming the invite if the invite is not redeemable or
   # for the wrong user
-  def validate_invitiation!(sso)
-    invite_key = secure_session["invite-key"]
-    return if invite_key.blank?
+  def validate_invitation!(sso)
+    return unless invite_key = server_session["invite-key"]
 
-    invite = Invite.find_by(invite_key: invite_key)
+    base_url = Discourse.base_url
+    site_name = SiteSetting.title
 
-    if invite.blank?
-      raise Invite::ValidationFailed.new(I18n.t("invite.not_found", base_url: Discourse.base_url))
+    unless invite = Invite.find_by(invite_key:)
+      raise Invite::ValidationFailed.new(I18n.t("invite.not_found", base_url:))
     end
 
     if invite.redeemable?
@@ -868,15 +873,9 @@ class SessionController < ApplicationController
         raise Invite::ValidationFailed.new(I18n.t("invite.not_matching_email"))
       end
     elsif invite.expired?
-      raise Invite::ValidationFailed.new(I18n.t("invite.expired", base_url: Discourse.base_url))
+      raise Invite::ValidationFailed.new(I18n.t("invite.expired", base_url:))
     elsif invite.redeemed?
-      raise Invite::ValidationFailed.new(
-              I18n.t(
-                "invite.not_found_template",
-                site_name: SiteSetting.title,
-                base_url: Discourse.base_url,
-              ),
-            )
+      raise Invite::ValidationFailed.new(I18n.t("invite.not_found_template", site_name:, base_url:))
     end
 
     invite
@@ -884,15 +883,16 @@ class SessionController < ApplicationController
 
   def redeem_invitation(invite, sso, redeeming_user)
     InviteRedeemer.new(
-      invite: invite,
+      invite:,
       username: sso.username,
       name: sso.name,
       ip_address: request.remote_ip,
-      session: session,
+      session: server_session,
       email: sso.email,
-      redeeming_user: redeeming_user,
+      redeeming_user:,
     ).redeem
-    secure_session["invite-key"] = nil
+
+    server_session.delete("invite-key")
 
     # note - more specific errors are handled in the sso_login method
   rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e

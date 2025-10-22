@@ -44,6 +44,14 @@ module PageObjects
         find(".edit-controls .cancel-edit").click
       end
 
+      def delete_tag
+        find(".delete-tag").click
+      end
+
+      def has_no_tag?(name)
+        has_no_css?(".tag-box", text: name)
+      end
+
       def add_synonyms_dropdown
         PageObjects::Components::SelectKit.new("#add-synonyms")
       end

@@ -10,6 +10,10 @@ import { createWidget } from "discourse/widgets/widget";
 module("Integration | Component | Widget | post-cooked", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
+  });
+
   test("quotes with no username and no valid topic", async function (assert) {
     const args = {
       cooked: `<aside class=\"quote no-group quote-post-not-found\" data-post=\"1\" data-topic=\"123456\">\n<blockquote>\n<p>abcd</p>\n</blockquote>\n</aside>\n<p>Testing the issue</p>`,

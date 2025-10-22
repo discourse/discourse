@@ -16,6 +16,7 @@ class GroupPostSerializer < ApplicationSerializer
              :post_number,
              :posts_count,
              :post_type,
+             :user_id,
              :username,
              :name,
              :avatar_template,
@@ -48,6 +49,10 @@ class GroupPostSerializer < ApplicationSerializer
 
   def category_id
     object.topic.category_id
+  end
+
+  def user_id
+    object&.user&.id
   end
 
   def username

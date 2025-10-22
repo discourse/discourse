@@ -15,6 +15,10 @@ module("Integration | Component | Widget | base", function (hooks) {
 
   let _translations = I18n.translations;
 
+  hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
+  });
+
   hooks.afterEach(function () {
     I18n.translations = _translations;
   });
@@ -391,7 +395,7 @@ module("Integration | Component | Widget | base", function (hooks) {
       template: widgetHbs`main content`,
     });
 
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.decorateWidget("decorate-test:before", (dec) => {
         return dec.h("b", "before");
       });
@@ -427,7 +431,7 @@ module("Integration | Component | Widget | base", function (hooks) {
       settings: { age: 36 },
     });
 
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.changeWidgetSetting("ov-settings-test", "age", 37);
     });
 

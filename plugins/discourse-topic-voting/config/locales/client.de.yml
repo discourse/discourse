@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  js:
+    category:
+      sort_options:
+        votes: "Stimmen"
+    topic_voting:
+      title: "Themenabstimmung"
+      reached_limit: "Du hast keine Stimmen mehr. Entferne eine bestehende Stimme!"
+      list_votes: "Deine Stimmen auflisten"
+      votes_nav_help: "Themen mit den meisten Stimmen"
+      voted: "Du hast für dieses Thema gestimmt"
+      allow_topic_voting: "Benutzern erlauben, für Themen in dieser Kategorie zu stimmen"
+      vote_title: "Abstimmen"
+      vote_title_plural: "Stimmen"
+      voted_title: "Abgestimmt"
+      voting_closed_title: "Geschlossen"
+      voting_limit: "Limit"
+      votes_left:
+        one: "Du hast noch %{count} Stimme übrig, siehe <a href='%{path}'>deine Stimmen</a>."
+        other: "Du hast noch %{count} Stimmen übrig, siehe <a href='%{path}'>deine Stimmen</a>."
+      votes_left_button_title:
+        one: "Du hast noch %{count} Stimme übrig."
+        other: "Du hast noch %{count} Stimmen übrig."
+      votes:
+        one: "%{count} Stimme"
+        other: "%{count} Stimmen"
+      anonymous_button:
+        one: "Stimme"
+        other: "Stimmen"
+      remove_vote: "Stimme entfernen"
+      no_votes_title_self: "Du hast noch für kein Thema gestimmt"
+      no_votes_title_others: "%{username} hat noch für kein Thema gestimmt"
+    filters:
+      votes:
+        title: "Stimmen"
+        help: "Themen mit den meisten Stimmen"
+      my_votes:
+        title: "Meine Stimmen"
+        help: "Themen, über die du abgestimmt hast"
+    search:
+      most_votes: "Meiste Stimmen"
+      advanced:
+        vote:
+          count:
+            label: "Mindeststimmzahl"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "Themenabstimmungsereignis"
+          topic_upvote: "Wenn ein Benutzer über ein Thema abstimmt"
+          topic_unvote: "Wenn ein Benutzer seine Stimme für ein Thema zurücknimmt"

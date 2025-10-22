@@ -1,0 +1,237 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  site_settings:
+    chat_integration_enabled: 'Ota discourse-chat-integrointilisäosa käyttöön.'
+    chat_integration_discourse_username: 'Sen käyttäjän käyttäjätunnus, jona toimitaan sisältöä haettaessa.'
+    chat_integration_delay_seconds: 'Odotuksen pituus sekunneissa kirjoituksen luomisen jälkeen ennen chat ilmoituksen lähettämistä'
+    chat_integration_slack_username: "Botin käyttäjätunnus, jolla lähetetään viesti Slackiin"
+    chat_integration_slack_enabled: 'Ota Slackin chat-integraatiopalveluntarjoaja käyttöön'
+    chat_integration_slack_access_token: 'OAuth Access Token Slackin todentamiseen'
+    chat_integration_slack_incoming_webhook_token: 'Saapuvien pyyntöjen todentamiseen käytetty vahvistustunnus'
+    chat_integration_slack_excerpt_length: 'Slack-viestin otteen pituus'
+    chat_integration_slack_icon_url: 'Kuvake, jolla viesti lähetetään Slackiin (oletuksena foorumin logo)'
+    chat_integration_slack_outbound_webhook_url: "Slackin \"Incoming Webhook\" -järjestelmän käyttämiseen OAuth APIn sijaan. Ei suositeltu."
+    chat_integration_slack_transcript_quote: Kääritäänkö Slack-transkriptio [quote]-tunnisteisiin?
+    errors:
+      chat_integration_slack_api_configs_are_empty: "Sinun täytyy antaa joko lähtevän webhookin URL-osoite tai käyttöoikeustunnus"
+    chat_integration_telegram_enabled: "Ota Telegram chat-integrointi palveluntarjoaja käyttöön."
+    chat_integration_telegram_access_token: "Bottisi käyttöoikeustunnus Telegram botfatherilta"
+    chat_integration_telegram_excerpt_length: "Telegram-viestin otteen pituus"
+    chat_integration_telegram_enable_slash_commands: "Salli telegram tilausten hallinnointi 'kauttaviiva käskyjä' käyttäen"
+    chat_integration_discord_enabled: "Ota Discordin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_discord_message_content: "Viesti, joka sisällytetään yhteenvedon yläpuolelle lähetettäessä ilmoitusta Discordiin"
+    chat_integration_discord_excerpt_length: "Discord-viestin otteen pituus"
+    chat_integration_guilded_enabled: "Ota Guildedin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_guilded_excerpt_length: "Guilded-viestin otteen pituus"
+    chat_integration_mattermost_enabled: "Ota Mattermostin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_mattermost_webhook_url: 'Mattermost-webhookin URL-osoite'
+    chat_integration_mattermost_incoming_webhook_token: 'Saapuvien pyyntöjen todentamiseen käytetty vahvistustunnus'
+    chat_integration_mattermost_icon_url: "Mattermost-viestien kuvake (oletuksena foorumin logo)"
+    chat_integration_mattermost_excerpt_length: "Mattermost-viestin otteen pituus"
+    chat_integration_matrix_enabled: "Ota Matrixin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_matrix_homeserver: "Yhdistettävä kotipalvelin. Varmista, että sisällytit protokollan"
+    chat_integration_matrix_access_token: "Botin Matrix-tilin käyttöoikeustunnus"
+    chat_integration_matrix_excerpt_length: "Matrix-viestin otteen pituus"
+    chat_integration_matrix_use_notice: "Käytä huomautusta pelkän viestin sijaan"
+    chat_integration_zulip_enabled: "Ota Zulipin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_zulip_server: "Zulip-palvelimesi perus-URL. Muista sisällyttää http(s)://"
+    chat_integration_zulip_bot_email_address: "Zulip-bottiisi liitetty sähköpostiosoite"
+    chat_integration_zulip_bot_api_key: "API-avain Zulip-botille"
+    chat_integration_zulip_excerpt_length: "Zulip-viestin otteen pituus"
+    chat_integration_rocketchat_enabled: "Ota Rocket Chatin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_rocketchat_webhook_url: "Rocket Chat -integraation webhookin URL-osoite"
+    chat_integration_rocketchat_excerpt_length: "Rocket Chat -viestin otteen pituus"
+    chat_integration_gitter_enabled: "Ota Gitterin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_flowdock_enabled: "Ota Flowdockin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_flowdock_excerpt_length: "Flowdock-viestin otteen pituus"
+    chat_integration_groupme_enabled: "Ota Groupmen chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_groupme_excerpt_length: "Groupme-viestin otteen pituus"
+    chat_integration_groupme_bot_ids: "*pakollinen* Bottitunnukset, erotettu pilkulla, jos niitä on useita"
+    chat_integration_groupme_instance_names: " *pakollinen* GroupMe-keskutelun nimi, erotettuna pilkulla, jos niitä on useita (sama järjestys kuin bottitunnuksilla)"
+    chat_integration_teams_enabled: "Ota Microsoft Teamsin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_teams_excerpt_length: "Microsoft Teams -viestin otteen pituus"
+    chat_integration_powerautomate_enabled: "Ota Microsoft Power Automate -integraatiopalveluntarjoaja käyttöön"
+    chat_integration_powerautomate_excerpt_length: "Microsoft Power Automate -viestin otteen pituus"
+    chat_integration_webex_enabled: "Ota Webexin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_webex_excerpt_length: "Webex Team -viestin otteen pituus"
+    chat_integration_google_enabled: "Ota Google Chatin chat-integraatiopalveluntarjoaja käyttöön"
+    chat_integration_google_excerpt_length: "Google Chat -viestin otteen pituus"
+  dashboard:
+    problem:
+      channel_errors: "Joissakin chat-integraatokanavissa on virheitä. Lisätietoja saat <a href='%{base_path}/admin/plugins/chat-integration'>chatin integrointiosiossa</a>."
+  discourse_automation:
+    scriptables:
+      send_slack_message:
+        title: Lähetä Slack-viesti
+      send_chat_integration_message:
+        title: Lähetä chat-integraatioviesti
+  chat_integration:
+    all_categories: "(kaikki alueet)"
+    deleted_category: "(poistettu alue)"
+    deleted_group: "(poistettu ryhmä)"
+    group_mention_template: "@%{name} mainittu"
+    group_message_template: "Viestejä käyttäjälle: @%{name}"
+    topic_tag_changed:
+      added_and_removed: "Lisättiin %{added} ja poistettiin %{removed}"
+      added: "Lisättiin %{added}"
+      removed: "Poistettiin %{removed}"
+    provider:
+      slack:
+        status:
+          header: |
+            *Tämän kanavan säännöt*
+            (jos viestiä vastaa useampi sääntö, ylin sääntö suoritetaan)
+          no_rules: "Tälle kanavalle ei ole asetettu sääntöjä. Katso ohjeita suorittamalla `/discourse help'."
+          rule_string: "*%{index})* *%{filter}* viestit alueella *%{category}*"
+          rule_string_tags_suffix: " tunnisteilla: *%{tags}*"
+        parse_error: "Anteeksi, en ymmärtänyt tätä. Katso ohjeita suorittamalla `/discourse help'."
+        create:
+          created: "Säännön luominen onnistui"
+          updated: "Säännön päivittäminen onnistui"
+          error: "Virhe luotaessa tätä sääntöä."
+        delete:
+          success: "Säännön poistaminen onnistui"
+          error: "Sääntöä poistettaessa tapahtui virhe. Katso sääntöjen luettelo suorittamalla `/discourse status'."
+        not_found:
+          tag: "Tunnistetta *%{name}* ei löydy."
+          category: "Aluetta *%{name}* ei löydy. Käytettävissä olevat alueet: *%{list}*"
+        help: |
+          *Uusi sääntö:* `/discourse [thread|watch|follow|mute] [alue] [tunnisteen:nimi]`
+          (sinun täytyy määrittää säännön tyyppi ja vähintään yksi alue tai tunniste)
+          – *thread* – ilmoita tälle kanavalle uusista ketjuista, ketjuta vastaukset mahdollisuuksien mukaan
+          – *watch* – ilmoita tälle kanavalle uusista ketjuista ja uusista vastauksista
+          – *follow* – ilmoita tälle kanavalle uusista ketjuista
+          – *mute* – estä ilmoitukset tälle kanavalle
+
+          *Poista sääntö:* `/discourse remove [säännön numero]`
+          (`[säännön numero]` löytyy suorittamalla `/discourse status`)
+
+          *Listaa säännöt:* `/discourse status`
+
+          *[Kokeellinen] Viestin transkriptio:* `/discourse post [n]`
+          Luo luonnosketju Discoursessa, joka sisältää viimeiset n viestiä tällä kanavalla
+
+          *Ohje:* `/discourse help`
+        transcript:
+          modal_title: "Luo transkriptio"
+          modal_description: "Kaikki ketjun viestit kootaan yhdeksi foorumin viestiksi. Sinulla on mahdollisuus muokata transkriptiota ennen julkaisua."
+          transcript_ready: "Transkriptio on valmis"
+          continue_on_discourse: "Jatka foorumilla"
+          error: "Jokin meni vikaan luotaessa transkriptiota"
+          post_to_discourse: "Tee viestiluonnos Discoursessa transkriptiolla napsauttamalla tätä"
+          api_required: "Tätä integraatiota ei ole määritetty tukemaan transkriptioiden lähettämistä."
+          view_on_slack: "Katso kanavalla %{name} Slackissa"
+          first_message_pretext: "alkaen %{n} viestiä sitten:"
+          last_message_pretext: "ja päättyen %{n} viestiä sitten:"
+          posted_in: "julkaistu kanavalla %{name}"
+          change_first_message: "Vaihda ensimmäinen viesti..."
+          change_last_message: "Vaihda viimeinen viesti..."
+          loading: "Ladataan transkriptiota..."
+          error_users: "Virhe: käyttäjiä ei voitu hakea Slackista"
+          error_history: "Virhe: kanavahistoriaa ei voitu hakea Slackista"
+          error_ts: "Virhe: pyydettyä viestiä ei voitu hakea Slackista"
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "Lisättiin %{added} ja poistettiin %{removed}"
+            added: "Lisättiin %{added}"
+            removed: "Poistettiin %{removed}"
+      telegram:
+        unknown_chat: "Tätä keskustelua ei ole määritetty sivustolla %{site_title}. Pyydä järjestelmänvalvojaa lisäämään kanava keskustelutunnuksella %{chat_id}."
+        known_chat: "Tämä keskustelu on määritetty sivustolla %{site_title}. Määritä se hallintapaneelissa. (Keskustelutunnus: %{chat_id})"
+        message: |-
+          <b>%{user}</b> lähetti viestin kohteessa <a href="%{post_url}">%{title}</a>
+
+          <pre>%{post_excerpt}</pre>
+        status:
+          header: |
+            <b>Tämän kanavan säännöt</b>
+            (jos viestiä vastaa useampi sääntö, ylin sääntö suoritetaan)
+          no_rules: "Tälle kanavalle ei ole asetettu sääntöjä. Katso ohjeita suorittamalla <code>/help</code>."
+          rule_string: "<b>%{index})</b> <b>%{filter}</b> viestit alueella <b>%{category}</b>"
+          rule_string_tags_suffix: " tunnisteilla: <b>%{tags}</b>"
+        parse_error: "Anteeksi, en ymmärtänyt tätä. Katso ohjeita suorittamalla <code>/help</code>."
+        create:
+          created: "Säännön luominen onnistui"
+          updated: "Säännön päivittäminen onnistui"
+          error: "Virhe luotaessa tätä sääntöä."
+        delete:
+          success: "Säännön poistaminen onnistui"
+          error: "Sääntöä poistettaessa tapahtui virhe. Katso sääntöjen luettelo suorittamalla <code>/status</code>."
+        not_found:
+          tag: "Tunnistetta <b>%{name}</b> ei löydy."
+          category: "Aluetta <b>%{name}</b> ei löydy. Käytettävissä olevat alueet: <b>%{list}</b>"
+        help: |
+          <b>Uusi sääntö:</b> <code>/[watch|follow|mute] [alue] [tunnisteen:nimi]</code>
+          (sinun täytyy määrittää säännön tyyppi ja vähintään yksi alue tai tunniste)
+          – <b>watch</b> – ilmoita tälle kanavalle uusista ketjuista ja uusista vastauksista
+          – <b>follow</b> – ilmoita tälle kanavalle uusista ketjuista
+          – <b>mute</b> – estä ilmoitukset tälle kanavalle
+
+          <b>Poista sääntö:</b> <code>/remove [säännön numero]</code>
+          (<code>[säännön numero]</code> löytyy suorittamalla <code>/status</code>)
+
+          <b>Listaa säännöt:</b> <code>/status</code>
+
+          <b>Ohje:</b> <code>/help</code>
+      hipchat:
+        message: <b>%{user}</b> lähetti viestin kohteessa <a href="%{post_url}">%{title}</a>
+      mattermost:
+        status:
+          header: |
+            *Tämän kanavan säännöt*
+            (jos viestiä vastaa useampi sääntö, ylin sääntö suoritetaan)
+          no_rules: "Tälle kanavalle ei ole asetettu sääntöjä. Katso ohjeita suorittamalla `/discourse help'."
+          rule_string: "*%{index})* *%{filter}* viestit alueella *%{category}*"
+          rule_string_tags_suffix: " tunnisteilla: *%{tags}*"
+        parse_error: "Anteeksi, en ymmärtänyt tätä. Katso ohjeita suorittamalla `/discourse help'."
+        create:
+          created: "Säännön luominen onnistui"
+          updated: "Säännön päivittäminen onnistui"
+          error: "Virhe luotaessa tätä sääntöä."
+        delete:
+          success: "Säännön poistaminen onnistui"
+          error: "Sääntöä poistettaessa tapahtui virhe. Katso sääntöjen luettelo suorittamalla `/discourse status'."
+        not_found:
+          tag: "Tunnistetta *%{name}* ei löydy."
+          category: "Aluetta *%{name}* ei löydy. Käytettävissä olevat alueet: *%{list}*"
+        help: |
+          *Uusi sääntö: `/discourse [watch|follow|mute] [alue] [tunnisteen:nimi]`
+          (sinun täytyy määrittää säännön tyyppi ja vähintään yksi alue tai tunniste)
+          – *watch* – ilmoita tälle kanavalle uusista ketjuista ja uusista vastauksista
+          – *follow* – ilmoita tälle kanavalle uusista ketjuista
+          – *mute* – estä ilmoitukset tälle kanavalle
+
+          *Poista sääntö*:`/discourse remove [säännön numero]`
+          (`[säännön numero]` löytyy suorittamalla `/discourse status`)
+
+          *Listaa säännöt*: `/discourse status`
+
+          *Ohje:* `/discourse help`
+      matrix:
+        text_message: "%{user} lähetti viestin kohteessa %{title} – %{post_url}"
+        formatted_message: |
+          <b>%{user}</b> lähetti viestin kohteessa <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
+      zulip:
+        message: |
+          **%{user}** lähetti viestin kohteessa **[%{title}](%{post_url})**
+          ~~~quote
+          %{excerpt}
+          ~~~
+      flowdock:
+        message_title: "lähetti viestin"
+      google:
+        new_post: "Uusi viesti sivustolla %{site_title}"
+        new_topic: "Uusi ketju sivustolla %{site_title}"
+        author: "käyttäjältä @%{username}"
+        link: "Näytä sivustolla %{site_title}"
+      groupme:
+        errors:
+          instance_names_issue: "Esiintymien nimet on muotoiltu väärin tai niitä ei ole annettu"

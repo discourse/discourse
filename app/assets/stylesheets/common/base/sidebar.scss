@@ -17,7 +17,9 @@
   --d-sidebar-footer-fade: rgb(var(--secondary-rgb), 1);
   --d-sidebar-header-color: var(--primary-medium);
   --d-sidebar-header-icon-color: var(--primary-medium);
-  --d-sidebar-border-color: var(--primary-low);
+  --d-sidebar-header-font-weight: bold;
+  --d-sidebar-section-border-color: var(--content-border-color);
+  --d-sidebar-border-color: var(--content-border-color);
   --d-sidebar-link-color: var(--primary-high);
   --d-sidebar-link-icon-color: var(--primary-500);
   --d-sidebar-link-badge-color: var(--primary-700); // example: new count
@@ -30,7 +32,7 @@
   --d-sidebar-suffix-color: var(--tertiary-med-or-tertiary);
 
   // highlight applies to both hover and focus states
-  --d-sidebar-highlight-background: var(--primary-low);
+  --d-sidebar-highlight-background: var(--d-hover);
   --d-sidebar-highlight-color: var(--primary-high);
   --d-sidebar-highlight-prefix-background: var(--primary-300);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
@@ -48,6 +50,7 @@
   --d-sidebar-active-icon-color: var(--d-sidebar-link-color);
   --d-sidebar-active-prefix-background: var(--primary-200);
   --d-sidebar-active-suffix-color: var(--tertiary-med-or-tertiary);
+  --d-sidebar-active-font-weight: bold; // example: active section link
 
   @include viewport.until(sm) {
     --d-sidebar-row-height: 2.4em;
@@ -89,7 +92,7 @@
     box-sizing: border-box;
     width: 100%;
     padding: 0;
-    border-right: 1px solid var(--primary-low);
+    border-right: 1px solid var(--d-sidebar-border-color);
     overflow-x: hidden;
 
     // allows sidebar to scroll to the bottom when the composer is open
@@ -214,7 +217,7 @@
     margin-bottom: -2px;
 
     @include viewport.until(sm) {
-      grid-template-columns: 2em 4.5em repeat(2, 1fr);
+      grid-template-columns: 4em auto auto min-content;
     }
 
     &.header {
@@ -432,6 +435,7 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     border-radius: var(--d-input-border-radius);
+    overflow: hidden;
   }
 
   &__icon.btn.btn-transparent {
@@ -464,6 +468,7 @@
 
   &__shortcut-hint {
     background-color: rgb(var(--tertiary-rgb), 0.1);
+    min-width: 26px;
     padding: 0.25em 0.5em;
     margin-right: 0.5em;
     font-size: var(--font-down-3);

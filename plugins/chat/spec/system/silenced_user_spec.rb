@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Silenced user", type: :system do
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:channel_1, :category_channel)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel) { PageObjects::Pages::ChatChannel.new }
@@ -9,7 +9,7 @@ RSpec.describe "Silenced user", type: :system do
   before { chat_system_bootstrap }
 
   context "when user is silenced" do
-    fab!(:silenced_user) { Fabricate(:user) }
+    fab!(:silenced_user, :user)
 
     before do
       UserSilencer.silence(silenced_user)

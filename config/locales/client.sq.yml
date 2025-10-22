@@ -199,18 +199,12 @@ sq:
       search: "Kërko"
     themes:
       default_description: "Paracaktuar"
-      broken_theme_alert: "Faqja juaj mund të mos funksionojë sepse një temë/komponent ka gabime."
       error_caused_by: "Shkaktuar nga '%{name}'. <a target='blank' href='%{path}'>Klikoni këtu</a> për të përditësuar, rikonfiguruar ose çaktivizuar."
       only_admins: "(ky mesazh u shfaqet vetëm administratorëve të faqes)"
     broken_decorator_alert: "Postimet mund të mos shfaqen saktë sepse një nga dekoruesit e përmbajtjes së postimit në faqen tuaj ngriti një gabim."
     broken_page_change_alert: "Një trajtues/menaxhues i OnPageChange ngriti një gabim. Kontrolloni mjetet e zhvilluesit të shfletuesit për më shumë informacion."
     broken_plugin_alert: "Shkaktuar nga shtojca '%{name}'"
     broken_transformer_alert: "Ka pasur një gabim. Faqja juaj mund të mos funksionojë siç duhet."
-    critical_deprecation:
-      notice: "<b>[Njoftim Admin]</b> Një nga temat apo shtojcat tuaja ka nevojë për përditësim që të jetë në përputhshmëri me ndryshimet kryesore të Diskursit (Discourse) të ardhshëm."
-      id: "(id:<em>%{id}</em>)"
-      theme_source: "Tema e identifikuar: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Shtojca e identifikuar: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -704,6 +698,15 @@ sq:
         reviewable_post:
           title: "Postim"
           noun: "postim"
+      notes:
+        delete: "Fshij"
+      review_user: "User"
+      copy_link: "Kopjoni lidhjen"
+      insights:
+        activities:
+          posts:
+            one: "%{count} postim"
+            other: "%{count} postime"
       approval:
         title: "Postimi ka nevojë për aprovim"
         description: "Postimi juaj u morr, por duhet të aprovohet nga një moderator para se të shfaqet në faqe. Kini pak durim. "
@@ -1266,18 +1269,15 @@ sq:
         description: "Kapërceni këshillat dhe distinktivët për hyrjen e përdoruesve të rinj"
       reset_seen_user_tips: "Shfaq përsëri këshillat për përdoruesit"
       theme_default_on_all_devices: "Bëje këtë temë të paracaktuar në të gjitha pajisjet e mia"
-      color_scheme_default_on_all_devices: "Cakto paletën e parazgjedhur të ngjyrave në të gjitha pajisjet e mia"
       color_scheme: "Paleta e ngjyrave"
       color_schemes:
         default_description: "Tema e paracaktuar"
-        disable_dark_scheme: "Njësoj si e rregullt"
         dark_instructions: "Mund të shikoni paraprakisht paletën e ngjyrave të modalitetit të errët duke ndryshuar modalitetin e errët të pajisjes tuaj."
         undo: "Rivendos"
-        regular: "Normal"
         dark: "Modaliteti i errët"
-        default_dark_scheme: "(parazgjedhja e faqes)"
+        picker:
+          active: "Aktiv"
       dark_mode: "Modaliteti i errët"
-      dark_mode_enable: "Aktivizo paletën automatike të ngjyrave në modalitetin e errët"
       text_size_default_on_all_devices: "Bëje këtë madhësinë e parazgjedhur të tekstit në të gjitha pajisjet e mia"
       allow_private_messages: "Lejo përdoruesit e tjerë të më dërgojnë mesazhe personale"
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
@@ -1301,6 +1301,8 @@ sq:
       suspended_notice: "Ky anëtar është përjashtuar deri më %{date}."
       suspended_permanently: "Ky përdorues është pezulluar."
       suspended_reason: "Arsyeja:"
+      silenced_permanently: "Ky përdorues është heshtur."
+      silenced_reason: "Arsyeja:"
       github_profile: "GitHub"
       email_activity_summary: "Përmbledhja e aktivitetit"
       mailing_list_mode:
@@ -1584,7 +1586,7 @@ sq:
         invalid: "Emri i përdoruesit nuk është i vlefshëm. Duhet të përmbaje vetëm shkronja ose numra"
       add_email:
         title: "Shto Email"
-        add: "shto"
+        add: "Shto"
       change_email:
         title: "Ndrysho email"
         taken: "Na vjen keq, por ky email nuk është i disponueshëm."
@@ -1816,7 +1818,8 @@ sq:
         removed: "U hoq"
         search: "shtypni për të kërkuar ftesat…"
         user: "Anëtari i ftuar"
-        none: "Asnjë ftesë për të shfaqur."
+        none:
+          title: "Asnjë ftesë për të shfaqur."
         truncated:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen %{count} ftesat e para."
@@ -2430,9 +2433,7 @@ sq:
       whisper: "pëshpëritje"
       unlist: "çlistuar"
       add_warning: "Ky është një paralajmërim zyrtar."
-      toggle_whisper: "Pëshpëritje?"
-      toggle_unlisted: "Toggle Unlisted"
-      insert_table: "Futni tabelën"
+      toggle_whisper: "Ndërroni pëshpëritjen"
       posting_not_on_topic: "Cilës temë doni t'i përgjigjeni?"
       saved_local_draft_tip: "ruajtur lokalisht"
       similar_topics: "Tema juaj është e ngjashme me…"
@@ -2495,6 +2496,7 @@ sq:
       create_shared_draft: "Krijo draft të përbashkët"
       edit_shared_draft: "Redakto draftin e përbashkët"
       title: "Ose shtypni %{modifier}Enter"
+      discard: "Harroni"
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
@@ -2528,19 +2530,9 @@ sq:
       paste_code_text: "shkruani ose ngjisni kodin këtu"
       upload_title: "Ngarko"
       upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
-      olist_title: "Listë e numëruar"
-      ulist_title: "Listë me pika"
       list_item: "Element liste"
-      toggle_direction: "Ndryshoni drejtimin"
       help: "Ndihmë mbi Markdown"
-      collapse: "minimizoni panelin e kompozitorit"
-      open: "hapni panelin e kompozitorit"
-      abandon: "mbyllni kompozitorin dhe hiqni draftin"
-      enter_fullscreen: "futni kompozitorin në ekran të plotë"
-      exit_fullscreen: "dilni nga kompozitori në ekran të plotë"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
-      show_toolbar: "shfaqni shiritin e veglave të kompozitorit"
-      hide_toolbar: "fshihni shiritin e veglave të kompozitorit"
       modal_ok: "OK"
       cant_send_pm: "Na vjen keq, nuk mund t'i dërgoni mesazh privat anëtarit %{username}."
       create_message_error: "Na vjen keq, ka pasur një gabim në krijimin e atij mesazhi. Ju lutemi provoni përsëri."
@@ -2587,6 +2579,8 @@ sq:
       image_alt_text:
         aria_label: Teksti alternativ për imazhin
         title: "Shtoni përshkrimin e imazhit"
+      image_toolbar:
+        alt_text: "Shtoni përshkrimin e imazhit"
       image_scale_button: "Shkallezoni imazhin në %{percent}%"
       delete_image_button: Fshini imazhin
       toggle_image_grid: Ndryshoni rrjetin e imazhit
@@ -3043,8 +3037,6 @@ sq:
         one: "%{count} postim në temë"
         other: "%{count} postime në temë"
       create: "Temë e re"
-      create_disabled_category: "Nuk ju lejohet të krijoni tema në këtë kategori"
-      create_disabled_tag: "Nuk ju lejohet të krijoni tema me këtë etiketë"
       create_long: "Hap një temë të re"
       open_draft: "Draft i hapur"
       private_message: "Fillo një mesazh"
@@ -3532,6 +3524,8 @@ sq:
       logo: "Logo e kategorisë"
       background_image: "Imazhi i sfondit për kategorinë"
       background_color: "Ngjyra"
+      color_validations:
+        cant_be_empty: "nuk mund të lihet bosh"
       styles:
         icon: "Ikonë"
         emoji: "Emoji"
@@ -3717,7 +3711,6 @@ sq:
         topics: "Topics"
         replies: "Përgjigjet"
       posted:
-        title: "Postimet e mia"
         help: "temat ku keni dërguar pêrgjigje"
       bookmarks:
         title: "Të preferuarat"
@@ -3944,6 +3937,8 @@ sq:
               content: "Admin"
             badges:
               content: "Stemat"
+            filter:
+              content: "Filtro"
             topics:
               content: "Topics"
             faq:
@@ -3955,8 +3950,6 @@ sq:
             users:
               content: "Users"
             my_posts:
-              content: "Postimet e mia"
-              content_drafts: "Draftet e mia"
               title: "Aktiviteti im i fundit për temën"
               title_drafts: "Draftet e mia të papostuara"
             invite:
@@ -3979,6 +3972,9 @@ sq:
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"
+    filter:
+      description:
+        yesterday: "Dje"
     discovery:
       headings:
         categories: "Të gjitha kategoritë"
@@ -4011,6 +4007,10 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Rregullimet"
         logo:
           form:
             mobile: "Mobile"
@@ -4080,6 +4080,8 @@ sq:
           title: "Webhooks"
         embedding:
           title: "Embedding"
+      theme_site_settings:
+        default_value: "Paracaktuar"
       search:
         title: "Kërko"
       dashboard:
@@ -4277,6 +4279,9 @@ sq:
           delete: "Fshij"
         color_palettes:
           palette_name: "Emri"
+          copy_to_clipboard: "Kopjoni në Clipboard"
+          copied_to_clipboard: "Kopjuar në Clipboard"
+          copy_to_clipboard_error: "Gabim gjatë kopjimit të të dhënave në Clipboard"
           delete: "Fshij"
           colors:
             title: "Ngjyrat"
@@ -4292,6 +4297,11 @@ sq:
         howto: "Si mund të instaloj një plugin?"
         author: "Nga %{author}"
         learn_more: "Mëso më shumë"
+        filters:
+          all: "Të gjitha"
+          enabled: "Aktivizuar"
+          disabled: "E çaktivizuar"
+          reset: "Rivendosni"
       backups:
         title: "Rezervat"
         menu:
@@ -4365,11 +4375,13 @@ sq:
           body: "Përmbajtja"
           revert: "Rikthe ndryshimet"
           revert_confirm: "A jeni i sigurtë që doni të riktheni ndryshimet?"
+          edit: "Redaktoni"
         component:
           all_filter: "Të Gjithë"
           enabled_filter: "Aktivizuar"
         theme:
           theme: "Tema"
+          filter_all: "Të gjitha"
           customize_desc: "Personalizo:"
           create_type: "Lloji"
           create_name: "Emri"
@@ -4377,7 +4389,6 @@ sq:
           edit: "Redakto"
           mobile: "Mobile"
           preview: "Parashikimi"
-          default: "Aktiv"
           cancel: "Anulo"
           upload: "Ngarko"
           installed: "Instaluar"
@@ -4387,10 +4398,6 @@ sq:
           enable: "Aktivizo"
           disable: "Çaktivizo"
           add: "Shto"
-          settings: "Rregullimet"
-          colors: "Ngjyrat"
-          discard_colors: "Harroni"
-          colors_title: "Ngjyrat"
           scss:
             text: "CSS"
           footer:
@@ -4411,6 +4418,9 @@ sq:
               too_large: "must be less than or equal to %{count}"
         colors:
           title: "Ngjyrat"
+          edit: "Redaktoni"
+          filters:
+            all: "Të gjitha"
           copy_name_prefix: "Kopje e"
           undo: "Çbëj"
           undo_title: "Anullo ndryshimet e bëra në këtë skemë, rikthe versionin e ruajtur herën e fundit. "
@@ -4670,7 +4680,6 @@ sq:
         activity: Aktiviteti
         like_count: Pëlqime të dhëna / të marra
         last_100_days: "në 100 ditët e fundit"
-        private_topics_count: Diskutime Private
         posts_read_count: Postime të lexuara
         post_count: Postime të krijuara
         topics_entered: Tema të shikuara
@@ -4699,7 +4708,6 @@ sq:
             cancel: "Anulo"
           confirmation:
             cancel: "Anulo"
-        delete_forbidden_because_staff: "Administratorët dhe moderatorët nuk fshihen dot. "
         delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
         deleted: "Anëtari u fshi."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."

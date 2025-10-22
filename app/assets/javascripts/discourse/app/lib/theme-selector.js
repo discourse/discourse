@@ -36,7 +36,7 @@ export function currentThemeId() {
 }
 
 export function setLocalTheme(ids, themeSeq) {
-  ids = ids.reject((id) => !id);
+  ids = ids.filter(Boolean);
   if (ids && ids.length > 0) {
     cookie(COOKIE_NAME, `${ids.join(",")}|${themeSeq}`, {
       path: "/",
@@ -64,7 +64,7 @@ export function listThemes(site) {
     return null;
   }
 
-  let hasDefault = !!themes.findBy("default", true);
+  let hasDefault = !!themes.find((theme) => theme.default);
 
   let results = [];
   if (!hasDefault) {
@@ -76,6 +76,7 @@ export function listThemes(site) {
       name: t.name,
       id: t.theme_id,
       color_scheme_id: t.color_scheme_id,
+      dark_color_scheme_id: t.dark_color_scheme_id,
     });
   });
 

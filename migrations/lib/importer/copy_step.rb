@@ -66,8 +66,22 @@ module Migrations::Importer
 
     def execute
       super
+
+      before(total_rows: total_count)
       with_progressbar(total_count) { copy_data }
+      after(total_rows: total_count)
+
       nil
+    end
+
+    protected
+
+    def before(total_rows:)
+      # Override in step implementation if needed
+    end
+
+    def after(total_rows:)
+      # Override in step implementation if needed
     end
 
     private
@@ -165,8 +179,11 @@ module Migrations::Importer
     end
 
     def total_count
-      query, parameters = self.class.total_rows_query
-      @intermediate_db.count(query, *parameters)
+      @total_count ||=
+        begin
+          query, parameters = self.class.total_rows_query
+          @intermediate_db.count(query, *parameters)
+        end
     end
   end
 end

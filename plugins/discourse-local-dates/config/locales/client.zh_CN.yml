@@ -9,7 +9,7 @@ zh_CN:
     admin:
       site_settings:
         categories:
-          discourse_local_dates: "Discourse 本地日期"
+          discourse_local_dates: "Discourse 当地日期"
   js:
     discourse_local_dates:
       relative_dates:

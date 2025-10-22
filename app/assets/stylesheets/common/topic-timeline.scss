@@ -47,7 +47,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     box-shadow: var(--shadow-composer);
     padding: 20px 0;
     z-index: z("fullscreen");
@@ -256,6 +256,7 @@
     .timeline-scrollarea {
       margin-top: 0.5em;
       margin-left: 0.5em;
+      border-left: 1px solid var(--topic-timeline-border-color);
       position: relative;
       transform: translateZ(0);
 
@@ -291,7 +292,7 @@
     .timeline-handle {
       border-radius: 0.8em;
       width: 0.35em;
-      background-color: var(--tertiary-low-or-tertiary-high);
+      background-color: var(--topic-timeline-handle-color);
       height: 100%;
       z-index: z("base") + 1;
       outline: 1px solid transparent;

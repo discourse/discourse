@@ -8,7 +8,7 @@
 }
 
 @mixin separator {
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
 }
 
 :root {
@@ -40,7 +40,7 @@
 
     .search-menu-panel & {
       @include viewport.from(sm) {
-        padding: var(--space-3) var(--space-4) 0;
+        padding: var(--space-3) var(--space-4);
       }
     }
   }
@@ -68,7 +68,6 @@
     }
 
     .btn.search-context {
-      margin: 2px;
       margin-right: 0;
       white-space: nowrap;
       background-color: var(--primary-200);
@@ -107,6 +106,7 @@
       right: 0;
       top: unset;
       width: unset;
+      border-radius: var(--d-border-radius);
     }
   }
 
@@ -115,7 +115,7 @@
     background-color: var(--primary-200);
 
     @include viewport.from(sm) {
-      margin-left: var(--space-4);
+      margin-left: var(--space-1);
       margin-right: 0;
     }
 
@@ -135,7 +135,6 @@
     display: flex;
     flex-direction: column;
     border-radius: var(--d-border-radius);
-    padding-top: var(--space-3);
 
     .heading {
       padding: var(--space-2) 0 0 var(--space-4);
@@ -420,7 +419,7 @@
 }
 
 .search-random-quick-tip {
-  padding: 0 var(--space-4) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   font-size: var(--font-down-2);
   color: var(--primary-medium);
 

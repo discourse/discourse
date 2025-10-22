@@ -1,7 +1,7 @@
 import { escapeExpression } from "discourse/lib/utilities";
 
 function renderOption(option) {
-  return `<li><a href>${escapeExpression(option.name)}</a></li>`;
+  return `<li><a href><span class='text-content'>${escapeExpression(option.name)}</span></a></li>`;
 }
 
 export default function groupAutocomplete({ options }) {

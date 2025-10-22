@@ -1,0 +1,251 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_ai: "هوش مصنوعی دیسکورس"
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "مرتب‌سازی بر اساس"
+            tag:
+              label: "برچسب"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "فرستنده"
+            topic_id:
+              label: "شناسه موضوع"
+            title:
+              label: "عنوان"
+            days:
+              label: "روز"
+            model:
+              label: "مدل"
+            categories:
+              label: "دسته‌بندی‌ها"
+            tags:
+              label: "برچسب‌ها"
+            suppress_notifications:
+              label: "توقف آگاه‌سازی‌ها"
+            debug_mode:
+              label: "حالت اشکال زدایی"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "مدل"
+        llm_triage:
+          fields:
+            search_for_text:
+              label: "جستجوی متن"
+            category:
+              label: "دسته‌بندی"
+            tags:
+              label: "برچسب‌ها"
+            canned_reply:
+              label: "پاسخ"
+            canned_reply_user:
+              label: "پاسخ کاربر"
+    discourse_ai:
+      title: "هوش مصنوعی"
+      features:
+        back: "بازگشت"
+        disabled: "(غیرفعال)"
+        groups: "گروه‌ها:"
+        no_persona: "تنظیم نشده"
+        no_groups: "هیچ‌کدام"
+        edit: "ویرایش"
+        expand_list:
+          one: "(%{count} مورد دیگر)"
+          other: "(%{count} مورد دیگر)"
+        collapse_list: "(نمایش کمتر)"
+        filters:
+          all: "همه"
+          reset: "بازنشانی"
+        search:
+          name: "جستجو"
+        spam:
+          name: "هرز‌نامه"
+      modals:
+        select_option: "یک گزینه را انتخاب کنید..."
+      translations:
+        title: "ترجمه‌ها"
+        progress_chart:
+          bar_done:
+            one: "%{count} فرسته"
+            other: "%{count} نوشته"
+      spam:
+        short_title: "هرز‌نامه"
+        last_seven_days: "۷ روز گذشته"
+        enable: "فعال کردن"
+        save_button: "ذخیر تغییرات"
+        test_modal:
+          run: "اجرا کردن تست"
+          spam: "هرز‌نامه"
+      usage:
+        short_title: "استفاده"
+        summary: "خلاصه"
+        model: "مدل"
+        username: "نام‌کاربری"
+        total_requests: "مجموع درخواست‌ها"
+        periods:
+          last_day: "۲۴ ساعت گذشته"
+          custom: "سفارشی..."
+      ai_persona:
+        back: "بازگشت"
+        name: "نام"
+        edit: "ویرایش"
+        export: "خروجی گرفتن"
+        import: "ورود داده‌ها"
+        description: "توضیح"
+        user: کاربر
+        save: "ذخیره"
+        enabled: "فعال شده؟"
+        delete: "حذف"
+        response_format:
+          open_modal: "ویرایش"
+          modal:
+            key_title: "کلید"
+        filters:
+          reset: "بازنشانی"
+      rag:
+        uploads:
+          title: "بارگذاری‌ها"
+          uploading: "در حال بار گذاری..."
+      tools:
+        back: "بازگشت"
+        export: "خروجی گرفتن"
+        import: "ورود داده‌ها"
+        name: "نام"
+        description: "توضیح"
+        summary: "خلاصه"
+        save: "ذخیره"
+        remove_parameter: "پاک کردن"
+        parameter_required: "مورد نیاز"
+        edit: "ویرایش"
+        test: "اجرا کردن تست"
+        delete: "حذف"
+        test_modal:
+          run: "اجرا کردن تست"
+      llms:
+        display_name: "نام"
+        provider: "ارائه‌دهنده"
+        save: "ذخیره"
+        edit: "ویرایش"
+        back: "بازگشت"
+        delete: حذف
+        quotas:
+          group: "گروه"
+          max_usages: "حداکثر استفاده"
+          duration: "مدت زمان"
+          durations:
+            hour: "۱ ساعت"
+            day: "۲۴ ساعت"
+            week: "۷ روزه"
+            custom: "سفارشی..."
+          hours: "ساعت"
+        usage:
+          ai_summarization: "خلاصه کن"
+          ai_spam: "هرز‌نامه"
+        next:
+          title: "بعدی"
+        tests:
+          title: "اجرا کردن تست"
+          running: "در حال اجرای آزمایش..."
+          success: "موفقیت!"
+          failure: "در حال ارتباط با مدل این خطا رخ داد: %{error}"
+        providers:
+          google: "گوگل"
+          fake: "سفارشی"
+      ai_helper:
+        title: "پیشنهاد تغییرات با استفاده از هوش مصنوعی"
+        description: "یکی از گزینه‌های زیر را انتخاب کنید و هوش مصنوعی نسخه جدیدی از متن را به شما پیشنهاد می‌کند."
+        selection_hint: "نکته: شما همچنین می‌توانید بخشی از متن را قبل از باز کردن راهنما انتخاب کنید، تا فقط آن قسمت بازنویسی شود."
+        context_menu:
+          cancel: "لغو"
+          regen: "دوباره امتحان کنید"
+          confirm: "تایید"
+          discard: "حذف"
+        post_options_menu:
+          close: "بستن"
+          copy: "کپی"
+          copied: "کپی شد!"
+          cancel: "لغو"
+          insert_footnote: "افزودن پاورقی"
+          footnote_credits: "توضیح توسط هوش مصنوعی"
+        thumbnail_suggestions:
+          select: "انتخاب"
+          selected: "انتخاب شده"
+        image_caption:
+          save_caption: "ذخیره"
+      reviewables:
+        model_used: "مدل مورد استفاده:"
+        accuracy: "دقت:"
+      embeddings:
+        back: "بازگشت"
+        save: "ذخیره"
+        delete: "حذف"
+        edit: "ویرایش"
+        tests:
+          title: "اجرا کردن تست"
+          running: "در حال اجرای آزمایش..."
+          success: "موفقیت!"
+        display_name: "نام"
+        provider: "ارائه‌دهنده"
+        providers:
+          google: "گوگل"
+          fake: "سفارشی"
+        provider_fields:
+          model_name: "نام مدل"
+        semantic_search: "موضوعات (معنایی)"
+      ai_bot:
+        llm: "مدل"
+        cancel_streaming: "توقف پاسخ"
+        conversation_shared: "گفتگو کپی شد"
+        debug_ai_modal:
+          request: "درخواست"
+          response: "پاسخ"
+          next_log: "بعدی"
+          previous_log: "پیشین"
+        invite_ai_conversation:
+          button: "دعوت"
+        ai_label: "هوش مصنوعی"
+        share_modal:
+          copy: "کپی"
+        bot_names:
+          gpt-4: "GPT-4"
+          gpt-3:
+            5-turbo: "GPT-3.5"
+          claude-2: "Claude 2"
+        conversations:
+          today: "امروز"
+          last_7_days: "۷ روز گذشته"
+          last_30_days: "۳۰ روز گذشته"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "همه"
+          group_types:
+            category: "دسته‌بندی"
+            tag: "برچسب"
+          table:
+            total_count: "مجموع"
+      summarization:
+        chat:
+          summarize: "خلاصه کن"
+      discobot_discoveries:
+        regular_results: "موضوعات"
+        collapse: "جمع کردن"
+        tooltip:
+          actions:
+            disable: "غیرفعال کردن"

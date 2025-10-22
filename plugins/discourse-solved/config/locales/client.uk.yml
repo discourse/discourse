@@ -1,0 +1,81 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Вирішено для Discourse"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "схвалено"
+    solutions: "Рішення"
+    solved:
+      title: "Вирішено"
+      allow_accepted_answers: "Дозвольте власнику теми та персоналу позначити відповідь як рішення"
+      solved_topics_auto_close_hours: "Автоматично закрити тему (n) годин після останньої відповіді, як тільки тема позначена як вирішена."
+      accept_answer: "Виберіть, чи вирішує ця відповідь проблему"
+      accepted_description: "Це прийняте рішення цієї теми"
+      has_no_accepted_answer: "Ця тема не має рішення"
+      unaccept_answer: "Зніміть вибір, якщо ця відповідь більше не вирішує проблему"
+      accepted_answer: "Рішення"
+      solution: "Рішення"
+      solution_summary:
+        one: "рішення"
+        few: "рішення"
+        many: "рішення"
+        other: "рішення"
+      accepted_answer_solver_info: "Вирішено %{user} в %{post}"
+      accepted_answer_post_number: "допис %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "всі"
+        solved: "вирішено"
+        unsolved: "невирішено"
+      no_solved_topics_title: "Ви ще не вирішили жодної теми"
+      no_solved_topics_title_others: "%{username} ще не вирішив жодної теми"
+      no_solved_topics_body: "Коли ви надаєте корисну відповідь на тему, ваша відповідь може бути обрана як рішення власником теми або співробітниками."
+      marked_solved_by: "Позначено як вирішене користувачем %{user}"
+      no_answer:
+        title: Чи було отримано відповідь на ваше запитання?
+        description: "Виділіть відповідь та допоможіть іншим, використовуючи кнопку рішення під правильною відповіддю."
+      notification:
+        title: "ваше повідомлення було позначено як рішення"
+    topic_statuses:
+      solved:
+        help: "Ця тема має рішення"
+    search:
+      advanced:
+        statuses:
+          solved: "вирішені"
+          unsolved: "не вирішені"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Подія Вирішення"
+          accepted_solution: "Коли користувач позначає публікацію як прийняту відповідь"
+          unaccepted_solution: "Коли користувач позначає публікацію як неприйняту відповідь"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Прийняти/відхилити рішення.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Будь-який
+          fields:
+            maximum_trust_level:
+              label: Рівень довіри
+              description: Користувачі з цим рівнем довіри запускатимуть цю автоматизацію

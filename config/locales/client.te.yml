@@ -198,18 +198,11 @@ te:
       search: "వెతుకు"
     themes:
       default_description: "అప్రమేయ"
-      broken_theme_alert: "థీమ్ / కాంపోనెంట్‌లో లోపాలు ఉన్నందున మీ సైట్ పని చేయకపోవచ్చు."
       error_caused_by: "'%{name}' వల్ల ఏర్పడింది. నవీకరించడానికి, మళ్లీ కాన్ఫిగర్ చేయడానికి లేదా నిలిపివేయడానికి <a target='blank' href='%{path}'>ఇక్కడ క్లిక్ చేయండి</a>."
       only_admins: "(ఈ సందేశం సైట్ నిర్వాహకులకు మాత్రమే చూపబడుతుంది)"
     broken_decorator_alert: "మీ సైట్‌లోని ఒక పోస్ట్ కంటెంట్ డెకరేటర్ లోపాన్ని కలిగించినందున పోస్ట్‌లు సరిగ్గా ప్రదర్శించబడకపోవచ్చు."
     broken_page_change_alert: "onPageChange హ్యాండ్లర్ లోపాన్ని లేవనెత్తింది. మరింత సమాచారం కోసం బ్రౌజర్ డెవలపర్ సాధనాలను తనిఖీ చేయండి."
     broken_plugin_alert: "'%{name}' ప్లగిన్ వల్ల ఏర్పడింది"
-    critical_deprecation:
-      notice: "<b>[అడ్మిన్ నోటీసు]</b> రాబోయే డిస్కోర్స్ కోర్ మార్పులకు అనుకూలత కోసం థీమ్‌లు లేదా ప్లగ్ఇన్‌ని నవీకరించడం అవసరం."
-      id: "(ఐడి:<em>%{id}</em>)"
-      linked_id: "(ఐడి:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "గుర్తించబడిన థీమ్: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "గుర్తించబడిన ప్లగిన్: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "ఆసియా పసిఫిక్ (టోక్యో)"
@@ -637,6 +630,15 @@ te:
         reviewable_post:
           title: "పోస్ట్"
           noun: "పోస్ట్"
+      notes:
+        delete: "తొలగించు"
+      review_user: "సభ్యుడు"
+      insights:
+        activities:
+          posts:
+            one: "%{count} పోస్ట్"
+            other: "%{count} పోస్ట్‌లు"
+        visibility: "దృశ్యమానత"
       approval:
         title: "పోస్ట్ కు ఆమోదం అవసరం"
         description: "మేము మీ కొత్త పోస్ట్‌ను స్వీకరించాము కానీ అది కనిపించడానికి ముందు దానిని మోడరేటర్ ఆమోదించాలి. దయచేసి ఓపిక పట్టండి."
@@ -1174,11 +1176,13 @@ te:
       color_scheme: "రంగుల పాలెట్"
       color_schemes:
         default_description: "థీమ్ డిఫాల్ట్"
-        disable_dark_scheme: "రెగ్యులర్ మాదిరిగానే"
         undo: "రీసెట్ చేయండి"
-        regular: "రెగ్యులరు"
         dark: "డార్క్ మోడ్"
-        default_dark_scheme: "(సైట్ డిఫాల్ట్)"
+        interface_modes:
+          light: "లేత"
+          dark: "డార్క్"
+        picker:
+          active: "క్రియాశీల"
       dark_mode: "డార్క్ మోడ్"
       text_size_default_on_all_devices: "నా అన్ని పరికరాలలో దీన్ని డిఫాల్ట్ వచన పరిమాణంగా చేయండి"
       allow_private_messages: "నాకు వ్యక్తిగత సందేశాలను పంపడానికి ఇతర సభ్యులను అనుమతించండి"
@@ -1201,6 +1205,7 @@ te:
       suspended_notice: "ఈ సభ్యుడు %{date} వరకూ సస్పెండయ్యాడు"
       suspended_permanently: "ఈ సభ్యుడు సస్పెండ్ చేయబడ్డారు."
       suspended_reason: "కారణం:"
+      silenced_reason: "కారణం:"
       github_profile: "గిట్ హబ్"
       email_activity_summary: "కార్యాచరణ సారాంశం"
       mailing_list_mode:
@@ -1424,7 +1429,7 @@ te:
         invalid: "ఆ సభ్యనామం చెల్లనిది. కేవలం సంఖ్యలు, అక్షరాలు మాత్రమే కలిగి ఉండాలి. "
       add_email:
         title: "ఇమెయిల్ జోడించండి"
-        add: "జోడించండి"
+        add: "కలుపు"
       change_email:
         title: "ఈమెయిల్ మార్చండి"
         taken: "క్షమించాలి. ఆ ఈమెయిల్ అందుబాటులో లేదు."
@@ -1650,7 +1655,8 @@ te:
         removed: "తీసివేయబడింది"
         search: "ఆహ్వానాలను శోధించడానికి రాయండి…"
         user: "ఆహ్వానించిన సభ్యుడు"
-        none: "ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
+        none:
+          title: "ప్రదర్శించడానికి ఆహ్వానాలు లేవు."
         truncated:
           one: "మొదటి ఆహ్వానాన్ని చూపుతోంది."
           other: "మొదటి %{count} ఆహ్వానాలను చూపుతోంది."
@@ -2102,6 +2108,7 @@ te:
       topic_count:
         one: "ఈ వర్గంలో %{count} విషయం"
         other: "ఈ వర్గంలోని %{count} విషయాలు"
+      read_only: "చదవడానికి మాత్రమే"
     select_kit:
       delete_item: "%{name} ని తొలగించండి"
       filter_by: "దీని ద్వారా ఫిల్టర్ చేయండి: %{name}"
@@ -2168,8 +2175,6 @@ te:
       unlist: "జాబితా నుంచి తొలగించిన"
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       toggle_whisper: "గుసగుసలను టోగుల్ చేయండి"
-      toggle_unlisted: "జాబితా చేయనవి టోగుల్ చేయండి"
-      insert_table: "పట్టికను చొప్పించండి"
       posting_not_on_topic: "ఏ విషయానికి మీరు ప్రత్యుత్తరం ఇవ్వాలనుకుంటున్నారు?"
       saved_local_draft_tip: "స్థానికంగా సేవ్ చేయబడింది"
       similar_topics: "మీ విషయం దీనితో పోలి ఉంది…"
@@ -2228,6 +2233,7 @@ te:
       create_shared_draft: "భాగస్వామ్య చిత్తుప్రతిని సృష్టించండి"
       edit_shared_draft: "భాగస్వామ్య చిత్తుప్రతిని సవరించండి"
       title: "లేదా %{modifier}ఎంటర్ నొక్కండి"
+      discard: "విస్మరించండి"
       users_placeholder: "సభ్యులను లేదా సమూహాలను జోడించండి"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
       title_or_link_placeholder: "శీర్షికను టైప్ చేయండి లేదా లింక్‌ను ఇక్కడ అతికించండి"
@@ -2262,19 +2268,9 @@ te:
       paste_code_text: "ఇక్కడ కోడ్‌ని టైప్ చేయండి లేదా అతికించండి"
       upload_title: "ఎగుమతించు"
       upload_description: "ఎగుమతి వివరణ ఇక్కడ రాయండి"
-      olist_title: "సంఖ్యా జాబితా"
-      ulist_title: "చుక్కల జాబితా"
       list_item: "జాబితా అంశం"
-      toggle_direction: "దిశను టోగుల్ చేయండి"
       help: "మార్క్ డైన్ సవరణ సహాయం"
-      collapse: "కంపోజర్ ప్యానెల్‌ను తగ్గించండి"
-      open: "కంపోజర్ ప్యానెల్ తెరవండి"
-      abandon: "కంపోజర్ను మూసివేయండి మరియు చిత్తుప్రతిని విస్మరించండి"
-      enter_fullscreen: "పూర్తి స్క్రీన్ కంపోజర్‌"
-      exit_fullscreen: "పూర్తి స్క్రీన్ కంపోజర్ నుండి నిష్క్రమించండి"
       exit_fullscreen_prompt: "పూర్తి స్క్రీన్ నుండి నిష్క్రమించడానికి <kbd>ESC</kbd> నొక్కండి"
-      show_toolbar: "కంపోజర్ టూల్బార్ చూపించండి"
-      hide_toolbar: "కంపోజర్ టూల్‌బార్‌ను దాచండి"
       modal_ok: "సరే"
       cant_send_pm: "క్షమించండి, మీరు %{username}కి సందేశం పంపలేరు."
       yourself_confirm:
@@ -2752,7 +2748,6 @@ te:
         one: "విషయంలో %{count} పోస్ట్"
         other: "విషయంలో %{count} పోస్ట్‌లు"
       create: "కొత్త విషయం"
-      create_disabled_category: "ఈ వర్గంలో విషయాలను సృష్టించడానికి మీకు అనుమతి లేదు"
       create_long: "కొత్త విషయం సృష్టించండి"
       open_draft: "చిత్తుప్రతి తెరవండి"
       private_message: "సందేశాన్ని ప్రారంభించండి"
@@ -3268,10 +3263,7 @@ te:
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
       cancel_composer:
-        confirm: "మీరు మీ పోస్ట్‌తో ఏమి చేయాలనుకుంటున్నారు?"
         discard: "విస్మరించండి"
-        save_draft: "తర్వాత కోసం చిత్తుప్రతిను సేవ్ చేయండి"
-        keep_editing: "సవరించడం కొనసాగించండి"
       via_email: "ఈ పోస్ట్ ఇమెయిల్ ద్వారా వచ్చింది"
       via_auto_generated_email: "ఈ పోస్ట్ స్వయంచాలకంగా రూపొందించబడిన ఇమెయిల్ ద్వారా వచ్చింది"
       whisper: "ఈ పోస్ట్ మోడరేటర్‌ల కోసం ఒక ప్రైవేట్ గుసగుస"
@@ -3453,8 +3445,8 @@ te:
         name: "పేరు"
         description: "వివరణ"
         remove: "తీసివేయండి"
-      tags_allowed_tags: "ఈ ట్యాగ్‌లను ఈ వర్గానికి పరిమితం చేయండి:"
-      tags_allowed_tag_groups: "ఈ ట్యాగ్ సమూహాలను ఈ వర్గానికి పరిమితం చేయండి:"
+      tags_allowed_tags_new_category: "ఈ ట్యాగ్‌లను ఈ వర్గానికి పరిమితం చేయండి:"
+      tags_allowed_tag_groups_new_category: "ఈ ట్యాగ్ సమూహాలను ఈ వర్గానికి పరిమితం చేయండి:"
       tags_placeholder: "(ఐచ్ఛికం) అనుమతించబడిన ట్యాగ్‌ల జాబితా"
       tags_tab_description: "పైన పేర్కొన్న ట్యాగ్‌లు మరియు ట్యాగ్ సమూహాలు ఈ వర్గంలో మరియు వాటిని పేర్కొనే ఇతర వర్గాల్లో మాత్రమే అందుబాటులో ఉంటాయి. ఇతర వర్గాలలో ఉపయోగించడానికి అవి అందుబాటులో ఉండవు."
       tag_groups_placeholder: "(ఐచ్ఛికం) అనుమతించబడిన ట్యాగ్ సమూహాల జాబితా"
@@ -3481,6 +3473,8 @@ te:
       background_image: "వర్గం నేపథ్య చిత్రం"
       background_image_dark: "డార్క్ వర్గం నేపథ్య చిత్రం"
       background_color: "రంగు"
+      color_validations:
+        cant_be_empty: "ఖాళీ ఉండకూడదు"
       styles:
         icon: "చిహ్నం"
         emoji: "ఇమోజి"
@@ -3687,6 +3681,8 @@ te:
       pinned:
         title: "పిన్ చేయబడింది"
         help: "ఈ విషయం మీ కోసం పిన్ చేయబడింది. ఇది దాని వర్గం ఎగువన ప్రదర్శించబడుతుంది"
+      hot:
+        title: "హాట్"
       personal_message:
         title: "ఈ విషయం వ్యక్తిగత సందేశం"
         help: "ఈ విషయం వ్యక్తిగత సందేశం"
@@ -3774,7 +3770,6 @@ te:
         replies: "ప్రత్యుత్తరాలు"
         replies_with_count: "ప్రత్యుత్తరాలు (%{count})"
       posted:
-        title: "నా పోస్ట్‌లు"
         help: "మీరు పోస్ట్ చేసిన విషయాలు"
       bookmarks:
         title: "బుక్‌మార్క్‌లు"
@@ -3971,7 +3966,6 @@ te:
       choose_for_topic_required_group:
         one: "'%{name}' నుండి %{count} ట్యాగ్‌ని ఎంచుకోండి…"
         other: "'%{name}' నుండి %{count} ట్యాగ్లను ఎంచుకోండి…"
-      info: "సమాచారం"
       default_info: "ఈ ట్యాగ్ ఏ వర్గాలకు పరిమితం చేయబడలేదు మరియు పర్యాయపదాలు లేవు."
       staff_info: "పరిమితులను జోడించడానికి, ఈ ట్యాగ్‌ను <a href=%{basePath}/tag_groups>ట్యాగ్ సమూహంలో ఉంచండి</a>."
       category_restricted: "ఈ ట్యాగ్ మీకు యాక్సెస్ చేయడానికి అనుమతి లేని వర్గాలకు పరిమితం చేయబడింది."
@@ -4241,6 +4235,8 @@ te:
             badges:
               content: "బ్యాడ్జీలు"
               title: "సంపాదించడానికి అన్ని బ్యాడ్జ్‌లు అందుబాటులో ఉన్నాయి"
+            filter:
+              content: "ఫిల్టర్ చేయండి"
             topics:
               content: "విషయాలు"
               title: "అన్ని విషయాలు"
@@ -4257,8 +4253,6 @@ te:
               content: "సభ్యులు"
               title: "సభ్యులందరి జాబితా"
             my_posts:
-              content: "నా పోస్ట్‌లు"
-              content_drafts: "నా చిత్తుప్రతులు"
               title: "నా ఇటీవలి విషయం కార్యాచరణ"
               title_drafts: "నా పోస్ట్ చేయని చిత్తుప్రతులు"
               draft_count:
@@ -4385,6 +4379,9 @@ te:
           copy: "కాపీ..."
           paste: "అతికించండి..."
           save: "ఇలా సేవ్ చేయండి..."
+    filter:
+      description:
+        yesterday: "నిన్న"
     discovery:
       headings:
         categories: "అన్ని వర్గాలు"
@@ -4394,7 +4391,6 @@ te:
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
-      filter_reports: నివేదికలను ఫిల్టర్ చేయండి
       tags:
         remove_muted_tags_from_latest:
           always: "ఎల్లప్పుడూ"
@@ -4433,6 +4429,10 @@ te:
           title: "ఫైళ్లు"
         legal:
           title: "చట్టపరమైన"
+        login:
+          sub_pages:
+            common_settings:
+              title: "అమరికలు"
         logo:
           form:
             logo:
@@ -4512,6 +4512,8 @@ te:
           title: "వెబ్‌బూక్స్"
         embedding:
           title: "పొందుపరచడం"
+      theme_site_settings:
+        default_value: "అప్రమేయ"
       search:
         title: "వెతుకు"
         result_types:
@@ -5023,6 +5025,9 @@ te:
           delete: "తొలగించు"
         color_palettes:
           palette_name: "పేరు"
+          copy_to_clipboard: "క్లిప్‌బోర్డ్‌కు కాపీ చేయండి"
+          copied_to_clipboard: "క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
+          copy_to_clipboard_error: "క్లిప్‌బోర్డ్‌కి డేటాను కాపీ చేయడంలో లోపం"
           duplicate: "నకిలీ చేయండి"
           delete: "తొలగించు"
           colors:
@@ -5042,6 +5047,11 @@ te:
         author: " %{author} రాసిన"
         experimental_badge: "ప్రయోగాత్మకమైన"
         learn_more: "మరింత తెలుసుకోండి"
+        filters:
+          all: "అన్నీ"
+          enabled: "ప్రారంభించబడింది"
+          disabled: "నిలిపివేయబడింది"
+          reset: "రీసెట్ చేయండి"
       navigation_menu:
         sidebar: "సైడ్‌బార్"
         header_dropdown: "హెడర్ లో డ్రాప్‌డౌన్"
@@ -5138,7 +5148,6 @@ te:
         copy_to_clipboard: "క్లిప్‌బోర్డ్‌కు కాపీ చేయండి"
         copied_to_clipboard: "క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
         copy_to_clipboard_error: "క్లిప్‌బోర్డ్‌కి డేటాను కాపీ చేయడంలో లోపం"
-        theme_owner: "సవరించలేనిది, దీని యజమాని:"
         email_templates:
           title: "ఈమెయిల్"
           subject: "విషయం"
@@ -5146,6 +5155,7 @@ te:
           body: "బాడీ"
           revert: "మార్పులను తిరిగి మార్చండి"
           revert_confirm: "మీరు ఖచ్చితంగా మీ మార్పులను తిరిగి మార్చాలనుకుంటున్నారా?"
+          edit: "సవరించండి"
         component:
           all_filter: "అన్ని"
           used_filter: "ఉపయోగించబడిన"
@@ -5158,7 +5168,7 @@ te:
           theme: "థీమ్"
           component: "భాగం"
           components: "భాగాలు"
-          search_placeholder: "శోధించడానికి టైప్ చేయండి…"
+          filter_all: "అన్నీ"
           theme_name: "థీమ్ పేరు"
           component_name: "భాగం పేరు"
           themes_intro: "ప్రారంభించడానికి ఇప్పటికే ఉన్న థీమ్‌ను ఎంచుకోండి లేదా కొత్తదాన్ని ఇన్‌స్టాల్ చేయండి"
@@ -5183,15 +5193,12 @@ te:
           extra_files_upload: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి."
           extra_files_remote: "ఈ ఫైల్‌లను వీక్షించడానికి థీమ్‌ను ఎగుమతి చేయండి లేదా git రిపోజిటరీని తనిఖీ చేయండి."
           preview: "ప్రివ్యూ"
-          default: "క్రియాశీల"
           settings_editor: "అమరికల ఎడిటర్"
           is_default: "థీమ్ డిఫాల్ట్‌గా ప్రారంభించబడింది"
           user_selectable: "థీమ్‌ను సభ్యులు ఎంచుకోవచ్చు"
           auto_update: "డిస్కర్స్ నవీకరించబడినప్పుడు ఆటో నవీకరణ"
           color_scheme: "రంగుల పాలెట్"
-          edit_color_scheme: "రంగుల పాలెట్‌ని సవరించండి"
           default_light_scheme: "తేలిక (డిఫాల్ట్)"
-          color_scheme_select: "థీమ్ ద్వారా ఉపయోగించాల్సిన రంగులను ఎంచుకోండి"
           custom_sections: "అనుకూల విభాగాలు:"
           theme_components: "థీమ్ భాగాలు"
           add_all_themes: "అన్ని థీమ్‌లను జోడించండి"
@@ -5272,11 +5279,7 @@ te:
           up_to_date: "థీమ్ తాజాగా ఉంది, చివరిగా తనిఖీ చేయబడింది:"
           has_overwritten_history: "Git చరిత్ర ఫోర్స్ పుష్ ద్వారా భర్తీ చేయబడినందున ప్రస్తుత థీమ్ వెర్షన్ ఉనికిలో లేదు."
           add: "జోడించండి"
-          theme_settings: "థీమ్ సెట్టింగ్‌లు"
-          edit_objects_theme_setting: "ఆబ్జెక్ట్స్ సెట్టింగ్ ఎడిటర్"
-          overriden_settings_explanation: "ఓవర్‌రైడ్ సెట్టింగ్‌లు చుక్కతో గుర్తించబడతాయి మరియు హైలైట్ చేయబడిన రంగును కలిగి ఉంటాయి. ఈ సెట్టింగ్‌లను డిఫాల్ట్ విలువకు రీసెట్ చేయడానికి, వాటి ప్రక్కన ఉన్న రీసెట్ బటన్‌ను నొక్కండి."
           no_settings: "ఈ థీమ్‌కు సెట్టింగ్‌లు లేవు."
-          theme_translations: "థీమ్ అనువాదాలు"
           empty: "అంశాలు లేవు"
           commits_behind:
             one: "థీమ్ కు %{count} అప్డేట్ ఉంది!"
@@ -5285,10 +5288,6 @@ te:
           remote_theme_edits: "మీరు ఈ థీమ్‌ను సవరించాలనుకుంటే, మీరు తప్పనిసరిగా <a href='%{repoURL}' target='_blank'>దాని రిపోజిటరీలో మార్పును సమర్పించాలి</a>"
           repo_unreachable: "ఈ థీమ్ యొక్క Git రిపోజిటరీని సంప్రదించలేకపోయింది. లోపం సందేశం:"
           imported_from_archive: "ఈ థీమ్ .zip ఫైల్ నుండి దిగుమతి చేయబడింది"
-          settings: "అమరికలు"
-          colors: "రంగులు"
-          discard_colors: "విస్మరించండి"
-          colors_title: "రంగులు"
           scss:
             text: "సీయస్ యస్"
           after_header:
@@ -5327,7 +5326,12 @@ te:
           select_base:
             title: "బేస్ కలర్ పాలెట్ ఎంచుకోండి"
             description: "బేస్ పాలెట్:"
+          light: "లేత"
+          dark: "డార్క్"
           title: "రంగులు"
+          edit: "సవరించండి"
+          filters:
+            all: "అన్నీ"
           about: "మీ థీమ్‌లు ఉపయోగించే రంగులను సవరించండి. ప్రారంభించడానికి కొత్త రంగుల పాలెట్‌ను సృష్టించండి."
           copy_name_prefix: "దీనికి నకలు"
           undo: "రద్దు చేయండి"
@@ -5871,7 +5875,6 @@ te:
         activity: కలాపం
         like_count: ఇష్టాలు ఇచ్చినవి/స్వీకరించినవి
         last_100_days: "గత నూరు రోజుల్లో"
-        private_topics_count: ప్రైవేటు విషయాలు
         posts_read_count: చదివిన పోస్ట్‌లు
         post_count: పోస్ట్‌లు సృష్టించబడ్డాయి
         second_factor_enabled: రెండు-కారకాల ప్రమాణీకరణ ప్రారంభించబడింది
@@ -5937,7 +5940,6 @@ te:
             cancel: "రద్దుచేయండి"
         merging_user: "సభ్యుని విలీనం చేస్తోంది…"
         merge_failed: "సభ్యులను విలీనం చేస్తున్నప్పుడు లోపం ఏర్పడింది."
-        delete_forbidden_because_staff: "నిర్వాహకులు మరియు మోడరేటర్‌లను తొలగించలేరు."
         delete_posts_forbidden_because_staff: "నిర్వాహకులు మరియు మోడరేటర్‌ల అన్ని పోస్ట్‌లను తొలగించలేరు."
         delete_forbidden:
           one: "సభ్యులు పోస్ట్‌లను కలిగి ఉంటే వారిని తొలగించలేరు. సభ్యుని తొలగించడానికి ప్రయత్నించే ముందు అన్ని పోస్ట్‌లను తొలగించండి. (%{count} రోజుల కంటే పాత పోస్ట్‌లు తొలగించబడవు.)"

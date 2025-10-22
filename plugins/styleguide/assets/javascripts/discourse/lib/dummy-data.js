@@ -135,6 +135,10 @@ export function createData(store) {
   pinnedTopic.set("category_id", categories[2].id);
   let unpinnedTopic = createTopic({ unpinned: true });
   let warningTopic = createTopic({ is_warning: true });
+  let pmTopic = createTopic({
+    archetype: "private_message",
+    related_messages: [topic, topic],
+  });
 
   const bunchOfTopics = [
     topic,
@@ -347,13 +351,13 @@ export function createData(store) {
 
     buttonSizes: [
       { class: "btn-large", text: "large" },
-      { class: "btn-default", text: "default" },
+      { class: "", text: "default" },
       { class: "btn-small", text: "small" },
     ],
 
     buttonStates: [
+      { class: "", text: "normal" },
       { class: "btn-hover", text: "hover" },
-      { class: "btn-active", text: "active" },
       { disabled: true, text: "disabled" },
     ],
 
@@ -378,6 +382,7 @@ export function createData(store) {
     pinnedTopic,
     unpinnedTopic,
     warningTopic,
+    pmTopic,
 
     topics: bunchOfTopics,
 

@@ -32,7 +32,7 @@ RSpec.describe NotificationsController do
   context "when logged in" do
     context "as normal user" do
       fab!(:user) { sign_in(Fabricate(:user)) }
-      fab!(:acting_user) { Fabricate(:user) }
+      fab!(:acting_user, :user)
       fab!(:notification) do
         Fabricate(:notification, user: user, data: { username: acting_user.username }.to_json)
       end
@@ -186,7 +186,7 @@ RSpec.describe NotificationsController do
             )
           end
 
-          fab!(:pending_reviewable) { Fabricate(:reviewable) }
+          fab!(:pending_reviewable, :reviewable)
 
           before { SiteSetting.navigation_menu = "sidebar" }
 
@@ -439,6 +439,58 @@ RSpec.describe NotificationsController do
             notifications.each do |notification|
               expect(notification["acting_user_avatar_template"]).to be_present
             end
+          end
+        end
+
+        context "when a notification topic has localizations" do
+          fab!(:english_topic) { Fabricate(:topic, locale: "en") }
+          fab!(:topic_localization_es) do
+            Fabricate(
+              :topic_localization,
+              topic: english_topic,
+              locale: "es",
+              fancy_title: "Hola Mundo",
+            )
+          end
+          fab!(:topic_localization_ja) do
+            Fabricate(
+              :topic_localization,
+              topic: english_topic,
+              locale: "ja",
+              fancy_title: "こんにちは世界",
+            )
+          end
+          fab!(:notification) do
+            Fabricate(
+              :notification,
+              topic: english_topic,
+              user:,
+              notification_type: Notification.types[:liked],
+            )
+          end
+
+          it "displays the localized fancy title in the user's locale when content_localization_enabled enabled" do
+            SiteSetting.content_localization_enabled = true
+            SiteSetting.allow_user_locale = true
+            user.update!(locale: "ja")
+
+            get "/notifications.json"
+
+            expect(response.status).to eq(200)
+            notifications = response.parsed_body["notifications"]
+            expect(notifications.first["fancy_title"]).to eq(topic_localization_ja.fancy_title)
+          end
+
+          it "does not display the localized fancy title in the user's locale when content_localization_enabled disabled" do
+            SiteSetting.content_localization_enabled = false
+            SiteSetting.allow_user_locale = true
+            user.update!(locale: "ja")
+
+            get "/notifications.json"
+
+            expect(response.status).to eq(200)
+            notifications = response.parsed_body["notifications"]
+            expect(notifications.first["fancy_title"]).to eq(english_topic.fancy_title)
           end
         end
       end

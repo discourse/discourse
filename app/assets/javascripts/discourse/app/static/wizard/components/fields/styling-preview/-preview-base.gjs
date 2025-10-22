@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 /*eslint no-bitwise:0 */
 import Component from "@ember/component";
 import { action } from "@ember/object";

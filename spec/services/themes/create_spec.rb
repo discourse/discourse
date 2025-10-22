@@ -113,6 +113,13 @@ RSpec.describe Themes::Create do
         result
       end
 
+      it "updates the SiteSetting.theme_site_settings cache for the theme" do
+        new_theme = result.theme
+        expect(SiteSetting.theme_site_settings[new_theme.id]).to eq(
+          ThemeSiteSetting.generate_theme_map[new_theme.id],
+        )
+      end
+
       context "with component param" do
         let(:params) do
           theme_params.merge(component: true, user_selectable: false, color_scheme_id: nil)
@@ -140,7 +147,7 @@ RSpec.describe Themes::Create do
         end
 
         context "when there is an existing default theme" do
-          fab!(:existing_default) { Fabricate(:theme) }
+          fab!(:existing_default, :theme)
 
           before { existing_default.set_default! }
 

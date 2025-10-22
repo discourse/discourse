@@ -40,6 +40,7 @@ ignored:
     - stringio # Ruby (default gem)
     - strscan # Ruby (default gem)
     - timeout # Ruby (default gem)
+    - tsort # Ruby (default gem)
     - uri # Ruby (default gem)
 
 reviewed:
@@ -59,6 +60,7 @@ reviewed:
     - faraday-net_http # MIT
     - faraday-patron # MIT
     - faraday-rack # MIT
+    - hashery # BSD-2-Clause
     - highline # Ruby or GPL-2.0
     - htmlentities # MIT
     - image_size # MIT
@@ -77,5 +79,6 @@ reviewed:
     - securerandom # Ruby
     - sidekiq # LGPL (Sidekiq)
     - tilt # MIT
+    - ttfunk # Ruby or GPLv2/GPLv3
     - unf # BSD-2-Clause
     - unicorn # Ruby or GPLv2/GPLv3

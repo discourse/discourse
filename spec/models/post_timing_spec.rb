@@ -7,7 +7,7 @@ RSpec.describe PostTiming do
   it { is_expected.to validate_presence_of :msecs }
 
   describe "pretend_read" do
-    fab!(:p1) { Fabricate(:post) }
+    fab!(:p1, :post)
     fab!(:p2) { Fabricate(:post, topic: p1.topic, user: p1.user) }
     fab!(:p3) { Fabricate(:post, topic: p1.topic, user: p1.user) }
 

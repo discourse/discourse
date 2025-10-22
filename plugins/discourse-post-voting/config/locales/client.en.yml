@@ -1,0 +1,125 @@
+en:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Post Voting
+  post_voting:
+    reviewables:
+      comment_already_handled: "Thanks, but we've already reviewed this comment and determined it does not need to be flagged again."
+
+  js:
+    discourse_post_voting:
+      title: "Post voting"
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "new comment"
+      popup:
+        question_answer_user_commented: '%{username} commented in "%{topic}" - %{site_title}'
+
+    category:
+      post_voting_settings_heading: Post Voting
+      create_as_post_voting_default: New topics default to Post Voting topics in this category.
+      only_post_voting_in_this_category: New topics can only be Post Voting topics in this category.
+
+    composer:
+      create_post_voting:
+        label: "Create post voting topic"
+      composer_actions:
+        create_as_post_voting:
+          label: "Toggle Post Voting"
+          desc: "Topic will be created with votable posts"
+        remove_as_post_voting:
+          label: "Remove Post Voting"
+          desc: "Topic will be created in the regular format"
+
+    vote:
+      already_voted: "You can only vote once per question."
+      user_over_limit: "You cannot exceed the number of votes for your trust level."
+      one_vote_per_post: "You can only vote once for each post."
+
+    last_answer_lowercase: last answer
+    answer_lowercase:
+      one: answer
+      other: answers
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Enter at least %{count} character"
+              other: "Enter at least %{count} characters"
+            length_ok:
+              one: "%{count} character left..."
+              other: "%{count} characters left..."
+            too_long:
+              one: "Comment cannot be longer than %{count} character"
+              other: "Comment cannot be longer than %{count} characters"
+          submit: "Add a comment"
+          edit: "edit"
+          cancel: "cancel"
+          add: "Add a comment"
+          show:
+            one: Show %{count} more comment
+            other: Show %{count} more comments
+          delete:
+            confirm: "Are you sure you want to delete this comment?"
+          user:
+            deleted: "(user deleted)"
+          reviewables:
+            comment_already_handled: "Thanks, but we've already reviewed this comment and determined it does not need to be flagged again."
+            actions:
+              agree:
+                title: "Agree..."
+              agree_and_keep_comment:
+                title: "Keep comment"
+                description: "Agree with flag and keep the comment unchanged."
+              agree_and_keep_deleted:
+                title: "Keep comment Deleted"
+                description: "Agree with flag and leave the comment deleted."
+              agree_and_suspend:
+                title: "Suspend User"
+                description: "Agree with flag and suspend the user."
+              agree_and_silence:
+                title: "Silence User"
+                description: "Agree with flag and silence the user."
+              agree_and_restore:
+                title: "Restore comment"
+                description: "Restore the comment so that users can see it."
+              agree_and_delete:
+                title: "Delete comment"
+                description: "Delete the comment so that users cannot see it."
+              delete_and_agree:
+                title: "Ignore Flag and Delete comment"
+                description: "Ignore the flag by removing it from the queue and delete the comment."
+              disagree_and_restore:
+                title: "Disagree and Restore comment"
+                description: "Restore the comment so that all users can see it."
+              disagree:
+                title: "Disagree"
+              ignore:
+                title: "Do Nothing"
+                description: "Ignore the flag by removing it from the queue without taking any action."
+            transcript:
+              view: "View previous comments transcript"
+
+      topic:
+        answer:
+          label: "Answer"
+          help: "begin composing an answer"
+        sort_by: "Sort by"
+        votes: "Votes"
+        activity: "Activity"
+        answer_count:
+          one: "%{count} Answer"
+          other: "%{count} Answers"
+        voters_count_diff:
+          one: "and %{count} more user..."
+          other: "and %{count} more users..."
+
+    review:
+      transcript:
+        view: "View previous messages transcript"
+      types:
+        reviewable_post_voting_comment:
+          title: "Flagged Post Voting Comment"

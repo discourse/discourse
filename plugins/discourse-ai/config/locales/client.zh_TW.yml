@@ -1,0 +1,202 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_TW:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "排序"
+            tag:
+              label: "標記"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "話題 ID"
+            title:
+              label: "標題"
+            categories:
+              label: "分類"
+            tags:
+              label: "標記"
+        llm_triage:
+          fields:
+            category:
+              label: "分類"
+            tags:
+              label: "標記"
+            canned_reply:
+              label: "回覆"
+    discourse_ai:
+      features:
+        back: "上一步"
+        disabled: "(停用)"
+        groups: "群組:"
+        no_persona: "未設定"
+        no_groups: "無"
+        edit: "編輯"
+        expand_list:
+          other: "(%{count} 更多)"
+        collapse_list: "(顯示更少)"
+        filters:
+          all: "全部"
+          reset: "重置"
+        search:
+          name: "搜尋"
+        spam:
+          name: "垃圾內容"
+      translations:
+        title: "翻譯"
+        progress_chart:
+          bar_done:
+            other: "%{count} 篇貼文"
+      spam:
+        short_title: "垃圾內容"
+        last_seven_days: "過去 7 天"
+        enable: "啟用"
+        test_modal:
+          run: "執行測試"
+          spam: "垃圾內容"
+      usage:
+        short_title: "使用方法"
+        summary: "摘要"
+        username: "使用者名稱"
+        total_requests: "請求總數"
+        periods:
+          last_day: "過去 24 小時"
+          custom: "自訂..."
+      ai_persona:
+        back: "上一步"
+        name: "名稱"
+        edit: "編輯"
+        export: "匯出"
+        import: "匯入"
+        description: "描述"
+        user: 使用者
+        save: "儲存"
+        enabled: "啟用?"
+        delete: "刪除"
+        response_format:
+          open_modal: "編輯"
+          modal:
+            key_title: "金鑰"
+        filters:
+          reset: "重置"
+      rag:
+        uploads:
+          title: "上傳檔案"
+          uploading: "上傳中..."
+      tools:
+        back: "上一步"
+        export: "匯出"
+        import: "匯入"
+        name: "名稱"
+        description: "描述"
+        summary: "摘要"
+        save: "儲存"
+        remove_parameter: "移除"
+        parameter_required: "必要設定"
+        edit: "編輯"
+        test: "執行測試"
+        delete: "刪除"
+        test_modal:
+          run: "執行測試"
+      llms:
+        display_name: "名稱"
+        save: "儲存"
+        edit: "編輯"
+        back: "上一步"
+        delete: 刪除
+        quotas:
+          group: "群組"
+          max_usages: "最大使用次數"
+          duration: "持續時間"
+          durations:
+            hour: "1 小時"
+            six_hours: "6 小時"
+            day: "24 小時"
+            week: "7 天"
+            custom: "自訂..."
+          hours: "小時"
+        usage:
+          ai_summarization: "總結"
+          ai_spam: "垃圾內容"
+        next:
+          title: "下一步"
+        tests:
+          title: "執行測試"
+          success: "成功!"
+        providers:
+          google: "Google"
+          fake: "客製"
+      ai_helper:
+        context_menu:
+          cancel: "取消"
+          confirm: "確認"
+          discard: "捨棄"
+        post_options_menu:
+          close: "關閉"
+          copy: "複製"
+          copied: "已複製!"
+          cancel: "取消"
+        thumbnail_suggestions:
+          select: "選擇"
+          selected: "已選"
+        image_caption:
+          save_caption: "儲存"
+      embeddings:
+        back: "上一步"
+        save: "儲存"
+        delete: "刪除"
+        edit: "編輯"
+        tests:
+          title: "執行測試"
+          success: "成功!"
+        display_name: "名稱"
+        providers:
+          google: "Google"
+          fake: "客製"
+      ai_bot:
+        debug_ai_modal:
+          request: "請求"
+          response: "回應"
+          next_log: "下一步"
+          previous_log: "舊"
+        invite_ai_conversation:
+          button: "邀請"
+        share_modal:
+          copy: "複製"
+        conversations:
+          today: "今天"
+          last_7_days: "過去 7 天"
+          last_30_days: "過去 30 天"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "全部"
+            neutral: "中性"
+          group_types:
+            category: "分類"
+            tag: "標記"
+          table:
+            total_count: "總計"
+      summarization:
+        chat:
+          title: "摘要訊息"
+          summarize: "總結"
+          since:
+            other: "前 %{count} 小時"
+      discobot_discoveries:
+        regular_results: "話題"
+        collapse: "收起"
+        tooltip:
+          actions:
+            disable: "禁用"

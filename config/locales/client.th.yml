@@ -437,6 +437,13 @@ th:
         reviewable_post:
           title: "โพสต์"
           noun: "โพส"
+      notes:
+        delete: "ลบ"
+      review_user: "ผู้ใช้"
+      insights:
+        activities:
+          posts:
+            other: "%{count} โพส"
       approval:
         title: "โพสต์นี้ต้องได้รับการอนุมัติ"
         description: "เราได้รับโพสต์ใหม่ของคุณแล้ว แต่ต้องได้รับการอนุมัติจากผู้ดูแลก่อนถึงจะปรากฏขึ้น กรุณารอสักครู่"
@@ -774,7 +781,8 @@ th:
       dynamic_favicon: "แสดงจำนวนบนไอคอนเบราว์เซอร์"
       theme_default_on_all_devices: "ทำให้ธีมนี้เป็นธีมเริ่มต้นบนทุกอุปกรณ์ของฉัน"
       color_schemes:
-        regular: "ทั่วไป"
+        picker:
+          active: "ใช้งานอยู่"
       text_size_default_on_all_devices: "ทำให้ขนาดฟอนต์นี้เป็นค่าเริ่มต้นบนทุกอุปกรณ์ของฉัน"
       allow_private_messages: "อนุญาตให้ผู้ใช้อื่นส่งข้อความส่วนตัวหาฉัน"
       external_links_in_new_tab: "เปิดลิงก์ภายนอกทั้งหมดในแท็บใหม่"
@@ -791,6 +799,7 @@ th:
       suspended_notice: "ผู้ใช้นี้ถูกระงับจนถึง %{date}"
       suspended_permanently: "ผู้ใช้นี้ถูกระงับชั่วคราว"
       suspended_reason: "เหตุผล:"
+      silenced_reason: "เหตุผล:"
       github_profile: "กิตฮับ"
       email_activity_summary: "สรุปกิจกรรม"
       mailing_list_mode:
@@ -1055,7 +1064,8 @@ th:
         remove: "ลบ"
         reinvited: "การเชิญชวนถูกส่งอีกครั้งแล้ว"
         user: "เชิญชวนผู้ใช้แล้ว"
-        none: "ไม่มีคำเชิญที่จะแสดง"
+        none:
+          title: "ไม่มีคำเชิญที่จะแสดง"
         truncated:
           other: "กำลังแสดงคำเชิญ %{count} รายการแรก"
         redeemed: "ยืนยันการเชิญชวน"
@@ -1357,7 +1367,6 @@ th:
       options: "ตัวเลือก"
       whisper: "กระซิบ"
       add_warning: "นี่คือคำเตือนอย่างเป็นทางการ"
-      toggle_whisper: "เปิดกระซิบ"
       posting_not_on_topic: "กระทู้ไหนที่คุณต้องการตอบ"
       saved_local_draft_tip: "บันทึกบนอุปกรณ์"
       drafts_offline: "แบบร่างออฟไลน์"
@@ -1411,15 +1420,8 @@ th:
       paste_code_text: "พิมพ์หรือวางโค้ดที่นี่"
       upload_title: "อัปโหลด"
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
-      olist_title: "รายการลำดับ"
-      ulist_title: "รายการดอกจันทร์"
       list_item: "รายการ"
       help: "ช่วยเหลือการจัดรูปแบบ"
-      collapse: "ย่อหน้าเขียนกระทู้"
-      open: "เปิดหน้าเขียนกระทู้"
-      abandon: "ปิดหน้าเขียนกระทู้และละทิ้งแบบร่าง"
-      enter_fullscreen: "ขยายหน้าเขียนกระทู้เต็มจอ"
-      exit_fullscreen: "ออกจากหน้าเขียนกระทู้เต็มจอ"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
       yourself_confirm:
@@ -2250,7 +2252,6 @@ th:
         topics: "หัวข้อ"
         replies: "ตอบ"
       posted:
-        title: "โพสต์ของฉัน"
         help: "กระทู้ที่คุณได้โพสต์"
       bookmarks:
         title: "บุ๊กมาร์ก"
@@ -2389,7 +2390,6 @@ th:
       selector_remove_filter: "เอาตัวกรองออก"
       tags: "แท็ก"
       choose_for_topic: "แท็กทางเลือก"
-      info: "ข้อมูล"
       tag_groups_info:
         other: "แท็กนี้เป็นของกลุ่มเหล่านี้: %{tag_groups}"
       category_restrictions:
@@ -2508,7 +2508,6 @@ th:
             users:
               content: "ผู้ใช้"
             my_posts:
-              content: "โพสต์ของฉัน"
               draft_count:
                 other: "%{count}แบบร่าง"
             review:
@@ -2537,6 +2536,9 @@ th:
       spreadsheet:
         show: "แสดง"
         about: "เกี่ยวกับ"
+    filter:
+      description:
+        yesterday: "เมื่อวาน"
     discovery:
       headings:
         categories: "หมวดหมู่ทั้งหมด"
@@ -2569,6 +2571,10 @@ th:
           title: "ไฟล์"
         legal:
           title: "กฎ"
+        login:
+          sub_pages:
+            common_settings:
+              title: "การตั้งค่า"
         logo:
           form:
             mobile: "โทรศัพท์"
@@ -2618,6 +2624,8 @@ th:
               title: "ถูกปฏิเสธ"
         embedding:
           title: "ฝั่ง"
+      theme_site_settings:
+        default_value: "ค่าเริ่มต้น"
       search:
         title: "ค้นหา"
         result_types:
@@ -2856,6 +2864,9 @@ th:
         change_settings_short: "การตั้งค่า"
         author: "โดย %{author}"
         learn_more: "เรียนรู้เพิ่มเติม"
+        filters:
+          all: "ทั้งหมด"
+          disabled: "ปิดใช้งานแล้ว"
       backups:
         title: "สำรอง"
         menu:
@@ -2890,17 +2901,18 @@ th:
         delete: "ลบ"
         delete_confirm: 'คุณแน่ใจหรือว่าต้องการลบ "%{theme_name}"'
         color: "สี"
-        theme_owner: "ไม่สามารถแก้ไขได้ เป็นเจ้าของโดย:"
         email_templates:
           title: "อีเมล"
           subject: "หัวข้อ"
           revert: "ย้อนกลับการแก้ไข"
           revert_confirm: "คุณแน่ใจหรือว่าจะย้อนกลับการแก้ไข"
+          edit: "แก้ไข"
         component:
           all_filter: "ทั้งหมด"
           disabled_filter: "ปิดใช้งานแล้ว"
         theme:
           theme: "ธีม"
+          filter_all: "ทั้งหมด"
           theme_name: "ชื่อธีม"
           customize_desc: "การปรับแต่ง:"
           title: "ธีม"
@@ -2911,7 +2923,6 @@ th:
           edit: "แก้ไข"
           mobile: "โทรศัพท์"
           preview: "แสดงตัวอย่าง"
-          default: "ใช้งานอยู่"
           add_all_themes: "เพิ่มธีมทั้งหมด"
           inactive_themes: "ธีมที่ไม่ได้ใช้งาน:"
           cancel: "ยกเลิก"
@@ -2933,11 +2944,7 @@ th:
           enable: "เปิดใช้งาน"
           disable: "ปิดใช้งาน"
           add: "เพิ่ม"
-          theme_settings: "การตั้งค่าธีม"
           no_settings: "ธีมนี้ไม่มีการตั้งค่า"
-          settings: "การตั้งค่า"
-          colors: "สี"
-          colors_title: "สี"
           scss:
             text: "CSS"
           footer:
@@ -2952,6 +2959,9 @@ th:
             required: "*ต้องการ"
         colors:
           title: "สี"
+          edit: "แก้ไข"
+          filters:
+            all: "ทั้งหมด"
           undo: "เลิกทำ"
           revert: "ย้อนกลับ"
           primary:
@@ -3188,7 +3198,6 @@ th:
         suspend: "ระงับการใช้งาน"
         activity: กิจกรรม
         last_100_days: "ใน 100 วันที่ผ่านมา"
-        private_topics_count: กระทู้ส่วนตัว
         posts_read_count: โพสต์ที่อ่าน
         post_count: โพสต์ที่สร้าง
         topics_entered: กระทู้ที่ดู
@@ -3212,7 +3221,6 @@ th:
             text: "ถ่ายโอน @%{username} ไปยัง @%{targetUsername}"
             transfer_and_delete: "ถ่ายโอนและลบ @%{username}"
             cancel: "ยกเลิก"
-        delete_forbidden_because_staff: "ไม่สามารถลบแอดมินและผู้ดูแลระบบได้"
         delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสต์ทั้งหมดของแอดมินและผู้ดูแลระบบได้"
         deleted: "ผู้ใช้ถูกลบแล้ว"
         delete_failed: "มีข้อผิดพลาดขณะกำลังลบผู้ใช้นั้น กรุณาตรวจสอบอีกครั้งว่าโพสต์ทั้งหมดถูกลบก่อนลบผู้ใช้นั้น"

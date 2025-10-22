@@ -108,7 +108,7 @@ RSpec.describe Middleware::AnonymousCache do
 
     it "handles modern mobile browsers" do
       key1 = new_helper("HTTP_USER_AGENT" => "Safari (iPhone OS 7)").cache_key
-      key2 = new_helper("HTTP_USER_AGENT" => "Safari (iPhone OS 15)").cache_key
+      key2 = new_helper("HTTP_USER_AGENT" => "Safari (iPhone OS 16)").cache_key
       expect(key1).not_to eq(key2)
     end
 

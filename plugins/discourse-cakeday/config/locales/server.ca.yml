@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  site_settings:
+    cakeday_enabled: "Mostra els emojis de pastís (cakeday) al costat del nom de l'usuari en la data en què es van unir a Discourse."
+    cakeday_emoji: "L'emoji o emojis que es mostraran al costat del nom de l'usuari en la data en què es van unir a Discourse. Es poden especificar múltiples emojis: smile|cake|smile"
+    cakeday_birthday_enabled: "Mostra els emojis al costat del nom de l'usuari el seu natalici."
+    cakeday_birthday_emoji: "L'emoji o emojis que es mostraran al costat del nom de l'usuari en el seu natalici. Es poden especificar múltiples emojis: smile|cake|smile"

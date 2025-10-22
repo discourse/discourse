@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  site_settings:
+    rss_polling_enabled: "[Interogare RSS] Activează importarea postărilor încorporate din mai multe fluxuri RSS"
+    rss_polling_frequency: "[Interogare RSS] Frecvența de interogare a fluxului, în minute"
+    rss_polling_use_pubdate: "[Interogare RSS] Setează data creării subiectului la pubDate găsit în fluxul RSS"
+    rss_polling_update_tags: "[Interogare RSS] Actualizează etichetele subiectului când un subiect este actualizat. Dezactivarea acesteia retrage etichetele inițiale, dar dezactivează modificările ulterioare ale etichetelor."

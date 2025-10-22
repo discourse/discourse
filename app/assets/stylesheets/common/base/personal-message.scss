@@ -21,7 +21,7 @@
 
   .regular.contents {
     border-radius: var(--d-border-radius);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     padding-left: var(--pm-padding);
     margin-left: calc(var(--pm-padding) * -1);
 
@@ -93,7 +93,7 @@
     }
 
     &.old {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
 
       @include viewport.until(sm) {
         padding-top: var(--pm-padding);
@@ -192,7 +192,7 @@
 
     &.top {
       .cooked {
-        border: 1px solid var(--primary-low);
+        border: 1px solid var(--content-border-color);
         border-radius: var(--d-border-radius);
         margin-left: calc(var(--pm-padding) * -1);
         padding-left: 2.15em;

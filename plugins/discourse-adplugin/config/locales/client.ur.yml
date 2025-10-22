@@ -1,0 +1,52 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    adplugin:
+      advertisement_label: "اشتہار"
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          ad_plugin: "اشتھاراتی پلَگ اِن"
+          dfp_plugin: "ڈی ایف پی / اَیڈ مینیجر"
+          adsense_plugin: "ایڈسینس"
+          amazon_plugin: "اَیمَیزَون"
+          carbonads_plugin: "کاربن اشتھارات"
+          adbutler_plugin: "اَیڈ بَٹلَر"
+      adplugin:
+        house_ads:
+          title: "ہائوز اشتھارات"
+          new: "نیا"
+          settings: "سیٹِنگ"
+          new_name: "نیو ہائوز اشتھار"
+          save: "محفوظ کریں"
+          delete: "مٹائیں"
+          description: "اپنے اشتھارات اور انہیں کہاں دکھایا جائے، کی وضاحت کریں۔"
+          get_started: "ایک نیا اشتھار بنا کر شروعات کریں۔"
+          filter_placeholder: "اشتھارات منتخب کریں..."
+          more_settings: "مزید ترتیبات"
+          show_to_anons: "صرف غیر رجسٹرڈ اراکین کو دکھائیں"
+          show_to_logged_in_users: "لاگ اِن اراکین کو دکھائیں"
+          category_chooser_description: "وہ زمرے منتخب کریں جہاں یہ اشتہار دکھایا جانا چاہیے یا اشتہار کو ہر جگہ دکھانے کے لیے خالی چھوڑ دیں۔ 'no_ads_for_categories' سائٹ کی ترتیب کو اس ترتیب پر ترجیح حاصل ہے۔"
+          group_chooser_description: "ان گروپس کا انتخاب کریں جو اس اشتہار کو دیکھ سکتے ہیں یا تمام سائن ان اراکین کو اشتہار دکھانے کے لیے خالی چھوڑ سکتے ہیں۔"
+          preview: "جھلک دیکھیں"
+          topic_list_top:
+            title: "ٹاپک فہرست ٹاپ اشتھارات"
+            description: "ٹاپک فہرست صفحات کے سب سے اوپر ظاہر کرنے کیلئے اشتھارات۔"
+          topic_above_post_stream:
+            title: "پوسٹ سٹریم کے اوپر ٹاپک"
+            description: "ٹاپک صفحے پر ایک ٹاپک کے عنوان کے اوپر دکھانے کیلئے اشتہارات۔"
+          topic_above_suggested:
+            title: "تجویز کردہ کے اوپر ٹاپک"
+            description: "تجویز کردہ ٹاپکس کے اوپر، ایک ٹاپک کی آخری پوسٹ کے بعد دکھانے کیلئے اشتہارات۔"
+          post_bottom:
+            title: "پوسٹس کے درمیان"
+            description: "ہر این پوسٹس کے بعد، پوسٹس کے درمیان میں دکھانے کیلئے اشتھارات۔"
+          topic_list_between:
+            title: "موضوعات کے درمیان"
+            description: "ہر N عنوان کے بعد موضوعات کے درمیان دکھائے جانے والے اشتہارات۔"

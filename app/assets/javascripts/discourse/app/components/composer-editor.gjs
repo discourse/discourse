@@ -1,8 +1,11 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import EmberObject, { action, computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { schedule, throttle } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
@@ -129,17 +132,28 @@ export default class ComposerEditor extends Component {
     return this.composer.get("model.topic");
   }
 
-  @discourseComputed("composer.model.requiredCategoryMissing")
+  @discourseComputed(
+    "composer.model.requiredCategoryMissing",
+    "currentUser.useRichEditor"
+  )
   replyPlaceholder(requiredCategoryMissing) {
     let placeholder = "composer.reply_placeholder_choose_category";
 
     if (!requiredCategoryMissing) {
-      const key = authorizesOneOrMoreImageExtensions(
+      const allowImages = authorizesOneOrMoreImageExtensions(
         this.currentUser.staff,
         this.siteSettings
-      )
-        ? "reply_placeholder"
-        : "reply_placeholder_no_images";
+      );
+
+      let key;
+      if (this.siteSettings.rich_editor && this.currentUser.useRichEditor) {
+        key = allowImages
+          ? "reply_placeholder_rte"
+          : "reply_placeholder_rte_no_images";
+      } else {
+        key = allowImages ? "reply_placeholder" : "reply_placeholder_no_images";
+      }
+
       placeholder = `composer.${key}`;
     }
 
@@ -177,9 +191,14 @@ export default class ComposerEditor extends Component {
 
         const posts = topic.get("postStream.posts");
         if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.findBy("post_number", postNumber);
+          const quotedPost = posts.find((p) => p.post_number === postNumber);
           if (quotedPost) {
-            return tinyAvatar(quotedPost.get("avatar_template"));
+            const avatarTemplate = applyValueTransformer(
+              "composer-editor-quoted-post-avatar-template",
+              quotedPost.get("avatar_template"),
+              { post: quotedPost }
+            );
+            return tinyAvatar(avatarTemplate);
           }
         }
       },
@@ -192,7 +211,7 @@ export default class ComposerEditor extends Component {
 
         const posts = topic.get("postStream.posts");
         if (posts && topicId === topic.get("id")) {
-          const quotedPost = posts.findBy("post_number", postNumber);
+          const quotedPost = posts.find((p) => p.post_number === postNumber);
           if (quotedPost) {
             return quotedPost.primary_group_name;
           }
@@ -207,14 +226,61 @@ export default class ComposerEditor extends Component {
 
   @on("didInsertElement")
   _composerEditorInit() {
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-    this._registerImageAltTextButtonClick(preview);
-
-    if (this.composer.allowUpload) {
-      this.uppyComposerUpload.setup(this.element);
-    }
-
     this.appEvents.trigger(`${this.composerEventPrefix}:will-open`);
+  }
+
+  @on("willDestroyElement")
+  _composerClosed() {
+    this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
+
+    // need to wait a bit for the "slide down" transition of the composer
+    discourseLater(
+      () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
+      400
+    );
+  }
+
+  @action
+  _composerEditorInitPreview(elem) {
+    const preview = elem.querySelector(".d-editor-preview-wrapper");
+    this._registerImageAltTextButtonClick(preview);
+    this._editorInitPreview = true;
+  }
+
+  @action
+  _composerEditorDestroyPreview(elem) {
+    const preview = elem.querySelector(".d-editor-preview-wrapper");
+
+    if (preview) {
+      preview.removeEventListener(
+        "click",
+        this._handleAltTextCancelButtonClick
+      );
+      preview.removeEventListener("click", this._handleAltTextEditButtonClick);
+      preview.removeEventListener("click", this._handleAltTextOkButtonClick);
+      preview.removeEventListener("click", this._handleImageDeleteButtonClick);
+      preview.removeEventListener("click", this._handleImageGridButtonClick);
+      preview.removeEventListener("click", this._handleImageScaleButtonClick);
+      preview.removeEventListener("keypress", this._handleAltTextInputKeypress);
+
+      apiImageWrapperBtnEvents.forEach((fn) =>
+        preview.removeEventListener("click", fn)
+      );
+    }
+  }
+
+  @action
+  _composerEditorInitEditor(elem) {
+    if (this.composer.allowUpload) {
+      this.uppyComposerUpload.setup(elem);
+    }
+  }
+
+  @action
+  _composerEditorDestroyEditor(elem) {
+    if (this.composer.allowUpload && this._cleanupComposerUploadElement) {
+      this.uppyComposerUpload.teardown(elem);
+    }
   }
 
   /**
@@ -832,35 +898,6 @@ export default class ComposerEditor extends Component {
     );
   }
 
-  @on("willDestroyElement")
-  _composerClosed() {
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (this.composer.allowUpload) {
-      this.uppyComposerUpload.teardown();
-    }
-
-    this.appEvents.trigger(`${this.composerEventPrefix}:will-close`);
-
-    // need to wait a bit for the "slide down" transition of the composer
-    discourseLater(
-      () => this.appEvents.trigger(`${this.composerEventPrefix}:closed`),
-      400
-    );
-
-    preview?.removeEventListener("click", this._handleAltTextCancelButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextEditButtonClick);
-    preview?.removeEventListener("click", this._handleAltTextOkButtonClick);
-    preview?.removeEventListener("click", this._handleImageDeleteButtonClick);
-    preview?.removeEventListener("click", this._handleImageGridButtonClick);
-    preview?.removeEventListener("click", this._handleImageScaleButtonClick);
-    preview?.removeEventListener("keypress", this._handleAltTextInputKeypress);
-
-    apiImageWrapperBtnEvents.forEach((fn) =>
-      preview?.removeEventListener("click", fn)
-    );
-  }
-
   @action
   onExpandPopupMenuOptions(toolbarEvent) {
     const selected = toolbarEvent.selected;
@@ -1037,11 +1074,19 @@ export default class ComposerEditor extends Component {
             @forcePreview={{this.forcePreview}}
             @onPreviewUpdated={{this.previewUpdated}}
             @outletArgs={{this.outletArgs}}
+            {{didInsert this._composerEditorInitPreview}}
+            {{willDestroy this._composerEditorDestroyPreview}}
           />
         {{/if}}
       </div>
     {{else if this.showTranslationEditor}}
-      <PostTranslationEditor @setupEditor={{this.setupEditor}} />
+      <PostTranslationEditor
+        @setupEditor={{this.setupEditor}}
+        {{didInsert this._composerEditorInitEditor}}
+        {{willDestroy this._composerEditorDestroyEditor}}
+        {{didInsert this._composerEditorInitPreview}}
+        {{willDestroy this._composerEditorDestroyPreview}}
+      />
     {{else}}
       <DEditor
         @value={{this.composer.model.reply}}
@@ -1067,6 +1112,10 @@ export default class ComposerEditor extends Component {
         @replyingToUserId={{this.composer.replyingToUserId}}
         @onSetup={{this.setupEditor}}
         @disableSubmit={{this.composer.disableSubmit}}
+        {{didInsert this._composerEditorInitEditor}}
+        {{willDestroy this._composerEditorDestroyEditor}}
+        {{didInsert this._composerEditorInitPreview}}
+        {{willDestroy this._composerEditorDestroyPreview}}
       >
         {{yield}}
       </DEditor>

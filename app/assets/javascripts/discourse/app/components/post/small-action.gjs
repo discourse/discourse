@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import PostCookedHtml from "discourse/components/post/cooked-html";
 import UserAvatar from "discourse/components/user-avatar";
@@ -17,10 +18,10 @@ export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
 export const customGroupActionCodes = [];
 
 export const ICONS = {
-  "closed.enabled": "lock",
-  "closed.disabled": "unlock-keyhole",
-  "autoclosed.enabled": "lock",
-  "autoclosed.disabled": "unlock-keyhole",
+  "closed.enabled": "topic.closed",
+  "closed.disabled": "topic.opened",
+  "autoclosed.enabled": "topic.closed",
+  "autoclosed.disabled": "topic.opened",
   "archived.enabled": "folder",
   "archived.disabled": "folder-open",
   "pinned.enabled": "thumbtack",
@@ -53,11 +54,13 @@ export function resetGroupPostSmallActionCodes() {
 }
 
 export default class PostSmallAction extends Component {
+  decoratorState = new TrackedMap();
+
   @cached
   get CustomComponent() {
     return applyValueTransformer("post-small-action-custom-component", null, {
-      actionCode: this.code,
-      post: this.post,
+      code: this.code,
+      post: this.args.post,
     });
   }
 
@@ -84,12 +87,12 @@ export default class PostSmallAction extends Component {
       : "";
 
     let who = "";
-    if (this.username) {
+    if (this.who) {
       if (this.isGroupAction) {
-        who = `<a class="mention-group" href="/g/${this.username}">@${this.username}</a>`;
+        who = `<a class="mention-group" href="/g/${this.who}">@${this.who}</a>`;
       } else {
-        who = `<a class="mention" href="${userPath(this.username)}">@${
-          this.username
+        who = `<a class="mention" href="${userPath(this.who)}">@${
+          this.who
         }</a>`;
       }
     }
@@ -121,7 +124,7 @@ export default class PostSmallAction extends Component {
     );
   }
 
-  get username() {
+  get who() {
     return this.args.post.action_code_who;
   }
 
@@ -150,7 +153,7 @@ export default class PostSmallAction extends Component {
           {{icon this.icon}}
         </div>
         <div class="small-action-desc">
-          <div class="small-action-contents">
+          <div class="small-action-contents" role="heading" aria-level="2">
             <UserAvatar
               @ariaHidden={{false}}
               @size="small"
@@ -159,10 +162,10 @@ export default class PostSmallAction extends Component {
             {{#if this.CustomComponent}}
               <this.CustomComponent
                 @code={{this.code}}
-                @post={{this.post}}
+                @post={{@post}}
                 @createdAt={{this.createdAt}}
                 @path={{this.path}}
-                @username={{this.username}}
+                @who={{this.who}}
               />
             {{else}}
               <p>{{htmlSafe this.description}}</p>
@@ -196,7 +199,12 @@ export default class PostSmallAction extends Component {
           {{#unless this.CustomComponent}}
             {{#if @post.cooked}}
               <div class="small-action-custom-message">
-                <PostCookedHtml @post={{@post}} />
+                <PostCookedHtml
+                  @post={{@post}}
+                  @decoratorState={{this.decoratorState}}
+                  @highlightTerm={{@highlightTerm}}
+                  @streamElement={{@streamElement}}
+                />
               </div>
             {{/if}}
           {{/unless}}

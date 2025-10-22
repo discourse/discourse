@@ -22,7 +22,7 @@ export function addUserMenuProfileTabItem(item) {
 }
 
 export function resetUserMenuProfileTabItems() {
-  _extraItems.clear();
+  _extraItems.length = 0;
 }
 
 export default class UserMenuProfileTabContent extends Component {
@@ -117,7 +117,7 @@ export default class UserMenuProfileTabContent extends Component {
   }
 
   <template>
-    <ul aria-labelledby={{@ariaLabelledby}}>
+    <ul aria-labelledby={{@ariaLabelledby}} class={{@class}}>
       {{#if this.siteSettings.enable_user_status}}
         <li class="set-user-status">
           <DButton

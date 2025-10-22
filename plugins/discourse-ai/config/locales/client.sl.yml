@@ -1,0 +1,186 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sl:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Uredi po"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID teme"
+            title:
+              label: "Naziv"
+            categories:
+              label: "Kategorije"
+            tags:
+              label: "Oznake"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategorija"
+            tags:
+              label: "Oznake"
+            canned_reply:
+              label: "Odgovori"
+    discourse_ai:
+      features:
+        back: "Nazaj"
+        disabled: "(onemogočeno)"
+        groups: "Skupine:"
+        no_persona: "Ni nastavljeno"
+        no_groups: "Brez"
+        edit: "Uredi"
+        expand_list:
+          one: "(%{count} več)"
+          two: "(%{count} več)"
+          few: "(%{count} več)"
+          other: "(%{count} več)"
+        collapse_list: "(manj)"
+        filters:
+          all: "Vsi"
+          reset: "Ponastavi"
+        search:
+          name: "Išči"
+        spam:
+          name: "Neželeno"
+      modals:
+        select_option: "Izberi možnost..."
+      layout:
+        table: "Tabela"
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} prispevek"
+            two: "%{count} prispevka"
+            few: "%{count} prispevki"
+            other: "%{count} prispevkov"
+      spam:
+        short_title: "Neželeno"
+        last_seven_days: "Zadnjih 7 dni"
+        enable: "Omogoči"
+        test_modal:
+          spam: "Neželeno"
+      usage:
+        summary: "Povzetek"
+        username: "Uporabniško ime"
+        periods:
+          last_day: "Zadnjih 24 ur"
+          custom: "Po meri..."
+      ai_persona:
+        back: "Nazaj"
+        name: "Ime"
+        edit: "Uredi"
+        export: "Izvozi"
+        import: "Uvozi"
+        description: "Opis"
+        user: Uporabnik
+        save: "Shrani"
+        enabled: "Vključeno?"
+        allowed_groups: "Dovoljene skupine"
+        delete: "Izbriši"
+        response_format:
+          open_modal: "Uredi"
+        filters:
+          reset: "Ponastavi"
+      rag:
+        uploads:
+          title: "Prenosi"
+          uploading: "Nalagam..."
+      tools:
+        back: "Nazaj"
+        export: "Izvozi"
+        import: "Uvozi"
+        name: "Ime"
+        description: "Opis"
+        summary: "Povzetek"
+        save: "Shrani"
+        remove_parameter: "Odstrani"
+        parameter_required: "Zahtevano"
+        edit: "Uredi"
+        delete: "Izbriši"
+      llms:
+        display_name: "Ime"
+        save: "Shrani"
+        edit: "Uredi"
+        back: "Nazaj"
+        delete: Izbriši
+        quotas:
+          group: "Skupina"
+          duration: "Trajanje"
+          durations:
+            hour: "1 ura"
+            six_hours: "6 uri"
+            day: "24 uri"
+            week: "7 dni"
+            custom: "Po meri..."
+          hours: "ur"
+        usage:
+          ai_spam: "Neželeno"
+        next:
+          title: "Naprej"
+        tests:
+          success: "Uspeh!"
+        providers:
+          google: "Google"
+          fake: "Po meri"
+      ai_helper:
+        context_menu:
+          cancel: "Prekliči"
+          confirm: "Potrdi"
+          discard: "Zavrzi"
+        post_options_menu:
+          close: "Zapri"
+          copy: "Kopiraj"
+          copied: "Kopirano!"
+          cancel: "Prekliči"
+        image_caption:
+          save_caption: "Shrani"
+      embeddings:
+        back: "Nazaj"
+        save: "Shrani"
+        delete: "Izbriši"
+        edit: "Uredi"
+        tests:
+          success: "Uspeh!"
+        display_name: "Ime"
+        providers:
+          google: "Google"
+          fake: "Po meri"
+      ai_bot:
+        debug_ai_modal:
+          request: "Zahteva"
+          next_log: "Naprej"
+          previous_log: "Prejšnja"
+        invite_ai_conversation:
+          button: "Povabi"
+        share_modal:
+          copy: "Kopiraj"
+        conversations:
+          today: "Danes"
+          last_7_days: "Zadnjih 7 dni"
+          last_30_days: "Zadnjih 30 dni"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Vsi"
+          group_types:
+            category: "Kategorija"
+          table:
+            total_count: "Skupaj"
+      discobot_discoveries:
+        regular_results: "Tem"
+        collapse: "Skrči"
+        tooltip:
+          actions:
+            disable: "Onemogoči"

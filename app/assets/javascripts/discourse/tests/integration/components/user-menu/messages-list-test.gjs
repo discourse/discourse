@@ -291,13 +291,13 @@ module("Integration | Component | user-menu | messages-list", function (hooks) {
     await render(<template><MessagesList /></template>);
 
     assert
-      .dom(".empty-state-title")
+      .dom(".empty-state__title")
       .hasText(i18n("user.no_messages_title"), "empty state title is shown");
     assert
-      .dom(".empty-state-body svg.d-icon-envelope")
+      .dom(".empty-state__body svg.d-icon-envelope")
       .exists("icon is correctly rendered in the empty state body");
     assert
-      .dom(".empty-state-body a")
+      .dom(".empty-state__body a")
       .hasAttribute(
         "href",
         "/about",

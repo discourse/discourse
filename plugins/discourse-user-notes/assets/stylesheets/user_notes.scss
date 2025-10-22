@@ -1,0 +1,85 @@
+.d-modal.user-notes-modal {
+  .d-modal__container {
+    width: 100%;
+  }
+
+  .posted-by {
+    width: 40px;
+    float: left;
+  }
+
+  .note-contents {
+    overflow: hidden;
+
+    .cooked {
+      margin-top: 0.5em;
+    }
+
+    .username {
+      font-weight: bold;
+    }
+
+    p {
+      margin: 0 0 1em 0;
+    }
+  }
+
+  .user-note {
+    border-top: 1px solid var(--primary-low);
+    padding-top: 1em;
+
+    &:first-of-type {
+      margin-top: 1em;
+    }
+  }
+
+  .controls {
+    float: right;
+  }
+}
+
+.show-user-notes-on-flags {
+  display: inline-block;
+
+  button {
+    display: inline;
+    padding: 0;
+  }
+}
+
+.show-user-notes-on-card {
+  button {
+    display: inline;
+    padding: 0;
+  }
+}
+
+.user-notes-icon {
+  .mobile-view & {
+    order: 2;
+    margin-left: 10px;
+  }
+  cursor: pointer;
+}
+
+.admin-report.user-notes {
+  grid-column: span 12;
+
+  .admin-report-table {
+    table-layout: auto;
+
+    tbody tr td,
+    thead tr th {
+      text-align: left;
+    }
+
+    thead tr th.note,
+    tbody tr td.note {
+      width: 60%;
+    }
+  }
+}
+
+.add-user-note {
+  border-top: 1px solid rgb(var(--primary-low-rgb), 0.5);
+}

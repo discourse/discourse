@@ -20,8 +20,38 @@ module PageObjects
         self
       end
 
-      def dark_mode_checkbox
-        page.find('.dark-mode input[type="checkbox"]')
+      def light_scheme_dropdown
+        PageObjects::Components::SelectKit.new(".light-color-scheme .select-kit")
+      end
+
+      def dark_scheme_dropdown
+        PageObjects::Components::SelectKit.new(".dark-color-scheme .select-kit")
+      end
+
+      def has_light_scheme_css?(color_scheme)
+        expect(page).to have_css(
+          "link.light-scheme[data-scheme-id=\"#{color_scheme.id}\"]",
+          visible: false,
+        )
+      end
+
+      def has_dark_scheme_css?(color_scheme)
+        expect(page).to have_css(
+          "link.dark-scheme[data-scheme-id=\"#{color_scheme.id}\"]",
+          visible: false,
+        )
+      end
+
+      def color_mode_dropdown
+        PageObjects::Components::SelectKit.new(".interface-color-mode .select-kit")
+      end
+
+      def default_palette_and_mode_for_all_devices_checkbox
+        find(".color-scheme-checkbox input[type='checkbox']")
+      end
+
+      def has_no_default_palette_and_mode_for_all_devices_checkbox?
+        has_no_css?(".color-scheme-checkbox input[type='checkbox']")
       end
 
       def save_changes

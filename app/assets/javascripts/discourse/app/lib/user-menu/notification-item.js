@@ -2,6 +2,7 @@ import { setTransientHeader } from "discourse/lib/ajax";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
 import { getRenderDirector } from "discourse/lib/notification-types-manager";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import UserMenuBaseItem from "discourse/lib/user-menu/base-item";
 
 export default class UserMenuNotificationItem extends UserMenuBaseItem {
@@ -67,7 +68,12 @@ export default class UserMenuNotificationItem extends UserMenuBaseItem {
   }
 
   get avatarTemplate() {
-    return this.notification.acting_user_avatar_template;
+    const acting_user_avatar = this.notification.acting_user_avatar_template;
+    return applyValueTransformer(
+      "user-menu-notification-item-acting-user-avatar",
+      acting_user_avatar,
+      { notification: this.notification }
+    );
   }
 
   get endOutletArgs() {

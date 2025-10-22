@@ -57,7 +57,13 @@ module TurboTests
       end
 
       def rerun_command
-        @failed_example.command_string
+        @failed_example
+          .command_string
+          .sub(/TEST_ENV_NUMBER=\d*\s*/, "")
+          .sub("RSPEC_SILENCE_FILTER_ANNOUNCEMENTS=1", "")
+          .sub("DISCOURSE_RSPEC_PROFILE_EACH_EXAMPLE=1", "")
+          .gsub(/--format \S+/, "")
+          .gsub(/--out \S+/, "")
       end
 
       def to_h

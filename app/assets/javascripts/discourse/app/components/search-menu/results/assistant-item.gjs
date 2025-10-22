@@ -23,7 +23,6 @@ export function resetItemSelectCallbacks() {
 
 export default class AssistantItem extends Component {
   @service search;
-  @service appEvents;
 
   icon = this.args.icon || "magnifying-glass";
 

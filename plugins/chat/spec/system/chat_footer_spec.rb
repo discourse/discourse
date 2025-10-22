@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
+  fab!(:other_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
   fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: current_user) }
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -121,7 +121,9 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
     end
 
     context "for direct messages" do
-      fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user]) }
+      fab!(:dm_channel) do
+        Fabricate(:direct_message_channel, users: [current_user], threading_enabled: true)
+      end
       fab!(:dm_message) { Fabricate(:chat_message, chat_channel: dm_channel, user: current_user) }
 
       it "is urgent" do

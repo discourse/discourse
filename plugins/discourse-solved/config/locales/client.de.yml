@@ -1,0 +1,79 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse – Gelöst"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "akzeptiert"
+    solutions: "Lösungen"
+    solved:
+      title: "Gelöst"
+      allow_accepted_answers: "Erlaube dem Ersteller des Themas und Team-Mitgliedern, eine Antwort als Lösung zu markieren"
+      solved_topics_auto_close_hours: "Thema automatisch (n) Stunden nach der letzten Antwort schließen, sobald das Thema als gelöst markiert wurde."
+      accept_answer: "Auswählen, wenn diese Antwort das Problem löst"
+      accepted_description: "Dies ist die für dieses Thema akzeptierte Lösung"
+      has_no_accepted_answer: "Dieses Thema hat keine Lösung"
+      unaccept_answer: "Abwählen, wenn diese Antwort das Problem nicht mehr löst"
+      accepted_answer: "Lösung"
+      solution: "Lösung"
+      solution_summary:
+        one: "Lösung"
+        other: "Lösungen"
+      accepted_answer_solver_info: "Gelöst von %{user} in %{post}"
+      accepted_answer_post_number: "Beitrag %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "alle"
+        solved: "gelöst"
+        unsolved: "ungelöst"
+      no_solved_topics_title: "Du hast noch keine Themen gelöst"
+      no_solved_topics_title_others: "%{username} hat noch keine Themen gelöst"
+      no_solved_topics_body: "Wenn du eine hilfreiche Antwort auf ein Thema gibst, kann es sein, dass deine Antwort vom Themenersteller oder einem Team-Mitglied als Lösung ausgewählt wird."
+      marked_solved_by: "Als gelöst markiert von %{user}"
+      no_answer:
+        title: Wurde deine Frage beantwortet?
+        description: "Hebe die Antwort hervor und hilf anderen, indem du die Lösungsschaltfläche unter der richtigen Antwort verwendest."
+      notification:
+        title: "dein Beitrag wurde als Lösung markiert"
+    topic_statuses:
+      solved:
+        help: "Dieses Thema hat eine Lösung"
+    search:
+      advanced:
+        statuses:
+          solved: "sind gelöst"
+          unsolved: "sind ungelöst"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Gelöstes Ereignis"
+          accepted_solution: "Wenn ein Benutzer einen Beitrag als akzeptierte Antwort markiert"
+          unaccepted_solution: "Wenn ein Benutzer einen Beitrag als nicht akzeptierte Antwort markiert"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Eine Lösung akzeptieren/nicht mehr akzeptieren.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < VS1
+            tl2: < VS2
+            tl3: < VS3
+            tl4: < VS4
+            any: Beliebig
+          fields:
+            maximum_trust_level:
+              label: Vertrauensstufe
+              description: Benutzer unter dieser Vertrauensstufe lösen diese Automatisierung aus

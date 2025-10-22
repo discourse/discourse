@@ -1,15 +1,16 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
 import { and } from "truth-helpers";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
-import FlatButton from "discourse/components/flat-button";
 import LoadMore from "discourse/components/load-more";
 import BookmarkModal from "discourse/components/modal/bookmark";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -21,8 +22,8 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import discourseTags from "discourse/helpers/discourse-tags";
 import formatDate from "discourse/helpers/format-date";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 import topicLink from "discourse/helpers/topic-link";
 import { ajax } from "discourse/lib/ajax";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
@@ -212,9 +213,9 @@ export default class BookmarkList extends Component {
               <PluginOutlet @name="bookmark-list-table-header">
                 {{#if this.bulkSelectEnabled}}
                   <th class="bulk-select topic-list-data">
-                    <FlatButton
+                    <DButton
                       @action={{this.toggleBulkSelect}}
-                      @class="bulk-select"
+                      class="bulk-select btn-flat"
                       @icon="list-check"
                       @title="bookmarks.bulk.toggle"
                     />
@@ -250,9 +251,9 @@ export default class BookmarkList extends Component {
                       />
                     </span>
                   {{else}}
-                    <FlatButton
+                    <DButton
                       @action={{this.toggleBulkSelect}}
-                      @class="bulk-select"
+                      class="btn-flat bulk-select"
                       @icon="list-check"
                       @title="bookmarks.bulk.toggle"
                     />
@@ -313,7 +314,9 @@ export default class BookmarkList extends Component {
                         {{/if}}
                         {{#if bookmark.name}}
                           <span class="bookmark-metadata-item">
-                            {{icon "circle-info"}}<span>{{bookmark.name}}</span>
+                            {{icon "circle-info"}}<span>{{replaceEmoji
+                                bookmark.name
+                              }}</span>
                           </span>
                         {{/if}}
                       </div>

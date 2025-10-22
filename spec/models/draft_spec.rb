@@ -188,7 +188,7 @@ RSpec.describe Draft do
   end
 
   describe "#stream" do
-    fab!(:public_post) { Fabricate(:post) }
+    fab!(:public_post, :post)
     let(:public_topic) { public_post.topic }
 
     let(:stream) { Draft.stream(user: user) }

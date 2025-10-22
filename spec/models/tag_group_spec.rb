@@ -2,13 +2,13 @@
 
 RSpec.describe TagGroup do
   describe "#visible" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
     fab!(:admin)
     fab!(:moderator)
 
     fab!(:group)
-    fab!(:beta_group) { Fabricate(:group) }
+    fab!(:beta_group, :group)
 
     fab!(:everyone_tag_group) do
       Fabricate(:tag_group, name: "Visible & usable by everyone", tag_names: ["foo-bar"])

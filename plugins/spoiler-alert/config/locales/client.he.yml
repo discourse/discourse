@@ -12,7 +12,7 @@ he:
           spoiler_alert: "התראת קלקלן של Discourse"
   js:
     spoiler:
-      title: טשטוש קלקלן
+      title: טשטוש קדימון
       label:
         show: "הצגת תוכן מוסתר"
     composer:

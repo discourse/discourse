@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -52,6 +53,7 @@ export default class AvatarUploader extends Component {
 
   <template>
     <input
+      id="custom-profile-upload"
       {{didInsert this.uppyUpload.setup}}
       class="hidden-upload-field"
       disabled={{this.uploading}}

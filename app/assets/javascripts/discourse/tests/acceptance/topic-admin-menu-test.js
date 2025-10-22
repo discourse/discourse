@@ -46,7 +46,7 @@ acceptance("Topic - Admin Menu", function (needs) {
     updateCurrentUser({ admin: true });
     this.set("actionCalled", false);
 
-    withPluginApi("1.31.0", (api) => {
+    withPluginApi((api) => {
       api.addTopicAdminMenuButton(() => {
         return {
           className: "extra-button",

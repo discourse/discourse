@@ -59,56 +59,51 @@ RSpec.describe ThemeField do
     expect(theme_field.error).to eq(nil)
   end
 
-  it "only extracts inline javascript to an external file" do
+  it "extracts inline javascript to an external file" do
     html = <<~HTML
       <script type="text/discourse-plugin" version="0.8">
-        var a = "inline discourse plugin";
+        console.log("inline discourse plugin");
       </script>
       <script type="text/template" data-template="custom-template">
         <div>custom script type</div>
       </script>
       <script>
-        var b = "inline raw script";
+        console.log("inline raw script");
       </script>
       <script type="texT/jAvasCripT">
-        var c = "text/javascript";
+        console.log("text/javascript");
       </script>
       <script type="application/javascript">
-        var d = "application/javascript";
+        console.log("application/javascript");
       </script>
       <script src="/external-script.js"></script>
     HTML
 
     theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     theme_field.ensure_baked!
-    expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{theme_field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+
+    baked_doc = Nokogiri::HTML5.fragment(theme_field.value_baked)
+
+    simple_extracted_scripts = baked_doc.css("script[src^='/theme-javascripts/']")
+    expect(simple_extracted_scripts.length).to eq(3)
+
+    extracted_module_preloads =
+      baked_doc.css("link[rel=modulepreload][href^='/theme-javascripts/']")
+    expect(extracted_module_preloads.length).to eq(1)
+
+    expect(theme_field.javascript_cache.content).to include("inline discourse plugin")
+
+    raw_js_cache_contents = theme_field.raw_javascript_caches.map(&:content)
+    expect(raw_js_cache_contents).to contain_exactly(
+      'console.log("inline raw script");',
+      'console.log("text/javascript");',
+      'console.log("application/javascript");',
     )
-    expect(theme_field.value_baked).to include("external-script.js")
-    expect(theme_field.value_baked).to include('<script type="text/template"')
-    expect(theme_field.javascript_cache.content).to include('a = "inline discourse plugin"')
-    expect(theme_field.javascript_cache.content).to include('b = "inline raw script"')
-    expect(theme_field.javascript_cache.content).to include('c = "text/javascript"')
-    expect(theme_field.javascript_cache.content).to include('d = "application/javascript"')
+
+    expect(baked_doc.css("script[type='text/template']").length).to eq(1)
   end
 
-  it "adds newlines between the extracted javascripts" do
-    html = <<~HTML
-      <script>var a = 10</script>
-      <script>var b = 10</script>
-    HTML
-
-    extracted = <<~JS
-      var a = 10
-      var b = 10
-    JS
-
-    theme_field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
-    theme_field.ensure_baked!
-    expect(theme_field.javascript_cache.content).to include(extracted)
-  end
-
-  it "correctly extracts and generates errors for transpiled js" do
+  it "correctly logs errors for transpiled js" do
     html = <<HTML
 <script type="text/discourse-plugin" version="0.8">
    badJavaScript(;
@@ -117,11 +112,32 @@ HTML
 
     field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
     field.ensure_baked!
-    expect(field.error).not_to eq(nil)
     expect(field.value_baked).to include(
-      "<script defer=\"\" src=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+      "<link rel=\"modulepreload\" href=\"#{field.javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\">",
     )
     expect(field.javascript_cache.content).to include("[THEME -1 'Foundation'] Compile error")
+
+    field.update!(value: "")
+    field.ensure_baked!
+  end
+
+  it "correctly extracts and generates errors for raw transpiled js" do
+    html = <<~HTML
+      <script>
+        badJavaScript(;
+      </script>
+    HTML
+
+    field = ThemeField.create!(theme_id: -1, target_id: 0, name: "header", value: html)
+    field.ensure_baked!
+
+    expect(field.error).not_to eq(nil)
+    expect(field.value_baked).to include(
+      "<script defer=\"\" src=\"#{field.raw_javascript_caches[0].url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+    )
+    expect(field.raw_javascript_caches[0].content).to include(
+      "[THEME -1 'Foundation'] Compile error",
+    )
 
     field.update!(value: "")
     field.ensure_baked!
@@ -146,13 +162,13 @@ HTML
     javascript_cache = theme_field.javascript_cache
 
     expect(theme_field.value_baked).to include(
-      "<script defer=\"\" src=\"#{javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\"></script>",
+      "<link rel=\"modulepreload\" href=\"#{javascript_cache.url}\" data-theme-id=\"-1\" nonce=\"#{ThemeField::CSP_NONCE_PLACEHOLDER}\">",
     )
     expect(javascript_cache.content).to include("testing-div")
     expect(javascript_cache.content).to include("string_setting")
     expect(javascript_cache.content).to include("test text \\\" 123!")
     expect(javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme_field.theme_id}/discourse/templates/my-template\"",
+      'themeCompatModules["discourse/templates/my-template"]',
     )
   end
 
@@ -255,40 +271,34 @@ HTML
 
     # All together
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/templates/discovery\", [\"exports\", ",
+      'themeCompatModules["discourse/templates/discovery"]',
     )
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery\"",
+      'themeCompatModules["discourse/controllers/discovery"]',
     )
     expect(theme.javascript_cache.content).to include(
-      "define(\"discourse/theme-#{theme.id}/discourse/controllers/discovery-2\"",
+      'themeCompatModules["discourse/controllers/discovery-2"]',
     )
-    expect(theme.javascript_cache.content).to include("const settings =")
+    expect(theme.javascript_cache.content).to include("registerSettings(")
     expect(theme.javascript_cache.content).to include(
-      "[THEME #{theme.id} '#{theme.name}'] Compile error: unknown file extension 'blah' (discourse/controllers/discovery.blah)",
+      "[THEME #{theme.id}] Unsupported file type: discourse/controllers/discovery.blah",
     )
     expect(theme.javascript_cache.content).to include(
-      "[THEME #{theme.id} '#{theme.name}'] Compile error: unknown file extension 'hbr' (discourse/templates/other_discovery.hbr)",
+      "[THEME #{theme.id}] Unsupported file type: discourse/templates/other_discovery.hbr",
     )
-
-    # Check sourcemap
-    expect(theme.javascript_cache.source_map).to eq(nil)
-    ThemeJavascriptCompiler.enable_terser!
-    js_field.update(compiler_version: "0")
-    theme.save!
 
     expect(theme.javascript_cache.source_map).not_to eq(nil)
     map = JSON.parse(theme.javascript_cache.source_map)
 
     expect(map["sources"]).to contain_exactly(
-      "discourse/controllers/discovery-2.js",
-      "discourse/controllers/discovery.blah",
-      "discourse/controllers/discovery.js",
-      "discourse/templates/discovery.js",
-      "discourse/templates/other_discovery.hbr",
+      "theme-#{theme.id}/discourse/controllers/discovery-2.js",
+      "theme-#{theme.id}/discourse/controllers/discovery.js",
+      "theme-#{theme.id}/discourse/templates/discovery.hbs",
+      "theme-#{theme.id}/virtual:main",
+      "theme-#{theme.id}/virtual:theme",
+      "theme-#{theme.id}/virtual:init-settings",
     )
-    expect(map["sourceRoot"]).to eq("theme-#{theme.id}/")
-    expect(map["sourcesContent"].length).to eq(5)
+    expect(map["sourcesContent"].length).to eq(6)
   end
 
   def create_upload_theme_field!(name)
@@ -675,7 +685,7 @@ HTML
       it "injects into JS" do
         html = <<~HTML
           <script type="text/discourse-plugin" version="0.8">
-            var a = "inline discourse plugin";
+            console.log("inline discourse plugin", themePrefix("foo"));
           </script>
         HTML
 
@@ -780,6 +790,7 @@ HTML
     after { upload_file.unlink }
 
     it "correctly handles local JS asset caching" do
+      # todo - make this a system spec
       upload =
         UploadCreator.new(upload_file, "test.js", for_theme: true).create_for(
           Discourse::SYSTEM_USER_ID,
@@ -797,7 +808,7 @@ HTML
         theme.set_field(
           target: :common,
           name: "head_tag",
-          value: "<script>let c = 'd';</script>",
+          value: "<script type='text/discourse-plugin' version='0.1'>let c = 'd';</script>",
           type: :html,
         )
 
@@ -816,30 +827,19 @@ HTML
         theme.reload.javascript_cache.content,
         common_field.reload.javascript_cache.content,
       ].each do |js|
-        js_to_eval = <<~JS
-          var settings;
-          var window = {};
-          var require = function(name) {
-            if(name == "discourse/lib/theme-settings-store") {
-              return({
-                registerSettings: function(id, s) {
-                  settings = s;
-                }
-              });
+        expected_local_js_cache_url = js_field.javascript_cache.local_url
+        expect(expected_local_js_cache_url).to start_with("/theme-javascripts/")
+        expect(js).to include(<<~JS)
+          registerSettings(#{theme.id}, {
+            "hello": "world",
+            "theme_uploads": {
+              "test_js": "#{js_field.upload.url}"
+            },
+            "theme_uploads_local": {
+              "test_js": "#{js_field.javascript_cache.local_url}"
             }
-          }
-          window.require = require;
-          #{js}
-          settings
+          });
         JS
-
-        ctx = MiniRacer::Context.new
-        val = ctx.eval(js_to_eval)
-        ctx.dispose
-
-        expect(val["theme_uploads"]["test_js"]).to eq(js_field.upload.url)
-        expect(val["theme_uploads_local"]["test_js"]).to eq(js_field.javascript_cache.local_url)
-        expect(val["theme_uploads_local"]["test_js"]).to start_with("/theme-javascripts/")
       end
 
       # this is important, we do not want local_js_urls to leak into scss

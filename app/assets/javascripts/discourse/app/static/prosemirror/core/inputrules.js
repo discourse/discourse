@@ -20,7 +20,7 @@ export function buildInputRules(extensions, params, includeDefault = true) {
       start: match[1].length,
     });
 
-    rules.push(
+    const defaultRules = [
       // TODO(renato) smartQuotes should respect `markdown_typographer_quotation_marks`
       ...smartQuotes,
       ...[
@@ -38,13 +38,14 @@ export function buildInputRules(extensions, params, includeDefault = true) {
       markInputRule(/(^|\s)__([^_]+)__$/, schema.marks.strong, getAttrs),
       markInputRule(/(^|[^*])\*([^*]+)\*$/, schema.marks.em, getAttrs),
       markInputRule(/(^|\s)_([^_]+)_$/, schema.marks.em, getAttrs),
-      markInputRule(/`([^`]+)`$/, schema.marks.code),
       new InputRule(
         /^(\u2013-|\u2014-|___\s|\*\*\*\s)$/,
         horizontalRuleHandler,
         { inCodeMark: false }
-      )
-    );
+      ),
+    ];
+
+    rules.push(...defaultRules.map((rule) => processInputRule(rule, params)));
   }
 
   rules.push(...extractInputRules(extensions, params));
@@ -68,7 +69,11 @@ function processInputRule(inputRule, params) {
   }
 
   if (inputRule instanceof InputRule) {
-    return inputRule;
+    return new InputRule(
+      inputRule.match,
+      wrapHandlerWithBacktickCheck(inputRule.handler),
+      inputRule.options
+    );
   }
 
   if (
@@ -78,10 +83,39 @@ function processInputRule(inputRule, params) {
     // Default to NOT applying input rules when inCodeMark
     const options = inputRule.options || {};
     options.inCodeMark ??= options.inCode || false;
-    return new InputRule(inputRule.match, inputRule.handler, options);
+
+    const handler = !options.inCodeMark
+      ? wrapHandlerWithBacktickCheck(inputRule.handler)
+      : inputRule.handler;
+
+    return new InputRule(inputRule.match, handler, options);
   }
 
   throw new Error("Input rule must have a match regex and a handler function");
+}
+
+function hasBacktickBefore(state, pos) {
+  return pos > 0 && state.doc.textBetween(pos - 1, pos, "\n", "\n") === "`";
+}
+
+function wrapHandlerWithBacktickCheck(handler) {
+  return (state, match, start, end) => {
+    if (hasBacktickBefore(state, start)) {
+      return null;
+    }
+
+    // For two capturing group patterns like (^|\W)(:emoji:) or (^|\W)(@mention),
+    // also check for backtick before the actual content (after the boundary group)
+    if (
+      match[1] &&
+      match[2] &&
+      hasBacktickBefore(state, start + match[1].length)
+    ) {
+      return null;
+    }
+
+    return handler(state, match, start, end);
+  };
 }
 
 function orderedListRule(nodeType) {

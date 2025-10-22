@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
@@ -26,14 +27,16 @@ import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
   "role",
   "ariaChecked:aria-checked",
   "guid:data-guid",
-  "rowLang:lang"
+  "rowLang:lang",
+  "rowDisabled:aria-disabled"
 )
 @classNameBindings(
   "isHighlighted",
   "isSelected",
   "isNone",
   "isNone:none",
-  "item.classNames"
+  "item.classNames",
+  "rowDisabled:disabled"
 )
 @selectKitPropUtils
 export default class SelectKitRow extends Component {
@@ -115,6 +118,7 @@ export default class SelectKitRow extends Component {
       rowLabel: this.getProperty(this.item, "labelProperty"),
       rowTitle: this.getProperty(this.item, "titleProperty"),
       rowLang: this.getProperty(this.item, "langProperty"),
+      rowDisabled: this.getProperty(this.item, "disabled"),
     });
   }
 

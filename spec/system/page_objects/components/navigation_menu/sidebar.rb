@@ -29,6 +29,10 @@ module PageObjects
           community_section.has_no_button?('[data-list-item-name="customize"]')
         end
 
+        def click_topics_button
+          page.find("[data-list-item-name='everything']").click
+        end
+
         def click_customize_community_section_button
           community_section.click_button(
             I18n.t("js.sidebar.sections.community.edit_section.sidebar"),
@@ -72,6 +76,50 @@ module PageObjects
 
         def click_search_input
           page.find(".sidebar-search__input").click
+        end
+
+        def my_messages
+          I18n.t("js.sidebar.sections.community.links.my_messages.content")
+        end
+
+        def my_messages_link_css
+          ".sidebar-section-link[data-link-name='#{my_messages.downcase.parameterize}']"
+        end
+
+        def has_my_messages_link?(text = my_messages)
+          page.has_css?(my_messages_link_css, text:)
+        end
+
+        def has_no_my_messages_link?(text = my_messages)
+          page.has_no_css?(my_messages_link_css, text:)
+        end
+
+        def has_my_messages_link_with_unread_icon?
+          page.has_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+        end
+
+        def has_my_messages_link_without_unread_icon?
+          page.has_no_css?("#{my_messages_link_css} .sidebar-section-link-suffix.icon.unread")
+        end
+
+        def has_my_messages_link_with_unread_count?
+          page.has_css?("#{my_messages_link_css} .sidebar-section-link-content-badge")
+        end
+
+        def has_active_link?(name)
+          page.has_css?(".sidebar-section-link[data-link-name='#{name}'].active")
+        end
+
+        def has_no_active_links?
+          page.has_no_css?(".sidebar-section-link.active")
+        end
+
+        def has_exact_url_match_link?(name)
+          page.has_css?(".sidebar-section-link[data-link-name='#{name}'].exact-url-match")
+        end
+
+        def has_no_exact_url_match_link?(name)
+          page.has_no_css?(".sidebar-section-link[data-link-name='#{name}'].exact-url-match")
         end
       end
     end

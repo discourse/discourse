@@ -4,7 +4,7 @@ describe "Tag view", type: :system do
   fab!(:tag_1) { Fabricate(:tag, name: "design") }
   fab!(:tag_2) { Fabricate(:tag, name: "art") }
   fab!(:topic) { Fabricate(:topic, tags: [tag_2]) }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   let(:tags_page) { PageObjects::Pages::Tag.new }
   let(:topic_list) { PageObjects::Components::TopicList.new }

@@ -1,16 +1,16 @@
 // @ts-check
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { next } from "@ember/runloop";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import $ from "jquery";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
 import { liftListItem, sinkListItem } from "prosemirror-schema-list";
-import { TextSelection } from "prosemirror-state";
+import { Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
-import { hasMark, inNode } from "./plugin-utils";
+import { hasMark, inNode, isNodeActive } from "./plugin-utils";
 
 /**
  * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
@@ -36,12 +36,24 @@ export default class ProsemirrorTextManipulation {
   convertFromMarkdown;
   convertToMarkdown;
 
-  constructor(owner, { schema, view, convertFromMarkdown, convertToMarkdown }) {
+  constructor(
+    owner,
+    {
+      schema,
+      view,
+      convertFromMarkdown,
+      convertToMarkdown,
+      commands,
+      customState,
+    }
+  ) {
     setOwner(this, owner);
     this.schema = schema;
     this.view = view;
     this.convertFromMarkdown = convertFromMarkdown;
     this.convertToMarkdown = convertToMarkdown;
+    this.commands = commands;
+    this.customState = customState;
 
     this.placeholder = new ProsemirrorPlaceholderHandler({
       schema,
@@ -78,15 +90,22 @@ export default class ProsemirrorTextManipulation {
 
   putCursorAtEnd() {
     this.focus();
-    next(() => (this.view.dom.scrollTop = this.view.dom.scrollHeight));
+
+    next(() => {
+      this.view.dispatch(
+        this.view.state.tr
+          .setSelection(Selection.atEnd(this.view.state.doc))
+          .scrollIntoView()
+      );
+    });
   }
 
   autocomplete(options) {
-    // @ts-ignore
-    $(this.view.dom).autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
+    return DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      this.view.dom,
+      this.autocompleteHandler,
+      options
     );
   }
 
@@ -190,23 +209,24 @@ export default class ProsemirrorTextManipulation {
     command?.(this.view.state, this.view.dispatch);
   }
 
-  formatCode() {
+  applyHeading(_selection, level) {
     let command;
-
-    const selection = this.view.state.selection;
-
-    if (selection.$from.parent.type === this.schema.nodes.code_block) {
+    if (level === 0) {
       command = setBlockType(this.schema.nodes.paragraph);
-    } else if (
-      selection.$from.pos !== selection.$to.pos &&
-      selection.$from.parent === selection.$to.parent
-    ) {
-      command = toggleMark(this.schema.marks.code);
     } else {
-      command = setBlockType(this.schema.nodes.code_block);
+      command = setBlockType(this.schema.nodes.heading, { level });
     }
-
     command?.(this.view.state, this.view.dispatch);
+    this.focus();
+  }
+
+  /**
+   * Bridge method from pre-existing API to the new command system
+   *
+   * @returns {boolean} whether the command was applied
+   */
+  formatCode() {
+    return this.commands.formatCode(this.view.state, this.view.dispatch);
   }
 
   emojiSelected(code) {
@@ -345,6 +365,12 @@ export default class ProsemirrorTextManipulation {
    * Updates the toolbar state object based on the current editor active states
    */
   updateState() {
+    const activeHeadingLevel = [1, 2, 3, 4, 5, 6].find((headingLevel) =>
+      isNodeActive(this.view.state, this.schema.nodes.heading, {
+        level: headingLevel,
+      })
+    );
+
     Object.assign(this.state, {
       inBold: hasMark(this.view.state, this.schema.marks.strong),
       inItalic: hasMark(this.view.state, this.schema.marks.em),
@@ -354,6 +380,10 @@ export default class ProsemirrorTextManipulation {
       inOrderedList: inNode(this.view.state, this.schema.nodes.ordered_list),
       inCodeBlock: inNode(this.view.state, this.schema.nodes.code_block),
       inBlockquote: inNode(this.view.state, this.schema.nodes.blockquote),
+      inHeading: !!activeHeadingLevel,
+      inHeadingLevel: activeHeadingLevel,
+      inParagraph: inNode(this.view.state, this.schema.nodes.paragraph),
+      ...this.customState(this.view.state),
     });
   }
 }
@@ -472,7 +502,7 @@ class ProsemirrorPlaceholderHandler {
       alt: i18n("uploading_filename", { filename: file.name }),
       title: file.id,
       width: 120,
-      "data-placeholder": true,
+      placeholder: true,
     });
 
     this.view.dispatch(
@@ -486,14 +516,12 @@ class ProsemirrorPlaceholderHandler {
   }
 
   progress() {}
+
   progressComplete() {}
 
   cancelAll() {
     this.view.state.doc.descendants((node, pos) => {
-      if (
-        node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"]
-      ) {
+      if (node.type === this.schema.nodes.image && node.attrs.placeholder) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
     });
@@ -503,8 +531,8 @@ class ProsemirrorPlaceholderHandler {
     this.view.state.doc.descendants((node, pos) => {
       if (
         node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"] &&
-        node.attrs?.title === file.id
+        node.attrs.placeholder &&
+        node.attrs.title === file.id
       ) {
         this.view.dispatch(this.view.state.tr.delete(pos, pos + node.nodeSize));
       }
@@ -517,8 +545,8 @@ class ProsemirrorPlaceholderHandler {
     this.view.state.doc.descendants((node, pos) => {
       if (
         node.type === this.schema.nodes.image &&
-        node.attrs["data-placeholder"] &&
-        node.attrs?.title === file.id
+        node.attrs.placeholder &&
+        node.attrs.title === file.id
       ) {
         nodeToReplace = { node, pos };
         return false;

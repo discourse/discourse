@@ -10,6 +10,7 @@ import { isTesting } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import discourseLater from "discourse/lib/later";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import userPresent, {
   onPresenceChange,
   removeOnPresenceChange,
@@ -112,7 +113,7 @@ class PresenceChannel extends EmberObject.extend(Evented) {
   @dependentKeyCompat
   get users() {
     if (this.get("subscribed")) {
-      return this.get("_presenceState.users");
+      return this._presenceState.users;
     }
   }
 
@@ -134,10 +135,11 @@ class PresenceChannel extends EmberObject.extend(Evented) {
 }
 
 class PresenceChannelState extends EmberObject.extend(Evented) {
+  @trackedArray users;
+
   init({ name, presenceService }) {
     super.init(...arguments);
     this.name = name;
-    this.set("users", null);
     this.set("count", null);
     this.set("countOnly", null);
     this.presenceService = presenceService;
@@ -166,7 +168,7 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
 
     this.set("count", initialData.count);
     if (initialData.users) {
-      this.set("users", initialData.users);
+      this.users = initialData.users?.map((u) => User.create(u));
       this.set("countOnly", false);
     } else {
       this.set("users", null);
@@ -230,14 +232,23 @@ class PresenceChannelState extends EmberObject.extend(Evented) {
       (data.entering_users || data.leaving_user_ids)
     ) {
       if (data.entering_users) {
-        const users = data.entering_users.map((u) => User.create(u));
-        this.users.addObjects(users);
+        data.entering_users
+          // filter users that are not already in the list
+          .filter(
+            (enteringUser) =>
+              !this.users.some(
+                (existingUser) => existingUser.id === enteringUser.id
+              )
+          )
+          // include new users in the list
+          .forEach((enteringUser) =>
+            this.users.push(User.create(enteringUser))
+          );
       }
 
       if (data.leaving_user_ids) {
         const leavingIds = new Set(data.leaving_user_ids);
-        const toRemove = this.users.filter((u) => leavingIds.has(u.id));
-        this.users.removeObjects(toRemove);
+        this.users = this.users.filter((u) => !leavingIds.has(u.id));
       }
 
       this.set("count", this.users.length);

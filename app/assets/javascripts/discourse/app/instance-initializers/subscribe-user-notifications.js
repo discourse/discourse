@@ -14,16 +14,19 @@ import {
   register as registerPushNotifications,
   unsubscribe as unsubscribePushNotifications,
 } from "discourse/lib/push-notifications";
+import { currentThemeId } from "discourse/lib/theme-selector";
 import Notification from "discourse/models/notification";
 
 class SubscribeUserNotificationsInit {
+  @service appEvents;
+  @service capabilities;
   @service currentUser;
   @service messageBus;
-  @service store;
-  @service appEvents;
-  @service siteSettings;
-  @service site;
+  @service pmTopicTrackingState;
   @service router;
+  @service site;
+  @service siteSettings;
+  @service store;
 
   constructor(owner) {
     setOwner(this, owner);
@@ -65,6 +68,8 @@ class SubscribeUserNotificationsInit {
     this.messageBus.subscribe("/categories", this.onCategories);
 
     this.messageBus.subscribe("/client_settings", this.onClientSettings);
+
+    this.pmTopicTrackingState.startTracking();
 
     if (!isTesting()) {
       this.messageBus.subscribe(alertChannel(this.currentUser), this.onAlert);
@@ -255,12 +260,20 @@ class SubscribeUserNotificationsInit {
 
   @bind
   onClientSettings(data) {
+    // Theme site setting changes for client settings should only affect users
+    // currently using the same theme.
+    if (data.scoped_to?.theme_id) {
+      if (currentThemeId() !== data.scoped_to.theme_id) {
+        return;
+      }
+    }
+
     this.siteSettings[data.name] = data.value;
   }
 
   @bind
   onAlert(data) {
-    if (this.site.desktopView) {
+    if (!this.capabilities.isMobileDevice) {
       return onDesktopNotification(
         data,
         this.siteSettings,

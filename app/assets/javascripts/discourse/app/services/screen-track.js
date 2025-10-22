@@ -24,7 +24,6 @@ export default class ScreenTrack extends Service {
   @service currentUser;
   @service keyValueStore;
   @service session;
-  @service siteSettings;
   @service topicTrackingState;
 
   _ajaxFailures = 0;
@@ -338,7 +337,7 @@ export default class ScreenTrack extends Service {
     this._lastFlush += diff;
     this._lastTick = now;
 
-    const nextFlush = this.siteSettings.flush_timings_secs * 1000;
+    const nextFlush = 60 * 1000;
 
     const rush = [...this._timings.entries()].some(([postNumber, timing]) => {
       return (

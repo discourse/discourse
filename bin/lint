@@ -1,0 +1,234 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "optparse"
+require "open3"
+require "shellwords"
+
+class LefthookLinter
+  def initialize(options = {})
+    @fix = options[:fix]
+    @recent = options[:recent]
+    @staged = options[:staged]
+    @unstaged = options[:unstaged]
+    @wip = options[:wip]
+    @files = options[:files] || []
+    @verbose = options[:verbose]
+  end
+
+  EVERYTHING = ["ALL FILES"]
+
+  def run
+    files_to_lint = determine_files
+
+    if @fix
+      run_fix_mode(files_to_lint)
+    else
+      run_check_mode(files_to_lint)
+    end
+  end
+
+  private
+
+  def determine_files
+    return recent_files if @recent
+    return staged_files if @staged
+    return unstaged_files if @unstaged
+    return wip_files if @wip
+    return @files if !@files.empty?
+
+    EVERYTHING
+  end
+
+  def recent_files
+    log_output, status = Open3.capture2("git", "log", "-50", "--name-only", "--pretty=format:")
+    return [] unless status.success?
+
+    log_files = log_output.lines.map(&:strip).reject(&:empty?)
+
+    tracked_out, tracked_status = Open3.capture2("git", "ls-files")
+    untracked_out, untracked_status =
+      Open3.capture2("git", "ls-files", "--others", "--exclude-standard")
+    return [] unless tracked_status.success? && untracked_status.success?
+
+    tracked = Set.new(tracked_out.lines.map(&:strip))
+    untracked = Set.new(untracked_out.lines.map(&:strip))
+
+    # Only keep log files that are still tracked, then add all untracked
+    candidates = Set.new
+    log_files.each { |f| candidates << f if tracked.include?(f) }
+    untracked.each { |f| candidates << f }
+
+    candidates.select { |f| File.file?(f) && lintable_file?(f) }
+  end
+
+  def staged_files
+    git_output, status = Open3.capture2("git", "diff", "--cached", "--name-only")
+    return [] unless status.success?
+
+    git_output.lines.map(&:strip).reject(&:empty?).select { |f| File.file?(f) && lintable_file?(f) }
+  end
+
+  def unstaged_files
+    git_output, status = Open3.capture2("git", "diff", "--name-only")
+    return [] unless status.success?
+
+    git_output.lines.map(&:strip).reject(&:empty?).select { |f| File.file?(f) && lintable_file?(f) }
+  end
+
+  def wip_files
+    # Get files changed since main branch
+    main_diff_output, main_status = Open3.capture2("git", "diff", "main...HEAD", "--name-only")
+    main_files = main_status.success? ? main_diff_output.lines.map(&:strip).reject(&:empty?) : []
+
+    # Get staged files
+    staged_output, staged_status = Open3.capture2("git", "diff", "--cached", "--name-only")
+    staged = staged_status.success? ? staged_output.lines.map(&:strip).reject(&:empty?) : []
+
+    # Get unstaged files
+    unstaged_output, unstaged_status = Open3.capture2("git", "diff", "--name-only")
+    unstaged = unstaged_status.success? ? unstaged_output.lines.map(&:strip).reject(&:empty?) : []
+
+    # Combine all files and remove duplicates
+    all_files = Set.new(main_files + staged + unstaged)
+    all_files.select { |f| File.file?(f) && lintable_file?(f) }
+  end
+
+  def lintable_file?(file)
+    # Skip certain directories and files
+    if file.include?("node_modules") || file.include?("vendor") || file.include?("tmp") ||
+         file.include?(".git") || file == "database.yml"
+      return false
+    end
+
+    return true if file == "Gemfile"
+
+    ext = File.extname(file)[1..]
+
+    # Check for Ruby files in /bin/ directory without extensions
+    if ext.nil? || ext.empty?
+      if file.start_with?("bin/") && File.file?(file)
+        begin
+          first_line = File.open(file, &:readline)
+          return true if first_line.strip == "#!/usr/bin/env ruby"
+        rescue StandardError
+          return false
+        end
+      end
+      return false
+    end
+
+    # Check if file extension is lintable
+    lintable_extensions = %w[rb rake js gjs hbs scss css yml yaml thor]
+    lintable_extensions.include?(ext)
+  end
+
+  def run_fix_mode(files)
+    if files == EVERYTHING
+      puts "🔧 Running linters in fix mode on all files" if @verbose
+    else
+      puts "🔧 Running linters in fix mode on #{files.length} file/s" if @verbose
+    end
+
+    if files == EVERYTHING
+      # Run fix-staged on all files (no file filtering)
+      run_lefthook_command("fix-staged", [])
+    elsif files.empty?
+      puts "No files to fix, exiting."
+    else
+      # Run fix-staged on specific files
+      run_lefthook_command("fix-staged", files)
+    end
+  end
+
+  def run_check_mode(files)
+    if files == EVERYTHING
+      puts "🔍 Running linters in check mode on all files" if @verbose
+    else
+      puts "🔍 Running linters in check mode on #{files.length} file/s" if @verbose
+    end
+
+    if files == EVERYTHING
+      run_lefthook_command("lints", [])
+    elsif files.empty?
+      puts "No files to lint, exiting."
+    else
+      run_lefthook_command("pre-commit", files)
+    end
+  end
+
+  def run_lefthook_command(hook_name, files)
+    cmd = ["pnpm", "lefthook", "run", hook_name]
+
+    # Only add file arguments if we have specific files
+    # For lints and fix-staged without files, let lefthook handle all files
+    files.each { |file| cmd << "--file" << file } unless files.empty?
+
+    # Add verbose flag if requested
+    cmd << "--verbose" if @verbose
+
+    puts "Running: #{cmd.shelljoin}" if @verbose
+
+    # Use system to preserve colored output and proper exit codes
+    success = system(*cmd)
+
+    unless success
+      puts "❌ Linting failed"
+      exit 1
+    end
+
+    puts "✅ All linting checks passed" if @verbose
+  end
+end
+
+def parse_options
+  options = {}
+
+  OptionParser
+    .new do |parser|
+      parser.banner = "Usage: bin/lint [options] [files...]"
+
+      parser.on("-h", "--help", "Show this help message") do
+        puts parser
+        puts
+        puts "Examples:"
+        puts "  bin/lint                        # Lint all files"
+        puts "  bin/lint --recent               # Lint recently changed files"
+        puts "  bin/lint --staged               # Lint only staged files"
+        puts "  bin/lint --unstaged             # Lint only unstaged files"
+        puts "  bin/lint --wip                  # Lint staged + unstaged + files changed since main"
+        puts "  bin/lint --fix app.rb file2.js  # Fix specific file/s"
+        puts "  bin/lint app/models/*.rb        # Lint multiple files"
+        puts
+        puts "Note: This script now uses lefthook to run linters."
+        puts "Check lefthook.yml for linting configuration."
+        exit
+      end
+
+      parser.on("-f", "--fix", "Attempt to automatically fix issues") { options[:fix] = true }
+
+      parser.on("-r", "--recent", "Lint recently changed files (last 50 commits)") do
+        options[:recent] = true
+      end
+
+      parser.on("--staged", "Lint only staged files") { options[:staged] = true }
+
+      parser.on("--unstaged", "Lint only unstaged files") { options[:unstaged] = true }
+
+      parser.on("--wip", "Lint work-in-progress: staged + unstaged + files changed since main") do
+        options[:wip] = true
+      end
+
+      parser.on("-v", "--verbose", "Show verbose output") { options[:verbose] = true }
+    end
+    .parse!
+
+  options[:files] = ARGV unless ARGV.empty?
+  options
+end
+
+if __FILE__ == $0
+  options = parse_options
+  linter = LefthookLinter.new(options)
+  linter.run
+end

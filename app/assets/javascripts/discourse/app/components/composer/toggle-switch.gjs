@@ -14,13 +14,34 @@ export default class ComposerToggleSwitch extends Component {
     }
   }
 
-  get label() {
-    const keyboardShortcut = `${translateModKey("ctrl")}+M`;
-    if (this.args.state) {
-      return i18n("composer.switch_to_markdown", { keyboardShortcut });
-    } else {
-      return i18n("composer.switch_to_rich_text", { keyboardShortcut });
+  @action
+  handleKeydown(event) {
+    // forward events to parent handlers (like roving button bar)
+    const result = this.args.onKeydown?.(event);
+    if (result) {
+      event.preventDefault();
     }
+    return result;
+  }
+
+  get label() {
+    if (this.args.state) {
+      return i18n("composer.switch_to_markdown", {
+        keyboardShortcut: this.keyboardShortcut,
+      });
+    } else {
+      return i18n("composer.switch_to_rich_text", {
+        keyboardShortcut: this.keyboardShortcut,
+      });
+    }
+  }
+
+  get keyboardShortcut() {
+    return `${translateModKey("ctrl")} M`;
+  }
+
+  get ariaKeyshortcuts() {
+    return this.keyboardShortcut.replace(/ /g, "+");
   }
 
   <template>
@@ -35,9 +56,11 @@ export default class ComposerToggleSwitch extends Component {
       disabled={{@disabled}}
       aria-checked={{if @state "true" "false"}}
       aria-label={{this.label}}
+      aria-keyshortcuts={{this.ariaKeyshortcuts}}
       title={{this.label}}
       {{! template-lint-disable no-pointer-down-event-binding }}
       {{on "mousedown" this.mouseDown}}
+      {{on "keydown" this.handleKeydown}}
       data-rich-editor={{@state}}
       ...attributes
     >

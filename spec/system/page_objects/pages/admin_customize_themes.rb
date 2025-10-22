@@ -3,8 +3,11 @@
 module PageObjects
   module Pages
     class AdminCustomizeThemes < PageObjects::Pages::AdminBase
-      def visit(id)
-        page.visit("/admin/customize/themes/#{id}")
+      def visit(theme_or_theme_id)
+        page.visit(
+          "/admin/customize/themes/#{theme_or_theme_id.is_a?(Theme) ? theme_or_theme_id.id : theme_or_theme_id}",
+        )
+        self
       end
 
       def has_colors_tab?
@@ -99,6 +102,39 @@ module PageObjects
         has_css?("#{setting_selector(setting_name)} .desc", exact_text: description)
       end
 
+      def has_theme_site_setting?(setting_name)
+        find(theme_site_setting_selector(setting_name)).has_css?(
+          ".setting-label",
+          text: SiteSetting.humanized_name(setting_name),
+        )
+        find(theme_site_setting_selector(setting_name)).has_css?(
+          ".setting-value",
+          text: SiteSetting.description(setting_name),
+        )
+      end
+
+      def has_overridden_theme_site_setting?(setting_name)
+        has_css?(theme_site_setting_selector(setting_name, overridden: true))
+      end
+
+      def has_no_overridden_theme_site_setting?(setting_name)
+        has_no_css?(theme_site_setting_selector(setting_name, overridden: true))
+      end
+
+      def toggle_theme_site_setting(setting_name)
+        find(theme_site_setting_selector(setting_name)).find(
+          ".setting-value input[type='checkbox']",
+        ).click
+        find(theme_site_setting_selector(setting_name)).find(".setting-controls .ok").click
+      end
+
+      def reset_overridden_theme_site_setting(setting_name)
+        find(theme_site_setting_selector(setting_name, overridden: true)).find(
+          ".setting-controls__undo",
+        ).click
+        find(theme_site_setting_selector(setting_name)).find(".setting-controls .ok").click
+      end
+
       def has_no_themes_list?
         has_no_css?(".themes-list-header")
       end
@@ -119,6 +155,11 @@ module PageObjects
           '.back-to-themes-and-components a[href="/admin/config/customize/components"]',
           text: I18n.t("admin_js.admin.config_areas.themes_and_components.components.back"),
         )
+      end
+
+      def click_add_all_themes_button
+        find(".relative-theme-selector .setting-label .btn-link").click
+        find(".setting-controls .ok").click
       end
 
       def has_no_page_header?
@@ -155,8 +196,10 @@ module PageObjects
         find_button("Delete", disabled: true)
       end
 
-      def click_delete_themes_button
-        find(".btn-delete").click
+      def click_delete_button_and_confirm
+        find(".delete").click
+        PageObjects::Components::Dialog.new.click_danger
+        self
       end
 
       def click_edit_objects_theme_setting_button(setting_name)
@@ -209,6 +252,10 @@ module PageObjects
 
       def setting_selector(setting_name, overridden: false)
         "section.theme.settings .setting#{overridden ? ".overridden" : ""}[data-setting=\"#{setting_name}\"]"
+      end
+
+      def theme_site_setting_selector(setting_name, overridden: false)
+        "section.theme.theme-site-settings .setting#{overridden ? ".overridden" : ""}.theme-site-setting[data-setting=\"#{setting_name}\"]"
       end
     end
   end

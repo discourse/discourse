@@ -4,7 +4,7 @@ RSpec.describe PublishedPagesController do
   fab!(:published_page)
   fab!(:admin)
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user2, :user)
 
   context "when enabled" do
     before { SiteSetting.enable_page_publishing = true }

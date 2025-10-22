@@ -33,7 +33,7 @@ cs:
         multi_select:
           title: "Vícenásobný výběr"
         toasts:
-          title: "Přípitky"
+          title: "Toasty"
         font_scale:
           title: "Systém písem"
         colors:
@@ -50,7 +50,7 @@ cs:
         categories:
           title: "Kategorie"
         bread_crumbs:
-          title: "Strouhanka"
+          title: "Bread Crumbs"
         navigation:
           title: "Navigace"
         navigation_bar:
@@ -89,14 +89,14 @@ cs:
           title: "Mapa tématu"
         site_header:
           title: "Záhlaví webu"
-        suggested_topics:
-          title: "Doporučená témata"
+        more_topics:
+          title: "Více témat"
         post_menu:
           title: "Nabídka příspěvku"
         modal:
           title: "Modální"
-          header: "Modální název"
-          footer: "Modální zápatí"
+          header: "Název dialogu"
+          footer: "Zápatí dialogu"
         user_about:
           title: "O uživateli"
         header_icons:

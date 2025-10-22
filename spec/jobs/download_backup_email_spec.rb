@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::DownloadBackupEmail do
-  fab!(:user) { Fabricate(:admin) }
+  fab!(:user, :admin)
 
   it "should work" do
     described_class.new.execute(user_id: user.id, backup_file_path: "http://some.example.test/")

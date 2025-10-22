@@ -172,8 +172,8 @@ RSpec.describe IncomingLinksReport do
 
     fab!(:amy) { Fabricate(:user, username: "amy") }
     fab!(:bob) { Fabricate(:user, username: "bob") }
-    fab!(:post1) { Fabricate(:post) }
-    fab!(:post2) { Fabricate(:post) }
+    fab!(:post1, :post)
+    fab!(:post2, :post)
     let(:topic1) { post1.topic }
     let(:topic2) { post2.topic }
 

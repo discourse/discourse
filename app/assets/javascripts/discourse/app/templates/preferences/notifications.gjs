@@ -2,6 +2,7 @@ import { fn } from "@ember/helper";
 import RouteTemplate from "ember-route-template";
 import DesktopNotificationConfig from "discourse/components/desktop-notification-config";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
 import UserNotificationSchedule from "discourse/components/user-notification-schedule";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -27,6 +28,13 @@ export default RouteTemplate(
           }}
         />
       </div>
+
+      <PreferenceCheckbox
+        @labelKey="user.notify_on_linked_posts"
+        @checked={{@controller.model.user_option.notify_on_linked_posts}}
+        data-setting-name="user-notify-on-linked-posts"
+        class="pref-notify-on-linked-posts"
+      />
     </div>
 
     {{#unless @controller.capabilities.isAppWebview}}

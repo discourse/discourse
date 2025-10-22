@@ -19,7 +19,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
     getOwner(this).register("test-thingy:main", TestThingy);
 
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       api.modifyClass("test-thingy:main", {
         pluginId: "plugin-api-test",
 
@@ -43,7 +43,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
     getOwner(this).register("native-test-thingy:main", NativeTestThingy);
 
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       api.modifyClass("native-test-thingy:main", {
         pluginId: "plugin-api-test",
 
@@ -72,7 +72,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
       instantiate: false,
     });
 
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       api.modifyClass("class-test-thingy:main", {
         pluginId: "plugin-api-test",
 
@@ -102,7 +102,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
     // https://github.com/emberjs/ember.js/blob/36505f1b42/packages/%40ember/-internals/runtime/lib/system/core_object.js#L1144-L1163
     // Which in turn invokes `factory.proto()`.
     // This puts things in a state which will trigger https://github.com/emberjs/ember.js/issues/18860 when a native getter is overridden.
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       api.modifyClass("test-class:main", {
         pluginId: "plugin-api-test",
 
@@ -135,7 +135,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
     getOwner(this).register("test-thingy:main", TestThingy);
 
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       api.modifyClass(
         "test-thingy:main",
         (Superclass) =>
@@ -189,7 +189,7 @@ module("Unit | Utility | plugin-api", function (hooks) {
     getOwner(this).register("test-thingy:main", TestThingy);
 
     const fakeInit = () => {
-      withPluginApi("1.1.0", (api) => {
+      withPluginApi((api) => {
         api.modifyClass("test-thingy:main", {
           someMethod() {
             return `${this._super()} reopened`;

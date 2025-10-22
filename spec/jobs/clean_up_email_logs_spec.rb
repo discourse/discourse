@@ -7,7 +7,7 @@ RSpec.describe Jobs::CleanUpEmailLogs do
 
   let!(:skipped_email_log) { Fabricate(:skipped_email_log, created_at: 2.years.ago) }
 
-  fab!(:skipped_email_log2) { Fabricate(:skipped_email_log) }
+  fab!(:skipped_email_log2, :skipped_email_log)
 
   it "removes old email logs" do
     Jobs::CleanUpEmailLogs.new.execute({})

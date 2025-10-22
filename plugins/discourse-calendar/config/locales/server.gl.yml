@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+gl:
+  reports:
+    currently_away:
+      labels:
+        username: Nome de usuario
+  discourse_post_event:
+    errors:
+      bulk_invite:
+        error: "Houbo un erro ao cargar o ficheiro. Ténteo máis tarde."

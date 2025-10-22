@@ -5,7 +5,7 @@
   flex-grow: 1;
   max-width: 100%;
 
-  &--rich-editor-enabled .d-editor-textarea-wrapper textarea.d-editor-input {
+  .d-editor-textarea-wrapper textarea.d-editor-input.--markdown-monospace {
     font-family: var(--d-font-family--monospace);
     font-variant-ligatures: none;
 
@@ -318,15 +318,19 @@
   flex-direction: row;
   flex-wrap: wrap;
   gap: var(--space-2);
-  align-items: center;
   margin: 0.25rem 0;
 
-  .composer-toggle-switch {
-    padding: 0 0.5rem;
-  }
-
   @include viewport.until(sm) {
-    font-size: var(--font-down-1-rem);
+    flex-wrap: nowrap;
+    padding-block: var(--space-1);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-width: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .btn:focus-visible {
@@ -345,10 +349,12 @@
 
     .discourse-no-touch & {
       &:hover {
-        background-color: var(--primary-low);
+        background-color: var(--d-hover);
 
         .d-icon {
-          color: var(--primary-medium);
+          color: var(
+            --primary-high
+          ); // to remove when btn hover variable is scoped better
         }
       }
     }
@@ -397,6 +403,10 @@
       color: var(--primary-high);
     }
   }
+
+  &.-expanded {
+    background: var(--d-hover);
+  }
 }
 
 .d-editor #form-template-form {
@@ -427,14 +437,13 @@
     }
   }
 
-  .d-editor-preview .d-editor-translation-preview-wrapper {
+  .d-editor-translation-preview-wrapper {
     --translation-preview-padding: 1rem;
     box-sizing: border-box;
     border: var(--d-input-border);
     border-radius: var(--d-border-radius);
     padding: var(--translation-preview-padding);
     position: relative;
-    height: 100%;
     padding-top: calc(var(--translation-preview-padding) * 2);
 
     &__header {

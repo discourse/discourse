@@ -74,7 +74,7 @@ class SidebarSectionsController < ApplicationController
   rescue ActiveRecord::NestedAttributes::TooManyRecords => e
     render_json_error(e.message)
   rescue Discourse::InvalidAccess
-    render json: failed_json, status: 403
+    render json: failed_json, status: :forbidden
   end
 
   def reset
@@ -102,7 +102,7 @@ class SidebarSectionsController < ApplicationController
 
     render json: success_json
   rescue Discourse::InvalidAccess
-    render json: failed_json, status: 403
+    render json: failed_json, status: :forbidden
   end
 
   def section_params

@@ -9,11 +9,11 @@ RSpec.describe Chat::LookupThread do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
     fab!(:private_channel) { Fabricate(:private_category_channel, group: Fabricate(:group)) }
     fab!(:thread) { Fabricate(:chat_thread, channel: channel) }
-    fab!(:other_thread) { Fabricate(:chat_thread) }
+    fab!(:other_thread, :chat_thread)
 
     let(:guardian) { Guardian.new(current_user) }
     let(:params) { { thread_id: thread.id, channel_id: thread.channel_id } }

@@ -5,7 +5,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("home-logo-minimized transformer", function () {
   test("can force minimize the logo", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer("home-logo-minimized", () => true);
     });
 
@@ -14,7 +14,7 @@ acceptance("home-logo-minimized transformer", function () {
   });
 
   test("can force un-minimize the logo", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer("home-logo-minimized", () => false);
     });
 

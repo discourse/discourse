@@ -81,22 +81,20 @@ acceptance("Admin Sidebar - Sections", function (needs) {
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 });
 
-    await fillIn(".admin-reports-header__filter", "flags");
+    await fillIn(".admin-filter-controls__input", "flags");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .doesNotExist();
 
-    await click(
-      ".sidebar-section-link[data-link-name='admin_login_and_authentication']"
-    );
+    await click(".sidebar-section-link[data-link-name='admin_login']");
     await click(".sidebar-section-link[data-link-name='admin_all_reports']");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
       .exists({ count: 1 }, "navigating back and forth resets filter");
 
-    await fillIn(".admin-reports-header__filter", "activities");
+    await fillIn(".admin-filter-controls__input", "activities");
 
     assert
       .dom(".admin-reports-list .admin-section-landing-item__content")
@@ -111,7 +109,7 @@ acceptance("Admin Sidebar - Sections - Plugin API", function (needs) {
   });
 
   needs.hooks.beforeEach(() => {
-    withPluginApi("1.24.0", (api) => {
+    withPluginApi((api) => {
       api.addAdminSidebarSectionLink("root", {
         name: "test_section_link",
         label: "admin.plugins.title",
@@ -236,7 +234,7 @@ acceptance(
       _locale = I18n.locale;
       I18n.locale = "fr_FOO";
 
-      withPluginApi("1.24.0", (api) => {
+      withPluginApi((api) => {
         api.addAdminSidebarSectionLink("root", {
           name: "test_section_link",
           label: "admin.plugins.title",

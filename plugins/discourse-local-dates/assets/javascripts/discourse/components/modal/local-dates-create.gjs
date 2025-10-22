@@ -1,16 +1,17 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import EmberObject, { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
+import { htmlSafe } from "@ember/template";
 import { observes } from "@ember-decorators/object";
 import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import TextField from "discourse/components/text-field";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import { propertyNotEqual } from "discourse/lib/computed";
 import computed, { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";

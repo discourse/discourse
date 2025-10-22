@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import DModal from "discourse/components/d-modal";
+import FilterInput from "discourse/components/filter-input";
 import { extraKeyboardShortcutsHelp } from "discourse/lib/keyboard-shortcuts";
 import { translateModKey } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -13,9 +16,8 @@ const ALT = translateModKey("Alt");
 const META = translateModKey("Meta");
 const CTRL = i18n("shortcut_modifier_key.ctrl");
 const ENTER = i18n("shortcut_modifier_key.enter");
-
+const ESC = i18n("shortcut_modifier_key.esc");
 const COMMA = i18n(`${KEY}.shortcut_key_delimiter_comma`);
-const PLUS = i18n(`${KEY}.shortcut_key_delimiter_plus`);
 
 const translationForExtraShortcuts = {
   shift: SHIFT,
@@ -24,13 +26,20 @@ const translationForExtraShortcuts = {
   ctrl: CTRL,
   enter: ENTER,
   comma: COMMA,
-  plus: PLUS,
 };
 
-function buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter) {
+function buildHTML(keys1, keys2, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
-    .reject((keys) => keys.length === 0)
-    .map((keys) => keys.map((k) => `<kbd>${k}</kbd>`).join(keysDelimiter))
+    .filter((keys) => keys.length !== 0)
+    .map((keys) =>
+      keys
+        .map((key) => {
+          // Turns e.g. c into C and esc into Esc
+          key = key.charAt(0).toUpperCase() + key.slice(1);
+          return `<kbd>${key}</kbd>`;
+        })
+        .join(" ")
+    )
     .map((keys) =>
       shortcutsDelimiter !== "space" && shortcutsDelimiter !== "newline"
         ? wrapInSpan(keys, shortcutsDelimiter)
@@ -67,16 +76,18 @@ function wrapInSpan(shortcut, delimiter) {
 
 function buildShortcut(
   key,
-  { keys1 = [], keys2 = [], keysDelimiter = COMMA, shortcutsDelimiter = "or" }
+  { keys1 = [], keys2 = [], shortcutsDelimiter = "or" }
 ) {
   const context = {
-    shortcut: buildHTML(keys1, keys2, keysDelimiter, shortcutsDelimiter),
+    shortcut: buildHTML(keys1, keys2, shortcutsDelimiter),
   };
   return i18n(`${KEY}.${key}`, context);
 }
 
 export default class KeyboardShortcutsHelp extends Component {
   @service currentUser;
+
+  @tracked searchTerm = "";
 
   get shortcuts() {
     let shortcuts = {
@@ -97,20 +108,16 @@ export default class KeyboardShortcutsHelp extends Component {
           search: buildShortcut("application.search", {
             keys1: ["/"],
             keys2: [CTRL, ALT, "f"],
-            keysDelimiter: PLUS,
           }),
           filter_sidebar: buildShortcut("application.filter_sidebar", {
             keys1: [META, "/"],
-            keysDelimiter: PLUS,
           }),
           help: buildShortcut("application.help", { keys1: ["?"] }),
           bulk_select: buildShortcut("application.toggle_bulk_select", {
             keys1: [SHIFT, "b"],
-            keysDelimiter: PLUS,
           }),
           dismiss: buildShortcut("application.dismiss", {
             keys1: [SHIFT, "d"],
-            keysDelimiter: PLUS,
           }),
           x: buildShortcut("application.x", {
             keys1: ["x"],
@@ -118,7 +125,6 @@ export default class KeyboardShortcutsHelp extends Component {
           log_out: buildShortcut("application.log_out", {
             keys1: [SHIFT, "z"],
             keys2: [SHIFT, "z"],
-            keysDelimiter: PLUS,
             shortcutsDelimiter: "space",
           }),
         },
@@ -133,17 +139,14 @@ export default class KeyboardShortcutsHelp extends Component {
           }),
           reply_topic: buildShortcut("actions.reply_topic", {
             keys1: [SHIFT, "r"],
-            keysDelimiter: PLUS,
           }),
           reply_post: buildShortcut("actions.reply_post", { keys1: ["r"] }),
           quote_post: buildShortcut("actions.quote_post", { keys1: ["q"] }),
           pin_unpin_topic: buildShortcut("actions.pin_unpin_topic", {
             keys1: [SHIFT, "p"],
-            keysDelimiter: PLUS,
           }),
           share_topic: buildShortcut("actions.share_topic", {
             keys1: [SHIFT, "s"],
-            keysDelimiter: PLUS,
           }),
           share_post: buildShortcut("actions.share_post", { keys1: ["s"] }),
           like: buildShortcut("actions.like", { keys1: ["l"] }),
@@ -165,15 +168,12 @@ export default class KeyboardShortcutsHelp extends Component {
           }),
           print: buildShortcut("actions.print", {
             keys1: [META, "p"],
-            keysDelimiter: PLUS,
           }),
           defer: buildShortcut("actions.defer", {
             keys1: [SHIFT, "u"],
-            keysDelimiter: PLUS,
           }),
           topic_admin_actions: buildShortcut("actions.topic_admin_actions", {
             keys1: [SHIFT, "a"],
-            keysDelimiter: PLUS,
           }),
           archive_private_message: buildShortcut(
             "actions.archive_private_message",
@@ -199,12 +199,10 @@ export default class KeyboardShortcutsHelp extends Component {
           next_prev: buildShortcut("navigation.next_prev", {
             keys1: [SHIFT, "j"],
             keys2: [SHIFT, "k"],
-            keysDelimiter: PLUS,
             shortcutsDelimiter: "slash",
           }),
           go_to_unread_post: buildShortcut("navigation.go_to_unread_post", {
             keys1: [SHIFT, "l"],
-            keysDelimiter: PLUS,
           }),
         },
       },
@@ -212,15 +210,57 @@ export default class KeyboardShortcutsHelp extends Component {
         shortcuts: {
           return: buildShortcut("composing.return", {
             keys1: [SHIFT, "c"],
-            keysDelimiter: PLUS,
           }),
           fullscreen: buildShortcut("composing.fullscreen", {
             keys1: [SHIFT, "F11"],
-            keysDelimiter: PLUS,
+          }),
+          minimize: buildShortcut("composing.minimize", {
+            keys1: [ESC],
+          }),
+          create_or_reply: buildShortcut("composing.create_or_reply", {
+            keys1: [META, ENTER],
           }),
           insertCurrentTime: buildShortcut("composing.insert_current_time", {
             keys1: [META, SHIFT, "."],
-            keysDelimiter: PLUS,
+          }),
+          bold: buildShortcut("composing.bold", {
+            keys1: [META, "b"],
+          }),
+          italic: buildShortcut("composing.italic", {
+            keys1: [META, "i"],
+          }),
+          link: buildShortcut("composing.link", {
+            keys1: [META, "k"],
+          }),
+          preformatted: buildShortcut("composing.preformatted", {
+            keys1: [META, "e"],
+          }),
+          paragraph: buildShortcut("composing.paragraph", {
+            keys1: [META, ALT, "0"],
+          }),
+          heading1: buildShortcut("composing.heading_1", {
+            keys1: [META, ALT, "1"],
+          }),
+          heading2: buildShortcut("composing.heading_2", {
+            keys1: [META, ALT, "2"],
+          }),
+          heading3: buildShortcut("composing.heading_3", {
+            keys1: [META, ALT, "3"],
+          }),
+          heading4: buildShortcut("composing.heading_4", {
+            keys1: [META, ALT, "4"],
+          }),
+          toggleDirection: buildShortcut("composing.toggle_direction", {
+            keys1: [META, SHIFT, "6"],
+          }),
+          orderedList: buildShortcut("composing.ordered_list", {
+            keys1: [META, SHIFT, "7"],
+          }),
+          unorderedList: buildShortcut("composing.unordered_list", {
+            keys1: [META, SHIFT, "8"],
+          }),
+          blockquote: buildShortcut("composing.blockquote", {
+            keys1: [META, SHIFT, "9"],
           }),
         },
       },
@@ -265,7 +305,6 @@ export default class KeyboardShortcutsHelp extends Component {
           }),
           full_page_search: buildShortcut("search_menu.full_page_search", {
             keys1: [META, "Enter"],
-            keysDelimiter: PLUS,
           }),
         },
       },
@@ -275,7 +314,6 @@ export default class KeyboardShortcutsHelp extends Component {
       shortcuts: {
         admin_search_open: buildShortcut("admin.search_open", {
           keys1: [META, "/"],
-          keysDelimiter: PLUS,
         }),
         admin_search_prev_next: buildShortcut("admin.search_prev_next", {
           keys1: ["&uarr;"],
@@ -291,6 +329,39 @@ export default class KeyboardShortcutsHelp extends Component {
     this._buildExtraShortcuts(shortcuts);
     this._addCountsToShortcutCategories(shortcuts);
     return shortcuts;
+  }
+
+  @action
+  filterShortcuts(event) {
+    this.searchTerm = event.target.value.toLowerCase().trim();
+  }
+
+  get filteredShortcuts() {
+    return Object.entries(this.shortcuts).reduce(
+      (acc, [category, shortcutCategory]) => {
+        const filteredShortcuts = Object.entries(
+          shortcutCategory.shortcuts
+        ).reduce((shortcutsAcc, [name, shortcut]) => {
+          if (
+            this.searchTerm === "" ||
+            name.toLowerCase().includes(this.searchTerm) ||
+            shortcut.toLowerCase().includes(this.searchTerm)
+          ) {
+            shortcutsAcc[name] = shortcut;
+          }
+          return shortcutsAcc;
+        }, {});
+
+        if (Object.keys(filteredShortcuts).length > 0) {
+          acc[category] = {
+            ...shortcutCategory,
+            shortcuts: filteredShortcuts,
+          };
+        }
+        return acc;
+      },
+      {}
+    );
   }
 
   _buildExtraShortcuts(shortcuts) {
@@ -385,10 +456,18 @@ export default class KeyboardShortcutsHelp extends Component {
     >
       <:body>
         <div id="keyboard-shortcuts-help">
+
+          <FilterInput
+            @filterAction={{this.filterShortcuts}}
+            @value={{this.searchTerm}}
+            placeholder={{i18n "keyboard_shortcuts_help.search_placeholder"}}
+          />
+
           <div class="keyboard-shortcuts-help__container">
             <span tabindex="0"></span>
+
             {{! A11Y, allows keyboard users to scroll modal body }}
-            {{#each-in this.shortcuts as |category shortcutCategory|}}
+            {{#each-in this.filteredShortcuts as |category shortcutCategory|}}
               <section
                 class="shortcut-category span-{{shortcutCategory.count}}
                   shortcut-category-{{category}}"

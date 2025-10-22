@@ -12,9 +12,9 @@ RSpec.describe Users::DiscourseIdController do
   end
 
   before do
-    SiteSetting.enable_discourse_id = true
     SiteSetting.discourse_id_client_id = SecureRandom.hex
     SiteSetting.discourse_id_client_secret = SecureRandom.hex
+    SiteSetting.enable_discourse_id = true
   end
 
   describe "#revoke" do

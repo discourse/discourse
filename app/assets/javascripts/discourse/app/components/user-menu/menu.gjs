@@ -377,6 +377,7 @@ export default class UserMenu extends Component {
               @closeUserMenu={{@closeUserMenu}}
               @filterByTypes={{this.currentNotificationTypes}}
               @ariaLabelledby={{concat "user-menu-button-" this.currentTabId}}
+              @class={{concat "user-menu-button-" this.currentTabId}}
             />
           </div>
         </div>

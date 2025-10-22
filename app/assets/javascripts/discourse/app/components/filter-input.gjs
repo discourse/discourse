@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { modifier } from "ember-modifier";
 import concatClass from "discourse/helpers/concat-class";
@@ -39,10 +38,11 @@ export default class FilterInput extends Component {
         {{icon @icons.left class="-left"}}
       {{/if}}
 
-      <Input
+      <input
         {{this.focusState}}
         {{on "input" (if @filterAction @filterAction (noop))}}
-        @value={{@value}}
+        type="text"
+        value={{@value}}
         class="filter-input"
         ...attributes
       />

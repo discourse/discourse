@@ -1,0 +1,60 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_patreon: "Discourse Patreon"
+  js:
+    login:
+      patreon:
+        name: Patreon
+        title: Prihláste sa cez Patreon
+    patreon:
+      title: 'Patreon'
+      header:
+        rules: 'Filtre'
+      group: 'Skupina'
+      rewards: 'Odmena'
+      filter: 'Filter'
+      help_text: 'Skupinu Discourse môžete synchronizovať s jednou alebo viacerými úrovňami odmien Patreon.'
+      last_synced: 'Posledná synchronizácia'
+      edit: 'Upraviť'
+      delete: 'Odstrániť'
+      save: 'Uložiť'
+      update_data: 'Aktualizácia údajov Patreonu a synchronizácia skupín'
+      refresh_page: 'Nové údaje boli stiahnuté z rozhrania API služby Patreon. Prosím, obnovte stránku.'
+      select_group: 'Vyberte skupinu'
+      field:
+        id: "Id"
+        email: "Email"
+        amount_cents: "Suma (v centoch)"
+        rewards: "Odmena"
+        declined_since: "Odmietnutý prísľub"
+        more_details:
+          label: "Platby a ďalšie podrobnosti"
+          help_text:
+            email_available: "Prejdite na pravú dolnú časť stránky a pozrite si históriu záväzkov tohto Patreonu."
+            email_not_available: "Vyberte člena Patreon a prejdite do pravej dolnej časti stránky, aby ste videli históriu prísľubov."
+      donation_prompt:
+        body: |
+          <h1>Ahoj čitateľ!</h1>
+
+          <p>Páči sa vám naša webová stránka? Chceli by ste prispieť na dobrú vec?</p>
+
+          <p>
+            Ak považujete našu webovú stránku za užitočnú a páči sa vám komunita, ktorú sme vytvorili, budeme radi, ak nám prispejete na našu webovú stránku.
+            Príspevky udržiavajú naše služby v bezproblémovom chode a zabezpečujú, že naša komunita bude fungovať aj v nasledujúcich rokoch.
+            Každý dolár sa počíta a bude použitý na dobré účely. </p> <p>
+          </p>
+
+          </p>Ďakujeme za vašu podporu!<p>
+
+          <p>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Staňte sa mecenášom</a>
+          </p>

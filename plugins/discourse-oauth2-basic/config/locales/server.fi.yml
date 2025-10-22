@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fi:
+  login:
+    authenticator_error_fetch_user_details: "Käyttäjätietojasi ei löytynyt. Oletko varma, että tilisi on aktiivinen?"
+  site_settings:
+    oauth2_enabled: "Mukautettu OAuth2 on käytössä"
+    oauth2_client_id: "Mukautetun OAuth2:n asiakastunnus"
+    oauth2_client_secret: "Mukautetun OAuth2:n asiakkaan salatunnus"
+    oauth2_authorize_url: "OAuth2:n valtuutuksen URL-osoite"
+    oauth2_authorize_signup_url: '(valinnainen) Vaihtoehtoinen valtuutus-URL, jota käytetään, kun Rekisteröidy-painiketta käytetään'
+    oauth2_token_url: "OAuth2:n tunnuksen URL-osoite"
+    oauth2_token_url_method: "Tunnuksen URL-osoitteen hakemiseen käytetty menetelmä"
+    oauth2_callback_user_id_path: "Polku tunnuksen vastauksessa käyttäjätunnukseen. esim.: params.info.uuid"
+    oauth2_callback_user_info_paths: "Polut tunnuksen vastauksessa muille käyttäjän ominaisuuksille. Tuetut ominaisuudet ovat name, username, email, email_verified ja avatar. Muoto on ominaisuus:polku, esim.: name:params.info.name"
+    oauth2_fetch_user_details: "Hae käyttäjän JSON OAuth2:lle"
+    oauth2_user_json_url: "URL-osoite käyttäjän JSON:n hakemiseksi OAuth2:ta varten (huomaa, että korvaamme :id:n OAuth-kutsun palauttamalla id-tunnuksella ja :tokenin token-tunnuksella)"
+    oauth2_user_json_url_method: "Käyttäjän JSON:n URL-osoitteen hakemiseen käytetty menetelmä"
+    oauth2_json_user_id_path: "Polku OAuth2:n käyttäjän JSON:ssä käyttäjätunnukseen. esim.: user.id"
+    oauth2_json_username_path: "Polku OAuth2:n käyttäjän JSON:ssä käyttäjänimeen. esim.: user.username"
+    oauth2_json_name_path: "Polku OAuth2:n käyttäjän JSON:ssä käyttäjän koko nimeen. esim.: user.name.full"
+    oauth2_json_email_path: "Polku OAuth2:n käyttäjän JSON:ssä käyttäjän sähköpostiosoitteeseen. esim.: user.email"
+    oauth2_json_email_verified_path: "Polku OAuth2:n käyttäjän JSON:ssä käyttäjän sähköpostin vahvistustilaan. Esim.: user.email.verified. oauth2_email_verified täytyy poistaa käytöstä, jotta tällä asetuksella olisi vaikutusta."
+    oauth2_json_avatar_path: "Polku OAuth2:n käyttäjän JSON:ssä käyttäjän avatariin. esim.: user.avatar_url"
+    oauth2_email_verified: "Tarkasta, onko tämä OAuth2 sivusto varmistanut sähköpostin"
+    oauth2_overrides_email: "Ohita Discoursen sähköpostiosoite etäsähköpostilla jokaisen kirjautumisen yhteydessä. Toimii samalla tavalla kuin `auth_overrides_email`-asetus, mutta koskee OAuth2-kirjautumisia."
+    oauth2_send_auth_header: "Lähetä asiakkaan tunnistetiedot HTTP Authorization -otsikkotiedoissa"
+    oauth2_send_auth_body: "Lähetä asiakkaan tunnistetiedot pyynnön tekstiosassa"
+    oauth2_debug_auth: "Sisällytä lokeihin laajat virheenkorjaustiedot"
+    oauth2_authorize_options: "Pyydä näitä vaihtoehtoja valtuutuksen yhteydessä"
+    oauth2_scope: "Pyydä tätä aluetta valtuutuksen yhteydessä"
+    oauth2_button_title: "Teksti OAuth2-painiketta varten"
+    oauth2_allow_association_change: Salli käyttäjien yhdistää Discourse-tilinsä OAuth2-palveluntarjoajaan ja katkaista niiden yhteys
+    oauth2_disable_csrf: "Poista CSRF-tarkistus käytöstä"
+    errors:
+      oauth2_fetch_user_details: "oauth2_callback_user_id_path täytyy olla määritetty, jotta oauth2_fetch_user_details voidaan poistaa käytöstä"

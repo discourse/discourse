@@ -4,16 +4,17 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import getURL from "discourse/lib/get-url";
-import { deepMerge } from "discourse/lib/object";
 import { emojiUnescape } from "discourse/lib/text";
+import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import { userPath } from "discourse/lib/url";
-import userSearch from "discourse/lib/user-search";
+import userSearch, { validateSearchResult } from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import User from "discourse/models/user";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import categoryTagAutocomplete from "./autocomplete/category-tag";
 import userAutocomplete from "./autocomplete/user";
@@ -26,8 +27,9 @@ const logSearchLinkClickedCallbacks = [];
 export function addLogSearchLinkClickedCallbacks(fn) {
   logSearchLinkClickedCallbacks.push(fn);
 }
+
 export function resetLogSearchLinkClickedCallbacks() {
-  logSearchLinkClickedCallbacks.clear();
+  logSearchLinkClickedCallbacks.length = 0;
 }
 
 export function addSearchResultsCallback(callback) {
@@ -67,9 +69,11 @@ export function translateResults(results, opts) {
 
   results.categories = results.categories
     .map(function (category) {
-      return Category.list().findBy("id", category.id || category.model.id);
+      return Category.list().find(
+        (c) => c.id === (category.id || category.model.id)
+      );
     })
-    .compact();
+    .filter((item) => item != null);
 
   results.grouped_search_result?.extra?.categories?.forEach((category) =>
     Site.current().updateCategory(category)
@@ -95,7 +99,7 @@ export function translateResults(results, opts) {
         url: getURL(`/g/${name}`),
       };
     })
-    .compact();
+    .filter((item) => item != null);
 
   results.tags = results.tags
     .map(function (tag) {
@@ -105,7 +109,7 @@ export function translateResults(results, opts) {
         url: getURL("/tag/" + tagName),
       });
     })
-    .compact();
+    .filter((item) => item != null);
 
   return translateResultsCallbacks
     .reduce(
@@ -223,30 +227,39 @@ export function isValidSearchTerm(searchTerm, siteSettings) {
   }
 }
 
-export function applySearchAutocomplete($input, siteSettings) {
-  $input.autocomplete(
-    deepMerge({
+export function applySearchAutocomplete(inputElement, siteSettings, owner) {
+  const autocompleteHandler = new TextareaAutocompleteHandler(inputElement);
+  DAutocompleteModifier.setupAutocomplete(
+    owner,
+    inputElement,
+    autocompleteHandler,
+    {
       template: categoryTagAutocomplete,
       key: "#",
-      width: "100%",
-      treatAsTextarea: true,
       autoSelectFirstSuggestion: false,
       transformComplete: (obj) => obj.text,
       dataSource: (term) => searchCategoryTag(term, siteSettings),
-    })
+      fixedTextareaPosition: true,
+      offset: 2,
+    }
   );
-
   if (siteSettings.enable_mentions) {
-    $input.autocomplete(
-      deepMerge({
+    DAutocompleteModifier.setupAutocomplete(
+      owner,
+      inputElement,
+      autocompleteHandler,
+      {
         template: userAutocomplete,
         key: "@",
-        width: "100%",
-        treatAsTextarea: true,
         autoSelectFirstSuggestion: false,
-        transformComplete: (v) => v.username || v.name,
+        transformComplete: (v) => {
+          validateSearchResult(v);
+          return v.username || v.name;
+        },
         dataSource: (term) => userSearch({ term, includeGroups: true }),
-      })
+        fixedTextareaPosition: true,
+        offset: 2,
+      }
     );
   }
 }
@@ -259,7 +272,7 @@ export function updateRecentSearches(currentUser, term) {
   let recentSearches = Object.assign(currentUser.recent_searches || []);
 
   if (recentSearches.includes(term)) {
-    recentSearches = recentSearches.without(term);
+    recentSearches = recentSearches.filter((item) => item !== term);
   } else if (recentSearches.length === MAX_RECENT_SEARCHES) {
     recentSearches.popObject();
   }

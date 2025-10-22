@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
@@ -5,7 +6,6 @@ import { observes, on } from "@ember-decorators/object";
 
 @classNames("contents")
 export default class DiscoveryTopicsList extends Component {
-  @service appEvents;
   @service documentTitle;
 
   @on("didInsertElement")

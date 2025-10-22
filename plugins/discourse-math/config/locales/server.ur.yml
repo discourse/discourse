@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  site_settings:
+    discourse_math_enabled: "ڈسکورس ریاضی پلگ اِن فعال کریں ($ اور $$ بلاکس کیلئے خصوصی پروسیسنگ شامل کردی جائیگی)"
+    discourse_math_provider: "ڈیفالٹ ریاضی رَینڈرِنگ فراہم کنندہ"
+    discourse_math_zoom_on_hover: "ہَووَر پر 200% زوم کریں (صرف مَیتھ جَیکس)"
+    discourse_math_enable_accessibility: "سائی کی خصوصیات فعال کریں (صرف مَیتھ جَیکس)"
+    discourse_math_enable_asciimath: "asciimath فعال کریں (٪ ڈیلیمٹیڈ اِن پٹ پر خصوصی پروسیسنگ شامل کرے گا) (صرف مَیتھ جَیکس)"

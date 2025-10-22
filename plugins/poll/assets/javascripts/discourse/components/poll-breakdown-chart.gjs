@@ -1,9 +1,13 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { mapBy } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
+import loadChartJS, {
+  loadChartJSDatalabels,
+} from "discourse/lib/load-chart-js";
 import I18n from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
@@ -36,11 +40,19 @@ export default class PollBreakdownChart extends Component {
     }
   }
 
-  didInsertElement() {
+  async didInsertElement() {
     super.didInsertElement(...arguments);
 
     const canvas = this.element.querySelector("canvas");
-    this._chart = new window.Chart(canvas.getContext("2d"), this.chartConfig);
+
+    const [Chart, ChartDataLabelsPlugin] = await Promise.all([
+      loadChartJS(),
+      loadChartJSDatalabels(),
+    ]);
+    this._chart = new Chart(canvas.getContext("2d"), {
+      ...this.chartConfig,
+      plugins: [ChartDataLabelsPlugin],
+    });
   }
 
   didReceiveAttrs() {
@@ -78,7 +90,6 @@ export default class PollBreakdownChart extends Component {
 
     return {
       type: PIE_CHART_TYPE,
-      plugins: [window.ChartDataLabels],
       data: {
         datasets: [
           {

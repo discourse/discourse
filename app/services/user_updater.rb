@@ -26,8 +26,10 @@ class UserUpdater
     enable_quoting
     enable_smart_lists
     enable_defer
+    enable_markdown_monospace_font
     color_scheme_id
     dark_scheme_id
+    interface_color_mode
     dynamic_favicon
     automatically_unpin_topics
     digest_after_minutes
@@ -37,6 +39,7 @@ class UserUpdater
     email_previous_replies
     email_in_reply_to
     like_notification_frequency
+    notify_on_linked_posts
     include_tl0_in_digests
     theme_ids
     allow_private_messages
@@ -55,6 +58,7 @@ class UserUpdater
     sidebar_show_count_of_new_items
     watched_precedence_over_muted
     topics_unread_when_closed
+    composition_mode
   ]
 
   NOTIFICATION_SCHEDULE_ATTRS = -> do
@@ -110,7 +114,7 @@ class UserUpdater
       user_notification_schedule.assign_attributes(attributes[:user_notification_schedule])
     end
 
-    old_user_name = user.name.present? ? user.name : ""
+    old_user_name = user.name.presence || ""
 
     user.name = attributes.fetch(:name) { user.name } if guardian.can_edit_name?(user)
 

@@ -42,8 +42,6 @@ class PresenceController < ApplicationController
   end
 
   def update
-    raise Discourse::ReadOnly if @readonly_mode
-
     client_id = params[:client_id]
     if !client_id.is_a?(String) || client_id.blank?
       raise Discourse::InvalidParameters.new(:client_id)

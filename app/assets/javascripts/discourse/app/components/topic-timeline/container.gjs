@@ -278,9 +278,8 @@ export default class TopicTimelineScrollArea extends Component {
 
     let date;
     if (daysAgo === undefined) {
-      const post = postStream.posts.findBy(
-        "id",
-        postStream.stream[this.current]
+      const post = postStream.posts.find(
+        (p) => p.id === postStream.stream[this.current]
       );
 
       if (post) {
@@ -427,11 +426,13 @@ export default class TopicTimelineScrollArea extends Component {
     const prevDockAt = this.dockAt;
     const positionTop = headerOffset() + window.pageYOffset;
     const currentPosition = positionTop + timelineHeight;
+    const postStream = this.args.model.postStream;
+    const allPostsLoaded = postStream.loadedAllPosts;
 
     this.dockBottom = false;
     if (positionTop < this.topicTop) {
       this.dockAt = parseInt(this.topicTop, 10);
-    } else if (currentPosition > this.topicBottom) {
+    } else if (allPostsLoaded && currentPosition > this.topicBottom) {
       this.dockAt = parseInt(this.topicBottom - timelineHeight, 10);
       this.dockBottom = true;
       if (this.dockAt < 0) {
@@ -648,7 +649,7 @@ export default class TopicTimelineScrollArea extends Component {
             @icon="layer-group"
             @label="summary.short_label"
             title={{i18n "summary.short_title"}}
-            class="show-summary btn-small"
+            class="show-summary btn-default btn-small"
           />
         {{/if}}
 

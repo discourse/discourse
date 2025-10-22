@@ -3,7 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { setComponentTemplate } from "@ember/component";
 import templateOnly from "@ember/component/template-only";
 import { assert } from "@ember/debug";
-import { createWidgetFrom } from "discourse/widgets/widget";
+import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import {
+  createWidgetFrom,
+  warnWidgetsDeprecation,
+} from "discourse/widgets/widget";
 
 const INITIAL_CLASSES = Symbol("RENDER_GLIMMER_INITIAL_CLASSES");
 
@@ -213,6 +217,19 @@ RenderGlimmer.prototype.type = "Widget";
  * @param template - a glimmer template compiled via ember-cli-htmlbars
  */
 export function registerWidgetShim(name, tagName, template) {
+  if (
+    getOwnerWithFallback(this)?.lookup(`service:site-settings`)
+      ?.deactivate_widgets_rendering
+  ) {
+    warnWidgetsDeprecation(
+      `Widgets are deactivated. Your site may not work properly. Affected widget: ${name}.`
+    );
+  } else {
+    warnWidgetsDeprecation(
+      `Using \`registerWidgetShim\` is deprecated and will soon stop working. Affected widgetShim: ${name}.`
+    );
+  }
+
   const RenderGlimmerShim = class MyClass extends RenderGlimmer {
     constructor(attrs) {
       super(null, tagName, template, attrs);
@@ -224,6 +241,7 @@ export function registerWidgetShim(name, tagName, template) {
     }
 
     didRenderWidget() {}
+
     willRerenderWidget() {}
   };
 

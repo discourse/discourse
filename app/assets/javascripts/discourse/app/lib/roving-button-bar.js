@@ -7,7 +7,7 @@ export function rovingButtonBar(event, containerClass = null) {
   } else if (event.code === "ArrowLeft") {
     siblingFinder = "previousElementSibling";
   } else {
-    return true;
+    return false;
   }
 
   if (containerClass) {
@@ -20,22 +20,35 @@ export function rovingButtonBar(event, containerClass = null) {
   }
 
   let focusable = target[siblingFinder];
-  if (focusable) {
-    while (
-      focusable.tagName !== "BUTTON" &&
-      focusable.tagName !== "A" &&
-      !focusable.classList.contains("select-kit") &&
-      !focusable.classList.contains("hidden")
-    ) {
-      focusable = focusable[siblingFinder];
-    }
+  while (focusable && !isActionable(focusable)) {
+    focusable = focusable[siblingFinder];
 
     if (focusable?.tagName === "DETAILS") {
       focusable = focusable.querySelector("summary");
     }
-
-    focusable?.focus();
   }
 
+  if (!focusable) {
+    return false;
+  }
+
+  focusable.focus();
+
   return true;
+}
+
+function isActionable(element) {
+  if (!element) {
+    return false;
+  }
+
+  return (
+    element.disabled !== true &&
+    (element.tagName === "BUTTON" ||
+      element.tagName === "A" ||
+      element.getAttribute("role") === "switch" ||
+      element.getAttribute("role") === "button") &&
+    !element.classList.contains("select-kit") &&
+    !element.classList.contains("hidden")
+  );
 }

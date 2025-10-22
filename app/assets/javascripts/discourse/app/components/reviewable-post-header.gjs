@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";

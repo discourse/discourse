@@ -1,17 +1,19 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import {
   CREATE_TOPIC,
   EDIT,
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
+import User from "discourse/models/user";
 import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
-import { currentUser } from "discourse/tests/helpers/qunit-helpers";
+import { currentUser, logIn } from "discourse/tests/helpers/qunit-helpers";
 
 function createComposer(opts = {}) {
   opts.user ??= currentUser();
@@ -29,6 +31,8 @@ module("Unit | Model | composer", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
+    logIn();
+
     this.siteSettings = getOwner(this).lookup("service:site-settings");
     this.keyValueStore = getOwner(this).lookup("service:key-value-store");
   });
@@ -466,6 +470,8 @@ module("Unit | Model | composer", function (hooks) {
       });
     });
     const composer = createComposer.call(this, {});
+    composer.currentUser = User.current();
+    composer.currentUser.set("user_option.composition_mode", 0);
 
     await composer.open({
       action: CREATE_TOPIC,
@@ -484,18 +490,25 @@ module("Unit | Model | composer", function (hooks) {
     assert.true(saved);
   });
 
-  test("composerVersion is correct when using 'rich text' composer", async function (assert) {
+  test("composerVersion is correct when using modern 'rich text' composer", async function (assert) {
     this.siteSettings.rich_editor = true;
-    this.keyValueStore.set({
-      key: "d-editor-prefers-rich-editor",
-      value: "true",
-    });
+
     const composer = createComposer.call(this, {});
+    composer.currentUser = User.current();
+    composer.currentUser.set(
+      "user_option.composition_mode",
+      USER_OPTION_COMPOSITION_MODES.rich
+    );
     assert.strictEqual(composer.composerVersion, 2);
   });
 
   test("composerVersion is correct when using 'classic' composer", async function (assert) {
     const composer = createComposer.call(this, {});
+    composer.currentUser = User.current();
+    composer.currentUser.set(
+      "user_option.composition_mode",
+      USER_OPTION_COMPOSITION_MODES.markdown
+    );
     assert.strictEqual(composer.composerVersion, 1);
   });
 });

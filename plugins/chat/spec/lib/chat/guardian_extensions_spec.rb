@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::GuardianExtensions do
-  fab!(:chatters) { Fabricate(:group) }
+  fab!(:chatters, :group)
   fab!(:user) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
   fab!(:staff) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:chat_group) { Fabricate(:group) }
-  fab!(:channel) { Fabricate(:category_channel) }
-  fab!(:dm_channel) { Fabricate(:direct_message_channel) }
+  fab!(:chat_group, :group)
+  fab!(:channel, :category_channel)
+  fab!(:dm_channel, :direct_message_channel)
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
 
@@ -171,7 +171,7 @@ RSpec.describe Chat::GuardianExtensions do
 
     describe "#can_join_chat_channel?" do
       context "for direct message channels" do
-        fab!(:chatable) { Fabricate(:direct_message) }
+        fab!(:chatable, :direct_message)
         fab!(:channel) { Fabricate(:direct_message_channel, chatable: chatable) }
 
         it "returns false if the user is not part of the direct message" do
@@ -423,7 +423,7 @@ RSpec.describe Chat::GuardianExtensions do
 
     describe "#can_restore_chat?" do
       fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: user) }
-      fab!(:chatable) { Fabricate(:category) }
+      fab!(:chatable, :category)
 
       context "when channel is closed" do
         before { channel.update!(status: :closed) }
@@ -679,7 +679,7 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   describe "#can_send_direct_message?" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
     fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [user, other_user]) }
     alias_matcher :be_able_to_send_direct_message, :be_can_send_direct_message
 
@@ -770,7 +770,7 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   describe "#recipient_not_muted?" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     context "when target user is not muted" do
       it "returns true" do
@@ -788,7 +788,7 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   describe "#recipient_not_ignored?" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     context "when target user is not ignored" do
       it "returns true" do
@@ -808,7 +808,7 @@ RSpec.describe Chat::GuardianExtensions do
   end
 
   describe "#recipient_allows_direct_messages?" do
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
     alias_matcher :be_able_to_receive_direct_message, :be_recipient_allows_direct_messages
 
     context "when target user has disabled private messages" do

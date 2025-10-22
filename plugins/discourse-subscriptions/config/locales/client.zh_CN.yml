@@ -1,0 +1,484 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse Subscriptions"
+  site_settings:
+    discourse_subscriptions_enabled: 启用 Discourse Subscriptions 插件。
+    discourse_subscriptions_extra_nav_subscribe: 在主导航中显示订阅按钮
+    discourse_subscriptions_pricing_table_id: 在此处从定价表嵌入代码中添加 pricing-table-id。
+    discourse_subscriptions_pricing_table_enabled: '“订阅”按钮将显示嵌入的定价表，并且将使用 Stripe Checkout。'
+    discourse_subscriptions_public_key: Stripe 可发布密钥
+    discourse_subscriptions_secret_key: Stripe 密钥
+    discourse_subscriptions_webhook_secret: Stripe 网络钩子密钥
+    discourse_subscriptions_currency: 默认货币代码。创建订阅方案时可以替换此代码。
+    discourse_subscriptions_campaign_enabled: 启用活动横幅以促进对此社区的财务支持。
+    discourse_subscriptions_campaign_goal: 您的支持活动的数字目标（订阅者或筹集金额）。
+    discourse_subscriptions_campaign_type: 选择要运行的活动类型（订阅者或每月筹集金额）。
+    discourse_subscriptions_campaign_banner_location: 选择活动横幅的位置（顶部或边栏）。
+    discourse_subscriptions_campaign_banner_shadow_color: 选择活动横幅投影的颜色。
+    discourse_subscriptions_campaign_banner_bg_image: 上传自定义图片以用作活动横幅的背景。
+    discourse_subscriptions_campaign_show_contributors: 显示最近购买的订阅产品的头像。
+    discourse_subscriptions_campaign_product: 当支持者点击活动上的按钮时向支持者发送的 Stripe 产品 ID。如果此设置为空，则支持者将被定向到主要产品页面。
+    discourse_subscriptions_enable_automatic_tax: 启用自动税务计算，它将自动计算订阅生成的所有发票的税率。
+    discourse_subscriptions_enable_verbose_logging: 启用更详细的日志记录以帮助调试。请勿在生产环境下永久启用。
+    errors:
+      discourse_patrons_amount_must_be_currency: "货币金额必须为无美元符号的金额（例如 1.50）"
+  js:
+    filters:
+      subscribe:
+        help: 订阅以支持此网站
+    discourse_subscriptions:
+      title: Discourse Subscriptions
+      admin_navigation: 订阅
+      optional: 可选
+      navigation:
+        billing: 结算
+        payments: 付款
+        subscriptions: 订阅
+        subscribe: 订阅
+        user_activity:
+          payments: 付款
+      campaign:
+        title: 支持我们
+        body: 我们需要您的帮助来使此社区保持正常运转！
+        success_title: 成功！
+        success_body: 感谢您帮助此社区保持正常运转！
+        subscribers: 订阅者
+        goal_comparison: "<strong>%{current}</strong>/<strong>%{goal}</strong>"
+        raised: 已筹集
+        button: 支持
+        recent_contributors: 最近的贡献者
+        goal: 我们已达成目标
+        one_click_campaign: 自动创建支持活动
+        refresh_campaign: 刷新活动数据
+        refresh_page: 现在正在后台从 Stripe 同步活动数据。请稍后刷新页面以加载更新的信息。
+        supporter: 支持者
+        supporters: 支持者
+        confirm_creation_title: 您想为您的社区自动创建活动吗？
+        confirm_creation: |-
+          <p>继续将创建：</p>
+
+          <ul>
+          <li>具有自定义标题和头像风格的群组，用于奖励您的支持者</li>
+          <li>具有预设价格（包月和包年）的 Stripe 产品，可供您的用户购买以支持您的网站。</li>
+          </ul>
+
+          <p>您想继续吗？</p>
+        created: 您的一键式活动已创建并准备就绪！正在重定向到活动设置。
+      one_time_payment: 一次性付款
+      plans:
+        purchase: 购买订阅
+        select: 选择订阅方案
+        interval:
+          adverb:
+            day: 每天
+            week: 每周
+            month: 每月
+            year: 每年
+        payment_button: 订阅
+        success: 谢谢！您的订阅已创建。
+        incomplete: 未完成付款。您的订阅将在付款完成后更新。
+        validate:
+          payment_options:
+            required: 请选择订阅方案。
+      user:
+        payments:
+          id: 付款 ID
+          amount: 金额
+          created_at: 创建时间
+        payments_help: 没有付款
+        plans:
+          rate: 费率
+          product: 名称
+        subscriptions_help: 您没有有效订阅。
+        subscriptions:
+          id: 订阅 ID
+          status: 状态
+          discounted: 折扣价
+          renews: 续订
+          update_card:
+            heading: "订阅更新卡片：%{sub_id}"
+            single: "更新"
+          created_at: 创建时间
+          cancel: 取消
+          cancelled: 已取消
+          operations:
+            destroy:
+              confirm: 确定要取消此订阅吗？
+      subscribe:
+        title: 订阅
+        view_past: 查看以前的购买记录
+        no_products: 当前没有可用产品。
+        unauthenticated: 登录或创建帐户以订阅。
+        invalid_coupon: 您输入的优惠码无效。请重试。
+        invalid_cardholder_name: 持卡人姓名为必填项。
+        invalid_cardholder_country: 国家/地区为必填项。
+        invalid_cardholder_state: 州为必填项。
+        invalid_cardholder_province: 省为必填项。
+        transaction_error: 处理付款时出错。请重试。
+        card:
+          title: 付款
+        customer:
+          title: 客户详细信息
+        promo_code: 优惠券
+        buttons:
+          subscribe: 订阅
+        purchased: 已购买
+        go_to_billing: 前往结算
+        already_purchased: 非常感谢您之前购买此产品！
+        cardholder_name: 持卡人姓名
+        cardholder_address:
+          line1: 街道地址
+          city: 城市
+          state: 州
+          province: 省
+          country: 国家/地区
+          postal_code: 邮政编码
+        countries:
+          AF: "阿富汗"
+          AX: "奥兰群岛"
+          AL: "阿尔巴尼亚"
+          DZ: "阿尔及利亚"
+          AS: "美属萨摩亚"
+          AD: "安道尔"
+          AO: "安哥拉"
+          AI: "安圭拉"
+          AQ: "南极洲"
+          AG: "安提瓜和巴布达"
+          AR: "阿根廷"
+          AM: "亚美尼亚"
+          AW: "阿鲁巴"
+          AU: "澳大利亚"
+          AT: "奥地利"
+          AZ: "阿塞拜疆"
+          BS: "巴哈马"
+          BH: "巴林"
+          BD: "孟加拉国"
+          BB: "巴巴多斯"
+          BY: "白俄罗斯"
+          BE: "比利时"
+          BZ: "伯利兹"
+          BJ: "贝宁"
+          BM: "百慕大"
+          BT: "不丹"
+          BO: "玻利维亚"
+          BQ: "博奈尔岛、圣尤斯特歇斯岛和萨巴岛"
+          BA: "波斯尼亚和黑塞哥维那"
+          BW: "博茨瓦纳"
+          BV: "布维岛"
+          BR: "巴西"
+          IO: "英属印度洋领地"
+          BN: "文莱达鲁萨兰国"
+          BG: "保加利亚"
+          BF: "布基纳法索"
+          BI: "布隆迪"
+          KH: "柬埔寨"
+          CM: "喀麦隆"
+          CA: "加拿大"
+          CV: "佛得角"
+          KY: "开曼群岛"
+          CF: "中非共和国"
+          TD: "乍得"
+          CL: "智利"
+          CN: "中国"
+          CX: "圣诞岛"
+          CC: "科科斯（基林）群岛"
+          CO: "哥伦比亚"
+          KM: "科摩罗"
+          CG: "刚果"
+          CD: "刚果民主共和国"
+          CK: "库克群岛"
+          CR: "哥斯达黎加"
+          CI: "科特迪瓦"
+          HR: "克罗地亚"
+          CU: "古巴"
+          CW: "库拉索"
+          CY: "塞浦路斯"
+          CZ: "捷克共和国"
+          DK: "丹麦"
+          DJ: "吉布提"
+          DM: "多米尼克"
+          DO: "多米尼加共和国"
+          EC: "厄瓜多尔"
+          EG: "埃及"
+          SV: "萨尔瓦多"
+          GQ: "赤道几内亚"
+          ER: "厄立特里亚"
+          EE: "爱沙尼亚"
+          ET: "埃塞俄比亚"
+          FK: "福克兰群岛（马尔维纳斯群岛）"
+          FO: "法罗群岛"
+          FJ: "斐济"
+          FI: "芬兰"
+          FR: "法国"
+          GF: "法属圭亚那"
+          PF: "法属波利尼西亚"
+          TF: "法属南部领地"
+          GA: "加蓬"
+          GM: "冈比亚"
+          GE: "格鲁吉亚"
+          DE: "德国"
+          GH: "加纳"
+          GI: "直布罗陀"
+          GR: "希腊"
+          GL: "格陵兰"
+          GD: "格林纳达"
+          GP: "瓜德罗普岛"
+          GU: "关岛"
+          GT: "危地马拉"
+          GG: "根西岛"
+          GN: "几内亚"
+          GW: "几内亚比绍"
+          GY: "圭亚那"
+          HT: "海地"
+          HM: "赫德岛和麦克唐纳群岛"
+          VA: "罗马教廷（梵蒂冈城国）"
+          HN: "洪都拉斯"
+          HK: "中国香港"
+          HU: "匈牙利"
+          IS: "冰岛"
+          IN: "印度"
+          ID: "印度尼西亚"
+          IR: "伊朗伊斯兰共和国"
+          IQ: "伊拉克"
+          IE: "爱尔兰"
+          IM: "马恩岛"
+          IL: "以色列"
+          IT: "意大利"
+          JM: "牙买加"
+          JP: "日本"
+          JE: "泽西岛"
+          JO: "约旦"
+          KZ: "哈萨克斯坦"
+          KE: "肯尼亚"
+          KI: "基里巴斯"
+          KP: "朝鲜民主主义人民共和国"
+          KR: "大韩民国"
+          KW: "科威特"
+          KG: "吉尔吉斯斯坦"
+          LA: "老挝人民民主共和国"
+          LV: "拉脱维亚"
+          LB: "黎巴嫩"
+          LS: "莱索托"
+          LR: "利比里亚"
+          LY: "利比亚"
+          LI: "列支敦士登"
+          LT: "立陶宛"
+          LU: "卢森堡"
+          MO: "中国澳门"
+          MK: "北马其顿"
+          MG: "马达加斯加"
+          MW: "马拉维"
+          MY: "马来西亚"
+          MV: "马尔代夫"
+          ML: "马里"
+          MT: "马耳他"
+          MH: "马绍尔群岛"
+          MQ: "马提尼克岛"
+          MR: "毛里塔尼亚"
+          MU: "毛里求斯"
+          YT: "马约特岛"
+          MX: "墨西哥"
+          FM: "密克罗尼西亚联邦"
+          MD: "摩尔多瓦共和国"
+          MC: "摩纳哥"
+          MN: "蒙古"
+          ME: "黑山"
+          MS: "蒙特塞拉特"
+          MA: "摩洛哥"
+          MZ: "莫桑比克"
+          MM: "缅甸"
+          NA: "纳米比亚"
+          NR: "瑙鲁"
+          NP: "尼泊尔"
+          NL: "荷兰"
+          NC: "新喀里多尼亚"
+          NZ: "新西兰"
+          NI: "尼加拉瓜"
+          NE: "尼日尔"
+          NG: "尼日利亚"
+          NU: "纽埃"
+          NF: "诺福克岛"
+          MP: "北马里亚纳群岛"
+          "NO": "挪威"
+          OM: "阿曼"
+          PK: "巴基斯坦"
+          PW: "帕劳"
+          PS: "巴勒斯坦被占领土"
+          PA: "巴拿马"
+          PG: "巴布亚新几内亚"
+          PY: "巴拉圭"
+          PE: "秘鲁"
+          PH: "菲律宾"
+          PN: "皮特凯恩群岛"
+          PL: "波兰"
+          PT: "葡萄牙"
+          PR: "波多黎各"
+          QA: "卡塔尔"
+          RE: "留尼汪岛"
+          RO: "罗马尼亚"
+          RU: "俄罗斯联邦"
+          RW: "卢旺达"
+          BL: "圣巴泰勒米"
+          SH: "圣赫勒拿、阿森松和特里斯坦-达库尼亚"
+          KN: "圣基茨和尼维斯"
+          LC: "圣卢西亚"
+          MF: "法属圣马丁"
+          PM: "圣皮埃尔和密克隆群岛"
+          VC: "圣文森特和格林纳丁斯"
+          WS: "萨摩亚"
+          SM: "圣马力诺"
+          ST: "圣多美和普林西比"
+          SA: "沙特阿拉伯"
+          SN: "塞内加尔"
+          RS: "塞尔维亚"
+          SC: "塞舌尔"
+          SL: "塞拉利昂"
+          SG: "新加坡"
+          SX: "荷属圣马丁"
+          SK: "斯洛伐克"
+          SI: "斯洛文尼亚"
+          SB: "所罗门群岛"
+          SO: "索马里"
+          ZA: "南非"
+          GS: "南乔治亚岛和南桑威奇群岛"
+          SS: "南苏丹"
+          ES: "西班牙"
+          LK: "斯里兰卡"
+          SD: "苏丹"
+          SR: "苏里南"
+          SJ: "斯瓦尔巴和扬马延"
+          SZ: "斯威士兰"
+          SE: "瑞典"
+          CH: "瑞士"
+          SY: "阿拉伯叙利亚共和国"
+          TW: "中国台湾省"
+          TJ: "塔吉克斯坦"
+          TZ: "坦桑尼亚联合共和国"
+          TH: "泰国"
+          TL: "东帝汶"
+          TG: "多哥"
+          TK: "托克劳"
+          TO: "汤加"
+          TT: "特立尼达和多巴哥"
+          TN: "突尼斯"
+          TR: "土耳其"
+          TM: "土库曼斯坦"
+          TC: "特克斯和凯科斯群岛"
+          TV: "图瓦卢"
+          UG: "乌干达"
+          UA: "乌克兰"
+          AE: "阿拉伯联合酋长国"
+          GB: "英国"
+          US: "美国"
+          UM: "美国本土外小岛屿"
+          UY: "乌拉圭"
+          UZ: "乌兹别克斯坦"
+          VU: "瓦努阿图"
+          VE: "委内瑞拉玻利瓦尔共和国"
+          VN: "越南"
+          VG: "英属维尔京群岛"
+          VI: "美属维尔京群岛"
+          WF: "瓦利斯和富图纳群岛"
+          EH: "西撒哈拉"
+          YE: "也门"
+          ZM: "赞比亚"
+          ZW: "津巴布韦"
+      billing:
+        name: 全名
+        email: 电子邮件
+        phone: 电话号码
+      confirmation:
+        amount: 金额
+        last4: 卡号
+      buttons:
+        make_payment: 付款
+        confirm_payment: 确认付款
+        success: 返回
+      admin:
+        unconfigured: 'Stripe 配置不正确。有关信息，请参阅 Discourse Meta。'
+        on_meta: Meta 上的 Discourse Subscriptions
+        dashboard:
+          title: 信息中心
+          table:
+            head:
+              user: 用户
+              payment_intent: 付款 ID
+              receipt_email: 收据电子邮件
+              amount: 金额
+        products:
+          title: 产品
+          operations:
+            create: 创建新产品
+            update: 更新产品
+            new: 新产品
+            destroy:
+              confirm: 确定要销毁此产品吗？
+          product:
+            product_id: 产品 ID
+            name: 产品名称
+            statement_descriptor: 对账单标注
+            statement_descriptor_help: 您客户的信用卡对账单上将显示的有关产品的额外信息。
+            plan_help: 创建客户订阅此产品的定价方案。
+            description: 描述
+            description_help: 此为您的订阅产品描述。
+            repurchaseable: 可重复购买？
+            repurchase_help: 允许多次购买产品和关联方案
+            active: 有效
+            active_help: 在您的产品准备好向客户开放前请关闭此项。
+            created_at: 创建时间
+            updated_at: 更新时间
+          product_help: 您需要至少创建一个产品及关联方案，然后客户才可以订阅您的站点。
+        plans:
+          title: 定价方案
+          operations:
+            add: 添加新方案
+            create: 创建方案
+            update: 更新方案
+            create_help: 在定价方案创建完成后，只能更新其昵称、试用期和用户群组。
+            new: 新建方案
+            destroy:
+              confirm: 确定要销毁此方案吗？
+          plan:
+            nickname: 方案昵称
+            nickname_help: 此信息对客户不可见，但可以帮助您稍后查找此方案
+            plan_id: 方案 ID
+            product: 产品
+            interval: 结算间隔
+            amount: 金额
+            trial: 试用期天数
+            trial_help: 订阅此方案将自动开始以此为时长的免费试用期
+            group: 用户群组
+            group_help: 这是创建订阅时客户将被添加到的 Discourse 用户群组。
+            active: 有效
+            created_at: 创建时间
+            recurring: 定期重复的方案？
+        coupons:
+          title: 优惠券
+          code: 促销代码
+          discount: 折扣
+          times_redeemed: 已兑换次数
+          active: 有效？
+          actions: 操作
+          create: 创建优惠券
+          promo_code: 促销代码（不区分大小写）
+        subscriptions:
+          title: 订阅
+          subscription:
+            user: 用户
+            subscription_id: 订阅 ID
+            customer: 客户
+            product: 产品
+            plan: 方案
+            status: 状态
+            created_at: 创建时间
+        ask_refund: 对客户最近一笔付款进行退款？
+        canceled: "该订阅已被取消。"

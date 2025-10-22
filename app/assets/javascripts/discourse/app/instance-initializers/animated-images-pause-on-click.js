@@ -34,7 +34,7 @@ function animatedImgs() {
 
 export default {
   initialize() {
-    withPluginApi("0.8.7", (api) => {
+    withPluginApi((api) => {
       function _cleanUp() {
         Object.values(_gifClickHandlers || {}).forEach((handler) => {
           handler.removeEventListener("click", _handleEvent);

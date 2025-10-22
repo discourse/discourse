@@ -11,7 +11,6 @@ import { i18n } from "discourse-i18n";
 
 export default class TopicStatus extends Component {
   @service currentUser;
-  @service site;
 
   get wrapperElement() {
     return element(this.args.tagName ?? "span");
@@ -43,17 +42,17 @@ export default class TopicStatus extends Component {
         <span
           title={{i18n "topic_statuses.locked_and_archived.help"}}
           class="topic-status"
-        >{{icon "lock"}}</span>
+        >{{icon "topic.closed"}}</span>
       {{~else if @topic.closed~}}
         <span
           title={{i18n "topic_statuses.locked.help"}}
           class="topic-status"
-        >{{icon "lock"}}</span>
+        >{{icon "topic.closed"}}</span>
       {{~else if @topic.archived~}}
         <span
           title={{i18n "topic_statuses.archived.help"}}
           class="topic-status"
-        >{{icon "lock"}}</span>
+        >{{icon "topic.closed"}}</span>
       {{~/if~}}
 
       {{~#if @topic.is_warning~}}

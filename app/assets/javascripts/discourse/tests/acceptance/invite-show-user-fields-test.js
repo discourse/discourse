@@ -11,18 +11,21 @@ acceptance("Accept Invite - User Fields", function (needs) {
         name: "I've read the terms of service",
         field_type: "confirm",
         required: true,
+        show_on_signup: true,
       },
       {
         id: 35,
         name: "What is your pet's name?",
         field_type: "text",
         required: true,
+        show_on_signup: true,
       },
       {
         id: 36,
         name: "What's your dad like?",
         field_type: "text",
         required: false,
+        show_on_signup: true,
       },
     ],
   });

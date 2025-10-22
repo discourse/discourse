@@ -89,8 +89,8 @@ uk:
           title: "Карта теми"
         site_header:
           title: "Заголовок сайту"
-        suggested_topics:
-          title: "Схожі теми"
+        more_topics:
+          title: "Більше тем"
         post_menu:
           title: "Меню повідомлення"
         modal:

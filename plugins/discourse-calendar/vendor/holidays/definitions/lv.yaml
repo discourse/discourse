@@ -1,0 +1,216 @@
+# Latvian holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2019-05-01
+# Sources:
+# - https://likumi.lv/ta/id/72608 (Likums "Par svētku, atceres un atzīmējamām dienām")
+---
+months:
+  0:
+  - name: Lielā Piektdiena # Good Friday
+    regions: [lv]
+    function: easter(year)
+    function_modifier: -2
+  - name: Pirmās Lieldienas # Easter Sunday
+    regions: [lv]
+    function: easter(year)
+  - name: Otrās Lieldienas # Easter Monday
+    regions: [lv]
+    function: easter(year)
+    function_modifier: 1
+  - name: Vasarsvētki # Summer's Day / Pentecost
+    regions: [lv]
+    function: easter(year)
+    function_modifier: 49
+  - name: Vispārējo latviešu Dziesmu un deju svētku noslēguma diena
+    regions: [lv]
+    function: lv_song_and_dance_festival_end_date(year)
+    observed: to_monday_if_weekend(date)
+    year_ranges:
+      from: 2018
+  1:
+  - name: Jaungada diena # New Year's Day
+    regions: [lv]
+    mday: 1
+  5:
+  - name: Darba svētki, Latvijas Republikas Satversmes sapulces sasaukšanas diena # Labor day, Anniversary of the Convocation of the Constitutional Assembly of the Republic of Latvia
+    regions: [lv]
+    mday: 1
+  - name: Latvijas Republikas Neatkarības atjaunošanas diena # Day of the Restoration of Independence of the Republic of Latvia
+    regions: [lv]
+    mday: 4
+    observed: to_monday_if_weekend(date)
+  - name: Mātes diena # Mother's Day
+    regions: [lv]
+    week: 2
+    wday: 0
+  6:
+  - name: Līgo diena # Midsummer
+    regions: [lv]
+    mday: 23
+  - name: Jāņu diena # Midsummer
+    regions: [lv]
+    mday: 24
+  9:
+  - name: Viņa Svētības pāvesta Franciska pastorālās vizītes Latvijā diena # Visit of Pope Francis
+    regions: [lv]
+    mday: 24
+    year_ranges:
+      limited: [2018]
+  11:
+  - name: Latvijas Republikas Proklamēšanas diena # Proclamation Day of the Republic of Latvia
+    regions: [lv]
+    mday: 18
+    observed: to_monday_if_weekend(date)
+  12:
+  - name: Ziemassvētku vakars # Christmas Eve
+    regions: [lv]
+    mday: 24
+  - name: Pirmie Ziemassvētki # Christmas Day
+    regions: [lv]
+    mday: 25
+  - name: Otrie Ziemassvētki # Boxing Day
+    regions: [lv]
+    mday: 26
+  - name: Vecgada diena # New Year's Eve
+    regions: [lv]
+    mday: 31
+
+methods:
+  lv_song_and_dance_festival_end_date:
+    arguments: year
+    ruby: |
+      case year
+      when 2018
+        # https://likumi.lv/ta/id/281541 (Ministru kabineta rīkojums Nr. 252 "Par XXVI Vispārējo latviešu dziesmu un XVI Deju svētku norises laiku")
+        Date.new(2018, 7, 8)
+      when 2023
+        # Event's period/next year is known, but precise dates aren't.
+        # Previously, dates were announced 2 years ahead, so at ~2021-05 this method would need to be revisited.
+      end
+
+tests:
+  - given:
+      date: ['2018-01-01', '2019-01-01', '2029-01-01']
+      regions: ["lv"]
+    expect:
+      name: "Jaungada diena"
+  - given:
+      date: ['2018-03-30', '2019-04-19', '2039-04-08']
+      regions: ["lv"]
+    expect:
+      name: "Lielā Piektdiena"
+  - given:
+      date: ['2018-04-01', '2019-04-21', '2039-04-10']
+      regions: ["lv"]
+    expect:
+      name: "Pirmās Lieldienas"
+  - given:
+      date: ['2018-04-02', '2019-04-22', '2039-04-11']
+      regions: ["lv"]
+    expect:
+      name: "Otrās Lieldienas"
+  - given:
+      date: ['2018-05-01', '2019-05-01', '2029-05-01']
+      regions: ["lv"]
+    expect:
+      name: "Darba svētki, Latvijas Republikas Satversmes sapulces sasaukšanas diena"
+  - given:
+      date: ['2018-05-04', '2019-05-04', '2020-05-04']
+      regions: ["lv"]
+    expect:
+      name: "Latvijas Republikas Neatkarības atjaunošanas diena"
+  - given:
+      date: '2019-05-06'
+      regions: ["lv"]
+      options: ["observed"]
+    expect:
+      name: "Latvijas Republikas Neatkarības atjaunošanas diena"
+  - given:
+      date: '2020-05-04'
+      regions: ["lv"]
+      options: ["observed"]
+    expect:
+      name: "Latvijas Republikas Neatkarības atjaunošanas diena"
+  - given:
+      date: ['2019-05-12', '2020-05-10', '2029-05-13']
+      regions: ["lv"]
+    expect:
+      name: "Mātes diena"
+  - given:
+      date: ['2019-06-09', '2020-05-31', '2029-05-20']
+      regions: ["lv"]
+    expect:
+      name: "Vasarsvētki"
+  - given:
+      date: ['2019-06-23', '2020-06-23', '2029-06-23']
+      regions: ["lv"]
+    expect:
+      name: "Līgo diena"
+  - given:
+      date: ['2019-06-24', '2020-06-24', '2029-06-24']
+      regions: ["lv"]
+    expect:
+      name: "Jāņu diena"
+  - given:
+      date: '2018-07-08'
+      regions: ["lv"]
+    expect:
+      name: "Vispārējo latviešu Dziesmu un deju svētku noslēguma diena"
+  - given:
+      date: '2018-07-09'
+      regions: ["lv"]
+      options: ["observed"]
+    expect:
+      name: "Vispārējo latviešu Dziesmu un deju svētku noslēguma diena"
+  - given:
+      date: ['2019-07-08', '2019-07-09']
+      regions: ["lv"]
+    expect:
+      holiday: false
+  - given:
+      date: '2018-09-24'
+      regions: ["lv"]
+    expect:
+      name: "Viņa Svētības pāvesta Franciska pastorālās vizītes Latvijā diena"
+  - given:
+      date: '2019-09-24'
+      regions: ["lv"]
+    expect:
+      holiday: false
+  - given:
+      date: ['2019-11-18', '2020-11-18', '2029-11-18']
+      regions: ["lv"]
+    expect:
+      name: "Latvijas Republikas Proklamēšanas diena"
+  - given:
+      date: '2020-11-18'
+      regions: ["lv"]
+      options: ["observed"]
+    expect:
+      name: "Latvijas Republikas Proklamēšanas diena"
+  - given:
+      date: '2029-11-19'
+      regions: ["lv"]
+      options: ["observed"]
+    expect:
+      name: "Latvijas Republikas Proklamēšanas diena"
+  - given:
+      date: ['2019-12-24', '2020-12-24', '2029-12-24']
+      regions: ["lv"]
+    expect:
+      name: "Ziemassvētku vakars"
+  - given:
+      date: ['2019-12-25', '2020-12-25', '2029-12-25']
+      regions: ["lv"]
+    expect:
+      name: "Pirmie Ziemassvētki"
+  - given:
+      date: ['2019-12-26', '2020-12-26', '2029-12-26']
+      regions: ["lv"]
+    expect:
+      name: "Otrie Ziemassvētki"
+  - given:
+      date: ['2019-12-31', '2020-12-31', '2029-12-31']
+      regions: ["lv"]
+    expect:
+      name: "Vecgada diena"

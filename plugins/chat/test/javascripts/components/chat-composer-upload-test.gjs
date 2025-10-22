@@ -1,6 +1,7 @@
 import { fn } from "@ember/helper";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import { restoreBaseUri, setupURL } from "discourse/lib/get-url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat-composer-upload";
@@ -87,7 +88,7 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
       type: ".png",
       original_filename: "bar_image.png",
       extension: "png",
-      short_path: "/images/avatar.png",
+      url: "/images/avatar.png",
     });
 
     await render(
@@ -97,6 +98,35 @@ module("Discourse Chat | Component | chat-composer-upload", function (hooks) {
     );
 
     assert.dom("img.preview-img[src='/images/avatar.png']").exists();
+  });
+
+  test("image - upload complete uses CDN in preview", async function (assert) {
+    const self = this;
+
+    try {
+      setupURL("//cdn.example.com", "http://test.local", "", {
+        snapshot: true,
+      });
+
+      this.set("upload", {
+        type: ".png",
+        original_filename: "bar_image.png",
+        extension: "png",
+        url: "/images/avatar.png",
+      });
+
+      await render(
+        <template>
+          <ChatComposerUpload @isDone={{true}} @upload={{self.upload}} />
+        </template>
+      );
+
+      assert
+        .dom("img.preview-img")
+        .hasAttribute("src", "//cdn.example.com/images/avatar.png");
+    } finally {
+      restoreBaseUri();
+    }
   });
 
   test("removing completed upload", async function (assert) {

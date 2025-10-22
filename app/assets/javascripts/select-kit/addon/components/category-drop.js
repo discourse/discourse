@@ -48,7 +48,7 @@ const MORE_COLLECTION = "MORE_COLLECTION";
 @pluginApiIdentifiers(["category-drop"])
 export default class CategoryDrop extends ComboBoxComponent {
   @readOnly("category.id") value;
-  @readOnly("categoriesWithShortcuts.[]") content;
+  @readOnly("categoriesWithShortcuts") content;
   @readOnly("selectKit.options.parentCategory.displayName") parentCategoryName;
   @readOnly("selectKit.options.shouldDisplayIcon") shouldDisplayIcon;
   @setting("allow_uncategorized_topics") allowUncategorized;

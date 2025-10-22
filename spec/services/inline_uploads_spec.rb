@@ -5,8 +5,8 @@ RSpec.describe InlineUploads do
   describe ".process" do
     context "with local uploads" do
       fab!(:upload)
-      fab!(:upload2) { Fabricate(:upload) }
-      fab!(:upload3) { Fabricate(:upload) }
+      fab!(:upload2, :upload)
+      fab!(:upload3, :upload)
 
       it "should not correct existing inline uploads" do
         md = <<~MD

@@ -4,6 +4,8 @@ output:
   schema_file: "db/intermediate_db_schema/100-base-schema.sql"
   models_directory: "lib/database/intermediate_db"
   models_namespace: Migrations::Database::IntermediateDB
+  enums_directory: "lib/database/intermediate_db/enums"
+  enums_namespace: Migrations::Database::IntermediateDB::Enums
 
 schema:
   tables:
@@ -15,6 +17,7 @@ schema:
         exclude:
           - "grant_count"
           - "system"
+    badge_groupings: {}
     categories:
       columns:
         add:
@@ -38,6 +41,152 @@ schema:
           - "topics_week"
           - "topics_year"
           - "reviewable_by_group_id"
+    category_users:
+      primary_key_column_names: [ "category_id", "user_id" ]
+      columns:
+        exclude:
+           - "id"
+    category_custom_fields:
+      primary_key_column_names: [ "category_id", "name" ]
+      columns:
+        exclude:
+          - "created_at"
+          - "id"
+    group_users:
+      primary_key_column_names: [ "group_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+          - "first_unread_pm_at"
+    groups:
+      columns:
+        add:
+          - name: "existing_id"
+            datatype: numeric
+        include:
+          - "allow_membership_requests"
+          - "allow_unknown_sender_topic_replies"
+          - "automatic_membership_email_domains"
+          - "bio_raw"
+          - "created_at"
+          - "default_notification_level"
+          - "flair_bg_color"
+          - "flair_color"
+          - "flair_icon"
+          - "flair_upload_id"
+          - "full_name"
+          - "grant_trust_level"
+          - "id"
+          - "members_visibility_level"
+          - "membership_request_template"
+          - "mentionable_level"
+          - "messageable_level"
+          - "name"
+          - "primary_group"
+          - "public_admission"
+          - "public_exit"
+          - "publish_read_state"
+          - "title"
+          - "visibility_level"
+    muted_users:
+      columns:
+        exclude:
+          - "id"
+    tag_group_memberships:
+      primary_key_column_names: [ "tag_group_id", "tag_id" ]
+      columns:
+        exclude:
+          - "id"
+    tag_group_permissions:
+      primary_key_column_names: [ "tag_group_id", "group_id", "permission_type" ]
+      columns:
+        exclude:
+          - "id"
+    tag_groups: {}
+    tag_users:
+      primary_key_column_names: [ "tag_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+    tags:
+      columns:
+        exclude:
+          - "pm_topic_count"
+          - "public_topic_count"
+          - "staff_topic_count"
+          - "target_tag_id"
+    topic_allowed_groups:
+      primary_key_column_names: [ "topic_id", "group_id" ]
+      columns:
+        exclude:
+          - "id"
+    topic_allowed_users:
+      primary_key_column_names: [ "topic_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+    topic_users:
+      primary_key_column_names: [ "topic_id", "user_id" ]
+      columns:
+        exclude:
+          - "id"
+          - "bookmarked"
+          - "liked"
+          - "posted"
+    topics:
+      columns:
+        exclude:
+          - "last_posted_at"
+          - "last_post_user_id"
+          - "reply_count"
+          - "featured_user1_id"
+          - "featured_user2_id"
+          - "featured_user3_id"
+          - "featured_user4_id"
+          - "image_upload_id"
+          - "highest_post_number"
+          - "like_count"
+          - "locale"
+          - "incoming_link_count"
+          - "moderator_posts_count"
+          - "bumped_at"
+          - "has_summary"
+          - "notify_moderators_count"
+          - "spam_count"
+          - "percent_rank"
+          - "posts_count"
+          - "score"
+          - "slug"
+          - "participant_count"
+          - "word_count"
+          - "excerpt"
+          - "fancy_title"
+          - "highest_staff_post_number"
+          - "reviewable_score"
+          - "slow_mode_seconds"
+      indexes:
+        - name: "index_topics_on_archetype"
+          columns: [ "archetype" ]
+    topic_tags:
+      primary_key_column_names: [ "topic_id", "tag_id" ]
+      columns:
+        exclude:
+          - "id"
+    user_associated_accounts:
+      primary_key_column_names: [ "user_id", "provider_name" ]
+      columns:
+        exclude:
+          - "id"
+          - "credentials"
+          - "extra"
+        modify:
+          - name: "last_used"
+            nullable: true
+    user_custom_fields:
+      columns:
+        exclude:
+          - "id"
+      primary_key_column_names: [ "user_id" , "name", "value" ]
     user_emails:
       columns:
         include:
@@ -46,6 +195,37 @@ schema:
           - "user_id"
           - "created_at"
       primary_key_column_names: [ "user_id" , "email" ]
+    user_field_options:
+      primary_key_column_names: [ "user_field_id", "value" ]
+      columns:
+        exclude:
+          - "id"
+    user_field_values:
+      copy_of: user_custom_fields
+      columns:
+        exclude:
+          - "id"
+          - "name"
+        add:
+          - name: "field_id"
+            datatype: numeric
+            nullable: false
+          - name: "is_multiselect_field"
+            datatype: boolean
+      indexes:
+        - name: "user_field_values_multiselect_index"
+          columns: [ "user_id", "field_id", "value" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = TRUE"
+        - name: "user_field_values_not_multiselect_index"
+          columns: [ "user_id", "field_id" ]
+          unique: true
+          condition: "WHERE is_multiselect_field = FALSE"
+    user_fields:
+      columns:
+        exclude:
+          - "field_type"
+          - "required"
     user_options:
       primary_key_column_names: [ "user_id" ]
     users:
@@ -89,21 +269,33 @@ schema:
     tables:
       exclude:
         - "admin_notices"
+        - "ai_api_audit_logs"
+        - "ai_artifact_key_values"
+        - "ai_artifact_versions"
+        - "ai_artifacts"
+        - "ai_document_fragments_embeddings"
+        - "ai_moderation_settings"
+        - "ai_personas"
+        - "ai_posts_embeddings"
+        - "ai_spam_logs"
+        - "ai_summaries"
+        - "ai_tools"
+        - "ai_topics_embeddings"
         - "allowed_pm_users"
         - "anonymous_users"
         - "api_key_scopes"
         - "api_keys"
         - "application_requests"
         - "ar_internal_metadata"
+        - "assignments"
         - "associated_groups"
         - "backup_draft_posts"
         - "backup_draft_topics"
         - "backup_metadata"
-        - "badge_groupings"
         - "badge_types"
         - "bookmarks"
+        - "calendar_events"
         - "categories_web_hooks"
-        - "category_custom_fields"
         - "category_featured_topics"
         - "category_form_templates"
         - "category_groups"
@@ -115,7 +307,6 @@ schema:
         - "category_tag_groups"
         - "category_tag_stats"
         - "category_tags"
-        - "category_users"
         - "chat_channel_archives"
         - "chat_channel_custom_fields"
         - "chat_channels"
@@ -123,6 +314,7 @@ schema:
         - "chat_mention_notifications"
         - "chat_mentions"
         - "chat_message_custom_fields"
+        - "chat_message_custom_prompts"
         - "chat_message_interactions"
         - "chat_message_reactions"
         - "chat_message_revisions"
@@ -131,9 +323,13 @@ schema:
         - "chat_threads"
         - "chat_webhook_events"
         - "child_themes"
+        - "classification_results"
         - "color_scheme_colors"
         - "color_schemes"
+        - "completion_prompts"
         - "custom_emojis"
+        - "data_explorer_queries"
+        - "data_explorer_query_groups"
         - "developers"
         - "direct_message_channels"
         - "direct_message_users"
@@ -145,6 +341,18 @@ schema:
         - "discourse_automation_pending_pms"
         - "discourse_automation_stats"
         - "discourse_automation_user_global_notices"
+        - "discourse_calendar_disabled_holidays"
+        - "discourse_calendar_post_event_dates"
+        - "discourse_post_event_events"
+        - "discourse_post_event_invitees"
+        - "discourse_reactions_reaction_users"
+        - "discourse_reactions_reactions"
+        - "discourse_rss_polling_rss_feeds"
+        - "discourse_solved_solved_topics"
+        - "discourse_subscriptions_customers"
+        - "discourse_subscriptions_products"
+        - "discourse_subscriptions_subscriptions"
+        - "discourse_templates_usage_count"
         - "dismissed_topic_users"
         - "do_not_disturb_timings"
         - "draft_sequences"
@@ -154,9 +362,15 @@ schema:
         - "email_tokens"
         - "embeddable_host_tags"
         - "embeddable_hosts"
+        - "embedding_definitions"
         - "external_upload_stubs"
         - "flags"
         - "form_templates"
+        - "gamification_leaderboards"
+        - "gamification_score_events"
+        - "gamification_scores"
+        - "github_commits"
+        - "github_repos"
         - "given_daily_likes"
         - "group_archived_messages"
         - "group_associated_groups"
@@ -166,8 +380,6 @@ schema:
         - "group_mentions"
         - "group_requests"
         - "group_tag_notification_defaults"
-        - "group_users"
-        - "groups"
         - "groups_web_hooks"
         - "ignored_users"
         - "imap_sync_logs"
@@ -176,40 +388,55 @@ schema:
         - "incoming_emails"
         - "incoming_links"
         - "incoming_referers"
+        - "inferred_concept_posts"
+        - "inferred_concept_topics"
+        - "inferred_concepts"
         - "invited_groups"
         - "invited_users"
         - "invites"
         - "javascript_caches"
         - "linked_topics"
+        - "llm_models"
+        - "llm_quota_usages"
+        - "llm_quotas"
         - "message_bus"
+        - "model_accuracies"
         - "moved_posts"
-        - "muted_users"
         - "notifications"
         - "oauth2_user_infos"
         - "onceoff_logs"
         - "optimized_images"
+        - "optimized_videos"
         - "permalinks"
         - "plugin_store_rows"
+        - "policy_users"
         - "poll_options"
         - "poll_votes"
         - "polls"
         - "post_action_types"
         - "post_actions"
         - "post_custom_fields"
+        - "post_custom_prompts"
         - "post_details"
         - "post_hotlinked_media"
         - "post_localizations"
+        - "post_policies"
+        - "post_policy_groups"
         - "post_replies"
         - "post_reply_keys"
         - "post_revisions"
         - "post_search_data"
         - "post_stats"
         - "post_timings"
+        - "post_voting_comment_custom_fields"
+        - "post_voting_comments"
+        - "post_voting_votes"
         - "posts"
         - "problem_check_trackers"
         - "published_pages"
         - "push_subscriptions"
         - "quoted_posts"
+        - "rag_document_fragments"
         - "redelivering_webhook_events"
         - "remote_themes"
         - "reviewable_claimed_topics"
@@ -224,35 +451,30 @@ schema:
         - "screened_ip_addresses"
         - "screened_urls"
         - "search_logs"
+        - "shared_ai_conversations"
         - "shared_drafts"
         - "shelved_notifications"
         - "sidebar_section_links"
         - "sidebar_sections"
         - "sidebar_urls"
+        - "silenced_assignments"
         - "single_sign_on_records"
         - "site_settings"
         - "sitemaps"
         - "skipped_email_logs"
         - "stylesheet_cache"
         - "summary_sections"
-        - "tag_group_memberships"
-        - "tag_group_permissions"
-        - "tag_groups"
         - "tag_search_data"
-        - "tag_users"
-        - "tags"
         - "tags_web_hooks"
-        - "theme_color_schemes"
         - "theme_fields"
         - "theme_modifier_sets"
         - "theme_settings"
         - "theme_settings_migrations"
+        - "theme_site_settings"
         - "theme_svg_sprites"
         - "theme_translation_overrides"
         - "themes"
         - "top_topics"
-        - "topic_allowed_groups"
-        - "topic_allowed_users"
         - "topic_custom_fields"
         - "topic_embeds"
         - "topic_groups"
@@ -262,13 +484,13 @@ schema:
         - "topic_links"
         - "topic_localizations"
         - "topic_search_data"
-        - "topic_tags"
         - "topic_thumbnails"
         - "topic_timers"
-        - "topic_users"
         - "topic_view_stats"
         - "topic_views"
-        - "topics"
+        - "topic_voting_category_settings"
+        - "topic_voting_topic_vote_count"
+        - "topic_voting_votes"
         - "translation_overrides"
         - "unsubscribe_keys"
         - "upload_references"
@@ -279,7 +501,6 @@ schema:
         - "user_api_key_scopes"
         - "user_api_keys"
         - "user_archived_messages"
-        - "user_associated_accounts"
         - "user_associated_groups"
         - "user_auth_token_logs"
         - "user_auth_tokens"
@@ -287,10 +508,7 @@ schema:
         - "user_badges"
         - "user_chat_channel_memberships"
         - "user_chat_thread_memberships"
-        - "user_custom_fields"
         - "user_exports"
-        - "user_field_options"
-        - "user_fields"
         - "user_histories"
         - "user_ip_address_histories"
         - "user_notification_schedules"
@@ -320,11 +538,41 @@ plugins:
   - "automation"
   - "chat"
   - "checklist"
+  - "discourse-adplugin"
+  - "discourse-affiliate"
+  - "discourse-ai"
+  - "discourse-apple-auth"
+  - "discourse-assign"
+  - "discourse-cakeday"
+  - "discourse-calendar"
+  - "discourse-chat-integration"
+  - "discourse-data-explorer"
   - "discourse-details"
+  - "discourse-gamification"
+  - "discourse-github"
+  - "discourse-graphviz"
+  - "discourse-hcaptcha"
   - "discourse-lazy-videos"
   - "discourse-local-dates"
+  - "discourse-login-with-amazon"
+  - "discourse-lti"
+  - "discourse-math"
+  - "discourse-microsoft-auth"
   - "discourse-narrative-bot"
+  - "discourse-oauth2-basic"
+  - "discourse-openid-connect"
+  - "discourse-patreon"
+  - "discourse-policy"
+  - "discourse-post-voting"
   - "discourse-presence"
+  - "discourse-reactions"
+  - "discourse-rss-polling"
+  - "discourse-solved"
+  - "discourse-subscriptions"
+  - "discourse-templates"
+  - "discourse-topic-voting"
+  - "discourse-user-notes"
+  - "discourse-zendesk-plugin"
   - "footnote"
   - "poll"
   - "spoiler-alert"

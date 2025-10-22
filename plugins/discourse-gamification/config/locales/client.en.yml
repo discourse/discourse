@@ -1,0 +1,78 @@
+en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discourse Gamification"
+  js:
+    # directory column workaround
+    gamification_score: "Cheers"
+    gamification:
+      score: "Cheers"
+      you: "You"
+      leaderboard:
+        title: "Leaderboards"
+        info: "How does this work?"
+        link_to_settings: "Settings"
+        refresh: "Refresh"
+        modal:
+          title: "How does the leaderboard work?"
+          text: "Points are awarded for engaging with the community, such as visiting, liking, and posting. Your score is updated every few minutes. So go be helpful, active, and supportive, and rise through the ranks!"
+        name: "Name"
+        name_placeholder: "Name..."
+        new: "New leaderboard"
+        create_success: "Leaderboard created"
+        delete_success: "Leaderboard deleted"
+        save_success: "Leaderboard saved"
+        cta: "Make your first leaderboard"
+        none: "No leaderboards created yet."
+        confirm_destroy: "Are you sure you want to delete this leaderboard?"
+        date:
+          range: "From / To Date Range"
+          from: "From date"
+          to: "To date"
+          helper: "If dates are left empty the leaderboard will show scores earned without any time restrictions."
+        visible_to_groups: "Visible to groups"
+        visible_to_groups_help: "Only users on those groups will be able to view the leaderboard. Leave empty to allow everyone."
+        included_groups: "Included groups"
+        included_groups_help: "Only users on those groups will be included in the leaderboard. Leave empty to list everyone."
+        excluded_groups: "Excluded groups"
+        excluded_groups_help: "Remove users on those groups from being included in the leaderboard. Leave empty to list everyone."
+        default_period: "Default period"
+        default_period_help: "Set the default time period to display for this leaderboard."
+        period_filter_disabled: "Disable time period filter"
+        period:
+          all_time: "All Time"
+          yearly: "Yearly"
+          quarterly: "Quarterly"
+          monthly: "Monthly"
+          weekly: "Weekly"
+          daily: "Daily"
+        rank: "Rank"
+      create: "Create"
+      cancel: "Cancel"
+      close: "Close"
+      delete: "Delete"
+      edit: "Edit"
+      back: "Back"
+      save: "Save"
+      apply: "Apply"
+      recalculate: "Recalculate scores"
+      recalculating: "Recalculating scores..."
+      completed: "Done! The scores have been successfully recalculated."
+      update_scores_help: "Update all scores for all leaderboards from"
+      update_range:
+        last_10_days: "Last 10 days"
+        last_30_days: "Last 30 days"
+        last_90_days: "Last 90 days"
+        last_year: "Last year"
+        all_time: "All Time"
+        custom_date_range: "Custom range"
+      custom_range_from: "From"
+      daily_update_scores_availability:
+        one: "%{count} daily recalculation left"
+        other: "%{count} daily recalculations left"
+      admin:
+        title: "Gamification"
+        name: "Name"
+        period: "Period"

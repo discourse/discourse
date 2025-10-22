@@ -5,7 +5,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("category-display-name transformer", function () {
   test("applying a value transformation", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "category-display-name",
         ({ value, context }) =>

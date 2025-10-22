@@ -69,12 +69,19 @@ RSpec.describe UserOption do
       user = Fabricate(:user)
       expect(user.user_option.sidebar_show_count_of_new_items).to eq(false)
     end
+
+    it "should correctly set composition_mode when `default_composition_mode` site setting is set" do
+      SiteSetting.default_composition_mode = UserOption.composition_mode_types[:markdown]
+      user = Fabricate(:user)
+      expect(user.user_option.composition_mode).to eq(UserOption.composition_mode_types[:markdown])
+    end
   end
 
   describe "site settings" do
     it "should apply defaults from site settings" do
       SiteSetting.default_other_enable_quoting = false
       SiteSetting.default_other_enable_smart_lists = false
+      SiteSetting.default_other_enable_markdown_monospace_font = false
       SiteSetting.default_other_enable_defer = true
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_dynamic_favicon = true
@@ -84,6 +91,7 @@ RSpec.describe UserOption do
 
       expect(user.user_option.enable_quoting).to eq(false)
       expect(user.user_option.enable_smart_lists).to eq(false)
+      expect(user.user_option.enable_markdown_monospace_font).to eq(false)
       expect(user.user_option.enable_defer).to eq(true)
       expect(user.user_option.external_links_in_new_tab).to eq(true)
       expect(user.user_option.dynamic_favicon).to eq(true)
@@ -92,8 +100,8 @@ RSpec.describe UserOption do
   end
 
   describe "#mailing_list_mode" do
-    fab!(:forum_user) { Fabricate(:user) }
-    fab!(:mailing_list_user) { Fabricate(:user) }
+    fab!(:forum_user, :user)
+    fab!(:mailing_list_user, :user)
 
     before do
       forum_user.user_option.update(mailing_list_mode: false)

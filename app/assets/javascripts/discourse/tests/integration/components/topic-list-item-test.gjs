@@ -35,7 +35,7 @@ module("Integration | Component | topic-list-item", function (hooks) {
   });
 
   test("topic-list-item-class value transformer", async function (assert) {
-    withPluginApi("1.39.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "topic-list-item-class",
         ({ value, context }) => {

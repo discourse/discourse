@@ -42,10 +42,11 @@ export default class Contents extends Component {
     if (
       this.site.mobileView ||
       this.args.narrowDesktop ||
-      this.router.currentURL?.match(
-        /\/(signup|login|invites|activate-account)/
+      ALL_PAGES_EXCLUDED_ROUTES.some(
+        (name) => name === this.router.currentRouteName
       ) ||
-      this.search.welcomeBannerSearchInViewport
+      this.search.welcomeBannerSearchInViewport ||
+      this.router.currentRouteName.startsWith("admin")
     ) {
       return false;
     }

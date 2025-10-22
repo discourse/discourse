@@ -16,6 +16,8 @@ module Chat
     #   @option params [Integer] :thread_id
     #   @return [Service::Base::Context]
 
+    options { attribute :max_page_size, :integer, default: Chat::MessagesQuery::MAX_PAGE_SIZE }
+
     params do
       attribute :thread_id, :integer
       # If this is not present, then we just fetch messages with page_size
@@ -29,19 +31,34 @@ module Chat
       attribute :target_date, :string # (optional)
 
       validates :thread_id, presence: true
+      validates :page_size,
+                numericality: {
+                  greater_than_or_equal_to: 1,
+                  only_integer: true,
+                  only_numeric: true,
+                },
+                allow_nil: true
       validates :direction,
                 inclusion: {
                   in: Chat::MessagesQuery::VALID_DIRECTIONS,
                 },
                 allow_nil: true
-      validates :page_size, numericality: { only_integer: true }, allow_nil: true
+
+      after_validation do
+        self.page_size ||= options.max_page_size
+        self.page_size = options.max_page_size if page_size > options.max_page_size
+      end
+
+      def include_target_message_id?
+        fetch_from_first_message || fetch_from_last_message
+      end
     end
 
     model :thread
     policy :can_view_thread
     model :membership, optional: true
-    step :determine_target_message_id
-    policy :target_message_exists
+    model :target_message_id, optional: true
+    policy :target_message_exists, class_name: Chat::Thread::Policy::MessageExistence
     model :metadata, optional: true
     model :messages, optional: true
 
@@ -59,41 +76,26 @@ module Chat
       thread.membership_for(guardian.user)
     end
 
-    def determine_target_message_id(params:, membership:, guardian:, thread:)
+    def fetch_target_message_id(params:, membership:, thread:)
       if params.fetch_from_last_message
-        context[:target_message_id] = thread.last_message_id
+        thread.last_message_id
       elsif params.fetch_from_first_message
-        context[:target_message_id] = thread.original_message_id
+        thread.original_message_id
       elsif params.fetch_from_last_read || !params.target_message_id
-        context[:target_message_id] = membership&.last_read_message_id
+        membership&.last_read_message_id
       elsif params.target_message_id
-        context[:target_message_id] = params.target_message_id
+        params.target_message_id
       end
     end
 
-    def target_message_exists(params:, guardian:)
-      return true if context.target_message_id.blank?
-      target_message =
-        ::Chat::Message.with_deleted.find_by(
-          id: context.target_message_id,
-          thread_id: params.thread_id,
-        )
-      return false if target_message.blank?
-      return true if !target_message.trashed?
-      target_message.user_id == guardian.user.id || guardian.is_staff?
-    end
-
-    def fetch_metadata(thread:, guardian:, params:)
+    def fetch_metadata(thread:, guardian:, params:, target_message_id:)
       ::Chat::MessagesQuery.call(
         guardian:,
+        target_message_id:,
         channel: thread.channel,
-        target_message_id: context.target_message_id,
         thread_id: thread.id,
-        page_size: params.page_size,
-        direction: params.direction,
-        target_date: params.target_date,
-        include_target_message_id:
-          params.fetch_from_first_message || params.fetch_from_last_message,
+        include_target_message_id: params.include_target_message_id?,
+        **params.slice(:page_size, :direction, :target_date),
       )
     end
 

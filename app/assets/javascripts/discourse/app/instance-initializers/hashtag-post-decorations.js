@@ -7,7 +7,7 @@ export default {
   initialize(owner) {
     const site = owner.lookup("service:site");
 
-    withPluginApi("0.8.7", (api) => {
+    withPluginApi((api) => {
       api.decorateCookedElement((post) => decorateHashtags(post, site));
     });
   },

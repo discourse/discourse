@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Admin::UnknownReviewablesController do
   let(:admin) { Fabricate(:admin) }
   let(:user) { Fabricate(:user) }

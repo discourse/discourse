@@ -1,142 +1,220 @@
-import ArrayProxy from "@ember/array/proxy";
+import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { number } from "discourse/lib/formatter";
+import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 import PreloadStore from "discourse/lib/preload-store";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Site from "discourse/models/site";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
-export default class CategoryList extends ArrayProxy {
+const STAT_PERIODS = ["week", "month"];
+
+/**
+ * Represents a list of categories with their related metadata and functionality
+ */
+export default class CategoryList extends LegacyArrayLikeObject {
+  /**
+   * Creates category objects from API result data
+   *
+   * @param {Object} store - The store instance
+   * @param {Object} result - The API result containing category data
+   * @param {Object} parentCategory - Optional parent category
+   * @returns {CategoryList} A new CategoryList instance with the processed categories
+   */
   static categoriesFrom(store, result, parentCategory = null) {
     // Find the period that is most relevant
+    const list = result?.category_list?.categories || [];
     const statPeriod =
-      ["week", "month"].find(
+      STAT_PERIODS.find(
         (period) =>
-          result.category_list.categories.filter(
-            (c) => c[`topics_${period}`] > 0
-          ).length >=
-          result.category_list.categories.length * 0.66
+          list.filter((c) => c?.[`topics_${period}`] > 0).length >=
+          list.length * 0.66
       ) || "all";
 
     // Update global category list to make sure that `findById` works as
     // expected later
-    result.category_list.categories.forEach((c) =>
-      Site.current().updateCategory(c)
-    );
+    list.forEach((c) => Site.current().updateCategory(c));
 
     const categories = CategoryList.create({ store });
-    result.category_list.categories.forEach((c) => {
+    list.forEach((c) => {
       c = this._buildCategoryResult(c, statPeriod);
       if (
         (parentCategory && c.parent_category_id === parentCategory.id) ||
         (!parentCategory && !c.parent_category_id)
       ) {
-        categories.pushObject(c);
+        categories.content.push(c);
       }
     });
     return categories;
   }
 
-  static _buildCategoryResult(c, statPeriod) {
-    if (c.topics) {
-      c.topics = c.topics.map((t) => Topic.create(t));
+  /**
+   * Builds a category result object with stats and topic data
+   * @param {Object} rawCategoryData - The raw category data
+   * @param {string} statPeriod - The period to use for stats ('week', 'month', or 'all')
+   * @returns {Category} The processed category object
+   * @private
+   */
+  static _buildCategoryResult(rawCategoryData, statPeriod) {
+    if (rawCategoryData.topics?.length) {
+      rawCategoryData.topics = rawCategoryData.topics.map((t) =>
+        Topic.create(t)
+      );
     }
 
-    const stat = c[`topics_${statPeriod}`];
-    if ((statPeriod === "week" || statPeriod === "month") && stat > 0) {
+    const stat = rawCategoryData[`topics_${statPeriod}`];
+    const isTimedPeriod = statPeriod === "week" || statPeriod === "month";
+    if (isTimedPeriod && stat > 0) {
       const unit = i18n(`categories.topic_stat_unit.${statPeriod}`);
 
-      c.stat = i18n("categories.topic_stat", {
+      rawCategoryData.stat = i18n("categories.topic_stat", {
         count: stat, // only used to correctly pluralize the string
         number: `<span class="value">${number(stat)}</span>`,
         unit: `<span class="unit">${unit}</span>`,
       });
 
-      c.statTitle = i18n(`categories.topic_stat_sentence_${statPeriod}`, {
-        count: stat,
-      });
+      rawCategoryData.statTitle = i18n(
+        `categories.topic_stat_sentence_${statPeriod}`,
+        {
+          count: stat,
+        }
+      );
 
-      c.pickAll = false;
+      rawCategoryData.pickAll = false;
     } else {
-      c.stat = `<span class="value">${number(c.topics_all_time)}</span>`;
-      c.statTitle = i18n("categories.topic_sentence", {
-        count: c.topics_all_time,
+      rawCategoryData.stat = `<span class="value">${number(rawCategoryData.topics_all_time)}</span>`;
+      rawCategoryData.statTitle = i18n("categories.topic_sentence", {
+        count: rawCategoryData.topics_all_time,
       });
-      c.pickAll = true;
+      rawCategoryData.pickAll = true;
     }
 
     if (Site.current().mobileView) {
-      c.statTotal = i18n("categories.topic_stat_all_time", {
-        count: c.topics_all_time,
-        number: `<span class="value">${number(c.topics_all_time)}</span>`,
+      rawCategoryData.statTotal = i18n("categories.topic_stat_all_time", {
+        count: rawCategoryData.topics_all_time,
+        number: `<span class="value">${number(rawCategoryData.topics_all_time)}</span>`,
       });
     }
 
-    const record = Site.current().updateCategory(c);
+    const record = Site.current().updateCategory(rawCategoryData);
     record.setupGroupsAndPermissions();
     return record;
   }
 
-  static listForParent(store, category) {
+  /**
+   * @deprecated Use list() instead
+   */
+  static listForParent(store, parentCategory) {
     deprecated(
       "The listForParent method of CategoryList is deprecated. Use list instead",
       { id: "discourse.category-list.listForParent" }
     );
 
-    return CategoryList.list(store, category);
+    return CategoryList.list(store, parentCategory);
   }
 
-  static list(store, parentCategory = null) {
-    return PreloadStore.getAndRemove("categories_list", () => {
-      const data = {};
-      if (parentCategory) {
-        data.parent_category_id = parentCategory?.id;
+  /**
+   * Fetches and creates a list of categories
+   *
+   * @param {Object} store - The store instance
+   * @param {Object} parentCategory - Optional parent category to filter by
+   * @returns {Promise<CategoryList>} A promise that resolves to the CategoryList
+   */
+  static async list(store, parentCategory = null) {
+    const result = await PreloadStore.getAndRemove(
+      "categories_list",
+      async () => {
+        const data = {};
+        if (parentCategory) {
+          data.parent_category_id = parentCategory.id;
+        }
+        return ajax("/categories.json", { data });
       }
-      return ajax("/categories.json", { data });
-    }).then((result) => {
-      return CategoryList.create({
-        store,
-        categories: this.categoriesFrom(store, result, parentCategory),
-        parentCategory,
-        can_create_category: result.category_list.can_create_category,
-        can_create_topic: result.category_list.can_create_topic,
-      });
+    );
+
+    const categoryList = result?.category_list || {};
+    return CategoryList.create({
+      store,
+      categories: this.categoriesFrom(store, result, parentCategory).content,
+      parentCategory,
+      can_create_category: categoryList.can_create_category,
+      can_create_topic: categoryList.can_create_topic,
     });
   }
 
-  init() {
-    this.set("content", this.categories || []);
-    super.init(...arguments);
-    this.set("page", 1);
-    this.set("fetchedLastPage", false);
+  /**
+   * Creates a new CategoryList instance
+   *
+   * @param {Object} attrs - The attributes to initialize with
+   * @returns {CategoryList} A new CategoryList instance
+   */
+  static create(attrs = {}) {
+    const { categories, ...properties } = attrs;
+    return super.create({ content: categories, ...properties });
   }
 
+  @tracked can_create_category;
+  @tracked can_create_topic;
+  @tracked fetchedLastPage = false;
+  @tracked isLoading = false;
+  @tracked page = 1;
+  @tracked parentCategory;
+  @trackedArray topics;
+  store;
+
+  /**
+   * @returns {Proxy} The proxied content for compatibility
+   * @deprecated use the category list instance instead
+   */
+  get categories() {
+    deprecated(
+      "Using `CategoryList.categories` property is deprecated. Use `CategoryList.content` instead",
+      { id: "discourse.category-list.categories" }
+    );
+    return this.content;
+  }
+
+  /**
+   * Loads more categories from the server
+   * @returns {Promise<void>}
+   */
   @bind
   async loadMore() {
     if (this.isLoading || this.fetchedLastPage) {
       return;
     }
 
-    this.set("isLoading", true);
+    this.isLoading = true;
 
-    const data = { page: this.page + 1 };
-    if (this.parentCategory) {
-      data.parent_category_id = this.parentCategory.id;
+    try {
+      const nextPage = this.page + 1;
+      const data = {
+        page: nextPage,
+        ...(this.parentCategory && {
+          parent_category_id: this.parentCategory.id,
+        }),
+      };
+
+      const result = await ajax("/categories.json", { data });
+
+      this.page = nextPage;
+
+      const newItems = CategoryList.categoriesFrom(
+        this.store,
+        result,
+        this.parentCategory
+      ).content;
+
+      if (!newItems.length) {
+        this.fetchedLastPage = true;
+      } else {
+        newItems.forEach((c) => this.content.push(c));
+      }
+    } finally {
+      this.isLoading = false;
     }
-    const result = await ajax("/categories.json", { data });
-
-    this.set("page", data.page);
-    if (result.category_list.categories.length === 0) {
-      this.set("fetchedLastPage", true);
-    }
-    this.set("isLoading", false);
-
-    CategoryList.categoriesFrom(
-      this.store,
-      result,
-      this.parentCategory
-    ).forEach((c) => this.categories.pushObject(c));
   }
 }

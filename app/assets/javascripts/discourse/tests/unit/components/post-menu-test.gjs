@@ -53,7 +53,7 @@ module("Unit | Component | post-menu", function (hooks) {
   });
 
   test("post-menu-toggle-like-action behavior transformer", async function (assert) {
-    withPluginApi("2.0.0", (api) => {
+    withPluginApi((api) => {
       api.registerBehaviorTransformer("post-menu-toggle-like-action", () => {
         assert.step("transformer called");
       });

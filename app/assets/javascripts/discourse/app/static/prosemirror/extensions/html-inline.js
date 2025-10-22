@@ -24,26 +24,59 @@ const ALL_ALLOWED_TAGS = [...Object.keys(HTML_INLINE_MARKS), ...ALLOWED_INLINE];
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
-    // TODO(renato): this node is hard to get past when at the end of a block
-    //   and is added to a newline unintentionally, investigate
     html_inline: {
       group: "inline",
       inline: true,
-      isolating: true,
+      defining: true,
       content: "inline*",
       attrs: { tag: {} },
-      parseDOM: ALLOWED_INLINE.map((tag) => ({ tag })),
+      parseDOM: ALLOWED_INLINE.map((tag) => ({
+        tag,
+        getAttrs: () => ({ tag }),
+      })),
       toDOM: (node) => [node.attrs.tag, 0],
     },
   },
   parse: {
-    // TODO(renato): it breaks if it's missing an end tag
     html_inline: (state, token) => {
-      const openMatch = token.content.match(/^<([a-z]+)>$/);
-      const closeMatch = token.content.match(/^<\/([a-z]+)>$/);
+      const openMatch = token.content.match(/^<([a-z]+)(\s[^>]*)?>/i);
+      const closeMatch = token.content.match(/^<\/([a-z]+)>$/i);
 
       if (openMatch) {
-        const tagName = openMatch[1];
+        const tagName = openMatch[1].toLowerCase();
+        const hasAttributes = openMatch[2];
+
+        if (hasAttributes) {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(token.content, "text/html");
+          const element = doc.body.firstElementChild;
+
+          if (element) {
+            // Handle links by delegating to the link mark
+            if (tagName === "a" && element.href) {
+              const attrs = {
+                href: element.getAttribute("href"),
+                title: element.title || null,
+              };
+              state.openMark(state.schema.marks.link.create(attrs));
+              return;
+            }
+
+            // Handle images by delegating to the image node (self-closing)
+            if (tagName === "img" && element.src) {
+              const attrs = {
+                src: element.src,
+                alt: element.alt || null,
+                title: element.title || null,
+                width: element.width || null,
+                height: element.height || null,
+              };
+              state.addNode(state.schema.nodes.image, attrs);
+              return;
+            }
+          }
+        }
+
         const markName = HTML_INLINE_MARKS[tagName];
         if (markName) {
           state.openMark(state.schema.marks[markName].create());
@@ -60,7 +93,13 @@ const extension = {
       }
 
       if (closeMatch) {
-        const tagName = closeMatch[1];
+        const tagName = closeMatch[1].toLowerCase();
+
+        if (tagName === "a") {
+          state.closeMark(state.schema.marks.link);
+          return;
+        }
+
         const markName = HTML_INLINE_MARKS[tagName];
         if (markName) {
           state.closeMark(state.schema.marks[markName].create());

@@ -1204,12 +1204,10 @@ lt:
     show_pinned_excerpt_desktop: "Rodyti ištrauką apie prisegtas temas darbalaukio rodinyje."
     logo: "Logotipo vaizdas viršutiniame kairiajame svetainės kampe. Naudokite platų stačiakampį vaizdą, kurio aukštis yra 120, o kraštinių santykis didesnis nei 3: 1. Jei jis paliekamas tuščias, bus rodomas svetainės pavadinimo tekstas."
     digest_logo: "Alternatyvus logotipo vaizdas, naudojamas jūsų svetainės el. pašto suvestinės viršuje. Naudokite platų stačiakampį vaizdą. Nenaudokite SVG vaizdo. Jei paliksite tuščią, bus naudojamas vaizdas iš „logotipo“ nustatymo."
-    mobile_logo: "Logotipas naudojamas mobiliojoje jūsų svetainės versijoje. Naudokite platų stačiakampį vaizdą, kurio aukštis yra 120, o kraštinių santykis didesnis nei 3:1. Jei paliktas tuščias, bus naudojamas paveikslėlis iš “logotipas” nustatymo."
     logo_dark: "Tamsios schemos alternatyva “logotipo” svetainės nustatymui."
     logo_small_dark: "Tamsios schemos alternatyva „mažo logotipo“ svetainės nustatymui."
     mobile_logo_dark: "Tamsios schemos alternatyva svetainės „mobiliojo logotipo“ nustatymui."
     large_icon: "Vaizdas naudojamas kaip kitų metaduomenų piktogramų pagrindas. Idealiu atveju turėtų būti didesnis nei 512 x 512. Jei paliksite tuščią, bus naudojamas logotipas_mažas."
-    email_custom_headers: "Brūkšniais atskirtas pasirinktinių el. laiškų antraščių sąrašas"
     force_https: "Priverskite savo svetainę naudoti tik HTTPS. ĮSPĖJIMAS: NEGALIMA to įjungti, kol nepatikrinate, kad HTTPS yra visiškai nustatytas ir veikia visiškai visur! Ar patikrinote savo CDN, visus socialinius prisijungimus ir visus išorinius logotipus / priklausomybes, kad įsitikintumėte, jog jie taip pat suderinami su HTTPS?"
     summary_score_threshold: "Minimalus balas, kurio reikia, kad įrašas būtų įtrauktas į „Apibendrinti šią temą“"
     summary_timeline_button: "Rodyti mygtuką “Apibendrinti” laiko juostoje"
@@ -1283,7 +1281,6 @@ lt:
     purge_deleted_uploads_grace_period_days: "Atidėjimo laikotarpis (dienomis), kol ištrintas įkėlimas ištrinamas."
     s3_access_key_id: "„Amazon S3“ prieigos rakto ID, kuris bus naudojamas vaizdams, priedams ir atsarginėms kopijoms įkelti."
     avatar_sizes: "Automatiškai sugeneruotų avatarų dydžių sąrašas."
-    external_system_avatars_url: "Išorinės sistemos avatarų paslaugos URL. Leidžiami pakeitimai yra {username} {first_letter} {color} {size}"
     external_emoji_url: "Jaustukų vaizdų išorinės paslaugos URL. Palikite tuščią, kad išjungtumėte."
     use_site_small_logo_as_system_avatar: "Naudokite mažą svetainės logotipą, o ne sistemos vartotojo avatarą. Reikalingas logotipas."
     enable_listing_suspended_users_on_search: "Įgalinkite nuolatinius vartotojus rasti sustabdytus vartotoj"
@@ -2190,10 +2187,7 @@ lt:
   page_not_found:
     page_title: "Puslapis nerastas"
     title: "Oi! Šis puslapis neegzistuoja arba yra privatus."
-    popular_topics: "Populiaros"
-    recent_topics: "Naujausios"
     see_more: "Daugiau"
-    search_title: "Ieškoti svetainėje"
     search_button: "Paieška"
   offline:
     title: "Nepavyko įkelti programos"
@@ -2251,7 +2245,6 @@ lt:
     latte: "Latte"
     summer: "Vasara"
     dark_rose: "Tamsi rožė"
-    default_theme_name: "Numatytasis"
     light_theme_name: "Šviesi"
     dark_theme_name: "Tamsi"
     neutral_theme_name: "Neutrali"
@@ -2503,10 +2496,6 @@ lt:
         Šis ženklelis suteikiamas už apsilankymą 365 dienas iš eilės. Oho, visus metus!
     badge_title_metadata: "%{display_name} ženklelis puslapyje %{site_title}"
   admin_login:
-    success: "El. paštas išsiųstas"
-    errors:
-      unknown_email_address: "Nežinomas e-pašto adresas"
-      invalid_token: "Netinkamas prieigos raktas."
     email_input: "Administratoriaus el. paštas"
     submit_button: "Siųsti e-paštą"
   performance_report:
@@ -2632,7 +2621,7 @@ lt:
         description: "Sutikti su pranešimu ir nutildyti narį."
       agree_and_restore:
         description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
-      delete_single:
+      delete:
         title: "Pašalinti"
         complete: "Įrašas ištrintas."
       delete_and_ignore:
@@ -2655,6 +2644,9 @@ lt:
         title: "Patvirtinti"
       approve_post:
         title: "Patvirtinti įrašą"
+      approve_post_closed:
+        title: "Patvirtinti įrašą"
+        complete: "Įrašas patvirtintas."
       reject_post:
         title: "Atmesti įrašą"
       approve_user:
@@ -2676,8 +2668,14 @@ lt:
         title: "Atmesti ir ištrinti įrašą"
       reject_and_keep_deleted:
         title: "Palikti įrašą ištrintą"
+      no_action_post:
+        title: "Jokių veiksmų"
+      delete_post:
+        complete: "Įrašas ištrintas"
+      no_action_user:
+        title: "Jokių veiksmų"
       delete_user:
-        complete: "Naudotojas ištrintas."
+        complete: "Naudotojas ištrintas"
   create_linked_topic:
     post_raw: "Tęsiant diskusiją nuo %{parent_url}.\n\nAnkstesnės diskusijos:\n\n%{previous_topics}"
     small_action_post_raw: "Tęsti diskusiją %{new_title}."

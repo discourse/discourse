@@ -7,11 +7,13 @@ import { service } from "@ember/service";
 import { and, eq, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import offsetCalculator from "discourse/lib/offset-calculator";
-import { Placeholder } from "discourse/lib/posts-with-placeholders";
+import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import Post from "./post";
 import PostGap from "./post/gap";
@@ -28,7 +30,6 @@ export default class PostStream extends Component {
   @service header;
   @service screenTrack;
   @service search;
-  @service site;
   @service siteSettings;
 
   @tracked cloakAbove;
@@ -62,12 +63,9 @@ export default class PostStream extends Component {
 
   @cached
   get posts() {
-    const postsToRender = this.capabilities.isAndroid
+    return this.capabilities.isAndroid
       ? this.args.postStream.posts
       : this.args.postStream.postsWithPlaceholders;
-
-    // TODO (glimmer-post-stream) ideally args.posts should be a TrackedArray
-    return postsToRender.toArray();
   }
 
   get firstAvailablePost() {
@@ -197,6 +195,11 @@ export default class PostStream extends Component {
     // requesting an animation frame to update the cloaking boundaries prevents Chrome from logging
     // [Violation] 'setTimeout' handler took <N>ms when scrolling fast
     requestAnimationFrame(() => {
+      if (this.cloakAbove === above && this.cloakBelow === below) {
+        // prevent Ember from trying to rerender the cloaking logic if the boundaries did not change
+        return;
+      }
+
       this.cloakAbove = above;
       this.cloakBelow = below;
     });
@@ -276,16 +279,14 @@ export default class PostStream extends Component {
               (this.viewportTracker.getCloakingData
                 post above=this.cloakAbove below=this.cloakBelow
               )
-              as |PostComponent cloakingData|
+              (eq this.keyboardSelectedPostNumber post.post_number)
+              as |PostComponent cloakingData keyboardSelected|
             }}
               <PostComponent
                 id={{concat "post_" post.post_number}}
                 class={{concatClass
                   (if cloakingData.active "post-stream--cloaked")
-                  (if
-                    (eq this.keyboardSelectedPostNumber post.post_number)
-                    "selected"
-                  )
+                  (if keyboardSelected "selected")
                 }}
                 style={{cloakingData.style}}
                 @cloaked={{cloakingData.active}}
@@ -302,13 +303,14 @@ export default class PostStream extends Component {
                 @filteringRepliesToPostNumber={{@filteringRepliesToPostNumber}}
                 @grantBadge={{fn @grantBadge post}}
                 @highlightTerm={{this.highlightTerm}}
+                @keyboardSelected={{keyboardSelected}}
                 @lockPost={{fn @lockPost post}}
                 @multiSelect={{@multiSelect}}
                 @permanentlyDeletePost={{fn @permanentlyDeletePost post}}
                 @rebakePost={{fn @rebakePost post}}
                 @recoverPost={{fn @recoverPost post}}
-                @removeAllowedGroup={{fn @removeAllowedGroup post}}
-                @removeAllowedUser={{fn @removeAllowedUser post}}
+                @removeAllowedGroup={{@removeAllowedGroup}}
+                @removeAllowedUser={{@removeAllowedUser}}
                 @replyToPost={{fn @replyToPost post}}
                 @selectBelow={{fn @selectBelow post}}
                 @selectReplies={{fn @selectReplies post}}
@@ -320,6 +322,7 @@ export default class PostStream extends Component {
                 @showPagePublish={{fn @showPagePublish post}}
                 @showRawEmail={{fn @showRawEmail post}}
                 @showReadIndicator={{@showReadIndicator}}
+                @streamElement={{true}}
                 @togglePostSelection={{fn @togglePostSelection post}}
                 @togglePostType={{fn @togglePostType post}}
                 @toggleReplyAbove={{fn @toggleReplyAbove post}}
@@ -357,6 +360,13 @@ export default class PostStream extends Component {
             class="post-stream__bottom-boundary"
             {{this.viewportTracker.registerBottomBoundary topicId=@topic.id}}
           ></div>
+          {{! this plugin outlet is only inserted when the real bottom of the post-stream is rendered
+           this is useful for plugins that want to render something at the bottom of the post-stream
+           e.g. a "no more posts" message }}
+          <PluginOutlet
+            @name="post-stream-bottom"
+            @outletArgs={{lazyHash posts=this.posts topic=@topic}}
+          />
         {{/if}}
       {{/unless}}
 

@@ -3,6 +3,10 @@
 .reviewable {
   background: var(--d-content-background);
 
+  .reviewable-top-nav {
+    margin-bottom: 1em;
+  }
+
   .flagged-post-header {
     width: 100%;
     display: flex;
@@ -128,7 +132,7 @@
   }
 
   .reviewable-user-details {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     padding-bottom: 0.25em;
     display: flex;
     margin-bottom: 0.5em;
@@ -546,7 +550,7 @@
     display: flex;
     width: 100%;
     overflow-x: scroll;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   &__table-wrapper {

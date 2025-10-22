@@ -45,7 +45,6 @@ export function registerFullPageSearchType(
 
 export default class FullPageSearchController extends Controller {
   @service composer;
-  @service modal;
   @service appEvents;
   @service siteSettings;
   @service searchPreferencesManager;
@@ -287,6 +286,12 @@ export default class FullPageSearchController extends Controller {
     );
   }
 
+  @discourseComputed("q")
+  isPMOnly(q) {
+    // Check if search is filtered to private messages only
+    return q && /\bin:(personal|messages|personal-direct|all-pms)\b/i.test(q);
+  }
+
   @discourseComputed("resultCount", "noSortQ")
   resultCountLabel(count, term) {
     const plus = count % 50 === 0 ? "+" : "";
@@ -380,7 +385,7 @@ export default class FullPageSearchController extends Controller {
     if (args.page === 1) {
       this.set("bulkSelectEnabled", false);
 
-      this.bulkSelectHelper.selected.clear();
+      this.bulkSelectHelper.clear();
       this.set("searching", true);
       scrollTop();
     } else {
@@ -544,7 +549,7 @@ export default class FullPageSearchController extends Controller {
   @action
   selectAll() {
     this.bulkSelectHelper.selected.addObjects(
-      this.get("searchResultPosts").mapBy("topic")
+      this.get("searchResultPosts").map((item) => item.topic)
     );
 
     // Doing this the proper way is a HUGE pain,

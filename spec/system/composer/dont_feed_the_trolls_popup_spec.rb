@@ -2,7 +2,7 @@
 
 describe "Composer don't feed the trolls popup", type: :system do
   fab!(:user)
-  fab!(:troll) { Fabricate(:user) }
+  fab!(:troll, :user)
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:post) { Fabricate(:post, user: user, topic: topic) }
   fab!(:reply) { Fabricate(:post, user: troll, topic: topic) }

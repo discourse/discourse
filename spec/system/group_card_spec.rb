@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Group Card", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:members) { Fabricate.times(12, :user) }
   fab!(:topic)
   fab!(:group) { Fabricate(:public_group, users: members) }

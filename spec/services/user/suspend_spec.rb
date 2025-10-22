@@ -13,7 +13,7 @@ RSpec.describe User::Suspend do
     end
     it do
       is_expected.to validate_inclusion_of(:post_action).in_array(
-        %w[delete delete_replies edit],
+        %w[delete delete_replies edit none],
       ).allow_blank
     end
   end
@@ -23,7 +23,7 @@ RSpec.describe User::Suspend do
 
     fab!(:admin)
     fab!(:user)
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
 
     let(:params) { { user_id:, reason:, suspend_until:, other_user_ids:, message: } }
     let(:dependencies) { { guardian: } }

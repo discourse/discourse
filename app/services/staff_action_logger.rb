@@ -340,6 +340,19 @@ class StaffActionLogger
     )
   end
 
+  def log_theme_site_setting_change(setting_name, previous_value, new_value, theme, opts = {})
+    raise Discourse::InvalidParameters.new(:theme) if !theme
+
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:change_theme_site_setting],
+        subject: "#{theme.name}: #{setting_name}",
+        previous_value: previous_value,
+        new_value: new_value,
+      ),
+    )
+  end
+
   def log_site_text_change(subject, new_text = nil, old_text = nil, opts = {})
     raise Discourse::InvalidParameters.new(:subject) if subject.blank?
     UserHistory.create!(
@@ -550,6 +563,12 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create!(
       params(opts).merge(action: UserHistory.actions[:impersonate], target_user_id: user.id),
+    )
+  end
+
+  def log_stop_impersonation(user, opts = {})
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:stop_impersonating], target_user_id: user.id),
     )
   end
 

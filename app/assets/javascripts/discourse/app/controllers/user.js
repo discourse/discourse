@@ -3,7 +3,7 @@ import EmberObject, { action, computed, set } from "@ember/object";
 import { and, equal, gt, not, or, readOnly } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import { isEmpty } from "@ember/utils";
+import { compare, isEmpty } from "@ember/utils";
 import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import { setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
@@ -27,6 +27,7 @@ export default class UserController extends Controller {
   @gt("model.number_of_flags_given", 0) hasGivenFlags;
   @gt("model.number_of_flagged_posts", 0) hasFlaggedPosts;
   @gt("model.number_of_deleted_posts", 0) hasDeletedPosts;
+  @gt("model.number_of_silencings", 0) hasBeenSilenced;
   @gt("model.number_of_suspensions", 0) hasBeenSuspended;
   @gt("model.warnings_received_count", 0) hasReceivedWarnings;
   @gt("model.number_of_rejected_posts", 0) hasRejectedPosts;
@@ -36,6 +37,7 @@ export default class UserController extends Controller {
     "hasGivenFlags",
     "hasFlaggedPosts",
     "hasDeletedPosts",
+    "hasBeenSilenced",
     "hasBeenSuspended",
     "hasReceivedWarnings",
     "hasRejectedPosts"
@@ -91,9 +93,9 @@ export default class UserController extends Controller {
     };
   }
 
-  @discourseComputed("model.suspended", "currentUser.staff")
-  isNotSuspendedOrIsStaff(suspended, isStaff) {
-    return !suspended || isStaff;
+  @discourseComputed("model.suspended", "model.silenced", "currentUser.staff")
+  isNotRestrictedOrIsStaff(suspended, silenced, isStaff) {
+    return (!suspended && !silenced) || isStaff;
   }
 
   @discourseComputed("model.trust_level")
@@ -158,8 +160,8 @@ export default class UserController extends Controller {
     if (!isEmpty(siteUserFields)) {
       const userFields = this.get("model.user_fields");
       return siteUserFields
-        .filterBy("show_on_profile", true)
-        .sortBy("position")
+        .filter((field) => field.show_on_profile)
+        .sort((a, b) => compare(a?.position, b?.position))
         .map((field) => {
           set(field, "dasherized_name", dasherize(field.get("name")));
           const value = userFields
@@ -167,7 +169,7 @@ export default class UserController extends Controller {
             : null;
           return isEmpty(value) ? null : EmberObject.create({ value, field });
         })
-        .compact();
+        .filter((item) => item != null);
     }
   }
 
@@ -210,13 +212,22 @@ export default class UserController extends Controller {
     return this.site.desktopView;
   }
 
-  @action
-  showSuspensions(event) {
-    event?.preventDefault();
-    this.adminTools.showActionLogs(this, {
-      target_user: this.get("model.username"),
-      action_name: "suspend_user",
-    });
+  get silencingsRouteQuery() {
+    return {
+      filters: {
+        target_user: this.get("model.username"),
+        action_name: "silence_user",
+      },
+    };
+  }
+
+  get suspensionsRouteQuery() {
+    return {
+      filters: {
+        target_user: this.get("model.username"),
+        action_name: "suspend_user",
+      },
+    };
   }
 
   @action

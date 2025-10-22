@@ -31,16 +31,24 @@ module PageObjects
         !is_expanded?
       end
 
-      def option(selector)
-        within("#d-menu-portals") { find(selector) }
+      def option(selector, match = nil)
+        params = {}
+        params[:match] = match if match
+        within("#d-menu-portals") { find(selector, **params) }
       end
 
-      def has_option?(selector)
-        within("#d-menu-portals") { has_css?(selector) }
+      def has_option?(selector, text = nil)
+        params = {}
+        params[:text] = text if text
+        within("#d-menu-portals") { has_css?(selector, **params) }
       end
 
       def has_no_option?(selector)
         within("#d-menu-portals") { has_no_css?(selector) }
+      end
+
+      def has_value?(value)
+        component.has_text?(value)
       end
     end
   end

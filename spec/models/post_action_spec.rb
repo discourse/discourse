@@ -237,9 +237,9 @@ RSpec.describe PostAction do
     end
 
     describe "likes consolidation" do
-      fab!(:liker) { Fabricate(:user) }
-      fab!(:liker2) { Fabricate(:user) }
-      fab!(:likee) { Fabricate(:user) }
+      fab!(:liker, :user)
+      fab!(:liker2, :user)
+      fab!(:likee, :user)
 
       it "can be disabled" do
         SiteSetting.notification_consolidation_threshold = 0

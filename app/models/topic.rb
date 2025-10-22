@@ -11,6 +11,7 @@ class Topic < ActiveRecord::Base
   include Trashable
   include Searchable
   include LimitedEdit
+  include Localizable
   extend Forwardable
 
   EXTERNAL_ID_MAX_LENGTH = 50
@@ -30,8 +31,6 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
   attr_accessor :allowed_user_ids, :allowed_group_ids, :tags_changed, :includes_destination_category
-
-  has_many :topic_localizations, dependent: :destroy
 
   def self.max_fancy_title_length
     400
@@ -304,7 +303,7 @@ class Topic < ActiveRecord::Base
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
-  has_many :topic_timers, dependent: :destroy
+  has_many :topic_timers, dependent: :destroy, foreign_key: :timerable_id
   has_many :reviewables
   has_many :user_profiles
 
@@ -356,7 +355,7 @@ class Topic < ActiveRecord::Base
           )
         end
 
-  scope :listable_topics, -> { where("topics.archetype <> ?", Archetype.private_message) }
+  scope :listable_topics, -> { where.not(topics: { archetype: Archetype.private_message }) }
 
   scope :by_newest, -> { order("topics.created_at desc, topics.id desc") }
 
@@ -409,12 +408,14 @@ class Topic < ActiveRecord::Base
   before_save do
     ensure_topic_has_a_category unless skip_callbacks
 
-    write_attribute(:fancy_title, Topic.fancy_title(title)) if title_changed?
+    self[:fancy_title] = Topic.fancy_title(title) if title_changed?
 
     if category_id_changed? || new_record?
       inherit_auto_close_from_category
       inherit_slow_mode_from_category
     end
+
+    self.locale = nil if locale.blank?
   end
 
   after_save do
@@ -536,7 +537,7 @@ class Topic < ActiveRecord::Base
 
     unless fancy_title = read_attribute(:fancy_title)
       fancy_title = Topic.fancy_title(title)
-      write_attribute(:fancy_title, fancy_title)
+      self[:fancy_title] = fancy_title
 
       if !new_record? && !Discourse.readonly_mode?
         # make sure data is set in table, this also allows us to change algorithm
@@ -708,6 +709,7 @@ class Topic < ActiveRecord::Base
   MAX_SIMILAR_BODY_LENGTH = 200
   SIMILAR_TOPIC_SEARCH_LIMIT = 10
   SIMILAR_TOPIC_LIMIT = 3
+  SIMILAR_TOPIC_MAX_BLURB_LENGTH = 500
 
   def self.similar_to(title, raw, user = nil)
     return [] if title.blank?
@@ -747,18 +749,66 @@ class Topic < ActiveRecord::Base
       #{excluded_category_ids_sql}
       UNION
       #{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql}
-      SQL
+    SQL
 
     candidates =
       Topic
         .visible
         .listable_topics
         .secured(guardian)
-        .joins("JOIN topic_search_data s ON topics.id = s.topic_id")
         .joins("LEFT JOIN categories c ON topics.id = c.topic_id")
-        .where("search_data @@ #{tsquery}")
         .where("c.topic_id IS NULL")
         .where("topics.category_id NOT IN (#{excluded_category_ids_sql})")
+
+    plugin_candidate_ids = []
+    plugin_candidate_ids =
+      DiscoursePluginRegistry.apply_modifier(
+        :similar_topic_candidate_ids,
+        plugin_candidate_ids,
+        title:,
+        raw:,
+        guardian:,
+        candidates:,
+      )
+
+    blurb_sql = "LEFT(p.cooked, #{SIMILAR_TOPIC_MAX_BLURB_LENGTH.to_i}) AS blurb"
+    select_fragment = ->(similarity_expr) do
+      DB.sql_fragment(
+        "topics.*, #{similarity_expr} AS similarity, #{blurb_sql}",
+        title: title,
+        raw: raw,
+      )
+    end
+
+    if plugin_candidate_ids.present? && plugin_candidate_ids.length > 0
+      ids = plugin_candidate_ids.map(&:to_i)
+      candidate_ids =
+        candidates
+          .where(id: ids)
+          .order("array_position(ARRAY[#{ids.join(",")}]::int[], topics.id)")
+          .limit(SIMILAR_TOPIC_LIMIT)
+          .pluck(:id)
+
+      if candidate_ids.present? && candidate_ids.length > 0
+        rank_array_sql = "ARRAY[#{candidate_ids.map(&:to_i).join(",")}]"
+        return(
+          Topic
+            .joins("JOIN posts AS p ON p.topic_id = topics.id AND p.post_number = 1")
+            .where(id: candidate_ids)
+            .select(
+              select_fragment.call(
+                "(array_length(#{rank_array_sql}, 1) - array_position(#{rank_array_sql}, topics.id) + 1)",
+              ),
+            )
+            .order("similarity DESC")
+        )
+      end
+    end
+
+    candidates =
+      candidates
+        .joins("JOIN topic_search_data s ON topics.id = s.topic_id")
+        .where("search_data @@ #{tsquery}")
         .order("ts_rank(search_data, #{tsquery}) DESC")
         .limit(SIMILAR_TOPIC_SEARCH_LIMIT)
 
@@ -775,23 +825,17 @@ class Topic < ActiveRecord::Base
 
     if raw.present?
       similars.select(
-        DB.sql_fragment(
-          "topics.*, similarity(topics.title, :title) + similarity(p.raw, :raw) AS similarity, p.cooked AS blurb",
-          title: title,
-          raw: raw,
-        ),
+        select_fragment.call("similarity(topics.title, :title) + similarity(p.raw, :raw)"),
       ).where(
         "similarity(topics.title, :title) + similarity(p.raw, :raw) > 0.2",
         title: title,
         raw: raw,
       )
     else
-      similars.select(
-        DB.sql_fragment(
-          "topics.*, similarity(topics.title, :title) AS similarity, p.cooked AS blurb",
-          title: title,
-        ),
-      ).where("similarity(topics.title, :title) > 0.2", title: title)
+      similars.select(select_fragment.call("similarity(topics.title, :title)")).where(
+        "similarity(topics.title, :title) > 0.2",
+        title: title,
+      )
     end
   end
 
@@ -1019,7 +1063,7 @@ class Topic < ActiveRecord::Base
 
   cattr_accessor :update_featured_topics
 
-  def changed_to_category(new_category)
+  def changed_to_category(new_category, silent: nil)
     return true if new_category.blank? || Category.exists?(topic_id: id)
 
     if new_category.id == SiteSetting.uncategorized_category_id &&
@@ -1051,7 +1095,9 @@ class Topic < ActiveRecord::Base
         CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
         CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
 
-        if !SiteSetting.disable_category_edit_notifications && (post = self.ordered_posts.first)
+        skip_alert = silent || SiteSetting.disable_category_edit_notifications
+
+        if !skip_alert && (post = self.ordered_posts.first)
           notified_user_ids = [post.user_id, post.last_editor_id].uniq
           DB.after_commit do
             Jobs.enqueue(
@@ -1128,7 +1174,7 @@ class Topic < ActiveRecord::Base
     new_post
   end
 
-  def change_category_to_id(category_id)
+  def change_category_to_id(category_id, silent: nil)
     return false if private_message?
 
     new_category_id = category_id.to_i
@@ -1142,7 +1188,7 @@ class Topic < ActiveRecord::Base
 
     reviewables.update_all(category_id: new_category_id)
 
-    changed_to_category(cat)
+    changed_to_category(cat, silent: silent)
   end
 
   def remove_allowed_group(removed_by, name)
@@ -1361,7 +1407,7 @@ class Topic < ActiveRecord::Base
     previous_banner = Topic.where(archetype: Archetype.banner).first
     previous_banner.remove_banner!(user) if previous_banner.present?
 
-    UserProfile.where("dismissed_banner_key IS NOT NULL").update_all(dismissed_banner_key: nil)
+    UserProfile.where.not(dismissed_banner_key: nil).update_all(dismissed_banner_key: nil)
 
     self.archetype = Archetype.banner
     self.bannered_until = bannered_until
@@ -1415,7 +1461,7 @@ class Topic < ActiveRecord::Base
       return "" if title.blank?
       slug = slug_for_topic(title)
       if new_record?
-        write_attribute(:slug, slug)
+        self[:slug] = slug
       else
         update_column(:slug, slug)
       end
@@ -1435,8 +1481,8 @@ class Topic < ActiveRecord::Base
 
   def title=(t)
     slug = slug_for_topic(t.to_s)
-    write_attribute(:slug, slug)
-    write_attribute(:fancy_title, nil)
+    self[:slug] = slug
+    self[:fancy_title] = nil
     write_attribute(:title, t)
   end
 
@@ -1618,7 +1664,7 @@ class Topic < ActiveRecord::Base
     topic_timer.status_type = status_type
 
     time_now = Time.zone.now
-    topic_timer.based_on_last_post = !based_on_last_post.blank?
+    topic_timer.based_on_last_post = based_on_last_post.present?
 
     if status_type == TopicTimer.types[:publish_to_category]
       topic_timer.category = Category.find_by(id: category_id)
@@ -1918,11 +1964,13 @@ class Topic < ActiveRecord::Base
     @is_category_topic ||= Category.exists?(topic_id: self.id.to_i)
   end
 
-  def reset_bumped_at(post_id = nil)
+  def reset_bumped_at(post_or_post_id = nil)
     post =
-      (
-        if post_id
-          Post.find_by(id: post_id)
+      if post_or_post_id.is_a?(Post)
+        post_or_post_id
+      else
+        if post_or_post_id
+          Post.find_by(id: post_or_post_id)
         else
           ordered_posts.where(
             user_deleted: false,
@@ -1930,7 +1978,7 @@ class Topic < ActiveRecord::Base
             post_type: Post.types[:regular],
           ).last || first_post
         end
-      )
+      end
 
     return if !post
 
@@ -2131,15 +2179,7 @@ class Topic < ActiveRecord::Base
   end
 
   def has_localization?(locale = I18n.locale)
-    topic_localizations.exists?(locale: locale.to_s.sub("-", "_"))
-  end
-
-  def in_user_locale?
-    locale == I18n.locale.to_s
-  end
-
-  def get_localization(locale = I18n.locale)
-    topic_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+    localizations.exists?(locale: locale.to_s.sub("-", "_"))
   end
 
   private

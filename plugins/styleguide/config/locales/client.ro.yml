@@ -75,8 +75,8 @@ ro:
           title: "Postare"
         topic_map:
           title: "Harta subiectului"
-        suggested_topics:
-          title: "Subiecte sugerate"
+        more_topics:
+          title: "Mai multe subiecte"
         post_menu:
           title: "Meniu postare"
         modal:

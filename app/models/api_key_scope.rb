@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class ApiKeyScope < ActiveRecord::Base
-  validates_presence_of :resource
-  validates_presence_of :action
+  validates :resource, presence: true
+  validates :action, presence: true
 
   class << self
     def list_actions
@@ -144,6 +144,9 @@ class ApiKeyScope < ActiveRecord::Base
           check_emails: {
             actions: %w[users#check_emails],
             params: %i[username],
+          },
+          create: {
+            actions: %w[users#create],
           },
           update: {
             actions: %w[

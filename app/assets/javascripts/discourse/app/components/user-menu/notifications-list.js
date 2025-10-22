@@ -35,7 +35,6 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   @service currentUser;
   @service siteSettings;
   @service site;
-  @service store;
   @service modal;
 
   get filterByTypes() {
@@ -57,7 +56,7 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
   get showDismiss() {
     return Object.keys(
       this.currentUser.get("grouped_unread_notifications") || {}
-    ).any((key) => {
+    ).some((key) => {
       return this.currentUser.get(`grouped_unread_notifications.${key}`) > 0;
     });
   }

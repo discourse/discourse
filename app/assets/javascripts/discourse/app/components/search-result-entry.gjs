@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -28,6 +29,11 @@ import { logSearchLinkClick } from "discourse/lib/search";
 @attributeBindings("role")
 export default class SearchResultEntry extends Component {
   role = "listitem";
+
+  get shouldShowPrivateMessageIcon() {
+    // Only show PM icon if this is a PM AND we're not in a PM-only search
+    return this.post.topic.isPrivateMessage && !this.isPMOnly;
+  }
 
   @action
   logClick(topicId, event) {
@@ -79,7 +85,7 @@ export default class SearchResultEntry extends Component {
           <TopicStatus
             @topic={{this.post.topic}}
             @disableActions={{true}}
-            @showPrivateMessageIcon={{true}}
+            @showPrivateMessageIcon={{this.shouldShowPrivateMessageIcon}}
           />
 
           <span class="topic-title">

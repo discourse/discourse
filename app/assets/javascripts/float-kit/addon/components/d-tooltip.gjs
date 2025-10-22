@@ -12,7 +12,6 @@ import DTooltipInstance from "float-kit/lib/d-tooltip-instance";
 
 export default class DTooltip extends Component {
   @service tooltip;
-  @service internalTooltip;
 
   tooltipInstance = new DTooltipInstance(getOwner(this), {
     ...this.allowedProperties,

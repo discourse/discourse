@@ -5,7 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import DModal from "discourse/components/d-modal";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Composer from "discourse/models/composer";
 import PostLocalization from "discourse/models/post-localization";
@@ -24,21 +26,6 @@ export default class PostTranslationsModal extends Component {
   constructor() {
     super(...arguments);
     this.loadPostLocalizations();
-  }
-
-  get originalPostContent() {
-    const originalLocale =
-      this.args.model.post?.locale || this.siteSettings.default_locale;
-
-    return `<div class='d-editor-translation-preview-wrapper'>
-         <span class='d-editor-translation-preview-wrapper__header'>
-          ${i18n("composer.translations.original_content")}
-            <span class='d-editor-translation-preview-wrapper__original-locale'>
-               ${originalLocale}
-            </span>
-         </span>
-          ${this.args.model.post.cooked}
-      </div>`;
   }
 
   async loadPostLocalizations() {
@@ -68,21 +55,26 @@ export default class PostTranslationsModal extends Component {
 
     this.args.closeModal();
 
+    const originalLocale = this.args.model.post?.locale;
+
+    const { raw } = await ajax(`/posts/${this.args.model.post.id}.json`);
+
     const composerOpts = {
       action: Composer.ADD_TRANSLATION,
       draftKey: "translation",
       warningsDisabled: true,
-      hijackPreview: this.originalPostContent,
+      hijackPreview: {
+        component: DEditorOriginalTranslationPreview,
+        model: {
+          postLocale: originalLocale,
+          rawPost: raw,
+        },
+      },
       post: this.args.model.post,
       selectedTranslationLocale: locale.locale,
     };
 
-    if (locale?.topic_localization) {
-      composerOpts.topicTitle = locale.topic_localization?.title;
-    }
-
     await this.composer.open(composerOpts);
-    this.composer.model.set("reply", locale.raw);
   }
 
   @action

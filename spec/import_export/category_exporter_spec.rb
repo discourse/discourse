@@ -6,8 +6,8 @@ RSpec.describe ImportExport::CategoryExporter do
   fab!(:category)
   fab!(:group)
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
+  fab!(:user2, :user)
+  fab!(:user3, :user)
 
   before { STDOUT.stubs(:write) }
 

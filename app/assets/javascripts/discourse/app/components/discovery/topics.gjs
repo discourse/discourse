@@ -4,6 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { not, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import CountI18n from "discourse/components/count-i18n";
@@ -19,7 +20,6 @@ import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import List from "discourse/components/topic-list/list";
 import basePath from "discourse/helpers/base-path";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -29,13 +29,10 @@ import { i18n } from "discourse-i18n";
 import PeriodChooser from "select-kit/components/period-chooser";
 
 export default class DiscoveryTopics extends Component {
-  @service router;
   @service composer;
   @service documentTitle;
-  @service modal;
   @service currentUser;
   @service topicTrackingState;
-  @service site;
 
   @tracked loadingNew;
 
@@ -141,29 +138,42 @@ export default class DiscoveryTopics extends Component {
       return;
     }
 
+    const filterSegments = (this.args.model.get("filter") || "").split("/");
+    const lastFilterSegment = filterSegments.at(-1);
+    const newOrUnreadFilter =
+      lastFilterSegment === "new" || lastFilterSegment === "unread";
     const { category, tag } = this.args;
     if (category) {
+      // We have a different custom display for the empty new + unread filter education.
+      if (topicsLength === 0 && newOrUnreadFilter) {
+        return;
+      }
+
       return i18n("topics.bottom.category", {
-        category: category.get("name"),
+        category: category.name,
       });
     } else if (tag) {
+      // We have a different custom display for the empty new + unread filter education.
+      if (topicsLength === 0 && newOrUnreadFilter) {
+        return;
+      }
+
       return i18n("topics.bottom.tag", {
         tag: tag.id,
       });
     } else {
-      const split = (this.args.model.get("filter") || "").split("/");
       if (topicsLength === 0) {
         // We have a different custom display for the empty new + unread filter education.
-        if (split[0] === "new" || split[0] === "unread") {
+        if (newOrUnreadFilter) {
           return;
         }
 
-        return i18n("topics.none." + split[0], {
-          category: split[1],
+        return i18n(`topics.none.${lastFilterSegment}`, {
+          category: filterSegments[1],
         });
       } else {
-        return i18n("topics.bottom." + split[0], {
-          category: split[1],
+        return i18n(`topics.bottom.${lastFilterSegment}`, {
+          category: filterSegments[1],
         });
       }
     }
@@ -177,7 +187,7 @@ export default class DiscoveryTopics extends Component {
     }
 
     const segments = (this.args.model.get("filter") || "").split("/");
-    const tab = segments[segments.length - 1];
+    const tab = segments.at(-1);
     if (tab === "new" || tab === "unread") {
       return true;
     }
@@ -186,11 +196,7 @@ export default class DiscoveryTopics extends Component {
   }
 
   get renderNewListHeaderControls() {
-    return (
-      this.site.mobileView &&
-      this.showTopicsAndRepliesToggle &&
-      !this.args.bulkSelectEnabled
-    );
+    return this.showTopicsAndRepliesToggle && !this.args.bulkSelectEnabled;
   }
 
   get expandGloballyPinned() {
@@ -311,6 +317,7 @@ export default class DiscoveryTopics extends Component {
 
       {{#if this.hasTopics}}
         <List
+          @ariaLabelledby="topic-list-heading"
           @highlightLastVisited={{true}}
           @top={{this.top}}
           @hot={{this.hot}}
@@ -328,12 +335,8 @@ export default class DiscoveryTopics extends Component {
           @topics={{@model.topics}}
           @discoveryList={{true}}
           @focusLastVisitedTopic={{true}}
-          @showTopicsAndRepliesToggle={{this.showTopicsAndRepliesToggle}}
-          @newListSubset={{@model.params.subset}}
-          @changeNewListSubset={{@changeNewListSubset}}
-          @newRepliesCount={{this.newRepliesCount}}
-          @newTopicsCount={{this.newTopicsCount}}
         />
+
         <LoadMore @action={{this.loadMore}} />
       {{/if}}
 
@@ -346,6 +349,7 @@ export default class DiscoveryTopics extends Component {
             tag=@tag
             loadingMore=@model.loadingMore
             canLoadMore=@model.canLoadMore
+            loadMore=this.loadMore
           }}
         />
       </span>
@@ -413,6 +417,12 @@ export default class DiscoveryTopics extends Component {
                 <EmptyTopicFilter
                   @newFilter={{this.new}}
                   @unreadFilter={{this.unread}}
+                  @trackingCounts={{hash
+                    newTopics=this.newTopicsCount
+                    newReplies=this.newRepliesCount
+                  }}
+                  @changeNewListSubset={{@changeNewListSubset}}
+                  @newListSubset={{@model.params.subset}}
                 />
               {{/if}}
             </:afterMessage>

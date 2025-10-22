@@ -1,0 +1,13 @@
+<%- site_link = raw(@markdown_linker.create(@site_name, '/')) %>
+
+<%= raw(@markdown_linker.references) %>
+
+<%= digest_custom_text("above_footer") %>
+<%=raw(t :'user_notifications.digest.unsubscribe',
+     site_link: site_link,
+     email_preferences_link: raw(@markdown_linker.create(t('user_notifications.digest.your_email_settings'), '/my/preferences/emails')),
+     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), "/email/unsubscribe/#{@unsubscribe_key}")))  %>
+
+<%= raw(@markdown_linker.references) %>
+
+<%= digest_custom_text("below_footer") %>

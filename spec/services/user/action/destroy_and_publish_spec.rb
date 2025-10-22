@@ -44,7 +44,7 @@ RSpec.describe User::Action::DestroyAndPublish do
     end
 
     context "when user destroyer raises an error" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
 
       it "publishes the result" do
         action

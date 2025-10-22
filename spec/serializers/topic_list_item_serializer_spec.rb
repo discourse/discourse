@@ -210,7 +210,7 @@ RSpec.describe TopicListItemSerializer do
 
   describe "#is_hot" do
     describe "including the attr based on theme modifier or plugin registry" do
-      fab!(:hot_topic) { Fabricate(:topic) }
+      fab!(:hot_topic, :topic)
 
       # Caching this directly to workaround the limit heuristic.
       before { Discourse.cache.write(TopicHotScore::CACHE_KEY, Set.new([hot_topic.id])) }

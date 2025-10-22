@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sw:
+  site_settings:
+    assign_enabled: "Ruhusu Programu Jalizi ya Ukabidhi"
+    assigns_public: "Ruhusu watu waone mada zilizotolewa"
+    assigns_user_url_path: "Njia kwenda kwa mada za watumiaji ambazo hazijakabidhiwa (tumia: {jina la mtumiaji} kuchukua nafasi ya jina la mtumiaji)"
+    assigns_by_staff_mention: "Kama msaidizi akimtaja mfanyakazi mwenzake, mada inakabidhiwa"
+    unassign_creates_tracking_post: "Mada zote ambazo hazijakabidhiwa kwa mtu, mabadiliko yake yanafuatiliwa."
+    unassign_on_group_archive: "Kama ujumbe umefanywa kuwa nyaraka kwenye kikundi, ondoa ukabidhi wa ujumbe (kabidhi kama ukirudishwa kisanduku pokezi)"
+    unassign_on_close: "Mada haitakabidhiwa kwa mtu kama ikiwa imefungwa"
+  discourse_assign:
+    assigned_to: "%{username} amepewa mada"
+    unassigned: "Hakuna mtu aliepewa hii mada"
+    already_claimed: "Hiyo mada imeshamilikiwa."
+    flag_assigned: "Samahani nembo hii ya mada imegawiwa kwa mtu mwingine"
+    flag_unclaimed: "Miliki mada kabla ya kutumia nembo"
+    reminders_frequency:
+      never: "kamwe"
+      daily: "kila siku"
+      weekly: "kila wiki"
+      monthly: "klla mwezi"
+      quarterly: "kila baada ya miezi mitatu"
+  assign_mailer:
+    subject_template: "[%{email_prefix}] %{assignee_name} amekukabidhi '%{topic_title}'!"
+    text_body_template: |
+      Habari, %{assignee_name} **amekuweka** kwenye majadiliano
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Kama umevutiwa, bonyeza kiunganisho:
+      [%{topic_link}](%{topic_link})

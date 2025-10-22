@@ -14,13 +14,13 @@ class SidebarUrl < ActiveRecord::Base
       segment: SidebarUrl.segments["primary"],
     },
     {
-      name: "My Posts",
+      name: "My posts",
       path: "/my/activity",
       icon: "user",
       segment: SidebarUrl.segments["primary"],
     },
     {
-      name: "My Messages",
+      name: "My messages",
       path: "/my/messages",
       icon: "inbox",
       segment: SidebarUrl.segments["primary"],
@@ -53,6 +53,7 @@ class SidebarUrl < ActiveRecord::Base
       icon: "certificate",
       segment: SidebarUrl.segments["secondary"],
     },
+    { name: "Filter", path: "/filter", icon: "filter", segment: SidebarUrl.segments["secondary"] },
   ]
 
   validates :icon, presence: true, length: { maximum: MAX_ICON_LENGTH }

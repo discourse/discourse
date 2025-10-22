@@ -1,0 +1,130 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse Předplatná"
+  site_settings:
+    discourse_subscriptions_enabled: Povolte plugin Discourse Předplatná.
+  js:
+    discourse_subscriptions:
+      optional: Volitelné
+      campaign:
+        success_title: Úspěch!
+      plans:
+        interval:
+          adverb:
+            day: Denně
+            week: Týdně
+            month: Měsíčně
+            year: Ročně
+      user:
+        payments:
+          created_at: Vytvořený
+        plans:
+          product: Název
+        subscriptions:
+          status: Stav
+          update_card:
+            single: "Aktualizovat"
+          created_at: Vytvořený
+          cancel: zrušit
+      subscribe:
+        cardholder_address:
+          city: Město
+        countries:
+          AR: "Argentina"
+          AU: "Austrálie"
+          AT: "Rakousko"
+          BR: "Brazílie"
+          CA: "Kanada"
+          CL: "Chile"
+          CO: "Kolumbie"
+          CR: "Kostarika"
+          HR: "Chorvatsko"
+          CZ: "Česká republika"
+          DK: "Dánsko"
+          EE: "Estonsko"
+          FI: "Finsko"
+          FR: "Francie"
+          GE: "Gruzie"
+          DE: "Německo"
+          GH: "Ghana"
+          GR: "Řecko"
+          GG: "Guernsey"
+          HK: "Hong Kong"
+          HU: "Maďarsko"
+          IS: "Island"
+          IN: "Indie"
+          ID: "Indonésie"
+          IE: "Irsko"
+          IM: "Ostrov Man"
+          IT: "Itálie"
+          JP: "Japonsko"
+          JE: "Jersey"
+          KE: "Keňa"
+          LV: "Lotyšsko"
+          LI: "Lichtenštejnsko"
+          LT: "Litva"
+          LU: "Lucembursko"
+          MY: "Malajsie"
+          MX: "Mexiko"
+          MA: "Maroko"
+          NL: "Nizozemsko"
+          NZ: "Nový Zéland"
+          NG: "Nigérie"
+          "NO": "Norsko"
+          PE: "Peru"
+          PH: "Filipíny"
+          PL: "Polsko"
+          PT: "Portugalsko"
+          RO: "Rumunsko"
+          RU: "Ruská federace"
+          SA: "Saudská arábie"
+          SG: "Singapur"
+          SK: "Slovensko"
+          SI: "Slovinsko"
+          ZA: "Jižní Afrika"
+          ES: "Španělsko"
+          SE: "Švédsko"
+          CH: "Švýcarsko"
+          TH: "Thajsko"
+          TN: "Tunisko"
+          TR: "Turecko"
+          UA: "Ukrajina"
+          AE: "Spojené arabské emiráty"
+          GB: "Spojené království"
+          US: "Spojené státy"
+          ZW: "Zimbabwe"
+      billing:
+        email: Email
+      admin:
+        dashboard:
+          title: Nástěnka
+          table:
+            head:
+              user: Uživatel
+        products:
+          product:
+            description: Popis
+            active: Aktivní
+            created_at: Vytvořený
+            updated_at: Aktualizováno
+        plans:
+          plan:
+            active: Aktivní
+            created_at: Vytvořený
+        coupons:
+          active: Aktivní?
+          actions: Akce
+        subscriptions:
+          subscription:
+            user: Uživatel
+            status: Stav
+            created_at: Vytvořený

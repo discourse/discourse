@@ -85,4 +85,6 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
       end
     end
   end
+
+  Theme.expire_site_cache! if name == :default_theme_id
 end

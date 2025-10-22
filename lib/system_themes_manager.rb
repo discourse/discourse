@@ -11,21 +11,32 @@ class SystemThemesManager
 
     theme_dir = "#{Rails.root}/themes/#{theme_name}"
 
-    remote_theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
-    if remote_theme.color_scheme
-      remote_theme.color_scheme.update!(user_selectable: true)
-      alternative_theme_name =
-        if remote_theme.color_scheme.name =~ / Dark$/
-          remote_theme.color_scheme.name.sub(" Dark", "")
-        else
-          "#{remote_theme.color_scheme.name} Dark"
-        end
-      remote_theme
-        .color_schemes
-        .where(name: alternative_theme_name)
-        .first
-        &.update!(user_selectable: true)
+    is_initial_install = !Theme.exists?(id: theme_id)
+
+    theme = RemoteTheme.import_theme_from_directory(theme_dir, theme_id: theme_id)
+    theme.update_column(:enabled, true)
+
+    if is_initial_install
+      if theme_id == Theme::CORE_THEMES["horizon"]
+        theme.update!(dark_color_scheme: theme.color_schemes.find_by(name: "Horizon Dark"))
+      end
     end
+
+    theme.save!
+
     Stylesheet::Manager.clear_theme_cache!
+  end
+
+  # Don't want user history created from theme site setting changes
+  # from system themes polluting specs.
+  def self.clear_system_theme_user_history!
+    return if !Rails.env.test?
+
+    Theme::CORE_THEMES.each_key do |theme_name|
+      UserHistory
+        .where(action: UserHistory.actions[:change_theme_site_setting])
+        .where("subject ILIKE :theme_name", theme_name: "#{theme_name}:%")
+        .destroy_all
+    end
   end
 end

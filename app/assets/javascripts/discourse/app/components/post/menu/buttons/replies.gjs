@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -26,7 +25,7 @@ export default class PostMenuRepliesButton extends Component {
   @service site;
 
   get disabled() {
-    return !!this.args.post.deleted;
+    return !!this.args.post.deleted || this.args.state?.repliesButtonDisabled;
   }
 
   get translatedTitle() {
@@ -47,7 +46,6 @@ export default class PostMenuRepliesButton extends Component {
       ...attributes
       disabled={{this.disabled}}
       @action={{@buttonActions.toggleReplies}}
-      @ariaControls={{concat "embedded-posts__bottom--" @post.post_number}}
       @ariaExpanded={{and @state.repliesShown (not @state.filteredRepliesView)}}
       @ariaPressed={{unless @state.filteredRepliesView @state.repliesShown}}
       @translatedAriaLabel={{i18n

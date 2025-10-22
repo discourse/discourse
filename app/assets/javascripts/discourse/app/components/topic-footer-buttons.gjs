@@ -1,13 +1,16 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat, hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
+import { compare } from "@ember/utils";
 import { attributeBindings } from "@ember-decorators/component";
 import { eq, gt } from "truth-helpers";
 import BookmarkMenu from "discourse/components/bookmark-menu";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import PinnedButton from "discourse/components/pinned-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
 import UserTip from "discourse/components/user-tip";
@@ -21,7 +24,6 @@ import { getTopicFooterDropdowns } from "discourse/lib/register-topic-footer-dro
 import TopicBookmarkManager from "discourse/lib/topic-bookmark-manager";
 import { i18n } from "discourse-i18n";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import PinnedButton from "select-kit/components/pinned-button";
 import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
 import DMenu from "float-kit/components/d-menu";
 
@@ -29,32 +31,43 @@ function bind(fn, context) {
   return fn.bind(context);
 }
 
-@attributeBindings("role")
+@attributeBindings("role", "aria-label")
 export default class TopicFooterButtons extends Component {
   elementId = "topic-footer-buttons";
   role = "region";
-
-  @getTopicFooterButtons() inlineButtons;
-  @getTopicFooterDropdowns() inlineDropdowns;
+  "aria-label" = i18n("topic.footer_buttons.region_label");
 
   @alias("currentUser.can_send_private_messages") canSendPms;
   @alias("topic.details.can_invite_to") canInviteTo;
   @alias("currentUser.user_option.enable_defer") canDefer;
   @or("topic.archived", "topic.closed", "topic.deleted") inviteDisabled;
 
+  get inlineButtons() {
+    return getTopicFooterButtons(this);
+  }
+
+  get inlineDropdowns() {
+    return getTopicFooterDropdowns(this);
+  }
+
   @discourseComputed("canSendPms", "topic.isPrivateMessage")
   canArchive(canSendPms, isPM) {
     return canSendPms && isPM;
   }
 
-  @computed("inlineButtons.[]", "inlineDropdowns.[]")
   get inlineActionables() {
-    return this.inlineButtons
-      .filterBy("dropdown", false)
-      .filterBy("anonymousOnly", false)
-      .concat(this.inlineDropdowns)
-      .sortBy("priority")
-      .reverse();
+    return (
+      this.inlineButtons
+        .filter(
+          (button) =>
+            button.dropdown === false && button.anonymousOnly === false
+        )
+        .concat(this.inlineDropdowns)
+        .sort((a, b) => compare(a?.priority, b?.priority))
+        // Reversing the array is necessary because when priorities are not set,
+        // we want to show the most recently added item first
+        .reverse()
+    );
   }
 
   @computed("topic")
@@ -62,15 +75,12 @@ export default class TopicFooterButtons extends Component {
     return new TopicBookmarkManager(getOwner(this), this.topic);
   }
 
-  // topic.assigned_to_user is for backward plugin support
-  @discourseComputed("inlineButtons.[]", "topic.assigned_to_user")
-  dropdownButtons(inlineButtons) {
-    return inlineButtons.filter((button) => button.dropdown);
+  get dropdownButtons() {
+    return this.inlineButtons.filter((button) => button.dropdown);
   }
 
-  @discourseComputed("dropdownButtons.[]")
-  loneDropdownButton(dropdownButtons) {
-    return dropdownButtons.length === 1 ? dropdownButtons[0] : null;
+  get loneDropdownButton() {
+    return this.dropdownButtons.length === 1 ? this.dropdownButtons[0] : null;
   }
 
   @discourseComputed("topic.isPrivateMessage")
@@ -127,7 +137,7 @@ export default class TopicFooterButtons extends Component {
           @buttonClasses="topic-footer-button"
         />
 
-        {{#each this.inlineActionables as |actionable|}}
+        {{#each this.inlineActionables key="id" as |actionable|}}
           {{#if (eq actionable.type "inline-button")}}
             {{#if (eq actionable.id "bookmark")}}
               <BookmarkMenu
@@ -197,7 +207,7 @@ export default class TopicFooterButtons extends Component {
               </:trigger>
               <:content>
                 <DropdownMenu as |dropdown|>
-                  {{#each this.dropdownButtons as |button|}}
+                  {{#each this.dropdownButtons key="id" as |button|}}
                     <dropdown.item>
                       <DButton
                         @action={{button.action}}

@@ -43,7 +43,6 @@ hy:
       save: "Պահպանել"
       sounds:
         none: "Ոչ մի"
-      exit: "ետ"
       channel_status:
         closed: "Փակված"
         open: "Բացել"

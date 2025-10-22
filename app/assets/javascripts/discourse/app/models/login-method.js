@@ -1,6 +1,7 @@
 import EmberObject from "@ember/object";
 import { Promise } from "rsvp";
 import { updateCsrfToken } from "discourse/lib/ajax";
+import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import Session from "discourse/models/session";
@@ -8,7 +9,7 @@ import Site from "discourse/models/site";
 import { i18n } from "discourse-i18n";
 
 export default class LoginMethod extends EmberObject {
-  static buildPostForm(url) {
+  static buildPostForm(url, params = {}) {
     // Login always happens in an anonymous context, with no CSRF token
     // So we need to fetch it before sending a POST request
     return updateCsrfToken().then(() => {
@@ -17,10 +18,17 @@ export default class LoginMethod extends EmberObject {
       form.setAttribute("method", "post");
       form.setAttribute("action", url);
 
-      const input = document.createElement("input");
-      input.setAttribute("name", "authenticity_token");
-      input.setAttribute("value", Session.currentProp("csrfToken"));
-      form.appendChild(input);
+      const csrfInput = document.createElement("input");
+      csrfInput.setAttribute("name", "authenticity_token");
+      csrfInput.setAttribute("value", Session.currentProp("csrfToken"));
+      form.appendChild(csrfInput);
+
+      Object.keys(params).forEach((key) => {
+        const input = document.createElement("input");
+        input.setAttribute("name", key);
+        input.setAttribute("value", params[key]);
+        form.appendChild(input);
+      });
 
       document.body.appendChild(form);
 
@@ -31,6 +39,11 @@ export default class LoginMethod extends EmberObject {
   @discourseComputed
   title() {
     return this.title_override || i18n(`login.${this.name}.title`);
+  }
+
+  @discourseComputed
+  icon() {
+    return this.icon_override || "user";
   }
 
   @discourseComputed
@@ -57,25 +70,27 @@ export default class LoginMethod extends EmberObject {
       return Promise.resolve();
     }
 
-    let authUrl = getURL(`/auth/${this.name}`);
-
     if (reconnect) {
-      params["reconnect"] = true;
+      params.reconnect = true;
     }
 
     if (signup) {
-      params["signup"] = true;
+      params.signup = true;
+
+      const email = Session.currentProp("email");
+      if (email) {
+        params.email = email;
+      }
     }
 
-    const paramKeys = Object.keys(params);
-    if (paramKeys.length > 0) {
-      authUrl += "?";
-      authUrl += paramKeys
-        .map((k) => `${encodeURIComponent(k)}=${encodeURIComponent(params[k])}`)
-        .join("&");
+    const destinationUrl = cookie("destination_url");
+    if (destinationUrl) {
+      params.origin = destinationUrl;
     }
 
-    return LoginMethod.buildPostForm(authUrl).then((form) => form.submit());
+    return LoginMethod.buildPostForm(getURL(`/auth/${this.name}`), params).then(
+      (form) => form.submit()
+    );
   }
 }
 
@@ -92,6 +107,8 @@ export function findAll() {
 
   // exclude FA icon for Google, uses custom SVG
   methods.forEach((m) => m.set("isGoogle", m.name === "google_oauth2"));
+
+  methods.forEach((m) => m.set("isDiscourseID", m.name === "discourse_id"));
 
   return methods;
 }

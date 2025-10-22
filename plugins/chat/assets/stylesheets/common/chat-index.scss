@@ -62,19 +62,6 @@
       }
     }
   }
-
-  .channel-list-empty-message {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    height: 100%;
-
-    .channel-title {
-      margin-bottom: 1rem;
-    }
-  }
 }
 
 .chat-channel-divider {

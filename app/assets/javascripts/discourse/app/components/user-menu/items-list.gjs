@@ -114,7 +114,7 @@ export default class UserMenuItemsList extends Component {
         <div class="spinner"></div>
       </div>
     {{else if this.items.length}}
-      <ul aria-labelledby={{@ariaLabelledby}}>
+      <ul aria-labelledby={{@ariaLabelledby}} class={{@class}}>
         {{#each this.items as |item|}}
           <MenuItem @item={{item}} @closeUserMenu={{@closeUserMenu}} />
         {{/each}}

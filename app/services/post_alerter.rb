@@ -539,6 +539,8 @@ class PostAlerter
       return
     end
 
+    return if type == Notification.types[:linked] && !user.user_option.notify_on_linked_posts
+
     return if !Guardian.new(user).can_receive_post_notifications?(post)
 
     return if user.staged? && topic.category&.mailinglist_mirror?
@@ -1037,7 +1039,7 @@ class PostAlerter
     notify = notify.where(staged: false).staff if post.topic.private_message?
 
     exclude_user_ids = notified.map(&:id)
-    notify = notify.where("users.id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
+    notify = notify.where.not(id: exclude_user_ids) if exclude_user_ids.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
 

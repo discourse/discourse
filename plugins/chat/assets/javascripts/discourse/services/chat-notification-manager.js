@@ -7,10 +7,10 @@ import {
 import { isTesting } from "discourse/lib/environment";
 
 export default class ChatNotificationManager extends Service {
+  @service capabilities;
   @service chat;
   @service currentUser;
   @service appEvents;
-  @service site;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -54,6 +54,8 @@ export default class ChatNotificationManager extends Service {
   }
 
   get #shouldRun() {
-    return this.site.desktopView && this.chat.userCanChat && !isTesting();
+    return (
+      !this.capabilities.isMobileDevice && this.chat.userCanChat && !isTesting()
+    );
   }
 }

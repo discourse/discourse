@@ -26,17 +26,29 @@
 
 .topic-list {
   @extend .topic-list-icons;
-  margin: 0 0 10px;
+  margin: var(--d-topic-list-margin-y) var(--d-topic-list-margin-x)
+    var(--d-topic-list-margin-bottom);
+
+  .topic-list-header {
+    font-size: var(--d-topic-list-header-font-size);
+  }
+
+  .topic-list-header .topic-list-data {
+    padding: var(--d-topic-list-header-data-padding-y)
+      var(--d-topic-list-header-data-padding-x);
+    color: var(--d-topic-list-header-text-color);
+  }
 
   .topic-list-data {
-    padding: var(--space-3) var(--space-1);
+    padding: var(--d-topic-list-data-padding-y)
+      var(--d-topic-list-data-padding-x);
 
     &:first-of-type {
-      padding-inline-start: 0.75rem;
+      padding-inline-start: var(--d-topic-list-data-padding-inline-start);
     }
 
     &:last-of-type {
-      padding-inline-end: 0.75rem;
+      padding-inline-end: var(--d-topic-list-data-padding-inline-end);
     }
 
     th & {
@@ -65,19 +77,6 @@
     }
   }
 
-  .topics-replies-toggle {
-    background: none;
-    border: none;
-    line-height: var(--line-height-large);
-    padding-left: var(--space-2);
-    padding-right: var(--space-2);
-    position: relative;
-
-    &.active {
-      @include nav-active;
-    }
-  }
-
   $td-posters-height: 29px; // min-height of td with avatar glow
   $td-posters-more-lh: $td-posters-height - 4;
 
@@ -85,6 +84,11 @@
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
     width: 175px;
+
+    img.avatar {
+      height: var(--d-topic-list-avatar-size);
+      width: var(--d-topic-list-avatar-size);
+    }
 
     > a {
       float: left;
@@ -103,7 +107,7 @@
     }
   }
 
-  .topic-list-data.posters {
+  td.topic-list-data.posters {
     height: $td-posters-height;
   }
 
@@ -115,15 +119,15 @@
   }
 
   .likes {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .views {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .posts {
-    width: 4.3em;
+    width: var(--d-topic-list-likes-views-posts-width);
   }
 
   .post-actions {
@@ -230,11 +234,6 @@
   }
 }
 
-.category-logo.aspect-image {
-  float: left;
-  margin: var(--space-1) var(--space-8) var(--space-8) 0;
-}
-
 /* Tablet (portrait) ----------- */
 
 // These styles kick in a little earlier when the sidebar appears
@@ -279,6 +278,20 @@
   }
 }
 
+.topic-replies-toggle-wrapper {
+  .topics-replies-toggle {
+    background: none;
+    border: none;
+    line-height: var(--line-height-large);
+    padding: var(--space-2);
+    position: relative;
+
+    &.active {
+      @include nav-active;
+    }
+  }
+}
+
 @include viewport.until(lg) {
   .nav-pills {
     > li > a {
@@ -300,4 +313,13 @@
 
 .container.list-container {
   position: relative;
+  padding: 0 var(--list-container-padding-x);
+}
+
+.container.list-container.--categories {
+  padding: 0 var(--list-container-categories-padding-x);
+}
+
+.container.list-container.--topic-list {
+  padding: 0 var(--list-container-topiclist-padding-x);
 }

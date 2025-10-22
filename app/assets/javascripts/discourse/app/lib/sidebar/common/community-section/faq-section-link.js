@@ -1,7 +1,10 @@
+import { service } from "@ember/service";
 import BaseSectionLink from "discourse/lib/sidebar/base-community-section-link";
 import { i18n } from "discourse-i18n";
 
 export default class FAQSectionLink extends BaseSectionLink {
+  @service siteSettings;
+
   get renameToGuidelines() {
     return (
       this.siteSettings.experimental_rename_faq_to_guidelines && !this.href
@@ -29,7 +32,7 @@ export default class FAQSectionLink extends BaseSectionLink {
   }
 
   get text() {
-    const name = this.renameToGuidelines ? "Guidelines" : this.overridenName;
+    const name = this.renameToGuidelines ? "Guidelines" : this.overriddenName;
 
     return i18n(
       `sidebar.sections.community.links.${name.toLowerCase()}.content`,

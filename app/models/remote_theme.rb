@@ -40,10 +40,12 @@ class RemoteTheme < ActiveRecord::Base
           )
         end
 
-  validates_format_of :minimum_discourse_version,
-                      :maximum_discourse_version,
-                      with: Discourse::VERSION_REGEXP,
-                      allow_nil: true
+  validates :minimum_discourse_version,
+            :maximum_discourse_version,
+            format: {
+              with: Discourse::VERSION_REGEXP,
+              allow_nil: true,
+            }
 
   def self.extract_theme_info(importer)
     if importer.file_size("about.json") > MAX_METADATA_FILE_SIZE
@@ -138,7 +140,7 @@ class RemoteTheme < ActiveRecord::Base
         if update_components == "sync"
           ChildTheme
             .joins(child_theme: :remote_theme)
-            .where("remote_themes.remote_url NOT IN (?)", child_components)
+            .where.not(remote_themes: { remote_url: child_components })
             .delete_all
         end
 
@@ -201,7 +203,7 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def self.unreachable_themes
-    self.joined_remotes.where("last_error_text IS NOT NULL").pluck("themes.name", "themes.id")
+    self.joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
   end
 
   def out_of_date?
@@ -386,6 +388,8 @@ class RemoteTheme < ActiveRecord::Base
         raise ActiveRecord::Rollback if !theme.save
       end
 
+      create_theme_site_settings(theme, theme_info["theme_site_settings"])
+
       theme.migrate_settings(start_transaction: false) if run_migrations
     end
 
@@ -415,12 +419,21 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def update_theme_color_schemes(theme, schemes)
-    missing_scheme_names = Hash[*theme.color_schemes.pluck(:name, :id).flatten]
+    existing_schemes = ColorScheme.unscoped.where(theme_id: theme.id)
+
+    missing_scheme_names =
+      existing_schemes.reduce({}) do |hash, cs|
+        hash[cs.name] = cs if !cs.remote_copy
+        hash
+      end
+
     ordered_schemes = []
 
     schemes&.each do |name, colors|
       missing_scheme_names.delete(name)
-      scheme = theme.color_schemes.find_by(name: name) || theme.color_schemes.build(name: name)
+      scheme = existing_schemes.find { |cs| cs.name == name && cs.remote_copy }
+      scheme ||= existing_schemes.find { |cs| cs.name == name }
+      scheme ||= theme.color_schemes.build(name: name)
 
       # Update main colors
       ColorScheme.base.colors_hashes.each do |color|
@@ -450,11 +463,50 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     if missing_scheme_names.length > 0
-      ColorScheme.where(id: missing_scheme_names.values).delete_all
-      # we may have stuff pointed at the incorrect scheme?
+      to_be_deleted_ids = []
+      missing_scheme_names.values.each do |cs|
+        if (base = existing_schemes.find { |s| s.id == cs.base_scheme_id && s.remote_copy })
+          to_be_deleted_ids << cs.base_scheme_id
+        else
+          to_be_deleted_ids << cs.id
+        end
+      end
+
+      ColorScheme.unscoped.where(id: to_be_deleted_ids).destroy_all
     end
 
     theme.color_scheme = ordered_schemes.first if theme.new_record?
+  end
+
+  def create_theme_site_settings(theme, theme_site_settings)
+    theme_site_settings ||= {}
+
+    existing_theme_site_settings =
+      theme.theme_site_settings.where(name: theme_site_settings.keys).to_a
+    theme_site_settings.each do |setting, value|
+      next if !SiteSetting.themeable[setting.to_sym]
+
+      # If there is an existing theme site setting, then don't touch it,
+      # we don't want to mess with site owner's changes.
+      existing_theme_site_setting =
+        existing_theme_site_settings.find do |theme_site_setting|
+          theme_site_setting.name == setting
+        end
+      next if existing_theme_site_setting.present?
+
+      # The manager handles creating the theme site setting record
+      # if it does not exist.
+      Themes::ThemeSiteSettingManager.call(
+        params: {
+          theme_id: theme.id,
+          name: setting,
+          value: value,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
+    end
+
+    SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
   end
 
   def github_diff_link

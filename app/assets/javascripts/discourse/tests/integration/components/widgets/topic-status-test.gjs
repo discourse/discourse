@@ -7,6 +7,10 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Component | Widget | topic-status", function (hooks) {
   setupRenderingTest(hooks);
 
+  hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
+  });
+
   test("basics", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const args = {
@@ -18,7 +22,7 @@ module("Integration | Component | Widget | topic-status", function (hooks) {
       <template><MountWidget @widget="topic-status" @args={{args}} /></template>
     );
 
-    assert.dom(".topic-status .d-icon-lock").exists();
+    assert.dom(".topic-status [class*='d-icon-topic.closed']").exists();
   });
 
   test("toggling pin status", async function (assert) {

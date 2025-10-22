@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
@@ -53,11 +54,11 @@ export default class BadgeTitle extends Component {
   }
 
   _findBadgeById(badges, id) {
-    return (badges || []).findBy("id", id);
+    return (badges || []).find((b) => b.id === id);
   }
 
   _findBadgeByTitle(badges, title) {
-    return (badges || []).findBy("badge.name", title);
+    return (badges || []).find((b) => b.badge.name === title);
   }
 
   <template>

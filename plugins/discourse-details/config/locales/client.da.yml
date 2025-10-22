@@ -11,8 +11,6 @@ da:
         categories:
           discourse_details: "Discourse Detaljer"
   js:
-    details:
-      title: Skjul detaljer
     composer:
       details_title: Resume
       details_text: "Denne tekst vil blive skjult"

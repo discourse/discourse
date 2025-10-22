@@ -485,7 +485,7 @@ class TopicView
   def has_deleted?
     @predelete_filtered_posts
       .with_deleted
-      .where("posts.deleted_at IS NOT NULL")
+      .where.not(deleted_at: nil)
       .where("posts.post_number > 1")
       .exists?
   end
@@ -929,7 +929,7 @@ class TopicView
         :deleted_by,
         :incoming_email,
         :image_upload,
-        :post_localizations,
+        :localizations,
       )
 
     @posts = @posts.includes({ user: :user_status }) if SiteSetting.enable_user_status
@@ -972,7 +972,7 @@ class TopicView
   def unfiltered_posts
     result = filter_post_types(@topic.posts)
     result = result.with_deleted if @guardian.can_see_deleted_posts?(@topic.category)
-    result = result.where("user_id IS NOT NULL") if @exclude_deleted_users
+    result = result.where.not(user_id: nil) if @exclude_deleted_users
     result = result.where(hidden: false) if @exclude_hidden
     result
   end

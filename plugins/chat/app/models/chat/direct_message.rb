@@ -94,7 +94,7 @@ end
 # Table name: direct_message_channels
 #
 #  id         :bigint           not null, primary key
-#  group      :boolean
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  group      :boolean          default(FALSE), not null
 #

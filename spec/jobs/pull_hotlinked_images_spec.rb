@@ -585,7 +585,7 @@ RSpec.describe Jobs::PullHotlinkedImages do
   end
 
   describe "with a lightboxed image" do
-    fab!(:upload) { Fabricate(:large_image_upload) }
+    fab!(:upload, :large_image_upload)
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
 
     before { Jobs.run_immediately! }
@@ -638,8 +638,9 @@ RSpec.describe Jobs::PullHotlinkedImages do
   end
 
   describe "#disable_if_low_on_disk_space" do
+    subject(:job) { described_class.new }
+
     fab!(:post) { Fabricate(:post, user: user, created_at: 20.days.ago) }
-    let(:job) { Jobs::PullHotlinkedImages.new }
 
     before do
       SiteSetting.download_remote_images_to_local = true

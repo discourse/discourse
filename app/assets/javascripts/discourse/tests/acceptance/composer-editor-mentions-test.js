@@ -21,7 +21,10 @@ acceptance("Composer - editor mentions", function (needs) {
   };
 
   needs.user();
-  needs.settings({ enable_mentions: true, allow_uncategorized_topics: true });
+  needs.settings({
+    enable_mentions: true,
+    allow_uncategorized_topics: true,
+  });
   needs.hooks.afterEach(() => clock?.restore());
 
   needs.pretender((server, helper) => {
@@ -45,6 +48,12 @@ acceptance("Composer - editor mentions", function (needs) {
             name: "Some User",
             avatar_template:
               "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+          },
+          {
+            username: "johndoe",
+            name: "John Doe Jr",
+            avatar_template:
+              "https://avatars.discourse.org/v3/letter/j/41988e/{size}.png",
           },
           {
             username: "foo",
@@ -124,14 +133,14 @@ acceptance("Composer - editor mentions", function (needs) {
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
-      ["user", "user2", "user_group", "foo"]
+      ["user", "user2", "user_group", "johndoe", "foo"]
     );
 
     await simulateKeys(".d-editor-input", "\bf");
 
     assert.deepEqual(
       [...queryAll(".ac-user .username")].map((e) => e.innerText),
-      ["foo", "user", "user2"]
+      ["foo", "user", "user2", "johndoe"]
     );
   });
 
@@ -146,7 +155,18 @@ acceptance("Composer - editor mentions", function (needs) {
       [...document.querySelectorAll(".ac-user .username")].map(
         (e) => e.innerText
       ),
-      ["user_group", "user", "user2", "foo"]
+      ["user_group", "user", "user2", "johndoe", "foo"]
     );
+  });
+
+  test("selecting user mentions by partial full name", async function (assert) {
+    await visit("/");
+    await click("#create-topic");
+
+    await simulateKeys(".d-editor-input", "abc @John Doe J\r");
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue("abc @johndoe ", "replaces full name mention correctly");
   });
 });

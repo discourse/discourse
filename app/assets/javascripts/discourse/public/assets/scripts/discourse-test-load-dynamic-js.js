@@ -1,12 +1,33 @@
 const dynamicJsTemplate = document.querySelector("#dynamic-test-js");
 
 const params = new URLSearchParams(document.location.search);
-const target = params.get("target");
-const skipPlugins = !target || target === "core";
+const target = params.get("target") || "core";
+
+// Same list maintained in qunit_controller.rb
+const alwaysRequiredPlugins = ["discourse-local-dates"];
+
+const requiredPluginInfo = JSON.parse(
+  dynamicJsTemplate.content.querySelector("#discourse-required-plugin-info")
+    ?.innerHTML || "{}"
+);
 
 (async function setup() {
   for (const element of dynamicJsTemplate.content.childNodes) {
-    if (skipPlugins && element.dataset?.discoursePlugin) {
+    const pluginName = element.dataset?.discoursePlugin;
+
+    if (pluginName && target === "core") {
+      continue;
+    }
+
+    const shouldLoad =
+      !pluginName ||
+      ["all", "plugins"].includes(target) ||
+      pluginName === "_all" ||
+      target === pluginName ||
+      alwaysRequiredPlugins.includes(pluginName) ||
+      requiredPluginInfo[target]?.includes(pluginName);
+
+    if (!shouldLoad) {
       continue;
     }
 

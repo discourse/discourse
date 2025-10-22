@@ -4,7 +4,7 @@ RSpec.describe ReviewableNote do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
+  fab!(:reviewable, :reviewable_flagged_post)
 
   describe "associations" do
     it { is_expected.to belong_to(:reviewable) }

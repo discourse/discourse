@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 describe Chat::InlineOneboxHandler do
-  fab!(:private_category_group) { Fabricate(:group) }
+  fab!(:private_category_group, :group)
   fab!(:private_category) { Fabricate(:private_category, group: private_category_group) }
   fab!(:private_channel) { Fabricate(:category_channel, chatable: private_category) }
-  fab!(:public_channel) { Fabricate(:category_channel) }
+  fab!(:public_channel, :category_channel)
   fab!(:user)
   fab!(:user_2) { Fabricate(:user, active: false) }
   fab!(:user_3) { Fabricate(:user, staged: true) }

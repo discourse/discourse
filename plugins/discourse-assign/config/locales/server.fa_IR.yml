@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  discourse_assign:
+    filter:
+      description:
+        assigned: "فیلتر کردن موضوعاتی که به کاربر یا گروه خاصی اختصاص داده شده‌اند"
+        nobody: "فیلتر کردن موضوعاتی که به هیچ‌کس اختصاص داده نشده‌اند"
+        anyone: "فیلتر کردن موضوعاتی که به هر کسی اختصاص داده شده‌اند"
+    reminders_frequency:
+      never: "هیچ‌وقت"
+      daily: "روزانه"
+      weekly: "هفتگی"
+      monthly: "ماهیانه"
+      quarterly: "فصلی"

@@ -1,11 +1,3 @@
-// If you add any methods to the API ensure you bump up the version number
-// based on Semantic Versioning 2.0.0. Please update the changelog at
-// docs/CHANGELOG-JAVASCRIPT-PLUGIN-API.md whenever you change the version
-// using the format described at https://keepachangelog.com/en/1.0.0/.
-
-export const PLUGIN_API_VERSION = "2.1.1";
-
-import Component from "@glimmer/component";
 import $ from "jquery";
 import { h } from "virtual-dom";
 import { addAboutPageActivity } from "discourse/components/about-page";
@@ -19,7 +11,6 @@ import {
 } from "discourse/components/composer-editor";
 import { addPluginDocumentTitleCounter } from "discourse/components/d-document";
 import { addToolbarCallback } from "discourse/components/d-editor";
-import { addCategorySortCriteria } from "discourse/components/edit-category-settings";
 import { forceDropdownForMenuPanels as glimmerForceDropdownForMenuPanels } from "discourse/components/glimmer-site-header";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import { headerButtonsDAG } from "discourse/components/header";
@@ -27,7 +18,6 @@ import { headerIconsDAG } from "discourse/components/header/icons";
 import { registeredTabs } from "discourse/components/more-topics";
 import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import { addPluginOutletDecorator } from "discourse/components/plugin-connector";
-import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
 import { addGroupPostSmallActionCode } from "discourse/components/post/small-action";
 import {
   addPluginReviewableParam,
@@ -124,6 +114,7 @@ import {
 import { addCustomUserFieldValidationCallback } from "discourse/lib/user-fields-validation-helper";
 import { registerUserMenuTab } from "discourse/lib/user-menu/tab";
 import { replaceFormatter } from "discourse/lib/utilities";
+import { _addCategoryPropertyForSave } from "discourse/models/category";
 import Composer, {
   registerCustomizationCallback,
 } from "discourse/models/composer";
@@ -135,7 +126,6 @@ import {
   addSaveableUserOptionField,
 } from "discourse/models/user";
 import { preventCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import { setNewCategoryDefaultColors } from "discourse/routes/new-category";
 import { setNotificationsLimit } from "discourse/routes/user-notifications";
 import { addComposerSaveErrorCallback } from "discourse/services/composer";
 import { addPostClassesCallback } from "discourse/widgets/post";
@@ -146,7 +136,6 @@ import {
 } from "discourse/widgets/post-small-action";
 import {
   addPostTransformCallback,
-  POST_STREAM_DEPRECATION_OPTIONS,
   preventCloak,
 } from "discourse/widgets/post-stream";
 import { disableNameSuppression } from "discourse/widgets/poster-name";
@@ -154,12 +143,16 @@ import {
   changeSetting,
   createWidget,
   decorateWidget,
+  POST_STREAM_DEPRECATION_OPTIONS,
   queryRegistry,
   reopenWidget,
+  warnWidgetsDeprecation,
 } from "discourse/widgets/widget";
 import { addImageWrapperButton } from "discourse-markdown-it/features/image-controls";
 import { CUSTOM_USER_SEARCH_OPTIONS } from "select-kit/components/user-chooser";
 import { modifySelectKit } from "select-kit/lib/plugin-api";
+
+const DEPRECATED_POST_STREAM_CLASSES = ["component:scrolling-post-stream"];
 
 const DEPRECATED_POST_STREAM_WIDGETS = [
   "actions-summary",
@@ -244,9 +237,11 @@ function wrapWithErrorHandler(func, messageKey) {
   };
 }
 
+/**
+ * @typedef {PluginApi} PluginApi
+ */
 class PluginApi {
-  constructor(version, container) {
-    this.version = version;
+  constructor(container) {
     this.container = container;
     this.h = h;
   }
@@ -324,6 +319,8 @@ class PluginApi {
    * ```
    **/
   modifyClass(resolverName, changes, opts) {
+    this.#deprecateModifyClass(resolverName);
+
     const klass = this._resolveClass(resolverName, opts);
     if (!klass) {
       return;
@@ -601,9 +598,6 @@ class PluginApi {
    * Use `options.onlyStream` if you only want to decorate posts within a topic,
    * and not in other places like the user stream.
    *
-   * Decoration normally happens in a detached DOM. Use `options.afterAdopt`
-   * to decorate html content after it is adopted by the main `document`.
-   *
    * For example, to add a yellow background to all posts you could do this:
    *
    * ```
@@ -617,16 +611,9 @@ class PluginApi {
 
     callback = wrapWithErrorHandler(callback, "broken_decorator_alert");
 
-    addDecorator(callback, { afterAdopt: !!opts.afterAdopt });
+    addDecorator(callback);
 
-    this.onAppEvent(
-      opts.afterAdopt
-        ? "decorate-post-cooked-element:after-adopt"
-        : "decorate-post-cooked-element:before-adopt",
-      callback
-    );
-
-    // TODO (glimmer-post-stream) should we also handle afterAdopt for non-stream renderings?
+    this.onAppEvent("decorate-post-cooked-element", callback);
     if (!opts.onlyStream) {
       this.onAppEvent("decorate-non-stream-cooked-element", callback);
     }
@@ -705,49 +692,28 @@ class PluginApi {
    * ```
    **/
   addPosterIcons(cb) {
-    const site = this._lookupContainer("service:site");
-    const loc = site && site.mobileView ? "before" : "after";
+    this.registerValueTransformer(
+      "poster-name-icons",
+      ({ value, context: { post } }) => {
+        // `cb` is called with the post's user custom fields and post attributes
+        // and should return an array of icon definitions.
+        const definitions = makeArray(cb(post.user_custom_fields || {}, post));
 
-    const IconsComponent = class extends Component {
-      get definitions() {
-        return makeArray(
-          cb(
-            this.args.outletArgs.post.user_custom_fields || {},
-            this.args.outletArgs.post
-          )
-        );
+        return makeArray(value).concat(definitions).filter(Boolean);
       }
-
-      <template>
-        {{#each this.definitions as |definition|}}
-          <PostMetaDataPosterNameIcon
-            @className={{definition.className}}
-            @emoji={{definition.emoji}}
-            @emojiTitle={{definition.emojiTitle}}
-            @icon={{definition.icon}}
-            @text={{definition.text}}
-            @title={{definition.title}}
-            @url={{definition.url}}
-          />
-        {{/each}}
-      </template>
-    };
-
-    if (loc === "after") {
-      this.renderAfterWrapperOutlet(
-        "post-meta-data-poster-name",
-        IconsComponent
-      );
-    } else {
-      this.renderBeforeWrapperOutlet(
-        "post-meta-data-poster-name",
-        IconsComponent
-      );
-    }
+    );
 
     // TODO (glimmer-post-stream): remove the fallback when removing the legacy post stream code
-    withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
-      decorateWidget(`poster-name:${loc}`, (dec) => {
+    withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
+      const decoratorFor = (view) => (dec) => {
+        const currentView = this.container.lookup("service:site").mobileView
+          ? "mobile"
+          : "desktop";
+
+        if (view !== currentView) {
+          return;
+        }
+
         const attrs = dec.attrs;
         let results = cb(attrs.userCustomFields || {}, attrs);
 
@@ -793,7 +759,10 @@ class PluginApi {
             );
           });
         }
-      });
+      };
+
+      decorateWidget(`poster-name:before`, decoratorFor("mobile"));
+      decorateWidget(`poster-name:after`, decoratorFor("desktop"));
     });
   }
 
@@ -1939,7 +1908,9 @@ class PluginApi {
    * categorySortCriteria("votes");
    */
   addCategorySortCriteria(criteria) {
-    addCategorySortCriteria(criteria);
+    this.registerValueTransformer("category-sort-orders", ({ value }) => {
+      value.push(criteria);
+    });
   }
 
   /**
@@ -2155,13 +2126,16 @@ class PluginApi {
    *
    * ```
    * const IconWithDropdown = <template>
-   *   <DMenu @icon="foo" title={{i18n "title"}}>
-   *     <:content as |args|>
-   *       dropdown content here
-   *       <DButton @action={{args.close}} @icon="bar" />
-   *     </:content>
-   *   </DMenu>
-   * </template>;
+    *
+    <DMenu @icon="foo" title={{i18n "title"}}>
+      *
+      <:content as |args|>
+        *       dropdown content here
+        *
+        <DButton @action={{args.close}} @icon="bar" />
+        *     </:content>
+      *   </DMenu>
+    * </template>;
    *
    * api.headerIcons.add("icon-name", IconWithDropdown, { before: "search" })
    * ```
@@ -2374,7 +2348,9 @@ class PluginApi {
    *
    **/
   setNewCategoryDefaultColors(backgroundColor, textColor) {
-    setNewCategoryDefaultColors(backgroundColor, textColor);
+    this.registerValueTransformer("category-default-colors", () => {
+      return { backgroundColor, textColor };
+    });
   }
 
   /**
@@ -2479,7 +2455,7 @@ class PluginApi {
    *       endsAt: "2021-10-12T16:00:00.000Z",
    *     },
    *   ],
-   *   { recurrenceRule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", location: "Paris", details: "Foo" }
+   *   { rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR", location: "Paris", details: "Foo" }
    * );
    * ```
    */
@@ -3261,20 +3237,25 @@ class PluginApi {
   /**
    * Adds a custom button to the composer preview's image wrapper
    *
+   * @param {string} label - The button label text
+   * @param {string} btnClass - The CSS class for the button
+   * @param {string} icon - The icon name (optional)
+   * @param {Function} fn - The click handler function
+   * @param {Function} includeCondition - Optional function that receives the image src and returns true if the button should be shown (optional)
    *
    * ```
    * api.addComposerImageWrapperButton(
    *   "My Custom Button",
-   *   "custom-button-class"
-   *   "lock"
-   *   (event) => { console.log("Custom button clicked", event)
-   * });
-   *
+   *   "custom-button-class",
+   *   "lock",
+   *   (event) => { console.log("Custom button clicked", event); },
+   *   (imageSrc) => imageSrc.endsWith('.jpg') // Only show for JPG images
+   * );
    * ```
    *
    */
-  addComposerImageWrapperButton(label, btnClass, icon, fn) {
-    addImageWrapperButton(label, btnClass, icon);
+  addComposerImageWrapperButton(label, btnClass, icon, fn, includeCondition) {
+    addImageWrapperButton(label, btnClass, icon, includeCondition);
     addApiImageWrapperButtonClickEvent(fn);
   }
 
@@ -3420,6 +3401,33 @@ class PluginApi {
     registerRichEditorExtension(extension);
   }
 
+  /**
+   * Registers a property that will be included when saving a category.
+   *
+   * This is useful for plugins that are adding additional parameters to the category
+   * and want to save the new property alongside the default category properties
+   * (all under the same save call), and are not using custom fields for that.
+   *
+   * ```
+   * api.registerCategorySaveProperty("property_one");
+   * api.registerCategorySaveProperty("property_two");
+   * ```
+   *
+   * @param {string} property - The name of the property to include when saving a category.
+   */
+  registerCategorySaveProperty(property) {
+    _addCategoryPropertyForSave(property);
+  }
+
+  #deprecateModifyClass(className) {
+    if (DEPRECATED_POST_STREAM_CLASSES.includes(className)) {
+      deprecated(
+        `Using api.modifyClass for \`${className}\` has been deprecated and is no longer a supported override.`,
+        POST_STREAM_DEPRECATION_OPTIONS
+      );
+    }
+  }
+
   #deprecatedWidgetOverride(widgetName, override) {
     // insert here the code to handle widget deprecations, e.g. for the header widgets we used:
     // if (DEPRECATED_HEADER_WIDGETS.includes(widgetName)) {
@@ -3439,76 +3447,45 @@ class PluginApi {
         `The \`${widgetName}\` widget has been deprecated and \`api.${override}\` is no longer a supported override.`,
         POST_STREAM_DEPRECATION_OPTIONS
       );
-    }
-  }
-}
-
-// from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
-function cmpVersions(a, b) {
-  let i, diff;
-  let regExStrip0 = /(\.0+)+$/;
-  let segmentsA = a.replace(regExStrip0, "").split(".");
-  let segmentsB = b.replace(regExStrip0, "").split(".");
-  let l = Math.min(segmentsA.length, segmentsB.length);
-
-  for (i = 0; i < l; i++) {
-    diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
-    if (diff) {
-      return diff;
-    }
-  }
-  return segmentsA.length - segmentsB.length;
-}
-
-function getPluginApi(version) {
-  version = version.toString();
-
-  if (cmpVersions(version, PLUGIN_API_VERSION) <= 0) {
-    const owner = getOwnerWithFallback(this);
-    let pluginApi = owner.lookup("plugin-api:main");
-
-    if (!pluginApi) {
-      pluginApi = new PluginApi(version, owner);
-      owner.registry.register("plugin-api:main", pluginApi, {
-        instantiate: false,
-      });
     } else {
-      // If we are re-using an instance, make sure the container is correct
-      pluginApi.container = owner;
+      warnWidgetsDeprecation(
+        `Using \`api.${override}\` is deprecated and will soon stop working. Affected widget: ${widgetName}.`
+      );
     }
-
-    // We are recycling the compatible object, but let's update to the higher version
-    if (pluginApi.version < version) {
-      pluginApi.version = version;
-    }
-
-    return pluginApi;
-  } else {
-    // eslint-disable-next-line no-console
-    console.warn(consolePrefix(), `Plugin API v${version} is not supported`);
   }
+}
+
+function getPluginApi() {
+  const owner = getOwnerWithFallback(this);
+  let pluginApi = owner.lookup("plugin-api:main");
+
+  if (!pluginApi) {
+    pluginApi = new PluginApi(owner);
+    owner.registry.register("plugin-api:main", pluginApi, {
+      instantiate: false,
+    });
+  } else {
+    // If we are re-using an instance, make sure the container is correct
+    pluginApi.container = owner;
+  }
+
+  return pluginApi;
 }
 
 /**
- * Executes the provided callback function with the `PluginApi` object if the specified API version is available.
+ * Executes the provided callback function with the `PluginApi` object.
  *
- * @param {number} version - The version of the API that the plugin is coded against.
- * @param {(api: PluginApi, opts: object) => void} apiCodeCallback - The callback function to execute if the API version is available
+ * @param {(api: PluginApi, opts: object) => any} apiCodeCallback - The callback function to execute
  * @param {object} [opts] - Optional additional options to pass to the callback function.
- * @returns {*} The result of the `callback` function, if executed
+ * @returns {any} The result of the `callback` function, if executed
  */
-export function withPluginApi(...args) {
-  let version, apiCodeCallback, opts;
-  if (typeof args[0] === "function") {
-    [version, apiCodeCallback, opts] = ["0", ...args];
-  } else {
-    [version, apiCodeCallback, opts] = args;
+export function withPluginApi(apiCodeCallback, opts) {
+  if (typeof arguments[0] === "string") {
+    // Old path. First argument is the version string. Silently ignore.
+    [, apiCodeCallback, opts] = arguments;
   }
 
   opts = opts || {};
 
-  const api = getPluginApi(version);
-  if (api) {
-    return apiCodeCallback(api, opts);
-  }
+  return apiCodeCallback(getPluginApi(), opts);
 }

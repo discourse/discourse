@@ -57,8 +57,8 @@ export default class CategorySelector extends MultiSelectComponent {
     let categories;
     if (this.site.lazy_load_categories) {
       const rejectCategoryIds = new Set([
-        ...this.categories.map((c) => c.id),
-        ...this.blockedCategories.map((c) => c.id),
+        ...this.categories.map((category) => category.id),
+        ...this.blockedCategories.map((category) => category.id),
       ]);
 
       categories = await Category.asyncSearch(filter, {
@@ -112,7 +112,9 @@ export default class CategorySelector extends MultiSelectComponent {
       }
 
       this.selectKit.change(
-        makeArray(this.value).concat(item.category.descendants.mapBy("id")),
+        makeArray(this.value).concat(
+          item.category.descendants.map((subcategory) => subcategory.id)
+        ),
         makeArray(this.selectedContent).concat(item.category.descendants)
       );
     } else {

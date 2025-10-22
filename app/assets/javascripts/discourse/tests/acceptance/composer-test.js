@@ -127,7 +127,7 @@ import { i18n } from "discourse-i18n";
         );
 
         await fillIn(".d-editor-input", "");
-        await click(".btn.cancel");
+        await click("#reply-control .discard-button");
         assert.strictEqual(
           document.documentElement.style.getPropertyValue("--composer-height"),
           "",
@@ -227,10 +227,10 @@ import { i18n } from "discourse-i18n";
             "supports keyboard shortcuts"
           );
 
-        await click("#reply-control button.cancel");
+        await click("#reply-control .discard-button");
         assert.dom(".d-modal").exists("pops up a confirmation dialog");
 
-        await click(".d-modal__footer .discard-draft");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
         assert
           .dom(".d-modal__body")
           .doesNotExist("the confirmation can be cancelled");
@@ -360,18 +360,17 @@ import { i18n } from "discourse-i18n";
         );
         await click(".topic-post[data-post-number='1'] button.edit");
 
-        await click(".d-modal__footer button.keep-editing");
+        await click(".d-modal__footer .discard-draft-modal__cancel-btn");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
         assert
           .dom(".d-editor-input")
           .hasValue(
             "this is the content of my reply",
-            "composer does not switch when using Keep Editing button"
+            "composer does not switch on dismissed Discard draft confirmation modal"
           );
 
         await click(".topic-post[data-post-number='1'] button.edit");
-        assert.dom(".d-modal__footer button.save-draft").doesNotExist();
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
 
         assert
@@ -382,7 +381,7 @@ import { i18n } from "discourse-i18n";
           );
       });
 
-      test("Can Keep Editing when replying on a different topic", async function (assert) {
+      test("Can dismiss Discard draft confirmation modal when replying on a different topic", async function (assert) {
         await visit("/t/internationalization-localization/280");
 
         await click("#topic-footer-buttons .create");
@@ -392,14 +391,14 @@ import { i18n } from "discourse-i18n";
         await click("#topic-footer-buttons .create");
         assert.dom(".discard-draft-modal.modal").exists();
 
-        await click(".d-modal__footer button.keep-editing");
+        await click(".d-modal__footer .discard-draft-modal__cancel-btn");
         assert.dom(".discard-draft-modal.modal").doesNotExist();
 
         assert
           .dom(".d-editor-input")
           .hasValue(
             "this is the content of my reply",
-            "composer does not switch when using Keep Editing button"
+            "composer does not switch on dismissed Discard draft confirmation modal"
           );
       });
 
@@ -457,7 +456,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up the discard drafts modal");
 
-        await click(".d-modal__footer button.keep-editing");
+        await click(".d-modal__footer .discard-draft-modal__cancel-btn");
 
         assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
         await click("#topic-footer-buttons .btn.create");
@@ -465,36 +464,49 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up the modal again");
 
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
 
         assert
           .dom(".d-editor-input")
-          .hasNoValue("discards draft and reset composer textarea");
+          .hasValue(
+            "This is a draft of the first post",
+            "loads the existing draft"
+          );
       });
 
-      test("Autosaves drafts after clicking keep editing in discard modal", async function (assert) {
-        pretender.post("/drafts.json", function () {
-          assert.step("saveDraft");
-          return response(200, {});
-        });
-
+      test("Loads draft in composer when clicking reply on a topic with existing draft", async function (assert) {
         await visit("/t/internationalization-localization/280");
 
         await click("#topic-footer-buttons .btn.create");
 
-        await fillIn(".d-editor-input", "this is draft content of the reply");
+        assert
+          .dom(".d-editor-input")
+          .hasValue("This is a draft of the first post");
+      });
 
+      test("Autosaves drafts after cancelling Discard draft confirmation modal", async function (assert) {
+        pretender.post("/drafts.json", function () {
+          assert.step("saveDraft");
+          return response(200, {});
+        });
+        pretender.get("/drafts/topic_280.json", function () {
+          return response(200, { draft: null });
+        });
+
+        await visit("/t/internationalization-localization/280");
+        await click("#topic-footer-buttons .btn.create");
+        await fillIn(".d-editor-input", "this is draft content of the reply");
         assert.verifySteps(["saveDraft"], "first draft is auto saved");
 
-        await click("#reply-control button.cancel");
-
+        await click("#reply-control .discard-button");
         assert
           .dom(".discard-draft-modal.modal")
-          .exists("pops up the discard drafts modal");
+          .exists("shows Discard draft confirmation modal");
 
-        await click(".d-modal__footer button.keep-editing");
-        assert.dom(".discard-draft-modal.modal").doesNotExist("hides modal");
-
+        await click(".d-modal__footer .discard-draft-modal__cancel-btn");
+        assert
+          .dom(".discard-draft-modal.modal")
+          .doesNotExist("hides modal on Cancel button click");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -504,17 +516,32 @@ import { i18n } from "discourse-i18n";
 
         await fillIn(
           ".d-editor-input",
-          "this is the updated content of the reply",
+          "this is the first update to the draft content",
           "update content in the composer"
         );
-
         assert.verifySteps(["saveDraft"], "second draft is saved");
 
-        await click("#reply-control button.create");
+        await click("#reply-control .discard-button");
+        assert
+          .dom(".discard-draft-modal.modal")
+          .exists("pops up the discard drafts modal");
 
+        await triggerKeyEvent(".discard-draft-modal", "keydown", "Escape");
+        assert
+          .dom(".discard-draft-modal.modal")
+          .doesNotExist("hides modal on Esc key stroke");
+
+        await fillIn(
+          ".d-editor-input",
+          "this is the second update to the draft content",
+          "update content in the composer"
+        );
+        assert.verifySteps(["saveDraft"], "third draft is saved");
+
+        await click("#reply-control button.create");
         assert
           .dom(".topic-post:nth-last-child(1 of .topic-post) .cooked p")
-          .hasText("this is the updated content of the reply");
+          .hasText("this is the second update to the draft content");
       });
 
       test("Create an enqueued Reply", async function (assert) {
@@ -651,7 +678,7 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
 
-        await click(".d-modal__footer button.discard-draft");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -661,7 +688,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle between edit and reply on the OP", async function (assert) {
-        await visit("/t/this-is-a-test-topic/9");
+        await visit("/t/this-is-a-test-topic/54081");
 
         await click(".topic-post[data-post-number='1'] button.edit");
         assert
@@ -684,7 +711,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle between edit and reply on a reply", async function (assert) {
-        await visit("/t/this-is-a-test-topic/9");
+        await visit("/t/this-is-a-test-topic/54081");
 
         await click(".topic-post[data-post-number='2'] button.edit");
         assert
@@ -707,33 +734,24 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle whispers when whisperer user", async function (assert) {
+        const menu = selectKit(".composer-actions");
+
         await visit("/t/this-is-a-test-topic/9");
         await click(".topic-post[data-post-number='1'] button.reply");
 
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-whisper']");
+        await menu.expand();
+        await menu.selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
           .exists("sets the post type to whisper");
 
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-whisper']");
+        await menu.expand();
+        await menu.selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
           .doesNotExist("removes the whisper mode");
-
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-whisper']");
-
-        await click(".toggle-fullscreen");
-
-        await click(".toolbar-menu__options-trigger");
-
-        assert
-          .dom("[data-name='toggle-whisper']")
-          .exists("whisper toggling is still present when going fullscreen");
       });
 
       test("Composer can toggle layouts (open, fullscreen and draft)", async function (assert) {
@@ -797,11 +815,12 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle between reply and createTopic", async function (assert) {
-        await visit("/t/this-is-a-test-topic/9");
+        await visit("/t/this-is-a-test-topic/54081");
         await click(".topic-post[data-post-number='1'] button.reply");
 
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-whisper']");
+        await selectKit(".composer-actions").expand();
+
+        await selectKit(".composer-actions").selectRowByValue("toggle_whisper");
 
         assert
           .dom(".composer-actions svg.d-icon-far-eye-slash")
@@ -817,8 +836,10 @@ import { i18n } from "discourse-i18n";
           .dom(".reply-details .whisper .d-icon-far-eye-slash")
           .doesNotExist("should reset the state of the composer's model");
 
-        await click(".toolbar-menu__options-trigger");
-        await click("[data-name='toggle-invisible']");
+        await selectKit(".composer-actions").expand();
+        await selectKit(".composer-actions").selectRowByValue(
+          "toggle_unlisted"
+        );
 
         assert
           .dom(".reply-details .unlist")
@@ -850,11 +871,11 @@ import { i18n } from "discourse-i18n";
       });
 
       test("Composer can toggle whisper when clicking reply to topic after reply to whisper", async function (assert) {
-        await visit("/t/topic-with-whisper/960");
+        await visit("/t/topic-with-whisper/54081");
 
         await click(".topic-post[data-post-number='3'] button.reply");
-        await click("#reply-control .save-or-cancel button.cancel");
-        await click(".topic-footer-main-buttons button.create");
+        await click("#reply-control .discard-button");
+        await click(".timeline-footer-controls button.create");
         await click(".reply-details summary div");
         assert
           .dom('.reply-details li[data-value="toggle_whisper"]')
@@ -871,14 +892,10 @@ import { i18n } from "discourse-i18n";
         assert
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
-        assert.dom(".d-modal__footer button.save-draft").doesNotExist();
         assert
-          .dom(".d-modal__footer button.keep-editing")
-          .hasText(
-            i18n("post.cancel_composer.keep_editing"),
-            "has keep editing button"
-          );
-        await click(".d-modal__footer button.discard-draft");
+          .dom(".d-modal__footer .discard-draft-modal__cancel-btn")
+          .hasText(i18n("cancel_value"), "has Cancel button");
+        await click(".d-modal__footer .discard-draft-modal__discard-btn");
         assert
           .dom(".d-editor-input")
           .hasValue(
@@ -887,7 +904,7 @@ import { i18n } from "discourse-i18n";
           );
       });
 
-      test("Composer draft can switch to draft in new context without destroying current draft", async function (assert) {
+      test("Composer shows Discard draft confirmation dialog in new context (when creating a new topic)", async function (assert) {
         await visit("/t/this-is-a-test-topic/9");
 
         await click(".topic-post[data-post-number='1'] button.reply");
@@ -900,20 +917,11 @@ import { i18n } from "discourse-i18n";
           .dom(".discard-draft-modal.modal")
           .exists("pops up a confirmation dialog");
         assert
-          .dom(".d-modal__footer button.save-draft")
-          .hasText(
-            i18n("post.cancel_composer.save_draft"),
-            "has save draft button"
-          );
+          .dom(".d-modal__footer .discard-draft-modal__discard-btn")
+          .hasText(i18n("post.cancel_composer.discard"), "has Discard button");
         assert
-          .dom(".d-modal__footer button.keep-editing")
-          .hasText(
-            i18n("post.cancel_composer.keep_editing"),
-            "has keep editing button"
-          );
-
-        await click(".d-modal__footer button.save-draft");
-        assert.dom(".d-editor-input").hasNoValue("clears the composer input");
+          .dom(".d-modal__footer .discard-draft-modal__cancel-btn")
+          .hasText(i18n("cancel_value"), "has Cancel button");
       });
 
       test("Does not check for existing draft", async function (assert) {
@@ -983,7 +991,7 @@ import { i18n } from "discourse-i18n";
         const privateMessageUsers = selectKit("#private-message-users");
         assert.strictEqual(privateMessageUsers.header().value(), "charlie");
 
-        await click(".submit-panel .cancel");
+        await click("#reply-control .discard-button");
         assert.dom(".d-editor-input").doesNotExist();
       });
 
@@ -1004,7 +1012,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("modified placeholder with composer-editor-reply-placeholder is rendered", async function (assert) {
-        withPluginApi("0.8.14", (api) => {
+        withPluginApi((api) => {
           api.registerValueTransformer(
             "composer-editor-reply-placeholder",
             () => {
@@ -1096,8 +1104,13 @@ import { i18n } from "discourse-i18n";
         await click("#create-topic");
         await fillIn("#reply-title", "Something");
         await fillIn(".d-editor-input", "Something");
-        await click(".save-or-cancel .cancel");
-        assert.dom(".discard-draft-modal .save-draft").doesNotExist();
+        await click("button.create");
+        assert.dom(".d-editor-textarea-wrapper .popup-tip.bad").hasText(
+          i18n("composer.error.post_length.other", {
+            count: this.siteSettings.min_first_post_length,
+          }),
+          "shows error"
+        );
       });
 
       test("Saves drafts that only contain quotes", async function (assert) {
@@ -1106,8 +1119,8 @@ import { i18n } from "discourse-i18n";
 
         await fillIn(".d-editor-input", "[quote]some quote[/quote]");
 
-        await click(".save-or-cancel .cancel");
-        assert.dom(".discard-draft-modal .save-draft").exists();
+        await click(".discard-button");
+        assert.dom(".discard-draft-modal").exists();
       });
 
       test("Discard drafts modal can be dismissed via keyboard", async function (assert) {
@@ -1116,14 +1129,10 @@ import { i18n } from "discourse-i18n";
 
         await fillIn(".d-editor-input", "[quote]some quote[/quote]");
 
-        await click(".save-or-cancel .cancel");
-        assert.dom(".discard-draft-modal .save-draft").exists();
+        await click(".discard-button");
+        assert.dom(".discard-draft-modal").exists();
 
-        await triggerKeyEvent(
-          ".discard-draft-modal .save-draft",
-          "keydown",
-          "Escape"
-        );
+        await triggerKeyEvent(".discard-draft-modal", "keydown", "Escape");
 
         assert.dom(".discard-draft-modal").doesNotExist();
 
@@ -1154,7 +1163,7 @@ import { i18n } from "discourse-i18n";
       }
 
       needs.hooks.beforeEach(() => {
-        withPluginApi("0.8.14", (api) => {
+        withPluginApi((api) => {
           api.customizeComposerText({
             actionTitle(model) {
               if (customComposerAction(model)) {
@@ -1198,7 +1207,7 @@ import { i18n } from "discourse-i18n";
       });
 
       needs.hooks.beforeEach(() => {
-        withPluginApi("1.5.0", (api) => {
+        withPluginApi((api) => {
           api.addComposerSaveErrorCallback((error) => {
             if (error.match(/PLUGIN_XYZ ERROR/)) {
               // handle error
@@ -1462,9 +1471,14 @@ import { i18n } from "discourse-i18n";
         glimmer_post_stream_mode: postStreamMode,
         allow_uncategorized_topics: true,
       });
+      needs.pretender((server, helper) => {
+        server.get("/drafts/topic_280.json", function () {
+          return helper.response(200, { draft: null });
+        });
+      });
 
       test("buttons can support a shortcut", async function (assert) {
-        withPluginApi("0", (api) => {
+        withPluginApi((api) => {
           api.addComposerToolbarPopupMenuOption({
             action: (toolbarEvent) => {
               toolbarEvent.applySurround("**", "**");
@@ -1505,14 +1519,14 @@ import { i18n } from "discourse-i18n";
           .hasAttribute(
             "title",
             i18n("some_title") +
-              ` (${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")})`,
+              ` (${translateModKey(PLATFORM_KEY_MODIFIER + " alt b")})`,
             "shows the title with shortcut"
           );
         assert
           .dom(row)
           .hasText(
             i18n("some_label") +
-              ` ${translateModKey(PLATFORM_KEY_MODIFIER + "+alt+b")}`,
+              ` ${translateModKey(PLATFORM_KEY_MODIFIER + " alt b")}`,
             "shows the label with shortcut"
           );
       });
@@ -1546,7 +1560,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("buttons can support a shortcut that triggers a custom action", async function (assert) {
-        withPluginApi("1.37.1", (api) => {
+        withPluginApi((api) => {
           api.onToolbarCreate((toolbar) => {
             toolbar.addButton({
               id: "smile",
@@ -1632,7 +1646,7 @@ import { i18n } from "discourse-i18n";
       });
 
       test("buttons can be added conditionally", async function (assert) {
-        withPluginApi("0", (api) => {
+        withPluginApi((api) => {
           api.addComposerToolbarPopupMenuOption({
             action: (toolbarEvent) => {
               toolbarEvent.applySurround("**", "**");
@@ -1667,6 +1681,70 @@ import { i18n } from "discourse-i18n";
         assert
           .dom(`button[title="${expectedName}"]`)
           .exists("custom button is displayed for new topic");
+      });
+
+      test("modified name when replying to a post", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "composer-reply-options-user-link-name",
+            () => {
+              return "NewNameHere";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+
+        assert.dom(".reply-details .user-link").hasText("NewNameHere");
+      });
+
+      test("modified avatar when replying to a post", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "composer-reply-options-user-avatar-template",
+            () => {
+              return "/images/avatar.png?size={size}";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+
+        assert
+          .dom(".reply-details .action-title img")
+          .hasAttribute(
+            "src",
+            /\/images\/avatar\.png/,
+            "Reply avatar can be customized"
+          );
+      });
+
+      test("modified avatar in quote", async function (assert) {
+        withPluginApi((api) => {
+          api.registerValueTransformer(
+            "composer-editor-quoted-post-avatar-template",
+            () => {
+              return "/images/custom-quote-avatar.png?size={size}";
+            }
+          );
+        });
+
+        await visit("/t/34");
+        await click("article#post_3 button.reply");
+        await fillIn(
+          ".d-editor-input",
+          '[quote="charlie, post:1, topic:34"]\noriginal post content\n[/quote]'
+        );
+
+        assert
+          .dom(".d-editor-preview .quote .title img")
+          .hasAttribute(
+            "src",
+            /\/images\/custom-quote-avatar\.png/,
+            "Quote avatar can be customized"
+          );
       });
     }
   );

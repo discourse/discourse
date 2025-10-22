@@ -1,0 +1,140 @@
+@use "lib/viewport";
+
+.ai-llms-list-editor {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0 1em 0;
+  }
+
+  &__configured,
+  &__templates {
+    margin-top: 2em;
+
+    h2 {
+      font-size: var(--font-up-1);
+    }
+  }
+}
+
+.ai-llm-editor {
+  padding-left: 0.5em;
+
+  .ai-llm-editor-tests {
+    &__failure {
+      color: var(--danger);
+    }
+
+    &__success {
+      color: var(--success);
+    }
+  }
+}
+
+[class*="ai-llms-list-editor"] {
+  h3 {
+    font-weight: normal;
+    margin: 0;
+    line-height: var(--line-height-medium);
+  }
+}
+
+.ai-llms-list-editor__configured {
+  .d-toggle-switch {
+    justify-content: center;
+  }
+}
+
+.ai-tool-list-editor__current,
+.ai-persona-list-editor__current,
+.ai-llms-list-editor__configured {
+  .d-admin-table {
+    @include viewport.from(md) {
+      th,
+      td {
+        &:first-child {
+          padding-left: 0;
+        }
+
+        &:last-child {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+}
+
+.ai-llms-list-editor__templates {
+  &-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16em, 1fr));
+    gap: 1em 2em;
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: 3px solid var(--primary-low);
+  }
+
+  &-list-item {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-row: span 4;
+    gap: 0;
+    margin-bottom: 2em;
+
+    @include viewport.from(sm) {
+      margin-bottom: 3em;
+    }
+  }
+
+  .admin-section-landing-item__description {
+    color: var(--primary-high);
+    margin: 0.25em 0 0.5em;
+    line-height: var(--line-height-large);
+    align-self: start;
+
+    @include viewport.from(sm) {
+      max-width: 17em;
+    }
+  }
+
+  button {
+    justify-self: start;
+  }
+
+  h4 {
+    font-size: var(--font-down-1);
+    font-weight: normal;
+    color: var(--primary-high);
+    margin: 0;
+    letter-spacing: 0.1px;
+  }
+}
+
+.ai-llm-list-editor__usages {
+  list-style: none;
+  margin: 0.5em 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+
+  li {
+    font-size: var(--font-down-2);
+    border-radius: 0.25em;
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    padding: 1px 3px;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em;
+  }
+}
+
+.ai-llm-list__seeded-model {
+  color: var(--primary-high);
+  font-size: var(--font-down-1);
+}
+
+@include viewport.until(md) {
+  .ai-llm-list__description {
+    max-width: 80%;
+  }
+}

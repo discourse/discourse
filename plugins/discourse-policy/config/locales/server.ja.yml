@@ -1,0 +1,39 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ja:
+  site_settings:
+    policy_enabled: "ポリシーを許可？"
+    policy_restrict_to_staff_posts: "ポリシーはスタッフの投稿のみに表示される場合があります"
+    policy_easy_revoke: "同意ボタンと同意の取り消しボタンを同時に表示する"
+  discourse_policy:
+    errors:
+      user_missing: "ユーザーはグループに存在しません"
+      group_not_found: "ポリシーのグループが見つかりません"
+      no_policy: "投稿にポリシーが存在しません"
+      staff_only: "ポリシーはスタッフの投稿のみに適用される場合があります"
+    error:
+      no_permission: "許可されていません"
+  reports:
+    unaccepted-policies:
+      title: 未承認のポリシー
+      labels:
+        topic_id: トピック ID
+        user_id: ユーザー ID
+  user_notifications:
+    policy_email:
+      from: "%{site_name}"
+      subject: "ポリシーをレビューする必要があります: %{topic_title}"
+      visit_topic: "トピックにアクセス"
+      visit_link_to_respond: "%{visit_topic_link} で回答します。"
+      unsubscribe: "%{email_preferences_link} を変更するか、%{unsubscribe_link} で購読を解除します。"
+      your_policy_email_settings: "ポリシーメールの頻度設定"
+  unsubscribe:
+    policy_emails:
+      select_title: "ポリシーアラートメールの頻度を次に設定する:"
+      never: 送信しない
+      when_away: 退席中の時のみ
+      always: 常時

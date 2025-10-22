@@ -1,6 +1,7 @@
 import { computed } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import MultiSelectComponent from "select-kit/components/multi-select";
@@ -27,14 +28,14 @@ export default class TagGroupChooser extends MultiSelectComponent {
 
   @computed("tagGroups.[]")
   get value() {
-    return makeArray(this.tagGroups).uniq();
+    return uniqueItemsFromArray(makeArray(this.tagGroups));
   }
 
   @computed("tagGroups.[]")
   get content() {
-    return makeArray(this.tagGroups)
-      .uniq()
-      .map((t) => this.defaultItem(t, t));
+    return uniqueItemsFromArray(makeArray(this.tagGroups)).map((t) =>
+      this.defaultItem(t, t)
+    );
   }
 
   validateCreate(filter, content) {

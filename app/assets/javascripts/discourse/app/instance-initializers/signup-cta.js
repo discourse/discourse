@@ -7,30 +7,26 @@ const PROMPT_HIDE_DURATION = ONE_DAY;
 
 export default {
   initialize(owner) {
+    const appEvents = owner.lookup("service:app-events");
+    const { canSignUp } = owner.lookup("controller:application");
+    const currentUser = owner.lookup("service:current-user");
+    const keyValueStore = owner.lookup("service:key-value-store");
     const screenTrack = owner.lookup("service:screen-track");
     const session = Session.current();
-    const siteSettings = owner.lookup("service:site-settings");
-    const keyValueStore = owner.lookup("service:key-value-store");
-    const user = owner.lookup("service:current-user");
-    const appEvents = owner.lookup("service:app-events");
+    const { enable_signup_cta, login_required } = owner.lookup(
+      "service:site-settings"
+    );
 
-    // Preconditions
-    if (user) {
-      return;
-    } // must not be logged in
-    if (keyValueStore.get("anon-cta-never")) {
-      return;
-    } // "never show again"
-    if (!siteSettings.allow_new_registrations) {
+    if (currentUser) {
       return;
     }
-    if (siteSettings.invite_only) {
+    if (!enable_signup_cta) {
       return;
     }
-    if (siteSettings.login_required) {
+    if (!canSignUp) {
       return;
     }
-    if (!siteSettings.enable_signup_cta) {
+    if (login_required) {
       return;
     }
 
@@ -47,9 +43,8 @@ export default {
         return; // hidden forever
       }
 
-      const now = Date.now();
       const hiddenAt = keyValueStore.getInt("anon-cta-hidden", 0);
-      if (hiddenAt > now - PROMPT_HIDE_DURATION) {
+      if (hiddenAt > Date.now() - PROMPT_HIDE_DURATION) {
         return; // hidden in last 24 hours
       }
 
@@ -58,12 +53,12 @@ export default {
         return;
       }
 
-      const topicIdsString = keyValueStore.get("anon-topic-ids");
-      if (!topicIdsString) {
+      const topicIds = keyValueStore.get("anon-topic-ids");
+      if (!topicIds) {
         return;
       }
-      let topicIdsAry = topicIdsString.split(",");
-      if (topicIdsAry.length < ANON_TOPIC_IDS) {
+
+      if (topicIds.split(",").length < ANON_TOPIC_IDS) {
         return;
       }
 

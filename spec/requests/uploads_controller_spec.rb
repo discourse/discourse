@@ -199,6 +199,12 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(422)
       end
 
+      it "ensures uploads fail when auth_overrides_avatar is enabled" do
+        SiteSetting.auth_overrides_avatar = true
+        post "/uploads.json", params: { file: logo, upload_type: "avatar" }
+        expect(response.status).to eq(422)
+      end
+
       it "allows staff to upload any file in PM" do
         SiteSetting.authorized_extensions = "jpg"
         SiteSetting.allow_staff_to_upload_any_file_in_pm = true

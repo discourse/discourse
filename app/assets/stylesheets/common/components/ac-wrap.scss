@@ -1,0 +1,64 @@
+// legacy stuff, only used for GroupSelector, which will get replaced (eventually) by selectKit
+div.ac-wrap.disabled {
+  input {
+    display: none;
+  }
+
+  .item a {
+    display: none;
+  }
+}
+
+div.ac-wrap div.item a.remove,
+.remove-link {
+  margin-left: 4px;
+  font-size: var(--font-down-1);
+  line-height: var(--line-height-small);
+  padding: 1px 3.5px;
+  border-radius: 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--primary-low);
+
+  &:hover {
+    background-color: var(--danger-low);
+    border: 1px solid var(--danger-medium);
+    text-decoration: none;
+    color: var(--danger);
+  }
+}
+
+div.ac-wrap {
+  max-height: 150px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 30px;
+  box-sizing: border-box;
+
+  div.item {
+    float: left;
+    padding: 4px 10px;
+    line-height: var(--line-height-large);
+
+    span {
+      display: inline-block;
+      line-height: var(--line-height-medium);
+    }
+  }
+
+  .ac-collapsed-button {
+    float: left;
+    border-radius: 20px;
+    position: relative;
+    top: -2px;
+    margin-right: 10px;
+  }
+
+  input[type="text"] {
+    float: left;
+
+    &.fullwidth-input {
+      width: 100%;
+    }
+  }
+}

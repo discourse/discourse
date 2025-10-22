@@ -70,7 +70,7 @@ RSpec.describe UserSerializer do
     let(:serializer) { UserSerializer.new(user, scope: scope, root: false) }
     let(:json) { serializer.as_json }
     fab!(:upload)
-    fab!(:upload2) { Fabricate(:upload) }
+    fab!(:upload2, :upload)
 
     context "when the scope user is admin" do
       let(:scope) { Guardian.new(admin_user) }
@@ -309,7 +309,7 @@ RSpec.describe UserSerializer do
     end
 
     describe "ignored and muted" do
-      fab!(:viewing_user) { Fabricate(:user) }
+      fab!(:viewing_user, :user)
       let(:scope) { Guardian.new(viewing_user) }
 
       it "returns false values for muted and ignored" do
@@ -438,7 +438,7 @@ RSpec.describe UserSerializer do
           revoked_at: Time.zone.now,
         )
       user_api_key_1 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 7.days.ago)
-      user_api_key_2 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 1.days.ago)
+      user_api_key_2 = Fabricate(:readonly_user_api_key, user: user, last_used_at: 1.day.ago)
       user_api_key_3 =
         Fabricate(
           :readonly_user_api_key,

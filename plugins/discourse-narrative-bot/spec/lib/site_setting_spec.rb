@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe SiteSetting do
-  let(:narrative_bot) { ::DiscourseNarrativeBot::Base.new }
+  let(:narrative_bot) { DiscourseNarrativeBot::Base.new }
   let(:discobot_user) { narrative_bot.discobot_user }
 
   before { SiteSetting.discourse_narrative_bot_enabled = true }

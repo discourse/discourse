@@ -12,7 +12,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 
 export default RouteTemplate(
   <template>
-    <Layout @model={{@controller.model}}>
+    <Layout @model={{@controller.model}} @listClass="--categories">
       <:navigation>
         <Navigation
           @category={{@controller.model.parentCategory}}
@@ -54,7 +54,7 @@ export default RouteTemplate(
           {{/if}}
 
           <CategoriesDisplay
-            @categories={{@controller.model.categories}}
+            @categories={{@controller.model.content}}
             @topics={{@controller.model.topics}}
             @parentCategory={{@controller.model.parentCategory}}
             @loadMore={{@controller.model.loadMore}}
@@ -66,7 +66,7 @@ export default RouteTemplate(
           @name="below-discovery-categories"
           @connectorTagName="div"
           @outletArgs={{lazyHash
-            categories=@controller.model.categories
+            categories=@controller.model.content
             topics=@controller.model.topics
           }}
         />

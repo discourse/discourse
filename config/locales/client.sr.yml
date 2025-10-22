@@ -226,19 +226,12 @@ sr:
       search: "Pretraži"
     themes:
       default_description: "Подразумевано"
-      broken_theme_alert: "Vaš forum možda neće raditi jer tema / komponenta  ima greške. Onemogućite je putem linka."
       error_caused_by: "Izazvano od '%{name}'. <a target='blank' href='%{path}'>Klikni ovde</a> da unaprediš, rekonfigurišeš ili onemogućiš."
       only_admins: "(ova poruka je prikazana samo sajt administratorima)"
     broken_decorator_alert: "Objava se možda neće prikazivati korektno zato što jedna od post dekoratora na vašem sajtu je imala grešku."
     broken_page_change_alert: "onPageChange izvršitelj je prijavio grešku. Proverite pretražvačke razvnojne alate za više informacija."
     broken_plugin_alert: "Izazvano od plugina '%{name}'"
     broken_transformer_alert: "Desila se greška. Vaš sajt možda ne radi kako treba."
-    critical_deprecation:
-      notice: "<b>[Admin Obaveštenje]</b> Jedna od vaših vizuelnih tema ili pluginova se mora unaprediti zbog kompatibilnost sa nadolazećim osnovnim Discourse promenama."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "Identifikovana vizuelna tema: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "Identifikovani dodatak: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Азија-Пацифик (Токио)"
@@ -779,6 +772,15 @@ sr:
         reviewable_post:
           title: "Post"
           noun: "post"
+      notes:
+        delete: "Obriši"
+      review_user: "Korisnik"
+      insights:
+        activities:
+          posts:
+            one: "%{count} poruka"
+            few: "%{count} poruka"
+            other: "%{count} poruka"
       approval:
         title: "Potrebno odobrenje"
         description: "Primili smo tvoj novi post ali on najpre mora biti odobren od strane moderatora. Budi strpljiv."
@@ -1220,18 +1222,15 @@ sr:
         description: "Preskoči savete i značke za novog korisnika"
       reset_seen_user_tips: "Prikaži korisničke savete ponovo"
       theme_default_on_all_devices: "Postavi za podrazumevanu vizuelnu temu na svim mojim uređajima"
-      color_scheme_default_on_all_devices: "Postavi kao podrazumevanu paletu boja na svim mojim uređajima"
       color_scheme: "Paleta Boja"
       color_schemes:
         default_description: "Podrzumevane vrednosti vizuelne teme"
-        disable_dark_scheme: "Kao i regularno"
         dark_instructions: "Možete pregledati paletu boja tamnog režima tako što ćete uključiti tamni mod na vašem uređaju."
         undo: "Reset"
-        regular: "Stalni član"
         dark: "Tamni mod"
-        default_dark_scheme: "(podrazumevana vrednost sajta)"
+        picker:
+          active: "Aktivni"
       dark_mode: "Tamni Mod"
-      dark_mode_enable: "Uključi automatsku paletu boja za tamni mod"
       external_links_in_new_tab: "Otvori sve spoljne linkove u novom tabu"
       enable_quoting: "Omogući citirani odgovor označenog teksta"
       experimental_sidebar:
@@ -1247,6 +1246,7 @@ sr:
       admin_tooltip: "Ovaj korisnik je administrator"
       suspended_notice: "Ovaj korisnik je suspendovan do %{date}."
       suspended_reason: "Razlog:"
+      silenced_reason: "Razlog:"
       email_activity_summary: "Sažetak aktivnosti"
       watched_tags: "Pregledano"
       tracked_tags: "Praćeno"
@@ -1369,7 +1369,7 @@ sr:
         taken: "Žao nam je, to je ime zauzeto."
         invalid: "Korisničko ime je nevažeće. Može sadržati samo slova i brojeve."
       add_email:
-        add: "dodaj"
+        add: "Dodaj"
       change_email:
         title: "Promeni e-mail"
         taken: "Žao nam je, taj e-mail nije dostupan"
@@ -1760,6 +1760,7 @@ sr:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Kreiraj temu"
+      discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
       edit_reason_placeholder: "zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
@@ -1783,12 +1784,8 @@ sr:
       paste_code_text: "unesi ili nalepi kod ovde"
       upload_title: "Učitaj"
       upload_description: "Ovde opišite stvar koju učitavate"
-      olist_title: "Brojčani popis"
-      ulist_title: "Tačkasti popis"
       list_item: "Predmet popisa"
       help: "Markdown pomoć pri izmenama"
-      collapse: "smanji panel za sastavljanje teksta"
-      hide_toolbar: "sakrij alatku za pisanje"
       modal_ok: "U redu"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
@@ -2373,7 +2370,6 @@ sr:
         topics: "Teme"
         replies: "Odgovori"
       posted:
-        title: "Moje poruke"
         help: "teme u kojima si pisao poruke"
       bookmarks:
         title: "Markiraj"
@@ -2580,6 +2576,8 @@ sr:
               content: "Admin"
             badges:
               content: "Značke"
+            filter:
+              content: "Filter"
             topics:
               content: "Teme"
             faq:
@@ -2590,8 +2588,6 @@ sr:
               content: "Grupe"
             users:
               content: "Korisnici"
-            my_posts:
-              content: "Moje poruke"
             invite:
               content: "Pozovite"
               title: "Pozovi nove članove"
@@ -2613,6 +2609,9 @@ sr:
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
+    filter:
+      description:
+        yesterday: "Juče"
     discovery:
       headings:
         categories: "Sve kategorije"
@@ -2643,6 +2642,10 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Podešavanje"
         logo:
           form:
             email: "Email"
@@ -2697,6 +2700,8 @@ sr:
               header_description: "URL-ovi s ove liste su korišteni u porukama korisnika koji su identifikovani kao nepoželjni"
         embedding:
           title: "Ugrađivanje"
+      theme_site_settings:
+        default_value: "Подразумевано"
       search:
         title: "Pretraži"
       dashboard:
@@ -2883,6 +2888,11 @@ sr:
         change_settings_short: "Podešavanje"
         author: "Od %{author}"
         learn_more: "Saznaj više"
+        filters:
+          all: "Sve"
+          enabled: "Omogućeno"
+          disabled: "Isključeno"
+          reset: "Reset"
       backups:
         title: "Sigurnosne kopije"
         menu:
@@ -2945,15 +2955,16 @@ sr:
         email_templates:
           title: "E-mail"
           subject: "Predmet"
+          edit: "Izmeni"
         component:
           all_filter: "sve"
         theme:
+          filter_all: "Sve"
           customize_desc: "Prilagođavanje:"
           create_type: "Tip"
           create_name: "Ime foruma"
           save: "Sačuvaj"
           edit: "Izmeni"
-          default: "Aktivno"
           cancel: "Odustani"
           collapse: Spusti
           upload: "Učitaj"
@@ -2965,10 +2976,6 @@ sr:
           enable: "Omogući"
           disable: "Onemogući"
           add: "Dodaj"
-          settings: "Podešavanje"
-          colors: "Boje"
-          discard_colors: "Odbaci"
-          colors_title: "Boje"
           scss:
             text: "CSS"
           footer:
@@ -2980,6 +2987,9 @@ sr:
             required: "*potrebno"
         colors:
           title: "Boje"
+          edit: "Izmeni"
+          filters:
+            all: "Sve"
           copy_name_prefix: "Kopija od"
           undo: "Vrati na prethodno"
           undo_title: "Poništi promene ovoj boji od zadnjeg puta kad su sačuvane."
@@ -3202,7 +3212,6 @@ sr:
         activity: Aktivnost
         like_count: Like-ovi Dati / Primljeni
         last_100_days: "U zadnjih 100 dana"
-        private_topics_count: Privatne Teme
         posts_read_count: Poruka Pročitano
         post_count: Poruka Otvoreno
         topics_entered: Tema Pregledano
@@ -3225,7 +3234,6 @@ sr:
             cancel: "Odustani"
           confirmation:
             cancel: "Odustani"
-        delete_forbidden_because_staff: "Admini i moderatori ne mogu biti obrisani."
         delete_forbidden:
           one: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"
           few: "Korisnici ne mogu biti obrisani ako imaju poruka. Obrišite sve njihove poruke pre nego pokušate obrisati korisnika. (Poruke starije od %{dana} ne mogu biti obrisane.)"

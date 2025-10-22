@@ -97,6 +97,11 @@ module SvgSprite
         discourse-threads
         discourse-add-translation
         download
+        discourse-h1
+        discourse-h2
+        discourse-h3
+        discourse-h4
+        discourse-h5
         earth-americas
         ellipsis
         ellipsis-vertical
@@ -110,6 +115,7 @@ module SvgSprite
         fab-facebook
         fab-facebook-square
         fab-github
+        fab-google
         fab-instagram
         fab-linkedin-in
         fab-linux
@@ -202,6 +208,7 @@ module SvgSprite
         palette
         paper-plane
         pause
+        pen
         pencil
         play
         plug
@@ -483,7 +490,7 @@ License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL
       # includes svg_icon_subset and any settings containing _icon (incl. plugin settings)
       site_setting_icons = []
 
-      SiteSetting.settings_hash.select do |key, value|
+      SiteSetting.settings_hash.each do |key, value|
         site_setting_icons |= value.split("|") if key.to_s.include?("_icon") && String === value
       end
 

@@ -3,7 +3,7 @@
 .popup-menu {
   background-color: var(--secondary);
   width: 14em;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   z-index: z("dropdown");
   box-shadow: var(--shadow-card);
 

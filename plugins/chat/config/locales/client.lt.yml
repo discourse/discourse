@@ -143,7 +143,6 @@ lt:
         none: "Nieko"
       title: "pokalbis"
       title_capitalized: "Pokalbis"
-      exit: "atgal"
       channel_status:
         closed: "Uždaryta"
         open: "Atidaryti"

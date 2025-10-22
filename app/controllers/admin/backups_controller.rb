@@ -8,7 +8,20 @@ class Admin::BackupsController < Admin::AdminController
 
   before_action :ensure_backups_enabled
   skip_before_action :check_xhr, only: %i[index show logs check_backup_chunk upload_backup_chunk]
-  skip_before_action :ensure_backups_enabled, only: %w[show status index email]
+  skip_before_action :ensure_backups_enabled, only: %i[show status index email]
+
+  allow_in_readonly_mode :create,
+                         :cancel,
+                         :email,
+                         :destroy,
+                         :restore,
+                         :rollback,
+                         :readonly,
+                         :upload_backup_chunk,
+                         :create_multipart,
+                         :complete_multipart,
+                         :abort_multipart,
+                         :batch_presign_multipart_parts
 
   def index
     respond_to do |format|
@@ -76,14 +89,14 @@ class Admin::BackupsController < Admin::AdminController
 
       render body: nil
     else
-      render body: nil, status: 404
+      render body: nil, status: :not_found
     end
   end
 
   def show
     if !EmailBackupToken.compare(current_user.id, params.fetch(:token))
       @error = I18n.t("download_backup_mailer.no_token")
-      return render layout: "no_ember", status: 422, formats: [:html]
+      return render layout: "no_ember", status: :unprocessable_entity, formats: [:html]
     end
 
     store = BackupRestore::BackupStore.create
@@ -99,7 +112,7 @@ class Admin::BackupsController < Admin::AdminController
         send_file backup.source
       end
     else
-      render body: nil, status: 404
+      render body: nil, status: :not_found
     end
   end
 
@@ -111,7 +124,7 @@ class Admin::BackupsController < Admin::AdminController
       store.delete_file(backup.filename)
       render body: nil
     else
-      render body: nil, status: 404
+      render body: nil, status: :not_found
     end
   end
 
@@ -180,13 +193,17 @@ class Admin::BackupsController < Admin::AdminController
 
     raise Discourse::InvalidParameters.new(:resumableIdentifier) unless valid_filename?(identifier)
     unless valid_extension?(filename)
-      return render status: 415, plain: I18n.t("backup.backup_file_should_be_tar_gz")
+      return(
+        render status: :unsupported_media_type, plain: I18n.t("backup.backup_file_should_be_tar_gz")
+      )
     end
     unless has_enough_space_on_disk?(total_size)
-      return render status: 415, plain: I18n.t("backup.not_enough_space_on_disk")
+      return(
+        render status: :unsupported_media_type, plain: I18n.t("backup.not_enough_space_on_disk")
+      )
     end
     unless valid_filename?(filename)
-      return render status: 415, plain: I18n.t("backup.invalid_filename")
+      return render status: :unsupported_media_type, plain: I18n.t("backup.invalid_filename")
     end
 
     file = params.fetch(:file)

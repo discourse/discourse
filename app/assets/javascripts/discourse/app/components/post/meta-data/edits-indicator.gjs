@@ -4,6 +4,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { longDate } from "discourse/lib/formatter";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataEditsIndicator extends Component {
@@ -14,9 +15,11 @@ export default class PostMetaDataEditsIndicator extends Component {
   }
 
   get label() {
-    if (this.args.post.version > 1) {
-      return this.args.post.version - 1;
-    }
+    return applyValueTransformer(
+      "post-meta-data-edits-indicator-label",
+      this.args.post.version > 1 ? this.args.post.version - 1 : null,
+      { post: this.args.post }
+    );
   }
 
   get title() {

@@ -22,4 +22,34 @@ module("Integration | Helper | category-link", function (hooks) {
 
     assert.dom(".badge-category").hasAttribute("title", "bar");
   });
+
+  test("styleType option", async function (assert) {
+    await render(
+      <template>
+        {{categoryLink (hash name="test-cat") styleType="icon" icon="user"}}
+      </template>
+    );
+
+    assert.dom(".badge-category").hasClass("--style-icon");
+    assert.dom(".d-icon-user").exists();
+  });
+
+  test("category.style_type auto-detection", async function (assert) {
+    await render(
+      <template>
+        {{categoryLink (hash name="icon-cat" style_type="icon" icon="user")}}
+      </template>
+    );
+
+    assert.dom(".badge-category").hasClass("--style-icon");
+    assert.dom(".d-icon-user").exists();
+  });
+
+  test("style falls back to square", async function (assert) {
+    await render(
+      <template>{{categoryLink (hash name="square-cat")}}</template>
+    );
+
+    assert.dom(".badge-category").hasClass("--style-square");
+  });
 });

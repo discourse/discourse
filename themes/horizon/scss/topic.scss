@@ -1,5 +1,9 @@
 @use "lib/viewport";
 
+:root {
+  --d-post-control-background--hover: var(--d-hover);
+}
+
 .post-stream {
   .contents {
     font-size: var(--font-up-1);
@@ -51,15 +55,24 @@
   }
 }
 
-.container.posts {
-  grid-template-columns: auto 8em;
+body:not(.d-toc-installed) {
+  .container.posts {
+    grid-template-columns: auto 8em;
 
-  @media screen and (width <= 924px) {
-    grid-template-columns: auto auto;
+    @media screen and (width <= 924px) {
+      grid-template-columns: auto auto;
+    }
   }
 
+  .topic-navigation-popup {
+    min-width: 250px;
+    right: 0;
+  }
+}
+
+.container.posts {
   .post-notice {
-    padding: var(--spacing-block-sm);
+    padding: var(--space-2);
     border-radius: var(--d-border-radius);
     font-size: var(--font-down-1-rem);
 
@@ -67,6 +80,17 @@
       font-size: var(--font-up-1);
       width: 1em;
     }
+  }
+}
+
+.topic-post-badges {
+  .badge-notification {
+    font-size: var(--font-down-1);
+    padding: 0.15em 0.35em;
+    border-radius: 1em;
+    min-width: 1.3em;
+    box-sizing: border-box;
+    color: var(--secondary);
   }
 }
 

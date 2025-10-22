@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
@@ -20,6 +21,7 @@ import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
 import ReviewableInsights from "discourse/components/reviewable-refresh/insights";
 import ReviewableTimeline from "discourse/components/reviewable-refresh/timeline";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
@@ -30,8 +32,6 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
-
-// const IpLookup = optionalRequire("admin/components/ip-lookup");
 
 let _components = {};
 
@@ -593,11 +593,7 @@ export default class ReviewableItem extends Component {
 
                 <div class="review-item__flag-badges">
                   {{#each this.scoreSummary as |score|}}
-                    <ReviewableFlagReason
-                      @type={{score.type}}
-                      @count={{score.count}}
-                      @title={{score.title}}
-                    />
+                    <ReviewableFlagReason @score={{score}} />
                   {{/each}}
                 </div>
               </div>
@@ -625,7 +621,12 @@ export default class ReviewableItem extends Component {
                 @ariaLabel="Review tabs"
                 class="d-nav-submenu__tabs"
               >
-                <li class={{if (eq this.activeTab "insights") "active"}}>
+                <li
+                  class={{concatClass
+                    "insights"
+                    (if (eq this.activeTab "insights") "active")
+                  }}
+                >
                   <a
                     href="#"
                     class={{if (eq this.activeTab "insights") "active"}}
@@ -634,7 +635,12 @@ export default class ReviewableItem extends Component {
                     {{i18n "review.insights.title"}}
                   </a>
                 </li>
-                <li class={{if (eq this.activeTab "timeline") "active"}}>
+                <li
+                  class={{concatClass
+                    "timeline"
+                    (if (eq this.activeTab "timeline") "active")
+                  }}
+                >
                   <a
                     href="#"
                     class={{if (eq this.activeTab "timeline") "active"}}

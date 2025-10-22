@@ -359,7 +359,7 @@ RSpec.describe CategoryUser do
 
   describe ".muted_category_ids" do
     context "with max category nesting 2" do
-      fab!(:category1) { Fabricate(:category) }
+      fab!(:category1, :category)
       fab!(:category2) { Fabricate(:category, parent_category: category1) }
       fab!(:category3) { Fabricate(:category, parent_category: category1) }
 

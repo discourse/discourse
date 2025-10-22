@@ -168,11 +168,11 @@ ko:
     back_button: "뒤로"
     welcome_banner:
       header:
+        logged_in_members: "어서오세요, %{preferred_display_name}님!"
         anonymous_members: "%{site_name}에 오신 것을 환영합니다!"
       search: "검색"
     themes:
       default_description: "기본"
-      broken_theme_alert: "테마/구성 요소에 오류가 있어 사이트가 작동하지 않을 수 있습니다."
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 테마를 업데이트 또는 재설정하거나, 테마 사용을 중지하세요."
       only_admins: "(이 메시지는 사이트 운영자에게만 표시됩니다)"
     broken_decorator_alert: "사이트의 게시물 콘텐츠 데코레이터 중 하나가 오류를 발생시켜 게시물이 올바르게 표시되지 않을 수 있습니다."
@@ -180,11 +180,11 @@ ko:
     broken_plugin_alert: "플러그인 '%{name}'(으)로 인해 발생"
     broken_transformer_alert: "오류가 발생했습니다. 사이트가 제대로 작동하지 않을 수 있습니다."
     critical_deprecation:
-      notice: "<b>[관리자 알림]</b> 예정된 Discourse 핵심 변경 사항과 호환되도록 테마 또는 플러그인을 업데이트해야 합니다."
-      id: "(id:<em>%{id}</em>)"
-      linked_id: "(id:<a href='%{url}' target='_blank'><em>%{id}</em></a>)"
-      theme_source: "식별된 테마: <a target='_blank' href='%{path}'>'%{name}'</a>."
-      plugin_source: "식별된 플러그인: '%{name}'"
+      notice: "<b>[관리자 알림]</b> %{source} 에 업데이트가 필요한 코드가 포함되어 있습니다. (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>자세히 알아보기</em></a>)"
+      theme_source: "<a target='_blank' href='%{path}'>'%{name}'</a> 테마"
+      plugin_source: "'%{name}' 플러그인"
+      unknown_source: "테마 또는 플러그인 중 하나"
     s3:
       regions:
         ap_northeast_1: "아시아 태평양(도쿄)"
@@ -289,32 +289,59 @@ ko:
       active_user_count: "활성 사용자"
       visitor_count: "방문자"
       eu_visitor_count: "유럽 연합 방문자"
+      traffic_info_footer_MF: |
+        지난 6개월 동안 이 사이트는 매달 약 { total_visitors, plural, other {#명 } }의 사람들에게 콘텐츠를 제공했으며, 그 중 약 {eu_visitors, plural, other {#명} }은 유럽 연합(EU)에서 방문했습니다.
       contact: "문의하기"
       contact_info: "이 사이트에 영향을 미치는 중대한 문제나 긴급한 사안이 발생한 경우 %{contact_info}으로 문의하시기 바랍니다."
       site_activity: "사이트 활동"
       view_more: "자세히 보기"
+      view_less: "간략히"
       activities:
         topics:
           other: "%{formatted_number}개의 글"
         posts:
           other: "글 %{formatted_number}개"
+        active_users:
+          other: "활성 사용자 %{formatted_number} 명"
+        sign_ups:
+          other: "가입 %{formatted_number} 명"
         likes:
           other: "좋아요 %{formatted_number}"
+        visitors_MF: |
+          총 방문자 { total_count, plural, other {{total_formatted_number}명}}, 이 중 약 { eu_count, plural, other {{eu_formatted_number} 명} }은 EU에서 방문함
         periods:
           last_7_days: "지난 7일간"
           today: "오늘"
+          all_time: "전체"
       member_count:
         other: "회원 %{formatted_number}명"
+      admin_count:
+        other: "관리자 %{formatted_number} 명"
+      moderator_count:
+        other: "운영진 %{formatted_number} 명"
+      report_inappropriate_content: "부적절한 콘텐츠를 발견하시면 주저하지 말고 저희 관리자와 운영진에게 문의해 주세요. 문의하기 전에 로그인해 주세요."
+      site_age:
+        less_than_one_month: "1개월 이내에 생성됨"
+        month:
+          other: "%{count}개월 전에 생성됨"
+        year:
+          other: "%{count}년 전에 생성됨"
     bookmarked:
       title: "북마크"
       edit_bookmark: "북마크 편집"
       clear_bookmarks: "북마크 지우기"
       help:
+        bookmark: "이 주제를 북마크하려면 클릭하세요"
+        edit_bookmark: "이 주제에 대한 북마크를 편집하려면 클릭하세요"
         edit_bookmark_for_topic: "이 주제의 북마크를 편집하려면 클릭하세요"
         unbookmark: "이 주제의 모든 북마크를 제거하려면 클릭하세요"
         unbookmark_with_reminder: "이 항목의 모든 북마크 및 미리 알림을 제거하려면 클릭하십시오"
     bookmarks:
+      also_set_reminder: "알림도 설정하시겠습니까?"
       bookmarked_success: "북마크에 추가했습니다!"
+      deleted_bookmark_success: "북마크를 삭제했습니다"
+      reminder_set_success: "알림을 설정했습니다"
+      reminder_clear_success: "미리 알림을 해제했습니다"
       created: "이 게시물을 북마크했습니다. %{name}"
       created_generic: "%{name}을 북마크했습니다."
       create: "북마크 만들기"
@@ -580,6 +607,15 @@ ko:
         reviewable_post:
           title: "게시물"
           noun: "글"
+      notes:
+        delete: "삭제하기"
+      review_user: "사용자"
+      copy_link: "링크 복사"
+      insights:
+        activities:
+          posts:
+            other: "글 %{count}개"
+        visibility: "시계"
       approval:
         title: "승인이 필요한 게시물"
         description: "새 게시물이 있습니다. 그러나 이 게시물이 보여지려면 운영자의 승인이 필요합니다. 잠시 기다려 주세요."
@@ -1090,11 +1126,13 @@ ko:
       color_scheme: "색상 팔레트"
       color_schemes:
         default_description: "디폴트 테마"
-        disable_dark_scheme: "일반과 동일"
         undo: "리셋"
-        regular: "일반"
         dark: "다크 모드"
-        default_dark_scheme: "(사이트 디폴트)"
+        interface_modes:
+          light: "라이트"
+          dark: "다크"
+        picker:
+          active: "활성화 사용자"
       dark_mode: "다크 모드"
       text_size_default_on_all_devices: "모든 디바이스에서 디폴트 텍스트 크기로 설정"
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
@@ -1116,6 +1154,8 @@ ko:
       suspended_notice: "이 사용자는 %{date}까지 정지되었습니다."
       suspended_permanently: "이 사용자는 정지되었습니다."
       suspended_reason: "이유: "
+      silenced_permanently: "이 회원은 차단되었습니다."
+      silenced_reason: "이유: "
       github_profile: "GitHub"
       email_activity_summary: "활동 요약"
       mailing_list_mode:
@@ -1519,7 +1559,8 @@ ko:
         reinvited: "초대 재전송됨"
         removed: "제거됨"
         user: "초대된 사용자"
-        none: "표시할 초대가 없습니다."
+        none:
+          title: "표시 할 초대가 없습니다."
         truncated:
           other: "첫 %{count}개의 초대를 표시합니다."
         redeemed: "사용된 초대"
@@ -1872,6 +1913,8 @@ ko:
     full_name_requirement:
       required_at_signup: "필수"
       optional_at_signup: "선택 사항"
+    welcome_banner_page_visibility:
+      homepage: "홈페이지"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1882,6 +1925,7 @@ ko:
         other: "+%{count}개의 하위 카테고리"
       topic_count:
         other: "이 카테고리에는 %{count}개의 주제가 있습니다"
+      read_only: "읽기 전용"
     select_kit:
       delete_item: "%{name} 삭제"
       filter_by: "필터링 기준: %{name}"
@@ -1936,8 +1980,7 @@ ko:
       whisper: "귓속말"
       unlist: "목록에서 제외됨"
       add_warning: "공식 경고입니다."
-      toggle_whisper: "귓속말 토글"
-      toggle_unlisted: "목록에서 제외 토글"
+      toggle_whisper: "귀속말 켜고 끄기"
       posting_not_on_topic: "어떤 주제에 댓글을 달까요?"
       saved_local_draft_tip: "로컬에 저장됨"
       drafts_offline: "오프라인 초안"
@@ -1970,6 +2013,7 @@ ko:
       create_shared_draft: "공유 초안 생성"
       edit_shared_draft: "공유 초안 편집"
       title: "또는 %{modifier}Enter를 누르세요"
+      discard: "포기"
       users_placeholder: "사용자 또는 그룹 추가"
       title_placeholder: "토론 주제를 한 문장으로 적으세요"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요"
@@ -2004,19 +2048,9 @@ ko:
       paste_code_text: "여기에 코드를 입력하거나 붙여 넣으세요"
       upload_title: "업로드"
       upload_description: "여기에 업로드 설명을 입력하세요"
-      olist_title: "번호 매기기 목록"
-      ulist_title: "글머리 기호 목록"
       list_item: "목록 항목"
-      toggle_direction: "방향 전환"
       help: "Markdown 편집 도움말"
-      collapse: "작성기 패널 최소화"
-      open: "작성기 패널 열기"
-      abandon: "작성기 닫기 및 초안 버리기"
-      enter_fullscreen: "전체화면으로 작성기 보기"
-      exit_fullscreen: "작성기 전체화면 종료"
       exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
-      show_toolbar: "작성기 툴바 표시"
-      hide_toolbar: "작성기 툴바 숨기기"
       modal_ok: "확인"
       cant_send_pm: "%{username} 님에게 메시지를 보낼 수 없습니다."
       yourself_confirm:
@@ -2815,10 +2849,7 @@ ko:
         attachment_upload_not_allowed_for_new_user: "신규 사용자는 첨부 파일을 업로드할 수 없습니다."
         attachment_download_requires_login: "첨부 파일을 다운로드하려면 로그인이 필요합니다."
       cancel_composer:
-        confirm: "게시물에 어떤 작업을 하고 싶나요?"
         discard: "버리기"
-        save_draft: "나중을 위해 초안 저장"
-        keep_editing: "편집 유지"
       via_email: "이 게시물은 이메일을 통해 전달됐습니다"
       via_auto_generated_email: "이 게시물은 자동 생성된 이메일로 전달됐습니다"
       whisper: "이 게시물은 운영자를 위한 비공개 귓속말입니다"
@@ -2976,8 +3007,8 @@ ko:
         name: "그룹명"
         description: "내용"
         remove: "제거"
-      tags_allowed_tags: "이 태그를 이 카테고리로 제한:"
-      tags_allowed_tag_groups: "이 태그 그룹을 이 카테고리로 제한:"
+      tags_allowed_tags_new_category: "이 태그를 현재 카테고리로 제한:"
+      tags_allowed_tag_groups_new_category: "이 태그 그룹을 현재 카테고리로 제한:"
       tags_placeholder: "(선택사항) 허용된 태그 목록"
       tags_tab_description: "위에 지정된 태그 및 태그 그룹은 이 카테고리 및 이를 지정하는 기타 카테고리에서만 사용할 수 있습니다. 그외 카테고리에서는 사용할 수 없습니다."
       tag_groups_placeholder: "(선택사항) 허용된 태그 그룹 목록"
@@ -3000,6 +3031,8 @@ ko:
       logo: "카테고리 로고 이미지"
       background_image: "카테고리 백그라운드 이미지"
       background_color: "색상"
+      color_validations:
+        cant_be_empty: "필수 작성"
       styles:
         icon: "아이콘"
         emoji: "이모티콘"
@@ -3239,6 +3272,8 @@ ko:
       unseen:
         title: "읽지 않음"
         lower_title: "읽지 않음"
+      hot:
+        title: "인기"
       new:
         lower_title_with_count:
           other: "%{count} new"
@@ -3431,7 +3466,6 @@ ko:
       selector_remove_filter: "필터 제거"
       tags: "태그"
       choose_for_topic: "태그(선택사항)"
-      info: "정보"
       default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이 없는 카테고리로 제한됩니다."
       synonyms: "동의어"
@@ -3632,6 +3666,8 @@ ko:
               content: "관리자"
             badges:
               content: "배지"
+            filter:
+              content: "필터"
             topics:
               content: "글"
               title: "모든 글"
@@ -3644,8 +3680,7 @@ ko:
             users:
               content: "사용자들"
             my_posts:
-              content: "내 게시물"
-              content_drafts: "내 초안"
+              content: "내 글"
               title: "최근 주제 활동"
               title_drafts: "게시하지 않은 초안"
               draft_count:
@@ -3685,6 +3720,9 @@ ko:
       spreadsheet:
         show: "보기"
         about: "소개"
+    filter:
+      description:
+        yesterday: "어제"
     discovery:
       headings:
         multi_tag:
@@ -3696,7 +3734,7 @@ ko:
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"
-      filter_reports: 보고서 필터링
+      filter_reports: "보고서 필터링..."
       tags:
         remove_muted_tags_from_latest:
           always: "항상 알림 받기"
@@ -3731,6 +3769,10 @@ ko:
           title: "파일"
         legal:
           title: "법률조항"
+        login:
+          sub_pages:
+            common_settings:
+              title: "설정"
         logo:
           form:
             mobile: "모바일"
@@ -3817,6 +3859,8 @@ ko:
           title: "Webhook"
         embedding:
           title: "삽입(Embedding)"
+      theme_site_settings:
+        default_value: "기본"
       search:
         title: "검색"
         result_types:
@@ -4213,6 +4257,9 @@ ko:
           delete: "삭제하기"
         color_palettes:
           palette_name: "그룹명"
+          copy_to_clipboard: "클립 보드에 복사"
+          copied_to_clipboard: "클립보드로 복사됨"
+          copy_to_clipboard_error: "데이터를 클립보드로 복사하는 중 오류 발생"
           delete: "삭제하기"
           colors:
             title: "색상"
@@ -4228,6 +4275,11 @@ ko:
         howto: "플러그인은 어떻게 설치하나요?"
         author: "%{author}에 의해"
         learn_more: "더 보기"
+        filters:
+          all: "모두"
+          enabled: "활성화"
+          disabled: "비활성"
+          reset: "리셋"
       navigation_menu:
         sidebar: "사이드바"
       backups:
@@ -4307,7 +4359,6 @@ ko:
         copy_to_clipboard: "클립보드에 복사"
         copied_to_clipboard: "클립보드로 복사됨"
         copy_to_clipboard_error: "클립보드로 복사하는 중 에러가 발생하였습니다"
-        theme_owner: "편집 불가, 소유자:"
         email_templates:
           title: "이메일"
           subject: "제목"
@@ -4315,6 +4366,7 @@ ko:
           body: "본문"
           revert: "변경사항 되돌리기"
           revert_confirm: "변경사항을 되돌릴까요?"
+          edit: "편집"
         component:
           all_filter: "전체"
           enabled_filter: "활성화"
@@ -4323,6 +4375,7 @@ ko:
           theme: "테마"
           component: "구성 요소"
           components: "구성 요소"
+          filter_all: "모두"
           theme_name: "테마명"
           component_name: "구성 요소 이름"
           themes_intro: "기존 테마를 선택하거나 새 테마를 설치하여 시작하세요."
@@ -4347,13 +4400,12 @@ ko:
           extra_files_upload: "이 파일을 보려면 테마를 내보내세요."
           extra_files_remote: "이 파일을 보려면 테마를 내보내거나 Git 저장소를 확인하세요."
           preview: "미리보기"
-          default: "활성화 사용자"
           is_default: "디폴트로 테마가 활성화되었습니다"
           user_selectable: "사용자가 테마를 선택할 수 있습니다"
           auto_update: "Discourse 업데이트 시 자동 업데이트"
           color_scheme: "색상 팔레트"
           default_light_scheme: "라이트(디폴트)"
-          color_scheme_select: "테마에서 사용할 색상 선택"
+          color_scheme_select: "테마에서 사용될 컬러 선택."
           custom_sections: "사용자 지정 섹션:"
           theme_components: "테마 구성 요소:"
           add_all_themes: "모든 테마 추가"
@@ -4423,9 +4475,7 @@ ko:
           up_to_date: "테마가 최신입니다. 마지막 확인:"
           has_overwritten_history: "강제 푸시로 Git 히스토리를 덮어 썼으므로 현재 테마 버전이 더 이상 존재하지 않습니다."
           add: "추가"
-          theme_settings: "테마 설정"
           no_settings: "이 테마에는 설정이 없습니다."
-          theme_translations: "테마 번역"
           empty: "항목이 없습니다"
           commits_behind:
             other: "테마에 최신 커밋 %{count}개가 있습니다."
@@ -4433,10 +4483,6 @@ ko:
           remote_theme_edits: "이 테마를 편집하려면 <a href='%{repoURL}' target='_blank'>저장소에 변경사항을 제출</a>해야 합니다."
           repo_unreachable: "이 테마의 Git 저장소에 접속할 수 없습니다. 오류 메시지:"
           imported_from_archive: "이 테마는 .zip 파일에서 임포트했습니다."
-          settings: "설정"
-          colors: "색상"
-          discard_colors: "포기"
-          colors_title: "색상"
           scss:
             text: "CSS"
           after_header:
@@ -4475,7 +4521,12 @@ ko:
           select_base:
             title: "베이스 색상 팔레트 선택"
             description: "베이스 팔레트:"
+          light: "라이트"
+          dark: "다크"
           title: "색상"
+          edit: "편집"
+          filters:
+            all: "모두"
           about: "테마에 사용되는 색상을 수정합니다. 시작하려면 새 색상 팔레트를 생성하세요."
           copy_name_prefix: "다음의 사본"
           undo: "실행 취소"
@@ -4932,7 +4983,6 @@ ko:
         activity: 활동
         like_count: 좋아요 보냄 / 받음
         last_100_days: "지난 100일간"
-        private_topics_count: 비공개 주제
         posts_read_count: 읽은 게시물
         post_count: 생성한 게시물
         second_factor_enabled: 2단계 인증 활성화됨
@@ -4994,7 +5044,6 @@ ko:
             transfer_and_delete: "@%{username} 이전 및 삭제"
             cancel: "취소"
         merge_failed: "사용자를 병합하는 중에 오류가 발생했습니다."
-        delete_forbidden_because_staff: "관리자 및 운영자 계정은 삭제할 수 없습니다."
         delete_posts_forbidden_because_staff: "관리자 및 운영자의 게시물은 모두 삭제할 수 없습니다."
         delete_forbidden:
           other: "게시물이 있는 사용자는 삭제할 수 없습니다. 사용자를 삭제하기 전에 게시물을 모두 삭제해야 합니다. (%{count}일 이전에 작성한 글은 삭제할 수 없습니다.)"

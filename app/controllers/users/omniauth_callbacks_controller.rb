@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 # frozen_string_literal: true
 
 class Users::OmniauthCallbacksController < ApplicationController
@@ -13,6 +12,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_action :verify_authenticity_token, only: :complete
 
+  # These are usually GET requests but some providers use POST requests
   allow_in_staff_writes_only_mode :complete
 
   def confirm_request
@@ -21,17 +21,15 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def complete
-    auth = request.env["omniauth.auth"]
-    raise Discourse::NotFound unless request.env["omniauth.auth"]
-    raise Discourse::ReadOnly if @readonly_mode && !staff_writes_only_mode?
+    raise Discourse::ReadOnly if @readonly_mode && !@staff_writes_only_mode
+    raise Discourse::NotFound unless auth = request.env["omniauth.auth"]
 
     auth[:session] = session
 
     authenticator = self.class.find_authenticator(params[:provider])
 
     if session.delete(:auth_reconnect) && authenticator.can_connect_existing_user? && current_user
-      path = persist_auth_token(auth)
-      return redirect_to path
+      return redirect_to persist_auth_token(auth)
     else
       DiscourseEvent.trigger(:before_auth, authenticator, auth, session, cookies, request)
       @auth_result = authenticator.after_authenticate(auth)
@@ -41,9 +39,10 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     preferred_origin = request.env["omniauth.origin"]
 
-    if session[:destination_url].present?
-      preferred_origin = session[:destination_url]
-      session.delete(:destination_url)
+    session.delete(:destination_url) # Clean up old values. TODO: Remove after March 2026
+    if server_session[:destination_url].present?
+      preferred_origin = server_session[:destination_url]
+      server_session.delete(:destination_url)
     elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
       preferred_origin = session_sso_provider_url + "?" + payload
     elsif cookies[:destination_url].present?
@@ -71,7 +70,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     return render_auth_result_failure if @auth_result.failed?
 
-    raise Discourse::ReadOnly if staff_writes_only_mode? && !@auth_result.user&.staff?
+    raise Discourse::ReadOnly if @staff_writes_only_mode && !@auth_result.user&.staff?
 
     complete_response_data
 
@@ -105,7 +104,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
-  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].to_h { [_1, _1] }
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].index_by { _1 }
 
   def failure
     error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence
@@ -150,7 +149,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif invite_required?
       @auth_result.requires_invite = true
     else
-      session[:authentication] = @auth_result.session_data
+      server_session[:authentication] = @auth_result.session_data
     end
   end
 
@@ -208,7 +207,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
       log_on_user(user, { authenticated_with_oauth: true })
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
-      session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere
+      server_session.delete(:authentication) # don't carry around old auth info
       @auth_result.authenticated = true
     else
       if SiteSetting.must_approve_users? && !user.approved?
@@ -221,9 +220,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def persist_auth_token(auth)
     secret = SecureRandom.hex
-    secure_session.set "#{Users::AssociateAccountsController.key(secret)}",
-                       auth.to_json,
-                       expires: 10.minutes
+    key = Users::AssociateAccountsController.key(secret)
+    server_session.set(key, auth.to_json, expires: 10.minutes)
     "#{Discourse.base_path}/associate/#{secret}"
   end
 end

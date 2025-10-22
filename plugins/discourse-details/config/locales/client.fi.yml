@@ -9,7 +9,7 @@ fi:
     admin:
       site_settings:
         categories:
-          discourse_details: "Discoursen yksityiskohdat"
+          discourse_details: "Discoursen tiedot"
   js:
     details:
       title: Piilota tiedot

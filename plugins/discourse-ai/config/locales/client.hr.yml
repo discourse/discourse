@@ -1,0 +1,204 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sortiraj po"
+            tag:
+              label: "Označiti"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID teme"
+            title:
+              label: "Naslov"
+            categories:
+              label: "Kategorije"
+            tags:
+              label: "Oznake"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategorija"
+            tags:
+              label: "Oznake"
+            canned_reply:
+              label: "Odgovor"
+    discourse_ai:
+      features:
+        back: "Natrag"
+        disabled: "(onemogućeno)"
+        groups: "Grupe:"
+        no_persona: "Nije postavljeno"
+        no_groups: "Ništa"
+        edit: "Uredi"
+        expand_list:
+          one: "(%{count} još)"
+          few: "(%{count} još)"
+          other: "(%{count} još)"
+        collapse_list: "(prikaži manje)"
+        filters:
+          all: "Sve"
+          reset: "Resetirati"
+        search:
+          name: "Pretraživanje"
+        spam:
+          name: "Nepoželjno"
+      modals:
+        select_option: "Odaberite opciju..."
+      translations:
+        title: "Prijevodi"
+        progress_chart:
+          bar_done:
+            one: "%{count} objava"
+            few: "%{count} objava"
+            other: "%{count} objava"
+      spam:
+        short_title: "Nepoželjno"
+        last_seven_days: "Zadnjih 7 dana"
+        enable: "Omogućiti"
+        test_modal:
+          spam: "Nepoželjno"
+      usage:
+        summary: "Sažetak"
+        username: "Korisničko ime"
+        total_requests: "Ukupno zahtjeva"
+        periods:
+          last_day: "Posljednja 24 sata"
+          custom: "Prilagođeno..."
+      ai_persona:
+        back: "Natrag"
+        name: "Ime"
+        edit: "Uredi"
+        export: "Izvoz"
+        description: "Opis"
+        user: Korisnik
+        save: "Spremi"
+        enabled: "Omogućeno?"
+        allowed_groups: "Dopuštene grupe"
+        delete: "Izbriši"
+        response_format:
+          open_modal: "Uredi"
+          modal:
+            key_title: "Ključ"
+        filters:
+          reset: "Resetirati"
+      rag:
+        uploads:
+          title: "Prijenosi"
+          uploading: "Učitavanje..."
+      tools:
+        back: "Natrag"
+        export: "Izvoz"
+        name: "Ime"
+        description: "Opis"
+        summary: "Sažetak"
+        save: "Spremi"
+        remove_parameter: "Ukloni"
+        parameter_required: "Potrebno"
+        edit: "Uredi"
+        delete: "Izbriši"
+      llms:
+        display_name: "Ime"
+        provider: "Pružatelj usluga"
+        save: "Spremi"
+        edit: "Uredi"
+        back: "Natrag"
+        delete: Izbriši
+        quotas:
+          group: "Grupa"
+          max_usages: "Max korisnika"
+          duration: "Trajanje"
+          durations:
+            hour: "1 sat"
+            six_hours: "6 sata"
+            day: "24 sata"
+            week: "7 dana"
+            custom: "Prilagođeno..."
+          hours: "sata"
+        usage:
+          ai_summarization: "Rezimirati"
+          ai_spam: "Nepoželjno"
+        next:
+          title: "Sljedeći"
+        tests:
+          success: "Uspjeh!"
+        providers:
+          google: "Google"
+          fake: "Posebna"
+      ai_helper:
+        context_menu:
+          cancel: "Odustani"
+          confirm: "Potvrdi"
+          discard: "Odbaci"
+        post_options_menu:
+          close: "Zatvori"
+          copy: "Kopija"
+          copied: "Kopirano!"
+          cancel: "Odustani"
+        thumbnail_suggestions:
+          select: "Odaberite"
+          selected: "Odabrano"
+        image_caption:
+          save_caption: "Spremi"
+      embeddings:
+        back: "Natrag"
+        save: "Spremi"
+        delete: "Izbriši"
+        edit: "Uredi"
+        tests:
+          success: "Uspjeh!"
+        display_name: "Ime"
+        provider: "Pružatelj usluga"
+        providers:
+          google: "Google"
+          fake: "Posebna"
+      ai_bot:
+        debug_ai_modal:
+          request: "Zahtjev"
+          response: "Odgovor"
+          next_log: "Sljedeći"
+          previous_log: "Prethodni"
+        invite_ai_conversation:
+          button: "Pozovite"
+        share_modal:
+          copy: "Kopija"
+        conversations:
+          today: "Danas"
+          last_7_days: "Zadnjih 7 dana"
+          last_30_days: "Zadnjih 30 dana"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Sve"
+          group_types:
+            category: "Kategorija"
+            tag: "Označiti"
+          table:
+            total_count: "Ukupno"
+      summarization:
+        chat:
+          title: "Sažmi poruke"
+          description: "Odaberite opciju u nastavku da biste saželi razgovor poslan tijekom željenog vremenskog okvira."
+          summarize: "Rezimirati"
+          since:
+            one: "Posljednji sat"
+            few: "Posljednja %{count} sata"
+            other: "Posljednjih %{count} sati"
+      discobot_discoveries:
+        regular_results: "Tema"
+        collapse: "Sakrij"
+        tooltip:
+          actions:
+            disable: "Onemogući"

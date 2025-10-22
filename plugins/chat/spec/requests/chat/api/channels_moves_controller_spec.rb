@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelsMessagesMovesController do
-  fab!(:channel) { Fabricate(:category_channel) }
+  fab!(:channel, :category_channel)
 
   70.times { |n| fab!("message_#{n}") { Fabricate(:chat_message, chat_channel: channel) } }
 
@@ -21,7 +21,7 @@ RSpec.describe Chat::Api::ChannelsMessagesMovesController do
     fab!(:message_to_move_2) do
       Fabricate(:chat_message, chat_channel: channel, created_at: 1.minute.ago)
     end
-    fab!(:destination_channel) { Fabricate(:category_channel) }
+    fab!(:destination_channel, :category_channel)
     let(:message_ids) { [message_to_move_1.id, message_to_move_2.id] }
 
     context "when the user is not admin" do
@@ -40,7 +40,7 @@ RSpec.describe Chat::Api::ChannelsMessagesMovesController do
     end
 
     context "when the user is admin" do
-      fab!(:current_user) { Fabricate(:admin) }
+      fab!(:current_user, :admin)
 
       before { sign_in(current_user) }
 

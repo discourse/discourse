@@ -1,10 +1,10 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import cookie from "discourse/lib/cookie";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import RequestGroupMembershipForm from "./modal/request-group-membership-form";
@@ -36,11 +36,6 @@ export default class GroupMembershipButton extends Component {
     return !!isGroupUser;
   }
 
-  _showLoginModal() {
-    this.showLogin();
-    cookie("destination_url", window.location.href);
-  }
-
   removeFromGroup() {
     const model = this.model;
     model
@@ -55,23 +50,23 @@ export default class GroupMembershipButton extends Component {
 
   @action
   joinGroup() {
-    if (this.currentUser) {
-      this.set("updatingMembership", true);
-      const group = this.model;
-
-      group
-        .join()
-        .then(() => {
-          group.set("is_group_user", true);
-          this.appEvents.trigger("group:join", group);
-        })
-        .catch(popupAjaxError)
-        .finally(() => {
-          this.set("updatingMembership", false);
-        });
-    } else {
-      this._showLoginModal();
+    if (!this.currentUser) {
+      return this.showLogin();
     }
+
+    this.set("updatingMembership", true);
+    const group = this.model;
+
+    group
+      .join()
+      .then(() => {
+        group.set("is_group_user", true);
+        this.appEvents.trigger("group:join", group);
+      })
+      .catch(popupAjaxError)
+      .finally(() => {
+        this.set("updatingMembership", false);
+      });
   }
 
   @action
@@ -91,15 +86,15 @@ export default class GroupMembershipButton extends Component {
 
   @action
   showRequestMembershipForm() {
-    if (this.currentUser) {
-      this.modal.show(RequestGroupMembershipForm, {
-        model: {
-          group: this.model,
-        },
-      });
-    } else {
-      this._showLoginModal();
+    if (!this.currentUser) {
+      return this.showLogin();
     }
+
+    this.modal.show(RequestGroupMembershipForm, {
+      model: {
+        group: this.model,
+      },
+    });
   }
 
   <template>

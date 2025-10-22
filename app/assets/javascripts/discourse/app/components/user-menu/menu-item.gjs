@@ -2,11 +2,9 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
-import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression } from "discourse/lib/utilities";
+import replaceEmoji from "discourse/helpers/replace-emoji";
 
 export default class UserMenuItem extends Component {
   get className() {
@@ -36,12 +34,7 @@ export default class UserMenuItem extends Component {
   get description() {
     const description = this.#item.description;
     if (description) {
-      if (typeof description === "string") {
-        // do emoji unescape on all items
-        return htmlSafe(emojiUnescape(escapeExpression(description)));
-      }
-      // it's probably an htmlSafe object, don't try to unescape emojis
-      return description;
+      return replaceEmoji(description);
     }
   }
 

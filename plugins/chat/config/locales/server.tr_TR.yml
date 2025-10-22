@@ -19,7 +19,7 @@ tr_TR:
     chat_auto_silence_from_flags_duration: "Kullanıcıların, işaretli sohbet mesajları nedeniyle otomatik olarak susturulduğunda, susturulacakları dakika sayısı."
     chat_duplicate_message_sensitivity: "Aynı gönderen tarafından eş kopya bir mesajın kısa bir süre içinde engellenme olasılığı. 0 ila 1,0 arasında ondalık sayı, 1,0 en yüksek ayardır (mesajları daha kısa sürede daha sık engeller). Eş kopya mesajlara izin vermek için \"0\" olarak ayarlayın."
     chat_minimum_message_length: "Bir sohbet mesajı için minimum karakter sayısı."
-    chat_allow_uploads: "Genel sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
+    chat_allow_uploads: "Herkese açık sohbet kanallarında ve doğrudan mesaj kanallarında yüklemelere izin verin."
     chat_archive_destination_topic_status: "Kanal arşivi tamamlandıktan sonra hedef konunun olması gereken durum. Bu, yalnızca hedef konu mevcut bir konu değil, yeni bir konu olduğunda geçerlidir."
     direct_message_enabled_groups: "Bu gruplardaki kullanıcıların kullanıcıdan kullanıcıya Kişisel Sohbetler oluşturmasına izin verin. Not: Personel her zaman Kişisel Sohbetler oluşturabilir ve kullanıcılar, bunları oluşturma iznine sahip kullanıcılar tarafından başlatılan Kişisel Sohbetlere yanıt verebilir."
     chat_message_flag_allowed_groups: "Bu gruplardaki kullanıcıların sohbet mesajlarını işaretlemesine izin verilir. Yöneticilerin ve moderatörlerin sohbet mesajlarını her zaman işaretleyebileceğini unutmayın."
@@ -30,10 +30,12 @@ tr_TR:
     chat_editing_grace_period_max_diff_low_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 0 ve 1)."
     chat_editing_grace_period_max_diff_high_trust: "Sohbet düzenleme ödemesiz döneminde izin verilen maksimum karakter değişikliği sayısı, daha fazla değiştirilirse sohbet mesajıyla (düzenlenmiş) etiketi görüntüler (güven seviyesi 2 ve üstü)."
     chat_preferred_index: "/chat yüklenirken tercih edilen sekme."
+    allow_chat_in_anonymous_mode: "Sitenizde anonim olarak gezinen kullanıcıların sohbet özelliğini kullanabilmesi için bu ayarı etkinleştirin. Bu ayar, `allow anonymous mode` ayarının etkinleştirilmesini gerektirir."
     errors:
       chat_default_channel: "Varsayılan sohbet kanalı genel bir kanal olmalıdır."
       direct_message_enabled_groups_invalid: "Bu ayar için en az bir grup belirtmelisiniz. Personel dışında kimsenin doğrudan mesaj göndermesini istemiyorsanız personel grubunu seçin."
       chat_upload_not_allowed_secure_uploads: "Güvenli yüklemeler site ayarı etkinleştirildiğinde sohbet yüklemelerine izin verilmez."
+      allow_chat_in_anonymous_mode_invalid: "Bu ayar öncelikle \"allow anonymous mode\" ayarının etkinleştirilmesini gerektiriyor."
   system_messages:
     private_channel_title: "Kanal %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ tr_TR:
     deleted_chat_username: silindi
     errors:
       users_cant_be_added_to_channel: "Bu kanala kullanıcı eklenemez."
+      user_cant_be_removed_from_channel: "Kullanıcı bu kanaldan kaldırılamıyor"
       channel_exists_for_category: "Bu kategori ve ada sahip bir kanal zaten var"
       channel_new_message_disallowed:
         archived: "Kanal arşivlendi, yeni mesaj gönderilemez"
@@ -90,6 +93,7 @@ tr_TR:
       actor_muting_target_user: "%{username} adlı kullanıcıyı sessize aldınız, bu nedenle ona mesaj gönderemezsiniz."
       actor_disallowed_dms: "Kullanıcıların size kişisel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, bu nedenle yeni doğrudan mesaj oluşturamazsınız."
       actor_preventing_target_user_from_dm: "%{username} adlı kişinin size kişisel ve doğrudan mesaj göndermesini engellemeyi seçtiniz, bu nedenle onlara yeni doğrudan mesaj oluşturamazsınız."
+      not_reachable: "Üzgünüz, %{username} sohbeti kullanmıyor."
       user_cannot_send_direct_messages: "Üzgünüz, doğrudan mesaj gönderemezsiniz."
       over_chat_max_direct_message_users_allow_self: "Yalnızca kendinize doğrudan mesaj oluşturabilirsiniz."
       over_chat_max_direct_message_users:
@@ -154,6 +158,7 @@ tr_TR:
     mention_warning:
       dismiss: "kapat"
       cannot_see: "%{first_identifier} bu kanala erişemiyor ve bilgilendirilmedi."
+      cannot_see_group: "%{group_name} grubunun bazı üyeleri bu kanala erişemiyor ve bildirim almadı."
       cannot_see_multiple:
         one: "%{first_identifier} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
         other: "%{first_identifier} ve %{count} kullanıcı daha bu kanala erişemiyor ve bilgilendirilmediler."
@@ -234,6 +239,12 @@ tr_TR:
         private_email:
           one: "[%{site_name}] Yeni mesaj"
           other: "[%{site_name}] Yeni mesajlar"
+        watched_thread:
+          one: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajı"
+          other: "[%{site_name}] %{channel} adlı kanalda yeni ileti dizisi mesajları"
+        watched_threads:
+          one: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni ileti dizisi mesajları"
+          other: "[%{site_name}] %{channel} ve %{count} kanaldan daha yeni ileti dizisi mesajları"
         chat_dm_1:
           one: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesaj"
           other: "[%{site_name}] %{name} adlı kullanıcıdan yeni mesajlar"

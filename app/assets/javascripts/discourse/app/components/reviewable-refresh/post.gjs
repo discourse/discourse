@@ -1,51 +1,13 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
-import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
 import ReviewableCreatedBy from "discourse/components/reviewable-refresh/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable-refresh/topic-link";
 import lazyHash from "discourse/helpers/lazy-hash";
-import { bind } from "discourse/lib/decorators";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewablePost extends Component {
-  @tracked isCollapsed = false;
-  @tracked isLongPost = false;
-  maxPostHeight = 300;
-
-  @action
-  toggleContent() {
-    this.isCollapsed = !this.isCollapsed;
-  }
-
-  @bind
-  calculatePostBodySize(element) {
-    if (element?.offsetHeight > this.maxPostHeight) {
-      this.isCollapsed = true;
-      this.isLongPost = true;
-    } else {
-      this.isCollapsed = false;
-      this.isLongPost = false;
-    }
-  }
-
-  get collapseButtonProps() {
-    if (this.isCollapsed) {
-      return {
-        label: "review.show_more",
-        icon: "chevron-down",
-      };
-    }
-    return {
-      label: "review.show_less",
-      icon: "chevron-up",
-    };
-  }
-
   get metaLabel() {
     return this.args.metaLabel || i18n("review.posted_in");
   }
@@ -75,36 +37,24 @@ export default class ReviewablePost extends Component {
     </div>
 
     <div class="review-item__post">
-      <div class="review-item__post-content">
-        <div
-          class="post-body{{if this.isCollapsed ' is-collapsed'}}"
-          {{didInsert this.calculatePostBodySize @reviewable}}
-        >
+      <div class="review-item__post-content-wrapper">
+        <div class="review-item__post-content">
           {{#if @reviewable.blank_post}}
             <p>{{i18n "review.deleted_post"}}</p>
           {{else}}
             {{highlightWatchedWords @reviewable.cooked @reviewable}}
           {{/if}}
+
+          <span>
+            <PluginOutlet
+              @name={{this.pluginOutletName}}
+              @connectorTagName="div"
+              @outletArgs={{lazyHash model=@reviewable}}
+            />
+          </span>
+
+          {{yield}}
         </div>
-
-        {{#if this.isLongPost}}
-          <DButton
-            @action={{this.toggleContent}}
-            @label={{this.collapseButtonProps.label}}
-            @icon={{this.collapseButtonProps.icon}}
-            class="btn-default btn-icon post-body__toggle-btn"
-          />
-        {{/if}}
-
-        <span>
-          <PluginOutlet
-            @name={{this.pluginOutletName}}
-            @connectorTagName="div"
-            @outletArgs={{lazyHash model=@reviewable}}
-          />
-        </span>
-
-        {{yield}}
       </div>
     </div>
   </template>

@@ -44,7 +44,7 @@ acceptance("Auth Complete", function (needs) {
   });
 
   test("Callback added using addBeforeAuthCompleteCallback", async function (assert) {
-    withPluginApi("1.11.0", (api) => {
+    withPluginApi((api) => {
       api.addBeforeAuthCompleteCallback(() => {
         api.container
           .lookup("service:router")

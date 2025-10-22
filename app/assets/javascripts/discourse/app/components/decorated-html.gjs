@@ -4,7 +4,12 @@ import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import helperFn from "discourse/helpers/helper-fn";
 import deprecated from "discourse/lib/deprecated";
-import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/post-stream";
+import {
+  isProduction,
+  isRailsTesting,
+  isTesting,
+} from "discourse/lib/environment";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
 const detachedDocument = document.implementation.createHTMLDocument("detached");
 
@@ -14,7 +19,7 @@ const detachedDocument = document.implementation.createHTMLDocument("detached");
 export default class DecoratedHtml extends Component {
   renderGlimmerInfos = new TrackedArray();
 
-  decoratedContent = helperFn((args, on) => {
+  decoratedContent = helperFn(({ decorateArgs }, on) => {
     const cookedDiv = this.elementToDecorate;
 
     const helper = new DecorateHtmlHelper({
@@ -25,12 +30,26 @@ export default class DecoratedHtml extends Component {
     on.cleanup(() => helper.teardown());
 
     const decorateFn = this.args.decorate;
-    untrack(() => decorateFn?.(cookedDiv, helper));
+
+    // force parameters explicity declarated in `decorateArgs` to be tracked despite the
+    // use of `untrack` below
+    decorateArgs && Object.values(decorateArgs);
+
+    try {
+      untrack(() => decorateFn?.(cookedDiv, helper, decorateArgs));
+    } catch (e) {
+      if (isRailsTesting() || isTesting()) {
+        throw e;
+      } else {
+        // in case one of the decorators throws an error we want to surface it to the console but prevent
+        // the application from crashing
+
+        // eslint-disable-next-line no-console
+        console.error(e);
+      }
+    }
 
     document.adoptNode(cookedDiv);
-
-    const afterAdoptDecorateFn = this.args.decorateAfterAdopt;
-    untrack(() => afterAdoptDecorateFn?.(cookedDiv, helper));
 
     return cookedDiv;
   });
@@ -53,19 +72,47 @@ export default class DecoratedHtml extends Component {
     return cookedDiv;
   }
 
+  /**
+   * Checks if a given HTML element belongs to the current document.
+   * In development mode, it warns if the element is not in the document.
+   *
+   * This is used to ensure components added using `renderGlimmer` are only rendered in the same document, preventing
+   * rendering errors that otherwise would crash the application.
+   *
+   * @param {Object} info - Object containing element information
+   * @param {Element} info.element - The DOM element to check
+   * @returns {boolean} True if element belongs to current document, false otherwise
+   */
+  isElementInDocument(info) {
+    const result = info.element.ownerDocument === document;
+
+    if (!isProduction() && !result) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "The `renderGlimmer` definition below was unable to render the decorated HTML because the target element is not in the " +
+          "current document. This likely occurred because the element was removed by another decorator.\n",
+        info
+      );
+    }
+
+    return result;
+  }
+
   <template>
-    {{~this.decoratedContent~}}
+    {{~this.decoratedContent decorateArgs=@decorateArgs~}}
 
     {{~#each this.renderGlimmerInfos as |info|~}}
-      {{~#if info.append}}
-        {{~#in-element info.element insertBefore=null~}}
-          <info.component @data={{info.data}} />
-        {{~/in-element~}}
-      {{~else}}
-        {{~#in-element info.element~}}
-          <info.component @data={{info.data}} />
-        {{~/in-element~}}
-      {{~/if}}
+      {{~#if (this.isElementInDocument info)~}}
+        {{~#if info.append}}
+          {{~#in-element info.element insertBefore=null~}}
+            <info.component @data={{info.data}} />
+          {{~/in-element~}}
+        {{~else}}
+          {{~#in-element info.element~}}
+            <info.component @data={{info.data}} />
+          {{~/in-element~}}
+        {{~/if}}
+      {{~/if~}}
     {{~/each~}}
   </template>
 }

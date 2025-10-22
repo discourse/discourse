@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
 import ReviewableConversationPost from "discourse/components/reviewable-conversation-post";

@@ -1,0 +1,174 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "క్రమబద్ధీకరించండి"
+            tag:
+              label: "ట్యాగ్"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "విషయపు ఐడీ"
+            title:
+              label: "శీర్షిక"
+            categories:
+              label: "వర్గాలు"
+            tags:
+              label: "ట్యాగులు"
+        llm_triage:
+          fields:
+            category:
+              label: "వర్గం"
+            tags:
+              label: "ట్యాగులు"
+            canned_reply:
+              label: "ప్రత్యుత్తరం ఇవ్వండి"
+    discourse_ai:
+      features:
+        back: "వెనుకకు"
+        no_persona: "సెట్ చేయబడలేదు"
+        no_groups: "ఏదీ లేదు"
+        edit: "సవరించండి"
+        expand_list:
+          one: "(మరో %{count})"
+          other: "(మరో %{count})"
+        filters:
+          all: "అన్నీ"
+          reset: "రీసెట్ చేయండి"
+        search:
+          name: "శోధించండి"
+        spam:
+          name: "స్పామ్"
+      translations:
+        title: "అనువాదాలు"
+        progress_chart:
+          bar_done:
+            one: "%{count} పోస్ట్"
+            other: "%{count} పోస్ట్‌లు"
+      spam:
+        short_title: "స్పామ్"
+        enable: "ప్రారంభించండి"
+        test_modal:
+          spam: "స్పామ్"
+      usage:
+        summary: "సారాంశం"
+        username: "సభ్యనామం"
+        total_requests: "మొత్తం అభ్యర్థనలు"
+      ai_persona:
+        back: "వెనుకకు"
+        name: "పేరు"
+        edit: "సవరించండి"
+        export: "ఎగుమతి"
+        description: "వివరణ"
+        user: సభ్యుడు
+        save: "సేవ్ చేయండి"
+        enabled: "ప్రారంభించబడిందా?"
+        delete: "తొలగించండి"
+        response_format:
+          open_modal: "సవరించండి"
+          modal:
+            key_title: "కీ"
+        filters:
+          reset: "రీసెట్ చేయండి"
+      rag:
+        uploads:
+          title: "అప్‌లోడ్‌లు"
+          uploading: "ఎగుమతవుతోంది..."
+      tools:
+        back: "వెనుకకు"
+        export: "ఎగుమతి"
+        name: "పేరు"
+        description: "వివరణ"
+        summary: "సారాంశం"
+        save: "సేవ్ చేయండి"
+        remove_parameter: "తీసివేయండి"
+        parameter_required: "అవసరం"
+        edit: "సవరించండి"
+        delete: "తొలగించండి"
+      llms:
+        display_name: "పేరు"
+        save: "సేవ్ చేయండి"
+        edit: "సవరించండి"
+        back: "వెనుకకు"
+        delete: తొలగించండి
+        quotas:
+          group: "సమూహం"
+          max_usages: "గరిష్ట ఉపయోగాలు"
+          duration: "వ్యవధి"
+          durations:
+            hour: "1 గంట"
+            six_hours: "6 గంటలు"
+            day: "24 గంటలు"
+            week: "7 రోజులు"
+          hours: "గంటలు"
+        usage:
+          ai_spam: "స్పామ్"
+        next:
+          title: "తదుపరి"
+        providers:
+          google: "గూగుల్"
+          fake: "అనుకూల"
+      ai_helper:
+        context_menu:
+          cancel: "రద్దుచేయండి"
+          confirm: "నిర్ధారించండి"
+          discard: "విస్మరించండి"
+        post_options_menu:
+          close: "మూసివేయండి"
+          copy: "నకలు"
+          copied: "కాపీ చేయబడింది!"
+          cancel: "రద్దుచేయండి"
+        thumbnail_suggestions:
+          select: "ఎంచుకోండి"
+          selected: "ఎంపిక చేయబడినవి"
+        image_caption:
+          save_caption: "సేవ్ చేయండి"
+      embeddings:
+        back: "వెనుకకు"
+        save: "సేవ్ చేయండి"
+        delete: "తొలగించండి"
+        edit: "సవరించండి"
+        display_name: "పేరు"
+        providers:
+          google: "గూగుల్"
+          fake: "అనుకూల"
+      ai_bot:
+        debug_ai_modal:
+          request: "అభ్యర్థన"
+          response: "ప్రతిస్పందన"
+          next_log: "తదుపరి"
+          previous_log: "గత"
+        invite_ai_conversation:
+          button: "ఆహ్వానించండి"
+        share_modal:
+          copy: "నకలు"
+        conversations:
+          today: "ఈరోజు"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "అన్నీ"
+            neutral: "తటస్థ"
+          group_types:
+            category: "వర్గం"
+            tag: "ట్యాగ్"
+          table:
+            total_count: "మొత్తం"
+      discobot_discoveries:
+        regular_results: "విషయాలు"
+        collapse: "కుదించండి"
+        tooltip:
+          actions:
+            disable: "నిలిపివేయండి"

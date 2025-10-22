@@ -15,7 +15,7 @@
   .combo-box .combo-box-header {
     background: var(--secondary);
     color: var(--primary);
-    border: 1px solid var(--primary-medium);
+    border: 1px solid var(--input-border-color);
     font-size: var(--font-0);
     height: 100%;
 
@@ -32,9 +32,11 @@
 }
 
 .navigation-container {
-  width: 100%;
+  width: calc(100% - var(--nav-horizontal-padding) * 2);
+  font-size: var(--d-nav-font-size);
   display: flex;
   flex-wrap: wrap;
+  padding: 0 var(--nav-horizontal-padding);
 }
 
 .category-breadcrumb {

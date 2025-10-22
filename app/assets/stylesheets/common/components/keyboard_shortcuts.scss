@@ -1,8 +1,3 @@
-.topic-list-item td:first-of-type,
-.topic-post {
-  border-left: 1px solid transparent;
-}
-
 .topic-list tr.selected td:first-of-type,
 .topic-list-item.selected td:first-of-type,
 .latest-topic-list-item.selected,
@@ -42,7 +37,7 @@
 }
 
 .shortcut-category {
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
 
   h2 {
     font-size: var(--font-0);
@@ -53,6 +48,11 @@
 
 #keyboard-shortcuts-help {
   box-sizing: border-box;
+
+  .filter-input-container {
+    grid-column: 1 / -1;
+    margin-bottom: 1em;
+  }
 
   .keyboard-shortcuts-help__container {
     columns: 2 20em; // Set maximum of 2 columns
@@ -88,7 +88,7 @@
       flex-wrap: nowrap;
       flex-direction: row-reverse;
       justify-content: space-between;
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
       padding: 0.25rem 1rem;
     }
 
@@ -113,7 +113,7 @@
     }
 
     kbd {
-      font-family: var(--font-family);
+      font-family: var(--d-font-family--monospace);
       font-weight: bold;
     }
   }

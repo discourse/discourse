@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import Post from "discourse/components/post";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { count, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import DMenus from "float-kit/components/d-menus";
 
@@ -62,6 +62,8 @@ module("Integration | Component | Post", function (hooks) {
       like_count: 3,
       actions_summary: [{ id: 2, count: 1, hidden: false, can_act: true }],
       created_at: new Date(new Date().getTime() - 30 * 60 * 1000),
+      user_id: 1,
+      username: "eviltrout",
     });
 
     this.post = post;
@@ -97,6 +99,21 @@ module("Integration | Component | Post", function (hooks) {
     assert
       .dom(".topic-post.custom-class.api-custom-class-123")
       .exists("applies the custom classes to the component");
+  });
+
+  test("can add classes to the `article` element in the component", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer("post-article-class", ({ value }) => {
+        value.push("custom-article-class");
+        return value;
+      });
+    });
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".topic-post > article.custom-article-class")
+      .exists("applies the custom classes `article` element in the component");
   });
 
   test("links", async function (assert) {
@@ -271,35 +288,41 @@ module("Integration | Component | Post", function (hooks) {
 
     await renderComponent(this.post);
 
-    assert.strictEqual(count(".topic-post.whisper"), 1);
-    assert.strictEqual(count(".post-info.whisper"), 1);
+    assert.dom(".topic-post.whisper").exists({ count: 1 });
+    assert.dom(".post-info.whisper").exists({ count: 1 });
   });
 
   test("language", async function (assert) {
     this.post.is_localized = true;
-    this.post.language = "English";
+    this.post.language = "en";
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
 
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".post-language").hasText(
       i18n("post.original_language", {
-        language: "English",
+        language: "English (US)",
       })
     );
   });
 
   test("outdated localization", async function (assert) {
     this.post.is_localized = true;
-    this.post.language = "English";
+    this.post.language = "en";
     this.post.localization_outdated = true;
+    this.siteSettings.available_locales = [
+      { value: "en", name: "English (US)" },
+    ];
 
     await renderComponent(this.post);
 
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
     assert.dom(".post-language").hasText(
       i18n("post.original_language_and_outdated", {
-        language: "English",
+        language: "English (US)",
       })
     );
   });
@@ -357,30 +380,31 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post, { prevPost });
 
     assert.dom("a.reply-to-tab").exists("shows the tab");
-    assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
+    assert.dom(".avoid-tab").exists({ count: 1 }, "has the avoid tab class");
   });
 
   test("reply directly above", async function (assert) {
     this.siteSettings.suppress_reply_directly_above = false;
-    this.post.reply_to_user = {
-      username: "eviltrout",
-      avatar_template: "/images/avatar.png",
-    };
-    this.post.post_number = 2;
-    this.post.reply_to_post_number = 1;
 
-    const prevPost = this.store.createRecord("post", {
-      id: 122,
-      post_number: 1,
+    const reply = this.store.createRecord("post", {
+      id: 369,
+      post_number: 2,
+      reply_to_post_number: 1,
       topic: this.post.topic,
+      user_id: 2,
+      username: "somebody",
+      reply_to_user: {
+        username: "eviltrout",
+        avatar_template: "/images/avatar.png",
+      },
     });
 
-    await renderComponent(this.post, { prevPost });
+    await renderComponent(reply, { prevPost: this.post });
 
-    assert.strictEqual(count(".avoid-tab"), 1, "has the avoid tab class");
+    assert.dom(".avoid-tab").exists({ count: 1 }, "has the avoid tab class");
     await click("a.reply-to-tab");
-    assert.strictEqual(count("section.embedded-posts.top .cooked"), 1);
-    assert.strictEqual(count("section.embedded-posts .d-icon-arrow-up"), 1);
+    assert.dom("section.embedded-posts.top .cooked").exists({ count: 1 });
+    assert.dom("section.embedded-posts .d-icon-arrow-up").exists({ count: 1 });
   });
 
   test("cooked content hidden", async function (assert) {
@@ -693,7 +717,7 @@ module("Integration | Component | Post", function (hooks) {
 
     await renderComponent(this.post);
 
-    assert.dom(".post-notice.returning-user:not(.old)").hasText(
+    assert.dom(".post-notice.returning-user").hasText(
       i18n("post.notice.returning_user", {
         user: "codinghorror",
         time: "2 days ago",
@@ -708,14 +732,30 @@ module("Integration | Component | Post", function (hooks) {
 
     this.post.username = "codinghorror";
     this.post.name = "Jeff";
-    this.post.created_at = new Date(2019, 0, 1);
+    this.post.created_at = new Date(); // Use current date to ensure it's within the 14-day limit
     this.post.notice = { type: "new_user" };
 
     await renderComponent(this.post);
 
     assert
-      .dom(".post-notice.old.new-user")
-      .hasText(i18n("post.notice.new_user", { user: "Jeff", time: "Jan '10" }));
+      .dom(".post-notice.new-user")
+      .exists("notice should render for recent posts");
+  });
+
+  test("post notice - not rendered when post is older than old_post_notice_days", async function (assert) {
+    this.siteSettings.old_post_notice_days = 14;
+
+    const twentyDaysAgo = new Date();
+    twentyDaysAgo.setDate(twentyDaysAgo.getDate() - 20);
+
+    this.post.created_at = twentyDaysAgo;
+    this.post.notice = { type: "new_user" };
+
+    await renderComponent(this.post);
+
+    assert
+      .dom(".post-notice.new-user")
+      .doesNotExist("notice should not render for old posts");
   });
 
   test("show group request in post", async function (assert) {
@@ -733,12 +773,10 @@ module("Integration | Component | Post", function (hooks) {
 
   test("shows user status if enabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = true;
-    const status = {
+    this.post.user_status = {
       emoji: "tooth",
       description: "off to dentist",
     };
-
-    this.post.user = this.store.createRecord("user", { status });
 
     await renderComponent(this.post);
 
@@ -747,12 +785,10 @@ module("Integration | Component | Post", function (hooks) {
 
   test("doesn't show user status if disabled in site settings", async function (assert) {
     this.siteSettings.enable_user_status = false;
-    const status = {
+    this.post.user_status = {
       emoji: "tooth",
       description: "off to dentist",
     };
-
-    this.post.user = this.store.createRecord("user", { status });
 
     await renderComponent(this.post);
 

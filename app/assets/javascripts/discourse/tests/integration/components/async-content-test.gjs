@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { click, render, waitFor } from "@ember/test-helpers";
+import DialogHolder from "dialog-holder/components/dialog-holder";
 import { TrackedAsyncData } from "ember-async-data";
 import { module, test } from "qunit";
 import { Promise as RsvpPromise } from "rsvp";
 import AsyncContent from "discourse/components/async-content";
-import DialogHolder from "discourse/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Component | AsyncContent", function (hooks) {
@@ -286,7 +286,7 @@ module("Integration | Component | AsyncContent", function (hooks) {
       assert.dom(".empty").doesNotExist();
     });
 
-    test("it displays the content block if the the empty block is not provided", async function (assert) {
+    test("it displays the content block if the empty block is not provided", async function (assert) {
       const promise = Promise.resolve(null);
 
       await render(

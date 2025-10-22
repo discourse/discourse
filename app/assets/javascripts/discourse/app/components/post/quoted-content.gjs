@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import { eq, or } from "truth-helpers";
+import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -27,7 +27,7 @@ export default class PostQuotedContent extends Component {
     this.args.expanded ??
     false;
 
-  applyWrapperDataAttributes = modifierFn((_, [target], data) => {
+  applyWrapperDataAttributes = modifierFn((_, [target, data]) => {
     const attributes = Object.entries(data);
     if (!target || attributes.length === 0) {
       return null;
@@ -95,11 +95,22 @@ export default class PostQuotedContent extends Component {
   }
 
   get shouldDisplayNavigateToPostButton() {
-    return this.quotedPostUrl && !this.isQuotedPostIgnored;
+    return !this.args.quotedPostNotFound && this.quotedPostUrl;
+  }
+
+  get shouldDisplayQuoteControls() {
+    return (
+      this.shouldDisplayNavigateToPostButton || this.shouldDisplayToggleButton
+    );
   }
 
   get shouldDisplayToggleButton() {
-    return this.args.id && !this.args.fullQuote && !this.isQuotedPostIgnored;
+    return (
+      !this.args.quotedPostNotFound &&
+      this.args.id &&
+      !this.args.fullQuote &&
+      !this.isQuotedPostIgnored
+    );
   }
 
   get stateExpandedId() {
@@ -173,7 +184,7 @@ export default class PostQuotedContent extends Component {
     >
       {{#if @wrapperElement}}
         {{! `this.OptionalWrapperComponent` can be empty to render only the children while decorating cooked content.
-        we need to handle the attributtes below in the existing wrapper received as @wrapperElement in this case }}
+        we need to handle the attributes below in the existing wrapper received as @wrapperElement in this case }}
         {{elementClass
           (if this.isQuotedPostIgnored "ignored-user")
           target=@wrapperElement
@@ -181,11 +192,9 @@ export default class PostQuotedContent extends Component {
       {{/if}}
       <div
         class="title"
-        data-has-quote-controls={{or
-          this.shouldDisplayToggleButton
-          this.shouldDisplayNavigateToPostButton
-        }}
+        data-has-quote-controls={{this.shouldDisplayQuoteControls}}
         data-can-toggle-quote={{this.shouldDisplayToggleButton}}
+        data-can-navigate-to-post={{this.shouldDisplayNavigateToPostButton}}
         {{(if
           this.shouldDisplayToggleButton (modifier on "click" this.onClickTitle)
         )}}
@@ -194,7 +203,7 @@ export default class PostQuotedContent extends Component {
           (modifier
             this.applyWrapperDataAttributes
             @wrapperElement
-            expanded=this.expanded
+            (hash expanded=this.expanded)
           )
         )}}
       >
@@ -207,32 +216,36 @@ export default class PostQuotedContent extends Component {
             {{~@title~}}
           {{~/if~}}
         {{~/if~}}
-        <div class="quote-controls">
-          {{~#if this.shouldDisplayToggleButton~}}
-            <DButton
-              class="btn-flat quote-toggle"
-              @action={{this.toggleExpanded}}
-              @ariaControls={{@id}}
-              @ariaExpanded={{this.expanded}}
-              @title="post.expand_collapse"
-            >
-              {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
-                  extra whitespace that will interfere with the text captured when quoting a quoted content }}
-              {{~icon this.toggleIcon~}}
-            </DButton>
-          {{~/if~}}
-          {{~#if this.shouldDisplayNavigateToPostButton~}}
-            <DButton
-              class="btn-flat back"
-              @href={{this.quotedPostUrl}}
-              @title="post.follow_quote"
-            >
-              {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
-                  extra whitespace that will interfere with the text captured when quoting a quoted content }}
-              {{~icon this.navigateToPostIcon~}}
-            </DButton>
-          {{~/if~}}
-        </div>
+        {{~#if this.shouldDisplayQuoteControls~}}
+          <div class="quote-controls">
+            {{~#if this.shouldDisplayToggleButton~}}
+              <DButton
+                class="btn-flat quote-toggle"
+                @action={{this.toggleExpanded}}
+                @ariaControls={{@id}}
+                @ariaExpanded={{this.expanded}}
+                @ariaLabel={{if this.expanded "post.collapse" "expand"}}
+                @title={{if this.expanded "post.collapse" "expand"}}
+              >
+                {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
+                    extra whitespace that will interfere with the text captured when quoting a quoted content }}
+                {{~icon this.toggleIcon~}}
+              </DButton>
+            {{~/if~}}
+            {{~#if this.shouldDisplayNavigateToPostButton~}}
+              <DButton
+                class="btn-flat back"
+                @href={{this.quotedPostUrl}}
+                @title="post.follow_quote"
+                @ariaLabel="post.follow_quote"
+              >
+                {{! rendering the icon in the block instead of using the parameter `@icon` prevents DButton from adding
+                    extra whitespace that will interfere with the text captured when quoting a quoted content }}
+                {{~icon this.navigateToPostIcon~}}
+              </DButton>
+            {{~/if~}}
+          </div>
+        {{~/if~}}
       </div>
       <blockquote id={{@id}}>
         {{~#unless this.isQuotedPostIgnored~}}
@@ -248,11 +261,13 @@ export default class PostQuotedContent extends Component {
               <:content as |expandedPost|>
                 <div class="expanded-quote" data-post-id={{expandedPost.id}}>
                   <PostCookedHtml
+                    @className="post__contents-cooked-quote"
                     @post={{expandedPost}}
                     @decoratorState={{@decoratorState}}
                     @extraDecorators={{this.extraDecorators}}
                     @highlightTerm={{@highlightTerm}}
-                    @streamElement={{false}}
+                    @selectionBarrier={{false}}
+                    @streamElement={{@streamElement}}
                   />
                 </div>
               </:content>
@@ -273,7 +288,16 @@ export default class PostQuotedContent extends Component {
               </:error>
             </AsyncContent>
           {{~else~}}
-            {{~@collapsedContent~}}
+            <PostCookedHtml
+              @className="post__contents-cooked-quote"
+              @post={{@post}}
+              @cooked={{@collapsedContent}}
+              @decoratorState={{@decoratorState}}
+              @extraDecorators={{this.extraDecorators}}
+              @highlightTerm={{@highlightTerm}}
+              @selectionBarrier={{false}}
+              @streamElement={{@streamElement}}
+            />
           {{~/if~}}
         {{~/unless~}}
       </blockquote>

@@ -40,7 +40,7 @@ export default {
 
   initialize(container) {
     const router = container.lookup("service:router");
-    withPluginApi("1.39.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "topic-list-columns",
         ({ value: columns }) => {
@@ -117,6 +117,7 @@ export default {
               metaKey: event.metaKey,
               shiftKey: event.shiftKey,
               button: event.button,
+              which: event.which,
               bubbles: true,
               cancelable: true,
             })

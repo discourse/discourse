@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  js:
+    user:
+      date_of_birth:
+        user_title: "Сьогодні ваш день народження! "
+        title: "Сьогодні мій день народження!"
+        label: "Дата народження"
+      anniversary:
+        user_title: "Сьогодні річниця з моменту вашого приєднання до нашої спільноти!"
+        title: "Сьогодні річниця з моменту мого приєднання до цієї спільноти! "
+    cakeday:
+      title: День торта
+      today: "Сьогодні"
+      tomorrow: "Завтра"
+      upcoming: "Майбутні"
+      all: "Всі"
+    birthdays:
+      title: "Дні народження"
+      month:
+        title: "Дні народження в місяці"
+        empty: "В цьому місяці ніхто з користувачів не святкує свій день народження"
+      upcoming:
+        title: "Дня народження між %{start_date}та %{end_date}"
+        empty: "В наступні 7 днів ніхто з користувачів не святкує свій день народження"
+      today:
+        title: "Дня народження %{date}"
+        empty: "Сьогодні ніхто не святкує свій день народження"
+      tomorrow:
+        empty: "Завтра ніхто з користувачів не святкує свій день народження"
+    anniversaries:
+      title: "Річниці"
+      month:
+        title: "Річниці в місяці "
+        empty: "В цьому місяці ніхто з користувачів не не святкує річниці"
+      upcoming:
+        title: "Річниці між %{start_date} та %{end_date}"
+        empty: "В наступні 7 днів ніхто з користувачів не святкує річниці"
+      today:
+        title: "Річниці за %{date}"
+        empty: "Сьогодні ніхто з користувачів не святкує річниці"
+      tomorrow:
+        empty: "Завтра ніхто з користувачів не святкує річниці"

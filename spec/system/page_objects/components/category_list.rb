@@ -33,6 +33,10 @@ module PageObjects
         page.find("a", text: topic.title).click
       end
 
+      def category_box(category)
+        find("div.category-box[data-category-id='#{category.id}']")
+      end
+
       def topic_list_item_class(topic)
         "#{TOPIC_LIST_ITEM_SELECTOR}[data-topic-id='#{topic.id}']"
       end

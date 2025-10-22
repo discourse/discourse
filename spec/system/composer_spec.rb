@@ -18,8 +18,8 @@ describe "Composer", type: :system do
   end
 
   context "in a topic, the autocomplete prioritizes" do
-    fab!(:topic_user) { Fabricate(:user) }
-    fab!(:second_reply_user) { Fabricate(:user) }
+    fab!(:topic_user, :user)
+    fab!(:second_reply_user, :user)
 
     fab!(:topic) { Fabricate(:topic, user: topic_user) }
     fab!(:op) { Fabricate(:post, topic: topic, user: topic_user) }
@@ -72,5 +72,22 @@ describe "Composer", type: :system do
         [second_reply_user.username, user.username, topic_user.username],
       )
     end
+  end
+
+  it "focuses the reply button when tabbing out of both editor modes" do
+    page.visit "/new-topic"
+    expect(composer).to be_opened
+    composer.focus
+
+    page.send_keys(:tab)
+
+    expect(composer.reply_button_focused?).to eq(true)
+
+    composer.toggle_rich_editor
+    composer.focus
+
+    page.send_keys(:tab)
+
+    expect(composer.reply_button_focused?).to eq(true)
   end
 end

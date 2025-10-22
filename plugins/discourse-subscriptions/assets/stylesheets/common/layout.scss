@@ -1,0 +1,79 @@
+@use "lib/viewport";
+
+.discourse-subscriptions-section-columns {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+  padding: 20px;
+
+  @include viewport.until(lg) {
+    flex-direction: column;
+    margin: 0;
+    padding: 0.5em;
+  }
+
+  .section-column {
+    min-width: calc(50% - 0.5em);
+    max-width: 100%;
+
+    &:last-child {
+      margin-left: 0.5em;
+    }
+
+    &:first-child {
+      margin-right: 0.5em;
+    }
+
+    @include viewport.until(lg) {
+      min-width: 100%;
+
+      &:last-child {
+        order: 2;
+        margin-left: 0;
+      }
+
+      &:first-child {
+        order: 1;
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.product-list {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+
+  .product {
+    display: flex;
+    flex-flow: column nowrap;
+    border: 1px solid var(--primary-low);
+    padding: 1.5rem;
+    margin: 1rem;
+    width: calc(50% - 240px);
+
+    .product-description {
+      flex-grow: 1;
+    }
+
+    .product-purchase {
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-between;
+
+      .purchased {
+        color: var(--success);
+      }
+
+      .billing-link {
+        align-self: flex-end;
+        font-size: $font-down-1;
+
+        @include viewport.until(lg) {
+          margin-top: 1em;
+        }
+      }
+    }
+  }
+}

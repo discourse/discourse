@@ -76,8 +76,8 @@ sv:
           title: "Ämneskarta"
         site_header:
           title: "Sajtens sidhuvud"
-        suggested_topics:
-          title: "Föreslagna ämnen"
+        more_topics:
+          title: "Fler ämnen"
         post_menu:
           title: "Inläggsmeny"
         modal:

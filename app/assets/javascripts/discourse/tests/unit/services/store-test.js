@@ -147,7 +147,7 @@ module("Unit | Service | store", function (hooks) {
     const result = await store.findAll("widget");
     assert.strictEqual(result.length, 2);
 
-    const widget = result.findBy("id", 124);
+    const widget = result.find((item) => item.id === 124);
     assert.false(widget.isNew, "found records are not new");
     assert.strictEqual(widget.name, "Evil Repellant");
   });
@@ -272,6 +272,24 @@ module("Unit | Service | store", function (hooks) {
       fruit.other_fruit_ids,
       { apple: 1, banana: 2 },
       "embedded record remains unhydrated"
+    );
+  });
+
+  test("hydrateEmbedded", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const things = await store.findAll("complex_thing");
+    const thing = things.content[0];
+
+    assert.propContains(
+      thing.foos[0],
+      { id: 1, name: "foo1" },
+      "it hydrates the embedded records"
+    );
+
+    assert.deepEqual(
+      thing.bar_ids,
+      [5, 6, 7, 8],
+      "it won't delete unhydrated ids"
     );
   });
 });

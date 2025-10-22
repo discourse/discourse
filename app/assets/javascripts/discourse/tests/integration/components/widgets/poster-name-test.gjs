@@ -10,6 +10,7 @@ module("Integration | Component | Widget | poster-name", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
     this.siteSettings.glimmer_post_stream_mode = "disabled";
   });
 

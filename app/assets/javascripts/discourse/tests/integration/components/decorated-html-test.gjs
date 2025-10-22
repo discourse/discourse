@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import { render, settled } from "@ember/test-helpers";
 import { hbs } from "ember-cli-htmlbars";
@@ -6,8 +7,8 @@ import curryComponent from "ember-curry-component";
 import { module, test } from "qunit";
 import DecoratedHtml from "discourse/components/decorated-html";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
 module("Integration | Component | <DecoratedHtml />", function (hooks) {
   setupRenderingTest(hooks);
@@ -53,7 +54,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     assert.dom("#render-glimmer").hasText("Hello from Glimmer Component");
   });
 
-  test("can decorate content with renderGlimmer using a curried componet", async function (assert) {
+  test("can decorate content with renderGlimmer using a curried component", async function (assert) {
     const state = new (class {
       @tracked html = htmlSafe("<h1>Initial</h1>");
     })();
@@ -67,7 +68,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
             <div id="render-glimmer">Hello from {{@value}} Component</div>
           </template>,
           { value: "Curried" },
-          getOwnerWithFallback(this)
+          getOwner(this)
         )
       );
     };
@@ -91,7 +92,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     const decorateWithStringTarget = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
 
-      withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
+      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
         helper.renderGlimmer(
           "div",
           <template>
@@ -131,7 +132,7 @@ module("Integration | Component | <DecoratedHtml />", function (hooks) {
     const decorateWithHbsTemplate = (element, helper) => {
       element.innerHTML += "<div id='appended'>Appended</div>";
 
-      withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
+      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
         helper.renderGlimmer(
           element,
           hbs("<div id='render-glimmer'>Hello from Glimmer Component</div>")

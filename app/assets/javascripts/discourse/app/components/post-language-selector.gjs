@@ -8,12 +8,22 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class PostLanguageSelector extends Component {
   @service siteSettings;
+  @service languageNameLookup;
 
   get selectedLanguage() {
     return (
       this.siteSettings.available_content_localization_locales.find(
         (locale) => locale.value === this.args.composerModel.locale
       )?.value || ""
+    );
+  }
+
+  get content() {
+    return this.siteSettings.available_content_localization_locales.map(
+      ({ value }) => ({
+        name: this.languageNameLookup.getLanguageName(value),
+        value,
+      })
     );
   }
 
@@ -40,10 +50,7 @@ export default class PostLanguageSelector extends Component {
     >
       <:content>
         <DropdownMenu as |dropdown|>
-          {{#each
-            this.siteSettings.available_content_localization_locales
-            as |locale|
-          }}
+          {{#each this.content as |locale|}}
             <dropdown.item
               class="locale-options"
               data-menu-option-id={{locale.value}}
@@ -59,7 +66,7 @@ export default class PostLanguageSelector extends Component {
           <dropdown.item>
             <DButton
               @label="post.localizations.post_language_selector.none"
-              @action={{fn this.selectPostLanguage ""}}
+              @action={{fn this.selectPostLanguage null}}
             />
           </dropdown.item>
         </DropdownMenu>

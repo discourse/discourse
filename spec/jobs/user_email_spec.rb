@@ -488,7 +488,7 @@ RSpec.describe Jobs::UserEmail do
             )
           end
           fab!(:moderator)
-          fab!(:regular_user) { Fabricate(:user) }
+          fab!(:regular_user, :user)
 
           context "when this is not a group PM" do
             let(:post) { Fabricate(:private_message_post, user: user, recipient: suspended) }

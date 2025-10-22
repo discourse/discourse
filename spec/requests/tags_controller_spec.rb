@@ -3,7 +3,7 @@
 RSpec.describe TagsController do
   fab!(:user)
   fab!(:admin)
-  fab!(:regular_user) { Fabricate(:trust_level_4) }
+  fab!(:regular_user, :trust_level_4)
   fab!(:moderator)
   fab!(:category)
   fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
@@ -406,7 +406,7 @@ RSpec.describe TagsController do
 
   describe "#show" do
     fab!(:tag) { Fabricate(:tag, name: "test") }
-    fab!(:topic_without_tags) { Fabricate(:topic) }
+    fab!(:topic_without_tags, :topic)
     fab!(:topic_with_tags) { Fabricate(:topic, tags: [tag]) }
 
     it "should return the right response" do
@@ -777,8 +777,8 @@ RSpec.describe TagsController do
 
   describe "#show_latest" do
     fab!(:tag)
-    fab!(:other_tag) { Fabricate(:tag) }
-    fab!(:third_tag) { Fabricate(:tag) }
+    fab!(:other_tag, :tag)
+    fab!(:third_tag, :tag)
 
     fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
     fab!(:multi_tag_topic) { Fabricate(:topic, tags: [tag, other_tag]) }
@@ -1341,10 +1341,17 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    it "fails if not staff user" do
+    it "fails if user not in allowed group" do
       sign_in(user)
       post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
       expect(response.status).to eq(403)
+    end
+
+    it "succeeds when user in allowed group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
+      expect(response.status).to eq(200)
     end
 
     context "when signed in as admin" do

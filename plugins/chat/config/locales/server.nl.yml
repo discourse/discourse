@@ -30,10 +30,12 @@ nl:
     chat_editing_grace_period_max_diff_low_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor chatbewerking; bij meer wijzigingen wordt de tag (bewerkt) weergegeven naast het chatbericht (vertrouwensniveau 0 en 1)"
     chat_editing_grace_period_max_diff_high_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor chatbewerking; bij meer wijzigingen wordt de tag (bewerkt) weergegeven naast het chatbericht (vertrouwensniveau 2 en hoger)"
     chat_preferred_index: "Voorkeurstabblad bij het laden van /chat."
+    allow_chat_in_anonymous_mode: "Schakel deze instelling in om gebruikers die anoniem op je site zijn toe te staan te chatten. Deze instelling vereist dat de instelling 'allow anonymous mode' is ingeschakeld."
     errors:
       chat_default_channel: "Het standaard chatkanaal moet een openbaar kanaal zijn."
       direct_message_enabled_groups_invalid: "Je moet ten minste één groep opgeven voor deze instelling. Als je niet wilt dat iemand behalve medewerkers directe berichten stuurt, kies dan de medewerkersgroep."
       chat_upload_not_allowed_secure_uploads: "Chatuploads zijn niet toegestaan als de website-instelling voor beveiligde uploads is ingeschakeld."
+      allow_chat_in_anonymous_mode_invalid: "Voor deze instelling moet eerst de instelling 'allow anonymous mode' worden ingeschakeld."
   system_messages:
     private_channel_title: "Kanaal %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ nl:
     deleted_chat_username: verwijderd
     errors:
       users_cant_be_added_to_channel: "Gebruikers kunnen niet worden toegevoegd aan dit kanaal."
+      user_cant_be_removed_from_channel: "Gebruiker kan niet uit dit kanaal worden verwijderd"
       channel_exists_for_category: "Er bestaat al een kanaal voor deze categorie en naam"
       channel_new_message_disallowed:
         archived: "Het kanaal is gearchiveerd, er kunnen geen nieuwe berichten worden gestuurd"
@@ -90,6 +93,7 @@ nl:
       actor_muting_target_user: "Je dempt %{username}, dus je kunt geen berichten sturen."
       actor_disallowed_dms: "Je hebt ervoor gekozen om te voorkomen dat gebruikers je persoonlijke en directe berichten sturen, dus je kunt geen nieuwe directe berichten maken."
       actor_preventing_target_user_from_dm: "Je hebt ervoor gekozen om te voorkomen dat %{username} je persoonlijke en directe berichten stuurt, dus je kunt geen nieuwe directe berichten maken."
+      not_reachable: "%{username} gebruikt de chat niet."
       user_cannot_send_direct_messages: "Sorry, je kunt geen directe berichten sturen."
       over_chat_max_direct_message_users_allow_self: "Je kunt alleen een direct bericht met jezelf maken."
       over_chat_max_direct_message_users:
@@ -154,6 +158,7 @@ nl:
     mention_warning:
       dismiss: "sluiten"
       cannot_see: "%{first_identifier} heeft geen toegang tot dit kanaal en is niet geïnformeerd."
+      cannot_see_group: "Sommige leden van %{group_name} hebben geen toegang tot dit kanaal en zijn niet op de hoogte gesteld."
       cannot_see_multiple:
         one: "%{first_identifier} en %{count} andere gebruiker hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
         other: "%{first_identifier} en %{count} andere gebruikers hebben geen toegang tot dit kanaal en zijn niet geïnformeerd."
@@ -234,6 +239,12 @@ nl:
         private_email:
           one: "[%{site_name}] Nieuw bericht"
           other: "[%{site_name}] Nieuwe berichten"
+        watched_thread:
+          one: "[%{site_name}] Nieuw threadbericht in %{channel}"
+          other: "[%{site_name}] Nieuwe threadberichten in %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nieuwe threadberichten in %{channel} en %{count} andere groep"
+          other: "[%{site_name}] Nieuwe threadberichten in %{channel} en %{count} andere groepen"
         chat_dm_1:
           one: "[%{site_name}] Nieuw bericht van %{name}"
           other: "[%{site_name}] Nieuw berichten van %{name}"

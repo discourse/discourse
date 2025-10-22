@@ -10,7 +10,7 @@ import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { setting } from "discourse/lib/computed";
-import cookie, { removeCookie } from "discourse/lib/cookie";
+import { removeCookie } from "discourse/lib/cookie";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import NameValidationHelper from "discourse/lib/name-validation-helper";
@@ -35,6 +35,7 @@ export default class SignupPageController extends Controller {
   @tracked isDeveloper = false;
   @tracked authOptions;
   @tracked skipConfirmation;
+
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
@@ -59,7 +60,8 @@ export default class SignupPageController extends Controller {
   });
   passwordValidationHelper = new PasswordValidationHelper(this);
   userFieldsValidationHelper = new UserFieldsValidationHelper({
-    getUserFields: () => this.site.get("user_fields"),
+    getUserFields: () =>
+      this.site.get("user_fields")?.filter((f) => f.show_on_signup),
     getAccountPassword: () => this.accountPassword,
     showValidationOnInit: false,
   });
@@ -67,16 +69,6 @@ export default class SignupPageController extends Controller {
   @notEmpty("authOptions") hasAuthOptions;
   @setting("enable_local_logins") canCreateLocal;
   @setting("require_invite_code") requireInviteCode;
-
-  init() {
-    super.init(...arguments);
-
-    if (cookie("email")) {
-      this.accountEmail = cookie("email");
-    }
-
-    this.fetchConfirmationValue();
-  }
 
   @dependentKeyCompat
   get userFields() {
@@ -267,15 +259,21 @@ export default class SignupPageController extends Controller {
       );
     }
 
-    if (this.authOptions?.email === email && this.authOptions?.email_valid) {
-      return EmberObject.create({
-        ok: true,
-        reason: i18n("user.email.authenticated", {
-          provider: this.authProviderDisplayName(
-            this.authOptions?.auth_provider
-          ),
-        }),
-      });
+    if (
+      this.authOptions?.email === email &&
+      this.authOptions?.email_valid &&
+      !isEmpty(this.authOptions?.auth_provider)
+    ) {
+      const provider = this.authProviderDisplayName(
+        this.authOptions.auth_provider
+      );
+
+      if (!isEmpty(provider)) {
+        return EmberObject.create({
+          ok: true,
+          reason: i18n("user.email.authenticated", { provider }),
+        });
+      }
     }
 
     return EmberObject.create({
@@ -344,11 +342,12 @@ export default class SignupPageController extends Controller {
     );
   }
 
-  authProviderDisplayName(providerName) {
-    const matchingProvider = findAll().find((provider) => {
-      return provider.name === providerName;
-    });
-    return matchingProvider ? matchingProvider.get("prettyName") : providerName;
+  authProviderDisplayName(name) {
+    return (
+      findAll()
+        .find((p) => p.name === name)
+        ?.get("prettyName") || name
+    );
   }
 
   @observes("emailValidation", "accountEmail")
@@ -450,12 +449,6 @@ export default class SignupPageController extends Controller {
       accountPasswordConfirm: this.accountHoneypot,
     };
 
-    const destinationUrl = this.authOptions?.destination_url;
-
-    if (!isEmpty(destinationUrl)) {
-      cookie("destination_url", destinationUrl, { path: "/" });
-    }
-
     // Add the userFields to the data
     if (!isEmpty(this.userFields)) {
       attrs.userFields = {};
@@ -475,29 +468,31 @@ export default class SignupPageController extends Controller {
           this._challengeExpiry = 1;
 
           // Trigger the browser's password manager using the hidden static login form:
-          const hiddenLoginForm = document.querySelector("#hidden-login-form");
-          if (hiddenLoginForm) {
-            hiddenLoginForm.querySelector("input[name=username]").value =
-              attrs.accountUsername;
-            hiddenLoginForm.querySelector("input[name=password]").value =
-              attrs.accountPassword;
-            hiddenLoginForm.querySelector("input[name=redirect]").value =
-              userPath("account-created");
-            hiddenLoginForm.submit();
+          const _form = document.getElementById("hidden-login-form");
+          if (_form) {
+            const set = (key, value) => {
+              _form.querySelector(`input[name=${key}]`).value = value;
+            };
+
+            set("username", this.accountUsername);
+            set("password", this.accountPassword);
+
+            let { destination_url } = this.authOptions || {};
+
+            if (destination_url && destination_url !== "/signup") {
+              set("redirect", destination_url);
+            } else {
+              set("redirect", userPath("account-created"));
+            }
+
+            _form.submit();
           }
+
           return new Promise(() => {}); // This will never resolve, the page will reload instead
         } else {
           this.set("flash", result.message || i18n("create_account.failed"));
           if (result.is_developer) {
             this.isDeveloper = true;
-          }
-          if (
-            result.errors &&
-            result.errors.email &&
-            result.errors.email.length > 0 &&
-            result.values
-          ) {
-            this.rejectedEmails.pushObject(result.values.email);
           }
           if (result.errors?.["user_password.password"]?.length > 0) {
             this.passwordValidationHelper.rejectedPasswords.push(

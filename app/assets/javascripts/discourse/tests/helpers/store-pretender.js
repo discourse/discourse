@@ -79,7 +79,9 @@ export default function (helpers) {
   });
 
   this.get("/widgets/:widget_id", function (request) {
-    const w = _widgets.findBy("id", parseInt(request.params.widget_id, 10));
+    const w = _widgets.find(
+      (widget) => widget.id === parseInt(request.params.widget_id, 10)
+    );
     if (w) {
       return response({ widget: w, extras: { hello: "world" } });
     } else {
@@ -109,10 +111,10 @@ export default function (helpers) {
     const qp = request.queryParams;
     if (qp) {
       if (qp.name) {
-        result = result.filterBy("name", qp.name);
+        result = result.filter((item) => item.name === qp.name);
       }
       if (qp.id) {
-        result = result.filterBy("id", parseInt(qp.id, 10));
+        result = result.filter((item) => item.id === parseInt(qp.id, 10));
       }
     }
 
@@ -135,4 +137,23 @@ export default function (helpers) {
   });
 
   this.delete("/widgets/:widget_id", success);
+
+  this.get("/complex_things", function () {
+    return response({
+      __rest_serializer: "1",
+      complex_things: [
+        {
+          id: 1,
+          foo_ids: [1, 2, 3, 4],
+          bar_ids: [5, 6, 7, 8],
+        },
+      ],
+      foos: [
+        { id: 1, name: "foo1" },
+        { id: 2, name: "foo2" },
+        { id: 3, name: "foo3" },
+        { id: 4, name: "foo4" },
+      ],
+    });
+  });
 }

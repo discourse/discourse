@@ -15,7 +15,6 @@ import emailProviderDefaultSettings from "discourse/lib/email-provider-default-s
 import { i18n } from "discourse-i18n";
 
 export default class GroupSmtpEmailSettings extends Component {
-  @service currentUser;
   @service toasts;
 
   @tracked smtpSettingsValid = false;

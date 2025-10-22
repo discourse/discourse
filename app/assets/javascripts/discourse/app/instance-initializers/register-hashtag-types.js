@@ -6,7 +6,7 @@ export default {
   before: "hashtag-css-generator",
 
   initialize(owner) {
-    withPluginApi("0.8.7", (api) => {
+    withPluginApi((api) => {
       api.registerHashtagType("category", new CategoryHashtagType(owner));
       api.registerHashtagType("tag", new TagHashtagType(owner));
     });

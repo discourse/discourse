@@ -230,7 +230,7 @@ export default class CategorySectionLink {
 
   get prefixBadge() {
     if (this.category.read_restricted) {
-      return customCategoryLockIcon || "lock";
+      return customCategoryLockIcon || "category.restricted";
     }
   }
 

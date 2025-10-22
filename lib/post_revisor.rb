@@ -96,7 +96,7 @@ class PostRevisor
       end
 
       tc.record_change("category_id", current_category&.id, new_category&.id)
-      tc.check_result(tc.topic.change_category_to_id(new_category_id))
+      tc.check_result(tc.topic.change_category_to_id(new_category_id, silent: @silent))
       create_small_action_for_category_change(
         topic: tc.topic,
         user: tc.user,
@@ -207,14 +207,20 @@ class PostRevisor
     tag_list.sort.map { |tag_name| "##{tag_name}" }.join(", ")
   end
 
-  # AVAILABLE OPTIONS:
-  # - revised_at: changes the date of the revision
-  # - force_new_version: bypass grace period edit window
-  # - bypass_rate_limiter:
-  # - bypass_bump: do not bump the topic, even if last post
-  # - skip_validations: ask ActiveRecord to skip validations
-  # - skip_revision: do not create a new PostRevision record
-  # - skip_staff_log: skip creating an entry in the staff action log
+  # Revises a post with the given fields and options.
+  #
+  # @param editor [User] The user performing the revision
+  # @param fields [Hash] Hash of fields to update
+  # @param opts [Hash] Optional parameters for the revision
+  # @option opts [Time] :revised_at Changes the date of the revision
+  # @option opts [Boolean] :force_new_version Bypass grace period edit window
+  # @option opts [Boolean] :bypass_rate_limiter Bypass the max limits per day rate limiter
+  # @option opts [Boolean] :bypass_bump Do not bump the topic. Takes precedence over should_bump_topic plugin modifier, and any other should_bump? logic
+  # @option opts [Boolean] :skip_validations Ask ActiveRecord to skip validations
+  # @option opts [Boolean] :skip_revision Do not create a new PostRevision record
+  # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
+  # @option opts [Boolean] :silent Don't send notifications to user
+  # @return [Boolean] Returns true if the revision was successful, false otherwise
   def revise!(editor, fields, opts = {})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -270,6 +276,9 @@ class PostRevisor
 
     @skip_revision = false
     @skip_revision = @opts[:skip_revision] if @opts.has_key?(:skip_revision)
+
+    @silent = false
+    @silent = @opts[:silent] if @opts.has_key?(:silent)
 
     @post.incoming_email&.update(imap_sync: true) if @post.incoming_email&.imap_uid
 
@@ -583,7 +592,7 @@ class PostRevisor
   end
 
   def create_revision
-    modifications = post_changes.merge(@topic_changes.diff)
+    modifications = post_changes.merge(topic_diff)
 
     modifications["raw"][0] = cached_original_raw || modifications["raw"][0] if modifications["raw"]
 
@@ -604,7 +613,7 @@ class PostRevisor
   def update_revision
     return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
     revision.user_id = @post.last_editor_id
-    modifications = post_changes.merge(@topic_changes.diff)
+    modifications = post_changes.merge(topic_diff)
 
     modifications.each_key do |field|
       if revision.modifications.has_key?(field)
@@ -637,7 +646,7 @@ class PostRevisor
   end
 
   def topic_diff
-    @topic_changes.diff
+    @topic_changes.diff.with_indifferent_access
   end
 
   def perform_edit
@@ -650,22 +659,36 @@ class PostRevisor
   end
 
   def bump_topic
-    return if bypass_bump? || !is_last_post?
+    return if !should_bump?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_unmuted(@topic)
     TopicTrackingState.publish_latest(@topic)
   end
 
-  def bypass_bump?
-    !@post_successfully_saved || @topic_changes.errored? || @opts[:bypass_bump] == true ||
-      @post.whisper? || only_hidden_tags_changed?
+  def should_bump?
+    return false if @opts[:bypass_bump] == true
+
+    should_bump_topic_modifier_result =
+      DiscoursePluginRegistry.apply_modifier(
+        :should_bump_topic,
+        nil,
+        @post,
+        post_changes,
+        @topic_changes,
+        @editor,
+      )
+    return should_bump_topic_modifier_result if !should_bump_topic_modifier_result.nil?
+
+    return true if @post.is_first_post? && @post.wiki? && post_changes.any?
+
+    false
   end
 
   def only_hidden_tags_changed?
     return false if (hidden_tag_names = DiscourseTagging.hidden_tag_names).blank?
 
-    modifications = post_changes.merge(@topic_changes.diff)
+    modifications = post_changes.merge(topic_diff)
     if modifications.keys.size == 1 && (tags_diff = modifications["tags"]).present?
       a, b = tags_diff[0] || [], tags_diff[1] || []
       changed_tags = ((a + b) - (a & b)).map(&:presence).compact
@@ -673,10 +696,6 @@ class PostRevisor
     end
 
     false
-  end
-
-  def is_last_post?
-    !Post.where(topic_id: @topic.id).where("post_number > ?", @post.post_number).exists?
   end
 
   def plugin_callbacks
@@ -732,7 +751,7 @@ class PostRevisor
 
   def publish_changes
     options =
-      if !@topic_changes.diff.empty? && !@topic_changes.errored?
+      if !topic_diff.empty? && !@topic_changes.errored?
         { reload_topic: true }
       else
         {}
@@ -761,6 +780,16 @@ class PostRevisor
 
   def topic_title_changed?
     topic_changed? && @fields.has_key?(:title) && topic_diff.has_key?(:title) &&
+      !@topic_changes.errored?
+  end
+
+  def topic_category_changed?
+    topic_changed? && @fields.has_key?(:category_id) && topic_diff.has_key?(:category_id) &&
+      !@topic_changes.errored?
+  end
+
+  def topic_tags_changed?
+    topic_changed? && @fields.has_key?(:tags) && topic_diff.has_key?(:tags) &&
       !@topic_changes.errored?
   end
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative "./page_objects/components/user_color_palette_selector"
+require_relative "page_objects/components/user_color_palette_selector"
 
 describe "Horizon theme | High level", type: :system do
   let!(:theme) do
@@ -11,7 +11,7 @@ describe "Horizon theme | High level", type: :system do
       .update_all(user_selectable: true)
     horizon_theme
   end
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:tag_1) { Fabricate(:tag, name: "wow-cool") }
   fab!(:tag_2) { Fabricate(:tag, name: "another-tag") }
   fab!(:category)
@@ -20,6 +20,9 @@ describe "Horizon theme | High level", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
   let(:palette_selector) { PageObjects::Components::UserColorPaletteSelector.new }
+  fab!(:incorrect_scheme) do
+    Fabricate(:color_scheme, name: "Incorrect Scheme", user_selectable: true)
+  end
 
   def run_all_high_level_tests
     expect(page).to have_css(".experimental-screen")

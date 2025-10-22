@@ -4,6 +4,7 @@ import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import ChooseMessage from "discourse/components/choose-message";
 import ChooseTopic from "discourse/components/choose-topic";
@@ -12,7 +13,6 @@ import DModal from "discourse/components/d-modal";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
@@ -227,7 +227,7 @@ export default class MoveToTopic extends Component {
                   @value="new_message"
                   @selection={{this.selection}}
                 />
-                <b>{{i18n "topic.move_to_new_message.radio_label"}}</b>
+                {{i18n "topic.move_to_new_message.radio_label"}}
               </label>
             {{/if}}
 
@@ -238,7 +238,7 @@ export default class MoveToTopic extends Component {
                 @value="existing_message"
                 @selection={{this.selection}}
               />
-              <b>{{i18n "topic.move_to_existing_message.radio_label"}}</b>
+              {{i18n "topic.move_to_existing_message.radio_label"}}
             </label>
           </div>
 
@@ -317,7 +317,7 @@ export default class MoveToTopic extends Component {
                   @value="new_topic"
                   @selection={{this.selection}}
                 />
-                <b>{{i18n "topic.split_topic.radio_label"}}</b>
+                {{i18n "topic.split_topic.radio_label"}}
               </label>
             {{/if}}
 
@@ -328,7 +328,7 @@ export default class MoveToTopic extends Component {
                 @value="existing_topic"
                 @selection={{this.selection}}
               />
-              <b>{{i18n "topic.merge_topic.radio_label"}}</b>
+              {{i18n "topic.merge_topic.radio_label"}}
             </label>
 
             {{#if this.canSplitToPM}}
@@ -339,7 +339,7 @@ export default class MoveToTopic extends Component {
                   @value="new_message"
                   @selection={{this.selection}}
                 />
-                <b>{{i18n "topic.move_to_new_message.radio_label"}}</b>
+                {{i18n "topic.move_to_new_message.radio_label"}}
               </label>
             {{/if}}
           </div>

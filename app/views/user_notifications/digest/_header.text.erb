@@ -1,0 +1,6 @@
+<%- site_link = raw(@markdown_linker.create(@site_name, '/')) %>
+<%= raw(t 'user_notifications.digest.why', site_link: site_link, since: @since) %>
+
+<%- @counts.each do |count| -%>
+<%= count[:value] -%> <%=t count[:label_key] %>
+<%- end -%>

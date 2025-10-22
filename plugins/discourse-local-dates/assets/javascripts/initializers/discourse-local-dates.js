@@ -16,12 +16,12 @@ import LocalDateBuilder from "../lib/local-date-builder";
 import richEditorExtension from "../lib/rich-editor-extension";
 
 // Import applyLocalDates from discourse/lib/local-dates instead
-export function applyLocalDates(dates, siteSettings) {
+export function applyLocalDates(dates, siteSettings, timezone) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
   }
 
-  const currentUserTZ = moment.tz.guess();
+  const currentUserTZ = timezone || moment.tz.guess();
 
   dates.forEach((element, index, arr) => {
     const opts = buildOptionsFromElement(element, siteSettings);
@@ -171,6 +171,7 @@ function initializeDiscourseLocalDates(api) {
         model: { insertDate: (markup) => event.addText(markup) },
       }),
     shortcut: "Shift+.",
+    alwaysShowShortcut: true,
     shortcutAction: (event) => {
       const timezone = api.getCurrentUser().user_option.timezone;
       const time = moment().format("HH:mm:ss");
@@ -344,7 +345,7 @@ class LocalDatesInit {
     window.addEventListener("click", this.showDatePopover, { passive: true });
 
     if (this.siteSettings.discourse_local_dates_enabled) {
-      withPluginApi("0.8.8", initializeDiscourseLocalDates);
+      withPluginApi(initializeDiscourseLocalDates);
     }
   }
 

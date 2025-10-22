@@ -41,7 +41,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       assert.throws(
         () =>
-          withPluginApi("1.34.0", (api) => {
+          withPluginApi((api) => {
             api.addValueTransformerName("whatever");
           }),
         /addValueTransformerName was called when the system is no longer accepting new names to be added/
@@ -51,7 +51,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("warns if name is already registered", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.addValueTransformerName("home-logo-href"); // existing core transformer
 
         // testing warning about core transformers
@@ -83,7 +83,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("adds a new transformer name", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         assert.false(
           transformerWasAdded(
             "a-new-plugin-transformer",
@@ -117,7 +117,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       assert.throws(
         () =>
-          withPluginApi("1.34.0", (api) => {
+          withPluginApi((api) => {
             api.registerValueTransformer("whatever", () => "foo"); // the name doesn't really matter at this point
           }),
         /was called while the system was still accepting new transformer names/
@@ -125,7 +125,7 @@ module("Unit | Utility | transformers", function (hooks) {
     });
 
     test("warns if transformer is unknown", function (assert) {
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         const result = api.registerValueTransformer("whatever", () => "foo");
         assert.false(
           result,
@@ -144,7 +144,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("raises an exception if the callback parameter is not a function", function (assert) {
       assert.throws(
         () =>
-          withPluginApi("1.34.0", (api) => {
+          withPluginApi((api) => {
             api.registerValueTransformer("home-logo-href", "foo");
           }),
         /api.registerValueTransformer requires the callback argument to be a function/
@@ -154,7 +154,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("registering a new transformer works", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.addValueTransformerName("test-transformer");
         acceptTransformerRegistrations();
 
@@ -189,7 +189,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       acceptNewTransformerNames();
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.addValueTransformerName("test-value1-transformer");
         api.addValueTransformerName("test-value2-transformer");
       });
@@ -354,7 +354,7 @@ module("Unit | Utility | transformers", function (hooks) {
         "returns the default values when there are no transformers registered"
       );
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.registerValueTransformer("test-value1-transformer", ({ value }) => {
           return value * 10;
         });
@@ -393,7 +393,7 @@ module("Unit | Utility | transformers", function (hooks) {
       const testObject1 = new Testable(1);
       const testObject2 = new Testable(2);
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.registerValueTransformer("test-value1-transformer", () => {
           throw new Error("sabotaged");
         });
@@ -436,7 +436,7 @@ module("Unit | Utility | transformers", function (hooks) {
         "dispatches an event to display a message do admins when an exception is caught in a transformer"
       );
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.registerValueTransformer("test-value1-transformer", () => {
           return 0;
         });
@@ -445,14 +445,14 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.deepEqual(
         [testObject1.value1, testObject2.value1],
         [0, 0],
-        "catches the exception and and keeps processing the queue when there are others transformers registered"
+        "catches the exception and keeps processing the queue when there are others transformers registered"
       );
     });
 
     test("the transformer callback can receive an optional context object", function (assert) {
       let expectedContext = null;
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.registerValueTransformer(
           "test-value1-transformer",
           // eslint-disable-next-line no-unused-vars
@@ -495,7 +495,7 @@ module("Unit | Utility | transformers", function (hooks) {
         `initially the sequence contains only the element "r"`
       );
 
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.registerValueTransformer("test-value1-transformer", ({ value }) => {
           return ["r", ...value];
         });
@@ -521,14 +521,14 @@ module("Unit | Utility | transformers", function (hooks) {
   module("applyMutableValueTransformer", function (innerHooks) {
     innerHooks.beforeEach(function () {
       acceptNewTransformerNames();
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.addValueTransformerName("test-mutable-transformer");
       });
       acceptTransformerRegistrations();
     });
 
     test("mutates the value as expected", function (assert) {
-      withPluginApi("1.34.0", (api) => {
+      withPluginApi((api) => {
         api.registerValueTransformer(
           "test-mutable-transformer",
           ({ value }) => {
@@ -564,7 +564,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       assert.throws(
         () =>
-          withPluginApi("1.35.0", (api) => {
+          withPluginApi((api) => {
             api.addBehaviorTransformerName("whatever");
           }),
         /addBehaviorTransformerName was called when the system is no longer accepting new names to be added/
@@ -574,7 +574,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("warns if name is already registered", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.addBehaviorTransformerName("home-logo-href"); // existing core transformer
 
         // testing warning about core transformers
@@ -606,7 +606,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("adds a new transformer name", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         assert.false(
           transformerWasAdded(
             "a-new-plugin-transformer",
@@ -640,7 +640,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       assert.throws(
         () =>
-          withPluginApi("1.35.0", (api) => {
+          withPluginApi((api) => {
             api.registerBehaviorTransformer("whatever", () => "foo"); // the name doesn't really matter at this point
           }),
         /was called while the system was still accepting new transformer names/
@@ -648,7 +648,7 @@ module("Unit | Utility | transformers", function (hooks) {
     });
 
     test("warns if transformer is unknown ans returns false", function (assert) {
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         const result = api.registerBehaviorTransformer("whatever", () => "foo");
         assert.false(
           result,
@@ -667,7 +667,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("raises an exception if the callback parameter is not a function", function (assert) {
       assert.throws(
         () =>
-          withPluginApi("1.35.0", (api) => {
+          withPluginApi((api) => {
             api.registerBehaviorTransformer(
               "discovery-topic-list-load-more",
               "foo"
@@ -680,7 +680,7 @@ module("Unit | Utility | transformers", function (hooks) {
     test("registering a new transformer works", function (assert) {
       acceptNewTransformerNames();
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.addBehaviorTransformerName("test-transformer");
         acceptTransformerRegistrations();
 
@@ -729,7 +729,7 @@ module("Unit | Utility | transformers", function (hooks) {
 
       acceptNewTransformerNames();
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.addBehaviorTransformerName("test-behavior1-transformer");
         api.addBehaviorTransformerName("test-behavior2-transformer");
       });
@@ -920,7 +920,7 @@ module("Unit | Utility | transformers", function (hooks) {
         "the default behavior doubles the value"
       );
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           ({ context }) => {
@@ -989,7 +989,7 @@ module("Unit | Utility | transformers", function (hooks) {
       const testObject = new Testable();
       assert.strictEqual(testObject.value, null, "initially the value is null");
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           ({ context, next }) => {
@@ -1061,7 +1061,7 @@ module("Unit | Utility | transformers", function (hooks) {
         "the value is changed after the async behavior"
       );
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           async ({ context, next }) => {
@@ -1118,7 +1118,7 @@ module("Unit | Utility | transformers", function (hooks) {
       const testObject1 = new Testable(1);
       const testObject2 = new Testable(2);
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer("test-behavior1-transformer", () => {
           throw new Error("sabotaged");
         });
@@ -1165,7 +1165,7 @@ module("Unit | Utility | transformers", function (hooks) {
         "dispatches an event to display a message do admins when an exception is caught in a transformer"
       );
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           ({ context }) => {
@@ -1180,7 +1180,7 @@ module("Unit | Utility | transformers", function (hooks) {
       assert.deepEqual(
         [testObject1.value, testObject2.value],
         [0, 0],
-        "catches the exception and and keeps processing the queue when there are others transformers registered"
+        "catches the exception and keeps processing the queue when there are others transformers registered"
       );
     });
 
@@ -1188,7 +1188,7 @@ module("Unit | Utility | transformers", function (hooks) {
       let behavior = null;
       let expectedContext = null;
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           ({ context }) => {
@@ -1250,7 +1250,7 @@ module("Unit | Utility | transformers", function (hooks) {
         `initially buildValue value only generates "!"`
       );
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           ({ context, next }) => {
@@ -1314,7 +1314,7 @@ module("Unit | Utility | transformers", function (hooks) {
         `initially buildValue value only generates "!"`
       );
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           ({ context }) => {
@@ -1373,7 +1373,7 @@ module("Unit | Utility | transformers", function (hooks) {
         `initially buildValue value only generates "!"`
       );
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           ({ context, next }) => {
@@ -1440,7 +1440,7 @@ module("Unit | Utility | transformers", function (hooks) {
         `initially buildValue value only generates "!"`
       );
 
-      withPluginApi("1.35.0", (api) => {
+      withPluginApi((api) => {
         api.registerBehaviorTransformer(
           "test-behavior1-transformer",
           ({ next, context }) => {

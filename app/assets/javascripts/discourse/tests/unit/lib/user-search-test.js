@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { CANCELLED_STATUS } from "discourse/lib/autocomplete";
 import userSearch from "discourse/lib/user-search";
+import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Utility | user-search", function (hooks) {
@@ -261,5 +261,101 @@ module("Unit | Utility | user-search", function (hooks) {
         `Should include '${groupName}' group`
       );
     });
+  });
+
+  test("it protects cached results from mutation by consumers", async function (assert) {
+    pretender.get("/u/search/users", (request) => {
+      if (request.url.includes("term=test_cache")) {
+        return response({
+          users: [
+            {
+              id: 123,
+              username: "test_cache_user",
+              name: "Test Cache User",
+              avatar_template:
+                "https://avatars.discourse.org/v3/letter/t/41988e/{size}.png",
+            },
+          ],
+          groups: [],
+        });
+      }
+      return response({ users: [], groups: [] });
+    });
+
+    // First userSearch call - this will populate the cache
+    let firstResults = await userSearch({ term: "test_cache" });
+    assert.strictEqual(
+      firstResults.length,
+      1,
+      "First call should return 1 result"
+    );
+
+    const userFromFirstCall = firstResults[0];
+    assert.strictEqual(
+      userFromFirstCall.username,
+      "test_cache_user",
+      "First call should have username"
+    );
+    assert.strictEqual(
+      userFromFirstCall.name,
+      "Test Cache User",
+      "First call should have name"
+    );
+    assert.present(
+      userFromFirstCall.avatar_template,
+      "First call should have avatar_template"
+    );
+
+    const originalKeys = Object.keys(userFromFirstCall);
+    // Simulate what can happen in consumers of the cache result that mutate that object
+    Object.keys(userFromFirstCall).forEach((key) => {
+      if (key === "id") {
+        return;
+      }
+      delete userFromFirstCall[key];
+    });
+
+    // Verify the mutation happened
+    assert.present(userFromFirstCall.id, "User object should still have id");
+    assert.strictEqual(
+      Object.keys(userFromFirstCall).length,
+      1,
+      "User object should be mutated to only have id"
+    );
+    ["username", "name", "avatar_template"].forEach((key) => {
+      assert.blank(
+        userFromFirstCall[key],
+        `User object should not have ${key} after mutation`
+      );
+    });
+
+    // Second userSearch call - this should return fresh objects from cache that are not mutated
+    let secondResults = await userSearch({ term: "test_cache" });
+    assert.strictEqual(
+      secondResults.length,
+      1,
+      "Second call should return 1 result"
+    );
+
+    const userFromSecondCall = secondResults[0];
+    assert.strictEqual(
+      userFromSecondCall.username,
+      "test_cache_user",
+      "Second call should have username (cache should be protected from mutation)"
+    );
+    assert.strictEqual(
+      userFromSecondCall.name,
+      "Test Cache User",
+      "Second call should have name (cache should be protected from mutation)"
+    );
+    assert.present(
+      userFromSecondCall.avatar_template,
+      "Second call should have avatar_template (cache should be protected from mutation)"
+    );
+    assert.strictEqual(
+      Object.keys(userFromSecondCall).length,
+      originalKeys.length,
+      "Second call should have all original properties"
+    );
   });
 });

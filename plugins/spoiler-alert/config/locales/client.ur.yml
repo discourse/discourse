@@ -5,3 +5,14 @@
 # https://translate.discourse.org/
 
 ur:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "ڈسکورس سپوئلر الرٹ"
+  js:
+    spoiler:
+      label:
+        show: "چھپا ہوا مواد دکھائیں"
+    composer:
+      spoiler_text: "یہ متن دھندلا ہو جائے گا"

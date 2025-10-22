@@ -5,7 +5,7 @@ require "rotp"
 
 RSpec.describe Admin::UsersController do
   fab!(:admin)
-  fab!(:another_admin) { Fabricate(:admin) }
+  fab!(:another_admin, :admin)
   fab!(:moderator)
   fab!(:user)
   fab!(:coding_horror)
@@ -295,8 +295,8 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#suspend" do
-    fab!(:created_post) { Fabricate(:post) }
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:created_post, :post)
+    fab!(:other_user, :user)
     let(:suspend_params) do
       { suspend_until: 5.hours.from_now, reason: "because of this post", post_id: created_post.id }
     end
@@ -648,11 +648,28 @@ RSpec.describe Admin::UsersController do
           expect(job_args["payload"]).to eq(WebHook.generate_payload(:user, user))
         end
       end
+
+      it "can unsuspend a user who was granted moderation while suspended" do
+        user.update!(suspended_at: DateTime.now, suspended_till: 2.years.from_now)
+        user.grant_moderation!
+
+        expect(user.reload).to be_suspended
+        expect(user).to be_moderator
+
+        put "/admin/users/#{user.id}/unsuspend.json"
+
+        expect(response.status).to eq(200)
+        user.reload
+        expect(user.suspended_till).to eq(nil)
+        expect(user.suspended_at).to eq(nil)
+        expect(user).not_to be_suspended
+        expect(user).to be_moderator
+      end
     end
   end
 
   describe "#revoke_admin" do
-    fab!(:another_admin) { Fabricate(:admin) }
+    fab!(:another_admin, :admin)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1038,7 +1055,17 @@ RSpec.describe Admin::UsersController do
 
       before { sign_in(admin) }
 
-      include_examples "trust level updates possible"
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        include_examples "trust level updates possible"
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        include_examples "trust level updates possible"
+      end
     end
 
     context "when logged in as a moderator" do
@@ -1046,7 +1073,23 @@ RSpec.describe Admin::UsersController do
 
       before { sign_in(moderator) }
 
-      include_examples "trust level updates possible"
+      context "when moderators_change_trust_levels setting is enabled" do
+        before { SiteSetting.moderators_change_trust_levels = true }
+
+        include_examples "trust level updates possible"
+      end
+
+      context "when moderators_change_trust_levels setting is disabled" do
+        before { SiteSetting.moderators_change_trust_levels = false }
+
+        it "prevents updates to trust level with a 422 response" do
+          another_user.update!(trust_level: TrustLevel[1])
+          put "/admin/users/#{another_user.id}/trust_level.json", params: { level: TrustLevel[0] }
+
+          expect(response.status).to eq(422)
+          expect(another_user.reload.trust_level).to eq(TrustLevel[1])
+        end
+      end
     end
 
     context "when logged in as a non-staff user" do
@@ -1116,7 +1159,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#revoke_moderation" do
-    fab!(:another_moderator) { Fabricate(:moderator) }
+    fab!(:another_moderator, :moderator)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1247,14 +1290,14 @@ RSpec.describe Admin::UsersController do
     context "when logged in as a moderator" do
       before { sign_in(moderator) }
 
-      context "when moderators_manage_categories_and_groups site setting is enabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = true }
+      context "when moderators_manage_groups site setting is enabled" do
+        before { SiteSetting.moderators_manage_groups = true }
 
         include_examples "primary group updates possible"
       end
 
-      context "when moderators_manage_categories_and_groups site setting is disabled" do
-        before { SiteSetting.moderators_manage_categories_and_groups = false }
+      context "when moderators_manage_groups site setting is disabled" do
+        before { SiteSetting.moderators_manage_groups = false }
 
         it "prevents setting primary group with a 403 response" do
           group.add(another_user)
@@ -1480,8 +1523,8 @@ RSpec.describe Admin::UsersController do
         expect(User.where(id: deleted_users.map(&:id)).count).to eq(0)
       end
 
-      it "responds with 404 when sending an empty user_ids list" do
-        delete "/admin/users/destroy-bulk.json", params: { user_ids: [] }
+      it "responds with 404 when sending non-existent user ids" do
+        delete "/admin/users/destroy-bulk.json", params: { user_ids: [0] }
 
         expect(response.status).to eq(404)
       end
@@ -1606,7 +1649,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#activate" do
-    fab!(:reg_user) { Fabricate(:inactive_user) }
+    fab!(:reg_user, :inactive_user)
 
     shared_examples "user activation possible" do
       it "returns success" do
@@ -1659,7 +1702,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#deactivate" do
-    fab!(:reg_user) { Fabricate(:active_user) }
+    fab!(:reg_user, :active_user)
 
     shared_examples "user deactivation possible" do
       it "returns success" do
@@ -1699,7 +1742,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#log_out" do
-    fab!(:reg_user) { Fabricate(:user) }
+    fab!(:reg_user, :user)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -1740,8 +1783,8 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#silence" do
-    fab!(:reg_user) { Fabricate(:user) }
-    fab!(:other_user) { Fabricate(:user) }
+    fab!(:reg_user, :user)
+    fab!(:other_user, :user)
 
     context "when logged in as an admin" do
       before { sign_in(admin) }
@@ -2145,11 +2188,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2170,11 +2209,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        _user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        _user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2203,11 +2238,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2264,11 +2295,7 @@ RSpec.describe Admin::UsersController do
         sso.email = "bob@bob.com"
         sso.external_id = "1"
 
-        user =
-          DiscourseConnect.parse(
-            sso.payload,
-            secure_session: read_secure_session,
-          ).lookup_or_create_user
+        user = DiscourseConnect.parse(sso.payload, server_session:).lookup_or_create_user
 
         sso.name = "Bill"
         sso.username = "Hokli$$!!"
@@ -2511,7 +2538,7 @@ RSpec.describe Admin::UsersController do
   end
 
   describe "#merge" do
-    fab!(:target_user) { Fabricate(:user) }
+    fab!(:target_user, :user)
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:first_post) { Fabricate(:post, topic: topic, user: user) }
 
@@ -2616,7 +2643,7 @@ RSpec.describe Admin::UsersController do
         provider_name: "github",
         provider_uid: "123456789",
         user_id: user.id,
-        last_used: 1.seconds.ago,
+        last_used: 1.second.ago,
       )
     end
 
@@ -2633,7 +2660,10 @@ RSpec.describe Admin::UsersController do
           target_user_id: user.id,
           action: UserHistory.actions[:delete_associated_accounts],
         )
-        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"')
+        # first option is for ruby 3.3 and the other for 3.4
+        expect(UserHistory.last.previous_value).to include(':uid=>"123456789"').or include(
+               'uid: "123456789"',
+             )
       end
     end
 

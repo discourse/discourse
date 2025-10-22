@@ -79,6 +79,6 @@ export default {
   name: "discourse-automation",
 
   initialize() {
-    withPluginApi("0.8.24", _initializeDiscourseAutomation);
+    withPluginApi(_initializeDiscourseAutomation);
   },
 };

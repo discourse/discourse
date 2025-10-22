@@ -1,117 +1,105 @@
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import cookie from "discourse/lib/cookie";
+import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class extends DiscourseRoute {
   @service composer;
-  @service router;
   @service currentUser;
+  @service router;
   @service site;
 
   async beforeModel(transition) {
-    if (this.currentUser) {
-      let category;
-      if (this.site.lazy_load_categories) {
-        if (transition.to.queryParams.category_id) {
-          const categories = await Category.asyncFindByIds([
-            transition.to.queryParams.category_id,
-          ]);
-          category = categories[0];
-        } else if (transition.to.queryParams.category) {
-          category = await Category.asyncFindBySlugPath(
-            transition.to.queryParams.category
-          );
-        }
-      } else {
-        category = this.parseCategoryFromTransition(transition);
-      }
-
-      if (category) {
-        // Using URL-based transition to avoid bug with dynamic segments and refreshModel query params
-        // https://github.com/emberjs/ember.js/issues/16992
-        this.router
-          .replaceWith(`/c/${category.id}`)
-          .followRedirects()
-          .then(() => {
-            if (this.currentUser.can_create_topic) {
-              this.openComposer({ transition, category });
-            }
-          });
-      } else if (transition.from) {
-        // Navigation from another ember route
-        transition.abort();
-        this.openComposer({ transition });
-      } else {
-        this.router
-          .replaceWith("discovery.latest")
-          .followRedirects()
-          .then(() => {
-            if (this.currentUser.can_create_topic) {
-              this.openComposer({ transition });
-            }
-          });
-      }
-    } else {
-      // User is not logged in
-      cookie("destination_url", window.location.href);
-      this.router.replaceWith("login");
+    if (!this.currentUser) {
+      transition.send("showLogin");
+      return;
     }
+
+    const { queryParams: params } = transition.to;
+    const category = await this.#loadCategoryFromTransition(params);
+
+    if (category) {
+      // Using URL-based transition to avoid bug with dynamic segments and refreshModel query params
+      // https://github.com/emberjs/ember.js/issues/16992
+      this.router
+        .replaceWith(`/c/${category.id}`)
+        .followRedirects()
+        .then(() => {
+          if (this.currentUser.can_create_topic) {
+            this.#openComposer(params, category);
+          }
+        });
+      return;
+    }
+
+    // When navigating from another ember route
+    if (transition.from) {
+      transition.abort();
+      this.#openComposer(params);
+      return;
+    }
+
+    // When landing on the route from a full page load
+    this.router
+      .replaceWith(`discovery.${defaultHomepage()}`)
+      .followRedirects()
+      .then(() => {
+        if (this.currentUser.can_create_topic) {
+          this.#openComposer(params);
+        }
+      });
   }
 
-  openComposer({ transition, category }) {
-    next(() => {
-      this.composer.openNewTopic({
-        title: transition.to.queryParams.title,
-        body: transition.to.queryParams.body,
-        category,
-        tags: transition.to.queryParams.tags,
-      });
+  #openComposer(params, category) {
+    const { title, body, tags } = params;
 
-      this.composer.set("formTemplateInitialValues", transition.to.queryParams);
+    next(() => {
+      this.composer.openNewTopic({ title, body, category, tags });
+      this.composer.set("formTemplateInitialValues", params);
     });
   }
 
-  parseCategoryFromTransition(transition) {
-    let category;
+  async #loadCategoryFromTransition(params) {
+    let category = null;
 
-    if (transition.to.queryParams.category_id) {
-      const categoryId = transition.to.queryParams.category_id;
-      category = Category.findById(categoryId);
-    } else if (transition.to.queryParams.category) {
-      const splitCategory = transition.to.queryParams.category.split("/");
-
-      category = this._getCategory(
-        splitCategory[0],
-        splitCategory[1],
-        "nameLower"
-      );
-
-      if (!category) {
-        category = this._getCategory(
-          splitCategory[0],
-          splitCategory[1],
-          "slug"
-        );
+    if (this.site.lazy_load_categories) {
+      if (params.category_id) {
+        category = await Category.asyncFindById(params.category_id);
+      } else if (params.category) {
+        category = await Category.asyncFindBySlugPath(params.category);
+      }
+    } else {
+      if (params.category_id) {
+        category = Category.findById(params.category_id);
+      } else if (params.category) {
+        // TODO: does this work with more than 2 levels of categories?
+        const [main, sub] = params.category.split("/");
+        category = this.#getCategory(main, sub, "nameLower");
+        category ||= this.#getCategory(main, sub, "slug");
       }
     }
+
     return category;
   }
 
-  _getCategory(mainCategory, subCategory, type) {
-    let category;
-    if (!subCategory) {
-      category = this.site.categories.findBy(type, mainCategory.toLowerCase());
+  #getCategory(main, sub, type) {
+    let category = null;
+
+    if (!sub) {
+      category = this.site.categories.find(
+        (c) => c[type] === main.toLowerCase()
+      );
     } else {
-      const categories = this.site.categories;
-      const main = categories.findBy(type, mainCategory.toLowerCase());
-      if (main) {
+      const { categories } = this.site;
+      const parent = categories.find((c) => c[type] === main.toLowerCase());
+
+      if (parent) {
         category = categories.find((item) => {
           return (
             item &&
-            item[type] === subCategory.toLowerCase() &&
-            item.parent_category_id === main.id
+            item[type] === sub.toLowerCase() &&
+            item.parent_category_id === parent.id
           );
         });
       }

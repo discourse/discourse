@@ -1,8 +1,9 @@
 // @ts-check
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import $ from "jquery";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -18,6 +19,7 @@ import {
   inCodeBlock,
   setCaretPosition,
 } from "discourse/lib/utilities";
+import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -59,7 +61,6 @@ export default class TextareaTextManipulation {
   @service appEvents;
   @service siteSettings;
   @service capabilities;
-  @service currentUser;
 
   allowPreview = true;
 
@@ -69,6 +70,9 @@ export default class TextareaTextManipulation {
 
   autocompleteHandler;
   placeholder;
+
+  /** @type {import("discourse/lib/composer/text-manipulation").ToolbarState} */
+  state = new TrackedObject();
 
   constructor(owner, { markdownOptions, textarea, eventPrefix = "composer" }) {
     setOwner(this, owner);
@@ -284,8 +288,8 @@ export default class TextareaTextManipulation {
 
         if (
           operation !== OP.ADDED &&
-          ((l.slice(0, hlen) === hval && tlen === 0) ||
-            (tail.length && l.slice(-tlen) === tail))
+          l.slice(0, hlen) === hval &&
+          (tlen === 0 || l.slice(-tlen) === tail)
         ) {
           operation = OP.REMOVED;
           if (tlen === 0) {
@@ -726,9 +730,9 @@ export default class TextareaTextManipulation {
     if (newValue.trim() !== "") {
       this.replaceText(value, newValue, { skipNewSelection: true });
       this.selectText(this.value.indexOf(newValue), newValue.length);
-    }
 
-    return true;
+      return true;
+    }
   }
 
   @bind
@@ -776,9 +780,38 @@ export default class TextareaTextManipulation {
         sel.value = i18n(`composer.${exampleKey}`);
       }
 
-      const number = sel.value.startsWith(hval)
-        ? sel.value.slice(hlen)
-        : `${hval}${sel.value}`;
+      // Special handling for markdown headings starting with #,
+      // they are "list-like" in that they have a character at
+      // the start and a level, rather than having a surrounding format.
+      let number;
+      if (hval.includes("#")) {
+        const currentHeadingLevel = sel.value.search(/[^#]/);
+
+        // Remove existing heading level if same as the new one,
+        // mirrors list behavior.
+        if (sel.value.startsWith(hval) && currentHeadingLevel + 1 === hlen) {
+          number = sel.value.slice(hlen);
+        } else {
+          // Replace the existing heading level with the new one, or
+          // if there is no heading level, add the new one.
+          if (currentHeadingLevel > 0) {
+            number =
+              hval +
+              sel.value.slice("#".repeat(currentHeadingLevel).length + 1);
+          } else {
+            number = hval + sel.value;
+          }
+        }
+      } else {
+        // Remove existing list item if it's the same as the new
+        // head, e.g. if a line is "* list item", then it converts
+        // it to "list item"
+        if (sel.value.startsWith(hval)) {
+          number = sel.value.slice(hlen);
+        } else {
+          number = `${hval}${sel.value}`;
+        }
+      }
 
       const preNewlines = sel.pre.trim() && "\n\n";
       const postNewlines = sel.post.trim() && "\n\n";
@@ -789,10 +822,39 @@ export default class TextareaTextManipulation {
       const postChars = sel.post.length - sel.post.trimStart().length;
 
       this._insertAt(sel.start - preChars, sel.end + postChars, textToInsert);
-      this.selectText(
-        sel.start + (preNewlines.length - preChars),
-        number.length
-      );
+
+      if (opts?.excludeHeadInSelection) {
+        this.selectText(
+          sel.start + (preNewlines.length - preChars) + hval.length,
+          number.length - hval.length
+        );
+      } else {
+        this.selectText(
+          sel.start + (preNewlines.length - preChars),
+          number.length
+        );
+      }
+    }
+  }
+
+  @bind
+  applyHeading(sel, level) {
+    if (level > 0) {
+      this.applyList(sel, "#".repeat(level) + " ", "heading_text", {
+        excludeHeadInSelection: true,
+      });
+    } else {
+      // Remove heading when the Paragrah level (0) is selected.
+      const currentHeadingLevel = sel.lineVal.search(/[^#]/);
+      if (currentHeadingLevel >= 0) {
+        // When you apply the list with the same head chars, then they
+        // are removed, so we can use the same function.
+        this.applyList(
+          sel,
+          "#".repeat(currentHeadingLevel) + " ",
+          "heading_text"
+        );
+      }
     }
   }
 
@@ -842,11 +904,11 @@ export default class TextareaTextManipulation {
   }
 
   autocomplete(options) {
-    // @ts-ignore
-    this.$textarea.autocomplete(
-      options instanceof Object
-        ? { textHandler: this.autocompleteHandler, ...options }
-        : options
+    return DAutocompleteModifier.setupAutocomplete(
+      getOwner(this),
+      this.textarea,
+      this.autocompleteHandler,
+      options
     );
   }
 }

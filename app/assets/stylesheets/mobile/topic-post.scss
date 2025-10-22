@@ -16,7 +16,7 @@
 }
 
 .topic-post > article {
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   padding: 15px 0 8px 0;
 }
 
@@ -35,7 +35,7 @@ nav.post-controls {
   --control-space-large: calc(var(--control-space) * 1.3);
 
   // on small devices with many buttons this can overflow
-  overflow-x: scroll;
+  overflow-x: auto;
 
   .actions {
     // using an auto margin on first-child instead of justify-content on the parent
@@ -408,22 +408,12 @@ span.highlighted {
 
 .read-state {
   // contained within the padding to prevent vertical overflow
-  max-width: var(--d-wrap-padding-h);
-  right: calc(var(--d-wrap-padding-h) * -1);
+  max-width: var(--d-wrap-padding-x);
+  right: calc(var(--d-wrap-padding-x) * -1);
   font-size: 6px; // static size to avoid overflow issues
 
   svg {
     right: -2px;
-  }
-}
-
-.post-notice {
-  box-sizing: border-box;
-  margin-bottom: 1em;
-
-  &.old {
-    border-top: none;
-    padding-top: 0;
   }
 }
 

@@ -17,7 +17,16 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
+    # Creates a new `user_emails` record in the IntermediateDB.
+    #
+    # @param email        [String]
+    # @param user_id      [Integer, String]
+    # @param created_at   [Time, nil]
+    # @param primary      [Boolean, nil]
+    #
+    # @return [void]
     def self.create(email:, user_id:, created_at: nil, primary: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

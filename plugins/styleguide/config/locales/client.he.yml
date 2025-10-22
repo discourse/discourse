@@ -89,8 +89,8 @@ he:
           title: "מפת נושאים"
         site_header:
           title: "כותרת האתר"
-        suggested_topics:
-          title: "נושאים מוצעים"
+        more_topics:
+          title: "נושאים נוספים"
         post_menu:
           title: "תפריט פוסט"
         modal:

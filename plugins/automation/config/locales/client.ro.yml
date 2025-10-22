@@ -215,8 +215,6 @@ ro:
             label: Versiune
           status:
             label: Stare
-          enabled:
-            label: Activat
           disabled:
             label: Dezactivat
           last_run:

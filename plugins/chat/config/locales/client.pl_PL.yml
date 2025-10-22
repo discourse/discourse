@@ -252,7 +252,7 @@ pl_PL:
         channels_list: "Lista kanałów czatu"
       no_direct_message_channels: "Nie dołączyłeś jeszcze do żadnych bezpośrednich wiadomości!"
       no_direct_message_channels_cta: "Rozpocząć rozmowę"
-      no_public_channels: "Jeszcze nie dołączyłeś(aś) do żadnych kanałów!"
+      no_public_channels: "Nie dołączyłeś jeszcze do żadnego kanału!"
       no_public_channels_cta: "Przeglądaj kanały"
       kicked_from_channel: "Nie masz już dostępu do tego kanału."
       only_chat_push_notifications:
@@ -289,7 +289,7 @@ pl_PL:
       retry_staged_message:
         title: "Błąd sieci"
         action: "Wyślij ponownie?"
-      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie wersji roboczej może nie działać"
+      unreliable_network: "Sieć jest zawodna, wysyłanie wiadomości i zapisywanie szkiców może nie działać"
       bookmark_message: "Zakładka"
       bookmark_message_edit: "Edytuj zakładkę"
       restore: "Przywróć usuniętą wiadomość"
@@ -322,7 +322,7 @@ pl_PL:
         many: "%{count} plików"
         other: "%{count} plików"
       you_flagged: "Oflagowałeś tę wiadomość"
-      exit: "poprzednia"
+      exit: "opuść czat"
       channel_status:
         read_only_header: "Kanał jest tylko do odczytu"
         read_only: "Tylko do odczytu"
@@ -548,7 +548,7 @@ pl_PL:
         title: "Kanały"
         aria_label: "Przełącz na listę kanałów"
       incoming_webhooks:
-        back: "Poprzednia"
+        back: "Wstecz"
         channel_placeholder: "Wybierz kanał"
         channel: "Kanał"
         confirm_destroy: "Czy na pewno chcesz usunąć tego przychodzącego webhooka? Tego nie można cofnąć."
@@ -594,7 +594,7 @@ pl_PL:
             other: "Zamierzasz utworzyć nowy temat i wypełnić go <b>%{count}</b> wybranymi wiadomościami czatu."
           instructions_channel_archive: "Zamierzasz utworzyć nowy temat i zarchiwizować w nim wiadomości z kanału."
         existing_topic:
-          title: "Przenieś do Istniejącego Tematu"
+          title: "Przenieś do istniejącego tematu"
           instructions:
             one: "Wybierz temat, do którego chcesz przenieść tę wiadomość czatu."
             few: "Wybierz temat, do którego chcesz przenieść tę <b>%{count}</b> wiadomości czatu."
@@ -762,7 +762,7 @@ pl_PL:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           switch__unread_channel_arrows: "%{shortcut} Przełącz nieprzeczytany kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
-          open_insert_link_modal: "%{shortcut} Wstaw hiperłącze (tylko kompozytor)"
+          open_insert_link_modal: "%{shortcut} Wstaw link (tylko kompozytor)"
           composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
           composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
           composer_code: "%{shortcut} Kod (tylko kompozytor)"
@@ -794,6 +794,9 @@ pl_PL:
         chat:
           title: Czat
     sidebar:
+      start_new_dm:
+        text: Rozpocznij nowy DM
+        title: Utwórz osobisty czat
       panels:
         chat:
           label: "Czat"

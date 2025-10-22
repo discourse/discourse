@@ -519,6 +519,15 @@ gl:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+      notes:
+        delete: "Eliminar"
+      review_user: "Usuario"
+      insights:
+        activities:
+          posts:
+            one: "%{count} publicación"
+            other: "%{count} publicacións"
+        visibility: "Visibilidade"
       approval:
         title: "A publicación necesita aprobación"
         description: "Recibimos a súa nova publicación pero cómpre que sexa aprobada por un moderador antes de aparecer. Teña paciencia."
@@ -987,11 +996,13 @@ gl:
       color_scheme: "Paleta de cores"
       color_schemes:
         default_description: "Predeterminado"
-        disable_dark_scheme: "O mesmo que o normal"
         undo: "Restabelecer"
-        regular: "Normal"
         dark: "Modo escuro"
-        default_dark_scheme: "(predeterminado do sitio)"
+        interface_modes:
+          light: "Claro"
+          dark: "Escuro"
+        picker:
+          active: "Activo"
       dark_mode: "Modo escuro"
       text_size_default_on_all_devices: "Facer que este sexa o tamaño de texto predeterminado en todos os meus dispositivos"
       allow_private_messages: "Permitirlles a outros usuarios enviarme mensaxes privadas"
@@ -1010,6 +1021,8 @@ gl:
       suspended_notice: "Este usuario está suspendido ata o %{date}."
       suspended_permanently: "Este usuario está suspendido."
       suspended_reason: "Razón: "
+      silenced_permanently: "Este usuario está silenciado."
+      silenced_reason: "Motivo: "
       github_profile: "Github"
       email_activity_summary: "Resumo da actividade"
       mailing_list_mode:
@@ -1176,7 +1189,7 @@ gl:
         invalid: "Este nome de usuario non é correcto. Só pode conter números e letras."
       add_email:
         title: "Engadir correo electrónico"
-        add: "engadir"
+        add: "Engadir"
       change_email:
         title: "Cambiar o correo electrónico"
         taken: "Sentímolo pero este correo non está dispoñíbel."
@@ -1388,7 +1401,8 @@ gl:
         reinvited: "Convite reenviado"
         removed: "Retirado"
         user: "Usuario convidado"
-        none: "Non hai convites que amosar."
+        none:
+          title: "Non hai convites que amosar."
         truncated:
           one: "Amosando o primeiro convite."
           other: "Amosando os primeiros %{count} convites."
@@ -1710,6 +1724,8 @@ gl:
     full_name_requirement:
       required_at_signup: "Obrigatorio"
       optional_at_signup: "Opcional"
+    welcome_banner_page_visibility:
+      homepage: "Páxina de inicio"
     shortcut_modifier_key:
       shift: "Maiús"
       ctrl: "Ctrl"
@@ -1776,7 +1792,6 @@ gl:
       unlist: "fóra da lista"
       add_warning: "Este é un aviso oficial."
       toggle_whisper: "Trocar rumor"
-      toggle_unlisted: "Trocar fóra da lista"
       posting_not_on_topic: "A que tema quere responder?"
       saved_local_draft_tip: "gardado localmente"
       drafts_offline: "borradores sen conexión"
@@ -1812,6 +1827,7 @@ gl:
       create_whisper: "Rumor"
       create_shared_draft: "Crear borrador compartido"
       edit_shared_draft: "Editar o borrador compartido"
+      discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
       edit_reason_placeholder: "por que o está editando?"
@@ -1843,18 +1859,8 @@ gl:
       paste_code_text: "escriba un título ou pégueo aquí"
       upload_title: "Cargar"
       upload_description: "introducir a descrición da carga aquí"
-      olist_title: "Listaxe numerada"
-      ulist_title: "Listaxe con símbolos"
       list_item: "Elemento da listaxe"
-      toggle_direction: "Trocar dirección"
       help: "Axuda para a edición con Markdown"
-      collapse: "minimizar o panel de composición"
-      open: "abrir o panel de composición"
-      abandon: "pechar o panel de composición e desbotar o borrador"
-      enter_fullscreen: "abrir o panel de composición en pantalla completa"
-      exit_fullscreen: "saír do panel de composición en pantalla completa"
-      show_toolbar: "amosar a barra de ferramentas de composición"
-      hide_toolbar: "agochar a barra de ferramentas de composición"
       modal_ok: "De acordo"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
       yourself_confirm:
@@ -2594,10 +2600,7 @@ gl:
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden cargar anexos."
         attachment_download_requires_login: "Sentímolo pero debe iniciar sesión para descargar anexos."
       cancel_composer:
-        confirm: "Que quere facer coa súa publicación?"
         discard: "Desbotar"
-        save_draft: "Gardar borrador para máis tarde"
-        keep_editing: "Seguir editando"
       via_email: "esta publicación chegou por correo"
       via_auto_generated_email: "esta publicación chegou dun correo electrónico xerado automaticamente"
       whisper: "este é un rumor privado para moderadores"
@@ -2753,8 +2756,8 @@ gl:
         name: "Nome"
         description: "Descrición"
         remove: "Retirar"
-      tags_allowed_tags: "Restrinxir estas etiquetas a esta categoría:"
-      tags_allowed_tag_groups: "Restrinxir estes grupos de etiquetas a esta categoría:"
+      tags_allowed_tags_new_category: "Restrinxir estas etiquetas a esta categoría:"
+      tags_allowed_tag_groups_new_category: "Restrinxir estes grupos de etiquetas a esta categoría:"
       tags_placeholder: "lista de etiquetas permitidas (opcional)"
       tags_tab_description: "As etiquetas e os grupos de etiquetas anteriores só estarán dispoñíbeis nesta categoría e outras que as inclúan. Non poderán usarse noutras categorías."
       tag_groups_placeholder: "lista de grupos de etiquetas permitidos (opcional)"
@@ -2776,6 +2779,8 @@ gl:
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
       background_color: "Cor"
+      color_validations:
+        cant_be_empty: "non pode quedar en branco"
       styles:
         icon: "Icona"
         emoji: "Emoji"
@@ -3030,7 +3035,6 @@ gl:
         topics: "Temas"
         replies: "Réplicas"
       posted:
-        title: "As miñas publicacións"
         help: "temas nos que publicou"
       bookmarks:
         title: "Marcadores"
@@ -3194,7 +3198,6 @@ gl:
       selector_remove_filter: "eliminar filtro"
       tags: "Etiquetas"
       choose_for_topic: "etiquetas opcionais"
-      info: "Información"
       default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
@@ -3365,6 +3368,8 @@ gl:
               content: "Administración"
             badges:
               content: "Insignias"
+            filter:
+              content: "Filtro"
             topics:
               content: "Temas"
             faq:
@@ -3375,8 +3380,6 @@ gl:
               content: "Grupos"
             users:
               content: "Usuarios"
-            my_posts:
-              content: "As miñas publicacións"
             review:
               content: "Revisar"
             invite:
@@ -3407,6 +3410,9 @@ gl:
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
+    filter:
+      description:
+        yesterday: "Onte"
     discovery:
       headings:
         multi_tag:
@@ -3417,7 +3423,7 @@ gl:
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
-      filter_reports: Filtrar informes
+      filter_reports: "Filtrar informes..."
       tags:
         remove_muted_tags_from_latest:
           always: "sempre"
@@ -3452,6 +3458,10 @@ gl:
           title: "Ficheiros"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Configuración"
         logo:
           form:
             mobile: "Móbil"
@@ -3539,6 +3549,8 @@ gl:
           title: "Enganches de web (webhooks)"
         embedding:
           title: "Incorporando"
+      theme_site_settings:
+        default_value: "Predeterminado"
       search:
         title: "Buscar"
         result_types:
@@ -3902,6 +3914,9 @@ gl:
           delete: "Eliminar"
         color_palettes:
           palette_name: "Nome"
+          copy_to_clipboard: "Copiar ao portapapeis"
+          copied_to_clipboard: "Copiado ao portapapeis"
+          copy_to_clipboard_error: "Produciuse un erro ao copiar os datos ao portapapeis"
           delete: "Eliminar"
           colors:
             title: "Cores"
@@ -3917,6 +3932,11 @@ gl:
         howto: "Como podo instalar un complemento?"
         author: "De %{author}"
         learn_more: "Saber máis"
+        filters:
+          all: "Todas"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          reset: "Restabelecer"
       backups:
         title: "Copias de seguranza"
         menu:
@@ -3995,7 +4015,6 @@ gl:
         copy_to_clipboard: "Copiar ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
         copy_to_clipboard_error: "Erro ao copiar os datos ao portapapeis"
-        theme_owner: "Non editábel, propiedade de:"
         email_templates:
           title: "Correo electrónico"
           subject: "Asunto"
@@ -4003,6 +4022,7 @@ gl:
           body: "Corpo"
           revert: "Reverter os cambios"
           revert_confirm: "Confirma a reversión dos cambios?"
+          edit: "Editar"
         component:
           all_filter: "Todas"
           enabled_filter: "Activado"
@@ -4011,6 +4031,7 @@ gl:
           theme: "Tema"
           component: "Compoñente"
           components: "Compoñentes"
+          filter_all: "Todas"
           theme_name: "Nome do tema"
           component_name: "Nome do compoñente"
           themes_intro: "Seleccione un tema existente ou instale un novo para comezar"
@@ -4035,13 +4056,12 @@ gl:
           extra_files_upload: "Exportar tema para ver estes ficheiros."
           extra_files_remote: "Exportar o tema ou comprobar o repositorio git para ver estes ficheiros."
           preview: "Previsualizar"
-          default: "Activo"
           is_default: "O tema está activado de modo predeterminado"
           user_selectable: "O tema pode ser seleccionado polos usuarios"
           auto_update: "Actualización automática cando Discourse estea actualizado"
           color_scheme: "Paleta de cores"
           default_light_scheme: "Claro (predeterminado)"
-          color_scheme_select: "Seleccione as cores que quere utilizar no tema"
+          color_scheme_select: "Seleccione as cores que quere utilizar no tema."
           custom_sections: "Seccións personalizadas:"
           theme_components: "Compoñentes do tema"
           add_all_themes: "Engadir todos os temas"
@@ -4111,9 +4131,7 @@ gl:
           up_to_date: "O tema está actualizado, última comprobación:"
           has_overwritten_history: "A versión actual do tema xa non existe porque o historial de Git foi sobrescrito por un push forzado."
           add: "Engadir"
-          theme_settings: "Configuración do tema"
           no_settings: "Este tema non ten axustes."
-          theme_translations: "Traducións do tema"
           empty: "Sen elementos"
           commits_behind:
             one: "O tema está %{count} commit por atrás!"
@@ -4122,10 +4140,6 @@ gl:
           remote_theme_edits: "Se quere editar este tema, debe <a href='%{repoURL}' target='_blank'> enviar un cambio a este repositorio</a>"
           repo_unreachable: "Non se puido conectar co repositorio Git deste tema. Mensaxe de erro:"
           imported_from_archive: "Este tema foi importado dun ficheiro .zip"
-          settings: "Configuración"
-          colors: "Cores"
-          discard_colors: "Desbotar"
-          colors_title: "Cores"
           scss:
             text: "CSS"
           after_header:
@@ -4161,7 +4175,12 @@ gl:
           select_base:
             title: "Seleccionar a paleta de cores básicas"
             description: "Paleta básica:"
+          light: "claro"
+          dark: "escuro"
           title: "Cores"
+          edit: "Editar"
+          filters:
+            all: "Todas"
           about: "Modifica as cores usadas nos temas. Crea unha nova paleta de cores para comezar."
           copy_name_prefix: "Copiar de"
           undo: "Desfacer"
@@ -4601,7 +4620,6 @@ gl:
         activity: Actividade
         like_count: Valoracións dadas / recibidas
         last_100_days: "nos últimos 100 días"
-        private_topics_count: Temas privados
         posts_read_count: Publicacións lidas
         post_count: Publicacións creadas
         second_factor_enabled: Activada a autenticación de dobre factor
@@ -4651,7 +4669,6 @@ gl:
             transfer_and_delete: "Transferir e eliminar @%{username}"
             cancel: "Cancelar"
         merge_failed: "Produciuse un erro ao combinar os usuarios."
-        delete_forbidden_because_staff: "Non é posíbel eliminar os administradores e moderadores."
         delete_posts_forbidden_because_staff: "Non é posíbel eliminar todas as publicacións dos administradores ou moderadores."
         delete_forbidden:
           one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimine as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} día)"

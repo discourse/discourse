@@ -5,20 +5,18 @@
 # version: 0.1
 # author: Joffrey Jaffeux
 
-hide_plugin
-
 register_asset "stylesheets/common/discourse-local-dates.scss"
 register_asset "moment.js", :vendored_core_pretty_text
 register_asset "moment-timezone.js", :vendored_core_pretty_text
 
 enabled_site_setting :discourse_local_dates_enabled
 
-after_initialize do
-  module ::DiscourseLocalDates
-    PLUGIN_NAME = "discourse-local-dates".freeze
-    POST_CUSTOM_FIELD = "local_dates".freeze
-  end
+module ::DiscourseLocalDates
+  PLUGIN_NAME = "discourse-local-dates"
+  POST_CUSTOM_FIELD = "local_dates"
+end
 
+after_initialize do
   require_relative "lib/discourse_local_dates/engine"
 
   register_post_custom_field_type(DiscourseLocalDates::POST_CUSTOM_FIELD, :json)

@@ -2,7 +2,7 @@
 
 require "mysql2"
 require "htmlentities"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 class ImportScripts::Drupal < ImportScripts::Base
   DRUPAL_DB = ENV["DRUPAL_DB"] || "drupal"

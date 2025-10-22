@@ -184,6 +184,7 @@ export default class ReviewableTimeline extends Component {
     }
 
     this.reviewableNotes = [...this.reviewableNotes, noteData];
+    this.args.reviewable.reviewable_notes = this.reviewableNotes;
   }
 
   /**
@@ -194,7 +195,7 @@ export default class ReviewableTimeline extends Component {
   @action
   async deleteNote(noteId) {
     try {
-      await ajax(`/reviewables/${this.args.reviewable.id}/notes/${noteId}`, {
+      await ajax(`/review/${this.args.reviewable.id}/notes/${noteId}`, {
         type: "DELETE",
       });
 
@@ -209,12 +210,10 @@ export default class ReviewableTimeline extends Component {
 
   <template>
     <div class="reviewable-timeline">
-      {{#if this.currentUser.staff}}
-        <ReviewableNoteForm
-          @reviewable={{@reviewable}}
-          @onNoteCreated={{this.onNoteCreated}}
-        />
-      {{/if}}
+      <ReviewableNoteForm
+        @reviewable={{@reviewable}}
+        @onNoteCreated={{this.onNoteCreated}}
+      />
 
       {{#if this.timelineEvents}}
         <div class="timeline-events">

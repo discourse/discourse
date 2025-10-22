@@ -5,7 +5,7 @@ import { initializeSpoiler } from "discourse/plugins/spoiler-alert/initializers/
 
 module("Spoiler Alert | Unit | to-markdown", function (hooks) {
   hooks.beforeEach(function () {
-    withPluginApi("0.5", initializeSpoiler);
+    withPluginApi(initializeSpoiler);
   });
 
   test("handles spoiler tags", function (assert) {

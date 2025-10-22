@@ -1,7 +1,7 @@
 @use "lib/viewport";
 @use "sass:string";
 
-$category-settings-width: string.unquote("min(500px, 90%)");
+$category-settings-width: string.unquote("min(600px, 90%)");
 $number-input-width: 75px;
 
 div.edit-category {
@@ -60,8 +60,8 @@ div.edit-category {
       width: 100%;
       background-color: var(--secondary);
       position: relative;
-      border-top: 1px solid var(--primary-low);
-      border-bottom: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--content-border-color);
       margin: 0.5em 0;
       overflow: hidden;
 
@@ -287,7 +287,7 @@ div.edit-category {
   margin-bottom: 2em;
 
   .permission-row {
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     display: flex;
 
     &.row-header {

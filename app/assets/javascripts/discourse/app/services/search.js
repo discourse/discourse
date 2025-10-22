@@ -2,7 +2,6 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import { applyValueTransformer } from "discourse/lib/transformer";
 
 @disableImplicitInjections
 export default class Search extends Service {
@@ -32,10 +31,7 @@ export default class Search extends Service {
   }
 
   get searchExperience() {
-    return applyValueTransformer(
-      "site-setting-search-experience",
-      this.siteSettings.search_experience
-    );
+    return this.siteSettings.search_experience;
   }
 
   focusSearchInput() {

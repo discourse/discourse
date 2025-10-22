@@ -12,7 +12,7 @@ acceptance(
 
     test("adds topic footer button as a dropdown through API", async function (assert) {
       const done = assert.async();
-      withPluginApi("0.13.1", (api) => {
+      withPluginApi((api) => {
         api.registerTopicFooterButton({
           id: "foo",
           icon: "gear",

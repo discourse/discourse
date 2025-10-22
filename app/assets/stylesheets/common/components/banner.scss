@@ -47,7 +47,11 @@
     margin-top: 0;
   }
 
-  > p:last-of-type {
+  > p:last-child {
     margin-bottom: 0;
+  }
+
+  a.anchor {
+    display: none;
   }
 }

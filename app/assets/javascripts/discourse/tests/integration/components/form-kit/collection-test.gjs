@@ -180,8 +180,8 @@ module("Integration | Component | FormKit | Collection", function (hooks) {
     const onSubmit = (data) => {
       assert.deepEqual(
         data.animals,
-        ["souna", undefined],
-        "correctly makes the field undefined"
+        ["souna", null],
+        "correctly makes the field null"
       );
     };
 

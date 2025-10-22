@@ -7,7 +7,6 @@ import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 
 export default class HeaderSearch extends Component {
-  @service site;
   @service siteSettings;
   @service currentUser;
   @service appEvents;

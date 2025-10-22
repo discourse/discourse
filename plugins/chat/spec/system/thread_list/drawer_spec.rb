@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe "Thread list in side panel | drawer", type: :system do
-  fab!(:current_user) { Fabricate(:admin) }
-  fab!(:channel) { Fabricate(:chat_channel) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:current_user, :admin)
+  fab!(:channel, :chat_channel)
+  fab!(:other_user, :user)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }

@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  reports:
+    currently_away:
+      labels:
+        username: ئىشلەتكۈچى ئاتى
+  discourse_post_event:
+    errors:
+      bulk_invite:
+        error: "ھۆججەتنى يۈكلەۋاتقاندا خاتالىق كۆرۈلدى. سەل تۇرۇپ قايتا سىناڭ."

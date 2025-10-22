@@ -38,17 +38,6 @@ class EmberCli < ActiveSupport::CurrentAttributes
     assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
 
-  def self.ember_version
-    @version ||=
-      begin
-        ember_source_package_raw =
-          File.read(
-            "#{Rails.root}/app/assets/javascripts/discourse/node_modules/ember-source/package.json",
-          )
-        JSON.parse(ember_source_package_raw)["version"]
-      end
-  end
-
   def self.has_tests?
     File.exist?("#{dist_dir}/tests/index.html")
   end

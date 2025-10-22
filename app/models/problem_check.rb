@@ -112,6 +112,11 @@ class ProblemCheck
     Collection.new(checks.select(&:realtime?))
   end
 
+  def self.tracker(target = NO_TARGET)
+    ProblemCheckTracker[identifier, target]
+  end
+  delegate :tracker, to: :class
+
   def self.identifier
     name.demodulize.underscore.to_sym
   end
@@ -136,6 +141,11 @@ class ProblemCheck
     inline
   end
   delegate :inline?, to: :class
+
+  def self.ready_to_run?
+    tracker.ready_to_run?
+  end
+  delegate :ready_to_run?, to: :class
 
   def self.call(data = {})
     new(data).call
@@ -180,15 +190,11 @@ class ProblemCheck
 
   private
 
-  def tracker(target = NO_TARGET)
-    ProblemCheckTracker[identifier, target]
-  end
-
   def targets
     [NO_TARGET]
   end
 
-  def problem(target = nil, override_key: nil, override_data: {})
+  def problem(target = nil, override_key: nil, override_data: {}, details: {})
     problem =
       Problem.new(
         I18n.t(
@@ -201,6 +207,7 @@ class ProblemCheck
         priority: self.config.priority,
         identifier:,
         target: target&.id,
+        details:,
       )
 
     target.present? ? problem : [problem]

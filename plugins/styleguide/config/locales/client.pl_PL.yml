@@ -89,8 +89,8 @@ pl_PL:
           title: "Mapa tematu"
         site_header:
           title: "Nagłówek witryny"
-        suggested_topics:
-          title: "Sugerowane tematy"
+        more_topics:
+          title: "Więcej tematów"
         post_menu:
           title: "Menu postu"
         modal:

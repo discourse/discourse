@@ -5,12 +5,6 @@
   }
 }
 
-.admin-plugins {
-  [data-plugin-name="chat"] {
-    display: none;
-  }
-}
-
 .user-summary-page .details .controls ul,
 .user-main .details .controls ul {
   flex-direction: column;
@@ -19,7 +13,7 @@
     order: -2;
   }
 
-  li.user-profile-controls-outlet.chat-button {
+  li.chat-button {
     order: -1;
 
     &:empty {

@@ -2,9 +2,9 @@
 
 RSpec.describe TopicParticipantGroupsSummary do
   describe "#summary" do
-    fab!(:group1) { Fabricate(:group) }
-    fab!(:group2) { Fabricate(:group) }
-    fab!(:group3) { Fabricate(:group) }
+    fab!(:group1, :group)
+    fab!(:group2, :group)
+    fab!(:group3, :group)
 
     let(:topic) { Fabricate(:private_message_topic) }
 

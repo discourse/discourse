@@ -182,7 +182,7 @@ module("Integration | Component | home-logo", function (hooks) {
   });
 
   test("api.registerHomeLogoHrefCallback can be used to change the logo href url", async function (assert) {
-    withPluginApi("1.32.0", (api) => {
+    withPluginApi((api) => {
       api.registerHomeLogoHrefCallback(() => "https://example.com");
     });
 

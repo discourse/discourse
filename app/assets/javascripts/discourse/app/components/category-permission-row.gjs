@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
@@ -10,8 +9,6 @@ import { i18n } from "discourse-i18n";
 const EVERYONE = "everyone";
 
 export default class CategoryPermissionRow extends Component {
-  @service currentUser;
-
   get everyonePermissionType() {
     return this.args.everyonePermission?.permission_type;
   }

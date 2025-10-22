@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe "Core extensions" do
-  fab!(:automation_1) { Fabricate(:automation) }
-  fab!(:automation_2) { Fabricate(:automation) }
+  fab!(:automation_1, :automation)
+  fab!(:automation_2, :automation)
 
   describe "plugin_api" do
     describe "#add_triggerable_to_scriptable" do

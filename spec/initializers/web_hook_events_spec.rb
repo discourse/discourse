@@ -2,7 +2,7 @@
 
 RSpec.describe "Webhook event handlers" do
   fab!(:user_badge)
-  fab!(:web_hook) { Fabricate(:user_badge_web_hook) }
+  fab!(:web_hook, :user_badge_web_hook)
   fab!(:user)
   fab!(:badge)
   fab!(:post)

@@ -1,0 +1,913 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "Umožňuje vyhľadávanie pomocou AI"
+              stream_completion: "Umožňuje streamovanie dokončovania AI persona"
+              update_personas: "Umožňuje aktualizovať AI personas"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
+      dashboard:
+        emotion:
+          title: "Emócia"
+          description: "Tabuľka uvádza počet príspevkov klasifikovaných s určenou emóciou. Klasifikácia bola vykonaná pomocou modelu „SamLowe/roberta-base-go_emotions“."
+        reports:
+          filters:
+            group_by:
+              label: "Zoskupiť podľa"
+            sort_by:
+              label: "Zoradiť podľa"
+            tag:
+              label: "Značka"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "Vytvorenie modelu LLM"
+            update_ai_llm_model: "Aktualizácia modelu LLM"
+            delete_ai_llm_model: "Odstránenie modelu LLM"
+            create_ai_persona: "Vytvorenie persóny umelej inteligencie"
+            update_ai_persona: "Aktualizácia AI persona"
+            delete_ai_persona: "Odstránenie AI persona"
+            create_ai_tool: "Vytvorenie nástroja AI"
+            update_ai_tool: "Aktualizácia nástroja AI"
+            delete_ai_tool: "Odstránenie nástroja AI"
+            create_ai_embedding: "Vytvorenie vloženia AI"
+            update_ai_embedding: "Aktualizácia vloženia AI"
+            delete_ai_embedding: "Odstránenie vloženia AI"
+            update_ai_spam_settings: "Aktualizácia nastavení AI pre spam"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Odosielateľ"
+              description: "Používateľ, ktorý odošle správu"
+            receivers:
+              label: "Príjemcovia"
+              description: "Používatelia, ktorí dostanú správu (e-maily budú odoslané priamo e-mailom, používateľské mená budú odoslané PM)"
+            topic_id:
+              label: "ID témy"
+              description: "ID témy, do ktorej sa má správa odoslať"
+            title:
+              label: "Názov"
+              description: "Názov správy"
+            days:
+              label: "Dni"
+              description: "Časový rozsah správy"
+            offset:
+              label: "Odsadenie"
+              description: "Pri testovaní možno budete chcieť spustiť správu historicky, použite posun, aby ste správu spustili v skoršom dátume."
+            instructions:
+              label: "Pokyny"
+              description: "Pokyny poskytnuté veľkému jazykovému modelu"
+            sample_size:
+              label: "Veľkosť vzorky"
+              description: "Počet príspevkov, ktoré sa majú vzorkovať pre správu"
+            tokens_per_post:
+              label: "Tokeny na príspevok"
+              description: "Počet tokenov LLM, ktoré sa majú použiť na jeden príspevok"
+            model:
+              label: "Model"
+              description: "LLM na použitie na generovanie reportov"
+            categories:
+              label: "Kategórie"
+              description: "Filtrovať témy iba do týchto kategórií"
+            tags:
+              label: "Značky"
+              description: "Filtrovanie tém len na tieto značky"
+            exclude_tags:
+              label: "Vylúčiť značky"
+              description: "Vylúčenie tém s týmito značkami"
+            exclude_categories:
+              label: "Vylúčiť kategórie"
+              description: "Vylúčte témy s týmito kategóriami"
+            allow_secure_categories:
+              label: "Povolenie zabezpečených kategórií"
+              description: "Povolenie generovania správy pre témy v zabezpečených kategóriách"
+            suppress_notifications:
+              label: "Potlačiť upozornenia"
+              description: "Potlačenie oznámení, ktoré môže správa vygenerovať transformáciou na obsah. Týmto spôsobom sa premapujú zmienky a interné odkazy."
+            debug_mode:
+              label: "Režim ladenia"
+              description: "Povoľte režim ladenia, aby ste videli nespracovaný vstup a výstup LLM."
+            priority_group:
+              label: "Prioritná skupina"
+              description: "Uprednostniť obsah z tejto skupiny v prehľade"
+            temperature:
+              label: "Teplota"
+              description: "Teplota, ktorá sa má použiť na LLM. Zvýšiť na zvýšenie náhodnosti (ponechať prázdne na použitie predvoleného modelu)"
+            top_p:
+              label: "Top P"
+              description: "Top P použiť pre LLM, zvýšiť pre zvýšenie náhodnosti (nechať prázdne pre použitie predvoleného modelu)"
+            persona_id:
+              label: "Persona"
+              description: "AI Persona na použitie pri generovaní prehľadov"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Model"
+              description: "Predvolený jazykový model používaný na triedenie"
+            tool:
+              label: "Nástroj"
+              description: "Nástroj na triedenie (nástroj nesmie mať definované žiadne parametre)"
+        llm_persona_triage:
+          fields:
+            persona:
+              label: "Persona"
+              description: "AI persona, ktorá sa má použiť na triedenie (musí mať predvolené nastavenie LLM a User)"
+            whisper:
+              label: "Odpovedať ako šepot"
+              description: "Či má byť odpoveď persiona šepotom"
+            silent_mode:
+              label: "Tichý režim"
+              description: "V tichom režime bude persona dostávať obsah, ale nebude nič zverejňovať na fóre – užitočné pri vykonávaní triedenia pomocou nástrojov."
+        llm_triage:
+          fields:
+            triage_persona:
+              label: "Persona"
+            max_post_tokens:
+              label: "Maximálny počet tokenov príspevkov"
+              description: "Maximálny počet tokenov na skenovanie pomocou LLM triage"
+            stop_sequences:
+              label: "Zastavovacie sekvencie"
+              description: "Pokyn modelu, aby zastavil generovanie tokenov pri dosiahnutí jednej z týchto hodnôt"
+            search_for_text:
+              label: "Hľadať text"
+              description: "Ak sa v odpovedi LLM objaví nasledujúci text, vykonajte tieto kroky"
+            category:
+              label: "Kategória"
+              description: "Kategória, ktorá sa vzťahuje na tému"
+            tags:
+              label: "Značky"
+              description: "Značky, ktoré sa majú použiť na tému"
+            canned_reply:
+              label: "Odpoveď"
+              description: "Nespracovaný text pripravenej odpovede na príspevok k téme"
+            canned_reply_user:
+              label: "Odpovedať používateľovi"
+              description: "Používateľské meno používateľa, ktorému sa má odoslať pripravená odpoveď"
+            hide_topic:
+              label: "Skryť tému"
+              description: "Ak sa spustí, sprístupniť tému verejnosti."
+            flag_type:
+              label: "Typ vlajky"
+              description: "Typ označenia, ktoré sa má na príspevok aplikovať (spam alebo jednoducho nahlásiť na kontrolu)"
+            flag_post:
+              label: "Príspevok s vlajkou"
+              description: "Označuje príspevky (buď ako spam, alebo na preskúmanie)"
+            include_personal_messages:
+              label: "Zahrnúť osobné správy"
+              description: "Tiež skenujte a triedte osobné správy"
+            whisper:
+              label: "Odpovedať ako šepot"
+              description: "Či by reakcia AI mala byť šepot"
+            reply_persona:
+              label: "Odpovedať Persona"
+              description: "Persona AI, ktorá sa použije pre odpovede (musí mať predvolený LLM), bude mať prednosť pred pripravenou odpoveďou."
+            max_output_tokens:
+              label: "Maximálny počet výstupných tokenov"
+              description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
+    discourse_ai:
+      title: "AI"
+      features:
+        short_title: "Funkcie"
+        description: "Ide o funkcie AI, ktoré sú k dispozícii návštevníkom vášho webu. Možno ich nakonfigurovať tak, aby používali konkrétne persóny a LLM, a prístup k nim možno riadiť podľa skupín."
+        back: "Späť"
+        disabled: "(vypnuté)"
+        persona:
+          one: "Persona:"
+          few: "Personas:"
+          many: "Personas:"
+          other: "Personas:"
+        groups: "Skupiny:"
+        llm:
+          one: "LLM:"
+          few: "LLMs:"
+          many: "LLMs:"
+          other: "LLMs:"
+        no_llm: "Nie je vybraný žiadny LLM"
+        no_persona: "Nie je nastavené"
+        no_groups: "Žiadny"
+        edit: "Upraviť"
+        expand_list:
+          one: "(%{count} ďalší)"
+          few: "(%{count} ďalšie)"
+          many: "(%{count} ďalších)"
+          other: "(%{count} ďalší)"
+        collapse_list: "(zobraziť menej)"
+        bot:
+          bot: "Chatbot"
+          name: "Bot"
+          description: "Chatovací bot, ktorý dokáže odpovedať na otázky a pomáhať používateľom v osobných správach, na fóre a v chate"
+        nav:
+          configured: "Nakonfigurované"
+          unconfigured: "Nekonfigurované"
+        filters:
+          all: "Všetky"
+          text: "Vyhľadávanie funkcií, personas, LLM alebo skupín..."
+          no_results: "Nenašli sa žiadne funkcie, ktoré by vyhovovali vašim filtrom."
+          reset: "Resetovať"
+        summarization:
+          name: "Súhrny"
+          description: "Sprístupňuje tlačidlo na zhrnutie, ktoré umožňuje návštevníkom zhrnúť témy"
+          topic_summaries: "Zhrnutia tém"
+          gists: "Krátke zhrnutia zoznamu tém"
+        search:
+          name: "Hľadať"
+          description: "Zlepšuje zážitok z vyhľadávania poskytovaním odpovedí na otázky generovaných umelou inteligenciou"
+          discoveries: "Objavy"
+        embeddings:
+          name: "Vkladania"
+          description: "Vytvára sémantické reprezentácie textu a podporuje funkcie ako Súvisiace témy a Vyhľadávanie pomocou umelej inteligencie."
+          hyde: "HyDE"
+        discord:
+          name: "Integrácia služby Discord"
+          description: "Pridáva možnosť vyhľadávať kanály Discord"
+          search: "Vyhľadávanie v službe Discord"
+        inference:
+          name: "Odvodené koncepty"
+          description: "Klasifikuje témy a príspevky do oblastí záujmu / štítkov."
+          generate_concepts: "Inferencia konceptov"
+          match_concepts: "Zhoda konceptov"
+          deduplicate_concepts: "Deduplikácia konceptov"
+        ai_helper:
+          name: "Pomocník"
+          description: "Pomáha používateľom pri interakcii s komunitou, ako je vytváranie tém, písanie príspevkov a čítanie obsahu"
+          proofread: Korektúra textu
+          title_suggestions: "Navrhnúť názvy"
+          explain: "Vysvetlite"
+          illustrate_post: "Ilustrujte príspevok"
+          smart_dates: "Inteligentné dátumy"
+          translate: "Preložiť"
+          markdown_tables: "Generovanie tabuľky Markdown"
+          custom_prompt: "Vlastný prompt"
+          image_caption: "Obrázky s popismi"
+          translator: "Prekladač"
+        translation:
+          name: "Preklad"
+          description: "Prekladá obsah do podporovaných jazykov"
+          locale_detector: "Detektor lokality"
+          post_raw_translator: "Prekladač RAW"
+          topic_title_translator: "Prekladač názvov tém"
+          short_text_translator: "Prekladač krátkych textov"
+        spam:
+          name: "Spam"
+          description: "Identifikuje potenciálny spam pomocou vybranej metódy LLM a označí ho moderátorom stránok na kontrolu v zozname kontrol."
+          inspect_posts: "Skontrolovať príspevky"
+      modals:
+        select_option: "Vyberte možnosť..."
+      layout:
+        table: "Tabuľka"
+        card: "Karta"
+      translations:
+        title: "Preklady"
+        progress_chart:
+          bar_done:
+            one: "jeden príspevok"
+            few: "%{count} príspevky"
+            many: "%{count} príspevkov"
+            other: "%{count} príspevkov"
+      spam:
+        short_title: "Spam"
+        title: "Konfigurácia spracovania spamu"
+        select_llm: "Vyberte si LLM"
+        select_persona: "Vyberte persona"
+        custom_instructions: "Vlastné pokyny"
+        custom_instructions_help: "Prispôsobené pokyny špecifické pre vašu stránku, ktoré pomôžu umelej inteligencii identifikovať spam, napr. „Buďte agresívnejší pri skenovaní príspevkov, ktoré nie sú v angličtine“."
+        last_seven_days: "Posledných 7 dní"
+        scanned_count: "Skenované príspevky"
+        false_positives: "Nesprávne označené"
+        false_negatives: "Zmeškaný spam"
+        spam_detected: "Zistený spam"
+        custom_instructions_placeholder: "Pokyny pre AI špecifické pre danú lokalitu, ktoré pomôžu presnejšie identifikovať spam"
+        enable: "Povoliť"
+        spam_tip: "Detekcia spamu pomocou AI prehľadá prvé 3 príspevky všetkých nových používateľov na verejných témach. Označí ich na kontrolu a zablokuje používateľov, ak sú pravdepodobne spam."
+        settings_saved: "Nastavenia uložené"
+        spam_description: "Identifikuje potenciálny spam pomocou vybranej metódy LLM a označí ho moderátorom stránok na kontrolu v zozname kontrol."
+        no_llms: "Nie sú k dispozícii žiadne LLM"
+        test_button: "Test..."
+        save_button: "Uloženie zmien"
+        test_modal:
+          title: "Testovanie detekcie spamu"
+          post_url_label: "URL alebo ID príspevku"
+          post_url_placeholder: "https://your-forum.com/t/topic/123/4 alebo ID príspevku"
+          result: "Výsledok"
+          scan_log: "Záznam skenovania"
+          run: "Spustiť test"
+          spam: "Spam"
+          not_spam: "Nie spam"
+        stat_tooltips:
+          incorrectly_flagged: "Položky, ktoré bot s AI označil ako spam, ak s tým moderátori nesúhlasili"
+          missed_spam: "Položky označené komunitou ako spam, ktoré bot s AI neodhalil a s ktorými moderátori súhlasili"
+        errors:
+          scan_not_admin:
+            message: "Upozornenie: skenovanie spamu nebude fungovať správne, pretože konto na skenovanie spamu nie je administrátorské"
+            action: "Oprava"
+          resolved: "Chyba bola vyriešená!"
+      usage:
+        short_title: "Použitie"
+        summary: "Zhrnutie"
+        total_tokens: "Celkový počet tokenov"
+        tokens_over_time: "Tokeny v priebehu času"
+        features_breakdown: "Používanie podľa funkcie"
+        feature: "Funkcia"
+        usage_count: "Počet použití"
+        model: "Model"
+        models_breakdown: "Použitie na model"
+        users_breakdown: "Spotreba na používateľa"
+        all_features: "Všetky funkcie"
+        all_models: "Všetky modely"
+        username: "Používateľské meno"
+        total_requests: "celkový počet žiadostí"
+        request_tokens: "Vyžiadať si tokeny"
+        response_tokens: "Tokeny odpovedí"
+        net_request_tokens: "Tokeny sieťových požiadaviek"
+        cached_tokens: "Tokeny uložené vo vyrovnávacej pamäti"
+        cached_request_tokens: "Tokeny požiadaviek uložené vo vyrovnávacej pamäti"
+        total_spending: "Odhadované náklady"
+        no_users: "Nenašli sa žiadne údaje o používaní používateľmi"
+        no_models: "Nenašli sa žiadne údaje o používaní modelu"
+        no_features: "Nenašli sa žiadne údaje o používaní funkcií"
+        subheader_description: "Tokeny sú základné jednotky, ktoré LLM používajú na pochopenie a generovanie textu, údaje o používaní môžu ovplyvniť náklady."
+        stat_tooltips:
+          total_requests: "Všetky žiadosti zaslané LLM prostredníctvom Discourse"
+          total_tokens: "Všetky tokeny použité pri vyvolávaní LLM"
+          request_tokens: "Tokeny používané, keď sa LLM snaží porozumieť tomu, čo hovoríte"
+          response_tokens: "Tokeny použité, keď LLM odpovie na váš prompt"
+          cached_tokens: "Predtým spracované tokeny požiadaviek, ktoré LLM opätovne používa na optimalizáciu výkonu a nákladov"
+          total_spending: "Kumulatívne náklady na všetky tokeny použité LLM na základe zadaných metrík nákladov pridaných do konfiguračných nastavení LLM"
+        periods:
+          last_day: "Posledných 24 hodín"
+          last_week: "Minulý týždeň"
+          last_month: "Minulý mesiac"
+          custom: "Vlastné..."
+      ai_persona:
+        ai_tools: "Nástroje"
+        tool_strategies:
+          all: "Použiť na všetky odpovede"
+          replies:
+            one: "Použiť iba na prvú odpoveď"
+            few: "Použiť na prvých %{count} odpovedí"
+            many: "Použiť na prvých %{count} odpovedí"
+            other: "Použiť na prvé %{count} odpovede"
+        back: "Späť"
+        name: "Meno"
+        edit: "Upraviť"
+        export: "Exportovať"
+        import: "Import"
+        import_error_conflict: "Pri importovaní %{name}bol zistený konflikt, chcete aktualizovať existujúcu personu?"
+        overwrite: "Prepísať"
+        description: "Popis"
+        no_llm_selected: "Nie je vybraný žiadny jazykový model"
+        use_parent_llm: "Použiť jazykový model personas"
+        max_context_posts: "Maximálny počet kontextových príspevkov"
+        max_context_posts_help: "Maximálny počet príspevkov, ktoré sa majú použiť ako kontext pre AI pri odpovedi používateľovi. (predvolene prázdne)"
+        vision_enabled: Videnie povolené
+        vision_enabled_help: Ak je táto funkcia zapnutá, AI sa pokúsi porozumieť obrázkom, ktoré používatelia uverejňujú v téme, v závislosti od použitého modelu podporujúceho videnie. Podporované najnovšími modelmi od spoločností Anthropic, Google a OpenAI.
+        vision_max_pixels: Podporovaná veľkosť obrázka
+        vision_max_pixel_sizes:
+          low: Nízka kvalita - najlacnejšie (256x256)
+          medium: Stredná kvalita (512x512)
+          high: Vysoká kvalita - najpomalšie (1024x1024)
+        tool_details: Zobraziť podrobnosti o nástroji
+        tool_details_help: Zobrazí koncovým používateľom podrobnosti o tom, ktoré nástroje jazykový model spustil.
+        mentionable: Povoliť zmienky
+        mentionable_help: Ak je táto možnosť povolená, používatelia v povolených skupinách môžu v príspevkoch spomenúť tohto používateľa a AI bude reagovať ako táto osoba.
+        user: Používateľ
+        create_user: Vytvoriť používateľa
+        create_user_help: K tejto persone môžete voliteľne priradiť používateľa. Ak tak urobíte, AI použije tohto používateľa na odpovedanie na požiadavky.
+        default_llm: Predvolený jazykový model
+        default_llm_help: Predvolený jazykový model, ktorý sa má použiť pre túto persona. Vyžaduje sa, ak chcete uviesť persona vo verejných príspevkoch.
+        question_consolidator_llm: Jazykový model pre konsolidátor otázok
+        question_consolidator_llm_help: Jazykový model, ktorý sa má použiť pre konsolidátor otázok, môžete si vybrať menej výkonný model, aby ste ušetrili náklady.
+        system_prompt: Systémová výzva
+        forced_tool_strategy: Stratégia vynútených nástrojov
+        allow_chat_direct_messages: "Povolenie priamych správ v chate"
+        allow_chat_direct_messages_help: "Ak je táto možnosť povolená, používatelia v povolených skupinách môžu tejto osobe posielať priame správy."
+        allow_chat_channel_mentions: "Povolenie zmienok o kanáloch chatu"
+        allow_chat_channel_mentions_help: "Ak je táto možnosť povolená, používatelia v povolených skupinách môžu túto osobu spomenúť v chatových kanáloch."
+        allow_personal_messages: "Povoliť osobné správy"
+        allow_personal_messages_help: "Ak je povolené, používatelia v povolených skupinách môžu posielať osobné správy tejto osobe."
+        allow_topic_mentions: "Povoliť zmienky o témach"
+        allow_topic_mentions_help: "Ak je táto možnosť povolená, používatelia v povolených skupinách môžu túto osobu uvádzať v témach."
+        force_default_llm: "Vždy používajte predvolený jazykový model"
+        save: "Uložiť"
+        saved: "Persona uložená"
+        enabled: "Povolené?"
+        tools: "Povolené nástroje"
+        forced_tools: "Vynútené nástroje"
+        allowed_groups: "Povolené skupiny"
+        confirm_delete: "Naozaj chcete odstrániť túto personu?"
+        new: "Nová persona"
+        no_personas: "Zatiaľ ste nevytvorili žiadne persony"
+        title: "Personas"
+        short_title: "Personas"
+        delete: "Odstrániť"
+        temperature: "Teplota"
+        temperature_help: "Teplota, ktorá sa má použiť pre LLM. Zvýšte pre zvýšenie kreativity (nechajte prázdne pre použitie predvolenej hodnoty modelu, zvyčajne hodnoty od 0,0 do 2,0)"
+        top_p: "Top P"
+        top_p_help: "Top P použiť pre LLM, zvýšiť pre zvýšenie náhodnosti (nechať prázdne pre použitie predvoleného modelu, zvyčajne hodnota od 0,0 do 1,0)"
+        priority: "Priorita"
+        priority_help: "Prioritné personas sa používateľom zobrazujú na vrchole zoznamu personas. Ak má prioritu viacero persón, budú zoradené abecedne."
+        tool_options: "Možnosti nástroja"
+        rag_conversation_chunks: "Vyhľadávanie v častiach konverzácie"
+        rag_conversation_chunks_help: "Počet častí, ktoré sa majú použiť na vyhľadávanie modelu RAG. Zvýšte, ak chcete zvýšiť množstvo kontextu, ktoré môže umelá inteligencia použiť."
+        persona_description: "Personas sú výkonnou funkciou, ktorá vám umožňuje prispôsobiť správanie mechanizmu AIvo vašom fóre Discourse. Fungujú ako \"systémová správa\", ktorá usmerňuje reakcie a interakcie AI a pomáha vytvárať personalizovanejšie a pútavejšie používateľské prostredie."
+        response_format:
+          title: "Formát odpovede JSON"
+          no_format: "Nie je zadaný žiadny formát JSON"
+          open_modal: "Upraviť"
+          modal:
+            root_title: "Štruktúra odpovede"
+            key_title: "Kľúč"
+        examples:
+          title: Príklady
+          examples_help: Simulujte predchádzajúce interakcie s LLM a uzemnite ho, aby ste dosiahli lepší výsledok.
+          new: Nový príklad
+          remove: Odstrániť príklad
+          collapsable_title: "Príklad č.%{number}"
+          user: "Správa používateľa"
+          model: "Odozva modelu"
+        list:
+          enabled: "AI Bot?"
+        ai_bot:
+          title: "Možnosti botov AI"
+          save_first: "Ďalšie možnosti botov AI budú k dispozícii po uložení persona."
+        filters:
+          text: "Nájdite persona"
+          reset: "Resetovať"
+          no_results: "Nenašli sa žiadne personas, ktoré by zodpovedali vašim filtrom."
+          all_features: "Akákoľvek funkcia"
+        features_list:
+          one: "Funkcia:"
+          few: "Funkcií:"
+          many: "Funkcií:"
+          other: "Funkcie:"
+        llms_list: "LLM:"
+      rag:
+        title: "RAG"
+        options:
+          rag_chunk_tokens: "Nahrať tokeny chunk"
+          rag_chunk_tokens_help: "Počet tokenov, ktoré sa majú použiť pre každý chunk v modeli RAG. Zvýšením zvýšite množstvo kontextu, ktorý môže AI použiť. (zmena spôsobí preindexovanie všetkých nahraných súborov)"
+          rag_chunk_overlap_tokens: "Nahrať tokeny prekrývania blokov"
+          rag_chunk_overlap_tokens_help: "Počet tokenov, ktoré sa majú prekrývať medzi blokmi v modeli RAG. (zmena spôsobí preindexovanie všetkých nahraných súborov)"
+          rag_llm_model: "Model indexovacieho jazyka"
+          rag_llm_model_help: "Jazykový model používaný na OCR pri indexovaní PDF a obrázkov"
+          show_indexing_options: "Zobraziť možnosti nahrávania"
+          hide_indexing_options: "Skryť možnosti nahrávania"
+        uploads:
+          title: "Nahrávanie"
+          description: "PDF (.pdf), Plaintext (.txt) alebo Markdown (.md)"
+          description_with_images: "Obyčajný text (.txt), markdown (.md), PDF (.pdf) alebo obrázok (.png, .jpeg)"
+          button: "Pridávanie súborov"
+          filter: "Filtrovanie nahrávok"
+          indexed: "Indexované"
+          indexing: "Indexovanie"
+          uploaded: "Pripravené na indexovanie"
+          uploading: "Načítavam..."
+          remove: "Odstránenie nahrávania"
+      tools:
+        back: "Späť"
+        short_title: "Nástroje"
+        export: "Exportovať"
+        import: "Import"
+        import_error_conflict: "Nástroj už existuje, chcete ho aktualizovať?"
+        overwrite: "Prepísať"
+        no_tools: "Zatiaľ ste nevytvorili žiadne nástroje"
+        name: "Meno"
+        name_help: "Názov sa zobrazí v používateľskom rozhraní Discourse a je to krátky identifikátor, ktorý budete používať na vyhľadávanie nástroja v rôznych nastaveniach, mal by byť zreteľný (je povinný)"
+        new: "Nový nástroj"
+        tool_name: "Názov nástroja"
+        tool_name_help: "Názov nástroja sa prezentuje na veľkom jazykovom modeli. Nie je zreteľný, ale je zreteľný na persona. (persona sa overí pri uložení)"
+        description: "Popis"
+        description_help: "Jasný opis účelu nástroja pre jazykový model"
+        subheader_description: "Nástroje rozširujú možnosti AI botov pomocou používateľom definovaných funkcií JavaScriptu."
+        summary: "Zhrnutie"
+        summary_help: "Zhrnutie účelu nástrojov, ktoré sa zobrazí koncovým používateľom"
+        script: "Skript"
+        parameters: "Parametre"
+        save: "Uložiť"
+        parameter_type: "Typ parametra"
+        add_parameter: "Pridať parameter"
+        remove_parameter: "Odstrániť"
+        parameter_required: "Povinné"
+        parameter_enum: "Enum"
+        parameter_name: "Názov parametra"
+        parameter_description: "Popis parametra"
+        enum_value: "Hodnota enumu"
+        add_enum_value: "Pridať enum hodnotu"
+        edit: "Upraviť"
+        test: "Spustiť test"
+        delete: "Odstrániť"
+        saved: "Nástroj uložený"
+        confirm_delete: "Naozaj chcete tento nástroj odstrániť?"
+        test_modal:
+          title: "Testovací nástroj AI"
+          run: "Spustiť test"
+          result: "Výsledok testu"
+      llms:
+        short_title: "LLM"
+        no_llms: "Zatiaľ žiadne LLM"
+        new: "Nový model"
+        display_name: "Meno"
+        name: "ID modelu"
+        provider: "Poskytovateľ"
+        tokenizer: "Tokenizér"
+        max_prompt_tokens: "Kontextové okno"
+        max_output_tokens: "Maximálny počet výstupných tokenov"
+        url: "URL adresa služby, ktorá je hostiteľom modelu"
+        api_key: "Kľúč API služby, ktorá je hostiteľom modelu"
+        enabled_chat_bot: "Povoľte AI bot selektor"
+        vision_enabled: "Videnie povolené"
+        ai_bot_user: "AI bot Používateľ"
+        cost_input: "Vstupné náklady"
+        cost_cached_input: "Cena vstupu uložená v vyrovnávacej pamäti"
+        cost_output: "Výstupné náklady"
+        save: "Uložiť"
+        edit: "Upraviť"
+        saved: "Model LLM bol uložený"
+        back: "Späť"
+        confirm_delete: Naozaj chcete odstrániť tento model?
+        delete: Odstrániť
+        seeded_warning: "Tento model je predkonfigurovaný na vašej stránke a nemožno ho upravovať."
+        quotas:
+          title: "Kvóty používania"
+          add_title: "Vytvoriť novú kvótu"
+          group: "Skupina"
+          max_tokens: "Maximálny počet tokenov"
+          max_usages: "Maximálne využitie"
+          duration: "Trvanie"
+          confirm_delete: "Naozaj chcete odstrániť túto kvótu?"
+          add: "Pridať kvótu"
+          durations:
+            hour: "1 hodina"
+            six_hours: "6 hodiny"
+            day: "24 hodín"
+            week: "7 dní"
+            custom: "Vlastné..."
+          hours: "hodiny"
+          max_tokens_help: "Maximálny počet tokenov (slov a znakov), ktoré môže každý používateľ v tejto skupine použiť v rámci zadaného trvania. Tokeny sú jednotky, ktoré modely umelej inteligencie používajú na spracovanie textu – približne 1 token = 4 znaky alebo 3/4 slova."
+          max_tokens_required: "Musí byť nastavené, ak nie je nastavený maximálny počet použití"
+          max_usages_help: "Maximálny počet použití modelu AI pre každého používateľa v tejto skupine v rámci zadaného trvania. Táto kvóta sa sleduje pre jednotlivých používateľov a nezdieľa sa v rámci skupiny."
+          max_usages_required: "Musí byť nastavené, ak nie je nastavený maximálny počet tokenov"
+        usage:
+          ai_bot: "AI bot"
+          ai_helper_image_caption: "Popis obrázka"
+          ai_persona: "Persona (%{persona})"
+          ai_summarization: "Zhrnúť"
+          ai_embeddings_semantic_search: "Vyhľadávanie pomocou AI"
+          ai_spam: "Spam"
+          automation: "Automatizácia (%{persona})"
+        in_use_warning:
+          one: "Tento model momentálne používa %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania."
+          few: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
+          many: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
+          other: "Tento model momentálne používa nasledovné %{settings}. Ak je nesprávne nakonfigurovaný, funkcia nebude fungovať podľa očakávania. "
+        model_description:
+          none: "Všeobecné nastavenia, ktoré fungujú pre väčšinu jazykových modelov"
+          anthropic-claude-opus-4-1: "Najinteligentnejší model spoločnosti Anthropic"
+          anthropic-claude-sonnet-4-0: "Optimálna rovnováha medzi rýchlosťou a cenou"
+          anthropic-claude-3-7-sonnet-latest: "Optimálna rovnováha medzi rýchlosťou a cenou (predchádzajúca generácia)"
+          anthropic-claude-3-5-haiku-latest: "Rýchle a cenovo výhodné"
+          google-gemini-2-5-pro: "Veľký multimodálny model schopný širokej škály úloh"
+          google-gemini-2-0-flash: "Ľahký, rýchly a nákladovo efektívny s multimodálnym uvažovaním (predchádzajúca generácia)"
+          google-gemini-2-5-flash: "Ľahké, rýchle a nákladovo efektívne multimodálne uvažovanie"
+          google-gemini-2-0-flash-lite: "Nákladovo efektívny model s nízkou latenciou"
+          open_ai-o4-mini: "Pokročilý model nákladovo efektívneho uvažovania"
+          open_ai-gpt-5-mini: "Poskytuje rovnováhu medzi inteligenciou, rýchlosťou a nákladmi, ktorá z neho robí atraktívny model pre mnohé prípady použitia."
+          open_ai-gpt-5-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5."
+          samba_nova-Meta-Llama-3-1-8B-Instruct: "Efektívny ľahký viacjazyčný model"
+          samba_nova-Meta-Llama-3-3-70B-Instruct": "Výkonný viacúčelový model"
+          mistral-mistral-large-latest: "Najvýkonnejší model spoločnosti Mistral"
+          mistral-pixtral-large-latest: "Najvýkonnejší model spoločnosti Mistral schopný vidieť"
+          open_router-x-ai-grok-3-beta: "Najnovší model xAI"
+          open_router-deepseek-deepseek-r1-0528-free: "Najnovší model uvažovania spoločnosti DeepSeek"
+          open_router-meta-llama-3-3-70b-instruct: "Vysoko výkonný viacjazyčný model"
+        preseeded_model_description: "Predkonfigurovaný model s otvoreným zdrojovým kódom využívajúci %{model}"
+        configured:
+          title: "Nakonfigurované LLM"
+        preconfigured_llms: "Vyberte si LLM"
+        preconfigured:
+          title_no_llms: "Vyberte šablónu a začnite"
+          title: "Nekonfigurované šablóny LLM"
+          description: "LLM (Large Language Models) sú nástroje AI optimalizované na úlohy, ako je sumarizácia obsahu, generovanie správ, automatizácia interakcií so zákazníkmi a uľahčenie moderovania fóra a postrehov."
+          fake: "Manuálna konfigurácia"
+          button: "Nastavenie"
+        next:
+          title: "Ďalej"
+        tests:
+          title: "Spustiť test"
+          running: "Spustenie testu..."
+          success: "Úspech!"
+          failure: "Pri pokuse o kontaktovanie modelu sa vrátila táto chyba: %{error}"
+        hints:
+          max_prompt_tokens: "Maximálny počet tokenov, ktoré môže model spracovať v jednej požiadavke"
+          max_output_tokens: "Maximálny počet tokenov, ktoré môže model vygenerovať v jednej požiadavke"
+          display_name: "Názov, ktorý sa používa na odkazovanie na tento model v rozhraní vášho webu."
+          name: "Tento údaj zahrnieme do volania API, aby sme určili, ktorý model použijeme"
+          vision_enabled: "Ak je táto funkcia zapnutá, AI sa pokúsi porozumieť obrázkom. Závisí to od použitého modelu podporujúceho videnie. Podporované najnovšími modelmi od spoločností Anthropic, Google a OpenAI."
+          enabled_chat_bot: "Ak je táto možnosť povolená, používatelia môžu vybrať tento model pri vytváraní PM s botom AI"
+          cost_input: "Vstupné náklady na 1 milión tokenov pre tento model"
+          cost_cached_input: "Cena uloženého vstupu na 1 milión tokenov pre tento model"
+          cost_output: "Výstupné náklady na 1 milión tokenov pre tento model"
+          cost_measure: "Tokeny $/1 milión"
+        providers:
+          aws_bedrock: "AWS Bedrock"
+          anthropic: "Antropický"
+          vllm: "vLLM"
+          hugging_face: "Objímajúca tvár"
+          cohere: "Cohere"
+          open_ai: "OpenAI"
+          google: "Google"
+          azure: "Azure"
+          ollama: "Ollama"
+          CDCK: "CDCK"
+          samba_nova: "SambaNova"
+          mistral: "Mistral"
+          open_router: "OpenRouter"
+          fake: "Vlastné"
+        provider_fields:
+          access_key_id: "ID prístupového kľúča AWS Bedrock"
+          region: "Región AWS Bedrock"
+          organization: "Voliteľné ID organizácie OpenAI"
+          disable_system_prompt: "Zakázať systémové správy vo výzvach"
+          enable_native_tool: "Povoliť podporu natívnych nástrojov"
+          disable_native_tools: "Zakázať podporu natívnych nástrojov (používať nástroje založené na XML)"
+          provider_order: "Poradie poskytovateľa (zoznam oddelený čiarkou)"
+          provider_quantizations: "Poradie kvantizácií poskytovateľov (zoznam oddelený čiarkou, napr. fp16, fp8)"
+          disable_streaming: "Zakázať dokončenie streamovania (konvertovať požiadavky na streamovanie na požiadavky bez streamovania)"
+          reasoning_effort: "Úsilie pri zdôvodňovaní (platí len pre modely zdôvodňovania)"
+          enable_reasoning: "Umožniť zdôvodňovanie (platí len pre modely zdôvodňovania)"
+          enable_thinking: "Povolenie myslenia (len v príslušných modeloch, napr.: flash 2.5)"
+          thinking_tokens: "Počet tokenov použitých na premýšľanie"
+          reasoning_tokens: "Počet tokenov použitých na uvažovanie"
+          disable_temperature: "Zakázať teplotu (niektoré modely myslenia teplotu nepodporujú)"
+          disable_top_p: "Zakázať top P (niektoré modely myslenia nepodporujú top P)"
+          enable_responses_api: "Povolenie rozhrania API pre odpovede (vyžaduje sa pri niektorých modeloch OpenAI)"
+      related_topics:
+        title: "Súvisiace témy"
+        pill: "Súvisiace"
+      ai_helper:
+        title: "Navrhovanie zmien pomocou AI"
+        description: "Vyberte jednu z nasledujúcich možností a AI vám navrhne novú verziu textu."
+        selection_hint: "Tip: Pred otvorením pomocníka môžete tiež vybrať časť textu a prepísať iba túto časť."
+        suggest: "Navrhnúť s AI"
+        suggest_errors:
+          too_many_tags:
+            one: "Môžete mať iba %{count} štítok"
+            few: "Môžete mať maximálne %{count} štítkov"
+            many: "Môžete mať maximálne %{count} štítkov"
+            other: "Môžete mať maximálne %{count} štítky"
+          no_suggestions: "Nie sú k dispozícii žiadne návrhy"
+        missing_content: "Zadajte nejaký obsah na generovanie návrhov."
+        context_menu:
+          trigger: "Spýtajte sa AI"
+          loading: "AI generuje"
+          cancel: "Zrušiť"
+          regen: "Skúste to znova"
+          confirm: "Potvrďte"
+          discard: "Zahodiť"
+          changes: "Navrhované úpravy"
+          custom_prompt:
+            title: "Vlastný prompt"
+            placeholder: "Zadajte vlastný prompt..."
+            submit: "Odoslať prompt"
+          translate_prompt: "Preložiť do %{language}"
+        post_options_menu:
+          trigger: "Spýtajte sa AI"
+          title: "Spýtajte sa AI"
+          loading: "AI generuje"
+          close: "Zatvoriť"
+          copy: "Kopírovať"
+          copied: "Skopírované!"
+          cancel: "Zrušiť"
+          insert_footnote: "Pridať poznámku pod čiarou"
+          footnote_disabled: "Automatické vkladanie je zakázané, kliknite na tlačidlo kopírovať a upravte ho manuálne"
+          footnote_credits: "Vysvetlenie podľa AI"
+        fast_edit:
+          suggest_button: "Navrhnúť úpravu"
+        thumbnail_suggestions:
+          title: "Navrhované miniatúry"
+          select: "Vyberte"
+          selected: "Vybrané"
+        image_caption:
+          button_label: "Titulky s AI"
+          generating: "Generovanie titulkov..."
+          credits: "S titulkami od AI"
+          save_caption: "Uložiť"
+        no_content_error: "Najprv pridajte obsah, aby ste na ňom mohli vykonávať akcie AI"
+      reviewables:
+        model_used: "Použitý model:"
+        accuracy: "Presnosť:"
+      embeddings:
+        short_title: "Vkladania"
+        description: "Vložené údaje sú číselné reprezentácie údajov, ktoré zachytávajú význam a vzťahy a umožňujú funkciám Discourse AI, ako sú Súvisiace témy a Vyhľadávanie AI, porozumieť obsahu a prepojiť ho."
+        new: "Nové vloženie"
+        back: "Späť"
+        save: "Uložiť"
+        saved: "Uložená konfigurácia vkladania"
+        delete: "Odstrániť"
+        confirm_delete: Naozaj chcete odstrániť túto konfiguráciu vkladania?
+        empty: "Ešte ste nenastavili vkladanie"
+        presets: "Vyberte predvoľbu..."
+        configure_manually: "Konfigurovať manuálne"
+        edit: "Upraviť"
+        seeded_warning: "Toto je predkonfigurované na vašej stránke a nie je možné to upravovať."
+        tests:
+          title: "Spustiť test"
+          running: "Spustenie testu..."
+          success: "Úspech!"
+          failure: "Pokus o vygenerovanie vloženia mal za následok: %{error}"
+        hints:
+          dimensions_warning: "Po uložení sa táto hodnota nedá zmeniť."
+          matryoshka_dimensions: "Definuje veľkosť vnorených vnorení, ktoré sa používajú na hierarchickú alebo viacvrstvovú reprezentáciu údajov, podobne ako vnorené bábiky zapadajú jedna do druhej."
+          embed_prompt: "Predpona inštrukcie úlohy pri generovaní vloženého obsahu fóra. POUZE pre modely embeddings, ktoré vyžadujú prefixy, ako napríklad nomic-embed alebo stella. Nie je potrebné pre väčšinu modelov."
+          search_prompt: "Predpona inštrukcie úlohy pri generovaní vnorení vyhľadávacích dopytov. IBA pre modely vnorení, ktoré vyžadujú predpony, ako napríklad nomic-embed alebo stella. Nie je potrebné pre väčšinu modelov."
+          sequence_length: "Maximálny počet tokenov, ktoré je možné spracovať naraz pri vytváraní vnorení alebo spracovaní dotazu."
+          distance_function: "Určuje, ako sa vypočíta podobnosť medzi vloženiami, buď pomocou kosínusovej vzdialenosti (meranie uhla medzi vektormi), alebo záporného vnútorného súčinu (meranie prekrývania hodnôt vektorov)."
+        display_name: "Meno"
+        provider: "Poskytovateľ"
+        url: "Adresa URL služby Embeddings"
+        api_key: "Kľúč API služby vkladania"
+        tokenizer: "Tokenizér"
+        dimensions: "Vkladanie rozmerov"
+        max_sequence_length: "Dĺžka sekvencie"
+        embed_prompt: "Výzva na vloženie"
+        search_prompt: "Výzva na vyhľadávanie"
+        matryoshka_dimensions: "Matryoshka rozmer"
+        distance_function: "Funkcia vzdialenosti"
+        distance_functions:
+          "<#>": "Záporný skalárny súčin"
+          <=>: "Kosínusová vzdialenosť"
+        providers:
+          hugging_face: "Objímajúca tvár"
+          open_ai: "OpenAI"
+          google: "Google"
+          cloudflare: "Cloudflare"
+          CDCK: "CDCK"
+          fake: "Vlastné"
+        provider_fields:
+          model_name: "Názov modelu"
+        semantic_search: "Témy (sémantické)"
+        semantic_search_loading: "Vyhľadávanie ďalších výsledkov pomocou AI"
+        semantic_search_results:
+          toggle: "Zobrazuje sa %{count} nájdených výsledkov pomocou AI"
+          toggle_hidden: "Skrytie výsledkov %{count} nájdených pomocou AI"
+          none: "Je nám ľúto, naša AI nenašla žiadne zodpovedajúce témy"
+          new: "Stlačením tlačidla \"hľadať\" začnete vyhľadávať nové výsledky pomocou AI"
+          unavailable: "Výsledky AI nie sú k dispozícii"
+        semantic_search_tooltips:
+          results_explanation: "Ak je táto funkcia povolená, pod ňu sa pridajú ďalšie výsledky vyhľadávania s AI."
+          invalid_sort: "Výsledky vyhľadávania musia byť zoradené podľa relevantnosti, aby sa zobrazovali výsledky AI"
+        semantic_search_unavailable_tooltip: "Výsledky vyhľadávania musia byť zoradené podľa relevantnosti, aby sa zobrazovali výsledky AI"
+        ai_generated_result: "Výsledok vyhľadávania nájdený pomocou AI"
+        quick_search:
+          suffix: "vo všetkých témach a príspevkoch s AI"
+      ai_artifact:
+        expand_view_label: "Rozbaliť zobrazenie"
+        collapse_view_label: "Ukončiť režim celej obrazovky (tlačidlo ESC alebo Späť)"
+        click_to_run_label: "Spustiť artefakt"
+      ai_bot:
+        persona: "Persona"
+        llm: "Model"
+        pm_warning: "Správy AI chatbota pravidelne monitorujú moderátori."
+        cancel_streaming: "Zastaviť odpoveď"
+        default_pm_prefix: "[Bez názvu AI bot PM]"
+        shortcut_title: "Spustenie PM s botom AI"
+        share: "Kopírovať konverzáciu s AI"
+        conversation_shared: "Konverzácia bola skopírovaná"
+        embed_copied: "Vložiť skopírované do schránky"
+        debug_ai: "Zobraziť nespracovanú požiadavku a odpoveď AI"
+        sidebar_empty: "Tu sa zobrazí história konverzácie s botom."
+        debug_ai_modal:
+          title: "Zobrazenie interakcie s AI"
+          copy_request: "Kopírovať požiadavku"
+          copy_response: "Kopírovať odpoveď"
+          request_tokens: "Vyžiadať si tokeny:"
+          response_tokens: "Tokeny odpovede:"
+          request: "Požiadavka"
+          response: "Odpoveď"
+          next_log: "Ďalej"
+          previous_log: "Predchádzajúci"
+        share_full_topic_modal:
+          title: "Zdieľať konverzáciu verejne"
+          share: "Zdieľanie a kopírovanie prepojenia"
+          update: "Aktualizácia a kopírovanie odkazu"
+          delete: "Odstrániť zdieľanie"
+        share_ai_conversation:
+          name: "Zdieľanie konverzácie s AI"
+          title: "Zdieľajte túto konverzáciu s AI verejne"
+        invite_ai_conversation:
+          button: "Pozvi"
+          title: "Pozvánka na konverzáciu s AI"
+        ai_label: "AI"
+        ai_title: "Rozhovor s AI"
+        share_modal:
+          title: "Kopírovanie konverzácie s AI"
+          copy: "Kopírovať"
+          context: "Interakcie na zdieľanie:"
+          share_tip: "Prípadne môžete zdieľať celú konverzáciu"
+        bot_names:
+          fake: "Falošný testovací bot"
+          claude-3-opus: "Claude 3 Opus"
+          claude-3-sonnet: "Claude 3 Sonet"
+          claude-3-haiku: "Claude 3 Haiku"
+          cohere-command-r-plus: "Cohere Command R Plus"
+          gpt-4: "GPT-4"
+          gpt-4-turbo: "GPT-4 Turbo"
+          gpt-4o: "GPT-4 Omni"
+          gpt-3:
+            5-turbo: "GPT-3.5"
+          claude-2: "Claude 2"
+          gemini-1:
+            5-pro: "Gemini"
+          mixtral-8x7B-Instruct-V0:
+            "1": "Mixtral-8x7B V0.1"
+        conversations:
+          header: "S čím môžem pomôcť?"
+          submit: "Odoslať otázku"
+          disclaimer: "Generatívna AI môže robiť chyby. Overte si dôležité informácie."
+          placeholder: "Položte otázku..."
+          new: "Nová otázka"
+          min_input_length_message:
+            one: "Správa musí mať %{count} alebo viac znakov"
+            few: "Správa musí mať %{count} alebo viac znakov"
+            many: "Správa musí mať %{count} alebo viac znakov"
+            other: "Správa musí mať %{count} alebo viac znakov"
+          messages_sidebar_title: "Konverzácie"
+          today: "Dnes"
+          last_7_days: "Posledných 7 dní"
+          last_30_days: "Posledných 30 dní"
+          upload_files: "Nahrávanie súborov"
+          uploads_in_progress: "Nemožno odoslať, keď prebieha nahrávanie"
+      sentiments:
+        dashboard:
+          title: "Sentiment"
+        sidebar:
+          overview: "Prehľad nálad"
+          analysis: "Analýza nálad"
+        sentiment_analysis:
+          share_chart: "Skopírujte odkaz na graf"
+          filter_types:
+            all: "Všetky"
+            positive: "Pozitívne"
+            neutral: "Neutrálna"
+            negative: "Negatívne"
+          group_types:
+            category: "Kategória"
+            tag: "Značka"
+          table:
+            sentiment: "Sentiment"
+            total_count: "Celkom"
+      summarization:
+        chat:
+          title: "Zhrnutie správ"
+          description: "Ak chcete zhrnúť konverzáciu odoslanú počas požadovaného časového obdobia, vyberte nižšie uvedenú možnosť."
+          summarize: "Zhrnúť"
+          since:
+            one: "Posledná hodina"
+            few: "Posledných %{count} hodín"
+            many: "Posledných %{count} hodín"
+            other: "Posledných %{count} hodín"
+        topic:
+          title: "Zhrnutie témy"
+          close: "Zatvoriť panel súhrnu"
+        topic_list_layout:
+          button:
+            compact: "Kompaktné"
+            expanded: "Rozšírené"
+            expanded_description: "so súhrnmi AI"
+      discobot_discoveries:
+        main_title: "Objavy Discobot"
+        regular_results: "Témy"
+        tell_me_more: "Povedz mi viac..."
+        continue_convo: "Pokračovať v konverzácii..."
+        loading_convo: "Načítanie konverzácie"
+        collapse: "Zbaliť"
+        timed_out: "Discobot nenašiel žiadne objavy. Niečo sa pokazilo."
+        user_setting: "Povolenie vyhľadávania objavov"
+        tooltip:
+          header: "Vyhľadávanie na báze umelej inteligencie"
+          content: "Vyhľadávanie v prirodzenom jazyku pomocou %{model}"
+          actions:
+            info: "Ako to funguje?"
+            disable: "Zakázať"
+      user_preferences:
+        empty: "V súčasnosti nie sú k dispozícii žiadne relevantné nastavenia"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Príspevok s príznakom AI"
+        reviewable_ai_chat_message:
+          title: "Správa chatu s príznakom AI"

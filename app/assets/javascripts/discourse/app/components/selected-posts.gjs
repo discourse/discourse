@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import CountI18n from "discourse/components/count-i18n";

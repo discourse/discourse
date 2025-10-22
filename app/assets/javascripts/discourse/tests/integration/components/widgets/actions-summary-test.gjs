@@ -9,6 +9,8 @@ module("Integration | Component | Widget | actions-summary", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    this.siteSettings.deactivate_widgets_rendering = false;
+
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
     const post = store.createRecord("post", {

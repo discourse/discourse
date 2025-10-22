@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { or as computedOr } from "@ember/object/computed";
@@ -17,7 +18,7 @@ export default class GroupManageSaveButton extends Component {
   disabled = false;
   updateExistingUsers = null;
 
-  @computedOr("model.flair_icon", "model.flair_upload_id") hasFlair;
+  @computedOr("model.flair_icon", "model.flair_url") hasFlair;
 
   @discourseComputed("saving")
   savingText(saving) {

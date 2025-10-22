@@ -9,7 +9,7 @@ RSpec.describe Chat::SearchChatable do
     fab!(:charlie) { Fabricate(:user, username: "charlie-user") }
     fab!(:alain) { Fabricate(:user, username: "alain-user") }
     fab!(:group_1) { Fabricate(:group, name: "awesome-group") }
-    fab!(:group_2) { Fabricate(:group) }
+    fab!(:group_2, :group)
     fab!(:channel_1) { Fabricate(:chat_channel, name: "bob-channel") }
     fab!(:channel_2) { Fabricate(:direct_message_channel, users: [current_user, sam]) }
     fab!(:channel_3) { Fabricate(:direct_message_channel, users: [current_user, sam, charlie]) }
@@ -112,6 +112,22 @@ RSpec.describe Chat::SearchChatable do
       end
 
       context "when including groups" do
+        fab!(:hidden_group) do
+          Fabricate(
+            :group,
+            name: "hidden-group-1",
+            visibility_level: Group.visibility_levels[:members],
+          )
+        end
+
+        fab!(:hidden_members_group) do
+          Fabricate(
+            :group,
+            name: "hidden-group-2",
+            members_visibility_level: Group.visibility_levels[:members],
+          )
+        end
+
         let(:include_groups) { true }
 
         it "fetches groups" do
@@ -126,6 +142,18 @@ RSpec.describe Chat::SearchChatable do
         it "excludes groups not matching the search term" do
           params[:term] = "nonexistent"
           expect(result.groups).to be_empty
+        end
+
+        it "excludes groups that user cannot see by default" do
+          expect(result.groups).to_not include(hidden_group)
+          expect(result.groups).to_not include(hidden_members_group)
+        end
+
+        it "excludes groups that user cannot see when searching" do
+          params[:term] = "hidden-group"
+
+          expect(result.groups).to_not include(hidden_group)
+          expect(result.groups).to_not include(hidden_members_group)
         end
       end
 

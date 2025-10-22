@@ -1,0 +1,16 @@
+en:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "There is a problem with your hCaptcha `site_key` or `secret_key` configuration"
+
+  admin: 
+    site_settings:
+      categories:
+        discourse_hcaptcha: "hCaptcha Plugin"
+        
+  site_settings:
+    discourse_hcaptcha_enabled: "Enable the hCaptcha Plugin. Requires <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account."
+    hcaptcha_site_key: "hCaptcha Site Key from your <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account"
+    hcaptcha_secret_key: "hCaptcha Secret Key from your <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> account"
+
+  h_captcha_verification_failed: "hCaptcha verification failed"

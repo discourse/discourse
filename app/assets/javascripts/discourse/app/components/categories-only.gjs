@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -47,11 +48,11 @@ export default class CategoriesOnly extends Component {
     }
 
     // hide in single category pages
-    if (categories.firstObject.parent_category_id) {
+    if (categories[0].parent_category_id) {
       return [];
     }
 
-    return categories.filterBy("hasMuted");
+    return categories.filter((category) => category.hasMuted);
   }
 
   @action

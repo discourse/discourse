@@ -73,6 +73,7 @@ module PageObjects
 
         def switch_to_chat
           find(".sidebar__panel-switch-button[data-key='chat']").click
+          has_no_css?(".sidebar__panel-switch-button[data-key='chat']")
         end
 
         def switch_to_main

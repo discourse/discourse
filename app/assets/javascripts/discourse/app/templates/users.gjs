@@ -1,16 +1,17 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DirectoryTable from "discourse/components/directory-table";
+import EmptyState from "discourse/components/empty-state";
 import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import basePath from "discourse/helpers/base-path";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
@@ -28,6 +29,7 @@ export default RouteTemplate(
       <LoadMore
         @action={{@controller.loadMore}}
         @enabled={{@controller.model.canLoadMore}}
+        @isLoading={{@controller.isLoading}}
       >
         <div class="container">
           <div class="users-directory directory">
@@ -100,33 +102,28 @@ export default RouteTemplate(
                   @columns={{@controller.columns}}
                   @showTimeRead={{@controller.showTimeRead}}
                   @order={{@controller.order}}
-                  @updateOrder={{fn (mut @controller.order)}}
                   @asc={{@controller.asc}}
-                  @updateAsc={{fn (mut @controller.asc)}}
+                  @updateOrderAndAsc={{@controller.updateOrderAndAsc}}
                 />
                 <ConditionalLoadingSpinner
                   @condition={{@controller.model.loadingMore}}
                 />
               {{else}}
-                <div class="empty-state">
-                  <div class="empty-state-body">
-                    <p>
-                      {{#if @controller.name}}
-                        {{i18n "directory.no_results_with_search"}}
-                      {{else}}
-                        {{i18n "directory.no_results.body"}}
-                        {{#if @controller.currentUser.staff}}
-                          {{htmlSafe
-                            (i18n
-                              "directory.no_results.extra_body"
-                              basePath=(basePath)
-                            )
-                          }}
-                        {{/if}}
-                      {{/if}}
-                    </p>
-                  </div>
-                </div>
+                <EmptyState
+                  @body={{if
+                    @controller.name
+                    (i18n "directory.no_results_with_search")
+                    (if
+                      @controller.currentUser.staff
+                      (htmlSafe
+                        (i18n
+                          "directory.no_results.extra_body" basePath=(basePath)
+                        )
+                      )
+                      (i18n "directory.no_results.body")
+                    )
+                  }}
+                />
               {{/if}}
             </ConditionalLoadingSpinner>
           </div>

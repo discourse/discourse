@@ -46,9 +46,9 @@ export default class CategoryHashtagType extends HashtagTypeBase {
     let style;
     if (parentColor) {
       style = `background: linear-gradient(-90deg, #${color} 50%, #${parentColor} 50%);`;
-    } else if (categoryOrHashtag.styleType === "icon") {
+    } else if (categoryOrHashtag.style_type === "icon") {
       style = `color: #${color};`;
-    } else if (categoryOrHashtag.styleType === "square") {
+    } else if (categoryOrHashtag.style_type === "square") {
       style = `background-color: #${color};`;
     } else {
       return [];

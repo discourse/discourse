@@ -30,10 +30,12 @@ ar:
     chat_editing_grace_period_max_diff_low_trust: "الحد الأقصى لعدد تغييرات الأحرف المسموح بها خلال فترة السماح بالتعديل في الدردشة، وعرض علامة (تم التعديل) بجانب رسالة الدردشة إذا تم تغيير المزيد (مستوى الثقة 0 و1)."
     chat_editing_grace_period_max_diff_high_trust: "الحد الأقصى لعدد تغييرات الأحرف المسموح بها خلال فترة السماح بالتعديل في الدردشة، وعرض علامة (تم التعديل) بجانب رسالة الدردشة إذا تم تغيير المزيد (مستوى الثقة 2 وأعلى)."
     chat_preferred_index: "علامة التبويب المفضَّلة عند تحميل /chat."
+    allow_chat_in_anonymous_mode: "فعّل هذا الإعداد للسماح للمستخدمين الذين يتصفحون موقعك بشكل مجهول باستخدام الدردشة. يتطلب هذا الإعداد تفعيل خيار \"السماح بالوضع المجهول\"."
     errors:
       chat_default_channel: "يجب أن تكون قناة الدردشة الافتراضية قناةً عامة."
       direct_message_enabled_groups_invalid: "يجب عليك تحديد مجموعة واحدة على الأقل لهذا الإعداد. إذا كنت لا تريد أن يقوم أي شخص باستثناء فريق العمل بإرسال رسائل مباشرة، فاختر مجموعة فريق العمل."
       chat_upload_not_allowed_secure_uploads: "غير مسموح بتحميلات الدردشة عندما يكون إعداد الموقع المسؤول عن التحميلات الآمنة مفعَّلًا."
+      allow_chat_in_anonymous_mode_invalid: "يشترط هذا الإعداد تفعيل خيار \"السماح بوضع المستخدم المجهول\" مسبقًا."
   system_messages:
     private_channel_title: "القناة %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ ar:
     deleted_chat_username: تم الحذف
     errors:
       users_cant_be_added_to_channel: "لا يمكن إضافة المستخدمين إلى هذه القناة."
+      user_cant_be_removed_from_channel: "لا يمكن إزالة المستخدم من هذه القناة"
       channel_exists_for_category: "توجد قناة بالفعل في هذه الفئة وبهذا الاسم"
       channel_new_message_disallowed:
         archived: "القناة مؤرشفة، ولا يمكن إرسال رسائل جديدة"
@@ -98,6 +101,7 @@ ar:
       actor_muting_target_user: "أنت تكتم %{username}؛ لذا لا يمكنك إرسال رسائل إليه."
       actor_disallowed_dms: "لقد اخترت منع المستخدمين من إرسال رسائل شخصية ومباشرة إليك؛ لذا لا يمكنك إنشاء رسائل مباشرةً جديدة."
       actor_preventing_target_user_from_dm: "لقد اخترت منع %{username} من إرسال رسائل شخصية ومباشرة إليك؛ لذا لا يمكنك إنشاء رسائل مباشرةً جديدة إليه."
+      not_reachable: "عذرًا، %{username} لا يستخدم الدردشة."
       user_cannot_send_direct_messages: "عذرًا، لا يمكنك إرسال الرسائل المباشرة."
       over_chat_max_direct_message_users_allow_self: "يمكنك إرسال رسالة مباشرة إلى نفسك فقط."
       over_chat_max_direct_message_users:
@@ -178,6 +182,7 @@ ar:
     mention_warning:
       dismiss: "تجاهل"
       cannot_see: "لا يمكن للمستخدم %{first_identifier} الوصول إلى هذه القناة ولم يتلقَّ إشعارًا."
+      cannot_see_group: "بعض أعضاء مجموعة %{group_name} لا يمكنهم الوصول إلى هذه القناة ولم يتلقوا إشعارات."
       cannot_see_multiple:
         zero: "لا يمكن للمستخدم %{first_identifier} و%{count} مستخدم آخر الوصول إلى هذه القناة ولم يتلقوا إشعارات."
         one: "لا يمكن للمستخدم %{first_identifier} ومستخدم واحد (%{count}) آخر الوصول إلى هذه القناة ولم يتلقيا إشعارات."
@@ -294,6 +299,20 @@ ar:
           few: "‎ [%{site_name}] ‎رسائل جديدة"
           many: "‎ [%{site_name}] ‎رسائل جديدة"
           other: "‎[%{site_name}] ‎ رسائل جديدة"
+        watched_thread:
+          zero: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
+          one: "[%{site_name}] سلسلة رسائل جديدة في %{channel}"
+          two: "[%{site_name}] سلسلتا رسائل جديدتان في %{channel}"
+          few: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
+          many: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
+          other: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
+        watched_threads:
+          zero: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
+          one: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخر"
+          two: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
+          few: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
+          many: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
+          other: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} آخرين"
         chat_dm_1:
           zero: "‎[%{site_name}] ‎ رسالة جديدة من %{name}"
           one: "‎[%{site_name}] ‎ رسالة جديدة من %{name}"

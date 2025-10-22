@@ -16,6 +16,8 @@ module Chat
     #   @option params [Integer] :channel_id
     #   @return [Service::Base::Context]
 
+    options { attribute :max_page_size, :integer, default: Chat::MessagesQuery::MAX_PAGE_SIZE }
+
     params do
       attribute :channel_id, :integer
       attribute :page_size, :integer
@@ -30,7 +32,6 @@ module Chat
       validates :channel_id, presence: true
       validates :page_size,
                 numericality: {
-                  less_than_or_equal_to: Chat::MessagesQuery::MAX_PAGE_SIZE,
                   greater_than_or_equal_to: 1,
                   only_integer: true,
                   only_numeric: true,
@@ -42,7 +43,10 @@ module Chat
                 },
                 allow_nil: true
 
-      after_validation { self.page_size ||= Chat::MessagesQuery::MAX_PAGE_SIZE }
+      after_validation do
+        self.page_size ||= options.max_page_size
+        self.page_size = options.max_page_size if page_size > options.max_page_size
+      end
     end
 
     model :channel
@@ -65,12 +69,12 @@ module Chat
       ::Chat::Channel.includes(:chatable).find_by(id: params.channel_id)
     end
 
-    def fetch_membership(channel:, guardian:)
-      channel.membership_for(guardian.user)
-    end
-
     def can_view_channel(guardian:, channel:)
       guardian.can_preview_chat_channel?(channel)
+    end
+
+    def fetch_membership(channel:, guardian:)
+      channel.membership_for(guardian.user)
     end
 
     def fetch_target_message_id(params:, membership:)

@@ -1,0 +1,12 @@
+months:
+  10:
+  - name: Company Founding!
+    regions: [custom_multiple_files]
+    mday: 5
+
+tests:
+  - given:
+      date: "2013-10-5"
+      regions: ["custom_multiple_files"]
+    expect:
+      name: "Company Founding!"

@@ -16,6 +16,7 @@ class Category < ActiveRecord::Base
   include CategoryHashtag
   include AnonCacheInvalidator
   include HasDestroyedWebHook
+  include Localizable
 
   SLUG_REF_SEPARATOR = ":"
   DEFAULT_TEXT_COLORS = %w[FFFFFF 000000]
@@ -103,16 +104,25 @@ class Category < ActiveRecord::Base
             },
             allow_nil: true
   validates :slug, exclusion: { in: RESERVED_SLUGS }
-
-  after_create :create_category_definition
-  after_destroy :trash_category_definition
-  after_destroy :clear_related_site_settings
+  validates :color, format: { with: /\A(\h{6}|\h{3})\z/ }
+  validates :text_color, format: { with: /\A(\h{6}|\h{3})\z/ }
 
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
   before_save :ensure_category_setting
+  after_create :create_category_definition
+  after_create :delete_category_permalink
+  after_update :rename_category_definition, if: :saved_change_to_name?
+  after_update :create_category_permalink, if: :saved_change_to_slug?
+  after_update :run_plugin_category_update_param_callbacks
+  after_destroy :trash_category_definition
+  after_destroy :clear_related_site_settings
 
+  after_destroy :reset_topic_ids_cache
+  after_destroy :clear_subcategory_ids
+  after_destroy :publish_category_deletion
+  after_destroy :remove_site_settings
   after_save :reset_topic_ids_cache
   after_save :clear_subcategory_ids
   after_save :clear_url_cache
@@ -131,16 +141,6 @@ class Category < ActiveRecord::Base
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
-
-  after_destroy :reset_topic_ids_cache
-  after_destroy :clear_subcategory_ids
-  after_destroy :publish_category_deletion
-  after_destroy :remove_site_settings
-
-  after_create :delete_category_permalink
-
-  after_update :rename_category_definition, if: :saved_change_to_name?
-  after_update :create_category_permalink, if: :saved_change_to_slug?
 
   after_commit :trigger_category_created_event, on: :create
   after_commit :trigger_category_updated_event, on: :update
@@ -568,7 +568,7 @@ class Category < ActiveRecord::Base
 
     Category.all.each do |c|
       topics = c.topics.visible
-      topics = topics.where(["topics.id <> ?", c.topic_id]) if c.topic_id
+      topics = topics.where.not(id: c.topic_id) if c.topic_id
       c.topics_year = topics.created_since(1.year.ago).count
       c.topics_month = topics.created_since(1.month.ago).count
       c.topics_week = topics.created_since(1.week.ago).count
@@ -592,7 +592,7 @@ class Category < ActiveRecord::Base
         .where("topics.visible = true")
         .where("posts.deleted_at IS NULL")
         .where("posts.user_deleted = false")
-    self.topic_id ? query.where(["topics.id <> ?", self.topic_id]) : query
+    self.topic_id ? query.where.not(topics: { id: self.topic_id }) : query
   end
 
   # Internal: Generate the text of post prompting to enter category description.
@@ -634,7 +634,7 @@ class Category < ActiveRecord::Base
 
   def topic_url
     if has_attribute?("topic_slug")
-      Topic.relative_url(topic_id, read_attribute(:topic_slug))
+      Topic.relative_url(topic_id, self[:topic_slug])
     else
       topic_only_relative_url.try(:relative_url)
     end
@@ -912,7 +912,7 @@ class Category < ActiveRecord::Base
         .listable_topics
         .exclude_scheduled_bump_topics
         .where(category_id: self.id)
-        .where("id <> ?", self.topic_id)
+        .where.not(id: self.topic_id)
         .where("bumped_at < ?", (self.auto_bump_cooldown_days || 1).days.ago)
         .where("pinned_at IS NULL AND NOT closed AND NOT archived")
         .order("bumped_at ASC")
@@ -1221,7 +1221,7 @@ class Category < ActiveRecord::Base
 
     Category
       .joins("LEFT JOIN topics ON categories.topic_id = topics.id AND topics.deleted_at IS NULL")
-      .where("categories.id <> ?", SiteSetting.uncategorized_category_id)
+      .where.not(id: SiteSetting.uncategorized_category_id)
       .where(topics: { id: nil })
       .find_each { |category| category.create_category_definition }
   end
@@ -1275,7 +1275,35 @@ class Category < ActiveRecord::Base
     tags.count > 0 || tag_groups.count > 0
   end
 
+  def category_localizations=(localizations_params)
+    return self.category_localizations_attributes = localizations_params unless persisted?
+
+    incoming_ids = localizations_params.map { |loc| loc["id"] }
+    category_localizations
+      .where.not(id: incoming_ids)
+      .select(:id)
+      .each { |record| localizations_params << { "id" => record.id, "_destroy" => true } }
+
+    self.category_localizations_attributes = localizations_params
+  end
+
   private
+
+  def run_plugin_category_update_param_callbacks
+    DiscoursePluginRegistry.category_update_param_with_callback.each do |param_name, opts|
+      next if !opts[:plugin].enabled?
+      next if !instance_variable_defined?(:"@#{param_name}_callback_value")
+
+      value = instance_variable_get(:"@#{param_name}_callback_value")
+      begin
+        opts[:callback].call(self, value)
+      ensure
+        if instance_variable_defined?(:"@#{param_name}_callback_value")
+          remove_instance_variable(:"@#{param_name}_callback_value")
+        end
+      end
+    end
+  end
 
   def ensure_category_setting
     self.build_category_setting if self.category_setting.blank?

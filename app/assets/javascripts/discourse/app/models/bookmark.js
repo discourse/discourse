@@ -44,7 +44,7 @@ export default class Bookmark extends RestModel {
 
   static bulkOperation(bookmarks, operation) {
     const data = {
-      bookmark_ids: bookmarks.mapBy("id"),
+      bookmark_ids: bookmarks.map((item) => item.id),
       operation,
     };
 

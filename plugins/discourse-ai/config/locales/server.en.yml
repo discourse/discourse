@@ -1,0 +1,678 @@
+en:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Model ID"
+        max_prompt_tokens: "Context window"
+
+  discourse_automation:
+    ai:
+      flag_types:
+        review: "Add post to review queue"
+        review_hide: "Add post to review queue and hide post"
+        review_delete: "Add post to review queue and delete post"
+        review_delete_silence: "Add post to review queue, delete post and silence user"
+        spam: "Flag as spam and hide post"
+        spam_silence: "Flag as spam, hide post and silence user"
+    scriptables:
+      llm_tool_triage:
+        title: Triage posts using AI Tool
+        description: "Triage posts using custom logic in an AI tool"
+      llm_persona_triage:
+        title: Triage posts using AI Persona
+        description: "Respond to posts using a specific AI persona"
+      llm_triage:
+        title: Triage posts using AI
+        description: "Triage posts using a large language model"
+        flagged_post: |
+          <div>Response from the model:</div>
+          <p>%{llm_response}</p>
+          <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
+        notify_author_pm:
+          subject: "Your post was temporarily removed for review"
+          body: |
+            Hi @%{username},
+
+            Your post in “%{topic_title}” was temporarily removed and placed in our review queue for a moderator to look at. If approved, it will be restored automatically.
+
+            Reference: %{post_url}
+      llm_report:
+        title: Periodic report using AI
+        description: "Periodic report based on a large language model"
+      llm_tagger:
+        title: Tag topics using AI
+        description: "Automatically tag topics using AI"
+  site_settings:
+    discourse_ai_enabled: "Enable the discourse AI plugin."
+    ai_default_llm_model: "The default LLM model to use for all AI features"
+    ai_artifact_security: "The AI artifact system generates IFRAMEs with runnable code. Strict mode forces an extra click to run code. Lax mode runs code immediately. Hybrid mode allows user to supply data-ai-artifact-autorun to show right away. Disabled mode disables the artifact system."
+    ai_toxicity_enabled: "Enable the toxicity module."
+    ai_toxicity_inference_service_api_endpoint: "URL where the API is running for the toxicity module"
+    ai_toxicity_inference_service_api_key: "API key for the toxicity API"
+    ai_toxicity_inference_service_api_model: "Model to use for inference. Multilingual model works with Italian, French, Russian, Portuguese, Spanish and Turkish."
+    ai_toxicity_flag_automatically: "Automatically flag posts / chat messages that are above the configured thresholds."
+    ai_toxicity_flag_threshold_toxicity: "Toxicity: a rude, disrespectful, or unreasonable comment that is somewhat likely to make you leave a discussion or give up on sharing your perspective"
+    ai_toxicity_flag_threshold_severe_toxicity: "Severe Toxicity: a very hateful, aggressive, or disrespectful comment that is very likely to make you leave a discussion or give up on sharing your perspective"
+    ai_toxicity_flag_threshold_obscene: "Obscene"
+    ai_toxicity_flag_threshold_identity_attack: "Identity Attack"
+    ai_toxicity_flag_threshold_insult: "Insult"
+    ai_toxicity_flag_threshold_threat: "Threat"
+    ai_toxicity_flag_threshold_sexual_explicit: "Sexual Explicit"
+    ai_toxicity_groups_bypass: "Users on those groups will not have their posts classified by the toxicity module."
+
+    ai_sentiment_enabled: "Enable the sentiment module."
+    ai_sentiment_inference_service_api_endpoint: "URL where the API is running for the sentiment module"
+    ai_sentiment_inference_service_api_key: "API key for the sentiment API"
+    ai_sentiment_models: "Models to use for inference. Sentiment classifies post on the positive/neutral/negative space. Emotion classifies on the anger/disgust/fear/joy/neutral/sadness/surprise space."
+
+    ai_nsfw_detection_enabled: "Enable the NSFW module."
+    ai_nsfw_inference_service_api_endpoint: "URL where the API is running for the NSFW module"
+    ai_nsfw_inference_service_api_key: "API key for the NSFW API"
+    ai_nsfw_flag_automatically: "Automatically flag NSFW posts that are above the configured thresholds."
+    ai_nsfw_flag_threshold_general: "General Threshold for an image to be considered NSFW."
+    ai_nsfw_flag_threshold_drawings: "Threshold for a drawing to be considered NSFW."
+    ai_nsfw_flag_threshold_hentai: "Threshold for an image classified as hentai to be considered NSFW."
+    ai_nsfw_flag_threshold_porn: "Threshold for an image classified as porn to be considered NSFW."
+    ai_nsfw_flag_threshold_sexy: "Threshold for an image classified as sexy to be considered NSFW."
+    ai_nsfw_models: "Models to use for NSFW inference."
+
+    ai_spam_detection_enabled: "Enable the AI spam detection module"
+
+    ai_openai_api_key: "API key for OpenAI API. ONLY used for Image creation and edits. For GPT use the LLM config tab"
+    ai_openai_image_generation_url: "URL for OpenAI image generation API"
+    ai_openai_image_edit_url: "URL for OpenAI image edit API"
+
+    ai_helper_enabled: "Enable the AI helper."
+    composer_ai_helper_allowed_groups: "Users on these groups will see the AI helper button in the composer."
+    ai_helper_allowed_in_pm: "Enable the composer's AI helper in PMs."
+    ai_helper_model: "Model to use for the AI helper."
+    ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
+    ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
+    ai_helper_illustrate_post_model: "Model to use for the composer AI helper's illustrate post feature"
+    ai_helper_enabled_features: "Select the features to enable in the AI helper."
+    post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
+    ai_helper_image_caption_model: "Select the model to use for generating image captions"
+
+    ai_embeddings_selected_model: "Use the selected model for generating embeddings."
+    ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."
+    ai_embeddings_semantic_related_topics_enabled: "Use Semantic Search for related topics."
+    ai_embeddings_semantic_related_topics: "Maximum number of topics to show in related topic section."
+    ai_embeddings_backfill_batch_size: "Number of embeddings to backfill every 15 minutes."
+    ai_embeddings_semantic_search_enabled: "Enable full-page semantic search."
+    ai_embeddings_semantic_search_use_hyde: "Use HyDE for semantic full page search. Uses an LLM to create an hypothetical post from the user search term to help with matches."
+    ai_embeddings_semantic_quick_search_enabled: "Enable semantic search option in search menu popup."
+    ai_embeddings_semantic_related_include_closed_topics: "Include closed topics in semantic search results"
+    ai_embeddings_semantic_related_age_penalty: "Apply exponential age penalty to topics in semantic search results. 0.0 = no penalty, 0.3 = gentle bias toward recently active content, 1.0+ = strong recency bias."
+    ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
+    ai_embeddings_semantic_search_hyde_model: "Model used to expand keywords to get better results during a semantic search"
+    ai_embeddings_per_post_enabled: Generate embeddings for each post
+
+    ai_summarization_enabled: "Enable the summarize feature"
+    ai_summarization_model: "Model to use for summarization"
+    ai_summarization_persona: "Persona to use for summarize feature"
+    ai_custom_summarization_allowed_groups: "Groups allowed to use create new summaries."
+    ai_pm_summarization_allowed_groups: "Groups allowed to create and view summaries in PMs."
+    ai_summary_gists_enabled: "Generate brief summaries of latest replies in topics automatically"
+    ai_summary_gists_allowed_groups: "Groups allowed to see gists in the hot topics list."
+    ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour."
+
+    ai_bot_enabled: "Enable the AI Bot module."
+    ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overriden by editing the translation string: discourse_ai.ai_bot.pm_warning"
+    ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
+    ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
+    ai_bot_public_sharing_allowed_groups: "Allow these groups to share AI personal messages with the public via a unique publicly available link. Note: if your site requires login, shares will also require login."
+    ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"
+    ai_bot_add_to_community_section: "Display a link in the sidebar community section to start a PM with an AI Bot"
+    ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
+
+    ai_discover_enabled: "Enable the discovery search feature"
+    ai_discover_persona: "Persona to use for discovery search feature"
+
+    ai_stability_api_key: "API key for the stability.ai API"
+    ai_stability_engine: "Image generation engine to use for the stability.ai API"
+    ai_stability_api_url: "URL for the stability.ai API"
+
+    ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
+    ai_google_custom_search_cx: "CX for Google Custom Search API"
+
+    ai_discord_search_enabled: "Enables the Discord search feature"
+    ai_discord_app_id: "The ID of the Discord application you would like to connect Discord search to"
+    ai_discord_app_public_key: "The public key of the Discord application you would like to connect Discord search to"
+    ai_discord_search_mode: "Select the search mode to use for Discord search"
+    ai_discord_search_persona: "The persona to use for Discord search."
+    ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
+
+    ai_translation_enabled: "Enable the AI translation feature"
+    ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
+    ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
+    ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
+    ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
+
+  reviewables:
+    reasons:
+      flagged_by_toxicity: The AI plugin flagged this after classifying it as toxic.
+      flagged_by_nsfw: The AI plugin flagged this after classifying at least one of the attached images as NSFW.
+
+  reports:
+    sentiment_analysis:
+      title: "Sentiment analysis"
+      description: "This report provides sentiment analysis for posts, grouped by category, with positive, negative, and neutral scores for each post and category."
+    overall_sentiment:
+      title: "Overall sentiment"
+      description: 'The chart compares the number of posts classified as either positive or negative. These are calculated when positive or negative scores > the set threshold score. This means neutral posts are not shown. Personal messages (PMs) are also excluded. Classified with "cardiffnlp/twitter-roberta-base-sentiment-latest"'
+      xaxis: "Positive(%)"
+      yaxis: "Date"
+    emotion_admiration:
+      title: 🤩 Admiration
+      description: "Posts classified with the emotion admiration via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_amusement:
+      title: 😄 Amusement
+      description: "Posts classified with the emotion amusement via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_anger:
+      title: 😠 Anger
+      description: "Posts classified with the emotion anger via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_annoyance:
+      title: 😒 Annoyance
+      description: "Posts classified with the emotion annoyance via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_approval:
+      title: 👍 Approval
+      description: "Posts classified with the emotion approval via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_caring:
+      title: 🤗 Caring
+      description: "Posts classified with the emotion caring via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_confusion:
+      title: 😕 Confusion
+      description: "Posts classified with the emotion confusion via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_curiosity:
+      title: 🤔 Curiosity
+      description: "Posts classified with the emotion curiosity via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_desire:
+      title: 😍 Desire
+      description: "Posts classified with the emotion desire via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_disappointment:
+      title: 😞 Disappointment
+      description: "Posts classified with the emotion disappointment via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_disapproval:
+      title: 👎 Disapproval
+      description: "Posts classified with the emotion disapproval via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_disgust:
+      title: 🤢 Disgust
+      description: "Posts classified with the emotion disgust via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_embarrassment:
+      title: 😳 Embarrassment
+      description: "Posts classified with the emotion embarrassment via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_excitement:
+      title: 🤪 Excitement
+      description: "Posts classified with the emotion excitement via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_fear:
+      title: 😨 Fear
+      description: "Posts classified with the emotion fear via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_gratitude:
+      title: 🙏 Gratitude
+      description: "Posts classified with the emotion gratitude via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_grief:
+      title: 😢 Grief
+      description: "Posts classified with the emotion grief via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_joy:
+      title: 😊 Joy
+      description: "Posts classified with the emotion joy via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_love:
+      title: ❤️ Love
+      description: "Posts classified with the emotion love via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_nervousness:
+      title: 😰 Nervousness
+      description: "Posts classified with the emotion nervousness via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_neutral:
+      title: 😐 Neutral
+      description: "Posts classified with the emotion neutral via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_optimism:
+      title: 🌟 Optimism
+      description: "Posts classified with the emotion optimism via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_pride:
+      title: 🦁 Pride
+      description: "Posts classified with the emotion pride via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_realization:
+      title: 💡 Realization
+      description: "Posts classified with the emotion realization via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_relief:
+      title: 😌 Relief
+      description: "Posts classified with the emotion relief via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_remorse:
+      title: 😔 Remorse
+      description: "Posts classified with the emotion remorse via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_sadness:
+      title: 😭 Sadness
+      description: "Posts classified with the emotion sadness via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+    emotion_surprise:
+      title: 😲 Surprise
+      description: "Posts classified with the emotion surprise via AI, using the model 'SamLowe/roberta-base-go_emotions'."
+
+  discourse_ai:
+    ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "You can only have %{count} key in the artifact."
+          other: "You can only have %{count} keys in the artifact."
+      link: "Show in new tab"
+      copy_embed: "Copy embed"
+      view_source: "View Source"
+      view_changes: "View Changes"
+      change_description: "Change Description"
+      copied: "Copied to clipboard"
+    unknown_model: "Unknown AI model"
+
+    tools:
+      custom_name: "%{name} (custom)"
+      presets:
+        browse_web_jina:
+          name: "Browse web (jina.ai)"
+        exchange_rate:
+          name: "Exchange rate"
+        stock_quote:
+          name: "Stock quote (AlphaVantage)"
+        image_generation:
+          name: "Flux image generator (Together.ai)"
+        empty_tool:
+          name: "Start from blank..."
+      name:
+        characters: "must only include numbers, letters, and underscores"
+
+    ai_helper:
+      errors:
+        completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
+        credit_limit_exceeded_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets %{reset_time}."
+        credit_limit_exceeded_bot: "AI responses are currently unavailable due to credit limits. Please try again %{reset_time}."
+      prompts:
+        translate: Translate to %{language}
+        generate_titles: Suggest topic titles
+        proofread: Proofread text
+        markdown_table: Generate Markdown table
+        custom_prompt: "Custom Prompt"
+        explain: "Explain"
+        illustrate_post: "Illustrate Post"
+        replace_dates: "Smart dates"
+      painter:
+        attribution:
+          stable_diffusion_xl: "Image by Stable Diffusion XL"
+          dall_e_3: "Image by DALL-E 3"
+      image_caption:
+        attribution: "Captioned by AI"
+
+    share_ai:
+      read_more: "Read full transcript"
+      onebox_title: "AI Conversation with %{llm_name}"
+      formatted_excerpt: "AI Conversation with %{llm_name}:\n %{excerpt}"
+      title: "%{title} - AI Conversation - %{site_name}"
+      errors:
+        not_allowed: "You are not allowed to share this topic"
+        other_people_in_pm: "Personal messages with other humans cannot be shared publicly"
+        other_content_in_pm: "Personal messages containing posts from other people cannot be shared publicly"
+        failed_to_share: "Failed to share the conversation"
+        conversation_deleted: "Conversation share deleted successfully"
+    spam_detection:
+      flag_reason: "Flagged as spam by <a href='%{url}'>Discourse AI</a>"
+      silence_reason: "User silenced automatically by <a href='%{url}'>Discourse AI</a>"
+      invalid_error_type: "Invalid error type provided"
+      unexpected: "An unexpected error occured"
+      bot_user_update_failed: "Failed to update the spam scanning bot user"
+      configuration_missing: "The AI spam detection configuration is missing. Add configuration in the 'Admin > Plugins > Discourse AI > Spam' before enabling."
+      logging_subject: "Spam detection"
+
+    ai_bot:
+      reply_error: "Sorry, it looks like our system encountered an unexpected issue while trying to reply.\n\n[details='Error details']\n%{details}\n[/details]"
+      default_pm_prefix: "[Untitled AI bot PM]"
+      thinking: "Thinking..."
+      personas:
+        default_llm_required: "Default LLM model is required prior to enabling Chat"
+        cannot_delete_system_persona: "System personas cannot be deleted, please disable it instead"
+        cannot_edit_system_persona: "System personas can only be renamed, you may not edit tools or system prompt, instead disable and make a copy"
+        cannot_have_duplicate_tools: "Can not have duplicate tools"
+        github_helper:
+          name: "GitHub Helper"
+          description: "AI Bot specialized in assisting with GitHub-related tasks and questions"
+        general:
+          name: Forum Helper
+          description: "General purpose AI Bot capable of performing various tasks"
+        artist:
+          name: Artist
+          description: "AI Bot specialized in generating images"
+        designer:
+          name: Designer
+          description: "AI Bot specialized in generating and editing images"
+        forum_researcher:
+          name: Forum Researcher
+          description: "AI Bot specialized in deep research for the forum"
+        sql_helper:
+          name: SQL Helper
+          description: "AI Bot specialized in helping craft SQL queries on this Discourse instance"
+        settings_explorer:
+          name: Settings Explorer
+          description: "AI Bot specialized in helping explore Discourse site settings"
+        researcher:
+          name: Web Researcher
+          description: "AI Bot with Google access that can both search and read web pages"
+        creative:
+          name: Creative
+          description: "AI Bot with no external integrations specialized in creative tasks"
+        dall_e3:
+          name: "DALL-E 3"
+          description: "AI Bot specialized in generating images using DALL-E 3"
+        discourse_helper:
+          name: "Discourse Helper"
+          description: "AI Bot specialized in helping with Discourse related tasks"
+        web_artifact_creator:
+          name: "Web Artifact Creator"
+          description: "AI Bot specialized in creating interactive web artifacts"
+        summarizer:
+          name: "Summarizer"
+          description: "Default persona used to power AI summaries"
+        short_summarizer:
+          name: "Summarizer (short form)"
+          description: "Default persona used to power AI short summaries for topic lists' items"
+        concept_finder:
+          name: "Concept Finder"
+          description: "AI Bot specialized in identifying concepts and themes in content"
+        concept_matcher:
+          name: "Concept Matcher"
+          description: "AI Bot specialized in matching content against existing concepts"
+        concept_deduplicator:
+          name: "Concept Deduplicator"
+          description: "AI Bot specialized in deduplicating concepts"
+        custom_prompt:
+          name: "Custom prompt"
+          description: "Default persona powering the Helper's custom prompt feature"
+        smart_dates:
+          name: "Smart dates"
+          description: "Default persona powering the Helper's smart dates feature"
+        markdown_table_generator:
+          name: "Markdown table generator"
+          description: "Default persona powering the Helper's generate Markdown table feature"
+        post_illustrator:
+          name: "Post illustrator"
+          description: "Generates StableDiffusion prompts to power the Helper's illustrate post feature"
+        proofreader:
+          name: "Proofreader"
+          description: "Default persona powering the Helper's proofread text feature"
+        titles_generator:
+          name: "Titles generator"
+          description: "Default persona powering the Helper's suggest topic titles feature"
+        tutor:
+          name: "Tutor"
+          description: "Default persona powering the Helper's explain feature"
+        translator:
+          name: "Translator"
+          description: "Default persona powering the Helper's translator feature"
+        image_captioner:
+          name: "Image captions"
+          description: "Default persona powering the Helper's image caption feature"
+        locale_detector:
+          name: "Locale detector"
+          description: "Powers the translation feature by detecting the locale of a given text (posts, titles, etc.)"
+        post_raw_translator:
+          name: "Post translator"
+          description: "Powers the translation feature by translating posts containing Discourse Markdown"
+        topic_title_translator:
+          name: "Topic title translator"
+          description: "Powers the translation feature by translating topic titles"
+        short_text_translator:
+          name: "Short text translator"
+          description: "Powers the translation feature by as a generic text translator, used for short texts like category names or tags"
+        spam_detector:
+          name: "Spam detector"
+          description: "Default persona powering our Spam detection feature"
+        content_creator:
+          name: "Content creator"
+          description: "Default persona powering HyDE search"
+        report_runner:
+          name: "Report runner"
+          description: "Default persona used in the report automation script"
+        discover:
+          name: "Discover"
+          description: "Default persona used in the discoveries feature (complimentary search)"
+
+      topic_not_found: "Summary unavailable, topic not found!"
+      summarizing: "Summarizing topic"
+      searching: "Searching for: '%{query}'"
+      tool_options:
+        researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "Language model to use for research (default to current persona's LLM)"
+          max_tokens_per_batch:
+            name: "Maximum tokens per batch"
+            description: "Maximum number of tokens to use for each batch in the research"
+          max_tokens_per_post:
+            name: "Maximum tokens per post"
+            description: "Maximum number of tokens to use for each post in the research"
+          max_results:
+            name: "Maximum number of results"
+            description: "Maximum number of results to include in a filter"
+          include_private:
+            name: "Include private"
+            description: "Include private topics in the filters"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Language model to use for artifact creation"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Language model to use for artifact edits"
+          update_algorithm:
+            name: "Update Algorithm"
+            description: "Ask LLM to fully replace, or use diff to update"
+          do_not_echo_artifact:
+            name: "Do Not Echo Artifact"
+            description: "Will limit costs however effectiveness of Artifact updates will be reduced"
+        google:
+          base_query:
+            name: "Base Search Query"
+            description: "Base query to use when searching. Examples: 'site:example.com' will only include results from example.com, before:2022-01-01 will only includes results from 2021 and earlier. This text is prepended to the search query."
+        read:
+          read_private:
+            name: "Read Private"
+            description: "Allow access to all topics user has access to (by default only public topics are included)"
+        search:
+          search_private:
+            name: "Search Private"
+            description: "Include all topics user has access to in search results (by default only public topics are included)"
+          max_results:
+            name: "Maximum number of results"
+            description: "Maximum number of results to include in the search - if empty default rules will be used and count will be scaled depending on model used. Highest value is 100."
+          base_query:
+            name: "Base Search Query"
+            description: "Base query to use when searching. Example: '#urgent' will prepend '#urgent' to the search query and only include topics with the urgent category or tag."
+      tool_summary:
+        read_artifact: "Read a web artifact"
+        update_artifact: "Update a web artifact"
+        create_artifact: "Create web artifact"
+        web_browser: "Browse Web"
+        github_search_files: "GitHub search files"
+        github_search_code: "GitHub code search"
+        github_file_content: "GitHub file content"
+        github_pull_request_diff: "GitHub pull request diff"
+        random_picker: "Random Picker"
+        categories: "List categories"
+        search: "Search"
+        tags: "List tags"
+        time: "Time"
+        summarize: "Summarize"
+        image: "Generate image"
+        google: "Search Google"
+        read: "Read topic"
+        setting_context: "Look up site setting context"
+        schema: "Look up database schema"
+        search_settings: "Searching site settings"
+        dall_e: "Generate image"
+        search_meta_discourse: "Search Meta Discourse"
+        javascript_evaluator: "Evaluate JavaScript"
+        create_image: "Creating image"
+        edit_image: "Editing image"
+        researcher: "Researching"
+        researcher_dry_run: "Preparing research"
+      tool_help:
+        read_artifact: "Read a web artifact using the AI Bot"
+        update_artifact: "Update a web artifact using the AI Bot"
+        create_artifact: "Create a web artifact using the AI Bot"
+        web_browser: "Browse web page using the AI Bot"
+        github_search_code: "Search for code in a GitHub repository"
+        github_search_files: "Search for files in a GitHub repository"
+        github_file_content: "Retrieve content of files from a GitHub repository"
+        github_pull_request_diff: "Retrieve a GitHub pull request diff"
+        random_picker: "Pick a random number or a random element of a list"
+        categories: "List all publicly visible categories on the forum"
+        search: "Search all public topics on the forum"
+        tags: "List all tags on the forum"
+        time: "Find time in various time zones"
+        summary: "Summarize a topic"
+        image: "Generate image using Stable Diffusion"
+        create_image: "Generate image using Open AI GPT image model"
+        edit_image: "Edit image using Open AI GPT image model"
+        google: "Search Google for a query"
+        read: "Read public topic on the forum"
+        setting_context: "Look up site setting context"
+        schema: "Look up database schema"
+        search_settings: "Search site settings"
+        dall_e: "Generate image using DALL-E 3"
+        search_meta_discourse: "Search Meta Discourse"
+        javascript_evaluator: "Evaluate JavaScript"
+        researcher: "Research forum information using the AI Bot"
+      tool_description:
+        read_artifact: "Read a web artifact using the AI Bot"
+        update_artifact: "Updated a web artifact using the AI Bot"
+        create_artifact: "Created a web artifact: %{name} - %{specification}"
+        web_browser: "Reading <a href='%{url}'>%{url}</a>"
+        github_search_files: "Searched for '%{keywords}' in %{repo}/%{branch}"
+        github_search_code: "Searched for '%{query}' in %{repo}"
+        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_file_content: "Retrieved content of %{file_paths} from %{repo_name}@%{branch}"
+        random_picker: "Picking from %{options}, picked: %{result}"
+        read: "Reading: <a href='%{url}'>%{title}</a>"
+        time: "Time in %{timezone} is %{time}"
+        summarize: "Summarized <a href='%{url}'>%{title}</a>"
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          one: "Found %{count} category"
+          other: "Found %{count} categories"
+        tags:
+          one: "Found %{count} tag"
+          other: "Found %{count} tags"
+        search:
+          one: "Found %{count} <a href='%{url}'>result</a> for '%{query}'"
+          other: "Found %{count} <a href='%{url}'>results</a> for '%{query}'"
+        search_meta_discourse:
+          one: "Found %{count} <a href='%{url}'>result</a> for '%{query}'"
+          other: "Found %{count} <a href='%{url}'>results</a> for '%{query}'"
+        google:
+          one: "Found %{count} <a href='%{url}'>result</a> for '%{query}'"
+          other: "Found %{count} <a href='%{url}'>results</a> for '%{query}'"
+        setting_context: "Reading context for: %{setting_name}"
+        schema: "%{tables}"
+        researcher_dry_run:
+          one: "Proposed goals: %{goals}\n\nFound %{count} post matching '%{filter}'"
+          other: "Proposed goals: %{goals}\n\nFound %{count} posts matching '%{filter}'"
+        researcher:
+          one: "Researching: %{goals}\n\nFound %{count} post matching '%{filter}'"
+          other: "Researching: %{goals}\n\nFound %{count} posts matching '%{filter}'"
+        search_settings:
+          one: "Found %{count} result for '%{query}'"
+          other: "Found %{count} results for '%{query}'"
+      discoveries:
+        continue_conversation:
+          title: "Discovery conversation: Search for %{query}"
+          raw: "In my search for %{query}, you showed me the following information:\n\n%{context}\n\nLet's continue the conversation."
+
+    summarization:
+      configuration_hint:
+        one: "Configure the `%{setting}` setting first."
+        other: "Configure these settings first: %{settings}"
+      chat:
+        no_targets: "There were no messages during the selected period."
+
+    sentiment:
+      reports:
+        overall_sentiment: "Overall sentiment (Positive - Negative)"
+        post_emotion:
+          sadness: "Sadness 😢"
+          surprise: "Surprise 😱"
+          neutral: "Neutral 😐"
+          fear: "Fear 😨"
+          anger: "Anger 😡"
+          joy: "Joy 😀"
+          disgust: "Disgust 🤢"
+        sentiment_analysis:
+          positive: "Positive"
+          negative: "Negative"
+          neutral: "Neutral"
+
+    llm:
+      configuration:
+        create_llm: "You need to setup an LLM before enabling this feature"
+        disable_modules_first: "You must disable these modules first: %{settings}"
+        set_llm_first: "Set %{setting} first"
+        model_unreachable: "We couldn't get a response from this model. Check your settings first."
+        invalid_seeded_model: "You can't use this model with this feature"
+        invalid_persona_response_format: "The selected persona must have a response format with a boolean field names \"spam\""
+        must_select_model: "You must select a LLM first"
+      endpoints:
+        not_configured: "%{display_name} (not configured)"
+        configuration_hint:
+          one: "Make sure the `%{settings}` setting was configured."
+          other: "Make sure these settings were configured: %{settings}"
+
+      delete_failed:
+        one: "We couldn't delete this model because %{settings} is using it. Update the setting and try again."
+        other: "We couldn't delete this model because %{settings} are using it. Update the settings and try again."
+      cannot_edit_builtin: "You can't edit a built-in model."
+
+    personas:
+      malformed_examples: "The given examples have the wrong format."
+
+    embeddings:
+      delete_failed: "This model is currently in use. Update the `ai embeddings selected model` first."
+      cannot_edit_builtin: "You can't edit a built-in model."
+      configuration:
+        disable_embeddings: "You have to disable 'ai embeddings enabled' first."
+        choose_model: "Set 'ai embeddings selected model' first."
+        model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
+
+    llm_models:
+      missing_provider_param: "%{param} can't be blank"
+      bedrock_invalid_url: "Please complete all the fields to use this model."
+
+    ai_staff_action_logger:
+      updated: "updated"
+      set: "set"
+      removed: "removed"
+
+    translation:
+      errors:
+        disabled: "The AI translation feature is not fully configured."
+
+    llm_credit_allocation:
+      limit_exceeded: "You have reached your AI credit limit. Please try again in %{reset_time}."
+
+    errors:
+      quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
+      quota_required: "You must specify maximum tokens or usages for this model"
+      no_query_specified: The query parameter is required, please specify it.
+      no_user_for_persona: The persona specified does not have a user associated with it.
+      persona_not_found: The persona specified does not exist. Check the persona_name or persona_id params.
+      no_user_specified: The username or the user_unique_id parameter is required, please specify it.
+      user_not_found: The user specified does not exist. Check the username param.
+      persona_disabled: The persona specified is disabled. Check the persona_name or persona_id params.
+      no_default_llm: The persona must have a default_llm defined.
+      user_not_allowed: The user is not allowed to participate in the topic.
+      prompt_message_length: The message %{idx} is over the 1000 character limit.
+      persona_already_exists: Persona with the name %{name} already exists.
+      custom_tool_exists:
+        one: "Custom tool with the name %{names} already exists."
+        other: "Custom tools with the names %{names} already exist."
+  dashboard:
+    problem:
+      ai_llm_status: "The LLM model: %{model_name} is encountering issues. Please check the <a href='%{url}'>model's configuration page</a>."
+      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"

@@ -13,6 +13,7 @@ acceptance(
     needs.settings({
       chat_enabled: true,
       navigation_menu: "legacy",
+      enable_emoji: true,
     });
 
     needs.pretender((server, helper) => {

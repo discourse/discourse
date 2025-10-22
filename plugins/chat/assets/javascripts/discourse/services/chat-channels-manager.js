@@ -5,6 +5,7 @@ import Promise from "rsvp";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { debounce } from "discourse/lib/decorators";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
+import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const DIRECT_MESSAGE_CHANNELS_LIMIT = 50;
 
@@ -19,8 +20,7 @@ export default class ChatChannelsManager extends Service {
   @service chatSubscriptionsManager;
   @service chatStateManager;
   @service currentUser;
-  @service router;
-  @service site;
+  @service chatDraftsManager;
   @service siteSettings;
 
   @tracked _cached = new TrackedObject();
@@ -30,7 +30,7 @@ export default class ChatChannelsManager extends Service {
     if (existingChannel) {
       return Promise.resolve(existingChannel);
     } else if (options.fetchIfNotFound) {
-      return this.#find(id);
+      return await this.#find(id);
     } else {
       return Promise.resolve();
     }
@@ -65,7 +65,45 @@ export default class ChatChannelsManager extends Service {
         channelObject.meta.message_bus_last_ids.channel_message_bus_last_id;
     }
 
+    this.#storeDraftsForChannel(model);
+
     return model;
+  }
+
+  #storeDraftsForChannel(channel) {
+    const userChatDrafts = this.currentUser?.chat_drafts;
+
+    if (!userChatDrafts) {
+      return;
+    }
+
+    const storedDrafts = userChatDrafts.filter(
+      (draft) => draft.channel_id === channel.id
+    );
+
+    storedDrafts.forEach((storedDraft) => {
+      if (
+        this.chatDraftsManager.get(
+          storedDraft.channel_id,
+          storedDraft.thread_id
+        )
+      ) {
+        return;
+      }
+
+      this.chatDraftsManager.add(
+        ChatMessage.createDraftMessage(
+          channel,
+          Object.assign(
+            { user: this.currentUser },
+            JSON.parse(storedDraft.data)
+          )
+        ),
+        storedDraft.channel_id,
+        storedDraft.thread_id,
+        false
+      );
+    });
   }
 
   async follow(model) {

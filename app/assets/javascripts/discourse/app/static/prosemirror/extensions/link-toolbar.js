@@ -1,7 +1,7 @@
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { TextSelection } from "prosemirror-state";
+import { NodeSelection, TextSelection } from "prosemirror-state";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
-import InsertHyperlink from "discourse/components/modal/insert-hyperlink";
+import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { clipboardCopy } from "discourse/lib/utilities";
@@ -21,7 +21,6 @@ class LinkToolbar extends ToolbarBase {
       icon: "pen",
       title: "composer.link_toolbar.edit",
       className: "composer-link-toolbar__edit",
-      preventFocus: true,
       action: opts.editLink,
     });
 
@@ -30,7 +29,6 @@ class LinkToolbar extends ToolbarBase {
       icon: "copy",
       title: "composer.link_toolbar.copy",
       className: "composer-link-toolbar__copy",
-      preventFocus: true,
       action: opts.copyLink,
     });
 
@@ -39,7 +37,6 @@ class LinkToolbar extends ToolbarBase {
       icon: "link-slash",
       title: "composer.link_toolbar.remove",
       className: "composer-link-toolbar__unlink",
-      preventFocus: true,
       condition: opts.canUnlink,
       action: opts.unlinkText,
     });
@@ -55,7 +52,6 @@ class LinkToolbar extends ToolbarBase {
       },
       title: "composer.link_toolbar.visit",
       className: "composer-link-toolbar__visit",
-      preventFocus: true,
       condition: () => opts.canVisit() || opts.canUnlink(),
       get href() {
         return opts.canVisit() ? opts.getHref() : null;
@@ -86,6 +82,7 @@ class LinkToolbarPluginView {
   #toolbarReplaced = false;
   #linkToolbar;
   #linkState;
+  #calculatingCoords = false;
 
   #view;
 
@@ -104,6 +101,11 @@ class LinkToolbarPluginView {
    */
   update(view) {
     this.#view = view;
+
+    if (view.state.selection instanceof NodeSelection) {
+      this.#resetToolbar();
+      return;
+    }
 
     const markRange = this.#utils.getMarkRange(
       view.state.selection.$head,
@@ -190,7 +192,7 @@ class LinkToolbarPluginView {
       )
     );
 
-    this.#getContext().modal.show(InsertHyperlink, {
+    this.#getContext().modal.show(UpsertHyperlink, {
       model: {
         editing: true,
         linkText: currentLinkText,
@@ -306,12 +308,17 @@ class LinkToolbarPluginView {
     const { head } = this.#linkState;
     const { doc } = this.#view.state;
 
-    if (!docView || head > doc.content.size) {
+    if (this.#calculatingCoords || !docView || head > doc.content.size) {
       return { left: 0, top: 0, width: 0, height: 0 };
     }
 
-    const { left, top } = this.#view.coordsAtPos(head);
-    return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
+    this.#calculatingCoords = true;
+    try {
+      const { left, top } = this.#view.coordsAtPos(head);
+      return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
+    } finally {
+      this.#calculatingCoords = false;
+    }
   }
 
   /**

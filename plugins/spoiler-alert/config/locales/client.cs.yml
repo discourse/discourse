@@ -12,7 +12,7 @@ cs:
           spoiler_alert: "Discourse Spoiler Alert"
   js:
     spoiler:
-      title: Rozostření spoileru
+      title: Rozmazaný spoiler
       label:
         show: "Zobrazit skrytý obsah"
     composer:

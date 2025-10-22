@@ -10,7 +10,7 @@ acceptance("composer-service-cannot-submit-post transformer", function (needs) {
   });
 
   test("applying a value transformation - disable submit", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "composer-service-cannot-submit-post",
         () => {
@@ -28,7 +28,7 @@ acceptance("composer-service-cannot-submit-post transformer", function (needs) {
   });
 
   test("applying a value transformation - allow submission", async function (assert) {
-    withPluginApi("1.34.0", (api) => {
+    withPluginApi((api) => {
       api.registerValueTransformer(
         "composer-service-cannot-submit-post",
         ({ value }) => {

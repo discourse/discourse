@@ -1,16 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
-import { cancel, scheduleOnce } from "@ember/runloop";
+import { getOwner } from "@ember/owner";
+import { cancel, next, scheduleOnce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import DiscardDraftModal from "discourse/components/modal/discard-draft";
 import PostEnqueuedModal from "discourse/components/modal/post-enqueued";
 import SpreadsheetEditor from "discourse/components/modal/spreadsheet-editor";
-import TopicLabelContent from "discourse/components/topic-label-content";
+import TopicReplyChoiceDialog from "discourse/components/topic-reply-choice-dialog";
 import {
   cannotPostAgain,
   durationTextFromSeconds,
@@ -20,11 +20,11 @@ import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import { isRailsTesting } from "discourse/lib/environment";
 import prepareFormTemplateData, {
   getFormTemplateObject,
 } from "discourse/lib/form-template-validation";
 import { shortDate } from "discourse/lib/formatter";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
@@ -105,11 +105,6 @@ export default class ComposerService extends Service {
   @service store;
   @service toasts;
 
-  @tracked
-  showPreview = this.site.mobileView
-    ? false
-    : (this.keyValueStore.get("composer.showPreview") || "true") === "true";
-
   @tracked allowPreview = false;
   @tracked selectedTranslationLocale = null;
   checkedMessages = false;
@@ -118,6 +113,7 @@ export default class ComposerService extends Service {
   editReason = null;
   scopedCategoryId = null;
   prioritizedCategoryId = null;
+  readOnlyCategoryId = null;
   lastValidatedAt = null;
   isUploading = false;
   isProcessingUpload = false;
@@ -136,8 +132,23 @@ export default class ComposerService extends Service {
   @and("model.creatingTopic", "isStaffUser") canUnlistTopic;
   @or("replyingToWhisper", "model.whisper") isWhispering;
 
+  @tracked _showPreview;
+
+  get showPreview() {
+    return (
+      this._showPreview ??
+      (this.site.mobileView
+        ? false
+        : (this.keyValueStore.get("composer.showPreview") || "true") === "true")
+    );
+  }
+
+  set showPreview(value) {
+    this._showPreview = value;
+  }
+
   get topicController() {
-    return getOwnerWithFallback(this).lookup("controller:topic");
+    return getOwner(this).lookup("controller:topic");
   }
 
   get isPreviewVisible() {
@@ -275,10 +286,7 @@ export default class ComposerService extends Service {
 
   @computed
   get showToolbar() {
-    const keyValueStore = getOwnerWithFallback(this).lookup(
-      "service:key-value-store"
-    );
-    const storedVal = keyValueStore.get("toolbar-enabled");
+    const storedVal = this.keyValueStore.get("toolbar-enabled");
     if (this._toolbarEnabled === undefined && storedVal === undefined) {
       // iPhone 6 is 375, anything narrower and toolbar should
       // be default disabled.
@@ -290,11 +298,8 @@ export default class ComposerService extends Service {
   }
 
   set showToolbar(val) {
-    const keyValueStore = getOwnerWithFallback(this).lookup(
-      "service:key-value-store"
-    );
     this._toolbarEnabled = val;
-    keyValueStore.set({
+    this.keyValueStore.set({
       key: "toolbar-enabled",
       value: val ? "true" : "false",
     });
@@ -422,16 +427,6 @@ export default class ComposerService extends Service {
         })
       );
 
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-invisible",
-          action: "toggleInvisible",
-          icon: "far-eye-slash",
-          label: "composer.toggle_unlisted",
-          condition: "canUnlistTopic",
-        })
-      );
-
       if (this.capabilities.touch) {
         options.push(
           this._setupPopupMenuOption({
@@ -460,16 +455,6 @@ export default class ComposerService extends Service {
           })
         );
       }
-
-      options.push(
-        this._setupPopupMenuOption({
-          name: "toggle-whisper",
-          action: "toggleWhisper",
-          icon: "far-eye-slash",
-          label: "composer.toggle_whisper",
-          condition: "showWhisperToggle",
-        })
-      );
 
       options.push(
         this._setupPopupMenuOption({
@@ -625,7 +610,9 @@ export default class ComposerService extends Service {
   }
 
   _focusAndInsertText(insertText) {
-    document.querySelector("textarea.d-editor-input")?.focus();
+    next(() =>
+      document.querySelector(".d-editor-container .d-editor-input")?.focus()
+    );
 
     if (insertText) {
       this.model.appendText(insertText, null, { new_line: true });
@@ -663,6 +650,12 @@ export default class ComposerService extends Service {
   @action
   removeFullScreenExitPrompt() {
     this.set("model.showFullScreenExitPrompt", false);
+  }
+
+  @action
+  async saveAndClose(event) {
+    event?.preventDefault();
+    await this.saveAndCloseComposer();
   }
 
   @action
@@ -708,8 +701,8 @@ export default class ComposerService extends Service {
       menuItem
     );
     if (typeof menuItem.action === "function") {
-      // note due to the way args are passed to actions we need
-      // to treate the explicity toolbarEvent as a fallback for no
+      // note: due to the way args are passed to actions we need
+      // to create the explicity toolbarEvent as a fallback for no
       // event
       // Long term we want to avoid needing this awkwardness and pass
       // the event explicitly
@@ -837,11 +830,6 @@ export default class ComposerService extends Service {
   }
 
   @action
-  toggleInvisible() {
-    this.toggleProperty("model.unlistTopic");
-  }
-
-  @action
   toggleToolbar() {
     this.toggleProperty("showToolbar");
   }
@@ -849,8 +837,6 @@ export default class ComposerService extends Service {
   // Toggle the reply view
   @action
   async toggle() {
-    this.closeAutocomplete();
-
     const composer = this.model;
 
     if (composer?.viewOpenOrFullscreen) {
@@ -874,16 +860,15 @@ export default class ComposerService extends Service {
 
     // If there is no current post, use the first post id from the stream
     if (!postId && postStream) {
-      postId = postStream.get("stream.firstObject");
+      postId = postStream.firstPostId;
     }
 
     // If we're editing a post, fetch the reply when importing a quote
     if (this.get("model.editingPost")) {
       const replyToPostNumber = this.get("model.post.reply_to_post_number");
       if (replyToPostNumber) {
-        const replyPost = postStream.posts.findBy(
-          "post_number",
-          replyToPostNumber
+        const replyPost = postStream.posts.find(
+          (item) => item.post_number === replyToPostNumber
         );
 
         if (replyPost) {
@@ -1141,7 +1126,7 @@ export default class ComposerService extends Service {
       ) {
         this.dialog.alert({
           title: i18n("composer.posting_not_on_topic"),
-          bodyComponent: TopicLabelContent,
+          bodyComponent: TopicReplyChoiceDialog,
           bodyComponentModel: {
             originalTopic,
             replyOnOriginal: () => {
@@ -1162,6 +1147,12 @@ export default class ComposerService extends Service {
             },
           ],
           class: "reply-where-modal",
+          didCancel: () => {
+            composer.set("disableDrafts", false);
+            this.skipAutoSave = true;
+            this._saveDraft(true);
+            this.skipAutoSave = false;
+          },
         });
         return;
       }
@@ -1358,11 +1349,12 @@ export default class ComposerService extends Service {
    @param {Boolean} [opts.disableScopedCategory]
    @param {Number} [opts.categoryId] Sets `scopedCategoryId` and `categoryId` on the Composer model
    @param {Number} [opts.prioritizedCategoryId]
+   @param {Number} [opts.readOnlyCategoryId] Shows category as read-only in category chooser, with a read-only badge
    @param {Number} [opts.formTemplateId]
    @param {String} [opts.draftSequence]
    @param {Boolean} [opts.skipJumpOnSave] Option to skip navigating to the post when saved in this composer session
    @param {Boolean} [opts.skipFormTemplate] Option to skip the form template even if configured for the category
-   @param {String} [opts.hijackPreview] Option to hijack the preview with custom content
+   @param {String} [opts.hijackPreview] Option to hijack the preview with a custom component, you must pass { component: CustomPreviewComponent, model: { ... } }
    @param {String} [opts.selectedTranslationLocale] The locale to use for the translation
    **/
   async open(opts = {}) {
@@ -1385,6 +1377,7 @@ export default class ComposerService extends Service {
       editReason: null,
       scopedCategoryId: null,
       prioritizedCategoryId: null,
+      readOnlyCategoryId: null,
       skipAutoSave: true,
     });
 
@@ -1414,6 +1407,10 @@ export default class ComposerService extends Service {
       if (category) {
         this.set("prioritizedCategoryId", opts.prioritizedCategoryId);
       }
+    }
+
+    if (opts.readOnlyCategoryId) {
+      this.set("readOnlyCategoryId", opts.readOnlyCategoryId);
     }
 
     // If we want a different draft than the current composer, close it and clear our model.
@@ -1475,6 +1472,9 @@ export default class ComposerService extends Service {
 
   @action
   async openNewTopic({ title, body, category, tags, formTemplate } = {}) {
+    const readOnlyCategoryId = !category?.canCreateTopic ? category?.id : null;
+    tags = await this.filterTags(tags);
+
     return this.open({
       prioritizedCategoryId: category?.id,
       topicCategoryId: category?.id,
@@ -1485,8 +1485,8 @@ export default class ComposerService extends Service {
       action: CREATE_TOPIC,
       draftKey: this.topicDraftKey,
       draftSequence: 0,
-      locale:
-        this.currentUser.effective_locale || this.siteSettings.default_locale,
+      locale: null,
+      readOnlyCategoryId,
     });
   }
 
@@ -1501,6 +1501,23 @@ export default class ComposerService extends Service {
       draftKey: this.privateMessageDraftKey,
       hasGroups,
     });
+  }
+
+  async filterTags(tags) {
+    if (!tags || this.currentUser?.staff) {
+      return tags;
+    }
+
+    if (typeof tags === "string") {
+      tags = await this.store.findAll("listTag", {
+        only_tags: tags.split(","),
+      });
+    }
+
+    return tags
+      .filter((t) => !t.staff)
+      .map((t) => t.name)
+      .join(",");
   }
 
   // Given a potential instance and options, set the model for this composer.
@@ -1620,23 +1637,15 @@ export default class ComposerService extends Service {
     this.appEvents.trigger("draft:destroyed", key);
   }
 
-  cancelComposer(opts = {}) {
+  cancelComposer() {
     this.skipAutoSave = true;
 
-    if (this._saveDraftDebounce) {
-      cancel(this._saveDraftDebounce);
-    }
+    cancel(this._saveDraftDebounce);
 
     return new Promise((resolve) => {
-      if (this.get("model.hasMetaData") || this.get("model.replyDirty")) {
-        const overridesDraft =
-          this.model.composeState === Composer.OPEN &&
-          this.model.draftKey === opts.draftKey &&
-          [Composer.EDIT_SHARED_DRAFT, Composer.EDIT].includes(opts.action);
-        const showSaveDraftButton = this.model.canSaveDraft && !overridesDraft;
+      if (this.get("model.anyDirty")) {
         this.modal.show(DiscardDraftModal, {
           model: {
-            showSaveDraftButton,
             onDestroyDraft: () => {
               return this.destroyDraft()
                 .then(() => {
@@ -1648,14 +1657,7 @@ export default class ComposerService extends Service {
                   resolve(true);
                 });
             },
-            onSaveDraft: () => {
-              this._saveDraft();
-              this.model.clearState();
-              this.close();
-              this.appEvents.trigger("composer:cancelled");
-              return resolve(true);
-            },
-            onKeepEditing: () => resolve(false),
+            onCancelDiscard: () => resolve(false),
           },
         });
       } else {
@@ -1675,6 +1677,23 @@ export default class ComposerService extends Service {
     });
   }
 
+  saveAndCloseComposer() {
+    // Always save the draft if the user had typed something
+    // or had started setting up a title/tags/category
+    if (this.model.anyDirty) {
+      this.skipAutoSave = true;
+      this._saveDraft(true);
+      this.model.clearState();
+      this.close();
+      this.appEvents.trigger("composer:cancelled");
+      this.skipAutoSave = false;
+      return true;
+    } else {
+      // Otherwise just close the composer and discard any empty draft
+      return this.cancelComposer();
+    }
+  }
+
   unshrink() {
     this.model.set("composeState", Composer.OPEN);
     document.documentElement.style.setProperty(
@@ -1687,7 +1706,9 @@ export default class ComposerService extends Service {
     this.collapse();
   }
 
-  _saveDraft() {
+  _saveDraft(showToast = false) {
+    cancel(this._saveDraftDebounce);
+
     if (!this.model) {
       return;
     }
@@ -1704,10 +1725,22 @@ export default class ComposerService extends Service {
         }
       }
 
-      this._saveDraftPromise = this.model.saveDraft().finally(() => {
-        this._lastDraftSaved = Date.now();
-        this._saveDraftPromise = null;
-      });
+      this._saveDraftPromise = this.model
+        .saveDraft()
+        .then(() => {
+          if (showToast) {
+            this.toasts.success({
+              duration: "short",
+              data: {
+                message: i18n("composer.draft_saved"),
+              },
+            });
+          }
+        })
+        .finally(() => {
+          this._lastDraftSaved = Date.now();
+          this._saveDraftPromise = null;
+        });
     }
   }
 
@@ -1723,7 +1756,12 @@ export default class ComposerService extends Service {
         // pretend so we get a save unconditionally in 15 secs
         this._lastDraftSaved = Date.now();
       }
-      if (Date.now() - this._lastDraftSaved > 15000) {
+
+      // Speed this up a bit in system specs so we don't have to wait as long
+      if (
+        Date.now() - this._lastDraftSaved >
+        (isRailsTesting() ? 3000 : 15000)
+      ) {
         this._saveDraft();
       } else {
         this._saveDraftDebounce = discourseDebounce(
@@ -1802,10 +1840,6 @@ export default class ComposerService extends Service {
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);
-  }
-
-  closeAutocomplete() {
-    $(".d-editor-input").autocomplete({ cancel: true });
   }
 
   @discourseComputed("model.action")

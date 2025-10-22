@@ -7,7 +7,7 @@
 html:not(:has(.has-full-page-chat)) {
   background-color: var(--background-color);
 
-  @include viewport.until(sm) {
+  @include viewport.until(lg) {
     background-color: var(--d-content-background);
   }
 }
@@ -64,7 +64,7 @@ body:not(.has-full-page-chat, .wizard) {
 
   #main-outlet-wrapper {
     @include viewport.until(lg) {
-      --main-grid-gap: 0;
+      --main-grid-gap: 0em;
     }
 
     @media screen and (width >= 768px) {
@@ -74,7 +74,7 @@ body:not(.has-full-page-chat, .wizard) {
     #main-outlet {
       width: 100%;
       max-width: unset;
-      padding-bottom: var(--spacing-block-l);
+      padding-bottom: var(--space-6);
       border-radius: var(--d-border-radius-large);
       background-color: var(--d-content-background);
 
@@ -86,12 +86,12 @@ body:not(.has-full-page-chat, .wizard) {
         padding-bottom: var(--composer-height);
       }
 
-      > *:not(.experimental-screen, .activate-account) {
-        @include viewport.from(lg) {
+      @include viewport.from(sm) {
+        > *:not(.experimental-screen, .activate-account) {
           box-sizing: border-box;
           max-width: 1000px;
           margin-inline: auto;
-          padding-inline: var(--spacing-inline-l);
+          padding-inline: var(--space-6);
         }
       }
     }
@@ -112,7 +112,7 @@ body:not(.has-full-page-chat, .wizard) {
       transform: translateX(50%);
 
       .alert {
-        padding: var(--spacing-block-sm) var(--spacing-inline-m);
+        padding: var(--space-2) var(--space-4);
         border-radius: var(--d-border-radius-large);
         font-size: var(--font-down-1-rem);
       }
@@ -120,7 +120,7 @@ body:not(.has-full-page-chat, .wizard) {
   }
 
   .topic-list-body {
-    padding-top: var(--spacing-block-m);
+    padding-top: var(--space-4);
   }
 }
 
@@ -137,8 +137,6 @@ aside.onebox {
 .no-ember {
   #main-outlet {
     border-radius: var(--d-border-radius-large);
-    margin: 0 var(--main-grid-gap) var(--main-grid-gap) var(--main-grid-gap);
-    padding: 2em;
     max-height: calc(100vh - 50px - 1em - var(--main-grid-gap));
   }
 }

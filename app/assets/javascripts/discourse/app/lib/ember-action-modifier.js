@@ -1,4 +1,5 @@
 import { modifier } from "ember-modifier";
+import deprecated from "./deprecated";
 
 /**
  * Creates a replacement for Ember's built-in `action` modifier that uses
@@ -15,6 +16,14 @@ export const actionModifier = modifier(
     [context, callback, ...args],
     { on, bubbles, preventDefault, allowedKeys }
   ) => {
+    deprecated(
+      `Usage of the \`{{action}}\` modifier is deprecated. Migrate to native functions and function invocation.`,
+      {
+        id: "discourse.template-action",
+        url: "https://deprecations.emberjs.com/id/template-action",
+      }
+    );
+
     const handler = (event) => {
       let fn;
       if (typeof callback === "string") {

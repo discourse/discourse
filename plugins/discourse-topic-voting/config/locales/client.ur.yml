@@ -1,0 +1,57 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  js:
+    category:
+      sort_options:
+        votes: "ووٹ"
+    topic_voting:
+      title: "موضوع ووٹنگ"
+      reached_limit: "آپ کے ووٹ ختم ہو چکے ہیں، کسی موجودہ ووٹ کو ہٹا ئیں!"
+      list_votes: "اپنے ووٹوں کی فہرست"
+      votes_nav_help: "سب سے زیادہ ووٹوں والے ٹاپک"
+      voted: "آپ نے اِس ٹاپک پر ووٹ کیا"
+      allow_topic_voting: "صارفین کو اس زمرہ کے ٹاپکس پر ووٹ کرنے کی اجازت دیں"
+      vote_title: "ووٹ"
+      vote_title_plural: "ووٹ"
+      voted_title: "ووٹ کیا"
+      voting_closed_title: "بند"
+      voting_limit: "حد"
+      votes_left:
+        one: "آپ کے پاس %{count} ووٹ باقی ہے، دیکھیں <a href='%{path}'>اپنے ووٹ</a>۔"
+        other: "آپ کے پاس %{count} ووٹ باقی ہیں، دیکھیں <a href='%{path}'>آپ کے ووٹ</a>۔"
+      votes_left_button_title:
+        one: "آپ کے پاس %{count} ووٹ باقی ہے۔"
+        other: "آپ کے پاس %{count} ووٹ باقی ہیں۔"
+      votes:
+        one: "%{count} ووٹ"
+        other: "%{count} ووٹ"
+      anonymous_button:
+        one: "ووٹ"
+        other: "ووٹ"
+      remove_vote: "ووٹ ہٹا دیں"
+      no_votes_title_self: "آپ نے ابھی تک کسی موضوع کو ووٹ نہیں دیا"
+      no_votes_title_others: "%{username} نے ابھی تک کسی موضوع کو ووٹ نہیں دیا"
+    filters:
+      votes:
+        title: "ووٹ"
+        help: "سب سے زیادہ ووٹوں والے ٹاپک"
+      my_votes:
+        title: "میرے ووٹ"
+        help: "جن موضوعات پر آپ نے ووٹ دیا"
+    search:
+      most_votes: "سب سے زیادہ ووٹ"
+      advanced:
+        vote:
+          count:
+            label: "کم از کم ووٹوں کی گنتی"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "موضوع ووٹنگ ایونٹ"
+          topic_upvote: "جب رکن کسی موضوع پر ووٹ دیتا ہے"
+          topic_unvote: "جب رکن کسی موضوع پر ووٹ نہیں ڈالتا ہے"

@@ -10,11 +10,11 @@ class Users::DiscourseIdController < ApplicationController
       on_success { render json: { success: true } }
       on_failed_contract do |contract|
         logger.warn(result.inspect_steps) if SiteSetting.discourse_id_verbose_logging
-        render json: { error: contract.errors.full_messages.join(", ") }, status: 400
+        render json: { error: contract.errors.full_messages.join(", ") }, status: :bad_request
       end
       on_failure do
         logger.warn(result.inspect_steps) if SiteSetting.discourse_id_verbose_logging
-        render json: { error: "Invalid request" }, status: 400
+        render json: { error: "Invalid request" }, status: :bad_request
       end
     end
   end

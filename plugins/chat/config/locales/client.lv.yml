@@ -43,7 +43,6 @@ lv:
       save: "Saglabāt"
       sounds:
         none: "Nav"
-      exit: "atpakaļ"
       channel_status:
         closed: "Slēgts"
         open: "Atvērt"

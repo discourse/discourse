@@ -23,8 +23,9 @@ export default class Flag extends Component {
   @service adminTools;
   @service currentUser;
   @service siteSettings;
-  @service site;
   @service appEvents;
+  // eslint-disable-next-line discourse/no-unused-services
+  @service site; // FIXME: used by flag-target objects
 
   @tracked userDetails;
   @tracked selected;
@@ -99,7 +100,9 @@ export default class Flag extends Component {
   }
 
   get flagsAvailable() {
-    return this.args.model.flagTarget.flagsAvailable(this).filterBy("enabled");
+    return this.args.model.flagTarget
+      .flagsAvailable(this)
+      .filter((flag) => flag.enabled);
   }
 
   get staffFlagsAvailable() {

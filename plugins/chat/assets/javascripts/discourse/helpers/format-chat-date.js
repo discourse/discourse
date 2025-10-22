@@ -9,10 +9,16 @@ export default function formatChatDate(message, options = {}) {
   const date = moment(new Date(message.createdAt), tz);
 
   const title = date.format(i18n("dates.long_with_year"));
-  const display =
-    options.mode === "tiny"
-      ? date.format(i18n("dates.time_short"))
-      : date.format(i18n("dates.time"));
+  let display;
+  if (options.mode === "tiny") {
+    display = date.format(i18n("dates.time_short"));
+  } else if (options.mode === "short") {
+    display = date.format(i18n("dates.time_short_day"));
+  } else if (options.mode === "long") {
+    display = date.format(i18n("dates.long_no_year"));
+  } else {
+    display = date.format(i18n("dates.time"));
+  }
 
   if (message.staged) {
     return htmlSafe(

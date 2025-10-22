@@ -322,7 +322,7 @@ cs:
         many: "%{count} souborů"
         other: "%{count} souborů"
       you_flagged: "Nahlásili jste tuto zprávu"
-      exit: "zpět"
+      exit: "ukončit chat"
       channel_status:
         read_only_header: "Kanál je určen pouze pro čtení"
         read_only: "Pouze pro čtení"
@@ -585,6 +585,7 @@ cs:
         select_emoji: "Vybrat Emoji"
         system: "systémové soukromé zprávy"
         title: "Příchozí webhooky"
+        header_description: "Příchozí webhooky mohou být použity externími systémy k odesílání zpráv do určeného chatovacího kanálu pod uživatelem bota"
         url: "URL"
         url_instructions: "Tato adresa URL obsahuje secret – uchovejte ji v bezpečí."
         username: "Uživatelské jméno"
@@ -777,7 +778,7 @@ cs:
           switch_channel_arrows: "%{shortcut} Přepnout kanál"
           switch__unread_channel_arrows: "%{shortcut} Přepnout nepřečtený kanál"
           open_quick_channel_selector: "%{shortcut} Otevřít rychlý výběr kanálů"
-          open_insert_link_modal: "%{shortcut} Vložit hypertextový odkaz (pouze editor)"
+          open_insert_link_modal: "%{shortcut} Vložit odkaz (pouze editor)"
           composer_bold: "%{shortcut} Tučné (pouze editor)"
           composer_italic: "%{shortcut} Kurzíva (pouze editor)"
           composer_code: "%{shortcut} Kód (pouze editor)"
@@ -809,6 +810,9 @@ cs:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        text: Začít novou SZ
+        title: Vytvořit osobní chat
       panels:
         chat:
           label: "Chat"

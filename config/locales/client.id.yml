@@ -165,12 +165,9 @@ id:
       search: "Cari"
     themes:
       default_description: "Asal"
-      broken_theme_alert: "Situs Anda mungkin tidak akan bekerja karena suatu tema/komponen memiliki masalah."
       error_caused_by: "Disebabkan oleh '%{name}'. <a target='blank' href='%{path}'>Klik di sini</a> untuk memperbarui, mengkonfigurasi ulang, atau menonaktifkan."
       only_admins: "(pesan ini hanya ditampilkan kepada administrator situs)"
     broken_decorator_alert: "Kiriman mungkin tidak ditampilkan dengan benar karena salah satu dekorator konten kiriman pada situs Anda menimbulkan kesalahan."
-    critical_deprecation:
-      plugin_source: "Plugin yang teridentifikasi: '%{name}'"
     s3:
       regions:
         ap_northeast_1: "Asia Pacific (Tokyo)"
@@ -582,6 +579,13 @@ id:
         reviewable_post:
           title: "Postingan"
           noun: "postingan"
+      notes:
+        delete: "Hapus"
+      review_user: "Pengguna"
+      insights:
+        activities:
+          posts:
+            other: "%{count} post"
       approval:
         title: "Pesan Membutuhkan Persetujuan"
         description: "Kami telah menerima posting baru Anda, tetapi diperlukan persetujuan dari moderator sebelum posting tersebut tampil. Mohon kesabarannya. Terima kasih!"
@@ -1042,11 +1046,10 @@ id:
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
       color_schemes:
         default_description: "Default tema"
-        disable_dark_scheme: "Sama seperti reguler"
         undo: "Reset"
-        regular: "Umum"
         dark: "Mode gelap"
-        default_dark_scheme: "(bawaan situs)"
+        picker:
+          active: "Aktif"
       dark_mode: "Mode Gelap"
       text_size_default_on_all_devices: "Jadikan ini ukuran teks default di semua perangkat saya"
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
@@ -1070,6 +1073,8 @@ id:
       suspended_notice: "Pengguna ini ditangguhkan sampai %{date}"
       suspended_permanently: "Pengguna ini dicekal"
       suspended_reason: "Alasan:"
+      silenced_permanently: "Pengguna ini dibungkam."
+      silenced_reason: "Alasan:"
       github_profile: "GitHub"
       email_activity_summary: "Jumlah aktifitas"
       mailing_list_mode:
@@ -1206,7 +1211,7 @@ id:
         taken: "Maaf, username tersebut sudah ada yang menggunakan"
         invalid: "Username tersebut tidak valid. Username harus berupa angka dan huruf"
       add_email:
-        add: "menambahkan"
+        add: "Menambahkan"
       change_email:
         title: "Ganti Alamat Surel"
         taken: "Maaf, alamat surel tersebut tidak tersedia."
@@ -1352,7 +1357,8 @@ id:
         remove: "Hapus"
         reinvited: "Undangan sudah dikirim ulang"
         user: "Pengguna yang telah diundang"
-        none: "Tidak ada undangan"
+        none:
+          title: "Tidak ada undangan"
         pending: "Undangan yang tertunda"
         topics_entered: "Topik Dilihat"
         posts_read_count: "Tulisan dilihat"
@@ -1635,6 +1641,7 @@ id:
       create_topic: "Buat Topik"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
+      discard: "Batalkan"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
       edit_reason_placeholder: "mengapa Anda menyunting?"
@@ -1962,6 +1969,8 @@ id:
       name: "Nama Kategori"
       description: "Deskripsi"
       background_image_dark: "Gambar Latar Belakang Kategori Gelap"
+      color_validations:
+        cant_be_empty: "tidak boleh kosong"
       permissions:
         reply: "Balas"
         create: "Buat"
@@ -2224,6 +2233,8 @@ id:
               content: "Tentang"
             admin:
               content: "Admin"
+            filter:
+              content: "Filter"
             topics:
               content: "Topik"
               title: "Semua topik"
@@ -2299,7 +2310,7 @@ id:
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
-      filter_reports: Filter laporan
+      filter_reports: "Filter laporan..."
       tags:
         remove_muted_tags_from_latest:
           always: "selalu"
@@ -2310,6 +2321,10 @@ id:
         email:
           title: "Surel"
       config:
+        login:
+          sub_pages:
+            common_settings:
+              title: "Pengaturan"
         logo:
           form:
             email: "Surel"
@@ -2342,6 +2357,8 @@ id:
               title: "Menerima"
             rejected:
               title: "Ditolak"
+      theme_site_settings:
+        default_value: "Asal"
       search:
         title: "Cari"
         result_types:
@@ -2508,6 +2525,8 @@ id:
           delete: "Hapus"
         color_palettes:
           palette_name: "Nama"
+          copy_to_clipboard: "Menyalin ke Clipboard"
+          copy_to_clipboard_error: "Terjadi kesalahan saat menyalin data ke Clipboard"
           delete: "Hapus"
           colors:
             title: "Warna"
@@ -2516,6 +2535,11 @@ id:
         enabled: "Diaktifkan?"
         change_settings_short: "Pengaturan"
         settings_disabled: "Plugin ini hanya dapat diaktifkan atau dinonaktifkan, tidak memiliki pengaturan tambahan."
+        filters:
+          all: "Semua"
+          enabled: "Diaktifkan"
+          disabled: "Dinonaktifkan"
+          reset: "Reset"
       backups:
         menu:
           logs: "Log"
@@ -2548,19 +2572,20 @@ id:
           title: "Email"
           subject: "Judul"
           body: "Konten"
+          edit: "Ubah"
         component:
           all_filter: "Semua"
           enabled_filter: "Diaktifkan"
           disabled_filter: "Dinonaktifkan"
         theme:
           theme: "Tema"
+          filter_all: "Semua"
           customize_desc: "Sesuaikan:"
           create: "Buat"
           create_type: "Tipe"
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
-          default: "Aktif"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"
@@ -2573,10 +2598,6 @@ id:
           disable: "Nonaktifkan"
           add: "Menambahkan"
           empty: "Tidak ada item"
-          settings: "Pengaturan"
-          colors: "Warna"
-          discard_colors: "Batalkan"
-          colors_title: "Warna"
           all_filter: "Semua"
           active_filter: "Aktif"
         schema:
@@ -2586,6 +2607,9 @@ id:
               too_large: "harus sama dengan atau kurang dari %{count}"
         colors:
           title: "Warna"
+          edit: "Ubah"
+          filters:
+            all: "Semua"
           undo: "Batalkan perintah"
           revert: "Dibalik"
           primary:

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "sidekiq/api"
+
 module BackupRestore
   class RunningSidekiqJobsError < RuntimeError
     def initialize

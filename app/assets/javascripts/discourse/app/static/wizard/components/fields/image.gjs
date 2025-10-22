@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { warn } from "@ember/debug";
 import { service } from "@ember/service";

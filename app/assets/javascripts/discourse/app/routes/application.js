@@ -1,29 +1,22 @@
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import KeyboardShortcutsHelp from "discourse/components/modal/keyboard-shortcuts-help";
 import NotActivatedModal from "discourse/components/modal/not-activated";
 import { RouteException } from "discourse/controllers/exception";
 import { setting } from "discourse/lib/computed";
-import cookie from "discourse/lib/cookie";
 import deprecated from "discourse/lib/deprecated";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
 import mobile from "discourse/lib/mobile";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
 import DiscourseURL from "discourse/lib/url";
-import { postRNWebviewMessage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
-function isStrictlyReadonly(site) {
-  return site.isReadOnly && !site.isStaffWritesOnly;
-}
-
 export default class ApplicationRoute extends DiscourseRoute {
-  @service capabilities;
   @service clientErrorHandler;
   @service composer;
   @service currentUser;
@@ -31,11 +24,9 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service documentTitle;
   @service historyStore;
   @service loadingSlider;
-  @service login;
   @service modal;
   @service router;
   @service site;
-  @service siteSettings;
   @service restrictedRouting;
 
   @setting("title") siteTitle;
@@ -86,11 +77,15 @@ export default class ApplicationRoute extends DiscourseRoute {
 
   @action
   logout() {
-    if (isStrictlyReadonly(this.site)) {
+    const { isReadOnly, isStaffWritesOnly } = this.site;
+
+    if (isReadOnly && !isStaffWritesOnly) {
       this.dialog.alert(i18n("read_only_mode.logout_disabled"));
-      return;
+    } else if (this.currentUser) {
+      this.currentUser
+        .destroySession()
+        .then((response) => logout({ redirect: response["redirect_url"] }));
     }
-    this._handleLogout();
   }
 
   @action
@@ -175,21 +170,25 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  showLogin() {
-    if (isStrictlyReadonly(this.site)) {
-      this.dialog.alert(i18n("read_only_mode.login_disabled"));
-      return;
-    }
-    this.handleShowLogin();
+  showLogin(props = {}) {
+    const t = this.router.transitionTo("login");
+    t.wantsTo = true;
+    return t.then(() =>
+      getOwner(this)
+        .lookup("controller:login")
+        .setProperties({ ...props })
+    );
   }
 
   @action
-  showCreateAccount(createAccountProps = {}) {
-    if (this.site.isReadOnly) {
-      this.dialog.alert(i18n("read_only_mode.login_disabled"));
-    } else {
-      this.handleShowCreateAccount(createAccountProps);
-    }
+  showCreateAccount(props = {}) {
+    const t = this.router.transitionTo("signup");
+    t.wantsTo = true;
+    return t.then(() =>
+      getOwner(this)
+        .lookup("controller:signup")
+        .setProperties({ ...props })
+    );
   }
 
   @action
@@ -229,7 +228,7 @@ export default class ApplicationRoute extends DiscourseRoute {
       "createNewTopicViaParam on the application route is deprecated. Use the composer service instead",
       { id: "discourse.createNewTopicViaParams" }
     );
-    getOwnerWithFallback(this).lookup("service:composer").openNewTopic({
+    this.composer.openNewTopic({
       title,
       body,
       categoryId,
@@ -248,57 +247,11 @@ export default class ApplicationRoute extends DiscourseRoute {
       "createNewMessageViaParams on the application route is deprecated. Use the composer service instead",
       { id: "discourse.createNewMessageViaParams" }
     );
-    getOwnerWithFallback(this).lookup("service:composer").openNewMessage({
+    this.composer.openNewMessage({
       recipients,
       title: topicTitle,
       body: topicBody,
       hasGroups,
     });
-  }
-
-  handleShowLogin() {
-    if (this.capabilities.isAppWebview) {
-      postRNWebviewMessage("showLogin", true);
-    }
-    if (this.siteSettings.enable_discourse_connect) {
-      const returnPath = cookie("destination_url")
-        ? getURL("/")
-        : encodeURIComponent(window.location.pathname);
-      window.location = getURL("/session/sso?return_path=" + returnPath);
-    } else {
-      if (this.login.isOnlyOneExternalLoginMethod) {
-        this.login.singleExternalLogin();
-      } else {
-        this.router.transitionTo("login").then((login) => {
-          login.controller.set("canSignUp", this.controller.canSignUp);
-        });
-      }
-    }
-  }
-
-  handleShowCreateAccount(createAccountProps) {
-    if (this.siteSettings.enable_discourse_connect) {
-      const returnPath = encodeURIComponent(window.location.pathname);
-      window.location = getURL("/session/sso?return_path=" + returnPath);
-    } else {
-      if (this.login.isOnlyOneExternalLoginMethod) {
-        // we will automatically redirect to the external auth service
-        this.login.singleExternalLogin({ signup: true });
-      } else {
-        this.router.transitionTo("signup").then((signup) => {
-          Object.keys(createAccountProps || {}).forEach((key) => {
-            signup.controller.set(key, createAccountProps[key]);
-          });
-        });
-      }
-    }
-  }
-
-  _handleLogout() {
-    if (this.currentUser) {
-      this.currentUser
-        .destroySession()
-        .then((response) => logout({ redirect: response["redirect_url"] }));
-    }
   }
 }

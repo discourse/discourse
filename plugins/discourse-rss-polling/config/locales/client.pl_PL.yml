@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "Pobieranie RSS w Discourse"
+  js:
+    rss_polling:
+      title: Pobieranie RSS
+    admin:
+      rss_polling:
+        feed: Ustawienia kanału
+        discourse: Ustawienia Discourse
+        author: Autor
+        feed_url: URL
+        discourse_category: Kategoria
+        discourse_tags: Tagi
+        feed_category_filter: Filtr kategorii
+        documentation: Dokumentacja konfiguracji pobierania RSS
+        destroy_feed:
+          confirm: "Czy na pewno chcesz usunąć ten kanał?"

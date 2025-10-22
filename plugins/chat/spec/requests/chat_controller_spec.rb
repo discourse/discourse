@@ -2,7 +2,7 @@
 
 RSpec.describe Chat::ChatController do
   fab!(:user)
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
   fab!(:admin)
   fab!(:category)
   fab!(:chat_channel) { Fabricate(:category_channel, chatable: category) }
@@ -165,7 +165,7 @@ RSpec.describe Chat::ChatController do
   end
 
   describe "react" do
-    fab!(:chat_channel) { Fabricate(:category_channel) }
+    fab!(:chat_channel, :category_channel)
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
     fab!(:user_membership) do
       Fabricate(:user_chat_channel_membership, chat_channel: chat_channel, user: user)
@@ -181,7 +181,7 @@ RSpec.describe Chat::ChatController do
       Fabricate(:user_chat_channel_membership, chat_channel: private_chat_channel, user: user)
     end
 
-    fab!(:chat_channel_no_memberships) { Fabricate(:category_channel) }
+    fab!(:chat_channel_no_memberships, :category_channel)
     fab!(:chat_message_no_memberships) do
       Fabricate(:chat_message, chat_channel: chat_channel_no_memberships, user: user)
     end

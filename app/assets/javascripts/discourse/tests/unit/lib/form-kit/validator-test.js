@@ -309,6 +309,26 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       "it returns an error when the value is empty spaces with trim"
     );
 
+    errors = await new Validator(undefined, {
+      required: {},
+    }).validate("input-text");
+
+    assert.deepEqual(
+      errors,
+      [i18n("form_kit.errors.required")],
+      "it returns an error when the value is undefined"
+    );
+
+    errors = await new Validator(null, {
+      required: {},
+    }).validate("input-text");
+
+    assert.deepEqual(
+      errors,
+      [i18n("form_kit.errors.required")],
+      "it returns an error when the value is null"
+    );
+
     errors = await new Validator(" ", {
       required: { trim: false },
     }).validate("input-text");

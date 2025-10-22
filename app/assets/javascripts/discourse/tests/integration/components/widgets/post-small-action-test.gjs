@@ -4,6 +4,7 @@ import MountWidget from "discourse/components/mount-widget";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
 
 // TODO (glimmer-post-stream) remove this test when removing the widget post stream code
@@ -14,6 +15,7 @@ module(
 
     hooks.beforeEach(function () {
       this.siteSettings.glimmer_post_stream_mode = "disabled";
+      this.siteSettings.deactivate_widgets_rendering = false;
     });
 
     test("does not have delete/edit/recover buttons by default", async function (assert) {
@@ -118,7 +120,7 @@ module(
     test("`addGroupPostSmallActionCode` plugin api", async function (assert) {
       const self = this;
 
-      withPluginApi("1.6.0", (api) => {
+      withPluginApi((api) => {
         api.addGroupPostSmallActionCode("some_code");
       });
 
@@ -154,8 +156,8 @@ module(
     test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {
       const self = this;
 
-      withSilencedDeprecations("discourse.post-stream-widget-overrides", () => {
-        withPluginApi("1.6.0", (api) => {
+      withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
+        withPluginApi((api) => {
           api.addPostSmallActionClassesCallback((postAttrs) => {
             if (postAttrs.canRecover) {
               return ["abcde"];

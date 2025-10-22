@@ -13,12 +13,16 @@ es:
             delete_automation: eliminar automatización
     discourse_automation:
       title: Automatización
+      table_title: Automatizaciones
+      create: Añadir automatización
+      update: Actualizar automatización
       back: Atrás
       edit: Editar
       select_script: Selecciona un script
       select_trigger: Selecciona un activador
       confirm_automation_reset: Esta acción restablecerá las opciones del script y del activador, y se guardará el nuevo estado. ¿Quieres continuar?
       confirm_automation_trigger: Esta acción activará la automatización. ¿Quieres continuar?
+      no_automation_yet: Actualmente no hay automatizaciones configuradas.
       filter_placeholder: Filtrar por nombre o descripción...
       edit_automation:
         trigger_section:
@@ -163,8 +167,22 @@ es:
               description: Opcional, solo se activará si la publicación tiene alguna de estas etiquetas
             restricted_categories:
               label: Categorías
+              description: Opcional, solo se activará si el tema de la publicación está en estas categorías
+            exclude_subcategories:
+              label: Excluir subcategorías
+              description: Opcional, solo se activará si el tema de la publicación está exactamente en las categorías especificadas anteriormente
+            restricted_archetype:
+              label: Tipo de tema
+              description: Opcional, permite la activación solo en temas o mensajes personales
+            restricted_groups:
+              label: Grupos restringidos
+              description: Opcional, solo se activará si el usuario de la publicación está en alguno de estos grupos
             restricted_inbox_groups:
+              label: Grupos de bandejas de entrada restringidas
               description: Opcional, se activará solo si el tema de la publicación es un mensaje personal en una de las bandejas de entrada del grupo.
+            excluded_groups:
+              label: Grupos excluidos
+              description: Opcional, omite la activación si el usuario de la publicación pertenece a alguno de estos grupos
             ignore_automated:
               label: Ignorar la automatización
               description: Omite el activador si el remitente tiene un correo electrónico de no respuesta o procede de una fuente automatizada. Solo se aplica a las publicaciones creadas por correo electrónico
@@ -177,8 +195,14 @@ es:
             skip_via_email:
               label: "Omitir por correo electrónico"
               description: "Omitir el activador si la publicación se creó por correo electrónico"
+            post_features:
+              label: Características de la publicación
+              description: "Opcional, limita la activación solo a publicaciones con estas características"
           created: Creado
           edited: Editado
+          topics: Todos los temas
+          personal_messages: Mensajes personales
+          public_topics: Temas públicos (excluir todas las categorías seguras)
           with_images: Imágenes
           with_links: Enlaces
           with_code: Código
@@ -383,6 +407,7 @@ es:
               label: MPs
             sender:
               label: Remitente del MP
+              description: "Asegúrate de que el remitente tenga los permisos adecuados para enviar mensajes privados al destinatario"
         close_topic:
           fields:
             topic:
@@ -406,6 +431,11 @@ es:
           name:
             label: Activador
         automation:
+          runs_today: "%{count} hoy"
+          runs_this_week: "%{count} esta semana"
+          runs_this_month: "%{count} este mes"
+          runs:
+            label: Ejecuciones
           name:
             label: Nombre
           trigger:
@@ -417,12 +447,15 @@ es:
           status:
             label: Estado
           enabled:
-            label: Activado
+            label: "Activar automatización"
           disabled:
             label: Desactivado
           placeholders:
             label: Marcadores de posición
           last_updated_at:
             label: Última actualización
+          last_run:
+            label: Última ejecución
           last_updated_by:
             label: Actualizado por
+          enable_toggle_disabled: "Puedes activar esta automatización cuando se hayan completado todos los campos obligatorios."

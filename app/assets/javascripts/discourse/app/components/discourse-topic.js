@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";

@@ -12,12 +12,7 @@ const TopicCell = <template>
     @showBulkToggle={{@showBulkToggle}}
     @canBulkSelect={{@canBulkSelect}}
     @canDoBulkActions={{@canDoBulkActions}}
-    @showTopicsAndRepliesToggle={{@showTopicsAndRepliesToggle}}
-    @newListSubset={{@newListSubset}}
-    @newRepliesCount={{@newRepliesCount}}
-    @newTopicsCount={{@newTopicsCount}}
     @bulkSelectHelper={{@bulkSelectHelper}}
-    @changeNewListSubset={{@changeNewListSubset}}
   />
 </template>;
 

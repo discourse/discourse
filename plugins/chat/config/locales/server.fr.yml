@@ -30,10 +30,12 @@ fr:
     chat_editing_grace_period_max_diff_low_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 0 et 1)."
     chat_editing_grace_period_max_diff_high_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 2 et supérieurs)."
     chat_preferred_index: "Onglet préféré lors du chargement de /chat."
+    allow_chat_in_anonymous_mode: "Activez ce paramètre pour permettre aux utilisateurs qui parcourent votre site de manière anonyme d'utiliser la messagerie instantanée. Ce paramètre nécessite l'activation du paramètre « Autoriser le mode anonyme »."
     errors:
       chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
       direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception du personnel, envoie des messages directs, choisissez le groupe des responsables."
       chat_upload_not_allowed_secure_uploads: "Les téléversements de discussion ne sont pas autorisés lorsque le paramètre du site de téléversement sécurisé est activé."
+      allow_chat_in_anonymous_mode_invalid: "Ce paramètre nécessite que le paramètre « Autoriser le mode anonyme » soit activé au préalable."
   system_messages:
     private_channel_title: "Canal %{id}"
     chat_channel_archive_complete:
@@ -59,6 +61,7 @@ fr:
     deleted_chat_username: supprimé
     errors:
       users_cant_be_added_to_channel: "Les utilisateurs ne peuvent pas être ajoutés à ce canal."
+      user_cant_be_removed_from_channel: "L'utilisateur ne peut pas être supprimé de ce canal"
       channel_exists_for_category: "Un canal existe déjà pour cette catégorie et ce nom"
       channel_new_message_disallowed:
         archived: "Le canal est archivé, aucun nouveau message ne peut être envoyé"
@@ -90,6 +93,7 @@ fr:
       actor_muting_target_user: "Vous mettez %{username} en sourdine, vous ne pouvez donc pas lui envoyer de messages."
       actor_disallowed_dms: "Vous avez choisi d'empêcher les utilisateurs de vous envoyer des messages privés et des messages directs. Vous ne pouvez donc pas créer de nouveaux messages directs."
       actor_preventing_target_user_from_dm: "Vous avez choisi d'empêcher %{username} de vous envoyer des messages directs. Vous ne pouvez donc pas créer de nouveaux messages directs à son intention."
+      not_reachable: "Nous sommes désolés, %{username} n'utilise pas la messagerie instantanée."
       user_cannot_send_direct_messages: "Nous sommes désolés, vous ne pouvez pas envoyer de messages directs."
       over_chat_max_direct_message_users_allow_self: "Vous ne pouvez créer un message direct qu'avec vous-même."
       over_chat_max_direct_message_users:
@@ -154,6 +158,7 @@ fr:
     mention_warning:
       dismiss: "rejeter"
       cannot_see: "%{first_identifier} ne peut pas accéder à ce canal et n'a pas été averti(e)."
+      cannot_see_group: "Certains membres de %{group_name} ne peuvent pas accéder à ce canal et n'ont pas été prévenus."
       cannot_see_multiple:
         one: "%{first_identifier} et %{count} autre utilisateur ne peuvent pas accéder à ce canal et n'ont pas été avertis."
         other: "%{first_identifier} et %{count} autres utilisateurs ne peuvent pas accéder à ce canal et n'ont pas été avertis."
@@ -234,6 +239,12 @@ fr:
         private_email:
           one: "[%{site_name}] Nouveau message"
           other: "[%{site_name}] Nouveaux messages"
+        watched_thread:
+          one: "[%{site_name}] Nouveau message dans le fil %{channel}"
+          other: "[%{site_name}] Nouveaux messages dans le fil %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nouveaux messages dans %{channel} et %{count} autre canal"
+          other: "[%{site_name}] Nouveaux messages dans %{channel} et %{count} autres canaux"
         chat_dm_1:
           one: "[%{site_name}] Nouveau message de %{name}"
           other: "[%{site_name}] Nouveaux messages de %{name}"

@@ -142,7 +142,5 @@ te:
             label: సంస్కరణ
           status:
             label: స్థితి
-          enabled:
-            label: ప్రారంభించబడింది
           disabled:
             label: నిలిపివేయబడింది

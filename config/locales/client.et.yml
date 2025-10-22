@@ -455,6 +455,15 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+      notes:
+        delete: "Kustuta"
+      review_user: "Kasutaja"
+      insights:
+        activities:
+          posts:
+            one: "%{count} postitus"
+            other: "%{count} postitust"
+        visibility: "Nähtavus"
       approval:
         title: "Postitus vajab kinnitust"
         description: "Oleme sinu uue postituse kätte saanud, kuid see vajab enne ilmumist moderaatori kinnitust. Palume veidi kannatust. "
@@ -844,7 +853,11 @@ et:
       color_schemes:
         default_description: "Teema vaikimisi"
         undo: "Lähtesta"
-        regular: "Tavaline"
+        interface_modes:
+          light: "Hele"
+          dark: "Tume"
+        picker:
+          active: "Aktiivne"
       dark_mode: "Tume režiim"
       allow_private_messages: "Luba teistel kasutajatel mulle privaatsõnumeid saata"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
@@ -862,6 +875,8 @@ et:
       suspended_notice: "Selle kasutaja ligipääs on ajutiselt peatatud kuni %{date}."
       suspended_permanently: "Selle kasutaja konto on peatatud."
       suspended_reason: "Põhjus:"
+      silenced_permanently: "See kasutaja on vaigistatud."
+      silenced_reason: "Põhjus:"
       github_profile: "GitHub"
       email_activity_summary: "Tegevuste kokkuvõte"
       mailing_list_mode:
@@ -986,7 +1001,7 @@ et:
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
       add_email:
         title: "Lisa meiliaadress"
-        add: "lisa"
+        add: "isa"
       change_email:
         title: "Muuda meiliaadressi"
         taken: "Vabandust, see meiliaadress ei ole saadaval."
@@ -1142,7 +1157,8 @@ et:
         remove: "Eemalda"
         reinvited: "Kutse uuesti saadetud"
         user: "Kutsutud kasutaja"
-        none: "Pole ühtegi kutset, mida näidata."
+        none:
+          title: "Pole ühtegi kutset, mida näidata."
         truncated:
           one: "Näitan esimest kutset."
           other: "Näitan esimest %{count} kutset."
@@ -1390,6 +1406,8 @@ et:
     full_name_requirement:
       required_at_signup: "Nõutud"
       optional_at_signup: "Valikuline"
+    welcome_banner_page_visibility:
+      homepage: "Avaleht"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1429,9 +1447,6 @@ et:
       whisper: "sosista"
       unlist: "eemaldatud"
       add_warning: "See on ametlik hoiatus."
-      toggle_whisper: "Lülita sosistamine ümber"
-      toggle_unlisted: "Lülita eemaldamine ümber"
-      insert_table: "Sisesta tabel"
       posting_not_on_topic: "Millisesse teemasse soovid vastata?"
       saved_local_draft_tip: "salvestatud lokaalselt"
       drafts_offline: "mustandid vallasrežiimis"
@@ -1474,10 +1489,7 @@ et:
       paste_code_text: "kirjuta või kleebi kood siia"
       upload_title: "Laadi üles"
       upload_description: "sisesta üleslaaditu kirjeldus siia"
-      olist_title: "Numberloend"
-      ulist_title: "Täpploend"
       list_item: "Loendi element"
-      toggle_direction: "Muuda suunda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
@@ -2196,6 +2208,8 @@ et:
       logo: "Kategooria logo"
       background_image: "Kategooria taustapilt"
       background_color: "Värv"
+      color_validations:
+        cant_be_empty: "ei tohi olla tühi"
       styles:
         icon: "Ikoon"
         emoji: "Emotikon"
@@ -2420,7 +2434,6 @@ et:
         topics: "Teemasid"
         replies: "Vastused"
       posted:
-        title: "Minu"
         help: "minu postitustega teemad"
       bookmarks:
         title: "Järjehoidjad"
@@ -2657,6 +2670,8 @@ et:
               content: "Adminn"
             badges:
               content: "Märgised"
+            filter:
+              content: "Filter"
             topics:
               content: "Teemad"
             faq:
@@ -2667,8 +2682,6 @@ et:
               content: "Rühmad"
             users:
               content: "Kasutajad"
-            my_posts:
-              content: "Minu"
             review:
               content: "Vaata üle"
             invite:
@@ -2698,6 +2711,9 @@ et:
       spreadsheet:
         show: "Näita"
         about: "Teave"
+    filter:
+      description:
+        yesterday: "Eile"
     discovery:
       headings:
         multi_tag:
@@ -2734,6 +2750,10 @@ et:
           title: "Failid"
         legal:
           title: "Õiguslik"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Seaded"
         logo:
           form:
             mobile: "Mobiil"
@@ -2807,6 +2827,8 @@ et:
           title: "Veebihaagid"
         embedding:
           title: "Sängitamine"
+      theme_site_settings:
+        default_value: "Vaikimisi"
       search:
         title: "Otsi"
         result_types:
@@ -3076,6 +3098,9 @@ et:
           delete: "Kustuta"
         color_palettes:
           palette_name: "Nimi"
+          copy_to_clipboard: "Kopeeri lõikelauale"
+          copied_to_clipboard: "Kopeeritud lõikelauale"
+          copy_to_clipboard_error: "Tõrge kopeerimisel"
           delete: "Kustuta"
           colors:
             title: "Värvid"
@@ -3091,6 +3116,11 @@ et:
         howto: "Kuidas pluginaid paigaldada?"
         author: "Autor %{author}"
         learn_more: "Uuri veel"
+        filters:
+          all: "Kõik"
+          enabled: "Sisse lülitatud"
+          disabled: "Välja lülitatud"
+          reset: "Nulli"
       backups:
         title: "Varukoopiad"
         menu:
@@ -3168,6 +3198,7 @@ et:
           body: "Sisu"
           revert: "Loobu muudatustest"
           revert_confirm: "Kas oled kindel, et soovid oma muudatustest loobuda?"
+          edit: "Muuda"
         component:
           all_filter: "Kõik"
           enabled_filter: "Sisse lülitatud"
@@ -3177,6 +3208,7 @@ et:
           theme: "Teema"
           component: "Komponent"
           components: "Komponendid"
+          filter_all: "Kõik"
           theme_name: "Teema nimi"
           component_name: "Komponendi nimi"
           customize_desc: "Kohanda:"
@@ -3190,7 +3222,6 @@ et:
           desktop: "Töölaud"
           mobile: "Mobiil"
           preview: "Eelvaade"
-          default: "Aktiivne"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           user_selectable: "Kasutajad saavad teemat valida"
           color_scheme: "Värvipalett"
@@ -3209,10 +3240,6 @@ et:
           enable: "Luba"
           disable: "Keela"
           add: "Lisa"
-          theme_settings: "Teema seaded"
-          settings: "Seaded"
-          colors: "Värvid"
-          colors_title: "Värvid"
           scss:
             text: "CSS"
           after_header:
@@ -3232,7 +3259,12 @@ et:
               too_small: "peab olema suurem või võrdne kui %{count}"
               too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
+          light: "hele"
+          dark: "tume"
           title: "Värvid"
+          edit: "Muuda"
+          filters:
+            all: "Kõik"
           copy_name_prefix: "Koopia sellest"
           undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
@@ -3544,7 +3576,6 @@ et:
         activity: Tegevused
         like_count: Meeldimisi antud / saadud
         last_100_days: "viimase 100 päeva jooksul"
-        private_topics_count: Privaatsed teemad
         posts_read_count: Positusi loetud
         post_count: Postitusi loodud
         topics_entered: Vaadatud teemasid
@@ -3570,7 +3601,6 @@ et:
             cancel: "Tühista"
           confirmation:
             cancel: "Tühista"
-        delete_forbidden_because_staff: "Adminne ja moderaatoreid ei saa kustutada."
         delete_posts_forbidden_because_staff: "Ei saa kustutada adminnide ja moderaatorite kõiki postitusi."
         delete_forbidden:
           one: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päev ei saa kustutada.)"

@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 RSpec.describe ApplicationController do
+  fab!(:user)
+
+  context "when visiting an invalid URL" do
+    it "displays the not found page with the user's active theme" do
+      theme = Fabricate(:theme, user_selectable: true)
+      Fabricate(:theme_field, theme:, name: "header", value: "<a>html</a>")
+      user.user_option.update!(theme_ids: [theme.id])
+
+      sign_in(user)
+
+      get "/invalid-url"
+
+      expect(response.status).to eq(404)
+      expect(response.body).to include("<a>html</a>")
+      expect(response.body).to include(I18n.t("page_not_found.title"))
+    end
+  end
+
   describe "#redirect_to_login_if_required" do
     let(:admin) { Fabricate(:admin) }
 
@@ -335,7 +353,7 @@ RSpec.describe ApplicationController do
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"].first).to include(
-        "param is missing or the value is empty: term",
+        "param is missing or the value is empty or invalid: term",
       )
     end
   end
@@ -424,6 +442,31 @@ RSpec.describe ApplicationController do
         expect(response.body).to_not include("google.com/search")
       end
 
+      it "should allow anchor tags in title" do
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "page_not_found.title",
+          'Visit <a href="/search">search</a> page',
+        )
+
+        get "/t/nope-nope/99999999"
+        expect(response.status).to eq(404)
+        expect(response.body).to include('<a href="/search">search</a>')
+      end
+
+      it "should sanitize unsafe HTML in title" do
+        TranslationOverride.upsert!(
+          I18n.locale,
+          "page_not_found.title",
+          'Page <script>alert("xss")</script> not found',
+        )
+
+        get "/t/nope-nope/99999999"
+        expect(response.status).to eq(404)
+        expect(response.body).to_not include("<script>")
+        expect(response.body).to include("Page")
+      end
+
       describe "no logspam" do
         let(:fake_logger) { FakeLogger.new }
 
@@ -454,6 +497,28 @@ RSpec.describe ApplicationController do
           expect(fake_logger.fatals.length).to eq(0)
           expect(fake_logger.errors.length).to eq(0)
           expect(fake_logger.warnings.length).to eq(0)
+        end
+
+        it "should render category badges with correct style classes on 404 page" do
+          Discourse.cache.delete("page_not_found_topics:#{I18n.locale}")
+
+          square_cat = Fabricate(:category, style_type: :square)
+          icon_cat = Fabricate(:category, style_type: :icon, icon: "user")
+          emoji_cat = Fabricate(:category, style_type: :emoji, emoji: "smile")
+
+          Fabricate(:topic, title: "Square Category Topic", category: square_cat)
+          Fabricate(:topic, title: "Icon Category Topic", category: icon_cat)
+          Fabricate(:topic, title: "Emoji Category Topic", category: emoji_cat)
+
+          get "/t/nope-nope/99999999"
+          expect(response.status).to eq(404)
+
+          expect(response.body).to include("badge-category --style-square")
+          expect(response.body).to include("badge-category --style-icon")
+          expect(response.body).to include("badge-category --style-emoji")
+
+          expect(response.body).to include('<svg id="user"')
+          expect(response.body).to include('class="emoji"')
         end
       end
 
@@ -606,7 +671,7 @@ RSpec.describe ApplicationController do
 
     describe "when `cross_origin_opener_unsafe_none_groups` site setting has been set" do
       fab!(:group)
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       before do
         SiteSetting.cross_origin_opener_policy_header = "same-origin"
@@ -664,13 +729,19 @@ RSpec.describe ApplicationController do
     end
 
     context "with color schemes" do
-      let!(:light_scheme) { ColorScheme.find_by(base_scheme_id: "Solarized Light") }
-      let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+      let!(:light_scheme) do
+        ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+      end
+      let!(:dark_scheme) do
+        ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
+      end
 
       before do
-        SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
         SiteSetting.interface_color_selector = "sidebar_footer"
-        Theme.find_by(id: SiteSetting.default_theme_id).update!(color_scheme_id: light_scheme.id)
+        Theme.find_default.update!(
+          color_scheme_id: light_scheme.id,
+          dark_color_scheme_id: dark_scheme.id,
+        )
       end
 
       context "when light mode is forced" do
@@ -1153,8 +1224,14 @@ RSpec.describe ApplicationController do
           it "serves a 404 page in the preferred locale" do
             get "/missingroute", headers: headers("fr")
             expect(response.status).to eq(404)
-            expected_title = I18n.t("page_not_found.title", locale: :fr)
-            expect(response.body).to include(CGI.escapeHTML(expected_title))
+            expect(response.body).to include(
+              # converts non-breaking space to &nbsp;
+              ActionController::Base.helpers.sanitize(
+                I18n.t("page_not_found.title", locale: :fr),
+                tags: %w[a],
+                attributes: %w[href class target rel],
+              ),
+            )
           end
 
           it "serves a RenderEmpty page in the preferred locale" do
@@ -1237,7 +1314,7 @@ RSpec.describe ApplicationController do
 
         context "with an anonymous user" do
           it "uses the locale from the param" do
-            get "/latest?lang=es"
+            get "/latest?tl=es"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("es")
             expect(I18n.locale.to_s).to eq(SiteSettings::DefaultsProvider::DEFAULT_LOCALE) # doesn't leak after requests
@@ -1246,7 +1323,7 @@ RSpec.describe ApplicationController do
 
         context "when the preferred locale includes a region" do
           it "returns the locale and region separated by an underscore" do
-            get "/latest?lang=zh-CN"
+            get "/latest?tl=zh-CN"
             expect(response.status).to eq(200)
             expect(main_locale_scripts(response.body)).to contain_exactly("zh_CN")
           end
@@ -1504,6 +1581,7 @@ RSpec.describe ApplicationController do
             "isStaffWritesOnly",
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
+            "themeSiteSettingOverrides",
           ],
         )
       end
@@ -1529,6 +1607,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "currentUser",
+            "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
           ],
@@ -1537,7 +1616,7 @@ RSpec.describe ApplicationController do
     end
 
     context "when user is admin" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
 
       before { sign_in(user) }
 
@@ -1556,6 +1635,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "currentUser",
+            "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
             "fontMap",
@@ -1619,10 +1699,10 @@ RSpec.describe ApplicationController do
   end
 
   describe "color definition stylesheets" do
-    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+    let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
 
     before do
-      SiteSetting.default_dark_mode_color_scheme_id = dark_scheme.id
+      Theme.find_default.update!(dark_color_scheme_id: dark_scheme.id)
       SiteSetting.interface_color_selector = "sidebar_footer"
     end
 
@@ -1632,7 +1712,7 @@ RSpec.describe ApplicationController do
       it "includes stylesheet links in the header" do
         get "/"
 
-        expect(response.headers["Link"]).to include("color_definitions_base")
+        expect(response.headers["Link"]).to include("color_definitions_light-default")
         expect(response.headers["Link"]).to include("color_definitions_dark")
       end
     end
@@ -1804,6 +1884,32 @@ RSpec.describe ApplicationController do
           expect(light_stylesheet[:media]).to eq("all")
         end
       end
+    end
+  end
+
+  describe "google site verification" do
+    it "is omitted by default" do
+      get "/"
+      expect(response.body).not_to include("google-site-verification")
+    end
+
+    it "is included when the site setting is set" do
+      SiteSetting.google_site_verification_token = "verification_token"
+      get "/"
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
+
+      SiteSetting.login_required = true
+      get "/"
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
+
+      get "/", headers: { "User-Agent" => "Googlebot" }
+      expect(response.body).to include(
+        '<meta name="google-site-verification" content="verification_token">',
+      )
     end
   end
 end

@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  site_settings:
+    discourse_gamification_enabled: "Engedélyezze a Discourse Gamifikáció beépülő modult"
+    like_received_score_value: "Pontszám értéke, amelyet akkor kap a felhasználó, ha egy like-ot kap."
+    like_given_score_value: "Pontszám értéke, amelyet a felhasználó minden egyes like-ért kap."
+    solution_score_value: "Pontszám értéke, amikor egy felhasználó bejegyzését megoldásnak jelölik meg"
+    user_invited_score_value: "Pontszám értéke, amelyet a felhasználó után beváltott meghívókért kap"
+    time_read_score_value: "Pontszám értéke, amelyet minden eltert olvasott óráért jár"
+    post_read_score_value: "Pontszám értéke, amelyet minden századik elolvasott bejegyzés után jár."
+    topic_created_score_value: "Pontszám értéke, amely új téma létrehozásáért jár"
+    post_created_score_value: "Pontszám értéke, amely új bejegyzés létrehozásáért jár"
+    flag_created_score_value: "Pontszám értéke, ami minden olyan megjelölés után jár, amit egy stábtag elfogadott"
+    day_visited_score_value: "Pontszám értéke, amely minden napi első bejelentkezés után jár"
+    scorable_categories: "Azoknak a kategóriáknak a listája, ahol a cselekvésekért pontszámok járnak. Hagyja üresen, hogy az összes kategóriát engedélyezze"
+    reaction_received_score_value: "Pontszám értéke, amelyet akkor kapnak, amikor a felhasználó reakciót kap"
+    reaction_given_score_value: "Pontszám értéke, amelyet akkor kapnak, amikor a felhasználó reakciót ad"
+    chat_reaction_received_score_value: "Pontszám értéke, amelyet akkor kap a felhasználó, ha reagál egy chat-üzenetre."
+    chat_reaction_given_score_value: "A csevegőüzenetre adott felhasználói reakciókért járó pontszám"
+    chat_message_created_score_value: "A csevegés során a felhasználó által elküldött minden üzenetért járó pontszám"
+    score_ranking_strategy: "Ranglista pozíció rangsorolási stratégia"
+  score: "Pontok"
+  default_leaderboard_name: "Globális ranglista"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "Elérte az újraszámítási pontszámok maximális számát. Kérjük, várjon %{time_left} , mielőtt újra próbálkozna."
+  errors:
+    leaderboard_positions_not_ready: "Létrehozzuk a ranglistát. Próbálja újra néhány perc múlva."

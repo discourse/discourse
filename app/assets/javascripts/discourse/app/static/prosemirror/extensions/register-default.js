@@ -1,8 +1,11 @@
+// @ts-check
+
 import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 import bulletList from "./bullet-list";
 import code from "./code";
 import codeBlock from "./code-block";
 import emoji from "./emoji";
+import hardBreak from "./hard-break";
 import hashtag from "./hashtag";
 import heading from "./heading";
 import htmlBlock from "./html-block";
@@ -17,6 +20,7 @@ import orderedList from "./ordered-list";
 import quote from "./quote";
 import strikethrough from "./strikethrough";
 import table from "./table";
+import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
@@ -25,7 +29,7 @@ import underline from "./underline";
  * List of default extensions
  * ProsemirrorEditor autoloads them when includeDefault=true (the default)
  *
- * @type {RichEditorExtension[]}
+ * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]}
  */
 const defaultExtensions = [
   emoji,
@@ -49,6 +53,8 @@ const defaultExtensions = [
   markdownPaste,
   orderedList,
   bulletList,
+  trailingInlineSpace,
+  hardBreak,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

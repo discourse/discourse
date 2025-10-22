@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Dates separators", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -35,8 +35,8 @@ RSpec.describe "Dates separators", type: :system do
   end
 
   context "when receiving messages on a different channel" do
-    fab!(:channel_2) { Fabricate(:chat_channel) }
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:channel_2, :chat_channel)
+    fab!(:user_1, :user)
 
     before do
       channel_2.add(current_user)

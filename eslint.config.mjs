@@ -6,6 +6,7 @@ export default [
     rules: {
       "qunit/no-assert-equal": "error",
       "qunit/no-loose-assertions": "error",
+      "ember/no-classic-components": "error",
     },
   },
   {
@@ -15,6 +16,7 @@ export default [
       "lib/javascripts/messageformat.js",
       "lib/javascripts/messageformat-lookup.js",
       "plugins/**/lib/javascripts/locale",
+      "plugins/discourse-math/public",
       "public/",
       "vendor/",
       "app/assets/javascripts/discourse/tests/fixtures",
@@ -23,5 +25,14 @@ export default [
       "app/assets/javascripts/discourse/dist/",
       "tmp/",
     ],
+  },
+  {
+    files: ["themes/**/*.{js,gjs}"],
+    languageOptions: {
+      globals: {
+        settings: "readonly",
+        themePrefix: "readonly",
+      },
+    },
   },
 ];

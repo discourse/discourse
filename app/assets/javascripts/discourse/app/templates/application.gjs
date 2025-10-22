@@ -1,7 +1,7 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DialogHolder from "dialog-holder/components/dialog-holder";
 import RouteTemplate from "ember-route-template";
-import { and } from "truth-helpers";
+import { and, eq } from "truth-helpers";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -73,6 +73,14 @@ export default RouteTemplate(
         <OfflineIndicator />
       {{/if}}
 
+      {{#if
+        (eq
+          @controller.siteSettings.welcome_banner_location "below_site_header"
+        )
+      }}
+        <WelcomeBanner />
+      {{/if}}
+
       <PluginOutlet
         @name="below-site-header"
         @connectorTagName="div"
@@ -99,7 +107,14 @@ export default RouteTemplate(
         <div id="main-outlet">
           <PluginOutlet @name="above-main-container" @connectorTagName="div" />
 
-          <WelcomeBanner />
+          {{#if
+            (eq
+              @controller.siteSettings.welcome_banner_location
+              "above_topic_content"
+            )
+          }}
+            <WelcomeBanner />
+          {{/if}}
 
           <div class="container" id="main-container">
             {{#if @controller.showTop}}

@@ -116,9 +116,7 @@ describe "Table Builder", type: :system do
             |Honda | S2000 | 2001|
           RAW
 
-          try_until_success do
-            expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
-          end
+          expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
         end
 
         it "should respect the original empty header" do
@@ -135,9 +133,7 @@ describe "Table Builder", type: :system do
             |1 | 2 | 3|
           RAW
 
-          try_until_success do
-            expect(normalize_value(post2.reload.raw)).to eq(normalize_value(updated_post))
-          end
+          expect(normalize_value(post2.reload.raw)).to eq(normalize_value(updated_post))
         end
 
         context "when adding an edit reason" do

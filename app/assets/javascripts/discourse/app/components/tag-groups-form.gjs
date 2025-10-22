@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import { cached, tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
@@ -18,7 +19,6 @@ import TagChooser from "select-kit/components/tag-chooser";
 
 @tagName("")
 export default class TagGroupsForm extends Component {
-  @service router;
   @service dialog;
   @service site;
 

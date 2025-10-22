@@ -77,6 +77,23 @@ RSpec.describe UserHistory do
         expect(records.size).to eq(1)
         expect(records.first).to eq(custom_history)
       end
+
+      it "filters by start and/or end date" do
+        freeze_time
+
+        10.times do |i|
+          Fabricate(
+            :user_history,
+            action: UserHistory.actions[:suspend_user],
+            created_at: i.days.ago,
+          )
+        end
+
+        records =
+          described_class.staff_action_records(admin, start_date: 7.days.ago, end_date: 2.days.ago)
+
+        expect(records.size).to eq(7 - 2 + 1)
+      end
     end
   end
 end

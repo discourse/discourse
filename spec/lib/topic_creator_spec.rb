@@ -91,6 +91,18 @@ RSpec.describe TopicCreator do
             )
           expect(topic.participant_count).to eq(3)
         end
+
+        describe "locale" do
+          it "updates the locale of the topic" do
+            topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: "ja"))
+            expect(topic.locale).to eq("ja")
+          end
+
+          it "sets the locale of the topic to nil if blank" do
+            topic1 = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(locale: ""))
+            expect(topic1.locale).to eq(nil)
+          end
+        end
       end
     end
 

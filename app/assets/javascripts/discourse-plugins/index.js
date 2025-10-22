@@ -8,6 +8,7 @@ const fs = require("fs");
 const concat = require("broccoli-concat");
 const DiscoursePluginColocatedTemplateProcessor = require("./colocated-template-compiler");
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
+const transformActionSyntax = require("./transform-action-syntax");
 
 function fixLegacyExtensions(tree) {
   return new Funnel(tree, {
@@ -78,6 +79,20 @@ function parsePluginName(pluginRbPath) {
   );
 }
 
+function getTestRequiredPlugins(aboutJsonPath) {
+  if (fs.existsSync(aboutJsonPath)) {
+    const aboutJson = JSON.parse(fs.readFileSync(aboutJsonPath, "utf8"));
+    const requiredPlugins = aboutJson.tests?.requiredPlugins || [];
+    return requiredPlugins.map((plugin) =>
+      plugin
+        .split("/")
+        .at(-1)
+        .replace(/\.git$/, "")
+    );
+  }
+  return [];
+}
+
 module.exports = {
   name: require("./package").name,
 
@@ -87,6 +102,28 @@ module.exports = {
     "ember-this-fallback": {
       enableLogging: false,
     },
+  },
+
+  setupPreprocessorRegistry(type, registry) {
+    if (type === "self") {
+      const plugin = this._buildActionPlugin();
+      plugin.parallelBabel = {
+        requireFile: __filename,
+        buildUsing: "_buildActionPlugin",
+        params: {},
+      };
+
+      registry.add("htmlbars-ast-plugin", plugin);
+    }
+  },
+
+  _buildActionPlugin() {
+    return {
+      name: "transform-action-syntax",
+      plugin: transformActionSyntax,
+      baseDir: transformActionSyntax.baseDir,
+      cacheKey: transformActionSyntax.cacheKey,
+    };
   },
 
   pluginInfos() {
@@ -125,6 +162,9 @@ module.exports = {
       const hasAdminJs = fs.existsSync(adminJsDirectory);
       const hasTests = fs.existsSync(testDirectory);
       const hasConfig = fs.existsSync(configDirectory);
+      const testRequiredPlugins = getTestRequiredPlugins(
+        path.resolve(root, directoryName, "about.json")
+      );
       return {
         pluginName,
         directoryName,
@@ -136,6 +176,7 @@ module.exports = {
         hasAdminJs,
         hasTests,
         hasConfig,
+        testRequiredPlugins,
       };
     });
   },
@@ -279,12 +320,21 @@ module.exports = {
       }
     }
 
-    return scripts
+    const scriptTags = scripts
       .map(
         ({ src, name }) =>
           `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}"></script>`
       )
       .join("\n");
+
+    const requiredPluginInfos = {};
+    for (const { pluginName, testRequiredPlugins } of pluginInfos) {
+      requiredPluginInfos[pluginName] = testRequiredPlugins;
+    }
+
+    const requiredPluginInfoTag = `<script type="application/json" id="discourse-required-plugin-info">${JSON.stringify(requiredPluginInfos)}</script>`;
+
+    return `${scriptTags}\n${requiredPluginInfoTag}`;
   },
 
   pluginTestScriptTags(config) {

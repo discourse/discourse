@@ -84,6 +84,7 @@ en:
     bad_color_scheme: "Can not update theme, invalid color palette"
     other_error: "Something went wrong updating theme"
     ember_selector_error: "Sorry – using #ember or .ember-view CSS selectors is not permitted, because these names are dynamically generated at runtime and will change over time, eventually resulting in broken CSS. Try a different selector."
+    setting_not_themeable: "The setting '%{name}' is not themeable."
     import_error:
       generic: An error occurred while importing that theme
       upload: "Error creating upload asset: %{name}. %{errors}"
@@ -301,6 +302,7 @@ en:
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
       has_already_been_used: "has already been used"
+      in: must be in %{count}
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
@@ -1665,6 +1667,15 @@ en:
         anon_views: Anonymous
         total_views: Total
       description: "The top 100 most viewed topics in a date range, combining logged in and anonymous views. Can be filtered by category."
+    associated_accounts_by_provider:
+      title: "Associated accounts by login method"
+      labels:
+        provider: Login provider
+        no_accounts: "No associated accounts"
+        discourse_connect: "SSO via Discourse Connect"
+        no_sso_accounts: "Accounts without an SSO record"
+        total_users: "Total active user accounts"
+      description: "Show number of associated accounts grouped by login provider. Applicable only when social login methods are enabled."
 
   dashboard:
     problem:
@@ -1713,7 +1724,7 @@ en:
     allow_user_locale: "Allow users to choose their own language interface preference"
     set_locale_from_accept_language_header: "Set interface language for anonymous users from their web browser's language headers"
     set_locale_from_cookie: "Allows setting an anonymous user's locale via the 'locale' browser cookie"
-    set_locale_from_param: "Allows setting an anonymous user's locale via the 'lang' URL param, e.g. ?lang=es"
+    set_locale_from_param: "Allows setting an anonymous user's locale via the 'tl' URL param, e.g. ?tl=es"
     support_mixed_text_direction: "Support mixed left-to-right and right-to-left text directions"
     min_post_length: "Minimum allowed post length in characters (excluding personal messages)"
     min_first_post_length: "Minimum allowed first post (topic body) length (excluding personal messages)"
@@ -1754,7 +1765,7 @@ en:
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote (hotlinked) images to local images by downloading them; This preserves content even if the images are removed from the remote site in future."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
-    disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
+    disabled_image_download_domains: "Remote images will never be downloaded from these domains."
     block_hotlinked_media: "Prevent users from introducing remote (hotlinked) media in their posts. Remote media which is not downloaded via 'download_remote_images_to_local' will be replaced with a placeholder link."
     block_hotlinked_media_exceptions: "A list of base URLs which are exempt from the block_hotlinked_media setting. Include the protocol (e.g. https://example.com)."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
@@ -1795,7 +1806,7 @@ en:
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
-    mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
+    mobile_logo: "The logo used on the mobile version of your site. We recommend a square icon to avoid crowding the header, but you can use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the logo setting will be used."
     logo_dark: "Dark scheme alternative for the 'logo' site setting."
     logo_small_dark: "Dark scheme alternative for the 'logo small' site setting."
     mobile_logo_dark: "Dark scheme alternative for the 'mobile logo' site setting."
@@ -1808,11 +1819,11 @@ en:
     x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
-    email_custom_headers: "A pipe-delimited list of custom email headers"
+    email_custom_headers: "A list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up two-factor authentication."
-    enforce_second_factor_on_external_auth: "Require users to use two-factor authentication at all times. When enabled this will prevent users logging in with external authentication methods like social logins if they have two-factor authentication enabled. When disabled users will only need to confirm their two-factor authentication when logging in with a username and password. Also see the `enforce_second_factor` setting."
+    enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
+    enforce_second_factor_on_external_auth: "Require users to use two-factor authentication (2FA) at all times. When enabled, this will prevent users logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the `enforce_second_factor` setting."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
 
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -1878,8 +1889,10 @@ en:
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCD12E. <br/>Note: To use GTM when the Content Security Policy (CSP) is enabled, see the documentation on meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
+    google_site_verification_token: Google search console verification token. Will be included as a meta tag in the HTML head.
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Allow moderators to create and manage categories and groups"
+    moderators_manage_categories: "Allow moderators to create and manage categories"
+    moderators_manage_groups: "Allow moderators to create and manage groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
@@ -1920,6 +1933,8 @@ en:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page. Only applies when 'top' is present in the 'top menu' site setting."
     top_page_default_timeframe: "Default top page time period for anonymous users (automatically adjusts for logged in users based on their last visit)."
     moderators_view_emails: "Allow moderators to view user email addresses."
+    moderators_view_ips: "Allow moderators to view user ip addresses."
+    moderators_change_trust_levels: "Allow moderators to change user trust levels."
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer."
     send_old_credential_reminder_days: "Remind about old credentials after days"
@@ -1933,8 +1948,8 @@ en:
     hidden_post_visible_groups: "Allow members of these groups to view hidden posts. Staff users can always view hidden posts."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines. You can <a href='%{base_path}/admin/customize/robots'>override your robots.txt here.</a> <b>WARNING</b>: Misconfigured rules could prevent your site from being crawled as expected."
-    blocked_email_domains: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. Example: mailinator.com|trashmail.net"
-    allowed_email_domains: "A pipe-delimited list of email domains that users MUST register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. WARNING: Users with email domains other than those listed will not be allowed!"
+    blocked_email_domains: "A list of email domains that users are not allowed to register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. Example: mailinator.com"
+    allowed_email_domains: "A list of email domains that users MUST register accounts with. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported. WARNING: Users with email domains other than those listed will not be allowed!"
     normalize_emails: "Check if normalized email is unique. Normalized email removes all dots from the username and everything between + and @ symbols."
     auto_approve_email_domains: "Users with email addresses from this list of domains will be automatically approved. Subdomains are automatically handled for the specified domains. Wildcard symbols * and ? are not supported."
     hide_email_address_taken: "Don't inform users that an account exists with a given email address during signup or during forgot password flow. Require full email for 'forgotten password' requests."
@@ -1976,6 +1991,7 @@ en:
     auth_overrides_email: "Overrides local email with external site email on every login, and prevent local changes. Applies to all authentication providers. (WARNING: discrepancies can occur due to normalization of local emails)"
     auth_overrides_username: "Overrides local username with external site username on every login, and prevent local changes.  Applies to all authentication providers. (WARNING: discrepancies can occur due to differences in username length/requirements)"
     auth_overrides_name: "Overrides local full name with external site full name on every login, and prevent local changes.  Applies to all authentication providers."
+    auth_overrides_avatar: "Overrides local avatar with external site avatar on every login, and prevent local changes. Applies to all authentication providers."
     discourse_connect_overrides_avatar: "Overrides user avatar with value from DiscourseConnect payload. If enabled, users will not be allowed to upload avatars on Discourse."
     discourse_connect_overrides_location: "Overrides user location with value from DiscourseConnect payload and prevent local changes."
     discourse_connect_overrides_website: "Overrides user website with value from DiscourseConnect payload and prevent local changes."
@@ -1988,6 +2004,7 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
+    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and Github are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "The unique client ID provided by your Google application, used for the authentication process."
@@ -2024,8 +2041,7 @@ en:
     allow_restore: "Allow restore, which can replace ALL site data! Leave disabled unless you plan to restore a backup"
     maximum_backups: "The maximum amount of backups to keep. Older backups are automatically deleted"
     remove_older_backups: "Remove backups older than the specified number of days. Leave blank to disable."
-    automatic_backups_enabled: "Run automatic backups as defined in backup frequency"
-    backup_frequency: "Specifies the interval, in days, at which automatic backups of the site are created. If set to 7, for example, a new backup will be generated every week. The activation of this setting is contingent upon `automatic_backups_enabled`."
+    backup_frequency: "Specifies the interval, in days, at which automatic backups of the site are created. If set to 7, for example, a new backup will be generated every week. Set to 0 to disable."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     s3_endpoint: "The endpoint can be modified to backup to an S3 compatible service like DigitalOcean Spaces or Minio. WARNING: Leave blank if using AWS S3."
     s3_configure_tombstone_policy: "Enable automatic deletion policy for tombstone uploads. IMPORTANT: If disabled, no space will be reclaimed after uploads are deleted."
@@ -2096,7 +2112,7 @@ en:
     avatar_sizes: "List of automatically generated avatar sizes."
 
     external_system_avatars_enabled: "Enables the use of an external service for generating system avatars. When this setting is enabled, user avatars, instead of being produced within the Discourse system, are generated and provided by an external service defined by the `external_system_avatars_url` setting."
-    external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
+    external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}. Leave blank to disable."
     external_emoji_url: "URL of the external service for emoji images. Leave blank to disable."
     use_site_small_logo_as_system_avatar: "Use the site's small logo instead of the system user's avatar. Requires the logo to be present."
     restrict_letter_avatar_colors: "A list of 6-digit hexadecimal color values to be used for letter avatar background."
@@ -2119,6 +2135,10 @@ en:
     composer_media_optimization_image_resize_dimensions_threshold: "Minimum image width to trigger client-side resize"
     composer_media_optimization_image_resize_width_target: "Images with widths larger than `composer_media_optimization_image_dimensions_resize_threshold` will be resized to this width. Must be >= than `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
+
+    video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
+    video_conversion_service: "The video conversion service to use for processing uploaded videos."
+    mediaconvert_role_arn: "AWS IAM role ARN for MediaConvert service. Required when using AWS MediaConvert for video conversion."
 
     min_ratio_to_crop: "Ratio used to crop tall images. Enter the result of width / height."
 
@@ -2208,7 +2228,6 @@ en:
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     personal_email_time_window_seconds: "Wait (n) seconds before sending any personal message notification emails, to give users a chance to edit and finalize their messages."
     email_posts_context: "How many prior replies to include as context in notification emails."
-    flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
     title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
@@ -2223,7 +2242,6 @@ en:
     desktop_category_page_style: "This setting determines the visual layout of the /categories page on desktop. It includes options such as displaying subcategories with featured topics, showing the latest topics, or presenting top topics. The chosen style will influence how users interact and navigate through categories on the site."
     mobile_category_page_style: "This setting determines the visual layout of the /categories page on mobile."
     category_colors: "A list of hexadecimal color values allowed for categories."
-    default_dark_mode_color_scheme_id: "The color palette used when in dark mode."
     dark_mode_none: "None"
 
     max_image_size_kb: "The maximum image upload size. This must be configured in nginx (client_max_body_size) / apache or proxy as well. Images larger than this and smaller than client_max_body_size will be resized to fit on upload."
@@ -2413,9 +2431,9 @@ en:
     enable_category_group_moderation: "Allow groups to moderate content in specific categories"
     group_in_subject: "Set %%{optional_pm} in email subject to name of first group in PM, see: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Customize subject format for standard emails</a>"
     allow_anonymous_mode: "Enable the option for users to switch to anonymous mode for posting. When activated, users can opt for their identities to be hidden when creating posts or topics throughout the site. See also `allow anonymous likes`."
-    allow_likes_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. See also `allow_anonymous_mode`."
-    anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
-    anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting"
+    allow_likes_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to like posts. When activated, users can opt for their identities to be hidden when liking posts or topics throughout the site. This setting requires the `allow anonymous mode` setting to be enabled."
+    anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting. This setting requires the `allow anonymous mode` setting to be enabled."
+    anonymous_posting_allowed_groups: "Groups that are allowed to enable anonymous posting. This setting requires the `allow anonymous mode` setting to be enabled."
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
@@ -2428,6 +2446,8 @@ en:
     allow_featured_topic_on_user_profiles: "Allow users to feature a link to a topic on their user card and profile."
 
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
+
+    hide_silencing_reasons: "Don't display silencing reasons publically on user profiles."
 
     hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
 
@@ -2444,7 +2464,7 @@ en:
 
     max_notifications_per_user: "Maximum amount of notifications per user, if this number is exceeded old notifications will be deleted. Enforced weekly. Set to 0 to disable"
 
-    allowed_user_website_domains: "User website will be verified against these domains. Pipe-delimited list."
+    allowed_user_website_domains: "User website will be verified against these domains."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
@@ -2562,7 +2582,7 @@ en:
     watched_words_regular_expressions: "Allows the use of regular expressions for filtering words. If enabled, this feature groups sensitive words by their case-sensitivity. It then compiles all selected words into a single regular expression, adding word boundaries for regular watched words. Consequently, this regex-based filtering method adds an extra layer of control over content moderation by supporting more sophisticated word patterns. The setting also allows to easily substitute the original text with the replacement of choice."
 
     enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
-    old_post_notice_days: "The number of days after which a post notice is considered old. This visually differentiates it from newer notices on the site."
+    old_post_notice_days: "The number of days after which the new-user and returning-user post notices will be hidden. The official post notice will always remain visible."
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
@@ -2596,6 +2616,7 @@ en:
     default_other_enable_quoting: "Enable quote reply for highlighted text by default."
     default_other_enable_smart_lists: "Enable smart lists when typing in the composer by default."
     default_other_enable_defer: "Enable defer topic functionality by default."
+    default_other_enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode by default."
     default_other_dynamic_favicon: "Show new/updated topic count on browser icon by default."
     default_other_skip_new_user_tips: "Skip new user onboarding tips and badges."
 
@@ -2645,6 +2666,7 @@ en:
     tagging_enabled: "Enable tags on topics? See the <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Admin guide to tags on Meta</a> for more information."
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
     create_tag_allowed_groups: "Groups that are allowed to create tags. Admins and moderators can always create tags."
+    edit_tags_allowed_groups: "Groups that are allowed to edit tags, tag descriptions, and tag synonyms."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
     enable_max_tags_per_email_subject: "Use max_tags_per_email_subject when generating the subject of an email"
     max_tags_per_email_subject: "The maximum tags that can be in the subject of an email"
@@ -2692,6 +2714,7 @@ en:
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
 
+    gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. This will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
     gravatar_base_url: "Specify the URL for accessing the Gravatar provider's API. This setting is critical for converting email addresses into Gravatar URLs where avatar images are stored."
     gravatar_login_url: "URL relative to `gravatar_base_url`, which provides the user with the login to the Gravatar service."
@@ -2708,6 +2731,10 @@ en:
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
+    welcome_banner_image: "Set an image to display in the background of the welcome banner."
+    welcome_banner_location: "Determines where on the page the welcome banner will appear."
+    welcome_banner_page_visibility: "Determines on which pages the welcome banner will appear."
+    welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the 'primary' color from the color palette will be used."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
@@ -2716,10 +2743,16 @@ en:
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
     glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
     glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
+    deactivate_widgets_rendering: "Disable the legacy widgets rendering engine. This will disable all widgets that have not been updated to Glimmer components, it will also force the Glimmer Post Stream to be enabled unconditionally regardless of the value of the `glimmer_post_stream_mode` setting. This setting is not recommended for production sites, as it may break existing themes and plugins."
+    floatkit_autocomplete_composer: "Enable the Floatkit-based autocomplete menu in composer. This is an UI enhancement that will replace the current JQuery-based autocomplete menu."
+    floatkit_autocomplete_input_fields: "Enable the Floatkit-based autocomplete menu for input fields in full page search and group selector fields. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
+    floatkit_autocomplete_chat_composer: "Enable the Floatkit-based autocomplete menu in chat composer. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
     experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
+    experimental_impersonation: "Impersonate a user without having to log out of your admin account."
+    experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
@@ -2729,14 +2762,14 @@ en:
     about_page_extra_groups_order: "Ordering of the extra groups on the about page."
     adobe_analytics_tags_url: "Adobe Analytics tags URL (`https://assets.adobedtm.com/...`)"
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
-    rich_editor: "Enable the rich editor so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition. The rich text editor is under active development, so not all features are supported yet — <a href='https://meta.discourse.org/t/test-our-new-composer/352347' target='_blank'>see Meta for more details</a>."
-    viewport_based_mobile_mode: "EXPERIMENTAL: Disable the user-agent-based mobile/desktop modes and use viewport width instead."
+    rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
+    default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
+    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
-
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
-    content_localization_anon_language_switcher: "Enable language switcher which allows site visitors who are not logged in to switch between translated versions of Discourse and user-contributed content. Depends on the list of languages defined in 'content localization supported locales'"
+    content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2800,6 +2833,7 @@ en:
         other: "The list must contain exactly %{count} values."
       markdown_linkify_tlds: "You cannot include a value of '*'."
       google_oauth2_hd_groups: "You must configure all 'google oauth2 hd' settings before enabling this setting."
+      discourse_id_credentials: "You must configure Discourse ID credentials ('discourse_id_client_id' and 'discourse_id_client_secret') before enabling this setting."
       linkedin_oidc_credentials: "You must configure LinkedIn OIDC credentials ('linkedin_oidc_client_id' and 'linkedin_oidc_client_secret') before enabling this setting."
       search_tokenize_chinese_enabled: "You must disable 'search_tokenize_chinese' before enabling this setting."
       search_tokenize_japanese_enabled: "You must disable 'search_tokenize_japanese' before enabling this setting."
@@ -2808,12 +2842,15 @@ en:
       invalid_uncategorized_category_setting: 'The "Uncategorized" category cannot be selected if ''allow uncategorized topics'' is not enabled.'
       invalid_search_ranking_weights: "Value is invalid for search_ranking_weights site setting. Example: '{0.1,0.2,0.3,1.0}'. Note that maximum value for each weight is 1.0."
       content_localization_locale_limit: "The number of supported locales cannot exceed %{max}."
-      content_localization_anon_language_switcher_requirements: "The language switcher requires the `set locale from cookie` site setting to be enabled, and the `content localization supported locales` to have at least one language."
+      content_localization_language_switcher_requirements: "The language switcher requires the 'set locale from cookie' and 'allow user locale' site settings to be enabled, and 'content localization supported locales' to have at least one language."
+      mediaconvert_role_arn_required: "AWS IAM role ARN is required when using AWS MediaConvert for video conversion."
+      s3_credentials_required_for_video_conversion: "S3 credentials are required for video conversion. Please configure S3 access keys or enable IAM profile."
 
     keywords:
       clean_up_inactive_users_after_days: "deactivated|inactive|unactivated"
       navigation_menu: "sidebar|header dropdown"
       purge_unactivated_users_grace_period_days: "deactivated|inactive|unactivated"
+      default_composition_mode: "rte|rich text|composer|markdown|rich editor"
 
     placeholder:
       discourse_connect_provider_secrets:
@@ -2830,6 +2867,95 @@ en:
     results_page: "Search results for '%{term}'"
     audio: "[audio]"
     video: "[video]"
+
+  filter:
+    description:
+      status: "Filter topics by their status"
+      in: "Filter topics in personal lists"
+      order: "Sort topics by a specific field"
+      category: "Show topics in a specific category"
+      category_any: "Show topics in any of the specified categories (comma-separated)"
+      exclude_category: "Exclude topics from a specific category"
+      category_without_subcategories: "Show topics only in the parent category, excluding subcategories"
+      exclude_category_without_subcategories: "Exclude topics only from the parent category, not subcategories"
+      tag: "Show topics with a specific tag"
+      tags_any: "Show topics with any of the specified tags (comma-separated)"
+      tags_all: "Show topics with all of the specified tags (plus-separated)"
+      exclude_tag: "Exclude topics with a specific tag"
+      exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
+      exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
+      tags_alias: "Alias for 'tag:' filter"
+      tag_group: "Show topics with tags from a specific tag group"
+      exclude_tag_group: "Exclude topics with tags from a specific tag group"
+      activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
+      activity_after: "Show topics with last activity after a date (YYYY-MM-DD or days ago)"
+      created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
+      created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
+      created_by: "Show topics created by a specific user"
+      created_by_user: "Show topics created by username (without @)"
+      created_by_multiple: "Show topics created by any of the specified users (comma-separated)"
+      latest_post_before: "Show topics with last post before a date (YYYY-MM-DD or days ago)"
+      latest_post_after: "Show topics with last post after a date (YYYY-MM-DD or days ago)"
+      likes_min: "Show topics with at least this many likes"
+      likes_max: "Show topics with at most this many likes"
+      likes_op_min: "Show topics where first post has at least this many likes"
+      likes_op_max: "Show topics where first post has at most this many likes"
+      posts_min: "Show topics with at least this many posts"
+      posts_max: "Show topics with at most this many posts"
+      posters_min: "Show topics with at least this many participants"
+      posters_max: "Show topics with at most this many participants"
+      views_min: "Show topics with at least this many views"
+      views_max: "Show topics with at most this many views"
+      status_open: "Show open topics (not closed or archived)"
+      status_closed: "Show closed topics"
+      status_archived: "Show archived topics"
+      status_listed: "Show listed (visible) topics"
+      status_unlisted: "Show unlisted (hidden) topics"
+      status_deleted: "Show deleted topics (if you have permission)"
+      status_public: "Show topics in public categories"
+      in_pinned: "Show pinned topics"
+      in_bookmarked: "Show topics you've bookmarked"
+      in_watching: "Show topics you're watching"
+      in_tracking: "Show topics you're tracking"
+      in_muted: "Show muted topics"
+      in_normal: "Show topics with normal notification level"
+      in_watching_first_post: "Show topics you're watching for first post"
+      in_new: "Show topics that are new or have new replies"
+      in_new_replies: "Show topics with new replies"
+      in_new_topics: "Show new topics"
+      in_unseen: "Show topics you haven't seen"
+      order_activity: "Sort by last activity (newest first)"
+      order_activity_asc: "Sort by last activity (oldest first)"
+      order_category: "Sort by category name (Z-A)"
+      order_category_asc: "Sort by category name (A-Z)"
+      order_created: "Sort by creation date (newest first)"
+      order_created_asc: "Sort by creation date (oldest first)"
+      order_latest_post: "Sort by last post date (newest first)"
+      order_latest_post_asc: "Sort by last post date (oldest first)"
+      order_likes: "Sort by number of likes (most first)"
+      order_likes_asc: "Sort by number of likes (least first)"
+      order_likes_op: "Sort by likes on first post (most first)"
+      order_likes_op_asc: "Sort by likes on first post (least first)"
+      order_posters: "Sort by number of participants (most first)"
+      order_posters_asc: "Sort by number of participants (least first)"
+      order_title: "Sort by title (Z-A)"
+      order_title_asc: "Sort by title (A-Z)"
+      order_views: "Sort by view count (most first)"
+      order_views_asc: "Sort by view count (least first)"
+      order_read: "Sort by when you last read (most recent first)"
+      order_read_asc: "Sort by when you last read (oldest first)"
+      order_hot: "Sort by hot score (most first)"
+      order_hot_asc: "Sort by hot score (least first)"
+      users: "Filter topics by participants"
+      users_any: "Show topics with any of the specified users (comma-separated)"
+      users_all: "Show topics with all of the specified users (plus-separated)"
+      exclude_users: "Exclude topics with specific users"
+      group: "Filter topics by groups"
+      groups_any: "Show topics with any of the specified groups (comma-separated)"
+      groups_all: "Show topics with all of the specified groups (plus-separated)"
+      locale: "Filter topics by original language"
+      locale_any: "Show topics originally written in any of the specified languages (comma-separated)"
+      exclude_locale: "Exclude topics originally written in a specific language"
 
   discourse_connect:
     login_error: "Login Error"
@@ -4328,7 +4454,7 @@ en:
       text_body_template: |
         Two-factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
 
-        If you did not choose to disable two-factor authentication, someone may have compromised your account.
+        If you did not choose to disable two-factor authentication (2FA), someone may have compromised your account.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
@@ -4576,11 +4702,14 @@ en:
   page_not_found:
     page_title: "Page Not Found"
     title: "Oops! That page doesn’t exist or is private."
-    popular_topics: "Popular"
-    recent_topics: "Recent"
+    subtitle: "We looked everywhere but couldn't find the page you were looking for."
+    popular_topics: "Popular topics"
+    recent_topics: "Recent topics"
     see_more: "More"
-    search_title: "Search this site"
+    search_title: "Try searching instead?"
     search_button: "Search"
+    home: "Take me home"
+    placeholder: "Search topics by title or keywords…"
 
   offline:
     title: "Cannot load app"
@@ -4675,7 +4804,6 @@ en:
     solarized_dark_theme_name: "Solarized Dark"
     wcag_dark: "WCAG Dark"
     wcag_dark_theme_name: "WCAG Dark"
-    default_theme_name: "Default"
     light_theme_name: "Light"
     dark_theme_name: "Dark"
     neutral_theme_name: "Neutral"
@@ -4684,6 +4812,8 @@ en:
     latte_theme_name: "Latte"
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
+    errors:
+      cannot_edit_remote_copies: "Edits to remote copies of color palettes are not allowed."
 
   edit_this_page: "Edit this page"
 
@@ -5308,10 +5438,7 @@ en:
     badge_title_metadata: "%{display_name} badge on %{site_title}"
 
   admin_login:
-    success: "Email Sent"
-    errors:
-      unknown_email_address: "Unknown email address."
-      invalid_token: "Invalid token."
+    acknowledgement: "If an admin account with the email address %{email} exists, you will receive an email with a link to log in."
     email_input: "Admin Email"
     submit_button: "Send Email"
     safe_mode: "Safe Mode: disable all themes/plugins when logging in"
@@ -5642,11 +5769,9 @@ en:
         title: "Agree and Edit Post"
         description: "Agree with flag and open a composer window to edit the post."
         complete: "Flag acknowledged, you can now edit the post."
-      delete_single:
+      delete:
         title: "Delete"
         complete: "Post deleted."
-      delete:
-        title: "Delete…"
       delete_and_ignore:
         title: "Ignore flag and delete post"
         description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
@@ -5690,7 +5815,10 @@ en:
         complete: "Post approved."
       approve_post:
         title: "Approve Post"
-        confirm_closed: "This topic is closed. Would you like to create the post anyway?"
+        complete: "Post approved."
+      approve_post_closed:
+        title: "Approve Post"
+        confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
       reject_post:
         title: "Reject Post"
@@ -5729,9 +5857,63 @@ en:
       approve_and_unhide:
         title: "Approve and Unhide post"
         complete: "Post approved and unhidden"
+      # New separated post actions
+      post_actions:
+        bundle_title: "What do you want to do with the post?"
+      no_action_post:
+        title: "No action"
+        description: "Take no action on the post"
+        complete: "No action taken on post"
+      delete_post:
+        title: "Delete post"
+        description: "Delete this post"
+        complete: "Post deleted"
+      hide_post:
+        title: "Hide post"
+        description: "Hide this post from public view"
+        complete: "Post hidden"
+      unhide_post:
+        title: "Unhide post"
+        description: "Make this post visible to all users"
+        complete: "Post unhidden"
+      restore_post:
+        title: "Restore post"
+        description: "Restore this deleted post"
+        complete: "Post restored"
+      edit_post:
+        title: "Edit post"
+        description: "Edit this post content"
+        complete: "Post edited"
+      convert_to_pm:
+        title: "Convert to PM"
+        description: "Convert this post to a personal message"
+        complete: "Post converted to personal message"
+      # New separated user actions
+      user_actions:
+        bundle_title: "What do you want to do with the user?"
+      no_action_user:
+        title: "No action"
+        description: "Take no action against the user"
+        complete: "No action taken against user"
+      silence_user:
+        title: "Silence user"
+        description: "Prevent the user from posting"
+        complete: "User silenced"
+        reason: "User silenced via review queue"
+      suspend_user:
+        title: "Suspend user"
+        description: "Suspend the user account"
+        complete: "User suspended"
+        reason: "User suspended via review queue"
       delete_user:
+        title: "Delete user"
+        description: "Delete this user from the forum"
+        complete: "User deleted"
         reason: "Deleted via review queue"
-        complete: "User deleted."
+      delete_and_block_user:
+        title: "Delete & block"
+        description: "Delete the user and block their IP/email"
+        complete: "User deleted and blocked"
 
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"
@@ -5782,3 +5964,7 @@ en:
       duplicate_ids: "has duplicate ids"
       reserved_id: "has a reserved keyword as id: %{id}"
       unsafe_description: "has an unsafe HTML description"
+      invalid_tag_group: "has invalid tag group: %{tag_group_name}"
+
+  discourse_id:
+    already_registered: "This site is already registered with Discourse ID"

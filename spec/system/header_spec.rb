@@ -3,7 +3,7 @@
 RSpec.describe "Glimmer Header", type: :system do
   let(:header) { PageObjects::Pages::Header.new }
   let(:search) { PageObjects::Pages::Search.new }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:topic)
 
   it "renders basics" do
@@ -206,7 +206,7 @@ RSpec.describe "Glimmer Header", type: :system do
   end
 
   context "when resetting password" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     it "does not show search, login, or signup buttons" do
       email_token =
@@ -223,11 +223,11 @@ RSpec.describe "Glimmer Header", type: :system do
   end
 
   context "when logged in and login required" do
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
 
     it "displays current user when logged in and login required" do
       SiteSetting.login_required = true
-      SiteSetting.enable_welcome_banner = false
+      Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
       sign_in(current_user)
 
       visit "/"
@@ -288,7 +288,9 @@ RSpec.describe "Glimmer Header", type: :system do
 
       current_user.publish_do_not_disturb(ends_at: 1.hour.from_now)
 
-      try_until_success { expect(page).to have_css(".d-header .do-not-disturb-background") }
+      try_until_success(reason: "Relies on messagebus updates") do
+        expect(page).to have_css(".d-header .do-not-disturb-background")
+      end
 
       current_user.publish_do_not_disturb(ends_at: 1.second.from_now)
 

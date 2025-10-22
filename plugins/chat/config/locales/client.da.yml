@@ -127,7 +127,6 @@ da:
       uploaded_files:
         one: "%{count} fil"
         other: "%{count} filer"
-      exit: "tilbage"
       channel_status:
         read_only_header: "Kanalen er skrivebeskyttet"
         read_only: "Kun læsning"

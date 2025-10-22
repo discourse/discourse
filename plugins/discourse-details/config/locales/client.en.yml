@@ -6,7 +6,7 @@ en:
           discourse_details: "Discourse Details"
   js:
     details:
-      title: Hide Details
+      title: Hide details
     composer:
       details_title: Summary
       details_text: "This text will be hidden"

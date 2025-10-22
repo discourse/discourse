@@ -17,13 +17,13 @@ import { i18n } from "discourse-i18n";
 
 export default {
   initialize(owner) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       const siteSettings = owner.lookup("service:site-settings");
       const session = owner.lookup("service:session");
       const site = owner.lookup("service:site");
       const capabilities = owner.lookup("service:capabilities");
       const modal = owner.lookup("service:modal");
-      // will eventually just be called lightbox
+
       api.decorateCookedElement((elem) => {
         return highlightSyntax(elem, siteSettings, session);
       });
@@ -203,11 +203,7 @@ export default {
 
           table.parentNode.insertBefore(buttonWrapper, table);
 
-          if (!isOverflown(table.parentNode)) {
-            return;
-          }
-
-          if (site.isMobileDevice) {
+          if (site.mobileView || !isOverflown(table.parentNode)) {
             return;
           }
 

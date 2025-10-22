@@ -57,7 +57,7 @@ end
 
 desc "Rebake all posts with a quote using a letter_avatar"
 task "posts:fix_letter_avatars" => :environment do
-  next unless SiteSetting.external_system_avatars_enabled
+  next if SiteSetting.external_system_avatars_url.blank?
 
   search =
     Post.where("user_id <> -1").where(
@@ -388,16 +388,17 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
     builder = DB.build <<~SQL
       WITH ordered_posts AS (
         SELECT
-          id,
+          p.id,
           ROW_NUMBER() OVER (
             PARTITION BY
-              topic_id
+              p.topic_id
             ORDER BY
-              created_at,
-              post_number
+              p.created_at,
+              p.post_number
           ) AS new_post_number
         FROM
-          posts
+          posts p
+        INNER JOIN topics t ON t.id = p.topic_id
         /*where*/
       )
       UPDATE
@@ -412,7 +413,7 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
         p.post_number <> o.new_post_number
     SQL
 
-    builder.where("topic_id = ?", args[:topic_id]) if args[:topic_id]
+    builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
     builder.exec
 
     [
@@ -426,11 +427,12 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
         UPDATE
           #{table} AS x
         SET
-          #{column} = p.sort_order * -1
+          #{column} = x.#{column} * -1
         FROM
           posts AS p
-        /*where*/
-      SQL
+        INNER JOIN topics t ON t.id = p.topic_id
+          /*where*/
+        SQL
 
       builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
       builder.where("p.post_number < 0")
@@ -438,26 +440,66 @@ task "posts:reorder_posts", [:topic_id] => [:environment] do |_, args|
       builder.where("x.#{column} = ABS(p.post_number)")
       builder.exec
 
-      DB.exec <<~SQL
+      # Mark orphaned records from the current table as negative so they
+      # don't collide (PostTimings) or are mismatched when reordering
+
+      orphan_builder = DB.build <<~SQL
+          UPDATE 
+            #{table} AS x
+          SET 
+            #{column} = x.#{column} * -1
+          FROM topics t
+          /*where*/
+        SQL
+
+      orphan_builder.where("t.id = x.topic_id")
+      orphan_builder.where("x.#{column} > 0")
+      orphan_builder.where("x.topic_id = ?", args[:topic_id]) if args[:topic_id]
+      orphan_builder.where(<<~SQL)
+          NOT EXISTS (
+            SELECT 
+              1
+            FROM 
+              posts p
+            WHERE
+              p.topic_id = x.topic_id
+              AND p.post_number = x.#{column}
+          )
+        SQL
+      orphan_builder.exec
+
+      builder = DB.build <<~SQL
         UPDATE
-          #{table}
+          #{table} AS x
         SET
-          #{column} = #{column} * -1
-        WHERE
-          #{column} < 0
+          #{column} = p.sort_order
+        FROM
+          posts AS p
+        INNER JOIN topics t ON t.id = p.topic_id
+        /*where*/
       SQL
+
+      builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
+      builder.where("p.post_number < 0")
+      builder.where("x.#{column} < 0")
+      builder.where("x.topic_id = p.topic_id")
+      builder.where("ABS(x.#{column}) = ABS(p.post_number)")
+      builder.exec
     end
 
     builder = DB.build <<~SQL
       UPDATE
-        posts
+        posts AS p
       SET
         post_number = sort_order
+      FROM
+        topics t
       /*where*/
     SQL
 
-    builder.where("topic_id = ?", args[:topic_id]) if args[:topic_id]
-    builder.where("post_number < 0")
+    builder.where("t.id = p.topic_id")
+    builder.where("p.topic_id = ?", args[:topic_id]) if args[:topic_id]
+    builder.where("p.post_number < 0")
     builder.exec
   end
 

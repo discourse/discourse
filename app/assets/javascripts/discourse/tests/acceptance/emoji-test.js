@@ -15,6 +15,9 @@ acceptance("Emoji", function (needs) {
     server.get("/emojis/search-aliases.json", () => {
       return helper.response([]);
     });
+    server.get("/drafts/topic_280.json", function () {
+      return helper.response(200, { draft: null });
+    });
   });
 
   test("emoji is cooked properly", async function (assert) {
@@ -36,8 +39,8 @@ acceptance("Emoji", function (needs) {
 
     await simulateKeys(".d-editor-input", "a :man_b");
 
-    // the 5th item in the list is the "more..."
-    await click(".autocomplete.ac-emoji ul li:nth-of-type(6)");
+    // the 6th item in the list is the "more..."
+    await click(".autocomplete.ac-emoji ul li:nth-of-type(6) a");
     await emojiPicker().select("man_biking");
 
     assert

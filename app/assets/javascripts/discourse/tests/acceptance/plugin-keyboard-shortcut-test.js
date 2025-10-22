@@ -9,7 +9,7 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
   needs.user();
 
   test("a plugin can add a keyboard shortcut", async function (assert) {
-    withPluginApi("0.8.38", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut("]", () => {
         document.querySelector("#qunit-fixture").innerHTML =
           `<div id="added-element">Test adding plugin shortcut</div>`;
@@ -28,7 +28,7 @@ acceptance("Plugin Keyboard Shortcuts - Logged In", function (needs) {
 acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
   test("a plugin can add a keyboard shortcut with an option", async function (assert) {
     let spy = sinon.spy(KeyboardShortcuts, "_bindToPath");
-    withPluginApi("0.8.38", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut("]", () => {}, {
         anonymous: true,
         path: "test-path",
@@ -42,7 +42,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
   });
 
   test("a plugin can add a shortcut and create a new category in the shortcut help modal", async function (assert) {
-    withPluginApi("0.8.38", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut("meta+]", () => {}, {
         help: {
           category: "new_category",
@@ -72,7 +72,7 @@ acceptance("Plugin Keyboard Shortcuts - Anonymous", function () {
 
     await click(".modal-close");
 
-    withPluginApi("0.8.38", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut("meta+]", () => {}, {
         help: {
           category: "application",

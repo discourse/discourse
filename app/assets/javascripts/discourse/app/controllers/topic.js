@@ -9,6 +9,7 @@ import { isEmpty, isPresent } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { Promise } from "rsvp";
+import DEditorOriginalTranslationPreview from "discourse/components/d-editor-original-translation-preview";
 import {
   CLOSE_INITIATED_BY_BUTTON,
   CLOSE_INITIATED_BY_ESC,
@@ -22,6 +23,7 @@ import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summar
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -38,6 +40,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import Draft from "discourse/models/draft";
 import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicTimer from "discourse/models/topic-timer";
@@ -71,6 +74,7 @@ export default class TopicController extends Controller {
   @service siteSettings;
   @service site;
   @service appEvents;
+  @service languageNameLookup;
 
   @tracked model;
 
@@ -296,9 +300,8 @@ export default class TopicController extends Controller {
           this.model.removeBookmark(post.bookmark_id);
         });
     }
-    const forTopicBookmark = this.model.bookmarks.findBy(
-      "bookmarkable_type",
-      "Topic"
+    const forTopicBookmark = this.model.bookmarks.find(
+      (b) => b.bookmarkable_type === "Topic"
     );
     if (
       forTopicBookmark?.auto_delete_preference ===
@@ -551,7 +554,7 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
-    const firstLoadedPost = postStream.get("posts.firstObject");
+    const firstLoadedPost = postStream.posts[0];
 
     if (post.get && post.get("post_number") === 1) {
       return;
@@ -568,7 +571,7 @@ export default class TopicController extends Controller {
     const { post, refresh } = event;
 
     const postStream = this.get("model.postStream");
-    const lastLoadedPost = postStream.get("posts.lastObject");
+    const lastLoadedPost = postStream.posts.at(-1);
 
     if (
       lastLoadedPost &&
@@ -684,7 +687,7 @@ export default class TopicController extends Controller {
 
   // Post related methods
   @action
-  replyToPost(post) {
+  async replyToPost(post) {
     const composerController = this.composer;
     const topic = post ? post.get("topic") : this.model;
     const quoteState = this.quoteState;
@@ -728,6 +731,16 @@ export default class TopicController extends Controller {
         opts.post = post;
       } else {
         opts.topic = topic;
+      }
+
+      if (!opts.quote) {
+        const draftData = await Draft.get(opts.draftKey);
+
+        if (draftData.draft) {
+          const data = JSON.parse(draftData.draft);
+          opts.reply = data.reply;
+          opts.draftSequence = draftData.draft_sequence;
+        }
       }
 
       composerController.open(opts);
@@ -877,6 +890,38 @@ export default class TopicController extends Controller {
 
     const topic = this.model;
 
+    const editingLocalizedPost =
+      post?.is_localized && this.siteSettings.content_localization_enabled;
+
+    if (editingLocalizedPost) {
+      if (!this.currentUser.can_localize_content) {
+        return this._openComposerForEdit(topic, post);
+      }
+
+      const language = this.languageNameLookup.getLanguageName(post.language);
+      return this.dialog.alert({
+        message: i18n("post.localizations.edit_warning.message", {
+          language,
+        }),
+        buttons: [
+          {
+            label: i18n("post.localizations.edit_warning.action_original"),
+            class: "btn-primary",
+            action: () => this._openComposerForEdit(topic, post),
+          },
+          {
+            label: i18n("post.localizations.edit_warning.action_translation"),
+            class: "btn-default",
+            action: () => this._openComposerForEditTranslation(topic, post),
+          },
+        ],
+      });
+    }
+
+    return this._openComposerForEdit(topic, post);
+  }
+
+  _openComposerForEdit(topic, post) {
     let editingSharedDraft = false;
     let draftsCategoryId = this.get("site.shared_drafts_category_id");
     if (draftsCategoryId && draftsCategoryId === topic.get("category.id")) {
@@ -902,6 +947,24 @@ export default class TopicController extends Controller {
       opts.draftKey === composerModel?.draftKey;
 
     return editingSamePost ? composer.unshrink() : composer.open(opts);
+  }
+
+  async _openComposerForEditTranslation(topic, post) {
+    const { raw } = await ajax(`/posts/${post.id}.json`);
+
+    const composerOpts = {
+      action: Composer.ADD_TRANSLATION,
+      draftKey: "translation",
+      warningsDisabled: true,
+      hijackPreview: {
+        component: DEditorOriginalTranslationPreview,
+        model: { postLocale: post.locale, rawPost: raw },
+      },
+      post,
+      selectedTranslationLocale: this.currentUser?.effective_locale,
+    };
+
+    await this.composer.open(composerOpts);
   }
 
   @action
@@ -1009,9 +1072,11 @@ export default class TopicController extends Controller {
   selectReplies(post) {
     ajax(`/posts/${post.id}/reply-ids.json`).then((replies) => {
       const replyIds = replies.map((r) => r.id);
-      this.selectedPostIds = [
-        ...new Set([...this.selectedPostIds, post.id, ...replyIds]),
-      ];
+      this.selectedPostIds = uniqueItemsFromArray([
+        ...this.selectedPostIds,
+        post.id,
+        ...replyIds,
+      ]);
       this._forceRefreshPostStream();
     });
   }
@@ -1342,7 +1407,9 @@ export default class TopicController extends Controller {
 
   _jumpToPostNumber(postNumber) {
     const postStream = this.get("model.postStream");
-    const post = postStream.get("posts").findBy("post_number", postNumber);
+    const post = postStream
+      .get("posts")
+      .find((item) => item.post_number === postNumber);
 
     if (post) {
       DiscourseURL.routeTo(
@@ -1449,7 +1516,7 @@ export default class TopicController extends Controller {
       this.model.set("bookmarks", []);
     }
 
-    const bookmark = this.model.bookmarks.findBy("id", data.id);
+    const bookmark = this.model.bookmarks.find((b) => b.id === data.id);
     if (!bookmark) {
       this.model.bookmarks.pushObject(Bookmark.create(data));
     } else {
@@ -1469,9 +1536,8 @@ export default class TopicController extends Controller {
     }
 
     if (this.model.bookmarkCount === 1) {
-      const topicBookmark = this.model.bookmarks.findBy(
-        "bookmarkable_type",
-        "Topic"
+      const topicBookmark = this.model.bookmarks.find(
+        (b) => b.bookmarkable_type === "Topic"
       );
       if (topicBookmark) {
         return this._modifyTopicBookmark(topicBookmark);
@@ -1524,20 +1590,19 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed(
-    "selectedPostIds",
-    "model.postStream.posts",
-    "selectedPostIds.[]",
-    "model.postStream.posts.[]"
-  )
-  selectedPosts(selectedPostIds, loadedPosts) {
-    return selectedPostIds
+  get selectedPosts() {
+    const loadedPosts = this.model.postStream.posts;
+
+    return this.selectedPostIds
       .map((id) => loadedPosts.find((p) => p.id === id))
       .filter((post) => post !== undefined);
   }
 
-  @discourseComputed("selectedPostsCount", "selectedPosts", "selectedPosts.[]")
-  selectedPostsUsername(selectedPostsCount, selectedPosts) {
+  @dependentKeyCompat
+  get selectedPostsUsername() {
+    const selectedPosts = this.selectedPosts;
+    const selectedPostsCount = this.selectedPostsCount;
+
     if (selectedPosts.length < 1 || selectedPostsCount > selectedPosts.length) {
       return undefined;
     }
@@ -1571,23 +1636,14 @@ export default class TopicController extends Controller {
     return isMegaTopic ? false : !selectedAllPosts;
   }
 
-  @discourseComputed(
-    "currentUser.staff",
-    "selectedPostsCount",
-    "selectedAllPosts",
-    "selectedPosts",
-    "selectedPosts.[]"
-  )
-  canDeleteSelected(
-    isStaff,
-    selectedPostsCount,
-    selectedAllPosts,
-    selectedPosts
-  ) {
+  @dependentKeyCompat
+  get canDeleteSelected() {
+    const isStaff = this.currentUser?.staff;
+
     return (
-      selectedPostsCount > 0 &&
-      ((selectedAllPosts && isStaff) ||
-        selectedPosts.every((p) => p.can_delete))
+      this.selectedPostsCount > 0 &&
+      ((this.selectedAllPosts && isStaff) ||
+        this.selectedPosts.every((p) => p.can_delete))
     );
   }
 
@@ -1617,17 +1673,12 @@ export default class TopicController extends Controller {
     );
   }
 
-  @discourseComputed(
-    "selectedPostsCount",
-    "selectedPostsUsername",
-    "selectedPosts",
-    "selectedPosts.[]"
-  )
-  canMergePosts(selectedPostsCount, selectedPostsUsername, selectedPosts) {
+  @dependentKeyCompat
+  get canMergePosts() {
     return (
-      selectedPostsCount > 1 &&
-      selectedPostsUsername !== undefined &&
-      selectedPosts.every((p) => p.can_delete)
+      this.selectedPostsCount > 1 &&
+      this.selectedPostsUsername !== undefined &&
+      this.selectedPosts.every((p) => p.can_delete)
     );
   }
 
@@ -1768,13 +1819,16 @@ export default class TopicController extends Controller {
     }
 
     const postStream = this.get("model.postStream");
+    const currentPostNumber = topic.get("currentPost");
+    const opts =
+      currentPostNumber > 1 ? { post_number: currentPostNumber } : {};
 
     if (data.reload_topic) {
-      topic.reload().then(() => {
-        this.send("postChangedRoute", topic.get("post_number") || 1);
+      topic.reload(opts).then(() => {
         this.appEvents.trigger("header:update-topic", topic);
         if (data.refresh_stream) {
-          postStream.refresh();
+          this.send("postChangedRoute", currentPostNumber || 1);
+          postStream.refresh({ nearPost: currentPostNumber });
         }
       });
 

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -955,14 +956,12 @@ export default class SearchAdvancedOptions extends Component {
               @content={{this.postTimeOptions}}
               @value={{this.searchedTerms.time.when}}
               @onChange={{this.onChangeWhenTime}}
-              @options={{hash
-                headerAriaLabel=(i18n "search.advanced.post.time.aria_label")
-              }}
             />
             <DateInput
               @date={{this.searchedTerms.time.days}}
               @onChange={{this.onChangeWhenDate}}
               @inputId="search-post-date"
+              aria-label={{i18n "search.advanced.post.time.aria_label"}}
             />
           </div>
         </div>

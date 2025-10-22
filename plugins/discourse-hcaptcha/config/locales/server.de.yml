@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "Es gibt ein Problem mit deiner hCaptcha-Konfiguration für `site_key` oder `secret_key`"
+  admin:
+    site_settings:
+      categories:
+        discourse_hcaptcha: "hCaptcha-Plug-in"
+  site_settings:
+    discourse_hcaptcha_enabled: "Aktiviere das hCaptcha-Plug-in. Erfordert ein <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto."
+    hcaptcha_site_key: "hCaptcha-Website-Schlüssel aus deinem <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto"
+    hcaptcha_secret_key: "Geheimer hCaptcha-Schlüssel aus deinem <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>-Konto"
+  h_captcha_verification_failed: "hCaptcha-Verifizierung fehlgeschlagen"

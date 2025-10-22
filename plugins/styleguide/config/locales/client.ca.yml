@@ -24,8 +24,8 @@ ca:
           title: "Temporitzadors de temes"
         post:
           title: "Publicació"
-        suggested_topics:
-          title: "Temes recomanats"
+        more_topics:
+          title: "Més temes"
         tooltips:
           description: "Descripció"
           header: "Capçalera"

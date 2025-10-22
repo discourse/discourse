@@ -6,10 +6,21 @@ require "fileutils"
 require "tempfile"
 require "open3"
 require "json"
+require "time"
 
-BUILD_INFO_FILE = "dist/BUILD_INFO.json"
+require_relative "../lib/version"
 
-Dir.chdir("#{__dir__}/../app/assets/javascripts/discourse")
+DOWNLOAD_PRE_BUILT_ASSETS = ENV["DISCOURSE_DOWNLOAD_PRE_BUILT_ASSETS"] != "0"
+DOWNLOAD_TEMP_FILE = "#{__dir__}/../tmp/assets.tar.gz"
+
+PRE_BUILD_ROOT = "https://get.discourse.org/discourse-assets"
+
+JS_SOURCE_PATHS = %w[app/assets/javascripts package.json pnpm-lock.yaml]
+
+EMBER_APP_DIR = "app/assets/javascripts/discourse"
+BUILD_INFO_FILE = "#{EMBER_APP_DIR}/dist/BUILD_INFO.json"
+
+Dir.chdir("#{__dir__}/..")
 
 def capture(*args)
   output, status = Open3.capture2(*args)
@@ -17,8 +28,12 @@ def capture(*args)
   output
 end
 
-# Returns a git tree-hash representing the current state of Discourse core.
-# If the working directory is clean, it will match the tree hash (note: different to the commit hash) of the HEAD commit.
+def log(message)
+  STDERR.puts "[assemble_ember_build] #{message}"
+end
+
+# Returns a git tree-hash representing the current state of Discourse core JS source paths.
+# Only files in JS_SOURCE_PATHS are included in the tree hash.
 def core_tree_hash
   Tempfile.create do |f|
     f.close
@@ -27,8 +42,12 @@ def core_tree_hash
     FileUtils.cp "#{git_dir}/index", f.path
 
     env = { "GIT_INDEX_FILE" => f.path }
-    system(env, "git", "add", "-A", exception: true)
-    return capture(env, "git", "write-tree").strip
+
+    # Remove all files from the index, then add only JS_SOURCE_PATHS
+    system(env, "git", "rm", "-r", "--cached", ".", "--quiet", exception: true)
+    system(env, "git", "add", *JS_SOURCE_PATHS, exception: true)
+
+    capture(env, "git", "write-tree").strip
   end
 end
 
@@ -41,7 +60,7 @@ def low_memory_environment?
 end
 
 def resolved_ember_env
-  ENV["EMBER_ENV"] || "production"
+  ENV["EMBER_ENV"] || "development"
 end
 
 def build_info
@@ -50,7 +69,7 @@ end
 
 def existing_core_build_usable?
   if !File.exist?(BUILD_INFO_FILE)
-    STDERR.puts "No existing build info file found."
+    log "No existing build info file found."
     return false
   end
 
@@ -60,13 +79,59 @@ def existing_core_build_usable?
   if existing == expected
     true
   else
-    STDERR.puts <<~MSG
+    log <<~MSG
       Existing build is not reusable.
       - Existing: #{existing.inspect}
       - Current: #{expected.inspect}
     MSG
     false
   end
+end
+
+def download_prebuild_assets!
+  return false if !DOWNLOAD_PRE_BUILT_ASSETS
+
+  status_output = capture("git", "status", "--porcelain", *JS_SOURCE_PATHS).strip
+  git_is_clean = status_output.empty?
+  if !git_is_clean
+    log "JS-related files in the git working directory have been changed. Skipping download of prebuilt assets."
+    return false
+  end
+
+  core_commit_hash = capture("git", "rev-parse", "HEAD").strip
+  version_string = "#{Discourse::VERSION::STRING}-#{core_commit_hash.slice(0, 8)}"
+
+  url = "#{PRE_BUILD_ROOT}/#{version_string}/#{resolved_ember_env}.tar.gz"
+  puts "Fetching and extracting #{url}..."
+
+  begin
+    system("curl", "--fail-with-body", "-L", url, "-o", DOWNLOAD_TEMP_FILE, exception: true)
+  rescue RuntimeError => e
+    log "Failed to download prebuilt assets: #{e.message}"
+    return false
+  end
+
+  FileUtils.rm_rf("#{EMBER_APP_DIR}/dist")
+  FileUtils.mkdir_p("#{EMBER_APP_DIR}/dist")
+  begin
+    system(
+      "tar",
+      "--strip-components=1",
+      "-xzf",
+      DOWNLOAD_TEMP_FILE,
+      "-C",
+      "#{EMBER_APP_DIR}/dist",
+      exception: true,
+    )
+  rescue RuntimeError => e
+    log "Failed to extract prebuilt assets: #{e.message}"
+    return false
+  end
+
+  puts "Prebuilt assets downloaded and extracted successfully."
+  true
+ensure
+  FileUtils.rm_f(DOWNLOAD_TEMP_FILE) if File.exist?(DOWNLOAD_TEMP_FILE)
 end
 
 build_cmd = %w[pnpm ember build]
@@ -78,7 +143,7 @@ if Etc.nprocessors > 2
 end
 
 if low_memory_environment?
-  STDERR.puts "Node.js heap_size_limit is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
+  log "Node.js heap_size_limit is less than 2048MB. Setting --max-old-space-size=2048 and CHEAP_SOURCE_MAPS=1"
   build_env["NODE_OPTIONS"] = "--max_old_space_size=2048"
   build_env["CHEAP_SOURCE_MAPS"] = "1"
   build_env["JOBS"] = "1"
@@ -86,20 +151,28 @@ end
 
 build_cmd << "-prod" if resolved_ember_env == "production"
 
-if existing_core_build_usable?
-  STDERR.puts "Reusing existing core ember build. Only building plugins..."
+core_build_reusable =
+  existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
+
+if core_build_reusable && ENV["LOAD_PLUGINS"] == "0"
+  log "Reusing existing core ember build. Plugins not loaded. All done."
+elsif core_build_reusable
+  log "Reusing existing core ember build. Only building plugins..."
   build_env["SKIP_CORE_BUILD"] = "1"
   build_cmd << "-o" << "dist/_plugin_only_build"
   begin
-    system(build_env, *build_cmd, exception: true)
-    FileUtils.rm_rf("dist/assets/plugins")
-    FileUtils.mv("dist/_plugin_only_build/assets/plugins", "dist/assets/plugins")
+    system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
+    FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/assets/plugins")
+    FileUtils.mv(
+      "#{EMBER_APP_DIR}/dist/_plugin_only_build/assets/plugins",
+      "#{EMBER_APP_DIR}/dist/assets/plugins",
+    )
   ensure
-    FileUtils.rm_rf("dist/_plugin_only_build")
+    FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/_plugin_only_build")
   end
-  STDERR.puts "Plugin build successfully integrated into dist"
+  log "Plugin build successfully integrated into dist"
 else
-  STDERR.puts "Running full core build..."
-  system(build_env, *build_cmd, exception: true)
+  log "Running full core build..."
+  system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
   File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
 end

@@ -123,7 +123,7 @@ export default class TopicAdminMenu extends Component {
                     @label="topic.actions.delete"
                     @action={{fn this.onButtonAction "deleteTopic"}}
                     @icon="trash-can"
-                    class="popup-menu-btn-danger btn-danger"
+                    class="popup-menu-btn-danger --danger"
                   />
                 </dropdown.item>
               {{else if this.canRecover}}
@@ -152,7 +152,7 @@ export default class TopicAdminMenu extends Component {
                     "topic.actions.close"
                   }}
                   @action={{fn this.onButtonAction "toggleClosed"}}
-                  @icon={{if @topic.closed "unlock" "lock"}}
+                  @icon={{if @topic.closed "topic.opened" "topic.closed"}}
                 />
               </dropdown.item>
             {{/if}}

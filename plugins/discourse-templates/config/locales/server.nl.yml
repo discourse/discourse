@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    discourse_templates_enabled: "Sta gebruikers met weergaverechten voor de hieronder opgegeven categorie toe om beschikbare sjablonen te gebruiken"
+    discourse_templates_categories: "Categorieën om de sjablonen uit op te halen"
+    discourse_templates_enable_private_templates: "Schakelt het gebruik van privésjablonen in"
+    discourse_templates_groups_allowed_private_templates: "Groepen mogen privésjablonen gebruiken. Medewerkers zijn altijd toegestaan."
+    discourse_templates_private_templates_tags: "Tags die een persoonlijk bericht identificeren als een privésjabloon"
+  default_category_template:
+    name: Sjablonen
+    description: |
+      Deze categorie wordt gebruikt om sjablonen op te slaan.
+
+      Met sjablonen kunnen gebruikers inhoud opslaan voor herhaald gebruik.
+
+      Elk topic in deze categorie vertegenwoordigt een ander sjabloon. **Het eerste bericht** van elk topic wordt gebruikt als model voor het sjabloon.
+
+      Elke gebruiker met toegang tot deze categorie mag sjablonen gebruiken.

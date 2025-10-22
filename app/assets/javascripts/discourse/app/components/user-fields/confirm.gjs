@@ -6,6 +6,11 @@ import { i18n } from "discourse-i18n";
 import UserFieldBase from "./base";
 
 export default class UserFieldConfirm extends UserFieldBase {
+  constructor() {
+    super(...arguments);
+    this.value = this.value === true;
+  }
+
   <template>
     {{#if this.field.name}}
       <label class="control-label">

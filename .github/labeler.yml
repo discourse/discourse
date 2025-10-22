@@ -2,16 +2,176 @@ chat:
   - changed-files:
       - any-glob-to-any-file: plugins/chat/**/*
 
+checklist:
+  - changed-files:
+      - any-glob-to-any-file: plugins/checklist/**/*
+
+discourse-details:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-details/**/*
+
+discourse-lazy-videos:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-lazy-videos/**/*
+
+discourse-local-dates:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-local-dates/**/*
+
+discourse-narrative-bot:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-narrative-bot/**/*
+
+discourse-presence:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-presence/**/*
+
+discourse-reactions:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-reactions/**/*
+
+discourse-apple-auth:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-apple-auth/**/*
+
+discourse-login-with-amazon:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-login-with-amazon/**/*
+
+discourse-lti:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-lti/**/*
+
+discourse-microsoft-auth:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-microsoft-auth/**/*
+
+discourse-oauth2-basic:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-oauth2-basic/**/*
+
+discourse-openid-connect:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-openid-connect/**/*
+
+discourse-zendesk-plugin:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-zendesk-plugin/**/*
+
+discourse-patreon:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-patreon/**/*
+
+discourse-graphviz:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-graphviz/**/*
+
+discourse-rss-polling:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-rss-polling/**/*
+
+discourse-math:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-math/**/*
+
+discourse-chat-integration:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-chat-integration/**/*
+
+discourse-data-explorer:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-data-explorer/**/*
+
+discourse-post-voting:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-post-voting/**/*
+
+discourse-user-notes:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-user-notes/**/*
+
+discourse-assign:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-assign/**/*
+
+discourse-subscriptions:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-subscriptions/**/*
+
+discourse-hcaptcha:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-hcaptcha/**/*
+
+discourse-gamification:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-gamification/**/*
+
+discourse-calendar:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-calendar/**/*
+
+discourse-policy:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-policy/**/*
+
+discourse-github:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-github/**/*
+
+discourse-adplugin:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-adplugin/**/*
+
+discourse-affiliate:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-affiliate/**/*
+
+discourse-solved:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-solved/**/*
+
+discourse-topic-voting:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-topic-voting/**/*
+
+discourse-templates:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-templates/**/*
+
+discourse-ai:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-ai/**/*
+
+discourse-cakeday:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-cakeday/**/*
+
+footnote:
+  - changed-files:
+      - any-glob-to-any-file: plugins/footnote/**/*
+
+poll:
+  - changed-files:
+      - any-glob-to-any-file: plugins/poll/**/*
+
+spoiler-alert:
+  - changed-files:
+      - any-glob-to-any-file: plugins/spoiler-alert/**/*
+
+styleguide:
+  - changed-files:
+      - any-glob-to-any-file: plugins/styleguide/**/*
+
 migrations-tooling:
   - changed-files:
       - any-glob-to-any-file:
-        - migrations/**/*
-        - script/bulk_import/**/*
-        - script/import_scripts/**/*
+          - migrations/**/*
+          - script/bulk_import/**/*
+          - script/import_scripts/**/*
 
 i18n:
   - changed-files:
       - any-glob-to-any-file:
-        - config/locales/*en.yml
-        - plugins/**/config/locales/*en.yml
-        - "**/*i18n*"
+          - config/locales/*en.yml
+          - plugins/**/config/locales/*en.yml
+          - "**/*i18n*"

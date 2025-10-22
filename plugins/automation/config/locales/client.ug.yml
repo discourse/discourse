@@ -446,8 +446,6 @@ ug:
             label: نەشرى
           status:
             label: ھالەت
-          enabled:
-            label: قوزغىتىلدى
           disabled:
             label: چەكلەندى
           placeholders:

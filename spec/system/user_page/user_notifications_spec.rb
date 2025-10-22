@@ -63,7 +63,7 @@ describe "User notifications", type: :system do
         topic: topic,
       )
     end
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     fab!(:group_mention_notification) do
       Fabricate(:group_mentioned_notification, post: post, user: user2, group: group)
     end

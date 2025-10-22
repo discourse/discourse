@@ -108,7 +108,7 @@ class PmMapUserGroup extends Component {
   }
 
   <template>
-    <div class="user group">
+    <div class="user group" data-id={{@model.id}}>
       <a href={{this.groupUrl}} class="group-link">
         {{icon "users"}}
         <span class="group-name">{{@model.name}}</span>
@@ -163,7 +163,7 @@ class PmMapUser extends Component {
   }
 
   <template>
-    <div class="user">
+    <div class="user" data-id={{@model.id}}>
       <a class="user-link" href={{@model.path}}>
         <a
           class="trigger-user-card"

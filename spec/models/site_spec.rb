@@ -11,13 +11,14 @@ RSpec.describe Site do
       Theme
         .where("id = :default OR user_selectable", default: SiteSetting.default_theme_id)
         .order(:name)
-        .pluck(:id, :name, :color_scheme_id)
-        .map do |id, n, cs|
+        .pluck(:id, :name, :color_scheme_id, :dark_color_scheme_id)
+        .map do |id, name, color_scheme_id, dark_color_scheme_id|
           {
             "theme_id" => id,
-            "name" => n,
+            "name" => name,
             "default" => id == SiteSetting.default_theme_id,
-            "color_scheme_id" => cs,
+            "color_scheme_id" => color_scheme_id,
+            "dark_color_scheme_id" => dark_color_scheme_id,
           }
         end
 
@@ -151,7 +152,7 @@ RSpec.describe Site do
 
       expect(site.categories.map { |c| c[:can_edit] }).to contain_exactly(false, false)
 
-      SiteSetting.moderators_manage_categories_and_groups = true
+      SiteSetting.moderators_manage_categories = true
 
       site = Site.new(Guardian.new(Fabricate(:moderator)))
 
@@ -283,9 +284,20 @@ RSpec.describe Site do
     expect(data["auth_providers"].map { |a| a["name"] }).to contain_exactly("facebook", "twitter")
   end
 
+  it "includes tos_url and privacy_policy_url when login_required" do
+    SiteSetting.login_required = true
+    SiteSetting.tos_url = "https://discourse.org"
+    SiteSetting.privacy_policy_url = "https://discourse.org/privacy"
+
+    data = JSON.parse(Site.json_for(Guardian.new))
+
+    expect(data["tos_url"]).to eq(SiteSetting.tos_url)
+    expect(data["privacy_policy_url"]).to eq(SiteSetting.privacy_policy_url)
+  end
+
   describe ".all_categories_cache" do
     fab!(:category)
-    fab!(:category2) { Fabricate(:category) }
+    fab!(:category2, :category)
 
     it "returns cached categories" do
       categories_data = Site.all_categories_cache

@@ -38,7 +38,7 @@
       align-items: center;
       justify-content: center;
       border-radius: var(--d-border-radius);
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       box-shadow: var(--shadow-dropdown);
       background: var(--secondary);
       max-width: 600px;
@@ -214,6 +214,11 @@
     align-items: center;
     justify-content: flex-start;
     padding: 0.5em;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.4;
+    }
 
     > * {
       pointer-events: none;

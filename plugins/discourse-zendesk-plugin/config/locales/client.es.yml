@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Zendesk de Discourse"
+  js:
+    topic:
+      create_zendesk_issue: "Crear una incidencia en Zendesk"
+      view_zendesk_issue: "Ver en Zendesk"
+    zendesk:
+      credentials_not_setup: No has configurado tus credenciales de Zendesk.
+      url_not_set: Tu URL de Zendesk no está configurada actualmente.
+      general_error: Algo salió mal.
+  site_settings:
+    zendesk_url: Tu URL de Zendesk. Por ejemplo, https://TU_SUBDOMINIO.zendesk.com/api/v2
+    zendesk_enabled: Activar el plugin de Zendesk
+    zendesk_autogenerate_all_categories: Crear automáticamente incidencias para todas las categorías. Si está habilitado, se ignora `zendesk_autogenerate_categories`.
+    zendesk_autogenerate_categories: Lista de categorías que crearán automáticamente incidencias de Zendesk.
+    zendesk_jobs_api_token: Token de la API para la autenticación de Zendesk
+    zendesk_jobs_email: Correo electrónico que se utilizará para la autenticación de Zendesk
+    zendesk_job_push_all_posts: '¿Enviar todos los mensajes en un tema como comentarios de Zendesk? Si está deshabilitado solo se enviará el primer mensaje a Zendesk.'
+    zendesk_job_push_only_author_posts: Enviar a Zendesk solo los mensajes del autor del tema original. Solo se aplica si `zendesk_job_push_all_posts` está activado
+    sync_comments_from_zendesk: Publicar automáticamente los comentarios de Zendesk en Discourse. Solo se aplica a los temas en `zendesk_autogenerate_categories`.
+    zendesk_incoming_webhook_token: Token enviado en la carga útil del webhook de salida de Zendesk. Solo es necesario si `sync_comments_from_zendesk` está activado.
+    zendesk_tags: Lista de etiquetas para añadir a cada incidencia

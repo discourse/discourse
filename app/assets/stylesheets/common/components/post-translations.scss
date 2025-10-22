@@ -4,14 +4,13 @@
   }
 }
 
-.update-translations-menu {
-  .d-icon {
-    color: var(--quaternary);
-  }
-}
-
 .post-language-selector-content {
   z-index: z("composer", "dropdown");
+
+  // eventho mobile composer shouldnt be used in conjuction with fk-d-menu (floating version), on tablets the possibility unfortunately exists
+  .discourse-touch & {
+    z-index: z("mobile-composer");
+  }
 }
 
 .post-language-selector-trigger {

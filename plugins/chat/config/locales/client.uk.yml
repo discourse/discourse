@@ -262,7 +262,7 @@ uk:
         header: "Заголовок чату"
         composer: "Редактор чату"
         channels_list: "Список каналів чату"
-      no_direct_message_channels: "Ви ще не приєдналися до будь-яких особистих повідомлень!"
+      no_direct_message_channels: "Ви ще не приєдналися до жодної особистої переписки!"
       no_direct_message_channels_cta: "Розпочати розмову"
       no_public_channels: "Ви ще не приєдналися до жодного каналу!"
       no_public_channels_cta: "Перегляд каналів"
@@ -334,7 +334,7 @@ uk:
         many: "%{count} файлів"
         other: "%{count} файлів"
       you_flagged: "Ви поскаржилися на це повідомлення"
-      exit: "назад"
+      exit: "вийти з чату"
       channel_status:
         read_only_header: "Канал тільки для читання"
         read_only: "Тільки для читання"
@@ -790,7 +790,7 @@ uk:
           switch_channel_arrows: "%{shortcut} Переключити канал"
           switch__unread_channel_arrows: "%{shortcut} Переключити непрочитаний канал"
           open_quick_channel_selector: "%{shortcut} Відкрити швидкий селектор каналів"
-          open_insert_link_modal: "%{shortcut} Вставити гіперпосилання (лише редактор)"
+          open_insert_link_modal: "%{shortcut} Вставити посилання (лише в редакторі)"
           composer_bold: "%{shortcut} Жирний (лише в редакторі)"
           composer_italic: "%{shortcut} Курсив (лише в редакторі)"
           composer_code: "%{shortcut} Код (тільки в редакторі)"
@@ -822,6 +822,9 @@ uk:
         chat:
           title: Чат
     sidebar:
+      start_new_dm:
+        text: Почати нове особисте повідомлення
+        title: Створити особистий чат
       panels:
         chat:
           label: "Чат"

@@ -16,7 +16,7 @@ RSpec.describe TopicQuery do
   fab!(:creator) { Fabricate(:user, refresh_auto_groups: true) }
   let(:topic_query) { TopicQuery.new(user) }
 
-  fab!(:tl4_user) { Fabricate(:trust_level_4) }
+  fab!(:tl4_user, :trust_level_4)
   fab!(:moderator)
   fab!(:admin)
 
@@ -105,6 +105,20 @@ RSpec.describe TopicQuery do
         expect(TopicQuery.validate?(:per_page, "10")).to eq(true)
       end
     end
+
+    describe "page" do
+      it "respects SiteSetting.max_topic_query_page_param" do
+        SiteSetting.max_topic_query_page_param = 100
+
+        expect(TopicQuery.validate?(:page, -1)).to eq(false)
+        expect(TopicQuery.validate?(:page, 101)).to eq(false)
+
+        expect(TopicQuery.validate?(:page, 0)).to eq(true)
+        expect(TopicQuery.validate?(:page, 1)).to eq(true)
+        expect(TopicQuery.validate?(:page, 100)).to eq(true)
+        expect(TopicQuery.validate?(:page, "10")).to eq(true)
+      end
+    end
   end
 
   describe "#list_topics_by" do
@@ -127,7 +141,7 @@ RSpec.describe TopicQuery do
           pinned_globally: true,
           like_count: 1,
         )
-      _topic = Fabricate(:topic, created_at: 5.minute.ago, like_count: 100)
+      _topic = Fabricate(:topic, created_at: 5.minutes.ago, like_count: 100)
       topic = Fabricate(:topic, created_at: 1.minute.ago, like_count: 100)
 
       # pinned topic is older so generally it would not hit the batch without
@@ -207,21 +221,21 @@ RSpec.describe TopicQuery do
       pinned1 =
         Fabricate(
           :topic,
-          bumped_at: 3.hour.ago,
-          pinned_at: 1.hours.ago,
+          bumped_at: 3.hours.ago,
+          pinned_at: 1.hour.ago,
           pinned_until: 10.days.from_now,
           pinned_globally: true,
         )
       pinned2 =
         Fabricate(
           :topic,
-          bumped_at: 2.hour.ago,
+          bumped_at: 2.hours.ago,
           pinned_at: 4.hours.ago,
           pinned_until: 10.days.from_now,
           pinned_globally: true,
         )
-      unpinned1 = Fabricate(:topic, bumped_at: 2.hour.ago)
-      unpinned2 = Fabricate(:topic, bumped_at: 3.hour.ago)
+      unpinned1 = Fabricate(:topic, bumped_at: 2.hours.ago)
+      unpinned2 = Fabricate(:topic, bumped_at: 3.hours.ago)
 
       topic_query = TopicQuery.new(user)
       results = topic_query.send(:default_results)
@@ -238,20 +252,20 @@ RSpec.describe TopicQuery do
         Fabricate(
           :topic,
           category: cat,
-          bumped_at: 3.hour.ago,
-          pinned_at: 1.hours.ago,
+          bumped_at: 3.hours.ago,
+          pinned_at: 1.hour.ago,
           pinned_until: 10.days.from_now,
         )
       pinned2 =
         Fabricate(
           :topic,
           category: cat,
-          bumped_at: 2.hour.ago,
+          bumped_at: 2.hours.ago,
           pinned_at: 4.hours.ago,
           pinned_until: 10.days.from_now,
         )
-      unpinned1 = Fabricate(:topic, category: cat, bumped_at: 2.hour.ago)
-      unpinned2 = Fabricate(:topic, category: cat, bumped_at: 3.hour.ago)
+      unpinned1 = Fabricate(:topic, category: cat, bumped_at: 2.hours.ago)
+      unpinned2 = Fabricate(:topic, category: cat, bumped_at: 3.hours.ago)
 
       topic_query = TopicQuery.new(user)
       results = topic_query.send(:default_results)
@@ -505,7 +519,7 @@ RSpec.describe TopicQuery do
 
   describe "tag filter" do
     fab!(:tag)
-    fab!(:other_tag) { Fabricate(:tag) }
+    fab!(:other_tag, :tag)
     fab!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
 
     before { SiteSetting.tagging_enabled = true }
@@ -515,7 +529,7 @@ RSpec.describe TopicQuery do
       fab!(:tagged_topic2) { Fabricate(:topic, tags: [other_tag]) }
       fab!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
       fab!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
-      fab!(:no_tags_topic) { Fabricate(:topic) }
+      fab!(:no_tags_topic, :topic)
       fab!(:tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [other_tag.name])
       end
@@ -737,7 +751,7 @@ RSpec.describe TopicQuery do
   end
 
   describe "mute_all_categories_by_default" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
     fab!(:topic) { Fabricate(:topic, category: category) }
 
     before { SiteSetting.mute_all_categories_by_default = true }
@@ -1110,9 +1124,9 @@ RSpec.describe TopicQuery do
   end
 
   describe "categorized" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
     let(:topic_category) { category.topic }
-    fab!(:topic_no_cat) { Fabricate(:topic) }
+    fab!(:topic_no_cat, :topic)
     fab!(:topic_in_cat1) do
       Fabricate(:topic, category: category, bumped_at: 10.minutes.ago, created_at: 10.minutes.ago)
     end
@@ -1617,7 +1631,7 @@ RSpec.describe TopicQuery do
 
       context "when there are new topics for user" do
         fab!(:category)
-        fab!(:category2) { Fabricate(:category) }
+        fab!(:category2, :category)
 
         fab!(:topic_in_category_that_user_created_and_has_partially_read) do
           Fabricate(:topic, user: user, category:).tap do |t|
@@ -1928,7 +1942,7 @@ RSpec.describe TopicQuery do
       user
     end
 
-    fab!(:user3) { Fabricate(:user) }
+    fab!(:user3, :user)
 
     fab!(:private_category) { Fabricate(:private_category_with_definition, group: group) }
 
@@ -1964,8 +1978,8 @@ RSpec.describe TopicQuery do
   end
 
   describe "shared drafts" do
-    fab!(:category) { Fabricate(:category_with_definition) }
-    fab!(:shared_drafts_category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
+    fab!(:shared_drafts_category, :category_with_definition)
     fab!(:topic) { Fabricate(:topic, category: shared_drafts_category) }
     fab!(:shared_draft) { Fabricate(:shared_draft, topic: topic, category: category) }
     fab!(:admin)
@@ -2233,7 +2247,7 @@ RSpec.describe TopicQuery do
   end
 
   describe "show_category_definitions_in_topic_lists setting" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
     fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
     fab!(:subcategory_regular_topic) { Fabricate(:topic, category: subcategory) }
 
@@ -2261,7 +2275,7 @@ RSpec.describe TopicQuery do
 
   describe "with topic_query_create_list_topics modifier" do
     fab!(:topic1) { Fabricate(:topic, created_at: 3.days.ago, bumped_at: 1.hour.ago) }
-    fab!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hour.ago) }
+    fab!(:topic2) { Fabricate(:topic, created_at: 2.days.ago, bumped_at: 3.hours.ago) }
 
     it "allows changing" do
       original_topic_query = TopicQuery.new(user)
@@ -2369,6 +2383,106 @@ RSpec.describe TopicQuery do
           topic_in_muted_category_and_watched_tag.id,
         )
       end
+    end
+  end
+
+  describe "state parameter" do
+    describe "state=watching_first_post" do
+      fab!(:test_user, :user)
+      fab!(:category_watching_first_post, :category)
+      fab!(:category_regular, :category)
+      fab!(:tag_watching_first_post, :tag)
+      fab!(:tag_regular, :tag)
+
+      fab!(:topic_in_watched_category) { Fabricate(:topic, category: category_watching_first_post) }
+
+      fab!(:topic_in_regular_category) { Fabricate(:topic, category: category_regular) }
+      fab!(:topic_with_watched_tag) { Fabricate(:topic, tags: [tag_watching_first_post]) }
+      fab!(:topic_with_regular_tag) { Fabricate(:topic, tags: [tag_regular]) }
+
+      fab!(:topic_with_both) do
+        Fabricate(:topic, category: category_watching_first_post, tags: [tag_watching_first_post])
+      end
+
+      before do
+        SiteSetting.tagging_enabled = true
+        CategoryUser.set_notification_level_for_category(
+          test_user,
+          CategoryUser.notification_levels[:watching_first_post],
+          category_watching_first_post.id,
+        )
+        TagUser.change(
+          test_user.id,
+          tag_watching_first_post.id,
+          TagUser.notification_levels[:watching_first_post],
+        )
+      end
+
+      it "should not return any topics if the user is anonymous" do
+        expect(
+          TopicQuery.new(nil, state: "watching_first_post").list_latest.topics.map(&:id),
+        ).to eq([])
+      end
+
+      it "should return the union of topics in watched categories and topics with watched tags" do
+        ids = TopicQuery.new(test_user, state: "watching_first_post").list_latest.topics.map(&:id)
+
+        expect(ids).to contain_exactly(
+          topic_in_watched_category.id,
+          topic_with_watched_tag.id,
+          topic_with_both.id,
+        )
+      end
+
+      it "should work when combined with other filters" do
+        topic_in_watched_category.update!(closed: true)
+
+        ids =
+          TopicQuery
+            .new(test_user, state: "watching_first_post", status: "closed")
+            .list_latest
+            .topics
+            .map(&:id)
+
+        expect(ids).to contain_exactly(topic_in_watched_category.id)
+      end
+    end
+  end
+
+  describe "content_localization enabled" do
+    fab!(:user)
+    fab!(:topics) { Fabricate.times(3, :topic) }
+    fab!(:topic_localization1) do
+      Fabricate(
+        :topic_localization,
+        topic: topics[0],
+        locale: "fr",
+        title: "Bonjour",
+        fancy_title: "Bonjour",
+      )
+    end
+    fab!(:topic_localization2) do
+      Fabricate(
+        :topic_localization,
+        topic: topics[1],
+        locale: "es",
+        title: "Hola",
+        fancy_title: "Hola",
+      )
+    end
+
+    before { SiteSetting.content_localization_enabled = true }
+
+    it "doesn't generate N+1 queries when accessing a localization's fancy_title" do
+      topic_query = TopicQuery.new(user)
+      topic_list = topic_query.list_latest
+
+      expect(topic_list.topics.first.association(:localizations).loaded?).to eq(true)
+
+      queries =
+        track_sql_queries { topic_list.topics.each { |topic| topic.get_localization&.fancy_title } }
+
+      expect(queries.select { |q| q.include?("topic_localizations") }).to be_empty
     end
   end
 end

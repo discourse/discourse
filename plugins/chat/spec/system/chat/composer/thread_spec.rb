@@ -2,7 +2,7 @@
 
 RSpec.describe "Chat | composer | thread", type: :system do
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
   fab!(:message_1) do
     Fabricate(:chat_message, chat_channel: channel_1, user: current_user, use_service: true)
   end

@@ -4,6 +4,7 @@ describe Chat::Message do
   fab!(:message) { Fabricate(:chat_message, message: "hey friend, what's up?!") }
 
   it { is_expected.to have_many(:chat_mentions).dependent(:destroy) }
+  it { is_expected.to have_one(:message_search_data).dependent(:destroy) }
 
   it "supports custom fields" do
     message.custom_fields["test"] = "test"
@@ -358,7 +359,7 @@ describe Chat::Message do
     it "supports quote bbcode" do
       topic = Fabricate(:topic, title: "Some quotable topic")
       post = Fabricate(:post, topic: topic)
-      SiteSetting.external_system_avatars_enabled = false
+      SiteSetting.external_system_avatars_url = ""
       avatar_src =
         "//test.localhost#{User.system_avatar_template(post.user.username).gsub("{size}", "48")}"
 
@@ -751,6 +752,20 @@ describe Chat::Message do
       expect { upload_reference_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it "destroys message_search_data" do
+      message_1 = Fabricate(:chat_message)
+      search_data_1 =
+        Chat::MessageSearchData.create!(
+          chat_message_id: message_1.id,
+          search_data: "test search data",
+          raw_data: "test",
+        )
+
+      message_1.destroy!
+
+      expect { search_data_1.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
     describe "bookmarks" do
       before { register_test_bookmarkable(Chat::MessageBookmarkable) }
 
@@ -802,10 +817,10 @@ describe Chat::Message do
 
   describe "#upsert_mentions" do
     context "with direct mentions" do
-      fab!(:user1) { Fabricate(:user) }
-      fab!(:user2) { Fabricate(:user) }
-      fab!(:user3) { Fabricate(:user) }
-      fab!(:user4) { Fabricate(:user) }
+      fab!(:user1, :user)
+      fab!(:user2, :user)
+      fab!(:user3, :user)
+      fab!(:user4, :user)
       fab!(:message) do
         Fabricate(:chat_message, message: "Hey @#{user1.username} and @#{user2.username}")
       end

@@ -41,7 +41,7 @@ RSpec.describe SiteSettingExtension do
     new_settings(provider_local)
   end
 
-  it "Does not leak state cause changes are not linked" do
+  it "does not leak state cause changes are not linked" do
     t1 =
       Thread.new do
         5.times do
@@ -66,7 +66,12 @@ RSpec.describe SiteSettingExtension do
     t2.join
   end
 
-  describe "refresh!" do
+  describe ".refresh!" do
+    it "ensures that the right MessageBus subscription has been set up" do
+      settings.expects(:ensure_listen_for_changes).once
+      settings.refresh!
+    end
+
     it "will reset to default if provider vanishes" do
       settings.setting(:hello, 1)
       settings.hello = 100
@@ -89,7 +94,7 @@ RSpec.describe SiteSettingExtension do
       expect(settings.hello).to eq(99)
     end
 
-    it "publishes changes cross sites" do
+    it "picks up changes from provider on refresh across processes" do
       settings.setting(:hello, 1)
       settings2.setting(:hello, 1)
 
@@ -921,12 +926,18 @@ RSpec.describe SiteSettingExtension do
 
       expect(client_settings["with_html"]).to eq("<script></script>rest")
     end
+
+    it "does not include themeable site settings" do
+      SiteSetting.refresh!
+      expect(SiteSetting.client_settings_json_uncached).not_to include("enable_welcome_banner")
+      expect(SiteSetting.client_settings_json_uncached).not_to include("search_experience")
+    end
   end
 
   describe ".setup_methods" do
     describe "for uploads site settings" do
       fab!(:upload)
-      fab!(:upload2) { Fabricate(:upload) }
+      fab!(:upload2, :upload)
 
       it "should return the upload record" do
         settings.setting(:some_upload, upload.id.to_s, type: :upload)
@@ -981,6 +992,106 @@ RSpec.describe SiteSettingExtension do
           :requires_confirmation
         ],
       ).to eq(nil)
+    end
+  end
+
+  describe "themeable settings" do
+    fab!(:theme_1, :theme)
+    fab!(:theme_2, :theme)
+    fab!(:tss_1) do
+      Fabricate(
+        :theme_site_setting_with_service,
+        name: "enable_welcome_banner",
+        value: false,
+        theme: theme_1,
+      )
+    end
+    fab!(:tss_2) do
+      Fabricate(
+        :theme_site_setting_with_service,
+        name: "search_experience",
+        value: "search_field",
+        theme: theme_2,
+      )
+    end
+
+    it "has the site setting default values when there are no theme site settings for the theme" do
+      SiteSetting.refresh!
+      expect(SiteSetting.theme_site_settings[theme_1.id][:search_experience]).to eq("search_icon")
+      expect(SiteSetting.theme_site_settings[theme_2.id][:enable_welcome_banner]).to eq(true)
+    end
+
+    it "returns true for settings that are themeable" do
+      expect(SiteSetting.themeable[:enable_welcome_banner]).to eq(true)
+    end
+
+    it "returns false for settings that are not themeable" do
+      expect(SiteSetting.themeable[:title]).to eq(false)
+    end
+
+    it "caches the theme site setting values on a per theme basis" do
+      SiteSetting.refresh!
+      expect(SiteSetting.theme_site_settings[theme_1.id][:enable_welcome_banner]).to eq(false)
+      expect(SiteSetting.theme_site_settings[theme_2.id][:search_experience]).to eq("search_field")
+    end
+
+    it "overrides the site setting value with the theme site setting" do
+      SiteSetting.create!(
+        name: "enable_welcome_banner",
+        data_type: SiteSettings::TypeSupervisor.types[:bool],
+        value: "t",
+      )
+      SiteSetting.create!(
+        name: "search_experience",
+        data_type: SiteSettings::TypeSupervisor.types[:enum],
+        value: SiteSetting.type_supervisor.to_db_value(:search_experience, "search_icon"),
+      )
+      SiteSetting.refresh!
+      expect(SiteSetting.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
+      expect(SiteSetting.enable_welcome_banner(theme_id: theme_2.id)).to eq(true)
+      expect(SiteSetting.search_experience(theme_id: theme_1.id)).to eq("search_icon")
+      expect(SiteSetting.search_experience(theme_id: theme_2.id)).to eq("search_field")
+    end
+
+    it "publishes the right MessageBus message when a theme site setting is updated" do
+      settings_tss_instance_1 = new_settings(provider_local)
+      settings_tss_instance_1.load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+      settings_tss_instance_1.refresh!
+
+      expect(settings_tss_instance_1.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
+
+      tss_1.update!(value: true)
+
+      messages =
+        MessageBus.track_publish(described_class::SITE_SETTINGS_CHANNEL) do
+          settings_tss_instance_1.change_themeable_site_setting(
+            theme_1.id,
+            :enable_welcome_banner,
+            true,
+          )
+        end
+
+      expect(messages.length).to eq(1)
+
+      message = messages.first
+
+      expect(message.data[:process]).to eq(settings_tss_instance_1.process_id)
+    end
+
+    describe ".theme_site_settings_json_uncached" do
+      it "returns the correct JSON" do
+        SiteSetting.refresh!
+        expect(SiteSetting.theme_site_settings_json_uncached(theme_1.id)).to eq(
+          %Q|{"enable_welcome_banner":false,"search_experience":"search_icon"}|,
+        )
+      end
+
+      it "returns default JSON when the theme_id is null" do
+        SiteSetting.refresh!
+        expect(SiteSetting.theme_site_settings_json_uncached(nil)).to eq(
+          %Q|{"enable_welcome_banner":true,"search_experience":"search_icon"}|,
+        )
+      end
     end
   end
 

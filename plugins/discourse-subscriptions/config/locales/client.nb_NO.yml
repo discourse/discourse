@@ -1,0 +1,56 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nb_NO:
+  js:
+    discourse_subscriptions:
+      optional: Valgfritt
+      campaign:
+        success_title: Suksess!
+      plans:
+        interval:
+          adverb:
+            day: Daglig
+            week: Ukentlig
+            month: Månedlig
+            year: Årlig
+      user:
+        payments:
+          created_at: Opprettet
+        plans:
+          product: Navn
+        subscriptions:
+          status: Status
+          update_card:
+            single: "Oppdater"
+          created_at: Opprettet
+          cancel: avbryt
+      billing:
+        email: E-post
+      admin:
+        dashboard:
+          title: Dashbord
+          table:
+            head:
+              user: Bruker
+        products:
+          product:
+            description: Beskrivelse
+            active: Aktiv
+            created_at: Opprettet
+            updated_at: Oppdatert
+        plans:
+          plan:
+            active: Aktiv
+            created_at: Opprettet
+        coupons:
+          active: Aktiv?
+          actions: Handlinger
+        subscriptions:
+          subscription:
+            user: Bruker
+            status: Status
+            created_at: Opprettet

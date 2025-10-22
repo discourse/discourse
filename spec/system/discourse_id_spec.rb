@@ -5,9 +5,9 @@ describe "discourse login client auth" do
 
   before do
     OmniAuth.config.test_mode = true
-    SiteSetting.enable_discourse_id = true
     SiteSetting.discourse_id_client_id = "asdasd"
     SiteSetting.discourse_id_client_secret = "wadayathink"
+    SiteSetting.enable_discourse_id = true
 
     OmniAuth.config.mock_auth[:discourse_id] = OmniAuth::AuthHash.new(
       provider: "discourse_id",
@@ -18,8 +18,6 @@ describe "discourse login client auth" do
           username: OmniauthHelpers::USERNAME,
         ),
     )
-
-    Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:github]
   end
 
   after { reset_omniauth_config(:discourse_id) }

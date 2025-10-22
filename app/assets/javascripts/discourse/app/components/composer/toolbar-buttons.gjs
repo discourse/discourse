@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
@@ -16,9 +15,14 @@ export default class ComposerToolbarButtons extends Component {
     const { isFirst = true } = this.args;
     return (
       isFirst &&
-      this.args.data.groups.find((group) => group.buttons?.length > 0)
-        ?.buttons[0]
+      this.args.data.groups
+        .find((group) => group.buttons?.length > 0)
+        ?.buttons.filter(this.isActionable)[0]
     );
+  }
+
+  isActionable(button) {
+    return button.type !== "separator" && !button.disabled;
   }
 
   get rovingButtonBar() {
@@ -39,13 +43,18 @@ export default class ComposerToolbarButtons extends Component {
             <div class="toolbar-separator"></div>
           {{else if button.popupMenu}}
             <ToolbarPopupMenuOptions
+              @title={{button.title}}
+              @context={{@data.context}}
               @content={{(button.popupMenu.options)}}
               @onChange={{button.popupMenu.action}}
               @onOpen={{button.action}}
               @tabindex={{this.tabIndex button}}
               @onKeydown={{this.rovingButtonBar}}
-              @options={{hash icon=button.icon focusAfterOnChange=false}}
-              @class={{button.className}}
+              @icon={{button.icon}}
+              @class={{concatClass
+                button.className
+                (if (this.isButtonActive button) "--active")
+              }}
             />
           {{else}}
             <DButton
@@ -58,6 +67,7 @@ export default class ComposerToolbarButtons extends Component {
               @icon={{button.icon}}
               @preventFocus={{button.preventFocus}}
               @onKeyDown={{this.rovingButtonBar}}
+              aria-keyshortcuts={{button.ariaKeyshortcuts}}
               tabindex={{this.tabIndex button}}
               class={{concatClass
                 "toolbar__button"

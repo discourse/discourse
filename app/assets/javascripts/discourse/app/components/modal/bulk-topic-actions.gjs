@@ -27,7 +27,6 @@ export function addBulkDropdownAction(name, customAction) {
 }
 
 export default class BulkTopicActions extends Component {
-  @service router;
   @service toasts;
 
   @tracked activeComponent = null;
@@ -88,9 +87,7 @@ export default class BulkTopicActions extends Component {
     const options = {};
 
     if (this.isSilent) {
-      const newType =
-        operation.type === "close" ? "silent_close" : operation.type;
-      operation.type = newType;
+      operation.silent = true;
     }
 
     if (this.isCloseAction && this.closeNote) {
@@ -106,7 +103,9 @@ export default class BulkTopicActions extends Component {
     return new Promise((resolve, reject) => {
       const resolveNextTask = async () => {
         if (tasks.length === 0) {
-          const topics = topicIds.map((id) => allTopics.findBy("id", id));
+          const topics = topicIds.map((id) =>
+            allTopics.find((value) => value.id === id)
+          );
           return resolve(topics);
         }
 
@@ -162,7 +161,7 @@ export default class BulkTopicActions extends Component {
         }
 
         let groupPrivateMessages = getOwner(this).lookup(
-          "controller:group-messages"
+          "controller:group.messages"
         );
 
         if (groupPrivateMessages.isGroup) {
@@ -229,12 +228,12 @@ export default class BulkTopicActions extends Component {
     this.loading = false;
     if (this.errors) {
       this.toasts.error({
-        duration: 3000,
+        duration: "short",
         data: { message: i18n("generic_error") },
       });
     } else {
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: { message: i18n("topics.bulk.completed") },
       });
     }

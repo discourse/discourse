@@ -3,7 +3,7 @@
 RSpec.describe "React to message", type: :system do
   fab!(:current_user) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
   fab!(:other_user) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
-  fab!(:category_channel_1) { Fabricate(:category_channel) }
+  fab!(:category_channel_1, :category_channel)
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: category_channel_1) }
 
   let(:chat) { PageObjects::Pages::Chat.new }
@@ -231,6 +231,20 @@ RSpec.describe "React to message", type: :system do
 
         expect(channel).to have_reaction(message_1, reaction_2.emoji, "1")
       end
+    end
+  end
+
+  context "when using one click reaction" do
+    before { current_user.user_option.update!(chat_quick_reactions_custom: "tada|smiley") }
+
+    it "appears in frequently used" do
+      sign_in(current_user)
+      chat.visit_channel(category_channel_1)
+
+      channel.click_quick_reaction(message_1, "tada")
+      channel.open_emoji_picker(message_1)
+
+      expect(page).to have_selector(".emoji-picker [data-emoji=\"tada\"]")
     end
   end
 end

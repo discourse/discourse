@@ -16,15 +16,18 @@ export function addOnKeyUpCallback(fn) {
   onKeyUpCallbacks.push(fn);
 }
 export function resetOnKeyUpCallbacks() {
-  onKeyUpCallbacks.clear();
+  onKeyUpCallbacks.length = 0;
 }
 
 export default class SearchTerm extends Component {
   @service search;
-  @service appEvents;
 
   @tracked lastEnterTimestamp = null;
   @tracked searchCleared = !this.search.activeGlobalSearchTerm;
+
+  get placeholderText() {
+    return this.args.placeholder || i18n("search.title");
+  }
 
   @action
   updateSearchTerm(input) {
@@ -118,8 +121,8 @@ export default class SearchTerm extends Component {
       autocomplete="off"
       enterkeyhint="search"
       value={{this.search.activeGlobalSearchTerm}}
-      placeholder={{i18n "search.title"}}
-      aria-label={{i18n "search.title"}}
+      placeholder={{this.placeholderText}}
+      aria-label={{this.placeholderText}}
       {{on "keyup" this.onKeyup}}
       {{on "keydown" this.onKeydown}}
       {{on "input" this.updateSearchTerm}}

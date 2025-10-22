@@ -7,7 +7,7 @@ describe "Post selection | Copy quote", type: :system do
 
   fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic, raw: "Hello world it's time for quoting!") }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:current_user, :admin)
 
   context "when logged in" do
     before do

@@ -19,7 +19,6 @@ import { i18n } from "discourse-i18n";
 
 export default class TopicCell extends Component {
   @service currentUser;
-  @service messageBus;
 
   get newDotText() {
     return this.currentUser?.trust_level > 0

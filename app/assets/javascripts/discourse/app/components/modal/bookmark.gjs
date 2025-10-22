@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import ItsATrap from "@discourse/itsatrap";
 import { Promise } from "rsvp";
 import DButton from "discourse/components/d-button";
@@ -16,7 +17,6 @@ import DModalCancel from "discourse/components/d-modal-cancel";
 import TimeShortcutPicker from "discourse/components/time-shortcut-picker";
 import basePath from "discourse/helpers/base-path";
 import icon from "discourse/helpers/d-icon";
-import htmlSafe from "discourse/helpers/html-safe";
 import { extractError } from "discourse/lib/ajax-error";
 import { formattedReminderTime } from "discourse/lib/bookmark";
 import KeyboardShortcuts from "discourse/lib/keyboard-shortcuts";
@@ -39,8 +39,9 @@ const BOOKMARK_BINDINGS = {
 export default class BookmarkModal extends Component {
   @service dialog;
   @service currentUser;
-  @service site;
+  @service capabilities;
   @service bookmarkApi;
+  @service site;
 
   @tracked postDetectedLocalDate = null;
   @tracked postDetectedLocalTime = null;
@@ -149,7 +150,7 @@ export default class BookmarkModal extends Component {
   @action
   didInsert() {
     discourseLater(() => {
-      if (this.site.isMobileDevice) {
+      if (this.capabilities.isMobileDevice) {
         document.getElementById("bookmark-name").blur();
       }
     });
@@ -363,7 +364,7 @@ export default class BookmarkModal extends Component {
           @label="bookmarks.save"
           @action={{this.saveAndClose}}
           @title="modal.close"
-          class="btn-transparent btn-primary"
+          class="btn-transparent"
         />
       </:headerPrimaryAction>
 
@@ -435,13 +436,15 @@ export default class BookmarkModal extends Component {
       </:body>
 
       <:footer>
-        <DButton
-          @label="bookmarks.save"
-          @action={{this.saveAndClose}}
-          id="save-bookmark"
-          class="btn-primary"
-        />
-        <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
+        {{#if this.site.desktopView}}
+          <DButton
+            @label="bookmarks.save"
+            @action={{this.saveAndClose}}
+            id="save-bookmark"
+            class="btn-primary"
+          />
+          <DModalCancel @close={{this.closeWithoutSavingBookmark}} />
+        {{/if}}
         {{#if this.showDelete}}
           <DButton
             @icon="trash-can"

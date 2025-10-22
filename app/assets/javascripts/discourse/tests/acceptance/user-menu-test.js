@@ -149,7 +149,7 @@ acceptance("User menu", function (needs) {
 
   test("tabs have title attributes", async function (assert) {
     updateCurrentUser({ reviewable_count: 1 });
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
           get id() {
@@ -217,7 +217,7 @@ acceptance("User menu", function (needs) {
 
   test("tabs added via the plugin API", async function (assert) {
     updateCurrentUser({ reviewable_count: 1 });
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
           get id() {
@@ -329,7 +329,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("notifications tab applies model transformations registered by plugins", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerModelTransformer("notification", (notifications) => {
         notifications.forEach((notification, index) => {
           if (notification.fancy_title) {
@@ -354,11 +354,11 @@ acceptance("User menu", function (needs) {
   });
 
   test("bookmarks tab applies model transformations registered by plugins", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerModelTransformer("bookmark", (bookmarks) => {
         bookmarks.forEach((bookmark) => {
-          if (bookmark.title) {
-            bookmark.title = `pluginBookmarkTransformer ${bookmark.title}`;
+          if (bookmark.fancy_title) {
+            bookmark.fancy_title = `pluginBookmarkTransformer ${bookmark.fancy_title}`;
           }
         });
       });
@@ -374,7 +374,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("messages tab applies model transformations registered by plugins", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerModelTransformer("topic", (topics) => {
         topics.forEach((topic) => {
           topic.fancy_title = `pluginTransformer#1 ${topic.fancy_title}`;
@@ -654,7 +654,7 @@ acceptance("User menu", function (needs) {
   });
 
   test("Extra items added to profile tab via plugin API are rendered properly", async function (assert) {
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.addQuickAccessProfileItem({
         className: "test-1-item",
         icon: "wrench",
@@ -698,7 +698,7 @@ acceptance("User menu", function (needs) {
 
   test("the active tab can be clicked again to navigate to a page", async function (assert) {
     updateCurrentUser({ reviewable_count: 1 });
-    withPluginApi("0.1", (api) => {
+    withPluginApi((api) => {
       api.registerUserMenuTab((UserMenuTab) => {
         return class extends UserMenuTab {
           get id() {

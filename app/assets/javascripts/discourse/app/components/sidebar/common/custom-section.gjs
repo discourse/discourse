@@ -16,8 +16,7 @@ import SectionLinkButton from "../section-link-button";
 export default class SidebarCustomSection extends Component {
   @service currentUser;
   @service navigationMenu;
-  @service site;
-  @service siteSettings;
+  @service router;
 
   @tracked section = this.initialSection;
 
@@ -39,6 +38,12 @@ export default class SidebarCustomSection extends Component {
     } else {
       return new CommonCommunitySection(opts);
     }
+  }
+
+  get exactUrlMatch() {
+    return this.section.links.find((link) => {
+      return this.router.currentURL === link.value;
+    });
   }
 
   <template>
@@ -71,6 +76,7 @@ export default class SidebarCustomSection extends Component {
           @suffixType={{link.suffixType}}
           @suffixValue={{link.suffixValue}}
           @title={{link.title}}
+          @exactUrlMatch={{this.exactUrlMatch}}
         />
       {{/each}}
 

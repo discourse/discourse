@@ -206,7 +206,7 @@ pl_PL:
           personal_messages: Wiadomości osobiste
           public_topics: Tematy publiczne (wyklucz wszystkie bezpieczne kategorie)
           with_images: Obrazy
-          with_links: Odnośniki
+          with_links: Linki
           with_code: Kod
           with_uploads: Pliki
         user_updated:
@@ -408,7 +408,7 @@ pl_PL:
             sendable_pms:
               label: Prywatne wiadomości
             sender:
-              label: Nadawca wiadomości prywatnych
+              label: Nadawca prywatnych wiadomości
               description: "Upewnij się, że nadawca ma odpowiednie uprawnienia do wysyłania wiadomości prywatnych do odbiorcy."
         close_topic:
           fields:
@@ -449,7 +449,7 @@ pl_PL:
           status:
             label: Status
           enabled:
-            label: Włączona
+            label: "Włącz automatyzację"
           disabled:
             label: Wyłączone
           placeholders:
@@ -460,3 +460,4 @@ pl_PL:
             label: Ostatnie uruchomienie
           last_updated_by:
             label: Zaktualizowany przez
+          enable_toggle_disabled: "Możesz włączyć tę automatyzację po uzupełnieniu wszystkich wymaganych pól."

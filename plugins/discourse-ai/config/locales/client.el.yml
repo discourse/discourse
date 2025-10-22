@@ -1,0 +1,237 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "Επιτρέπει την αναζήτηση AI"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
+      dashboard:
+        reports:
+          filters:
+            group_by:
+              label: "Ομαδοποίηση κατά"
+            sort_by:
+              label: "Ταξινόμηση κατά"
+            tag:
+              label: "Ετικέτα"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "Δημιουργία μοντέλου LLM"
+            update_ai_llm_model: "Ενημέρωση μοντέλου LLM"
+            delete_ai_llm_model: "Διαγραφή μοντέλου LLM"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Αποστολέας"
+              description: "Ο χρήστης που θα στείλει την αναφορά"
+            receivers:
+              label: "Παραλήπτες"
+              description: "Οι χρήστες που θα λάβουν την αναφορά (τα emails θα αποσταλούν απευθείας με email, τα ονόματα χρηστών θα αποσταλούν με ΠΜ)"
+            topic_id:
+              label: "ID Θέματος"
+              description: "Το ID θέματος στο οποίο θα δημοσιεύεται η αναφορά"
+            title:
+              label: "Τίτλος"
+              description: "Ο τίτλος της αναφοράς"
+            days:
+              label: "Ημέρες"
+              description: "Το χρονικό διάστημα της αναφοράς"
+            instructions:
+              label: "Οδηγίες"
+            sample_size:
+              label: "Μέγεθος δείγματος"
+            model:
+              label: "Μοντέλο"
+            categories:
+              label: "Κατηγορίες"
+            tags:
+              label: "Ετικέτες"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Μοντέλο"
+        llm_triage:
+          fields:
+            category:
+              label: "Κατηγορία"
+            tags:
+              label: "Ετικέτες"
+            canned_reply:
+              label: "Απάντηση"
+    discourse_ai:
+      features:
+        back: "Πίσω"
+        disabled: "(απενεργοποιημένο)"
+        groups: "Ομάδες:"
+        no_persona: "Δεν έχει οριστεί"
+        no_groups: "Κανένα"
+        edit: "Επεξεργασία"
+        expand_list:
+          one: "(%{count} περισσότερο)"
+          other: "(%{count} περισσότερα)"
+        collapse_list: "(δείξε λιγότερα)"
+        filters:
+          all: "Όλα"
+          reset: "Επαναφορά"
+        search:
+          name: "Αναζήτηση"
+        spam:
+          name: "Ανεπιθύμητα"
+      modals:
+        select_option: "Διαλέξτε μία επιλογή..."
+      translations:
+        title: "Μεταφράσεις"
+        progress_chart:
+          bar_done:
+            one: "%{count} ανάρτηση"
+            other: "%{count} αναρτήσεις"
+      spam:
+        short_title: "Ανεπιθύμητα"
+        last_seven_days: "Τελευταίες 7 ημέρες"
+        enable: "Ενεργοποίηση"
+        save_button: "Αποθήκευση αλλαγών"
+        test_modal:
+          result: "Αποτέλεσμα"
+          spam: "Ανεπιθύμητα"
+      usage:
+        summary: "Περίληψη"
+        model: "Μοντέλο"
+        username: "Όνομα Χρήστη"
+        total_requests: "Σύνολο αιτήσεων"
+        periods:
+          last_day: "Τελευταίες 24 ώρες"
+          custom: "Προσαρμοσμένο..."
+      ai_persona:
+        back: "Πίσω"
+        name: "Όνομα"
+        edit: "Επεξεργασία"
+        export: "Εξαγωγή"
+        import: "Εισαγωγή"
+        description: "Περιγραφή"
+        user: Χρήστης
+        save: "Αποθήκευση"
+        enabled: "Ενεργοποιημένο;"
+        allowed_groups: "Επιτρεπόμενες ομάδες"
+        delete: "Σβήσιμο"
+        response_format:
+          open_modal: "Επεξεργασία"
+          modal:
+            key_title: "Κλειδί"
+        filters:
+          reset: "Επαναφορά"
+      rag:
+        uploads:
+          title: "Μεταφορτώσεις"
+          uploading: "Επιφόρτωση..."
+      tools:
+        back: "Πίσω"
+        export: "Εξαγωγή"
+        import: "Εισαγωγή"
+        name: "Όνομα"
+        description: "Περιγραφή"
+        summary: "Περίληψη"
+        save: "Αποθήκευση"
+        remove_parameter: "Αφαίρεση"
+        parameter_required: "Απαιτείται"
+        edit: "Επεξεργασία"
+        delete: "Σβήσιμο"
+      llms:
+        display_name: "Όνομα"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        back: "Πίσω"
+        delete: Σβήσιμο
+        quotas:
+          group: "Ομάδα"
+          max_usages: "Μέγιστες χρήσεις"
+          duration: "Διάρκεια"
+          durations:
+            hour: "1 ώρα"
+            six_hours: "6 ώρες"
+            day: "24 ώρες"
+            week: "7 ημέρες"
+            custom: "Προσαρμοσμένο..."
+          hours: "ώρες"
+        usage:
+          ai_summarization: "Συνοψίστε"
+          ai_spam: "Ανεπιθύμητα"
+        next:
+          title: "Επόμενο"
+        tests:
+          success: "Επιτυχία!"
+        providers:
+          google: "Google"
+          fake: "Προσαρμοσμένο"
+      ai_helper:
+        context_menu:
+          cancel: "Άκυρο"
+          confirm: "Επιβεβαίωση"
+          discard: "Απόρριψη"
+        post_options_menu:
+          close: "Κλείσιμο"
+          copy: "Αντιγραφή"
+          copied: "Αντιγράφηκε!"
+          cancel: "Άκυρο"
+        thumbnail_suggestions:
+          select: "Επιλογή"
+          selected: "Επιλεγμένα"
+        image_caption:
+          save_caption: "Αποθήκευση"
+      embeddings:
+        back: "Πίσω"
+        save: "Αποθήκευση"
+        delete: "Σβήσιμο"
+        edit: "Επεξεργασία"
+        tests:
+          success: "Επιτυχία!"
+        display_name: "Όνομα"
+        providers:
+          google: "Google"
+          fake: "Προσαρμοσμένο"
+      ai_bot:
+        llm: "Μοντέλο"
+        debug_ai_modal:
+          request: "Αίτημα"
+          response: "Απάντηση"
+          next_log: "Επόμενο"
+          previous_log: "Προηγούμενο"
+        invite_ai_conversation:
+          button: "Πρόσκληση"
+        share_modal:
+          copy: "Αντιγραφή"
+        conversations:
+          today: "Σήμερα"
+          last_7_days: "Τελευταίες 7 ημέρες"
+          last_30_days: "Τελευταίες 30 ημέρες"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Όλα"
+          group_types:
+            category: "Κατηγορία"
+            tag: "Ετικέτα"
+          table:
+            total_count: "Σύνολο"
+      summarization:
+        chat:
+          summarize: "Συνοψίστε"
+      discobot_discoveries:
+        regular_results: "Θέματα"
+        collapse: "Σύμπτυξη"
+        tooltip:
+          actions:
+            disable: "Απενεργοποίηση"

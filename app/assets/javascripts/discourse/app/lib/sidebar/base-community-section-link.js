@@ -2,20 +2,26 @@ import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 
 /**
- * Base class representing a sidebar communtiy section link interface.
+ * Base class representing a sidebar community section link interface.
  */
 export default class BaseCommunitySectionLink {
+  // TODO: All those are used by subclasses
+  // eslint-disable-next-line discourse/no-unused-services
   @service currentUser;
+  // eslint-disable-next-line discourse/no-unused-services
   @service appEvents;
+  // eslint-disable-next-line discourse/no-unused-services
   @service router;
+  // eslint-disable-next-line discourse/no-unused-services
   @service siteSettings;
+  // eslint-disable-next-line discourse/no-unused-services
   @service topicTrackingState;
 
-  constructor(owner, { inMoreDrawer, overridenName, overridenIcon } = {}) {
+  constructor(owner, { inMoreDrawer, overriddenName, overriddenIcon } = {}) {
     setOwner(this, owner);
     this.inMoreDrawer = inMoreDrawer;
-    this.overridenName = overridenName;
-    this.overridenIcon = overridenIcon;
+    this.overriddenName = overriddenName;
+    this.overriddenIcon = overriddenIcon;
   }
 
   /**
@@ -111,7 +117,7 @@ export default class BaseCommunitySectionLink {
    * @returns {string} The name of the fontawesome icon to be displayed before the link.
    */
   get prefixValue() {
-    return this.overridenIcon || this.defaultPrefixValue;
+    return this.overriddenIcon || this.defaultPrefixValue;
   }
 
   _notImplemented() {

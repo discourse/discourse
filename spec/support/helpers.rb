@@ -318,6 +318,17 @@ module Helpers
     SiteSetting.public_send("#{plugin.enabled_site_setting}=", true)
   end
 
+  def try_until_success(timeout: 3, frequency: 0.01)
+    start ||= Time.zone.now
+    backoff ||= frequency
+    yield
+  rescue RSpec::Expectations::ExpectationNotMetError
+    raise if Time.zone.now >= start + timeout.seconds
+    sleep backoff
+    backoff += frequency
+    retry
+  end
+
   private
 
   def directory_from_caller

@@ -31,9 +31,6 @@ module("Integration | Component | Post | PostMetaData", function (hooks) {
 
   test("post-meta-data-infos value transformer (DAG API)", async function (assert) {
     this.post.username = "eviltrout";
-    this.post.user = this.store.createRecord("user", {
-      username: "eviltrout",
-    });
     withPluginApi((api) => {
       const TestComponent = <template>
         <div class="post-info post-metadata-test"></div>

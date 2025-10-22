@@ -57,7 +57,7 @@
         align-items: center;
         font-size: var(--font-up-1-rem);
 
-        .d-icon:first-of-type:not(.d-icon-lock),
+        .d-icon:first-of-type:not([class*="d-icon-category.restricted"]),
         &.--style-square::before,
         &.--style-emoji .emoji {
           width: 1.25em;
@@ -70,7 +70,7 @@
         }
       }
 
-      .d-icon.d-icon-lock {
+      [class*="d-icon-category.restricted"] {
         order: 1;
       }
     }
@@ -262,7 +262,8 @@
   }
 }
 
-.category-boxes.with-subcategories {
+.category-boxes,
+.category-boxes-with-topics {
   .category-logo {
     display: none;
   }
@@ -335,7 +336,7 @@
           font-size: var(--font-up-1-rem);
         }
 
-        .d-icon:not(.d-icon-lock),
+        .d-icon:not([class*="d-icon-category.restricted"]),
         img.emoji {
           aspect-ratio: 1 / 1;
           height: auto;
@@ -352,12 +353,19 @@
 
     .subcategories {
       margin-top: auto;
-      row-gap: 0.5em;
 
       .subcategory {
         margin-bottom: 0;
         font-size: var(--font-down-1);
       }
     }
+  }
+}
+
+// theme component: https://github.com/discourse/discourse-minimal-category-boxes
+.custom-category-boxes-container {
+  @include viewport.until(sm) {
+    padding-inline: var(--space-4);
+    box-sizing: border-box;
   }
 }

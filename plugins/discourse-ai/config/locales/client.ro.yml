@@ -1,0 +1,257 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ro:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Sortează după"
+            tag:
+              label: "Etichetă"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID subiect"
+            title:
+              label: "Titlu"
+            categories:
+              label: "Categorii"
+            tags:
+              label: "Etichete"
+        llm_triage:
+          fields:
+            triage_persona:
+              label: "Personaj"
+              description: "Personajul este folosit pentru triaj, asigură-te că răspunde cu un singur cuvânt pe care îl poți folosi pentru a declanșa acțiunea."
+            category:
+              label: "Categorie"
+            tags:
+              label: "Etichete"
+            canned_reply:
+              label: "Răspunde"
+            notify_author_pm:
+              label: "Notifică autorul prin PM"
+              description: "Trimite un mesaj personal autorului postării atunci când postarea lor este în așteptare și ștearsă"
+            notify_author_pm_user:
+              label: "Expeditor PM"
+              description: "Utilizatorul care va trimite PM (implicit la sistem)"
+            notify_author_pm_message:
+              label: "Mesaj PM"
+              description: "Mesaj personalizat opțional pentru a trimite autorului"
+        llm_tagger:
+          fields:
+            confidence_threshold:
+              description: "Procentul minim de încredere (0-100) necesar pentru aplicarea etichetelor sugerate"
+            allow_system_posts:
+              label: "Permite postările de sistem"
+              description: "Permite etichetarea postărilor create de utilizatorul sistemului."
+    discourse_ai:
+      default_llm:
+        title: "Model LLM implicit"
+        description: "Modelul LLM implicit de utilizat pentru toate funcțiile IA. Acesta va fi utilizat dacă nu este specificat niciun LLM în configurația funcționalității sau în personaj. Dacă nu este specificat niciun LLM implicit, se va utiliza ultimul LLM creat."
+      features:
+        back: "Înapoi"
+        disabled: "(dezactivat)"
+        groups: "Grupuri:"
+        no_groups: "Nimic"
+        edit: "Editează"
+        expand_list:
+          one: "(încă %{count})"
+          few: "(încă %{count})"
+          other: "(încă %{count})"
+        collapse_list: "(arată mai puține)"
+        filters:
+          all: "Toate"
+          reset: "Resetare"
+        search:
+          name: "Caută"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Alege o opțiune..."
+      translations:
+        title: "Traduceri"
+        description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
+        supported_locales: "Limbi acceptate"
+        supported_locales_description: "Această setare a site-ului permite vizitatorilor să contribuie și la traducerea postărilor."
+        admin_actions:
+          translation_settings: "Setări traducere"
+          localization_settings: "Setări localizare"
+          enable_translations: "Activează traducerile automate"
+        stats:
+          title: "Statistici traducere"
+          complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
+          incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
+          backfill_disabled: "Completarea este dezactivată, doar postările noi vor fi traduse."
+          description_tooltip:
+            one: 'Există o postare eligibilă pentru traducere.'
+            few: 'Există %{count} postări eligibile pentru traducere.'
+            other: 'Există %{count} de postări eligibile pentru traducere.'
+        progress_chart:
+          title: "Progresul traducerii"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} din %{total} postări traduse"
+          bar_done:
+            one: "o postare"
+            few: "%{count} postări"
+            other: "%{count} de postări"
+      spam:
+        short_title: "Spam"
+        last_seven_days: "Ultimele 7 zile"
+        enable: "Activează"
+        save_button: "Salvează modificări"
+        test_modal:
+          run: "Rulează test"
+          spam: "Spam"
+      usage:
+        summary: "Rezumat"
+        username: "Nume utilizator"
+        total_requests: "Total cereri"
+        periods:
+          last_day: "Ultimele 24 de ore"
+          custom: "Personalizat..."
+      ai_persona:
+        back: "Înapoi"
+        name: "Nume"
+        edit: "Editează"
+        export: "Exportă"
+        import: "Importă"
+        description: "Descriere"
+        user: Utilizator
+        save: "Salvează"
+        enabled: "Activată?"
+        delete: "Șterge"
+        response_format:
+          open_modal: "Editează"
+        filters:
+          reset: "Resetare"
+      rag:
+        uploads:
+          title: "Încărcări"
+          uploading: "Se încarcă..."
+      tools:
+        back: "Înapoi"
+        export: "Exportă"
+        import: "Importă"
+        name: "Nume"
+        description: "Descriere"
+        summary: "Rezumat"
+        save: "Salvează"
+        remove_parameter: "Elimină"
+        parameter_required: "Necesare"
+        edit: "Editează"
+        test: "Rulează test"
+        delete: "Șterge"
+        test_modal:
+          run: "Rulează test"
+      llms:
+        display_name: "Nume"
+        provider: "Furnizor"
+        save: "Salvează"
+        edit: "Editează"
+        back: "Înapoi"
+        delete: Șterge
+        quotas:
+          group: "Grup"
+          duration: "Durată"
+          durations:
+            hour: "o oră"
+            six_hours: "6 de ore"
+            day: "24 de ore"
+            week: "7 zile"
+            custom: "Personalizat..."
+          hours: "de ore"
+        usage:
+          ai_helper: "Ajutor (%{persona})"
+          ai_summarization: "Rezumat"
+          ai_spam: "Spam"
+        model_description:
+          anthropic-claude-opus-4-1: "Cel mai inteligent model de la Anthropic"
+          google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
+          google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
+          google-gemini-2-5-flash-image-preview: "Cel mai recent model de generare a imaginilor cu capacități vizuale"
+          open_ai-o3: "Cel mai capabil model de raționament al OpenAI"
+          open_ai-gpt-5: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
+          open_ai-gpt-5-mini: "Asigură un echilibru între inteligență, viteză și costuri care îl transformă într-un model atractiv pentru multe cazuri de utilizare."
+          open_ai-gpt-5-nano: "Cel mai rapid și mai rentabil model GPT-5."
+          samba_nova-Meta-Llama-3-1-8B-Instruct: "Model multilingv ușor și eficient"
+          groq-openai-gpt-oss-120b: "Model de ultimă generație, deschis de la OpenAI"
+          groq-openai-gpt-oss-20b: "Model ușor, rapid, deschis, de la OpenAI"
+        next:
+          title: "Următorul"
+        tests:
+          title: "Rulează test"
+          success: "Succes!"
+          invalid_config: "Remediază mai întâi următoarele erori în configurație:"
+        providers:
+          google: "Google"
+          fake: "Personalizat"
+      ai_helper:
+        context_menu:
+          cancel: "Anulează"
+          regen: "Încearcă din nou"
+          discard: "Renunță"
+        post_options_menu:
+          close: "Închide"
+          copy: "Copiază"
+          copied: "Copiat!"
+          cancel: "Anulează"
+        image_caption:
+          save_caption: "Salvează"
+      embeddings:
+        back: "Înapoi"
+        save: "Salvează"
+        delete: "Șterge"
+        edit: "Editează"
+        tests:
+          title: "Rulează test"
+          success: "Succes!"
+        display_name: "Nume"
+        provider: "Furnizor"
+        providers:
+          google: "Google"
+          fake: "Personalizat"
+      ai_bot:
+        exit: "ieșire bot IA"
+        debug_ai_modal:
+          request: "Cere"
+          response: "Răspuns"
+          next_log: "Următorul"
+          previous_log: "Precedent"
+        invite_ai_conversation:
+          button: "Invită"
+        share_modal:
+          copy: "Copiază"
+        conversations:
+          today: "Astăzi"
+          last_7_days: "Ultimele 7 zile"
+          last_30_days: "Ultimele 30 de zile"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Toate"
+          group_types:
+            category: "Categorie"
+            tag: "Etichetă"
+          table:
+            total_count: "Total"
+      summarization:
+        chat:
+          title: "Rezumați mesajele"
+          description: "Selectați o opțiune de mai jos pentru a rezuma conversația trimisă în intervalul de timp dorit."
+          summarize: "Rezumat"
+      discobot_discoveries:
+        regular_results: "Discuții"
+        collapse: "Colaps"
+        tooltip:
+          actions:
+            disable: "Dezactivează"

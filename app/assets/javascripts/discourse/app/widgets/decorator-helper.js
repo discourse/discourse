@@ -3,9 +3,9 @@ import { h } from "virtual-dom";
 import deprecated from "discourse/lib/deprecated";
 import Connector from "discourse/widgets/connector";
 import PostCooked from "discourse/widgets/post-cooked";
-import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/post-stream";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { POST_STREAM_DEPRECATION_OPTIONS } from "discourse/widgets/widget";
 
 class DecoratorHelper {
   constructor(widget, attrs, state) {
@@ -173,6 +173,7 @@ class DecoratorHelper {
     return renderGlimmer.element;
   }
 }
+
 DecoratorHelper.prototype.h = h;
 
 export default DecoratorHelper;

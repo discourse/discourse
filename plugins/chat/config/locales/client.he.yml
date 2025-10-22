@@ -250,9 +250,9 @@ he:
         header: "כותרת צ׳אט"
         composer: "כותב צ׳אט"
         channels_list: "רשימת ערוצי צ׳אט"
-      no_direct_message_channels: "לא הצטרפת להודעות ישירות כלשהן, עדיין!"
+      no_direct_message_channels: "לא הצטרפת להודעות ישירות עדיין!"
       no_direct_message_channels_cta: "לפתוח דיון"
-      no_public_channels: "לא הצטרפת לערוצים כלשהם, עדיין!"
+      no_public_channels: "לא הצטרפת לערוצים כלשהם עדיין!"
       no_public_channels_cta: "עיון בערוצים"
       kicked_from_channel: "אין לך יותר גישה לערוץ הזה."
       only_chat_push_notifications:
@@ -322,7 +322,7 @@ he:
         many: "%{count} קבצים"
         other: "%{count} קבצים"
       you_flagged: "סימנת את ההודעה הזאת"
-      exit: "חזרה"
+      exit: "יציאה מהצ׳אט"
       channel_status:
         read_only_header: "הערוץ הוא לקריאה בלבד"
         read_only: "לקריאה בלבד"
@@ -790,6 +790,9 @@ he:
         chat:
           title: צ׳אט
     sidebar:
+      start_new_dm:
+        text: התחלת הודעה פרטית חדשה
+        title: יצירת צ׳אט אישי
       panels:
         chat:
           label: "צ׳אט"

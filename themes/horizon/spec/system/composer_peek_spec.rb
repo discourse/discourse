@@ -2,7 +2,7 @@
 
 describe "Composer peek", type: :system do
   fab!(:current_user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:topic) { Fabricate(:topic_with_op) }
+  fab!(:topic, :topic_with_op)
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:composer) { PageObjects::Components::Composer.new }

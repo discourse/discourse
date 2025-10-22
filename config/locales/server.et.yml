@@ -860,10 +860,7 @@ et:
   page_not_found:
     page_title: "Lehekülge ei leitud"
     title: "Oih! Soovitud lehte ei ole või on see privaatne."
-    popular_topics: "Populaarsed"
-    recent_topics: "Viimased"
     see_more: "Veel"
-    search_title: "Otsi sellelt saidilt"
     search_button: "Otsi"
   upload:
     unauthorized: "Vabandust, fail mida püüad üles laadida, ei ole lubatud (lubatud faililaiendid: %{authorized_extensions})."
@@ -881,7 +878,6 @@ et:
     dark: "Tume"
     neutral: "Neutraalne"
     summer: "Suvi"
-    default_theme_name: "Vaikimisi"
     light_theme_name: "Hele"
     dark_theme_name: "Tume"
     neutral_theme_name: "Neutraalne"
@@ -1009,7 +1005,6 @@ et:
     first_reply_by_email:
       name: Esimene vastamine meiliga
   admin_login:
-    success: "Kiri saadetud"
     email_input: "Admini kiri"
     submit_button: "Saada kiri"
   tags:
@@ -1084,7 +1079,7 @@ et:
     actions:
       agree:
         title: "Jah"
-      delete_single:
+      delete:
         title: "Kustuta"
         complete: "Postitus kustutatud."
       delete_and_ignore:
@@ -1107,8 +1102,14 @@ et:
           complete: "Kasutaja kustutatud."
       reject:
         title: "Lükka tagasi"
+      no_action_post:
+        title: "Tegevust pole"
+      delete_post:
+        complete: "Postitus kustutatud"
+      no_action_user:
+        title: "Tegevust pole"
       delete_user:
-        complete: "Kasutaja kustutatud."
+        complete: "Kasutaja kustutatud"
   fallback_username: "kasutaja"
   activemodel:
     errors:

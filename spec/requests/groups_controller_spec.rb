@@ -2,8 +2,8 @@
 
 RSpec.describe GroupsController do
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:user2, :user)
+  fab!(:other_user, :user)
   let(:group) { Fabricate(:group, users: [user]) }
   let(:moderator_group_id) { Group::AUTO_GROUPS[:moderators] }
   fab!(:admin)
@@ -1295,12 +1295,12 @@ RSpec.describe GroupsController do
 
     context "when user is a site moderator" do
       before do
-        SiteSetting.moderators_manage_categories_and_groups = true
+        SiteSetting.moderators_manage_groups = true
         sign_in(moderator)
       end
 
       it "should not be able to update the group if the SiteSetting is false" do
-        SiteSetting.moderators_manage_categories_and_groups = false
+        SiteSetting.moderators_manage_groups = false
 
         put "/groups/#{group.id}.json", params: { group: { name: "testing" } }
 
@@ -1406,21 +1406,11 @@ RSpec.describe GroupsController do
 
   describe "#members" do
     let(:user1) do
-      Fabricate(
-        :user,
-        last_seen_at: Time.zone.now,
-        last_posted_at: Time.zone.now - 1.day,
-        email: "b@test.org",
-      )
+      Fabricate(:user, last_seen_at: Time.zone.now, last_posted_at: 1.day.ago, email: "b@test.org")
     end
 
     let(:user2) do
-      Fabricate(
-        :user,
-        last_seen_at: Time.zone.now - 1.day,
-        last_posted_at: Time.zone.now,
-        email: "a@test.org",
-      )
+      Fabricate(:user, last_seen_at: 1.day.ago, last_posted_at: Time.zone.now, email: "a@test.org")
     end
 
     fab!(:user3) { Fabricate(:user, last_seen_at: nil, last_posted_at: nil, email: "c@test.org") }
@@ -1647,7 +1637,7 @@ RSpec.describe GroupsController do
       end
 
       context "when is able to add several members to a group" do
-        fab!(:user1) { Fabricate(:user) }
+        fab!(:user1, :user)
         fab!(:user2) { Fabricate(:user, username: "UsEr2") }
 
         it "adds by username" do
@@ -1960,8 +1950,8 @@ RSpec.describe GroupsController do
       context "when logged in as a moderator" do
         before { sign_in(moderator) }
 
-        context "with moderators_manage_categories_and_groups enabled" do
-          before { SiteSetting.moderators_manage_categories_and_groups = true }
+        context "with moderators_manage_groups enabled" do
+          before { SiteSetting.moderators_manage_groups = true }
 
           it "adds owners" do
             put "/groups/#{group.id}/owners.json",
@@ -1985,8 +1975,8 @@ RSpec.describe GroupsController do
           end
         end
 
-        context "with moderators_manage_categories_and_groups disabled" do
-          before { SiteSetting.moderators_manage_categories_and_groups = false }
+        context "with moderators_manage_groups disabled" do
+          before { SiteSetting.moderators_manage_groups = false }
 
           it "prevents adding of owners with a 403 response" do
             put "/groups/#{group.id}/owners.json",
@@ -2177,7 +2167,7 @@ RSpec.describe GroupsController do
 
       describe "#remove_members" do
         context "when is able to remove several members from a group" do
-          fab!(:user1) { Fabricate(:user) }
+          fab!(:user1, :user)
           fab!(:user2) { Fabricate(:user, username: "UsEr2") }
           let(:group1) { Fabricate(:group, users: [user1, user2]) }
 
@@ -2498,7 +2488,7 @@ RSpec.describe GroupsController do
   end
 
   describe "#request_membership" do
-    fab!(:new_user) { Fabricate(:user) }
+    fab!(:new_user, :user)
 
     it "requires the user to log in" do
       post "/groups/#{group.name}/request_membership.json"
@@ -2540,7 +2530,7 @@ RSpec.describe GroupsController do
 
     it "should create the right PM" do
       owner1 = Fabricate(:user, last_seen_at: Time.zone.now)
-      owner2 = Fabricate(:user, last_seen_at: Time.zone.now - 1.day)
+      owner2 = Fabricate(:user, last_seen_at: 1.day.ago)
       [owner1, owner2].each { |owner| group.add_owner(owner) }
 
       sign_in(user)

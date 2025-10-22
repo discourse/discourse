@@ -9,7 +9,7 @@ fi:
     admin:
       site_settings:
         categories:
-          spoiler_alert: "Discourse Spoiler Alert"
+          spoiler_alert: "Discoursen spoilerivaroitus"
   js:
     spoiler:
       title: Sumenna spoileri

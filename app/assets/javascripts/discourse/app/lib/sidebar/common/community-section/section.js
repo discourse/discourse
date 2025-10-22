@@ -5,6 +5,7 @@ import AboutSectionLink from "discourse/lib/sidebar/common/community-section/abo
 import BadgesSectionLink from "discourse/lib/sidebar/common/community-section/badges-section-link";
 import EverythingSectionLink from "discourse/lib/sidebar/common/community-section/everything-section-link";
 import FAQSectionLink from "discourse/lib/sidebar/common/community-section/faq-section-link";
+import FilterSectionLink from "discourse/lib/sidebar/common/community-section/filter-section-link";
 import GroupsSectionLink from "discourse/lib/sidebar/common/community-section/groups-section-link";
 import UsersSectionLink from "discourse/lib/sidebar/common/community-section/users-section-link";
 import {
@@ -14,6 +15,7 @@ import {
 import SectionLink from "discourse/lib/sidebar/section-link";
 import AdminSectionLink from "discourse/lib/sidebar/user/community-section/admin-section-link";
 import InviteSectionLink from "discourse/lib/sidebar/user/community-section/invite-section-link";
+import MyMessagesSectionLink from "discourse/lib/sidebar/user/community-section/my-messages-section-link";
 import MyPostsSectionLink from "discourse/lib/sidebar/user/community-section/my-posts-section-link";
 import ReviewSectionLink from "discourse/lib/sidebar/user/community-section/review-section-link";
 
@@ -23,19 +25,17 @@ const SPECIAL_LINKS_MAP = {
   "/u": UsersSectionLink,
   "/faq": FAQSectionLink,
   "/my/activity": MyPostsSectionLink,
+  "/my/messages": MyMessagesSectionLink,
   "/review": ReviewSectionLink,
   "/badges": BadgesSectionLink,
+  "/filter": FilterSectionLink,
   "/admin": AdminSectionLink,
   "/g": GroupsSectionLink,
   "/new-invite": InviteSectionLink,
 };
 
 export default class CommunitySection {
-  @service appEvents;
-  @service currentUser;
-  @service modal;
   @service router;
-  @service siteSettings;
   @service topicTrackingState;
 
   @tracked links;
@@ -124,16 +124,16 @@ export default class CommunitySection {
   #initializeSectionLink(
     sectionLinkClass,
     inMoreDrawer,
-    overridenName,
-    overridenIcon
+    overriddenName,
+    overriddenIcon
   ) {
     if (this.router.isDestroying) {
       return;
     }
     return new sectionLinkClass(getOwner(this), {
       inMoreDrawer,
-      overridenName,
-      overridenIcon,
+      overriddenName,
+      overriddenIcon,
     });
   }
 }

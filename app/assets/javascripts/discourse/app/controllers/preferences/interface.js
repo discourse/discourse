@@ -1,6 +1,6 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
-import { not, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { reload } from "discourse/helpers/page-reloader";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -10,6 +10,7 @@ import {
   updateColorSchemeCookie,
 } from "discourse/lib/color-scheme-picker";
 import { propertyEqual } from "discourse/lib/computed";
+import { INTERFACE_COLOR_MODES } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import {
   currentThemeId,
@@ -36,22 +37,19 @@ const TEXT_SIZES = ["smallest", "smaller", "normal", "larger", "largest"];
 const TITLE_COUNT_MODES = ["notifications", "contextual"];
 
 export default class InterfaceController extends Controller {
+  @service interfaceColor;
   @service session;
   @controller("preferences") preferencesController;
 
+  @tracked selectedInterfaceColorModeId = null;
   currentThemeId = currentThemeId();
   previewingColorScheme = false;
   selectedDarkColorSchemeId = null;
   makeColorSchemeDefault = true;
 
   @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
+  @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
   subpageTitle = i18n("user.preferences_nav.interface");
-
-  @reads("userSelectableColorSchemes.length") showColorSchemeSelector;
-
-  @not("currentSchemeCanBeSelected") showColorSchemeNoneItem;
-
-  selectedColorSchemeNoneLabel = i18n("user.color_schemes.default_description");
 
   init() {
     super.init(...arguments);
@@ -80,6 +78,8 @@ export default class InterfaceController extends Controller {
       "color_scheme_id",
       "dark_scheme_id",
       "bookmark_auto_delete_preference",
+      "interface_color_mode",
+      "enable_markdown_monospace_font",
     ];
 
     if (makeThemeDefault) {
@@ -91,12 +91,13 @@ export default class InterfaceController extends Controller {
 
   @discourseComputed()
   availableLocales() {
-    return JSON.parse(this.siteSettings.available_locales);
+    return this.siteSettings.available_locales;
   }
 
-  @discourseComputed
-  defaultDarkSchemeId() {
-    return this.siteSettings.default_dark_mode_color_scheme_id;
+  @discourseComputed("currentThemeId")
+  defaultDarkSchemeId(themeId) {
+    const theme = this.userSelectableThemes?.find((t) => t.id === themeId);
+    return theme?.dark_color_scheme_id || -1;
   }
 
   @discourseComputed
@@ -166,12 +167,14 @@ export default class InterfaceController extends Controller {
       return false;
     }
 
-    const theme = userThemes.findBy("id", themeId);
+    const theme = userThemes.find((t) => t.id === themeId);
     if (!theme) {
       return false;
     }
 
-    return userColorSchemes.findBy("id", theme.color_scheme_id);
+    return userColorSchemes.find(
+      (colorScheme) => colorScheme.id === theme.color_scheme_id
+    );
   }
 
   @discourseComputed("model.user_option.theme_ids", "themeId")
@@ -182,6 +185,52 @@ export default class InterfaceController extends Controller {
   @discourseComputed("model.user_option.text_size", "textSize")
   showTextSetDefault(userOptionTextSize, selectedTextSize) {
     return userOptionTextSize !== selectedTextSize;
+  }
+
+  get isInLightMode() {
+    return (
+      this.interfaceColor.colorModeIsLight ||
+      (this.interfaceColor.colorModeIsAuto &&
+        !window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
+  }
+
+  get isInDarkMode() {
+    return (
+      this.interfaceColor.colorModeIsDark ||
+      (this.interfaceColor.colorModeIsAuto &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    );
+  }
+
+  #shouldEnablePreview(isDarkMode) {
+    return (
+      this.isViewingOwnProfile &&
+      (isDarkMode ? this.isInDarkMode : this.isInLightMode)
+    );
+  }
+
+  #resolveThemeDefaultColorScheme(colorSchemeId, isDark) {
+    // non-default color schemes
+    if (!isDark && colorSchemeId >= 0) {
+      return colorSchemeId;
+    }
+    // -1 is the default color scheme
+    if (isDark && colorSchemeId !== -1) {
+      return colorSchemeId;
+    }
+
+    const defaultTheme = this.userSelectableThemes.find(
+      (theme) => theme.id === this.themeId
+    );
+    if (!defaultTheme) {
+      return colorSchemeId;
+    }
+
+    if (isDark) {
+      return defaultTheme.dark_color_scheme_id || this.selectedColorSchemeId;
+    }
+    return defaultTheme.color_scheme_id || colorSchemeId;
   }
 
   homeChanged() {
@@ -230,9 +279,15 @@ export default class InterfaceController extends Controller {
     return result;
   }
 
-  @discourseComputed
-  showDarkModeToggle() {
-    return this.defaultDarkSchemeId > 0 && !this.showDarkColorSchemeSelector;
+  @discourseComputed("selectedDarkColorSchemeId", "currentThemeId")
+  showInterfaceColorModeSelector(selectedDarkColorSchemeId, themeId) {
+    const theme = this.userSelectableThemes?.find((t) => t.id === themeId);
+    return (
+      (this.defaultDarkSchemeId > 0 &&
+        theme.color_scheme_id &&
+        theme.color_scheme_id !== theme.dark_color_scheme_id) ||
+      selectedDarkColorSchemeId > 0
+    );
   }
 
   @discourseComputed
@@ -242,13 +297,61 @@ export default class InterfaceController extends Controller {
     });
   }
 
+  @discourseComputed(
+    "userSelectableColorSchemes",
+    "userSelectableDarkColorSchemes"
+  )
+  showColorSchemeSelector() {
+    return (
+      this.showLightColorSchemeSelector ||
+      this.showDarkColorSchemeSelector ||
+      this.showInterfaceColorModeSelector
+    );
+  }
+
+  @discourseComputed("userSelectableColorSchemes")
+  showLightColorSchemeSelector(lightSchemes) {
+    return lightSchemes && lightSchemes.length > 1;
+  }
+
   @discourseComputed("userSelectableDarkColorSchemes")
   showDarkColorSchemeSelector(darkSchemes) {
-    // when a default dark scheme is set
-    // dropdown has two items (disable / use site default)
-    // but we show a checkbox in that case
-    const minToShow = this.defaultDarkSchemeId > 0 ? 2 : 1;
-    return darkSchemes && darkSchemes.length > minToShow;
+    return darkSchemes && darkSchemes.length > 1;
+  }
+
+  get interfaceColorModes() {
+    return [
+      {
+        id: INTERFACE_COLOR_MODES.AUTO,
+        name: i18n("user.color_schemes.interface_modes.auto"),
+      },
+      {
+        id: INTERFACE_COLOR_MODES.LIGHT,
+        name: i18n("user.color_schemes.interface_modes.light"),
+      },
+      {
+        id: INTERFACE_COLOR_MODES.DARK,
+        name: i18n("user.color_schemes.interface_modes.dark"),
+      },
+    ];
+  }
+
+  get selectedInterfaceColorMode() {
+    if (this.selectedInterfaceColorModeId) {
+      return this.selectedInterfaceColorModeId;
+    }
+    if (this.isViewingOwnProfile) {
+      if (this.interfaceColor.colorModeIsAuto) {
+        return INTERFACE_COLOR_MODES.AUTO;
+      }
+      if (this.interfaceColor.colorModeIsLight) {
+        return INTERFACE_COLOR_MODES.LIGHT;
+      }
+      if (this.interfaceColor.colorModeIsDark) {
+        return INTERFACE_COLOR_MODES.DARK;
+      }
+    }
+    return this.model.user_option.interface_color_mode;
   }
 
   getSelectedColorSchemeId() {
@@ -256,15 +359,14 @@ export default class InterfaceController extends Controller {
       return;
     }
 
-    const theme = this.userSelectableThemes?.findBy("id", this.themeId);
+    const theme = this.userSelectableThemes?.find((t) => t.id === this.themeId);
 
     // we don't want to display the numeric ID of a scheme
     // when it is set by the theme but not marked as user selectable
     if (
       theme?.color_scheme_id === this.session.userColorSchemeId &&
-      !this.userSelectableColorSchemes.findBy(
-        "id",
-        this.session.userColorSchemeId
+      !this.userSelectableColorSchemes.find(
+        (t) => t.id === this.session.userColorSchemeId
       )
     ) {
       return;
@@ -288,26 +390,17 @@ export default class InterfaceController extends Controller {
 
     if (!this.showColorSchemeSelector) {
       this.set("model.user_option.color_scheme_id", null);
+      this.set("model.user_option.dark_scheme_id", null);
     } else if (this.makeColorSchemeDefault) {
       this.set("model.user_option.color_scheme_id", this.selectedColorSchemeId);
-    }
-
-    if (this.showDarkModeToggle) {
       this.set(
         "model.user_option.dark_scheme_id",
-        this.enableDarkMode ? null : -1
+        this.selectedDarkColorSchemeId
       );
-    } else {
-      // if chosen dark scheme matches site dark scheme, no need to store
-      if (
-        this.defaultDarkSchemeId > 0 &&
-        this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
-      ) {
-        this.set("model.user_option.dark_scheme_id", null);
-      } else {
+      if (this.selectedInterfaceColorModeId) {
         this.set(
-          "model.user_option.dark_scheme_id",
-          this.selectedDarkColorSchemeId
+          "model.user_option.interface_color_mode",
+          this.selectedInterfaceColorModeId
         );
       }
     }
@@ -349,6 +442,20 @@ export default class InterfaceController extends Controller {
           }
         }
 
+        if (this.selectedInterfaceColorModeId) {
+          if (this.isViewingOwnProfile) {
+            const modeId = this.selectedInterfaceColorModeId;
+            if (modeId === INTERFACE_COLOR_MODES.AUTO) {
+              this.interfaceColor.useAutoMode();
+            } else if (modeId === INTERFACE_COLOR_MODES.LIGHT) {
+              this.interfaceColor.forceLightMode();
+            } else if (modeId === INTERFACE_COLOR_MODES.DARK) {
+              this.interfaceColor.forceDarkMode();
+            }
+          }
+          this.selectedInterfaceColorModeId = null;
+        }
+
         this.homeChanged();
 
         if (this.themeId && this.themeId !== this.currentThemeId) {
@@ -380,45 +487,111 @@ export default class InterfaceController extends Controller {
   loadColorScheme(colorSchemeId) {
     this.setProperties({
       selectedColorSchemeId: colorSchemeId,
-      previewingColorScheme: this.canPreviewColorScheme,
+      previewingColorScheme: this.#shouldEnablePreview(false),
     });
 
-    if (!this.canPreviewColorScheme) {
+    if (!this.isViewingOwnProfile) {
       return;
     }
 
-    if (colorSchemeId < 0) {
-      const defaultTheme = this.userSelectableThemes.findBy("id", this.themeId);
+    // only preview light schemes when in light mode
+    if (!this.isInLightMode) {
+      return;
+    }
 
-      if (defaultTheme && defaultTheme.color_scheme_id) {
-        colorSchemeId = defaultTheme.color_scheme_id;
-      }
-    }
-    loadColorSchemeStylesheet(colorSchemeId, this.themeId);
-    if (this.selectedDarkColorSchemeId === -1) {
-      // set this same scheme for dark mode preview when dark scheme is disabled
-      loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
-    }
+    this.#previewColorScheme(false);
   }
 
   @action
   loadDarkColorScheme(colorSchemeId) {
     this.setProperties({
       selectedDarkColorSchemeId: colorSchemeId,
-      previewingColorScheme: this.canPreviewColorScheme,
+      previewingColorScheme: this.#shouldEnablePreview(true),
     });
 
-    if (!this.canPreviewColorScheme) {
+    if (!this.isViewingOwnProfile) {
       return;
     }
 
-    if (colorSchemeId === -1) {
-      // load preview of regular scheme when dark scheme is disabled
-      loadColorSchemeStylesheet(this.selectedColorSchemeId, this.themeId, true);
-      this.session.set("darkModeAvailable", false);
-    } else {
+    // only preview dark schemes when in dark mode
+    if (!this.isInDarkMode) {
+      return;
+    }
+
+    this.#previewColorScheme(true);
+    this.session.set("darkModeAvailable", colorSchemeId !== -1);
+  }
+
+  @action
+  selectColorMode(modeId) {
+    this.selectedInterfaceColorModeId = modeId;
+    this.set("previewingColorScheme", this.isViewingOwnProfile);
+
+    if (!this.isViewingOwnProfile) {
+      return;
+    }
+
+    this.#applyInterfaceModePreview(modeId);
+    this.#previewColorSchemeForMode(modeId);
+  }
+
+  #applyInterfaceModePreview(modeId) {
+    if (modeId === INTERFACE_COLOR_MODES.AUTO) {
+      this.interfaceColor.useAutoMode();
+    } else if (modeId === INTERFACE_COLOR_MODES.LIGHT) {
+      this.interfaceColor.forceLightMode();
+    } else if (modeId === INTERFACE_COLOR_MODES.DARK) {
+      this.interfaceColor.forceDarkMode();
+    }
+  }
+
+  #previewColorSchemeForMode(modeId) {
+    if (this.#shouldShowPreviewForMode(modeId, false)) {
+      this.#removePreviewStylesheet("dark");
+      this.#previewColorScheme(false);
+    } else if (this.#shouldShowPreviewForMode(modeId, true)) {
+      this.#removePreviewStylesheet("light");
+      this.#previewColorScheme(true);
+    }
+  }
+
+  #shouldShowPreviewForMode(modeId, isDark) {
+    const targetMode = isDark
+      ? INTERFACE_COLOR_MODES.DARK
+      : INTERFACE_COLOR_MODES.LIGHT;
+    const autoCondition = isDark
+      ? window.matchMedia("(prefers-color-scheme: dark)").matches
+      : !window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    return (
+      modeId === targetMode ||
+      (modeId === INTERFACE_COLOR_MODES.AUTO && autoCondition)
+    );
+  }
+
+  #removePreviewStylesheet(type) {
+    const selector =
+      type === "dark" ? "link#cs-preview-dark" : "link#cs-preview-light";
+    const stylesheet = document.querySelector(selector);
+    if (stylesheet) {
+      stylesheet.remove();
+    }
+  }
+
+  #previewColorScheme(isDark) {
+    const selectedId = isDark
+      ? this.selectedDarkColorSchemeId
+      : this.selectedColorSchemeId;
+    const colorSchemeId = this.#resolveThemeDefaultColorScheme(
+      selectedId,
+      isDark
+    );
+
+    if (isDark) {
       loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
-      this.session.set("darkModeAvailable", true);
+    } else {
+      loadColorSchemeStylesheet(colorSchemeId, this.themeId, false);
+      loadColorSchemeStylesheet(colorSchemeId, this.themeId, true);
     }
   }
 
@@ -427,8 +600,21 @@ export default class InterfaceController extends Controller {
     this.setProperties({
       selectedColorSchemeId: this.session.userColorSchemeId,
       selectedDarkColorSchemeId: this.session.userDarkSchemeId,
+      selectedInterfaceColorModeId: null,
       previewingColorScheme: false,
     });
+
+    if (this.isViewingOwnProfile) {
+      const originalMode = this.model.user_option.interface_color_mode;
+      if (originalMode === INTERFACE_COLOR_MODES.AUTO) {
+        this.interfaceColor.useAutoMode();
+      } else if (originalMode === INTERFACE_COLOR_MODES.LIGHT) {
+        this.interfaceColor.forceLightMode();
+      } else if (originalMode === INTERFACE_COLOR_MODES.DARK) {
+        this.interfaceColor.forceDarkMode();
+      }
+    }
+
     const darkStylesheet = document.querySelector("link#cs-preview-dark"),
       lightStylesheet = document.querySelector("link#cs-preview-light");
     if (darkStylesheet) {

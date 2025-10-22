@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  site_settings:
+    cakeday_enabled: "A tortanap emoji[s] megjelenítése a felhasználó neve mellett azon a napon, amikor csatlakoztak a Discourse-hoz."
+    cakeday_emoji: "Az emoji[k], amelyek a felhasználó neve mellett jelennek meg azon a napon, amikor a felhasználó csatlakozott a Discourse-hoz. Több emoji is megadható: smile|cake|smile"
+    cakeday_birthday_enabled: "Születésnapi hangulatjelek megjelenítése a felhasználó neve mellett a születésnapján."
+    cakeday_birthday_emoji: "Az emoji[k], amelyek a felhasználó neve mellett jelennek meg a születésnapján. Több emoji is megadható: smile|cake|smile"

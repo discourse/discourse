@@ -29,6 +29,9 @@ class CategoriesController < ApplicationController
                      ]
   skip_before_action :verify_authenticity_token, only: %i[search]
 
+  # The front-end is POSTing data to this endpoint, but we're not modifying anything
+  allow_in_readonly_mode :search
+
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
   MAX_CATEGORIES_LIMIT = 25
@@ -97,7 +100,7 @@ class CategoriesController < ApplicationController
       category.move_to(params["position"].to_i)
       render json: success_json
     else
-      render status: 500, json: failed_json
+      render status: :internal_server_error, json: failed_json
     end
   end
 
@@ -140,7 +143,7 @@ class CategoriesController < ApplicationController
       begin
         Category.new(required_create_params.merge(user: current_user))
       rescue ArgumentError => e
-        return render json: { errors: [e.message] }, status: 422
+        return render json: { errors: [e.message] }, status: :unprocessable_entity
       end
 
     if @category.save
@@ -541,59 +544,66 @@ class CategoriesController < ApplicationController
         end
 
         if SiteSetting.content_localization_enabled?
-          conditional_param_keys << {
-            category_localizations_attributes: %i[id category_id locale name description _destroy],
-          }
+          conditional_param_keys << { category_localizations: %i[id locale name description] }
+        end
+
+        permitted_params = [
+          *required_param_keys,
+          :position,
+          :name,
+          :color,
+          :text_color,
+          :style_type,
+          :emoji,
+          :icon,
+          :email_in,
+          :email_in_allow_strangers,
+          :mailinglist_mirror,
+          :all_topics_wiki,
+          :allow_unlimited_owner_edits_on_first_post,
+          :default_slow_mode_seconds,
+          :parent_category_id,
+          :auto_close_hours,
+          :auto_close_based_on_last_post,
+          :uploaded_logo_id,
+          :uploaded_logo_dark_id,
+          :uploaded_background_id,
+          :uploaded_background_dark_id,
+          :slug,
+          :allow_badges,
+          :topic_template,
+          :sort_order,
+          :sort_ascending,
+          :topic_featured_link_allowed,
+          :show_subcategory_list,
+          :num_featured_topics,
+          :default_view,
+          :subcategory_list_style,
+          :default_top_period,
+          :minimum_required_tags,
+          :navigate_to_first_post_after_read,
+          :search_priority,
+          :allow_global_tags,
+          :read_only_banner,
+          :default_list_filter,
+          *conditional_param_keys,
+        ]
+
+        DiscoursePluginRegistry.category_update_param_with_callback.each do |param_name, config|
+          permitted_params << param_name if config[:plugin].enabled?
         end
 
         result =
           params.permit(
-            *required_param_keys,
-            :position,
-            :name,
-            :color,
-            :text_color,
-            :style_type,
-            :emoji,
-            :icon,
-            :email_in,
-            :email_in_allow_strangers,
-            :mailinglist_mirror,
-            :all_topics_wiki,
-            :allow_unlimited_owner_edits_on_first_post,
-            :default_slow_mode_seconds,
-            :parent_category_id,
-            :auto_close_hours,
-            :auto_close_based_on_last_post,
-            :uploaded_logo_id,
-            :uploaded_logo_dark_id,
-            :uploaded_background_id,
-            :uploaded_background_dark_id,
-            :slug,
-            :allow_badges,
-            :topic_template,
-            :sort_order,
-            :sort_ascending,
-            :topic_featured_link_allowed,
-            :show_subcategory_list,
-            :num_featured_topics,
-            :default_view,
-            :subcategory_list_style,
-            :default_top_period,
-            :minimum_required_tags,
-            :navigate_to_first_post_after_read,
-            :search_priority,
-            :allow_global_tags,
-            :read_only_banner,
-            :default_list_filter,
-            *conditional_param_keys,
+            *permitted_params,
             category_setting_attributes: %i[
               auto_bump_cooldown_days
               num_auto_bump_daily
               require_reply_approval
               require_topic_approval
             ],
-            custom_fields: [custom_field_params],
+            custom_fields: {
+            },
             permissions: [*p.try(:keys)],
             allowed_tags: [],
             allowed_tag_groups: [],
@@ -605,15 +615,19 @@ class CategoriesController < ApplicationController
           raise Discourse::InvalidParameters.new(:required_tag_groups)
         end
 
+        if @category
+          DiscoursePluginRegistry.category_update_param_with_callback.each do |param_name, config|
+            next if !config[:plugin].enabled?
+            next if !result.key?(param_name)
+
+            @category.instance_variable_set(:"@#{param_name}_callback_value", result[param_name])
+            # remove from params so that AR doesn't try to set it as an attribute
+            result.delete(param_name)
+          end
+        end
+
         result
       end
-  end
-
-  def custom_field_params
-    keys = params[:custom_fields].try(:keys)
-    return if keys.blank?
-
-    keys.map { |key| params[:custom_fields][key].is_a?(Array) ? { key => [] } : key }
   end
 
   def fetch_category

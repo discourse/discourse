@@ -1,18 +1,26 @@
 # Available options:
 #
-# default            - The default value of the setting. For upload site settings, use the id of the upload seeded in db/fixtures/010_uploads.rb.
-# client             - Set to true if the javascript should have access to this setting's value.
-# refresh            - Set to true if clients should refresh when the setting is changed.
-# min                - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max                - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex              - A regex that the value must match.
-# validator          - The name of the class that will be use to validate the value of the setting.
-# allow_any          - For choice settings allow items not specified in the choice list (default true)
-# secret             - Set to true if input type should be password and value needs to be scrubbed from logs (default false).
-# enum               - The setting has a fixed set of allowed values, and only one can be chosen.
-#                      Set to the class name that defines the set.
-# locale_default     - A hash which overrides according to `SiteSetting.default_locale`.
-#                      The key should be as the same as possible value of default_locale.
+# default               - The default value of the setting. For upload site settings, use the id of the upload seeded
+#                         in db/fixtures/010_uploads.rb.
+# client                - Set to true if the javascript should have access to this setting's value.
+# refresh               - Set to true if clients should refresh when the setting is changed.
+# min                   - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max                   - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex                 - A regex that the value must match.
+# validator             - The name of the class that will be use to validate the value of the setting.
+# allow_any             - For choice settings allow items not specified in the choice list (default true)
+# secret                - Set to true if input type should be password and value needs to be scrubbed from logs (default false).
+# enum                  - The setting has a fixed set of allowed values, and only one can be chosen.
+#                         Set to the class name that defines the set.
+# locale_default        - A hash which overrides according to `SiteSetting.default_locale`.
+#                         The key should be as the same as possible value of default_locale.
+# mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
+#                         in the UI.
+# requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
+#                         Only valid value here is "simple" which will display a confirmation dialog when the setting
+#                         is changed.
+# themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
+#                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
 #
 #
 # type: email                 - Must be a valid email address.
@@ -230,6 +238,9 @@ basic:
     default: ""
     regex: "^GTM-"
     area: "analytics"
+  google_site_verification_token:
+    default: ""
+    area: "analytics"
   top_menu:
     client: true
     refresh: true
@@ -359,11 +370,6 @@ basic:
   default_theme_id:
     default: -1
     hidden: true
-  default_dark_mode_color_scheme_id:
-    default: -1
-    type: enum
-    enum: "ColorSchemeSetting"
-    client: true
   relative_date_duration:
     client: true
     default: 30
@@ -486,7 +492,7 @@ basic:
     area: "analytics"
   enable_user_tips:
     client: true
-    default: true
+    default: false
     refresh: true
     area: "users"
   page_loading_indicator:
@@ -563,25 +569,31 @@ basic:
     area: "interface"
 
 login:
-  invite_only:
-    refresh: true
-    client: true
-    default: false
   login_required:
     refresh: true
     client: true
     default: false
+    area: "login"
   must_approve_users:
     client: true
     default: false
-  invite_code: ""
+  invite_only:
+    refresh: true
+    client: true
+    default: false
+    area: "login"
+  invite_code:
+    default: ""
+    area: "login"
   enable_local_logins:
     client: true
     default: true
+    area: "login"
   enable_local_logins_via_email:
     client: true
     default: true
     validator: "EnableLocalLoginsViaEmailValidator"
+    area: "login"
   enable_passkeys:
     client: true
     default: true
@@ -589,12 +601,15 @@ login:
   allow_new_registrations:
     client: true
     default: true
+    area: "login"
   enable_signup_cta:
     client: true
     default: true
+    area: "login"
   enable_discourse_id:
     default: false
-    hidden: true
+    validator: "EnableDiscourseIdValidator"
+    area: "authenticators"
   discourse_id_client_id:
     default: ""
     hidden: true
@@ -610,10 +625,14 @@ login:
     hidden: true
   enable_google_oauth2_logins:
     default: false
-  google_oauth2_client_id: ""
+    area: "authenticators"
+  google_oauth2_client_id:
+    default: ""
+    area: "authenticators"
   google_oauth2_client_secret:
     default: ""
     secret: true
+    area: "authenticators"
   google_oauth2_prompt:
     default: ""
     type: list
@@ -622,86 +641,123 @@ login:
       - "none"
       - "consent"
       - "select_account"
+    area: "authenticators"
   google_oauth2_hd:
     default: ""
+    area: "authenticators"
   google_oauth2_hd_groups_service_account_admin_email:
     default: ""
+    area: "authenticators"
   google_oauth2_hd_groups_service_account_json:
     default: ""
     textarea: true
+    area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
+    area: "authenticators"
   enable_twitter_logins:
     default: false
+    area: "authenticators"
   twitter_consumer_key:
     default: ""
     regex: "^[\\w+-]+$"
+    area: "authenticators"
   twitter_consumer_secret:
     default: ""
     regex: "^[\\w+-]+$"
     secret: true
+    area: "authenticators"
   enable_facebook_logins:
     default: false
+    area: "authenticators"
   facebook_app_id:
     client: true
     default: ""
     regex: "^\\d+$"
+    area: "authenticators"
   facebook_app_secret:
     default: ""
     regex: "^[a-f0-9]+$"
     secret: true
+    area: "authenticators"
   enable_github_logins:
     default: false
+    area: "authenticators"
   github_client_id:
     default: ""
     regex: "^[a-zA-Z0-9\\.]+$"
+    area: "authenticators"
   github_client_secret:
     default: ""
     regex: "^[a-f0-9]+$"
     secret: true
+    area: "authenticators"
   enable_discord_logins:
     default: false
+    area: "authenticators"
   discord_client_id:
     default: ""
+    area: "authenticators"
   discord_secret:
     default: ""
     secret: true
+    area: "authenticators"
   discord_trusted_guilds:
     default: ""
     type: list
     list_type: simple
+    area: "authenticators"
   enable_linkedin_oidc_logins:
     default: false
     validator: "LinkedinOidcCredentialsValidator"
+    area: "authenticators"
   linkedin_oidc_client_id:
     default: ""
     regex: "^[a-z0-9]+$"
+    area: "authenticators"
   linkedin_oidc_client_secret:
     default: ""
     regex: "^[a-zA-Z0-9_=\\.]+$"
     secret: true
+    area: "authenticators"
   auth_skip_create_confirm:
     default: false
     client: true
+    area: "authenticators"
   auth_immediately:
     default: true
     client: true
+    area: "authenticators"
   auth_overrides_email:
     default: false
     validator: "SsoOverridesEmailValidator"
     client: true
-  auth_overrides_username: false
-  auth_overrides_name: false
-  auth_require_interaction: true
+    area: "authenticators"
+  auth_overrides_username:
+    default: false
+    area: "authenticators"
+  auth_overrides_avatar:
+    default: false
+    area: "authenticators"
+  auth_overrides_name:
+    default: false
+    area: "authenticators"
+  auth_require_interaction:
+    default: true
+    area: "authenticators"
   enable_discourse_connect:
     client: true
     default: false
     validator: "EnableSsoValidator"
+    area: "discourseconnect"
   discourse_connect_allowed_redirect_domains:
     default: ""
     type: list
     list_type: simple
-  verbose_discourse_connect_logging: false
+    area: "discourseconnect"
+  verbose_discourse_connect_logging:
+    default: false
+    area: "discourseconnect"
   verbose_upload_logging:
     hidden: true
     default: false
@@ -714,23 +770,43 @@ login:
   discourse_connect_url:
     default: ""
     regex: '^https?:\/\/.+[^\/]$'
+    area: "discourseconnect"
   discourse_connect_secret:
     default: ""
     secret: true
-  discourse_connect_overrides_groups: false
-  discourse_connect_overrides_bio: false
+    area: "discourseconnect"
+  discourse_connect_overrides_groups:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_overrides_bio:
+    default: false
+    area: "discourseconnect"
   discourse_connect_overrides_avatar:
     default: false
     client: true
-  discourse_connect_overrides_profile_background: false
-  discourse_connect_overrides_location: false
-  discourse_connect_overrides_website: false
-  discourse_connect_overrides_card_background: false
-  discourse_connect_not_approved_url: ""
+    area: "authenticators"
+  discourse_connect_overrides_profile_background:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_overrides_location:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_overrides_website:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_overrides_card_background:
+    default: false
+    area: "discourseconnect"
+  discourse_connect_not_approved_url:
+    default: ""
+    area: "discourseconnect"
   discourse_connect_csrf_protection:
     default: true
     hidden: true
-  enable_discourse_connect_provider: false
+    area: "discourseconnect"
+  enable_discourse_connect_provider:
+    default: false
+    area: "discourseconnect"
   discourse_connect_provider_secrets:
     default: ""
     type: list
@@ -739,44 +815,60 @@ login:
     placeholder:
       key: "sso_provider.key_placeholder"
       value: "sso_provider.value_placeholder"
+    area: "discourseconnect"
   blocked_email_domains:
     default: "mailinator.com"
     type: host_list
     list_type: simple
+    area: "login"
   allowed_email_domains:
     default: ""
     type: host_list
     list_type: simple
+    area: "login"
   normalize_emails:
     default: true
+    area: "login"
   auto_approve_email_domains:
     default: ""
     type: host_list
     list_type: simple
+    area: "login"
   hide_email_address_taken:
     client: true
     default: true
-  log_out_strict: false
+    area: "login"
+  log_out_strict:
+    default: false
+    area: "login"
   pending_users_reminder_delay_minutes:
     min: -1
     default: 480
-  persistent_sessions: true
+    area: "login"
+  persistent_sessions:
+    default: true
+    area: "login"
   maximum_session_age:
     default: 1440
     min: 1
     max: 175200
+    area: "login"
   show_signup_form_email_instructions:
     client: true
     default: true
+    area: "login"
   show_signup_form_username_instructions:
     client: true
     default: false
+    area: "login"
   show_signup_form_full_name_instructions:
     client: true
     default: false
+    area: "login"
   show_signup_form_password_instructions:
     client: true
     default: false
+    area: "login"
 
 users:
   min_username_length:
@@ -923,7 +1015,7 @@ users:
     client: true
     hidden: true
   anonymous_posting_allowed_groups:
-    default: "3|11" # auto group staff and trust_level_1
+    default: "1|2|11" # auto group admins, moderators and trust_level_1
     type: group_list
     allow_any: false
     refresh: true
@@ -960,6 +1052,10 @@ users:
     default: false
     client: true
     area: "users"
+  hide_silencing_reasons:
+    default: false
+    client: true
+    area: "users"
   log_personal_messages_views:
     default: false
     area: "users"
@@ -992,17 +1088,25 @@ users:
     default: 10000
     hidden: true
     area: "notifications"
+  gravatar_enabled:
+    type: "bool"
+    default: true
+    client: true
+    area: "users"
   gravatar_name:
     default: Gravatar
     client: true
+    hidden: true
     area: "users"
   gravatar_base_url:
     default: www.gravatar.com
     client: true
+    hidden: true
     area: "users"
   gravatar_login_url:
     default: /emails
     client: true
+    hidden: true
     area: "users"
   max_bookmarks_per_user:
     default: 2000
@@ -1203,7 +1307,7 @@ posting:
     enum: "TrustLevelAndStaffSetting"
     hidden: true
   shared_drafts_allowed_groups:
-    default: "3" # auto group staff
+    default: "1|2" # auto group admins and moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -1256,6 +1360,7 @@ posting:
     default: "“|”|‘|’"
     locale_default:
       de: "„|“|‚|‘"
+      cs: "„|“|‚|‘"
       fr: "«\xA0|\xA0»|‹\xA0|\xA0›"
     area: "posts_and_topics"
   suppress_reply_directly_below:
@@ -1595,6 +1700,11 @@ posting:
     type: integer
     min: 1
     hidden: true
+  rich_editor:
+    client: true
+    default: true
+    hidden: true
+    area: "posts_and_topics"
 
 content_localization:
   content_localization_enabled:
@@ -1612,19 +1722,27 @@ content_localization:
     default: ""
     type: list
     client: true
-    list_type: named
+    list_type: locale
     allow_any: false
-    choices: "LocaleSiteSetting.values"
+    enum: "LocaleSiteSetting"
     area: "localization"
     validator: "ContentLocalizationLocalesValidator"
   content_localization_max_locales:
     default: 10
     type: integer
     hidden: true
-  content_localization_anon_language_switcher:
-    default: false
+  content_localization_language_switcher:
+    type: enum
+    choices:
+      - none
+      - anonymous
+      - all
+    default: none
     client: true
     validator: "LanguageSwitcherSettingValidator"
+  content_localization_crawler_param:
+    default: false
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -1829,6 +1947,9 @@ email:
   enable_staged_users:
     default: true
     area: "email"
+  email_in_allow_system_user_fallback:
+    default: false
+    hidden: true
   maximum_staged_users_per_email:
     default: 10
     area: "email"
@@ -1991,7 +2112,7 @@ files:
     list_type: file_types
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif|webp|avif"
+    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg"
     refresh: true
     type: list
     list_type: file_types
@@ -2139,9 +2260,11 @@ files:
     type: list
     list_type: compact
     client: true
+    hidden: true
   external_system_avatars_enabled:
     default: true
     client: true
+    hidden: true
     validator: "ExternalSystemAvatarsValidator"
   external_system_avatars_url:
     default: "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
@@ -2179,14 +2302,17 @@ files:
     default: 95
     min: 1
     max: 100
+    hidden: true
   recompress_original_jpg_quality:
     default: 90
     min: 1
     max: 100
+    hidden: true
   image_preview_jpg_quality:
     default: 90
     min: 1
     max: 100
+    hidden: true
   allow_staff_to_upload_any_file_in_pm:
     default: true
     client: true
@@ -2230,6 +2356,7 @@ files:
   composer_media_optimization_image_encode_quality:
     default: 75
     client: true
+    hidden: true
   composer_media_optimization_debug_mode:
     default: false
     client: true
@@ -2241,6 +2368,19 @@ files:
   video_thumbnails_enabled:
     default: true
     client: true
+    hidden: true
+  video_conversion_enabled:
+    default: false
+    validator: "VideoConversionEnabledValidator"
+  video_conversion_service:
+    type: enum
+    default: "aws_mediaconvert"
+    choices:
+      - "aws_mediaconvert"
+  mediaconvert_role_arn:
+    default: ""
+  mediaconvert_endpoint:
+    default: ""
     hidden: true
 
 trust:
@@ -2486,7 +2626,8 @@ trust:
     hidden: true
     area: "trust_levels"
   delete_all_posts_and_topics_allowed_groups:
-    default: ""
+    default: "1|2" # auto group admins, moderators
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     allow_any: false
     refresh: true
@@ -2496,7 +2637,8 @@ trust:
     type: group_list
     area: "group_permissions"
   edit_all_post_groups:
-    default: "14"
+    default: "1|2|14" # auto group admins, moderators, and TL4
+    mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
     area: "group_permissions"
 
@@ -2505,6 +2647,7 @@ security:
   enforce_second_factor_on_external_auth:
     client: true
     default: true
+    area: "login"
   enforce_second_factor:
     client: true
     type: enum
@@ -2513,6 +2656,7 @@ security:
       - "no"
       - "staff"
       - "all"
+    area: "login"
   force_https:
     default: false
   same_site_cookies:
@@ -2530,7 +2674,10 @@ security:
   allow_indexing_non_canonical_urls:
     default: true
     hidden: true
-  moderators_manage_categories_and_groups:
+  moderators_manage_categories:
+    default: false
+    client: true
+  moderators_manage_groups:
     default: false
     client: true
   moderators_change_post_ownership:
@@ -2539,6 +2686,11 @@ security:
   moderators_view_emails:
     client: true
     default: false
+  moderators_view_ips:
+    default: true
+    client: true
+  moderators_change_trust_levels:
+    default: true
   non_crawler_user_agents:
     hidden: true
     default: "trident|webkit|gecko|chrome|safari|msie|opera|goanna|discourse"
@@ -2927,19 +3079,22 @@ developer:
     client: true
     default: 25000
     max: 99000
-  flush_timings_secs:
-    client: true
+  active_user_rate_limit_secs:
     default: 60
-  active_user_rate_limit_secs: 60
+    hidden: true
   verbose_localization:
     default: false
     client: true
+    hidden: true
   top_topics_formula_log_views_multiplier:
     default: 2
+    hidden: true
   top_topics_formula_first_post_likes_multiplier:
     default: 0.5
+    hidden: true
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
+    hidden: true
   rebake_old_posts_count:
     hidden: true
     default: 80
@@ -2985,7 +3140,7 @@ developer:
     hidden: true
     client: true
   viewport_based_mobile_mode:
-    default: false
+    default: true
     client: true
 
 navigation:
@@ -3073,10 +3228,8 @@ backups:
   remove_older_backups:
     client: true
     default: ""
-  automatic_backups_enabled:
-    default: true
   backup_frequency:
-    min: 1
+    min: 0
     max: 30
     default: 7
   s3_backup_bucket:
@@ -3099,6 +3252,7 @@ backups:
     default: 1
     min: 1
     max: 9
+    hidden: true
   include_thumbnails_in_backups:
     default: false
   include_s3_uploads_in_backups:
@@ -3197,6 +3351,7 @@ search:
     client: true
     type: enum
     enum: "SearchExperienceSiteSetting"
+    themeable: true
 
 uncategorized:
   version_checks:
@@ -3576,10 +3731,16 @@ uncategorized:
   overridden_robots_txt:
     default: ""
     hidden: true
+
   show_category_definitions_in_topic_lists:
     default: false
     hidden: true
     client: true
+
+  max_topic_query_page_param:
+    default: 2000
+    min: 100
+    hidden: true
 
   create_revision_on_bulk_topic_moves:
     default: true
@@ -3588,11 +3749,6 @@ uncategorized:
   allow_changing_staged_user_tracking:
     default: false
     area: "users"
-
-  use_polymorphic_bookmarks:
-    client: true
-    default: true
-    hidden: true
 
   splash_screen:
     default: true
@@ -3615,6 +3771,28 @@ uncategorized:
   enable_welcome_banner:
     client: true
     default: true
+    themeable: true
+    area: "interface"
+  welcome_banner_image:
+    client: true
+    default: ""
+    type: upload
+    area: "interface"
+  welcome_banner_text_color:
+    client: true
+    type: color
+    default: ""
+    validator: "CssColorWithBlankValidator"
+    area: "interface"
+  welcome_banner_location:
+    client: true
+    enum: "WelcomeBannerLocation"
+    default: "above_topic_content"
+    area: "interface"
+  welcome_banner_page_visibility:
+    client: true
+    enum: "WelcomeBannerPageVisibility"
+    default: "top_menu_pages"
     area: "interface"
 
 user_preferences:
@@ -3763,6 +3941,13 @@ user_preferences:
   default_sidebar_show_count_of_new_items:
     default: false
     area: "navigation"
+  default_composition_mode:
+    default: 1
+    enum: "CompositionModeSiteSetting"
+    area: "posts_and_topics|user_defaults"
+  default_other_enable_markdown_monospace_font:
+    default: true
+    area: "posts_and_topics|user_defaults"
 
 api:
   retain_web_hook_events_period_days:
@@ -3874,6 +4059,13 @@ tags:
     allow_any: false
     refresh: true
     area: "group_permissions"
+  edit_tags_allowed_groups:
+    default: "1|2" # auto group admins, moderators
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    area: "group_permissions"
   min_trust_level_to_tag_topics:
     default: "0"
     enum: "TrustLevelAndStaffSetting"
@@ -3891,6 +4083,7 @@ tags:
     client: true
     default: 5
     min: 1
+    max: 1000
     area: "categories_and_tags"
   max_tags_in_filter_list:
     client: true
@@ -3993,20 +4186,38 @@ experimental:
   experimental_auto_grid_images:
     default: false
     client: true
+    area: "experimental"
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
     hidden: true
+    area: "experimental"
   experimental_form_templates:
     client: true
     default: false
+    area: "experimental"
+  experimental_impersonation:
+    default: false
+    hidden: true
+    area: "experimental"
+  experimental_impersonation_time_limit_minutes:
+    default: 15
+    hidden: true
+    area: "experimental"
+  experimental_lightbox:
+    client: true
+    default: false
+    hidden: true
+    area: "experimental"
   show_preview_for_form_templates:
     client: true
     default: true
+    area: "experimental"
   experimental_new_new_view_groups:
     client: true
     type: group_list
@@ -4014,7 +4225,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
-    area: "group_permissions|navigation"
+    area: "group_permissions|navigation|experimental"
   glimmer_post_stream_mode_auto_groups:
     client: true
     type: group_list
@@ -4022,6 +4233,7 @@ experimental:
     default: ""
     allow_any: false
     refresh: true
+    area: "experimental"
   glimmer_post_stream_mode:
     client: true
     type: enum
@@ -4029,37 +4241,31 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: disabled
+    default: "enabled"
+    area: "experimental"
+  deactivate_widgets_rendering:
+    client: true
+    default: true
+    area: "experimental"
   enable_rich_text_paste:
     client: true
     default: true
+    area: "experimental"
   google_oauth2_hd_groups:
     default: false
     validator: GoogleOauth2HdGroupsValidator
+    area: "experimental"
   lazy_load_categories_groups:
     default: ""
     type: group_list
     list_type: compact
-    area: "group_permissions"
-  use_overhauled_theme_color_palette:
-    default: false
-    hidden: true
-    client: true
-  rich_editor:
-    client: true
-    default: false
+    area: "group_permissions|experimental"
   reviewable_ui_refresh:
     client: true
     type: group_list
     default: ""
-  experimental_system_themes:
-    type: list
-    default: "horizon"
-    hidden: true
-  allow_any: false
-    choices:
-      - "foundation"
-      - "horizon"
+    area: "experimental"
   experimental_grid_layout:
     client: true
     default: true
+    area: "experimental"

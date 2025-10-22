@@ -18,7 +18,7 @@ RSpec.describe ComposerMessagesFinder do
   end
 
   describe ".check_education_message" do
-    let(:user) { Fabricate.build(:user) }
+    fab!(:user)
 
     context "when creating topic" do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: "createTopic") }
@@ -26,18 +26,20 @@ RSpec.describe ComposerMessagesFinder do
       before { SiteSetting.educate_until_posts = 10 }
 
       it "returns a message for a user who has not posted any topics" do
-        user.expects(:created_topic_count).returns(9)
+        user.expects(:post_count).returns(8)
+        user.expects(:topic_count).returns(1)
         expect(finder.check_education_message).to be_present
       end
 
       it "returns no message when the user has posted enough topics" do
-        user.expects(:created_topic_count).returns(10)
+        user.expects(:post_count).returns(8)
+        user.expects(:topic_count).returns(2)
         expect(finder.check_education_message).to be_blank
       end
     end
 
     context "with private message" do
-      fab!(:topic) { Fabricate(:private_message_topic) }
+      fab!(:topic, :private_message_topic)
 
       context "when starting a new private message" do
         let(:finder) do
@@ -190,9 +192,9 @@ RSpec.describe ComposerMessagesFinder do
 
   describe "#dont_feed_the_trolls" do
     fab!(:user)
-    fab!(:author) { Fabricate(:user) }
-    fab!(:other_user) { Fabricate(:user) }
-    fab!(:third_user) { Fabricate(:user) }
+    fab!(:author, :user)
+    fab!(:other_user, :user)
+    fab!(:third_user, :user)
     fab!(:topic) { Fabricate(:topic, user: author) }
     fab!(:original_post) { Fabricate(:post, topic: topic, user: author) }
     fab!(:unflagged_post) { Fabricate(:post, topic: topic, user: author) }
@@ -284,8 +286,8 @@ RSpec.describe ComposerMessagesFinder do
 
   describe ".check_get_a_room" do
     fab!(:user)
-    fab!(:other_user) { Fabricate(:user) }
-    fab!(:third_user) { Fabricate(:user) }
+    fab!(:other_user, :user)
+    fab!(:third_user, :user)
     fab!(:topic) { Fabricate(:topic, user: other_user) }
     fab!(:op) { Fabricate(:post, topic_id: topic.id, user: other_user) }
 

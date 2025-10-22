@@ -1,0 +1,351 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Řadit podle"
+            tag:
+              label: "Štítek"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Odesílatel"
+            topic_id:
+              label: "ID tématu"
+            title:
+              label: "Název"
+            categories:
+              label: "Kategorie"
+            tags:
+              label: "Štítky"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategorie"
+            tags:
+              label: "Štítky"
+            canned_reply:
+              label: "Odpověď"
+    discourse_ai:
+      features:
+        back: "Zpět"
+        disabled: "(vypnuto)"
+        groups: "Skupiny:"
+        no_persona: "Nenastaveno"
+        no_groups: "Žádná"
+        edit: "Upravit"
+        expand_list:
+          one: "(%{count} další)"
+          few: "(%{count} další)"
+          many: "(%{count} další)"
+          other: "(%{count} další)"
+        collapse_list: "(zobrazit méně)"
+        filters:
+          all: "Vše"
+          reset: "obnovit výchozí"
+        search:
+          name: "Vyhledávání"
+        ai_helper:
+          proofread: Korektura textu
+          explain: "Vysvětlit"
+          smart_dates: "Chytré datumy"
+          markdown_tables: "Generovat Markdown tabulku"
+          custom_prompt: "Vlastní pokyn"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Vyberte možnost..."
+      translations:
+        title: "Překlady"
+        progress_chart:
+          bar_done:
+            one: "%{count} příspěvek"
+            few: "%{count} příspěvků"
+            many: "%{count} příspěvky"
+            other: "%{count} příspěvky"
+      spam:
+        short_title: "Spam"
+        last_seven_days: "Posledních 7 dní"
+        enable: "Zapnout"
+        save_button: "Uložit změny"
+        test_modal:
+          result: "Výsledek"
+          run: "Spustit test"
+          spam: "Spam"
+      usage:
+        short_title: "Použití"
+        summary: "Souhrn"
+        username: "Uživatelské jméno"
+        total_requests: "Celkem požadavků"
+        request_tokens: "Tokeny požadavku"
+        response_tokens: "Tokeny odpovědi"
+        periods:
+          last_day: "Posledních 24 hodin"
+          custom: "Vlastní…"
+      ai_persona:
+        back: "Zpět"
+        name: "Název"
+        edit: "Upravit"
+        export: "Export"
+        import: "Import"
+        description: "Popis"
+        user: Uživatel
+        save: "Uložit"
+        enabled: "Zapnuto?"
+        delete: "Smazat"
+        response_format:
+          open_modal: "Upravit"
+          modal:
+            key_title: "Klíč"
+        filters:
+          reset: "obnovit výchozí"
+      rag:
+        uploads:
+          title: "Nahrané soubory"
+          button: "Přidat soubory"
+          uploading: "Nahrává se..."
+      tools:
+        back: "Zpět"
+        export: "Export"
+        import: "Import"
+        name: "Název"
+        description: "Popis"
+        summary: "Souhrn"
+        save: "Uložit"
+        remove_parameter: "Smazat"
+        parameter_required: "Povinné"
+        edit: "Upravit"
+        test: "Spustit test"
+        delete: "Smazat"
+        test_modal:
+          run: "Spustit test"
+      llms:
+        display_name: "Název"
+        save: "Uložit"
+        edit: "Upravit"
+        back: "Zpět"
+        delete: Smazat
+        quotas:
+          group: "Skupina"
+          max_usages: "Max. použití"
+          duration: "Doba trvání"
+          durations:
+            hour: "1 hodina"
+            six_hours: "6 hodin"
+            day: "24 hodin"
+            week: "7 dní"
+            custom: "Vlastní…"
+          hours: "hodiny"
+        usage:
+          ai_summarization: "Shrnout"
+          ai_spam: "Spam"
+        next:
+          title: "Další"
+        tests:
+          title: "Spustit test"
+          success: "Úspěch!"
+        providers:
+          aws_bedrock: "AWS Bedrock"
+          anthropic: "Anthropic"
+          vllm: "vLLM"
+          hugging_face: "Hugging Face"
+          cohere: "Cohere"
+          open_ai: "OpenAI"
+          google: "Google"
+          azure: "Azure"
+          ollama: "Ollama"
+          CDCK: "CDCK"
+          samba_nova: "SambaNova"
+          mistral: "Mistral"
+          open_router: "OpenRouter"
+          fake: "Přizpůsobené"
+      related_topics:
+        title: "Související témata"
+        pill: "Související"
+      ai_helper:
+        title: "Navrhněte změny pomocí AI"
+        description: "Vyberte jednu z níže uvedených možností a umělá inteligence vám navrhne novou verzi textu."
+        selection_hint: "Tip: Před otevřením pomocníka můžete také vybrat část textu a přepsat pouze tuto část."
+        suggest: "Navrhnout s AI"
+        suggest_errors:
+          too_many_tags:
+            one: "Můžete mít max. %{count} štítek"
+            few: "Můžete mít max. %{count} štítky"
+            many: "Můžete mít max. %{count} štítků"
+            other: "Můžete mít max. %{count} štítků"
+          no_suggestions: "Nejsou k dispozici žádné návrhy"
+        missing_content: "Chcete-li generovat návrhy, zadejte nějaký obsah."
+        context_menu:
+          trigger: "Zeptejte se AI"
+          loading: "Umělá inteligence generuje"
+          cancel: "Zrušit"
+          regen: "Zkusit znovu"
+          confirm: "Potvrdit"
+          discard: "Zrušit"
+          changes: "Navrhované úpravy"
+          custom_prompt:
+            title: "Vlastní pokyn"
+            placeholder: "Napište vlastní pokyn..."
+            submit: "Odeslat pokyn"
+          translate_prompt: "Přeložit do %{language}"
+        post_options_menu:
+          trigger: "Zeptejte se AI"
+          title: "Zeptejte se AI"
+          loading: "Umělá inteligence generuje"
+          close: "Zavřít"
+          copy: "Kopírovat"
+          copied: "Zkopírováno!"
+          cancel: "Zrušit"
+          insert_footnote: "Přidat poznámku pod čarou"
+          footnote_disabled: "Automatické vkládání je zakázáno, klikněte na tlačítko Kopírovat a upravte jej ručně."
+          footnote_credits: "Vysvětlení pomocí AI"
+        fast_edit:
+          suggest_button: "Navrhnout úpravu"
+        thumbnail_suggestions:
+          title: "Navrhované miniatury"
+          select: "Vybrat"
+          selected: "Zaškrtnuté"
+        image_caption:
+          button_label: "Popisek pomocí AI"
+          generating: "Generování popisku..."
+          credits: "Popisek od AI"
+          save_caption: "Uložit"
+        no_content_error: "Nejprve přidejte obsah, abyste na něm mohli provádět akce AI"
+      embeddings:
+        back: "Zpět"
+        save: "Uložit"
+        delete: "Smazat"
+        edit: "Upravit"
+        tests:
+          title: "Spustit test"
+          success: "Úspěch!"
+        display_name: "Název"
+        providers:
+          hugging_face: "Hugging Face"
+          open_ai: "OpenAI"
+          google: "Google"
+          CDCK: "CDCK"
+          fake: "Přizpůsobené"
+        semantic_search_results:
+          toggle: "Zobrazeno %{count} výsledků nalezených pomocí AI"
+          toggle_hidden: "Skryto %{count} výsledků nalezených pomocí AI"
+          none: "Je nám líto, naše vyhledávání AI nenalezlo žádná odpovídající témata"
+          new: "Stisknutím tlačítka „hledat“ začněte hledat nové výsledky pomocí AI"
+          unavailable: "Výsledky AI nejsou k dispozici"
+        semantic_search_tooltips:
+          results_explanation: "Pokud je tato funkce povolena, budou níže přidány další výsledky vyhledávání pomocí umělé inteligence."
+        ai_generated_result: "Výsledek hledání nalezen pomocí AI"
+        quick_search:
+          suffix: "ve všech tématech a příspěvcích s AI"
+      ai_artifact:
+        collapse_view_label: "Ukončení celé obrazovky (ESC nebo tlačítko Zpět)"
+      ai_bot:
+        pm_warning: "Zprávy chatbotů s umělou inteligencí jsou pravidelně monitorovány moderátory."
+        cancel_streaming: "Zastavit odpověď"
+        default_pm_prefix: "[Nepojmenovaná SZ od AI bota]"
+        shortcut_title: "Začněte SZ s AI botem"
+        share: "Kopírovat konverzaci s AI"
+        conversation_shared: "Konverzace zkopírována"
+        debug_ai: "Zobrazit nezpracovaný požadavek a odpověď umělé inteligence"
+        sidebar_empty: "Zde se zobrazí historie konverzace s botem."
+        debug_ai_modal:
+          title: "Zobrazit interakci s umělou inteligencí"
+          copy_request: "Kopírovat požadavek"
+          copy_response: "Kopírovat odpověď"
+          request_tokens: "Tokeny požadavku:"
+          response_tokens: "Tokeny odpovědi:"
+          request: "Požadavek"
+          response: "Odpověď"
+          next_log: "Další"
+          previous_log: "Předchozí"
+        share_full_topic_modal:
+          title: "Veřejně sdílet konverzaci"
+          share: "Sdílet a kopírovat odkaz"
+          update: "Aktualizovat a zkopírovat odkaz"
+          delete: "Odstranit sdílení"
+        share_ai_conversation:
+          name: "Sdílet konverzaci s AI"
+          title: "Sdílejte veřejně tuto konverzaci s umělou inteligencí"
+        invite_ai_conversation:
+          button: "Pozvat"
+          title: "Pozvat do konverzace s AI"
+        ai_title: "Konverzace s AI"
+        share_modal:
+          title: "Kopírovat konverzaci s AI"
+          copy: "Kopírovat"
+          context: "Interakce ke sdílení:"
+          share_tip: "Můžete také sdílet celou konverzaci."
+        bot_names:
+          fake: "Falešný testovací bot"
+          claude-3-opus: "Claude 3 Opus"
+          claude-3-sonnet: "Claude 3 Sonet"
+          claude-3-haiku: "Haiku Claude 3"
+          cohere-command-r-plus: "Cohere Command R Plus"
+          gpt-4: "GPT-4"
+          gpt-4-turbo: "GPT-4 Turbo"
+          gpt-4o: "GPT-4 Omni"
+          gpt-3:
+            5-turbo: "GPT-3.5"
+          claude-2: "Claude 2"
+          gemini-1:
+            5-pro: "Gemini"
+          mixtral-8x7B-Instruct-V0:
+            "1": "Mixtral-8x7B V0.1"
+        conversations:
+          header: "S čím mohu pomoci?"
+          submit: "Odeslat otázku"
+          disclaimer: "Generativní umělá inteligence může dělat chyby. Ověřte si důležité informace."
+          placeholder: "Zeptejte se..."
+          new: "Nová otázka"
+          messages_sidebar_title: "Konverzace"
+          today: "Dnes"
+          last_7_days: "Posledních 7 dní"
+          last_30_days: "Posledních 30 dní"
+          upload_files: "Nahrát soubory"
+      sentiments:
+        dashboard:
+          title: "Sentiment"
+        sentiment_analysis:
+          filter_types:
+            all: "Vše"
+          group_types:
+            category: "Kategorie"
+            tag: "Štítek"
+          table:
+            sentiment: "Sentiment"
+            total_count: "Celkem"
+      summarization:
+        chat:
+          title: "Shrnout zprávy"
+          description: "Výběrem níže uvedené možnosti shrnete konverzaci odeslanou v požadovaném časovém období."
+          summarize: "Shrnout"
+          since:
+            one: "Poslední hodina"
+            few: "Poslední %{count} hodiny"
+            many: "Posledních %{count} hodin"
+            other: "Posledních %{count} hodin"
+        topic:
+          title: "Souhrn tématu"
+          close: "Zavřít panel souhrnu"
+        topic_list_layout:
+          button:
+            compact: "Kompaktní"
+            expanded: "Rozšířený"
+            expanded_description: "se souhrny AI"
+      discobot_discoveries:
+        regular_results: "Témata"
+        collapse: "Sbalit"
+        tooltip:
+          actions:
+            disable: "Vypnout"

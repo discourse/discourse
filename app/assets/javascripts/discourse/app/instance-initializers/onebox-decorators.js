@@ -39,7 +39,7 @@ function _cleanUp() {
 
 export default {
   initialize() {
-    withPluginApi("0.8.42", (api) => {
+    withPluginApi((api) => {
       api.decorateCookedElement((element) => {
         decorateGithubOneboxBody(element);
       });

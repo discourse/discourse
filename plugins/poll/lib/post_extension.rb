@@ -16,7 +16,8 @@ module DiscoursePoll
         post = self
 
         ::Poll.transaction do
-          polls.values.each { |poll| DiscoursePoll::Poll.create!(post.id, poll) }
+          polls.each { |name, poll| DiscoursePoll::Poll.create!(post.id, poll) }
+
           post.custom_fields[DiscoursePoll::HAS_POLLS] = true
           post.save_custom_fields(true)
         end

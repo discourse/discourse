@@ -2,6 +2,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
+import { not } from "truth-helpers";
 import AuthTokenDropdown from "discourse/components/auth-token-dropdown";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -10,7 +11,6 @@ import UserPasskeys from "discourse/components/user-preferences/user-passkeys";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
-import routeAction from "discourse/helpers/route-action";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -22,9 +22,9 @@ export default RouteTemplate(
       >
         <label class="control-label">{{i18n "user.password.title"}}</label>
         <div class="controls">
-          <a
-            href
+          <button
             {{on "click" @controller.changePassword}}
+            disabled={{not @controller.canResetPassword}}
             class="btn btn-default"
             id="change-password-button"
           >
@@ -34,36 +34,36 @@ export default RouteTemplate(
             {{else}}
               {{i18n "user.change_password.action"}}
             {{/if}}
-          </a>
+          </button>
+
+          {{#unless @controller.canResetPassword}}
+            <div class="instructions">
+              {{i18n "user.change_password.staged_user"}}
+            </div>
+          {{/unless}}
 
           {{@controller.passwordProgress}}
         </div>
 
         {{#unless @controller.model.no_password}}
-          {{#if @controller.associatedAccountsLoaded}}
-            {{#if @controller.canRemovePassword}}
-              <div class="controls">
-                <a
-                  href
-                  {{on "click" @controller.removePassword}}
-                  hidden={{@controller.removePasswordInProgress}}
-                  id="remove-password-link"
-                >
-                  {{icon "trash-can"}}
-                  {{i18n "user.change_password.remove"}}
-                </a>
-              </div>
-            {{/if}}
-          {{else}}
-            <div class="controls">
-              <DButton
-                @action={{fn (routeAction "checkEmail") @controller.model}}
-                @title="admin.users.check_email.title"
-                @icon="envelope"
-                @label="admin.users.check_email.text"
-              />
+          <div class="controls">
+            <button
+              {{on "click" @controller.removePassword}}
+              disabled={{not @controller.canRemovePassword}}
+              hidden={{@controller.removePasswordInProgress}}
+              class="btn btn-danger"
+              id="remove-password-link"
+            >
+              {{icon "trash-can"}}
+              {{i18n "user.change_password.remove"}}
+            </button>
+          </div>
+
+          {{#unless @controller.canRemovePassword}}
+            <div class="instructions">
+              {{i18n "user.change_password.remove_disabled"}}
             </div>
-          {{/if}}
+          {{/unless}}
         {{/unless}}
       </div>
 
@@ -94,6 +94,8 @@ export default RouteTemplate(
         </div>
       {{/if}}
     {{/if}}
+
+    <PluginOutlet @name="user-preferences-security-after-password" />
 
     {{#if @controller.canCheckEmails}}
       <div

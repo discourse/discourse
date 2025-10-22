@@ -16,8 +16,8 @@ export default class InviteSectionLink extends BaseSectionLink {
 
   get text() {
     return i18n(
-      `sidebar.sections.community.links.${this.overridenName.toLowerCase()}.content`,
-      { defaultValue: this.overridenName }
+      `sidebar.sections.community.links.${this.overriddenName.toLowerCase()}.content`,
+      { defaultValue: this.overriddenName }
     );
   }
 

@@ -70,6 +70,10 @@ module PageObjects
         component.find(".select-kit-collection li[data-name='#{name}']")
       end
 
+      def has_no_option_name?(name)
+        component.has_no_css?(".select-kit-collection li[data-name='#{name}']")
+      end
+
       def has_option_value?(value)
         component.find(".select-kit-collection li[data-value='#{value}']")
       end

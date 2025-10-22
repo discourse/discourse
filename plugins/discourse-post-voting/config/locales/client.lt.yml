@@ -1,0 +1,37 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  js:
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Įveskite bent jau %{count} simbolį"
+              few: "Įveskite bent jau %{count} simbolius"
+              many: "Įveskite bent jau %{count}simbolių"
+              other: "Įveskite bent jau %{count}simbolius"
+          edit: "redaguoti"
+          cancel: "atšaukti"
+          user:
+            deleted: "(naudotojas ištrintas)"
+          reviewables:
+            actions:
+              agree:
+                title: "Sutinku..."
+              agree_and_suspend:
+                title: "Suspenduoti narį"
+              agree_and_silence:
+                title: "Nutildyti narį"
+                description: "Sutikti su pranešimu ir nutildyti narį."
+              disagree:
+                title: "Nesutinka"
+      topic:
+        sort_by: "Rūšiuoti pagal"
+        activity: "Aktyvumas"

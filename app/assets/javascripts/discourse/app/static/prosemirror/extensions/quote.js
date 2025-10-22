@@ -1,14 +1,19 @@
+import { schema } from "prosemirror-markdown";
+
 /** @type {RichEditorExtension} */
 const extension = {
   nodeSpec: {
+    blockquote: {
+      createGapCursor: true,
+      ...schema.nodes.blockquote.spec,
+    },
     quote: {
       content: "block+",
       group: "block",
-      inline: false,
-      selectable: true,
-      isolating: true,
+      createGapCursor: true,
+      defining: true,
       attrs: {
-        username: {},
+        username: { default: null },
         postNumber: { default: null },
         topicId: { default: null },
         full: { default: null },
@@ -102,9 +107,37 @@ const extension = {
       state.write("[/quote]\n\n");
     },
   },
-  plugins({ pmState: { Plugin, NodeSelection } }) {
+  inputRules: ({ utils: { convertFromMarkdown } }) => ({
+    match: /^\[quote([^\]]*)\]$/,
+    handler: (state, match, start, end) => {
+      const markdown = match[0] + "\n[/quote]";
+
+      return state.tr
+        .replaceWith(start - 1, end, convertFromMarkdown(markdown))
+        .scrollIntoView();
+    },
+  }),
+  plugins({
+    pmState: { Plugin, NodeSelection },
+    pmModel: { Slice, Fragment },
+  }) {
     return new Plugin({
       props: {
+        transformPasted(slice, view) {
+          if (
+            view.endOfTextblock("forward") &&
+            slice.content.childCount === 1 &&
+            slice.content.firstChild.type.name === "quote"
+          ) {
+            const quote = slice.content.firstChild;
+            const paragraph = view.state.schema.nodes.paragraph.create();
+
+            return Slice.maxOpen(Fragment.from([quote, paragraph]), false);
+          }
+
+          return slice;
+        },
+
         handleClickOn(view, pos, node, nodePos, event) {
           if (
             node.type.name === "quote" &&

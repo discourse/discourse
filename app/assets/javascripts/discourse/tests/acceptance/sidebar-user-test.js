@@ -155,7 +155,11 @@ acceptance(
       assert.dom(".sidebar-container").exists("displays the sidebar");
     });
 
-    test("button to toggle between mobile and desktop view on touch devices ", async function (assert) {
+    test("button to toggle between legacy mobile and desktop view on touch devices", async function (assert) {
+      this.container.lookup(
+        "service:site-settings"
+      ).viewport_based_mobile_mode = false;
+
       const capabilities = this.container.lookup("service:capabilities");
       Sinon.stub(capabilities, "touch").value(true);
 

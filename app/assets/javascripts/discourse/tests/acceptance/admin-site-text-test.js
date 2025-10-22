@@ -5,7 +5,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 acceptance("Admin - Site Texts", function (needs) {
   needs.user();
   needs.settings({
-    available_locales: JSON.stringify([{ name: "English", value: "en" }]),
+    available_locales: [{ name: "English", value: "en" }],
     default_locale: "en",
   });
 

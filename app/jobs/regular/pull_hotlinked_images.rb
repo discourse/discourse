@@ -24,7 +24,7 @@ module Jobs
       post = Post.find_by(id: @post_id)
       return if post.nil? || post.topic.nil?
 
-      hotlinked_map = post.post_hotlinked_media.map { |r| [r.url, r] }.to_h
+      hotlinked_map = post.post_hotlinked_media.index_by { |r| r.url }
 
       changed_hotlink_records = false
 

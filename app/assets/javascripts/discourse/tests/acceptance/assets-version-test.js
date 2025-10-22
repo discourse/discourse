@@ -49,7 +49,7 @@ acceptance("Software update refresh", function (needs) {
 
     redirectStub.resetHistory();
     await visit("/");
-    await click(".save-or-cancel .cancel");
+    await click(".discard-button");
     await click(".nav-item_hot a");
     assert.true(
       redirectStub.calledWith("/hot"),

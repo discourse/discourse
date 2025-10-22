@@ -105,7 +105,8 @@ describe "Admin About Config Area Page", type: :system do
       expect(config_area.general_settings_section.banner_image_uploader).to have_uploaded_image
 
       config_area.general_settings_section.banner_image_uploader.toggle_lightbox_preview
-      expect(config_area.general_settings_section.banner_image_uploader).to have_lighbox_preview
+      expect(config_area.general_settings_section.banner_image_uploader).to have_lightbox_preview
+      config_area.general_settings_section.banner_image_uploader.close_lightbox_preview
 
       config_area.general_settings_section.submit
 
@@ -133,6 +134,7 @@ describe "Admin About Config Area Page", type: :system do
 
         config_area.general_settings_section.submit
         expect(config_area.general_settings_section).to have_saved_successfully
+
         expect(SiteSetting.about_banner_image).to eq(nil)
       end
 
@@ -156,6 +158,7 @@ describe "Admin About Config Area Page", type: :system do
 
         config_area.general_settings_section.submit
         expect(config_area.general_settings_section).to have_saved_successfully
+
         expect(SiteSetting.about_banner_image).to eq(nil)
       end
 

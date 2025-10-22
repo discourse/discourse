@@ -9,7 +9,7 @@ export default {
       return;
     }
 
-    withPluginApi("1.1.0", (api) => {
+    withPluginApi((api) => {
       api.addAdminPluginConfigurationNav("automation", [
         {
           label: "discourse_automation.title",

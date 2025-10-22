@@ -1,6 +1,7 @@
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -17,7 +18,6 @@ import avatar from "discourse/helpers/avatar";
 import bodyClass from "discourse/helpers/body-class";
 import categoryLink from "discourse/helpers/category-link";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
-import htmlSafe from "discourse/helpers/html-safe";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import { i18n } from "discourse-i18n";
@@ -45,7 +45,9 @@ export default RouteTemplate(
               id="search-result-count"
               aria-live="polite"
             >
-              {{htmlSafe @controller.resultCountLabel}}
+              {{#unless @controller.searching}}
+                {{htmlSafe @controller.resultCountLabel}}
+              {{/unless}}
             </div>
           {{else}}
             <div class="search-page-heading__page-title">
@@ -59,7 +61,6 @@ export default RouteTemplate(
             @aria-label={{i18n "search.search_term_label"}}
             @enter={{fn @controller.search (hash collapseFilters=true)}}
             @hasAutofocus={{@controller.hasAutofocus}}
-            @aria-controls="search-result-count"
             type="search"
             class="full-page-search search no-blur search-query"
           />
@@ -212,7 +213,15 @@ export default RouteTemplate(
         {{#if @controller.searching}}
           {{loadingSpinner size="medium"}}
         {{else}}
-          <div class="search-results" role="region">
+          <div
+            class="search-results"
+            role="region"
+            aria-label={{if
+              @controller.q
+              (i18n "search.results_page" term=@controller.q)
+              (i18n "search.results")
+            }}
+          >
             <LoadMore @action={{@controller.loadMore}}>
               {{#if
                 (or
@@ -226,6 +235,7 @@ export default RouteTemplate(
                   @selected={{@controller.bulkSelectHelper.selected}}
                   @highlightQuery={{@controller.highlightQuery}}
                   @searchLogId={{@controller.model.grouped_search_result.search_log_id}}
+                  @isPMOnly={{@controller.isPMOnly}}
                 />
 
                 <ConditionalLoadingSpinner @condition={{@controller.loading}}>

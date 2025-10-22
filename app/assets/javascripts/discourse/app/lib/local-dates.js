@@ -1,4 +1,4 @@
-export function applyLocalDates(dates, siteSettings) {
+export function applyLocalDates(dates, siteSettings, timezone) {
   if (!siteSettings.discourse_local_dates_enabled) {
     return;
   }
@@ -7,5 +7,5 @@ export function applyLocalDates(dates, siteSettings) {
     "discourse/plugins/discourse-local-dates/initializers/discourse-local-dates"
   ).applyLocalDates;
 
-  _applyLocalDates(dates, siteSettings);
+  _applyLocalDates(dates, siteSettings, timezone);
 }

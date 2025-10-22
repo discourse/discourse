@@ -84,10 +84,42 @@ export async function testMarkdown(
     multiToggle
   );
 
-  assert.strictEqual(html, expectedHtml, `HTML should match for "${markdown}"`);
+  if (typeof expectedHtml === "function") {
+    expectedHtml(assert);
+  } else {
+    assert.strictEqual(
+      html,
+      expectedHtml,
+      `HTML should match for "${markdown}"`
+    );
+  }
+
   assert.strictEqual(
     editorClass.value,
     expectedMarkdown,
     `Markdown should match for "${markdown}"`
   );
+}
+
+/**
+ * Helper to test rendered markdown with DOM assertions
+ * @param {string} markdown - The markdown to render
+ * @param {Function} assertions - Function to run assertions on the rendered HTML
+ * @returns {Function} - A test function that can be passed to QUnit's test()
+ */
+export function testRenderedMarkdown(markdown, assertions) {
+  return async function (assert) {
+    this.siteSettings.rich_editor = true;
+
+    const [editorClass] = await setupRichEditor(assert, markdown);
+
+    // The editor is already in the DOM, so we can use assert.dom directly
+    assertions(assert, editorClass);
+
+    assert.strictEqual(
+      editorClass.value,
+      markdown,
+      `Markdown should match for "${markdown}"`
+    );
+  };
 }

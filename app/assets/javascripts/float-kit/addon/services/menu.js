@@ -42,11 +42,7 @@ export default class Menu extends Service {
         (registeredMenu) => registeredMenu.trigger === arguments[0]
       );
 
-      if (!instance) {
-        instance = new DMenuInstance(getOwner(this), arguments[1]);
-        instance.trigger = arguments[0];
-        instance.detachedTrigger = true;
-      }
+      instance ??= this.newInstance(arguments[0], arguments[1]);
     }
 
     if (instance.options.identifier || instance.options.groupIdentifier) {
@@ -77,6 +73,14 @@ export default class Menu extends Service {
     instance.expanded = true;
 
     await new Promise((resolve) => schedule("afterRender", resolve));
+
+    return instance;
+  }
+
+  newInstance(trigger, options) {
+    const instance = new DMenuInstance(getOwner(this), options);
+    instance.trigger = trigger;
+    instance.detachedTrigger = true;
 
     return instance;
   }

@@ -8,7 +8,7 @@ module Migrations::Converters::Discourse
       @source_db.count <<~SQL
         SELECT COUNT(*)
         FROM user_options
-        WHERE user_id >= 0
+        WHERE user_id > 0
       SQL
     end
 
@@ -16,7 +16,7 @@ module Migrations::Converters::Discourse
       @source_db.query <<~SQL
         SELECT *
         FROM user_options
-        WHERE user_id >= 0
+        WHERE user_id > 0
         ORDER BY user_id
       SQL
     end
@@ -48,9 +48,9 @@ module Migrations::Converters::Discourse
         email_previous_replies: item[:email_previous_replies],
         enable_allowed_pm_users: item[:enable_allowed_pm_users],
         enable_defer: item[:enable_defer],
-        enable_experimental_sidebar: item[:enable_experimental_sidebar],
         enable_quoting: item[:enable_quoting],
         enable_smart_lists: item[:enable_smart_lists],
+        enable_markdown_monospace_font: item[:enable_markdown_monospace_font],
         external_links_in_new_tab: item[:external_links_in_new_tab],
         hide_presence: item[:hide_presence],
         hide_profile: item[:hide_profile],

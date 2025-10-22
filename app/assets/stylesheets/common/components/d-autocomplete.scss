@@ -1,0 +1,30 @@
+@use "lib/viewport";
+
+.fk-d-menu[data-identifier="d-autocomplete"] {
+  z-index: z("modal", "dialog") + 1;
+  animation: fade-in ease 0.25s 1 forwards !important;
+
+  --d-border-radius: var(--space-2);
+
+  // Override compose.scss autocomplete styles to remove double styling
+  // Let d-menu handle the container border/shadow/radius
+  .autocomplete {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+
+    ul {
+      li {
+        &:first-of-type a {
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+        }
+
+        &:last-of-type a {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+        }
+      }
+    }
+  }
+}

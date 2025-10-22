@@ -3,7 +3,6 @@
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
-const concat = require("broccoli-concat");
 const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
@@ -16,6 +15,10 @@ const withSideWatch = require("./lib/with-side-watch");
 const crypto = require("crypto");
 const commonBabelConfig = require("./lib/common-babel-config");
 const TerserPlugin = require("terser-webpack-plugin");
+const {
+  CustomizeChunkUrlPlugin,
+} = require("./lib/webpack-customize-chunk-url-plugin");
+const { BroccoliMergeFiles } = require("broccoli-merge-files");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
@@ -25,9 +28,35 @@ module.exports = function (defaults) {
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   DeprecationSilencer.silence(console, "warn");
+  DeprecationSilencer.silence(console, "log");
   DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
 
   const isProduction = EmberApp.env().includes("production");
+
+  const adminTree = funnel("admin", { destDir: "admin" });
+  const adminCompatModulesTree = funnel(
+    new BroccoliMergeFiles(["admin"], {
+      outputFileName: "admin-compat-modules.js",
+      async merge(files) {
+        const lines = [`const compatModules = {};`];
+
+        let i = 1;
+        for (const [filename] of files) {
+          const withoutExtension = filename.replace(/\..*$/, "");
+          lines.push(
+            `import * as Module${i} from "./${withoutExtension}";`,
+            `compatModules["./${withoutExtension}"] = Module${i};`
+          );
+          i++;
+        }
+
+        lines.push("export default compatModules;");
+
+        return lines.join("\n");
+      },
+    }),
+    { destDir: "admin" }
+  );
 
   const app = new EmberApp(defaults, {
     autoRun: false,
@@ -64,9 +93,12 @@ module.exports = function (defaults) {
     ...commonBabelConfig(),
 
     trees: {
-      app: withSideWatch("app", {
-        watching: ["../discourse-markdown-it", "../truth-helpers"],
-      }),
+      app: withSideWatch(
+        mergeTrees(["app", adminTree, adminCompatModulesTree]),
+        {
+          watching: ["../discourse-markdown-it", "../truth-helpers"],
+        }
+      ),
     },
   });
 
@@ -82,8 +114,6 @@ module.exports = function (defaults) {
     .findAddonByName("discourse-plugins")
     .generatePluginsTree(app.tests);
 
-  const adminTree = app.project.findAddonByName("admin").treeForAddonBundle();
-
   app.project.liveReloadFilterPatterns = [/.*\.scss/];
 
   const terserPlugin = app.project.findAddonByName("ember-cli-terser");
@@ -98,12 +128,6 @@ module.exports = function (defaults) {
   let extraPublicTrees = [
     parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
-    applyTerser(
-      concat(adminTree, {
-        inputFiles: ["**/*.js"],
-        outputFile: `assets/admin.js`,
-      })
-    ),
     applyTerser(generateScriptsTree(app)),
     pluginTrees,
   ];
@@ -118,7 +142,7 @@ module.exports = function (defaults) {
   const appTree = compatBuild(app, Webpack, {
     staticEmberSource: true,
     splitAtRoutes: ["wizard"],
-    staticAppPaths: ["static"],
+    staticAppPaths: ["static", "admin"],
     packagerOptions: {
       webpackConfig: {
         devtool:
@@ -129,20 +153,13 @@ module.exports = function (defaults) {
           publicPath: "auto",
           filename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
           chunkFilename: `assets/chunk.[chunkhash].${cachebusterHash}.js`,
+          assetModuleFilename: `assets/chunk.[hash].${cachebusterHash}[ext][query]`,
         },
         optimization: {
           minimize: isProduction,
           minimizer: [
             new TerserPlugin({
               minify: TerserPlugin.swcMinify,
-              terserOptions: {
-                compress: {
-                  // Stop swc unwrapping 'unnecessary' IIFE wrappers which are added by Babel
-                  // to workaround a bug in Safari 15 class fields.
-                  inline: false,
-                  reduce_funcs: false,
-                },
-              },
             }),
           ],
         },
@@ -153,9 +170,8 @@ module.exports = function (defaults) {
               maxGenerations: 1,
             },
         entry: {
-          "assets/discourse.js/features/markdown-it.js": {
-            import: "./static/markdown-it",
-            dependOn: "assets/discourse.js",
+          "assets/media-optimization-bundle.js": {
+            import: "./static/media-optimization-bundle",
             runtime: false,
           },
         },
@@ -170,8 +186,7 @@ module.exports = function (defaults) {
               callback(null, request, "commonjs");
             } else if (
               !request.includes("-embroider-implicit") &&
-              (request.startsWith("admin/") ||
-                request.startsWith("discourse/plugins/") ||
+              (request.startsWith("discourse/plugins/") ||
                 request.startsWith("discourse/theme-"))
             ) {
               callback(null, request, "commonjs");
@@ -194,8 +209,9 @@ module.exports = function (defaults) {
             stats: {
               all: false,
               entrypoints: true,
+              chunks: true,
             },
-            transform({ entrypoints }) {
+            transform({ chunks, entrypoints }) {
               let names = Object.keys(entrypoints);
               let output = {};
 
@@ -216,14 +232,29 @@ module.exports = function (defaults) {
                 }
               }
 
+              for (const chunk of chunks) {
+                if (chunk.entry) {
+                  continue;
+                }
+                for (const name of chunk.names) {
+                  const outputName = `assets/chunk.${name}.js`;
+                  output[outputName] ??= { assets: [] };
+                  output[outputName].assets.push(...chunk.files);
+                }
+              }
+
               return JSON.stringify(output, null, 2);
             },
           }),
+          new CustomizeChunkUrlPlugin(),
           new RetryChunkLoadPlugin({
             retryDelay: 200,
             maxRetries: 2,
           }),
         ],
+        experiments: {
+          asyncWebAssembly: true,
+        },
       },
     },
     skipBabel: [

@@ -35,7 +35,6 @@ be:
       edit: "рэдагаваць"
       bookmark_message: "закладка"
       save: "захаваць"
-      exit: "назад"
       channel_status:
         closed: "Закрыта"
       browse:

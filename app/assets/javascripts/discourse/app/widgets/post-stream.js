@@ -5,25 +5,22 @@ import { addWidgetCleanCallback } from "discourse/components/mount-widget";
 import discourseDebounce from "discourse/lib/debounce";
 import { registerDeprecationHandler } from "discourse/lib/deprecated";
 import { iconNode } from "discourse/lib/icon-library";
-import { Placeholder } from "discourse/lib/posts-with-placeholders";
 import { consolePrefix } from "discourse/lib/source-identifier";
 import transformPost from "discourse/lib/transform-post";
 import DiscourseURL from "discourse/lib/url";
+import { Placeholder } from "discourse/models/post-stream";
 import { avatarFor } from "discourse/widgets/post";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { createWidget } from "discourse/widgets/widget";
+import {
+  createWidget,
+  POST_STREAM_DEPRECATION_OPTIONS,
+} from "discourse/widgets/widget";
 import { i18n } from "discourse-i18n";
-
-export const POST_STREAM_DEPRECATION_OPTIONS = {
-  since: "v3.5.0.beta1-dev",
-  id: "discourse.post-stream-widget-overrides",
-  // url: "", // TODO (glimmer-post-stream) uncomment when the topic is created on meta
-};
 
 export let havePostStreamWidgetExtensions = null;
 
 registerDeprecationHandler((_, opts) => {
-  if (opts?.id === "discourse.post-stream-widget-overrides") {
+  if (opts?.id === POST_STREAM_DEPRECATION_OPTIONS.id) {
     if (!havePostStreamWidgetExtensions) {
       havePostStreamWidgetExtensions = new Set();
     }
@@ -111,9 +108,8 @@ createWidget("posts-filtered-notice", {
         this.attach("filter-show-all", attrs),
       ];
     } else if (filters.replies_to_post_number) {
-      const sourcePost = attrs.posts.findBy(
-        "post_number",
-        filters.replies_to_post_number
+      const sourcePost = attrs.posts.find(
+        (item) => item.post_number === filters.replies_to_post_number
       );
 
       return [
@@ -217,8 +213,7 @@ export default createWidget("post-stream", {
   tagName: "div.post-stream.widget-post-stream",
 
   html(attrs) {
-    const posts = attrs.posts || [];
-    const postArray = posts.toArray();
+    const postArray = attrs.posts || [];
     const postArrayLength = postArray.length;
     const maxPostNumber =
       postArrayLength > 0 ? postArray[postArrayLength - 1].post_number : 0;

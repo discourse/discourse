@@ -16,7 +16,6 @@ import { MENU } from "float-kit/lib/constants";
 import DMenuInstance from "float-kit/lib/d-menu-instance";
 
 export default class DMenu extends Component {
-  @service menu;
   @service site;
 
   menuInstance = new DMenuInstance(getOwner(this), {
@@ -49,8 +48,11 @@ export default class DMenu extends Component {
 
   @action
   forwardTabToContent(event) {
+    // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
+    const parentHandlerResult = this.args.onKeydown?.(event);
+
     if (!this.body) {
-      return;
+      return parentHandlerResult;
     }
 
     if (event.key === "Tab") {
@@ -61,11 +63,10 @@ export default class DMenu extends Component {
       );
 
       firstFocusable?.focus() || this.body.focus();
+      return true;
     }
-  }
 
-  get menuId() {
-    return `d-menu-${this.menuInstance.id}`;
+    return parentHandlerResult;
   }
 
   get options() {

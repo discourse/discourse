@@ -598,6 +598,7 @@ export default class PostMenu extends Component {
       isWhoReadVisible: this.isWhoReadVisible,
       isWikiMode: this.isWikiMode,
       repliesShown: this.args.repliesShown,
+      repliesButtonDisabled: this.args.repliesButtonDisabled,
       replyDirectlyBelow:
         this.args.nextPost?.reply_to_post_number ===
           this.args.post.post_number &&

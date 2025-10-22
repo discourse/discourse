@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fa_IR:
+  site_settings:
+    microsoft_auth_enabled: "به کاربران اجازه می‌دهید با استفاده از مایکروسافت احراز هویت کنند؟"
+    microsoft_auth_email_verified: "تمام ایمیل‌های مایکروسافت را به صورت پیش‌فرض تایید شده در نظر بگیرید. \nاخطار: این را فقط در صورتی فعال کنید که مطمئن باشید همه کاربران شما ایمیل‌های تایید شده دارند."

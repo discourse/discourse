@@ -6,7 +6,7 @@
 @import "./common/components/hashtag";
 
 article.post {
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
 
   img.avatar {
     border-radius: 50%;
@@ -115,8 +115,8 @@ article.post {
 }
 
 img.emoji {
-  width: 20px;
-  height: 20px;
+  width: 1em;
+  height: 1em;
 }
 
 .in-reply-to {
@@ -226,7 +226,7 @@ div.lightbox-wrapper {
     clear: both;
 
     .main-link {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
       padding: 0.5rem;
       width: 100%;
 

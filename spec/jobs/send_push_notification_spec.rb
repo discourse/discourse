@@ -2,7 +2,7 @@
 
 RSpec.describe Jobs::SendPushNotification do
   fab!(:user)
-  fab!(:subscription) { Fabricate(:push_subscription) }
+  fab!(:subscription, :push_subscription)
   let(:payload) { { notification_type: 1, excerpt: "Hello you" } }
 
   before do

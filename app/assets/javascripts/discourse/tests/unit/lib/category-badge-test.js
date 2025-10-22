@@ -111,43 +111,52 @@ module("Unit | Utility | category-badge", function (hooks) {
     assert.strictEqual(dirSpan.dir, "auto");
   });
 
-  test("recursive", function (assert) {
+  test("category style types", function (assert) {
     const store = getOwner(this).lookup("service:store");
-    const siteSettings = getOwner(this).lookup("service:site-settings");
+    const category = store.createRecord("category", { name: "hello", id: 123 });
 
-    const foo = store.createRecord("category", {
-      name: "foo",
-      id: 1,
+    assert.true(
+      categoryBadgeHTML(category).includes("--style-square"),
+      "has square style by default"
+    );
+
+    assert.true(
+      categoryBadgeHTML(category, {
+        styleType: "icon",
+        icon: "book",
+      }).includes("--style-icon"),
+      "has icon style"
+    );
+
+    assert.true(
+      categoryBadgeHTML(category, {
+        styleType: "emoji",
+        emoji: "wave",
+      }).includes("--style-emoji"),
+      "has emoji style"
+    );
+  });
+
+  test("category style with ancestors", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+
+    const emojiParent = store.createRecord("category", {
+      name: "hello",
+      id: 123,
+      style_type: "icon",
+      icon: "book",
+    });
+    const emojiChild = store.createRecord("category", {
+      name: "world",
+      id: 456,
+      style_type: "icon",
+      icon: "file",
+      parent_category_id: emojiParent.id,
     });
 
-    const bar = store.createRecord("category", {
-      name: "bar",
-      id: 2,
-      parent_category_id: foo.id,
-    });
+    const badge = categoryBadgeHTML(emojiChild, { ancestors: [emojiParent] });
 
-    const baz = store.createRecord("category", {
-      name: "baz",
-      id: 3,
-      parent_category_id: bar.id,
-    });
-
-    siteSettings.max_category_nesting = 0;
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-
-    siteSettings.max_category_nesting = 1;
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-
-    siteSettings.max_category_nesting = 2;
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-    assert.false(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
-
-    siteSettings.max_category_nesting = 3;
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("baz"));
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("bar"));
-    assert.true(categoryBadgeHTML(baz, { recursive: true }).includes("foo"));
+    assert.true(badge.includes("d-icon-book"), "has parent with book icon");
+    assert.true(badge.includes("d-icon-file"), "has child with file icon");
   });
 });

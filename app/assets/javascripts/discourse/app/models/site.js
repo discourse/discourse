@@ -1,4 +1,4 @@
-import { tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import EmberObject, { computed, get } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, sort } from "@ember/object/computed";
@@ -6,12 +6,13 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import discourseComputed from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
+import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import Mobile from "discourse/lib/mobile";
 import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Archetype from "discourse/models/archetype";
 import Category from "discourse/models/category";
 import PostActionType from "discourse/models/post-action-type";
@@ -85,13 +86,14 @@ export default class Site extends RestModel {
   @service currentUser;
   @service capabilities;
 
-  @tracked categories;
+  @trackedArray categories;
 
   @alias("is_readonly") isReadOnly;
 
   @sort("categories", "topicCountDesc") categoriesByCount;
 
   #glimmerPostStreamEnabled;
+  #siteInitialized = false;
 
   init() {
     super.init(...arguments);
@@ -107,8 +109,40 @@ export default class Site extends RestModel {
 
   @dependentKeyCompat
   get mobileView() {
+    this.#siteInitialized ||= getOwnerWithFallback(this).lookup(
+      "-application-instance:main"
+    )?._booted;
+
+    if (!this.#siteInitialized) {
+      if (isTesting() || isRailsTesting()) {
+        throw new Error(
+          "Accessing `site.mobileView` or `site.desktopView` during the site initialization phase. " +
+            "Move these checks to a component, transformer, or API callback that executes during page rendering."
+        );
+      }
+
+      deprecated(
+        "Accessing `site.mobileView` or `site.desktopView` during the site initialization " +
+          "can lead to errors and inconsistencies when the browser window is " +
+          "resized. Please move these checks to a component, transformer, or API callback that executes during page" +
+          " rendering.",
+        {
+          since: "3.5.0.beta9-dev",
+          id: "discourse.static-viewport-initialization",
+          url: "https://meta.discourse.org/t/367810",
+        }
+      );
+    }
+
+    if (Mobile.mobileForced) {
+      return true;
+    }
+
     if (this.siteSettings.viewport_based_mobile_mode) {
-      return !this.capabilities.viewport.sm;
+      return withSilencedDeprecations(
+        "discourse.static-viewport-initialization",
+        () => !this.capabilities.viewport.sm
+      );
     } else {
       return Mobile.mobileView;
     }
@@ -116,6 +150,16 @@ export default class Site extends RestModel {
 
   @dependentKeyCompat
   get isMobileDevice() {
+    deprecated(
+      "Site.isMobileDevice is deprecated. Use `site.mobileView` and `site.desktopView` instead for " +
+        "viewport-based values or `capabilities.isMobileDevice` for user-agent based detection.",
+      {
+        id: "discourse.site.is-mobile-device",
+        since: "3.5.0.beta9-dev",
+        url: "https://meta.discourse.org/t/367810",
+      }
+    );
+
     return this.mobileView;
   }
 
@@ -128,7 +172,9 @@ export default class Site extends RestModel {
     let enabled;
 
     /* eslint-disable no-console */
-    let settingValue = this.siteSettings.glimmer_post_stream_mode;
+    let settingValue = this.siteSettings.deactivate_widgets_rendering
+      ? "enabled" // if widgets rendering is deactivated, we always use the glimmer post stream
+      : this.siteSettings.glimmer_post_stream_mode;
     if (
       settingValue === "disabled" &&
       this.currentUser?.use_glimmer_post_stream_mode_auto_mode
@@ -215,7 +261,7 @@ export default class Site extends RestModel {
     if (!postActionTypes) {
       return [];
     }
-    return postActionTypes.filterBy("is_flag", true);
+    return postActionTypes.filter((type) => type.is_flag);
   }
 
   collectUserFields(fields) {
@@ -234,9 +280,9 @@ export default class Site extends RestModel {
   }
 
   // Sort subcategories under parents
-  @discourseComputed("categoriesByCount", "categories.[]")
-  sortedCategories(categories) {
-    return Category.sortCategories(categories);
+  @cached
+  get sortedCategories() {
+    return Category.sortCategories(this.categoriesByCount);
   }
 
   // Returns it in the correct order, by setting
@@ -275,16 +321,22 @@ export default class Site extends RestModel {
 
   removeCategory(id) {
     const categories = this.categories;
-    const existingCategory = categories.findBy("id", id);
+    const existingCategory = categories.find((c) => c.id === id);
     if (existingCategory) {
       categories.removeObject(existingCategory);
     }
   }
 
   updateCategory(newCategory) {
+    if (newCategory instanceof Category) {
+      throw new Error(
+        "updateCategory should be passed a pojo, not a category model instance"
+      );
+    }
+
     const categories = this.categories;
     const categoryId = get(newCategory, "id");
-    const existingCategory = categories.findBy("id", categoryId);
+    const existingCategory = categories.find((c) => c.id === categoryId);
 
     // Don't update null permissions
     if (newCategory.permission === null) {

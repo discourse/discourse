@@ -5,6 +5,7 @@ class TopicViewSerializer < ApplicationSerializer
   include SuggestedTopicsMixin
   include TopicTagsMixin
   include ApplicationHelper
+  include LocalizedFancyTopicTitleMixin
 
   def self.attributes_from_topic(*list)
     [list].flatten.each do |attribute|
@@ -18,7 +19,6 @@ class TopicViewSerializer < ApplicationSerializer
   attributes_from_topic(
     :id,
     :title,
-    :fancy_title,
     :posts_count,
     :created_at,
     :views,
@@ -317,16 +317,6 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_visibility_reason_id?
     object.topic.visibility_reason_id.present?
-  end
-
-  def fancy_title
-    f = object.topic.fancy_title
-
-    if ContentLocalization.show_translated_topic?(object.topic, scope)
-      object.topic.get_localization&.fancy_title.presence || f
-    else
-      f
-    end
   end
 
   def has_localized_content

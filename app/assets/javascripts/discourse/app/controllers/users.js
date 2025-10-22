@@ -118,6 +118,11 @@ export default class UsersController extends Controller {
   }
 
   @action
+  updateOrderAndAsc(order, asc) {
+    this.setProperties({ order, asc });
+  }
+
+  @action
   loadMore() {
     this.model.loadMore();
   }

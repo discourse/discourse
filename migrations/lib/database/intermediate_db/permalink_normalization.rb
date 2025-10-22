@@ -6,6 +6,7 @@ module Migrations::Database::IntermediateDB
       INSERT INTO permalink_normalizations (normalization)
       VALUES (?)
     SQL
+    private_constant :SQL
 
     def self.create(normalization:)
       ::Migrations::Database::IntermediateDB.insert(SQL, normalization)

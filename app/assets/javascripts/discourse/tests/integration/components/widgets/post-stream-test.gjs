@@ -29,6 +29,7 @@ function postStreamTest(name, attrs) {
 
       hooks.beforeEach(function () {
         this.siteSettings.glimmer_post_stream_mode = postStreamMode;
+        this.siteSettings.deactivate_widgets_rendering = false;
       });
 
       const CustomPostMenuButton = <template>
@@ -42,7 +43,7 @@ function postStreamTest(name, attrs) {
 
       postStreamTest("extensibility", {
         posts() {
-          withPluginApi("1.34.0", (api) => {
+          withPluginApi((api) => {
             api.registerValueTransformer(
               "post-menu-buttons",
               ({ value: dag, context: { post, firstButtonKey } }) => {

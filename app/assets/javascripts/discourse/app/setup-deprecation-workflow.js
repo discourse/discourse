@@ -1,4 +1,4 @@
 import setupDeprecationWorkflow from "ember-cli-deprecation-workflow";
-import DEPRECATION_WORKFLOW from "./deprecation-workflow";
+import DeprecationWorkflow from "./deprecation-workflow";
 
-setupDeprecationWorkflow({ workflow: DEPRECATION_WORKFLOW });
+setupDeprecationWorkflow({ workflow: DeprecationWorkflow.emberWorkflowList });

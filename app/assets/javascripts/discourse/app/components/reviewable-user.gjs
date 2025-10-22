@@ -1,14 +1,15 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ReviewableField from "discourse/components/reviewable-field";
-import getUrl from "discourse/helpers/get-url";
 import rawDate from "discourse/helpers/raw-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { bind } from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
 import { REJECTED } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
 import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";

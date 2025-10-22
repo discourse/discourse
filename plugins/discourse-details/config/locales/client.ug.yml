@@ -11,8 +11,6 @@ ug:
         categories:
           discourse_details: "Discourse تەپسىلاتى"
   js:
-    details:
-      title: تەپسىلاتنى يوشۇر
     composer:
       details_title: قىسقىچە مەزمۇن
       details_text: "بۇ تېكىست يوشۇرۇلىدۇ"

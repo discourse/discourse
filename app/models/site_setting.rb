@@ -4,11 +4,18 @@ class SiteSetting < ActiveRecord::Base
   VALID_AREAS = %w[
     about
     analytics
+    login
+    authenticators
+    discourseconnect
+    oauth2
+    oidc
+    saml
     badges
     categories_and_tags
     email
     embedding
     emojis
+    experimental
     flags
     fonts
     group_permissions
@@ -49,6 +56,7 @@ class SiteSetting < ActiveRecord::Base
     default_other_dynamic_favicon
     default_other_like_notification_frequency
     default_other_skip_new_user_tips
+    default_other_enable_markdown_monospace_font
     default_topics_automatic_unpin
     default_categories_watching
     default_categories_tracking
@@ -65,6 +73,7 @@ class SiteSetting < ActiveRecord::Base
     default_navigation_menu_tags
     default_sidebar_link_to_filtered_list
     default_sidebar_show_count_of_new_items
+    default_composition_mode
   ]
 
   extend GlobalPath
@@ -72,8 +81,8 @@ class SiteSetting < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :destroy
 
-  validates_presence_of :name
-  validates_presence_of :data_type
+  validates :name, presence: true
+  validates :data_type, presence: true
 
   after_save do
     if saved_change_to_value?
@@ -337,8 +346,8 @@ class SiteSetting < ActiveRecord::Base
 
   protected
 
-  def self.clear_cache!
-    super
+  def self.clear_cache!(expire_theme_site_setting_cache: false)
+    super(expire_theme_site_setting_cache:)
 
     @blocked_attachment_content_types_regex = nil
     @blocked_attachment_filenames_regex = nil

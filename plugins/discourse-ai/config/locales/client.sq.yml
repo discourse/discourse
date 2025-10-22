@@ -1,0 +1,178 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sq:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Rendit sipas"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID e temës"
+            title:
+              label: "Titulli"
+            categories:
+              label: "Categories"
+            tags:
+              label: "Etiketat"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategori"
+            tags:
+              label: "Etiketat"
+            canned_reply:
+              label: "Përgjigju"
+    discourse_ai:
+      features:
+        back: "Kthehu mbrapa"
+        disabled: "(e çaktivizuar)"
+        groups: "Grupet:"
+        no_persona: "Nuk është vendosur"
+        no_groups: "Asnjë"
+        edit: "Redaktoni"
+        expand_list:
+          one: "(%{count} tjetër)"
+          other: "(%{count} të tjera)"
+        collapse_list: "(shfaq më pak)"
+        filters:
+          all: "Të gjitha"
+          reset: "Rivendosni"
+        search:
+          name: "Kërko"
+        spam:
+          name: "Spam"
+      modals:
+        select_option: "Zgjidhni një opsion..."
+      translations:
+        progress_chart:
+          bar_done:
+            one: "%{count} postim"
+            other: "%{count} postime"
+      spam:
+        short_title: "Spam"
+        enable: "Aktivizo"
+        test_modal:
+          spam: "Spam"
+      usage:
+        summary: "Përmbledhja"
+        username: "Emri i përdoruesit"
+        total_requests: "Total requests"
+        periods:
+          custom: "Me porosi..."
+      ai_persona:
+        back: "Kthehu mbrapa"
+        name: "Emri"
+        edit: "Redaktoni"
+        export: "Eksporto"
+        import: "Importo"
+        description: "Përshkrimi"
+        user: User
+        save: "Ruani"
+        enabled: "Aktivizuar?"
+        delete: "Fshij"
+        response_format:
+          open_modal: "Redaktoni"
+        filters:
+          reset: "Rivendosni"
+      rag:
+        uploads:
+          uploading: "Duke ngarkuar..."
+      tools:
+        back: "Kthehu mbrapa"
+        export: "Eksporto"
+        import: "Importo"
+        name: "Emri"
+        description: "Përshkrimi"
+        summary: "Përmbledhja"
+        save: "Ruani"
+        remove_parameter: "Hiq"
+        parameter_required: "E nevojshme"
+        edit: "Redaktoni"
+        delete: "Fshij"
+      llms:
+        display_name: "Emri"
+        save: "Ruani"
+        edit: "Redaktoni"
+        back: "Kthehu mbrapa"
+        delete: Fshij
+        quotas:
+          group: "Grupi"
+          max_usages: "Përdorimet maksimale"
+          duration: "Kohëzgjatja"
+          durations:
+            hour: "1 orë"
+            six_hours: "6 orë"
+            day: "24 orë"
+            week: "7 ditë"
+            custom: "Me porosi..."
+          hours: "orë"
+        usage:
+          ai_summarization: "Përmblidhni"
+          ai_spam: "Spam"
+        next:
+          title: "Vazhdo përpara"
+        providers:
+          google: "Google"
+          fake: "Grupet e krijuara"
+      ai_helper:
+        context_menu:
+          cancel: "Anulo"
+          confirm: "Konfirmoni"
+          discard: "Harroni"
+        post_options_menu:
+          close: "Mbyll"
+          copy: "Kopjo"
+          copied: "Kopjuar!"
+          cancel: "Anulo"
+        thumbnail_suggestions:
+          select: "Zgjidhni"
+        image_caption:
+          save_caption: "Ruani"
+      embeddings:
+        back: "Kthehu mbrapa"
+        save: "Ruani"
+        delete: "Fshij"
+        edit: "Redaktoni"
+        display_name: "Emri"
+        providers:
+          google: "Google"
+          fake: "Grupet e krijuara"
+      ai_bot:
+        debug_ai_modal:
+          request: "Kërkesë"
+          next_log: "Vazhdo përpara"
+          previous_log: "I kaluar"
+        invite_ai_conversation:
+          button: "Fto"
+        share_modal:
+          copy: "Kopjo"
+        conversations:
+          today: "Sot"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Të gjitha"
+          group_types:
+            category: "Kategori"
+          table:
+            total_count: "Total"
+      summarization:
+        chat:
+          summarize: "Përmblidhni"
+      discobot_discoveries:
+        regular_results: "Topics"
+        collapse: "Zvogëloni"
+        tooltip:
+          actions:
+            disable: "Çaktivizoni"

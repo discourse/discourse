@@ -1,0 +1,6 @@
+en:
+  site_settings:
+    rss_polling_enabled: "[RSS Polling] Enable importing embed posts from multiple RSS feeds"
+    rss_polling_frequency: "[RSS Polling] Feed polling frequency, in minutes"
+    rss_polling_use_pubdate: "[RSS Polling] Set topic creation date to the pubDate found in the RSS feed"
+    rss_polling_update_tags: "[RSS Polling] Update topic tags when a topic is updated. Disabling this pulls initial tags but disables further tag changes."

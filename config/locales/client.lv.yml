@@ -494,6 +494,15 @@ lv:
         reviewable_post:
           title: "Ieraksts"
           noun: "ieraksts"
+      notes:
+        delete: "Dzēst"
+      review_user: "Lietotājs"
+      insights:
+        activities:
+          posts:
+            zero: "%{count} raksti"
+            one: "%{count} raksts"
+            other: "%{count} raksti"
       approval:
         title: "Ieraksts gaida apstiprinājumu"
         description: "Mēs saņēmām jūsu ierakstu, taču vispirms to jāapstiprina moderatoram. Lūdzu, esiet pacietīgi."
@@ -958,11 +967,10 @@ lv:
       theme_default_on_all_devices: "Padarīt to par noklusējuma motīvu visās manās ierīcēs"
       color_schemes:
         default_description: "Tēma pēc noklusējuma"
-        disable_dark_scheme: "Tāds pats kā parasts"
         undo: "Atlikt"
-        regular: "Regulārs"
         dark: "Tumšais režīms"
-        default_dark_scheme: "(vietnes noklusējums)"
+        picker:
+          active: "Aktīvs"
       dark_mode: "Tumšais režīms"
       text_size_default_on_all_devices: "Padarīt to par noklusējuma teksta izmēru visās manās ierīcēs"
       allow_private_messages: "Atļaut citiem lietotājiem sūtīt man personiskas ziņas"
@@ -981,6 +989,8 @@ lv:
       suspended_notice: "Lietotājs ir īslaicīgi bloķēts līdz %{date}."
       suspended_permanently: "Šī lietotāja darbība ir apturēta."
       suspended_reason: "Iemesls:"
+      silenced_permanently: "Šis lietotājs ir izslēgts."
+      silenced_reason: "Iemesls:"
       github_profile: "GitHub"
       email_activity_summary: "Aktivitātes atskaite"
       mailing_list_mode:
@@ -1320,7 +1330,8 @@ lv:
         reinvited: "Ielūgums atkārtots"
         removed: "Noņemts"
         user: "Ielūgtie lietotāji"
-        none: "Nav uzaicinājumu ko parādīt."
+        none:
+          title: "Nav uzaicinājumu ko parādīt."
         truncated:
           zero: "Nav ielūgumu."
           one: "Pirmais ielūgums."
@@ -1671,8 +1682,6 @@ lv:
       whisper: "čuksts"
       unlist: "paslēpts"
       add_warning: "Šis ir oficiāls brīdinājums."
-      toggle_whisper: "Čukstēšana"
-      toggle_unlisted: "Paslēpšana no tēmu saraksta"
       posting_not_on_topic: "Kurā tēmā vēlaties komentēt?"
       saved_local_draft_tip: "saglabāts lokāli"
       drafts_offline: "lokāls melnraksts"
@@ -1684,6 +1693,7 @@ lv:
       reply: "Atbildēt"
       cancel: "Atcelt"
       create_topic: "Izveidot tēmu"
+      discard: "Izmest"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
       edit_reason_placeholder: "kāpēc jūs rediģējat?"
@@ -1709,8 +1719,6 @@ lv:
       paste_code_text: "ierakstiet vai ielīmējiet formatēto tekstu šeit"
       upload_title: "Augšupielādēt"
       upload_description: "pievienojiet faila aprakstu"
-      olist_title: "Numurēts saraksts"
-      ulist_title: "Nenumurēts saraksts"
       list_item: "Saraksta punkts"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
       modal_ok: "Labi"
@@ -2575,7 +2583,6 @@ lv:
         topics: "Tēmas"
         replies: "Atbildes"
       posted:
-        title: "Mani ieraksti"
         help: "tēmas, kurās esat rakstījis"
       bookmarks:
         title: "Grāmatzīmes"
@@ -2812,6 +2819,8 @@ lv:
               content: "Administrators"
             badges:
               content: "Žetoni"
+            filter:
+              content: "Filtrs"
             topics:
               content: "Tēmas"
             faq:
@@ -2822,8 +2831,6 @@ lv:
               content: "Grupas"
             users:
               content: "Lietotāji"
-            my_posts:
-              content: "Mani ieraksti"
             review:
               content: "Pārskats"
             invite:
@@ -2849,6 +2856,9 @@ lv:
       spreadsheet:
         show: "Parādīt"
         about: "Par"
+    filter:
+      description:
+        yesterday: "Vakar"
     discovery:
       headings:
         categories: "Visas sadaļas"
@@ -2881,6 +2891,10 @@ lv:
           title: "Faili"
         legal:
           title: "Jurid."
+        login:
+          sub_pages:
+            common_settings:
+              title: "Iestatījumi"
         logo:
           form:
             mobile: "Mobilais"
@@ -2950,6 +2964,8 @@ lv:
               header_description: "URL kas ir šajā sarakstā tika publicēti no lietotājiem, kas ir identificēti kā spameri"
         embedding:
           title: "Ieguldīšana"
+      theme_site_settings:
+        default_value: "Noklusējums"
       search:
         title: "Meklēt"
         result_types:
@@ -3181,6 +3197,9 @@ lv:
           delete: "Dzēst"
         color_palettes:
           palette_name: "Vārds"
+          copy_to_clipboard: "Kopēt uz starpliktuvi (clipboard)"
+          copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
+          copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"
           delete: "Dzēst"
           colors:
             title: "Krāsas"
@@ -3195,6 +3214,11 @@ lv:
         change_settings_short: "Iestatījumi"
         howto: "Kā instalēt spraudņus?"
         learn_more: "Uzzināt vairāk"
+        filters:
+          all: "Visi"
+          enabled: "Ieslēgts"
+          disabled: "Atslēgt"
+          reset: "Atlikt"
       backups:
         title: "Rezerves kopijas"
         menu:
@@ -3260,7 +3284,6 @@ lv:
         copy_to_clipboard: "Kopēt uz starpliktuvi (clipboard)"
         copied_to_clipboard: "Nokopēts uz starpliktuvi (clipboard)"
         copy_to_clipboard_error: "Radās kļūda, kopējot uz starpliktuvi (clipboard)"
-        theme_owner: "Nevar labot; īpašnieks ir"
         email_templates:
           title: "E-pasts"
           subject: "Virsraksts"
@@ -3268,12 +3291,14 @@ lv:
           body: "Saturs"
           revert: "Atcelt izmaiņas"
           revert_confirm: "Vai jūs esat drošs, ka vēlaties atcelt jūsu veiktās izmaiņas"
+          edit: "Labot"
         component:
           all_filter: "Viss"
           enabled_filter: "Ieslēgts"
           disabled_filter: "Atslēgt"
         theme:
           theme: "Tēma"
+          filter_all: "Visi"
           customize_desc: "Pielāgot:"
           title: "Dizaini"
           create: "Izveidot"
@@ -3286,10 +3311,9 @@ lv:
           desktop: "Personālais dators"
           mobile: "Mobilais"
           preview: "Priekšskatījums"
-          default: "Aktīvi"
           is_default: "Šis ir noklusējuma dizains"
           user_selectable: "Šo dizainu var izvēlēties lietotāji"
-          color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains"
+          color_scheme_select: "Izvēlieties krāsas, kuras lietos šis dizains."
           custom_sections: "Specifiskas sadaļas:"
           theme_components: "Dizaina komponenti"
           cancel: "Atcelt"
@@ -3310,10 +3334,6 @@ lv:
           disable: "Atslēgt"
           up_to_date: "Dizains ir pilnībā atjaunināts, pēdējā parbaude:"
           add: "Pievienot"
-          settings: "Iestatījumi"
-          colors: "Krāsas"
-          discard_colors: "Izmest"
-          colors_title: "Krāsas"
           scss:
             text: "CSS"
           all_filter: "Viss"
@@ -3324,6 +3344,9 @@ lv:
             required: "*nepieciešams"
         colors:
           title: "Krāsas"
+          edit: "Labot"
+          filters:
+            all: "Visi"
           undo: "Atsaukt"
           revert: "Atgriezt"
           primary:
@@ -3589,7 +3612,6 @@ lv:
         activity: Aktivitāte
         like_count: '"Patīk" doti / saņemti'
         last_100_days: "Pēdējās 100 dienās"
-        private_topics_count: Privātas tēmas
         posts_read_count: Ieraksti izlasīti
         post_count: Ieraksti
         topics_entered: Tēmas apskatītas.
@@ -3615,7 +3637,6 @@ lv:
             cancel: "Atcelt"
           confirmation:
             cancel: "Atcelt"
-        delete_forbidden_because_staff: "Administratori un moderatori nevar tikt dzēsti."
         delete_posts_forbidden_because_staff: "Nevar izdzēst visus administratoru un moderatoru ierakstus."
         delete_forbidden:
           zero: "Lietotāji nevar tikt dzēsti ja viņiem ir ieraksti. Izdzēs visus ierakstus pirms dzēs lietotāju. (ieraksti vecāki kā %{count} dienas nevar tikt izdzēsti.)"

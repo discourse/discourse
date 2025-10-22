@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  site_settings:
+    topic_voting_enabled: 'صارفین کو ٹاپکس پر ووٹ کرنے کی اجازت دیں؟'
+    topic_voting_tl0_vote_limit: 'TL0 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
+    topic_voting_tl1_vote_limit: 'TL1 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
+    topic_voting_tl2_vote_limit: 'TL2 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
+    topic_voting_tl3_vote_limit: 'TL3 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
+    topic_voting_tl4_vote_limit: 'TL4 صارفین کو کتنے فعال ووٹوں کی اجازت ہے؟'
+    topic_voting_show_who_voted: 'صارفین کو، کس نے ووٹ کیا ہے، دیکھنے کی اجازت دیں؟'
+    topic_voting_show_votes_on_profile: 'صارفین کو اُن کی سرگرمی فیڈ میں اُن کے ووٹ دیکھنے کی اجازت دیں؟'
+    topic_voting_alert_votes_left: 'صارف کو انتباہ کردیں جب اتنے ووٹ باقی رہ جائیں'
+  topic_voting:
+    votes_moved:
+      one: "ایک ووٹ منتقل کر دیا گیا ہے۔"
+      other: "%{count} ووٹوں کو منتقل کر دیا گیا۔"
+    duplicated_votes:
+      one: "ایک ووٹ کو منتقل نہیں کیا جا سکا کیونکہ رکن پہلے ہی دوسرے موضوع میں ووٹ دے چکا ہے۔"
+      other: "%{count} ووٹوں کو منتقل نہیں کیا جا سکا کیونکہ ان کے اراکین پہلے ہی دوسرے عنوان میں ووٹ دے چکے ہیں۔"

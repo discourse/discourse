@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::CleanUpUnusedUserApiKeys do
-  fab!(:key1) { Fabricate(:readonly_user_api_key) }
-  fab!(:key2) { Fabricate(:readonly_user_api_key) }
+  fab!(:key1, :readonly_user_api_key)
+  fab!(:key2, :readonly_user_api_key)
   fab!(:key3) { Fabricate(:readonly_user_api_key, revoked_at: 10.days.ago) }
 
   context "when user api key is unused in last 1 days" do

@@ -19,10 +19,10 @@ RSpec.describe UploadReference do
   end
 
   describe "category uploads" do
-    fab!(:upload1) { Fabricate(:upload) }
-    fab!(:upload2) { Fabricate(:upload) }
-    fab!(:upload3) { Fabricate(:upload) }
-    fab!(:upload4) { Fabricate(:upload) }
+    fab!(:upload1, :upload)
+    fab!(:upload2, :upload)
+    fab!(:upload3, :upload)
+    fab!(:upload4, :upload)
 
     it "creates upload references" do
       category = nil
@@ -95,7 +95,7 @@ RSpec.describe UploadReference do
   describe "site setting uploads" do
     let(:provider) { SiteSettings::DbProvider.new(SiteSetting) }
     fab!(:upload)
-    fab!(:upload2) { Fabricate(:upload) }
+    fab!(:upload2, :upload)
 
     it "creates upload references for uploads" do
       expect {
@@ -192,8 +192,8 @@ RSpec.describe UploadReference do
   end
 
   describe "user avatar uploads" do
-    fab!(:upload1) { Fabricate(:upload) }
-    fab!(:upload2) { Fabricate(:upload) }
+    fab!(:upload1, :upload)
+    fab!(:upload2, :upload)
 
     it "creates upload references" do
       user_avatar = nil
@@ -234,8 +234,8 @@ RSpec.describe UploadReference do
 
   describe "user profile uploads" do
     fab!(:user)
-    fab!(:upload1) { Fabricate(:upload) }
-    fab!(:upload2) { Fabricate(:upload) }
+    fab!(:upload1, :upload)
+    fab!(:upload2, :upload)
 
     it "creates upload references" do
       user_profile = user.user_profile

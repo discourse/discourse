@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe "Content Localization" do
+  TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
+
   fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
   fab!(:site_local_user) { Fabricate(:user, locale: "en") }
   fab!(:admin)
@@ -32,8 +34,8 @@ describe "Content Localization" do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:post_1_obj) { PageObjects::Components::Post.new(1) }
+  let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
-  let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
 
   before do
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
@@ -54,9 +56,9 @@ describe "Content Localization" do
       SiteSetting.content_localization_supported_locales = "en|ja"
     end
 
-    it "shows the correct language based on the selected language and login status" do
+    it "shows the user's language based on their user locale" do
       sign_in(japanese_user)
-      visit("/")
+
       visit("/t/#{topic.id}")
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
     end
@@ -68,9 +70,16 @@ describe "Content Localization" do
       topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
 
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
-      page.find("button.btn-toggle-localized-content").click
+
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.translated"),
+      )
+      page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.not_translated"),
+      )
 
       visit("/")
       topic_list.visit_topic_with_title("Life strategies from The Art of War")
@@ -89,18 +98,17 @@ describe "Content Localization" do
       composer.set_locale("日本語")
       composer.fill_content("この小説は、名前のない猫の視点から明治時代の人間社会を風刺的に描いています。")
       composer.create
-      try_until_success do
-        new_post = Post.find_by(post_number: 4, topic_id: topic.id)
-        expect(new_post).to_not be_nil
-        # simulates a localization that would have been automatically created
-        Fabricate(
-          :post_localization,
-          post: new_post,
-          locale: "en",
-          cooked:
-            "This novel satirically depicts Meiji-era human society from the perspective of a nameless cat.",
-        )
-      end
+
+      new_post = Post.find_by(post_number: 4, topic_id: topic.id)
+      expect(new_post).to_not be_nil
+      # simulates a localization that would have been automatically created
+      Fabricate(
+        :post_localization,
+        post: new_post,
+        locale: "en",
+        cooked:
+          "This novel satirically depicts Meiji-era human society from the perspective of a nameless cat.",
+      )
 
       sign_in(site_local_user)
 
@@ -108,16 +116,57 @@ describe "Content Localization" do
       expect(post_4_obj.post_language).to have_content("日本語")
     end
 
-    it "allows editing original content when post is localized" do
-      sign_in(admin)
+    it "shows 'en' posts for 'en_GB' users" do
+      brit_user = Fabricate(:user, locale: "en_GB")
 
-      topic_page.visit_topic(topic)
-      topic_page.expand_post_actions(post_3)
-      topic_page.click_post_action_button(post_3, :edit)
-      expect(composer).to have_content(post_3.raw)
+      sign_in(brit_user)
+      visit("/")
+
+      topic_list.visit_topic_with_title("Life strategies from The Art of War")
+      expect(post_3_obj.post).to have_content("A general is one who ..")
+    end
+
+    context "when editing" do
+      let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
+      let(:fast_editor) { PageObjects::Components::FastEditor.new }
+
+      it "allows editing original content when post is localized" do
+        sign_in(admin)
+
+        topic_page.visit_topic(topic)
+        topic_page.expand_post_actions(post_3)
+        topic_page.click_post_action_button(post_3, :edit)
+        expect(edit_localized_post_dialog).to be_open
+        edit_localized_post_dialog.click_yes
+        expect(composer).to have_content(post_3.raw)
+      end
+
+      it "allows editing translated content when post is localized" do
+        sign_in(admin)
+
+        topic_page.visit_topic(topic)
+        topic_page.expand_post_actions(post_3)
+        topic_page.click_post_action_button(post_3, :edit)
+        expect(edit_localized_post_dialog).to be_open
+        edit_localized_post_dialog.click_no
+        expect(page).to have_css(".action-title", text: I18n.t("js.composer.translations.title"))
+      end
+
+      it "does not open the fast editor for localized posts" do
+        sign_in(admin)
+
+        topic_page.visit_topic(topic)
+        select_text_range("#{topic_page.post_by_number_selector(post_3.post_number)} .cooked", 0, 5)
+        expect(topic_page.fast_edit_button).to be_visible
+        topic_page.click_fast_edit_button
+        expect(page).to have_no_css("#fast-edit-input")
+        expect(edit_localized_post_dialog).to be_open
+      end
     end
 
     context "for post edit histories" do
+      let(:post_history_modal) { PageObjects::Modals::PostHistory.new }
+
       before do
         SiteSetting.editing_grace_period = 0
         PostRevisor.new(post_1).revise!(Discourse.system_user, { raw: post_1.raw, locale: "" })
@@ -150,11 +199,16 @@ describe "Content Localization" do
     let(:banner) { PageObjects::Components::AdminChangesBanner.new }
 
     it "does not allow more than the maximum number of locales" do
+      SiteSetting.content_localization_supported_locales = "en|ja"
       SiteSetting.content_localization_max_locales = 2
       sign_in(admin)
 
       settings_page.visit("content_localization_supported_locales")
-      settings_page.select_list_values("content_localization_supported_locales", %w[en ja es])
+      expect(settings_page.find_setting("content_localization_supported_locales")).to have_content(
+        "English (US), Japanese",
+      )
+
+      settings_page.select_list_values("content_localization_supported_locales", %w[es])
       settings_page.save_setting("content_localization_supported_locales")
       expect(settings_page.error_message("content_localization_supported_locales")).to have_content(
         I18n.t(

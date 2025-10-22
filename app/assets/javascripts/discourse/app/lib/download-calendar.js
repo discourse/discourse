@@ -49,8 +49,8 @@ export function downloadGoogle(title, dates, options = {}) {
       )}`
     );
 
-    if (options.recurrenceRule) {
-      link.searchParams.append("recur", `RRULE:${options.recurrenceRule}`);
+    if (options.rrule) {
+      link.searchParams.append("recur", `RRULE:${options.rrule}`);
     }
 
     if (options.location) {
@@ -88,7 +88,7 @@ export function generateIcsData(title, dates, options = {}) {
         `DTSTAMP:${moment().utc().format("YMMDDTHHmmss")}Z\n` +
         `DTSTART:${startDate.utc().format("YMMDDTHHmmss")}Z\n` +
         `DTEND:${endDate.utc().format("YMMDDTHHmmss")}Z\n` +
-        (options.recurrenceRule ? `RRULE:${options.recurrenceRule}\n` : ``) +
+        (options.rrule ? `RRULE:${options.rrule}\n` : ``) +
         (options.location ? `LOCATION:${options.location}\n` : ``) +
         (options.details ? `DESCRIPTION:${options.details}\n` : ``) +
         `SUMMARY:${title}\n` +
@@ -106,7 +106,7 @@ function _displayModal(title, dates, options = {}) {
       calendar: {
         title,
         dates,
-        recurrenceRule: options.recurrenceRule,
+        rrule: options.rrule,
         location: options.location,
         details: options.details,
       },

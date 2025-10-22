@@ -8,12 +8,12 @@ export function renderCategory(option) {
     link: false,
   });
 
-  return `<li><a href>${link}</a></li>`;
+  return `<li><a href><span class='text-content'>${link}</span></a></li>`;
 }
 
 export function renderTag(option) {
   const text = `${escapeExpression(option.name)} x ${escapeExpression(option.count)}`;
-  return `<li><a href>${iconHTML("tag")}${text}</a></li>`;
+  return `<li><a href>${iconHTML("tag")}<span class='text-content'>${text}</span></a></li>`;
 }
 
 export function renderOption(option) {

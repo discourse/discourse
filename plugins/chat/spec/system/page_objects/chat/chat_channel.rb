@@ -11,6 +11,10 @@ module PageObjects
         @messages ||= PageObjects::Components::Chat::Messages.new(".chat-channel")
       end
 
+      def filter
+        @filter ||= PageObjects::Components::Chat::Filter.new
+      end
+
       def selection_management
         @selection_management ||=
           PageObjects::Components::Chat::SelectionManagement.new(".chat-channel")
@@ -117,7 +121,7 @@ module PageObjects
       def send_message(text = nil)
         text ||= fake_chat_message
         text = text.chomp if text.present? # having \n on the end of the string counts as an Enter keypress
-        composer.fill_in(with: text)
+        fill_composer(text)
         click_send_message
         expect(page).to have_no_css(".chat-message.-not-processed")
         text
@@ -140,6 +144,16 @@ module PageObjects
 
       def find_reaction(message, emoji)
         within(message_reactions_list(message)) { return find("[data-emoji-name=\"#{emoji}\"]") }
+      end
+
+      def click_quick_reaction(message, emoji_name)
+        hover_message(message)
+        find(".chat-message-actions [data-emoji-name=\"#{emoji_name}\"]").click
+      end
+
+      def open_emoji_picker(message)
+        hover_message(message)
+        find(".chat-message-react-btn").click
       end
 
       def find_quick_reaction(emoji_name)

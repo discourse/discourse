@@ -1,4 +1,5 @@
 import { click, fillIn, render } from "@ember/test-helpers";
+import DialogHolder from "dialog-holder/components/dialog-holder";
 import { module, test } from "qunit";
 import schemaAndData, {
   SCHEMA_MODES,
@@ -83,6 +84,8 @@ class InputFieldsFromDOM {
 
 const TOP_LEVEL_ADD_BTN = ".schema-setting-editor__tree-add-button.--root";
 const REMOVE_ITEM_BTN = ".schema-setting-editor__remove-btn";
+const MOVE_UP_BTN = ".schema-setting-editor__move-up-btn";
+const MOVE_DOWN_BTN = ".schema-setting-editor__move-down-btn";
 
 module(
   "Integration | Admin | Themes | Component | schema-setting/editor",
@@ -1663,6 +1666,44 @@ module(
       assert.dom(TOP_LEVEL_ADD_BTN).hasText("level1");
     });
 
+    test("removing an object with delete warning from the root list of objects", async function (assert) {
+      const setting = schemaAndData(4);
+
+      await render(
+        <template>
+          <DialogHolder />
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
+        </template>
+      );
+
+      const tree = new TreeFromDOM();
+      const inputFields = new InputFieldsFromDOM();
+
+      assert.strictEqual(tree.nodes.length, 3);
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+
+      await click(REMOVE_ITEM_BTN);
+
+      assert.dom("#dialog-title").hasText("Delete warning title");
+      assert.dom(".dialog-body").includesText("Delete warning message");
+      assert.dom(".dialog-footer .btn-danger").hasText(i18n("delete"));
+      assert.dom(".dialog-footer .btn-default").hasText(i18n("cancel_value"));
+
+      await click(".dialog-footer .btn-danger");
+
+      tree.refresh();
+      inputFields.refresh();
+
+      assert.strictEqual(tree.nodes.length, 2);
+      assert.dom(tree.nodes[0].textElement).hasText("item 2");
+    });
+
     test("navigating 1 level deep and removing an object from the child list of objects", async function (assert) {
       const setting = schemaAndData(1);
 
@@ -1711,6 +1752,114 @@ module(
       assert.dom(tree.nodes[1].textElement).hasText("item 2");
       assert.dom(inputFields.fields.name.inputElement).hasValue("item 1");
       assert.dom(".--back-btn").doesNotExist();
+    });
+
+    test("move buttons reorder root level items correctly", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
+        </template>
+      );
+
+      const tree = new TreeFromDOM();
+
+      // Verify initial order
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+
+      // Test move up: Select second item and move up
+      await click(tree.nodes[1].element);
+      tree.refresh();
+      await click(MOVE_UP_BTN);
+      tree.refresh();
+
+      assert.dom(tree.nodes[0].textElement).hasText("item 2");
+      assert.dom(tree.nodes[1].textElement).hasText("item 1");
+
+      // Test move down: Select first item (was originally second) and move down
+      await click(tree.nodes[0].element);
+      tree.refresh();
+      await click(MOVE_DOWN_BTN);
+      tree.refresh();
+
+      // Should be back to original order
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+    });
+
+    test("move buttons are disabled appropriately for root level items", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
+        </template>
+      );
+
+      const tree = new TreeFromDOM();
+
+      // First item should have move up disabled
+      await click(tree.nodes[0].element);
+      tree.refresh();
+
+      assert.dom(MOVE_UP_BTN).isDisabled();
+      assert.dom(MOVE_DOWN_BTN).isNotDisabled();
+
+      // Last item should have move down disabled
+      await click(tree.nodes[1].element);
+      tree.refresh();
+
+      assert.dom(MOVE_UP_BTN).isNotDisabled();
+      assert.dom(MOVE_DOWN_BTN).isDisabled();
+    });
+
+    test("move up button reorders nested items correctly", async function (assert) {
+      const setting = schemaAndData(1);
+
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.objects_schema}}
+            @routeToRedirect="adminCustomizeThemes.show"
+          />
+        </template>
+      );
+
+      const tree = new TreeFromDOM();
+
+      // Navigate to nested level
+      await click(tree.nodes[0].children[1].element);
+      tree.refresh();
+
+      // Verify initial order of nested items
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-1");
+      assert.dom(tree.nodes[1].textElement).hasText("child 1-2");
+
+      // Select second nested item
+      await click(tree.nodes[1].element);
+      tree.refresh();
+
+      // Click move up button
+      await click(MOVE_UP_BTN);
+      tree.refresh();
+
+      // Verify nested items are reordered
+      assert.dom(tree.nodes[0].textElement).hasText("child 1-2");
+      assert.dom(tree.nodes[1].textElement).hasText("child 1-1");
     });
   }
 );
@@ -2227,6 +2376,75 @@ module(
       assert
         .dom(inputFields.fields.name.descriptionElement)
         .hasText("Description for level 2");
+    });
+
+    test("move buttons reorder items correctly", async function (assert) {
+      const setting = schemaAndData(1, SCHEMA_MODES.SITE_SETTING);
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+
+      const tree = new TreeFromDOM();
+
+      // Verify initial order
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+
+      // Test move up: Select second item and move up
+      await click(tree.nodes[1].element);
+      tree.refresh();
+      await click(MOVE_UP_BTN);
+      tree.refresh();
+
+      assert.dom(tree.nodes[0].textElement).hasText("item 2");
+      assert.dom(tree.nodes[1].textElement).hasText("item 1");
+
+      // Test move down: Select first item (was originally second) and move down
+      await click(tree.nodes[0].element);
+      tree.refresh();
+      await click(MOVE_DOWN_BTN);
+      tree.refresh();
+
+      // Should be back to original order
+      assert.dom(tree.nodes[0].textElement).hasText("item 1");
+      assert.dom(tree.nodes[1].textElement).hasText("item 2");
+    });
+
+    test("move buttons are disabled appropriately", async function (assert) {
+      const setting = schemaAndData(1, SCHEMA_MODES.SITE_SETTING);
+      await render(
+        <template>
+          <AdminSchemaSettingEditor
+            @id="1"
+            @setting={{setting}}
+            @schema={{setting.schema}}
+            @routeToRedirect="adminPlugins.show.settings"
+          />
+        </template>
+      );
+
+      const tree = new TreeFromDOM();
+
+      // First item should have move up disabled
+      await click(tree.nodes[0].element);
+      tree.refresh();
+
+      assert.dom(MOVE_UP_BTN).isDisabled();
+      assert.dom(MOVE_DOWN_BTN).isNotDisabled();
+
+      // Last item should have move down disabled
+      await click(tree.nodes[1].element);
+      tree.refresh();
+
+      assert.dom(MOVE_UP_BTN).isNotDisabled();
+      assert.dom(MOVE_DOWN_BTN).isDisabled();
     });
   }
 );

@@ -11,7 +11,7 @@ acceptance("Modal - move-to-topic", function (needs) {
   needs.user({ admin: true });
 
   test("Transformer can modify merge/move options sent in request", async function (assert) {
-    withPluginApi("1.24.0", (api) => {
+    withPluginApi((api) => {
       ["move-to-topic-merge-options", "move-to-topic-move-options"].forEach(
         (transformerName) => {
           api.registerValueTransformer(transformerName, (transformer) => {

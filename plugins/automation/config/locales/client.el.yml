@@ -317,8 +317,6 @@ el:
             label: Έκδοση
           status:
             label: Κατάσταση
-          enabled:
-            label: Ενεργοποιημένο
           disabled:
             label: Απενεργοποιημένο
           last_updated_at:

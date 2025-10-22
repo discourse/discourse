@@ -2,7 +2,7 @@ import { LinkTo } from "@ember/routing";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import getUrl from "discourse/helpers/get-url";
+import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(

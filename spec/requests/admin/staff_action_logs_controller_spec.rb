@@ -28,6 +28,57 @@ RSpec.describe Admin::StaffActionLogsController do
         )
       end
 
+      describe "filter logs by date" do
+        before do
+          freeze_time
+          topic = Fabricate(:topic)
+          StaffActionLogger.new(Discourse.system_user).log_topic_delete_recover(
+            topic,
+            "delete_topic",
+          )
+          freeze_time 3.days.from_now
+          StaffActionLogger.new(Discourse.system_user).log_grant_admin(user)
+          freeze_time 2.days.from_now
+          StaffActionLogger.new(Discourse.system_user).log_user_suspend(user, "reason")
+        end
+
+        it "filter logs by start_date" do
+          get "/admin/logs/staff_action_logs.json", params: { start_date: 3.days.ago.iso8601 }
+
+          json = response.parsed_body
+          expect(response.status).to eq(200)
+
+          expect(json["staff_action_logs"].length).to eq(2)
+          expect(json["staff_action_logs"][0]["action_name"]).to eq("suspend_user")
+          expect(json["staff_action_logs"][1]["action_name"]).to eq("grant_admin")
+        end
+
+        it "filter logs by end_date" do
+          get "/admin/logs/staff_action_logs.json", params: { end_date: 1.day.ago.iso8601 }
+
+          json = response.parsed_body
+          expect(response.status).to eq(200)
+
+          expect(json["staff_action_logs"].length).to eq(2)
+          expect(json["staff_action_logs"][0]["action_name"]).to eq("grant_admin")
+          expect(json["staff_action_logs"][1]["action_name"]).to eq("delete_topic")
+        end
+
+        it "filter logs by start_date and end_date" do
+          get "/admin/logs/staff_action_logs.json",
+              params: {
+                start_date: 3.days.ago.iso8601,
+                end_date: 1.day.ago.iso8601,
+              }
+
+          json = response.parsed_body
+          expect(response.status).to eq(200)
+
+          expect(json["staff_action_logs"].length).to eq(1)
+          expect(json["staff_action_logs"][0]["action_name"]).to eq("grant_admin")
+        end
+      end
+
       describe "when limit params is invalid" do
         include_examples "invalid limit params",
                          "/admin/logs/staff_action_logs.json",

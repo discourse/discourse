@@ -1,0 +1,81 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse נפתר"
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "התקבל"
+    solutions: "פתרונות"
+    solved:
+      title: "נפתר"
+      allow_accepted_answers: "לאפשר למשתמשים לאשר תשובות"
+      solved_topics_auto_close_hours: "לסגור נושא אוטומטית (n) שעות לאחר התגובה האחרונה כאשר הנושא סומן כפתור."
+      accept_answer: "יש לבחור בזה אם התגובה הזאת פותרת את הבעיה"
+      accepted_description: "זה הפתרון המקובל לנושא זה"
+      has_no_accepted_answer: "לנושא הזה אין פתרון"
+      unaccept_answer: "יש לבטל את הסימון אם התגובה הזו אינה פותרת עוד את הבעיה."
+      accepted_answer: "פתרון"
+      solution: "פתרון"
+      solution_summary:
+        one: "פתרון"
+        two: "פתרונות"
+        many: "פתרונות"
+        other: "פתרונות"
+      accepted_answer_solver_info: "נפתר על ידי %{user} ב־%{post}"
+      accepted_answer_post_number: "פוסט %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "הכול"
+        solved: "נפתר"
+        unsolved: "בלתי פתור"
+      no_solved_topics_title: "עדיין לא פתרת אף נושא"
+      no_solved_topics_title_others: "אין נושאים שנפתרו על ידי %{username} עדיין"
+      no_solved_topics_body: "לאחר שכתבת תגובה מועילה לנושא, התגובה שלך עשויה להיבחר כפתרון על ידי בעלי הנושא או הסגל."
+      marked_solved_by: "סומן כפתור על ידי %{user}"
+      no_answer:
+        title: התשובה שלך נענתה?
+        description: "ניתן להדגיש את התשובה ולסייע לאחרים על ידי לחיצה על כפתור הפתרון שלהלן מתחת לתגובה הנכונה."
+      notification:
+        title: "הפוסט שלך סומן כפתרון"
+    topic_statuses:
+      solved:
+        help: "לנושא הזה יש פתרון"
+    search:
+      advanced:
+        statuses:
+          solved: "נפתרו"
+          unsolved: "לא נפתרו"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "אירוע שנפתר"
+          accepted_solution: "כשמשתמש מסמן פוסט כתשובה מקובלת"
+          unaccepted_solution: "כשמשתמש מסמן פוסט כתשובה בלתי מקובלת"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: קבלת/דחיית פתרון.
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < דרגת אמון 1
+            tl2: < דרגת אמון 2
+            tl3: < דרגת אמון 3
+            tl4: < דרגת אמון 4
+            any: כלשהו
+          fields:
+            maximum_trust_level:
+              label: דרגת אמון
+              description: משתמשים מתחת לדרגת אמון זו יקפיצו אוטומציה זו

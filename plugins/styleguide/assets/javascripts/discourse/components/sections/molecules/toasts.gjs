@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import withEventValue from "discourse/helpers/with-event-value";
 import IconPicker from "select-kit/components/icon-picker";
 import { TOAST } from "float-kit/lib/constants";
 import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
@@ -157,20 +157,36 @@ export default class Toasts extends Component {
         </Row>
         {{#if this.autoClose}}
           <Row @name="[@options.duration] ms">
-            <Input @value={{this.duration}} @type="number" />
+            <input
+              {{on "input" (withEventValue (fn (mut this.duration)))}}
+              type="number"
+              value={{this.duration}}
+            />
           </Row>
         {{/if}}
         <Row @name="[@options.class]">
-          <Input @value={{this.class}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.class)))}}
+            type="text"
+            value={{this.class}}
+          />
         </Row>
         <Row>
           <b>Model props for default:</b>
         </Row>
         <Row @name="[@options.data.title]">
-          <Input @value={{this.title}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.title)))}}
+            type="text"
+            value={{this.title}}
+          />
         </Row>
         <Row @name="[@options.data.message]">
-          <Input @value={{this.message}} />
+          <input
+            {{on "input" (withEventValue (fn (mut this.message)))}}
+            type="text"
+            value={{this.message}}
+          />
         </Row>
         <Row @name="[@options.data.icon]">
           <IconPicker

@@ -576,7 +576,7 @@ acceptance("Uppy Composer Attachment - Upload Handler", function (needs) {
     allow_uncategorized_topics: true,
   });
   needs.hooks.beforeEach(() => {
-    withPluginApi("0.8.14", (api) => {
+    withPluginApi((api) => {
       api.addComposerUploadHandler(["png"], (files) => {
         const file = files[0];
         const isNativeFile = file instanceof File ? "WAS" : "WAS NOT";

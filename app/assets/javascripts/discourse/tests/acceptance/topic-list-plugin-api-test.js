@@ -11,7 +11,7 @@ acceptance("Topic list plugin API", function () {
 
   test("Overrides lastUnreadUrl", async function (assert) {
     try {
-      withPluginApi("1.2.0", (api) => {
+      withPluginApi((api) => {
         api.registerCustomLastUnreadUrlCallback(customLastUnreadUrl);
       });
 

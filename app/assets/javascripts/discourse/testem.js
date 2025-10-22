@@ -3,6 +3,13 @@ const fs = require("fs");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
 
+const SANDBOX_DISABLE_VALUES = ["1", "true"];
+const sandboxDisabled =
+  process.env.CI ||
+  SANDBOX_DISABLE_VALUES.includes(
+    (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
+  );
+
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
@@ -136,12 +143,12 @@ module.exports = {
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
-  parallel: -1,
+  parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
   browser_start_timeout: 120,
   browser_args: {
     Chromium: [
-      // --no-sandbox is needed when running Chromium inside a container
-      process.env.CI ? "--no-sandbox" : null,
+      // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
+      sandboxDisabled ? "--no-sandbox" : null,
       "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
@@ -153,8 +160,8 @@ module.exports = {
       "--js-flags=--max_old_space_size=4096",
     ].filter(Boolean),
     Chrome: [
-      // --no-sandbox is needed when running Chrome inside a container
-      process.env.CI ? "--no-sandbox" : null,
+      // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
+      sandboxDisabled ? "--no-sandbox" : null,
       "--headless=new",
       "--disable-dev-shm-usage",
       "--disable-software-rasterizer",
@@ -185,6 +192,13 @@ fetch(`${target}/about.json`).catch(() => {
     )
   );
 });
+
+const pluginTestPages = process.env.PLUGIN_TARGETS;
+if (pluginTestPages) {
+  module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
+    return `tests/index.html?hidepassed&target=${plugin}`;
+  });
+}
 
 const themeTestPages = process.env.THEME_TEST_PAGES;
 

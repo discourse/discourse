@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { equal } from "@ember/object/computed";
@@ -5,6 +6,7 @@ import { htmlSafe } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
 import { propertyEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
+import loadChartJS from "discourse/lib/load-chart-js";
 import I18n, { i18n } from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 
@@ -21,7 +23,15 @@ export default class PollBreakdownOption extends Component {
   onMouseOut = null;
 
   @propertyEqual("highlightedOption", "index") highlighted;
+
   @equal("displayMode", "percentage") showPercentage;
+
+  constructor() {
+    super(...arguments);
+    loadChartJS().then((Chart) => {
+      this.set("Chart", Chart);
+    });
+  }
 
   @discourseComputed("option.votes", "totalVotes")
   percent(votes, total) {
@@ -41,10 +51,10 @@ export default class PollBreakdownOption extends Component {
     }
   }
 
-  @discourseComputed("highlighted", "optionColors", "index")
-  colorPreviewStyle(highlighted, optionColors, index) {
+  @discourseComputed("Chart", "highlighted", "optionColors", "index")
+  colorPreviewStyle(Chart, highlighted, optionColors, index) {
     const color = highlighted
-      ? window.Chart.helpers.getHoverColor(optionColors[index])
+      ? Chart?.helpers.getHoverColor(optionColors[index])
       : optionColors[index];
 
     return htmlSafe(`background: ${color};`);

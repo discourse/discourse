@@ -151,6 +151,16 @@ TEXT
         plugin.git_repo.stubs(:latest_local_commit).returns(nil)
         expect(plugin.discourse_owned?).to eq(false)
       end
+
+      it "returns false if the commit_url has a nil path" do
+        plugin = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")[3]
+        plugin.git_repo.stubs(:latest_local_commit).returns("123456")
+        plugin.git_repo.stubs(:url).returns("invalid://url")
+        parsed_url = URI.parse("invalid://url")
+        parsed_url.stubs(:path).returns(nil)
+        UrlHelper.stubs(:relaxed_parse).returns(parsed_url)
+        expect(plugin.discourse_owned?).to eq(false)
+      end
     end
   end
 
@@ -1204,6 +1214,62 @@ TEXT
           )
         end
       end
+    end
+  end
+
+  describe "#register_admin_config_login_route" do
+    after { DiscoursePluginRegistry.clear_modifiers! }
+
+    it "registers a new admin config login route" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_admin_config_login_route("plugin_route")
+
+      expect(DiscoursePluginRegistry.admin_config_login_routes).to include("plugin_route")
+    end
+  end
+
+  describe "#register_search_index" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:model_class) { User }
+    let(:search_data_class) { double }
+    let(:search_data) { ->(record, indexer_helper) { { a_weight: "test", d_weight: "content" } } }
+    let(:load_unindexed_record_ids) { -> { [1, 2, 3] } }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "registers a search handler with the correct parameters" do
+      plugin.register_search_index(
+        model_class: model_class,
+        search_data_class: search_data_class,
+        index_version: 1,
+        search_data: search_data,
+        load_unindexed_record_ids: load_unindexed_record_ids,
+      )
+
+      expect(DiscoursePluginRegistry.search_handlers.count).to eq(1)
+
+      handler = DiscoursePluginRegistry.search_handlers.first
+      expect(handler[:table_name]).to eq("user")
+      expect(handler[:model_class]).to eq(model_class)
+      expect(handler[:search_data_class]).to eq(search_data_class)
+      expect(handler[:index_version]).to eq(1)
+      expect(handler[:search_data]).to eq(search_data)
+      expect(handler[:load_unindexed_record_ids]).to eq(load_unindexed_record_ids)
+      expect(handler[:enabled].call).to eq(true)
+    end
+
+    it "allows custom enabled callback" do
+      plugin.register_search_index(
+        model_class: model_class,
+        search_data_class: search_data_class,
+        index_version: 1,
+        search_data: search_data,
+        load_unindexed_record_ids: load_unindexed_record_ids,
+        enabled: -> { false },
+      )
+
+      handler = DiscoursePluginRegistry.search_handlers.first
+      expect(handler[:enabled].call).to eq(false)
     end
   end
 end
