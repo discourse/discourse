@@ -58,6 +58,7 @@ export default class UserAutocompleteResults extends Component {
         {{#each @results as |result index|}}
           {{#if result.isUser}}
             <li
+              data-index={{result.index}}
               {{scrollIntoView
                 (and (not this.isInitialRender) (eq index @selectedIndex))
               }}
@@ -65,7 +66,8 @@ export default class UserAutocompleteResults extends Component {
               <a
                 href
                 title={{result.name}}
-                class={{if (eq index @selectedIndex) "selected"}}
+                class="{{result.cssClasses}}
+                  {{if (eq index @selectedIndex) 'selected'}}"
                 {{on "click" (fn this.handleResultClick result index)}}
               >
                 {{avatar result imageSize="tiny"}}
@@ -91,6 +93,7 @@ export default class UserAutocompleteResults extends Component {
               <a
                 href
                 title={{result.username}}
+                class={{if (eq index @selectedIndex) "selected"}}
                 {{on "click" (fn this.handleResultClick result index)}}
               >
                 {{icon "envelope"}}
@@ -108,6 +111,7 @@ export default class UserAutocompleteResults extends Component {
               <a
                 href
                 title={{result.full_name}}
+                class={{if (eq index @selectedIndex) "selected"}}
                 {{on "click" (fn this.handleResultClick result index)}}
               >
                 {{icon "users"}}
