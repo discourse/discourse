@@ -344,6 +344,18 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("code", text: "not code")
       expect(rich).to have_no_css("code", text: "and this, not code")
     end
+
+    it "doesn't apply input rules immediately after a single backtick" do
+      open_composer
+      composer.type_content("`**not bold**\n`:tada:")
+
+      expect(rich).to have_no_css("strong")
+      expect(rich).to have_no_css("img.emoji")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("\\`\\*\\*not bold\\*\\*\n\n\\`:tada:")
+    end
   end
 
   context "with oneboxing" do
