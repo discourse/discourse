@@ -64,9 +64,10 @@ module Migrations::Importer::Steps
            LEFT JOIN user_suspensions us ON u.original_id = us.user_id AND us.suspended_at < DATETIME() AND
                                             (us.suspended_till IS NULL OR us.suspended_till > DATETIME())
            LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?1
+           LEFT JOIN sanitized_usernames ON u.original_id = sanitized_usernames.user_id
       WHERE mu.original_id IS NULL
       GROUP BY u.original_id
-      ORDER BY u.ROWID
+      ORDER BY CASE WHEN sanitized_usernames.username = u.username THEN 0 ELSE 1 END, u.ROWID
     SQL
 
     private
@@ -74,6 +75,39 @@ module Migrations::Importer::Steps
     def setup
       @unique_name_finder = ::Migrations::Importer::UsernameFinder.new(@shared_data)
       @always_allow_reserved_names = @config[:always_allow_reserved_usernames] || false
+      insert_sort_order
+    end
+
+    def insert_sort_order
+      @intermediate_db.execute <<~SQL
+        CREATE TEMP TABLE sanitized_usernames
+        (
+            user_id  NUMERIC PRIMARY KEY NOT NULL,
+            username TEXT
+        )
+      SQL
+
+      rows = @intermediate_db.query <<~SQL
+        SELECT u.original_id, u.username
+        FROM users u
+             LEFT JOIN mapped.ids mu ON u.original_id = mu.original_id AND mu.type = ?1
+        WHERE mu.original_id IS NULL
+        ORDER BY u.ROWID
+      SQL
+
+      insert_sql = <<~SQL
+        INSERT INTO sanitized_usernames (user_id, username)
+        VALUES (?, ?)
+      SQL
+
+      rows.each do |row|
+        @intermediate_db.insert(
+          insert_sql,
+          [row[:original_id], UserNameSuggester.sanitize_username(row[:username])],
+        )
+      end
+
+      @intermediate_db.commit_transaction
     end
 
     def transform_row(row)

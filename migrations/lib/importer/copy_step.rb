@@ -72,7 +72,7 @@ module Migrations::Importer
       nil
     end
 
-    protected
+    private
 
     def before(total_rows:)
       # Override in step implementation if needed
@@ -99,8 +99,6 @@ module Migrations::Importer
       @discourse_db.fix_last_id_of(table_name) if self.class.store_mapped_ids?
       @intermediate_db.commit_transaction
     end
-
-    private
 
     def fetch_rows
       skip_row_marker = ::Migrations::Importer::DiscourseDB::SKIP_ROW_MARKER
