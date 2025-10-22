@@ -41,7 +41,7 @@ export default class UserNotificationsController extends Controller {
 
   @discourseComputed("model.content.@each")
   items() {
-    return this.model.map((notification) => {
+    return this.model.content.map((notification) => {
       const props = {
         appEvents: this.appEvents,
         currentUser: this.currentUser,
