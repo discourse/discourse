@@ -71,7 +71,7 @@ module Migrations::Importer::Steps
 
     def initialize(intermediate_db, discourse_db, shared_data)
       super
-      @unique_name_finder = ::Migrations::Importer::UniqueNameFinder.new(@shared_data)
+      @unique_name_finder = ::Migrations::Importer::UsernameFinder.new(@shared_data)
     end
 
     private
@@ -94,7 +94,7 @@ module Migrations::Importer::Steps
       end
 
       row[:original_username] ||= row[:username]
-      row[:username] = @unique_name_finder.find_available_username(
+      row[:username] = @unique_name_finder.find_available_name(
         row[:username],
         allow_reserved_username: row[:admin] == 1,
       )
