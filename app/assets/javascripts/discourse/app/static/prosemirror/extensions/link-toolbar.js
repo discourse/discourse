@@ -5,6 +5,7 @@ import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { rovingButtonBar } from "discourse/lib/roving-button-bar";
 import { clipboardCopy } from "discourse/lib/utilities";
+import virtualElementFromCaretCoords from "discourse/lib/virtual-element-from-caret-coords";
 import { i18n } from "discourse-i18n";
 import { updatePosition } from "float-kit/lib/update-position";
 
@@ -260,11 +261,7 @@ class LinkToolbarPluginView {
   }
 
   #showFloatingToolbar() {
-    const element = this.#view.domAtPos(this.#linkState.head).node;
-    const trigger =
-      element.nodeType === Node.TEXT_NODE ? element.parentElement : element;
-
-    trigger.getBoundingClientRect = () => this.#getTriggerClientRect();
+    const trigger = this.#createVirtualTrigger();
 
     if (this.#menuInstance?.expanded) {
       this.#menuInstance.trigger = trigger;
@@ -302,17 +299,17 @@ class LinkToolbarPluginView {
       });
   }
 
-  #getTriggerClientRect() {
+  #createVirtualTrigger() {
     const { docView } = this.#view;
     const { head } = this.#linkState;
     const { doc } = this.#view.state;
 
     if (!docView || head > doc.content.size) {
-      return { left: 0, top: 0, width: 0, height: 0 };
+      return virtualElementFromCaretCoords({ x: 0, y: 0 }, [0, 0]);
     }
 
     const { left, top } = this.#view.coordsAtPos(head);
-    return { left, top: top + MENU_OFFSET, width: 0, height: 0 };
+    return virtualElementFromCaretCoords({ x: left, y: top }, [0, MENU_OFFSET]);
   }
 
   /**
