@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/owner";
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import User from "discourse/models/user";
@@ -63,6 +64,32 @@ acceptance("Discourse Presence Plugin", function (needs) {
       presentUserIds("/discourse-presence/reply/280"),
       [],
       "leaves channel when composer closes"
+    );
+  });
+
+  test("It respects the hide_presence user's preference, even when hiding profile is disabled", async function (assert) {
+    const siteSettings = getOwner(this).lookup("service:site-settings");
+    siteSettings.allow_users_to_hide_profile = false;
+
+    User.current().set("user_option.hide_presence", true);
+
+    await visit("/t/internationalization-localization/280");
+
+    await click("#topic-footer-buttons .btn.create");
+    assert.dom(".d-editor-input").exists("the composer input is visible");
+
+    assert.deepEqual(
+      presentUserIds("/discourse-presence/reply/280"),
+      [],
+      "does not publish presence for open composer"
+    );
+
+    await fillIn(".d-editor-input", "this is the content of my reply");
+
+    assert.deepEqual(
+      presentUserIds("/discourse-presence/reply/280"),
+      [],
+      "does not publish presence when typing"
     );
   });
 

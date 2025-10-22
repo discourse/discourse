@@ -1565,7 +1565,7 @@ hy:
         invalid: "Այդ օգտանունն անվավեր է: Այն պետք է պարունակի միայն թվեր և տառեր:"
       add_email:
         title: "Ավելացնել էլ փոստ"
-        add: "ավելացնել"
+        add: "Ավելացնել"
       change_email:
         title: "Փոխել Էլ. Հասցեն"
         taken: "Ներողություն, այդ էլ. հասցեն հասանելի չէ:"
@@ -3019,10 +3019,7 @@ hy:
         attachment_upload_not_allowed_for_new_user: "Ներողություն, նոր օգտատերերը չեն կարող ֆայլեր կցել:"
         attachment_download_requires_login: "Ներողություն, Դուք պետք է մուտք գործեք՝ կցված ֆայլերը ներբեռնելու համար:"
       cancel_composer:
-        confirm: "Ի՞նչ անել գրառման հետ։"
         discard: "Չեղարկել"
-        save_draft: "Պահպանել որպես սևագիր"
-        keep_editing: "Շարունակել խմբագրումը"
       via_email: "այս գրառումը եկել է էլ. նամակով"
       via_auto_generated_email: "այս գրառումը եկել է ավտոմատ գեներացված էլ. նամակով"
       whisper: "այս գրառումը գաղտնի շշուկ է մոդերատորների համար"
@@ -3181,6 +3178,8 @@ hy:
       logo: "Կատեգորիայի Լոգոյի Նկարը"
       background_image: "Կատեգորիայի Ֆոնի Նկարը"
       background_color: "Գույն"
+      color_validations:
+        cant_be_empty: "չի կարող դատարկ լինել"
       styles:
         icon: "Պատկերակ"
         emoji: "Էմոջի"
@@ -3600,7 +3599,6 @@ hy:
       selector_remove_filter: "հանել ֆիլտրը"
       tags: "Պիտակներ"
       choose_for_topic: "ընտրովի պիտակներ"
-      info: "Ինֆորմացիա"
       default_info: "Այս տեգը չի սահմանափակվում որևէ կատեգորիայով և չունի հոմանիշ:"
       category_restricted: "Այս տեգը սահմանափակված է այն կատեգորիաներով, որոնցում մուտքի թույլտվություն չունեք:"
       synonyms: "Հոմանիշներ"
@@ -3866,6 +3864,10 @@ hy:
           title: "Ֆայլեր"
         legal:
           title: "Օրինական"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Կարգավորումներ"
         logo:
           form:
             mobile: "Հեռախոսային"
@@ -4392,7 +4394,6 @@ hy:
         copy_to_clipboard: "Կրկնօրինակել Փոխանակման Հարթակում"
         copied_to_clipboard: "Կրկնօրինակված է Փոխանակման Հարթակում"
         copy_to_clipboard_error: "Փոխանակման Հարթակում տվյալների կրկնօրինակման սխալ"
-        theme_owner: "Խմբագրելի չէ, սեփականատերն է՝ "
         email_templates:
           title: "Էլ. հասցե"
           subject: "Թեմա"
@@ -4400,6 +4401,7 @@ hy:
           body: "Բովանդակություն"
           revert: "Վերադարձնել Փոփոխությունները"
           revert_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք վերադարձնել Ձեր փոփոխությունները:"
+          edit: "Խմբագրել"
         component:
           all_filter: "Բոլորը"
           disabled_filter: "Անջատված"

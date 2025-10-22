@@ -89,7 +89,6 @@ gem "oj"
 gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
-gem "pry-byebug", require: false
 gem "rtlcss", require: false
 gem "messageformat-wrapper", require: false
 gem "rake"
@@ -144,7 +143,7 @@ group :test, :development do
   gem "shoulda-matchers", require: false
   gem "rspec-html-matchers"
   gem "pry-stack_explorer", require: false
-  gem "byebug", require: ENV["RM_INFO"].nil?, platform: :mri
+  gem "debug", ">= 1.0.0", require: "debug/prelude"
   gem "rubocop-discourse", require: false
   gem "parallel_tests"
 
@@ -164,6 +163,8 @@ group :development do
   gem "binding_of_caller"
   gem "yaml-lint"
   gem "yard"
+  gem "ruby-lsp", require: false
+  gem "ruby-lsp-rails", require: false
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"

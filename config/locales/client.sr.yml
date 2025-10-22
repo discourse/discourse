@@ -1369,7 +1369,7 @@ sr:
         taken: "Žao nam je, to je ime zauzeto."
         invalid: "Korisničko ime je nevažeće. Može sadržati samo slova i brojeve."
       add_email:
-        add: "dodaj"
+        add: "Dodaj"
       change_email:
         title: "Promeni e-mail"
         taken: "Žao nam je, taj e-mail nije dostupan"
@@ -2642,6 +2642,10 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Podešavanje"
         logo:
           form:
             email: "Email"
@@ -2951,6 +2955,7 @@ sr:
         email_templates:
           title: "E-mail"
           subject: "Predmet"
+          edit: "Izmeni"
         component:
           all_filter: "sve"
         theme:

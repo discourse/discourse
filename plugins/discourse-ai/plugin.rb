@@ -48,6 +48,7 @@ register_asset "stylesheets/modules/embeddings/common/ai-embedding-editor.scss"
 register_asset "stylesheets/modules/llms/common/usage.scss"
 register_asset "stylesheets/modules/llms/common/spam.scss"
 register_asset "stylesheets/modules/llms/common/ai-llm-quotas.scss"
+register_asset "stylesheets/modules/llms/common/ai-credit-bar.scss"
 
 register_asset "stylesheets/modules/ai-bot/common/ai-tools.scss"
 
@@ -61,12 +62,12 @@ module ::DiscourseAi
   end
 end
 
-Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: ::DiscourseAi)
+Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: DiscourseAi)
 
 require_relative "lib/engine"
 require_relative "lib/configuration/module"
 
-::DiscourseAi::Configuration::Module::NAMES.each do |module_name|
+DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end
 
@@ -94,9 +95,12 @@ after_initialize do
     DiscourseAi::AiBot::EntryPoint.new,
     DiscourseAi::AiModeration::EntryPoint.new,
     DiscourseAi::Translation::EntryPoint.new,
+    DiscourseAi::Discover::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
-  register_problem_check ProblemCheck::AiLlmStatus
+  #register_problem_check ProblemCheck::AiLlmStatus
+  #register_problem_check ProblemCheck::AiCreditSoftLimit
+  #register_problem_check ProblemCheck::AiCreditHardLimit
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
@@ -147,6 +151,7 @@ after_initialize do
     face-smile
     face-meh
     face-angry
+    circle-info
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 

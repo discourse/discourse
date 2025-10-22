@@ -4,9 +4,11 @@ module DiscourseSolved
   class RegisterFilters
     def self.register(plugin)
       solved_callback = ->(scope) do
-        scope.joins(
-          "INNER JOIN discourse_solved_solved_topics ON discourse_solved_solved_topics.topic_id = topics.id",
-        ).where("topics.archetype <> ?", Archetype.private_message)
+        scope
+          .joins(
+            "INNER JOIN discourse_solved_solved_topics ON discourse_solved_solved_topics.topic_id = topics.id",
+          )
+          .where.not(topics: { archetype: Archetype.private_message })
       end
 
       unsolved_callback = ->(scope) do
@@ -26,7 +28,7 @@ module DiscourseSolved
                 FROM topics t
                 JOIN category_custom_fields cc
                   ON t.category_id = cc.category_id
-                 AND cc.name = '#{::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD}'
+                 AND cc.name = '#{DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD}'
                  AND cc.value = 'true'
             )
             OR
@@ -38,7 +40,7 @@ module DiscourseSolved
           SQL
         end
 
-        scope.where("topics.archetype <> ?", Archetype.private_message)
+        scope.where.not(topics: { archetype: Archetype.private_message })
       end
 
       plugin.register_custom_filter_by_status("solved", &solved_callback)

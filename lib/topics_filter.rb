@@ -87,6 +87,8 @@ class TopicsFilter
         filter_tag_groups(values: key_prefixes.zip(filter_values))
       when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
+      when "locale"
+        filter_locale(values: key_prefixes.zip(filter_values))
       when "views-min"
         filter_by_number_of_views(min: filter_values)
       when "views-max"
@@ -140,7 +142,7 @@ class TopicsFilter
       category = category_id.present? ? Category.find_by(id: category_id) : nil
 
       if @guardian.can_see_deleted_topics?(category)
-        @scope = @scope.unscope(where: :deleted_at).where("topics.deleted_at IS NOT NULL")
+        @scope = @scope.unscope(where: :deleted_at).where.not(topics: { deleted_at: nil })
       end
     when "public"
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
@@ -340,6 +342,17 @@ class TopicsFilter
           { name: ",", description: I18n.t("filter.description.groups_any") },
           { name: "+", description: I18n.t("filter.description.groups_all") },
         ],
+      },
+    )
+
+    # Locale filter
+    results.push(
+      {
+        name: "locale:",
+        description: I18n.t("filter.description.locale"),
+        type: "text",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.locale_any") }],
+        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_locale") }],
       },
     )
 
@@ -677,6 +690,22 @@ class TopicsFilter
     end
   end
 
+  def topic_user_scope
+    @scope.where(
+      "tu.notification_level IN (:topic_notification_levels)",
+      topic_notification_levels: @topic_notification_levels.to_a,
+    )
+  end
+
+  def watching_first_post_scope
+    TopicQuery.watching_first_post_filter(@scope, @guardian.user)
+  end
+
+  def combine_scopes_with_or(scope1, scope2)
+    @scope.joins_values.concat(scope1.joins_values, scope2.joins_values).uniq!
+    @scope.merge(scope1.or(scope2))
+  end
+
   def filter_in(values:)
     values.uniq!
 
@@ -702,10 +731,12 @@ class TopicsFilter
             treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
       end
+
       if values.delete("new-replies")
         ensure_topic_users_reference!
         @scope = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
       end
+
       if values.delete("new")
         ensure_topic_users_reference!
         new_topics =
@@ -714,10 +745,7 @@ class TopicsFilter
             treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
         unread_topics = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
-        base = @scope
-        base.joins_values.dup.concat(new_topics.joins_values, unread_topics.joins_values)
-        base.joins_values.uniq!
-        @scope = base.merge(new_topics.or(unread_topics))
+        @scope = combine_scopes_with_or(new_topics, unread_topics)
       end
 
       if values.delete("unseen")
@@ -740,15 +768,20 @@ class TopicsFilter
               end
             end
         end
+      end
 
-        if @topic_notification_levels.present?
-          ensure_topic_users_reference!
-          @scope =
-            @scope.where(
-              "tu.notification_level IN (:topic_notification_levels)",
-              topic_notification_levels: @topic_notification_levels.to_a,
-            )
-        end
+      # watching_first_post is a category/tag-level notification, not a topic-level one
+      # We need to handle it separately from regular notification levels and combine with OR
+      has_watching_first_post = values.delete("watching_first_post")
+
+      if has_watching_first_post && @topic_notification_levels.present?
+        ensure_topic_users_reference!
+        @scope = combine_scopes_with_or(topic_user_scope, watching_first_post_scope)
+      elsif has_watching_first_post
+        @scope = @scope.merge(watching_first_post_scope)
+      elsif @topic_notification_levels.present?
+        ensure_topic_users_reference!
+        @scope = @scope.merge(topic_user_scope)
       end
     elsif values.present?
       @scope = @scope.none
@@ -902,6 +935,28 @@ class TopicsFilter
         .distinct(:id)
   end
 
+  def filter_locale(values:)
+    include_locales = []
+    exclude_locales = []
+
+    values.each do |key_prefix, value|
+      locales = value.split(",").map(&:strip).reject(&:blank?)
+      next if locales.empty?
+
+      if key_prefix == "-"
+        exclude_locales.concat(locales)
+      else
+        include_locales.concat(locales)
+      end
+    end
+
+    @scope = @scope.where(locale: include_locales) if include_locales.present?
+
+    if exclude_locales.present?
+      @scope = @scope.where("topics.locale IS NULL OR topics.locale NOT IN (?)", exclude_locales)
+    end
+  end
+
   ORDER_BY_MAPPINGS = {
     "activity" => {
       column: "topics.bumped_at",
@@ -943,7 +998,7 @@ class TopicsFilter
       scope: -> do
         if @guardian.authenticated?
           ensure_topic_users_reference!
-          @scope.where("tu.last_visited_at IS NOT NULL")
+          @scope.where.not(tu: { last_visited_at: nil })
         else
           # make sure this works for anon (particularly selection)
           @scope.joins("LEFT JOIN topic_users tu ON 1 = 0")

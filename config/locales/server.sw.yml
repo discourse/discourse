@@ -1703,10 +1703,7 @@ sw:
   page_not_found:
     page_title: "Ukurasa Haujapatikana"
     title: "Samahani! Ukurasa huu haupo au ni wa siri."
-    popular_topics: "Maarufu"
-    recent_topics: "Hivi Karibuni"
     see_more: "Zaidi"
-    search_title: "Tafuta tovuti hii"
     search_button: "Tafuta"
   offline:
     title: "Haiwezi kupakia programu-tumizi"

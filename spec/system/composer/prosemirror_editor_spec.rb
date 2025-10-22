@@ -9,6 +9,9 @@ describe "Composer - ProseMirror editor", type: :system do
     )
   end
   fab!(:tag)
+  fab!(:category_with_emoji) do
+    Fabricate(:category, slug: "cat", emoji: "cat", style_type: "emoji")
+  end
 
   let(:cdp) { PageObjects::CDP.new }
   let(:composer) { PageObjects::Components::Composer.new }
@@ -56,7 +59,7 @@ describe "Composer - ProseMirror editor", type: :system do
     composer.toggle_rich_editor
     expect(composer).to have_markdown_editor_active
 
-    try_until_success(frequency: 0.5) do
+    try_until_success(reason: "Relies on an Ember timer to update the user option") do
       expect(current_user.user_option.reload.composition_mode).to eq(
         UserOption.composition_mode_types[:markdown],
       )
@@ -90,7 +93,7 @@ describe "Composer - ProseMirror editor", type: :system do
 
     expect(composer).to have_rich_editor
 
-    try_until_success(frequency: 0.5) do
+    try_until_success(reason: "Relies on an Ember timer to update the user option") do
       expect(current_user.user_option.reload.composition_mode).to eq(
         UserOption.composition_mode_types[:rich],
       )
@@ -327,6 +330,32 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_no_css("aside.quote")
       expect(rich).to have_content("This [quote] should not trigger")
     end
+
+    it "avoids applying input rules in inline code if part of the matched text" do
+      open_composer
+      composer.type_content("This `__code` should not__ be bold. `and this, ")
+      page.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "e"])
+      # should not trigger the conversion of "and this, " to code as the 2nd ` is typed inside inline code
+      composer.type_content("not code`")
+
+      expect(rich).to have_no_css("strong")
+      expect(rich).to have_css("code", text: "__code")
+
+      expect(rich).to have_css("code", text: "not code")
+      expect(rich).to have_no_css("code", text: "and this, not code")
+    end
+
+    it "doesn't apply input rules immediately after a single backtick" do
+      open_composer
+      composer.type_content("`**not bold**\n`:tada:")
+
+      expect(rich).to have_no_css("strong")
+      expect(rich).to have_no_css("img.emoji")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("\\`\\*\\*not bold\\*\\*\n\n\\`:tada:")
+    end
   end
 
   context "with oneboxing" do
@@ -511,6 +540,253 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  describe "code formatting" do
+    # formatCode() behavior is determined by selection type and context:
+    # 1. Inside code block: convert back to paragraphs (respecting \n\n splits)
+    # 2. Empty selection in empty block: create code block
+    # 3. Empty selection in non-empty block: toggle stored inline code mark
+    # 4. Multi-block selection: create single code block with full content selected
+    # 5. Full block selection: create code block with full content selected
+    # 6. Partial text selection: toggle inline code marks
+
+    context "when inside code block" do
+      it "converts code block back to single paragraph" do
+        open_composer
+        composer.type_content("```\nSingle line of code\n```")
+
+        expect(rich).to have_css("pre code", text: "Single line of code")
+
+        composer.send_keys(:up, :end)
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("p", text: "Single line of code")
+        expect(rich).to have_no_css("pre code")
+      end
+
+      it "converts code block to multiple paragraphs respecting \\n\\n splits" do
+        open_composer
+        composer.type_content("First paragraph\n\nSecond paragraph\n\nThird paragraph")
+        composer.select_all
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css(
+          "pre code",
+          text: "First paragraph\nSecond paragraph\nThird paragraph",
+        )
+
+        composer.send_keys(:left)
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("p", text: "First paragraph")
+        expect(rich).to have_css("p", text: "Second paragraph")
+        expect(rich).to have_css("p", text: "Third paragraph")
+        expect(rich).to have_no_css("pre code")
+      end
+
+      it "selects all resulting paragraphs for easy back-and-forth toggling" do
+        open_composer
+        composer.type_content("```\nFirst\n\nSecond\n```")
+
+        composer.send_keys(:up, :end)
+        find(".toolbar__button.code").click
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code", text: "First\nSecond")
+      end
+    end
+
+    context "with empty selection (cursor only)" do
+      it "creates code block when in empty block" do
+        open_composer
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code")
+        expect(rich).to have_css("p", count: 1)
+      end
+
+      it "toggles stored inline code mark when in non-empty block" do
+        open_composer
+        composer.type_content("Before ")
+
+        find(".toolbar__button.code").click
+        expect(page).to have_css(".toolbar__button.code.--active")
+
+        composer.type_content("code")
+        expect(rich).to have_css("code", text: "code")
+
+        find(".toolbar__button.code").click
+        expect(page).to have_no_css(".toolbar__button.code.--active")
+
+        composer.type_content(" after")
+        expect(rich).to have_css("code", text: "code")
+        expect(rich).to have_content("Before code after")
+      end
+    end
+
+    context "with multi-block selection" do
+      it "creates single code block from multiple paragraphs" do
+        open_composer
+        composer.type_content("First paragraph\n\nSecond paragraph")
+        composer.select_all
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code", count: 1)
+        expect(rich).to have_css("pre code", text: "First paragraph\nSecond paragraph")
+      end
+
+      it "creates single code block from mixed block types" do
+        open_composer
+        composer.type_content("# Heading\n\nParagraph text\n\n> Quote text")
+        composer.select_all
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code", count: 1)
+        expect(rich).to have_css("pre code", text: "Heading\nParagraph text\nQuote text")
+      end
+
+      it "selects entire content of newly created code block" do
+        open_composer
+        composer.type_content("First\n\nSecond")
+        composer.select_all
+        find(".toolbar__button.code").click
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("p", text: "First")
+        expect(rich).to have_css("p", text: "Second")
+      end
+
+      it "preserves plain text content without markdown conversion" do
+        open_composer
+        composer.type_content("**Bold text** and *italic text*")
+        composer.select_all
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code", text: "Bold text and italic text")
+        expect(rich).to have_no_css("pre code", text: "**Bold text** and *italic text*")
+      end
+    end
+
+    context "with single-block text selection" do
+      it "creates inline code marks for partial text selection" do
+        open_composer
+        composer.type_content("This is a test")
+
+        rich.find("p").double_click
+        page.execute_script(<<~JS)
+          const selection = window.getSelection();
+          const range = document.createRange();
+          const textNode = document.querySelector('.ProseMirror p').firstChild;
+          range.setStart(textNode, 5);
+          range.setEnd(textNode, 9);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        JS
+
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("code", text: "is a")
+        expect(rich).to have_content("This is a test")
+      end
+
+      it "creates inline code marks when selecting all text content within paragraph" do
+        open_composer
+        composer.type_content("Hello world")
+
+        page.execute_script(<<~JS)
+          const selection = window.getSelection();
+          const range = document.createRange();
+          const textNode = document.querySelector('.ProseMirror p').firstChild;
+          range.setStart(textNode, 0);
+          range.setEnd(textNode, textNode.textContent.length);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        JS
+
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("code", text: "Hello world")
+      end
+
+      it "removes inline code marks from selection that has them" do
+        open_composer
+        composer.type_content("This `is a` test")
+
+        page.execute_script(<<~JS)
+          const selection = window.getSelection();
+          const range = document.createRange();
+          const codeElement = document.querySelector('.ProseMirror code');
+          range.selectNodeContents(codeElement);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        JS
+
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_no_css("code")
+        expect(rich).to have_content("This is a test")
+      end
+    end
+
+    context "with full block selection" do
+      it "creates code block from fully selected paragraph" do
+        open_composer
+        composer.type_content("Full paragraph text")
+        composer.select_all
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code", text: "Full paragraph text")
+      end
+
+      it "creates code block from fully selected heading" do
+        open_composer
+        composer.type_content("# Full heading text")
+        composer.select_all
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code", text: "Full heading text")
+      end
+
+      it "creates code block from fully selected list item" do
+        open_composer
+        composer.type_content("1. List item")
+        composer.select_all
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code", text: "List item")
+      end
+    end
+
+    context "with round-trip conversion" do
+      it "converts multiple paragraphs to code block and back preserving structure" do
+        open_composer
+        composer.type_content("First paragraph  ")
+        composer.send_keys(:shift, :enter)
+        composer.type_content("Second line\nSecond paragraph\nThird paragraph")
+
+        expect(rich).to have_css("p", count: 3)
+        expect(rich).to have_css("p", text: "First paragraph  \nSecond line")
+        expect(rich).to have_css("p", text: "Second paragraph")
+        expect(rich).to have_css("p", text: "Third paragraph")
+
+        composer.select_all
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("pre code", count: 1)
+        expect(rich).to have_css(
+          "pre code",
+          text: "First paragraph  \nSecond line\nSecond paragraph\nThird paragraph",
+        )
+
+        composer.send_keys(:left)
+        find(".toolbar__button.code").click
+
+        expect(rich).to have_css("p", text: "First paragraph  \nSecond line")
+        expect(rich).to have_css("p", text: "Second paragraph")
+        expect(rich).to have_css("p", text: "Third paragraph")
+      end
+    end
+  end
+
   context "with keymap" do
     PLATFORM_KEY_MODIFIER = SystemHelpers::PLATFORM_KEY_MODIFIER
     it "supports Ctrl + B to create a bold text" do
@@ -643,6 +919,33 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(rich).to have_css("ol li", text: "Item 1")
       expect(rich).to have_css("ol li", text: "Item 2Item 3")
+    end
+
+    it "supports hashtag decoration when pressing return" do
+      open_composer
+
+      composer.type_content("##{category_with_emoji.slug}")
+      composer.send_keys(:space)
+      composer.send_keys(:home)
+      wait_for_timeout
+      composer.send_keys(:enter)
+
+      expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
+    end
+
+    it "supports hashtag decoration when backspacing to combine paragraphs" do
+      open_composer
+
+      composer.type_content("some text ")
+      composer.send_keys(:enter)
+
+      composer.type_content("##{category_with_emoji.slug}")
+      composer.send_keys(:space)
+      composer.send_keys(:home)
+      wait_for_timeout
+      composer.send_keys(:backspace)
+
+      expect(rich).to have_css("a.hashtag-cooked .emoji[alt='#{category_with_emoji.emoji}']")
     end
 
     it "supports Ctrl + M to toggle between rich and markdown editors" do
@@ -795,6 +1098,44 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
     end
 
+    it "handles multiple data URI images pasted simultaneously" do
+      SiteSetting.simultaneous_uploads = 1
+
+      valid_png_data_uri =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+      valid_jpeg_data_uri =
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/2wBDAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQH/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwA/wA=="
+
+      cdp.allow_clipboard
+
+      open_composer
+
+      html = <<~HTML
+          before 1<br>
+          <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
+          <img src="#{valid_png_data_uri}" alt="img2">
+          between<br>
+          <img src="#{valid_jpeg_data_uri}">
+          after 2
+        HTML
+
+      cdp.copy_paste(html, html: true)
+
+      expect(rich).to have_css("img[alt='img1'][width='100'][height='100'][data-orig-src]")
+      expect(rich).to have_css("img[alt='img2'][data-orig-src]")
+      expect(rich).to have_css("img[alt='image'][data-orig-src]")
+      expect(rich).to have_css("p", text: "before 1")
+      expect(rich).to have_css("p", text: "between")
+      expect(rich).to have_css("p", text: "after 2")
+      expect(rich).to have_no_css("img[src^='data:']")
+
+      # pasting a second time to make sure there's no cache pollution
+      cdp.copy_paste("<img src='#{valid_png_data_uri}' alt='img1'>", html: true)
+
+      expect(rich).to have_no_css("img[src^='data:']")
+      expect(rich).to have_css("img[alt='img1'][data-orig-src]", count: 2)
+    end
+
     it "merges text with link marks created from parsing" do
       cdp.allow_clipboard
       open_composer
@@ -807,6 +1148,17 @@ describe "Composer - ProseMirror editor", type: :system do
       composer.type_content(:backspace)
 
       expect(rich).to have_css("a", text: "lin")
+    end
+
+    it "clears closed marks from stored marks when using markInputRule" do
+      open_composer
+
+      composer.type_content("[`something`](link) word")
+
+      expect(rich).to have_css("a", text: "something")
+      expect(rich).to have_css("a code", text: "something")
+      expect(rich).to have_content("word")
+      expect(rich).to have_no_css("code", text: "word")
     end
 
     it "parses html inline tags from pasted HTML" do
@@ -823,6 +1175,22 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
     end
+
+    it "converts newlines to hard breaks when parsing `white-space: pre` HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("<span style='white-space: pre;'>line1\nline2\nline3</pre>", html: true)
+
+      expect(rich).to have_css("p", text: "line1")
+      expect(rich).to have_css("p", text: "line2")
+      expect(rich).to have_css("p", text: "line3")
+      expect(rich).to have_css("br", count: 2)
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("line1\nline2\nline3")
+    end
   end
 
   describe "toolbar state updates" do
@@ -838,7 +1206,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(page).to have_css(".toolbar__button.code.--active", count: 0)
       expect(page).to have_css(".toolbar__button.blockquote.--active", count: 0)
 
-      composer.type_content("> - ` [***many styles***](https://example.com)`")
+      composer.type_content("> - [***many `styles`***](https://example.com)")
       composer.send_keys(:left, :left)
 
       expect(page).to have_css(".toolbar__button.bold.--active", count: 1)
@@ -1062,8 +1430,8 @@ describe "Composer - ProseMirror editor", type: :system do
   end
 
   describe "with mentions" do
-    fab!(:post)
-    fab!(:topic) { post.topic }
+    fab!(:topic) { Fabricate(:topic, category: category_with_emoji) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:mixed_case_user) { Fabricate(:user, username: "TestUser_123") }
     fab!(:mixed_case_group) do
       Fabricate(:group, name: "TestGroup_ABC", mentionable_level: Group::ALIAS_LEVELS[:everyone])
@@ -1221,6 +1589,57 @@ describe "Composer - ProseMirror editor", type: :system do
       )
     end
 
+    it "preserves existing percent escapes when inserting a link" do
+      open_composer
+
+      composer.click_toolbar_button("link")
+
+      expect(upsert_hyperlink_modal).to be_open
+
+      upsert_hyperlink_modal.fill_in_link_text("Encoded URL")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com/%20test")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css("a[href='https://example.com/%20test']", text: "Encoded URL")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[Encoded URL](https://example.com/%20test)")
+    end
+
+    it "handles malformed links gracefully" do
+      cdp.allow_clipboard
+      open_composer
+
+      composer.click_toolbar_button("link")
+
+      expect(upsert_hyperlink_modal).to be_open
+
+      upsert_hyperlink_modal.fill_in_link_text("Encoded URL")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com/100%/working 1")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css(
+        "a[href='https://example.com/100%25/working%201']",
+        text: "Encoded URL",
+      )
+
+      composer.send_keys(:left, :left, :left)
+      find("button.composer-link-toolbar__edit").click
+
+      expect(upsert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal.link_text_value).to eq("Encoded URL")
+      # this ensures we keeps the corrected encoding and do not decode prior to edit
+      # if we decode prior to edit user may end up being confused about why the url has spaces etc...
+      expect(upsert_hyperlink_modal.link_url_value).to eq("https://example.com/100%25/working%201")
+
+      upsert_hyperlink_modal.close
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("[Encoded URL](https://example.com/100%25/working%201)")
+    end
+
     it "allows copying a link URL via toolbar" do
       cdp.allow_clipboard
       open_composer
@@ -1369,6 +1788,22 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value(
         "[Updated **bold** and *italic* content](https://updated-example.com)",
       )
+    end
+
+    it "does not infinite loop on link rewrite" do
+      with_logs do |logger|
+        open_composer
+
+        composer.type_content("[Example](https://example.com)")
+        composer.type_content([PLATFORM_KEY_MODIFIER, "a"])
+        composer.type_content("Modified")
+
+        expect(logger.logs.map { |log| log[:message] }).not_to include(
+          "Maximum call stack size exceeded",
+        )
+
+        expect(rich).to have_content("Modified")
+      end
     end
   end
 

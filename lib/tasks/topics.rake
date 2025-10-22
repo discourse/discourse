@@ -31,7 +31,7 @@ def apply_auto_close(category)
       NOT EXISTS (
         SELECT 1
         FROM topic_timers
-        WHERE topic_timers.topic_id = topics.id
+        WHERE topic_timers.timerable_id = topics.id
           AND topic_timers.status_type = ?
           AND topic_timers.deleted_at IS NULL
       )
@@ -71,7 +71,7 @@ end
 
 task "topics:watch_all_replied_topics" => :environment do
   puts "Setting all topics to Watching on which a user has posted at least once..."
-  topics = Topic.where("archetype != ?", Archetype.private_message)
+  topics = Topic.where.not(archetype: Archetype.private_message)
   total = topics.count
   count = 0
 

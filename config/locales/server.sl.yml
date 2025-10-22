@@ -1636,10 +1636,7 @@ sl:
   page_not_found:
     page_title: "stran ne obstaja"
     title: "Oops! Ta stran ne obstaja ali je zasebna."
-    popular_topics: "Zanimivo"
-    recent_topics: "Nedavno"
     see_more: "Več"
-    search_title: "Išči na tem spletnem mestu"
     search_button: "Išči"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
@@ -2026,6 +2023,8 @@ sl:
           description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
       reject:
         title: "Zavrni"
+      delete_post:
+        complete: "Prispevek izbrisan"
       delete_user:
         complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"

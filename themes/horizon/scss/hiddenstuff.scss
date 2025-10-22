@@ -1,7 +1,14 @@
+@use "lib/viewport";
+
 .sidebar__panel-switch-button,
-.list-controls #create-topic,
 .notifications-button-footer .reason .text,
 .pinned-button .reason .text,
 .more-topics__browse-more {
   display: none;
+}
+
+@include viewport.from(md) {
+  .list-controls #create-topic {
+    display: none;
+  }
 }

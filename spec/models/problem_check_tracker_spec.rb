@@ -231,6 +231,8 @@ RSpec.describe ProblemCheckTracker do
   end
 
   describe "#no_problem!" do
+    let(:next_run_at) { 24.hours.from_now.round(6) }
+
     let(:problem_tracker) do
       Fabricate(:problem_check_tracker, identifier: "twitter_login", **original_attributes)
     end
@@ -245,12 +247,12 @@ RSpec.describe ProblemCheckTracker do
       }
     end
 
-    let(:updated_attributes) { { blips: 0 } }
+    let(:updated_attributes) { { blips: 0, next_run_at: } }
 
     it do
       freeze_time
 
-      expect { problem_tracker.no_problem!(next_run_at: 24.hours.from_now) }.to change {
+      expect { problem_tracker.no_problem!(next_run_at:) }.to change {
         problem_tracker.attributes
       }.to(hash_including(updated_attributes))
     end

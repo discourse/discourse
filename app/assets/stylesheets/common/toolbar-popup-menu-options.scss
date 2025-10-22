@@ -20,6 +20,10 @@
   }
 
   .shortcut {
+    &.--apple {
+      letter-spacing: 0.25em;
+    }
+
     @include viewport.until(sm) {
       display: none;
     }

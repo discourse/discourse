@@ -2,8 +2,8 @@
 
 module DiscourseNarrativeBot
   class NewUserNarrative < Base
-    I18N_KEY = "discourse_narrative_bot.new_user_narrative".freeze
-    BADGE_NAME = "Certified".freeze
+    I18N_KEY = "discourse_narrative_bot.new_user_narrative"
+    BADGE_NAME = "Certified"
 
     TRANSITION_TABLE = {
       begin: {

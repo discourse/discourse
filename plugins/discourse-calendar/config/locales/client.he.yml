@@ -7,11 +7,11 @@
 he:
   admin_js:
     admin:
-      calendar: "לוח שנה"
+      calendar: "לוח שנה ואירועים"
       site_settings:
         categories:
           discourse_post_event: "אירוע Discourse"
-          discourse_calendar: "לוח שנה Discourse"
+          discourse_calendar: "לוח שנה ואירועים"
   js:
     notifications:
       titles:
@@ -36,6 +36,7 @@ he:
         header_title: "חגים"
         pick_region_description: "נא לבחור אזור כדי לראות את החגים לאותו האזור."
         disabled_holidays_description: "חגים מושבתים יוחרגו מלוח השנה של חגי הסגל."
+        header_description: "נא לבחור אזור כדי לראות את החגים עבור אזור זה. חגים מושבתים לא ייכללו בלוח החופשות של הצוות."
       date: "תאריך"
       add_to_calendar: "הוספה ללוח השנה של Google"
       toggle_timezone_offset_title: "החלפת מצב היסט אזור זמן"
@@ -44,6 +45,7 @@ he:
         title: "אזור"
         none: "ללא"
         use_current_region: "להשתמש באזור הנוכחי"
+        select_region: "בחירת אזור…"
         names:
           ae: "איחוד האמירויות הערביות"
           ar: "ארגנטינה"

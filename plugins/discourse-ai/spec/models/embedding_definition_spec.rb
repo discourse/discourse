@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe EmbeddingDefinition do
-  fab!(:embedding_definition) { Fabricate(:open_ai_embedding_def) }
-  fab!(:gemini_embedding_definition) { Fabricate(:gemini_embedding_def) }
+  fab!(:embedding_definition, :open_ai_embedding_def)
+  fab!(:gemini_embedding_definition, :gemini_embedding_def)
 
   describe "#prepare_query_text" do
     let(:text) { "test query" }

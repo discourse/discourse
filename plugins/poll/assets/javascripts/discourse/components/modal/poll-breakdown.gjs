@@ -12,7 +12,6 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
-import loadScript from "discourse/lib/load-script";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import PollBreakdownChart from "discourse/plugins/poll/discourse/components/poll-breakdown-chart";
@@ -30,11 +29,9 @@ export default class PollBreakdownModal extends Component {
 
   init() {
     this.set("groupedBy", this.groupableUserFields[0]?.id);
-    loadScript("/javascripts/Chart.min.js")
-      .then(() => loadScript("/javascripts/chartjs-plugin-datalabels.min.js"))
-      .then(() => {
-        this.fetchGroupedPollData();
-      });
+
+    this.fetchGroupedPollData();
+
     super.init(...arguments);
   }
 

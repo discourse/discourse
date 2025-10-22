@@ -27,7 +27,7 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    if Rails.env.test? || Rails.env.development?
+    if Rails.env.local?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
       get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
     end
@@ -421,6 +421,13 @@ Discourse::Application.routes.draw do
         get "legal" => "site_settings#index"
         get "localization" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
+        get "login-and-authentication/authenticators" => "site_settings#index"
+        get "login-and-authentication/discourseconnect" => "site_settings#index"
+
+        DiscoursePluginRegistry.admin_config_login_routes.each do |location|
+          get "login-and-authentication/#{location}" => "site_settings#index"
+        end
+
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
@@ -1608,7 +1615,9 @@ Discourse::Application.routes.draw do
 
     get "message-bus/poll" => "message_bus#poll"
 
-    resources :drafts, only: %i[index create show destroy]
+    resources :drafts, only: %i[index create show destroy] do
+      collection { delete :bulk_destroy }
+    end
 
     get "/service-worker.js" => "static#service_worker_asset", :format => :js
 

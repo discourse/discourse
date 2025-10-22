@@ -12,12 +12,12 @@ module PageObjects
         has_no_css?(".modal.d-modal#{MODAL_SELECTOR}")
       end
 
-      def click_save
-        footer.find("button.save-draft").click
+      def click_discard
+        footer.find(".discard-draft-modal__discard-btn").click
       end
 
-      def click_discard
-        footer.find("button.discard-draft").click
+      def click_cancel
+        footer.find(".discard-draft-modal__cancel-btn").click
       end
     end
   end

@@ -11,7 +11,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
   describe "GET #index" do
     fab!(:llm_model) { Fabricate(:llm_model, enabled_chat_bot: true) }
-    fab!(:llm_model2) { Fabricate(:llm_model) }
+    fab!(:llm_model2, :llm_model)
     fab!(:ai_persona) do
       Fabricate(
         :ai_persona,
@@ -484,6 +484,21 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           expect(response.parsed_body["success"]).to eq(false)
           expect(response.parsed_body["error"]).to eq(error_message.to_json)
         end
+      end
+    end
+
+    context "when config is invalid" do
+      it "returns a success false with the validation error" do
+        get "/admin/plugins/discourse-ai/ai-llms/test.json",
+            params: {
+              ai_llm: test_attrs.except(:max_prompt_tokens),
+            }
+
+        expect(response).to be_successful
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.parsed_body["validation_errors"]).to contain_exactly(
+          "Context window is not a number",
+        )
       end
     end
   end

@@ -16,20 +16,17 @@ register_asset "stylesheets/mobile/discourse-reactions.scss", :mobile
 register_svg_icon "star"
 register_svg_icon "far-star"
 
-require_relative "lib/reaction_for_like_site_setting_enum.rb"
-require_relative "lib/reactions_excluded_from_like_site_setting_validator.rb"
+require_relative "lib/reaction_for_like_site_setting_enum"
+require_relative "lib/reactions_excluded_from_like_site_setting_validator"
+
+module ::DiscourseReactions
+  PLUGIN_NAME = "discourse-reactions"
+end
+
+require_relative "lib/discourse_reactions/engine"
 
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-reactions", "db", "fixtures").to_s
-
-  module ::DiscourseReactions
-    PLUGIN_NAME = "discourse-reactions"
-
-    class Engine < ::Rails::Engine
-      engine_name PLUGIN_NAME
-      isolate_namespace DiscourseReactions
-    end
-  end
 
   %w[
     app/controllers/discourse_reactions/custom_reactions_controller.rb
@@ -63,25 +60,7 @@ after_initialize do
     Notification.singleton_class.prepend DiscourseReactions::NotificationExtension
   end
 
-  Discourse::Application.routes.append { mount ::DiscourseReactions::Engine, at: "/" }
-
-  DiscourseReactions::Engine.routes.draw do
-    get "/discourse-reactions/custom-reactions" => "custom_reactions#index",
-        :constraints => {
-          format: :json,
-        }
-    put "/discourse-reactions/posts/:post_id/custom-reactions/:reaction/toggle" =>
-          "custom_reactions#toggle",
-        :constraints => {
-          format: :json,
-        }
-    get "/discourse-reactions/posts/reactions" => "custom_reactions#reactions_given",
-        :as => "reactions_given"
-    get "/discourse-reactions/posts/reactions-received" => "custom_reactions#reactions_received",
-        :as => "reactions_received"
-    get "/discourse-reactions/posts/:id/reactions-users" => "custom_reactions#post_reactions_users",
-        :as => "post_reactions_users"
-  end
+  Discourse::Application.routes.append { mount DiscourseReactions::Engine, at: "/" }
 
   add_to_serializer(:post, :reactions) do
     reactions = []

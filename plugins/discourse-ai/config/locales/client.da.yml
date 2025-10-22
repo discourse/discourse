@@ -23,10 +23,16 @@ da:
               label: "Emne ID"
             title:
               label: "Titel"
+            days:
+              label: "Dage"
+            model:
+              label: "Model"
             categories:
               label: "Kategorier"
             tags:
               label: "Mærker"
+            exclude_tags:
+              label: "Udeluk Mærker"
         llm_triage:
           fields:
             category:

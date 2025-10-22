@@ -35,6 +35,10 @@ he:
     no_solutions:
       self: "אין לך פתרונות מקובלים עדיין."
       others: "אין פתרונות מקובלים."
+    filter:
+      description:
+        solved: "סינון נושאים שנפתרו"
+        unsolved: "סינון נושאים שלא נפתרו"
   badges:
     solved_1:
       name: "נפתר!"

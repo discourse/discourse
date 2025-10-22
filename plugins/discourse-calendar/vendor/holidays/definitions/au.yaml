@@ -98,9 +98,24 @@ months:
     regions: [au_act, au_nsw, au_sa, au_tas, au_nt, au_vic]
     week: 2
     wday: 1
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_act, au_nsw, au_sa, au_tas, au_nt, au_vic]
+    week: 2
+    wday: 1
+    year_ranges:
+      from: 2023
   - name: Queen's Birthday
     regions: [au_qld]
     function: qld_queens_birthday_june(year)
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_qld]
+    function: qld_queens_birthday_june(year)
+    year_ranges:
+      from: 2023
   - name: Queensland Day
     regions: [au_qld]
     mday: 6
@@ -120,6 +135,14 @@ months:
     regions: [au_wa]
     week: -1
     wday: 1
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_wa]
+    week: -1
+    wday: 1
+    year_ranges:
+      from: 2023
   - name: "Family & Community Day"
     regions: [au_act]
     week: -1
@@ -142,6 +165,13 @@ months:
   - name: Queen's Birthday
     regions: [au_qld]
     function: qld_queens_bday_october(year)
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [au_qld]
+    function: qld_queens_bday_october(year)
+    year_ranges:
+      from: 2023
     observed: to_monday_if_weekend(date)
   - name: Royal Hobart Show
     regions: [au_tas_south]
@@ -180,21 +210,22 @@ months:
 
 methods:
   afl_grand_final:
+    # The AFL Grand Final is typically held on the last Saturday in September.
+    # Starting 2015, the day before the Grand Final is observed as a public holiday in Victoria.
+    # Some years are exceptions, these are defined manually.
     arguments: year
     ruby: |
       case year
+      when year < 2015
+        nil
       when 2015
         Date.civil(2015, 10, 2)
       when 2016
         Date.civil(2016, 9, 30)
-      when 2017
-        Date.civil(2017, 9, 29)
-      when 2018
-        Date.civil(2018, 9, 28)
-      when 2019
-        Date.civil(2019,9, 27)
       when 2020
         Date.civil(2020, 10, 23)
+      else
+        Date.civil(year, 9, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 9, :last, :saturday) - 1)
       end
   qld_queens_bday_october:
     # http://www.justice.qld.gov.au/fair-and-safe-work/industrial-relations/public-holidays/dates
@@ -319,6 +350,21 @@ tests:
       regions: ["au_wa"]
     expect:
       name: "Queen's Birthday"
+  - given:
+      date: '2023-06-12'
+      regions: ["au_nsw"]
+    expect:
+      name: "King's Birthday"
+  - given:
+      date: '2023-10-02'
+      regions: ["au_qld"]
+    expect:
+      name: "King's Birthday"
+  - given:
+      date: '2023-09-25'
+      regions: ["au_wa"]
+    expect:
+      name: "King's Birthday"
   - given:
       date: '2014-09-29'
       regions: ["au_act"]

@@ -67,16 +67,13 @@ updates:
     open-pull-requests-limit: 20
     versioning-strategy: increase
     ignore: # These are all vendored so need to be updated manually. See lib/tasks/javascript.rake
-      - dependency-name: "chart.js"
-      - dependency-name: "chartjs-plugin-datalabels"
       - dependency-name: "magnific-popup"
-      - dependency-name: "pikaday"
       - dependency-name: "moment"
       - dependency-name: "moment-timezone"
       - dependency-name: "@discourse/moment-timezone-names-translations"
-      - dependency-name: "squoosh"
       - dependency-name: "@glint/*" # Using unstable version - don't auto-upgrade to stable
       - dependency-name: "typescript" # Very sensitive to glint/volar version
+      - dependency-name: "webpack" # Recent versions have bugs with `/static` loading. We're working to move away from webpack anyway.
     groups:
       babel:
         patterns:

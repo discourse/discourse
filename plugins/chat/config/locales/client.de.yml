@@ -736,6 +736,9 @@ de:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        text: Neue DN starten
+        title: Persönlichen Chat erstellen
       panels:
         chat:
           label: "Chat"

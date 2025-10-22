@@ -225,7 +225,11 @@ class PostActionCreator
       true,
       Discourse.system_user,
       message:
-        I18n.t("temporarily_closed_due_to_flags", count: SiteSetting.num_hours_to_close_topic),
+        I18n.t(
+          "temporarily_closed_due_to_flags",
+          count: SiteSetting.num_hours_to_close_topic,
+          locale: SiteSetting.default_locale,
+        ),
     )
 
     topic.set_or_create_timer(
@@ -296,7 +300,7 @@ class PostActionCreator
     }
 
     # First try to revive a trashed record
-    post_action = PostAction.where(where_attrs).with_deleted.where("deleted_at IS NOT NULL").first
+    post_action = PostAction.where(where_attrs).with_deleted.where.not(deleted_at: nil).first
 
     if post_action
       post_action.recover!

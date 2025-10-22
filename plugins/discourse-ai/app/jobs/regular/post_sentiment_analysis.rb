@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::Jobs
+module Jobs
   class PostSentimentAnalysis < ::Jobs::Base
     sidekiq_options queue: "low"
 

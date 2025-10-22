@@ -675,6 +675,8 @@ sv:
         chat:
           title: Chatt
     sidebar:
+      start_new_dm:
+        title: Skapa en personlig chatt
       panels:
         chat:
           label: "Chatt"

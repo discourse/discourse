@@ -29,6 +29,10 @@ module PageObjects
           community_section.has_no_button?('[data-list-item-name="customize"]')
         end
 
+        def click_topics_button
+          page.find("[data-list-item-name='everything']").click
+        end
+
         def click_customize_community_section_button
           community_section.click_button(
             I18n.t("js.sidebar.sections.community.edit_section.sidebar"),
@@ -100,6 +104,22 @@ module PageObjects
 
         def has_my_messages_link_with_unread_count?
           page.has_css?("#{my_messages_link_css} .sidebar-section-link-content-badge")
+        end
+
+        def has_active_link?(name)
+          page.has_css?(".sidebar-section-link[data-link-name='#{name}'].active")
+        end
+
+        def has_no_active_links?
+          page.has_no_css?(".sidebar-section-link.active")
+        end
+
+        def has_exact_url_match_link?(name)
+          page.has_css?(".sidebar-section-link[data-link-name='#{name}'].exact-url-match")
+        end
+
+        def has_no_exact_url_match_link?(name)
+          page.has_no_css?(".sidebar-section-link[data-link-name='#{name}'].exact-url-match")
         end
       end
     end

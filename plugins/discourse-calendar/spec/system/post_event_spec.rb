@@ -2,7 +2,7 @@
 
 describe "Post event", type: :system do
   fab!(:admin)
-  fab!(:user) { Fabricate(:admin) }
+  fab!(:user, :admin)
   fab!(:group)
 
   let(:composer) { PageObjects::Components::Composer.new }
@@ -176,17 +176,10 @@ describe "Post event", type: :system do
     expect(page).to have_css(".event-info .name", text: "<script>alert(1);</script>")
   end
 
-  xit "can create, close, and open an event" do
-    # failing on:
-    #   Playwright::Error:
-    # Element is not attached to the DOM
-    #   Call log:
-    #     - attempting click action
-    #     -     - waiting for element to be visible, enabled and stable
-    #     -     - element is visible, enabled and stable
+  it "can create, close, and open an event" do
     visit "/new-topic"
     title = "My upcoming l33t event"
-    tomorrow = (Time.zone.now + 1.day).strftime("%Y-%m-%d")
+    tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
     composer.fill_title(title)
     composer.fill_content <<~MD
       [event start="#{tomorrow} 13:37" status="public"]
@@ -204,12 +197,10 @@ describe "Post event", type: :system do
     find(".d-modal .add-invitee").click
 
     topic_page = PageObjects::Pages::Topic.new
-    try_until_success do
-      topic = Topic.find(topic_page.current_topic_id)
-      event = topic.posts.first.event
 
-      expect(event.invitees.count).to eq(2)
-    end
+    topic = Topic.find(topic_page.current_topic_id)
+    event = topic.posts.first.event
+    expect(event.invitees.count).to eq(2)
   end
 
   it "does not show participants button when event is standalone" do
@@ -262,8 +253,9 @@ describe "Post event", type: :system do
     find(".toolbar-menu__options-trigger").click
     find("button[title='#{I18n.t("js.discourse_post_event.builder_modal.attach")}']").click
     find(".d-modal input[name=status][value=private]").click
-    find(".d-modal input.group-selector").send_keys(group.name)
-    find(".autocomplete.ac-group").click
+    find(".group-selector").click
+    find(".d-multi-select__search-input").send_keys(group.name)
+    find(".d-multi-select__result", text: group.name).click
     find(".d-modal .custom-field-input").fill_in(with: "custom value")
     dropdown = PageObjects::Components::SelectKit.new(".available-recurrences")
     dropdown.expand
@@ -277,7 +269,7 @@ describe "Post event", type: :system do
     post_event_page.edit
 
     expect(find(".d-modal input[name=status][value=private]").checked?).to eq(true)
-    expect(find(".d-modal")).to have_text(group.name)
+    expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
     expect(find(".d-modal .custom-field-input").value).to eq("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"
@@ -293,8 +285,8 @@ describe "Post event", type: :system do
       )
     end
 
-    fab!(:invitable_user_1) { Fabricate(:user) }
-    fab!(:invitable_user_2) { Fabricate(:user) }
+    fab!(:invitable_user_1, :user)
+    fab!(:invitable_user_2, :user)
 
     it "can invite users to an event" do
       visit(post.topic.url)

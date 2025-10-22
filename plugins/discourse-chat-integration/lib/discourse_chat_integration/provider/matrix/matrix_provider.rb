@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module MatrixProvider
-      PROVIDER_NAME = "matrix".freeze
+      PROVIDER_NAME = "matrix"
       PROVIDER_ENABLED_SETTING = :chat_integration_matrix_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+' },
         { key: "room_id", regex: '^\!\S+$', unique: true, hidden: true },
@@ -35,7 +35,7 @@ module DiscourseChatIntegration
       end
 
       def self.generate_matrix_message(post)
-        display_name = ::DiscourseChatIntegration::Helper.formatted_display_name(post.user)
+        display_name = DiscourseChatIntegration::Helper.formatted_display_name(post.user)
 
         message = {
           msgtype: SiteSetting.chat_integration_matrix_use_notice ? "m.notice" : "m.text",
@@ -81,11 +81,11 @@ module DiscourseChatIntegration
               error_key = "chat_integration.provider.matrix.errors.unknown_room"
             end
           ensure
-            raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                  error_key: error_key,
-                                                                  message: message,
-                                                                  response_body: response.body,
-                                                                }
+            raise DiscourseChatIntegration::ProviderError.new info: {
+                                                                error_key: error_key,
+                                                                message: message,
+                                                                response_body: response.body,
+                                                              }
           end
         end
       end

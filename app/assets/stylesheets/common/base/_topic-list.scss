@@ -19,14 +19,10 @@
   flex-wrap: wrap;
   align-items: stretch;
   margin-bottom: var(--nav-space);
-  gap: var(--nav-space) 0; // used if the buttons wrap
+  gap: var(--nav-space) 0.5em;
 
   > * {
     white-space: nowrap;
-
-    &:not(:last-child) {
-      margin-right: var(--space-2);
-    }
   }
 
   .select-kit-header {
@@ -140,6 +136,13 @@
     margin-bottom: var(--space-2);
     font-size: var(--font-down-2);
     word-break: break-word;
+
+    // special exception case because this class gets applied where it shouldn't, example in excerpts in bookmark pages
+    .only-emoji {
+      width: 1em;
+      height: 1em;
+      margin-block: 0;
+    }
   }
 }
 

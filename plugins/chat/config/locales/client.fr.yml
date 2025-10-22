@@ -736,6 +736,8 @@ fr:
         chat:
           title: Discussion
     sidebar:
+      start_new_dm:
+        title: Créer une conversation personnelle
       panels:
         chat:
           label: "Discussion"

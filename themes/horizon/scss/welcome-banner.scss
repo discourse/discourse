@@ -75,29 +75,18 @@
         margin-inline: unset;
       }
     }
-
-    p:not(.welcome-banner__subheader) {
-      display: none;
-    }
   }
 
   .search-menu .search-input,
   .search-menu-container .search-input {
-    background: var(--d-content-background);
-    border: 1px solid var(--search-color);
-    box-shadow: 0 4px 10px rgb(52, 6, 121, 15%);
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--d-border-radius);
   }
 
   .search-menu .search-input:focus-within,
   .search-menu-container .search-input:focus-within {
     border: 1px solid var(--search-color);
     outline: 2px solid var(--search-color);
-  }
-
-  .search-menu .d-icon,
-  .search-menu .searching .d-icon,
-  .search-menu .searching .show-advanced-search .d-icon {
-    color: var(--search-color);
   }
 
   .panel-body {

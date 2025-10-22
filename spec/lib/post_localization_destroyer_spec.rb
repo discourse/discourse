@@ -26,4 +26,15 @@ describe PostLocalizationDestroyer do
       described_class.destroy(post_id: post.id, locale: "nope", acting_user: user)
     }.to raise_error(Discourse::NotFound)
   end
+
+  it "publishes MessageBus notification" do
+    messages =
+      MessageBus.track_publish("/topic/#{post.topic_id}") do
+        described_class.destroy(post_id: post.id, locale: locale, acting_user: user)
+      end
+
+    expect(messages.length).to eq(1)
+    expect(messages.first.data[:type]).to eq(:revised)
+    expect(messages.first.data[:id]).to eq(post.id)
+  end
 end

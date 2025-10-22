@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "Bağlam penceresi"
   discourse_automation:
     ai:
       flag_types:
@@ -24,8 +28,8 @@ tr_TR:
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
         flagged_post: |
           <div>Modelden gelen yanıt:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b><a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> kuralı ile tetiklenir.</b>
+          <p>%{llm_response}</p>
+          <b><a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> kuralı ile tetiklenir.</b>
       llm_report:
         title: YZ kullanarak periyodik raporla
         description: "Geniş bir dil modeline dayalı periyodik raporla"
@@ -68,7 +72,6 @@ tr_TR:
     composer_ai_helper_allowed_groups: "Bu gruplardaki kullanıcılar, bestecide YZ yardımcı düğmesini görür."
     ai_helper_allowed_in_pm: "Kişisel mesajlarda bestecinin YZ yardımcıyı etkinleştirin."
     ai_helper_model: "YZ yardımcı için kullanılacak model."
-    ai_helper_custom_prompts_allowed_groups: "Bu gruplardaki kullanıcılar YZ yardımcıda özel istem seçeneğini görürler."
     ai_helper_automatic_chat_thread_title_delay: "YZ yardımcının sohbet dizisi başlığını otomatik olarak ayarlamasından önceki dakika cinsinden gecikme."
     ai_helper_automatic_chat_thread_title: "Sohbet konu başlıklarını konu içeriklerine göre otomatik olarak ayarlayın."
     ai_helper_illustrate_post_model: "Besteci YZ yardımcının gönderiyi çizme özelliği için kullanılacak model"
@@ -112,8 +115,6 @@ tr_TR:
     ai_discord_search_mode: "Discord araması için kullanılacak arama modunu seçin"
     ai_discord_search_persona: "Discord araması için kullanılacak kişilik."
     ai_discord_allowed_guilds: "Botun arama yapmasına izin verilen Discord loncaları (sunucular)"
-    ai_bot_enable_dedicated_ux: "Kişisel mesaj yerine tam ekran bot arayüzüne izin verin"
-    ai_translation_enabled: "YZ çeviri özelliğini etkinleştirir"
     ai_translation_model: "Çeviri için kullanılacak model. Bu modelin çeviriyi desteklemesi gerekir. Kişilikler bu ayarı geçersiz kılabilir."
     ai_translation_backfill_limit_to_public_content: "Etkinleştirildiğinde, yalnızca herkese açık kategorilerdeki içerikler çevrilir. Devre dışı bırakıldığında, grup kişisel mesajları ve özel kategorilerdeki içerikler de çeviri için gönderilir."
     ai_translation_backfill_max_age_days: "Çevrilecek gönderi ve konuların maksimum yaşı. Bundan daha eski gönderiler ve konular çevrilmez. 0, geri doldurmayı devre dışı bırakır ancak yeni gönderilerin çevirisini devre dışı bırakmaz."

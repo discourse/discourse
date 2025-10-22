@@ -18,8 +18,7 @@ module SystemHelpers
            ENV["SELENIUM_FORWARD_DEVTOOLS_TO_PORT"].presence
       socat_pid =
         fork do
-          chrome_port = uri.port
-          exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{chrome_port}"
+          exec "socat tcp-listen:#{exposed_port},reuseaddr,fork tcp:localhost:#{CHROME_REMOTE_DEBUGGING_PORT}"
         end
     end
 
@@ -28,7 +27,7 @@ module SystemHelpers
       .each do |result|
         devtools_url = result["devtoolsFrontendUrl"]
 
-        devtools_url = devtools_url.gsub(":#{uri.port}", ":#{exposed_port}") if exposed_port
+        devtools_url.gsub!(":#{CHROME_REMOTE_DEBUGGING_PORT}", ":#{exposed_port}") if exposed_port
 
         if ENV["CODESPACE_NAME"]
           devtools_url =
@@ -45,7 +44,7 @@ module SystemHelpers
       end
 
     result = ask("\n\e[33m#{msg}\e[0m")
-    binding.pry if result == "d" # rubocop:disable Lint/Debugger
+    debugger if result == "d" # rubocop:disable Lint/Debugger
     puts "\e[33mResuming...\e[0m"
     Process.kill("TERM", socat_pid) if socat_pid
     self
@@ -75,7 +74,7 @@ module SystemHelpers
       ).join("|")
   end
 
-  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01)
+  def try_until_success(timeout: Capybara.default_max_wait_time, frequency: 0.01, reason: nil)
     start ||= Time.zone.now
     backoff ||= frequency
     yield
@@ -338,23 +337,48 @@ module SystemHelpers
     page.evaluate_script(script, element, key)
   end
 
+  def expect_no_alert
+    opened_dialog = false
+
+    page.driver.with_playwright_page do |pw_page|
+      pw_page.on("dialog", ->(dialog) { opened_dialog = true })
+
+      yield
+
+      expect(opened_dialog).to eq(false)
+    end
+  end
+
   def get_rgb_color(element, property = "backgroundColor")
-    element.native.evaluate(<<~JS)
-      (el) => {
-        const color = window.getComputedStyle(el).#{property};
-        const tempDiv = document.createElement('div');
-        tempDiv.style.#{property} = color;
-        document.body.appendChild(tempDiv);
-        const rgbColor = window.getComputedStyle(tempDiv).#{property};
-        document.body.removeChild(tempDiv);
-        return rgbColor;
-      }
-    JS
+    css_property = property.underscore.dasherize
+
+    try_until_success do
+      style_hash = element.style(css_property)
+      color = style_hash[css_property]
+      raise Capybara::ExpectationNotMet if color.blank?
+      color
+    end
   end
 
   # should be used only on very rare occasion when you need to wait for something
   # that is not visually changing on the page
   def wait_for_timeout(ms = 100)
     page.driver.with_playwright_page { |pw_page| pw_page.wait_for_timeout(ms) }
+  end
+
+  def wait_until_hidden(element)
+    element.with_playwright_element_handle do |playwright_element|
+      playwright_element.wait_for_element_state("hidden")
+    rescue Playwright::Error => e
+      raise e unless e.message.match?(/Element is not attached to the DOM/)
+    end
+  end
+
+  def locator(selector, locator = nil)
+    if locator
+      locator.locator(selector)
+    else
+      page.driver.with_playwright_page { |pw_page| pw_page.locator(selector) }
+    end
   end
 end

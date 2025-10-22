@@ -5,6 +5,19 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_zendesk: "Discourse Zendesk"
   js:
+    topic:
+      create_zendesk_issue: "Zendesk-jegy létrehozása"
+      view_zendesk_issue: "Megtekintés a Zendesken"
     zendesk:
+      credentials_not_setup: Nem állította be a Zendesk hitelesítő adatait.
+      url_not_set: A Zendesk URL-címed jelenleg nincs beállítva.
       general_error: Valami rosszul sült el.
+  site_settings:
+    zendesk_url: A Zendesk URL-címed. Pl. https://AZ_ALDOMENED.zendesk.com/api/v2
+    zendesk_enabled: Zendesk bővítmény engedélyezése

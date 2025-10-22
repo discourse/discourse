@@ -7,24 +7,59 @@
 hu:
   js:
     discourse_policy:
+      title: "Szabályzat"
+      accepted_tooltip: "Azok a felhasználók, akik elfogadták ezt a szabályzatot"
+      not_accepted_tooltip: "Azok a felhasználók, akik nem fogadták el ezt a szabályzatot"
+      accept_policy: "Elfogadom a szabályzatot"
+      revoke_policy: "Szabályzat elutasítása"
+      edit_reason: "A házirend-beállítások módosultak"
+      no_possible_users: "Ennek a szabályzatnak nincsenek lehetséges felhasználói"
+      accept_policy_template: "Elfogadom ezt a szabályzatot"
       builder:
+        title: Szabályzat
+        attach: Szabályzat létrehozása
         save: Módosítások mentése
         insert: Beszúrás
+        errors:
+          group: Csoport megadása kötelező
+          version: Verzió megadása kötelező
         groups:
           label: Csoportok
+          description: Az ehhez a szabályzathoz kapcsolódó csoportok
         version:
           label: Verzió
+          description: A szabályzat verziója, a verzió felemelése arra kényszeríti az embereket, hogy újra elfogadják azt.
+        renew:
+          label: Megújítás
+          description: Újítsa meg a szabályzatot x naponta
+        renew-start:
+          label: Megújítás indítása
+          description: Mikor kell megújítani a szabályzatot
+        reminder:
+          label: Emlékeztető
+          description: Milyen gyakran kell emlékeztetőt küldeni a szabályzat elfogadásáról
+          no_reminder: (Nincs emlékeztető)
         accept:
           label: Elfogadás
+          description: Az elfogadás gombon használt szöveg
         revoke:
           label: Visszavonás
+          description: A visszavonás gombon használt szöveg
         private:
           label: Privát?
           description: Házirend állapotának privátban tartása a rendszergazdák számára
         send-email:
           label: E-mail küldése?
+          description: Értesítse a felhasználókat az új szabályzatról e-mailben
+        add-users-to-group:
+          label: Felhasználók hozzáadása a csoporthoz
+          description: Felhasználók hozzáadása a következő csoporthoz, ha elfogadják ezt a szabályzatot
       preferences:
+        title: Szabályzatok
         policy_emails:
+          always_description: Csak akkor küldünk Önnek e-mailt, ha feliratkozott az új tevékenységekről szóló e-mailekre is.
+          away_description: Csak akkor küldünk Önnek e-mailt, ha az elmúlt 10 percben nem láttuk Önt, amikor a szabályzat állapota megváltozik, és csak akkor, ha feliratkozott az új tevékenységekről szóló e-mailekre is.
+          label: E-mailben értesülök, ha egy szabályzat felülvizsgálatra szorul
           email_frequency_options:
             never: Soha
             when_away: Csak ha távol van

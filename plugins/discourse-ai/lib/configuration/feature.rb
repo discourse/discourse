@@ -5,7 +5,7 @@ module DiscourseAi
     class Feature
       class << self
         def feature_cache
-          @feature_cache ||= ::DiscourseAi::MultisiteHash.new("feature_cache")
+          @feature_cache ||= DiscourseAi::MultisiteHash.new("feature_cache")
         end
 
         def summarization_features
@@ -30,7 +30,7 @@ module DiscourseAi
           feature_cache[:search] ||= [
             new(
               "discoveries",
-              "ai_bot_discover_persona",
+              "ai_discover_persona",
               DiscourseAi::Configuration::Module::SEARCH_ID,
               DiscourseAi::Configuration::Module::SEARCH,
             ),

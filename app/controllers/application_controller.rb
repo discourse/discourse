@@ -14,6 +14,9 @@ class ApplicationController < ActionController::Base
 
   attr_reader :theme_id
 
+  delegate :server_session, to: :request
+  alias_method :secure_session, :server_session
+
   serialization_scope :guardian
 
   protect_from_forgery
@@ -26,7 +29,7 @@ class ApplicationController < ActionController::Base
     unless is_api? || is_user_api?
       super
       clear_current_user
-      render plain: "[\"BAD CSRF\"]", status: 403
+      render plain: "[\"BAD CSRF\"]", status: :forbidden
     end
   end
 
@@ -252,14 +255,16 @@ class ApplicationController < ActionController::Base
         format.json do
           render_json_error I18n.t("read_only_mode_enabled"), type: :read_only, status: 503
         end
-        format.html { render status: 503, layout: "no_ember", template: "exceptions/read_only" }
+        format.html do
+          render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only"
+        end
       end
     end
   end
 
   rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
     if request.xhr?
-      render json: { second_factor_challenge_nonce: e.nonce }, status: 403
+      render json: { second_factor_challenge_nonce: e.nonce }, status: :forbidden
     else
       redirect_to session_2fa_path(nonce: e.nonce)
     end
@@ -568,10 +573,6 @@ class ApplicationController < ActionController::Base
     request.session_options[:skip] = true
   end
 
-  def secure_session
-    SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
-  end
-
   def handle_permalink(path)
     permalink = Permalink.find_by_url(path)
     if permalink && permalink.target_url
@@ -733,7 +734,7 @@ class ApplicationController < ActionController::Base
     raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
   end
 
-  # Keep in sync with `NO_DESTINATION_COOKIE` in `app/assets/javascripts/discourse/app/lib/utilities.js`
+  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.js`
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
 
   def is_valid_destination_url?(url)
@@ -748,8 +749,8 @@ class ApplicationController < ActionController::Base
     dont_cache_page
 
     if SiteSetting.auth_immediately && SiteSetting.enable_discourse_connect?
-      # save original URL in a session so we can redirect after login
-      session[:destination_url] = destination_url
+      # save original URL in the server session so we can redirect after login
+      server_session[:destination_url] = destination_url
       redirect_to path("/session/sso")
     elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins &&
           Discourse.enabled_authenticators.one? && !cookies[:authentication_data]
@@ -890,6 +891,7 @@ class ApplicationController < ActionController::Base
     @container_class = "wrap not-found-container"
     @page_title = I18n.t("page_not_found.page_title")
     @title = opts[:title] || I18n.t("page_not_found.title")
+    @subtitle = opts[:subtitle] || I18n.t("page_not_found.subtitle")
     @group = opts[:group]
     @hide_search = true if SiteSetting.login_required
 
@@ -945,11 +947,11 @@ class ApplicationController < ActionController::Base
   protected
 
   def honeypot_value
-    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
+    server_session[HONEYPOT_KEY] ||= SecureRandom.hex
   end
 
   def challenge_value
-    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
+    server_session[CHALLENGE_KEY] ||= SecureRandom.hex
   end
 
   def render_post_json(post, add_raw: true)
@@ -984,7 +986,7 @@ class ApplicationController < ActionController::Base
     action = action_class.new(guardian, request, opts: action_data, target_user: target_user)
     manager = SecondFactor::AuthManager.new(guardian, action, target_user: target_user)
     yield(manager) if block_given?
-    result = manager.run!(request, params, secure_session)
+    result = manager.run!(request, params, server_session)
 
     if !result.no_second_factors_enabled? && !result.second_factor_auth_completed? &&
          !result.second_factor_auth_skipped?
@@ -1050,7 +1052,7 @@ class ApplicationController < ActionController::Base
   end
 
   def clean_xml
-    response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
+    response.body = response.body.gsub(XmlCleaner::INVALID_CHARACTERS, "")
   end
 
   def service_params

@@ -47,6 +47,13 @@ ro:
             notify_author_pm_message:
               label: "Mesaj PM"
               description: "Mesaj personalizat opțional pentru a trimite autorului"
+        llm_tagger:
+          fields:
+            confidence_threshold:
+              description: "Procentul minim de încredere (0-100) necesar pentru aplicarea etichetelor sugerate"
+            allow_system_posts:
+              label: "Permite postările de sistem"
+              description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
       default_llm:
         title: "Model LLM implicit"
@@ -74,19 +81,23 @@ ro:
       translations:
         title: "Traduceri"
         description: "Tradu automat tot conținutul de pe forumul tău în limba preferată de utilizator"
+        supported_locales: "Limbi acceptate"
+        supported_locales_description: "Această setare a site-ului permite vizitatorilor să contribuie și la traducerea postărilor."
         admin_actions:
           translation_settings: "Setări traducere"
           localization_settings: "Setări localizare"
-          disabled_state:
-            configure: "Configurează traduceri"
-            empty_label: "Traducerile automate sunt dezactivate, dă clic mai jos pentru a le configura"
+          enable_translations: "Activează traducerile automate"
         stats:
           title: "Statistici traducere"
           complete_language_detection_description: "Toate cele %{total} postări eligibile au limba lor detectată."
           incomplete_language_detection_description: "%{done} din %{total} postări eligibile au găsit limba lor detectată."
-          description_tooltip: "Postările eligibile sunt determinate de setările de traducere AI"
+          backfill_disabled: "Completarea este dezactivată, doar postările noi vor fi traduse."
+          description_tooltip:
+            one: 'Există o postare eligibilă pentru traducere.'
+            few: 'Există %{count} postări eligibile pentru traducere.'
+            other: 'Există %{count} de postări eligibile pentru traducere.'
         progress_chart:
-          title: "Progres traducere %{tooltip}"
+          title: "Progresul traducerii"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} din %{total} postări traduse"
           bar_done:
@@ -167,6 +178,7 @@ ro:
           anthropic-claude-opus-4-1: "Cel mai inteligent model de la Anthropic"
           google-gemini-2-0-flash: "Ușoare, rapide și rentabile cu raționament multi-modal (generația precedentă)"
           google-gemini-2-5-flash: "Ușoare, rapide și rentabile cu raționament multi-modal"
+          google-gemini-2-5-flash-image-preview: "Cel mai recent model de generare a imaginilor cu capacități vizuale"
           open_ai-o3: "Cel mai capabil model de raționament al OpenAI"
           open_ai-gpt-5: "Modelul emblematic al OpenAI. Este foarte potrivit pentru rezolvarea problemelor în diverse domenii."
           open_ai-gpt-5-mini: "Asigură un echilibru între inteligență, viteză și costuri care îl transformă într-un model atractiv pentru multe cazuri de utilizare."
@@ -179,6 +191,7 @@ ro:
         tests:
           title: "Rulează test"
           success: "Succes!"
+          invalid_config: "Remediază mai întâi următoarele erori în configurație:"
         providers:
           google: "Google"
           fake: "Personalizat"

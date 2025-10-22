@@ -13,13 +13,14 @@ export default class CategoryCalendar extends Component {
   @service currentUser;
   @service router;
   @service siteSettings;
-  @service store;
   @service discoursePostEventApi;
 
   @bind
-  async loadEvents() {
+  async loadEvents(info) {
     try {
       const params = {
+        after: info.startStr,
+        before: info.endStr,
         post_id: this.categorySetting?.postId,
         category_id: this.category.id,
         include_subcategories: true,
@@ -37,6 +38,10 @@ export default class CategoryCalendar extends Component {
   }
 
   get shouldRender() {
+    if (!this.siteSettings.discourse_post_event_enabled) {
+      return false;
+    }
+
     if (this.siteSettings.login_required && !this.currentUser) {
       return false;
     }
@@ -99,7 +104,9 @@ export default class CategoryCalendar extends Component {
         return data;
       });
 
-    return settings.findBy("categoryId", this.category.id.toString());
+    return settings.find(
+      (item) => item.categoryId === this.category.id.toString()
+    );
   }
 
   @action
@@ -120,28 +127,21 @@ export default class CategoryCalendar extends Component {
       if (!backgroundColor) {
         const categoryColorFromMap = this.tagsColorsMap.find(
           (entry) =>
-            entry.type === "category" && entry.slug === post.topic.category_slug
+            entry.type === "category" && entry.slug === post.category_slug
         )?.color;
         backgroundColor =
           categoryColorFromMap || `#${Category.findById(categoryId)?.color}`;
       }
 
-      let classNames;
-      if (moment(endsAt || startsAt).isBefore(moment())) {
-        classNames = "fc-past-event";
-      }
-
       return {
         title: formatEventName(event, this.currentUser?.user_option?.timezone),
         start: startsAt,
-        display: "list-item",
         rrule: event.rrule,
         end: endsAt || startsAt,
         duration: event.duration,
         allDay: !isNotFullDayEvent(moment(startsAt), moment(endsAt)),
         url: getURL(`/t/-/${post.topic.id}/${post.post_number}`),
         backgroundColor,
-        classNames,
       };
     });
   }

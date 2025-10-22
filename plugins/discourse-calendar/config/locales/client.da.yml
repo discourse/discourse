@@ -10,7 +10,6 @@ da:
       site_settings:
         categories:
           discourse_post_event: "Discourse Begivenhed"
-          discourse_calendar: "Discourse Kalender"
   js:
     discourse_automation:
       triggerables:

@@ -4,6 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { compare } from "@ember/utils";
 import { eq } from "truth-helpers";
 import { i18n } from "discourse-i18n";
 import roundTime from "../../lib/round-time";
@@ -22,36 +23,43 @@ export default class GroupTimezones extends Component {
   get groupedTimezones() {
     let groupedTimezones = [];
 
-    this.args.members.filterBy("timezone").forEach((member) => {
-      if (this.#shouldAddMemberToGroup(this.filter, member)) {
-        const timezone = member.timezone;
-        const identifier = parseInt(moment.tz(timezone).format("YYYYMDHm"), 10);
-        let groupedTimezone = groupedTimezones.findBy("identifier", identifier);
+    this.args.members
+      .filter((member) => member.timezone)
+      .forEach((member) => {
+        if (this.#shouldAddMemberToGroup(this.filter, member)) {
+          const timezone = member.timezone;
+          const identifier = parseInt(
+            moment.tz(timezone).format("YYYYMDHm"),
+            10
+          );
+          let groupedTimezone = groupedTimezones.find(
+            (item) => item.identifier === identifier
+          );
 
-        if (groupedTimezone) {
-          groupedTimezone.members.push(member);
-        } else {
-          const now = this.#roundMoment(moment.tz(timezone));
-          const workingDays = this.#workingDays();
-          const offset = moment.tz(moment.utc(), timezone).utcOffset();
+          if (groupedTimezone) {
+            groupedTimezone.members.push(member);
+          } else {
+            const now = this.#roundMoment(moment.tz(timezone));
+            const workingDays = this.#workingDays();
+            const offset = moment.tz(moment.utc(), timezone).utcOffset();
 
-          groupedTimezone = {
-            identifier,
-            offset,
-            type: "discourse-group-timezone",
-            nowWithOffset: now.add(this.localTimeOffset, "minutes"),
-            closeToWorkingHours: this.#closeToWorkingHours(now, workingDays),
-            inWorkingHours: this.#inWorkingHours(now, workingDays),
-            utcOffset: this.#utcOffset(offset),
-            members: [member],
-          };
-          groupedTimezones.push(groupedTimezone);
+            groupedTimezone = {
+              identifier,
+              offset,
+              type: "discourse-group-timezone",
+              nowWithOffset: now.add(this.localTimeOffset, "minutes"),
+              closeToWorkingHours: this.#closeToWorkingHours(now, workingDays),
+              inWorkingHours: this.#inWorkingHours(now, workingDays),
+              utcOffset: this.#utcOffset(offset),
+              members: [member],
+            };
+            groupedTimezones.push(groupedTimezone);
+          }
         }
-      }
-    });
+      });
 
     groupedTimezones = groupedTimezones
-      .sortBy("offset")
+      .sort((a, b) => compare(a?.offset, b?.offset))
       .filter((g) => g.members.length);
 
     let newDayIndex;

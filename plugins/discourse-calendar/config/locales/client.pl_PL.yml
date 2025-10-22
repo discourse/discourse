@@ -7,11 +7,11 @@
 pl_PL:
   admin_js:
     admin:
-      calendar: "Kalendarz"
+      calendar: "Kalendarz i wydarzenia"
       site_settings:
         categories:
           discourse_post_event: "Wydarzenie Discourse"
-          discourse_calendar: "Kalendarz Discourse"
+          discourse_calendar: "Kalendarz i wydarzenia"
   js:
     notifications:
       titles:
@@ -36,6 +36,7 @@ pl_PL:
         header_title: "Święta"
         pick_region_description: "Wybierz region, aby zobaczyć święta dla tego regionu."
         disabled_holidays_description: "Wyłączone wakacje zostaną wyłączone z kalendarza wakacyjnego personelu."
+        header_description: "Wybierz region, aby zobaczyć święta dla niego obowiązujące. Święta wyłączone zostaną pominięte w kalendarzu świąt personelu."
       date: "Data"
       add_to_calendar: "Dodaj do Kalendarza Google"
       toggle_timezone_offset_title: "Przełącz przesunięcie strefy czasowej"
@@ -44,6 +45,7 @@ pl_PL:
         title: "Region"
         none: "Brak"
         use_current_region: "Użyj bieżącego regionu"
+        select_region: "Wybierz region..."
         names:
           ae: "Emiraty Arabskie"
           ar: "Argentyna"

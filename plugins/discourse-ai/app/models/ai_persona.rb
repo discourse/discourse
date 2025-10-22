@@ -37,11 +37,11 @@ class AiPersona < ActiveRecord::Base
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references
 
-  before_destroy :ensure_not_system
   before_update :regenerate_rag_fragments
+  before_destroy :ensure_not_system
 
   def self.persona_cache
-    @persona_cache ||= ::DiscourseAi::MultisiteHash.new("persona_cache")
+    @persona_cache ||= DiscourseAi::MultisiteHash.new("persona_cache")
   end
 
   scope :ordered, -> { order("priority DESC, lower(name) ASC") }

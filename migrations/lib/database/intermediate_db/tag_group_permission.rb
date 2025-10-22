@@ -19,6 +19,14 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `tag_group_permissions` record in the IntermediateDB.
+    #
+    # @param group_id          [Integer, String]
+    # @param permission_type   [Integer, nil]
+    # @param tag_group_id      [Integer, String]
+    # @param created_at        [Time, nil]
+    #
+    # @return [void]
     def self.create(group_id:, permission_type:, tag_group_id:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

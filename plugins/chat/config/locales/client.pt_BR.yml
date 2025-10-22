@@ -736,6 +736,8 @@ pt_BR:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        title: Criar um chat pessoal
       panels:
         chat:
           label: "Chat"

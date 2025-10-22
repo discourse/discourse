@@ -39,9 +39,10 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     preferred_origin = request.env["omniauth.origin"]
 
-    if session[:destination_url].present?
-      preferred_origin = session[:destination_url]
-      session.delete(:destination_url)
+    session.delete(:destination_url) # Clean up old values. TODO: Remove after March 2026
+    if server_session[:destination_url].present?
+      preferred_origin = server_session[:destination_url]
+      server_session.delete(:destination_url)
     elsif SiteSetting.enable_discourse_connect_provider && payload = cookies.delete(:sso_payload)
       preferred_origin = session_sso_provider_url + "?" + payload
     elsif cookies[:destination_url].present?
@@ -103,7 +104,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
-  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].to_h { [_1, _1] }
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat].index_by { _1 }
 
   def failure
     error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence
@@ -148,7 +149,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     elsif invite_required?
       @auth_result.requires_invite = true
     else
-      session[:authentication] = @auth_result.session_data
+      server_session[:authentication] = @auth_result.session_data
     end
   end
 
@@ -206,7 +207,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
       log_on_user(user, { authenticated_with_oauth: true })
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
-      session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere
+      server_session.delete(:authentication) # don't carry around old auth info
       @auth_result.authenticated = true
     else
       if SiteSetting.must_approve_users? && !user.approved?
@@ -220,7 +221,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def persist_auth_token(auth)
     secret = SecureRandom.hex
     key = Users::AssociateAccountsController.key(secret)
-    secure_session.set key, auth.to_json, expires: 10.minutes
+    server_session.set(key, auth.to_json, expires: 10.minutes)
     "#{Discourse.base_path}/associate/#{secret}"
   end
 end

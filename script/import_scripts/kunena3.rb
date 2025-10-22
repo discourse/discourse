@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "mysql2"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 # If you change this script's functionality, please consider making a note here:
 # https://meta.discourse.org/t/importing-from-kunena-3/43776

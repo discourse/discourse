@@ -89,8 +89,7 @@ Either use the root password from the email DigitalOcean sent you when the serve
 
 ### 5. Install Prerequisites for Docker (Debian/Ubuntu based Distro example)
 
-    sudo apt install docker.io
-    sudo apt install git
+`sudo apt install git` and follow the [official instructions](https://docs.docker.com/engine/install/ubuntu/) on installing Docker.
 
 ### 6. Install Discourse
 

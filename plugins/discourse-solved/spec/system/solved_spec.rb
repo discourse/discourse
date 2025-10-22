@@ -2,7 +2,7 @@
 
 describe "Solved", type: :system do
   fab!(:admin)
-  fab!(:solver) { Fabricate(:user) }
+  fab!(:solver, :user)
   fab!(:accepter) { Fabricate(:user, name: "<b>DERP<b>") }
   fab!(:topic) { Fabricate(:post, user: admin).topic }
   fab!(:solver_post) { Fabricate(:post, topic:, user: solver, cooked: "The answer is 42") }

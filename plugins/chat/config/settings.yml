@@ -17,6 +17,10 @@ chat:
     client: true
     default: false
     hidden: true
+  chat_search_enabled:
+    client: true
+    default: false
+    hidden: true
   needs_chat_seeded:
     default: true
     hidden: true

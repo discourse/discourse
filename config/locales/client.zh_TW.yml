@@ -1622,7 +1622,7 @@ zh_TW:
         invalid: "此使用者名稱無效，只能使用數字與英文字母。"
       add_email:
         title: "新增電子郵件"
-        add: "添加"
+        add: "加入"
       change_email:
         title: "修改電子郵件地址"
         taken: "抱歉，此電子郵件地址無效。"
@@ -2380,6 +2380,7 @@ zh_TW:
         other: "+%{count} 個子類別"
       topic_count:
         other: "%{count}個話題在此分類"
+      read_only: "唯讀"
     select_kit:
       delete_item: "刪除 %{name} 個"
       filter_by: "篩選條件 %{name}"
@@ -3012,8 +3013,6 @@ zh_TW:
       filter_to:
         other: "本話題中的 %{count} 帖"
       create: "新話題"
-      create_disabled_category: "您不允許在此類別中創建主題"
-      create_disabled_tag: "您無權創建帶有此標記的話題"
       create_long: "開啟新話題"
       open_draft: "開啟草稿"
       private_message: "發送訊息"
@@ -3427,6 +3426,9 @@ zh_TW:
       title: " 最近貼文"
       empty: "沒有貼文"
       aria_post_number: "%{title} - 貼文 #%{postNumber}"
+      bulk:
+        clear_all: "清除全部"
+        actions: "批次操作"
     post:
       confirm_delete: "確定要刪除此貼文嗎？"
       quote_reply: "引用"
@@ -3514,10 +3516,7 @@ zh_TW:
         attachment_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳附件。"
         attachment_download_requires_login: "抱歉，您必須登入以下載附件。"
       cancel_composer:
-        confirm: "您想對您的貼文做什麼？"
         discard: "捨棄"
-        save_draft: "儲存草稿以備稍後使用"
-        keep_editing: "繼續編輯"
       via_email: "本貼文透過電子郵件送達"
       via_auto_generated_email: "通過自動生成郵件發表的貼文"
       whisper: "這貼文是版主私人密談"
@@ -3727,6 +3726,8 @@ zh_TW:
       background_image: "分類背景圖片"
       background_image_dark: "深色類別背景圖片"
       background_color: "顏色"
+      color_validations:
+        cant_be_empty: "不能空白"
       styles:
         icon: "圖示"
         emoji: "Emoji"
@@ -4244,7 +4245,6 @@ zh_TW:
         other: "至少選擇 %{count} 個標記…"
       choose_for_topic_required_group:
         other: "從 '%{name}' 中選擇 %{count} 個標記…"
-      info: "資訊"
       default_info: "此標記不限於任何類別，並且沒有同義詞。"
       staff_info: "要新增限制，請將此標記放入<a href=%{basePath}/tag_groups>標記組</a>。"
       category_restricted: "此標記僅限於您無權訪問的類別。"
@@ -4736,9 +4736,12 @@ zh_TW:
           title: "本地化"
           header_description: "為您的成員設定社群的介面語言和其他本地化選項"
           keywords: "地區 | 語言 | 時區 | 單一區 | ltr"
-        login_and_authentication:
+        login:
           title: "登入與驗證"
           header_description: "設定使用者登入和驗證方式、密碼和金鑰、OAuth2 提供者等"
+          sub_pages:
+            common_settings:
+              title: "設定"
         logo:
           title: "標誌"
           form:
@@ -5739,7 +5742,6 @@ zh_TW:
         copy_to_clipboard: "複製至剪貼簿"
         copied_to_clipboard: "已複製至剪貼簿"
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"
-        theme_owner: "無法編輯，擁有者為："
         email_templates:
           title: "電子信箱"
           subject: "主旨"
@@ -5747,6 +5749,7 @@ zh_TW:
           body: "內容"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
+          edit: "編輯"
         component:
           all_filter: "全部"
           used_filter: "已使用"
@@ -5944,6 +5947,8 @@ zh_TW:
           updates_available_filter: "有可用更新"
         schema:
           back_button: "返回 %{name}"
+          move_up: "上移"
+          move_down: "下移"
           fields:
             required: "*必要設定"
             groups:

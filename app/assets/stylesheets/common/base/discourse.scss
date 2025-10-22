@@ -182,7 +182,8 @@ blockquote {
 }
 
 code,
-pre {
+pre,
+kbd {
   font-family: var(--d-font-family--monospace);
 }
 
@@ -807,6 +808,11 @@ form {
       padding-right: env(safe-area-inset-right);
       padding-left: env(safe-area-inset-left);
     }
+  }
+
+  .no-ember & {
+    padding-left: max(var(--space-4), var(--main-outlet-padding-x));
+    padding-right: max(var(--space-4), var(--main-outlet-padding-x));
   }
 }
 

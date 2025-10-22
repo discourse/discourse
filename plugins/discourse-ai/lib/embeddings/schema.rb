@@ -15,8 +15,6 @@ module DiscourseAi
       EMBEDDING_TARGETS = %w[topics posts document_fragments]
       EMBEDDING_TABLES = [TOPICS_TABLE, POSTS_TABLE, RAG_DOCS_TABLE]
 
-      DEFAULT_HNSW_EF_SEARCH = 40
-
       MissingEmbeddingError = Class.new(StandardError)
 
       class << self
@@ -137,8 +135,6 @@ module DiscourseAi
       end
 
       def asymmetric_similarity_search(embedding, limit:, offset:)
-        before_query = hnsw_search_workaround(limit)
-
         builder = DB.build(<<~SQL)
           WITH candidates AS (
             SELECT
@@ -179,7 +175,8 @@ module DiscourseAi
         end
 
         ActiveRecord::Base.transaction do
-          DB.exec(before_query) if before_query.present?
+          DB.exec(hnsw_scan_relaxed_order)
+
           builder.query(
             query_embedding: embedding,
             candidates_limit: candidates_limit,
@@ -192,9 +189,11 @@ module DiscourseAi
         raise MissingEmbeddingError
       end
 
-      def symmetric_similarity_search(record)
+      def symmetric_similarity_search(record, age_penalty: 0.0)
         limit = 200
-        before_query = hnsw_search_workaround(limit)
+
+        # For topics table, we can apply age penalty. For other tables, ignore the penalty.
+        use_age_penalty = age_penalty > 0.0 && table == TOPICS_TABLE
 
         builder = DB.build(<<~SQL)
           WITH le_target AS (
@@ -210,10 +209,11 @@ module DiscourseAi
           )
           SELECT #{target_column} FROM (
             SELECT
-              #{target_column}, embeddings
+              #{target_column}, embeddings /*extra_columns*/
             FROM
               #{table}
             /*join*/
+            /*extra_join*/
             /*where*/
             ORDER BY
               binary_quantize(embeddings)::bit(#{dimensions}) <~> (
@@ -225,7 +225,30 @@ module DiscourseAi
               )
             LIMIT #{limit}
           ) AS widenet
-          ORDER BY
+          /*ordering*/
+          LIMIT #{limit / 2};
+        SQL
+
+        builder.where("model_id = :vid AND strategy_id = :vsid")
+
+        if use_age_penalty
+          builder.sql_literal(
+            extra_join: "INNER JOIN topics ON topics.id = #{table}.#{target_column}",
+            extra_columns: ", topics.bumped_at",
+            ordering: <<~SQL,
+              ORDER BY
+              (embeddings::halfvec(#{dimensions}) #{pg_function} (
+                SELECT
+                  embeddings::halfvec(#{dimensions})
+                FROM
+                  le_target
+                LIMIT 1
+              )) / POWER(EXTRACT(EPOCH FROM NOW() - bumped_at) / 86400 / :time_scale + 1, :age_penalty)
+            SQL
+          )
+        else
+          builder.sql_literal(ordering: <<~SQL)
+            ORDER BY
             embeddings::halfvec(#{dimensions}) #{pg_function} (
               SELECT
                 embeddings::halfvec(#{dimensions})
@@ -233,16 +256,21 @@ module DiscourseAi
                 le_target
               LIMIT 1
             )
-          LIMIT #{limit / 2};
-        SQL
-
-        builder.where("model_id = :vid AND strategy_id = :vsid")
+          SQL
+        end
 
         yield(builder) if block_given?
 
+        query_params = { vid: vector_def.id, vsid: vector_def.strategy_id, target_id: record.id }
+        if use_age_penalty
+          query_params[:age_penalty] = age_penalty
+          query_params[:time_scale] = SiteSetting.ai_embeddings_semantic_related_age_time_scale
+        end
+
         ActiveRecord::Base.transaction do
-          DB.exec(before_query) if before_query.present?
-          builder.query(vid: vector_def.id, vsid: vector_def.strategy_id, target_id: record.id)
+          DB.exec(hnsw_scan_relaxed_order)
+
+          builder.query(query_params)
         end
       rescue PG::Error => e
         Rails.logger.error("Error #{e} querying embeddings for model #{vector_def.display_name}")
@@ -275,11 +303,9 @@ module DiscourseAi
 
       private
 
-      def hnsw_search_workaround(limit)
-        threshold = limit * 2
-
-        return "" if threshold < DEFAULT_HNSW_EF_SEARCH
-        "SET LOCAL hnsw.ef_search = #{threshold};"
+      def hnsw_scan_relaxed_order
+        # https://github.com/pgvector/pgvector?tab=readme-ov-file#iterative-index-scans
+        "SET LOCAL hnsw.iterative_scan = relaxed_order;"
       end
 
       delegate :dimensions, :pg_function, to: :vector_def

@@ -105,6 +105,12 @@ months:
   - name: Friedensfest
     regions: [de_by_augsburg]
     mday: 8
+  9:
+  - name: Weltkindertag
+    regions: [de_th]
+    mday: 20
+    year_ranges:
+      from: 2019
   10:
   - name: Tag der Deutschen Einheit
     regions: [de]
@@ -365,3 +371,8 @@ tests:
       regions: ["de_be"]
     expect:
       name: "Tag der Befreiung"
+  - given:
+      date: "2024-09-20"
+      regions: ["de_th"]
+    expect:
+      name: "Weltkindertag"

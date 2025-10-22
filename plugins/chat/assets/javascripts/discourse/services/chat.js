@@ -5,6 +5,7 @@ import { cancel, next } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import discourseLater from "discourse/lib/later";
@@ -12,7 +13,6 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
-import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
 
 const CHAT_ONLINE_OPTIONS = {
   userUnseenTime: 300000, // 5 minutes seconds with no interaction
@@ -23,13 +23,10 @@ export default class Chat extends Service {
   @service chatApi;
   @service appEvents;
   @service currentUser;
-  @service chatNotificationManager;
   @service chatSubscriptionsManager;
   @service chatStateManager;
-  @service chatDraftsManager;
   @service presence;
   @service router;
-  @service site;
   @service chatChannelsManager;
   @service chatTrackingStateManager;
 
@@ -195,17 +192,17 @@ export default class Chat extends Service {
         return;
       }
 
-      if (this.loadingChannels) {
-        return this.loadingChannels;
+      if (!this.loadingChannels) {
+        this.loadingChannels = new Promise((resolve) => {
+          this.chatApi.listCurrentUserChannels().then((result) => {
+            this.setupWithPreloadedChannels(result);
+            this.chatStateManager.hasPreloadedChannels = true;
+            resolve();
+          });
+        });
       }
 
-      this.loadingChannels = new Promise((resolve) => {
-        this.chatApi.listCurrentUserChannels().then((result) => {
-          this.setupWithPreloadedChannels(result);
-          this.chatStateManager.hasPreloadedChannels = true;
-          resolve();
-        });
-      });
+      return this.loadingChannels;
     } catch (e) {
       popupAjaxError(e);
     }
@@ -222,24 +219,6 @@ export default class Chat extends Service {
       ...channelsView.direct_message_channels,
     ].forEach((channelObject) => {
       const storedChannel = this.chatChannelsManager.store(channelObject);
-      const storedDrafts = (this.currentUser?.chat_drafts || []).filter(
-        (draft) => draft.channel_id === storedChannel.id
-      );
-
-      storedDrafts.forEach((storedDraft) => {
-        this.chatDraftsManager.add(
-          ChatMessage.createDraftMessage(
-            storedChannel,
-            Object.assign(
-              { user: this.currentUser },
-              JSON.parse(storedDraft.data)
-            )
-          ),
-          storedDraft.channel_id,
-          storedDraft.thread_id,
-          false
-        );
-      });
 
       if (channelsView.unread_thread_overview?.[storedChannel.id]) {
         storedChannel.threadsManager.unreadThreadOverview =
@@ -394,10 +373,11 @@ export default class Chat extends Service {
   }
 
   upsertDmChannelForUser(channel, user) {
-    const usernames = (channel.chatable.users || [])
-      .mapBy("username")
-      .concat(user.username)
-      .uniq();
+    const usernames = uniqueItemsFromArray(
+      (channel.chatable.users || [])
+        .map((item) => item.username)
+        .concat(user.username)
+    );
 
     return this.upsertDmChannel({ usernames });
   }
@@ -413,8 +393,12 @@ export default class Chat extends Service {
     return ajax("/chat/api/direct-message-channels.json", {
       method: "POST",
       data: {
-        target_usernames: targets.usernames?.uniq(),
-        target_groups: targets.groups?.uniq(),
+        target_usernames: targets.usernames
+          ? uniqueItemsFromArray(targets.usernames)
+          : null,
+        target_groups: targets.groups
+          ? uniqueItemsFromArray(targets.groups)
+          : null,
         upsert: opts.upsert,
         name: opts.name,
       },
@@ -436,7 +420,7 @@ export default class Chat extends Service {
   // participant to fetch the channel for.
   getDmChannelForUsernames(usernames) {
     return ajax("/chat/direct_messages.json", {
-      data: { usernames: usernames.uniq().join(",") },
+      data: { usernames: uniqueItemsFromArray(usernames).join(",") },
     });
   }
 

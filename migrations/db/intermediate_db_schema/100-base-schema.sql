@@ -191,6 +191,92 @@ CREATE TABLE tags
     name        TEXT     NOT NULL
 );
 
+CREATE TABLE topic_allowed_groups
+(
+    group_id NUMERIC NOT NULL,
+    topic_id NUMERIC NOT NULL,
+    PRIMARY KEY (topic_id, group_id)
+);
+
+CREATE TABLE topic_allowed_users
+(
+    topic_id   NUMERIC  NOT NULL,
+    user_id    NUMERIC  NOT NULL,
+    created_at DATETIME,
+    PRIMARY KEY (topic_id, user_id)
+);
+
+CREATE TABLE topic_tags
+(
+    tag_id     NUMERIC  NOT NULL,
+    topic_id   NUMERIC  NOT NULL,
+    created_at DATETIME,
+    PRIMARY KEY (topic_id, tag_id)
+);
+
+CREATE TABLE topic_users
+(
+    topic_id                 NUMERIC  NOT NULL,
+    user_id                  NUMERIC  NOT NULL,
+    cleared_pinned_at        DATETIME,
+    first_visited_at         DATETIME,
+    last_emailed_post_number INTEGER,
+    last_posted_at           DATETIME,
+    last_read_post_number    INTEGER,
+    last_visited_at          DATETIME,
+    notification_level       INTEGER,
+    notifications_changed_at DATETIME,
+    notifications_reason_id  NUMERIC,
+    total_msecs_viewed       INTEGER,
+    PRIMARY KEY (topic_id, user_id)
+);
+
+CREATE TABLE topics
+(
+    original_id          NUMERIC  NOT NULL PRIMARY KEY,
+    archetype            TEXT,
+    archived             BOOLEAN,
+    bannered_until       DATETIME,
+    category_id          NUMERIC,
+    closed               BOOLEAN,
+    created_at           DATETIME,
+    deleted_at           DATETIME,
+    deleted_by_id        NUMERIC,
+    external_id          NUMERIC,
+    featured_link        TEXT,
+    pinned_at            DATETIME,
+    pinned_globally      BOOLEAN,
+    pinned_until         DATETIME,
+    subtype              TEXT,
+    title                TEXT     NOT NULL,
+    user_id              NUMERIC,
+    views                INTEGER,
+    visibility_reason_id NUMERIC,
+    visible              BOOLEAN
+);
+
+CREATE INDEX index_topics_on_archetype ON topics (archetype);
+
+CREATE TABLE user_associated_accounts
+(
+    provider_name TEXT      NOT NULL,
+    user_id       NUMERIC,
+    created_at    DATETIME,
+    info          JSON_TEXT,
+    last_used     DATETIME,
+    provider_uid  TEXT      NOT NULL,
+    PRIMARY KEY (user_id, provider_name)
+);
+
+CREATE TABLE user_custom_fields
+(
+    name       TEXT     NOT NULL,
+    user_id    NUMERIC  NOT NULL,
+    value      TEXT,
+    created_at DATETIME,
+    PRIMARY KEY (user_id, name, value)
+);
+
 CREATE TABLE user_emails
 (
     email      TEXT     NOT NULL,
@@ -208,6 +294,18 @@ CREATE TABLE user_field_options
     PRIMARY KEY (user_field_id, value)
 );
 
+CREATE TABLE user_field_values
+(
+    created_at           DATETIME,
+    field_id             NUMERIC  NOT NULL,
+    is_multiselect_field BOOLEAN,
+    user_id              NUMERIC  NOT NULL,
+    value                TEXT
+);
+
+CREATE UNIQUE INDEX user_field_values_multiselect_index ON user_field_values (user_id, field_id, value) WHERE is_multiselect_field = TRUE;
+CREATE UNIQUE INDEX user_field_values_not_multiselect_index ON user_field_values (user_id, field_id) WHERE is_multiselect_field = FALSE;
+
 CREATE TABLE user_fields
 (
     original_id       NUMERIC  NOT NULL PRIMARY KEY,
@@ -222,6 +320,7 @@ CREATE TABLE user_fields
     requirement       INTEGER,
     searchable        BOOLEAN,
     show_on_profile   BOOLEAN,
+    show_on_signup    BOOLEAN,
     show_on_user_card BOOLEAN
 );
 

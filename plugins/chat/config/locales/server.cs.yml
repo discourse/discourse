@@ -23,7 +23,7 @@ cs:
     chat_archive_destination_topic_status: "Stav, ve kterém se má nacházet cílové téma po dokončení archivace kanálu. To platí pouze v případě, že cílové téma je nové, nikoliv existující."
     direct_message_enabled_groups: "Povolit uživatelům v těchto skupinách vytvářet soukromé chaty mezi uživateli. Poznámka: Redaktoři mohou vždy vytvářet soukromé chaty a uživatelé budou moci odpovídat na soukromé chaty iniciované uživateli, kteří mají oprávnění je vytvářet."
     chat_message_flag_allowed_groups: "Uživatelé v těchto skupinách mohou zprávy chatu nahlásit. Upozorňujeme, že správci a moderátoři mohou zprávy chatu nahásit vždy."
-    max_mentions_per_chat_message: "Maximální počet @name upozornění, která může uživatel použít v chatové zprávě."
+    max_mentions_per_chat_message: "Maximální počet zmínek @name, která může uživatel použít ve zprávě chatu."
     chat_max_direct_message_users: "Uživatelé nemohou při vytváření nové přímé zprávy přidat více než tento počet dalších uživatelů. Nastavením na 0 povolíte zprávy pouze sobě. Redaktoři jsou z tohoto nastavení vyňati."
     chat_allow_archiving_channels: "Umožnit redakci při uzavření kanálu archivovat zprávy do tématu."
     chat_editing_grace_period: "Po (n) sekund po odeslání chatu se po úpravách nezobrazí značka (upraveno) u zprávy chatu."

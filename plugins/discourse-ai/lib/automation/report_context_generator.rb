@@ -53,9 +53,10 @@ module DiscourseAi
         if exclude_tags.present?
           exclude_tag_ids = Tag.where_name(exclude_tags).select(:id)
           @posts =
-            @posts.where(
-              "topics.id NOT IN (?)",
-              TopicTag.where(tag_id: exclude_tag_ids).select(:topic_id),
+            @posts.where.not(
+              topics: {
+                id: TopicTag.where(tag_id: exclude_tag_ids).select(:topic_id),
+              },
             )
         end
 
@@ -65,7 +66,7 @@ module DiscourseAi
           @posts = @posts.where(topic_id: topic_ids_with_tags)
         end
 
-        if defined?(::DiscourseSolved)
+        if defined?(DiscourseSolved)
           @solutions =
             DiscourseSolved::SolvedTopic
               .where(topic_id: @posts.select(:topic_id))

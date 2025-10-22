@@ -26,6 +26,12 @@ describe PostLocalizationCreator do
     )
   end
 
+  it "enqueues ProcessLocalizedCook job" do
+    loc = described_class.create(post_id: post.id, locale:, raw:, user:)
+
+    expect_job_enqueued(job: :process_localized_cooked, args: { post_localization_id: loc.id })
+  end
+
   it "raises not found if the post is missing" do
     expect { described_class.create(post_id: -1, locale:, raw:, user:) }.to raise_error(
       Discourse::NotFound,

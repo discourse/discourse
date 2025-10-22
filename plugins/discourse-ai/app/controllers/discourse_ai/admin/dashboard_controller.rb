@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class DashboardController < ::Admin::StaffController
-      requires_plugin DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       def sentiment
       end

@@ -48,7 +48,7 @@ class Stylesheet::Manager::Builder
           load_paths: load_paths,
           strict_deprecations: %i[desktop mobile admin wizard].include?(@target),
         )
-      rescue SassC::SyntaxError, SassC::NotRenderedError, DiscourseJsProcessor::TranspileError => e
+      rescue SassC::SyntaxError, SassC::NotRenderedError, AssetProcessor::TranspileError => e
         if Stylesheet::Manager::THEME_REGEX.match?(@target.to_s)
           # no special errors for theme, handled in theme editor
           ["/* SCSS compilation error: #{e.message} */", nil]

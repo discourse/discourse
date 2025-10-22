@@ -32,10 +32,10 @@ RSpec.describe Statistics do
       ApplicationRequest.increment!(:page_view_logged_in_browser)
     end
 
-    UserVisit.create!(user_id: users[0].id, visited_at: date - 50.minute)
+    UserVisit.create!(user_id: users[0].id, visited_at: date - 50.minutes)
 
     UserVisit.create!(user_id: users[0].id, visited_at: date - 36.hours)
-    UserVisit.create!(user_id: users[1].id, visited_at: date - 2.day)
+    UserVisit.create!(user_id: users[1].id, visited_at: date - 2.days)
     UserVisit.create!(user_id: users[0].id, visited_at: date - 4.days)
     UserVisit.create!(user_id: users[2].id, visited_at: date - 6.days)
     UserVisit.create!(user_id: users[3].id, visited_at: date - 3.days)

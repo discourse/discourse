@@ -38,13 +38,13 @@ describe DiscourseTemplates::TopicExtension do
     fab!(:user)
 
     context "with normal topics" do
-      fab!(:templates_category) { Fabricate(:category_with_definition) }
+      fab!(:templates_category, :category_with_definition)
       fab!(:template) { Fabricate(:template_item, category: templates_category) }
       fab!(:templates_subcategory) do
         Fabricate(:category_with_definition, parent_category: templates_category)
       end
       fab!(:template_on_sub) { Fabricate(:template_item, category: templates_category) }
-      fab!(:other_category) { Fabricate(:category_with_definition) }
+      fab!(:other_category, :category_with_definition)
       fab!(:other_topic) { Fabricate(:topic, category: other_category) }
 
       before { SiteSetting.discourse_templates_categories = templates_category.id.to_s }
@@ -65,7 +65,7 @@ describe DiscourseTemplates::TopicExtension do
     end
 
     describe "private messages" do
-      fab!(:other_user) { Fabricate(:user) }
+      fab!(:other_user, :user)
 
       fab!(:tag_a) { Fabricate(:tag, name: "tag-a") }
       fab!(:tag_b) { Fabricate(:tag, name: "tag-b") }

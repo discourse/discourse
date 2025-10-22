@@ -17,7 +17,6 @@ end
 require "rubygems"
 require "rbtrace" if RUBY_ENGINE == "ruby"
 require "pry"
-require "pry-byebug"
 require "pry-rails"
 require "pry-stack_explorer"
 require "fabrication"
@@ -120,7 +119,7 @@ Dir[Rails.root.join("spec/system/page_objects/**/*_base.rb")].each { |f| require
 Dir[Rails.root.join("spec/system/page_objects/**/*.rb")].each { |f| require f }
 
 Dir[Rails.root.join("spec/fabricators/*.rb")].each { |f| require f }
-require_relative "./helpers/redis_snapshot_helper"
+require_relative "helpers/redis_snapshot_helper"
 
 # Require plugin helpers at plugin/[plugin]/spec/plugin_helper.rb (includes symlinked plugins).
 if ENV["LOAD_PLUGINS"] == "1"
@@ -131,12 +130,7 @@ if ENV["LOAD_PLUGINS"] == "1"
   Dir[Rails.root.join("plugins/*/spec/system/page_objects/**/*.rb")].each { |f| require f }
 end
 
-# let's not run seed_fu every test
-SeedFu.quiet = true if SeedFu.respond_to? :quiet
-
 SiteSetting.automatically_download_gravatars = false
-
-SeedFu.seed
 
 # we need this env var to ensure that we can impersonate in test
 # this enable integration_helpers sign_in helper
@@ -234,6 +228,9 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  # Default is :fork, but this causes problems if any miniracer context have started
+  config.bisect_runner = :shell
 
   config.fail_fast = ENV["RSPEC_FAIL_FAST"] == "1"
   config.silence_filter_announcements = ENV["RSPEC_SILENCE_FILTER_ANNOUNCEMENTS"] == "1"
@@ -382,6 +379,8 @@ RSpec.configure do |config|
       minio_runner_config.minio_console_port = 9_001 + 2 * test_i
     end
 
+    DiscourseConnectHelpers.provider_port = 9100 + ENV["TEST_ENV_NUMBER"].to_i
+
     WebMock.disable_net_connect!(
       allow_localhost: true,
       allow: [
@@ -435,6 +434,7 @@ RSpec.configure do |config|
 
       def synchronize(seconds = nil, errors: nil)
         return super if session.synchronized # Nested synchronize. We only want our logic on the outermost call.
+
         begin
           super
         rescue StandardError => e
@@ -475,6 +475,96 @@ RSpec.configure do |config|
         end
       end
     end
+
+    module CapybaraPlaywrightBasePatch
+      private
+
+      def execute_async_client_settled_script(session)
+        result = session.evaluate_async_script(<<~JS)
+            const done = arguments[0];
+
+            if (window.clientSettled) {
+              window.clientSettled(#{Capybara.default_max_wait_time * 1000})
+                .then(done)
+                .catch((error) => { done(error.message) });
+            } else {
+              done();
+            }
+          JS
+
+        raise result if result.is_a? String
+      end
+
+      def wait_for_client_settled(method_name)
+        session = @driver.send(:session)
+
+        if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+          now = Time.now.to_f
+          puts "[#{now}] #{method_name}: START"
+          execute_async_client_settled_script(session)
+          puts "[#{Time.now.to_f}] #{method_name}: END IN #{Time.now.to_f - now}"
+        else
+          execute_async_client_settled_script(session)
+        end
+      end
+    end
+
+    module CapybaraPlaywrightNodePatch
+      include CapybaraPlaywrightBasePatch
+
+      NODE_METHODS_TO_PATCH = %i[
+        click
+        right_click
+        double_click
+        send_keys
+        hover
+        drag_to
+        scroll_by
+        scroll_to
+        trigger
+        set
+        select_option
+        unselect_option
+      ]
+
+      NODE_METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_client_settled(method_name)
+          result
+        end
+      end
+    end
+
+    module CapybaraPlaywrightBrowserPatch
+      include CapybaraPlaywrightBasePatch
+
+      METHODS_TO_PATCH = %i[visit go_back go_forward refresh resize_window_to]
+
+      METHODS_TO_PATCH.each do |method_name|
+        define_method(method_name) do |*args, **options|
+          result = super(*args, **options)
+          wait_for_client_settled(method_name)
+          result
+        end
+      end
+    end
+
+    Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
+    Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
+
+    module PlaywrightErrorPatch
+      def message
+        msg = super
+        if msg.include?("Please run the following command to download new browsers:")
+          replacement = "pnpm playwright-install"
+          msg.sub("playwright install".ljust(replacement.size), replacement)
+        else
+          msg
+        end
+      end
+    end
+    Playwright::Error.prepend(PlaywrightErrorPatch)
 
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
@@ -853,7 +943,7 @@ RSpec.configure do |config|
       end
     end
 
-    $playwright_logger.logs.each do |log|
+    $playwright_logger&.logs&.each do |log|
       next if log[:level] != "WARNING"
       deprecation_id = log[:message][/\[deprecation id: ([^\]]+)\]/, 1]
       next if deprecation_id.nil?
@@ -889,12 +979,14 @@ RSpec.configure do |config|
 
   class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
     def log_on_user(user, session, cookies, opts = {})
-      session[:current_user_id] = user.id
+      # Try using the main session as `session` sometimes is a server session
+      (cookies.try(:request).try(:session) || session)[:current_user_id] = user.id
       super
     end
 
     def log_off_user(session, cookies)
-      session[:current_user_id] = nil
+      # Try using the main session as `session` sometimes is a server session
+      (cookies.try(:request).try(:session) || session).delete(:current_user_id)
       super
     end
   end
@@ -924,11 +1016,17 @@ def before_next_spec(&callback)
 end
 
 def global_setting(name, value)
+  SiteSetting.hidden_settings_provider.remove_hidden(name)
+  SiteSetting.shadowed_settings.delete(name)
   GlobalSetting.reset_s3_cache!
 
   GlobalSetting.stubs(name).returns(value)
 
-  before_next_spec { GlobalSetting.reset_s3_cache! }
+  before_next_spec do
+    SiteSetting.hidden_settings_provider.remove_hidden(name)
+    SiteSetting.shadowed_settings.delete(name)
+    GlobalSetting.reset_s3_cache!
+  end
 end
 
 def set_cdn_url(cdn_url)
@@ -1109,7 +1207,7 @@ def swap_2_different_characters(str)
 end
 
 def create_request_env(path: nil)
-  env = Rails.application.env_config.dup
+  env = Rails.application.env_config.dup.merge("rack.session" => ActionController::TestSession.new)
   env.merge!(Rack::MockRequest.env_for(path)) if path
   env
 end

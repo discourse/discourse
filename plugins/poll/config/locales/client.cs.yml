@@ -13,7 +13,7 @@ cs:
   js:
     poll:
       dynamic:
-        enabled_hint: "Toto hlasování je dynamické. Možnosti lze upravit po odeslání."
+        enabled_hint: "Možnosti lze přidat nebo odebrat."
       voters:
         one: "hlasující"
         few: "hlasující"
@@ -167,7 +167,7 @@ cs:
         poll_public:
           label: Zobrazit kdo hlasoval
         poll_dynamic:
-          label: Povolit možnosti úprav po odeslání hlasu (dynamické hlasování)
+          label: Povolit přidání nebo odebrání možností po odeslání
         poll_title:
           label: Název (nepovinný)
         poll_options:

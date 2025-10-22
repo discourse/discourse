@@ -46,7 +46,7 @@ ru:
       cannot_edit_default_poll_with_votes: "Вы не можете редактировать опрос после прошедших %{minutes} минут."
       cannot_edit_named_poll_with_votes: "Вы не можете изменить имя опроса <strong>${name}</strong> после прошедших %{minutes} минут."
     dynamic_poll:
-      enabled_hint: "Этот опрос динамический. Варианты можно редактировать после публикации."
+      enabled_hint: "Опции могут быть добавлены или удалены."
     no_poll_with_this_name: "В данном сообщении нет опроса под названием <strong>%{name}</strong>."
     post_is_deleted: "Невозможно совершить действие над удаленным сообщением."
     user_cant_post_in_topic: "Вы не можете голосовать, поскольку вы не можете создавать сообщения в этой теме."

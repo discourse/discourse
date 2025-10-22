@@ -55,12 +55,20 @@ module PageObjects
         has_css?(".sidebar-categories-form__category-row[data-category-id='#{category.id}']")
       end
 
-      def has_no_show_more_button?
-        has_no_css?(".sidebar-categories-form__show-more-btn")
+      def has_no_category_row?(category)
+        has_no_css?(".sidebar-categories-form__category-row[data-category-id='#{category.id}']")
       end
 
-      def has_show_more_button?
-        has_css?(".sidebar-categories-form__show-more-btn")
+      def has_no_show_more_button?(category)
+        has_no_css?(
+          ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
+        )
+      end
+
+      def has_show_more_button?(category)
+        has_css?(
+          ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
+        )
       end
 
       def scroll_to_category(category)
@@ -68,8 +76,10 @@ module PageObjects
         self
       end
 
-      def click_show_more_button
-        find(".sidebar-categories-form__show-more-btn").click
+      def click_show_more_button(category)
+        find(
+          ".sidebar-categories-form__category-row[data-test-category-id='#{category.id}'] .sidebar-categories-form__show-more-btn",
+        ).click
         self
       end
     end

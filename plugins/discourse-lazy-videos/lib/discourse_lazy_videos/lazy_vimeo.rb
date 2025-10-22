@@ -11,7 +11,7 @@ class Onebox::Engine::VimeoOnebox
       full_video_id = oembed_data[:uri].sub("/videos/", "").sub(":", "/")
 
       # This is used to discern public and private video
-      # Unlisted videos have an adidtional alphanumeric ID in their URI.
+      # Unlisted videos have an additional alphanumeric ID in their URI.
       if !oembed_data[:uri].match?(%r{videos/\d+:.+})
         iframe_id = full_video_id
       else

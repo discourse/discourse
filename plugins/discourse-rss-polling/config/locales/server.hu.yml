@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    rss_polling_enabled: "[RSS Polling] Beágyazott bejegyzések importálásának engedélyezése több RSS-hírcsatornából"
+    rss_polling_frequency: "[RSS Polling] Hírcsatorna-szavazás gyakorisága percben"
+    rss_polling_use_pubdate: "[RSS Polling] A téma létrehozási dátumát az RSS-hírcsatornában található pubDate-ra kell állítani."
+    rss_polling_update_tags: "[RSS Polling] Témacímkék frissítése témafrissítéskor. Ennek letiltása esetén a kezdeti címkék lekérésre kerülnek, de a további címkemódosítások letiltásra kerülnek."

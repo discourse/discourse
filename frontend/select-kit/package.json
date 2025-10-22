@@ -1,0 +1,59 @@
+{
+  "name": "select-kit",
+  "version": "1.0.0",
+  "description": "Discourse's select widget",
+  "author": "Discourse",
+  "license": "GPL-2.0-only",
+  "keywords": [
+    "ember-addon"
+  ],
+  "scripts": {
+    "build": "ember build",
+    "lint:hbs": "ember-template-lint .",
+    "lint:js": "eslint .",
+    "start": "ember serve"
+  },
+  "dependencies": {
+    "@babel/core": "^7.28.4",
+    "@ember-decorators/component": "*",
+    "@ember/string": "^4.0.1",
+    "@popperjs/core": "^2.11.8",
+    "discourse-i18n": "workspace:1.0.0",
+    "ember-auto-import": "^2.11.1",
+    "ember-cached-decorator-polyfill": "^1.0.2",
+    "ember-cli-babel": "^8.2.0",
+    "ember-cli-htmlbars": "^6.3.0",
+    "ember-decorators": "^6.1.1",
+    "ember-template-imports": "^4.3.0",
+    "truth-helpers": "workspace:*"
+  },
+  "devDependencies": {
+    "@ember/optional-features": "^2.2.0",
+    "@embroider/test-setup": "^4.0.0",
+    "@glimmer/component": "^2.0.0",
+    "@types/jquery": "^3.5.33",
+    "@types/qunit": "^2.19.13",
+    "@types/rsvp": "^4.0.9",
+    "broccoli-asset-rev": "^3.0.0",
+    "ember-cli": "~6.8.0",
+    "ember-cli-inject-live-reload": "^2.1.0",
+    "ember-cli-sri": "^2.1.1",
+    "ember-cli-terser": "^4.0.2",
+    "ember-disable-prototype-extensions": "^1.1.3",
+    "ember-load-initializers": "^3.0.1",
+    "ember-resolver": "^13.1.1",
+    "ember-source": "~6.6.0",
+    "ember-source-channel-url": "^3.0.0",
+    "loader.js": "^4.7.0",
+    "webpack": "5.99.9"
+  },
+  "engines": {
+    "node": ">= 18",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "^9"
+  },
+  "ember": {
+    "edition": "default"
+  }
+}

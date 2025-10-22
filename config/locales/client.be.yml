@@ -994,42 +994,42 @@ be:
         in_progress: "(адпраўка ліста)"
         error: "(памылка)"
         action: "Адправіць ліст для аднаўлення пароля"
-        set_password: "ўсталяваць пароль"
-        choose_new: "Абярыце новы пароль"
-        choose: "% Менш, чым {лік} хвілін таму........................................................."
+        set_password: "Задаць пароль"
+        choose_new: "Выберыце новы пароль"
+        choose: "Выберыце пароль"
         title: "Скід пароля"
       second_factor_backup:
-        regenerate: "Перагенераваць"
+        regenerate: "Перагенерыраваць"
         disable: "Адключыць"
       second_factor:
         name: "Імя"
         disable: "Адключыць"
-        delete: "выдаляць"
+        delete: "Выдаліць"
         save: "Захаваць"
-        edit: "рэдагаваць"
+        edit: "Рэдагаваць"
         security_key:
-          register: "рэгістрацыя"
+          register: "Зарэгістраваць"
           iphone_default_name: "iPhone"
           android_default_name: "Android"
           save: "Захаваць"
       passkeys:
-        save: "захаваць"
+        save: "Захаваць"
       change_about:
-        title: "Змяніць інфу аба мяне"
+        title: "Змяніць інфармацыю пра мяне"
       change_username:
-        title: "Змена імя карыстальніка"
-        taken: "Выбачайце, гэтае імя карыстальніка ўжо занятае."
-        invalid: "Такое імя карыстальніка не падыйдзе. Яно павінна ўтрымліваць толькі лічбы і літары"
+        title: "Змяніць імя карыстальніка"
+        taken: "Гэта імя карыстальніка ўжо занята."
+        invalid: "Памылковае імя карыстальніка. Яно павінна ўтрымліваць толькі лічбы і літары"
       add_email:
-        add: "дадаць"
+        add: "Дадаць"
       change_email:
-        title: "Змяненне адрасы электроннай пошты"
-        taken: "Выбачайце, гэты адрас не даступны."
+        title: "Змяніць адрас электроннай пошты"
+        taken: "Гэты адрас недаступны."
         error: "Пры змяненні адраса электроннай пошты адбылася памылка. Магчыма, гэты адрас ужо выкарыстоўваецца?"
-        success: "Мы надсилалы ліст на гэтую скрыню. Выканайце інструкцыі па пидтердження."
-        confirm_success: "Ваш электронны адрас быў абноўлены."
+        success: "Мы адправілі ліст на гэту электронную пошту. Выконвайце інструкцыі для пацвярджэння."
+        confirm_success: "Ваш адрас электроннай пошты быў абноўлены."
       change_avatar:
-        letter_based: "Ваша выява дададзена сістэмай"
+        letter_based: "Аватар профілю, прызначаны сістэмай"
         uploaded_avatar: "Іншая выява"
         uploaded_avatar_empty: "Дадаць малюнак"
         upload_title: "Загрузіць свой малюнак"
@@ -1063,7 +1063,7 @@ be:
         too_short: "Ваша імя кароткі"
         too_long: "Ваша імя доўгае"
       locale:
-        title: "Interface language"
+        title: "Мова інтэрфейсу"
         default: "(Default)"
         any: "любой"
       homepage:
@@ -1088,25 +1088,25 @@ be:
         never: "ніколі"
       email_digests:
         every_30_minutes: "кожныя 30 хвілін"
-        every_hour: "кожную гадзіну"
+        every_hour: "штогадзіну"
         daily: "штодня"
         weekly: "штотыдзень"
-        every_month: "кожны месяц"
+        every_month: "штомесяц"
         every_six_months: "кожныя шэсць месяцаў"
       email_level:
         always: "заўсёды"
         never: "ніколі"
-      other_settings: "іншае"
+      other_settings: "Іншае"
       categories_settings: "Катэгорыі"
-      topics_settings: "тэмы"
+      topics_settings: "Тэмы"
       new_topic_duration:
-        label: "Лічыць тэмы новымі, калі"
-        not_viewed: "я іх яшчэ не прагледзеў"
-        last_here: "створана пасля вашага апошняга візіту"
-        after_1_day: "створана за апошні дзень"
-        after_2_days: "створана за апошнія 2 дні"
-        after_1_week: "створана за апошні тыдзень"
-        after_2_weeks: "створана за апошнія 2 тыдня"
+        label: "Лічыць тэмы новымі, калі яны"
+        not_viewed: "яшчэ не прагледжаны мной"
+        last_here: "створаны пасля майго апошняга візіту"
+        after_1_day: "створаны за апошні дзень"
+        after_2_days: "створаны за апошнія 2 дні"
+        after_1_week: "створаны за апошні тыдзень"
+        after_2_weeks: "створаны за апошнія 2 тыдні"
       auto_track_topics: "Аўтаматычна сачыць за тэмамі, я наведаў"
       auto_track_options:
         never: "ніколі"
@@ -1645,6 +1645,8 @@ be:
       name: "Назва катэгорыі"
       description: "апісанне"
       background_color: "колер"
+      color_validations:
+        cant_be_empty: "не можа быць пустым"
       styles:
         icon: "Абразка"
         emoji: "Emoji"
@@ -1998,6 +2000,10 @@ be:
           title: "файлы"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Налады"
         logo:
           form:
             mobile: "Мабільны"
@@ -2326,6 +2332,7 @@ be:
           body: "цела"
           revert: "вярнуць змены"
           revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
+          edit: "Рэдагаваць"
         component:
           all_filter: "Усё"
           disabled_filter: "Адключана"

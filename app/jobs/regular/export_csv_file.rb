@@ -11,7 +11,7 @@ module Jobs
     attr_accessor :entity
 
     HEADER_ATTRS_FOR =
-      HashWithIndifferentAccess.new(
+      ActiveSupport::HashWithIndifferentAccess.new(
         user_list: %w[
           id
           name
@@ -60,7 +60,7 @@ module Jobs
 
     def execute(args)
       @entity = args[:entity]
-      @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
+      @extra = ActiveSupport::HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @current_user = User.find_by(id: args[:user_id])
 
       entity = { name: @entity }

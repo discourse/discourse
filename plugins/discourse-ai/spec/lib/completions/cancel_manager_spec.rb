@@ -5,7 +5,14 @@ describe DiscourseAi::Completions::CancelManager do
 
   before do
     enable_current_plugin
-    WebMock.allow_net_connect!
+    WebMock.disable!
+    FinalDestination::SSRFDetector.allow_ip_lookups_in_test!
+    SiteSetting.allowed_internal_hosts = "127.0.0.1"
+  end
+
+  after do
+    WebMock.enable!
+    FinalDestination::SSRFDetector.allow_ip_lookups_in_test!
   end
 
   it "can stop monitoring for cancellation cleanly" do

@@ -17,10 +17,11 @@ module DiscoursePostEvent
     belongs_to :post, foreign_key: :id
 
     scope :visible, -> { where(deleted_at: nil) }
+    scope :open, -> { where(closed: false) }
 
+    before_save :chat_channel_sync
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
-    before_save :chat_channel_sync
 
     validate :raw_invitees_are_groups
     validates :original_starts_at, presence: true
@@ -110,21 +111,31 @@ module DiscoursePostEvent
     def starts_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
 
-      from_event_dates =
-        event_dates.pending.order(:starts_at).last&.starts_at ||
-          event_dates.order(:updated_at, :id).last&.starts_at
+      date =
+        if association(:event_dates).loaded?
+          pending = event_dates.select { |d| d.finished_at.nil? }
+          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        else
+          event_dates.where(finished_at: nil).order(:starts_at).last ||
+            event_dates.order(:updated_at, :id).last
+        end
 
-      from_event_dates || original_starts_at
+      date&.starts_at || original_starts_at
     end
 
     def ends_at
       return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
 
-      from_event_dates =
-        event_dates.pending.order(:starts_at).last&.ends_at ||
-          event_dates.order(:updated_at, :id).last&.ends_at
+      date =
+        if association(:event_dates).loaded?
+          pending = event_dates.select { |d| d.finished_at.nil? }
+          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        else
+          event_dates.where(finished_at: nil).order(:starts_at).last ||
+            event_dates.order(:updated_at, :id).last
+        end
 
-      from_event_dates || original_ends_at
+      date&.ends_at || original_ends_at
     end
 
     def on_going_event_invitees
@@ -187,7 +198,7 @@ module DiscoursePostEvent
       end
       result = self.invitees.insert_all!(attrs)
 
-      # batch event does not call calleback
+      # batch event does not call callback
       ChatChannelSync.sync(self) if chat_enabled?
 
       result
@@ -213,6 +224,7 @@ module DiscoursePostEvent
 
     def create_notification!(user, post, predefined_attendance: false)
       return if post.event.starts_at.nil? || post.event.starts_at < Time.current
+      return if !Guardian.new(user).can_see?(post)
 
       message =
         if predefined_attendance
@@ -372,6 +384,8 @@ module DiscoursePostEvent
             .where.not(id: excluded_ids)
             .select(:id)
         User.where(id: user_ids)
+      elsif self.private?
+        User.none
       else
         users.where.not(id: excluded_ids)
       end

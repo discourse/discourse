@@ -1586,7 +1586,7 @@ sq:
         invalid: "Emri i përdoruesit nuk është i vlefshëm. Duhet të përmbaje vetëm shkronja ose numra"
       add_email:
         title: "Shto Email"
-        add: "shto"
+        add: "Shto"
       change_email:
         title: "Ndrysho email"
         taken: "Na vjen keq, por ky email nuk është i disponueshëm."
@@ -3037,8 +3037,6 @@ sq:
         one: "%{count} postim në temë"
         other: "%{count} postime në temë"
       create: "Temë e re"
-      create_disabled_category: "Nuk ju lejohet të krijoni tema në këtë kategori"
-      create_disabled_tag: "Nuk ju lejohet të krijoni tema me këtë etiketë"
       create_long: "Hap një temë të re"
       open_draft: "Draft i hapur"
       private_message: "Fillo një mesazh"
@@ -3526,6 +3524,8 @@ sq:
       logo: "Logo e kategorisë"
       background_image: "Imazhi i sfondit për kategorinë"
       background_color: "Ngjyra"
+      color_validations:
+        cant_be_empty: "nuk mund të lihet bosh"
       styles:
         icon: "Ikonë"
         emoji: "Emoji"
@@ -4007,6 +4007,10 @@ sq:
           title: "Skedarë"
         legal:
           title: "Legale"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Rregullimet"
         logo:
           form:
             mobile: "Mobile"
@@ -4371,6 +4375,7 @@ sq:
           body: "Përmbajtja"
           revert: "Rikthe ndryshimet"
           revert_confirm: "A jeni i sigurtë që doni të riktheni ndryshimet?"
+          edit: "Redaktoni"
         component:
           all_filter: "Të Gjithë"
           enabled_filter: "Aktivizuar"

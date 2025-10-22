@@ -7,7 +7,6 @@ import { getUploadMarkdown } from "discourse/lib/uploads";
 import { i18n } from "discourse-i18n";
 
 export default class AiBotConversationsHiddenSubmit extends Service {
-  @service aiConversationsSidebarManager;
   @service appEvents;
   @service composer;
   @service dialog;
