@@ -55,20 +55,14 @@ export default class PreventScrollOnFocus extends Modifier {
       return;
     }
 
-    const clone = event.target.cloneNode(false);
-    clone.removeAttribute("id");
-    clone.dataset.iosInputClone = true;
-    clone.style.setProperty("position", "fixed");
-    clone.style.setProperty("left", "0");
-    clone.style.setProperty("top", "0");
-    clone.style.setProperty("transform", "translateY(-3000px) scale(0)");
-    document.documentElement.appendChild(clone);
-    clone.focus({ preventScroll: true });
-
-    setTimeout(() => {
-      event.target.focus({ preventScroll: true });
-      clone.remove();
-    }, 32);
+    const textarea = event.target;
+    textarea.style.transform = "translateY(-99999px)";
+    textarea.focus({ preventScroll: true });
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        textarea.style.transform = "";
+      });
+    });
   }
 
   cleanup() {
