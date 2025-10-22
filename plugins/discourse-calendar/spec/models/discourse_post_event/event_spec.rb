@@ -673,37 +673,44 @@ describe DiscoursePostEvent::Event do
           )
         end
 
-        context "when the event has timezone set" do
-          it "returns the next occurrence in UTC timezone" do
+        context "when the event has no timezone set" do
+          it "calculates the next occurrence using UTC by default" do
             expect(next_date).not_to be_blank
             expect(next_date).to be_an(Array)
             expect(next_date.length).to eq(2)
-            expect(next_date[0]).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
-            expect(next_date[1]).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
-          end
 
-          it "returns the next occurrence in UTC+3 timezone" do
+            next_starts_at, next_ends_at = next_date
+            expect(next_starts_at).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
+            expect(next_ends_at).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
+          end
+        end
+
+        context "when the event has timezone set" do
+          it "calculates the next occurrence ahead of UTC: (+3)" do
             event.timezone = "Europe/Kyiv"
 
             expect(next_date).not_to be_blank
             expect(next_date).to be_an(Array)
             expect(next_date.length).to eq(2)
-            expect(next_date[0]).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
-            expect(next_date[1]).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
-            expect(next_date[0]).to eq(Time.parse("2020-04-25 16:00:00 +0300"))
-            expect(next_date[1]).to eq(Time.parse("2020-04-25 17:00:00 +0300"))
+
+            next_starts_at, next_ends_at = next_date
+            expect(next_starts_at).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
+            expect(next_ends_at).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
+            expect(next_starts_at).to eq(Time.parse("2020-04-25 16:00:00 +0300"))
+            expect(next_ends_at).to eq(Time.parse("2020-04-25 17:00:00 +0300"))
           end
 
-          it "returns the next occurrence in UTC-7 timezone" do
-            event.timezone = "America/Los_Angeles"
+          it "calculates the next occurrence behind UTC: (-4)" do
+            event.timezone = "US/Eastern" # -4
+            # event.timezone = "America/Nuuk" # -2
 
             expect(next_date).not_to be_blank
             expect(next_date).to be_an(Array)
             expect(next_date.length).to eq(2)
-            expect(next_date[0]).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
-            expect(next_date[1]).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
-            expect(next_date[0]).to eq(Time.parse("2020-04-25 06:00:00 -0700"))
-            expect(next_date[1]).to eq(Time.parse("2020-04-25 07:00:00 -0700"))
+
+            next_starts_at, next_ends_at = next_date
+            expect(next_starts_at).to eq(Time.utc(2020, 4, 25, 13, 0, 0))
+            expect(next_ends_at).to eq(Time.utc(2020, 4, 25, 14, 0, 0))
           end
         end
       end
