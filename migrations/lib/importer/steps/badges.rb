@@ -16,7 +16,6 @@ module Migrations::Importer::Steps
 
     requires_mapping :ids_by_name, "SELECT name, id FROM badges"
     requires_set :existing_ids, "SELECT id FROM badges"
-    requires_set :existing_names, "SELECT name FROM badges"
     requires_set :existing_badge_grouping_ids, "SELECT id FROM badge_groupings"
     requires_set :existing_badge_type_ids, "SELECT id FROM badge_types"
 
