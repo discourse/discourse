@@ -1,3 +1,4 @@
+import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -80,7 +81,7 @@ module(
       ],
       "hashtag with emoji": [
         "Time for #coffee",
-        '<p>Time for <a class="hashtag-cooked" data-name="coffee" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-emoji hashtag-color--category-3\"><img width=\"20\" height=\"20\" src=\"/images/emoji/twitter/coffee.png?v=14\" title=\"coffee\" alt=\"coffee\" class=\"emoji\"></span>coffee</a></p>',
+        `<p>Time for <a class="hashtag-cooked" data-name="coffee" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-emoji hashtag-color--category-3\"><img width=\"20\" height=\"20\" src=\"/images/emoji/twitter/coffee.png?v=${v}\" title=\"coffee\" alt=\"coffee\" class=\"emoji\"></span>coffee</a></p>`,
         "Time for #coffee",
       ],
       "hashtag with icon": [
@@ -90,7 +91,7 @@ module(
       ],
       "hashtag with emoji in text": [
         "#welcome",
-        '<p><a class="hashtag-cooked" data-name="welcome" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-5\"></span>hello <img width=\"20\" height=\"20\" src=\"/images/emoji/twitter/wave.png?v=14\" title=\"wave\" alt=\"wave\" class=\"emoji\"></a></p>',
+        `<p><a class="hashtag-cooked" data-name="welcome" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-5\"></span>hello <img width=\"20\" height=\"20\" src=\"/images/emoji/twitter/wave.png?v=${v}\" title=\"wave\" alt=\"wave\" class=\"emoji\"></a></p>`,
         "#welcome",
       ],
     };

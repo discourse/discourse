@@ -26,7 +26,7 @@
     "lint-to-the-future-eslint": "^3.2.0",
     "playwright": "1.56.1",
     "prettier": "3.6.2",
-    "puppeteer-core": "^24.25.0",
+    "puppeteer-core": "^24.26.0",
     "stylelint": "16.25.0",
     "terser": "^5.44.0",
     "typescript": "5.6.x"

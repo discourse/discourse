@@ -1424,7 +1424,7 @@ export default class Composer extends RestModel {
                 },
                 {
                   label: i18n("composer.ignore"),
-                  class: "btn",
+                  class: "btn-default",
                   action: () => this.set("draftForceSave", true),
                 },
               ],

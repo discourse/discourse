@@ -35,6 +35,32 @@ describe "Gists Toggle Functionality", type: :system do
 
       expect(page).to have_css("body.topic-list-layout-table-ai")
     end
+
+    it "shows toggle and gists on filter route" do
+      visit("/filter?q=status:open")
+
+      expect(find(".topic-list-layout-trigger")).to be_present
+
+      find(".topic-list-layout-trigger").click
+      find(
+        ".dropdown-menu__item .d-button-label",
+        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.expanded"),
+      ).click
+
+      expect(page).to have_css("body.topic-list-layout-table-ai")
+    end
+
+    it "filter route shares toggle state with discovery routes" do
+      visit("/latest")
+      find(".topic-list-layout-trigger").click
+      find(
+        ".dropdown-menu__item .d-button-label",
+        text: I18n.t("js.discourse_ai.summarization.topic_list_layout.button.expanded"),
+      ).click
+
+      visit("/filter?q=status:open")
+      expect(page).to have_css("body.topic-list-layout-table-ai")
+    end
   end
 
   context "when viewing PM topic lists" do
