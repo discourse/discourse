@@ -7,19 +7,12 @@ module Migrations::Importer
     DEFAULT_MAX_ATTEMPTS = 500
     TRUNCATION_CACHE_SIZE = 500
 
-    def initialize(
-      shared_data,
-      min_length: DEFAULT_MIN_LENGTH,
-      max_length: DEFAULT_MAX_LENGTH,
-      max_attempts: DEFAULT_MAX_ATTEMPTS
-    )
-      @min_length = min_length
-      @max_length = max_length
-      @max_attempts = max_attempts
+    def initialize(shared_data, min_length: nil, max_length: nil, max_attempts: nil)
+      @min_length = min_length || DEFAULT_MIN_LENGTH
+      @max_length = max_length || DEFAULT_MAX_LENGTH
+      @max_attempts = max_attempts || DEFAULT_MAX_ATTEMPTS
 
-      @last_suffixes = {}
-      @truncations = ::LruRedux::Cache.new(TRUNCATION_CACHE_SIZE)
-
+      init_caches
       load_from_shared_data(shared_data)
       extract_max_suffixes_from_existing_names
     end
@@ -175,6 +168,11 @@ module Migrations::Importer
 
     def modify_truncated_name(name)
       name
+    end
+
+    def init_caches
+      @last_suffixes = {}
+      @truncations = ::LruRedux::Cache.new(TRUNCATION_CACHE_SIZE)
     end
 
     def extract_max_suffixes_from_existing_names

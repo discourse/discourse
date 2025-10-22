@@ -2,22 +2,62 @@
 
 module Migrations::Importer
   class CategoryNameFinder < UniqueNameFinderBase
-    private
+    MIN_LENGTH = 1
+    MAX_LENGTH = 50
 
-    def load_used_names(shared_data)
-      shared_data&.load(:category_names) || Set.new
+    def initialize(shared_data, min_length: nil, max_length: nil, max_attempts: nil)
+      super(shared_data, min_length: MIN_LENGTH, max_length: MAX_LENGTH)
+
+      @last_suffixes_by_parent_id = Hash.new { |h, k| h[k] = {} }
+      @truncations_by_parent_id =
+        Hash.new { |h, k| h[k] = ::LruRedux::Cache.new(TRUNCATION_CACHE_SIZE) }
     end
 
-    def max_length
-      ::Category::MAX_NAME_LENGTH
+    def find_available_name(name, parent_id)
+      with_parent_scope(parent_id) { super(name) }
+    end
+
+    private
+
+    def with_parent_scope(parent_id)
+      @last_suffixes = @last_suffixes_by_parent_id[parent_id]
+      @truncations = @truncations_by_parent_id[parent_id]
+      @used_category_names_lower = @used_category_names_lower_by_parent_id[parent_id]
+
+      yield
+    ensure
+      @last_suffixes = @truncations = @used_category_names_lower = nil
+    end
+
+    def load_from_shared_data(shared_data)
+      @used_category_names_lower_by_parent_id = shared_data.load_set <<~SQL
+        SELECT parent_category_id, LOWER(name)
+        FROM categories
+      SQL
+    end
+
+    def store_used_name(name_lower)
+      @used_category_names_lower.add(name_lower)
+    end
+
+    def init_caches
+      # Parent-scoped caches initialized in constructor
+    end
+
+    def extract_max_suffixes_from_existing_names
+      # Suffixes tracked per parent, no need to pre-extract
     end
 
     def fallback_name
-      "category"
+      I18n.t("importer.fallback_names.group")
     end
 
     def sanitize_name(name)
-      name.to_s.strip
+      name.scrub.strip
+    end
+
+    def name_available?(name_lower)
+      !@used_category_names_lower.include?(name_lower)
     end
   end
 end
