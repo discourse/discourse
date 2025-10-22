@@ -26,7 +26,7 @@ export default class TagsIndexController extends Controller {
   }
 
   get TagsAdminDropdownComponent() {
-    return optionalRequire("admin/components/tags-admin-dropdown");
+    return optionalRequire("discourse/admin/components/tags-admin-dropdown");
   }
 
   @discourseComputed("groupedByCategory", "groupedByTagGroup")
