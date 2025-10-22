@@ -8,6 +8,7 @@ DiscourseAutomation::Engine.routes.draw do
   scope format: :json do
     delete "/user-global-notices/:id" => "user_global_notices#destroy"
     put "/append-last-checked-by/:post_id" => "append_last_checked_by#post_checked"
+    post "/automations/:id/topic-buttons/trigger" => "topic_buttons#trigger"
   end
 
   scope "/admin/plugins/automation",
