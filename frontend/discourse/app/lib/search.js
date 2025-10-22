@@ -1,13 +1,14 @@
 import EmberObject from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { Promise } from "rsvp";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import { ajax } from "discourse/lib/ajax";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import getURL from "discourse/lib/get-url";
 import { emojiUnescape } from "discourse/lib/text";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import { userPath } from "discourse/lib/url";
-import userSearch, { validateSearchResult } from "discourse/lib/user-search";
+import { validateSearchResult } from "discourse/lib/user-search";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
@@ -17,7 +18,6 @@ import User from "discourse/models/user";
 import DAutocompleteModifier from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 import categoryTagAutocomplete from "./autocomplete/category-tag";
-import userAutocomplete from "./autocomplete/user";
 
 const translateResultsCallbacks = [];
 const MAX_RECENT_SEARCHES = 5; // should match backend constant with the same name
@@ -249,14 +249,15 @@ export function applySearchAutocomplete(inputElement, siteSettings, owner) {
       inputElement,
       autocompleteHandler,
       {
-        template: userAutocomplete,
-        key: "@",
+        component: UserAutocompleteResults,
+        key: UserAutocompleteResults.TRIGGER_KEY,
         autoSelectFirstSuggestion: false,
         transformComplete: (v) => {
           validateSearchResult(v);
-          return v.username || v.name;
+          return UserAutocompleteResults.transformComplete(v);
         },
-        dataSource: (term) => userSearch({ term, includeGroups: true }),
+        dataSource: (term) =>
+          UserAutocompleteResults.dataSource(term, { includeGroups: true }),
         fixedTextareaPosition: true,
         offset: 2,
       }
