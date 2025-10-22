@@ -7,7 +7,7 @@ module Migrations::Importer::Steps
     # TODO Add :emojis as dependency
     depends_on :categories, :groups, :tags, :uploads, :users
 
-    protected
+    private
 
     def skip_row?(row)
       name = row[:name].to_sym

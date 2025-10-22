@@ -2,7 +2,7 @@
 
 module Migrations::Importer
   class CategoryNameFinder < UniqueNameFinderBase
-    protected
+    private
 
     def load_used_names(shared_data)
       shared_data&.load(:category_names) || Set.new

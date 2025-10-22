@@ -2,7 +2,7 @@
 
 module Migrations::Importer
   class BadgeNameFinder < UniqueNameFinderBase
-    protected
+    private
 
     def load_used_names(shared_data)
       shared_data&.load(:badge_names) || Set.new

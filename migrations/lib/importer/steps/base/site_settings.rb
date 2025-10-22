@@ -50,7 +50,7 @@ module Migrations::Importer::Steps::Base
       @log_messages.each { |message| puts "      #{message}" }
     end
 
-    protected
+    private
 
     # Override in subclasses to skip rows that should be handled in a later step.
     def skip_row?(_row)

@@ -5,7 +5,7 @@ module Migrations::Importer::Steps
     title "Importing basic site settings"
     priority 0
 
-    protected
+    private
 
     def skip_row?(row)
       name = row[:name].to_sym
