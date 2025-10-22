@@ -42,6 +42,10 @@
   display: flex;
   min-width: 0;
 
+  .search-highlight {
+    background: var(--highlight-medium);
+  }
+
   .chat-message-reaction {
     @include chat-reaction;
     will-change: scale;

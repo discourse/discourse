@@ -137,7 +137,7 @@ RSpec.describe "Chat channel", type: :system do
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
 
-      find(".chat-scroll-to-bottom__button.visible").click
+      find(".chat-channel:not(.loading) .chat-scroll-to-bottom__button.visible").click
 
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_css("[data-id='#{unloaded_message.id}']")

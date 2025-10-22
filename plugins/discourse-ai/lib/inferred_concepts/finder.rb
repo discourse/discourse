@@ -15,7 +15,7 @@ module DiscourseAi
             .find { |p| p.id == SiteSetting.inferred_concepts_generate_persona.to_i }
             .new
 
-        llm = LlmModel.find(persona.class.default_llm_id)
+        llm = LlmModel.find(persona.class.default_llm_id || SiteSetting.ai_default_llm_model)
         context =
           DiscourseAi::Personas::BotContext.new(
             messages: [{ type: :user, content: content }],
@@ -154,7 +154,7 @@ module DiscourseAi
             .find { |p| p.id == SiteSetting.inferred_concepts_deduplicate_persona.to_i }
             .new
 
-        llm = LlmModel.find(persona.class.default_llm_id)
+        llm = LlmModel.find(persona.class.default_llm_id || SiteSetting.ai_default_llm_model)
 
         # Create the input for the deduplicator
         input = { type: :user, content: concept_names.join(", ") }

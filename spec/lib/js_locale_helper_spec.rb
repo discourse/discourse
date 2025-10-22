@@ -2,7 +2,7 @@
 
 RSpec.describe JsLocaleHelper do
   let(:v8_ctx) do
-    discourse_node_modules = "#{Rails.root}/app/assets/javascripts/discourse/node_modules"
+    discourse_node_modules = "#{Rails.root}/frontend/discourse/node_modules"
     mf_runtime = "#{discourse_node_modules}/@messageformat/runtime"
     processor = AssetProcessor.new
     ctx = MiniRacer::Context.new
@@ -13,7 +13,7 @@ RSpec.describe JsLocaleHelper do
       "@messageformat/runtime": "#{mf_runtime}/esm/runtime.js",
       "@messageformat/runtime/lib/cardinals": "#{mf_runtime}/esm/cardinals.js",
       "make-plural/cardinals": "#{discourse_node_modules}/make-plural/cardinals.mjs",
-      "discourse-i18n": "#{Rails.root}/app/assets/javascripts/discourse-i18n/src/index.js",
+      "discourse-i18n": "#{Rails.root}/frontend/discourse-i18n/src/index.js",
     }.each do |module_name, path|
       ctx.eval(processor.perform(File.read(path), "", module_name.to_s))
     end

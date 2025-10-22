@@ -183,7 +183,7 @@ task "docker:test" do
       else
         @good &&= run_or_fail("bundle exec rake plugin:update_all") unless ENV["SKIP_PLUGINS"]
         @good &&= run_or_fail("bundle exec rubocop") unless ENV["SKIP_CORE"]
-        @good &&= run_or_fail("pnpm eslint app/assets/javascripts") unless ENV["SKIP_CORE"]
+        @good &&= run_or_fail("pnpm eslint frontend") unless ENV["SKIP_CORE"]
         @good &&=
           run_or_fail(
             "pnpm eslint --ext .js,.js.es6 --no-error-on-unmatched-pattern plugins",
@@ -202,7 +202,7 @@ task "docker:test" do
           puts "Listing prettier offenses in core:"
           @good &&=
             run_or_fail(
-              'pnpm pprettier --list-different "app/assets/stylesheets/**/*.scss" "app/assets/javascripts/**/*.js"',
+              'pnpm pprettier --list-different "app/assets/stylesheets/**/*.scss" "frontend/**/*.js"',
             )
         end
 
