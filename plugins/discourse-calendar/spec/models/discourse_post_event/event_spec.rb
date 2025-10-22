@@ -701,8 +701,9 @@ describe DiscoursePostEvent::Event do
           end
 
           it "calculates the next occurrence behind UTC: (-4)" do
+            # This test will fail if the machine’s timezone combined with UTC−4 exceeds an 11-hour offset,
+            # because the event starts at 13:00 UTC + 11h = next day (26th), which is beyond recurrence_until
             event.timezone = "US/Eastern" # -4
-            # event.timezone = "America/Nuuk" # -2
 
             expect(next_date).not_to be_blank
             expect(next_date).to be_an(Array)
