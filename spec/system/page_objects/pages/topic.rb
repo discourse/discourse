@@ -278,6 +278,7 @@ module PageObjects
 
       def click_admin_menu_button
         within_topic_footer_buttons { find(".toggle-admin-menu").click }
+        PageObjects::Components::TopicAdminMenu.new
       end
 
       def watch_topic

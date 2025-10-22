@@ -80,7 +80,16 @@ export default class EditTopicTimerForm extends Component {
   }
 
   get statusType() {
-    return this.args.topicTimer.status_type;
+    const statusType = this.args.topicTimer.status_type;
+
+    if (
+      statusType === CLOSE_STATUS_TYPE &&
+      this.args.topicTimer.based_on_last_post
+    ) {
+      return CLOSE_AFTER_LAST_POST_STATUS_TYPE;
+    } else {
+      return statusType;
+    }
   }
 
   get excludeCategoryId() {
