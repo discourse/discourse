@@ -55,12 +55,23 @@ if !args.include?("test") && !args.include?("build") && !args.include?("--proxy"
   args << PROXY
 end
 
-if !system "pnpm", "--dir=#{RAILS_ROOT}", "install"
-  abort "pnpm is not installed. run `npm install -g pnpm`" if !system("command -v pnpm >/dev/null;")
-  exit 1
-end
+node_modules_outdated =
+  begin
+    File.read("node_modules/.pnpm/lock.yaml") != File.read("pnpm-lock.yaml")
+  rescue ERRNO::ENOENT
+    true
+  end
 
-system "pnpm", "playwright", "install", "--no-shell", "chromium", exception: true
+if node_modules_outdated
+  puts "[bin/ember-cli] Detected outdated or missing node_modules. Running pnpm install..."
+
+  if !system "pnpm", "--dir=#{RAILS_ROOT}", "install"
+    if !system("command -v pnpm >/dev/null;")
+      abort "pnpm is not installed. run `npm install -g pnpm`"
+    end
+    exit 1
+  end
+end
 
 pnpm_env = {
   "TERM" => "dumb", # simple output from ember-cli, so we can parse/forward it more easily
