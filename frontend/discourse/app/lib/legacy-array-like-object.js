@@ -238,7 +238,7 @@ function createProxy(instance, trackedItems) {
     set(target, prop, value, receiver) {
       if (prop === "content") {
         throw new Error(
-          `You cannot override the content property of an ${instance.constructor.name}, mutate the array instead.`
+          `${instance.constructor.name}: You cannot override the \`content\` property, mutate the array instead.`
         );
       }
 
