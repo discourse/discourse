@@ -295,52 +295,57 @@ export default RouteTemplate(
                 />
 
                 <div class="bio">
-                  {{#if @controller.model.suspended}}
-                    <div class="suspended">
-                      <div class="suspension-date">
-                        {{icon "ban"}}
-                        <b>
-                          {{#if @controller.model.suspendedForever}}
-                            {{i18n "user.suspended_permanently"}}
-                          {{else}}
-                            {{i18n
-                              "user.suspended_notice"
-                              date=@controller.model.suspendedTillDate
-                            }}
-                          {{/if}}
-                        </b>
-                      </div>
-                      {{#if @controller.model.suspend_reason}}
-                        <div class="suspension-reason">
-                          <b>{{i18n "user.suspended_reason"}}</b>
-                          {{htmlSafe @controller.model.suspend_reason}}
+                  <PluginOutlet
+                    @name="user-profile-suspended-silenced"
+                    @outletArgs={{lazyHash user=@controller.model}}
+                  >
+                    {{#if @controller.model.suspended}}
+                      <div class="suspended">
+                        <div class="suspension-date">
+                          {{icon "ban"}}
+                          <b>
+                            {{#if @controller.model.suspendedForever}}
+                              {{i18n "user.suspended_permanently"}}
+                            {{else}}
+                              {{i18n
+                                "user.suspended_notice"
+                                date=@controller.model.suspendedTillDate
+                              }}
+                            {{/if}}
+                          </b>
                         </div>
-                      {{/if}}
-                    </div>
-                  {{/if}}
-                  {{#if @controller.model.silenced}}
-                    <div class="silenced">
-                      <div class="silence-date">
-                        {{icon "microphone-slash"}}
-                        <b>
-                          {{#if @controller.model.silencedForever}}
-                            {{i18n "user.silenced_permanently"}}
-                          {{else}}
-                            {{i18n
-                              "user.silenced_notice"
-                              date=@controller.model.silencedTillDate
-                            }}
-                          {{/if}}
-                        </b>
+                        {{#if @controller.model.suspend_reason}}
+                          <div class="suspension-reason">
+                            <b>{{i18n "user.suspended_reason"}}</b>
+                            {{htmlSafe @controller.model.suspend_reason}}
+                          </div>
+                        {{/if}}
                       </div>
-                      {{#if @controller.model.silence_reason}}
-                        <div class="silence-reason">
-                          <b>{{i18n "user.silenced_reason"}}</b>
-                          {{htmlSafe @controller.model.silence_reason}}
+                    {{/if}}
+                    {{#if @controller.model.silenced}}
+                      <div class="silenced">
+                        <div class="silence-date">
+                          {{icon "microphone-slash"}}
+                          <b>
+                            {{#if @controller.model.silencedForever}}
+                              {{i18n "user.silenced_permanently"}}
+                            {{else}}
+                              {{i18n
+                                "user.silenced_notice"
+                                date=@controller.model.silencedTillDate
+                              }}
+                            {{/if}}
+                          </b>
                         </div>
-                      {{/if}}
-                    </div>
-                  {{/if}}
+                        {{#if @controller.model.silence_reason}}
+                          <div class="silence-reason">
+                            <b>{{i18n "user.silenced_reason"}}</b>
+                            {{htmlSafe @controller.model.silence_reason}}
+                          </div>
+                        {{/if}}
+                      </div>
+                    {{/if}}
+                  </PluginOutlet>
                   {{#if @controller.isNotRestrictedOrIsStaff}}
                     <HtmlWithLinks>
                       {{htmlSafe @controller.model.bio_cooked}}
