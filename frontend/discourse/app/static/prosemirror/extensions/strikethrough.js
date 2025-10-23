@@ -7,7 +7,7 @@ const extension = {
       before: "link",
       parseDOM: [
         { tag: "s" },
-        { tag: "del" },
+        { tag: "strike" },
         {
           getAttrs: (value) =>
             /(^|[\s])line-through([\s]|$)/u.test(value) && null,
