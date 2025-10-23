@@ -154,26 +154,28 @@ export default class StoreService extends Service {
       return hydrated;
     }
 
-    hydrated.set(
-      "content",
-      hydrated.get("content").map((item) => {
-        let staleItem = stale.content.find(
-          (i) => i.primaryKey === item.get(primaryKey)
-        );
-        if (staleItem) {
-          for (const [key, value] of Object.entries(
-            Object.getOwnPropertyDescriptors(staleItem)
-          )) {
-            if (value.writable && value.enumerable) {
-              staleItem.set(key, value.value);
-            }
+    const newValues = hydrated.get("content").map((item) => {
+      let staleItem = stale.content.find(
+        (i) => i.primaryKey === item.get(primaryKey)
+      );
+      if (staleItem) {
+        for (const [key, value] of Object.entries(
+          Object.getOwnPropertyDescriptors(staleItem)
+        )) {
+          if (value.writable && value.enumerable) {
+            staleItem.set(key, value.value);
           }
-        } else {
-          staleItem = item;
         }
-        return staleItem;
-      })
-    );
+      } else {
+        staleItem = item;
+      }
+      return staleItem;
+    });
+
+    hydrated instanceof ResultSet
+      ? hydrated.content.splice(0, Infinity, ...newValues)
+      : hydrated.set("content", newValues);
+
     return hydrated;
   }
 
