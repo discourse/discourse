@@ -121,9 +121,7 @@ before_fork do |server, worker|
       demon_class.start(1, logger: server.logger)
     end
 
-    if Rails.env.development?
-      Demon::PluginJsWatcher.start(verbose: true)
-    end
+    Demon::PluginJsWatcher.start(verbose: true) if Rails.env.development?
 
     Thread.new do
       while true

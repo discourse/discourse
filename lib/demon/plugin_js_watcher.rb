@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal: true
 
 class Demon::PluginJsWatcher < ::Demon::Base
   def self.prefix
@@ -16,7 +16,7 @@ class Demon::PluginJsWatcher < ::Demon::Base
 
     Plugin::JsManager.new.watch { @queue.pop }
   ensure
-    STDERR.puts "Finished Plugin JS watcher thread" 
+    STDERR.puts "Finished Plugin JS watcher thread"
   end
 
   def suppress_stdout
