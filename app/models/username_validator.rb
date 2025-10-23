@@ -18,18 +18,14 @@ class UsernameValidator
   def initialize(username, skip_length_validation: false, object: nil)
     @username = username&.unicode_normalize
     @skip_length_validation = skip_length_validation
-    @object = object
+    @user = object
     @errors = []
   end
 
   attr_accessor :errors
   attr_reader :username
-  attr_reader :object
+  attr_reader :user
   attr_reader :skip_length_validation
-
-  def user
-    @user ||= User.new(user)
-  end
 
   def valid_format?
     username_present?
@@ -158,7 +154,7 @@ class UsernameValidator
   def username_plugin_validations
     return unless errors.empty?
 
-    DiscoursePluginRegistry.apply_modifier(:username_validations, self.errors, self)
+    DiscoursePluginRegistry.apply_modifier(:username_validation, self.errors, self)
   end
 
   def username_grapheme_clusters
