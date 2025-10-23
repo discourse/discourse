@@ -4,17 +4,16 @@ import RouteTemplate from "ember-route-template";
 import { and } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SecurityKeyDropdown from "discourse/components/security-key-dropdown";
 import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdown";
 import TwoFactorBackupDropdown from "discourse/components/two-factor-backup-dropdown";
 import bodyClass from "discourse/helpers/body-class";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>
-    <PluginOutlet
-      @name="user-second-factor-wrapper">
+    <PluginOutlet @name="user-second-factor-wrapper">
       {{bodyClass "user-preferences-page"}}
 
       <section
@@ -44,8 +43,7 @@ export default RouteTemplate(
               <div class="alert alert-error">{{@controller.errorMessage}}</div>
             {{/if}}
 
-            <PluginOutlet
-              @name="user-second-factor-totp-wrapper">
+            <PluginOutlet @name="user-second-factor-totp-wrapper">
               <div class="control-group totp">
                 <div class="controls">
                   <h2>{{i18n "user.second_factor.totp.title"}}</h2>
@@ -80,8 +78,7 @@ export default RouteTemplate(
               </div>
             </PluginOutlet>
 
-            <PluginOutlet
-              @name="user-second-factor-security-key-wrapper">
+            <PluginOutlet @name="user-second-factor-security-key-wrapper">
               <div class="control-group security-key">
                 <div class="controls">
                   <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
@@ -91,7 +88,9 @@ export default RouteTemplate(
                         {{#if security_key.name}}
                           {{security_key.name}}
                         {{else}}
-                          {{i18n "user.second_factor.security_key.default_name"}}
+                          {{i18n
+                            "user.second_factor.security_key.default_name"
+                          }}
                         {{/if}}
                       </div>
 

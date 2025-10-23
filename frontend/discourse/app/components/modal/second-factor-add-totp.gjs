@@ -8,14 +8,14 @@ import { htmlSafe } from "@ember/template";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SecondFactorInput from "discourse/components/second-factor-input";
+import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import {
   MAX_SECOND_FACTOR_NAME_LENGTH,
   SECOND_FACTOR_METHODS,
 } from "discourse/models/user";
-import lazyHash from "discourse/helpers/lazy-hash";
-import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorAddTotp extends Component {
@@ -103,7 +103,8 @@ export default class SecondFactorAddTotp extends Component {
               markDirty=@model.markDirty
               onError=@model.onError
               closeModal=@closeModal
-            }}>
+            }}
+          >
 
             {{#if this.errorMessage}}
               <div class="control-group">
@@ -113,9 +114,7 @@ export default class SecondFactorAddTotp extends Component {
               </div>
             {{/if}}
 
-            <PluginOutlet
-              @name="user-second-factor-totp-modal-above-content"
-            />
+            <PluginOutlet @name="user-second-factor-totp-modal-above-content" />
 
             <div class="control-group totp-description">
               <div class="controls">
@@ -150,7 +149,10 @@ export default class SecondFactorAddTotp extends Component {
                 }}</label>
               <div class="controls totp-app-name">
                 <input
-                  {{on "input" (withEventValue (fn (mut this.secondFactorName)))}}
+                  {{on
+                    "input"
+                    (withEventValue (fn (mut this.secondFactorName)))
+                  }}
                   value={{this.secondFactorName}}
                   type="text"
                   placeholder={{i18n "user.second_factor.totp.default_name"}}
