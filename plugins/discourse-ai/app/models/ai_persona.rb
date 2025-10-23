@@ -347,26 +347,6 @@ class AiPersona < ActiveRecord::Base
 
   private
 
-  def self.cast_persona_id(persona_id)
-    return persona_id if persona_id.is_a?(Integer)
-
-    if persona_id.respond_to?(:id)
-      record_id = persona_id.id
-      return record_id if record_id.is_a?(Integer)
-    end
-
-    return nil if persona_id.blank?
-
-    if persona_id.is_a?(String)
-      stripped_id = persona_id.strip
-      return nil if stripped_id.blank?
-
-      return Integer(stripped_id, exception: false)
-    end
-
-    persona_id.respond_to?(:to_i) ? persona_id.to_i : nil
-  end
-
   def chat_preconditions
     if (
          allow_chat_channel_mentions || allow_chat_direct_messages || allow_topic_mentions ||
