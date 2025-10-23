@@ -93,7 +93,7 @@ export default class UpcomingChangeItem extends Component {
 
     try {
       await ajax("/admin/config/upcoming-changes/toggle", {
-        type: "POST",
+        type: "PUT",
         data: {
           setting_name: this.args.change.setting,
         },
