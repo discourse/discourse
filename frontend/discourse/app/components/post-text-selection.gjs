@@ -146,24 +146,27 @@ export default class PostTextSelection extends Component {
 
   @bind
   async showToolbar(cooked) {
+    const shouldRenderUnder = this.shouldRenderUnder();
     const quoteState = this.computeQuoteState(cooked);
 
     let offset = 3;
-    if (this.shouldRenderUnder) {
-      // on mobile, we ideally want to show the toolbar at the end of the selection
-      offset = 20;
+    if (this.capabilities.isIOS) {
+      if (shouldRenderUnder) {
+        // on mobile, we ideally want to show the toolbar at the end of the selection
+        offset = 20;
 
-      if (
-        !isElementInViewport(selectedRange().startContainer.parentNode) ||
-        !isElementInViewport(selectedRange().endContainer.parentNode)
-      ) {
-        // we force a higher offset in two cases:
-        // - the start of the selection is not in viewport, in this case on iOS for example
-        //   the native menu will be shown at the bottom of the screen, right after text selection
-        //   so we need more space
-        // - the end of the selection is not in viewport, in this case our menu will be shown at the top
-        //   of the screen, so we need more space to avoid overlapping with the native menu
-        offset = 70;
+        if (
+          !isElementInViewport(selectedRange().startContainer.parentNode) ||
+          !isElementInViewport(selectedRange().endContainer.parentNode)
+        ) {
+          // we force a higher offset in two cases:
+          // - the start of the selection is not in viewport, in this case on iOS for example
+          //   the native menu will be shown at the bottom of the screen, right after text selection
+          //   so we need more space
+          // - the end of the selection is not in viewport, in this case our menu will be shown at the top
+          //   of the screen, so we need more space to avoid overlapping with the native menu
+          offset = 70;
+        }
       }
     }
 
@@ -171,10 +174,8 @@ export default class PostTextSelection extends Component {
       identifier: "post-text-selection-toolbar",
       component: PostTextSelectionToolbar,
       inline: true,
-      placement: this.shouldRenderUnder ? "bottom-start" : "top-start",
-      fallbackPlacements: this.shouldRenderUnder
-        ? ["bottom-end", "top-start"]
-        : ["bottom-start"],
+      placement: shouldRenderUnder ? "bottom-start" : "top-start",
+      fallbackPlacements: shouldRenderUnder ? ["bottom-end"] : ["top-end"],
       offset,
       trapTab: false,
       closeOnScroll: false,
@@ -272,12 +273,28 @@ export default class PostTextSelection extends Component {
 
   // on Desktop, shows the bar at the beginning of the selection
   // on Mobile, shows the bar at the end of the selection
-  @cached
-  get shouldRenderUnder() {
+  shouldRenderUnder() {
     const { isIOS, isAndroid, isOpera, isFirefox, touch } = this.capabilities;
+
+    if (isIOS) {
+      const rect = virtualElementFromTextRange().rect;
+      const spaceAbove = rect.top;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const safeAreaInset =
+        parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue("--safe-area-inset-bottom")
+            .trim(),
+          10
+        ) || 0;
+
+      // if we have more space above, ios will render its callout above
+      // so we should render ours, under
+      return spaceAbove >= spaceBelow - safeAreaInset;
+    }
+
     return (
       this.capabilities.isMobileDevice ||
-      isIOS ||
       isAndroid ||
       isOpera ||
       (touch && isFirefox)
