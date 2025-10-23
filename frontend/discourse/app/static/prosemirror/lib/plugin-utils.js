@@ -22,78 +22,70 @@ export { buildBBCodeAttrs } from "discourse/lib/text";
  * @returns {import("prosemirror-inputrules").InputRule}
  */
 export function markInputRule(regexp, markType, getAttrs) {
-  return new InputRule(
-    regexp,
-    (state, match, start, end) => {
-      const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
-      const tr = state.tr;
+  return new InputRule(regexp, (state, match, start, end) => {
+    const attrs = getAttrs instanceof Function ? getAttrs(match) : getAttrs;
+    const tr = state.tr;
 
-      // attrs may override match or start
-      const {
-        match: attrsMatch,
-        start: attrsStart,
-        ...markAttrs
-      } = attrs ?? {};
+    // attrs may override match or start
+    const { match: attrsMatch, start: attrsStart, ...markAttrs } = attrs ?? {};
 
-      match = attrsMatch ?? match;
-      start = start + (attrsStart ?? 0);
+    match = attrsMatch ?? match;
+    start = start + (attrsStart ?? 0);
 
-      if (match[1]) {
-        const fullMatch = match[0];
-        const capturedContent = match[1];
-        const contentStart = fullMatch.indexOf(capturedContent);
-        const contentEnd = contentStart + capturedContent.length;
+    if (match[1]) {
+      const fullMatch = match[0];
+      const capturedContent = match[1];
+      const contentStart = fullMatch.indexOf(capturedContent);
+      const contentEnd = contentStart + capturedContent.length;
 
-        const ranges = [];
-        if (contentStart > 0) {
-          ranges.push([start, start + contentStart]);
-        }
-        if (contentEnd < fullMatch.length) {
-          ranges.push([start + contentEnd, start + fullMatch.length]);
-        }
+      const ranges = [];
+      if (contentStart > 0) {
+        ranges.push([start, start + contentStart]);
+      }
+      if (contentEnd < fullMatch.length) {
+        ranges.push([start + contentEnd, start + fullMatch.length]);
+      }
 
-        for (const [rangeStart, rangeEnd] of ranges) {
-          let hasCodeMark = false;
-          state.doc.nodesBetween(rangeStart, rangeEnd, (node) => {
-            if (node.isInline && node.marks.some((m) => m.type.spec.code)) {
-              hasCodeMark = true;
-              return false;
-            }
-          });
-          if (hasCodeMark) {
-            return null;
+      for (const [rangeStart, rangeEnd] of ranges) {
+        let hasCodeMark = false;
+        state.doc.nodesBetween(rangeStart, rangeEnd, (node) => {
+          if (node.isInline && node.marks.some((m) => m.type.spec.code)) {
+            hasCodeMark = true;
+            return false;
           }
+        });
+        if (hasCodeMark) {
+          return null;
         }
       }
+    }
 
-      if (match[1]) {
-        const textStart = start + match[0].indexOf(match[1]);
-        const textEnd = textStart + match[1].length;
-        if (textEnd < end) {
-          tr.delete(textEnd, end);
-        }
-        if (textStart > start) {
-          tr.delete(start, textStart);
-        }
-
-        tr.addMark(start, start + match[1].length, markType.create(markAttrs));
-        tr.setStoredMarks(tr.doc.resolve(start + match[1].length + 1).marks());
-      } else {
-        tr.delete(start, end);
-        tr.insertText(" ");
-        tr.addMark(start, start + 1, markType.create(markAttrs));
-        tr.removeStoredMark(markType);
-        tr.insertText(" ");
-
-        tr.setSelection(
-          state.selection.constructor.create(tr.doc, start, start + 1)
-        );
+    if (match[1]) {
+      const textStart = start + match[0].indexOf(match[1]);
+      const textEnd = textStart + match[1].length;
+      if (textEnd < end) {
+        tr.delete(textEnd, end);
+      }
+      if (textStart > start) {
+        tr.delete(start, textStart);
       }
 
-      return tr;
-    },
-    { inCodeMark: false }
-  );
+      tr.addMark(start, start + match[1].length, markType.create(markAttrs));
+      tr.setStoredMarks(tr.doc.resolve(start + match[1].length + 1).marks());
+    } else {
+      tr.delete(start, end);
+      tr.insertText(" ");
+      tr.addMark(start, start + 1, markType.create(markAttrs));
+      tr.removeStoredMark(markType);
+      tr.insertText(" ");
+
+      tr.setSelection(
+        state.selection.constructor.create(tr.doc, start, start + 1)
+      );
+    }
+
+    return tr;
+  });
 }
 
 export function getChangedRanges(tr) {
