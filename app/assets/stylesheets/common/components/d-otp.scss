@@ -24,7 +24,6 @@
 
   &.--is-focused {
     @include default-focus;
-
     box-shadow: 0 0 0 2px rgb(var(--tertiary-rgb), 0.25);
   }
 
