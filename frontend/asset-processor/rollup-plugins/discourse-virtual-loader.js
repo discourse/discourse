@@ -1,7 +1,12 @@
 import rollupVirtualImports from "../rollup-virtual-imports";
 
-export default function discourseVirtualLoader({ basePath, modules, opts }) {
-  const availableVirtualImports = opts.isTheme
+export default function discourseVirtualLoader({
+  basePath,
+  modules,
+  opts,
+  isTheme,
+}) {
+  const availableVirtualImports = isTheme
     ? rollupVirtualImports
     : {
         "virtual:main": rollupVirtualImports["virtual:main"],
