@@ -25,6 +25,7 @@ en:
     chat_editing_grace_period_max_diff_high_trust: "Maximum number of character changes allowed in chat editing grace period, if more changed display the (edited) tag by the chat message (trust level 2 and up)."
     chat_preferred_index: "Preferred tab when loading /chat."
     allow_chat_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to use chat. This setting requires the `allow anonymous mode` setting to be enabled."
+    chat_search_enabled: "Enable this setting to allow users to search chat messages."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."

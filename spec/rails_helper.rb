@@ -553,6 +553,19 @@ RSpec.configure do |config|
     Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
     Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
 
+    module PlaywrightErrorPatch
+      def message
+        msg = super
+        if msg.include?("Please run the following command to download new browsers:")
+          replacement = "pnpm playwright-install"
+          msg.sub("playwright install".ljust(replacement.size), replacement)
+        else
+          msg
+        end
+      end
+    end
+    Playwright::Error.prepend(PlaywrightErrorPatch)
+
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
       if example.exception.nil? &&
@@ -930,7 +943,7 @@ RSpec.configure do |config|
       end
     end
 
-    $playwright_logger.logs.each do |log|
+    $playwright_logger&.logs&.each do |log|
       next if log[:level] != "WARNING"
       deprecation_id = log[:message][/\[deprecation id: ([^\]]+)\]/, 1]
       next if deprecation_id.nil?

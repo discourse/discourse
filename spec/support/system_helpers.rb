@@ -373,4 +373,12 @@ module SystemHelpers
       raise e unless e.message.match?(/Element is not attached to the DOM/)
     end
   end
+
+  def locator(selector, locator = nil)
+    if locator
+      locator.locator(selector)
+    else
+      page.driver.with_playwright_page { |pw_page| pw_page.locator(selector) }
+    end
+  end
 end
