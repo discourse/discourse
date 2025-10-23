@@ -68,7 +68,7 @@ export default async function lightbox(elem, siteSettings) {
 
             const captionTitle = escapeExpression(title);
             const captionDetails =
-              element.querySelector(".informations")?.innerText;
+              element.querySelector(".informations")?.textContent;
             const titleEl = captionTitle
               ? `<div class='pswp__caption-title'>${captionTitle}</div>`
               : null;
@@ -151,7 +151,7 @@ export default async function lightbox(elem, siteSettings) {
       }
 
       if (!width || !height) {
-        const imgInfo = el.querySelector(".informations")?.innerText || "";
+        const imgInfo = el.querySelector(".informations")?.textContent || "";
         const dimensions = imgInfo.trim().split(" ")[0];
         [width, height] = dimensions.split(/x|×/).map(Number);
       }
