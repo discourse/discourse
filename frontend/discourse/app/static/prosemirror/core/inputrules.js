@@ -87,15 +87,15 @@ function processInputRule(inputRule, params) {
       undoable = options.undoable ?? true;
     }
 
-    const handler = !inCodeMark
-      ? wrapHandlerWithBacktickCheck(inputRule.handler)
-      : inputRule.handler;
-
-    return new InputRule(inputRule.match, handler, {
-      undoable,
-      inCode,
-      inCodeMark,
-    });
+    return new InputRule(
+      inputRule.match,
+      wrapHandlerWithBacktickCheck(inputRule.handler),
+      {
+        undoable,
+        inCode,
+        inCodeMark,
+      }
+    );
   }
 
   throw new Error("Input rule must have a match regex and a handler function");
