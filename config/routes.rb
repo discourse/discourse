@@ -28,9 +28,8 @@ Discourse::Application.routes.draw do
     get "/404-body" => "exceptions#not_found_body"
 
     if Rails.env.local?
-      get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
       get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
-      get "/bootstrap/plugin-js-for-tests" => "bootstrap#plugin_js_for_tests"
+      get "/bootstrap/plugin-test-info" => "bootstrap#plugin_test_info"
     end
 
     # This is not a valid production route and is causing routing errors to be raised in

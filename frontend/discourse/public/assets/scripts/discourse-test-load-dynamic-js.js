@@ -5,20 +5,22 @@ const params = new URLSearchParams(document.location.search);
 const target = params.get("target") || "core";
 
 (async function setup() {
-  if (target !== "core") {
-    const rootUrl = document.querySelector("link[rel='canonical']").href;
-    const response = await fetch(
-      `${rootUrl}bootstrap/plugin-js-for-tests.json?target=${target}`
-    );
-    const data = await response.json();
+  const rootUrl = document.querySelector("link[rel='canonical']").href;
+  const response = await fetch(
+    `${rootUrl}bootstrap/plugin-test-info.json?target=${target}`
+  );
+  const data = await response.json();
 
-    dynamicJsTemplate.content.firstElementChild.insertAdjacentHTML(
-      "beforebegin",
-      data.html
-    );
+  dynamicJsTemplate.content.firstElementChild.insertAdjacentHTML(
+    "beforebegin",
+    data.html
+  );
 
-    window._discourseQunitPluginNames = data.all_plugins;
-  }
+  window._discourseQunitPluginNames = data.all_plugins;
+
+  window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS = JSON.parse(
+    data.site_settings_json
+  );
 
   for (const element of dynamicJsTemplate.content.childNodes) {
     if (
