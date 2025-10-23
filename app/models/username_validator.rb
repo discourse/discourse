@@ -37,7 +37,7 @@ class UsernameValidator
     username_last_char_valid?
     username_no_double_special?
     username_does_not_end_with_confusing_suffix?
-    username_plugin_validations
+    username_plugin_validation
     errors.empty?
   end
 
@@ -151,7 +151,7 @@ class UsernameValidator
     end
   end
 
-  def username_plugin_validations
+  def username_plugin_validation
     return unless errors.empty?
 
     DiscoursePluginRegistry.apply_modifier(:username_validation, self.errors, self)
