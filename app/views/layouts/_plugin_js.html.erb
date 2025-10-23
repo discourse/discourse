@@ -1,13 +1,6 @@
 <%# locals: (opts:) %>
 
 <%- Discourse.find_plugin_js_assets(opts).tap do |plugin_assets| %>
-  <%- plugin_assets.each do |asset| %>
-    <%if asset[:type_module] %>
-      <link rel="modulepreload" href="<%= script_asset_path(asset[:name]) %>" nonce="<%= csp_nonce_placeholder %>" data-plugin-name="<%= asset[:plugin].directory_name %>">
-    <% else %>
-      <%= preload_script asset[:name] %>
-    <% end %>  
-  <%- end %>
   <script type="importmap" nonce="<%= csp_nonce_placeholder %>">
     <%=
       {
@@ -15,4 +8,11 @@
       }.to_json.html_safe
     %>
   </script>
+  <%- plugin_assets.each do |asset| %>
+    <%if asset[:type_module] %>
+      <link rel="modulepreload" href="<%= script_asset_path(asset[:name]) %>" nonce="<%= csp_nonce_placeholder %>" data-plugin-name="<%= asset[:plugin].directory_name %>">
+    <% else %>
+      <%= preload_script asset[:name] %>
+    <% end %>  
+  <%- end %>
 <%- end %>
