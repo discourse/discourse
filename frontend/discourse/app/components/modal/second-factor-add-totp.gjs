@@ -146,13 +146,9 @@ export default class SecondFactorAddTotp extends Component {
             </label>
             <div class="controls">
               <SecondFactorInput
-                {{on
-                  "input"
-                  (withEventValue (fn (mut this.secondFactorToken)))
-                }}
+                @onFilled={{fn (mut this.secondFactorToken)}}
                 @secondFactorMethod={{this.totpType}}
                 value={{this.secondFactorToken}}
-                placeholder="123456"
                 id="second-factor-token"
               />
             </div>

@@ -5,6 +5,7 @@ import colors from "../components/sections/atoms/03-colors";
 import icons from "../components/sections/atoms/04-icons";
 import forms from "../components/sections/atoms/05-forms";
 import spinners from "../components/sections/atoms/06-spinners";
+import otp from "../components/sections/atoms/07-otp";
 import dateTimeInputs from "../components/sections/atoms/date-time-inputs";
 import dropdowns from "../components/sections/atoms/dropdowns";
 import topicLink from "../components/sections/atoms/topic-link";
@@ -58,6 +59,7 @@ const SECTIONS = [
     priority: 5,
   },
   { component: spinners, category: "atoms", id: "spinners", priority: 6 },
+  { component: otp, category: "atoms", id: "otp", priority: 7 },
   { component: dateTimeInputs, category: "atoms", id: "date-time-inputs" },
   { component: dropdowns, category: "atoms", id: "dropdowns" },
   { component: topicLink, category: "atoms", id: "topic-link" },

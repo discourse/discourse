@@ -1,12 +1,10 @@
 import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
 import RouteTemplate from "ember-route-template";
 import DButton from "discourse/components/d-button";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecondFactorInput from "discourse/components/second-factor-input";
 import SecurityKeyForm from "discourse/components/security-key-form";
-import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
@@ -53,12 +51,7 @@ export default RouteTemplate(
                     @isLogin={{true}}
                   >
                     <SecondFactorInput
-                      {{on
-                        "input"
-                        (withEventValue
-                          (fn (mut @controller.secondFactorToken))
-                        )
-                      }}
+                      @onFilled={{fn (mut @controller.secondFactorToken)}}
                       @secondFactorMethod={{@controller.secondFactorMethod}}
                       value={{@controller.secondFactorToken}}
                     />
