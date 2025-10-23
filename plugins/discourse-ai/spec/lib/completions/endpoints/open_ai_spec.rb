@@ -439,6 +439,88 @@ RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
 
       expect(read_properties.join).to eq("hello")
     end
+
+    it "converts json_schema to json_object for Azure deployments" do
+      model.provider = "azure"
+      model.save!
+
+      prompt = compliance.generic_prompt
+      response_text = '{"message": "test response"}'
+
+      model_params = {
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "test_schema",
+            schema: {
+              type: "object",
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      }
+
+      # Expect the request to have json_object instead of json_schema
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body: hash_including(response_format: { type: "json_object" }),
+      ).to_return(status: 200, body: JSON.dump(open_ai_mock.response(response_text)))
+
+      dialect = compliance.dialect(prompt: prompt)
+      endpoint.perform_completion!(dialect, user, model_params) { |partial| partial }
+    end
+
+    it "keeps json_schema for non-Azure OpenAI deployments" do
+      model.provider = "open_ai"
+      model.save!
+
+      prompt = compliance.generic_prompt
+      response_text = '{"message": "test response"}'
+
+      model_params = {
+        response_format: {
+          type: "json_schema",
+          json_schema: {
+            name: "test_schema",
+            schema: {
+              type: "object",
+              properties: {
+                message: {
+                  type: "string",
+                },
+              },
+            },
+          },
+        },
+      }
+
+      # Expect the request to keep json_schema for regular OpenAI
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          hash_including(
+            response_format: {
+              type: "json_schema",
+              json_schema: {
+                name: "test_schema",
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+            },
+          ),
+      ).to_return(status: 200, body: JSON.dump(open_ai_mock.response(response_text)))
+
+      dialect = compliance.dialect(prompt: prompt)
+      endpoint.perform_completion!(dialect, user, model_params) { |partial| partial }
+    end
   end
 
   describe "disabled tool use" do

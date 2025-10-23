@@ -96,6 +96,14 @@ module DiscourseAi
             payload[:stream_options] = { include_usage: true } if llm_model.provider == "open_ai"
           end
 
+          # Azure OpenAI API versions vary and many don't support json_schema so we convert to json_object
+          if llm_model.provider == "azure" && payload[:response_format].present?
+            response_format_type = payload.dig(:response_format, :type)
+            if response_format_type == "json_schema"
+              payload[:response_format] = { type: "json_object" }
+            end
+          end
+
           if !xml_tools_enabled?
             if dialect.tools.present?
               payload[:tools] = dialect.tools
