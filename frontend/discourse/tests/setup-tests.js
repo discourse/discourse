@@ -131,7 +131,7 @@ function setupToolbar() {
       "all",
       "theme-qunit",
       "-----",
-      ...window._discourseQunitPluginNames,
+      ...(window._discourseQunitPluginNames || []),
     ],
   });
 
