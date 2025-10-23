@@ -100,7 +100,7 @@ module("Integration | Component | FilterInput", function (hooks) {
     );
     await click(".filter-input-clear-btn");
 
-    assert.strictEqual(this.called, true);
+    assert.true(this.called);
   });
 
   test("Input focus after clear", async function (assert) {
