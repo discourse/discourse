@@ -150,23 +150,22 @@ export default class PostTextSelection extends Component {
     const quoteState = this.computeQuoteState(cooked);
 
     let offset = 3;
-    if (this.capabilities.isIOS) {
-      if (shouldRenderUnder) {
-        // on mobile, we ideally want to show the toolbar at the end of the selection
-        offset = 20;
 
-        if (
-          !isElementInViewport(selectedRange().startContainer.parentNode) ||
-          !isElementInViewport(selectedRange().endContainer.parentNode)
-        ) {
-          // we force a higher offset in two cases:
-          // - the start of the selection is not in viewport, in this case on iOS for example
-          //   the native menu will be shown at the bottom of the screen, right after text selection
-          //   so we need more space
-          // - the end of the selection is not in viewport, in this case our menu will be shown at the top
-          //   of the screen, so we need more space to avoid overlapping with the native menu
-          offset = 70;
-        }
+    if (shouldRenderUnder) {
+      // on mobile, we ideally want to show the toolbar at the end of the selection
+      offset = 20;
+
+      if (
+        !isElementInViewport(selectedRange().startContainer.parentNode) ||
+        !isElementInViewport(selectedRange().endContainer.parentNode)
+      ) {
+        // we force a higher offset in two cases:
+        // - the start of the selection is not in viewport, in this case on iOS for example
+        //   the native menu will be shown at the bottom of the screen, right after text selection
+        //   so we need more space
+        // - the end of the selection is not in viewport, in this case our menu will be shown at the top
+        //   of the screen, so we need more space to avoid overlapping with the native menu
+        offset = 70;
       }
     }
 
