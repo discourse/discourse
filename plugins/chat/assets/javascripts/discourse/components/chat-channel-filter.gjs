@@ -167,12 +167,12 @@ export default class ChatChannelFilter extends Component {
               <DButton
                 @action={{this.navigateToPreviousResult}}
                 @icon="chevron-up"
-                class="btn-small chat-channel__prev-result"
+                class="btn-small btn-flat chat-channel__prev-result"
               />
               <DButton
                 @action={{this.navigateToNextResult}}
                 @icon="chevron-down"
-                class="btn-small chat-channel__next-result"
+                class="btn-small btn-flat chat-channel__next-result"
               />
             {{/if}}
           {{/if}}
@@ -180,14 +180,14 @@ export default class ChatChannelFilter extends Component {
           {{#if this.currentChannelFilter.length}}
             <DButton
               @icon="xmark"
-              class="btn-small"
+              class="btn-small btn-flat"
               @action={{this.clearFilteringState}}
             />
           {{/if}}
 
           <DButton
             @action={{fn @onToggleFilter false}}
-            class="btn-primary btn-small"
+            class="btn-small btn-flat"
             @label="done"
           />
         </div>
