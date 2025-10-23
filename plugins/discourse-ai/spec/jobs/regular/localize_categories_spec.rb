@@ -50,6 +50,13 @@ describe Jobs::LocalizeCategories do
     job.execute({ limit: 10 })
   end
 
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_category_localization?).returns(false)
+    DiscourseAi::Translation::CategoryLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
   it "does nothing when the limit is zero" do
     DiscourseAi::Translation::CategoryLocalizer.expects(:localize).never
 
