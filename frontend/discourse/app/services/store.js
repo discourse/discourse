@@ -186,8 +186,7 @@ export default class StoreService extends Service {
       );
 
       // reset the content of the array
-      resultSet.content.length = 0;
-      resultSet.content.push(...content);
+      resultSet.content.splice(0, Infinity, ...content);
     });
   }
 
