@@ -252,6 +252,12 @@ RSpec.describe AiPersona do
       expect(result.name).to eq("cached_persona")
     end
 
+    it "finds persona when id is provided as a string" do
+      result = AiPersona.find_by_id_from_cache(persona.id.to_s)
+      expect(result).to be_present
+      expect(result.id).to eq(persona.id)
+    end
+
     it "returns nil for non-existent persona id" do
       result = AiPersona.find_by_id_from_cache(999_999)
       expect(result).to eq(nil)

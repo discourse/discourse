@@ -76,14 +76,14 @@ class AiPersona < ActiveRecord::Base
   end
 
   def self.find_by_id_from_cache(persona_id)
-    return nil if persona_id.blank?
+    return nil if persona_id.nil?
 
     # Try to find in record cache first
-    cached_persona = all_persona_records(enabled_only: false).find { |p| p.id == persona_id }
+    cached_persona = all_persona_records(enabled_only: false).find { |p| p.id == persona_id.to_i }
     return cached_persona if cached_persona
 
     # Fallback to database if not found in cache (e.g., in tests or if cache is stale)
-    find_by(id: persona_id)
+    find_by(id: persona_id.to_i)
   end
 
   def self.persona_users(user: nil)
@@ -346,6 +346,26 @@ class AiPersona < ActiveRecord::Base
   end
 
   private
+
+  def self.cast_persona_id(persona_id)
+    return persona_id if persona_id.is_a?(Integer)
+
+    if persona_id.respond_to?(:id)
+      record_id = persona_id.id
+      return record_id if record_id.is_a?(Integer)
+    end
+
+    return nil if persona_id.blank?
+
+    if persona_id.is_a?(String)
+      stripped_id = persona_id.strip
+      return nil if stripped_id.blank?
+
+      return Integer(stripped_id, exception: false)
+    end
+
+    persona_id.respond_to?(:to_i) ? persona_id.to_i : nil
+  end
 
   def chat_preconditions
     if (
