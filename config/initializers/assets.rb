@@ -11,7 +11,7 @@ Rails.application.config.assets.version = "2-#{GlobalSetting.asset_url_salt}"
 # Add additional assets to the asset load path.
 Rails.application.config.assets.paths.push(
   "#{Rails.root}/public/javascripts",
-  "#{Rails.root}/app/assets/javascripts/discourse/dist/assets",
+  "#{Rails.root}/frontend/discourse/dist/assets",
 )
 
 Rails.application.config.assets.paths.push(

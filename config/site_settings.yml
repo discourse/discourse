@@ -1360,6 +1360,7 @@ posting:
     default: "“|”|‘|’"
     locale_default:
       de: "„|“|‚|‘"
+      cs: "„|“|‚|‘"
       fr: "«\xA0|\xA0»|‹\xA0|\xA0›"
     area: "posts_and_topics"
   suppress_reply_directly_below:
@@ -1946,6 +1947,9 @@ email:
   enable_staged_users:
     default: true
     area: "email"
+  email_in_allow_system_user_fallback:
+    default: false
+    hidden: true
   maximum_staged_users_per_email:
     default: 10
     area: "email"
@@ -4237,11 +4241,11 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: "auto"
+    default: "enabled"
     area: "experimental"
   deactivate_widgets_rendering:
     client: true
-    default: false
+    default: true
     area: "experimental"
   enable_rich_text_paste:
     client: true
