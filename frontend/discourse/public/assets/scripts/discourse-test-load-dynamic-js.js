@@ -18,9 +18,10 @@ const target = params.get("target") || "core";
 
   window._discourseQunitPluginNames = data.all_plugins;
 
-  window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS = JSON.parse(
-    data.site_settings_json
-  );
+  window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS = {
+    ...JSON.parse(data.site_settings_json),
+    ...JSON.parse(data.theme_site_settings_json),
+  };
 
   for (const element of dynamicJsTemplate.content.childNodes) {
     if (
