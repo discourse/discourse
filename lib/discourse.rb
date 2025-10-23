@@ -453,7 +453,7 @@ module Discourse
 
     assets = []
 
-    plugins.flat_map do |plugin|
+    plugins.each do |plugin|
       if plugin.js_asset_exists?
         assets << {
           name: "plugins/#{plugin.directory_name}",
@@ -474,6 +474,15 @@ module Discourse
       if args[:include_admin_asset] && plugin.admin_js_asset_exists?
         assets << {
           name: "plugins/#{plugin.directory_name}_admin",
+          plugin: plugin,
+          type_module: true,
+        }
+      end
+
+      if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
+           plugin.test_js_asset_exists?
+        assets << {
+          name: "plugins/#{plugin.directory_name}_test",
           plugin: plugin,
           type_module: true,
         }

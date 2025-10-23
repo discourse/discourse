@@ -962,8 +962,11 @@ class Plugin::Instance
   end
 
   def admin_js_asset_exists?
-    # If this directory exists, ember-cli will output a .js file
     File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
+  end
+
+  def test_js_asset_exists?
+    File.exist?("#{File.dirname(@path)}/test/javascripts")
   end
 
   # Receives an array with two elements:

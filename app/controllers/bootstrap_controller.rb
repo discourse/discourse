@@ -26,12 +26,15 @@ class BootstrapController < ApplicationController
       required_plugins << additional_plugin.directory_name if additional_plugin
     end
 
+    required_plugins.push(*QunitController::ALWAYS_LOADED_PLUGINS)
+
     plugin_js_string =
       render_to_string partial: "layouts/plugin_js",
                        locals: {
                          opts: {
                            include_disabled: true,
                            include_admin_asset: true,
+                           include_test_assets_for: [target_plugin.directory_name],
                            only: required_plugins,
                          },
                        },
