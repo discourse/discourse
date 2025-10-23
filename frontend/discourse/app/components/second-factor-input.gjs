@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import DOTP from "discourse/components/d-otp";
 import withEventValue from "discourse/helpers/with-event-value";
