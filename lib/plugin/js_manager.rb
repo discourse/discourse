@@ -16,16 +16,16 @@ module Plugin
     end
 
     def compile!
-      puts "Running initial compilation of plugins..."
+      puts "[Plugin::JSManager] Compiling plugins..."
       start = Time.now
 
       Parallel.each(Discourse.plugins, in_threads: 8) { |plugin| compile_js_bundle(plugin) }
 
-      puts "Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
+      puts "[Plugin::JSManager] Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
     end
 
     def compile_js_bundle(plugin)
-      print "Building #{plugin.directory_name}... "
+      # print "Building #{plugin.directory_name}... "
       start = Time.now
 
       output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}/plugins"
@@ -89,7 +89,7 @@ module Plugin
           .each { |f| File.delete(f) }
         next
       end
-      puts "done (#{(Time.now - start).round(2)}s)"
+      # puts "done (#{(Time.now - start).round(2)}s)"
     end
 
     def watch
