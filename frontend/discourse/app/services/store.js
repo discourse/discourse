@@ -188,7 +188,9 @@ export default class StoreService extends Service {
       );
 
       // reset the content of the array
-      resultSet.content.splice(0, Infinity, ...content);
+      resultSet instanceof ResultSet
+        ? resultSet.content.splice(0, Infinity, ...content)
+        : resultSet.set("content", content);
     });
   }
 
