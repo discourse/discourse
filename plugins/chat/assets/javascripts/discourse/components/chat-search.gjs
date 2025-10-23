@@ -189,11 +189,8 @@ export default class ChatSearch extends Component {
           @icons={{hash left="magnifying-glass"}}
           placeholder={{i18n "chat.search_view.filter_placeholder"}}
           class="no-blur"
+          @onClearInput={{fn this.debounceFilterChange ""}}
         />
-
-        {{#if @query}}
-          <DButton @icon="xmark" @action={{fn this.debounceFilterChange ""}} />
-        {{/if}}
 
         <DMenu
           @identifier="search-sort-options"

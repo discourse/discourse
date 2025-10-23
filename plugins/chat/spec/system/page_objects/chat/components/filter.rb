@@ -17,7 +17,7 @@ module PageObjects
         end
 
         def toggle
-          locator(".c-navbar__filter").click
+          locator(".c-navbar__filter").click(position: { x: 0, y: 25 }) # avoid mini profiler
           self
         end
 
@@ -32,6 +32,15 @@ module PageObjects
         def fill_in(query)
           filter_bar.locator("input").fill(query)
           self
+        end
+
+        def clear
+          filter_bar.locator(".filter-input-clear-btn").click
+          self
+        end
+
+        def has_no_state?
+          has_no_css?(".chat-channel__filter-position")
         end
 
         def has_no_results?
