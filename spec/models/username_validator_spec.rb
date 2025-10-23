@@ -301,7 +301,7 @@ RSpec.describe UsernameValidator do
       end
     end
 
-    it "calls plugin modifiers for username validation" do
+    it "applies plugin modifiers for username validation" do
       expect_valid(invalid_username, failure_reason: "Plugin validations should be called")
 
       DiscoursePluginRegistry.register_modifier(plugin, modifier, &add_error_block)
