@@ -26,7 +26,7 @@ const extension = {
       parseDOM: [
         {
           priority: 60,
-          tag: "a.mention",
+          tag: "a.mention, a.mention-group",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
             return {

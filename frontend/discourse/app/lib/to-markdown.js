@@ -1,7 +1,11 @@
+import { DOMParser as ProseMirrorDOMParser } from "prosemirror-model";
 import {
   buildImageMarkdown,
   extensionFromUrl,
 } from "discourse/lib/markdown-image-builder";
+import { createSchema } from "../static/prosemirror/core/schema";
+import Serializer from "../static/prosemirror/core/serializer";
+import { getExtensions } from "./composer/rich-editor-extensions";
 
 const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpFirst",
@@ -9,23 +13,13 @@ const MSO_LIST_CLASSES = [
   "MsoListParagraphCxSpLast",
 ];
 
+// Legacy callback system for backward compatibility
 let tagDecorateCallbacks = [];
 let blockDecorateCallbacks = [];
 let textDecorateCallbacks = [];
 
 /**
- * Allows to add support for custom inline markdown/bbcode prefixes
- * to convert nodes back to bbcode.
- *
- * ```
- * addTagDecorateCallback(function (text) {
- *   if (this.element.attributes.class === "loud") {
- *     this.prefix = "^^";
- *     this.suffix = "^^";
- *     return text.toLowerCase();
- *   }
- * });
- * ```
+ * @deprecated Use ProseMirror extensions instead
  */
 export function addTagDecorateCallback(callback) {
   tagDecorateCallbacks.push(callback);
@@ -36,17 +30,7 @@ export function clearTagDecorateCallbacks() {
 }
 
 /**
- * Allows to add support for custom block markdown/bbcode prefixes
- * to convert nodes back to bbcode.
- *
- * ```
- * addBlockDecorateCallback(function (text) {
- *   if (this.element.attributes.class === "spoiled") {
- *     this.prefix = "[spoiler]";
- *     this.suffix = "[/spoiler]";
- *   }
- * });
- * ```
+ * @deprecated Use ProseMirror extensions instead
  */
 export function addBlockDecorateCallback(callback) {
   blockDecorateCallbacks.push(callback);
@@ -57,20 +41,7 @@ export function clearBlockDecorateCallbacks() {
 }
 
 /**
- * Allows to add support for custom text node transformations
- * based on the next/previous elements.
- *
- * ```
- * addTextDecorateCallback(function (text, nextElement, previousElement) {
- *   if (
- *     startRangeOpts &&
- *     nextElement?.attributes.class?.includes("discourse-local-date") &&
- *     text === "→"
- *   ) {
- *     return "";
- *   }
- * });
- * ```
+ * @deprecated Use ProseMirror extensions instead
  */
 export function addTextDecorateCallback(callback) {
   textDecorateCallbacks.push(callback);
@@ -949,19 +920,15 @@ function replacePlaceholders(markdown, placeholders) {
 
 export default function toMarkdown(html) {
   try {
-    const { elements, placeholders } = putPlaceholders(html);
-    let markdown = Element.parse(elements).trim();
-    markdown = markdown
-      .replace(/^<b>/, "")
-      .replace(/<\/b>$/, "")
-      .trim(); // fix for google doc copy paste
-    markdown = markdown
-      .replace(/\n +/g, "\n")
-      .replace(/ +\n/g, "\n")
-      .replace(/ {2,}/g, " ")
-      .replace(/\n{3,}/g, "\n\n")
-      .replace(/\t/g, "  ");
-    return replacePlaceholders(markdown, placeholders);
+    const extensions = getExtensions();
+    const schema = createSchema(extensions);
+    const domParser = ProseMirrorDOMParser.fromSchema(schema);
+    const serializer = new Serializer(extensions, {});
+
+    const element = new DOMParser().parseFromString(html, "text/html");
+    const doc = domParser.parse(element);
+
+    return serializer.convert(doc).trim();
   } catch {
     return "";
   }

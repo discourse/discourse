@@ -23,8 +23,12 @@ const extension = {
       inclusive: false,
       parseDOM: [
         {
-          tag: "a[href]",
+          tag: "a[href]:not(.lightbox)",
           getAttrs(dom) {
+            if (dom.textContent === dom.getAttribute("href")) {
+              return false;
+            }
+
             return {
               href: dom.getAttribute("href"),
               title: dom.getAttribute("title"),
