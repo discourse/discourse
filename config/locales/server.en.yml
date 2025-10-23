@@ -5915,6 +5915,10 @@ en:
         title: "Delete & block"
         description: "Delete the user and block their IP/email"
         complete: "User deleted and blocked"
+      delete_user_block:
+        title: "Delete & block"
+        description: "Delete the user and block their IP/email"
+        complete: "User deleted and blocked"
 
   email_style:
     html_missing_placeholder: "The html template must include %{placeholder}"

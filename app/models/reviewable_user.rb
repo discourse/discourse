@@ -29,7 +29,7 @@ class ReviewableUser < Reviewable
 
     if @guardian.can_delete_user?(target_user)
       bundle_actions[:delete_user] = {}
-      bundle_actions[:delete_and_block_user] = {}
+      bundle_actions[:delete_user_block] = {}
     end
 
     build_bundle(
@@ -116,6 +116,7 @@ class ReviewableUser < Reviewable
         else
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
+        delete_args[:from_reviewable] = true
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess

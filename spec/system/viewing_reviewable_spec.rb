@@ -6,6 +6,7 @@ describe "Viewing reviewable item", type: :system do
   fab!(:reviewable_flagged_post)
 
   let(:review_page) { PageObjects::Pages::Review.new }
+  let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
   let(:review_note_form) { PageObjects::Components::ReviewNoteForm.new }
 
   describe "when user is part of the groups list of the `reviewable_ui_refresh` site setting" do
@@ -108,11 +109,11 @@ describe "Viewing reviewable item", type: :system do
       end
 
       it "allows to add notes and persists them when toggle tabs" do
-        review_page.visit_reviewable(reviewable_flagged_post)
-        review_page.click_timeline_tab
+        refreshed_review_page.visit_reviewable(reviewable_flagged_post)
+        refreshed_review_page.click_timeline_tab
         review_note_form.add_note("This is a review note.")
-        review_page.click_insights_tab
-        review_page.click_timeline_tab
+        refreshed_review_page.click_insights_tab
+        refreshed_review_page.click_timeline_tab
         expect(page).to have_text("This is a review note.")
       end
     end
@@ -132,20 +133,62 @@ describe "Viewing reviewable item", type: :system do
       it "shows the user's name and admin profile link" do
         reviewable = ReviewableUser.find_by_target_id(user.id)
 
-        review_page.visit_reviewable(reviewable)
+        refreshed_review_page.visit_reviewable(reviewable)
         expect(page).to have_text(user.name)
         expect(page).to have_link(user.username, href: "/admin/users/#{user.id}/#{user.username}")
       end
 
-      it "allows to add notes and persists them when toggle tabs" do
+      it "Allow to delete user" do
         reviewable = ReviewableUser.find_by_target_id(user.id)
+        user_email = user.email
 
-        review_page.visit_reviewable(reviewable)
-        review_page.click_timeline_tab
-        review_note_form.add_note("This is a review note.")
-        review_page.click_insights_tab
-        review_page.click_timeline_tab
-        expect(page).to have_text("This is a review note.")
+        refreshed_review_page.visit_reviewable(reviewable)
+        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.to).to eq([user_email])
+        expect(mail.subject).to match(/You've been rejected on Discourse/)
+      end
+
+      it "Allows scrubbing user data after rejection" do
+        scrubbing_reason = "a spammer who knows how to make GDPR requests"
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+        user_email = user.email
+
+        refreshed_review_page.visit_reviewable(reviewable)
+        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
+
+        expect(refreshed_review_page).to have_scrub_button(reviewable)
+        refreshed_review_page.click_scrub_button(reviewable)
+
+        expect(scrub_user_modal.scrub_button).to be_disabled
+        scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
+        expect(scrub_user_modal.scrub_button).not_to be_disabled
+        scrub_user_modal.scrub_button.click
+
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_by(
+          reviewable,
+          admin.username,
+        )
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_reason(
+          reviewable,
+          scrubbing_reason,
+        )
+        expect(refreshed_review_page).to have_reviewable_with_scrubbed_at(
+          reviewable,
+          reviewable.payload["scrubbed_at"],
+        )
+        expect(refreshed_review_page).to have_no_scrub_button(reviewable)
+      end
+
+      it "Allows to delete and block user" do
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+        user_email = user.email
+
+        refreshed_review_page.visit_reviewable(reviewable)
+        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user_block")
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
       end
     end
   end
