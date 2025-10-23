@@ -1,6 +1,5 @@
 /**
  * Utility functions for autocomplete result components
- * Provides reusable behaviors without requiring inheritance
  */
 
 /**
@@ -17,11 +16,25 @@ export function handleAutocompleteResultClick(
   index,
   event
 ) {
-  event.preventDefault();
-  event.stopPropagation();
+  try {
+    event.preventDefault();
+    event.stopPropagation();
 
-  if (typeof onSelectCallback === "function") {
-    onSelectCallback(result, index, event);
+    if (typeof onSelectCallback !== "function") {
+      return;
+    }
+
+    const callbackResult = onSelectCallback(result, index, event);
+
+    if (callbackResult && typeof callbackResult.then === "function") {
+      callbackResult.catch((e) => {
+        // eslint-disable-next-line no-console
+        console.error("[autocomplete] onSelect promise rejected: ", e);
+      });
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error("[autocomplete] Click handler error: ", e);
   }
 }
 
@@ -35,30 +48,4 @@ export function callOnRenderCallback(onRenderCallback, results) {
   if (typeof onRenderCallback === "function") {
     onRenderCallback(results);
   }
-}
-
-/**
- * Determine if an item should be selected based on index
- *
- * @param {number} itemIndex - Index of the current item
- * @param {number} selectedIndex - Currently selected index
- * @returns {boolean} Whether this item is selected
- */
-export function isItemSelected(itemIndex, selectedIndex) {
-  return itemIndex === selectedIndex;
-}
-
-/**
- * Find and return the selected item element
- *
- * @param {HTMLElement} container - Container element to search within
- * @param {number} selectedIndex - Index to find
- * @returns {HTMLElement|null} The selected element or null
- */
-export function findSelectedItem(container, selectedIndex) {
-  if (!container || selectedIndex < 0) {
-    return null;
-  }
-
-  return container.querySelector(`[data-index="${selectedIndex}"]`);
 }
