@@ -6,6 +6,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import WebhookItem from "admin/components/webhook-item";
+import { removeValueFromArray } from "../../../app/lib/array-tools";
 
 export default class AdminConfigAreasWebhooksList extends Component {
   @service dialog;
@@ -19,7 +20,7 @@ export default class AdminConfigAreasWebhooksList extends Component {
       didConfirm: async () => {
         try {
           await webhook.destroyRecord();
-          this.webhooks.removeObject(webhook);
+          removeValueFromArray(this.webhooks.content, webhook);
         } catch (e) {
           popupAjaxError(e);
         }
@@ -29,7 +30,7 @@ export default class AdminConfigAreasWebhooksList extends Component {
 
   <template>
     <div class="container admin-api_keys">
-      {{#if this.webhooks}}
+      {{#if this.webhooks.content}}
         <table class="d-table admin-web_hooks__items">
           <thead class="d-table__header">
             <tr class="d-table__row">
@@ -48,7 +49,7 @@ export default class AdminConfigAreasWebhooksList extends Component {
             </tr>
           </thead>
           <tbody class="d-table__body">
-            {{#each this.webhooks as |webhook|}}
+            {{#each this.webhooks.content as |webhook|}}
               <WebhookItem
                 @webhook={{webhook}}
                 @deliveryStatuses={{this.webhooks.extras.delivery_statuses}}
