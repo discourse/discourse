@@ -97,9 +97,9 @@ def migrate_theme_settings_to_site_settings(theme_settings)
     begin
       SiteSetting.set(site_setting_name, new_value)
 
-      old_text = "\e[1;31m#{ts.name}: #{ts.value}\e[0m" # Bold red
-      arrow = "\e[1m=>\e[0m" # Bold white
-      new_text = "\e[1;32m#{site_setting_name}: #{new_value}\e[0m" # Bold green
+      old_text = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
+      arrow = "\e[0m=>\e[0m"
+      new_text = "\e[0;32m#{site_setting_name}: #{new_value}\e[0m"
 
       puts "    #{old_text} #{arrow} #{new_text}"
       migrated_count += 1
