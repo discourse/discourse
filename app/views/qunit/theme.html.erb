@@ -3,7 +3,7 @@
   <head>
     <title>Theme QUnit Test Runner</title>
     <%= discourse_color_scheme_stylesheets %>
-    <meta name="color-scheme" content="light dark">
+    <meta name="color-scheme" content="light dark">  
 
     <%- if @has_test_bundle && !@suggested_themes %>
       <%= preload_script "vendor" %>
@@ -12,9 +12,13 @@
       <%= preload_script "test" %>
       <%= preload_script_url ExtraLocalesController.url("main") %>
       <%= preload_script_url ExtraLocalesController.url("mf") %>
-      <%- Discourse.find_plugin_js_assets(include_disabled: true, include_admin_asset: true, only: @required_plugins).each do |file| %>
-        <%= preload_script file %>
-      <%- end %>
+      <%= render "layouts/plugin_js", 
+        opts: {
+          include_disabled: true,
+          include_admin_asset: true,
+          only: @required_plugins
+        }
+      %>
       <%= preload_script "test-site-settings" %>
       <%= theme_translations_lookup %>
       <%= theme_lookup("head_tag") %>
