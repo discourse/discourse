@@ -113,6 +113,7 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
       # Bypass `ember test` - it only works properly for the `/tests` path.
       # We have to trigger a `build` manually so that JS is available for rails to serve.
       if !reuse_build
+        system("bin/rake", "assets:precompile:build_plugins", exception: true)
         system("pnpm", "ember", "build", chdir: "#{Rails.root}/frontend/discourse", exception: true)
       end
 
