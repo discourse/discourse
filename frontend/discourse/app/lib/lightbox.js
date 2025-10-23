@@ -34,7 +34,9 @@ export default async function lightbox(elem, siteSettings) {
       children: SELECTORS.DEFAULT_ITEM_SELECTOR,
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
-      errorMsg: i18n("lightbox.content_load_error", { url: elem.href }),
+      closeTitle: i18n("lightbox.close"),
+      zoomTitle: i18n("lightbox.zoom"),
+      errorMsg: i18n("lightbox.error"),
       paddingFn: (viewportSize, itemData) => {
         if (viewportSize.x < 1200 || caps.isMobileDevice) {
           return { top: 0, bottom: 0, left: 0, right: 0 };
