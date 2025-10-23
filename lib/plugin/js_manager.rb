@@ -33,9 +33,10 @@ module Plugin
       bundles = [
         ["assets/javascripts", plugin.directory_name],
         ["admin/assets/javascripts", "#{plugin.directory_name}_admin"],
+        ["test/javascripts", "#{plugin.directory_name}_tests", "test/"],
       ]
 
-      bundles.each do |js_path, output_name|
+      bundles.each do |js_path, output_name, module_prefix|
         output_path = "#{output_dir}/#{output_name}-"
         # output_map_file = "#{output_dir}/#{output_name}.js.map"
 

@@ -33,14 +33,13 @@
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
 
-    <%= render "layouts/plugin_js", locals: {
-      opts: {
+    <%= render "layouts/plugin_js", opts: {
         include_official: allow_plugins?,
         include_unofficial: allow_third_party_plugins?,
         request: request,
         include_admin_asset: staff?
       }
-    } %>
+     %>
 
     <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
     <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>

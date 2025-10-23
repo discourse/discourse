@@ -116,13 +116,6 @@ function setupToolbar() {
       ].includes(c.id)
   );
 
-  const pluginNames = new Set();
-
-  document
-    .querySelector("#dynamic-test-js")
-    ?.content.querySelectorAll("script[data-discourse-plugin]")
-    .forEach((script) => pluginNames.add(script.dataset.discoursePlugin));
-
   QUnit.config.urlConfig.push({
     id: "loop",
     label: "Loop until failure",
@@ -138,7 +131,7 @@ function setupToolbar() {
       "all",
       "theme-qunit",
       "-----",
-      ...Array.from(pluginNames),
+      ...window._discourseQunitPluginNames,
     ],
   });
 
