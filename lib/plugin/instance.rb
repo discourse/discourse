@@ -1451,6 +1451,18 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_topic_preloader_association({ fields:, condition: }, self)
   end
 
+  def about_json_metadata
+    @about_json_metadata ||= JSON.parse(File.read("#{directory}/about.json"))
+  rescue Errno::ENOENT
+    nil
+  end
+
+  def test_required_plugins
+    if urls = about_json_metadata&.dig("tests", "requiredPlugins")
+      urls.map { |url| url.split("/").last.delete_suffix(".git") }
+    end
+  end
+
   protected
 
   def self.js_path
