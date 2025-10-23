@@ -13,7 +13,7 @@ function cakedayDate(val, { isBirthday }) {
 
 const UserInfoList = <template>
   <ul class="user-info-list">
-    {{#each @users as |user|}}
+    {{#each @users.content as |user|}}
       <li class="user-info-item">
         <UserInfo @user={{user}}>
           <div>{{cakedayDate user.cakedate isBirthday=@isBirthday}}</div>
