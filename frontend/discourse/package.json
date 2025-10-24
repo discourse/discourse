@@ -36,7 +36,7 @@
     "@messageformat/runtime": "^3.0.1",
     "ace-builds": "^1.43.4",
     "decorator-transforms": "^2.3.0",
-    "chart.js": "3.5.1",
+    "chart.js": "4.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
     "diff": "^8.0.2",
     "discourse-widget-hbs": "workspace:1.0.0",
