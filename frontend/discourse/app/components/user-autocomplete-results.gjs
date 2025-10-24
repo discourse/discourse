@@ -1,0 +1,129 @@
+import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
+import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { and, eq, not } from "truth-helpers";
+import avatar from "discourse/helpers/avatar";
+import icon from "discourse/helpers/d-icon";
+import {
+  callOnRenderCallback,
+  handleAutocompleteResultClick,
+} from "discourse/lib/autocomplete-result-helpers";
+import { formatUsername } from "discourse/lib/utilities";
+import scrollIntoView from "discourse/modifiers/scroll-into-view";
+
+/**
+ * Component for rendering user autocomplete results for the DAutocomplete modifier.
+ *
+ * This component handles rendering of users, emails, and groups in the autocomplete
+ * dropdown, and is designed to be used with DAutocomplete's `component` API.
+ *
+ * @component UserAutocompleteResults
+ * @param {Array} results - Array of autocomplete results (users, emails, groups)
+ * @param {number} selectedIndex - Currently selected index in the results list
+ * @param {Function} onSelect - Callback function triggered when a result is selected
+ * @param {Function} onRender - Optional callback function triggered after component renders
+ */
+export default class UserAutocompleteResults extends Component {
+  static TRIGGER_KEY = "@";
+
+  @tracked isInitialRender = true;
+
+  @action
+  handleResultClick(result, index, event) {
+    handleAutocompleteResultClick(this.args.onSelect, result, index, event);
+  }
+
+  @action
+  handleInsert() {
+    callOnRenderCallback(this.args.onRender, this.args.results);
+  }
+
+  @action
+  handleUpdate() {
+    this.isInitialRender = false;
+    callOnRenderCallback(this.args.onRender, this.args.results);
+  }
+
+  <template>
+    <div
+      class="autocomplete ac-user"
+      {{didInsert this.handleInsert}}
+      {{didUpdate this.handleUpdate @selectedIndex}}
+    >
+      <ul>
+        {{#each @results as |result index|}}
+          {{#if result.isUser}}
+            <li
+              data-index={{result.index}}
+              {{scrollIntoView
+                (and (not this.isInitialRender) (eq index @selectedIndex))
+              }}
+            >
+              <a
+                href
+                title={{result.name}}
+                class="{{result.cssClasses}}
+                  {{if (eq index @selectedIndex) 'selected'}}"
+                {{on "click" (fn this.handleResultClick result index)}}
+              >
+                {{avatar result imageSize="tiny"}}
+                <span class="text-content">
+                  <span class="username">{{formatUsername
+                      result.username
+                    }}</span>
+                  {{#if result.name}}
+                    <span class="name">{{result.name}}</span>
+                  {{/if}}
+                </span>
+                {{#if result.status}}
+                  <span class="user-status"></span>
+                {{/if}}
+              </a>
+            </li>
+          {{else if result.isEmail}}
+            <li
+              {{scrollIntoView
+                (and (not this.isInitialRender) (eq index @selectedIndex))
+              }}
+            >
+              <a
+                href
+                title={{result.username}}
+                class={{if (eq index @selectedIndex) "selected"}}
+                {{on "click" (fn this.handleResultClick result index)}}
+              >
+                {{icon "envelope"}}
+                <span class="text-content username">{{formatUsername
+                    result.username
+                  }}</span>
+              </a>
+            </li>
+          {{else if result.isGroup}}
+            <li
+              {{scrollIntoView
+                (and (not this.isInitialRender) (eq index @selectedIndex))
+              }}
+            >
+              <a
+                href
+                title={{result.full_name}}
+                class={{if (eq index @selectedIndex) "selected"}}
+                {{on "click" (fn this.handleResultClick result index)}}
+              >
+                {{icon "users"}}
+                <span class="text-content">
+                  <span class="username">{{result.name}}</span>
+                  <span class="name">{{result.full_name}}</span>
+                </span>
+              </a>
+            </li>
+          {{/if}}
+        {{/each}}
+      </ul>
+    </div>
+  </template>
+}

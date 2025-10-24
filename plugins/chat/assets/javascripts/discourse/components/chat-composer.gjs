@@ -22,10 +22,10 @@ import DTextarea from "discourse/components/d-textarea";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
-import userAutocomplete from "discourse/lib/autocomplete/user";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { cloneJSON } from "discourse/lib/object";
@@ -453,8 +453,8 @@ export default class ChatComposer extends Component {
     }
 
     this.applyAutocomplete(textarea, {
-      template: userAutocomplete,
-      key: "@",
+      component: UserAutocompleteResults,
+      key: UserAutocompleteResults.TRIGGER_KEY,
       width: "100%",
       treatAsTextarea: true,
       fixedTextareaPosition: true,

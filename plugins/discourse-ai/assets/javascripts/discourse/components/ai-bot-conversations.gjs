@@ -11,10 +11,10 @@ import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import userAutocomplete from "discourse/lib/autocomplete/user";
 import { hashtagAutocompleteOptions } from "discourse/lib/hashtag-autocomplete";
 import { TextareaAutocompleteHandler } from "discourse/lib/textarea-text-manipulation";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
@@ -194,7 +194,8 @@ export default class AiBotConversations extends Component {
       textarea,
       autocompleteHandler,
       {
-        template: userAutocomplete,
+        component: UserAutocompleteResults,
+        key: UserAutocompleteResults.TRIGGER_KEY,
         dataSource: (term) => {
           destroyUserStatuses();
           return userSearch({
@@ -206,7 +207,6 @@ export default class AiBotConversations extends Component {
           });
         },
         onRender: (options) => renderUserStatusHtml(options),
-        key: "@",
         fixedTextareaPosition: true,
         autoSelectFirstSuggestion: true,
         offset: 2,
