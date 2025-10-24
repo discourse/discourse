@@ -65,7 +65,7 @@ class LlmCreditAllocation < ActiveRecord::Base
 
   def next_reset_at
     return nil if last_reset_at.nil?
-    last_reset_at + 1.month
+    (last_reset_at + 1.month).beginning_of_month
   end
 
   def reset_if_needed!
@@ -73,7 +73,7 @@ class LlmCreditAllocation < ActiveRecord::Base
       reload
       return unless should_reset?
 
-      now = Time.current
+      now = Time.current.beginning_of_month
       update!(monthly_used: 0, last_reset_at: now)
     end
   end
@@ -145,7 +145,7 @@ class LlmCreditAllocation < ActiveRecord::Base
   private
 
   def set_last_reset_at
-    self.last_reset_at ||= Time.current
+    self.last_reset_at ||= Time.current.beginning_of_month
   end
 
   def format_reset_time

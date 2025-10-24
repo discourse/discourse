@@ -42,6 +42,12 @@ RSpec.describe LlmCreditAllocation do
       allocation.save!
       expect(allocation.last_reset_at).to be_present
     end
+
+    it "sets last_reset_at to beginning of month on create" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
+      allocation = Fabricate(:llm_credit_allocation, llm_model: llm_model)
+      expect(allocation.last_reset_at).to eq_time(Time.zone.parse("2025-10-01 00:00:00"))
+    end
   end
 
   describe "#credits_remaining" do
@@ -219,10 +225,24 @@ RSpec.describe LlmCreditAllocation do
   end
 
   describe "#next_reset_at" do
-    it "returns one month after last_reset_at" do
+    it "returns beginning of next month after last_reset_at" do
       freeze_time
       allocation = Fabricate(:llm_credit_allocation, last_reset_at: Time.current)
-      expect(allocation.next_reset_at).to eq_time(1.month.from_now)
+      expect(allocation.next_reset_at).to eq_time((1.month.from_now).beginning_of_month)
+    end
+
+    it "returns first of next month when created mid-month" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
+      allocation = Fabricate(:llm_credit_allocation)
+      expect(allocation.last_reset_at).to eq_time(Time.zone.parse("2025-10-01 00:00:00"))
+      expect(allocation.next_reset_at).to eq_time(Time.zone.parse("2025-11-01 00:00:00"))
+    end
+
+    it "returns first of next month when created on first of month" do
+      freeze_time(Time.zone.parse("2025-11-01 00:00:00"))
+      allocation = Fabricate(:llm_credit_allocation)
+      expect(allocation.last_reset_at).to eq_time(Time.zone.parse("2025-11-01 00:00:00"))
+      expect(allocation.next_reset_at).to eq_time(Time.zone.parse("2025-12-01 00:00:00"))
     end
   end
 
@@ -253,7 +273,7 @@ RSpec.describe LlmCreditAllocation do
 
         allocation.reload
         expect(allocation.monthly_used).to eq(0)
-        expect(allocation.last_reset_at).to be_within(1.second).of(Time.current)
+        expect(allocation.last_reset_at).to eq_time(Time.current.beginning_of_month)
       end
     end
 
@@ -272,6 +292,23 @@ RSpec.describe LlmCreditAllocation do
       allocation.reload
       expect(allocation.monthly_used).to eq(800)
       expect(allocation.last_reset_at).to be_within(1.second).of(original_time)
+    end
+
+    it "resets to beginning of current month when triggered mid-month" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
+      allocation =
+        Fabricate(
+          :llm_credit_allocation,
+          monthly_credits: 1000,
+          monthly_used: 800,
+          last_reset_at: Time.zone.parse("2025-09-01 00:00:00"),
+        )
+
+      allocation.reset_if_needed!
+
+      allocation.reload
+      expect(allocation.monthly_used).to eq(0)
+      expect(allocation.last_reset_at).to eq_time(Time.zone.parse("2025-10-01 00:00:00"))
     end
   end
 
