@@ -3,6 +3,17 @@
 module DiscourseAi
   module Automation
     module LlmTriage
+      def self.flagged_by_another_triage_rule?(post)
+        triage_score_types = [ReviewableScore.types[:spam], ReviewableScore.types[:needs_approval]]
+
+        ReviewableScore
+          .pending
+          .where(user: Discourse.system_user, reviewable_score_type: triage_score_types)
+          .joins(:reviewable)
+          .where(reviewables: { target: post })
+          .exists?
+      end
+
       def self.handle(
         post:,
         triage_persona_id:,
@@ -106,7 +117,6 @@ module DiscourseAi
             end
           elsif canned_reply.present? && action != :edit
             post_type = whisper ? Post.types[:whisper] : Post.types[:regular]
-
             PostCreator.create!(
               user,
               topic_id: post.topic_id,
@@ -133,6 +143,11 @@ module DiscourseAi
           post.topic.update!(visible: false) if hide_topic
 
           if flag_post
+            # Check if another triage rule already created a reviewable for this post.
+            # We'll later use it to avoid sending multiple PMs to the user.
+            # We are doing this now before we create another flag.
+            already_flagged = flagged_by_another_triage_rule?(post)
+
             score_reason =
               I18n.t(
                 "discourse_automation.scriptables.llm_triage.flagged_post",
@@ -191,7 +206,7 @@ module DiscourseAi
                 end
               end
 
-              if notify_author_pm && action != :edit
+              if notify_author_pm && action != :edit && !already_flagged
                 begin
                   pm_sender =
                     if notify_author_pm_user.present?
