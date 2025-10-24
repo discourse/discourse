@@ -1,7 +1,7 @@
 import { waitForPromise } from "@ember/test-waiters";
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
@@ -28,6 +28,7 @@ export default async function lightbox(elem, siteSettings) {
 
   if (siteSettings.experimental_lightbox) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
+    const isTestEnv = isTesting() || isRailsTesting();
 
     const lightboxEl = new PhotoSwipeLightbox({
       gallery: elem,
@@ -37,6 +38,7 @@ export default async function lightbox(elem, siteSettings) {
       closeTitle: i18n("lightbox.close"),
       zoomTitle: i18n("lightbox.zoom"),
       errorMsg: i18n("lightbox.error"),
+      showHideAnimationType: isTestEnv ? "none" : "zoom",
       tapAction,
       paddingFn,
       pswpModule: async () => await import("photoswipe"),
