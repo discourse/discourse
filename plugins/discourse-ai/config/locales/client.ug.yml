@@ -68,6 +68,13 @@ ug:
         select_option: "تاللانما تاللىنىدۇ..."
       translations:
         title: "تەرجىمە"
+        admin_actions:
+          disabled_state:
+            configure: "تەرجىمە سەپلىمىسى"
+        progress_chart:
+          title: "تەرجىمە ئىلگىرىلىشى"
+          completed: "تاماملاندى"
+          remaining: "قالغىنى"
       spam:
         short_title: "ئەخلەت خەت"
         enable: "قوزغات"

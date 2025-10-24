@@ -14,6 +14,8 @@ cs:
           <b>Spuštěno pravidlem <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> .</b>
   site_settings:
     ai_helper_custom_prompts_allowed_groups: "Uživatelé v těchto skupinách uvidí v pomocníkovi AI možnost vlastního propmptu."
+    ai_bot_enable_dedicated_ux: "Povolit zobrazení bota přes celou obrazovku namísto PM"
+    ai_translation_enabled: "Povolí funkci překladu AI"
     ai_translation_max_post_length: "Maximální délka příspěvku k překladu. Příspěvky delší než tato délka nebudou přeloženy."
   reports:
     overall_sentiment:

@@ -37,6 +37,7 @@ zh_CN:
       no_solved_topics_title: "您尚未解决任何话题"
       no_solved_topics_title_others: "%{username} 还没有解决任何话题"
       no_solved_topics_body: "当您对某个话题提供有用的回复时，您的回复可能会被话题所有者或管理人员选为解决方案。"
+      marked_solved_by: "由 %{user} 标记为已解决"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"
