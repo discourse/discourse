@@ -39,7 +39,7 @@ Discourse::Application.configure do
 
   config.action_mailer.smtp_settings =
     if ENV["DISCOURSE_USE_SMTP_ENVIRONMENT_IN_DEVELOPMENT"] == "true"
-      GlobalSetting.smtp_settings
+      GlobalSetting.smtp_settings || { address: "localhost", port: 1025 }
     else
       # we recommend you use mailpit: https://github.com/axllent/mailpit/
       { address: "localhost", port: 1025 }
