@@ -95,8 +95,8 @@ importers:
         specifier: 3.6.2
         version: 3.6.2
       puppeteer-core:
-        specifier: ^24.26.0
-        version: 24.26.0
+        specifier: ^24.26.1
+        version: 24.26.1
       stylelint:
         specifier: 16.25.0
         version: 16.25.0(typescript@5.6.3)
@@ -3449,16 +3449,16 @@ packages:
   balanced-match@2.0.0:
     resolution: {integrity: sha512-1ugUSr8BHXRnK23KfuYS+gVMC3LB8QGH9W1iGtDPsNWoQbgtXSExkBu2aDR4epiGWZOjZsj6lDl/N/AqqTC3UA==}
 
-  bare-events@2.8.0:
-    resolution: {integrity: sha512-AOhh6Bg5QmFIXdViHbMc2tLDsBIRxdkIaIddPslJF9Z5De3APBScuqGP2uThXnIpqFrgoxMNC6km7uXNIMLHXA==}
+  bare-events@2.8.1:
+    resolution: {integrity: sha512-oxSAxTS1hRfnyit2CL5QpAOS5ixfBjj6ex3yTNvXyY/kE719jQ/IjuESJBK2w5v4wwQRAHGseVJXx9QBYOtFGQ==}
     peerDependencies:
       bare-abort-controller: '*'
     peerDependenciesMeta:
       bare-abort-controller:
         optional: true
 
-  bare-fs@4.4.11:
-    resolution: {integrity: sha512-Bejmm9zRMvMTRoHS+2adgmXw1ANZnCNx+B5dgZpGwlP1E3x6Yuxea8RToddHUbWtVV0iUMWqsgZr8+jcgUI2SA==}
+  bare-fs@4.5.0:
+    resolution: {integrity: sha512-GljgCjeupKZJNetTqxKaQArLK10vpmK28or0+RwWjEl5Rk+/xG3wkpmkv+WrcBm3q1BwHKlnhXzR8O37kcvkXQ==}
     engines: {bare: '>=1.16.0'}
     peerDependencies:
       bare-buffer: '*'
@@ -7623,8 +7623,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@24.26.0:
-    resolution: {integrity: sha512-l3aMYhTdSzazZ14rfpNAPGhnYHsd8mwduqybhu5aO/OR+d24P/V/eo8XTB3GB2yX2ZWf9GLAVcx8nnVPFZpP/A==}
+  puppeteer-core@24.26.1:
+    resolution: {integrity: sha512-YHZdo3chJ5b9pTYVnuDuoI3UX/tWJFJyRZvkLbThGy6XeHWC+0KI8iN0UMCkvde5l/YOk3huiVZ/PvwgSbwdrA==}
     engines: {node: '>=18'}
 
   qified@0.5.0:
@@ -12238,13 +12238,13 @@ snapshots:
 
   balanced-match@2.0.0: {}
 
-  bare-events@2.8.0: {}
+  bare-events@2.8.1: {}
 
-  bare-fs@4.4.11:
+  bare-fs@4.5.0:
     dependencies:
-      bare-events: 2.8.0
+      bare-events: 2.8.1
       bare-path: 3.0.0
-      bare-stream: 2.7.0(bare-events@2.8.0)
+      bare-stream: 2.7.0(bare-events@2.8.1)
       bare-url: 2.3.1
       fast-fifo: 1.3.2
     transitivePeerDependencies:
@@ -12260,11 +12260,11 @@ snapshots:
       bare-os: 3.6.2
     optional: true
 
-  bare-stream@2.7.0(bare-events@2.8.0):
+  bare-stream@2.7.0(bare-events@2.8.1):
     dependencies:
       streamx: 2.23.0
     optionalDependencies:
-      bare-events: 2.8.0
+      bare-events: 2.8.1
     transitivePeerDependencies:
       - bare-abort-controller
       - react-native-b4a
@@ -14481,7 +14481,7 @@ snapshots:
 
   events-universal@1.0.1:
     dependencies:
-      bare-events: 2.8.0
+      bare-events: 2.8.1
     transitivePeerDependencies:
       - bare-abort-controller
 
@@ -17386,7 +17386,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@24.26.0:
+  puppeteer-core@24.26.1:
     dependencies:
       '@puppeteer/browsers': 2.10.12
       chromium-bidi: 10.5.1(devtools-protocol@0.0.1508733)
@@ -18490,7 +18490,7 @@ snapshots:
       pump: 3.0.3
       tar-stream: 3.1.7
     optionalDependencies:
-      bare-fs: 4.4.11
+      bare-fs: 4.5.0
       bare-path: 3.0.0
     transitivePeerDependencies:
       - bare-abort-controller
