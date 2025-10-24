@@ -61,6 +61,7 @@ html.discourse-reactions-no-select {
       padding: 0.5em 0;
       min-width: 120px;
       min-height: 80px;
+      width: max-content;
 
       .spinner {
         animation-play-state: paused;
