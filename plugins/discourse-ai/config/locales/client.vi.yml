@@ -54,6 +54,13 @@ vi:
         select_option: "Chọn một tùy Chọn..."
       translations:
         title: "Bản dịch"
+        stats:
+          eta_minutes:
+            other: "%{count} phút"
+          eta_hours:
+            other: "%{count} giờ"
+          eta_days:
+            other: "%{count} ngày"
         progress_chart:
           bar_done:
             other: "%{count} bài đăng"

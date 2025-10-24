@@ -319,6 +319,7 @@ pl_PL:
       greater_than: musi być większe niż %{count}
       greater_than_or_equal_to: musi być większe lub równe %{count}
       has_already_been_used: "został już użyty"
+      in: musi być w %{count}
       inclusion: nie jest zawarty w liście
       invalid: jest nieprawidłowy
       is_invalid: "wygląda niejasno, czy to cała wypowiedź?"
@@ -2617,9 +2618,9 @@ pl_PL:
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
     experimental_new_new_view_groups: 'Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i spraw, by łącze "Wszystko" na pasku bocznym prowadziło do niej.'
-    glimmer_post_stream_mode: "Kontroluj, czy nowa implementacja strumienia postów „glimmer” jest używana. „auto” zostanie włączone automatycznie, gdy wszystkie motywy i wtyczki będą gotowe. Ta implementacja jest w trakcie aktywnego rozwoju i nie jest przeznaczona do użytku produkcyjnego. Nie rozwijaj motywów/wtyczek dla niej, dopóki implementacja nie zostanie sfinalizowana i ogłoszona."
-    glimmer_post_stream_mode_auto_groups: "Włącz nową implementację strumienia postów 'glimmer' w trybie 'auto' dla określonych grup użytkowników. Ta implementacja jest w trakcie aktywnego rozwoju i nie jest przeznaczona do użytku produkcyjnego. Nie rozwijaj motywów/wtyczek dla niej, dopóki implementacja nie zostanie sfinalizowana i ogłoszona."
-    deactivate_widgets_rendering: "Wyłącz starszy silnik renderujący widżety. Spowoduje to wyłączenie wszystkich widżetów, które nie zostały zaktualizowane do komponentów Glimmer, a także wymusi bezwarunkowe włączenie strumienia postów Glimmer, niezależnie od wartości ustawienia `glimmer_post_stream_mode`. To ustawienie nie jest zalecane w przypadku witryn produkcyjnych, ponieważ może popsuć istniejące motywy i wtyczki."
+    glimmer_post_stream_mode: "Określ, czy używana jest nowa implementacja strumienia wpisów „Glimmer”. Opcja „auto” zostanie włączona automatycznie, gdy wszystkie motywy i wtyczki będą gotowe."
+    glimmer_post_stream_mode_auto_groups: "Włącz nową implementację strumienia wpisów „Glimmer” w trybie „auto” dla określonych grup użytkowników."
+    deactivate_widgets_rendering: "Wyłącz starszy silnik renderujący widżety. Spowoduje to wyłączenie wszystkich widżetów, które nie zostały zaktualizowane do komponentów Glimmer, a także wymusi bezwarunkowe włączenie strumienia wpisów Glimmer, niezależnie od wartości ustawienia `glimmer_post_stream_mode`."
     floatkit_autocomplete_composer: "Włącz menu autouzupełniania oparte na Floatkit w kompozytorze. Jest to ulepszenie interfejsu użytkownika, które zastąpi obecne menu autouzupełniania oparte na JQuery."
     floatkit_autocomplete_input_fields: "Włącz menu autouzupełniania oparte na technologii Floatkit dla pól wprowadzania danych w polach wyszukiwania pełnostronicowego i selektora grup. To ulepszenie interfejsu użytkownika, które zastąpi obecne menu autouzupełniania oparte na jQuery."
     floatkit_autocomplete_chat_composer: "Włącz menu autouzupełniania oparte na Floatkit w kompozytorze czatu. Jest to ulepszenie interfejsu użytkownika, które zastąpi obecne menu autouzupełniania oparte na jQuery."

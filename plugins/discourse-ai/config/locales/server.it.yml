@@ -26,10 +26,6 @@ it:
       llm_triage:
         title: Triage dei messaggi con IA
         description: "Triage dei messaggi con LLM"
-        flagged_post: |
-          <div>Risposta dal modello:</div>
-          <p>%{llm_response}</p>
-          <b>Innescato dalla regola <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Report periodico con IA
         description: "Report periodico basato su LLM"
@@ -102,7 +98,6 @@ it:
     ai_bot_allowed_groups: "Quando il bot GPT ha accesso a un MP, risponderà ai membri di questi gruppi."
     ai_bot_debugging_allowed_groups: "Consenti a questi gruppi di vedere un pulsante di debug sui post che mostra la richiesta e la risposta IA non elaborate"
     ai_bot_public_sharing_allowed_groups: "Consenti a questi gruppi di condividere messaggi personali dell'IA con il pubblico tramite un link univoco disponibile al pubblico. Nota: se il tuo sito richiede l'accesso, anche le condivisioni richiederanno l'accesso."
-    ai_bot_add_to_header: "Mostra un pulsante nell'intestazione per avviare un MP con un Bot IA"
     ai_bot_github_access_token: "Token di accesso GitHub da utilizzare con gli strumenti GitHub IA (richiesto per il supporto della ricerca)"
     ai_stability_api_key: "Chiave API per l'API stability.ai"
     ai_stability_engine: "Sistema di generazione di immagini da utilizzare per l'API stability.ai"

@@ -326,6 +326,8 @@ nl:
       chat_message_separator:
         today: Vandaag
         yesterday: Gisteren
+      search_view:
+        filter_placeholder: Zoeken in berichten
       members_view:
         filter_placeholder: Leden zoeken
         add_member: Lid toevoegen
@@ -342,6 +344,7 @@ nl:
         tabs:
           members: Leden
           settings: Instellingen
+          search: Zoeken
         remove_member: "Verwijderen"
       new_message_modal:
         title: Bericht sturen
@@ -495,6 +498,11 @@ nl:
           create_export: "Export maken"
           confirm_export: "Hiermee worden alle berichten van alle kanalen geëxporteerd en wordt het resultaat naar jou gestuurd in een persoonlijk bericht. Weet je zeker dat je wilt exporteren?"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
+      search:
+        no_results: "Geen resultaten gevonden"
+        sort:
+          relevance: "Relevantie"
+          latest: "Recent"
       my_threads:
         title: Mijn threads
         aria_label: "Wisselen naar mijn threadslijst"

@@ -55,6 +55,13 @@ zh_TW:
           name: "垃圾內容"
       translations:
         title: "翻譯"
+        stats:
+          eta_minutes:
+            other: "%{count} 分"
+          eta_hours:
+            other: "%{count} 小時"
+          eta_days:
+            other: "%{count} 天"
         progress_chart:
           bar_done:
             other: "%{count} 篇貼文"

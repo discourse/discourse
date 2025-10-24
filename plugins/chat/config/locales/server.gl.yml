@@ -11,6 +11,8 @@ gl:
       not_accepting_dms: "Sentímolo, %{username} non acepta mensaxes neste momento."
     reviewables:
       actions:
+        no_action_message:
+          title: "Sen acción"
         agree:
           title: "De acordo..."
         agree_and_suspend:

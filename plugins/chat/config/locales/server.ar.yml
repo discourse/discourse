@@ -118,6 +118,8 @@ ar:
     reviewables:
       message_already_handled: "شكرًا، لكننا راجعنا هذه الرسالة بالفعل وقرَّرنا أنك لست بحاجة إلى الإبلاغ عنها مرة أخرى."
       actions:
+        no_action_message:
+          title: "التي لم يتم اتخاذ إجراء بشأنها"
         agree:
           title: "موافقة..."
         agree_and_keep_message:

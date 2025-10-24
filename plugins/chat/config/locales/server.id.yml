@@ -87,6 +87,10 @@ id:
     reviewables:
       message_already_handled: "Terima kasih, tetapi kami telah meninjau pesan ini dan memutuskan bahwa pesan ini tidak perlu ditandai lagi."
       actions:
+        no_action_message:
+          title: "Tidak ada tindakan"
+        restore_message:
+          description: "Pulihkan pesan agar pengguna dapat melihatnya."
         agree:
           title: "Setuju..."
         agree_and_keep_message:

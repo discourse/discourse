@@ -112,6 +112,8 @@ he:
     reviewables:
       message_already_handled: "תודה, אבל כבר סקרנו הודעה זו וקבענו שאין צורך לסמן אותה שוב."
       actions:
+        no_action_message:
+          title: "אין פעולה"
         agree:
           title: "הסכמה…"
         agree_and_keep_message:

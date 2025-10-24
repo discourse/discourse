@@ -95,6 +95,16 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
+        stats:
+          eta_minutes:
+            one: "%{count} λεπτό"
+            other: "%{count} λεπτά"
+          eta_hours:
+            one: "%{count} ω"
+            other: "%{count} ω"
+          eta_days:
+            one: "%{count} ημ"
+            other: "%{count} ημ"
         progress_chart:
           bar_done:
             one: "%{count} ανάρτηση"

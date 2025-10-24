@@ -26,10 +26,6 @@ fr:
       llm_triage:
         title: Trier les publications à l'aide de l'IA
         description: "Triez les publications à l'aide d'un grand modèle linguistique"
-        flagged_post: |
-          <div>Réponse du modèle :</div>
-          <p>%{llm_response}</p>
-          <b>Déclenché par la règle <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Rapport périodique utilisant l'IA
         description: "Rapport périodique basé sur un grand modèle linguistique"
@@ -102,7 +98,6 @@ fr:
     ai_bot_allowed_groups: "Lorsque le robot GPT aura accès aux messages privés, il répondra aux membres de ces groupes."
     ai_bot_debugging_allowed_groups: "Autoriser ces groupes à voir un bouton de débogage sur les publications qui affiche la demande et la réponse brutes de l'IA"
     ai_bot_public_sharing_allowed_groups: "Autorisez ces groupes à partager des messages privés de l'IA avec le public via un lien unique accessible au public. Remarque : si votre site nécessite une connexion, les partages nécessiteront également une connexion."
-    ai_bot_add_to_header: "Afficher un bouton dans l'en-tête pour démarrer une conversation avec un robot IA"
     ai_bot_github_access_token: "Jeton d'accès GitHub à utiliser avec les outils GitHub AI (requis pour la prise en charge de la recherche)"
     ai_stability_api_key: "Clé d'API pour l'API stable.ai"
     ai_stability_engine: "Moteur de génération d'images à utiliser pour l'API stability.ai"

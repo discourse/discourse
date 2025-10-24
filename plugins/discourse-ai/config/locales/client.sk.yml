@@ -272,6 +272,22 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
+        stats:
+          eta_minutes:
+            one: "%{count} minútu"
+            few: "%{count} minúty"
+            many: "%{count} minút"
+            other: "%{count} minút"
+          eta_hours:
+            one: "%{count} hodina"
+            few: "%{count} hodiny"
+            many: "%{count} hodín"
+            other: "%{count} hodín"
+          eta_days:
+            one: "%{count} deň"
+            few: "%{count} dni"
+            many: "%{count} dní"
+            other: "%{count} dní"
         progress_chart:
           bar_done:
             one: "jeden príspevok"
@@ -785,6 +801,7 @@ sk:
         cancel_streaming: "Zastaviť odpoveď"
         default_pm_prefix: "[Bez názvu AI bot PM]"
         shortcut_title: "Spustenie PM s botom AI"
+        shortcut_link: "AI bot"
         share: "Kopírovať konverzáciu s AI"
         conversation_shared: "Konverzácia bola skopírovaná"
         embed_copied: "Vložiť skopírované do schránky"

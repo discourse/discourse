@@ -11,6 +11,8 @@ hy:
       not_accepting_dms: "Ներողություն, %{username}-ը այս պահին հաղորդագրություններ չի ընդունում:"
     reviewables:
       actions:
+        no_action_message:
+          title: "Առանց գործողության"
         agree_and_suspend:
           title: "Սառեցնել Օգտատիրոջը"
           description: "Ընդունել դրոշակավորումը և սառեցնել օգտատիրոջը:"

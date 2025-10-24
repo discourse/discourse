@@ -534,6 +534,7 @@ zh_TW:
       other: "檢視 %{count} 則新話題"
     preview: "預覽"
     cancel: "取消"
+    done: "完成"
     deleting: "正在刪除..."
     save: "儲存變更"
     saving: "正在儲存..."
@@ -3167,8 +3168,6 @@ zh_TW:
       auto_close_title: "自動關閉設定"
       auto_close_immediate:
         other: "話題中的最後一帖是 %{hours} 小時前發出的，所以話題將會立即關閉。"
-      auto_close_momentarily:
-        other: "該話題中的最後一個貼文已經存在 %{count} 小時，因此該話題將被立即關閉。"
       timeline:
         back: "返回"
         back_description: "回到最後一個未讀貼文"
@@ -4084,7 +4083,6 @@ zh_TW:
     preloader_text: "載入中"
     lightbox:
       download: "下載"
-      open: "原始圖片"
       previous: "上一個（左箭頭鍵）"
       next: "下一個（右箭頭鍵）"
       counter: "%curr%的%total%"

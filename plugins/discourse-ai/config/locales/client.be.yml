@@ -47,6 +47,22 @@ be:
         spam:
           name: "Спам"
       translations:
+        stats:
+          eta_minutes:
+            one: "%{count} хвіліну"
+            few: "%{count}хвілін"
+            many: "%{count}хвіліны"
+            other: "%{count}хвілін"
+          eta_hours:
+            one: "%{count} гадзіна"
+            few: "%{count} гадзіны"
+            many: "%{count} гадзін"
+            other: "%{count} гадзін"
+          eta_days:
+            one: "%{count} дзень"
+            few: "%{count} дні"
+            many: "%{count} дзён"
+            other: "%{count} дзён"
         progress_chart:
           bar_done:
             one: "%{count} запіс"

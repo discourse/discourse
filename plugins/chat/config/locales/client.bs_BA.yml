@@ -53,6 +53,8 @@ bs_BA:
       chat_message_separator:
         today: Today
         yesterday: Yesterday
+      search_view:
+        filter_placeholder: Pretraži poruke
       about_view:
         title: Naslov
         name: Ime
@@ -62,6 +64,7 @@ bs_BA:
         tabs:
           members: Članovi
           settings: Postavke
+          search: Pretraži
         remove_member: "Ukloni"
       new_message_modal:
         no_items: "Nema stavki"
@@ -95,6 +98,11 @@ bs_BA:
         category_label: "Kategorija"
         history_label: "Historija"
         members_label: "Članovi"
+      search:
+        no_results: "No results found"
+        sort:
+          relevance: "Bitnost"
+          latest: "Zadnje"
       incoming_webhooks:
         back: "Prethodno"
         description: "Opis"

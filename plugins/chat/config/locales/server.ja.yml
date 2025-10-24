@@ -103,6 +103,10 @@ ja:
     reviewables:
       message_already_handled: "ありがとうございます。ただ、このメッセージはすでにレビュー済みで、通報の必要がないと判断されています。"
       actions:
+        no_action_message:
+          title: "未対応"
+        restore_message:
+          description: "ユーザーが閲覧できるようにメッセージを復元します。"
         agree:
           title: "同意…"
         agree_and_keep_message:

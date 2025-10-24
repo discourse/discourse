@@ -106,6 +106,10 @@ de:
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
+        no_action_message:
+          title: "Keine Aktion"
+        restore_message:
+          description: "Nachricht wiederherstellen, damit Benutzer sie sehen können."
         agree:
           title: "Zustimmen …"
         agree_and_keep_message:

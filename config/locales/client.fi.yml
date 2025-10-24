@@ -590,6 +590,7 @@ fi:
       other: "Näytä %{count} uutta ketjua"
     preview: "esikatselu"
     cancel: "Peruuta"
+    done: "Valmis"
     deleting: "Poistetaan…"
     save: "Tallenna muutokset"
     saving: "Tallennetaan…"
@@ -3507,9 +3508,6 @@ fi:
       auto_close_immediate:
         one: "Ketjun viimeisin viesti on jo %{count} tunnin vanha, joten ketju suljetaan heti."
         other: "Ketjun viimeisin viesti on jo %{count} tuntia vanha, joten ketju suljetaan heti."
-      auto_close_momentarily:
-        one: "Ketjun viimeisin viesti on jo %{count} tunnin vanha, joten ketju suljetaan hetkellisesti."
-        other: "Ketjun viimeisin viesti on jo %{count} tuntia vanha, joten ketju suljetaan hetkellisesti."
       timeline:
         back: "Takaisin"
         back_description: "Siirry takaisin ensimmäiseen lukemattomaan viestiin"
@@ -4504,8 +4502,7 @@ fi:
       readonly: "Nähdä"
     preloader_text: "Ladataan"
     lightbox:
-      download: "lataa"
-      open: "alkuperäinen kuva"
+      download: "Lataa"
       previous: "Edellinen (vasen nuolinäppäin)"
       next: "Seuraava (oikea nuolinäppäin)"
       counter: "%curr% / %total%"

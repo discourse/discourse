@@ -424,6 +424,7 @@ sl:
       other: "Poglej %{count} novih tem"
     preview: "predogled"
     cancel: "Prekliči"
+    done: "Končano"
     deleting: "Brišem..."
     save: "Shrani spremembe"
     saving: "Shranjujem..."
@@ -3314,7 +3315,7 @@ sl:
       readonly: "Vidi"
     preloader_text: "Nalagam"
     lightbox:
-      download: "prenesi"
+      download: "Naloži"
       previous: "Predhodna (leva puščična tipka)"
       next: "Naslednja (desna puščična tipka)"
       counter: "%curr% od %total%"

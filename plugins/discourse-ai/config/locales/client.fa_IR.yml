@@ -80,6 +80,16 @@ fa_IR:
         select_option: "یک گزینه را انتخاب کنید..."
       translations:
         title: "ترجمه‌ها"
+        stats:
+          eta_minutes:
+            one: "%{count} دقیقه"
+            other: "%{count} دقیقه"
+          eta_hours:
+            one: "%{count} ساعت"
+            other: "%{count} ساعت"
+          eta_days:
+            one: "%{count} روز"
+            other: "%{count} روز"
         progress_chart:
           bar_done:
             one: "%{count} فرسته"

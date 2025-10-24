@@ -353,6 +353,7 @@ bs_BA:
       other: "Pogledaj %{count} novih tema"
     preview: "predprikaz"
     cancel: "Odustani"
+    done: "Urađeno"
     save: "Spremiti promjene"
     saved: "Spremljeno!"
     upload: "Učitaj"
@@ -2816,7 +2817,7 @@ bs_BA:
       readonly: "Vidi"
     preloader_text: "Učitava"
     lightbox:
-      download: "skini"
+      download: "Skinuti"
       previous: "Prošlo (Tipka sa strelicom lijevo)"
       next: "Sljedeće (tipka sa strelicom udesno)"
       counter: "%curr% od %total%"

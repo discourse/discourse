@@ -114,6 +114,7 @@ id:
         tabs:
           members: Anggota
           settings: Pengaturan
+          search: Cari
         remove_member: "Hapus"
       new_message_modal:
         title: Kirim pesan
@@ -165,6 +166,9 @@ id:
           description: "Ini mengekspor semua pesan dari semua kanal."
           create_export: "Buat ekspor"
           export_has_started: "Ekspor telah dimulai. Anda akan menerima PM jika sudah siap."
+      search:
+        sort:
+          latest: "Terbaru"
       direct_messages:
         cannot_create: "Maaf, Anda tidak dapat mengirim pesan langsung."
       channel_list:

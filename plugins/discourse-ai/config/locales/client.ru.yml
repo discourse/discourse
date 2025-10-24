@@ -321,9 +321,23 @@ ru:
           localization_settings: "Настройки перевода"
         stats:
           title: "Статистика переводов"
+          eta_minutes:
+            one: "%{count} минута"
+            few: "%{count} минуты"
+            many: "%{count} минут"
+            other: "%{count} минут"
+          eta_hours:
+            one: "%{count} час"
+            few: "%{count} часа"
+            many: "%{count} часов"
+            other: "%{count} часов"
+          eta_days:
+            one: "%{count} день"
+            few: "%{count} дней"
+            many: "%{count} дня"
+            other: "%{count} дня"
         progress_chart:
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} из %{total} сообщений переведено"
           bar_done:
             one: "%{count} публикация"
             few: "%{count} публикации"
@@ -848,6 +862,7 @@ ru:
         cancel_streaming: "Прекратить отвечать"
         default_pm_prefix: "[Личное сообщение от AI-бота без названия]"
         shortcut_title: "Начать личный чат с AI-ботом"
+        shortcut_link: "AI-бот"
         exit: "выйти из AI-бота"
         share: "Копировать разговор с AI"
         conversation_shared: "Разговор скопирован"

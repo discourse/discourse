@@ -106,6 +106,10 @@ es:
     reviewables:
       message_already_handled: "Gracias, pero ya hemos revisado este mensaje y hemos determinado que no es necesario marcarlo de nuevo."
       actions:
+        no_action_message:
+          title: "Ninguna acción"
+        restore_message:
+          description: "Restaura el mensaje para que los usuarios puedan verlo."
         agree:
           title: "De acuerdo..."
         agree_and_keep_message:

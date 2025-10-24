@@ -132,6 +132,15 @@ pt:
         title: "Traduções"
         stats:
           title: "Estatísticas da tradução"
+          eta_minutes:
+            one: "%{count} minuto"
+            other: "%{count} minutos"
+          eta_hours:
+            one: "%{count} hora"
+            other: "%{count} horas"
+          eta_days:
+            one: "%{count} dia"
+            other: "%{count} dias"
         progress_chart:
           bar_done:
             one: "%{count} mensagem"
