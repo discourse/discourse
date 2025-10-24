@@ -321,7 +321,7 @@ export default {
         );
       }
 
-      if (this.currentUser.can_direct_message) {
+      if (this.chatService.userCanDirectMessage) {
         api.addSidebarSection(
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatNewDirectMessagesSectionLink = class extends BaseCustomSidebarSectionLink {
@@ -501,9 +501,6 @@ export default {
               @service currentUser;
               @service chatStateManager;
 
-              @tracked
-              userCanDirectMessage = this.chatService.userCanDirectMessage;
-
               constructor() {
                 super(...arguments);
 
@@ -555,10 +552,6 @@ export default {
               }
 
               get actions() {
-                if (!this.userCanDirectMessage) {
-                  return [];
-                }
-
                 return [
                   {
                     id: "startDm",
@@ -581,7 +574,7 @@ export default {
               get displaySection() {
                 return (
                   this.chatStateManager.hasPreloadedChannels &&
-                  (this.sectionLinks?.length > 0 || this.userCanDirectMessage)
+                  this.sectionLinks?.length > 0
                 );
               }
             };
