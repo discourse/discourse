@@ -77,20 +77,20 @@ export default class DialogService extends Service {
   alert(params) {
     // support string param for easier porting of bootbox.alert
     if (typeof params === "string") {
-      return this._promiseDialog({
+      return this.#promiseDialog({
         message: params,
         type: "alert",
       });
     }
 
-    return this._promiseDialog({
+    return this.#promiseDialog({
       ...params,
       type: "alert",
     });
   }
 
   confirm(params) {
-    return this._promiseDialog({
+    return this.#promiseDialog({
       ...params,
       buttons: null,
       type: "confirm",
@@ -98,14 +98,14 @@ export default class DialogService extends Service {
   }
 
   notice(message) {
-    return this._promiseDialog({
+    return this.#promiseDialog({
       message,
       type: "notice",
     });
   }
 
   yesNoConfirm(params) {
-    return this._promiseDialog({
+    return this.#promiseDialog({
       ...params,
       confirmButtonLabel: "yes_value",
       cancelButtonLabel: "no_value",
@@ -115,7 +115,7 @@ export default class DialogService extends Service {
   }
 
   deleteConfirm(params) {
-    return this._promiseDialog({
+    return this.#promiseDialog({
       ...params,
       confirmButtonClass: "btn-danger",
       confirmButtonLabel: params.confirmButtonLabel || "delete",
@@ -124,7 +124,7 @@ export default class DialogService extends Service {
     });
   }
 
-  _promiseDialog(params) {
+  #promiseDialog(params) {
     return new Promise((resolve) => {
       const { didConfirm, didCancel } = params;
 
