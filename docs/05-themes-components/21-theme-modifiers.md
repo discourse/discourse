@@ -14,7 +14,7 @@ For a 100% up-to-date list of modifiers, check the database schema at the bottom
 
 - `serialize_topic_excerpts` **boolean** (default false) - always include excerpts when serializing topic lists
 
-- `csp_extensions` **string array** - add directives to the CSP. Works the same as the old "extend_content_security_policy" theme-setting method. But remember, [simple `<script> src="">` tags are allowed automatically](https://meta.discourse.org/t/automatically-adding-theme-scripts-to-csp/149028?u=david).
+- `csp_extensions` **string array** - add directives to the CSP. Works the same as the old "extend_content_security_policy" theme-setting method. But remember, [simple `<script src="">` tags are allowed automatically](https://meta.discourse.org/t/automatically-adding-theme-scripts-to-csp/149028?u=david).
 
 - `svg_icons` **string array** - a list of icons which should be included in the icon subset
 
