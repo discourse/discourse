@@ -318,7 +318,7 @@ class UploadCreator
   def convert_png_to_jpeg?
     return false unless @image_info.type == :png
     return true if @opts[:pasted]
-    target_quality = SiteSetting.png_to_jpg_quality.presence || SiteSetting.image_quality
+    target_quality = SiteSetting.png_to_jpg_quality.nonzero? || SiteSetting.image_quality
     return false if target_quality == 100
     pixels > MIN_PIXELS_TO_CONVERT_TO_JPEG
   end
@@ -370,8 +370,8 @@ class UploadCreator
     opts = {}
 
     desired_quality = [
-      SiteSetting.png_to_jpg_quality.presence,
-      SiteSetting.recompress_original_jpg_quality.presence,
+      SiteSetting.png_to_jpg_quality.nonzero?,
+      SiteSetting.recompress_original_jpg_quality.nonzero?,
     ].compact.min
 
     target_quality =
@@ -450,7 +450,7 @@ class UploadCreator
 
     @upload.target_image_quality(
       @file.path,
-      desired_quality.presence || SiteSetting.image_quality,
+      desired_quality.nonzero? || SiteSetting.image_quality,
     ).present?
   end
 

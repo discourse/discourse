@@ -2303,18 +2303,18 @@ files:
     client: true
     default: 70
   png_to_jpg_quality:
-    default: ""
-    min: 1
+    default: 0
+    min: 0
     max: 100
     hidden: true
   recompress_original_jpg_quality:
-    default: ""
-    min: 1
+    default: 0
+    min: 0
     max: 100
     hidden: true
   image_preview_jpg_quality:
-    default: ""
-    min: 1
+    default: 0
+    min: 0
     max: 100
     hidden: true
   allow_staff_to_upload_any_file_in_pm:
@@ -2358,7 +2358,7 @@ files:
     hidden: true
     client: true
   composer_media_optimization_image_encode_quality:
-    default: ""
+    default: 0
     client: true
     hidden: true
   composer_media_optimization_debug_mode:

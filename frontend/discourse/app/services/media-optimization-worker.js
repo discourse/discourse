@@ -1,5 +1,4 @@
 import Service, { service } from "@ember/service";
-import { isPresent } from "@ember/utils";
 import { Promise } from "rsvp";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
@@ -94,12 +93,12 @@ export default class MediaOptimizationWorkerService extends Service {
             resize_linear_rgb:
               this.siteSettings
                 .composer_media_optimization_image_resize_linear_rgb,
-            encode_quality: isPresent(
-              this.siteSettings.composer_media_optimization_image_encode_quality
-            )
-              ? this.siteSettings
-                  .composer_media_optimization_image_encode_quality
-              : this.siteSettings.image_quality,
+            encode_quality:
+              this.siteSettings
+                .composer_media_optimization_image_encode_quality !== 0
+                ? this.siteSettings
+                    .composer_media_optimization_image_encode_quality
+                : this.siteSettings.image_quality,
             debug_mode:
               this.siteSettings.composer_media_optimization_debug_mode,
             mediaOptimizationBundle: this.session.mediaOptimizationBundle,
