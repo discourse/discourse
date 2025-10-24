@@ -147,10 +147,10 @@ RSpec.describe "List channels | sidebar", type: :system do
 
       before { SiteSetting.direct_message_enabled_groups = group.id }
 
-      it "doesn't show the start new dm button" do
+      it "doesn't show the section" do
         visit("/")
 
-        expect(chat_sidebar).to have_no_start_new_dm
+        expect(chat_sidebar).to have_no_dm_section
       end
     end
   end

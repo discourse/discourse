@@ -38,6 +38,10 @@ module PageObjects
           selector
         end
 
+        def has_no_dm_section?
+          has_no_selector?(".sidebar-section[data-section-name='chat-dms']")
+        end
+
         NEW_START_DM_SELECTOR = ".sidebar-section-link[data-link-name='new-chat-dm']"
 
         def has_no_start_new_dm?
