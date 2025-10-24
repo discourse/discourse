@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import freezeTime from "../helpers/freeze-time";
-import { applyLocalDates } from "../initializers/discourse-local-dates";
+import freezeTime from "discourse/plugins/discourse-local-dates/helpers/freeze-time";
+import { applyLocalDates } from "discourse/plugins/discourse-local-dates/initializers/discourse-local-dates";
 
 module("Unit | discourse-local-dates", function (hooks) {
   setupTest(hooks);
