@@ -12,7 +12,7 @@ module DiscourseAi
 
       def translate
         return nil if !SiteSetting.ai_translation_enabled
-        if (ai_persona = AiPersona.find_by(id: persona_setting)).blank?
+        if (ai_persona = AiPersona.find_by_id_from_cache(persona_setting)).blank?
           return nil
         end
         translation_user = ai_persona.user || Discourse.system_user

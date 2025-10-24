@@ -121,13 +121,13 @@ class GroupUser < ActiveRecord::Base
   end
 
   def grant_trust_level
-    return if group.grant_trust_level.nil?
+    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
 
     TrustLevelGranter.grant(group.grant_trust_level, user)
   end
 
   def recalculate_trust_level
-    return if group.grant_trust_level.nil?
+    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
     return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to recalculate
 
     Promotion.recalculate(user, use_previous_trust_level: true)

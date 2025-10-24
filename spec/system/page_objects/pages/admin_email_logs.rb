@@ -12,8 +12,8 @@ module PageObjects
       end
 
       class IncomingEmailRow < BaseRow
-        def has_subject?(subject)
-          element.has_css?(".incoming-email-link", text: subject)
+        def has_subject_link?(subject, href)
+          element.has_link?(subject, href:)
         end
 
         def has_from_address?(from_address)
@@ -22,6 +22,10 @@ module PageObjects
 
         def has_to_address?(to_address)
           element.has_css?("td:nth-of-type(3)", text: to_address)
+        end
+
+        def has_subject?(subject)
+          element.has_css?("td:nth-of-type(4)", text: subject)
         end
 
         def has_error?(error)

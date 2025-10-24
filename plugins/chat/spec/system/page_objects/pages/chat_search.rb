@@ -37,6 +37,15 @@ module PageObjects
         expect(page_locator.locator(".alert.alert-info")).to be_visible
       end
 
+      def clear
+        page_locator.locator(".filter-input-clear-btn").click
+        self
+      end
+
+      def has_zero_results?
+        has_no_selector?(".chat-message-container")
+      end
+
       def click_result(message)
         page_locator.locator(
           ".chat-message-search-entry:has(.chat-message-container[data-id=\"#{message.id}\"])",
