@@ -6,10 +6,8 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { createPopper } from "@popperjs/core";
+import { computePosition, flip, hide, offset } from "@floating-ui/dom";
 import { and } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import DButton from "discourse/components/d-button";
@@ -29,8 +27,6 @@ export default class ChatMessageActionsDesktop extends Component {
   @service site;
 
   @tracked size = FULL;
-
-  popper = null;
 
   get message() {
     return this.chat.activeMessage.model;
@@ -64,48 +60,47 @@ export default class ChatMessageActionsDesktop extends Component {
 
   @action
   setup(element) {
-    this.popper?.destroy();
+    if (!this.messageContainer) {
+      return;
+    }
 
-    schedule("afterRender", () => {
-      if (!this.messageContainer) {
-        return;
+    const boundary = this.messageContainer.closest(".chat-messages-scroller");
+    this.size = boundary.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
+
+    computePosition(this.messageContainer, element, {
+      placement: "top-end",
+      strategy: "fixed",
+      middleware: [
+        flip({
+          boundary,
+          fallbackPlacements: ["bottom-end"],
+        }),
+        offset({
+          mainAxis: MSG_ACTIONS_VERTICAL_PADDING,
+          crossAxis: -2,
+        }),
+        hide({ strategy: "referenceHidden" }),
+        hide({ strategy: "escaped" }),
+      ],
+    }).then(({ x, y, middlewareData }) => {
+      const style = {
+        left: `${x}px`,
+        top: `${y}px`,
+      };
+
+      if (
+        middlewareData.hide?.referenceHidden ||
+        middlewareData.hide?.escaped
+      ) {
+        style.visibility = "hidden";
+        style.pointerEvents = "none";
+      } else {
+        style.visibility = "visible";
+        style.pointerEvents = "auto";
       }
 
-      const viewport = this.messageContainer.closest(".popper-viewport");
-      this.size =
-        viewport.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
-
-      if (!this.messageContainer) {
-        return;
-      }
-
-      this.popper = createPopper(this.messageContainer, element, {
-        placement: "top-end",
-        strategy: "fixed",
-        modifiers: [
-          {
-            name: "flip",
-            enabled: true,
-            options: {
-              boundary: viewport,
-              fallbackPlacements: ["bottom-end"],
-            },
-          },
-          { name: "hide", enabled: true },
-          { name: "eventListeners", options: { scroll: false } },
-          {
-            name: "offset",
-            options: { offset: [-2, MSG_ACTIONS_VERTICAL_PADDING] },
-          },
-        ],
-      });
+      Object.assign(element.style, style);
     });
-  }
-
-  @action
-  teardown() {
-    this.popper?.destroy();
-    this.popper = null;
   }
 
   @action
@@ -128,7 +123,6 @@ export default class ChatMessageActionsDesktop extends Component {
       <div
         {{didInsert this.setup}}
         {{didUpdate this.setup this.chat.activeMessage.model.id}}
-        {{willDestroy this.teardown}}
         class={{concatClass
           "chat-message-actions-container"
           (concat "is-size-" this.size)

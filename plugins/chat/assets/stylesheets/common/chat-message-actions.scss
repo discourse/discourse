@@ -5,6 +5,8 @@
 
 .chat-message-actions-container {
   @include unselectable;
+  position: fixed;
+  width: max-content;
   z-index: z("composer", "content");
 }
 
