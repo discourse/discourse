@@ -68,4 +68,40 @@ describe "Lightbox | Photoswipe", type: :system do
       expect(lightbox).to have_original_image_button
     end
   end
+
+  context "when on mobile", mobile: true do
+    let(:screen_center_x) { page.evaluate_script("window.innerWidth / 2") }
+    let(:screen_center_y) { page.evaluate_script("window.innerHeight / 2") }
+
+    before do
+      upload_1.update(width: 400, height: 300)
+      cpp.post_process
+      post.update(cooked: cpp.html)
+    end
+
+    it "tap image to toggle UI" do
+      topic_page.visit_topic(topic)
+      find("#post_1 a.lightbox").click
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_ui_visible
+
+      tap_screen_at(screen_center_x, screen_center_y)
+      expect(lightbox).to have_no_ui_visible
+
+      tap_screen_at(screen_center_x, screen_center_y)
+      expect(lightbox).to have_ui_visible
+    end
+
+    it "tap backdrop to close lightbox" do
+      topic_page.visit_topic(topic)
+      find("#post_1 a.lightbox").click
+
+      expect(lightbox).to be_visible
+
+      tap_screen_at(50, 50)
+
+      expect(lightbox).to be_hidden
+    end
+  end
 end

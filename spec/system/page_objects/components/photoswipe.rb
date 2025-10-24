@@ -16,6 +16,7 @@ module PageObjects
       CAPTION = ".pswp__caption"
       CAPTION_TITLE = ".pswp__caption-title"
       CAPTION_DETAILS = ".pswp__caption-details"
+      UI_VISIBLE = ".pswp--ui-visible"
 
       def initialize
         @component = find(SELECTOR)
@@ -91,6 +92,14 @@ module PageObjects
 
       def has_no_original_image_button?
         component.has_no_css?(ORIGINAL_IMAGE_BTN)
+      end
+
+      def has_ui_visible?
+        page.has_css?(UI_VISIBLE)
+      end
+
+      def has_no_ui_visible?
+        page.has_no_css?(UI_VISIBLE)
       end
     end
   end
