@@ -174,7 +174,7 @@ export default class DiscourseReactionsCounter extends Component {
       class={{this.classes}}
       {{on "mousedown" this.mouseDown}}
       {{on "mouseup" this.mouseUp}}
-      {{closeOnClickOutside this.clickOutside (hash)}}
+      {{closeOnClickOutside this.clickOutside}}
       {{on "touchstart" this.touchStart}}
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}
