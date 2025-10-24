@@ -148,6 +148,20 @@ module TestSetup
     WordWatcher.disable_cache
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
+
+    # Set some standard overrides for tests. Some for performance, some to make the tests easier,
+    # and some because their default was changed, and we didn't want to refactor all the relevant specs.
+    {
+      s3_upload_bucket: "bucket",
+      min_post_length: 5,
+      min_first_post_length: 5,
+      min_personal_message_post_length: 10,
+      download_remote_images_to_local: false,
+      unique_posts_mins: 0,
+      max_consecutive_replies: 0,
+      allow_uncategorized_topics: true,
+    }.each { |k, v| SiteSetting.set(k, v) }
+
     SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
 
     # very expensive IO operations
