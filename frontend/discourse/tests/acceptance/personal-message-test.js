@@ -92,10 +92,7 @@ acceptance("Personal Message - invite", function (needs) {
 
   test("can open invite modal", async function (assert) {
     await visit("/t/pm-for-testing/12");
-    await click(".add-remove-participant-btn");
-    await click(
-      ".topic-map__private-message-map .controls .add-participant-btn"
-    );
+    await click(".topic-map__private-message-map .add-participant-btn");
 
     assert
       .dom(".d-modal.add-pm-participants .invite-user-control")
@@ -104,10 +101,7 @@ acceptance("Personal Message - invite", function (needs) {
 
   test("shows errors correctly", async function (assert) {
     await visit("/t/pm-for-testing/12");
-    await click(".add-remove-participant-btn");
-    await click(
-      ".topic-map__private-message-map .controls .add-participant-btn"
-    );
+    await click(".topic-map__private-message-map .add-participant-btn");
 
     assert
       .dom(".d-modal.add-pm-participants .invite-user-control")
@@ -117,7 +111,6 @@ acceptance("Personal Message - invite", function (needs) {
     await input.expand();
     await input.fillInFilter("example");
     await input.selectRowByValue("example");
-
     await click(".send-invite");
 
     assert.dom(".d-modal.add-pm-participants .alert-error").exists();
