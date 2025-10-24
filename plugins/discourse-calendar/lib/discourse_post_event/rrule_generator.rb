@@ -12,8 +12,7 @@ class RRuleGenerator
     dtstart: nil
   )
     rrule = generate_hash(RRuleConfigurator.rule(recurrence_until:, recurrence:, starts_at:))
-    rrule = set_mandatory_options(rrule, starts_at)
-
+    rrule = set_mandatory_options(rrule)
     ::RRule::Rule
       .new(stringify(rrule), dtstart: starts_at, tzid: timezone)
       .between(Time.current, 14.months.from_now)
@@ -30,7 +29,7 @@ class RRuleGenerator
     show_local_time: false
   )
     rrule = generate_hash(RRuleConfigurator.rule(recurrence_until:, recurrence:, starts_at:))
-    rrule = set_mandatory_options(rrule, starts_at)
+    rrule = set_mandatory_options(rrule)
     rrule_line = "RRULE:#{stringify(rrule)}"
 
     if dtstart
@@ -60,7 +59,7 @@ class RRuleGenerator
       end
   end
 
-  def self.set_mandatory_options(rrule, time)
+  def self.set_mandatory_options(rrule)
     rrule["INTERVAL"] ||= 1
     rrule["WKST"] = "MO" # considers Monday as the first day of the week
     rrule
