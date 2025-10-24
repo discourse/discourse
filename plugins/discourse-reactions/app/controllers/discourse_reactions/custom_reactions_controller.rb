@@ -12,7 +12,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     reaction = params[:reaction]
 
     invalid_reaction =
-      if SiteSetting.discourse_reactions_experimental_allow_any_emoji
+      if SiteSetting.discourse_reactions_allow_any_emoji
         !Emoji.exists?(reaction)
       else
         DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])

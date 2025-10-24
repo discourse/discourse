@@ -6,7 +6,12 @@ describe Jobs::PostsLocaleDetectionBackfill do
   fab!(:post) { Fabricate(:post, locale: nil) }
 
   before do
-    assign_fake_provider_to(:ai_default_llm_model)
+    fake_llm = assign_fake_provider_to(:ai_default_llm_model)
+
+    # Update the locale detector persona (ID -27) with the fake LLM
+    locale_detector = AiPersona.find_by(id: -27)
+    locale_detector.update!(default_llm_id: fake_llm.id) if locale_detector
+
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100

@@ -469,7 +469,6 @@ module Email
       style(".with-accent-colors, .digest-content-header", nil, dm: "body_primary")
       style(".digest-topic-body", nil, dm: "topic-body")
       style(".summary-footer", nil, dm: "text-color")
-      style("code, pre code, blockquote", nil, dm: "bg")
     end
 
     def replace_relative_urls

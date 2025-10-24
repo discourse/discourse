@@ -195,6 +195,7 @@ gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
 gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
+gem "pitchfork", require: false
 
 gem "rbtrace", require: false, platform: :mri
 

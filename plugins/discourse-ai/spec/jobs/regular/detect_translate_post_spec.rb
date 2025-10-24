@@ -36,6 +36,14 @@ describe Jobs::DetectTranslatePost do
     job.execute({ post_id: post.id })
   end
 
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_post_detection?).returns(false)
+    DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).never
+    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+    job.execute({ post_id: post.id })
+  end
+
   it "detects locale" do
     allow(DiscourseAi::Translation::PostLocaleDetector).to receive(:detect_locale).with(
       post,

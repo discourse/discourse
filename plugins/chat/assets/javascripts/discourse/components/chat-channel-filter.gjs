@@ -31,6 +31,11 @@ export default class ChatChannelFilter extends Component {
   }
 
   @action
+  clearInput() {
+    this.currentChannelFilter = "";
+  }
+
+  @action
   navigateToPreviousResult() {
     if (!this.channelFilterResults?.length) {
       return;
@@ -150,6 +155,7 @@ export default class ChatChannelFilter extends Component {
             placeholder={{i18n "chat.search.title"}}
             @filterAction={{this.loadSearchResults}}
             class="no-blur"
+            @onClearInput={{this.clearInput}}
           />
 
           {{#if this.channelFilterResults.length}}
@@ -167,27 +173,19 @@ export default class ChatChannelFilter extends Component {
               <DButton
                 @action={{this.navigateToPreviousResult}}
                 @icon="chevron-up"
-                class="btn-small chat-channel__prev-result"
+                class="btn-small btn-flat chat-channel__prev-result"
               />
               <DButton
                 @action={{this.navigateToNextResult}}
                 @icon="chevron-down"
-                class="btn-small chat-channel__next-result"
+                class="btn-small btn-flat chat-channel__next-result"
               />
             {{/if}}
           {{/if}}
 
-          {{#if this.currentChannelFilter.length}}
-            <DButton
-              @icon="xmark"
-              class="btn-small"
-              @action={{this.clearFilteringState}}
-            />
-          {{/if}}
-
           <DButton
             @action={{fn @onToggleFilter false}}
-            class="btn-primary btn-small"
+            class="btn-small btn-flat"
             @label="done"
           />
         </div>

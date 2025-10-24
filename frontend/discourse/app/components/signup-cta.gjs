@@ -47,7 +47,7 @@ export default class SignupCta extends Component {
           <DButton
             @action={{this.hideForSession}}
             @label="signup_cta.hide_session"
-            class="no-icon"
+            class="btn-default no-icon"
           />
           <DButton
             @action={{this.hideForever}}
