@@ -433,6 +433,10 @@ export default class DAutocompleteModifier extends Modifier {
           "top-end",
           "bottom-start",
           "bottom-end",
+          "left-start",
+          "right-end",
+          "left-end",
+          "right-start",
         ],
         data: {
           getResults: () => this.results,
