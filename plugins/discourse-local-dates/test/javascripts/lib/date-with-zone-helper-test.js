@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import DateWithZoneHelper from "./date-with-zone-helper";
+import DateWithZoneHelper from "discourse/plugins/discourse-local-dates/lib/date-with-zone-helper";
 
 const PARIS = "Europe/Paris";
 const SYDNEY = "Australia/Sydney";

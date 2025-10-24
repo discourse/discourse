@@ -1,7 +1,7 @@
 import QUnit, { module, test } from "qunit";
 import { i18n } from "discourse-i18n";
-import freezeTime from "../helpers/freeze-time";
-import LocalDateBuilder from "../lib/local-date-builder";
+import freezeTime from "discourse/plugins/discourse-local-dates/helpers/freeze-time";
+import LocalDateBuilder from "discourse/plugins/discourse-local-dates/lib/local-date-builder";
 
 const UTC = "Etc/UTC";
 const SYDNEY = "Australia/Sydney";
