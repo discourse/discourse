@@ -24,7 +24,6 @@ process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
 module.exports = function (defaults) {
   const discourseRoot = path.resolve("../..");
-  const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   DeprecationSilencer.silence(console, "warn");
@@ -125,7 +124,6 @@ module.exports = function (defaults) {
   }
 
   let extraPublicTrees = [
-    // parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     applyTerser(generateScriptsTree(app)),
     pluginTrees,
