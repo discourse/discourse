@@ -68,27 +68,34 @@ function processInputRule(inputRule, params) {
     return processInputRule(inputRule(params));
   }
 
-  if (inputRule instanceof InputRule) {
+  if (
+    inputRule instanceof InputRule ||
+    (inputRule.match instanceof RegExp && inputRule.handler instanceof Function)
+  ) {
+    let inCodeMark, inCode, undoable;
+
+    if (inputRule instanceof InputRule) {
+      // InputRule instances store properties as class attributes
+      inCodeMark = inputRule.inCodeMark ?? inputRule.inCode ?? false;
+      inCode = inputRule.inCode ?? false;
+      undoable = inputRule.undoable ?? true;
+    } else {
+      // Plain objects store properties in the options key
+      const options = inputRule.options || {};
+      inCodeMark = options.inCodeMark ?? options.inCode ?? false;
+      inCode = options.inCode ?? false;
+      undoable = options.undoable ?? true;
+    }
+
     return new InputRule(
       inputRule.match,
       wrapHandlerWithBacktickCheck(inputRule.handler),
-      inputRule.options
+      {
+        undoable,
+        inCode,
+        inCodeMark,
+      }
     );
-  }
-
-  if (
-    inputRule.match instanceof RegExp &&
-    inputRule.handler instanceof Function
-  ) {
-    // Default to NOT applying input rules when inCodeMark
-    const options = inputRule.options || {};
-    options.inCodeMark ??= options.inCode || false;
-
-    const handler = !options.inCodeMark
-      ? wrapHandlerWithBacktickCheck(inputRule.handler)
-      : inputRule.handler;
-
-    return new InputRule(inputRule.match, handler, options);
   }
 
   throw new Error("Input rule must have a match regex and a handler function");
