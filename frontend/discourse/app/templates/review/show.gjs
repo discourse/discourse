@@ -49,7 +49,10 @@ export default RouteTemplate(
             {{i18n "review.back_to_queue"}}
           </LinkTo>
         </div>
-        <ReviewableItemRefresh @reviewable={{@controller.reviewable}} />
+        <ReviewableItemRefresh
+          @reviewable={{@controller.reviewable}}
+          @showHelp={{true}}
+        />
       {{else}}
         <ul class="nav nav-pills reviewable-title">
           <NavItem @route="review.index" @label="review.view_all" />
