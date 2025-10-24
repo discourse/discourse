@@ -52,6 +52,7 @@ module DiscourseAi::Completions
 
         if id.present? && @tool && @tool.id != id
           process_arguments
+          @tool.partial = false
           rval = @tool
           @tool = nil
         end
@@ -102,6 +103,7 @@ module DiscourseAi::Completions
       rval = []
       if @tool
         process_arguments
+        @tool.partial = false
         rval << @tool
         @tool = nil
       end
