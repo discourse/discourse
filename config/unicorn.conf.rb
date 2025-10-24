@@ -20,6 +20,13 @@ else
   logger Logger.new(STDOUT)
 end
 
+# Sets the `DISCOURSE_DB_VARIABLES_STATEMENT_TIMEOUT` env var for all child processes Unicorn spawns. The value is used
+# to set the `statement_timeout` setting for all connections established by ActiveRecord. Do be aware when using this with
+# PGBouncer in transaction pooling mode as the setting will persist across the connections.
+if ENV["DISCOURSE_UNICORN_DB_STATEMENT_TIMEOUT"]&.length.to_i > 0
+  ENV["DISCOURSE_DB_VARIABLES_STATEMENT_TIMEOUT"] = ENV["DISCOURSE_UNICORN_DB_STATEMENT_TIMEOUT"]
+end
+
 # tune down if not enough ram
 worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 
