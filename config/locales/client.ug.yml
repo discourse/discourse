@@ -298,6 +298,9 @@ ug:
         logged_in_members: "قايتا خۇش كەلدىڭىز، %{preferred_display_name}!"
         anonymous_members: "%{site_name} غا خۇش كەلدىڭىز!"
       search: "ئىزدە"
+    impersonation:
+      notice: "سىز %{username} دەك سىياقلىنىۋاتىسىز"
+      stop: "سىياقلىنىشنى توختات"
     themes:
       default_description: "كۆڭۈلدىكى"
       error_caused_by: "«%{name}» پەيدا قىلغان. <a target='blank' href='%{path}'>بۇ جاينى چېكىپ</a>يېڭىلاپ، قايتا سەپلەپ ياكى چەكلەڭ."
@@ -5573,6 +5576,7 @@ ug:
         overridden_by: "قاپلىغۇچى"
         default_value: "كۆڭۈلدىكى"
         overridden_value: "قاپلىغان قىممەت: %{value}"
+        add: "ئۆرنەك بېكەت تەڭشىكىگە يۆتكىلىدۇ"
       search:
         modal_title: "باشقۇرۇش بېتىدىن ھەممە نەرسىنى ئىزدەيدۇ"
         title: "ئىزدە"
