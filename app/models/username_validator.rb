@@ -18,13 +18,13 @@ class UsernameValidator
   def initialize(username, skip_length_validation: false, object: nil)
     @username = username&.unicode_normalize
     @skip_length_validation = skip_length_validation
-    @user = object
+    @object = object
     @errors = []
   end
 
   attr_accessor :errors
   attr_reader :username
-  attr_reader :user
+  attr_reader :object
   attr_reader :skip_length_validation
 
   def valid_format?
