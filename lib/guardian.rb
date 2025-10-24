@@ -610,8 +610,7 @@ class Guardian
   end
 
   def can_see_reviewable_ui_refresh?
-    SiteSetting.reviewable_ui_refresh_map.include?(Group::AUTO_GROUPS[:everyone]) ||
-      @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_map)
+    @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_map)
   end
 
   def is_me?(other)

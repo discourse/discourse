@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Experiments::Toggle
+class UpcomingChanges::Toggle
   include Service::Base
 
   policy :current_user_is_admin

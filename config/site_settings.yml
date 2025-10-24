@@ -4265,3 +4265,7 @@ experimental:
     type: group_list
     default: ""
     area: "experimental"
+  enable_upcoming_changes:
+    default: false
+    hidden: true
+    client: true

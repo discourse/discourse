@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Experiments::Toggle do
+RSpec.describe UpcomingChanges::Toggle do
   describe described_class::Contract, type: :model do
     it { is_expected.to validate_presence_of :setting_name }
   end

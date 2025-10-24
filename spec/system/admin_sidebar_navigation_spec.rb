@@ -98,16 +98,18 @@ describe "Admin | Sidebar Navigation", type: :system do
     )
 
     sidebar.toggle_all_sections
-    expect(page).to have_selector(".sidebar-section-link-content-text", count: 5)
-    expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(
-      [
-        I18n.t("admin_js.admin.dashboard.title"),
-        I18n.t("admin_js.admin.config.users.title"),
-        I18n.t("admin_js.admin.config.groups.title"),
-        I18n.t("admin_js.admin.config.site_settings.title"),
-        I18n.t("admin_js.admin.config.whats_new.title"),
-      ],
+    expected_links = [
+      I18n.t("admin_js.admin.dashboard.title"),
+      I18n.t("admin_js.admin.config.users.title"),
+      I18n.t("admin_js.admin.config.groups.title"),
+      I18n.t("admin_js.admin.config.site_settings.title"),
+      I18n.t("admin_js.admin.config.whats_new.title"),
+    ]
+    expect(page).to have_selector(
+      ".sidebar-section-link-content-text",
+      count: expected_links.length,
     )
+    expect(all(".sidebar-section-link-content-text").map(&:text)).to eq(expected_links)
 
     sidebar.toggle_all_sections
     expect(page).to have_selector(
