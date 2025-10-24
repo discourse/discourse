@@ -48,6 +48,10 @@
     overflow: auto;
   }
 
+  .btn {
+    border-radius: 0;
+  }
+
   .arrow {
     position: absolute;
     color: var(--secondary);
