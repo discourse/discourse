@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -9,21 +10,16 @@ import StyleguideExample from "discourse/plugins/styleguide/discourse/components
 export default class Dialogs extends Component {
   @service dialog;
 
-  @action
-  openDialog(dialog = {}) {
-    this.dialog[dialog.name](dialog.options);
-  }
+  @tracked alertOutput = "";
+  @tracked deleteConfirmOutput = "";
+  @tracked noticeOutput = "";
+  @tracked confirmOutput = "";
+  @tracked yesNoConfirmOutput = "";
 
   @action
-  didConfirm() {
-    // eslint-disable-next-line no-alert
-    alert("did confirm");
-  }
-
-  @action
-  didCancel() {
-    // eslint-disable-next-line no-alert
-    alert("did cancel");
+  async openDialog(dialog = {}) {
+    const confirmed = await this.dialog[dialog.name](dialog.options);
+    this[`${dialog.name}Output`] = `Confirmed: ${confirmed}`;
   }
 
   <template>
@@ -45,6 +41,8 @@ export default class Dialogs extends Component {
               )
             }}
           />
+
+          <span>&nbsp;{{this.alertOutput}}</span>
         </:actions>
       </StyleguideComponent>
       <StyleguideComponent @tag="notice">
@@ -56,6 +54,7 @@ export default class Dialogs extends Component {
               (hash name="notice" options="message")
             }}
           />
+          <span>&nbsp;{{this.noticeOutput}}</span>
         </:actions>
       </StyleguideComponent>
       <StyleguideComponent @tag="yesNoConfirm">
@@ -75,6 +74,7 @@ export default class Dialogs extends Component {
               )
             }}
           />
+          <span>&nbsp;{{this.yesNoConfirmOutput}}</span>
         </:actions>
       </StyleguideComponent>
       <StyleguideComponent @tag="deleteConfirm">
@@ -94,6 +94,7 @@ export default class Dialogs extends Component {
               )
             }}
           />
+          <span>&nbsp;{{this.deleteConfirmOutput}}</span>
         </:actions>
       </StyleguideComponent>
       <StyleguideComponent @tag="confirm">
@@ -113,6 +114,7 @@ export default class Dialogs extends Component {
               )
             }}
           />
+          <span>&nbsp;{{this.confirmOutput}}</span>
         </:actions>
       </StyleguideComponent>
     </StyleguideExample>
