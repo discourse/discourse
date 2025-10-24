@@ -114,10 +114,9 @@ class UserDestroyer
       end
     end
 
-    # After the user is deleted, remove the reviewable
-    if reviewable = ReviewableUser.pending.find_by(target: user)
-      reviewable.perform(@actor, :delete_user)
-    end
+    # After the user is deleted, remove the reviewable unless request comes from reviewable
+    reviewable = ReviewableUser.pending.find_by(target: user)
+    reviewable.perform(@actor, :delete_user) if reviewable && !opts[:from_reviewable]
 
     result
   end

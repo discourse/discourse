@@ -36,7 +36,7 @@ export default class ReviewableInsights extends Component {
         icon: "clock-rotate-left",
         label: i18n("review.insights.similar_posts"),
         description: i18n("review.insights.flagged_in_timeframe", {
-          count: user.user_stat.flags_agreed,
+          count: user.user_stat?.flags_agreed || 0,
         }),
       });
     }
@@ -64,7 +64,7 @@ export default class ReviewableInsights extends Component {
     });
 
     // Visibility insight
-    if (!reviewable?.topic?.visible) {
+    if (reviewable?.topic && !reviewable?.topic?.visible) {
       insights.push({
         icon: "far-eye-slash",
         label: i18n("review.insights.visibility"),
