@@ -482,6 +482,14 @@ class TopicsFilter
         next
       end
 
+      # Exclude whisper posts unless the user can see whispers
+      whisper_condition =
+        if @guardian.can_see_whispers?
+          ""
+        else
+          "AND p1.post_type != #{Post.types[:whisper]}"
+        end
+
       if require_all
         if user_ids.length < usernames.length
           @scope = @scope.none
@@ -495,29 +503,46 @@ class TopicsFilter
             topics.id NOT IN (
               SELECT p1.topic_id
               FROM posts p1
-              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL
+              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL #{whisper_condition}
               GROUP BY p1.topic_id
               HAVING COUNT(DISTINCT p1.user_id) = :user_count
             )
           SQL
         else
-          user_ids.each_with_index { |uid, idx| @scope = @scope.where(<<~SQL) }
+          user_ids.each_with_index do |uid, idx|
+            whisper_condition_indexed =
+              if @guardian.can_see_whispers?
+                ""
+              else
+                "AND p#{idx}.post_type != #{Post.types[:whisper]}"
+              end
+
+            @scope = @scope.where(<<~SQL)
             EXISTS (
               SELECT 1
               FROM posts p#{idx}
-              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL
+              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL #{whisper_condition_indexed}
               LIMIT 1
             )
           SQL
+          end
         end
       else
         not_sql = prefix == "-" ? "NOT" : ""
+        whisper_condition_p =
+          if @guardian.can_see_whispers?
+            ""
+          else
+            "AND p.post_type != #{Post.types[:whisper]}"
+          end
+
         @scope = @scope.where(<<~SQL, user_ids: user_ids)
               topics.id #{not_sql} IN (
                 SELECT DISTINCT p.topic_id
                 FROM posts p
                 WHERE p.user_id IN (:user_ids)
                   AND p.deleted_at IS NULL
+                  #{whisper_condition_p}
               )
             SQL
       end
@@ -547,27 +572,47 @@ class TopicsFilter
         next
       end
 
+      # Exclude whisper posts unless the user can see whispers
+      whisper_condition =
+        if @guardian.can_see_whispers?
+          ""
+        else
+          "AND pg#{require_all ? "IDX" : ""}.post_type != #{Post.types[:whisper]}"
+        end
+
       if require_all
         if group_ids.length < group_names.length
           @scope = @scope.none
           next
         end
 
-        group_ids.each_with_index { |gid, idx| @scope = @scope.where(<<~SQL) }
+        group_ids.each_with_index do |gid, idx|
+          whisper_condition_indexed = whisper_condition.gsub("IDX", idx.to_s)
+
+          @scope = @scope.where(<<~SQL)
             EXISTS (
               SELECT 1
               FROM posts pg#{idx}
               JOIN group_users gu#{idx} ON gu#{idx}.user_id = pg#{idx}.user_id
-              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid}
+              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid} #{whisper_condition_indexed}
             )
           SQL
+        end
       else
+        whisper_condition_p =
+          if @guardian.can_see_whispers?
+            ""
+          else
+            "AND p.post_type != #{Post.types[:whisper]}"
+          end
+
         @scope = @scope.where(<<~SQL, group_ids: group_ids)
               topics.id IN (
                 SELECT DISTINCT p.topic_id
                 FROM posts p
                 JOIN group_users gu ON gu.user_id = p.user_id
                 WHERE gu.group_id IN (:group_ids)
+                  #{whisper_condition_p}
               )
             SQL
       end
