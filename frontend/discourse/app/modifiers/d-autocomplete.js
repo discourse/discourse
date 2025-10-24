@@ -180,6 +180,18 @@ export default class DAutocompleteModifier extends Modifier {
     }
   }
 
+  @action
+  async handleWindowResize() {
+    try {
+      if (this.expanded) {
+        await this.closeAutocomplete();
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] handleWindowResize: ", e);
+    }
+  }
+
   hasModifierKey(event) {
     return event.ctrlKey || event.altKey || event.metaKey;
   }
@@ -215,8 +227,9 @@ export default class DAutocompleteModifier extends Modifier {
     element.addEventListener("keydown", this.handleKeyDown);
     element.addEventListener("paste", this.handlePaste);
 
-    // Global click handler to close autocomplete
+    // Global handlers to close autocomplete
     document.addEventListener("click", this.handleGlobalClick);
+    window.addEventListener("resize", this.handleWindowResize);
   }
 
   @action
@@ -229,6 +242,7 @@ export default class DAutocompleteModifier extends Modifier {
     }
 
     document.removeEventListener("click", this.handleGlobalClick);
+    window.removeEventListener("resize", this.handleWindowResize);
     this.menu.close("d-autocomplete");
   }
 
