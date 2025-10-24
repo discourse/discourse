@@ -36,8 +36,16 @@ module UpcomingChanges
     change_status_value(change_setting_name) >= UpcomingChanges.statuses[:stable]
   end
 
+  def self.meets_or_exceeds_status?(change_setting_name, status)
+    change_status_value(change_setting_name) >= UpcomingChanges.statuses[status]
+  end
+
   def self.change_status_value(change_setting_name)
-    UpcomingChanges.statuses[change_metadata(change_setting_name)[:status]]
+    UpcomingChanges.statuses[change_status(change_setting_name)]
+  end
+
+  def self.change_status(change_setting_name)
+    change_metadata(change_setting_name)[:status]
   end
 
   def self.history_for(change_setting_name)
@@ -45,5 +53,13 @@ module UpcomingChanges
       action: UserHistory.actions[:upcoming_change_toggled],
       subject: change_setting_name,
     ).order(created_at: :desc)
+  end
+
+  def self.has_groups?(change_setting_name)
+    group_ids_for(change_setting_name).present?
+  end
+
+  def self.group_ids_for(change_setting_name)
+    SiteSetting.send("#{change_setting_name}_groups_map")
   end
 end

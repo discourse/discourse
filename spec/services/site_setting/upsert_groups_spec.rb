@@ -125,6 +125,14 @@ RSpec.describe SiteSetting::UpsertGroups do
         SiteSetting.expects(:notify_changed!).once
         result
       end
+
+      context "when group_names are empty" do
+        let(:group_names) { [] }
+
+        it "deletes the existing site setting group record" do
+          expect { result }.to change { SiteSettingGroup.where(name: setting).count }.by(-1)
+        end
+      end
     end
   end
 end

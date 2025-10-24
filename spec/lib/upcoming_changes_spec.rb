@@ -173,6 +173,40 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".change_status" do
+    it "returns :pre_alpha for pre_alpha status" do
+      expect(described_class.change_status(setting_name)).to eq(:pre_alpha)
+    end
+
+    it "returns :alpha for alpha status" do
+      expect(described_class.change_status("alpha_setting")).to eq(:alpha)
+    end
+
+    it "returns :beta for beta status" do
+      expect(described_class.change_status("beta_setting")).to eq(:beta)
+    end
+
+    it "returns :stable for stable status" do
+      expect(described_class.change_status("stable_setting")).to eq(:stable)
+    end
+
+    it "returns :permanent for permanent status" do
+      expect(described_class.change_status("permanent_setting")).to eq(:permanent)
+    end
+  end
+
+  describe ".meets_or_exceeds_status?" do
+    it "returns true when the change meets the required status" do
+      expect(described_class.meets_or_exceeds_status?("stable_setting", :beta)).to eq(true)
+      expect(described_class.meets_or_exceeds_status?("permanent_setting", :stable)).to eq(true)
+    end
+
+    it "returns false when the change does not meet the required status" do
+      expect(described_class.meets_or_exceeds_status?("alpha_setting", :beta)).to eq(false)
+      expect(described_class.meets_or_exceeds_status?("beta_setting", :stable)).to eq(false)
+    end
+  end
+
   describe ".history_for" do
     fab!(:admin)
 

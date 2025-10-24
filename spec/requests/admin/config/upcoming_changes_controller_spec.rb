@@ -143,6 +143,20 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("13|1")
       end
 
+      it "deletes an existing site setting group record" do
+        SiteSettingGroup.create!(name: setting_name, group_ids: "10|13")
+
+        expect {
+          put "/admin/config/upcoming-changes/groups.json",
+              params: {
+                group_names: [],
+                setting: setting_name,
+              }
+        }.to change { SiteSettingGroup.count }.by(-1)
+
+        expect(SiteSettingGroup.find_by(name: setting_name)).to not_exist
+      end
+
       it "logs the change in staff action logs" do
         expect {
           put "/admin/config/upcoming-changes/groups.json",
