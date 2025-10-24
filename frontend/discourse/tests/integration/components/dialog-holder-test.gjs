@@ -352,7 +352,8 @@ module("Integration | Component | dialog-holder", function (hooks) {
       }
 
       // notice has no button
-      if (method !== "notice") {
+      // alert has no cancel button
+      if (!["notice", "alert"].includes(method)) {
         // Test cancel button
         const cancelPromise = this.dialog[method]({ message: "test" });
         await settled();

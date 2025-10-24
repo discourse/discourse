@@ -80,12 +80,14 @@ export default class DialogService extends Service {
       return this.#promiseDialog({
         message: params,
         type: "alert",
+        shouldDisplayCancel: false,
       });
     }
 
     return this.#promiseDialog({
       ...params,
       type: "alert",
+      shouldDisplayCancel: false,
     });
   }
 
@@ -129,8 +131,8 @@ export default class DialogService extends Service {
       const { didConfirm, didCancel } = params;
 
       this.dialog({
-        ...params,
         shouldDisplayCancel: true,
+        ...params,
         didConfirm: () => {
           didConfirm?.();
           resolve(true);
