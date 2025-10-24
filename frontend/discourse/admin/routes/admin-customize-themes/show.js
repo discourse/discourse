@@ -24,7 +24,7 @@ export default class AdminCustomizeThemesShowRoute extends DiscourseRoute {
     super.setupController(...arguments);
 
     const parentController = this.controllerFor("adminCustomizeThemes");
-    controller.set("allThemes", parentController.get("model"));
+    controller.set("allThemes", parentController.model.content);
   }
 
   titleToken() {
