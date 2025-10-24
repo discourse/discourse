@@ -259,14 +259,6 @@ describe "Composer Form Templates", type: :system do
     end
 
     context "when the default template has a topic template" do
-      SiteSetting.default_composer_category =
-        (
-          if SiteSetting.general_category_id != -1
-            SiteSetting.general_category_id
-          else
-            SiteSetting.uncategorized_category_id
-          end
-        )
       let(:default_category) { Category.find(SiteSetting.default_composer_category) }
 
       before { default_category.update!(topic_template: "Testing") }
