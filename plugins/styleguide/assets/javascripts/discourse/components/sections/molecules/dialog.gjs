@@ -18,6 +18,7 @@ export default class Dialogs extends Component {
 
   @action
   async openDialog(dialog = {}) {
+    this[`${dialog.name}Output`] = "";
     const confirmed = await this.dialog[dialog.name](dialog.options);
     this[`${dialog.name}Output`] = `Confirmed: ${confirmed}`;
   }
