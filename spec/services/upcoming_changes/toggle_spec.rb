@@ -59,6 +59,23 @@ RSpec.describe UpcomingChanges::Toggle do
           ).count
         }.by(1)
       end
+
+      context "when enable_upcoming_changes is enabled" do
+        before { SiteSetting.enable_upcoming_changes = true }
+
+        it "creates an entry in the staff action logs with correct context" do
+          expect { result }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:upcoming_change_toggled],
+              subject: "experimental_form_templates",
+            ).count
+          }.by(1)
+
+          expect(UserHistory.last.context).to eq(
+            I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled"),
+          )
+        end
+      end
     end
   end
 end

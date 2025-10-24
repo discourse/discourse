@@ -5699,6 +5699,12 @@ en:
     auto_deleted_hidden_posts: "Automatically destroyed hidden posts"
     seed_data_topic_updated: "Seed data topic updated"
     seed_data_topic_deleted: "Seed data topic deleted"
+    upcoming_changes:
+      log_manually_toggled: "Manually toggled by user"
+      log_promoted: >
+        This upcoming change was automatically enabled because it reached the '%{change_status}' status, which meets or exceeds the defined promotion status of '%{promotion_status_threshold}' on your site.
+
+        See the <a href="%{base_url}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
