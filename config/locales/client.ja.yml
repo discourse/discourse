@@ -2483,6 +2483,7 @@ ja:
         other: "+%{count} 個のサブカテゴリ"
       topic_count:
         other: "このカテゴリの %{count} 件のトピック"
+      read_only: "読み取り専用"
     timezone_input:
       ambiguous_ist: "IST はあいまいです。特定のタイムゾーンを選択してください（「アジア/コルカタ」など）"
     select_kit:
@@ -3162,8 +3163,6 @@ ja:
       filter_to:
         other: "トピックの %{count} 件の投稿"
       create: "新規トピック"
-      create_disabled_category: "このカテゴリにトピックを作成することはできません"
-      create_disabled_tag: "このタグでトピックを作成することはできません"
       create_long: "新しいトピックの作成"
       open_draft: "下書きを開く"
       private_message: "メッセージを書く"
@@ -3580,6 +3579,9 @@ ja:
       title: "最新の投稿"
       empty: "投稿はありません"
       aria_post_number: "%{title} - 投稿 #%{postNumber}"
+      bulk:
+        clear_all: "すべてクリア"
+        actions: "一括操作"
     post:
       confirm_delete: "この投稿を削除してもよろしいですか？"
       quote_reply: "引用"
@@ -3679,10 +3681,7 @@ ja:
         attachment_upload_not_allowed_for_new_user: "新規ユーザーはファイルを添付できません。"
         attachment_download_requires_login: "添付ファイルをダウンロードするには、ログインする必要があります。"
       cancel_composer:
-        confirm: "投稿をどうしますか？"
         discard: "破棄"
-        save_draft: "後で使用するために下書きとして保存"
-        keep_editing: "編集を続ける"
       via_email: "これはメールで投稿されました"
       via_auto_generated_email: "この投稿は自動生成メール経由で届きました"
       whisper: "この投稿はモデレーターの非公開のささやきです"
@@ -3906,6 +3905,8 @@ ja:
       style: "スタイル"
       background_color: "色"
       foreground_color: "テキストの色"
+      color_validations:
+        cant_be_empty: "空にできません"
       styles:
         type: "スタイル"
         icon: "アイコン"
@@ -5012,9 +5013,12 @@ ja:
           title: "ローカリゼーション"
           header_description: "コミュニティーのインターフェース言語とメンバー向けのその他のローカリゼーションオプションを構成します"
           keywords: "ロケール|言語|タイムゾーン|Unicode|ltr"
-        login_and_authentication:
+        login:
           title: "ログインと認証"
           header_description: "ユーザーのログインと認証方法、シークレットと鍵、OAuth2 プロバイダーなどを構成します"
+          sub_pages:
+            common_settings:
+              title: "設定"
         logo:
           title: "ロゴ"
           header_description: "サイト全体で使用されるロゴとアイコンを構成します"
@@ -6171,7 +6175,6 @@ ja:
         copy_to_clipboard: "クリップボードにコピー"
         copied_to_clipboard: "クリップボードにコピーしました"
         copy_to_clipboard_error: "データをクリップボードにコピーする際にエラーが発生しました"
-        theme_owner: "編集できません。オーナー:"
         email_templates:
           title: "メール"
           subject: "件名"
@@ -6179,6 +6182,7 @@ ja:
           body: "本文"
           revert: "変更を戻す"
           revert_confirm: "変更を戻してよろしいですか？"
+          edit: "編集"
         component:
           all_filter: "すべて"
           used_filter: "使用中"
@@ -6399,6 +6403,8 @@ ja:
         schema:
           title: "%{name} 設定の編集"
           back_button: "%{name} に戻る"
+          move_up: "上に移動"
+          move_down: "下に移動"
           fields:
             required: "*必須"
             groups:

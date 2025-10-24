@@ -7,11 +7,11 @@
 ru:
   admin_js:
     admin:
-      calendar: "Календарь"
+      calendar: "Календарь и события"
       site_settings:
         categories:
           discourse_post_event: "Мероприятие Discourse"
-          discourse_calendar: "Календарь Discourse"
+          discourse_calendar: "Календарь и события"
   js:
     notifications:
       titles:
@@ -36,6 +36,7 @@ ru:
         header_title: "Праздники"
         pick_region_description: "Выберите регион, чтобы увидеть праздники, которые там отмечают."
         disabled_holidays_description: "При отключении праздников они будут исключены из рабочего календаря."
+        header_description: "Выберите регион, чтобы увидеть праздничные дни для этого региона. Праздники для людей с ограниченными возможностями будут исключены из календаря праздничных дней для сотрудников."
       date: "Дата"
       add_to_calendar: "Добавить в Календарь Google"
       toggle_timezone_offset_title: "Переключить смещение часового пояса"
@@ -44,6 +45,7 @@ ru:
         title: "Регион"
         none: "Отсутствует"
         use_current_region: "Использовать текущий регион"
+        select_region: "Выберите регион..."
         names:
           ae: "Объединенные Арабские Эмираты"
           ar: "Аргентина"
@@ -423,6 +425,7 @@ ru:
         event:
           expired: "Истекший срок"
           closed: "Закрытое"
+          full: "Полный"
           status:
             standalone:
               title: "Обособленное"
@@ -480,6 +483,9 @@ ru:
         minimal:
           label: "Минимальное событие"
           checkbox_label: "Скрыть кнопки «Участвую», «Не участвую» и статус приглашенных"
+        max_attendees:
+          label: "Максимальное количество участников"
+          placeholder: "Нет ограничений"
         allow_chat:
           label: "Интеграция чата"
           checkbox_label: "Создать и настроить чат-канал для конкретного события"

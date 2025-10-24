@@ -4,13 +4,13 @@ class GroupUser < ActiveRecord::Base
   belongs_to :group
   belongs_to :user
 
-  after_save :update_title
+  before_create :set_notification_level
   after_destroy :grant_other_available_title
+  after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
+  after_save :update_title
 
   after_save :set_primary_group
-  after_destroy :remove_primary_and_flair_group, :recalculate_trust_level
 
-  before_create :set_notification_level
   after_save :grant_trust_level
   after_save :set_category_notifications
   after_save :set_tag_notifications
@@ -121,13 +121,13 @@ class GroupUser < ActiveRecord::Base
   end
 
   def grant_trust_level
-    return if group.grant_trust_level.nil?
+    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
 
     TrustLevelGranter.grant(group.grant_trust_level, user)
   end
 
   def recalculate_trust_level
-    return if group.grant_trust_level.nil?
+    return if group.grant_trust_level.nil? || group.grant_trust_level.zero?
     return if self.destroyed_by_association&.active_record == User # User is being destroyed, so don't try to recalculate
 
     Promotion.recalculate(user, use_previous_trust_level: true)

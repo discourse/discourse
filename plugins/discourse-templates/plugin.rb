@@ -11,18 +11,15 @@ enabled_site_setting :discourse_templates_enabled
 
 register_asset "stylesheets/discourse-templates.scss"
 
-register_svg_icon "far-clipboard" if respond_to?(:register_svg_icon)
+register_svg_icon "far-clipboard"
+
+module ::DiscourseTemplates
+  PLUGIN_NAME = "discourse-templates"
+end
+
+require_relative "lib/discourse_templates/engine"
 
 after_initialize do
-  module ::DiscourseTemplates
-    PLUGIN_NAME = "discourse-templates".freeze
-
-    class Engine < ::Rails::Engine
-      engine_name DiscourseTemplates::PLUGIN_NAME
-      isolate_namespace DiscourseTemplates
-    end
-  end
-
   require_relative "app/controllers/discourse_templates/templates_controller"
   require_relative "app/models/discourse_templates/usage_count"
   require_relative "app/serializers/discourse_templates/templates_serializer"
@@ -30,6 +27,10 @@ after_initialize do
   require_relative "lib/discourse_templates/topic_extension"
   require_relative "lib/discourse_templates/topic_query_extension"
   require_relative "lib/discourse_templates/user_extension"
+
+  Discourse::Application.routes.append do
+    mount DiscourseTemplates::Engine, at: "/discourse_templates"
+  end
 
   reloadable_patch do |plugin|
     Guardian.prepend(DiscourseTemplates::GuardianExtension)
@@ -45,14 +46,4 @@ after_initialize do
     :is_template,
     include_condition: -> { object.topic.template?(scope.user) },
   ) { true }
-
-  Discourse::Application.routes.append do
-    mount ::DiscourseTemplates::Engine, at: "/discourse_templates"
-  end
-
-  DiscourseTemplates::Engine.routes.draw do
-    resources :templates, path: "/", only: [:index] do
-      member { post "use" }
-    end
-  end
 end

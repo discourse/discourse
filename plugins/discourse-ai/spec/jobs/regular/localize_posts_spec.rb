@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe Jobs::LocalizePosts do
-  fab!(:post)
   subject(:job) { described_class.new }
+
+  fab!(:post)
 
   let(:locales) { %w[en ja de] }
 
@@ -38,6 +39,13 @@ describe Jobs::LocalizePosts do
 
   it "does nothing when ai_translation_backfill_hourly_rate is 0" do
     SiteSetting.ai_translation_backfill_hourly_rate = 0
+    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_post_localization?).returns(false)
     DiscourseAi::Translation::PostLocalizer.expects(:localize).never
 
     job.execute({ limit: 10 })
@@ -144,7 +152,7 @@ describe Jobs::LocalizePosts do
 
     fab!(:public_post) { Fabricate(:post, locale: "es") }
 
-    fab!(:personal_pm_topic) { Fabricate(:private_message_topic) }
+    fab!(:personal_pm_topic, :private_message_topic)
     fab!(:personal_pm_post) { Fabricate(:post, topic: personal_pm_topic, locale: "es") }
 
     fab!(:group)

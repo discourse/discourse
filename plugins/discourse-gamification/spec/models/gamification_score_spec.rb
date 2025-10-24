@@ -2,7 +2,7 @@
 
 RSpec.describe DiscourseGamification::GamificationScore, type: :model do
   fab!(:user)
-  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
+  fab!(:leaderboard, :gamification_leaderboard)
 
   before { DiscourseGamification::LeaderboardCachedView.create_all }
 

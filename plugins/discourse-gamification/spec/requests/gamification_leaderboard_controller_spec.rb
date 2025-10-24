@@ -3,7 +3,7 @@
 RSpec.describe DiscourseGamification::GamificationLeaderboardController do
   fab!(:group)
   fab!(:current_user) { Fabricate(:user, group_ids: [group.id]) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_2, :user)
   fab!(:staged_user) { Fabricate(:user, staged: true) }
   fab!(:anon_user) { Fabricate(:user, email: "john@anonymized.invalid") }
   fab!(:currently_suspended_user) do
@@ -13,7 +13,7 @@ RSpec.describe DiscourseGamification::GamificationLeaderboardController do
     Fabricate(:user, suspended_at: Time.now, suspended_till: 5.days.ago)
   end
 
-  fab!(:user_3) { Fabricate(:user) }
+  fab!(:user_3, :user)
 
   let!(:create_score) { UserVisit.create(user_id: current_user.id, visited_at: 2.days.ago) }
   let!(:create_score_for_user2) { UserVisit.create(user_id: user_2.id, visited_at: 2.days.ago) }

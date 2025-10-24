@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class ReportGenerator
     def self.generate(query_id, query_params, recipients, opts = {})
       query = DiscourseDataExplorer::Query.find(query_id)

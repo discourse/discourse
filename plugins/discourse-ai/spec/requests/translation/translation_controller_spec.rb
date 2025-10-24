@@ -3,7 +3,7 @@
 describe DiscourseAi::Translation::TranslationController do
   fab!(:user)
   fab!(:admin)
-  fab!(:test_post) { Fabricate(:post) }
+  fab!(:test_post, :post)
   fab!(:group)
 
   before do
@@ -43,7 +43,7 @@ describe DiscourseAi::Translation::TranslationController do
         expect(response.status).to eq(404)
       end
 
-      it "successfully enqueues translation job when user can edit" do
+      it "successfully enqueues post translation job when user can edit" do
         admin_post = Fabricate(:post, user: admin)
 
         expect_enqueued_with(
@@ -53,6 +53,19 @@ describe DiscourseAi::Translation::TranslationController do
             force: true,
           },
         ) { post "/discourse-ai/translate/posts/#{admin_post.id}" }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "enqueues topic translation job when translating first post" do
+        first_post = Fabricate(:post, topic: Fabricate(:topic), user: admin)
+        expect_enqueued_with(
+          job: Jobs::DetectTranslateTopic,
+          args: {
+            topic_id: first_post.topic.id,
+            force: true,
+          },
+        ) { post "/discourse-ai/translate/posts/#{first_post.id}" }
 
         expect(response.status).to eq(200)
       end

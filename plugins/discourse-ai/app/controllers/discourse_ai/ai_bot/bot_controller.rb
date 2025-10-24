@@ -3,7 +3,9 @@
 module DiscourseAi
   module AiBot
     class BotController < ::ApplicationController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      include AiCreditLimitHandler
+
+      requires_plugin PLUGIN_NAME
       requires_login
 
       def show_debug_info_by_id
@@ -11,7 +13,7 @@ module DiscourseAi
         raise Discourse::NotFound if !log.topic
 
         guardian.ensure_can_debug_ai_bot_conversation!(log.topic)
-        render json: AiApiAuditLogSerializer.new(log, root: false), status: 200
+        render json: AiApiAuditLogSerializer.new(log, root: false), status: :ok
       end
 
       def show_debug_info
@@ -26,7 +28,7 @@ module DiscourseAi
 
         debug_info = AiApiAuditLog.where(post: posts).order(created_at: :desc).first
 
-        render json: AiApiAuditLogSerializer.new(debug_info, root: false), status: 200
+        render json: AiApiAuditLogSerializer.new(debug_info, root: false), status: :ok
       end
 
       def stop_streaming_response
@@ -35,14 +37,14 @@ module DiscourseAi
 
         Discourse.redis.del("gpt_cancel:#{post.id}")
 
-        render json: {}, status: 200
+        render json: {}, status: :ok
       end
 
       def show_bot_username
         bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(params[:username])
         raise Discourse::InvalidParameters.new(:username) if !bot_user
 
-        render json: { bot_username: bot_user.username_lower }, status: 200
+        render json: { bot_username: bot_user.username_lower }, status: :ok
       end
     end
   end

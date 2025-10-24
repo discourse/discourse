@@ -36,6 +36,10 @@ ru:
     no_solutions:
       self: "У вас пока нет решённых вопросов."
       others: "Нет решённых вопросов."
+    filter:
+      description:
+        solved: "Фильтр тем, которые были решены"
+        unsolved: "Фильтр тем, которые не были решены"
   badges:
     solved_1:
       name: "Решение найдено!"

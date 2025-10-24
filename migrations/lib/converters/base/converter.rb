@@ -8,7 +8,7 @@ module Migrations::Converters::Base
       @settings = settings
     end
 
-    def run
+    def run(only_steps: [], skip_steps: [])
       if respond_to?(:setup)
         puts "Initializing..."
         setup
@@ -16,7 +16,7 @@ module Migrations::Converters::Base
 
       create_database
 
-      steps.each do |step_class|
+      filter_steps(steps, only_steps, skip_steps).each do |step_class|
         step = create_step(step_class)
         before_step_execution(step)
         execute_step(step)
@@ -81,6 +81,10 @@ module Migrations::Converters::Base
 
       args = default_args.merge(step_args(step_class))
       step_class.new(StepTracker.new, args)
+    end
+
+    def filter_steps(step_classes, only_steps, skip_steps)
+      ::Migrations::ClassFilter.filter(step_classes, only: only_steps, skip: skip_steps)
     end
   end
 end

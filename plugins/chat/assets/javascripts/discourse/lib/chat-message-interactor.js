@@ -33,7 +33,6 @@ export function resetRemovedChatComposerSecondaryActions() {
 
 export default class ChatemojiReactions {
   @service appEvents;
-  @service dialog;
   @service chat;
   @service chatChannelComposer;
   @service chatThreadComposer;
@@ -42,7 +41,6 @@ export default class ChatemojiReactions {
   @service chatApi;
   @service currentUser;
   @service site;
-  @service router;
   @service modal;
   @service capabilities;
   @service siteSettings;
@@ -249,7 +247,7 @@ export default class ChatemojiReactions {
       });
     }
 
-    return buttons.reject((button) => removedSecondaryActions.has(button.id));
+    return buttons.filter((button) => !removedSecondaryActions.has(button.id));
   }
 
   select(checked = true) {

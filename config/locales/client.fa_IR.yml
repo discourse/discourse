@@ -150,7 +150,7 @@ fa_IR:
       en:
         name: انگلیسی (لهجه آمریکایی)
       en_GB:
-        name: انگلیسی
+        name: انگلیسی (بریتانیا)
       es:
         name: اسپانیایی
       et:
@@ -2448,6 +2448,7 @@ fa_IR:
       topic_count:
         one: "%{count} موضوع در این دسته"
         other: "%{count} موضوع در این دسته"
+      read_only: "فقط خواندنی"
     select_kit:
       delete_item: "حذف %{name}"
       filter_by: "فیلتر توسط: %{name}"
@@ -3119,8 +3120,6 @@ fa_IR:
         one: "%{count} نوشته در این موضوع وجود دارد"
         other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
-      create_disabled_category: "شما مجاز به ایجاد موضوع در این دسته‌بندی نیستید"
-      create_disabled_tag: "شما مجاز به ایجاد موضوع با این برچسب نیستید"
       create_long: "ساخت یک موضوع جدید"
       open_draft: "بازکردن پیشنویس"
       private_message: "شروع یک پیام"
@@ -3557,6 +3556,9 @@ fa_IR:
       title: "آخرین فرسته‌ها"
       empty: "هیچ پستی وجود ندارد"
       aria_post_number: "%{title} - نوشته #%{postNumber}"
+      bulk:
+        clear_all: "پاکسازی همه"
+        actions: "عملیات گروهی"
     post:
       confirm_delete: "آیا مطمئن هستید که می‌خواهید این پست را حذف کنید؟"
       quote_reply: "نقل‌قول"
@@ -3655,10 +3657,7 @@ fa_IR:
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
       cancel_composer:
-        confirm: "دوست دارید با پست خود چه کار کنید؟"
         discard: "دور انداختن"
-        save_draft: "ذخیره به عنوان پیش نویس"
-        keep_editing: "ادامه ویرایش"
       via_email: "این نوشته از طریق ایمیل ارسال شده است"
       via_auto_generated_email: "این نوشته با ایمیل خودکار ارسال شده"
       whisper: "این ارسال نجوای خصوصی برای ناظران است"
@@ -3879,6 +3878,8 @@ fa_IR:
       logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
       background_color: "رنگ"
+      color_validations:
+        cant_be_empty: "نمی‌تواند خالی باشد"
       styles:
         icon: "آیکن"
         emoji: "شکلک"
@@ -4926,9 +4927,12 @@ fa_IR:
           title: "محلی‌سازی"
           header_description: "زبان رابط انجمن خود و سایر گزینه‌های محلی سازی را برای اعضای خود پیکربندی کنید"
           keywords: "محل|زبان|منطقه زمانی|یونیکد|ltr"
-        login_and_authentication:
+        login:
           title: "ورود و احراز هویت"
           header_description: "نحوه ورود و احراز هویت کاربران، اسرار و کلیدها، ارائه دهندگان OAuth2 و موارد دیگر را پیکربندی کنید"
+          sub_pages:
+            common_settings:
+              title: "تنظیم"
         logo:
           form:
             logo:
@@ -5874,7 +5878,6 @@ fa_IR:
         copy_to_clipboard: "کپی در clipboard"
         copied_to_clipboard: "کپی شد"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
-        theme_owner: "قابل ویرایش نیست، مالک:"
         email_templates:
           title: "ایمیل"
           subject: "عنوان"
@@ -5882,6 +5885,7 @@ fa_IR:
           body: "متن"
           revert: "بازگرداندن تغییرات"
           revert_confirm: "آیا مطمئن هستید که میخواهید تنظیمات را بازگردانی کنید؟"
+          edit: "ویرایش"
         component:
           all_filter: "همه"
           used_filter: "استفاده شده"
@@ -6063,6 +6067,8 @@ fa_IR:
         schema:
           title: "ویرایش تنظیمات %{name}"
           back_button: "بازگشت به %{name}"
+          move_up: "انتقال به بالا"
+          move_down: "انتقال به پایین"
           fields:
             required: "*مورد نیاز"
             groups:

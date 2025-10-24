@@ -10,21 +10,17 @@ module Jobs
     every 10.minutes
 
     def execute(_args)
-      scheduled_checks =
-        ProblemCheckTracker.all.filter_map do |tracker|
-          tracker.check if eligible_for_this_run?(tracker)
+      ProblemCheck.scheduled.filter_map do |check|
+        if eligible_for_this_run?(check)
+          Jobs.enqueue(:run_problem_check, check_identifier: check.identifier.to_s)
         end
-
-      scheduled_checks.each do |check|
-        Jobs.enqueue(:run_problem_check, check_identifier: check.identifier.to_s)
       end
     end
 
     private
 
-    def eligible_for_this_run?(tracker)
-      tracker.check.present? && tracker.check.enabled? && tracker.check.scheduled? &&
-        tracker.ready_to_run?
+    def eligible_for_this_run?(check)
+      check.enabled? && check.scheduled? && check.ready_to_run?
     end
   end
 end

@@ -29,8 +29,8 @@ module PrettyText
 
   def self.apply_es6_file(ctx:, path:, module_name:)
     source = File.read(path)
-    transpiler = DiscourseJsProcessor::Transpiler.new
-    transpiled = transpiler.perform(source, nil, module_name)
+    processor = AssetProcessor.new
+    transpiled = processor.perform(source, nil, module_name)
     ctx.eval(transpiled, filename: module_name)
   end
 
@@ -46,9 +46,27 @@ module PrettyText
 
     ctx.eval("window = globalThis; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
-    ctx.attach("rails.logger.info", proc { |err| Rails.logger.info(err.to_s) })
-    ctx.attach("rails.logger.warn", proc { |err| Rails.logger.warn(err.to_s) })
-    ctx.attach("rails.logger.error", proc { |err| Rails.logger.error(err.to_s) })
+    ctx.attach(
+      "rails.logger.info",
+      proc do |err|
+        Rails.logger.info(err.to_s)
+        nil
+      end,
+    )
+    ctx.attach(
+      "rails.logger.warn",
+      proc do |err|
+        Rails.logger.warn(err.to_s)
+        nil
+      end,
+    )
+    ctx.attach(
+      "rails.logger.error",
+      proc do |err|
+        Rails.logger.error(err.to_s)
+        nil
+      end,
+    )
     ctx.eval <<~JS
       console = {
         prefix: "[PrettyText] ",
@@ -64,9 +82,9 @@ module PrettyText
       ctx.attach("__helpers.#{method}", PrettyText::Helpers.method(method))
     end
 
-    root_path = "#{Rails.root}/app/assets/javascripts"
-    d_node_modules = "#{Rails.root}/app/assets/javascripts/discourse/node_modules"
-    md_node_modules = "#{Rails.root}/app/assets/javascripts/discourse-markdown-it/node_modules"
+    root_path = "#{Rails.root}/frontend"
+    d_node_modules = "#{Rails.root}/frontend/discourse/node_modules"
+    md_node_modules = "#{Rails.root}/frontend/discourse-markdown-it/node_modules"
     ctx.load("#{d_node_modules}/loader.js/dist/loader/loader.js")
     ctx.load("#{md_node_modules}/markdown-it/dist/markdown-it.js")
     ctx.load("#{md_node_modules}/xss/dist/xss.js")
@@ -272,7 +290,7 @@ module PrettyText
         __performEmojiUnescape(#{title.inspect}, {
           getURL: __getURL,
           emojiSet: #{set},
-          emojiCDNUrl: "#{SiteSetting.external_emoji_url.blank? ? "" : SiteSetting.external_emoji_url}",
+          emojiCDNUrl: "#{SiteSetting.external_emoji_url.presence || ""}",
           customEmoji: #{custom},
           enableEmojiShortcuts: #{SiteSetting.enable_emoji_shortcuts},
           inlineEmoji: #{SiteSetting.enable_inline_emoji_translation}

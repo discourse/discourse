@@ -61,17 +61,17 @@ acceptance("Admin - Discourse Calendar - Holidays", function (needs) {
     await settled();
 
     assert
-      .dom(".holidays-list")
+      .dom(".admin-holidays-list")
       .includesText("New Year's Day", "it displays holiday names");
     assert
-      .dom(".holidays-list")
+      .dom(".admin-holidays-list")
       .includesText("Good Friday", "it displays holiday names");
 
     assert
-      .dom(".holidays-list")
+      .dom(".admin-holidays-list")
       .includesText("2022-01-01", "it displays holiday dates");
     assert
-      .dom(".holidays-list")
+      .dom(".admin-holidays-list")
       .includesText("2022-04-15", "it displays holiday dates");
   });
 
@@ -87,16 +87,16 @@ acceptance("Admin - Discourse Calendar - Holidays", function (needs) {
     assert
       .dom("table tbody tr")
       .hasClass(
-        "disabled",
-        "after clicking the disable button, it adds a .disabled CSS class"
+        "--disabled",
+        "after clicking the disable button, it adds a .--disabled CSS class"
       );
 
-    await click("table tr.disabled button");
+    await click("table tr.--disabled button");
     assert
       .dom("table tbody tr")
       .doesNotHaveClass(
-        "disabled",
-        "after clicking the enable button, it removes the .disabled CSS class"
+        "--disabled",
+        "after clicking the enable button, it removes the .--disabled CSS class"
       );
   });
 });

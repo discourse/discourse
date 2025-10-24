@@ -3,7 +3,7 @@
 describe PostVoting::CommentReviewQueue do
   subject(:queue) { described_class.new }
 
-  fab!(:comment_poster) { Fabricate(:user) }
+  fab!(:comment_poster, :user)
   fab!(:flagger) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }
   fab!(:post) { Fabricate(:post, topic: topic) }

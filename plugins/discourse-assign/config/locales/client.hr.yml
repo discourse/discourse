@@ -31,6 +31,8 @@ hr:
         watch_topic: "Prati temu"
         track_topic: "Prati temu"
         do_nothing: "Ne radi ništa"
+      no_assignments_body: >
+        Ovdje će biti navedene vaše dodijeljene teme i poruke. Također ćete povremeno primati podsjetnike za svoje zadatke, koje možete prilagoditi u svojim <a href='%{preferencesUrl}'>korisničkim postavkama</a>. <br><br> Kako biste dodijelili temu ili poruku sebi ili nekome drugome, potražite gumb %{icon} dodijeli pri dnu.
       assignment_description:
         topic: "%{topic_title}"
     search:
@@ -40,5 +42,6 @@ hr:
     notifications:
       assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:
+      title: "Uredi zadatke"
       topic: "Tema"
       post: "Objava"

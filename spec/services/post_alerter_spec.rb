@@ -733,6 +733,24 @@ RSpec.describe PostAlerter do
         staged_user.notifications.where(notification_type: Notification.types[:linked]).count,
       ).to eq(0)
     end
+
+    it "does not notify when user has disabled linked post notifications" do
+      user.user_option.update!(notify_on_linked_posts: false)
+      linking_post
+
+      expect(user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(
+        0,
+      )
+    end
+
+    it "still notifies when user has enabled linked post notifications (default)" do
+      expect(user.user_option.notify_on_linked_posts).to eq(true)
+      linking_post
+
+      expect(user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(
+        1,
+      )
+    end
   end
 
   context "with @here" do
@@ -1379,7 +1397,7 @@ RSpec.describe PostAlerter do
       evil_trout.update!(last_seen_at: 5.minutes.ago)
 
       expect { mention_post }.to change { Jobs::PushNotification.jobs.count }
-      expect(Jobs::PushNotification.jobs[0]["at"]).to be_within(30.second).of(
+      expect(Jobs::PushNotification.jobs[0]["at"]).to be_within(30.seconds).of(
         5.minutes.from_now.to_f,
       )
     end
@@ -1406,7 +1424,7 @@ RSpec.describe PostAlerter do
         delay = 5.minutes.from_now.to_f
 
         expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
-        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_within(30.second).of(delay)
+        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_within(30.seconds).of(delay)
       end
 
       it "does not delay push notification for inactive offline user" do

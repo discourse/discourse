@@ -736,6 +736,8 @@ nl:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        title: Maak een persoonlijke chat
       panels:
         chat:
           label: "Chat"

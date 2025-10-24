@@ -15,7 +15,7 @@ describe "Admin Badges Grouping Modal", type: :system do
       badges_page.visit_page(Badge::Autobiographer).edit_groupings
       badges_groupings_page.add_grouping("a new grouping")
 
-      try_until_success { BadgeGrouping.exists?(name: "a new grouping") }
+      BadgeGrouping.exists?(name: "a new grouping")
     end
   end
 end

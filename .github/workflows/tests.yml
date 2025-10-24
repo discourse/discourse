@@ -26,7 +26,7 @@ jobs:
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (github.repository_owner == 'discourse' && (matrix.target == 'plugins' && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
+    timeout-minutes: ${{ ((matrix.build_type == 'system' && (matrix.target == 'plugins' || matrix.target == 'core')) && 30) || 20 }}
 
     env:
       RAILS_ENV: test
@@ -140,7 +140,7 @@ jobs:
 
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
-        run: bin/rake plugin:pull_compatible_all
+        run: LOAD_PLUGINS=0 bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
         if: matrix.target == 'themes'
@@ -276,9 +276,9 @@ jobs:
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
-      - name: Theme Transpiler Tests
+      - name: Asset Processor Tests
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
-        working-directory: app/assets/javascripts/theme-transpiler
+        working-directory: frontend/asset-processor
         run: pnpm test
 
       - name: Plugin QUnit
@@ -292,8 +292,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always() && matrix.build_type == 'frontend'
         with:
-          name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
-          path: ./app/assets/javascripts/discourse/test-execution-*.json
+          name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
+          path: ./frontend/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'

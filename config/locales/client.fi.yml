@@ -1787,7 +1787,7 @@ fi:
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
       add_email:
         title: "Lisää sähköpostiosoite"
-        add: "lisää"
+        add: "Lisää"
       change_email:
         title: "Vaihda sähköposti"
         taken: "Tämä sähköpostiosoite ei valitettavasti ole saatavilla."
@@ -2614,6 +2614,7 @@ fi:
       topic_count:
         one: "%{count} ketju tällä alueella"
         other: "%{count} ketjua tällä alueella"
+      read_only: "vain luku"
     timezone_input:
       ambiguous_ist: "IST on moniselitteinen, valitse tietty aikavyöhyke (esim. Aasia/Kolkata)."
     select_kit:
@@ -3339,8 +3340,6 @@ fi:
         one: "%{count} viesti ketjussa"
         other: "%{count} viestiä ketjussa"
       create: "Uusi ketju"
-      create_disabled_category: "Et saa luoda ketjuja tälle alueelle"
-      create_disabled_tag: "Et saa luoda ketjuja tällä tunnisteella"
       create_long: "Aloita uusi ketju"
       open_draft: "Avaa luonnos"
       private_message: "Luo viesti"
@@ -3781,6 +3780,9 @@ fi:
       title: "Uusimmat viestit"
       empty: "Viestejä ei ole"
       aria_post_number: "%{title} – viesti %{postNumber}"
+      bulk:
+        clear_all: "Tyhjennä kaikki"
+        actions: "Joukkotoiminnot"
     post:
       confirm_delete: "Oletko varma, että haluat poistaa tämän viestin?"
       quote_reply: "Lainaa"
@@ -3892,10 +3894,7 @@ fi:
         attachment_upload_not_allowed_for_new_user: "Uudet käyttäjät eivät saa ladata liitteitä."
         attachment_download_requires_login: "Sinun täytyy kirjautua sisään, jotta voit ladata liitetiedostoja."
       cancel_composer:
-        confirm: "Mitä haluaisit tehdä viestillesi?"
         discard: "Hylkää"
-        save_draft: "Tallenna luonnos myöhempää käyttöä varten"
-        keep_editing: "Jatka muokkaamista"
       via_email: "tämä viesti lähetettiin sähköpostitse"
       via_auto_generated_email: "tämä viesti saapui automaattisesti luotuna sähköpostina"
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
@@ -4128,6 +4127,8 @@ fi:
       style: "Tyylit"
       background_color: "Väri"
       foreground_color: "Tekstin väri"
+      color_validations:
+        cant_be_empty: "ei voi olla tyhjä"
       styles:
         type: "Tyyli"
         icon: "Kuvake"
@@ -5276,9 +5277,12 @@ fi:
           title: "Lokalisointi"
           header_description: "Määritä yhteisösi käyttöliittymän kieli ja muut lokalisointivaihtoehdot jäsenillesi"
           keywords: "maa-asetus|kieli|aikavyöhyke|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Kirjautuminen ja todennus"
           header_description: "Määritä käyttäjien kirjautumis- ja todennustavat, salatunnukset ja avaimet, OAuth2-palveluntarjoajat ja muuta"
+          sub_pages:
+            common_settings:
+              title: "Asetukset"
         logo:
           title: "Logo"
           header_description: "Määritä koko sivuston logot ja kuvakkeet"
@@ -6247,7 +6251,7 @@ fi:
             title: "Teeman sivustoasetukset"
           themes:
             title: "Teemat"
-            description: 'Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille.'
+            description: "Sivuston laajuiset teemat, jotka muuttavat sivustosi yleistä ulkoasua ja tunnelmaa kaikille käyttäjille."
             themes_intro: "Aloita asentamalla uusi teema tai luo oma alusta alkaen näiden resurssien avulla."
             new_theme: "Uusi teema"
             back: "Takaisin teemoihin"
@@ -6453,7 +6457,6 @@ fi:
         copy_to_clipboard: "Kopioi leikepöydälle"
         copied_to_clipboard: "Kopioitiin leikepöydälle"
         copy_to_clipboard_error: "Virhe kopioimisessa leikepöydälle"
-        theme_owner: "Et voi muokata, omistaja:"
         email_templates:
           title: "Sähköposti"
           subject: "Aihe"
@@ -6461,6 +6464,7 @@ fi:
           body: "Leipäteksti"
           revert: "Palauta muutokset"
           revert_confirm: "Haluatko varmasti palauttaa muutokset?"
+          edit: "Muokkaa"
         component:
           all_filter: "Kaikki"
           used_filter: "Käytetty"
@@ -6684,6 +6688,8 @@ fi:
         schema:
           title: "Muokkaa asetusta %{name}"
           back_button: "Takaisin kohteeseen %{name}"
+          move_up: "Siirrä ylös"
+          move_down: "Siirrä alas"
           fields:
             required: "*pakollinen"
             groups:

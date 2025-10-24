@@ -559,6 +559,11 @@ ug:
       resume: "ئەسلىگە كەلتۈر"
       remove: "چىقىرىۋەت"
       remove_confirmation: "بۇ دەسلەپكى نۇسخىنى راستىنلا ئۆچۈرەمسىز؟"
+      bulk_delete: "تاللانغاننى ئۆچۈر"
+      bulk_delete_confirmation: "دەسلەپكى نۇسخىنى ئۆچۈر"
+      bulk_delete_message:
+        one: "بۇ دەسلەپكى نۇسخىنى راستىنلا ئۆچۈرەمسىز؟"
+        other: "بۇ %{count} دەسلەپكى نۇسخىنى راستىنلا ئۆچۈرەمسىز؟"
       new_topic: "يېڭى تېما دەسلەپكى نۇسخىسى"
       new_private_message: "يېڭى شەخسىي ئۇچۇر دەسلەپكى نۇسخىسى"
       edit_topic: "تېما دەسلەپكى نۇسخا تەھرىر"
@@ -2618,6 +2623,7 @@ ug:
       topic_count:
         one: "بۇ سەھىپىدە %{count} تېما بار"
         other: "بۇ سەھىپىدە %{count} تېما بار"
+      read_only: "پەقەت ئوقۇلىدۇ"
     timezone_input:
       ambiguous_ist: "ھىندىستان ئۆلچەملىك ۋاقتى مۈجمەل، ئېنىق بىر ۋاقىت رايونىنى تاللاڭ (مەسىلەن: Asia/Kolkata)"
     select_kit:
@@ -3352,8 +3358,6 @@ ug:
         one: "تېمىدىكى %{count} يازما"
         other: "تېمىدىكى %{count} يازما"
       create: "يېڭى تېما"
-      create_disabled_category: "بۇ سەھىپىدە يېڭى تېما قۇرۇش ئىجازىتىڭىز يوق"
-      create_disabled_tag: "بۇ بەلگىدە يېڭى تېما قۇرۇش ئىجازىتىڭىز يوق"
       create_long: "يېڭى تېما قۇر"
       open_draft: "دەسلەپكى نۇسخا ئاچ"
       private_message: "ئۇچۇر باشلا"
@@ -3794,6 +3798,9 @@ ug:
       title: "ئاخىرقى يازما"
       empty: "يازما يوق"
       aria_post_number: "%{title} - يازما #%{postNumber}"
+      bulk:
+        clear_all: "ھەممىنى تازىلا"
+        actions: "توپ مەشغۇلات"
     post:
       confirm_delete: "بۇ يازمىنى راستتىنلا ئۆچۈرەمسىز؟"
       quote_reply: "نەقىل"
@@ -3905,10 +3912,7 @@ ug:
         attachment_upload_not_allowed_for_new_user: "كەچۈرۈڭ، يېڭى ئىشلەتكۈچى يۈكلەنمە يۈكلىيەلمەيدۇ."
         attachment_download_requires_login: "كەچۈرۈڭ، يۈكلەنمە چۈشۈرۈش ئۈچۈن تىزىمغا كىرىش كېرەك."
       cancel_composer:
-        confirm: "يازمىڭىزغا نېمە ئىش قىلماقچى؟"
         discard: "تاشلىۋەت"
-        save_draft: "كېيىن ئىشلىتىش ئۈچۈن دەسلەپكى نۇسخىغا ساقلا"
-        keep_editing: "تەھرىرلەشنى داۋاملاشتۇر"
       via_email: "بۇ يازما ئېلخەتتە كەلگەن"
       via_auto_generated_email: "بۇ يازما ئۆزلۈكىدىن ھاسىللانغان ئېلخەتتە كەلگەن"
       whisper: "بۇ يازما رىياسەتچىلەرگە قىلىنغان شەخسىي پىچىر"
@@ -4139,6 +4143,8 @@ ug:
       style: "ئۇسلۇب"
       background_color: "رەڭ"
       foreground_color: "تېكىست رەڭگى"
+      color_validations:
+        cant_be_empty: "قۇرۇق قالمايدۇ"
       styles:
         type: "ئۇسلۇب"
         icon: "سىنبەلگە"
@@ -5289,9 +5295,12 @@ ug:
           title: "يەرلىكلەشتۈرۈش"
           header_description: "جامائىتىڭىزدىكى ئەزالارنىڭ ئارايۈز تىلى ۋە باشقا يەرلىكلەشتۈرۈش تاللانمىلىرىنى سەپلەيدۇ"
           keywords: "يەرلىك|تىل|ۋاقىت رايونى|يۇنىكود|rtl"
-        login_and_authentication:
+        login:
           title: "تىزىمغا كىرىش ۋە دەلىللەش"
           header_description: "ئىشلەتكۈچىنىڭ تىزىمغا قانداق كىرىدىغانلىقى ۋە دەلىللىنىدىغانلىقى، بىخەتەرلىك ۋە شىفىرلىق ئاچقۇچ، ئىككى ئامىللىق دەلىللەش تەمىنلىگۈچى ۋە باشقىلار سەپلىنىدۇ"
+          sub_pages:
+            common_settings:
+              title: "تەڭشەك"
         logo:
           title: "تۇغ"
           header_description: "تور بېكىتىڭىزدە ئىشلىتىدىغان تۇغ ۋە سىنبەلگىنى سەپلەيدۇ"
@@ -6250,7 +6259,7 @@ ug:
             title: "ئۆرنەك بېكەت تەڭشىكى"
           themes:
             title: "ئۆرنەك"
-            description: 'بېكەت دائىرىسى ئۆرنەك تور بېكىتىڭىزدىكى بارلىق ئىشلەتكۈچىنىڭ ئومۇمىي كۆرۈنۈشى ۋە تەسىراتىنى ئۆزگەرتىدۇ.'
+            description: "بېكەت دائىرىسى ئۆرنەك تور بېكىتىڭىزدىكى بارلىق ئىشلەتكۈچىنىڭ ئومۇمىي كۆرۈنۈشى ۋە تەسىراتىنى ئۆزگەرتىدۇ."
             themes_intro: "باشلاش ئۈچۈن يېڭى ئۆرنەك ئورنىتىڭ ياكى بۇ مەنبەلەرنى ئىشلىتىپ باشتىن باشلاپ ئۆزىڭىز قۇرۇڭ."
             new_theme: "يېڭى ئۆرنەك"
             back: "ئۆرنەككە قايت"
@@ -6455,14 +6464,15 @@ ug:
         copy_to_clipboard: "چاپلاش تاختىسىغا كۆچۈر"
         copied_to_clipboard: "چاپلاش تاختىسىغا كۆچۈرۈلدى"
         copy_to_clipboard_error: "سانلىق مەلۇماتنى چاپلاش تاختىسىغا كۆچۈرۈۋاتقاندا خاتالىق كۆرۈلدى"
-        theme_owner: "تەھرىرلەشكە بولمايدۇ، ئىگىسى:"
         email_templates:
           title: "ئېلخەت"
           subject: "ماۋزۇ"
           multiple_subjects: "بۇ ئېلخەت قېلىپىدا كۆپ تېما بار."
+          multiple_bodies: "بۇ ئېلخەت قېلىپىدا كۆپ گەۋدە بار."
           body: "مەزمۇن"
           revert: "ئۆزگەرتىشنى ئەسلىگە قايتۇر"
           revert_confirm: "ئۆزگەرتىشىڭىزنى راستتىنلا ئەسلىگە قايتۇرامسىز؟"
+          edit: "تەھرىر"
         component:
           all_filter: "ھەممىسى"
           used_filter: "ئىشلىتىلگەن"
@@ -6475,8 +6485,10 @@ ug:
           theme: "ئۆرنەك"
           component: "پارچە"
           components: "بۆلەك"
+          search_placeholder: "ئۆرنەك ئاتى ياكى چۈشەندۈرۈش بويىچە سۈزىدۇ…"
           filter_all: "ھەممىسى"
           filter_user_selectable: "ئىشلەتكۈچى تاللىيالايدۇ"
+          no_themes_found: "سۈزگۈچىڭىزگە ھېچقانداق ئۆرنەك ماس كەلمەيدۇ"
           theme_name: "ئۆرنەك ئىسمى"
           component_name: "بۆلەك ئىسمى"
           themes_intro: "باشلاش ئۈچۈن مەۋجۇت ئۆرنەكتىن بىرى تاللىنىدۇ ياكى يېڭىسى ئورنىتىلىدۇ"
@@ -6513,12 +6525,15 @@ ug:
           user_selectable: "ئىشلەتكۈچى ئۆرنەك تاللىيالايدۇ"
           user_selectable_badge_label: "ئىشلەتكۈچى تاللىيالايدۇ"
           user_selectable_button_label: "ئىشلەتكۈچىنىڭ تاللىشىغا يول قويىدۇ"
+          user_selectable_unavailable_button_label: "ئىشلەتكۈچىنىڭ تاللىشىغا يول قويمايدۇ"
           broken_badge_label: "بۇزۇلغان ئۆرنەك"
           color_scheme_user_selectable: "ئىشلەتكۈچى رەڭ تاختىسىنى تاللىيالايدۇ"
           auto_update: "Discourse يېڭىلانغاندا ئۆزلۈكىدىن يېڭىلىنىدۇ"
           color_scheme: "رەڭ تاختا"
+          dark_color_scheme: "قاراڭغۇ رەڭ تاختا"
           default_light_scheme: "سۇس (كۆڭۈلدىكى)"
           color_scheme_select: "ئۆرنەكتە ئىشلەتكەن رەڭنى تاللايدۇ."
+          dark_color_scheme_select: "قاراڭغۇ ئۆرنەكتە ئىشلىتىدىغان رەڭ تاللىنىدۇ."
           edit_colors: "رەڭ تەھرىر"
           custom_sections: "ئىختىيارى بۆلەك:"
           theme_components: "ئۆرنەك بۆلىكى"
@@ -6680,6 +6695,8 @@ ug:
         schema:
           title: "%{name} تەڭشىكىنى تەھرىرلەش"
           back_button: "%{name} غا قايت"
+          move_up: "ئۈستىگە يۆتكەل"
+          move_down: "ئاستىغا يۆتكەل"
           fields:
             required: "*زۆرۈر"
             groups:

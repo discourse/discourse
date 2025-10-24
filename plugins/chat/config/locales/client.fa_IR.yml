@@ -418,6 +418,8 @@ fa_IR:
         chat:
           title: گفتگو
     sidebar:
+      start_new_dm:
+        title: ایجاد گفتگوی شخصی
       panels:
         chat:
           label: "گفتگو"

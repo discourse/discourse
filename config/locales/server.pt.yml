@@ -396,7 +396,7 @@ pt:
         name: "Nome da Categoria"
       topic:
         title: "Título"
-        featured_link: "Ligação Destacada"
+        featured_link: "Hiperligação em Destaque"
         category_id: "Categoria"
       post:
         raw: "Corpo"
@@ -702,7 +702,7 @@ pt:
       logging_in_as: Fazendo login como %{username}
       confirm_button: Concluir o Login
     no_trust_level: "Desculpe, não tem o nível de confiança requerido para aceder à API de utilizador"
-    generic_error: "Desculpe, não somos capazes de gerar chaves API de uitlizador, esta funcionalidade poderá estar desactivada pela administração do site"
+    generic_error: "Desculpe, nós não conseguimos gerar as chaves de API do utilizador, esta funcionalidade poderá estar desativada pela administração do site"
     scopes:
       message_bus: "Actualizações ao vivo"
       notifications: "Ler e remover notificações"
@@ -993,7 +993,7 @@ pt:
     educate_until_posts: "Quando um utilizador começar a escrever as primeiras (n) novas mensagens, mostrar o painel pop-up de educação do novo utilizador no editor."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
     download_remote_images_threshold: "Espaço mínimo necessário em disco para transferir as imagens remotas localmente (em percentagem)"
-    disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios. Lista delimitada por canal."
+    disabled_image_download_domains: "As imagens remotas nunca serão transferidas destes domínios."
     editing_grace_period: "Por (n) segundos após publicar, a edição não irá criar uma nova versão no histórico da mensagem."
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
@@ -1006,7 +1006,7 @@ pt:
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
     manifest_screenshots: "Capturas de tela que mostrem os recursos e a funcionalidade da instância na página de incentivo à instalação. Todas as imagens devem ser envios locais e das mesmas dimensões."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
-    email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
+    email_custom_headers: "Uma lista de cabeçalhos de mensagem personalizados"
     force_https: "Forçar o site a usar apenas HTTPS. ALERTA: NÃO active esta opção enquanto não verificar que o HTTPS está completamente configurado e funcional absolutamente em todo o lado! Verificou a sua CDN, todos os logins por rede social, e quaisquer logos ou outras dependências externas para garantir que também são compatíveis com HTTPS?"
     summary_score_threshold: "Pontuação mínima necessária para que uma mensagem seja incluída em 'Resumir Este Tópico'"
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores % de mensagens"
@@ -1037,7 +1037,8 @@ pt:
     topics_per_period_in_top_page: "Número de tópicos principais mostrados em 'Mostrar Mais' tópicos principais expandido."
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
-    blocked_email_domains: "Uma lista delimitada de domínios de correio electrónico com os quais os utilizadores não estão autorizados a registar contas. Os subdomínios são automaticamente tratados para os domínios especificados. Os símbolos wildcard * e ? não são suportados. Exemplo: mailinator.com|trashmail.net"
+    blocked_email_domains: "Uma lista de domínios de correio eletrónico com os quais os utilizadores não estão autorizados a registar contas. Os subdomínios são tratados automaticamente para os domínios especificados. Os símbolos de substituição * e ? não são suportados. Exemplo: mailinator.com"
+    allowed_email_domains: "Uma lista de domínios de correio eletrónico com os quais os utilizadores DEVEM registar as contas. Os subdomínios são tratados automaticamente para os domínios especificados. Os símbolos de substituição * e ? não são suportados. AVISO: os utilizadores com domínios de correio eletrónico diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
     new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
@@ -1068,7 +1069,7 @@ pt:
     max_topic_invitations_per_day: "Número máximo de convites para tópicos que um utilizador pode enviar por dia."
     invite_link_max_redemptions_limit_users: "O máximo de resgates permitido para links de convite gerados por usuários comuns não pode ser superior a este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
-    alert_admins_if_errors_per_hour: "Número de erros por hora necessários para disparar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
+    alert_admins_if_errors_per_hour: "Número de erros por hora necessários para ativar um alerta de administração. Um valor maior que 0 desativa esta funcionalidade. NOTA: requer reinício."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Apenas mostrar tópicos da categoria atual nos tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dias de idade."
@@ -1198,10 +1199,10 @@ pt:
     detect_custom_avatars: "Se deve ou não verificar que os utilizadores carregaram fotografias de perfil personalizadas."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá verificar o Gravatar para avatars personalizados, por dia"
     enable_user_directory: "Forneça uma diretoria de utilizadores para navegação"
-    anonymous_posting_min_trust_level: "Nível de confiança mínimo necessário para ativar publicações anónimas"
     anonymous_account_duration_minutes: "Para proteger o anonimato crie uma nova conta anónima a cada N minutos para cada utilizador. Exemplo: se configurado para 600, assim que passarem 600 minutos desde a última mensagem E o utilizador altere para anónimo, uma nova conta anónima é criada."
     hide_user_profiles_from_public: "Desativar cartões de utilizador, perfis de utilizador e diretoria de utilizadores para utilizadores anónimos."
     max_notifications_per_user: "O número máximo de notificações por utilizador, se este número for excedido as notificações antigas serão eliminadas. Reforçado semanalmente. Defina como 0 para desativar"
+    allowed_user_website_domains: "O ''site'' da Web do utilizador será verificado em relação a estes domínios."
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Que percentagem de mensagens um utilizador tem que fazer num tópico antes de ser relembrado sobre dominar demasiado um tópico."
@@ -1222,6 +1223,7 @@ pt:
     auto_close_messages_post_count: "Número máximo de publicações numa mensagem antes de a fechar automáticamente (configurar a 0 para desactivar)"
     auto_close_topics_post_count: "Número máximo de publicações num tópico antes de o fechar automáticamente (configurar a 0 para desactivar)"
     code_formatting_style: "Botão de código no compositor por defeito usa este estilo de formatação"
+    old_post_notice_days: "O número de dias após os quais os avisos de publicação de novo utilizador e utilizador existente serão ocultados. O aviso oficial de publicação permanecerá sempre visível."
     blur_tl0_flagged_posts_media: "Desfocar imagens sinalizadas para ocultar conteúdo potencialmente NSPT."
     default_email_digest_frequency: "Por defeito, quantas frequentemente os utilizadores recebem emails de resumo."
     default_include_tl0_in_digests: "Incluir publicações de novos utilizadores nos emails de resumo por defeito. Utilizadores podem alterar isto nas suas preferências."
@@ -1229,6 +1231,7 @@ pt:
     default_email_mailing_list_mode_frequency: "Utilizadores que activem o modo de lista de distribuição receberão, por omissão, emails com esta frequência."
     default_email_previous_replies: "Incluir, por omissão, respostas prévias nos emails."
     default_email_in_reply_to: "Incluir, por omissão, um excerto da publicação respondida nos emails."
+    default_hide_presence: "Desativar as funcionalidades de presença por predefinição."
     default_other_new_topic_duration_minutes: "Condição global por defeito para o qual um tópico é considerado novo."
     default_other_auto_track_topics_after_msecs: "Tempo global por defeito antes de um tópico ser automaticamente acompanhado."
     default_other_notification_level_when_replying: "Nível de notificação por defeito quando um utilizador responde a um tópico."
@@ -1252,6 +1255,7 @@ pt:
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
     create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
+    show_preview_for_form_templates: "Ativar a pré-visualização para a funcionalidade de modelos de formulário"
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1281,6 +1285,9 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
+  filter:
+    description:
+      in: "Filtrar tópicos nas listas pessoais"
   discourse_connect:
     login_error: "Erro de Início de Sessão"
     not_found: "A sua conta não foi encontrada. Por favor contacte o administrador do site."
@@ -1791,11 +1798,9 @@ pt:
   page_not_found:
     page_title: "Página Não Encontrada"
     title: "Oops! Essa página não existe or é privada."
-    popular_topics: "Popular"
-    recent_topics: "Recente"
     see_more: "Mais"
-    search_title: "Pesquisar neste sítio"
     search_button: "Pesquisar"
+    placeholder: "Procurar tópicos pelo título ou palavras-chave…"
   upload:
     edit_reason: "cópias das imagens locais transferidas"
     unauthorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
@@ -1888,7 +1893,7 @@ pt:
       long_description: |
         Este distintivo é concedido ao criar um tópico que obtém 10 gostos. Iniciou uma discussão interessante que a comunidade gostou.
     good_topic:
-      name: Ótimo Tópico
+      name: Bom Tópico
       description: Recebeu 25 gostos num tópico
     great_topic:
       name: Excelente Tópico
@@ -1900,7 +1905,7 @@ pt:
 
         Este distintivo é concedido por partilhar uma ligação que foi clicada por 25 visitantes externos. Obrigado por espalhar a palavra sobre as nossas discussões, e esta comunidade.
     good_share:
-      name: Ótima Partilha
+      name: Boa Partilha
       description: Partilhou uma publicação com 300 visitantes únicos
     great_share:
       name: Excelente Partilha
@@ -2135,6 +2140,8 @@ pt:
           complete: "Usuário eliminado."
       reject:
         title: "Rejeitar"
+      delete_post:
+        complete: "Publicação eliminada"
       silence_user:
         title: "Silenciar utilizador"
       delete_user:

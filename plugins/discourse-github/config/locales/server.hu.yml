@@ -5,3 +5,59 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    enable_discourse_github_plugin: "Engedélyezze a discourse-github bővítményt"
+    github_linkback_enabled: "GitHub-problémák visszakapcsolása a fórumbeszélgetésekre"
+    github_linkback_projects: "A projektek listája, amelyekből vissza lehet hivatkozni"
+    github_linkback_access_token: 'Érvényes hozzáférési token a linkvisszaküldő felhasználó számára, valamint a jelvények odaítéléséhez szükséges commitok/hozzájárulások számlálásához. A tokenek beszerzésével kapcsolatos utasításokért lásd <a href="https://meta.discourse.org/t/99895">itt</a> .'
+    github_linkback_maximum_links: "Egyetlen bejegyzésből létrehozható linkek maximális száma. Ha egy bejegyzés több linket tartalmaz, akkor egy sem jön létre."
+    github_permalinks_enabled: "GitHub permalink felülírások engedélyezése"
+    github_permalinks_exclude: "Fájlnév vagy könyvtár, amelyet ki kell zárni a permalink felülírásából. Csak a fájlnevet vagy a teljes elérési utat kell megadni: user/repository/optional-directory/filename"
+    github_badges_enabled: "GitHub jelvények engedélyezése"
+    github_badges_repos: "A GitHub repók URL-címei a közreműködések és commitok kereséséhez"
+    github_silver_badge_min_commits: "Ezüst jelvény megszerzéséhez szükséges minimális commitok száma"
+    github_gold_badge_min_commits: "Arany jelvény megszerzéséhez szükséges minimális commitok száma"
+    errors:
+      invalid_badge_repo: "Meg kell adnia egy GitHub URL-címet vagy a tárhely nevét github_user/tárhely_neve formátumban."
+      invalid_github_linkback_access_token: "Érvényes GitHub linkback hozzáférési tokent kell megadnia, amely hozzáféréssel rendelkezik a megadott jelvénytárhelyekhez."
+  github_linkback:
+    commit_template: |
+      Ezt a commitot már említették a **%{title}** oldalon. Lehetnek ott releváns részletek:
+
+      %{post_url}
+    pr_template: |
+      Ezt a pull requestet már említették a **%{title}** oldalon. Lehetnek ott releváns részletek:
+
+      %{post_url}
+    issue_template: |
+      Ezt a problémát már említették a **%{title}** oldalon. Lehetnek ott releváns részletek:
+
+      %{post_url}
+  github_commits_populator:
+    errors:
+      repository_identifier_invalid_pm_title: "Művelet szükséges a discourse-github bővítményhez"
+      repository_identifier_invalid_pm: |
+        A discord-github bővítményben megadott repository érvénytelen:
+        %{repo_name}
+
+        `user/repo`-ként kell megadni őket.
+
+        A jelvények nem lesznek kiosztva, amíg a nevet ki nem javítják a
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discord-github webhelybeállításaiban</a>
+        és a "github_badges_enabled" vissza nincs kapcsolva.
+      repository_not_found_pm_title: "Művelet szükséges a discourse-github bővítményhez"
+      repository_not_found_pm: |
+        A discord-github bővítményben megadott adattár „Nem található”
+        hibát adott vissza: %{repo_name}
+
+        A jelvények nem lesznek kiosztva, amíg a nevet ki nem javítják a
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discord-github webhelybeállításaiban</a>
+        és a „github_badges_enabled” vissza nincs kapcsolva.
+      invalid_octokit_credentials_pm_title: "Művelet szükséges a discourse-github bővítményhez"
+      invalid_octokit_credentials_pm: |
+        A discourse-github bővítménynek megadott GitHub hitelesítő adatok érvénytelenek. A „github jelvények engedélyezve\ webhely
+        beállítás le van tiltva, és a commitok kitöltésére nem kerül sor a probléma megoldásáig.
+
+        Ellenőrizd a „github linkback hozzáférési token” webhelybeállítást, hogy megbizonyosodj arról, hogy a token helyes, és rendelkezik engedéllyel az összes
+        repóhoz a
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github webhelybeállításai</a>segítségével.

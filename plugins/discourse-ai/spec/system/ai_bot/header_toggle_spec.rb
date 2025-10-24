@@ -7,7 +7,7 @@ RSpec.describe "AI Bot - Header Toggle", type: :system do
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:group)
-  fab!(:regular_topic) { Fabricate(:topic) }
+  fab!(:regular_topic, :topic)
 
   fab!(:gpt_4) { Fabricate(:llm_model, name: "gpt-4") }
   fab!(:gpt_3_5_turbo) { Fabricate(:llm_model, name: "gpt-3.5-turbo") }
@@ -17,7 +17,6 @@ RSpec.describe "AI Bot - Header Toggle", type: :system do
     SiteSetting.ai_bot_enabled = true
     toggle_enabled_bots(bots: [gpt_4, gpt_3_5_turbo])
     SiteSetting.ai_bot_allowed_groups = group.id.to_s
-    SiteSetting.ai_bot_enable_dedicated_ux = true
     SiteSetting.ai_bot_add_to_header = true
     SiteSetting.navigation_menu = "sidebar"
 

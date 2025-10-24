@@ -8,14 +8,14 @@ module Migrations::Converters::Discourse
       @source_db.count <<~SQL
         SELECT COUNT(*)
         FROM tag_users
-        WHERE user_id >= 0
+        WHERE user_id > 0
       SQL
     end
 
     def items
       @source_db.query <<~SQL
         SELECT * FROM tag_users
-        WHERE user_id >= 0
+        WHERE user_id > 0
         ORDER BY tag_id, user_id
       SQL
     end

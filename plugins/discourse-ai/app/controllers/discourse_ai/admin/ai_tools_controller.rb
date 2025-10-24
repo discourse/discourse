@@ -3,7 +3,7 @@
 module DiscourseAi
   module Admin
     class AiToolsController < ::Admin::AdminController
-      requires_plugin ::DiscourseAi::PLUGIN_NAME
+      requires_plugin PLUGIN_NAME
 
       before_action :find_ai_tool, only: %i[test edit update destroy export]
 

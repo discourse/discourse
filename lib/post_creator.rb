@@ -259,7 +259,7 @@ class PostCreator
   end
 
   def self.track_post_stats
-    Rails.env != "test" || @track_post_stats
+    !Rails.env.test? || @track_post_stats
   end
 
   def self.track_post_stats=(val)

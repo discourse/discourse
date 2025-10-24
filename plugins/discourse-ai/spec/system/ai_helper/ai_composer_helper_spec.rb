@@ -2,13 +2,18 @@
 
 RSpec.describe "AI Composer helper", type: :system do
   fab!(:user) { Fabricate(:admin, refresh_auto_groups: true) }
-  fab!(:non_member_group) { Fabricate(:group) }
+  fab!(:non_member_group, :group)
   fab!(:embedding_definition)
+
+  fab!(:custom_prompts_persona) do
+    Fabricate(:ai_persona, allowed_group_ids: [Group::AUTO_GROUPS[:admins]])
+  end
 
   before do
     enable_current_plugin
     Group.find_by(id: Group::AUTO_GROUPS[:admins]).add(user)
     assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_helper_custom_prompt_persona = custom_prompts_persona.id
     SiteSetting.ai_helper_enabled = true
     Jobs.run_immediately!
     sign_in(user)
@@ -23,12 +28,12 @@ RSpec.describe "AI Composer helper", type: :system do
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
   fab!(:category)
-  fab!(:category_2) { Fabricate(:category) }
-  fab!(:video) { Fabricate(:tag) }
-  fab!(:music) { Fabricate(:tag) }
-  fab!(:cloud) { Fabricate(:tag) }
-  fab!(:feedback) { Fabricate(:tag) }
-  fab!(:review) { Fabricate(:tag) }
+  fab!(:category_2, :category)
+  fab!(:video, :tag)
+  fab!(:music, :tag)
+  fab!(:cloud, :tag)
+  fab!(:feedback, :tag)
+  fab!(:review, :tag)
   fab!(:topic) { Fabricate(:topic, category: category, tags: [video, music]) }
   fab!(:post) do
     Fabricate(
@@ -116,7 +121,7 @@ RSpec.describe "AI Composer helper", type: :system do
 
     context "when not a member of custom prompt group" do
       let(:mode) { DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT }
-      before { SiteSetting.ai_helper_custom_prompts_allowed_groups = non_member_group.id.to_s }
+      before { custom_prompts_persona.update!(allowed_group_ids: [non_member_group.id]) }
 
       it "does not show custom prompt option" do
         trigger_composer_helper(input)

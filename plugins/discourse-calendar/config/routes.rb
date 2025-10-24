@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 
 DiscoursePostEvent::Engine.routes.draw do
-  get "/discourse-post-event/events" => "events#index", :format => :json
+  get "/discourse-post-event/events" => "events#index",
+      :constraints => {
+        format: /(json|ics)/,
+      },
+      :defaults => {
+        format: :json,
+      }
   get "/discourse-post-event/events/:id" => "events#show"
   delete "/discourse-post-event/events/:id" => "events#destroy"
   post "/discourse-post-event/events" => "events#create"
@@ -19,8 +25,8 @@ DiscoursePostEvent::Engine.routes.draw do
 end
 
 Discourse::Application.routes.draw do
-  mount ::DiscourseCalendar::Engine, at: "/"
-  mount ::DiscoursePostEvent::Engine, at: "/"
+  mount DiscourseCalendar::Engine, at: "/"
+  mount DiscoursePostEvent::Engine, at: "/"
 
   scope constraints: StaffConstraint.new do
     get "/admin/plugins/calendar" => "admin/plugins#index"

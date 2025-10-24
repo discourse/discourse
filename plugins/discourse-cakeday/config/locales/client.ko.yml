@@ -1,0 +1,48 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  js:
+    user:
+      date_of_birth:
+        user_title: "오늘은 너의 생일이야!"
+        title: "오늘은 내 생일!"
+        label: "생년월일"
+      anniversary:
+        user_title: "오늘은 커뮤니티에 가입 한 기념일입니다."
+        title: "오늘은이 커뮤니티에 가입 한 기념일입니다."
+    cakeday:
+      title: 케이크 데이
+      today: "오늘"
+      tomorrow: "내일"
+      upcoming: "다가오는"
+      all: "모두"
+    birthdays:
+      title: "생일"
+      month:
+        title: "달의 생일"
+        empty: "이번 달에 생일을 축하하는 사용자는 없습니다."
+      upcoming:
+        title: "%{start_date}의 생일-%{end_date}"
+        empty: "다음 7 일 동안 생일을 축하하는 사용자는 없습니다."
+      today:
+        title: "%{date}의 생일"
+        empty: "오늘 생일을 축하하는 사용자가 없습니다."
+      tomorrow:
+        empty: "내일 생일을 축하하는 사용자는 없습니다."
+    anniversaries:
+      title: "기념일"
+      month:
+        title: "이달의 기념일"
+        empty: "이번 달에는 기념일을 축하하는 사용자가 없습니다."
+      upcoming:
+        title: "%{start_date}-%{end_date}의 기념일"
+        empty: "다음 7 일 동안 기념일을 축하하는 사용자는 없습니다."
+      today:
+        title: "%{date}의 기념일"
+        empty: "오늘 기념일을 축하하는 사용자가 없습니다."
+      tomorrow:
+        empty: "내일 기념일을 축하하는 사용자는 없습니다."

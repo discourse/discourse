@@ -2,7 +2,7 @@
 
 describe DiscourseAi::Embeddings::EmbeddingsController do
   context "when performing a topic search" do
-    fab!(:vector_def) { Fabricate(:open_ai_embedding_def) }
+    fab!(:vector_def, :open_ai_embedding_def)
 
     before do
       enable_current_plugin
@@ -213,6 +213,92 @@ describe DiscourseAi::Embeddings::EmbeddingsController do
 
           expect(response.status).to eq(200)
         end
+      end
+    end
+  end
+
+  context "when performing a quick search" do
+    fab!(:vector_def, :open_ai_embedding_def)
+    fab!(:user)
+
+    before do
+      enable_current_plugin
+      SiteSetting.min_search_term_length = 3
+      SiteSetting.ai_embeddings_selected_model = vector_def.id
+      SiteSetting.ai_embeddings_semantic_quick_search_enabled = true
+      DiscourseAi::Embeddings::SemanticSearch.clear_cache_for("test")
+      SearchIndexer.enable
+      sign_in(user)
+    end
+
+    fab!(:topic)
+    fab!(:post) { Fabricate(:post, topic: topic, raw: "This is a test post") }
+
+    def index(topic)
+      vector = DiscourseAi::Embeddings::Vector.instance
+
+      stub_request(:post, "https://api.openai.com/v1/embeddings").to_return(
+        status: 200,
+        body: JSON.dump({ data: [{ embedding: [0.1] * 1536 }] }),
+      )
+
+      vector.generate_representation_from(topic)
+    end
+
+    def stub_embedding(query)
+      embedding = [0.049382] * 1536
+
+      EmbeddingsGenerationStubs.openai_service(
+        vector_def.lookup_custom_param("model_name"),
+        query,
+        embedding,
+      )
+    end
+
+    it "returns 400 when query is too short" do
+      get "/discourse-ai/embeddings/quick-search.json?q=ab"
+
+      expect(response.status).to eq(400)
+    end
+
+    it "returns results successfully with valid query" do
+      index(topic)
+      stub_embedding("test")
+
+      get "/discourse-ai/embeddings/quick-search.json?q=test"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"]).to be_present
+      expect(response.parsed_body["topics"].map { |t| t["id"] }).to contain_exactly(topic.id)
+    end
+
+    context "when rate limiting is enabled" do
+      before { RateLimiter.enable }
+
+      it "rate limits non-cached queries" do
+        61.times do |i|
+          query = "test#{i}"
+          stub_embedding(query)
+          get "/discourse-ai/embeddings/quick-search.json?q=#{query}"
+        end
+
+        expect(response.status).to eq(429)
+      end
+
+      it "does not rate limit cached queries" do
+        query = "cached_query"
+        semantic_search = instance_double(DiscourseAi::Embeddings::SemanticSearch)
+        allow(DiscourseAi::Embeddings::SemanticSearch).to receive(:new).and_return(semantic_search)
+        allow(semantic_search).to receive(:cached_query?).with(query).and_return(true)
+        allow(semantic_search).to receive(:search_for_topics).with(
+          query,
+          1,
+          hyde: false,
+        ).and_return([])
+
+        100.times { get "/discourse-ai/embeddings/quick-search.json?q=#{query}" }
+
+        expect(response.status).to eq(200)
       end
     end
   end

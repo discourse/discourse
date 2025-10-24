@@ -80,6 +80,9 @@
     "can_deactivate": {
       "type": "boolean"
     },
+    "can_change_trust_level": {
+      "type": "boolean"
+    },
     "ip_address": {
       "type": "string"
     },

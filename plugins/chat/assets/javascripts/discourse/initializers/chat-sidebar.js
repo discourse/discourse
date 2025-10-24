@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { get } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
@@ -52,6 +53,38 @@ export default {
         "service:chat-channels-manager"
       );
       const chatStateManager = container.lookup("service:chat-state-manager");
+
+      if (this.siteSettings.chat_search_enabled) {
+        api.addSidebarSection(
+          (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
+            const SidebarChatSearchSectionLink = class extends BaseCustomSidebarSectionLink {
+              route = "chat.search";
+              text = i18n("chat.search.title");
+              title = i18n("chat.search.title");
+              name = "chat-search";
+              prefixType = "icon";
+              prefixValue = "magnifying-glass";
+            };
+
+            const SidebarChatSearchSection = class extends BaseCustomSidebarSection {
+              hideSectionHeader = true;
+              name = "chat-search";
+              title = "";
+
+              get links() {
+                return [new SidebarChatSearchSectionLink()];
+              }
+
+              get text() {
+                return null;
+              }
+            };
+
+            return SidebarChatSearchSection;
+          },
+          CHAT_PANEL
+        );
+      }
 
       api.addSidebarSection(
         (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
@@ -423,8 +456,10 @@ export default {
               const user = this.channel.chatable.users[0];
 
               if (
-                !!activeUsers?.findBy("id", user?.id) ||
-                !!activeUsers?.findBy("username", user?.username)
+                !!activeUsers?.find((item) => get(item, "id") === user?.id) ||
+                !!activeUsers?.find(
+                  (item) => get(item, "username") === user?.username
+                )
               ) {
                 return "active";
               }
@@ -498,7 +533,7 @@ export default {
                       currentUser: this.currentUser,
                     })
                 );
-              } else {
+              } else if (this.currentUser.can_direct_message) {
                 return [new SidebarChatNewDirectMessagesSectionLink()];
               }
             }
@@ -542,7 +577,7 @@ export default {
             get displaySection() {
               return (
                 this.chatStateManager.hasPreloadedChannels &&
-                (this.sectionLinks.length > 0 || this.userCanDirectMessage)
+                (this.sectionLinks?.length > 0 || this.userCanDirectMessage)
               );
             }
           };

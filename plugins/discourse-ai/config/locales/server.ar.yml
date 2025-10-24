@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ar:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "نافذة السياق"
   discourse_automation:
     ai:
       flag_types:
@@ -68,7 +72,6 @@ ar:
     composer_ai_helper_allowed_groups: "سيرى المستخدمون في هذه المجموعات زر مساعد الذكاء الاصطناعي في أداة الإنشاء."
     ai_helper_allowed_in_pm: "تفعيل مساعد الذكاء الاصطناعي في الرسائل الخاصة."
     ai_helper_model: "النموذج المراد استخدامه لمساعد الذكاء الاصطناعي."
-    ai_helper_custom_prompts_allowed_groups: "سيرى المستخدمون في هذه المجموعات خيار رسالة المطالبة المخصَّصة في مساعد الذكاء الاصطناعي."
     ai_helper_automatic_chat_thread_title_delay: "التأخير بالدقائق قبل أن يقوم مساعد الذكاء الاصطناعي بتعيين عنوان سلسلة الدردشة تلقائيًا."
     ai_helper_automatic_chat_thread_title: "تعيين عناوين سلسلة الدردشة تلقائيًا بناءً على محتويات السلسلة."
     ai_helper_illustrate_post_model: "النموذج المراد استخدامه لميزة تزويد المنشور بالصور من مساعد الذكاء الاصطناعي في أداة الإنشاء"
@@ -112,8 +115,6 @@ ar:
     ai_discord_search_mode: "حدد وضع البحث الذي تريد استخدامه للبحث في Discord"
     ai_discord_search_persona: "الشخصية المستخدمة في بحث Discord."
     ai_discord_allowed_guilds: "مجتمعات (خوادم) Discord التي يُصرح للروبوت بالبحث فيها"
-    ai_bot_enable_dedicated_ux: "السماح باستخدام واجهة البوت بكامل الشاشة بدلًا من الرسائل الخاصة (PM)"
-    ai_translation_enabled: "تمكين ميزة الترجمة بالذكاء الاصطناعي"
     ai_translation_model: "النموذج المستخدم للترجمة. يجب أن يدعم هذا النموذج الترجمة. يمكن للشخصيات تغيير هذا الإعداد."
     ai_translation_backfill_limit_to_public_content: "عند التفعيل، سيتم ترجمة المحتوى في الفئات العامة فقط. عند التعطيل، سيتم أيضًا إرسال المحتوى في الرسائل الجماعية الخاصة والفئات الخاصة للترجمة."
     ai_translation_backfill_max_age_days: "الحد الأقصى لعمر المنشور والموضوع الذي سيتم ترجمته. المنشورات والموضوعات الأقدم من ذلك لن تُترجم. القيمة 0 تمنع الترجمة الرجعية، لكنها لن تمنع ترجمة المنشورات الجديدة."

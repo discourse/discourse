@@ -1189,7 +1189,7 @@ gl:
         invalid: "Este nome de usuario non é correcto. Só pode conter números e letras."
       add_email:
         title: "Engadir correo electrónico"
-        add: "engadir"
+        add: "Engadir"
       change_email:
         title: "Cambiar o correo electrónico"
         taken: "Sentímolo pero este correo non está dispoñíbel."
@@ -2600,10 +2600,7 @@ gl:
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden cargar anexos."
         attachment_download_requires_login: "Sentímolo pero debe iniciar sesión para descargar anexos."
       cancel_composer:
-        confirm: "Que quere facer coa súa publicación?"
         discard: "Desbotar"
-        save_draft: "Gardar borrador para máis tarde"
-        keep_editing: "Seguir editando"
       via_email: "esta publicación chegou por correo"
       via_auto_generated_email: "esta publicación chegou dun correo electrónico xerado automaticamente"
       whisper: "este é un rumor privado para moderadores"
@@ -2782,6 +2779,8 @@ gl:
       logo: "Logotipo da categoría"
       background_image: "Imaxe do fondo da categoría"
       background_color: "Cor"
+      color_validations:
+        cant_be_empty: "non pode quedar en branco"
       styles:
         icon: "Icona"
         emoji: "Emoji"
@@ -3459,6 +3458,10 @@ gl:
           title: "Ficheiros"
         legal:
           title: "Legal"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Configuración"
         logo:
           form:
             mobile: "Móbil"
@@ -4012,7 +4015,6 @@ gl:
         copy_to_clipboard: "Copiar ao portapapeis"
         copied_to_clipboard: "Copiado ao portapapeis"
         copy_to_clipboard_error: "Erro ao copiar os datos ao portapapeis"
-        theme_owner: "Non editábel, propiedade de:"
         email_templates:
           title: "Correo electrónico"
           subject: "Asunto"
@@ -4020,6 +4022,7 @@ gl:
           body: "Corpo"
           revert: "Reverter os cambios"
           revert_confirm: "Confirma a reversión dos cambios?"
+          edit: "Editar"
         component:
           all_filter: "Todas"
           enabled_filter: "Activado"

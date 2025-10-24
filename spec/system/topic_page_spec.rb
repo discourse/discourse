@@ -17,9 +17,7 @@ describe "Topic page", type: :system do
 
     find("#toc-h2-testing .anchor", visible: :all).click
 
-    try_until_success do
-      expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
-    end
+    expect(current_url).to match("/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
   end
 
   context "with a subfolder setup" do
@@ -30,9 +28,7 @@ describe "Topic page", type: :system do
 
       find("#toc-h2-testing .anchor", visible: :all).click
 
-      try_until_success do
-        expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
-      end
+      expect(current_url).to match("/forum/t/#{topic.slug}/#{topic.id}#toc-h2-testing")
     end
   end
 

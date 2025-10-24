@@ -55,6 +55,18 @@
   opacity: 0.3;
 }
 
+.fc-dayGridMonth-view {
+  .fc-event-time {
+    overflow: visible !important;
+  }
+
+  @include viewport.until(md) {
+    .fc-event-time {
+      display: none;
+    }
+  }
+}
+
 #upcoming-events-calendar {
   height: 100%;
 }

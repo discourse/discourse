@@ -7,29 +7,32 @@
     "experimentalDecorators": true,
     "allowJs": true,
     "paths": {
+      "discourse/admin/*": [
+        "./frontend/discourse/admin/*"
+      ],
       "discourse/*": [
-        "./app/assets/javascripts/discourse/app/*"
+        "./frontend/discourse/app/*"
       ],
       "discourse/tests/*": [
-        "./app/assets/javascripts/discourse/tests/*"
+        "./frontend/discourse/tests/*"
       ],
       "admin/*": [
-        "./app/assets/javascripts/admin/addon/*"
+        "./frontend/discourse/admin/*"
       ],
       "pretty-text/*": [
-        "./app/assets/javascripts/pretty-text/addon/*"
+        "./frontend/pretty-text/addon/*"
       ],
       "select-kit/*": [
-        "./app/assets/javascripts/select-kit/addon/*"
+        "./frontend/select-kit/addon/*"
       ],
       "float-kit/*": [
-        "./app/assets/javascripts/float-kit/addon/*"
+        "./frontend/float-kit/addon/*"
       ],
       "truth-helpers/*": [
-        "./app/assets/javascripts/truth-helpers/addon/*"
+        "./frontend/truth-helpers/addon/*"
       ],
       "dialog-holder/*": [
-        "./app/assets/javascripts/dialog-holder/addon/*"
+        "./frontend/dialog-holder/addon/*"
       ],
       "discourse/plugins/automation/*": [
         "./plugins/automation/assets/javascripts/*",
@@ -62,6 +65,10 @@
       "discourse/plugins/discourse-assign/*": [
         "./plugins/discourse-assign/assets/javascripts/*",
         "./plugins/discourse-assign/test/javascripts/*"
+      ],
+      "discourse/plugins/discourse-cakeday/*": [
+        "./plugins/discourse-cakeday/assets/javascripts/*",
+        "./plugins/discourse-cakeday/test/javascripts/*"
       ],
       "discourse/plugins/discourse-calendar/*": [
         "./plugins/discourse-calendar/assets/javascripts/*",
@@ -206,14 +213,15 @@
     }
   },
   "include": [
-    "./app/assets/javascripts/discourse/app",
-    "./app/assets/javascripts/discourse/tests",
-    "./app/assets/javascripts/admin/addon",
-    "./app/assets/javascripts/pretty-text/addon",
-    "./app/assets/javascripts/select-kit/addon",
-    "./app/assets/javascripts/float-kit/addon",
-    "./app/assets/javascripts/truth-helpers/addon",
-    "./app/assets/javascripts/dialog-holder/addon",
+    "./frontend/discourse/admin",
+    "./frontend/discourse/app",
+    "./frontend/discourse/tests",
+    "./frontend/discourse/admin",
+    "./frontend/pretty-text/addon",
+    "./frontend/select-kit/addon",
+    "./frontend/float-kit/addon",
+    "./frontend/truth-helpers/addon",
+    "./frontend/dialog-holder/addon",
     "./plugins/automation/assets/javascripts",
     "./plugins/automation/test/javascripts",
     "./plugins/chat/assets/javascripts",
@@ -230,6 +238,8 @@
     "./plugins/discourse-apple-auth/test/javascripts",
     "./plugins/discourse-assign/assets/javascripts",
     "./plugins/discourse-assign/test/javascripts",
+    "./plugins/discourse-cakeday/assets/javascripts",
+    "./plugins/discourse-cakeday/test/javascripts",
     "./plugins/discourse-calendar/assets/javascripts",
     "./plugins/discourse-calendar/test/javascripts",
     "./plugins/discourse-chat-integration/assets/javascripts",
@@ -302,15 +312,6 @@
     "./themes/horizon/test"
   ],
   "exclude": [
-    "app/assets/javascripts/discourse/tests/unit/utils/decorators-test.js",
-    "app/assets/javascripts/discourse/tests/integration/component-templates-test.gjs",
-    "**/*.hbs"
-  ],
-  "glint": {
-    "environment": [
-      "ember-loose",
-      "ember-template-imports"
-    ],
-    "checkStandaloneTemplates": false
-  }
+    "frontend/discourse/tests/unit/utils/decorators-test.js"
+  ]
 }

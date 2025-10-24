@@ -1787,7 +1787,7 @@ es:
         invalid: "Este nombre de usuario no es válido. Este solo puede incluir números y letras"
       add_email:
         title: "Añadir correo electrónico"
-        add: "añadir"
+        add: "Añadir"
       change_email:
         title: "Cambiar correo electrónico"
         taken: "Lo sentimos, ese correo electrónico no está disponible."
@@ -2614,6 +2614,7 @@ es:
       topic_count:
         one: "%{count} tema en esta categoría"
         other: "%{count} temas en esta categoría"
+      read_only: "solo lectura"
     timezone_input:
       ambiguous_ist: "El IST es ambiguo, selecciona una zona horaria específica (por ejemplo: Asia/Kolkata)"
     select_kit:
@@ -3339,8 +3340,6 @@ es:
         one: "%{count} publicación en el tema"
         other: "%{count} publicaciones en el tema"
       create: "Nuevo tema"
-      create_disabled_category: "No tienes permiso para crear temas en esta categoría."
-      create_disabled_tag: "No puedes crear temas con esta etiqueta"
       create_long: "Crear un tema nuevo"
       open_draft: "Abrir borrador"
       private_message: "Comenzar un mensaje"
@@ -3781,6 +3780,9 @@ es:
       title: "Últimas publicaciones"
       empty: "No hay publicaciones"
       aria_post_number: "%{title}, publicación n.º %{postNumber}"
+      bulk:
+        clear_all: "Limpiar todo"
+        actions: "Acciones en bloque"
     post:
       confirm_delete: "¿Seguro que quieres eliminar esta publicación?"
       quote_reply: "Citar"
@@ -3892,10 +3894,7 @@ es:
         attachment_upload_not_allowed_for_new_user: "Lo sentimos, los usuarios nuevos no pueden subir archivos adjuntos."
         attachment_download_requires_login: "Lo sentimos, necesitas haber iniciado sesión para descargar archivos adjuntos."
       cancel_composer:
-        confirm: "¿Qué te gustaría hacer con tu publicación?"
         discard: "Descartar"
-        save_draft: "Guardar borrador para más tarde"
-        keep_editing: "Seguir editando"
       via_email: "esta publicación llegó por correo electrónico"
       via_auto_generated_email: "esta publicación llegó a través de un correo electrónico generado automáticamente"
       whisper: "esta publicación es un susurro privado para los moderadores"
@@ -4128,6 +4127,8 @@ es:
       style: "Estilos"
       background_color: "Color"
       foreground_color: "Color del texto"
+      color_validations:
+        cant_be_empty: "no puede estar vacío"
       styles:
         type: "Estilo"
         icon: "Icono"
@@ -5276,9 +5277,12 @@ es:
           title: "Localización"
           header_description: "Configura el idioma de la interfaz de tu comunidad y otras opciones de localización para tus miembros"
           keywords: "idioma local|idioma|zona horaria|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Inicio de sesión y autenticación"
           header_description: "Configura cómo se conectan y autentican los usuarios, secretos y claves, proveedores de OAuth2, etc."
+          sub_pages:
+            common_settings:
+              title: "Ajustes"
         logo:
           title: "Logo"
           header_description: "Configura los logotipos e iconos utilizados en todo tu sitio"
@@ -6452,7 +6456,6 @@ es:
         copy_to_clipboard: "Copiar al portapapeles"
         copied_to_clipboard: "Copiado al portapapeles"
         copy_to_clipboard_error: "Error al copiar datos al portapapeles"
-        theme_owner: "No editable, propiedad de:"
         email_templates:
           title: "Correo electrónico"
           subject: "Asunto"
@@ -6460,6 +6463,7 @@ es:
           body: "Cuerpo del correo electrónico"
           revert: "Revertir los cambios"
           revert_confirm: "¿Seguro que quieres revertir los cambios?"
+          edit: "Editar"
         component:
           all_filter: "Todo"
           used_filter: "Usado"
@@ -6684,6 +6688,8 @@ es:
         schema:
           title: "Editar el ajuste de %{name}"
           back_button: "Volver a %{name}"
+          move_up: "Sube"
+          move_down: "Baja"
           fields:
             required: "* obligatorio"
             groups:

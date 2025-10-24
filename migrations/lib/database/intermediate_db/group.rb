@@ -40,6 +40,35 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `groups` record in the IntermediateDB.
+    #
+    # @param original_id                          [Integer, String]
+    # @param allow_membership_requests            [Boolean, nil]
+    # @param allow_unknown_sender_topic_replies   [Boolean, nil]
+    # @param automatic_membership_email_domains   [String, nil]
+    # @param bio_raw                              [String, nil]
+    # @param created_at                           [Time, nil]
+    # @param default_notification_level           [Integer, nil]
+    # @param existing_id                          [Integer, String, nil]
+    # @param flair_bg_color                       [String, nil]
+    # @param flair_color                          [String, nil]
+    # @param flair_icon                           [String, nil]
+    # @param flair_upload_id                      [String, nil]
+    # @param full_name                            [String, nil]
+    # @param grant_trust_level                    [Integer, nil]
+    # @param members_visibility_level             [Integer, nil]
+    # @param membership_request_template          [String, nil]
+    # @param mentionable_level                    [Integer, nil]
+    # @param messageable_level                    [Integer, nil]
+    # @param name                                 [String]
+    # @param primary_group                        [Boolean, nil]
+    # @param public_admission                     [Boolean, nil]
+    # @param public_exit                          [Boolean, nil]
+    # @param publish_read_state                   [Boolean, nil]
+    # @param title                                [String, nil]
+    # @param visibility_level                     [Integer, nil]
+    #
+    # @return [void]
     def self.create(
       original_id:,
       allow_membership_requests: nil,

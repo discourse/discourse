@@ -35,6 +35,13 @@ Discourse is large with long history. Understand context before changes.
 - Don't write obvious tests
 - Ruby: use `fab!()` over `let()`, system tests for UI (`spec/system`), use page objects for system spec finders (`spec/system/page_objects`)
 
+### Page Objects (System Specs)
+- Located in `spec/system/page_objects/pages/`, inherit from `PageObjects::Pages::Base`
+- NEVER store `find()` results - causes stale element references after re-renders
+- Use `has_x?` / `has_no_x?` patterns for state checks (finds fresh each time)
+- Action methods find+interact atomically, return `self` for chaining
+- Don't assert immediate UI feedback after clicks (tests browser, not app logic)
+
 ### Commands
 ```bash
 # Ruby tests
@@ -83,6 +90,18 @@ ALWAYS lint any changes you make
 - ActiveRecord: use `includes()`/`preload()` (N+1), `find_each()`/`in_batches()` (large sets), `update_all`/`delete_all` (bulk), `exists?` over `present?`
 - Migrations: rollback logic, `algorithm: :concurrently` for large tables, deprecate before removing columns
 - Queries: use `explain`, specify columns, strategic indexing, `counter_cache` for counts
+
+## HTTP Response Codes
+- **204 No Content**: Use `head :no_content` for successful operations that don't return data
+  - DELETE operations that successfully remove a resource
+  - UPDATE/PUT operations that succeed but don't need to return modified data
+  - POST operations that perform an action without creating/returning resources (mark as read, clear notifications)
+- **200 OK**: Use `render json: success_json` when returning confirmation data or when clients expect a response body
+- **201 Created**: Use when creating resources, include location header or resource data
+- **Do NOT use 204 when**:
+  - Creating resources (use 201 with data)
+  - Returning modified/useful data to the client
+  - Clients expect confirmation data beyond success/failure
 
 ## Security
 - XSS: use `{{}}` (escaped) not `{{{ }}}`, sanitize with `sanitize`/`cook`, no `innerHTML`, careful with `@html`

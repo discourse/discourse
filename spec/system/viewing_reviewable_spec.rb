@@ -6,6 +6,7 @@ describe "Viewing reviewable item", type: :system do
   fab!(:reviewable_flagged_post)
 
   let(:review_page) { PageObjects::Pages::Review.new }
+  let(:review_note_form) { PageObjects::Components::ReviewNoteForm.new }
 
   describe "when user is part of the groups list of the `reviewable_ui_refresh` site setting" do
     before do
@@ -104,6 +105,15 @@ describe "Viewing reviewable item", type: :system do
         expect(topic_link_component).to have_tag_link(tag_name: tag_2.name, tag_url: tag_2.url)
 
         # TODO: Add test for watched words highlighting
+      end
+
+      it "allows to add notes and persists them when toggle tabs" do
+        review_page.visit_reviewable(reviewable_flagged_post)
+        review_page.click_timeline_tab
+        review_note_form.add_note("This is a review note.")
+        review_page.click_insights_tab
+        review_page.click_timeline_tab
+        expect(page).to have_text("This is a review note.")
       end
     end
   end

@@ -1380,7 +1380,7 @@ bg:
         invalid: "Потребителското име не е валидно. Трябва да включва само цифри и букви"
       add_email:
         title: "Добавете имейл"
-        add: "добавяне"
+        add: "Добави "
       change_email:
         title: "Смяна на Имейла"
         taken: "Съжаляваме, този имейл адрес не е свободен."
@@ -2428,7 +2428,6 @@ bg:
         name: "Изтрий"
     topic:
       create: "Нова тема"
-      create_disabled_category: "Нямате право да създавате теми в тази категория"
       create_long: "Създайте нова тема"
       open_draft: "Довърши ревизия"
       private_message: "Започни съобщение"
@@ -2820,9 +2819,7 @@ bg:
         attachment_upload_not_allowed_for_new_user: "Съжаляваме, новите потребители не могат да прикачват файлове."
         attachment_download_requires_login: "Съжаляваме, трябва да сте логнат, за да може да сваляте прикачените файлове."
       cancel_composer:
-        confirm: "Какво бихте искали да направите с публикацията си?"
         discard: "Отхвърляне"
-        save_draft: "Запазете чернова за по-късно"
       via_email: "тази публикация пристига чрез имейл"
       whisper: "този пост е отбелязан като таен за модераторите"
       wiki:
@@ -2951,6 +2948,8 @@ bg:
       logo: "Изображение за категория "
       background_image: "Изображение за фон на категорията "
       background_color: "Цвят"
+      color_validations:
+        cant_be_empty: "не може да бъде празно"
       styles:
         icon: "Икона"
         emoji: "Емотикони"
@@ -3474,6 +3473,10 @@ bg:
           title: "Файлове"
         legal:
           title: "Правни"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Настройки"
         logo:
           form:
             mobile: "Мобилен"
@@ -3838,6 +3841,7 @@ bg:
           body: "Тяло"
           revert: "Върни промените"
           revert_confirm: "Сигурен ли си, че искаш да върнеш промените?"
+          edit: "Редактирай"
         component:
           all_filter: "Всички"
           enabled_filter: "Да е включен"

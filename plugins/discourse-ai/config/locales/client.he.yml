@@ -44,6 +44,7 @@ he:
             create_ai_embedding: "יצירת הטמעת בינה מלאכותית"
             update_ai_embedding: "עדכון הטמעת בינה מלאכותית"
             delete_ai_embedding: "מחיקת הטמעת בינה מלאכותית"
+            update_ai_spam_settings: "עדכון הגדרות ספאם בינה מלאכותית"
   js:
     discourse_automation:
       scriptables:
@@ -116,21 +117,26 @@ he:
           fields:
             model:
               label: "מודל"
+              description: "מודל שפה כברירת מחדל שישמש למיון ראשוני"
             tool:
               label: "כלי"
+              description: "כלי לשימוש למיון ראשוני (אסור שלכלי יהיו מוגדרים משתנים)"
         llm_persona_triage:
           fields:
             persona:
               label: "דמות"
+              description: "דמות בינה מלאכותית למיון ראשוני (חייב להיות לה LLM/מש״ג ומשתמש מוגדרים כברירת מחדל)"
             whisper:
               label: "להגיב בלחישה"
               description: "האם התגובה של הדמות צריכה להיות בלחישה"
             silent_mode:
               label: "מצב שקט"
+              description: "במצב שקט הדמות תקבל את התוכן אבל לא תפרסם שום דבר בפורום - שימושי לביצוע מיון ראשוני באמצעות כלים"
         llm_triage:
           fields:
             triage_persona:
               label: "דמות"
+              description: "הדמות שתשמש למיון ראשוני, נא לוודא שהתשובה היא מילה אחת בה ניתן להשתמש כדי להקפיץ את הפקודה"
             max_post_tokens:
               label: "כמות אסימונים מרבית לפוסט"
               description: "מספר האסימונים המרבי לסריקה בעזרת מיון ראשוני עם LLM"
@@ -184,14 +190,20 @@ he:
         llm_tagger:
           tag_mode:
             manual: "להשתמש ברשימת תגיות מסוימת (מוגדרת להלן)"
+            discover: "לאפשר לבינה מלאכותית לגלות ולהשתמש בתגיות אתר כלשהן"
           fields:
             tagger_persona:
               label: "דמות בינה מלאכותית"
+              description: "דמות הבינה המלאכותית לשימוש לניתוח ותיוג פוסטים"
             tag_mode:
               label: "מצב בחירת תגיות"
               description: "בחירה איך הבינה המלאכותית בוחר תגיות"
             available_tags:
               label: "תגיות זמינות"
+              description: "התגיות שהבינה המלאכותית יכולה לבחור מביניהן (בשימוש במצב ידני בלבד)"
+            confidence_threshold:
+              label: "סף ביטחון"
+              description: "אחוז הביטחון המזערי (0-‏100) הנדרש כדי להחיל תגיות מוצעות"
             max_tags_per_post:
               label: "כמות תגים מרבית לפוסט"
               description: "מספר התגיות המרבי שאפשר להחיל על פוסט יחיד"
@@ -200,6 +212,13 @@ he:
               description: "מספר האסימונים המרבי מתוכן הפוסט לניתוח"
             allow_restricted_tags:
               label: "לאפשר תגיות מוגבלות"
+              description: "אפשר לבינה מלאכותית להציע ולהחיל תגיות עם הרשאות או חשיפה מוגבלות."
+            max_posts_for_context:
+              label: "כמות פוסטים מרבית להקשר"
+              description: "כמות פוסטים מרבית מהנושא שיש לכלול בהקשר האבחון (ברירת מחדל: 5)"
+            allow_system_posts:
+              label: "לאפשר פוסטים של המערכת"
+              description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
       default_llm:
@@ -236,6 +255,7 @@ he:
           description: "צ׳אט בוט שיכול לענות על שאלות ולסייע למשתמשים בהודעות אישיות, בפורום ובצ׳אט"
         nav:
           configured: "מוגדר"
+          unconfigured: "לא מוגדר"
         filters:
           all: "הכול"
           text: "חיפוש יכולות, דמויות, LLMים/מש״גים או קבוצות…"
@@ -287,6 +307,9 @@ he:
           inspect_posts: "בדיקת פוסטים"
         automation_reports:
           name: "דוחות אוטומטיים"
+        automation_triage:
+          name: "מיון ראשוני של פוסטים"
+          description: "אוטומציית פיקוח וניהול פוסטים על ידי שימוש בכללי אוטומציה שניתן להגדיר"
       modals:
         select_option: "בחירת אפשרות…"
       layout:
@@ -294,19 +317,25 @@ he:
         card: "כרטיס"
       translations:
         title: "תרגומים"
+        description: "תרגום כל התוכן של הפורום שלך לשפת המשתמש המועדפת אוטומטית"
+        supported_locales: "שפות נתמכות"
+        supported_locales_description: "הגדרת האתר הזאת מאפשרת גם למבקרים לתרום תרגומים לפוסטים."
         admin_actions:
           translation_settings: "הגדרות תרגום"
           localization_settings: "הגדרות התאמת שפה"
-          disabled_state:
-            configure: "הגדרת תרגומים"
-            empty_label: "תרגומים אוטומטיים מושבתים, למטה אפשר ללחוץ כדי להגדיר"
+          enable_translations: "הפעלת תרגומים אוטומטיים"
         stats:
           title: "סטטיסטיקת תרגום"
           complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
           incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
-          description_tooltip: "פוסטים זכאים נקבעים על ידי הגדרות תרגום הבינה המלאכותית"
+          backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
+          description_tooltip:
+            one: 'יש פוסט שזכאי לתרגום.'
+            two: 'יש שני פוסטים שזכאים לתרגום.'
+            many: 'יש %{count} פוסטים שזכאים לתרגום.'
+            other: 'יש %{count} פוסטים שזכאים לתרגום.'
         progress_chart:
-          title: "תהליך התרגום %{tooltip}"
+          title: "התקדמות התרגום"
           data_label: "%{percentage}%"
           tooltip_translated: "%{done} מתוך %{total} פוסטים תורגמו"
           bar_done:
@@ -314,12 +343,19 @@ he:
             two: "שני פוסטים"
             many: "שני פוסטים"
             other: "שני פוסטים"
+        translations_menu:
+          translate:
+            label: "תרגום פוסט"
+            title: "תרגום הפוסט הזה לכל השפות הנתמכות"
+            confirm: "הפעולה הזאת תעדכן תרגומים קיימים לפוסט. להמשיך?"
+            success: "הפוסט נשלח לתרגום"
       spam:
         short_title: "ספאם"
         title: "הגדרת טיפול בספאם"
         select_llm: "בחירת LLM"
         select_persona: "בחירת דמות"
         custom_instructions: "הנחיות מותאמות אישית"
+        custom_instructions_help: "הנחיות שמותאמות נקודתית לאתר שלך כדי לסייע להנחות את הבינה המלאכותית בזיהוי ספאם/זבל, למשל ‚להיות יותר תקיף בנוגע לסריקת פוסטים שאינם באנגלית/עברית’."
         last_seven_days: "7 הימים האחרונים"
         scanned_count: "פוסטים נסרקו"
         false_positives: "סימון שגוי"
@@ -327,6 +363,7 @@ he:
         spam_detected: "ספאם זוהה"
         custom_instructions_placeholder: "הנחיות נקודתיות לאתר עבור הבינה המלאכותית כדי לזהות ספאם בצורה יותר מדויקת"
         enable: "הפעלה"
+        spam_tip: "זיהוי ספאם/זבל יסרוק את 3 הפוסטים החדשים שנכתבו על ידי כל אחד מהמשתמשים החדשים בנושאים ציבוריים. הוא יסמן אותם בדגל לסקירה ויחסום את המשתמשים אם יש סיכוי גדול שזה ספאם/זבל."
         settings_saved: "הגדרות נשמרו"
         no_llms: "אין LLMים זמינים"
         test_button: "בדיקה…"
@@ -613,7 +650,9 @@ he:
           google-gemini-2-0-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים (מהדור הקודם)"
           google-gemini-2-5-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים"
           google-gemini-2-0-flash-lite: "מודל חסכוני ומהיר"
+          open_ai-o3: "מודל ההיגיון החזק ביותר מבית OpenAI"
           open_ai-o4-mini: "מודל הגיון מתקדם וחסכוני"
+          open_ai-gpt-5: "מודל הדגל של OpenAI. הוא מתאים היטב לפתרון בעיות בתחומים שונים"
           open_ai-gpt-5-mini: "מספק איזון בין בינה, מהירות ועלות, מה שהופך אותו למודל שמעורר משיכה עבור מקרי שימוש רבים."
           open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "דגם רב־לשוני, קליל ויעיל"
@@ -639,6 +678,7 @@ he:
           title: "הרצת בדיקה"
           running: "הבדיקה רצה…"
           success: "הצליח!"
+          invalid_config: "נא לתקן את השגיאות הבאות בהגדרות שלך תחילה:"
           failure: "הניסיון ליצור קשר עם המודל החזיר את השגיאה הבאה: %{error}"
         hints:
           max_prompt_tokens: "מספר האסימונים המרבי שהמודל יכול לעבד בבקשה בודדת"
@@ -863,6 +903,11 @@ he:
           disclaimer: "בינה מלאכותית מחוללת עלולה לשגות. כדאי לאמת פרטים חשובים."
           placeholder: "הגשת שאלה…"
           new: "שאלה חדשה"
+          min_input_length_message:
+            one: "אורך ההודעה חייב להיות באורך של תו ומעלה"
+            two: "אורך ההודעה חייב להיות באורך של שני תווים ומעלה"
+            many: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
+            other: "אורך ההודעה חייב להיות באורך של %{count} תווים ומעלה"
           messages_sidebar_title: "שיחות"
           today: "היום"
           last_7_days: "7 הימים האחרונים"
@@ -893,6 +938,11 @@ he:
           title: "סיכום הודעות"
           description: "נא לבחור אפשרות להלן כדי לסכם את הדיון שנשלח בפרק הזמן המבוקש."
           summarize: "סיכום"
+          since:
+            one: "השעה האחרונה"
+            two: "השעתיים האחרונות"
+            many: "%{count} השעות האחרונות"
+            other: "%{count} השעות האחרונות"
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
@@ -903,6 +953,11 @@ he:
             two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
             many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
             other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
+          regenerate_error:
+            one: "יצירת תקציר מחדש נכשלה"
+            two: "יצירת שני תקצירים מחדש נכשלה"
+            many: "יצירת %{count} תקצירים מחדש נכשלה"
+            other: "יצירת %{count} תקצירים מחדש נכשלה"
         topic_list_layout:
           button:
             compact: "מצומצם"

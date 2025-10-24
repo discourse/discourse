@@ -18,7 +18,7 @@ RSpec.describe Jobs::StreamPostHelper do
           "I like to eat pie. It is a very good dessert. Some people are wasteful by throwing pie at others but I do not do that. I always eat the pie.",
       )
     end
-    fab!(:user) { Fabricate(:leader) }
+    fab!(:user, :leader)
 
     before do
       Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)
@@ -159,6 +159,45 @@ RSpec.describe Jobs::StreamPostHelper do
           expect(final_update[:done]).to eq(true)
         end
       end
+    end
+  end
+
+  describe "#publish_error" do
+    fab!(:seeded_model)
+    fab!(:allocation) { Fabricate(:llm_credit_allocation, llm_model: seeded_model) }
+    fab!(:user)
+
+    it "publishes error details with reset times to MessageBus" do
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Test error", allocation: allocation)
+      channel = "/test/channel"
+
+      messages =
+        MessageBus.track_publish(channel) { job.send(:publish_error, channel, user, exception) }
+
+      expect(messages.count).to eq(1)
+      message_data = messages.first.data
+
+      expect(message_data[:error]).to eq(true)
+      expect(message_data[:error_type]).to eq("credit_limit_exceeded")
+      expect(message_data[:message]).to eq("Test error")
+      expect(message_data[:done]).to eq(true)
+      expect(message_data[:details][:reset_time_absolute]).to be_present
+      expect(message_data[:details][:reset_time_relative]).to be_present
+    end
+
+    it "handles exception without allocation gracefully" do
+      exception = LlmCreditAllocation::CreditLimitExceeded.new("Test error")
+      channel = "/test/channel"
+
+      messages =
+        MessageBus.track_publish(channel) { job.send(:publish_error, channel, user, exception) }
+
+      expect(messages.count).to eq(1)
+      message_data = messages.first.data
+
+      expect(message_data[:error]).to eq(true)
+      expect(message_data[:message]).to eq("Test error")
+      expect(message_data[:details]).to eq({})
     end
   end
 end

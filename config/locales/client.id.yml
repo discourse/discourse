@@ -1211,7 +1211,7 @@ id:
         taken: "Maaf, username tersebut sudah ada yang menggunakan"
         invalid: "Username tersebut tidak valid. Username harus berupa angka dan huruf"
       add_email:
-        add: "menambahkan"
+        add: "Menambahkan"
       change_email:
         title: "Ganti Alamat Surel"
         taken: "Maaf, alamat surel tersebut tidak tersedia."
@@ -1969,6 +1969,8 @@ id:
       name: "Nama Kategori"
       description: "Deskripsi"
       background_image_dark: "Gambar Latar Belakang Kategori Gelap"
+      color_validations:
+        cant_be_empty: "tidak boleh kosong"
       permissions:
         reply: "Balas"
         create: "Buat"
@@ -2319,6 +2321,10 @@ id:
         email:
           title: "Surel"
       config:
+        login:
+          sub_pages:
+            common_settings:
+              title: "Pengaturan"
         logo:
           form:
             email: "Surel"
@@ -2566,6 +2572,7 @@ id:
           title: "Email"
           subject: "Judul"
           body: "Konten"
+          edit: "Ubah"
         component:
           all_filter: "Semua"
           enabled_filter: "Diaktifkan"

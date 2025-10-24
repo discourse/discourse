@@ -351,13 +351,13 @@ export function createData(store) {
 
     buttonSizes: [
       { class: "btn-large", text: "large" },
-      { class: "btn-default", text: "default" },
+      { class: "", text: "default" },
       { class: "btn-small", text: "small" },
     ],
 
     buttonStates: [
+      { class: "", text: "normal" },
       { class: "btn-hover", text: "hover" },
-      { class: "btn-active", text: "active" },
       { disabled: true, text: "disabled" },
     ],
 

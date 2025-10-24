@@ -32,7 +32,7 @@ RSpec.describe "AI Spam Configuration", type: :system do
       toggle = PageObjects::Components::DToggleSwitch.new(".ai-spam__toggle")
       toggle.toggle
 
-      try_until_success { expect(AiModerationSetting.spam&.llm_model_id).to eq(llm_model.id) }
+      expect(AiModerationSetting.spam&.llm_model_id).to eq(llm_model.id)
 
       find(".ai-spam__instructions-input").fill_in(with: "Test spam detection instructions")
       find(".ai-spam__instructions-save").click

@@ -33,7 +33,7 @@ describe DiscoursePostEvent::Event do
     let(:event) do
       DiscoursePostEvent::Event.create!(
         id: first_post.id,
-        original_starts_at: Time.now + 1.hours,
+        original_starts_at: Time.now + 1.hour,
         original_ends_at: Time.now + 2.hours,
       )
     end
@@ -102,6 +102,31 @@ describe DiscoursePostEvent::Event do
               expect { late_event.create_notification!(notified_user, first_post) }.not_to change {
                 Notification.count
               }
+            end
+          end
+
+          describe "with private message topics" do
+            let(:pm_owner) { Fabricate(:user) }
+            let(:allowed_user) { Fabricate(:user) }
+            let(:disallowed_user) { Fabricate(:user) }
+            let(:pm_topic) do
+              Fabricate(:private_message_topic, user: pm_owner, recipient: allowed_user)
+            end
+            let(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_owner) }
+            let(:pm_event) { Fabricate(:event, post: pm_post) }
+
+            it "does not send notifications to users without access to the PM" do
+              expect(Guardian.new(disallowed_user).can_see?(pm_topic)).to be(false)
+              expect { pm_event.create_notification!(disallowed_user, pm_post) }.not_to change {
+                Notification.count
+              }
+            end
+
+            it "does send notifications to users with access to the PM" do
+              expect(Guardian.new(allowed_user).can_see?(pm_topic)).to be(true)
+              expect { pm_event.create_notification!(allowed_user, pm_post) }.to change {
+                Notification.count
+              }.by(1)
             end
           end
         end
@@ -277,7 +302,7 @@ describe DiscoursePostEvent::Event do
             post_event =
               DiscoursePostEvent::Event.create!(
                 original_starts_at: 2.hours.ago,
-                original_ends_at: 1.hours.ago,
+                original_ends_at: 1.hour.ago,
                 post: first_post,
               )
 
@@ -337,10 +362,7 @@ describe DiscoursePostEvent::Event do
       context "when starts_at > current date" do
         it "is not ongoing" do
           post_event =
-            DiscoursePostEvent::Event.create!(
-              original_starts_at: 1.hours.from_now,
-              post: first_post,
-            )
+            DiscoursePostEvent::Event.create!(original_starts_at: 1.hour.from_now, post: first_post)
 
           expect(post_event.ongoing?).to be(false)
         end
@@ -612,12 +634,28 @@ describe DiscoursePostEvent::Event do
 
     before { DiscoursePostEvent::Invitee.create_attendance!(user_3.id, post_1.id, :going) }
 
-    it "doesn’t return already attending user" do
+    it "doesn't return already attending user" do
       expect(event_1.missing_users.pluck(:id)).to_not include(user_3.id)
     end
 
     it "return users from groups with no duplicates" do
       expect(event_1.missing_users.pluck(:id)).to match_array([user_1.id, user_2.id])
+    end
+
+    context "with private event with empty raw_invitees" do
+      let!(:event_without_invitees) do
+        Fabricate(
+          :event,
+          post: Fabricate(:post),
+          status: DiscoursePostEvent::Event.statuses[:private],
+          raw_invitees: [],
+        )
+      end
+
+      it "does not return all site users" do
+        expect(event_without_invitees.missing_users.count).to eq(0)
+        expect(User.real.activated.not_silenced.not_suspended.not_staged.count).not_to eq(0)
+      end
     end
   end
 
@@ -653,9 +691,9 @@ describe DiscoursePostEvent::Event do
           Fabricate(
             :event,
             recurrence: "every_week",
-            recurrence_until: Time.current - 1.day,
-            original_starts_at: Time.current - 1.week,
-            original_ends_at: Time.current - 1.week + 2.hours,
+            recurrence_until: 1.day.ago,
+            original_starts_at: 1.week.ago,
+            original_ends_at: 1.week.ago + 2.hours,
           )
         event
       end
@@ -701,8 +739,8 @@ describe DiscoursePostEvent::Event do
           :event,
           recurrence: "every_week",
           recurrence_until: nil,
-          original_starts_at: Time.current - 1.week,
-          original_ends_at: Time.current - 1.week + 2.hours,
+          original_starts_at: 1.week.ago,
+          original_ends_at: 1.week.ago + 2.hours,
         )
       end
 
@@ -720,8 +758,8 @@ describe DiscoursePostEvent::Event do
         Fabricate(
           :event,
           recurrence: nil,
-          original_starts_at: Time.current - 1.week,
-          original_ends_at: Time.current - 1.week + 2.hours,
+          original_starts_at: 1.week.ago,
+          original_ends_at: 1.week.ago + 2.hours,
         )
       end
 

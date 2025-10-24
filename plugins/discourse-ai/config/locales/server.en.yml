@@ -11,6 +11,7 @@ en:
         review: "Add post to review queue"
         review_hide: "Add post to review queue and hide post"
         review_delete: "Add post to review queue and delete post"
+        review_delete_silence: "Add post to review queue, delete post and silence user"
         spam: "Flag as spam and hide post"
         spam_silence: "Flag as spam, hide post and silence user"
     scriptables:
@@ -26,7 +27,7 @@ en:
         flagged_post: |
           <div>Response from the model:</div>
           <p>%{llm_response}</p>
-          <b>Triggered by the <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> rule.</b>
+          <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
           subject: "Your post was temporarily removed for review"
           body: |
@@ -85,7 +86,6 @@ en:
     composer_ai_helper_allowed_groups: "Users on these groups will see the AI helper button in the composer."
     ai_helper_allowed_in_pm: "Enable the composer's AI helper in PMs."
     ai_helper_model: "Model to use for the AI helper."
-    ai_helper_custom_prompts_allowed_groups: "Users on these groups will see the custom prompt option in the AI helper."
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
     ai_helper_illustrate_post_model: "Model to use for the composer AI helper's illustrate post feature"
@@ -121,7 +121,8 @@ en:
     ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
     ai_bot_public_sharing_allowed_groups: "Allow these groups to share AI personal messages with the public via a unique publicly available link. Note: if your site requires login, shares will also require login."
-    ai_bot_add_to_header: "Display a button in the header to start a PM with a AI Bot"
+    ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"
+    ai_bot_add_to_community_section: "Display a link in the sidebar community section to start a PM with an AI Bot"
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
 
     ai_discover_enabled: "Enable the discovery search feature"
@@ -140,9 +141,8 @@ en:
     ai_discord_search_mode: "Select the search mode to use for Discord search"
     ai_discord_search_persona: "The persona to use for Discord search."
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
-    ai_bot_enable_dedicated_ux: "Allow for full screen bot interface, instead of a PM"
 
-    ai_translation_enabled: "Enables the AI translation feature"
+    ai_translation_enabled: "Enable the AI translation feature"
     ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
     ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
@@ -280,6 +280,8 @@ en:
     ai_helper:
       errors:
         completion_request_failed: "Something went wrong while trying to provide suggestions. Please, try again."
+        credit_limit_exceeded_user: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets %{reset_time}."
+        credit_limit_exceeded_bot: "AI responses are currently unavailable due to credit limits. Please try again %{reset_time}."
       prompts:
         translate: Translate to %{language}
         generate_titles: Suggest topic titles
@@ -650,6 +652,9 @@ en:
       errors:
         disabled: "The AI translation feature is not fully configured."
 
+    llm_credit_allocation:
+      limit_exceeded: "You have reached your AI credit limit. Please try again in %{reset_time}."
+
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
       quota_required: "You must specify maximum tokens or usages for this model"
@@ -669,3 +674,5 @@ en:
   dashboard:
     problem:
       ai_llm_status: "The LLM model: %{model_name} is encountering issues. Please check the <a href='%{url}'>model's configuration page</a>."
+      ai_credit_soft_limit: "%{model_name} has only %{percentage_remaining}% of credits remaining. Credits will reset at %{reset_date}. <a href='%{url}'>View AI models</a>"
+      ai_credit_hard_limit: "You have run out of AI credits for %{model_name}. AI features will be unavailable until %{reset_date}. <a href='%{url}'>View AI models</a>"

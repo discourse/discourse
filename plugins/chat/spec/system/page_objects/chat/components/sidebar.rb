@@ -37,6 +37,20 @@ module PageObjects
           selector += " .sidebar-section-link.channel-#{channel.id}"
           selector
         end
+
+        NEW_START_DM_SELECTOR = ".sidebar-section-link[data-link-name='new-chat-dm']"
+
+        def has_no_start_new_dm?
+          has_no_selector?(NEW_START_DM_SELECTOR)
+        end
+
+        def has_start_new_dm?
+          has_selector?(NEW_START_DM_SELECTOR)
+        end
+
+        def click_start_new_dm
+          find(NEW_START_DM_SELECTOR).click
+        end
       end
     end
   end

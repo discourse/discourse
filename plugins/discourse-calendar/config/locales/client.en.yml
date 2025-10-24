@@ -39,6 +39,7 @@ en:
         title: "Region"
         none: "None"
         use_current_region: "Use Current Region"
+        select_region: "Select a region..."
         names:
           ae: "United Arab Emirates"
           ar: "Argentina"
@@ -133,6 +134,7 @@ en:
           dk: "Denmark"
           ee: "Estonia"
           el: "Greece"
+          gr: "Greece"
           es_an: "Spain (es_an)"
           es_ar: "Spain (es_ar)"
           es_ce: "Spain (es_ce)"

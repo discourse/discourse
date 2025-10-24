@@ -18,6 +18,13 @@ module Migrations::Database::IntermediateDB
     SQL
     private_constant :SQL
 
+    # Creates a new `user_field_options` record in the IntermediateDB.
+    #
+    # @param user_field_id   [Integer, String]
+    # @param value           [String]
+    # @param created_at      [Time, nil]
+    #
+    # @return [void]
     def self.create(user_field_id:, value:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

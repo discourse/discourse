@@ -612,6 +612,7 @@ el:
     review:
       show_more: "Δείτε περισσότερα"
       show_less: "Δείξε λιγότερα"
+      back_to_queue: "Πίσω στην ουρά"
       order_by: "Ταξινόμηση κατά"
       date_filter: "Δημοσιεύτηκε μεταξύ"
       in_reply_to: "απαντώντας στο"
@@ -833,6 +834,9 @@ el:
         solution_marked: "Λύση επισημάνθηκε"
         topic_has_solution: "Αυτό το θέμα έχει λύση"
         visibility: "Ορατότητα"
+      help:
+        moderation_guide: "Οδηγός εποπτείας Discourse"
+        spam_detection: "Ανίχνευση spam"
       approval:
         title: "Απαιτείται Έγκριση Ανάρτησης"
         description: "Λάβαμε την ανάρτησή σου, αλλά πρέπει πρώτα να εγκριθεί από έναν συντονιστή πριν εμφανιστεί. Παρακαλώ περιμένετε."
@@ -1568,7 +1572,7 @@ el:
         invalid: "Αυτό το όνομα χρήστη δεν είναι έγκυρο. Θα πρέπει να αποτελείται μόνο από αριθμούς και γράμματα"
       add_email:
         title: "Προσθήκη email"
-        add: "προσθήκη"
+        add: "Προσθήκη"
       change_email:
         title: "Αλλαγή διεύθυνσης Email"
         taken: "Λυπούμαστε, αυτή η διεύθυνση email δεν είναι διαθέσιμη."
@@ -3384,8 +3388,6 @@ el:
         attachment_download_requires_login: "Λυπούμαστε, για να κατεβάσεις συνημμένα αρχεία, πρέπει πρώτα να συνδεθείς."
       cancel_composer:
         discard: "Απόρριψη"
-        save_draft: "Αποθήκευση πρόχειρου για αργότερα"
-        keep_editing: "Συνέχιση επεξεργασίας"
       via_email: "αυτή η ανάρτηση ήρθε μέσω email"
       via_auto_generated_email: "αυτή η ανάρτηση ήρθε μέσω ενός email που δημιουργήθηκε αυτόματα"
       whisper: "αυτή η ανάρτηση είναι εμπιστευτική προς τους συντονιστές"
@@ -3580,6 +3582,8 @@ el:
       logo: "Εικονίδιο Κατηγορίας"
       background_image: "Εικόνα Φόντου Κατηγορίας"
       background_color: "Χρώμα"
+      color_validations:
+        cant_be_empty: "δεν μπορεί να είναι άδειο"
       styles:
         icon: "Σύμβολο"
         emoji: "Emoji"
@@ -4433,6 +4437,10 @@ el:
           title: "Αρχεία"
         legal:
           title: "Νομικά"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Ρυθμίσεις"
         logo:
           form:
             mobile: "Mobile"
@@ -5003,7 +5011,6 @@ el:
         copy_to_clipboard: "Αντιγραφή στο Clipboard"
         copied_to_clipboard: "Αντιγράφτηκε στο Clipboard"
         copy_to_clipboard_error: "Σφάλμα αντιγραφής δεδομένων στο Clipboard"
-        theme_owner: "Μη επεξεργάσιμο, ανήκει σε:"
         email_templates:
           title: "Διεύθυνση Email"
           subject: "Θέμα"
@@ -5011,6 +5018,7 @@ el:
           body: "Σώμα"
           revert: "Επαναφορά Αλλαγών"
           revert_confirm: "Είσαι βέβαιος πως θέλεις να επαναφέρεις τις αλλαγές;"
+          edit: "Επεξεργασία"
         component:
           all_filter: "Όλα"
           used_filter: "Χρησιμοποιημένο"

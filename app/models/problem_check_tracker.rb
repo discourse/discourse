@@ -34,7 +34,7 @@ class ProblemCheckTracker < ActiveRecord::Base
   end
 
   def no_problem!(next_run_at: nil)
-    reset
+    reset(next_run_at:)
     silence_the_alarm
   end
 

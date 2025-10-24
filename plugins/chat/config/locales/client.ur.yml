@@ -175,6 +175,9 @@ ur:
         description: "چینل بھر میں تذکروں کے لئے اطلاعات نہ بھیجیں (@here اور @all)"
       show_thread_title_prompts:
         description: "نئے دھاگوں کے لیے عنوان سیٹ کرنے کے لیے بلا تاخیردکھائیں"
+      placeholder_channel: "%{channelName} میں چیٹ کریں"
+      placeholder_thread: "دھاگے میں چیٹ کریں"
+      placeholder_group: "گروپ میں چیٹ کریں"
       reply: "جواب"
       edit: "ترمیم کریں"
       rebake_message: "HTML دوبارہ بِلڈ کریں"
@@ -266,17 +269,34 @@ ur:
       direct_message_creator:
         title: نیا پیغام
         prefix: "کے لئے:"
+      channel:
+        no_memberships_found: کوئی اراکین نہیں ملے
+        memberships_count:
+          one: "%{count} رکن"
+          other: "%{count} اراکین"
       create_channel:
+        choose_category:
+          label: "ایک زمرہ منتخب کریں"
+          none: "ایک کو منتخب کریں..."
+        create: "چینل بنائیں"
+        description: "تفصیل (اختیاری)"
+        name: "چینل کا نام"
+        slug: "چینل سلگ (اختیاری)"
+        title: "نیا چینل"
         type: "قِسم"
         types:
           category: "زمرہ"
-          topic: "ٹاپک"
+          topic: "موضوع"
+      reviewable:
+        type: "گپ شپ کا پیغام"
       composer:
         italic_text: "زور دیا گیا ٹَیکسٹ"
         bold_text: "گہرا ٹَیکسٹ"
         send: "بھیجیں"
       notification_levels:
         never: "کبھی نہیں"
+        mention: "صرف تذکروں کے لئے"
+        always: "ہر سرگرمی کے لئے"
       settings:
         channel_threading_label: "تھریڈنگ"
         channel_threading_description: "جب تھریڈنگ فعال ہوتی ہے، تو چیٹ میسج کے جوابات ایک الگ گفتگو تخلیق کریں گے، جو مرکزی چینل کے ساتھ موجود ہوگی۔"
@@ -299,6 +319,8 @@ ur:
       my_threads:
         title: میرے دھاگے
         aria_label: "میری دھاگوں کی فہرست پر جائیں"
+      direct_messages:
+        title: "ذاتی پیغامات"
       incoming_webhooks:
         back: "واپس"
         description: "تفصیل"
@@ -320,9 +342,13 @@ ur:
         new_message:
           title: "نئے پیغام پر منتقل کریں"
       retention_reminders:
+        indefinitely_long: "چینل کے پیغامات کو غیر معینہ مدت تک برقرار رکھنے کے لیے چیٹ کی ترتیبات میں ترتیب دی گئی ہے۔"
         short:
           one: "%{count} دن"
           other: "%{count} دن"
+        long:
+          one: "چیٹ کی ترتیبات %{count} دن کے لیے چینل کے پیغامات کو برقرار رکھنے کے لیے سیٹ کی گئی ہے۔"
+          other: "چیٹ کی ترتیبات %{count} دنوں تک چینل کے پیغامات کو برقرار رکھنے کے لیے سیٹ کی گئی ہے۔"
       flags:
         notify_moderators: "اس پیغام پر عملے کی توجہ کی ضرورت ہے کسی اور وجہ سے جو اوپر درج نہیں۔"
       emoji_picker:
@@ -361,9 +387,19 @@ ur:
           custom: "اپنی مرضی کے رد عمل"
     notifications:
       chat_quoted: "<span>%{username}</span> %{description}"
+      popup:
+        chat_mention:
+          direct: '"%{channel}" میں آپ کا تذکرہ کیا'
+          direct_html: '<span>%{username}</span> <span>نے "%{channel}" میں آپ کا تذکرہ کیا</span>'
+        direct_message_chat_mention:
+          direct: "نجی چیٹ میں آپ کا تذکرہ کیا"
+          direct_html: "<span>%{username}</span> <span>نے نجی چیٹ میں آپ کا تذکرہ کیا</span>"
     discourse_automation:
       scriptables:
         send_chat_message:
           fields:
             message:
               label: پیغام
+    sidebar:
+      start_new_dm:
+        text: نیا ذاتی پیغام بنائیں

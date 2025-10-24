@@ -7,11 +7,9 @@
 fa_IR:
   admin_js:
     admin:
-      calendar: "تقویم"
       site_settings:
         categories:
           discourse_post_event: "رویداد دیسکورس"
-          discourse_calendar: "تقویم دیسکورس"
   js:
     notifications:
       titles:

@@ -39,7 +39,6 @@
     "source-map": "0.1.43",
     "sourcemap-validator": "1.1.1",
     "spawn-command": "0.0.2",
-    "squoosh": "2.0.0",
     "taffydb": "2.6.2"
   },
   "corrections": true,

@@ -17,21 +17,18 @@ export default class Gists extends Service {
     return this.router.currentRoute.attributes;
   }
 
-  get publicTopics() {
-    return this.routerAttributes?.list?.topics;
-  }
-
-  get pmTopics() {
-    return this.routerAttributes?.topics;
-  }
-
   get isPm() {
-    return !this.publicTopics && this.pmTopics;
+    const routeName = this.router.currentRouteName;
+    return routeName?.startsWith("userPrivateMessages");
+  }
+
+  get topics() {
+    // covers discovery, filter, and pm routes
+    return this.routerAttributes?.list?.topics ?? this.routerAttributes?.topics;
   }
 
   get showToggle() {
-    const topicList = this.publicTopics ?? this.pmTopics;
-    return topicList?.some((topic) => topic.ai_topic_gist);
+    return this.topics?.some((topic) => topic.ai_topic_gist);
   }
 
   get currentPreference() {

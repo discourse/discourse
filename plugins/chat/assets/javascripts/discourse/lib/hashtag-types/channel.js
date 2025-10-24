@@ -5,7 +5,6 @@ import { iconHTML } from "discourse/lib/icon-library";
 export default class ChannelHashtagType extends HashtagTypeBase {
   @service chatChannelsManager;
   @service currentUser;
-  @service site;
 
   get type() {
     return "channel";

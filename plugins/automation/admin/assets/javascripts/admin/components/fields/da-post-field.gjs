@@ -12,7 +12,11 @@ export default class PostField extends BaseField {
 
         <div class="controls">
           <div class="field-wrapper">
-            <DEditor @value={{@field.metadata.value}} />
+            <DEditor
+              @value={{@field.metadata.value}}
+              @forceEditorMode="rich"
+              @processPreview={{false}}
+            />
 
             <DAFieldDescription @description={{@description}} />
 

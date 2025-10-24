@@ -7,7 +7,7 @@ RSpec.describe DiscourseAi::InferredConcepts::Finder do
   fab!(:post) { Fabricate(:post, like_count: 10) }
   fab!(:concept1) { Fabricate(:inferred_concept, name: "programming") }
   fab!(:concept2) { Fabricate(:inferred_concept, name: "testing") }
-  fab!(:llm_model) { Fabricate(:fake_model) }
+  fab!(:llm_model, :fake_model)
 
   before do
     enable_current_plugin

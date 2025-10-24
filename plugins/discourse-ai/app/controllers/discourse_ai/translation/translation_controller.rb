@@ -3,7 +3,9 @@
 module DiscourseAi
   module Translation
     class TranslationController < ::ApplicationController
-      requires_plugin DiscourseAi::PLUGIN_NAME
+      include AiCreditLimitHandler
+
+      requires_plugin PLUGIN_NAME
 
       before_action :ensure_logged_in
       before_action :check_permissions
@@ -15,11 +17,15 @@ module DiscourseAi
 
         if DiscourseAi::Translation.enabled?
           Jobs.enqueue(:detect_translate_post, post_id: post.id, force: true)
+
+          if post.is_first_post?
+            Jobs.enqueue(:detect_translate_topic, topic_id: post.topic.id, force: true)
+          end
         else
           return(
             render json:
                      failed_json.merge(error: I18n.t("discourse_ai.translation.errors.disabled")),
-                   status: 400
+                   status: :bad_request
           )
         end
 

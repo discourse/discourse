@@ -58,7 +58,6 @@
 
   button.bulk-select {
     padding: 0;
-    border: 0;
     margin-right: var(--space-2);
     line-height: var(--line-height-large);
   }
@@ -75,19 +74,6 @@
 
     + .main-link {
       padding-left: 0;
-    }
-  }
-
-  .topics-replies-toggle {
-    background: none;
-    border: none;
-    line-height: var(--line-height-large);
-    padding-left: var(--space-2);
-    padding-right: var(--space-2);
-    position: relative;
-
-    &.active {
-      @include nav-active;
     }
   }
 
@@ -288,6 +274,20 @@
           margin: 0 auto;
         }
       }
+    }
+  }
+}
+
+.topic-replies-toggle-wrapper {
+  .topics-replies-toggle {
+    background: none;
+    border: none;
+    line-height: var(--line-height-large);
+    padding: var(--space-2);
+    position: relative;
+
+    &.active {
+      @include nav-active;
     }
   }
 }
