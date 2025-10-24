@@ -8,6 +8,7 @@ import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { VISIBILITY_OPTIMIZERS } from "float-kit/lib/constants";
 import { updatePosition } from "float-kit/lib/update-position";
 
@@ -445,21 +446,27 @@ export default class DAutocompleteModifier extends Modifier {
         ? this.createVirtualElementAtTextarea()
         : this.createVirtualElementAtCaret();
 
+      // Dynamically determine allowed placements based on available vertical space
+      const hasVerticalSpace = this.hasEnoughVerticalSpace();
+      const allowedPlacements = hasVerticalSpace
+        ? ["top-start", "top-end", "bottom-start", "bottom-end"]
+        : [
+            "top-start",
+            "top-end",
+            "bottom-start",
+            "bottom-end",
+            "right-end",
+            "left-end",
+            "right-start",
+            "left-start",
+          ];
+
       this.menuOptions = {
         identifier: "d-autocomplete",
         component: DAutocompleteResults,
         visibilityOptimizer: VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT,
         placement: "top-start",
-        allowedPlacements: [
-          "top-start",
-          "top-end",
-          "bottom-start",
-          "bottom-end",
-          "right-end",
-          "left-end",
-          "left-start",
-          "right-start",
-        ],
+        allowedPlacements,
         data: {
           getResults: () => this.results,
           getSelectedIndex: () => this.selectedIndex,
@@ -692,6 +699,27 @@ export default class DAutocompleteModifier extends Modifier {
       x: textareaRect.left,
       y: textareaRect.top,
     };
+  }
+
+  hasEnoughVerticalSpace() {
+    const MIN_HEIGHT = 200; // Minimum height in pixels for autocomplete menu
+    const VIRTUAL_ELEMENT_HEIGHT = 10; // Height of virtual element
+
+    try {
+      const caretCoords = this.getAbsoluteCaretCoords();
+      const headerHeight = headerOffset();
+
+      const spaceAbove = caretCoords.y - headerHeight;
+      const spaceBelow =
+        window.innerHeight - caretCoords.y - VIRTUAL_ELEMENT_HEIGHT;
+
+      return spaceAbove >= MIN_HEIGHT || spaceBelow >= MIN_HEIGHT;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] hasEnoughVerticalSpace: ", e);
+      // Default to true on error to avoid breaking existing behavior
+      return true;
+    }
   }
 
   createVirtualElementAtCaret() {
