@@ -195,6 +195,22 @@ lt:
         card: "Kortelė"
       translations:
         title: "Vertimai"
+        stats:
+          eta_minutes:
+            one: "%{count} minutė"
+            few: "%{count} minutės"
+            many: "%{count} minučių"
+            other: "%{count} minučių"
+          eta_hours:
+            one: "%{count} valanda"
+            few: "%{count} valandos"
+            many: "%{count} valandų"
+            other: "%{count} valandų"
+          eta_days:
+            one: "%{count} diena"
+            few: "%{count} dienos"
+            many: "%{count} dienų"
+            other: "%{count} dienų"
         progress_chart:
           bar_done:
             one: "%{count} pranešimas"

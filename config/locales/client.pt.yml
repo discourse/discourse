@@ -598,6 +598,7 @@ pt:
       other: "Ver %{count} tópicos novos"
     preview: "pré-visualizar"
     cancel: "Cancelar"
+    done: "Concluído"
     deleting: "Apagando..."
     save: "Guardar alterações"
     saving: "Guardando..."
@@ -3305,9 +3306,6 @@ pt:
       auto_close_immediate:
         one: "A última publicação neste tópico já tem %{count} hora, por isso o tópico será fechado imediatamente."
         other: "A última publicação neste tópico já tem %{count} horas, por isso o tópico será fechado imediatamente."
-      auto_close_momentarily:
-        one: "A última publicação neste tópico já tem %{count} hora, por isso o tópico será fechado imediatamente."
-        other: "A última publicação neste tópico já tem %{count} horas, por isso o tópico será fechado imediatamente."
       timeline:
         back: "Retroceder"
         back_description: "Voltar à última publicação não lida"
@@ -4135,7 +4133,7 @@ pt:
       readonly: "Ver"
     preloader_text: "A carregar"
     lightbox:
-      download: "transferir"
+      download: "Transferir"
       counter: "%curr% de %total%"
       close: "Fechar (Esc)"
       content_load_error: '<a href="%url%">O conteúdo</a> não pôde ser carregado.'

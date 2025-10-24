@@ -590,6 +590,7 @@ fr:
       other: "Voir %{count} nouveaux sujets"
     preview: "prévisualiser"
     cancel: "Annuler"
+    done: "Terminé"
     deleting: "Suppression…"
     save: "Enregistrer les modifications"
     saving: "Enregistrement…"
@@ -3507,9 +3508,6 @@ fr:
       auto_close_immediate:
         one: "Le dernier message publié dans ce sujet remonte à %{count} heure. Le sujet sera donc immédiatement fermé."
         other: "Le dernier message publié dans ce sujet remonte à %{count} heures. Le sujet sera donc immédiatement fermé."
-      auto_close_momentarily:
-        one: "Le dernier message publié dans ce sujet remonte à %{count} heure. Le sujet sera donc temporairement fermé."
-        other: "Le dernier message publié dans ce sujet remonte à %{count} heures. Le sujet sera donc temporairement fermé."
       timeline:
         back: "Retour"
         back_description: "Revenir au dernier message non lu"
@@ -4504,8 +4502,7 @@ fr:
       readonly: "Voir"
     preloader_text: "Chargement"
     lightbox:
-      download: "télécharger"
-      open: "image originale"
+      download: "Télécharger"
       previous: "Précédent (touche flèche gauche)"
       next: "Suivant (touche flèche droite)"
       counter: "%curr% sur %total%"

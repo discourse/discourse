@@ -20,6 +20,8 @@ ur:
       actor_disallowed_dms: "آپ نے اراکین کو ذاتی اور براہ راست پیغامات بھیجنے سے روکنے کا انتخاب کیا ہے، لہذا آپ نئے براہ راست پیغامات نہیں بنا سکتے۔"
     reviewables:
       actions:
+        no_action_message:
+          title: "کوئی کارروائی نہیں"
         agree:
           title: "اتفاق کریں..."
         agree_and_suspend:

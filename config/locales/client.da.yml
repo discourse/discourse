@@ -544,6 +544,7 @@ da:
       other: "Se %{count} nye emner"
     preview: "forhåndsvising"
     cancel: "Annuller"
+    done: "Færdig"
     deleting: "Sletter…"
     save: "Gem ændringer"
     saving: "Gemmer…"
@@ -2943,9 +2944,6 @@ da:
       auto_close_immediate:
         one: "Seneste indlæg i emnet er allerede %{count} time gammelt så emnet bliver lukket med det samme."
         other: "Seneste indlæg i emnet er allerede %{hours} timer gammelt så emnet bliver lukket med det samme."
-      auto_close_momentarily:
-        one: "Seneste indlæg i emnet er allerede %{count} time gammelt så emnet bliver lukket med det samme."
-        other: "Seneste indlæg i emnet er allerede %{count} timer gammelt så emnet bliver lukket med det samme."
       timeline:
         back: "Tilbage"
         back_description: "Tilbage til dit seneste ulæste indlæg"
@@ -3802,8 +3800,7 @@ da:
       readonly: "Se"
     preloader_text: "Indlæser"
     lightbox:
-      download: "hent"
-      open: "originalt billede"
+      download: "Download"
       previous: "Forrige (Venstre piletast)"
       next: "Næste (højre piletast)"
       counter: "%curr% af %total%"

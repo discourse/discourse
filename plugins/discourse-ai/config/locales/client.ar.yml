@@ -289,6 +289,28 @@ ar:
         card: "بطاقة"
       translations:
         title: "الترجمات"
+        stats:
+          eta_minutes:
+            zero: "دقيقتان (%{count})"
+            one: "دقيقة واحدة (%{count})"
+            two: "دقيقتان (%{count})"
+            few: "%{count} دقائق"
+            many: "%{count} دقيقة"
+            other: "دقيقتان (%{count})"
+          eta_hours:
+            zero: "ساعتان (%{count})"
+            one: "ساعة واحدة (%{count})"
+            two: "ساعتان (%{count})"
+            few: "ساعتان (%{count})"
+            many: "ساعتان (%{count})"
+            other: "ساعتان (%{count})"
+          eta_days:
+            zero: "%{count} يومًا"
+            one: "يوم واحد (%{count})"
+            two: "%{count} يومًا"
+            few: "%{count} يومًا"
+            many: "%{count} أيام"
+            other: "%{count} يومًا"
         progress_chart:
           bar_done:
             zero: "%{count} منشور"
@@ -813,6 +835,7 @@ ar:
         cancel_streaming: "إيقاف الرد"
         default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
         shortcut_title: "بدء رسالة خاصة باستخدام روبوت ذكاء اصطناعي"
+        shortcut_link: "روبوت الذكاء الاصطناعي"
         exit: "الخروج من روبوت الذكاء الاصطناعي"
         share: "نسخ محادثة الذكاء الاصطناعي"
         conversation_shared: "تم نسخ المحادثة"

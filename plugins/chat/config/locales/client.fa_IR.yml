@@ -213,6 +213,8 @@ fa_IR:
       chat_message_separator:
         today: امروز
         yesterday: دیروز
+      search_view:
+        filter_placeholder: جستجوی پیام‌ها
       members_view:
         filter_placeholder: جستجوی اعضا
       about_view:
@@ -227,6 +229,7 @@ fa_IR:
         tabs:
           members: اعضاء
           settings: تنظیمات
+          search: جستجو
         remove_member: "پاک کردن"
       new_message_modal:
         filter: "فیلتر"
@@ -295,6 +298,11 @@ fa_IR:
         members_label: "اعضاء"
       admin:
         title: "گفتگو"
+      search:
+        no_results: "چیزی یافت نشد"
+        sort:
+          relevance: "ارتباطات"
+          latest: "آخرین"
       direct_messages:
         new: "ایجاد گفتگوی شخصی"
         create: "برو"

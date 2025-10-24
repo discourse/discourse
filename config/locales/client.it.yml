@@ -590,6 +590,7 @@ it:
       other: "Vedi %{count} nuovi argomenti"
     preview: "anteprima"
     cancel: "Annulla"
+    done: "Fatto"
     deleting: "Eliminazione…"
     save: "Salva Modifiche"
     saving: "Salvataggio…"
@@ -3504,9 +3505,6 @@ it:
       auto_close_immediate:
         one: "L'ultimo messaggio nell'argomento risale a %{count} ora fa, per cui l'argomento verrà chiuso immediatamente."
         other: "L'ultimo messaggio nell'argomento risale a %{count} ore fa, per cui l'argomento verrà chiuso immediatamente."
-      auto_close_momentarily:
-        one: "L'ultimo messaggio dell'argomento risale a %{count} ora fa, quindi l'argomento verrà chiuso momentaneamente."
-        other: "L'ultimo messaggio dell'argomento risale a %{count} ore fa, quindi l'argomento verrà chiuso momentaneamente."
       timeline:
         back: "Indietro"
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
@@ -4501,8 +4499,7 @@ it:
       readonly: "Visualizza"
     preloader_text: "Caricamento"
     lightbox:
-      download: "scarica"
-      open: "immagine originale"
+      download: "Scarica"
       previous: "Precedente (tasto freccia a sinistra)"
       next: "Successivo (tasto freccia a destra)"
       counter: "%curr% di %total%"

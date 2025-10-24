@@ -586,6 +586,7 @@ be:
       other: "Паглядзець %{count} новых тэм"
     preview: "Перадпрагляд"
     cancel: "Скасаваць"
+    done: "Выканана"
     deleting: "Выдаленне…"
     save: "Захаваць змены"
     saving: "Захаванне…"
@@ -1794,7 +1795,7 @@ be:
       readonly: "бачыць"
     preloader_text: "загрузка"
     lightbox:
-      download: "загрузіць"
+      download: "спампаваць"
     keyboard_shortcuts_help:
       title: "Спалучэнні клавіш"
       jump_to:

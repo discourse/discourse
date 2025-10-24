@@ -379,6 +379,7 @@ vi:
       other: "Xem %{count} chủ đề mới"
     preview: "xem trước"
     cancel: "Huỷ"
+    done: "Hoàn tất"
     deleting: "Đang xóa…"
     save: "Lưu thay đổi"
     saving: "Đang lưu…"
@@ -2577,8 +2578,6 @@ vi:
       auto_close_title: "Tự động-Đóng các Cài đặt"
       auto_close_immediate:
         other: "Các bài mới nhất trong chủ đề này là đã %{count} giờ cũ, vì vậy đề tài sẽ đóng cửa ngay lập tức."
-      auto_close_momentarily:
-        other: "Bài cuối cùng trong chủ đề đã được %{count} giờ, vì vậy chủ đề sẽ được đóng lại trong giây lát."
       timeline:
         back: "Quay lại"
         back_description: "Quay lại bài viết chưa đọc cuối cùng của bạn"
@@ -3371,8 +3370,7 @@ vi:
       readonly: "Xem"
     preloader_text: "Đang tải"
     lightbox:
-      download: "tải về"
-      open: "ảnh gốc"
+      download: "Tải xuống"
       previous: "Trước (Phím mũi tên trái)"
       next: "Tiếp theo (Phím mũi tên phải)"
       counter: "%curr% trên %total%"

@@ -14,11 +14,60 @@ ug:
     spam_detection:
       logging_subject: "ئەخلەت ئۇچۇر بايقاش"
     ai_bot:
+      personas:
+        titles_generator:
+          name: "ماۋزۇ ھاسىللىغۇچ"
+        translator:
+          name: "تەرجىمان"
+        locale_detector:
+          name: "تىل مۇھىتىنى بايقىغۇچ"
+        post_raw_translator:
+          name: "يازما تەرجىمانى"
+        spam_detector:
+          name: "ئەخلەت ئۇچۇر بايقىغۇچ"
+        content_creator:
+          name: "مەزمۇن قۇرغۇچ"
+        report_runner:
+          name: "دوكلات ئىجرا قىلغۇچ"
+        discover:
+          name: "بايقاش"
+      tool_options:
+        researcher:
+          researcher_llm:
+            name: "LLM"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+          update_algorithm:
+            name: "ھېسابلاش ئۇسۇلىنى يېڭىلا"
+        google:
+          base_query:
+            name: "ئاساسىي ئىزدەش سۈرۈشتۈرۈشى"
       tool_summary:
+        web_browser: "تور زىيارەت"
+        github_search_files: "GitHub ئىزدەش ھۆججىتى"
+        github_search_code: "GitHub كود ئىزدەش"
+        github_file_content: "GitHub ھۆججەت مەزمۇنى"
+        github_pull_request_diff: "GitHub تارتىش ئىلتىماس پەرقى"
+        random_picker: "ئىختىيارىي تاللىغۇچ"
+        categories: "سەھىپە تىزىمىنى كۆرسەت"
         search: "ئىزدە"
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"
         time: "ۋاقىت"
         summarize: "خۇلاسە"
+        image: "سۈرەت ھاسىللا"
+        google: "Google دىن ئىزدە"
+        read: "تېمىنى ئوقۇڭ"
+        dall_e: "سۈرەت ھاسىللا"
+        create_image: "سۈرەت قۇرۇش"
+        edit_image: "سۈرەت تەھرىرلەش"
+        researcher: "تەتقىقات"
+        researcher_dry_run: "تەتقىقات تەييارلاش"
+      tool_help:
+        search_settings: "بېكەت تەڭشىكىنى ئىزدەيدۇ"
       tool_description:
         dall_e: "%{prompt}"
         create_image: "%{prompt}"
@@ -30,6 +79,7 @@ ug:
         tags:
           one: "%{count} بەلگە تېپىلدى"
           other: "%{count} بەلگە تېپىلدى"
+        schema: "%{tables}"
     summarization:
       chat:
         no_targets: "تاللىغان مەزگىلدىكى ئۇچۇر يوق."
@@ -38,9 +88,12 @@ ug:
         post_emotion:
           neutral: "بىتەرەپ \U0001F610"
         sentiment_analysis:
+          positive: "ئىجابىي"
+          negative: "سەلبىي"
           neutral: "بىتەرەپ"
     llm:
       configuration:
+        set_llm_first: "ئالدى بىلەن %{setting} تەڭشىلىدۇ"
         invalid_seeded_model: "بۇ مودېلدا مەزكۇر ئىقتىدارنى ئىشلىتەلمەيسىز"
         must_select_model: "ئالدى بىلەن LLM نى تاللىشىڭىز كېرەك"
       endpoints:

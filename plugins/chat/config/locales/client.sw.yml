@@ -52,6 +52,8 @@ sw:
       chat_message_separator:
         today: Leo
         yesterday: Jana
+      search_view:
+        filter_placeholder: Tafuta ujumbe
       about_view:
         title: Kichwa cha Habari
         name: Jina
@@ -61,6 +63,7 @@ sw:
         tabs:
           members: Wanachama
           settings: Mipangilio
+          search: Tafuta
         remove_member: "Ondoa"
       new_message_modal:
         filter: "Chuja"
@@ -93,6 +96,11 @@ sw:
         category_label: "Kategoria"
         history_label: "Historia"
         members_label: "Wanachama"
+      search:
+        no_results: "Hakuna Majibu Yaliyopatikana"
+        sort:
+          relevance: "Umuhimu"
+          latest: "Hivi Karibuni"
       incoming_webhooks:
         back: "Iliyopita"
         description: "Elezo"

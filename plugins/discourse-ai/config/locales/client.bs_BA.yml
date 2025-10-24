@@ -55,6 +55,15 @@ bs_BA:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prevodi"
+        stats:
+          eta_hours:
+            one: "%{count} sat"
+            few: "%{count} sata"
+            other: "%{count} sata"
+          eta_days:
+            one: "%{count} dan"
+            few: "Par dana"
+            other: "%{count} dana"
         progress_chart:
           bar_done:
             one: "%{count} objava"

@@ -99,6 +99,8 @@ sq:
     reviewables:
       message_already_handled: "Faleminderit, mesazhi është rishikuar tashmë dhe nuk ka nevojë të raportohet përsëri."
       actions:
+        restore_message:
+          description: "Rikthe mesazhin që të shfaqet për përdoruesit"
         agree:
           title: "Pranuar"
         agree_and_keep_message:

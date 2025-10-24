@@ -13,7 +13,6 @@ hu:
     discourse_reactions_desaturated_reaction_panel: "Csökkenti a reakciók vizuális zaját azáltal, hogy ki vannak szürkítve, ameddig föléjük nem viszi az egeret."
     discourse_reactions_excluded_from_like: "Olyan reakciók, amelyek nem számítanak Kedvelésnek. Azok a reakciók, amelyek nem szerepelnek ezen a listán, Kedvelésenk számítanak a jelvények, a jelentéstétel és egyéb célok érdekében."
     discourse_reactions_like_sync_enabled: "Ha ez be van kapcsolva, az előzményreakciókhoz a megfelelő Like-rekordok jönnek létre, kivéve a „discourse_reactions_excluded_from_like” paraméterben meghatározott reakciókat. Ez a szinkronizálás rendszeresen megtörténik a háttérben, és akkor is, ha módosítja a `discourse_reactions_excluded_from_like` paramétert."
-    discourse_reactions_experimental_allow_any_emoji: "KÍSÉRLETI: Ha ez engedélyezve van, akkor egy gomb jelenik meg, amely lehetővé teszi a felhasználók számára, hogy bármilyen emojit válasszanak a reakciók kiválasztásakor. A tagok bármilyen emojit választhatnak a reakciókhoz, beleértve az egyéni emojikat is, ezért csak körültekintően engedélyezd."
     errors:
       invalid_excluded_emoji: "Nem zárhatja ki azokat a hangulatjeleket, amelyek nem szerepelnek a „beszédreakciók engedélyezett reakcióiban”, és nem zárhatók ki a „beszédreakciók hasonlóra adott reakciói” emojik sem."
   badges:

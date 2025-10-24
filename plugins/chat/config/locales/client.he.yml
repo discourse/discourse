@@ -346,6 +346,8 @@ he:
       chat_message_separator:
         today: היום
         yesterday: אתמול
+      search_view:
+        filter_placeholder: חיפוש הודעות
       members_view:
         filter_placeholder: איתור חברים
         add_member: הוספת חברים
@@ -362,6 +364,7 @@ he:
         tabs:
           members: חברים
           settings: הגדרות
+          search: חיפוש
         remove_member: "הסרה"
       new_message_modal:
         title: שליחת הודעה
@@ -529,6 +532,11 @@ he:
           create_export: "יצירת ייצוא"
           confirm_export: "מייצא את כל ההודעות מכל הערוצים ושולח אליך את התוצאה בהודעה אישית. לייצא?"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
+      search:
+        no_results: "לא נמצאו תוצאות"
+        sort:
+          relevance: "רלוונטיות"
+          latest: "אחרונות"
       my_threads:
         title: השרשורים שלי
         aria_label: "מעבר לרשימת השרשורים שלי"

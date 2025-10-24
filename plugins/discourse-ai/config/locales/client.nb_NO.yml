@@ -56,6 +56,16 @@ nb_NO:
         select_option: "Velg et alternativ..."
       translations:
         title: "Oversettelser"
+        stats:
+          eta_minutes:
+            one: "%{count} minutt"
+            other: "%{count} minutter"
+          eta_hours:
+            one: "%{count} time"
+            other: "%{count} timer"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dager"
         progress_chart:
           bar_done:
             one: "%{count} innlegg"

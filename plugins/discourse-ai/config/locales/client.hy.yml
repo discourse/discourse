@@ -55,6 +55,16 @@ hy:
         select_option: "Ընտրել..."
       translations:
         title: "Թարգմանություններ"
+        stats:
+          eta_minutes:
+            one: "%{count} րոպե"
+            other: "%{count} րոպե"
+          eta_hours:
+            one: "%{count} ժամ"
+            other: "%{count} ժամ"
+          eta_days:
+            one: "%{count} օր"
+            other: "%{count} օր"
         progress_chart:
           bar_done:
             one: "%{count} գրառում"

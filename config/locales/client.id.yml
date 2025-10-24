@@ -2100,7 +2100,6 @@ id:
       admin_message: 'Salah satu tema Anda telah mengaktifkan pengubah "custom_homepage" tetapi tidak menampilkan apa pun di konektor [custom-homepage]. (Pesan ini hanya ditampilkan kepada administrator situs.)'
     preloader_text: "Memuat"
     lightbox:
-      download: "unduh"
       close: "Tutup (Esc)"
     keyboard_shortcuts_help:
       jump_to:

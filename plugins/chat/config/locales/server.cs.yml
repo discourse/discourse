@@ -112,6 +112,10 @@ cs:
     reviewables:
       message_already_handled: "Děkujeme, ale tuto zprávu jsme již zkontrolovali a rozhodli jsme se, že ji není třeba znovu nahlašovat."
       actions:
+        no_action_message:
+          title: "Bez akce"
+        restore_message:
+          description: "Obnovit zprávu, aby ji uživatelé mohli vidět."
         agree:
           title: "Souhlas..."
         agree_and_keep_message:

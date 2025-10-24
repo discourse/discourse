@@ -55,6 +55,16 @@ sq:
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
+        stats:
+          eta_minutes:
+            one: "%{count} minutë"
+            other: "%{count} minuta"
+          eta_hours:
+            one: "%{count} orë"
+            other: "%{count} orë"
+          eta_days:
+            one: "%{count} ditë"
+            other: "%{count} ditë"
         progress_chart:
           bar_done:
             one: "%{count} postim"

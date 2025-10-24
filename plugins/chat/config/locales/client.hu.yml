@@ -273,6 +273,8 @@ hu:
       chat_message_separator:
         today: Ma
         yesterday: Tegnap
+      search_view:
+        filter_placeholder: Üzenetek keresése
       members_view:
         filter_placeholder: Tagok keresése
         add_member: Tag hozzáadása
@@ -289,6 +291,7 @@ hu:
         tabs:
           members: Tagok
           settings: Beállítások
+          search: Keresés
         remove_member: "Eltávolítás"
       new_message_modal:
         title: Üzenet küldése
@@ -442,6 +445,11 @@ hu:
           create_export: "Export létrehozása"
           confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
           export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-t, ha elkészült."
+      search:
+        no_results: "Nincs találat"
+        sort:
+          relevance: "Relevancia"
+          latest: "Legutóbbi"
       my_threads:
         title: Saját szálak
         aria_label: "Váltás a saját szálakra"

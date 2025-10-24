@@ -53,6 +53,16 @@ te:
           name: "స్పామ్"
       translations:
         title: "అనువాదాలు"
+        stats:
+          eta_minutes:
+            one: "ఒక నిమిషం"
+            other: "%{count} నిమిషాలు"
+          eta_hours:
+            one: "ఒక గంట"
+            other: "%{count} గంటలు"
+          eta_days:
+            one: "%{count} రోజు"
+            other: "%{count} రోజులు"
         progress_chart:
           bar_done:
             one: "%{count} పోస్ట్"

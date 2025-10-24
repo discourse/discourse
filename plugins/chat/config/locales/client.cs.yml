@@ -346,6 +346,8 @@ cs:
       chat_message_separator:
         today: Dnes
         yesterday: Včera
+      search_view:
+        filter_placeholder: Hledat ve zprávách
       members_view:
         filter_placeholder: Najít členy
         add_member: Přidat člena
@@ -362,6 +364,7 @@ cs:
         tabs:
           members: Členové
           settings: Nastavení
+          search: Vyhledat
         remove_member: "Smazat"
       new_message_modal:
         title: Odeslání zprávy
@@ -549,6 +552,11 @@ cs:
           create_export: "Vytvořit export"
           confirm_export: "Toto exportuje všechny zprávy ze všech kanálů a odešle vám výsledek v soukromé zprávě. Opravdu chcete exportovat?"
           export_has_started: "Export byl zahájen. Až bude hotový, obdržíte SZ."
+      search:
+        no_results: "Nenalezeny žádné výsledky"
+        sort:
+          relevance: "Relevance"
+          latest: "Nejnovější"
       my_threads:
         title: Moje vlákna
         aria_label: "Přepnout na můj seznam vláken"

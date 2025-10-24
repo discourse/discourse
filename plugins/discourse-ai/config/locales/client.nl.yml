@@ -277,6 +277,16 @@ nl:
         card: "Kaart"
       translations:
         title: "Vertalingen"
+        stats:
+          eta_minutes:
+            one: "%{count} minuut"
+            other: "%{count} minuten"
+          eta_hours:
+            one: "%{count} uur"
+            other: "%{count} uur"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dagen"
         progress_chart:
           bar_done:
             one: "%{count} bericht"
@@ -781,6 +791,7 @@ nl:
         cancel_streaming: "Stoppen met antwoorden"
         default_pm_prefix: "[Ongetitelde PB van AI-bot]"
         shortcut_title: "Start een PB met een AI-bot"
+        shortcut_link: "AI-bot"
         exit: "AI-bot afsluiten"
         share: "AI-conversatie kopiëren"
         conversation_shared: "Conversatie gekopieerd"

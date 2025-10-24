@@ -154,6 +154,8 @@ lt:
       chat_message_separator:
         today: Šiandien
         yesterday: Vakar
+      search_view:
+        filter_placeholder: Ieškoti žinučių
       about_view:
         title: Antraštė
         name: Vardas
@@ -163,6 +165,7 @@ lt:
         tabs:
           members: Nariai
           settings: Nustatymai
+          search: Paieška
         remove_member: "Pašalinti"
       new_message_modal:
         no_items: "Nėra elementų"
@@ -198,6 +201,11 @@ lt:
         members_label: "Nariai"
       admin:
         title: "Pokalbis"
+      search:
+        no_results: "Nerasta jokių rezultatų"
+        sort:
+          relevance: "Tinkamumas"
+          latest: "Naujausia"
       incoming_webhooks:
         back: "Atgal"
         description: "Aprašymas"
