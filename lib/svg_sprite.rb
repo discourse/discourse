@@ -95,6 +95,7 @@ module SvgSprite
         discourse-table
         discourse-text
         discourse-threads
+        discourse-chat-search
         discourse-add-translation
         download
         discourse-h1
