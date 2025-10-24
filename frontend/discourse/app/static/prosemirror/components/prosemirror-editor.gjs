@@ -117,6 +117,7 @@ export default class ProsemirrorEditor extends Component {
         appEvents: this.appEvents,
         dialog: this.dialog,
         replaceToolbar: this.args.replaceToolbar,
+        markdownOptions: this.args.markdownOptions,
         addGlimmerNodeView: (nodeView) => this.glimmerNodeViews.push(nodeView),
         removeGlimmerNodeView: (nodeView) =>
           this.glimmerNodeViews.splice(
