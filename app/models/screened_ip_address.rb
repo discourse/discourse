@@ -9,8 +9,12 @@ class ScreenedIpAddress < ActiveRecord::Base
 
   default_action :block
 
+  CACHE_EXPIRY_SECONDS = 120
+
   validates :ip_address, ip_address_format: true, presence: true
   after_validation :check_for_match, if: :will_save_change_to_ip_address?
+  after_destroy :clear_ip_cache
+  after_save :clear_ip_cache
 
   ROLLED_UP_BLOCKS = [
     # IPv4
@@ -82,8 +86,30 @@ class ScreenedIpAddress < ActiveRecord::Base
     order("masklen(ip_address) DESC").find_by("? <<= ip_address", ip_address)
   end
 
-  def self.should_block?(ip_address)
-    exists_for_ip_address_and_action?(ip_address, actions[:block])
+  def self.should_block?(ip_address, cached: false)
+    if cached
+      cache_key = "is-screened-ip-#{ip_address}"
+      cached_result = Discourse.redis.get(cache_key)
+
+      if cached_result.present?
+        is_blocked, cached_sequence = cached_result.split(",", 2)
+        current_sequence = Discourse.redis.get("screened-ip-sequence")
+
+        return is_blocked == "1" if cached_sequence == current_sequence
+      end
+
+      is_blocked = exists_for_ip_address_and_action?(ip_address, actions[:block])
+      current_sequence =
+        (Discourse.redis.set("screened-ip-sequence", "1", nx: true, get: true) || "1").to_i
+      Discourse.redis.setex(
+        cache_key,
+        CACHE_EXPIRY_SECONDS,
+        "#{is_blocked ? 1 : 0},#{current_sequence}",
+      )
+      is_blocked
+    else
+      exists_for_ip_address_and_action?(ip_address, actions[:block])
+    end
   end
 
   def self.is_allowed?(ip_address)
@@ -160,6 +186,12 @@ class ScreenedIpAddress < ActiveRecord::Base
           old_ips.delete_all
         end
     end
+  end
+
+  private
+
+  def clear_ip_cache
+    Discourse.redis.incr("screened-ip-sequence")
   end
 end
 
