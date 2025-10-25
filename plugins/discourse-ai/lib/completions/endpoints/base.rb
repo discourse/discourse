@@ -42,8 +42,9 @@ module DiscourseAi
           end
         end
 
-        def initialize(llm_model)
+        def initialize(llm_model, http_client: FinalDestination::HTTP)
           @llm_model = llm_model
+          @http_client = http_client
         end
 
         def enforce_max_output_tokens(value)
@@ -136,7 +137,7 @@ module DiscourseAi
           cancel_manager_callback = nil
           cancelled = false
 
-          FinalDestination::HTTP.start(
+          http_client.start(
             model_uri.host,
             model_uri.port,
             use_ssl: use_ssl?,
@@ -357,6 +358,8 @@ module DiscourseAi
         attr_reader :llm_model
 
         protected
+
+        attr_reader :http_client
 
         def tokenizer
           llm_model.tokenizer_class
