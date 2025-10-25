@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
