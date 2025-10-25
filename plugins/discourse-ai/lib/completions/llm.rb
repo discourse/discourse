@@ -300,13 +300,22 @@ module DiscourseAi
           @canned_llm = llm
           @prompts = []
           @prompt_options = []
+          @scripted_http = nil
 
           helper =
             case transport
             when :canned
               @canned_response = DiscourseAi::Completions::Endpoints::CannedResponse.new(responses)
             when :scripted_http
-              @scripted_http_plan_responses = Array.wrap(responses)
+              if @canned_llm.blank?
+                raise ArgumentError, "You need to provide the LlmModel in scripted_http mode."
+              end
+
+              @scripted_http =
+                DiscourseAi::Completions::Scripted::HttpClient.for(
+                  llm_model: @canned_llm,
+                  responses: responses,
+                )
             else
               raise ArgumentError, "Unknown transport #{transport}"
             end
@@ -316,7 +325,7 @@ module DiscourseAi
           # Don't leak prepared response if there's an exception.
           @canned_response = nil
           @canned_llm = nil
-          @scripted_http_plan_responses = nil
+          @scripted_http = nil
           @prompts = nil
         end
 
@@ -360,18 +369,12 @@ module DiscourseAi
           model_provider = llm_model.provider
           gateway_klass = DiscourseAi::Completions::Endpoints::Base.endpoint_for(model_provider)
 
-          if @scripted_http_plan_responses
+          if @scripted_http
             if @canned_llm && @canned_llm != model
               raise "Invalid call LLM call, expected #{@canned_llm} but got #{model}"
             end
 
-            scripted_http =
-              DiscourseAi::Completions::Scripted::HttpClient.for(
-                llm_model: llm_model,
-                responses: @scripted_http_plan_responses,
-              )
-
-            scripted_gateway = gateway_klass.new(llm_model, http_client: scripted_http)
+            scripted_gateway = gateway_klass.new(llm_model, http_client: @scripted_http)
             return new(dialect_klass, gateway_klass, llm_model, gateway: scripted_gateway)
           end
 

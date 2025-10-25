@@ -4,25 +4,32 @@ module DiscourseAi
   module Completions
     module Scripted
       class Response
-        attr_reader :code, :body
+        attr_reader :code
 
-        def initialize(body: nil, status: 200, streaming_mode: false)
+        def initialize(body: nil, status: 200, chunks: nil)
           @body = body
           @code = status.to_s
-          @streaming_mode = streaming_mode
+          @chunks = chunks
         end
 
         def read_body
-          if streaming_mode
-            body.to_a.each { |chunk| yield chunk }
+          if @chunks
+            @chunks.each { |chunk| yield chunk }
           else
-            body
+            if block_given?
+              yield @body
+            else
+              @body
+            end
           end
         end
 
-        private
+        def body
+          return @body if @body
+          return "" if !@chunks
 
-        attr_reader :streaming_mode
+          @chunks.join
+        end
       end
     end
   end

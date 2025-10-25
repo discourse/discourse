@@ -8,6 +8,8 @@ module DiscourseAi
           true
         end
 
+        private
+
         def build_response(request)
           @response_id = nil
 
@@ -27,8 +29,6 @@ module DiscourseAi
           end
         end
 
-        private
-
         def next_response
           raise ArgumentError, "No scripted responses remaining" if raw_responses.empty?
 
@@ -46,16 +46,27 @@ module DiscourseAi
         end
 
         def normalize_hash_response(response)
+          usage = response[:usage]
+
+          if (raw_chunks = response[:raw_stream])
+            normalized = { type: :raw_stream, raw_stream: Array.wrap(raw_chunks) }
+            normalized[:usage] = usage if usage
+            return normalized
+          end
+
           if (tool = response[:tool_call])
-            { type: :tool_calls, tool_calls: [normalize_tool_call(tool)] }
+            normalized = { type: :tool_calls, tool_calls: [normalize_tool_call(tool)] }
           elsif (tools = response[:tool_calls])
             raise ArgumentError, "tool_calls array cannot be empty" if tools.blank?
             normalized = tools.map { |tool_hash| normalize_tool_call(tool_hash) }
-            { type: :tool_calls, tool_calls: normalized }
+            normalized = { type: :tool_calls, tool_calls: normalized }
           else
             raise ArgumentError,
                   "Supported hash responses must include :tool_call or :tool_calls key. Got: #{response.keys.inspect}"
           end
+
+          normalized[:usage] = usage if usage
+          normalized
         end
 
         def normalize_tool_call(tool_hash)
@@ -79,9 +90,11 @@ module DiscourseAi
         def standard_response(response, payload)
           case response[:type]
           when :message
-            build_standard_message(response[:content], payload)
+            build_standard_message(response, payload)
           when :tool_calls
-            raise ArgumentError, "Tool calls is only supported on streaming mode."
+            build_standard_tool_calls(response, payload)
+          when :raw_stream
+            Response.new(body: Array.wrap(response[:raw_stream]).join)
           else
             raise ArgumentError, "Unknown scripted response type: #{response[:type]}"
           end
@@ -90,28 +103,70 @@ module DiscourseAi
         def stream_response(response, payload)
           case response[:type]
           when :message
-            build_streaming_message(response[:content], payload)
+            build_streaming_message(response, payload)
           when :tool_calls
-            build_streaming_tool_calls(response[:tool_calls], payload)
+            build_streaming_tool_calls(response, payload)
+          when :raw_stream
+            Response.new(chunks: Array.wrap(response[:raw_stream]))
           else
             raise ArgumentError, "Unknown scripted response type: #{response[:type]}"
           end
         end
 
-        def build_standard_message(content, payload)
+        def build_standard_message(response, payload)
+          content = response[:content]
+          usage = response[:usage] || usage_for_length(content.length, content, payload)
           response_body = {
             id: response_id,
             object: "chat.completion",
             choices: [
               { index: 0, finish_reason: "stop", message: { role: "assistant", content: content } },
             ],
-            usage: usage_for_length(content.length, payload),
+            usage: usage,
           }
 
           Response.new(body: response_body.to_json)
         end
 
-        def build_streaming_message(content, payload)
+        def build_standard_tool_calls(response, payload)
+          tool_calls = response[:tool_calls]
+          formatted =
+            tool_calls.map do |tool|
+              {
+                id: tool[:id],
+                type: "function",
+                function: {
+                  name: tool[:name],
+                  arguments: tool[:arguments],
+                },
+              }
+            end
+
+          total_length = tool_calls.sum { |tool| tool[:arguments].length }
+          usage = response[:usage] || usage_for_length(total_length, tool_calls.to_s, payload)
+
+          response_body = {
+            id: response_id,
+            object: "chat.completion",
+            choices: [
+              {
+                index: 0,
+                finish_reason: "tool_calls",
+                message: {
+                  role: "assistant",
+                  content: nil,
+                  tool_calls: formatted,
+                },
+              },
+            ],
+            usage: usage,
+          }
+
+          Response.new(body: response_body.to_json)
+        end
+
+        def build_streaming_message(response, payload)
+          content = response[:content]
           model = payload[:model] || "scripted-model"
           chunks = []
 
@@ -120,19 +175,15 @@ module DiscourseAi
           stream_chunks_for(content).each do |piece|
             chunks << sse_chunk(model, delta: { content: piece })
           end
+          usage = response[:usage] || usage_for_length(content.length, content, payload)
 
-          chunks << sse_chunk(
-            model,
-            delta: {
-            },
-            finish_reason: "stop",
-            usage: usage_for_length(content.length, payload),
-          )
+          chunks << sse_chunk(model, delta: {}, finish_reason: "stop", usage: usage)
 
-          Response.new(body: chunks, streaming_mode: true)
+          Response.new(chunks: chunks)
         end
 
-        def build_streaming_tool_calls(tool_calls, payload)
+        def build_streaming_tool_calls(response, payload)
+          tool_calls = response[:tool_calls]
           model = payload[:model] || "scripted-model"
           chunks = []
 
@@ -156,15 +207,11 @@ module DiscourseAi
           end
 
           total_length = tool_calls.sum { |tool| tool[:arguments].length }
-          chunks << sse_chunk(
-            model,
-            delta: {
-            },
-            finish_reason: "stop",
-            usage: usage_for_length(total_length, payload),
-          )
+          usage = response[:usage] || usage_for_length(total_length, tool_calls.to_s, payload)
 
-          Response.new(body: chunks, streaming_mode: true)
+          chunks << sse_chunk(model, delta: {}, finish_reason: "tool_calls", usage: usage)
+
+          Response.new(chunks: chunks)
         end
 
         def stream_chunks_for(content)
@@ -209,8 +256,12 @@ module DiscourseAi
           "data: #{payload.to_json}\n\n"
         end
 
-        def usage_for_length(length, _payload)
-          { prompt_tokens: 0, completion_tokens: length, total_tokens: length }
+        def usage_for_length(length, content, _payload)
+          {
+            prompt_tokens: length,
+            completion_tokens: llm_model.tokenizer_class.size(content),
+            total_tokens: length,
+          }
         end
 
         def response_id

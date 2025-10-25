@@ -12,7 +12,7 @@ module DiscourseAi
             raise ArgumentError, "Scripted::Http does not support provider #{llm_model.provider}"
           end
 
-          strategy = strategy_class.new(Array.wrap(responses).dup)
+          strategy = strategy_class.new(Array.wrap(responses).dup, llm_model)
           new(strategy)
         end
 
@@ -24,6 +24,13 @@ module DiscourseAi
 
         def start(_host, _port, use_ssl:, read_timeout:, open_timeout:, write_timeout:)
           yield strategy
+        end
+
+        def last_request
+          if strategy.nil? || strategy.last_request.nil?
+            raise "No scripted HTTP interaction recorded"
+          end
+          JSON.parse(strategy.last_request.body)
         end
       end
     end
