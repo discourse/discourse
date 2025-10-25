@@ -30,6 +30,7 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
+import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 
@@ -54,7 +55,6 @@ const tonableEmojiUrl = (emoji, scale) => {
 
 export default class EmojiPicker extends Component {
   @service emojiStore;
-  @service capabilities;
   @service site;
 
   @tracked isFiltering = false;
@@ -165,15 +165,6 @@ export default class EmojiPicker extends Component {
       value,
       INPUT_DELAY
     );
-  }
-
-  @action
-  focusFilter(target) {
-    if (this.capabilities.isIOS) {
-      return;
-    }
-
-    target?.focus({ preventScroll: true });
   }
 
   debouncedDidInputFilter(filter = "") {
@@ -333,7 +324,6 @@ export default class EmojiPicker extends Component {
     this.addVisibleSections(this._getSectionsUpTo(section));
     this.lastVisibleSection = section;
 
-    // iOS hack to avoid blank div when requesting section during momentum
     if (this.scrollableNode && this.capabilities.isIOS) {
       this.scrollableNode.style.overflow = "hidden";
     }
@@ -344,7 +334,6 @@ export default class EmojiPicker extends Component {
           `.emoji-picker__section[data-section="${section}"]`
         );
         targetEmoji.scrollIntoView({ block: "nearest" });
-
         // iOS hack to avoid blank div when requesting section during momentum
         if (this.scrollableNode && this.capabilities.isIOS) {
           this.scrollableNode.style.overflow = "scroll";
@@ -460,7 +449,7 @@ export default class EmojiPicker extends Component {
           @name="emoji-picker-filter-container"
           @outletArgs={{lazyHash
             term=this.term
-            focusFilter=this.focusFilter
+            focusFilter=(noop)
             registerFilterInput=this.registerFilterInput
             didInputFilter=this.didInputFilter
             context=@context
@@ -468,7 +457,7 @@ export default class EmojiPicker extends Component {
           }}
         >
           <FilterInput
-            {{didInsert this.focusFilter}}
+            {{preventScrollOnFocus}}
             {{didInsert this.registerFilterInput}}
             @value={{this.term}}
             @filterAction={{withEventValue this.didInputFilter}}
