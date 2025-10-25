@@ -23,10 +23,9 @@ module DiscourseAi
           )
         end
 
-        totals = DiscourseAi::Translation::PostCandidates.get_total_and_with_locale_count
-        progress = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
+        data = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
 
-        render json: base_result.merge(totals.merge(translation_progress: progress))
+        render json: base_result.merge(data)
       end
 
       private

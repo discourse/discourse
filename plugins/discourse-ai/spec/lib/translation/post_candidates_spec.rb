@@ -70,15 +70,18 @@ describe DiscourseAi::Translation::PostCandidates do
       Post.delete_all
 
       result = DiscourseAi::Translation::PostCandidates.get_completion_all_locales
-      expect(result.length).to eq(3)
-      expect(result).to all(include(done: 0, total: 0))
+      expect(result).to be_a(Hash)
+      expect(result[:translation_progress].length).to eq(3)
+      expect(result[:translation_progress]).to all(include(done: 0, total: 0))
+      expect(result[:total]).to eq(0)
+      expect(result[:posts_with_detected_locale]).to eq(0)
     end
 
     it "returns progress grouped by base locale (of en_GB) and correct totals" do
       post1 = Fabricate(:post, locale: "en_GB")
       post2 = Fabricate(:post, locale: "fr")
       post3 = Fabricate(:post, locale: "es")
-      Fabricate(:post, locale: nil) # not eligible
+      post_without_locale = Fabricate(:post, locale: nil) # not eligible for translation
 
       # add an en_GB localization to a non-en base post
       PostLocalization.create!(
@@ -91,27 +94,31 @@ describe DiscourseAi::Translation::PostCandidates do
       )
 
       result = DiscourseAi::Translation::PostCandidates.completion_all_locales
-      expect(result.length).to eq(3)
+      expect(result).to be_a(Hash)
+      expect(result[:translation_progress].length).to eq(3)
+      expect(result[:total]).to eq(4) # all eligible posts (including one without locale)
+      expect(result[:posts_with_detected_locale]).to eq(3) # only posts with locale
 
-      expect(result).to all(include(:locale, :done, :total))
+      progress = result[:translation_progress]
+      expect(progress).to all(include(:locale, :done, :total))
 
-      expect(result.first[:locale]).to eq("en_GB")
+      expect(progress.first[:locale]).to eq("en_GB")
 
-      en_entry = result.find { |r| r[:locale] == "en_GB" }
+      en_entry = progress.find { |r| r[:locale] == "en_GB" }
       expect(en_entry).to be_present
       # total is non-English posts (post2 + post3)
       expect(en_entry[:done]).to eq(1)
       expect(en_entry[:total]).to eq(2)
 
-      pt_entry = result.find { |r| r[:locale] == "pt" }
+      pt_entry = progress.find { |r| r[:locale] == "pt" }
       expect(pt_entry).to be_present
       expect(pt_entry[:done]).to eq(0)
       expect(pt_entry[:total]).to eq(3)
-      es_entry = result.find { |r| r[:locale] == "es" }
+      es_entry = progress.find { |r| r[:locale] == "es" }
       expect(es_entry).to be_present
       expect(es_entry[:done]).to eq(0)
       expect(es_entry[:total]).to eq(2)
-      fr_entry = result.find { |r| r[:locale] == "fr" }
+      fr_entry = progress.find { |r| r[:locale] == "fr" }
       expect(fr_entry).to be_nil
     end
   end
