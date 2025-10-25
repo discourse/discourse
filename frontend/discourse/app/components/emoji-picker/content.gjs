@@ -30,6 +30,7 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
+import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
@@ -449,6 +450,7 @@ export default class EmojiPicker extends Component {
         >
           <FilterInput
             {{preventScrollOnFocus}}
+            {{autoFocus}}
             {{didInsert this.registerFilterInput}}
             @value={{this.term}}
             @filterAction={{withEventValue this.didInputFilter}}
