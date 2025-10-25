@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -86,15 +85,19 @@ export default class PostTextSelection extends Component {
 
   @bind
   async toggleFastEdit(quoteState, supportsFastEdit) {
+    // store the post we want to edit at this point to avoid any
+    // other action to change its value until toggleFastEdit is complete
+    const post = this.post;
+
     if (supportsFastEdit) {
       this.modal.show(FastEditModal, {
         model: {
           initialValue: quoteState.buffer,
-          post: this.post,
+          post,
         },
       });
     } else {
-      const result = await ajax(`/posts/${this.post.id}`);
+      const result = await ajax(`/posts/${post.id}`);
 
       if (this.isDestroying || this.isDestroyed) {
         return;
@@ -117,7 +120,7 @@ export default class PostTextSelection extends Component {
         }
       });
 
-      this.args.editPost(this.post);
+      this.args.editPost(post);
 
       document
         .querySelector("#reply-control")
@@ -146,10 +149,12 @@ export default class PostTextSelection extends Component {
 
   @bind
   async showToolbar(cooked) {
+    const shouldRenderBelow = this.shouldRenderBelow();
     const quoteState = this.computeQuoteState(cooked);
 
     let offset = 3;
-    if (this.shouldRenderUnder) {
+
+    if (shouldRenderBelow) {
       // on mobile, we ideally want to show the toolbar at the end of the selection
       offset = 20;
 
@@ -171,10 +176,8 @@ export default class PostTextSelection extends Component {
       identifier: "post-text-selection-toolbar",
       component: PostTextSelectionToolbar,
       inline: true,
-      placement: this.shouldRenderUnder ? "bottom-start" : "top-start",
-      fallbackPlacements: this.shouldRenderUnder
-        ? ["bottom-end", "top-start"]
-        : ["bottom-start"],
+      placement: shouldRenderBelow ? "bottom-start" : "top-start",
+      fallbackPlacements: shouldRenderBelow ? ["bottom-end"] : ["top-end"],
       offset,
       trapTab: false,
       closeOnScroll: false,
@@ -272,12 +275,28 @@ export default class PostTextSelection extends Component {
 
   // on Desktop, shows the bar at the beginning of the selection
   // on Mobile, shows the bar at the end of the selection
-  @cached
-  get shouldRenderUnder() {
+  shouldRenderBelow() {
     const { isIOS, isAndroid, isOpera, isFirefox, touch } = this.capabilities;
+
+    if (isIOS) {
+      const rect = virtualElementFromTextRange().rect;
+      const spaceAbove = rect.top;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const safeAreaInset =
+        parseInt(
+          getComputedStyle(document.documentElement)
+            .getPropertyValue("--safe-area-inset-bottom")
+            .trim(),
+          10
+        ) || 0;
+
+      // if we have more space above, ios will render its callout above
+      // so we should render ours, below
+      return spaceAbove >= spaceBelow - safeAreaInset;
+    }
+
     return (
       this.capabilities.isMobileDevice ||
-      isIOS ||
       isAndroid ||
       isOpera ||
       (touch && isFirefox)
