@@ -98,8 +98,13 @@ module Service
         steps << ModelStep.new(name, step_name, optional:)
       end
 
-      def params(name = :default, default_values_from: nil, &block)
-        contract_class = Class.new(Service::ContractBase).tap { _1.class_eval(&block) }
+      def params(
+        name = :default,
+        default_values_from: nil,
+        base_class: Service::ContractBase,
+        &block
+      )
+        contract_class = Class.new(base_class).tap { _1.class_eval(&block) if block }
         const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
         steps << ContractStep.new(name, class_name: contract_class, default_values_from:)
       end
@@ -241,7 +246,11 @@ module Service
       def run_step
         attributes = class_name.attribute_names.map(&:to_sym)
         default_values = {}
-        default_values = context[default_values_from].slice(*attributes) if default_values_from
+        default_values =
+          (
+            context[default_values_from].try(:attributes).try(:with_indifferent_access) ||
+              context[default_values_from]
+          ).slice(*attributes) if default_values_from
         contract =
           class_name.new(
             **default_values.merge(context[:params].slice(*attributes)),
