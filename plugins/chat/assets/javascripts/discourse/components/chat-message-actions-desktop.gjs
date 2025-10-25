@@ -71,13 +71,13 @@ export default class ChatMessageActionsDesktop extends Component {
       placement: "top-end",
       strategy: "fixed",
       middleware: [
-        flip({
-          boundary,
-          fallbackPlacements: ["bottom-end"],
-        }),
         offset({
           mainAxis: MSG_ACTIONS_VERTICAL_PADDING,
           crossAxis: -2,
+        }),
+        flip({
+          boundary,
+          fallbackPlacements: ["bottom-end"],
         }),
         hide({ strategy: "referenceHidden" }),
         hide({ strategy: "escaped" }),
