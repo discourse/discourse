@@ -258,20 +258,12 @@ describe "Composer Form Templates", type: :system do
       expect(composer).to be_closed
     end
 
-    context "when the default template has a topic template" do
-      let(:default_category) { Category.find(SiteSetting.default_composer_category) }
+    context "when the default category has a topic template" do
+      let(:default_category) { Fabricate(:category) }
 
       before do
-        SiteSetting.default_composer_category =
-          (
-            if SiteSetting.general_category_id != -1
-              SiteSetting.general_category_id
-            else
-              SiteSetting.uncategorized_category_id
-            end
-          )
-
         default_category.update!(topic_template: "Testing")
+        SiteSetting.default_composer_category = default_category.id
       end
 
       it "does not show the modal if there is no draft" do
