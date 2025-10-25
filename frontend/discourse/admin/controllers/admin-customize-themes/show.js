@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { match } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
@@ -75,7 +76,7 @@ export default class AdminCustomizeThemesShowController extends Controller {
         const model = this.model;
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
-          this.allThemes.removeObject(model);
+          removeValueFromArray(this.allThemes, model);
           this.router.transitionTo("adminConfig.customize.themes");
         });
       },

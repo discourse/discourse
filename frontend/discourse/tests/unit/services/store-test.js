@@ -80,13 +80,13 @@ module("Unit | Service | store", function (hooks) {
   test("find with object id", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", { id: 123 });
-    assert.strictEqual(widget.firstObject.name, "Trout Lure");
+    assert.strictEqual(widget.content[0].name, "Trout Lure");
   });
 
   test("find with query param", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const widget = await store.find("widget", { name: "Trout Lure" });
-    assert.strictEqual(widget.firstObject.id, 123);
+    assert.strictEqual(widget.content[0].id, 123);
   });
 
   test("findStale with no stale results", async function (assert) {
@@ -98,7 +98,7 @@ module("Unit | Service | store", function (hooks) {
 
     const widget = await stale.refresh();
     assert.strictEqual(
-      widget.firstObject.id,
+      widget.content[0].id,
       123,
       "a `refresh()` method provides results for stale"
     );
@@ -145,9 +145,9 @@ module("Unit | Service | store", function (hooks) {
   test("findAll", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const result = await store.findAll("widget");
-    assert.strictEqual(result.length, 2);
+    assert.strictEqual(result.content.length, 2);
 
-    const widget = result.find((item) => item.id === 124);
+    const widget = result.content.find((item) => item.id === 124);
     assert.false(widget.isNew, "found records are not new");
     assert.strictEqual(widget.name, "Evil Repellant");
   });
@@ -203,10 +203,10 @@ module("Unit | Service | store", function (hooks) {
   test("findAll embedded", async function (assert) {
     const store = getOwner(this).lookup("service:store");
     const fruits = await store.findAll("fruit");
-    assert.strictEqual(fruits.objectAt(0).farmer.name, "Old MacDonald");
+    assert.strictEqual(fruits.content[0].farmer.name, "Old MacDonald");
     assert.strictEqual(
-      fruits.objectAt(0).farmer,
-      fruits.objectAt(1).farmer,
+      fruits.content[0].farmer,
+      fruits.content[1].farmer,
       "points at the same object"
     );
     assert.strictEqual(
@@ -215,12 +215,12 @@ module("Unit | Service | store", function (hooks) {
       "it can supply extra information"
     );
 
-    const fruitCols = fruits.objectAt(0).colors;
+    const fruitCols = fruits.content[0].colors;
     assert.strictEqual(fruitCols.length, 2);
     assert.strictEqual(fruitCols[0].id, 1);
     assert.strictEqual(fruitCols[1].id, 2);
 
-    assert.strictEqual(fruits.objectAt(2).farmer.name, "Luke Skywalker");
+    assert.strictEqual(fruits.content[2].farmer.name, "Luke Skywalker");
   });
 
   test("custom primaryKey", async function (assert) {
@@ -237,7 +237,7 @@ module("Unit | Service | store", function (hooks) {
 
     const store = getOwner(this).lookup("service:store");
     const users = await store.findAll("user");
-    assert.strictEqual(users.objectAt(0).username, "souna");
+    assert.strictEqual(users.content[0].username, "souna");
   });
 
   test("findFiltered", async function (assert) {

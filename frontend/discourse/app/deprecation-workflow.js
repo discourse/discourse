@@ -250,6 +250,11 @@ const DeprecationWorkflow = new DiscourseDeprecationWorkflow([
   { handler: "silence", matchId: "template-action" }, // will be removed in Ember 6.0
   { handler: "silence", matchId: "discourse.select-kit" },
   {
+    handler: "throw",
+    matchId: "discourse.legacy-array-like-object.proxied-array",
+    env: ["test"],
+  },
+  {
     handler: "silence",
     matchId: "discourse.decorate-widget.hamburger-widget-links",
   },

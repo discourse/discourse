@@ -63,7 +63,7 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
   @action
   didInsertTag(element) {
     const tagName = element.dataset.tagName;
-    const lastTagName = this.tags.content[this.tags.content.length - 1].name;
+    const lastTagName = this.tags.content.at(-1).name;
 
     if (tagName === lastTagName) {
       if (this.observer) {
@@ -192,7 +192,7 @@ export default class SidebarEditNavigationMenuTagsModal extends Component {
         {{loadingSpinner size="large"}}
       {{else}}
         <form class="sidebar-tags-form">
-          {{#each this.tags as |tag|}}
+          {{#each this.tags.content as |tag|}}
             <div
               {{didInsert this.didInsertTag}}
               data-tag-name={{tag.name}}

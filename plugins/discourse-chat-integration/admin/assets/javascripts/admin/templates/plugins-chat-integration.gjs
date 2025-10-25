@@ -11,7 +11,7 @@ export default RouteTemplate(
       <div class="admin-controls">
         <div class="admin-controls-chat-providers">
           <ul class="nav nav-pills">
-            {{#each @controller.model as |provider|}}
+            {{#each @controller.model.content as |provider|}}
               <NavItem
                 @route="adminPlugins.chat-integration.provider"
                 @routeParam={{provider.name}}

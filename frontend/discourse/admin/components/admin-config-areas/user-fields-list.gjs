@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import AdminUserFieldItem from "admin/components/admin-user-field-item";
@@ -59,7 +60,7 @@ export default class AdminConfigAreasUserFieldsList extends Component {
   async #deleteField(field) {
     try {
       await field.destroyRecord();
-      this.fields.removeObject(field);
+      removeValueFromArray(this.fields, field);
       this.toasts.success({
         duration: "short",
         data: {

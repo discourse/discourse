@@ -19,7 +19,7 @@ export default class AdminCustomizeThemesShowIndexRoute extends DiscourseRoute {
     controller.setProperties({
       model,
       parentController,
-      allThemes: parentController.get("model"),
+      allThemes: parentController.model.content,
       colorSchemeId: model.get("color_scheme_id"),
       darkColorSchemeId: model.get("dark_color_scheme_id"),
       colorSchemes: parentController.get("model.extras.color_schemes"),

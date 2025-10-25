@@ -8,8 +8,7 @@ export default class TagGroupsNewController extends Controller {
 
   @action
   onSave() {
-    const tagGroups = this.tagGroups.model;
-    tagGroups.pushObject(this.model);
+    this.tagGroups.model.content.push(this.model);
 
     this.router.transitionTo("tagGroups.index");
   }

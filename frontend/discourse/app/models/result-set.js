@@ -1,46 +1,51 @@
-import ArrayProxy from "@ember/array/proxy";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import { Promise } from "rsvp";
-import discourseComputed from "discourse/lib/decorators";
+import { dependentKeyCompat } from "@ember/object/compat";
+import LegacyArrayLikeObject from "discourse/lib/legacy-array-like-object";
 
-export default class ResultSet extends ArrayProxy {
-  loading = false;
-  loadingMore = false;
-  totalRows = 0;
-  refreshing = false;
-  content = null;
-  loadMoreUrl = null;
-  refreshUrl = null;
-  findArgs = null;
+export default class ResultSet extends LegacyArrayLikeObject {
+  @tracked extras;
+  @tracked findArgs;
+  @tracked loadMoreUrl = null;
+  @tracked loading = false;
+  @tracked loadingMore = false;
+  @tracked refreshUrl = null;
+  @tracked refreshing = false;
+  @tracked resultSetMeta;
+  @tracked totalRows = 0;
   store = null;
-  resultSetMeta = null;
-  __type = null;
+  __type;
 
-  @discourseComputed("totalRows", "length")
-  canLoadMore(totalRows, length) {
-    return length < totalRows;
+  get warnContext() {
+    return "__type: " + this.__type;
+  }
+
+  @dependentKeyCompat
+  get canLoadMore() {
+    return this.content.length < this.totalRows;
   }
 
   @action
-  loadMore() {
+  async loadMore() {
     const loadMoreUrl = this.loadMoreUrl;
     if (!loadMoreUrl) {
       return;
     }
 
     const totalRows = this.totalRows;
-    if (this.length < totalRows && !this.loadingMore) {
-      this.set("loadingMore", true);
+    if (this.content.length < totalRows && !this.loadingMore) {
+      this.loadingMore = true;
 
-      return this.store
-        .appendResults(this, this.__type, loadMoreUrl)
-        .finally(() => this.set("loadingMore", false));
+      try {
+        return await this.store.appendResults(this, this.__type, loadMoreUrl);
+      } finally {
+        this.loadingMore = false;
+      }
     }
-
-    return Promise.resolve();
   }
 
-  refresh() {
+  @action
+  async refresh() {
     if (this.refreshing) {
       return;
     }
@@ -50,9 +55,11 @@ export default class ResultSet extends ArrayProxy {
       return;
     }
 
-    this.set("refreshing", true);
-    return this.store
-      .refreshResults(this, this.__type, refreshUrl)
-      .finally(() => this.set("refreshing", false));
+    this.refreshing = true;
+    try {
+      return await this.store.refreshResults(this, this.__type, refreshUrl);
+    } finally {
+      this.refreshing = false;
+    }
   }
 }

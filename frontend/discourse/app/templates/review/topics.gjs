@@ -9,7 +9,7 @@ import { i18n } from "discourse-i18n";
 
 export default RouteTemplate(
   <template>
-    {{#if @controller.reviewableTopics}}
+    {{#if @controller.reviewableTopics.content}}
       <table class="reviewable-topics">
         <thead>
           <th>{{i18n "review.topics.topic"}} </th>
@@ -18,7 +18,7 @@ export default RouteTemplate(
           <th></th>
         </thead>
         <tbody>
-          {{#each @controller.reviewableTopics as |rt|}}
+          {{#each @controller.reviewableTopics.content as |rt|}}
             <tr class="reviewable-topic">
               <td class="topic-title">
                 <div class="combined-title">

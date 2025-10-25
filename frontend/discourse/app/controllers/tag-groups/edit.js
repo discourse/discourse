@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 
 export default class TagGroupsEditController extends Controller {
   @service router;
@@ -8,8 +9,7 @@ export default class TagGroupsEditController extends Controller {
 
   @action
   onDestroy() {
-    const tagGroups = this.tagGroups.model;
-    tagGroups.removeObject(this.model);
+    removeValueFromArray(this.tagGroups.model.content, this.model);
 
     this.router.transitionTo("tagGroups.index");
   }

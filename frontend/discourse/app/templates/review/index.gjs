@@ -75,10 +75,10 @@ export default RouteTemplate(
     {{/if}}
     <div class="reviewable-container">
       <div class="reviewable-list">
-        {{#if @controller.reviewables}}
+        {{#if @controller.reviewables.content}}
           <LoadMore @action={{@controller.loadMore}}>
             <div class="reviewables">
-              {{#each @controller.reviewables as |r|}}
+              {{#each @controller.reviewables.content as |r|}}
                 <ReviewableItem
                   @reviewable={{r}}
                   @remove={{@controller.remove}}

@@ -91,6 +91,39 @@ export default class LegacyArrayLikeObject extends EmberObject {
     return object;
   }
 
+  /**
+   * Emits a deprecation warning for direct array property access.
+   *
+   * @param {LegacyArrayLikeObject} instance - The instance of LegacyArrayLikeObject (or subclass) being accessed
+   * @param {string|number|symbol} prop - The property being accessed on the instance
+   * @private
+   * @example
+   * // Will warn about accessing array methods directly:
+   * const obj = CustomArrayLike.create({ content: [1,2,3] });
+   * obj[0]; // Triggers deprecation warning
+   * obj.push(4); // Triggers deprecation warning
+   *
+   * // Should use content instead:
+   * obj.content[0]; // Correct usage
+   * obj.content.push(4); // Correct usage
+   */
+  static warnArrayDeprecation(instance, prop) {
+    const instanceName = instance.constructor.name;
+    const propName = isNumericIndexProp(prop)
+      ? `[${prop}]`
+      : `.${prop.toString()}`;
+
+    deprecated(
+      `Accessing \`(${instanceName} instance)${propName}\` directly is deprecated. ` +
+        (instance.warnContext ? `${instance.warnContext}\n` : "\n") +
+        `Access the array directly via \`.content\` instead. \n\n` +
+        `For example, use \`(${instanceName} instance).content${propName}\` instead of \`(${instanceName} instance)${propName}\`.`,
+      {
+        id: "discourse.legacy-array-like-object.proxied-array",
+      }
+    );
+  }
+
   #content;
 
   /**
@@ -121,6 +154,16 @@ export default class LegacyArrayLikeObject extends EmberObject {
       content instanceof TrackedArray ? content : new TrackedArray(content);
 
     return createProxy(this, this.#content);
+  }
+
+  /**
+   * Context string to add to array access deprecation warnings.
+   * To be overridden by subclasses to provide additional context.
+   *
+   * @returns {string|undefined} The warning context string
+   */
+  get warnContext() {
+    // to be overridden by subclasses
   }
 }
 
@@ -166,25 +209,6 @@ function isNumericIndexProp(prop) {
 }
 
 /**
- * Emits a deprecation warning for direct array property access.
- *
- * @param {string} instanceName - The name of the instance's constructor.
- * @param {string|number|symbol} prop - The property being accessed.
- * @param {boolean} [isIndex=false] - Whether the property is a numeric index.
- */
-function warnArrayDeprecation(instanceName, prop, isIndex = false) {
-  const propName = isIndex ? `[${prop}]` : `.${prop.toString()}`;
-  deprecated(
-    `Accessing \`(${instanceName} instance)${propName}\` directly is deprecated. ` +
-      `Access the array directly via \`.content\` instead. ` +
-      `For example, use \`(${instanceName} instance).content${propName}\` instead of \`(${instanceName} instance)${propName}\`.`,
-    {
-      id: "discourse.legacy-array-like-object.proxied-array",
-    }
-  );
-}
-
-/**
  * Creates a proxy that intercepts property access, forwarding instance properties to the LegacyArrayLikeObject
  * and array properties to the underlying array.
  * Emits deprecation warnings for direct array property access.
@@ -194,8 +218,6 @@ function warnArrayDeprecation(instanceName, prop, isIndex = false) {
  * @returns {Proxy} Proxy object that combines instance and array behaviors.
  */
 function createProxy(instance, trackedItems) {
-  const instanceName = instance.constructor.name;
-
   return new Proxy(trackedItems, {
     get(target, prop, receiver) {
       if (prop === "content") {
@@ -207,7 +229,7 @@ function createProxy(instance, trackedItems) {
       }
 
       if (isArrayProperty(prop) || isNumericIndexProp(prop)) {
-        warnArrayDeprecation(instanceName, prop, isNumericIndexProp(prop));
+        instance.constructor.warnArrayDeprecation(instance, prop);
       }
 
       return Reflect.get(target, prop, receiver);
@@ -216,7 +238,7 @@ function createProxy(instance, trackedItems) {
     set(target, prop, value, receiver) {
       if (prop === "content") {
         throw new Error(
-          `You cannot override the content property of an ${instanceName}, mutate the array instead.`
+          `${instance.constructor.name}: You cannot override the \`content\` property, mutate the array instead.`
         );
       }
 
@@ -225,7 +247,7 @@ function createProxy(instance, trackedItems) {
       }
 
       if (isArrayProperty(prop) || isNumericIndexProp(prop)) {
-        warnArrayDeprecation(instanceName, prop, isNumericIndexProp(prop));
+        instance.constructor.warnArrayDeprecation(instance, prop);
       }
 
       return Reflect.set(target, prop, value, receiver);

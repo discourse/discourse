@@ -104,7 +104,9 @@ export default class WebhookEvents extends Component {
     }
 
     if (data.type === "redelivered") {
-      const event = this.events.find((e) => e.id === data.web_hook_event.id);
+      const event = this.events.content.find(
+        (e) => e.id === data.web_hook_event.id
+      );
 
       event.setProperties({
         response_body: data.web_hook_event.response_body,
@@ -116,7 +118,9 @@ export default class WebhookEvents extends Component {
     }
 
     if (data.type === "redelivery_failed") {
-      const event = this.events.find((e) => e.id === data.web_hook_event_id);
+      const event = this.events.content.find(
+        (e) => e.id === data.web_hook_event_id
+      );
       event.set("redelivering", false);
       return;
     }
@@ -138,7 +142,7 @@ export default class WebhookEvents extends Component {
     const objects = data.map((webhookEvent) =>
       this.store.createRecord("web-hook-event", webhookEvent)
     );
-    this.events.unshiftObjects(objects);
+    this.events.content.unshift(...objects);
     this.incomingEventIds = [];
   }
 
@@ -181,7 +185,7 @@ export default class WebhookEvents extends Component {
           );
           if (response.event_ids?.length) {
             response.event_ids.map((id) => {
-              const event = this.events.find((e) => e.id === id);
+              const event = this.events.content.find((e) => e.id === id);
               event.set("redelivering", true);
             });
           } else {
@@ -230,7 +234,7 @@ export default class WebhookEvents extends Component {
         />
       </div>
 
-      {{#if this.events}}
+      {{#if this.events.content}}
         <LoadMore @action={{this.loadMore}}>
           <div class="web-hook-events content-list">
             <div class="heading-container">
@@ -266,7 +270,7 @@ export default class WebhookEvents extends Component {
             {{/if}}
 
             <ul>
-              {{#each this.events as |event|}}
+              {{#each this.events.content as |event|}}
                 <WebhookEvent @event={{event}} />
               {{/each}}
             </ul>

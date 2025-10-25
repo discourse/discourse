@@ -8,7 +8,7 @@ export default class AdminPluginsChatIntegrationIndex extends DiscourseRoute {
     if (model.totalRows > 0) {
       this.router.transitionTo(
         "adminPlugins.chat-integration.provider",
-        model.get("firstObject").name
+        model.content[0].name
       );
     }
   }

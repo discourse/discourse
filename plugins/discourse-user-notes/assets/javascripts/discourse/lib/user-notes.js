@@ -8,7 +8,7 @@ export async function showUserNotes(store, userId, callback, opts = {}) {
 
   await modal.show(UserNotesModal, {
     model: {
-      note: model,
+      note: model.content,
       userId,
       callback,
       postId: opts.postId,

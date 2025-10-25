@@ -61,7 +61,7 @@ export default RouteTemplate(
         </div>
       {{/if}}
 
-      {{#if @controller.model.length}}
+      {{#if @controller.model.content.length}}
         <ConditionalLoadingSpinner @condition={{@controller.loading}} />
 
         <div class="container">

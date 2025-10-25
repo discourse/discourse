@@ -1020,7 +1020,7 @@ createWidget("post-article", {
       return this.store
         .find("post-reply-history", { postId: this.attrs.id })
         .then((posts) => {
-          posts.forEach((post) => {
+          posts.content.forEach((post) => {
             this.state.repliesAbove.push(
               transformWithCallbacks(post, topicUrl, this.store)
             );

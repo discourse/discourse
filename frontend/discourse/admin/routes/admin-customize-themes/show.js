@@ -10,7 +10,7 @@ export default class AdminCustomizeThemesShowRoute extends DiscourseRoute {
 
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
-    const model = all.find(
+    const model = all.content.find(
       (value) => value.id === parseInt(params.theme_id, 10)
     );
     if (model) {
@@ -24,7 +24,7 @@ export default class AdminCustomizeThemesShowRoute extends DiscourseRoute {
     super.setupController(...arguments);
 
     const parentController = this.controllerFor("adminCustomizeThemes");
-    controller.set("allThemes", parentController.get("model"));
+    controller.set("allThemes", parentController.model.content);
   }
 
   titleToken() {
