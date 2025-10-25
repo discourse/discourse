@@ -4293,6 +4293,7 @@ en:
         delete_post_notice: "Delete Official Notice"
         remove_timer: "remove timer"
         edit_timer: "edit timer"
+        remove_yourself_from_pm: "Are you sure you want to remove yourself from this message? You will no longer be able to see or reply to it."
 
       actions:
         people:

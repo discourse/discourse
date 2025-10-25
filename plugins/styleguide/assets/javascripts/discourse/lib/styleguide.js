@@ -12,6 +12,7 @@ import topicStatuses from "../components/sections/atoms/topic-statuses";
 import breadCrumbs from "../components/sections/molecules/bread-crumbs";
 import categories from "../components/sections/molecules/categories";
 import charCounter from "../components/sections/molecules/char-counter";
+import dialog from "../components/sections/molecules/dialog";
 import emptyState from "../components/sections/molecules/empty-state";
 import footerMessage from "../components/sections/molecules/footer-message";
 import menus from "../components/sections/molecules/menus";
@@ -78,6 +79,7 @@ const SECTIONS = [
   { component: menus, category: "molecules", id: "menus" },
   { component: multiselect, category: "molecules", id: "multi-select" },
   { component: toasts, category: "molecules", id: "toasts" },
+  { component: dialog, category: "molecules", id: "dialog" },
   { component: signupCta, category: "molecules", id: "signup-cta" },
   { component: topicListItem, category: "molecules", id: "topic-list-item" },
   {

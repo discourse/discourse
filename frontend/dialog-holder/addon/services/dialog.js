@@ -77,47 +77,71 @@ export default class DialogService extends Service {
   alert(params) {
     // support string param for easier porting of bootbox.alert
     if (typeof params === "string") {
-      return this.dialog({
+      return this.#promiseDialog({
         message: params,
         type: "alert",
+        shouldDisplayCancel: false,
       });
     }
 
-    return this.dialog({
+    return this.#promiseDialog({
       ...params,
       type: "alert",
+      shouldDisplayCancel: false,
     });
   }
 
   confirm(params) {
-    return this.dialog({
+    return this.#promiseDialog({
       ...params,
-      shouldDisplayCancel: true,
       buttons: null,
       type: "confirm",
     });
   }
 
   notice(message) {
-    return this.dialog({
+    return this.#promiseDialog({
       message,
       type: "notice",
     });
   }
 
   yesNoConfirm(params) {
-    return this.confirm({
+    return this.#promiseDialog({
       ...params,
       confirmButtonLabel: "yes_value",
       cancelButtonLabel: "no_value",
+      buttons: null,
+      type: "confirm",
     });
   }
 
   deleteConfirm(params) {
-    return this.confirm({
+    return this.#promiseDialog({
       ...params,
       confirmButtonClass: "btn-danger",
       confirmButtonLabel: params.confirmButtonLabel || "delete",
+      buttons: null,
+      type: "confirm",
+    });
+  }
+
+  #promiseDialog(params) {
+    return new Promise((resolve) => {
+      const { didConfirm, didCancel } = params;
+
+      this.dialog({
+        shouldDisplayCancel: true,
+        ...params,
+        didConfirm: () => {
+          didConfirm?.();
+          resolve(true);
+        },
+        didCancel: () => {
+          didCancel?.();
+          resolve(false);
+        },
+      });
     });
   }
 
