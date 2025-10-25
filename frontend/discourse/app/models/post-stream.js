@@ -476,6 +476,7 @@ export default class PostStream extends RestModel {
       } finally {
         this.appendingPlaceholders -= this.topic.chunk_size - 1;
         this.loadingBelow = false;
+        this.appEvents.trigger("post-stream:posts-appended");
       }
     } else {
       const postIds = this.nextWindow;
@@ -493,6 +494,8 @@ export default class PostStream extends RestModel {
       } finally {
         this.appendingPlaceholders -= postIds.length;
         this.loadingBelow = false;
+        // Emit event for accessibility components
+        this.appEvents.trigger("post-stream:posts-appended");
       }
     }
   }

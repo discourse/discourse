@@ -99,7 +99,7 @@ export default class PostMetaData extends Component {
   }
 
   <template>
-    <div class="topic-meta-data" role="heading" aria-level="2">
+    <div class="topic-meta-data">
       {{#if this.shouldDisplayPosterName}}
         <PostMetaDataPosterName @post={{@post}} />
       {{/if}}

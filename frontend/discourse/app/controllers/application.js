@@ -15,6 +15,10 @@ export default class ApplicationController extends Controller {
   @service router; // used in the route template
   @service footer;
   @service sidebarState;
+  // eslint-disable-next-line discourse/no-unused-services
+  @service appEvents;
+  // eslint-disable-next-line discourse/no-unused-services
+  @service accessibilityAnnouncer;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
