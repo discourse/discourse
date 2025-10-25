@@ -4874,6 +4874,8 @@ en:
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
       close: "Close (Esc)"
+      zoom: "Zoom (Z key)"
+      error: "The image cannot be loaded"
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 

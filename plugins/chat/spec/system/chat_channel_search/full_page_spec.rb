@@ -48,6 +48,21 @@ RSpec.describe "Chat channel search - full page", type: :system do
 
       expect(channel_page.filter).to have_no_results
     end
+
+    it "can clear the filter input" do
+      message =
+        Fabricate(:chat_message, chat_channel: channel_1, message: "test", use_service: true)
+
+      chat_page.visit_channel(channel_1)
+      channel_page.filter.toggle.fill_in("test")
+
+      expect(channel_page.filter).to have_state(results: 1, position: 1)
+
+      channel_page.filter.clear
+
+      expect(channel_page.filter).to be_visible
+      expect(channel_page.filter).to have_no_state
+    end
   end
 
   context "when filter is not toggled" do

@@ -14,7 +14,7 @@
     "start": "ember serve"
   },
   "dependencies": {
-    "@babel/core": "^7.28.4",
+    "@babel/core": "^7.28.5",
     "@ember-decorators/component": "*",
     "@ember/string": "^4.0.1",
     "@floating-ui/dom": "^1.7.4",

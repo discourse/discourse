@@ -44,6 +44,13 @@ describe Jobs::LocalizePosts do
     job.execute({ limit: 10 })
   end
 
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_post_localization?).returns(false)
+    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
   it "does nothing when there are no posts to translate" do
     Post.destroy_all
     DiscourseAi::Translation::PostLocalizer.expects(:localize).never

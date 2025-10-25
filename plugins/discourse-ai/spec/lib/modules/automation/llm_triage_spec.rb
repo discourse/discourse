@@ -387,4 +387,41 @@ describe DiscourseAi::Automation::LlmTriage do
       "<a href=\"#{Discourse.base_path}/admin/plugins/automation/",
     )
   end
+
+  it "only sends one PM when multiple rules flag the same post" do
+    # First rule flags the post and sends PM
+    DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review,
+        automation: nil,
+        notify_author_pm: true,
+      )
+
+      triage(
+        post: post.reload,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review,
+        automation: nil,
+        notify_author_pm: true,
+      )
+    end
+
+    pm_topics =
+      Topic
+        .where(archetype: Archetype.private_message)
+        .joins(:topic_allowed_users)
+        .where(topic_allowed_users: { user: post.user })
+
+    expect(pm_topics.size).to eq(1)
+
+    reviewable_scores_count =
+      ReviewableScore.joins(:reviewable).where(reviewable: { target: post }).count
+    expect(reviewable_scores_count).to eq(2)
+  end
 end

@@ -54,15 +54,17 @@ export default RouteTemplate(
           <td>{{emailLog.from_address}}</td>
           <td>{{emailLog.to_addresses}}</td>
           <td>
+            {{emailLog.subject}}
+          </td>
+          <td>
             <a
               href
               {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
               class="incoming-email-link"
             >
-              {{emailLog.subject}}
+              {{emailLog.error}}
             </a>
           </td>
-          <td>{{emailLog.error}}</td>
         </tr>
       </:default>
     </EmailLogsList>

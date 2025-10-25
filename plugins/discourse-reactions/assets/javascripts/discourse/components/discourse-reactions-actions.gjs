@@ -739,7 +739,7 @@ export default class DiscourseReactionsActions extends Component {
       {{on "touchstart" this.touchStart}}
       {{on "touchmove" this.touchMove}}
       {{on "touchend" this.touchEnd}}
-      {{closeOnClickOutside this.clickOutside (hash)}}
+      {{closeOnClickOutside this.clickOutside}}
     >
       {{#let
         (hash
