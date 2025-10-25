@@ -8,7 +8,9 @@ import DAutocompleteResults from "discourse/components/d-autocomplete-results";
 import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { headerOffset } from "discourse/lib/offset-calculator";
 import { VISIBILITY_OPTIMIZERS } from "float-kit/lib/constants";
+import { updatePosition } from "float-kit/lib/update-position";
 
 export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
@@ -70,6 +72,9 @@ export default class DAutocompleteModifier extends Modifier {
   previousTerm = null;
   debouncedSearch = null;
   targetElement = null;
+  menuInstance = null;
+  virtualElement = null;
+  menuOptions = null;
 
   // Constants
   ALLOWED_LETTERS_REGEXP = /[\s[{(/+]/;
@@ -175,6 +180,18 @@ export default class DAutocompleteModifier extends Modifier {
     }
   }
 
+  @action
+  async handleWindowResize() {
+    try {
+      if (this.expanded) {
+        await this.closeAutocomplete();
+      }
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] handleWindowResize: ", e);
+    }
+  }
+
   hasModifierKey(event) {
     return event.ctrlKey || event.altKey || event.metaKey;
   }
@@ -210,8 +227,9 @@ export default class DAutocompleteModifier extends Modifier {
     element.addEventListener("keydown", this.handleKeyDown);
     element.addEventListener("paste", this.handlePaste);
 
-    // Global click handler to close autocomplete
+    // Global handlers to close autocomplete
     document.addEventListener("click", this.handleGlobalClick);
+    window.addEventListener("resize", this.handleWindowResize);
   }
 
   @action
@@ -224,6 +242,7 @@ export default class DAutocompleteModifier extends Modifier {
     }
 
     document.removeEventListener("click", this.handleGlobalClick);
+    window.removeEventListener("resize", this.handleWindowResize);
     this.menu.close("d-autocomplete");
   }
 
@@ -408,6 +427,24 @@ export default class DAutocompleteModifier extends Modifier {
       if (JSON.stringify(oldResults) !== JSON.stringify(results)) {
         this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
       }
+
+      // Manually update menu position since virtual element dimensions may have changed
+      // This ensures the menu repositions correctly when using right/left-end placements
+      if (
+        this.menuInstance?.content &&
+        this.virtualElement &&
+        this.menuOptions
+      ) {
+        updatePosition(
+          this.virtualElement,
+          this.menuInstance.content,
+          this.menuOptions
+        ).catch((e) => {
+          // eslint-disable-next-line no-console
+          console.error("[autocomplete] updatePosition: ", e);
+        });
+      }
+
       return;
     }
 
@@ -419,21 +456,31 @@ export default class DAutocompleteModifier extends Modifier {
     this.selectedIndex = this.autoSelectFirstSuggestion ? 0 : -1;
     try {
       // Create virtual element with appropriate positioning
-      const virtualElement = this.options.fixedTextareaPosition
+      this.virtualElement = this.options.fixedTextareaPosition
         ? this.createVirtualElementAtTextarea()
         : this.createVirtualElementAtCaret();
 
-      const menuOptions = {
+      // Dynamically determine allowed placements based on available vertical space
+      const hasVerticalSpace = this.hasEnoughVerticalSpace();
+      const allowedPlacements = hasVerticalSpace
+        ? ["top-start", "top-end", "bottom-start", "bottom-end"]
+        : [
+            "top-start",
+            "top-end",
+            "bottom-start",
+            "bottom-end",
+            "right-end",
+            "left-end",
+            "right-start",
+            "left-start",
+          ];
+
+      this.menuOptions = {
         identifier: "d-autocomplete",
         component: DAutocompleteResults,
         visibilityOptimizer: VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT,
         placement: "top-start",
-        allowedPlacements: [
-          "top-start",
-          "top-end",
-          "bottom-start",
-          "bottom-end",
-        ],
+        allowedPlacements,
         data: {
           getResults: () => this.results,
           getSelectedIndex: () => this.selectedIndex,
@@ -450,10 +497,13 @@ export default class DAutocompleteModifier extends Modifier {
 
       // Add offset if specified
       if (this.options.offset !== undefined) {
-        menuOptions.offset = this.options.offset;
+        this.menuOptions.offset = this.options.offset;
       }
 
-      await this.menu.show(virtualElement, menuOptions);
+      this.menuInstance = await this.menu.show(
+        this.virtualElement,
+        this.menuOptions
+      );
       this.expanded = true;
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -466,6 +516,11 @@ export default class DAutocompleteModifier extends Modifier {
     await this.menu.close("d-autocomplete");
     this.expanded = false;
     this.selectedIndex = -1;
+
+    // Clean up menu references
+    this.menuInstance = null;
+    this.virtualElement = null;
+    this.menuOptions = null;
 
     if (!resetSearchState) {
       return;
@@ -660,15 +715,67 @@ export default class DAutocompleteModifier extends Modifier {
     };
   }
 
+  hasEnoughVerticalSpace() {
+    const MIN_HEIGHT = 200; // Minimum height in pixels for autocomplete menu
+    const VIRTUAL_ELEMENT_HEIGHT = 10; // Height of virtual element
+
+    try {
+      const caretCoords = this.getAbsoluteCaretCoords();
+      const headerHeight = headerOffset();
+
+      const spaceAbove = caretCoords.y - headerHeight;
+      const spaceBelow =
+        window.innerHeight - caretCoords.y - VIRTUAL_ELEMENT_HEIGHT;
+
+      return spaceAbove >= MIN_HEIGHT || spaceBelow >= MIN_HEIGHT;
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error("[autocomplete] hasEnoughVerticalSpace: ", e);
+      // Default to true on error to avoid breaking existing behavior
+      return true;
+    }
+  }
+
   createVirtualElementAtCaret() {
-    const caretCoords = this.getAbsoluteCaretCoords();
+    // Return a virtual element that recalculates position and width on each call
+    // This makes it "live" so floating-ui gets updated values as the user types
     return {
-      getBoundingClientRect: () => ({
-        left: caretCoords.x + this.TRIGGER_CHAR_RELATIVE_OFFSET,
-        top: caretCoords.y + this.VERTICAL_RELATIVE_OFFSET,
-        width: 1,
-        height: 10,
-      }),
+      getBoundingClientRect: () => {
+        const caretCoords = this.getAbsoluteCaretCoords();
+
+        // Calculate width from trigger position to current caret position
+        // This allows proper alignment for right-end and left-end placements
+        let width = 1;
+        if (
+          this.completeStart !== null &&
+          this.options.textHandler?.getCaretCoords
+        ) {
+          try {
+            const currentCaretPos = this.getCaretPosition();
+            const triggerCoords = this.options.textHandler.getCaretCoords(
+              this.completeStart
+            );
+            const currentCoords =
+              this.options.textHandler.getCaretCoords(currentCaretPos);
+
+            // Width spans from trigger to current caret position
+            width = Math.max(1, currentCoords.left - triggerCoords.left);
+          } catch (e) {
+            // eslint-disable-next-line no-console
+            console.error(
+              "[autocomplete] createVirtualElementAtCaret width calculation: ",
+              e
+            );
+          }
+        }
+
+        return {
+          left: caretCoords.x + this.TRIGGER_CHAR_RELATIVE_OFFSET,
+          top: caretCoords.y + this.VERTICAL_RELATIVE_OFFSET,
+          width,
+          height: 10,
+        };
+      },
     };
   }
 
