@@ -2,6 +2,7 @@
 
 module UploadsHelpers
   def setup_s3
+    SiteSetting.s3_upload_bucket = "bucket"
     SiteSetting.enable_s3_uploads = true
 
     SiteSetting.s3_region = "us-west-1"

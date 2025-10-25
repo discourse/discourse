@@ -55,6 +55,8 @@ class QunitController < ApplicationController
         .dig("tests", "requiredPlugins")
         &.map { |p| p.split("/").last.delete_suffix(".git") } || []
 
+    @required_plugins.push(*ALWAYS_LOADED_PLUGINS)
+
     request.env[:resolved_theme_id] = theme.id
     request.env[:skip_theme_ids_transformation] = true
   end

@@ -276,6 +276,9 @@ module.exports = {
 
   // Matches logic from GlobalSetting.load_plugins? in the ruby app
   shouldLoadPlugins() {
+    if (true) {
+      return false;
+    }
     if (process.env.LOAD_PLUGINS === "1") {
       return true;
     } else if (process.env.LOAD_PLUGINS === "0") {
