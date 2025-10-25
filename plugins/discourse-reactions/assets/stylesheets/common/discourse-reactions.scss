@@ -125,6 +125,7 @@ html.discourse-reactions-no-select {
   position: absolute;
   visibility: hidden;
   padding: 15px 0;
+  width: max-content;
 
   &.is-expanded {
     visibility: visible;
@@ -188,6 +189,7 @@ html.discourse-reactions-no-select {
   position: absolute;
   visibility: hidden;
   padding: 15px 0;
+  width: max-content;
 
   &.is-expanded {
     min-width: 80px;

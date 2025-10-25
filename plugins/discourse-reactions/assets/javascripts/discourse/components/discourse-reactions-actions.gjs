@@ -5,7 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel, later, run, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { createPopper } from "@popperjs/core";
+import { computePosition, flip, offset } from "@floating-ui/dom";
 import curryComponent from "ember-curry-component";
 import $ from "jquery";
 import { Promise } from "rsvp";
@@ -23,11 +23,10 @@ import DiscourseReactionsReactionButton from "./discourse-reactions-reaction-but
 
 const VIBRATE_DURATION = 5;
 
-let _popperPicker;
-let _currentReactionWidget;
+let activeReactionsComponent;
 
 export function resetCurrentReaction() {
-  _currentReactionWidget = null;
+  activeReactionsComponent = null;
 }
 
 function buildFakeReaction(reactionId) {
@@ -600,25 +599,19 @@ export default class DiscourseReactionsActions extends Component {
 
   expandReactionsPicker() {
     cancel(this._collapseHandler);
-    _currentReactionWidget?.collapseAllPanels();
+    activeReactionsComponent?.collapseAllPanels();
     this.statePanelExpanded = false;
     this.reactionsPickerExpanded = true;
-    this._setupPopper([
-      ".discourse-reactions-reaction-button",
-      ".discourse-reactions-picker",
-    ]);
+    this.updateReactionsPickerPopover();
   }
 
   @action
   expandStatePanel() {
     cancel(this._collapseHandler);
-    _currentReactionWidget?.collapseAllPanels();
+    activeReactionsComponent?.collapseAllPanels();
     this.statePanelExpanded = true;
     this.reactionsPickerExpanded = false;
-    this._setupPopper([
-      ".discourse-reactions-counter",
-      ".discourse-reactions-state-panel",
-    ]);
+    this.updateReactionsStatePanel();
   }
 
   @action
@@ -647,44 +640,45 @@ export default class DiscourseReactionsActions extends Component {
   }
 
   @action
-  updatePopperPosition() {
-    _popperPicker?.update();
+  updateReactionsPickerPopover() {
+    this.showPopover(
+      ".discourse-reactions-reaction-button",
+      ".discourse-reactions-picker"
+    );
   }
 
-  _setupPopper(selectors) {
+  @action
+  updateReactionsStatePanel() {
+    this.showPopover(
+      ".discourse-reactions-counter",
+      ".discourse-reactions-state-panel"
+    );
+  }
+
+  showPopover(referenceSelector, floatingSelector) {
     schedule("afterRender", () => {
-      const position = this.args.position || "right";
-      const id = this.args.post.id;
-      const trigger = document.querySelector(
-        `#discourse-reactions-actions-${id}-${position} ${selectors[0]}`
+      const referenceElement = document.querySelector(
+        `#${this.elementId} ${referenceSelector}`
       );
-      const popper = document.querySelector(
-        `#discourse-reactions-actions-${id}-${position} ${selectors[1]}`
+      const floatingElement = document.querySelector(
+        `#${this.elementId} ${floatingSelector}`
       );
 
-      _popperPicker?.destroy();
-      _popperPicker = this._applyPopper(trigger, popper);
-      _currentReactionWidget = this;
-    });
-  }
+      if (!floatingElement) {
+        return;
+      }
 
-  _applyPopper(button, picker) {
-    return createPopper(button, picker, {
-      placement: "top",
-      modifiers: [
-        {
-          name: "offset",
-          options: {
-            offset: [0, -5],
-          },
-        },
-        {
-          name: "preventOverflow",
-          options: {
-            padding: 5,
-          },
-        },
-      ],
+      computePosition(referenceElement, floatingElement, {
+        placement: "top",
+        middleware: [offset(-5), flip({ padding: 5 })],
+      }).then(({ x, y }) => {
+        Object.assign(floatingElement.style, {
+          left: `${x}px`,
+          top: `${y}px`,
+        });
+      });
+
+      activeReactionsComponent = this;
     });
   }
 
@@ -760,7 +754,7 @@ export default class DiscourseReactionsActions extends Component {
               collapseStatePanel=this.collapseStatePanel
               cancelCollapse=this.cancelCollapse
               scheduleCollapse=this.scheduleCollapse
-              updatePopperPosition=this.updatePopperPosition
+              updatePopover=this.updateReactionsStatePanel
               collapseAllPanels=this.collapseAllPanels
             )
           )

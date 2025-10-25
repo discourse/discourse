@@ -33,28 +33,26 @@ export default class DiscourseReactionsCounter extends Component {
   }
 
   @bind
-  getUsers(reactionValue) {
-    return CustomReaction.findReactionUsers(this.args.post.id, {
+  async getUsers(reactionValue) {
+    const response = await CustomReaction.findReactionUsers(this.args.post.id, {
       reactionValue,
-    }).then((response) => {
-      response.reaction_users.forEach((reactionUser) => {
-        this.reactionsUsers[reactionUser.id] = reactionUser.users;
-      });
-
-      this.args.updatePopperPosition();
     });
+
+    response.reaction_users.forEach((reactionUser) => {
+      this.reactionsUsers[reactionUser.id] = reactionUser.users;
+    });
+
+    this.args.updatePopover();
   }
 
   @action
   mouseDown(event) {
     event.stopImmediatePropagation();
-    return false;
   }
 
   @action
   mouseUp(event) {
     event.stopImmediatePropagation();
-    return false;
   }
 
   @action
