@@ -74,8 +74,7 @@ RSpec.describe Admin::EmailTemplatesController do
         # Verify original keys are still present
         expect(modified_keys).to include("user_notifications.admin_login")
 
-        # Clear the memoized value again so other tests aren't affected
-        Admin::EmailTemplatesController.instance_variable_set(:@email_keys, nil)
+        DiscoursePluginRegistry.unregister_modifier(plugin_instance, :email_template_keys, &block)
       end
     end
 
@@ -446,6 +445,7 @@ RSpec.describe Admin::EmailTemplatesController do
     shared_examples "email template reversal not allowed" do
       it "prevents reversals with a 404 response" do
         delete "/admin/email/templates/some_id", headers: headers
+
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
