@@ -10,7 +10,7 @@ export default class CloseOnClickOutside extends Modifier {
 
   modify(
     element,
-    [closeFn, { targetSelector, secondaryTargetSelector, target }]
+    [closeFn, { targetSelector, secondaryTargetSelector, target } = {}]
   ) {
     this.closeFn = closeFn;
     this.element = element;
