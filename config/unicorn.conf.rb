@@ -194,6 +194,7 @@ end
 
 after_fork do |server, worker|
   DiscourseEvent.trigger(:web_fork_started)
+  Discourse.after_unicorn_worker_fork
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
 

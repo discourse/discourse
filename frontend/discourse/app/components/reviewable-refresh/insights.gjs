@@ -47,11 +47,13 @@ export default class ReviewableInsights extends Component {
     if (Date.now() - Date.parse(user.created_at) < 7 * 24 * 60 * 60 * 1000) {
       activities.push(i18n("review.insights.activities.new_account"));
     }
-    activities.push(
-      i18n("review.insights.activities.trust_level", {
-        trustLevelName: user.trustLevel.name,
-      })
-    );
+    if (user.trustLevel) {
+      activities.push(
+        i18n("review.insights.activities.trust_level", {
+          trustLevelName: user.trustLevel.name,
+        })
+      );
+    }
     activities.push(
       i18n("review.insights.activities.posts", {
         count: user.post_count,
