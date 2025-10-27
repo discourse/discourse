@@ -18,8 +18,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   setupRenderingTest(hooks);
 
   test("displays host-list setting value", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -30,15 +28,13 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     assert.dom(".formatted-selection").hasText("a.com, b.com");
   });
 
   test("error response with html_message is rendered as HTML", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -55,7 +51,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     });
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
@@ -64,8 +60,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("error response without html_message is not rendered as HTML", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -82,7 +76,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     });
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
     await fillIn(".setting input", "value");
     await click(".setting .d-icon-check");
@@ -91,8 +85,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("displays file types list setting", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -103,7 +95,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     assert.dom(".formatted-selection").hasText("jpg, jpeg, png");
@@ -123,8 +115,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
 
   // Skipping for now because ember-test-helpers doesn't check for defaultPrevented when firing that event chain
   skip("prevents decimal in integer setting input", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -135,15 +125,13 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
     await typeIn(".input-setting-integer", "90,5", { delay: 1000 });
     assert.dom(".input-setting-integer").hasValue("905");
   });
 
   test("does not consider an integer setting overridden if the value is the same as the default", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -154,7 +142,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       })
     );
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
     await fillIn(".input-setting-integer", "90");
     assert.dom(".input-setting-integer").hasValue("90");
@@ -165,8 +153,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("Input for secret site setting is hidden by default", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -176,7 +162,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       })
     );
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
     assert.dom(".input-setting-string").hasAttribute("type", "password");
     assert.dom(".setting-toggle-secret svg").hasClass("d-icon-far-eye");
@@ -189,8 +175,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("shows link to the staff action logs for the setting on hover", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -202,7 +186,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     await triggerEvent("[data-setting='enable_badges']", "mouseenter");
@@ -217,8 +201,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("Shows update status for default_categories_ sitesettings", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -229,7 +211,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     await publishToMessageBus("/site_setting/default_categories_test/process", {
@@ -253,8 +235,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("Shows update status for default_tags_ sitesettings", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -265,7 +245,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     await publishToMessageBus("/site_setting/default_tags_test/process", {
@@ -288,8 +268,6 @@ module("Integration | Component | SiteSetting", function (hooks) {
   });
 
   test("Doesn't shows update status for other site settings besides default_tags_test or default_categories_test", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -300,7 +278,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     await publishToMessageBus("/site_setting/default_tags_test/process", {
@@ -364,8 +342,6 @@ module(
     setupRenderingTest(hooks);
 
     test("disables input for themeable site settings", async function (assert) {
-      const self = this;
-
       this.site = this.container.lookup("service:site");
       this.site.set("user_themes", [
         { theme_id: 5, default: true, name: "Default Theme" },
@@ -382,7 +358,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
 
       assert.dom(".input-setting-string").hasAttribute("disabled", "");
@@ -392,8 +368,6 @@ module(
     });
 
     test("shows warning text for themeable site settings", async function (assert) {
-      const self = this;
-
       this.site = this.container.lookup("service:site");
       this.site.set("user_themes", [
         { theme_id: 5, default: true, name: "Default Theme" },
@@ -410,7 +384,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
 
       assert
@@ -441,8 +415,6 @@ module(
     setupRenderingTest(hooks);
 
     test("shows the reset button when the value has been changed from the default", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -456,14 +428,12 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
       assert.dom(".setting-controls__undo").exists("reset button is shown");
     });
 
     test("doesn't show the reset button when the value is the same as the default", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -477,7 +447,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
       assert
         .dom(".setting-controls__undo")
@@ -485,8 +455,6 @@ module(
     });
 
     test("shows validation error when the value exceeds the max limit", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -500,7 +468,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
       await fillIn(".file-size-input", "5000");
 
@@ -515,8 +483,6 @@ module(
     });
 
     test("shows validation error when the value is below the min limit", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -530,7 +496,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
       await fillIn(".file-size-input", "100");
 
@@ -545,8 +511,6 @@ module(
     });
 
     test("cancelling pending changes resets the value and removes validation error", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -560,7 +524,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
 
       await fillIn(".file-size-input", "100");
@@ -574,8 +538,6 @@ module(
     });
 
     test("resetting to the default value changes the content of input field", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -589,7 +551,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
       assert
         .dom(".file-size-input")
@@ -610,8 +572,6 @@ module(
     });
 
     test("resetting to the default value changes the content of checkbox field", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -623,7 +583,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
       assert
         .dom("input[type=checkbox]")
@@ -644,8 +604,6 @@ module(
     });
 
     test("clearing the input field keeps the cancel button and the validation error shown", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -659,7 +617,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
 
       await fillIn(".file-size-input", "100");
@@ -697,8 +655,6 @@ module(
     ];
 
     test("base_font sets body-font-X classNames on each field choice", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -716,7 +672,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
       const fontSelector = selectKit(".font-selector");
       await fontSelector.expand();
@@ -731,8 +687,6 @@ module(
     });
 
     test("heading_font sets heading-font-X classNames on each field choice", async function (assert) {
-      const self = this;
-
       this.set(
         "setting",
         SiteSetting.create({
@@ -750,7 +704,7 @@ module(
       );
 
       await render(
-        <template><SiteSettingComponent @setting={{self.setting}} /></template>
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
       );
       const fontSelector = selectKit(".font-selector");
       await fontSelector.expand();

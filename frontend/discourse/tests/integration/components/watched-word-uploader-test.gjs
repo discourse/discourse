@@ -18,8 +18,6 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
   });
 
   test("sets the proper action key on uploads", async function (assert) {
-    const self = this;
-
     const dialog = getOwner(this).lookup("service:dialog");
     sinon.stub(dialog, "alert");
 
@@ -44,8 +42,8 @@ module("Integration | Component | watched-word-uploader", function (hooks) {
     await render(
       <template>
         <WatchedWordUploader
-          @actionKey={{self.actionNameKey}}
-          @done={{self.doneUpload}}
+          @actionKey={{this.actionNameKey}}
+          @done={{this.doneUpload}}
         />
       </template>
     );

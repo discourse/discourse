@@ -9,14 +9,12 @@ module("Discourse Chat | Component | chat-thread-header", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it safely renders title", async function (assert) {
-    const self = this;
-
     const title = "<style>body { background: red;}</style>";
     this.thread = new ChatFabricators(getOwner(this)).thread({ title });
 
     await render(
       <template>
-        <Header @thread={{self.thread}} @channel={{self.thread.channel}} />
+        <Header @thread={{this.thread}} @channel={{this.thread.channel}} />
       </template>
     );
 

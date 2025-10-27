@@ -31,13 +31,11 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
   });
 
   test("content", async function (assert) {
-    const self = this;
-
     setDefaultState(this);
 
     await render(
       <template>
-        <MultiSelect @value={{self.value}} @content={{self.content}} />
+        <MultiSelect @value={{this.value}} @content={{this.content}} />
       </template>
     );
 
@@ -63,15 +61,13 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
   });
 
   test("maximum=1", async function (assert) {
-    const self = this;
-
     setDefaultState(this);
 
     await render(
       <template>
         <MultiSelect
-          @value={{self.value}}
-          @content={{self.content}}
+          @value={{this.value}}
+          @content={{this.content}}
           @options={{hash maximum=1}}
         />
       </template>
@@ -92,15 +88,13 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
   });
 
   test("maximum=2", async function (assert) {
-    const self = this;
-
     setDefaultState(this);
 
     await render(
       <template>
         <MultiSelect
-          @value={{self.value}}
-          @content={{self.content}}
+          @value={{this.value}}
+          @content={{this.content}}
           @options={{hash maximum=2}}
         />
       </template>
@@ -113,15 +107,13 @@ module("Integration | Component | select-kit/multi-select", function (hooks) {
   });
 
   test("pasting", async function (assert) {
-    const self = this;
-
     setDefaultState(this);
 
     await render(
       <template>
         <MultiSelect
-          @value={{self.value}}
-          @content={{self.content}}
+          @value={{this.value}}
+          @content={{this.content}}
           @options={{hash maximum=2}}
         />
       </template>

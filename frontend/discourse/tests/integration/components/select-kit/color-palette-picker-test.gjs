@@ -87,14 +87,12 @@ module(
     test("with value", async function (assert) {
       setDefaultState(this);
 
-      const self = this;
-
       await render(
         <template>
           <ColorPalettePicker
-            @content={{self.content}}
-            @value={{self.value}}
-            @onChange={{self.onChange}}
+            @content={{this.content}}
+            @value={{this.value}}
+            @onChange={{this.onChange}}
           />
         </template>
       );
@@ -128,14 +126,12 @@ module(
     test("with theme default", async function (assert) {
       setDefaultState(this, { value: null });
 
-      const self = this;
-
       await render(
         <template>
           <ColorPalettePicker
-            @content={{self.content}}
-            @value={{self.value}}
-            @onChange={{self.onChange}}
+            @content={{this.content}}
+            @value={{this.value}}
+            @onChange={{this.onChange}}
             @options={{hash
               translatedNone=(i18n "admin.customize.theme.default_light_scheme")
             }}

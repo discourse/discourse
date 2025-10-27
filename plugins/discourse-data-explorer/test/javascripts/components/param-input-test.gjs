@@ -171,8 +171,6 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
       }
 
       test(testName.join(" "), async function (assert) {
-        const self = this;
-
         this.setProperties({
           param_info: [
             {
@@ -195,9 +193,9 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
           <template>
             <ParamInputForm
               @hasParams="true"
-              @initialValues={{self.initialValues}}
-              @paramInfo={{self.param_info}}
-              @onRegisterApi={{self.onRegisterApi}}
+              @initialValues={{this.initialValues}}
+              @paramInfo={{this.param_info}}
+              @onRegisterApi={{this.onRegisterApi}}
             />
           </template>
         );
@@ -251,8 +249,6 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
   }
 
   test("empty form will reject submit", async function (assert) {
-    const self = this;
-
     this.setProperties({
       param_info: [
         {
@@ -271,9 +267,9 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
     await render(
       <template>
         <ParamInputForm
-          @initialValues={{self.initialValues}}
-          @paramInfo={{self.param_info}}
-          @onRegisterApi={{self.onRegisterApi}}
+          @initialValues={{this.initialValues}}
+          @paramInfo={{this.param_info}}
+          @onRegisterApi={{this.onRegisterApi}}
         />
       </template>
     );
@@ -288,8 +284,6 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
   });
 
   test("async normalization", async function (assert) {
-    const self = this;
-
     this.setProperties({
       param_info: [
         {
@@ -308,9 +302,9 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
     await render(
       <template>
         <ParamInputForm
-          @initialValues={{self.initialValues}}
-          @paramInfo={{self.param_info}}
-          @onRegisterApi={{self.onRegisterApi}}
+          @initialValues={{this.initialValues}}
+          @paramInfo={{this.param_info}}
+          @onRegisterApi={{this.onRegisterApi}}
         />
       </template>
     );
@@ -323,8 +317,6 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
   });
 
   test("show error message when default value is invalid", async function (assert) {
-    const self = this;
-
     this.setProperties({
       param_info: [
         {
@@ -341,9 +333,9 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
     await render(
       <template>
         <ParamInputForm
-          @initialValues={{self.initialValues}}
-          @paramInfo={{self.param_info}}
-          @onRegisterApi={{self.onRegisterApi}}
+          @initialValues={{this.initialValues}}
+          @paramInfo={{this.param_info}}
+          @onRegisterApi={{this.onRegisterApi}}
         />
       </template>
     );
@@ -355,8 +347,6 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
   });
 
   test("date, time, datetime with initial value in other formats", async function (assert) {
-    const self = this;
-
     this.setProperties({
       param_info: [
         {
@@ -391,9 +381,9 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
     await render(
       <template>
         <ParamInputForm
-          @initialValues={{self.initialValues}}
-          @paramInfo={{self.param_info}}
-          @onRegisterApi={{self.onRegisterApi}}
+          @initialValues={{this.initialValues}}
+          @paramInfo={{this.param_info}}
+          @onRegisterApi={{this.onRegisterApi}}
         />
       </template>
     );

@@ -17,18 +17,16 @@ module(
     });
 
     test("default", async function (assert) {
-      const self = this;
-
       this.set("value", 1);
       setDefaultState(this, 1, { i18nPrefix: "pre", i18nPostfix: "post" });
 
       await render(
         <template>
           <NotificationsButton
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash
-              i18nPrefix=self.i18nPrefix
-              i18nPostfix=self.i18nPostfix
+              i18nPrefix=this.i18nPrefix
+              i18nPostfix=this.i18nPostfix
             }}
           />
         </template>

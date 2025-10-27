@@ -24,8 +24,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("widget attributes are passed in via args", async function (assert) {
-    const self = this;
-
     createWidget("hello-test", {
       tagName: "div.test",
       template: widgetHbs`Hello {{attrs.name}}`,
@@ -35,7 +33,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="hello-test" @args={{self.args}} />
+        <MountWidget @widget="hello-test" @args={{this.args}} />
       </template>
     );
 
@@ -43,8 +41,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("widget rerenders when args change", async function (assert) {
-    const self = this;
-
     createWidget("hello-test", {
       tagName: "div.test",
       template: widgetHbs`Hello {{attrs.name}}`,
@@ -54,7 +50,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="hello-test" @args={{self.args}} />
+        <MountWidget @widget="hello-test" @args={{this.args}} />
       </template>
     );
 
@@ -81,8 +77,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("hbs template - no tagName", async function (assert) {
-    const self = this;
-
     createWidget("hbs-test", {
       template: widgetHbs`<div class='test'>Hello {{attrs.name}}</div>`,
     });
@@ -91,7 +85,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="hbs-test" @args={{self.args}} />
+        <MountWidget @widget="hbs-test" @args={{this.args}} />
       </template>
     );
 
@@ -99,8 +93,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("hbs template - with tagName", async function (assert) {
-    const self = this;
-
     createWidget("hbs-test", {
       tagName: "div.test",
       template: widgetHbs`Hello {{attrs.name}}`,
@@ -110,7 +102,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="hbs-test" @args={{self.args}} />
+        <MountWidget @widget="hbs-test" @args={{this.args}} />
       </template>
     );
 
@@ -118,15 +110,13 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("hbs template - with data attributes", async function (assert) {
-    const self = this;
-
     createWidget("hbs-test", {
       template: widgetHbs`<div class='my-div' data-my-test='hello world'></div>`,
     });
 
     await render(
       <template>
-        <MountWidget @widget="hbs-test" @args={{self.args}} />
+        <MountWidget @widget="hbs-test" @args={{this.args}} />
       </template>
     );
 
@@ -134,8 +124,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("buildClasses", async function (assert) {
-    const self = this;
-
     createWidget("classname-test", {
       tagName: "div.test",
 
@@ -148,7 +136,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="classname-test" @args={{self.args}} />
+        <MountWidget @widget="classname-test" @args={{this.args}} />
       </template>
     );
 
@@ -156,8 +144,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("buildAttributes", async function (assert) {
-    const self = this;
-
     createWidget("attributes-test", {
       tagName: "div.test",
 
@@ -170,7 +156,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="attributes-test" @args={{self.args}} />
+        <MountWidget @widget="attributes-test" @args={{this.args}} />
       </template>
     );
 
@@ -179,8 +165,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("buildId", async function (assert) {
-    const self = this;
-
     createWidget("id-test", {
       buildId(attrs) {
         return `test-${attrs.id}`;
@@ -190,7 +174,7 @@ module("Integration | Component | Widget | base", function (hooks) {
     this.set("args", { id: 1234 });
 
     await render(
-      <template><MountWidget @widget="id-test" @args={{self.args}} /></template>
+      <template><MountWidget @widget="id-test" @args={{this.args}} /></template>
     );
 
     assert.dom("#test-1234").exists();
@@ -316,15 +300,13 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("handlebars d-icon", async function (assert) {
-    const self = this;
-
     createWidget("hbs-icon-test", {
       template: widgetHbs`{{d-icon "arrow-down"}}`,
     });
 
     await render(
       <template>
-        <MountWidget @widget="hbs-icon-test" @args={{self.args}} />
+        <MountWidget @widget="hbs-icon-test" @args={{this.args}} />
       </template>
     );
 
@@ -332,8 +314,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("handlebars i18n", async function (assert) {
-    const self = this;
-
     createWidget("hbs-i18n-test", {
       template: widgetHbs`
         <span class='string'>{{i18n "hbs_test0"}}</span>
@@ -353,7 +333,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="hbs-i18n-test" @args={{self.args}} />
+        <MountWidget @widget="hbs-i18n-test" @args={{this.args}} />
       </template>
     );
 
@@ -364,8 +344,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("handlebars #each", async function (assert) {
-    const self = this;
-
     createWidget("hbs-each-test", {
       tagName: "ul",
       template: widgetHbs`
@@ -381,7 +359,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="hbs-each-test" @args={{self.args}} />
+        <MountWidget @widget="hbs-each-test" @args={{this.args}} />
       </template>
     );
 
@@ -477,8 +455,6 @@ module("Integration | Component | Widget | base", function (hooks) {
   });
 
   test("avoids rerendering on prepend", async function (assert) {
-    const self = this;
-
     createWidget("prepend-test", {
       tagName: "div.test",
       html(attrs) {
@@ -506,7 +482,7 @@ module("Integration | Component | Widget | base", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="prepend-test" @args={{self.args}} />
+        <MountWidget @widget="prepend-test" @args={{this.args}} />
       </template>
     );
 

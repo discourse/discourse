@@ -55,8 +55,6 @@ module("Integration | Component | admin-report", function (hooks) {
   });
 
   test("options", async function (assert) {
-    const self = this;
-
     this.set("options", {
       table: {
         perPage: 4,
@@ -68,7 +66,7 @@ module("Integration | Component | admin-report", function (hooks) {
       <template>
         <AdminReport
           @dataSourceName="signups"
-          @reportOptions={{self.options}}
+          @reportOptions={{this.options}}
         />
       </template>
     );

@@ -19,11 +19,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("links to correct channel", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -36,11 +34,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("allows tabbing", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -48,11 +44,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("channel id data attribute", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -65,11 +59,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("renders correct channel title", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -79,8 +71,6 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("renders correct channel metadata", async function (assert) {
-    const self = this;
-
     this.categoryChatChannel.lastMessage = new ChatFabricators(
       getOwner(this)
     ).message({
@@ -88,7 +78,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     });
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -100,13 +90,11 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("renders membership toggling button when necessary", async function (assert) {
-    const self = this;
-
     forceMobile();
 
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -116,7 +104,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -127,7 +115,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     await render(
       <template>
         <ChatChannelRow
-          @channel={{self.categoryChatChannel}}
+          @channel={{this.categoryChatChannel}}
           @options={{hash leaveButton=true}}
         />
       </template>
@@ -137,11 +125,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("focused channel has correct class", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -151,7 +137,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -159,11 +145,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("muted channel has correct class", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -173,7 +157,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -181,11 +165,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("leaveButton options adds correct class", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -194,7 +176,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
     await render(
       <template>
         <ChatChannelRow
-          @channel={{self.categoryChatChannel}}
+          @channel={{this.categoryChatChannel}}
           @options={{hash leaveButton=true}}
         />
       </template>
@@ -204,11 +186,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("active channel adds correct class", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -220,7 +200,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -228,11 +208,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("unreads adds correct class", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -242,7 +220,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -250,11 +228,9 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("user status with category channel", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <ChatChannelRow @channel={{self.categoryChatChannel}} />
+        <ChatChannelRow @channel={{this.categoryChatChannel}} />
       </template>
     );
 
@@ -262,8 +238,6 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("user status with direct message channel", async function (assert) {
-    const self = this;
-
     this.directMessageChannel.chatable = new ChatFabricators(
       getOwner(this)
     ).directMessage({
@@ -274,7 +248,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     await render(
       <template>
-        <ChatChannelRow @channel={{self.directMessageChannel}} />
+        <ChatChannelRow @channel={{this.directMessageChannel}} />
       </template>
     );
 
@@ -282,8 +256,6 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
   });
 
   test("user status with direct message channel and multiple users", async function (assert) {
-    const self = this;
-
     const status = { description: "Off to dentist", emoji: "tooth" };
     this.directMessageChannel.chatable.users[0].status = status;
 
@@ -296,7 +268,7 @@ module("Discourse Chat | Component | chat-channel-row", function (hooks) {
 
     await render(
       <template>
-        <ChatChannelRow @channel={{self.directMessageChannel}} />
+        <ChatChannelRow @channel={{this.directMessageChannel}} />
       </template>
     );
 

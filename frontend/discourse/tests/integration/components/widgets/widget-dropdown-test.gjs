@@ -31,8 +31,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("dropdown id", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
 
     await render(
@@ -41,12 +39,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -56,8 +54,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("label", async function (assert) {
-    const self = this;
-
     I18n.translations = { en: { js: { foo: "FooBaz" } } };
     this.setProperties(DEFAULT_CONTENT);
 
@@ -67,12 +63,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -82,8 +78,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("translatedLabel", async function (assert) {
-    const self = this;
-
     I18n.translations = { en: { js: { foo: "FooBaz" } } };
     this.setProperties(DEFAULT_CONTENT);
     this.set("translatedLabel", "BazFoo");
@@ -94,12 +88,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -109,8 +103,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("content", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
 
     await render(
@@ -119,12 +111,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -143,8 +135,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("onChange action", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
     this.set("onChange", (item) => assert.step(`${item.id}`));
 
@@ -154,9 +144,9 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            label=self.label
-            content=self.content
-            onChange=self.onChange
+            label=this.label
+            content=this.content
+            onChange=this.onChange
           }}
         />
       </template>
@@ -168,8 +158,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("can be opened and closed", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
 
     await render(
@@ -178,12 +166,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -201,8 +189,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("icon", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
     this.set("icon", "xmark");
 
@@ -212,12 +198,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -227,8 +213,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("class", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
     this.set("class", "activated");
 
@@ -238,12 +222,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -253,8 +237,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("content with translatedLabel", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
 
     await render(
@@ -263,12 +245,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -279,8 +261,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("content with label", async function (assert) {
-    const self = this;
-
     I18n.translations = { en: { js: { foo: "FooBaz" } } };
     this.setProperties(DEFAULT_CONTENT);
 
@@ -290,12 +270,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -306,8 +286,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("content with icon", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
 
     await render(
@@ -316,12 +294,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -334,8 +312,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("content with html", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
 
     await render(
@@ -344,12 +320,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -362,8 +338,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("separator", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
 
     await render(
@@ -372,12 +346,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -390,8 +364,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("hides widget if no content", async function (assert) {
-    const self = this;
-
     this.setProperties({ content: null, label: "foo" });
 
     await render(
@@ -400,12 +372,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -416,8 +388,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("headerClass option", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
     this.set("options", { headerClass: "btn-small and-text" });
 
@@ -427,12 +397,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -443,8 +413,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("bodyClass option", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
     this.set("options", { bodyClass: "gigantic and-yet-small" });
 
@@ -454,12 +422,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -471,8 +439,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("caret option", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
     this.set("options", { caret: true });
 
@@ -482,12 +448,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -499,8 +465,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("disabled widget", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
     this.set("options", { disabled: true });
 
@@ -510,12 +474,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>
@@ -530,8 +494,6 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
   });
 
   test("disabled item", async function (assert) {
-    const self = this;
-
     this.setProperties(DEFAULT_CONTENT);
 
     await render(
@@ -540,12 +502,12 @@ module("Integration | Component | Widget | widget-dropdown", function (hooks) {
           @widget="widget-dropdown"
           @args={{hash
             id="my-dropdown"
-            icon=self.icon
-            label=self.label
-            class=self.class
-            translatedLabel=self.translatedLabel
-            content=self.content
-            options=self.options
+            icon=this.icon
+            label=this.label
+            class=this.class
+            translatedLabel=this.translatedLabel
+            content=this.content
+            options=this.options
           }}
         />
       </template>

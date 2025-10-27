@@ -11,12 +11,10 @@ module("Integration | Component | Widget | button", function (hooks) {
   });
 
   test("icon only button", async function (assert) {
-    const self = this;
-
     this.set("args", { icon: "far-face-smile" });
 
     await render(
-      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+      <template><MountWidget @widget="button" @args={{this.args}} /></template>
     );
 
     assert.dom("button.btn.btn-icon.no-text").exists("has all the classes");
@@ -24,12 +22,10 @@ module("Integration | Component | Widget | button", function (hooks) {
   });
 
   test("icon and text button", async function (assert) {
-    const self = this;
-
     this.set("args", { icon: "plus", label: "topic.create" });
 
     await render(
-      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+      <template><MountWidget @widget="button" @args={{this.args}} /></template>
     );
 
     assert.dom("button.btn.btn-icon-text").exists("has all the classes");
@@ -38,12 +34,10 @@ module("Integration | Component | Widget | button", function (hooks) {
   });
 
   test("emoji and text button", async function (assert) {
-    const self = this;
-
     this.set("args", { emoji: "mega", label: "topic.create" });
 
     await render(
-      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+      <template><MountWidget @widget="button" @args={{this.args}} /></template>
     );
 
     assert.dom("button.widget-button").exists("renders the widget");
@@ -52,36 +46,30 @@ module("Integration | Component | Widget | button", function (hooks) {
   });
 
   test("translatedLabel", async function (assert) {
-    const self = this;
-
     this.set("args", { translatedLabel: "foo bar" });
 
     await render(
-      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+      <template><MountWidget @widget="button" @args={{this.args}} /></template>
     );
 
     assert.dom("button span.d-button-label").hasText("foo bar");
   });
 
   test("translatedTitle", async function (assert) {
-    const self = this;
-
     this.set("args", { label: "topic.create", translatedTitle: "foo bar" });
 
     await render(
-      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+      <template><MountWidget @widget="button" @args={{this.args}} /></template>
     );
 
     assert.dom("button").hasAttribute("title", "foo bar");
   });
 
   test("translatedLabel skips no-text class in icon", async function (assert) {
-    const self = this;
-
     this.set("args", { icon: "plus", translatedLabel: "foo bar" });
 
     await render(
-      <template><MountWidget @widget="button" @args={{self.args}} /></template>
+      <template><MountWidget @widget="button" @args={{this.args}} /></template>
     );
 
     assert

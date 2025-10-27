@@ -11,38 +11,32 @@ module(
     setupRenderingTest(hooks);
 
     test("icon", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, { data: { icon: "check" } });
 
       await render(
-        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+        <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
       assert.dom(".fk-d-default-toast__icon-container .d-icon-check").exists();
     });
 
     test("no icon", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, {});
 
       await render(
-        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+        <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
       assert.dom(".fk-d-default-toast__icon-container").doesNotExist();
     });
 
     test("progress bar", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, {});
 
       await render(
         <template>
           <DDefaultToast
-            @data={{self.toast.options.data}}
+            @data={{this.toast.options.data}}
             @showProgressBar={{true}}
             @onRegisterProgressBar={{(noop)}}
           />
@@ -53,14 +47,12 @@ module(
     });
 
     test("no progress bar", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, {});
 
       await render(
         <template>
           <DDefaultToast
-            @data={{self.toast.options.data}}
+            @data={{this.toast.options.data}}
             @showProgressBar={{false}}
           />
         </template>
@@ -70,12 +62,10 @@ module(
     });
 
     test("title", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, { data: { title: "Title" } });
 
       await render(
-        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+        <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
       assert
@@ -84,24 +74,20 @@ module(
     });
 
     test("no title", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, {});
 
       await render(
-        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+        <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
       assert.dom(".fk-d-default-toast__title").doesNotExist();
     });
 
     test("message", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, { data: { message: "Message" } });
 
       await render(
-        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+        <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
       assert
@@ -110,20 +96,16 @@ module(
     });
 
     test("no message", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, {});
 
       await render(
-        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+        <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
       assert.dom(".fk-d-default-toast__message").doesNotExist();
     });
 
     test("actions", async function (assert) {
-      const self = this;
-
       this.toast = new DToastInstance(this, {
         data: {
           actions: [
@@ -138,7 +120,7 @@ module(
       });
 
       await render(
-        <template><DDefaultToast @data={{self.toast.options.data}} /></template>
+        <template><DDefaultToast @data={{this.toast.options.data}} /></template>
       );
 
       assert

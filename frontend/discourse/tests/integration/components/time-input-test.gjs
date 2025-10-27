@@ -16,13 +16,11 @@ module("Integration | Component | time-input", function (hooks) {
   });
 
   test("default", async function (assert) {
-    const self = this;
-
     this.setProperties({ hours: "14", minutes: "58" });
 
     await render(
       <template>
-        <TimeInput @hours={{self.hours}} @minutes={{self.minutes}} />
+        <TimeInput @hours={{this.hours}} @minutes={{this.minutes}} />
       </template>
     );
 
@@ -30,13 +28,11 @@ module("Integration | Component | time-input", function (hooks) {
   });
 
   test("prevents mutations", async function (assert) {
-    const self = this;
-
     this.setProperties({ hours: "14", minutes: "58" });
 
     await render(
       <template>
-        <TimeInput @hours={{self.hours}} @minutes={{self.minutes}} />
+        <TimeInput @hours={{this.hours}} @minutes={{this.minutes}} />
       </template>
     );
 
@@ -46,17 +42,15 @@ module("Integration | Component | time-input", function (hooks) {
   });
 
   test("allows mutations through actions", async function (assert) {
-    const self = this;
-
     this.setProperties({ hours: "14", minutes: "58" });
     this.set("onChange", setTime);
 
     await render(
       <template>
         <TimeInput
-          @hours={{self.hours}}
-          @minutes={{self.minutes}}
-          @onChange={{self.onChange}}
+          @hours={{this.hours}}
+          @minutes={{this.minutes}}
+          @onChange={{this.onChange}}
         />
       </template>
     );

@@ -12,11 +12,15 @@ RSpec.describe "Admin AI translations", type: :system do
     allow(DiscourseAi::Translation::PostCandidates).to receive(
       :get_completion_all_locales,
     ).and_return(
-      [
-        { done: 50, locale: "en", total: 100 },
-        { done: 50, locale: "fr", total: 100 },
-        { done: 50, locale: "es", total: 100 },
-      ],
+      {
+        translation_progress: [
+          { done: 50, locale: "en", total: 100 },
+          { done: 50, locale: "fr", total: 100 },
+          { done: 50, locale: "es", total: 100 },
+        ],
+        total: 300,
+        posts_with_detected_locale: 150,
+      },
     )
 
     sign_in(admin)
@@ -124,7 +128,16 @@ RSpec.describe "Admin AI translations", type: :system do
 
       allow(DiscourseAi::Translation::PostCandidates).to receive(
         :get_completion_all_locales,
-      ).and_return([{ done: 50, locale: "en", total: 100 }, { done: 50, locale: "fr", total: 100 }])
+      ).and_return(
+        {
+          translation_progress: [
+            { done: 50, locale: "en", total: 100 },
+            { done: 50, locale: "fr", total: 100 },
+          ],
+          total: 200,
+          posts_with_detected_locale: 100,
+        },
+      )
     end
 
     it "displays the translation toggle" do
