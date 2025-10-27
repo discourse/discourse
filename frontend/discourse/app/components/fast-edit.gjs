@@ -9,6 +9,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { translateModKey } from "discourse/lib/utilities";
 import autoFocus from "discourse/modifiers/auto-focus";
+import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 
 export default class FastEdit extends Component {
@@ -76,6 +77,7 @@ export default class FastEdit extends Component {
       <textarea
         {{on "input" this.updateValue}}
         id="fast-edit-input"
+        {{preventScrollOnFocus}}
         {{autoFocus}}
       >{{this.value}}</textarea>
 
