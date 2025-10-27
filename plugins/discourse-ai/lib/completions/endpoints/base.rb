@@ -229,7 +229,7 @@ module DiscourseAi
                     response_raw: response_raw,
                     structured_output: structured_output,
                   )
-                call_status = :success # Mark as successful if we reach this point
+                call_status = :success
                 return response_data
               end
 
