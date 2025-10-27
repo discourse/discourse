@@ -418,6 +418,31 @@
     font-size: var(--font-0);
     cursor: default;
   }
+
+  .show-more.has-topics {
+    @include viewport.from(md) {
+      position: absolute;
+      z-index: z("base");
+      width: auto;
+      right: 50%;
+      transform: translateX(50%);
+      font-size: var(--font-down-1-rem);
+    }
+
+    .alert {
+      margin: 0;
+
+      &.loading {
+        color: var(--primary-medium);
+        cursor: default;
+      }
+
+      @include viewport.from(md) {
+        border-radius: var(--d-border-radius-large);
+        padding: var(--space-2) var(--space-4);
+      }
+    }
+  }
 }
 
 .d-icon-thumbtack.unpinned {
