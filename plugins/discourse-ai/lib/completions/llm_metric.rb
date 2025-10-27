@@ -30,14 +30,12 @@ module DiscourseAi
             seeded: llm_model.seeded?,
           }
 
-          # Increment total calls counter
           increment_counter(
             "discourse_ai_llm_calls_total",
             "Total number of LLM API calls",
             labels.merge(status: status),
           )
 
-          # Only record tokens and duration for successful calls
           if status == :success
             # Record request tokens
             increment_counter(
@@ -47,7 +45,6 @@ module DiscourseAi
               request_tokens,
             )
 
-            # Record response tokens
             increment_counter(
               "discourse_ai_llm_response_tokens_total",
               "Total number of output tokens received from LLM APIs",
@@ -55,7 +52,6 @@ module DiscourseAi
               response_tokens,
             )
 
-            # Record duration histogram
             observe_histogram(
               "discourse_ai_llm_duration_seconds",
               "Duration of LLM API calls in seconds",
