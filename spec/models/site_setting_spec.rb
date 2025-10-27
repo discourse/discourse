@@ -4,7 +4,7 @@ RSpec.describe SiteSetting do
   describe "topic_title_length" do
     it "returns a range of min/max topic title length" do
       expect(SiteSetting.topic_title_length).to eq(
-        (SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length),
+        SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length,
       )
     end
   end
