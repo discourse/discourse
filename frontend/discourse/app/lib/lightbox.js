@@ -166,6 +166,40 @@ export default async function lightbox(elem, siteSettings) {
       return data;
     });
 
+    // Preload images without dimensions to get their dimensions
+    const itemsToPreload = Array.from(
+      elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)
+    ).filter((item) => {
+      // Check if item has an image source
+      const hasImageSrc =
+        item.getAttribute("data-large-src") || item.getAttribute("href");
+
+      // Check if dimensions are missing
+      const missingDimensions =
+        !item.getAttribute("data-target-width") ||
+        !item.getAttribute("data-target-height");
+
+      // Only preload if it has an image AND is missing dimensions
+      return hasImageSrc && missingDimensions;
+    });
+
+    await Promise.all(
+      itemsToPreload.map(
+        (item) =>
+          new Promise((resolve) => {
+            const img = new Image();
+            img.src =
+              item.getAttribute("data-large-src") || item.getAttribute("href");
+            img.onload = () => {
+              item.setAttribute("data-target-width", img.naturalWidth);
+              item.setAttribute("data-target-height", img.naturalHeight);
+              resolve();
+            };
+            img.onerror = resolve;
+          })
+      )
+    );
+
     lightboxEl.init();
   } else {
     // Magnific lightbox
