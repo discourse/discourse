@@ -32,12 +32,10 @@ module(
     });
 
     test("displays selected value", async function (assert) {
-      const self = this;
-
       this.set("value", [1]);
 
       await render(
-        <template><FormTemplateChooser @value={{self.value}} /></template>
+        <template><FormTemplateChooser @value={{this.value}} /></template>
       );
 
       assert.strictEqual(this.subject.header().name(), "template 1");

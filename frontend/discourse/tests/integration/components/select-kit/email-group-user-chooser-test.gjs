@@ -47,8 +47,6 @@ module(
     });
 
     test("excluding usernames", async function (assert) {
-      const self = this;
-
       pretender.get("/u/search/users", () => {
         const users = [
           {
@@ -74,7 +72,7 @@ module(
       await render(
         <template>
           <EmailGroupUserChooser
-            @options={{hash excludedUsernames=self.excludedUsernames}}
+            @options={{hash excludedUsernames=this.excludedUsernames}}
           />
         </template>
       );
@@ -89,7 +87,7 @@ module(
       await render(
         <template>
           <EmailGroupUserChooser
-            @options={{hash excludedUsernames=self.excludedUsernames}}
+            @options={{hash excludedUsernames=this.excludedUsernames}}
           />
         </template>
       );

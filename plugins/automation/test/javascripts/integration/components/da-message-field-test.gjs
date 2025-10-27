@@ -13,8 +13,6 @@ module("Integration | Component | da-message-field", function (hooks) {
   });
 
   test("set value", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "message",
     });
@@ -22,8 +20,8 @@ module("Integration | Component | da-message-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -33,8 +31,6 @@ module("Integration | Component | da-message-field", function (hooks) {
   });
 
   test("render placeholders", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "message",
     });
@@ -43,8 +39,8 @@ module("Integration | Component | da-message-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );

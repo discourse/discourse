@@ -20,11 +20,9 @@ module(
     setupRenderingTest(hooks);
 
     test("empty post", async function (assert) {
-      const self = this;
-
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -32,14 +30,12 @@ module(
     });
 
     test("post#policy_can_accept", async function (assert) {
-      const self = this;
-
       this.set("post", fabricatePost({ policy_can_accept: true }));
       this.set("policy", fabricatePolicy());
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -48,14 +44,12 @@ module(
     });
 
     test("post#policy_can_revoke", async function (assert) {
-      const self = this;
-
       this.set("post", fabricatePost({ policy_can_revoke: true }));
       this.set("policy", fabricatePolicy());
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -64,14 +58,12 @@ module(
     });
 
     test("post#policy_accepted_by_count", async function (assert) {
-      const self = this;
-
       this.set("post", fabricatePost({ policy_accepted_by_count: 10 }));
       this.set("policy", fabricatePolicy());
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -79,14 +71,12 @@ module(
     });
 
     test("post#policy_not_accepted_by_count", async function (assert) {
-      const self = this;
-
       this.set("post", fabricatePost({ policy_not_accepted_by_count: 10 }));
       this.set("policy", fabricatePolicy());
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -94,8 +84,6 @@ module(
     });
 
     test("no possible users", async function (assert) {
-      const self = this;
-
       this.set(
         "post",
         fabricatePost({
@@ -108,7 +96,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -118,8 +106,6 @@ module(
     });
 
     test("does not show 'no possible users' when no access to stats", async function (assert) {
-      const self = this;
-
       this.set(
         "post",
         fabricatePost({
@@ -131,7 +117,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -139,8 +125,6 @@ module(
     });
 
     test("toggle state", async function (assert) {
-      const self = this;
-
       const acceptedByUsers = [
         { id: 1, username: "jeanne", avatar_template: "/images/avatar.png" },
       ];
@@ -163,7 +147,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -185,8 +169,6 @@ module(
     });
 
     test("accept policy", async function (assert) {
-      const self = this;
-
       this.set("currentUser", {
         id: 1,
         username: "bob",
@@ -204,7 +186,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -221,8 +203,6 @@ module(
     });
 
     test("revoke policy", async function (assert) {
-      const self = this;
-
       this.set("currentUser", {
         id: 1,
         username: "bob",
@@ -240,7 +220,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 

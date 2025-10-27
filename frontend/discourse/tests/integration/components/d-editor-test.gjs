@@ -36,9 +36,7 @@ module("Integration | Component | d-editor", function (hooks) {
   });
 
   test("preview updates with markdown", async function (assert) {
-    const self = this;
-
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
 
     assert.dom(".d-editor-button-bar").exists();
     await fillIn(".d-editor-input", "hello **world**");
@@ -50,9 +48,7 @@ module("Integration | Component | d-editor", function (hooks) {
   });
 
   test("links in preview are not tabbable", async function (assert) {
-    const self = this;
-
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
 
     await fillIn(".d-editor-input", "[discourse](https://www.discourse.org)");
 
@@ -64,11 +60,9 @@ module("Integration | Component | d-editor", function (hooks) {
   });
 
   test("updating the value refreshes the preview", async function (assert) {
-    const self = this;
-
     this.set("value", "evil trout");
 
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
 
     assert.dom(".d-editor-preview").hasHtml("<p>evil trout</p>");
 
@@ -90,8 +84,6 @@ module("Integration | Component | d-editor", function (hooks) {
 
   function testCase(title, testFunc, userOptions = {}) {
     test(title, async function (assert) {
-      const self = this;
-
       this.currentUser.user_option = Object.assign(
         {},
         this.currentUser.user_option,
@@ -99,7 +91,7 @@ module("Integration | Component | d-editor", function (hooks) {
       );
       this.set("value", "hello world.");
 
-      await render(<template><DEditor @value={{self.value}} /></template>);
+      await render(<template><DEditor @value={{this.value}} /></template>);
 
       const textarea = jumpEnd("textarea.d-editor-input");
       await testFunc.call(this, assert, textarea);
@@ -108,13 +100,11 @@ module("Integration | Component | d-editor", function (hooks) {
 
   function composerTestCase(title, testFunc) {
     test(title, async function (assert) {
-      const self = this;
-
       this.set("value", "hello world.");
 
       await render(
         <template>
-          <DEditor @value={{self.value}} @composerEvents={{true}} />
+          <DEditor @value={{this.value}} @composerEvents={{true}} />
         </template>
       );
 
@@ -259,8 +249,6 @@ module("Integration | Component | d-editor", function (hooks) {
   );
 
   test("advanced code", async function (assert) {
-    const self = this;
-
     this.siteSettings.code_formatting_style = "4-spaces-indent";
     this.set(
       "value",
@@ -273,7 +261,7 @@ function xyz(x, y, z) {
 `
     );
 
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
 
     const textarea = find("textarea.d-editor-input");
     textarea.selectionStart = 0;
@@ -293,11 +281,9 @@ function xyz(x, y, z) {
   });
 
   test("code button", async function (assert) {
-    const self = this;
-
     this.siteSettings.code_formatting_style = "4-spaces-indent";
 
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
 
     const textarea = jumpEnd("textarea.d-editor-input");
 
@@ -377,11 +363,9 @@ third line`
   });
 
   test("code button does not reset undo history", async function (assert) {
-    const self = this;
-
     this.set("value", "existing");
 
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
     const textarea = find("textarea.d-editor-input");
     textarea.selectionStart = 0;
     textarea.selectionEnd = 8;
@@ -399,11 +383,9 @@ third line`
   });
 
   test("code fences", async function (assert) {
-    const self = this;
-
     this.set("value", "");
 
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
 
     const textarea = jumpEnd("textarea.d-editor-input");
 
@@ -514,13 +496,11 @@ third line`
   });
 
   test("quote button - empty lines", async function (assert) {
-    const self = this;
-
     this.set("value", "one\n\ntwo\n\nthree");
 
     await render(
       <template>
-        <DEditor @value={{self.value}} @composerEvents={{true}} />
+        <DEditor @value={{this.value}} @composerEvents={{true}} />
       </template>
     );
 
@@ -539,13 +519,11 @@ third line`
   });
 
   test("quote button - selecting empty lines", async function (assert) {
-    const self = this;
-
     this.set("value", "one\n\n\n\ntwo");
 
     await render(
       <template>
-        <DEditor @value={{self.value}} @composerEvents={{true}} />
+        <DEditor @value={{this.value}} @composerEvents={{true}} />
       </template>
     );
 
@@ -788,12 +766,10 @@ third line`
   );
 
   test("clicking the toggle-direction changes dir from ltr to rtl and back", async function (assert) {
-    const self = this;
-
     this.siteSettings.support_mixed_text_direction = true;
     this.siteSettings.default_locale = "en";
 
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
 
     await click("button.toggle-direction");
     assert.dom("textarea.d-editor-input").hasAttribute("dir", "rtl");
@@ -803,8 +779,6 @@ third line`
   });
 
   test("toolbar event supports replaceText", async function (assert) {
-    const self = this;
-
     withPluginApi((api) => {
       api.onToolbarCreate((toolbar) => {
         toolbar.addButton({
@@ -821,7 +795,7 @@ third line`
 
     this.value = "hello";
 
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
     await click("button.replace-text");
 
     assert.strictEqual(this.value, "goodbye");
@@ -842,13 +816,11 @@ third line`
   );
 
   test("emoji", async function (assert) {
-    const self = this;
-
     this.set("value", "hello world.");
     // we need DMenus here, as we are testing the d-editor which is not renderining
     // the in-element outlet container necessary for DMenu to work
     await render(
-      <template><DMenus /><DEditor @value={{self.value}} /></template>
+      <template><DMenus /><DEditor @value={{this.value}} /></template>
     );
     const picker = emojiPicker();
     jumpEnd("textarea.d-editor-input");
@@ -1048,14 +1020,12 @@ third line`
   );
 
   test("paste table", async function (assert) {
-    const self = this;
-
     this.set("value", "");
     this.siteSettings.enable_rich_text_paste = true;
 
     await render(
       <template>
-        <DEditor @value={{self.value}} @composerEvents={{true}} />
+        <DEditor @value={{this.value}} @composerEvents={{true}} />
       </template>
     );
 
@@ -1067,14 +1037,12 @@ third line`
   });
 
   test("paste a different table", async function (assert) {
-    const self = this;
-
     this.set("value", "");
     this.siteSettings.enable_rich_text_paste = true;
 
     await render(
       <template>
-        <DEditor @value={{self.value}} @composerEvents={{true}} />
+        <DEditor @value={{this.value}} @composerEvents={{true}} />
       </template>
     );
 
@@ -1429,8 +1397,6 @@ third line`
   })();
 
   test("toolbar instance replacement", async function (assert) {
-    const self = this;
-
     const customToolbar = new ToolbarBase({
       siteSettings: this.siteSettings,
       capabilities: this.capabilities,
@@ -1458,7 +1424,7 @@ third line`
 
     this.value = "hello";
 
-    await render(<template><DEditor @value={{self.value}} /></template>);
+    await render(<template><DEditor @value={{this.value}} /></template>);
 
     assert.dom(".d-editor-button-bar").exists();
     assert.dom(".d-editor-button-bar.--replaced-toolbar").doesNotExist();

@@ -9,24 +9,20 @@ module("Integration | Component | date-input", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    const self = this;
-
     this.setProperties({ date: DEFAULT_DATE });
 
-    await render(<template><DateInput @date={{self.date}} /></template>);
+    await render(<template><DateInput @date={{this.date}} /></template>);
 
     assert.dom(".date-picker").hasValue("2019-01-29");
   });
 
   test("prevents mutations", async function (assert) {
-    const self = this;
-
     this.setProperties({ date: DEFAULT_DATE });
     this.set("onChange", () => {});
 
     await render(
       <template>
-        <DateInput @date={{self.date}} @onChange={{self.onChange}} />
+        <DateInput @date={{this.date}} @onChange={{this.onChange}} />
       </template>
     );
 
@@ -37,14 +33,12 @@ module("Integration | Component | date-input", function (hooks) {
   });
 
   test("allows mutations through actions", async function (assert) {
-    const self = this;
-
     this.setProperties({ date: DEFAULT_DATE });
     this.set("onChange", (date) => this.set("date", date));
 
     await render(
       <template>
-        <DateInput @date={{self.date}} @onChange={{self.onChange}} />
+        <DateInput @date={{this.date}} @onChange={{this.onChange}} />
       </template>
     );
 
@@ -55,15 +49,13 @@ module("Integration | Component | date-input", function (hooks) {
   });
 
   test("always shows date in timezone of input timestamp", async function (assert) {
-    const self = this;
-
     this.setProperties({
       date: moment.tz("2023-05-05T10:00:00", "ETC/GMT-12"),
     });
 
     await render(
       <template>
-        <DateInput @date={{self.date}} @onChange={{self.onChange}} />
+        <DateInput @date={{this.date}} @onChange={{this.onChange}} />
       </template>
     );
     assert.dom(".date-picker").hasValue("2023-05-05");

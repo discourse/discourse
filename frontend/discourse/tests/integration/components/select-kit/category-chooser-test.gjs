@@ -17,11 +17,10 @@ module(
     });
 
     test("with value", async function (assert) {
-      const self = this;
       this.set("value", 2);
 
       await render(
-        <template><CategoryChooser @value={{self.value}} /></template>
+        <template><CategoryChooser @value={{this.value}} /></template>
       );
 
       assert.strictEqual(this.subject.header().value(), "2");
@@ -29,11 +28,10 @@ module(
     });
 
     test("with excludeCategoryId", async function (assert) {
-      const self = this;
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash excludeCategoryId=2}}
           />
         </template>
@@ -45,11 +43,10 @@ module(
     });
 
     test("with scopedCategoryId", async function (assert) {
-      const self = this;
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash scopedCategoryId=2}}
           />
         </template>
@@ -77,11 +74,10 @@ module(
     });
 
     test("with prioritizedCategoryId", async function (assert) {
-      const self = this;
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash prioritizedCategoryId=5}}
           />
         </template>
@@ -114,13 +110,12 @@ module(
     });
 
     test("with allowUncategorized=null", async function (assert) {
-      const self = this;
       this.siteSettings.allow_uncategorized_topics = false;
 
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
           />
         </template>
@@ -131,14 +126,13 @@ module(
     });
 
     test("with allowUncategorized=null and defaultComposerCategory present", async function (assert) {
-      const self = this;
       this.siteSettings.allow_uncategorized_topics = false;
       this.siteSettings.default_composer_category = 4;
 
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
           />
         </template>
@@ -149,14 +143,13 @@ module(
     });
 
     test("with allowUncategorized=null and defaultComposerCategory present, but not set", async function (assert) {
-      const self = this;
       this.siteSettings.allow_uncategorized_topics = false;
       this.siteSettings.default_composer_category = -1;
 
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash allowUncategorized=null}}
           />
         </template>
@@ -167,13 +160,12 @@ module(
     });
 
     test("with allowUncategorized=null none=true", async function (assert) {
-      const self = this;
       this.siteSettings.allow_uncategorized_topics = false;
 
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash allowUncategorized=null none=true}}
           />
         </template>
@@ -184,14 +176,13 @@ module(
     });
 
     test("with disallowed uncategorized, none", async function (assert) {
-      const self = this;
       I18n.translations[I18n.locale].js.test = { root: "root none label" };
       this.siteSettings.allow_uncategorized_topics = false;
 
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash allowUncategorized=null none="test.root"}}
           />
         </template>
@@ -202,13 +193,12 @@ module(
     });
 
     test("with allowed uncategorized", async function (assert) {
-      const self = this;
       this.siteSettings.allow_uncategorized_topics = true;
 
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash allowUncategorized=true}}
           />
         </template>
@@ -219,13 +209,12 @@ module(
     });
 
     test("with allowed uncategorized and none=true", async function (assert) {
-      const self = this;
       this.siteSettings.allow_uncategorized_topics = true;
 
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash allowUncategorized=true none=true}}
           />
         </template>
@@ -236,14 +225,13 @@ module(
     });
 
     test("with allowed uncategorized and none", async function (assert) {
-      const self = this;
       I18n.translations[I18n.locale].js.test = { root: "root none label" };
       this.siteSettings.allow_uncategorized_topics = true;
 
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash allowUncategorized=true none="test.root"}}
           />
         </template>
@@ -254,9 +242,8 @@ module(
     });
 
     test("filter is case insensitive", async function (assert) {
-      const self = this;
       await render(
-        <template><CategoryChooser @value={{self.value}} /></template>
+        <template><CategoryChooser @value={{this.value}} /></template>
       );
 
       await this.subject.expand();
@@ -273,7 +260,6 @@ module(
     });
 
     test("filter works with non english characters", async function (assert) {
-      const self = this;
       const store = getOwner(this).lookup("service:store");
       store.createRecord("category", {
         id: 1,
@@ -281,7 +267,7 @@ module(
       });
 
       await render(
-        <template><CategoryChooser @value={{self.value}} /></template>
+        <template><CategoryChooser @value={{this.value}} /></template>
       );
 
       await this.subject.expand();
@@ -292,7 +278,6 @@ module(
     });
 
     test("decodes entities in row title", async function (assert) {
-      const self = this;
       const store = getOwner(this).lookup("service:store");
       store.createRecord("category", {
         id: 1,
@@ -303,7 +288,7 @@ module(
       await render(
         <template>
           <CategoryChooser
-            @value={{self.value}}
+            @value={{this.value}}
             @options={{hash scopedCategoryId=1}}
           />
         </template>

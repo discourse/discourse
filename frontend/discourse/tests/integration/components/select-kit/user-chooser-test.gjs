@@ -12,21 +12,17 @@ module("Integration | Component | select-kit/user-chooser", function (hooks) {
   });
 
   test("displays usernames", async function (assert) {
-    const self = this;
-
     this.set("value", ["bob", "martin"]);
 
-    await render(<template><UserChooser @value={{self.value}} /></template>);
+    await render(<template><UserChooser @value={{this.value}} /></template>);
 
     assert.strictEqual(this.subject.header().name(), "bob,martin");
   });
 
   test("can remove a username", async function (assert) {
-    const self = this;
-
     this.set("value", ["bob", "martin"]);
 
-    await render(<template><UserChooser @value={{self.value}} /></template>);
+    await render(<template><UserChooser @value={{this.value}} /></template>);
 
     await this.subject.expand();
     await this.subject.deselectItemByValue("bob");
@@ -34,8 +30,6 @@ module("Integration | Component | select-kit/user-chooser", function (hooks) {
   });
 
   test("can display default search results", async function (assert) {
-    const self = this;
-
     this.set("options", {
       customSearchOptions: {
         defaultSearchResults: [{ username: "foo" }, { username: "bar" }],
@@ -43,7 +37,7 @@ module("Integration | Component | select-kit/user-chooser", function (hooks) {
     });
 
     await render(
-      <template><UserChooser @options={{self.options}} /></template>
+      <template><UserChooser @options={{this.options}} /></template>
     );
 
     await this.subject.expand();

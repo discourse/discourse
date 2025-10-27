@@ -11,13 +11,11 @@ module(
     setupRenderingTest(hooks);
 
     test("data-id attribute", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
         <template>
-          <ChatComposerMessageDetails @message={{self.message}} />
+          <ChatComposerMessageDetails @message={{this.message}} />
         </template>
       );
 
@@ -27,15 +25,13 @@ module(
     });
 
     test("editing a message has the pencil icon", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message({
         editing: true,
       });
 
       await render(
         <template>
-          <ChatComposerMessageDetails @message={{self.message}} />
+          <ChatComposerMessageDetails @message={{this.message}} />
         </template>
       );
 
@@ -43,8 +39,6 @@ module(
     });
 
     test("replying to a message has the reply icon", async function (assert) {
-      const self = this;
-
       const firstMessage = new ChatFabricators(getOwner(this)).message();
       this.message = new ChatFabricators(getOwner(this)).message({
         inReplyTo: firstMessage,
@@ -52,7 +46,7 @@ module(
 
       await render(
         <template>
-          <ChatComposerMessageDetails @message={{self.message}} />
+          <ChatComposerMessageDetails @message={{this.message}} />
         </template>
       );
 
@@ -60,13 +54,11 @@ module(
     });
 
     test("displays user avatar", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
         <template>
-          <ChatComposerMessageDetails @message={{self.message}} />
+          <ChatComposerMessageDetails @message={{this.message}} />
         </template>
       );
 
@@ -76,13 +68,11 @@ module(
     });
 
     test("displays message excerpt", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
         <template>
-          <ChatComposerMessageDetails @message={{self.message}} />
+          <ChatComposerMessageDetails @message={{this.message}} />
         </template>
       );
 
@@ -90,13 +80,11 @@ module(
     });
 
     test("displays user’s username", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
         <template>
-          <ChatComposerMessageDetails @message={{self.message}} />
+          <ChatComposerMessageDetails @message={{this.message}} />
         </template>
       );
 

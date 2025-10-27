@@ -7,12 +7,10 @@ module("Integration | Component | group-membership-button", function (hooks) {
   setupRenderingTest(hooks);
 
   test("canJoinGroup", async function (assert) {
-    const self = this;
-
     this.set("model", { public_admission: false, is_group_user: true });
 
     await render(
-      <template><GroupMembershipButton @model={{self.model}} /></template>
+      <template><GroupMembershipButton @model={{this.model}} /></template>
     );
 
     assert
@@ -29,12 +27,10 @@ module("Integration | Component | group-membership-button", function (hooks) {
   });
 
   test("canLeaveGroup", async function (assert) {
-    const self = this;
-
     this.set("model", { public_exit: false, is_group_user: false });
 
     await render(
-      <template><GroupMembershipButton @model={{self.model}} /></template>
+      <template><GroupMembershipButton @model={{this.model}} /></template>
     );
 
     assert
@@ -51,15 +47,13 @@ module("Integration | Component | group-membership-button", function (hooks) {
   });
 
   test("canRequestMembership", async function (assert) {
-    const self = this;
-
     this.set("model", {
       allow_membership_requests: true,
       is_group_user: true,
     });
 
     await render(
-      <template><GroupMembershipButton @model={{self.model}} /></template>
+      <template><GroupMembershipButton @model={{this.model}} /></template>
     );
 
     assert

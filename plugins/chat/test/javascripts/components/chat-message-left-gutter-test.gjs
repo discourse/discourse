@@ -13,26 +13,22 @@ module(
     setupRenderingTest(hooks);
 
     test("default", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message();
 
       await render(
-        <template><LeftGutter @message={{self.message}} /></template>
+        <template><LeftGutter @message={{this.message}} /></template>
       );
 
       assert.dom(".chat-message-left-gutter__date").exists();
     });
 
     test("with reviewable", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message({
         reviewable_id: 1,
       });
 
       await render(
-        <template><LeftGutter @message={{self.message}} /></template>
+        <template><LeftGutter @message={{this.message}} /></template>
       );
 
       assert
@@ -41,14 +37,12 @@ module(
     });
 
     test("with flag status", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message({
         user_flag_status: 0,
       });
 
       await render(
-        <template><LeftGutter @message={{self.message}} /></template>
+        <template><LeftGutter @message={{this.message}} /></template>
       );
 
       assert
@@ -57,14 +51,12 @@ module(
     });
 
     test("bookmark", async function (assert) {
-      const self = this;
-
       this.message = new ChatFabricators(getOwner(this)).message({
         bookmark: new CoreFabricators(getOwner(this)).bookmark(),
       });
 
       await render(
-        <template><LeftGutter @message={{self.message}} /></template>
+        <template><LeftGutter @message={{this.message}} /></template>
       );
 
       assert.dom(".chat-message-left-gutter__date").exists();

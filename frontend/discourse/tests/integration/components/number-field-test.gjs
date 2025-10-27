@@ -11,11 +11,9 @@ module("Integration | Component | number-field", function (hooks) {
     this.set("value", 123);
 
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
-      const self = this;
-
       await render(
         <template>
-          <NumberField @value={{self.value}} @classNames="number-field-test" />
+          <NumberField @value={{this.value}} @classNames="number-field-test" />
         </template>
       );
     });
@@ -42,12 +40,10 @@ module("Integration | Component | number-field", function (hooks) {
     this.set("value", "");
 
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
-      const self = this;
-
       await render(
         <template>
           <NumberField
-            @value={{self.value}}
+            @value={{this.value}}
             @classNames="number-field-test"
             @min="1"
           />
@@ -65,12 +61,10 @@ module("Integration | Component | number-field", function (hooks) {
     );
 
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
-      const self = this;
-
       await render(
         <template>
           <NumberField
-            @value={{self.value}}
+            @value={{this.value}}
             @classNames="number-field-test"
             @min="-10"
           />
