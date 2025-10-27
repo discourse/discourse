@@ -85,15 +85,19 @@ export default class PostTextSelection extends Component {
 
   @bind
   async toggleFastEdit(quoteState, supportsFastEdit) {
+    // store the post we want to edit at this point to avoid any
+    // other action to change its value until toggleFastEdit is complete
+    const post = this.post;
+
     if (supportsFastEdit) {
       this.modal.show(FastEditModal, {
         model: {
           initialValue: quoteState.buffer,
-          post: this.post,
+          post,
         },
       });
     } else {
-      const result = await ajax(`/posts/${this.post.id}`);
+      const result = await ajax(`/posts/${post.id}`);
 
       if (this.isDestroying || this.isDestroyed) {
         return;
@@ -116,7 +120,7 @@ export default class PostTextSelection extends Component {
         }
       });
 
-      this.args.editPost(this.post);
+      this.args.editPost(post);
 
       document
         .querySelector("#reply-control")
