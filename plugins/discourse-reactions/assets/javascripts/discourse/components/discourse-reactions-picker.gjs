@@ -185,6 +185,7 @@ export default class DiscourseReactionsPicker extends Component {
             <EmojiPicker
               ...attributes
               @icon="far-face-smile"
+              @context="discourse-reactions"
               @didSelectEmoji={{this.onSelectEmoji}}
               @onShow={{this.preventCollapse}}
               @onClose={{this.reenableCollapse}}
