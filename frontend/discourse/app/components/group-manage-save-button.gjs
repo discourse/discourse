@@ -30,10 +30,7 @@ export default class GroupManageSaveButton extends Component {
   }
 
   get shouldRenderWarningFlair() {
-    if (this.router.currentRoute.name === "group.manage.membership") {
-      return false;
-    }
-    return true;
+    return this.router.currentRouteName !== "group.manage.membership";
   }
 
   @action
