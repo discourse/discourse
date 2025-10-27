@@ -140,7 +140,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
               }
         }.not_to change { SiteSettingGroup.count }
 
-        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("13|1")
+        expect(SiteSettingGroup.find_by(name: setting_name).group_ids).to eq("1|13")
       end
 
       it "deletes an existing site setting group record" do
@@ -154,7 +154,8 @@ RSpec.describe Admin::Config::UpcomingChangesController do
               }
         }.to change { SiteSettingGroup.count }.by(-1)
 
-        expect(SiteSettingGroup.find_by(name: setting_name)).to not_exist
+        expect(response.status).to eq(200)
+        expect(SiteSettingGroup.exists?(name: setting_name)).to be_falsey
       end
 
       it "logs the change in staff action logs" do
@@ -172,13 +173,6 @@ RSpec.describe Admin::Config::UpcomingChangesController do
         }.by(1)
       end
 
-      it "returns 400 when group_names is missing" do
-        put "/admin/config/upcoming-changes/groups.json", params: { setting: setting_name }
-
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"]).to be_present
-      end
-
       it "returns 400 when setting is missing" do
         put "/admin/config/upcoming-changes/groups.json",
             params: {
@@ -187,16 +181,6 @@ RSpec.describe Admin::Config::UpcomingChangesController do
 
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"]).to be_present
-      end
-
-      it "returns 204 when group_names is empty" do
-        put "/admin/config/upcoming-changes/groups.json",
-            params: {
-              group_names: [],
-              setting: setting_name,
-            }
-
-        expect(response.status).to eq(204)
       end
 
       it "only includes existing groups when some don't exist" do

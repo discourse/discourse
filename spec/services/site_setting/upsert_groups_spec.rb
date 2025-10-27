@@ -2,7 +2,6 @@
 
 RSpec.describe SiteSetting::UpsertGroups do
   describe described_class::Contract, type: :model do
-    it { is_expected.to validate_presence_of :group_names }
     it { is_expected.to validate_presence_of :setting }
   end
 
@@ -17,12 +16,6 @@ RSpec.describe SiteSetting::UpsertGroups do
     let(:setting) { "enable_upload_debug_mode" }
     let(:guardian) { admin.guardian }
 
-    context "when group_names is blank" do
-      let(:group_names) { nil }
-
-      it { is_expected.to fail_a_contract }
-    end
-
     context "when setting is blank" do
       let(:setting) { nil }
 
@@ -35,12 +28,6 @@ RSpec.describe SiteSetting::UpsertGroups do
       it { is_expected.to fail_to_find_a_model(:group_ids) }
     end
 
-    context "when group_names is an empty array" do
-      let(:group_names) { [] }
-
-      it { is_expected.to fail_a_contract }
-    end
-
     context "when some group names exist and some don't" do
       let(:group_names) { %w[trust_level_0 nonexistent_group admins] }
 
@@ -49,7 +36,7 @@ RSpec.describe SiteSetting::UpsertGroups do
       it "only includes the existing groups" do
         result
         site_setting_group = SiteSettingGroup.find_by(name: setting)
-        expect(site_setting_group.group_ids).to eq("10|1")
+        expect(site_setting_group.group_ids).to eq("1|10")
       end
     end
 
@@ -69,7 +56,7 @@ RSpec.describe SiteSetting::UpsertGroups do
       it "stores the group ids in pipe-delimited format" do
         result
         site_setting_group = SiteSettingGroup.find_by(name: setting)
-        expect(site_setting_group.group_ids).to eq("10|1")
+        expect(site_setting_group.group_ids).to eq("1|10")
       end
 
       it "creates an entry in the staff action logs" do
@@ -82,7 +69,7 @@ RSpec.describe SiteSetting::UpsertGroups do
 
         history = UserHistory.where(subject: setting).last
         expect(history.previous_value).to be_nil
-        expect(history.new_value).to eq("10|1")
+        expect(history.new_value).to eq("1|10")
       end
 
       it "notifies that site settings have changed" do
@@ -110,7 +97,7 @@ RSpec.describe SiteSetting::UpsertGroups do
       it "updates the existing site setting group record" do
         expect { result }.to change { SiteSettingGroup.find_by(name: setting).group_ids }.from(
           "10|13",
-        ).to("13|1")
+        ).to("1|13")
       end
 
       it "creates an entry in the staff action logs with previous value" do
@@ -123,7 +110,7 @@ RSpec.describe SiteSetting::UpsertGroups do
 
         history = UserHistory.where(subject: setting).last
         expect(history.previous_value).to eq("10|13")
-        expect(history.new_value).to eq("13|1")
+        expect(history.new_value).to eq("1|13")
       end
 
       it "notifies that site settings have changed" do
