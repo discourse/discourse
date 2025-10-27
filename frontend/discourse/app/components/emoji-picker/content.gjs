@@ -55,6 +55,7 @@ const tonableEmojiUrl = (emoji, scale) => {
 };
 
 export default class EmojiPicker extends Component {
+  @service capabilities;
   @service emojiStore;
   @service site;
 
