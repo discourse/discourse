@@ -214,6 +214,15 @@ export default class ProsemirrorEditor extends Component {
           next(() => this.args.focusOut?.());
           return false;
         },
+        drop: (view, event) => {
+          if (
+            [...event.dataTransfer.items].some((item) => item.kind === "file")
+          ) {
+            // Skip processing the drop event (e.g. Safari cross-window content drag),
+            // Uppy's DropTarget should handle that instead.
+            return true;
+          }
+        },
       },
       handleKeyDown: (view, event) => {
         // suppress if Enter/Tab and the autocomplete is open
