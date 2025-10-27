@@ -9,9 +9,7 @@ export default class DominatingTopicComposerMessage extends Component {
   @service currentUser;
 
   <template>
-    <ComposerTipCloseButton
-      @action={{fn @closeMessage @message}}
-    />
+    <ComposerTipCloseButton @action={{fn @closeMessage @message}} />
 
     {{htmlSafe @message.body}}
 
@@ -24,5 +22,4 @@ export default class DominatingTopicComposerMessage extends Component {
       />
     {{/if}}
   </template>
-
 }

@@ -1,8 +1,4 @@
-import Component from "@glimmer/component";
-import { getOwner } from "@ember/owner";
-import { classNameBindings } from "@ember-decorators/component";
 import concatClass from "discourse/helpers/concat-class";
-import discourseComputed from "discourse/lib/decorators";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import DominatingTopicComposerMessage from "./composer-messages/dominating-topic";
 import EducationComposerMessage from "./composer-messages/education";
