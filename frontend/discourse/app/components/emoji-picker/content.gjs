@@ -331,23 +331,12 @@ export default class EmojiPicker extends Component {
     this.addVisibleSections(this._getSectionsUpTo(section));
     this.lastVisibleSection = section;
 
-    // iOS hack to avoid blank div when requesting section during momentum
-    if (this.scrollableNode && this.capabilities.isIOS) {
-      this.scrollableNode.style.overflow = "hidden";
-    }
-
     next(() => {
       schedule("afterRender", () => {
         const targetEmoji = document.querySelector(
           `.emoji-picker__section[data-section="${section}"]`
         );
         targetEmoji.scrollIntoView({ block: "nearest" });
-
-        // iOS hack to avoid blank div when requesting section during momentum
-        if (this.scrollableNode && this.capabilities.isIOS) {
-          this.scrollableNode.style.overflow = "scroll";
-        }
-
         this.scrollObserverEnabled = true;
       });
     });
