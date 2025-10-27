@@ -4,6 +4,7 @@ class ProblemCheck::UpcomingChangeStableOptedOut < ProblemCheck
   self.perform_every = 1.hour
 
   def call
+    return no_problem if !SiteSetting.enable_upcoming_changes
     status_errors
   end
 

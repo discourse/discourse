@@ -60,6 +60,6 @@ module UpcomingChanges
   end
 
   def self.group_ids_for(change_setting_name)
-    SiteSetting.send("#{change_setting_name}_groups_map")
+    SiteSetting.site_setting_group_ids[change_setting_name].presence || []
   end
 end
