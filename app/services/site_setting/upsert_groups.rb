@@ -40,7 +40,7 @@ class SiteSetting::UpsertGroups
 
   def upsert_site_setting_groups(params:, group_ids:, guardian:)
     previous_value = SiteSettingGroup.find_by(name: params.setting)&.group_ids
-    new_value = group_ids.join("|")
+    new_value = group_ids.sort.join("|")
 
     ActiveRecord::Base.transaction do
       SiteSettingGroup.upsert({ name: params.setting, group_ids: new_value }, unique_by: :name)
