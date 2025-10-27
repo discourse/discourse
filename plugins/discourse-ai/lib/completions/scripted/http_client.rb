@@ -6,6 +6,7 @@ module DiscourseAi
       class HttpClient
         def self.for(llm_model:, responses:)
           strategies = [
+            DiscourseAi::Completions::Scripted::AnthropicApiStyle,
             DiscourseAi::Completions::Scripted::GeminiApiStyle,
             DiscourseAi::Completions::Scripted::OpenAiApiStyle,
           ]

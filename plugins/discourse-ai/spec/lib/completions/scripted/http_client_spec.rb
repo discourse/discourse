@@ -4,6 +4,7 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
   fab!(:user)
   fab!(:open_ai_model, :llm_model)
   fab!(:gemini_model, :gemini_model)
+  fab!(:anthropic_model, :anthropic_model)
 
   before { enable_current_plugin }
 
@@ -20,6 +21,11 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
     it "selects the Gemini style for Google providers" do
       client = described_class.for(llm_model: gemini_model, responses: ["hi"])
       expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::GeminiApiStyle)
+    end
+
+    it "selects the Anthropic style for Anthropic providers" do
+      client = described_class.for(llm_model: anthropic_model, responses: ["hi"])
+      expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::AnthropicApiStyle)
     end
   end
 
@@ -152,6 +158,99 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
       response =
         style_for([{ raw_stream: raw_chunks }]).request(
           build_request(generate_uri, payload.to_json),
+        )
+
+      yielded = []
+      response.read_body { |chunk| yielded << chunk }
+      expect(yielded).to eq(raw_chunks)
+    end
+  end
+
+  describe DiscourseAi::Completions::Scripted::AnthropicApiStyle do
+    let(:uri) { URI(anthropic_model.url) }
+    let(:payload) do
+      {
+        model: anthropic_model.name,
+        system: "You are helpful",
+        messages: [{ role: "user", content: "Hello?" }],
+      }
+    end
+
+    def style_for(responses)
+      DiscourseAi::Completions::Scripted::AnthropicApiStyle.new(
+        Array.wrap(responses),
+        anthropic_model,
+      )
+    end
+
+    it "produces Anthropic message payloads" do
+      response = style_for(["Hi there"]).request(build_request(uri, payload.to_json))
+
+      body = JSON.parse(response.body, symbolize_names: true)
+      expect(body[:role]).to eq("assistant")
+      expect(body[:content].first).to eq({ type: "text", text: "Hi there" })
+      expect(body[:stop_reason]).to eq("end_turn")
+      expect(body[:usage]).to include(:input_tokens, :output_tokens)
+    end
+
+    it "streams Anthropic messages via event stream chunks" do
+      streaming_payload = payload.merge(stream: true)
+      response =
+        style_for(["Streaming response"]).request(build_request(uri, streaming_payload.to_json))
+
+      chunks = []
+      response.read_body { |chunk| chunks << chunk }
+
+      expect(chunks.first).to include("event: message_start")
+      expect(chunks.grep(/event: content_block_delta/)).not_to be_empty
+      expect(chunks.last).to include("event: message_stop")
+    end
+
+    it "returns tool call payloads including preamble text" do
+      scripted = {
+        content: "Let me call a tool",
+        tool_calls: [{ id: "toolu_abc", name: "lookup_weather", arguments: { city: "Paris" } }],
+      }
+
+      response = style_for([scripted]).request(build_request(uri, payload.to_json))
+
+      body = JSON.parse(response.body, symbolize_names: true)
+      expect(body[:content].first).to eq({ type: "text", text: "Let me call a tool" })
+
+      tool_block = body[:content].last
+      expect(tool_block[:type]).to eq("tool_use")
+      expect(tool_block[:name]).to eq("lookup_weather")
+      expect(tool_block[:input]).to eq({ city: "Paris" })
+      expect(body[:stop_reason]).to eq("tool_use")
+    end
+
+    it "streams tool call payloads" do
+      scripted = {
+        tool_calls: [
+          { id: "toolu_weather", name: "lookup_weather", arguments: { city: "Berlin" } },
+        ],
+      }
+
+      streaming_payload = payload.merge(stream: true)
+      response = style_for([scripted]).request(build_request(uri, streaming_payload.to_json))
+
+      chunks = []
+      response.read_body { |chunk| chunks << chunk }
+
+      expect(chunks.grep(/content_block_start/).first).to include("\"tool_use\"")
+      expect(chunks.grep(/input_json_delta/)).not_to be_empty
+
+      final_chunks = chunks.last(2)
+      expect(final_chunks.first).to include("\"stop_reason\":\"tool_use\"")
+      expect(final_chunks.last).to include("{\"type\":\"message_stop\"}")
+    end
+
+    it "passes raw stream payloads through unchanged" do
+      streaming_payload = payload.merge(stream: true)
+      raw_chunks = ["event: ping\ndata: {\"type\":\"ping\"}\n\n"]
+      response =
+        style_for([{ raw_stream: raw_chunks }]).request(
+          build_request(uri, streaming_payload.to_json),
         )
 
       yielded = []
