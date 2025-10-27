@@ -35,7 +35,7 @@ import CategoryChooser from "select-kit/components/category-chooser";
 import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
-import resizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
+import resizableNode from "../modifiers/resizable-node";
 
 export default class ComposerContainer extends Component {
   @service composer;

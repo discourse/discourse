@@ -15,7 +15,7 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
-import chatResizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
+import chatResizableNode from "discourse/modifiers/resizable-node";
 
 @tagName("")
 export default class ChatDrawer extends Component {
