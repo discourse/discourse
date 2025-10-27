@@ -272,7 +272,7 @@ module DiscourseAi
                   blk.call("")
                 end
               end
-              call_status = :success # Mark as successful if we reach this point
+              call_status = :success
               return response_data
             ensure
               if log
