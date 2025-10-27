@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
@@ -18,7 +17,7 @@ export default class FKControlCheckbox extends Component {
     <FKLabel class="form-kit__control-checkbox-label">
       <input
         type="checkbox"
-        checked={{eq @field.value true}}
+        checked={{@field.value}}
         class="form-kit__control-checkbox"
         disabled={{@field.disabled}}
         ...attributes

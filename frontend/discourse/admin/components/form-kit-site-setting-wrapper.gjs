@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
+import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import CategoryList from "admin/components/site-settings/category-list";
 import Color from "admin/components/site-settings/color";
@@ -33,9 +34,6 @@ class PrimaryActions extends Component {
     await menu.close();
 
     this.args.field.set(this.args.setting.default);
-    this.args.save({
-      [this.args.setting.setting]: this.args.field.value,
-    });
   }
 
   @action
@@ -52,13 +50,26 @@ class PrimaryActions extends Component {
   }
 
   @action
-  async copyStettingAsUrl(menu) {
+  async copySettingAsUrl(menu) {
     await menu.close();
 
     const url = `${window.location.origin}/admin/site_settings/category/all_results?filter=${this.args.setting.setting}`;
-    navigator.clipboard.writeText(url).then(() => {
-      this.toasts.success({ data: { message: "Copied to clipboard!" } });
-    });
+
+    try {
+      await clipboardCopy(url);
+      this.toasts.success({
+        data: {
+          message: i18n("admin.site_settings.actions.copied_to_clipboard"),
+        },
+      });
+    } catch (error) {
+      console.error("Failed to copy to clipboard:", error); // eslint-disable-line no-console
+      this.toasts.error({
+        data: {
+          message: i18n("admin.site_settings.actions.failed_to_copy"),
+        },
+      });
+    }
   }
 
   <template>
@@ -73,16 +84,20 @@ class PrimaryActions extends Component {
             <DButton
               @disabled={{this.cannotRevert}}
               @action={{fn this.revertToDefault menu}}
-            >
-              Reset Setting
-            </DButton>
+              @label="admin.site_settings.actions.reset_setting"
+            />
           </dropdown.item>
           <dropdown.item>
-            <DButton @action={{fn this.copyStettingAsUrl menu}}>Copy link to
-              setting</DButton>
+            <DButton
+              @action={{fn this.copySettingAsUrl menu}}
+              @label="admin.site_settings.actions.copy_link"
+            />
           </dropdown.item>
           <dropdown.item>
-            <DButton @action={{this.settingHistory}}>Setting History</DButton>
+            <DButton
+              @action={{this.settingHistory}}
+              @label="admin.site_settings.actions.setting_history"
+            />
           </dropdown.item>
         </menu.Dropdown>
       </:content>
@@ -91,40 +106,103 @@ class PrimaryActions extends Component {
 }
 
 export default class FormKitSiteSettingWrapper extends Component {
+  formApi = null;
+
   @cached
   get formData() {
     const data = {};
     this.args.settings.forEach((setting) => {
-      data[setting.setting] = setting.value;
+      let value = setting.value;
+      if (setting.type === "bool") {
+        value = value === true || value === "true";
+      } else if (setting.type === "integer") {
+        value = parseInt(value, 10);
+      } else if (setting.type === "float") {
+        value = parseFloat(value);
+      }
+      data[setting.setting] = value;
     });
     return data;
   }
 
+  @action
+  onRegisterApi(api) {
+    this.formApi = api;
+  }
+
   validateHexColor(name, color, helper) {
+    // Allow empty values (for reset or optional colors)
+    if (!color || color === "") {
+      return;
+    }
+
     const isValid = /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color);
     if (!isValid) {
+      const setting = this.args.settings.find((s) => s.setting === name);
       helper.addError(name, {
-        title: i18n(`foo.bar.${name}`),
-        message: "Color is not a valid RGB.",
+        title: setting?.humanized_name || name,
+        message: i18n("admin.site_settings.validation.invalid_color"),
       });
     }
   }
 
-  async save(data, fields) {
+  @action
+  async save(data, options = {}) {
+    if (!this.formApi) {
+      return;
+    }
+
     const params = {};
-    Object.keys(data).forEach((key) => {
-      const value = data[key];
-      // this.args.setting.buffered.set(
-      //   this.args.setting.setting,
-      //   data[this.args.setting.setting]
-      // );
-      // this.args.setting.buffered.applyChanges();
+    const dirtyFields = new Set();
+
+    if (options.patches) {
+      options.patches.forEach((patch) => {
+        if (patch.path && patch.path[0]) {
+          dirtyFields.add(patch.path[0]);
+        }
+      });
+    } else if (data) {
+      Object.keys(data).forEach((key) => dirtyFields.add(key));
+    }
+
+    dirtyFields.forEach((key) => {
+      const setting = this.args.settings.find((s) => s.setting === key);
+      let value = this.formApi.get(key);
+
+      if (setting?.type === "bool") {
+        value = value ? "t" : "f";
+      } else if (setting?.type === "integer" || setting?.type === "float") {
+        value = String(value);
+      }
+
       params[key] = {
         value,
         backfill: false,
       };
     });
-    await SiteSetting.bulkUpdate(params);
+
+    try {
+      await SiteSetting.bulkUpdate(params);
+    } catch (error) {
+      const errorData = error.jqXHR?.responseJSON;
+      if (errorData?.errors) {
+        errorData.errors.forEach((errorMessage) => {
+          const match = errorMessage.match(/^([^:]+):\s*(.+)$/);
+          if (match) {
+            const [, settingName, message] = match;
+            const setting = this.args.settings.find(
+              (s) => s.setting === settingName
+            );
+            this.formApi.addError(settingName, {
+              title: setting?.humanized_name || settingName,
+              message,
+            });
+          }
+        });
+      } else {
+        throw error;
+      }
+    }
   }
 
   @action
@@ -148,10 +226,31 @@ export default class FormKitSiteSettingWrapper extends Component {
     set(category?.id);
   }
 
+  @action
+  getUsernameArray(value) {
+    return value ? [value] : [];
+  }
+
+  @action
+  setUsername(set, usernames) {
+    set(usernames?.[0] || "");
+  }
+
+  @action
+  isOverridden(setting) {
+    if (!this.formApi) {
+      return setting.overridden;
+    }
+    const currentValue = String(this.formApi.get(setting.setting) ?? "");
+    const defaultValue = String(setting.default ?? "");
+    return currentValue !== defaultValue;
+  }
+
   <template>
     <Form
       @onSubmit={{this.save}}
       @data={{this.formData}}
+      @onRegisterApi={{this.onRegisterApi}}
       class="form-kit-settings-wrapper"
       as |form|
     >
@@ -161,7 +260,7 @@ export default class FormKitSiteSettingWrapper extends Component {
           <form.Field
             @name={{setting.setting}}
             @title={{setting.humanized_name}}
-            @emphasis={{setting.overridden}}
+            @emphasis={{this.isOverridden setting}}
             @format={{this.fieldFormat setting.type}}
           >
             <:body as |field|>
@@ -182,16 +281,27 @@ export default class FormKitSiteSettingWrapper extends Component {
           <form.Field
             @name={{setting.setting}}
             @title={{setting.humanized_name}}
-            @emphasis={{setting.overridden}}
+            @emphasis={{this.isOverridden setting}}
             @format={{this.fieldFormat setting.type}}
             @validate={{this.validateHexColor}}
             as |field|
           >
             <field.Custom>
-              <Color
-                @changeValueCallback={{field.set}}
-                @value={{field.value}}
-              />
+              <:body>
+                <Color
+                  @changeValueCallback={{field.set}}
+                  @value={{field.value}}
+                />
+              </:body>
+              <:primary-actions as |actions|>
+                <PrimaryActions
+                  @form={{form}}
+                  @field={{field}}
+                  @actions={{actions}}
+                  @setting={{setting}}
+                  @save={{this.save}}
+                />
+              </:primary-actions>
             </field.Custom>
           </form.Field>
         {{else}}
@@ -199,7 +309,7 @@ export default class FormKitSiteSettingWrapper extends Component {
             @name={{setting.setting}}
             @title={{setting.humanized_name}}
             @description={{htmlSafe setting.description}}
-            @emphasis={{setting.overridden}}
+            @emphasis={{this.isOverridden setting}}
             @format={{this.fieldFormat setting.type}}
           >
             <:body as |field|>
@@ -253,8 +363,14 @@ export default class FormKitSiteSettingWrapper extends Component {
                 </field.Input>
               {{else if (eq setting.type "upload")}}
                 <field.Image @type="site_setting">
-                  <:primary-actions>
-                    primary
+                  <:primary-actions as |actions|>
+                    <PrimaryActions
+                      @form={{form}}
+                      @field={{field}}
+                      @actions={{actions}}
+                      @setting={{setting}}
+                      @save={{this.save}}
+                    />
                   </:primary-actions>
                 </field.Image>
               {{else if (eq setting.type "enum")}}
@@ -301,47 +417,124 @@ export default class FormKitSiteSettingWrapper extends Component {
                 </field.Custom>
               {{else if (eq setting.type "group")}}
                 <field.Custom>
-                  <GroupList @onChange={{field.set}} @value={{field.value}} />
+                  <:body>
+                    <GroupList @onChange={{field.set}} @value={{field.value}} />
+                  </:body>
+                  <:primary-actions as |actions|>
+                    <PrimaryActions
+                      @form={{form}}
+                      @field={{field}}
+                      @actions={{actions}}
+                      @setting={{setting}}
+                      @save={{this.save}}
+                    />
+                  </:primary-actions>
                 </field.Custom>
               {{else if (eq setting.type "category_list")}}
                 <field.Custom>
-                  <CategoryList
-                    @changeValueCallback={{field.set}}
-                    @value={{field.value}}
-                  />
+                  <:body>
+                    <CategoryList
+                      @changeValueCallback={{field.set}}
+                      @value={{field.value}}
+                    />
+                  </:body>
+                  <:primary-actions as |actions|>
+                    <PrimaryActions
+                      @form={{form}}
+                      @field={{field}}
+                      @actions={{actions}}
+                      @setting={{setting}}
+                      @save={{this.save}}
+                    />
+                  </:primary-actions>
                 </field.Custom>
               {{else if (eq setting.type "tag_list")}}
                 <field.Custom>
-                  <TagList @onChange={{field.set}} @value={{field.value}} />
+                  <:body>
+                    <TagList @onChange={{field.set}} @value={{field.value}} />
+                  </:body>
+                  <:primary-actions as |actions|>
+                    <PrimaryActions
+                      @form={{form}}
+                      @field={{field}}
+                      @actions={{actions}}
+                      @setting={{setting}}
+                      @save={{this.save}}
+                    />
+                  </:primary-actions>
                 </field.Custom>
               {{else if (eq setting.type "username")}}
                 <field.Custom>
-                  <UserChooser
-                    @value={{field.value}}
-                    @options={{hash maximum=1}}
-                    @onChange={{field.set}}
-                  />
+                  <:body>
+                    <UserChooser
+                      @value={{this.getUsernameArray field.value}}
+                      @options={{hash maximum=1}}
+                      @onChange={{fn this.setUsername field.set}}
+                    />
+                  </:body>
+                  <:primary-actions as |actions|>
+                    <PrimaryActions
+                      @form={{form}}
+                      @field={{field}}
+                      @actions={{actions}}
+                      @setting={{setting}}
+                      @save={{this.save}}
+                    />
+                  </:primary-actions>
                 </field.Custom>
               {{else if (eq setting.type "locale_enum")}}
                 <field.Custom>
-                  <LocaleEnum
-                    @setting={{setting}}
-                    @changeValueCallback={{field.set}}
-                    @value={{field.value}}
-                  />
+                  <:body>
+                    <LocaleEnum
+                      @setting={{setting}}
+                      @changeValueCallback={{field.set}}
+                      @value={{field.value}}
+                    />
+                  </:body>
+                  <:primary-actions as |actions|>
+                    <PrimaryActions
+                      @form={{form}}
+                      @field={{field}}
+                      @actions={{actions}}
+                      @setting={{setting}}
+                      @save={{this.save}}
+                    />
+                  </:primary-actions>
                 </field.Custom>
               {{else if (eq setting.type "host_list")}}
                 <field.Custom>
-                  <HostList
-                    @setting={{setting}}
-                    @onChangeCallback={{field.set}}
-                    @value={{field.value}}
-                    @allowAny={{not (eq setting.anyValue false)}}
-                  />
+                  <:body>
+                    <HostList
+                      @setting={{setting}}
+                      @onChangeCallback={{field.set}}
+                      @value={{field.value}}
+                      @allowAny={{not (eq setting.anyValue false)}}
+                    />
+                  </:body>
+                  <:primary-actions as |actions|>
+                    <PrimaryActions
+                      @form={{form}}
+                      @field={{field}}
+                      @actions={{actions}}
+                      @setting={{setting}}
+                      @save={{this.save}}
+                    />
+                  </:primary-actions>
                 </field.Custom>
               {{else if (eq setting.type "group_list")}}
                 <field.Custom>
-                  <GroupList @onChange={{field.set}} @value={{field.value}} />
+                  <:body>
+                    <GroupList @onChange={{field.set}} @value={{field.value}} />
+                  </:body>
+                  <:primary-actions as |actions|>
+                    <PrimaryActions
+                      @form={{form}}
+                      @field={{field}}
+                      @actions={{actions}}
+                      @setting={{setting}}
+                      @save={{this.save}}
+                    />
+                  </:primary-actions>
                 </field.Custom>
               {{else if (eq setting.type "list")}}
                 <field.Custom>
@@ -374,9 +567,6 @@ export default class FormKitSiteSettingWrapper extends Component {
                 </field.Custom>
               {{else}}
                 {{setting.type}}
-
-                {{log setting.type setting.setting}}
-
               {{/if}}
             </:body>
           </form.Field>
@@ -388,16 +578,26 @@ export default class FormKitSiteSettingWrapper extends Component {
         <form.Actions
           class="site-settings-form__floating-actions admin-changes-banner"
           @floating={{true}}
-          @floatContainerClass={{"admin-detail"}}
+          @floatContainerClass="admin-detail"
         >
-          {{#if form.dirtyCount}}
-            You have
-            {{form.dirtyCount}}
-            unsaved change(s)
-          {{/if}}
+          <div class="admin-changes-banner__message">
+            {{htmlSafe
+              (i18n "admin.site_settings.dirty_banner" count=form.dirtyCount)
+            }}
+          </div>
           <div class="site-settings-form__floating-buttons">
-            <form.Reset @translatedLabel="Discard change" />
-            <form.Submit @translatedLabel="Save change" />
+            <form.Reset
+              @translatedLabel={{i18n
+                "admin.site_settings.discard"
+                count=form.dirtyCount
+              }}
+            />
+            <form.Submit
+              @translatedLabel={{i18n
+                "admin.site_settings.save"
+                count=form.dirtyCount
+              }}
+            />
           </div>
         </form.Actions>
 

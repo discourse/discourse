@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
@@ -52,6 +53,7 @@ class FKForm extends Component {
       reset: this.onReset,
       addError: this.addError,
       removeError: this.removeError,
+      patches: this.formData.patches,
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
@@ -108,9 +110,29 @@ class FKForm extends Component {
   get dirtyCount() {
     const paths = new Set();
     this.formData.patches.forEach((patch) => {
-      paths.add(patch.path[0]);
+      const fieldName = patch.path[0];
+      const currentValue = this.formData.get(fieldName);
+      const originalValue = this.formData.data[fieldName];
+
+      const normalizedCurrent = this.normalizeValue(currentValue);
+      const normalizedOriginal = this.normalizeValue(originalValue);
+
+      if (normalizedCurrent !== normalizedOriginal) {
+        paths.add(fieldName);
+      }
     });
     return paths.size;
+  }
+
+  normalizeValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    // Handle objects and arrays with deep comparison via JSON
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+    return String(value);
   }
 
   @action
@@ -235,17 +257,23 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
+      await new Promise((resolve) => next(resolve));
+
       await this.validate([...this.fields.values()]);
 
       if (this.formData.isValid) {
+        const patchesSnapshot = [...this.formData.patches];
+
         this.formData.save(field?.name);
 
-        if (field) {
+        if (field?.name) {
           await this.args.onSubmit?.({
             [field.name]: this.formData.get(field.name),
           });
         } else {
-          await this.args.onSubmit?.(this.formData.draftData);
+          await this.args.onSubmit?.(this.formData.draftData, {
+            patches: patchesSnapshot,
+          });
         }
       } else {
         const elementPosition = this.formElement.getBoundingClientRect().top;
@@ -331,7 +359,7 @@ class FKForm extends Component {
           Alert=FKAlert
           Submit=(component
             FKSubmit
-            action=this.onSubmit
+            onSubmit=this.onSubmit
             forwardEvent=true
             class="btn-primary form-kit__button"
             type="submit"

@@ -57,22 +57,21 @@ export default class FKFieldData extends Component {
   }
 
   get isPristine() {
-    const patches = this.args.data.patches.filter((patch) => {
-      return (
-        Array.isArray(patch.path) &&
-        patch.path.length === 1 &&
-        patch.path[0] === this.name
-      );
-    });
-    const inversePatches = this.args.data.inversePatches.filter((patch) => {
-      return (
-        Array.isArray(patch.path) &&
-        patch.path.length === 1 &&
-        patch.path[0] === this.name
-      );
-    });
+    const currentValue = this.normalizeValue(this.value);
+    const originalValue = this.normalizeValue(this.args.data.data[this.name]);
 
-    return patches.length + inversePatches.length === 0;
+    return currentValue === originalValue;
+  }
+
+  normalizeValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+    return String(value);
   }
 
   @action

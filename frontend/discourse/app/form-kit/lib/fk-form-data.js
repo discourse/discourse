@@ -80,10 +80,38 @@ export default class FKFormData {
 
   /**
    * Checks if the changeset is dirty.
-   * @return {boolean} True if patches have been applied.
+   * @return {boolean} True if any values differ from original data.
    */
   get isDirty() {
-    return !this.isPristine;
+    const paths = new Set();
+    this.patches.forEach((patch) => {
+      const fieldName = patch.path[0];
+      const currentValue = this.get(fieldName);
+      const originalValue = this.data[fieldName];
+
+      const normalizedCurrent = this.normalizeValue(currentValue);
+      const normalizedOriginal = this.normalizeValue(originalValue);
+
+      if (normalizedCurrent !== normalizedOriginal) {
+        paths.add(fieldName);
+      }
+    });
+    return paths.size > 0;
+  }
+
+  /**
+   * Normalizes a value for comparison.
+   * @param {any} value - The value to normalize.
+   * @return {string} The normalized value.
+   */
+  normalizeValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+    return String(value);
   }
 
   /**
@@ -117,8 +145,7 @@ export default class FKFormData {
       this.execute();
       this.resetPatches();
     }
-
-    console.log("save", name);
+    console.log("save", name); // eslint-disable-line no-console
 
     await new Promise((resolve) => next(resolve));
   }
