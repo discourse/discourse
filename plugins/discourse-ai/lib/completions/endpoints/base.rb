@@ -135,7 +135,7 @@ module DiscourseAi
 
           cancel_manager_callback = nil
           cancelled = false
-          call_status = :error # Track success/failure for metrics
+          call_status = :error
 
           FinalDestination::HTTP.start(
             model_uri.host,
