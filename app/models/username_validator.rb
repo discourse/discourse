@@ -9,7 +9,7 @@ class UsernameValidator
   #
   # Example: UsernameValidator.perform_validation(user, 'name')
   def self.perform_validation(object, field_name, opts = {})
-    validator = UsernameValidator.new(object.public_send(field_name), object: object, **opts)
+    validator = UsernameValidator.new(object.public_send(field_name), object:, **opts)
     unless validator.valid_format?
       validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }
     end
