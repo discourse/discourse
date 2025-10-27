@@ -26,7 +26,7 @@
       <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
 
       <style>
-        <%= File.read("#{Rails.root}/app/assets/javascripts/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
+        <%= File.read("#{Rails.root}/frontend/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
       </style>
 
       <%= discourse_stylesheet_link_tag(:common, theme_id: nil) %>

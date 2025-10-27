@@ -27,22 +27,24 @@ export function scrollListToMessage(
     message.expanded = true;
   }
 
-  schedule("afterRender", () => {
-    const messageEl = list.querySelector(
-      `.chat-message-container[data-id='${message.id}']`
-    );
+  next(() => {
+    schedule("afterRender", () => {
+      const messageEl = list.querySelector(
+        `.chat-message-container[data-id='${message.id}']`
+      );
 
-    if (!messageEl) {
-      return;
-    }
+      if (!messageEl) {
+        return;
+      }
 
-    if (opts.highlight) {
-      message.highlight();
-    }
+      if (opts.highlight) {
+        message.highlight();
+      }
 
-    messageEl.scrollIntoView({
-      behavior: "auto",
-      block: opts.position || "center",
+      messageEl.scrollIntoView({
+        behavior: "auto",
+        block: opts.position || "center",
+      });
     });
   });
 }

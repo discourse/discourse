@@ -67,6 +67,41 @@ RSpec.describe Discourse do
     end
   end
 
+  describe ".after_unicorn_worker_fork" do
+    around do |example|
+      original_env = ENV.to_hash
+      original_config = ActiveRecord::Base.configurations
+      original_show_statement_timeout =
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"]
+
+      begin
+        example.run
+      ensure
+        ENV.replace(original_env)
+        ActiveRecord::Base.configurations = original_config
+        ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+        ActiveRecord::Base.establish_connection
+
+        expect(
+          ActiveRecord::Base.connection.execute("SHOW statement_timeout").first[
+            "statement_timeout"
+          ],
+        ).to eq(original_show_statement_timeout)
+      end
+    end
+
+    it "applies worker-specific database variable overrides" do
+      ENV["DISCOURSE_DB_VARIABLES_STATEMENT_TIMEOUT"] = "5s"
+      ENV["DISCOURSE_UNICORN_WORKER_DB_VARIABLES_STATEMENT_TIMEOUT"] = "100s"
+
+      Discourse.after_unicorn_worker_fork
+
+      expect(
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
+      ).to eq("100s")
+    end
+  end
+
   describe ".plugins_sorted_by_name" do
     before do
       Discourse.stubs(:visible_plugins).returns(

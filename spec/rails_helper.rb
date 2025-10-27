@@ -148,6 +148,20 @@ module TestSetup
     WordWatcher.disable_cache
 
     SiteSetting.provider.all.each { |setting| SiteSetting.remove_override!(setting.name) }
+
+    # Set some standard overrides for tests. Some for performance, some to make the tests easier,
+    # and some because their default was changed, and we didn't want to refactor all the relevant specs.
+    {
+      s3_upload_bucket: "bucket",
+      min_post_length: 5,
+      min_first_post_length: 5,
+      min_personal_message_post_length: 10,
+      download_remote_images_to_local: false,
+      unique_posts_mins: 0,
+      max_consecutive_replies: 0,
+      allow_uncategorized_topics: true,
+    }.each { |k, v| SiteSetting.set(k, v) }
+
     SiteSetting.refresh!(refresh_site_settings: false, refresh_theme_site_settings: true)
 
     # very expensive IO operations
@@ -523,6 +537,8 @@ RSpec.configure do |config|
         scroll_to
         trigger
         set
+        select_option
+        unselect_option
       ]
 
       NODE_METHODS_TO_PATCH.each do |method_name|
@@ -550,6 +566,19 @@ RSpec.configure do |config|
 
     Capybara::Playwright::Node.prepend(CapybaraPlaywrightNodePatch)
     Capybara::Playwright::Browser.prepend(CapybaraPlaywrightBrowserPatch)
+
+    module PlaywrightErrorPatch
+      def message
+        msg = super
+        if msg.include?("Please run the following command to download new browsers:")
+          replacement = "pnpm playwright-install"
+          msg.sub("playwright install".ljust(replacement.size), replacement)
+        else
+          msg
+        end
+      end
+    end
+    Playwright::Error.prepend(PlaywrightErrorPatch)
 
     config.after(:each, type: :system) do |example|
       # If test passed, but we had a capybara finder timeout, raise it now
@@ -928,7 +957,7 @@ RSpec.configure do |config|
       end
     end
 
-    $playwright_logger.logs.each do |log|
+    $playwright_logger&.logs&.each do |log|
       next if log[:level] != "WARNING"
       deprecation_id = log[:message][/\[deprecation id: ([^\]]+)\]/, 1]
       next if deprecation_id.nil?

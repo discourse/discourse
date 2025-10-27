@@ -11,6 +11,13 @@ module Jobs
 
       return if !DiscourseAi::Translation.backfill_enabled?
 
+      unless DiscourseAi::Translation.credits_available_for_topic_localization?
+        Rails.logger.info(
+          "Translation skipped for topics: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       locales = SiteSetting.content_localization_supported_locales.split("|")
       locales.each do |locale|
         base_locale = locale.split("_").first

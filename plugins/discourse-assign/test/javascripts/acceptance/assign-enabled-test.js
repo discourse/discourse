@@ -322,7 +322,7 @@ acceptance(
 
         // usually this is done automatically by this pretender but we
         // have to do it manually here because we are overriding the
-        // pretender see app/assets/javascripts/discourse/tests/helpers/create-pretender.js
+        // pretender see frontend/discourse/tests/helpers/create-pretender.js
         json.user.can_edit = true;
 
         return helper.response(200, json);

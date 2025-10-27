@@ -34,8 +34,6 @@ module("Integration | Component | da-groups-field", function (hooks) {
   });
 
   test("set value", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "groups",
     });
@@ -43,8 +41,8 @@ module("Integration | Component | da-groups-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -56,8 +54,6 @@ module("Integration | Component | da-groups-field", function (hooks) {
   });
 
   test("supports a maximum value", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "groups",
       extra: { maximum: 1 },
@@ -66,8 +62,8 @@ module("Integration | Component | da-groups-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -84,8 +80,6 @@ module("Integration | Component | da-groups-field", function (hooks) {
   });
 
   test("empty", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "groups",
     });
@@ -93,8 +87,8 @@ module("Integration | Component | da-groups-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );

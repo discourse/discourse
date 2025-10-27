@@ -495,7 +495,7 @@ class TopicsFilter
             topics.id NOT IN (
               SELECT p1.topic_id
               FROM posts p1
-              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL
+              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL #{whisper_condition("p1")}
               GROUP BY p1.topic_id
               HAVING COUNT(DISTINCT p1.user_id) = :user_count
             )
@@ -505,7 +505,7 @@ class TopicsFilter
             EXISTS (
               SELECT 1
               FROM posts p#{idx}
-              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL
+              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL #{whisper_condition("p#{idx}")}
               LIMIT 1
             )
           SQL
@@ -518,6 +518,7 @@ class TopicsFilter
                 FROM posts p
                 WHERE p.user_id IN (:user_ids)
                   AND p.deleted_at IS NULL
+                  #{whisper_condition("p")}
               )
             SQL
       end
@@ -558,7 +559,7 @@ class TopicsFilter
               SELECT 1
               FROM posts pg#{idx}
               JOIN group_users gu#{idx} ON gu#{idx}.user_id = pg#{idx}.user_id
-              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid}
+              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid} #{whisper_condition("pg#{idx}")}
             )
           SQL
       else
@@ -568,6 +569,7 @@ class TopicsFilter
                 FROM posts p
                 JOIN group_users gu ON gu.user_id = p.user_id
                 WHERE gu.group_id IN (:group_ids)
+                  #{whisper_condition("p")}
               )
             SQL
       end
@@ -1036,5 +1038,13 @@ class TopicsFilter
     scope.joins(
       "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
     )
+  end
+
+  def whisper_condition(table_alias)
+    if @guardian.can_see_whispers?
+      ""
+    else
+      "AND #{table_alias}.post_type != #{Post.types[:whisper]}"
+    end
   end
 end

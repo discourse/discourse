@@ -1947,6 +1947,9 @@ email:
   enable_staged_users:
     default: true
     area: "email"
+  email_in_allow_system_user_fallback:
+    default: false
+    hidden: true
   maximum_staged_users_per_email:
     default: 10
     area: "email"
@@ -4208,8 +4211,7 @@ experimental:
     area: "experimental"
   experimental_lightbox:
     client: true
-    default: false
-    hidden: true
+    default: true
     area: "experimental"
   show_preview_for_form_templates:
     client: true

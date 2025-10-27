@@ -174,7 +174,7 @@ after_initialize do
       object.emoji_reactions.any? do |reaction|
         reaction.reaction_users.any? { |ru| ru.user_id == scope.user.id } &&
           (
-            if SiteSetting.discourse_reactions_experimental_allow_any_emoji
+            if SiteSetting.discourse_reactions_allow_any_emoji
               reaction.reaction_value != DiscourseReactions::Reaction.main_reaction_id
             else
               DiscourseReactions::Reaction.reactions_counting_as_like.include?(

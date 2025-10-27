@@ -116,6 +116,7 @@ class DiscoursePluginRegistry
   define_filtered_register :hashtag_autocomplete_contextual_type_priorities
 
   define_filtered_register :search_groups_set_query_callbacks
+  define_filtered_register :search_handlers
 
   define_filtered_register :stats
   define_filtered_register :bookmarkables
@@ -249,9 +250,9 @@ class DiscoursePluginRegistry
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {
-    "moment.js" => "app/assets/javascripts/discourse/node_modules/moment/moment.js",
+    "moment.js" => "frontend/discourse/node_modules/moment/moment.js",
     "moment-timezone.js" =>
-      "app/assets/javascripts/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
+      "frontend/discourse/node_modules/moment-timezone/builds/moment-timezone-with-data.js",
   }
 
   def self.core_asset_for_name(name)

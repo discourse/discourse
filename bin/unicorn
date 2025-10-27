@@ -1,56 +1,28 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'pathname'
-ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
-  Pathname.new(__FILE__).realpath)
-RAILS_ROOT = File.expand_path("../../", Pathname.new(__FILE__).realpath)
+require "pathname"
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", Pathname.new(__FILE__).realpath)
 
-if defined? Bundler
-  STDERR.puts <<~MESSAGE
+STDERR.puts <<~MESSAGE if defined?(Bundler)
     WARNING: Using `bundle exec` to start the server is unnecessary, and will make startup slower. Use `bin/rails s` or `bin/unicorn`.
   MESSAGE
-end
 
-require 'rubygems'
-require 'bundler/setup'
-require 'digest'
-require 'fileutils'
+require "rubygems"
+require "bundler/setup"
+require "fileutils"
 
 dev_mode = false
 
-def ensure_cache_clean!
-  _all_plugin_directories = Pathname.new(RAILS_ROOT + '/plugins').children.select(&:directory?)
-  core_git_sha = `git rev-parse HEAD`.strip
-  plugins_combined_git_sha = `git ls-files -s plugins | git hash-object --stdin`.strip
-  client_locale_paths_digest =
-    Digest::SHA1.hexdigest(Dir.glob("#{RAILS_ROOT}/plugins/*/config/locales/client.*.yml").join)
-  super_sha =
-    Digest::SHA1.hexdigest(core_git_sha + plugins_combined_git_sha + client_locale_paths_digest)
-  hash_file = "#{RAILS_ROOT}/tmp/plugin-hash"
-
-  old_hash = File.exist?(hash_file) ? File.read(hash_file) : nil
-
-  if old_hash && old_hash != super_sha
-    FileUtils.rm_rf("#{RAILS_ROOT}/tmp/cache")
-  end
-
-  FileUtils.mkdir_p(RAILS_ROOT + "/tmp")
-  File.write(hash_file, super_sha)
-end
-
 # in development do some fussing around, to automate config
-if !ARGV.include?("-E") &&
-    !ARGV.include?("--env") &&
-    (["development", "test"].include?(ENV["RAILS_ENV"]) || !ENV["RAILS_ENV"])
-
+if !ARGV.include?("-E") && !ARGV.include?("--env") &&
+     (%w[development test].include?(ENV["RAILS_ENV"]) || !ENV["RAILS_ENV"])
   dev_mode = true
 
   ARGV.push("-N")
   if !ARGV.include?("-c") && !ARGV.include?("--config-file")
     ARGV.push("-c")
-    ARGV.push(File.expand_path("../../config/unicorn.conf.rb",
-      Pathname.new(__FILE__).realpath))
+    ARGV.push(File.expand_path("../../config/unicorn.conf.rb", Pathname.new(__FILE__).realpath))
   end
 
   # we do not want to listen on 2 ports, so lets fix it
@@ -66,14 +38,10 @@ if !ARGV.include?("-E") &&
   end
 
   ENV["UNICORN_SIDEKIQS"] ||= "1"
-
-  ensure_cache_clean!
 end
 
 if ARGV.include?("--help")
-  fork do
-    load Gem.bin_path('unicorn', 'unicorn')
-  end
+  fork { load Gem.bin_path("unicorn", "unicorn") }
   Process.wait
   puts "Extra Discourse Options:"
   puts "  -x                       run without sidekiq"
@@ -92,24 +60,20 @@ if dev_mode
   restart = true
   while restart
     restart = false
-    pid = fork do
-      load Gem.bin_path('unicorn', 'unicorn')
-    end
+    pid = fork { load Gem.bin_path("unicorn", "unicorn") }
     done = false
 
-    Signal.trap('INT') do
+    Signal.trap("INT") do
       # wait for parent to be done
     end
 
-    Signal.trap('USR2') do
-      Process.kill('QUIT', pid)
+    Signal.trap("USR2") do
+      Process.kill("QUIT", pid)
       puts "RESTARTING UNICORN"
       restart = true
     end
 
-    Signal.trap("TERM") do
-      Process.kill('TERM', pid)
-    end
+    Signal.trap("TERM") { Process.kill("TERM", pid) }
 
     while !done
       sleep 1
@@ -117,5 +81,5 @@ if dev_mode
     end
   end
 else
-  load Gem.bin_path('unicorn', 'unicorn')
+  load Gem.bin_path("unicorn", "unicorn")
 end
