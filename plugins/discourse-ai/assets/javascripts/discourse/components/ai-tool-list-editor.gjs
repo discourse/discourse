@@ -10,6 +10,7 @@ import DPageSubheader from "discourse/components/d-page-subheader";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import DMenu from "float-kit/components/d-menu";
@@ -84,11 +85,13 @@ export default class AiToolListEditor extends Component {
     })
       .then((result) => {
         let tool = AiTool.create(result.ai_tool);
-        let existingTool = this.args.tools.find((item) => item.id === tool.id);
+        let existingTool = this.args.tools.content.find(
+          (item) => item.id === tool.id
+        );
         if (existingTool) {
-          this.args.tools.removeObject(existingTool);
+          removeValueFromArray(this.args.tools.content, existingTool);
         }
-        this.args.tools.insertAt(0, tool);
+        this.args.tools.content.unshift(tool);
       })
       .catch((error) => {
         if (error.jqXHR?.status === 409) {
@@ -152,14 +155,14 @@ export default class AiToolListEditor extends Component {
         </:actions>
       </DPageSubheader>
 
-      {{#if @tools}}
+      {{#if @tools.content}}
         <table class="d-admin-table ai-tool-list-editor">
           <thead>
             <th>{{i18n "discourse_ai.tools.name"}}</th>
             <th></th>
           </thead>
           <tbody>
-            {{#each @tools as |tool|}}
+            {{#each @tools.content as |tool|}}
               <tr
                 data-tool-id={{tool.id}}
                 class="ai-tool-list__row d-admin-row__content"
