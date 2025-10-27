@@ -1701,6 +1701,109 @@ RSpec.describe TopicsFilter do
       end
     end
 
+    describe "when filtering by topic creator's group" do
+      fab!(:group1) { Fabricate(:group, name: "group1") }
+      fab!(:group2) { Fabricate(:group, name: "group2") }
+      fab!(:user_in_group1) { Fabricate(:user).tap { |u| group1.add(u) } }
+      fab!(:user_in_group2) { Fabricate(:user).tap { |u| group2.add(u) } }
+      fab!(:user_in_both_groups) do
+        Fabricate(:user).tap do |u|
+          group1.add(u)
+          group2.add(u)
+        end
+      end
+      fab!(:topic_by_group1_user) { Fabricate(:topic, user: user_in_group1) }
+      fab!(:topic_by_group2_user) { Fabricate(:topic, user: user_in_group2) }
+      fab!(:topic_by_both_groups_user) { Fabricate(:topic, user: user_in_both_groups) }
+
+      describe "when query string is `created-by-group:group1`" do
+        it "should return topics created by users in the specified group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by-group:group1")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_group1_user.id, topic_by_both_groups_user.id)
+        end
+      end
+
+      describe "when query string is `created-by-group:group2`" do
+        it "should return topics created by users in the specified group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by-group:group2")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_group2_user.id, topic_by_both_groups_user.id)
+        end
+      end
+
+      describe "when query string is `created-by-group:group1,group2`" do
+        it "should return topics created by users in any of the specified groups" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by-group:group1,group2")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_by_group1_user.id,
+            topic_by_group2_user.id,
+            topic_by_both_groups_user.id,
+          )
+        end
+      end
+
+      describe "when query string is `created-by-group:invalid`" do
+        it "should not return any topics" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by-group:invalid")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when query string is `created-by-group:group1,invalid`" do
+        it "should only return topics created by users in the valid group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by-group:group1,invalid")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_group1_user.id, topic_by_both_groups_user.id)
+        end
+      end
+
+      describe "with group visibility restrictions" do
+        fab!(:private_group) do
+          Fabricate(:group, visibility_level: Group.visibility_levels[:members])
+        end
+        fab!(:user_in_private_group) { Fabricate(:user).tap { |u| private_group.add(u) } }
+        fab!(:topic_by_private_group_user) { Fabricate(:topic, user: user_in_private_group) }
+
+        it "should not return topics when user cannot see the group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by-group:#{private_group.name}")
+              .pluck(:id),
+          ).to eq([])
+        end
+
+        it "should return topics when user is a member of the private group" do
+          private_group.add(user)
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("created-by-group:#{private_group.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_private_group_user.id)
+        end
+      end
+    end
+
     shared_examples "filtering for topics by counts" do |filter|
       describe "when query string is `#{filter}-min:1`" do
         it "should only return topics with at least 1 #{filter}" do

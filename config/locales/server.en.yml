@@ -2895,6 +2895,8 @@ en:
       created_by: "Show topics created by a specific user"
       created_by_user: "Show topics created by username (without @)"
       created_by_multiple: "Show topics created by any of the specified users (comma-separated)"
+      created_by_group: "Show topics created by users in a specific group"
+      created_by_group_multiple: "Show topics created by users in any of the specified groups (comma-separated)"
       latest_post_before: "Show topics with last post before a date (YYYY-MM-DD or days ago)"
       latest_post_after: "Show topics with last post after a date (YYYY-MM-DD or days ago)"
       likes_min: "Show topics with at least this many likes"
