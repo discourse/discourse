@@ -49,6 +49,15 @@ export default class ResizableNode extends Modifier {
   }
 
   cleanup() {
+    if (this.options.mutate) {
+      Object.assign(this.element.style, {
+        width: null,
+        height: null,
+        top: null,
+        left: null,
+      });
+    }
+
     this.element
       .querySelector(this.resizerSelector)
       ?.removeEventListener("touchstart", this._startResize);

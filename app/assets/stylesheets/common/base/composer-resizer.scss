@@ -1,10 +1,6 @@
 @use "lib/viewport";
 
 .composer-resizer {
-  @include viewport.from(xl) {
-    display: none;
-  }
-
   .draft & {
     display: none;
   }

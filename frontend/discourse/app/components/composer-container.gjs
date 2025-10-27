@@ -50,7 +50,7 @@ export default class ComposerContainer extends Component {
    * @type {boolean}
    */
   get shouldShowHorizontalResizer() {
-    return this.capabilities.viewport.lg;
+    return this.site.desktopView && !this.capabilities.viewport.xl;
   }
 
   @bind
@@ -98,16 +98,18 @@ export default class ComposerContainer extends Component {
 
   @bind
   onHorizontalResizeDrag(element, { width }) {
-    if (width && this.shouldShowHorizontalResizer) {
-      this.keyValueStore.set({
-        key: "composerWidth",
-        value: `${width}px`,
-      });
-      document.documentElement.style.setProperty(
-        "--composer-width",
-        `${width}px`
-      );
+    if (!width) {
+      return;
     }
+
+    this.keyValueStore.set({
+      key: "composerWidth",
+      value: `${width}px`,
+    });
+    document.documentElement.style.setProperty(
+      "--composer-width",
+      `${width}px`
+    );
   }
 
   @bind
@@ -123,17 +125,21 @@ export default class ComposerContainer extends Component {
       @typed={{this.composer.typed}}
       @cancelled={{this.composer.cancelled}}
       @save={{this.composer.saveAction}}
-      {{resizableNode
-        ".composer-resizer"
-        this.onHorizontalResizeDrag
-        (hash
-          horizontal=true
-          vertical=false
-          position=false
-          mutate=true
-          resetOnWindowResize=true
+      {{(if
+        this.shouldShowHorizontalResizer
+        (modifier
+          resizableNode
+          ".composer-resizer"
+          this.onHorizontalResizeDrag
+          (hash
+            horizontal=true
+            vertical=false
+            position=false
+            mutate=true
+            resetOnWindowResize=true
+          )
         )
-      }}
+      )}}
     >
       <div
         class="grippie"
@@ -147,9 +153,9 @@ export default class ComposerContainer extends Component {
           )
         }}
       ></div>
-      {{#unless this.site.mobileView}}
+      {{#if this.shouldShowHorizontalResizer}}
         <div class="composer-resizer"></div>
-      {{/unless}}
+      {{/if}}
       {{#if this.composer.visible}}
         {{htmlClass (if this.composer.isPreviewVisible "composer-has-preview")}}
 
