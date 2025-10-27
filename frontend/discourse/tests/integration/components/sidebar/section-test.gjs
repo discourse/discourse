@@ -7,15 +7,13 @@ module("Integration | Component | sidebar | section", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default displaySection value for section", async function (assert) {
-    const self = this;
-
     const template = <template>
       <Section
         @sectionName="test"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
         @headerActionsIcon="plus"
-        @headerActions={{self.headerActions}}
+        @headerActions={{this.headerActions}}
       />
     </template>;
 
@@ -28,16 +26,14 @@ module("Integration | Component | sidebar | section", function (hooks) {
   });
 
   test("displaySection is dynamic based on argument", async function (assert) {
-    const self = this;
-
     const template = <template>
       <Section
         @sectionName="test"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
         @headerActionsIcon="plus"
-        @headerActions={{self.headerActions}}
-        @displaySection={{self.displaySection}}
+        @headerActions={{this.headerActions}}
+        @displaySection={{this.displaySection}}
       />
     </template>;
 
@@ -54,15 +50,13 @@ module("Integration | Component | sidebar | section", function (hooks) {
   });
 
   test("can expand and collapse content when section is collapsible", async function (assert) {
-    const self = this;
-
     const template = <template>
       <Section
         @sectionName="test"
         @headerLinkText="test header"
         @headerLinkTitle="some title"
         @headerActionsIcon="plus"
-        @headerActions={{self.headerActions}}
+        @headerActions={{this.headerActions}}
         @collapsable={{true}}
       />
     </template>;

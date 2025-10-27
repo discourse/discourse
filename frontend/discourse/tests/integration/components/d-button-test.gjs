@@ -37,12 +37,10 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("isLoading button", async function (assert) {
-    const self = this;
-
     this.set("isLoading", true);
 
     await render(
-      <template><DButton @isLoading={{self.isLoading}} /></template>
+      <template><DButton @isLoading={{this.isLoading}} /></template>
     );
 
     assert
@@ -83,11 +81,9 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("disabled button", async function (assert) {
-    const self = this;
-
     this.set("disabled", true);
 
-    await render(<template><DButton @disabled={{self.disabled}} /></template>);
+    await render(<template><DButton @disabled={{this.disabled}} /></template>);
 
     assert.dom("button").isDisabled();
 
@@ -96,15 +92,13 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("aria-label", async function (assert) {
-    const self = this;
-
     I18n.translations[I18n.locale].js.test = { fooAriaLabel: "foo" };
 
     await render(
       <template>
         <DButton
-          @ariaLabel={{self.ariaLabel}}
-          @translatedAriaLabel={{self.translatedAriaLabel}}
+          @ariaLabel={{this.ariaLabel}}
+          @translatedAriaLabel={{this.translatedAriaLabel}}
         />
       </template>
     );
@@ -122,15 +116,13 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("title", async function (assert) {
-    const self = this;
-
     I18n.translations[I18n.locale].js.test = { fooTitle: "foo" };
 
     await render(
       <template>
         <DButton
-          @title={{self.title}}
-          @translatedTitle={{self.translatedTitle}}
+          @title={{this.title}}
+          @translatedTitle={{this.translatedTitle}}
         />
       </template>
     );
@@ -147,15 +139,13 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("label", async function (assert) {
-    const self = this;
-
     I18n.translations[I18n.locale].js.test = { fooLabel: "foo" };
 
     await render(
       <template>
         <DButton
-          @label={{self.label}}
-          @translatedLabel={{self.translatedLabel}}
+          @label={{this.label}}
+          @translatedLabel={{this.translatedLabel}}
         />
       </template>
     );
@@ -173,10 +163,8 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("aria-expanded", async function (assert) {
-    const self = this;
-
     await render(
-      <template><DButton @ariaExpanded={{self.ariaExpanded}} /></template>
+      <template><DButton @ariaExpanded={{this.ariaExpanded}} /></template>
     );
 
     assert.dom("button").doesNotHaveAria("expanded");
@@ -195,10 +183,8 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("aria-controls", async function (assert) {
-    const self = this;
-
     await render(
-      <template><DButton @ariaControls={{self.ariaControls}} /></template>
+      <template><DButton @ariaControls={{this.ariaControls}} /></template>
     );
 
     this.set("ariaControls", "foo-bar");
@@ -206,8 +192,6 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("onKeyDown callback", async function (assert) {
-    const self = this;
-
     this.set("foo", null);
     this.set("onKeyDown", () => {
       this.set("foo", "bar");
@@ -218,7 +202,7 @@ module("Integration | Component | d-button", function (hooks) {
 
     await render(
       <template>
-        <DButton @action={{self.action}} @onKeyDown={{self.onKeyDown}} />
+        <DButton @action={{this.action}} @onKeyDown={{this.onKeyDown}} />
       </template>
     );
 
@@ -230,14 +214,12 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("press Enter", async function (assert) {
-    const self = this;
-
     this.set("foo", null);
     this.set("action", () => {
       this.set("foo", "bar");
     });
 
-    await render(<template><DButton @action={{self.action}} /></template>);
+    await render(<template><DButton @action={{this.action}} /></template>);
 
     await triggerKeyEvent(".btn", "keydown", "Space");
     assert.strictEqual(this.foo, null);
@@ -247,14 +229,12 @@ module("Integration | Component | d-button", function (hooks) {
   });
 
   test("@action function is triggered on click", async function (assert) {
-    const self = this;
-
     this.set("foo", null);
     this.set("action", () => {
       this.set("foo", "bar");
     });
 
-    await render(<template><DButton @action={{self.action}} /></template>);
+    await render(<template><DButton @action={{this.action}} /></template>);
 
     await click(".btn");
 

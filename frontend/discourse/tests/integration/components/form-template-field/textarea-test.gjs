@@ -18,8 +18,6 @@ module(
     });
 
     test("renders a text input with attributes", async function (assert) {
-      const self = this;
-
       const attributes = {
         label: "My text label",
         placeholder: "Enter text here",
@@ -28,7 +26,7 @@ module(
 
       await render(
         <template>
-          <FormTextarea @attributes={{self.attributes}} @onChange={{noop}} />
+          <FormTextarea @attributes={{this.attributes}} @onChange={{noop}} />
         </template>
       );
 
@@ -43,8 +41,6 @@ module(
     });
 
     test("doesn't render a label when attribute is missing", async function (assert) {
-      const self = this;
-
       const attributes = {
         placeholder: "Enter text here",
       };
@@ -52,7 +48,7 @@ module(
 
       await render(
         <template>
-          <FormTextarea @attributes={{self.attributes}} @onChange={{noop}} />
+          <FormTextarea @attributes={{this.attributes}} @onChange={{noop}} />
         </template>
       );
 

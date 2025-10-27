@@ -9,8 +9,6 @@ module("Integration | Component | ThemeSiteSettingEditor", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows link to the staff action logs for the setting on hover", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -26,8 +24,8 @@ module("Integration | Component | ThemeSiteSettingEditor", function (hooks) {
     await render(
       <template>
         <ThemeSiteSettingEditor
-          @setting={{self.setting}}
-          @model={{self.model}}
+          @setting={{this.setting}}
+          @model={{this.model}}
         />
       </template>
     );

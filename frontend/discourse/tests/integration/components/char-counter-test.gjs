@@ -10,14 +10,12 @@ module("Integration | Component | char-counter", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows the number of characters", async function (assert) {
-    const self = this;
-
     this.value = "Hello World";
     this.max = 12;
 
     await render(
       <template>
-        <CharCounter @value={{self.value}} @max={{self.max}} />
+        <CharCounter @value={{this.value}} @max={{this.max}} />
       </template>
     );
 
@@ -25,15 +23,13 @@ module("Integration | Component | char-counter", function (hooks) {
   });
 
   test("updating value updates counter", async function (assert) {
-    const self = this;
-
     this.max = 50;
 
     await render(
       <template>
-        <CharCounter @value={{self.charCounterContent}} @max={{self.max}}>
+        <CharCounter @value={{this.charCounterContent}} @max={{this.max}}>
           <textarea
-            {{on "input" (withEventValue (fn (mut self.charCounterContent)))}}
+            {{on "input" (withEventValue (fn (mut this.charCounterContent)))}}
           ></textarea>
         </CharCounter>
       </template>
@@ -51,14 +47,12 @@ module("Integration | Component | char-counter", function (hooks) {
   });
 
   test("exceeding max length", async function (assert) {
-    const self = this;
-
     this.max = 10;
     this.value = "Hello World";
 
     await render(
       <template>
-        <CharCounter @value={{self.value}} @max={{self.max}} />
+        <CharCounter @value={{this.value}} @max={{this.max}} />
       </template>
     );
 

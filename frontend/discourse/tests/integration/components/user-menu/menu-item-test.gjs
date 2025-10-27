@@ -53,14 +53,12 @@ module(
     setupRenderingTest(hooks);
 
     test("pushes `read` to the classList if the notification is read and `unread` if it isn't", async function (assert) {
-      const self = this;
-
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
       this.item.notification.read = false;
-      await render(<template><MenuItem @item={{self.item}} /></template>);
+      await render(<template><MenuItem @item={{this.item}} /></template>);
       assert.dom("li.read").doesNotExist();
       assert.dom("li.unread").exists();
 
@@ -76,13 +74,11 @@ module(
     });
 
     test("pushes the notification type name to the classList", async function (assert) {
-      const self = this;
-
       this.set(
         "item",
         getNotification(this.currentUser, this.siteSettings, this.site)
       );
-      await render(<template><MenuItem @item={{self.item}} /></template>);
+      await render(<template><MenuItem @item={{this.item}} /></template>);
       assert.dom("li").hasClass("mentioned");
 
       this.set(

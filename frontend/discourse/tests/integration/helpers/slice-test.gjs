@@ -25,12 +25,10 @@ module("Integration | Helper | {{slice}}", function (hooks) {
   });
 
   test("it recomputes the slice if an item in the array changes", async function (assert) {
-    const self = this;
-
     let array = new TrackedArray([2, 4, 6]);
     this.set("array", array);
 
-    await render(<template>{{slice 1 3 self.array}}</template>);
+    await render(<template>{{slice 1 3 this.array}}</template>);
 
     assert.dom().hasText("4,6", "sliced values");
 

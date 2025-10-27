@@ -7,13 +7,11 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
   setupRenderingTest(hooks);
 
   test("yields", async function (assert) {
-    const self = this;
-
     this.set("cooked", "<p></p>");
 
     await render(
       <template>
-        <ChatMessageText @cooked={{self.cooked}} @uploads={{self.uploads}}>
+        <ChatMessageText @cooked={{this.cooked}} @uploads={{this.uploads}}>
           <div class="yield-me"></div>
         </ChatMessageText>
       </template>
@@ -23,8 +21,6 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
   });
 
   test("shows collapsed", async function (assert) {
-    const self = this;
-
     this.set(
       "cooked",
       '<div class="youtube-onebox lazy-video-container" data-video-id="WaT_rLGuUr8" data-video-title="Japanese Katsu Curry (Pork Cutlet)" data-provider-name="youtube"/>'
@@ -32,7 +28,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
 
     await render(
       <template>
-        <ChatMessageText @cooked={{self.cooked}} @uploads={{self.uploads}} />
+        <ChatMessageText @cooked={{this.cooked}} @uploads={{this.uploads}} />
       </template>
     );
 
@@ -40,25 +36,21 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
   });
 
   test("does not collapse a non-image onebox", async function (assert) {
-    const self = this;
-
     this.set("cooked", '<p><a href="http://cat1.com" class="onebox"></a></p>');
 
     await render(
-      <template><ChatMessageText @cooked={{self.cooked}} /></template>
+      <template><ChatMessageText @cooked={{this.cooked}} /></template>
     );
 
     assert.dom(".chat-message-collapser").doesNotExist();
   });
 
   test("shows edits - regular message", async function (assert) {
-    const self = this;
-
     this.set("cooked", "<p></p>");
 
     await render(
       <template>
-        <ChatMessageText @cooked={{self.cooked}} @edited={{true}} />
+        <ChatMessageText @cooked={{this.cooked}} @edited={{true}} />
       </template>
     );
 
@@ -66,8 +58,6 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
   });
 
   test("shows edits - collapsible message", async function (assert) {
-    const self = this;
-
     this.set(
       "cooked",
       '<div class="youtube-onebox lazy-video-container"></div>'
@@ -75,7 +65,7 @@ module("Discourse Chat | Component | chat-message-text", function (hooks) {
 
     await render(
       <template>
-        <ChatMessageText @cooked={{self.cooked}} @edited={{true}} />
+        <ChatMessageText @cooked={{this.cooked}} @edited={{true}} />
       </template>
     );
 
