@@ -3,7 +3,7 @@
 class SearchLog < ActiveRecord::Base
   MAXIMUM_USER_AGENT_LENGTH = 2000
 
-  validates_presence_of :term
+  validates :term, presence: true
   validates :user_agent, length: { maximum: MAXIMUM_USER_AGENT_LENGTH }
 
   belongs_to :user
@@ -94,7 +94,7 @@ class SearchLog < ActiveRecord::Base
 
     result = result.where("search_type = ?", search_types[search_type]) if search_type == :header ||
       search_type == :full_page
-    result = result.where("search_result_id IS NOT NULL") if search_type == :click_through_only
+    result = result.where.not(search_result_id: nil) if search_type == :click_through_only
 
     result
       .order("date")

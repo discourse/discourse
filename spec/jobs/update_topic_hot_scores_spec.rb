@@ -3,7 +3,7 @@
 require "file_store/s3_store"
 
 RSpec.describe Jobs::UpdateTopicHotScores do
-  let(:job) { subject }
+  subject(:job) { described_class.new }
 
   fab!(:topic) { Fabricate(:topic, created_at: 1.day.ago) }
 

@@ -3,7 +3,7 @@
 module Admin::DiscourseCalendar
   describe AdminHolidaysController do
     fab!(:admin) { Fabricate(:user, admin: true) }
-    fab!(:member) { Fabricate(:user) }
+    fab!(:member, :user)
 
     before { SiteSetting.calendar_enabled = calendar_enabled }
 

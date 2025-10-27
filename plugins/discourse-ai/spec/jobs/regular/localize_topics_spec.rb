@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 describe Jobs::LocalizeTopics do
-  fab!(:topic)
   subject(:job) { described_class.new }
+
+  fab!(:topic)
 
   let(:locales) { %w[en ja de] }
 
@@ -38,6 +39,13 @@ describe Jobs::LocalizeTopics do
 
   it "does nothing when there are no topics to translate" do
     Topic.destroy_all
+    DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_topic_localization?).returns(false)
     DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
 
     job.execute({ limit: 10 })

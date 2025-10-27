@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscoursePostEvent::EventFinder do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:user)
 
   subject(:finder) { DiscoursePostEvent::EventFinder }
@@ -13,7 +13,7 @@ describe DiscoursePostEvent::EventFinder do
   end
 
   describe "by attending user" do
-    fab!(:attending_user) { Fabricate(:user) }
+    fab!(:attending_user, :user)
     fab!(:public_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
     fab!(:private_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:private]) }
     fab!(:another_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
@@ -235,6 +235,32 @@ describe DiscoursePostEvent::EventFinder do
         results = finder.search(current_user)
         expect(results).to include(expired_event)
         expect(results).to include(current_event)
+      end
+    end
+
+    describe "with an order parameter provided" do
+      let!(:event1) { Fabricate(:event, original_starts_at: 3.days.from_now) }
+      let!(:event2) { Fabricate(:event, original_starts_at: 1.day.from_now) }
+      let!(:event3) { Fabricate(:event, original_starts_at: 2.days.from_now) }
+
+      it "returns events in ascending order by default" do
+        results = finder.search(current_user)
+        expect(results.pluck(:id)).to eq([event2.id, event3.id, event1.id])
+      end
+
+      it "returns events in ascending order when order=asc" do
+        results = finder.search(current_user, { order: "asc" })
+        expect(results.pluck(:id)).to eq([event2.id, event3.id, event1.id])
+      end
+
+      it "returns events in descending order when order=desc" do
+        results = finder.search(current_user, { order: "desc" })
+        expect(results.pluck(:id)).to eq([event1.id, event3.id, event2.id])
+      end
+
+      it "defaults to ascending order for invalid order values" do
+        results = finder.search(current_user, { order: "invalid" })
+        expect(results.pluck(:id)).to eq([event2.id, event3.id, event1.id])
       end
     end
   end

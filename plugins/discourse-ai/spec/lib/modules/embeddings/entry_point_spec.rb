@@ -61,7 +61,7 @@ describe DiscourseAi::Embeddings::EntryPoint do
     fab!(:category)
     fab!(:normal_topic_1) { Fabricate(:topic, category: category) }
     fab!(:normal_topic_2) { Fabricate(:topic, category: category) }
-    fab!(:private_topic) { Fabricate(:private_message_topic) }
+    fab!(:private_topic, :private_message_topic)
 
     let(:query) { "title\n\nraw" }
 

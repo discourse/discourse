@@ -28,7 +28,7 @@ module PageObjects
       end
 
       def has_subject_value?(value)
-        try_until_success { expect(find("input.email-template__subject").value).to eq(value) }
+        expect(find("input.email-template__subject").value).to eq(value)
       end
 
       def edit_body(text)

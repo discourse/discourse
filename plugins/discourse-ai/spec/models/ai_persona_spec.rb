@@ -229,6 +229,73 @@ RSpec.describe AiPersona do
     expect(AiPersona.persona_cache[:value]).to eq(nil)
   end
 
+  describe ".find_by_id_from_cache" do
+    fab!(:persona) do
+      AiPersona.create!(
+        name: "cached_persona",
+        description: "test persona for cache",
+        system_prompt: "you are a test",
+        tools: [],
+        allowed_group_ids: [],
+      )
+    end
+
+    it "returns nil for blank persona_id" do
+      expect(AiPersona.find_by_id_from_cache(nil)).to eq(nil)
+      expect(AiPersona.find_by_id_from_cache("")).to eq(nil)
+    end
+
+    it "finds persona by id from cache" do
+      result = AiPersona.find_by_id_from_cache(persona.id)
+      expect(result).to be_present
+      expect(result.id).to eq(persona.id)
+      expect(result.name).to eq("cached_persona")
+    end
+
+    it "finds persona when id is provided as a string" do
+      result = AiPersona.find_by_id_from_cache(persona.id.to_s)
+      expect(result).to be_present
+      expect(result.id).to eq(persona.id)
+    end
+
+    it "returns nil for non-existent persona id" do
+      result = AiPersona.find_by_id_from_cache(999_999)
+      expect(result).to eq(nil)
+    end
+
+    it "finds disabled personas" do
+      persona.update!(enabled: false)
+      result = AiPersona.find_by_id_from_cache(persona.id)
+      expect(result).to be_present
+      expect(result.id).to eq(persona.id)
+    end
+
+    it "uses cache and avoids database queries after initial load" do
+      AiPersona.find_by_id_from_cache(persona.id)
+
+      query_count = track_sql_queries { AiPersona.find_by_id_from_cache(persona.id) }.count
+
+      expect(query_count).to eq(0)
+    end
+
+    it "falls back to database when cache is cleared after initial load" do
+      result_before = AiPersona.find_by_id_from_cache(persona.id)
+      expect(result_before).to be_present
+
+      AiPersona.persona_cache.flush!
+
+      query_count =
+        track_sql_queries do
+          result_after = AiPersona.find_by_id_from_cache(persona.id)
+          expect(result_after).to be_present
+          expect(result_after.id).to eq(persona.id)
+          expect(result_after.name).to eq("cached_persona")
+        end.count
+
+      expect(query_count).to be > 0
+    end
+  end
+
   describe "system persona validations" do
     let(:system_persona) do
       AiPersona.create!(

@@ -17,7 +17,8 @@ class ChromeInstalledChecker
 
   def self.run
     if RbConfig::CONFIG["host_os"][/darwin|mac os/]
-      binary = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+      chrome_path = "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
+      binary = chrome_path if File.exist?(chrome_path)
     elsif system("command -v google-chrome-stable >/dev/null;")
       binary = "google-chrome-stable"
     end
@@ -38,5 +39,8 @@ class ChromeInstalledChecker
     if Gem::Version.new(version_match[0]) < Gem::Version.new("59")
       raise ChromeVersionTooLow.new("Chrome 59 or higher is required")
     end
+
+    # Return browser name for testem launcher (case-sensitive)
+    binary.include?("chromium") ? "Chromium" : "Chrome"
   end
 end

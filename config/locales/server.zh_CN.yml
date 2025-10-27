@@ -1623,7 +1623,6 @@ zh_CN:
     logo: "您的网站左上角的徽标图片。使用高度为 120 且宽高比大于 3:1 的宽矩形图片。如果留空，将显示网站标题文本。"
     logo_small: "您的网站左上角的小徽标图片，向下滚动后可见。使用 120×120 的方形图片。如果留空，将显示首页标志符号。"
     digest_logo: "在您网站的电子邮件总结顶部使用的备用徽标图片。使用宽矩形图片。不要使用 SVG 图片。如果留空，则使用 `logo` 设置中的图片。"
-    mobile_logo: "您移动版本的网站上使用的徽标。使用高度为 120 且纵横比大于 3:1 的宽矩形图像。如果留空，将使用 `logo` 设置中的图片。"
     logo_dark: "'logo' 网站设置的深色方案替代选择。"
     logo_small_dark: "'logo small' 网站设置的深色方案替代选择。"
     mobile_logo_dark: "'mobile logo' 网站设置的深色方案替代选择。"
@@ -1638,8 +1637,6 @@ zh_CN:
     email_custom_headers: "自定义邮件头列表"
     email_subject: "标准电子邮件的可自定义主题格式。请参阅 <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "向用户提供有关他们无法访问特定话题的更多详细信息。注意：这不太安全，因为用户会知道 URL 是否链接到有效话题。"
-    enforce_second_factor: "要求用户在访问 Discourse UI 之前启用双重身份验证。此设置不会影响 API 或 'DiscourseConnect provider' 身份验证。如果启用了 enforce_second_factor_on_external_auth 设置，用户在设置双重身份验证后将无法使用外部身份验证提供商登录。"
-    enforce_second_factor_on_external_auth: "要求用户始终使用双重身份验证。启用后，如果用户启用了双重身份验证，将无法使用外部身份验证方法（如社交登录）登录。禁用后，用户只需在使用用户名和密码登录时确认双重身份验证。另请参见 `enforce_second_factor` 设置。"
     force_https: "强制您的网站仅使用 HTTPS。警告：在您验证 HTTPS 已完全设置并在任何地方都可以正常工作之前，请勿启用此功能！您是否检查过您的 CDN、所有社交登录以及任何外部徽标/依赖项，以确保它们都与 HTTPS 兼容？"
     summary_score_threshold: "将帖子包含在“总结此话题”中所需的最低分数"
     summary_posts_required: "启用“总结此话题”之前话题中的最少帖子数。对此设置的更改将在一周内追溯应用。"
@@ -1697,8 +1694,10 @@ zh_CN:
     ga_universal_domain_name: "Google Universal Analytics 域名，例如：mysite.com；请参阅 <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "启用 Google Universal Analytics 跨网域跟踪。指向这些网域的出站链接将在其中添加客户端 ID。请参阅 <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google 的跨网域跟踪指南</a>。"
     gtm_container_id: "Google 跟踪代码管理器容器 ID。例如：GTM-ABCD12E。 <br/>注意：要在启用内容安全策略 (CSP) 时使用 GTM，请参阅 Meta 上的文档：<a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>在 Google 跟踪代码管理器脚本中使用随机数</a>。"
+    google_site_verification_token: Google 搜索控制台验证令牌。将作为元标记包含在 HTML 头中。
     enable_escaped_fragments: "如果未检测到网络抓取工具，则回退到 Google 的 Ajax-Crawling API。请参阅 <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "允许版主创建和管理类别和群组"
+    moderators_manage_categories: "允许版主创建和管理类别"
+    moderators_manage_groups: "允许版主创建和管理群组"
     moderators_change_post_ownership: "允许版主更改帖子所有权"
     cors_origins: "允许跨源请求（CORS）。每个来源必须包括 http:// 或 https://。环境变量 DISCOURSE_ENABLE_CORS 必须设置为 true 才能启用 CORS。"
     use_admin_ip_allowlist: "只有使用“屏蔽的 IP 列表”（管理 > 日志 > 屏蔽的 IP）中的 IP 地址时，管理员才能登录。"
@@ -1797,7 +1796,6 @@ zh_CN:
     enable_local_logins_via_email: "允许用户请求通过电子邮件向他们发送一键登录链接。"
     allow_new_registrations: "允许新用户注册。取消选中此项以防止任何人创建新帐户。"
     enable_signup_cta: "向回访匿名用户显示通知，提示他们注册帐户。"
-    enable_discourse_id: "通过 Discourse ID 启用身份验证，这是一种单点登录服务，允许用户使用一个帐户登录多个 Discourse 站点。无需额外配置即可支持 Google、Facebook 和 Twitter 等常见社交登录提供商。如需了解详情，请参阅 <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>。"
     enable_google_oauth2_logins: "启用 Google Oauth2 身份验证。这是 Google 当前支持的身份验证方法。要求密钥和密钥代码。请参阅<a href='https://meta.discourse.org/t/15858' target='_blank'>为 Discourse 配置 Google 登录</a>。"
     google_oauth2_client_id: "由 Google 应用程序提供的唯一客户端 ID，用于身份验证流程。"
     google_oauth2_client_secret: "您的 Google 应用的客户端密钥。"
@@ -2399,7 +2397,6 @@ zh_CN:
     view_raw_email_allowed_groups: "如果帖子是通过接收的电子邮件创建的，可以查看帖子原始电子邮件内容的群组。这包括电子邮件标题和其他技术信息。"
     rich_editor: "为输入框启用富文本编辑器，以便所有用户都可以在当前 Markdown 模式和新的富文本编辑器之间切换，从而实现更直观、更人性化的写作体验。"
     default_composition_mode: "设置社区编辑器的默认模式。富文本模式为大多数用户提供了更现代、更熟悉的写作体验，而 Markdown 模式可能更适合技术能力更高的用户。成员可以使用编辑器工具栏中的切换按钮在不同模式之间切换。"
-    viewport_based_mobile_mode: "实验：禁用基于 user-agent 的移动/桌面模式，改用视口宽度。"
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
     content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
@@ -2496,7 +2493,6 @@ zh_CN:
   filter:
     description:
       status: "按状态筛选话题"
-      in: "在个人列表中筛选话题"
       order: "按特定字段排列话题"
       category: "显示特定类别中的话题"
       category_any: "显示任意指定类别（以逗号分隔）中的话题"
@@ -2570,6 +2566,9 @@ zh_CN:
       order_read: "按最后阅读时间排序（时间最近的优先）"
       order_read_asc: "按最后阅读时间排序（时间最早的优先）"
       exclude_users: "排除特定用户的话题"
+      locale: "按原始语言过滤话题"
+      locale_any: "显示以任何指定语言撰写的原始话题（以逗号分隔）"
+      exclude_locale: "排除最初以特定语言撰写的话题"
   discourse_connect:
     login_error: "登录错误"
     not_found: "找不到您的帐户。请联系网站管理员。"
@@ -3907,12 +3906,6 @@ zh_CN:
     account_second_factor_disabled:
       title: "双重身份验证已禁用"
       subject_template: "[%{email_prefix}] 双重身份验证已禁用"
-      text_body_template: |
-        您在 %{site_name} 的帐户的双重身份验证已被禁用。您现在可以仅使用您的密码登录；不再需要额外的身份验证代码。
-
-        如果您没有选择禁用双重身份验证，则可能有人盗用了您的帐户。
-
-        如果您有任何问题，请[联系我们友好的管理人员](%{base_url}/about)。
     digest:
       why: "自 %{since} 以来 %{site_link} 的简要摘要"
       since_last_visit: "自从您上次访问以来"
@@ -4205,6 +4198,8 @@ zh_CN:
     latte_theme_name: "棕色"
     summer_theme_name: "夏季"
     dark_rose_theme_name: "黑红"
+    errors:
+      cannot_edit_remote_copies: "不允许编辑调色板的远程副本。"
   edit_this_page: "编辑此页面"
   csv_export:
     boolean_yes: "是"
@@ -5210,14 +5205,38 @@ zh_CN:
       approve_and_unhide:
         title: "批准并取消隐藏帖子"
         complete: "帖子已获批准并取消隐藏"
+      post_actions:
+        bundle_title: "您想对这篇帖子做什么？"
       no_action_post:
         title: "无行动"
+        description: "不对帖子采取任何行动"
+        complete: "未对帖子采取任何行动"
       delete_post:
         title: "删除帖子"
+        description: "删除此帖子"
+        complete: "帖子已删除"
       hide_post:
         title: "隐藏帖子"
+        description: "隐藏此帖子，不让公众查看"
+        complete: "帖子已隐藏"
+      unhide_post:
+        title: "取消隐藏帖子"
+        description: "让所有用户都可以看到此帖子"
+        complete: "帖子取消隐藏"
       restore_post:
         title: "恢复帖子"
+        description: "恢复已删除的帖子"
+        complete: "帖子已恢复"
+      edit_post:
+        title: "编辑帖子"
+        description: "编辑此帖内容"
+        complete: "帖子已编辑"
+      convert_to_pm:
+        title: "转换为 PM"
+        description: "将此帖子转换为个人消息"
+        complete: "帖子已转换为私人消息"
+      user_actions:
+        bundle_title: "您想对这位用户做什么？"
       no_action_user:
         title: "无行动"
       silence_user:

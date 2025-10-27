@@ -3,7 +3,7 @@
 module Jobs
   class DeleteReplies < ::Jobs::TopicTimerBase
     def execute_timer_action(topic_timer, topic)
-      unless Guardian.new(topic_timer.user).is_staff?
+      unless Guardian.new(topic_timer.user).can_delete?(topic)
         topic_timer.trash!(Discourse.system_user)
         return
       end

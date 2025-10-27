@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-module ::AdPlugin
+module AdPlugin
   class HouseAdSettingsController < ::ApplicationController
-    requires_plugin AdPlugin::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     def update
       HouseAdSetting.update(params[:id], params[:value])

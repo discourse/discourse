@@ -2,6 +2,17 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { apiInitializer } from "discourse/lib/api";
 import { i18n } from "discourse-i18n";
+import {
+  isAiCreditLimitError,
+  popupAiCreditLimitError,
+} from "../lib/ai-errors";
+
+function isAiCaptionableImage(uploadUrl) {
+  if (!uploadUrl) {
+    return false;
+  }
+  return /\.(png|jpe?g|gif|webp)$/i.test(uploadUrl);
+}
 
 export default apiInitializer((api) => {
   const buttonAttrs = {
@@ -72,11 +83,18 @@ export default apiInitializer((api) => {
               imageCaptionPopup.updateCaption();
             }
           })
-          .catch(popupAjaxError)
+          .catch((error) => {
+            if (isAiCreditLimitError(error)) {
+              popupAiCreditLimitError(error);
+            } else {
+              popupAjaxError(error);
+            }
+          })
           .finally(() => {
             imageCaptionPopup.toggleLoadingState(false);
           });
       }
-    }
+    },
+    isAiCaptionableImage
   );
 });

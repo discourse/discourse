@@ -7,6 +7,7 @@ require_relative "../migrations"
 
 ::Migrations.configure_zeitwerk
 ::Migrations.enable_i18n
+::Migrations.apply_global_config
 
 require "rspec-multi-mock"
 

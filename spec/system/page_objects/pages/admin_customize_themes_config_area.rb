@@ -23,6 +23,10 @@ module PageObjects
       def mark_as_default(theme)
         open_theme_menu(theme)
         find(".set-default").click
+        expect(page).to have_css(
+          "meta[name=discourse_theme_id][content='#{theme.id}']",
+          visible: false, # wait for reload
+        )
       end
 
       def delete_theme(theme)

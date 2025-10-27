@@ -160,14 +160,14 @@ RSpec.describe UserStat do
       end
 
       # User affected
-      expect(user.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(
+      expect(user.user_stat.reload.first_unread_pm_at).to be_within(1.second).of(
         pm_topic.reload.updated_at,
       )
-      expect(user_2.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(
+      expect(user_2.user_stat.reload.first_unread_pm_at).to be_within(1.second).of(
         UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
       )
       expect(user_3.user_stat.reload.first_unread_pm_at).to eq_time(user_3_orig_first_unread_pm_at)
-      expect(user_4.user_stat.reload.first_unread_pm_at).to be_within(1.seconds).of(
+      expect(user_4.user_stat.reload.first_unread_pm_at).to be_within(1.second).of(
         UserStat::UPDATE_UNREAD_MINUTES_AGO.minutes.ago,
       )
       expect(user_5.user_stat.reload.first_unread_pm_at).to eq_time(pm_topic_2.reload.updated_at)

@@ -7,9 +7,11 @@
 de:
   admin_js:
     admin:
+      calendar: "Kalender & Ereignisse"
       site_settings:
         categories:
           discourse_post_event: "Discourse – Ereignis"
+          discourse_calendar: "Kalender und Ereignisse"
   js:
     notifications:
       titles:
@@ -34,6 +36,7 @@ de:
         header_title: "Feiertage"
         pick_region_description: "Wähle eine Region aus, um die Feiertage für diese Region zu sehen."
         disabled_holidays_description: "Deaktivierte Feiertage werden aus dem Team-Feiertagskalender ausgeschlossen."
+        header_description: "Wähle eine Region aus, um die Feiertage für diese zu sehen. Deaktivierte Feiertage werden aus dem Team-Feiertagskalender ausgeschlossen."
       date: "Datum"
       add_to_calendar: "Zu Google Kalender hinzufügen"
       toggle_timezone_offset_title: "Zeitzonenoffset umschalten"

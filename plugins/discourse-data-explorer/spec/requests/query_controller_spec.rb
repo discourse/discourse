@@ -86,7 +86,7 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#update" do
-      fab!(:user2) { Fabricate(:user) }
+      fab!(:user2, :user)
       fab!(:group2) { Fabricate(:group, users: [user2]) }
 
       it "allows group to access system query" do
@@ -182,6 +182,39 @@ describe DiscourseDataExplorer::QueryController do
         expect(response_json["errors"]).to_not eq([])
         expect(response_json["success"]).to eq(false)
         expect(response_json["errors"].first).to match(/ValidationError/)
+      end
+
+      it "can accept parameters as a hash instead of JSON string" do
+        query = make_query <<~SQL
+        -- [params]
+        -- int :foo = 34
+        -- string :bar = 'default'
+        SELECT :foo as my_value, :bar as text_value
+        SQL
+
+        # Test with hash format
+        post "/admin/plugins/explorer/queries/#{query.id}/run.json",
+             params: {
+               params: {
+                 foo: 42,
+                 bar: "test",
+               },
+             },
+             as: :json
+        expect(response.status).to eq(200)
+        expect(response_json["success"]).to eq(true)
+        expect(response_json["columns"]).to eq(%w[my_value text_value])
+        expect(response_json["rows"]).to eq([[42, "test"]])
+      end
+
+      it "can accept empty hash for parameters" do
+        query = make_query "SELECT 23 as my_value"
+
+        post "/admin/plugins/explorer/queries/#{query.id}/run.json", params: { params: {} }
+        expect(response.status).to eq(200)
+        expect(response_json["success"]).to eq(true)
+        expect(response_json["columns"]).to eq(["my_value"])
+        expect(response_json["rows"]).to eq([[23]])
       end
 
       context "when rate limited" do
@@ -311,7 +344,7 @@ describe DiscourseDataExplorer::QueryController do
 
         # Manual Test - change out the following line:
         #
-        #  module ::DiscourseDataExplorer
+        #  module DiscourseDataExplorer
         #   def self.run_query(...)
         #     if query.sql =~ /;/
         #
@@ -522,6 +555,21 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.parsed_body["success"]).to eq(true)
         expect(response.parsed_body["columns"]).to eq(["value"])
         expect(response.parsed_body["rows"]).to eq([[1828]])
+      end
+
+      it "can accept parameters as a hash" do
+        query_string = <<~SQL
+        -- [params]
+        -- int :num = 100
+        SELECT :num as value
+        SQL
+        query = make_query(query_string, { name: "Parameterized Query" }, ["#{group.id}"])
+
+        post "/g/#{group.name}/reports/#{query.id}/run.json", params: { params: { num: 999 } }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(true)
+        expect(response.parsed_body["columns"]).to eq(["value"])
+        expect(response.parsed_body["rows"]).to eq([[999]])
       end
 
       it "returns a 404 when the user should not have access to the query " do

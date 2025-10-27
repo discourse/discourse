@@ -17,6 +17,8 @@ RSpec.describe SvgSprite do
 
   it "can generate paths" do
     version = SvgSprite.version # Icons won't change for this test
+
+    expect(SvgSprite.bundle).to eq(SvgSprite.bundle(1)) # This test flakes from time to time, adding this assertion to help us debug the issue.
     expect(SvgSprite.path).to eq("/svg-sprite/#{Discourse.current_hostname}/svg--#{version}.js")
     expect(SvgSprite.path(1)).to eq("/svg-sprite/#{Discourse.current_hostname}/svg-1-#{version}.js")
 

@@ -190,7 +190,7 @@ module DiscourseAi
               scope.user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
           end,
         ) do
-          bots_map = ::DiscourseAi::AiBot::EntryPoint.enabled_user_ids_and_models_map
+          bots_map = DiscourseAi::AiBot::EntryPoint.enabled_user_ids_and_models_map
 
           persona_users = AiPersona.persona_users(user: scope.user)
           if persona_users.present?

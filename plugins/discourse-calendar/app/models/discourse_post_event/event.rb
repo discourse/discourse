@@ -19,9 +19,9 @@ module DiscoursePostEvent
     scope :visible, -> { where(deleted_at: nil) }
     scope :open, -> { where(closed: false) }
 
+    before_save :chat_channel_sync
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
-    before_save :chat_channel_sync
 
     validate :raw_invitees_are_groups
     validates :original_starts_at, presence: true
@@ -224,6 +224,7 @@ module DiscoursePostEvent
 
     def create_notification!(user, post, predefined_attendance: false)
       return if post.event.starts_at.nil? || post.event.starts_at < Time.current
+      return if !Guardian.new(user).can_see?(post)
 
       message =
         if predefined_attendance
@@ -383,6 +384,8 @@ module DiscoursePostEvent
             .where.not(id: excluded_ids)
             .select(:id)
         User.where(id: user_ids)
+      elsif self.private?
+        User.none
       else
         users.where.not(id: excluded_ids)
       end

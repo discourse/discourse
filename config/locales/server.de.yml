@@ -1702,7 +1702,6 @@ de:
     logo: "Das Logo oben links auf deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1. Wenn leer, wird die Website-Überschrift angezeigt."
     logo_small: "Kleine Logo-Grafik oben links auf der Website, die beim Herunterscrollen angezeigt wird. Verwende ein quadratisches Bild (120 × 120). Falls leer, wird ein „Home“-Zeichen angezeigt."
     digest_logo: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Website. Verwende ein breites rechteckiges Bild. Verwende kein SVG-Bild. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
-    mobile_logo: "Das Logo auf der mobilen Ausgabe deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
     logo_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „logo“."
     logo_small_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „logo small“."
     mobile_logo_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „mobile logo“."
@@ -1717,8 +1716,6 @@ de:
     email_custom_headers: "Eine Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
-    enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus. Wenn enforce_second_factor_on_external_auth aktiviert ist, können sich Benutzer nicht mit externen Authentifizierungsanbietern anmelden, nachdem sie die Zwei-Faktor-Authentifizierung eingerichtet haben."
-    enforce_second_factor_on_external_auth: "Verlangt von den Benutzern, dass sie immer die Zwei-Faktor-Authentifizierung verwenden. Wenn diese Option aktiviert ist, wird verhindert, dass sich Benutzer mit externen Authentifizierungsmethoden wie sozialen Netzwerken anmelden, wenn sie die Zwei-Faktor-Authentifizierung aktiviert haben. Wenn sie deaktiviert ist, müssen die Benutzer die Zwei-Faktor-Authentifizierung nur bestätigen, wenn sie sich mit einem Benutzernamen und einem Passwort anmelden. Siehe auch die Einstellung `enforce_second_factor`."
     force_https: "Erzwinge HTTPS für deine Website. ACHTUNG: Aktiviere dies NICHT, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du dein CDN, alle Anmeldungen über soziale Netzwerke, alle externe Logos/Abhängigkeiten geprüft, um sicherzustellen, dass sie auch HTTPS-kompatibel sind?"
     summary_score_threshold: "Mindestscore, den ein Beitrag benötigt, um in der „Dieses Thema zusammenfassen“-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
@@ -1777,7 +1774,6 @@ de:
     ga_universal_auto_link_domains: "Aktiviere Cross-Domain-Tracking von Google Universal Analytics. Bei ausgehenden Links zu diesen Domains wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
     gtm_container_id: "Google-Tag-Manager-Container-ID, z. B.: GTM-ABCD12E. <br/>Hinweis: Um GTM zu verwenden, wenn die Content Security Policy (CSP) aktiviert ist, siehe die Dokumentation bei Meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces in Google-Tag-Manager-Skripten verwenden</a>."
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Moderatoren erlauben, Kategorien und Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
@@ -1876,7 +1872,6 @@ de:
     enable_local_logins_via_email: "Erlaube Benutzern, einen Ein-Klick-Anmelde-Link anzufordern, der ihnen per E-Mail zugeschickt wird."
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige einen Hinweis für wiederkehrende anonyme Benutzer an, der sie auffordert, sich für ein Konto zu registrieren."
-    enable_discourse_id: "Aktiviere die Authentifizierung über Discourse ID, einen Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook und Twitter werden ohne zusätzliche Konfiguration unterstützt. Weitere Informationen findest du unter <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> ."
     enable_google_oauth2_logins: "Google-OAuth2-Authentifizierung aktivieren. Dies ist der momentan von Google unterstützte Authentifizierungs-Mechanismus. Benötigt Schlüssel und Geheimnis. Siehe <a href='https://meta.discourse.org/t/15858' target='_blank'>Google-Anmeldung für Discourse konfigurieren</a>."
     google_oauth2_client_id: "Die eindeutige Client-ID, die von deiner Google-Anwendung bereitgestellt und für den Authentifizierungsprozess verwendet wird."
     google_oauth2_client_secret: "Client-Geheimnis deiner Google-Anwendung."
@@ -2480,7 +2475,6 @@ de:
     view_raw_email_allowed_groups: "Gruppen, die den unformatierten E-Mail-Inhalt eines Beitrags einsehen können, wenn dieser durch eine eingehende E-Mail erstellt wurde. Dazu gehören E-Mail-Kopfzeilen und andere technische Informationen."
     rich_editor: "Aktiviere den Rich-Editor, damit alle Benutzer zwischen dem aktuellen Markdown-Modus und dem neuen Rich-Text-Editor wechseln können, um intuitiver und benutzerfreundlicher zu arbeiten."
     default_composition_mode: "Lege den Standardmodus für den Editor deiner Community fest. Der Rich-Text-Modus bietet den meisten Benutzern ein moderneres, vertrauteres Schreibgefühl, während der Markdown-Modus für ein eher technisches Publikum geeignet sein kann. Die Mitglieder können mit einem Schalter in der Editor-Symbolleiste zwischen den Modi wechseln."
-    viewport_based_mobile_mode: "EXPERIMENTELL: Deaktiviere die User-Agent-basierten Mobil-/Desktop-Modi und verwende stattdessen die Viewport-Breite."
     reviewable_ui_refresh: "Gruppen, die die experimentelle neue Benutzeroberfläche in der Warteschlange zur Überprüfung nutzen können."
     content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
     content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Erfordert, dass „content localization enabled“ aktiviert ist."
@@ -2582,7 +2576,6 @@ de:
   filter:
     description:
       status: "Themen nach ihrem Status filtern"
-      in: "Themen nach persönlichen Kriterien filtern"
       order: "Themen nach einem bestimmten Feld sortieren"
       category: "Themen aus einer bestimmten Kategorie anzeigen"
       category_any: "Themen aus jeder der angegebenen Kategorien anzeigen (durch Kommas getrennt)"
@@ -4023,12 +4016,6 @@ de:
     account_second_factor_disabled:
       title: "Zwei-Faktor-Authentifizierung deaktiviert"
       subject_template: "[%{email_prefix}] Zwei-Faktor-Authentifizierung deaktiviert"
-      text_body_template: |
-        Die Zwei-Faktor-Authentifizierung deines Benutzerkontos bei %{site_name} wurde deaktiviert. Du kannst dich nun allein mit deinem Passwort anmelden. Ein zusätzlicher Code ist nicht mehr erforderlich.
-
-        Wenn du die Zwei-Faktor-Authentifizierung nicht selbst deaktiviert hast, hat jemand dein Benutzerkonto kompromittiert.
-
-        Wenn du Fragen hast, [wende dich an unser freundliches Team](%{base_url}/about).
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit %{since}"
       since_last_visit: "Seit deinem letzten Besuch"
@@ -4224,8 +4211,13 @@ de:
   page_not_found:
     page_title: "Seite nicht gefunden"
     title: "Hoppla! Diese Seite existiert nicht oder ist privat."
+    subtitle: "Wir haben überall nachgeschaut, aber wir konnten die vor dir gesuchte Seite nicht finden."
+    popular_topics: "Beliebte Themen"
+    recent_topics: "Aktuelle Themen"
     see_more: "Mehr"
+    search_title: "Versuche stattdessen zu suchen?"
     search_button: "Suche"
+    home: "Zurück zur Startseite"
   offline:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
@@ -5337,16 +5329,36 @@ de:
       approve_and_unhide:
         title: "Beitrag genehmigen und nicht länger verstecken"
         complete: "Beitrag genehmigt und wieder sichtbar gemacht"
+      post_actions:
+        bundle_title: "Was willst du mit dem Beitrag machen?"
       no_action_post:
         title: "Keine Aktion"
+        description: "Keine Maßnahmen bezüglich des Beitrags ergreifen"
+        complete: "Keine Aktion bezüglich des Beitrags ausgeführt"
       delete_post:
         title: "Beitrag löschen"
+        description: "Diesen Beitrag löschen"
         complete: "Beitrag gelöscht"
       hide_post:
         title: "Beitrag ausblenden"
+        description: "Diesen Beitrag vor der Öffentlichkeit verbergen"
+        complete: "Beitrag ausgeblendet"
+      unhide_post:
+        title: "Beitrag sichtbar machen"
+        description: "Diesen Beitrag für alle Benutzer sichtbar machen"
+        complete: "Beitrag sichtbar gemacht"
       restore_post:
         title: "Beitrag wiederherstellen"
+        description: "Diesen gelöschten Beitrag wiederherstellen"
         complete: "Beitrag wiederhergestellt"
+      edit_post:
+        title: "Beitrag bearbeiten"
+        description: "Den Inhalt dieses Beitrags bearbeiten"
+        complete: "Beitrag bearbeitet"
+      convert_to_pm:
+        title: "In PN umwandeln"
+        description: "Diesen Beitrag in eine persönliche Nachricht umwandeln"
+        complete: "Beitrag in persönliche Nachricht umgewandelt"
       user_actions:
         bundle_title: "Was willst du mit dem Benutzer machen?"
       no_action_user:

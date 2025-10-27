@@ -3426,6 +3426,9 @@ zh_TW:
       title: " 最近貼文"
       empty: "沒有貼文"
       aria_post_number: "%{title} - 貼文 #%{postNumber}"
+      bulk:
+        clear_all: "清除全部"
+        actions: "批次操作"
     post:
       confirm_delete: "確定要刪除此貼文嗎？"
       quote_reply: "引用"
@@ -3513,10 +3516,7 @@ zh_TW:
         attachment_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳附件。"
         attachment_download_requires_login: "抱歉，您必須登入以下載附件。"
       cancel_composer:
-        confirm: "您想對您的貼文做什麼？"
         discard: "捨棄"
-        save_draft: "儲存草稿以備稍後使用"
-        keep_editing: "繼續編輯"
       via_email: "本貼文透過電子郵件送達"
       via_auto_generated_email: "通過自動生成郵件發表的貼文"
       whisper: "這貼文是版主私人密談"
@@ -3726,6 +3726,8 @@ zh_TW:
       background_image: "分類背景圖片"
       background_image_dark: "深色類別背景圖片"
       background_color: "顏色"
+      color_validations:
+        cant_be_empty: "不能空白"
       styles:
         icon: "圖示"
         emoji: "Emoji"
@@ -4734,9 +4736,12 @@ zh_TW:
           title: "本地化"
           header_description: "為您的成員設定社群的介面語言和其他本地化選項"
           keywords: "地區 | 語言 | 時區 | 單一區 | ltr"
-        login_and_authentication:
+        login:
           title: "登入與驗證"
           header_description: "設定使用者登入和驗證方式、密碼和金鑰、OAuth2 提供者等"
+          sub_pages:
+            common_settings:
+              title: "設定"
         logo:
           title: "標誌"
           form:
@@ -5737,7 +5742,6 @@ zh_TW:
         copy_to_clipboard: "複製至剪貼簿"
         copied_to_clipboard: "已複製至剪貼簿"
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"
-        theme_owner: "無法編輯，擁有者為："
         email_templates:
           title: "電子信箱"
           subject: "主旨"
@@ -5745,6 +5749,7 @@ zh_TW:
           body: "內容"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
+          edit: "編輯"
         component:
           all_filter: "全部"
           used_filter: "已使用"

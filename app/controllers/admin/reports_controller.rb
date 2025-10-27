@@ -87,7 +87,7 @@ class Admin::ReportsController < Admin::StaffController
           if report_params[:start_date].present?
             Time.parse(report_params[:start_date]).to_date
           else
-            1.days.ago
+            1.day.ago
           end
         ).beginning_of_day
       end_date =

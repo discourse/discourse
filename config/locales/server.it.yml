@@ -1692,7 +1692,6 @@ it:
     logo: "L'immagine del logo in alto a sinistra del tuo sito. Utilizzare un'immagine rettangolare ampia con un'altezza di 120 e un rapporto di forma superiore a 3: 1. Se lasciato vuoto, verrà mostrato il testo del titolo del sito."
     logo_small: "La piccola immagine del logo in alto a sinistra del tuo sito, vista quando scorri verso il basso. Usa un'immagine quadrata di 120 × 120. Se lasciato vuoto, verrà mostrato un glifo Home."
     digest_logo: "L'immagine del logo alternativo utilizzata nella parte superiore del riepilogo dell'email del tuo sito. Usa un'immagine a rettangolo largo. Non usare un'immagine SVG. Se lasciato vuoto, verrà utilizzata l'immagine dall'impostazione `logo`."
-    mobile_logo: "Il logo utilizzato sulla versione mobile del tuo sito. Utilizzare un'immagine rettangolare ampia con un'altezza di 120 e una proporzione superiore a 3:1. Se lasciato vuoto, verrà utilizzata l'immagine dell'impostazione `logo`."
     logo_dark: "Schema scuro alternativo per l'impostazione 'logo' del sito."
     logo_small_dark: "Schema scuro alternativo per l'impostazione 'logo piccolo' del sito."
     mobile_logo_dark: "Schema scuro alternativo per l'impostazione 'logo mobile' del sito."
@@ -1706,8 +1705,6 @@ it:
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_subject: "Formato oggetto personalizzabile per email standard. Vedi <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Fornisce maggiori dettagli agli utenti sul perché non possono accedere a un argomento specifico. Nota: questo metodo è meno sicuro perché gli utenti sapranno se un URL si collega a un argomento valido."
-    enforce_second_factor: "Richiede all'utente di abilitare l'autenticazione a due fattori per poter accedere all'interfaccia utente di Discourse. Questa impostazione non interessa l'autenticazione via API o \"'DiscourseConnect provider\". Se enforce_second_factor_on_external_auth è abilitata, l'utente non sarà più in grado di accedere con provider di autenticazione esterni dopo aver configurato l'autenticazione a due fattori."
-    enforce_second_factor_on_external_auth: "Richiede all'utente di utilizzare sempre l'autenticazione a due fattori. Se abilitata, impedisce all'utente che ha già abilitato l'autenticazione a due fattori di accedere via metodi di autenticazione esterni come l'accesso via social. Se disabilitata, l'utente dovrà usare l'autenticazione a due fattori solo quando accede con nome utente e password. Vedi anche l'impostazione `enforce_second_factor`."
     force_https: "Forza il tuo sito ad usare solo HTTPS. ATTENZIONE: NON abilitare questa opzione finché non hai verificato che HTTPS è pienamente configurato e sta funzionando ovunque! Hai verificato il tuo CDN, tutti gli accessi ai social ed ogni logo esterno / dipendenze per essere sicuro che sono anch'essi tutti compatibili con HTTPS?"
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"
     summary_posts_required: "Numero minimo di messaggi in un argomento prima che l'opzione 'Riassumi questo argomento' sia abilitata. Le modifiche a questa impostazione verranno applicate retroattivamente entro una settimana."
@@ -1766,7 +1763,6 @@ it:
     ga_universal_auto_link_domains: "Abilita il monitoraggio tra domini di Google Universal Analytics. I collegamenti in uscita verso questi domini avranno l'ID del client aggiunto. Vedi <a href='https://support.google.com/analytics/answer/1034342?hl=it' target='_blank'>Impostare il monitoraggio tra domini.</a>"
     gtm_container_id: "ID contenitore di Google Tag Manager. ad esempio: GTM-ABCD12E. <br/>Nota: per utilizzare GTM quando la Content Security Policy (CSP) è abilitata, consulta la documentazione su meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Utilizzare nonce negli script di Google Tag Manager</a>."
     enable_escaped_fragments: "Tornare all'API Ajax-Crawling di Google se non viene rilevato alcun webcrawler. Vedi <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Permetti ai moderatori di creare e gestire categorie e gruppi"
     moderators_change_post_ownership: "Consenti ai moderatori di modificare la proprietà del messaggio"
     cors_origins: "Origini permesse per richieste cross-origin (CORS). Ogni origine deve includere http:// o https://. La variabile d'ambiente DISCOURSE_ENABLE_CORS deve essere impostata come true per abilitare CORS."
     use_admin_ip_allowlist: "Gli amministratori possono effettuare l'accesso solo se usano un indirizzo IP definito nell'elenco degli IP scansionati (Amministratore > Log > IP scansionati)."
@@ -1862,7 +1858,6 @@ it:
     enable_local_logins_via_email: "Consenti agli utenti di richiedere un collegamento di accesso usa e getta, che gli verrà inviato tramite email."
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se l'opzione è deselezionata, non sarà possibile creare nuovi account."
     enable_signup_cta: "Mostra una notifica agli utenti anonimi che ritornano chiedendo loro di registrare un account."
-    enable_discourse_id: "Abilita l'autenticazione tramite Discourse ID, un servizio Single Sign-On che consente agli utenti di accedere a più siti Discourse utilizzando un unico account. I provider di accesso social più comuni come Google, Facebook e Twitter sono supportati senza alcuna configurazione aggiuntiva. Per maggiori dettagli, consulta <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a>."
     enable_google_oauth2_logins: "Abilita l'autenticazione di Google Oauth2. Questo è il metodo di autenticazione attualmente supportato da Google. Richiede chiave e segreto. Vedi <a href='https://meta.discourse.org/t/15858' target='_blank'>Configurare l'accesso a Discourse tramite Google</a> ."
     google_oauth2_client_id: "L'ID client univoco fornito dalla tua applicazione Google, utilizzato per il processo di autenticazione."
     google_oauth2_client_secret: "Segreto client della tua applicazione Google."
@@ -2461,7 +2456,6 @@ it:
     view_raw_email_allowed_groups: "Gruppi a cui è consentito visualizzare il contenuto email sorgente di un messaggio se questo viene generato da un'email in arrivo. Include l'intestazione dell'email e altre informazioni tecniche."
     rich_editor: "Abilita l'editor avanzato per il compositore in modo che tutti gli utenti possano passare dalla modalità Markdown attuale al nuovo editor di rich text per una composizione più intuitiva e facile da usare."
     default_composition_mode: "Imposta la modalità predefinita per il compositore della tua community. La modalità Rich Text offre un'esperienza di scrittura più moderna e familiare per la maggior parte degli utenti, mentre la modalità Markdown potrebbe essere adatta a un pubblico più tecnico. I membri possono utilizzare un interruttore nella barra degli strumenti del compositore per passare da una modalità all'altra."
-    viewport_based_mobile_mode: "SPERIMENTALE: disattiva le modalità mobile/desktop basate sull'agente utente e utilizza invece la larghezza della finestra di visualizzazione."
     reviewable_ui_refresh: "Gruppi che possono utilizzare la nuova interfaccia utente sperimentale nella coda di revisione."
     content_localization_enabled: "Mostra contenuti localizzati per gli utenti in base alle preferenze del browser o della lingua. Tali contenuti possono includere categorie, tag, post e argomenti. Le impostazioni locali supportate sono impostate in \"Impostazioni locali supportate per la localizzazione dei contenuti\"."
     content_localization_supported_locales: "Elenco delle lingue supportate in cui è possibile tradurre i contenuti utente. Richiede \"localizzazione dei contenuti abilitata\"."
@@ -2561,7 +2555,6 @@ it:
   filter:
     description:
       status: "Filtra gli argomenti in base al loro stato"
-      in: "Filtra gli argomenti in base agli elenchi personali"
       order: "Ordina gli argomenti in base a un campo specifico"
       category: "Mostra argomenti in una categoria specifica"
       category_any: "Mostra gli argomenti in una qualsiasi delle categorie specificate (separati da virgole)"
@@ -3888,7 +3881,6 @@ it:
     account_second_factor_disabled:
       title: "Autenticazione a due fattori disabilitata"
       subject_template: "[%{email_prefix}] Autenticazione a due fattori disabilitata"
-      text_body_template: "L'autenticazione a due fattori è stata disabilitata per il tuo account su %{site_name}. Ora puoi accedere con la tua sola password; non è più richiesto un codice di autenticazione aggiuntivo. \n\nSe non hai disabilitato tu l'autenticazione a due fattori, qualcuno potrebbe aver violato il tuo account. \n\nSe hai domande, [contatta il nostro staff](%{base_url}/about).\n"
     digest:
       why: "Un breve riepilogo di %{site_link} da %{since}"
       since_last_visit: "Dalla tua ultima visita"

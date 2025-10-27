@@ -7,3 +7,7 @@ en:
       site_settings:
         categories:
           discourse_oauth2_basic: "OAuth2 Login"
+      config:
+        login:
+          sub_pages:
+            oauth2: "OAuth2"

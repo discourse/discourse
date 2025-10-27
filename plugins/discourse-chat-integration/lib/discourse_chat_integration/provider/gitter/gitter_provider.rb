@@ -3,9 +3,9 @@
 module DiscourseChatIntegration
   module Provider
     module GitterProvider
-      PROVIDER_NAME = "gitter".freeze
+      PROVIDER_NAME = "gitter"
       PROVIDER_ENABLED_SETTING = :chat_integration_gitter_enabled
-      CHANNEL_IDENTIFIER_KEY = "name".freeze
+      CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [
         { key: "name", regex: '^\S+$', unique: true },
         {
@@ -21,11 +21,11 @@ module DiscourseChatIntegration
         response = Net::HTTP.post_form(URI(channel.data["webhook_url"]), message: message)
         unless response.kind_of? Net::HTTPSuccess
           error_key = nil
-          raise ::DiscourseChatIntegration::ProviderError.new info: {
-                                                                error_key: error_key,
-                                                                message: message,
-                                                                response_body: response.body,
-                                                              }
+          raise DiscourseChatIntegration::ProviderError.new info: {
+                                                              error_key: error_key,
+                                                              message: message,
+                                                              response_body: response.body,
+                                                            }
         end
       end
 

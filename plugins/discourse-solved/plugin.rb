@@ -186,7 +186,7 @@ after_initialize do
   register_category_list_topics_preloader_associations(:solved) if SiteSetting.solved_enabled
   register_topic_preloader_associations(:solved) if SiteSetting.solved_enabled
   Search.custom_topic_eager_load { [:solved] } if SiteSetting.solved_enabled
-  Site.preloaded_category_custom_fields << ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
+  Site.preloaded_category_custom_fields << DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
 
   add_api_key_scope(
     :solved,
@@ -205,10 +205,9 @@ after_initialize do
     report.data = []
 
     accepted_solutions =
-      DiscourseSolved::SolvedTopic.joins(:topic).where(
-        "topics.archetype <> ?",
-        Archetype.private_message,
-      )
+      DiscourseSolved::SolvedTopic
+        .joins(:topic)
+        .where.not(topics: { archetype: Archetype.private_message })
 
     category_id, include_subcategories = report.add_category_filter
     if category_id
@@ -273,7 +272,7 @@ after_initialize do
   add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
-  on(:post_destroyed) { |post| ::DiscourseSolved.unaccept_answer!(post) }
+  on(:post_destroyed) { |post| DiscourseSolved.unaccept_answer!(post) }
 
   on(:filter_auto_bump_topics) do |_category, filters|
     filters.push(

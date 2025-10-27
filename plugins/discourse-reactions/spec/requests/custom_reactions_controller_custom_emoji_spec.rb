@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 describe DiscourseReactions::CustomReactionsController do
   fab!(:user)
-  fab!(:post_1) { Fabricate(:post) }
+  fab!(:post_1, :post)
 
   let(:custom_emoji) { "wink" }
 
   before do
     SiteSetting.discourse_reactions_enabled = true
-    SiteSetting.discourse_reactions_experimental_allow_any_emoji = true
+    SiteSetting.discourse_reactions_allow_any_emoji = true
     SiteSetting.discourse_reactions_enabled_reactions = "heart|thumbsup|laughing"
   end
 
-  describe "custom emoji reactions with discourse_reactions_experimental_allow_any_emoji enabled" do
+  describe "custom emoji reactions with discourse_reactions_allow_any_emoji enabled" do
     context "when user is logged in" do
       before { sign_in(user) }
 
@@ -85,9 +83,9 @@ describe DiscourseReactions::CustomReactionsController do
     end
   end
 
-  describe "custom emoji reactions with discourse_reactions_experimental_allow_any_emoji disabled" do
+  describe "custom emoji reactions with discourse_reactions_allow_any_emoji disabled" do
     before do
-      SiteSetting.discourse_reactions_experimental_allow_any_emoji = false
+      SiteSetting.discourse_reactions_allow_any_emoji = false
       sign_in(user)
     end
 

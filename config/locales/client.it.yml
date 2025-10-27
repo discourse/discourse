@@ -3777,6 +3777,9 @@ it:
       title: "Ultimi messaggi"
       empty: "Non ci sono messaggi"
       aria_post_number: "%{title}, messaggio n. %{postNumber}"
+      bulk:
+        clear_all: "Deseleziona tutto"
+        actions: "Azioni collettive"
     post:
       confirm_delete: "Vuoi davvero eliminare questo messaggio?"
       quote_reply: "Cita"
@@ -3888,10 +3891,7 @@ it:
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
         attachment_download_requires_login: "Spiacenti, devi effettuare l'accesso per poter scaricare gli allegati."
       cancel_composer:
-        confirm: "Cosa vorresti fare con il tuo messaggio?"
         discard: "Elimina"
-        save_draft: "Salva la bozza"
-        keep_editing: "Continua modifica"
       via_email: "questo messaggio è arrivato via email"
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
@@ -4124,6 +4124,8 @@ it:
       style: "Stili"
       background_color: "Colore"
       foreground_color: "Colore del testo"
+      color_validations:
+        cant_be_empty: "non può essere vuoto"
       styles:
         type: "Stile"
         icon: "Icona"
@@ -5272,9 +5274,12 @@ it:
           title: "Localizzazione"
           header_description: "Configura la lingua dell'interfaccia della tua community e altre opzioni di localizzazione per i tuoi membri"
           keywords: "localizzazione|lingua|fusoorario|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Accesso e autenticazione"
           header_description: "Configura le modalità di accesso e autenticazione degli utenti, segreti e chiavi, fornitori OAuth2 e altro ancora"
+          sub_pages:
+            common_settings:
+              title: "Impostazioni"
         logo:
           title: "Logo"
           header_description: "Configura i loghi e le icone utilizzati nel tuo sito"
@@ -6441,7 +6446,6 @@ it:
         copy_to_clipboard: "Copia negli Appunti"
         copied_to_clipboard: "Copiato negli Appunti"
         copy_to_clipboard_error: "Errore durante la copia negli appunti"
-        theme_owner: "Non modificabile, di proprietà di:"
         email_templates:
           title: "Email"
           subject: "Oggetto"
@@ -6449,6 +6453,7 @@ it:
           body: "Corpo"
           revert: "Annulla Cambiamenti"
           revert_confirm: "Sei sicuro di voler annullare i cambiamenti?"
+          edit: "Modifica"
         component:
           all_filter: "Tutti"
           used_filter: "Usato"

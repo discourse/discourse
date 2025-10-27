@@ -2,7 +2,7 @@
 
 RSpec.describe "Managing Posts solved status" do
   let(:topic) { Fabricate(:topic_with_op) }
-  fab!(:user) { Fabricate(:trust_level_4) }
+  fab!(:user, :trust_level_4)
   let(:p1) { Fabricate(:post, topic: topic) }
 
   before { SiteSetting.allow_solved_on_all_topics = true }
@@ -18,14 +18,14 @@ RSpec.describe "Managing Posts solved status" do
 
       CategoryCustomField.create(
         category_id: category.id,
-        name: ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+        name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
         value: "true",
       )
 
       category
     end
 
-    fab!(:solvable_tag) { Fabricate(:tag) }
+    fab!(:solvable_tag, :tag)
 
     fab!(:solved_in_category) do
       topic = Fabricate(:topic, category: solvable_category)
@@ -48,7 +48,7 @@ RSpec.describe "Managing Posts solved status" do
     fab!(:unsolved_in_category) { Fabricate(:topic, category: solvable_category) }
     fab!(:unsolved_in_tag) { Fabricate(:topic, tags: [solvable_tag]) }
 
-    fab!(:unsolved_topic) { Fabricate(:topic) }
+    fab!(:unsolved_topic, :topic)
 
     it "can filter by solved status" do
       expect(
@@ -142,7 +142,7 @@ RSpec.describe "Managing Posts solved status" do
         category_custom_field =
           CategoryCustomField.new(
             category_id: category.id,
-            name: ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+            name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
             value: "true",
           )
         category_custom_field.save
@@ -153,7 +153,7 @@ RSpec.describe "Managing Posts solved status" do
         category_custom_field =
           CategoryCustomField.new(
             category_id: category.id,
-            name: ::DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+            name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
             value: "false",
           )
         category_custom_field.save
@@ -265,7 +265,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(topic.public_topic_timer.status_type).to eq(TopicTimer.types[:silent_close])
 
       expect(topic.solved.topic_timer).to eq(topic.public_topic_timer)
-      expect(topic.public_topic_timer.execute_at).to eq_time(Time.zone.now + 2.hours)
+      expect(topic.public_topic_timer.execute_at).to eq_time(2.hours.from_now)
       expect(topic.public_topic_timer.based_on_last_post).to eq(true)
     end
 
@@ -287,7 +287,7 @@ RSpec.describe "Managing Posts solved status" do
       expect(topic_2.public_topic_timer.status_type).to eq(TopicTimer.types[:silent_close])
 
       expect(topic_2.solved.topic_timer).to eq(topic_2.public_topic_timer)
-      expect(topic_2.public_topic_timer.execute_at).to eq_time(Time.zone.now + 4.hours)
+      expect(topic_2.public_topic_timer.execute_at).to eq_time(4.hours.from_now)
       expect(topic_2.public_topic_timer.based_on_last_post).to eq(true)
     end
 

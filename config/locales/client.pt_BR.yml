@@ -3780,6 +3780,9 @@ pt_BR:
       title: "Últimas postagens"
       empty: "Não há postagens"
       aria_post_number: "%{title} - postagem #%{postNumber}"
+      bulk:
+        clear_all: "Limpar tudo"
+        actions: "Ações em massa"
     post:
       confirm_delete: "Tem certeza de que deseja excluir esta postagem?"
       quote_reply: "Citação"
@@ -3891,10 +3894,7 @@ pt_BR:
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários(as) novos(as) não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa entrar para baixar arquivos anexos."
       cancel_composer:
-        confirm: "O que gostaria de fazer com sua postagem?"
         discard: "Descartar"
-        save_draft: "Salvar rascunho para mais tarde"
-        keep_editing: "Continuar editando"
       via_email: "postagem recebida via e-mail"
       via_auto_generated_email: "esta mensagem chegou por um e-mail gerado automaticamente"
       whisper: "esta mensagem é um sussuro privado para a moderação"
@@ -4127,6 +4127,8 @@ pt_BR:
       style: "Estilos"
       background_color: "Cor"
       foreground_color: "Cor do texto"
+      color_validations:
+        cant_be_empty: "não pode estar vazio(a)"
       styles:
         type: "Estilo"
         icon: "Ícone"
@@ -4843,7 +4845,7 @@ pt_BR:
       no_drafts_title: "Você ainda não iniciou nenhum rascunho"
       no_drafts_body: "Ainda não está pronto(a) para postar? Salvaremos automaticamente um novo rascunho e o listaremos aqui sempre que você começar a escrever um tópico, resposta ou mensagem pessoal. Selecione o botão de cancelamento para descartar ou salvar seu rascunho para continuar mais tarde."
       no_likes_title: "Você ainda não curtiu nenhum tópico"
-      no_likes_title_others: "%{username} ainda não respondeu a nenhum tópico"
+      no_likes_title_others: "%{username} ainda não curtiu nenhum tópico"
       no_likes_body: "Uma ótima maneira de participar e começar a contribuir é iniciar a leitura das conversas que já aconteceram e selecionar %{heartIcon} nas postagens de que você gostou!"
       no_topics_title: "Você ainda não iniciou nenhum tópico"
       no_topics_body: "É sempre melhor <a href='%{searchUrl}'>pesquisar</a> por tópicos de conversa existentes antes de iniciar um novo, mas, se você tiver certeza de que o tópico que deseja ainda não está disponível, vá em frente e crie um novo tópico próprio. Procure o botão <kbd>+ Novo Tópico</kbd> no canto superior direito da lista de tópicos, categoria ou etiqueta para começar a criar um novo tópico nessa área."
@@ -5275,9 +5277,12 @@ pt_BR:
           title: "Localização"
           header_description: "Configure o idioma da interface da sua comunidade e outras opções de localização para seus membros"
           keywords: "local|idioma|fuso_horário|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Acesso e autenticação"
           header_description: "Configure o acesso e autenticação de usuários(as), chaves e segredos, provedores OAuth2 e muito mais"
+          sub_pages:
+            common_settings:
+              title: "Definições"
         logo:
           title: "Logotipo"
           header_description: "Configure os ícones e logotipos usados no seu site"
@@ -6444,7 +6449,6 @@ pt_BR:
         copy_to_clipboard: "Copiar para área de transferência"
         copied_to_clipboard: "Copiou para área de transferência"
         copy_to_clipboard_error: "Erro ao copiar dados para a área de transferência"
-        theme_owner: "Não editável, pertence a:"
         email_templates:
           title: "E-mail"
           subject: "Assunto"
@@ -6452,6 +6456,7 @@ pt_BR:
           body: "Corpo"
           revert: "Reverter alterações"
           revert_confirm: "Tem certeza de que deseja reverter as alterações?"
+          edit: "Editar"
         component:
           all_filter: "Tudo"
           used_filter: "Usado(a)"

@@ -338,4 +338,20 @@ RSpec.describe GroupUser do
       expect(user.reload.trust_level).to eq(2)
     end
   end
+
+  it "skips trust level changes when grant_trust_level = 0" do
+    group = Fabricate(:group)
+    group.update!(grant_trust_level: 0)
+
+    user = Fabricate(:user)
+    user.change_trust_level!(1)
+    expect(user.trust_level).to eq(1)
+
+    group.add(user)
+    expect(user.reload.trust_level).to eq(1)
+
+    group_user = GroupUser.find_by(group: group, user: user)
+    Promotion.expects(:recalculate).never
+    group_user.destroy!
+  end
 end

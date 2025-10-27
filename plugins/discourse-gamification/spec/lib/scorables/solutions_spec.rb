@@ -3,8 +3,8 @@
 RSpec.describe DiscourseGamification::Solutions do
   fab!(:category)
   fab!(:topic) { Fabricate(:topic, category: category) }
-  fab!(:question_user) { Fabricate(:user) }
-  fab!(:answer_user) { Fabricate(:user) }
+  fab!(:question_user, :user)
+  fab!(:answer_user, :user)
   fab!(:answer_post) { Fabricate(:post, topic: topic, user: answer_user) }
 
   before { SiteSetting.solution_score_value = 5 }

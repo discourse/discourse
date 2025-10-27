@@ -3263,10 +3263,7 @@ te:
         attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
         attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
       cancel_composer:
-        confirm: "మీరు మీ పోస్ట్‌తో ఏమి చేయాలనుకుంటున్నారు?"
         discard: "విస్మరించండి"
-        save_draft: "తర్వాత కోసం చిత్తుప్రతిను సేవ్ చేయండి"
-        keep_editing: "సవరించడం కొనసాగించండి"
       via_email: "ఈ పోస్ట్ ఇమెయిల్ ద్వారా వచ్చింది"
       via_auto_generated_email: "ఈ పోస్ట్ స్వయంచాలకంగా రూపొందించబడిన ఇమెయిల్ ద్వారా వచ్చింది"
       whisper: "ఈ పోస్ట్ మోడరేటర్‌ల కోసం ఒక ప్రైవేట్ గుసగుస"
@@ -3476,6 +3473,8 @@ te:
       background_image: "వర్గం నేపథ్య చిత్రం"
       background_image_dark: "డార్క్ వర్గం నేపథ్య చిత్రం"
       background_color: "రంగు"
+      color_validations:
+        cant_be_empty: "ఖాళీ ఉండకూడదు"
       styles:
         icon: "చిహ్నం"
         emoji: "ఇమోజి"
@@ -4430,6 +4429,10 @@ te:
           title: "ఫైళ్లు"
         legal:
           title: "చట్టపరమైన"
+        login:
+          sub_pages:
+            common_settings:
+              title: "అమరికలు"
         logo:
           form:
             logo:
@@ -5145,7 +5148,6 @@ te:
         copy_to_clipboard: "క్లిప్‌బోర్డ్‌కు కాపీ చేయండి"
         copied_to_clipboard: "క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
         copy_to_clipboard_error: "క్లిప్‌బోర్డ్‌కి డేటాను కాపీ చేయడంలో లోపం"
-        theme_owner: "సవరించలేనిది, దీని యజమాని:"
         email_templates:
           title: "ఈమెయిల్"
           subject: "విషయం"
@@ -5153,6 +5155,7 @@ te:
           body: "బాడీ"
           revert: "మార్పులను తిరిగి మార్చండి"
           revert_confirm: "మీరు ఖచ్చితంగా మీ మార్పులను తిరిగి మార్చాలనుకుంటున్నారా?"
+          edit: "సవరించండి"
         component:
           all_filter: "అన్ని"
           used_filter: "ఉపయోగించబడిన"

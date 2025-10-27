@@ -7,4 +7,4 @@ DiscourseSolved::Engine.routes.draw do
   get "/by_user" => "solved_topics#by_user"
 end
 
-Discourse::Application.routes.draw { mount ::DiscourseSolved::Engine, at: "solution" }
+Discourse::Application.routes.draw { mount DiscourseSolved::Engine, at: "solution" }

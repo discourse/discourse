@@ -1622,7 +1622,6 @@ ja:
     logo: "サイトの左上にあるロゴ画像です。高さ 120、縦横比 3：1を超える広幅の長方形の画像を使用してください。空白のままにすると、サイトタイトルのテキストが表示されます。"
     logo_small: "あなたのサイトの左上にある小さなロゴ画像です。下にスクロールしたときに見えます。 120×120 の正方形の画像を使用してください。空白のままにすると、ホームグリフが表示されます。"
     digest_logo: "サイトのメール要約の上部で使用されるロゴの代替画像です。広い長方形の画像を使用してください。SVG 画像を使わないでください。空白のままにすると、`logo` で設定した画像が使用されます。"
-    mobile_logo: "あなたのサイトのモバイル版で使用されるロゴです。高さ120、縦横比 3：1 を超える広い長方形の画像を使用します。空白のままにすると、'logo' で設定した画像が使用されます。"
     logo_dark: "'logo' サイト設定の代替のダークスキーム。"
     logo_small_dark: "'logo small' サイト設定の代替のダークスキーム。"
     mobile_logo_dark: "'mobile logo' サイト設定の代替のダークスキーム。"
@@ -1636,8 +1635,6 @@ ja:
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
     email_subject: "標準メールのカスタマイズ可能な件名形式。<a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a> をご覧ください"
     detailed_404: "特定のトピックにアクセスできない詳細な理由をユーザーに提供します。注意: URL が有効なトピックにリンクしているかどうかがユーザーにわかるため、安全性が低くなります。"
-    enforce_second_factor: "ユーザーに Discourse UI にアクセスする前に二要素認証を有効にするように要求します。この設定は API または 'DiscourseConnect プロバイダー' 認証に影響しません。enforce_second_factor_on_external_auth が有効である場合、ユーザーは二要素認証をセットアップした後、外部認証プロバイダーを使用してログインできなくなります。"
-    enforce_second_factor_on_external_auth: "ユーザーに常に二要素認証を使用するように要求します。これを有効にすると、二要素認証が有効である場合に、ソーシャルログインなどの外部認証方法でログインできなくなります。無効にすると、ユーザー名とパスワードでログインする際に二要素認証のみを確認する必要があります。`enforce_second_factor` 設定も参照してください。"
     force_https: "サイトが HTTPS のみを使用するように強制する。警告: HTTPS が完全にセットアップ済みであり、すべての場所で機能していることを確認するまで、これを有効にしないでください！CDN、すべてのソーシャルログイン、および外部ロゴ/依存関係がすべて HTTPS 対応であることを確認しましたか？"
     summary_score_threshold: "「このトピックを要約」に含まれるために必要な投稿の最低スコア"
     summary_posts_required: "'このトピックを要約' を有効にするために最低限必要なトピック内の投稿数。この設定を変更すると、1 週間以内で遡って適用されます。"
@@ -1696,7 +1693,6 @@ ja:
     ga_universal_auto_link_domains: "Google Universal Analytics クロスドメイントラッキングを有効にする。これらのドメインへの発信リンクにはクライアント ID が追加されます。<a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google のクロスドメイントラッキングガイド</a>をご覧ください。"
     gtm_container_id: "Google Tag Manager コンテナ ID。例: GTM-ABCD12E。<br/>注意: コンテンツセキュリティポリシー (CSP) が有効な場合に GTM を使用するには、メタのドキュメントをご覧ください: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Google Tag Manager スクリプトでノンスを使用する</a>。"
     enable_escaped_fragments: "ウェブクローラーが検出されない場合、Google の Ajax-Crawling API にフォールバックする。<a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a> をご覧ください。"
-    moderators_manage_categories_and_groups: "モデレーターによるカテゴリとグループの作成と管理を許可する"
     moderators_change_post_ownership: "モデレーターによる投稿の所有権の変更を許可する"
     cors_origins: "CORS を許可。オリジンは http:// か https:// を含む必要があります。CORS を有効にするには、環境変数　DISCOURSE_ENABLE_CORS に true を設定する必要があります。"
     use_admin_ip_allowlist: "管理者はスクリーン対象 IP リスト (管理者 > ログ > スクリーン対象 IP) に定義されている IP アドレスからのみログインできる。"
@@ -1792,7 +1788,6 @@ ja:
     enable_local_logins_via_email: "メールで送信されるワンクリックログインリンクをユーザーがリクエストすることを許可する。"
     allow_new_registrations: "新しいユーザーの登録を許可。新規アカウントを作成できないようにするには、これをオフにします。"
     enable_signup_cta: "匿名のリピートユーザーにアカウント登録を促す通知を表示する。"
-    enable_discourse_id: "Discourse ID による認証を有効にします。これは、ユーザーが 1 つのアカウントで複数の Discourse サイトにログインできるようにするシングルサインオンサービスです。Google、Facebook、X などの一般的なソーシャルログインプロバイダーは、追加構成なしでサポートされています。詳細は、<a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> をご覧ください。"
     enable_google_oauth2_logins: "Google OAuth2 認証を有効にする。これは、Google が現在サポートしている認証方法です。キーとシークレットが必要です。「<a href='https://meta.discourse.org/t/15858' target='_blank'>Discourse 用に Google ログインを構成する</a>」をご覧ください。"
     google_oauth2_client_id: "認証プロセスに使用される Google アプリケーション提供の一意のクライアント ID。"
     google_oauth2_client_secret: "あなたの Google アプリケーションのクライアントシークレット"
@@ -2392,7 +2387,6 @@ ja:
     view_raw_email_allowed_groups: "受信メールで作成された場合に、投稿の生のメールコンテンツを表示できるグループ。これには、メールのヘッダーやその他の技術情報が含まれます。"
     rich_editor: "作成ツールでリッチエディターを有効にして、すべてのユーザーがより直感的で使いやすく作成できるように、現在の Markdown モードと新しいリッチテキストエディターを切り替えられるようにする。"
     default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
-    viewport_based_mobile_mode: "実験的: ユーザーエージェントベースのモバイル/デスクトップモードを無効にし、代わりにビューポートの幅を使用する。"
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_enabled: "ユーザーのブラウザまたはユーザの言語設定に基づいて、ローカライズされたコンテンツを表示します。コンテンツには、カテゴリ、タグ、投稿、トピックが含まれる場合があります。サポートされているロケールは、'content localization supported locales' に設定されているロケールです。"
     content_localization_supported_locales: "ユーザーコンテンツを翻訳できるサポートされたロケールのリスト。'content localization enabled' が必要です。"
@@ -2489,7 +2483,6 @@ ja:
   filter:
     description:
       status: "ステータスでトピックを絞り込みます"
-      in: "個人リストでトピックを絞り込みます"
       order: "特定のフィールドでトピックを並べ替えます"
       category: "特定のカテゴリのトピックを表示します"
       category_any: "指定されたカテゴリのトピックを表示します (カンマ区切り)"
@@ -3895,12 +3888,6 @@ ja:
     account_second_factor_disabled:
       title: "二要素認証が無効です"
       subject_template: "[%{email_prefix}] 二要素認証が無効です"
-      text_body_template: |
-        %{site_name} のアカウントの二要素認証が無効になったため、パスワードのみでログインできるようになりました。今後、追加の認証コードは不要です。
-
-        二要素認証を無効にしなかった場合、誰かがあなたのアカウントを侵害した可能性があります。
-
-        不明な点がございましたら、[スタッフにお問い合わせください](%{base_url}/about)。
     digest:
       why: "%{since} 以降の %{site_link} の簡単な要約"
       since_last_visit: "最終アクセス以降"

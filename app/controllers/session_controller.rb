@@ -91,14 +91,15 @@ class SessionController < ApplicationController
       render json: success_json.merge(redirect_url: redirect_url)
     end
   rescue DiscourseConnectProvider::BlankSecret
-    render plain: I18n.t("discourse_connect.missing_secret"), status: 400
+    render plain: I18n.t("discourse_connect.missing_secret"), status: :bad_request
   rescue DiscourseConnectProvider::ParseError
     # Do NOT pass the error text to the client, it would give them the correct signature
-    render plain: I18n.t("discourse_connect.login_error"), status: 422
+    render plain: I18n.t("discourse_connect.login_error"), status: :unprocessable_entity
   rescue DiscourseConnectProvider::BlankReturnUrl
-    render plain: "return_sso_url is blank, it must be provided", status: 400
+    render plain: "return_sso_url is blank, it must be provided", status: :bad_request
   rescue DiscourseConnectProvider::InvalidParameterValueError => e
-    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param), status: 400
+    render plain: I18n.t("discourse_connect.invalid_parameter_value", param: e.param),
+           status: :bad_request
   end
 
   # For use in development mode only when login options could be limited or disabled.
@@ -110,7 +111,7 @@ class SessionController < ApplicationController
       raise Discourse::InvalidAccess if Rails.env.production?
 
       if ENV["DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE"] != "1"
-        return render plain: <<~TEXT, status: 403
+        return render plain: <<~TEXT, status: :forbidden
           To enable impersonating any user without typing passwords set the following ENV var
 
           export DISCOURSE_DEV_ALLOW_ANON_TO_IMPERSONATE=1
@@ -122,9 +123,9 @@ class SessionController < ApplicationController
       user = User.find_by_username(params[:session_id])
 
       if user.blank?
-        return render plain: "User #{params[:session_id]} not found", status: 403
+        return render plain: "User #{params[:session_id]} not found", status: :forbidden
       elsif !user.active?
-        return render plain: "User #{params[:session_id]} is not active", status: 403
+        return render plain: "User #{params[:session_id]} is not active", status: :forbidden
       end
 
       log_on_user(user)
@@ -157,7 +158,7 @@ class SessionController < ApplicationController
       # but since this is a test route, we allow passing a bad value into the API, catch the error
       # and return a JSON response to assert against.
       if e.message == "running 2fa against another user is not allowed"
-        render json: { result: "wrong user" }, status: 400
+        render json: { result: "wrong user" }, status: :bad_request
       else
         raise e
       end
@@ -204,7 +205,7 @@ class SessionController < ApplicationController
     sso.expire_nonce!
 
     begin
-      invite = validate_invitiation!(sso)
+      invite = validate_invitation!(sso)
 
       if user = sso.lookup_or_create_user(request.remote_ip)
         raise Discourse::ReadOnly if @staff_writes_only_mode && !user&.staff?
@@ -222,6 +223,7 @@ class SessionController < ApplicationController
           else
             render_sso_error(text: I18n.t("discourse_connect.account_not_approved"), status: 403)
           end
+
           return
 
           # we only want to redeem the invite if
@@ -240,9 +242,9 @@ class SessionController < ApplicationController
           topic = invite.topics.first
           return_path = topic.present? ? path(topic.relative_url) : path("/")
         elsif !user.active?
-          activation = UserActivator.new(user, request, session, cookies)
+          activation = UserActivator.new(user, request, server_session, cookies)
           activation.finish
-          session["user_created_message"] = activation.message
+          server_session["user_created_message"] = activation.message
           return redirect_to(users_account_created_path)
         else
           login_sso_user(sso, user)
@@ -605,7 +607,7 @@ class SessionController < ApplicationController
             .deep_symbolize_keys
             .slice(:ok, :error, :reason)
             .merge(failed_json)
-        render json: error_json, status: 400
+        render json: error_json, status: :bad_request
         return
       end
     end
@@ -615,7 +617,7 @@ class SessionController < ApplicationController
              callback_path: challenge[:callback_path],
              redirect_url: challenge[:redirect_url],
            },
-           status: 200
+           status: :ok
   end
 
   def forgot_password
@@ -661,7 +663,7 @@ class SessionController < ApplicationController
     if current_user.present?
       render_serialized(current_user, CurrentUserSerializer, { login_method: login_method })
     else
-      render body: nil, status: 404
+      render body: nil, status: :not_found
     end
   end
 
@@ -716,7 +718,7 @@ class SessionController < ApplicationController
       api_key = ApiKey.active.with_key(key).first
       render_serialized(api_key.api_key_scopes, ApiKeyScopeSerializer, root: "scopes")
     else
-      render body: nil, status: 404
+      render body: nil, status: :not_found
     end
   end
 
@@ -856,14 +858,14 @@ class SessionController < ApplicationController
   # not want to complete the SSO process of creating a user
   # and redeeming the invite if the invite is not redeemable or
   # for the wrong user
-  def validate_invitiation!(sso)
-    invite_key = server_session["invite-key"]
-    return if invite_key.blank?
+  def validate_invitation!(sso)
+    return unless invite_key = server_session["invite-key"]
 
-    invite = Invite.find_by(invite_key: invite_key)
+    base_url = Discourse.base_url
+    site_name = SiteSetting.title
 
-    if invite.blank?
-      raise Invite::ValidationFailed.new(I18n.t("invite.not_found", base_url: Discourse.base_url))
+    unless invite = Invite.find_by(invite_key:)
+      raise Invite::ValidationFailed.new(I18n.t("invite.not_found", base_url:))
     end
 
     if invite.redeemable?
@@ -871,15 +873,9 @@ class SessionController < ApplicationController
         raise Invite::ValidationFailed.new(I18n.t("invite.not_matching_email"))
       end
     elsif invite.expired?
-      raise Invite::ValidationFailed.new(I18n.t("invite.expired", base_url: Discourse.base_url))
+      raise Invite::ValidationFailed.new(I18n.t("invite.expired", base_url:))
     elsif invite.redeemed?
-      raise Invite::ValidationFailed.new(
-              I18n.t(
-                "invite.not_found_template",
-                site_name: SiteSetting.title,
-                base_url: Discourse.base_url,
-              ),
-            )
+      raise Invite::ValidationFailed.new(I18n.t("invite.not_found_template", site_name:, base_url:))
     end
 
     invite
@@ -887,14 +883,15 @@ class SessionController < ApplicationController
 
   def redeem_invitation(invite, sso, redeeming_user)
     InviteRedeemer.new(
-      invite: invite,
+      invite:,
       username: sso.username,
       name: sso.name,
       ip_address: request.remote_ip,
-      session: session,
+      session: server_session,
       email: sso.email,
-      redeeming_user: redeeming_user,
+      redeeming_user:,
     ).redeem
+
     server_session.delete("invite-key")
 
     # note - more specific errors are handled in the sso_login method

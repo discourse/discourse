@@ -4,8 +4,8 @@ class InvitedUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :invite, -> { unscope(where: :deleted_at) }
 
-  validates_presence_of :invite_id
-  validates_uniqueness_of :invite_id, scope: :user_id, conditions: -> { where.not(user_id: nil) }
+  validates :invite_id, presence: true
+  validates :invite_id, uniqueness: { scope: :user_id, conditions: -> { where.not(user_id: nil) } }
 end
 
 # == Schema Information

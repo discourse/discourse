@@ -12,8 +12,8 @@ class Patreon::PatreonAdminController < Admin::AdminController
 
   def list
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
-    rewards = ::Patreon::Reward.all
-    last_sync = ::Patreon.get("last_sync") || {}
+    rewards = Patreon::Reward.all
+    last_sync = Patreon.get("last_sync") || {}
 
     groups = ::Group.all.pluck(:id)
 
@@ -23,7 +23,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def rewards
-    rewards = ::Patreon::Reward.all
+    rewards = Patreon::Reward.all
 
     render json: rewards
   end
@@ -38,7 +38,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
 
   def edit
     if params[:rewards_ids].nil? || !is_number?(params[:group_id])
-      return render json: { message: "Error" }, status: 500
+      return render json: { message: "Error" }, status: :internal_server_error
     end
 
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
@@ -51,7 +51,9 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def delete
-    return render json: { message: "Error" }, status: 500 unless is_number?(params[:group_id])
+    unless is_number?(params[:group_id])
+      return render json: { message: "Error" }, status: :internal_server_error
+    end
 
     filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
 
@@ -67,7 +69,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
       Patreon::Patron.sync_groups
       render json: success_json
     rescue => e
-      render json: { message: e.message }, status: 500
+      render json: { message: e.message }, status: :internal_server_error
     end
   end
 
@@ -84,7 +86,7 @@ class Patreon::PatreonAdminController < Admin::AdminController
       StaffActionLogger.new(current_user).log_check_email(user, context: params[:context])
     end
 
-    render json: { email: ::Patreon::Patron.attr("email", user) }
+    render json: { email: Patreon::Patron.attr("email", user) }
   end
 
   def patreon_tokens_present?

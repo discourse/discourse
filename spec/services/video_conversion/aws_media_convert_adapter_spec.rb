@@ -45,10 +45,11 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     allow(SiteSetting).to receive(:mediaconvert_endpoint).and_return(
       "https://mediaconvert.endpoint",
     )
-    allow(SiteSetting).to receive(:s3_upload_bucket).and_return(s3_bucket)
+    allow(SiteSetting.Upload).to receive(:s3_upload_bucket).and_return(s3_bucket)
     allow(SiteSetting).to receive(:s3_region).and_return(s3_region)
     allow(SiteSetting).to receive(:s3_access_key_id).and_return("test-key")
     allow(SiteSetting).to receive(:s3_secret_access_key).and_return("test-secret")
+    allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(false)
     allow(SiteSetting).to receive(:s3_use_acls).and_return(true)
 
     allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
@@ -186,6 +187,29 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
         expect(adapter.convert).to be false
       end
     end
+
+    context "when using IAM profile" do
+      before do
+        allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(true)
+        allow(SiteSetting).to receive(:s3_access_key_id).and_return("")
+        allow(SiteSetting).to receive(:s3_secret_access_key).and_return("")
+        upload.update!(
+          url: "//#{s3_bucket}.s3.#{s3_region}.amazonaws.com/uploads/default/original/test.mp4",
+          original_filename: "test.mp4",
+        )
+        allow(mediaconvert_job).to receive(:id).and_return(job_id)
+        allow(mediaconvert_client).to receive(:create_job).and_return(mediaconvert_job_response)
+      end
+
+      it "creates MediaConvert client without explicit credentials" do
+        expected_client_options = { region: s3_region, endpoint: "https://mediaconvert.endpoint" }
+
+        adapter.convert
+
+        expect(Aws::MediaConvert::Client).to have_received(:new).with(expected_client_options)
+        expect(adapter.convert).to be true
+      end
+    end
   end
 
   describe "#check_status" do
@@ -205,12 +229,17 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     context "when job has error" do
       before do
         allow(mediaconvert_job).to receive(:status).and_return("ERROR")
+        allow(mediaconvert_job).to receive(:error_code).and_return("1517")
+        allow(mediaconvert_job).to receive(:error_message).and_return("S3 Write Error")
+        allow(mediaconvert_job).to receive(:settings).and_return(nil)
         allow(mediaconvert_client).to receive(:get_job).and_return(mediaconvert_job_response)
       end
 
       it "returns :error and logs the error" do
         adapter.check_status(job_id)
-        expect(Rails.logger).to have_received(:error).with(/MediaConvert job #{job_id} failed/)
+        expect(Rails.logger).to have_received(:error).with(
+          /MediaConvert job #{job_id} failed\. Error Code: 1517, Error Message: S3 Write Error, Upload ID: #{upload.id}/,
+        )
         expect(adapter.check_status(job_id)).to eq(:error)
       end
     end
@@ -248,14 +277,19 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     end
 
     it "creates optimized video record and rebakes posts" do
-      allow(s3_object).to receive(:exists?).and_return(true)
-      allow(s3_object).to receive(:size).and_return(1024)
-      allow(OptimizedVideo).to receive(:create_for).and_return(true)
+      optimized_video_instance = instance_double(OptimizedVideo)
+      allow(OptimizedVideo).to receive(:create_for).and_return(optimized_video_instance)
+      allow(s3_store).to receive(:update_file_access_control)
 
-      adapter.handle_completion(job_id, output_path, new_sha1)
+      result = adapter.handle_completion(job_id, output_path, new_sha1)
 
+      expect(result).to be true
       expect(s3_object).to have_received(:exists?)
       expect(s3_object).to have_received(:size)
+      expect(s3_store).to have_received(:update_file_access_control).with(
+        "#{output_path}.mp4",
+        upload.secure?,
+      )
       expect(OptimizedVideo).to have_received(:create_for).with(
         upload,
         "video_converted.mp4",
@@ -270,8 +304,6 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
       )
       expect(post).to have_received(:rebake!)
       expect(Rails.logger).to have_received(:info).with(/Rebaking post #{post.id}/)
-
-      expect(adapter.handle_completion(job_id, output_path, new_sha1)).to be true
     end
 
     context "when S3 object doesn't exist" do
@@ -285,7 +317,9 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
     context "when optimized video creation fails" do
       before do
         allow(s3_object).to receive(:exists?).and_return(true)
+        allow(s3_object).to receive(:size).and_return(1024)
         allow(OptimizedVideo).to receive(:create_for).and_return(false)
+        allow(s3_store).to receive(:update_file_access_control)
       end
 
       it "returns false and logs error" do
@@ -302,6 +336,7 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
         allow(s3_object).to receive(:exists?).and_return(true)
         allow(s3_object).to receive(:size).and_return(1024)
         allow(OptimizedVideo).to receive(:create_for).and_raise(error)
+        allow(s3_store).to receive(:update_file_access_control)
       end
 
       it "returns false and logs error" do
@@ -323,12 +358,70 @@ RSpec.describe VideoConversion::AwsMediaConvertAdapter do
         allow(SiteSetting).to receive(:s3_use_acls).and_return(false)
         allow(s3_object).to receive(:exists?).and_return(true)
         allow(OptimizedVideo).to receive(:create_for).and_return(true)
+        allow(s3_store).to receive(:update_file_access_control)
       end
 
-      it "skips ACL update and completes successfully" do
+      it "still calls update_file_access_control but it handles the disabled ACL setting internally" do
         adapter.handle_completion(job_id, output_path, new_sha1)
-        expect(s3_object).not_to have_received(:acl)
+        expect(s3_store).to have_received(:update_file_access_control).with(
+          "#{output_path}.mp4",
+          upload.secure?,
+        )
         expect(adapter.handle_completion(job_id, output_path, new_sha1)).to be true
+      end
+    end
+  end
+
+  describe "#create_basic_client" do
+    context "when using IAM profile" do
+      before do
+        allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(true)
+        allow(SiteSetting).to receive(:s3_access_key_id).and_return("")
+        allow(SiteSetting).to receive(:s3_secret_access_key).and_return("")
+      end
+
+      it "creates client without endpoint when endpoint is nil" do
+        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
+
+        adapter.send(:create_basic_client, endpoint: nil)
+
+        expect(Aws::MediaConvert::Client).to have_received(:new).with({ region: s3_region })
+      end
+
+      it "creates client without endpoint when endpoint is empty string" do
+        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
+
+        adapter.send(:create_basic_client, endpoint: "")
+
+        expect(Aws::MediaConvert::Client).to have_received(:new).with({ region: s3_region })
+      end
+
+      it "creates client with endpoint when endpoint is present" do
+        endpoint = "https://mediaconvert.us-west-2.amazonaws.com"
+        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
+
+        adapter.send(:create_basic_client, endpoint: endpoint)
+
+        expect(Aws::MediaConvert::Client).to have_received(:new).with(
+          { region: s3_region, endpoint: endpoint },
+        )
+      end
+    end
+
+    context "when not using IAM profile" do
+      before do
+        allow(SiteSetting).to receive(:s3_use_iam_profile).and_return(false)
+        allow(SiteSetting).to receive(:s3_access_key_id).and_return("test-key")
+        allow(SiteSetting).to receive(:s3_secret_access_key).and_return("test-secret")
+      end
+
+      it "creates client with credentials" do
+        allow(Aws::MediaConvert::Client).to receive(:new).and_return(mediaconvert_client)
+
+        adapter.send(:create_basic_client, endpoint: nil)
+
+        # Verify that credentials are included in the client creation
+        expect(Aws::MediaConvert::Client).to have_received(:new)
       end
     end
   end

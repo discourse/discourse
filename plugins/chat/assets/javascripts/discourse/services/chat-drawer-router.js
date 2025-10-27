@@ -9,6 +9,7 @@ import ChatDrawerRoutesChannelThread from "discourse/plugins/chat/discourse/comp
 import ChatDrawerRoutesChannelThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channel-threads";
 import ChatDrawerRoutesChannels from "discourse/plugins/chat/discourse/components/chat/drawer-routes/channels";
 import ChatDrawerRoutesDirectMessages from "discourse/plugins/chat/discourse/components/chat/drawer-routes/direct-messages";
+import ChatDrawerRoutesSearch from "discourse/plugins/chat/discourse/components/chat/drawer-routes/search";
 import ChatDrawerRoutesThreads from "discourse/plugins/chat/discourse/components/chat/drawer-routes/threads";
 
 const ROUTES = {
@@ -159,6 +160,9 @@ const ROUTES = {
   "chat.threads": {
     name: ChatDrawerRoutesThreads,
   },
+  "chat.search": {
+    name: ChatDrawerRoutesSearch,
+  },
   "chat.channel.near-message": {
     name: ChatDrawerRoutesChannel,
 
@@ -254,7 +258,6 @@ export default class ChatDrawerRouter extends Service {
   @service chatHistory;
   @service chat;
   @service siteSettings;
-  @service chatStateManager;
   @service chatChannelsManager;
 
   @tracked component = null;

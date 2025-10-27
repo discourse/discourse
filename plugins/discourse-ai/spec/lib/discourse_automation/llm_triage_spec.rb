@@ -4,8 +4,8 @@ return if !defined?(DiscourseAutomation)
 
 describe DiscourseAi::Automation::LlmTriage do
   fab!(:category)
-  fab!(:reply_user) { Fabricate(:user) }
-  fab!(:personal_message) { Fabricate(:private_message_topic) }
+  fab!(:reply_user, :user)
+  fab!(:personal_message, :private_message_topic)
   let(:canned_reply_text) { "Hello, this is a reply" }
 
   let(:automation) { Fabricate(:automation, script: "llm_triage", enabled: true) }
@@ -205,5 +205,41 @@ describe DiscourseAi::Automation::LlmTriage do
     # Verify no replies were created
     last_post = topic.posts.order(:post_number).last
     expect(last_post.id).to eq(post.id)
+  end
+
+  context "when the scripts gets triggered repeteadly due to edits" do
+    fab!(:post)
+
+    before { add_automation_field("canned_reply", nil, type: "message") }
+
+    it "flags the post once when using spam-based types" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+        add_automation_field("flag_type", "spam")
+
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        automation.trigger!({ "post" => post })
+      end
+
+      reviewable = ReviewableFlaggedPost.find_by(target: post)
+      scores = reviewable.reviewable_scores.select { |rs| rs.user == Discourse.system_user }
+
+      expect(scores.size).to eq(1)
+    end
+
+    it "flags the post once when not using spam-based types (review_* types)" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+        add_automation_field("flag_type", "review")
+
+        automation.running_in_background!
+        automation.trigger!({ "post" => post })
+        automation.trigger!({ "post" => post })
+      end
+
+      reviewable = ReviewablePost.find_by(target: post)
+      scores = reviewable.reviewable_scores.select { |rs| rs.user == Discourse.system_user }
+
+      expect(scores.size).to eq(1)
+    end
   end
 end

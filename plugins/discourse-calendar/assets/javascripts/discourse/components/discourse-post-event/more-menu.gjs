@@ -9,7 +9,6 @@ import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { exportEntity } from "discourse/lib/export-csv";
-import { getAbsoluteURL } from "discourse/lib/get-url";
 import { cook } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
@@ -85,8 +84,8 @@ export default class DiscoursePostEventMoreMenu extends Component {
       ],
       {
         rrule: event.rrule,
-        location: event.url,
-        details: getAbsoluteURL(event.post.url),
+        location: event.location,
+        details: event.description,
       }
     );
   }

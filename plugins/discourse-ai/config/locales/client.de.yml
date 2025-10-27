@@ -316,21 +316,25 @@ de:
       translations:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
+        supported_locales: "Unterstützte Sprachen"
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"
-          disabled_state:
-            configure: "Übersetzungen konfigurieren"
-            empty_label: "Automatische Übersetzungen sind deaktiviert, klicke unten, um sie zu konfigurieren"
+          enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
-          backfill_disabled: "Rückwirkende Übersetzung ist derzeit deaktiviert."
         progress_chart:
-          title: "Übersetzungsfortschritt %{tooltip}"
+          title: "Übersetzungsfortschritt"
           data_label: "%{percentage}%"
           bar_done:
             one: "%{count} Beitrag"
             other: "%{count} Beiträge"
+        translations_menu:
+          translate:
+            label: "Beitrag übersetzen"
+            title: "Übersetzt diesen Beitrag in alle unterstützten Sprachen"
+            confirm: "Dadurch werden alle vorhandenen Übersetzungen in diesem Beitrag aktualisiert. Bist du sicher?"
+            success: "Der Beitrag wurde zur Übersetzung gesendet"
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
@@ -632,6 +636,8 @@ de:
           google-gemini-2-0-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation (vorherige Generation)"
           google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
           google-gemini-2-0-flash-lite: "Kosteneffizientes Modell mit niedriger Latenz"
+          google-gemini-2-5-flash-image-preview: "Neuestes Bilderzeugungsmodell mit Bildverarbeitungsfunktionen"
+          open_ai-o3: "OpenAIs leistungsstärkstes Argumentationsmodell"
           open_ai-o4-mini: "Erweitertes kosteneffizientes Argumentationsmodell"
           open_ai-gpt-5: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
           open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."

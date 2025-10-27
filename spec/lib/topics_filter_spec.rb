@@ -192,11 +192,42 @@ RSpec.describe TopicsFilter do
             .pluck(:id)
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
       end
+
+      context "with whispers" do
+        fab!(:whisperer_group, :group)
+        fab!(:whisperer_user) { Fabricate(:user).tap { |u| whisperer_group.add(u) } }
+        fab!(:regular_user, :user)
+        fab!(:topic_with_whisper_only) do
+          Fabricate(:post, user: u1, post_type: Post.types[:whisper]).topic
+        end
+
+        before { SiteSetting.whispers_allowed_groups = "#{whisperer_group.id}" }
+
+        it "users:alice should not return topics where alice only whispered when viewed by non-whisperer" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(regular_user))
+              .filter_from_query_string("users:alice")
+              .pluck(:id)
+          expect(ids).not_to include(topic_with_whisper_only.id)
+          expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
+        end
+
+        it "group:group1 should not return topics where group members only whispered when viewed by non-whisperer" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(regular_user))
+              .filter_from_query_string("group:group1")
+              .pluck(:id)
+          expect(ids).not_to include(topic_with_whisper_only.id)
+          expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
+        end
+      end
     end
 
     describe "ordering by hot score" do
-      fab!(:t1) { Fabricate(:topic) }
-      fab!(:t2) { Fabricate(:topic) }
+      fab!(:t1, :topic)
+      fab!(:t2, :topic)
 
       before do
         TopicHotScore.create!(topic_id: t1.id, score: 2.0)
@@ -244,7 +275,7 @@ RSpec.describe TopicsFilter do
       end
 
       fab!(:expired_pinned_topic) do
-        Fabricate(:topic, pinned_at: 2.hour.ago, pinned_until: 1.hour.ago)
+        Fabricate(:topic, pinned_at: 2.hours.ago, pinned_until: 1.hour.ago)
       end
 
       describe "when query string is `in:pinned`" do
@@ -270,7 +301,7 @@ RSpec.describe TopicsFilter do
       end
 
       describe "new / unread operators" do
-        fab!(:user_for_new_filters) { Fabricate(:user) }
+        fab!(:user_for_new_filters, :user)
         let!(:new_topic) { Fabricate(:topic) }
         let!(:unread_topic) do
           Fabricate(:topic, created_at: 2.days.ago).tap do |t|
@@ -488,6 +519,95 @@ RSpec.describe TopicsFilter do
                 .pluck(:id),
             ).to contain_exactly(user_muted_topic.id, user_tracking_topic.id)
           end
+        end
+      end
+
+      describe "when query string is `in:watching_first_post`" do
+        fab!(:category_watching_first_post, :category)
+        fab!(:category_regular, :category)
+        fab!(:tag_watching_first_post, :tag)
+        fab!(:tag_regular, :tag)
+
+        fab!(:topic_in_watched_category) do
+          Fabricate(:topic, category: category_watching_first_post)
+        end
+        fab!(:topic_in_regular_category) { Fabricate(:topic, category: category_regular) }
+        fab!(:topic_with_watched_tag) { Fabricate(:topic, tags: [tag_watching_first_post]) }
+        fab!(:topic_with_regular_tag) { Fabricate(:topic, tags: [tag_regular]) }
+        fab!(:topic_with_both) do
+          Fabricate(:topic, category: category_watching_first_post, tags: [tag_watching_first_post])
+        end
+
+        before do
+          CategoryUser.set_notification_level_for_category(
+            user,
+            CategoryUser.notification_levels[:watching_first_post],
+            category_watching_first_post.id,
+          )
+          TagUser.change(
+            user.id,
+            tag_watching_first_post.id,
+            TagUser.notification_levels[:watching_first_post],
+          )
+        end
+
+        it "should not return any topics if the user is anonymous" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("in:watching_first_post")
+              .pluck(:id),
+          ).to be_empty
+        end
+
+        it "should return the union of topics in watched categories and topics with watched tags" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:watching_first_post")
+              .pluck(:id)
+
+          expect(ids).to contain_exactly(
+            topic_in_watched_category.id,
+            topic_with_watched_tag.id,
+            topic_with_both.id,
+          )
+        end
+
+        it "should work when combined with other filters" do
+          topic_in_watched_category.update!(closed: true)
+
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:watching_first_post status:closed")
+              .pluck(:id)
+
+          expect(ids).to contain_exactly(topic_in_watched_category.id)
+        end
+
+        it "should work with comma-separated notification levels" do
+          user_watching_topic =
+            Fabricate(:topic).tap do |topic|
+              TopicUser.change(
+                user.id,
+                topic.id,
+                notification_level: TopicUser.notification_levels[:watching],
+              )
+            end
+
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("in:watching,watching_first_post")
+              .pluck(:id)
+
+          expect(ids).to contain_exactly(
+            user_watching_topic.id,
+            topic_in_watched_category.id,
+            topic_with_watched_tag.id,
+            topic_with_both.id,
+          )
         end
       end
     end
@@ -1419,6 +1539,93 @@ RSpec.describe TopicsFilter do
         ).to eq([])
       end
     end
+
+    describe "when filtering by locale" do
+      fab!(:en_topic) { Fabricate(:topic, locale: "en") }
+      fab!(:ja_topic) { Fabricate(:topic, locale: "ja") }
+      fab!(:es_topic) { Fabricate(:topic, locale: "es") }
+      fab!(:no_locale_topic, :topic)
+
+      describe "when query string is `locale:en`" do
+        it "should only return topics with locale en" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:en")
+              .pluck(:id),
+          ).to contain_exactly(en_topic.id)
+        end
+      end
+
+      describe "when query string is `locale:ja,es`" do
+        it "should return topics with locale ja or es" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:ja,es")
+              .pluck(:id),
+          ).to contain_exactly(ja_topic.id, es_topic.id)
+        end
+      end
+
+      describe "when query string is `locale:ja locale:es`" do
+        it "should return topics with locale ja or es" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:ja locale:es")
+              .pluck(:id),
+          ).to contain_exactly(ja_topic.id, es_topic.id)
+        end
+      end
+
+      describe "when query string is `-locale:en`" do
+        it "should return topics without locale en" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-locale:en")
+              .pluck(:id),
+          ).to contain_exactly(ja_topic.id, es_topic.id, no_locale_topic.id)
+        end
+      end
+
+      describe "when query string is `-locale:en,ja`" do
+        it "should return topics without locale en or ja" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-locale:en,ja")
+              .pluck(:id),
+          ).to contain_exactly(es_topic.id, no_locale_topic.id)
+        end
+      end
+
+      describe "when query string is `locale:invalid`" do
+        it "should return no topics" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:invalid")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when combining with other filters" do
+        before { en_topic.update!(closed: true) }
+
+        it "should work with status:closed" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("locale:en status:closed")
+              .pluck(:id),
+          ).to contain_exactly(en_topic.id)
+        end
+      end
+    end
+
     describe "when filtering by topic author" do
       fab!(:user2) { Fabricate(:user, username: "username2") }
       fab!(:topic_by_user) { Fabricate(:topic, user: user) }

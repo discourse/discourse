@@ -931,10 +931,27 @@ module Discourse
     ObjectSpace.each_object(MiniRacer::Context) { |c| c.dispose }
 
     # get rid of rubbish so we don't share it
-    # longer term we will use compact! here
-    GC.start
-    GC.start
-    GC.start
+    Process.warmup
+  end
+
+  def self.after_unicorn_worker_fork
+    unicorn_worker_db_variables_prefix = "DISCOURSE_UNICORN_WORKER_DB_VARIABLES_"
+    db_variables_overrides = {}
+
+    ENV.filter do |key, value|
+      if key.start_with?(unicorn_worker_db_variables_prefix)
+        db_variables_overrides[
+          "DISCOURSE_DB_VARIABLES_#{key.sub(unicorn_worker_db_variables_prefix, "")}"
+        ] = value
+      end
+    end
+
+    if db_variables_overrides.any?
+      db_variables_overrides.each { |key, value| ENV[key] = value }
+      ActiveRecord::Base.configurations = Rails.application.config.database_configuration
+      ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+      ActiveRecord::Base.establish_connection
+    end
   end
 
   # all forking servers must call this
@@ -953,7 +970,7 @@ module Discourse
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
 
-    DiscourseJsProcessor::Transpiler.reset_context if defined?(DiscourseJsProcessor::Transpiler)
+    AssetProcessor.reset_context if defined?(AssetProcessor)
 
     # warm up v8 after fork, that way we do not fork a v8 context
     # it may cause issues if bg threads in a v8 isolate randomly stop

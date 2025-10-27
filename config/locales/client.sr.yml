@@ -2642,6 +2642,10 @@ sr:
           title: "Datoteke"
         legal:
           title: "Legalno"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Podešavanje"
         logo:
           form:
             email: "Email"
@@ -2951,6 +2955,7 @@ sr:
         email_templates:
           title: "E-mail"
           subject: "Predmet"
+          edit: "Izmeni"
         component:
           all_filter: "sve"
         theme:

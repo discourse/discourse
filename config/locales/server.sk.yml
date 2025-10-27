@@ -1843,7 +1843,6 @@ sk:
     logo: "Obrázok loga v ľavom hornom rohu vašej stránky. Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1. Ak zostane prázdny, zobrazí sa text názvu lokality."
     logo_small: "Malý obrázok loga v ľavom hornom rohu vašej stránky, ktorý vidíte pri posúvaní nadol. Použite štvorcový obrázok s rozmermi 120 × 120. Ak zostane prázdny, zobrazí sa domovský glyf."
     digest_logo: "Alternatívny obrázok loga, ktorý sa používa v hornej časti súhrnu e-mailu na vašej stránke. Použite široký obdĺžnikový obrázok. Nepoužívajte obrázok SVG. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."
-    mobile_logo: "Logo použité na mobilnej verzii vašej stránky. Použite široký obdĺžnikový obrázok s výškou 120 a pomerom strán väčším ako 3:1. Ak zostane prázdne, použije sa obrázok z nastavenia `logo`."
     logo_dark: "Alternatíva tmavej schémy pre nastavenie stránky \"logo\"."
     logo_small_dark: "Alternatíva tmavej schémy pre nastavenie stránky \"malé logo\"."
     mobile_logo_dark: "Alternatíva tmavej schémy pre nastavenie stránky \"mobilné logo\"."
@@ -1857,8 +1856,6 @@ sk:
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
     email_subject: "Prispôsobiteľný formát predmetu pre štandardné e-maily. Pozrite si <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje používateľom podrobnejšie informácie o tom, prečo nemajú prístup k určitej téme. Poznámka: Je to menej bezpečné, pretože používatelia budú vedieť, či adresa URL odkazuje na platnú tému."
-    enforce_second_factor: "Vyžadujte od používateľov, aby pred prístupom do používateľského rozhrania Discourse povolili dvojfaktorové overovanie. Toto nastavenie nemá vplyv na overovanie API alebo poskytovateľa DiscourseConnect. Ak je zapnutá možnosť enforce_second_factor_on_external_auth, používatelia sa nebudú môcť prihlásiť pomocou externých poskytovateľov overovania po nastavení dvojfaktorového overovania."
-    enforce_second_factor_on_external_auth: "Vyžadujte od používateľov, aby vždy používali dvojfaktorové overovanie. Ak je táto funkcia zapnutá, zabráni používateľom prihlásiť sa pomocou externých metód overovania, ako sú napríklad prihlásenia cez sociálne siete, ak majú povolené dvojfaktorové overovanie. Keď je táto funkcia vypnutá, používatelia budú musieť potvrdiť svoje dvojfaktorové overenie len pri prihlasovaní pomocou používateľského mena a hesla. Pozrite si tiež nastavenie `enforce_second_factor` (vynútiť druhý faktor)."
     force_https: "Vynútiť, aby váš web používal iba HTTPS. UPOZORNENIE: NEZAPÍNAJTE to, kým neoveríte, že HTTPS je úplne nastavené a funguje úplne všade! Skontrolovali ste svoje CDN, všetky sociálne prihlásenia a akékoľvek externé logá / závislosti, aby ste sa uistili, že sú tiež kompatibilné s HTTPS?"
     summary_score_threshold: "Minimálne požadované skóre príspevku na to aby bol zahrnutý do 'Sumarizuj túto tému'"
     summary_posts_required: "Minimálny počet príspevkov v téme pred povolením funkcie 'Zhrnúť túto tému'. Zmeny v tomto nastavení budú uplatnené spätne do jedného týždňa."
@@ -1917,7 +1914,6 @@ sk:
     ga_universal_auto_link_domains: "Povoľte sledovanie medzi doménami v službe Google Universal Analytics. Odchádzajúce odkazy na tieto domény budú mať pridané ID klienta. Pozrite si <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>príručku sledovania medzi doménami od spoločnosti Google</a>."
     gtm_container_id: "Identifikátor kontajnera Google Tag Manager. napr: GTM-ABCD12E. <br/>Poznámka: Ak chcete používať GTM, keď je zapnutá politika zabezpečenia obsahu (CSP), pozrite si dokumentáciu k meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Používanie nonces v skriptov Google Tag Manager</a>."
     enable_escaped_fragments: "Ak sa nezistí žiadny webový prehľadávač, vráťte sa späť na rozhranie API Ajax-Crawling od spoločnosti Google. Pozrite si <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Umožniť moderátorom vytvárať a spravovať kategórie a skupiny"
     moderators_change_post_ownership: "Povoliť moderátorom zmeniť vlastníctvo príspevku"
     cors_origins: "Povoľ prameňom/origins použitie cross-origin dotazov (CORS). Každý prameň/origin musí obsahovať http:// alebo https://. Aby ste umožnili CORS, systémové premenná DISCOURSE_ENABLE_CORS musí byť nastavená na true."
     use_admin_ip_allowlist: "Správcovia sa môťu prihlásiť iba pokiaľ pristupujú z adresy uvedenej v zozname kontrolovaných IP adries (Admin > Logs > Screened Ips)"
@@ -2604,7 +2600,6 @@ sk:
     view_raw_email_allowed_groups: "Skupiny, ktoré môžu zobraziť nespracovaný obsah e-mailu, ak bol príspevok vytvorený pomocou prichádzajúceho e-mailu. To zahŕňa hlavičky e-mailov a ďalšie technické informácie."
     rich_editor: "Povoľte editor formátovaného textu pre autora, aby všetci používatelia mohli prepínať medzi aktuálnym režimom Markdown a novým editorom formátovaného textu pre intuitívnejšiu a užívateľsky prívetivejšiu tvorbu textu."
     default_composition_mode: "Nastavenie predvoleného režimu pre skladateľa vašej komunity. Režim Rich text poskytuje modernejšie a známejšie písanie pre väčšinu používateľov, zatiaľ čo režim Markdown môže byť vhodný pre technickejšie publikum. Členovia môžu na prepínanie medzi režimami používať prepínač na paneli nástrojov kompozitora."
-    viewport_based_mobile_mode: "EXPERIMENTÁLNE: Vypnite režimy pre mobilné zariadenia/plochu založené na používateľskom agentovi a namiesto toho použite šírku zobrazenia."
     reviewable_ui_refresh: "Skupiny, ktoré môžu používať nové experimentálne používateľské rozhranie vo fronte revízií."
     content_localization_enabled: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich prehliadača alebo jazykových preferencií používateľa. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Podporované lokálne jazyky sú nastavené v položke 'content localization supported locales'."
     content_localization_supported_locales: "Zoznam podporovaných lokálnych jazykov, do ktorých možno preložiť obsah používateľa. Vyžaduje \"povolená lokalizácia obsahu\"."
@@ -2710,7 +2705,6 @@ sk:
   filter:
     description:
       status: "Filtrovať témy podľa ich stavu"
-      in: "Filtrovanie tém podľa v osobných zoznamoch"
       order: "Triedenie tém podľa konkrétneho poľa"
       category: "Zobrazenie tém v konkrétnej kategórii"
       category_any: "Zobraziť témy v niektorej zo zadaných kategórií (oddelených čiarkami)"
@@ -4217,12 +4211,6 @@ sk:
     account_second_factor_disabled:
       title: "Vypnuté dvojfaktorové overovanie"
       subject_template: "[%{email_prefix}] Dvojfaktorové overovanie vypnuté"
-      text_body_template: |
-        Dvojfaktorové overovanie bolo na vašom účte vypnuté na adrese %{site_name}. Teraz sa môžete prihlásiť len pomocou hesla; ďalší overovací kód sa už nevyžaduje.
-
-        Ak ste sa nerozhodli vypnúť dvojfaktorové overovanie, niekto mohol vaše konto kompromitovať.
-
-        Ak máte akékoľvek otázky, [kontaktujte náš priateľský personál](%{base_url}/o).
     digest:
       why: "Stručný prehľad %{site_link} od %{since}"
       since_last_visit: "Od Vašej poslednej návštevy"

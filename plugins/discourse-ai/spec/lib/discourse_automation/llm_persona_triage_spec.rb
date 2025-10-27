@@ -4,7 +4,7 @@ return if !defined?(DiscourseAutomation)
 
 describe DiscourseAi::Automation::LlmPersonaTriage do
   fab!(:user)
-  fab!(:bot_user) { Fabricate(:user) }
+  fab!(:bot_user, :user)
 
   fab!(:llm_model) { Fabricate(:anthropic_model, name: "claude-3-opus", enabled_chat_bot: true) }
 
@@ -272,8 +272,8 @@ describe DiscourseAi::Automation::LlmPersonaTriage do
 
   describe "LLM Persona Triage with Chat Message Creation" do
     fab!(:user)
-    fab!(:bot_user) { Fabricate(:user) }
-    fab!(:chat_channel) { Fabricate(:category_channel) }
+    fab!(:bot_user, :user)
+    fab!(:chat_channel, :category_channel)
 
     fab!(:custom_tool) do
       AiTool.create!(

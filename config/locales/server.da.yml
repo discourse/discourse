@@ -1306,7 +1306,6 @@ da:
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
     allowed_inline_onebox_domains: "En liste over domæner, der vil blive onebox'et i miniatureform, hvis de linkes uden en titel"
     facebook_app_access_token: "Et token genereret fra dit Facebook-app-id og hemmelighed. Bruges til at generere Instagram oneboxes."
-    mobile_logo: "Logoet, der bruges på mobilversionen af dit websted. Brug et bredt rektangulært billede med en højde på 120 og et billedformat, der er større end 3: 1. Hvis det er tomt, bruges billedet fra 'logo'-indstillingen."
     favicon: "Et favicon til dit websted, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. For at fungere korrekt over et CDN skal det være en png. Ændres til 32x32. Hvis det er tomt, vil large_icon blive brugt."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
@@ -2579,12 +2578,6 @@ da:
     account_second_factor_disabled:
       title: "To-Faktor godkendelse deaktiveret"
       subject_template: "[%{email_prefix}] To-Faktor godkendelse deaktiveret"
-      text_body_template: |
-        To-faktor-godkendelse er blevet deaktiveret for din konto på %{site_name}. Du kan nu logge ind ved kun at bruge din adgangskode; en ekstra godkendelseskode er ikke længere påkrævet.
-
-        Hvis du ikke valgte at deaktivere tofaktorautentificering, kan nogen have kompromitteret din konto.
-
-        Hvis du har spørgsmål, [kontakt vores venlige personale](%{base_url}/about).
     digest:
       since_last_visit: "Siden dit sidste besøg"
       new_topics: "Nye Emner"

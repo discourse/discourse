@@ -103,6 +103,7 @@ import { addChatDrawerStateCallback } from "discourse/plugins/chat/discourse/ser
  * @param {string} [options.message] - The content of the message to send
  * @param {string} [options.uploads] - A list of uploads to send
  * @param {number} [options.threadId] - The thread id where the message should be sent
+ * @param {number} [options.inReplyToId] - The ID of the replied to  message
  *
  * @example
  *
@@ -163,6 +164,7 @@ export default {
               .lookup("service:chat-api")
               .sendMessage(channelId, {
                 thread_id: options.threadId,
+                in_reply_to_id: options.inReplyToId,
                 post_ids: options.postIds,
                 topic_id: options.topicId,
                 message: options.message,

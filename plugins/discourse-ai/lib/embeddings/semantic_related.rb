@@ -30,12 +30,12 @@ module DiscourseAi
                 # Happens when the topic doesn't have any embeddings
                 # I'd rather not use Exceptions to control the flow, so this should be refactored soon
                 if candidate_ids.empty? || !candidate_ids.include?(topic.id)
-                  raise ::DiscourseAi::Embeddings::Schema::MissingEmbeddingError,
+                  raise DiscourseAi::Embeddings::Schema::MissingEmbeddingError,
                         "No embeddings found for topic #{topic.id}"
                 end
               end
           end
-      rescue ::DiscourseAi::Embeddings::Schema::MissingEmbeddingError
+      rescue DiscourseAi::Embeddings::Schema::MissingEmbeddingError
         # avoid a flood of jobs when visiting topic
         if Discourse.redis.set(
              build_semantic_suggested_key(topic.id),
@@ -50,11 +50,11 @@ module DiscourseAi
 
       def results_ttl(topic)
         case topic.created_at
-        when 6.hour.ago..Time.now
+        when 6.hours.ago..Time.now
           15.minutes
-        when 3.day.ago..6.hour.ago
+        when 3.days.ago..6.hours.ago
           1.hour
-        when 15.days.ago..3.day.ago
+        when 15.days.ago..3.days.ago
           12.hours
         else
           1.week

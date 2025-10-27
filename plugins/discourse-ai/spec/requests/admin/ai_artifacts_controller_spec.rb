@@ -3,7 +3,7 @@
 RSpec.describe DiscourseAi::Admin::AiArtifactsController, type: :request do
   fab!(:admin)
   fab!(:user)
-  fab!(:target_post) { Fabricate(:post) }
+  fab!(:target_post, :post)
 
   before do
     enable_current_plugin
@@ -36,7 +36,7 @@ RSpec.describe DiscourseAi::Admin::AiArtifactsController, type: :request do
   end
 
   describe "GET #show" do
-    fab!(:artifact) { Fabricate(:ai_artifact) }
+    fab!(:artifact, :ai_artifact)
 
     it "returns a single artifact" do
       get "/admin/plugins/discourse-ai/ai-artifacts/#{artifact.id}.json"
@@ -78,7 +78,7 @@ RSpec.describe DiscourseAi::Admin::AiArtifactsController, type: :request do
   end
 
   describe "PUT #update" do
-    fab!(:artifact) { Fabricate(:ai_artifact) }
+    fab!(:artifact, :ai_artifact)
 
     it "updates fields" do
       put "/admin/plugins/discourse-ai/ai-artifacts/#{artifact.id}.json",
@@ -95,7 +95,7 @@ RSpec.describe DiscourseAi::Admin::AiArtifactsController, type: :request do
   end
 
   describe "DELETE #destroy" do
-    fab!(:artifact) { Fabricate(:ai_artifact) }
+    fab!(:artifact, :ai_artifact)
 
     it "removes the artifact" do
       expect { delete "/admin/plugins/discourse-ai/ai-artifacts/#{artifact.id}.json" }.to change(

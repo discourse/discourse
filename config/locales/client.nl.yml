@@ -3780,6 +3780,9 @@ nl:
       title: "Nieuwste berichten"
       empty: "Er zijn geen berichten"
       aria_post_number: "%{title} - bericht %{postNumber}"
+      bulk:
+        clear_all: "Alles wissen"
+        actions: "Bulkacties"
     post:
       confirm_delete: "Weet je zeker dat je dit bericht wilt verwijderen?"
       quote_reply: "Citeren"
@@ -3891,10 +3894,7 @@ nl:
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers kunnen geen bijlagen uploaden."
         attachment_download_requires_login: "Sorry, je moet aangemeld zijn om bijlagen te downloaden."
       cancel_composer:
-        confirm: "Wat wil je doen met je bericht?"
         discard: "Weggooien"
-        save_draft: "Concept opslaan voor later"
-        keep_editing: "Blijven bewerken"
       via_email: "dit bericht is binnengekomen via e-mail"
       via_auto_generated_email: "dit bericht is binnengekomen via een automatisch gegenereerde e-mail"
       whisper: "dit bericht is alleen toegankelijk voor moderators"
@@ -4127,6 +4127,8 @@ nl:
       style: "Stijlen"
       background_color: "Kleur"
       foreground_color: "Tekstkleur"
+      color_validations:
+        cant_be_empty: "mag niet leeg zijn"
       styles:
         type: "Stijl"
         icon: "Pictogram"
@@ -5275,9 +5277,12 @@ nl:
           title: "Lokalisatie"
           header_description: "Configureer de interfacetaal van je community en andere lokalisatieopties voor je leden"
           keywords: "landinstellingen|taal|tijdzone|unicode|ltr"
-        login_and_authentication:
+        login:
           title: "Aanmelden en verificatie"
           header_description: "Configureer hoe gebruikers zich aanmelden en verifiëren, geheimen en sleutels, OAuth2-providers en meer"
+          sub_pages:
+            common_settings:
+              title: "Instellingen"
         logo:
           title: "Logo"
           header_description: "Configureer de logo's en pictogrammen die op je site worden gebruikt"
@@ -6444,7 +6449,6 @@ nl:
         copy_to_clipboard: "Kopiëren naar klembord"
         copied_to_clipboard: "Gekopieerd naar klembord"
         copy_to_clipboard_error: "Fout bij kopiëren van gegevens naar klembord"
-        theme_owner: "Niet bewerkbaar, eigendom van:"
         email_templates:
           title: "E-mailadres"
           subject: "Onderwerp"
@@ -6452,6 +6456,7 @@ nl:
           body: "Inhoud"
           revert: "Wijzigingen ongedaan maken"
           revert_confirm: "Weet je zeker dat je je wijzigingen ongedaan wilt maken?"
+          edit: "Bewerken"
         component:
           all_filter: "Alles"
           used_filter: "Gebruikt"

@@ -14,7 +14,7 @@ import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
         discourse_reactions_enabled_reactions: "otter|open_mouth|heart",
         discourse_reactions_reaction_for_like: "heart",
         discourse_reactions_like_icon: "heart",
-        discourse_reactions_experimental_allow_any_emoji: true,
+        discourse_reactions_allow_any_emoji: true,
         glimmer_post_stream_mode: postStreamMode,
       });
 
@@ -35,7 +35,7 @@ import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
         );
       });
 
-      test("Shows EmojiPicker button when discourse_reactions_experimental_allow_any_emoji is enabled", async function (assert) {
+      test("Shows EmojiPicker button when discourse_reactions_allow_any_emoji is enabled", async function (assert) {
         await visit("/t/topic_with_reactions_and_likes/374");
         await triggerEvent(
           "#post_2 button.btn-toggle-reaction-like",
@@ -77,7 +77,7 @@ import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
           );
       });
 
-      test("Selected custom emoji is added to reactions when discourse_reactions_experimental_allow_any_emoji is enabled", async function (assert) {
+      test("Selected custom emoji is added to reactions when discourse_reactions_allow_any_emoji is enabled", async function (assert) {
         await visit("/t/topic_with_reactions_and_likes/374");
         await triggerEvent(
           "#post_2 button.btn-toggle-reaction-like",
@@ -109,7 +109,7 @@ import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
         discourse_reactions_enabled_reactions: "otter|open_mouth|heart",
         discourse_reactions_reaction_for_like: "heart",
         discourse_reactions_like_icon: "heart",
-        discourse_reactions_experimental_allow_any_emoji: false,
+        discourse_reactions_allow_any_emoji: false,
         glimmer_post_stream_mode: postStreamMode,
       });
 
@@ -125,7 +125,7 @@ import ReactionsTopics from "../fixtures/reactions-topic-fixtures";
         );
       });
 
-      test("Does not show EmojiPicker button when discourse_reactions_experimental_allow_any_emoji is disabled", async function (assert) {
+      test("Does not show EmojiPicker button when discourse_reactions_allow_any_emoji is disabled", async function (assert) {
         await visit("/t/topic_with_reactions_and_likes/374");
         await triggerEvent(
           "#post_2 button.btn-toggle-reaction-like",

@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  site_settings:
+    cakeday_enabled: "Mostra le emoji della torta accanto al nome dell'utente nel giorno in cui si sono iscritti su Discourse."
+    cakeday_emoji: "Le emoji che verranno mostrate accanto al nome dell'utente nella data in cui si sono iscritti a Discourse. Si possono indicare emoji multiple così: smile|cake|smile"
+    cakeday_birthday_enabled: "Mostra le emoji del compleanno accanto al nome dell'utente il giorno del compleanno."
+    cakeday_birthday_emoji: "Le emoji che verranno mostrate accanto al nome dell'utente il giorno del suo compleanno. Si possono indicare emoji multiple così: smile|cake|smile"

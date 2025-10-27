@@ -104,6 +104,8 @@ module BackupRestore
         "CREATE SCHEMA", # PostgreSQL 11+
         "COMMENT ON SCHEMA", # PostgreSQL 11+
         "SET default_table_access_method", # PostgreSQL 12
+        "\\\\restrict",
+        "\\\\unrestrict",
       ].join("|")
 
       command = "sed -E '/^(#{unwanted_sql})/d' #{@db_dump_path}"
@@ -114,7 +116,15 @@ module BackupRestore
     end
 
     def restore_dump_command
-      "#{sed_command} | #{self.class.psql_command} 2>&1"
+      nonce = SecureRandom.hex
+
+      <<~CMD
+        (
+          printf '%s\\n' "\\\\restrict #{nonce}"
+          #{sed_command}
+          printf '%s\\n' "\\\\unrestrict #{nonce}"
+        ) | #{self.class.psql_command} 2>&1
+      CMD
     end
 
     def self.psql_command

@@ -302,6 +302,7 @@ en:
       greater_than: must be greater than %{count}
       greater_than_or_equal_to: must be greater than or equal to %{count}
       has_already_been_used: "has already been used"
+      in: must be in %{count}
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
@@ -1805,7 +1806,7 @@ en:
     logo: "The logo image at the top left of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the site title text will be shown."
     logo_small: "The small logo image at the top left of your site, seen when scrolling down. Use a square 120 × 120 image. If left blank, a home glyph will be shown."
     digest_logo: "The alternate logo image used at the top of your site's email summary. Use a wide rectangle image. Don't use an SVG image. If left blank, the image from the `logo` setting will be used."
-    mobile_logo: "The logo used on mobile version of your site. Use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the `logo` setting will be used."
+    mobile_logo: "The logo used on the mobile version of your site. We recommend a square icon to avoid crowding the header, but you can use a wide rectangular image with a height of 120 and an aspect ratio greater than 3:1. If left blank, the image from the logo setting will be used."
     logo_dark: "Dark scheme alternative for the 'logo' site setting."
     logo_small_dark: "Dark scheme alternative for the 'logo small' site setting."
     mobile_logo_dark: "Dark scheme alternative for the 'mobile logo' site setting."
@@ -1821,8 +1822,8 @@ en:
     email_custom_headers: "A list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Provides more details to users about why they can’t access a particular topic. Note: This is less secure because users will know if a URL links to a valid topic."
-    enforce_second_factor: "Require users to enable two-factor authentication before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up two-factor authentication."
-    enforce_second_factor_on_external_auth: "Require users to use two-factor authentication at all times. When enabled this will prevent users logging in with external authentication methods like social logins if they have two-factor authentication enabled. When disabled users will only need to confirm their two-factor authentication when logging in with a username and password. Also see the `enforce_second_factor` setting."
+    enforce_second_factor: "Require users to enable two-factor authentication (2FA) before they can access the Discourse UI. This setting does not affect API or 'DiscourseConnect provider' authentication. If enforce_second_factor_on_external_auth is enabled, users will not be able to log in with external authentication providers after they set up 2FA."
+    enforce_second_factor_on_external_auth: "Require users to use two-factor authentication (2FA) at all times. When enabled, this will prevent users logging in with external authentication methods like social logins if they have 2FA enabled. When disabled, users will only need to confirm their 2FA when logging in with a username and password. Also see the `enforce_second_factor` setting."
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
 
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
@@ -1888,8 +1889,10 @@ en:
     ga_universal_domain_name: "Google Universal Analytics domain name, eg: mysite.com; see <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Enable Google Universal Analytics cross-domain tracking. Outgoing links to these domains will have the client id added to them. See <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Google's Cross-Domain Tracking guide.</a>"
     gtm_container_id: "Google Tag Manager container id. eg: GTM-ABCD12E. <br/>Note: To use GTM when the Content Security Policy (CSP) is enabled, see the documentation on meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Use nonces in Google Tag Manager scripts</a>."
+    google_site_verification_token: Google search console verification token. Will be included as a meta tag in the HTML head.
     enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
-    moderators_manage_categories_and_groups: "Allow moderators to create and manage categories and groups"
+    moderators_manage_categories: "Allow moderators to create and manage categories"
+    moderators_manage_groups: "Allow moderators to create and manage groups"
     moderators_change_post_ownership: "Allow moderators to change post ownership"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
     use_admin_ip_allowlist: "Admins can only log in if they are at an IP address defined in the Screened IPs list (Admin > Logs > Screened Ips)."
@@ -1931,6 +1934,7 @@ en:
     top_page_default_timeframe: "Default top page time period for anonymous users (automatically adjusts for logged in users based on their last visit)."
     moderators_view_emails: "Allow moderators to view user email addresses."
     moderators_view_ips: "Allow moderators to view user ip addresses."
+    moderators_change_trust_levels: "Allow moderators to change user trust levels."
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
     enable_rich_text_paste: "Enable automatic HTML to Markdown conversion when pasting text into the composer."
     send_old_credential_reminder_days: "Remind about old credentials after days"
@@ -2000,7 +2004,7 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
-    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, and Twitter are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
+    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and Github are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "The unique client ID provided by your Google application, used for the authentication process."
@@ -2578,7 +2582,7 @@ en:
     watched_words_regular_expressions: "Allows the use of regular expressions for filtering words. If enabled, this feature groups sensitive words by their case-sensitivity. It then compiles all selected words into a single regular expression, adding word boundaries for regular watched words. Consequently, this regex-based filtering method adds an extra layer of control over content moderation by supporting more sophisticated word patterns. The setting also allows to easily substitute the original text with the replacement of choice."
 
     enable_fast_edit: "Adds a button to the post selection menu to edit a small selection inline."
-    old_post_notice_days: "The number of days after which a post notice is considered old. Old notices will be hidden."
+    old_post_notice_days: "The number of days after which the new-user and returning-user post notices will be hidden. The official post notice will always remain visible."
     new_user_notice_tl: "Minimum trust level required to see new user post notices."
     returning_user_notice_tl: "Minimum trust level required to see returning user post notices."
     returning_users_days: "How many days should pass before a user is considered to be returning."
@@ -2737,9 +2741,9 @@ en:
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
-    glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups. This implementation is under active development, and is not intended for production use. Do not develop themes/plugins against it until the implementation is finalized and announced."
-    deactivate_widgets_rendering: "Disable the legacy widgets rendering engine. This will disable all widgets that have not been updated to Glimmer components, it will also force the Glimmer Post Stream to be enabled unconditionally regardless of the value of the `glimmer_post_stream_mode` setting. This setting is not recommended for production sites, as it may break existing themes and plugins."
+    glimmer_post_stream_mode: "Control whether the new 'glimmer' post stream implementation is used. 'auto' will enable automatically once all your themes and plugins are ready."
+    glimmer_post_stream_mode_auto_groups: "Enable the new 'glimmer' post stream implementation in 'auto' mode for the specified user groups."
+    deactivate_widgets_rendering: "Disable the legacy widgets rendering engine. This will disable all widgets that have not been updated to Glimmer components, it will also force the Glimmer Post Stream to be enabled unconditionally regardless of the value of the `glimmer_post_stream_mode` setting."
     floatkit_autocomplete_composer: "Enable the Floatkit-based autocomplete menu in composer. This is an UI enhancement that will replace the current JQuery-based autocomplete menu."
     floatkit_autocomplete_input_fields: "Enable the Floatkit-based autocomplete menu for input fields in full page search and group selector fields. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
     floatkit_autocomplete_chat_composer: "Enable the Floatkit-based autocomplete menu in chat composer. This is a UI enhancement that will replace the current jQuery-based autocomplete menu."
@@ -2749,6 +2753,7 @@ en:
     experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     experimental_impersonation: "Impersonate a user without having to log out of your admin account."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
+    experimental_lightbox: "Use PhotoSwipe to lightbox larger images."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."
@@ -2760,7 +2765,7 @@ en:
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
-    viewport_based_mobile_mode: "EXPERIMENTAL: Disable the user-agent-based mobile/desktop modes and use viewport width instead."
+    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
@@ -2867,7 +2872,7 @@ en:
   filter:
     description:
       status: "Filter topics by their status"
-      in: "Filter topics by in personal lists"
+      in: "Filter topics in personal lists"
       order: "Sort topics by a specific field"
       category: "Show topics in a specific category"
       category_any: "Show topics in any of the specified categories (comma-separated)"
@@ -2949,6 +2954,9 @@ en:
       group: "Filter topics by groups"
       groups_any: "Show topics with any of the specified groups (comma-separated)"
       groups_all: "Show topics with all of the specified groups (plus-separated)"
+      locale: "Filter topics by original language"
+      locale_any: "Show topics originally written in any of the specified languages (comma-separated)"
+      exclude_locale: "Exclude topics originally written in a specific language"
 
   discourse_connect:
     login_error: "Login Error"
@@ -4447,7 +4455,7 @@ en:
       text_body_template: |
         Two-factor authentication has been disabled on your account at %{site_name}. You can now log in with only your password; an additional authentication code is no longer required.
 
-        If you did not choose to disable two-factor authentication, someone may have compromised your account.
+        If you did not choose to disable two-factor authentication (2FA), someone may have compromised your account.
 
         If you have any questions, [contact our friendly staff](%{base_url}/about).
 
@@ -4702,6 +4710,7 @@ en:
     search_title: "Try searching instead?"
     search_button: "Search"
     home: "Take me home"
+    placeholder: "Search topics by title or keywords…"
 
   offline:
     title: "Cannot load app"
@@ -4804,6 +4813,8 @@ en:
     latte_theme_name: "Latte"
     summer_theme_name: "Summer"
     dark_rose_theme_name: "Dark Rose"
+    errors:
+      cannot_edit_remote_copies: "Edits to remote copies of color palettes are not allowed."
 
   edit_this_page: "Edit this page"
 

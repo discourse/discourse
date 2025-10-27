@@ -3230,10 +3230,7 @@ lt:
         attachment_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti priedų."
         attachment_download_requires_login: "Atsiprašome, bet jūs turite būti prisijungęs, kad galėtumėt atsisiųsti priedus."
       cancel_composer:
-        confirm: "Ką norėtumėte daryti su savo įrašu?"
         discard: "Išmesti"
-        save_draft: "Išsaugoti juodraštį vėlesniam laikui"
-        keep_editing: "Tęskite redagavimą"
       via_email: "Šis įrašas buvo gautas per el. paštą"
       via_auto_generated_email: "šis pranešimas atkeliavo automatiškai sugeneruotu el. paštu"
       whisper: "Šis įrašas yra privatus šnabždesys moderatoriams"
@@ -3407,6 +3404,8 @@ lt:
       logo: "Kategorijos logotipo paveiksliukas"
       background_image: "Kategorijos fono paveiksliukas"
       background_color: "Spalva"
+      color_validations:
+        cant_be_empty: "negali būti tuščia"
       styles:
         icon: "Ikona"
         emoji: "Emoji"
@@ -4140,6 +4139,10 @@ lt:
           title: "Failai"
         legal:
           title: "Naudojimosi taisyklės"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Nustatymai"
         logo:
           form:
             mobile: "Mobilus"
@@ -4677,7 +4680,6 @@ lt:
         copy_to_clipboard: "Nukopijuoti į iškarpinę"
         copied_to_clipboard: "Nukopijuota į iškirptę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
-        theme_owner: "Neredaguojama, priklauso:"
         email_templates:
           title: "Epaštas"
           subject: "Tema"
@@ -4685,6 +4687,7 @@ lt:
           body: "Tekstas"
           revert: "Atstatyti Pakeitimus"
           revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
+          edit: "Redaguoti"
         component:
           all_filter: "Visos"
           enabled_filter: "Galimas"

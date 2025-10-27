@@ -1259,7 +1259,6 @@ gl:
     logo: "A imaxe do logotipo na parte superior esquerda do seu sitio. Utilice unha imaxe rectangular larga cunha altura de 120 e unha relación de aspecto superior a 3:1. Se se deixa en branco, mostrarase o texto do título do sitio."
     logo_small: "A imaxe pequena do logotipo na parte superior esquerda do seu sitio, visible ao desprazarse cara a abaixo. Utilice un cadrado de 120 x 120. Se se deixa en branco, mostrarase un glifo local."
     digest_logo: "A imaxe de logotipo alternativa utilizada na parte superior do resumo de correo electrónico do seu sitio. Utilice un rectángulo largo. Non debe ser unha imaxe SVG. Se se deixa en branco, utilizarase a imaxe configurada como logotipo."
-    mobile_logo: "O logotipo utilizado na versión móbil do seu sitio. Utilice unha imaxe rectangular cunha anchura de 120 e unha proporción maior que 3:1. Se se deixa en branco, utilizarase a imaxe configurada como logotipo."
     logo_dark: "Alternativa de esquema escuro para o axuste de «logo»."
     logo_small_dark: "Alternativa de esquema escuro para o axuste do «logo pequeno»."
     mobile_logo_dark: "Alternativa de esquema escuro para o axuste de «logo para móbil»."
@@ -2871,12 +2870,6 @@ gl:
     account_second_factor_disabled:
       title: "Autenticación en dous pasos desactivada"
       subject_template: "[%{email_prefix}] Autenticación en dous pasos desactivada"
-      text_body_template: |
-        A autenticación de dobre paso desactivouse na súa conta en %{site_name}. Agora pode iniciar sesión con só o seu contrasinal; xa non se vai precisar un código adicional de autenticación.
-
-        Se non elixiu desactivar a autenticación de dobre paso, pode que alguén comprometese a seguridade da súa conta.
-
-        Se ten calquera pregunta, [contacte co noso equipo](%{base_url}/about).
     digest:
       since_last_visit: "Desde a súa última visita"
       new_topics: "Novos temas"
