@@ -1,10 +1,14 @@
 import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 
 const ChatNavbarFilter = <template>
   <DButton
-    @icon={{if @isFiltering "filter-circle-xmark" "filter"}}
+    @icon="discourse-chat-search"
     @action={{@onToggleFilter}}
-    class="btn-transparent c-navbar__filter"
+    class={{concatClass
+      "btn-transparent c-navbar__filter"
+      (if @isFiltering "active")
+    }}
   />
 </template>;
 

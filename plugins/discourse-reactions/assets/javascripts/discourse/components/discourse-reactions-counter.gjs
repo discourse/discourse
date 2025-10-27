@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -174,7 +173,7 @@ export default class DiscourseReactionsCounter extends Component {
       class={{this.classes}}
       {{on "mousedown" this.mouseDown}}
       {{on "mouseup" this.mouseUp}}
-      {{closeOnClickOutside this.clickOutside (hash)}}
+      {{closeOnClickOutside this.clickOutside}}
       {{on "touchstart" this.touchStart}}
       {{on "pointerover" this.pointerOver}}
       {{on "pointerout" this.pointerOut}}

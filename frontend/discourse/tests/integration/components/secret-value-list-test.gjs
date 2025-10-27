@@ -8,15 +8,13 @@ module("Integration | Component | secret-value-list", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {
-    const self = this;
-
     this.set("setValidationMessage", () => {});
 
     await render(
       <template>
         <SecretValueList
-          @values={{self.values}}
-          @setValidationMessage={{self.setValidationMessage}}
+          @values={{this.values}}
+          @setValidationMessage={{this.setValidationMessage}}
         />
       </template>
     );
@@ -60,8 +58,6 @@ module("Integration | Component | secret-value-list", function (hooks) {
   });
 
   test("adding an invalid value", async function (assert) {
-    const self = this;
-
     let setValidationMessage = (message) => {
       this.set("message", message);
     };
@@ -70,8 +66,8 @@ module("Integration | Component | secret-value-list", function (hooks) {
     await render(
       <template>
         <SecretValueList
-          @values={{self.values}}
-          @setValidationMessage={{self.setValidationMessage}}
+          @values={{this.values}}
+          @setValidationMessage={{this.setValidationMessage}}
         />
       </template>
     );
@@ -98,15 +94,13 @@ module("Integration | Component | secret-value-list", function (hooks) {
   });
 
   test("changing a value", async function (assert) {
-    const self = this;
-
     this.set("setValidationMessage", () => {});
 
     await render(
       <template>
         <SecretValueList
-          @values={{self.values}}
-          @setValidationMessage={{self.setValidationMessage}}
+          @values={{this.values}}
+          @setValidationMessage={{this.setValidationMessage}}
         />
       </template>
     );
@@ -140,15 +134,13 @@ module("Integration | Component | secret-value-list", function (hooks) {
   });
 
   test("removing a value", async function (assert) {
-    const self = this;
-
     this.set("setValidationMessage", () => {});
 
     await render(
       <template>
         <SecretValueList
-          @values={{self.values}}
-          @setValidationMessage={{self.setValidationMessage}}
+          @values={{this.values}}
+          @setValidationMessage={{this.setValidationMessage}}
         />
       </template>
     );

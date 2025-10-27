@@ -49,8 +49,6 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
   });
 
   test("avatar flair for admin user", async function (assert) {
-    const self = this;
-
     this.set("args", {
       admin: true,
       moderator: false,
@@ -59,7 +57,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{self.args}} /></template>);
+    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-bars").exists("has the svg icon");
@@ -70,8 +68,6 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
   });
 
   test("avatar flair for moderator user with fallback to staff", async function (assert) {
-    const self = this;
-
     this.set("args", {
       admin: false,
       moderator: true,
@@ -80,7 +76,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{self.args}} /></template>);
+    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-bars").exists("has the svg icon");
@@ -91,8 +87,6 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
   });
 
   test("avatar flair for trust level", async function (assert) {
-    const self = this;
-
     this.set("args", {
       admin: false,
       moderator: false,
@@ -101,7 +95,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{self.args}} /></template>);
+    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-dice-two").exists("has the svg icon");
@@ -112,8 +106,6 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
   });
 
   test("avatar flair for trust level when set to none", async function (assert) {
-    const self = this;
-
     this.set("args", {
       admin: false,
       moderator: false,
@@ -122,14 +114,12 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{self.args}} /></template>);
+    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
 
   test("avatar flair for trust level with fallback", async function (assert) {
-    const self = this;
-
     this.set("args", {
       admin: false,
       moderator: false,
@@ -138,7 +128,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{self.args}} /></template>);
+    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-dice-two").exists("has the svg icon");
@@ -149,8 +139,6 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
   });
 
   test("avatar flair for login-required site, before login", async function (assert) {
-    const self = this;
-
     this.set("args", {
       admin: false,
       moderator: false,
@@ -160,14 +148,12 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     // Groups not serialized for anon on login_required
     this.site.groups = undefined;
 
-    await render(<template><UserAvatarFlair @user={{self.args}} /></template>);
+    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });
 
   test("avatar flair for primary group flair", async function (assert) {
-    const self = this;
-
     this.set("args", {
       admin: false,
       moderator: false,
@@ -181,7 +167,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
     });
     setupSiteGroups(this);
 
-    await render(<template><UserAvatarFlair @user={{self.args}} /></template>);
+    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").exists("has the tag");
     assert.dom("svg.d-icon-xmark").exists("has the svg icon");
@@ -192,8 +178,6 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
   });
 
   test("user-avatar-flair for user with no flairs", async function (assert) {
-    const self = this;
-
     this.set("args", {
       admin: false,
       moderator: false,
@@ -201,7 +185,7 @@ module("Integration | Component | user-avatar-flair", function (hooks) {
       flair_group_id: 11,
     });
 
-    await render(<template><UserAvatarFlair @user={{self.args}} /></template>);
+    await render(<template><UserAvatarFlair @user={{this.args}} /></template>);
 
     assert.dom(".avatar-flair").doesNotExist("does not render a flair");
   });

@@ -431,6 +431,13 @@ module("Unit | Ember | resolver", function (hooks) {
       }
     );
 
+    lookupTemplate(
+      assert,
+      "template:admin/plugin-template",
+      "discourse/plugins/my-plugin/discourse/templates/admin/plugin-template",
+      "looks up templates in plugin discourse namespace with correct name"
+    );
+
     withSilencedDeprecations(
       "discourse.deprecated-resolver-normalization",
       () => {

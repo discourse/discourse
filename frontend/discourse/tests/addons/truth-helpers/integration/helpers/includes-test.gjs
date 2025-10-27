@@ -7,13 +7,11 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
   setupRenderingTest(hooks);
 
   test("when using an array", async function (assert) {
-    const self = this;
-
     this.foo = [1];
     this.bar = 1;
     await render(
       <template>
-        {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
+        {{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}
       </template>
     );
 
@@ -22,7 +20,7 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
     this.bar = 2;
     await render(
       <template>
-        {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
+        {{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}
       </template>
     );
 
@@ -30,13 +28,11 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
   });
 
   test("when using a string", async function (assert) {
-    const self = this;
-
     this.foo = "foo";
     this.bar = "f";
     await render(
       <template>
-        {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
+        {{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}
       </template>
     );
 
@@ -45,7 +41,7 @@ module("Addons | truth-helpers | Integration | includes", function (hooks) {
     this.bar = "b";
     await render(
       <template>
-        {{#if (includes self.foo self.bar)}}<span class="test"></span>{{/if}}
+        {{#if (includes this.foo this.bar)}}<span class="test"></span>{{/if}}
       </template>
     );
 

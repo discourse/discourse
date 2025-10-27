@@ -14,8 +14,6 @@ module("Integration | Component | da-tags-field", function (hooks) {
   });
 
   test("set value", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "tags",
     });
@@ -23,8 +21,8 @@ module("Integration | Component | da-tags-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -36,8 +34,6 @@ module("Integration | Component | da-tags-field", function (hooks) {
   });
 
   test("empty tags", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "tags",
     });
@@ -45,8 +41,8 @@ module("Integration | Component | da-tags-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );

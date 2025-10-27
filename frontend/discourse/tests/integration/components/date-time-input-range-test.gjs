@@ -12,16 +12,14 @@ module("Integration | Component | date-time-input-range", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    const self = this;
-
     this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
 
     await render(
       <template>
         <DateTimeInputRange
-          @from={{self.state.from}}
-          @to={{self.state.to}}
-          @onChange={{fn (mut self.state)}}
+          @from={{this.state.from}}
+          @to={{this.state.to}}
+          @onChange={{fn (mut this.state)}}
         />
       </template>
     );
@@ -53,17 +51,15 @@ module("Integration | Component | date-time-input-range", function (hooks) {
   });
 
   test("setting relativeDate results in correct intervals (4x 15m then 30m)", async function (assert) {
-    const self = this;
-
     this.setProperties({ state: { from: DEFAULT_DATE_TIME, to: null } });
 
     await render(
       <template>
         <DateTimeInputRange
-          @from={{self.state.from}}
-          @to={{self.state.to}}
-          @relativeDate={{self.state.from}}
-          @onChange={{fn (mut self.state)}}
+          @from={{this.state.from}}
+          @to={{this.state.to}}
+          @relativeDate={{this.state.from}}
+          @onChange={{fn (mut this.state)}}
         />
       </template>
     );
@@ -78,8 +74,6 @@ module("Integration | Component | date-time-input-range", function (hooks) {
   });
 
   test("timezone support", async function (assert) {
-    const self = this;
-
     this.setProperties({
       state: {
         from: moment.tz(DEFAULT_DATE_TIME_STRING, "Europe/Paris"),
@@ -90,9 +84,9 @@ module("Integration | Component | date-time-input-range", function (hooks) {
     await render(
       <template>
         <DateTimeInputRange
-          @from={{self.state.from}}
-          @to={{self.state.to}}
-          @onChange={{fn (mut self.state)}}
+          @from={{this.state.from}}
+          @to={{this.state.to}}
+          @onChange={{fn (mut this.state)}}
           @timezone="Europe/Paris"
         />
       </template>

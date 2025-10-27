@@ -10,8 +10,6 @@ module("Integration | Component | invite-panel", function (hooks) {
   setupRenderingTest(hooks);
 
   test("shows the invite link after it is generated", async function (assert) {
-    const self = this;
-
     pretender.get("/u/search/users", () => response({ users: [] }));
 
     pretender.post("/invites", () =>
@@ -27,7 +25,7 @@ module("Integration | Component | invite-panel", function (hooks) {
     this.set("inviteModel", user);
 
     await render(
-      <template><InvitePanel @inviteModel={{self.inviteModel}} /></template>
+      <template><InvitePanel @inviteModel={{this.inviteModel}} /></template>
     );
 
     const input = selectKit(".invite-user-input");

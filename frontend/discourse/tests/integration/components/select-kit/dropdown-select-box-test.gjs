@@ -37,13 +37,11 @@ module(
     });
 
     test("selection behavior", async function (assert) {
-      const self = this;
-
       setDefaultState(this);
 
       await render(
         <template>
-          <DropdownSelectBox @value={{self.value}} @content={{self.content}} />
+          <DropdownSelectBox @value={{this.value}} @content={{this.content}} />
         </template>
       );
 
@@ -58,8 +56,6 @@ module(
     });
 
     test("options.showFullTitle=false", async function (assert) {
-      const self = this;
-
       setDefaultState(this, {
         value: null,
         showFullTitle: false,
@@ -69,12 +65,12 @@ module(
       await render(
         <template>
           <DropdownSelectBox
-            @value={{self.value}}
-            @content={{self.content}}
+            @value={{this.value}}
+            @content={{this.content}}
             @options={{hash
               icon="xmark"
-              showFullTitle=self.showFullTitle
-              none=self.none
+              showFullTitle=this.showFullTitle
+              none=this.none
             }}
           />
         </template>
@@ -94,16 +90,14 @@ module(
     });
 
     test("options.showFullTitle=true", async function (assert) {
-      const self = this;
-
       setDefaultState(this, { showFullTitle: true });
 
       await render(
         <template>
           <DropdownSelectBox
-            @value={{self.value}}
-            @content={{self.content}}
-            @options={{hash showFullTitle=self.showFullTitle}}
+            @value={{this.value}}
+            @content={{this.content}}
+            @options={{hash showFullTitle=this.showFullTitle}}
           />
         </template>
       );

@@ -9,6 +9,7 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import DModalCancel from "discourse/components/d-modal-cancel";
 import withEventValue from "discourse/helpers/with-event-value";
+import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 
 export default class ChangePostNoticeModal extends Component {
@@ -84,6 +85,7 @@ export default class ChangePostNoticeModal extends Component {
       <:body>
         <form>
           <textarea
+            {{preventScrollOnFocus}}
             value={{this.notice}}
             {{on "input" (withEventValue (fn (mut this.notice)))}}
           />

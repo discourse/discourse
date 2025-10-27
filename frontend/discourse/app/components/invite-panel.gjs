@@ -20,6 +20,7 @@ import GroupChooser from "select-kit/components/group-chooser";
 
 export default class InvitePanel extends Component {
   @service site;
+  @service toasts;
 
   @readOnly("currentUser.staff") isStaff;
   @readOnly("currentUser.admin") isAdmin;
@@ -260,13 +261,12 @@ export default class InvitePanel extends Component {
     return isPrivateTopic ? "required" : "optional";
   }
 
-  @discourseComputed("isPM", "invitee", "invitingExistingUserToTopic")
-  successMessage(isPM, invitee, invitingExistingUserToTopic) {
+  successMessage(invitee) {
     if (this.isInviteeGroup) {
       return i18n("topic.invite_private.success_group");
-    } else if (isPM) {
+    } else if (this.isPM) {
       return i18n("topic.invite_private.success");
-    } else if (invitingExistingUserToTopic) {
+    } else if (this.invitingExistingUserToTopic) {
       return i18n("topic.invite_reply.success_existing_email", {
         invitee,
       });
@@ -351,6 +351,11 @@ export default class InvitePanel extends Component {
           this.inviteModel.reload().then(() => {
             // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh");
+
+            this.toasts.success({
+              data: { message: this.successMessage(this.invitee) },
+            });
+            this.closeModal();
           });
         })
         .catch(onerror);
@@ -365,6 +370,11 @@ export default class InvitePanel extends Component {
             );
             // TODO (glimmer-post-stream) the Glimmer Post Stream does not listen to this event
             this.appEvents.trigger("post-stream:refresh", { force: true });
+
+            this.toasts.success({
+              data: { message: this.successMessage(result) },
+            });
+            this.closeModal();
           } else if (
             this.invitingToTopic &&
             emailValid(this.invitee.trim()) &&
@@ -372,6 +382,11 @@ export default class InvitePanel extends Component {
             result.user
           ) {
             this.set("invitingExistingUserToTopic", true);
+
+            this.toasts.success({
+              data: { message: this.successMessage(this.invitee) },
+            });
+            this.closeModal();
           }
         })
         .catch(onerror);
@@ -467,10 +482,6 @@ export default class InvitePanel extends Component {
             @link={{this.inviteModel.inviteLink}}
             @email={{this.invitee}}
           />
-        {{else}}
-          <div class="success-message">
-            {{htmlSafe this.successMessage}}
-          </div>
         {{/if}}
       {{else}}
         <div class="invite-user-control">

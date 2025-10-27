@@ -72,14 +72,12 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@onRegisterApi", async function (assert) {
-    const self = this;
-
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
 
     await render(
       <template>
-        <DMenu @inline={{true}} @onRegisterApi={{self.onRegisterApi}} />
+        <DMenu @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />
       </template>
     );
 
@@ -87,13 +85,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@onShow", async function (assert) {
-    const self = this;
-
     this.test = false;
     this.onShow = () => (this.test = true);
 
     await render(
-      <template><DMenu @inline={{true}} @onShow={{self.onShow}} /></template>
+      <template><DMenu @inline={{true}} @onShow={{this.onShow}} /></template>
     );
     await open();
 
@@ -101,13 +97,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@onClose", async function (assert) {
-    const self = this;
-
     this.test = false;
     this.onClose = () => (this.test = true);
 
     await render(
-      <template><DMenu @inline={{true}} @onClose={{self.onClose}} /></template>
+      <template><DMenu @inline={{true}} @onClose={{this.onClose}} /></template>
     );
     await open();
     await close();
@@ -194,8 +188,6 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("@component", async function (assert) {
-    const self = this;
-
     this.component = DDefaultToast;
 
     await render(
@@ -203,7 +195,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
         <DMenu
           @inline={{true}}
           @label="test"
-          @component={{self.component}}
+          @component={{this.component}}
           @data={{hash message="content"}}
         />
       </template>
@@ -473,8 +465,6 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("focusTrigger on close", async function (assert) {
-    const self = this;
-
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
     this.close = async () => await this.api.close();
@@ -482,11 +472,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @onRegisterApi={{self.onRegisterApi}}
+          @onRegisterApi={{this.onRegisterApi}}
           @inline={{true}}
           @icon="xmark"
         >
-          <DButton @icon="xmark" class="close" @action={{self.close}} />
+          <DButton @icon="xmark" class="close" @action={{this.close}} />
         </DMenu>
       </template>
     );
@@ -499,8 +489,6 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("focusTrigger=false on close", async function (assert) {
-    const self = this;
-
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
     this.close = async () => await this.api.close({ focusTrigger: false });
@@ -508,11 +496,11 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
     await render(
       <template>
         <DMenu
-          @onRegisterApi={{self.onRegisterApi}}
+          @onRegisterApi={{this.onRegisterApi}}
           @inline={{true}}
           @icon="xmark"
         >
-          <DButton @icon="xmark" class="close" @action={{self.close}} />
+          <DButton @icon="xmark" class="close" @action={{this.close}} />
         </DMenu>
       </template>
     );
@@ -525,8 +513,6 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
   });
 
   test("traps pointerdown events only when expanded ", async function (assert) {
-    const self = this;
-
     let propagated = false;
 
     const listener = () => {
@@ -542,7 +528,7 @@ module("Integration | Component | FloatKit | d-menu", function (hooks) {
 
     await render(
       <template>
-        <div {{didInsert self.didInsert}} {{willDestroy self.willDestroy}}>
+        <div {{didInsert this.didInsert}} {{willDestroy this.willDestroy}}>
           <DMenu
             @inline={{true}}
             @label="label"
