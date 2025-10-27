@@ -32,7 +32,7 @@ import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
-import resizableNode from "discourse/plugins/chat/discourse/modifiers/chat/resizable-node";
+import resizableNode from "../modifiers/resizable-node";
 
 export default class ComposerContainer extends Component {
   @service composer;
