@@ -1,3 +1,10 @@
+<%
+  db_variables =
+    ENV
+      .filter { |key, _| key.start_with?("DISCOURSE_DB_VARIABLES_") }
+      .transform_keys { |key| key.slice(("DISCOURSE_DB_VARIABLES_".length)..).downcase }
+%>
+
 development:
   prepared_statements: false
   adapter: postgresql
@@ -11,9 +18,7 @@ development:
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
     - "<%= ENV['DISCOURSE_HOSTNAME'] || 'localhost' %>"
-  variables: <%= ENV.filter { |k,v| k.start_with? 'DISCOURSE_DB_VARIABLES_' }
-                    .transform_keys { |k| k.slice(('DISCOURSE_DB_VARIABLES_'.length)..).downcase }
-                    .to_json %>
+  variables: <%= db_variables.to_json %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -41,6 +46,7 @@ test:
   checkout_timeout: <%= ENV["CHECKOUT_TIMEOUT"] || 5 %>
   host_names:
     - test.localhost
+  variables: <%= db_variables.to_json %>
 
 # profile db is used for benchmarking using the script/bench.rb script
 profile:
