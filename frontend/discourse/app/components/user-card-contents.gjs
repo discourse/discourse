@@ -553,53 +553,59 @@ export default class UserCardContents extends CardContentsBase {
           {{/if}}
 
           {{#if this.isRestrictedOrHasBio}}
+
             <div class="card-row second-row">
-              {{#if this.user.suspend_reason}}
-                <div class="suspended">
-                  <div class="suspension-date">
-                    {{icon "ban"}}
-                    {{#if this.user.suspendedForever}}
-                      {{i18n "user.suspended_permanently"}}
-                    {{else}}
-                      {{i18n
-                        "user.suspended_notice"
-                        date=this.user.suspendedTillDate
-                      }}
-                    {{/if}}
+              <PluginOutlet
+                @name="user-card-suspended-silenced"
+                @outletArgs={{lazyHash user=this.user}}
+              >
+                {{#if this.user.suspend_reason}}
+                  <div class="suspended">
+                    <div class="suspension-date">
+                      {{icon "ban"}}
+                      {{#if this.user.suspendedForever}}
+                        {{i18n "user.suspended_permanently"}}
+                      {{else}}
+                        {{i18n
+                          "user.suspended_notice"
+                          date=this.user.suspendedTillDate
+                        }}
+                      {{/if}}
+                    </div>
+                    <div class="suspension-reason">
+                      <span class="suspension-reason-title">{{i18n
+                          "user.suspended_reason"
+                        }}</span>
+                      <span class="suspension-reason-description">{{htmlSafe
+                          this.user.suspend_reason
+                        }}</span>
+                    </div>
                   </div>
-                  <div class="suspension-reason">
-                    <span class="suspension-reason-title">{{i18n
-                        "user.suspended_reason"
-                      }}</span>
-                    <span class="suspension-reason-description">{{htmlSafe
-                        this.user.suspend_reason
-                      }}</span>
+                {{/if}}
+                {{#if this.user.silence_reason}}
+                  <div class="silenced">
+                    <div class="silence-date">
+                      {{icon "microphone-slash"}}
+                      {{#if this.user.silencedForever}}
+                        {{i18n "user.silenced_permanently"}}
+                      {{else}}
+                        {{i18n
+                          "user.silenced_notice"
+                          date=this.user.silencedTillDate
+                        }}
+                      {{/if}}
+                    </div>
+                    <div class="silence-reason">
+                      <span class="silence-reason-title">{{i18n
+                          "user.silenced_reason"
+                        }}</span>
+                      <span class="silence-reason-description">{{htmlSafe
+                          this.user.silence_reason
+                        }}</span>
+                    </div>
                   </div>
-                </div>
-              {{/if}}
-              {{#if this.user.silence_reason}}
-                <div class="silenced">
-                  <div class="silence-date">
-                    {{icon "microphone-slash"}}
-                    {{#if this.user.silencedForever}}
-                      {{i18n "user.silenced_permanently"}}
-                    {{else}}
-                      {{i18n
-                        "user.silenced_notice"
-                        date=this.user.silencedTillDate
-                      }}
-                    {{/if}}
-                  </div>
-                  <div class="silence-reason">
-                    <span class="silence-reason-title">{{i18n
-                        "user.silenced_reason"
-                      }}</span>
-                    <span class="silence-reason-description">{{htmlSafe
-                        this.user.silence_reason
-                      }}</span>
-                  </div>
-                </div>
-              {{/if}}
+                {{/if}}
+              </PluginOutlet>
               {{#unless this.isRestricted}}
                 <div class="bio">
                   <HtmlWithLinks>
