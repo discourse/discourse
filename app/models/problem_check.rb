@@ -83,6 +83,7 @@ class ProblemCheck
     ProblemCheck::S3UploadConfig,
     ProblemCheck::SidekiqCheck,
     ProblemCheck::SubfolderEndsInSlash,
+    ProblemCheck::StarttlsDisabled,
     ProblemCheck::TranslationOverrides,
     ProblemCheck::TwitterConfig,
     ProblemCheck::TwitterLogin,

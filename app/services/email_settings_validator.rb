@@ -116,7 +116,12 @@ class EmailSettingsValidator
       ssl_context = Net::SMTP.default_ssl_context
       ssl_context.verify_mode = openssl_verify_mode if openssl_verify_mode
 
-      smtp.enable_starttls_auto(ssl_context) if enable_starttls_auto
+      if enable_starttls_auto
+        # starttls is automatic, but we might need to change the context
+        smtp.enable_starttls_auto(ssl_context)
+      else
+        smtp.disable_starttls
+      end
       smtp.enable_tls(ssl_context) if enable_tls
 
       smtp.open_timeout = 5
