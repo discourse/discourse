@@ -80,10 +80,6 @@ class EmailSettingsValidator
     debug: Rails.env.development?
   )
     begin
-      if enable_tls && enable_starttls_auto
-        raise ArgumentError, "TLS and STARTTLS are mutually exclusive"
-      end
-
       if username || password
         authentication = SmtpProviderOverrides.authentication_override(host) if authentication.nil?
         authentication = authentication.to_sym
