@@ -460,7 +460,7 @@ export default class EmojiPicker extends Component {
             {{didInsert this.registerFilterInput}}
             @value={{this.term}}
             @filterAction={{withEventValue this.didInputFilter}}
-            @icons={{hash right="magnifying-glass"}}
+            @icons={{hash left="magnifying-glass"}}
             @containerClass="emoji-picker__filter"
             placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
           />
