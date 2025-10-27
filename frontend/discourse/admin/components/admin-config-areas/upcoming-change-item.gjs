@@ -89,7 +89,7 @@ export default class UpcomingChangeItem extends Component {
 
     setTimeout(() => {
       this.toggleSettingDisabled = false;
-    }, 5000);
+    }, 3000);
 
     try {
       await ajax("/admin/config/upcoming-changes/toggle", {

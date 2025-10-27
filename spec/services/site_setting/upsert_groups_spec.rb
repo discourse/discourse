@@ -89,6 +89,11 @@ RSpec.describe SiteSetting::UpsertGroups do
         SiteSetting.expects(:notify_changed!).once
         result
       end
+
+      it "refreshes the site setting group ids for this process" do
+        SiteSetting.expects(:refresh_site_setting_group_ids!).once
+        result
+      end
     end
 
     context "when an admin user updates groups for an existing setting" do
@@ -131,6 +136,11 @@ RSpec.describe SiteSetting::UpsertGroups do
 
         it "deletes the existing site setting group record" do
           expect { result }.to change { SiteSettingGroup.where(name: setting).count }.by(-1)
+        end
+
+        it "refreshes the site setting group ids for this process" do
+          SiteSetting.expects(:refresh_site_setting_group_ids!).once
+          result
         end
       end
     end

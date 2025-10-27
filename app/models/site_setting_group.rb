@@ -14,7 +14,15 @@ class SiteSettingGroup < ActiveRecord::Base
 
     DB
       .query("SELECT name, group_ids FROM site_setting_groups")
-      .each_with_object({}) { |row, hash| hash[row.name] = row.group_ids.split("|").map(&:to_i) }
+      .each_with_object({}) do |row, hash|
+        hash[row.name.to_sym] = row.group_ids.split("|").map(&:to_i)
+      end
+  end
+
+  def self.generate_setting_group_map
+    return {} unless can_access_db?
+
+    Hash[*SiteSettingGroup.setting_group_ids.flatten]
   end
 
   def self.can_access_db?

@@ -466,9 +466,7 @@ module SiteSettingExtension
             )
           ]
 
-        SiteSettingGroup.setting_group_ids.each do |name, group_ids|
-          site_setting_group_ids[name.to_sym] = group_ids
-        end
+        refresh_site_setting_group_ids!
 
         defaults_view = defaults.all(new_hash[:default_locale])
 
@@ -485,24 +483,36 @@ module SiteSettingExtension
         uploads.clear
       end
 
-      if refresh_theme_site_settings
-        new_theme_site_settings = ThemeSiteSetting.generate_theme_map
-
-        theme_site_setting_changes, theme_site_setting_deletions =
-          diff_hash(new_theme_site_settings, theme_site_settings)
-
-        theme_site_setting_changes.each do |theme_id, settings|
-          theme_site_settings[theme_id] ||= {}
-          theme_site_settings[theme_id].merge!(settings)
-        end
-        theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
-      end
+      refresh_theme_site_settings! if refresh_theme_site_settings
 
       clear_cache!(
         expire_theme_site_setting_cache:
           ThemeSiteSetting.can_access_db? && refresh_theme_site_settings,
       )
     end
+  end
+
+  def refresh_site_setting_group_ids!
+    new_site_setting_group_ids_hash = SiteSettingGroup.generate_setting_group_map
+    site_setting_group_id_changes, site_setting_group_id_deletions =
+      diff_hash(new_site_setting_group_ids_hash, site_setting_group_ids)
+
+    site_setting_group_id_changes.each { |name, val| site_setting_group_ids[name] = val }
+    site_setting_group_id_deletions.each { |name, _| site_setting_group_ids.delete(name) }
+  end
+
+  def refresh_theme_site_settings!
+    new_theme_site_settings = ThemeSiteSetting.generate_theme_map
+
+    theme_site_setting_changes, theme_site_setting_deletions =
+      diff_hash(new_theme_site_settings, theme_site_settings)
+
+    theme_site_setting_changes.each do |theme_id, settings|
+      theme_site_settings[theme_id] ||= {}
+      theme_site_settings[theme_id].merge!(settings)
+    end
+
+    theme_site_setting_deletions.each { |theme_id, _| theme_site_settings.delete(theme_id) }
   end
 
   SITE_SETTINGS_CHANNEL = "/site_settings"
@@ -667,11 +677,31 @@ module SiteSettingExtension
     DiscourseEvent.trigger(:theme_site_setting_changed, name, old_val, val)
   end
 
+  # NOTE: This will not refresh the current process' site settings, only other processes
+  # that are listening for changes. We check if the current process_id is != to the message
+  # process ID before refreshing in process_message.
+  #
+  # If you need to refresh the current process as well, call refresh! (or another
+  # method to update caches) directly.
   def notify_changed!
     MessageBus.publish(SITE_SETTINGS_CHANNEL, process: process_id)
   end
 
   def notify_clients!(name, scoped_to = nil)
+    # Group-based upcoming changes cannot update clients, because we need
+    # to know a user to determine if the change is active for them.
+    #
+    # This is the same limitation that group-based site settings have --
+    # we cannot determine the full groups of a user on the client side,
+    # so we only use these in the CurrentUserSerializer to send down an
+    # attribute. Users will get the new value on page reload.
+    #
+    # If the upcoming change is not group-based then it's safe to just
+    # use the underlying site setting value.
+    if upcoming_change_site_settings.include?(name.to_sym) && UpcomingChanges.has_groups?(name)
+      return
+    end
+
     MessageBus.publish(
       CLIENT_SETTINGS_CHANNEL,
       name: name,

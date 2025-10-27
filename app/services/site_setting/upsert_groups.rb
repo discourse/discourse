@@ -18,6 +18,7 @@ class SiteSetting::UpsertGroups
     step :upsert_site_setting_groups
   end
   only_if(:no_provided_group_names) { step :delete_site_setting_group }
+  step :notify_changed
 
   private
 
@@ -50,8 +51,6 @@ class SiteSetting::UpsertGroups
         new_value,
       )
     end
-
-    SiteSetting.notify_changed!
   end
 
   def delete_site_setting_group(params:, guardian:)
@@ -66,7 +65,10 @@ class SiteSetting::UpsertGroups
         "",
       )
     end
+  end
 
+  def notify_changed
+    SiteSetting.refresh_site_setting_group_ids!
     SiteSetting.notify_changed!
   end
 end
