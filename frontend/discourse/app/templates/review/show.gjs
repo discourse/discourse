@@ -13,7 +13,6 @@ import { i18n } from "discourse-i18n";
 export default RouteTemplate(
   class extends Component {
     @service currentUser;
-    @service site;
 
     /**
      * Checks if a refreshed reviewable component exists for the current reviewable type.
