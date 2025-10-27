@@ -27,6 +27,8 @@ acceptance("Lightbox", function (needs) {
   });
 
   test("Shows download and direct URL", async function (assert) {
+    this.siteSettings.experimental_lightbox = false;
+
     await visit("/t/internationalization-localization/280");
     await click(".lightbox");
 
@@ -51,6 +53,8 @@ acceptance("Lightbox", function (needs) {
   });
 
   test("Correctly escapes image caption", async function (assert) {
+    this.siteSettings.experimental_lightbox = false;
+
     await visit("/t/internationalization-localization/280");
     await click(".lightbox");
 
