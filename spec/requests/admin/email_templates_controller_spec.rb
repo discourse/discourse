@@ -60,9 +60,6 @@ RSpec.describe Admin::EmailTemplatesController do
       it "includes custom email template keys added via modifier" do
         custom_keys = %w[custom.email_template_one custom.email_template_two]
 
-        # Clear the memoized email_keys before testing
-        Admin::EmailTemplatesController.instance_variable_set(:@email_keys, nil)
-
         # Register a modifier to add custom email template keys
         block = Proc.new { |keys| keys + custom_keys }
         plugin_instance = Plugin::Instance.new
@@ -449,7 +446,6 @@ RSpec.describe Admin::EmailTemplatesController do
     shared_examples "email template reversal not allowed" do
       it "prevents reversals with a 404 response" do
         delete "/admin/email/templates/some_id", headers: headers
-
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
       end
