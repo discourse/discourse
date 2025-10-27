@@ -4,69 +4,21 @@ module DiscourseAi
   module Completions
     module Scripted
       class OpenAiApiStyle < BaseStyle
-        def self.can_handle?(_llm_model)
-          true
+        SUPPORTED_PROVIDERS = %w[open_ai azure groq open_router mistral samba_nova vllm]
+
+        def self.can_handle?(llm_model)
+          SUPPORTED_PROVIDERS.include?(llm_model.provider)
         end
 
         private
 
         def build_response(request)
           @response_id = nil
-
-          payload =
-            begin
-              JSON.parse(request.body, symbolize_names: true)
-            rescue JSON::ParserError
-              {}
-            end
-
-          response = next_response
-
-          if payload[:stream]
-            stream_response(response, payload)
-          else
-            standard_response(response, payload)
-          end
+          super(request)
         end
 
-        def next_response
-          raise ArgumentError, "No scripted responses remaining" if raw_responses.empty?
-
-          response = raw_responses.shift
-
-          case response
-          when String
-            { type: :message, content: response }
-          when Hash
-            normalize_hash_response(response.deep_symbolize_keys!)
-          else
-            raise ArgumentError,
-                  "Unsupported scripted response #{response.class}. Use strings or hashes with :tool_call."
-          end
-        end
-
-        def normalize_hash_response(response)
-          usage = response[:usage]
-
-          if (raw_chunks = response[:raw_stream])
-            normalized = { type: :raw_stream, raw_stream: Array.wrap(raw_chunks) }
-            normalized[:usage] = usage if usage
-            return normalized
-          end
-
-          if (tool = response[:tool_call])
-            normalized = { type: :tool_calls, tool_calls: [normalize_tool_call(tool)] }
-          elsif (tools = response[:tool_calls])
-            raise ArgumentError, "tool_calls array cannot be empty" if tools.blank?
-            normalized = tools.map { |tool_hash| normalize_tool_call(tool_hash) }
-            normalized = { type: :tool_calls, tool_calls: normalized }
-          else
-            raise ArgumentError,
-                  "Supported hash responses must include :tool_call or :tool_calls key. Got: #{response.keys.inspect}"
-          end
-
-          normalized[:usage] = usage if usage
-          normalized
+        def streaming_request?(_request, payload)
+          !!payload[:stream]
         end
 
         def normalize_tool_call(tool_hash)
@@ -87,33 +39,7 @@ module DiscourseAi
           { id: id, name: name, arguments: arguments }
         end
 
-        def standard_response(response, payload)
-          case response[:type]
-          when :message
-            build_standard_message(response, payload)
-          when :tool_calls
-            build_standard_tool_calls(response, payload)
-          when :raw_stream
-            Response.new(body: Array.wrap(response[:raw_stream]).join)
-          else
-            raise ArgumentError, "Unknown scripted response type: #{response[:type]}"
-          end
-        end
-
-        def stream_response(response, payload)
-          case response[:type]
-          when :message
-            build_streaming_message(response, payload)
-          when :tool_calls
-            build_streaming_tool_calls(response, payload)
-          when :raw_stream
-            Response.new(chunks: Array.wrap(response[:raw_stream]))
-          else
-            raise ArgumentError, "Unknown scripted response type: #{response[:type]}"
-          end
-        end
-
-        def build_standard_message(response, payload)
+        def render_standard_message(response, payload)
           content = response[:content]
           usage = response[:usage] || usage_for_length(content.length, content, payload)
           response_body = {
@@ -128,7 +54,7 @@ module DiscourseAi
           Response.new(body: response_body.to_json)
         end
 
-        def build_standard_tool_calls(response, payload)
+        def render_standard_tool_calls(response, payload)
           tool_calls = response[:tool_calls]
           formatted =
             tool_calls.map do |tool|
@@ -165,7 +91,7 @@ module DiscourseAi
           Response.new(body: response_body.to_json)
         end
 
-        def build_streaming_message(response, payload)
+        def render_streaming_message(response, payload)
           content = response[:content]
           model = payload[:model] || "scripted-model"
           chunks = []
@@ -182,7 +108,7 @@ module DiscourseAi
           Response.new(chunks: chunks)
         end
 
-        def build_streaming_tool_calls(response, payload)
+        def render_streaming_tool_calls(response, payload)
           tool_calls = response[:tool_calls]
           model = payload[:model] || "scripted-model"
           chunks = []
@@ -212,31 +138,6 @@ module DiscourseAi
           chunks << sse_chunk(model, delta: {}, finish_reason: "tool_calls", usage: usage)
 
           Response.new(chunks: chunks)
-        end
-
-        def stream_chunks_for(content)
-          content = content.to_s
-          return [content] if content.length <= 1
-
-          remaining = content.length
-          offset = 0
-          pieces = []
-          random = Random.new(Zlib.crc32(content))
-
-          while remaining.positive?
-            max_chunk = [remaining, 6].min
-            size = random.rand(1..max_chunk)
-
-            if remaining == content.length && remaining > 1 && size == remaining
-              size = [remaining - 1, 1].max
-            end
-
-            pieces << content[offset, size]
-            offset += size
-            remaining -= size
-          end
-
-          pieces
         end
 
         def sse_chunk(model, delta:, finish_reason: nil, usage: nil)

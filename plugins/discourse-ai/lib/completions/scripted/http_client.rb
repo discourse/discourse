@@ -5,7 +5,10 @@ module DiscourseAi
     module Scripted
       class HttpClient
         def self.for(llm_model:, responses:)
-          strategies = [DiscourseAi::Completions::Scripted::OpenAiApiStyle]
+          strategies = [
+            DiscourseAi::Completions::Scripted::GeminiApiStyle,
+            DiscourseAi::Completions::Scripted::OpenAiApiStyle,
+          ]
 
           strategy_class = strategies.find { |klass| klass.can_handle?(llm_model) }
           if !strategy_class
