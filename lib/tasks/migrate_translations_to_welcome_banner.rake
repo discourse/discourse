@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-desc "Migrate translations from Advanced search banner to Welcome banner"
+desc "Migrate translations from Advanced Search Banner to core  welcome banner"
 task "themes:migrate_translations_to_welcome_banner" => :environment do
   advanced_search_banners = []
 
@@ -14,7 +14,7 @@ task "themes:migrate_translations_to_welcome_banner" => :environment do
   end
 
   if advanced_search_banners.empty?
-    puts "\n\e[33m✗ No Advanced search banner theme components were found.\e[0m"
+    puts "\n\e[33m✗ No Advanced Search Banner theme components were found.\e[0m"
   else
     puts "\n\e[1;36m=== Migration Summary ===\e[0m"
     advanced_search_banners.each do |entry|
@@ -50,7 +50,7 @@ def find_advanced_search_banners(db)
 
       migrated_count = 0
 
-      if !theme.theme_translation_overrides.any?
+      if theme.theme_translation_overrides.any?
         processed_keys_by_locale = Hash.new { |h, k| h[k] = Set.new }
 
         theme.theme_translation_overrides.each do |override|
@@ -74,7 +74,7 @@ def find_advanced_search_banners(db)
 
           if missing_keys.any?
             unless shown
-              puts "  Migrating Advanced search banner's default translations..."
+              puts "  Migrating Advanced Search Banner's default translations..."
               shown = true
             end
 
@@ -85,7 +85,7 @@ def find_advanced_search_banners(db)
           end
         end
       else
-        puts "  ✗ No translation overrides found. Migrating Advanced search banner's default translations..."
+        puts "  ✗ No translation overrides found. Migrating Advanced Search Banner's default translations..."
         required_keys.each do |required_key|
           count = migrate_translations(key: required_key)
           migrated_count += count

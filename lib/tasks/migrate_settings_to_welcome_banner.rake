@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-desc "Migrate settings from Advanced search banner to Welcome banner"
+desc "Migrate settings from Advanced Search Banner to core  welcome banner"
 task "themes:migrate_settings_to_welcome_banner" => :environment do
   advanced_search_banners = []
 
@@ -14,7 +14,7 @@ task "themes:migrate_settings_to_welcome_banner" => :environment do
   end
 
   if advanced_search_banners.empty?
-    puts "\n\e[33m✗ No Advanced search banner theme components were found.\e[0m"
+    puts "\n\e[33m✗ No Advanced Search Banner theme components were found.\e[0m"
   else
     puts "\n\e[1;36m=== Migration Summary ===\e[0m"
     advanced_search_banners.each do |entry|
@@ -95,7 +95,12 @@ def migrate_theme_settings_to_site_settings(theme_settings)
     end
 
     begin
-      SiteSetting.set(site_setting_name, new_value)
+      SiteSetting.set_and_log(
+        site_setting_name,
+        new_value,
+        Discourse.system_user,
+        "Migrated from the deprecated Advanced Search Banner",
+      )
 
       old_text = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
       arrow = "\e[0m=>\e[0m"
