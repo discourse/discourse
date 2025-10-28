@@ -1,10 +1,10 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { or as computedOr } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
@@ -13,42 +13,24 @@ import { i18n } from "discourse-i18n";
 export default class GroupManageSaveButton extends Component {
   @service modal;
   @service groupAutomaticMembersDialog;
+  @service router;
 
   saving = null;
   disabled = false;
   updateExistingUsers = null;
-
-  @computedOr("model.flair_icon", "model.flair_url") hasFlair;
 
   @discourseComputed("saving")
   savingText(saving) {
     return saving ? i18n("saving") : i18n("save");
   }
 
-  @discourseComputed(
-    "model.visibility_level",
-    "model.primary_group",
-    "hasFlair"
-  )
-  privateGroupNameNotice(visibilityLevel, isPrimaryGroup, hasFlair) {
-    if (visibilityLevel === 0) {
-      return;
-    }
-
-    if (isPrimaryGroup) {
-      return i18n("admin.groups.manage.alert.primary_group", {
-        group_name: this.model.name,
-      });
-    } else if (hasFlair) {
-      return i18n("admin.groups.manage.alert.flair_group", {
-        group_name: this.model.name,
-      });
-    }
-  }
-
   @action
   setUpdateExistingUsers(value) {
     this.updateExistingUsers = value;
+  }
+
+  get shouldRenderWarningFlair() {
+    return this.router.currentRouteName !== "group.manage.membership";
   }
 
   @action
@@ -110,12 +92,8 @@ export default class GroupManageSaveButton extends Component {
   }
 
   <template>
-    {{#if this.privateGroupNameNotice}}
-      <div class="row">
-        <div class="alert alert-warning alert-private-group-name">
-          {{this.privateGroupNameNotice}}
-        </div>
-      </div>
+    {{#if this.shouldRenderWarningFlair}}
+      <GroupFlairVisibilityWarning @model={{this.model}} />
     {{/if}}
     <div class="control-group buttons group-manage-save-button">
       <DButton
