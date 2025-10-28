@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { getHashtagAutocompleteCache } from "discourse/lib/hashtag-autocomplete";
 import { getHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
 import { emojiUnescape } from "discourse/lib/text";
 import { isBoundary } from "discourse/static/prosemirror/lib/markdown-it";
@@ -165,7 +166,11 @@ const extension = {
                 }
 
                 // decorate valid hashtags based on their type
-                const tagText = emojiUnescape(validHashtag?.text || name);
+                const displayText = validHashtag?.text || name;
+                const tagText =
+                  typeof displayText === "string"
+                    ? emojiUnescape(displayText)
+                    : displayText;
                 const hashtagTypeClass =
                   getHashtagTypeClasses()[validHashtag.type];
                 const hashtagIconHTML = hashtagTypeClass
@@ -188,6 +193,21 @@ async function fetchHashtags(hashtags, context) {
   const slugs = hashtags.filter(
     (tag) => !VALID_HASHTAGS.has(tag) && !INVALID_HASHTAGS.has(tag)
   );
+
+  if (!slugs.length) {
+    return;
+  }
+
+  const cache = getHashtagAutocompleteCache();
+  if (cache) {
+    const cachedItems = Object.values(cache).flat().filter(Boolean);
+    cachedItems.forEach((item) => {
+      if (slugs.includes(item.ref)) {
+        VALID_HASHTAGS.set(item.ref, item);
+        slugs.splice(slugs.indexOf(item.ref), 1);
+      }
+    });
+  }
 
   if (!slugs.length) {
     return;
