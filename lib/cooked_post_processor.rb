@@ -231,7 +231,7 @@ class CookedPostProcessor
           # Look for optimized video
           upload = Upload.get_from_url(src)
           if upload && optimized_video = OptimizedVideo.find_by(upload_id: upload.id)
-            optimized_url = optimized_video.optimized_upload.url
+            optimized_url = Discourse.store.cdn_url(optimized_video.optimized_upload.url)
             # Only update if the URL is different
             if container["data-video-src"] != optimized_url
               container["data-original-video-src"] = container["data-video-src"] unless container[

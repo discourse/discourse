@@ -4,11 +4,7 @@ RSpec.describe SiteSetting do
   describe "topic_title_length" do
     it "returns a range of min/max topic title length" do
       expect(SiteSetting.topic_title_length).to eq(
-        (
-          SiteSetting.defaults[:min_topic_title_length]..SiteSetting.defaults[
-            :max_topic_title_length
-          ]
-        ),
+        SiteSetting.min_topic_title_length..SiteSetting.max_topic_title_length,
       )
     end
   end
@@ -16,7 +12,7 @@ RSpec.describe SiteSetting do
   describe "post_length" do
     it "returns a range of min/max post length" do
       expect(SiteSetting.post_length).to eq(
-        SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length],
+        SiteSetting.min_post_length..SiteSetting.max_post_length,
       )
     end
   end
@@ -24,7 +20,7 @@ RSpec.describe SiteSetting do
   describe "first_post_length" do
     it "returns a range of min/max first post length" do
       expect(SiteSetting.first_post_length).to eq(
-        SiteSetting.defaults[:min_first_post_length]..SiteSetting.defaults[:max_post_length],
+        SiteSetting.min_first_post_length..SiteSetting.max_post_length,
       )
     end
   end
@@ -32,9 +28,7 @@ RSpec.describe SiteSetting do
   describe "private_message_title_length" do
     it "returns a range of min/max pm topic title length" do
       expect(SiteSetting.private_message_title_length).to eq(
-        SiteSetting.defaults[:min_personal_message_title_length]..SiteSetting.defaults[
-          :max_topic_title_length
-        ],
+        SiteSetting.min_personal_message_title_length..SiteSetting.max_topic_title_length,
       )
     end
   end

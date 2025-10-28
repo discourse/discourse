@@ -7,7 +7,9 @@ module DiscourseAi
         plugin.add_to_serializer(:current_user, :can_summarize) do
           return false if !SiteSetting.ai_summarization_enabled
 
-          if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)).blank?
+          if (
+               ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
+             ).blank?
             return false
           end
           scope.user.in_any_groups?(ai_persona.allowed_group_ids.to_a)

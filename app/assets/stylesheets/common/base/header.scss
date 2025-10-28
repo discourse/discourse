@@ -216,7 +216,6 @@
   .badge-notification {
     border: 2px solid var(--header_background);
     position: absolute;
-    z-index: z("base");
     top: -4px;
     min-width: 0.6em;
     left: auto;

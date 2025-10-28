@@ -15,7 +15,8 @@ module DiscourseAi
         return nil if !SiteSetting.ai_translation_enabled
         return nil if @text.blank?
         if (
-             ai_persona = AiPersona.find_by(id: SiteSetting.ai_translation_locale_detector_persona)
+             ai_persona =
+               AiPersona.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_persona)
            ).blank?
           return nil
         end

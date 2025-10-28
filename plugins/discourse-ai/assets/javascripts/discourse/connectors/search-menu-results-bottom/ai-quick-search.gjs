@@ -148,27 +148,73 @@ export default class AiQuickSearch extends Component {
     }
   }
 
+  #removeExistingAiResults() {
+    if (!this.search.results) {
+      return;
+    }
+
+    if (this.search.results.posts) {
+      this.search.results.posts = this.search.results.posts.filter(
+        (post) => !post.aiGenerated
+      );
+    }
+
+    const resultTypes = this.search.results.resultTypes || [];
+    resultTypes.forEach((resultType) => {
+      if (resultType.results) {
+        resultType.results = resultType.results.filter(
+          (result) => !result.aiGenerated
+        );
+      }
+    });
+  }
+
+  #getExistingTopicIds() {
+    const existingTopicIds = new Set();
+    const resultTypes = this.search.results?.resultTypes || [];
+
+    resultTypes.forEach((resultType) => {
+      resultType.results?.forEach((result) => {
+        const topicId = result.topic?.id || result.topic_id;
+        if (topicId) {
+          existingTopicIds.add(topicId);
+        }
+      });
+    });
+
+    return existingTopicIds;
+  }
+
   appendResults(aiResults) {
     if (!this.search.results) {
       this.search.results = {};
     }
 
+    this.#removeExistingAiResults();
+
+    const existingTopicIds = this.#getExistingTopicIds();
+    const uniqueAiPosts = aiResults.posts.filter((post) => {
+      const topicId = post.topic?.id || post.topic_id;
+      return !existingTopicIds.has(topicId);
+    });
+
+    if (uniqueAiPosts.length === 0) {
+      return;
+    }
+
     this.search.results.posts = [
       ...(this.search.results.posts || []),
-      ...aiResults.posts,
+      ...uniqueAiPosts,
     ];
 
     const resultTypes = this.search.results.resultTypes || [];
     const topicResultType = resultTypes.find((rt) => rt.type === "topic");
 
     if (topicResultType) {
-      topicResultType.results = [
-        ...topicResultType.results,
-        ...aiResults.posts,
-      ];
+      topicResultType.results = [...topicResultType.results, ...uniqueAiPosts];
     } else {
       resultTypes.push({
-        results: aiResults.posts,
+        results: uniqueAiPosts,
         componentName: "search-result-topic",
         type: "topic",
         more: false,

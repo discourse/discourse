@@ -330,6 +330,13 @@ en:
         today: Today
         yesterday: Yesterday
 
+      search_view:
+        filter_placeholder: Search messages
+        message_result_label: "Chat message from %{username}: %{preview} %{threadInfo}"
+        in_thread: "in thread %{title}"
+        sr_instructions: "Press Enter or Space to open message. Use Tab to navigate between results."
+        results_list_label: "Chat message search results"
+
       members_view:
         filter_placeholder: Find members
         add_member: Add Member
@@ -348,6 +355,7 @@ en:
         tabs:
           members: Members
           settings: Settings
+          search: Search
         remove_member: "Remove"
 
       new_message_modal:
@@ -514,6 +522,14 @@ en:
           create_export: "Create export"
           confirm_export: "This exports all messages from all channels and sends the result to you in a personal message. Are you sure you want to export?"
           export_has_started: "The export has started. You'll receive a PM when it's ready."
+
+      search:
+        title: Search chat
+        aria_label: "Switch to chat search"
+        no_results: "No results found"
+        sort:
+          relevance: "Relevance"
+          latest: "Latest"
 
       my_threads:
         title: My Threads

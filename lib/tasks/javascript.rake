@@ -7,7 +7,7 @@ def write_template(path, task_name, template)
   JS
 
   basename = File.basename(path)
-  output_path = "#{Rails.root}/app/assets/javascripts/#{path}"
+  output_path = "#{Rails.root}/frontend/#{path}"
 
   File.write(output_path, "#{header}\n\n#{template}")
   puts "#{basename} created"
@@ -32,7 +32,7 @@ task "javascript:update_constants" => :environment do
 
   MAIN_FONT_KEYS = %w[helvetica inter lato montserrat open_sans poppins roboto merriweather mukta]
 
-  write_template("admin/addon/lib/constants.js", task_name, <<~JS)
+  write_template("discourse/admin/lib/constants.js", task_name, <<~JS)
     export const ADMIN_SEARCH_RESULT_TYPES = #{Admin::SearchController::RESULT_TYPES.to_json};
 
     export const SITE_SETTING_REQUIRES_CONFIRMATION_TYPES = #{SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.to_json};

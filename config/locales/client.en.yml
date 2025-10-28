@@ -647,6 +647,7 @@ en:
 
     preview: "preview"
     cancel: "Cancel"
+    done: "Done"
 
     deleting: "Deleting…"
 
@@ -3784,10 +3785,6 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
-      auto_close_momentarily:
-        one: "The last post in the topic is already %{count} hour old, so the topic will be closed momentarily."
-        other: "The last post in the topic is already %{count} hours old, so the topic will be closed momentarily."
-
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
@@ -4296,6 +4293,7 @@ en:
         delete_post_notice: "Delete Official Notice"
         remove_timer: "remove timer"
         edit_timer: "edit timer"
+        remove_yourself_from_pm: "Are you sure you want to remove yourself from this message? You will no longer be able to see or reply to it."
 
       actions:
         people:
@@ -4877,6 +4875,8 @@ en:
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
       close: "Close (Esc)"
+      zoom: "Zoom (Z key)"
+      error: "The image cannot be loaded"
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 

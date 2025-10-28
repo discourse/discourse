@@ -651,6 +651,7 @@ login:
   google_oauth2_hd_groups_service_account_json:
     default: ""
     textarea: true
+    secret: true
     area: "authenticators"
   google_oauth2_verbose_logging:
     default: false
@@ -1947,6 +1948,9 @@ email:
   enable_staged_users:
     default: true
     area: "email"
+  email_in_allow_system_user_fallback:
+    default: false
+    hidden: true
   maximum_staged_users_per_email:
     default: 10
     area: "email"
@@ -4208,8 +4212,7 @@ experimental:
     area: "experimental"
   experimental_lightbox:
     client: true
-    default: false
-    hidden: true
+    default: true
     area: "experimental"
   show_preview_for_form_templates:
     client: true
@@ -4238,11 +4241,11 @@ experimental:
       - disabled
       - auto
       - enabled
-    default: "auto"
+    default: "enabled"
     area: "experimental"
   deactivate_widgets_rendering:
     client: true
-    default: false
+    default: true
     area: "experimental"
   enable_rich_text_paste:
     client: true

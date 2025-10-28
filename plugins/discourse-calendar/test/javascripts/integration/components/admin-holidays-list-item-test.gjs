@@ -7,8 +7,6 @@ module("Integration | Component | AdminHolidaysListItem", function (hooks) {
   setupRenderingTest(hooks);
 
   test("when a holiday is disabled, it displays an enable button and adds a disabled CSS class", async function (assert) {
-    const self = this;
-
     this.set("holiday", {
       date: "2022-01-01",
       name: "New Year's Day",
@@ -19,9 +17,9 @@ module("Integration | Component | AdminHolidaysListItem", function (hooks) {
     await render(
       <template>
         <AdminHolidaysListItem
-          @holiday={{self.holiday}}
-          @region_code={{self.region_code}}
-          @isHolidayDisabled={{self.holiday.disabled}}
+          @holiday={{this.holiday}}
+          @region_code={{this.region_code}}
+          @isHolidayDisabled={{this.holiday.disabled}}
         />
       </template>
     );
@@ -31,8 +29,6 @@ module("Integration | Component | AdminHolidaysListItem", function (hooks) {
   });
 
   test("when a holiday is enabled, it displays a disable button and does not add a disabled CSS class", async function (assert) {
-    const self = this;
-
     this.set("holiday", {
       date: "2022-01-01",
       name: "New Year's Day",
@@ -43,9 +39,9 @@ module("Integration | Component | AdminHolidaysListItem", function (hooks) {
     await render(
       <template>
         <AdminHolidaysListItem
-          @holiday={{self.holiday}}
-          @region_code={{self.region_code}}
-          @isHolidayDisabled={{self.holiday.disabled}}
+          @holiday={{this.holiday}}
+          @region_code={{this.region_code}}
+          @isHolidayDisabled={{this.holiday.disabled}}
         />
       </template>
     );

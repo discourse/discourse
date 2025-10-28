@@ -162,8 +162,6 @@ module(
     });
 
     test("resets presence when channel changes", async function (assert) {
-      const self = this;
-
       this.set("presenceChannelName", "/chat-reply/1");
 
       await addUser(1, "sam");
@@ -171,7 +169,7 @@ module(
       await render(
         <template>
           <ChatReplyingIndicator
-            @presenceChannelName={{self.presenceChannelName}}
+            @presenceChannelName={{this.presenceChannelName}}
           />
         </template>
       );

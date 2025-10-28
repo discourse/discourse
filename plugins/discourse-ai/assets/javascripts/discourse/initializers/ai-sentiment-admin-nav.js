@@ -5,7 +5,7 @@ export default apiInitializer((api) => {
 
   if (
     !currentUser ||
-    !currentUser.admin ||
+    !currentUser.staff ||
     !currentUser.can_see_sentiment_reports
   ) {
     return;

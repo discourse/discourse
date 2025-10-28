@@ -88,6 +88,7 @@ describe "Admin About Config Area Page", type: :system do
 
   describe "the general settings card" do
     it "can saves its fields to their corresponding site settings" do
+      SiteSetting.experimental_lightbox = false
       config_area.visit
 
       image_file = file_from_fixtures("logo.png", "images")

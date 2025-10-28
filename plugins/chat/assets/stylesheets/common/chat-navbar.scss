@@ -113,6 +113,14 @@
   .d-icon {
     color: var(--primary-low-mid);
   }
+
+  .c-navbar__filter {
+    &.active {
+      .d-icon {
+        color: var(--d-button-transparent-text-color--hover);
+      }
+    }
+  }
 }
 
 .c-navbar__back-button ~ .c-navbar__title {
