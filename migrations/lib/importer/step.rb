@@ -2,6 +2,9 @@
 
 module Migrations::Importer
   class Step
+    MappingType = ::Migrations::Importer::MappingType
+    Enums = ::Migrations::Database::IntermediateDB::Enums
+
     class << self
       # stree-ignore
       def title(value = (getter = true; nil))

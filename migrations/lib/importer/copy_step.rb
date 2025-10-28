@@ -2,8 +2,6 @@
 
 module Migrations::Importer
   class CopyStep < Step
-    MappingType = ::Migrations::Importer::MappingType
-
     NOW = "NOW()"
     SYSTEM_USER_ID = Discourse::SYSTEM_USER_ID
 
