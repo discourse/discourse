@@ -10,30 +10,15 @@ RSpec.describe UpcomingChanges::List do
     let(:params) { {} }
 
     before do
-      @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
-
-      # We do this because upcoming changes are ephemeral in site settings,
-      # so we cannot rely on them for specs. Instead we can fake some metadata
-      # for an existing stable setting.
-      SiteSetting.instance_variable_set(
-        :@upcoming_change_metadata,
-        @original_upcoming_changes_metadata.merge(
-          {
-            enable_upload_debug_mode: {
-              impact: "other,developers",
-              status: :pre_alpha,
-              impact_type: "feature",
-              impact_role: "admins",
-            },
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :pre_alpha,
+            impact_type: "other",
+            impact_role: "developers",
           },
-        ),
-      )
-    end
-
-    after do
-      SiteSetting.instance_variable_set(
-        :@upcoming_change_metadata,
-        @original_upcoming_changes_metadata,
+        },
       )
     end
 
@@ -57,8 +42,8 @@ RSpec.describe UpcomingChanges::List do
           value: SiteSetting.enable_upload_debug_mode,
           upcoming_change: {
             impact: "other,developers",
-            impact_role: "admins",
-            impact_type: "feature",
+            impact_role: "developers",
+            impact_type: "other",
             status: :pre_alpha,
           },
         )

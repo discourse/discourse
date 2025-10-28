@@ -1012,38 +1012,27 @@ RSpec.describe SiteSettingExtension do
   describe "#notify_clients!" do
     context "when the site setting is an upcoming change" do
       before do
-        @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
-
-        SiteSetting.instance_variable_set(
-          :@upcoming_change_metadata,
-          @original_upcoming_changes_metadata.merge(
-            {
-              enable_upload_debug_mode: {
-                impact: "other,developers",
-                status: :pre_alpha,
-                impact_type: "feature",
-                impact_role: "admins",
-              },
-              some_other_upcoming_setting: {
-                impact: "feature,staff",
-                status: :alpha,
-                impact_type: "feature",
-                impact_role: "staff",
-              },
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :pre_alpha,
+              impact_type: "other",
+              impact_role: "developers",
             },
-          ),
+            some_other_upcoming_setting: {
+              impact: "feature,staff",
+              status: :alpha,
+              impact_type: "feature",
+              impact_role: "staff",
+            },
+          },
         )
-
         SiteSetting.send(:setup_methods, :enable_upload_debug_mode)
-      end
-
-      after do
-        SiteSetting.instance_variable_set(
-          :@upcoming_change_metadata,
-          @original_upcoming_changes_metadata,
-        )
         SiteSetting.refresh!
       end
+
+      after { SiteSetting.refresh! }
 
       context "with site setting groups assigned" do
         before do

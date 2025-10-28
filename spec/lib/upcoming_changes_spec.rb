@@ -4,44 +4,32 @@ RSpec.describe UpcomingChanges do
   let(:setting_name) { "enable_upload_debug_mode" }
 
   before do
-    @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
-
-    SiteSetting.instance_variable_set(
-      :@upcoming_change_metadata,
-      @original_upcoming_changes_metadata.merge(
-        {
-          enable_upload_debug_mode: {
-            impact: "other,developers",
-            status: :pre_alpha,
-            impact_type: "feature",
-            impact_role: "admins",
-          },
-          alpha_setting: {
-            status: :alpha,
-          },
-          beta_setting: {
-            status: :beta,
-          },
-          stable_setting: {
-            status: :stable,
-          },
-          permanent_setting: {
-            status: :permanent,
-          },
+    mock_upcoming_change_metadata(
+      {
+        enable_upload_debug_mode: {
+          impact: "other,developers",
+          status: :pre_alpha,
+          impact_type: "other",
+          impact_role: "developers",
         },
-      ),
+        alpha_setting: {
+          status: :alpha,
+        },
+        beta_setting: {
+          status: :beta,
+        },
+        stable_setting: {
+          status: :stable,
+        },
+        permanent_setting: {
+          status: :permanent,
+        },
+      },
     )
 
     # There is a fixture image at spec/fixtures/images/upcoming_changes/enable_upload_debug_mode.png,
     # but normally upcoming change images are at Rails.public_path + /images/upcoming_changes/
     Rails.stubs(:public_path).returns(File.join(Rails.root, "spec", "fixtures"))
-  end
-
-  after do
-    SiteSetting.instance_variable_set(
-      :@upcoming_change_metadata,
-      @original_upcoming_changes_metadata,
-    )
   end
 
   describe ".image_exists?" do
@@ -82,8 +70,8 @@ RSpec.describe UpcomingChanges do
         {
           impact: "other,developers",
           status: :pre_alpha,
-          impact_type: "feature",
-          impact_role: "admins",
+          impact_type: "other",
+          impact_role: "developers",
         },
       )
     end

@@ -6,27 +6,15 @@ RSpec.describe Admin::Config::UpcomingChangesController do
 
   describe "#index" do
     before do
-      @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
-
-      SiteSetting.instance_variable_set(
-        :@upcoming_change_metadata,
-        @original_upcoming_changes_metadata.merge(
-          {
-            enable_upload_debug_mode: {
-              impact: "other,developers",
-              status: :pre_alpha,
-              impact_type: "feature",
-              impact_role: "admins",
-            },
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :pre_alpha,
+            impact_type: "other",
+            impact_role: "developers",
           },
-        ),
-      )
-    end
-
-    after do
-      SiteSetting.instance_variable_set(
-        :@upcoming_change_metadata,
-        @original_upcoming_changes_metadata,
+        },
       )
     end
 

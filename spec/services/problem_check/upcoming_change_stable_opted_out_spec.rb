@@ -5,30 +5,15 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
 
   describe ".call" do
     before do
-      @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
-
-      # We do this because upcoming changes are ephemeral in site settings,
-      # so we cannot rely on them for specs. Instead we can fake some metadata
-      # for an existing stable setting.
-      SiteSetting.instance_variable_set(
-        :@upcoming_change_metadata,
-        @original_upcoming_changes_metadata.merge(
-          {
-            enable_upload_debug_mode: {
-              impact: "other,developers",
-              status: :stable,
-              impact_type: "feature",
-              impact_role: "admins",
-            },
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :stable,
+            impact_type: "feature",
+            impact_role: "admins",
           },
-        ),
-      )
-    end
-
-    after do
-      SiteSetting.instance_variable_set(
-        :@upcoming_change_metadata,
-        @original_upcoming_changes_metadata,
+        },
       )
     end
 
@@ -53,18 +38,15 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
 
       context "when upcoming change is not yet stable and not opted in" do
         before do
-          SiteSetting.instance_variable_set(
-            :@upcoming_change_metadata,
-            @original_upcoming_changes_metadata.merge(
-              {
-                enable_upload_debug_mode: {
-                  impact: "other,developers",
-                  status: :alpha,
-                  impact_type: "feature",
-                  impact_role: "admins",
-                },
+          mock_upcoming_change_metadata(
+            {
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :alpha,
+                impact_type: "other",
+                impact_role: "developers",
               },
-            ),
+            },
           )
         end
 
@@ -73,18 +55,13 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
 
       context "when upcoming change is permanent and not opted in" do
         before do
-          SiteSetting.instance_variable_set(
-            :@upcoming_change_metadata,
-            @original_upcoming_changes_metadata.merge(
-              {
-                enable_upload_debug_mode: {
-                  impact: "other,developers",
-                  status: :permanent,
-                  impact_type: "feature",
-                  impact_role: "admins",
-                },
-              },
-            ),
+          mock_upcoming_change_metadata(
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :permanent,
+              impact_type: "other",
+              impact_role: "developers",
+            },
           )
         end
 
