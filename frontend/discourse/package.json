@@ -6,20 +6,14 @@
   "license": "GPL-2.0-only",
   "author": "Discourse",
   "exports": {
-    "./external-types": {
-      "types": "./external-types.d.ts"
-    },
     "./tests/*": {
-      "default": "./tests/*",
-      "types": "./declarations/tests/*.d.ts"
+      "default": "./tests/*"
     },
     "./admin/*": {
-      "default": "./admin/*",
-      "types": "./declarations/admin/*.d.ts"
+      "default": "./admin/*"
     },
     "./*": {
-      "default": "./app/*",
-      "types": "./declarations/app/*.d.ts"
+      "default": "./app/*"
     }
   },
   "directories": {

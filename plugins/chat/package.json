@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discourse": "workspace:discourse@0.0.0"
+    "discourse": "workspace:@discourse/types@0.0.0"
   }
 }

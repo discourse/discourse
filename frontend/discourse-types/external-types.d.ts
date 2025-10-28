@@ -5,5 +5,5 @@ declare module "@glimmer/component" {
 }
 
 declare module "qunit" {
-  export { module, test } from "@types/qunit";
+  export {module, test} from "@types/qunit";
 }

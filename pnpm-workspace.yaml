@@ -13,4 +13,5 @@ packages:
 - "frontend/select-kit"
 - "frontend/asset-processor"
 - "frontend/truth-helpers"
+- "frontend/discourse-types"
 - "plugins/chat"

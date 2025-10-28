@@ -1,0 +1,31 @@
+{
+  "name": "@discourse/types",
+  "version": "0.0.0",
+  "description": "Types only",
+  "license": "GPL-2.0-only",
+  "author": "Discourse",
+  "exports": {
+    "./external-types": {
+      "types": "./external-types.d.ts"
+    },
+    "./tests/*": {
+      "types": "./declarations/tests/*.d.ts"
+    },
+    "./admin/*": {
+      "types": "./declarations/admin/*.d.ts"
+    },
+    "./*": {
+      "types": "./declarations/app/*.d.ts"
+    }
+  },
+  "dependencies": {
+    "ember-source": "~6.6.0",
+    "@types/@glimmer__component": "npm:@glimmer/component@^2.0.0"
+  },
+  "engines": {
+    "node": ">= 18",
+    "npm": "please-use-pnpm",
+    "yarn": "please-use-pnpm",
+    "pnpm": "^9"
+  }
+}

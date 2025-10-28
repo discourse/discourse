@@ -5,12 +5,12 @@
     "./tests/**/*",
     "./config/environment.js"
   ],
-  "exclude": ["./declarations", "./tests/unit/utils/decorators-test.js"],
+  "exclude": ["./tests/unit/utils/decorators-test.js"],
   "extends": "../../jsconfig-base.json",
   "compilerOptions": {
     "composite": true,
     "rootDir": "./",
-    "outDir": "./declarations",
+    "outDir": "../discourse-types/declarations",
     "types": ["ember-source/types"],
     "paths": {
       "discourse/admin/*": ["./admin/*"],
