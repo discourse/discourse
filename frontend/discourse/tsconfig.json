@@ -3,9 +3,10 @@
     "./app/**/*",
     "./admin/**/*",
     "./tests/**/*",
+    "./config/environment.js"
   ],
   "exclude": ["./declarations", "./tests/unit/utils/decorators-test.js"],
-  "extends": "../../../../jsconfig-base.json",
+  "extends": "../../jsconfig-base.json",
   "compilerOptions": {
     "composite": true,
     "rootDir": "./",

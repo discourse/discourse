@@ -1071,7 +1071,7 @@ importers:
     dependencies:
       discourse:
         specifier: workspace:discourse
-        version: link:../../app/assets/javascripts/discourse
+        version: link:../../frontend/discourse
     devDependencies:
       '@glimmer/component':
         specifier: ^2.0.0
