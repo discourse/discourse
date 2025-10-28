@@ -17,7 +17,7 @@ schema:
         exclude:
           - "grant_count"
           - "system"
-    badge_groupings: {}
+    badge_groupings: { }
     categories:
       columns:
         add:
@@ -45,7 +45,7 @@ schema:
       primary_key_column_names: [ "category_id", "user_id" ]
       columns:
         exclude:
-           - "id"
+          - "id"
     category_custom_fields:
       primary_key_column_names: [ "category_id", "name" ]
       columns:
@@ -102,7 +102,7 @@ schema:
       columns:
         exclude:
           - "id"
-    tag_groups: {}
+    tag_groups: { }
     tag_users:
       primary_key_column_names: [ "tag_id", "user_id" ]
       columns:
@@ -318,6 +318,7 @@ schema:
         - "chat_message_interactions"
         - "chat_message_reactions"
         - "chat_message_revisions"
+        - "chat_message_search_data"
         - "chat_messages"
         - "chat_thread_custom_fields"
         - "chat_threads"
@@ -396,6 +397,8 @@ schema:
         - "invites"
         - "javascript_caches"
         - "linked_topics"
+        - "llm_credit_allocations"
+        - "llm_feature_credit_costs"
         - "llm_models"
         - "llm_quota_usages"
         - "llm_quotas"
