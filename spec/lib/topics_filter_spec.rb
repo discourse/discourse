@@ -2237,6 +2237,19 @@ RSpec.describe TopicsFilter do
       expect(scope.pluck(:id)).to eq([post1.topic_id])
     end
 
+    it "excludes topics with only deleted or hidden posts from keyword search" do
+      SearchIndexer.enable
+      visible_post = Fabricate(:post, raw: "searchterm")
+      _deleted_post = Fabricate(:post, raw: "searchterm", deleted_at: Time.zone.now)
+      _hidden_post = Fabricate(:post, raw: "searchterm", hidden: true)
+      _whisper_post = Fabricate(:post, raw: "searchterm", post_type: Post.types[:whisper])
+
+      filter = TopicsFilter.new(guardian: Guardian.new)
+      scope = filter.filter_from_query_string("searchterm")
+
+      expect(scope.pluck(:id)).to contain_exactly(visible_post.topic_id)
+    end
+
     describe "with a custom filter" do
       fab!(:topic)
 
