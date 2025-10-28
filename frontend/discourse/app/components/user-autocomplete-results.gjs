@@ -8,10 +8,7 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { and, eq, not } from "truth-helpers";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
-import {
-  callOnRenderCallback,
-  handleAutocompleteResultClick,
-} from "discourse/lib/autocomplete-result-helpers";
+import { safeInvoke } from "discourse/lib/function-utils";
 import { formatUsername } from "discourse/lib/utilities";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
 
@@ -34,18 +31,20 @@ export default class UserAutocompleteResults extends Component {
 
   @action
   handleResultClick(result, index, event) {
-    handleAutocompleteResultClick(this.args.onSelect, result, index, event);
+    event.preventDefault();
+    event.stopPropagation();
+    safeInvoke(this.args.onSelect, result, index, event);
   }
 
   @action
   handleInsert() {
-    callOnRenderCallback(this.args.onRender, this.args.results);
+    safeInvoke(this.args.onRender, this.args.results);
   }
 
   @action
   handleUpdate() {
     this.isInitialRender = false;
-    callOnRenderCallback(this.args.onRender, this.args.results);
+    safeInvoke(this.args.onRender, this.args.results);
   }
 
   <template>
