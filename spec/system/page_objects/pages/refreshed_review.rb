@@ -34,16 +34,8 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--rejected") }
       end
 
-      def has_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_css?(".scrub-rejected-user button") }
-      end
-
-      def has_no_scrub_button?(reviewable)
-        within(reviewable_by_id(reviewable.id)) { page.has_no_css?(".scrub-rejected-user button") }
-      end
-
-      def click_scrub_button(reviewable)
-        within(reviewable_by_id(reviewable.id)) { find(".scrub-rejected-user button").click }
+      def has_reviewable_with_approved_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
       end
 
       def has_reviewable_with_scrubbed_by?(reviewable, scrubbed_by)

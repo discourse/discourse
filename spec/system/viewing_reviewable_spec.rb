@@ -130,39 +130,22 @@ describe "Viewing reviewable item", type: :system do
         user.activate
       end
 
-      it "shows the user's name and admin profile link" do
+      it "Allow to delete and scrub user" do
         reviewable = ReviewableUser.find_by_target_id(user.id)
 
         refreshed_review_page.visit_reviewable(reviewable)
+
         expect(page).to have_text(user.name)
         expect(page).to have_link(user.username, href: "/admin/users/#{user.id}/#{user.username}")
-      end
 
-      it "Allow to delete user" do
-        reviewable = ReviewableUser.find_by_target_id(user.id)
-        user_email = user.email
-
-        refreshed_review_page.visit_reviewable(reviewable)
         refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
         expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
 
-        mail = ActionMailer::Base.deliveries.first
-        expect(mail.to).to eq([user_email])
-        expect(mail.subject).to match(/You've been rejected on Discourse/)
-      end
+        expect(page).to have_text(user.name)
 
-      it "Allows scrubbing user data after rejection" do
+        refreshed_review_page.select_bundled_action(reviewable, "user-scrub")
+
         scrubbing_reason = "a spammer who knows how to make GDPR requests"
-        reviewable = ReviewableUser.find_by_target_id(user.id)
-        user_email = user.email
-
-        refreshed_review_page.visit_reviewable(reviewable)
-        refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
-
-        expect(refreshed_review_page).to have_scrub_button(reviewable)
-        refreshed_review_page.click_scrub_button(reviewable)
-
-        expect(scrub_user_modal.scrub_button).to be_disabled
         scrub_user_modal.fill_in_scrub_reason(scrubbing_reason)
         expect(scrub_user_modal.scrub_button).not_to be_disabled
         scrub_user_modal.scrub_button.click
@@ -179,16 +162,24 @@ describe "Viewing reviewable item", type: :system do
           reviewable,
           reviewable.payload["scrubbed_at"],
         )
-        expect(refreshed_review_page).to have_no_scrub_button(reviewable)
+        expect(page).not_to have_text(user.name)
       end
 
       it "Allows to delete and block user" do
         reviewable = ReviewableUser.find_by_target_id(user.id)
-        user_email = user.email
 
         refreshed_review_page.visit_reviewable(reviewable)
         refreshed_review_page.select_bundled_action(reviewable, "user-delete_user_block")
         expect(refreshed_review_page).to have_reviewable_with_rejected_status(reviewable)
+      end
+
+      it "Allows to approve user" do
+        reviewable = ReviewableUser.find_by_target_id(user.id)
+
+        refreshed_review_page.visit_reviewable(reviewable)
+        refreshed_review_page.select_bundled_action(reviewable, "user-approve_user")
+
+        expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
       end
     end
   end

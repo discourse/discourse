@@ -5852,6 +5852,8 @@ en:
       reject_and_keep_deleted:
         title: "Keep post deleted"
         complete: "Post rejected and kept deleted."
+      scrub:
+        title: Scrub record
       approve_and_restore:
         title: "Approve and Restore post"
         complete: "Post approved and restored."
