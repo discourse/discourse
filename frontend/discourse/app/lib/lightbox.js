@@ -151,6 +151,9 @@ export default async function lightbox(elem, siteSettings) {
         [width, height] = dimensions.split(/x|×/).map(Number);
       }
 
+      // this ensures that cropped images (eg: grid) do not cause jittering when closing
+      data.thumbCropped = true;
+
       data.src = data.src || el.getAttribute("data-large-src");
       data.title = el.title || el.alt;
       data.w = data.width = width;
