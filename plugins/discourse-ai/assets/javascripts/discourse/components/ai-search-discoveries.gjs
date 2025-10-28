@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -11,6 +12,7 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import DiscourseURL from "discourse/lib/url";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
@@ -144,6 +146,27 @@ export default class AiSearchDiscoveries extends Component {
   }
 
   @action
+  handleDiscoveryClick(event) {
+    const target = event.target;
+    const link = target.closest("a");
+
+    if (!link) {
+      return;
+    }
+
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    DiscourseURL.routeTo(link.href);
+
+    if (this.args.closeSearchMenu) {
+      this.args.closeSearchMenu();
+    }
+  }
+
+  @action
   async continueConversation() {
     const data = {
       user_id: this.currentUser.id,
@@ -194,6 +217,7 @@ export default class AiSearchDiscoveries extends Component {
         {{else if this.discobotDiscoveries.discoveryTimedOut}}
           {{i18n "discourse_ai.discobot_discoveries.timed_out"}}
         {{else}}
+          {{! template-lint-disable no-invalid-interactive }}
           <article
             class={{concatClass
               "ai-search-discoveries__discovery"
@@ -201,6 +225,7 @@ export default class AiSearchDiscoveries extends Component {
               (if this.discobotDiscoveries.isStreaming "streaming")
               "streamable-content"
             }}
+            {{on "click" this.handleDiscoveryClick}}
           >
             <CookText
               @rawText={{this.discobotDiscoveries.streamedText}}
