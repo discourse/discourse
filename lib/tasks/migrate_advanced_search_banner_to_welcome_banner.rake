@@ -6,15 +6,20 @@ REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead]
 desc "Migrate settings from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
   components = find_all_components(:theme_settings)
+  migration_errors = []
 
   if components.empty?
     puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
     next
   end
 
-  components.each { |entry| process_theme_component_settings(entry[:theme]) }
+  components.each { |entry| process_theme_component_settings(entry[:theme], migration_errors) }
 
-  puts "\n\e[1;34mTask completed successfully!\e[0m"
+  if migration_errors.any?
+    puts "\n\e[1;31mMigration completed with errors\e[0m"
+  else
+    puts "\n\e[1;34mMigration completed successfully!\e[0m"
+  end
 end
 
 desc "Migrate translations from Advanced Search Banner to core welcome banner"
@@ -28,7 +33,7 @@ task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :
 
   components.each { |entry| process_theme_component_translations(entry[:theme]) }
 
-  puts "\n\e[1;34mTask completed successfully!\e[0m"
+  puts "\n\e[1;34mMigration completed successfully!\e[0m"
 end
 
 desc "Exclude and disable Advanced Search Banner theme component"
@@ -93,7 +98,7 @@ SETTINGS_MAPPING = {
     site_setting: "welcome_banner_page_visibility",
     value_mapping: {
       "top_menu" => "top_menu_pages",
-      "all_pages" => "all_pages",
+      "all" => "all_pages",
     },
   },
   "plugin_outlet" => {
@@ -109,13 +114,17 @@ SETTINGS_MAPPING = {
   },
 }
 
-def process_theme_component_settings(theme)
+def process_theme_component_settings(theme, errors)
   puts "\n  Migrating settings for #{theme_identifier(theme)}..."
-  migrated_count = migrate_theme_settings_to_site_settings(theme.theme_settings)
-  puts "  \e[1;32m✓ Migrated #{migrated_count} setting#{"s" if migrated_count != 1}\e[0m"
+  migrated_count = migrate_theme_settings_to_site_settings(theme.theme_settings, errors)
+  if migrated_count == theme.theme_settings.size
+    puts "  \e[1;32m✓ Migrated #{migrated_count} setting#{"s" if migrated_count != 1}\e[0m"
+  else
+    puts "  \e[33mMigrated #{migrated_count} out of #{theme.theme_settings.size} setting#{"s" if theme.theme_settings.size != 1}\e[0m"
+  end
 end
 
-def migrate_theme_settings_to_site_settings(theme_settings)
+def migrate_theme_settings_to_site_settings(theme_settings, errors)
   migrated_count = 0
 
   theme_settings.each do |ts|
@@ -123,7 +132,10 @@ def migrate_theme_settings_to_site_settings(theme_settings)
     next unless mapping
 
     site_setting_name = mapping[:site_setting]
-    next if ts.value.blank?
+    if ts.value.blank?
+      puts "    - skipping '#{ts.name}' as it has no value"
+      next
+    end
 
     if mapping[:value_mapping]
       new_value = mapping[:value_mapping][ts.value] || ts.value
@@ -146,7 +158,8 @@ def migrate_theme_settings_to_site_settings(theme_settings)
       puts "    - #{old_text} #{arrow} #{new_text}"
       migrated_count += 1
     rescue StandardError => e
-      puts "    \e[1;31m✗ Failed to migrate #{ts.name}: #{e.message}\e[0m"
+      errors << e
+      puts "    \e[31m- failed to migrate '#{ts.name}': \e[1m#{e.message}\e[0m"
     end
   end
 
