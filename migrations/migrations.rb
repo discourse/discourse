@@ -25,6 +25,7 @@ module Migrations
     # rubocop:disable Discourse/NoChdir
     Dir.chdir(rails_root) do
       begin
+        ENV["DISCOURSE_DEV_ALLOW_HTTPS"] = "1" # suppress warning
         require File.join(rails_root, "config/environment")
       rescue LoadError => e
         $stderr.puts e.message
