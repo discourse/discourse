@@ -5,6 +5,7 @@ export default class AdminPluginsShowDiscourseAiFeatures extends DiscourseRoute 
   @service store;
 
   async model() {
-    return this.store.findAll("ai-feature");
+    const features = await this.store.findAll("ai-feature");
+    return features.content;
   }
 }

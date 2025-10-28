@@ -13,7 +13,7 @@ export default class AdminPluginsShowDiscourseAiLlmsEdit extends DiscourseRoute 
     }
 
     const allLlms = this.modelFor("adminPlugins.show.discourse-ai-llms");
-    const record = allLlms.find((item) => item.id === id);
+    const record = allLlms.content.find((item) => item.id === id);
     record.provider_params = record.provider_params || {};
     return record;
   }
