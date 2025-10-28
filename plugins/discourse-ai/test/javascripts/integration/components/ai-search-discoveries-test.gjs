@@ -1,6 +1,8 @@
 import Service from "@ember/service";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
+import DiscourseURL from "discourse/lib/url";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import AiSearchDiscoveries from "discourse/plugins/discourse-ai/discourse/components/ai-search-discoveries";
@@ -17,10 +19,11 @@ module("Integration | Component | ai-search-discoveries", function (hooks) {
       this.closeSearchMenuCalled = true;
     };
 
-    this.routedUrl = null;
-    this.owner.lookup("service:router").routeTo = (url) => {
-      this.routedUrl = url;
-    };
+    sinon.stub(DiscourseURL, "routeTo");
+  });
+
+  hooks.afterEach(function () {
+    sinon.restore();
   });
 
   test("clicking a link in discovery text closes search menu", async function (assert) {
@@ -73,13 +76,12 @@ module("Integration | Component | ai-search-discoveries", function (hooks) {
       this.closeSearchMenuCalled,
       "closeSearchMenu was called after clicking link"
     );
-    assert.strictEqual(
-      typeof this.routedUrl,
-      "string",
-      "router.routeTo was called"
+    assert.true(
+      DiscourseURL.routeTo.calledOnce,
+      "DiscourseURL.routeTo was called"
     );
     assert.true(
-      this.routedUrl.includes("/t/some-topic/123"),
+      DiscourseURL.routeTo.calledWith(sinon.match("/t/some-topic/123")),
       "routed to correct URL"
     );
   });
@@ -135,10 +137,9 @@ module("Integration | Component | ai-search-discoveries", function (hooks) {
       this.closeSearchMenuCalled,
       "closeSearchMenu was not called when ctrl+clicking"
     );
-    assert.strictEqual(
-      this.routedUrl,
-      null,
-      "router.routeTo was not called for new window navigation"
+    assert.false(
+      DiscourseURL.routeTo.called,
+      "DiscourseURL.routeTo was not called for new window navigation"
     );
   });
 
@@ -194,7 +195,10 @@ module("Integration | Component | ai-search-discoveries", function (hooks) {
         this.closeSearchMenuCalled,
         "closeSearchMenu was not called when clicking non-link content"
       );
-      assert.strictEqual(this.routedUrl, null, "router.routeTo was not called");
+      assert.false(
+        DiscourseURL.routeTo.called,
+        "DiscourseURL.routeTo was not called"
+      );
     } else {
       assert.strictEqual(
         document.querySelector(".ai-search-discoveries__discovery")?.tagName,
