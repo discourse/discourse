@@ -1,3 +1,4 @@
+// @ts-check
 import { withPluginApi } from "./plugin-api.gjs";
 
 let _apiInitializerId = 0;
