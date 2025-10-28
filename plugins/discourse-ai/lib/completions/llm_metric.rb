@@ -37,7 +37,6 @@ module DiscourseAi
           )
 
           if status == :success
-            # Record request tokens
             increment_counter(
               "discourse_ai_llm_request_tokens_total",
               "Total number of input tokens sent to LLM APIs",
@@ -52,12 +51,13 @@ module DiscourseAi
               response_tokens,
             )
 
-            observe_histogram(
-              "discourse_ai_llm_duration_seconds",
-              "Duration of LLM API calls in seconds",
-              labels,
-              duration_ms / 1000.0,
-            )
+            # TODO: Enable duration histogram when supported in DiscoursePrometheus
+            # observe_histogram(
+            #   "discourse_ai_llm_duration_seconds",
+            #   "Duration of LLM API calls in seconds",
+            #   labels,
+            #   duration_ms / 1000.0,
+            # )
           end
         end
 
