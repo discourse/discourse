@@ -57,7 +57,7 @@ module Migrations::Importer
       end
     end
 
-    def initialize(intermediate_db, discourse_db, shared_data)
+    def initialize(intermediate_db, discourse_db, shared_data, config)
       super
 
       @last_id = 0
@@ -74,7 +74,7 @@ module Migrations::Importer
       nil
     end
 
-    protected
+    private
 
     def before(total_rows:)
       # Override in step implementation if needed
@@ -84,10 +84,8 @@ module Migrations::Importer
       # Override in step implementation if needed
     end
 
-    private
-
     def copy_data
-      table_name = self.class.table_name || self.class.name&.demodulize&.underscore
+      table_name = self.class.table_name || self.class.name.demodulize.underscore
       column_names = self.class.column_names || @discourse_db.column_names(table_name)
 
       if self.class.store_mapped_ids?
