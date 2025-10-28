@@ -10,10 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/discourse": "workspace:discourse@0.0.0"
-  },
-  "devDependencies": {
-    "@types/glimmer__component": "npm:@glimmer/component@^2.0.0",
-    "@types/ember-source": "npm:ember-source@^6.6.0"
+    "discourse": "workspace:discourse@0.0.0"
   }
 }

@@ -6,6 +6,9 @@
   "license": "GPL-2.0-only",
   "author": "Discourse",
   "exports": {
+    "./external-types": {
+      "types": "./external-types.d.ts"
+    },
     "./tests/*": {
       "default": "./tests/*",
       "types": "./declarations/tests/*.d.ts"
@@ -78,9 +81,13 @@
     "prosemirror-state": "^1.4.4",
     "prosemirror-transform": "^1.10.4",
     "prosemirror-view": "^1.41.3",
-    "rrule": "^2.8.1"
+    "rrule": "^2.8.1",
+    "@glimmer/tracking": "^1.1.2",
+    "ember-source": "~6.6.0",
+    "@types/@glimmer__component": "npm:@glimmer/component@^2.0.0"
   },
   "devDependencies": {
+    "@glimmer/component": "^2.0.0",
     "@babel/core": "^7.28.5",
     "@babel/standalone": "^7.28.5",
     "@colors/colors": "^1.6.0",
@@ -97,8 +104,6 @@
     "@embroider/router": "^2.1.8",
     "@embroider/webpack": "^4.1.0",
     "@floating-ui/dom": "^1.7.4",
-    "@glimmer/component": "^2.0.0",
-    "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",
     "@swc/core": "^1.13.5",
     "@types/jquery": "^3.5.33",
@@ -140,7 +145,6 @@
     "ember-load-initializers": "^3.0.1",
     "ember-modifier": "^4.2.2",
     "ember-qunit": "^9.0.4",
-    "ember-source": "~6.6.0",
     "ember-template-imports": "^4.3.0",
     "ember-test-selectors": "^7.1.0",
     "float-kit": "workspace:1.0.0",

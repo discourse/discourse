@@ -1,6 +1,8 @@
 {
+  "extends": "../../tsconfig.base.json",
   "include": [
-    "./assets/javascripts/**/*"
+    "./assets/javascripts/**/*",
+    "./test/javascripts/**/*"
   ],
   "exclude": [],
   "compilerOptions": {
@@ -16,7 +18,7 @@
     // "outDir": "",
     // "composite": true,
     "rootDir": "./",
-    "types": ["@types/ember-source/types"],
+    "types": ["discourse/external-types"],
     "paths": {
       "discourse/plugins/chat/*": ["./assets/javascripts/*"]
     }
