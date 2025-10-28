@@ -3,7 +3,7 @@
  *
  * @component PostList
  *
- * @args {TrackedArray<Object>} posts - The array of post objects to display (it must be a tracked array to ensure that
+ * @args {Array<Object>} posts - The array of post objects to display (it must be a tracked array to ensure that
  *   the component is re-rendered when the array changes)
  * @args {Function} fetchMorePosts - A function that fetches more posts. Must return a Promise that resolves to an array of new posts.
  * @args {String} emptyText (optional) - Custom text to display when there are no posts
@@ -42,7 +42,6 @@ import PostListItem from "discourse/components/post-list/item";
 import concatClass from "discourse/helpers/concat-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import ResultSet from "discourse/models/result-set";
 import { i18n } from "discourse-i18n";
 import { addUniqueValuesToArray } from "../../lib/array-tools";
 
@@ -65,12 +64,7 @@ export default class PostList extends Component {
     try {
       const newPosts = await this.args.fetchMorePosts();
       if (this.args.posts) {
-        if (this.args.posts instanceof ResultSet) {
-          // keep using `.addObjects` for now to preserve the reactivity on ResultSets
-          this.args.posts.addObjects(newPosts);
-        } else {
-          addUniqueValuesToArray(this.args.posts, newPosts);
-        }
+        addUniqueValuesToArray(this.args.posts, newPosts);
       }
 
       if (newPosts.length === 0) {
