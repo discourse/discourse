@@ -12,7 +12,7 @@ const FILTER_MINIMUM = 8;
 export default class ThemesGrid extends Component {
   @cached
   get sortedThemes() {
-    return this.args.themes.sort((a, b) => {
+    return this.args.themes.toSorted((a, b) => {
       if (a.get("default")) {
         return -1;
       } else if (b.get("default")) {

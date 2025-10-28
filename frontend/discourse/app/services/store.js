@@ -154,26 +154,28 @@ export default class StoreService extends Service {
       return hydrated;
     }
 
-    hydrated.set(
-      "content",
-      hydrated.get("content").map((item) => {
-        let staleItem = stale.content.find(
-          (i) => i.primaryKey === item.get(primaryKey)
-        );
-        if (staleItem) {
-          for (const [key, value] of Object.entries(
-            Object.getOwnPropertyDescriptors(staleItem)
-          )) {
-            if (value.writable && value.enumerable) {
-              staleItem.set(key, value.value);
-            }
+    const newValues = hydrated.get("content").map((item) => {
+      let staleItem = stale.content.find(
+        (i) => i.primaryKey === item.get(primaryKey)
+      );
+      if (staleItem) {
+        for (const [key, value] of Object.entries(
+          Object.getOwnPropertyDescriptors(staleItem)
+        )) {
+          if (value.writable && value.enumerable) {
+            staleItem.set(key, value.value);
           }
-        } else {
-          staleItem = item;
         }
-        return staleItem;
-      })
-    );
+      } else {
+        staleItem = item;
+      }
+      return staleItem;
+    });
+
+    hydrated instanceof ResultSet
+      ? hydrated.content.splice(0, Infinity, ...newValues)
+      : hydrated.set("content", newValues);
+
     return hydrated;
   }
 
@@ -184,7 +186,11 @@ export default class StoreService extends Service {
       const content = result[typeName].map((obj) =>
         this._hydrate(type, obj, result)
       );
-      resultSet.set("content", content);
+
+      // reset the content of the array
+      resultSet instanceof ResultSet
+        ? resultSet.content.splice(0, Infinity, ...content)
+        : resultSet.set("content", content);
     });
   }
 
@@ -195,18 +201,19 @@ export default class StoreService extends Service {
 
       let pageTarget = result.meta || result;
       let totalRows =
-        pageTarget["total_rows_" + typeName] || resultSet.get("totalRows");
+        pageTarget["total_rows_" + typeName] || resultSet.totalRows;
       let loadMoreUrl = pageTarget["load_more_" + typeName];
       let content = result[typeName].map((obj) =>
         this._hydrate(type, obj, result)
       );
 
-      resultSet.setProperties({ totalRows, loadMoreUrl });
-      resultSet.get("content").pushObjects(content);
+      resultSet.totalRows = totalRows;
+      resultSet.loadMoreUrl = loadMoreUrl;
+      resultSet.content.push(...content);
 
       // If we've loaded them all, clear the load more URL
-      if (resultSet.get("length") >= totalRows) {
-        resultSet.set("loadMoreUrl", null);
+      if (!resultSet.canLoadMore) {
+        resultSet.loadMoreUrl = null;
       }
     });
   }

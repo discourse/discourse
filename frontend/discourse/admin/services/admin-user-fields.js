@@ -20,7 +20,8 @@ export default class AdminUserFields extends Service {
 
   async #fetchUserFields() {
     try {
-      this.userFields = await this.store.findAll("user-field");
+      const userFields = await this.store.findAll("user-field");
+      this.userFields = userFields.content;
     } catch (err) {
       popupAjaxError(err);
     }

@@ -288,7 +288,7 @@ export default class ComposerMessages extends Component {
 
     this.set("checkedMessages", true);
 
-    messages.forEach((msg) => {
+    messages.content.forEach((msg) => {
       if (msg.wait_for_typing) {
         this.queuedForTyping.addObject(msg);
       } else {

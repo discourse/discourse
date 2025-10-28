@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 import UserNote from "../user-note";
@@ -61,7 +62,7 @@ export default class UserNotesModal extends Component {
     try {
       await note.save(args);
       await this.formApi.set("content", "");
-      this.args.model.note.insertAt(0, note);
+      this.args.model.note.unshift(note);
       this.#refreshCount();
     } catch (error) {
       popupAjaxError(error);
@@ -76,7 +77,7 @@ export default class UserNotesModal extends Component {
         note
           .destroyRecord()
           .then(() => {
-            this.args.model.note.removeObject(note);
+            removeValueFromArray(this.args.model.note, note);
             this.#refreshCount();
           })
           .catch(popupAjaxError);

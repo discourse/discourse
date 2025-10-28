@@ -1,4 +1,4 @@
-import { action } from "@ember/object";
+import { action, set } from "@ember/object";
 import { isPresent } from "@ember/utils";
 import { bind } from "discourse/lib/decorators";
 import DiscourseRoute from "discourse/routes/discourse";
@@ -51,7 +51,9 @@ export default class ReviewIndex extends DiscourseRoute {
       additionalFilters: meta.additional_filters || {},
     });
 
-    controller.reviewables.setEach("last_performing_username", null);
+    controller.reviewables.content.forEach((reviewable) =>
+      set(reviewable, "last_performing_username", null)
+    );
   }
 
   activate() {
@@ -71,7 +73,7 @@ export default class ReviewIndex extends DiscourseRoute {
   @bind
   _updateReviewables(data) {
     if (data.updates) {
-      this.controller.reviewables.forEach((reviewable) => {
+      this.controller.reviewables.content.forEach((reviewable) => {
         const updates = data.updates[reviewable.id];
         if (updates) {
           reviewable.setProperties(updates);

@@ -55,7 +55,7 @@ export default class AiFeatures extends Component {
       return [];
     }
 
-    let features = this.args.features.toArray();
+    let features = this.args.features;
 
     if (this.selectedFeatureGroup === CONFIGURED) {
       features = features.filter((feature) => feature.module_enabled === true);

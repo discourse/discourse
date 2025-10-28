@@ -573,7 +573,7 @@ export default class PostMenu extends Component {
       post_action_type_id: LIKE_ACTION,
     });
 
-    this.likedUsers = users.map(smallUserAttrs);
+    this.likedUsers = users.content.map(smallUserAttrs);
     this.totalLikedUsers = users.totalRows;
     this.isWhoLikedVisible = true;
   }
@@ -583,7 +583,7 @@ export default class PostMenu extends Component {
       id: this.args.post.id,
     });
 
-    this.readers = users.map(smallUserAttrs);
+    this.readers = users.content.map(smallUserAttrs);
     this.totalReaders = users.totalRows;
     this.isWhoReadVisible = true;
   }
