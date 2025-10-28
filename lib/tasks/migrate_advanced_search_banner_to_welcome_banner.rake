@@ -3,26 +3,12 @@
 THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git"
 REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead]
 
-desc "Exclude and disable Advanced Search Banner theme component"
-task "themes:advanced_search_banner:exclude_and_disable" => :environment do
-  components = find_all_components
-
-  if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found.\e[0m"
-    next
-  end
-
-  components.each { |entry| process_theme_component(entry[:theme]) }
-
-  puts "\n\e[1;34mTask completed successfully!\e[0m"
-end
-
 desc "Migrate settings from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
   components = find_all_components(:theme_settings)
 
   if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found.\e[0m"
+    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
     next
   end
 
@@ -36,7 +22,7 @@ task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :
   components = find_all_components(:theme_translation_overrides)
 
   if components.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components found.\e[0m"
+    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
     next
   end
 
@@ -45,8 +31,22 @@ task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :
   puts "\n\e[1;34mTask completed successfully!\e[0m"
 end
 
+desc "Exclude and disable Advanced Search Banner theme component"
+task "themes:advanced_search_banner:exclude_and_disable" => :environment do
+  components = find_all_components({ parent_theme_relation: :parent_theme })
+
+  if components.empty?
+    puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
+    next
+  end
+
+  components.each { |entry| process_theme_component(entry[:theme]) }
+
+  puts "\n\e[1;34mTask completed successfully!\e[0m"
+end
+
 # Common helper methods
-def find_all_components(includes = nil)
+def find_all_components(includes)
   if ENV["RAILS_DB"].present?
     db = validate_and_get_db(ENV["RAILS_DB"])
     RailsMultisite::ConnectionManagement.establish_connection(db: db)
@@ -64,7 +64,7 @@ def validate_and_get_db(db)
   return db if RailsMultisite::ConnectionManagement.has_db?(db)
 
   default_db = RailsMultisite::ConnectionManagement::DEFAULT
-  puts "\e[31mDatabase \e[1;101m[#{db}]\e[0m \e[31mnot found.\e[0m"
+  puts "\e[31m✗ Database \e[1;101m[#{db}]\e[0m \e[31mnot found\e[0m"
   puts "Using default database instead: \e[1;104m[#{default_db}]\e[0m\n\n"
   default_db
 end
@@ -73,19 +73,11 @@ def wrap_themes_with_db(themes, db)
   themes.map { |theme| { db: db, theme: theme } }
 end
 
-def find_components_in_db(db, includes = nil)
+def find_components_in_db(db, includes)
   puts "Accessing database: \e[1;104m[#{db}]\e[0m"
   puts "  Searching for Advanced Search Banner components..."
 
-  query = RemoteTheme.where(remote_url: THEME_GIT_URL)
-
-  if includes
-    query = query.includes(theme: includes)
-  else
-    query = query.includes(theme: { parent_theme_relation: :parent_theme })
-  end
-
-  themes = query.map(&:theme)
+  themes = RemoteTheme.where(remote_url: THEME_GIT_URL).includes(theme: includes).map(&:theme)
 
   themes.each { |theme| puts "  \e[1;34mFound: #{theme_identifier(theme)}" }
   themes
@@ -93,35 +85,6 @@ end
 
 def theme_identifier(theme)
   "\e[1m#{theme.name} (ID: #{theme.id})\e[0m"
-end
-
-# Exclude and disable methods
-def process_theme_component(theme)
-  exclude_theme_component(theme)
-  disable_theme_component(theme)
-end
-
-def exclude_theme_component(theme)
-  parent_relations = theme.parent_theme_relation.to_a
-  total_relations = parent_relations.size
-
-  if parent_relations.empty?
-    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes\e[0m"
-    return
-  end
-
-  puts "\n  Excluding #{theme_identifier(theme)} from:"
-  parent_relations.each do |relation|
-    puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
-    # relation.destroy!
-  end
-  puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
-end
-
-def disable_theme_component(theme)
-  puts "\n  Disabling #{theme_identifier(theme)}..."
-  # theme.update!(enabled: false)
-  puts "  \e[1;32m✓ Disabled\e[0m"
 end
 
 # Settings migration methods
@@ -228,7 +191,8 @@ def process_theme_component_translations(theme)
       end
     end
   else
-    puts "  ✗ No translation overrides found. Migrating Advanced Search Banner's default translations..."
+    puts "  \e[33m✗ No translation overrides found\e[0m"
+    puts "  Migrating Advanced Search Banner's default translations..."
     REQUIRED_TRANSLATION_KEYS.each do |required_key|
       count = migrate_translations(key: required_key)
       migrated_count += count
@@ -282,4 +246,67 @@ def map_translation_keys(translation_key)
   }
 
   translations_mapping[translation_key] || []
+end
+
+# Exclude and disable methods
+def process_theme_component(theme)
+  exclude_theme_component(theme)
+  enable_welcome_banner(theme)
+  disable_theme_component(theme)
+end
+
+def exclude_theme_component(theme)
+  parent_relations = theme.parent_theme_relation.to_a
+  total_relations = parent_relations.size
+
+  if parent_relations.empty?
+    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes\e[0m"
+    return
+  end
+
+  puts "\n  Excluding #{theme_identifier(theme)} from..."
+  parent_relations.each do |relation|
+    puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
+    # relation.destroy!
+  end
+  puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
+end
+
+def enable_welcome_banner(theme)
+  return unless theme.enabled
+
+  parent_relations = theme.parent_theme_relation.to_a
+  return if parent_relations.empty?
+
+  puts "\n  Enabling \e[1mcore welcome banner\e[0m for themes..."
+  enabled_count = 0
+
+  parent_relations.each do |relation|
+    parent_theme = relation.parent_theme
+    site_setting =
+      ThemeSiteSetting.find_by(theme_id: parent_theme.id, name: "enable_welcome_banner", value: "f")
+
+    if site_setting
+      site_setting.update!(value: "t")
+      puts "    - #{parent_theme.name} (ID: #{parent_theme.id}) - \e[1;32m✓ enabled\e[0m"
+      enabled_count += 1
+    end
+  end
+
+  if enabled_count > 0
+    puts "  \e[1;32m✓ Enabled core welcome banner for #{enabled_count} theme#{"s" if enabled_count > 1}\e[0m"
+  else
+    puts "  \e[33m✗ No themes required enabling core welcome banner\e[0m"
+  end
+end
+
+def disable_theme_component(theme)
+  if !theme.enabled
+    puts "\n  \e[33m#{theme_identifier(theme)} was already disabled. Skipping disable step.\e[0m"
+    return
+  end
+
+  puts "\n  Disabling #{theme_identifier(theme)}..."
+  theme.update!(enabled: false)
+  puts "  \e[1;32m✓ Disabled\e[0m"
 end
