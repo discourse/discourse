@@ -1,67 +1,94 @@
 # frozen_string_literal: true
 
+THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git"
+
 desc "Exclude and disable Advanced Search Banner theme component"
 task "themes:advanced_search_banner:exclude_and_disable" => :environment do
-  advanced_search_banners = []
+  components = find_all_components
 
-  if ENV["RAILS_DB"].present?
-    advanced_search_banners = find_theme_components(ENV["RAILS_DB"])
-  else
-    RailsMultisite::ConnectionManagement.each_connection do |db|
-      found = find_theme_components(db)
-      advanced_search_banners.concat(found.map { |asb| { db: db, asb: asb } })
-    end
+  if components.empty?
+    puts "\n\e[33m✗ No Advanced Search Banner theme components found.\e[0m"
+    next
   end
 
-  if advanced_search_banners.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components were found.\e[0m"
+  components.each { |entry| process_theme_component(entry[:theme]) }
+
+  puts "\n\e[1;34mTask completed successfully!\e[0m"
+end
+
+def find_all_components
+  if ENV["RAILS_DB"].present?
+    db = validate_and_get_db(ENV["RAILS_DB"])
+    RailsMultisite::ConnectionManagement.establish_connection(db: db)
+    wrap_themes_with_db(find_components_in_db(db), db)
   else
-    advanced_search_banners.each do |entry|
-      if entry.is_a?(Hash) && entry[:db]
-        puts "\nDatabase: \e[1;104m[#{entry[:db]}]\e[0m"
-        theme_data = entry[:asb]
-        exclude_theme_component(theme_data)
-        disable_theme_component(theme_data)
-      else
-        exclude_theme_component(entry)
-        disable_theme_component(entry)
-      end
+    components = []
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      components.concat(wrap_themes_with_db(find_components_in_db(db), db))
     end
-    puts "\n\e[1;32m✓ The task completed successfully!\e[0m"
+    components
   end
 end
 
-def find_theme_components(db)
+def validate_and_get_db(db)
+  return db if RailsMultisite::ConnectionManagement.has_db?(db)
+
+  default_db = RailsMultisite::ConnectionManagement::DEFAULT
+  puts "\e[31mDatabase \e[1;101m[#{db}]\e[0m \e[31mnot found.\e[0m"
+  puts "Using default database instead: \e[1;104m[#{default_db}]\e[0m\n\n"
+  default_db
+end
+
+def wrap_themes_with_db(themes, db)
+  themes.map { |theme| { db: db, theme: theme } }
+end
+
+def find_components_in_db(db)
   puts "Accessing database: \e[1;104m[#{db}]\e[0m"
+  puts "  Searching for Advanced Search Banner components..."
 
-  advanced_search_banners = []
+  themes =
+    RemoteTheme
+      .where(remote_url: THEME_GIT_URL)
+      .includes(theme: { parent_theme_relation: :parent_theme })
+      .map(&:theme)
 
-  puts "  Searching for Advanced Search Banner theme components..."
-  RemoteTheme
-    .where(remote_url: "https://github.com/discourse/discourse-search-banner.git")
-    .includes(theme: { parent_theme_relation: :parent_theme })
-    .each do |remote_theme|
-      theme = remote_theme.theme
+  themes.each { |theme| puts "  \e[1;34mFound: #{theme_identifier(theme)}" }
+  themes
+end
 
-      puts "  \e[1;32m✓ Found: #{theme.name} (ID: #{theme.id})\e[0m"
+def print_database_header(db)
+  puts "\nDatabase: \e[1;104m[#{db}]\e[0m"
+end
 
-      advanced_search_banners << theme
-    end
+def theme_identifier(theme)
+  "\e[1m#{theme.name} (ID: #{theme.id})\e[0m"
+end
 
-  advanced_search_banners
+def process_theme_component(theme)
+  exclude_theme_component(theme)
+  disable_theme_component(theme)
 end
 
 def exclude_theme_component(theme)
-  puts "\n  Excluding #{theme.name} (ID: #{theme.id}) from themes..."
-  theme.parent_theme_relation.each do |child_theme|
-    puts "    #{child_theme.parent_theme.name} (ID: #{child_theme.parent_theme_id})"
-    # child_theme.destroy!
+  parent_relations = theme.parent_theme_relation.to_a
+  total_relations = parent_relations.size
+
+  if parent_relations.empty?
+    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes\e[0m"
+    return
   end
-  puts "\e[1;32m✓ Excluded: #{theme.name} (ID: #{theme.id}) from #{theme.parent_theme_relation.length} themes\e[0m"
+
+  puts "\n  Excluding #{theme_identifier(theme)} from:"
+  parent_relations.each do |relation|
+    puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
+    # relation.destroy!
+  end
+  puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
 end
 
 def disable_theme_component(theme)
-  puts "\n  Disabling #{theme.name} (ID: #{theme.id})..."
+  puts "\n  Disabling #{theme_identifier(theme)}..."
   # theme.update!(enabled: false)
-  puts "\e[1;33m⚠ Disabled: #{theme.name} (ID: #{theme.id})\e[0m"
+  puts "  \e[1;32m✓ Disabled\e[0m"
 end
