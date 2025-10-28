@@ -110,7 +110,7 @@ class TopicsFilter
             SELECT topic_id
             FROM post_search_data
             JOIN posts ON posts.id = post_search_data.post_id
-            WHERE search_data @@ #{ts_query}
+            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")}
           )
         SQL
     end
