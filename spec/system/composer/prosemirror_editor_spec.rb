@@ -795,6 +795,29 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value("![image|244x66](upload://hGLky57lMjXvqCWRhcsH31ShzmO.png)")
     end
 
+    it "avoids triggering upload when unauthorized" do
+      SiteSetting.authorized_extensions = ""
+
+      valid_png_data_uri =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+
+      cdp.allow_clipboard
+
+      open_composer
+
+      html = <<~HTML
+          <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
+        HTML
+
+      cdp.copy_paste(html, html: true)
+
+      expect(rich).to have_no_css("img")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("")
+    end
+
     it "merges text with link marks created from parsing" do
       cdp.allow_clipboard
       open_composer
