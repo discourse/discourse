@@ -106,7 +106,6 @@ RSpec.describe InviteMailer do
           )
 
           mail = InviteMailer.send_invite(invite)
-          #expect(mail.subject).to eq("[Discourse] Custom Invite from Bruce Wayne (bruce0)")
           expect(mail.subject).to eq(
             I18n.t(
               "#{custom_template}.subject_template",
