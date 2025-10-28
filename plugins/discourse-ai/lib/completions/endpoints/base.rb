@@ -135,6 +135,7 @@ module DiscourseAi
 
           cancel_manager_callback = nil
           cancelled = false
+          call_status = :error
 
           FinalDestination::HTTP.start(
             model_uri.host,
@@ -228,6 +229,7 @@ module DiscourseAi
                     response_raw: response_raw,
                     structured_output: structured_output,
                   )
+                call_status = :success
                 return response_data
               end
 
@@ -270,6 +272,7 @@ module DiscourseAi
                   blk.call("")
                 end
               end
+              call_status = :success
               return response_data
             ensure
               if log
@@ -286,6 +289,16 @@ module DiscourseAi
                   feature_name,
                   log.request_tokens,
                   log.response_tokens,
+                )
+
+                # Record Prometheus metrics
+                DiscourseAi::Completions::LlmMetric.record(
+                  llm_model: @llm_model,
+                  feature_name: feature_name,
+                  request_tokens: log.request_tokens || 0,
+                  response_tokens: log.response_tokens || 0,
+                  duration_ms: log.duration_msecs,
+                  status: call_status,
                 )
 
                 if Rails.env.development? && ENV["DISCOURSE_AI_DEBUG"]
