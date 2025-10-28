@@ -27,7 +27,7 @@ module Chat
       return if !SiteSetting.create_thumbnails
 
       @model.uploads.each do |upload|
-        next if upload.blank? || IMG_FILETYPES.exclude?(upload.extension.downcase)
+        next if upload.blank? || IMG_FILETYPES.exclude?(upload.extension&.downcase)
 
         if upload.width <= SiteSetting.max_image_width &&
              upload.height <= SiteSetting.max_image_height
