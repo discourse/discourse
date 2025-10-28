@@ -580,7 +580,6 @@ module CookedProcessorMixin
     a = create_link_node("lightbox", src)
     img.add_next_sibling(a)
 
-    a["data-cropped"] = "true" if crop
     a["data-download-href"] = Discourse.store.download_url(upload) if upload
 
     a.add_child(img)
