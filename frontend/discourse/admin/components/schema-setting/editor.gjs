@@ -10,32 +10,34 @@ import { cloneJSON } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 import Tree from "admin/components/schema-setting/editor/tree";
 import FieldInput from "admin/components/schema-setting/field";
+import { trackedArray } from "../../../app/lib/tracked-tools";
 
 export default class SchemaSettingNewEditor extends Component {
   @service router;
   @service dialog;
 
-  @tracked history = [];
   @tracked activeIndex = 0;
-  @tracked activeDataPaths = [];
-  @tracked activeSchemaPaths = [];
   @tracked saveButtonDisabled = false;
   @tracked validationErrorMessage;
+  @trackedArray activeDataPaths = [];
+  @trackedArray activeSchemaPaths = [];
+  @trackedArray history = [];
+
   inputFieldObserver = new Map();
   data = cloneJSON(this.args.setting.value);
   schema = this.args.schema;
 
   @action
   onChildClick(index, propertyName, parentNodeIndex) {
-    this.history.pushObject({
+    this.history.push({
       dataPaths: [...this.activeDataPaths],
       schemaPaths: [...this.activeSchemaPaths],
       index: this.activeIndex,
     });
 
     this.activeIndex = index;
-    this.activeDataPaths.pushObjects([parentNodeIndex, propertyName]);
-    this.activeSchemaPaths.pushObject(propertyName);
+    this.activeDataPaths.push(parentNodeIndex, propertyName);
+    this.activeSchemaPaths.push(propertyName);
     this.inputFieldObserver.clear();
   }
 
@@ -66,7 +68,7 @@ export default class SchemaSettingNewEditor extends Component {
       return;
     }
 
-    const lastHistory = this.history[this.history.length - 1];
+    const lastHistory = this.history.at(-1);
 
     return i18n("admin.customize.schema.back_button", {
       name: this.generateSchemaTitle(
@@ -179,7 +181,7 @@ export default class SchemaSettingNewEditor extends Component {
       dataPaths: lastDataPaths,
       schemaPaths: lastSchemaPaths,
       index: lastIndex,
-    } = this.history.popObject();
+    } = this.history.pop();
 
     this.activeDataPaths = lastDataPaths;
     this.activeSchemaPaths = lastSchemaPaths;
