@@ -23,6 +23,11 @@ en:
     default_step_title: "Importing %{type}"
     loading_required_data: "Loading required data..."
     done: "Done. Total runtime: %{runtime}"
+    fallback_names:
+      user: "user"
+      group: "group"
+      category: "Category"
+      badge: "Badge"
 
   schema:
     validator:

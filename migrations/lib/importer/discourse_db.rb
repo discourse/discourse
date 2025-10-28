@@ -140,7 +140,7 @@ module Migrations::Importer
       {
         host: db_config[:host],
         port: db_config[:port],
-        username: db_config[:username] || username,
+        user: db_config[:username] || username,
         password: db_config[:password] || password,
         dbname: db_config[:database],
       }.compact
