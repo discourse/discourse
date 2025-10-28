@@ -7,6 +7,10 @@ export default function ({ types: t }) {
         if (moduleName.startsWith("admin/")) {
           path.node.source = t.stringLiteral(`discourse/${moduleName}`);
         }
+
+        if (moduleName.startsWith(".") && moduleName.match(/\.g?js$/)) {
+          path.node.source = t.stringLiteral(moduleName.replace(/\.g?js$/, ""));
+        }
       },
     },
   };

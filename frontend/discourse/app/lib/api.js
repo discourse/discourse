@@ -1,5 +1,4 @@
-// @ts-check
-import { withPluginApi } from "discourse/lib/plugin-api";
+import { withPluginApi } from "./plugin-api.gjs";
 
 let _apiInitializerId = 0;
 
