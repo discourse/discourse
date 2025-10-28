@@ -15,6 +15,7 @@ import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import Group from "discourse/models/group";
 import { i18n } from "discourse-i18n";
@@ -87,7 +88,7 @@ export default class UpcomingChangeItem extends Component {
     this.args.change.value = !this.args.change.value;
     this.toggleSettingDisabled = true;
 
-    setTimeout(() => {
+    discourseLater(() => {
       this.toggleSettingDisabled = false;
     }, 3000);
 

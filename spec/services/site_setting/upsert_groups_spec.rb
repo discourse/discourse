@@ -129,6 +129,19 @@ RSpec.describe SiteSetting::UpsertGroups do
           SiteSetting.expects(:refresh_site_setting_group_ids!).once
           result
         end
+
+        it "creates an entry in the staff action logs with previous value and empty new value" do
+          expect { result }.to change {
+            UserHistory.where(
+              action: UserHistory.actions[:change_site_setting_groups],
+              subject: setting,
+            ).count
+          }.by(1)
+
+          history = UserHistory.where(subject: setting).last
+          expect(history.previous_value).to eq("10|13")
+          expect(history.new_value).to eq("")
+        end
       end
     end
   end
