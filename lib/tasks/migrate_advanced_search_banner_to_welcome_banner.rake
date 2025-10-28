@@ -1,0 +1,285 @@
+# frozen_string_literal: true
+
+THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git"
+REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead]
+
+desc "Exclude and disable Advanced Search Banner theme component"
+task "themes:advanced_search_banner:exclude_and_disable" => :environment do
+  components = find_all_components
+
+  if components.empty?
+    puts "\n\e[33m✗ No Advanced Search Banner theme components found.\e[0m"
+    next
+  end
+
+  components.each { |entry| process_theme_component(entry[:theme]) }
+
+  puts "\n\e[1;34mTask completed successfully!\e[0m"
+end
+
+desc "Migrate settings from Advanced Search Banner to core welcome banner"
+task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
+  components = find_all_components(:theme_settings)
+
+  if components.empty?
+    puts "\n\e[33m✗ No Advanced Search Banner theme components found.\e[0m"
+    next
+  end
+
+  components.each { |entry| process_theme_component_settings(entry[:theme]) }
+
+  puts "\n\e[1;34mTask completed successfully!\e[0m"
+end
+
+desc "Migrate translations from Advanced Search Banner to core welcome banner"
+task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :environment do
+  components = find_all_components(:theme_translation_overrides)
+
+  if components.empty?
+    puts "\n\e[33m✗ No Advanced Search Banner theme components found.\e[0m"
+    next
+  end
+
+  components.each { |entry| process_theme_component_translations(entry[:theme]) }
+
+  puts "\n\e[1;34mTask completed successfully!\e[0m"
+end
+
+# Common helper methods
+def find_all_components(includes = nil)
+  if ENV["RAILS_DB"].present?
+    db = validate_and_get_db(ENV["RAILS_DB"])
+    RailsMultisite::ConnectionManagement.establish_connection(db: db)
+    wrap_themes_with_db(find_components_in_db(db, includes), db)
+  else
+    components = []
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      components.concat(wrap_themes_with_db(find_components_in_db(db, includes), db))
+    end
+    components
+  end
+end
+
+def validate_and_get_db(db)
+  return db if RailsMultisite::ConnectionManagement.has_db?(db)
+
+  default_db = RailsMultisite::ConnectionManagement::DEFAULT
+  puts "\e[31mDatabase \e[1;101m[#{db}]\e[0m \e[31mnot found.\e[0m"
+  puts "Using default database instead: \e[1;104m[#{default_db}]\e[0m\n\n"
+  default_db
+end
+
+def wrap_themes_with_db(themes, db)
+  themes.map { |theme| { db: db, theme: theme } }
+end
+
+def find_components_in_db(db, includes = nil)
+  puts "Accessing database: \e[1;104m[#{db}]\e[0m"
+  puts "  Searching for Advanced Search Banner components..."
+
+  query = RemoteTheme.where(remote_url: THEME_GIT_URL)
+
+  if includes
+    query = query.includes(theme: includes)
+  else
+    query = query.includes(theme: { parent_theme_relation: :parent_theme })
+  end
+
+  themes = query.map(&:theme)
+
+  themes.each { |theme| puts "  \e[1;34mFound: #{theme_identifier(theme)}" }
+  themes
+end
+
+def theme_identifier(theme)
+  "\e[1m#{theme.name} (ID: #{theme.id})\e[0m"
+end
+
+# Exclude and disable methods
+def process_theme_component(theme)
+  exclude_theme_component(theme)
+  disable_theme_component(theme)
+end
+
+def exclude_theme_component(theme)
+  parent_relations = theme.parent_theme_relation.to_a
+  total_relations = parent_relations.size
+
+  if parent_relations.empty?
+    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes\e[0m"
+    return
+  end
+
+  puts "\n  Excluding #{theme_identifier(theme)} from:"
+  parent_relations.each do |relation|
+    puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
+    # relation.destroy!
+  end
+  puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
+end
+
+def disable_theme_component(theme)
+  puts "\n  Disabling #{theme_identifier(theme)}..."
+  # theme.update!(enabled: false)
+  puts "  \e[1;32m✓ Disabled\e[0m"
+end
+
+# Settings migration methods
+SETTINGS_MAPPING = {
+  "show_on" => {
+    site_setting: "welcome_banner_page_visibility",
+    value_mapping: {
+      "top_menu" => "top_menu_pages",
+      "all_pages" => "all_pages",
+    },
+  },
+  "plugin_outlet" => {
+    site_setting: "welcome_banner_location",
+    value_mapping: {
+      "above-main-container" => "above_topic_content",
+      "below-site-header" => "below_site_header",
+    },
+  },
+  "background_image_light" => {
+    site_setting: "welcome_banner_image",
+    value_mapping: nil,
+  },
+}
+
+def process_theme_component_settings(theme)
+  puts "\n  Migrating settings for #{theme_identifier(theme)}..."
+  migrated_count = migrate_theme_settings_to_site_settings(theme.theme_settings)
+  puts "  \e[1;32m✓ Migrated #{migrated_count} setting#{"s" if migrated_count != 1}\e[0m"
+end
+
+def migrate_theme_settings_to_site_settings(theme_settings)
+  migrated_count = 0
+
+  theme_settings.each do |ts|
+    mapping = SETTINGS_MAPPING[ts.name]
+    next unless mapping
+
+    site_setting_name = mapping[:site_setting]
+    next if ts.value.blank?
+
+    if mapping[:value_mapping]
+      new_value = mapping[:value_mapping][ts.value] || ts.value
+    else
+      new_value = ts.value.to_i
+    end
+
+    begin
+      SiteSetting.set_and_log(
+        site_setting_name,
+        new_value,
+        Discourse.system_user,
+        "Migrated from the deprecated Advanced Search Banner",
+      )
+
+      old_text = "\e[0;31m#{ts.name}: #{ts.value}\e[0m"
+      arrow = "\e[0m=>\e[0m"
+      new_text = "\e[0;32m#{site_setting_name}: #{new_value}\e[0m"
+
+      puts "    - #{old_text} #{arrow} #{new_text}"
+      migrated_count += 1
+    rescue StandardError => e
+      puts "    \e[1;31m✗ Failed to migrate #{ts.name}: #{e.message}\e[0m"
+    end
+  end
+
+  migrated_count
+end
+
+# Translations migration methods
+def process_theme_component_translations(theme)
+  puts "\n  Migrating translation overrides for #{theme_identifier(theme)}..."
+
+  migrated_count = 0
+
+  if theme.theme_translation_overrides.any?
+    processed_keys_by_locale = Hash.new { |h, k| h[k] = Set.new }
+
+    theme.theme_translation_overrides.each do |override|
+      count =
+        migrate_translations(
+          locale: override.locale,
+          key: override.translation_key,
+          value: override.value,
+        )
+      migrated_count += count
+
+      processed_keys_by_locale[override.locale].add(override.translation_key)
+    end
+
+    shown = false
+    processed_keys_by_locale.each do |locale, processed_keys|
+      missing_keys = REQUIRED_TRANSLATION_KEYS - processed_keys.to_a
+
+      if missing_keys.any?
+        unless shown
+          puts "  Migrating Advanced Search Banner's default translations..."
+          shown = true
+        end
+
+        missing_keys.each do |missing_key|
+          count = migrate_translations(locale: locale, key: missing_key)
+          migrated_count += count
+        end
+      end
+    end
+  else
+    puts "  ✗ No translation overrides found. Migrating Advanced Search Banner's default translations..."
+    REQUIRED_TRANSLATION_KEYS.each do |required_key|
+      count = migrate_translations(key: required_key)
+      migrated_count += count
+    end
+  end
+
+  puts "  \e[1;32m✓ Migrated #{migrated_count} translation#{"s" if migrated_count != 1}\e[0m"
+end
+
+def migrate_translations(locale: "en", key:, value: nil)
+  default_translations = {
+    "js.welcome_banner.header.anonymous_members" => "Welcome to our community",
+    "js.welcome_banner.header.logged_in_members" => "Welcome to our community",
+    "js.welcome_banner.subheader.anonymous_members" =>
+      "We're happy to have you here. If you need help, please search before you post.",
+    "js.welcome_banner.subheader.logged_in_members" =>
+      "We're happy to have you here. If you need help, please search before you post.",
+  }
+  mapped_keys = map_translation_keys(key)
+
+  # Print the value once before processing all keys
+  first_key = mapped_keys.first
+  new_value = value || default_translations[first_key]
+  puts "    \e[1;32m✓\e[0m \e[1;94m\"#{new_value}\"\e[0m"
+
+  mapped_keys.each do |new_key|
+    actual_value = value || default_translations[new_key]
+    TranslationOverride.upsert!(locale, new_key, actual_value)
+
+    old_text = "\e[0;31m#{key}\e[0m"
+    arrow = "\e[0m=>\e[0m"
+    new_text = "\e[0;32m#{locale}.#{new_key}\e[0m"
+
+    puts "      - #{old_text} #{arrow} #{new_text}"
+  end
+
+  mapped_keys.count
+end
+
+def map_translation_keys(translation_key)
+  translations_mapping = {
+    "search_banner.headline" => %w[
+      js.welcome_banner.header.anonymous_members
+      js.welcome_banner.header.logged_in_members
+    ],
+    "search_banner.subhead" => %w[
+      js.welcome_banner.subheader.anonymous_members
+      js.welcome_banner.subheader.logged_in_members
+    ],
+    "search_banner.search_button_text" => ["js.welcome_banner.search_placeholder"],
+  }
+
+  translations_mapping[translation_key] || []
+end
