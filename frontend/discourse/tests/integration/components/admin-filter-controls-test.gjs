@@ -45,12 +45,11 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders text filter input", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
 
     await render(
       <template>
-        <AdminFilterControls @array={{self.data}} @inputPlaceholder="Search...">
+        <AdminFilterControls @array={{this.data}} @inputPlaceholder="Search...">
           <:content as |filteredData|>
             <div class="results">
               {{#each filteredData as |item|}}
@@ -71,15 +70,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("filters data by text (client-side)", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name", "description"]);
 
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @searchableProps={{self.searchableProps}}
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
           @inputPlaceholder="Search..."
         >
           <:content as |filteredData|>
@@ -104,15 +102,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("renders single dropdown filter", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
 
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @dropdownOptions={{self.dropdownOptions}}
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -131,15 +128,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("filters data by single dropdown (client-side)", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
 
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @dropdownOptions={{self.dropdownOptions}}
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -167,7 +163,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("combines text and dropdown filters (client-side)", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name", "description"]);
     this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
@@ -175,9 +170,9 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @searchableProps={{self.searchableProps}}
-          @dropdownOptions={{self.dropdownOptions}}
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -207,15 +202,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("shows reset button when filters are active", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
 
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @searchableProps={{self.searchableProps}}
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -243,15 +237,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("reset button clears filters", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
 
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @searchableProps={{self.searchableProps}}
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -280,12 +273,11 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("respects minItemsForFilter parameter", async function (assert) {
-    const self = this;
     this.set("data", [SAMPLE_DATA[0]]);
 
     await render(
       <template>
-        <AdminFilterControls @array={{self.data}} @minItemsForFilter={{2}}>
+        <AdminFilterControls @array={{this.data}} @minItemsForFilter={{2}}>
           <:content as |filteredData|>
             <div class="results">
               {{#each filteredData as |item|}}
@@ -306,7 +298,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("calls onTextFilterChange callback for server-side filtering", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("textFilterCallback", (event) => {
       assert.step(`text-filter:${event.target.value}`);
@@ -315,8 +306,8 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @onTextFilterChange={{self.textFilterCallback}}
+          @array={{this.data}}
+          @onTextFilterChange={{this.textFilterCallback}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -335,7 +326,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("calls onDropdownFilterChange callback for server-side filtering", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", [
       { label: "All", value: "all" },
@@ -348,9 +338,9 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @dropdownOptions={{self.dropdownOptions}}
-          @onDropdownFilterChange={{self.dropdownFilterCallback}}
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @onDropdownFilterChange={{this.dropdownFilterCallback}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -372,7 +362,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("calls onResetFilters callback for server-side filtering", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
     this.set("resetCallback", () => {
@@ -382,9 +371,9 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @searchableProps={{self.searchableProps}}
-          @onResetFilters={{self.resetCallback}}
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @onResetFilters={{this.resetCallback}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -404,7 +393,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("skips client-side filtering when server callbacks provided", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
     this.set("textFilterCallback", () => {});
@@ -412,9 +400,9 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @searchableProps={{self.searchableProps}}
-          @onTextFilterChange={{self.textFilterCallback}}
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @onTextFilterChange={{this.textFilterCallback}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -438,12 +426,11 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("yields to actions block", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
 
     await render(
       <template>
-        <AdminFilterControls @array={{self.data}}>
+        <AdminFilterControls @array={{this.data}}>
           <:actions>
             <button type="button" class="custom-action">Custom Action</button>
           </:actions>
@@ -464,12 +451,11 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("yields to aboveContent block", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
 
     await render(
       <template>
-        <AdminFilterControls @array={{self.data}}>
+        <AdminFilterControls @array={{this.data}}>
           <:aboveContent>
             <div class="above-content">Above Content Area</div>
           </:aboveContent>
@@ -490,15 +476,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("shows custom no results message", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
 
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @searchableProps={{self.searchableProps}}
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
           @noResultsMessage="No items found matching your criteria"
         >
           <:content as |filteredData|>
@@ -523,15 +508,14 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("does not show dropdown filter when only one option", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", [{ label: "All", value: "all" }]);
 
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @dropdownOptions={{self.dropdownOptions}}
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -550,7 +534,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("renders multiple dropdowns", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", {
       category: [
@@ -566,8 +549,8 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @dropdownOptions={{self.dropdownOptions}}
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -592,7 +575,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("filters data by multiple dropdowns (client-side)", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", {
       category: [
@@ -616,8 +598,8 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @dropdownOptions={{self.dropdownOptions}}
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -651,7 +633,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("resets multiple dropdowns correctly", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("searchableProps", ["name"]);
     this.set("dropdownOptions", {
@@ -668,9 +649,9 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @searchableProps={{self.searchableProps}}
-          @dropdownOptions={{self.dropdownOptions}}
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @dropdownOptions={{this.dropdownOptions}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -695,7 +676,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("calls onDropdownFilterChange with key and value for multiple dropdowns", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", {
       category: [
@@ -714,9 +694,9 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @dropdownOptions={{self.dropdownOptions}}
-          @onDropdownFilterChange={{self.dropdownFilterCallback}}
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @onDropdownFilterChange={{this.dropdownFilterCallback}}
         >
           <:content as |filteredData|>
             <div class="results">
@@ -739,7 +719,6 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
   });
 
   test("supports custom default values for multiple dropdowns", async function (assert) {
-    const self = this;
     this.set("data", SAMPLE_DATA);
     this.set("dropdownOptions", {
       category: [
@@ -756,9 +735,9 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     await render(
       <template>
         <AdminFilterControls
-          @array={{self.data}}
-          @dropdownOptions={{self.dropdownOptions}}
-          @defaultDropdownValue={{self.defaultDropdownValue}}
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @defaultDropdownValue={{this.defaultDropdownValue}}
         >
           <:content as |filteredData|>
             <div class="results">
