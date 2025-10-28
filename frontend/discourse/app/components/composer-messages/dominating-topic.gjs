@@ -1,24 +1,25 @@
+import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import RouteTemplate from "ember-route-template";
 import ComposerTipCloseButton from "discourse/components/composer-tip-close-button";
 import DButton from "discourse/components/d-button";
 
-export default RouteTemplate(
+export default class DominatingTopicComposerMessage extends Component {
+  @service currentUser;
+
   <template>
-    <ComposerTipCloseButton
-      @action={{fn @controller.closeMessage @controller.message}}
-    />
+    <ComposerTipCloseButton @action={{fn @closeMessage @message}} />
 
-    {{htmlSafe @controller.message.body}}
+    {{htmlSafe @message.body}}
 
-    {{#if @controller.currentUser.can_invite_to_forum}}
+    {{#if this.currentUser.can_invite_to_forum}}
       <DButton
         @label="footer_nav.share"
         @icon="link"
-        @action={{@controller.shareModal}}
+        @action={{@shareModal}}
         class="btn-primary"
       />
     {{/if}}
   </template>
-);
+}

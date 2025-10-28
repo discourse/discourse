@@ -7,6 +7,7 @@ export default [
       "qunit/no-assert-equal": "error",
       "qunit/no-loose-assertions": "error",
       "ember/no-classic-components": "error",
+      "discourse/no-route-template": "error",
     },
   },
   {

@@ -8,37 +8,31 @@ module("Integration | Component | user-info", function (hooks) {
   setupRenderingTest(hooks);
 
   test("prioritized name", async function (assert) {
-    const self = this;
-
     this.siteSettings.prioritize_username_in_ux = false;
     this.currentUser.name = "Evil Trout";
 
-    await render(<template><UserInfo @user={{self.currentUser}} /></template>);
+    await render(<template><UserInfo @user={{this.currentUser}} /></template>);
 
     assert.dom(".name").hasText("Evil Trout");
     assert.dom(".username").hasText("eviltrout");
   });
 
   test("prioritized username", async function (assert) {
-    const self = this;
-
     this.siteSettings.prioritize_username_in_ux = true;
     this.currentUser.name = "Evil Trout";
 
-    await render(<template><UserInfo @user={{self.currentUser}} /></template>);
+    await render(<template><UserInfo @user={{this.currentUser}} /></template>);
 
     assert.dom(".username").hasText("eviltrout");
     assert.dom(".name").hasText("Evil Trout");
   });
 
   test("includeLink", async function (assert) {
-    const self = this;
-
     await render(
       <template>
         <UserInfo
-          @user={{self.currentUser}}
-          @includeLink={{self.includeLink}}
+          @user={{this.currentUser}}
+          @includeLink={{this.includeLink}}
         />
       </template>
     );
@@ -53,13 +47,11 @@ module("Integration | Component | user-info", function (hooks) {
   });
 
   test("includeAvatar", async function (assert) {
-    const self = this;
-
     await render(
       <template>
         <UserInfo
-          @user={{self.currentUser}}
-          @includeAvatar={{self.includeAvatar}}
+          @user={{this.currentUser}}
+          @includeAvatar={{this.includeAvatar}}
         />
       </template>
     );
@@ -72,14 +64,12 @@ module("Integration | Component | user-info", function (hooks) {
   });
 
   test("shows status if enabled and user has status", async function (assert) {
-    const self = this;
-
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
       <template>
-        <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
+        <UserInfo @user={{this.currentUser}} @showStatus={{true}} />
       </template>
     );
 
@@ -87,13 +77,11 @@ module("Integration | Component | user-info", function (hooks) {
   });
 
   test("doesn't show status if enabled but user doesn't have status", async function (assert) {
-    const self = this;
-
     this.currentUser.name = "Evil Trout";
 
     await render(
       <template>
-        <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
+        <UserInfo @user={{this.currentUser}} @showStatus={{true}} />
       </template>
     );
 
@@ -101,14 +89,12 @@ module("Integration | Component | user-info", function (hooks) {
   });
 
   test("doesn't show status if disabled", async function (assert) {
-    const self = this;
-
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
       <template>
-        <UserInfo @user={{self.currentUser}} @showStatus={{false}} />
+        <UserInfo @user={{this.currentUser}} @showStatus={{false}} />
       </template>
     );
 
@@ -116,25 +102,21 @@ module("Integration | Component | user-info", function (hooks) {
   });
 
   test("doesn't show status by default", async function (assert) {
-    const self = this;
-
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
-    await render(<template><UserInfo @user={{self.currentUser}} /></template>);
+    await render(<template><UserInfo @user={{this.currentUser}} /></template>);
 
     assert.dom(".user-status-message").doesNotExist();
   });
 
   test("doesn't show status description by default", async function (assert) {
-    const self = this;
-
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
       <template>
-        <UserInfo @user={{self.currentUser}} @showStatus={{true}} />
+        <UserInfo @user={{this.currentUser}} @showStatus={{true}} />
       </template>
     );
 
@@ -144,15 +126,13 @@ module("Integration | Component | user-info", function (hooks) {
   });
 
   test("shows status description if enabled", async function (assert) {
-    const self = this;
-
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
       <template>
         <UserInfo
-          @user={{self.currentUser}}
+          @user={{this.currentUser}}
           @showStatus={{true}}
           @showStatusDescription={{true}}
         />
@@ -165,14 +145,12 @@ module("Integration | Component | user-info", function (hooks) {
   });
 
   test("shows status tooltip if enabled", async function (assert) {
-    const self = this;
-
     this.currentUser.name = "Evil Trout";
     this.currentUser.status = { emoji: "tooth", description: "off to dentist" };
 
     await render(
       <template>
-        <UserInfo @user={{self.currentUser}} @showStatus={{true}} /><DTooltips
+        <UserInfo @user={{this.currentUser}} @showStatus={{true}} /><DTooltips
         />
       </template>
     );

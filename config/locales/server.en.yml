@@ -2754,6 +2754,7 @@ en:
     experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
     experimental_impersonation: "Impersonate a user without having to log out of your admin account."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
+    experimental_lightbox: "Use PhotoSwipe to lightbox larger images."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
     about_page_hidden_groups: "Do not show members of specific groups on the /about page."

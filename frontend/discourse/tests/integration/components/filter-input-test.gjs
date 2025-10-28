@@ -39,14 +39,12 @@ module("Integration | Component | FilterInput", function (hooks) {
   });
 
   test("Filter action", async function (assert) {
-    const self = this;
-
     this.set("value", null);
     this.set("action", (event) => {
       this.set("value", event.target.value);
     });
     await render(
-      <template><FilterInput @filterAction={{self.action}} /></template>
+      <template><FilterInput @filterAction={{this.action}} /></template>
     );
     await fillIn(".filter-input", "foo");
 
@@ -54,10 +52,8 @@ module("Integration | Component | FilterInput", function (hooks) {
   });
 
   test("Focused state", async function (assert) {
-    const self = this;
-
     await render(
-      <template><FilterInput @filterAction={{self.action}} /></template>
+      <template><FilterInput @filterAction={{this.action}} /></template>
     );
     await triggerEvent(".filter-input", "focusin");
 
@@ -69,13 +65,11 @@ module("Integration | Component | FilterInput", function (hooks) {
   });
 
   test("Clear button visibility", async function (assert) {
-    const self = this;
-
     this.set("clearAction", () => {});
     this.set("value", "test");
     await render(
       <template>
-        <FilterInput @onClearInput={{self.clearAction}} @value={{self.value}} />
+        <FilterInput @onClearInput={{this.clearAction}} @value={{this.value}} />
       </template>
     );
 
@@ -87,15 +81,13 @@ module("Integration | Component | FilterInput", function (hooks) {
   });
 
   test("onClearInput callback", async function (assert) {
-    const self = this;
-
     this.set("called", false);
     this.set("clearAction", () => {
       this.set("called", true);
     });
     await render(
       <template>
-        <FilterInput @onClearInput={{self.clearAction}} @value="test" />
+        <FilterInput @onClearInput={{this.clearAction}} @value="test" />
       </template>
     );
     await click(".filter-input-clear-btn");
@@ -104,12 +96,10 @@ module("Integration | Component | FilterInput", function (hooks) {
   });
 
   test("Input focus after clear", async function (assert) {
-    const self = this;
-
     this.set("clearAction", () => {});
     await render(
       <template>
-        <FilterInput @onClearInput={{self.clearAction}} @value="test" />
+        <FilterInput @onClearInput={{this.clearAction}} @value="test" />
       </template>
     );
     await click(".filter-input-clear-btn");

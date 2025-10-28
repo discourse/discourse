@@ -118,15 +118,13 @@ module(
     });
 
     test("changing date/time updates the input correctly", async function (assert) {
-      const self = this;
-
       this.set("input", moment("2032-01-01 11:10"));
 
       await render(
         <template>
           <FutureDateInput
-            @input={{self.input}}
-            @onChangeInput={{fn (mut self.input)}}
+            @input={{this.input}}
+            @onChangeInput={{fn (mut this.input)}}
           />
         </template>
       );

@@ -55,12 +55,12 @@ export default class PreventScrollOnFocus extends Modifier {
       return;
     }
 
-    const textarea = event.target;
-    textarea.style.transform = "translateY(-99999px)";
-    textarea.focus({ preventScroll: true });
+    const target = event.target;
+    target.style.transform = "translateY(-99999px)";
+    target.focus({ preventScroll: true });
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        textarea.style.transform = "";
+        target.style.transform = "";
       });
     });
   }

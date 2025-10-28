@@ -11,13 +11,11 @@ module(
     setupRenderingTest(hooks);
 
     test("display retention info", async function (assert) {
-      const self = this;
-
       this.channel = ChatChannel.create({ chatable_type: "Category" });
       this.currentUser.set("needs_channel_retention_reminder", true);
 
       await render(
-        <template><ChatRetentionReminder @channel={{self.channel}} /></template>
+        <template><ChatRetentionReminder @channel={{this.channel}} /></template>
       );
 
       assert.dom(".chat-retention-reminder").includesText(
@@ -28,14 +26,12 @@ module(
     });
 
     test("@type=short", async function (assert) {
-      const self = this;
-
       this.channel = ChatChannel.create({ chatable_type: "Category" });
       this.currentUser.set("needs_channel_retention_reminder", true);
 
       await render(
         <template>
-          <ChatRetentionReminder @channel={{self.channel}} @type="short" />
+          <ChatRetentionReminder @channel={{this.channel}} @type="short" />
         </template>
       );
 

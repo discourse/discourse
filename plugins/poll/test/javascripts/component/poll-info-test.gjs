@@ -14,8 +14,6 @@ module("Poll | Component | poll-info", function (hooks) {
   setupRenderingTest(hooks);
 
   test("public multiple poll with results anytime", async function (assert) {
-    const self = this;
-
     this.setProperties({
       isMultiple: true,
       min: 1,
@@ -34,18 +32,18 @@ module("Poll | Component | poll-info", function (hooks) {
     await render(
       <template>
         <PollInfo
-          @options={{self.options}}
-          @min={{self.min}}
-          @max={{self.max}}
-          @isMultiple={{self.isMultiple}}
-          @close={{self.close}}
-          @closed={{self.closed}}
-          @results={{self.results}}
-          @showResults={{self.showResults}}
-          @postUserId={{self.postUserId}}
-          @isPublic={{self.isPublic}}
-          @hasVoted={{self.hasVoted}}
-          @voters={{self.voters}}
+          @options={{this.options}}
+          @min={{this.min}}
+          @max={{this.max}}
+          @isMultiple={{this.isMultiple}}
+          @close={{this.close}}
+          @closed={{this.closed}}
+          @results={{this.results}}
+          @showResults={{this.showResults}}
+          @postUserId={{this.postUserId}}
+          @isPublic={{this.isPublic}}
+          @hasVoted={{this.hasVoted}}
+          @voters={{this.voters}}
         />
       </template>
     );
@@ -66,8 +64,6 @@ module("Poll | Component | poll-info", function (hooks) {
   });
 
   test("public multiple poll with results only shown on vote", async function (assert) {
-    const self = this;
-
     this.setProperties({
       isMultiple: true,
       min: 1,
@@ -86,18 +82,18 @@ module("Poll | Component | poll-info", function (hooks) {
     await render(
       <template>
         <PollInfo
-          @options={{self.options}}
-          @min={{self.min}}
-          @max={{self.max}}
-          @isMultiple={{self.isMultiple}}
-          @close={{self.close}}
-          @closed={{self.closed}}
-          @results={{self.results}}
-          @showResults={{self.showResults}}
-          @postUserId={{self.postUserId}}
-          @isPublic={{self.isPublic}}
-          @hasVoted={{self.hasVoted}}
-          @voters={{self.voters}}
+          @options={{this.options}}
+          @min={{this.min}}
+          @max={{this.max}}
+          @isMultiple={{this.isMultiple}}
+          @close={{this.close}}
+          @closed={{this.closed}}
+          @results={{this.results}}
+          @showResults={{this.showResults}}
+          @postUserId={{this.postUserId}}
+          @isPublic={{this.isPublic}}
+          @hasVoted={{this.hasVoted}}
+          @voters={{this.voters}}
         />
       </template>
     );

@@ -9,8 +9,6 @@ module("Integration | Component | group-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    const self = this;
-
     this.site.groups = [
       {
         id: 1,
@@ -38,7 +36,7 @@ module("Integration | Component | group-list site-setting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     const subject = selectKit(".list-setting");
@@ -60,8 +58,6 @@ module("Integration | Component | group-list site-setting", function (hooks) {
   });
 
   test("mandatory values", async function (assert) {
-    const self = this;
-
     this.site.groups = [
       {
         id: 1,
@@ -90,7 +86,7 @@ module("Integration | Component | group-list site-setting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     const subject = selectKit(".list-setting");

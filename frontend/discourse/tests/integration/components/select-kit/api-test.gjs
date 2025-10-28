@@ -25,8 +25,6 @@ module("Integration | Component | select-kit/api", function (hooks) {
   });
 
   test("modifySelectKit(identifier).appendContent", async function (assert) {
-    const self = this;
-
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
     withPluginApi((api) => {
@@ -42,14 +40,14 @@ module("Integration | Component | select-kit/api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{self.value}}
-          @content={{self.content}}
-          @onChange={{self.onChange}}
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
         />
         <SingleSelect
-          @value={{self.value}}
-          @content={{self.content}}
-          @onChange={{self.onChange}}
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
         />
       </template>
     );
@@ -67,8 +65,6 @@ module("Integration | Component | select-kit/api", function (hooks) {
   });
 
   test("modifySelectKit(identifier).prependContent", async function (assert) {
-    const self = this;
-
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
     withPluginApi((api) => {
@@ -84,14 +80,14 @@ module("Integration | Component | select-kit/api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{self.value}}
-          @content={{self.content}}
-          @onChange={{self.onChange}}
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
         />
         <SingleSelect
-          @value={{self.value}}
-          @content={{self.content}}
-          @onChange={{self.onChange}}
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
         />
       </template>
     );
@@ -109,8 +105,6 @@ module("Integration | Component | select-kit/api", function (hooks) {
   });
 
   test("modifySelectKit(identifier).onChange", async function (assert) {
-    const self = this;
-
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
     withPluginApi((api) => {
@@ -123,9 +117,9 @@ module("Integration | Component | select-kit/api", function (hooks) {
       <template>
         <div id="test"></div>
         <ComboBox
-          @value={{self.value}}
-          @content={{self.content}}
-          @onChange={{self.onChange}}
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
         />
       </template>
     );
@@ -136,8 +130,6 @@ module("Integration | Component | select-kit/api", function (hooks) {
   });
 
   test("modifySelectKit(identifier).replaceContent", async function (assert) {
-    const self = this;
-
     setDefaultState(this, null, { content: DEFAULT_CONTENT });
 
     withPluginApi((api) => {
@@ -153,14 +145,14 @@ module("Integration | Component | select-kit/api", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{self.value}}
-          @content={{self.content}}
-          @onChange={{self.onChange}}
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
         />
         <SingleSelect
-          @value={{self.value}}
-          @content={{self.content}}
-          @onChange={{self.onChange}}
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
         />
       </template>
     );

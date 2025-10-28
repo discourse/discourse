@@ -30,6 +30,8 @@ import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import loadEmojiSearchAliases from "discourse/lib/load-emoji-search-aliases";
 import { emojiUrlFor } from "discourse/lib/text";
+import autoFocus from "discourse/modifiers/auto-focus";
+import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 import DiversityMenu from "./diversity-menu";
 
@@ -54,7 +56,6 @@ const tonableEmojiUrl = (emoji, scale) => {
 
 export default class EmojiPicker extends Component {
   @service emojiStore;
-  @service capabilities;
   @service site;
 
   @tracked isFiltering = false;
@@ -169,10 +170,6 @@ export default class EmojiPicker extends Component {
 
   @action
   focusFilter(target) {
-    if (this.capabilities.isIOS) {
-      return;
-    }
-
     target?.focus({ preventScroll: true });
   }
 
@@ -333,23 +330,12 @@ export default class EmojiPicker extends Component {
     this.addVisibleSections(this._getSectionsUpTo(section));
     this.lastVisibleSection = section;
 
-    // iOS hack to avoid blank div when requesting section during momentum
-    if (this.scrollableNode && this.capabilities.isIOS) {
-      this.scrollableNode.style.overflow = "hidden";
-    }
-
     next(() => {
       schedule("afterRender", () => {
         const targetEmoji = document.querySelector(
           `.emoji-picker__section[data-section="${section}"]`
         );
         targetEmoji.scrollIntoView({ block: "nearest" });
-
-        // iOS hack to avoid blank div when requesting section during momentum
-        if (this.scrollableNode && this.capabilities.isIOS) {
-          this.scrollableNode.style.overflow = "scroll";
-        }
-
         this.scrollObserverEnabled = true;
       });
     });
@@ -468,11 +454,12 @@ export default class EmojiPicker extends Component {
           }}
         >
           <FilterInput
-            {{didInsert this.focusFilter}}
+            {{preventScrollOnFocus}}
+            {{autoFocus}}
             {{didInsert this.registerFilterInput}}
             @value={{this.term}}
             @filterAction={{withEventValue this.didInputFilter}}
-            @icons={{hash right="magnifying-glass"}}
+            @icons={{hash left="magnifying-glass"}}
             @containerClass="emoji-picker__filter"
             placeholder={{i18n "chat.emoji_picker.search_placeholder"}}
           />

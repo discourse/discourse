@@ -31,11 +31,9 @@ module("Integration | Component | badge-button", function (hooks) {
   });
 
   test("title", async function (assert) {
-    const self = this;
-
     this.set("badge", { description: "a <a href>good</a> run" });
 
-    await render(<template><BadgeButton @badge={{self.badge}} /></template>);
+    await render(<template><BadgeButton @badge={{this.badge}} /></template>);
 
     assert
       .dom(".user-badge")

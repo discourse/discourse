@@ -16,14 +16,12 @@ module(
     });
 
     test("renders a dropdown with choices", async function (assert) {
-      const self = this;
-
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       this.set("choices", choices);
 
       await render(
         <template>
-          <Dropdown @choices={{self.choices}} @onChange={{noop}} />
+          <Dropdown @choices={{this.choices}} @onChange={{noop}} />
         </template>
       );
       assert
@@ -46,8 +44,6 @@ module(
     });
 
     test("renders a dropdown with choices and attributes", async function (assert) {
-      const self = this;
-
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       const attributes = {
         none_label: "Select a choice",
@@ -60,8 +56,8 @@ module(
       await render(
         <template>
           <Dropdown
-            @choices={{self.choices}}
-            @attributes={{self.attributes}}
+            @choices={{this.choices}}
+            @attributes={{this.attributes}}
             @onChange={{noop}}
           />
         </template>
@@ -76,14 +72,12 @@ module(
     });
 
     test("doesn't render a label when attribute is missing", async function (assert) {
-      const self = this;
-
       const choices = ["Choice 1", "Choice 2", "Choice 3"];
       this.set("choices", choices);
 
       await render(
         <template>
-          <Dropdown @choices={{self.choices}} @onChange={{noop}} />
+          <Dropdown @choices={{this.choices}} @onChange={{noop}} />
         </template>
       );
 

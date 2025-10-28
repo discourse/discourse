@@ -11,12 +11,10 @@ module(
     setupRenderingTest(hooks);
 
     test("does not render a component when template content has invalid YAML", async function (assert) {
-      const self = this;
-
       this.set("content", `- type: checkbox\n  attributes;invalid`);
       await render(
         <template>
-          <Wrapper @content={{self.content}} @onChange={{noop}} />
+          <Wrapper @content={{this.content}} @onChange={{noop}} />
         </template>
       );
 
@@ -27,8 +25,6 @@ module(
     });
 
     test("renders a component based on the component type found in the content YAML", async function (assert) {
-      const self = this;
-
       const content = `- type: checkbox\n  id: checkbox\n
 - type: input\n  id: name
 - type: textarea\n  id: notes
@@ -47,7 +43,7 @@ module(
 
       await render(
         <template>
-          <Wrapper @content={{self.content}} @onChange={{noop}} />
+          <Wrapper @content={{this.content}} @onChange={{noop}} />
         </template>
       );
 
@@ -59,8 +55,6 @@ module(
     });
 
     test("renders a component based on the component type found in the content YAML, with initial values", async function (assert) {
-      const self = this;
-
       const content = `- type: checkbox\n  id: checkbox\n
 - type: input\n  id: name
 - type: textarea\n  id: notes
@@ -79,8 +73,8 @@ module(
       await render(
         <template>
           <Wrapper
-            @content={{self.content}}
-            @initialValues={{self.initialValues}}
+            @content={{this.content}}
+            @initialValues={{this.initialValues}}
             @onChange={{noop}}
           />
         </template>
@@ -94,8 +88,6 @@ module(
     });
 
     test("renders a component based on the component type found in the content YAML when passed ids", async function (assert) {
-      const self = this;
-
       pretender.get("/form-templates/1.json", () => {
         return response({
           form_template: {
@@ -110,7 +102,7 @@ module(
       this.set("formTemplateId", [1]);
       await render(
         <template>
-          <Wrapper @id={{self.formTemplateId}} @onChange={{noop}} />
+          <Wrapper @id={{this.formTemplateId}} @onChange={{noop}} />
         </template>
       );
 
