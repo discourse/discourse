@@ -7,10 +7,10 @@ import { gt, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
 import Tree from "admin/components/schema-setting/editor/tree";
 import FieldInput from "admin/components/schema-setting/field";
-import { trackedArray } from "../../../app/lib/tracked-tools";
 
 export default class SchemaSettingNewEditor extends Component {
   @service router;
