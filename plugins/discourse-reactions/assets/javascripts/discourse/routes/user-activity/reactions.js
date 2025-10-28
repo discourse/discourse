@@ -3,8 +3,8 @@ import DiscourseRoute from "discourse/routes/discourse";
 import CustomReaction from "../../models/discourse-reactions-custom-reaction";
 
 export default class UserActivityReactions extends DiscourseRoute {
-  model() {
-    const list = CustomReaction.findReactions(
+  async model() {
+    const list = await CustomReaction.findReactions(
       "reactions",
       this.modelFor("user").username
     );
