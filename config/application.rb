@@ -59,11 +59,11 @@ require_relative "../lib/require_dependency_backward_compatibility"
 
 module Discourse
   class Application < Rails::Application
-    def config.database_configuration
+    def config.database_configuration(variables_overrides: {})
       if Rails.env.production?
-        GlobalSetting.database_config
+        GlobalSetting.database_config(variables_overrides:)
       else
-        super
+        super()
       end
     end
 

@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  around_action :ensure_dont_cache_page
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -51,7 +52,6 @@ class ApplicationController < ActionController::Base
   before_action :set_crawler_header
   after_action :add_readonly_header
   after_action :perform_refresh_session
-  after_action :dont_cache_page
   after_action :conditionally_allow_site_embedding
   after_action :ensure_vary_header
   after_action :add_noindex_header,
@@ -161,6 +161,11 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActionController::RoutingError, PluginDisabled do
+    # This error is raised outside of the normal request response cycle and is called via the
+    # `DiscoursePublicExceptions` middleware which creates a new instance of the ApplicationController.
+    # As a result, controller actions hooks are not called and we need to explicitly call `dont_cache_page` here.
+    dont_cache_page
+
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -1061,5 +1066,11 @@ class ApplicationController < ActionController::Base
 
   def set_crawler_header
     response.headers["X-Discourse-Crawler-View"] = "true" if use_crawler_layout?
+  end
+
+  def ensure_dont_cache_page
+    yield
+  ensure
+    dont_cache_page
   end
 end

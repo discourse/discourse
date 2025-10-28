@@ -8,6 +8,7 @@ import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import DMenu from "float-kit/components/d-menu";
@@ -40,7 +41,7 @@ export default class ThemeCard extends Component {
   }
 
   get themePreviewUrl() {
-    return `/admin/themes/${this.args.theme.id}/preview`;
+    return getURL(`/admin/themes/${this.args.theme.id}/preview`);
   }
 
   get destroyDisabled() {

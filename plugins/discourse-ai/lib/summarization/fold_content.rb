@@ -59,6 +59,46 @@ module DiscourseAi
         AiSummary.where(target: strategy.target, summary_type: strategy.type).destroy_all
       end
 
+      def truncate(item)
+        item_content = item[:text].to_s
+        # From https://www.unicode.org/reports/tr29/#Grapheme_Cluster_Boundaries:
+        #
+        # A single Unicode code point is often, but not always, the same as a basic unit of a
+        # writing system, or what a typical user might think of as a "character." There are cases
+        # where such a basic unit is made up of multiple code points. To avoid ambiguity with
+        # encoding terminology, TR29 recommends reasoning in terms of a user-perceived character
+        # (a grapheme cluster). For example, "G" + grave-accent is perceived as a single character
+        # even though it is represented by two code points.
+        #
+        # Split using grapheme clusters so multi-codepoint emoji remain intact.
+        graphemes = item_content.grapheme_clusters
+        midpoint = graphemes.size / 2
+
+        first_half = graphemes.slice(0, midpoint)&.join || ""
+        reversed_second_half = (graphemes.slice(midpoint, graphemes.size - midpoint) || []).join
+
+        truncation_length = 500
+        tokenizer = llm_model.tokenizer_class
+
+        item[:text] = [
+          tokenizer.truncate(
+            first_half,
+            truncation_length,
+            strict: SiteSetting.ai_strict_token_counting,
+          ).to_s,
+          tokenizer
+            .truncate(
+              reversed_second_half,
+              truncation_length,
+              strict: SiteSetting.ai_strict_token_counting,
+            )
+            .to_s
+            .reverse,
+        ].join(" ")
+
+        item
+      end
+
       private
 
       attr_reader :persist_summaries
@@ -144,30 +184,6 @@ module DiscourseAi
         reserved_tokens = 700
 
         llm_model.max_prompt_tokens - reserved_tokens
-      end
-
-      def truncate(item)
-        item_content = item[:text].to_s
-        split_1, split_2 =
-          [item_content[0, item_content.size / 2], item_content[(item_content.size / 2)..-1]]
-
-        truncation_length = 500
-        tokenizer = llm_model.tokenizer_class
-
-        item[:text] = [
-          tokenizer.truncate(
-            split_1,
-            truncation_length,
-            strict: SiteSetting.ai_strict_token_counting,
-          ),
-          tokenizer.truncate(
-            split_2.reverse,
-            truncation_length,
-            strict: SiteSetting.ai_strict_token_counting,
-          ).reverse,
-        ].join(" ")
-
-        item
       end
     end
   end
