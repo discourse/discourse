@@ -117,7 +117,7 @@
   }
 
   .bulk-select-enabled & {
-    grid-template-columns: min-content min-content min-content auto min-content min-content;
+    grid-template-columns: min-content min-content min-content min-content auto min-content;
     grid-template-areas:
       "bulk-select creator title title title status"
       "bulk-select category category activity activity .";
@@ -125,7 +125,7 @@
     &.has-replies {
       grid-template-areas:
         "bulk-select creator title title title status"
-        "bulk-select category category activity likes-replies likes-replies";
+        "bulk-select category category activity likes-replies .";
 
       @include viewport.until(sm) {
         grid-template-areas:
