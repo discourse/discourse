@@ -314,6 +314,7 @@ export default class User extends RestModel.extend(Evented) {
     return {
       type: "user",
       id: username,
+      /** @type User */
       user: this,
     };
   }

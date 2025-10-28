@@ -268,6 +268,7 @@ export default class StoreService extends Service {
       loadMoreUrl: pageTarget["load_more_" + typeName],
       refreshUrl: pageTarget["refresh_" + typeName],
       resultSetMeta: result.meta,
+      /** @type StoreService */
       store: this,
       __type: type,
     };
