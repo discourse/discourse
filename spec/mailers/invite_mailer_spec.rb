@@ -76,7 +76,13 @@ RSpec.describe InviteMailer do
         end
       end
 
-      context "with template modifier" do
+      # TODO: Very flaky test
+      # 1) InviteMailer send_invite when inviting to site with template modifier allows plugins to customize the invite template
+      #  Failure/Error: expect(mail.subject).to eq("[Discourse] Custom Invite from Bruce Wayne (bruce0)")
+
+      #    expected: "[Discourse] Custom Invite from Bruce Wayne (bruce0)"
+      #         got: "[Discourse] Custom Invite from Bruce Wayne (bruce3)"
+      skip "with template modifier" do
         fab!(:invite)
         let(:plugin) { Plugin::Instance.new }
         let(:custom_template) { "plugin_custom_invite_template" }
