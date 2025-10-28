@@ -63,9 +63,6 @@ def find_advanced_search_banners(db)
           migrated_count += count
 
           processed_keys_by_locale[override.locale].add(override.translation_key)
-
-          # override.destroy!
-          puts "    \e[0;93m● Removing old override: #{override.locale}.#{override.translation_key}\e[0m\n\n"
         end
 
         shown = false
