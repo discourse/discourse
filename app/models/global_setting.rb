@@ -126,7 +126,8 @@ class GlobalSetting
     hostnames
   end
 
-  def self.database_config
+  def self.database_config(variables_overrides: {})
+    variables_overrides = variables_overrides.with_indifferent_access
     hash = { "adapter" => "postgresql" }
 
     %w[
@@ -166,6 +167,11 @@ class GlobalSetting
       db_variables.each do |k|
         hash["variables"][k.slice(("db_variables_".length)..)] = self.public_send(k)
       end
+    end
+
+    variables_overrides.each do |key, value|
+      hash["variables"] ||= {}
+      hash["variables"][key.to_s] = value
     end
 
     { "production" => hash }
@@ -366,13 +372,14 @@ class GlobalSetting
     attr_accessor :provider
   end
 
-  def self.configure!
-    if Rails.env.test?
+  def self.configure!(
+    path: File.expand_path("../../../config/discourse.conf", __FILE__),
+    use_blank_provider: Rails.env.test?
+  )
+    if use_blank_provider
       @provider = BlankProvider.new
     else
-      @provider =
-        FileProvider.from(File.expand_path("../../../config/discourse.conf", __FILE__)) ||
-          EnvProvider.new
+      @provider = FileProvider.from(path) || EnvProvider.new
     end
   end
 
