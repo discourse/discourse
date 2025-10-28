@@ -8,3 +8,4 @@ discourse_hcaptcha:
   hcaptcha_secret_key:
     default: ''
     client: false
+    secret: true

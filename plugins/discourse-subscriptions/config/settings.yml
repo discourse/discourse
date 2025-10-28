@@ -16,9 +16,11 @@ discourse_subscriptions:
   discourse_subscriptions_secret_key:
     default: ''
     client: false
+    secret: true
   discourse_subscriptions_webhook_secret:
     default: ''
     client: false
+    secret: true
   discourse_subscriptions_currency:
     client: true
     default: "USD"

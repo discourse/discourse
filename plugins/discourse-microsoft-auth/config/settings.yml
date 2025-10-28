@@ -10,6 +10,7 @@ plugins:
   microsoft_auth_client_secret:
     client: false
     default: ""
+    secret: true
     area: "authenticators"
   microsoft_auth_email_verified:
     default: false
