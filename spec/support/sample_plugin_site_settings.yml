@@ -12,5 +12,5 @@ site_settings:
     client: true
     hidden: true
     upcoming_change:
-      impact: "feature|admins"
+      impact: "feature,admins"
       status: "alpha"

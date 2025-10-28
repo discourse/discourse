@@ -125,7 +125,10 @@ export default class UpcomingChangeItem extends Component {
   }
 
   <template>
-    <tr class="d-table__row upcoming-change-row">
+    <tr
+      class="d-table__row upcoming-change-row"
+      data-upcoming-change={{@change.setting}}
+    >
       <td class="d-table__cell --overview">
         {{#if @change.plugin}}
           <span class="upcoming-change__plugin">
@@ -214,7 +217,10 @@ export default class UpcomingChangeItem extends Component {
                 @change.upcoming_change.impact_role
               )
             }}
-            class="upcoming-change__badge"
+            class={{concatClass
+              "upcoming-change__badge"
+              (concat "--impact-role-" @change.upcoming_change.impact_role)
+            }}
           >
             {{icon (this.impactRoleIcon @change.upcoming_change.impact_role)}}
             {{i18n
