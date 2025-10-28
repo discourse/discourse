@@ -1,102 +1,114 @@
 # frozen_string_literal: true
 
+THEME_GIT_URL_TRANSLATIONS = "https://github.com/discourse/discourse-search-banner.git"
+REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead]
+
 desc "Migrate translations from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :environment do
-  advanced_search_banners = []
+  components = find_all_components_for_translations
 
-  if ENV["RAILS_DB"].present?
-    advanced_search_banners = find_advanced_search_banners(ENV["RAILS_DB"])
-  else
-    RailsMultisite::ConnectionManagement.each_connection do |db|
-      found = find_advanced_search_banners(db)
-      advanced_search_banners.concat(found.map { |asb| { db: db, asb: asb } })
-    end
+  if components.empty?
+    puts "\n\e[33m✗ No Advanced Search Banner theme components found.\e[0m"
+    next
   end
 
-  if advanced_search_banners.empty?
-    puts "\n\e[33m✗ No Advanced Search Banner theme components were found.\e[0m"
+  components.each { |entry| process_theme_component_translations(entry[:theme]) }
+
+  puts "\n\e[1;34mTask completed successfully!\e[0m"
+end
+
+def find_all_components_for_translations
+  if ENV["RAILS_DB"].present?
+    db = validate_and_get_db_for_translations(ENV["RAILS_DB"])
+    RailsMultisite::ConnectionManagement.establish_connection(db: db)
+    wrap_themes_with_db_for_translations(find_components_in_db_for_translations(db), db)
   else
-    puts "\n\e[1;36m=== Migration Summary ===\e[0m"
-    advanced_search_banners.each do |entry|
-      if entry.is_a?(Hash) && entry[:db]
-        puts "\nDatabase: \e[1;104m[#{entry[:db]}]\e[0m"
-        theme_data = entry[:asb]
-        puts "  Theme: #{theme_data[:name]} (ID: #{theme_data[:id]})"
-        puts "  Migrated translations: #{theme_data[:migrated_translations]}"
-      else
-        puts "\n  Theme: #{entry[:name]} (ID: #{entry[:id]})"
-        puts "  Migrated translations: #{entry[:migrated_translations]}"
-      end
+    components = []
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      components.concat(
+        wrap_themes_with_db_for_translations(find_components_in_db_for_translations(db), db),
+      )
     end
-    puts "\n\e[1;32m✓ Translations migration completed!\e[0m"
+    components
   end
 end
 
-def find_advanced_search_banners(db)
+def validate_and_get_db_for_translations(db)
+  return db if RailsMultisite::ConnectionManagement.has_db?(db)
+
+  default_db = RailsMultisite::ConnectionManagement::DEFAULT
+  puts "\e[31mDatabase \e[1;101m[#{db}]\e[0m \e[31mnot found.\e[0m"
+  puts "Using default database instead: \e[1;104m[#{default_db}]\e[0m\n\n"
+  default_db
+end
+
+def wrap_themes_with_db_for_translations(themes, db)
+  themes.map { |theme| { db: db, theme: theme } }
+end
+
+def find_components_in_db_for_translations(db)
   puts "Accessing database: \e[1;104m[#{db}]\e[0m"
+  puts "  Searching for Advanced Search Banner components..."
 
-  required_keys = %w[search_banner.headline search_banner.subhead]
-  advanced_search_banners = []
+  themes =
+    RemoteTheme
+      .where(remote_url: THEME_GIT_URL_TRANSLATIONS)
+      .includes(theme: :theme_translation_overrides)
+      .map(&:theme)
 
-  puts "  Searching for Advanced Search Banner theme components..."
-  RemoteTheme
-    .where(remote_url: "https://github.com/discourse/discourse-search-banner.git")
-    .includes(theme: :theme_translation_overrides)
-    .each do |remote_theme|
-      theme = remote_theme.theme
+  themes.each { |theme| puts "  \e[1;34mFound: #{theme_identifier_for_translations(theme)}" }
+  themes
+end
 
-      puts "  \e[1;32m✓ Found: #{theme.name} (ID: #{theme.id})\e[0m"
-      puts "\n  Migrating translation overrides..."
+def theme_identifier_for_translations(theme)
+  "\e[1m#{theme.name} (ID: #{theme.id})\e[0m"
+end
 
-      migrated_count = 0
+def process_theme_component_translations(theme)
+  puts "\n  Migrating translation overrides for #{theme_identifier_for_translations(theme)}..."
 
-      if theme.theme_translation_overrides.any?
-        processed_keys_by_locale = Hash.new { |h, k| h[k] = Set.new }
+  migrated_count = 0
 
-        theme.theme_translation_overrides.each do |override|
-          count =
-            migrate_translations(
-              locale: override.locale,
-              key: override.translation_key,
-              value: override.value,
-            )
-          migrated_count += count
+  if theme.theme_translation_overrides.any?
+    processed_keys_by_locale = Hash.new { |h, k| h[k] = Set.new }
 
-          processed_keys_by_locale[override.locale].add(override.translation_key)
+    theme.theme_translation_overrides.each do |override|
+      count =
+        migrate_translations(
+          locale: override.locale,
+          key: override.translation_key,
+          value: override.value,
+        )
+      migrated_count += count
+
+      processed_keys_by_locale[override.locale].add(override.translation_key)
+    end
+
+    shown = false
+    processed_keys_by_locale.each do |locale, processed_keys|
+      missing_keys = REQUIRED_TRANSLATION_KEYS - processed_keys.to_a
+
+      if missing_keys.any?
+        unless shown
+          puts "  Migrating Advanced Search Banner's default translations..."
+          shown = true
         end
 
-        shown = false
-        processed_keys_by_locale.each do |locale, processed_keys|
-          missing_keys = required_keys - processed_keys.to_a
-
-          if missing_keys.any?
-            unless shown
-              puts "  Migrating Advanced Search Banner's default translations..."
-              shown = true
-            end
-
-            missing_keys.each do |missing_key|
-              count = migrate_translations(locale: locale, key: missing_key)
-              migrated_count += count
-            end
-          end
-        end
-      else
-        puts "  ✗ No translation overrides found. Migrating Advanced Search Banner's default translations..."
-        required_keys.each do |required_key|
-          count = migrate_translations(key: required_key)
+        missing_keys.each do |missing_key|
+          count = migrate_translations(locale: locale, key: missing_key)
           migrated_count += count
         end
       end
-
-      advanced_search_banners << {
-        name: theme.name,
-        id: theme.id,
-        migrated_translations: migrated_count,
-      }
     end
+  else
+    puts "  ✗ No translation overrides found. Migrating Advanced Search Banner's default translations..."
+    REQUIRED_TRANSLATION_KEYS.each do |required_key|
+      count = migrate_translations(key: required_key)
+      migrated_count += count
+    end
+  end
 
-  advanced_search_banners
+  puts "  \e[1;32m✓ Migrated #{migrated_count} translation#{"s" if migrated_count != 1}\e[0m"
 end
 
 def migrate_translations(locale: "en", key:, value: nil)
@@ -123,7 +135,7 @@ def migrate_translations(locale: "en", key:, value: nil)
     arrow = "\e[0m=>\e[0m"
     new_text = "\e[0;32m#{locale}.#{new_key}\e[0m"
 
-    puts "      #{old_text} #{arrow} #{new_text}"
+    puts "      - #{old_text} #{arrow} #{new_text}"
   end
 
   mapped_keys.count
