@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 
 export default class AdminApiKeysIndexController extends Controller {
   @tracked loading = false;
@@ -26,10 +27,6 @@ export default class AdminApiKeysIndexController extends Controller {
 
   @action
   async loadMore() {
-    if (this.loading || this.model.loaded) {
-      return;
-    }
-
     const limit = 50;
 
     try {
@@ -39,11 +36,9 @@ export default class AdminApiKeysIndexController extends Controller {
         limit,
       });
 
-      // this.model is an instance of a ResultSet. We need to keep using `.addObjects` for now to preserve the
-      // KVO-compliant behavior of the model.
-      this.model.addObjects(keys);
+      addUniqueValuesToArray(this.model.content, keys);
       if (keys.length < limit) {
-        this.model.set("loaded", true);
+        this.model.loaded = true;
       }
     } finally {
       this.loading = false;
