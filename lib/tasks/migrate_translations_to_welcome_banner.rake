@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-desc "Migrate translations from Advanced Search Banner to core  welcome banner"
-task "themes:migrate_translations_to_welcome_banner" => :environment do
+desc "Migrate translations from Advanced Search Banner to core welcome banner"
+task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :environment do
   advanced_search_banners = []
 
   if ENV["RAILS_DB"].present?
