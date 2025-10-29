@@ -285,6 +285,9 @@ module Email
       # Please, don't send us automatic responses...
       result["X-Auto-Response-Suppress"] = "All"
 
+      # Disable Outlook's noisy "reaction via email" feature
+      result["x-ms-reactions"] = "disallow"
+
       if !allow_reply_by_email?
         # This will end up being the notification_email, which is a
         # noreply address.
