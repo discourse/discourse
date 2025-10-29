@@ -155,7 +155,7 @@ export default class UpcomingChangeItem extends Component {
                   class="lightbox upcoming-change__image-preview"
                   rel="nofollow ugc noopener"
                   data-target-width={{@change.upcoming_change.image.width}}
-                  data-target-height={{@change.upcoming_change.image.width}}
+                  data-target-height={{@change.upcoming_change.image.height}}
                   data-large-src={{@change.upcoming_change.image.url}}
                 >{{icon "far-image"}}
                   {{i18n "admin.upcoming_changes.preview"}}</a>
