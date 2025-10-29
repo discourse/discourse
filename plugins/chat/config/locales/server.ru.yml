@@ -112,6 +112,10 @@ ru:
     reviewables:
       message_already_handled: "Спасибо, но мы уже рассмотрели жалобу на это сообщение, поэтому жаловаться на него снова нет необходимости."
       actions:
+        no_action_message:
+          title: "Нет действий"
+        restore_message:
+          description: "Восстановить сообщение, чтобы пользователи могли его видеть."
         agree:
           title: "Согласиться…"
         agree_and_keep_message:

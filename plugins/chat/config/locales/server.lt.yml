@@ -11,6 +11,8 @@ lt:
       not_accepting_dms: "Atsiprašome, %{username} šiuo metu nepriima pranešimų."
     reviewables:
       actions:
+        no_action_message:
+          title: "Jokių veiksmų"
         agree:
           title: "Sutinku..."
         agree_and_suspend:

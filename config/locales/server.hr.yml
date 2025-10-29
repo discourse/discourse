@@ -2808,6 +2808,8 @@ hr:
           complete: "Korisnik izbrisan."
       reject:
         title: "Odbij"
+      scrub:
+        title: Obriši zapis
       no_action_post:
         title: "Nema akcije"
       delete_post:

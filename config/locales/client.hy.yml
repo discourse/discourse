@@ -471,6 +471,7 @@ hy:
       other: "Դիտել %{count} նոր թեմաները"
     preview: "նախադիտում"
     cancel: "Չեղարկել"
+    done: "Կատարված է"
     deleting: "Ջնջվում է…"
     save: "Պահպանել Փոփոխությունները"
     saving: "Պահպանվում է…"
@@ -3471,7 +3472,7 @@ hy:
       readonly: "Դիտել"
     preloader_text: "Բեռնում"
     lightbox:
-      download: "ներբեռնել"
+      download: "Ներբեռնել"
       previous: "Նախորդ (սլաքի Ձախ ստեղնը)"
       next: "Հաջորդ (սլաքի Աջ ստեղնը)"
       counter: "%curr% %total% -ից"

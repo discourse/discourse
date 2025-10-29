@@ -319,6 +319,7 @@ pl_PL:
       greater_than: musi być większe niż %{count}
       greater_than_or_equal_to: musi być większe lub równe %{count}
       has_already_been_used: "został już użyty"
+      in: musi być w %{count}
       inclusion: nie jest zawarty w liście
       invalid: jest nieprawidłowy
       is_invalid: "wygląda niejasno, czy to cała wypowiedź?"
@@ -2127,6 +2128,7 @@ pl_PL:
     selectable_avatars_mode: "Pozwól użytkownikom wybrać awatar z listy selectable_avatars i ogranicz przesyłanie niestandardowych awatarów do wybranego poziomu zaufania."
     selectable_avatars: "Określ kolekcję awatarów, z której użytkownicy mogą wybrać zdjęcie profilowe. Możliwość wyboru powinna pojawiać się podczas tworzenia profilu użytkownika lub aktualizacji awatara profilu."
     allow_all_attachments_for_group_messages: "Zezwól na wszystkie załączniki email dla wiadomości grupowych."
+    image_quality: "Ustaw poziom jakości obrazów przesyłanych do Twojej witryny. Niższa jakość spowoduje zmniejszenie rozmiaru plików."
     png_to_jpg_quality: "Jakość skonwertowanego pliku JPG (1 to najniższa jakość, 99 to najlepsza jakość, 100 aby dezaktywować)."
     recompress_original_jpg_quality: "Jakość przesłanych plików graficznych (1 to najniższa jakość, 99 to najlepsza jakość, 100 bez zmian)."
     image_preview_jpg_quality: "Jakość plików graficznych o zmienionym rozmiarze (1 to najniższa jakość, 99 to najlepsza jakość, 100 bez zmian)."
@@ -2617,9 +2619,9 @@ pl_PL:
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
     experimental_new_new_view_groups: 'Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i spraw, by łącze "Wszystko" na pasku bocznym prowadziło do niej.'
-    glimmer_post_stream_mode: "Kontroluj, czy nowa implementacja strumienia postów „glimmer” jest używana. „auto” zostanie włączone automatycznie, gdy wszystkie motywy i wtyczki będą gotowe. Ta implementacja jest w trakcie aktywnego rozwoju i nie jest przeznaczona do użytku produkcyjnego. Nie rozwijaj motywów/wtyczek dla niej, dopóki implementacja nie zostanie sfinalizowana i ogłoszona."
-    glimmer_post_stream_mode_auto_groups: "Włącz nową implementację strumienia postów 'glimmer' w trybie 'auto' dla określonych grup użytkowników. Ta implementacja jest w trakcie aktywnego rozwoju i nie jest przeznaczona do użytku produkcyjnego. Nie rozwijaj motywów/wtyczek dla niej, dopóki implementacja nie zostanie sfinalizowana i ogłoszona."
-    deactivate_widgets_rendering: "Wyłącz starszy silnik renderujący widżety. Spowoduje to wyłączenie wszystkich widżetów, które nie zostały zaktualizowane do komponentów Glimmer, a także wymusi bezwarunkowe włączenie strumienia postów Glimmer, niezależnie od wartości ustawienia `glimmer_post_stream_mode`. To ustawienie nie jest zalecane w przypadku witryn produkcyjnych, ponieważ może popsuć istniejące motywy i wtyczki."
+    glimmer_post_stream_mode: "Określ, czy używana jest nowa implementacja strumienia wpisów „Glimmer”. Opcja „auto” zostanie włączona automatycznie, gdy wszystkie motywy i wtyczki będą gotowe."
+    glimmer_post_stream_mode_auto_groups: "Włącz nową implementację strumienia wpisów „Glimmer” w trybie „auto” dla określonych grup użytkowników."
+    deactivate_widgets_rendering: "Wyłącz starszy silnik renderujący widżety. Spowoduje to wyłączenie wszystkich widżetów, które nie zostały zaktualizowane do komponentów Glimmer, a także wymusi bezwarunkowe włączenie strumienia wpisów Glimmer, niezależnie od wartości ustawienia `glimmer_post_stream_mode`."
     floatkit_autocomplete_composer: "Włącz menu autouzupełniania oparte na Floatkit w kompozytorze. Jest to ulepszenie interfejsu użytkownika, które zastąpi obecne menu autouzupełniania oparte na JQuery."
     floatkit_autocomplete_input_fields: "Włącz menu autouzupełniania oparte na technologii Floatkit dla pól wprowadzania danych w polach wyszukiwania pełnostronicowego i selektora grup. To ulepszenie interfejsu użytkownika, które zastąpi obecne menu autouzupełniania oparte na jQuery."
     floatkit_autocomplete_chat_composer: "Włącz menu autouzupełniania oparte na Floatkit w kompozytorze czatu. Jest to ulepszenie interfejsu użytkownika, które zastąpi obecne menu autouzupełniania oparte na jQuery."
@@ -2629,6 +2631,7 @@ pl_PL:
     experimental_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
     experimental_impersonation: "Podszywaj się pod użytkownika bez konieczności wylogowywania się z konta administratora."
     experimental_impersonation_time_limit_minutes: "Jak długo musi upłynąć, zanim sesja podszywania się zostanie automatycznie zakończona."
+    experimental_lightbox: "Użyj PhotoSwipe, aby dodać lightbox do większych obrazów."
     page_loading_indicator: "Skonfiguruj wskaźnik ładowania, który pojawia się podczas nawigacji po stronie w Discourse. \"Spinner\" to wskaźnik na pełnym ekranie. \"Slider\" wyświetla wąski pasek u góry ekranu."
     show_user_menu_avatars: "Pokaż awatary użytkowników w menu użytkownika"
     about_page_hidden_groups: "Nie pokazuj członków określonych grup na stronie /about."
@@ -5597,6 +5600,8 @@ pl_PL:
       reject_and_keep_deleted:
         title: "Zachowaj usunięcie postu"
         complete: "Post odrzucony i usunięcie zachowane w mocy."
+      scrub:
+        title: Wyczyść rekord
       approve_and_restore:
         title: "Zatwierdź i przywróć post"
         complete: "Post zatwierdzony i przywrócony."
@@ -5655,6 +5660,10 @@ pl_PL:
         complete: "Użytkownik usunięty"
         reason: "Skasowano z poziomu kolejki moderacji"
       delete_and_block_user:
+        title: "Usuń i zablokuj"
+        description: "Usuń użytkownika i zablokuj jego adres IP / adres e-mail"
+        complete: "Użytkownik usunięty i zablokowany"
+      delete_user_block:
         title: "Usuń i zablokuj"
         description: "Usuń użytkownika i zablokuj jego adres IP / adres e-mail"
         complete: "Użytkownik usunięty i zablokowany"

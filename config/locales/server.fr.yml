@@ -2443,9 +2443,6 @@ fr:
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
-    glimmer_post_stream_mode: "Contrôlez si la nouvelle implémentation du flux de publication « glimmer » est utilisée. « auto » s'activera automatiquement une fois que tous vos thèmes et extensions seront prêts. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
-    glimmer_post_stream_mode_auto_groups: "Activez la nouvelle implémentation du flux de publication « glimmer » en mode « auto » pour les groupes d'utilisateurs spécifiés. Cette implémentation est en cours de développement et n'est pas destinée à une utilisation en production. Ne développez pas de thèmes/extensions pour cette implémentation avant qu'elle soit finalisée et annoncée."
-    deactivate_widgets_rendering: "Désactivez l'ancien moteur de rendu des widgets. Cela désactivera tous les widgets qui n'ont pas été mis à jour avec les composants Glimmer et forcera également l'activation inconditionnelle du Glimmer Post Stream, quelle que soit la valeur du paramètre « glimmer_post_stream_mode ». Ce paramètre n'est pas recommandé pour les sites de production, car il peut endommager les thèmes et extensions existantes."
     floatkit_autocomplete_composer: "Activez le menu de saisie semi-automatique basé sur FloatKit dans l'éditeur. Il s'agit d'une amélioration de l'interface utilisateur qui remplacera le menu de saisie semi-automatique actuel basé sur jQuery."
     floatkit_autocomplete_chat_composer: "Activez le menu de saisie semi-automatique basé sur FloatKit dans l'éditeur de discussion. Il s'agit d'une amélioration de l'interface utilisateur qui remplacera le menu de saisie semi-automatique actuel basé sur jQuery."
     experimental_form_templates: "Activez la fonctionnalité de modèles de formulaire. Gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
@@ -5313,6 +5310,8 @@ fr:
       reject_and_keep_deleted:
         title: "Laisser ce message à l'état supprimé"
         complete: "Publication rejetée et maintenue supprimée."
+      scrub:
+        title: Effacer l'enregistrement
       approve_and_restore:
         title: "Autoriser et restaurer ce message"
         complete: "Publication approuvée et restaurée."
@@ -5342,6 +5341,8 @@ fr:
         complete: "Utilisateur supprimé"
         reason: "Supprimé via la file des messages en attente d'examen"
       delete_and_block_user:
+        complete: "Utilisateur supprimé et bloqué"
+      delete_user_block:
         complete: "Utilisateur supprimé et bloqué"
   email_style:
     html_missing_placeholder: "Le modèle HTML doit inclure %{placeholder}"

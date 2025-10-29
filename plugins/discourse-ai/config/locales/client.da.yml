@@ -65,6 +65,16 @@ da:
         table: "Tabel"
       translations:
         title: "Oversættelser"
+        stats:
+          eta_minutes:
+            one: "%{count} minut"
+            other: "%{count} minutter"
+          eta_hours:
+            one: "%{count} time"
+            other: "%{count} timer"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dage"
         progress_chart:
           bar_done:
             one: "%{count} indlæg"

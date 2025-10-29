@@ -2437,9 +2437,6 @@ pt_BR:
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
     experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
-    glimmer_post_stream_mode: "Controle se a implementação da nova transmissão de postagem \"glimmer\" é usada. O modo \"automático\" será ativado automaticamente quando os temas e plugins estiverem prontos. Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
-    glimmer_post_stream_mode_auto_groups: "Ative a implementação da nova transmissão de postagem \"glimmer\" no modo \"automático\" para grupos de usuários(as) específicos(as). Esta implementação ainda está em desenvolvimento e não se destina a uso para fins de produção. Não a use para desenvolver temas/plugins até que seja finalizada e anunciada."
-    deactivate_widgets_rendering: "Desative o mecanismo de renderização de widgets legados. Desabilita todos os widgets que não foram atualizados para componentes do Glimmer. Também obriga que a Transmissão de Postagem do Glimmer seja ativada de qualquer forma independentemente do valor da configuração \"glimmer_post_stream_mode\". Essa configuração não é recomendada para sites de produção, pois pode interromper os temas e plugins existentes."
     floatkit_autocomplete_composer: "Ative o menu de preenchimento automático baseado no Floatkit no compositor. É uma melhoria de IU que substituirá o menu atual de preenchimento automático atual baseado em JQuery."
     floatkit_autocomplete_chat_composer: "Ative o menu de preenchimento automático baseado no Floatkit no compositor do bate-papo. É uma melhoria de IU que substituirá o menu de preenchimento automático atual baseado em JQuery."
     experimental_form_templates: "Ative o recurso de modelo de formulário. Gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
@@ -5288,6 +5285,8 @@ pt_BR:
       reject_and_keep_deleted:
         title: "Manter a postagem excluída"
         complete: "Postagem recusada e mantida excluída."
+      scrub:
+        title: Registro removido
       approve_and_restore:
         title: "Aprovar e restaurar postagem"
         complete: "Postagem aprovada e restaurada."
