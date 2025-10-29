@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { trackedArray } from "discourse/lib/tracked-tools";
 import PostVotingComment from "./post-voting-comment";
 import PostVotingCommentsMenu from "./post-voting-comments-menu";
 
 export default class PostVotingComments extends Component {
-  @trackedArray comments = this.args.post.comments;
+  comments = this.args.post.comments; // post.comments is a tracked array
 
   get moreCommentCount() {
     return this.args.post.comments_count - this.comments.length;
