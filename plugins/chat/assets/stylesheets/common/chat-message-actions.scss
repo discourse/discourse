@@ -7,6 +7,8 @@
   @include unselectable;
   position: fixed;
   width: max-content;
+  top: 0;
+  left: 0;
   z-index: z("composer", "content");
 }
 
