@@ -96,7 +96,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
     end
   end
 
-  it "renders the index page correctly on a theme with no customizations" do
+  it "renders the index page correctly on a site with no default theme" do
     SiteSetting.default_theme_id = nil
     visit "/styleguide"
 
