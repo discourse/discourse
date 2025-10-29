@@ -3,10 +3,11 @@
 RSpec.describe SvgSprite do
   fab!(:theme)
 
-  before do
+  before { allow(Rails.env).to receive(:test?).and_return(false) }
+
+  after do
     SvgSprite.clear_plugin_svg_sprite_cache!
     SvgSprite.expire_cache
-    allow(Rails.env).to receive(:test?).and_return(false)
   end
 
   it "can generate a bundle" do
