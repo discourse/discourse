@@ -96,6 +96,13 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
     end
   end
 
+  it "renders the index page correctly on a theme with no customizations" do
+    SiteSetting.default_theme_id = nil
+    visit "/styleguide"
+
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
+  end
+
   # uses the sections hash to generate a test for each page and check if it renders correctly
   context "when testing the available pages" do
     before do
