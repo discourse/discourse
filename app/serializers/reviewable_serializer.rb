@@ -9,6 +9,8 @@ class ReviewableSerializer < ApplicationSerializer
     :type_source,
     :topic_id,
     :topic_url,
+    :target_type,
+    :target_id,
     :target_url,
     :topic_tags,
     :category_id,
@@ -143,7 +145,11 @@ class ReviewableSerializer < ApplicationSerializer
   end
 
   def target_created_by
-    user = object.target_created_by
+    if object.target_type == "User"
+      user = object.target
+    else
+      user = object.target_created_by
+    end
     return nil unless user
 
     serializer_class =

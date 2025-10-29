@@ -31,12 +31,12 @@ export default class ReviewableInsights extends Component {
     });
 
     // Similar posts insight
-    if (user.flags_agreed) {
+    if (user?.flags_agreed) {
       insights.push({
         icon: "clock-rotate-left",
         label: i18n("review.insights.similar_posts"),
         description: i18n("review.insights.flagged_in_timeframe", {
-          count: user.user_stat.flags_agreed,
+          count: user.user_stat?.flags_agreed || 0,
         }),
       });
     }
@@ -44,19 +44,21 @@ export default class ReviewableInsights extends Component {
     // User activity insight
     const activities = [];
 
-    if (Date.now() - Date.parse(user.created_at) < 7 * 24 * 60 * 60 * 1000) {
-      activities.push(i18n("review.insights.activities.new_account"));
-    }
-    if (user.trustLevel) {
-      activities.push(
-        i18n("review.insights.activities.trust_level", {
-          trustLevelName: user.trustLevel.name,
-        })
-      );
+    if (user) {
+      if (Date.now() - Date.parse(user.created_at) < 7 * 24 * 60 * 60 * 1000) {
+        activities.push(i18n("review.insights.activities.new_account"));
+      }
+      if (user.trustLevel) {
+        activities.push(
+          i18n("review.insights.activities.trust_level", {
+            trustLevelName: user.trustLevel.name,
+          })
+        );
+      }
     }
     activities.push(
       i18n("review.insights.activities.posts", {
-        count: user.post_count,
+        count: user?.post_count || 0,
       })
     );
     insights.push({
@@ -66,7 +68,7 @@ export default class ReviewableInsights extends Component {
     });
 
     // Visibility insight
-    if (!reviewable?.topic?.visible) {
+    if (reviewable?.topic && !reviewable?.topic?.visible) {
       insights.push({
         icon: "far-eye-slash",
         label: i18n("review.insights.visibility"),

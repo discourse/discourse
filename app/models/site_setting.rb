@@ -236,6 +236,24 @@ class SiteSetting < ActiveRecord::Base
     ).order(created_at: :desc)
   end
 
+  class ImageQuality
+    def self.png_to_jpg_quality
+      SiteSetting.png_to_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+
+    def self.recompress_original_jpg_quality
+      SiteSetting.recompress_original_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+
+    def self.image_preview_jpg_quality
+      SiteSetting.image_preview_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+  end
+
+  def self.ImageQuality
+    SiteSetting::ImageQuality
+  end
+
   # helpers for getting s3 settings that fallback to global
   class Upload
     def self.s3_cdn_url

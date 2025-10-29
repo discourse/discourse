@@ -236,6 +236,66 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe "ImageQuality" do
+    describe "#png_to_jpg_quality" do
+      context "when set to zero" do
+        before { SiteSetting.png_to_jpg_quality = 0 }
+
+        it "falls back to unified image quality setting" do
+          expect(SiteSetting.ImageQuality.png_to_jpg_quality).to eq(SiteSetting.image_quality)
+        end
+      end
+
+      context "when set to any non-zero value" do
+        before { SiteSetting.png_to_jpg_quality = 42 }
+
+        it "uses the configured value" do
+          expect(SiteSetting.ImageQuality.png_to_jpg_quality).to eq(42)
+        end
+      end
+    end
+
+    describe "#recompress_original_jpg_quality" do
+      context "when set to zero" do
+        before { SiteSetting.recompress_original_jpg_quality = 0 }
+
+        it "falls back to unified image quality setting" do
+          expect(SiteSetting.ImageQuality.recompress_original_jpg_quality).to eq(
+            SiteSetting.image_quality,
+          )
+        end
+      end
+
+      context "when set to any non-zero value" do
+        before { SiteSetting.recompress_original_jpg_quality = 42 }
+
+        it "uses the configured value" do
+          expect(SiteSetting.ImageQuality.recompress_original_jpg_quality).to eq(42)
+        end
+      end
+    end
+
+    describe "#image_preview_jpg_quality" do
+      context "when set to zero" do
+        before { SiteSetting.image_preview_jpg_quality = 0 }
+
+        it "falls back to unified image quality setting" do
+          expect(SiteSetting.ImageQuality.image_preview_jpg_quality).to eq(
+            SiteSetting.image_quality,
+          )
+        end
+      end
+
+      context "when set to any non-zero value" do
+        before { SiteSetting.image_preview_jpg_quality = 42 }
+
+        it "uses the configured value" do
+          expect(SiteSetting.ImageQuality.image_preview_jpg_quality).to eq(42)
+        end
+      end
+    end
+  end
+
   describe "Upload" do
     before { setup_s3 }
 
