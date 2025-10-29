@@ -83,6 +83,16 @@ ur:
         select_option: "ایک آپشن منتخب کریں..."
       translations:
         title: "ترجمہ"
+        stats:
+          eta_minutes:
+            one: "%{count} منٹ"
+            other: "%{count} منٹس"
+          eta_hours:
+            one: "%{count} گھنٹہ"
+            other: "%{count} گھنٹے"
+          eta_days:
+            one: "%{count} دن"
+            other: "%{count} دن"
         progress_chart:
           bar_done:
             one: "%{count} پوسٹ"

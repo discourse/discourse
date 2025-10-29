@@ -16,6 +16,8 @@ el:
       not_accepting_dms: "Λυπούμαστε, ο/η %{username} δεν δέχεται μηνύματα αυτή τη στιγμή."
     reviewables:
       actions:
+        no_action_message:
+          title: "Καμία ενέργεια"
         agree_and_suspend:
           title: "Αποβολή Χρήστη"
         agree_and_silence:

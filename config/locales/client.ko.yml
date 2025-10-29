@@ -408,6 +408,7 @@ ko:
       other: "%{count}개의 새 주제 보기"
     preview: "미리보기"
     cancel: "취소"
+    done: "완료"
     deleting: "삭제 중…"
     save: "변경사항 저장"
     saving: "저장 중…"
@@ -2539,8 +2540,6 @@ ko:
       auto_close_title: "자동 종료 설정"
       auto_close_immediate:
         other: "주제의 마지막 게시물은 이미 %{count} 시간이 지났으므로 이 주제는 즉시 종료됩니다."
-      auto_close_momentarily:
-        other: "주제의 마지막 게시물은 이미 %{count} 시간이 지났으므로 이 주제는 일시적으로 종료됩니다."
       timeline:
         back: "뒤로 가기"
         back_description: "읽지 않은 마지막 게시물로 이동합니다"
@@ -3326,7 +3325,6 @@ ko:
     preloader_text: "로딩 중"
     lightbox:
       download: "다운로드"
-      open: "원본 이미지"
       previous: "이전(왼쪽 화살표 키)"
       next: "다음(오른쪽 화살표 키)"
       counter: "%curr% / %total%"

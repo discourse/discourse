@@ -74,6 +74,8 @@ et:
       chat_message_separator:
         today: Täna
         yesterday: Eile
+      search_view:
+        filter_placeholder: Otsi sõnumeid
       about_view:
         title: Pealkiri
         name: Nimi
@@ -83,6 +85,7 @@ et:
         tabs:
           members: Liikmed
           settings: Sätted
+          search: Otsi
         remove_member: "Eemalda"
       new_message_modal:
         filter: "Filter"
@@ -119,6 +122,11 @@ et:
         members_label: "Liikmed"
       admin:
         title: "Vestlus"
+      search:
+        no_results: "Ei leidnud midagi"
+        sort:
+          relevance: "Asjakohasus"
+          latest: "Värskeimad"
       channel_list:
         title: "Kanalid"
       incoming_webhooks:

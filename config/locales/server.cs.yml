@@ -4710,6 +4710,8 @@ cs:
         title: "Odmítnout a odstranit příspěvek"
       reject_and_keep_deleted:
         title: "Ponechat příspěvek smazaný"
+      scrub:
+        title: Očistit záznam
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
       no_action_post:

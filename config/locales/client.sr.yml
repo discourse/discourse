@@ -532,6 +532,7 @@ sr:
       other: "Pogledajte %{count} novih tema"
     preview: "prikaži"
     cancel: "Odustani"
+    done: "Gotovo"
     deleting: "Brisanje…"
     save: "Sačuvaj izmene"
     saving: "Snimanje…"
@@ -2404,7 +2405,7 @@ sr:
       readonly: "Pogledaj"
     preloader_text: "Učitavanje"
     lightbox:
-      download: "preuzmi"
+      download: "Preuzmi"
       counter: "%curr% od %total%"
     keyboard_shortcuts_help:
       title: "Prečice na tastaturi"

@@ -277,6 +277,16 @@ pt_BR:
         card: "Cartão"
       translations:
         title: "Traduções"
+        stats:
+          eta_minutes:
+            one: "%{count} minuto"
+            other: "%{count} minutos"
+          eta_hours:
+            one: "%{count} hora"
+            other: "%{count} horas"
+          eta_days:
+            one: "%{count} dia"
+            other: "%{count} dias"
         progress_chart:
           bar_done:
             one: "%{count} postagem"
@@ -781,6 +791,7 @@ pt_BR:
         cancel_streaming: "Parar resposta"
         default_pm_prefix: "[MP de bot de IA não identificado]"
         shortcut_title: "Iniciar uma MP com bot de IA"
+        shortcut_link: "Bot de IA"
         exit: "sair do bot de IA"
         share: "Copiar conversa com IA"
         conversation_shared: "Conversa copiada"

@@ -277,6 +277,16 @@ it:
         card: "Scheda"
       translations:
         title: "Traduzioni"
+        stats:
+          eta_minutes:
+            one: "%{count} minuto"
+            other: "%{count} minuti"
+          eta_hours:
+            one: "%{count} ora"
+            other: "%{count} ore"
+          eta_days:
+            one: "%{count} giorno"
+            other: "%{count} giorni"
         progress_chart:
           bar_done:
             one: "%{count} messaggio"
@@ -781,6 +791,7 @@ it:
         cancel_streaming: "Interrompi risposta"
         default_pm_prefix: "[MP di bot IA senza titolo]"
         shortcut_title: "Avvia un MP con un bot IA"
+        shortcut_link: "Bot IA"
         exit: "esci dal bot AI"
         share: "Copia la conversazione IA"
         conversation_shared: "Conversazione copiata"

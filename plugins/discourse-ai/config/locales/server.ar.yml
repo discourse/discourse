@@ -26,10 +26,6 @@ ar:
       llm_triage:
         title: فرز المنشورات باستخدام الذكاء الاصطناعي
         description: "فرز المنشورات باستخدام نموذج اللغة الكبير"
-        flagged_post: |
-          <div>استجابة من النموذج:</div>
-          <p>%{llm_response}</p>
-          <b>تم تشغيله من قِبل <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> القاعدة.</b>
       llm_report:
         title: التقرير الدوري باستخدام الذكاء الاصطناعي
         description: "تقرير دوري قائم على نموذج اللغة الكبير"
@@ -102,7 +98,6 @@ ar:
     ai_bot_allowed_groups: "عندما يتمكن GPT Bot من الوصول إلى الرسالة الخاصة، فإنه سيرد على أعضاء هذه المجموعات."
     ai_bot_debugging_allowed_groups: "السماح لهذه المجموعات برؤية زر تصحيح الأخطاء في المنشورات التي تعرض طلب الذكاء الاصطناعي الأولي والرد"
     ai_bot_public_sharing_allowed_groups: "السماح لهذه المجموعات بمشاركة رسائل الذكاء الاصطناعي الشخصية مع العامة عبر رابط فريد متاح بشكلٍ علني. ملاحظة: إذا كان موقعك يتطلَّب تسجيل الدخول، فستتطلب المشاركة تسجيل الدخول أيضًا."
-    ai_bot_add_to_header: "عرض زر في الرأس لبدء رسالة خاصة مع روبوت ذكاء اصطناعي"
     ai_bot_github_access_token: "رمز وصول GitHub للاستخدام مع أدوات الذكاء الاصطناعي من GitHub (مطلوب لدعم البحث)"
     ai_stability_api_key: "مفتاح API لواجهة API المسماة stability.ai"
     ai_stability_engine: "محرك إنشاء الصور المراد استخدامه لواجهة API المسماة stability.ai"

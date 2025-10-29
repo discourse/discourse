@@ -60,6 +60,16 @@ sv:
         table: "Tabell"
       translations:
         title: "Översättningar"
+        stats:
+          eta_minutes:
+            one: "%{count} minut"
+            other: "%{count} minuter"
+          eta_hours:
+            one: "%{count} timme"
+            other: "%{count} timmar"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dagar"
         progress_chart:
           bar_done:
             one: "%{count} inlägg"
