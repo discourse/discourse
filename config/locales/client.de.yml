@@ -3288,7 +3288,7 @@ de:
         hot: "Es gibt keine heißen Themen."
         filter: "Es gibt keine Themen."
         education:
-          topic_tracking_preferences: 'Du kannst deine Einstellungen für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
+          topic_tracking_preferences: 'Du kannst deine Konfiguration für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
           unread: "Nichts ungelesen … beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"

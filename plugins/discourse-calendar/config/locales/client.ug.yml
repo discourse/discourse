@@ -5,6 +5,12 @@
 # https://translate.discourse.org/
 
 ug:
+  admin_js:
+    admin:
+      calendar: "يىلنامە"
+      site_settings:
+        categories:
+          discourse_calendar: "Discourse يىلنامە"
   js:
     discourse_automation:
       triggerables:

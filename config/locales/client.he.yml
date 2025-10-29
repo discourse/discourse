@@ -5799,6 +5799,7 @@ he:
           header_description: "הגדרת התצוגה המשפטית, כגון תנאי השירות, מדיניות פרטיות, פרטי יצירת קשר ונושאים נקודתיים לאיחוד האירופי"
         theme_site_settings:
           title: "הגדרות ערכת העיצוב של האתר"
+          header_description: "הצגת כל הגדרות האתר עם ערכת נושא ואת ערכות הנושא שדורסות אותן"
         localization:
           title: "תרגום"
           header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
@@ -6091,6 +6092,7 @@ he:
         default_value: "ברירת מחדל"
         overridden_value: "ערך שנדרס: %{value}"
         select_setting: "נא לבחור הגדרת אתר כדי לצפות בערכי ערכת העיצוב הנוכחיים"
+        add: "הגדרות אתר עם ערכת עיצוב"
         help: "ערכת הנושא בשימוש כרגע היא <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. יש לגשת אל <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>עמוד הגדרות ערכת העיצוב</a> כדי לשנות את הגדרות ערכת העיצוב של האתר או ללחוץ על ערכת עיצוב מקושרת בטבלה שלהלן כדי לערוך את ההגדרות שלה."
       search:
         modal_title: "חיפוש בכול הניהול"
