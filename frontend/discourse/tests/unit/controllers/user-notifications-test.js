@@ -2,37 +2,42 @@ import EmberObject from "@ember/object";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import ResultSet from "discourse/models/result-set";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Controller | user-notifications", function (hooks) {
   setupTest(hooks);
 
   test("Mark read marks all models read when response is 200", async function (assert) {
-    const model = [
-      EmberObject.create({ read: false }),
-      EmberObject.create({ read: false }),
-    ];
+    const model = ResultSet.create({
+      content: [
+        EmberObject.create({ read: false }),
+        EmberObject.create({ read: false }),
+      ],
+    });
     const controller = this.owner.lookup("controller:user-notifications");
     controller.setProperties({ model });
     pretender.put("/notifications/mark-read", () => response({}));
 
     await controller.markRead();
 
-    assert.true(model.every(({ read }) => read === true));
+    assert.true(model.content.every(({ read }) => read === true));
   });
 
   test("Mark read does not mark models read when response is not successful", async function (assert) {
-    const model = [
-      EmberObject.create({ read: false }),
-      EmberObject.create({ read: true }),
-    ];
+    const model = ResultSet.create({
+      content: [
+        EmberObject.create({ read: false }),
+        EmberObject.create({ read: true }),
+      ],
+    });
     const controller = this.owner.lookup("controller:user-notifications");
     controller.setProperties({ model });
     pretender.put("/notifications/mark-read", () => response(500));
 
     assert.rejects(controller.markRead());
     assert.deepEqual(
-      model.map(({ read }) => read),
+      model.content.map(({ read }) => read),
       [false, true],
       "models unmodified"
     );
@@ -46,7 +51,9 @@ module("Unit | Controller | user-notifications", function (hooks) {
     });
     const controller = this.owner.lookup("controller:user-notifications");
     controller.setProperties({
-      model: [],
+      model: ResultSet.create({
+        content: [],
+      }),
       currentUser,
     });
     sinon.stub(controller, "markRead").callsFake(() => (markRead = true));
