@@ -33,6 +33,7 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
+import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 
 let _components = {};
 
@@ -180,9 +181,13 @@ export default class ReviewableItem extends Component {
   @discourseComputed(
     "claimEnabled",
     "siteSettings.reviewable_claiming",
-    "reviewable.claimed_by"
+    "reviewable.claimed_by",
+    "reviewable.bundled_actions"
   )
-  canPerform(claimEnabled, claimMode, claimedBy) {
+  canPerform(claimEnabled, claimMode, claimedBy, bundledActions) {
+    if (bundledActions?.length === 0) {
+      return false;
+    }
     if (!claimEnabled) {
       return true;
     }
@@ -386,6 +391,29 @@ export default class ReviewableItem extends Component {
       this.remove(result.remove_reviewable_ids);
     } else {
       return this.store.find("reviewable", reviewable.id);
+    }
+  }
+
+  @action
+  clientScrub() {
+    this.modal.show(ScrubRejectedUserModal, {
+      model: {
+        confirmScrub: this.scrubRejectedUser,
+      },
+    });
+  }
+
+  @bind
+  async scrubRejectedUser(reason) {
+    try {
+      await ajax({
+        url: `/review/${this.reviewable.id}/scrub`,
+        type: "PUT",
+        data: { reason },
+      });
+      this.store.find("reviewable", this.reviewable.id);
+    } catch (e) {
+      popupAjaxError(e);
     }
   }
 
