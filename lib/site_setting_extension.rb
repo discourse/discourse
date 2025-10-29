@@ -327,13 +327,18 @@ module SiteSettingExtension
 
     include_locale_setting = false if filter_categories.present? || filter_plugin.present?
 
+    # There is a hidden_site_settings modifier in HiddenSettingsProvider
+    # that can cause perf overhead, so instead of calling hidden_settings
+    # in a loop, we call it once here.
+    current_hidden_settings = hidden_settings
+
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
         plugins[name] && !Discourse.plugins_by_name[plugins[name]].configurable?
       end
       .select do |setting_name, _|
-        is_hidden = hidden_settings.include?(setting_name)
+        is_hidden = current_hidden_settings.include?(setting_name)
 
         next true if !is_hidden
         next false if !include_hidden

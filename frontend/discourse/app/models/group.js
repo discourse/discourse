@@ -2,6 +2,7 @@ import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
@@ -471,12 +472,14 @@ export default class Group extends RestModel {
       Site.current().updateCategory(category);
     });
 
-    return result.posts.map((p) => {
-      p.user = User.create(p.user);
-      p.topic = Topic.create(p.topic);
-      p.category = Category.findById(p.category_id);
-      return EmberObject.create(p);
-    });
+    return new TrackedArray(
+      result.posts.map((p) => {
+        p.user = User.create(p.user);
+        p.topic = Topic.create(p.topic);
+        p.category = Category.findById(p.category_id);
+        return EmberObject.create(p);
+      })
+    );
   }
 
   setNotification(notification_level, userId) {

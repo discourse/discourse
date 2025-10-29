@@ -640,6 +640,7 @@ RSpec.describe SiteSettingExtension do
 
   describe "hidden" do
     before do
+      settings.setting(:other_setting, "Blah")
       settings.setting(:superman_identity, "Clark Kent", hidden: true)
       settings.refresh!
     end
@@ -660,6 +661,17 @@ RSpec.describe SiteSettingExtension do
       expect(
         settings.all_settings(include_hidden: true).find { |s| s[:setting] == :superman_identity },
       ).to be_present
+    end
+
+    it "does not call the hidden_site_settings plugin modifier in a loop" do
+      called = 0
+      plugin = Plugin::Instance.new
+      plugin.register_modifier(:hidden_site_settings) do |defaults|
+        called += 1
+        defaults + [:other_setting]
+      end
+      settings.all_settings(include_hidden: true)
+      expect(called).to eq(1)
     end
   end
 

@@ -25,6 +25,7 @@ import { EditorView } from "prosemirror-view";
 import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+import { authorizesOneOrMoreExtensions } from "../../../lib/uploads";
 import { buildCommands, buildCustomState } from "../core/commands";
 import { buildInputRules } from "../core/inputrules";
 import { buildKeymap } from "../core/keymap";
@@ -77,6 +78,7 @@ export default class ProsemirrorEditor extends Component {
   @service site;
   @service siteSettings;
   @service appEvents;
+  @service currentUser;
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
@@ -213,6 +215,28 @@ export default class ProsemirrorEditor extends Component {
         blur: () => {
           next(() => this.args.focusOut?.());
           return false;
+        },
+        paste: (view, event) => {
+          // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
+          // which is originally responsible for preventDefault.
+          if (
+            event.clipboardData.files &&
+            !authorizesOneOrMoreExtensions(
+              this.currentUser.staff,
+              this.siteSettings
+            )
+          ) {
+            event.preventDefault();
+          }
+        },
+        drop: (view, event) => {
+          if (
+            [...event.dataTransfer.items].some((item) => item.kind === "file")
+          ) {
+            // Skip processing the drop event (e.g. Safari cross-window content drag),
+            // Uppy's DropTarget should handle that instead.
+            return true;
+          }
         },
       },
       handleKeyDown: (view, event) => {
