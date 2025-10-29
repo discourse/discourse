@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 class ConvertWatchedPrecedenceOverMutedToDefaultPref < ActiveRecord::Migration[8.0]
   def up
-    execute <<~SQL
-      UPDATE site_settings SET name = 'default_watched_precedence_over_muted'
-      WHERE name = 'watched_precedence_over_muted';
-    SQL
-
     existing_setting_value =
       DB.query_single(
-        "SELECT value FROM site_settings WHERE name = 'default_watched_precedence_over_muted'",
+        "SELECT value FROM site_settings WHERE name = 'watched_precedence_over_muted'",
       ).first
+
+    # Data type 5 is boolean
+    DB.exec(<<~SQL, setting_value: existing_setting_value) if existing_setting_value
+      INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
+      VALUES ('default_watched_precedence_over_muted', 5, :setting_value, NOW(), NOW())
+      SQL
 
     preference_value =
       if existing_setting_value.nil?

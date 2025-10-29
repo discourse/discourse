@@ -1918,10 +1918,6 @@ class User < ActiveRecord::Base
     in_any_groups?(SiteSetting.experimental_new_new_view_groups_map)
   end
 
-  def watched_precedence_over_muted
-    user_option.watched_precedence_over_muted
-  end
-
   def populated_required_custom_fields?
     UserField
       .for_all_users
