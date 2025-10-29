@@ -51,8 +51,8 @@ RSpec.describe Admin::Config::UpcomingChangesController do
           "value" => SiteSetting.enable_upload_debug_mode,
           "upcoming_change" => {
             "impact" => "other,developers",
-            "impact_role" => "admins",
-            "impact_type" => "feature",
+            "impact_role" => "developers",
+            "impact_type" => "other",
             "status" => "pre_alpha",
           },
         )
