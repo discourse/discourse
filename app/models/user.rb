@@ -1919,11 +1919,7 @@ class User < ActiveRecord::Base
   end
 
   def watched_precedence_over_muted
-    if user_option.watched_precedence_over_muted.nil?
-      SiteSetting.watched_precedence_over_muted
-    else
-      user_option.watched_precedence_over_muted
-    end
+    user_option.watched_precedence_over_muted
   end
 
   def populated_required_custom_fields?

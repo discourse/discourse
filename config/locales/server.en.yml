@@ -2684,7 +2684,7 @@ en:
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
     create_post_for_category_and_tag_changes: "Create a whisper post when a topic's category or tags change, requires whisper posts to be enabled."
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or personal messages on a daily basis."
-    watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
+    default_watched_precedence_over_muted: "Notify users about topics in categories or tags that they are watching that also belong to one they have muted"
 
     company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
     governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
