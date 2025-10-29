@@ -124,8 +124,9 @@ class SchemaSettingsObjectValidator
       case type
       when "string"
         value.is_a?(String)
-      when "integer", "topic", "post", "upload"
-        value.is_a?(Integer)
+      when "integer", "topic", "post", value.is_a?(Integer)
+      when "upload"
+        value.is_a?(Integer) || value.is_a?(String)
       when "float"
         value.is_a?(Float) || value.is_a?(Integer)
       when "boolean"
@@ -245,6 +246,7 @@ class SchemaSettingsObjectValidator
     },
     "upload" => {
       klass: Upload,
+      # column: :url,
     },
     "tags" => {
       klass: Tag,

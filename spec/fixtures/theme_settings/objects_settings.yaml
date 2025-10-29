@@ -49,3 +49,11 @@ objects_with_categories:
           properties:
             category_ids:
               type: categories
+objects_with_uploads:
+  type: objects
+  default: []
+  schema:
+    name: images
+    properties:
+      image:
+        type: upload

@@ -37,4 +37,21 @@ class ThemeSettingsManager::Objects < ThemeSettingsManager
 
     Category.secured(guardian).where(id: category_ids)
   end
+
+  def uploads
+    upload_ids = Set.new
+
+    value.each do |theme_setting_object|
+      upload_ids.merge(
+        SchemaSettingsObjectValidator.new(
+          schema:,
+          object: theme_setting_object,
+        ).property_values_of_type("upload"),
+      )
+    end
+
+    return [] if upload_ids.empty?
+
+    ::Upload.where(id: upload_ids).to_a
+  end
 end

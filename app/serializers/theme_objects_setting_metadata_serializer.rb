@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
 class ThemeObjectsSettingMetadataSerializer < ApplicationSerializer
-  attributes :categories, :property_descriptions
+  attributes :categories, uploads, :property_descriptions
 
   def categories
     object
       .categories(scope)
       .reduce({}) do |acc, category|
         acc[category.id] = BasicCategorySerializer.new(category, scope: scope, root: false).as_json
+        acc
+      end
+  end
+
+  def uploads
+    object
+      .uploads
+      .reduce({}) do |acc, upload|
+        acc[upload.id] = UploadSerializer.new(upload, scope: scope, root: false).as_json
         acc
       end
   end

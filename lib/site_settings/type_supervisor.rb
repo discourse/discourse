@@ -131,7 +131,6 @@ class SiteSettings::TypeSupervisor
         @list_type[name] = opts[:list_type] if opts[:list_type]
       end
 
-      # add validator for objects
       if type.to_sym == :objects
         @validators[name] = { class: ObjectsSettingValidator, opts: { schema: opts[:schema] } }
       end
