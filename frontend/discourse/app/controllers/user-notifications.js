@@ -76,7 +76,6 @@ export default class UserNotificationsController extends Controller {
     );
   }
 
-  @action
   async markRead() {
     await ajax("/notifications/mark-read", { type: "PUT" });
     this.model.content.forEach((notification) =>
