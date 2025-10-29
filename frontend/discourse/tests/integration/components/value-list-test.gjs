@@ -8,11 +8,9 @@ module("Integration | Component | value-list", function (hooks) {
   setupRenderingTest(hooks);
 
   test("adding a value", async function (assert) {
-    const self = this;
-
     this.set("values", "vinkas\nosama");
 
-    await render(<template><ValueList @values={{self.values}} /></template>);
+    await render(<template><ValueList @values={{this.values}} /></template>);
 
     await selectKit().expand();
     await selectKit().fillInFilter("eviltrout");
@@ -30,11 +28,9 @@ module("Integration | Component | value-list", function (hooks) {
   });
 
   test("changing a value", async function (assert) {
-    const self = this;
-
     this.set("values", "vinkas\nosama");
 
-    await render(<template><ValueList @values={{self.values}} /></template>);
+    await render(<template><ValueList @values={{this.values}} /></template>);
 
     await fillIn(".values .value[data-index='1'] .value-input", "jarek");
     await blur(".values .value[data-index='1'] .value-input");
@@ -44,11 +40,9 @@ module("Integration | Component | value-list", function (hooks) {
   });
 
   test("removing a value", async function (assert) {
-    const self = this;
-
     this.set("values", "vinkas\nosama");
 
-    await render(<template><ValueList @values={{self.values}} /></template>);
+    await render(<template><ValueList @values={{this.values}} /></template>);
 
     await click(".values .value[data-index='0'] .remove-value-btn");
 
@@ -66,8 +60,6 @@ module("Integration | Component | value-list", function (hooks) {
   });
 
   test("selecting a value", async function (assert) {
-    const self = this;
-
     this.setProperties({
       values: "vinkas\nosama",
       choices: ["maja", "michael"],
@@ -75,7 +67,7 @@ module("Integration | Component | value-list", function (hooks) {
 
     await render(
       <template>
-        <ValueList @values={{self.values}} @choices={{self.choices}} />
+        <ValueList @values={{this.values}} @choices={{this.choices}} />
       </template>
     );
 
@@ -94,13 +86,11 @@ module("Integration | Component | value-list", function (hooks) {
   });
 
   test("array support", async function (assert) {
-    const self = this;
-
     this.set("values", ["vinkas", "osama"]);
 
     await render(
       <template>
-        <ValueList @values={{self.values}} @inputType="array" />
+        <ValueList @values={{this.values}} @inputType="array" />
       </template>
     );
 
@@ -122,13 +112,11 @@ module("Integration | Component | value-list", function (hooks) {
   });
 
   test("delimiter support", async function (assert) {
-    const self = this;
-
     this.set("values", "vinkas|osama");
 
     await render(
       <template>
-        <ValueList @values={{self.values}} @inputDelimiter="|" />
+        <ValueList @values={{this.values}} @inputDelimiter="|" />
       </template>
     );
 

@@ -53,6 +53,8 @@ gl:
       chat_message_separator:
         today: Hoxe
         yesterday: Onte
+      search_view:
+        filter_placeholder: Buscar mensaxes
       about_view:
         title: Título
         name: Nome
@@ -62,6 +64,7 @@ gl:
         tabs:
           members: Membros
           settings: Configuración
+          search: Buscar
         remove_member: "Retirar"
       new_message_modal:
         no_items: "Sen elementos"
@@ -95,6 +98,11 @@ gl:
         category_label: "Categoría"
         history_label: "Historial"
         members_label: "Membros"
+      search:
+        no_results: "Non se atoparon resultados"
+        sort:
+          relevance: "Relevancia"
+          latest: "Últimos"
       incoming_webhooks:
         back: "Volver"
         description: "Descrición"

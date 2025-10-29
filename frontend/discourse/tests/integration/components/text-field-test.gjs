@@ -34,8 +34,6 @@ module("Integration | Component | text-field", function (hooks) {
   });
 
   test("supports onChange", async function (assert) {
-    const self = this;
-
     this.called = false;
     this.newValue = null;
     this.set("value", "hello");
@@ -48,8 +46,8 @@ module("Integration | Component | text-field", function (hooks) {
       <template>
         <TextField
           class="tf-test"
-          @value={{self.value}}
-          @onChange={{self.changed}}
+          @value={{this.value}}
+          @onChange={{this.changed}}
         />
       </template>
     );
@@ -63,8 +61,6 @@ module("Integration | Component | text-field", function (hooks) {
   });
 
   test("supports onChangeImmediate", async function (assert) {
-    const self = this;
-
     this.called = false;
     this.newValue = null;
     this.set("value", "old");
@@ -77,8 +73,8 @@ module("Integration | Component | text-field", function (hooks) {
       <template>
         <TextField
           class="tf-test"
-          @value={{self.value}}
-          @onChangeImmediate={{self.changed}}
+          @value={{this.value}}
+          @onChangeImmediate={{this.changed}}
         />
       </template>
     );

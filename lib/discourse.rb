@@ -934,6 +934,26 @@ module Discourse
     Process.warmup
   end
 
+  def self.after_unicorn_worker_fork
+    variables_overrides = {}
+    unicorn_worker_db_variables_prefix = "unicorn_worker_db_variables_"
+
+    GlobalSetting.provider.keys.each do |key|
+      if key.start_with?(unicorn_worker_db_variables_prefix)
+        variables_overrides[
+          key.to_s.sub(unicorn_worker_db_variables_prefix, "").downcase.to_sym
+        ] = GlobalSetting.public_send(key)
+      end
+    end
+
+    if variables_overrides.any?
+      ActiveRecord::Base.configurations =
+        Rails.application.config.database_configuration(variables_overrides:)
+      ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+      ActiveRecord::Base.establish_connection
+    end
+  end
+
   # all forking servers must call this
   # after fork, otherwise Discourse will be
   # in a bad state

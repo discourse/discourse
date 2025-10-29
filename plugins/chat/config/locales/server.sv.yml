@@ -96,6 +96,8 @@ sv:
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:
+        no_action_message:
+          title: "Ingen åtgärd"
         agree:
           title: "Godkänn..."
         agree_and_keep_message:

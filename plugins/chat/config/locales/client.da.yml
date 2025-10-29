@@ -145,6 +145,8 @@ da:
       chat_message_separator:
         today: I dag
         yesterday: I går
+      search_view:
+        filter_placeholder: Søg i meddelelser
       members_view:
         add_member: Tilføj Medlem
         back_to_settings: "Tilbage til indstillinger"
@@ -157,6 +159,7 @@ da:
         tabs:
           members: Brugere
           settings: Indstillinger
+          search: Søg
         remove_member: "Fjern"
       new_message_modal:
         no_items: "Ingen punkter"
@@ -212,6 +215,11 @@ da:
         title: "Chat"
         export_messages:
           description: "Dette eksporterer alle beskeder fra alle kanaler."
+      search:
+        no_results: "Ingen resultater fundet"
+        sort:
+          relevance: "Relevans"
+          latest: "Seneste"
       incoming_webhooks:
         back: "Tilbage"
         description: "Beskrivelse"

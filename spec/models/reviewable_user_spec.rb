@@ -329,4 +329,17 @@ RSpec.describe ReviewableUser, type: :model do
       end
     end
   end
+  describe "#build_new_separated_actions" do
+    fab!(:reviewable)
+
+    it "returns correct actions in the pending state" do
+      reviewable.actions_for(Guardian.new(moderator))
+      expect(reviewable.build_new_separated_actions.actions.map(&:id)).to eq(
+        %w[user-approve_user user-delete_user user-delete_user_block],
+      )
+
+      reviewable.update!(status: Reviewable.statuses[:rejected])
+      expect(reviewable.build_new_separated_actions.actions.map(&:id)).to eq(%w[user-scrub])
+    end
+  end
 end

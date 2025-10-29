@@ -126,14 +126,14 @@ export default class ReviewIndexController extends Controller {
       return;
     }
 
-    let newList = this.reviewables.filter(
+    let newList = this.reviewables.content.filter(
       (reviewable) => !ids.includes(reviewable.id)
     );
 
     if (newList.length === 0) {
       this.refreshModel();
     } else {
-      this.reviewables.setObjects(newList);
+      this.reviewables.content.splice(0, Infinity, ...newList);
     }
   }
 

@@ -277,6 +277,16 @@ fi:
         card: "Kortti"
       translations:
         title: "Käännökset"
+        stats:
+          eta_minutes:
+            one: "%{count} minuutti"
+            other: "%{count} minuuttia"
+          eta_hours:
+            one: "%{count} tunti"
+            other: "%{count} tuntia"
+          eta_days:
+            one: "%{count} päivä"
+            other: "%{count} päivää"
         progress_chart:
           bar_done:
             one: "ensimmäisen %{count} viestin"
@@ -781,6 +791,7 @@ fi:
         cancel_streaming: "Lopeta vastaus"
         default_pm_prefix: "[Nimetön tekoälybotin yksityisviesti]"
         shortcut_title: "Aloita yksityiskeskustelu tekoälybotin kanssa"
+        shortcut_link: "Tekoälybotti"
         exit: "poistu tekoälybotista"
         share: "Kopioi tekoälykeskustelu"
         conversation_shared: "Keskustelu kopioitu"

@@ -598,6 +598,7 @@ hu:
       other: "%{count} új téma megtekintése"
     preview: "előnézet"
     cancel: "Mégse"
+    done: "Kész"
     deleting: "Törlés…"
     save: "Módosítások mentése"
     saving: "Mentés…"
@@ -3529,9 +3530,6 @@ hu:
       auto_close_immediate:
         one: "A téma utolsó bejegyzése már %{count} órás, ezért a téma azonnal lezárásra kerül."
         other: "A téma utolsó bejegyzése már %{count} órás, ezért a téma azonnal lezárásra kerül."
-      auto_close_momentarily:
-        one: "A téma utolsó bejegyzése már %{count} órás, ezért a téma hamarosan lezárásra kerül."
-        other: "A téma utolsó bejegyzése már %{count} órás, ezért a téma hamarosan lezárásra kerül."
       timeline:
         back: "Vissza"
         back_description: "Vissza az utolsó olvasatlan bejegyzéshez"
@@ -4542,8 +4540,7 @@ hu:
       readonly: "Megtekintés"
     preloader_text: "Betöltés"
     lightbox:
-      download: "letöltés"
-      open: "eredeti kép"
+      download: "Letöltés"
       previous: "Előző (balra nyíl billentyű)"
       next: "Következő (jobbra nyíl billentyű)"
       counter: "%curr% / %total%"

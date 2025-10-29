@@ -387,6 +387,7 @@ export function buildResolver(baseName) {
         let adminParsedName = this.parseName(`template:${namespaced}`);
         const candidates = [
           [parsedName, "discourse/admin/templates/"],
+          [parsedName, "admin/templates/"],
           [adminParsedName, "admin/templates/"],
           [adminParsedName, "discourse/admin/templates/"],
           [adminParsedName, "admin/"],

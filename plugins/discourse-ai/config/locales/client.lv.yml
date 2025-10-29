@@ -54,6 +54,15 @@ lv:
       modals:
         select_option: "Izvēlieties opciju..."
       translations:
+        stats:
+          eta_hours:
+            zero: "%{count} stundas"
+            one: "%{count} stunda"
+            other: "%{count} stundas"
+          eta_days:
+            zero: "%{count} dienas"
+            one: "%{count} diena"
+            other: "%{count} dienas"
         progress_chart:
           bar_done:
             zero: "%{count} raksti"

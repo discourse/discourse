@@ -21,6 +21,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "category-text-color",
   "composer-editor-quoted-post-avatar-template",
   "composer-editor-reply-placeholder",
+  "composer-message-components",
   "composer-reply-options-user-link-name",
   "composer-reply-options-user-avatar-template",
   "composer-save-button-label",

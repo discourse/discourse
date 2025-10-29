@@ -38,8 +38,6 @@ module("Poll | Component | poll-results-standard", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the standard results Component correctly", async function (assert) {
-    const self = this;
-
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
@@ -55,15 +53,15 @@ module("Poll | Component | poll-results-standard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
-          @options={{self.options}}
-          @pollName={{self.pollName}}
-          @pollType={{self.pollType}}
-          @isPublic={{self.isPublic}}
-          @postId={{self.postId}}
-          @vote={{self.vote}}
-          @voters={{self.voters}}
-          @votersCount={{self.votersCount}}
-          @fetchVoters={{self.fetchVoters}}
+          @options={{this.options}}
+          @pollName={{this.pollName}}
+          @pollType={{this.pollType}}
+          @isPublic={{this.isPublic}}
+          @postId={{this.postId}}
+          @vote={{this.vote}}
+          @voters={{this.voters}}
+          @votersCount={{this.votersCount}}
+          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -74,8 +72,6 @@ module("Poll | Component | poll-results-standard", function (hooks) {
   });
 
   test("Omits voters for private polls", async function (assert) {
-    const self = this;
-
     this.setProperties({
       options: TWO_OPTIONS,
       pollName: "Two Choice Poll",
@@ -91,15 +87,15 @@ module("Poll | Component | poll-results-standard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
-          @options={{self.options}}
-          @pollName={{self.pollName}}
-          @pollType={{self.pollType}}
-          @isPublic={{self.isPublic}}
-          @postId={{self.postId}}
-          @vote={{self.vote}}
-          @voters={{self.voters}}
-          @votersCount={{self.votersCount}}
-          @fetchVoters={{self.fetchVoters}}
+          @options={{this.options}}
+          @pollName={{this.pollName}}
+          @pollType={{this.pollType}}
+          @isPublic={{this.isPublic}}
+          @postId={{this.postId}}
+          @vote={{this.vote}}
+          @voters={{this.voters}}
+          @votersCount={{this.votersCount}}
+          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -108,8 +104,6 @@ module("Poll | Component | poll-results-standard", function (hooks) {
   });
 
   test("options in ascending order", async function (assert) {
-    const self = this;
-
     this.setProperties({
       options: TWO_OPTIONS_REVERSED,
       pollName: "Two Choice Poll",
@@ -124,14 +118,14 @@ module("Poll | Component | poll-results-standard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
-          @options={{self.options}}
-          @pollName={{self.pollName}}
-          @pollType={{self.pollType}}
-          @postId={{self.postId}}
-          @vote={{self.vote}}
-          @voters={{self.voters}}
-          @votersCount={{self.votersCount}}
-          @fetchVoters={{self.fetchVoters}}
+          @options={{this.options}}
+          @pollName={{this.pollName}}
+          @pollType={{this.pollType}}
+          @postId={{this.postId}}
+          @vote={{this.vote}}
+          @voters={{this.voters}}
+          @votersCount={{this.votersCount}}
+          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -141,8 +135,6 @@ module("Poll | Component | poll-results-standard", function (hooks) {
   });
 
   test("options in ascending order", async function (assert) {
-    const self = this;
-
     this.setProperties({
       options: FIVE_OPTIONS,
       pollName: "Five Multi Option Poll",
@@ -157,14 +149,14 @@ module("Poll | Component | poll-results-standard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
-          @options={{self.options}}
-          @pollName={{self.pollName}}
-          @pollType={{self.pollType}}
-          @postId={{self.postId}}
-          @vote={{self.vote}}
-          @voters={{self.voters}}
-          @votersCount={{self.votersCount}}
-          @fetchVoters={{self.fetchVoters}}
+          @options={{this.options}}
+          @pollName={{this.pollName}}
+          @pollType={{this.pollType}}
+          @postId={{this.postId}}
+          @vote={{this.vote}}
+          @voters={{this.voters}}
+          @votersCount={{this.votersCount}}
+          @fetchVoters={{this.fetchVoters}}
         />
       </template>
     );
@@ -181,8 +173,6 @@ module("Poll | Component | poll-results-standard", function (hooks) {
   });
 
   test("options in ascending order, showing absolute vote number", async function (assert) {
-    const self = this;
-
     this.setProperties({
       options: FIVE_OPTIONS,
       pollName: "Five Multi Option Poll",
@@ -198,15 +188,15 @@ module("Poll | Component | poll-results-standard", function (hooks) {
     await render(
       <template>
         <PollResultsStandard
-          @options={{self.options}}
-          @pollName={{self.pollName}}
-          @pollType={{self.pollType}}
-          @postId={{self.postId}}
-          @vote={{self.vote}}
-          @voters={{self.voters}}
-          @votersCount={{self.votersCount}}
-          @fetchVoters={{self.fetchVoters}}
-          @showTally={{self.showTally}}
+          @options={{this.options}}
+          @pollName={{this.pollName}}
+          @pollType={{this.pollType}}
+          @postId={{this.postId}}
+          @vote={{this.vote}}
+          @voters={{this.voters}}
+          @votersCount={{this.votersCount}}
+          @fetchVoters={{this.fetchVoters}}
+          @showTally={{this.showTally}}
         />
       </template>
     );

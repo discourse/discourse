@@ -112,6 +112,10 @@ sk:
     reviewables:
       message_already_handled: "Ďakujeme, ale túto správu sme už skontrolovali a rozhodli sme sa, že ju netreba znova nahlásiť."
       actions:
+        no_action_message:
+          title: "Žiadna akcia"
+        restore_message:
+          description: "Obnovte správu, aby ju používatelia mohli vidieť."
         agree:
           title: "Súhlasím..."
         agree_and_keep_message:

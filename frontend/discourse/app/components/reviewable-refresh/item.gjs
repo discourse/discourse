@@ -19,6 +19,7 @@ import ReviewableBundledAction from "discourse/components/reviewable-bundled-act
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewableFlagReason from "discourse/components/reviewable-refresh/flag-reason";
+import ReviewableHelpResources from "discourse/components/reviewable-refresh/help-resources";
 import ReviewableInsights from "discourse/components/reviewable-refresh/insights";
 import ReviewableTimeline from "discourse/components/reviewable-refresh/timeline";
 import concatClass from "discourse/helpers/concat-class";
@@ -32,6 +33,7 @@ import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
+import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 
 let _components = {};
 
@@ -179,9 +181,13 @@ export default class ReviewableItem extends Component {
   @discourseComputed(
     "claimEnabled",
     "siteSettings.reviewable_claiming",
-    "reviewable.claimed_by"
+    "reviewable.claimed_by",
+    "reviewable.bundled_actions"
   )
-  canPerform(claimEnabled, claimMode, claimedBy) {
+  canPerform(claimEnabled, claimMode, claimedBy, bundledActions) {
+    if (bundledActions?.length === 0) {
+      return false;
+    }
     if (!claimEnabled) {
       return true;
     }
@@ -385,6 +391,29 @@ export default class ReviewableItem extends Component {
       this.remove(result.remove_reviewable_ids);
     } else {
       return this.store.find("reviewable", reviewable.id);
+    }
+  }
+
+  @action
+  clientScrub() {
+    this.modal.show(ScrubRejectedUserModal, {
+      model: {
+        confirmScrub: this.scrubRejectedUser,
+      },
+    });
+  }
+
+  @bind
+  async scrubRejectedUser(reason) {
+    try {
+      await ajax({
+        url: `/review/${this.reviewable.id}/scrub`,
+        type: "PUT",
+        data: { reason },
+      });
+      this.store.find("reviewable", this.reviewable.id);
+    } catch (e) {
+      popupAjaxError(e);
     }
   }
 
@@ -713,66 +742,19 @@ export default class ReviewableItem extends Component {
             {{/if}}
           {{/unless}}
 
-          <div class="review-item__moderator-actions --extra">
-            {{#if this.claimEnabled}}
+          {{#if this.claimEnabled}}
+            <div class="review-item__moderator-actions --extra">
               <ReviewableClaimedTopic
                 @topicId={{this.topicId}}
                 @claimedBy={{this.reviewable.claimed_by}}
                 @onClaim={{fn (mut this.reviewable.claimed_by)}}
               />
-            {{/if}}
-            <DButton
-              @label="review.copy_link"
-              @icon="link"
-              class="btn-secondary"
-            />
-            <DButton
-              @label="review.view_source"
-              @icon="code"
-              class="btn-secondary"
-            />
-          </div>
+            </div>
+          {{/if}}
 
-          <div class="review-item__resources">
-            <h3 class="review-item__aside-title">{{i18n
-                "review.need_help"
-              }}</h3>
-            <ul class="review-resources__list">
-              <li class="review-resources__item">
-                <span class="review-resources__icon">
-                  {{icon "book"}}
-                </span>
-                <a
-                  href={{this.siteSettings.moderation_guide_url}}
-                  class="review-resources__link"
-                >
-                  {{i18n "review.help.moderation_guide"}}
-                </a>
-              </li>
-              <li class="review-resources__item">
-                <span class="review-resources__icon">
-                  {{icon "book"}}
-                </span>
-                <a
-                  href={{this.siteSettings.flag_priorities_url}}
-                  class="review-resources__link"
-                >
-                  {{i18n "review.help.flag_priorities"}}
-                </a>
-              </li>
-              <li class="review-resources__item">
-                <span class="review-resources__icon">
-                  {{icon "book"}}
-                </span>
-                <a
-                  href={{this.siteSettings.spam_detection_url}}
-                  class="review-resources__link"
-                >
-                  {{i18n "review.help.spam_detection"}}
-                </a>
-              </li>
-            </ul>
-          </div>
+          {{#if @showHelp}}
+            <ReviewableHelpResources />
+          {{/if}}
         </div>
       </div>
     </div>

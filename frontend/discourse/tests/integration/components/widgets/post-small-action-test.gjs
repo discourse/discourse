@@ -19,13 +19,11 @@ module(
     });
 
     test("does not have delete/edit/recover buttons by default", async function (assert) {
-      const self = this;
-
       this.set("args", { id: 123 });
 
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
 
@@ -35,13 +33,11 @@ module(
     });
 
     test("shows edit button if canEdit", async function (assert) {
-      const self = this;
-
       this.set("args", { id: 123, canEdit: true });
 
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
 
@@ -51,13 +47,11 @@ module(
     });
 
     test("uses custom widget if actionDescriptionWidget", async function (assert) {
-      const self = this;
-
       this.set("args", { id: 123, actionDescriptionWidget: "button" });
 
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
 
@@ -67,13 +61,11 @@ module(
     });
 
     test("does not show edit button if canRecover even if canEdit", async function (assert) {
-      const self = this;
-
       this.set("args", { id: 123, canEdit: true, canRecover: true });
 
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
 
@@ -86,13 +78,11 @@ module(
     });
 
     test("shows delete button if canDelete", async function (assert) {
-      const self = this;
-
       this.set("args", { id: 123, canDelete: true });
 
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
 
@@ -102,13 +92,11 @@ module(
     });
 
     test("shows undo button if canRecover", async function (assert) {
-      const self = this;
-
       this.set("args", { id: 123, canRecover: true });
 
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
 
@@ -118,8 +106,6 @@ module(
     });
 
     test("`addGroupPostSmallActionCode` plugin api", async function (assert) {
-      const self = this;
-
       withPluginApi((api) => {
         api.addGroupPostSmallActionCode("some_code");
       });
@@ -135,7 +121,7 @@ module(
       };
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
       assert
@@ -154,8 +140,6 @@ module(
     });
 
     test("`addPostSmallActionClassesCallback` plugin api", async function (assert) {
-      const self = this;
-
       withSilencedDeprecations(POST_STREAM_DEPRECATION_OPTIONS.id, () => {
         withPluginApi((api) => {
           api.addPostSmallActionClassesCallback((postAttrs) => {
@@ -170,7 +154,7 @@ module(
 
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
 
@@ -184,7 +168,7 @@ module(
 
       await render(
         <template>
-          <MountWidget @widget="post-small-action" @args={{self.args}} />
+          <MountWidget @widget="post-small-action" @args={{this.args}} />
         </template>
       );
 

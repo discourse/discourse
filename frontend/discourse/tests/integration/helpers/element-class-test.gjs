@@ -29,10 +29,8 @@ module("Integration | Helper | body-class and html-class", function (hooks) {
   });
 
   test("Dynamic classes", async function (assert) {
-    const self = this;
-
     this.set("dynamic", "bar");
-    await render(<template>{{bodyClass self.dynamic}}</template>);
+    await render(<template>{{bodyClass this.dynamic}}</template>);
     assert.dom(document.body).hasClass("bar");
 
     this.set("dynamic", "baz");

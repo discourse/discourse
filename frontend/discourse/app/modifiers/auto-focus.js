@@ -3,10 +3,10 @@ import Modifier from "ember-modifier";
 export default class AutoFocusModifier extends Modifier {
   didFocus = false;
 
-  modify(element, _, { selectText }) {
+  modify(element, _, { selectText, preventScroll }) {
     if (!this.didFocus) {
       element.autofocus = true;
-      element.focus();
+      element.focus({ preventScroll: preventScroll ?? true });
 
       if (selectText) {
         element.select();

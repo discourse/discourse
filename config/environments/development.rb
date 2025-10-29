@@ -37,8 +37,13 @@ Discourse::Application.configure do
   config.active_record.migration_error = :page_load
   config.watchable_dirs["lib"] = [:rb]
 
-  # we recommend you use mailhog https://github.com/mailhog/MailHog
-  config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
+  config.action_mailer.smtp_settings =
+    if GlobalSetting.try(:use_smtp_environment_in_development)
+      GlobalSetting.smtp_settings || { address: "localhost", port: 1025 }
+    else
+      # we recommend you use mailpit: https://github.com/axllent/mailpit/
+      { address: "localhost", port: 1025 }
+    end
 
   config.action_mailer.raise_delivery_errors = true
 

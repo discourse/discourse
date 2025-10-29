@@ -11,6 +11,10 @@ import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 import DurationSelector from "./ai-quota-duration-selector";
@@ -208,7 +212,7 @@ export default class AiLlmEditorForm extends Component {
       await this.args.model.save(updatedData);
 
       if (isNew) {
-        this.args.llms.addObject(this.args.model);
+        addUniqueValueToArray(this.args.llms.content, this.args.model);
         await this.router.replaceWith(
           "adminPlugins.show.discourse-ai-llms.edit",
           this.args.model.id
@@ -265,7 +269,7 @@ export default class AiLlmEditorForm extends Component {
         return this.args.model
           .destroyRecord()
           .then(() => {
-            this.args.llms.removeObject(this.args.model);
+            removeValueFromArray(this.args.llms.content, this.args.model);
             this.router.transitionTo(
               "adminPlugins.show.discourse-ai-llms.index"
             );

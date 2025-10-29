@@ -374,6 +374,7 @@ CREATE TABLE user_options
     new_topic_duration_minutes           INTEGER,
     notification_level_when_assigned     INTEGER,
     notification_level_when_replying     INTEGER,
+    notify_on_linked_posts               BOOLEAN,
     oldest_search_log_date               DATETIME,
     only_chat_push_notifications         BOOLEAN,
     policy_email_frequency               INTEGER,

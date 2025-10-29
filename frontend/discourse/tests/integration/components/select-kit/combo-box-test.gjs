@@ -32,8 +32,6 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
   });
 
   test("options.clearable", async function (assert) {
-    const self = this;
-
     setDefaultState(this, {
       clearable: true,
       onChange: (value) => {
@@ -44,10 +42,10 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{self.value}}
-          @content={{self.content}}
-          @onChange={{self.onChange}}
-          @options={{hash clearable=self.clearable}}
+          @value={{this.value}}
+          @content={{this.content}}
+          @onChange={{this.onChange}}
+          @options={{hash clearable=this.clearable}}
         />
       </template>
     );
@@ -66,8 +64,6 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
   });
 
   test("options.{caretUpIcon,caretDownIcon}", async function (assert) {
-    const self = this;
-
     setDefaultState(this, {
       caretUpIcon: "pencil",
       caretDownIcon: "trash-can",
@@ -76,11 +72,11 @@ module("Integration | Component | select-kit/combo-box", function (hooks) {
     await render(
       <template>
         <ComboBox
-          @value={{self.value}}
-          @content={{self.content}}
+          @value={{this.value}}
+          @content={{this.content}}
           @options={{hash
-            caretUpIcon=self.caretUpIcon
-            caretDownIcon=self.caretDownIcon
+            caretUpIcon=this.caretUpIcon
+            caretDownIcon=this.caretDownIcon
           }}
         />
       </template>

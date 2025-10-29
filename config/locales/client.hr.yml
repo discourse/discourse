@@ -649,6 +649,7 @@ hr:
       other: "Pregledajte %{count} nove teme."
     preview: "Predprikaz"
     cancel: "Odustani"
+    done: "Gotovo"
     deleting: "Brisanje…"
     save: "Zabilježi promjene"
     saving: "Spremanje…"
@@ -3709,10 +3710,6 @@ hr:
         one: "Posljednji post u ovoj temi je star već %{count} sat, stoga će tema odmah biti zatvorena."
         few: "Posljednji post u ovoj temi je star već %{count} sati, stoga će tema odmah biti zatvorena."
         other: "Posljednji post u ovoj temi je star već %{count} sati, stoga će tema odmah biti zatvorena."
-      auto_close_momentarily:
-        one: "Posljednji post u ovoj temi je star već %{count} sat, stoga će tema odmah biti zatvorena."
-        few: "Zadnji post u temi star je već %{count} sati, tako da će se tema trenutno zatvoriti."
-        other: "Zadnji post u temi star je već %{count} sati, tako da će se tema trenutno zatvoriti."
       timeline:
         back: "Natrag"
         back_description: "Vrati se na posljednju nepročitanu poruku"
@@ -4756,8 +4753,7 @@ hr:
       readonly: "Vidjeti"
     preloader_text: "Učitavanje"
     lightbox:
-      download: "preuzmi"
-      open: "izvorna slika"
+      download: "Preuzmi"
       previous: "Prethodno (tipka sa strelicom ulijevo)"
       next: "Sljedeće (tipka sa strelicom desno)"
       counter: "%curr% od %total%"
