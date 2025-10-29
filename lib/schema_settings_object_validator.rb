@@ -246,7 +246,6 @@ class SchemaSettingsObjectValidator
     },
     "upload" => {
       klass: Upload,
-      # column: :url,
     },
     "tags" => {
       klass: Tag,

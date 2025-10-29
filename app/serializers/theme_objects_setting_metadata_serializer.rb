@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ThemeObjectsSettingMetadataSerializer < ApplicationSerializer
-  attributes :categories, uploads, :property_descriptions
+  attributes :categories, :uploads, :property_descriptions
 
   def categories
     object

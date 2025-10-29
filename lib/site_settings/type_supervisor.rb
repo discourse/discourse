@@ -275,6 +275,52 @@ class SiteSettings::TypeSupervisor
     public_send(validate_method, val) if self.respond_to? validate_method
   end
 
+  # It will be used in models/site_setting.rb#L88-L95
+  def has_upload_type?(site_setting)
+    schema = @schemas[site_setting.to_sym]
+
+    has_uploads = schema[:properties].values.any? { |prop| true if prop[:type] == "upload" }
+    return true if has_uploads
+
+    # maybe we have nested objects, we need to traverse them
+    has_more = schema[:properties].values.any? { |prop| prop[:type] == "objects" }
+    next_object = schema[:properties].values.find { |prop| prop[:type] == "objects" }
+
+    while has_more
+      nested_schema = next_object[:schema]
+      has_uploads =
+        nested_schema[:properties].values.any? { |prop| true if prop[:type] == "upload" }
+
+      return true if has_uploads
+
+      has_more = nested_schema[:properties].values.any? { |prop| prop[:type] == "objects" }
+      next_object = nested_schema[:properties].values.find { |prop| prop[:type] == "objects" }
+    end
+
+    false
+  end
+
+  def get_object_upload_ids(site_setting, value)
+    schema = @schemas[site_setting.to_sym]
+    setting = JSON.parse(value).first
+    upload_ids = []
+    rec_get_upload = ->(object, value) do
+      object.each do |key, prop|
+        name = key.to_s
+        if prop[:type] == "upload"
+          upload_ids << value[name] if value[name].present?
+        end
+
+        if prop[:type] == "objects"
+          nested_schema = prop[:schema]
+          value[name].each { |obj| rec_get_upload.call(nested_schema[:properties], obj) }
+        end
+      end
+    end
+    rec_get_upload.call(schema[:properties], setting)
+    upload_ids.uniq
+  end
+
   private
 
   def normalize_input(name, val)

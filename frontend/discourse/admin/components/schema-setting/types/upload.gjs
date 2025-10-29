@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import { and, not } from "truth-helpers";
+import { and, not, or } from "truth-helpers";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import FieldInputDescription from "admin/components/schema-setting/field-input-description";
 import SchemaSettingTypeModels from "admin/components/schema-setting/types/models";
@@ -13,7 +13,7 @@ export default class SchemaSettingTypeUpload extends SchemaSettingTypeModels {
   @action
   onChange(upload) {
     this.value = upload.url;
-    return upload.url;
+    return upload.id;
   }
 
   <template>
@@ -23,7 +23,7 @@ export default class SchemaSettingTypeUpload extends SchemaSettingTypeModels {
       @onUploadDone={{this.onInput}}
       @onUploadDeleted={{fn (mut this.value) null}}
       @type={{this.type}}
-      @id={{@setting.schema.name}}
+      @id={{(or @setting.schema.name @setting.setting)}}
     />
 
     <div class="schema-field__input-supporting-text">
