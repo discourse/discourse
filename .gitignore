@@ -80,6 +80,7 @@
 !/plugins/discourse-ai
 !/plugins/discourse-cakeday
 /plugins/*/auto_generated
+/plugins/discourse-ai/evals/cases
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 

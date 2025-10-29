@@ -92,7 +92,7 @@ class DiscourseAi::Evals::Runner
     end
   end
 
-  attr_reader :llms, :cases
+  attr_reader :llms, :cases, :evals
 
   def self.evals_paths
     @eval_paths ||= Dir.glob(File.join(File.join(__dir__, "../cases"), "*/*.yml"))
@@ -102,16 +102,32 @@ class DiscourseAi::Evals::Runner
     @evals ||= evals_paths.map { |path| DiscourseAi::Evals::Eval.new(path: path) }
   end
 
+  def self.evals_by_feature(feature)
+    return [] if feature.blank?
+    evals.select { |eval| eval.feature == feature }
+  end
+
   def self.print
     evals.each(&:print)
   end
 
-  def initialize(eval_name:, llms:)
+  def initialize(eval_name: nil, llms:, feature: nil)
     @llms = llms
-    @eval = self.class.evals.find { |c| c.id == eval_name }
+    @evals =
+      if feature.present?
+        self.class.evals_by_feature(feature)
+      elsif eval_name.present?
+        [self.class.evals.find { |c| c.id == eval_name }].compact
+      else
+        []
+      end
 
-    if !@eval
-      puts "Error: Unknown evaluation '#{eval_name}'"
+    if @evals.empty?
+      if feature.present?
+        puts "Error: No evaluations registered for feature '#{feature}'"
+      else
+        puts "Error: Unknown evaluation '#{eval_name}'"
+      end
       exit 1
     end
 
@@ -122,10 +138,16 @@ class DiscourseAi::Evals::Runner
   end
 
   def run!
-    puts "Running evaluation '#{@eval.id}'"
+    @evals.each { |eval_case| run_single_eval(eval_case) }
+  end
 
-    structured_log_filename = "#{@eval.id}-#{Time.now.strftime("%Y%m%d-%H%M%S")}.json"
-    log_filename = "#{@eval.id}-#{Time.now.strftime("%Y%m%d-%H%M%S")}.log"
+  private
+
+  def run_single_eval(eval_case)
+    puts "Running evaluation '#{eval_case.id}'"
+
+    structured_log_filename = "#{eval_case.id}-#{Time.now.strftime("%Y%m%d-%H%M%S")}.json"
+    log_filename = "#{eval_case.id}-#{Time.now.strftime("%Y%m%d-%H%M%S")}.log"
     logs_dir = File.join(__dir__, "../log")
     FileUtils.mkdir_p(logs_dir)
 
@@ -133,14 +155,14 @@ class DiscourseAi::Evals::Runner
     structured_log_path = File.expand_path(File.join(logs_dir, structured_log_filename))
 
     logger = Logger.new(File.open(log_path, "a"))
-    logger.info("Starting evaluation '#{@eval.id}'")
+    logger.info("Starting evaluation '#{eval_case.id}'")
 
     Thread.current[:llm_audit_log] = logger
     structured_logger = Thread.current[:llm_audit_structured_log] = StructuredLogger.new
 
-    structured_logger.step("Evaluating #{@eval.id}", args: @eval.to_json) do
+    structured_logger.step("Evaluating #{eval_case.id}", args: eval_case.to_json) do
       llms.each do |llm|
-        if @eval.vision && !llm.vision?
+        if eval_case.vision && !llm.vision?
           logger.info("Skipping LLM: #{llm.name} as it does not support vision")
           next
         end
@@ -148,7 +170,7 @@ class DiscourseAi::Evals::Runner
         structured_logger.step("Evaluating with LLM: #{llm.name}") do |step|
           logger.info("Evaluating with LLM: #{llm.name}")
           print "#{llm.name}: "
-          results = @eval.run(llm: llm)
+          results = eval_case.run(llm: llm)
 
           results.each do |result|
             step[:args] = result
@@ -182,7 +204,7 @@ class DiscourseAi::Evals::Runner
 
     #structured_logger.save(structured_log_path)
 
-    File.write("#{structured_log_path}", structured_logger.to_trace_event_json)
+    File.write(structured_log_path.to_s, structured_logger.to_trace_event_json)
 
     puts
     puts "Log file: #{log_path}"

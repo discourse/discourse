@@ -8,6 +8,7 @@ class DiscourseAi::Evals::Eval
               :id,
               :args,
               :vision,
+              :feature,
               :expected_output,
               :expected_output_regex,
               :expected_tool_call,
@@ -30,6 +31,10 @@ class DiscourseAi::Evals::Eval
     @description = @yaml[:description]
     @vision = @yaml[:vision]
     @type = @yaml[:type]
+    @feature = @yaml[:feature]
+    if @feature.blank?
+      raise ArgumentError, "Eval '#{@id || @name || path}' must define a 'feature' key."
+    end
     @expected_output = @yaml[:expected_output]
     @expected_output_regex = @yaml[:expected_output_regex]
     @expected_output_regex =
@@ -73,7 +78,7 @@ class DiscourseAi::Evals::Eval
   end
 
   def print
-    puts "#{id}: #{description}"
+    puts "#{id}: #{description} (feature: #{feature})"
   end
 
   def to_json
@@ -83,6 +88,7 @@ class DiscourseAi::Evals::Eval
       name: @name,
       description: @description,
       id: @id,
+      feature: @feature,
       args: @args,
       vision: @vision,
       expected_output: @expected_output,
