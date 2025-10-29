@@ -2445,6 +2445,10 @@ en:
       no_results: "No results"
       search: "Search…"
       label: "Select options"
+    d_otp:
+      screen_reader:
+        one: Fill one char
+        other: Fill %{count} chars
     form_kit:
       reset: Reset
       optional: optional
