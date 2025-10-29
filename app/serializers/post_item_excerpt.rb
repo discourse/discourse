@@ -11,7 +11,13 @@ module PostItemExcerpt
 
   def excerpt
     return nil unless cooked
-    @excerpt ||= PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
+
+    @excerpt ||=
+      begin
+        PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
+      rescue ArgumentError
+        nil
+      end
   end
 
   def truncated
