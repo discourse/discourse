@@ -280,7 +280,7 @@ def exclude_theme_component(theme)
   puts "\n  Excluding #{theme_identifier(theme)} from..."
   parent_relations.each do |relation|
     puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
-    # relation.destroy!
+    relation.destroy!
   end
   puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
 end
@@ -291,31 +291,29 @@ def enable_welcome_banner(theme)
   parent_relations = theme.parent_theme_relation.to_a
   return if parent_relations.empty?
 
-  puts "\n  Enabling \e[1mcore welcome banner\e[0m for themes..."
+  puts "\n  Enabling \e[1mcore welcome banner\e[0m for..."
   enabled_count = 0
 
   parent_relations.each do |relation|
     parent_theme = relation.parent_theme
     site_setting =
-      ThemeSiteSetting.find_by(theme_id: parent_theme.id, name: "enable_welcome_banner", value: "f")
+      ThemeSiteSetting.find_by(theme_id: parent_theme.id, name: "enable_welcome_banner")
 
-    if site_setting
+    if site_setting.value == "f"
       site_setting.update!(value: "t")
-      puts "    - #{parent_theme.name} (ID: #{parent_theme.id}) - \e[1;32m✓ enabled\e[0m"
+      puts "    - #{parent_theme.name} (ID: #{parent_theme.id}) \e[32m- enabled\e[0m"
       enabled_count += 1
+    else
+      puts "    - #{parent_theme.name} (ID: #{parent_theme.id}) \e[33m- it was already enabled. Skipping\e[0m"
     end
   end
 
-  if enabled_count > 0
-    puts "  \e[1;32m✓ Enabled core welcome banner for #{enabled_count} theme#{"s" if enabled_count > 1}\e[0m"
-  else
-    puts "  \e[33m✗ No themes required enabling core welcome banner\e[0m"
-  end
+  puts "  \e[1;32m✓ Enabled for #{enabled_count} theme#{"s" unless enabled_count == 1}\e[0m"
 end
 
 def disable_theme_component(theme)
   if !theme.enabled
-    puts "\n  \e[33m#{theme_identifier(theme)} was already disabled. Skipping disable step.\e[0m"
+    puts "\n  \e[33m#{theme_identifier(theme)} was already disabled. Skipping\e[0m"
     return
   end
 
