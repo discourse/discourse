@@ -4,7 +4,7 @@
 
   td.d-table__cell {
     vertical-align: middle;
-    padding: 1rem 0.75rem;
+    padding: var(--space-4) var(--space-3);
   }
 
   td.d-table__cell.--detail.upcoming-change__metadata {
@@ -35,9 +35,9 @@
   &__badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: var(--space-2);
     align-items: center;
-    min-height: 2rem;
+    min-height: var(--space-8);
   }
 
   &__image-preview.lightbox[href] {
@@ -62,7 +62,7 @@
     letter-spacing: 0.25px;
     align-items: center;
     display: inline-flex;
-    gap: 0.25rem;
+    gap: var(--space-1);
 
     svg {
       height: 0.75em;
@@ -89,7 +89,7 @@
 
   &__save-groups {
     align-self: start;
-    margin-left: 0.5em;
+    margin-left: var(--space-2);
   }
 
   &__toggle-cell {
@@ -106,7 +106,7 @@
   &__plugin {
     font-size: var(--font-down-2);
     color: var(--primary-high);
-    margin-bottom: 0.5em;
+    margin-bottom: var(--space-2);
   }
 
   &__labels &__badges {
@@ -115,12 +115,12 @@
     justify-content: flex-start;
     height: 100%;
     margin: 0;
-    padding: 0.5rem 0;
+    padding: var(--space-2) 0;
   }
 
   &__permanent-notice {
     font-size: var(--font-down-1);
     color: var(--primary-medium);
-    margin-top: 0.5rem;
+    margin-top: var(--space-2);
   }
 }
