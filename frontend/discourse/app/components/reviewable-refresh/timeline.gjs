@@ -159,7 +159,7 @@ export default class ReviewableTimeline extends Component {
         user: note.user,
         icon: "far-pen-to-square",
         titleKey: "review.timeline.note_added_by",
-        description: note.content,
+        description: htmlSafe(note.content),
         noteId: note.id,
         canDelete:
           this.currentUser &&

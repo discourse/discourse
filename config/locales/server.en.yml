@@ -5852,6 +5852,8 @@ en:
       reject_and_keep_deleted:
         title: "Keep post deleted"
         complete: "Post rejected and kept deleted."
+      scrub:
+        title: Scrub record
       approve_and_restore:
         title: "Approve and Restore post"
         complete: "Post approved and restored."
@@ -5912,6 +5914,10 @@ en:
         complete: "User deleted"
         reason: "Deleted via review queue"
       delete_and_block_user:
+        title: "Delete & block"
+        description: "Delete the user and block their IP/email"
+        complete: "User deleted and blocked"
+      delete_user_block:
         title: "Delete & block"
         description: "Delete the user and block their IP/email"
         complete: "User deleted and blocked"

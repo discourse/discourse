@@ -26,7 +26,12 @@ export default class ReviewableUser extends Component {
 
   @discourseComputed("reviewable.status", "currentUser", "isScrubbed")
   canScrubRejectedUser(status, currentUser, isScrubbed) {
-    return status === REJECTED && currentUser.admin && !isScrubbed;
+    return (
+      status === REJECTED &&
+      currentUser.admin &&
+      !isScrubbed &&
+      !currentUser.use_reviewable_ui_refresh
+    );
   }
 
   @discourseComputed("reviewable.payload")
@@ -93,7 +98,7 @@ export default class ReviewableUser extends Component {
                   href={{getUrl
                     (concat
                       "/admin/users/"
-                      this.reviewable.user_id
+                      this.reviewable.user.id
                       "/"
                       this.reviewable.payload.username
                     )

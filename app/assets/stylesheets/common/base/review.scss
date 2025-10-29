@@ -225,7 +225,7 @@
   }
 
   &.--other,
-  &.--needs_approval {
+  &.--needs-approval {
     background-color: var(--d-review-reason-other-bg);
     color: var(--d-review-reason-other-text);
   }
@@ -265,7 +265,8 @@
     color: var(--d-review-reason-inappropriate-count-text);
   }
 
-  &.--other {
+  &.--other,
+  &.--needs-approval {
     background-color: var(--d-review-reason-other-count-bg);
     color: var(--d-review-reason-other-count-text);
   }
