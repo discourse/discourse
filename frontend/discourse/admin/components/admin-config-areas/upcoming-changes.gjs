@@ -113,7 +113,7 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
               >{{i18n "admin.upcoming_changes.opt_in_groups"}}</th>
               <th
                 class="d-table__header-cell upcoming-change__enabled-header"
-              ></th>
+              >{{i18n "admin.plugins.enabled"}}</th>
             </tr>
           </thead>
           <tbody class="d-table__body">

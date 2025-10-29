@@ -23,12 +23,7 @@
 
   &__enabled-header {
     width: 10%;
-  }
-
-  &__learn-more {
-    &::before {
-      content: "• ";
-    }
+    text-align: center;
   }
 
   &__opt-in-groups-label {
@@ -43,6 +38,19 @@
     gap: 0.5rem;
     align-items: center;
     min-height: 2rem;
+  }
+
+  &__image-preview.lightbox[href] {
+    // very specific to override
+    &:hover {
+      box-shadow: none;
+    }
+
+    & + .upcoming-change__learn-more {
+      &::before {
+        content: "•";
+      }
+    }
   }
 
   &__badge {
@@ -68,20 +76,31 @@
 
   &__groups {
     display: flex;
-    flex-direction: row;
 
     .group-selector-wrapper {
-      width: 100%;
+      // make space for button
+      width: calc(100% - 3.125em);
     }
   }
 
+  &__description-details {
+    display: inline;
+  }
+
   &__save-groups {
-    align-self: center;
+    align-self: start;
     margin-left: 0.5em;
   }
 
   &__toggle-cell {
-    vertical-align: top !important;
+    &.d-table__cell.--detail {
+      vertical-align: top;
+    }
+
+    .d-toggle-switch {
+      padding-top: var(--space-1);
+      justify-content: center;
+    }
   }
 
   &__plugin {
