@@ -231,15 +231,15 @@ class SiteSetting < ActiveRecord::Base
 
   class ImageQuality
     def self.png_to_jpg_quality
-      SiteSetting.png_to_jpg_quality || SiteSetting.image_quality
+      SiteSetting.png_to_jpg_quality.nonzero? || SiteSetting.image_quality
     end
 
     def self.recompress_original_jpg_quality
-      SiteSetting.recompress_original_jpg_quality || SiteSetting.image_quality
+      SiteSetting.recompress_original_jpg_quality.nonzero? || SiteSetting.image_quality
     end
 
     def self.image_preview_jpg_quality
-      SiteSetting.image_preview_jpg_quality || SiteSetting.image_quality
+      SiteSetting.image_preview_jpg_quality.nonzero? || SiteSetting.image_quality
     end
   end
 

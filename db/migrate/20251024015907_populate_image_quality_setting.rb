@@ -21,14 +21,14 @@ class PopulateImageQualitySetting < ActiveRecord::Migration[8.0]
         CASE
           WHEN recompress_quality BETWEEN 0 AND 60 THEN '50'
           WHEN recompress_quality BETWEEN 61 AND 75 THEN '70'
-          WHEN recompress_quality BETWEEN 76 AND 90 THEN '90'
-          WHEN recompress_quality BETWEEN 91 AND 99 THEN '99'
+          WHEN recompress_quality BETWEEN 76 AND 99 THEN '90'
           WHEN recompress_quality = 100 THEN '100'
           ELSE '90'
         END,
         NOW(),
         NOW()
-      FROM src;
+      FROM src
+      ON CONFLICT (name) DO UPDATE SET value = EXCLUDED.value;
     SQL
   end
 
