@@ -1508,6 +1508,14 @@ class Search
     end
 
     aggregate_posts(post_sql[:remaining]).each { |p| @results.add(p) } if added < limit
+
+    # Fallback: search localized titles if no results found
+    if added == 0 && @term.present?
+      localized_title_search.each do |p|
+        @results.add(p)
+        added += 1
+      end
+    end
   end
 
   def private_messages_search
@@ -1532,6 +1540,34 @@ class Search
     else
       aggregate_search
     end
+  end
+
+  def localized_title_search
+    return [] if @term.blank?
+    return [] unless SiteSetting.content_localization_enabled
+
+    user_locale = @guardian.user&.effective_locale || SiteSetting.default_locale
+    return [] if user_locale == SiteSetting.default_locale
+
+    # Build a query for first posts of topics with matching localized titles
+    posts =
+      Post
+        .joins(:topic)
+        .joins("INNER JOIN topic_localizations ON topic_localizations.topic_id = topics.id")
+        .where("posts.post_number = 1")
+        .where("topic_localizations.locale = ?", user_locale)
+        .where("topic_localizations.title ILIKE ?", "%#{Search.escape_string(@term)}%")
+        .where("topics.visible = true")
+        .where("topics.archetype <> ?", Archetype.private_message)
+        .where("posts.hidden = false")
+        .where(post_type: Topic.visible_post_types(@guardian.user))
+        .limit(limit)
+
+    # Apply additional filters
+    posts = apply_filters(posts)
+
+    # Return the posts with proper eager loading
+    posts_scope(posts_eager_loads(posts)).to_a
   end
 
   def posts_eager_loads(query)

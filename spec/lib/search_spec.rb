@@ -3166,4 +3166,87 @@ RSpec.describe Search do
     # no op on anon - all included
     expect(result.posts.map(&:id).length).to eq(3)
   end
+
+  describe "localized title search" do
+    fab!(:french_user) { Fabricate(:user, locale: "fr") }
+    fab!(:english_topic) do
+      Fabricate(:topic, title: "The Best Japanese Engine Ever Made", user: admin)
+    end
+    fab!(:english_post) { Fabricate(:post, topic: english_topic, user: admin) }
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.allow_user_locale = true
+      SiteSetting.default_locale = "en"
+    end
+
+    context "when topic has localized title" do
+      before do
+        TopicLocalization.create!(
+          topic: english_topic,
+          locale: "fr",
+          title: "Le meilleur moteur japonais jamais fabriqué",
+          fancy_title: "Le meilleur moteur japonais jamais fabriqué",
+          localizer_user_id: admin.id,
+        )
+      end
+
+      it "finds topic by localized title when primary search returns no results" do
+        results = Search.execute("meilleur moteur japonais", guardian: Guardian.new(french_user))
+        expect(results.posts.map(&:topic_id)).to include(english_topic.id)
+      end
+
+      it "finds topic by partial localized title match" do
+        results = Search.execute("moteur japonais", guardian: Guardian.new(french_user))
+        expect(results.posts.map(&:topic_id)).to include(english_topic.id)
+      end
+
+      it "does not use localized search when primary search has results" do
+        # Create another post that matches in English
+        matching_post = Fabricate(:post, topic: Fabricate(:topic), raw: "meilleur moteur japonais")
+
+        results = Search.execute("meilleur moteur japonais", guardian: Guardian.new(french_user))
+
+        # Should find the post with matching content via primary search
+        expect(results.posts.map(&:id)).to include(matching_post.id)
+      end
+
+      it "respects guardian permissions" do
+        private_topic = Fabricate(:private_message_topic, user: admin)
+        Fabricate(:post, topic: private_topic, user: admin)
+        TopicLocalization.create!(
+          topic: private_topic,
+          locale: "fr",
+          title: "Message privé moteur",
+          fancy_title: "Message privé moteur",
+          localizer_user_id: admin.id,
+        )
+
+        results = Search.execute("Message privé moteur", guardian: Guardian.new(french_user))
+        expect(results.posts.map(&:topic_id)).not_to include(private_topic.id)
+      end
+
+      it "does not search localized titles for default locale users" do
+        english_user = Fabricate(:user, locale: "en")
+        results = Search.execute("meilleur moteur japonais", guardian: Guardian.new(english_user))
+
+        # English user searching French term should not find anything via localized search
+        # (they would only find it if the English content contained those words)
+        expect(results.posts).to be_empty
+      end
+
+      it "does not search when content_localization is disabled" do
+        SiteSetting.content_localization_enabled = false
+        results = Search.execute("meilleur moteur japonais", guardian: Guardian.new(french_user))
+        expect(results.posts).to be_empty
+      end
+    end
+
+    context "when topic has no localized title" do
+      it "returns no results when searching non-English term" do
+        results = Search.execute("meilleur moteur japonais", guardian: Guardian.new(french_user))
+        expect(results.posts).to be_empty
+      end
+    end
+  end
 end
