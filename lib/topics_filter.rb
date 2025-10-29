@@ -52,7 +52,7 @@ class TopicsFilter
       when "created-before"
         filter_by_created(before: filter_values)
       when "created-by"
-        filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
+        filter_created_by(names: filter_values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: filter_values)
       when "latest-post-after"
@@ -197,7 +197,7 @@ class TopicsFilter
       {
         name: "created-by:",
         description: I18n.t("filter.description.created_by"),
-        type: "username",
+        type: "username_group_list",
         delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
       },
       {
@@ -659,12 +659,33 @@ class TopicsFilter
       SQL
   end
 
-  def filter_created_by_user(usernames:)
-    @scope =
-      @scope.joins(:user).where(
-        "users.username_lower IN (:usernames)",
-        usernames: usernames.map(&:downcase),
-      )
+  def filter_created_by(names:)
+    if names.include?("me") && @guardian.authenticated?
+      names = names.map { |n| n == "me" ? @guardian.user.username_lower : n }
+    end
+    if (user_ids = User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)) &&
+         user_ids.any?
+      @scope = @scope.joins(:user).where(user_id: user_ids)
+      return
+    end
+
+    if (
+         group_ids =
+           Group
+             .visible_groups(@guardian.user)
+             .where("lower(name) IN (?)", names.map(&:downcase))
+             .pluck(:id)
+       ) && group_ids.any?
+      @scope =
+        @scope
+          .joins(:user)
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", group_ids)
+          .distinct(:id)
+      return
+    end
+
+    @scope = @scope.none
   end
 
   def apply_custom_filter!(scope:, filter_name:, values:)
