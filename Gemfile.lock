@@ -670,7 +670,7 @@ GEM
     tiktoken_ruby (0.0.11.1-x86_64-darwin)
     tiktoken_ruby (0.0.11.1-x86_64-linux)
     tiktoken_ruby (0.0.11.1-x86_64-linux-musl)
-    timeout (0.4.3)
+    timeout (0.4.4)
     tokenizers (0.5.5)
       rb_sys
     tokenizers (0.5.5-aarch64-linux)
@@ -1214,7 +1214,7 @@ CHECKSUMS
   tiktoken_ruby (0.0.11.1-x86_64-darwin) sha256=554c84d14e66a7cef277b00ec26ce6c201d6b94d223f8d71397b1287cda11d78
   tiktoken_ruby (0.0.11.1-x86_64-linux) sha256=ab56c936876c2ccba41fd8dc6588097e6555345ad0bdf5f4204be771a3637618
   tiktoken_ruby (0.0.11.1-x86_64-linux-musl) sha256=fd52104cbeb14471136f8519a07eef457ca84d01693bfb9b92b150a1fb3f42f6
-  timeout (0.4.3) sha256=9509f079b2b55fe4236d79633bd75e34c1c1e7e3fb4b56cb5fda61f80a0fe30e
+  timeout (0.4.4) sha256=f0f6f970104b82427cd990680f539b6bbb8b1e55efa913a55c6492935e4e0edb
   tokenizers (0.5.5) sha256=7bf1600567a3f253ec3f24da51af338437ecd1c638874122a9c57ea1724f4d92
   tokenizers (0.5.5-aarch64-linux) sha256=55ac300cdcefcb4dccbe5b1577920d3ab47dab404c4e70a442aa5c97f084790d
   tokenizers (0.5.5-aarch64-linux-musl) sha256=ddd23414ef60e15860a1ec804496ff053aa817956036594923a086c2897c492a
