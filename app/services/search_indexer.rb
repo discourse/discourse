@@ -230,6 +230,179 @@ class SearchIndexer
     update_index(table: "tag", id: tag_id, a_weight: name.downcase)
   end
 
+  # Index localized content for posts
+  # This indexes all available localizations for a post
+  def self.index_post_localizations(post)
+    return unless SiteSetting.content_localization_enabled
+    return unless post.topic
+
+    # Preload associations to prevent N+1 queries
+    # Load topic with category, tags, and topic_localizations
+    topic = post.topic
+    ActiveRecord::Associations::Preloader.new(
+      records: [topic],
+      associations: %i[category tags topic_localizations],
+    ).call
+
+    # Cache topic localizations by locale for quick lookup
+    topic_localizations_by_locale = topic.topic_localizations.index_by(&:locale)
+
+    post.localizations.find_each do |localization|
+      topic_localization = topic_localizations_by_locale[localization.locale]
+
+      update_index_with_locale(
+        table: "post",
+        id: post.id,
+        locale: localization.locale,
+        a_weight: topic_localization&.title || topic.title,
+        b_weight: topic.category&.name,
+        c_weight: topic.tags.present? ? topic.tags.map(&:name).join(" ") : nil,
+        d_weight: HtmlScrubber.scrub(localization.cooked)[0..600_000],
+      ) { |params| params["private_message"] = topic.private_message? }
+    end
+  end
+
+  # Index localized content for topics
+  # This indexes all available localizations for a topic
+  def self.index_topic_localizations(topic)
+    return unless SiteSetting.content_localization_enabled
+
+    first_post = topic.posts.find_by(post_number: 1)
+    return unless first_post
+
+    # Preload post_localizations to prevent N+1 queries
+    ActiveRecord::Associations::Preloader.new(
+      records: [first_post],
+      associations: [:post_localizations],
+    ).call
+
+    # Cache post localizations by locale for quick lookup
+    post_localizations_by_locale = first_post.post_localizations.index_by(&:locale)
+
+    topic.localizations.find_each do |localization|
+      # Get the corresponding post localization if it exists
+      post_localization = post_localizations_by_locale[localization.locale]
+      cooked = post_localization&.cooked || first_post.cooked
+
+      update_index_with_locale(
+        table: "topic",
+        id: topic.id,
+        locale: localization.locale,
+        a_weight: localization.title,
+        b_weight: HtmlScrubber.scrub(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH],
+      )
+    end
+  end
+
+  # Version of update_index that accepts a locale parameter
+  # This allows us to create multiple search index entries per content item
+  # Valid PostgreSQL text search configurations
+  # See: https://www.postgresql.org/docs/current/textsearch-dictionaries.html
+  VALID_TS_CONFIGS = %w[
+    danish
+    dutch
+    english
+    finnish
+    french
+    german
+    hungarian
+    italian
+    norwegian
+    portuguese
+    romanian
+    russian
+    spanish
+    swedish
+    turkish
+    simple
+  ].freeze
+
+  def self.update_index_with_locale(
+    table:,
+    id:,
+    locale:,
+    a_weight: nil,
+    b_weight: nil,
+    c_weight: nil,
+    d_weight: nil
+  )
+    raw_data = { a: a_weight, b: b_weight, c: c_weight, d: d_weight }
+
+    # The version used in excerpts
+    search_data = raw_data.transform_values { |data| Search.prepare_data(data || "", :index) }
+
+    # The version used to build the index
+    indexed_data =
+      search_data.transform_values do |data|
+        data.gsub(/\S+/) { |word| word[0...SiteSetting.search_max_indexed_word_length] }
+      end
+
+    table_name = "#{table}_search_data"
+    foreign_key = "#{table}_id"
+
+    # Use locale-specific stemmer if available
+    stemmer = Search.ts_config(locale)
+
+    # Validate stemmer to prevent SQL injection
+    if VALID_TS_CONFIGS.exclude?(stemmer)
+      Rails.logger.warn(
+        "Invalid text search config '#{stemmer}' for locale '#{locale}', falling back to 'simple'",
+      )
+      stemmer = "simple"
+    end
+
+    ranked_index = <<~SQL
+      setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:a,''))")}, 'A') ||
+      setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:b,''))")}, 'B') ||
+      setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:c,''))")}, 'C') ||
+      setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:d,''))")}, 'D')
+    SQL
+
+    tsvector = DB.query_single("SELECT #{ranked_index}", indexed_data)[0]
+
+    indexed_data =
+      if table.to_s == "post"
+        clean_post_raw_data!(search_data[:d])
+      else
+        search_data.values.select { |d| d.length > 0 }.join(" ")
+      end
+
+    handler = DiscoursePluginRegistry.search_handlers.find { |h| h[:table_name] == table }
+    index_version = handler ? handler[:index_version] : const_get("#{table.upcase}_INDEX_VERSION")
+
+    params = {
+      "raw_data" => indexed_data,
+      "#{foreign_key}" => id,
+      "locale" => locale,
+      "version" => index_version,
+      "search_data" => tsvector,
+    }
+
+    yield params if block_given?
+
+    # Upsert with compound primary key (id, locale)
+    unique_by_columns = [foreign_key.to_sym, :locale]
+
+    if handler
+      handler[:search_data_class].upsert(params, unique_by: unique_by_columns)
+    else
+      table_name.camelize.constantize.upsert(params, unique_by: unique_by_columns)
+    end
+  rescue => e
+    if Rails.env.test?
+      raise
+    else
+      Discourse.warn_exception(
+        e,
+        message: "Unexpected error while indexing #{table} for search (locale: #{locale})",
+        env: {
+          id: id,
+          locale: locale,
+        },
+      )
+    end
+  end
+
   def self.queue_category_posts_reindex(category_id)
     return if @disabled
 

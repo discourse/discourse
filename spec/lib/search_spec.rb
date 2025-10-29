@@ -3211,7 +3211,7 @@ RSpec.describe Search do
         expect(results.posts.map(&:id)).to include(matching_post.id)
       end
 
-      it "respects guardian permissions" do
+      it "respects guardian permissions for private messages" do
         private_topic = Fabricate(:private_message_topic, user: admin)
         Fabricate(:post, topic: private_topic, user: admin)
         TopicLocalization.create!(
@@ -3224,6 +3224,78 @@ RSpec.describe Search do
 
         results = Search.execute("Message privé moteur", guardian: Guardian.new(french_user))
         expect(results.posts.map(&:topic_id)).not_to include(private_topic.id)
+      end
+
+      it "respects guardian permissions for restricted categories" do
+        group = Fabricate(:group)
+        private_category = Fabricate(:private_category, group: group)
+        restricted_topic =
+          Fabricate(:topic, category: private_category, title: "Restricted Engine Topic")
+        Fabricate(:post, topic: restricted_topic)
+
+        TopicLocalization.create!(
+          topic: restricted_topic,
+          locale: "fr",
+          title: "Moteur de catégorie restreinte",
+          fancy_title: "Moteur de catégorie restreinte",
+          localizer_user_id: admin.id,
+        )
+
+        # User not in group shouldn't see the topic
+        results = Search.execute("Moteur de catégorie", guardian: Guardian.new(french_user))
+        expect(results.posts.map(&:topic_id)).not_to include(restricted_topic.id)
+
+        # User in group should see the topic
+        group.add(french_user)
+        results = Search.execute("Moteur de catégorie", guardian: Guardian.new(french_user))
+        expect(results.posts.map(&:topic_id)).to include(restricted_topic.id)
+      end
+
+      it "respects guardian permissions for anonymous users" do
+        TopicLocalization.create!(
+          topic: english_topic,
+          locale: "fr",
+          title: "Le meilleur moteur japonais jamais fabriqué",
+          fancy_title: "Le meilleur moteur japonais jamais fabriqué",
+          localizer_user_id: admin.id,
+        )
+
+        # Anonymous users should be able to search public topics
+        results = Search.execute("meilleur moteur", guardian: Guardian.new(nil))
+        expect(results.posts.map(&:topic_id)).to include(english_topic.id)
+      end
+
+      it "does not show localized content from deleted topics" do
+        deleted_topic = Fabricate(:topic, title: "Deleted Topic", deleted_at: Time.now)
+        Fabricate(:post, topic: deleted_topic)
+
+        TopicLocalization.create!(
+          topic: deleted_topic,
+          locale: "fr",
+          title: "Sujet supprimé",
+          fancy_title: "Sujet supprimé",
+          localizer_user_id: admin.id,
+        )
+
+        results = Search.execute("Sujet supprimé", guardian: Guardian.new(french_user))
+        expect(results.posts.map(&:topic_id)).not_to include(deleted_topic.id)
+      end
+
+      it "shows localized content from deleted topics to admins" do
+        deleted_topic = Fabricate(:topic, title: "Deleted Topic", deleted_at: Time.now)
+        Fabricate(:post, topic: deleted_topic)
+
+        TopicLocalization.create!(
+          topic: deleted_topic,
+          locale: "fr",
+          title: "Sujet supprimé",
+          fancy_title: "Sujet supprimé",
+          localizer_user_id: admin.id,
+        )
+
+        admin.update!(locale: "fr")
+        results = Search.execute("Sujet supprimé", guardian: Guardian.new(admin))
+        expect(results.posts.map(&:topic_id)).to include(deleted_topic.id)
       end
 
       it "does not search localized titles for default locale users" do

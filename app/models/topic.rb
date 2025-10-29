@@ -255,6 +255,7 @@ class Topic < ActiveRecord::Base
   belongs_to :category
   has_many :category_users, through: :category
   has_many :posts
+  has_many :topic_localizations, dependent: :destroy
 
   # NOTE: To get all Post _and_ Topic bookmarks for a topic by user,
   # use the Bookmark.for_user_in_topic scope.

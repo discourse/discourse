@@ -42,6 +42,7 @@ class Post < ActiveRecord::Base
   has_many :post_actions, dependent: :destroy
   has_many :topic_links
   has_many :group_mentions, dependent: :destroy
+  has_many :post_localizations, dependent: :destroy
 
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references

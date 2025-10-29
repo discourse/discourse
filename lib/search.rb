@@ -1039,13 +1039,17 @@ class Search
         )
 
       post =
-        posts_scope.joins(:topic).find_by(
+        posts_scope(Post.all, user_locale: user_locale_for_search).joins(:topic).find_by(
           "topics.id = :id AND topics.archetype = :archetype AND posts.post_number = 1",
           id: id,
           archetype: archetype,
         )
     else
-      post = posts_scope.find_by(topic_id: id, post_number: 1)
+      post =
+        posts_scope(Post.all, user_locale: user_locale_for_search).find_by(
+          topic_id: id,
+          post_number: 1,
+        )
     end
 
     return nil unless @guardian.can_see?(post)
@@ -1161,11 +1165,28 @@ class Search
   PHRASE_MATCH_REGEXP_PATTERN = '"([^"]+)"'
 
   def posts_query(limit, type_filter: nil, aggregate_search: false)
+    # Build locale-aware join for post_search_data
+    user_locale = nil
+    @search_locales = nil
+
     posts =
-      Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false).joins(
-        :post_search_data,
-        :topic,
-      )
+      Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false).joins(:topic)
+
+    if SiteSetting.content_localization_enabled && @guardian.user
+      user_locale = @guardian.user.effective_locale || SiteSetting.default_locale
+      # Store locales for use in search queries - sanitized values from DB
+      @search_locales = [user_locale, SiteSetting.default_locale].uniq
+
+      # Join with locale filtering using parameterized query
+      # Note: We sanitize the locale array to prevent SQL injection
+      sanitized_locales = @search_locales.map { |l| Post.connection.quote(l) }.join(", ")
+      posts =
+        posts.joins(
+          "INNER JOIN post_search_data ON post_search_data.post_id = posts.id AND post_search_data.locale IN (#{sanitized_locales})",
+        )
+    else
+      posts = posts.joins("INNER JOIN post_search_data ON post_search_data.post_id = posts.id")
+    end
 
     if type_filter != "private_messages"
       posts = posts.joins("LEFT JOIN categories ON categories.id = topics.category_id")
@@ -1217,7 +1238,27 @@ class Search
           )
       else
         posts = posts.where(post_number: 1) if @in_title
-        posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+
+        # Search with both user's locale and default locale text search configs
+        # This allows searching in both original and localized content
+        if SiteSetting.content_localization_enabled && user_locale &&
+             user_locale != SiteSetting.default_locale
+          user_ts_config = Search.ts_config(user_locale)
+          default_ts_config = Search.ts_config(SiteSetting.default_locale)
+
+          # Match either the user's locale index OR the default locale index
+          posts =
+            posts.where(
+              "(post_search_data.locale = :user_locale AND post_search_data.search_data @@ #{ts_query(user_ts_config, weight_filter: weights)}) OR " +
+                "(post_search_data.locale = :default_locale AND post_search_data.search_data @@ #{ts_query(default_ts_config, weight_filter: weights)})",
+              user_locale: user_locale,
+              default_locale: SiteSetting.default_locale,
+            )
+        else
+          # Single locale search
+          posts = posts.where("post_search_data.search_data @@ #{ts_query(weight_filter: weights)}")
+        end
+
         exact_terms = @term.scan(Regexp.new(PHRASE_MATCH_REGEXP_PATTERN)).flatten
 
         exact_terms.each do |exact|
@@ -1493,7 +1534,7 @@ class Search
   def aggregate_posts(post_sql)
     return [] unless post_sql
 
-    posts_scope(posts_eager_loads(Post)).joins(
+    posts_scope(posts_eager_loads(Post), user_locale: user_locale_for_search).joins(
       "JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number",
     ).order("row_number")
   end
@@ -1508,14 +1549,6 @@ class Search
     end
 
     aggregate_posts(post_sql[:remaining]).each { |p| @results.add(p) } if added < limit
-
-    # Fallback: search localized titles if no results found
-    if added == 0 && @term.present?
-      localized_title_search.each do |p|
-        @results.add(p)
-        added += 1
-      end
-    end
   end
 
   def private_messages_search
@@ -1531,43 +1564,15 @@ class Search
   def topic_search
     if @search_context.is_a?(Topic)
       posts =
-        posts_scope(posts_eager_loads(posts_query(limit))).where(
-          "posts.topic_id = ?",
-          @search_context.id,
-        )
+        posts_scope(
+          posts_eager_loads(posts_query(limit)),
+          user_locale: user_locale_for_search,
+        ).where("posts.topic_id = ?", @search_context.id)
 
       posts.each { |post| @results.add(post) }
     else
       aggregate_search
     end
-  end
-
-  def localized_title_search
-    return [] if @term.blank?
-    return [] unless SiteSetting.content_localization_enabled
-
-    user_locale = @guardian.user&.effective_locale || SiteSetting.default_locale
-    return [] if user_locale == SiteSetting.default_locale
-
-    # Build a query for first posts of topics with matching localized titles
-    posts =
-      Post
-        .joins(:topic)
-        .joins("INNER JOIN topic_localizations ON topic_localizations.topic_id = topics.id")
-        .where("posts.post_number = 1")
-        .where("topic_localizations.locale = ?", user_locale)
-        .where("topic_localizations.title ILIKE ?", "%#{Search.escape_string(@term)}%")
-        .where("topics.visible = true")
-        .where("topics.archetype <> ?", Archetype.private_message)
-        .where("posts.hidden = false")
-        .where(post_type: Topic.visible_post_types(@guardian.user))
-        .limit(limit)
-
-    # Apply additional filters
-    posts = apply_filters(posts)
-
-    # Return the posts with proper eager loading
-    posts_scope(posts_eager_loads(posts)).to_a
   end
 
   def posts_eager_loads(query)
@@ -1589,18 +1594,95 @@ class Search
   # document is too long.
   MAX_LENGTH_FOR_HEADLINE = 2500
 
-  def posts_scope(default_scope = Post.all)
+  # Get the user's locale for localized search content
+  def user_locale_for_search
+    if SiteSetting.content_localization_enabled && @guardian.user
+      @guardian.user.effective_locale || SiteSetting.default_locale
+    else
+      nil
+    end
+  end
+
+  def posts_scope(default_scope = Post.all, user_locale: nil)
     if SiteSetting.use_pg_headlines_for_excerpt
       search_term = @term.present? ? Search.escape_string(@term) : nil
-      ts_config = default_ts_config
+
+      # Use locale-specific ts_config for proper stemming and highlighting
+      ts_config =
+        if user_locale
+          "'#{Search.ts_config(user_locale)}'"
+        else
+          default_ts_config
+        end
+
+      # Build join condition for post_search_data with locale filtering
+      # Use a subquery to select the best locale (user's locale first, then default)
+      # Note: locale values are sanitized using connection.quote to prevent SQL injection
+      if user_locale
+        quoted_user_locale = Post.connection.quote(user_locale)
+        quoted_default_locale = Post.connection.quote(SiteSetting.default_locale)
+
+        if user_locale != SiteSetting.default_locale
+          # Prefer user's locale, fallback to default
+          pd_subquery = <<~SQL
+            INNER JOIN LATERAL (
+              SELECT * FROM post_search_data
+              WHERE post_search_data.post_id = posts.id
+                AND post_search_data.locale IN (#{quoted_user_locale}, #{quoted_default_locale})
+              ORDER BY CASE WHEN post_search_data.locale = #{quoted_user_locale} THEN 0 ELSE 1 END
+              LIMIT 1
+            ) pd ON true
+          SQL
+        else
+          # User's locale is the default - just filter to that locale
+          pd_subquery =
+            "INNER JOIN post_search_data pd ON pd.post_id = posts.id AND pd.locale = #{quoted_user_locale}"
+        end
+      else
+        # No locale filtering
+        pd_subquery = "INNER JOIN post_search_data pd ON pd.post_id = posts.id"
+      end
+
+      # Build join condition for topic_localizations with locale filtering
+      # Similar to post_search_data, prefer user's locale first
+      if user_locale && SiteSetting.content_localization_enabled
+        quoted_user_locale = Post.connection.quote(user_locale)
+        quoted_default_locale = Post.connection.quote(SiteSetting.default_locale)
+
+        if user_locale != SiteSetting.default_locale
+          tl_subquery = <<~SQL
+            LEFT JOIN LATERAL (
+              SELECT fancy_title FROM topic_localizations
+              WHERE topic_localizations.topic_id = t1.id
+                AND topic_localizations.locale IN (#{quoted_user_locale}, #{quoted_default_locale})
+              ORDER BY CASE WHEN topic_localizations.locale = #{quoted_user_locale} THEN 0 ELSE 1 END
+              LIMIT 1
+            ) tl ON true
+          SQL
+        else
+          tl_subquery =
+            "LEFT JOIN topic_localizations tl ON tl.topic_id = t1.id AND tl.locale = #{quoted_user_locale}"
+        end
+      else
+        tl_subquery = ""
+      end
+
+      # Use localized title if available, otherwise use original title
+      title_column =
+        if user_locale && SiteSetting.content_localization_enabled
+          "COALESCE(tl.fancy_title, t1.fancy_title)"
+        else
+          "t1.fancy_title"
+        end
 
       default_scope
-        .joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id")
+        .joins(pd_subquery)
         .joins("INNER JOIN topics t1 ON t1.id = posts.topic_id")
+        .joins(tl_subquery)
         .select(
           "TS_HEADLINE(
             #{ts_config},
-            t1.fancy_title,
+            #{title_column},
             PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
             'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'', HighlightAll=true'
           ) AS topic_title_headline",
