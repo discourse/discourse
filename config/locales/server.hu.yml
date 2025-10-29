@@ -2460,9 +2460,6 @@ hu:
     default_navigation_menu_categories: "A kiválasztott kategóriák alapértelmezetten megjelennek a Navigációs Menü Kategóriák szekciójában."
     default_navigation_menu_tags: "A kiválasztott címkék alapértelmezetten megjelennek a Navigációs Menü Címkék szekciójában."
     experimental_new_new_view_groups: 'Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és új témákat, és az oldalsávon lévő "Minden" hivatkozást jelölje be.'
-    glimmer_post_stream_mode: "Szabályozhatja, hogy a rendszer használja-e az új „csillogó” post-stream megvalósítást. Az „auto” automatikusan bekapcsol, amint minden témája és bővítménye készen áll. Ez a megvalósítás aktív fejlesztés alatt áll, és nem termelési használatra készült. Ne dolgozzon ellene témákat/bővítményeket, amíg a megvalósítást nem véglegesítik és be nem jelentik."
-    glimmer_post_stream_mode_auto_groups: "Az új 'glimmer' post stream implementáció engedélyezése 'auto' módban a megadott felhasználói csoportok számára. Ez az implementáció aktív fejlesztés alatt áll, és nem szánták gyártás közbeni használatra. Ne fejlesszen témákat/pluginokat ellene, amíg az implementáció véglegesítésre és bejelentésre nem kerül."
-    deactivate_widgets_rendering: "Tiltsd le a régi widgetek renderelő motorját. Ez letiltja az összes olyan widgetet, amely nem lett frissítve a Glimmer komponensekre, és a Glimmer Post Stream feltétel nélküli engedélyezését is kényszeríti, függetlenül a `glimmer_post_stream_mode` beállítás értékétől. Ez a beállítás nem ajánlott éles webhelyek számára, mivel a meglévő témák és bővítmények működését tönkreteheti."
     floatkit_autocomplete_composer: "Engedélyezze a Floatkit-alapú automatikus kiegészítés menüt a szerkesztőben. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi JQuery-alapú automatikus kiegészítés menüt."
     floatkit_autocomplete_input_fields: "Engedélyezze a Floatkit-alapú automatikus kiegészítés menüt a teljes oldalas keresés és a csoportválasztó mezők beviteli mezőihez. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi jQuery-alapú automatikus kiegészítés menüt."
     floatkit_autocomplete_chat_composer: "Engedélyezd a Floatkit-alapú automatikus kiegészítés menüt a chat szerkesztőben. Ez egy felhasználói felület fejlesztése, amely felváltja a jelenlegi jQuery-alapú automatikus kiegészítés menüt."
@@ -5354,6 +5351,10 @@ hu:
         complete: "Felhasználó törölve"
         reason: "Törölve az ellenőrzési soron keresztül"
       delete_and_block_user:
+        title: "Törlés és blokkolás"
+        description: "Törölje a felhasználót és blokkolja az IP/email címét."
+        complete: "Felhasználó törölve és letiltva"
+      delete_user_block:
         title: "Törlés és blokkolás"
         description: "Törölje a felhasználót és blokkolja az IP/email címét."
         complete: "Felhasználó törölve és letiltva"

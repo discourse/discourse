@@ -3746,6 +3746,8 @@ ur:
           description: "اِس صارف کو حذف کر دیا جائے گا، اور ہم اِس کے IP اور ایمَیل ایڈریسوں کو بلاک کردیں گے۔"
       reject:
         title: "مسترد کریں"
+      scrub:
+        title: ریکارڈ صاف
       no_action_post:
         title: "کوئی کارروائی نہیں"
       delete_post:

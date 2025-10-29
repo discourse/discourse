@@ -38,6 +38,8 @@ cs:
           title: "Systém písem"
         colors:
           title: "Barvy"
+        dialog:
+          title: "Dialog"
         icons:
           title: "Ikony"
           full_list: "Podívejte se na úplný seznam Font Awesome Icons"

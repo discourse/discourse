@@ -590,6 +590,7 @@ es:
       other: "Ver %{count} temas nuevos"
     preview: "vista previa"
     cancel: "Cancelar"
+    done: "Hecho"
     deleting: "Eliminando…"
     save: "Guardar cambios"
     saving: "Guardando…"
@@ -3507,9 +3508,6 @@ es:
       auto_close_immediate:
         one: "La última publicación se realizó hace %{count} hora, por lo que el tema se cerrará inmediatamente."
         other: "La última publicación se realizó hace %{count} horas, por lo que el tema se cerrará inmediatamente."
-      auto_close_momentarily:
-        one: "La última publicación ha sido hace %{count} hora, por lo que el tema se cerrará en unos instantes."
-        other: "La última publicación ha sido hace %{count} horas, por lo que el tema se cerrará en unos instantes."
       timeline:
         back: "Volver"
         back_description: "Volver a la última publicación sin leer"
@@ -4504,8 +4502,7 @@ es:
       readonly: "Ver"
     preloader_text: "Cargando"
     lightbox:
-      download: "descargar"
-      open: "imagen original"
+      download: "Descargar"
       previous: "Anterior (flecha izquierda)"
       next: "Siguiente (flecha derecha)"
       counter: "%curr% de %total%"

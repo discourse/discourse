@@ -329,15 +329,24 @@ he:
           complete_language_detection_description: "השפה של כל %{total} הפוסטים הזכאים זוהתה."
           incomplete_language_detection_description: "השפה של %{done} מתוך %{total} פוסטים זכאים זוהתה."
           backfill_disabled: "מילוי לאחור מושבת, רק פוסטים חדשים יתורגמו."
-          description_tooltip:
-            one: 'יש פוסט שזכאי לתרגום.'
-            two: 'יש שני פוסטים שזכאים לתרגום.'
-            many: 'יש %{count} פוסטים שזכאים לתרגום.'
-            other: 'יש %{count} פוסטים שזכאים לתרגום.'
+          eta_minutes:
+            one: "דקה"
+            two: "שתי דקות"
+            many: "%{count} דקות"
+            other: "%{count} דקות"
+          eta_hours:
+            one: "שעה"
+            two: "שעתיים"
+            many: "%{count} שעות"
+            other: "%{count} שעות"
+          eta_days:
+            one: "יום"
+            two: "יומיים"
+            many: "%{count} יום"
+            other: "%{count} ימים"
         progress_chart:
           title: "התקדמות התרגום"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} מתוך %{total} פוסטים תורגמו"
           bar_done:
             one: "פוסט"
             two: "שני פוסטים"
@@ -847,6 +856,7 @@ he:
         cancel_streaming: "עצירת התגובה"
         default_pm_prefix: "[הודעה פרטית של בינה מלאכותית ללא כותרת]"
         shortcut_title: "התחלת הודעה פרטית עם בוט בינה מלאכותית"
+        shortcut_link: "בוט בינה מלאכותית"
         exit: "יציאה מבוט בינה מלאכותית"
         share: "העתקת דיון עם בינה מלאכותית"
         conversation_shared: "הדיון הועתק"

@@ -591,6 +591,7 @@ ro:
       other: "Vezi %{count} de subiecte noi"
     preview: "previzualizează"
     cancel: "Anulare"
+    done: "Gata"
     save: "Salvează modificări"
     saved: "Salvat!"
     upload: "Încarcă"
@@ -3451,8 +3452,10 @@ ro:
       readonly: "Doar citire"
     preloader_text: "Se încarcă"
     lightbox:
-      download: "descărcare"
+      download: "Descărcare"
       counter: "%curr% din %total%"
+      zoom: "Zoom (tasta Z)"
+      error: "Imaginea nu poate fi încărcată"
     invalid_video_url: Acest videoclip nu poate fi redat deoarece adresa URL este nevalidă sau indisponibilă.
     keyboard_shortcuts_help:
       search_placeholder: "Caută o scurtătură după descriere sau combinație de taste"

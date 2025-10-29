@@ -408,6 +408,7 @@ sv:
       other: "Visa %{count} nya ämnen"
     preview: "förhandsgranska"
     cancel: "Avbryt"
+    done: "Klar"
     deleting: "Raderar…"
     save: "Spara ändringar"
     saving: "Sparar…"
@@ -2908,9 +2909,6 @@ sv:
       auto_close_immediate:
         one: "Senaste inlägget i det här ämnet är redan %{count} timme gammalt, så ämnet kommer att stängas omedelbart. "
         other: "Senaste inlägget i det här ämnet är redan %{count} timmar gammal, så ämnet kommer att stängas omedelbart. "
-      auto_close_momentarily:
-        one: "Senaste inlägget i det här ämnet är redan %{count} timme gammalt, så ämnet kommer att stängas för tillfället."
-        other: "Senaste inlägget i det här ämnet är redan %{count} timmar gammalt, så ämnet kommer att stängas för tillfället."
       timeline:
         back: "Tillbaka"
         back_description: "Gå tillbaka till ditt senaste olästa inlägg"
@@ -3806,8 +3804,7 @@ sv:
       readonly: "Se"
     preloader_text: "Laddar"
     lightbox:
-      download: "ladda ned"
-      open: "originalbild"
+      download: "Ladda ner"
       previous: "Föregående (Vänster piltangent)"
       next: "Nästa (höger piltangent)"
       counter: "%curr% av %total%"

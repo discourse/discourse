@@ -54,6 +54,8 @@ ca:
       chat_message_separator:
         today: Avui
         yesterday: Ahir
+      search_view:
+        filter_placeholder: Cerca missatges
       about_view:
         title: Títol
         name: Nom
@@ -63,6 +65,7 @@ ca:
         tabs:
           members: Membres
           settings: Configuració
+          search: Cerca
         remove_member: "Elimina"
       new_message_modal:
         no_items: "Sense elements"
@@ -96,6 +99,11 @@ ca:
         category_label: "Categoria"
         history_label: "Historial"
         members_label: "Membres"
+      search:
+        no_results: "No hi ha resultats"
+        sort:
+          relevance: "Importància"
+          latest: "Més recents"
       incoming_webhooks:
         back: "Enrere"
         description: "Descripció"

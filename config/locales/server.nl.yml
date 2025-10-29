@@ -2437,9 +2437,6 @@ nl:
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
-    glimmer_post_stream_mode: "Bepaal of de nieuwe 'glimmer'-implementatie voor de plaatsingsstroom wordt gebruikt. 'Auto' wordt automatisch ingeschakeld wanneer al je thema's en plug-ins gereed zijn. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
-    glimmer_post_stream_mode_auto_groups: "Schakel de nieuwe 'glimmer'-implementatie voor de plaatsstringsstroom in de 'auto'-modus in voor specifieke gebruikersgroepen. Deze implementatie wordt momenteel ontwikkeld en is niet bedoeld voor productiegebruik. Ontwikkel er geen thema's/plug-ins mee totdat de implementatie is afgerond en aangekondigd."
-    deactivate_widgets_rendering: "Schakel de renderingsengine voor oude widgets uit. Hierdoor worden alle widgets uitgeschakeld die niet zijn bijgewerkt naar Glimmer-onderdelen. Het zorgt er ook voor dat de Glimmer-plaatsingsstroom onvoorwaardelijk wordt ingeschakeld, ongeacht de waarde van de instelling 'glimmer_post_stream_mode'. Deze instelling wordt niet aanbevolen voor productiesites, omdat deze bestaande thema's en plug-ins kan verstoren."
     floatkit_autocomplete_composer: "Activeer het op Floatkit gebaseerde menu voor automatische aanvulling in de editor. Dit is een verbetering van de gebruikersinterface die het huidige op jQuery gebaseerde menu voor automatische aanvulling zal vervangen."
     floatkit_autocomplete_chat_composer: "Activeer het op Floatkit gebaseerde menu voor automatische aanvulling in de chateditor. Dit is een verbetering van de gebruikersinterface die het huidige op jQuery gebaseerde menu voor automatische aanvulling zal vervangen."
     experimental_form_templates: "Schakel de functie Formuliersjablonen in. Beheer de sjablonen via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
@@ -5300,6 +5297,8 @@ nl:
       reject_and_keep_deleted:
         title: "Bericht verwijderd houden"
         complete: "Bericht afgewezen en verwijderd gehouden."
+      scrub:
+        title: Record scrubben
       approve_and_restore:
         title: "Bericht goedkeuren en herstellen"
         complete: "Bericht goedgekeurd en hersteld."
@@ -5329,6 +5328,8 @@ nl:
         complete: "Gebruiker verwijderd"
         reason: "Verwijderd via wachtrij voor beoordeling"
       delete_and_block_user:
+        complete: "Gebruiker verwijderd en geblokkeerd"
+      delete_user_block:
         complete: "Gebruiker verwijderd en geblokkeerd"
   email_style:
     html_missing_placeholder: "De HTML-sjabloon moet %{placeholder} bevatten"

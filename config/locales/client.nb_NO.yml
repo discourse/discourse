@@ -453,6 +453,7 @@ nb_NO:
       other: "Se %{count} nye emner"
     preview: "forhåndsvisning"
     cancel: "Avbryt"
+    done: "Ferdig"
     deleting: "forhåndsvisning"
     save: "Lagre endringer"
     saving: "Lagrer…"
@@ -3120,9 +3121,6 @@ nb_NO:
       auto_close_immediate:
         one: "Det siste innlegget i emnet er allerede en time gammelt, så emnet vil stenges umiddelbart."
         other: "Det siste innlegget i emnet er allerede %{count} timer gammelt, så emnet vil stenges umiddelbart."
-      auto_close_momentarily:
-        one: "Siste innlegg i emnet er allerede %{count} timer gammel, så emnet vil bli lukket om et øyeblikk."
-        other: "Siste innlegg i emnet er allerede %{count} timer gammelt, så emnet vil bli stengt om et øyeblikk."
       timeline:
         back: "Tilbake"
         back_description: "Gå tilbake til forrige uleste innlegg"
@@ -4009,7 +4007,7 @@ nb_NO:
       readonly: "Se"
     preloader_text: "Laster"
     lightbox:
-      download: "last ned"
+      download: "Last ned"
       previous: "Forrige (Venstre pil-nøkkel)"
       next: "Neste (pil-nøkkel)"
       counter: "%curr% av %total%"

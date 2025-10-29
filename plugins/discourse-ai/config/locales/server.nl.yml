@@ -26,10 +26,6 @@ nl:
       llm_triage:
         title: Berichten triageren met AI
         description: "Triageer berichten met behulp van een groot taalmodel"
-        flagged_post: |
-          <div>Reactie van het model:</div>
-          <p>%{llm_response}</p>
-          <b>Getriggerd door de regel <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
       llm_report:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"
@@ -102,7 +98,6 @@ nl:
     ai_bot_allowed_groups: "Wanneer de GPT-bot toegang heeft tot het privébericht, zal deze reageren op leden van deze groepen."
     ai_bot_debugging_allowed_groups: "Geef deze groepen een debugknop bij berichten die het ruwe AI-verzoek en -antwoord weergeeft"
     ai_bot_public_sharing_allowed_groups: "Sta deze groepen toe persoonlijke AI-berichten met het publiek delen via een unieke, openbaar beschikbare link. Let op: als aanmelden vereist is op je site, is dat ook vereist voor delen."
-    ai_bot_add_to_header: "Geef een knop weer in de kop om een privéchat te starten met een AI-bot"
     ai_bot_github_access_token: "GitHub-toegangstoken voor gebruik met GitHub AI-tools (vereist voor zoekondersteuning)"
     ai_stability_api_key: "API-sleutel voor de stability.ai-API"
     ai_stability_engine: "Te gebruiken engine voor het genereren van afbeeldingen voor de stability.ai-API"

@@ -11,6 +11,8 @@ nb_NO:
       not_accepting_dms: "Beklager, %{username} ønsker ikke å motta personlige meldinger for øyeblikket."
     reviewables:
       actions:
+        no_action_message:
+          title: "Ingen handling"
         agree_and_suspend:
           title: "Steng ute bruker"
           description: "Si deg enig med rapportering og steng ute bruker. "

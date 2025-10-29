@@ -19,6 +19,8 @@ ur:
       toggle_timezone_offset_title: "خطہ کا وقت کا فرق کو ٹوگل کریں۔"
       region:
         none: "کوئی نہیں"
+        names:
+          gr: "یونان"
       toolbar_button:
         today: "آج"
         month: "مہینہ"

@@ -2442,9 +2442,6 @@ fi:
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
-    glimmer_post_stream_mode: "Hallitse, käytetäänkö uutta glimmer-viestivirtauudistusta. \"Auto\" ottaa sen käyttöön automaattisesti, kun kaikki teemasi ja lisäosasi ovat valmiita. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
-    glimmer_post_stream_mode_auto_groups: "Ota käyttöön uusi glimmer-viestivirtauudistus \"auto\"-tilassa määritetyille käyttäjäryhmille. Tämä uudistus on aktiivisesti kehitteillä, eikä sitä ole tarkoitettu tuotantokäyttöön. Älä kehitä teemoja tai lisäosia sen mukaan ennen kuin uudistus on viimeistelty ja julkistettu."
-    deactivate_widgets_rendering: "Poista vanhojen pienoisohjelmien renderöintimoduuli käytöstä. Tämä poistaa käytöstä kaikki pienoisohjelmat, joita ei ole päivitetty Glimmer-komponentteihin, ja pakottaa myös Glimmer Post Streamin olemaan käytössä ehdoitta glimmer_post_stream_mode-asetuksen arvosta riippumatta. Tätä asetusta ei suositella tuotantosivustoille, koska se saattaa rikkoa olemassa olevia teemoja ja lisäosia."
     floatkit_autocomplete_composer: "Ota käyttöön Floatkit-pohjainen automaattisen täydennyksen valikko kirjoitustilassa. Tämä on käyttöliittymän parannus, joka korvaa nykyisen jQuery-pohjaisen automaattisen täydennyksen valikon."
     floatkit_autocomplete_chat_composer: "Ota käyttöön Floatkit-pohjainen automaattisen täydennyksen valikko chat-kirjoitustilassa. Tämä on käyttöliittymän parannus, joka korvaa nykyisen jQuery-pohjaisen automaattisen täydennyksen valikon."
     experimental_form_templates: "Ota lomakemalliominaisuus käyttöön.Voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
@@ -5209,6 +5206,8 @@ fi:
       reject_and_keep_deleted:
         title: "Pidä viesti poistettuna"
         complete: "Viesti hylättiin ja pidettiin poistettuna."
+      scrub:
+        title: Puhdistusrekisteri
       approve_and_restore:
         title: "Hyväksy ja palauta viesti"
         complete: "Viesti hyväksytty ja palautettu."
@@ -5238,6 +5237,8 @@ fi:
         complete: "Käyttäjä poistettu"
         reason: "Poistettiin tarkastusjonon kautta"
       delete_and_block_user:
+        complete: "Käyttäjä poistettu ja estetty"
+      delete_user_block:
         complete: "Käyttäjä poistettu ja estetty"
   email_style:
     html_missing_placeholder: "HTML-pohjan täytyy sisältää %{placeholder}"

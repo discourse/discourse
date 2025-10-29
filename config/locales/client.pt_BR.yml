@@ -590,6 +590,7 @@ pt_BR:
       other: "Veja %{count} novos tópicos"
     preview: "pré-visualizar"
     cancel: "Cancelar"
+    done: "Concluído(a)"
     deleting: "Excluindo…"
     save: "Salvar alterações"
     saving: "Salvando…"
@@ -3507,9 +3508,6 @@ pt_BR:
       auto_close_immediate:
         one: "A última postagem no tópico foi feita há %{count} hora, portanto o tópico será fechado imediatamente."
         other: "A última postagem no tópico já foi feita há %{count} horas, portanto o tópico será fechado imediatamente."
-      auto_close_momentarily:
-        one: "A última postagem no tópico foi feita há %{count} hora, portanto o tópico será fechado momentaneamente."
-        other: "A última postagem no tópico foi feita há %{count} horas, portanto o tópico será fechado momentaneamente."
       timeline:
         back: "Voltar"
         back_description: "Voltar para a sua última postagem não lida"
@@ -4504,8 +4502,7 @@ pt_BR:
       readonly: "Ver"
     preloader_text: "Carregando"
     lightbox:
-      download: "download"
-      open: "imagem original"
+      download: "Download"
       previous: "Anterior (seta para a esquerda)"
       next: "Próximo (seta para a direita)"
       counter: "%curr% de %total%"

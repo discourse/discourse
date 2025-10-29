@@ -2668,6 +2668,8 @@ lt:
         title: "Atmesti ir ištrinti įrašą"
       reject_and_keep_deleted:
         title: "Palikti įrašą ištrintą"
+      scrub:
+        title: Šveitimo įrašas
       no_action_post:
         title: "Jokių veiksmų"
       delete_post:

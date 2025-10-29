@@ -332,6 +332,7 @@ gl:
       other: "Ver %{count} temas novos"
     preview: "visualizar"
     cancel: "Cancelar"
+    done: "Feito"
     save: "Gardar cambios"
     saved: "Gardado!"
     upload: "Cargar"
@@ -2283,9 +2284,6 @@ gl:
       auto_close_immediate:
         one: "A última publicación deste tema xa ten %{count} hora. O tema pecharase inmediatamente."
         other: "A última publicación deste tema xa ten %{count} horas. O tema pecharase inmediatamente."
-      auto_close_momentarily:
-        one: "A última publicación deste tema xa ten %{count} hora. O tema pecharase axiña."
-        other: "A última publicación deste tema xa ten %{count} horas. O tema pecharase axiña."
       timeline:
         back: "Atrás"
         back_description: "Volver á última publicación pendente de lectura"
@@ -3072,7 +3070,7 @@ gl:
       readonly: "Ver"
     preloader_text: "Cargando"
     lightbox:
-      download: "descargar"
+      download: "Descargar"
       previous: "Anterior (tecla de frecha cara á esquerda)"
       next: "Seguinte (tecla de frecha cara á dereita)"
       counter: "%curr% de %total%"

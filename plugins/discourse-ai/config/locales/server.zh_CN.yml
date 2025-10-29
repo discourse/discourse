@@ -28,10 +28,6 @@ zh_CN:
       llm_triage:
         title: 使用 AI 对帖子进行分类
         description: "使用大语言模型对帖子进行分类"
-        flagged_post: |
-          <div>模型的回答：</div>
-          <p>%{llm_response}</p>
-          <b>由 <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> 规则触发</b>。
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
           body: |
@@ -112,7 +108,6 @@ zh_CN:
     ai_bot_allowed_groups: "当 GPT 机器人可以访问私信时，它将回复这些群组的成员。"
     ai_bot_debugging_allowed_groups: "允许这些群组在帖子上看到显示原始 AI 请求和回答的调试按钮"
     ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的站点需要登录，分享时也需要登录。"
-    ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人启动私信"
     ai_bot_github_access_token: "搭配使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
     ai_discover_enabled: "启用发现搜索功能"
     ai_discover_persona: "用于发现搜索功能的 Persona"

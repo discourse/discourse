@@ -2582,9 +2582,6 @@ sk:
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
-    glimmer_post_stream_mode: "Ovládanie, či sa použije nová implementácia postreamu \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie postreamu \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    deactivate_widgets_rendering: "Zakázanie staršieho vykresľovacieho jadra widgetov. Tým sa zakážu všetky widgety, ktoré neboli aktualizované na komponenty Glimmer, a tiež sa bezpodmienečne povolí Glimmer Post Stream bez ohľadu na hodnotu nastavenia `glimmer_post_stream_mode`. Toto nastavenie sa neodporúča pre produkčné stránky, pretože môže narušiť existujúce témy a doplnky."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
@@ -5536,6 +5533,8 @@ sk:
       reject_and_keep_deleted:
         title: "Ponechať príspevok odstránený"
         complete: "Príspevok zamietnutý a vymazaný."
+      scrub:
+        title: Záznam o čistení
       approve_and_restore:
         title: "Schváliť a obnoviť príspevok"
         complete: "Príspevok schválený a obnovený."
@@ -5565,6 +5564,8 @@ sk:
         complete: "Používateľ odstránený"
         reason: "Odstránené prostredníctvom poradia na kontrolu"
       delete_and_block_user:
+        complete: "Používateľ vymazaný a zablokovaný"
+      delete_user_block:
         complete: "Používateľ vymazaný a zablokovaný"
   email_style:
     html_missing_placeholder: "Šablóna html musí obsahovať %{placeholder}"

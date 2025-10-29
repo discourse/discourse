@@ -155,6 +155,8 @@ el:
       chat_message_separator:
         today: Σήμερα
         yesterday: Χτες
+      search_view:
+        filter_placeholder: Αναζήτηση στα μηνύματα
       about_view:
         title: Τίτλος
         name: Όνομα
@@ -164,6 +166,7 @@ el:
         tabs:
           members: Μέλη
           settings: Ρυθμίσεις
+          search: Αναζήτηση
         remove_member: "Αφαίρεση"
       new_message_modal:
         no_items: "Δεν υπάρχουν στοιχεία"
@@ -202,6 +205,11 @@ el:
         category_label: "Κατηγορία"
         history_label: "Ιστορικό"
         members_label: "Μέλη"
+      search:
+        no_results: "Δεν βρέθηκαν αποτελέσματα"
+        sort:
+          relevance: "Συνάφεια"
+          latest: "Πρόσφατα"
       incoming_webhooks:
         back: "Πίσω"
         channel: "Κανάλι"

@@ -18,6 +18,8 @@ zh_TW:
       user_cannot_send_direct_messages: "抱歉，您無法傳送私訊。"
     reviewables:
       actions:
+        no_action_message:
+          title: "沒有動作"
         agree:
           title: "同意..."
         agree_and_keep_message:

@@ -26,10 +26,6 @@ fi:
       llm_triage:
         title: Luokittele viestit tekoälyllä
         description: "Luokittele viestit suurella kielimallilla"
-        flagged_post: |
-          <div>Mallin vastaus::</div>
-          <p>%{llm_response}</p>
-          <b>Säännön <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> käynnistämä.</b>
       llm_report:
         title: Säännöllinen raportti tekoälyllä
         description: "Säännöllinen raportti laajan kielimallin perusteella"
@@ -102,7 +98,6 @@ fi:
     ai_bot_allowed_groups: "Kun GPT-botilla on yksityisviestin käyttöoikeus, se vastaa näiden ryhmien jäsenille."
     ai_bot_debugging_allowed_groups: "Salli näiden ryhmien nähdä viesteissä virheenkorjauspainike, joka näyttää raa'an tekoälypyynnön ja vastauksen"
     ai_bot_public_sharing_allowed_groups: "Salli näiden ryhmien jakaa tekoälyn yksityisviestejä yleisölle ainutlaatuisen julkisesti käytettävissä olevan linkin kautta. Huomaa: jos sivustosi edellyttää kirjautumista, myös jaot edellyttävät kirjautumista."
-    ai_bot_add_to_header: "Näytä painike yläpalkissa yksityiskeskustelun aloittamiseksi tekoälybotin kanssa"
     ai_bot_github_access_token: "GitHubin käyttötunnus käytettäväksi GitHubin tekoälytyökalujen kanssa (vaaditaan haun tukea varten)"
     ai_stability_api_key: "stability.ai-APIn API-avain"
     ai_stability_engine: "stability.ai-APIssa käytettävä kuvanluontimoduuli"

@@ -31,6 +31,7 @@ cs:
     chat_editing_grace_period_max_diff_high_trust: "Maximální počet povolených změn znaků v době odkladu úpravy chatu, pokud se změní více, zobrazí se značka (upraveno) u zprávy chatu (úroveň důvěry 2 a vyšší)."
     chat_preferred_index: "Preferovaný panel při načítání /chat"
     allow_chat_in_anonymous_mode: "Povolením tohoto nastavení umožníte uživatelům, kteří procházejí vaše stránky anonymně, používat chat. Toto nastavení vyžaduje, aby bylo povoleno nastavení `allow anonymous mode`."
+    chat_search_enabled: "Povolením tohoto nastavení umožníte uživatelům prohledávat zprávy chatu."
     errors:
       chat_default_channel: "Výchozí kanál chatu musí být veřejný kanál."
       direct_message_enabled_groups_invalid: "Pro toto nastavení musíte zadat alespoň jednu skupinu. Pokud nechcete, aby nikdo kromě redakce posílal přímé zprávy, vyberte skupinu redakce."
@@ -112,6 +113,17 @@ cs:
     reviewables:
       message_already_handled: "Děkujeme, ale tuto zprávu jsme již zkontrolovali a rozhodli jsme se, že ji není třeba znovu nahlašovat."
       actions:
+        message_actions:
+          bundle_title: "Co chcete se zprávou udělat?"
+        no_action_message:
+          title: "Bez akce"
+          description: "Ponechat zprávu tak, jak je."
+        delete_message:
+          title: "Smazat zprávu"
+          description: "Trvale smazat zprávu."
+        restore_message:
+          title: "Obnovit zprávu"
+          description: "Obnovit zprávu, aby ji uživatelé mohli vidět."
         agree:
           title: "Souhlas..."
         agree_and_keep_message:

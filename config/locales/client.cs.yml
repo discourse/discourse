@@ -712,6 +712,7 @@ cs:
       other: "Zobrazit %{count} nových témat"
     preview: "ukázka"
     cancel: "Zrušit"
+    done: "Hotovo"
     deleting: "Mazání…"
     save: "Uložit změny"
     saving: "Ukládání…"
@@ -3835,6 +3836,8 @@ cs:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Projděte všechny kategorie</a>, <a href='%{basePath}/latest'>zobrazte nejnovější témata</a> nebo si prohlédněte nejlepší:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Projděte všechny štítky</a> nebo <a href='%{basePath}/latest'>zobrazte nejnovější témata</a>."
       browse_latest_topics: "Procházet nejnovější témata"
+      browse_new_replies: "Procházet nové odpovědi"
+      browse_new_topics: "Procházet nová témata"
       suggest_create_topic: Jste připraveni <a href>zahájit novou konverzaci?</a>
       jump_reply: "Přejít na původní umístění příspěvku"
       jump_reply_aria: "Přejít na příspěvek uživatele @%{username} v původním umístění"
@@ -3915,11 +3918,6 @@ cs:
         few: "Poslední příspěvek v tématu je již %{count} hodiny starý, takže toto téma bude okamžitě uzavřeno."
         many: "Poslední příspěvek v tématu je již %{count} hodin starý, takže toto téma bude okamžitě uzavřeno."
         other: "Poslední příspěvek v tématu je již %{count} hodin starý, takže toto téma bude okamžitě uzavřeno."
-      auto_close_momentarily:
-        one: "Poslední příspěvek v tématu je již %{count} hodinu starý, takže toto téma bude za okamžik uzavřeno."
-        few: "Poslední příspěvek v tématu je již %{count} hodiny starý, takže toto téma bude za okamžik uzavřeno."
-        many: "Poslední příspěvek v tématu je již %{count} hodin starý, takže toto téma bude za okamžik uzavřeno."
-        other: "Poslední příspěvek v tématu je již %{count} hodin starý, takže toto téma bude za okamžik uzavřeno."
       timeline:
         back: "Zpět"
         back_description: "Přejít na poslední nepřečtený příspěvek"
@@ -4442,6 +4440,7 @@ cs:
         delete_post_notice: "Smazat oficiální upozornění"
         remove_timer: "odebrat časovač"
         edit_timer: "upravit časovač"
+        remove_yourself_from_pm: "Opravdu se chcete z této zprávy odebrat? Nebudete ji už moci zobrazit ani na ni odpovědět."
       actions:
         people:
           like:
@@ -5036,12 +5035,14 @@ cs:
       readonly: "Prohlížet"
     preloader_text: "Nahrávám"
     lightbox:
-      download: "stáhnout"
-      open: "původní obrázek"
+      download: "Stáhnout"
+      open: "Původní obrázek"
       previous: "Předchozí (klávesa šipka vlevo)"
       next: "Další (klávesa šipka vpravo)"
       counter: "%curr% z %total%"
       close: "Zavřít (Esc)"
+      zoom: "Přiblížení (klávesa Z)"
+      error: "Obrázek nelze načíst"
       content_load_error: '<a href="%url%">Obsah</a> se nepodařilo načíst.'
       image_load_error: '<a href="%url%">Obrázek</a> se nepodařilo načíst.'
     cannot_render_video: Toto video nelze zobrazit, protože váš prohlížeč nepodporuje daný kodek.
