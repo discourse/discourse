@@ -2156,6 +2156,7 @@ en:
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
+        generating_link: "Generating link..."
         groups: "Groups"
         topic: "Topic"
         sent: "Created/Last Sent"
