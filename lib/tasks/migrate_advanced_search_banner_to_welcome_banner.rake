@@ -1,7 +1,11 @@
 # frozen_string_literal: true
 
-THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git"
-REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead]
+THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git" unless defined?(
+  THEME_GIT_URL
+)
+REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead] unless defined?(
+  REQUIRED_TRANSLATION_KEYS
+)
 
 desc "Migrate settings from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
@@ -93,26 +97,28 @@ def theme_identifier(theme)
 end
 
 # Settings migration methods
-SETTINGS_MAPPING = {
-  "show_on" => {
-    site_setting: "welcome_banner_page_visibility",
-    value_mapping: {
-      "top_menu" => "top_menu_pages",
-      "all" => "all_pages",
+unless defined?(SETTINGS_MAPPING)
+  SETTINGS_MAPPING = {
+    "show_on" => {
+      site_setting: "welcome_banner_page_visibility",
+      value_mapping: {
+        "top_menu" => "top_menu_pages",
+        "all" => "all_pages",
+      },
     },
-  },
-  "plugin_outlet" => {
-    site_setting: "welcome_banner_location",
-    value_mapping: {
-      "above-main-container" => "above_topic_content",
-      "below-site-header" => "below_site_header",
+    "plugin_outlet" => {
+      site_setting: "welcome_banner_location",
+      value_mapping: {
+        "above-main-container" => "above_topic_content",
+        "below-site-header" => "below_site_header",
+      },
     },
-  },
-  "background_image_light" => {
-    site_setting: "welcome_banner_image",
-    value_mapping: nil,
-  },
-}
+    "background_image_light" => {
+      site_setting: "welcome_banner_image",
+      value_mapping: nil,
+    },
+  }
+end
 
 def process_theme_component_settings(theme, errors)
   puts "\n  Migrating settings for #{theme_identifier(theme)}..."
