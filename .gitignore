@@ -77,6 +77,7 @@
 !/plugins/discourse-templates
 !/plugins/discourse-ai
 !/plugins/discourse-cakeday
+!/plugins/fake-custom-theme
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated

@@ -1,5 +1,6 @@
 import $ from "jquery";
 import { h } from "virtual-dom";
+import { isBlock } from "discourse/blocks";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -191,6 +192,9 @@ const DEPRECATED_POST_STREAM_WIDGETS = [
 const blockedModifications = ["component:topic-list"];
 
 const appliedModificationIds = new WeakMap();
+
+// TODO: This should be stored in a service instead
+export const blockConfigs = new Map();
 
 // This helper prevents us from applying the same `modifyClass` over and over in test mode.
 function canModify(klass, type, resolverName, changes) {
@@ -3417,6 +3421,21 @@ class _PluginApi {
    */
   registerCategorySaveProperty(property) {
     _addCategoryPropertyForSave(property);
+  }
+
+  renderBlockLayout(name, blocks) {
+    blocks.forEach((block) => {
+      // TODO: better validation
+      if (!block.component) {
+        throw new Error(`Block in layout ${name} is missing a component`);
+      }
+      if (!isBlock(block.component)) {
+        throw new Error(
+          `Block component ${block.name} (${block.component}) in layout ${name} is not a valid block`
+        );
+      }
+    });
+    blockConfigs.set(name, blocks);
   }
 
   #deprecateModifyClass(className) {
