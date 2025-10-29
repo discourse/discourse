@@ -20,7 +20,7 @@ module Jobs
     private
 
     def eligible_for_this_run?(check)
-      check.enabled? && check.scheduled? && check.ready_to_run?
+      check.enabled? && check.ready_to_run?
     end
   end
 end
