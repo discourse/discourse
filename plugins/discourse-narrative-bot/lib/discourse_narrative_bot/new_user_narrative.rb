@@ -267,12 +267,9 @@ module DiscourseNarrativeBot
       post_topic_id = @post.topic_id
       return unless valid_topic?(post_topic_id)
 
-      # NOTE: This can be a bit brittle if people change the site text for
-      # discourse_narrative_bot.new_user_narrative.onebox.instructions, or if
-      # the user drops some other random link, but we accept that risk for now.
       found_link =
         @post.raw.match(
-          %r{https://en\.wikipedia\.org/wiki/(Inherently_funny_word|Death_by_coconut|Calculator_spelling)},
+          %r{https:\/\/[a-zA-Z0-9-._~:?#@!$&'()*+,;=\[\]\/]*},
         )
 
       if found_link
