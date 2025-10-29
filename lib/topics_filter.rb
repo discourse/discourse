@@ -197,7 +197,7 @@ class TopicsFilter
       {
         name: "created-by:",
         description: I18n.t("filter.description.created_by"),
-        type: "username",
+        type: "username_group_list",
         delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
       },
       {
