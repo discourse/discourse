@@ -663,6 +663,7 @@ class TopicsFilter
     if names.include?("me") && @guardian.authenticated?
       names = names.map { |n| n == "me" ? @guardian.user.username_lower : n }
     end
+
     if (user_ids = User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)) &&
          user_ids.any?
       @scope = @scope.joins(:user).where(user_id: user_ids)
@@ -673,6 +674,7 @@ class TopicsFilter
          group_ids =
            Group
              .visible_groups(@guardian.user)
+             .members_visible_groups(@guardian.user)
              .where("lower(name) IN (?)", names.map(&:downcase))
              .pluck(:id)
        ) && group_ids.any?
