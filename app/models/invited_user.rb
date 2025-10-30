@@ -14,9 +14,11 @@ class InvitedUser < ActiveRecord::Base
   def decrement_invite_redemption_count
     return if invite_id.blank?
 
-    Invite.unscoped.where(id: invite_id).where("redemption_count > 0").update_all(
-      "redemption_count = redemption_count - 1",
-    )
+    Invite
+      .unscoped
+      .where(id: invite_id)
+      .where("redemption_count > 0")
+      .update_all("redemption_count = redemption_count - 1")
   end
 end
 
