@@ -203,4 +203,8 @@ RSpec.describe Onebox::Engine::YoutubeOnebox do
     preview.to match(/iframe/)
     preview.to include("embed/eJemwqO0SDw")
   end
+
+  it "generates a thumbnail for videos" do
+    expect(Onebox.preview("https://www.youtube.com/watch?v=21Lk4YiASMo").to_s).to match("<img")
+  end
 end
