@@ -54,7 +54,7 @@ module DiscourseAi
         JSON.pretty_generate({ traceEvents: trace_events })
       end
 
-      def save(path)
+      def save
         File.write(path, to_trace_event_json)
       end
 

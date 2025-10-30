@@ -80,7 +80,6 @@
 !/plugins/discourse-ai
 !/plugins/discourse-cakeday
 /plugins/*/auto_generated
-/plugins/discourse-ai/evals/cases
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 
@@ -123,3 +122,8 @@ openapi/*
 
 # direnv.net
 .direnv
+
+# discourse-ai evals
+/plugins/discourse-ai/evals/cases
+/plugins/discourse-ai/evals/log
+/plugins/discourse-ai/config/eval-llms.local.yml

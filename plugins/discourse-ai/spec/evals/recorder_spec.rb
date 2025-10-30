@@ -5,7 +5,9 @@ require_relative "../../evals/lib/structured_logger"
 require_relative "../../evals/lib/eval"
 
 RSpec.describe DiscourseAi::Evals::Recorder do
-  subject(:recorder) { described_class.new(eval_case, logger, structured_logger, output: output) }
+  subject(:recorder) do
+    described_class.new(eval_case, logger, "/tmp/example.json", structured_logger, output: output)
+  end
 
   let(:eval_case) do
     instance_double("DiscourseAi::Evals::Eval", id: "example-eval", to_json: { foo: "bar" })

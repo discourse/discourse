@@ -2,6 +2,7 @@
 
 require "fileutils"
 require "logger"
+require_relative "structured_logger"
 
 module DiscourseAi
   module Evals
@@ -20,15 +21,15 @@ module DiscourseAi
         logger = Logger.new(File.open(log_path, "a"))
         structured_logger = StructuredLogger.new(structured_log_path)
 
-        new(an_eval, logger, structured_logger, output: output).tap do |recorder|
-          attach_thread_loggers
+        new(an_eval, logger, log_path, structured_logger, output: output).tap do |recorder|
           recorder.running
         end
       end
 
-      def initialize(an_eval, logger, structured_logger, output: $stdout)
+      def initialize(an_eval, logger, log_path, structured_logger, output: $stdout)
         @an_eval = an_eval
         @logger = logger
+        @log_path = log_path
         @structured_logger = structured_logger
         @output = output
       end
@@ -92,7 +93,8 @@ module DiscourseAi
         structured_logger.finish_root(end_time: Time.now.utc)
 
         detach_thread_loggers
-        File.write(structured_log_path, structured_logger.to_trace_event_json)
+
+        structured_logger.save
 
         output.puts
         output.puts "Log file: #{log_path}"
@@ -103,7 +105,7 @@ module DiscourseAi
 
       private
 
-      attr_reader :an_eval, :logger, :structured_logger, :output
+      attr_reader :an_eval, :logger, :structured_logger, :output, :log_path
 
       def attach_thread_loggers
         @previous_thread_loggers = {
