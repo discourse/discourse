@@ -74,6 +74,7 @@ class SiteSetting < ActiveRecord::Base
     default_sidebar_link_to_filtered_list
     default_sidebar_show_count_of_new_items
     default_composition_mode
+    default_watched_precedence_over_muted
   ]
 
   extend GlobalPath
@@ -227,6 +228,31 @@ class SiteSetting < ActiveRecord::Base
         Regexp.new(SiteSetting.allowed_unicode_username_characters)
       end
     end
+  end
+
+  def self.history_for(setting_name)
+    UserHistory.where(
+      action: UserHistory.actions[:change_site_setting],
+      subject: setting_name,
+    ).order(created_at: :desc)
+  end
+
+  class ImageQuality
+    def self.png_to_jpg_quality
+      SiteSetting.png_to_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+
+    def self.recompress_original_jpg_quality
+      SiteSetting.recompress_original_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+
+    def self.image_preview_jpg_quality
+      SiteSetting.image_preview_jpg_quality.nonzero? || SiteSetting.image_quality
+    end
+  end
+
+  def self.ImageQuality
+    SiteSetting::ImageQuality
   end
 
   # helpers for getting s3 settings that fallback to global

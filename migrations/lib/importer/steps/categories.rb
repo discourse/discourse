@@ -16,12 +16,8 @@ module Migrations::Importer::Steps
 
     requires_mapping :ids_by_name, "SELECT name, id FROM categories"
     requires_set :existing_ids, "SELECT id FROM categories"
-    requires_set :existing_category_names, <<~SQL
-      SELECT COALESCE(parent_category_id::text, '') || '-' || LOWER(name) FROM categories
-    SQL
     requires_set :existing_slugs, <<~SQL
-      SELECT
-        COALESCE(parent_category_id::text, '') || ':' || LOWER(slug)
+      SELECT parent_category_id, LOWER(slug)
       FROM categories
       WHERE slug <> ''
     SQL
@@ -127,6 +123,7 @@ module Migrations::Importer::Steps
       @mapped_category_ids = @intermediate_db.query_array(<<~SQL, MappingType::CATEGORIES).to_h
         SELECT original_id, discourse_id FROM  mapped.ids WHERE type = ?
       SQL
+      @unique_name_finder = ::Migrations::Importer::CategoryNameFinder.new(@shared_data)
 
       super
     end
@@ -209,27 +206,8 @@ module Migrations::Importer::Steps
     end
 
     def ensure_unique_name(original_name, parent_id)
-      truncated_name = original_name[0...MAX_NAME_LENGTH].scrub.strip
-      name_lower = truncated_name.downcase
-
-      if @existing_category_names.add?("#{parent_id}-#{name_lower}")
-        return truncated_name, name_lower
-      end
-
-      counter = 1
-      loop do
-        suffix = counter.to_s
-        trim_length = MAX_NAME_LENGTH - suffix.length
-
-        candidate_name = "#{truncated_name[0...trim_length]}#{suffix}"
-        candidate_name_lower = candidate_name.downcase
-
-        if @existing_category_names.add?("#{parent_id}-#{candidate_name_lower}")
-          return candidate_name, candidate_name_lower
-        end
-
-        counter += 1
-      end
+      name = @unique_name_finder.find_available_name(original_name, parent_id)
+      [name, name.downcase]
     end
 
     def ensure_unique_slug(slug, parent_id, name_lower)
@@ -237,13 +215,11 @@ module Migrations::Importer::Steps
       # safe to use directly as fallback without deduplication
       return Slug.for(name_lower, "") if slug.blank?
 
-      parent_prefix = "#{parent_id}:"
       slug_lower = slug.downcase
+      return slug if @existing_slugs.add?(parent_id, slug_lower)
 
-      return slug if @existing_slugs.add?("#{parent_prefix}#{slug_lower}")
-
-      new_slug = "#{slug_lower}-1"
-      new_slug.next! until @existing_slugs.add?("#{parent_prefix}#{new_slug}")
+      new_slug = +"#{slug_lower}-1"
+      new_slug.next! until @existing_slugs.add?(parent_id, new_slug)
 
       new_slug
     end

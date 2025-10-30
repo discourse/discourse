@@ -42,11 +42,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("caretUpIcon", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <CategoryDrop @category={{self.value}} @categories={{self.content}} />
+        <CategoryDrop @category={{this.value}} @categories={{this.content}} />
       </template>
     );
 
@@ -56,11 +54,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("none", async function (assert) {
-    const self = this;
-
     await render(
       <template>
-        <CategoryDrop @category={{self.value}} @categories={{self.content}} />
+        <CategoryDrop @category={{this.value}} @categories={{this.content}} />
       </template>
     );
 
@@ -73,8 +69,6 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("[not staff - TL0] displayCategoryDescription", async function (assert) {
-    const self = this;
-
     set(this.currentUser, "staff", false);
     set(this.currentUser, "trust_level", 0);
 
@@ -83,9 +77,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -99,8 +93,6 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("[not staff - TL1] displayCategoryDescription", async function (assert) {
-    const self = this;
-
     set(this.currentUser, "moderator", false);
     set(this.currentUser, "admin", false);
     set(this.currentUser, "trust_level", 1);
@@ -109,9 +101,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -125,8 +117,6 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("[staff - TL0] displayCategoryDescription", async function (assert) {
-    const self = this;
-
     set(this.currentUser, "moderator", true);
     set(this.currentUser, "trust_level", 0);
 
@@ -135,9 +125,9 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -151,16 +141,14 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("hideParentCategory (default: false)", async function (assert) {
-    const self = this;
-
     initCategories(this);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -173,16 +161,14 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("hideParentCategory (true)", async function (assert) {
-    const self = this;
-
     initCategoriesWithParentCategory(this);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
           @options={{hash hideParentCategory=true}}
         />
       </template>
@@ -202,17 +188,15 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("allow_uncategorized_topics (true)", async function (assert) {
-    const self = this;
-
     this.siteSettings.allow_uncategorized_topics = true;
     initCategories(this);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -225,17 +209,15 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("allow_uncategorized_topics (false)", async function (assert) {
-    const self = this;
-
     this.siteSettings.allow_uncategorized_topics = false;
     initCategories(this);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -248,16 +230,14 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("countSubcategories (default: false)", async function (assert) {
-    const self = this;
-
     initCategories(this);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -273,16 +253,14 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("countSubcategories (true)", async function (assert) {
-    const self = this;
-
     initCategories(this);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
           @options={{hash countSubcategories=true}}
         />
       </template>
@@ -299,17 +277,15 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("shortcuts:default", async function (assert) {
-    const self = this;
-
     initCategories(this);
     this.set("category", null);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -324,16 +300,14 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("shortcuts:category is set", async function (assert) {
-    const self = this;
-
     initCategories(this);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );
@@ -344,16 +318,14 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("shortcuts with parentCategory/subCategory=true:default", async function (assert) {
-    const self = this;
-
     initCategoriesWithParentCategory(this);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
           @options={{hash subCategory=true}}
         />
       </template>
@@ -365,17 +337,15 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("shortcuts with parentCategory/subCategory=true:category is selected", async function (assert) {
-    const self = this;
-
     initCategoriesWithParentCategory(this);
     this.set("category", this.categories.firstObject);
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
           @options={{hash subCategory=true}}
         />
       </template>
@@ -388,17 +358,15 @@ module("Integration | Component | select-kit/category-drop", function (hooks) {
   });
 
   test("category url", async function (assert) {
-    const self = this;
-
     initCategoriesWithParentCategory(this);
     sinon.stub(DiscourseURL, "routeTo");
 
     await render(
       <template>
         <CategoryDrop
-          @category={{self.category}}
-          @categories={{self.categories}}
-          @parentCategory={{self.parentCategory}}
+          @category={{this.category}}
+          @categories={{this.categories}}
+          @parentCategory={{this.parentCategory}}
         />
       </template>
     );

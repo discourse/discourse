@@ -1,6 +1,3 @@
-import { fn } from "@ember/helper";
-import { on } from "@ember/modifier";
-import RouteTemplate from "ember-route-template";
 import formatDate from "discourse/helpers/format-date";
 import routeAction from "discourse/helpers/route-action";
 import EmailLogsList from "admin/components/email-logs-list";
@@ -30,34 +27,26 @@ const RECEIVED_FILTERS = [
   },
 ];
 
-export default RouteTemplate(
-  <template>
-    <EmailLogsList
-      @status="received"
-      @logType="received"
-      @sourceModel={{IncomingEmail}}
-      @headers={{RECEIVED_HEADERS}}
-      @filters={{RECEIVED_FILTERS}}
-      @onShowEmail={{routeAction "showIncomingEmail"}}
-    >
-      <:default
-        as |emailLog ccThreshold sortWithAddressFilter handleShowIncomingEmail|
-      >
-        <tr data-test-email-log-row-id={{emailLog.id}}>
-          <td>{{formatDate emailLog.created_at}}</td>
-          <td>{{emailLog.from_address}}</td>
-          <td>{{emailLog.to_addresses}}</td>
-          <td>
-            <a
-              href
-              {{on "click" (fn handleShowIncomingEmail emailLog.id)}}
-              class="incoming-email-link"
-            >
-              {{emailLog.subject}}
-            </a>
-          </td>
-        </tr>
-      </:default>
-    </EmailLogsList>
-  </template>
-);
+export default <template>
+  <EmailLogsList
+    @status="received"
+    @logType="received"
+    @sourceModel={{IncomingEmail}}
+    @headers={{RECEIVED_HEADERS}}
+    @filters={{RECEIVED_FILTERS}}
+    @onShowEmail={{routeAction "showIncomingEmail"}}
+  >
+    <:default as |emailLog|>
+      <tr data-test-email-log-row-id={{emailLog.id}}>
+        <td>{{formatDate emailLog.created_at}}</td>
+        <td>{{emailLog.from_address}}</td>
+        <td>{{emailLog.to_addresses}}</td>
+        <td>
+          <a href={{emailLog.post_url}}>
+            {{emailLog.subject}}
+          </a>
+        </td>
+      </tr>
+    </:default>
+  </EmailLogsList>
+</template>

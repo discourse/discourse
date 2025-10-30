@@ -73,6 +73,7 @@ reviewed:
     - nio4r # MIT + BSD
     - omniauth # MIT
     - pg # Ruby
+    - pitchfork # Ruby or GPLv2/GPLv3
     - r2 # Apache-2.0 (Twitter)
     - raindrops # LGPL-2.1+
     - rubyzip # Ruby

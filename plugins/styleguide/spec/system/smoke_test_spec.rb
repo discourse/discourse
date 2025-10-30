@@ -32,6 +32,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/molecules/signup-cta", title: "Signup CTA" },
       { href: "/molecules/multi-select", title: "Multi select" },
       { href: "/molecules/toasts", title: "Toasts" },
+      { href: "/molecules/dialog", title: "Dialog" },
       { href: "/molecules/tooltips", title: "Tooltips" },
       { href: "/molecules/topic-list-item", title: "Topic List Item" },
       { href: "/molecules/topic-notifications", title: "Topic Notifications" },
@@ -93,6 +94,13 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
         "Section #{section} has a different number of items declared then what was found in the index page"
       end
     end
+  end
+
+  it "renders the index page correctly on a site with no default theme" do
+    SiteSetting.default_theme_id = nil
+    visit "/styleguide"
+
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
   end
 
   # uses the sections hash to generate a test for each page and check if it renders correctly

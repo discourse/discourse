@@ -9,6 +9,13 @@ module Jobs
       return if !DiscourseAi::Translation.enabled?
       return if args[:topic_id].blank?
 
+      unless DiscourseAi::Translation.credits_available_for_topic_detection?
+        Rails.logger.info(
+          "Translation skipped for topic: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       topic = Topic.find_by(id: args[:topic_id])
       if topic.blank? || topic.title.blank? || topic.deleted_at.present? || topic.user_id <= 0
         return

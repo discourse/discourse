@@ -27,7 +27,7 @@ export default class GroupList extends Component {
 
   @action
   loadMore() {
-    this.args.groups && this.args.groups.loadMore();
+    this.args.groups?.loadMore();
   }
 
   get types() {
@@ -86,11 +86,11 @@ export default class GroupList extends Component {
         </div>
       </div>
 
-      {{#if @groups}}
+      {{#if @groups.content}}
         <LoadMore @action={{this.loadMore}}>
           <div class="container">
             <div class="groups-boxes">
-              {{#each @groups as |group|}}
+              {{#each @groups.content as |group|}}
                 <GroupCard @group={{group}} />
               {{/each}}
             </div>

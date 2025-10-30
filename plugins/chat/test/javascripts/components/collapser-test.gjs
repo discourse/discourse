@@ -8,11 +8,9 @@ module("Discourse Chat | Component | collapser", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders header", async function (assert) {
-    const self = this;
-
     this.set("header", htmlSafe(`<div class="cat">tomtom</div>`));
 
-    await render(<template><Collapser @header={{self.header}} /></template>);
+    await render(<template><Collapser @header={{this.header}} /></template>);
 
     assert.dom(".cat").exists();
   });

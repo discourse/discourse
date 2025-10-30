@@ -1,17 +1,17 @@
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import RouteTemplate from "ember-route-template";
 import { and } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SecurityKeyDropdown from "discourse/components/security-key-dropdown";
 import TokenBasedAuthDropdown from "discourse/components/token-based-auth-dropdown";
 import TwoFactorBackupDropdown from "discourse/components/two-factor-backup-dropdown";
 import bodyClass from "discourse/helpers/body-class";
 import { i18n } from "discourse-i18n";
 
-export default RouteTemplate(
-  <template>
+export default <template>
+  <PluginOutlet @name="user-second-factor-wrapper">
     {{bodyClass "user-preferences-page"}}
 
     <section
@@ -41,72 +41,76 @@ export default RouteTemplate(
             <div class="alert alert-error">{{@controller.errorMessage}}</div>
           {{/if}}
 
-          <div class="control-group totp">
-            <div class="controls">
-              <h2>{{i18n "user.second_factor.totp.title"}}</h2>
-              {{#each @controller.totps as |totp|}}
-                <div class="second-factor-item row">
-                  <div class="details">
-                    {{#if totp.name}}
-                      {{totp.name}}
-                    {{else}}
-                      {{i18n "user.second_factor.totp.default_name"}}
+          <PluginOutlet @name="user-second-factor-totp-wrapper">
+            <div class="control-group totp">
+              <div class="controls">
+                <h2>{{i18n "user.second_factor.totp.title"}}</h2>
+                {{#each @controller.totps as |totp|}}
+                  <div class="second-factor-item row">
+                    <div class="details">
+                      {{#if totp.name}}
+                        {{totp.name}}
+                      {{else}}
+                        {{i18n "user.second_factor.totp.default_name"}}
+                      {{/if}}
+                    </div>
+                    {{#if @controller.isCurrentUser}}
+                      <div class="actions">
+                        <TokenBasedAuthDropdown
+                          @totp={{totp}}
+                          @editSecondFactor={{@controller.editSecondFactor}}
+                          @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
+                        />
+                      </div>
                     {{/if}}
                   </div>
-                  {{#if @controller.isCurrentUser}}
-                    <div class="actions">
-                      <TokenBasedAuthDropdown
-                        @totp={{totp}}
-                        @editSecondFactor={{@controller.editSecondFactor}}
-                        @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
-                      />
-                    </div>
-                  {{/if}}
-                </div>
-              {{/each}}
-              <DButton
-                @action={{@controller.createTotp}}
-                @icon="plus"
-                @disabled={{@controller.loading}}
-                @label="user.second_factor.totp.add"
-                class="btn-default new-totp"
-              />
+                {{/each}}
+                <DButton
+                  @action={{@controller.createTotp}}
+                  @icon="plus"
+                  @disabled={{@controller.loading}}
+                  @label="user.second_factor.totp.add"
+                  class="btn-default new-totp"
+                />
+              </div>
             </div>
-          </div>
+          </PluginOutlet>
 
-          <div class="control-group security-key">
-            <div class="controls">
-              <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
-              {{#each @controller.security_keys as |security_key|}}
-                <div class="second-factor-item row">
-                  <div class="details">
-                    {{#if security_key.name}}
-                      {{security_key.name}}
-                    {{else}}
-                      {{i18n "user.second_factor.security_key.default_name"}}
+          <PluginOutlet @name="user-second-factor-security-key-wrapper">
+            <div class="control-group security-key">
+              <div class="controls">
+                <h2>{{i18n "user.second_factor.security_key.title"}}</h2>
+                {{#each @controller.security_keys as |security_key|}}
+                  <div class="second-factor-item row">
+                    <div class="details">
+                      {{#if security_key.name}}
+                        {{security_key.name}}
+                      {{else}}
+                        {{i18n "user.second_factor.security_key.default_name"}}
+                      {{/if}}
+                    </div>
+
+                    {{#if @controller.isCurrentUser}}
+                      <div class="actions">
+                        <SecurityKeyDropdown
+                          @securityKey={{security_key}}
+                          @editSecurityKey={{@controller.editSecurityKey}}
+                          @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
+                        />
+                      </div>
                     {{/if}}
                   </div>
-
-                  {{#if @controller.isCurrentUser}}
-                    <div class="actions">
-                      <SecurityKeyDropdown
-                        @securityKey={{security_key}}
-                        @editSecurityKey={{@controller.editSecurityKey}}
-                        @disableSingleSecondFactor={{@controller.disableSingleSecondFactor}}
-                      />
-                    </div>
-                  {{/if}}
-                </div>
-              {{/each}}
-              <DButton
-                @action={{@controller.createSecurityKey}}
-                @icon="plus"
-                @disabled={{@controller.loading}}
-                @label="user.second_factor.security_key.add"
-                class="btn-default new-security-key"
-              />
+                {{/each}}
+                <DButton
+                  @action={{@controller.createSecurityKey}}
+                  @icon="plus"
+                  @disabled={{@controller.loading}}
+                  @label="user.second_factor.security_key.add"
+                  class="btn-default new-security-key"
+                />
+              </div>
             </div>
-          </div>
+          </PluginOutlet>
 
           <div class="control-group pref-second-factor-backup">
             <div class="controls pref-second-factor-backup">
@@ -179,5 +183,5 @@ export default RouteTemplate(
         </form>
       </ConditionalLoadingSpinner>
     </section>
-  </template>
-);
+  </PluginOutlet>
+</template>

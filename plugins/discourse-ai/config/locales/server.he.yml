@@ -29,10 +29,6 @@ he:
       llm_triage:
         title: מיון ראשוני של פוסטים באמצעות בינה מלאכותית
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
-        flagged_post: |
-          <div>תגובה מהמודל:</div>
-          <p>%{llm_response}</p>
-          <b>הוזנקה על ידי הכלל <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "הפוסט שלך הוסר זמנית לצורך בדיקה"
           body: |
@@ -115,7 +111,6 @@ he:
     ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
     ai_bot_public_sharing_allowed_groups: "לאפשר לקבוצות האלה לשתף הודעות אישיות של בינה למאכותית עם הציבור באמצעות קישור ייחודי גלוי לציבור. הערה: אם האתר שלך דורש כניסה, גם שיתופים ידרשו כניסה."
-    ai_bot_add_to_header: "הצגת כפתור בכותרת כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
     ai_bot_github_access_token: "אסימון גישה ל־GitHub לשימוש עם כלי הבינה המלאכותית של GitHub (נחוץ לתמיכה בחיפוש)"
     ai_discover_enabled: "הפעלת יכולת חיפוש גילוי"
     ai_discover_persona: "דמות לשימוש ליכולת חיפוש גילוי"

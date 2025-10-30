@@ -44,6 +44,13 @@ describe Jobs::LocalizeTopics do
     job.execute({ limit: 10 })
   end
 
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_topic_localization?).returns(false)
+    DiscourseAi::Translation::TopicLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
   it "skips topics that already have localizations" do
     Topic.all.each do |topic|
       Fabricate(:topic_localization, topic:, locale: "en")

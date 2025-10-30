@@ -180,3 +180,7 @@ export default function renderHashtagAutocomplete({ options }) {
     </div>
   `;
 }
+
+export function getHashtagAutocompleteCache() {
+  return searchCache;
+}

@@ -22,6 +22,8 @@ ro:
       invalid_direct_message: "Nu ai voie să creezi acest mesaj direct."
     reviewables:
       actions:
+        no_action_message:
+          title: "Nicio acțiune"
         agree_and_suspend:
           title: "Suspendă utilizator"
         agree_and_silence:

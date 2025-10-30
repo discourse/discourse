@@ -4,6 +4,8 @@ import { getAbsoluteURL } from "discourse/lib/get-url";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import { fileToImageData } from "discourse/lib/media-optimization-utils";
 
+const WORKER_INSTALL_TIMEOUT_MS = 3000;
+
 /**
  * This worker follows a particular promise/callback flow to ensure
  * that the media-optimization-worker is installed and has its libraries
@@ -95,7 +97,10 @@ export default class MediaOptimizationWorkerService extends Service {
                 .composer_media_optimization_image_resize_linear_rgb,
             encode_quality:
               this.siteSettings
-                .composer_media_optimization_image_encode_quality,
+                .composer_media_optimization_image_encode_quality !== 0
+                ? this.siteSettings
+                    .composer_media_optimization_image_encode_quality
+                : this.siteSettings.image_quality,
             debug_mode:
               this.siteSettings.composer_media_optimization_debug_mode,
             mediaOptimizationBundle: this.session.mediaOptimizationBundle,
@@ -130,14 +135,36 @@ export default class MediaOptimizationWorkerService extends Service {
           mediaOptimizationBundle: this.session.mediaOptimizationBundle,
         },
       });
+
+      // new Worker(workerUrl) can hang indefinitely in some cases, so we wait
+      // and see if the worker manages to install in a reasonable time. If not,
+      // we reject the install promise and clean up.
+      setTimeout(() => {
+        if (!this.workerInstalled) {
+          this.failInstall("Worker install timed out.");
+        }
+      }, WORKER_INSTALL_TIMEOUT_MS);
+
       this.appEvents.on("composer:closed", this, "stopWorker");
     });
+
     return this.installPromise;
   }
 
   startWorker() {
     this.logIfDebug("Starting media-optimization-worker");
-    this.worker = new Worker(this.workerUrl); // TODO come up with a workaround for FF that lacks type: module support
+    try {
+      // TODO come up with a workaround for FF that lacks type: module support
+      this.worker = new Worker(this.workerUrl);
+    } catch (err) {
+      this.failInstall("Error starting worker:", err);
+    }
+  }
+
+  failInstall(message, err = null) {
+    this.logIfDebug(message, err);
+    this.failedInstall(err);
+    this.cleanupInstallPromises();
   }
 
   stopWorker() {
@@ -152,17 +179,21 @@ export default class MediaOptimizationWorkerService extends Service {
   }
 
   registerMessageHandler() {
-    this.worker.onmessage = (e) => {
-      switch (e.data.type) {
+    this.worker.onmessage = (workerMessage) => {
+      switch (workerMessage.data.type) {
         case "file":
-          let optimizedFile = new File([e.data.file], e.data.fileName, {
-            type: "image/jpeg",
-          });
+          let optimizedFile = new File(
+            [workerMessage.data.file],
+            workerMessage.data.fileName,
+            {
+              type: "image/jpeg",
+            }
+          );
           this.logIfDebug(
             `Finished optimization of ${optimizedFile.name} new size: ${optimizedFile.size}.`
           );
 
-          this.promiseResolvers[e.data.fileId](optimizedFile);
+          this.promiseResolvers[workerMessage.data.fileId](optimizedFile);
 
           this.workerDoneCount++;
           this.workerPendingCount--;
@@ -174,14 +205,14 @@ export default class MediaOptimizationWorkerService extends Service {
           break;
         case "error":
           this.logIfDebug(
-            `Handling error message from image optimization for ${e.data.fileName}.`
+            `Handling error message from image optimization for ${workerMessage.data.fileName}.`
           );
 
           if (this.stopWorkerOnError) {
             this.stopWorker();
           }
 
-          this.promiseResolvers[e.data.fileId]();
+          this.promiseResolvers[workerMessage.data.fileId]();
           this.workerPendingCount--;
           break;
         case "installed":
@@ -191,12 +222,13 @@ export default class MediaOptimizationWorkerService extends Service {
           this.cleanupInstallPromises();
           break;
         case "installFailed":
-          this.logIfDebug("Worker failed to install.");
-          this.failedInstall(e.data.errorMessage);
-          this.cleanupInstallPromises();
+          this.failInstall(
+            "Worker failed to install.",
+            workerMessage.data.errorMessage
+          );
           break;
         default:
-          this.logIfDebug(`Sorry, we are out of ${e}.`);
+          this.logIfDebug(`Sorry, we are out of ${workerMessage}.`);
       }
     };
   }
@@ -210,7 +242,7 @@ export default class MediaOptimizationWorkerService extends Service {
   logIfDebug(...messages) {
     if (this.siteSettings.composer_media_optimization_debug_mode) {
       // eslint-disable-next-line no-console
-      console.log(...messages);
+      console.log("[media-optimization-worker]", ...messages);
     }
   }
 }

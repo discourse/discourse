@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__discourse-localhost__discourse_list_categories",
+      "mcp__discourse-localhost__discourse_create_category"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

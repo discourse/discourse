@@ -602,6 +602,7 @@ sk:
       other: "Pozrieť %{count} nových tém."
     preview: "náhľad"
     cancel: "Zrušiť"
+    done: "Hotovo"
     deleting: "Odstraňujem…"
     save: "Uložiť zmeny"
     saving: "Ukladanie…"
@@ -3763,11 +3764,6 @@ sk:
         few: "Posledný príspevok k téme je starý už %{hours} hodiny, takže téma bude okamžite uzavretá. "
         many: "Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. "
         other: "Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. "
-      auto_close_momentarily:
-        one: "Posledný príspevok k téme je starý už %{count} hodinu, takže téma bude okamžite uzavretá."
-        few: "Posledný príspevok v tejto téme je už %{count} hodina, takže téma bude okamžite uzavretá."
-        many: "Posledný príspevok v tejto téme je už %{count} hodina, takže téma bude okamžite uzavretá."
-        other: "Posledný príspevok v tejto téme je už starý %{count} hodín, takže téma bude okamžite uzavretá."
       timeline:
         back: "Späť"
         back_description: "Vrátiť sa k poslednému neprečítanému príspevku"
@@ -4866,8 +4862,7 @@ sk:
       readonly: "Zobraz"
     preloader_text: "Načítava sa"
     lightbox:
-      download: "stiahnuť"
-      open: "pôvodný obrázok"
+      download: "Stiahnuť"
       previous: "Predchádzajúci (kláves so šípkou doľava)"
       next: "Ďalej (kláves so šípkou doprava)"
       counter: "%curr% z %total%"

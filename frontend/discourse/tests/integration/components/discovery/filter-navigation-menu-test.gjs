@@ -53,14 +53,12 @@ module(
     });
 
     test("keyboard navigation through tips", async function (assert) {
-      const self = this;
-
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{self.tips}}
-            @initialFilterQueryString={{self.query}}
-            @onChange={{self.update}}
+            @tips={{this.tips}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
           <DMenus />
         </template>
@@ -102,14 +100,12 @@ module(
     });
 
     test("selecting a tip with Tab", async function (assert) {
-      const self = this;
-
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{self.tips}}
-            @initialFilterQueryString={{self.query}}
-            @onChange={{self.update}}
+            @tips={{this.tips}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
 
           <DMenus />
@@ -135,13 +131,12 @@ module(
     });
 
     test("searching tag values", async function (assert) {
-      const self = this;
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{self.tips}}
-            @initialFilterQueryString={{self.query}}
-            @onChange={{self.update}}
+            @tips={{this.tips}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
           <DMenus />
         </template>
@@ -169,13 +164,12 @@ module(
     });
 
     test("escape hides suggestions", async function (assert) {
-      const self = this;
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{self.tips}}
-            @initialFilterQueryString={{self.query}}
-            @onChange={{self.update}}
+            @tips={{this.tips}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
           <DMenus />
         </template>
@@ -194,7 +188,6 @@ module(
     });
 
     test("prefix support for categories", async function (assert) {
-      const self = this;
       this.tips = [
         {
           name: "category:",
@@ -211,9 +204,9 @@ module(
       await render(
         <template>
           <FilterNavigationMenu
-            @tips={{self.tips}}
-            @initialFilterQueryString={{self.query}}
-            @onChange={{self.update}}
+            @tips={{this.tips}}
+            @initialFilterQueryString={{this.query}}
+            @onChange={{this.update}}
           />
           <DMenus />
         </template>

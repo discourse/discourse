@@ -70,7 +70,7 @@ export default class AiLlmsListEditor extends Component {
   }
 
   get hasLlmElements() {
-    return this.args.llms.length !== 0;
+    return this.args.llms.content.length !== 0;
   }
 
   get preconfiguredTitle() {
@@ -168,7 +168,7 @@ export default class AiLlmsListEditor extends Component {
                 </tr>
               </thead>
               <tbody>
-                {{#each @llms as |llm|}}
+                {{#each @llms.content as |llm|}}
                   <tr
                     data-llm-id={{llm.name}}
                     class="ai-llm-list__row d-admin-row__content"

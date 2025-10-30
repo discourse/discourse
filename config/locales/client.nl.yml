@@ -590,6 +590,7 @@ nl:
       other: "%{count} nieuwe topics weergeven"
     preview: "voorbeeld"
     cancel: "Annuleren"
+    done: "Gereed"
     deleting: "Verwijderen…"
     save: "Wijzigingen opslaan"
     saving: "Opslaan…"
@@ -3507,9 +3508,6 @@ nl:
       auto_close_immediate:
         one: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic wordt meteen gesloten."
         other: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic wordt meteen gesloten."
-      auto_close_momentarily:
-        one: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic wordt gesloten."
-        other: "Het laatste bericht in dit topic is al %{count} uur oud, dus het topic wordt gesloten."
       timeline:
         back: "Terug"
         back_description: "Ga terug naar je laatste ongelezen bericht"
@@ -4504,8 +4502,7 @@ nl:
       readonly: "Weergeven"
     preloader_text: "Laden"
     lightbox:
-      download: "downloaden"
-      open: "originele afbeelding"
+      download: "Downloaden"
       previous: "Vorige (pijltoets naar links)"
       next: "Volgende (pijltoets naar rechts)"
       counter: "%curr% van %total%"

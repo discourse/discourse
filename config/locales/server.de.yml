@@ -2452,9 +2452,6 @@ de:
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
-    glimmer_post_stream_mode: "Lege fest, ob die neue Implementierung des „glimmer“-Beitragsstroms verwendet werden soll. „auto“ wird automatisch aktiviert, sobald alle deine Themes und Plug-ins bereit sind. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den produktiven Einsatz gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und angekündigt ist."
-    glimmer_post_stream_mode_auto_groups: "Aktiviere die neue „glimmer“-Beitragsstrom-Implementierung im „auto“-Modus für die angegebenen Benutzergruppen. Diese Implementierung befindet sich in der Entwicklung und ist nicht für den Einsatz in Produktionsumgebungen gedacht. Entwickle keine Themes/Plug-ins dafür, bis die Implementierung fertiggestellt und veröffentlicht ist."
-    deactivate_widgets_rendering: "Deaktiviert die veraltete Rendering-Engine für Widgets. Dadurch werden alle Widgets deaktiviert, die nicht auf Glimmer-Komponenten umgestellt wurden. Außerdem wird der Glimmer-Post-Stream unabhängig vom Wert der Einstellung `glimmer_post_stream_mode` bedingungslos aktiviert. Diese Einstellung wird für Produktionsumgebungen nicht empfohlen, da sie bestehende Themes und Plug-ins beeinträchtigen kann."
     floatkit_autocomplete_composer: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü im Editor. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle JQuery-basierte Autovervollständigungsmenü ersetzt."
     floatkit_autocomplete_input_fields: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü für Eingabefelder in der Ganzseitensuche und in Gruppenauswahlfeldern. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle jQuery-basierte Autovervollständigungsmenü ersetzt."
     floatkit_autocomplete_chat_composer: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü im Chat-Editor. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle jQuery-basierte Autovervollständigungsmenü ersetzt."
@@ -4313,6 +4310,8 @@ de:
     latte_theme_name: "Latte"
     summer_theme_name: "Sommer"
     dark_rose_theme_name: "Dunkelrosa"
+    errors:
+      cannot_edit_remote_copies: "Änderungen an Remote-Kopien von Farbpaletten sind nicht erlaubt."
   edit_this_page: "Diese Seite bearbeiten"
   csv_export:
     boolean_yes: "Ja"
@@ -5323,6 +5322,8 @@ de:
       reject_and_keep_deleted:
         title: "Beitrag gelöscht lassen"
         complete: "Beitrag abgelehnt und gelöscht belassen."
+      scrub:
+        title: Datensatz bereinigen
       approve_and_restore:
         title: "Beitrag genehmigen und wiederherstellen"
         complete: "Beitrag genehmigt und wiederhergestellt."
@@ -5381,6 +5382,10 @@ de:
         complete: "Benutzer gelöscht"
         reason: "Gelöscht via Warteschlange zur Überprüfung"
       delete_and_block_user:
+        title: "Löschen & Blockieren"
+        description: "Lösche den Benutzer und blockiere seine IP/E-Mail"
+        complete: "Benutzer gelöscht und gesperrt"
+      delete_user_block:
         title: "Löschen & Blockieren"
         description: "Lösche den Benutzer und blockiere seine IP/E-Mail"
         complete: "Benutzer gelöscht und gesperrt"

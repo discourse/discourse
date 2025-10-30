@@ -12,8 +12,6 @@ module(
     setupRenderingTest(hooks);
 
     test("direct message to self shows Jot something down", async function (assert) {
-      const self = this;
-
       pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.currentUser.set("id", 1);
@@ -24,7 +22,7 @@ module(
         },
       });
 
-      await render(<template><Channel @channel={{self.channel}} /></template>);
+      await render(<template><Channel @channel={{this.channel}} /></template>);
 
       assert
         .dom(".chat-composer__input")
@@ -32,8 +30,6 @@ module(
     });
 
     test("direct message to multiple folks shows their names  when not a group", async function (assert) {
-      const self = this;
-
       pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
@@ -48,7 +44,7 @@ module(
         },
       });
 
-      await render(<template><Channel @channel={{self.channel}} /></template>);
+      await render(<template><Channel @channel={{this.channel}} /></template>);
 
       assert
         .dom(".chat-composer__input")
@@ -56,8 +52,6 @@ module(
     });
 
     test("direct message to group shows Chat in group", async function (assert) {
-      const self = this;
-
       pretender.get("/chat/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
@@ -73,7 +67,7 @@ module(
         },
       });
 
-      await render(<template><Channel @channel={{self.channel}} /></template>);
+      await render(<template><Channel @channel={{this.channel}} /></template>);
 
       assert
         .dom(".chat-composer__input")
@@ -81,8 +75,6 @@ module(
     });
 
     test("message to channel shows send message to channel name", async function (assert) {
-      const self = this;
-
       pretender.get("/emojis.json", () => [200, [], {}]);
 
       this.channel = ChatChannel.create({
@@ -90,7 +82,7 @@ module(
         title: "just-cats",
       });
 
-      await render(<template><Channel @channel={{self.channel}} /></template>);
+      await render(<template><Channel @channel={{this.channel}} /></template>);
 
       assert
         .dom(".chat-composer__input")

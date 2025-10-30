@@ -11,6 +11,8 @@ ca:
       not_accepting_dms: "De moment %{username} no accepta missatges."
     reviewables:
       actions:
+        no_action_message:
+          title: "Cap acció"
         agree:
           title: "D'acord..."
         agree_and_suspend:

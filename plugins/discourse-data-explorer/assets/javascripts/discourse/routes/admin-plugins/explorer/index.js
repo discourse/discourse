@@ -30,7 +30,7 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
         groupNames[g.id] = g.name;
       });
       return queryPromise.then((model) => {
-        model.forEach((query) => {
+        model.content.forEach((query) => {
           query.set(
             "group_names",
             (query.group_ids || []).map((id) => groupNames[id])

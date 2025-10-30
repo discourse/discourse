@@ -8,8 +8,6 @@ module("Integration | Component | pinned-options", function (hooks) {
   setupRenderingTest(hooks);
 
   test("unpinning", async function (assert) {
-    const self = this;
-
     this.siteSettings.automatically_unpin_topics = false;
 
     const store = getOwner(this).lookup("service:store");
@@ -25,7 +23,7 @@ module("Integration | Component | pinned-options", function (hooks) {
 
     await render(
       <template>
-        <PinnedOptions @value={{self.topic.pinned}} @topic={{self.topic}} />
+        <PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />
       </template>
     );
 
@@ -40,8 +38,6 @@ module("Integration | Component | pinned-options", function (hooks) {
   });
 
   test("pinning", async function (assert) {
-    const self = this;
-
     this.siteSettings.automatically_unpin_topics = false;
 
     const store = getOwner(this).lookup("service:store");
@@ -58,7 +54,7 @@ module("Integration | Component | pinned-options", function (hooks) {
 
     await render(
       <template>
-        <PinnedOptions @value={{self.topic.pinned}} @topic={{self.topic}} />
+        <PinnedOptions @value={{this.topic.pinned}} @topic={{this.topic}} />
       </template>
     );
 

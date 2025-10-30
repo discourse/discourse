@@ -8,8 +8,6 @@ module("Integration | Component | file-size-input", function (hooks) {
   setupRenderingTest(hooks);
 
   test("file size unit selector kb", async function (assert) {
-    const self = this;
-
     this.set("value", 1023);
     this.set("max", 4096);
     this.set("onChangeSize", () => {});
@@ -18,10 +16,10 @@ module("Integration | Component | file-size-input", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly self.value}}
+          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
-          @onChangeSize={{self.onChangeSize}}
-          @setValidationMessage={{self.setValidationMessage}}
+          @onChangeSize={{this.onChangeSize}}
+          @setValidationMessage={{this.setValidationMessage}}
           @max="4096"
         />
       </template>
@@ -36,8 +34,6 @@ module("Integration | Component | file-size-input", function (hooks) {
   });
 
   test("file size unit is mb when the starting value is 1mb or more", async function (assert) {
-    const self = this;
-
     this.set("value", 1024);
     this.set("onChangeSize", () => {});
     this.set("setValidationMessage", () => {});
@@ -45,10 +41,10 @@ module("Integration | Component | file-size-input", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly self.value}}
+          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
-          @onChangeSize={{self.onChangeSize}}
-          @setValidationMessage={{self.setValidationMessage}}
+          @onChangeSize={{this.onChangeSize}}
+          @setValidationMessage={{this.setValidationMessage}}
           @max="4096"
         />
       </template>
@@ -63,8 +59,6 @@ module("Integration | Component | file-size-input", function (hooks) {
   });
 
   test("file size unit is gb when the starting value is 1gb or more", async function (assert) {
-    const self = this;
-
     this.set("value", 1024 * 1024);
     this.set("onChangeSize", () => {});
     this.set("setValidationMessage", () => {});
@@ -72,10 +66,10 @@ module("Integration | Component | file-size-input", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly self.value}}
+          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
-          @onChangeSize={{self.onChangeSize}}
-          @setValidationMessage={{self.setValidationMessage}}
+          @onChangeSize={{this.onChangeSize}}
+          @setValidationMessage={{this.setValidationMessage}}
           @max="4096"
         />
       </template>
@@ -90,8 +84,6 @@ module("Integration | Component | file-size-input", function (hooks) {
   });
 
   test("file size unit selector", async function (assert) {
-    const self = this;
-
     this.set("value", 4096);
     this.set("max", 8192);
     this.set("onChangeSize", () => {});
@@ -100,10 +92,10 @@ module("Integration | Component | file-size-input", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly self.value}}
+          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
-          @onChangeSize={{self.onChangeSize}}
-          @setValidationMessage={{self.setValidationMessage}}
+          @onChangeSize={{this.onChangeSize}}
+          @setValidationMessage={{this.setValidationMessage}}
           @max="4096"
         />
       </template>
@@ -154,8 +146,6 @@ module("Integration | Component | file-size-input", function (hooks) {
   });
 
   test("file size input error message", async function (assert) {
-    const self = this;
-
     this.set("value", 4096);
     this.set("max", 8192);
     this.set("min", 2048);
@@ -169,12 +159,12 @@ module("Integration | Component | file-size-input", function (hooks) {
     await render(
       <template>
         <FileSizeInput
-          @sizeValueKB={{readonly self.value}}
+          @sizeValueKB={{readonly this.value}}
           class="file-size-input-test"
-          @onChangeSize={{self.onChangeSize}}
-          @setValidationMessage={{self.setValidationMessage}}
-          @max={{self.max}}
-          @min={{self.min}}
+          @onChangeSize={{this.onChangeSize}}
+          @setValidationMessage={{this.setValidationMessage}}
+          @max={{this.max}}
+          @min={{this.min}}
         />
       </template>
     );

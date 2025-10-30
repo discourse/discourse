@@ -86,24 +86,6 @@ Discourse::Application.configure do
     config.middleware.insert_after ActionDispatch::Flash, RspecErrorTracker
   end
 
-  config.after_initialize do
-    SiteSetting.defaults.tap do |s|
-      s.set_regardless_of_locale(:s3_upload_bucket, "bucket")
-      s.set_regardless_of_locale(:min_post_length, 5)
-      s.set_regardless_of_locale(:min_first_post_length, 5)
-      s.set_regardless_of_locale(:min_personal_message_post_length, 10)
-      s.set_regardless_of_locale(:download_remote_images_to_local, false)
-      s.set_regardless_of_locale(:unique_posts_mins, 0)
-      s.set_regardless_of_locale(:max_consecutive_replies, 0)
-
-      # Most existing tests were written assuming allow_uncategorized_topics
-      # was enabled, so we should set it to true.
-      s.set_regardless_of_locale(:allow_uncategorized_topics, true)
-    end
-
-    SiteSetting.refresh!
-  end
-
   if ENV["CI"].present?
     config.to_prepare do
       ActiveSupport.on_load(:active_record_postgresqladapter) { self.create_unlogged_tables = true }

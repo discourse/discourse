@@ -56,14 +56,12 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("@onRegisterApi", async function (assert) {
-    const self = this;
-
     this.api = null;
     this.onRegisterApi = (api) => (this.api = api);
 
     await render(
       <template>
-        <DTooltip @inline={{true}} @onRegisterApi={{self.onRegisterApi}} />
+        <DTooltip @inline={{true}} @onRegisterApi={{this.onRegisterApi}} />
       </template>
     );
 
@@ -71,13 +69,11 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("@onShow", async function (assert) {
-    const self = this;
-
     this.test = false;
     this.onShow = () => (this.test = true);
 
     await render(
-      <template><DTooltip @inline={{true}} @onShow={{self.onShow}} /></template>
+      <template><DTooltip @inline={{true}} @onShow={{this.onShow}} /></template>
     );
 
     await hover();
@@ -86,14 +82,12 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("@onClose", async function (assert) {
-    const self = this;
-
     this.test = false;
     this.onClose = () => (this.test = true);
 
     await render(
       <template>
-        <DTooltip @inline={{true}} @onClose={{self.onClose}} />
+        <DTooltip @inline={{true}} @onClose={{this.onClose}} />
       </template>
     );
     await hover();
@@ -189,8 +183,6 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
   });
 
   test("@component", async function (assert) {
-    const self = this;
-
     this.component = DDefaultToast;
 
     await render(
@@ -198,7 +190,7 @@ module("Integration | Component | FloatKit | d-tooltip", function (hooks) {
         <DTooltip
           @inline={{true}}
           @label="test"
-          @component={{self.component}}
+          @component={{this.component}}
           @data={{hash message="content"}}
         />
       </template>

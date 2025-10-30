@@ -640,6 +640,7 @@ RSpec.describe SiteSettingExtension do
 
   describe "hidden" do
     before do
+      settings.setting(:other_setting, "Blah")
       settings.setting(:superman_identity, "Clark Kent", hidden: true)
       settings.refresh!
     end
@@ -660,6 +661,17 @@ RSpec.describe SiteSettingExtension do
       expect(
         settings.all_settings(include_hidden: true).find { |s| s[:setting] == :superman_identity },
       ).to be_present
+    end
+
+    it "does not call the hidden_site_settings plugin modifier in a loop" do
+      called = 0
+      plugin = Plugin::Instance.new
+      plugin.register_modifier(:hidden_site_settings) do |defaults|
+        called += 1
+        defaults + [:other_setting]
+      end
+      settings.all_settings(include_hidden: true)
+      expect(called).to eq(1)
     end
   end
 
@@ -992,6 +1004,118 @@ RSpec.describe SiteSettingExtension do
           :requires_confirmation
         ],
       ).to eq(nil)
+    end
+  end
+
+  describe "site setting groups" do
+    before do
+      SiteSettingGroup.create!(
+        name: "enable_upload_debug_mode",
+        group_ids: "#{Group::AUTO_GROUPS[:trust_level_0]}|#{Group::AUTO_GROUPS[:trust_level_1]}",
+      )
+    end
+
+    it "returns the correct group for a setting" do
+      SiteSetting.refresh!
+      expect(SiteSetting.site_setting_group_ids[:enable_upload_debug_mode]).to eq([10, 11])
+    end
+  end
+
+  describe "#notify_clients!" do
+    context "when the site setting is an upcoming change" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :pre_alpha,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+            some_other_upcoming_setting: {
+              impact: "feature,staff",
+              status: :alpha,
+              impact_type: "feature",
+              impact_role: "staff",
+            },
+          },
+        )
+        SiteSetting.send(:setup_methods, :enable_upload_debug_mode)
+        SiteSetting.refresh!
+      end
+
+      after { SiteSetting.refresh! }
+
+      context "with site setting groups assigned" do
+        before do
+          SiteSettingGroup.create!(
+            name: "enable_upload_debug_mode",
+            group_ids:
+              "#{Group::AUTO_GROUPS[:trust_level_0]}|#{Group::AUTO_GROUPS[:trust_level_1]}",
+          )
+          SiteSetting.refresh!
+        end
+
+        after { SiteSetting.refresh! }
+
+        it "does not publish to MessageBus for the client settings channel" do
+          messages =
+            MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+              SiteSetting.notify_clients!(:enable_upload_debug_mode)
+            end
+
+          expect(messages.length).to eq(0)
+        end
+      end
+
+      context "without site setting groups assigned" do
+        it "publishes to MessageBus with the setting name and value" do
+          messages =
+            MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+              SiteSetting.notify_clients!(:enable_upload_debug_mode)
+            end
+
+          expect(messages.length).to eq(1)
+          expect(messages.first.data[:name]).to eq(:enable_upload_debug_mode)
+          expect(messages.first.data[:value]).to eq(SiteSetting.enable_upload_debug_mode)
+        end
+      end
+    end
+
+    context "when the site setting is not an upcoming change" do
+      it "publishes to MessageBus with the setting name and value" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:title)
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:name]).to eq(:title)
+        expect(messages.first.data[:value]).to eq(SiteSetting.title)
+      end
+
+      it "includes scoped_to parameter when provided" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:title, { theme_id: 123 })
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:scoped_to]).to eq({ theme_id: 123 })
+      end
+    end
+
+    context "with default_locale setting" do
+      it "uses the custom getter for default_locale" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:default_locale)
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:name]).to eq(:default_locale)
+        expect(messages.first.data[:value]).to eq(SiteSetting.default_locale)
+      end
     end
   end
 

@@ -10,6 +10,7 @@ import {
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
@@ -418,7 +419,7 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
         const model = this.model;
         model.setProperties({ recentlyInstalled: false });
         model.destroyRecord().then(() => {
-          this.allThemes.removeObject(model);
+          removeValueFromArray(this.allThemes, model);
 
           this.toasts.success({
             data: {

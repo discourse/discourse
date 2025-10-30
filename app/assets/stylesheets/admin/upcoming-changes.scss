@@ -1,0 +1,126 @@
+.upcoming-changes-table {
+  table-layout: fixed;
+  width: 100%;
+
+  td.d-table__cell {
+    vertical-align: middle;
+    padding: var(--space-4) var(--space-3);
+  }
+
+  td.d-table__cell.--detail.upcoming-change__metadata {
+    height: 100%;
+  }
+}
+
+.upcoming-change {
+  &__name-header {
+    width: 45%;
+  }
+
+  &__groups-header {
+    width: 35%;
+  }
+
+  &__enabled-header {
+    width: 10%;
+    text-align: center;
+  }
+
+  &__opt-in-groups-label {
+    display: block;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    min-height: var(--space-8);
+  }
+
+  &__image-preview.lightbox[href] {
+    // very specific to override
+    &:hover {
+      box-shadow: none;
+    }
+
+    & + .upcoming-change__learn-more {
+      &::before {
+        content: "•";
+      }
+    }
+  }
+
+  &__badge {
+    font-size: var(--font-down-2);
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    color: var(--primary-very-high);
+    background: var(--tertiary-low);
+    letter-spacing: 0.25px;
+    align-items: center;
+    display: inline-flex;
+    gap: var(--space-1);
+
+    svg {
+      height: 0.75em;
+      color: var(--primary-high);
+    }
+
+    &.--status-permanent {
+      background-color: var(--success-low);
+    }
+  }
+
+  &__groups {
+    display: flex;
+
+    .group-selector-wrapper {
+      // make space for button
+      width: calc(100% - 3.125em);
+    }
+  }
+
+  &__description-details {
+    display: inline;
+  }
+
+  &__save-groups {
+    align-self: start;
+    margin-left: var(--space-2);
+  }
+
+  &__toggle-cell {
+    &.d-table__cell.--detail {
+      vertical-align: top;
+    }
+
+    .d-toggle-switch {
+      padding-top: var(--space-1);
+      justify-content: center;
+    }
+  }
+
+  &__plugin {
+    font-size: var(--font-down-2);
+    color: var(--primary-high);
+    margin-bottom: var(--space-2);
+  }
+
+  &__labels &__badges {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    margin: 0;
+    padding: var(--space-2) 0;
+  }
+
+  &__permanent-notice {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    margin-top: var(--space-2);
+  }
+}

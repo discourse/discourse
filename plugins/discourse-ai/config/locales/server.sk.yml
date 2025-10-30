@@ -26,10 +26,6 @@ sk:
       llm_triage:
         title: Triážne príspevky pomocou AI
         description: "Triedenie príspevkov pomocou rozsiahleho jazykového modelu"
-        flagged_post: |
-          <div>Odpoveď modelu:</div>
-          <p>%{llm_response}</p>
-          <b>Spúšťa sa <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> pravidlom.</b>
       llm_report:
         title: Pravidelná správa s použitím AI
         description: "Pravidelná správa na základe rozsiahleho jazykového modelu"
@@ -100,7 +96,6 @@ sk:
     ai_bot_allowed_groups: "Keď má bot GPT prístup k PM, bude odpovedať členom týchto skupín."
     ai_bot_debugging_allowed_groups: "Povoľte týmto skupinám zobrazenie tlačidla na ladenie príspevkov, ktoré zobrazuje nespracovanú požiadavku a odpoveď AI."
     ai_bot_public_sharing_allowed_groups: "Umožnite týmto skupinám zdieľať osobné správy AI s verejnosťou prostredníctvom jedinečného verejne dostupného prepojenia. Poznámka: ak vaša stránka vyžaduje prihlásenie, aj zdieľania budú vyžadovať prihlásenie."
-    ai_bot_add_to_header: "Zobrazenie tlačidla v záhlaví na spustenie PM s AI Bot"
     ai_bot_github_access_token: "Prístupový token GitHub na použitie s nástrojmi AI GitHub (vyžaduje sa pre podporu vyhľadávania)"
     ai_stability_api_key: "Kľúč API pre rozhranie API stability.ai"
     ai_stability_engine: "Generátor obrázkov, ktorý sa má použiť pre API stability.ai"

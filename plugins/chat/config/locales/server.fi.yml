@@ -106,6 +106,10 @@ fi:
     reviewables:
       message_already_handled: "Kiitos, mutta olemme jo käsitelleet tämän viestin ja todenneet, ettei sitä tarvitse liputtaa uudelleen."
       actions:
+        no_action_message:
+          title: "Ei toimintaa"
+        restore_message:
+          description: "Palauta viesti, jotta käyttäjät näkevät sen."
         agree:
           title: "Hyväksy..."
         agree_and_keep_message:

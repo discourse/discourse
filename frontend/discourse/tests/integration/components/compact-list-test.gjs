@@ -9,8 +9,6 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
   setupRenderingTest(hooks);
 
   test("mandatory values", async function (assert) {
-    const self = this;
-
     this.set(
       "setting",
       SiteSetting.create({
@@ -28,7 +26,7 @@ module("Integration | Component | compact-list site-setting", function (hooks) {
     );
 
     await render(
-      <template><SiteSettingComponent @setting={{self.setting}} /></template>
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
     );
 
     const subject = selectKit(".list-setting");

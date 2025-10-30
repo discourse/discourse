@@ -1287,7 +1287,6 @@ ro:
     welcome_banner_location: "Stabilește unde va apărea bannerul de bun venit pe pagină."
     welcome_banner_page_visibility: "Stabilește pe ce pagini va apărea bannerul de bun venit."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
-    deactivate_widgets_rendering: "Dezactivează motorul de randare a pieselor vechi. Aceasta va dezactiva toate piesele care nu au fost actualizate la componentele Glimmer și va forța activarea necondiționată a fluxului de postări Glimmer, indiferent de valoarea setării `glimmer_post_stream_mode`. Această setare nu este recomandată pentru site-urile de producție, deoarece poate deteriora temele și modulele existente."
     floatkit_autocomplete_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitor. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     floatkit_autocomplete_chat_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitorul de discuții. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
@@ -2397,6 +2396,10 @@ ro:
         description: "Șterge acest utilizator din forum"
         complete: "Utilizatorul a fost șters"
       delete_and_block_user:
+        title: "Șterge și blochează"
+        description: "Șterge utilizatorul și blochează-i IP-ul sau emailul"
+        complete: "Utilizatorul a fost șters și blocat"
+      delete_user_block:
         title: "Șterge și blochează"
         description: "Șterge utilizatorul și blochează-i IP-ul sau emailul"
         complete: "Utilizatorul a fost șters și blocat"

@@ -48,10 +48,10 @@ module Jobs
     private
 
     def find_llm_model
-      ai_persona = AiPersona.find_by(id: SiteSetting.ai_translation_locale_detector_persona)
-      return nil if ai_persona.blank?
+      persona_klass =
+        AiPersona.find_by_id_from_cache(SiteSetting.ai_translation_locale_detector_persona)
+      return nil if persona_klass.blank?
 
-      persona_klass = ai_persona.class_instance
       DiscourseAi::Translation::BaseTranslator.preferred_llm_model(persona_klass)
     end
   end

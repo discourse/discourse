@@ -119,10 +119,6 @@ export default class extends Controller {
       (this.model.watched_tags?.length > 0 &&
         this.model.mutedCategories?.length > 0);
 
-    if (show && this.model.user_option.watched_precedence_over_muted === null) {
-      this.model.user_option.watched_precedence_over_muted =
-        this.siteSettings.watched_precedence_over_muted;
-    }
     return show;
   }
 

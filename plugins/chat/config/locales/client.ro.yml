@@ -94,6 +94,8 @@ ro:
       chat_message_separator:
         today: Astăzi
         yesterday: Ieri
+      search_view:
+        filter_placeholder: Caută mesaje
       members_view:
         add_member: Adaugă membru
         back_to_settings: "Înapoi la setări"
@@ -106,6 +108,7 @@ ro:
         tabs:
           members: Membri
           settings: Setări
+          search: Caută
         remove_member: "Elimină"
       new_message_modal:
         user_search_placeholder: "...adaugă mai mulți membri"
@@ -168,6 +171,11 @@ ro:
         category_label: "Categorie"
         history_label: "Istoric"
         members_label: "Membri"
+      search:
+        no_results: "Nu s-au găsit rezultate"
+        sort:
+          relevance: "Relevanță"
+          latest: "Ultimele"
       direct_messages:
         close: "Închide această conversație personală"
       incoming_webhooks:

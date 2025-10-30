@@ -9,11 +9,9 @@ module("Integration | Component | date-time-input", function (hooks) {
   setupRenderingTest(hooks);
 
   test("default", async function (assert) {
-    const self = this;
-
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
-    await render(<template><DateTimeInput @date={{self.date}} /></template>);
+    await render(<template><DateTimeInput @date={{this.date}} /></template>);
 
     assert.dom(".date-picker").hasValue("2019-01-29");
     assert
@@ -22,11 +20,9 @@ module("Integration | Component | date-time-input", function (hooks) {
   });
 
   test("prevents mutations", async function (assert) {
-    const self = this;
-
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
-    await render(<template><DateTimeInput @date={{self.date}} /></template>);
+    await render(<template><DateTimeInput @date={{this.date}} /></template>);
 
     await fillIn(".date-picker", "2019-01-02");
 
@@ -34,14 +30,12 @@ module("Integration | Component | date-time-input", function (hooks) {
   });
 
   test("allows mutations through actions", async function (assert) {
-    const self = this;
-
     this.setProperties({ date: DEFAULT_DATE_TIME });
     this.set("onChange", (date) => this.set("date", date));
 
     await render(
       <template>
-        <DateTimeInput @date={{self.date}} @onChange={{self.onChange}} />
+        <DateTimeInput @date={{this.date}} @onChange={{this.onChange}} />
       </template>
     );
 
@@ -52,13 +46,11 @@ module("Integration | Component | date-time-input", function (hooks) {
   });
 
   test("can hide time", async function (assert) {
-    const self = this;
-
     this.setProperties({ date: DEFAULT_DATE_TIME });
 
     await render(
       <template>
-        <DateTimeInput @date={{self.date}} @showTime={{false}} />
+        <DateTimeInput @date={{this.date}} @showTime={{false}} />
       </template>
     );
 
@@ -66,8 +58,6 @@ module("Integration | Component | date-time-input", function (hooks) {
   });
 
   test("supports swapping timezone without changing visible date/time", async function (assert) {
-    const self = this;
-
     this.setProperties({
       date: moment.tz("2023-05-05T12:00:00", "Europe/London"),
       timezone: "Europe/London",
@@ -77,9 +67,9 @@ module("Integration | Component | date-time-input", function (hooks) {
     await render(
       <template>
         <DateTimeInput
-          @date={{self.date}}
-          @timezone={{self.timezone}}
-          @onChange={{self.onChange}}
+          @date={{this.date}}
+          @timezone={{this.timezone}}
+          @onChange={{this.onChange}}
         />
       </template>
     );

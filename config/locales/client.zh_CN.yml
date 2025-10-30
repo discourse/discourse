@@ -541,6 +541,7 @@ zh_CN:
       other: "查看 %{count} 个新话题"
     preview: "预览"
     cancel: "取消"
+    done: "完成"
     deleting: "正在删除…"
     save: "保存变更"
     saving: "正在保存…"
@@ -3253,6 +3254,8 @@ zh_CN:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       browse_latest_topics: "浏览最新话题"
+      browse_new_replies: "浏览新回复"
+      browse_new_topics: "显示新话题"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
       jump_reply: "跳到帖子的原始位置"
       jump_reply_aria: "跳到 @%{username} 的帖子的原始位置"
@@ -3330,8 +3333,6 @@ zh_CN:
       auto_close_title: "自动关闭设置"
       auto_close_immediate:
         other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即关闭。"
-      auto_close_momentarily:
-        other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被暂时关闭。"
       timeline:
         back: "返回"
         back_description: "返回上一个未读帖子"
@@ -3592,6 +3593,8 @@ zh_CN:
       empty: "没有帖子"
       aria_post_number: "%{title} - 帖子 #%{postNumber}"
       bulk:
+        selected:
+          other: "已选择 %{count} 个帖子"
         select_all: "全选"
         clear_all: "全部清除"
         actions: "批量操作"
@@ -3765,6 +3768,7 @@ zh_CN:
         delete_post_notice: "删除官方通知"
         remove_timer: "移除计时器"
         edit_timer: "编辑计时器"
+        remove_yourself_from_pm: "您确定要从这条消息中删除自己吗？您将无法再看到或回复它。"
       actions:
         people:
           like:
@@ -4289,6 +4293,8 @@ zh_CN:
       next: "下一个（右方向键）"
       counter: "%curr%/%total%"
       close: "关闭 (Esc)"
+      zoom: "缩放（Z 键）"
+      error: "图像无法加载"
       content_load_error: '<a href="%url%">内容</a>无法加载。'
       image_load_error: '<a href="%url%">图片</a>无法加载。'
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
@@ -6072,6 +6078,7 @@ zh_CN:
             toggle: "可由用户选择"
             toggle_description: "用户可以选择调色板"
             toggle_default_light_on_theme: "调色板是默认主题上的默认浅色调色板（%{themeName}）"
+            toggle_default_dark_on_theme: "调色板是默认主题上的默认深色调色板（%{themeName}）"
           colors:
             title: "颜色"
           save_changes: "保存更改"
@@ -6162,6 +6169,7 @@ zh_CN:
             confirm: "确定要删除此备份吗？"
           restore:
             is_disabled: "恢复功能目前已禁用。要启用此功能，请访问<a href='%{url}'>网站设置</a>。"
+            is_disabled_title: "恢复功能目前已禁用。如需启用，请在站点设置中搜索“允许恢复”。"
             label: "恢复"
             title: "恢复该备份"
             confirm: "确定要恢复此备份吗？"
@@ -6493,6 +6501,7 @@ zh_CN:
             reset: "重置筛选器"
           default_dark_badge:
             text: "默认深色"
+            title: "默认深色调色板"
           system_palette: "这是一个内置调色板，无法编辑或删除。"
           back_to_colors: "返回调色板"
           long_title: "调色板"
@@ -7001,6 +7010,7 @@ zh_CN:
         help: "使用此工具模拟用户帐户以进行调试。完成后，您必须退出。"
         not_found: "无法找到该用户。"
         invalid: "抱歉，您不能模拟该用户。"
+        error: "哎呀。发生意外错误。"
       users:
         title: "用户"
         description: "查看和管理用户。"
@@ -7511,6 +7521,9 @@ zh_CN:
           block_common_passwords:
             prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
+        job_status:
+          completed: "更新完成"
+          enqueued: "正在更新"
       badges:
         status: 状态
         title: 徽章

@@ -30,8 +30,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("basic elements", async function (assert) {
-    const self = this;
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
       id: 123,
@@ -42,7 +40,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -51,8 +49,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("post - links", async function (assert) {
-    const self = this;
-
     this.set("args", {
       cooked:
         "<a href='http://link1.example.com/'>first link</a> and <a href='http://link2.example.com/?some=query'>second link</a>",
@@ -66,8 +62,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post-contents"
-          @model={{self.post}}
-          @args={{self.args}}
+          @model={{this.post}}
+          @args={{this.args}}
         />
       </template>
     );
@@ -77,8 +73,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("post - onebox links", async function (assert) {
-    const self = this;
-
     this.set("args", {
       cooked: `
       <p><a href="https://example.com">Other URL</a></p>
@@ -102,8 +96,8 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post-contents"
-          @model={{self.post}}
-          @args={{self.args}}
+          @model={{this.post}}
+          @args={{this.args}}
         />
       </template>
     );
@@ -125,8 +119,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("wiki", async function (assert) {
-    const self = this;
-
     this.set("args", { wiki: true, version: 2, canViewEditHistory: true });
     this.set("showHistory", () => (this.historyShown = true));
 
@@ -134,9 +126,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showHistory={{self.showHistory}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @showHistory={{this.showHistory}}
         />
       </template>
     );
@@ -149,8 +141,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("wiki without revision", async function (assert) {
-    const self = this;
-
     this.set("args", { wiki: true, version: 1, canViewEditHistory: true });
     this.set("editPost", () => (this.editPostCalled = true));
 
@@ -158,9 +148,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @editPost={{self.editPost}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @editPost={{this.editPost}}
         />
       </template>
     );
@@ -170,8 +160,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("via-email", async function (assert) {
-    const self = this;
-
     this.set("args", { via_email: true, canViewRawEmail: true });
     this.set("showRawEmail", () => (this.rawEmailShown = true));
 
@@ -179,9 +167,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showRawEmail={{self.showRawEmail}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @showRawEmail={{this.showRawEmail}}
         />
       </template>
     );
@@ -194,8 +182,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("via-email without permission", async function (assert) {
-    const self = this;
-
     this.rawEmailShown = false;
     this.set("args", { via_email: true, canViewRawEmail: false });
     this.set("showRawEmail", () => (this.rawEmailShown = true));
@@ -204,9 +190,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showRawEmail={{self.showRawEmail}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @showRawEmail={{this.showRawEmail}}
         />
       </template>
     );
@@ -219,8 +205,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("history", async function (assert) {
-    const self = this;
-
     this.set("args", { version: 3, canViewEditHistory: true });
     this.set("showHistory", () => (this.historyShown = true));
 
@@ -228,9 +212,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showHistory={{self.showHistory}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @showHistory={{this.showHistory}}
         />
       </template>
     );
@@ -240,8 +224,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("history without view permission", async function (assert) {
-    const self = this;
-
     this.historyShown = false;
     this.set("args", { version: 3, canViewEditHistory: false });
     this.set("showHistory", () => (this.historyShown = true));
@@ -250,9 +232,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @showHistory={{self.showHistory}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @showHistory={{this.showHistory}}
         />
       </template>
     );
@@ -265,13 +247,11 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("whisper", async function (assert) {
-    const self = this;
-
     this.set("args", { isWhisper: true });
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -280,13 +260,11 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test(`read indicator`, async function (assert) {
-    const self = this;
-
     this.set("args", { read: true });
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -294,13 +272,11 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test(`unread indicator`, async function (assert) {
-    const self = this;
-
     this.set("args", { read: false });
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -308,8 +284,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("reply directly above (suppressed)", async function (assert) {
-    const self = this;
-
     this.set("args", {
       replyToUsername: "eviltrout",
       replyToAvatarTemplate: "/images/avatar.png",
@@ -318,7 +292,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -327,8 +301,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("reply a few posts above (suppressed)", async function (assert) {
-    const self = this;
-
     this.set("args", {
       replyToUsername: "eviltrout",
       replyToAvatarTemplate: "/images/avatar.png",
@@ -337,7 +309,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -346,8 +318,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("reply directly above", async function (assert) {
-    const self = this;
-
     this.set("args", {
       replyToUsername: "eviltrout",
       replyToAvatarTemplate: "/images/avatar.png",
@@ -357,7 +327,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -368,8 +338,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("cooked content hidden", async function (assert) {
-    const self = this;
-
     this.set("args", { cooked_hidden: true, canSeeHiddenPost: true });
     this.set("expandHidden", () => (this.unhidden = true));
 
@@ -377,9 +345,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @expandHidden={{self.expandHidden}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @expandHidden={{this.expandHidden}}
         />
       </template>
     );
@@ -389,8 +357,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test(`cooked content hidden - can't view hidden post`, async function (assert) {
-    const self = this;
-
     this.set("args", { cooked_hidden: true, canSeeHiddenPost: false });
     this.set("expandHidden", () => (this.unhidden = true));
 
@@ -398,9 +364,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @expandHidden={{self.expandHidden}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @expandHidden={{this.expandHidden}}
         />
       </template>
     );
@@ -411,13 +377,11 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("expand first post", async function (assert) {
-    const self = this;
-
     this.set("args", { expandablePost: true });
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -426,13 +390,11 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("can't show admin menu when you can't manage", async function (assert) {
-    const self = this;
-
     this.set("args", { canManage: false });
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -440,13 +402,11 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("show admin menu", async function (assert) {
-    const self = this;
-
     this.currentUser.admin = true;
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
         <DMenus />
       </template>
     );
@@ -465,8 +425,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("permanently delete topic", async function (assert) {
-    const self = this;
-
     this.currentUser.set("admin", true);
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -488,9 +446,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @permanentlyDeletePost={{self.permanentlyDeletePost}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @permanentlyDeletePost={{this.permanentlyDeletePost}}
         />
         <DMenus />
       </template>
@@ -507,8 +465,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("permanently delete post", async function (assert) {
-    const self = this;
-
     this.currentUser.set("admin", true);
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
@@ -530,9 +486,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @permanentlyDeletePost={{self.permanentlyDeletePost}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @permanentlyDeletePost={{this.permanentlyDeletePost}}
         />
         <DMenus />
       </template>
@@ -550,8 +506,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("toggle moderator post", async function (assert) {
-    const self = this;
-
     this.currentUser.set("moderator", true);
 
     const store = getOwner(this).lookup("service:store");
@@ -574,9 +528,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @togglePostType={{self.togglePostType}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @togglePostType={{this.togglePostType}}
         />
         <DMenus />
       </template>
@@ -594,8 +548,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("rebake post", async function (assert) {
-    const self = this;
-
     this.currentUser.moderator = true;
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
@@ -613,9 +565,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @rebakePost={{self.rebakePost}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @rebakePost={{this.rebakePost}}
         />
         <DMenus />
       </template>
@@ -632,8 +584,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("unhide post", async function (assert) {
-    const self = this;
-
     let unhidden;
 
     this.currentUser.admin = true;
@@ -645,9 +595,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @unhidePost={{self.unhidePost}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @unhidePost={{this.unhidePost}}
         />
         <DMenus />
       </template>
@@ -667,8 +617,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("change owner", async function (assert) {
-    const self = this;
-
     this.currentUser.admin = true;
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
@@ -687,9 +635,9 @@ module("Integration | Component | Widget | post", function (hooks) {
       <template>
         <MountWidget
           @widget="post"
-          @model={{self.post}}
-          @args={{self.args}}
-          @changePostOwner={{self.changePostOwner}}
+          @model={{this.post}}
+          @args={{this.args}}
+          @changePostOwner={{this.changePostOwner}}
         />
         <DMenus />
       </template>
@@ -706,15 +654,13 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("shows the topic map when setting the 'topicMap' attribute", async function (assert) {
-    const self = this;
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", { id: 123 });
     this.set("args", { topic, post_number: 1, topicMap: true });
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -722,8 +668,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("shows the topic map when no replies", async function (assert) {
-    const self = this;
-
     this.siteSettings.show_topic_map_in_topics_without_replies = true;
 
     const store = getOwner(this).lookup("service:store");
@@ -735,7 +679,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -743,8 +687,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - few participants", async function (assert) {
-    const self = this;
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
       id: 123,
@@ -763,7 +705,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
     assert.dom(".topic-map__users-trigger").doesNotExist();
@@ -771,8 +713,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - participants", async function (assert) {
-    const self = this;
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
       id: 123,
@@ -797,7 +737,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
     assert.dom(".topic-map__users-list a.poster").exists({ count: 5 });
@@ -809,8 +749,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - links", async function (assert) {
-    const self = this;
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
       id: 123,
@@ -829,7 +767,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -843,8 +781,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - has top replies summary", async function (assert) {
-    const self = this;
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
       id: 123,
@@ -856,7 +792,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -864,8 +800,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("topic map - no top reply summary", async function (assert) {
-    const self = this;
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
       id: 123,
@@ -876,7 +810,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -885,8 +819,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("pm map", async function (assert) {
-    const self = this;
-
     const store = getOwner(this).lookup("service:store");
     const topic = store.createRecord("topic", {
       id: 123,
@@ -902,7 +834,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -911,8 +843,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("post notice - with username", async function (assert) {
-    const self = this;
-
     const twoDaysAgo = new Date();
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
     this.siteSettings.display_name_on_posts = false;
@@ -930,7 +860,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -943,8 +873,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("post notice - custom official notice with created by username", async function (assert) {
-    const self = this;
-
     this.siteSettings.display_name_on_posts = false;
     this.siteSettings.prioritize_username_in_ux = true;
     this.set("args", {
@@ -961,7 +889,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -980,8 +908,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("post notice - with name", async function (assert) {
-    const self = this;
-
     this.siteSettings.display_name_on_posts = true;
     this.siteSettings.prioritize_username_in_ux = false;
     this.siteSettings.old_post_notice_days = 14;
@@ -994,7 +920,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -1004,8 +930,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("show group request in post", async function (assert) {
-    const self = this;
-
     this.set("args", {
       username: "foo",
       requestedGroupName: "testGroup",
@@ -1013,7 +937,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -1024,8 +948,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("shows user status if enabled in site settings", async function (assert) {
-    const self = this;
-
     this.siteSettings.enable_user_status = true;
     const status = {
       emoji: "tooth",
@@ -1037,7 +959,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -1045,8 +967,6 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("doesn't show user status if disabled in site settings", async function (assert) {
-    const self = this;
-
     this.siteSettings.enable_user_status = false;
     const status = {
       emoji: "tooth",
@@ -1058,7 +978,7 @@ module("Integration | Component | Widget | post", function (hooks) {
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
 
@@ -1066,26 +986,22 @@ module("Integration | Component | Widget | post", function (hooks) {
   });
 
   test("more actions button is displayed when multiple hidden items are configured", async function (assert) {
-    const self = this;
-
     this.siteSettings.post_menu_hidden_items = "bookmark|edit|copyLink";
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
     assert.dom(".show-more-actions").exists();
   });
 
   test("hidden menu expands automatically when only one hidden item is configured", async function (assert) {
-    const self = this;
-
     this.siteSettings.post_menu_hidden_items = "bookmark|edit";
 
     await render(
       <template>
-        <MountWidget @widget="post" @model={{self.post}} @args={{self.args}} />
+        <MountWidget @widget="post" @model={{this.post}} @args={{this.args}} />
       </template>
     );
     assert.dom(".show-more-actions").doesNotExist();

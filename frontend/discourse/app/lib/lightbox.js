@@ -1,7 +1,7 @@
 import { waitForPromise } from "@ember/test-waiters";
 import $ from "jquery";
 import { spinnerHTML } from "discourse/helpers/loading-spinner";
-import { isTesting } from "discourse/lib/environment";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
@@ -28,24 +28,19 @@ export default async function lightbox(elem, siteSettings) {
 
   if (siteSettings.experimental_lightbox) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
+    const isTestEnv = isTesting() || isRailsTesting();
 
     const lightboxEl = new PhotoSwipeLightbox({
       gallery: elem,
       children: SELECTORS.DEFAULT_ITEM_SELECTOR,
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
-      errorMsg: i18n("lightbox.content_load_error", { url: elem.href }),
-      paddingFn: (viewportSize, itemData) => {
-        if (viewportSize.x < 1200 || caps.isMobileDevice) {
-          return { top: 0, bottom: 0, left: 0, right: 0 };
-        }
-        return {
-          top: 20,
-          bottom: itemData.title ? 75 : 20,
-          left: 20,
-          right: 20,
-        };
-      },
+      closeTitle: i18n("lightbox.close"),
+      zoomTitle: i18n("lightbox.zoom"),
+      errorMsg: i18n("lightbox.error"),
+      showHideAnimationType: isTestEnv ? "none" : "zoom",
+      tapAction,
+      paddingFn,
       pswpModule: async () => await import("photoswipe"),
       appendToEl: isTesting() && document.getElementById("ember-testing"),
     });
@@ -68,7 +63,7 @@ export default async function lightbox(elem, siteSettings) {
 
             const captionTitle = escapeExpression(title);
             const captionDetails =
-              element.querySelector(".informations")?.innerText;
+              element.querySelector(".informations")?.textContent;
             const titleEl = captionTitle
               ? `<div class='pswp__caption-title'>${captionTitle}</div>`
               : null;
@@ -151,10 +146,13 @@ export default async function lightbox(elem, siteSettings) {
       }
 
       if (!width || !height) {
-        const imgInfo = el.querySelector(".informations")?.innerText || "";
+        const imgInfo = el.querySelector(".informations")?.textContent || "";
         const dimensions = imgInfo.trim().split(" ")[0];
         [width, height] = dimensions.split(/x|×/).map(Number);
       }
+
+      // this ensures that cropped images (eg: grid) do not cause jittering when closing
+      data.thumbCropped = true;
 
       data.src = data.src || el.getAttribute("data-large-src");
       data.title = el.title || el.alt;
@@ -163,6 +161,27 @@ export default async function lightbox(elem, siteSettings) {
 
       return data;
     });
+
+    function tapAction(pt, event) {
+      const pswp = lightboxEl.pswp;
+      if (event.target.classList.contains("pswp__img")) {
+        pswp?.element?.classList.toggle("pswp--ui-visible");
+      } else {
+        pswp?.close();
+      }
+    }
+
+    function paddingFn(viewportSize, itemData) {
+      if (viewportSize.x < 1200 || caps.isMobileDevice) {
+        return { top: 0, bottom: 0, left: 0, right: 0 };
+      }
+      return {
+        top: 20,
+        bottom: itemData.title ? 75 : 20,
+        left: 20,
+        right: 20,
+      };
+    }
 
     lightboxEl.init();
   } else {

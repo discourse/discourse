@@ -122,6 +122,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
       user_notifications.user_watching_category_or_tag
       user_notifications.user_watching_first_post
     ]
+    DiscoursePluginRegistry.apply_modifier(:email_template_keys, @email_keys)
   end
 
   def show

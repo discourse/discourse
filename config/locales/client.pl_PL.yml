@@ -708,6 +708,7 @@ pl_PL:
       other: "Zobacz %{count} nowych tematów"
     preview: "podgląd"
     cancel: "Anuluj"
+    done: "Zrobione"
     deleting: "Usuwanie…"
     save: "Zapisz zmiany"
     saving: "Zapisywanie…"
@@ -3906,11 +3907,6 @@ pl_PL:
         few: "Ostatni wpis w tym temacie został zamieszczony %{count} godziny temu, więc zostanie on natychmiastowo zamknięty."
         many: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
         other: "Ostatni wpis w tym temacie został zamieszczony %{count} godzin temu, więc zostanie on natychmiastowo zamknięty."
-      auto_close_momentarily:
-        one: "Ostatni post w temacie ma już %{count} godzinę, więc temat zostanie chwilowo zamknięty."
-        few: "Ostatni post w temacie ma już %{count} godziny, więc temat zostanie chwilowo zamknięty."
-        many: "Ostatni post w temacie ma już %{count} godzin, więc temat zostanie chwilowo zamknięty."
-        other: "Ostatni post w temacie ma już %{count} godzin, więc temat zostanie chwilowo zamknięty."
       timeline:
         back: "Wstecz"
         back_description: "Wróć do ostatniego nieprzeczytanego wpisu"
@@ -4433,6 +4429,7 @@ pl_PL:
         delete_post_notice: "Usuń oficjalne ogłoszenie"
         remove_timer: "usuń minutnik"
         edit_timer: "edytuj licznik czasu"
+        remove_yourself_from_pm: "Czy na pewno chcesz usunąć siebie z tej wiadomości? Nie będzie można jej zobaczyć ani na nią odpowiedzieć."
       actions:
         people:
           like:
@@ -5015,12 +5012,14 @@ pl_PL:
       readonly: "przeglądać"
     preloader_text: "Ładowanie"
     lightbox:
-      download: "pobierz"
-      open: "oryginalny obraz"
+      download: "Pobierz"
+      open: "Oryginalny obraz"
       previous: "Poprzedni (klawisz strzałki w lewo)"
       next: "Następny (klawisz strzałki w prawo)"
       counter: "%curr% z %total%"
       close: "Zamknij (Esc)"
+      zoom: "Powiększenie (klawisz Z)"
+      error: "Nie można załadować obrazu"
       content_load_error: '<a href="%url%">Zawartość</a> nie może zostać wczytana.'
       image_load_error: '<a href="%url%">Obraz</a> nie może zostać wczytany.'
     cannot_render_video: Nie można wyrenderować tego wideo, ponieważ Twoja przeglądarka nie obsługuje tego kodeka.

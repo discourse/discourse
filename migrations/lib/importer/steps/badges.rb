@@ -16,7 +16,6 @@ module Migrations::Importer::Steps
 
     requires_mapping :ids_by_name, "SELECT name, id FROM badges"
     requires_set :existing_ids, "SELECT id FROM badges"
-    requires_set :existing_names, "SELECT name FROM badges"
     requires_set :existing_badge_grouping_ids, "SELECT id FROM badge_groupings"
     requires_set :existing_badge_type_ids, "SELECT id FROM badge_types"
 
@@ -61,6 +60,10 @@ module Migrations::Importer::Steps
     SQL
 
     private
+
+    def setup
+      @unique_name_finder = ::Migrations::Importer::BadgeNameFinder.new(@shared_data)
+    end
 
     def transform_row(row)
       if (existing_id = row[:existing_id])
@@ -109,12 +112,7 @@ module Migrations::Importer::Steps
     end
 
     def ensure_unique_name(name)
-      return name if @existing_names.add?(name)
-
-      new_name = name + DUPLICATE_SUFFIX
-      new_name.next! until @existing_names.add?(new_name)
-
-      new_name
+      @unique_name_finder.find_available_name(name)
     end
 
     def ensure_valid_trigger(row)

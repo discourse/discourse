@@ -89,7 +89,7 @@ export default class DiscourseReactionsPicker extends Component {
   get optimalColsCount() {
     let count = this.reactionInfo.length;
 
-    if (this.siteSettings.discourse_reactions_experimental_allow_any_emoji) {
+    if (this.siteSettings.discourse_reactions_allow_any_emoji) {
       count += 1;
     }
 
@@ -181,12 +181,11 @@ export default class DiscourseReactionsPicker extends Component {
               {{emoji reaction.id}}
             </DButton>
           {{/each}}
-          {{#if
-            this.siteSettings.discourse_reactions_experimental_allow_any_emoji
-          }}
+          {{#if this.siteSettings.discourse_reactions_allow_any_emoji}}
             <EmojiPicker
               ...attributes
               @icon="far-face-smile"
+              @context="discourse-reactions"
               @didSelectEmoji={{this.onSelectEmoji}}
               @onShow={{this.preventCollapse}}
               @onClose={{this.reenableCollapse}}

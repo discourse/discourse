@@ -247,7 +247,7 @@ export default class Post extends Component {
       after,
     });
 
-    replies.forEach((reply) => {
+    replies.content.forEach((reply) => {
       // the components expect a post model instance
       const replyAsPost = this.store.createRecord("post", reply);
       this.repliesBelow.push(replyAsPost);
@@ -398,7 +398,9 @@ export default class Post extends Component {
       postId: this.args.post.id,
     });
 
-    return replies.map((reply) => this.store.createRecord("post", reply));
+    return replies.content.map((reply) =>
+      this.store.createRecord("post", reply)
+    );
   }
 
   <template>

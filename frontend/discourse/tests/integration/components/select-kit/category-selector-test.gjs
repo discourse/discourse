@@ -15,14 +15,12 @@ module(
     });
 
     test("with value", async function (assert) {
-      const self = this;
-
       const category = Category.findById(1001);
       const subcategory = Category.findById(1002);
       this.set("value", [category, subcategory]);
 
       await render(
-        <template><CategorySelector @categories={{self.value}} /></template>
+        <template><CategorySelector @categories={{this.value}} /></template>
       );
 
       assert.strictEqual(this.subject.header().value(), "1001,1002");
@@ -33,12 +31,10 @@ module(
     });
 
     test("has +subcategories row", async function (assert) {
-      const self = this;
-
       this.set("value", []);
 
       await render(
-        <template><CategorySelector @categories={{self.value}} /></template>
+        <template><CategorySelector @categories={{this.value}} /></template>
       );
       await this.subject.expand();
       await this.subject.fillInFilter("Parent Category");

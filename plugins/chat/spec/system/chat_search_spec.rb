@@ -81,6 +81,18 @@ RSpec.describe "Chat search", type: :system do
 
       expect(chat_search_page).to have_x_results(21)
     end
+
+    it "can clear the search input" do
+      Fabricate(:chat_message, chat_channel: channel_1, message: "test message", use_service: true)
+
+      chat_search_page.visit.fill_in("test")
+
+      expect(chat_search_page).to have_x_results(1)
+
+      chat_search_page.clear
+
+      expect(chat_search_page).to have_zero_results
+    end
   end
 
   context "with search disabled" do

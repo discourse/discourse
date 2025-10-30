@@ -52,9 +52,9 @@ module Migrations::Importer::Steps
       ORDER BY user_fields.original_id
     SQL
 
-    def initialize(intermediate_db, discourse_db, shared_data)
-      super
+    private
 
+    def setup
       @needs_required_fields_version_bump = false
     end
 
@@ -66,8 +66,6 @@ module Migrations::Importer::Steps
         VALUES (NOW(), NOW())
       SQL
     end
-
-    private
 
     def transform_row(row)
       name = row[:name]

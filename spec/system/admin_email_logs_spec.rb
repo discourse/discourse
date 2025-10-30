@@ -37,8 +37,12 @@ RSpec.describe "Admin viewing email logs" do
   end
 
   describe "when viewing received email logs" do
-    fab!(:incoming_email)
-    fab!(:incoming_email_2, :incoming_email)
+    fab!(:post_1, :post)
+    fab!(:post_2, :post)
+    fab!(:topic_1) { post_1.topic }
+    fab!(:topic_2) { post_2.topic }
+    fab!(:incoming_email) { Fabricate(:incoming_email, post: post_1) }
+    fab!(:incoming_email_2) { Fabricate(:incoming_email, post: post_2) }
 
     it "allows an admin to view a list of received email logs and their details" do
       admin_email_logs_page.visit_received
@@ -48,15 +52,8 @@ RSpec.describe "Admin viewing email logs" do
 
         expect(row).to have_from_address(incoming_email.from_address)
         expect(row).to have_to_address(incoming_email.to_addresses)
-        expect(row).to have_subject(incoming_email.subject)
+        expect(row).to have_subject_link(incoming_email.subject, incoming_email.post.url)
       end
-
-      row = admin_email_logs_page.row_for(incoming_email)
-
-      details_modal = row.open_incoming_email
-
-      expect(details_modal).to be_open
-      expect(details_modal).to have_no_error
     end
   end
 
