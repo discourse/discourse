@@ -9,26 +9,19 @@ REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead] unl
 
 desc "Migrate settings from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
-  components = find_all_components(:theme_settings)
-  migration_errors = []
+  components = find_all_components([:theme_settings])
 
   if components.empty?
     puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
     next
   end
 
-  components.each { |entry| process_theme_component_settings(entry[:theme], migration_errors) }
-
-  if migration_errors.any?
-    puts "\n\e[1;31mMigration completed with errors\e[0m"
-  else
-    puts "\n\e[1;34mMigration completed successfully!\e[0m"
-  end
+  components.each { |entry| process_theme_component_settings(entry[:theme]) }
 end
 
 desc "Migrate translations from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :environment do
-  components = find_all_components(:theme_translation_overrides)
+  components = find_all_components([:theme_translation_overrides])
 
   if components.empty?
     puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
@@ -36,13 +29,11 @@ task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :
   end
 
   components.each { |entry| process_theme_component_translations(entry[:theme]) }
-
-  puts "\n\e[1;34mMigration completed successfully!\e[0m"
 end
 
 desc "Exclude and disable Advanced Search Banner theme component"
 task "themes:advanced_search_banner:exclude_and_disable" => :environment do
-  components = find_all_components({ parent_theme_relation: :parent_theme })
+  components = find_all_components
 
   if components.empty?
     puts "\n\e[33m✗ No Advanced Search Banner theme components found\e[0m"
@@ -55,7 +46,7 @@ task "themes:advanced_search_banner:exclude_and_disable" => :environment do
 end
 
 # Common helper methods
-def find_all_components(includes)
+def find_all_components(includes = [])
   if ENV["RAILS_DB"].present?
     db = validate_and_get_db(ENV["RAILS_DB"])
     RailsMultisite::ConnectionManagement.establish_connection(db: db)
@@ -82,10 +73,11 @@ def wrap_themes_with_db(themes, db)
   themes.map { |theme| { db: db, theme: theme } }
 end
 
-def find_components_in_db(db, includes)
+def find_components_in_db(db, additional_includes)
   puts "Accessing database: \e[1;104m[#{db}]\e[0m"
   puts "  Searching for Advanced Search Banner components..."
 
+  includes = [{ parent_theme_relation: :parent_theme }] + Array(additional_includes)
   themes = RemoteTheme.where(remote_url: THEME_GIT_URL).includes(theme: includes).map(&:theme)
 
   themes.each { |theme| puts "  \e[1;34mFound: #{theme_identifier(theme)}" }
@@ -94,6 +86,10 @@ end
 
 def theme_identifier(theme)
   "\e[1m#{theme.name} (ID: #{theme.id})\e[0m"
+end
+
+def is_included_in_any_theme?(theme)
+  theme.parent_theme_relation.exists?
 end
 
 # Settings migration methods
@@ -120,13 +116,25 @@ unless defined?(SETTINGS_MAPPING)
   }
 end
 
-def process_theme_component_settings(theme, errors)
+def process_theme_component_settings(theme)
+  migration_errors = []
+  unless is_included_in_any_theme?(theme)
+    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes. Skipping migration\e[0m"
+    return
+  end
+
   puts "\n  Migrating settings for #{theme_identifier(theme)}..."
-  migrated_count = migrate_theme_settings_to_site_settings(theme.theme_settings, errors)
+  migrated_count = migrate_theme_settings_to_site_settings(theme.theme_settings, migration_errors)
   if migrated_count == theme.theme_settings.size
     puts "  \e[1;32m✓ Migrated #{migrated_count} setting#{"s" if migrated_count != 1}\e[0m"
   else
     puts "  \e[33mMigrated #{migrated_count} out of #{theme.theme_settings.size} setting#{"s" if theme.theme_settings.size != 1}\e[0m"
+  end
+
+  if migration_errors.any?
+    puts "\n\e[1;31mMigration completed with errors\e[0m"
+  else
+    puts "\n\e[1;34mMigration completed successfully!\e[0m"
   end
 end
 
@@ -174,6 +182,11 @@ end
 
 # Translations migration methods
 def process_theme_component_translations(theme)
+  unless is_included_in_any_theme?(theme)
+    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes. Skipping migration\e[0m"
+    return
+  end
+
   puts "\n  Migrating translation overrides for #{theme_identifier(theme)}..."
 
   migrated_count = 0
@@ -219,6 +232,7 @@ def process_theme_component_translations(theme)
   end
 
   puts "  \e[1;32m✓ Migrated #{migrated_count} translation#{"s" if migrated_count != 1}\e[0m"
+  puts "\n\e[1;34mMigration completed successfully!\e[0m"
 end
 
 def migrate_translations(locale: "en", key:, value: nil)
