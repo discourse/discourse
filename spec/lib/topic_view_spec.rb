@@ -72,19 +72,28 @@ RSpec.describe TopicView do
     fab!(:p0) { Fabricate(:post, topic: topic) }
     fab!(:p1) { Fabricate(:post, topic: topic, wiki: true) }
 
-    after { TopicView.custom_filters.clear }
+    let(:tv) { described_class.new(topic.id, evil_trout, { filter: }) }
+    let(:enabled?) { true }
+    let(:filter) { "wiki" }
 
-    it "allows to register custom filters" do
-      tv = TopicView.new(topic.id, evil_trout, { filter: "wiki" })
-      expect(tv.filter_posts({ filter: "wiki" })).to eq([p0, p1])
+    before do
+      described_class.add_custom_filter("wiki", enabled: method(:enabled?)) do |posts, topic_view|
+        posts.where(wiki: true)
+      end
+    end
 
-      TopicView.add_custom_filter("wiki") { |posts, topic_view| posts.where(wiki: true) }
+    after { described_class.custom_filters.clear }
 
-      tv = TopicView.new(topic.id, evil_trout, { filter: "wiki" })
-      expect(tv.filter_posts).to eq([p1])
+    it "applies custom filters" do
+      expect(tv.filter_posts).to contain_exactly(p1)
+    end
 
-      tv = TopicView.new(topic.id, evil_trout, { filter: "whatever" })
-      expect(tv.filter_posts).to eq([p0, p1])
+    context "when the custom filter is disabled" do
+      let(:enabled?) { false }
+
+      it "does not apply the custom filter" do
+        expect(tv.filter_posts).to contain_exactly(p0, p1)
+      end
     end
   end
 

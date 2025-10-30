@@ -21,14 +21,15 @@ class TopicList
     @preload.each { |preload| preload.call(topics, object) } if @preload
   end
 
-  def self.on_preload_user_ids(&blk)
-    (@preload_user_ids ||= Set.new) << blk
+  def self.on_preload_user_ids(enabled: -> { true }, &block)
+    (@preload_user_ids ||= Set.new) << { block:, enabled: }
   end
 
   def self.preload_user_ids(topics, user_ids, object)
     if @preload_user_ids
       @preload_user_ids.each do |preload_user_ids|
-        user_ids = preload_user_ids.call(topics, user_ids, object)
+        next unless preload_user_ids[:enabled].call
+        user_ids = preload_user_ids[:block].call(topics, user_ids, object)
       end
     end
     user_ids

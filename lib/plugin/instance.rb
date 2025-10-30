@@ -293,7 +293,7 @@ class Plugin::Instance
   #     scope.where("word_count = 42")
   #   end
   def register_custom_filter_by_status(status, &block)
-    TopicsFilter.add_filter_by_status(status, &block)
+    TopicsFilter.add_filter_by_status(status, enabled: method(:enabled?), &block)
   end
 
   # Allows to define custom search order. Example usage:
@@ -301,7 +301,7 @@ class Plugin::Instance
   #     posts.reorder("(SELECT LENGTH(raw) FROM posts WHERE posts.topic_id = subquery.topic_id) DESC")
   #   end
   def register_search_advanced_order(trigger, &block)
-    Search.advanced_order(trigger, &block)
+    Search.advanced_order(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to define custom search filters. Example usage:
@@ -309,7 +309,7 @@ class Plugin::Instance
   #     posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
   #   end
   def register_search_advanced_filter(trigger, &block)
-    Search.advanced_filter(trigger, &block)
+    Search.advanced_filter(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to define TopicView posts filters. Example usage:
@@ -317,7 +317,7 @@ class Plugin::Instance
   #     posts.where(wiki: true)
   #   end
   def register_topic_view_posts_filter(trigger, &block)
-    TopicView.add_custom_filter(trigger, &block)
+    TopicView.add_custom_filter(trigger, enabled: method(:enabled?), &block)
   end
 
   # Allows to add more user IDs to the list of preloaded users. This can be
@@ -327,7 +327,7 @@ class Plugin::Instance
   #     user_ids << Discourse::SYSTEM_USER_ID
   #   end
   def register_topic_list_preload_user_ids(&block)
-    TopicList.on_preload_user_ids(&block)
+    TopicList.on_preload_user_ids(enabled: method(:enabled?), &block)
   end
 
   # Allow to eager load additional tables in Search. Useful to avoid N+1 performance problems.
@@ -338,7 +338,7 @@ class Plugin::Instance
   # OR
   #   register_search_topic_eager_load(%i(example_table))
   def register_search_topic_eager_load(tables = nil, &block)
-    Search.custom_topic_eager_load(tables, &block)
+    Search.custom_topic_eager_load(tables, enabled: method(:enabled?), &block)
   end
 
   # Request a new size for topic thumbnails
@@ -359,7 +359,7 @@ class Plugin::Instance
   #     end
   #   end
   def register_site_categories_callback(&block)
-    Site.add_categories_callbacks(&block)
+    Site.add_categories_callbacks(enabled: method(:enabled?), &block)
   end
 
   # Add a category parameter that includes both controller param permission
@@ -757,8 +757,7 @@ class Plugin::Instance
   end
 
   def register_email_poller(poller)
-    plugin = self
-    DiscoursePluginRegistry.register_mail_poller(poller) if plugin.enabled?
+    DiscoursePluginRegistry.register_mail_poller(poller) if enabled?
   end
 
   def register_asset(file, opts = nil)

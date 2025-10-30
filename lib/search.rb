@@ -365,24 +365,24 @@ class Search
     @results
   end
 
-  def self.advanced_order(trigger, &block)
-    advanced_orders[trigger] = block
+  def self.advanced_order(trigger, enabled: -> { true }, &block)
+    advanced_orders[trigger] = { block:, enabled: }
   end
 
   def self.advanced_orders
     @advanced_orders ||= {}
   end
 
-  def self.advanced_filter(trigger, name: nil, &block)
-    advanced_filters[trigger] = { block:, name: }
+  def self.advanced_filter(trigger, name: nil, enabled: -> { true }, &block)
+    advanced_filters[trigger] = { block:, name:, enabled: }
   end
 
   def self.advanced_filters
     @advanced_filters ||= {}
   end
 
-  def self.custom_topic_eager_load(tables = nil, &block)
-    (@custom_topic_eager_loads ||= []) << (tables || block)
+  def self.custom_topic_eager_load(tables = nil, enabled: -> { true }, &block)
+    (@custom_topic_eager_loads ||= []) << { tables:, block:, enabled: }
   end
 
   def self.custom_topic_eager_loads
@@ -882,8 +882,8 @@ class Search
     end
 
     if @order
-      advanced_order = Search.advanced_orders&.fetch(@order, nil)
-      posts = advanced_order.call(posts) if advanced_order
+      advanced_order = Search.advanced_orders[@order]
+      posts = advanced_order[:block].call(posts) if advanced_order.try(:[], :enabled).try(:call)
     end
 
     posts
@@ -936,6 +936,7 @@ class Search
         Search.advanced_filters.each do |matcher, options|
           block = options[:block]
           name = options[:name]
+          next unless options[:enabled].call
 
           case_insensitive_matcher =
             Regexp.new(matcher.source, matcher.options | Regexp::IGNORECASE)
@@ -1541,8 +1542,9 @@ class Search
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
 
     Search.custom_topic_eager_loads.each do |custom_loads|
+      next unless custom_loads[:enabled].call
       topic_eager_loads.concat(
-        custom_loads.is_a?(Array) ? custom_loads : custom_loads.call(search_pms: @search_pms).to_a,
+        custom_loads[:tables] || custom_loads[:block].call(search_pms: @search_pms).to_a,
       )
     end
 
