@@ -121,8 +121,8 @@ export default class SearchTerm extends Component {
       autocomplete="off"
       enterkeyhint="search"
       value={{this.search.activeGlobalSearchTerm}}
-      placeholder={{this.placeholderText}}
-      aria-label={{this.placeholderText}}
+      placeholder={{i18n @inputPlaceholder}}
+      aria-label={{i18n @inputPlaceholder}}
       {{on "keyup" this.onKeyup}}
       {{on "keydown" this.onKeydown}}
       {{on "input" this.updateSearchTerm}}
