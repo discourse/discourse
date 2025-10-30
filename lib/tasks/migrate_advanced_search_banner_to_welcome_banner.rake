@@ -88,8 +88,11 @@ def theme_identifier(theme)
   "\e[1m#{theme.name} (ID: #{theme.id})\e[0m"
 end
 
-def is_included_in_any_theme?(theme)
-  theme.parent_theme_relation.exists?
+def not_included_in_any_theme?(theme)
+  return false if theme.parent_theme_relation.exists?
+
+  puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes. Skipping\e[0m"
+  true
 end
 
 # Settings migration methods
@@ -117,11 +120,8 @@ unless defined?(SETTINGS_MAPPING)
 end
 
 def process_theme_component_settings(theme)
+  return if not_included_in_any_theme?(theme)
   migration_errors = []
-  unless is_included_in_any_theme?(theme)
-    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes. Skipping migration\e[0m"
-    return
-  end
 
   puts "\n  Migrating settings for #{theme_identifier(theme)}..."
   migrated_count = migrate_theme_settings_to_site_settings(theme.theme_settings, migration_errors)
@@ -182,10 +182,7 @@ end
 
 # Translations migration methods
 def process_theme_component_translations(theme)
-  unless is_included_in_any_theme?(theme)
-    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes. Skipping migration\e[0m"
-    return
-  end
+  return if not_included_in_any_theme?(theme)
 
   puts "\n  Migrating translation overrides for #{theme_identifier(theme)}..."
 
@@ -289,13 +286,10 @@ def process_theme_component(theme)
 end
 
 def exclude_theme_component(theme)
+  return if not_included_in_any_theme?(theme)
+
   parent_relations = theme.parent_theme_relation.to_a
   total_relations = parent_relations.size
-
-  if parent_relations.empty?
-    puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes\e[0m"
-    return
-  end
 
   puts "\n  Excluding #{theme_identifier(theme)} from..."
   parent_relations.each do |relation|

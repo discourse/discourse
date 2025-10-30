@@ -56,6 +56,26 @@ RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
     end
   end
 
+  describe "#not_included_in_any_theme?" do
+    fab!(:parent_theme, :theme)
+    fab!(:child_theme) { Fabricate(:theme, component: true) }
+
+    it "returns false when theme is included in a parent theme" do
+      ChildTheme.create!(parent_theme: parent_theme, child_theme: child_theme)
+
+      expect(not_included_in_any_theme?(child_theme)).to eq(false)
+    end
+
+    it "returns true and prints message when theme is not included in any parent theme" do
+      orphan_theme = Fabricate(:theme, component: true)
+
+      expect {
+        result = not_included_in_any_theme?(orphan_theme)
+        expect(result).to eq(true)
+      }.to output(/is not included in any of your themes/).to_stdout
+    end
+  end
+
   describe "#map_translation_keys" do
     it "returns mapped keys for headline" do
       result = map_translation_keys("search_banner.headline")
