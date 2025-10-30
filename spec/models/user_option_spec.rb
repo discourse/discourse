@@ -86,6 +86,7 @@ RSpec.describe UserOption do
       SiteSetting.default_other_external_links_in_new_tab = true
       SiteSetting.default_other_dynamic_favicon = true
       SiteSetting.default_other_skip_new_user_tips = true
+      SiteSetting.default_watched_precedence_over_muted = true
 
       user = Fabricate(:user)
 
@@ -96,6 +97,7 @@ RSpec.describe UserOption do
       expect(user.user_option.external_links_in_new_tab).to eq(true)
       expect(user.user_option.dynamic_favicon).to eq(true)
       expect(user.user_option.skip_new_user_tips).to eq(true)
+      expect(user.user_option.watched_precedence_over_muted).to eq(true)
     end
   end
 

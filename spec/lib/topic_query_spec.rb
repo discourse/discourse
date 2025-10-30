@@ -2354,7 +2354,7 @@ RSpec.describe TopicQuery do
 
     context "when enabled" do
       it "returns topics even if category or tag is muted but another tag or category is watched" do
-        SiteSetting.watched_precedence_over_muted = true
+        user.user_option.update!(watched_precedence_over_muted: true)
         query = TopicQuery.new(user).list_latest
         expect(query.topics.map(&:id)).to contain_exactly(
           topic.id,
@@ -2366,22 +2366,9 @@ RSpec.describe TopicQuery do
 
     context "when disabled" do
       it "returns topics without muted category or tag" do
-        SiteSetting.watched_precedence_over_muted = false
+        user.user_option.update!(watched_precedence_over_muted: false)
         query = TopicQuery.new(user).list_latest
         expect(query.topics.map(&:id)).to contain_exactly(topic.id)
-      end
-    end
-
-    context "when disabled but overridden by user" do
-      it "returns topics even if category or tag is muted but another tag or category is watched" do
-        SiteSetting.watched_precedence_over_muted = false
-        user.user_option.update!(watched_precedence_over_muted: true)
-        query = TopicQuery.new(user).list_latest
-        expect(query.topics.map(&:id)).to contain_exactly(
-          topic.id,
-          topic_in_watched_category_and_muted_tag.id,
-          topic_in_muted_category_and_watched_tag.id,
-        )
       end
     end
   end

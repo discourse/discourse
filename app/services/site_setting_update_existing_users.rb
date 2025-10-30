@@ -76,6 +76,7 @@ class SiteSettingUpdateExistingUsers
       default_sidebar_link_to_filtered_list: "sidebar_link_to_filtered_list",
       default_sidebar_show_count_of_new_items: "sidebar_show_count_of_new_items",
       default_composition_mode: "composition_mode",
+      default_watched_precedence_over_muted: "watched_precedence_over_muted",
     }
   end
 

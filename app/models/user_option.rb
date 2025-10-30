@@ -109,6 +109,7 @@ class UserOption < ActiveRecord::Base
     self.sidebar_link_to_filtered_list = SiteSetting.default_sidebar_link_to_filtered_list
     self.sidebar_show_count_of_new_items = SiteSetting.default_sidebar_show_count_of_new_items
     self.composition_mode = SiteSetting.default_composition_mode
+    self.watched_precedence_over_muted = SiteSetting.default_watched_precedence_over_muted
 
     true
   end
@@ -305,7 +306,7 @@ end
 #  timezone                         :string
 #  title_count_mode_key             :integer          default(0), not null
 #  topics_unread_when_closed        :boolean          default(TRUE), not null
-#  watched_precedence_over_muted    :boolean
+#  watched_precedence_over_muted    :boolean          default(FALSE), not null
 #  color_scheme_id                  :integer
 #  dark_scheme_id                   :integer
 #  homepage_id                      :integer

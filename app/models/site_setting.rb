@@ -74,6 +74,7 @@ class SiteSetting < ActiveRecord::Base
     default_sidebar_link_to_filtered_list
     default_sidebar_show_count_of_new_items
     default_composition_mode
+    default_watched_precedence_over_muted
   ]
 
   extend GlobalPath
