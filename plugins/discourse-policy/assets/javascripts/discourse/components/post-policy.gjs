@@ -96,13 +96,13 @@ export default class PostPolicy extends Component {
 
   get remainingAcceptedUsers() {
     return (
-      (this.post?.policy_accepted_by_count || 0) -
-      (this.post?.policy_accepted_by || []).length
+      (this.post?.get("policy_accepted_by_count") || 0) -
+      (this.post?.get("policy_accepted_by") || []).length
     );
   }
 
   get acceptedUsers() {
-    return this.post?.policy_accepted_by || [];
+    return this.post?.get("policy_accepted_by") || [];
   }
 
   get remainingNotAcceptedUsers() {
@@ -212,7 +212,7 @@ export default class PostPolicy extends Component {
     event.preventDefault();
 
     try {
-      const result = await ajax(`/policy/accepted`, {
+      const result = await ajax(`/policy/not-accepted`, {
         data: {
           post_id: this.post.id,
           offset: this.post.policy_not_accepted_by.length,
