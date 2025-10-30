@@ -149,7 +149,6 @@ describe DiscourseAi::Translation::PostLocalizer do
           { text: post.raw, target_locale: "ja", translated: translated_raw },
         )
 
-        # Stub post_process to raise an error (simulating onebox fetch failure)
         LocalizedCookedPostProcessor
           .any_instance
           .stubs(:post_process)
