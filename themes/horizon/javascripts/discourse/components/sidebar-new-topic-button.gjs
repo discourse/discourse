@@ -20,7 +20,11 @@ export default class SidebarNewTopicButton extends Component {
   @tracked tag;
 
   get shouldRender() {
-    return this.currentUser && !this.router.currentRouteName.includes("admin");
+    return (
+      this.currentUser &&
+      !this.router.currentRouteName.includes("admin") &&
+      !this.router.currentRouteName.includes("manage-account")
+    );
   }
 
   get canCreateTopic() {
