@@ -41,6 +41,11 @@ export default class PostMenuLikeButton extends Component {
       : "post.controls.like";
   }
 
+  get likeButtonIcon() {
+    const defaultIcon = this.args.post.liked ? "d-liked" : "d-unliked";
+    return applyValueTransformer("post-menu-like-button-icon", defaultIcon);
+  }
+
   @action
   async toggleLike() {
     this.isAnimated = true;
@@ -75,7 +80,7 @@ export default class PostMenuLikeButton extends Component {
           data-post-id={{@post.id}}
           disabled={{this.disabled}}
           @action={{this.toggleLike}}
-          @icon={{if @post.liked "d-liked" "d-unliked"}}
+          @icon={{this.likeButtonIcon}}
           @label={{if @showLabel "post.controls.like_action"}}
           @title={{this.title}}
         />
