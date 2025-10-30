@@ -31,6 +31,7 @@ export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
 
 export default class DModal extends Component {
+  @service capabilities;
   @service modal;
   @service site;
 
@@ -46,9 +47,21 @@ export default class DModal extends Component {
       return;
     }
 
+    let offset, interval;
+    if (this.capabilities.isIOS) {
+      offset = window.pageYOffset;
+      interval = setInterval(() => {
+        window.scrollTo(0, offset);
+      }, 50);
+    }
+
     disableBodyScroll(el);
 
     return () => {
+      if (this.capabilities.isIOS) {
+        clearInterval(interval);
+      }
+
       enableBodyScroll(el);
     };
   });
