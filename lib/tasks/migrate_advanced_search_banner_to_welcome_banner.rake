@@ -278,26 +278,11 @@ end
 
 # Exclude and disable methods
 def process_theme_component(theme)
-  exclude_theme_component(theme)
   enable_welcome_banner(theme)
+  exclude_theme_component(theme)
   disable_theme_component(theme)
 
   puts "\n\e[1;34mTask completed successfully!\e[0m"
-end
-
-def exclude_theme_component(theme)
-  puts "\n  Executing exclude step..."
-  return if not_included_in_any_theme?(theme)
-
-  parent_relations = theme.parent_theme_relation.to_a
-  total_relations = parent_relations.size
-
-  puts "\n  Excluding #{theme_identifier(theme)} from..."
-  parent_relations.each do |relation|
-    puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
-    relation.destroy!
-  end
-  puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
 end
 
 def enable_welcome_banner(theme)
@@ -335,6 +320,23 @@ def enable_welcome_banner(theme)
   end
 
   puts "  \e[1;32m✓ Enabled for #{enabled_count} theme#{"s" unless enabled_count == 1}\e[0m"
+end
+
+def exclude_theme_component(theme)
+  puts "\n  Executing exclude step..."
+  return if not_included_in_any_theme?(theme)
+
+  parent_relations = theme.parent_theme_relation.to_a
+  total_relations = parent_relations.size
+
+  puts "\n  Excluding #{theme_identifier(theme)} from..."
+  parent_relations.each do |relation|
+    puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
+    relation.destroy!
+  end
+  theme.parent_theme_ids = []
+  theme.save!
+  puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
 end
 
 def disable_theme_component(theme)
