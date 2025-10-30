@@ -208,6 +208,33 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  # allow_user_locale is just used as an example here because upcoming
+  # changes will not exist forever, so there aren't any stable names we
+  # can use
+  describe "log_upcoming_change_toggle" do
+    it "raises an error when params are invalid" do
+      expect { logger.log_upcoming_change_toggle(nil, false, true) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect {
+        logger.log_upcoming_change_toggle("change_that_will_not_exist", false, true)
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      expect { logger.log_upcoming_change_toggle("allow_user_locale", false, true) }.to change {
+        UserHistory.count
+      }.by(1)
+    end
+
+    it "records the details of why the toggle happened" do
+      details =
+        "This upcoming change was automatically enabled because it reached the 'Beta' status, which meets or exceeds the defined promotion status of 'Beta' on your site. See <a href='#{Discourse.base_url}/admin/config/upcoming-changes'>the upcoming changes page for details</a>."
+      result = logger.log_upcoming_change_toggle("allow_user_locale", false, true, { details: })
+      expect(result.details).to eq(details)
+    end
+  end
+
   describe "log_theme_change" do
     fab!(:theme)
 

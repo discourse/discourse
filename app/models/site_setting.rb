@@ -230,6 +230,13 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
+  def self.history_for(setting_name)
+    UserHistory.where(
+      action: UserHistory.actions[:change_site_setting],
+      subject: setting_name,
+    ).order(created_at: :desc)
+  end
+
   class ImageQuality
     def self.png_to_jpg_quality
       SiteSetting.png_to_jpg_quality.nonzero? || SiteSetting.image_quality

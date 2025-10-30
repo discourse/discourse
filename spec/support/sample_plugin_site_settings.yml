@@ -7,3 +7,10 @@ site_settings:
     default: 0
   test_some_other_topic_id:
     default: 0
+  enable_experimental_sample_plugin_feature:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      impact: "feature,admins"
+      status: "alpha"

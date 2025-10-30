@@ -1681,6 +1681,7 @@ en:
     problem:
       twitter_login: 'Twitter login appears to not be working at the moment. Check the credentials in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.'
       group_email_credentials: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
+      upcoming_change_stable_opted_out: 'Your site has opted-out of the "%{upcoming_change}" upcoming change. This change has now reached the "Stable" status and may soon be removed or made permanent. Visit <a href="%{base_path}/admin/config/upcoming-changes">the upcoming changes page</a> to review details about this change.'
       rails_env: "Your server is running in %{env} mode."
       host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
       sidekiq: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -2766,12 +2767,14 @@ en:
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
-    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
+    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
+    enable_upcoming_changes: "Enable upcoming changes"
+
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -5698,6 +5701,12 @@ en:
     auto_deleted_hidden_posts: "Automatically destroyed hidden posts"
     seed_data_topic_updated: "Seed data topic updated"
     seed_data_topic_deleted: "Seed data topic deleted"
+    upcoming_changes:
+      log_manually_toggled: "Manually toggled by user"
+      log_promoted: >
+        This upcoming change was automatically enabled because it reached the '%{change_status}' status, which meets or exceeds the defined promotion status of '%{promotion_status_threshold}' on your site.
+
+        See the <a href="%{base_url}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."

@@ -61,7 +61,7 @@ class Admin::DashboardController < Admin::StaffController
   end
 
   def toggle_feature
-    Experiments::Toggle.call(service_params) do
+    UpcomingChanges::Toggle.call(service_params) do
       on_success { render(json: success_json) }
       on_failure { render(json: failed_json, status: :unprocessable_entity) }
       on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }

@@ -896,6 +896,7 @@ RSpec.configure do |config|
     ActionMailer::Base.deliveries.clear
     Discourse.redis.flushdb
     Scheduler::Defer.do_all_work
+    clear_mocked_upcoming_change_metadata
   end
 
   config.after(:each, type: :system) do |example|
