@@ -43,8 +43,9 @@
 
   .reviewable-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     margin-top: 1em;
+    gap: var(--space-4);
 
     @include viewport.until(sm) {
       flex-direction: column;
@@ -53,9 +54,8 @@
     .reviewable-list {
       flex: 1;
       box-sizing: border-box;
-      max-width: 760px; // Match topic post width
       min-width: 0;
-      margin-right: auto;
+      width: 100%;
 
       @include viewport.until(sm) {
         order: 2;
@@ -65,21 +65,52 @@
     }
 
     .reviewable-filters {
-      width: 250px;
+      width: 100%;
       height: 100%;
       box-sizing: border-box;
 
+      &.--expanded {
+        column-gap: 5em;
+
+        @include viewport.from(sm) {
+          columns: 2;
+        }
+
+        @include viewport.until(lg) {
+          column-gap: 2em;
+        }
+
+        .reviewable-filters-actions {
+          column-span: all;
+          margin-top: var(--space-4);
+        }
+
+        .reviewable-filter {
+          margin: 0 0 1em 0;
+        }
+      }
+
+      &.--collapsed {
+        display: flex;
+        gap: var(--space-2);
+        align-items: end;
+
+        .reviewable-filter {
+          flex: 1 1 auto;
+        }
+      }
+
+      .reviewable-filters-actions {
+        display: flex;
+        gap: var(--space-2);
+        justify-content: space-between;
+      }
+
       @include viewport.until(sm) {
         order: 1;
-        margin: 0 0 1em 0;
         padding: 0.5em 1em 1em 1em;
         width: 100%;
         background-color: var(--primary-very-low);
-
-        .reviewable-filters-actions {
-          display: flex;
-          justify-content: space-between;
-        }
 
         .reviewable-filter {
           .filter-label {
@@ -87,6 +118,20 @@
           }
         }
       }
+    }
+
+    .d-date-time-input-range {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+
+      .from {
+        margin: 0;
+      }
+    }
+
+    .d-date-time-input {
+      flex: 1 1 auto;
     }
 
     .reviewable-list + .reviewable-filters {
@@ -177,7 +222,7 @@
   .reviewable-filter {
     display: flex;
     flex-direction: column;
-    margin: 0 0 1em 0;
+    break-inside: avoid;
 
     .filter-label {
       margin: 0 0 0.5em 0;
@@ -280,6 +325,10 @@
   padding: 1.5rem;
   margin-block: 3rem;
   padding-bottom: 1em;
+
+  &:first-of-type {
+    margin-top: var(--space-4);
+  }
 
   .show-raw-email {
     color: var(--primary-medium);
