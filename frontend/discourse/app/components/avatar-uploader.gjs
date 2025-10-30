@@ -3,15 +3,20 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
+import { acceptedImageFormats } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 
 @tagName("span")
 export default class AvatarUploader extends Component {
+  @service currentUser;
+  @service siteSettings;
+
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "avatar-uploader",
     type: "avatar",
@@ -33,6 +38,11 @@ export default class AvatarUploader extends Component {
   });
 
   imageIsNotASquare = false;
+
+  @discourseComputed()
+  acceptedFormats() {
+    return acceptedImageFormats(this.currentUser?.staff, this.siteSettings);
+  }
 
   @discourseComputed("uppyUpload.uploading", "uploadedAvatarId")
   customAvatarUploaded() {
@@ -58,7 +68,7 @@ export default class AvatarUploader extends Component {
       class="hidden-upload-field"
       disabled={{this.uploading}}
       type="file"
-      accept="image/*"
+      accept={{this.acceptedFormats}}
       aria-hidden="true"
     />
     <DButton

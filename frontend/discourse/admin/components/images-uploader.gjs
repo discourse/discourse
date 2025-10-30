@@ -2,13 +2,18 @@
 import Component from "@ember/component";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
+import { acceptedImageFormats } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 
 @tagName("span")
 export default class ImagesUploader extends Component {
+  @service currentUser;
+  @service siteSettings;
+
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "images-uploader",
     type: "avatar",
@@ -28,6 +33,10 @@ export default class ImagesUploader extends Component {
     return this.uploadingOrProcessing ? i18n("uploading") : i18n("upload");
   }
 
+  get acceptedFormats() {
+    return acceptedImageFormats(this.currentUser?.staff, this.siteSettings);
+  }
+
   <template>
     <label
       class="btn"
@@ -40,7 +49,7 @@ export default class ImagesUploader extends Component {
         class="hidden-upload-field"
         disabled={{this.uppyUpload.uploading}}
         type="file"
-        accept="image/*"
+        accept={{this.acceptedFormats}}
         multiple
       />
     </label>

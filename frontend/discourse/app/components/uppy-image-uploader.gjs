@@ -15,7 +15,12 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import lightbox from "discourse/lib/lightbox";
-import { authorizesOneOrMoreExtensions, isVideo } from "discourse/lib/uploads";
+import {
+  acceptedImageFormats,
+  acceptedVideoFormats,
+  authorizesOneOrMoreExtensions,
+  isVideo,
+} from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 
@@ -138,7 +143,20 @@ export default class UppyImageUploader extends Component {
   }
 
   get acceptedFormats() {
-    return this.args.allowVideo ? "image/*,video/*" : "image/*";
+    const imageFormats = acceptedImageFormats(
+      this.currentUser?.staff,
+      this.siteSettings
+    );
+
+    if (this.args.allowVideo) {
+      const videoFormats = acceptedVideoFormats(
+        this.currentUser?.staff,
+        this.siteSettings
+      );
+      return videoFormats ? `${imageFormats},${videoFormats}` : imageFormats;
+    }
+
+    return imageFormats;
   }
 
   get isVideoFile() {

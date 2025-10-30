@@ -178,6 +178,17 @@ function imagesExtensions(staff, siteSettings) {
   return exts;
 }
 
+function videosExtensions(staff, siteSettings) {
+  let exts = extensions(siteSettings).filter((ext) => isVideo(`.${ext}`));
+  if (staff) {
+    const staffExts = staffExtensions(siteSettings).filter((ext) =>
+      isVideo(`.${ext}`)
+    );
+    exts = exts.concat(staffExts);
+  }
+  return exts;
+}
+
 function isAuthorizedFile(fileName, staff, siteSettings) {
   if (
     staff &&
@@ -213,6 +224,16 @@ function authorizedImagesExtensions(staff, siteSettings) {
   return authorizesAllExtensions(staff, siteSettings)
     ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp, avif"
     : imagesExtensions(staff, siteSettings).join(", ");
+}
+
+export function acceptedImageFormats(staff, siteSettings) {
+  const exts = imagesExtensions(staff, siteSettings);
+  return exts.map((ext) => `.${ext}`).join(",");
+}
+
+export function acceptedVideoFormats(staff, siteSettings) {
+  const exts = videosExtensions(staff, siteSettings);
+  return exts.map((ext) => `.${ext}`).join(",");
 }
 
 export function authorizesAllExtensions(staff, siteSettings) {
