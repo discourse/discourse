@@ -118,8 +118,8 @@ class TopicsFilter
     @scope
   end
 
-  def self.add_filter_by_status(status, &blk)
-    custom_status_filters[status] = blk
+  def self.add_filter_by_status(status, enabled: -> { true }, &block)
+    custom_status_filters[status] = { block:, enabled: }
   end
 
   def self.custom_status_filters
@@ -148,7 +148,7 @@ class TopicsFilter
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
     else
       if custom_filter = TopicsFilter.custom_status_filters[status]
-        @scope = custom_filter.call(@scope)
+        @scope = custom_filter[:block].call(@scope) if custom_filter[:enabled].call
       end
     end
 
