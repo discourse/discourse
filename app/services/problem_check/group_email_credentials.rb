@@ -9,16 +9,15 @@
 class ProblemCheck::GroupEmailCredentials < ProblemCheck
   self.priority = "high"
   self.perform_every = 30.minutes
+  self.targets = -> do
+    [*Group.with_smtp_configured.pluck(:name), *Group.with_imap_configured.pluck(:name)]
+  end
 
   def call
     [*smtp_errors, *imap_errors]
   end
 
   private
-
-  def targets
-    [*Group.with_smtp_configured.pluck(:name), *Group.with_imap_configured.pluck(:name)]
-  end
 
   def translation_data(group)
     { group_name: group.name, group_full_name: group.full_name }

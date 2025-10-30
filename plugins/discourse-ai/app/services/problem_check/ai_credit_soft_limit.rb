@@ -3,6 +3,9 @@
 class ProblemCheck::AiCreditSoftLimit < ProblemCheck
   self.priority = "low"
   self.perform_every = 1.hour
+  self.targets = -> do
+    LlmModel.joins(:llm_credit_allocation).where("llm_models.id < 0").pluck("llm_models.id")
+  end
 
   def call
     return [] if !SiteSetting.discourse_ai_enabled
@@ -26,10 +29,6 @@ class ProblemCheck::AiCreditSoftLimit < ProblemCheck
   end
 
   private
-
-  def targets
-    LlmModel.joins(:llm_credit_allocation).where("llm_models.id < 0").pluck("llm_models.id")
-  end
 
   def soft_limit_problem(model, allocation)
     override_data = {

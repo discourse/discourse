@@ -56,6 +56,11 @@ class ProblemCheck
   #
   config_accessor :inline, default: false, instance_writer: false
 
+  # Used to set up multiple targets for the check. For example, a check that
+  # operates on groups may need to specify which groups to work on.
+  #
+  config_accessor :targets, default: -> { [NO_TARGET] }, instance_writer: false
+
   # Problem check classes need to be registered here in order to be enabled.
   #
   # Note: This list must come after the `config_accessor` declarations.
@@ -144,10 +149,20 @@ class ProblemCheck
   end
   delegate :inline?, to: :class
 
+  def self.single_target?
+    targets.call.one?
+  end
+  delegate :single_target?, to: :class
+
   def self.ready_to_run?
     tracker.ready_to_run?
   end
   delegate :ready_to_run?, to: :class
+
+  def self.each_target(&)
+    targets.call.each(&)
+  end
+  delegate :each_target, to: :class
 
   def self.call(data = {})
     new(data).call
@@ -175,7 +190,7 @@ class ProblemCheck
     next_run_at = perform_every&.from_now
 
     if problems.empty?
-      targets.each { |t| tracker(t).no_problem!(next_run_at:) }
+      targets.call.each { |t| tracker(t).no_problem!(next_run_at:) }
     else
       problems
         .uniq(&:target)
@@ -195,10 +210,6 @@ class ProblemCheck
   end
 
   private
-
-  def targets
-    [NO_TARGET]
-  end
 
   def problem(target = nil, override_key: nil, override_data: {}, details: {})
     target_identifier = target.kind_of?(ActiveRecord::Base) ? target.id : target

@@ -6,6 +6,7 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
   self.max_retries = 2
   self.retry_after = 1.minute
   self.max_blips = 2
+  self.targets = -> { LlmModel.in_use.pluck(:id) }
 
   def call
     return [] if !SiteSetting.discourse_ai_enabled
@@ -14,10 +15,6 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
   end
 
   private
-
-  def targets
-    LlmModel.in_use.pluck(:id)
-  end
 
   def llm_errors
     return [] if !SiteSetting.discourse_ai_enabled

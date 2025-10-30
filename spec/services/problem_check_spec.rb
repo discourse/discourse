@@ -7,6 +7,7 @@ RSpec.describe ProblemCheck do
     InlineCheck = Class.new(described_class) { self.inline = true }
     PluginCheck = Class.new(described_class)
     DisabledCheck = Class.new(described_class) { self.enabled = false }
+    MultiTargetCheck = Class.new(described_class) { self.targets = -> { %w[foo bar] } }
     FailingCheck =
       Class.new(described_class) do
         def call
@@ -31,7 +32,15 @@ RSpec.describe ProblemCheck do
     stub_const(
       described_class,
       "CORE_PROBLEM_CHECKS",
-      [ScheduledCheck, RealtimeCheck, InlineCheck, DisabledCheck, FailingCheck, PassingCheck],
+      [
+        ScheduledCheck,
+        RealtimeCheck,
+        InlineCheck,
+        DisabledCheck,
+        MultiTargetCheck,
+        FailingCheck,
+        PassingCheck,
+      ],
       &example
     )
 
@@ -39,6 +48,7 @@ RSpec.describe ProblemCheck do
     Object.send(:remove_const, RealtimeCheck.name)
     Object.send(:remove_const, InlineCheck.name)
     Object.send(:remove_const, DisabledCheck.name)
+    Object.send(:remove_const, MultiTargetCheck.name)
     Object.send(:remove_const, PluginCheck.name)
     Object.send(:remove_const, FailingCheck.name)
     Object.send(:remove_const, PassingCheck.name)
@@ -49,6 +59,7 @@ RSpec.describe ProblemCheck do
   let(:inline_check) { InlineCheck }
   let(:enabled_check) { RealtimeCheck }
   let(:disabled_check) { DisabledCheck }
+  let(:multi_target_check) { MultiTargetCheck }
   let(:plugin_check) { PluginCheck }
   let(:failing_check) { FailingCheck }
   let(:passing_check) { PassingCheck }
@@ -99,6 +110,11 @@ RSpec.describe ProblemCheck do
   describe ".enabled?" do
     it { expect(enabled_check).to be_enabled }
     it { expect(disabled_check).not_to be_enabled }
+  end
+
+  describe ".single_target?" do
+    it { expect(scheduled_check).to be_single_target }
+    it { expect(multi_target_check).not_to be_single_target }
   end
 
   describe "plugin problem check registration" do
