@@ -57,7 +57,9 @@ async function loadDraft(store, opts = {}) {
     if (draft && typeof draft === "string") {
       draft = JSON.parse(draft);
     }
-  } catch {
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.debug("Failed to parse draft JSON", err, draft);
     draft = null;
     Draft.clear(draftKey, draftSequence);
   }
@@ -1643,7 +1645,7 @@ export default class ComposerService extends Service {
     cancel(this._saveDraftDebounce);
 
     return new Promise((resolve) => {
-      if (this.get("model.anyDirty")) {
+      if (this.shouldConfirmDiscard) {
         this.modal.show(DiscardDraftModal, {
           model: {
             onDestroyDraft: () => {
@@ -1661,7 +1663,6 @@ export default class ComposerService extends Service {
           },
         });
       } else {
-        // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()
           .then(() => {
             this.model.clearState();
@@ -1742,6 +1743,37 @@ export default class ComposerService extends Service {
           this._saveDraftPromise = null;
         });
     }
+  }
+
+  @discourseComputed(
+    "model.replyingToTopic",
+    "model.creatingTopic",
+    "model.anyDirty",
+    "model.reply",
+    "model.title",
+    "model.hasMetaData"
+  )
+  shouldConfirmDiscard(
+    replyingToTopic,
+    creatingTopic,
+    anyDirty,
+    reply,
+    title,
+    hasMetaData
+  ) {
+    if (anyDirty) {
+      return true;
+    }
+
+    if (replyingToTopic && reply.length > 0) {
+      return true;
+    }
+
+    if (creatingTopic && (title.length > 0 || hasMetaData)) {
+      return true;
+    }
+
+    return false;
   }
 
   @observes("model.reply", "model.title")

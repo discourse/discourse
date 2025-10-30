@@ -245,6 +245,14 @@ module PageObjects
         find(copy_quote_button_selector)
       end
 
+      def insert_quote_button_selector
+        ".insert-quote"
+      end
+
+      def insert_quote_button
+        find(insert_quote_button_selector)
+      end
+
       def click_mention(post, mention)
         within_post(post) { find("a.mention-group", text: mention).click }
       end

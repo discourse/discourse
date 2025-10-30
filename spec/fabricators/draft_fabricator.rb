@@ -7,15 +7,18 @@ Fabricator(:draft) do
   transient :post
   transient :archetype
   transient :tags
+  transient :reply
   draft_key do |transients|
     topic = transients[:topic] || transients[:post]&.topic
 
-    return "#{Draft::EXISTING_TOPIC}_#{topic.id}" if topic
-
-    if transients[:archetype] == "regular"
-      Draft::NEW_TOPIC
+    if topic
+      "#{Draft::EXISTING_TOPIC}#{topic.id}"
     else
-      Draft::NEW_PRIVATE_MESSAGE
+      if transients[:archetype] == "regular"
+        Draft::NEW_TOPIC
+      else
+        Draft::NEW_PRIVATE_MESSAGE
+      end
     end
   end
   owner { SecureRandom.hex(10) }
@@ -25,7 +28,7 @@ Fabricator(:draft) do
     topic = transients[:topic] || transients[:post]&.topic
 
     {
-      reply: "This is my really long draft",
+      reply: transients[:reply] || "This is my really long draft",
       action: topic.present? ? "reply" : "createTopic",
       categoryId: transients[:category_id] || topic&.category_id,
       tags: transients[:tags],
@@ -33,6 +36,6 @@ Fabricator(:draft) do
       metaData: nil,
       composerTime: SecureRandom.random_number(10_000),
       typingTime: SecureRandom.random_number(10_000),
-    }
+    }.to_json
   end
 end

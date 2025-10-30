@@ -68,6 +68,59 @@ describe "Composer - Drafts", type: :system do
         expect(Draft.where(user: current_user).count).to eq(1)
       end
     end
+
+    context "for an existing draft in a topic" do
+      fab!(:draft) do
+        Fabricate(:draft, topic:, user: current_user, reply: "This is a reply I started typing")
+      end
+
+      it "opens the draft when clicking Reply and saves changes clicking X" do
+        topic_page.visit_topic_and_open_composer(topic)
+
+        expect(composer).to be_opened
+        expect(composer).to have_content("This is a reply I started typing")
+
+        composer.fill_content("This is an updated reply content")
+        composer.close
+        expect(composer).to be_closed
+
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+
+        draft.reload
+        expect(JSON.parse(draft.data)["reply"]).to eq("This is an updated reply content")
+      end
+
+      it "does not save changes if nothing changed after opening the reply" do
+        topic_page.visit_topic_and_open_composer(topic)
+
+        expect(composer).to be_opened
+        expect(composer).to have_content("This is a reply I started typing")
+        composer.close
+        expect(toasts).to have_no_message
+        expect(composer).to be_closed
+
+        draft.reload
+        expect(JSON.parse(draft.data)["reply"]).to eq("This is a reply I started typing")
+      end
+    end
+
+    context "when starting a new reply draft in a topic" do
+      it "saves a quote by itself when clicking X" do
+        topic_page.visit_topic(topic)
+
+        select_text_range("#{topic_page.post_by_number_selector(1)} .cooked p", 0, 10)
+        topic_page.insert_quote_button.click
+
+        expect(composer).to be_opened
+        expect(composer).to have_value(<<~QUOTE.chomp)
+    [quote=\"#{topic.first_post.user.username}, post:1, topic:#{topic.id}\"]\nHello worl\n[/quote]\n\n
+    QUOTE
+        composer.close
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+        expect(composer).to be_closed
+        expect(Draft.where(user: current_user).count).to eq(1)
+      end
+    end
   end
 
   context "when clicking discard" do
@@ -121,6 +174,42 @@ describe "Composer - Drafts", type: :system do
         discard_draft_modal.click_cancel
 
         expect(discard_draft_modal).to be_closed
+      end
+    end
+
+    context "when opening a reply draft" do
+      fab!(:draft) do
+        Fabricate(:draft, topic:, user: current_user, reply: "This is a reply I started typing")
+      end
+
+      it "shows Discard draft confirmation modal and hides it on Cancel button click" do
+        topic_page.visit_topic_and_open_composer(topic)
+
+        expect(composer).to be_opened
+        expect(composer).to have_content("This is a reply I started typing")
+
+        composer.discard
+
+        expect(discard_draft_modal).to be_open
+        discard_draft_modal.click_cancel
+
+        expect(discard_draft_modal).to be_closed
+      end
+
+      it "discards the draft via the confirmation modal" do
+        topic_page.visit_topic_and_open_composer(topic)
+
+        expect(composer).to be_opened
+        expect(composer).to have_content("This is a reply I started typing")
+
+        composer.discard
+
+        expect(discard_draft_modal).to be_open
+        discard_draft_modal.click_discard
+
+        expect(discard_draft_modal).to be_closed
+        expect(composer).to be_closed
+        expect(Draft.where(user: current_user).count).to eq(0)
       end
     end
   end
