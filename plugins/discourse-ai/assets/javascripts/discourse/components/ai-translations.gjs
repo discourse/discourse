@@ -292,17 +292,7 @@ export default class AiTranslations extends Component {
     const colors = this.chartColors;
     const processedData = this.data.map(({ locale, total, done }) => {
       const rawPercentage = total > 0 ? (done / total) * 100 : 0;
-      // only show 100% if we're actually at 100% - cap at 99.9% otherwise
-      let donePercentage;
-      if (done === total) {
-        donePercentage = "100";
-      } else if (rawPercentage > 99.9) {
-        donePercentage = "99.9";
-      } else if (rawPercentage >= 99) {
-        donePercentage = rawPercentage.toFixed(1);
-      } else {
-        donePercentage = rawPercentage.toFixed(0);
-      }
+      const donePercentage = Math.trunc(rawPercentage).toString();
       const localeName = this.languageNameLookup.getLanguageName(locale);
       const languageNameForTooltip = localeName.split(" (")[0];
 
