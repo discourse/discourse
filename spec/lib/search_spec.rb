@@ -179,29 +179,31 @@ RSpec.describe Search do
 
   describe "custom_eager_load" do
     fab!(:topic)
-    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:post) { Fabricate(:post, topic:) }
+
+    let(:enabled?) { true }
+    let(:record) { described_class.execute("test").posts[0].topic }
 
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
+      described_class.custom_topic_eager_load([:topic_users], enabled: method(:enabled?))
+      described_class.custom_topic_eager_load(enabled: method(:enabled?)) { [:bookmarks] }
     end
 
+    after { described_class.instance_variable_set(:@custom_topic_eager_loads, []) }
+
     it "includes custom tables" do
-      begin
-        SiteSetting.tagging_enabled = false
-        expect(Search.execute("test").posts[0].topic.association(:category).loaded?).to be true
-        expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be false
+      expect(record.association(:topic_users)).to be_loaded
+      expect(record.association(:bookmarks)).to be_loaded
+    end
 
-        SiteSetting.tagging_enabled = true
-        Search.custom_topic_eager_load([:topic_users])
-        Search.custom_topic_eager_load() { [:bookmarks] }
+    context "when tables/blocks are disabled" do
+      let(:enabled?) { false }
 
-        expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be true
-        expect(Search.execute("test").posts[0].topic.association(:topic_users).loaded?).to be true
-        expect(Search.execute("test").posts[0].topic.association(:bookmarks).loaded?).to be true
-      ensure
-        SiteSetting.tagging_enabled = false
-        Search.instance_variable_set(:@custom_topic_eager_loads, [])
+      it "does not include custom tables" do
+        expect(record.association(:topic_users)).not_to be_loaded
+        expect(record.association(:bookmarks)).not_to be_loaded
       end
     end
   end
@@ -2850,18 +2852,37 @@ RSpec.describe Search do
         raw: "this is the first post about advanced filter with length more than 50 chars",
       )
     end
-    let!(:post1) { Fabricate(:post, raw: "this is the second post about advanced filter") }
+    let!(:post1) { Fabricate(:post, raw: "another post about advanced filter min_chars:50") }
 
-    it "allows to define custom filter" do
-      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+    context "with custom filters" do
+      let(:enabled?) { true }
+      let(:posts) { described_class.new("advanced min_chars:50").execute.posts }
 
-      Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
-        posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+      before do
+        described_class.advanced_filter(
+          /^min_chars:(\d+)$/,
+          enabled: method(:enabled?),
+        ) do |posts, match|
+          posts.where(
+            "(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?",
+            match.to_i,
+          )
+        end
       end
 
-      expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
-    ensure
-      Search.advanced_filters.delete(/^min_chars:(\d+)$/)
+      after { described_class.advanced_filters.delete(/^min_chars:(\d+)$/) }
+
+      it "applies the custom filter" do
+        expect(posts).to contain_exactly(post0)
+      end
+
+      context "when the filter is disabled" do
+        let(:enabled?) { false }
+
+        it "does not apply the custom filter" do
+          expect(posts).to contain_exactly(post1) # matches `min_chars:50` as a normal word
+        end
+      end
     end
 
     it "forces custom filters matchers to be case insensitive" do
@@ -2876,14 +2897,29 @@ RSpec.describe Search do
       Search.advanced_filters.delete(/^MIN_CHARS:(\d+)$/)
     end
 
-    it "allows to define custom order" do
-      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+    context "with custom order" do
+      let(:enabled?) { true }
+      let(:posts) { described_class.new("advanced order:chars").execute.posts }
 
-      Search.advanced_order(:chars) { |posts| posts.reorder("MAX(LENGTH(posts.raw)) DESC") }
+      before do
+        described_class.advanced_order(:chars, enabled: method(:enabled?)) do
+          _1.reorder("MAX(LENGTH(posts.raw)) DESC")
+        end
+      end
 
-      expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
-    ensure
-      Search.advanced_orders.delete(:chars)
+      after { described_class.advanced_orders.delete(:chars) }
+
+      it "applies custom order" do
+        expect(posts).to eq([post0, post1])
+      end
+
+      context "when the callback is disabled" do
+        let(:enabled?) { false }
+
+        it "does not apply custom order" do
+          expect(posts).to eq([post1, post0])
+        end
+      end
     end
   end
 

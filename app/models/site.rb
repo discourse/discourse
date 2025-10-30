@@ -25,8 +25,8 @@ class Site
   cattr_accessor :markdown_additional_options
   self.markdown_additional_options = {}
 
-  def self.add_categories_callbacks(&block)
-    categories_callbacks << block
+  def self.add_categories_callbacks(enabled: -> { true }, &block)
+    categories_callbacks << { block:, enabled: }
   end
 
   def self.categories_callbacks
@@ -178,7 +178,10 @@ class Site
 
         categories.reject! { |c| c[:parent_category_id] && !by_id[c[:parent_category_id]] }
 
-        self.class.categories_callbacks.each { |callback| callback.call(categories, @guardian) }
+        self.class.categories_callbacks.each do |callback|
+          next unless callback[:enabled].call
+          callback[:block].call(categories, @guardian)
+        end
 
         categories
       end
