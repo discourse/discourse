@@ -41,8 +41,6 @@ task "themes:advanced_search_banner:exclude_and_disable" => :environment do
   end
 
   components.each { |entry| process_theme_component(entry[:theme]) }
-
-  puts "\n\e[1;34mTask completed successfully!\e[0m"
 end
 
 # Common helper methods
@@ -91,7 +89,7 @@ end
 def not_included_in_any_theme?(theme)
   return false if theme.parent_theme_relation.exists?
 
-  puts "\n  \e[33m#{theme_identifier(theme)} is not included in any of your themes. Skipping\e[0m"
+  puts "  \e[33m#{theme_identifier(theme)} is not included in any of your themes. Skipping\e[0m"
   true
 end
 
@@ -283,9 +281,12 @@ def process_theme_component(theme)
   exclude_theme_component(theme)
   enable_welcome_banner(theme)
   disable_theme_component(theme)
+
+  puts "\n\e[1;34mTask completed successfully!\e[0m"
 end
 
 def exclude_theme_component(theme)
+  puts "\n  Executing exclude step..."
   return if not_included_in_any_theme?(theme)
 
   parent_relations = theme.parent_theme_relation.to_a
@@ -300,15 +301,19 @@ def exclude_theme_component(theme)
 end
 
 def enable_welcome_banner(theme)
+  puts "\n  Executing enable core welcome banner step..."
+  if !theme.enabled
+    puts "  \e[33m#{theme_identifier(theme)} is disabled, thus no need to enable core welcome banner. Skipping\e[0m"
+    return
+  end
   return unless theme.enabled
 
-  parent_relations = theme.parent_theme_relation.to_a
-  return if parent_relations.empty?
+  return if not_included_in_any_theme?(theme)
 
   puts "\n  Enabling \e[1mcore welcome banner\e[0m for..."
   enabled_count = 0
 
-  parent_relations.each do |relation|
+  theme.parent_theme_relation.each do |relation|
     parent_theme = relation.parent_theme
     site_setting =
       ThemeSiteSetting.find_by(theme_id: parent_theme.id, name: "enable_welcome_banner")
@@ -326,8 +331,9 @@ def enable_welcome_banner(theme)
 end
 
 def disable_theme_component(theme)
+  puts "\n  Executing disable component step..."
   if !theme.enabled
-    puts "\n  \e[33m#{theme_identifier(theme)} was already disabled. Skipping\e[0m"
+    puts "  \e[33m#{theme_identifier(theme)} was already disabled. Skipping\e[0m"
     return
   end
 
