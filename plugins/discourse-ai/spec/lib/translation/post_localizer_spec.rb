@@ -143,6 +143,25 @@ describe DiscourseAi::Translation::PostLocalizer do
           expect(localization.cooked).to include(uploaded_image_url)
         end
       end
+
+      it "continues translation even if post-processing fails" do
+        post_raw_translator_stub(
+          { text: post.raw, target_locale: "ja", translated: translated_raw },
+        )
+
+        LocalizedCookedPostProcessor
+          .any_instance
+          .stubs(:post_process)
+          .raises(Errno::ECONNREFUSED.new("Connection refused"))
+
+        expect {
+          localization = described_class.localize(post, "ja")
+          expect(localization).to be_a(PostLocalization)
+          expect(localization.raw).to eq(translated_raw)
+          expect(localization.cooked).to eq(cooked) # Basic cooked content without post-processing
+          expect(localization.persisted?).to eq(true)
+        }.to change { PostLocalization.count }.by(1)
+      end
     end
   end
 
