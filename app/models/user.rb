@@ -1942,6 +1942,16 @@ class User < ActiveRecord::Base
       .where(ip_address: self.ip_address, admin: false, moderator: false)
   end
 
+  def upcoming_change_enabled?(upcoming_change)
+    setting_enabled = SiteSetting.public_send(upcoming_change)
+
+    if UpcomingChanges.has_groups?(upcoming_change)
+      return setting_enabled && in_any_groups?(UpcomingChanges.group_ids_for(upcoming_change))
+    end
+
+    setting_enabled
+  end
+
   protected
 
   def badge_grant

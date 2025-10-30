@@ -7,6 +7,17 @@
     flex: 1 1 auto;
   }
 
+  &.--multiple-dropdowns {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__inputs {
+    display: flex;
+    gap: var(--space-2);
+    flex: 1 1 auto;
+  }
+
   &__dropdown {
     max-width: min(14em, 35vw);
     flex: 1 1 auto;
