@@ -42,6 +42,79 @@ RSpec.describe DiscourseAssign do
     end
   end
 
+  describe "discourse-assign TopicsFilter filtering" do
+    fab!(:group)
+    fab!(:user) { Fabricate(:user).tap { |u| group.add(u) } }
+
+    fab!(:unassigned_topic, :topic)
+    fab!(:assigned_topic, :topic)
+    fab!(:non_related_topic, :topic)
+
+    fab!(:assigned_post) { Fabricate(:post, topic: unassigned_topic) }
+
+    fab!(:topic_assignment) do
+      Fabricate(:topic_assignment, topic: assigned_topic, assigned_to: group)
+    end
+    fab!(:post_assignment) { Fabricate(:post_assignment, post: assigned_post, assigned_to: user) }
+
+    before { SiteSetting.assign_allowed_on_groups = "#{group.id}" }
+
+    describe "with assigned:username" do
+      it "returns topics assigned to the specified user" do
+        filtered_topic_ids =
+          TopicsFilter
+            .new(guardian: Guardian.new(user))
+            .filter_from_query_string("assigned:#{user.username}")
+            .pluck(:id)
+        expect(filtered_topic_ids).to contain_exactly(post_assignment.topic.id)
+      end
+    end
+
+    describe "with assigned:group" do
+      it "returns topics assigned to the specified group" do
+        filtered_topic_ids =
+          TopicsFilter
+            .new(guardian: Guardian.new(user))
+            .filter_from_query_string("assigned:#{group.name}")
+            .pluck(:id)
+        expect(filtered_topic_ids).to contain_exactly(topic_assignment.topic.id)
+      end
+
+      it "respects group visibility" do
+        private_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+        private_topic = Fabricate(:topic)
+
+        private_user = Fabricate(:user).tap { |u| group.add(u) }
+        private_owner = Fabricate(:user, admin: true)
+        private_group.add(private_user)
+        private_group.add_owner(private_owner)
+
+        Fabricate(:topic_assignment, topic: private_topic, assigned_to: private_group)
+
+        filtered_topic_ids =
+          TopicsFilter
+            .new(guardian: Guardian.new(user))
+            .filter_from_query_string("assigned:#{private_group.name}")
+            .pluck(:id)
+        expect(filtered_topic_ids).to be_empty
+
+        filtered_topic_ids =
+          TopicsFilter
+            .new(guardian: Guardian.new(private_user))
+            .filter_from_query_string("assigned:#{private_group.name}")
+            .pluck(:id)
+        expect(filtered_topic_ids).to be_empty
+
+        filtered_topic_ids =
+          TopicsFilter
+            .new(guardian: Guardian.new(private_owner))
+            .filter_from_query_string("assigned:#{private_group.name}")
+            .pluck(:id)
+        expect(filtered_topic_ids).to contain_exactly(private_topic.id)
+      end
+    end
+  end
+
   describe "Events" do
     describe "on 'user_removed_from_group'" do
       let(:group) { Fabricate(:group) }
