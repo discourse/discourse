@@ -319,7 +319,14 @@ def enable_welcome_banner(theme)
       ThemeSiteSetting.find_by(theme_id: parent_theme.id, name: "enable_welcome_banner")
 
     if site_setting.value == "f"
-      site_setting.update!(value: "t")
+      Themes::ThemeSiteSettingManager.call(
+        params: {
+          theme_id: parent_theme.id,
+          name: "enable_welcome_banner",
+          value: true,
+        },
+        guardian: Discourse.system_user.guardian,
+      )
       puts "    - #{parent_theme.name} (ID: #{parent_theme.id}) \e[32m- enabled\e[0m"
       enabled_count += 1
     else
