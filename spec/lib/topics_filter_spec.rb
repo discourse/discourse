@@ -1862,7 +1862,7 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_by_private_group_user.id)
         end
 
-        it "should not return topics when user has not the visibility to see group members" do
+        it "does not filter topics when user cannot see members of the group" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new(user_in_super_private_group))
