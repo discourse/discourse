@@ -118,8 +118,8 @@ class TopicsFilter
     @scope
   end
 
-  def self.add_filter_by_status(status, &blk)
-    custom_status_filters[status] = blk
+  def self.add_filter_by_status(status, enabled: -> { true }, &block)
+    custom_status_filters[status] = { block:, enabled: }
   end
 
   def self.custom_status_filters
@@ -148,7 +148,7 @@ class TopicsFilter
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
     else
       if custom_filter = TopicsFilter.custom_status_filters[status]
-        @scope = custom_filter.call(@scope)
+        @scope = custom_filter[:block].call(@scope) if custom_filter[:enabled].call
       end
     end
 
@@ -663,6 +663,7 @@ class TopicsFilter
     if names.include?("me") && @guardian.authenticated?
       names = names.map { |n| n == "me" ? @guardian.user.username_lower : n }
     end
+
     if (user_ids = User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)) &&
          user_ids.any?
       @scope = @scope.joins(:user).where(user_id: user_ids)
@@ -673,6 +674,7 @@ class TopicsFilter
          group_ids =
            Group
              .visible_groups(@guardian.user)
+             .members_visible_groups(@guardian.user)
              .where("lower(name) IN (?)", names.map(&:downcase))
              .pluck(:id)
        ) && group_ids.any?

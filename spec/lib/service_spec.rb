@@ -149,4 +149,49 @@ RSpec.describe Service do
       end
     end
   end
+
+  describe "Contract" do
+    subject(:result) { service_class.call(**args) }
+
+    let(:args) { { params: {} } }
+
+    describe "Reusability" do
+      before do
+        another_contract =
+          Class.new(Service::ContractBase) do
+            attribute :id
+
+            validates :id, presence: true
+          end
+        service_class.class_eval { params base_class: another_contract }
+      end
+
+      it "executes another contract" do
+        expect(result.params).to be_invalid
+        expect(result.params.errors.details).to match({ id: [{ error: :blank }] })
+      end
+    end
+
+    describe "Using values from a model" do
+      before do
+        service_class.class_eval do
+          model :user
+
+          params(default_values_from: :user) do
+            attribute :id, :integer
+            attribute :name, :string
+            attribute :groups, :array, default: -> { [] }
+          end
+
+          def fetch_user
+            { id: 1, name: "John" }
+          end
+        end
+      end
+
+      it "applies values from a model to the contract attributes" do
+        expect(result.params).to have_attributes(id: 1, name: "John", groups: [])
+      end
+    end
+  end
 end
