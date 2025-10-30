@@ -303,6 +303,8 @@ def enable_welcome_banner(theme)
     site_setting =
       ThemeSiteSetting.find_by(theme_id: parent_theme.id, name: "enable_welcome_banner")
 
+    next if site_setting.nil?
+
     if site_setting.value == "f"
       Themes::ThemeSiteSettingManager.call(
         params: {
