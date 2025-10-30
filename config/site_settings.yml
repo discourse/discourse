@@ -3953,6 +3953,10 @@ user_preferences:
   default_other_enable_markdown_monospace_font:
     default: true
     area: "posts_and_topics|user_defaults"
+  default_watched_precedence_over_muted:
+    client: true
+    default: false
+    area: "categories_and_tags|user_defaults"
 
 api:
   retain_web_hook_events_period_days:
@@ -4121,10 +4125,6 @@ tags:
     type: enum
     default: always
     enum: RemoveMutedTagsFromLatestSiteSetting
-    area: "categories_and_tags"
-  watched_precedence_over_muted:
-    client: true
-    default: false
     area: "categories_and_tags"
 
   force_lowercase_tags:

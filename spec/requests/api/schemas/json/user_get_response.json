@@ -814,7 +814,7 @@
               "type": "boolean"
             },
             "watched_precedence_over_muted": {
-              "type": ["boolean", "null"]
+              "type": ["boolean"]
             },
             "seen_popups": {
               "type": ["array", "null"]
