@@ -231,5 +231,22 @@ RSpec.describe Migrations::Importer::GroupNameFinder do
         expect(name).to eq("a_100")
       end
     end
+
+    context "with fallback name conflicts" do
+      it "finds next available fallback name when some are already used" do
+        fallback = I18n.t("importer.fallback_names.group")
+        group_names.add("#{fallback.downcase}_1")
+        group_names.add("#{fallback.downcase}_123")
+
+        name1 = finder.find_available_name("")
+        119.times { finder.find_available_name("") }
+        name2 = finder.find_available_name("")
+        name3 = finder.find_available_name("")
+
+        expect(name1).to eq("#{fallback}_2")
+        expect(name2).to eq("#{fallback}_122")
+        expect(name3).to eq("#{fallback}_124")
+      end
+    end
   end
 end
