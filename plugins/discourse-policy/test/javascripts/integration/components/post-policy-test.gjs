@@ -237,8 +237,6 @@ module(
     });
 
     test("load remaining accepted users", async function (assert) {
-      const self = this;
-
       const acceptedByUsers = [
         { id: 1, username: "alice", avatar_template: "/images/avatar.png" },
         { id: 2, username: "bob", avatar_template: "/images/avatar.png" },
@@ -260,7 +258,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
@@ -280,8 +278,6 @@ module(
     });
 
     test("load remaining not accepted users", async function (assert) {
-      const self = this;
-
       const notAcceptedByUsers = [
         { id: 1, username: "alice", avatar_template: "/images/avatar.png" },
         { id: 2, username: "bob", avatar_template: "/images/avatar.png" },
@@ -303,7 +299,7 @@ module(
 
       await render(
         <template>
-          <PostPolicy @post={{self.post}} @policy={{self.policy}} />
+          <PostPolicy @post={{this.post}} @policy={{this.policy}} />
         </template>
       );
 
