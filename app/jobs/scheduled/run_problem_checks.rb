@@ -12,7 +12,13 @@ module Jobs
     def execute(_args)
       ProblemCheck.scheduled.filter_map do |check|
         if eligible_for_this_run?(check)
-          Jobs.enqueue(:run_problem_check, check_identifier: check.identifier.to_s)
+          check.each_target do |target|
+            Jobs.enqueue(
+              :run_problem_check,
+              check_identifier: check.identifier.to_s,
+              target: target.to_s,
+            )
+          end
         end
       end
     end

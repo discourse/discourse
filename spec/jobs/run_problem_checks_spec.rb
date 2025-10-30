@@ -37,6 +37,7 @@ RSpec.describe Jobs::RunProblemChecks do
         job: :run_problem_check,
         args: {
           check_identifier: "scheduled_check",
+          target: ProblemCheck::NO_TARGET,
         },
       ) { described_class.new.execute([]) }
     end
@@ -52,6 +53,7 @@ RSpec.describe Jobs::RunProblemChecks do
         job: :run_problem_check,
         args: {
           check_identifier: "scheduled_check",
+          target: ProblemCheck::NO_TARGET,
         },
       ) { described_class.new.execute([]) }
     end
