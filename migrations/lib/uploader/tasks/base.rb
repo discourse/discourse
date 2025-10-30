@@ -48,7 +48,7 @@ module Migrations::Uploader
         new(databases, settings).run!
       end
 
-      protected
+      private
 
       def handle_status_update
         raise NotImplementedError
@@ -121,8 +121,6 @@ module Migrations::Uploader
           sleep(calculate_backoff(count))
         end
       end
-
-      private
 
       def calculate_backoff(retry_count)
         0.25 * retry_count

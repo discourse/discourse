@@ -712,6 +712,7 @@ he:
       other: "הצגת %{count} נושאים חדשים"
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
+    done: "סיום"
     deleting: "מתבצעת מחיקה…"
     save: "שמירת השינויים"
     saving: "מתבצעת שמירה…"
@@ -2164,6 +2165,7 @@ he:
         first_time_and_daily: "בפעם הראשונה שפוסט מקבל לייק ובאופן יומי"
         first_time: "בפעם הראשונה שמישהו אוהב פוסט"
         never: "אף פעם"
+      notify_on_linked_posts: "להודיע כשקישור לאחד הפוסטים שלי משותף"
       email_previous_replies:
         title: "לכלול תגובות קודמות בתחתית הודעות הדוא״ל"
         unless_emailed: "אלא אם נשלח לפני כן"
@@ -3181,6 +3183,7 @@ he:
         remove: "הסרת קישור"
         visit: "פתיחת קישור בלשונית חיצונית"
         link_copied: "הקישור הועתק!"
+      unsupported_token: "עורך הטקסט העשיר אינו תומך בכל היכולות בהן נעשה שימוש בפוסט הזה, מעביר אותך לעורך Markdown."
     notifications:
       tooltip:
         regular:
@@ -3817,6 +3820,8 @@ he:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a>, <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a> או צפייה במובילים:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>עיון בכל התגיות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
       browse_latest_topics: "עיון בנושאים האחרונים"
+      browse_new_replies: "עיון בתגובות חדשות"
+      browse_new_topics: "עיון בנושאים חדשים"
       suggest_create_topic: מעניין אותך <a href>לפתוח בדיון חדש?</a>
       jump_reply: "קפיצה למיקום המקורי של הפוסט"
       jump_reply_aria: "קפיצה לפוסט של ‎@%{username} במיקומו המקורי"
@@ -3897,11 +3902,6 @@ he:
         two: "הפוסט האחרון בנושא הוא כבר בן שעתיים (%{count}), אז הנושא ייסגר אוטומטית."
         many: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, אז הנושא ייסגר אוטומטית."
         other: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, אז הנושא ייסגר אוטומטית."
-      auto_close_momentarily:
-        one: "הפוסט האחרון בנושא הוא כבר בן שעה (%{count}), לכן הנושא ייסגר מיידית."
-        two: "הפוסט האחרון בנושא הוא כבר בן שעתיים (%{count}), לכן הנושא ייסגר מיידית."
-        many: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, לכן הנושא ייסגר מיידית."
-        other: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, לכן הנושא ייסגר מיידית."
       timeline:
         back: "חזרה"
         back_description: "חיזרו לפוסט האחרון שלא-נקרא על-ידיכם"
@@ -3991,6 +3991,8 @@ he:
       reply:
         title: "תגובה"
         help: "להתחיל לכתוב תגובה לנושא זה"
+      footer_buttons:
+        region_label: "פעולות על נושא"
       share:
         title: "שיתוף נושא"
         extended_title: "שתף קישור"
@@ -4343,6 +4345,7 @@ he:
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
       cancel_composer:
+        confirm: "להתעלם מהפוסט שלך?"
         discard: "להשליך"
       via_email: "פוסט זה הגיע בדוא״ל"
       via_auto_generated_email: "פוסט זה הגיע דרך הודעת דוא״ל שנוצרה אוטומטית"
@@ -5011,6 +5014,8 @@ he:
       next: "הבא (מקש ימינה)"
       counter: "%curr% מתוך %total%"
       close: "סגירה (Esc)"
+      zoom: "תקריב (מקש Z)"
+      error: "לא ניתן לטעון את התמונה"
       content_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תוכן הזה</a>.'
       image_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תמונה הזו</a>.'
     cannot_render_video: לא ניתן לעבד את הסרטון הזה מכיוון שהדפדפן שלך אינו תומך במקודד.
@@ -5585,6 +5590,8 @@ he:
           light: "בהיר"
           dark: "כהה"
           auto: "אוט׳"
+          title: "מצב צבע"
+          aria_label: "מצב צבע, כרגע %{mode}"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
@@ -5832,6 +5839,7 @@ he:
           header_description: "הגדרת התצוגה המשפטית, כגון תנאי השירות, מדיניות פרטיות, פרטי יצירת קשר ונושאים נקודתיים לאיחוד האירופי"
         theme_site_settings:
           title: "הגדרות ערכת העיצוב של האתר"
+          header_description: "הצגת כל הגדרות האתר עם ערכת נושא ואת ערכות הנושא שדורסות אותן"
         localization:
           title: "תרגום"
           header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
@@ -5842,6 +5850,10 @@ he:
           sub_pages:
             common_settings:
               title: "הגדרות"
+            authenticators:
+              title: "כניסות דרך רשתות חברתיות"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "לוגו"
           header_description: "הגדרת הלוגואים והסמלים בהם נעשה שימוש ברחבי האתר שלך"
@@ -6127,6 +6139,7 @@ he:
         default_value: "ברירת מחדל"
         overridden_value: "ערך שנדרס: %{value}"
         select_setting: "נא לבחור הגדרת אתר כדי לצפות בערכי ערכת העיצוב הנוכחיים"
+        add: "הגדרות אתר עם ערכת עיצוב"
         help: "ערכת הנושא בשימוש כרגע היא <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. יש לגשת אל <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>עמוד הגדרות ערכת העיצוב</a> כדי לשנות את הגדרות ערכת העיצוב של האתר או ללחוץ על ערכת עיצוב מקושרת בטבלה שלהלן כדי לערוך את ההגדרות שלה."
         site_setting_warning: 'ההגדרה הזאת מנוהלת על ידי ערכת העיצוב כברירת המחדל של האתר שלך (%{defaultThemeName}). אפשר לשנות אותה דרך <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">עמוד עריכת ערכת העיצוב</a>.'
       search:
@@ -7063,7 +7076,10 @@ he:
           body: "גוף"
           revert: "ביטול שינויים"
           revert_confirm: "לבטל את השינויים שלך?"
+          search_templates: "סינון לפי שם תבנית…"
+          no_templates_found: "אין תבניות שעונות על המסננים שלך."
           edit: "עריכה"
+          back: "חזרה לתבניות"
         component:
           all_filter: "הכול"
           used_filter: "בשימוש"

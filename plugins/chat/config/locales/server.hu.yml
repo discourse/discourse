@@ -106,6 +106,10 @@ hu:
     reviewables:
       message_already_handled: "Köszönjük, de már megvizsgáltuk ezt az üzenetet, és megállapítottuk, hogy nem kell újra megjelölni."
       actions:
+        no_action_message:
+          title: "Nincs művelet"
+        restore_message:
+          description: "Üzenet helyreállítása, hogy láthassák a felhasználók."
         agree:
           title: "Egyetértek…"
         agree_and_keep_message:

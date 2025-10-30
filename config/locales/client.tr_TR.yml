@@ -590,6 +590,7 @@ tr_TR:
       other: "%{count} yeni konuya bakın"
     preview: "ön izleme"
     cancel: "İptal et"
+    done: "Bitti"
     deleting: "Siliniyor…"
     save: "Değişiklikleri Kaydet"
     saving: "Kaydediliyor…"
@@ -3507,9 +3508,6 @@ tr_TR:
       auto_close_immediate:
         one: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
         other: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
-      auto_close_momentarily:
-        one: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
-        other: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
       timeline:
         back: "Geri"
         back_description: "Son okunmamış gönderinize geri dönün"
@@ -4504,8 +4502,7 @@ tr_TR:
       readonly: "Bak"
     preloader_text: "Yükleniyor"
     lightbox:
-      download: "indir"
-      open: "orijinal görüntü"
+      download: "İndir"
       previous: "Önceki (Sol ok tuşu)"
       next: "Sonraki (Sağ ok tuşu)"
       counter: "%curr% / %total%"

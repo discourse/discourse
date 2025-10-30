@@ -53,6 +53,16 @@ et:
       modals:
         select_option: "Vali võimalus..."
       translations:
+        stats:
+          eta_minutes:
+            one: "%{count} minut"
+            other: "%{count} minutit"
+          eta_hours:
+            one: "%{count} tund"
+            other: "%{count} tundi"
+          eta_days:
+            one: "%{count} päev"
+            other: "%{count} päeva"
         progress_chart:
           bar_done:
             one: "%{count} postitus"

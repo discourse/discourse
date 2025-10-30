@@ -106,6 +106,10 @@ ug:
     reviewables:
       message_already_handled: "رەھمەت، ئەمما بىز بۇ ئۇچۇرنى تەكشۈرگەن ھەمدە ئۇنى قايتا پاش قىلىشنىڭ ھاجىتى يوق قارىغان."
       actions:
+        no_action_message:
+          title: "تەدبىر قوللانمىغان"
+        restore_message:
+          description: "ئۇچۇرنى ئىشلەتكۈچى كۆرەلەيدىغان ھالەتتە ئەسلىگە كەلتۈرىدۇ."
         agree:
           title: "قوشۇل…"
         agree_and_keep_message:

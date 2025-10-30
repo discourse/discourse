@@ -51,6 +51,11 @@ th:
       modals:
         select_option: "เลือกตัวเลือก..."
       translations:
+        stats:
+          eta_hours:
+            other: "%{count} ชั่วโมง"
+          eta_days:
+            other: "%{count} วัน"
         progress_chart:
           bar_done:
             other: "%{count} โพส"

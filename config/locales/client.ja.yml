@@ -534,6 +534,7 @@ ja:
       other: "%{count} 件の新規トピックを見る"
     preview: "プレビュー"
     cancel: "キャンセル"
+    done: "完了"
     deleting: "削除中..."
     save: "変更を保存"
     saving: "保存中…"
@@ -3320,8 +3321,6 @@ ja:
       auto_close_title: "自動クローズの設定"
       auto_close_immediate:
         other: "このトピックは最終投稿からすでに %{count} 時間経過しているため、すぐにクローズされます。"
-      auto_close_momentarily:
-        other: "このトピックは最終投稿からすでに %{count} 時間経過しているため、すぐにクローズされます。"
       timeline:
         back: "戻る"
         back_description: "最後の未読の投稿に戻る"
@@ -4267,7 +4266,6 @@ ja:
     preloader_text: "読み込み中"
     lightbox:
       download: "ダウンロード"
-      open: "元の画像"
       previous: "前へ (左矢印キー)"
       next: "次へ (右矢印キー)"
       counter: "%curr% / %total%"
