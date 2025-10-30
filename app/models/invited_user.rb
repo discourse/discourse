@@ -6,6 +6,18 @@ class InvitedUser < ActiveRecord::Base
 
   validates :invite_id, presence: true
   validates :invite_id, uniqueness: { scope: :user_id, conditions: -> { where.not(user_id: nil) } }
+
+  after_destroy :decrement_invite_redemption_count
+
+  private
+
+  def decrement_invite_redemption_count
+    return if invite_id.blank?
+
+    Invite.unscoped.where(id: invite_id).where("redemption_count > 0").update_all(
+      "redemption_count = redemption_count - 1",
+    )
+  end
 end
 
 # == Schema Information
