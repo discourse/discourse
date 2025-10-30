@@ -286,7 +286,7 @@ def process_theme_component(theme)
 end
 
 def enable_welcome_banner(theme)
-  puts "\n  Executing enable core welcome banner step..."
+  puts "\n  Executing enable core welcome banner step... (1/3)"
   if !theme.enabled
     puts "  \e[33m#{theme_identifier(theme)} is disabled, thus no need to enable core welcome banner. Skipping\e[0m"
     return
@@ -295,7 +295,7 @@ def enable_welcome_banner(theme)
 
   return if not_included_in_any_theme?(theme)
 
-  puts "\n  Enabling \e[1mcore welcome banner\e[0m for..."
+  puts "  Enabling \e[1mcore welcome banner\e[0m for..."
   enabled_count = 0
 
   theme.parent_theme_relation.each do |relation|
@@ -323,30 +323,29 @@ def enable_welcome_banner(theme)
 end
 
 def exclude_theme_component(theme)
-  puts "\n  Executing exclude step..."
+  puts "\n  Executing exclude step... (2/3)"
   return if not_included_in_any_theme?(theme)
 
   parent_relations = theme.parent_theme_relation.to_a
   total_relations = parent_relations.size
+  parent_names = parent_relations.map { |r| "#{r.parent_theme.name} (ID: #{r.parent_theme_id})" }
 
-  puts "\n  Excluding #{theme_identifier(theme)} from..."
-  parent_relations.each do |relation|
-    puts "    - #{relation.parent_theme.name} (ID: #{relation.parent_theme_id})"
-    relation.destroy!
-  end
+  puts "  Excluding #{theme_identifier(theme)} from:"
+  puts "    - #{parent_names.join("\n    - ")}"
+
   theme.parent_theme_ids = []
   theme.save!
   puts "  \e[1;32m✓ Excluded from #{total_relations} theme#{"s" if total_relations > 1}\e[0m"
 end
 
 def disable_theme_component(theme)
-  puts "\n  Executing disable component step..."
+  puts "\n  Executing disable component step... (3/3)"
   if !theme.enabled
     puts "  \e[33m#{theme_identifier(theme)} was already disabled. Skipping\e[0m"
     return
   end
 
-  puts "\n  Disabling #{theme_identifier(theme)}..."
+  puts "  Disabling #{theme_identifier(theme)}..."
   theme.update!(enabled: false)
   puts "  \e[1;32m✓ Disabled\e[0m"
 end
