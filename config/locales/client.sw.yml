@@ -264,6 +264,7 @@ sw:
       other: "Angalia Topiki %{count} Mpya"
     preview: "kihakiki"
     cancel: "Ghairi"
+    done: "Imekwisha"
     save: "Hifadhi Mabadiliko"
     saved: "Imehifadhiwa!"
     upload: "Pakia"
@@ -2156,7 +2157,7 @@ sw:
       readonly: "Angalia"
     preloader_text: "Inapakuliwa"
     lightbox:
-      download: "pakua"
+      download: "Pakua"
       counter: "%curr% chini ya %total%"
     keyboard_shortcuts_help:
       title: "Njia Mkato za Baobonye"

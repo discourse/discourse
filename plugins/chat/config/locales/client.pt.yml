@@ -117,6 +117,8 @@ pt:
       chat_message_separator:
         today: Hoje
         yesterday: Ontem
+      search_view:
+        filter_placeholder: Pesquisar mensagens
       about_view:
         title: Título
         name: Nome
@@ -126,6 +128,7 @@ pt:
         tabs:
           members: Membros
           settings: Configurações
+          search: Procurar
         remove_member: "Remover"
       new_message_modal:
         no_items: "Sem itens"
@@ -166,6 +169,11 @@ pt:
         category_label: "Categoria"
         history_label: "Histórico"
         members_label: "Membros"
+      search:
+        no_results: "Não foi encontrado nenhum resultado"
+        sort:
+          relevance: "Relevância"
+          latest: "Mais Recente"
       channel_list:
         title: "Canais"
       incoming_webhooks:

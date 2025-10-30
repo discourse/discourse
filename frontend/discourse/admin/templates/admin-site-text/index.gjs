@@ -89,7 +89,7 @@ export default <template>
       <p><b>{{i18n "admin.site_text.recommended"}}</b></p>
     {{/if}}
 
-    {{#each @controller.model as |siteText|}}
+    {{#each @controller.model.content as |siteText|}}
       <SiteTextSummary
         @siteText={{siteText}}
         @editAction={{@controller.edit}}

@@ -358,6 +358,12 @@ uk:
       chat_message_separator:
         today: Сьогодні
         yesterday: Вчора
+      search_view:
+        filter_placeholder: Шукати приватні повідомлення
+        message_result_label: "Повідомлення в чаті від %{username}: %{preview} %{threadInfo}"
+        in_thread: "у темі %{title}"
+        sr_instructions: "Натисніть Enter або пробіл, щоб відкрити повідомлення. Використовуйте Tab для навігації між результатами."
+        results_list_label: "Результати пошуку повідомлень чату"
       members_view:
         filter_placeholder: Знайти учасників
         add_member: Додати учасника
@@ -374,6 +380,7 @@ uk:
         tabs:
           members: Учасники
           settings: Налаштування
+          search: Пошук
         remove_member: "Вилучити"
       new_message_modal:
         title: Надіслати повідомлення
@@ -561,6 +568,13 @@ uk:
           create_export: "Створити експорт"
           confirm_export: "Це експортує всі повідомлення з усіх каналів і надсилає результат вам в особистому повідомленні. Ви впевнені, що хочете експортувати?"
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
+      search:
+        title: Пошук у чаті
+        aria_label: "Перейти до пошуку в чаті"
+        no_results: "Не знайдено результатів"
+        sort:
+          relevance: "За змістом"
+          latest: "Остання"
       my_threads:
         title: Мої теми
         aria_label: "Перейти до списку моїх тем"

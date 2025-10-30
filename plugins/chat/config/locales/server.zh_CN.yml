@@ -103,6 +103,17 @@ zh_CN:
     reviewables:
       message_already_handled: "谢谢，但我们已经审核此消息，并确定它不需要被再次举报。"
       actions:
+        message_actions:
+          bundle_title: "您想如何处理这条信息？"
+        no_action_message:
+          title: "无行动"
+          description: "保持消息原样。"
+        delete_message:
+          title: "删除消息"
+          description: "永久删除该消息。"
+        restore_message:
+          title: "恢复消息"
+          description: "恢复消息，以便用户可以看到。"
         agree:
           title: "同意…"
         agree_and_keep_message:

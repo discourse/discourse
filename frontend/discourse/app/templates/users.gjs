@@ -94,9 +94,9 @@ export default <template>
           </div>
 
           <ConditionalLoadingSpinner @condition={{@controller.isLoading}}>
-            {{#if @controller.model.length}}
+            {{#if @controller.model.content}}
               <DirectoryTable
-                @items={{@controller.model}}
+                @items={{@controller.model.content}}
                 @columns={{@controller.columns}}
                 @showTimeRead={{@controller.showTimeRead}}
                 @order={{@controller.order}}

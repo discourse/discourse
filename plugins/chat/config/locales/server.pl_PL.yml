@@ -31,6 +31,7 @@ pl_PL:
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
     chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
     allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają twoją stronę anonimowo, korzystanie z czatu. To ustawienie wymaga włączenia ustawienia `allow anonymous mode`."
+    chat_search_enabled: "Włącz to ustawienie, aby umożliwić użytkownikom przeszukiwanie wiadomości na czacie."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."
@@ -112,6 +113,17 @@ pl_PL:
     reviewables:
       message_already_handled: "Dziękujemy, ale sprawdziliśmy już tę wiadomość i ustaliliśmy, że nie trzeba jej ponownie oznaczać."
       actions:
+        message_actions:
+          bundle_title: "Co chcesz zrobić z tą wiadomością?"
+        no_action_message:
+          title: "Brak akcji"
+          description: "Pozostaw wiadomość bez zmian."
+        delete_message:
+          title: "Usuń wiadomość"
+          description: "Trwale usuń wiadomość."
+        restore_message:
+          title: "Przywróć wiadomość"
+          description: "Przywróć wiadomość, aby użytkownicy mogli ją zobaczyć."
         agree:
           title: "Zgadzam się..."
         agree_and_keep_message:

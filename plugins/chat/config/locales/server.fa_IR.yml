@@ -35,6 +35,8 @@ fa_IR:
     reviewables:
       message_already_handled: "با تشکر از شما، اما ما در حال حاضر این پیام را بررسی کرده‌ایم و تشخیص داده‌ایم که نیازی به گزارش دوباره ندارد."
       actions:
+        no_action_message:
+          title: "هیچ اقدامی"
         agree:
           title: "موافقم..."
         agree_and_suspend:

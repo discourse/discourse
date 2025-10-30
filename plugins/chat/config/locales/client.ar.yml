@@ -366,6 +366,8 @@ ar:
       chat_message_separator:
         today: اليوم
         yesterday: الأمس
+      search_view:
+        filter_placeholder: البحث في الرسائل
       members_view:
         filter_placeholder: العثور على أعضاء
         add_member: إضافة عضو
@@ -382,6 +384,7 @@ ar:
         tabs:
           members: الأعضاء
           settings: الإعدادات
+          search: البحث
         remove_member: "إزالة"
       new_message_modal:
         title: إرسال رسالة
@@ -563,6 +566,11 @@ ar:
           create_export: "إنشاء تصدير"
           confirm_export: "يؤدي هذا إلى تصدير جميع الرسائل من جميع القنوات وإرسال النتيجة إليك في رسالة شخصية. هل تريد بالتأكيد التصدير؟"
           export_has_started: "بدأ التصدير. ستتلقى رسالة خاصة عندما يصبح جاهزًا."
+      search:
+        no_results: "لم يتم العثور على نتائج"
+        sort:
+          relevance: "مدى الصلة بالموضوع"
+          latest: "الحديثة"
       my_threads:
         title: سلاسل الدردشة الخاصة بي
         aria_label: "التبديل إلى قائمة سلاسل الدردشة الخاصة بي"

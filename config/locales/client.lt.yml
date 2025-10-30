@@ -551,6 +551,7 @@ lt:
       other: "Pamatyk %{count} naujas temas"
     preview: "Peržiūrėti"
     cancel: "Atšaukti"
+    done: "Baigta"
     deleting: "Ištrinama…"
     save: "Išsaugoti pakeitimus"
     saving: "Saugoma..."
@@ -3724,8 +3725,7 @@ lt:
       readonly: "Peržiūrėti"
     preloader_text: "Kraunama"
     lightbox:
-      download: "atsisiųsti"
-      open: "originalus vaizdas"
+      download: "Atsisiųsti"
       previous: "Ankstesnis (rodyklės į kairę klavišas)"
       next: "Kitas (Dešinės rodyklės klavišas)"
       counter: "%curr% iš %total%"

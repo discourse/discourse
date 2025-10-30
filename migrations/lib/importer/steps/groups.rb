@@ -74,14 +74,12 @@ module Migrations::Importer::Steps
       ORDER BY groups.ROWID
     SQL
 
-    def initialize(intermediate_db, discourse_db, shared_data)
-      super
+    private
 
-      @unique_name_finder = ::Migrations::Importer::UniqueNameFinder.new(shared_data)
+    def setup
+      @unique_name_finder = ::Migrations::Importer::GroupNameFinder.new(@shared_data)
       @max_domains = SiteSetting.max_automatic_membership_email_domains
     end
-
-    private
 
     def transform_row(row)
       # TODO(selase):
@@ -93,7 +91,7 @@ module Migrations::Importer::Steps
         return nil if row[:id]
       end
 
-      row[:name] = @unique_name_finder.find_available_group_name(row[:name])
+      row[:name] = @unique_name_finder.find_available_name(row[:name])
       row[:full_name] = sanitize_string(row[:full_name], MAX_FULL_NAME_LENGTH)
       row[:title] = sanitize_string(row[:title])
       row[:bio_raw] = sanitize_string(row[:bio_raw])

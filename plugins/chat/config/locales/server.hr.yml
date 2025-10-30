@@ -24,6 +24,8 @@ hr:
       not_accepting_dms: "Žao nam je, %{username} trenutno ne prihvaća poruke."
     reviewables:
       actions:
+        no_action_message:
+          title: "Nema akcije"
         agree_and_suspend:
           title: "Suspendiraj korisnika"
         agree_and_silence:

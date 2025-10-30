@@ -1,12 +1,13 @@
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import curryComponent from "ember-curry-component";
 import DismissNotificationConfirmationModal from "discourse/components/modal/dismiss-notification-confirmation";
 import RelativeDate from "discourse/components/relative-date";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { iconHTML } from "discourse/lib/icon-library";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
@@ -28,53 +29,45 @@ export default class UserNotificationsController extends Controller {
 
   queryParams = ["filter"];
 
-  get listContainerClassNames() {
-    return `user-notifications-list ${
-      this.siteSettings.show_user_menu_avatars ? "show-avatars" : ""
-    }`;
-  }
-
-  @discourseComputed("filter")
-  isFiltered() {
+  get isFiltered() {
     return this.filter && this.filter !== "all";
   }
 
-  @discourseComputed("model.content.@each")
-  items() {
-    return this.model.map((notification) => {
+  get items() {
+    return this.model.content.map((notification) => {
       const props = {
         appEvents: this.appEvents,
         currentUser: this.currentUser,
         siteSettings: this.siteSettings,
         site: this.site,
         notification,
-        endComponent: <template>
-          <RelativeDate @date={{notification.created_at}} />
-        </template>,
+        endComponent: curryComponent(
+          RelativeDate,
+          { date: notification.created_at },
+          getOwner(this)
+        ),
       };
       return new UserMenuNotificationItem(props);
     });
   }
 
-  @discourseComputed("model.content.@each.read")
-  allNotificationsRead() {
-    return !this.get("model.content").some(
+  get allNotificationsRead() {
+    return !this.model.content.some(
       (notification) => !notification.get("read")
     );
   }
 
-  @discourseComputed("isFiltered", "model.content.length", "loading")
-  doesNotHaveNotifications(isFiltered, contentLength, loading) {
-    return !loading && !isFiltered && contentLength === 0;
+  get doesNotHaveNotifications() {
+    return (
+      !this.model.loading && !this.isFiltered && this.model.content.length === 0
+    );
   }
 
-  @discourseComputed("isFiltered", "model.content.length")
-  nothingFound(isFiltered, contentLength) {
-    return isFiltered && contentLength === 0;
+  get nothingFound() {
+    return this.isFiltered && this.model.content.length === 0;
   }
 
-  @discourseComputed()
-  emptyStateBody() {
+  get emptyStateBody() {
     return htmlSafe(
       i18n("user.no_notifications_page_body", {
         preferencesUrl: getURL("/my/preferences/notifications"),
@@ -85,12 +78,13 @@ export default class UserNotificationsController extends Controller {
 
   async markRead() {
     await ajax("/notifications/mark-read", { type: "PUT" });
-    this.model.forEach((notification) => notification.set("read", true));
+    this.model.content.forEach((notification) =>
+      notification.set("read", true)
+    );
   }
 
   @action
   updateFilter(value) {
-    this.loading = true;
     this.filter = value;
   }
 

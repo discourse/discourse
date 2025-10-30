@@ -5,7 +5,7 @@ import AdminPlugin from "admin/models/admin-plugin";
 export default class AdminPluginsRoute extends DiscourseRoute {
   async model() {
     const plugins = await this.store.findAll("plugin");
-    return plugins.map((plugin) => AdminPlugin.create(plugin));
+    return plugins.content.map((plugin) => AdminPlugin.create(plugin));
   }
 
   titleToken() {

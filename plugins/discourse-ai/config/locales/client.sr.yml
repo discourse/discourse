@@ -55,6 +55,15 @@ sr:
       modals:
         select_option: "Izaberi jednu od opcija..."
       translations:
+        stats:
+          eta_hours:
+            one: "%{count} сат"
+            few: "%{count} сата"
+            other: "%{count} сати"
+          eta_days:
+            one: "%{count} дан"
+            few: "%{count} дана"
+            other: "%{count} дана"
         progress_chart:
           bar_done:
             one: "%{count} poruka"

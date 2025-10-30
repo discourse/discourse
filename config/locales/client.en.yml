@@ -324,7 +324,7 @@ en:
       subheader:
         logged_in_members: ""
         anonymous_members: ""
-      search: "Search"
+      search_placeholder: "Search"
 
     impersonation:
       notice: "You are impersonating %{username}"
@@ -5630,6 +5630,8 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
+    reset_filter: "Reset"
+    toggle_filters: "Toggle dropdown filters"
 
     admin:
       title: "Discourse Admin"
@@ -5667,6 +5669,54 @@ en:
         advanced:
           title: "Advanced"
 
+      upcoming_changes:
+        name: "Name"
+        plugin: "Plugin"
+        metadata: "Metadata"
+        enabled: "Enabled"
+        show_image: "Show image"
+        edit_groups: "Edit opt-in groups"
+        groups_updated: "Groups updated!"
+        save_groups: "Save groups"
+        select_groups: "Select groups…"
+        opt_in_groups: "Opt-in groups"
+        opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
+        toggled_too_fast: "You have toggled this change too quickly. Please wait a few seconds before trying again."
+        change_enabled: "You have opted-in to this change"
+        change_disabled: "You have opted-out of this change"
+        permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
+        permanent_no_group_selection: "N/A, permanent changes apply to all groups."
+        no_changes: "There are no upcoming changes at this time."
+        preview: "Preview"
+        statuses:
+          pre_alpha: "Pre-Alpha"
+          alpha: "Alpha"
+          beta: "Beta"
+          stable: "Stable"
+          permanent: "Permanent"
+        impact_roles:
+          admins: "Admins"
+          moderators: "Moderators"
+          staff: "Staff"
+          all_members: "All members"
+          developers: "Developers"
+        filter:
+          search_placeholder: "Filter by name, description, or plugin..."
+          no_results: "No upcoming changes match your filter"
+          all: "All"
+          enabled_all: "Enabled or disabled"
+          enabled: "Enabled"
+          disabled: "Disabled"
+          impact_type_all: "All impact types"
+          impact_type_feature: "Feature"
+          impact_type_other: "Other"
+          status_all: "All statuses"
+          status_pre_alpha: "Pre-Alpha"
+          status_alpha: "Alpha"
+          status_beta: "Beta"
+          status_stable: "Stable"
+          status_permanent: "Permanent"
+
       config:
         about:
           title: "About your site"
@@ -5697,6 +5747,9 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
+        upcoming_changes:
+          title: "Upcoming changes"
+          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by impact, change type, and status.\n\nOpt-in groups can be used to let a certain group of users to test a change before it is released to everyone, though these groups will be irrelevant once a change progresses to the Stable status."
         login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
@@ -7525,6 +7578,8 @@ en:
             delete_associated_accounts: "delete associated accounts"
             change_theme_site_setting: "change theme site setting"
             stop_impersonating: "stop impersonating"
+            upcoming_change_toggled: "upcoming change toggled"
+            change_site_setting_groups: "change site setting groups"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

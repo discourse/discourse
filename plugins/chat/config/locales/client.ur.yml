@@ -232,6 +232,8 @@ ur:
       chat_message_separator:
         today: آج
         yesterday: کَل
+      search_view:
+        filter_placeholder: پیغامات میں تلاش کریں
       members_view:
         filter_placeholder: اراکین تلاش کریں
         add_member: رکن شامل کریں
@@ -248,6 +250,7 @@ ur:
         tabs:
           members: ممبران
           settings: ترتیبات
+          search: تلاش کریں
         remove_member: "خارج کریں"
       new_message_modal:
         title: پیغام بھیجیں
@@ -316,6 +319,10 @@ ur:
         category_label: "زمرہ"
         history_label: "تاریخی"
         members_label: "ممبران"
+      search:
+        sort:
+          relevance: "مطابقت"
+          latest: "تازہ ترین"
       my_threads:
         title: میرے دھاگے
         aria_label: "میری دھاگوں کی فہرست پر جائیں"

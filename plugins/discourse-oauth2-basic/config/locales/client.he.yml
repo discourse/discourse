@@ -13,3 +13,7 @@ he:
       site_settings:
         categories:
           discourse_oauth2_basic: "כניסה עם OAuth2"
+      config:
+        login:
+          sub_pages:
+            oauth2: "OAuth2"

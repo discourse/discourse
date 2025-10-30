@@ -164,6 +164,8 @@ hr:
       chat_message_separator:
         today: Danas
         yesterday: Jučer
+      search_view:
+        filter_placeholder: Pretražite poruke
       about_view:
         title: Naslov
         name: Ime
@@ -173,6 +175,7 @@ hr:
         tabs:
           members: Članovi
           settings: Postavke
+          search: Pretraživanje
         remove_member: "Ukloni"
       new_message_modal:
         no_items: "Nema stvari"
@@ -237,6 +240,10 @@ hr:
           title: "Izvezi poruke čavrljanja"
           create_export: "Stvori izvoz"
           export_has_started: "Izvoz je počeo. Dobit ćete PM kad bude spreman."
+      search:
+        sort:
+          relevance: "Relevantnost"
+          latest: "Posljednje"
       incoming_webhooks:
         back: "Natrag"
         description: "Opis"

@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { and, gt } from "truth-helpers";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import AiToolTestModal from "./modal/ai-tool-test-modal";
@@ -88,8 +89,10 @@ export default class AiToolEditorForm extends Component {
         duration: "short",
       });
 
-      if (!this.args.tools.some((tool) => tool.id === this.args.model.id)) {
-        this.args.tools.pushObject(this.args.model);
+      if (
+        !this.args.tools.content.some((tool) => tool.id === this.args.model.id)
+      ) {
+        this.args.tools.content.push(this.args.model);
       }
 
       await this.router.replaceWith(
@@ -110,7 +113,7 @@ export default class AiToolEditorForm extends Component {
 
       didConfirm: async () => {
         await this.args.model.destroyRecord();
-        this.args.tools.removeObject(this.args.model);
+        removeValueFromArray(this.args.tools.content, this.args.model);
         this.router.transitionTo("adminPlugins.show.discourse-ai-tools.index");
       },
     });

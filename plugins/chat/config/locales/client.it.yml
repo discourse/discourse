@@ -326,6 +326,8 @@ it:
       chat_message_separator:
         today: Oggi
         yesterday: Ieri
+      search_view:
+        filter_placeholder: Cerca messaggi
       members_view:
         filter_placeholder: Trova membri
         add_member: Aggiungi membro
@@ -342,6 +344,7 @@ it:
         tabs:
           members: Membri
           settings: Impostazioni
+          search: Cerca
         remove_member: "Rimuovi"
       new_message_modal:
         title: Invia messaggio
@@ -495,6 +498,11 @@ it:
           create_export: "Crea esportazione"
           confirm_export: "Questa operazione esporta tutti i messaggi da tutti i canali e ti invia il risultato in un messaggio personale. Vuoi esportare?"
           export_has_started: "L'esportazione è iniziata. Riceverai un messaggio personale quando sarà pronto."
+      search:
+        no_results: "Nessun risultato trovato"
+        sort:
+          relevance: "Rilevanza"
+          latest: "Più recenti"
       my_threads:
         title: I miei thread
         aria_label: "Passa all'elenco dei miei thread"

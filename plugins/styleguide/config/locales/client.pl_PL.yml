@@ -38,6 +38,8 @@ pl_PL:
           title: "System czcionek"
         colors:
           title: "Kolory"
+        dialog:
+          title: "Okno dialogowe"
         icons:
           title: "Ikony"
           full_list: "Zobacz pełną listę niesamowitych ikon czcionek"
