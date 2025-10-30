@@ -794,15 +794,36 @@ RSpec.describe TopicsFilter do
 
       after { TopicsFilter.custom_status_filters.clear }
 
-      it "supports custom status filters" do
-        TopicsFilter.add_filter_by_status("foobar") { |scope| scope.where("word_count = 42") }
+      context "with custom status filters" do
+        let(:enabled?) { true }
 
-        expect(
-          TopicsFilter
-            .new(guardian: Guardian.new)
-            .filter_from_query_string("status:foobar")
-            .pluck(:id),
-        ).to contain_exactly(foobar_topic.id)
+        before do
+          TopicsFilter.add_filter_by_status("foobar", enabled: method(:enabled?)) do |scope|
+            scope.where("word_count = 42")
+          end
+        end
+
+        it "applies the custom filter" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("status:foobar")
+              .pluck(:id),
+          ).to contain_exactly(foobar_topic.id)
+        end
+
+        context "when the filter is disabled" do
+          let(:enabled?) { false }
+
+          it "does not apply the custom filter" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("status:foobar")
+                .pluck(:id),
+            ).to contain_exactly(*Topic.all.pluck(:id))
+          end
+        end
       end
 
       it "should only return topics that have not been closed or archived when query string is `status:open`" do

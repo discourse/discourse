@@ -853,23 +853,59 @@ TEXT
   describe "#register_site_categories_callback" do
     fab!(:category)
 
-    it "adds a callback to the Site#categories" do
-      instance = Plugin::Instance.new
+    let(:instance) { Plugin::Instance.new }
+    let(:site_guardian) { Guardian.new }
+    let(:site) { Site.new(site_guardian) }
 
-      site_guardian = Guardian.new
-
+    before do
+      allow(instance).to receive(:enabled?).and_call_original
       instance.register_site_categories_callback do |categories, guardian|
         categories.each { |category| category[:test_field] = "test" }
 
         expect(guardian).to eq(site_guardian)
       end
+    end
 
-      site = Site.new(site_guardian)
-
-      expect(site.categories.first[:test_field]).to eq("test")
-    ensure
+    after do
       Site.clear_cache
       Site.categories_callbacks.clear
+    end
+
+    it "adds a callback to the Site#categories" do
+      expect(site.categories.first[:test_field]).to eq("test")
+    end
+
+    context "when the plugin is disabled" do
+      before { allow(instance).to receive(:enabled?).and_return(false) }
+
+      it "does not run the callback" do
+        expect(site.categories.first[:test_field]).to be_blank
+      end
+    end
+  end
+
+  describe "#register_topic_list_preload_user_ids" do
+    subject(:preload_user_ids) { TopicList.preload_user_ids(stub, [], stub) }
+
+    let(:instance) { Plugin::Instance.new }
+
+    before do
+      allow(instance).to receive(:enabled?).and_call_original
+      instance.register_topic_list_preload_user_ids { |topics, user_ids, object| [1] }
+    end
+
+    after { TopicList.instance_variable_set(:@preload_user_ids, nil) }
+
+    it "adds a callback to TopicList.preload_user_ids" do
+      expect(preload_user_ids).to include(1)
+    end
+
+    context "when the plugin is disabled" do
+      before { allow(instance).to receive(:enabled?).and_return(false) }
+
+      it "does not run the callback" do
+        expect(preload_user_ids).to be_empty
+      end
     end
   end
 
