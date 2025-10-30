@@ -1830,16 +1830,17 @@ RSpec.describe TopicsFilter do
           Fabricate(:user).tap { |u| super_private_group.add_owner(u) }
         end
 
-        fab!(:user_in_private_group) do
-          Fabricate(:user).tap do |u|
-            private_group.add(u)
-            super_private_group.add(u)
-          end
+        fab!(:user_in_private_group) { Fabricate(:user).tap { |u| private_group.add(u) } }
+        fab!(:user_in_super_private_group) do
+          Fabricate(:user).tap { |u| super_private_group.add(u) }
         end
 
         fab!(:topic_by_private_group_user) { Fabricate(:topic, user: user_in_private_group) }
-        fab!(:topic_by_super_private_group_user) do
+        fab!(:topic_by_super_private_group_owner) do
           Fabricate(:topic, user: owner_of_super_private_group)
+        end
+        fab!(:topic_by_super_private_group_user) do
+          Fabricate(:topic, user: user_in_super_private_group)
         end
         it "should not return topics when user cannot see the group" do
           expect(
@@ -1864,7 +1865,7 @@ RSpec.describe TopicsFilter do
         it "should not return topics when user has not the visibility to see group members" do
           expect(
             TopicsFilter
-              .new(guardian: Guardian.new(user_in_private_group))
+              .new(guardian: Guardian.new(user_in_super_private_group))
               .filter_from_query_string("created-by:#{super_private_group.name}")
               .pluck(:id),
           ).to eq([])
@@ -1876,7 +1877,10 @@ RSpec.describe TopicsFilter do
               .new(guardian: Guardian.new(owner_of_super_private_group))
               .filter_from_query_string("created-by:#{super_private_group.name}")
               .pluck(:id),
-          ).to contain_exactly(topic_by_super_private_group_user.id)
+          ).to contain_exactly(
+            topic_by_super_private_group_owner.id,
+            topic_by_super_private_group_user.id,
+          )
         end
       end
     end
