@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Importer::GroupNameFinder do
+RSpec.describe ::Migrations::Importer::GroupNameFinder do
   subject(:finder) { described_class.new(shared_data) }
 
   let(:usernames) { Set.new }

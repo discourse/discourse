@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Importer::BadgeNameFinder do
+RSpec.describe ::Migrations::Importer::BadgeNameFinder do
   subject(:finder) { described_class.new(shared_data) }
 
   let(:discourse_db) { ::Migrations::Importer::DiscourseDB.new }
