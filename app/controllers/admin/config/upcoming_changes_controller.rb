@@ -2,11 +2,11 @@
 #
 class Admin::Config::UpcomingChangesController < Admin::AdminController
   def index
-    if request.xhr?
-      UpcomingChanges::List.call(service_params) do
-        on_success { |upcoming_changes:| render(json: upcoming_changes) }
-        on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
-      end
+    return if !request.xhr?
+
+    UpcomingChanges::List.call(service_params) do
+      on_success { |upcoming_changes:| render(json: upcoming_changes) }
+      on_failed_policy(:current_user_is_admin) { raise Discourse::InvalidAccess }
     end
   end
 
