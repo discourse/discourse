@@ -1871,7 +1871,7 @@ RSpec.describe TopicsFilter do
           ).to eq([])
         end
 
-        it "should return topics when user has the visibility to see group members" do
+        it "returns topics when user can see group members" do
           expect(
             TopicsFilter
               .new(guardian: Guardian.new(owner_of_super_private_group))
