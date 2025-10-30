@@ -18,7 +18,7 @@ module Migrations::Importer
     end
 
     def find_available_name(name)
-      name, name_lower = find_available_name_internal(name)
+      name, name_lower = resolve_unique_name(name)
       store_used_name(name_lower)
       name
     end
@@ -60,8 +60,8 @@ module Migrations::Importer
       false
     end
 
-    def find_available_name_internal(name)
-      name = sanitize_name(name)
+    def resolve_unique_name(original_name)
+      name = sanitize_name(original_name)
 
       result =
         if name.present?
@@ -141,13 +141,23 @@ module Migrations::Importer
     def find_fallback_name
       name = (@fallback_name ||= fallback_name)
       name_lower = name.downcase
-
       suffix = next_suffix(name_lower)
-      name_candidate = "#{name}_#{suffix}"
-      name_candidate_lower = name_candidate.downcase
+      attempts = 0
 
-      @last_suffixes[name_lower] = suffix
-      [name_candidate, name_candidate_lower]
+      while attempts < @max_attempts
+        name_candidate = "#{name}_#{suffix}"
+        name_candidate_lower = name_candidate.downcase
+
+        if name_available?(name_candidate_lower)
+          @last_suffixes[name_lower] = suffix
+          return name_candidate, name_candidate_lower
+        end
+
+        suffix += 1
+        attempts += 1
+      end
+
+      raise "Unable to find an available name after #{@max_attempts} attempts"
     end
 
     def next_suffix(name_lower)
