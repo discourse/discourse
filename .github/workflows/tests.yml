@@ -297,7 +297,7 @@ jobs:
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
-        run: script/assemble_ember_build.rb
+        run: bin/rake assets:precompile:build_plugins && script/assemble_ember_build.rb
 
       - name: Install playwright
         if: matrix.build_type == 'system'

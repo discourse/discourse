@@ -3,7 +3,7 @@
 const EmberApp = require("ember-cli/lib/broccoli/ember-app");
 const path = require("path");
 const mergeTrees = require("broccoli-merge-trees");
-const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
+// const { parsePluginClientSettings } = require("./lib/site-settings-plugin");
 const generateScriptsTree = require("./lib/scripts");
 const funnel = require("broccoli-funnel");
 const DeprecationSilencer = require("deprecation-silencer");
@@ -24,7 +24,6 @@ process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
 module.exports = function (defaults) {
   const discourseRoot = path.resolve("../..");
-  const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
 
   // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
   DeprecationSilencer.silence(console, "warn");
@@ -125,7 +124,6 @@ module.exports = function (defaults) {
   }
 
   let extraPublicTrees = [
-    parsePluginClientSettings(discourseRoot, vendorJs, app),
     funnel(`${discourseRoot}/public/javascripts`, { destDir: "javascripts" }),
     applyTerser(generateScriptsTree(app)),
     pluginTrees,

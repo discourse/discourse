@@ -109,6 +109,8 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
     parallel = ENV["QUNIT_PARALLEL"]
     reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1"
 
+    Rake::Task["assets:precompile:build_plugins"].invoke unless reuse_build
+
     if qunit_path
       # Bypass `ember test` - it only works properly for the `/tests` path.
       # We have to trigger a `build` manually so that JS is available for rails to serve.

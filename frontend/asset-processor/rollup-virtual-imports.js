@@ -1,14 +1,18 @@
+import { federatedExportNameFor } from "./federated-modules-helper";
+
 const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
 export default {
-  "virtual:main": (tree, { themeId }) => {
-    let output = cleanMultiline(`
-      import "virtual:init-settings";
+  "virtual:main": async (tree, { themeId }, basePath, context) => {
+    let output = `const compatModules = {};`;
 
-      const themeCompatModules = {};
-    `);
+    if (themeId) {
+      output += cleanMultiline(`
+        import "virtual:init-settings";
+      `);
+    }
 
     let i = 1;
     for (const moduleFilename of Object.keys(tree)) {
@@ -46,12 +50,38 @@ export default {
         ? moduleFilename
         : filenameWithoutExtension;
       output += `import * as Mod${i} from "./${importPath}";\n`;
-      output += `themeCompatModules["${compatModuleName}"] = Mod${i};\n\n`;
+      output += `compatModules["${compatModuleName}"] = Mod${i};\n\n`;
+
+      const resolvedId = await context.resolve(
+        `./${importPath}`,
+        `${basePath}virtual:main`
+      );
+      const loadedModule = await context.load(resolvedId);
+
+      const reexportPairs = loadedModule.exports.map((exportedName) => {
+        return `${exportedName} as ${federatedExportNameFor(compatModuleName, exportedName)}`;
+      });
+
+      const isIndexModule =
+        compatModuleName.endsWith("/index") &&
+        !tree[moduleFilename.replace("/index", "")];
+
+      if (isIndexModule) {
+        loadedModule.exports.forEach((exportedName) => {
+          const federatedExportName = federatedExportNameFor(
+            compatModuleName.replace(/\/index$/, ""),
+            exportedName
+          );
+          reexportPairs.push(`${exportedName} as ${federatedExportName}`);
+        });
+      }
+
+      output += `export { ${reexportPairs.join(", ")} } from "./${importPath}";\n`;
 
       i += 1;
     }
 
-    output += "export default themeCompatModules;\n";
+    output += "export default compatModules;\n";
 
     return output;
   },
