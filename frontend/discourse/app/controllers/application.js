@@ -12,13 +12,11 @@ const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
   // eslint-disable-next-line discourse/no-unused-services
-  @service router; // used in the route template
-  @service footer;
-  @service sidebarState;
-  // eslint-disable-next-line discourse/no-unused-services
   @service appEvents;
+  @service footer;
   // eslint-disable-next-line discourse/no-unused-services
-  @service accessibilityAnnouncer;
+  @service router; // used in the route template
+  @service sidebarState;
 
   queryParams = [{ navigationMenuQueryParamOverride: "navigation_menu" }];
   showTop = true;
@@ -26,7 +24,6 @@ export default class ApplicationController extends Controller {
   sidebarDisabledRouteOverride = false;
   navigationMenuQueryParamOverride = null;
   showSiteHeader = true;
-  showSkipToContent = true;
 
   @tracked _showSidebar;
 

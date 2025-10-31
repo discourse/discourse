@@ -22,8 +22,8 @@ import { i18n } from "discourse-i18n";
  * @param {Object} @lastAvailablePost - Last available post from PostStream
  */
 export default class LoadMoreAccessible extends Component {
+  @service a11yAnnouncer;
   @service appEvents;
-  @service accessibilityAnnouncer;
 
   @tracked isLoading = false;
   @tracked pendingFocusContext = null;
@@ -76,10 +76,7 @@ export default class LoadMoreAccessible extends Component {
       this.#hasPostsAppendedListener = false;
     }
 
-    this.accessibilityAnnouncer.announce(
-      i18n("post.loading_complete"),
-      "polite"
-    );
+    this.a11yAnnouncer.announce(i18n("post.loading_complete"), "polite");
   }
 
   get buttonLabel() {

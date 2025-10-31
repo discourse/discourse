@@ -32,6 +32,7 @@ import TopicLocalizedContentToggle from "discourse/components/topic-localized-co
 import TopicMap from "discourse/components/topic-map/index";
 import TopicNavigation from "discourse/components/topic-navigation";
 import TopicProgress from "discourse/components/topic-progress";
+import TopicSkipLinks from "discourse/components/topic-skip-links";
 import TopicStatus from "discourse/components/topic-status";
 import TopicTimeline from "discourse/components/topic-timeline";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
@@ -60,6 +61,7 @@ export default <template>
     @topic={{@controller.model}}
     @hasScrolled={{@controller.hasScrolled}}
   >
+    <TopicSkipLinks @topic={{@controller.model}} />
     {{#if @controller.model}}
       <AddCategoryTagClasses
         @category={{@controller.model.category}}

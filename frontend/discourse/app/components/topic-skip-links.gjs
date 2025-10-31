@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
-import { on } from "@ember/modifier";
+import { concat } from "@ember/helper";
 import { action } from "@ember/object";
-import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import a11ySkipLink from "discourse/helpers/a11y-skip-link";
 import { i18n } from "discourse-i18n";
 
 class TopicSkipLinks extends Component {
@@ -11,53 +11,25 @@ class TopicSkipLinks extends Component {
 
   #skipLinkFocusListener = null;
 
-  get applicationController() {
-    return getOwner(this).lookup("controller:application");
-  }
-
-  #getTopicController() {
-    if (!this.router.currentRouteName?.startsWith("topic.")) {
-      return null;
-    }
-    try {
-      return getOwner(this).lookup("controller:topic");
-    } catch {
-      return null;
-    }
-  }
-
   get showTopicSkipLinks() {
-    const topicController = this.#getTopicController();
-    return (
-      topicController?.userLastReadPostNumber &&
-      topicController.userLastReadPostNumber > 0
-    );
+    return this.args.topic?.last_read_post_number > 0;
   }
 
   get resumePostNumber() {
-    const topicController = this.#getTopicController();
-    if (
-      topicController?.userLastReadPostNumber &&
-      topicController.userLastReadPostNumber > 1
-    ) {
-      return topicController.userLastReadPostNumber;
+    if (this.args.topic.last_read_post_number > 1) {
+      return this.args.topic.last_read_post_number;
     }
-    return null;
   }
 
   get lastPostNumber() {
-    const topicController = this.#getTopicController();
     return (
-      topicController?.get("model.highest_post_number") ||
-      topicController?.get("model.posts_count") ||
-      null
+      this.args.topic.highest_post_number || this.args.topic.posts_count || null
     );
   }
 
   get topicUrl() {
-    const topicController = this.#getTopicController();
-    const topicId = topicController?.get("model.id");
-    const topicSlug = topicController?.get("model.slug");
+    const topicId = this.args.topic.id;
+    const topicSlug = this.args.topic.slug;
 
     if (topicId && topicSlug) {
       return `/t/${topicSlug}/${topicId}`;
@@ -66,15 +38,9 @@ class TopicSkipLinks extends Component {
   }
 
   get resumeIsLastReply() {
-    const topicController = this.#getTopicController();
-    if (!topicController) {
-      return false;
-    }
-
-    const resumePostNumber = topicController.userLastReadPostNumber;
+    const resumePostNumber = this.args.topic.last_read_post_number;
     const lastPostNumber =
-      topicController.get("model.highest_post_number") ||
-      topicController.get("model.posts_count");
+      this.args.topic.highest_post_number || this.args.topic.posts_count;
 
     return (
       resumePostNumber && lastPostNumber && resumePostNumber >= lastPostNumber
@@ -82,33 +48,23 @@ class TopicSkipLinks extends Component {
   }
 
   get topicHasMultiplePosts() {
-    const topicController = this.#getTopicController();
-    const postsCount = topicController?.get("model.posts_count");
+    const postsCount = this.args.topic.posts_count;
     return postsCount && postsCount > 1;
   }
 
   get currentPostNumber() {
-    const topicController = this.#getTopicController();
     return (
-      topicController?.get("currentPost") ||
-      topicController?.get("model.currentPost") ||
+      this.args.topic.currentPost ||
       parseInt(this.router.currentRoute?.params?.nearPost, 10) ||
       1
     );
   }
 
   get isDirectUrlToArbitraryPost() {
-    const topicController = this.#getTopicController();
-    if (!topicController) {
-      return false;
-    }
-
     const currentPost = this.currentPostNumber;
-    const resumePost = topicController.userLastReadPostNumber;
+    const resumePost = this.args.topic.last_read_post_number;
 
-    return (
-      currentPost && currentPost > 1 && resumePost && currentPost !== resumePost
-    );
+    return currentPost > 1 && resumePost && currentPost !== resumePost;
   }
 
   #setupFocusAfterNavigation(focusCallback) {
@@ -259,73 +215,61 @@ class TopicSkipLinks extends Component {
   }
 
   <template>
-    {{#if this.applicationController.showSkipToContent}}
-      {{#if this.showTopicSkipLinks}}
-        <div class="skip-links" aria-label={{i18n "skip_links_label"}}>
-          {{#if this.isDirectUrlToArbitraryPost}}
-            <a
-              href="{{this.topicUrl}}/{{this.currentPostNumber}}"
-              class="skip-link"
-              {{on "click" this.handleSkipToPost}}
-            >
-              {{i18n "skip_to_post" post_number=this.currentPostNumber}}
-            </a>
-          {{/if}}
-          {{#if this.resumePostNumber}}
-            {{#if this.resumeIsLastReply}}
-              <a
-                href="{{this.topicUrl}}/last"
-                class="skip-link"
-                {{on "click" this.handleSkipToResume}}
-              >
-                {{i18n
-                  "skip_to_where_you_left_off_last"
-                  post_number=this.resumePostNumber
-                }}
-              </a>
-            {{else}}
-              <a
-                href="{{this.topicUrl}}/{{this.resumePostNumber}}"
-                class="skip-link"
-                {{on "click" this.handleSkipToResume}}
-              >
-                {{i18n
-                  "skip_to_where_you_left_off"
-                  post_number=this.resumePostNumber
-                }}
-              </a>
-              {{#if this.topicHasMultiplePosts}}
-                <a
-                  href="{{this.topicUrl}}/last"
-                  class="skip-link"
-                  {{on "click" this.handleSkipToLastPost}}
-                >{{i18n "skip_to_last_reply"}}</a>
-              {{/if}}
-            {{/if}}
-          {{else}}
-            {{#if this.topicHasMultiplePosts}}
-              <a
-                href="{{this.topicUrl}}/last"
-                class="skip-link"
-                {{on "click" this.handleSkipToLastPost}}
-              >{{i18n "skip_to_last_reply"}}</a>
-            {{/if}}
-          {{/if}}
+    {{#if this.showTopicSkipLinks}}
+      {{#if this.isDirectUrlToArbitraryPost}}
+        {{a11ySkipLink
+          href=(concat this.topicUrl "/" this.currentPostNumber)
+          label=(i18n "skip_to_post" post_number=this.currentPostNumber)
+          onClick=this.handleSkipToPost
+          position="topic-001"
+        }}
+      {{/if}}
+      {{#if this.resumePostNumber}}
+        {{#if this.resumeIsLastReply}}
+          {{a11ySkipLink
+            href=(concat this.topicUrl "/last")
+            label=(i18n
+              "skip_to_where_you_left_off_last"
+              post_number=this.resumePostNumber
+            )
+            onClick=this.handleSkipToResume
+            position="topic-002"
+          }}
+        {{else}}
+          {{a11ySkipLink
+            href=(concat this.topicUrl "/" this.resumePostNumber)
+            label=(i18n
+              "skip_to_where_you_left_off" post_number=this.resumePostNumber
+            )
+            onClick=this.handleSkipToResume
+            position="topic-003"
+          }}
           {{#if this.topicHasMultiplePosts}}
-            <a
-              href="{{this.topicUrl}}/1"
-              class="skip-link"
-              {{on "click" this.handleSkipToTop}}
-            >{{i18n "skip_to_top"}}</a>
+            {{a11ySkipLink
+              href=(concat this.topicUrl "/last")
+              label=(i18n "skip_to_last_reply")
+              onClick=this.handleSkipToLastPost
+              position="topic-004"
+            }}
           {{/if}}
-          <a href="#main-container" class="skip-link">{{i18n
-              "skip_to_main_content"
-            }}</a>
-        </div>
+        {{/if}}
       {{else}}
-        <a href="#main-container" class="skip-link">{{i18n
-            "skip_to_main_content"
-          }}</a>
+        {{#if this.topicHasMultiplePosts}}
+          {{a11ySkipLink
+            href=(concat this.topicUrl "/last")
+            label=(i18n "skip_to_last_reply")
+            onClick=this.handleSkipToLastPost
+            position="topic-005"
+          }}
+        {{/if}}
+      {{/if}}
+      {{#if this.topicHasMultiplePosts}}
+        {{a11ySkipLink
+          href=(concat this.topicUrl "/1")
+          label=(i18n "skip_to_top")
+          onClick=this.handleSkipToTop
+          position="topic-006"
+        }}
       {{/if}}
     {{/if}}
   </template>

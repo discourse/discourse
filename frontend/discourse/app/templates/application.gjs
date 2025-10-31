@@ -1,7 +1,8 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DialogHolder from "dialog-holder/components/dialog-holder";
 import { and, eq } from "truth-helpers";
-import AccessibilityLiveRegions from "discourse/components/accessibility-live-region";
+import A11yLiveRegions from "discourse/components/a11y-live-regions";
+import A11ySkipLinks from "discourse/components/a11y-skip-links";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -24,7 +25,6 @@ import RenderGlimmerContainer from "discourse/components/render-glimmer-containe
 import Sidebar from "discourse/components/sidebar";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import TopicEntrance from "discourse/components/topic-entrance";
-import TopicSkipLinks from "discourse/components/topic-skip-links";
 import WelcomeBanner from "discourse/components/welcome-banner";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
@@ -37,7 +37,8 @@ export default <template>
   <DVirtualHeight />
 
   <DiscourseRoot {{didInsert @controller.trackDiscoursePainted}}>
-    <TopicSkipLinks />
+    <A11ySkipLinks />
+
     <DDocument />
     <PageLoadingSlider />
     <PluginOutlet
@@ -173,8 +174,5 @@ export default <template>
   <DTooltips />
   <DToasts />
 
-  <AccessibilityLiveRegions
-    @politeMessage={{@controller.accessibilityAnnouncer.politeMessage}}
-    @assertiveMessage={{@controller.accessibilityAnnouncer.assertiveMessage}}
-  />
+  <A11yLiveRegions />
 </template>

@@ -32,10 +32,17 @@ export default class AccessibilityAnnouncerService extends Service {
       clearDelay = 2000;
     }
 
-    if (type === "assertive") {
-      this.assertiveMessage = message;
-    } else {
-      this.politeMessage = message;
+    switch (type) {
+      case "assertive":
+        this.assertiveMessage = message;
+        break;
+      case "polite":
+        this.politeMessage = message;
+        break;
+      default:
+        throw new Error(
+          `Invalid announcement type: ${type}. Expected 'polite' or 'assertive'.`
+        );
     }
 
     this.#scheduleClear(type, clearDelay);
