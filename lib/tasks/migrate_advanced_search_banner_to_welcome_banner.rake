@@ -349,5 +349,6 @@ def disable_theme_component(theme)
 
   puts "  Disabling #{theme_identifier(theme)}..."
   theme.update!(enabled: false)
+  StaffActionLogger.new(Discourse.system_user).log_theme_component_disabled(theme)
   puts "  \e[1;32m✓ Disabled\e[0m"
 end
