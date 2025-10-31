@@ -2,6 +2,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import CardContainer from "discourse/components/card-container";
+import BlockLayout from "discourse/components/block-layout";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
 import DDocument from "discourse/components/d-document";
@@ -11,7 +12,6 @@ import DiscourseRoot from "discourse/components/discourse-root";
 import FooterNav from "discourse/components/footer-nav";
 import GlimmerSiteHeader from "discourse/components/glimmer-site-header";
 import GlobalNotice from "discourse/components/global-notice";
-import LayoutBlocks from "discourse/components/layout-blocks";
 import LoadingSliderFallbackSpinner from "discourse/components/loading-slider-fallback-spinner";
 import ModalContainer from "discourse/components/modal-container";
 import NotificationConsentBanner from "discourse/components/notification-consent-banner";
@@ -98,7 +98,7 @@ export default <template>
 
       <div id="main-outlet">
         <PluginOutlet @name="above-main-container" @connectorTagName="div" />
-        <LayoutBlocks @name="above-main-container" />
+        <BlockLayout @name="above-main-container" />
 
         {{#if
           (eq
