@@ -92,6 +92,7 @@ module Discourse
     config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
+    config.active_record.dump_schema_after_migration = false
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the
