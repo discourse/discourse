@@ -50,6 +50,10 @@ export default async function lightbox(elem, siteSettings) {
       el.querySelector(".meta").classList.add("open");
     });
 
+    lightboxEl.on("close", function () {
+      lightboxEl.pswp.element.classList.add("pswp--behind-header");
+    });
+
     lightboxEl.on("destroy", () => {
       const el = lightboxEl.pswp.currSlide.data.element;
       el.querySelector(".meta").classList.remove("open");

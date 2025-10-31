@@ -30,6 +30,13 @@
   opacity: 0.003;
   contain: layout style size;
   -webkit-tap-highlight-color: rgb(0, 0, 0, 0);
+
+  /* Switch z-index to be behind behind header for smoother close animation */
+  &.pswp--behind-header,
+  &.pswp--closing,
+  &.pswp--open:not(.pswp--ui-visible) {
+    z-index: z("header") - 1;
+  }
 }
 
 /* Prevents focus outline on the root element,
