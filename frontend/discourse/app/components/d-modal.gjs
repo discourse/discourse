@@ -75,6 +75,24 @@ export default class DModal extends Component {
       );
 
       this.animating = false;
+    } else {
+      this.animating = true;
+
+      await waitForPromise(
+        this.modalContainer.animate(
+          [
+            { transform: "scale(0.7)", opacity: 0 },
+            { transform: "scale(1)", opacity: 1 },
+          ],
+          {
+            duration: getMaxAnimationTimeMs(300),
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+            fill: "forwards",
+          }
+        ).finished
+      );
+
+      this.animating = false;
     }
 
     this.wrapperElement = el;
@@ -277,7 +295,7 @@ export default class DModal extends Component {
         this.modalContainer.animate(
           [
             { transform: "scale(1)", opacity: 1, offset: 0 },
-            { transform: "scale(0)", opacity: 0, offset: 1 },
+            { transform: "scale(0.7)", opacity: 0, offset: 1 },
           ],
           {
             fill: "forwards",
