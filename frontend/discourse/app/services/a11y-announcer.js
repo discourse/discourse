@@ -27,11 +27,7 @@ export default class AccessibilityAnnouncerService extends Service {
     }
   }
 
-  announce(message, type = "polite", clearDelay) {
-    if (clearDelay === undefined) {
-      clearDelay = 2000;
-    }
-
+  announce(message, type = "polite", clearDelay = 2000) {
     switch (type) {
       case "assertive":
         this.assertiveMessage = message;
