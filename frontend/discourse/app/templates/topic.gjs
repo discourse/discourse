@@ -47,6 +47,7 @@ import autoFocus from "discourse/modifiers/auto-focus";
 import { i18n } from "discourse-i18n";
 import CategoryChooser from "select-kit/components/category-chooser";
 import MiniTagChooser from "select-kit/components/mini-tag-chooser";
+import booleanString from "../helpers/boolean-string";
 
 export default <template>
   {{#let @controller.model.postStream as |postStream|}}
@@ -203,7 +204,12 @@ export default <template>
             </div>
 
           {{else}}
-            <h1 data-topic-id={{@controller.model.id}}>
+            <h1
+              data-topic-id={{@controller.model.id}}
+              {{! Prevent duplicating the topic title heading on screen readers when the header is displaying the title
+                heading }}
+              aria-hidden={{booleanString @controller.firstPostTitleIsHidden}}
+            >
               {{#unless @controller.model.is_warning}}
                 {{#if @controller.canSendPms}}
                   <PrivateMessageGlyph

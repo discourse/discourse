@@ -64,17 +64,19 @@ export function registerCustomPostMessageCallback(type, callback) {
 }
 
 export default class TopicController extends Controller {
+  @service appEvents;
   @service composer;
+  @service currentUser;
   @service dialog;
   @service documentTitle;
-  @service screenTrack;
-  @service modal;
-  @service currentUser;
-  @service router;
-  @service siteSettings;
-  @service site;
-  @service appEvents;
+
+  @service header; // used in the template
   @service languageNameLookup;
+  @service modal;
+  @service router;
+  @service screenTrack;
+  @service site;
+  @service siteSettings;
 
   @tracked model;
 
@@ -134,6 +136,10 @@ export default class TopicController extends Controller {
     return BufferedProxy.create({
       content: this.model,
     });
+  }
+
+  get firstPostTitleIsHidden() {
+    return !this.header.mainTopicTitleVisible;
   }
 
   updateQueryParams() {
