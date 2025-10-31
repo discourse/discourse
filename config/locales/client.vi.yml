@@ -167,7 +167,7 @@ vi:
       header:
         logged_in_members: "Chào mừng %{preferred_display_name} đã trở lại đây!"
         anonymous_members: "Chào mừng đến với %{site_name}!"
-      search: "Tìm kiếm"
+      search_placeholder: "Tìm kiếm"
     themes:
       default_description: "Mặc định"
       error_caused_by: "Gây ra bởi '%{name}'. <a target='blank' href='%{path}'>Nhấp vào đây</a> để cập nhật, cấu hình lại hoặc tắt."
@@ -3775,6 +3775,7 @@ vi:
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
+    reset_filter: "Cài lại"
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
@@ -3804,6 +3805,18 @@ vi:
           title: "Plugins"
         advanced:
           title: "Nâng cao"
+      upcoming_changes:
+        name: "Tên"
+        select_groups: "Chọn nhóm…"
+        preview: "Xem trước"
+        impact_roles:
+          admins: "Quản trị"
+          moderators: "Điều hành viên"
+          staff: "Nhân viên"
+        filter:
+          all: "Tất cả"
+          disabled: "Vô hiệu hóa"
+          impact_type_other: "Khác"
       config:
         developer:
           title: "Nhà phát triển"

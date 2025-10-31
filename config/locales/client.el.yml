@@ -293,7 +293,7 @@ el:
       header:
         logged_in_members: "Καλώς ήρθες πίσω, %{preferred_display_name}!"
         anonymous_members: "Καλώς ήλθατε στην %{site_name}!"
-      search: "Αναζήτηση"
+      search_placeholder: "Αναζήτηση"
     themes:
       default_description: "Προεπιλογή"
       error_caused_by: "Προκλήθηκε από '%{name}'. <a target='blank' href='%{path}'>Πατήστε εδώ</a> για να το ενημερώσετε, να αλλάξετε τις ρυθμίσεις ή να το απενεργοποιήσετε."
@@ -4544,6 +4544,7 @@ el:
         categories: "Όλες οι κατηγορίες"
   admin_js:
     settings: "Ρυθμίσεις"
+    reset_filter: "Επαναφορά"
     admin:
       title: "Διαχειριστής"
       moderator: "Συντονιστής"
@@ -4571,6 +4572,20 @@ el:
           title: "Ασφάλεια"
         plugins:
           title: "Πρόσθετα"
+      upcoming_changes:
+        name: "Όνομα"
+        enabled: "Ενεργοποιημένα"
+        select_groups: "Επιλέξτε ομάδες…"
+        preview: "Προεπισκόπηση"
+        impact_roles:
+          admins: "Διαχειριστές"
+          moderators: "Συντονιστές"
+          staff: "Συνεργάτες"
+        filter:
+          all: "Όλα"
+          enabled: "Ενεργοποιημένα"
+          disabled: "Απενεργοποιημένο"
+          impact_type_other: "Άλλα"
       config:
         developer:
           title: "Developer"

@@ -475,6 +475,7 @@ schema:
         - "sidebar_urls"
         - "silenced_assignments"
         - "single_sign_on_records"
+        - "site_setting_groups"
         - "sitemaps"
         - "skipped_email_logs"
         - "stylesheet_cache"

@@ -37,6 +37,29 @@ pl_PL:
     post_voting_comment_enabled: "Włącz komentarze do postów w tematach głosowania na posty"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_zaufanie_do_głosowania_w_komentarzach_w_postach"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        comment_actions:
+          bundle_title: "Co chcesz zrobić z tym komentarzem?"
+        no_action_comment:
+          title: "Brak akcji"
+          description: "Pozostaw komentarz bez zmian."
+        agree_and_keep_comment:
+          title: "Zachowaj komentarz"
+          description: "Zgadzam się z flagą i pozostawię komentarz bez zmian."
+        agree_and_keep_deleted:
+          title: "Zachowaj komentarz usunięty"
+          description: "Zgadzam się z flagą i pozostawię komentarz usunięty."
+        agree_and_restore:
+          title: "Przywróć komentarz"
+          description: "Przywróć komentarz, aby użytkownicy mogli go zobaczyć."
+        agree_and_delete:
+          title: "Usuń komentarz"
+          description: "Usuń komentarz, aby użytkownicy nie mogli go zobaczyć."
+        disagree_and_restore:
+          title: "Nie zgadzam się i przywróć komentarz"
+          description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
   post_action_types:
     vote:
       title: "Głosuj"

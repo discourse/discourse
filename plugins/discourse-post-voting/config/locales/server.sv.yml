@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 sv:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Ingen åtgärd"
   post_action_types:
     vote:
       title: "Rösta"

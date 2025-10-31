@@ -34,6 +34,26 @@ zh_CN:
     post_voting_comment_enabled: "启用对“帖子投票”话题中的帖子发表评论"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "无行动"
+        agree_and_keep_comment:
+          title: "保留评论"
+          description: "同意举报并保持评论不变。"
+        agree_and_keep_deleted:
+          title: "保留评论删除状态"
+          description: "同意举报并保持评论的删除状态。"
+        agree_and_restore:
+          title: "恢复评论"
+          description: "恢复评论，以便用户可以看到。"
+        agree_and_delete:
+          title: "删除评论"
+          description: "删除评论，使用户看不到。"
+        disagree_and_restore:
+          title: "不同意并恢复评论"
+          description: "恢复评论，以便所有用户都可以看到。"
   post_action_types:
     vote:
       title: "投票"

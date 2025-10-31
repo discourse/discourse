@@ -35,6 +35,26 @@ tr_TR:
     post_voting_comment_enabled: "Gönderi Oylaması konularındaki Gönderilerde yorumları etkinleştirin"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Eylem yok"
+        agree_and_keep_comment:
+          title: "Yorumu tut"
+          description: "Bayrağı kabul edin ve yorumu değiştirmeyin."
+        agree_and_keep_deleted:
+          title: "Yorumu Silinmiş hâlde tut"
+          description: "Bayrağı kabul edin ve yorumu silinmiş olarak bırakın."
+        agree_and_restore:
+          title: "Yorumu geri yükle"
+          description: "Kullanıcıların görebilmesi için yorumu geri yükleyin."
+        agree_and_delete:
+          title: "Yorumu sil"
+          description: "Kullanıcıların görememesi için yorumu silin."
+        disagree_and_restore:
+          title: "Katılma ve yorumu Geri Yükle"
+          description: "Tüm kullanıcıların görebilmesi için yorumu geri yükleyin."
   post_action_types:
     vote:
       title: "Oy ver"

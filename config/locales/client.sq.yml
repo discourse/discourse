@@ -196,7 +196,7 @@ sq:
     welcome_banner:
       header:
         anonymous_members: "Mirë se vini tek %{site_name}!"
-      search: "Kërko"
+      search_placeholder: "Kërko"
     themes:
       default_description: "Paracaktuar"
       error_caused_by: "Shkaktuar nga '%{name}'. <a target='blank' href='%{path}'>Klikoni këtu</a> për të përditësuar, rikonfiguruar ose çaktivizuar."
@@ -3978,6 +3978,7 @@ sq:
         categories: "Të gjitha kategoritë"
   admin_js:
     settings: "Rregullimet"
+    reset_filter: "Rivendosni"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -3996,6 +3997,19 @@ sq:
           title: "Siguria"
         plugins:
           title: "Pluginet"
+      upcoming_changes:
+        name: "Emri"
+        enabled: "Aktivizuar"
+        preview: "Parashikimi"
+        impact_roles:
+          admins: "Administratorët"
+          moderators: "Moderatorë"
+          staff: "Stafi"
+        filter:
+          all: "Të gjitha"
+          enabled: "Aktivizuar"
+          disabled: "E çaktivizuar"
+          impact_type_other: "Të tjerë"
       config:
         developer:
           title: "Developer"

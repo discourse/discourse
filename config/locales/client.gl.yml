@@ -160,7 +160,7 @@ gl:
     welcome_banner:
       header:
         anonymous_members: "Dámoslle a benvida a %{site_name}!"
-      search: "Buscar"
+      search_placeholder: "Buscar"
     themes:
       default_description: "Predeterminado"
     s3:
@@ -3418,6 +3418,7 @@ gl:
         categories: "Todas as categorías"
   admin_js:
     settings: "Configuración"
+    reset_filter: "Restabelecer"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
@@ -3445,6 +3446,19 @@ gl:
           title: "Seguranza"
         plugins:
           title: "Complementos"
+      upcoming_changes:
+        name: "Nome"
+        enabled: "Activado"
+        preview: "Visualizar"
+        impact_roles:
+          admins: "Administradores"
+          moderators: "Moderadores"
+          staff: "Equipo"
+        filter:
+          all: "Todas"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          impact_type_other: "Outro"
       config:
         developer:
           title: "Desenvolvedor"

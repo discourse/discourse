@@ -38,6 +38,8 @@ uk:
           title: "Шрифти"
         colors:
           title: "Кольори"
+        dialog:
+          title: "Діалог"
         icons:
           title: "Іконки"
           full_list: "Перегляньте повний список значків Font Awesome"

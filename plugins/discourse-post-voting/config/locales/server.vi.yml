@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 vi:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Không có hành động"
   post_action_types:
     vote:
       title: "Bình chọn"

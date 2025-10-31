@@ -35,6 +35,26 @@ it:
     post_voting_comment_enabled: "Abilita i commenti nei messaggi negli argomenti con voto sui messaggi"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Nessuna azione"
+        agree_and_keep_comment:
+          title: "Mantieni il commento"
+          description: "Accetta la segnalazione e mantieni invariato il commento."
+        agree_and_keep_deleted:
+          title: "Mantieni il commento cancellato"
+          description: "Accetta segnalazione e conferma eliminazione del commento."
+        agree_and_restore:
+          title: "Ripristina il commento"
+          description: "Ripristina il commento in modo che gli utenti possano vederlo."
+        agree_and_delete:
+          title: "Elimina il commento"
+          description: "Elimina il commento in modo che gli utenti non possano vederlo."
+        disagree_and_restore:
+          title: "Esprimi disaccordo e ripristina il commento"
+          description: "Ripristina il commento in modo che tutti gli utenti possano vederlo."
   post_action_types:
     vote:
       title: "Vota"

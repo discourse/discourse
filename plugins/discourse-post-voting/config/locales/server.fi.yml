@@ -35,6 +35,26 @@ fi:
     post_voting_comment_enabled: "Ota viestin kommentit käyttöön viestiäänestysketjuissa"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Ei toimintaa"
+        agree_and_keep_comment:
+          title: "Pidä kommentti"
+          description: "Hyväksy liputus ja pidä kommentti ennallaan."
+        agree_and_keep_deleted:
+          title: "Pidä kommentti poistettuna"
+          description: "Hyväksy liputus ja pidä kommentti poistettuna."
+        agree_and_restore:
+          title: "Palauta kommentti"
+          description: "Palauta kommentti, jotta käyttäjät näkevät sen."
+        agree_and_delete:
+          title: "Poista kommentti"
+          description: "Poista kommentti, jotta käyttäjät eivät näe sitä."
+        disagree_and_restore:
+          title: "Hylkää ja palauta kommentti"
+          description: "Palauta kommentti, jotta kaikki käyttäjät näkevät sen."
   post_action_types:
     vote:
       title: "Äänestä"

@@ -16,6 +16,11 @@ zh_TW:
     post_voting:
       answer_count:
         other: "%{count} 個回答"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "沒有動作"
   post_action_types:
     vote:
       title: "投票"

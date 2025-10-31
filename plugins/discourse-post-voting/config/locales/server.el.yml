@@ -10,6 +10,23 @@ el:
       answer_count:
         one: "%{count} Απάντηση"
         other: "%{count} Απαντήσεις"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Καμία ενέργεια"
+        agree_and_keep_comment:
+          title: "Διατήρηση σχολίου"
+        agree_and_keep_deleted:
+          title: "Διατήρηση σχολίου ως Διαγραμμένο"
+        agree_and_restore:
+          title: "Επαναφορά σχολίου"
+          description: "Επαναφορά του σχολίου ώστε οι χρήστες να μπορούν να το δουν."
+        agree_and_delete:
+          title: "Διαγραφή σχολίου"
+          description: "Διαγράψτε το σχόλιο ώστε οι χρήστες να μην μπορούν να το δουν."
+        disagree_and_restore:
+          title: "Διαφωνώ και Επαναφορά σχολίου"
   post_action_types:
     vote:
       title: "Ψήφισε"

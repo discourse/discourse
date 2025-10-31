@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 be:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Ніякіх дзеянняў"
   post_action_types:
     vote:
       title: "Галасаваць"

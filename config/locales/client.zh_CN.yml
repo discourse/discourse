@@ -269,7 +269,7 @@ zh_CN:
       header:
         logged_in_members: "欢迎回来，%{preferred_display_name}！"
         anonymous_members: "欢迎来到 %{site_name}！"
-      search: "搜索"
+      search_placeholder: "搜索"
     impersonation:
       notice: "您正在模拟 %{username}"
       stop: "停止模拟"
@@ -4983,6 +4983,7 @@ zh_CN:
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
+    reset_filter: "重置"
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
@@ -5015,6 +5016,20 @@ zh_CN:
           title: "插件"
         advanced:
           title: "高级"
+      upcoming_changes:
+        name: "名称"
+        enabled: "已启用"
+        select_groups: "选择群组…"
+        preview: "预览"
+        impact_roles:
+          moderators: "版主"
+          staff: "管理人员"
+        filter:
+          all: "所有"
+          enabled: "已启用"
+          disabled: "已禁用"
+          impact_type_feature: "功能"
+          impact_type_other: "其他"
       config:
         about:
           title: "关于您的站点"

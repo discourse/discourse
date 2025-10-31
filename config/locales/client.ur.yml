@@ -297,7 +297,7 @@ ur:
       header:
         logged_in_members: "دوبارہ خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "%{site_name} پر خوش آمدید!"
-      search: "تلاش کریں"
+      search_placeholder: "تلاش کریں"
     impersonation:
       notice: "آپ %{username} کی نقالی کر رہے ہیں"
       stop: "نقالی کرنا بند کریں"
@@ -5244,6 +5244,7 @@ ur:
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
+    reset_filter: "رِی سَیٹ"
     admin:
       title: "ڈِسکورس منتظم"
       moderator: "نگران"
@@ -5276,6 +5277,20 @@ ur:
           title: "اضافی سہولتیں"
         advanced:
           title: "اعلی درجے کی"
+      upcoming_changes:
+        name: "نام"
+        enabled: "فعال شدہ"
+        select_groups: "گروپس کا انتخاب"
+        preview: "جھلک دیکھیں"
+        impact_roles:
+          admins: "منتظمین"
+          moderators: "نگران"
+          staff: "عملہ"
+        filter:
+          all: "تمام"
+          enabled: "فعال شدہ"
+          disabled: "غیر فعال"
+          impact_type_other: "دیگر"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"

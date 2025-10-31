@@ -35,6 +35,26 @@ de:
     post_voting_comment_enabled: "Kommentare zu Beiträgen in Beitragsabstimmungsthemen aktivieren"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Keine Aktion"
+        agree_and_keep_comment:
+          title: "Kommentar behalten"
+          description: "Meldung zustimmen und den Kommentar unbearbeitet lassen."
+        agree_and_keep_deleted:
+          title: "Kommentar gelöscht lassen"
+          description: "Meldung zustimmen und den Kommentar gelöscht lassen."
+        agree_and_restore:
+          title: "Kommentar wiederherstellen"
+          description: "Kommentar wiederherstellen, damit Benutzer ihn sehen können."
+        agree_and_delete:
+          title: "Kommentar löschen"
+          description: "Kommentar löschen, damit Benutzer ihn nicht sehen können."
+        disagree_and_restore:
+          title: "Ablehnen und Kommentar wiederherstellen"
+          description: "Kommentar wiederherstellen, damit alle Benutzer ihn sehen können."
   post_action_types:
     vote:
       title: "Abstimmen"

@@ -297,7 +297,7 @@ es:
       header:
         logged_in_members: "¡Te damos la bienvenida de nuevo, %{preferred_display_name}!"
         anonymous_members: "¡Te damos la bienvenida a %{site_name}!"
-      search: "Buscar"
+      search_placeholder: "Buscar"
     themes:
       default_description: "Por defecto"
       broken_theme_alert: "Es posible que tu sitio no funcione porque un tema o componente tenga errores. Comprueba la consola del navegador para obtener más información."
@@ -5212,6 +5212,7 @@ es:
   admin_js:
     type_to_filter: "Escribe para filtrar…"
     settings: "Ajustes"
+    reset_filter: "Restablecer"
     admin:
       title: "Administrador de Discourse"
       moderator: "Moderador"
@@ -5244,6 +5245,21 @@ es:
           title: "Plugins"
         advanced:
           title: "Avanzado"
+      upcoming_changes:
+        name: "Nombre"
+        enabled: "Activado"
+        select_groups: "Seleccionar grupos…"
+        preview: "Vista previa"
+        impact_roles:
+          admins: "Administradores"
+          moderators: "Moderadores"
+          staff: "Personal"
+        filter:
+          all: "Todo"
+          enabled: "Activado"
+          disabled: "Desactivado"
+          impact_type_feature: "Característica"
+          impact_type_other: "Otros"
       config:
         about:
           title: "Acerca de tu sitio"

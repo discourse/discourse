@@ -10,6 +10,11 @@ ur:
       answer_count:
         one: "%{count} جواب"
         other: "%{count} جوابات"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "کوئی کارروائی نہیں"
   post_action_types:
     vote:
       title: "ووٹ"

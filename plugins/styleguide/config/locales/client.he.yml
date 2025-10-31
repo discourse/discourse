@@ -38,6 +38,8 @@ he:
           title: "מערכת גופנים"
         colors:
           title: "צבעים"
+        dialog:
+          title: "חלונית"
         icons:
           title: "סמלים"
           full_list: "הצגת רשימת הסמלים המלאה של Font Awesome"

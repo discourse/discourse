@@ -243,7 +243,7 @@ fa_IR:
       header:
         logged_in_members: "خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "به %{site_name} خوش آمدید!"
-      search: "جستجو"
+      search_placeholder: "جستجو"
     themes:
       default_description: "پیش‌فرض"
       error_caused_by: "ناشی از '%{name}'. برای به روز رسانی، پیکربندی مجدد یا غیر فعال کردن، <a target='blank' href='%{path}'>کلیک کنید</a>."
@@ -4869,6 +4869,7 @@ fa_IR:
   admin_js:
     type_to_filter: "برای فیلتر کردن تایپ کنید..."
     settings: "تنظیمات"
+    reset_filter: "بازنشانی"
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "ناظر"
@@ -4900,6 +4901,20 @@ fa_IR:
           title: "افزونه‌ها"
         advanced:
           title: "پیشرفته"
+      upcoming_changes:
+        name: "نام"
+        enabled: "فعال شده"
+        select_groups: "انتخاب گروه‌ها"
+        preview: "پیش‌نمایش"
+        impact_roles:
+          admins: "مدیران ارشد"
+          moderators: "ناظران"
+          staff: "همکاران"
+        filter:
+          all: "همه"
+          enabled: "فعال شده"
+          disabled: "غیرفعال"
+          impact_type_other: "دیگر"
       config:
         about:
           title: "درباره سایت شما"
