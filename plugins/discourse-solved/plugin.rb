@@ -258,11 +258,7 @@ after_initialize do
   end
 
   add_to_serializer(:user_card, :accepted_answers) do
-    DiscourseSolved::SolvedTopic
-      .joins(answer_post: :user, topic: {})
-      .where(posts: { user_id: object.id, deleted_at: nil })
-      .where(topics: { archetype: Archetype.default, deleted_at: nil })
-      .count
+    DiscourseSolved::Queries.solved_count(object.id)
   end
   add_to_serializer(:user_summary, :solved_count) { object.solved_count }
   add_to_serializer(:post, :can_accept_answer) { scope.can_accept_answer?(topic, object) }
