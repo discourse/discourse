@@ -207,7 +207,7 @@ sl:
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
-      search: "Išči"
+      search_placeholder: "Išči"
     themes:
       default_description: "Privzeto"
     s3:
@@ -3721,6 +3721,7 @@ sl:
         categories: "Vse kategorije"
   admin_js:
     settings: "Nastavitve"
+    reset_filter: "Ponastavi"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -3748,6 +3749,20 @@ sl:
           title: "Varnost"
         plugins:
           title: "Vtičniki"
+      upcoming_changes:
+        name: "Ime"
+        enabled: "Vključeno"
+        select_groups: "Izberi skupine…"
+        preview: "Predogled"
+        impact_roles:
+          admins: "Administratorji"
+          moderators: "Moderatorji"
+          staff: "Osebje"
+        filter:
+          all: "Vsi"
+          enabled: "Vključeno"
+          disabled: "Onemogočeno"
+          impact_type_other: "Drugo"
       config:
         developer:
           title: "Razvijalci"

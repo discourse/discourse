@@ -162,7 +162,7 @@ id:
     welcome_banner:
       header:
         anonymous_members: "Selamat datang ke %{site_name}!"
-      search: "Cari"
+      search_placeholder: "Cari"
     themes:
       default_description: "Asal"
       error_caused_by: "Disebabkan oleh '%{name}'. <a target='blank' href='%{path}'>Klik di sini</a> untuk memperbarui, mengkonfigurasi ulang, atau menonaktifkan."
@@ -2306,6 +2306,7 @@ id:
         categories: "Semua kategori"
   admin_js:
     settings: "Pengaturan"
+    reset_filter: "Reset"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
@@ -2319,6 +2320,17 @@ id:
           title: "Akun"
         email:
           title: "Surel"
+      upcoming_changes:
+        name: "Nama"
+        enabled: "Diaktifkan"
+        impact_roles:
+          moderators: "Moderator"
+          staff: "Staf"
+        filter:
+          all: "Semua"
+          enabled: "Diaktifkan"
+          disabled: "Dinonaktifkan"
+          impact_type_other: "Lainnya"
       config:
         login:
           sub_pages:

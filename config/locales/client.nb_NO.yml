@@ -195,7 +195,7 @@ nb_NO:
     welcome_banner:
       header:
         anonymous_members: "Velkommen til %{site_name}!"
-      search: "Søk"
+      search_placeholder: "Søk"
     themes:
       default_description: "Forvalg"
       error_caused_by: "Forårsaket av '%{name}'. <a target='blank' href='%{path}'>Klikk her</a> for å oppdatere, rekonfigurere eller deaktivere."
@@ -4371,6 +4371,7 @@ nb_NO:
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
+    reset_filter: "Tilbakestill"
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
@@ -4398,6 +4399,19 @@ nb_NO:
           title: "Sikkerhet"
         plugins:
           title: "Utvidelser"
+      upcoming_changes:
+        name: "Navn"
+        enabled: "Aktivert"
+        preview: "Forhåndsvis"
+        impact_roles:
+          admins: "Adminer"
+          moderators: "Moderatorer"
+          staff: "Stab"
+        filter:
+          all: "Alle"
+          enabled: "Aktivert"
+          disabled: "Deaktivert"
+          impact_type_other: "Annet"
       config:
         developer:
           title: "Utvikler"

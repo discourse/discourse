@@ -297,7 +297,7 @@ ug:
       header:
         logged_in_members: "قايتا خۇش كەلدىڭىز، %{preferred_display_name}!"
         anonymous_members: "%{site_name} غا خۇش كەلدىڭىز!"
-      search: "ئىزدە"
+      search_placeholder: "ئىزدە"
     impersonation:
       notice: "سىز %{username} دەك سىياقلىنىۋاتىسىز"
       stop: "سىياقلىنىشنى توختات"
@@ -5244,6 +5244,7 @@ ug:
   admin_js:
     type_to_filter: "كىرگۈزۈلسە سۈزىدۇ…"
     settings: "تەڭشەكلەر"
+    reset_filter: "ئەسلىگە قايتۇر"
     admin:
       title: "Discourse باشقۇرغۇچى"
       moderator: "رىياسەتچى"
@@ -5276,6 +5277,20 @@ ug:
           title: "قىستۇرما"
         advanced:
           title: "ئالىي"
+      upcoming_changes:
+        name: "ئىسمى"
+        enabled: "قوزغىتىلدى"
+        select_groups: "گۇرۇپپا تاللا…"
+        preview: "ئالدىن كۆزەت"
+        impact_roles:
+          admins: "باشقۇرغۇچى"
+          moderators: "رىياسەتچى"
+          staff: "باشقۇرغۇچى خادىم"
+        filter:
+          all: "ھەممىسى"
+          enabled: "قوزغىتىلدى"
+          disabled: "چەكلەندى"
+          impact_type_other: "باشقا"
       config:
         about:
           title: "تور بېكىتىڭىز ھەققىدە"

@@ -195,7 +195,7 @@ sv:
     welcome_banner:
       header:
         anonymous_members: "Välkommen till %{site_name}!"
-      search: "Sök"
+      search_placeholder: "Sök"
     themes:
       default_description: "Standard"
       error_caused_by: "Orsakas av '%{name}'. <a target='blank' href='%{path}'>Klicka här</a> för att uppdatera, konfigurera eller inaktivera."
@@ -4383,6 +4383,7 @@ sv:
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
+    reset_filter: "Återställ"
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"
@@ -4412,6 +4413,20 @@ sv:
           title: "Tillägg"
         advanced:
           title: "Avancerat"
+      upcoming_changes:
+        name: "Namn"
+        enabled: "Aktiverad"
+        select_groups: "Välj grupper…"
+        preview: "Förhandsgranska"
+        impact_roles:
+          admins: "Administratörer"
+          moderators: "Moderatorer"
+          staff: "Personal"
+        filter:
+          all: "Alla"
+          enabled: "Aktiverad"
+          disabled: "Inaktiverad"
+          impact_type_other: "Övrigt"
       config:
         about:
           title: "Om din webbplats"

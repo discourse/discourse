@@ -348,6 +348,8 @@ he:
         yesterday: אתמול
       search_view:
         filter_placeholder: חיפוש הודעות
+        message_result_label: "הודעת צ׳אט מאת %{username}: %{preview} %{threadInfo}"
+        in_thread: "בשרשור %{title}"
       members_view:
         filter_placeholder: איתור חברים
         add_member: הוספת חברים
@@ -533,6 +535,8 @@ he:
           confirm_export: "מייצא את כל ההודעות מכל הערוצים ושולח אליך את התוצאה בהודעה אישית. לייצא?"
           export_has_started: "הייצוא החל. תישלח אליך הודעה פרטית כשהוא מוכן."
       search:
+        title: חיפוש בצ׳אט
+        aria_label: "מעבר לחיפוש בצ׳אט"
         no_results: "לא נמצאו תוצאות"
         sort:
           relevance: "רלוונטיות"
