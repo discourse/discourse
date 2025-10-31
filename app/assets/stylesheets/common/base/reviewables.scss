@@ -70,18 +70,20 @@
       box-sizing: border-box;
 
       &.--expanded {
-        column-gap: 5em;
+        --column-gap: 5em;
+        gap: 0 var(--column-gap);
 
         @include viewport.from(sm) {
-          columns: 2;
+          display: grid;
+          grid-template-columns: repeat(2, calc(50% - (var(--column-gap) / 2)));
         }
 
         @include viewport.until(lg) {
-          column-gap: 2em;
+          --column-gap: 2em;
         }
 
         .reviewable-filters-actions {
-          column-span: all;
+          grid-column: 1 / -1;
           margin-top: var(--space-4);
         }
 
@@ -95,8 +97,26 @@
         gap: var(--space-2);
         align-items: end;
 
+        @include viewport.until(sm) {
+          flex-wrap: wrap;
+        }
+
         .reviewable-filter {
-          flex: 1 1 auto;
+          flex: 1 1 50%;
+          min-width: 5em;
+
+          @include viewport.until(sm) {
+            &:nth-child(2) {
+              display: none;
+            }
+          }
+
+          .name {
+            min-width: 0;
+            display: block;
+
+            @include ellipsis;
+          }
         }
       }
 
@@ -104,6 +124,10 @@
         display: flex;
         gap: var(--space-2);
         justify-content: space-between;
+
+        @include viewport.until(sm) {
+          width: 100%;
+        }
       }
 
       @include viewport.until(sm) {
@@ -207,8 +231,8 @@
 
 .reviewable-filters {
   background-color: var(--primary-very-low);
-  padding: 1em;
-  margin-bottom: 1em;
+  padding: var(--space-4) var(--space-6);
+  margin-bottom: var(--space-4);
 
   .topic-filter .btn {
     display: flex;
@@ -598,12 +622,12 @@
   @include viewport.until(sm) {
     display: flex;
     width: 100%;
-    overflow-x: scroll;
+    overflow-x: auto;
     border-top: 1px solid var(--content-border-color);
   }
 
   &__table-wrapper {
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 
   th {

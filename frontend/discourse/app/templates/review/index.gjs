@@ -209,6 +209,17 @@ export default <template>
           </div>
         {{/if}}
 
+        <div class="reviewable-filter sort-order">
+          <label class="filter-label">
+            {{i18n "review.order_by"}}
+          </label>
+          <ComboBox
+            @value={{@controller.filterSortOrder}}
+            @content={{@controller.sortOrders}}
+            @onChange={{fn (mut @controller.filterSortOrder)}}
+          />
+        </div>
+
         <div class="reviewable-filter date-range">
           <label class="filter-label">
             {{i18n "review.date_filter"}}
@@ -219,17 +230,6 @@ export default <template>
             @onChange={{@controller.setRange}}
             @showFromTime={{false}}
             @showToTime={{false}}
-          />
-        </div>
-
-        <div class="reviewable-filter sort-order">
-          <label class="filter-label">
-            {{i18n "review.order_by"}}
-          </label>
-          <ComboBox
-            @value={{@controller.filterSortOrder}}
-            @content={{@controller.sortOrders}}
-            @onChange={{fn (mut @controller.filterSortOrder)}}
           />
         </div>
       {{/if}}
