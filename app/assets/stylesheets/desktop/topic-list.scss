@@ -285,6 +285,7 @@
     line-height: var(--line-height-large);
     padding: var(--space-2);
     position: relative;
+    font-size: var(--font-down-1-rem);
 
     &.active {
       @include nav-active;
