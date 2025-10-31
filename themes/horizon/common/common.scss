@@ -1,3 +1,15 @@
+// Horizon Theme - Using CSS Cascade Layers
+//
+// This theme benefits from Discourse's cascade layer system:
+// - Core styles are in: discourse-reset, discourse-base, discourse-foundation, discourse-components
+// - Plugin styles are in: discourse-plugins
+// - Theme styles are in: discourse-theme (highest priority - this theme!)
+//
+// Benefits:
+// - Simpler selectors: No need for high specificity or !important
+// - Better maintainability: Theme styles always override core without complex selectors
+// - Clear separation: Layer order determines cascade, not selector specificity
+
 @import "box-view";
 @import "buttons";
 @import "chat";

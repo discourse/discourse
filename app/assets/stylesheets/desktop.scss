@@ -1,4 +1,5 @@
-@import "desktop/_index";
-
-// Import all component-specific files
-@import "desktop/components/_index";
+// Desktop-specific styles (inherit layer order from common.scss)
+@layer discourse-components {
+  @import "desktop/_index";
+  @import "desktop/components/_index";
+}

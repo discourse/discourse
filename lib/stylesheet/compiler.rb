@@ -14,7 +14,11 @@ module Stylesheet
       if Importer::THEME_TARGETS.include?(asset.to_s)
         filename = "theme_#{options[:theme_id]}.scss"
         file += options[:theme_variables].to_s
+
+        # Wrap theme styles in cascade layer for proper specificity
+        file += "@layer discourse-theme {\n"
         file += importer.theme_import(asset)
+        file += "}\n"
       elsif plugin_asset_info = Importer.plugin_assets[asset.to_s]
         options[:load_paths] = [] if options[:load_paths].nil?
 
@@ -22,6 +26,8 @@ module Stylesheet
         plugin_path = plugin_asset_info[:plugin_path]
         options[:load_paths] << plugin_path
 
+        # Wrap plugin styles in cascade layer
+        file += "@layer discourse-plugins {\n"
         plugin_assets.each do |src|
           options[:load_paths] << File.expand_path(File.dirname(src))
           if src.end_with?(".scss")
@@ -30,6 +36,7 @@ module Stylesheet
             file += File.read(src)
           end
         end
+        file += "}\n"
       else # Core asset
         file += "@import \"#{asset}\";\n"
 

@@ -2,7 +2,8 @@
   --d-button-border-radius: 6.25rem;
 }
 
-.discourse-no-touch .topic-body .actions .fade-out {
+// Simplified selectors using cascade layers
+.topic-body .actions .fade-out {
   transition: none;
 }
 
@@ -15,13 +16,13 @@
   }
 }
 
-.discourse-no-touch .dropdown-menu__item .btn {
+.dropdown-menu__item .btn {
   background: transparent;
 }
 
-.discourse-no-touch .btn-default.sidebar-new-topic-button,
-.discourse-no-touch .btn-default,
-.discourse-no-touch .select-kit .select-kit-header.btn-default {
+.btn-default.sidebar-new-topic-button,
+.btn-default,
+.select-kit .select-kit-header.btn-default {
   background: var(--primary-100);
 
   .d-icon {
@@ -50,8 +51,9 @@
   }
 }
 
+// Simplified selectors using cascade layers
 .btn-primary,
-.discourse-no-touch .btn-default.ai-new-question-button {
+.btn-default.ai-new-question-button {
   background-color: var(--accent-color);
   color: var(--accent-text-color);
 
@@ -61,14 +63,12 @@
 
   &:not([disabled]):focus-visible,
   &:not([disabled]):hover {
-    .discourse-no-touch & {
-      background-color: var(--accent-color);
-      box-shadow: 0 0 0 4px var(--button-box-shadow);
-      color: var(--accent-text-color);
+    background-color: var(--accent-color);
+    box-shadow: 0 0 0 4px var(--button-box-shadow);
+    color: var(--accent-text-color);
 
-      .d-icon {
-        color: var(--accent-text-color);
-      }
+    .d-icon {
+      color: var(--accent-text-color);
     }
   }
 
@@ -85,12 +85,10 @@
 }
 
 .btn-danger {
-  .discourse-no-touch & {
-    &:not([disabled]):focus-visible,
-    &:not([disabled]):hover {
-      background-color: var(--danger);
-      box-shadow: 0 0 0 4px var(--d-button-danger-bg-color--hover);
-    }
+  &:not([disabled]):focus-visible,
+  &:not([disabled]):hover {
+    background-color: var(--danger);
+    box-shadow: 0 0 0 4px var(--d-button-danger-bg-color--hover);
   }
 }
 

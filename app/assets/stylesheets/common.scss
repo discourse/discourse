@@ -1,25 +1,53 @@
+// Define cascade layer order (lowest to highest specificity)
+@layer discourse-reset,
+       discourse-base,
+       discourse-foundation,
+       discourse-components,
+       discourse-plugins,
+       discourse-theme;
+
+// Font variables (outside layers - used by preprocessor)
 @import "common/font-variables";
-@import "vendor/normalize";
-@import "vendor/normalize-ext";
-@import "vendor/pikaday";
-@import "common/whcm";
-@import "common/foundation/helpers";
-@import "common/foundation/base";
-@import "common/form-kit/_index";
-@import "common/float-kit/_index";
-@import "common/select-kit/_index";
-@import "common/components/_index";
-@import "common/modal/_index";
-@import "common/input_tip";
-@import "common/topic-entrance";
-@import "common/printer-friendly";
-@import "common/base/_index";
-@import "common/d-editor";
-@import "common/software-update-prompt";
-@import "common/topic-timeline";
-@import "common/loading-slider";
-@import "common/rich-editor";
-@import "common/login/_index";
-@import "common/table-builder/_index";
-@import "common/post-action-feedback";
-@import "common/toolbar-popup-menu-options";
+
+// Layer: Reset styles from vendor libraries
+@layer discourse-reset {
+  @import "vendor/normalize";
+  @import "vendor/normalize-ext";
+  @import "vendor/pikaday";
+}
+
+// Layer: Base element styles and accessibility
+@layer discourse-base {
+  @import "common/whcm";
+  @import "common/foundation/base";
+  @import "common/base/_index";
+}
+
+// Layer: Foundation utilities and helpers
+@layer discourse-foundation {
+  @import "common/foundation/helpers";
+}
+
+// Layer: All component styles
+@layer discourse-components {
+  @import "common/form-kit/_index";
+  @import "common/float-kit/_index";
+  @import "common/select-kit/_index";
+  @import "common/components/_index";
+  @import "common/modal/_index";
+  @import "common/input_tip";
+  @import "common/topic-entrance";
+  @import "common/printer-friendly";
+  @import "common/d-editor";
+  @import "common/software-update-prompt";
+  @import "common/topic-timeline";
+  @import "common/loading-slider";
+  @import "common/rich-editor";
+  @import "common/login/_index";
+  @import "common/table-builder/_index";
+  @import "common/post-action-feedback";
+  @import "common/toolbar-popup-menu-options";
+}
+
+// discourse-plugins layer: Added dynamically by plugin system
+// discourse-theme layer: Added dynamically by theme compiler

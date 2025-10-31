@@ -1,7 +1,8 @@
-@import "mobile/_index";
-
-// Import all component-specific files
-@import "mobile/components/_index";
-@import "mobile/select-kit/_index";
-@import "mobile/float-kit/_index";
-@import "mobile/form-kit/_index";
+// Mobile-specific styles (inherit layer order from common.scss)
+@layer discourse-components {
+  @import "mobile/_index";
+  @import "mobile/components/_index";
+  @import "mobile/select-kit/_index";
+  @import "mobile/float-kit/_index";
+  @import "mobile/form-kit/_index";
+}
