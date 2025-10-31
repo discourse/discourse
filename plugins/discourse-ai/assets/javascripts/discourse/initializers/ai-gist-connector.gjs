@@ -92,12 +92,33 @@ export default apiInitializer((api) => {
       desktop: "topic-list-topic-cell-link-bottom-line__before",
     };
 
+    function isGistEnabledRoute(routeName) {
+      if (routeName?.startsWith("discovery.")) {
+        return true;
+      }
+
+      if (routeName?.startsWith("filter")) {
+        return true;
+      }
+
+      if (routeName?.startsWith("userPrivateMessages")) {
+        return true;
+      }
+
+      return false;
+    }
+
     function renderGistInOutlet(outletName, shouldRenderFn) {
       api.renderInOutlet(
         outletName,
         class extends Component {
-          static shouldRender(args, context) {
-            return shouldRenderFn(context);
+          static shouldRender(args, context, owner) {
+            if (!shouldRenderFn(context)) {
+              return false;
+            }
+
+            const router = owner.lookup("service:router");
+            return isGistEnabledRoute(router.currentRouteName);
           }
 
           <template><AiTopicGist @topic={{@topic}} /></template>
