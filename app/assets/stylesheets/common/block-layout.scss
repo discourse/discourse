@@ -1,0 +1,31 @@
+.block-layout {
+  &__container {
+    container: block-layout / inline-size;
+  }
+
+  &__layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  &__block {
+    border: 2px solid var(--primary-medium);
+    border-radius: var(--d-border-radius);
+    padding: var(--space-2);
+  }
+}
+
+.block-group {
+  &__container {
+    container: block-group / inline-size;
+  }
+
+  &__layout {
+    border-radius: var(--d-border-radius);
+    background-color: var(--primary-low);
+    padding: var(--space-6);
+    display: grid;
+    gap: var(--space-2);
+  }
+}

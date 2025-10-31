@@ -3423,9 +3423,9 @@ class _PluginApi {
     _addCategoryPropertyForSave(property);
   }
 
-  renderBlockLayout(name, blocks) {
-    blocks.forEach((block) => {
-      // TODO: better validation
+  renderBlockLayout(name, blockConfig) {
+    // TODO: Better validation
+    const validateBlock = (block) => {
       if (!block.component) {
         throw new Error(`Block in layout ${name} is missing a component`);
       }
@@ -3434,8 +3434,17 @@ class _PluginApi {
           `Block component ${block.name} (${block.component}) in layout ${name} is not a valid block`
         );
       }
+    };
+
+    blockConfig.forEach((block) => {
+      if (block.group) {
+        block.blocks.forEach((groupedBlock) => validateBlock(groupedBlock));
+      } else {
+        validateBlock(block);
+      }
     });
-    blockConfigs.set(name, blocks);
+
+    blockConfigs.set(name, blockConfig);
   }
 
   #deprecateModifyClass(className) {
