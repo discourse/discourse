@@ -1253,6 +1253,7 @@ pt:
     tags_sort_alphabetically: "Mostrar etiquetas por ordem alfabética. São, por omissão, ordenadas por popularidade."
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir etiquetas a tópicos."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
+    watched_precedence_over_muted: "Notifique-me sobre tópicos em categorias ou etiquetas que estou a ver e que também pertencem a um tópico que silenciei"
     create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
     show_preview_for_form_templates: "Ativar a pré-visualização para a funcionalidade de modelos de formulário"
     errors:

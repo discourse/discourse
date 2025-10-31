@@ -1774,6 +1774,7 @@ ko:
     suppress_overlapping_tags_in_list: "태그가 주제 제목의 단어와 정확히 일치하면 태그를 표시하지 않습니다."
     remove_muted_tags_from_latest: "최신 주제 목록에서 뮤트된 태그로만 태그된 주제를 표시하지 않습니다."
     force_lowercase_tags: "모든 새 태그를 완전히 소문자로 만듭니다."
+    watched_precedence_over_muted: "내가 뮤트한 카테고리 또는 태그에 속해 있는 토픽에 대해 알림 받기"
     shared_drafts_category: "주제 초안에 카테고리를 지정하여 공유 초안을 활성화합니다. 이 카테고리의 주제는 운영진의 주제 목록에서 표시되지 않습니다."
     shared_drafts_min_trust_level: "사용자가 공유 초안을 보고 편집할 수 있도록 허용합니다."
     push_notifications_icon: "알림 코너에 표시되는 배지 아이콘입니다. 투명도가 있는 96×96 단색 PNG를 사용하는 것이 좋습니다."

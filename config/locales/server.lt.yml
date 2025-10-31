@@ -1392,6 +1392,7 @@ lt:
     suppress_overlapping_tags_in_list: "Jei žymos atitinka tikslius žodžius temų pavadinimuose, nerodykite jų"
     remove_muted_tags_from_latest: "Naujausiame temų sąraše nerodykite temų, pažymėtų tik nutildytomis žymomis."
     force_lowercase_tags: "Priversti visas naujas žymas rašyti mažosiomis raidėmis."
+    watched_precedence_over_muted: "Pranešti man apie temas kategorijose arba žymose, kurias stebiu, kurios taip pat priklauso vienai iš mano nutildytų"
     push_notifications_icon: "Ženklelio piktograma, rodoma pranešimų kampe. Rekomenduojamas 96 × 96 vienspalvis PNG su skaidrumu."
     short_title: "Trumpas pavadinimas bus naudojamas vartotojo pagrindiniame ekrane, paleidimo priemonėje ar kitose vietose, kur erdvė gali būti ribota. Jis turėtų būti apribotas iki 12 simbolių."
     errors:

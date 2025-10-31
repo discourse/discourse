@@ -1985,7 +1985,7 @@ cs:
     auto_approve_email_domains: "Uživatelé s e-mailovými adresami z tohoto seznamu domén budou automaticky schváleni. Subdomény jsou pro zadané domény zpracovávány automaticky. Zástupné znaky * a ? nejsou podporovány."
     hide_email_address_taken: "Neinformovat uživatele o existenci účtu s danou e-mailovou adresou během registrace nebo během procesu zapomenutí hesla. V případě požadavku na zapomenuté heslo požadovat celou e-mailovou adresu."
     log_out_strict: "Při odhlašování odhlásit VŠECHNY relace uživatele na všech zařízeních"
-    version_checks: "Odešlete příkaz ping na Discourse Hub pro aktualizace verzí a zobrazte zprávy o nových verzích na <a href='%{base_path}/admin' target='_blank'>/admin</a> nástěnce"
+    version_checks: "Odesílat příkaz ping na Discourse Hub pro aktualizace verzí a zobrazit informace o nových verzích na nástěnce <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Až bude k dispozici nová verze Discourse, poslat e-mail na adresu contact_email."
     include_in_discourse_discover: "Dovolte společnosti CDCK, Inc. („Discourse“), aby tuto komunitu zobrazila na stránce <a href='https://discover.discourse.org' target='_blank'>Discover</a> a v marketingových materiálech Discourse. Tímto způsobem sdílíte data potřebná k tomu, aby byl váš web zahrnut do služby. Upozorňujeme, že propagace komunit je na uvážení společnosti Discourse."
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
