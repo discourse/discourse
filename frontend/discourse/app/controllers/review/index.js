@@ -37,7 +37,7 @@ export default class ReviewIndexController extends Controller {
   category_id = null;
   reviewables = null;
   topic_id = null;
-  filtersExpanded = this.site.desktopView;
+  filtersExpanded = false;
   username = "";
   reviewed_by = "";
   flagged_by = "";
