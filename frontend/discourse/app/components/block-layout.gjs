@@ -47,11 +47,13 @@ const WrappedBlock = <template>
 </template>;
 
 const GroupedBlocks = <template>
-  <div class="block-group__container {{@group.group}}">
-    <div class="block-group__layout">
-      {{#each @group.blocks as |block|}}
-        <WrappedBlock @block={{block}} />
-      {{/each}}
+  <div class="block-layout__block block-group {{@group.group}}">
+    <div class="block-group__container">
+      <div class="block-group__layout">
+        {{#each @group.blocks as |block|}}
+          <WrappedBlock @block={{block}} />
+        {{/each}}
+      </div>
     </div>
   </div>
 </template>;
