@@ -72,29 +72,10 @@ export default <template>
     </div>
   {{/if}}
   <div class="reviewable-container">
-    <div class="reviewable-list">
-      {{#if @controller.reviewables.content}}
-        <LoadMore @action={{@controller.loadMore}}>
-          <div class="reviewables">
-            {{#each @controller.reviewables.content as |r|}}
-              <ReviewableItem
-                @reviewable={{r}}
-                @remove={{@controller.remove}}
-              />
-            {{/each}}
-          </div>
-        </LoadMore>
-        <ConditionalLoadingSpinner
-          @condition={{@controller.reviewables.loadingMore}}
-        />
-      {{else}}
-        <div class="no-review">
-          {{i18n "review.none"}}
-        </div>
-      {{/if}}
-    </div>
-
-    <div class="reviewable-filters">
+    <div
+      class="reviewable-filters
+        {{if @controller.filtersExpanded '--expanded' '--collapsed'}}"
+    >
       <div class="reviewable-filter">
         <label class="filter-label">
           {{i18n "review.filters.status"}}
@@ -103,6 +84,18 @@ export default <template>
           @value={{@controller.filterStatus}}
           @content={{@controller.statuses}}
           @onChange={{fn (mut @controller.filterStatus)}}
+        />
+      </div>
+
+      <div class="reviewable-filter">
+        <label class="filter-label">
+          {{i18n "review.filters.type.title"}}
+        </label>
+        <ComboBox
+          @value={{@controller.filterType}}
+          @content={{@controller.allTypes}}
+          @onChange={{fn (mut @controller.filterType)}}
+          @options={{hash none="review.filters.type.all"}}
         />
       </div>
 
@@ -118,18 +111,6 @@ export default <template>
             }}
           />
         </span>
-
-        <div class="reviewable-filter">
-          <label class="filter-label">
-            {{i18n "review.filters.type.title"}}
-          </label>
-          <ComboBox
-            @value={{@controller.filterType}}
-            @content={{@controller.allTypes}}
-            @onChange={{fn (mut @controller.filterType)}}
-            @options={{hash none="review.filters.type.all"}}
-          />
-        </div>
 
         <div class="reviewable-filter">
           <label class="filter-label">
@@ -228,6 +209,17 @@ export default <template>
           </div>
         {{/if}}
 
+        <div class="reviewable-filter sort-order">
+          <label class="filter-label">
+            {{i18n "review.order_by"}}
+          </label>
+          <ComboBox
+            @value={{@controller.filterSortOrder}}
+            @content={{@controller.sortOrders}}
+            @onChange={{fn (mut @controller.filterSortOrder)}}
+          />
+        </div>
+
         <div class="reviewable-filter date-range">
           <label class="filter-label">
             {{i18n "review.date_filter"}}
@@ -240,17 +232,6 @@ export default <template>
             @showToTime={{false}}
           />
         </div>
-
-        <div class="reviewable-filter sort-order">
-          <label class="filter-label">
-            {{i18n "review.order_by"}}
-          </label>
-          <ComboBox
-            @value={{@controller.filterSortOrder}}
-            @content={{@controller.sortOrders}}
-            @onChange={{fn (mut @controller.filterSortOrder)}}
-          />
-        </div>
       {{/if}}
 
       <div class="reviewable-filters-actions">
@@ -261,15 +242,35 @@ export default <template>
           class="btn-primary refresh"
         />
 
-        {{#if @controller.site.mobileView}}
-          <DButton
-            @label="show_help"
-            @icon={{@controller.toggleFiltersIcon}}
-            @action={{@controller.toggleFilters}}
-            class="btn-default expand-secondary-filters"
-          />
-        {{/if}}
+        <DButton
+          @label="show_help"
+          @icon={{@controller.toggleFiltersIcon}}
+          @action={{@controller.toggleFilters}}
+          class="btn-default expand-secondary-filters"
+        />
+
       </div>
+    </div>
+    <div class="reviewable-list">
+      {{#if @controller.reviewables.content}}
+        <LoadMore @action={{@controller.loadMore}}>
+          <div class="reviewables">
+            {{#each @controller.reviewables.content as |r|}}
+              <ReviewableItem
+                @reviewable={{r}}
+                @remove={{@controller.remove}}
+              />
+            {{/each}}
+          </div>
+        </LoadMore>
+        <ConditionalLoadingSpinner
+          @condition={{@controller.reviewables.loadingMore}}
+        />
+      {{else}}
+        <div class="no-review">
+          {{i18n "review.none"}}
+        </div>
+      {{/if}}
     </div>
   </div>
 </template>
