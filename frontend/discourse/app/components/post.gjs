@@ -105,25 +105,6 @@ export default class Post extends Component {
     );
   }
 
-  get postDate() {
-    if (this.args.post.wiki && this.args.post.last_wiki_edit) {
-      return this.args.post.last_wiki_edit;
-    } else {
-      return this.args.post.created_at;
-    }
-  }
-
-  get postDateText() {
-    if (!this.postDate) {
-      return "";
-    }
-    const formattedDate = relativeAge(new Date(this.postDate), {
-      format: "medium",
-      wrapInSpan: false,
-    });
-    return formattedDate || new Date(this.postDate).toLocaleDateString();
-  }
-
   get filteredRepliesView() {
     return this.siteSettings.enable_filtered_replies_view;
   }
@@ -168,6 +149,17 @@ export default class Post extends Component {
 
   get minHeight() {
     return this.args.height ? `${this.args.height}px` : null;
+  }
+
+  get postDateText() {
+    if (!this.args.post.displayDate) {
+      return "";
+    }
+
+    return relativeAge(new Date(this.args.post.displayDate), {
+      format: "medium",
+      wrapInSpan: false,
+    });
   }
 
   get repliesShown() {
@@ -449,7 +441,8 @@ export default class Post extends Component {
       <h2 class="sr-only" id={{concat "post-heading-" @post.post_number}}>
         {{i18n
           "post.accessible_heading"
-          (hash username=(or @post.username "") date=(or this.postDateText ""))
+          username=@post.username
+          date=this.postDateText
         }}
       </h2>
       {{#unless @cloaked}}

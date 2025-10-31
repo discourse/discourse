@@ -109,6 +109,7 @@ export default class PostMetaData extends Component {
         {{#each this.availableInfoComponents key="key" as |item|}}
           <item.InfoComponent
             @post={{@post}}
+            @date={{@date}}
             @editPost={{@editPost}}
             @hasRepliesAbove={{@hasRepliesAbove}}
             @isReplyingDirectlyToPostAbove={{@isReplyingDirectlyToPostAbove}}
