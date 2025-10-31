@@ -16,7 +16,6 @@ import SecurityKeyForm from "discourse/components/security-key-form";
 import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import icon from "discourse/helpers/d-icon";
 import valueEntered from "discourse/helpers/value-entered";
-import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { escapeExpression } from "discourse/lib/utilities";
@@ -259,8 +258,8 @@ export default class LocalLoginForm extends Component {
           {{else}}
             <SecondFactorInput
               {{on "keydown" this.loginOnEnter}}
-              {{on "input" (withEventValue (fn (mut @secondFactorToken)))}}
               {{on "focusin" this.scrollInputIntoView}}
+              @onChange={{fn (mut @secondFactorToken)}}
               @secondFactorMethod={{@secondFactorMethod}}
               value={{@secondFactorToken}}
               id="login-second-factor"

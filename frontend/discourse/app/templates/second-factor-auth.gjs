@@ -4,7 +4,6 @@ import { gt, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import SecondFactorInput from "discourse/components/second-factor-input";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
-import withEventValue from "discourse/helpers/with-event-value";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -32,10 +31,7 @@ export default <template>
     {{else if (or @controller.showTotpForm @controller.showBackupCodesForm)}}
       <form class={{@controller.inputFormClass}}>
         <SecondFactorInput
-          {{on
-            "input"
-            (withEventValue (fn (mut @controller.secondFactorToken)))
-          }}
+          @onChange={{fn (mut @controller.secondFactorToken)}}
           @secondFactorMethod={{@controller.shownSecondFactorMethod}}
           value={{@controller.secondFactorToken}}
         />
