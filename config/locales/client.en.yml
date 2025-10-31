@@ -2447,8 +2447,8 @@ en:
       label: "Select options"
     d_otp:
       screen_reader:
-        one: Fill one char
-        other: Fill %{count} chars
+        one: Enter a number
+        other: Enter %{count} numbers
     form_kit:
       reset: Reset
       optional: optional
