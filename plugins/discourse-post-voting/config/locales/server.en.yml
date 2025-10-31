@@ -36,7 +36,7 @@ en:
     reviewables:
       actions:
         comment_actions:
-          bundle_title: "What do you want to do with the comment"
+          bundle_title: "What do you want to do with the comment?"
         no_action_comment:
           title: "No action"
           description: "Leave the comment as is."

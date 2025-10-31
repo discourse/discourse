@@ -4,8 +4,8 @@ describe "Viewing reviewable post voting comment", type: :system do
   fab!(:admin)
   fab!(:group)
   fab!(:topic) { Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE) }
-  fab!(:answer) { Fabricate(:post, topic: topic) }
-  fab!(:comment) { Fabricate(:post_voting_comment, post: answer) }
+  fab!(:reply) { Fabricate(:post, topic: topic) }
+  fab!(:comment) { Fabricate(:post_voting_comment, post: reply) }
   fab!(:reviewable) { Fabricate(:reviewable_post_voting_comment, target: comment, topic: topic) }
   let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
 
