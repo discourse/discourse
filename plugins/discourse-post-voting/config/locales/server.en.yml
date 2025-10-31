@@ -32,6 +32,29 @@ en:
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
 
+  discourse_post_voting:
+    reviewables:
+      actions:
+        comment_actions:
+          bundle_title: "What do you want to do with the comment?"
+        no_action_comment:
+          title: "No action"
+          description: "Leave the comment as is."
+        agree_and_keep_comment:
+          title: "Keep comment"
+          description: "Agree with flag and keep the comment unchanged."
+        agree_and_keep_deleted:
+          title: "Keep comment Deleted"
+          description: "Agree with flag and leave the comment deleted."
+        agree_and_restore:
+          title: "Restore comment"
+          description: "Restore the comment so that users can see it."
+        agree_and_delete:
+          title: "Delete comment"
+          description: "Delete the comment so that users cannot see it."
+        disagree_and_restore:
+          title: "Disagree and Restore comment"
+          description: "Restore the comment so that all users can see it."
 
   post_action_types:
     vote:
