@@ -30,17 +30,22 @@
 .review-item {
   display: flex;
   flex-wrap: nowrap;
-  gap: var(--space-4);
+  gap: var(--space-4) 0;
   align-items: flex-start;
+  margin-bottom: var(--space-8);
 
   @include viewport.until(sm) {
+    border: 1px solid var(--content-border-color);
     flex-direction: column;
-    border: 1px solid var(--primary-low);
   }
 
   &__primary-content {
     position: relative;
     flex: 0 1 70%;
+
+    @include viewport.from(sm) {
+      border: 1px solid var(--content-border-color);
+    }
 
     @include viewport.until(sm) {
       width: 100%;
@@ -50,6 +55,8 @@
   &__aside {
     flex: 0 1 30%;
     min-width: 0;
+    position: sticky;
+    top: var(--header-offset);
 
     @include viewport.until(sm) {
       box-sizing: border-box;
@@ -83,11 +90,6 @@
 
   &__flag-summary {
     border-radius: var(--d-border-radius);
-
-    @include viewport.from(sm) {
-      margin-bottom: var(--space-6);
-      border: 1px solid var(--content-border-color);
-    }
   }
 
   &__header {
@@ -100,10 +102,9 @@
   }
 
   &__label-badges {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--space-2);
-    align-items: start;
+    display: flex;
+    gap: var(--space-1);
+    align-items: baseline;
   }
 
   &__flag-label,
@@ -130,10 +131,14 @@
 
   &__meta-content {
     display: grid;
-    grid-template-columns: auto 1fr;
     row-gap: var(--space-4);
     column-gap: var(--space-4);
     padding: var(--space-4);
+    grid-template-columns: auto 1fr;
+
+    .reviewable-user & {
+      grid-template-columns: 1fr;
+    }
 
     .badge-category__wrapper {
       display: block;
@@ -161,6 +166,7 @@
     &-content-wrapper {
       padding-top: var(--space-4);
       border-top: 4px solid var(--primary-low);
+      width: 100%;
     }
 
     &-content {
@@ -169,6 +175,11 @@
       scrollbar-color: var(--primary-low) transparent;
       transition: scrollbar-color 0.25s ease-in-out;
       transition-delay: 0.5s;
+
+      pre,
+      code {
+        white-space: pre-wrap;
+      }
 
       --scrollbarWidth: 0.5em;
 
@@ -204,13 +215,11 @@
     gap: 0 var(--space-2);
   }
 
-  @include viewport.until(sm) {
-    &__insights {
-      padding-inline: var(--space-4);
+  &__insights {
+    padding-inline: var(--space-4);
 
-      .nav-pills {
-        border-bottom: 1px solid var(--content-border-color);
-      }
+    .nav-pills {
+      border-bottom: 1px solid var(--content-border-color);
     }
   }
 }
@@ -241,40 +250,30 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  background: var(--primary-very-low);
-  border-radius: 999px;
-  padding: var(--space-1) var(--space-2);
-  font-size: var(--font-down-1);
   line-height: 1;
 
   &.--spam {
-    background-color: var(--d-review-reason-spam-bg);
     color: var(--d-review-reason-spam-text);
   }
 
   &.--off-topic {
-    background-color: var(--d-review-reason-off-topic-bg);
     color: var(--d-review-reason-off-topic-text);
   }
 
   &.--illegal {
-    background-color: var(--d-review-reason-illegal-bg);
     color: var(--d-review-reason-illegal-text);
   }
 
   &.--inappropriate {
-    background-color: var(--d-review-reason-inappropriate-bg);
     color: var(--d-review-reason-inappropriate-text);
   }
 
   &.--other,
   &.--needs-approval {
-    background-color: var(--d-review-reason-other-bg);
     color: var(--d-review-reason-other-text);
   }
 
   &.--custom {
-    background-color: var(--d-review-reason-custom-bg);
     color: var(--d-review-reason-custom-text);
   }
 }
@@ -285,8 +284,8 @@
   justify-content: center;
   border-radius: 999px;
   min-width: 1rem;
-  padding: var(--space-1);
-  font-size: var(--font-down-2);
+  padding: var(--space-1) var(--space-half);
+  font-size: var(--font-down-3);
 
   &.--spam {
     background-color: var(--d-review-reason-spam-count-bg);
@@ -324,11 +323,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding-top: var(--space-3);
-
-  @include viewport.from(sm) {
-    margin-bottom: var(--space-6);
-  }
 
   &__item {
     display: grid;
@@ -370,6 +364,7 @@
   flex-direction: column;
   gap: var(--space-2);
   padding-top: var(--space-1);
+  padding-bottom: 0;
 
   label {
     display: block;
@@ -413,7 +408,6 @@
     display: flex;
     align-items: flex-start;
     gap: var(--space-3);
-    padding: var(--space-4);
     background: var(--secondary);
 
     &:not(:last-child) {
@@ -471,7 +465,6 @@
     &__description {
       color: var(--primary-high);
       font-size: var(--font-down-1);
-      margin: 0;
       line-height: var(--line-height-medium);
     }
 
@@ -494,6 +487,7 @@
       border: none;
       cursor: pointer;
       transition: all 0.15s ease;
+      margin-top: calc(var(--space-1) * -1);
 
       &:hover {
         background: var(--danger-low);
@@ -532,10 +526,8 @@
   padding: var(--space-4);
   margin-bottom: var(--space-4);
 
-  @include viewport.until(sm) {
-    &__form {
-      gap: var(--space-3);
-    }
+  &__form {
+    gap: var(--space-2);
   }
 
   textarea {

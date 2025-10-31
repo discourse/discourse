@@ -38,6 +38,7 @@ import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 let _components = {};
 
 const pluginReviewableParams = {};
+const reviewableTypeLabels = {};
 
 // The mappings defined here are default core mappings, and cannot be overridden
 // by plugins.
@@ -59,6 +60,21 @@ export function registerReviewableActionModal(actionName, modalClass) {
     );
   }
   actionModalClassMap[actionName] = modalClass;
+}
+
+/**
+ * Registers a custom label translation key for a reviewable type.
+ * Plugins can use this to provide specific labels for their reviewable types.
+ *
+ * @param {string} reviewableType - The reviewable type class name (e.g., "ReviewableAiPost")
+ * @param {string} labelKey - The i18n translation key (e.g., "discourse_ai.review.ai_post_flagged_as")
+ *
+ * @example
+ * import { registerReviewableTypeLabel } from "discourse/components/reviewable-refresh/item";
+ * registerReviewableTypeLabel("ReviewableAiPost", "discourse_ai.review.ai_post_flagged_as");
+ */
+export function registerReviewableTypeLabel(reviewableType, labelKey) {
+  reviewableTypeLabels[reviewableType] = labelKey;
 }
 
 function lookupComponent(context, name) {
@@ -281,6 +297,30 @@ export default class ReviewableItem extends Component {
     }, {});
 
     return Object.values(scoreData);
+  }
+
+  @discourseComputed("reviewable.type", "reviewable.created_from_flag")
+  reviewableTypeLabel(type, createdFromFlag) {
+    // handle plugin types
+    if (reviewableTypeLabels[type]) {
+      return reviewableTypeLabels[type];
+    }
+
+    // core types
+    if (type === "ReviewableUser") {
+      return "review.user_label";
+    }
+
+    if (type === "ReviewableQueuedPost") {
+      return "review.queued_post_label";
+    }
+
+    if (createdFromFlag) {
+      return "review.post_flagged_as";
+    }
+
+    // fallback
+    return "review.flagged_as";
   }
 
   @bind
@@ -617,7 +657,7 @@ export default class ReviewableItem extends Component {
             <div class="review-item__header">
               <div class="review-item__label-badges">
                 <span class="review-item__flag-label">{{i18n
-                    "review.flagged_as"
+                    this.reviewableTypeLabel
                   }}</span>
 
                 <div class="review-item__flag-badges">
