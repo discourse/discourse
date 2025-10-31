@@ -1681,7 +1681,7 @@ export default class ComposerService extends Service {
   saveAndCloseComposer() {
     // Always save the draft if the user had typed something
     // or had started setting up a title/tags/category
-    if (this.model.anyDirty) {
+    if (this.model.anyContentToSave) {
       this.skipAutoSave = true;
       this._saveDraft(true);
       this.model.clearState();
@@ -1745,35 +1745,9 @@ export default class ComposerService extends Service {
     }
   }
 
-  @discourseComputed(
-    "model.replyingToTopic",
-    "model.creatingTopic",
-    "model.anyDirty",
-    "model.reply",
-    "model.title",
-    "model.hasMetaData"
-  )
-  shouldConfirmDiscard(
-    replyingToTopic,
-    creatingTopic,
-    anyDirty,
-    reply,
-    title,
-    hasMetaData
-  ) {
-    if (anyDirty) {
-      return true;
-    }
-
-    if (replyingToTopic && reply.length > 0) {
-      return true;
-    }
-
-    if (creatingTopic && (title.length > 0 || hasMetaData)) {
-      return true;
-    }
-
-    return false;
+  @discourseComputed("model.anyContentToSave")
+  shouldConfirmDiscard(anyContentToSave) {
+    return anyContentToSave;
   }
 
   @observes("model.reply", "model.title")

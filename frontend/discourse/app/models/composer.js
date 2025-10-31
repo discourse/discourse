@@ -262,6 +262,46 @@ export default class Composer extends RestModel {
     return replyDirty || titleDirty || hasMetaData;
   }
 
+  @discourseComputed(
+    "anyDirty",
+    "replyingToTopic",
+    "creatingTopic",
+    "creatingPrivateMessage",
+    "reply",
+    "title",
+    "hasMetaData"
+  )
+  anyContentToSave(
+    anyDirty,
+    replyingToTopic,
+    creatingTopic,
+    creatingPrivateMessage,
+    reply,
+    title,
+    hasMetaData
+  ) {
+    if (anyDirty) {
+      return true;
+    }
+
+    if (replyingToTopic && !isEmpty(reply)) {
+      return true;
+    }
+
+    if (creatingTopic && (!isEmpty(title) || hasMetaData || !isEmpty(reply))) {
+      return true;
+    }
+
+    if (
+      creatingPrivateMessage &&
+      (!isEmpty(title) || hasMetaData || !isEmpty(reply))
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   @dependentKeyCompat
   get categoryId() {
     return this._categoryId;

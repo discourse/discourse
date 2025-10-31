@@ -71,14 +71,18 @@ describe "Composer - Drafts", type: :system do
 
     context "for an existing draft in a topic" do
       fab!(:draft) do
-        Fabricate(:draft, topic:, user: current_user, reply: "This is a reply I started typing")
+        Fabricate(
+          :draft,
+          topic:,
+          user: current_user,
+          reply: "This is an existing reply draft I want to save",
+        )
       end
 
       it "opens the draft when clicking Reply and saves changes clicking X" do
         topic_page.visit_topic_and_open_composer(topic)
 
-        expect(composer).to be_opened
-        expect(composer).to have_content("This is a reply I started typing")
+        expect(composer).to have_content("This is an existing reply draft I want to save")
 
         composer.fill_content("This is an updated reply content")
         composer.close
@@ -93,14 +97,15 @@ describe "Composer - Drafts", type: :system do
       it "does not save changes if nothing changed after opening the reply" do
         topic_page.visit_topic_and_open_composer(topic)
 
-        expect(composer).to be_opened
-        expect(composer).to have_content("This is a reply I started typing")
+        expect(composer).to have_content("This is an existing reply draft I want to save")
         composer.close
         expect(toasts).to have_no_message
         expect(composer).to be_closed
 
         draft.reload
-        expect(JSON.parse(draft.data)["reply"]).to eq("This is a reply I started typing")
+        expect(JSON.parse(draft.data)["reply"]).to eq(
+          "This is an existing reply draft I want to save",
+        )
       end
     end
 
@@ -185,7 +190,6 @@ describe "Composer - Drafts", type: :system do
       it "shows Discard draft confirmation modal and hides it on Cancel button click" do
         topic_page.visit_topic_and_open_composer(topic)
 
-        expect(composer).to be_opened
         expect(composer).to have_content("This is a reply I started typing")
 
         composer.discard
@@ -199,7 +203,6 @@ describe "Composer - Drafts", type: :system do
       it "discards the draft via the confirmation modal" do
         topic_page.visit_topic_and_open_composer(topic)
 
-        expect(composer).to be_opened
         expect(composer).to have_content("This is a reply I started typing")
 
         composer.discard
@@ -292,10 +295,8 @@ describe "Composer - Drafts", type: :system do
     end
 
     def visit_topic_and_save_draft
-      topic_page.visit_topic(topic)
-      topic_page.click_reply_button
+      topic_page.visit_topic_and_open_composer(topic)
 
-      expect(composer).to be_opened
       composer.fill_content("a b c d e f g")
 
       composer.close
