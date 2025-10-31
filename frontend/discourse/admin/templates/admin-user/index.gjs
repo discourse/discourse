@@ -772,7 +772,11 @@ export default <template>
             />
           {{/if}}
         {{else}}
-          {{@controller.deleteAllPostsExplanation}}
+          {{#if @controller.deleteAllPostsExplanation}}
+            <span class="delete-all-posts-explanation">
+              {{@controller.deleteAllPostsExplanation}}
+            </span>
+          {{/if}}
         {{/if}}
       </div>
     </div>
@@ -988,7 +992,9 @@ export default <template>
       <br />
       <div class="pull-right">
         {{icon "triangle-exclamation"}}
-        {{@controller.deleteExplanation}}
+        <span class="delete-explanation">
+          {{@controller.deleteExplanation}}
+        </span>
       </div>
     {{/if}}
   </section>

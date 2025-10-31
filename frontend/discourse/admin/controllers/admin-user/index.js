@@ -89,18 +89,15 @@ export default class AdminUserIndexController extends Controller {
 
   @discourseComputed(
     "model.can_delete_all_posts",
-    "model.staff",
+    "model.admin",
     "model.post_count"
   )
-  deleteAllPostsExplanation(canDeleteAllPosts, staff, postCount) {
+  deleteAllPostsExplanation(canDeleteAllPosts, admin, postCount) {
     if (canDeleteAllPosts) {
       return null;
-    }
-
-    if (staff) {
-      return i18n("admin.user.delete_posts_forbidden_because_staff");
-    }
-    if (postCount > this.siteSettings.delete_all_posts_max) {
+    } else if (admin) {
+      return i18n("admin.user.delete_posts_forbidden_because_admin");
+    } else if (postCount > this.siteSettings.delete_all_posts_max) {
       return i18n("admin.user.cant_delete_all_too_many_posts", {
         count: this.siteSettings.delete_all_posts_max,
       });
@@ -111,14 +108,12 @@ export default class AdminUserIndexController extends Controller {
     }
   }
 
-  @discourseComputed("model.canBeDeleted", "model.staff")
-  deleteExplanation(canBeDeleted, staff) {
+  @discourseComputed("model.canBeDeleted", "model.admin")
+  deleteExplanation(canBeDeleted, admin) {
     if (canBeDeleted) {
       return null;
-    }
-
-    if (staff) {
-      return i18n("admin.user.delete_forbidden_because_staff");
+    } else if (admin) {
+      return i18n("admin.user.delete_forbidden_because_admin");
     } else {
       return i18n("admin.user.delete_forbidden", {
         count: this.siteSettings.delete_user_max_post_age,
