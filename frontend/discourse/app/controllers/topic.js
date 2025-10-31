@@ -547,7 +547,7 @@ export default class TopicController extends Controller {
 
   // Called when the topmost visible post on the page changes.
   @action
-  topVisibleChanged(event) {
+  async topVisibleChanged(event) {
     const { post, refresh } = event;
     if (!post) {
       return;
@@ -561,13 +561,13 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      postStream.prependMore().then(() => refresh?.());
+      await postStream.prependMore();
+      refresh?.();
     }
   }
 
-  // Called the bottommost visible post on the page changes.
   @action
-  bottomVisibleChanged(event) {
+  async bottomVisibleChanged(event) {
     const { post, refresh } = event;
 
     const postStream = this.get("model.postStream");
@@ -578,9 +578,7 @@ export default class TopicController extends Controller {
       lastLoadedPost === post &&
       postStream.get("canAppendMore")
     ) {
-      // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
-      postStream.appendMore().then(() => refresh?.());
-      // show loading stuff
+      await postStream.appendMore();
       // TODO (glimmer-post-stream) the Glimmer Post stream doesn't pass a refresh function
       refresh?.();
     }
