@@ -91,6 +91,13 @@ module("Integration | Component | DOTP", function (hooks) {
     assert.dom(".d-otp-slot:nth-child(6)").hasText("​ -");
   });
 
+  test("@autoFocus", async function (assert) {
+    await render(<template><DOTP @autoFocus={{true}} /></template>);
+
+    assert.dom('.d-otp-slot[data-index="0"]').hasClass("--is-focused");
+    assert.dom(".d-otp-input").isFocused();
+  });
+
   test("handles paste with spaces correctly", async function (assert) {
     await render(<template><DOTP /></template>);
 

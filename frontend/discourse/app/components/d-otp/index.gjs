@@ -7,6 +7,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 import Slot from "./slot";
+import autoFocus from "discourse/modifiers/auto-focus";
 
 const DEFAULT_SLOTS = 6;
 
@@ -142,6 +143,7 @@ export default class DOTP extends Component {
           {{on "focus" this.onFocus}}
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
+          {{(if @autoFocus (modifier autoFocus))}}
           aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
           ...attributes
         />
