@@ -5,22 +5,6 @@ import { service } from "@ember/service";
 import LoadMore from "discourse/components/load-more";
 import { i18n } from "discourse-i18n";
 
-/**
- * @component LoadMoreAccessible
- *
- * Extends the standard LoadMore component with screen reader accessibility.
- * Provides both intersection observer based loading and manual load buttons
- * for users who navigate via headings or other assistive technologies.
- *
- * @param {Function} @action - Function to call when loading more content
- * @param {"above"|"below"} @direction - Direction of loading (affects button text and aria labels)
- * @param {boolean} @enabled - Whether loading is enabled (default: true)
- * @param {boolean} @canLoadMore - Whether more content is available to load
- * @param {string} @loadingText - Optional custom loading text
- * @param {Array<number>} @existingPostNumbers - Array of existing post numbers from PostStream
- * @param {Object} @firstAvailablePost - First available post from PostStream
- * @param {Object} @lastAvailablePost - Last available post from PostStream
- */
 export default class LoadMoreAccessible extends Component {
   @service a11yAnnouncer;
   @service appEvents;
@@ -46,10 +30,6 @@ export default class LoadMoreAccessible extends Component {
 
   get direction() {
     return this.args.direction || "below";
-  }
-
-  get isLoadingAbove() {
-    return this.direction === "above";
   }
 
   get canLoadMore() {
@@ -84,7 +64,7 @@ export default class LoadMoreAccessible extends Component {
       return this.args.loadingText;
     }
 
-    return this.isLoadingAbove
+    return this.direction === "above"
       ? i18n("post.load_more_posts_above")
       : i18n("post.load_more_posts_below");
   }
@@ -119,17 +99,14 @@ export default class LoadMoreAccessible extends Component {
     <LoadMore
       @action={{this.handleIntersectionLoad}}
       @enabled={{this.enabled}}
-      @rootMargin={{@rootMargin}}
-      @threshold={{@threshold}}
-      @root={{@root}}
-      ...attributes
-    >
-      {{yield}}
-    </LoadMore>
+    />
 
     {{! Screen reader accessible heading for navigation-based loading }}
-    <div class="load-more-accessible sr-only">
-      <h2 class="load-more-accessible__heading" id="load-more-heading">
+    <div class="post-stream-load-more-accessible sr-only">
+      <h2
+        class="post-stream-load-more-accessible__heading"
+        id="post-stream-load-more-heading__{{this.direction}}"
+      >
         {{if this.isLoading (i18n "post.loading_more_posts") this.buttonLabel}}
       </h2>
     </div>

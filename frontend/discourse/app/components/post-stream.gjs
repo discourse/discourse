@@ -6,7 +6,6 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMoreAccessible from "discourse/components/load-more-accessible";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import concatClass from "discourse/helpers/concat-class";
@@ -17,6 +16,7 @@ import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import Post from "./post";
 import PostGap from "./post/gap";
+import LoadMoreAccessible from "./post/load-more-accessible";
 import PostPlaceholder from "./post/placeholder";
 import PostSmallAction from "./post/small-action";
 import PostTimeGap from "./post/time-gap";
@@ -256,12 +256,12 @@ export default class PostStream extends Component {
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
         <LoadMoreAccessible
           @action={{fn this.loadMoreAbove this.firstAvailablePost}}
-          @direction="above"
           @canLoadMore={{@postStream.canPrependMore}}
-          @postStream={{@postStream}}
+          @direction="above"
           @existingPostNumbers={{this.existingPostNumbers}}
           @firstAvailablePost={{this.firstAvailablePost}}
           @lastAvailablePost={{this.lastAvailablePost}}
+          @postStream={{@postStream}}
         />
       {{/if}}
 
@@ -371,12 +371,12 @@ export default class PostStream extends Component {
         {{#if @postStream.canAppendMore}}
           <LoadMoreAccessible
             @action={{fn this.loadMoreBelow this.lastAvailablePost}}
-            @direction="below"
             @canLoadMore={{@postStream.canAppendMore}}
-            @postStream={{@postStream}}
+            @direction="below"
             @existingPostNumbers={{this.existingPostNumbers}}
             @firstAvailablePost={{this.firstAvailablePost}}
             @lastAvailablePost={{this.lastAvailablePost}}
+            @postStream={{@postStream}}
           />
         {{else}}
           <div
