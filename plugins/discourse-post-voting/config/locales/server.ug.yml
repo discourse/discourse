@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ug:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "تەدبىر قوللانمىغان"
   post_action_types:
     vote:
       title: "بېلەت تاشلاش"

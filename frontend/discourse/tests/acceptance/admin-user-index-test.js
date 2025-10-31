@@ -145,6 +145,76 @@ acceptance("Admin - User Index", function (needs) {
     server.put("/admin/users/7/disable_second_factor", () => {
       return helper.response({ success: "OK" });
     });
+
+    server.get("/admin/users/8.json", () => {
+      return helper.response({
+        id: 8,
+        username: "admin_user",
+        name: "Admin User",
+        avatar_template: "/letter_avatar_proxy/v4/letter/a/f0a364/{size}.png",
+        active: true,
+        admin: true,
+        moderator: false,
+        can_be_deleted: false,
+        post_count: 10,
+      });
+    });
+
+    server.get("/admin/users/9.json", () => {
+      return helper.response({
+        id: 9,
+        username: "regular_user",
+        name: "Regular User",
+        avatar_template: "/letter_avatar_proxy/v4/letter/r/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: false,
+        can_be_deleted: false,
+        post_count: 100,
+      });
+    });
+
+    server.get("/admin/users/10.json", () => {
+      return helper.response({
+        id: 10,
+        username: "moderator_user",
+        name: "Moderator User",
+        avatar_template: "/letter_avatar_proxy/v4/letter/m/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: true,
+        can_be_deleted: false,
+        post_count: 150,
+      });
+    });
+
+    server.get("/admin/users/11.json", () => {
+      return helper.response({
+        id: 11,
+        username: "admin_with_posts",
+        name: "Admin With Posts",
+        avatar_template: "/letter_avatar_proxy/v4/letter/a/f0a364/{size}.png",
+        active: true,
+        admin: true,
+        moderator: false,
+        can_delete_all_posts: false,
+        post_count: 50,
+      });
+    });
+
+    server.get("/admin/users/12.json", () => {
+      return helper.response({
+        id: 12,
+        username: "moderator_with_posts",
+        name: "Moderator With Posts",
+        avatar_template: "/letter_avatar_proxy/v4/letter/m/f0a364/{size}.png",
+        active: true,
+        admin: false,
+        moderator: true,
+        can_delete_all_posts: false,
+        post_count: 50,
+      });
+    });
   });
 
   needs.hooks.beforeEach(() => {
@@ -287,5 +357,77 @@ acceptance("Admin - User Index", function (needs) {
     await click(".dialog-footer .delete-and-block");
 
     assert.true(deleteAndBlock, "user does get blocked");
+  });
+
+  test("delete explanation - shows admin-specific message when admin cannot be deleted", async function (assert) {
+    await visit("/admin/users/8/admin_user");
+
+    assert
+      .dom(".delete-explanation")
+      .hasText(
+        i18n("admin.user.delete_forbidden_because_admin"),
+        "shows the admin delete forbidden message"
+      );
+  });
+
+  test("delete explanation - shows post-based message when moderators cannot be deleted", async function (assert) {
+    await visit("/admin/users/10/moderator_user");
+
+    assert.dom(".delete-explanation").includesText(
+      i18n("admin.user.delete_forbidden", {
+        count: this.siteSettings.delete_user_max_post_age,
+      }),
+      "moderators get the post-based message"
+    );
+
+    assert
+      .dom(".delete-explanation")
+      .doesNotIncludeText(
+        i18n("admin.user.delete_forbidden_because_admin"),
+        "moderators don't get the admin-specific message"
+      );
+  });
+
+  test("delete explanation - shows post-based message when regular user cannot be deleted", async function (assert) {
+    await visit("/admin/users/9/regular_user");
+
+    assert.dom(".delete-explanation").includesText(
+      i18n("admin.user.delete_forbidden", {
+        count: this.siteSettings.delete_user_max_post_age,
+      }),
+      "shows the post-based delete forbidden message"
+    );
+  });
+
+  test("delete explanation - not shown when user can be deleted", async function (assert) {
+    await visit("/admin/users/5/user5");
+
+    assert
+      .dom(".delete-explanation")
+      .doesNotExist(
+        "delete explanation is not shown for users who can be deleted"
+      );
+  });
+
+  test("delete all posts explanation - shows admin-specific message when admin's posts cannot be deleted", async function (assert) {
+    await visit("/admin/users/11/admin_with_posts");
+
+    assert
+      .dom(".delete-all-posts-explanation")
+      .hasText(
+        i18n("admin.user.delete_posts_forbidden_because_admin"),
+        "shows the admin delete posts forbidden message"
+      );
+  });
+
+  test("delete all posts explanation - moderators get post-based message, not admin message", async function (assert) {
+    await visit("/admin/users/12/moderator_with_posts");
+
+    assert
+      .dom(".delete-all-posts-explanation")
+      .doesNotIncludeText(
+        i18n("admin.user.delete_posts_forbidden_because_admin"),
+        "moderators don't get the admin-specific message for delete posts"
+      );
   });
 });

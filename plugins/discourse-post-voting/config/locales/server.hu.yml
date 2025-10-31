@@ -35,6 +35,26 @@ hu:
     post_voting_comment_enabled: "Kommentek engedélyezése a bejegyzésen a Bejegyzés szavazás témákban"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Nincs művelet"
+        agree_and_keep_comment:
+          title: "Hozzászólás megtartása"
+          description: "Egyetértek a megjelöléssel, de a hozzászólást változatlanul hagyom."
+        agree_and_keep_deleted:
+          title: "Hozzászólás törlése"
+          description: "Egyetértek a megjelöléssel, a hozzászólás törölve marad."
+        agree_and_restore:
+          title: "Hozzászólás visszaállítása"
+          description: "Bejegyzés visszaállítása, a felhasználók láthatják."
+        agree_and_delete:
+          title: "Hozzászólás törlése"
+          description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
+        disagree_and_restore:
+          title: "Nem értek egyet, és visszaállítom a hozzászólást"
+          description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
   post_action_types:
     vote:
       title: "Szavazás"

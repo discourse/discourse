@@ -297,7 +297,7 @@ de:
       header:
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
-      search: "Suche"
+      search_placeholder: "Suche"
     impersonation:
       notice: "Du verwendest derzeit die Rolle von %{username}"
       stop: "Nutzerrolle verlassen"
@@ -5252,6 +5252,7 @@ de:
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
+    reset_filter: "Zurücksetzen"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5284,6 +5285,21 @@ de:
           title: "Plug-ins"
         advanced:
           title: "Erweitert "
+      upcoming_changes:
+        name: "Name"
+        enabled: "Aktiviert"
+        select_groups: "Gruppen auswählen …"
+        preview: "Vorschau"
+        impact_roles:
+          admins: "Administratoren"
+          moderators: "Moderatoren"
+          staff: "Team"
+        filter:
+          all: "Gesamt"
+          enabled: "Aktiviert"
+          disabled: "Deaktiviert"
+          impact_type_feature: "Funktion"
+          impact_type_other: "Sonstiges"
       config:
         about:
           title: "Über deine Website"

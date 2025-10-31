@@ -10,6 +10,11 @@ fa_IR:
       answer_count:
         one: "%{count} پاسخ"
         other: "%{count} پاسخ"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "هیچ اقدامی"
   post_action_types:
     vote:
       title: "رای"

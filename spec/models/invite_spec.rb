@@ -637,4 +637,24 @@ RSpec.describe Invite do
       end
     end
   end
+
+  describe "redemption_count decrement when user is deleted" do
+    fab!(:invite) { Fabricate(:invite, email: nil, invited_by: user, max_redemptions_allowed: 5) }
+
+    it "decrements redemption_count when invited_user is destroyed" do
+      expect(invite.redemption_count).to eq(0)
+
+      user1 = invite.redeem(email: "user1@example.com")
+      expect(invite.reload.redemption_count).to eq(1)
+
+      user2 = invite.redeem(email: "user2@example.com")
+      expect(invite.reload.redemption_count).to eq(2)
+
+      user1.destroy
+      expect(invite.reload.redemption_count).to eq(1)
+
+      user2.destroy
+      expect(invite.reload.redemption_count).to eq(0)
+    end
+  end
 end

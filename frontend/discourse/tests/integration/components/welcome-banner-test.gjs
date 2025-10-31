@@ -61,15 +61,15 @@ module(
       assert.dom(".welcome-banner .welcome-banner__title input").doesNotExist();
     });
 
-    test("uses the welcome_banner.search translation for placeholder", async function (assert) {
+    test("uses the welcome_banner.search_placeholder translation for placeholder", async function (assert) {
       await render(<template><WelcomeBanner /></template>);
 
       assert
         .dom("#welcome-banner-search-input")
         .hasAttribute(
           "placeholder",
-          i18n("welcome_banner.search"),
-          "search input uses the welcome_banner.search translation as placeholder"
+          i18n("welcome_banner.search_placeholder"),
+          "search input uses the welcome_banner.search_placeholder translation as placeholder"
         );
     });
   }

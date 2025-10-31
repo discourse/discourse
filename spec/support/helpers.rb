@@ -329,6 +329,25 @@ module Helpers
     retry
   end
 
+  def mock_upcoming_change_metadata(metadata)
+    @original_upcoming_changes_metadata = SiteSetting.upcoming_change_metadata.dup
+
+    # We do this because upcoming changes are ephemeral in site settings,
+    # so we cannot rely on them for specs. Instead we can fake some metadata
+    # for an existing stable setting.
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_metadata,
+      @original_upcoming_changes_metadata.merge(metadata),
+    )
+  end
+
+  def clear_mocked_upcoming_change_metadata
+    SiteSetting.instance_variable_set(
+      :@upcoming_change_metadata,
+      @original_upcoming_changes_metadata,
+    )
+  end
+
   private
 
   def directory_from_caller

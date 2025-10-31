@@ -6,46 +6,6 @@
   --category-header-border: 1px solid var(--content-border-color);
 }
 
-#navigation-bar {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  margin-bottom: var(--nav-space);
-  margin-right: auto;
-}
-
-.navigation-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  margin-bottom: var(--nav-space);
-  gap: var(--nav-space) 0.5em;
-
-  > * {
-    white-space: nowrap;
-  }
-
-  .select-kit-header {
-    height: 100%;
-  }
-
-  @include viewport.until(sm) {
-    .edit-category {
-      .d-button-label {
-        display: none;
-      }
-
-      .d-icon {
-        margin: 0;
-      }
-    }
-  }
-
-  .dismiss-container-top:empty {
-    display: none;
-  }
-}
-
 .category-heading {
   max-width: 100%;
 

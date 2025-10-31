@@ -46,7 +46,7 @@ module Onebox
           return
         end
 
-        @parse_embed_response = { image: image, title: title }
+        @parse_embed_response = { image:, title: }
       end
 
       def placeholder_html
@@ -63,6 +63,7 @@ module Onebox
       def to_html
         if video_id
           <<-HTML
+            <img class="youtube-thumbnail onebox" style="display: none;" src="#{video_thumbnail_url}">
             <iframe
               src="#{self.class.embed_url(video_id)}?#{embed_params}"
               width="#{WIDTH}"
@@ -191,6 +192,10 @@ module Onebox
           end
       rescue StandardError
         {}
+      end
+
+      def video_thumbnail_url
+        "https://img.youtube.com/vi/#{video_id}/maxresdefault.jpg"
       end
     end
   end
