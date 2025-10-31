@@ -25,6 +25,7 @@ en:
     post_voting_enable_likes_on_answers: "Enable like button on replies on Post Voting topics"
     post_voting_undo_vote_action_window: "Number of minutes users are allowed to undo votes in Post Voting topics (enter 0 for no limit)"
     post_voting_comment_limit_per_post: "Number of comments allowed on each post"
+    post_voting_create_allowed_groups: "Groups allowed to create post voting topics"
     min_trust_to_flag_posts_voting_comments: "Minimum trust level to flag a post voting comment"
     flag_posts_voting_comments_allowed_groups: "Groups allowed to flag a post voting comment"
     post_voting_comment_enabled: "Enable comments on Post in Post Voting topics"
@@ -75,6 +76,8 @@ en:
       one_vote_per_comment: "You can only vote once for each comment."
 
   post_voting:
+    errors:
+      cannot_create_post_voting_topic: "You are not permitted to create post voting topics."
     comment:
       errors:
         post_voting_not_enabled: "Commenting on a post that is not in a Post Voting topic is not permitted."

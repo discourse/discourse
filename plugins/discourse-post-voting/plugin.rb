@@ -186,6 +186,12 @@ after_initialize do
   NewPostManager.add_handler do |manager|
     if !manager.args[:topic_id] && manager.args[:create_as_post_voting] == "true" &&
          (manager.args[:archetype].blank? || manager.args[:archetype] == Archetype.default)
+      if !manager.user.guardian.can_create_post_voting_topic?
+        result = NewPostResult.new(:created_post, false)
+        result.errors.add(:base, I18n.t("post_voting.errors.cannot_create_post_voting_topic"))
+        next result
+      end
+
       manager.args[:subtype] = Topic::POST_VOTING_SUBTYPE
     end
 
@@ -216,6 +222,10 @@ after_initialize do
   end
   add_to_serializer(:basic_category, :create_as_post_voting_default) do
     object.create_as_post_voting_default
+  end
+
+  add_to_serializer(:current_user, :can_create_post_voting_topic) do
+    scope.can_create_post_voting_topic?
   end
 
   add_to_serializer(:current_user, :can_flag_post_voting_comments) do
