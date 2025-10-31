@@ -78,8 +78,11 @@ export default class DModal extends Component {
     } else {
       this.animating = true;
 
+      el.style.transform = "scale(0.7)";
+      el.style.opacity = "0";
+
       await waitForPromise(
-        this.modalContainer.animate(
+        el.animate(
           [
             { transform: "scale(0.7)", opacity: 0 },
             { transform: "scale(1)", opacity: 1 },
@@ -91,6 +94,9 @@ export default class DModal extends Component {
           }
         ).finished
       );
+
+      el.style.transform = "";
+      el.style.opacity = "";
 
       this.animating = false;
     }
