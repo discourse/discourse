@@ -5,91 +5,45 @@ import { service } from "@ember/service";
 import LoadMore from "discourse/components/load-more";
 import { i18n } from "discourse-i18n";
 
-export default class LoadMoreAccessible extends Component {
+export default class PostLoadMoreAccessible extends Component {
   @service a11yAnnouncer;
-  @service appEvents;
 
   @tracked isLoading = false;
-  @tracked pendingFocusContext = null;
 
-  #hasPostsAppendedListener = false;
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-
-    // Only remove listeners that were actually added
-    if (this.#hasPostsAppendedListener) {
-      this.appEvents.off(
-        "post-stream:posts-appended",
-        this,
-        this.#handlePostsAppended
-      );
-      this.#hasPostsAppendedListener = false;
-    }
+  get canLoadMore() {
+    return this.args.canLoadMore ?? true;
   }
 
   get direction() {
     return this.args.direction || "below";
   }
 
-  get canLoadMore() {
-    return this.args.canLoadMore ?? true;
-  }
-
   get enabled() {
     return this.args.enabled ?? true;
   }
 
-  #handlePostsAppended() {
-    if (!this.pendingFocusContext) {
-      return;
-    }
-
-    // Clear the pending context
-    this.pendingFocusContext = null;
-    if (this.#hasPostsAppendedListener) {
-      this.appEvents.off(
-        "post-stream:posts-appended",
-        this,
-        this.#handlePostsAppended
-      );
-      this.#hasPostsAppendedListener = false;
-    }
-
-    this.a11yAnnouncer.announce(i18n("post.loading_complete"), "polite");
-  }
-
-  get buttonLabel() {
+  get label() {
     if (this.args.loadingText) {
       return this.args.loadingText;
     }
 
-    return this.direction === "above"
-      ? i18n("post.load_more_posts_above")
-      : i18n("post.load_more_posts_below");
+    return i18n(
+      this.direction === "above"
+        ? "post.load_more_posts_above"
+        : "post.load_more_posts_below"
+    );
   }
 
   @action
-  async handleIntersectionLoad() {
+  async handleLoadAndAnnouncement() {
     if (!this.enabled || !this.canLoadMore || this.isLoading) {
       return;
     }
 
     try {
       this.isLoading = true;
-
       await this.args.action();
-
-      this.pendingFocusContext = true;
-
-      if (!this.#hasPostsAppendedListener) {
-        this.appEvents.on(
-          "post-stream:posts-appended",
-          this,
-          this.#handlePostsAppended
-        );
-        this.#hasPostsAppendedListener = true;
-      }
+      this.a11yAnnouncer.announce(i18n("post.loading_complete"), "polite");
     } finally {
       this.isLoading = false;
     }
@@ -97,7 +51,7 @@ export default class LoadMoreAccessible extends Component {
 
   <template>
     <LoadMore
-      @action={{this.handleIntersectionLoad}}
+      @action={{this.handleLoadAndAnnouncement}}
       @enabled={{this.enabled}}
     />
 
@@ -107,7 +61,7 @@ export default class LoadMoreAccessible extends Component {
         class="post-stream-load-more-accessible__heading"
         id="post-stream-load-more-heading__{{this.direction}}"
       >
-        {{if this.isLoading (i18n "post.loading_more_posts") this.buttonLabel}}
+        {{if this.isLoading (i18n "post.loading_more_posts") this.label}}
       </h2>
     </div>
   </template>
