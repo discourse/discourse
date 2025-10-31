@@ -596,6 +596,8 @@ GEM
       rbs (>= 3, < 5)
     ruby-lsp-rails (0.4.8)
       ruby-lsp (>= 0.26.0, < 0.27.0)
+    ruby-lsp-rspec (0.1.28)
+      ruby-lsp (~> 0.26.0)
     ruby-prof (1.7.2)
       base64
     ruby-progressbar (1.13.0)
@@ -867,6 +869,7 @@ DEPENDENCIES
   rubocop-discourse
   ruby-lsp
   ruby-lsp-rails
+  ruby-lsp-rspec
   ruby-prof
   ruby-progressbar
   ruby-rc4
@@ -1168,6 +1171,7 @@ CHECKSUMS
   rubocop-rspec_rails (2.31.0) sha256=775375e18a26a1184a812ef3054b79d218e85601b9ae897f38f8be24dddf1f45
   ruby-lsp (0.26.2) sha256=b4e0da60d97d453ae8f91f065197f2ab189955bba763a128a416cc4c3fa1d976
   ruby-lsp-rails (0.4.8) sha256=f09d1f926d4063deeb2f3049311925c20dfe6c912371e3bcd04a265a865c44ae
+  ruby-lsp-rspec (0.1.28) sha256=0db3b3ffba08c6d70eb7831e79090a1863f572fe131ed0ecfce8a2f7d01bf491
   ruby-prof (1.7.2) sha256=270424fcac37e611f2d15a55226c4628e234f8434e1d7c25ca8a2155b9fc4340
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
   ruby-rc4 (0.1.5) sha256=00cc40a39d20b53f5459e7ea006a92cf584e9bc275e2a6f7aa1515510e896c03
