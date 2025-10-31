@@ -297,7 +297,7 @@ pt_BR:
       header:
         logged_in_members: "Boas-vindas novamente, %{preferred_display_name}!"
         anonymous_members: "Boas-vindas ao %{site_name}!"
-      search: "Pesquisar"
+      search_placeholder: "Pesquisar"
     themes:
       default_description: "Padrão"
       broken_theme_alert: "Seu site pode não funcionar por causa de um tema/componente com erro. Verifique o console do seu navegador para obter mais informações."
@@ -5212,6 +5212,7 @@ pt_BR:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
+    reset_filter: "Redefinir"
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
@@ -5244,6 +5245,20 @@ pt_BR:
           title: "Plugins"
         advanced:
           title: "Avançado"
+      upcoming_changes:
+        name: "Nome"
+        enabled: "Ativados(as)"
+        select_groups: "Selecionar grupos…"
+        preview: "Pré-visualizar"
+        impact_roles:
+          moderators: "Moderadores(as)"
+          staff: "Equipe"
+        filter:
+          all: "Todos(as)"
+          enabled: "Ativados(as)"
+          disabled: "Desativados(as)"
+          impact_type_feature: "Recurso"
+          impact_type_other: "Outras"
       config:
         about:
           title: "Sobre seu site"

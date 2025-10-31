@@ -353,7 +353,7 @@ cs:
       header:
         logged_in_members: "Vítejte zpět, %{preferred_display_name}!"
         anonymous_members: "Vítejte v %{site_name}!"
-      search: "Vyhledat"
+      search_placeholder: "Vyhledat"
     impersonation:
       notice: "Vydáváte se za %{username}"
       stop: "Zastavit impersonaci"
@@ -5809,6 +5809,7 @@ cs:
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
+    reset_filter: "obnovit výchozí"
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
@@ -5841,6 +5842,20 @@ cs:
           title: "Pluginy"
         advanced:
           title: "Pokročilé"
+      upcoming_changes:
+        name: "Jméno"
+        enabled: "Zapnuto"
+        select_groups: "Vyberte skupiny…"
+        preview: "Náhled"
+        impact_roles:
+          admins: "Administrátoři"
+          moderators: "Moderátoři"
+          staff: "Redakce"
+        filter:
+          all: "Vše"
+          enabled: "Zapnuto"
+          disabled: "Vypnuto"
+          impact_type_other: "Ostatní"
       config:
         about:
           title: "O vašem webu"

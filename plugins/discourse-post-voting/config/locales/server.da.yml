@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 da:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Ingen handling"
   post_action_types:
     vote:
       title: "Stemmeafgivelse"

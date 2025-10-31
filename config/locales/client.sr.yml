@@ -223,7 +223,7 @@ sr:
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
-      search: "Pretraži"
+      search_placeholder: "Pretraži"
     themes:
       default_description: "Подразумевано"
       error_caused_by: "Izazvano od '%{name}'. <a target='blank' href='%{path}'>Klikni ovde</a> da unaprediš, rekonfigurišeš ili onemogućiš."
@@ -2618,6 +2618,7 @@ sr:
         categories: "Sve kategorije"
   admin_js:
     settings: "Podešavanja"
+    reset_filter: "Reset"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -2634,6 +2635,18 @@ sr:
           title: "Sigurnost"
         plugins:
           title: "Dodaci"
+      upcoming_changes:
+        name: "Ime foruma"
+        enabled: "Omogućeno"
+        impact_roles:
+          admins: "Admini"
+          moderators: "Moderatori"
+          staff: "Osoblje"
+        filter:
+          all: "Sve"
+          enabled: "Omogućeno"
+          disabled: "Isključeno"
+          impact_type_other: "Ostalo"
       config:
         developer:
           title: "Programer"

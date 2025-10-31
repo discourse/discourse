@@ -254,7 +254,7 @@ sk:
       header:
         logged_in_members: "Vitaj späť, %{preferred_display_name}!"
         anonymous_members: "Vitajte na %{site_name}!"
-      search: "Hľadať"
+      search_placeholder: "Hľadať"
     themes:
       default_description: "Predvolené"
       error_caused_by: "Spôsobené '%{name}'. <a target='blank' href='%{path}'>Kliknutím sem</a> aktualizujte, prekonfigurujte alebo deaktivujte."
@@ -5621,6 +5621,7 @@ sk:
   admin_js:
     type_to_filter: "Filtrovať..."
     settings: "Nastavenia"
+    reset_filter: "Resetovať"
     admin:
       title: "Administrátor Discourse"
       moderator: "Moderátor"
@@ -5653,6 +5654,21 @@ sk:
           title: "Pluginy"
         advanced:
           title: "Pokročilé"
+      upcoming_changes:
+        name: "Meno"
+        enabled: "Povolené"
+        select_groups: "Vyberte skupiny…"
+        preview: "Náhľad"
+        impact_roles:
+          admins: "Administrátori"
+          moderators: "Moderátori"
+          staff: "Personál"
+        filter:
+          all: "Všetky"
+          enabled: "Povolené"
+          disabled: "Vypnuté"
+          impact_type_feature: "Funkcia"
+          impact_type_other: "Ostatné"
       config:
         about:
           title: "O vašej stránke"

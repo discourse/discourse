@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ro:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Nicio acțiune"
   post_action_types:
     vote:
       title: "Votează"

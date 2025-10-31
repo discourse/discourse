@@ -151,7 +151,7 @@ th:
     welcome_banner:
       header:
         anonymous_members: "ยินดีต้อนรับสู่ %{site_name}!"
-      search: "ค้นหา"
+      search_placeholder: "ค้นหา"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -2563,6 +2563,17 @@ th:
           title: "ความปลอดภัย"
         plugins:
           title: "ตัวเสริม"
+      upcoming_changes:
+        name: "ชื่อ"
+        preview: "แสดงตัวอย่าง"
+        impact_roles:
+          admins: "แอดมิน"
+          moderators: "ผู้ดูแลระบบ"
+          staff: "ทีมงาน"
+        filter:
+          all: "ทั้งหมด"
+          disabled: "ปิดใช้งานแล้ว"
+          impact_type_other: "อื่นๆ"
       config:
         developer:
           title: "นักพัฒนา"
