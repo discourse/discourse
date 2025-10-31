@@ -29,7 +29,7 @@ RSpec.describe PostItemExcerpt do
     it "returns nil when HTML depth exceeds limits" do
       stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_TREE_DEPTH", 5) do
         item = ExcerptSerializer.new(complex_post, scope: Guardian.new, root: false)
-        expect(item.excerpt).to eq(nil)
+        expect(item.excerpt).to eq("")
       end
     end
   end

@@ -15,8 +15,8 @@ module PostItemExcerpt
     @excerpt ||=
       begin
         PrettyText.excerpt(cooked, 300, keep_emoji_images: true)
-      rescue ArgumentError
-        nil
+      rescue ArgumentError => e
+        e.message.include?("Document tree depth limit exceeded") ? "" : raise
       end
   end
 
