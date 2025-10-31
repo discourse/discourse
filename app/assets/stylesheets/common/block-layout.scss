@@ -17,14 +17,14 @@
 }
 
 .block-group {
+  background-color: var(--primary-low);
+  padding: var(--space-6);
+
   &__container {
     container: block-group / inline-size;
   }
 
   &__layout {
-    border-radius: var(--d-border-radius);
-    background-color: var(--primary-low);
-    padding: var(--space-6);
     display: grid;
     gap: var(--space-2);
   }
