@@ -157,7 +157,7 @@ export default class Post extends Component {
     }
 
     return relativeAge(new Date(this.args.post.displayDate), {
-      format: "medium",
+      format: "medium-with-ago-and-on",
       wrapInSpan: false,
     });
   }

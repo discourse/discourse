@@ -4100,7 +4100,7 @@ en:
         actions: "Bulk actions"
 
     post:
-      accessible_heading: "post by %{username} on %{date}"
+      accessible_heading: "post by %{username} %{date}"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Quote (or press q)"
@@ -4128,7 +4128,8 @@ en:
       load_more_posts_below: "Load more posts below"
       sr_collapse_replies: "Collapse embedded replies"
       sr_load_more_replies: "Load more embedded replies"
-      loading_more_posts: "Loading more posts..."
+      loading_more_posts_above: "Loading more posts above..."
+      loading_more_posts_below: "Loading more posts below..."
       loading_complete: "Loading complete"
       sr_date: "Post date"
       sr_expand_replies:

@@ -8,7 +8,7 @@ import { i18n } from "discourse-i18n";
 export default class PostLoadMoreAccessible extends Component {
   @service a11yAnnouncer;
 
-  @tracked isLoading = false;
+  @tracked loading = false;
 
   get canLoadMore() {
     return this.args.canLoadMore ?? true;
@@ -23,8 +23,10 @@ export default class PostLoadMoreAccessible extends Component {
   }
 
   get label() {
-    if (this.args.loadingText) {
-      return this.args.loadingText;
+    if (this.loading) {
+      this.direction === "above"
+        ? "post.loading_more_posts_above"
+        : "post.loading_more_posts_below";
     }
 
     return i18n(
@@ -36,16 +38,21 @@ export default class PostLoadMoreAccessible extends Component {
 
   @action
   async handleLoadAndAnnouncement() {
-    if (!this.enabled || !this.canLoadMore || this.isLoading) {
+    if (!this.enabled || !this.canLoadMore || this.loading) {
       return;
     }
 
     try {
-      this.isLoading = true;
+      this.loading = true;
+
+      this.a11yAnnouncer.announce(
+        i18n(`post.loading_more_${this.direction}`),
+        "polite"
+      );
       await this.args.action();
       this.a11yAnnouncer.announce(i18n("post.loading_complete"), "polite");
     } finally {
-      this.isLoading = false;
+      this.loading = false;
     }
   }
 
@@ -61,7 +68,7 @@ export default class PostLoadMoreAccessible extends Component {
         class="post-stream-load-more-accessible__heading"
         id="post-stream-load-more-heading__{{this.direction}}"
       >
-        {{if this.isLoading (i18n "post.loading_more_posts") this.label}}
+        {{this.label}}
       </h2>
     </div>
   </template>
