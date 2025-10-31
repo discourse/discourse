@@ -16,7 +16,7 @@ import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import Post from "./post";
 import PostGap from "./post/gap";
-import LoadMoreAccessible from "./post/load-more-accessible";
+import PostLoadMoreAccessible from "./post/load-more-accessible";
 import PostPlaceholder from "./post/placeholder";
 import PostSmallAction from "./post/small-action";
 import PostTimeGap from "./post/time-gap";
@@ -254,7 +254,7 @@ export default class PostStream extends Component {
       }}
     >
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
-        <LoadMoreAccessible
+        <PostLoadMoreAccessible
           @action={{fn this.loadMoreAbove this.firstAvailablePost}}
           @canLoadMore={{@postStream.canPrependMore}}
           @direction="above"
@@ -369,7 +369,7 @@ export default class PostStream extends Component {
 
       {{#unless @postStream.loadingBelow}}
         {{#if @postStream.canAppendMore}}
-          <LoadMoreAccessible
+          <PostLoadMoreAccessible
             @action={{fn this.loadMoreBelow this.lastAvailablePost}}
             @canLoadMore={{@postStream.canAppendMore}}
             @direction="below"
