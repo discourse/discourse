@@ -1443,6 +1443,7 @@ zh_TW:
     min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     force_lowercase_tags: "強制所有新標籤完全小寫"
+    watched_precedence_over_muted: "如果我正在關注的類別或標籤中有我已設為免打擾的話題，請通知我。"
     shared_drafts_category: "通過為討論話題的草稿以指定一個類別，來啟用「共用草稿」功能。此類別中的話題將從工作人員使用者的主題清單中取消。"
     short_title: "短標題將用於使用者的主螢幕、啟動器或其他可能空白鍵有限的地方，它應限制為12個字。"
     dashboard_general_tab_activity_metrics: "選擇在一般頁面中要顯示為活躍指標的報告"
