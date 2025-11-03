@@ -7,6 +7,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { isTesting } from "discourse/lib/environment";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
@@ -112,6 +113,10 @@ export default class ApplicationController extends Controller {
     }
 
     return this.siteSettings.navigation_menu === "sidebar";
+  }
+
+  get showBannerContent() {
+    return applyValueTransformer("show-application-banner-content", true);
   }
 
   calculateShowSidebar() {

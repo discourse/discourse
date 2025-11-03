@@ -95,69 +95,80 @@ export default <template>
 
       <LoadingSliderFallbackSpinner />
 
-      <PluginOutlet @name="before-main-outlet" />
+      {{#if @controller.showBannerContent}}
+        <PluginOutlet @name="before-main-outlet" />
+      {{/if}}
 
       <div id="main-outlet">
-        <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+        {{#if this.showBannerContent}}
+          <PluginOutlet @name="above-main-container" @connectorTagName="div" />
 
-        {{#if
-          (eq
-            @controller.siteSettings.welcome_banner_location
-            "above_topic_content"
-          )
-        }}
-          <WelcomeBanner />
-        {{/if}}
-
-        <div class="container" id="main-container">
-          {{#if @controller.showTop}}
-            <CustomHtml @name="top" />
+          {{#if
+            (eq
+              @controller.siteSettings.welcome_banner_location
+              "above_topic_content"
+            )
+          }}
+            <WelcomeBanner />
           {{/if}}
-          <NotificationConsentBanner />
-          <PwaInstallBanner />
-          <GlobalNotice />
-          <PluginOutlet
-            @name="top-notices"
-            @connectorTagName="div"
-            @outletArgs={{lazyHash
-              currentPath=@controller.router._router.currentPath
-            }}
-          />
-        </div>
+
+          <div class="container" id="main-container">
+
+            {{#if @controller.showTop}}
+              <CustomHtml @name="top" />
+            {{/if}}
+            <NotificationConsentBanner />
+            <PwaInstallBanner />
+            <GlobalNotice />
+            <PluginOutlet
+              @name="top-notices"
+              @connectorTagName="div"
+              @outletArgs={{lazyHash
+                currentPath=@controller.router._router.currentPath
+              }}
+            />
+          </div>
+        {{/if}}
 
         {{outlet}}
 
         <CardContainer />
-        <PluginOutlet
-          @name="main-outlet-bottom"
-          @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-        />
+        {{#if this.showBannerContent}}
+          <PluginOutlet
+            @name="main-outlet-bottom"
+            @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+          />
+        {{/if}}
       </div>
 
-      <PluginOutlet @name="after-main-outlet" />
+      {{#if this.showBannerContent}}
+        <PluginOutlet @name="after-main-outlet" />
+      {{/if}}
 
       {{#if @controller.showPoweredBy}}
         <PoweredByDiscourse />
       {{/if}}
     </div>
 
-    <PluginOutlet
-      @name="above-footer"
-      @connectorTagName="div"
-      @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-    />
-    {{#if @controller.showFooter}}
-      <CustomHtml
-        @name="footer"
-        @triggerAppEvent="true"
-        @classNames="custom-footer-content"
+    {{#if this.showBannerContent}}
+      <PluginOutlet
+        @name="above-footer"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+      />
+      {{#if @controller.showFooter}}
+        <CustomHtml
+          @name="footer"
+          @triggerAppEvent="true"
+          @classNames="custom-footer-content"
+        />
+      {{/if}}
+      <PluginOutlet
+        @name="below-footer"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash showFooter=@controller.showFooter}}
       />
     {{/if}}
-    <PluginOutlet
-      @name="below-footer"
-      @connectorTagName="div"
-      @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-    />
 
     <ModalContainer />
     <DialogHolder />
