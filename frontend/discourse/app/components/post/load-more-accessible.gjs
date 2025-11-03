@@ -6,7 +6,7 @@ import LoadMore from "discourse/components/load-more";
 import { i18n } from "discourse-i18n";
 
 export default class PostLoadMoreAccessible extends Component {
-  @service a11yAnnouncer;
+  @service a11y;
 
   @tracked loading = false;
 
@@ -45,12 +45,9 @@ export default class PostLoadMoreAccessible extends Component {
     try {
       this.loading = true;
 
-      this.a11yAnnouncer.announce(
-        i18n(`post.loading_more_${this.direction}`),
-        "polite"
-      );
+      this.a11y.announce(i18n(`post.loading_more_${this.direction}`), "polite");
       await this.args.action();
-      this.a11yAnnouncer.announce(i18n("post.loading_complete"), "polite");
+      this.a11y.announce(i18n("post.loading_complete"), "polite");
     } finally {
       this.loading = false;
     }

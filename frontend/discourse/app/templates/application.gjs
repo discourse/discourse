@@ -1,8 +1,8 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DialogHolder from "dialog-holder/components/dialog-holder";
 import { and, eq } from "truth-helpers";
-import A11yLiveRegions from "discourse/components/a11y-live-regions";
-import A11ySkipLinks from "discourse/components/a11y-skip-links";
+import A11yLiveRegions from "discourse/components/a11y/live-regions";
+import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -37,7 +37,7 @@ export default <template>
   <DVirtualHeight />
 
   <DiscourseRoot {{didInsert @controller.trackDiscoursePainted}}>
-    <A11ySkipLinks />
+    <A11ySkipLinks.Container />
 
     <DDocument />
     <PageLoadingSlider />

@@ -1,15 +1,15 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { cancel, later, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import a11ySkipLink from "discourse/helpers/a11y-skip-link";
+import A11ySkipLinks from "discourse/components/a11y/skip-links";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import { forceFocus } from "../lib/dom-utils";
 
 class TopicSkipLinks extends Component {
   @service router;
-  @service appEvents;
-
-  #skipLinkFocusListener = null;
 
   get showTopicSkipLinks() {
     return this.args.topic?.last_read_post_number > 0;
@@ -25,16 +25,6 @@ class TopicSkipLinks extends Component {
     return (
       this.args.topic.highest_post_number || this.args.topic.posts_count || null
     );
-  }
-
-  get topicUrl() {
-    const topicId = this.args.topic.id;
-    const topicSlug = this.args.topic.slug;
-
-    if (topicId && topicSlug) {
-      return `/t/${topicSlug}/${topicId}`;
-    }
-    return topicId ? `/t/${topicId}` : null;
   }
 
   get resumeIsLastReply() {
@@ -67,210 +57,141 @@ class TopicSkipLinks extends Component {
     return currentPost > 1 && resumePost && currentPost !== resumePost;
   }
 
-  #setupFocusAfterNavigation(focusCallback) {
-    if (focusCallback()) {
-      return;
+  <template>
+    <A11ySkipLinks>
+      {{#if this.showTopicSkipLinks}}
+        {{#if this.isDirectUrlToArbitraryPost}}
+          <SkipTo @topic={{@topic}} @postNumber={{this.currentPostNumber}}>
+            {{i18n "skip_to_post" post_number=this.currentPostNumber}}
+          </SkipTo>
+        {{/if}}
+        {{#if this.resumePostNumber}}
+          {{#if this.resumeIsLastReply}}
+            <SkipTo @topic={{@topic}} @postNumber={{this.resumePostNumber}}>
+              {{i18n
+                "skip_to_where_you_left_off_last"
+                post_number=this.resumePostNumber
+              }}
+            </SkipTo>
+          {{else}}
+            <SkipTo @topic={{@topic}} @postNumber={{this.resumePostNumber}}>
+              {{i18n
+                "skip_to_where_you_left_off"
+                post_number=this.resumePostNumber
+              }}
+            </SkipTo>
+            {{#if this.topicHasMultiplePosts}}
+              <SkipTo @topic={{@topic}} @postNumber={{this.lastPostNumber}}>
+                {{i18n "skip_to_last_reply"}}
+              </SkipTo>
+            {{/if}}
+          {{/if}}
+        {{else}}
+          {{#if this.topicHasMultiplePosts}}
+            <SkipTo @topic={{@topic}} @postNumber={{this.lastPostNumber}}>
+              {{i18n "skip_to_last_reply"}}
+            </SkipTo>
+          {{/if}}
+        {{/if}}
+        {{#if this.topicHasMultiplePosts}}
+          <SkipTo @topic={{@topic}} @postNumber="1">
+            {{i18n "skip_to_top"}}
+          </SkipTo>
+        {{/if}}
+      {{/if}}
+    </A11ySkipLinks>
+  </template>
+}
+
+class SkipTo extends Component {
+  #mutationObserver = null;
+
+  willDestroy() {
+    super.willDestroy();
+
+    // clear any pending observer
+    this.#mutationObserver?.disconnect();
+  }
+
+  get url() {
+    return `${this.args.topic.url}/${this.args.postNumber}`;
+  }
+
+  @action
+  async handleSkipToPost(evt) {
+    evt.preventDefault();
+
+    await DiscourseURL.routeTo(evt.target.href);
+
+    let focusTarget;
+
+    if (Number(this.args.postNumber) === 1) {
+      focusTarget = document.querySelector("#topic-title h1");
+    } else {
+      focusTarget = document.querySelector(
+        `[data-post-number="${this.args.postNumber}"] .post-username`
+      );
     }
 
-    let attempts = 0;
-    const maxAttempts = 20;
-
-    const tryFocus = () => {
-      attempts++;
-      if (focusCallback()) {
-        if (this.#skipLinkFocusListener) {
-          this.appEvents.off(
-            "post-stream:posts-appended",
-            this,
-            this.#skipLinkFocusListener
-          );
-          this.#skipLinkFocusListener = null;
-        }
-        return;
-      }
-
-      if (attempts >= maxAttempts) {
-        if (this.#skipLinkFocusListener) {
-          this.appEvents.off(
-            "post-stream:posts-appended",
-            this,
-            this.#skipLinkFocusListener
-          );
-          this.#skipLinkFocusListener = null;
-        }
-        return;
-      }
-
-      setTimeout(tryFocus, 500);
-    };
-
-    this.#skipLinkFocusListener = () => {
-      setTimeout(tryFocus, 100);
-    };
-
-    this.appEvents.on(
-      "post-stream:posts-appended",
-      this,
-      this.#skipLinkFocusListener
-    );
-
-    setTimeout(tryFocus, 500);
-  }
-
-  @action
-  handleSkipToTop() {
-    setTimeout(() => {
-      const topicTitle =
-        document.querySelector("h1[data-topic-title]") ||
-        document.querySelector(".topic-title h1") ||
-        document.querySelector("#topic-title") ||
-        document.querySelector("h1");
-
-      if (topicTitle) {
-        topicTitle.setAttribute("tabindex", "-1");
-        topicTitle.focus();
-      }
-    }, 500);
-  }
-
-  @action
-  handleSkipToPost() {
-    this.#setupFocusAfterNavigation(() => {
-      const currentPost = this.currentPostNumber;
-      if (!currentPost) {
-        return false;
-      }
-
-      const postHeading =
-        document.querySelector(
-          `[data-post-number="${currentPost}"] .post-username`
-        ) ||
-        document.querySelector(
-          `[data-post-number="${currentPost}"] .username`
-        ) ||
-        document.querySelector(`[data-post-number="${currentPost}"]`);
-
-      if (postHeading) {
-        postHeading.setAttribute("tabindex", "-1");
-        postHeading.focus();
-        return true;
-      } else {
-        return false;
-      }
+    schedule("afterRender", async () => {
+      await this.#focusElement(focusTarget);
     });
   }
 
-  @action
-  handleSkipToLastPost() {
-    this.#setupFocusAfterNavigation(() => {
-      const lastPostNumber = this.lastPostNumber;
-      if (!lastPostNumber) {
-        return false;
-      }
+  async #focusElement(selector, timeout = 1000) {
+    this.#mutationObserver?.disconnect();
 
-      const postHeading =
-        document.querySelector(
-          `[data-post-number="${lastPostNumber}"] .post-username`
-        ) ||
-        document.querySelector(
-          `[data-post-number="${lastPostNumber}"] .username`
-        ) ||
-        document.querySelector(`[data-post-number="${lastPostNumber}"]`);
+    if (!selector) {
+      return Promise.resolve(false);
+    }
 
-      if (postHeading) {
-        postHeading.setAttribute("tabindex", "-1");
-        postHeading.focus();
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
+    const element = document.querySelector(selector);
 
-  @action
-  handleSkipToResume() {
-    this.#setupFocusAfterNavigation(() => {
-      const resumePostNumber = this.resumePostNumber;
-      if (!resumePostNumber) {
-        return false;
-      }
+    if (element) {
+      forceFocus(element);
+      return Promise.resolve(true);
+    }
 
-      const postHeading =
-        document.querySelector(
-          `[data-post-number="${resumePostNumber}"] .post-username`
-        ) ||
-        document.querySelector(
-          `[data-post-number="${resumePostNumber}"] .username`
-        ) ||
-        document.querySelector(`[data-post-number="${resumePostNumber}"]`);
+    try {
+      return await new Promise((resolve) => {
+        // if not fulfilled in time, resolve with false
+        const timeoutTimer = later(() => {
+          resolve(false);
+        }, timeout);
 
-      if (postHeading) {
-        postHeading.setAttribute("tabindex", "-1");
-        postHeading.focus();
-        return true;
-      } else {
-        return false;
-      }
-    });
+        this.#mutationObserver = new MutationObserver((mutations) => {
+          for (const mutation of mutations) {
+            if (mutation.type === "childList") {
+              const newElement = document.querySelector(selector);
+
+              if (newElement) {
+                cancel(timeoutTimer); // cancel the timeout timer
+                forceFocus(newElement); // force focus on the target element
+                resolve(true);
+
+                // skip the rest of the mutations
+                return;
+              }
+            }
+          }
+        });
+
+        this.#mutationObserver.observe(document.querySelector("#main-outlet"), {
+          childList: true,
+          subtree: true,
+        });
+      });
+    } finally {
+      this.#mutationObserver?.disconnect();
+      this.#mutationObserver = null;
+    }
   }
 
   <template>
-    {{#if this.showTopicSkipLinks}}
-      {{#if this.isDirectUrlToArbitraryPost}}
-        {{a11ySkipLink
-          href=(concat this.topicUrl "/" this.currentPostNumber)
-          label=(i18n "skip_to_post" post_number=this.currentPostNumber)
-          onClick=this.handleSkipToPost
-          position="topic-001"
-        }}
-      {{/if}}
-      {{#if this.resumePostNumber}}
-        {{#if this.resumeIsLastReply}}
-          {{a11ySkipLink
-            href=(concat this.topicUrl "/last")
-            label=(i18n
-              "skip_to_where_you_left_off_last"
-              post_number=this.resumePostNumber
-            )
-            onClick=this.handleSkipToResume
-            position="topic-002"
-          }}
-        {{else}}
-          {{a11ySkipLink
-            href=(concat this.topicUrl "/" this.resumePostNumber)
-            label=(i18n
-              "skip_to_where_you_left_off" post_number=this.resumePostNumber
-            )
-            onClick=this.handleSkipToResume
-            position="topic-003"
-          }}
-          {{#if this.topicHasMultiplePosts}}
-            {{a11ySkipLink
-              href=(concat this.topicUrl "/last")
-              label=(i18n "skip_to_last_reply")
-              onClick=this.handleSkipToLastPost
-              position="topic-004"
-            }}
-          {{/if}}
-        {{/if}}
-      {{else}}
-        {{#if this.topicHasMultiplePosts}}
-          {{a11ySkipLink
-            href=(concat this.topicUrl "/last")
-            label=(i18n "skip_to_last_reply")
-            onClick=this.handleSkipToLastPost
-            position="topic-005"
-          }}
-        {{/if}}
-      {{/if}}
-      {{#if this.topicHasMultiplePosts}}
-        {{a11ySkipLink
-          href=(concat this.topicUrl "/1")
-          label=(i18n "skip_to_top")
-          onClick=this.handleSkipToTop
-          position="topic-006"
-        }}
-      {{/if}}
+    {{#if @postNumber}}
+      <a href={{this.url}} {{on "click" this.handleSkipToPost}}>
+        {{yield}}
+      </a>
     {{/if}}
   </template>
 }

@@ -3,7 +3,7 @@ import { service } from "@ember/service";
 import Wizard from "discourse/static/wizard/models/wizard";
 
 export default class WizardRoute extends Route {
-  @service a11ySkipLinks;
+  @service a11y;
 
   model() {
     return Wizard.load();
@@ -19,7 +19,7 @@ export default class WizardRoute extends Route {
       showSiteHeader: false,
     });
 
-    this.a11ySkipLinks.show = false;
+    this.a11y.showSkipLinks = false;
   }
 
   deactivate() {
@@ -32,6 +32,6 @@ export default class WizardRoute extends Route {
       showSiteHeader: true,
     });
 
-    this.a11ySkipLinks.show = true;
+    this.a11y.showSkipLinks = true;
   }
 }

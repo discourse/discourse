@@ -62,7 +62,10 @@ export default <template>
     @topic={{@controller.model}}
     @hasScrolled={{@controller.hasScrolled}}
   >
-    <TopicSkipLinks @topic={{@controller.model}} />
+    <TopicSkipLinks
+      @postStream={{@controller.model.postStream}}
+      @topic={{@controller.model}}
+    />
     {{#if @controller.model}}
       <AddCategoryTagClasses
         @category={{@controller.model.category}}

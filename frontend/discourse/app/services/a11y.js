@@ -8,9 +8,11 @@ import Service from "@ember/service";
  * Provides a centralized way to announce messages to assistive technology users.
  * Uses reactive state with aria-atomic for reliable screen reader detection.
  */
-export default class AccessibilityAnnouncerService extends Service {
-  @tracked politeMessage = "";
+export default class A11y extends Service {
   @tracked assertiveMessage = "";
+  @tracked politeMessage = "";
+  @tracked showSkipLinks = true;
+
   #politeTimerId = null;
   #assertiveTimerId = null;
 

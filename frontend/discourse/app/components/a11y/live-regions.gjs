@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 
 export default class A11yLiveRegions extends Component {
-  @service a11yAnnouncer;
+  @service a11y;
 
   <template>
     <div
@@ -12,7 +12,7 @@ export default class A11yLiveRegions extends Component {
       aria-live="polite"
       aria-atomic="true"
     >
-      {{this.a11yAnnouncer.politeMessage}}
+      {{this.a11y.politeMessage}}
     </div>
     <div
       id="a11y-announcements-assertive"
@@ -21,7 +21,7 @@ export default class A11yLiveRegions extends Component {
       aria-live="assertive"
       aria-atomic="true"
     >
-      {{this.a11yAnnouncer.assertiveMessage}}
+      {{this.a11y.assertiveMessage}}
     </div>
   </template>
 }
