@@ -75,11 +75,11 @@ If multiple transformers are registered against a single name, then they will be
 
 ## Finding Transformers
 
-At the moment there is no centralized documentation for transformers. However, a list of all core transformers can be found in the code [here](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/transformer/registry.js). You can then search for those names in the core codebase to find where they're called, the context/value, and the expected return type.
+At the moment there is no centralized documentation for transformers. However, a list of all core transformers can be found in the code [here](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/transformer/registry.js). You can then search for those names in the core codebase to find where they're called, the context/value, and the expected return type.
 
 ## Introducing new Transformers
 
-To introduce new transformers, the name first needs to be added to the registry. In core, add it to [lib/transformer/registry.js](https://github.com/discourse/discourse/blob/main/app/assets/javascripts/discourse/app/lib/transformer/registry.js).
+To introduce new transformers, the name first needs to be added to the registry. In core, add it to [lib/transformer/registry.js](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/lib/transformer/registry.js).
 
 To introduce a new transformer via a theme or plugin, create a `pre-initializer` and register the name via the relevant API:
 
