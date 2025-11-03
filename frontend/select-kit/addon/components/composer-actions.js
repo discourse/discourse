@@ -249,6 +249,22 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       });
     }
 
+    if (
+      this.currentUser.can_send_private_messages &&
+      this.action !== PRIVATE_MESSAGE &&
+      this.action !== REPLY &&
+      !this.isEditing
+    ) {
+      items.push({
+        name: i18n("composer.composer_actions.create_personal_message.label"),
+        description: i18n(
+          "composer.composer_actions.create_personal_message.desc"
+        ),
+        icon: "envelope",
+        id: "create_private_message",
+      });
+    }
+
     return items;
   }
 
@@ -380,6 +396,11 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
   sharedDraftSelected(options) {
     this._switchCreate(options, CREATE_SHARED_DRAFT);
+  }
+
+  createPrivateMessageSelected(options) {
+    options.archetypeId = "private_message";
+    this._switchCreate(options, PRIVATE_MESSAGE);
   }
 
   @action
