@@ -100,7 +100,7 @@ export default <template>
       {{/if}}
 
       <div id="main-outlet">
-        {{#if this.showBannerContent}}
+        {{#if @controller.showBannerContent}}
           <PluginOutlet @name="above-main-container" @connectorTagName="div" />
 
           {{#if
@@ -133,7 +133,7 @@ export default <template>
         {{outlet}}
 
         <CardContainer />
-        {{#if this.showBannerContent}}
+        {{#if @controller.showBannerContent}}
           <PluginOutlet
             @name="main-outlet-bottom"
             @outletArgs={{lazyHash showFooter=@controller.showFooter}}
@@ -141,7 +141,7 @@ export default <template>
         {{/if}}
       </div>
 
-      {{#if this.showBannerContent}}
+      {{#if @controller.showBannerContent}}
         <PluginOutlet @name="after-main-outlet" />
       {{/if}}
 
@@ -150,7 +150,7 @@ export default <template>
       {{/if}}
     </div>
 
-    {{#if this.showBannerContent}}
+    {{#if @controller.showBannerContent}}
       <PluginOutlet
         @name="above-footer"
         @connectorTagName="div"
