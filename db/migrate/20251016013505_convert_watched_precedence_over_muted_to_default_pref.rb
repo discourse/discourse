@@ -25,9 +25,6 @@ class ConvertWatchedPrecedenceOverMutedToDefaultPref < ActiveRecord::Migration[8
       SET watched_precedence_over_muted = :preference_value
       WHERE watched_precedence_over_muted IS NULL;
     SQL
-
-    change_column_default :user_options, :watched_precedence_over_muted, from: nil, to: false
-    change_column_null :user_options, :watched_precedence_over_muted, false
   end
 
   def down
