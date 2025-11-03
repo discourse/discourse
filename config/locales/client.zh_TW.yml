@@ -4567,6 +4567,7 @@ zh_TW:
           light: "輕亮"
           dark: "黑暗"
           auto: "自動"
+          aria_label: "色彩模式，當前爲 %{mode}"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       description: "您的歡迎主題是新成員首先會閱讀的內容。將其視為你的“電梯遊說”或“使命宣言”。讓每個人都知道這個社區是為誰而建的、他們可以在這裡找到什麼以及你希望他們首先做什麼。"
@@ -6692,7 +6693,6 @@ zh_TW:
             cancel: "取消"
         merging_user: "合併使用者…"
         merge_failed: "合併用戶時發生錯誤。"
-        delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有貼文。"
         delete_forbidden:
           other: "不能刪除擁有貼文的使用者。請先刪除所有貼文後才能刪除該使用者。( 發表超過 %{count} 天的貼文不能刪除 )"
         cant_delete_all_posts:

@@ -4681,7 +4681,6 @@ gl:
             transfer_and_delete: "Transferir e eliminar @%{username}"
             cancel: "Cancelar"
         merge_failed: "Produciuse un erro ao combinar os usuarios."
-        delete_posts_forbidden_because_staff: "Non é posíbel eliminar todas as publicacións dos administradores ou moderadores."
         delete_forbidden:
           one: "Non é posíbel eliminar usuarios se teñen publicacións. Elimine as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} día)"
           other: "Non é posíbel eliminar usuarios se teñen publicacións. Elimine as publicacións antes de eliminar o usuario (non é posíbel eliminar publicacións de máis de %{count} días)"

@@ -5056,7 +5056,6 @@ ko:
             transfer_and_delete: "@%{username} 이전 및 삭제"
             cancel: "취소"
         merge_failed: "사용자를 병합하는 중에 오류가 발생했습니다."
-        delete_posts_forbidden_because_staff: "관리자 및 운영자의 게시물은 모두 삭제할 수 없습니다."
         delete_forbidden:
           other: "게시물이 있는 사용자는 삭제할 수 없습니다. 사용자를 삭제하기 전에 게시물을 모두 삭제해야 합니다. (%{count}일 이전에 작성한 글은 삭제할 수 없습니다.)"
         cant_delete_all_posts:

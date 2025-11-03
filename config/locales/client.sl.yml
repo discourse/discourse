@@ -4606,7 +4606,6 @@ sl:
           confirmation:
             cancel: "Prekliči"
         merging_user: "Združujem uporabnika…"
-        delete_posts_forbidden_because_staff: "Ne morete izbrisati vseh prispevkov od administratorjev ali moderatorjev."
         delete_forbidden:
           one: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dne ne morejo biti izbrisani.)"
           two: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"

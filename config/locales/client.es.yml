@@ -7487,7 +7487,6 @@ es:
             cancel: "Cancelar"
         merging_user: "Fusionando usuario…"
         merge_failed: "Ha ocurrido un error al fusionar los usuarios."
-        delete_posts_forbidden_because_staff: "No se pueden eliminar todos las publicaciones de administradores y moderadores."
         delete_forbidden:
           one: "Los usuarios no se pueden borrar si han sido registrados hace más de %{count} día, o si tienen publicaciones. Borra todas publicaciones antes de tratar de borrar un usuario."
           other: "Los usuarios no se pueden eliminar si tienen publicaciones. Elimina todas las publicaciones antes de tratar de eliminar a un usuario. (No se pueden eliminar las publicaciones que se hayan creado hace más de %{count} días)"

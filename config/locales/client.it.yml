@@ -7466,7 +7466,6 @@ it:
             cancel: "Annulla"
         merging_user: "Unione utente in corso…"
         merge_failed: "Si è verificato un errore durante l'unione degli utenti."
-        delete_posts_forbidden_because_staff: "Impossibile cancellare tutti i messaggi degli amministratori e dei moderatori."
         delete_forbidden:
           one: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorno non possono essere cancellati)."
           other: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorni non possono essere cancellati)."

@@ -5100,7 +5100,6 @@ vi:
             cancel: "Hủy"
         merging_user: "Đang hợp nhất người dùng…"
         merge_failed: "Đã xảy ra lỗi khi hợp nhất người dùng."
-        delete_posts_forbidden_because_staff: "Không thể xóa tất cả bài viết của quản trị và điều hành viên."
         delete_forbidden:
           other: "Không thể xóa tài khoản nếu họ có bài viết, hãy xóa tất cả các bài viết trước khi xóa tài khoản. (Không thể xóa các bài viết cũ hơn %{count} ngày.)"
         cant_delete_all_posts:
