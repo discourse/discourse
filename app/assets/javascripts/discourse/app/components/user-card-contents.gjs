@@ -534,7 +534,11 @@ export default class UserCardContents extends CardContentsBase {
             <PluginOutlet
               @name="user-card-additional-controls"
               @connectorTagName="div"
-              @outletArgs={{lazyHash user=this.user close=this.close}}
+              @outletArgs={{lazyHash
+                user=this.user
+                close=this.close
+                post=this.post
+              }}
             />
           </div>
 
