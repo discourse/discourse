@@ -151,7 +151,6 @@ $hpad: 0.65em;
   animation: float-up ease 0.25s 1 forwards;
 }
 
-// Enter/exit animation mixins for consistent animation patterns
 @mixin enter-animation($name, $duration, $easing: ease) {
   &.is-entering {
     animation: $name $duration $easing forwards;

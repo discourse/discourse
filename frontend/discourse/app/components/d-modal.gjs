@@ -173,7 +173,6 @@ export default class DModal extends Component {
       if (this.site.desktopView) {
         await this.#animatePopOff();
       } else {
-        // Mobile: use CSS animation for exit
         const backdrop = this.wrapperElement.nextElementSibling;
         this.modalContainer.classList.add("is-exiting");
         if (backdrop) {
@@ -256,10 +255,25 @@ export default class DModal extends Component {
 
   #waitForAnimationEnd(el) {
     return new Promise((resolve) => {
+      const style = window.getComputedStyle(el);
+      const duration = parseFloat(style.animationDuration) * 1000 || 0;
+      const delay = parseFloat(style.animationDelay) * 1000 || 0;
+      const totalTime = duration + delay;
+
+      const timeoutId = setTimeout(
+        () => {
+          el.removeEventListener("animationend", handleAnimationEnd);
+          resolve();
+        },
+        Math.max(totalTime + 50, 50)
+      );
+
       const handleAnimationEnd = () => {
+        clearTimeout(timeoutId);
         el.removeEventListener("animationend", handleAnimationEnd);
         resolve();
       };
+
       el.addEventListener("animationend", handleAnimationEnd);
     });
   }
