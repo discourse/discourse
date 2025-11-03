@@ -73,8 +73,14 @@ module BadgeQueries
       SELECT pa.user_id, min(pa.id) id
       FROM post_actions pa
       JOIN badge_posts p on p.id = pa.post_id
-      WHERE post_action_type_id IN (#{PostActionType.flag_types_without_additional_message.values.join(",")}) AND
-        (:backfill OR pa.post_id IN (:post_ids) )
+      WHERE post_action_type_id IN (
+        SELECT f.id
+        FROM flags f
+        WHERE name != 'like'
+        AND score_type IS FALSE
+        AND require_message IS FALSE
+      )
+      AND (:backfill OR pa.post_id IN (:post_ids))
       GROUP BY pa.user_id
     ) x
     JOIN post_actions pa1 on pa1.id = x.id
