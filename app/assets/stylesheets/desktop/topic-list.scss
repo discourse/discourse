@@ -191,25 +191,6 @@
   h2 {
     margin: var(--space-5) 0 var(--space-3);
   }
-
-  .show-more {
-    width: 100%;
-    z-index: z("base");
-    position: absolute;
-    top: 0;
-
-    .alert {
-      margin: 0;
-      padding: var(--space-4) var(--space-8) var(--space-4) var(--space-3);
-      gap: var(--space-3);
-      align-items: center;
-
-      &.loading {
-        color: var(--primary-medium);
-        cursor: default;
-      }
-    }
-  }
 }
 
 .bulk-select-topics {
