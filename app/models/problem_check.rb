@@ -164,19 +164,13 @@ class ProblemCheck
   end
   delegate :each_target, to: :class
 
-  def self.call(data = {})
-    new(data).call
+  def self.call
+    new.call
   end
 
-  def self.run(data = {}, &)
-    new(data).run(&)
+  def self.run(&)
+    new.run(&)
   end
-
-  def initialize(data = {})
-    @data = OpenStruct.new(data)
-  end
-
-  attr_reader :data
 
   def call
     raise NotImplementedError
@@ -207,10 +201,6 @@ class ProblemCheck
     end
 
     problems
-  end
-
-  def each_target(&)
-    targets.call.each(&)
   end
 
   private
