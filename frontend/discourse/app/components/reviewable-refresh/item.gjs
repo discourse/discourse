@@ -11,6 +11,8 @@ import { classify, dasherize } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
+import DMenu from "discourse/components/d-menu";
+import DropdownMenu from "discourse/components/dropdown-menu";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
@@ -28,7 +30,9 @@ import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { bind } from "discourse/lib/decorators";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
+import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
@@ -645,6 +649,29 @@ export default class ReviewableItem extends Component {
     }
   }
 
+  get permalink() {
+    return getAbsoluteURL(`/review/${this.reviewable.id}`);
+  }
+
+  @action
+  openInNewTab() {
+    window.open(this.permalink, "_blank");
+  }
+
+  @action
+  async copyPermalink() {
+    try {
+      await clipboardCopy(this.permalink);
+      this.toasts.success({
+        data: { message: i18n("admin.customize.copied_to_clipboard") },
+        duration: 3000,
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to copy to clipboard:", error);
+    }
+  }
+
   <template>
     <div class="review-container">
 
@@ -666,11 +693,37 @@ export default class ReviewableItem extends Component {
                   {{/each}}
                 </div>
               </div>
-
               {{newReviewableStatus
                 this.reviewable.status
                 this.reviewable.type
               }}
+              <DMenu
+                @icon="link"
+                @title={{i18n "review.permalink_menu"}}
+                class="review-item__permalink-menu btn-transparent"
+                @modalForMobile={{true}}
+              >
+                <:content>
+                  <DropdownMenu as |dropdown|>
+                    <dropdown.item>
+                      <DButton
+                        @icon="up-right-from-square"
+                        @label="review.open_in_new_window"
+                        @action={{this.openInNewTab}}
+                        class="btn-transparent"
+                      />
+                    </dropdown.item>
+                    <dropdown.item>
+                      <DButton
+                        @icon="copy"
+                        @label="review.copy_link"
+                        @action={{this.copyPermalink}}
+                        class="btn-transparent"
+                      />
+                    </dropdown.item>
+                  </DropdownMenu>
+                </:content>
+              </DMenu>
             </div>
 
             {{#let

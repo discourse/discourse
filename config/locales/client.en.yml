@@ -828,6 +828,9 @@ en:
       save: "Save"
       cancel: "Cancel"
       new_topic: "Approving this item will create a new topic"
+      permalink_menu: "Permalink options"
+      open_in_new_window: "Open in new window"
+      copy_link: "Copy link"
 
       filters:
         all_categories: "(all categories)"
