@@ -950,6 +950,8 @@ en:
       review_user: "User"
       need_help: "Need help?"
       copy_link: "Copy link"
+      copy_permalink_title: "copy a link to this reviewable item to clipboard"
+      copy_link_feedback: "Link copied"
       view_source: "View source"
       insights:
         title: "Insights"

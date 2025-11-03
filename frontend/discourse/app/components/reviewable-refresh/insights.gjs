@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
+import { htmlSafe } from "@ember/template";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -56,15 +56,24 @@ export default class ReviewableInsights extends Component {
         );
       }
     }
-    activities.push(
-      i18n("review.insights.activities.posts", {
-        count: user?.post_count || 0,
-      })
-    );
+
+    const postCount = user?.post_count || 0;
+    const postsText = i18n("review.insights.activities.posts", {
+      count: postCount,
+    });
+
+    if (postCount > 0 && user?.username) {
+      activities.push(
+        `<a href="/u/${user.username}/activity">${postsText}</a>`
+      );
+    } else {
+      activities.push(postsText);
+    }
+
     insights.push({
       icon: "users",
       label: i18n("review.insights.user_activity"),
-      description: activities.join(", "),
+      description: htmlSafe(activities.join(", ")),
     });
 
     // Visibility insight
@@ -83,14 +92,11 @@ export default class ReviewableInsights extends Component {
     <div class="review-insight">
       {{#each this.reviewInsights as |insight|}}
         <div class="review-insight__item">
-          <div class="review-insight__icon">
-            {{icon insight.icon}}
-          </div>
           <div class="review-insight__content">
             <div class="review-insight__label">{{insight.label}}</div>
-            <div
-              class="review-insight__description"
-            >{{insight.description}}</div>
+            <div class="review-insight__description">
+              {{insight.description}}
+            </div>
           </div>
         </div>
       {{/each}}
