@@ -43,7 +43,7 @@ module DiscourseAi
 
           Important: Base your analysis solely on the provided text. Do not use any external information or make assumptions about the text's origin or context beyond what is explicitly provided.
 
-          Your response must be a language code, and nothing else.
+          Your response must be a language code, and nothing else. Do not wrap your response in quotes or any other characters.
         PROMPT
       end
 

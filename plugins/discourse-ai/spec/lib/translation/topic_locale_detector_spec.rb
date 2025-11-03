@@ -20,6 +20,13 @@ describe DiscourseAi::Translation::TopicLocaleDetector do
       expect(described_class.detect_locale(nil)).to eq(nil)
     end
 
+    it "returns nil if language detector returns nil and does not update topic" do
+      language_detector_stub({ text: "This is a cat topic", locale: nil, topic: })
+
+      expect(described_class.detect_locale(topic)).to eq(nil)
+      expect { described_class.detect_locale(topic) }.not_to change { topic }
+    end
+
     it "updates the topic locale with the detected locale" do
       language_detector_stub({ text: "This is a cat topic", locale: "zh_CN", topic: })
       expect { described_class.detect_locale(topic) }.to change { topic.reload.locale }.from(

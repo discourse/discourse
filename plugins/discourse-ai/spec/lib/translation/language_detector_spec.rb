@@ -10,6 +10,7 @@ describe DiscourseAi::Translation::LanguageDetector do
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_translation_enabled = true
   end
 
   describe ".detect" do
@@ -52,6 +53,40 @@ describe DiscourseAi::Translation::LanguageDetector do
     it "returns the language from the llm's response in the language tag" do
       DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
         locale_detector.detect
+      end
+    end
+
+    it "returns nil when the llm's response is not a valid language tag" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["not a language code"]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["1234"]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en-US-INCORRECT"]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en-US-INCORRECT"]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en-US"]) do
+        expect(locale_detector.detect).to eq("en-US")
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en"]) do
+        expect(locale_detector.detect).to eq("en")
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["sr-Latn"]) do
+        expect(locale_detector.detect).to eq("sr-Latn")
       end
     end
 
