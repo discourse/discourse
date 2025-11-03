@@ -12,11 +12,14 @@ module Jobs
     def execute(args)
       retry_count = args[:retry_count].to_i
       identifier = args[:check_identifier].to_sym
+      target = args[:target].to_s
+
+      return if target.blank?
 
       check = ProblemCheck[identifier]
 
-      check.run do |problems|
-        raise RetrySignal if problems.present? && retry_count < check.max_retries
+      check.run(target) do |problem|
+        raise RetrySignal if problem.present? && retry_count < check.max_retries
       end
     rescue RetrySignal
       Jobs.enqueue_in(

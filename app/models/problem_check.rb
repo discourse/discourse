@@ -13,7 +13,7 @@ class ProblemCheck
     end
 
     def run_all
-      select(&:enabled?).each(&:run)
+      select(&:enabled?).each { |check| check.each_target { |t| check.run(t) } }
     end
 
     private
@@ -149,10 +149,10 @@ class ProblemCheck
   end
   delegate :inline?, to: :class
 
-  def self.single_target?
-    targets.call.one?
+  def self.targeted?
+    targets.call != [ProblemCheck::NO_TARGET]
   end
-  delegate :single_target?, to: :class
+  delegate :targeted?, to: :class
 
   def self.ready_to_run?
     tracker.ready_to_run?
@@ -164,43 +164,43 @@ class ProblemCheck
   end
   delegate :each_target, to: :class
 
-  def self.call
-    new.call
+  def self.call(target = NO_TARGET)
+    if target == NO_TARGET
+      new.call
+    else
+      new.call(target)
+    end
   end
 
-  def self.run(&)
-    new.run(&)
+  def self.run(target = NO_TARGET, &)
+    new.run(target, &)
   end
 
   def call
     raise NotImplementedError
   end
 
-  def run
-    problems = call
-
-    yield(problems) if block_given?
-
-    next_run_at = perform_every&.from_now
-
-    if problems.empty?
-      each_target { |t| tracker(t).no_problem!(next_run_at:) }
-    else
-      problems
-        .uniq(&:target)
-        .each do |problem|
-          problem_translation_data =
-            problem.target.present? ? translation_data(problem.target) : translation_data
-
-          tracker(problem.target).problem!(
-            next_run_at:,
-            details:
-              problem_translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
-          )
-        end
+  def run(target = NO_TARGET)
+    if targeted? && (target == NO_TARGET || targets.call.exclude?(target))
+      tracker(target).destroy
+      return
     end
 
-    problems
+    problem = target == NO_TARGET ? call : call(target)
+
+    yield(problem) if block_given?
+
+    next_run_at = perform_every&.from_now
+    tracker = tracker(target)
+
+    if problem.blank?
+      tracker.no_problem!(next_run_at:)
+    else
+      tracker.problem!(
+        next_run_at:,
+        details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
+      )
+    end
   end
 
   private
@@ -208,22 +208,19 @@ class ProblemCheck
   def problem(target = nil, override_key: nil, override_data: {}, details: {})
     target_identifier = target.kind_of?(ActiveRecord::Base) ? target.id : target
 
-    problem =
-      Problem.new(
-        I18n.t(
-          override_key || translation_key,
-          base_path: Discourse.base_path,
-          **override_data.merge(
-            target.present? ? translation_data(target) : translation_data,
-          ).symbolize_keys,
-        ),
-        priority: self.config.priority,
-        identifier:,
-        target: target_identifier,
-        details:,
-      )
-
-    target.present? ? problem : [problem]
+    Problem.new(
+      I18n.t(
+        override_key || translation_key,
+        base_path: Discourse.base_path,
+        **override_data.merge(
+          target.present? ? translation_data(target) : translation_data,
+        ).symbolize_keys,
+      ),
+      priority: self.config.priority,
+      identifier:,
+      target: target_identifier,
+      details:,
+    )
   end
 
   def no_problem

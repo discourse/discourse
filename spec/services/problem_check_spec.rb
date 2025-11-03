@@ -112,9 +112,9 @@ RSpec.describe ProblemCheck do
     it { expect(disabled_check).not_to be_enabled }
   end
 
-  describe ".single_target?" do
-    it { expect(scheduled_check).to be_single_target }
-    it { expect(multi_target_check).not_to be_single_target }
+  describe ".targeted?" do
+    it { expect(scheduled_check).not_to be_targeted }
+    it { expect(multi_target_check).to be_targeted }
   end
 
   describe "plugin problem check registration" do
@@ -142,6 +142,22 @@ RSpec.describe ProblemCheck do
 
     context "when check is passing" do
       it { expect { passing_check.run }.to change { ProblemCheckTracker.passing.count }.by(1) }
+    end
+
+    context "when targeted check has a no-target tracker" do
+      before { multi_target_check.tracker(ProblemCheck::NO_TARGET) }
+
+      it "deletes the tracker" do
+        expect { multi_target_check.run }.to change { ProblemCheckTracker.count }.by(-1)
+      end
+    end
+
+    context "when targeted check has an outdated target" do
+      before { multi_target_check.tracker("baz") }
+
+      it "deletes the tracker" do
+        expect { multi_target_check.run("baz") }.to change { ProblemCheckTracker.count }.by(-1)
+      end
     end
   end
 end
