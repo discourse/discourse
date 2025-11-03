@@ -172,7 +172,7 @@ en:
               label: "PM sender"
               description: "User who will send the PM (defaults to system)"
             notify_author_pm_message:
-              label: "PM message"
+              label: "PM content"
               description: "Optional custom message to send to the author"
             include_personal_messages:
               label: "Include personal messages"
@@ -193,7 +193,7 @@ en:
           fields:
             tagger_persona:
               label: "AI Persona"
-              description: "The AI persona to use for analyzing and tagging posts"
+              description: "The AI persona to use for analyzing and tagging topics"
             tag_mode:
               label: "Tag Selection Mode"
               description: "Choose how the AI selects tags"
