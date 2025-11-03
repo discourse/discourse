@@ -138,7 +138,7 @@ export default class TopicController extends Controller {
     });
   }
 
-  get firstPostTitleIsHidden() {
+  get titleIsVisibleOnHeader() {
     return !this.header.mainTopicTitleVisible;
   }
 

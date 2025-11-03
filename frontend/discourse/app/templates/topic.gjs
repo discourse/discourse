@@ -207,8 +207,8 @@ export default <template>
             <h1
               data-topic-id={{@controller.model.id}}
               {{! Prevent duplicating the topic title heading on screen readers when the header is displaying the title
-                heading }}
-              aria-hidden={{booleanString @controller.firstPostTitleIsHidden}}
+                in the header }}
+              aria-hidden={{booleanString @controller.titleIsVisibleOnHeader}}
             >
               {{#unless @controller.model.is_warning}}
                 {{#if @controller.canSendPms}}
