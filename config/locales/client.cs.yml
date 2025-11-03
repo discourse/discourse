@@ -4548,7 +4548,7 @@ cs:
       localizations: "Lokalizace"
       localization:
         locale: "Jazyk"
-        name: "Jméno"
+        name: "Název"
         description: "Popis"
         add: "Přidat lokalizaci"
         remove: "Smazat"
@@ -5304,7 +5304,7 @@ cs:
         parent_tag_description: "Štítky z této skupiny lze použít pouze v případě, že je přítomen nadřazený štítek."
         one_per_topic_label: "Omezit na jeden štítek k tématu z této skupiny"
         new_name: "Nová skupina štítků"
-        name_placeholder: "Jméno"
+        name_placeholder: "Název"
         save: "Uložit"
         delete: "Smazat"
         confirm_delete: "Jste si jistí, že chcete smazat tuto skupinu štítků?"
@@ -6846,7 +6846,7 @@ cs:
             new_component: "Nová komponenta"
             back: "Zpět na komponenty"
             install: "Instalovat"
-            name: "Jméno"
+            name: "Název"
             used_on: "Použita v"
             enabled: "Zapnuto?"
             by_author: "Od uživatele %{name}"
@@ -6892,7 +6892,7 @@ cs:
           delete_successful: "Uživatelské pole odstraněno."
           save_successful: "Uživatelské pole uloženo."
         color_palettes:
-          palette_name: "Jméno"
+          palette_name: "Název"
           copy_to_clipboard: "Kopírovat do schránky"
           copied_to_clipboard: "Zkopírováno do schránky"
           copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"
@@ -7767,7 +7767,7 @@ cs:
         new_template: "Nová šablona"
         list_table:
           headings:
-            name: "Jméno"
+            name: "Název"
             active_categories: "Aktivní kategorie"
             actions: "Akce"
           actions:
