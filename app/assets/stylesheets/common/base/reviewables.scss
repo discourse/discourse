@@ -201,10 +201,13 @@
   }
 
   .reviewable-user-details {
-    border-bottom: 1px solid var(--content-border-color);
     padding-bottom: 0.25em;
     display: flex;
     margin-bottom: 0.5em;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--content-border-color);
+    }
 
     .name {
       width: 8em;
@@ -371,10 +374,6 @@
       float: left;
       margin-bottom: 1em;
     }
-  }
-
-  .names {
-    font-weight: bold;
   }
 
   .post-contents-wrapper {
@@ -552,6 +551,10 @@
     .score {
       font-size: var(--font-down-1);
     }
+  }
+
+  &__meta-label {
+    font-weight: bold;
   }
 
   .reviewable-contents {

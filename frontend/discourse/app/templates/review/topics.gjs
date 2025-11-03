@@ -1,5 +1,6 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import NavItem from "discourse/components/nav-item";
 import ReviewableClaimedTopic from "discourse/components/reviewable-claimed-topic";
 import TopicStatus from "discourse/components/topic-status";
 import icon from "discourse/helpers/d-icon";
@@ -7,6 +8,18 @@ import replaceEmoji from "discourse/helpers/replace-emoji";
 import { i18n } from "discourse-i18n";
 
 export default <template>
+  <ul class="nav nav-pills reviewable-title">
+    <NavItem @route="review.index" @label="review.view_all" />
+    <NavItem @route="review.topics" @label="review.grouped_by_topic" />
+    {{#if @controller.currentUser.admin}}
+      <NavItem
+        @route="review.settings"
+        @label="review.settings.title"
+        @icon="wrench"
+      />
+    {{/if}}
+  </ul>
+
   {{#if @controller.reviewableTopics.content}}
     <table class="reviewable-topics">
       <thead>

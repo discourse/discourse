@@ -28,7 +28,10 @@ import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { bind } from "discourse/lib/decorators";
+import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
+import { showAlert } from "discourse/lib/post-action-feedback";
+import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
@@ -645,6 +648,34 @@ export default class ReviewableItem extends Component {
     }
   }
 
+  get permalink() {
+    return getAbsoluteURL(`/review/${this.reviewable.id}`);
+  }
+
+  @action
+  async copyPermalink(event) {
+    const button = event.currentTarget;
+
+    // cmd/ctrl+click or middle-click to open in new tab
+    if (event.metaKey || event.ctrlKey || event.button === 1) {
+      window.open(this.permalink, "_blank");
+      return;
+    }
+
+    try {
+      await clipboardCopy(this.permalink);
+      showAlert(
+        this.reviewable.id,
+        "reviewable-permalink-copy",
+        "review.copy_link_feedback",
+        { actionBtn: button }
+      );
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("Failed to copy to clipboard:", error);
+    }
+  }
+
   <template>
     <div class="review-container">
 
@@ -666,11 +697,19 @@ export default class ReviewableItem extends Component {
                   {{/each}}
                 </div>
               </div>
-
               {{newReviewableStatus
                 this.reviewable.status
                 this.reviewable.type
               }}
+
+              <button
+                type="button"
+                {{on "click" this.copyPermalink}}
+                title={{i18n "review.copy_permalink_title"}}
+                class="btn btn-transparent reviewable-permalink-copy"
+              >
+                {{icon "d-post-share"}}
+              </button>
             </div>
 
             {{#let
