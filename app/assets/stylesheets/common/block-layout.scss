@@ -1,31 +1,9 @@
-.block-layout {
-  &__container {
-    container: block-layout / inline-size;
-  }
-
-  &__layout {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
-  }
-
-  &__block {
-    border: 2px solid var(--primary-medium);
-    border-radius: var(--d-border-radius);
-    padding: var(--space-2);
-  }
-}
-
-.block-group {
-  background-color: var(--primary-low);
-  padding: var(--space-6);
-
-  &__container {
-    container: block-group / inline-size;
-  }
-
-  &__layout {
-    display: grid;
-    gap: var(--space-2);
-  }
-}
+@import "blocks/layout-primitives";
+@import "blocks/layout-defaults";
+@import "blocks/layout-app";
+@import "blocks/block-search-bar";
+@import "blocks/block-featured-categories";
+@import "blocks/block-banner";
+@import "blocks/block-user-profile";
+@import "blocks/block-link";
+@import "blocks/block-category-banner";

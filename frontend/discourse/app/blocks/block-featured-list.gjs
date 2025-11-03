@@ -33,7 +33,7 @@ export default class BlockFeaturedList extends Component {
               {{or @title "Featured List"}}
             </h2>
             {{#if @link}}
-              <a href="{{@link}}" class="feed-link" style="...">{{i18n
+              <a href={{@link}} class="feed-link" style="...">{{i18n
                   "more_link"
                 }}</a>
             {{/if}}

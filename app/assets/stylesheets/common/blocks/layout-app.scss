@@ -1,0 +1,17 @@
+.header-blocks {
+  width: 100%;
+  margin-inline-start: var(--space-4);
+}
+
+.main-outlet-blocks {
+  margin-block-end: var(--space-4);
+
+  :has(.alert) &,
+  .welcome-banner--enabled & {
+    margin-block-end: 0;
+  }
+}
+
+.homepage-blocks {
+  margin-block-end: var(--space-2);
+}

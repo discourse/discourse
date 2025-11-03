@@ -1,3 +1,4 @@
+import BlockLayout from "discourse/components/block-layout";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { i18n } from "discourse-i18n";
 
@@ -9,4 +10,5 @@ export default <template>
       </p>
     {{/if}}
   </PluginOutlet>
+  <BlockLayout @name="homepage-blocks" />
 </template>

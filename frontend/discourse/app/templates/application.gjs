@@ -98,7 +98,7 @@ export default <template>
 
       <div id="main-outlet">
         <PluginOutlet @name="above-main-container" @connectorTagName="div" />
-        <BlockLayout @name="above-main-container" />
+        <BlockLayout @name="main-outlet-blocks" />
 
         {{#if
           (eq
