@@ -800,6 +800,75 @@ describe Post do
       expect(post.event.starts_at).to eq_time(expected_next_datetime)
     end
 
+    it "handles weekly recurrence across DST transition maintaining local time" do
+      expected_original_datetime =
+        ActiveSupport::TimeZone["America/New_York"].parse("2025-09-25 11:00")
+
+      post =
+        PostCreator.create!(
+          user,
+          title: "Weekly meeting",
+          raw:
+            "[event start='2025-09-25 11:00' end='2025-09-25 12:00' timezone='America/New_York' recurrence='every_week']\n[/event]",
+        ).reload
+
+      expect(post.event.timezone).to eq("America/New_York")
+      expect(post.event.original_starts_at).to eq_time(expected_original_datetime)
+
+      freeze_time(ActiveSupport::TimeZone["America/New_York"].parse("2025-11-05 12:00"))
+      post.event.set_next_date
+
+      next_starts_at = post.event.reload.starts_at
+      expect(next_starts_at.in_time_zone("America/New_York").hour).to eq(11)
+      expect(next_starts_at.in_time_zone("America/New_York").min).to eq(0)
+    end
+
+    it "handles daily recurrence across DST transition maintaining local time" do
+      expected_original_datetime =
+        ActiveSupport::TimeZone["America/New_York"].parse("2025-10-30 11:00")
+
+      post =
+        PostCreator.create!(
+          user,
+          title: "Daily standup",
+          raw:
+            "[event start='2025-10-30 11:00' end='2025-10-30 12:00' timezone='America/New_York' recurrence='every_day']\n[/event]",
+        ).reload
+
+      expect(post.event.timezone).to eq("America/New_York")
+      expect(post.event.original_starts_at).to eq_time(expected_original_datetime)
+
+      freeze_time(ActiveSupport::TimeZone["America/New_York"].parse("2025-11-05 12:00"))
+      post.event.set_next_date
+
+      next_starts_at = post.event.reload.starts_at
+      expect(next_starts_at.in_time_zone("America/New_York").hour).to eq(11)
+      expect(next_starts_at.in_time_zone("America/New_York").min).to eq(0)
+    end
+
+    it "handles monthly recurrence across DST transition maintaining local time" do
+      expected_original_datetime =
+        ActiveSupport::TimeZone["America/New_York"].parse("2025-09-25 11:00")
+
+      post =
+        PostCreator.create!(
+          user,
+          title: "Monthly meeting",
+          raw:
+            "[event start='2025-09-25 11:00' end='2025-09-25 12:00' timezone='America/New_York' recurrence='every_month']\n[/event]",
+        ).reload
+
+      expect(post.event.timezone).to eq("America/New_York")
+      expect(post.event.original_starts_at).to eq_time(expected_original_datetime)
+
+      freeze_time(ActiveSupport::TimeZone["America/New_York"].parse("2025-11-05 12:00"))
+      post.event.set_next_date
+
+      next_starts_at = post.event.reload.starts_at
+      expect(next_starts_at.in_time_zone("America/New_York").hour).to eq(11)
+      expect(next_starts_at.in_time_zone("America/New_York").min).to eq(0)
+    end
+
     it "handles showLocalTime with non-recurring events" do
       expected_datetime = ActiveSupport::TimeZone["Europe/Prague"].parse("2025-09-07 18:30")
 

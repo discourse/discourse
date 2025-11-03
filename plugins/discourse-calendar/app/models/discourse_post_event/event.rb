@@ -492,14 +492,35 @@ module DiscoursePostEvent
 
     def calculate_next_recurring_date
       timezone_starts_at = original_starts_at.in_time_zone(timezone)
+      dtstart =
+        Time.find_zone(rrule_timezone).local(
+          timezone_starts_at.year,
+          timezone_starts_at.month,
+          timezone_starts_at.day,
+          timezone_starts_at.hour,
+          timezone_starts_at.min,
+          timezone_starts_at.sec,
+        )
+
       timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
+      recurrence_until_local =
+        if timezone_recurrence_until
+          Time.find_zone(rrule_timezone).local(
+            timezone_recurrence_until.year,
+            timezone_recurrence_until.month,
+            timezone_recurrence_until.day,
+            timezone_recurrence_until.hour,
+            timezone_recurrence_until.min,
+            timezone_recurrence_until.sec,
+          )
+        end
 
       RRuleGenerator.generate(
-        starts_at: timezone_starts_at,
+        starts_at: dtstart,
         timezone: rrule_timezone,
         recurrence: recurrence,
-        recurrence_until: timezone_recurrence_until,
-        dtstart: timezone_starts_at,
+        recurrence_until: recurrence_until_local,
+        dtstart: dtstart,
       ).first
     end
   end
