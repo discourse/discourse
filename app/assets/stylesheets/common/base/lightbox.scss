@@ -127,27 +127,46 @@
   left: 0;
   bottom: var(--safe-area-inset-bottom);
   width: 100%;
-  padding: 0.5em;
   text-align: center;
   position: absolute;
 
   .pswp__caption-title {
     left: 50%;
+    bottom: 0;
     color: #fff;
     line-height: 1.25em;
     position: relative;
     max-width: 800px;
     padding: 0 1em 0.25em;
     transform: translateX(-50%);
+    transition: transform 0.4s ease;
   }
 
   .pswp__caption-details {
+    position: relative;
+    left: 50%;
+    bottom: 0;
+    opacity: 0;
+    transform: translate(-50%, 100%);
     color: var(--secondary-high);
     font-size: var(--font-down-1);
+    transition:
+      transform 0.4s ease,
+      opacity 0.4s ease;
   }
 }
 
+.pswp--caption-expanded .pswp__caption-title {
+  transform: translate(-50%, -5px);
+}
+
+.pswp--caption-expanded .pswp__caption-details {
+  transform: translate(-50%, -5px);
+  opacity: 1;
+}
+
 .pswp__button--download-image svg,
-.pswp__button--original-image svg {
+.pswp__button--original-image svg,
+.pswp__button--image-info svg {
   padding: 0.4em;
 }

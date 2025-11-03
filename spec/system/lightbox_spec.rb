@@ -32,12 +32,30 @@ describe "Lightbox | Photoswipe", type: :system do
 
       expect(lightbox).to have_no_counter
       expect(lightbox).to have_caption_title("first image")
-      expect(lightbox).to have_caption_details("2400×3600 1.21 KB")
+      expect(lightbox).to have_no_caption_details
 
       expect(lightbox).to have_no_next_button
       expect(lightbox).to have_no_prev_button
       expect(lightbox).to have_download_button
       expect(lightbox).to have_original_image_button
+      expect(lightbox).to have_image_info_button
+    end
+
+    it "can toggle image info" do
+      topic_page.visit_topic(topic)
+
+      find("#post_1 a.lightbox").click
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_no_caption_details
+
+      lightbox.image_info_button.click
+
+      expect(lightbox).to have_caption_details("2400×3600 1.21 KB")
+
+      lightbox.image_info_button.click
+
+      expect(lightbox).to have_no_caption_details
     end
   end
 
@@ -60,12 +78,13 @@ describe "Lightbox | Photoswipe", type: :system do
 
       expect(lightbox).to have_counter("2 / 2")
       expect(lightbox).to have_caption_title("second image")
-      expect(lightbox).to have_caption_details("2000×1000 1.21 KB")
+      expect(lightbox).to have_no_caption_details
 
       expect(lightbox).to have_next_button
       expect(lightbox).to have_prev_button
       expect(lightbox).to have_download_button
       expect(lightbox).to have_original_image_button
+      expect(lightbox).to have_image_info_button
     end
   end
 
@@ -79,7 +98,7 @@ describe "Lightbox | Photoswipe", type: :system do
       post.update(cooked: cpp.html)
     end
 
-    it "tap image to toggle UI" do
+    it "toggles UI by tapping image" do
       topic_page.visit_topic(topic)
       find("#post_1 a.lightbox").click
 
@@ -93,7 +112,7 @@ describe "Lightbox | Photoswipe", type: :system do
       expect(lightbox).to have_ui_visible
     end
 
-    it "tap backdrop to close lightbox" do
+    it "closes lightbox by tapping backdrop" do
       topic_page.visit_topic(topic)
       find("#post_1 a.lightbox").click
 
@@ -102,6 +121,23 @@ describe "Lightbox | Photoswipe", type: :system do
       tap_screen_at(50, 50)
 
       expect(lightbox).to be_hidden
+    end
+
+    it "toggles image info by clicking button" do
+      topic_page.visit_topic(topic)
+
+      find("#post_1 a.lightbox").click
+
+      expect(lightbox).to be_visible
+      expect(lightbox).to have_no_caption_details
+
+      lightbox.image_info_button.click
+
+      expect(lightbox).to have_caption_details("400×300 1.21 KB")
+
+      lightbox.image_info_button.click
+
+      expect(lightbox).to have_no_caption_details
     end
   end
 end
