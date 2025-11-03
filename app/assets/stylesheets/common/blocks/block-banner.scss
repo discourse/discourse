@@ -1,0 +1,17 @@
+.block-banner {
+  &__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__contents {
+    display: flex;
+    align-items: baseline;
+    gap: var(--block-layout-gap, var(--space-4));
+  }
+
+  &__title {
+    margin: 0;
+  }
+}

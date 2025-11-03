@@ -91,8 +91,6 @@ export default class Sidebar extends Component {
         />
       {{/if}}
 
-      <PluginOutlet @name="after-sidebar-sections" />
-
       {{#unless this.showSwitchPanelButtonsOnTop}}
         <SwitchPanelButtons @buttons={{this.switchPanelButtons}} />
       {{/unless}}

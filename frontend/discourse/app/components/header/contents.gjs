@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import BlockLayout from "discourse/components/block-layout";
 import { ALL_PAGES_EXCLUDED_ROUTES } from "discourse/components/welcome-banner";
 import deprecatedOutletArgument from "discourse/helpers/deprecated-outlet-argument";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -118,6 +119,8 @@ export default class Contents extends Component {
       {{#if this.showHeaderSearch}}
         <HeaderSearch />
       {{/if}}
+
+      <BlockLayout @name="header-blocks" />
 
       <div class="before-header-panel-outlet">
         <PluginOutlet

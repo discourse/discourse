@@ -1,0 +1,60 @@
+.block-user-profile {
+  --banner-height: 7.5rem;
+  --avatar-size: 5.5rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__banner {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    height: var(--banner-height);
+    width: 100%;
+    background-position: 50% 50%;
+    background-size: cover;
+  }
+
+  &__avatar {
+    position: relative;
+    box-sizing: border-box;
+    z-index: 1;
+    max-width: var(--avatar-size);
+    padding: 0.25rem;
+    background: var(--secondary);
+    border-radius: 50%;
+    margin-top: calc(var(--banner-height) - var(--avatar-size) / 2);
+
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 1rem 1rem;
+  }
+
+  &__username {
+    display: inline-flex;
+
+    &::before {
+      content: "@";
+    }
+  }
+
+  &__bio {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,11 @@
+.block-link {
+  a {
+    display: inline-block;
+    color: var(--primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

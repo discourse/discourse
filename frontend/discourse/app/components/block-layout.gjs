@@ -15,14 +15,14 @@ export default class BlockLayout extends Component {
 
   <template>
     {{#if this.shouldShow}}
-      <div class="block-layout {{@name}}">
-        <div class="block-layout__container">
-          <div class="block-layout__layout">
+      <div class={{@name}}>
+        <div class={{concat @name "__container"}}>
+          <div class={{concat @name "__layout"}}>
             {{#each this.blocks as |block|}}
               {{#if block.group}}
-                <GroupedBlocks @group={{block}} />
+                <GroupedBlocks @group={{block}} @blockLayoutName={{@name}} />
               {{else}}
-                <WrappedBlock @block={{block}} />
+                <WrappedBlock @block={{block}} @blockLayoutName={{@name}} />
               {{/if}}
             {{/each}}
           </div>
@@ -35,25 +35,22 @@ export default class BlockLayout extends Component {
 const WrappedBlock = <template>
   <div
     class={{concatClass
-      "block-layout__block"
+      (concat @blockLayoutName "__block ")
       (concat "block-" @block.component.blockName)
       @block.customClass
     }}
   >
-    {{#let (curryComponent @block.component @block.params) as |blockComponent|}}
-      <blockComponent />
+    {{#let (curryComponent @block.component @block.params) as |BlockComponent|}}
+      <BlockComponent />
     {{/let}}
   </div>
 </template>;
 
 const GroupedBlocks = <template>
-  <div class="block-layout__block block-group {{@group.group}}">
-    <div class="block-group__container">
-      <div class="block-group__layout">
-        {{#each @group.blocks as |block|}}
-          <WrappedBlock @block={{block}} />
-        {{/each}}
-      </div>
-    </div>
+  <div class={{concatClass (concat @blockLayoutName "__group ") @group.group}}>
+    {{#each @group.blocks as |block|}}
+      <WrappedBlock @block={{block}} @blockLayoutName={{@blockLayoutName}} />
+    {{/each}}
+
   </div>
 </template>;
