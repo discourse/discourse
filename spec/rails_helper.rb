@@ -491,6 +491,23 @@ RSpec.configure do |config|
       end
     end
 
+    config.before(:each, type: :system) do |example|
+      next if example.metadata[:allow_network]
+      page.driver.with_playwright_page do |page|
+        page.route(
+          "**/*",
+          ->(route, request) do
+            uri = URI(route.request.url)
+            if uri.host == "localhost"
+              route.fallback
+            else
+              route.abort
+            end
+          end,
+        )
+      end
+    end
+
     module CapybaraPlaywrightBasePatch
       private
 
