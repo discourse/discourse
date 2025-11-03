@@ -11,8 +11,6 @@ import { classify, dasherize } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
 import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
-import DMenu from "discourse/components/d-menu";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
 import RejectReasonReviewableModal from "discourse/components/modal/reject-reason-reviewable";
@@ -32,6 +30,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import optionalService from "discourse/lib/optional-service";
+import { showAlert } from "discourse/lib/post-action-feedback";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
@@ -654,18 +653,23 @@ export default class ReviewableItem extends Component {
   }
 
   @action
-  openInNewTab() {
-    window.open(this.permalink, "_blank");
-  }
+  async copyPermalink(event) {
+    const button = event.currentTarget;
 
-  @action
-  async copyPermalink() {
+    // cmd/ctrl+click or middle-click to open in new tab
+    if (event.metaKey || event.ctrlKey || event.button === 1) {
+      window.open(this.permalink, "_blank");
+      return;
+    }
+
     try {
       await clipboardCopy(this.permalink);
-      this.toasts.success({
-        data: { message: i18n("admin.customize.copied_to_clipboard") },
-        duration: 3000,
-      });
+      showAlert(
+        this.reviewable.id,
+        "reviewable-permalink-copy",
+        "review.copy_link_feedback",
+        { actionBtn: button }
+      );
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Failed to copy to clipboard:", error);
@@ -697,33 +701,15 @@ export default class ReviewableItem extends Component {
                 this.reviewable.status
                 this.reviewable.type
               }}
-              <DMenu
-                @icon="link"
-                @title={{i18n "review.permalink_menu"}}
-                class="review-item__permalink-menu btn-transparent"
-                @modalForMobile={{true}}
+
+              <button
+                type="button"
+                {{on "click" this.copyPermalink}}
+                title={{i18n "review.copy_permalink_title"}}
+                class="btn btn-transparent reviewable-permalink-copy"
               >
-                <:content>
-                  <DropdownMenu as |dropdown|>
-                    <dropdown.item>
-                      <DButton
-                        @icon="up-right-from-square"
-                        @label="review.open_in_new_window"
-                        @action={{this.openInNewTab}}
-                        class="btn-transparent"
-                      />
-                    </dropdown.item>
-                    <dropdown.item>
-                      <DButton
-                        @icon="copy"
-                        @label="review.copy_link"
-                        @action={{this.copyPermalink}}
-                        class="btn-transparent"
-                      />
-                    </dropdown.item>
-                  </DropdownMenu>
-                </:content>
-              </DMenu>
+                {{icon "d-post-share"}}
+              </button>
             </div>
 
             {{#let

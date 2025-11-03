@@ -53,11 +53,16 @@
     }
   }
 
-  &__permalink-menu {
+  .reviewable-permalink-copy {
     position: relative;
     top: -0.35em;
     right: calc(var(--space-2) * -1);
     margin-left: calc(var(--space-4) * -1);
+
+    .post-action-feedback-alert {
+      top: -1rem;
+      left: 40%;
+    }
   }
 
   &__aside {
