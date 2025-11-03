@@ -7937,7 +7937,6 @@ sk:
             cancel: "Zrušiť"
         merging_user: "Zlúčenie používateľa…"
         merge_failed: "Pri zlučovaní používateľov sa vyskytla chyba."
-        delete_posts_forbidden_because_staff: "Nedá sa zmazať príspevky správcov a moderátorov."
         delete_forbidden:
           one: "Užívatelia nemôžu byť vymazaní ak majú príspevky. Najprv zmažte príspevky až potom užívateľa. (Príspevky staršie ako %{count} deň nemožno zmazať)"
           few: "Užívatelia nemôžu byť vymazaní ak majú príspevky. Najprv zmažte príspevky až potom užívateľa. (Príspevky staršie ako %{count} dni nemožno zmazať)"
