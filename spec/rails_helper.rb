@@ -498,9 +498,10 @@ RSpec.configure do |config|
           "**/*",
           ->(route, request) do
             uri = URI(route.request.url)
-            if uri.host == "localhost"
+            if %w[localhost discoursetest.minio.local].include?(uri.host)
               route.fallback
             else
+              STDERR.puts "Blocked network request to #{uri.host}"
               route.abort
             end
           end,
