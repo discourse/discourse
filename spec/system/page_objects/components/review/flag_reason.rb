@@ -29,7 +29,7 @@ module PageObjects
         def has_flag_reason?(reviewable, css_class:, type:, count: 1)
           within_reviewable_item(reviewable) do
             expect(find(".review-item__flag-reason.--#{css_class}").text.gsub(/\s+/, " ")).to eq(
-              "#{count} #{ReviewableScore.type_title(type)}",
+              "#{ReviewableScore.type_title(type)} #{count}",
             )
 
             expect(page).to have_css(".review-item__flag-count.--#{css_class}")
