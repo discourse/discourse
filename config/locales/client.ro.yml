@@ -5271,8 +5271,7 @@ ro:
             cancel: "Anulează"
           confirmation:
             cancel: "Anulează"
-        delete_forbidden_because_staff: "Administratorii nu pot fi șterși."
-        delete_posts_forbidden_because_staff: "Nu poți șterge mesajele administratorilor și moderatorilor."
+        delete_forbidden_because_admin: "Administratorii nu pot fi șterși."
         delete_forbidden:
           one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zi nu pot fi șterse)"
           few: "Utilizatorii nu pot fi șterși dacă au postări. Şterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi șterse)"
