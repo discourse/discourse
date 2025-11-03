@@ -154,6 +154,10 @@ class UserCommScreener
     ).uniq
   end
 
+  def actor_ignoring_or_muting_users
+    (actor_preferences[:ignoring] + actor_preferences[:muting]).uniq
+  end
+
   ##
   # The actor methods below are more fine-grained than the user ones,
   # since we may want to display more detailed messages to the actor about
