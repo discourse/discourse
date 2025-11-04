@@ -102,6 +102,16 @@ def update_plugin(plugin)
   abort("Unable to pull latest version of plugin #{plugin_path}") unless update_status
 end
 
+def plugin_test_directories_for(name)
+  base = Rails.root.join("plugins", name)
+  return [] unless Dir.exist?(base)
+
+  %w[test/javascripts test]
+    .map { |sub| base.join(sub) }
+    .select { |path| Dir.exist?(path) }
+    .map { |path| path.relative_path_from(Rails.root).to_s }
+end
+
 desc "update all plugins"
 task "plugin:update_all" do |t|
   # Loop through each directory
@@ -228,22 +238,26 @@ desc "run plugin qunit tests"
 task "plugin:qunit", :plugin do |t, args|
   args.with_defaults(plugin: "*")
 
-  rake = "#{Rails.root}/bin/rake"
+  plugin_dirs =
+    if args[:plugin] == "*"
+      Dir.children(Rails.root.join("plugins")).flat_map { |name| plugin_test_directories_for(name) }
+    else
+      args[:plugin].split(",").flat_map { |name| plugin_test_directories_for(name.strip) }
+    end
 
-  cmd = "LOAD_PLUGINS=1 "
-
-  if args[:plugin] == "*"
-    plugin_names = Dir.glob("plugins/*/test/**/*-test.js").map { |file| file.split("/")[1] }.uniq
-    puts "Running qunit tests for all plugins: #{plugin_names.join(", ")}"
-    cmd += "PLUGIN_TARGETS='#{plugin_names.join(",")}' "
-  else
-    puts "Running qunit tests for #{args[:plugin]}"
-    cmd += "TARGET='#{args[:plugin]}' "
+  plugin_dirs.uniq!
+  plugin_dirs.select! do |dir|
+    Dir.glob(File.join(Rails.root, dir, "**", "*-test.{js,gjs}"), File::FNM_EXTGLOB).any?
   end
 
-  cmd += "#{rake} qunit:test"
+  abort "No plugin test directories found for #{args[:plugin]}" if plugin_dirs.empty?
 
-  system cmd
+  puts "Running plugin qunit tests in:\n  #{plugin_dirs.join("\n  ")}"
+
+  cmd = [Rails.root.join("bin/qunit").to_s, "--full"] + plugin_dirs
+  env = ENV.to_h.merge("LOAD_PLUGINS" => "1")
+
+  system(env, *cmd, chdir: Rails.root)
   exit $?.exitstatus
 end
 
