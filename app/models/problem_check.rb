@@ -164,14 +164,6 @@ class ProblemCheck
   end
   delegate :each_target, to: :class
 
-  def self.call(target = NO_TARGET)
-    if target == NO_TARGET
-      new.call
-    else
-      new.call(target)
-    end
-  end
-
   def self.run(target = NO_TARGET, &)
     new.run(target, &)
   end
