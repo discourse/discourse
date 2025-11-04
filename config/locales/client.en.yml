@@ -3097,6 +3097,9 @@ en:
         create_topic:
           label: "New Topic"
           desc: Create a new topic
+        create_personal_message:
+          label: "New message"
+          desc: "Create a new personal message"
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to allowed users"
