@@ -9,9 +9,9 @@ export default function ({ types: t }) {
         }
 
         // TODO: REMOVE WITH VITE
-        if (moduleName.startsWith(".") && moduleName.match(/\.g?js$/)) {
-          path.node.source = t.stringLiteral(moduleName.replace(/\.g?js$/, ""));
-        }
+        // if (moduleName.startsWith(".") && moduleName.match(/\.g?js$/)) {
+        //   path.node.source = t.stringLiteral(moduleName.replace(/\.g?js$/, ""));
+        // }
       },
     },
   };
