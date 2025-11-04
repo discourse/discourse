@@ -39,6 +39,7 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 export default class Post extends Component {
+  @service a11y;
   @service appEvents;
   @service capabilities;
   @service currentUser;
@@ -153,12 +154,14 @@ export default class Post extends Component {
   }
 
   get a11yHeadingText() {
-    const date = this.args.post.displayDate
-      ? relativeAge(new Date(this.args.post.displayDate), {
-          format: "medium-with-ago-and-on",
-          wrapInSpan: false,
-        })
-      : "";
+    // a11y.autoUpdatingRelativeDateRef is consumed to force the heading text to be auto-updated
+    const date =
+      this.a11y.autoUpdatingRelativeDateRef && this.args.post.displayDate
+        ? relativeAge(new Date(this.args.post.displayDate), {
+            format: "medium-with-ago-and-on",
+            wrapInSpan: false,
+          })
+        : "";
 
     return i18n("post.accessible_heading", {
       username: this.args.post.username,

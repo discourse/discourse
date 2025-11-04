@@ -28,6 +28,7 @@ export default class A11y extends Service {
    * @type {boolean}
    */
   @tracked showSkipLinks = true;
+  @tracked autoUpdatingRelativeDateRef = new Date();
 
   #state = new (class {
     /**
