@@ -7,8 +7,8 @@ RSpec.describe ::Migrations::Importer::GroupNameFinder do
   let(:group_names) { Set.new }
   let(:shared_data) do
     instance_double(Migrations::Importer::SharedData).tap do |sd|
-      allow(sd).to receive(:load).with(:usernames).and_return(usernames)
-      allow(sd).to receive(:load).with(:group_names).and_return(group_names)
+      allow(sd).to receive(:[]).with(:existing_usernames_lower).and_return(usernames)
+      allow(sd).to receive(:[]).with(:existing_group_names_lower).and_return(group_names)
     end
   end
 

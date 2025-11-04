@@ -7,7 +7,7 @@ module Migrations::Importer::Steps
       VALUES (?, ?, ?)
     SQL
 
-    # requires_shared_data :usernames, :group_names
+    requires_shared_data :existing_usernames_lower, :existing_group_names_lower
     requires_mapping :user_ids_by_email, "SELECT LOWER(email) AS email, user_id FROM user_emails"
     requires_mapping :user_ids_by_external_id,
                      "SELECT external_id, user_id FROM single_sign_on_records"
