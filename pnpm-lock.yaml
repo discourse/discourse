@@ -287,6 +287,15 @@ importers:
       '@glimmer/syntax':
         specifier: 0.93.1
         version: 0.93.1
+      '@glimmer/tracking':
+        specifier: ^1.1.2
+        version: 1.1.2
+      '@glint/ember-tsc':
+        specifier: ^1.0.7
+        version: 1.0.7(typescript@5.9.3)
+      '@glint/template':
+        specifier: ^1.7.2
+        version: 1.7.2
       '@highlightjs/cdn-assets':
         specifier: 11.11.1
         version: 11.11.1
@@ -332,6 +341,9 @@ importers:
       ember-route-template:
         specifier: ^1.0.3
         version: 1.0.3
+      ember-source:
+        specifier: ~6.6.0
+        version: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
       ember-tracked-storage-polyfill:
         specifier: ^1.0.0
         version: 1.0.0
@@ -465,9 +477,6 @@ importers:
       '@glimmer/component':
         specifier: ^2.0.0
         version: 2.0.0
-      '@glimmer/tracking':
-        specifier: ^1.1.2
-        version: 1.1.2
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
@@ -591,9 +600,6 @@ importers:
       ember-qunit:
         specifier: ^9.0.4
         version: 9.0.4(@ember/test-helpers@5.4.0(@babel/core@7.28.5)(@glint/template@1.7.2))(@glint/template@1.7.2)(qunit@2.24.2)
-      ember-source:
-        specifier: ~6.6.0
-        version: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
       ember-template-imports:
         specifier: ^4.3.0
         version: 4.3.0
@@ -654,6 +660,9 @@ importers:
       truth-helpers:
         specifier: workspace:1.0.0
         version: link:../truth-helpers
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
       util:
         specifier: ^0.12.5
         version: 0.12.5
