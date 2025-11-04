@@ -30,6 +30,13 @@ module PageObjects
         )
       end
 
+      def has_new_user_title?(username)
+        has_css?(
+          ".welcome-banner .welcome-banner__title",
+          text: I18n.t("js.welcome_banner.header.new_members", preferred_display_name: username),
+        )
+      end
+
       def has_no_subheader?
         has_no_css?(".welcome-banner .welcome-banner__subheader")
       end

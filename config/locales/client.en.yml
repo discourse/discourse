@@ -319,6 +319,7 @@ en:
 
     welcome_banner:
       header:
+        new_members: "Welcome, %{preferred_display_name}!"
         logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
       subheader:
