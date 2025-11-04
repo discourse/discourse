@@ -23,7 +23,7 @@ after_initialize do
   require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
   require_relative "app/controllers/ad_plugin/house_ads_controller"
   require_relative "app/controllers/adstxt_controller"
-  require_relative "app/controllers/ad_plugin/impressions_controller.rb"
+  require_relative "app/controllers/ad_plugin/ad_impressions_controller.rb"
 
   require_relative "app/models/ad_plugin/house_ad_setting"
   require_relative "app/models/ad_plugin/house_ad"
@@ -35,6 +35,9 @@ after_initialize do
 
   Discourse::Application.routes.append do
     get "/ads.txt" => "adstxt#index"
+
+    post "/ad_plugin/ad_impressions" => "ad_plugin/ad_impressions#create"
+
     mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
   end
 

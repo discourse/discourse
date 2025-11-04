@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module AdPlugin
-  class ImpressionsController < ::ApplicationController
+  class AdImpressionsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
 
     def create
