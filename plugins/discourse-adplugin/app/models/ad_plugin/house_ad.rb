@@ -36,29 +36,27 @@ module AdPlugin
 
     def self.all_for_logged_in_users(scope)
       query = for_logged_in
+      return query if scope.nil?
 
-      if scope.present
-        #
-        query =
-          query
-            .left_joins(:groups)
-            .where(
-              "ad_plugin_house_ads_groups.group_id IN (?) OR ad_plugin_house_ads_groups.group_id = ? OR ad_plugin_house_ads_groups.group_id IS NULL",
-              scope.user.group_ids,
-              Group::AUTO_GROUPS[:everyone],
-            )
-            .distinct
+      query =
+        query
+          .left_joins(:groups)
+          .where(
+            "ad_plugin_house_ads_groups.group_id IN (?) OR ad_plugin_house_ads_groups.group_id = ? OR ad_plugin_house_ads_groups.group_id IS NULL",
+            scope.user.group_ids,
+            Group::AUTO_GROUPS[:everyone],
+          )
+          .distinct
 
-        category_ids = Category.secured(scope).pluck(:id)
-        query =
-          query
-            .left_joins(:categories)
-            .where(
-              "ad_plugin_house_ads_categories.category_id IN (?) OR ad_plugin_house_ads_categories.category_id IS NULL",
-              category_ids,
-            )
-            .distinct
-      end
+      category_ids = Category.secured(scope).pluck(:id)
+      query =
+        query
+          .left_joins(:categories)
+          .where(
+            "ad_plugin_house_ads_categories.category_id IN (?) OR ad_plugin_house_ads_categories.category_id IS NULL",
+            category_ids,
+          )
+          .distinct
 
       query.to_a
     end

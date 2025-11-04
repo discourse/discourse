@@ -16,7 +16,7 @@ module AdPlugin
     #          foreign_key: "ad_plugin_impression_id",
     #          dependent: :destroy
 
-    enum ad_type: { house: 0, adsense: 1, dfp: 2, amazon: 3, carbon: 4, adbutler: 5 }
+    enum :ad_type, { house: 0, adsense: 1, dfp: 2, amazon: 3, carbon: 4, adbutler: 5 }.freeze
 
     validates :ad_type, presence: true
     validates :placement, presence: true

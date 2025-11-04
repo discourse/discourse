@@ -23,10 +23,12 @@ after_initialize do
   require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
   require_relative "app/controllers/ad_plugin/house_ads_controller"
   require_relative "app/controllers/adstxt_controller"
+  require_relative "app/controllers/ad_plugin/ad_impressions_controller.rb"
+
   require_relative "app/models/ad_plugin/house_ad_setting"
   require_relative "app/models/ad_plugin/house_ad"
   require_relative "app/models/ad_plugin/ad_impression"
-  require_relative "app/models/ad_plugin/ad_click"
+  # require_relative "app/models/ad_plugin/ad_click"
   require_relative "lib/adplugin/guardian_extensions"
 
   reloadable_patch { Guardian.prepend AdPlugin::GuardianExtensions }
