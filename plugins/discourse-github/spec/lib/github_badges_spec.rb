@@ -9,6 +9,8 @@ describe DiscourseGithubPlugin::GithubBadges do
   let(:private_email_contributor2) { Fabricate(:user) }
   let(:merge_commit_user) { Fabricate(:user) }
   let(:staged_user) { Fabricate(:user, staged: true) }
+  let(:username_fallback_user) { Fabricate(:user, username: "githubdev") }
+  let(:staged_username_fallback) { Fabricate(:user, username: "stageddev", staged: true) }
 
   before { enable_current_plugin }
 
@@ -89,6 +91,20 @@ describe DiscourseGithubPlugin::GithubBadges do
         committed_at: 1.day.ago,
         role_id: roles[:contributor],
       )
+
+      repo1.commits.create!(
+        sha: "username1",
+        email: "githubdev@users.noreply.github.com",
+        committed_at: 1.day.ago,
+        role_id: roles[:contributor],
+        )
+
+      repo1.commits.create!(
+        sha: "staged_username",
+        email: "stageddev@users.noreply.github.com",
+        committed_at: 1.day.ago,
+        role_id: roles[:contributor],
+        )
     end
 
     it "granted correctly" do
@@ -108,6 +124,8 @@ describe DiscourseGithubPlugin::GithubBadges do
         private_email_contributor,
         private_email_contributor2,
         merge_commit_user,
+        username_fallback_user,
+        staged_username_fallback,
       ]
       users.each { |u| u.badges.destroy_all }
 
@@ -126,9 +144,11 @@ describe DiscourseGithubPlugin::GithubBadges do
       expect(private_email_contributor.badges.pluck(:name)).to eq([contributor_bronze])
       expect(private_email_contributor2.badges.pluck(:name)).to eq([contributor_bronze])
       expect(silver_user.badges.pluck(:name)).to contain_exactly(committer_bronze, committer_silver)
+      expect(username_fallback_user.badges.pluck(:name)).to eq([contributor_bronze])
 
-      # does not grant badges to staged users
+      # does not grant badges to staged users (both email and username fallback)
       expect(staged_user.badges.first).to eq(nil)
+      expect(staged_username_fallback.badges.first).to eq(nil)
     end
 
     it "does not update user title if badge is not allowed to be used as a title" do
@@ -150,6 +170,40 @@ describe DiscourseGithubPlugin::GithubBadges do
       DiscourseGithubPlugin::GithubBadges.contributor_badges
 
       expect(badge.reload.name).to eq("Great Contributor")
+    end
+
+    it "prioritizes GitHub association over username match for noreply emails" do
+      roles = DiscourseGithubPlugin::CommitsPopulator::ROLES
+      repo1 = DiscourseGithubPlugin::GithubRepo.repos.find { |repo| repo.name == "org/repo1" }
+
+      matching_username_user = Fabricate(:user, username: "samename")
+
+      github_associated_user = Fabricate(:user, username: "different")
+      UserAssociatedAccount.create!(
+        provider_name: "github",
+        user_id: github_associated_user.id,
+        info: { nickname: "samename" },
+        provider_uid: 999,
+        )
+
+      repo1.commits.create!(
+        sha: "priority_test",
+        email: "samename@users.noreply.github.com",
+        committed_at: 1.day.ago,
+        role_id: roles[:contributor],
+        )
+
+      DiscourseGithubPlugin::GithubBadges.grant!
+
+      contributor_bronze = DiscourseGithubPlugin::GithubBadges::BADGE_NAME_BRONZE
+      Badge.find_by(name: contributor_bronze).update!(enabled: true)
+
+      [matching_username_user, github_associated_user].each { |u| u.badges.destroy_all }
+
+      DiscourseGithubPlugin::GithubBadges.grant!
+
+      expect(github_associated_user.reload.badges.pluck(:name)).to eq([contributor_bronze])
+      expect(matching_username_user.reload.badges).to be_empty
     end
   end
 end
