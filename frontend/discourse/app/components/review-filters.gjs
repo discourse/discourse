@@ -38,16 +38,14 @@ export default <template>
 
     {{#if @controller.filtersExpanded}}
 
-      <span>
-        <PluginOutlet
-          @name="above-review-filters"
-          @connectorTagName="div"
-          @outletArgs={{lazyHash
-            model=@controller.model
-            additionalFilters=@controller.additionalFilters
-          }}
-        />
-      </span>
+      <PluginOutlet
+        @name="above-review-filters"
+        @connectorTagName="div"
+        @outletArgs={{lazyHash
+          model=@controller.model
+          additionalFilters=@controller.additionalFilters
+        }}
+      />
 
       <div class="reviewable-filter">
         <label class="filter-label">

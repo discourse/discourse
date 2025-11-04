@@ -48,9 +48,11 @@ import { i18n } from "discourse-i18n";
       </div>
 
       <div class="reviewable-topic-link__details">
-        <div class="reviewable-topic-link__details-category-badge">
-          {{categoryBadge @reviewable.category}}
-        </div>
+        {{#if @reviewable.category}}
+          <div class="reviewable-topic-link__details-category-badge">
+            {{categoryBadge @reviewable.category}}
+          </div>
+        {{/if}}
 
         <div class="reviewable-topic-link__details-tags">
           <ReviewableTags @tags={{@reviewable.topic_tags}} @tagName="" />
