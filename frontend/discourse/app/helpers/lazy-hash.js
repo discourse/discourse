@@ -1,4 +1,3 @@
-// @ts-check
 import { setInternalHelperManager } from "@glimmer/manager";
 import { createComputeRef, valueForRef } from "@glimmer/reference";
 import { dependentKeyCompat } from "@ember/object/compat";
