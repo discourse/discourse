@@ -1,23 +1,10 @@
 {
+  "extends": "discourse/tsconfig-plugin",
   "include": [
     "./assets/javascripts/**/*",
     "./test/javascripts/**/*"
   ],
-  "exclude": [],
   "compilerOptions": {
-    "target": "es2021",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "experimentalDecorators": true,
-    "allowJs": true,
-    "skipLibCheck": true,
-    "noEmit": true,
-    "noEmitOnError": false,
-    "declaration": true,
-    "outDir": "declarations",
-    "composite": true,
-    "rootDir": "./",
-    "types": ["discourse/external-types"],
     "paths": {
       "discourse/plugins/chat/*": ["./assets/javascripts/*"]
     }

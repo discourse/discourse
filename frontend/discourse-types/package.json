@@ -5,6 +5,7 @@
   "license": "GPL-2.0-only",
   "author": "Discourse",
   "exports": {
+    "./tsconfig-plugin": "./tsconfig-plugin.json",
     "./external-types": {
       "types": "./external-types.d.ts"
     },
