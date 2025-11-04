@@ -48,12 +48,24 @@ end
 #
 # Table name: ad_plugin_impressions
 #
-#  id                      :bigint           not null, primary key
-#  ad_type                 :integer          not null
-#  ad_plugin_house_ad_id   :bigint
-#  ad_network_name         :string
-#  placement               :string           not null
-#  user_id                 :integer
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
+#  id              :bigint           not null, primary key
+#  ad_network_name :string
+#  ad_type         :integer          not null
+#  placement       :string           not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  house_ad_id     :bigint
+#  user_id         :integer
+#
+# Indexes
+#
+#  index_ad_plugin_impressions_on_ad_type                (ad_type)
+#  index_ad_plugin_impressions_on_ad_type_and_placement  (ad_type,placement)
+#  index_ad_plugin_impressions_on_house_ad_id            (house_ad_id)
+#  index_ad_plugin_impressions_on_user_id                (user_id)
+#
+# Foreign Keys
+#
+#  ad_plugin_house_ad_id  (house_ad_id => ad_plugin_house_ads.id)
+#  fk_rails_...           (user_id => users.id) ON DELETE => nullify
 #

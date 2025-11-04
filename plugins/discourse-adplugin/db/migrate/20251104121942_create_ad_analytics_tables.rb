@@ -4,11 +4,7 @@ class CreateAdAnalyticsTables < ActiveRecord::Migration[7.0]
   def change
     create_table :ad_plugin_impressions do |t|
       t.integer :ad_type, null: false
-      t.belongs_to :house_ad,
-                   foreign_key: {
-                     to_table: :ad_plugin_house_ads,
-                     name: "ad_plugin_house_ad_id",
-                   }
+      t.bigint :ad_plugin_house_ad_id
       t.string :ad_network_name
       t.string :placement, null: false
       t.integer :user_id
@@ -16,15 +12,15 @@ class CreateAdAnalyticsTables < ActiveRecord::Migration[7.0]
     end
 
     add_index :ad_plugin_impressions, :ad_type
+    add_index :ad_plugin_impressions, :ad_plugin_house_ad_id
     add_index :ad_plugin_impressions, :user_id
     add_index :ad_plugin_impressions, %i[ad_type placement]
-    # add_index :ad_plugin_clicks, :ad_plugin_impression_id
-    # add_index :ad_plugin_clicks, :created_at
+    add_index :ad_plugin_impressions, :created_at
 
+    add_foreign_key :ad_plugin_impressions,
+                    :ad_plugin_house_ads,
+                    column: :ad_plugin_house_ad_id,
+                    on_delete: :cascade
     add_foreign_key :ad_plugin_impressions, :users, column: :user_id, on_delete: :nullify
-    # add_foreign_key :ad_plugin_clicks,
-    #                 :ad_plugin_impressions,
-    #                 column: :ad_plugin_impression_id,
-    #                 on_delete: :cascade
   end
 end

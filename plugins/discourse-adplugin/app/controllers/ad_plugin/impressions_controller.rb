@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 module AdPlugin
-  class AdImpressionsController < ::ApplicationController
+  class ImpressionsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
-
-    before_action :find_interstitials
-    before_action :validate_ownership
 
     def create
       impression =
@@ -16,7 +13,7 @@ module AdPlugin
     private
 
     def impression_params
-      params.require(:impression).permit(
+      params.require(:ad_plugin_impression).permit(
         :ad_type,
         :ad_plugin_house_ad_id,
         :ad_network_name,

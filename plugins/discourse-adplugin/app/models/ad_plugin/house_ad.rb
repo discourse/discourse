@@ -92,11 +92,17 @@ end
 #
 # Table name: ad_plugin_house_ads
 #
-#  id                          :bigint           not null, primary key
-#  name                        :string           not null
-#  html                        :text             not null
-#  visible_to_logged_in_users  :boolean          default(TRUE), not null
-#  visible_to_anons            :boolean          default(TRUE), not null
-#  created_at                  :datetime         not null
-#  updated_at                  :datetime         not null
+#  id                         :bigint           not null, primary key
+#  html                       :text             not null
+#  name                       :string           not null
+#  visible_to_anons           :boolean          default(TRUE), not null
+#  visible_to_logged_in_users :boolean          default(TRUE), not null
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#
+# Indexes
+#
+#  index_ad_plugin_house_ads_on_name                        (name) UNIQUE
+#  index_ad_plugin_house_ads_on_visible_to_anons            (visible_to_anons)
+#  index_ad_plugin_house_ads_on_visible_to_logged_in_users  (visible_to_logged_in_users)
 #
