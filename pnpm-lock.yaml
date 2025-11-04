@@ -764,7 +764,7 @@ importers:
         specifier: npm:@glint/ember-tsc@^1.0.7
         version: '@glint/ember-tsc@1.0.7(typescript@5.9.3)'
       '@types/@glint__template':
-        specifier: npm:@glint/template
+        specifier: npm:@glint/template@^1.7.2
         version: '@glint/template@1.7.2'
       ember-source:
         specifier: ~6.6.0
