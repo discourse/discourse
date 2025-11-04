@@ -1100,7 +1100,247 @@ importers:
         specifier: ^2.11.1
         version: 2.11.1(@glint/template@1.7.2)(webpack@5.99.9(@swc/core@1.14.0)(esbuild@0.25.11))
 
+  plugins/automation:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
   plugins/chat:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/checklist:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-adplugin:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-affiliate:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-ai:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-apple-auth:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-assign:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-cakeday:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-calendar:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-chat-integration:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-data-explorer:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-details:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-gamification:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-github:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-graphviz:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-hcaptcha:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-lazy-videos:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-local-dates:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-login-with-amazon:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-lti:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-math:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-microsoft-auth:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-narrative-bot:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-oauth2-basic:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-openid-connect:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-patreon:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-post-voting:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-presence:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-reactions:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-rss-polling:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-solved:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-subscriptions:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-templates:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-topic-voting:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-user-notes:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/discourse-zendesk-plugin:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/footnote:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/poll:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/spoiler-alert:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@0.0.0
+        version: link:../../frontend/discourse-types
+
+  plugins/styleguide:
     dependencies:
       discourse:
         specifier: workspace:@discourse/types@0.0.0
