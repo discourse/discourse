@@ -723,9 +723,9 @@ RSpec.describe TopicQuery do
             .new(moderator, category: category1.id, tags: [tag.name])
             .list_latest
             .topics
-            .map(&:id)
-            .sort,
-        ).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+            .map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic3.id)
+
         expect(
           TopicQuery
             .new(moderator, category: category2.id, tags: [other_tag.name])

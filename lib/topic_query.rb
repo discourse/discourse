@@ -818,7 +818,7 @@ class TopicQuery
     end
 
     # Start with a list of all topics
-    result = Topic.includes(:category)
+    result = Topic.preload(:category)
 
     if @user
       result =
@@ -834,9 +834,10 @@ class TopicQuery
         result = result.where("topics.category_id = ?", category_id)
       else
         result = result.where("topics.category_id IN (?)", Category.subcategory_ids(category_id))
+
         if !SiteSetting.show_category_definitions_in_topic_lists
           result =
-            result.where(
+            result.joins(:category).where(
               "categories.topic_id IS DISTINCT FROM topics.id OR topics.category_id = ?",
               category_id,
             )
@@ -868,11 +869,7 @@ class TopicQuery
 
     result = apply_ordering(result, options) if !options[:skip_ordering]
 
-    all_listable_topics =
-      @guardian.filter_allowed_categories(
-        Topic.unscoped.listable_topics,
-        category_id_column: "categories.id",
-      )
+    all_listable_topics = @guardian.filter_allowed_categories(Topic.unscoped.listable_topics)
 
     if options[:include_pms] || options[:include_all_pms]
       all_pm_topics =
@@ -888,7 +885,7 @@ class TopicQuery
 
     # Don't include the category topics if excluded
     if options[:no_definitions]
-      result = result.where("COALESCE(categories.topic_id, 0) <> topics.id")
+      result = result.joins(:category).where("COALESCE(categories.topic_id, 0) <> topics.id")
     end
 
     result = result.limit(options[:per_page]&.to_i) unless options[:limit] == false
@@ -1056,7 +1053,7 @@ class TopicQuery
       ].flatten.map(&:to_i)
       category_ids << category_id if category_id.present? && category_ids.exclude?(category_id)
 
-      list = list.where("categories.id IN (?)", category_ids) if category_ids.present?
+      list = list.where("topics.category_id IN (?)", category_ids) if category_ids.present?
     else
       category_ids = SiteSetting.default_categories_muted.split("|").map(&:to_i)
       category_ids -= [category_id] if category_id.present? && category_ids.include?(category_id)
@@ -1362,7 +1359,8 @@ class TopicQuery
         end
       else
         # ANY of the given tags:
-        result = result.joins(:tags).where("tags.id in (?)", tags)
+        topic_ids_with_tags = TopicTag.where(tag_id: tags).select(:topic_id)
+        result = result.where(id: topic_ids_with_tags)
       end
 
       @options[:tag_ids] = tags
