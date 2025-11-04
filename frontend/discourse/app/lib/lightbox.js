@@ -45,6 +45,16 @@ export default async function lightbox(elem, siteSettings) {
       appendToEl: isTesting() && document.getElementById("ember-testing"),
     });
 
+    lightboxEl.on("afterInit", () => {
+      const el = lightboxEl.pswp.currSlide.data.element;
+      el.querySelector(".meta").classList.add("open");
+    });
+
+    lightboxEl.on("destroy", () => {
+      const el = lightboxEl.pswp.currSlide.data.element;
+      el.querySelector(".meta").classList.remove("open");
+    });
+
     lightboxEl.on("uiRegister", function () {
       // adds a custom caption to lightbox
       lightboxEl.pswp.ui.registerElement({
