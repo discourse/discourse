@@ -127,7 +127,6 @@
   }
 }
 
-/* Switch z-index to be behind behind header for smoother close animation */
 .pswp.pswp--behind-header {
   z-index: z("header") - 1;
 }
