@@ -273,29 +273,28 @@ export default class DiscoveryTopics extends Component {
           />
         </div>
       {{else}}
-        {{#if (or this.topicTrackingState.hasIncoming @model.loadingBefore)}}
-          <div class="show-more {{if this.hasTopics 'has-topics'}}">
-            <a
-              tabindex="0"
-              href
-              {{on "click" this.showInserted}}
-              class="alert alert-info clickable
-                {{if @model.loadingBefore 'loading'}}"
-            >
-              <CountI18n
-                @key="topic_count_"
-                @suffix={{this.topicTrackingState.filter}}
-                @count={{or
-                  @model.loadingBefore
-                  this.topicTrackingState.incomingCount
-                }}
-              />
-              {{#if @model.loadingBefore}}
-                {{loadingSpinner size="small"}}
-              {{/if}}
-            </a>
-          </div>
-        {{/if}}
+        {{!-- {{#if (or this.topicTrackingState.hasIncoming @model.loadingBefore)}} --}}
+        <div class="show-more {{if this.hasTopics 'has-topics'}}">
+          <a
+            tabindex="0"
+            href
+            {{on "click" this.showInserted}}
+            class="alert alert-info clickable loading"
+          >
+            <CountI18n
+              @key="topic_count_"
+              @suffix={{this.topicTrackingState.filter}}
+              @count={{or
+                @model.loadingBefore
+                this.topicTrackingState.incomingCount
+              }}
+            />
+            {{!-- {{#if @model.loadingBefore}} --}}
+            {{loadingSpinner size="small"}}
+            {{!-- {{/if}} --}}
+          </a>
+        </div>
+        {{!-- {{/if}} --}}
       {{/if}}
 
       {{#if this.renderNewListHeaderControls}}
