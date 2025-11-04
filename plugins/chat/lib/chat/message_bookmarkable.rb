@@ -44,13 +44,23 @@ module Chat
     end
 
     def self.reminder_handler(bookmark)
+      channel = bookmark.bookmarkable.chat_channel
+      channel_type =
+        (
+          if channel.direct_message_channel? && !channel.direct_message_group?
+            "direct_message"
+          else
+            "channel"
+          end
+        )
+
       send_reminder_notification(
         bookmark,
         data: {
           title:
             I18n.t(
-              "chat.bookmarkable.notification_title",
-              channel_name: bookmark.bookmarkable.chat_channel.title(bookmark.user),
+              "chat.bookmarkable.notification_title_#{channel_type}",
+              channel_name: channel.title(bookmark.user),
             ),
           bookmarkable_url: bookmark.bookmarkable.url,
         },
