@@ -13,9 +13,9 @@
     "skipLibCheck": true,
     "noEmit": true,
     "noEmitOnError": false,
-    "declaration": false,
-    // "outDir": "",
-    // "composite": true,
+    "declaration": true,
+    "outDir": "declarations",
+    "composite": true,
     "rootDir": "./",
     "types": ["discourse/external-types"],
     "paths": {
