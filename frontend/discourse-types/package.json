@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "ember-source": "~6.6.0",
-    "@types/@glimmer__component": "npm:@glimmer/component@^2.0.0"
+    "@types/@glimmer__component": "npm:@glimmer/component@^2.0.0",
+    "@types/@glint__ember-tsc": "npm:@glint/ember-tsc@^1.0.7",
+    "@types/@glint__template": "npm:@glint/template@^1.7.2"
   },
   "engines": {
     "node": ">= 18",
