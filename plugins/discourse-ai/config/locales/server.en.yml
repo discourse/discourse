@@ -147,6 +147,7 @@ en:
     ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
     ai_translation_backfill_max_age_days: "The maximum age of a post and topic to be translated. Posts and topics older than this will not be translated. 0 disables backfilling, but will not disable translation of new posts."
+    ai_translation_backfill_hourly_rate: "The number of posts and topics to translate per hour during backfill operations. Set to 0 to disable automatic backfilling of translations for existing content."
 
   reviewables:
     reasons:
