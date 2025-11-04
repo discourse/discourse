@@ -31,7 +31,7 @@
     "@glimmer/tracking": "^1.1.2",
     "@glimmer/manager": "*",
     "@glimmer/reference": "*",
-    "@glint/ember-tsc": "1.0.4",
+    "@glint/ember-tsc": "^1.0.7",
     "@glint/template": "1.6.2",
     "@highlightjs/cdn-assets": "11.11.1",
     "@json-editor/json-editor": "2.15.2",

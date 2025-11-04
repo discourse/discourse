@@ -297,8 +297,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2
       '@glint/ember-tsc':
-        specifier: 1.0.4
-        version: 1.0.4(typescript@5.6.3)
+        specifier: ^1.0.7
+        version: 1.0.7(typescript@5.6.3)
       '@glint/template':
         specifier: 1.6.2
         version: 1.6.2
@@ -2253,12 +2253,6 @@ packages:
 
   '@glimmer/wire-format@0.94.8':
     resolution: {integrity: sha512-A+Cp5m6vZMAEu0Kg/YwU2dJZXyYxVJs2zI57d3CP6NctmX7FsT8WjViiRUmt5abVmMmRH5b8BUovqY6GSMAdrw==}
-
-  '@glint/ember-tsc@1.0.4':
-    resolution: {integrity: sha512-b1IAMZoEdubKN0ax/wgU3gMC8lvn7a6thgWPjRjHQe1sMVw3CeSdvP9K2mOY/BrVggvkLsqol33p9rtQ1IjIXw==}
-    hasBin: true
-    peerDependencies:
-      typescript: '>=5.6.0'
 
   '@glint/ember-tsc@1.0.7':
     resolution: {integrity: sha512-jPJEL3vU95Xud3XlUWVgWeTlhyS0i9HlUzQmnZs7aiaaLkkcKG4mEW/1WyVATsu+7rNil3dyDElobuTXRmCE7A==}
@@ -11082,10 +11076,10 @@ snapshots:
     dependencies:
       '@glimmer/interfaces': 0.94.6
 
-  '@glint/ember-tsc@1.0.4(typescript@5.6.3)':
+  '@glint/ember-tsc@1.0.7(typescript@5.6.3)':
     dependencies:
       '@glimmer/syntax': 0.95.0
-      '@glint/template': 1.6.2
+      '@glint/template': 1.7.2
       '@volar/kit': 2.4.23(typescript@5.6.3)
       '@volar/language-core': 2.4.23
       '@volar/language-server': 2.4.23
