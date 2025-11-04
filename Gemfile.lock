@@ -136,7 +136,7 @@ GEM
     debug_inspector (1.2.0)
     diff-lcs (1.6.2)
     diffy (3.4.4)
-    digest (3.2.0)
+    digest (3.2.1)
     digest-xxhash (0.2.9)
     discourse-emojis (1.0.44)
     discourse-fonts (0.0.19)
@@ -954,7 +954,7 @@ CHECKSUMS
   debug_inspector (1.2.0) sha256=9bdfa02eebc3da163833e6a89b154084232f5766087e59573b70521c77ea68a2
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
   diffy (3.4.4) sha256=79384ab5ca82d0e115b2771f0961e27c164c456074bd2ec46b637ebf7b6e47e3
-  digest (3.2.0) sha256=fa2e7092ec683f65d82fadde5ff4ca3b32e23ee0b19f1fc1a5e09993ad2d3991
+  digest (3.2.1) sha256=ab3312b4e272d7d5dc41c564c86a25861a1f34ac5153374199a0b74861395947
   digest-xxhash (0.2.9) sha256=a989d8309c03c4136a4bea9981ec0a146a2750de7f3dfb7b5624a3038aa598d7
   discourse-emojis (1.0.44) sha256=63425a32379fb471d58f5eac9a1e931fc5a94efb7d327f71f1580af4dfe4edb3
   discourse-fonts (0.0.19) sha256=78d4ddd671615908303a675427039d8d787c935e6deae184c6e143c18c6e0033
