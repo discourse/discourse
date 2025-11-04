@@ -3095,7 +3095,7 @@ en:
           label: Toggle whisper
           desc: Whispers are only visible to staff members
         create_topic:
-          label: "New Topic"
+          label: "New topic"
           desc: Create a new topic
         create_personal_message:
           label: "New message"
@@ -3616,8 +3616,8 @@ en:
       filter_to:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
-      create: "New Topic"
-      create_long: "Create a new Topic"
+      create: "New topic"
+      create_long: "Create a new topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
       archive_message:
