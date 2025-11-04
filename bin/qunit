@@ -367,9 +367,7 @@ class QunitRunner
     args += ["--filter", filter] if filter
     args += ["--path", "dist"]
 
-    Dir.chdir(frontend_dir) do
-      exec(env, *args)
-    end
+    exec(env, *args, chdir: frontend_dir)
   end
 
   def run_ember_exam_with_file_path(file_path_filter, load_plugins, query: nil)
@@ -397,9 +395,7 @@ class QunitRunner
     args += ["--query", query] if query
     args += ["--file-path", file_path_filter, "--path", "dist"]
 
-    Dir.chdir(frontend_dir) do
-      exec(env, *args)
-    end
+    exec(env, *args, chdir: frontend_dir)
   end
 
   def convert_to_ember_relative_path(file_path)
@@ -476,17 +472,17 @@ class QunitRunner
       response = http.get("/")
       if response.is_a?(Net::HTTPSuccess) || response.is_a?(Net::HTTPRedirection)
         puts "? #{name} server responding on :#{port}" if @verbose
-        return true
+        true
       else
         puts "? #{name} server on :#{port} returned #{response.code}"
-        return false
+        false
       end
     rescue Errno::ECONNREFUSED
       puts "? #{name} server not responding on :#{port} (connection refused)"
-      return false
+      false
     rescue => e
       puts "? #{name} server on :#{port}: #{e.message}" if @verbose
-      return false
+      false
     end
   end
 
