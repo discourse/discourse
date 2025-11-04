@@ -2933,6 +2933,10 @@ en:
         select: "Select translation"
         save: "Save translation"
         original_content: "Original post content"
+        translation_preview: "Translation preview"
+        original: "Original"
+        translation: "Translation"
+        no_translation_yet: "Start typing to see translation preview..."
         placeholder: "Enter translation for post here..."
 
       group_mentioned_limit:
