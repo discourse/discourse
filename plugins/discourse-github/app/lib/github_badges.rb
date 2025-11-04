@@ -44,13 +44,31 @@ module DiscourseGithubPlugin
           .each { |user| user_emails[user] = user.emails }
 
         if github_name_email.any?
-          screen_names =
-            UserAssociatedAccount
-              .where(provider_name: "github")
-              .where("info ->> 'nickname' IN (?)", github_name_email.keys)
-              .includes(:user)
-              .map { |row| [row.user, row.info["nickname"]] }
-              .to_h
+          screen_names = {}
+          
+          # First: try linking via GitHub provider (if it exists)
+          if UserAssociatedAccount.table_exists? &&
+            UserAssociatedAccount.where(provider_name: "github").exists?
+            screen_names =
+              UserAssociatedAccount
+                .where(provider_name: "github")
+                .where("info ->> 'nickname' IN (?)", github_name_email.keys)
+                .includes(:user)
+                .map { |row| [row.user, row.info["nickname"]] }
+                .to_h
+          end
+
+          # Fallback: match commit nickname with Discourse username
+          unmatched_nicknames = github_name_email.keys - screen_names.values
+          if unmatched_nicknames.any?
+            User
+              .real
+              .where(staged: false)
+              .where(username: unmatched_nicknames)
+              .each do |user|
+                screen_names[user] = user.username
+              end
+          end
 
           screen_names.each do |user, screen_name|
             user_emails[user] ||= []
