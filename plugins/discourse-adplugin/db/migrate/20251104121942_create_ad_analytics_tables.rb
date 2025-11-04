@@ -5,7 +5,6 @@ class CreateAdAnalyticsTables < ActiveRecord::Migration[7.0]
     create_table :ad_plugin_impressions do |t|
       t.integer :ad_type, null: false
       t.bigint :ad_plugin_house_ad_id
-      t.string :ad_network_name
       t.string :placement, null: false
       t.integer :user_id
       t.timestamps

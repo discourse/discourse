@@ -28,10 +28,13 @@ after_initialize do
   require_relative "app/models/ad_plugin/house_ad_setting"
   require_relative "app/models/ad_plugin/house_ad"
   require_relative "app/models/ad_plugin/ad_impression"
-  # require_relative "app/models/ad_plugin/ad_click"
+  require_relative "app/models/concerns/reports/ad_plugin"
   require_relative "lib/adplugin/guardian_extensions"
 
-  reloadable_patch { Guardian.prepend AdPlugin::GuardianExtensions }
+  reloadable_patch do
+    Guardian.prepend AdPlugin::GuardianExtensions
+    Report.include(Reports::AdPlugin)
+  end
 
   Discourse::Application.routes.append do
     get "/ads.txt" => "adstxt#index"
