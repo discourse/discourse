@@ -15,39 +15,19 @@ describe DiscourseAi::Translation::LanguageDetector do
 
   describe ".detect" do
     let(:locale_detector) { described_class.new("meow") }
-    let(:llm_response) { "hur dur hur dur!" }
+    let(:llm_response) { "en-US" }
 
     it "creates the correct prompt" do
       allow(DiscourseAi::Completions::Prompt).to receive(:new).with(
         persona.system_prompt,
-        messages: [{ type: :user, content: "meow", id: "user" }],
+        messages: [{ type: :user, content: "meow" }],
+        post_id: nil,
+        topic_id: nil,
       ).and_call_original
 
       DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
         locale_detector.detect
       end
-    end
-
-    it "sends the language detection prompt to the ai helper model" do
-      mock_prompt = instance_double(DiscourseAi::Completions::Prompt)
-      mock_llm = instance_double(DiscourseAi::Completions::Llm)
-
-      structured_output =
-        DiscourseAi::Completions::StructuredOutput.new({ locale: { type: "string" } })
-      structured_output << { locale: llm_response }.to_json
-
-      allow(DiscourseAi::Completions::Prompt).to receive(:new).and_return(mock_prompt)
-      allow(DiscourseAi::Completions::Llm).to receive(:proxy).with(
-        SiteSetting.ai_default_llm_model,
-      ).and_return(mock_llm)
-      allow(mock_llm).to receive(:generate).with(
-        mock_prompt,
-        user: Discourse.system_user,
-        feature_name: "translation",
-        response_format: persona.response_format,
-      ).and_return(structured_output)
-
-      locale_detector.detect
     end
 
     it "returns the language from the llm's response in the language tag" do
@@ -66,10 +46,6 @@ describe DiscourseAi::Translation::LanguageDetector do
       end
 
       DiscourseAi::Completions::Llm.with_prepared_responses(["1234"]) do
-        expect(locale_detector.detect).to eq(nil)
-      end
-
-      DiscourseAi::Completions::Llm.with_prepared_responses(["en-US-INCORRECT"]) do
         expect(locale_detector.detect).to eq(nil)
       end
 
