@@ -4269,6 +4269,10 @@ experimental:
     type: group_list
     default: ""
     area: "experimental"
+  reviewable_old_moderator_actions:
+    default: true
+    hidden: true
+    client: true
   enable_upcoming_changes:
     default: false
     hidden: true
