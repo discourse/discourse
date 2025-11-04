@@ -5,6 +5,9 @@
 # https://translate.discourse.org/
 
 el:
+  site_settings:
+    chat_integration_mattermost_webhook_url: 'URL για το webhook του Mattermost'
+    chat_integration_rocketchat_webhook_url: "Το URL για το webhook ενσωμάτωσης του Rocket Chat"
   chat_integration:
     all_categories: "(όλες οι κατηγορίες)"
     topic_tag_changed:

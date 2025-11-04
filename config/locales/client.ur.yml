@@ -684,10 +684,6 @@ ur:
         claimed_by_you: "آپ نے اِس چیز کو کََلیم کر لیا ہے اور اِس کا جائزہ لے سکتے ہیں۔"
         claimed_by_other: "اِس چیز کا صرف <b>%{username}</b> جائزہ لے سکتا ہے۔"
         automatically_claimed_by: "اس شے کا فی الحال <b>%{username}</b> جائزہ لے رہے ہیں۔"
-      claim:
-        title: "اس موضوع پر حق جتائیں"
-      unclaim:
-        help: "اس کََلیم کو ہٹائیں"
       awaiting_approval: "منظوری کا منتظر"
       delete: "حذف کریں"
       settings:
@@ -845,6 +841,7 @@ ur:
           title: "دھاگہ"
           noun: "پوسٹ"
       flagged_as: "کے طور پرفلَیگ"
+      user_label: "رکن"
       assigned_to: "کو تفویض کیا گیا"
       moderator_actions: "ناظم کی کاروائیاں"
       timeline_and_notes: "ٹائم لائن اور نوٹس"
@@ -875,6 +872,7 @@ ur:
       review_user: "صارف"
       need_help: "مدد۔ضرورت؟"
       copy_link: "رابطہ کاپی کریں"
+      copy_link_feedback: "رابطہ کاپی ہو گیا"
       view_source: "ماخذ دیکھیں"
       insights:
         title: "تجزیے"
@@ -2874,6 +2872,9 @@ ur:
         create_topic:
           label: "نیا موضوع"
           desc: ایک نیا موضوع بنائیں
+        create_personal_message:
+          label: "نیا پیغام"
+          desc: "نیا ذاتی پیغام بنائیں"
         shared_draft:
           label: "مشترکہ مسودہ"
           desc: "ایسے موضوع کا مسودہ تیار کریں جو صرف اجازت شدہ اراکین کو نظر آئے"
@@ -3367,7 +3368,7 @@ ur:
         one: "موضوع میں %{count} پوسٹ"
         other: "ٹاپک میں %{count} پوسٹس"
       create: "نیا موضوع"
-      create_long: "نیا موضوع بنائیں"
+      create_long: "ایک نیا موضوع بنائیں"
       open_draft: "مسودہ کھولیں"
       private_message: "ایک پیغام شروع کریں"
       archive_message:

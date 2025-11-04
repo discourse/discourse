@@ -45,7 +45,6 @@ ro:
               label: "Expeditor PM"
               description: "Utilizatorul care va trimite PM (implicit la sistem)"
             notify_author_pm_message:
-              label: "Mesaj PM"
               description: "Mesaj personalizat opțional pentru a trimite autorului"
         llm_tagger:
           fields:

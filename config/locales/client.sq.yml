@@ -548,10 +548,6 @@ sq:
         required: "Ju duhet të përvetësoni artikuj para se t'i rishikoni ato."
         claimed_by_you: "Ju e keni përvetësuar këtë artikull dhe mund ta rishikoni atë."
         claimed_by_other: "Ky artikull mund të shqyrtohet vetëm nga <b>%{username}</b>."
-      claim:
-        title: "përvetësoni këtë temë"
-      unclaim:
-        help: "hiqni këtë përvetësim"
       awaiting_approval: "Në pritje të miratimit"
       delete: "Fshij"
       settings:
@@ -699,10 +695,12 @@ sq:
         reviewable_post:
           title: "Postim"
           noun: "postim"
+      user_label: "User"
       notes:
         delete: "Fshij"
       review_user: "User"
       copy_link: "Kopjoni lidhjen"
+      copy_link_feedback: "Lidhja u kopjua"
       insights:
         activities:
           posts:
@@ -2567,7 +2565,6 @@ sq:
           label: Ndërroni pëshpëritjen
           desc: Pashërritjet janë të dukshme vetëm për anëtarët e stafit
         create_topic:
-          label: "Temë e re"
           desc: Krijoni një temë të re
         shared_draft:
           label: "Drafti i përbashkët"
@@ -3038,7 +3035,7 @@ sq:
         one: "%{count} postim në temë"
         other: "%{count} postime në temë"
       create: "Temë e re"
-      create_long: "Hap një temë të re"
+      create_long: "Krijoni një temë të re"
       open_draft: "Draft i hapur"
       private_message: "Fillo një mesazh"
       archive_message:

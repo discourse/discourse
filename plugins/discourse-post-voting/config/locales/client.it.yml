@@ -30,10 +30,8 @@ it:
         label: "Crea un argomento di votazione dei messaggi"
       composer_actions:
         create_as_post_voting:
-          label: "Attiva/disattiva votazione dei messaggi"
           desc: "L'argomento verrà creato con messaggi votabili"
         remove_as_post_voting:
-          label: "Rimuovi votazione dei messaggi"
           desc: "L'argomento verrà creato nel formato normale"
     vote:
       already_voted: "Puoi votare una sola volta per domanda."
