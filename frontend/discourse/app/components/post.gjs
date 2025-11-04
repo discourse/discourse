@@ -12,6 +12,7 @@ import { and, eq, not, or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import ShareTopicModal from "discourse/components/modal/share-topic";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import PostA11yHeading from "discourse/components/post/a11y-heading";
 import PostActionsSummary from "discourse/components/post/actions-summary";
 import PostAvatar from "discourse/components/post/avatar";
 import PostCookedHtml from "discourse/components/post/cooked-html";
@@ -151,14 +152,17 @@ export default class Post extends Component {
     return this.args.height ? `${this.args.height}px` : null;
   }
 
-  get postDateText() {
-    if (!this.args.post.displayDate) {
-      return "";
-    }
+  get a11yHeadingText() {
+    const date = this.args.post.displayDate
+      ? relativeAge(new Date(this.args.post.displayDate), {
+          format: "medium-with-ago-and-on",
+          wrapInSpan: false,
+        })
+      : "";
 
-    return relativeAge(new Date(this.args.post.displayDate), {
-      format: "medium-with-ago-and-on",
-      wrapInSpan: false,
+    return i18n("post.accessible_heading", {
+      username: this.args.post.username,
+      date,
     });
   }
 
@@ -438,13 +442,7 @@ export default class Post extends Component {
           all cloaked items can be referenced and we need to override it }}
       id={{if @cloaked (concat "post_" @post.post_number)}}
     >
-      <h2 class="sr-only" id={{concat "post-heading-" @post.post_number}}>
-        {{i18n
-          "post.accessible_heading"
-          username=@post.username
-          date=this.postDateText
-        }}
-      </h2>
+      <PostA11yHeading @post={{@post}} @text={{this.a11yHeadingText}} />
       {{#unless @cloaked}}
         {{#let
           (lazyHash

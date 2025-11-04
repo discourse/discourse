@@ -13,6 +13,7 @@ import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import PostA11yHeading from "./a11y-heading";
 
 // TODO (glimmer-post-stream) remove the export after removing the legacy widget code
 export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
@@ -129,8 +130,7 @@ export default class PostSmallAction extends Component {
     return this.args.post.action_code_who;
   }
 
-  @cached
-  get headingDescription() {
+  get a11yHeadingText() {
     // plain text version for screen reader headings
     const when = this.createdAt
       ? relativeAge(this.createdAt, {
@@ -148,9 +148,7 @@ export default class PostSmallAction extends Component {
   }
 
   <template>
-    <h2 class="sr-only" id={{concat "post-heading-" @post.post_number}}>
-      {{this.headingDescription}}
-    </h2>
+    <PostA11yHeading @post={{@post}} @text={{this.a11yHeadingText}} />
     <article
       ...attributes
       class={{unless
