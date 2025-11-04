@@ -2,11 +2,12 @@ import loadEmberExam from "ember-exam/test-support/load";
 import { setupEmberOnerrorValidation, start } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
-import { loadAdmin, loadThemes } from "discourse/app";
+import { loadAdmin, loadModules, loadThemes } from "discourse/app";
 import setupTests from "discourse/tests/setup-tests";
 import config from "../config/environment";
 
 document.addEventListener("discourse-init", async () => {
+  await loadModules();
   await loadAdmin();
   await loadThemes();
 

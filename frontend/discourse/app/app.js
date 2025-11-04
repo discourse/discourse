@@ -51,6 +51,24 @@ export async function loadThemes() {
   await Promise.all(promises);
 }
 
+export async function loadModules() {
+  await loadModule("select-kit");
+  await loadModule("float-kit");
+  await loadModule("truth-helpers");
+  await loadModule("dialog-holder");
+}
+
+async function loadModule(name) {
+  const compatModules = (
+    await import(
+      /* webpackChunkName: TODO? */ `discourse/${name}/${name}-compat-modules`
+    )
+  ).default;
+  for (const [key, mod] of Object.entries(compatModules)) {
+    define(`discourse/${name}/${key.slice(2)}`, () => mod);
+  }
+}
+
 export async function loadAdmin() {
   const compatModules = (
     await import(
