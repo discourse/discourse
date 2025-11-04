@@ -82,7 +82,6 @@
     }
 
     > * {
-      padding-top: var(--space-2);
       padding-bottom: var(--space-4);
       margin-bottom: var(--space-3);
 
@@ -245,6 +244,22 @@
       border-bottom: 1px solid var(--content-border-color);
     }
   }
+
+  .reviewable-claimed-topic {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  &__assigned {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-2);
+
+    .d-icon {
+      color: var(--primary-high);
+    }
+  }
 }
 
 .review-item__status {
@@ -380,8 +395,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding-top: var(--space-1);
-  padding-bottom: 0;
 
   label {
     display: block;
