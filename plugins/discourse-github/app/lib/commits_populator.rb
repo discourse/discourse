@@ -73,6 +73,9 @@ module DiscourseGithubPlugin
                         }
                         author {
                           email
+                          user {
+                            login
+                          }
                         }
                       }
                     }
@@ -240,12 +243,12 @@ module DiscourseGithubPlugin
       batch.each do |c|
         hash = commit_to_hash(c)
         fragments << DB.sql_fragment(<<~SQL, hash)
-          (:repo_id, :sha, :email, :committed_at, :role_id, :merge_commit, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          (:repo_id, :sha, :email, :committed_at, :role_id, :merge_commit, :user_login, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         SQL
       end
       DB.exec(<<~SQL)
         INSERT INTO github_commits
-        (repo_id, sha, email, committed_at, role_id, merge_commit, created_at, updated_at) VALUES #{fragments.join(",")}
+        (repo_id, sha, email, committed_at, role_id, merge_commit, user_login, created_at, updated_at) VALUES #{fragments.join(",")}
       SQL
     end
 
@@ -257,6 +260,7 @@ module DiscourseGithubPlugin
         committed_at: commit.committedDate,
         merge_commit: commit.message.match?(MERGE_COMMIT_REGEX),
         role_id: is_contribution?(commit) ? ROLES[:contributor] : ROLES[:committer],
+        user_login: commit.author.user&.login
       }
     end
 
