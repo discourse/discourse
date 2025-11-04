@@ -112,14 +112,17 @@ export default class PostTranslationEditor extends Component {
 
     {{#if this.composer.model.post.firstPost}}
       <div class="topic-title-translator title-and-category with-preview">
-        <TextField
-          @value={{this.composer.model.title}}
-          @id="translated-topic-title"
-          @maxLength={{this.siteSettings.max_topic_title_length}}
-          @placeholder={{this.composer.model.topic.title}}
-          @disabled={{this.composer.loading}}
-          @autocomplete="off"
-        />
+        <div class="title-input-column">
+          <TextField
+            @value={{this.composer.model.title}}
+            @id="translated-topic-title"
+            @maxLength={{this.siteSettings.max_topic_title_length}}
+            @placeholder={{this.composer.model.topic.title}}
+            @disabled={{this.composer.loading}}
+            @autocomplete="off"
+          />
+        </div>
+        <div class="title-preview-spacer"></div>
       </div>
     {{/if}}
 
