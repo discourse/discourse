@@ -36,7 +36,10 @@ export default class ReviewIndexRefresh extends Component {
       <ReviewFilters @controller={{@controller}} />
       <div class="reviewable-list">
         {{#if @controller.reviewables.content}}
-          <LoadMore @action={{@controller.loadMore}}>
+          <LoadMore
+            @action={{@controller.loadMore}}
+            @rootMargin="0px 0px 200px 0px"
+          >
             <div class="reviewables">
               {{#each @controller.reviewables.content as |r|}}
                 {{#if (this.shouldUseRefreshUI r)}}

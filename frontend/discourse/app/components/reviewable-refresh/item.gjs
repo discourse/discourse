@@ -769,13 +769,6 @@ export default class ReviewableItem extends Component {
         </div>
 
         <div class="review-item__aside">
-          {{#if this.reviewable.claimed_by}}
-            <div class="review-item__assigned">
-              {{icon "user-plus"}}
-              {{i18n "review.assigned_to"}}
-              <ReviewableCreatedBy @user={{this.reviewable.claimed_by.user}} />
-            </div>
-          {{/if}}
 
           {{#unless this.reviewable.last_performing_username}}
             {{#if this.canPerform}}
@@ -823,6 +816,16 @@ export default class ReviewableItem extends Component {
 
           {{#if this.claimEnabled}}
             <div class="review-item__moderator-actions --extra">
+              {{#if this.reviewable.claimed_by}}
+                <div class="review-item__assigned">
+                  {{icon "user-plus"}}
+                  <ReviewableCreatedBy
+                    @showUsername={{true}}
+                    @avatarSize="small"
+                    @user={{this.reviewable.claimed_by.user}}
+                  />
+                </div>
+              {{/if}}
               <ReviewableClaimedTopic
                 @topicId={{this.topicId}}
                 @claimedBy={{this.reviewable.claimed_by}}
