@@ -229,4 +229,147 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
       .dom(".small-action-desc .small-action-recover")
       .exists("adds the recover small action button");
   });
+
+  test("a11y heading is rendered with correct attributes and text", async function (assert) {
+    this.post.created_at = new Date().getTime() - 2 * 60 * 60 * 1000; // 2 hours ago
+    await renderComponent(this.post);
+
+    assert.dom("h2.sr-only").exists("accessibility heading exists");
+    assert
+      .dom("h2.sr-only")
+      .hasAttribute(
+        "id",
+        `post-heading-${this.post.post_number}`,
+        "heading has correct id based on post number"
+      );
+
+    // Check that the heading text includes the action description
+    const headingText = this.element
+      .querySelector("h2.sr-only")
+      .textContent.trim();
+
+    assert.true(
+      headingText.includes("Converted"),
+      "heading text includes action description"
+    );
+    assert.true(
+      headingText.includes("2 hours ago"),
+      "heading text includes time information"
+    );
+  });
+
+  test("a11y heading is rendered even when small action is cloaked", async function (assert) {
+    await render(
+      <template>
+        <PostSmallAction @post={{this.post}} @cloaked={{true}} />
+      </template>
+    );
+
+    assert
+      .dom("h2.sr-only")
+      .exists("accessibility heading exists even when cloaked");
+    assert
+      .dom("h2.sr-only")
+      .hasAttribute(
+        "id",
+        `post-heading-${this.post.post_number}`,
+        "heading has correct id when cloaked"
+      );
+
+    // The main content should not be rendered when cloaked
+    assert
+      .dom("article .small-action-desc")
+      .doesNotExist("main content is not rendered when cloaked");
+    assert
+      .dom("article .topic-avatar")
+      .doesNotExist("avatar icon is not rendered when cloaked");
+  });
+
+  test("article is properly labeled by a11y heading", async function (assert) {
+    await renderComponent(this.post);
+
+    const expectedAriaLabelledBy = `post-heading-${this.post.post_number}`;
+
+    assert
+      .dom("article.small-action")
+      .hasAttribute(
+        "aria-labelledby",
+        expectedAriaLabelledBy,
+        "article is labeled by the accessibility heading"
+      );
+  });
+
+  test("a11y heading text is plain text without HTML", async function (assert) {
+    await renderComponent(this.post);
+
+    const headingText = this.element
+      .querySelector("h2.sr-only")
+      .textContent.trim();
+
+    assert.false(
+      headingText.includes("<a"),
+      "heading text does not include HTML tags"
+    );
+    assert.false(
+      headingText.includes("href"),
+      "heading text does not include link attributes"
+    );
+  });
+
+  test("a11y heading text updates with different action codes", async function (assert) {
+    this.post.action_code = "invited_user";
+    this.post.action_code_who = "testuser";
+    this.post.created_at = new Date().getTime() - 2 * 60 * 60 * 1000; // 2 hours ago
+
+    await renderComponent(this.post);
+
+    const headingText = this.element
+      .querySelector("h2.sr-only")
+      .textContent.trim();
+
+    assert.true(
+      headingText.includes("Invited"),
+      "heading text reflects closed action"
+    );
+    assert.true(
+      headingText.includes("@testuser"),
+      "heading text includes who performed the action"
+    );
+    assert.true(
+      headingText.includes("2 hours ago"),
+      "heading text includes time information"
+    );
+  });
+
+  test("a11y heading id is unique for different post numbers", async function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const topic = store.createRecord("topic", { id: 1 });
+
+    const post1 = store.createRecord("post", {
+      id: 100,
+      post_number: 1,
+      topic,
+      action_code: "open_topic",
+      created_at: "2025-09-23T16:10:28.695Z",
+    });
+
+    const post2 = store.createRecord("post", {
+      id: 200,
+      post_number: 2,
+      topic,
+      action_code: "closed.enabled",
+      created_at: "2025-09-23T16:10:28.695Z",
+    });
+
+    // Render both posts
+    await render(
+      <template>
+        <PostSmallAction @post={{post1}} />
+        <PostSmallAction @post={{post2}} />
+      </template>
+    );
+
+    assert.dom("#post-heading-1").exists("first post heading has correct id");
+    assert.dom("#post-heading-2").exists("second post heading has correct id");
+  });
 });

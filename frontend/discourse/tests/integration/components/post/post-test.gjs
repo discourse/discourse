@@ -809,4 +809,139 @@ module("Integration | Component | Post", function (hooks) {
 
     assert.dom(".show-more-actions").doesNotExist();
   });
+
+  test("a11y heading is rendered with correct attributes and text", async function (assert) {
+    await renderComponent(this.post);
+
+    assert.dom("h2.sr-only").exists("accessibility heading exists");
+    assert
+      .dom("h2.sr-only")
+      .hasAttribute(
+        "id",
+        `post-heading-${this.post.post_number}`,
+        "heading has correct id based on post number"
+      );
+
+    // Check that the heading text includes username and date
+    const headingText = this.element
+      .querySelector("h2.sr-only")
+      .textContent.trim();
+    assert.true(
+      headingText.includes(this.post.username),
+      "heading text includes username"
+    );
+    assert.true(
+      headingText.includes("ago"),
+      "heading text includes relative date"
+    );
+  });
+
+  test("a11y heading is rendered when post is cloaked", async function (assert) {
+    // TODO (glimmer-post-stream) remove the outer div when the post-stream widget is converted to a Glimmer component
+    await render(
+      <template>
+        <div class="topic-post glimmer-post-stream">
+          <Post @post={{this.post}} @cloaked={{true}} />
+        </div>
+        <DMenus />
+      </template>
+    );
+
+    assert
+      .dom("h2.sr-only")
+      .exists("accessibility heading exists when the post is cloaked");
+    assert
+      .dom("h2.sr-only")
+      .hasAttribute(
+        "id",
+        `post-heading-${this.post.post_number}`,
+        "heading has correct id based on post number"
+      );
+
+    // Check that the heading text includes username and date
+    const headingText = this.element
+      .querySelector("h2.sr-only")
+      .textContent.trim();
+    assert.true(
+      headingText.includes(this.post.username),
+      "heading text includes username"
+    );
+    assert.true(
+      headingText.includes("ago"),
+      "heading text includes relative date"
+    );
+  });
+
+  test("article is properly labeled by a11y heading", async function (assert) {
+    await renderComponent(this.post);
+
+    const expectedAriaLabelledBy = `post-heading-${this.post.post_number}`;
+
+    assert
+      .dom("article.onscreen-post")
+      .hasAttribute(
+        "aria-labelledby",
+        expectedAriaLabelledBy,
+        "article is labeled by the accessibility heading"
+      );
+  });
+
+  test("a11y heading text updates with different post data", async function (assert) {
+    // Create a post with specific user and date
+    const customPost = this.store.createRecord("post", {
+      id: 456,
+      post_number: 5,
+      topic: this.post.topic,
+      username: "test_user",
+      created_at: new Date(new Date().getTime() - 2 * 60 * 60 * 1000), // 2 hours ago
+    });
+
+    await renderComponent(customPost);
+
+    const headingText = this.element
+      .querySelector("h2.sr-only")
+      .textContent.trim();
+
+    assert.true(
+      headingText.includes("test_user"),
+      "heading text includes the correct username"
+    );
+    assert.true(
+      headingText.includes("2 hours ago"),
+      "heading text includes the correct relative time"
+    );
+  });
+
+  test("a11y heading id is unique for different post numbers", async function (assert) {
+    const post1 = this.store.createRecord("post", {
+      id: 100,
+      post_number: 1,
+      topic: this.post.topic,
+      username: "user1",
+      created_at: new Date(),
+    });
+
+    const post2 = this.store.createRecord("post", {
+      id: 200,
+      post_number: 2,
+      topic: this.post.topic,
+      username: "user2",
+      created_at: new Date(),
+    });
+
+    // Render both posts
+    // TODO (glimmer-post-stream) remove the outer div when the post-stream widget is converted to a Glimmer component
+    await render(
+      <template>
+        <div class="topic-post glimmer-post-stream">
+          <Post @post={{post1}} />
+          <Post @post={{post2}} />
+        </div>
+        <DMenus />
+      </template>
+    );
+
+    assert.dom("#post-heading-1").exists("first post heading has correct id");
+    assert.dom("#post-heading-2").exists("second post heading has correct id");
+  });
 });
