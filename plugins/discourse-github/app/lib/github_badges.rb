@@ -45,10 +45,10 @@ module DiscourseGithubPlugin
 
         if github_name_email.any?
           screen_names = {}
-          
+
           # First: try linking via GitHub provider (if it exists)
           if UserAssociatedAccount.table_exists? &&
-            UserAssociatedAccount.where(provider_name: "github").exists?
+               UserAssociatedAccount.where(provider_name: "github").exists?
             screen_names =
               UserAssociatedAccount
                 .where(provider_name: "github")
@@ -65,9 +65,7 @@ module DiscourseGithubPlugin
               .real
               .where(staged: false)
               .where(username: unmatched_nicknames)
-              .each do |user|
-                screen_names[user] = user.username
-              end
+              .each { |user| screen_names[user] = user.username }
           end
 
           screen_names.each do |user, screen_name|

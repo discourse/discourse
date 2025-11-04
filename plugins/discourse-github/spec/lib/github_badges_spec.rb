@@ -97,14 +97,14 @@ describe DiscourseGithubPlugin::GithubBadges do
         email: "githubdev@users.noreply.github.com",
         committed_at: 1.day.ago,
         role_id: roles[:contributor],
-        )
+      )
 
       repo1.commits.create!(
         sha: "staged_username",
         email: "stageddev@users.noreply.github.com",
         committed_at: 1.day.ago,
         role_id: roles[:contributor],
-        )
+      )
     end
 
     it "granted correctly" do
@@ -182,16 +182,18 @@ describe DiscourseGithubPlugin::GithubBadges do
       UserAssociatedAccount.create!(
         provider_name: "github",
         user_id: github_associated_user.id,
-        info: { nickname: "samename" },
+        info: {
+          nickname: "samename",
+        },
         provider_uid: 999,
-        )
+      )
 
       repo1.commits.create!(
         sha: "priority_test",
         email: "samename@users.noreply.github.com",
         committed_at: 1.day.ago,
         role_id: roles[:contributor],
-        )
+      )
 
       DiscourseGithubPlugin::GithubBadges.grant!
 
