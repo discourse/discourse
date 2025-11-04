@@ -47,12 +47,12 @@ export default async function lightbox(elem, siteSettings) {
 
     lightboxEl.on("afterInit", () => {
       const el = lightboxEl.pswp.currSlide.data.element;
-      el.querySelector(".meta").classList.add("open");
+      el.querySelector(".meta")?.classList.add("open");
     });
 
     lightboxEl.on("destroy", () => {
       const el = lightboxEl.pswp.currSlide.data.element;
-      el.querySelector(".meta").classList.remove("open");
+      el.querySelector(".meta")?.classList.remove("open");
     });
 
     lightboxEl.on("uiRegister", function () {
