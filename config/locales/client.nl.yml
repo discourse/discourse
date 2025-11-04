@@ -297,7 +297,7 @@ nl:
       header:
         logged_in_members: "Welkom terug, %{preferred_display_name}!"
         anonymous_members: "Welkom bij %{site_name}!"
-      search: "Zoeken"
+      search_placeholder: "Zoeken"
     themes:
       default_description: "Standaard"
       broken_theme_alert: "Je site werkt mogelijk niet omdat een thema/onderdeel fouten bevat. Zie de browserconsole voor meer informatie."
@@ -5212,6 +5212,7 @@ nl:
   admin_js:
     type_to_filter: "Typ om te filteren…"
     settings: "Instellingen"
+    reset_filter: "Resetten"
     admin:
       title: "Discourse-beheerder"
       moderator: "Moderator"
@@ -5244,6 +5245,21 @@ nl:
           title: "Plug-ins"
         advanced:
           title: "Geavanceerd"
+      upcoming_changes:
+        name: "Naam"
+        enabled: "Ingeschakeld"
+        select_groups: "Selecteer groepen…"
+        preview: "Voorbeeld"
+        impact_roles:
+          admins: "Beheerders"
+          moderators: "Moderators"
+          staff: "Medewerker"
+        filter:
+          all: "Alles"
+          enabled: "Ingeschakeld"
+          disabled: "Uitgeschakeld"
+          impact_type_feature: "Functie"
+          impact_type_other: "Anders"
       config:
         about:
           title: "Over je site"
@@ -7453,7 +7469,6 @@ nl:
             cancel: "Annuleren"
         merging_user: "Gebruiker samenvoegen…"
         merge_failed: "Er is een fout opgetreden tijdens het samenvoegen van de gebruikers."
-        delete_posts_forbidden_because_staff: "Kan niet alle berichten van beheerders en moderators verwijderen."
         delete_forbidden:
           one: "Gebruikers kunnen niet worden verwijderd als ze berichten hebben geplaatst. Verwijder alle berichten voordat je een gebruiker probeert te verwijderen. (Berichten ouder dan %{count} dag kunnen niet worden verwijderd.)"
           other: "Gebruikers kunnen niet worden verwijderd als ze berichten hebben geplaatst. Verwijder alle berichten voordat je een gebruiker probeert te verwijderen. (Berichten ouder dan %{count} dagen kunnen niet worden verwijderd.)"

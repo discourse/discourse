@@ -195,7 +195,7 @@ te:
     welcome_banner:
       header:
         anonymous_members: "%{site_name} కు సుస్వాగతం!"
-      search: "వెతుకు"
+      search_placeholder: "వెతుకు"
     themes:
       default_description: "అప్రమేయ"
       error_caused_by: "'%{name}' వల్ల ఏర్పడింది. నవీకరించడానికి, మళ్లీ కాన్ఫిగర్ చేయడానికి లేదా నిలిపివేయడానికి <a target='blank' href='%{path}'>ఇక్కడ క్లిక్ చేయండి</a>."
@@ -4385,6 +4385,7 @@ te:
   admin_js:
     type_to_filter: "ఫిల్టర్ చేయడానికి టైప్ చేయండి…"
     settings: "అమరికలు"
+    reset_filter: "రీసెట్ చేయండి"
     admin:
       title: "డిస్కోర్స్ అడ్మిన్"
       moderator: "నిర్వాహకుడు"
@@ -4413,6 +4414,19 @@ te:
           title: "చొప్పింతలు"
         advanced:
           title: "అధునాతన"
+      upcoming_changes:
+        name: "పేరు"
+        enabled: "ప్రారంభించబడింది"
+        select_groups: "సమూహాలను ఎంచుకోండి…"
+        preview: "ప్రివ్యూ"
+        impact_roles:
+          moderators: "నిర్వాహకులు"
+          staff: "సిబ్బంది"
+        filter:
+          all: "అన్నీ"
+          enabled: "ప్రారంభించబడింది"
+          disabled: "నిలిపివేయబడింది"
+          impact_type_other: "ఇతర"
       config:
         about:
           title: "మీ సైట్ గురించి"
@@ -5937,7 +5951,6 @@ te:
             cancel: "రద్దుచేయండి"
         merging_user: "సభ్యుని విలీనం చేస్తోంది…"
         merge_failed: "సభ్యులను విలీనం చేస్తున్నప్పుడు లోపం ఏర్పడింది."
-        delete_posts_forbidden_because_staff: "నిర్వాహకులు మరియు మోడరేటర్‌ల అన్ని పోస్ట్‌లను తొలగించలేరు."
         delete_forbidden:
           one: "సభ్యులు పోస్ట్‌లను కలిగి ఉంటే వారిని తొలగించలేరు. సభ్యుని తొలగించడానికి ప్రయత్నించే ముందు అన్ని పోస్ట్‌లను తొలగించండి. (%{count} రోజుల కంటే పాత పోస్ట్‌లు తొలగించబడవు.)"
           other: "సభ్యులు పోస్ట్‌లను కలిగి ఉంటే వారిని తొలగించలేరు. సభ్యుని తొలగించడానికి ప్రయత్నించే ముందు అన్ని పోస్ట్‌లను తొలగించండి. (%{count} రోజుల కంటే పాత పోస్ట్‌లు తొలగించబడవు.)"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Importer::CategoryNameFinder do
+RSpec.describe ::Migrations::Importer::CategoryNameFinder do
   subject(:finder) { described_class.new(shared_data) }
 
   let(:discourse_db) { ::Migrations::Importer::DiscourseDB.new }
@@ -185,6 +185,22 @@ RSpec.describe Migrations::Importer::CategoryNameFinder do
       it "preserves special characters in names" do
         name = finder.find_available_name("Test & Category!", nil)
         expect(name).to eq("Test & Category!")
+      end
+    end
+
+    context "with fallback name conflicts" do
+      it "finds next available fallback name when some are already used" do
+        category_rows << [nil, "category_1"]
+        category_rows << [nil, "category_123"]
+
+        name1 = finder.find_available_name("", nil)
+        119.times { finder.find_available_name("", nil) }
+        name2 = finder.find_available_name("", nil)
+        name3 = finder.find_available_name("", nil)
+
+        expect(name1).to eq("Category_2")
+        expect(name2).to eq("Category_122")
+        expect(name3).to eq("Category_124")
       end
     end
   end

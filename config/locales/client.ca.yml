@@ -198,7 +198,7 @@ ca:
       header:
         logged_in_members: "Benvingut de nou, %{preferred_display_name}!"
         anonymous_members: "Benvingut a %{site_name}!"
-      search: "Cerca"
+      search_placeholder: "Cerca"
     themes:
       default_description: "Per defecte"
       error_caused_by: "Causat per '%{name}'. <a target='blank' href='%{path}'>Feu clic aquí</a> per actualitzar, tornar a configurar o desactivar."
@@ -3066,6 +3066,7 @@ ca:
         categories: "Totes les categories"
   admin_js:
     settings: "Configuració"
+    reset_filter: "Restableix"
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"
@@ -3093,6 +3094,19 @@ ca:
           title: "Seguretat"
         plugins:
           title: "Connectors"
+      upcoming_changes:
+        name: "Nom"
+        enabled: "Activat"
+        preview: "Previsualitza"
+        impact_roles:
+          admins: "Administradors"
+          moderators: "Moderadors"
+          staff: "Equip responsable"
+        filter:
+          all: "Tots"
+          enabled: "Activat"
+          disabled: "Desactivat"
+          impact_type_other: "Altres"
       config:
         developer:
           title: "Desenvolupador"
@@ -4168,7 +4182,6 @@ ca:
             cancel: "Cancel·la"
           confirmation:
             cancel: "Cancel·la"
-        delete_posts_forbidden_because_staff: "No es poden suprimir totes les publicacions d'administradores i moderadors."
         delete_forbidden:
           one: "No es poden suprimir els usuaris si tenen publicacions. Suprimiu totes les publicacions abans de suprimir un usuari. (No es poden suprimir les publicacions amb més d'%{count} dia.)"
           other: "No es poden suprimir els usuaris si tenen publicacions. Suprimiu totes les publicacions abans de suprimir un usuari. (No es poden suprimir les publicacions amb més de %{count} dies.)"

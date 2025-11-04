@@ -325,7 +325,7 @@ hr:
       header:
         logged_in_members: "Dobrodošli natrag, %{preferred_display_name}!"
         anonymous_members: "Dobrodošli na %{site_name}"
-      search: "Pretraživanje"
+      search_placeholder: "Pretraživanje"
     impersonation:
       notice: "Lažno se predstavljaš kao %{username}"
       stop: "Prestani se lažno predstavljati"
@@ -5491,6 +5491,7 @@ hr:
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"
+    reset_filter: "Resetirati"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -5523,6 +5524,20 @@ hr:
           title: "Dodaci"
         advanced:
           title: "Napredno"
+      upcoming_changes:
+        name: "Ime"
+        enabled: "Omogućeno"
+        select_groups: "Odaberite grupe"
+        preview: "Pregled"
+        impact_roles:
+          admins: "Admini"
+          moderators: "Moderatori"
+          staff: "Osoblje"
+        filter:
+          all: "Sve"
+          enabled: "Omogućeno"
+          disabled: "Onemogućeno"
+          impact_type_other: "Ostalo"
       config:
         about:
           title: "O vašoj web stranici"
@@ -7166,8 +7181,7 @@ hr:
             cancel: "Odustani"
         merging_user: "Spajanje korisnika…"
         merge_failed: "Došlo je do pogreške prilikom spajanja korisnika."
-        delete_forbidden_because_staff: "Administratori se ne mogu izbrisati."
-        delete_posts_forbidden_because_staff: "Nije moguće obrisati sve objave administratora i moderatora."
+        delete_forbidden_because_admin: "Administratori se ne mogu izbrisati."
         delete_forbidden:
           one: "Korisnici ne mogu biti obrisani ako imaju objava. Obrišite sve njihove objave prije nego pokušate obrisati korisnika. (Objave starije od %{dana] ne mogu biti obrisane.)"
           few: "Korisnici ne mogu biti obrisani ako imaju objava. Obrišite sve njihove objave prije nego pokušate obrisati korisnika. (Objave starije od %{dana] ne mogu biti obrisane.)"

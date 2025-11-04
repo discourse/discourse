@@ -353,7 +353,7 @@ cs:
       header:
         logged_in_members: "Vítejte zpět, %{preferred_display_name}!"
         anonymous_members: "Vítejte v %{site_name}!"
-      search: "Vyhledat"
+      search_placeholder: "Vyhledat"
     impersonation:
       notice: "Vydáváte se za %{username}"
       stop: "Zastavit impersonaci"
@@ -2515,6 +2515,12 @@ cs:
       no_results: "Žádné výsledky"
       search: "Vyhledat..."
       label: "Vyberte možnosti"
+    d_otp:
+      screen_reader:
+        one: Zadejte číslo
+        few: Zadejte %{count} čísla
+        many: Zadejte %{count} čísel
+        other: Zadejte %{count} čísel
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
@@ -4575,7 +4581,7 @@ cs:
       localizations: "Lokalizace"
       localization:
         locale: "Jazyk"
-        name: "Jméno"
+        name: "Název"
         description: "Popis"
         add: "Přidat lokalizaci"
         remove: "Smazat"
@@ -5338,7 +5344,7 @@ cs:
         parent_tag_description: "Štítky z této skupiny lze použít pouze v případě, že je přítomen nadřazený štítek."
         one_per_topic_label: "Omezit na jeden štítek k tématu z této skupiny"
         new_name: "Nová skupina štítků"
-        name_placeholder: "Jméno"
+        name_placeholder: "Název"
         save: "Uložit"
         delete: "Smazat"
         confirm_delete: "Jste si jistí, že chcete smazat tuto skupinu štítků?"
@@ -5809,6 +5815,8 @@ cs:
   admin_js:
     type_to_filter: "Text pro filtrování..."
     settings: "Nastavení"
+    reset_filter: "obnovit výchozí"
+    toggle_filters: "Přepnout rozbalovací filtry"
     admin:
       title: "Administrátor"
       moderator: "Moderátor"
@@ -5841,6 +5849,53 @@ cs:
           title: "Pluginy"
         advanced:
           title: "Pokročilé"
+      upcoming_changes:
+        name: "Název"
+        plugin: "Plugin"
+        metadata: "Metadata"
+        enabled: "Zapnuto"
+        show_image: "Zobrazit obrázek"
+        edit_groups: "Úprit opt-in skupiny"
+        groups_updated: "Skupiny aktualizovány!"
+        save_groups: "Uložit skupiny"
+        select_groups: "Vyberte skupiny…"
+        opt_in_groups: "Opt-in skupiny"
+        opt_in_groups_instructions: "Opt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude zveřejněna pro všechny. Vemte na vědomí, že tyto skupiny budou irelevantní, jakmile změna přejde do stavu Stabilní."
+        toggled_too_fast: "Tuto změnu jste provedli příliš rychle. Před dalším pokusem prosím počkejte několik sekund."
+        change_enabled: "Přihlásili jste se k této změně"
+        change_disabled: "Odhlásili jste se z této změny"
+        permanent_notice: "Tato změna je nyní trvalá a brzy bude odstraněna. Odhlášení již není možné."
+        permanent_no_group_selection: "Není k dispozici, trvalé změny platí pro všechny skupiny."
+        no_changes: "V tuto chvíli se neplánují žádné změny."
+        preview: "Náhled"
+        statuses:
+          pre_alpha: "Pre-Alpha"
+          alpha: "Alpha"
+          beta: "Beta"
+          stable: "Stabilní"
+          permanent: "Trvalá"
+        impact_roles:
+          admins: "Administrátoři"
+          moderators: "Moderátoři"
+          staff: "Redakce"
+          all_members: "Všichni členové"
+          developers: "Vývojáři"
+        filter:
+          search_placeholder: "Filtrovat podle názvu, popisu nebo pluginu..."
+          no_results: "Vašemu filtru neodpovídají žádné nadcházející změny."
+          all: "Vše"
+          enabled_all: "Povoleno nebo zakázáno"
+          enabled: "Zapnuto"
+          disabled: "Vypnuto"
+          impact_type_all: "Všechny typy dopadů"
+          impact_type_feature: "Funkce"
+          impact_type_other: "Ostatní"
+          status_all: "Všechny stavy"
+          status_pre_alpha: "Pre-Alpha"
+          status_alpha: "Alpha"
+          status_beta: "Beta"
+          status_stable: "Stabilní"
+          status_permanent: "Trvalá"
       config:
         about:
           title: "O vašem webu"
@@ -5871,6 +5926,9 @@ cs:
           title: "Lokalizace"
           header_description: "Nastavte uživatelské rozhraní vaší komunity z pohledu jazyka a dalších možností lokalizace"
           keywords: "locale|language|timezone|unicode|ltr|jazyk|časová|zóna"
+        upcoming_changes:
+          title: "Nadcházející změny"
+          header_description: "Seznam chystaných změn ve službě Discourse, které mohou mít vliv na váš web, a experimentální funkce, ke kterým se můžete přihlásit. Můžete filtrovat podle dopadu, typu změny a stavu.\n\nOpt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude uvolněna pro všechny. Tyto skupiny se stanou irelevantními, jakmile změna přejde do stavu stabilní."
         login:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
@@ -6901,7 +6959,7 @@ cs:
             new_component: "Nová komponenta"
             back: "Zpět na komponenty"
             install: "Instalovat"
-            name: "Jméno"
+            name: "Název"
             used_on: "Použita v"
             enabled: "Zapnuto?"
             by_author: "Od uživatele %{name}"
@@ -6947,7 +7005,7 @@ cs:
           delete_successful: "Uživatelské pole odstraněno."
           save_successful: "Uživatelské pole uloženo."
         color_palettes:
-          palette_name: "Jméno"
+          palette_name: "Název"
           copy_to_clipboard: "Kopírovat do schránky"
           copied_to_clipboard: "Zkopírováno do schránky"
           copy_to_clipboard_error: "Při kopírování dat do schránky došlo k chybě"
@@ -7723,6 +7781,8 @@ cs:
             delete_associated_accounts: "odstranit přidružené účty"
             change_theme_site_setting: "změnit nastavení webu motivem"
             stop_impersonating: "zastavit impersonaci"
+            upcoming_change_toggled: "nadcházející změna přepnuta"
+            change_site_setting_groups: "změna skupin nastavení webu"
         screened_emails:
           title: "Filtrované emaily"
           description: "Při registraci nového účtu budou konzultovány následujíci adresy. Při shodě bude registrace zablokována, nebo bude provedena jiná akce."
@@ -7830,7 +7890,7 @@ cs:
         new_template: "Nová šablona"
         list_table:
           headings:
-            name: "Jméno"
+            name: "Název"
             active_categories: "Aktivní kategorie"
             actions: "Akce"
           actions:
@@ -8162,8 +8222,8 @@ cs:
             cancel: "Zrušit"
         merging_user: "Sloučení uživatele…"
         merge_failed: "Při slučování uživatelů došlo k chybě."
-        delete_forbidden_because_staff: "Nelze smazat správce."
-        delete_posts_forbidden_because_staff: "Nelze smazat všechny příspěvky administrátorů a moderátorů."
+        delete_forbidden_because_admin: "Nelze smazat správce."
+        delete_posts_forbidden_because_admin: "Nelze odstranit všechny příspěvky administrátorů."
         delete_forbidden:
           one: "Uživatele nelze odstranit, pokud mají příspěvky. Než se pokusíte uživatele odstranit, smažte všechny příspěvky. (Příspěvky starší než %{count} den nelze smazat.)"
           few: "Uživatele nelze odstranit, pokud mají příspěvky. Než se pokusíte uživatele odstranit, smažte všechny příspěvky. (Příspěvky starší než %{count} dny nelze smazat.)"

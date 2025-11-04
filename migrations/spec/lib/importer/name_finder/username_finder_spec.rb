@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Importer::UsernameFinder do
+RSpec.describe ::Migrations::Importer::UsernameFinder do
   subject(:finder) { described_class.new(shared_data) }
 
   let(:usernames) { Set.new }
@@ -293,6 +293,23 @@ RSpec.describe Migrations::Importer::UsernameFinder do
         98.times { finder.find_available_name("a") }
         username = finder.find_available_name("a")
         expect(username).to eq("a_100")
+      end
+    end
+
+    context "with fallback name conflicts" do
+      it "finds next available fallback name when some are already used" do
+        fallback = I18n.t("importer.fallback_names.user")
+        usernames.add("#{fallback.downcase}_1")
+        usernames.add("#{fallback.downcase}_123")
+
+        username1 = finder.find_available_name("")
+        119.times { finder.find_available_name("") }
+        username2 = finder.find_available_name("")
+        username3 = finder.find_available_name("")
+
+        expect(username1).to eq("#{fallback}_2")
+        expect(username2).to eq("#{fallback}_122")
+        expect(username3).to eq("#{fallback}_124")
       end
     end
   end

@@ -353,7 +353,7 @@ pl_PL:
       header:
         logged_in_members: "Witaj z powrotem, %{preferred_display_name}!"
         anonymous_members: "Witaj na %{site_name}!"
-      search: "Szukaj"
+      search_placeholder: "Szukaj"
     impersonation:
       notice: "Podszywasz się pod %{username}"
       stop: "Przestań się podszywać"
@@ -2514,6 +2514,12 @@ pl_PL:
       no_results: "Brak wyników"
       search: "Szukaj…"
       label: "Wybierz opcje"
+    d_otp:
+      screen_reader:
+        one: Wprowadź liczbę
+        few: Wprowadź %{count} liczby
+        many: Wprowadź %{count} liczb
+        other: Wprowadź %{count} liczb
     form_kit:
       reset: Przywróć
       optional: opcjonalnie
@@ -5786,6 +5792,8 @@ pl_PL:
   admin_js:
     type_to_filter: "Pisz, aby filtrować…"
     settings: "Ustawienia"
+    reset_filter: "Przywróć"
+    toggle_filters: "Przełącz filtry rozwijane"
     admin:
       title: "Administrator Discourse"
       moderator: "Moderator"
@@ -5818,6 +5826,53 @@ pl_PL:
           title: "Wtyczki"
         advanced:
           title: "Zaawansowane"
+      upcoming_changes:
+        name: "Nazwa"
+        plugin: "Wtyczka"
+        metadata: "Metadane"
+        enabled: "Włączona"
+        show_image: "Pokaż obraz"
+        edit_groups: "Edytuj grupy opt-in"
+        groups_updated: "Grupy zaktualizowane!"
+        save_groups: "Zapisz grupy"
+        select_groups: "Wybierz grupy…"
+        opt_in_groups: "Grupy opt-in"
+        opt_in_groups_instructions: "Grupy opt-in można wykorzystać, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim. Należy pamiętać, że grupy te staną się nieistotne, gdy zmiana osiągnie status stabilnej."
+        toggled_too_fast: "Wprowadziłeś tę zmianę zbyt szybko. Odczekaj kilka sekund, zanim spróbujesz ponownie."
+        change_enabled: "Wyraziłeś zgodę na tę zmianę"
+        change_disabled: "Zrezygnowałeś z tej zmiany"
+        permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
+        permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
+        no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
+        preview: "Podgląd"
+        statuses:
+          pre_alpha: "Pre-alfa"
+          alpha: "Alfa"
+          beta: "Beta"
+          stable: "Stabilna"
+          permanent: "Stała"
+        impact_roles:
+          admins: "Administratorzy"
+          moderators: "Moderatorzy"
+          staff: "Zespół"
+          all_members: "Wszyscy członkowie"
+          developers: "Deweloperzy"
+        filter:
+          search_placeholder: "Filtruj według nazwy, opisu lub wtyczki..."
+          no_results: "Brak nadchodzących zmian odpowiadających wybranemu filtrowi"
+          all: "Wszystkie"
+          enabled_all: "Włączone lub wyłączone"
+          enabled: "Włączona"
+          disabled: "Wyłączone"
+          impact_type_all: "Wszystkie rodzaje uderzeń"
+          impact_type_feature: "Funkcja"
+          impact_type_other: "Inne"
+          status_all: "Wszystkie statusy"
+          status_pre_alpha: "Pre-alfa"
+          status_alpha: "Alfa"
+          status_beta: "Beta"
+          status_stable: "Stabilna"
+          status_permanent: "Stała"
       config:
         about:
           title: "O Twojej witrynie"
@@ -5848,6 +5903,9 @@ pl_PL:
           title: "Lokalizacja"
           header_description: "Skonfiguruj język interfejsu społeczności i inne opcje lokalizacji dla swoich członków"
           keywords: "ustawienia regionalne|strefa czasowa|unicode|ltr"
+        upcoming_changes:
+          title: "Nadchodzące zmiany"
+          header_description: "Lista nadchodzących zmian w Discourse, które mogą mieć wpływ na Twoją witrynę, oraz funkcji eksperymentalnych, na które możesz wyrazić zgodę. Możesz filtrować według wpływu, typu zmiany i statusu. Grupy z opcją zgody (\n\n) mogą być używane, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim użytkownikom. Grupy te będą jednak nieistotne, gdy zmiana osiągnie status stabilnej."
         login:
           title: "Logowanie i uwierzytelnianie"
           header_description: "Skonfiguruj sposób logowania i uwierzytelniania użytkowników, sekrety i klucze, dostawców OAuth2 i nie tylko."
@@ -7700,6 +7758,8 @@ pl_PL:
             delete_associated_accounts: "usuń powiązane konta"
             change_theme_site_setting: "zmień ustawienia motywu witryny"
             stop_impersonating: "przestań się podszywać"
+            upcoming_change_toggled: "nadchodząca zmiana przełączona"
+            change_site_setting_groups: "zmień grupy ustawień witryny"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -8129,8 +8189,8 @@ pl_PL:
             cancel: "Anuluj"
         merging_user: "Łączenie użytkownika…"
         merge_failed: "Wystąpił błąd podczas łączenia użytkowników."
-        delete_forbidden_because_staff: "Administratorów nie można usuwać."
-        delete_posts_forbidden_because_staff: "Nie można usunąć wszystkich wpisów administratorów i moderatorów."
+        delete_forbidden_because_admin: "Administratorów nie można usuwać."
+        delete_posts_forbidden_because_admin: "Nie można usunąć wszystkich wpisów administratorów."
         delete_forbidden:
           one: "Użytkownik nie może zostać usunięty jeśli posiada wpisy. Usuń wszystkie jego wpisy przed usunięciem użytkownika. (Nie można usunąć wpisów starszych niż %{count} dzień.)"
           few: "Użytkownik nie może zostać usunięty jeśli posiada wpisy. Usuń wszystkie jego wpisy przed usunięciem użytkownika. (Nie można usunąć wpisów starszych niż %{count} dni.)"

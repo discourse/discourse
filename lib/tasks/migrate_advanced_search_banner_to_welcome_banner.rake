@@ -303,6 +303,8 @@ def enable_welcome_banner(theme)
     site_setting =
       ThemeSiteSetting.find_by(theme_id: parent_theme.id, name: "enable_welcome_banner")
 
+    next if site_setting.nil?
+
     if site_setting.value == "f"
       Themes::ThemeSiteSettingManager.call(
         params: {
@@ -347,5 +349,6 @@ def disable_theme_component(theme)
 
   puts "  Disabling #{theme_identifier(theme)}..."
   theme.update!(enabled: false)
+  StaffActionLogger.new(Discourse.system_user).log_theme_component_disabled(theme)
   puts "  \e[1;32m✓ Disabled\e[0m"
 end

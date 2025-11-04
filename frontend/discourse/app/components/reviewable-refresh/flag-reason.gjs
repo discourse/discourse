@@ -38,12 +38,12 @@ export default class ReviewableFlagReason extends Component {
 
   <template>
     <span class="review-item__flag-reason --{{this.scoreCSSClass}}">
+      {{@score.title}}
       {{#if (gt @score.count 0)}}
         <span class="review-item__flag-count --{{this.scoreCSSClass}}">
           {{@score.count}}
         </span>
       {{/if}}
-      {{@score.title}}
     </span>
   </template>
 }

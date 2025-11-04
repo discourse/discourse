@@ -25,6 +25,7 @@ module DiscourseAi
             .where(deleted_at: nil)
             .where("posts.user_id > 0")
             .where.not(raw: [nil, ""])
+            .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
 
         posts = posts.joins(:topic)
         if SiteSetting.ai_translation_backfill_limit_to_public_content

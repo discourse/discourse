@@ -105,6 +105,8 @@ cs:
           title: "Ikony záhlaví"
         spinners:
           title: "Spinnery"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Prázdný stav"
         tooltips:

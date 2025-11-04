@@ -353,7 +353,7 @@ he:
       header:
         logged_in_members: "ברוך שובך, %{preferred_display_name}!"
         anonymous_members: "ברוך בואך אל %{site_name}!"
-      search: "חיפוש"
+      search_placeholder: "חיפוש"
     impersonation:
       notice: "בחירת להתחקות אחר %{username}"
       stop: "הפסקת התחזות"
@@ -5782,6 +5782,7 @@ he:
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
+    reset_filter: "איפוס"
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
@@ -5814,6 +5815,39 @@ he:
           title: "תוספים"
         advanced:
           title: "מתקדם"
+      upcoming_changes:
+        name: "שם"
+        plugin: "תוסף"
+        metadata: "נתוני על"
+        enabled: "פעיל"
+        show_image: "הצגת תמונה"
+        groups_updated: "הקבוצות עודכנו!"
+        save_groups: "שמירת קבוצות"
+        select_groups: "בחירת קבוצות…"
+        no_changes: "אין שינויים צפויים כרגע."
+        preview: "תצוגה מקדימה"
+        statuses:
+          stable: "יציב"
+          permanent: "קבוע"
+        impact_roles:
+          admins: "מנהלים ראשיים"
+          moderators: "מפקחים"
+          staff: "סגל"
+          all_members: "כל החברים"
+          developers: "מפתחים"
+        filter:
+          search_placeholder: "סינון לפי שם, תיאור או תוסף…"
+          no_results: "אין שינויים עתידיים שתואמים את המסנן שלך"
+          all: "הכול"
+          enabled_all: "מופעל או מושבת"
+          enabled: "פעיל"
+          disabled: "כבוי"
+          impact_type_all: "כל סוגי ההשפעה"
+          impact_type_feature: "יכולת"
+          impact_type_other: "אחר"
+          status_all: "כל המצבים"
+          status_stable: "יציב"
+          status_permanent: "קבוע"
       config:
         about:
           title: "על האתר שלך"
@@ -5844,6 +5878,8 @@ he:
           title: "תרגום"
           header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
           keywords: "מקום|שפה|אזור זמן|unicode|rtl"
+        upcoming_changes:
+          title: "שינויים צפויים"
         login:
           title: "כניסה ואימות"
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
@@ -8117,8 +8153,7 @@ he:
             cancel: "ביטול"
         merging_user: "המשתמש ממוזג…"
         merge_failed: "אירעה שגיאה במיזוג המשתמשים."
-        delete_forbidden_because_staff: "אי אפשר למחוק מנהלים."
-        delete_posts_forbidden_because_staff: "לא ניתן להסיר את כל הפוסטים של מנהלי מערכת ומפקחים."
+        delete_forbidden_because_admin: "אי אפשר למחוק מנהלים."
         delete_forbidden:
           one: "לא ניתן למחוק משתמשים אם יש להם הודעות. יש למחוק את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מיום %{count} לא ניתן למחוק.)"
           two: "לא ניתן למחוק משתמשים אם יש להם פוסטים. יש למחוק את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מיומיים - %{count} לא ניתן למחוק.)"

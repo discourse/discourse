@@ -297,7 +297,7 @@ fi:
       header:
         logged_in_members: "Tervetuloa takaisin, %{preferred_display_name}!"
         anonymous_members: "Tervetuloa sivustolle %{site_name}!"
-      search: "Hae"
+      search_placeholder: "Haku"
     themes:
       default_description: "Oletus"
       broken_theme_alert: "Sivustosi ei ehkä toimi, koska teemassa tai komponentissa on virheitä. Katso lisätietoja selaimen konsolista."
@@ -5212,6 +5212,7 @@ fi:
   admin_js:
     type_to_filter: "Kirjoita suodattaaksesi…"
     settings: "Asetukset"
+    reset_filter: "Palauta"
     admin:
       title: "Discoursen ylläpitäjä"
       moderator: "Valvoja"
@@ -5244,6 +5245,21 @@ fi:
           title: "Lisäosat"
         advanced:
           title: "Lisäasetukset"
+      upcoming_changes:
+        name: "Nimi"
+        enabled: "Käytössä"
+        select_groups: "Valitse ryhmät…"
+        preview: "Esikatselu"
+        impact_roles:
+          admins: "Ylläpitäjät"
+          moderators: "Valvojat"
+          staff: "Henkilökunta"
+        filter:
+          all: "Kaikki"
+          enabled: "Käytössä"
+          disabled: "Pois käytöstä"
+          impact_type_feature: "Ominaisuus"
+          impact_type_other: "Muut"
       config:
         about:
           title: "Tietoa sivustostasi"
@@ -7468,7 +7484,6 @@ fi:
             cancel: "Peruuta"
         merging_user: "Yhdistetään käyttäjää…"
         merge_failed: "Käyttäjien yhdistäminen epäonnistui."
-        delete_posts_forbidden_because_staff: "Ylläpitäjien ja valvojien kaikkia viestejä ei voi poistaa."
         delete_forbidden:
           one: "Käyttäjiä ei voi poistaa, jos heillä on viestejä. Poista viestit ennen käyttäjän poistamista. (%{count} päivää vanhempia viestejä ei voi poistaa.)"
           other: "Käyttäjiä ei voi poistaa, jos heillä on viestejä. Poista viestit ennen käyttäjän poistamista. (%{count} päivää vanhempia viestejä ei voi poistaa.)"

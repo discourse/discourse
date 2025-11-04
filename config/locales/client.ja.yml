@@ -269,7 +269,7 @@ ja:
       header:
         logged_in_members: "%{preferred_display_name}、おかえりなさい！"
         anonymous_members: "%{site_name} へようこそ！"
-      search: "検索"
+      search_placeholder: "検索"
     themes:
       default_description: "デフォルト"
       broken_theme_alert: "テーマ / コンポーネントにエラーがあるため、サイトが動作しない可能性があります。詳細はブラウザコンソールを確認してください。"
@@ -4949,6 +4949,7 @@ ja:
   admin_js:
     type_to_filter: "入力してフィルタ..."
     settings: "設定"
+    reset_filter: "リセット"
     admin:
       title: "Discourse の管理者"
       moderator: "モデレーター"
@@ -4981,6 +4982,21 @@ ja:
           title: "プラグイン"
         advanced:
           title: "高度"
+      upcoming_changes:
+        name: "名前"
+        enabled: "有効"
+        select_groups: "グループを選択…"
+        preview: "プレビュー"
+        impact_roles:
+          admins: "管理者"
+          moderators: "モデレーター"
+          staff: "スタッフ"
+        filter:
+          all: "すべて"
+          enabled: "有効"
+          disabled: "無効"
+          impact_type_feature: "機能"
+          impact_type_other: "その他"
       config:
         about:
           title: "サイトについて"
@@ -7174,7 +7190,6 @@ ja:
             cancel: "キャンセル"
         merging_user: "ユーザーをマージ中…"
         merge_failed: "ユーザーをマージ中にエラーが発生しました。"
-        delete_posts_forbidden_because_staff: "管理者とモデレーターのすべての投稿を削除できません。"
         delete_forbidden:
           other: "投稿が存在するユーザーを削除できません。ユーザーを削除する前にすべての投稿を削除してください。(%{count} 日以上経過した投稿は削除できません)"
         cant_delete_all_posts:

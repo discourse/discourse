@@ -498,7 +498,6 @@ discourse_ai:
     min: 0
     max: 100000
     client: false
-    hidden: true
     area: "ai-features/translation"
   ai_translation_backfill_limit_to_public_content:
     default: true

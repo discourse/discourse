@@ -179,7 +179,7 @@ bs_BA:
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
-      search: "Pretraži"
+      search_placeholder: "Pretraži"
     themes:
       default_description: "Uobičajen"
     s3:
@@ -3155,6 +3155,7 @@ bs_BA:
         categories: "Sve kategorije"
   admin_js:
     settings: "Postavke"
+    reset_filter: "Resetovati"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -3182,6 +3183,19 @@ bs_BA:
           title: "Security"
         plugins:
           title: "Pluginovi"
+      upcoming_changes:
+        name: "Ime"
+        enabled: "Omogućen"
+        preview: "Pregled"
+        impact_roles:
+          admins: "Admins"
+          moderators: "Moderators"
+          staff: "Staff"
+        filter:
+          all: "Sve"
+          enabled: "Omogućen"
+          disabled: "Neomogućen"
+          impact_type_other: "Other"
       config:
         developer:
           title: "Developer"
@@ -4248,7 +4262,6 @@ bs_BA:
             cancel: "Odustani"
           confirmation:
             cancel: "Odustani"
-        delete_posts_forbidden_because_staff: "Ne možete obrisati sve postove administratora i moderatora."
         delete_forbidden:
           one: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Postovi stariji od %{count} dana stari ne mogu se izbrisati.)"
           few: "Korisnici se ne mogu izbrisati ako imaju postove. Izbrišite sve postove prije nego pokušate izbrisati korisnika. (Poruke starije od %{count} dana ne mogu se izbrisati.)"

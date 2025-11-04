@@ -14,6 +14,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/atoms/icons", title: "Icons" },
       { href: "/atoms/forms", title: "Forms" },
       { href: "/atoms/spinners", title: "Spinners" },
+      { href: "/atoms/otp", title: "OTP" },
       { href: "/atoms/date-time-inputs", title: "Date/Time inputs" },
       { href: "/atoms/dropdowns", title: "Dropdowns" },
       { href: "/atoms/topic-link", title: "Topic Link" },

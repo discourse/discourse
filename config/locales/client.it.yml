@@ -297,7 +297,7 @@ it:
       header:
         logged_in_members: "Rieccoti, %{preferred_display_name}!"
         anonymous_members: "Ti diamo il benvenuto su %{site_name}!"
-      search: "Cerca"
+      search_placeholder: "Cerca"
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il tuo sito potrebbe non funzionare a causa di errori in un tema/componente. Controlla la console del browser per maggiori informazioni."
@@ -5209,6 +5209,7 @@ it:
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"
+    reset_filter: "Reimposta"
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
@@ -5241,6 +5242,21 @@ it:
           title: "Plugin"
         advanced:
           title: "Avanzato"
+      upcoming_changes:
+        name: "Nome"
+        enabled: "Abilitato"
+        select_groups: "Seleziona gruppi…"
+        preview: "Anteprima"
+        impact_roles:
+          admins: "Amministratori"
+          moderators: "Moderatori"
+          staff: "Staff"
+        filter:
+          all: "Tutte"
+          enabled: "Abilitato"
+          disabled: "Disabilitati"
+          impact_type_feature: "Funzionalità"
+          impact_type_other: "Altri"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -7450,7 +7466,6 @@ it:
             cancel: "Annulla"
         merging_user: "Unione utente in corso…"
         merge_failed: "Si è verificato un errore durante l'unione degli utenti."
-        delete_posts_forbidden_because_staff: "Impossibile cancellare tutti i messaggi degli amministratori e dei moderatori."
         delete_forbidden:
           one: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorno non possono essere cancellati)."
           other: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorni non possono essere cancellati)."

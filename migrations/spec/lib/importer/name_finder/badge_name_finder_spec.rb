@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Importer::BadgeNameFinder do
+RSpec.describe ::Migrations::Importer::BadgeNameFinder do
   subject(:finder) { described_class.new(shared_data) }
 
   let(:discourse_db) { ::Migrations::Importer::DiscourseDB.new }
@@ -127,6 +127,22 @@ RSpec.describe Migrations::Importer::BadgeNameFinder do
       it "preserves special characters in names" do
         name = finder.find_available_name("Test & Badge!")
         expect(name).to eq("Test & Badge!")
+      end
+    end
+
+    context "with fallback name conflicts" do
+      it "finds next available fallback name when some are already used" do
+        badge_rows << "badge_1"
+        badge_rows << "badge_123"
+
+        name1 = finder.find_available_name("")
+        119.times { finder.find_available_name("") }
+        name2 = finder.find_available_name("")
+        name3 = finder.find_available_name("")
+
+        expect(name1).to eq("Badge_2")
+        expect(name2).to eq("Badge_122")
+        expect(name3).to eq("Badge_124")
       end
     end
   end

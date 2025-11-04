@@ -557,20 +557,20 @@ export default class ComposerService extends Service {
     }
   }
 
-  // Use this to open the composer when you are not sure whether it is
-  // already open and whether it already has a draft being worked on. Supports
-  // options to append text once the composer is open if required.
-  //
-  // opts:
-  //
-  // - topic: if this is present, the composer will be opened with the reply
-  // action and the current topic key and draft sequence
-  // - fallbackToNewTopic: if true, and there is no draft and no topic,
-  // the composer will be opened with the create_topic action and a new
-  // topic draft key
-  // - insertText: the text to append to the composer once it is opened
-  // - openOpts: this object will be passed to this.open if fallbackToNewTopic is
-  // true or topic is provided
+  /**
+   * Opens the composer when uncertain if it's already open or has a draft.
+   * Supports appending text once the composer is open.
+   *
+   * @param {Object} opts - Configuration options
+   * @param {Object} [opts.topic] - If provided, opens composer with reply action,
+   *   using the current topic key and draft sequence
+   * @param {boolean} [opts.fallbackToNewTopic] - If true and no draft/topic exists,
+   *   opens composer with create_topic action and new topic draft key
+   * @param {string} [opts.insertText] - Text to append to the composer after opening
+   * @param {Object} [opts.openOpts] - Additional options passed to this.open when
+   *   fallbackToNewTopic is true or topic is provided
+   * @returns {Promise<void>}
+   */
   @action
   async focusComposer(opts = {}) {
     await this._openComposerForFocus(opts);

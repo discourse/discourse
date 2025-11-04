@@ -297,7 +297,7 @@ de:
       header:
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
-      search: "Suche"
+      search_placeholder: "Suche"
     impersonation:
       notice: "Du verwendest derzeit die Rolle von %{username}"
       stop: "Nutzerrolle verlassen"
@@ -5252,6 +5252,7 @@ de:
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
+    reset_filter: "Zurücksetzen"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5284,6 +5285,21 @@ de:
           title: "Plug-ins"
         advanced:
           title: "Erweitert "
+      upcoming_changes:
+        name: "Name"
+        enabled: "Aktiviert"
+        select_groups: "Gruppen auswählen …"
+        preview: "Vorschau"
+        impact_roles:
+          admins: "Administratoren"
+          moderators: "Moderatoren"
+          staff: "Team"
+        filter:
+          all: "Gesamt"
+          enabled: "Aktiviert"
+          disabled: "Deaktiviert"
+          impact_type_feature: "Funktion"
+          impact_type_other: "Sonstiges"
       config:
         about:
           title: "Über deine Website"
@@ -7530,8 +7546,7 @@ de:
             cancel: "Abbrechen"
         merging_user: "Benutzer wird zusammengeführt …"
         merge_failed: "Beim Zusammenführen der Benutzer ist ein Fehler aufgetreten."
-        delete_forbidden_because_staff: "Administratoren können nicht gelöscht werden."
-        delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
+        delete_forbidden_because_admin: "Administratoren können nicht gelöscht werden."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
           other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"

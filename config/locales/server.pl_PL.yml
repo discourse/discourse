@@ -1731,6 +1731,7 @@ pl_PL:
     problem:
       twitter_login: 'Wygląda na to, że logowanie przez Twittera obecnie nie działa. Sprawdź dane uwierzytelniające w <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">ustawieniach witryny</a>.'
       group_email_credentials: 'Wystąpił problem z poświadczeniami e-mail dla grupy <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Wiadomości e-mail nie będą wysyłane z grupowej skrzynki odbiorczej do czasu rozwiązania tego problemu. %{error}'
+      upcoming_change_stable_opted_out: 'Twoja witryna zrezygnowała z nadchodzącej zmiany „%{upcoming_change}”. Zmiana ta uzyskała status „Stabilna” i może wkrótce zostać usunięta lub wprowadzona na stałe. Odwiedź <a href="%{base_path}/admin/config/upcoming-changes">stronę nadchodzących zmian</a> , aby zapoznać się ze szczegółowymi informacjami na temat tej zmiany.'
       rails_env: "Twój serwer działa w trybie %{env}"
       host_names: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
       sidekiq: 'Sidekiq nie jest uruchomiony. Wiele zadań, takich jak wysyłanie wiadomości e-mail, jest wykonywanych asynchronicznie przez Sidekiq. Upewnij się, że co najmniej jeden proces Sidekiq jest uruchomiony. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiq tutaj</a>.'
@@ -2575,7 +2576,7 @@ pl_PL:
     force_lowercase_tags: "Wymuś, aby wszystkie nowe tagi były małymi literami."
     create_post_for_category_and_tag_changes: "Utwórz post szeptany, gdy zmieni się kategoria lub tagi tematu, wymaga włączenia postów szeptanych."
     automatically_clean_unused_tags: "Automatycznie usuwaj tagi, które nie są używane w żadnych tematach ani wiadomościach prywatnych."
-    watched_precedence_over_muted: "Powiadamiaj mnie o tematach w obserwowanych przeze mnie kategoriach lub tagach, które również należą do tych, które wyciszyłem."
+    default_watched_precedence_over_muted: "Powiadamiaj użytkowników o tematach w kategoriach lub tagach, które obserwują, a które należą również do wyciszonych przez nich treści"
     company_name: "Nazwa Twojej firmy lub organizacji. Jeśli pozostawisz to pole puste, nie otrzymasz szablonu warunków świadczenia usług ani informacji o ochronie prywatności."
     governing_law: "Określ jurysdykcję, która reguluje aspekty prawne witryny, w tym Warunki korzystania z usługi i politykę prywatności. Zwykle jest to kraj lub stan, w którym zarejestrowana jest lub prowadzi działalność firma obsługująca witrynę"
     city_for_disputes: "Określ miasto, które będzie używane jako jurysdykcja do rozstrzygania wszelkich sporów związanych z korzystaniem z tego forum. Informacje te są zazwyczaj zawarte w dokumentach prawnych, takich jak warunki korzystania z forum."
@@ -2643,12 +2644,13 @@ pl_PL:
     view_raw_email_allowed_groups: "Grupy, które mogą wyświetlać nieprzetworzoną treść wiadomości e-mail, jeśli została ona utworzona przez przychodzącą wiadomość e-mail. Obejmuje to nagłówki wiadomości e-mail i inne informacje techniczne."
     rich_editor: "Włącz wzbogacony edytor dla kompozytora, aby wszyscy użytkownicy mogli przełączać się między obecnym trybem Markdown a nowym edytorem tekstu wzbogaconego, co zapewni bardziej intuicyjne i łatwiejsze w obsłudze tworzenie treści."
     default_composition_mode: "Ustaw domyślny tryb dla kompozytora w swojej społeczności. Tryb RTF zapewnia bardziej nowoczesne i znajome środowisko pisania dla większości użytkowników, natomiast tryb Markdown może być odpowiedni dla odbiorców o bardziej technicznym zacięciu. Członkowie mogą przełączać się między trybami za pomocą przełącznika na pasku narzędzi kompozytora."
-    viewport_based_mobile_mode: "Użyj szerokości pola widzenia, aby określić tryby mobilne/komputerowe. To ustawienie zostanie wkrótce usunięte. Jeśli uznasz, że musisz je wyłączyć, daj nam znać <a href='https://meta.discourse.org/t/384280'>na Meta</a>."
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
+    viewport_based_mobile_mode: "Użyj szerokości pola widzenia, aby określić tryby mobilne/komputerowe. To ustawienie zostanie wkrótce usunięte. Jeśli uznasz, że musisz je wyłączyć, daj nam znać <a href='https://meta.discourse.org/t/384280'>na Meta</a>."
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
     content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, do których można przetłumaczyć zawartość użytkownika. Wymaga 'włączonej lokalizacji zawartości'."
     content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
     content_localization_language_switcher: "Pokaż przełącznik języka w nagłówku, umożliwiający użytkownikom przełączanie się między przetłumaczonymi wersjami Discourse a treściami dodanymi przez użytkowników. Używa języków zdefiniowanych w sekcji „Lokalizacje obsługiwane przez lokalizację treści”."
+    enable_upcoming_changes: "Włącz nadchodzące zmiany"
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_email: "Nieprawidłowy adres e-mail."
@@ -2771,9 +2773,9 @@ pl_PL:
       activity_after: "Pokaż tematy z ostatnią aktywnością po dacie (RRRR-MM-DD lub dni temu)"
       created_before: "Pokaż tematy utworzone przed datą (RRRR-MM-DD lub dni temu)"
       created_after: "Pokaż tematy utworzone po określonej dacie (RRRR-MM-DD lub dni temu)"
-      created_by: "Pokaż tematy utworzone przez określonego użytkownika"
-      created_by_user: "Pokaż tematy utworzone przez użytkownika (bez @)"
-      created_by_multiple: "Pokaż tematy utworzone przez dowolnego z określonych użytkowników (rozdzielone przecinkami)"
+      created_by: "Pokaż tematy utworzone przez określonego użytkownika lub grupę"
+      created_by_user: "Pokaż tematy utworzone według nazwy użytkownika lub grupy (bez znaku @)"
+      created_by_multiple: "Pokaż tematy utworzone przez dowolnego z określonych użytkowników lub grup (rozdzielone przecinkami)"
       latest_post_before: "Pokaż tematy z ostatnim postem przed datą (RRRR-MM-DD lub dni temu)"
       latest_post_after: "Pokaż tematy z ostatnim postem po dacie (RRRR-MM-DD lub dni temu)"
       likes_min: "Pokaż tematy z co najmniej taką liczbą polubień"
@@ -5445,6 +5447,10 @@ pl_PL:
     auto_deleted_hidden_posts: "Automatycznie niszczone ukryte posty"
     seed_data_topic_updated: "Zaktualizowano temat danych seedów"
     seed_data_topic_deleted: "Usunięto temat danych seedów"
+    upcoming_changes:
+      log_manually_toggled: "Przełączanie ręczne przez użytkownika"
+      log_promoted: >
+        Ta nadchodząca zmiana została automatycznie włączona, ponieważ osiągnęła status „%{change_status}”, który jest równy lub wyższy od zdefiniowanego statusu promocji „%{promotion_status_threshold}” na Twojej stronie. Więcej szczegółów znajdziesz na stronie „ <a href="%{base_url}/admin/config/upcoming-changes">nadchodzących zmian</a> ”.
   reviewables:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
     already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."

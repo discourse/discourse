@@ -1072,7 +1072,7 @@ users:
     max: 36500
     area: "users"
   clean_up_inactive_users_after_days:
-    default: 730
+    default: 0
     min: 0
     max: 36500
     area: "users"
@@ -4264,6 +4264,7 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
+    hidden: true
   reviewable_ui_refresh:
     client: true
     type: group_list

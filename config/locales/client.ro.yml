@@ -325,7 +325,7 @@ ro:
       header:
         logged_in_members: "Bine ai revenit, %{preferred_display_name}!"
         anonymous_members: "Bine ai venit pe %{site_name}!"
-      search: "Caută"
+      search_placeholder: "Caută"
     impersonation:
       notice: "Preiei identitatea utilizatorului %{username}"
       stop: "Oprește preluarea identității"
@@ -3863,6 +3863,7 @@ ro:
   admin_js:
     type_to_filter: "Tastează pentru a filtra…"
     settings: "Opțiuni"
+    reset_filter: "Resetare"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
@@ -3891,6 +3892,19 @@ ro:
           title: "Module"
         advanced:
           title: "Avansat"
+      upcoming_changes:
+        name: "Nume"
+        enabled: "Activate"
+        preview: "Previzualizează"
+        impact_roles:
+          admins: "Admini"
+          moderators: "Moderatori"
+          staff: "Echipa"
+        filter:
+          all: "Toate"
+          enabled: "Activate"
+          disabled: "Dezactivate"
+          impact_type_other: "Altele"
       config:
         about:
           title: "Despre site-ul tău"
@@ -5257,8 +5271,7 @@ ro:
             cancel: "Anulează"
           confirmation:
             cancel: "Anulează"
-        delete_forbidden_because_staff: "Administratorii nu pot fi șterși."
-        delete_posts_forbidden_because_staff: "Nu poți șterge mesajele administratorilor și moderatorilor."
+        delete_forbidden_because_admin: "Administratorii nu pot fi șterși."
         delete_forbidden:
           one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zi nu pot fi șterse)"
           few: "Utilizatorii nu pot fi șterși dacă au postări. Şterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi șterse)"

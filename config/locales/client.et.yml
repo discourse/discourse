@@ -166,7 +166,7 @@ et:
     welcome_banner:
       header:
         anonymous_members: "Tere tulemast lehele %{site_name}!"
-      search: "Otsi"
+      search_placeholder: "Otsi"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -2722,6 +2722,7 @@ et:
         categories: "Kõik kategooriad"
   admin_js:
     settings: "Sätted"
+    reset_filter: "Nulli"
     admin:
       title: "Discourse'i adminn"
       moderator: "Moderaator"
@@ -2740,6 +2741,19 @@ et:
           title: "Turve"
         plugins:
           title: "Pistikprogrammid"
+      upcoming_changes:
+        name: "Nimi"
+        enabled: "Sisse lülitatud"
+        preview: "Eelvaade"
+        impact_roles:
+          admins: "Adminnid"
+          moderators: "Moderaatorid"
+          staff: "Meeskond"
+        filter:
+          all: "Kõik"
+          enabled: "Sisse lülitatud"
+          disabled: "Välja lülitatud"
+          impact_type_other: "Muu"
       config:
         developer:
           title: "Arendaja"
@@ -3602,7 +3616,6 @@ et:
             cancel: "Tühista"
           confirmation:
             cancel: "Tühista"
-        delete_posts_forbidden_because_staff: "Ei saa kustutada adminnide ja moderaatorite kõiki postitusi."
         delete_forbidden:
           one: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päev ei saa kustutada.)"
           other: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päeva ei saa kustutada.)"

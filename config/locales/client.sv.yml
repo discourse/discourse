@@ -195,7 +195,7 @@ sv:
     welcome_banner:
       header:
         anonymous_members: "Välkommen till %{site_name}!"
-      search: "Sök"
+      search_placeholder: "Sök"
     themes:
       default_description: "Standard"
       error_caused_by: "Orsakas av '%{name}'. <a target='blank' href='%{path}'>Klicka här</a> för att uppdatera, konfigurera eller inaktivera."
@@ -4383,6 +4383,7 @@ sv:
   admin_js:
     type_to_filter: "Skriv för att filtrera…"
     settings: "Inställningar"
+    reset_filter: "Återställ"
     admin:
       title: "Discourse-administratör"
       moderator: "Moderator"
@@ -4412,6 +4413,20 @@ sv:
           title: "Tillägg"
         advanced:
           title: "Avancerat"
+      upcoming_changes:
+        name: "Namn"
+        enabled: "Aktiverad"
+        select_groups: "Välj grupper…"
+        preview: "Förhandsgranska"
+        impact_roles:
+          admins: "Administratörer"
+          moderators: "Moderatorer"
+          staff: "Personal"
+        filter:
+          all: "Alla"
+          enabled: "Aktiverad"
+          disabled: "Inaktiverad"
+          impact_type_other: "Övrigt"
       config:
         about:
           title: "Om din webbplats"
@@ -5943,7 +5958,6 @@ sv:
             cancel: "Avbryt"
         merging_user: "Slår samman användare…"
         merge_failed: "Det uppstod ett fel vid sammanslagningen av användarna."
-        delete_posts_forbidden_because_staff: "Kan inte ta bort alla inlägg från administratörer och moderatorer."
         delete_forbidden:
           one: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dag kan ej raderas.)"
           other: "Användare kan inte tas bort om de har inlägg. Radera alla inlägg innan du försöker ta bort en användare. (Inlägg som är äldre än %{count} dagar kan ej raderas.)"

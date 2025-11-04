@@ -294,7 +294,7 @@ da:
       header:
         logged_in_members: "Velkommen tilbage, %{preferred_display_name}!"
         anonymous_members: "Velkommen til %{site_name}!"
-      search: "Søg"
+      search_placeholder: "Søg"
     impersonation:
       notice: "Du udgiver dig for at være %{username}"
       stop: "Stop med at udgive dig"
@@ -4320,6 +4320,7 @@ da:
   admin_js:
     type_to_filter: "Skriv for at filtrere…"
     settings: "Indstillinger"
+    reset_filter: "Nulstil"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -4350,6 +4351,20 @@ da:
           title: "Udvidelser"
         advanced:
           title: "Avanceret"
+      upcoming_changes:
+        name: "Navn"
+        enabled: "Aktiveret"
+        select_groups: "Vælg grupper…"
+        preview: "Forhåndsvisning"
+        impact_roles:
+          admins: "Admins"
+          moderators: "Moderatorer"
+          staff: "Personale"
+        filter:
+          all: "Alle"
+          enabled: "Aktiveret"
+          disabled: "Deaktiveret"
+          impact_type_other: "Andre"
       config:
         about:
           title: "Om dit websted"
@@ -5899,7 +5914,6 @@ da:
             cancel: "Annuller"
         merging_user: "Fletter bruger…"
         merge_failed: "Der opstod en fejl under sammenfletning af brugere."
-        delete_posts_forbidden_because_staff: "Kan ikke slette alle indlæg fra administratorer og moderatorer."
         delete_forbidden:
           one: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dag siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."
           other: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dage siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."

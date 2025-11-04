@@ -141,7 +141,7 @@ sw:
     welcome_banner:
       header:
         anonymous_members: "Karibu kwenye %{site_name}!"
-      search: "Tafuta"
+      search_placeholder: "Tafuta"
     themes:
       default_description: "Halisi"
     s3:
@@ -2398,6 +2398,7 @@ sw:
         categories: "Kategoria Zote"
   admin_js:
     settings: "Mipangilio"
+    reset_filter: "Weka/Anzisha Upya"
     admin:
       title: "Kiongozi wa Discourse"
       moderator: "Msimamizi"
@@ -2418,6 +2419,19 @@ sw:
           title: "Ulinzi"
         plugins:
           title: "Programu Jalizi"
+      upcoming_changes:
+        name: "Jina"
+        enabled: "Imeruhusiwa"
+        preview: "Kihakiki"
+        impact_roles:
+          admins: "Viongozi"
+          moderators: "Wasimamizi"
+          staff: "Wasaidizi"
+        filter:
+          all: "Yote"
+          enabled: "Imeruhusiwa"
+          disabled: "Imezuiwa"
+          impact_type_other: "Nyingine"
       config:
         developer:
           title: "Mtengenezaji"
@@ -3271,7 +3285,6 @@ sw:
             cancel: "Ghairi"
           confirmation:
             cancel: "Ghairi"
-        delete_posts_forbidden_because_staff: "Hauwezi kufuta machapisho yote za viongozi na wasimamizi."
         cant_delete_all_posts:
           one: "Hauwezi kufuta taarifa zote. Kuna taarifa ambazo ziliandikwa siku %{count}zilizopita. (The delete_user_max_post_age setting.)"
           other: "Hauwezi kufuta machapisho yote. Kuna machapisho ambazo ziliandikwa siku %{count}zilizopita. (The delete_user_max_post_age setting.)"

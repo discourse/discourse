@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Migrations::Importer::SuffixFinder do
+RSpec.describe ::Migrations::Importer::SuffixFinder do
   subject(:finder) { described_class.new }
 
   describe "#find_max_suffixes" do

@@ -193,7 +193,7 @@ bg:
     welcome_banner:
       header:
         anonymous_members: "Добре дошли в %{site_name}!"
-      search: "Търсене"
+      search_placeholder: "Търсене"
     themes:
       default_description: "По подразбиране"
       error_caused_by: "Причинено от '%{name}'. <a target='blank' href='%{path}'>Щракнете тук</a> за да актуализирате, преконфигурирате или деактивирате."
@@ -3447,6 +3447,7 @@ bg:
         categories: "Всички категории"
   admin_js:
     settings: "Настройки"
+    reset_filter: "Нулиране"
     admin:
       title: "Discourse Админ"
       moderator: "Модератор"
@@ -3465,6 +3466,19 @@ bg:
           title: "Сигурност"
         plugins:
           title: "Приставки"
+      upcoming_changes:
+        name: "Име"
+        enabled: "Да е включен"
+        preview: "Преглед"
+        impact_roles:
+          admins: "Админи"
+          moderators: "Модератори"
+          staff: "Персонал"
+        filter:
+          all: "Всички"
+          enabled: "Да е включен"
+          disabled: "Деактивирани"
+          impact_type_other: "Други"
       config:
         developer:
           title: "Разработчик"
@@ -4242,7 +4256,6 @@ bg:
             cancel: "Отмени"
           confirmation:
             cancel: "Отмени"
-        delete_posts_forbidden_because_staff: "Не могат да бъдат изтрити всички постове на администратори и модератори."
         delete_forbidden:
           one: "Не може да изтривате потребители които имат публикации. Първо изтрийте всички публикации на този потребител и опитайте отново. (Публикации по стари от %{count} ден не може да бъдат изтривани)"
           other: "Не може да изтривате потребители, които имат публикации. Първо изтрийте всички публикации на този потребител и опитайте отново. (Публикации по стари от %{count} дни не могат да бъдат изтрити.) "

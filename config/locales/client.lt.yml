@@ -229,7 +229,7 @@ lt:
       header:
         logged_in_members: "Sveikas sugrįžęs, %{preferred_display_name}!"
         anonymous_members: "Sveiki atvykę į %{site_name}!"
-      search: "Paieška"
+      search_placeholder: "Paieška"
     themes:
       default_description: "Numatytasis"
       error_caused_by: "Sukėlė '%{name}'. <a target='blank' href='%{path}'>Spustelėkite čia</a> norėdami atnaujinti, iš naujo sukonfigūruoti arba išjungti."
@@ -4101,6 +4101,7 @@ lt:
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
+    reset_filter: "Atstatyti"
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"
@@ -4128,6 +4129,19 @@ lt:
           title: "Apsauga"
         plugins:
           title: "Apklausos"
+      upcoming_changes:
+        name: "Vardas"
+        enabled: "Galimas"
+        preview: "Peržiūrėti"
+        impact_roles:
+          admins: "Administratoriai"
+          moderators: "Moderatoriai"
+          staff: "Personalas"
+        filter:
+          all: "Visi"
+          enabled: "Galimas"
+          disabled: "Uždrausta"
+          impact_type_other: "Kiti"
       config:
         developer:
           title: "Programuotojams"
@@ -5286,7 +5300,6 @@ lt:
             transfer_and_delete: "Perkelti ir ištrinti @%{username}"
             cancel: "Atšaukti"
         merge_failed: "Sujungiant vartotojus įvyko klaida."
-        delete_posts_forbidden_because_staff: "Negalima ištrinti administratorių ir moderatorių įrašų"
         delete_forbidden:
           one: "Vartotojai negali būti ištrinti jeigu jie sukūrė įrašus. Ištrink visus įrašus prieš ištrinant vartotoją (%{count} dienos senumo įrašas negali būti ištrintas)"
           few: "Vartotojai negali būti ištrinti jeigu jie sukūrė įrašus. Ištrink visus įrašus prieš ištrinant vartotoją (%{count} dienų senumo įrašai negali būti ištrinti)"

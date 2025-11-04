@@ -195,7 +195,7 @@ nb_NO:
     welcome_banner:
       header:
         anonymous_members: "Velkommen til %{site_name}!"
-      search: "Søk"
+      search_placeholder: "Søk"
     themes:
       default_description: "Forvalg"
       error_caused_by: "Forårsaket av '%{name}'. <a target='blank' href='%{path}'>Klikk her</a> for å oppdatere, rekonfigurere eller deaktivere."
@@ -4371,6 +4371,7 @@ nb_NO:
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
+    reset_filter: "Tilbakestill"
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
@@ -4398,6 +4399,19 @@ nb_NO:
           title: "Sikkerhet"
         plugins:
           title: "Utvidelser"
+      upcoming_changes:
+        name: "Navn"
+        enabled: "Aktivert"
+        preview: "Forhåndsvis"
+        impact_roles:
+          admins: "Adminer"
+          moderators: "Moderatorer"
+          staff: "Stab"
+        filter:
+          all: "Alle"
+          enabled: "Aktivert"
+          disabled: "Deaktivert"
+          impact_type_other: "Annet"
       config:
         developer:
           title: "Utvikler"
@@ -5474,7 +5488,6 @@ nb_NO:
             cancel: "Avbryt"
           confirmation:
             cancel: "Avbryt"
-        delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:
           one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"
           other: "Brukere kan ikke slettes om de har innlegg. Slett alle innlegg før du forsøker å slette en bruker. (Innlegg eldre enn %{count} dager kan ikke slettes.)"

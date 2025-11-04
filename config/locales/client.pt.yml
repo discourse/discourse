@@ -297,7 +297,7 @@ pt:
       header:
         logged_in_members: "Seja bem-vindo, %{preferred_display_name}!"
         anonymous_members: "Bem-vindo a %{site_name}!"
-      search: "Procurar"
+      search_placeholder: "Procurar"
     impersonation:
       notice: "Está a passar-se por %{username}"
       stop: "Pare de se passar por"
@@ -4490,6 +4490,7 @@ pt:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
+    reset_filter: "Repor"
     admin:
       title: "Administração Discourse"
       moderator: "Moderador"
@@ -4520,6 +4521,20 @@ pt:
           title: "Plugins"
         advanced:
           title: "Avançado"
+      upcoming_changes:
+        name: "Nome"
+        enabled: "Ativado"
+        preview: "Pré-visualização"
+        impact_roles:
+          admins: "Administradores"
+          moderators: "Moderadores"
+          staff: "Pessoal"
+        filter:
+          all: "Todos"
+          enabled: "Ativado"
+          disabled: "Desativado"
+          impact_type_feature: "Funcionalidade"
+          impact_type_other: "Outro"
       config:
         about:
           title: "Sobre o seu ''site''"
@@ -5619,7 +5634,6 @@ pt:
             cancel: "Cancelar"
           confirmation:
             cancel: "Cancelar"
-        delete_posts_forbidden_because_staff: "Não é possível eliminar todas as publicações dos administradores e moderadores."
         delete_forbidden:
           one: "Utilizadores não podem ser eliminados se tiverem publicações. Apague todas as publicações antes de eliminar o utilizador. (Publicações com mais de %{count} dia de existência não podem ser eliminadas.)"
           other: "Utilizadores não podem ser eliminados se tiverem publicações. Apague todas as publicações antes de eliminar o utilizador. (Publicações com mais de %{count} dias de existência não podem ser eliminadas.)"

@@ -409,7 +409,7 @@ ar:
       header:
         logged_in_members: "مرحبًا بعودتك يا %{preferred_display_name}!"
         anonymous_members: "مرحبًا بك في %{site_name}!"
-      search: "البحث"
+      search_placeholder: "البحث"
     themes:
       default_description: "افتراضي"
       broken_theme_alert: "قد لا يعمل موقعك بسبب وجود أخطاء في أحد السمات/المكوِّنات. راجع وحدة تحكم المتصفح للحصول على مزيد من المعلومات."
@@ -6249,6 +6249,7 @@ ar:
   admin_js:
     type_to_filter: "اكتب للتصفية…"
     settings: "الإعدادات"
+    reset_filter: "إعادة التعيين"
     admin:
       title: "مسؤول Discourse"
       moderator: "مشرف"
@@ -6281,6 +6282,21 @@ ar:
           title: "المكونات الإضافية"
         advanced:
           title: "متقدمة"
+      upcoming_changes:
+        name: "الاسم"
+        enabled: "مفعَّلة"
+        select_groups: "تحديد المجموعات…"
+        preview: "معاينة"
+        impact_roles:
+          admins: "المسؤولون"
+          moderators: "المشرفون"
+          staff: "فريق العمل"
+        filter:
+          all: "الكل"
+          enabled: "مفعَّلة"
+          disabled: "متوقفة"
+          impact_type_feature: "الميزة"
+          impact_type_other: "أخرى"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -8623,7 +8639,6 @@ ar:
             cancel: "إلغاء"
         merging_user: "جارٍ دمج المستخدم…"
         merge_failed: "حدث خطأ في أثناء دمج المستخدمين."
-        delete_posts_forbidden_because_staff: "لا يمكن حذف جميع منشورات المسؤولين والمشرفين."
         delete_forbidden:
           zero: "لا يمكن حذف المستخدمين إذا كان لديهم منشورات. احذف كل المنشورات أولًا قبل محاولة حذف المستخدم. (لا يمكنك حذف المشاركات التي مضى عليها %{count} يوم.)"
           one: "لا يمكن حذف المستخدمين إذا كان لديهم منشورات. احذف كل المنشورات أولًا قبل محاولة حذف المستخدم. (لا يمكنك حذف المشاركات التي مضى عليها يوم واحد (%{count}))."

@@ -297,7 +297,7 @@ fr:
       header:
         logged_in_members: "Bienvenue, %{preferred_display_name} !"
         anonymous_members: "Bienvenue sur %{site_name} !"
-      search: "Recherche"
+      search_placeholder: "Recherche"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Il se peut que votre site ne fonctionne pas, car un thème ou un composant comporte des erreurs. Consultez la console du navigateur pour obtenir plus d'informations."
@@ -5212,6 +5212,7 @@ fr:
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
+    reset_filter: "Réinitialiser"
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
@@ -5244,6 +5245,21 @@ fr:
           title: "Extensions"
         advanced:
           title: "Avancé"
+      upcoming_changes:
+        name: "Nom"
+        enabled: "Activé"
+        select_groups: "Sélectionnez des groupes…"
+        preview: "Aperçu"
+        impact_roles:
+          admins: "Administrateurs "
+          moderators: "Modérateurs"
+          staff: "Responsable"
+        filter:
+          all: "Tout"
+          enabled: "Activé"
+          disabled: "Désactivé"
+          impact_type_feature: "Fonctionnalité"
+          impact_type_other: "Autre"
       config:
         about:
           title: "À propos de votre site"
@@ -7453,7 +7469,6 @@ fr:
             cancel: "Annuler"
         merging_user: "Fusion de l'utilisateur…"
         merge_failed: "Une erreur s'est produite lors de la fusion des utilisateurs."
-        delete_posts_forbidden_because_staff: "Vous ne pouvez pas supprimer tous les messages des administrateurs et des modérateurs."
         delete_forbidden:
           one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jour ne peuvent pas être supprimés.)"
           other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jours ne peuvent pas être supprimés.)"

@@ -297,7 +297,7 @@ tr_TR:
       header:
         logged_in_members: "Tekrar hoş geldiniz %{preferred_display_name}!"
         anonymous_members: "%{site_name}'a hoş geldiniz!"
-      search: "Ara"
+      search_placeholder: "Ara"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir tema/bileşende hata olması nedeniyle siteniz çalışmayabilir. Daha fazla bilgi için tarayıcı konsolunu kontrol edin."
@@ -5212,6 +5212,7 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
+    reset_filter: "Sıfırla"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
@@ -5244,6 +5245,21 @@ tr_TR:
           title: "Eklentiler"
         advanced:
           title: "Gelişmiş"
+      upcoming_changes:
+        name: "Ad"
+        enabled: "Etkin mi"
+        select_groups: "Grupları seç…"
+        preview: "Ön izle"
+        impact_roles:
+          admins: "Yöneticiler"
+          moderators: "Moderatörler"
+          staff: "Personel"
+        filter:
+          all: "Tümü"
+          enabled: "Etkin mi"
+          disabled: "Devre Dışı"
+          impact_type_feature: "Özellik"
+          impact_type_other: "Diğer"
       config:
         about:
           title: "Siteniz hakkında"
@@ -7453,7 +7469,6 @@ tr_TR:
             cancel: "İptal et"
         merging_user: "Kullanıcı birleştiriliyor…"
         merge_failed: "Kullanıcılar birleştirilirken bir hata oluştu."
-        delete_posts_forbidden_because_staff: "Yöneticilerin ve moderatörlerin tüm gönderileri silinemez."
         delete_forbidden:
           one: "Gönderileri olan kullanıcılar silinemez. Bir kullanıcıyı silmeye çalışmadan önce tüm gönderileri silin. (%{count} günden eski gönderiler silinemez.)"
           other: "Gönderileri olan kullanıcılar silinemez. Bir kullanıcıyı silmeye çalışmadan önce tüm gönderileri silin. (%{count} günden eski gönderiler silinemez.)"

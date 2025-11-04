@@ -353,7 +353,7 @@ ru:
       header:
         logged_in_members: "С возвращением, %{preferred_display_name}!"
         anonymous_members: "Добро пожаловать на сайт %{site_name}!"
-      search: "Искать"
+      search_placeholder: "Искать"
     impersonation:
       notice: "Вы выдаете себя за %{username}"
       stop: "Перестань выдавать себя за кого-то другого"
@@ -5759,6 +5759,7 @@ ru:
   admin_js:
     type_to_filter: "Фильтрация настроек…"
     settings: "Настройки"
+    reset_filter: "Сбросить"
     admin:
       title: "Администратор Discourse"
       moderator: "Модератор"
@@ -5791,6 +5792,21 @@ ru:
           title: "Плагины"
         advanced:
           title: "Дополнительно"
+      upcoming_changes:
+        name: "Название"
+        enabled: "Включено"
+        select_groups: "Выберите группы…"
+        preview: "Предпросмотр"
+        impact_roles:
+          admins: "Администраторы"
+          moderators: "Модераторы"
+          staff: "Персонал"
+        filter:
+          all: "Все настройки"
+          enabled: "Включено"
+          disabled: "Отключен"
+          impact_type_feature: "Функция"
+          impact_type_other: "Разное"
       config:
         about:
           title: "О вашем сайте"
@@ -8074,8 +8090,7 @@ ru:
             cancel: "Отмена"
         merging_user: "Объединение пользователей…"
         merge_failed: "В процессе объединения пользователей произошла ошибка."
-        delete_forbidden_because_staff: "Администраторы не могут быть удалены."
-        delete_posts_forbidden_because_staff: "Сообщения администраторов и модераторов не могут быть удалены."
+        delete_forbidden_because_admin: "Администраторы не могут быть удалены."
         delete_forbidden:
           one: "Пользователи не могут быть удалены, если у них есть сообщения. Перед удалением пользователя удалите все его сообщения. (Сообщения старше %{count} дня не могут быть удалены.)"
           few: "Пользователи не могут быть удалены, если у них есть сообщения. Перед удалением пользователя удалите все его сообщения. (Сообщения старше %{count} дней не могут быть удалены.)"

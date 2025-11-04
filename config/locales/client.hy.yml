@@ -195,7 +195,7 @@ hy:
     welcome_banner:
       header:
         anonymous_members: "Բարի գալուստ %{site_name}!"
-      search: "Որոնում"
+      search_placeholder: "Որոնում"
     themes:
       default_description: "Լռելյայն"
       error_caused_by: "Սխալ “%{name}” թեմայի պատճառով: <a target='blank' href='%{path}'>Սեղմեք այստեղ</a> թարմացնելու, վերաձևակերպելու կամ անջատելու համար:"
@@ -3827,6 +3827,7 @@ hy:
         categories: "Բոլոր կատեգորիաները"
   admin_js:
     settings: "Կարգավորումներ"
+    reset_filter: "Վերահաստատե;"
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
@@ -3854,6 +3855,16 @@ hy:
           title: "Անվտանգություն"
         plugins:
           title: "Հավելումներ"
+      upcoming_changes:
+        name: "Անուն"
+        preview: "Նախադիտում"
+        impact_roles:
+          moderators: "Մոդերատորներ"
+          staff: "Անձնակազմ"
+        filter:
+          all: "Բոլոր"
+          disabled: "Անջատված"
+          impact_type_other: "Այլ"
       config:
         developer:
           title: "Ծրագրավորող"
@@ -4996,7 +5007,6 @@ hy:
             transfer_and_delete: "Միավորել կայքի բովանդակությունը և Ջնջել օգտատերերին @%{username}"
             cancel: "Չեղարկել"
         merge_failed: "Օգտատերերին միավորելիս սխալ է տեղի ունեցել:"
-        delete_posts_forbidden_because_staff: "Չհաջողվեց ջնջել ադմինների և մոդերատորների բոլոր գրառումները:"
         delete_forbidden:
           one: "Օգտատերերը չեն կարող ջնջվել, եթե նրանք ունեն գրառումներ: Ջնջեք բոլոր գրառումները՝ մինչ օգտատիրոջը ջնջել փորձելը: (%{count} օրվանից հին գրառումները չեն կարող ջնջվել:)"
           other: "Օգտատերերը չեն կարող ջնջվել, եթե նրանք գրառումներ ունեն: Ջնջեք բոլոր գրառումները՝ մինչ օգտատիրոջը ջնջել փորձելը: (%{count} օրվանից հին գրառումները չեն կարող ջնջվել:)"

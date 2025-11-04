@@ -167,7 +167,7 @@ vi:
       header:
         logged_in_members: "Chào mừng %{preferred_display_name} đã trở lại đây!"
         anonymous_members: "Chào mừng đến với %{site_name}!"
-      search: "Tìm kiếm"
+      search_placeholder: "Tìm kiếm"
     themes:
       default_description: "Mặc định"
       error_caused_by: "Gây ra bởi '%{name}'. <a target='blank' href='%{path}'>Nhấp vào đây</a> để cập nhật, cấu hình lại hoặc tắt."
@@ -3775,6 +3775,7 @@ vi:
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
+    reset_filter: "Cài lại"
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
@@ -3804,6 +3805,18 @@ vi:
           title: "Plugins"
         advanced:
           title: "Nâng cao"
+      upcoming_changes:
+        name: "Tên"
+        select_groups: "Chọn nhóm…"
+        preview: "Xem trước"
+        impact_roles:
+          admins: "Quản trị"
+          moderators: "Điều hành viên"
+          staff: "Nhân viên"
+        filter:
+          all: "Tất cả"
+          disabled: "Vô hiệu hóa"
+          impact_type_other: "Khác"
       config:
         developer:
           title: "Nhà phát triển"
@@ -5087,7 +5100,6 @@ vi:
             cancel: "Hủy"
         merging_user: "Đang hợp nhất người dùng…"
         merge_failed: "Đã xảy ra lỗi khi hợp nhất người dùng."
-        delete_posts_forbidden_because_staff: "Không thể xóa tất cả bài viết của quản trị và điều hành viên."
         delete_forbidden:
           other: "Không thể xóa tài khoản nếu họ có bài viết, hãy xóa tất cả các bài viết trước khi xóa tài khoản. (Không thể xóa các bài viết cũ hơn %{count} ngày.)"
         cant_delete_all_posts:

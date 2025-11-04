@@ -297,7 +297,7 @@ hu:
       header:
         logged_in_members: "Üdv újra itt, %{preferred_display_name}!"
         anonymous_members: "Üdvözöljük a(z) %{site_name} oldalon."
-      search: "Keresés"
+      search_placeholder: "Keresés"
     impersonation:
       notice: "Te %{username} személyét utánozod"
       stop: "Hagyd abba az utánzást"
@@ -5259,6 +5259,7 @@ hu:
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
+    reset_filter: "Alaphelyzetbe állítás"
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
@@ -5291,6 +5292,20 @@ hu:
           title: "Bővítmények"
         advanced:
           title: "Speciális"
+      upcoming_changes:
+        name: "Név"
+        enabled: "Bekapcsolva"
+        select_groups: "Csoportok kiválasztása…"
+        preview: "Előnézet"
+        impact_roles:
+          admins: "Adminisztrátorok"
+          moderators: "Moderátorok"
+          staff: "Stáb"
+        filter:
+          all: "Összes"
+          enabled: "Bekapcsolva"
+          disabled: "Kikapcsolva"
+          impact_type_other: "Egyéb"
       config:
         about:
           title: "Az Ön webhelyéről"
@@ -7544,8 +7559,7 @@ hu:
             cancel: "Mégse"
         merging_user: "Felhasználó összevonása…"
         merge_failed: "Hiba történt a felhasználók összevonása során."
-        delete_forbidden_because_staff: "Az adminokat nem lehet törölni."
-        delete_posts_forbidden_because_staff: "Nem törölhető az összes adminisztrátor és moderátor bejegyzése."
+        delete_forbidden_because_admin: "Az adminokat nem lehet törölni."
         delete_forbidden:
           one: "A felhasználókat nem lehet törölni, ha vannak hozzászólásaik. Törölj minden hozzászólást, mielőtt megpróbálnál törölni egy felhasználót. (A %{count} napnál régebbi hozzászólások nem törölhetők.)"
           other: "A felhasználókat nem lehet törölni, ha vannak hozzászólásaik. Törölj minden hozzászólást, mielőtt megpróbálnál törölni egy felhasználót. (A %{count} napnál régebbi hozzászólások nem törölhetők.)"

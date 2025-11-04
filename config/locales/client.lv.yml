@@ -167,7 +167,7 @@ lv:
     welcome_banner:
       header:
         anonymous_members: "Laipni lūdzam %{site_name}!"
-      search: "Meklēt"
+      search_placeholder: "Meklēt"
     themes:
       default_description: "Noklusējums"
     s3:
@@ -2865,6 +2865,7 @@ lv:
         categories: "Visas sadaļas"
   admin_js:
     settings: "Iestatījumi"
+    reset_filter: "Atlikt"
     admin:
       title: "Discourse administrators"
       moderator: "Moderators"
@@ -2883,6 +2884,19 @@ lv:
           title: "Drošība"
         plugins:
           title: "Spraudņi"
+      upcoming_changes:
+        name: "Vārds"
+        enabled: "Ieslēgts"
+        preview: "Priekšskatījums"
+        impact_roles:
+          admins: "Administratori"
+          moderators: "Moderātori"
+          staff: "Personāls"
+        filter:
+          all: "Visi"
+          enabled: "Ieslēgts"
+          disabled: "Atslēgt"
+          impact_type_other: "Citi"
       config:
         developer:
           title: "Izstrādātājs"
@@ -3638,7 +3652,6 @@ lv:
             cancel: "Atcelt"
           confirmation:
             cancel: "Atcelt"
-        delete_posts_forbidden_because_staff: "Nevar izdzēst visus administratoru un moderatoru ierakstus."
         delete_forbidden:
           zero: "Lietotāji nevar tikt dzēsti ja viņiem ir ieraksti. Izdzēs visus ierakstus pirms dzēs lietotāju. (ieraksti vecāki kā %{count} dienas nevar tikt izdzēsti.)"
           one: "Lietotāji nevar tikt dzēsti ja viņiem ir ieraksti. Izdzēs visus ierakstus pirms dzēs lietotāju. (ieraksti vecāki kā %{count} dienas nevar tikt izdzēsti.)"
