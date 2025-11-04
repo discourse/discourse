@@ -30,10 +30,8 @@ ja:
         label: "投稿の投票トピックを作成する"
       composer_actions:
         create_as_post_voting:
-          label: "投稿の投票を切り替える"
           desc: "トピックは投票可能な投稿で作成されます"
         remove_as_post_voting:
-          label: "投稿の投票を削除"
           desc: "トピックは通常の形式で作成されます"
     vote:
       already_voted: "質問ごとに 1 回だけ投票できます。"

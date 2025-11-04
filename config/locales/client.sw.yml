@@ -347,6 +347,7 @@ sw:
         reviewable_post:
           title: "Ujumbe"
           noun: "ujumbe"
+      user_label: "Mtumiaji"
       notes:
         delete: "Futa"
       review_user: "Mtumiaji"
@@ -1312,8 +1313,9 @@ sw:
           desc: Jibu mada, sio chapisho lolote tu
         toggle_whisper:
           desc: Minong'ono inapatikana kwa wasaidizi tu
-        create_topic:
-          label: "Mada Mpya"
+        create_personal_message:
+          label: "Ujumbe mpya"
+          desc: "Tengeneza ujumbe binafsi mpya"
         shared_draft:
           label: "Mswadajaribio Gawiza"
       ignore: "Puuzia"
@@ -1529,7 +1531,6 @@ sw:
         one: "%{count} chapisho kwenye mada"
         other: "%{count} machapisho kwenye mada"
       create: "Mada Mpya"
-      create_long: "Tengeneza Mada mpya"
       open_draft: "Fungua Mswadajaribio"
       private_message: "Anzisha ujumbe"
       archive_message:

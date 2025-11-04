@@ -411,10 +411,6 @@ bs_BA:
         required: "VI morate tvrditi stavari prije ih morate cijeniti"
         claimed_by_you: "Vi ste tvrdili ovu stvar i sad ju možete pregledati "
         claimed_by_other: "Ovu stavku može revidirati samo korisnik<b>%{username}</b>"
-      claim:
-        title: "tvrdite ovu temu?"
-      unclaim:
-        help: "maknite ovu tvrdnju?"
       awaiting_approval: "čekanje odobrenje"
       delete: "Delete"
       settings:
@@ -544,6 +540,7 @@ bs_BA:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+      user_label: "User"
       notes:
         delete: "Delete"
       review_user: "User"
@@ -1756,8 +1753,9 @@ bs_BA:
         toggle_whisper:
           label: Uključi Šapat
           desc: Šapati su vidljivi samo administratorima
-        create_topic:
-          label: "Nova tema"
+        create_personal_message:
+          label: "Nova poruka"
+          desc: "Kreiraj novu personalnu poruku"
         shared_draft:
           label: "Dijeljena skica"
         toggle_topic_bump:
@@ -2012,7 +2010,6 @@ bs_BA:
         few: "%{count} objave u temi"
         other: "%{count} objava u temi"
       create: "Nova tema"
-      create_long: "Otvori novu temu"
       open_draft: "Otvori skicu"
       private_message: "Piši poruku"
       archive_message:

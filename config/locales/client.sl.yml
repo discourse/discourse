@@ -604,9 +604,11 @@ sl:
         reviewable_post:
           title: "Prispevek"
           noun: "prispevek"
+      user_label: "Uporabnik"
       notes:
         delete: "Izbriši"
       review_user: "Uporabnik"
+      copy_link_feedback: "Povezava kopirana"
       insights:
         activities:
           posts:
@@ -2080,8 +2082,9 @@ sl:
         toggle_whisper:
           label: Preklopi šepet
           desc: Šepeti so vidni samo članom osebja
-        create_topic:
-          label: "Nova tema"
+        create_personal_message:
+          label: "Novo ZS"
+          desc: "Odgovori v zasebno sporočilo"
         shared_draft:
           label: "Skupen osnutek"
         toggle_topic_bump:
@@ -2378,7 +2381,6 @@ sl:
         few: "%{count} prispevki v temi"
         other: "%{count} prispevkov v temi"
       create: "Nova tema"
-      create_long: "Ustvari novo temo"
       open_draft: "Odpri osnutek"
       private_message: "Novo zasebno sporočilo"
       archive_message:

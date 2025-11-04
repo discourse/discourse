@@ -621,10 +621,6 @@ ja:
         claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
         claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
         automatically_claimed_by: "この項目は現在、<b>%{username}</b> がレビューしています。"
-      claim:
-        title: "トピックを自分に割り当てる"
-      unclaim:
-        help: "この割り当てを削除する"
       awaiting_approval: "承認待ち"
       delete: "削除"
       settings:
@@ -775,6 +771,7 @@ ja:
           title: "投稿"
           noun: "投稿"
       flagged_as: "通報:"
+      user_label: "ユーザー"
       assigned_to: "割り当て先"
       moderator_actions: "モデレーターのアクション"
       timeline_and_notes: "タイムラインとメモ"
@@ -2706,6 +2703,9 @@ ja:
         create_topic:
           label: "新規トピック"
           desc: 新しいトピックを作成します
+        create_personal_message:
+          label: "新規メッセージ"
+          desc: "新しい個人メッセージを作成する"
         shared_draft:
           label: "共有の下書き"
           desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
@@ -3164,7 +3164,7 @@ ja:
       filter_to:
         other: "トピックの %{count} 件の投稿"
       create: "新規トピック"
-      create_long: "新しいトピックの作成"
+      create_long: "新しいトピックを作成します"
       open_draft: "下書きを開く"
       private_message: "メッセージを書く"
       archive_message:

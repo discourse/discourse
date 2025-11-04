@@ -795,10 +795,6 @@ ru:
         claimed_by_you: "Вы зарезервировали этот контент за собой и можете смело заняться его модерацией."
         claimed_by_other: "Этот контент может быть отмодерирован только пользователем <b>%{username}</b>."
         automatically_claimed_by: "Этот элемент сейчас проверяется пользователем <b>%{username}</b>."
-      claim:
-        title: "зарезервировать эту тему за собой"
-      unclaim:
-        help: "снять резервирование"
       awaiting_approval: "В ожидании подтверждения"
       delete: "Удалить"
       settings:
@@ -969,6 +965,7 @@ ru:
           title: "Сообщение"
           noun: "публикация"
       flagged_as: "Помечено как"
+      user_label: "Пользователь"
       assigned_to: "Назначено:"
       moderator_actions: "Действия модератора"
       timeline_and_notes: "Хронология и заметки"
@@ -999,6 +996,7 @@ ru:
       review_user: "Пользователь"
       need_help: "Нужна помощь?"
       copy_link: "Копировать ссылку"
+      copy_link_feedback: "Ссылка скопирована"
       view_source: "Посмотреть источник"
       insights:
         title: "Аналитика"
@@ -3149,6 +3147,9 @@ ru:
         create_topic:
           label: "Новая тема"
           desc: Создать новую тему
+        create_personal_message:
+          label: "Личное сообщение"
+          desc: "Создать новое личное сообщение"
         shared_draft:
           label: "Общий черновик"
           desc: "Черновик темы, который будет виден только пользователям с необходимыми правами доступа"
