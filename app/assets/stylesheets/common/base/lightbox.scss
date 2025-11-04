@@ -127,13 +127,9 @@
   }
 }
 
-.pswp {
-  /* Switch z-index to be behind behind header for smoother close animation */
-  &.pswp--behind-header,
-  &.pswp--closing,
-  &.pswp--open:not(.pswp--ui-visible) {
-    z-index: z("header") - 1;
-  }
+/* Switch z-index to be behind behind header for smoother close animation */
+.pswp.pswp--behind-header {
+  z-index: z("header") - 1;
 }
 
 // photoswipe custom caption
