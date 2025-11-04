@@ -285,10 +285,10 @@ importers:
         specifier: ^6.1.19
         version: 6.1.19(@fullcalendar/core@6.1.19)
       '@glimmer/manager':
-        specifier: '*'
+        specifier: ^0.94.9
         version: 0.94.9
       '@glimmer/reference':
-        specifier: '*'
+        specifier: ^0.94.8
         version: 0.94.8
       '@glimmer/syntax':
         specifier: 0.93.1
