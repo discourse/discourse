@@ -33,6 +33,8 @@ class TopicSkipLinks extends Component {
     if (this.args.topic.last_read_post_number > 1) {
       return this.args.topic.last_read_post_number;
     }
+
+    return null;
   }
 
   get lastPostNumber() {
@@ -57,9 +59,10 @@ class TopicSkipLinks extends Component {
   }
 
   get currentPostNumber() {
+    const nearPost = parseInt(this.router.currentRoute?.params?.nearPost, 10);
     return (
-      this.args.topic.currentPost ||
-      parseInt(this.router.currentRoute?.params?.nearPost, 10) ||
+      this.args.topic?.currentPost ||
+      (nearPost && !isNaN(nearPost) ? nearPost : null) ||
       1
     );
   }
@@ -85,18 +88,27 @@ class TopicSkipLinks extends Component {
 
     try {
       await new Promise((resolve) => {
-        // if not fulfilled in time, resolve with false
-        const timeoutTimer = later(() => {
+        // Add proper cleanup for timeout timer
+        let timeoutTimer;
+
+        const cleanup = () => {
+          if (timeoutTimer) {
+            cancel(timeoutTimer);
+          }
+          this.#mutationObserver?.disconnect();
+        };
+
+        timeoutTimer = later(() => {
+          cleanup();
           resolve();
         }, timeout);
 
         this.#mutationObserver = new MutationObserver(() => {
-          cancel(timeoutTimer);
           this.#pendingFocusAttempt = discourseDebounce(
             this,
             () => {
               if (document.querySelector(selector)) {
-                cancel(timeoutTimer); // cancel the timeout timer
+                cleanup();
                 resolve();
               }
             },
