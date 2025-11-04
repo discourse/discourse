@@ -284,6 +284,12 @@ importers:
       '@fullcalendar/timegrid':
         specifier: ^6.1.19
         version: 6.1.19(@fullcalendar/core@6.1.19)
+      '@glimmer/manager':
+        specifier: '*'
+        version: 0.94.9
+      '@glimmer/reference':
+        specifier: '*'
+        version: 0.94.8
       '@glimmer/syntax':
         specifier: 0.93.1
         version: 0.93.1
