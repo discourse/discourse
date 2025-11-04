@@ -193,7 +193,8 @@ en:
         is_already_in_use: "is already in use"
 
     bookmarkable:
-      notification_title: "message in %{channel_name}"
+      notification_title_channel: "message in %{channel_name}"
+      notification_title_direct_message: "message with %{channel_name}"
 
     personal_chat: "personal chat"
 
