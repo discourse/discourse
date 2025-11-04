@@ -4264,6 +4264,7 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
+    hidden: true
   reviewable_ui_refresh:
     client: true
     type: group_list
