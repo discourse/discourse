@@ -650,9 +650,6 @@ importers:
       '@embroider/addon-shim':
         specifier: ^1.9.0
         version: 1.10.0
-      discourse:
-        specifier: workspace:0.0.0
-        version: link:../discourse
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
