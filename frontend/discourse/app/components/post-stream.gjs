@@ -80,6 +80,7 @@ export default class PostStream extends Component {
     return this.posts.at(-1);
   }
 
+  @cached
   get existingPostNumbers() {
     return this.posts
       .filter((post) => !this.isPlaceholder(post))
