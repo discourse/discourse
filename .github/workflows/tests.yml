@@ -266,7 +266,7 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
+        run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --no-color --profile=50
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
