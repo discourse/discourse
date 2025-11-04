@@ -35,29 +35,34 @@
   * {
     outline: 0;
   }
-}
 
-.meta {
-  --meta-element-margin: 0.375em;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  color: var(--secondary);
-  background: var(--primary);
-  opacity: 0;
-  transition: opacity 0.2s;
-  display: flex;
-  align-items: center;
-
-  @media (pointer: coarse) {
-    align-items: center;
-    background: var(--secondary);
-    color: var(--primary-high);
-    height: 25px;
-    width: 25px;
+  .lightbox .meta {
+    --meta-element-margin: 0.375em;
+    position: absolute;
     bottom: 0;
-    right: 0;
-    opacity: 0.8;
+    width: 100%;
+    color: var(--secondary);
+    background: var(--primary);
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+
+    @media (pointer: coarse) {
+      align-items: center;
+      background: var(--secondary);
+      color: var(--primary-high);
+      height: 25px;
+      width: 25px;
+      bottom: 0;
+      right: 0;
+      opacity: 0.8;
+      transition: opacity 500ms;
+
+      &.open {
+        opacity: 0;
+      }
+    }
   }
 
   .filename {
