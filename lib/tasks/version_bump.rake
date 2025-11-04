@@ -50,6 +50,7 @@ end
 
 def git(*args, allow_failure: false, silent: false)
   puts "> git #{args.inspect}" unless silent
+  args.prepend(*%w[-c commit.gpgsign=false]) if test_mode?
   stdout, stderr, status = Open3.capture3({ "LEFTHOOK" => "0" }, "git", *args)
   if !status.success? && !allow_failure
     raise "Command failed: git #{args.inspect}\n#{stdout.indent(2)}\n#{stderr.indent(2)}"
