@@ -17,7 +17,7 @@
     "concurrently": "^9.2.1",
     "ember-template-lint": "7.9.3",
     "esbuild": "^0.25.11",
-    "eslint": "9.39.0",
+    "eslint": "9.39.1",
     "jsdoc": "^4.0.5",
     "lefthook": "^1.13.6",
     "licensee": "^11.1.1",
