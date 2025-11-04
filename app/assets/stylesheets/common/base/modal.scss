@@ -68,6 +68,9 @@ html:not(.keyboard-visible).mobile-device {
       width: 100%;
       max-width: 100%;
       max-height: calc(var(--composer-vh, 1dvh) * 85);
+
+      @include enter-animation(modal-enter-mobile, 250ms, ease);
+      @include exit-animation(modal-exit-mobile, 250ms, ease);
     }
 
     @include viewport.from(sm) {
@@ -82,6 +85,17 @@ html:not(.keyboard-visible).mobile-device {
       .d-modal.-max & {
         max-width: 90vw;
       }
+
+      @include enter-animation(
+        modal-enter-desktop,
+        250ms,
+        cubic-bezier(0.4, 0, 0.2, 1)
+      );
+      @include exit-animation(
+        modal-exit-desktop,
+        250ms,
+        cubic-bezier(0.4, 0, 0.2, 1)
+      );
     }
   }
 
@@ -215,6 +229,12 @@ html:not(.keyboard-visible).mobile-device {
     @media (prefers-reduced-motion) {
       animation-duration: 0s;
     }
+
+    @include exit-animation(
+      backdrop-fade-out,
+      250ms,
+      cubic-bezier(0.4, 0, 0.2, 1)
+    );
   }
 
   #modal-alert {
@@ -279,6 +299,61 @@ html:not(.keyboard-visible).mobile-device {
 
   to {
     opacity: 0.6;
+  }
+}
+
+// Modal animations
+@keyframes modal-enter-desktop {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes modal-exit-desktop {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+}
+
+@keyframes modal-enter-mobile {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-exit-mobile {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes backdrop-fade-out {
+  from {
+    opacity: 0.6;
+  }
+
+  to {
+    opacity: 0;
   }
 }
 
