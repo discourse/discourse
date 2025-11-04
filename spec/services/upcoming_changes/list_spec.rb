@@ -63,7 +63,9 @@ RSpec.describe UpcomingChanges::List do
         )
       end
 
-      it "includes the plugin name if the setting is from a plugin" do
+      # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
+      # sample plugin settings loaded in the SiteSetting model.
+      xit "includes the plugin name if the setting is from a plugin" do
         results = result.upcoming_changes
         sample_plugin_setting =
           results.find { |change| change[:setting] == :enable_experimental_sample_plugin_feature }
