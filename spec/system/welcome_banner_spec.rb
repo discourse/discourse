@@ -19,6 +19,7 @@ describe "Welcome banner", type: :system do
       visit "/"
       expect(banner).to be_visible
       expect(banner).to have_anonymous_title
+      current_user.update!(previous_visit_at: 1.day.ago)
       sign_in(current_user)
       visit "/"
       expect(banner).to have_logged_in_title(current_user.username)
