@@ -1,3 +1,4 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -11,6 +12,58 @@ import element from "discourse/helpers/element";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+/**
+ * @typedef DButtonSignature
+ *
+ * @property {object} Args
+ *
+ * // Text
+ * @property {string} Args.title
+ * @property {string} Args.translatedTitle
+ * @property {string} Args.label
+ * @property {string} Args.translatedLabel
+ *
+ * // Actions / events
+ * @property {function|object} Args.action
+ * @property {any} Args.actionParam
+ * @property {boolean} Args.forwardEvent
+ * @property {function} Args.onKeyDown
+ *
+ * // Navigation
+ * @property {string} Args.href
+ * @property {string} Args.route
+ * @property {object|object[]} Args.routeModels
+ *
+ * // State
+ * @property {boolean} Args.isLoading
+ * @property {boolean} Args.disabled
+ * @property {boolean} Args.preventFocus
+ *
+ * // Display / icon
+ * @property {string} Args.icon
+ * @property {boolean} Args.ellipsis
+ *
+ * // Accessibility
+ * @property {string} Args.ariaLabel
+ * @property {string} Args.translatedAriaLabel
+ * @property {boolean} Args.ariaExpanded
+ * @property {boolean} Args.ariaPressed
+ * @property {string} Args.ariaControls
+ * @property {boolean} Args.ariaHidden
+ *
+ * // HTML attributes
+ * @property {string} Args.type
+ * @property {string} Args.id
+ * @property {string} Args.form
+ * @property {string} Args.tabindex
+ * @property {string} Args.class
+ *
+ * // Optional yield
+ * @property {object} Blocks
+ * @property {[]} Blocks.default Contents of the button
+ */
+
+/** @extends {Component<DButtonSignature>} */
 export default class DButton extends Component {
   @service router;
   @service capabilities;
