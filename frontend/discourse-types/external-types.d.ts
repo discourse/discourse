@@ -4,6 +4,8 @@ declare module "@glimmer/component" {
   export { default } from "@types/@glimmer__component";
 }
 
+// TODO: add glint template stuff
+
 declare module "qunit" {
-  export {module, test} from "@types/qunit";
+  export { module, test } from "@types/qunit";
 }
