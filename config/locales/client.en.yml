@@ -3616,7 +3616,7 @@ en:
       filter_to:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
-      create: "New topic"
+      create: "New Topic"
       create_long: "Create a new topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
