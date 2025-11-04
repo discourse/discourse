@@ -678,10 +678,6 @@ pt_BR:
         claimed_by_you: "Você reivindicou este item e pode revisá-lo."
         claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
         automatically_claimed_by: "Este item está sendo revisado por <b>%{username}</b>."
-      claim:
-        title: "reivindicar este tópico"
-      unclaim:
-        help: "remover esta reivindicação"
       awaiting_approval: "Aguardando aprovação"
       delete: "Excluir"
       settings:
@@ -839,6 +835,7 @@ pt_BR:
           title: "Postagem"
           noun: "postagem"
       flagged_as: "Sinalizado como"
+      user_label: "Usuário(a)"
       assigned_to: "Atribuído(a) a"
       moderator_actions: "Ações da moderação"
       timeline_and_notes: "Cronograma e observações"
@@ -869,6 +866,7 @@ pt_BR:
       review_user: "Usuário(a)"
       need_help: "Precisa de ajuda?"
       copy_link: "Copiar link"
+      copy_link_feedback: "Link copiado"
       view_source: "Visualizar origem"
       insights:
         title: "Percepções"
@@ -2849,6 +2847,9 @@ pt_BR:
         create_topic:
           label: "Novo tópico"
           desc: Criar um novo tópico
+        create_personal_message:
+          label: "Nova mensagem"
+          desc: "Criar uma nova mensagem pessoal"
         shared_draft:
           label: "Rascunho compartilhado"
           desc: "Fazer rascunho do tópico visívei apenas para usuários(as) com permissão"

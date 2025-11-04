@@ -9,6 +9,8 @@ el:
     overall_sentiment:
       yaxis: "Ημερομηνία"
   discourse_ai:
+    spam_detection:
+      flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
       tool_summary:
         search: "Αναζήτηση"

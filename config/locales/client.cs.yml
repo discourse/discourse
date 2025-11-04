@@ -803,10 +803,6 @@ cs:
         claimed_by_you: "Tuto položku jste si nárokovali a můžete ji zkontrolovat."
         claimed_by_other: "Tuto položku může revidovat pouze <b>%{username}</b>."
         automatically_claimed_by: "Tuto položku aktuálně reviduje <b>%{username}</b>."
-      claim:
-        title: "nárokovat toto téma"
-      unclaim:
-        help: "odstranit toto nárokování"
       awaiting_approval: "Čeká na schválení"
       delete: "Smazat"
       settings:
@@ -978,6 +974,7 @@ cs:
           title: "Příspěvek"
           noun: "příspěvek"
       flagged_as: "Nahlášeno jako"
+      user_label: "Uživatel"
       assigned_to: "Přiřazeno"
       moderator_actions: "Akce moderátora"
       timeline_and_notes: "Časová osa a poznámky"
@@ -1008,6 +1005,7 @@ cs:
       review_user: "Uživatel"
       need_help: "Potřebujete pomoc?"
       copy_link: "Kopírovat odkaz"
+      copy_link_feedback: "Odkaz zkopírován"
       view_source: "Zobrazit zdroj"
       insights:
         title: "Postřehy"
@@ -3173,6 +3171,9 @@ cs:
         create_topic:
           label: "Nové téma"
           desc: Vytvořit nové téma
+        create_personal_message:
+          label: "Nová zpráva"
+          desc: "Vytvořit novou osobní zprávu"
         shared_draft:
           label: "Sdílený koncept"
           desc: "Navrhněte téma, které bude viditelné pouze pro povolené uživatele"

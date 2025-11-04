@@ -800,9 +800,9 @@ pl_PL:
         claimed_by_other: "Ten przedmiot może być sprawdzony tylko przez <b>%{username}</b> ."
         automatically_claimed_by: "Ta pozycja jest obecnie sprawdzana przez <b>%{username}</b>."
       claim:
-        title: "zgłoś ten temat"
+        title: "Zgłoś ten temat"
       unclaim:
-        help: "usuń to roszczenie"
+        help: "Usuń to roszczenie"
       awaiting_approval: "Oczekuje na zatwierdzenie"
       delete: "Usuń"
       settings:
@@ -974,6 +974,9 @@ pl_PL:
           title: "Wpis"
           noun: "wpis"
       flagged_as: "Oflagowany jako"
+      post_flagged_as: "Wpis oznaczono jako"
+      queued_post_label: "Wpis w kolejce"
+      user_label: "Użytkownik"
       assigned_to: "Przypisany do"
       moderator_actions: "Działania moderatora"
       timeline_and_notes: "Oś czasu i uwagi"
@@ -1004,6 +1007,8 @@ pl_PL:
       review_user: "Użytkownik"
       need_help: "Potrzebujesz pomocy?"
       copy_link: "Skopiuj link"
+      copy_permalink_title: "skopiuj link do tego elementu do schowka"
+      copy_link_feedback: "Link skopiowany"
       view_source: "Wyświetl źródło"
       insights:
         title: "Wnioski"
@@ -3162,6 +3167,9 @@ pl_PL:
         create_topic:
           label: "Nowy temat"
           desc: Utwórz nowy temat
+        create_personal_message:
+          label: "Nowa wiadomość"
+          desc: "Utwórz nową osobistą wiadomość"
         shared_draft:
           label: "Udostępniony szkic"
           desc: "Szkicuj temat, który będzie widoczny tylko dla uprawnionych użytkowników"
@@ -5020,6 +5028,7 @@ pl_PL:
     lightbox:
       download: "Pobierz"
       open: "Oryginalny obraz"
+      image_info: "Informacje o obrazie"
       previous: "Poprzedni (klawisz strzałki w lewo)"
       next: "Następny (klawisz strzałki w prawo)"
       counter: "%curr% z %total%"

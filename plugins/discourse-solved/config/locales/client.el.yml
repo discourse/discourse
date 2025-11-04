@@ -48,7 +48,7 @@ el:
     admin:
       web_hooks:
         solved_event:
-          group_name: "Επιλύθηκε γεγονός"
+          group_name: "Επιλυμένη εκδήλωση"
       api:
         scopes:
           descriptions:

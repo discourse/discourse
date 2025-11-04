@@ -665,9 +665,9 @@ ro:
         claimed_by_other: "Acest element poate fi revizuit numai de <b>%{username}</b>."
         automatically_claimed_by: "Acest element este revizuit momentan de <b>%{username}</b>."
       claim:
-        title: "revendică acest subiect"
+        title: "Revendică acest subiect"
       unclaim:
-        help: "elimină această revendicare"
+        help: "Elimină această revendicare"
       awaiting_approval: "În așteptarea aprobării"
       delete: "Șterge"
       settings:
@@ -825,6 +825,9 @@ ro:
           title: "Articol"
           noun: "postare"
       flagged_as: "Semnalat ca"
+      post_flagged_as: "Postare semnalată ca"
+      queued_post_label: "Postare în coadă"
+      user_label: "Utilizator"
       assigned_to: "Atribuit la"
       moderator_actions: "Acțiuni moderator"
       timeline_and_notes: "Cronologie și note"
@@ -855,6 +858,8 @@ ro:
       review_user: "Utilizator"
       need_help: "Ai nevoie de ajutor?"
       copy_link: "Copiază legătură"
+      copy_permalink_title: "copiază o legătură în clipboard către acest element verificabil"
+      copy_link_feedback: "Legătură copiată"
       view_source: "Vezi sursă"
       insights:
         flagged_by_users:
@@ -1941,6 +1946,11 @@ ro:
       no_results: "Fără rezultate"
       search: "Caută…"
       label: "Selectează opțiuni"
+    d_otp:
+      screen_reader:
+        one: Introduceți un număr
+        few: Introdu %{count} numere
+        other: Introdu %{count} de numere
     form_kit:
       reset: Resetare
       optional: opțional
@@ -2297,7 +2307,10 @@ ro:
           label: Răspunde la subiect
           desc: Răspundeți subiectului, nu unei anumite postări
         create_topic:
-          label: "Discuție nouă"
+          label: "Subiect nou"
+        create_personal_message:
+          label: "Mesaj nou"
+          desc: "Creează un mesaj personal nou"
         toggle_topic_bump:
           label: "Comută bump pentru subiect"
         toggle_unlisted:
@@ -3453,6 +3466,7 @@ ro:
     preloader_text: "Se încarcă"
     lightbox:
       download: "Descărcare"
+      image_info: "Informații despre imagine"
       counter: "%curr% din %total%"
       zoom: "Zoom (tasta Z)"
       error: "Imaginea nu poate fi încărcată"
@@ -5272,6 +5286,7 @@ ro:
           confirmation:
             cancel: "Anulează"
         delete_forbidden_because_admin: "Administratorii nu pot fi șterși."
+        delete_posts_forbidden_because_admin: "Nu pot șterge toate postările administratorilor."
         delete_forbidden:
           one: "Utilizatorii nu pot fi șterși dacă au postări. Șterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zi nu pot fi șterse)"
           few: "Utilizatorii nu pot fi șterși dacă au postări. Şterge toate postările înainte de a încerca ștergerea unui utilizator. (Postările mai vechi de %{count} zile nu pot fi șterse)"

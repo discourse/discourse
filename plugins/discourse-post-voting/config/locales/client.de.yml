@@ -30,10 +30,8 @@ de:
         label: "Beitragsabstimmungsthema erstellen"
       composer_actions:
         create_as_post_voting:
-          label: "Beitragsabstimmung umschalten"
           desc: "Thema wird mit Beiträgen erstellt, bei denen abgestimmt werden kann"
         remove_as_post_voting:
-          label: "Beitragsabstimmung entfernen"
           desc: "Thema wird im regulären Format erstellt"
     vote:
       already_voted: "Du kannst nur einmal pro Frage abstimmen."

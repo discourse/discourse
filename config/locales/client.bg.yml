@@ -455,10 +455,6 @@ bg:
         required: "Трябва да заявите артикули, преди да можете да ги прегледате."
         claimed_by_you: "Заявихте този артикул и можете да го прегледате."
         claimed_by_other: "Този артикул може да бъде прегледан само от <b>%{username}</b>."
-      claim:
-        title: "заявете тази тема"
-      unclaim:
-        help: "премахнете на тази заявка"
       awaiting_approval: "Очаква одобрение"
       delete: "Изтрий"
       settings:
@@ -604,6 +600,7 @@ bg:
         reviewable_post:
           title: "Публикация"
           noun: "публикация"
+      user_label: "Потребител"
       notes:
         delete: "Изтрий"
       review_user: "Потребител"
@@ -2165,8 +2162,9 @@ bg:
         toggle_whisper:
           label: Превключете шепот
           desc: Шепотът се вижда само от служителите
-        create_topic:
-          label: "Нова тема"
+        create_personal_message:
+          label: "Ново съобщение"
+          desc: "Създайте ново лично съобщение"
       ignore: "Игнорирай"
     notifications:
       title: "уведомления за @name споменавания, отговори на вашите публикации и теми, лични съобщения, и т.н."
@@ -2429,7 +2427,6 @@ bg:
         name: "Изтрий"
     topic:
       create: "Нова тема"
-      create_long: "Създайте нова тема"
       open_draft: "Довърши ревизия"
       private_message: "Започни съобщение"
       archive_message:

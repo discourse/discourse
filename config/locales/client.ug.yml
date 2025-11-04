@@ -685,10 +685,6 @@ ug:
         claimed_by_you: "بۇ تۈرنى تەلەپ قىلدىڭىز، تەكشۈرۈپ تەستىقلىيالايسىز."
         claimed_by_other: "بۇ تۈرنى پەقەت <b>%{username}</b>لا تەكشۈرۈپ تەستىقلىيالايدۇ."
         automatically_claimed_by: "ھازىر بۇ تۈرنى <b>%{username}</b> تەكشۈرۈۋاتىدۇ."
-      claim:
-        title: "تېما تەلەپ قىل"
-      unclaim:
-        help: "بۇ تەلەپنى چىقىرىۋەت"
       awaiting_approval: "تەستىق كۈتۈۋاتىدۇ"
       delete: "ئۆچۈر"
       settings:
@@ -846,6 +842,7 @@ ug:
           title: "يازما"
           noun: "يازما"
       flagged_as: "پاش قىلىنغان"
+      user_label: "ئىشلەتكۈچى"
       assigned_to: "تەقسىم قىلىندى"
       moderator_actions: "رىياسەتچى مەشغۇلاتى"
       timeline_and_notes: "ۋاقىت سىزىقى ۋە ئىزاھات"
@@ -876,6 +873,7 @@ ug:
       review_user: "ئىشلەتكۈچى"
       need_help: "ياردەم كېرەكمۇ؟"
       copy_link: "ئۇلانما كۆچۈر"
+      copy_link_feedback: "ئۇلانما كۆچۈرۈلدى"
       view_source: "مەنبەنى كۆرسەت"
       insights:
         title: "چۈشەنچە"

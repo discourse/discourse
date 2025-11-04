@@ -803,10 +803,6 @@ uk:
         claimed_by_you: "Ви заявили права на цей елемент і можете розглядати його."
         claimed_by_other: "Цей елемент може розглядати лише <b>%{username}</b>."
         automatically_claimed_by: "Зараз цей елемент переглядає <b>%{username}</b>."
-      claim:
-        title: "заявити права на цю тему"
-      unclaim:
-        help: "вилучити цю заявку"
       awaiting_approval: "Очікує схвалення"
       delete: "Вилучити"
       settings:
@@ -978,6 +974,7 @@ uk:
           title: "Допис"
           noun: "допис"
       flagged_as: "Позначено як"
+      user_label: "Користувач"
       assigned_to: "Призначено для"
       moderator_actions: "Дії модератора"
       timeline_and_notes: "Хронологія та нотатки"
@@ -1008,6 +1005,7 @@ uk:
       review_user: "Користувач"
       need_help: "Потрібна допомога?"
       copy_link: "Скопіювати посилання"
+      copy_link_feedback: "Посилання скопійовано"
       view_source: "Переглянути вихідний код"
       insights:
         title: "Статистика"
@@ -3161,6 +3159,9 @@ uk:
         create_topic:
           label: "Нова тема"
           desc: Створити нову тему
+        create_personal_message:
+          label: "Сворити нове"
+          desc: "Створити нове приватне повідомлення"
         shared_draft:
           label: "Спільна чернетка"
           desc: "Створіть тему, яку бачитимуть лише обрані користувачі"
@@ -5021,6 +5022,7 @@ uk:
     lightbox:
       download: "Завантажити"
       open: "Оригінальне зображення"
+      image_info: "Інформація про зображення"
       previous: "Попередній (клавіша зі стрілкою вліво)"
       next: "Наступний (клавіша зі стрілкою вправо)"
       counter: "%curr% з %total%"

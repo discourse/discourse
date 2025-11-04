@@ -89,6 +89,8 @@ ro:
           title: "Pictograme Antet"
         spinners:
           title: "Indicatori încărcare"
+        otp:
+          title: "OTP"
         tooltips:
           description: "Descriere"
           header: "Antet"

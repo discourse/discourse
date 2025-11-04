@@ -174,7 +174,6 @@ de:
               label: "PN-Absender"
               description: "Benutzer, der die PN sendet (Standard: System)"
             notify_author_pm_message:
-              label: "PN-Nachrichtentext"
               description: "Optionale benutzerdefinierte Nachricht die an den Autor gesendet werden soll"
             include_personal_messages:
               label: "Persönliche Nachrichten einbeziehen"
@@ -195,7 +194,6 @@ de:
           fields:
             tagger_persona:
               label: "KI-Persona"
-              description: "Die KI-Persona, die Beiträge analysiert und Schlagwörter hinzufügt"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"

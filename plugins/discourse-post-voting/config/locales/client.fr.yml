@@ -30,10 +30,8 @@ fr:
         label: "Créer un sujet de vote de message"
       composer_actions:
         create_as_post_voting:
-          label: "Activer/désactiver le vote de message"
           desc: "Le sujet sera créé avec des messages pouvant faire l'objet d'un vote"
         remove_as_post_voting:
-          label: "Supprimer le vote de message"
           desc: "Le sujet sera créé dans le format normal"
     vote:
       already_voted: "Vous ne pouvez voter qu'une seule fois par question."

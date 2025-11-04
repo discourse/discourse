@@ -380,10 +380,6 @@ lv:
         required: "Jums ir jāpieprasa vienumi, pirms jūs varat tos pārskatīt."
         claimed_by_you: "Jūs pieprasījāt šo vienumu un varat to pārskatīt."
         claimed_by_other: "Šo vienumu var pārskatīt tikai <b>%{username}</b>."
-      claim:
-        title: "pieprasīt šo tēmu"
-      unclaim:
-        help: "noņemt šo prasību"
       awaiting_approval: "Gaida apstiprinājumu"
       delete: "Dzēst"
       settings:
@@ -495,6 +491,7 @@ lv:
         reviewable_post:
           title: "Ieraksts"
           noun: "ieraksts"
+      user_label: "Lietotājs"
       notes:
         delete: "Dzēst"
       review_user: "Lietotājs"
@@ -1731,8 +1728,6 @@ lv:
       composer_actions:
         reply: Atbilde
         edit: Labot
-        create_topic:
-          label: "Jauna tēma"
       ignore: "Ignorēt"
     notifications:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
@@ -1943,7 +1938,6 @@ lv:
         one: "%{count} ziņa tēmā"
         other: "%{count} ziņas tēmā"
       create: "Jauna tēma"
-      create_long: "Izveidot jaunu tēmu "
       private_message: "Rakstīt ziņu "
       archive_message:
         help: "Pārvietot ziņu uz arhīvu "

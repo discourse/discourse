@@ -30,10 +30,8 @@ tr_TR:
         label: "Gönderi oylaması konusu oluşturun"
       composer_actions:
         create_as_post_voting:
-          label: "Gönderi Oylamasını değiştir"
           desc: "Konu oylanabilir gönderilerle oluşturulacak"
         remove_as_post_voting:
-          label: "Gönderi Oylamasını kaldır"
           desc: "Konu normal formatta oluşturulacak"
     vote:
       already_voted: "Her soru için yalnızca bir kez oy kullanabilirsiniz."

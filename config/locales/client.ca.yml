@@ -464,10 +464,6 @@ ca:
         required: "Heu de reclamar elements abans de poder revisar-los"
         claimed_by_you: "Heu reclamat aquest element i podeu revisar-lo"
         claimed_by_other: "Aquest element sols pot ser revisat per <b>%{username}</b>."
-      claim:
-        title: "reclama aquest tema"
-      unclaim:
-        help: "elimina aquesta reclamació"
       awaiting_approval: "Esperant aprovació"
       delete: "Suprimeix"
       settings:
@@ -590,6 +586,7 @@ ca:
         reviewable_post:
           title: "Publicació"
           noun: "publicació"
+      user_label: "Usuari"
       notes:
         delete: "Suprimeix"
       review_user: "Usuari"
@@ -1752,8 +1749,9 @@ ca:
         toggle_whisper:
           label: Commuta xiuxiueig
           desc: Els xiuxiuejos sols són visibles a membres de l'equip responsable
-        create_topic:
-          label: "Tema nou"
+        create_personal_message:
+          label: "Missatge nou"
+          desc: "Crea un missatge personal nou "
         shared_draft:
           label: "Esborrany compartit"
         toggle_topic_bump:
@@ -2004,7 +2002,6 @@ ca:
         one: "%{count} publicació en el tema"
         other: "%{count} publicacions en el tema"
       create: "Tema nou"
-      create_long: "Crea un tema nou"
       open_draft: "Obre esborrany"
       private_message: "Comença un missatge"
       archive_message:

@@ -528,10 +528,6 @@ nb_NO:
         required: "Du må gjøre krav på varer før du kan se gjennom dem."
         claimed_by_you: "Du har gjort krav på dette elementet og kan se gjennom det."
         claimed_by_other: "Dette elementet kan bare bli vurdert av <b>%{username}</b>."
-      claim:
-        title: "Gjør krav på dette emne"
-      unclaim:
-        help: "fjern dette kravet"
       awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
@@ -665,9 +661,11 @@ nb_NO:
         reviewable_post:
           title: "Innlegg"
           noun: "innlegg"
+      user_label: "Bruker"
       notes:
         delete: "Slett"
       review_user: "Bruker"
+      copy_link_feedback: "Lenk kopiert"
       insights:
         activities:
           posts:
@@ -2491,8 +2489,10 @@ nb_NO:
           label: Veksle hvisking
           desc: Hvisking er kun synlig for stab
         create_topic:
-          label: "Nytt emne"
           desc: Opprett et nytt emne
+        create_personal_message:
+          label: "Ny melding"
+          desc: "Opprett en ny personlig melding"
         shared_draft:
           label: "Delt utkast"
           desc: "Lag et emne som bare vil være synlig for tillatte brukere"

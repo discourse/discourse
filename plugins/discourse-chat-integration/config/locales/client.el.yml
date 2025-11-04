@@ -92,6 +92,8 @@ el:
               title: "Όνομα"
             webhook_url:
               title: "Webhook URL"
+          errors:
+            invalid_webhook: "Αυτό το URL του webhook δεν είναι έγκυρο."
         webex:
           param:
             name:

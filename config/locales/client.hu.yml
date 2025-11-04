@@ -687,10 +687,6 @@ hu:
         claimed_by_you: "Zárolta ezt az elemet, és most már jóváhagyhatja."
         claimed_by_other: "Ezt az elemet csak <b>%{username}</b> hagyhatja jóvá."
         automatically_claimed_by: "Ezt az elemet <b>%{username}</b> vizsgálja felül."
-      claim:
-        title: "téma zárolása"
-      unclaim:
-        help: "zárolás eltávolítása"
       awaiting_approval: "Jóváhagyásra vár"
       delete: "Törlés"
       settings:
@@ -846,6 +842,7 @@ hu:
           title: "Bejegyzés"
           noun: "bejegyzéssel"
       flagged_as: "Megjelölt"
+      user_label: "Felhasználó"
       assigned_to: "Hozzárendelve"
       moderator_actions: "Moderátori intézkedések"
       timeline_and_notes: "Idővonal és jegyzetek"
@@ -876,6 +873,7 @@ hu:
       review_user: "Felhasználó"
       need_help: "Segítségre van szüksége?"
       copy_link: "Hivatkozás másolása"
+      copy_link_feedback: "Hivatkozás másolva"
       view_source: "Forrás megtekintése"
       insights:
         title: "Betekintések"
@@ -2869,6 +2867,9 @@ hu:
         create_topic:
           label: "Új téma"
           desc: Új téma létrehozása
+        create_personal_message:
+          label: "Új üzenet"
+          desc: "Új személyes üzenet létrehozása"
         shared_draft:
           label: "Megosztott vázlat"
           desc: "Témavázlat készítése, amely csak az engedélyezett felhasználók számára látható"

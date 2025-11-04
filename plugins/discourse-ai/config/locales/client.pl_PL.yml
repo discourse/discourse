@@ -174,7 +174,7 @@ pl_PL:
               label: "Nadawca PW"
               description: "Użytkownik, który wyśle PW (domyślnie system)"
             notify_author_pm_message:
-              label: "Wiadomość PW"
+              label: "Treść PW"
               description: "Opcjonalna niestandardowa wiadomość do wysłania do autora"
             include_personal_messages:
               label: "Dołącz osobiste wiadomości"
@@ -195,7 +195,7 @@ pl_PL:
           fields:
             tagger_persona:
               label: "Osobowość AI"
-              description: "Osobowość AI do analizy i tagowania postów"
+              description: "Osobowość AI do analizy i tagowania tematów"
             tag_mode:
               label: "Tryb wyboru tagów"
               description: "Wybierz sposób, w jaki AI wybiera tagi"

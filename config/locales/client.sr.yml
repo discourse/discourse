@@ -618,10 +618,6 @@ sr:
         required: "Morate prihvatiti stavke pre nego što ih možete pregledati."
         claimed_by_you: "Prihvatili ste ovu stavku i možete je pregledati."
         claimed_by_other: "Samo <b>%{username}</b> može pregledati ovu stavku."
-      claim:
-        title: "prihvati ovu temu"
-      unclaim:
-        help: "ukloni prihvat"
       awaiting_approval: "Čeka odobrenje"
       delete: "Obriši"
       settings:
@@ -773,6 +769,7 @@ sr:
         reviewable_post:
           title: "Post"
           noun: "post"
+      user_label: "Korisnik"
       notes:
         delete: "Obriši"
       review_user: "Korisnik"
@@ -1798,8 +1795,6 @@ sr:
         reply_as_new_topic:
           desc: Kreiraj novu temu povezanu na ovu temu
           confirm: Imate novi nacrt teme sačuvan, koji će biti obrisan ako stvorite povezanu temu.
-        create_topic:
-          label: "Nova Tema"
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
@@ -1918,7 +1913,6 @@ sr:
         name: "Obriši"
     topic:
       create: "Nova Tema"
-      create_long: "Otvori novu Temu"
       archive_message:
         title: "Arhiviraj"
       list: "Teme"

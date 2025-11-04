@@ -705,6 +705,7 @@ be:
         reviewable_post:
           title: "Паведамленне"
           noun: "пост"
+      user_label: "Карыстальнік"
       notes:
         delete: "выдаляць"
       review_user: "карыстальнік"
@@ -1351,8 +1352,9 @@ be:
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
-        create_topic:
-          label: "Стварыць новую тэму"
+        create_personal_message:
+          label: "Новае паведамленне"
+          desc: "Напісаць новае асабістае паведамленне"
       ignore: "ігнараваць"
     notifications:
       watching_first_post_label: "Стварыць новую тэму"
@@ -1461,7 +1463,6 @@ be:
         name: "выдаляць"
     topic:
       create: "пачаць новую тэму"
-      create_long: "Стварыць новую тэму"
       archive_message:
         title: "архіў"
       move_to_inbox:

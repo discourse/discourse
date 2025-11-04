@@ -456,6 +456,7 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+      user_label: "Kasutaja"
       notes:
         delete: "Kustuta"
       review_user: "Kasutaja"
@@ -1504,8 +1505,8 @@ et:
         edit: Muuda
         reply_to_topic:
           label: Vasta teemale
-        create_topic:
-          label: "Uus teema"
+        create_personal_message:
+          label: "Uus sõnum"
         shared_draft:
           label: "Jagatud mustand"
       ignore: "Ignoreeri"
@@ -1723,7 +1724,6 @@ et:
         one: "%{count} postitus teemas"
         other: "%{count} postitust teemas"
       create: "Uus teema"
-      create_long: "Loo uus teema"
       open_draft: "Ava mustand"
       private_message: "Alusta sõnumit"
       archive_message:

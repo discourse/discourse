@@ -30,6 +30,12 @@ el:
         do_nothing: "Μην κάνετε τίποτα"
       assignment_description:
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Ανάθεση εκδηλώσεων"
+          assigned: "Όταν ένας χρήστης αναθέτει ένα θέμα"
+          unassigned: "Όταν ένας χρήστης αναιρεί την ανάθεση ενός θέματος"
     search:
       advanced:
         assigned:
