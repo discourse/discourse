@@ -5,10 +5,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { and, eq, not } from "truth-helpers";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
-import { safeInvoke } from "discourse/lib/function-utils";
 import { formatUsername } from "discourse/lib/utilities";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
 
@@ -27,24 +25,75 @@ import scrollIntoView from "discourse/modifiers/scroll-into-view";
 export default class UserAutocompleteResults extends Component {
   static TRIGGER_KEY = "@";
 
+  static RESULT_TYPE_CONFIG = {
+    isUser: {
+      titleKey: "name",
+      hasCustomClasses: true,
+    },
+    isEmail: {
+      titleKey: "username",
+    },
+    isGroup: {
+      titleKey: "full_name",
+    },
+  };
+
   @tracked isInitialRender = true;
 
   @action
   handleResultClick(result, index, event) {
     event.preventDefault();
     event.stopPropagation();
-    safeInvoke(this.args.onSelect, result, index, event);
+    this.args.onSelect(result, index, event);
   }
 
   @action
   handleInsert() {
-    safeInvoke(this.args.onRender, this.args.results);
+    this.args.onRender(this.args.results);
   }
 
   @action
   handleUpdate() {
     this.isInitialRender = false;
-    safeInvoke(this.args.onRender, this.args.results);
+    this.args.onRender(this.args.results);
+  }
+
+  @action
+  shouldScroll(index) {
+    return index === this.args.selectedIndex && !this.isInitialRender;
+  }
+
+  @action
+  shouldSelect(index) {
+    return index === this.args.selectedIndex;
+  }
+
+  getResultConfig(result) {
+    return Object.entries(UserAutocompleteResults.RESULT_TYPE_CONFIG).find(
+      ([key]) => result[key]
+    )?.[1];
+  }
+
+  @action
+  getTitle(result) {
+    const config = this.getResultConfig(result);
+    return result[config.titleKey];
+  }
+
+  @action
+  getItemLinkClasses(result, index) {
+    const config = this.getResultConfig(result);
+    let classes = "";
+
+    if (config.hasCustomClasses && result.cssClasses) {
+      classes = result.cssClasses;
+    }
+
+    if (this.shouldSelect(index)) {
+      classes = classes ? `${classes} selected` : "selected";
+    }
+
+    return classes;
   }
 
   <template>
@@ -55,20 +104,17 @@ export default class UserAutocompleteResults extends Component {
     >
       <ul>
         {{#each @results as |result index|}}
-          {{#if result.isUser}}
-            <li
-              data-index={{result.index}}
-              {{scrollIntoView
-                (and (not this.isInitialRender) (eq index @selectedIndex))
-              }}
+          <li
+            data-index={{result.index}}
+            {{scrollIntoView (this.shouldScroll index)}}
+          >
+            <a
+              href
+              title={{this.getTitle result}}
+              class={{this.getItemLinkClasses result index}}
+              {{on "click" (fn this.handleResultClick result index)}}
             >
-              <a
-                href
-                title={{result.name}}
-                class="{{result.cssClasses}}
-                  {{if (eq index @selectedIndex) 'selected'}}"
-                {{on "click" (fn this.handleResultClick result index)}}
-              >
+              {{#if result.isUser}}
                 {{avatar result imageSize="tiny"}}
                 <span class="text-content">
                   <span class="username">{{formatUsername
@@ -81,46 +127,20 @@ export default class UserAutocompleteResults extends Component {
                 {{#if result.status}}
                   <span class="user-status"></span>
                 {{/if}}
-              </a>
-            </li>
-          {{else if result.isEmail}}
-            <li
-              {{scrollIntoView
-                (and (not this.isInitialRender) (eq index @selectedIndex))
-              }}
-            >
-              <a
-                href
-                title={{result.username}}
-                class={{if (eq index @selectedIndex) "selected"}}
-                {{on "click" (fn this.handleResultClick result index)}}
-              >
+              {{else if result.isEmail}}
                 {{icon "envelope"}}
                 <span class="text-content username">{{formatUsername
                     result.username
                   }}</span>
-              </a>
-            </li>
-          {{else if result.isGroup}}
-            <li
-              {{scrollIntoView
-                (and (not this.isInitialRender) (eq index @selectedIndex))
-              }}
-            >
-              <a
-                href
-                title={{result.full_name}}
-                class={{if (eq index @selectedIndex) "selected"}}
-                {{on "click" (fn this.handleResultClick result index)}}
-              >
+              {{else if result.isGroup}}
                 {{icon "users"}}
                 <span class="text-content">
                   <span class="username">{{result.name}}</span>
                   <span class="name">{{result.full_name}}</span>
                 </span>
-              </a>
-            </li>
-          {{/if}}
+              {{/if}}
+            </a>
+          </li>
         {{/each}}
       </ul>
     </div>
