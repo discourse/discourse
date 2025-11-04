@@ -250,7 +250,11 @@ import { i18n } from "discourse-i18n";
           composerActions.rowByIndex(3).value(),
           "shared_draft"
         );
-        assert.strictEqual(composerActions.rows().length, 4);
+        assert.strictEqual(
+          composerActions.rowByIndex(4).value(),
+          "create_private_message"
+        );
+        assert.strictEqual(composerActions.rows().length, 5);
       });
 
       test("interactions - private message", async function (assert) {
