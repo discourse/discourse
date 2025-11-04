@@ -9,25 +9,22 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
   self.targets = -> { LlmModel.in_use.pluck(:id) }
 
   def call
-    return [] if !SiteSetting.discourse_ai_enabled
+    return no_problem if !SiteSetting.discourse_ai_enabled
 
-    llm_errors
+    model = LlmModel.in_use.find_by(id: target)
+
+    return no_problem if model.blank?
+    return no_problem if model.seeded?
+
+    try_validate(model) { validator.run_test(model) }
   end
 
   private
 
-  def llm_errors
-    return [] if !SiteSetting.discourse_ai_enabled
-    LlmModel.in_use.find_each.filter_map do |model|
-      next if model.seeded?
-      try_validate(model) { validator.run_test(model) }
-    end
-  end
-
   def try_validate(model, &blk)
     begin
       blk.call
-      nil
+      no_problem
     rescue => e
       # Skip problem reporting for rate limiting and temporary service issues
       # These are expected to resolve on their own
@@ -35,7 +32,7 @@ class ProblemCheck::AiLlmStatus < ProblemCheck
         Rails.logger.info(
           "AI LLM Status Check: Rate limit detected for model #{model.display_name} (#{model.id}), skipping problem report",
         )
-        return nil
+        return no_problem
       end
 
       # Log transient errors but still return a problem

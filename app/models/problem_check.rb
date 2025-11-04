@@ -13,7 +13,7 @@ class ProblemCheck
     end
 
     def run_all
-      select(&:enabled?).each { |check| check.each_target { |t| check.run(t) } }
+      select(&:enabled?).each { |check| check.each_target { |t| check.new(t).run } }
     end
 
     private
@@ -165,20 +165,26 @@ class ProblemCheck
   delegate :each_target, to: :class
 
   def self.run(target = NO_TARGET, &)
-    new.run(target, &)
+    new(target).run(&)
   end
+
+  def initialize(target = NO_TARGET)
+    @target = target
+  end
+
+  attr_reader :target
 
   def call
     raise NotImplementedError
   end
 
-  def run(target = NO_TARGET)
+  def run
     if targeted? && (target == NO_TARGET || targets.call.exclude?(target))
       tracker(target).destroy
       return
     end
 
-    problem = target == NO_TARGET ? call : call(target)
+    problem = call
 
     yield(problem) if block_given?
 
@@ -216,7 +222,7 @@ class ProblemCheck
   end
 
   def no_problem
-    []
+    nil
   end
 
   def translation_key

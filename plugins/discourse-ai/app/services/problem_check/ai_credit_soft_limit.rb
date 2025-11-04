@@ -8,24 +8,18 @@ class ProblemCheck::AiCreditSoftLimit < ProblemCheck
   end
 
   def call
-    return [] if !SiteSetting.discourse_ai_enabled
+    return no_problem if !SiteSetting.discourse_ai_enabled
 
-    problems = []
+    model = LlmModel.where("id < 0").includes(:llm_credit_allocation).find_by(id: target)
 
-    LlmModel
-      .where("id < 0")
-      .includes(:llm_credit_allocation)
-      .find_each do |model|
-        next unless model.llm_credit_allocation
+    return no_problem if model.llm_credit_allocation.blank?
 
-        allocation = model.llm_credit_allocation
+    allocation = model.llm_credit_allocation
 
-        if allocation.soft_limit_reached? && !allocation.hard_limit_reached?
-          problems << soft_limit_problem(model, allocation)
-        end
-      end
+    return no_problem if !allocation.soft_limit_reached?
+    return no_problem if allocation.hard_limit_reached?
 
-    problems.compact
+    soft_limit_problem(model, allocation)
   end
 
   private
