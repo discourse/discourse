@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { NativeArray } from "@ember/array";
+import { A } from "@ember/array";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -39,7 +39,7 @@ export default class SignupPageController extends Controller {
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
-  rejectedEmails = NativeArray();
+  rejectedEmails = A();
   prefilledUsername = null;
   maskPassword = true;
   emailValidationVisible = false;
