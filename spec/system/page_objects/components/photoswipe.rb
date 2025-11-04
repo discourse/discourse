@@ -12,6 +12,7 @@ module PageObjects
       PREV_BTN = ".pswp__button--arrow--prev"
       DOWNLOAD_BTN = ".pswp__button--download-image"
       ORIGINAL_IMAGE_BTN = ".pswp__button--original-image"
+      IMAGE_INFO_BTN = ".pswp__button--image-info"
       COUNTER = ".pswp__counter"
       CAPTION = ".pswp__caption"
       CAPTION_TITLE = ".pswp__caption-title"
@@ -38,6 +39,10 @@ module PageObjects
         component.find(PREV_BTN)
       end
 
+      def image_info_button
+        component.find(IMAGE_INFO_BTN)
+      end
+
       def close_button
         component.find(CLOSE_BTN)
       end
@@ -60,6 +65,10 @@ module PageObjects
 
       def has_no_caption?
         component.has_no_css?(CAPTION)
+      end
+
+      def has_no_caption_details?
+        component.has_no_css?(CAPTION_DETAILS)
       end
 
       def has_next_button?
@@ -92,6 +101,10 @@ module PageObjects
 
       def has_no_original_image_button?
         component.has_no_css?(ORIGINAL_IMAGE_BTN)
+      end
+
+      def has_image_info_button?
+        component.has_css?(IMAGE_INFO_BTN)
       end
 
       def has_ui_visible?

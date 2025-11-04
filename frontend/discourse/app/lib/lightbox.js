@@ -131,6 +131,18 @@ export default async function lightbox(elem, siteSettings) {
           });
         },
       });
+
+      lightboxEl.pswp.ui.registerElement({
+        name: "image-info",
+        order: 9,
+        isButton: true,
+        tagName: "a",
+        title: i18n("lightbox.image_info"),
+        html: renderIcon("string", "circle-info", { class: "pswp__icn" }),
+        onClick: () => {
+          lightboxEl.pswp.element.classList.toggle("pswp--caption-expanded");
+        },
+      });
     });
 
     lightboxEl.addFilter("domItemData", (data, el) => {
