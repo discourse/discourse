@@ -69,9 +69,13 @@ export default class UserAutocompleteResults extends Component {
   }
 
   getResultConfig(result) {
-    return Object.entries(UserAutocompleteResults.RESULT_TYPE_CONFIG).find(
-      ([key]) => result[key]
-    )?.[1];
+    for (const [key, config] of Object.entries(
+      UserAutocompleteResults.RESULT_TYPE_CONFIG
+    )) {
+      if (result[key]) {
+        return config;
+      }
+    }
   }
 
   @action
