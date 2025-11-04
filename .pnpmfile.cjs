@@ -40,36 +40,36 @@ if (fs.existsSync(`${discourseRoot}/${oldFrontendPath}`)) {
   }
 }
 
-// const pluginBase = `${discourseRoot}/plugins/`;
-// const cwd = process.cwd();
-// const pluginName =
-//   cwd.startsWith(pluginBase) && cwd.replace(pluginBase, "").split("/", 2)[0];
+const pluginBase = `${discourseRoot}/plugins/`;
+const cwd = process.cwd();
+const pluginName =
+  cwd.startsWith(pluginBase) && cwd.replace(pluginBase, "").split("/", 2)[0];
 
-// if (
-//   pluginName &&
-//   fs.existsSync(`${discourseRoot}/plugins/${pluginName}/package.json`) &&
-//   !process.argv.includes("--ignore-workspace")
-// ) {
-//   console.log(
-//     "> pnpm was run inside a plugin directory. Re-executing with --ignore-workspace..."
-//   );
+if (
+  pluginName &&
+  fs.existsSync(`${discourseRoot}/plugins/${pluginName}/pnpm-lock.yaml`) &&
+  !process.argv.includes("--ignore-workspace")
+) {
+  console.log(
+    "> pnpm was run inside a plugin directory. Re-executing with --ignore-workspace..."
+  );
 
-//   const indexOfPnpm = process.argv.findIndex(
-//     (a) => a.includes("/pnpm") || a.endsWith("pnpm")
-//   );
-//   const newArgs = [...process.argv];
-//   newArgs.splice(indexOfPnpm + 1, 0, "--ignore-workspace");
+  const indexOfPnpm = process.argv.findIndex(
+    (a) => a.includes("/pnpm") || a.endsWith("pnpm")
+  );
+  const newArgs = [...process.argv];
+  newArgs.splice(indexOfPnpm + 1, 0, "--ignore-workspace");
 
-//   try {
-//     execFileSync(newArgs[0], newArgs.slice(1), {
-//       stdio: "inherit",
-//     });
-//   } catch (e) {
-//     if (e.status) {
-//       process.exit(e.status);
-//     }
-//     throw e;
-//   }
+  try {
+    execFileSync(newArgs[0], newArgs.slice(1), {
+      stdio: "inherit",
+    });
+  } catch (e) {
+    if (e.status) {
+      process.exit(e.status);
+    }
+    throw e;
+  }
 
-//   process.exit(0);
-// }
+  process.exit(0);
+}
