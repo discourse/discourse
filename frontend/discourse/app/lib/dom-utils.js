@@ -4,6 +4,7 @@
  * when the element loses focus.
  *
  * @param {HTMLElement} element - The DOM element to force focus on
+ * @throws {TypeError} If element is not a valid DOM element
  * @example
  * // Make a div focusable and focus it
  * const div = document.querySelector('#myDiv');
@@ -15,9 +16,15 @@
  * forceFocus(input);
  */
 export function forceFocus(element) {
-  // we want to ensure to capture the value of the tabindex attribute which may be different from the tabindex
-  // property of the element.
-  const isFocusable = element.getAttribute("tabindex") !== null;
+  // Validate input
+  if (!element || !(element instanceof Element)) {
+    throw new TypeError("forceFocus requires a valid DOM element");
+  }
+
+  // Check if element is naturally focusable or has tabindex
+  const isNaturallyFocusable = isElementNaturallyFocusable(element);
+  const hasTabindex = element.getAttribute("tabindex") !== null;
+  const isFocusable = isNaturallyFocusable || hasTabindex;
 
   if (!isFocusable) {
     // force the attribute to be -1 so that the element is focusable
@@ -30,7 +37,7 @@ export function forceFocus(element) {
     element.addEventListener(
       "blur",
       () => {
-        // ensure tabindex it's still -1 before removing it
+        // Only remove if we added it and it hasn't been changed
         if (element.getAttribute("tabindex") === "-1") {
           element.removeAttribute("tabindex");
         }
@@ -42,6 +49,34 @@ export function forceFocus(element) {
       }
     );
   }
+}
+
+/**
+ * Checks if an element is naturally focusable without tabindex
+ * @param {Element} element - The element to check
+ * @returns {boolean} True if element is naturally focusable
+ */
+function isElementNaturallyFocusable(element) {
+  const tagName = element.tagName.toLowerCase();
+
+  // Check for naturally focusable elements
+  if (["input", "textarea", "select", "button"].includes(tagName)) {
+    return !element.disabled;
+  }
+
+  if (tagName === "a" || tagName === "area") {
+    return element.hasAttribute("href");
+  }
+
+  if (["iframe", "object", "embed"].includes(tagName)) {
+    return true;
+  }
+
+  if (element.hasAttribute("contenteditable")) {
+    return element.getAttribute("contenteditable") !== "false";
+  }
+
+  return false;
 }
 
 function offset(element) {
