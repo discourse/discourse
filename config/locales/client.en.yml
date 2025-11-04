@@ -749,9 +749,9 @@ en:
         claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
         automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
-        title: "claim this topic"
+        title: "Claim this topic"
       unclaim:
-        help: "remove this claim"
+        help: "Remove this claim"
       awaiting_approval: "Awaiting Approval"
       delete: "Delete"
       settings:
