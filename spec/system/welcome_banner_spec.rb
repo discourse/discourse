@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Welcome banner", type: :system do
-  fab!(:current_user, :user)
+  fab!(:current_user) { Fabricate(:user, seen_before: true) }
   let(:banner) { PageObjects::Components::WelcomeBanner.new }
   let(:search_page) { PageObjects::Pages::Search.new }
 
@@ -19,10 +19,19 @@ describe "Welcome banner", type: :system do
       visit "/"
       expect(banner).to be_visible
       expect(banner).to have_anonymous_title
-      current_user.update!(previous_visit_at: 1.day.ago)
       sign_in(current_user)
       visit "/"
       expect(banner).to have_logged_in_title(current_user.username)
+    end
+
+    context "for new users who have not visited before" do
+      fab!(:current_user, :user)
+
+      it "shows a new user title" do
+        sign_in(current_user)
+        visit "/"
+        expect(banner).to have_new_user_title(current_user.username)
+      end
     end
 
     context "with subheader translations" do
