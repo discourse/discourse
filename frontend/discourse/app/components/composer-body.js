@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { cancel, schedule } from "@ember/runloop";
+import { dasherize } from "@ember/string";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
@@ -27,7 +28,7 @@ export default class ComposerBody extends Component {
 
   @discourseComputed("composer.action")
   prefixedComposerAction(action) {
-    return action ? `composer-action-${action}` : "";
+    return action ? `composer-action-${dasherize(action)}` : "";
   }
 
   @discourseComputed("currentUser.primary_group_name")

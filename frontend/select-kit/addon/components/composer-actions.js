@@ -141,9 +141,9 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     }
 
     if (
+      this.action === REPLY &&
       this.action !== CREATE_TOPIC &&
       this.action !== CREATE_SHARED_DRAFT &&
-      this.action === REPLY &&
       this.topic &&
       !this.topic.isPrivateMessage &&
       !this.isEditing &&
