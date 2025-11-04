@@ -68,6 +68,7 @@ export default class PostTranslationsModal extends Component {
         model: {
           postLocale: originalLocale,
           rawPost: raw,
+          translationText: () => this.composer.model?.reply,
         },
       },
       post: this.args.model.post,

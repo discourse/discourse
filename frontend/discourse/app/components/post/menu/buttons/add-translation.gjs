@@ -71,6 +71,7 @@ export default class PostMenuAddTranslationButton extends Component {
         model: {
           postLocale: this.args.post.locale,
           rawPost: raw,
+          translationText: () => this.composer.model?.reply,
         },
       },
       post: this.args.post,
