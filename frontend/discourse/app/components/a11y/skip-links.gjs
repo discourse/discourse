@@ -12,6 +12,9 @@ class A11ySkipLinksContainer extends Component {
         class="skip-links"
         aria-label={{i18n "skip_links_label"}}
       >
+        <div>
+          {{! wrapper used to render the skip links }}
+        </div>
         <a href="#main-container" class="skip-link">
           {{i18n "skip_to_main_content"}}
         </a>
@@ -20,43 +23,18 @@ class A11ySkipLinksContainer extends Component {
   </template>
 }
 
-class A11ySkipLinksWrapper extends Component {
-  wrapperElement;
-
-  constructor() {
-    super(...arguments);
-
-    // the element is created manually to render all the items in one phase
-    const element = document.createElement("div");
-    const container = document.querySelector("#skip-links__container");
-
-    // prepend the wrapper to the container
-    container.prepend(element);
-    this.wrapperElement = element;
-  }
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.wrapperElement.remove();
-    this.wrapperElement = null;
-  }
-
-  <template>
-    {{#in-element this.wrapperElement}}
-      {{yield}}
-    {{/in-element}}
-  </template>
-}
-
 export default class A11ySkipLinks extends Component {
   static Container = A11ySkipLinksContainer;
 
   @service a11y;
 
+  wrapperElement = document.querySelector("#skip-links__container > div");
+
   <template>
     {{#if this.a11y.showSkipLinks}}
-      {{! the nested wrapping will force the wrapper elements to be recreated when `showSkipLinks` changes }}
-      <A11ySkipLinksWrapper>{{yield}}</A11ySkipLinksWrapper>
+      {{#in-element this.wrapperElement insertAfter=null}}
+        {{yield}}
+      {{/in-element}}
     {{/if}}
   </template>
 }
