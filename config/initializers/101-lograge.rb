@@ -108,6 +108,27 @@ if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
               database: RailsMultisite::ConnectionManagement.current_db,
             }
 
+            if ENV["LOGRAGE_INCLUDE_HTTP_ACCEPT_LANGUAGE_HEADER"] == "1" &&
+                 (
+                   http_accept_language_request_header =
+                     event.payload[:headers]["HTTP_ACCEPT_LANGUAGE"]
+                 ).present?
+              output["request.headers.http_accept_language"] = {}
+              http_accept_language_request_header
+                .split(",")
+                .each do |lang|
+                  lang_code, lang_quality = lang.strip.split(";q=")
+
+                  output["request.headers.http_accept_language"][lang_code] = (
+                    if lang_quality
+                      lang_quality.to_f
+                    else
+                      1.0
+                    end
+                  )
+                end
+            end
+
             if data = (Thread.current[:_method_profiler] || event.payload[:timings])
               if sql = data[:sql]
                 output[:db] = sql[:duration] * 1000
