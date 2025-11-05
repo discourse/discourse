@@ -37,33 +37,25 @@ module DiscourseAi
         localization
       end
 
-      def self.has_relocalize_quota?(post, locale, skip_incr: false)
-        return false if get_relocalize_quota(post, locale).to_i >= 2
-
-        incr_relocalize_quota(post, locale) unless skip_incr
-        true
+      # Checks if a post has remaining quota for re-localization attempts.
+      # Uses atomic Redis INCR to prevent race conditions.
+      # The quota key expires after 24 hours, allowing retries after that period.
+      #
+      # @param post_id [Integer] The post ID
+      # @param locale [String] The target locale
+      # @return [Boolean] true if quota is available (attempts <= 2), false if exhausted
+      def self.has_relocalize_quota?(post_id, locale)
+        key = relocalize_key(post_id, locale)
+        count = Discourse.redis.incr(key)
+        # Only set expiry on first increment to avoid resetting the TTL on subsequent checks
+        Discourse.redis.expire(key, 1.day.to_i) if count == 1
+        count <= 2
       end
 
       private
 
-      def self.relocalize_key(post, locale)
-        "post_relocalized_#{post.id}_#{locale}"
-      end
-
-      def self.get_relocalize_quota(post, locale)
-        Discourse.redis.get(relocalize_key(post, locale)).to_i || 0
-      end
-
-      def self.incr_relocalize_quota(post, locale)
-        key = relocalize_key(post, locale)
-
-        if (count = get_relocalize_quota(post, locale)).zero?
-          Discourse.redis.set(key, 1, ex: 1.day.to_i)
-        else
-          ttl = Discourse.redis.ttl(key)
-          incr = count.to_i + 1
-          Discourse.redis.set(key, incr, ex: ttl)
-        end
+      def self.relocalize_key(post_id, locale)
+        "post_relocalized_#{post_id}_#{locale}"
       end
     end
   end

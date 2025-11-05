@@ -236,4 +236,49 @@ describe Jobs::LocalizeTopics do
       job.execute({ limit: 10 })
     end
   end
+
+  describe "quota checking" do
+    fab!(:topic_to_translate) { Fabricate(:topic, locale: "es") }
+
+    before { SiteSetting.content_localization_supported_locales = "ja" }
+
+    it "skips topics that have exhausted their relocalization quota" do
+      Discourse.redis.set(
+        DiscourseAi::Translation::TopicLocalizer.relocalize_key(topic_to_translate.id, "ja"),
+        2,
+        ex: 10,
+      )
+
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(topic_to_translate, any_parameters)
+        .never
+
+      job.execute({ limit: 10 })
+    end
+
+    it "processes topics that have available quota" do
+      Discourse.redis.set(
+        DiscourseAi::Translation::TopicLocalizer.relocalize_key(topic_to_translate.id, "ja"),
+        1,
+        ex: 10,
+      )
+
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(topic_to_translate, "ja")
+        .once
+
+      job.execute({ limit: 10 })
+    end
+
+    it "processes topics that have never been attempted before" do
+      DiscourseAi::Translation::TopicLocalizer
+        .expects(:localize)
+        .with(topic_to_translate, "ja")
+        .once
+
+      job.execute({ limit: 10 })
+    end
+  end
 end

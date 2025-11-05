@@ -234,4 +234,43 @@ describe Jobs::LocalizePosts do
       job.execute({ limit: 10 })
     end
   end
+
+  describe "quota checking" do
+    fab!(:post_to_translate) { Fabricate(:post, locale: "es") }
+
+    before { SiteSetting.content_localization_supported_locales = "ja" }
+
+    it "skips posts that have exhausted their relocalization quota" do
+      Discourse.redis.set(
+        DiscourseAi::Translation::PostLocalizer.relocalize_key(post_to_translate.id, "ja"),
+        2,
+        ex: 10,
+      )
+
+      DiscourseAi::Translation::PostLocalizer
+        .expects(:localize)
+        .with(post_to_translate, any_parameters)
+        .never
+
+      job.execute({ limit: 10 })
+    end
+
+    it "processes posts that have available quota" do
+      Discourse.redis.set(
+        DiscourseAi::Translation::PostLocalizer.relocalize_key(post_to_translate.id, "ja"),
+        1,
+        ex: 10,
+      )
+
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post_to_translate, "ja").once
+
+      job.execute({ limit: 10 })
+    end
+
+    it "processes posts that have never been attempted before" do
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post_to_translate, "ja").once
+
+      job.execute({ limit: 10 })
+    end
+  end
 end

@@ -128,4 +128,38 @@ describe DiscourseAi::Translation::TopicLocalizer do
       }.to_not change { TopicLocalization.count }
     end
   end
+
+  describe ".has_relocalize_quota?" do
+    fab!(:topic)
+
+    it "returns false if quota is already 2 or more" do
+      Discourse.redis.set(described_class.relocalize_key(topic.id, "en"), 2, ex: 10)
+      expect(described_class.has_relocalize_quota?(topic.id, "en")).to eq(false)
+
+      Discourse.redis.set(described_class.relocalize_key(topic.id, "en"), 3, ex: 10)
+      expect(described_class.has_relocalize_quota?(topic.id, "en")).to eq(false)
+    end
+
+    it "returns true if quota is less than 2 and atomically increments quota" do
+      Discourse.redis.set(described_class.relocalize_key(topic.id, "en"), 1, ex: 10)
+
+      expect(described_class.has_relocalize_quota?(topic.id, "en")).to eq(true)
+      expect(Discourse.redis.get(described_class.relocalize_key(topic.id, "en"))).to eq("2")
+    end
+
+    it "atomically increments quota if it was not set before" do
+      result = described_class.has_relocalize_quota?(topic.id, "en")
+
+      expect(result).to eq(true)
+      expect(Discourse.redis.get(described_class.relocalize_key(topic.id, "en"))).to eq("1")
+    end
+
+    it "sets expiry on first increment" do
+      described_class.has_relocalize_quota?(topic.id, "en")
+
+      ttl = Discourse.redis.ttl(described_class.relocalize_key(topic.id, "en"))
+      expect(ttl).to be > 0
+      expect(ttl).to be <= 1.day.to_i
+    end
+  end
 end

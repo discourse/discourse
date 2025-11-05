@@ -169,30 +169,33 @@ describe DiscourseAi::Translation::PostLocalizer do
     fab!(:post)
 
     it "returns false if quota is already 2 or more" do
-      Discourse.redis.set(described_class.relocalize_key(post, "en"), 2, ex: 10)
-      expect(described_class.has_relocalize_quota?(post, "en")).to eq(false)
+      Discourse.redis.set(described_class.relocalize_key(post.id, "en"), 2, ex: 10)
+      expect(described_class.has_relocalize_quota?(post.id, "en")).to eq(false)
 
-      Discourse.redis.set(described_class.relocalize_key(post, "en"), 3, ex: 10)
-      expect(described_class.has_relocalize_quota?(post, "en")).to eq(false)
+      Discourse.redis.set(described_class.relocalize_key(post.id, "en"), 3, ex: 10)
+      expect(described_class.has_relocalize_quota?(post.id, "en")).to eq(false)
     end
 
-    it "returns true if quota is less than 2 and increments quota" do
-      Discourse.redis.set(described_class.relocalize_key(post, "en"), 1, ex: 10)
+    it "returns true if quota is less than 2 and atomically increments quota" do
+      Discourse.redis.set(described_class.relocalize_key(post.id, "en"), 1, ex: 10)
 
-      expect(described_class.has_relocalize_quota?(post, "en")).to eq(true)
+      expect(described_class.has_relocalize_quota?(post.id, "en")).to eq(true)
+      expect(Discourse.redis.get(described_class.relocalize_key(post.id, "en"))).to eq("2")
     end
 
-    it "does not increment quota if skip_incr is true" do
-      Discourse.redis.set(described_class.relocalize_key(post, "en"), 1, ex: 10)
+    it "atomically increments quota if it was not set before" do
+      result = described_class.has_relocalize_quota?(post.id, "en")
 
-      described_class.has_relocalize_quota?(post, "en", skip_incr: true)
-      expect(Discourse.redis.get(described_class.relocalize_key(post, "en"))).to eq("1")
+      expect(result).to eq(true)
+      expect(Discourse.redis.get(described_class.relocalize_key(post.id, "en"))).to eq("1")
     end
 
-    it "increments quota if it was not set before" do
-      described_class.has_relocalize_quota?(post, "en")
+    it "sets expiry on first increment" do
+      described_class.has_relocalize_quota?(post.id, "en")
 
-      expect(Discourse.redis.get(described_class.relocalize_key(post, "en"))).to eq("1")
+      ttl = Discourse.redis.ttl(described_class.relocalize_key(post.id, "en"))
+      expect(ttl).to be > 0
+      expect(ttl).to be <= 1.day.to_i
     end
   end
 end

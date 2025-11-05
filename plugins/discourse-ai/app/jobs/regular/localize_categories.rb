@@ -38,6 +38,14 @@ module Jobs
           break if remaining_limit <= 0
           next if LocaleNormalizer.is_same?(locale, category.locale)
 
+          unless DiscourseAi::Translation::CategoryLocalizer.has_relocalize_quota?(
+                   category.id,
+                   locale,
+                 )
+            remaining_limit -= 1
+            next
+          end
+
           begin
             DiscourseAi::Translation::CategoryLocalizer.localize(category, locale)
           rescue FinalDestination::SSRFDetector::LookupFailedError

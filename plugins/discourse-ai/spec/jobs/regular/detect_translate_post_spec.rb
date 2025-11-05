@@ -87,7 +87,7 @@ describe Jobs::DetectTranslatePost do
     before do
       DiscourseAi::Translation::PostLocalizer
         .expects(:has_relocalize_quota?)
-        .with(post, "ja")
+        .with(post.id, "ja")
         .returns(false)
     end
 

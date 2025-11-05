@@ -27,6 +27,27 @@ module DiscourseAi
         localization.save!
         localization
       end
+
+      # Checks if a category has remaining quota for re-localization attempts.
+      # Uses atomic Redis INCR to prevent race conditions.
+      # The quota key expires after 24 hours, allowing retries after that period.
+      #
+      # @param category_id [Integer] The category ID
+      # @param locale [String] The target locale
+      # @return [Boolean] true if quota is available (attempts <= 2), false if exhausted
+      def self.has_relocalize_quota?(category_id, locale)
+        key = relocalize_key(category_id, locale)
+        count = Discourse.redis.incr(key)
+        # Only set expiry on first increment to avoid resetting the TTL on subsequent checks
+        Discourse.redis.expire(key, 1.day.to_i) if count == 1
+        count <= 2
+      end
+
+      private
+
+      def self.relocalize_key(category_id, locale)
+        "category_relocalized_#{category_id}_#{locale}"
+      end
     end
   end
 end

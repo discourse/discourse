@@ -176,4 +176,49 @@ describe Jobs::LocalizeCategories do
 
     job.execute({ limit: 10 })
   end
+
+  describe "quota checking" do
+    fab!(:category_to_translate) { Fabricate(:category, locale: "es") }
+
+    before { SiteSetting.content_localization_supported_locales = "ja" }
+
+    it "skips categories that have exhausted their relocalization quota" do
+      Discourse.redis.set(
+        DiscourseAi::Translation::CategoryLocalizer.relocalize_key(category_to_translate.id, "ja"),
+        2,
+        ex: 10,
+      )
+
+      DiscourseAi::Translation::CategoryLocalizer
+        .expects(:localize)
+        .with(category_to_translate, any_parameters)
+        .never
+
+      job.execute({ limit: 10 })
+    end
+
+    it "processes categories that have available quota" do
+      Discourse.redis.set(
+        DiscourseAi::Translation::CategoryLocalizer.relocalize_key(category_to_translate.id, "ja"),
+        1,
+        ex: 10,
+      )
+
+      DiscourseAi::Translation::CategoryLocalizer
+        .expects(:localize)
+        .with(category_to_translate, "ja")
+        .once
+
+      job.execute({ limit: 10 })
+    end
+
+    it "processes categories that have never been attempted before" do
+      DiscourseAi::Translation::CategoryLocalizer
+        .expects(:localize)
+        .with(category_to_translate, "ja")
+        .once
+
+      job.execute({ limit: 10 })
+    end
+  end
 end

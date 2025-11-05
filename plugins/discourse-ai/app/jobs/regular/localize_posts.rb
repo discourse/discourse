@@ -37,6 +37,8 @@ module Jobs
         next if posts.empty?
 
         posts.each do |post|
+          next unless DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post.id, locale)
+
           begin
             DiscourseAi::Translation::PostLocalizer.localize(post, locale)
           rescue FinalDestination::SSRFDetector::LookupFailedError
