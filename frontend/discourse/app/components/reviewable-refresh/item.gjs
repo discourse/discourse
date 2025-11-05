@@ -323,6 +323,10 @@ export default class ReviewableItem extends Component {
       return "review.queued_post_label";
     }
 
+    if (type === "ReviewableChatMessage") {
+      return "review.chat_flagged_as";
+    }
+
     if (createdFromFlag) {
       return "review.post_flagged_as";
     }

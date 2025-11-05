@@ -454,6 +454,7 @@ en:
 
       reviewable:
         type: "Chat message"
+        message_in_channel: "Channel"
 
       reactions:
         only_you: "<span>You reacted with </span>:%{emoji}:"
