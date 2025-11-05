@@ -9,10 +9,12 @@ pre-commit:
     - rebase
   commands:
     rubocop:
-      glob: "*.{rb,rake,thor}"
+      glob: "*"
+      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
       run: bundle exec rubocop --force-exclusion {staged_files}
     syntax_tree:
-      glob: "*.{rb,rake,thor}"
+      glob: "*"
+      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
       run: bundle exec stree check Gemfile {staged_files}
     prettier:
       glob: "*.{js,gjs,hbs,scss,css,cjs,mjs}"
@@ -59,10 +61,12 @@ fix-staged:
       include: "app/assets/stylesheets|plugins/.+?/assets/stylesheets|themes"
       run: pnpm stylelint --fix {staged_files}
     rubocop:
-      glob: "*.{rb,rake,thor}"
+      glob: "*"
+      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
       run: bundle exec rubocop --force-exclusion -A {staged_files}
     syntax_tree:
-      glob: "*.{rb,rake,thor}"
+      glob: "*"
+      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
       run: bundle exec stree write Gemfile {staged_files}
 
 lints:
@@ -88,4 +92,4 @@ lints:
       glob: "**/{client,server}.en.yml"
       run: bundle exec ruby script/i18n_lint.rb {all_files}
     glint:
-      run: pnpm glint -p jsconfig.json --noEmit
+      run: pnpm lint:glint
