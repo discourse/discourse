@@ -57,10 +57,6 @@ class TopicSkipLinks extends Component {
       return;
     }
 
-    if (this.#tryFocusSelector(selector)) {
-      return;
-    }
-
     try {
       await this.#waitForSelectorWithTimeout(selector, timeout);
       this.#tryFocusSelector(selector);
