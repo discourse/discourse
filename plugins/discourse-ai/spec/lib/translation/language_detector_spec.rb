@@ -18,9 +18,21 @@ describe DiscourseAi::Translation::LanguageDetector do
     let(:llm_response) { "en-US" }
 
     it "creates the correct prompt" do
+      expected_system_prompt = DiscourseAi::Personas::LocaleDetector.new.system_prompt
+
       allow(DiscourseAi::Completions::Prompt).to receive(:new).with(
-        persona.system_prompt,
-        messages: [{ type: :user, content: "meow" }],
+        expected_system_prompt,
+        messages: [
+          { type: :user, content: "Can you tell me what '私の世界で一番好きな食べ物はちらし丼です' means?" },
+          { type: :model, content: "en" },
+          {
+            type: :user,
+            content:
+              "[quote]\nNon smettere mai di credere nella bellezza dei tuoi sogni. Anche quando tutto sembra perduto, c'è sempre una luce che aspetta di essere trovata.\nOgni passo, anche il più piccolo, ti avvicina a ciò che desideri. La forza che cerchi è già dentro di te.\n[/quote]\n¿Cuál es el mensaje principal de esta cita?",
+          },
+          { type: :model, content: "es" },
+          { type: :user, content: "meow" },
+        ],
         post_id: nil,
         topic_id: nil,
       ).and_call_original

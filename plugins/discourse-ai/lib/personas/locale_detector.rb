@@ -34,17 +34,20 @@ module DiscourseAi
 
           5. Avoid using `und` and prefer `en` over `en-US` or `en-GB` unless the text specifically indicates a regional variant.
 
-          Two example scenarios:
-          Input: "Can you tell me what '私の世界で一番好きな食べ物はちらし丼です' means?"
-          Output: "en"
-
-          Input: [quote]\nNon smettere mai di credere nella bellezza dei tuoi sogni. Anche quando tutto sembra perduto, c'è sempre una luce che aspetta di essere trovata.\nOgni passo, anche il più piccolo, ti avvicina a ciò che desideri. La forza che cerchi è già dentro di te.\n[/quote]\n¿Cuál es el mensaje principal de esta cita?
-          Output: "es"
-
           Important: Base your analysis solely on the provided text. Do not use any external information or make assumptions about the text's origin or context beyond what is explicitly provided.
 
           Your response must be a language code, and nothing else. Do not wrap your response in quotes or any other characters.
         PROMPT
+      end
+
+      def examples
+        [
+          ["Can you tell me what '私の世界で一番好きな食べ物はちらし丼です' means?", "en"],
+          [
+            "[quote]\nNon smettere mai di credere nella bellezza dei tuoi sogni. Anche quando tutto sembra perduto, c'è sempre una luce che aspetta di essere trovata.\nOgni passo, anche il più piccolo, ti avvicina a ciò che desideri. La forza che cerchi è già dentro di te.\n[/quote]\n¿Cuál es el mensaje principal de esta cita?",
+            "es",
+          ],
+        ]
       end
 
       def temperature
