@@ -2697,6 +2697,7 @@ it:
         select: "Seleziona la traduzione"
         save: "Salva la traduzione"
         original_content: "Contenuto del messaggio originale"
+        translation: "Traduzione"
         placeholder: "Inserisci qui la traduzione del messaggio..."
       group_mentioned_limit:
         one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Non ci saranno notifiche."

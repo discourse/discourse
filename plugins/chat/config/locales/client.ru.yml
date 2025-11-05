@@ -498,6 +498,7 @@ ru:
           topic: "Тема"
       reviewable:
         type: "Сообщение чата"
+        message_in_channel: "Канал"
       reactions:
         only_you: "<span>Вы отреагировали с эмодзи</span>:%{emoji}:"
         you_and_single_user: "<span>Вы и %{username} отреагировали с эмодзи </span>:%{emoji}:"

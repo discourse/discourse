@@ -474,6 +474,7 @@ pl_PL:
           topic: "Temat"
       reviewable:
         type: "Wiadomość na czacie"
+        message_in_channel: "Kanał"
       reactions:
         only_you: "<span>Zareagowałeś za pomocą </span>:%{emoji}:"
         you_and_single_user: "<span>Ty i %{username} zareagowaliście za pomocą </span>:%{emoji}:"

@@ -2979,6 +2979,7 @@ he:
         select: "בחירת תרגום"
         save: "שמירת תרגום"
         original_content: "תוכן פוסט מקורי"
+        translation: "תרגום"
         placeholder: "נא למלא כאן תרגום לפוסט…"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."

@@ -105,6 +105,8 @@ uk:
           title: "Значки заголовків"
         spinners:
           title: "Спінери"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Порожній стан"
         tooltips:

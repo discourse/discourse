@@ -485,6 +485,7 @@ sk:
           topic: "Témy"
       reviewable:
         type: "Chatová správa"
+        message_in_channel: "Kanál"
       reactions:
         only_you: "<span>Reagovali ste na </span>:%{emoji}:"
         you_and_single_user: "<span>Vy a %{username} ste reagovali pomocou </span>:%{emoji}:"
