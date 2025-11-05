@@ -120,6 +120,7 @@ export default class AdminEmbeddingHostForm extends Component {
               <form.Field
                 @name="user"
                 @title={{i18n "admin.embedding.post_author"}}
+                @description={{i18n "admin.embedding.post_author_description"}}
                 as |field|
               >
                 <field.Custom>
