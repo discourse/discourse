@@ -266,11 +266,11 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
+        run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
+        run: bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
 
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
