@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+# rubocop:disable Lint/OrAssignmentToConstant
 
-THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git" unless defined?(
+THEME_GIT_URL ||= "https://github.com/discourse/discourse-search-banner.git" unless defined?(
   THEME_GIT_URL
 )
-REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead] unless defined?(
+REQUIRED_TRANSLATION_KEYS ||= %w[search_banner.headline search_banner.subhead] unless defined?(
   REQUIRED_TRANSLATION_KEYS
 )
 
