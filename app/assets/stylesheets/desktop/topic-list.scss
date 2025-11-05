@@ -1,5 +1,27 @@
 @use "lib/viewport";
 
+@mixin hide-posters {
+  width: 2em;
+  text-align: center;
+
+  a:first-child .avatar.latest:not(.single) {
+    top: 0;
+    left: 0;
+  }
+
+  a:not(.latest) {
+    display: none;
+  }
+
+  a.latest {
+    width: 100%;
+
+    img {
+      margin: 0 auto;
+    }
+  }
+}
+
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -103,6 +125,18 @@
         color: var(--primary-med-or-secondary-med);
         line-height: $td-posters-more-lh;
         font-size: var(--font-down-1);
+      }
+    }
+
+    @include viewport.until(md) {
+      @include hide-posters;
+    }
+  }
+
+  @include viewport.until(lg) {
+    .has-sidebar-page & {
+      .posters {
+        @include hide-posters;
       }
     }
   }
@@ -235,31 +269,6 @@
     // reduce width for more title space
     .posts {
       width: 3em;
-    }
-
-    .posters {
-      width: 2em;
-      text-align: center;
-    }
-
-    // show only the first poster
-    .topic-list-data.posters {
-      a:first-child .avatar.latest:not(.single) {
-        top: 0;
-        left: 0;
-      }
-
-      a:not(.latest) {
-        display: none;
-      }
-
-      a.latest {
-        width: 100%;
-
-        img {
-          margin: 0 auto;
-        }
-      }
     }
   }
 }
