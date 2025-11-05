@@ -167,4 +167,49 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
       expect(find("#hashtag-css-generator", visible: false).text(:all)).not_to include(css_class)
     end
   end
+
+  describe "using channel hashtags in the topic composer" do
+    it "renders the selected channel hashtag correctly in the topic composer preview" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      topic_page.type_in_composer("something #rando")
+      expect(page).to have_css(
+        ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
+        count: 1,
+      )
+      find(".d-icon-comment.hashtag-color--channel-#{channel2.id}").find(:xpath, "..").click
+      expect(topic_page.composer.preview).to have_css(
+        ".hashtag-cooked .d-icon-comment.hashtag-color--channel-#{channel2.id}",
+      )
+    end
+
+    it "renders the selected channel hashtag correctly in the topic rich composer" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      topic_page.composer.toggle_rich_editor
+      topic_page.type_in_composer("something #rando")
+      expect(page).to have_css(
+        ".hashtag-autocomplete .hashtag-autocomplete__option .hashtag-autocomplete__link",
+        count: 1,
+      )
+      find(".d-icon-comment.hashtag-color--channel-#{channel2.id}").find(:xpath, "..").click
+      expect(topic_page.composer.rich_editor).to have_css(
+        ".hashtag-cooked .d-icon-comment.hashtag-color--channel-#{channel2.id}",
+      )
+    end
+
+    it "cooks the post with the channel hashtag on submit" do
+      topic_page.visit_topic_and_open_composer(topic)
+      expect(topic_page).to have_expanded_composer
+      topic_page.type_in_composer("something #random is what i am typing")
+      topic_page.send_reply
+
+      expect(topic_page).to have_post_number(2)
+      topic_page.within_post(2) do
+        expect(page).to have_css(
+          ".hashtag-cooked .d-icon-comment.hashtag-color--channel-#{channel2.id}",
+        )
+      end
+    end
+  end
 end
