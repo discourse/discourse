@@ -6,7 +6,6 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { and, eq, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import concatClass from "discourse/helpers/concat-class";
@@ -17,6 +16,7 @@ import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import Post from "./post";
 import PostGap from "./post/gap";
+import PostLoadMoreAccessible from "./post/load-more-accessible";
 import PostPlaceholder from "./post/placeholder";
 import PostSmallAction from "./post/small-action";
 import PostTimeGap from "./post/time-gap";
@@ -78,6 +78,14 @@ export default class PostStream extends Component {
 
   get lastAvailablePost() {
     return this.posts.at(-1);
+  }
+
+  @cached
+  get existingPostNumbers() {
+    return this.posts
+      .filter((post) => !this.isPlaceholder(post))
+      .map((post) => post.post_number)
+      .filter((num) => !isNaN(num));
   }
 
   @cached
@@ -247,7 +255,15 @@ export default class PostStream extends Component {
       }}
     >
       {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
-        <LoadMore @action={{fn this.loadMoreAbove this.firstAvailablePost}} />
+        <PostLoadMoreAccessible
+          @action={{fn this.loadMoreAbove this.firstAvailablePost}}
+          @canLoadMore={{@postStream.canPrependMore}}
+          @direction="above"
+          @existingPostNumbers={{this.existingPostNumbers}}
+          @firstAvailablePost={{this.firstAvailablePost}}
+          @lastAvailablePost={{this.lastAvailablePost}}
+          @postStream={{@postStream}}
+        />
       {{/if}}
 
       {{#each this.postTuples key="post.id" as |tuple index|}}
@@ -280,16 +296,19 @@ export default class PostStream extends Component {
                 post above=this.cloakAbove below=this.cloakBelow
               )
               (eq this.keyboardSelectedPostNumber post.post_number)
-              as |PostComponent cloakingData keyboardSelected|
+              (concat "post_" post.post_number)
+              as |PostComponent cloakingData keyboardSelected postId|
             }}
               <PostComponent
-                id={{concat "post_" post.post_number}}
+                id={{postId}}
                 class={{concatClass
                   (if cloakingData.active "post-stream--cloaked")
                   (if keyboardSelected "selected")
                 }}
                 style={{cloakingData.style}}
                 @cloaked={{cloakingData.active}}
+                {{! template-lint-disable no-duplicate-id }}
+                @elementId={{postId}}
                 @post={{post}}
                 @prevPost={{previousPost}}
                 @nextPost={{nextPost}}
@@ -354,7 +373,15 @@ export default class PostStream extends Component {
 
       {{#unless @postStream.loadingBelow}}
         {{#if @postStream.canAppendMore}}
-          <LoadMore @action={{fn this.loadMoreBelow this.lastAvailablePost}} />
+          <PostLoadMoreAccessible
+            @action={{fn this.loadMoreBelow this.lastAvailablePost}}
+            @canLoadMore={{@postStream.canAppendMore}}
+            @direction="below"
+            @existingPostNumbers={{this.existingPostNumbers}}
+            @firstAvailablePost={{this.firstAvailablePost}}
+            @lastAvailablePost={{this.lastAvailablePost}}
+            @postStream={{@postStream}}
+          />
         {{else}}
           <div
             class="post-stream__bottom-boundary"
