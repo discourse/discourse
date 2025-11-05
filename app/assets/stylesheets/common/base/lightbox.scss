@@ -127,6 +127,10 @@
   }
 }
 
+.pswp.pswp--behind-header {
+  z-index: z("header") - 1;
+}
+
 // photoswipe custom caption
 .pswp__caption {
   left: 0;
