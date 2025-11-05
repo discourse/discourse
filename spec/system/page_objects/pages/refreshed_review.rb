@@ -38,6 +38,10 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
       end
 
+      def has_reviewable_with_ignored_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--ignored") }
+      end
+
       def has_reviewable_with_scrubbed_by?(reviewable, scrubbed_by)
         within(reviewable_by_id(reviewable.id)) do
           page.has_css?(".reviewable-user-details.scrubbed-by .value", text: scrubbed_by)
