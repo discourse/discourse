@@ -944,6 +944,87 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.client_settings_json_uncached).not_to include("enable_welcome_banner")
       expect(SiteSetting.client_settings_json_uncached).not_to include("search_experience")
     end
+
+    context "when error occurs" do
+      it "re-raises the exception instead of returning nil" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        allow(settings).to receive(:public_send).with(:default_locale).and_return(
+          SiteSetting.default_locale,
+        )
+        allow(settings).to receive(:public_send).with(:test_setting).and_raise(
+          PG::ConnectionBad,
+          "connection lost",
+        )
+
+        expect { settings.client_settings_json_uncached }.to raise_error(
+          PG::ConnectionBad,
+          /connection lost/,
+        )
+      end
+    end
+  end
+
+  describe ".client_settings_json" do
+    it "returns valid JSON when successful" do
+      settings.setting(:test_setting, "value", client: true)
+      settings.refresh!
+
+      result = settings.client_settings_json
+      expect { JSON.parse(result) }.not_to raise_error
+      parsed = JSON.parse(result)
+      expect(parsed["test_setting"]).to eq("value")
+    end
+
+    context "when error occurs" do
+      it "returns empty string without caching the error" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        allow(settings).to receive(:client_settings_json_uncached).and_raise(
+          PG::ConnectionBad,
+          "connection lost",
+        )
+
+        result = settings.client_settings_json
+        expect(result).to eq("")
+      end
+
+      it "does not cache the error and retries on next call" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        cache_key = SiteSettingExtension.client_settings_cache_key
+
+        call_count = 0
+        allow(settings).to receive(:client_settings_json_uncached) do
+          call_count += 1
+          if call_count == 1
+            raise PG::ConnectionBad, "connection lost"
+          else
+            '{"default_locale":"en","test_setting":"value"}'
+          end
+        end
+
+        # First call fails
+        result1 = settings.client_settings_json
+        expect(result1).to eq("")
+        # Verify error was NOT cached in Redis
+        expect(Discourse.cache.exist?(cache_key)).to be_falsey
+
+        # Second call should retry (not use cached error) and succeed
+        result2 = settings.client_settings_json
+        expect(result2).to eq('{"default_locale":"en","test_setting":"value"}')
+        expect(call_count).to eq(2) # Both calls executed, error was not cached
+
+        # Verify success was cached in Redis
+        expect(Discourse.cache.exist?(cache_key)).to be_truthy
+        expect(Discourse.cache.read(cache_key)).to eq(
+          '{"default_locale":"en","test_setting":"value"}',
+        )
+      end
+    end
   end
 
   describe ".setup_methods" do
