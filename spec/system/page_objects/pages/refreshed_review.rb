@@ -56,6 +56,18 @@ module PageObjects
         end
       end
 
+      def click_edit_post_button
+        find(".reviewable-action.edit").click
+      end
+
+      def fill_post_content(content)
+        find(".d-editor-input").fill_in(with: content)
+      end
+
+      def save_post_edit
+        find(".reviewable-action.save-edit").click
+      end
+
       private
 
       def reviewable_by_id(id)
