@@ -217,7 +217,7 @@
 
 /* Tablet (portrait) ----------- */
 
-@include viewport.until(lg) {
+@include viewport.until(md) {
   .topic-list {
     .views {
       display: none;
