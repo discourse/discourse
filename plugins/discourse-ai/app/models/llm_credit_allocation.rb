@@ -153,7 +153,7 @@ end
 #
 #  id                    :bigint           not null, primary key
 #  monthly_credits       :bigint           not null
-#  monthly_usage         :jsonb            default({}), not null
+#  monthly_usage         :jsonb            not null
 #  soft_limit_percentage :integer          default(80), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
