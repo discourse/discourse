@@ -411,18 +411,49 @@ RSpec.describe Group do
       end
     end
 
-    it "does not use the localized name if name has already been taken" do
-      begin
-        I18n.locale = SiteSetting.default_locale = "de"
+    it "does not use the localized name if name has already been taken when switching to a the english locale" do
+      I18n.locale = SiteSetting.default_locale = "de"
 
-        Fabricate(:group, name: I18n.t("groups.default_names.staff").upcase)
-        group = Group.refresh_automatic_group!(:staff)
-        expect(group.name).to eq("staff")
+      Group.refresh_automatic_group!(:staff)
+      Group.refresh_automatic_group!(:moderators)
 
-        Fabricate(:user, username: I18n.t("groups.default_names.moderators").upcase)
-        group = Group.refresh_automatic_group!(:moderators)
-        expect(group.name).to eq("moderators")
-      end
+      moderator_group = Group.find(Group::AUTO_GROUPS[:moderators])
+      staff_group = Group.find(Group::AUTO_GROUPS[:staff])
+
+      expect(moderator_group.name).to eq("Moderatoren")
+      expect(staff_group.name).to eq("Team")
+
+      I18n.locale = SiteSetting.default_locale = "en"
+
+      Fabricate(:group, name: I18n.t("groups.default_names.staff").upcase)
+      Group.refresh_automatic_group!(:staff)
+
+      expect(staff_group.reload.name).to eq("Team")
+
+      Fabricate(:user, username: I18n.t("groups.default_names.moderators").upcase)
+      Group.refresh_automatic_group!(:moderators)
+
+      expect(moderator_group.reload.name).to eq("Moderatoren")
+    end
+
+    it "does not use the localized name if name has already been taken when switching to a non-english locale" do
+      moderator_group = Group.find(Group::AUTO_GROUPS[:moderators])
+      staff_group = Group.find(Group::AUTO_GROUPS[:staff])
+
+      expect(moderator_group.name).to eq("moderators")
+      expect(staff_group.name).to eq("staff")
+
+      I18n.locale = SiteSetting.default_locale = "de"
+
+      Fabricate(:group, name: I18n.t("groups.default_names.staff").upcase)
+      Group.refresh_automatic_group!(:staff)
+
+      expect(staff_group.reload.name).to eq(staff_group.name)
+
+      Fabricate(:user, username: I18n.t("groups.default_names.moderators").upcase)
+      Group.refresh_automatic_group!(:moderators)
+
+      expect(moderator_group.reload.name).to eq(moderator_group.name)
     end
 
     it "always uses the default locale" do
