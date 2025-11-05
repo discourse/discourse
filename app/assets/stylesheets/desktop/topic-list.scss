@@ -217,16 +217,19 @@
 
 /* Tablet (portrait) ----------- */
 
+@include viewport.until(lg) {
+  .topic-list {
+    .views {
+      display: none;
+    }
+  }
+}
+
 // These styles kick in a little earlier when the sidebar appears
 
 /* stylelint-disable-next-line discourse/no-breakpoint-mixin */
 @include breakpoint(medium, $sidebar: true) {
   .topic-list {
-    // suppress views column
-    .views {
-      display: none;
-    }
-
     // reduce width for more title space
     .posts {
       width: 3em;
