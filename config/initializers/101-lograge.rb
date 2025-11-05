@@ -113,20 +113,7 @@ if ENV["ENABLE_LOGSTASH_LOGGER"] == "1"
                    http_accept_language_request_header =
                      event.payload[:headers]["HTTP_ACCEPT_LANGUAGE"]
                  ).present?
-              output["request.headers.http_accept_language"] = {}
-              http_accept_language_request_header
-                .split(",")
-                .each do |lang|
-                  lang_code, lang_quality = lang.strip.split(";q=")
-
-                  output["request.headers.http_accept_language"][lang_code] = (
-                    if lang_quality
-                      lang_quality.to_f
-                    else
-                      1.0
-                    end
-                  )
-                end
+              output["request.headers.http_accept_language"] = http_accept_language_request_header
             end
 
             if data = (Thread.current[:_method_profiler] || event.payload[:timings])
