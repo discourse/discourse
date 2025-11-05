@@ -58,7 +58,7 @@ export async function loadThemes() {
 export async function loadAdmin() {
   const compatModules = (
     await import(
-      /* webpackChunkName: "admin" */ `discourse/admin/admin-compat-modules`
+      /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
     )
   ).default;
   for (const [key, mod] of Object.entries(compatModules)) {
