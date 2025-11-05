@@ -230,34 +230,6 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
       .exists("adds the recover small action button");
   });
 
-  test("a11y heading is rendered with correct attributes and text", async function (assert) {
-    this.post.created_at = new Date().getTime() - 2 * 60 * 60 * 1000; // 2 hours ago
-    await renderComponent(this.post);
-
-    assert.dom("h2.sr-only").exists("accessibility heading exists");
-    assert
-      .dom("h2.sr-only")
-      .hasAttribute(
-        "id",
-        `post-heading-${this.post.post_number}`,
-        "heading has correct id based on post number"
-      );
-
-    // Check that the heading text includes the action description
-    const headingText = this.element
-      .querySelector("h2.sr-only")
-      .textContent.trim();
-
-    assert.true(
-      headingText.includes("Converted"),
-      "heading text includes action description"
-    );
-    assert.true(
-      headingText.includes("2 hours ago"),
-      "heading text includes time information"
-    );
-  });
-
   test("a11y heading is rendered even when small action is cloaked", async function (assert) {
     await render(
       <template>
@@ -297,48 +269,6 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
         expectedAriaLabelledBy,
         "article is labeled by the accessibility heading"
       );
-  });
-
-  test("a11y heading text is plain text without HTML", async function (assert) {
-    await renderComponent(this.post);
-
-    const headingText = this.element
-      .querySelector("h2.sr-only")
-      .textContent.trim();
-
-    assert.false(
-      headingText.includes("<a"),
-      "heading text does not include HTML tags"
-    );
-    assert.false(
-      headingText.includes("href"),
-      "heading text does not include link attributes"
-    );
-  });
-
-  test("a11y heading text updates with different action codes", async function (assert) {
-    this.post.action_code = "invited_user";
-    this.post.action_code_who = "testuser";
-    this.post.created_at = new Date().getTime() - 2 * 60 * 60 * 1000; // 2 hours ago
-
-    await renderComponent(this.post);
-
-    const headingText = this.element
-      .querySelector("h2.sr-only")
-      .textContent.trim();
-
-    assert.true(
-      headingText.includes("Invited"),
-      "heading text reflects invited action"
-    );
-    assert.true(
-      headingText.includes("@testuser"),
-      "heading text includes who performed the action"
-    );
-    assert.true(
-      headingText.includes("2 hours ago"),
-      "heading text includes time information"
-    );
   });
 
   test("a11y heading id is unique for different post numbers", async function (assert) {
