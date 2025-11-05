@@ -122,15 +122,9 @@ RSpec.describe TagGroup do
     fab!(:tag_group) { Fabricate(:tag_group, name: "Test-Tag-Group") }
 
     it "finds by name case insensitively" do
-      expect(
-        TagGroup.find_by_lowercase_name("test-tag-group"),
-      ).to eq(tag_group)
-      expect(
-        TagGroup.find_by_lowercase_name("TEST-TAG-GROUP"),
-      ).to eq(tag_group)
-      expect(
-        TagGroup.find_by_lowercase_name("TeSt-TaG-GrOuP"),
-      ).to eq(tag_group)
+      expect(TagGroup.find_by_lowercase_name("test-tag-group")).to eq(tag_group)
+      expect(TagGroup.find_by_lowercase_name("TEST-TAG-GROUP")).to eq(tag_group)
+      expect(TagGroup.find_by_lowercase_name("TeSt-TaG-GrOuP")).to eq(tag_group)
     end
   end
   describe "tag_names=" do

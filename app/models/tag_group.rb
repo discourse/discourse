@@ -53,7 +53,6 @@ class TagGroup < ActiveRecord::Base
     nil
   end
 
-
   # Same as Tag#find_by_name
   def self.find_by_name_insensitive(name)
     self.find_by("lower(name) = ?", name.downcase)
