@@ -4,6 +4,10 @@ import "decorator-transforms/globals";
 import "./loader-shims";
 import "./discourse-common-loader-shims";
 import "./global-compat";
+import "discourse/select-kit/select-kit-compat-modules";
+import "discourse/float-kit/float-kit-compat-modules";
+import "discourse/truth-helpers/truth-helpers-compat-modules";
+import "discourse/dialog-holder/dialog-holder-compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 
 // Register Discourse's standard implicit injections on common framework classes.
@@ -51,59 +55,15 @@ export async function loadThemes() {
   await Promise.all(promises);
 }
 
-export async function loadModules() {
-  defineModules(
-    "select-kit",
-    (
-      await import(
-        /* webpackChunkName: "select-kit" */ `discourse/select-kit/select-kit-compat-modules`
-      )
-    ).default
-  );
-
-  defineModules(
-    "float-kit",
-    (
-      await import(
-        /* webpackChunkName: "float-kit" */ `discourse/float-kit/float-kit-compat-modules`
-      )
-    ).default
-  );
-
-  defineModules(
-    "truth-helpers",
-    (
-      await import(
-        /* webpackChunkName: "truth-helpers" */ `discourse/truth-helpers/truth-helpers-compat-modules`
-      )
-    ).default
-  );
-
-  defineModules(
-    "dialog-holder",
-    (
-      await import(
-        /* webpackChunkName: "dialog-holder" */ `discourse/dialog-holder/dialog-holder-compat-modules`
-      )
-    ).default
-  );
-}
-
-function defineModules(name, compatModules) {
-  for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/${name}/${key.slice(2)}`, () => mod);
-  }
-}
-
 export async function loadAdmin() {
-  defineModules(
-    "admin",
-    (
-      await import(
-        /* webpackChunkName: "admin" */ `discourse/admin/admin-compat-modules`
-      )
-    ).default
-  );
+  const compatModules = (
+    await import(
+      /* webpackChunkName: "admin" */ `discourse/admin/admin-compat-modules`
+    )
+  ).default;
+  for (const [key, mod] of Object.entries(compatModules)) {
+    define(`discourse/admin/${key.slice(2)}`, () => mod);
+  }
 }
 
 class Discourse extends Application {
