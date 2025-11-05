@@ -1,6 +1,48 @@
 # frozen_string_literal: true
 
 module Migrations::Importer
+  module PgEncoderCache
+    @encoders = {}
+
+    ENCODER_MAP = {
+      # Scalars
+      "bool" => -> { PG::TextEncoder::Boolean.new },
+      "date" => -> { PG::TextEncoder::Date.new },
+      "float8" => -> { PG::TextEncoder::Float.new },
+      "inet" => -> { PG::TextEncoder::Inet.new },
+      "int4" => -> { PG::TextEncoder::Integer.new },
+      "int8" => -> { PG::TextEncoder::Integer.new },
+      "json" => -> { PG::TextEncoder::JSON.new },
+      "jsonb" => -> { PG::TextEncoder::JSON.new },
+      "text" => -> { PG::TextEncoder::String.new },
+      "timestamp" => -> { PG::TextEncoder::String.new },
+      "uuid" => -> { PG::TextEncoder::String.new },
+      "varchar" => -> { PG::TextEncoder::String.new },
+      # Ranges
+      "int4range" => -> { PG::TextEncoder::String.new },
+      # Arrays
+      "inet[]" => -> { PG::TextEncoder::Array.new(name: "inet") },
+      "int4[]" => -> { PG::TextEncoder::Array.new(name: "int4") },
+      "text[]" => -> { PG::TextEncoder::Array.new(name: "text") },
+      "varchar[]" => -> { PG::TextEncoder::Array.new(name: "varchar") },
+    }
+
+    def self.get_encoder(pg_type)
+      pg_type = normalize_pg_type(pg_type)
+
+      @encoders[pg_type] ||= begin
+        factory = ENCODER_MAP[pg_type]
+        raise "Unsupported PG type #{pg_type}" unless factory
+
+        factory.call
+      end
+    end
+
+    def self.normalize_pg_type(pg_type)
+      pg_type.start_with?("_") ? "#{pg_type[1..]}[]" : pg_type
+    end
+  end
+
   class DiscourseDB
     QueryResult = Data.define(:rows, :column_count)
 
@@ -8,9 +50,9 @@ module Migrations::Importer
     SKIP_ROW_MARKER = :"$skip"
 
     def initialize
-      @encoder = PG::TextEncoder::CopyRow.new
       @connection = PG::Connection.new(database_configuration)
       @connection.type_map_for_results = PG::BasicTypeMapForResults.new(@connection)
+      @connection.field_name_type = :symbol
     end
 
     def copy_data(table_name, column_names, rows)
@@ -22,6 +64,9 @@ module Migrations::Importer
       column_count = column_names.size
       data = Array.new(column_count)
 
+      type_map = build_type_map(table_name, column_names)
+      encoder = PG::TextEncoder::CopyRow.new(type_map:)
+
       rows.each_slice(COPY_BATCH_SIZE) do |sliced_rows|
         # TODO Maybe add error handling and check if all rows fail to insert, or only
         # some of them fail. Currently, if a single row fails to insert, then an exception
@@ -29,7 +74,7 @@ module Migrations::Importer
         # should ensure all data is valid. We might need to see how this works out in
         # actual migrations...
         @connection.transaction do
-          @connection.copy_data(sql, @encoder) do
+          @connection.copy_data(sql, encoder) do
             sliced_rows.each do |row|
               if row[SKIP_ROW_MARKER]
                 skipped_rows << row
@@ -148,6 +193,39 @@ module Migrations::Importer
 
     def quote_identifier(identifier)
       PG::Connection.quote_ident(identifier.to_s)
+    end
+
+    def normalize_pg_type(pg_type)
+      if pg_type.start_with?("_")
+        "#{pg_type[1..]}[]" # '_int4' -> 'int4[]'
+      else
+        pg_type
+      end
+    end
+
+    def build_type_map(table_name, column_names)
+      sql = <<~SQL
+        SELECT a.attname AS name,
+               t.typname AS pg_type
+        FROM pg_attribute a
+             JOIN pg_type t ON a.atttypid = t.oid
+        WHERE a.attrelid = $1::regclass
+          AND a.attnum > 0
+          AND NOT a.attisdropped
+      SQL
+
+      result = @connection.exec_params(sql, [table_name]).to_a
+      column_type_map = result.to_h { |row| [row[:name].to_sym, row[:pg_type]] }
+
+      encoders =
+        column_names.map do |column_name|
+          pg_type = column_type_map[column_name]
+          raise "Column #{column_name} not found in table #{table_name}" unless pg_type
+
+          PgEncoderCache.get_encoder(pg_type)
+        end
+
+      PG::TypeMapByColumn.new(encoders)
     end
   end
 end

@@ -334,7 +334,7 @@ CREATE TABLE user_fields
 
 CREATE TABLE user_options
 (
-    user_id                              NUMERIC  NOT NULL PRIMARY KEY,
+    user_id                              NUMERIC   NOT NULL PRIMARY KEY,
     ai_search_discoveries                BOOLEAN,
     allow_private_messages               BOOLEAN,
     auto_image_caption                   BOOLEAN,
@@ -386,15 +386,14 @@ CREATE TABLE user_options
     oldest_search_log_date               DATETIME,
     only_chat_push_notifications         BOOLEAN,
     policy_email_frequency               INTEGER,
-    seen_popups                          INTEGER,
+    seen_popups                          JSON_TEXT,
     show_thread_title_prompts            BOOLEAN,
     sidebar_link_to_filtered_list        BOOLEAN,
     sidebar_show_count_of_new_items      BOOLEAN,
     skip_new_user_tips                   BOOLEAN,
     text_size_key                        INTEGER,
     text_size_seq                        INTEGER,
-    theme_ids                            INTEGER,
-    theme_key_seq                        INTEGER,
+    theme_ids                            JSON_TEXT,
     timezone                             TEXT,
     title_count_mode_key                 INTEGER,
     topics_unread_when_closed            BOOLEAN,

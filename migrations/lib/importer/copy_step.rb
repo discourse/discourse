@@ -12,15 +12,30 @@ module Migrations::Importer
 
     class << self
       # stree-ignore
-      def table_name(value = (getter = true; nil))
+      def table_name(table_name = (getter = true; nil))
         return @table_name if getter
-        @table_name = value
+        @table_name = table_name
       end
 
-      # stree-ignore
-      def column_names(value = (getter = true; nil))
-        return @column_names if getter
-        @column_names = value
+      def column_names(column_names)
+        @column_names = column_names
+      end
+
+      def plugin_column_names(plugin_name, column_names)
+        @plugin_column_names ||= {}
+        @plugin_column_names[plugin_name] = column_names
+      end
+
+      def all_column_names
+        column_names = @column_names.dup
+        return column_names if @plugin_column_names.blank?
+
+        all_plugins = Discourse.plugins_by_name
+        @plugin_column_names.each do |plugin_name, plugin_column_names|
+          column_names += plugin_column_names if all_plugins.has_key?(plugin_name)
+        end
+
+        column_names
       end
 
       def timestamp_columns?
@@ -84,7 +99,7 @@ module Migrations::Importer
 
     def copy_data
       table_name = self.class.table_name || self.class.name.demodulize.underscore
-      column_names = self.class.column_names || @discourse_db.column_names(table_name)
+      column_names = self.class.all_column_names || @discourse_db.column_names(table_name)
 
       if self.class.store_mapped_ids?
         @last_id = @discourse_db.last_id_of(table_name)

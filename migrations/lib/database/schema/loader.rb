@@ -115,9 +115,7 @@ module Migrations::Database::Schema
     end
 
     def datatype_for(column, modified_column, enum)
-      datatype = enum.datatype if enum
-      datatype ||= modified_column[:datatype]&.to_sym if modified_column
-      datatype ||= @global.modified_datatype(column.name) || column.type
+      datatype = calculate_datatype(column, modified_column, enum)
 
       case datatype
       when :binary
@@ -131,6 +129,17 @@ module Migrations::Database::Schema
       else
         raise "Unknown datatype: #{datatype}"
       end
+    end
+
+    def calculate_datatype(column, modified_column, enum)
+      datatype = enum.datatype if enum
+      datatype ||= modified_column[:datatype]&.to_sym if modified_column
+      datatype ||= @global.modified_datatype(column.name)
+      datatype ||
+        begin
+          is_array_type = column.sql_type_metadata.sql_type.end_with?("[]")
+          is_array_type ? :json : column.type
+        end
     end
 
     def modified_column_for(column, config)

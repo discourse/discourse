@@ -240,6 +240,9 @@ schema:
           - "field_type"
           - "required"
     user_options:
+      columns:
+        exclude:
+          - "theme_key_seq"
       primary_key_column_names: [ "user_id" ]
     users:
       columns:

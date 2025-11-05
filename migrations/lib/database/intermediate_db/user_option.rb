@@ -68,7 +68,6 @@ module Migrations::Database::IntermediateDB
         text_size_key,
         text_size_seq,
         theme_ids,
-        theme_key_seq,
         timezone,
         title_count_mode_key,
         topics_unread_when_closed,
@@ -77,7 +76,7 @@ module Migrations::Database::IntermediateDB
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?
+        ?, ?, ?, ?
       )
     SQL
     private_constant :SQL
@@ -136,15 +135,14 @@ module Migrations::Database::IntermediateDB
     # @param oldest_search_log_date                 [Time, nil]
     # @param only_chat_push_notifications           [Boolean, nil]
     # @param policy_email_frequency                 [Integer, nil]
-    # @param seen_popups                            [Integer, nil]
+    # @param seen_popups                            [Object, nil]
     # @param show_thread_title_prompts              [Boolean, nil]
     # @param sidebar_link_to_filtered_list          [Boolean, nil]
     # @param sidebar_show_count_of_new_items        [Boolean, nil]
     # @param skip_new_user_tips                     [Boolean, nil]
     # @param text_size_key                          [Integer, nil]
     # @param text_size_seq                          [Integer, nil]
-    # @param theme_ids                              [Integer, nil]
-    # @param theme_key_seq                          [Integer, nil]
+    # @param theme_ids                              [Object, nil]
     # @param timezone                               [String, nil]
     # @param title_count_mode_key                   [Integer, nil]
     # @param topics_unread_when_closed              [Boolean, nil]
@@ -212,7 +210,6 @@ module Migrations::Database::IntermediateDB
       text_size_key: nil,
       text_size_seq: nil,
       theme_ids: nil,
-      theme_key_seq: nil,
       timezone: nil,
       title_count_mode_key: nil,
       topics_unread_when_closed: nil,
@@ -272,15 +269,14 @@ module Migrations::Database::IntermediateDB
         ::Migrations::Database.format_datetime(oldest_search_log_date),
         ::Migrations::Database.format_boolean(only_chat_push_notifications),
         policy_email_frequency,
-        seen_popups,
+        ::Migrations::Database.to_json(seen_popups),
         ::Migrations::Database.format_boolean(show_thread_title_prompts),
         ::Migrations::Database.format_boolean(sidebar_link_to_filtered_list),
         ::Migrations::Database.format_boolean(sidebar_show_count_of_new_items),
         ::Migrations::Database.format_boolean(skip_new_user_tips),
         text_size_key,
         text_size_seq,
-        theme_ids,
-        theme_key_seq,
+        ::Migrations::Database.to_json(theme_ids),
         timezone,
         title_count_mode_key,
         ::Migrations::Database.format_boolean(topics_unread_when_closed),

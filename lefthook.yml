@@ -8,6 +8,10 @@ pre-commit:
     - merge
     - rebase
   commands:
+    test:
+      glob: "*"
+      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
+      run: echo Gemfile {staged_files}
     rubocop:
       glob: "*"
       include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
