@@ -5,10 +5,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import CookText from "discourse/components/cook-text";
+import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 export default class DEditorOriginalTranslationPreview extends Component {
   @tracked showOriginal = true;
+  @tracked showRawMarkdown = false;
 
   get originalLocale() {
     return this.args.model.postLocale;
@@ -23,6 +25,12 @@ export default class DEditorOriginalTranslationPreview extends Component {
   @action
   setView(view) {
     this.showOriginal = view === "original";
+    this.showRawMarkdown = false;
+  }
+
+  @action
+  toggleRawMarkdown() {
+    this.showRawMarkdown = !this.showRawMarkdown;
   }
 
   <template>
@@ -34,6 +42,13 @@ export default class DEditorOriginalTranslationPreview extends Component {
             <span class="d-editor-translation-preview-wrapper__original-locale">
               {{this.originalLocale}}
             </span>
+            <div class="d-editor-translation-preview-header__raw-toggle">
+              <DToggleSwitch
+                @state={{this.showRawMarkdown}}
+                @label="composer.translations.show_raw_markdown"
+                {{on "click" this.toggleRawMarkdown}}
+              />
+            </div>
           {{else}}
             {{i18n "composer.translations.translation_preview"}}
           {{/if}}
@@ -59,10 +74,18 @@ export default class DEditorOriginalTranslationPreview extends Component {
 
       <div class="d-editor-translation-preview-content">
         {{#if this.showOriginal}}
-          {{#if @model.cookedPost}}
-            {{htmlSafe @model.cookedPost}}
-          {{else if @model.rawPost}}
-            <CookText @rawText={{@model.rawPost}} />
+          {{#if this.showRawMarkdown}}
+            {{#if @model.rawPost}}
+              <pre
+                class="d-editor-translation-preview-raw"
+              >{{@model.rawPost}}</pre>
+            {{/if}}
+          {{else}}
+            {{#if @model.cookedPost}}
+              {{htmlSafe @model.cookedPost}}
+            {{else if @model.rawPost}}
+              <CookText @rawText={{@model.rawPost}} />
+            {{/if}}
           {{/if}}
         {{else}}
           {{#if this.translationText}}
