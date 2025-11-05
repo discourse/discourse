@@ -52,32 +52,58 @@ export async function loadThemes() {
 }
 
 export async function loadModules() {
-  await loadModule("select-kit");
-  await loadModule("float-kit");
-  await loadModule("truth-helpers");
-  await loadModule("dialog-holder");
+  defineModules(
+    "select-kit",
+    (
+      await import(
+        /* webpackChunkName: "select-kit" */ `discourse/select-kit/select-kit-compat-modules`
+      )
+    ).default
+  );
+
+  defineModules(
+    "float-kit",
+    (
+      await import(
+        /* webpackChunkName: "float-kit" */ `discourse/float-kit/float-kit-compat-modules`
+      )
+    ).default
+  );
+
+  defineModules(
+    "truth-helpers",
+    (
+      await import(
+        /* webpackChunkName: "truth-helpers" */ `discourse/truth-helpers/truth-helpers-compat-modules`
+      )
+    ).default
+  );
+
+  defineModules(
+    "dialog-holder",
+    (
+      await import(
+        /* webpackChunkName: "dialog-holder" */ `discourse/dialog-holder/dialog-holder-compat-modules`
+      )
+    ).default
+  );
 }
 
-async function loadModule(name) {
-  const compatModules = (
-    await import(
-      /* webpackChunkName: TODO? */ `discourse/${name}/${name}-compat-modules`
-    )
-  ).default;
+function defineModules(name, compatModules) {
   for (const [key, mod] of Object.entries(compatModules)) {
     define(`discourse/${name}/${key.slice(2)}`, () => mod);
   }
 }
 
 export async function loadAdmin() {
-  const compatModules = (
-    await import(
-      /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
-    )
-  ).default;
-  for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/admin/${key.slice(2)}`, () => mod);
-  }
+  defineModules(
+    "admin",
+    (
+      await import(
+        /* webpackChunkName: "admin" */ `discourse/admin/admin-compat-modules`
+      )
+    ).default
+  );
 }
 
 class Discourse extends Application {
