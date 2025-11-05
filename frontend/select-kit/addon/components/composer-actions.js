@@ -242,6 +242,7 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
 
     if (
       this.currentUser.can_create_topic &&
+      this.action !== CREATE_TOPIC &&
       (items.length === 0 || this.action === PRIVATE_MESSAGE)
     ) {
       items.push({
