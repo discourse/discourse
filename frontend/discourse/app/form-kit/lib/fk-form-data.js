@@ -3,6 +3,7 @@
  */
 import { tracked } from "@glimmer/tracking";
 import { next } from "@ember/runloop";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { applyPatches, enablePatches, produce } from "immer";
 
 enablePatches();
@@ -30,13 +31,13 @@ export default class FKFormData {
    * The patches to be applied.
    * @type {Array}
    */
-  patches = [];
+  @tracked patches = new TrackedArray();
 
   /**
    * The inverse patches to be applied, useful for rollback.
    * @type {Array}
    */
-  inversePatches = [];
+  @tracked inversePatches = new TrackedArray();
 
   /**
    * Creates an instance of Changeset.
@@ -79,43 +80,87 @@ export default class FKFormData {
 
   /**
    * Checks if the changeset is dirty.
-   * @return {boolean} True if patches have been applied.
+   * @return {boolean} True if any values differ from original data.
    */
   get isDirty() {
-    return !this.isPristine;
+    const paths = new Set();
+    this.patches.forEach((patch) => {
+      const fieldName = patch.path[0];
+      const currentValue = this.get(fieldName);
+      const originalValue = this.data[fieldName];
+
+      const normalizedCurrent = this.normalizeValue(currentValue);
+      const normalizedOriginal = this.normalizeValue(originalValue);
+
+      if (normalizedCurrent !== normalizedOriginal) {
+        paths.add(fieldName);
+      }
+    });
+    return paths.size > 0;
+  }
+
+  /**
+   * Normalizes a value for comparison.
+   * @param {any} value - The value to normalize.
+   * @return {string} The normalized value.
+   */
+  normalizeValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+    return String(value);
   }
 
   /**
    * Executes the patches to update the data.
    */
-  execute() {
-    this.data = applyPatches(this.data, this.patches);
+  execute(patches = this.patches) {
+    this.data = applyPatches(this.data, patches);
   }
 
   /**
    * Reverts the patches to update the data.
    */
-  unexecute() {
-    this.data = applyPatches(this.data, this.inversePatches);
+  unexecute(inversePatches = this.inversePatches) {
+    this.data = applyPatches(this.data, inversePatches);
   }
 
   /**
    * Saves the changes by executing the patches and resetting them.
    */
-  save() {
-    this.execute();
-    this.resetPatches();
+  async save(name) {
+    if (name) {
+      const patches = this.patches.filter((patch) => patch.path[0] === name);
+      this.execute(patches);
+      this.patches = new TrackedArray(
+        this.patches.filter((patch) => patch.path[0] !== name)
+      );
+      this.inversePatches = new TrackedArray(
+        this.inversePatches.filter((patch) => patch.path[0] !== name)
+      );
+    } else {
+      this.execute();
+      this.resetPatches();
+    }
+    console.log("save", name); // eslint-disable-line no-console
+
+    await new Promise((resolve) => next(resolve));
   }
 
   /**
    * Rolls back all changes by applying the inverse patches.
    * @return {Promise<void>} A promise that resolves after the rollback is complete.
    */
-  async rollback() {
-    while (this.inversePatches.length > 0) {
-      this.draftData = applyPatches(this.draftData, [
-        this.inversePatches.pop(),
-      ]);
+  async rollback(name) {
+    const inversePatches = name
+      ? this.inversePatches.filter((patch) => patch.path[0] === name)
+      : this.inversePatches;
+
+    while (inversePatches.length > 0) {
+      this.draftData = applyPatches(this.draftData, [inversePatches.pop()]);
     }
 
     this.resetPatches();
@@ -201,7 +246,7 @@ export default class FKFormData {
    * Resets the patches and inverse patches.
    */
   resetPatches() {
-    this.patches = [];
-    this.inversePatches = [];
+    this.patches = new TrackedArray();
+    this.inversePatches = new TrackedArray();
   }
 }

@@ -48,6 +48,37 @@ export default class FKFieldData extends Component {
     return this.args.data.get(this.name);
   }
 
+  get isDirty() {
+    return !this.isPristine;
+  }
+
+  get emphasis() {
+    return this.args.emphasis;
+  }
+
+  get isPristine() {
+    const currentValue = this.normalizeValue(this.value);
+    const originalValue = this.normalizeValue(this.args.data.data[this.name]);
+
+    return currentValue === originalValue;
+  }
+
+  normalizeValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    }
+
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+    return String(value);
+  }
+
+  @action
+  async rollback(name) {
+    await this.args.data.rollback(name);
+  }
+
   /**
    * Parses the validation rules for the field.
    * @type {Object|null}
@@ -94,7 +125,7 @@ export default class FKFieldData extends Component {
    * @type {string}
    */
   get format() {
-    return this.args.format;
+    return this.args.format ?? "full";
   }
 
   /**

@@ -210,6 +210,11 @@ export default class AdminBadgesShow extends Component {
   }
 
   @action
+  toggleBadgeEnabled(value, { set }) {
+    set("enabled", value);
+  }
+
+  @action
   async handleDelete() {
     if (!this.args.badge?.id) {
       return this.router.transitionTo("adminBadges.index");
@@ -243,23 +248,14 @@ export default class AdminBadgesShow extends Component {
         class="badge-form current-badge content-body"
         as |form data|
       >
-
-        <h2 class="current-badge-header">
-          {{iconOrImage data}}
-          <span class="badge-display-name">{{data.name}}</span>
-        </h2>
-
-        <form.Field
-          @name="enabled"
-          @validation="required"
-          @title={{i18n "admin.badges.status"}}
-          as |field|
-        >
-          <field.Question
-            @yesLabel={{i18n "admin.badges.enabled"}}
-            @noLabel={{i18n "admin.badges.disabled"}}
-          />
-        </form.Field>
+        <form.Header as |header|>
+          <header.Title>
+            <span class="badge-display-name">{{data.name}}</span>
+          </header.Title>
+          <header.Subtitle>
+            This is a subtitle
+          </header.Subtitle>
+        </form.Header>
 
         {{#if this.readOnly}}
           <form.Container data-name="name" @title={{i18n "admin.badges.name"}}>
@@ -269,6 +265,7 @@ export default class AdminBadgesShow extends Component {
             <LinkTo
               @route="adminSiteText"
               @query={{hash q=(concat this.textCustomizationPrefix "name")}}
+              class="btn-flat"
             >
               {{icon "pencil"}}
             </LinkTo>
@@ -279,29 +276,25 @@ export default class AdminBadgesShow extends Component {
             @name="name"
             @disabled={{this.readOnly}}
             @validation="required"
+            @description="This is a required field"
+            @helpText="This is a required field"
             as |field|
           >
             <field.Input />
           </form.Field>
         {{/if}}
 
-        <form.Section @title="Design">
-          <form.Field
-            @name="badge_type_id"
-            @title={{i18n "admin.badges.badge_type"}}
-            @validation="required"
-            @disabled={{this.readOnly}}
-            as |field|
-          >
-            <field.Select as |select|>
-              {{#each this.badgeTypes as |badgeType|}}
-                <select.Option @value={{badgeType.id}}>
-                  {{badgeType.name}}
-                </select.Option>
-              {{/each}}
-            </field.Select>
-          </form.Field>
+        <form.Field
+          @name="enabled"
+          @validation="required"
+          @title={{i18n "admin.badges.status"}}
+          @onSet={{this.toggleBadgeEnabled}}
+          as |field|
+        >
+          <field.Toggle />
+        </form.Field>
 
+        <form.Section @title="Design">
           <form.ConditionalContent
             @activeName={{if data.image_url "upload-image" "choose-icon"}}
             as |cc|
@@ -340,6 +333,23 @@ export default class AdminBadgesShow extends Component {
               </Content>
             </cc.Contents>
           </form.ConditionalContent>
+          <form.Field
+            @name="badge_type_id"
+            @title={{i18n "admin.badges.badge_type"}}
+            @description="This is a required field"
+            @helpText="This is a required field"
+            @validation="required"
+            @disabled={{this.readOnly}}
+            as |field|
+          >
+            <field.Select as |select|>
+              {{#each this.badgeTypes as |badgeType|}}
+                <select.Option @value={{badgeType.id}}>
+                  {{badgeType.name}}
+                </select.Option>
+              {{/each}}
+            </field.Select>
+          </form.Field>
 
           {{#if this.readOnly}}
             <form.Container
@@ -354,6 +364,7 @@ export default class AdminBadgesShow extends Component {
                 @query={{hash
                   q=(concat this.textCustomizationPrefix "description")
                 }}
+                class="btn-flat"
               >
                 {{icon "pencil"}}
               </LinkTo>
@@ -383,6 +394,7 @@ export default class AdminBadgesShow extends Component {
                 @query={{hash
                   q=(concat this.textCustomizationPrefix "long_description")
                 }}
+                class="btn-flat"
               >
                 {{icon "pencil"}}
               </LinkTo>
@@ -490,7 +502,6 @@ export default class AdminBadgesShow extends Component {
               @title={{i18n "admin.badges.allow_title"}}
               @showTitle={{false}}
               @name="allow_title"
-              @format="full"
               as |field|
             >
               <field.Checkbox />
@@ -501,7 +512,6 @@ export default class AdminBadgesShow extends Component {
               @showTitle={{false}}
               @name="multiple_grant"
               @disabled={{this.readOnly}}
-              @format="full"
               as |field|
             >
               <field.Checkbox />
@@ -517,7 +527,6 @@ export default class AdminBadgesShow extends Component {
               @showTitle={{false}}
               @name="listable"
               @disabled={{this.readOnly}}
-              @format="full"
               as |field|
             >
               <field.Checkbox />
@@ -528,7 +537,6 @@ export default class AdminBadgesShow extends Component {
               @showTitle={{false}}
               @name="show_posts"
               @disabled={{this.readOnly}}
-              @format="full"
               as |field|
             >
               <field.Checkbox />
@@ -539,7 +547,6 @@ export default class AdminBadgesShow extends Component {
               @showTitle={{false}}
               @name="show_in_post_header"
               @disabled={{this.disableBadgeOnPosts data}}
-              @format="full"
               as |field|
             >
               <field.Checkbox>

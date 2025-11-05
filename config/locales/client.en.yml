@@ -2458,7 +2458,7 @@ en:
         other: Enter %{count} numbers
     form_kit:
       reset: Reset
-      optional: optional
+      required: required
       errors_summary_title: "This form contains errors:"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
@@ -8257,6 +8257,14 @@ en:
         dirty_banner:
           one: "You have <b>%{count}</b> unsaved change"
           other: "You have <b>%{count}</b> unsaved changes"
+        actions:
+          reset_setting: "Reset Setting"
+          copy_link: "Copy link to setting"
+          setting_history: "Setting History"
+          copied_to_clipboard: "Copied to clipboard!"
+          failed_to_copy: "Failed to copy to clipboard"
+        validation:
+          invalid_color: "Color is not a valid RGB."
         emoji_list:
           invalid_input: "Emoji list should only contain valid emoji names, eg: hugs"
           add_emoji_button:

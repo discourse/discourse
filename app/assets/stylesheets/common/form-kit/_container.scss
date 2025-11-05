@@ -1,8 +1,12 @@
 .form-kit__container {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.5rem;
   flex-direction: column;
   align-items: flex-start;
+
+  &-secondary-actions {
+    margin-left: auto;
+  }
 
   &.--column {
     .form-kit__container-content {
@@ -10,24 +14,51 @@
     }
   }
 
-  &-title {
-    display: inline;
-    gap: 0.25em;
+  &-description {
+    @include default-description;
+  }
+
+  &-help-text {
     margin: 0;
     font-size: var(--font-down-1-rem);
+    color: var(--primary-800);
+  }
+
+  &-title {
+    display: flex;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: var(--font-down-1-rem);
+    color: var(--primary);
+    font-weight: 500;
+    align-items: center;
+  }
+
+  &-title .fk-d-menu__trigger {
+    padding: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+
+  &:hover .fk-d-menu__trigger {
+    opacity: 1;
+  }
+
+  .fk-d-menu__trigger.btn-flat:hover svg {
     color: var(--primary-high);
-    font-weight: bold;
-    padding-bottom: 0.25em;
+  }
+
+  &-title .form-kit__button {
+    padding: 0;
   }
 
   &-subtitle {
     display: flex;
     align-items: center;
-    gap: 0.25em;
+    gap: 0.5rem;
     margin: 0;
     font-size: var(--font-down-1-rem);
     color: var(--primary-high);
-    padding-bottom: 0.25em;
 
     > * {
       margin: 0;
@@ -42,7 +73,7 @@
 
   &-content {
     display: flex;
-    gap: 0.25em;
+    gap: 0.5rem;
     flex-direction: row;
     align-items: flex-start;
     max-width: 100%;

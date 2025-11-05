@@ -5,7 +5,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
 import FKAlert from "discourse/form-kit/components/fk/alert";
@@ -16,6 +18,7 @@ import FKControlConditionalContent from "discourse/form-kit/components/fk/contro
 import FKErrorsSummary from "discourse/form-kit/components/fk/errors-summary";
 import FKField from "discourse/form-kit/components/fk/field";
 import FKFieldset from "discourse/form-kit/components/fk/fieldset";
+import FKHeader from "discourse/form-kit/components/fk/header";
 import FKInputGroup from "discourse/form-kit/components/fk/input-group";
 import FKObject from "discourse/form-kit/components/fk/object";
 import Row from "discourse/form-kit/components/fk/row";
@@ -35,7 +38,7 @@ class FKForm extends Component {
 
   @tracked isSubmitting = false;
 
-  fields = new Map();
+  fields = new TrackedMap();
 
   formData = new FKFormData(this.args.data ?? {});
 
@@ -50,6 +53,7 @@ class FKForm extends Component {
       reset: this.onReset,
       addError: this.addError,
       removeError: this.removeError,
+      patches: this.formData.patches,
     });
 
     this.router.on("routeWillChange", this.checkIsDirty);
@@ -101,6 +105,34 @@ class FKForm extends Component {
     }
 
     return validateOn;
+  }
+
+  get dirtyCount() {
+    const paths = new Set();
+    this.formData.patches.forEach((patch) => {
+      const fieldName = patch.path[0];
+      const currentValue = this.formData.get(fieldName);
+      const originalValue = this.formData.data[fieldName];
+
+      const normalizedCurrent = this.normalizeValue(currentValue);
+      const normalizedOriginal = this.normalizeValue(originalValue);
+
+      if (normalizedCurrent !== normalizedOriginal) {
+        paths.add(fieldName);
+      }
+    });
+    return paths.size;
+  }
+
+  normalizeValue(value) {
+    if (value === null || value === undefined) {
+      return "";
+    }
+    // Handle objects and arrays with deep comparison via JSON
+    if (typeof value === "object") {
+      return JSON.stringify(value);
+    }
+    return String(value);
   }
 
   @action
@@ -215,7 +247,7 @@ class FKForm extends Component {
   }
 
   @action
-  async onSubmit(event) {
+  async onSubmit(event, field) {
     event?.preventDefault();
 
     if (this.isSubmitting) {
@@ -225,12 +257,24 @@ class FKForm extends Component {
     try {
       this.isSubmitting = true;
 
+      await new Promise((resolve) => next(resolve));
+
       await this.validate([...this.fields.values()]);
 
       if (this.formData.isValid) {
-        this.formData.save();
+        const patchesSnapshot = [...this.formData.patches];
 
-        await this.args.onSubmit?.(this.formData.draftData);
+        this.formData.save(field?.name);
+
+        if (field?.name) {
+          await this.args.onSubmit?.({
+            [field.name]: this.formData.get(field.name),
+          });
+        } else {
+          await this.args.onSubmit?.(this.formData.draftData, {
+            patches: patchesSnapshot,
+          });
+        }
       } else {
         const elementPosition = this.formElement.getBoundingClientRect().top;
         const scrollable = getScrollParent(this.formElement);
@@ -304,6 +348,7 @@ class FKForm extends Component {
 
       {{yield
         (hash
+          Header=FKHeader
           Row=Row
           Section=FKSection
           Fieldset=FKFieldset
@@ -314,11 +359,12 @@ class FKForm extends Component {
           Alert=FKAlert
           Submit=(component
             FKSubmit
-            action=this.onSubmit
+            onSubmit=this.onSubmit
             forwardEvent=true
             class="btn-primary form-kit__button"
             type="submit"
             isLoading=this.isSubmitting
+            label=@label
           )
           Reset=(component
             DButton
@@ -326,8 +372,20 @@ class FKForm extends Component {
             forwardEvent=true
             class="form-kit__button"
             label="form_kit.reset"
+            disabled=true
           )
-          Field=(this.componentFor FKField)
+          Field=(component
+            FKField
+            errors=this.formData.errors
+            data=this.formData
+            patches=this.formData.patches
+            addError=this.addError
+            registerField=this.registerField
+            unregisterField=this.unregisterField
+            triggerRevalidationFor=this.triggerRevalidationFor
+            remove=this.remove
+            set=this.set
+          )
           Collection=(this.componentFor FKCollection)
           Object=(this.componentFor FKObject)
           InputGroup=(this.componentFor FKInputGroup)
@@ -335,6 +393,8 @@ class FKForm extends Component {
           set=this.set
           setProperties=this.setProperties
           addItemToCollection=this.addItemToCollection
+          dirtyCount=this.dirtyCount
+          submit=this.onSubmit
         )
         this.formData.draftData
       }}
@@ -347,6 +407,7 @@ const Form = <template>
     <FKForm
       @data={{data}}
       @onSubmit={{@onSubmit}}
+      @submitOn={{@submitOn}}
       @validate={{@validate}}
       @validateOn={{@validateOn}}
       @onRegisterApi={{@onRegisterApi}}
@@ -355,7 +416,11 @@ const Form = <template>
       ...attributes
       as |components draftData|
     >
-      {{yield components draftData}}
+      {{#if (has-block "body")}}
+        {{yield components draftData to="body"}}
+      {{else}}
+        {{yield components draftData}}
+      {{/if}}
     </FKForm>
   {{/each}}
 </template>;

@@ -13,7 +13,13 @@ export default class TagList extends Component {
 
   @action
   changeSelectedTags(tags) {
-    this.set("value", tags.join("|"));
+    tags = tags.join("|");
+
+    if (this.onChange) {
+      this.onChange(tags);
+    } else {
+      this.set("value", tags);
+    }
   }
 
   <template>

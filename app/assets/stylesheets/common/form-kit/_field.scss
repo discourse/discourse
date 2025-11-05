@@ -5,6 +5,12 @@
     width: var(--form-kit-medium-input);
   }
 
+  &.has-emphasis,
+  &.is-dirty {
+    background-color: var(--primary-50);
+    box-shadow: -2px 0 0 var(--tertiary);
+  }
+
   &.--full {
     width: 100%;
   }
@@ -31,17 +37,6 @@
     .form-kit__container-title {
       padding: 0;
     }
-  }
-
-  .form-kit__container-description {
-    margin: 0;
-    font-size: var(--font-down-1-rem);
-  }
-
-  .form-kit__container-help-text {
-    margin: 0;
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-high-or-secondary-low);
   }
 
   .form-kit__container-title,
