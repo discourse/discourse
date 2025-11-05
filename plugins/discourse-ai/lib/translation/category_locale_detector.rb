@@ -10,6 +10,8 @@ module DiscourseAi
         return if text.blank?
 
         detected_locale = LanguageDetector.new(text).detect
+        return if detected_locale.blank?
+
         locale = LocaleNormalizer.normalize_to_i18n(detected_locale)
         category.update_column(:locale, locale)
         locale

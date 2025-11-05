@@ -3,6 +3,9 @@
 module DiscourseAi
   module Translation
     class LanguageDetector
+      # reject non-language code responses by IETF language tag: https://datatracker.ietf.org/doc/html/rfc5646
+      LANGUAGE_TAG_REGEXP = /\A[A-Za-z]{2,4}(-[A-Za-z]{4})?(-([A-Za-z]{2}|[0-9]{3}))?\z/
+
       DETECTION_CHAR_LIMIT = 1000
 
       def initialize(text, topic: nil, post: nil)
@@ -49,7 +52,8 @@ module DiscourseAi
           next if partial.strip.blank?
           result << partial
         end
-        result
+
+        result.match?(LANGUAGE_TAG_REGEXP) ? result : nil
       end
     end
   end

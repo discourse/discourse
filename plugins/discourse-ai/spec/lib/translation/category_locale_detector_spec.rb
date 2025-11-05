@@ -25,6 +25,14 @@ describe DiscourseAi::Translation::CategoryLocaleDetector do
       expect(described_class.detect_locale(nil)).to eq(nil)
     end
 
+    it "returns nil if detected locale is blank and does not update category" do
+      text = "#{category.name}\n\n#{category.description}"
+      language_detector_stub({ text: text, locale: nil })
+
+      expect(described_class.detect_locale(category)).to eq(nil)
+      expect { described_class.detect_locale(category) }.not_to change { category }
+    end
+
     it "updates the category locale with the detected locale" do
       text = "#{category.name}\n\n#{category.description}"
       language_detector_stub({ text: text, locale: "zh_CN" })
