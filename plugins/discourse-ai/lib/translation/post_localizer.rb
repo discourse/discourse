@@ -3,6 +3,8 @@
 module DiscourseAi
   module Translation
     class PostLocalizer
+      MAX_QUOTA_PER_DAY = 2
+
       def self.localize(post, target_locale = I18n.locale)
         if post.blank? || target_locale.blank? ||
              LocaleNormalizer.is_same?(post.locale, target_locale) || post.raw.blank?
@@ -38,7 +40,7 @@ module DiscourseAi
       end
 
       def self.has_relocalize_quota?(post, locale, skip_incr: false)
-        return false if get_relocalize_quota(post, locale).to_i >= 2
+        return false if get_relocalize_quota(post, locale).to_i >= MAX_QUOTA_PER_DAY
 
         incr_relocalize_quota(post, locale) unless skip_incr
         true
