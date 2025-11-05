@@ -141,7 +141,7 @@ function _searchRequest(term, contextualHashtagConfiguration, resultFunc) {
         }
 
         const hashtagType = getHashtagTypeClassesNew()[result.type];
-        result.icon = hashtagType.generateIconHTML(opts);
+        result.iconHtml = hashtagType.generateIconHTML(opts);
       });
       resultFunc(response.results || CANCELLED_STATUS);
     })
@@ -159,7 +159,7 @@ function renderOption(option) {
   return `
     <li class="hashtag-autocomplete__option">
       <a class="hashtag-autocomplete__link" title="${escapeExpression(option.description)}" href>
-        ${option.icon}
+        ${option.iconHtml}
         <span class="hashtag-autocomplete__text">
           ${option.text}
           ${metaText}

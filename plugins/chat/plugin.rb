@@ -53,6 +53,7 @@ after_initialize do
   register_category_custom_field_type(Chat::HAS_CHAT_ENABLED, :boolean)
 
   register_search_index(
+    enabled: -> { SiteSetting.chat_search_enabled },
     model_class: Chat::Message,
     search_data_class: Chat::MessageSearchData,
     index_version: 1,

@@ -21,6 +21,7 @@ export const CANCELLED_STATUS = "__CANCELLED";
  * @param {string} key - Trigger character (e.g., "@", "#", ":")
  * @param {Function} dataSource - Async function to fetch results: (term) => Promise<Array>
  * @param {Function} template - Template function that receives {options: results} and returns HTML
+ * @param {Component} component - Component for rendering results (takes precedence over template if provided)
  * @param {Function} [transformComplete] - Transform completion before insertion
  * @param {Function} [afterComplete] - Callback after completion
  * @param {boolean} [debounced=false] - Enable debounced search
@@ -438,7 +439,6 @@ export default class DAutocompleteModifier extends Modifier {
           getResults: () => this.results,
           getSelectedIndex: () => this.selectedIndex,
           onSelect: (result, index, event) => this.selectResult(result, event),
-          template: this.options.template,
           onRender: this.options.onRender,
         },
         modalForMobile: false,
@@ -447,6 +447,13 @@ export default class DAutocompleteModifier extends Modifier {
           this.options.onClose?.();
         },
       };
+
+      // Pass component or template through data
+      if (this.options.component) {
+        menuOptions.data.component = this.options.component;
+      } else {
+        menuOptions.data.template = this.options.template;
+      }
 
       // Add offset if specified
       if (this.options.offset !== undefined) {
