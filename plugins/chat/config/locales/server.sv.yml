@@ -96,6 +96,8 @@ sv:
     reviewables:
       message_already_handled: "Tack, men vi har redan granskat det här meddelandet och beslutat att det inte behöver flaggas igen."
       actions:
+        no_action_message:
+          title: "Ingen åtgärd"
         agree:
           title: "Godkänn..."
         agree_and_keep_message:
@@ -172,8 +174,6 @@ sv:
       errors:
         slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"
         is_already_in_use: "används redan"
-    bookmarkable:
-      notification_title: "meddelande i %{channel_name}"
     personal_chat: "personlig chatt"
     onebox:
       inline_to_message: "Meddelande #%{message_id} av %{username} – #%{chat_channel}"

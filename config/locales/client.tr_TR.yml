@@ -297,7 +297,7 @@ tr_TR:
       header:
         logged_in_members: "Tekrar hoş geldiniz %{preferred_display_name}!"
         anonymous_members: "%{site_name}'a hoş geldiniz!"
-      search: "Ara"
+      search_placeholder: "Ara"
     themes:
       default_description: "Varsayılan"
       broken_theme_alert: "Bir tema/bileşende hata olması nedeniyle siteniz çalışmayabilir. Daha fazla bilgi için tarayıcı konsolunu kontrol edin."
@@ -590,6 +590,7 @@ tr_TR:
       other: "%{count} yeni konuya bakın"
     preview: "ön izleme"
     cancel: "İptal et"
+    done: "Bitti"
     deleting: "Siliniyor…"
     save: "Değişiklikleri Kaydet"
     saving: "Kaydediliyor…"
@@ -677,10 +678,6 @@ tr_TR:
         claimed_by_you: "Bu ögeyi talep ettiniz ve inceleyebilirsiniz."
         claimed_by_other: "Bu öge yalnızca <b>%{username}</b> adlı kullanıcı tarafından incelenebilir."
         automatically_claimed_by: "Bu ürün şu anda <b>%{username}</b> tarafından inceleniyor."
-      claim:
-        title: "bu konuyu talep et"
-      unclaim:
-        help: "bu talebi iptal et"
       awaiting_approval: "Onay Bekleniyor"
       delete: "Sil"
       settings:
@@ -838,6 +835,7 @@ tr_TR:
           title: "Gönderi"
           noun: "gönderi"
       flagged_as: "Bayrak ekleme nedeni:"
+      user_label: "Kullanıcı"
       assigned_to: "Şuraya atandı:"
       moderator_actions: "Moderatör eylemleri"
       timeline_and_notes: "Zaman çizelgesi ve notlar"
@@ -868,6 +866,7 @@ tr_TR:
       review_user: "Kullanıcı"
       need_help: "Yardıma mı ihtiyacınız var?"
       copy_link: "Bağlantıyı kopyala"
+      copy_link_feedback: "Bağlantı kopyalandı"
       view_source: "Kaynağı görüntüle"
       insights:
         title: "İçgörüler"
@@ -2701,6 +2700,7 @@ tr_TR:
         select: "Çeviri seç"
         save: "Çeviriyi kaydet"
         original_content: "Orijinal gönderi içeriği"
+        translation: "Çeviri"
         placeholder: "Gönderinin çevirisini buraya girin..."
       group_mentioned_limit:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."
@@ -2846,8 +2846,11 @@ tr_TR:
           label: Fısıltıyı Aç/Kapat
           desc: Fısıltılar yalnızca personel tarafından görülebilir
         create_topic:
-          label: "Yeni Konu"
+          label: "Yeni konu"
           desc: Yeni bir konu oluşturun
+        create_personal_message:
+          label: "Yeni İleti"
+          desc: "Kişisel bir ileti oluştur"
         shared_draft:
           label: "Paylaşılan Taslak"
           desc: "Yalnızca izin verilen kullanıcılar tarafından görülebilecek bir konu taslağı oluşturun"
@@ -3340,7 +3343,7 @@ tr_TR:
         one: "Konuda %{count} gönderi"
         other: "Konuda %{count} gönderi"
       create: "Yeni Konu"
-      create_long: "Yeni bir Konu oluştur"
+      create_long: "Yeni bir konu oluşturun"
       open_draft: "Taslağı aç"
       private_message: "Mesaj başlat"
       archive_message:
@@ -3505,9 +3508,6 @@ tr_TR:
         auto_delete_replies: "Bu konudaki yanıtlar %{duration} sonra otomatik olarak silinir."
       auto_close_title: "Otomatik Kapatma Ayarları"
       auto_close_immediate:
-        one: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
-        other: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
-      auto_close_momentarily:
         one: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
         other: "Konudaki son gönderi zaten %{count} saat öncesine ait, bu yüzden konu hemen kapatılacak."
       timeline:
@@ -4504,8 +4504,7 @@ tr_TR:
       readonly: "Bak"
     preloader_text: "Yükleniyor"
     lightbox:
-      download: "indir"
-      open: "orijinal görüntü"
+      download: "İndir"
       previous: "Önceki (Sol ok tuşu)"
       next: "Sonraki (Sağ ok tuşu)"
       counter: "%curr% / %total%"
@@ -5215,6 +5214,7 @@ tr_TR:
   admin_js:
     type_to_filter: "Filtrelemek için yazın…"
     settings: "Ayarlar"
+    reset_filter: "Sıfırla"
     admin:
       title: "Discourse Yöneticisi"
       moderator: "Moderatör"
@@ -5247,6 +5247,21 @@ tr_TR:
           title: "Eklentiler"
         advanced:
           title: "Gelişmiş"
+      upcoming_changes:
+        name: "Ad"
+        enabled: "Etkin mi"
+        select_groups: "Grupları seç…"
+        preview: "Ön izle"
+        impact_roles:
+          admins: "Yöneticiler"
+          moderators: "Moderatörler"
+          staff: "Personel"
+        filter:
+          all: "Tümü"
+          enabled: "Etkin mi"
+          disabled: "Devre Dışı"
+          impact_type_feature: "Özellik"
+          impact_type_other: "Diğer"
       config:
         about:
           title: "Siteniz hakkında"
@@ -7456,7 +7471,6 @@ tr_TR:
             cancel: "İptal et"
         merging_user: "Kullanıcı birleştiriliyor…"
         merge_failed: "Kullanıcılar birleştirilirken bir hata oluştu."
-        delete_posts_forbidden_because_staff: "Yöneticilerin ve moderatörlerin tüm gönderileri silinemez."
         delete_forbidden:
           one: "Gönderileri olan kullanıcılar silinemez. Bir kullanıcıyı silmeye çalışmadan önce tüm gönderileri silin. (%{count} günden eski gönderiler silinemez.)"
           other: "Gönderileri olan kullanıcılar silinemez. Bir kullanıcıyı silmeye çalışmadan önce tüm gönderileri silin. (%{count} günden eski gönderiler silinemez.)"

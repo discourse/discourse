@@ -45,6 +45,20 @@ export default async function lightbox(elem, siteSettings) {
       appendToEl: isTesting() && document.getElementById("ember-testing"),
     });
 
+    lightboxEl.on("afterInit", () => {
+      const el = lightboxEl.pswp.currSlide.data.element;
+      el.querySelector(".meta")?.classList.add("open");
+    });
+
+    lightboxEl.on("close", function () {
+      lightboxEl.pswp.element.classList.add("pswp--behind-header");
+    });
+
+    lightboxEl.on("destroy", () => {
+      const el = lightboxEl.pswp.currSlide.data.element;
+      el.querySelector(".meta")?.classList.remove("open");
+    });
+
     lightboxEl.on("uiRegister", function () {
       // adds a custom caption to lightbox
       lightboxEl.pswp.ui.registerElement({
@@ -119,6 +133,18 @@ export default async function lightbox(elem, siteSettings) {
           pswp.on("change", () => {
             el.href = pswp.currSlide.data.src;
           });
+        },
+      });
+
+      lightboxEl.pswp.ui.registerElement({
+        name: "image-info",
+        order: 9,
+        isButton: true,
+        tagName: "a",
+        title: i18n("lightbox.image_info"),
+        html: renderIcon("string", "circle-info", { class: "pswp__icn" }),
+        onClick: () => {
+          lightboxEl.pswp.element.classList.toggle("pswp--caption-expanded");
         },
       });
     });

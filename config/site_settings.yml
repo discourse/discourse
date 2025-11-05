@@ -1072,7 +1072,7 @@ users:
     max: 36500
     area: "users"
   clean_up_inactive_users_after_days:
-    default: 730
+    default: 0
     min: 0
     max: 36500
     area: "users"
@@ -2299,19 +2299,23 @@ files:
     client: true
     type: uploaded_image_list
   allow_all_attachments_for_group_messages: false
+  image_quality:
+    enum: "ImageQualitySetting"
+    client: true
+    default: 70
   png_to_jpg_quality:
-    default: 95
-    min: 1
+    default: 0
+    min: 0
     max: 100
     hidden: true
   recompress_original_jpg_quality:
-    default: 90
-    min: 1
+    default: 0
+    min: 0
     max: 100
     hidden: true
   image_preview_jpg_quality:
-    default: 90
-    min: 1
+    default: 0
+    min: 0
     max: 100
     hidden: true
   allow_staff_to_upload_any_file_in_pm:
@@ -2355,7 +2359,7 @@ files:
     hidden: true
     client: true
   composer_media_optimization_image_encode_quality:
-    default: 75
+    default: 0
     client: true
     hidden: true
   composer_media_optimization_debug_mode:
@@ -3949,6 +3953,10 @@ user_preferences:
   default_other_enable_markdown_monospace_font:
     default: true
     area: "posts_and_topics|user_defaults"
+  default_watched_precedence_over_muted:
+    client: true
+    default: false
+    area: "categories_and_tags|user_defaults"
 
 api:
   retain_web_hook_events_period_days:
@@ -4118,10 +4126,6 @@ tags:
     default: always
     enum: RemoveMutedTagsFromLatestSiteSetting
     area: "categories_and_tags"
-  watched_precedence_over_muted:
-    client: true
-    default: false
-    area: "categories_and_tags"
 
   force_lowercase_tags:
     default: true
@@ -4260,8 +4264,17 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
+    hidden: true
   reviewable_ui_refresh:
     client: true
     type: group_list
     default: ""
     area: "experimental"
+  reviewable_old_moderator_actions:
+    default: true
+    hidden: true
+    client: true
+  enable_upcoming_changes:
+    default: false
+    hidden: true
+    client: true

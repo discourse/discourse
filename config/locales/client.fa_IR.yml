@@ -243,7 +243,7 @@ fa_IR:
       header:
         logged_in_members: "خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "به %{site_name} خوش آمدید!"
-      search: "جستجو"
+      search_placeholder: "جستجو"
     themes:
       default_description: "پیش‌فرض"
       error_caused_by: "ناشی از '%{name}'. برای به روز رسانی، پیکربندی مجدد یا غیر فعال کردن، <a target='blank' href='%{path}'>کلیک کنید</a>."
@@ -521,6 +521,7 @@ fa_IR:
       other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
     cancel: "انصراف"
+    done: "انجام شد"
     deleting: "در حال حذف ..."
     save: "ذخیره سازی تغییرات"
     saving: "در‌حال ذخیره‌سازی..."
@@ -608,10 +609,6 @@ fa_IR:
         claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
         claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
         automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
-      claim:
-        title: "درخواست این مبحث"
-      unclaim:
-        help: "حذف درخواست"
       awaiting_approval: "منتظر تایید"
       delete: "حذف"
       settings:
@@ -760,10 +757,12 @@ fa_IR:
         reviewable_post:
           title: "نوشته"
           noun: "نوشته"
+      user_label: "کاربر"
       notes:
         delete: "حذف"
       review_user: "کاربر"
       copy_link: "رونوشت پیوند"
+      copy_link_feedback: "لینک کپی شد"
       insights:
         activities:
           posts:
@@ -2648,8 +2647,10 @@ fa_IR:
           label: فعالسازی زمزمه
           desc: زمزمه ها فقط توسط کارکنان قابل مشاهده است
         create_topic:
-          label: "موضوع جدید"
           desc: یک موضوع جدید ایجاد کنید
+        create_personal_message:
+          label: "پیام جدید"
+          desc: "یک پیام شخصی جدید بساز"
         shared_draft:
           label: "درفت اشتراکی"
           desc: "موضوعی را پیش‌نویس کنید که فقط برای کاربران مجاز قابل مشاهده باشد"
@@ -3120,7 +3121,7 @@ fa_IR:
         one: "%{count} نوشته در این موضوع وجود دارد"
         other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
-      create_long: "ساخت یک موضوع جدید"
+      create_long: "یک موضوع جدید ایجاد کنید"
       open_draft: "بازکردن پیشنویس"
       private_message: "شروع یک پیام"
       archive_message:
@@ -3283,9 +3284,6 @@ fa_IR:
       auto_close_immediate:
         one: "از آخرین نوشته این موضوع %{count} ساعت گذشته، بنابراین موضوع بسته می‌شود."
         other: "از آخرین نوشته این موضوع %{count} ساعت گذشته، بنابراین موضوع بسته می‌شود."
-      auto_close_momentarily:
-        one: "از آخرین نوشته این موضوع %{count} ساعت گذشته است؛ بنابراین موضوع موقتاً بسته می‌شود."
-        other: "از آخرین نوشته این موضوع %{count} ساعت گذشته است؛ بنابراین موضوع موقتاً بسته می‌شود."
       timeline:
         back: "بازگشت"
         back_description: "بازگشت به اولین نوشته‌ی خوانده نشده"
@@ -4252,7 +4250,6 @@ fa_IR:
     preloader_text: "بارگیری..."
     lightbox:
       download: "دانلود"
-      open: "تصویر اصلی"
       previous: "قبلی (مکان‌نمای چپ)"
       next: "بعدی (مکان‌نمای راست)"
       counter: "%curr% از %total%"
@@ -4872,6 +4869,7 @@ fa_IR:
   admin_js:
     type_to_filter: "برای فیلتر کردن تایپ کنید..."
     settings: "تنظیمات"
+    reset_filter: "بازنشانی"
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "ناظر"
@@ -4903,6 +4901,20 @@ fa_IR:
           title: "افزونه‌ها"
         advanced:
           title: "پیشرفته"
+      upcoming_changes:
+        name: "نام"
+        enabled: "فعال شده"
+        select_groups: "انتخاب گروه‌ها"
+        preview: "پیش‌نمایش"
+        impact_roles:
+          admins: "مدیران ارشد"
+          moderators: "ناظران"
+          staff: "همکاران"
+        filter:
+          all: "همه"
+          enabled: "فعال شده"
+          disabled: "غیرفعال"
+          impact_type_other: "دیگر"
       config:
         about:
           title: "درباره سایت شما"
@@ -6755,7 +6767,6 @@ fa_IR:
             cancel: "لغو کردن"
         merging_user: "درحال ادغام کاربر…"
         merge_failed: "هنگام ادغام کاربران خطایی روی داد."
-        delete_posts_forbidden_because_staff: "نمی توان همه‌ی نوشته‌های مدیران و ناظران را حذف کرد"
         delete_forbidden:
           one: "کاربرانی را که دارای موضوع هستند نمی‌توانید پاک کنید. پیش از تلاش برای پاک کردن کاربر، ابتدا همه‌ی موضوعاتش را پاک کنید. (موضوعات که بیش از %{count} روز پیش فرستاده شده باشند، نمی‌توانند پاک شوند.)"
           other: "کاربرانی را که دارای موضوع هستند نمی‌توانید پاک کنید. پیش از تلاش برای پاک کردن کاربر، ابتدا همه‌ی موضوعاتش را پاک کنید. (موضوعات که بیش از %{count} روز پیش فرستاده شده باشند، نمی‌توانند پاک شوند.)"

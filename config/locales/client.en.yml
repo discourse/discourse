@@ -305,6 +305,12 @@ en:
 
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
+    skip_links_label: "Skip navigation links"
+    skip_to_post: "Skip to post %{post_number}"
+    skip_to_where_you_left_off: "Skip to where you left off (post %{post_number})"
+    skip_to_where_you_left_off_last: "Skip to where you left off (last reply, post %{post_number})"
+    skip_to_last_reply: "Skip to last reply"
+    skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
@@ -319,12 +325,13 @@ en:
 
     welcome_banner:
       header:
+        new_members: "Welcome, %{preferred_display_name}!"
         logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
       subheader:
         logged_in_members: ""
         anonymous_members: ""
-      search: "Search"
+      search_placeholder: "Search"
 
     impersonation:
       notice: "You are impersonating %{username}"
@@ -749,9 +756,9 @@ en:
         claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
         automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
-        title: "claim this topic"
+        title: "Claim this topic"
       unclaim:
-        help: "remove this claim"
+        help: "Remove this claim"
       awaiting_approval: "Awaiting Approval"
       delete: "Delete"
       settings:
@@ -917,6 +924,10 @@ en:
           title: "Post"
           noun: "post"
       flagged_as: "Flagged as"
+      post_flagged_as: "Post flagged as"
+      chat_flagged_as: "Chat flagged as"
+      queued_post_label: "Queued post"
+      user_label: "User"
       assigned_to: "Assigned to"
       moderator_actions: "Moderator actions"
       timeline_and_notes: "Timeline & notes"
@@ -947,6 +958,8 @@ en:
       review_user: "User"
       need_help: "Need help?"
       copy_link: "Copy link"
+      copy_permalink_title: "copy a link to this reviewable item to clipboard"
+      copy_link_feedback: "Link copied"
       view_source: "View source"
       insights:
         title: "Insights"
@@ -2445,6 +2458,10 @@ en:
       no_results: "No results"
       search: "Search…"
       label: "Select options"
+    d_otp:
+      screen_reader:
+        one: Enter a number
+        other: Enter %{count} numbers
     form_kit:
       reset: Reset
       optional: optional
@@ -2924,6 +2941,10 @@ en:
         select: "Select translation"
         save: "Save translation"
         original_content: "Original post content"
+        translation_preview: "Translation preview"
+        original: "Original"
+        translation: "Translation"
+        no_translation_yet: "Start typing to see translation preview..."
         placeholder: "Enter translation for post here..."
 
       group_mentioned_limit:
@@ -3086,8 +3107,11 @@ en:
           label: Toggle whisper
           desc: Whispers are only visible to staff members
         create_topic:
-          label: "New Topic"
+          label: "New topic"
           desc: Create a new topic
+        create_personal_message:
+          label: "New message"
+          desc: "Create a new personal message"
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to allowed users"
@@ -3605,7 +3629,7 @@ en:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
-      create_long: "Create a new Topic"
+      create_long: "Create a new topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
       archive_message:
@@ -4094,6 +4118,7 @@ en:
         actions: "Bulk actions"
 
     post:
+      accessible_heading: "post by %{username} %{date}"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Quote (or press q)"
@@ -4117,8 +4142,13 @@ en:
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
       load_more_replies: "load more replies"
+      load_more_posts_above: "Load more posts above"
+      load_more_posts_below: "Load more posts below"
       sr_collapse_replies: "Collapse embedded replies"
       sr_load_more_replies: "Load more embedded replies"
+      loading_more_posts_above: "Loading more posts above..."
+      loading_more_posts_below: "Loading more posts below..."
+      loading_complete: "Loading complete"
       sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply"
@@ -4871,6 +4901,7 @@ en:
     lightbox:
       download: "Download"
       open: "Original image"
+      image_info: "Image information"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
@@ -5630,6 +5661,8 @@ en:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
+    reset_filter: "Reset"
+    toggle_filters: "Toggle dropdown filters"
 
     admin:
       title: "Discourse Admin"
@@ -5667,6 +5700,54 @@ en:
         advanced:
           title: "Advanced"
 
+      upcoming_changes:
+        name: "Name"
+        plugin: "Plugin"
+        metadata: "Metadata"
+        enabled: "Enabled"
+        show_image: "Show image"
+        edit_groups: "Edit opt-in groups"
+        groups_updated: "Groups updated!"
+        save_groups: "Save groups"
+        select_groups: "Select groups…"
+        opt_in_groups: "Opt-in groups"
+        opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
+        toggled_too_fast: "You have toggled this change too quickly. Please wait a few seconds before trying again."
+        change_enabled: "You have opted-in to this change"
+        change_disabled: "You have opted-out of this change"
+        permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
+        permanent_no_group_selection: "N/A, permanent changes apply to all groups."
+        no_changes: "There are no upcoming changes at this time."
+        preview: "Preview"
+        statuses:
+          pre_alpha: "Pre-Alpha"
+          alpha: "Alpha"
+          beta: "Beta"
+          stable: "Stable"
+          permanent: "Permanent"
+        impact_roles:
+          admins: "Admins"
+          moderators: "Moderators"
+          staff: "Staff"
+          all_members: "All members"
+          developers: "Developers"
+        filter:
+          search_placeholder: "Filter by name, description, or plugin..."
+          no_results: "No upcoming changes match your filter"
+          all: "All"
+          enabled_all: "Enabled or disabled"
+          enabled: "Enabled"
+          disabled: "Disabled"
+          impact_type_all: "All impact types"
+          impact_type_feature: "Feature"
+          impact_type_other: "Other"
+          status_all: "All statuses"
+          status_pre_alpha: "Pre-Alpha"
+          status_alpha: "Alpha"
+          status_beta: "Beta"
+          status_stable: "Stable"
+          status_permanent: "Permanent"
+
       config:
         about:
           title: "About your site"
@@ -5697,6 +5778,9 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
+        upcoming_changes:
+          title: "Upcoming changes"
+          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by impact, change type, and status.\n\nOpt-in groups can be used to let a certain group of users to test a change before it is released to everyone, though these groups will be irrelevant once a change progresses to the Stable status."
         login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
@@ -7525,6 +7609,8 @@ en:
             delete_associated_accounts: "delete associated accounts"
             change_theme_site_setting: "change theme site setting"
             stop_impersonating: "stop impersonating"
+            upcoming_change_toggled: "upcoming change toggled"
+            change_site_setting_groups: "change site setting groups"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -7972,8 +8058,8 @@ en:
 
         merging_user: "Merging user…"
         merge_failed: "There was an error while merging the users."
-        delete_forbidden_because_staff: "Admins can't be deleted."
-        delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
+        delete_forbidden_because_admin: "Admins can't be deleted."
+        delete_posts_forbidden_because_admin: "Can't delete all posts of admins."
         delete_forbidden:
           one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
           other: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} days old can't be deleted.)"
@@ -8413,6 +8499,7 @@ en:
         category: "Post to category"
         tags: "Topic tags"
         post_author: "Post author"
+        post_author_description: "Author for all embedded topics from this host, overriding blog page meta tags. Leave empty to read author from the page's <meta name='discourse-username'> or <meta name='author'> tags."
         post_author_with_default: "Post author (defaults to %{author})"
         add_host: "Add host"
         posts_and_topics: "Posts & topics configuration"

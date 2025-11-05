@@ -26,10 +26,6 @@ es:
       llm_triage:
         title: Triaje de publicaciones mediante IA
         description: "Triaje de publicaciones utilizando un gran modelo lingüístico"
-        flagged_post: |
-          <div>Respuesta del modelo:</div>
-          <p>%{llm_response}</p>
-          <b>Activada por la regla<a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a></b>
       llm_report:
         title: Informe periódico mediante IA
         description: "Informe periódico basado en un modelo lingüístico de gran tamaño"
@@ -102,7 +98,6 @@ es:
     ai_bot_allowed_groups: "Cuando el Bot GPT tenga acceso al MP, responderá a los miembros de estos grupos."
     ai_bot_debugging_allowed_groups: "Permitir que estos grupos vean un botón de depuración en las publicaciones que muestre la solicitud y la respuesta sin procesar de la IA."
     ai_bot_public_sharing_allowed_groups: "Permitir que estos grupos compartan mensajes personales de IA con el público a través de un enlace único disponible públicamente. Nota: Si tu sitio requiere inicio de sesión, los mensajes compartidos también requerirán inicio de sesión."
-    ai_bot_add_to_header: "Mostrar un botón en el encabezado para iniciar un MP con un bot de IA"
     ai_bot_github_access_token: "Token de acceso a GitHub para utilizarlo con las herramientas de IA de GitHub (necesario para la compatibilidad con búsquedas)"
     ai_stability_api_key: "Clave API para la API de stability.ai"
     ai_stability_engine: "Motor de generación de imágenes que se utilizará para la API stability.ai"

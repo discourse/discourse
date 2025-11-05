@@ -122,3 +122,8 @@ openapi/*
 
 # direnv.net
 .direnv
+
+# discourse-ai evals
+/plugins/discourse-ai/evals/cases
+/plugins/discourse-ai/evals/log
+/plugins/discourse-ai/config/eval-llms.local.yml

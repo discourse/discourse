@@ -346,6 +346,12 @@ cs:
       chat_message_separator:
         today: Dnes
         yesterday: Včera
+      search_view:
+        filter_placeholder: Hledat ve zprávách
+        message_result_label: "Zpráva v chatu od %{username}: %{preview} %{threadInfo}"
+        in_thread: "ve vlákně %{title}"
+        sr_instructions: "Stisknutím klávesy Enter nebo mezerníku otevřete zprávu. Pro navigaci mezi výsledky použijte klávesu Tab."
+        results_list_label: "Výsledky vyhledávání zpráv v chatu"
       members_view:
         filter_placeholder: Najít členy
         add_member: Přidat člena
@@ -362,6 +368,7 @@ cs:
         tabs:
           members: Členové
           settings: Nastavení
+          search: Vyhledat
         remove_member: "Smazat"
       new_message_modal:
         title: Odeslání zprávy
@@ -483,6 +490,7 @@ cs:
           topic: "Témata"
       reviewable:
         type: "Zpráva chatu"
+        message_in_channel: "Kanál"
       reactions:
         only_you: "<span>Reagovali jste pomocí </span>:%{emoji}:"
         you_and_single_user: "<span>Vy a %{username} jste reagovali pomocí </span>:%{emoji}:"
@@ -549,6 +557,13 @@ cs:
           create_export: "Vytvořit export"
           confirm_export: "Toto exportuje všechny zprávy ze všech kanálů a odešle vám výsledek v soukromé zprávě. Opravdu chcete exportovat?"
           export_has_started: "Export byl zahájen. Až bude hotový, obdržíte SZ."
+      search:
+        title: Hledat v chatu
+        aria_label: "Přepnout na vyhledávání v chatu"
+        no_results: "Nenalezeny žádné výsledky"
+        sort:
+          relevance: "Relevance"
+          latest: "Nejnovější"
       my_threads:
         title: Moje vlákna
         aria_label: "Přepnout na můj seznam vláken"
@@ -568,18 +583,18 @@ cs:
         channel_placeholder: "Vyberte kanál"
         channel: "Kanál"
         confirm_destroy: "Jste si jisti, že chcete odstranit tento příchozí webhook? Toto nelze zrušit."
-        current_emoji: "Aktuální emoji"
+        current_emoji: "Aktuální emotikon"
         description: "Popis"
         delete: "Smazat"
-        emoji: "Smajlíky :)"
-        emoji_instructions: "Pokud emoji ponecháte prázdné, použije se systémový avatar."
-        name: "Jméno"
+        emoji: "Emotikon"
+        emoji_instructions: "Pokud nebude vybrán emotikon, použije se systémový avatar."
+        name: "Název"
         name_placeholder: "název..."
         new: "Nový příchozí webhook"
         none: "Nebyly vytvořeny žádné existující příchozí webhooky."
         no_emoji: "Nejsou vybrány žádné emotikony"
         post_to: "Poslat na"
-        reset_emoji: "Obnovit Emoji"
+        reset_emoji: "Resetovat emotikon"
         save: "Uložit"
         edit: "Upravit"
         select_emoji: "Vybrat Emoji"

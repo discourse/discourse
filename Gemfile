@@ -165,6 +165,7 @@ group :development do
   gem "yard"
   gem "ruby-lsp", require: false
   gem "ruby-lsp-rails", require: false
+  gem "ruby-lsp-rspec", require: false
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"

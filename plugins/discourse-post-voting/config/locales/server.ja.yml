@@ -34,6 +34,26 @@ ja:
     post_voting_comment_enabled: "投稿の投票トピックで投稿へのコメントを有効にする"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "未対応"
+        agree_and_keep_comment:
+          title: "コメントを保持"
+          description: "通報に同意し、コメントを変更しないままにします。"
+        agree_and_keep_deleted:
+          title: "コメントを削除されたままにする"
+          description: "通報に同意し、コメントを削除したままにします。"
+        agree_and_restore:
+          title: "コメントを復元"
+          description: "ユーザーが閲覧できるようにコメントを復元します。"
+        agree_and_delete:
+          title: "コメントを削除"
+          description: "ユーザーが閲覧できないようにコメントを削除します。"
+        disagree_and_restore:
+          title: "却下してコメントを復元"
+          description: "すべてのユーザーが閲覧できるようにコメントを復元します。"
   post_action_types:
     vote:
       title: "投票"

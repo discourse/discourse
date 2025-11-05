@@ -294,7 +294,7 @@ da:
       header:
         logged_in_members: "Velkommen tilbage, %{preferred_display_name}!"
         anonymous_members: "Velkommen til %{site_name}!"
-      search: "Søg"
+      search_placeholder: "Søg"
     impersonation:
       notice: "Du udgiver dig for at være %{username}"
       stop: "Stop med at udgive dig"
@@ -544,6 +544,7 @@ da:
       other: "Se %{count} nye emner"
     preview: "forhåndsvising"
     cancel: "Annuller"
+    done: "Færdig"
     deleting: "Sletter…"
     save: "Gem ændringer"
     saving: "Gemmer…"
@@ -631,10 +632,6 @@ da:
         claimed_by_you: "Du har gjort krav på dette punkt og kan gennemgå det."
         claimed_by_other: "Dette punkt kan kun gennemgås af <b>%{username}</b> ."
         automatically_claimed_by: "Dette element er i øjeblikket ved at blive gennemgået af <b>%{username}</b>."
-      claim:
-        title: "gør krav på dette emne"
-      unclaim:
-        help: "fjern dette krav"
       awaiting_approval: "Afventer godkendelse"
       delete: "Slet"
       settings:
@@ -785,6 +782,7 @@ da:
           title: "Indlæg"
           noun: "indlæg"
       flagged_as: "Anmeldt som"
+      user_label: "Bruger"
       assigned_to: "Tildelt til"
       moderator_actions: "Moderatorhandlinger"
       timeline_and_notes: "Tidslinje og noter"
@@ -809,6 +807,7 @@ da:
       review_user: "Bruger"
       need_help: "Brug for hjælp?"
       copy_link: "Kopiér link"
+      copy_link_feedback: "Link kopieret"
       view_source: "Vis kilde"
       insights:
         title: "Indsigter"
@@ -2460,8 +2459,11 @@ da:
           label: Slå hvisken til/fra
           desc: Hvisken er kun synlige for hjælperteam medlemmer
         create_topic:
-          label: "Nyt Emne"
+          label: "Nyt emne"
           desc: Opret et nyt emne
+        create_personal_message:
+          label: "Ny meddelelse"
+          desc: "Opret en ny privat besked"
         shared_draft:
           label: "Delt Kladde"
           desc: "Lav en udkast til et emne, der kun er synligt for tilladte brugere"
@@ -2824,7 +2826,7 @@ da:
         one: "%{count} indlæg i emnet"
         other: "%{count} indlæg i emnet"
       create: "Nyt emne"
-      create_long: "Opret et nyt emne i debatten"
+      create_long: "Opret et nyt emne"
       open_draft: "Åbn kladde"
       private_message: "Start en besked"
       archive_message:
@@ -2943,9 +2945,6 @@ da:
       auto_close_immediate:
         one: "Seneste indlæg i emnet er allerede %{count} time gammelt så emnet bliver lukket med det samme."
         other: "Seneste indlæg i emnet er allerede %{hours} timer gammelt så emnet bliver lukket med det samme."
-      auto_close_momentarily:
-        one: "Seneste indlæg i emnet er allerede %{count} time gammelt så emnet bliver lukket med det samme."
-        other: "Seneste indlæg i emnet er allerede %{count} timer gammelt så emnet bliver lukket med det samme."
       timeline:
         back: "Tilbage"
         back_description: "Tilbage til dit seneste ulæste indlæg"
@@ -3802,8 +3801,7 @@ da:
       readonly: "Se"
     preloader_text: "Indlæser"
     lightbox:
-      download: "hent"
-      open: "originalt billede"
+      download: "Download"
       previous: "Forrige (Venstre piletast)"
       next: "Næste (højre piletast)"
       counter: "%curr% af %total%"
@@ -4323,6 +4321,7 @@ da:
   admin_js:
     type_to_filter: "Skriv for at filtrere…"
     settings: "Indstillinger"
+    reset_filter: "Nulstil"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -4353,6 +4352,20 @@ da:
           title: "Udvidelser"
         advanced:
           title: "Avanceret"
+      upcoming_changes:
+        name: "Navn"
+        enabled: "Aktiveret"
+        select_groups: "Vælg grupper…"
+        preview: "Forhåndsvisning"
+        impact_roles:
+          admins: "Admins"
+          moderators: "Moderatorer"
+          staff: "Personale"
+        filter:
+          all: "Alle"
+          enabled: "Aktiveret"
+          disabled: "Deaktiveret"
+          impact_type_other: "Andre"
       config:
         about:
           title: "Om dit websted"
@@ -5902,7 +5915,6 @@ da:
             cancel: "Annuller"
         merging_user: "Fletter bruger…"
         merge_failed: "Der opstod en fejl under sammenfletning af brugere."
-        delete_posts_forbidden_because_staff: "Kan ikke slette alle indlæg fra administratorer og moderatorer."
         delete_forbidden:
           one: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dag siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."
           other: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dage siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."

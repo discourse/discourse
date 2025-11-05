@@ -229,7 +229,7 @@ lt:
       header:
         logged_in_members: "Sveikas sugrįžęs, %{preferred_display_name}!"
         anonymous_members: "Sveiki atvykę į %{site_name}!"
-      search: "Paieška"
+      search_placeholder: "Paieška"
     themes:
       default_description: "Numatytasis"
       error_caused_by: "Sukėlė '%{name}'. <a target='blank' href='%{path}'>Spustelėkite čia</a> norėdami atnaujinti, iš naujo sukonfigūruoti arba išjungti."
@@ -551,6 +551,7 @@ lt:
       other: "Pamatyk %{count} naujas temas"
     preview: "Peržiūrėti"
     cancel: "Atšaukti"
+    done: "Baigta"
     deleting: "Ištrinama…"
     save: "Išsaugoti pakeitimus"
     saving: "Saugoma..."
@@ -640,10 +641,6 @@ lt:
         claimed_by_you: "Pareiškėte teises į šį elementą ir galite jį peržiūrėti."
         claimed_by_other: "Šį elementą gali peržiūrėti tik <b>%{username}</b>."
         automatically_claimed_by: "Šį elementą šiuo metu peržiūri <b>%{username}</b>."
-      claim:
-        title: "pretenduoti į šią temą"
-      unclaim:
-        help: "pašalinti šį teiginį"
       awaiting_approval: "Laukiama patvirtinimo"
       delete: "Pašalinti"
       settings:
@@ -799,6 +796,7 @@ lt:
         reviewable_post:
           title: "Įrašai"
           noun: "įrašai"
+      user_label: "Narys"
       notes:
         delete: "Pašalinti"
       review_user: "Narys"
@@ -2385,6 +2383,8 @@ lt:
       saved_local_draft_tip: "išsaugota lokaliai"
       drafts_offline: "juodraščiai ne ryšio zonoje"
       edit_conflict: "redaguoti konfliktą"
+      translations:
+        translation: "Vertimai"
       cannot_see_mention:
         category: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie neturi prieigos prie šios kategorijos. Turėsite juos įtraukti į grupę, kuri turi prieigą prie šios kategorijos."
         private: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie negali matyti šio asmeninio pranešimo. Turėsite juos pakviesti į šią asmeninę žinutę."
@@ -2468,8 +2468,9 @@ lt:
         toggle_whisper:
           label: Visiškas gandas
           desc: Gandai matomi tik valdytojams
-        create_topic:
-          label: "Nauja tema"
+        create_personal_message:
+          label: "Nauja žinutė"
+          desc: "Sukurti naują asmeninę žinutę"
         shared_draft:
           label: "Bendrinami juodraščiai"
           desc: "Sukurkite temą, kuri bus matoma tik leidžiamiems vartotojams"
@@ -2794,7 +2795,6 @@ lt:
         many: "teoje %{count} įrašų"
         other: "temoje %{count} įrašai"
       create: "Nauja Tema"
-      create_long: "Sukurti naują temą"
       open_draft: "Atviras juodraštis"
       private_message: "Rašyti žinutę"
       archive_message:
@@ -3724,8 +3724,7 @@ lt:
       readonly: "Peržiūrėti"
     preloader_text: "Kraunama"
     lightbox:
-      download: "atsisiųsti"
-      open: "originalus vaizdas"
+      download: "Atsisiųsti"
       previous: "Ankstesnis (rodyklės į kairę klavišas)"
       next: "Kitas (Dešinės rodyklės klavišas)"
       counter: "%curr% iš %total%"
@@ -4101,6 +4100,7 @@ lt:
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
+    reset_filter: "Atstatyti"
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"
@@ -4128,6 +4128,19 @@ lt:
           title: "Apsauga"
         plugins:
           title: "Apklausos"
+      upcoming_changes:
+        name: "Vardas"
+        enabled: "Galimas"
+        preview: "Peržiūrėti"
+        impact_roles:
+          admins: "Administratoriai"
+          moderators: "Moderatoriai"
+          staff: "Personalas"
+        filter:
+          all: "Visi"
+          enabled: "Galimas"
+          disabled: "Uždrausta"
+          impact_type_other: "Kiti"
       config:
         developer:
           title: "Programuotojams"
@@ -5286,7 +5299,6 @@ lt:
             transfer_and_delete: "Perkelti ir ištrinti @%{username}"
             cancel: "Atšaukti"
         merge_failed: "Sujungiant vartotojus įvyko klaida."
-        delete_posts_forbidden_because_staff: "Negalima ištrinti administratorių ir moderatorių įrašų"
         delete_forbidden:
           one: "Vartotojai negali būti ištrinti jeigu jie sukūrė įrašus. Ištrink visus įrašus prieš ištrinant vartotoją (%{count} dienos senumo įrašas negali būti ištrintas)"
           few: "Vartotojai negali būti ištrinti jeigu jie sukūrė įrašus. Ištrink visus įrašus prieš ištrinant vartotoją (%{count} dienų senumo įrašai negali būti ištrinti)"

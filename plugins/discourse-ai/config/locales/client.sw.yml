@@ -50,6 +50,13 @@ sw:
       modals:
         select_option: "Chagua chaguo moja..."
       translations:
+        stats:
+          eta_hours:
+            one: "saa %{count}"
+            other: "masaa %{count}"
+          eta_days:
+            one: "siku %{count}"
+            other: "siku %{count}"
         progress_chart:
           bar_done:
             one: "%{count} chapisho"

@@ -198,7 +198,7 @@ ca:
       header:
         logged_in_members: "Benvingut de nou, %{preferred_display_name}!"
         anonymous_members: "Benvingut a %{site_name}!"
-      search: "Cerca"
+      search_placeholder: "Cerca"
     themes:
       default_description: "Per defecte"
       error_caused_by: "Causat per '%{name}'. <a target='blank' href='%{path}'>Feu clic aquí</a> per actualitzar, tornar a configurar o desactivar."
@@ -405,6 +405,7 @@ ca:
       other: "Vegeu %{count} temes nous"
     preview: "previsualitza"
     cancel: "Cancel·la"
+    done: "Fet"
     save: "Desa els canvis"
     saved: "Desat!"
     upload: "Carrega"
@@ -463,10 +464,6 @@ ca:
         required: "Heu de reclamar elements abans de poder revisar-los"
         claimed_by_you: "Heu reclamat aquest element i podeu revisar-lo"
         claimed_by_other: "Aquest element sols pot ser revisat per <b>%{username}</b>."
-      claim:
-        title: "reclama aquest tema"
-      unclaim:
-        help: "elimina aquesta reclamació"
       awaiting_approval: "Esperant aprovació"
       delete: "Suprimeix"
       settings:
@@ -589,6 +586,7 @@ ca:
         reviewable_post:
           title: "Publicació"
           noun: "publicació"
+      user_label: "Usuari"
       notes:
         delete: "Suprimeix"
       review_user: "Usuari"
@@ -1751,8 +1749,9 @@ ca:
         toggle_whisper:
           label: Commuta xiuxiueig
           desc: Els xiuxiuejos sols són visibles a membres de l'equip responsable
-        create_topic:
-          label: "Tema nou"
+        create_personal_message:
+          label: "Missatge nou"
+          desc: "Crea un missatge personal nou "
         shared_draft:
           label: "Esborrany compartit"
         toggle_topic_bump:
@@ -2003,7 +2002,6 @@ ca:
         one: "%{count} publicació en el tema"
         other: "%{count} publicacions en el tema"
       create: "Tema nou"
-      create_long: "Crea un tema nou"
       open_draft: "Obre esborrany"
       private_message: "Comença un missatge"
       archive_message:
@@ -2775,7 +2773,7 @@ ca:
       readonly: "Mira"
     preloader_text: "Carregant"
     lightbox:
-      download: "descarrega"
+      download: "Descarrega"
       previous: "Anterior (tecla de fletxa esquerra)"
       next: "Següent (tecla de fletxa dreta)"
       counter: "%curr% de %total%"
@@ -3065,6 +3063,7 @@ ca:
         categories: "Totes les categories"
   admin_js:
     settings: "Configuració"
+    reset_filter: "Restableix"
     admin:
       title: "Administració de Discourse"
       moderator: "Moderador"
@@ -3092,6 +3091,19 @@ ca:
           title: "Seguretat"
         plugins:
           title: "Connectors"
+      upcoming_changes:
+        name: "Nom"
+        enabled: "Activat"
+        preview: "Previsualitza"
+        impact_roles:
+          admins: "Administradors"
+          moderators: "Moderadors"
+          staff: "Equip responsable"
+        filter:
+          all: "Tots"
+          enabled: "Activat"
+          disabled: "Desactivat"
+          impact_type_other: "Altres"
       config:
         developer:
           title: "Desenvolupador"
@@ -4167,7 +4179,6 @@ ca:
             cancel: "Cancel·la"
           confirmation:
             cancel: "Cancel·la"
-        delete_posts_forbidden_because_staff: "No es poden suprimir totes les publicacions d'administradores i moderadors."
         delete_forbidden:
           one: "No es poden suprimir els usuaris si tenen publicacions. Suprimiu totes les publicacions abans de suprimir un usuari. (No es poden suprimir les publicacions amb més d'%{count} dia.)"
           other: "No es poden suprimir els usuaris si tenen publicacions. Suprimiu totes les publicacions abans de suprimir un usuari. (No es poden suprimir les publicacions amb més de %{count} dies.)"

@@ -26,6 +26,7 @@ module(
     });
 
     test("shows the logged in user message with the user's username", async function (assert) {
+      this.currentUser.previous_visit_at = new Date("2025-01-01");
       await render(<template><WelcomeBanner /></template>);
 
       assert.dom(".welcome-banner").containsText(
@@ -37,6 +38,7 @@ module(
     });
 
     test("shows the logged in user message with the user's display name", async function (assert) {
+      this.currentUser.previous_visit_at = new Date("2025-01-01");
       this.siteSettings.display_name_on_posts = true;
       this.siteSettings.prioritize_username_in_ux = false;
 
@@ -61,15 +63,27 @@ module(
       assert.dom(".welcome-banner .welcome-banner__title input").doesNotExist();
     });
 
-    test("uses the welcome_banner.search translation for placeholder", async function (assert) {
+    test("shows the new member message for users without previous_visit_at", async function (assert) {
+      this.currentUser.previous_visit_at = null;
+      await render(<template><WelcomeBanner /></template>);
+
+      assert.dom(".welcome-banner").containsText(
+        i18n("welcome_banner.header.new_members", {
+          preferred_display_name: "eviltrout",
+        }),
+        "banner contains the correct message for new users"
+      );
+    });
+
+    test("uses the welcome_banner.search_placeholder translation for placeholder", async function (assert) {
       await render(<template><WelcomeBanner /></template>);
 
       assert
         .dom("#welcome-banner-search-input")
         .hasAttribute(
           "placeholder",
-          i18n("welcome_banner.search"),
-          "search input uses the welcome_banner.search translation as placeholder"
+          i18n("welcome_banner.search_placeholder"),
+          "search input uses the welcome_banner.search_placeholder translation as placeholder"
         );
     });
   }

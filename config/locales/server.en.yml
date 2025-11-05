@@ -1681,6 +1681,7 @@ en:
     problem:
       twitter_login: 'Twitter login appears to not be working at the moment. Check the credentials in <a href="%{base_path}/admin/site_settings/category/login?filter=twitter">the Site Settings</a>.'
       group_email_credentials: 'There was an issue with the email credentials for the group <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. No emails will be sent from the group inbox until this problem is addressed. %{error}'
+      upcoming_change_stable_opted_out: 'Your site has opted-out of the "%{upcoming_change}" upcoming change. This change has now reached the "Stable" status and may soon be removed or made permanent. Visit <a href="%{base_path}/admin/config/upcoming-changes">the upcoming changes page</a> to review details about this change.'
       rails_env: "Your server is running in %{env} mode."
       host_names: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
       sidekiq: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by Sidekiq. Please ensure at least one Sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -1712,6 +1713,7 @@ en:
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
+      starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -2122,6 +2124,7 @@ en:
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
+    image_quality: "Set the level of quality for images uploaded to your site. Lower quality will result in smaller file sizes."
     png_to_jpg_quality: "Quality of the converted JPG file (1 is lowest quality, 99 is best quality, 100 to disable)."
     recompress_original_jpg_quality: "Quality of uploaded image files (1 is lowest quality, 99 is best quality, 100 to disable)."
     image_preview_jpg_quality: "Quality of resized image files (1 is lowest quality, 99 is best quality, 100 to disable)."
@@ -2684,7 +2687,7 @@ en:
     force_lowercase_tags: "Force all new tags to be entirely lowercase."
     create_post_for_category_and_tag_changes: "Create a whisper post when a topic's category or tags change, requires whisper posts to be enabled."
     automatically_clean_unused_tags: "Automatically delete tags that are not being used on any topics or personal messages on a daily basis."
-    watched_precedence_over_muted: "Notify me about topics in categories or tags I’m watching that also belong to one I have muted"
+    default_watched_precedence_over_muted: "Notify users about topics in categories or tags that they are watching that also belong to one they have muted"
 
     company_name: "Name of your company or organization. If left blank, no boilerplate Terms of Service or Privacy Notice will be provided."
     governing_law: "Specify the jurisdiction that governs the legal aspects of the site, including Terms of Service and Privacy Policy. This is typically the country or state where the company operating the site is registered or conducts business."
@@ -2765,12 +2768,14 @@ en:
     view_raw_email_allowed_groups: "Groups which can view the raw email content of a post if it was created by an incoming email. This includes email headers and other technical information."
     rich_editor: "Enable the rich editor for the composer so all users can switch between the current Markdown mode and the new rich text editor for more intuitive and user-friendly composition."
     default_composition_mode: "Set the default mode for your community's composer. Rich text mode provides a more modern, familiar writing experience for most users, while Markdown mode may be suitable for more technical audiences. Members can use a toggle in the composer toolbar to switch between modes."
-    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
+    viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
     content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
+    enable_upcoming_changes: "Enable upcoming changes"
+
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -2892,9 +2897,9 @@ en:
       activity_after: "Show topics with last activity after a date (YYYY-MM-DD or days ago)"
       created_before: "Show topics created before a date (YYYY-MM-DD or days ago)"
       created_after: "Show topics created after a date (YYYY-MM-DD or days ago)"
-      created_by: "Show topics created by a specific user"
-      created_by_user: "Show topics created by username (without @)"
-      created_by_multiple: "Show topics created by any of the specified users (comma-separated)"
+      created_by: "Show topics created by a specific user or group"
+      created_by_user: "Show topics created by username or group (without @)"
+      created_by_multiple: "Show topics created by any of the specified users or groups (comma-separated)"
       latest_post_before: "Show topics with last post before a date (YYYY-MM-DD or days ago)"
       latest_post_after: "Show topics with last post after a date (YYYY-MM-DD or days ago)"
       likes_min: "Show topics with at least this many likes"
@@ -5697,6 +5702,12 @@ en:
     auto_deleted_hidden_posts: "Automatically destroyed hidden posts"
     seed_data_topic_updated: "Seed data topic updated"
     seed_data_topic_deleted: "Seed data topic deleted"
+    upcoming_changes:
+      log_manually_toggled: "Manually toggled by user"
+      log_promoted: >
+        This upcoming change was automatically enabled because it reached the '%{change_status}' status, which meets or exceeds the defined promotion status of '%{promotion_status_threshold}' on your site.
+
+        See the <a href="%{base_url}/admin/config/upcoming-changes">upcoming changes page</a> for more detail.
 
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
@@ -5852,6 +5863,8 @@ en:
       reject_and_keep_deleted:
         title: "Keep post deleted"
         complete: "Post rejected and kept deleted."
+      scrub:
+        title: Scrub record
       approve_and_restore:
         title: "Approve and Restore post"
         complete: "Post approved and restored."
@@ -5912,6 +5925,10 @@ en:
         complete: "User deleted"
         reason: "Deleted via review queue"
       delete_and_block_user:
+        title: "Delete & block"
+        description: "Delete the user and block their IP/email"
+        complete: "User deleted and blocked"
+      delete_user_block:
         title: "Delete & block"
         description: "Delete the user and block their IP/email"
         complete: "User deleted and blocked"

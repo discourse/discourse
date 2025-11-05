@@ -326,6 +326,8 @@ de:
       chat_message_separator:
         today: Heute
         yesterday: Gestern
+      search_view:
+        filter_placeholder: Nachrichten durchsuchen
       members_view:
         filter_placeholder: Mitglieder finden
         add_member: Mitglied hinzufügen
@@ -342,6 +344,7 @@ de:
         tabs:
           members: Mitglieder
           settings: Einstellungen
+          search: Suche
         remove_member: "Entfernen"
       new_message_modal:
         title: Nachricht senden
@@ -433,6 +436,7 @@ de:
           topic: "Thema"
       reviewable:
         type: "Chat-Nachricht"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Du hast mit reagiert mit </span>:%{emoji}:"
         you_and_single_user: "<span>Du und %{username} habt reagiert mit </span>:%{emoji}:"
@@ -495,6 +499,11 @@ de:
           create_export: "Export erstellen"
           confirm_export: "Dies exportiert alle Nachrichten aus allen Kanälen und schickt dir das Ergebnis in einer persönlichen Nachricht. Bist du sicher, dass du exportieren willst?"
           export_has_started: "Der Export hat begonnen. Du erhältst eine PN, wenn er abgeschlossen ist."
+      search:
+        no_results: "Keine Ergebnisse gefunden"
+        sort:
+          relevance: "Relevanz"
+          latest: "Aktuelle"
       my_threads:
         title: Meine Threads
         aria_label: "Zu meiner Thread-Liste wechseln"

@@ -32,7 +32,7 @@ pl_PL:
         flagged_post: |
           <div>Odpowiedź modelu:</div>
           <p>%{llm_response}</p>
-          <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/discourse-automation/%{automation_id}">%{automation_name}</a> .</b>
+          <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
           body: |
@@ -118,7 +118,8 @@ pl_PL:
     ai_bot_allowed_groups: "Gdy bot GPT uzyska dostęp do PW, odpowie członkom tych grup."
     ai_bot_debugging_allowed_groups: "Zezwól tym grupom na wyświetlanie przycisku debugowania w postach, który wyświetla surowe żądanie i odpowiedź AI"
     ai_bot_public_sharing_allowed_groups: "Zezwól tym grupom na udostępnianie osobistych wiadomości AI publicznie za pośrednictwem unikalnego, publicznie dostępnego linku. Uwaga: jeśli Twoja witryna wymaga logowania, udostępnianie również będzie wymagało logowania."
-    ai_bot_add_to_header: "Wyświetl przycisk w nagłówku, aby rozpocząć PW z botem AI"
+    ai_bot_add_to_header: "Wyświetl przycisk w nagłówku, aby rozpocząć wiadomość prywatną z botem AI"
+    ai_bot_add_to_community_section: "Wyświetl link w sekcji społeczności na pasku bocznym, aby rozpocząć prywatną wiadomość z botem AI"
     ai_bot_github_access_token: "Token dostępu GitHub do użytku z narzędziami GitHub AI (wymagany do obsługi wyszukiwania)"
     ai_discover_enabled: "Włącz funkcję wyszukiwania odkrywczego"
     ai_discover_persona: "Osobowość do wykorzystania w funkcji wyszukiwania odkrywczego"
@@ -138,6 +139,7 @@ pl_PL:
     ai_translation_backfill_limit_to_public_content: "Po włączeniu tej opcji tłumaczone będą tylko treści z kategorii publicznych. Po wyłączeniu tej opcji do tłumaczenia będą wysyłane również treści z prywatnych wiadomości grupowych i kategorii."
     ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
+    ai_translation_backfill_hourly_rate: "Liczba wpisów i tematów do przetłumaczenia na godzinę podczas operacji uzupełniania. Ustaw na 0, aby wyłączyć automatyczne uzupełnianie tłumaczeń dla istniejących treści."
   reviewables:
     reasons:
       flagged_by_toxicity: Wtyczka AI oznaczyła to po sklasyfikowaniu jako toksyczne.

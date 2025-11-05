@@ -1287,7 +1287,6 @@ ro:
     welcome_banner_location: "Stabilește unde va apărea bannerul de bun venit pe pagină."
     welcome_banner_page_visibility: "Stabilește pe ce pagini va apărea bannerul de bun venit."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
-    deactivate_widgets_rendering: "Dezactivează motorul de randare a pieselor vechi. Aceasta va dezactiva toate piesele care nu au fost actualizate la componentele Glimmer și va forța activarea necondiționată a fluxului de postări Glimmer, indiferent de valoarea setării `glimmer_post_stream_mode`. Această setare nu este recomandată pentru site-urile de producție, deoarece poate deteriora temele și modulele existente."
     floatkit_autocomplete_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitor. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     floatkit_autocomplete_chat_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitorul de discuții. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
@@ -1301,8 +1300,8 @@ ro:
     about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
     rich_editor: "Activează editorul îmbogățit pentru compoziție astfel încât toți utilizatorii să poată comuta între modul Markdown curent și noul editor de text îmbogățit pentru o compoziție mai intuitivă și mai ușor de utilizat."
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
-    viewport_based_mobile_mode: "Folosește lățimea ferestrei de vizualizare pentru a determina modurile mobil sau desktop. Această setare va fi eliminată în curând. Dacă ai nevoie să o dezactivezi, te rog să ne anunți <a href='https://meta.discourse.org/t/384280'>pe Meta</a>."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
+    viewport_based_mobile_mode: "Folosește lățimea ferestrei de vizualizare pentru a determina modurile mobil sau desktop. Această setare va fi eliminată în curând. Dacă ai nevoie să o dezactivezi, te rog să ne anunți <a href='https://meta.discourse.org/t/384280'>pe Meta</a>."
     content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
     content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
     content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
@@ -1371,9 +1370,6 @@ ro:
       activity_after: "Arată subiectele cu ultima activitate după o dată (AAAA-LL-ZZ sau acum câteva zile)"
       created_before: "Arată subiectele create înainte de o dată (AAAA-LL-ZZ sau acum câteva zile)"
       created_after: "Arată subiectele create după o dată (AAAA-LL-ZZ sau acum câteva zile)"
-      created_by: "Arată subiectele create de un anumit utilizator"
-      created_by_user: "Arată subiectele create de numele de utilizator (fără @)"
-      created_by_multiple: "Arată subiectele create de oricare dintre utilizatorii specificați (separați prin virgulă)"
       latest_post_before: "Arată subiectele cu ultima postare înainte de o dată (AAAA-LL-ZZ sau acum câteva zile)"
       latest_post_after: "Arată subiectele cu ultima postare după o dată (AAAA-LL-ZZ sau acum câteva zile)"
       likes_min: "Arată subiectele cu cel puțin atâtea aprecieri"
@@ -2397,6 +2393,10 @@ ro:
         description: "Șterge acest utilizator din forum"
         complete: "Utilizatorul a fost șters"
       delete_and_block_user:
+        title: "Șterge și blochează"
+        description: "Șterge utilizatorul și blochează-i IP-ul sau emailul"
+        complete: "Utilizatorul a fost șters și blocat"
+      delete_user_block:
         title: "Șterge și blochează"
         description: "Șterge utilizatorul și blochează-i IP-ul sau emailul"
         complete: "Utilizatorul a fost șters și blocat"

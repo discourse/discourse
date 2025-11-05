@@ -267,7 +267,7 @@ zh_TW:
       header:
         logged_in_members: "%{preferred_display_name} 歡迎回來！"
         anonymous_members: "歡迎來到 %{site_name}！"
-      search: "搜索"
+      search_placeholder: "搜索"
     themes:
       default_description: "預設"
       broken_theme_alert: "你的網站無法運作，因為主題/元件發生錯誤，請檢查瀏覽主控台獲得更多資訊。"
@@ -534,6 +534,7 @@ zh_TW:
       other: "檢視 %{count} 則新話題"
     preview: "預覽"
     cancel: "取消"
+    done: "完成"
     deleting: "正在刪除..."
     save: "儲存變更"
     saving: "正在儲存..."
@@ -620,10 +621,6 @@ zh_TW:
         claimed_by_you: "您已聲明此項目，並可以查看。"
         claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
         automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
-      claim:
-        title: "聲稱這個話題"
-      unclaim:
-        help: "刪除此聲明"
       awaiting_approval: "等待審核"
       delete: "刪除"
       settings:
@@ -765,6 +762,7 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+      user_label: "使用者"
       notes:
         delete: "刪除"
       review_user: "使用者"
@@ -2570,8 +2568,10 @@ zh_TW:
           label: 切換為悄悄話
           desc: 悄悄話只有管理員能見
         create_topic:
-          label: "新增話題"
           desc: 開啟新話題
+        create_personal_message:
+          label: "新增訊息"
+          desc: "寫一則私訊"
         shared_draft:
           label: "共享草稿"
           desc: "建立僅允許使用者可見的話題草稿"
@@ -3167,8 +3167,6 @@ zh_TW:
       auto_close_title: "自動關閉設定"
       auto_close_immediate:
         other: "話題中的最後一帖是 %{hours} 小時前發出的，所以話題將會立即關閉。"
-      auto_close_momentarily:
-        other: "該話題中的最後一個貼文已經存在 %{count} 小時，因此該話題將被立即關閉。"
       timeline:
         back: "返回"
         back_description: "回到最後一個未讀貼文"
@@ -4084,7 +4082,6 @@ zh_TW:
     preloader_text: "載入中"
     lightbox:
       download: "下載"
-      open: "原始圖片"
       previous: "上一個（左箭頭鍵）"
       next: "下一個（右箭頭鍵）"
       counter: "%curr%的%total%"
@@ -4569,6 +4566,7 @@ zh_TW:
           light: "輕亮"
           dark: "黑暗"
           auto: "自動"
+          aria_label: "色彩模式，當前爲 %{mode}"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       description: "您的歡迎主題是新成員首先會閱讀的內容。將其視為你的“電梯遊說”或“使命宣言”。讓每個人都知道這個社區是為誰而建的、他們可以在這裡找到什麼以及你希望他們首先做什麼。"
@@ -4678,6 +4676,7 @@ zh_TW:
   admin_js:
     type_to_filter: "篩選類型…"
     settings: "設定"
+    reset_filter: "重置"
     admin:
       title: "論壇管理員"
       moderator: "板主"
@@ -4709,6 +4708,19 @@ zh_TW:
           title: "延伸套件"
         advanced:
           title: "進階"
+      upcoming_changes:
+        name: "名稱"
+        enabled: "啟用"
+        select_groups: "選擇群組…"
+        preview: "預覽"
+        impact_roles:
+          moderators: "板主"
+          staff: "管理員"
+        filter:
+          all: "全部"
+          enabled: "啟用"
+          disabled: "停用"
+          impact_type_other: "其他"
       config:
         about:
           title: "關於您的網站"
@@ -6680,7 +6692,6 @@ zh_TW:
             cancel: "取消"
         merging_user: "合併使用者…"
         merge_failed: "合併用戶時發生錯誤。"
-        delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有貼文。"
         delete_forbidden:
           other: "不能刪除擁有貼文的使用者。請先刪除所有貼文後才能刪除該使用者。( 發表超過 %{count} 天的貼文不能刪除 )"
         cant_delete_all_posts:

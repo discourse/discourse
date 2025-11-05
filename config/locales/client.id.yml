@@ -162,7 +162,7 @@ id:
     welcome_banner:
       header:
         anonymous_members: "Selamat datang ke %{site_name}!"
-      search: "Cari"
+      search_placeholder: "Cari"
     themes:
       default_description: "Asal"
       error_caused_by: "Disebabkan oleh '%{name}'. <a target='blank' href='%{path}'>Klik di sini</a> untuk memperbarui, mengkonfigurasi ulang, atau menonaktifkan."
@@ -436,10 +436,6 @@ id:
         required: "Anda harus mengklaim hal ini sebelum dapat meninjaunya."
         claimed_by_you: "Anda telah mengklaim item ini dan dapat meninjaunya."
         claimed_by_other: "Item ini hanya dapat ditinjau oleh <b>%{username}</b> ."
-      claim:
-        title: "klaim topik ini"
-      unclaim:
-        help: "hapus klaim ini"
       awaiting_approval: "Menunggu Persetujuan"
       delete: "Hapus"
       settings:
@@ -579,6 +575,7 @@ id:
         reviewable_post:
           title: "Postingan"
           noun: "postingan"
+      user_label: "Pengguna"
       notes:
         delete: "Hapus"
       review_user: "Pengguna"
@@ -1680,8 +1677,9 @@ id:
         reply_to_topic:
           label: Balas ke topik
           desc: Membalas topik, bukan tulisan tertentu
-        create_topic:
-          label: "Topik Baru"
+        create_personal_message:
+          label: "Pesan baru"
+          desc: "Buat pesan pribadi baru"
         shared_draft:
           label: "Konsep Bersama"
       ignore: "Abaikan"
@@ -1797,7 +1795,6 @@ id:
         name: "Tandai Belum Dibaca"
     topic:
       create: "Topik Baru"
-      create_long: "Pilih topik baru"
       archive_message:
         title: "Arsip"
       move_to_inbox:
@@ -2100,7 +2097,6 @@ id:
       admin_message: 'Salah satu tema Anda telah mengaktifkan pengubah "custom_homepage" tetapi tidak menampilkan apa pun di konektor [custom-homepage]. (Pesan ini hanya ditampilkan kepada administrator situs.)'
     preloader_text: "Memuat"
     lightbox:
-      download: "unduh"
       close: "Tutup (Esc)"
     keyboard_shortcuts_help:
       jump_to:
@@ -2307,6 +2303,7 @@ id:
         categories: "Semua kategori"
   admin_js:
     settings: "Pengaturan"
+    reset_filter: "Reset"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
@@ -2320,6 +2317,17 @@ id:
           title: "Akun"
         email:
           title: "Surel"
+      upcoming_changes:
+        name: "Nama"
+        enabled: "Diaktifkan"
+        impact_roles:
+          moderators: "Moderator"
+          staff: "Staf"
+        filter:
+          all: "Semua"
+          enabled: "Diaktifkan"
+          disabled: "Dinonaktifkan"
+          impact_type_other: "Lainnya"
       config:
         login:
           sub_pages:

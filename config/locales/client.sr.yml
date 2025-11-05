@@ -223,7 +223,7 @@ sr:
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
-      search: "Pretraži"
+      search_placeholder: "Pretraži"
     themes:
       default_description: "Подразумевано"
       error_caused_by: "Izazvano od '%{name}'. <a target='blank' href='%{path}'>Klikni ovde</a> da unaprediš, rekonfigurišeš ili onemogućiš."
@@ -532,6 +532,7 @@ sr:
       other: "Pogledajte %{count} novih tema"
     preview: "prikaži"
     cancel: "Odustani"
+    done: "Gotovo"
     deleting: "Brisanje…"
     save: "Sačuvaj izmene"
     saving: "Snimanje…"
@@ -617,10 +618,6 @@ sr:
         required: "Morate prihvatiti stavke pre nego što ih možete pregledati."
         claimed_by_you: "Prihvatili ste ovu stavku i možete je pregledati."
         claimed_by_other: "Samo <b>%{username}</b> može pregledati ovu stavku."
-      claim:
-        title: "prihvati ovu temu"
-      unclaim:
-        help: "ukloni prihvat"
       awaiting_approval: "Čeka odobrenje"
       delete: "Obriši"
       settings:
@@ -772,6 +769,7 @@ sr:
         reviewable_post:
           title: "Post"
           noun: "post"
+      user_label: "Korisnik"
       notes:
         delete: "Obriši"
       review_user: "Korisnik"
@@ -1797,8 +1795,6 @@ sr:
         reply_as_new_topic:
           desc: Kreiraj novu temu povezanu na ovu temu
           confirm: Imate novi nacrt teme sačuvan, koji će biti obrisan ako stvorite povezanu temu.
-        create_topic:
-          label: "Nova Tema"
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
       empty: "Nisu pronađene notifikacije"
@@ -1917,7 +1913,6 @@ sr:
         name: "Obriši"
     topic:
       create: "Nova Tema"
-      create_long: "Otvori novu Temu"
       archive_message:
         title: "Arhiviraj"
       list: "Teme"
@@ -2404,7 +2399,7 @@ sr:
       readonly: "Pogledaj"
     preloader_text: "Učitavanje"
     lightbox:
-      download: "preuzmi"
+      download: "Preuzmi"
       counter: "%curr% od %total%"
     keyboard_shortcuts_help:
       title: "Prečice na tastaturi"
@@ -2617,6 +2612,7 @@ sr:
         categories: "Sve kategorije"
   admin_js:
     settings: "Podešavanja"
+    reset_filter: "Reset"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -2633,6 +2629,18 @@ sr:
           title: "Sigurnost"
         plugins:
           title: "Dodaci"
+      upcoming_changes:
+        name: "Ime foruma"
+        enabled: "Omogućeno"
+        impact_roles:
+          admins: "Admini"
+          moderators: "Moderatori"
+          staff: "Osoblje"
+        filter:
+          all: "Sve"
+          enabled: "Omogućeno"
+          disabled: "Isključeno"
+          impact_type_other: "Ostalo"
       config:
         developer:
           title: "Programer"

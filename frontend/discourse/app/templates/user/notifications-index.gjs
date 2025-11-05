@@ -5,6 +5,7 @@ import MenuItem from "discourse/components/user-menu/menu-item";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
 import NotificationsFilter from "select-kit/components/notifications-filter";
+import concatClass from "../../helpers/concat-class";
 
 export default <template>
   {{#if @controller.model.error}}
@@ -38,7 +39,12 @@ export default <template>
     {{#if @controller.nothingFound}}
       <div class="alert alert-info">{{i18n "notifications.empty"}}</div>
     {{else}}
-      <div class={{@controller.listContainerClassNames}}>
+      <div
+        class={{concatClass
+          "user-notifications-list"
+          (if @controller.siteSettings.show_user_menu_avatars "show-avatars")
+        }}
+      >
         {{#each @controller.items as |item|}}
           <MenuItem @item={{item}} />
         {{/each}}

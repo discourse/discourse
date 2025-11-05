@@ -35,29 +35,34 @@
   * {
     outline: 0;
   }
-}
 
-.meta {
-  --meta-element-margin: 0.375em;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  color: var(--secondary);
-  background: var(--primary);
-  opacity: 0;
-  transition: opacity 0.2s;
-  display: flex;
-  align-items: center;
-
-  @media (pointer: coarse) {
-    align-items: center;
-    background: var(--secondary);
-    color: var(--primary-high);
-    height: 25px;
-    width: 25px;
+  .lightbox .meta {
+    --meta-element-margin: 0.375em;
+    position: absolute;
     bottom: 0;
-    right: 0;
-    opacity: 0.8;
+    width: 100%;
+    color: var(--secondary);
+    background: var(--primary);
+    opacity: 0;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+
+    @media (pointer: coarse) {
+      align-items: center;
+      background: var(--secondary);
+      color: var(--primary-high);
+      height: 25px;
+      width: 25px;
+      bottom: 0;
+      right: 0;
+      opacity: 0.8;
+      transition: opacity 500ms;
+
+      &.open {
+        opacity: 0;
+      }
+    }
   }
 
   .filename {
@@ -122,32 +127,55 @@
   }
 }
 
+.pswp.pswp--behind-header {
+  z-index: z("header") - 1;
+}
+
 // photoswipe custom caption
 .pswp__caption {
   left: 0;
   bottom: var(--safe-area-inset-bottom);
   width: 100%;
-  padding: 0.5em;
   text-align: center;
   position: absolute;
 
   .pswp__caption-title {
     left: 50%;
+    bottom: 0;
     color: #fff;
     line-height: 1.25em;
     position: relative;
     max-width: 800px;
     padding: 0 1em 0.25em;
     transform: translateX(-50%);
+    transition: transform 0.4s ease;
   }
 
   .pswp__caption-details {
+    position: relative;
+    left: 50%;
+    bottom: 0;
+    opacity: 0;
+    transform: translate(-50%, 100%);
     color: var(--secondary-high);
     font-size: var(--font-down-1);
+    transition:
+      transform 0.4s ease,
+      opacity 0.4s ease;
   }
 }
 
+.pswp--caption-expanded .pswp__caption-title {
+  transform: translate(-50%, -5px);
+}
+
+.pswp--caption-expanded .pswp__caption-details {
+  transform: translate(-50%, -5px);
+  opacity: 1;
+}
+
 .pswp__button--download-image svg,
-.pswp__button--original-image svg {
+.pswp__button--original-image svg,
+.pswp__button--image-info svg {
   padding: 0.4em;
 }

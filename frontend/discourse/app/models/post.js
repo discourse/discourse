@@ -812,4 +812,12 @@ export default class Post extends RestModel {
         };
       });
   }
+
+  get displayDate() {
+    if (this.wiki && this.last_wiki_edit) {
+      return this.last_wiki_edit;
+    } else {
+      return this.created_at;
+    }
+  }
 }

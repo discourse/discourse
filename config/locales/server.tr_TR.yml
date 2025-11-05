@@ -2400,7 +2400,6 @@ tr_TR:
     force_lowercase_tags: "Tüm yeni etiketleri tamamen küçük harf olmaya zorlayın."
     create_post_for_category_and_tag_changes: "Bir konunun kategorisi veya etiketleri değiştiğinde bir fısıltı gönderisi oluşturun, fısıltı gönderilerinin etkinleştirilmesini gerektirir."
     automatically_clean_unused_tags: "Herhangi bir konuda veya kişisel mesajda kullanılmayan etiketleri günlük olarak otomatik olarak silin."
-    watched_precedence_over_muted: "Sessize aldıklarım dahil, izlediğim kategorilerdeki veya etiketlerdeki konular hakkında beni bilgilendirin"
     company_name: "Şirketinizin veya kuruluşunuzun adı. Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz."
     governing_law: "Hizmet Koşulları ve Gizlilik Politikası da dâhil olmak üzere sitenin hukuki yönlerini düzenleyen yargı bölgesini belirtin. Bu genellikle siteyi işleten şirketin kayıtlı olduğu veya faaliyet gösterdiği ülke veya eyalettir."
     city_for_disputes: "Bu forumun kullanımıyla ilgili herhangi bir anlaşmazlığın çözümünde yargı yetkisi olarak kullanılacak şehri belirtin. Bu bilgi genellikle forumun Hizmet Koşulları gibi yasal belgelerde yer alır."
@@ -2443,9 +2442,6 @@ tr_TR:
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
     experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
-    glimmer_post_stream_mode: "Yeni \"parıltı\" gönderi akışı uygulamasının kullanılıp kullanılmayacağını kontrol edin. \"otomatik\" tüm temalarınız ve eklentileriniz hazır olduğunda otomatik olarak etkinleştirilir. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
-    glimmer_post_stream_mode_auto_groups: "Belirtilen kullanıcı grupları için \"otomatik\" modda yeni \"parıltı\" gönderi akışı uygulamasını etkinleştirin. Bu uygulama aktif geliştirme aşamasındadır ve üretim kullanımı için tasarlanmamıştır. Uygulama tamamlanıp duyurulana kadar tema/eklenti geliştirmeyin."
-    deactivate_widgets_rendering: "Eski widget oluşturma motorunu devre dışı bırakın. Bu, Glimmer bileşenlerine güncellenmemiş tüm widget'ları devre dışı bırakır ve ayrıca `glimmer_post_stream_mode` ayarının değerinden bağımsız olarak Glimmer Gönderi Akışının koşulsuz olarak etkinleştirilmesini zorunlu kılar. Bu ayar, mevcut temaları ve eklentileri bozabileceğinden, prodüksiyon siteleri için önerilmez."
     floatkit_autocomplete_composer: "Bestecide Floatkit tabanlı otomatik tamamlama menüsünü etkinleştirin. Bu, mevcut JQuery tabanlı otomatik tamamlama menüsünün yerini alacak bir kullanıcı arayüzü geliştirmesidir."
     floatkit_autocomplete_chat_composer: "Sohbet bestecisinde Floatkit tabanlı otomatik tamamlama menüsünü etkinleştirin. Bu, mevcut jQuery tabanlı otomatik tamamlama menüsünün yerini alacak bir kullanıcı arayüzü geliştirmesidir."
     experimental_form_templates: "Form şablonları özelliğini etkinleştirin. Şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> bölümünden yönetin."
@@ -2581,9 +2577,6 @@ tr_TR:
       activity_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) son aktiviteye sahip konuları gösterin"
       created_before: "Belirli bir tarihten önce (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
       created_after: "Belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) oluşturulan konuları gösterin"
-      created_by: "Belirli bir kullanıcı tarafından oluşturulan konuları gösterin"
-      created_by_user: "Kullanıcı adı tarafından oluşturulan konuları gösterin (@ işareti olmadan)"
-      created_by_multiple: "Belirtilen kullanıcılardan herhangi biri tarafından oluşturulan konuları gösterin (virgülle ayrılmış)"
       latest_post_before: "Son gönderisi belirli bir tarihten önce (YYYY-AA-GG veya günler önce) olan konuları gösterin"
       latest_post_after: "Son gönderisi belirli bir tarihten sonra (YYYY-AA-GG veya günler önce) olan konuları gösterin"
       likes_min: "En az bu kadar beğeniye sahip konuları gösterin"
@@ -5265,6 +5258,8 @@ tr_TR:
       reject_and_keep_deleted:
         title: "Gönderiyi silinmiş olarak tut"
         complete: "Gönderi reddedildi ve silinmiş olarak kaldı."
+      scrub:
+        title: Temizleme kaydı
       approve_and_restore:
         title: "Onayla ve Gönderiyi Geri Yükle"
         complete: "Gönderi onaylandı ve geri yüklendi."
@@ -5294,6 +5289,8 @@ tr_TR:
         complete: "Kullanıcı silindi"
         reason: "İnceleme kuyruğu aracılığıyla silindi"
       delete_and_block_user:
+        complete: "Kullanıcı silindi ve engellendi"
+      delete_user_block:
         complete: "Kullanıcı silindi ve engellendi"
   email_style:
     html_missing_placeholder: "Html şablonu %{placeholder} içermeli"

@@ -297,7 +297,7 @@ ur:
       header:
         logged_in_members: "دوبارہ خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "%{site_name} پر خوش آمدید!"
-      search: "تلاش کریں"
+      search_placeholder: "تلاش کریں"
     impersonation:
       notice: "آپ %{username} کی نقالی کر رہے ہیں"
       stop: "نقالی کرنا بند کریں"
@@ -595,6 +595,7 @@ ur:
       other: "%{count} نئے موضوعات دیکھیں"
     preview: "جھلک دیکھیں"
     cancel: "منسوخ کریں"
+    done: "مکمل"
     deleting: "حذف کیا جا رہا۔۔۔"
     save: "تبدیلیاں محفوظ کریں"
     saving: "محفوظ کیا جا رہا۔۔۔"
@@ -683,10 +684,6 @@ ur:
         claimed_by_you: "آپ نے اِس چیز کو کََلیم کر لیا ہے اور اِس کا جائزہ لے سکتے ہیں۔"
         claimed_by_other: "اِس چیز کا صرف <b>%{username}</b> جائزہ لے سکتا ہے۔"
         automatically_claimed_by: "اس شے کا فی الحال <b>%{username}</b> جائزہ لے رہے ہیں۔"
-      claim:
-        title: "اس موضوع پر حق جتائیں"
-      unclaim:
-        help: "اس کََلیم کو ہٹائیں"
       awaiting_approval: "منظوری کا منتظر"
       delete: "حذف کریں"
       settings:
@@ -844,6 +841,7 @@ ur:
           title: "دھاگہ"
           noun: "پوسٹ"
       flagged_as: "کے طور پرفلَیگ"
+      user_label: "رکن"
       assigned_to: "کو تفویض کیا گیا"
       moderator_actions: "ناظم کی کاروائیاں"
       timeline_and_notes: "ٹائم لائن اور نوٹس"
@@ -874,6 +872,7 @@ ur:
       review_user: "صارف"
       need_help: "مدد۔ضرورت؟"
       copy_link: "رابطہ کاپی کریں"
+      copy_link_feedback: "رابطہ کاپی ہو گیا"
       view_source: "ماخذ دیکھیں"
       insights:
         title: "تجزیے"
@@ -2873,6 +2872,9 @@ ur:
         create_topic:
           label: "نیا موضوع"
           desc: ایک نیا موضوع بنائیں
+        create_personal_message:
+          label: "نیا پیغام"
+          desc: "نیا ذاتی پیغام بنائیں"
         shared_draft:
           label: "مشترکہ مسودہ"
           desc: "ایسے موضوع کا مسودہ تیار کریں جو صرف اجازت شدہ اراکین کو نظر آئے"
@@ -3366,7 +3368,7 @@ ur:
         one: "موضوع میں %{count} پوسٹ"
         other: "ٹاپک میں %{count} پوسٹس"
       create: "نیا موضوع"
-      create_long: "نیا موضوع بنائیں"
+      create_long: "ایک نیا موضوع بنائیں"
       open_draft: "مسودہ کھولیں"
       private_message: "ایک پیغام شروع کریں"
       archive_message:
@@ -3533,9 +3535,6 @@ ur:
       auto_close_immediate:
         one: "موضوع کا آخری دھاگہ ابھی سے %{count} گھنٹا پرانا ہے، اِسلیئے موضوع فوری طور پر بند کر دیا جائے گا۔"
         other: "موضوع کا آخری دھاگہ ابھی سے %{count} گھنٹے پرانا ہے، اِسلیئے موضوع فوری طور پر بند کر دیا جائے گا۔"
-      auto_close_momentarily:
-        one: "موضوع میں آخری دھاگہ پہلے ہی %{count} گھنٹہ پرانا ہے ، لہذا موضوع لمحہ بہ لمحہ بند ہوجائے گا۔"
-        other: "موضوع میں آخری دھاگہ پہلے ہی %{count} گھنٹے پرانا ہے ، لہذا موضوع لمحہ بہ لمحہ بند ہوجائے گا۔"
       timeline:
         back: "واپس"
         back_description: "اپنے آخری بغیر پڑھے دھاگے پر واپس جائیں"
@@ -4532,7 +4531,6 @@ ur:
     preloader_text: "لوڈ ہو رہا ہے"
     lightbox:
       download: "ڈاؤن لوڈ"
-      open: "اصل تصویر"
       previous: "پچھلا (بائیں تیر کلید)"
       next: "اگلا (بائیں تیر کلید)"
       counter: "%curr% of %total%"
@@ -5247,6 +5245,7 @@ ur:
   admin_js:
     type_to_filter: "کو فلٹر کرنے کے لیے ٹائپ کریں…"
     settings: "ترتیبات"
+    reset_filter: "رِی سَیٹ"
     admin:
       title: "ڈِسکورس منتظم"
       moderator: "نگران"
@@ -5279,6 +5278,20 @@ ur:
           title: "اضافی سہولتیں"
         advanced:
           title: "اعلی درجے کی"
+      upcoming_changes:
+        name: "نام"
+        enabled: "فعال شدہ"
+        select_groups: "گروپس کا انتخاب"
+        preview: "جھلک دیکھیں"
+        impact_roles:
+          admins: "منتظمین"
+          moderators: "نگران"
+          staff: "عملہ"
+        filter:
+          all: "تمام"
+          enabled: "فعال شدہ"
+          disabled: "غیر فعال"
+          impact_type_other: "دیگر"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -7207,7 +7220,6 @@ ur:
             transfer_and_delete: "منتقلی اور حذف کریں @%{username}"
             cancel: "منسوخ"
         merge_failed: "اراکین کو ضم کرتے وقت ایک خامی تھی۔"
-        delete_posts_forbidden_because_staff: "منتظم اور نگرانوں کے تمام دھاگے حذف نہیں کیے جا سکتے۔"
         delete_forbidden:
           one: "اگر اراکین کے دھاگے ہیں تو انہیں حذف کرنا ممکن نہیں۔ کسی رکن کو مٹانے سے پہلے تمام دھاگے حذف کریں۔ ( %{count} دن سے زیادہ پرانے دھاگوں کو حذف نہیں کیا جا سکتا۔)"
           other: "اگر اراکین کے دھاگے ہیں تو انہیں حذف کرنا ممکن نہیں۔ کسی رکن کو مٹانے سے پہلے تمام دھاگے حذف کریں۔ ( %{count} دن سے زیادہ پرانے دھاگوں کو حذف نہیں کیا جا سکتا۔)"

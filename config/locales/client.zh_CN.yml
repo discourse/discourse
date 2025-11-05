@@ -269,7 +269,7 @@ zh_CN:
       header:
         logged_in_members: "欢迎回来，%{preferred_display_name}！"
         anonymous_members: "欢迎来到 %{site_name}！"
-      search: "搜索"
+      search_placeholder: "搜索"
     impersonation:
       notice: "您正在模拟 %{username}"
       stop: "停止模拟"
@@ -541,6 +541,7 @@ zh_CN:
       other: "查看 %{count} 个新话题"
     preview: "预览"
     cancel: "取消"
+    done: "完成"
     deleting: "正在删除…"
     save: "保存变更"
     saving: "正在保存…"
@@ -628,10 +629,6 @@ zh_CN:
         claimed_by_you: "您已认领此条目，可以进行审核。"
         claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审核。"
         automatically_claimed_by: "此条目目前正在由 <b>%{username}</b>审核。"
-      claim:
-        title: "认领此话题"
-      unclaim:
-        help: "移除此认领"
       awaiting_approval: "需要审批"
       delete: "删除"
       settings:
@@ -782,6 +779,7 @@ zh_CN:
           title: "帖子"
           noun: "帖子"
       flagged_as: "被标记为"
+      user_label: "用户"
       assigned_to: "已指定给"
       moderator_actions: "版主操作"
       timeline_and_notes: "时间线和注释"
@@ -2566,6 +2564,7 @@ zh_CN:
         select: "选择翻译"
         save: "保存翻译"
         original_content: "原始帖子内容"
+        translation: "翻译"
         placeholder: "在此处输入帖子的翻译…"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
@@ -2711,8 +2710,11 @@ zh_CN:
           label: 切换密语
           desc: 密语仅对管理人员可见
         create_topic:
-          label: "新建话题"
+          label: "新话题"
           desc: 创建新话题
+        create_personal_message:
+          label: "新建消息"
+          desc: "创建新的个人消息"
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
@@ -3253,6 +3255,8 @@ zh_CN:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>浏览所有类别</a>、<a href='%{basePath}/latest'>查看最新话题</a>或查看热门话题："
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>浏览所有标签</a>或<a href='%{basePath}/latest'>查看最新话题</a>。"
       browse_latest_topics: "浏览最新话题"
+      browse_new_replies: "浏览新回复"
+      browse_new_topics: "显示新话题"
       suggest_create_topic: 准备好<a href>开始新对话</a>了吗？
       jump_reply: "跳到帖子的原始位置"
       jump_reply_aria: "跳到 @%{username} 的帖子的原始位置"
@@ -3330,8 +3334,6 @@ zh_CN:
       auto_close_title: "自动关闭设置"
       auto_close_immediate:
         other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即关闭。"
-      auto_close_momentarily:
-        other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被暂时关闭。"
       timeline:
         back: "返回"
         back_description: "返回上一个未读帖子"
@@ -3592,6 +3594,8 @@ zh_CN:
       empty: "没有帖子"
       aria_post_number: "%{title} - 帖子 #%{postNumber}"
       bulk:
+        selected:
+          other: "已选择 %{count} 个帖子"
         select_all: "全选"
         clear_all: "全部清除"
         actions: "批量操作"
@@ -3765,6 +3769,7 @@ zh_CN:
         delete_post_notice: "删除官方通知"
         remove_timer: "移除计时器"
         edit_timer: "编辑计时器"
+        remove_yourself_from_pm: "您确定要从这条消息中删除自己吗？您将无法再看到或回复它。"
       actions:
         people:
           like:
@@ -4289,6 +4294,8 @@ zh_CN:
       next: "下一个（右方向键）"
       counter: "%curr%/%total%"
       close: "关闭 (Esc)"
+      zoom: "缩放（Z 键）"
+      error: "图像无法加载"
       content_load_error: '<a href="%url%">内容</a>无法加载。'
       image_load_error: '<a href="%url%">图片</a>无法加载。'
     cannot_render_video: 无法呈现此视频，因为您的浏览器不支持编解码器。
@@ -4977,6 +4984,7 @@ zh_CN:
   admin_js:
     type_to_filter: "输入以筛选…"
     settings: "设置"
+    reset_filter: "重置"
     admin:
       title: "Discourse 管理员"
       moderator: "版主"
@@ -5009,6 +5017,20 @@ zh_CN:
           title: "插件"
         advanced:
           title: "高级"
+      upcoming_changes:
+        name: "名称"
+        enabled: "已启用"
+        select_groups: "选择群组…"
+        preview: "预览"
+        impact_roles:
+          moderators: "版主"
+          staff: "管理人员"
+        filter:
+          all: "所有"
+          enabled: "已启用"
+          disabled: "已禁用"
+          impact_type_feature: "功能"
+          impact_type_other: "其他"
       config:
         about:
           title: "关于您的站点"
@@ -6072,6 +6094,7 @@ zh_CN:
             toggle: "可由用户选择"
             toggle_description: "用户可以选择调色板"
             toggle_default_light_on_theme: "调色板是默认主题上的默认浅色调色板（%{themeName}）"
+            toggle_default_dark_on_theme: "调色板是默认主题上的默认深色调色板（%{themeName}）"
           colors:
             title: "颜色"
           save_changes: "保存更改"
@@ -6162,6 +6185,7 @@ zh_CN:
             confirm: "确定要删除此备份吗？"
           restore:
             is_disabled: "恢复功能目前已禁用。要启用此功能，请访问<a href='%{url}'>网站设置</a>。"
+            is_disabled_title: "恢复功能目前已禁用。如需启用，请在站点设置中搜索“允许恢复”。"
             label: "恢复"
             title: "恢复该备份"
             confirm: "确定要恢复此备份吗？"
@@ -6493,6 +6517,7 @@ zh_CN:
             reset: "重置筛选器"
           default_dark_badge:
             text: "默认深色"
+            title: "默认深色调色板"
           system_palette: "这是一个内置调色板，无法编辑或删除。"
           back_to_colors: "返回调色板"
           long_title: "调色板"
@@ -7001,6 +7026,7 @@ zh_CN:
         help: "使用此工具模拟用户帐户以进行调试。完成后，您必须退出。"
         not_found: "无法找到该用户。"
         invalid: "抱歉，您不能模拟该用户。"
+        error: "哎呀。发生意外错误。"
       users:
         title: "用户"
         description: "查看和管理用户。"
@@ -7223,8 +7249,7 @@ zh_CN:
             cancel: "取消"
         merging_user: "正在合并用户…"
         merge_failed: "合并用户时出错。"
-        delete_forbidden_because_staff: "管理员不能被删除。"
-        delete_posts_forbidden_because_staff: "无法删除管理员和版主的所有帖子。"
+        delete_forbidden_because_admin: "管理员不能被删除。"
         delete_forbidden:
           other: "如果用户有帖子，则无法删除用户。在尝试删除用户之前请删除所有帖子。（无法删除超过 %{count} 天的帖子。）"
         cant_delete_all_posts:
@@ -7511,6 +7536,9 @@ zh_CN:
           block_common_passwords:
             prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
             confirm: "是，更新密码策略"
+        job_status:
+          completed: "更新完成"
+          enqueued: "正在更新"
       badges:
         status: 状态
         title: 徽章

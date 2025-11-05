@@ -159,7 +159,7 @@ export default class ReviewableTimeline extends Component {
         user: note.user,
         icon: "far-pen-to-square",
         titleKey: "review.timeline.note_added_by",
-        description: note.content,
+        description: htmlSafe(`<p>${note.content}</p>`),
         noteId: note.id,
         canDelete:
           this.currentUser &&
@@ -258,7 +258,7 @@ export default class ReviewableTimeline extends Component {
                         @icon="trash-can"
                         @title="review.notes.delete_note"
                         @action={{fn this.deleteNote event.noteId}}
-                        class="timeline-event__delete-note btn-transparent"
+                        class="btn-transparent btn-danger timeline-event__delete-note btn-transparent"
                       />
                     </div>
                   {{/if}}

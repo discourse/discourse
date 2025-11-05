@@ -23,7 +23,7 @@ export function renderUserStatusHtml(options) {
       return el.index === parseInt(index, 10);
     })?.statusHtml;
     if (statusHtml) {
-      user.querySelector(".user-status").replaceWith(statusHtml);
+      user.querySelector(".user-status")?.replaceWith(statusHtml);
     }
   });
 }
