@@ -82,7 +82,7 @@ module ReviewableActionBuilder
     @guardian = guardian
     @action_args = args
 
-    if guardian.can_see_reviewable_ui_refresh?
+    if guardian.can_see_reviewable_ui_refresh? && !SiteSetting.reviewable_old_moderator_actions
       build_new_separated_actions
     else
       build_legacy_combined_actions(actions, guardian, args)

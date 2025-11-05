@@ -377,6 +377,7 @@ RSpec.describe ReviewableQueuedPost, type: :model do
 
     context "when reviewable_ui_refresh feature is enabled" do
       before do
+        SiteSetting.reviewable_old_moderator_actions = false
         allow_any_instance_of(Guardian).to receive(:can_see_reviewable_ui_refresh?).and_return(true)
       end
 
