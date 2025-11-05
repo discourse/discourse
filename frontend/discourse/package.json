@@ -151,7 +151,7 @@
     "select-kit": "workspace:1.0.0",
     "sinon": "^21.0.0",
     "source-map": "^0.7.6",
-    "terser": "^5.44.0",
+    "terser": "^5.44.1",
     "testem": "^3.16.0",
     "truth-helpers": "workspace:1.0.0",
     "util": "^0.12.5",
