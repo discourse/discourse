@@ -919,6 +919,7 @@ en:
           noun: "post"
       flagged_as: "Flagged as"
       post_flagged_as: "Post flagged as"
+      chat_flagged_as: "Chat flagged as"
       queued_post_label: "Queued post"
       user_label: "User"
       assigned_to: "Assigned to"
