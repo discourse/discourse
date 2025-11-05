@@ -1322,6 +1322,26 @@ RSpec.describe TagsController do
         expect(Tag.find_by_name("tag4").tag_groups.pluck(:name)).to contain_exactly("taggroup1")
       end
 
+      it "does not fail if tags already exist" do
+        Fabricate(:tag, name: "TAG1")
+        Fabricate(:tag_group, name: "TAGGROUP1")
+
+        sign_in(moderator)
+
+        post "/tags/upload.json", params: { file: file, name: filename }
+
+        expect(response.status).to eq(200)
+        expect(Tag.pluck(:name)).to contain_exactly(
+          "TAG1",
+          "capitaltag2",
+          "spaced-tag",
+          "tag3",
+          "tag4",
+        )
+        expect(Tag.find_by_name("tag3").tag_groups.pluck(:name)).to contain_exactly("TAGGROUP1")
+        expect(Tag.find_by_name("tag4").tag_groups.pluck(:name)).to contain_exactly("TAGGROUP1")
+      end
+
       it "fails gracefully with invalid input" do
         sign_in(moderator)
 
