@@ -101,8 +101,8 @@ importers:
         specifier: 16.25.0
         version: 16.25.0(typescript@5.9.3)
       terser:
-        specifier: ^5.44.0
-        version: 5.44.0
+        specifier: ^5.44.1
+        version: 5.44.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -197,12 +197,12 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       terser:
-        specifier: ^5.44.0
-        version: 5.44.0
+        specifier: ^5.44.1
+        version: 5.44.1
     devDependencies:
       vitest:
         specifier: ^4.0.7
-        version: 4.0.7(@types/node@24.10.0)(jsdom@25.0.1)(terser@5.44.0)
+        version: 4.0.7(@types/node@24.10.0)(jsdom@25.0.1)(terser@5.44.1)
 
   frontend/custom-proxy:
     devDependencies:
@@ -652,8 +652,8 @@ importers:
         specifier: ^0.7.6
         version: 0.7.6
       terser:
-        specifier: ^5.44.0
-        version: 5.44.0
+        specifier: ^5.44.1
+        version: 5.44.1
       testem:
         specifier: ^3.16.0
         version: 3.16.0(handlebars@4.7.8)(underscore@1.13.7)
@@ -8529,8 +8529,8 @@ packages:
       uglify-js:
         optional: true
 
-  terser@5.44.0:
-    resolution: {integrity: sha512-nIVck8DK+GM/0Frwd+nIhZ84pR/BX7rmXMfYwyg+Sri5oGVE99/E3KvXqpC2xHFxyqXyGHTKBSioxxplrO4I4w==}
+  terser@5.44.1:
+    resolution: {integrity: sha512-t/R3R/n0MSwnnazuPpPNVO60LX0SKL45pyl9YlvxIdkH0Of7D5qM2EVe+yASRIlY5pZ73nclYJfNANGWPwFDZw==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -10533,7 +10533,7 @@ snapshots:
       source-map-url: 0.4.1
       style-loader: 2.0.0(webpack@5.99.9(@swc/core@1.15.0)(esbuild@0.25.12))
       supports-color: 8.1.1
-      terser: 5.44.0
+      terser: 5.44.1
       thread-loader: 3.0.4(webpack@5.99.9(@swc/core@1.15.0)(esbuild@0.25.12))
       webpack: 5.99.9(@swc/core@1.15.0)(esbuild@0.25.12)
     transitivePeerDependencies:
@@ -11671,13 +11671,13 @@ snapshots:
       chai: 6.2.0
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.7(vite@7.1.12(@types/node@24.10.0)(terser@5.44.0))':
+  '@vitest/mocker@4.0.7(vite@7.1.12(@types/node@24.10.0)(terser@5.44.1))':
     dependencies:
       '@vitest/spy': 4.0.7
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.1.12(@types/node@24.10.0)(terser@5.44.0)
+      vite: 7.1.12(@types/node@24.10.0)(terser@5.44.1)
 
   '@vitest/pretty-format@4.0.7':
     dependencies:
@@ -12738,7 +12738,7 @@ snapshots:
       lodash.defaultsdeep: 4.6.1
       matcher-collection: 2.0.1
       symlink-or-copy: 1.3.1
-      terser: 5.44.0
+      terser: 5.44.1
       walk-sync: 2.2.0
       workerpool: 6.5.1
     transitivePeerDependencies:
@@ -18529,13 +18529,13 @@ snapshots:
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
-      terser: 5.44.0
+      terser: 5.44.1
       webpack: 5.99.9(@swc/core@1.15.0)(esbuild@0.25.12)
     optionalDependencies:
       '@swc/core': 1.15.0
       esbuild: 0.25.12
 
-  terser@5.44.0:
+  terser@5.44.1:
     dependencies:
       '@jridgewell/source-map': 0.3.11
       acorn: 8.15.0
@@ -18998,7 +18998,7 @@ snapshots:
       x-is-array: 0.1.0
       x-is-string: 0.1.0
 
-  vite@7.1.12(@types/node@24.10.0)(terser@5.44.0):
+  vite@7.1.12(@types/node@24.10.0)(terser@5.44.1):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
@@ -19009,12 +19009,12 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.10.0
       fsevents: 2.3.3
-      terser: 5.44.0
+      terser: 5.44.1
 
-  vitest@4.0.7(@types/node@24.10.0)(jsdom@25.0.1)(terser@5.44.0):
+  vitest@4.0.7(@types/node@24.10.0)(jsdom@25.0.1)(terser@5.44.1):
     dependencies:
       '@vitest/expect': 4.0.7
-      '@vitest/mocker': 4.0.7(vite@7.1.12(@types/node@24.10.0)(terser@5.44.0))
+      '@vitest/mocker': 4.0.7(vite@7.1.12(@types/node@24.10.0)(terser@5.44.1))
       '@vitest/pretty-format': 4.0.7
       '@vitest/runner': 4.0.7
       '@vitest/snapshot': 4.0.7
@@ -19031,7 +19031,7 @@ snapshots:
       tinyexec: 0.3.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.1.12(@types/node@24.10.0)(terser@5.44.0)
+      vite: 7.1.12(@types/node@24.10.0)(terser@5.44.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.10.0
