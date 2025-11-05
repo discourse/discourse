@@ -18,7 +18,11 @@ class RefactorLlmCreditAllocationToMonthlyUsage < ActiveRecord::Migration[8.0]
 
   def down
     add_column :llm_credit_allocations, :monthly_used, :bigint, default: 0, null: false
-    add_column :llm_credit_allocations, :last_reset_at, :datetime, null: false
+    add_column :llm_credit_allocations,
+               :last_reset_at,
+               :datetime,
+               null: false,
+               default: -> { "date_trunc('month', CURRENT_TIMESTAMP)" }
 
     execute <<~SQL
       UPDATE llm_credit_allocations
