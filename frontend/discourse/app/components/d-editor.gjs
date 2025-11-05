@@ -23,9 +23,9 @@ import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PopupInputTip from "discourse/components/popup-input-tip";
+import UserAutocompleteResults from "discourse/components/user-autocomplete-results";
 import concatClass from "discourse/helpers/concat-class";
 import renderEmojiAutocomplete from "discourse/lib/autocomplete/emoji";
-import userAutocomplete from "discourse/lib/autocomplete/user";
 import Toolbar from "discourse/lib/composer/toolbar";
 import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
@@ -472,7 +472,8 @@ export default class DEditor extends Component {
     }
 
     this.textManipulation.autocomplete({
-      template: userAutocomplete,
+      component: UserAutocompleteResults,
+      key: UserAutocompleteResults.TRIGGER_KEY,
       dataSource: (term) => {
         destroyUserStatuses();
         return userSearch({
@@ -487,7 +488,6 @@ export default class DEditor extends Component {
         });
       },
       onRender: (options) => renderUserStatusHtml(options),
-      key: "@",
       transformComplete: (v) => {
         validateSearchResult(v);
         return v.username || v.name;
