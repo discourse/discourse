@@ -1,6 +1,7 @@
 import { service } from "@ember/service";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { defaultHomepage } from "discourse/lib/utilities";
+import Session from "discourse/models/session";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";
@@ -25,10 +26,22 @@ export default class ChatRoute extends DiscourseRoute {
       return this.router.transitionTo(`discovery.${defaultHomepage()}`);
     }
 
+    // Check if user prefers drawer mode and the route can be handled in drawer
+    const isDrawerPreferred = this.chatStateManager.isDrawerPreferred;
+    const canHandleInDrawer = this.chatDrawerRouter.canHandleRoute(
+      transition.to
+    );
+    const fullPageReload = !transition.from;
+    const requiresRefresh = Session.currentProp("requiresRefresh");
+
+    // Don't intercept direct loads unless requiresRefresh is forcing a reload
+    // This preserves the original behavior: if someone directly types /chat in
+    // the address bar, show them full page chat (they explicitly chose it).
+    // But if requiresRefresh caused a reload mid-session, respect drawer preference.
     if (
-      transition.from && // don't intercept when directly loading chat
-      this.chatStateManager.isDrawerPreferred &&
-      this.chatDrawerRouter.canHandleRoute(transition.to)
+      isDrawerPreferred &&
+      canHandleInDrawer &&
+      (!fullPageReload || requiresRefresh)
     ) {
       transition.abort();
 
@@ -43,11 +56,23 @@ export default class ChatRoute extends DiscourseRoute {
         url ??= this.router.urlFor(transition.targetName);
       }
 
-      this.appEvents.trigger("chat:open-url", url);
+      // If this is a full page reload (no transition.from), we need to
+      // navigate to a non-chat page first before opening the drawer
+      if (fullPageReload) {
+        const appURL =
+          this.chatStateManager.lastKnownAppURL ||
+          `discovery.${defaultHomepage()}`;
+        return this.router.transitionTo(appURL).then(() => {
+          this.appEvents.trigger("chat:open-url", url);
+        });
+      }
 
+      // Normal SPA navigation - just open the drawer
+      this.appEvents.trigger("chat:open-url", url);
       return;
     }
 
+    // Full page mode - close any open drawer
     this.appEvents.trigger("chat:toggle-close");
   }
 
