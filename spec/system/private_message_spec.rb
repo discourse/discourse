@@ -44,5 +44,20 @@ describe "Private Message", type: :system do
       composer.open_composer_actions
       expect(composer).to have_no_action("New message")
     end
+
+    it "can switch between topic and personal message modes" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+
+      # Switch to personal message
+      composer.open_composer_actions
+      composer.select_action("New message")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.create_pm"))
+
+      # Switch back to topic
+      composer.open_composer_actions
+      composer.select_action("New topic")
+      expect(composer.button_label).to have_text(I18n.t("js.composer.create_topic"))
+    end
   end
 end
