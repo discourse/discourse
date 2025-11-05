@@ -154,7 +154,14 @@ module.exports = function (defaults) {
   const appTree = compatBuild(app, Webpack, {
     staticEmberSource: true,
     splitAtRoutes: ["wizard"],
-    staticAppPaths: ["static", "admin"],
+    staticAppPaths: [
+      "static",
+      "admin",
+      "select-kit",
+      "float-kit",
+      "truth-helpers",
+      "dialog-holder",
+    ],
     packagerOptions: {
       webpackConfig: {
         devtool:
