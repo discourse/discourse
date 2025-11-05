@@ -1,7 +1,45 @@
 import { tracked } from "@glimmer/tracking";
-import { cancel, later } from "@ember/runloop";
+import { cancel } from "@ember/runloop";
 import Service from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import { isRailsTesting, isTesting } from "discourse/lib/environment";
+import discourseLater from "discourse/lib/later";
+
+let clearAnnouncements = true;
+
+/**
+ * Reset announcements auto-clear functionality by enabling it.
+ * When enabled, announcements will automatically clear after their configured delay.
+ *
+ * This function only works in test environments (Qunit and Rails).
+ * Used to restore default behavior where announcements auto-clear.
+ *
+ * USE ONLY FOR TESTING PURPOSES
+
+ * @returns {void}
+ */
+export function enableClearA11yAnnouncementsInTests() {
+  if (isTesting() || isRailsTesting()) {
+    clearAnnouncements = true;
+  }
+}
+
+/**
+ * Disable announcements auto-clear functionality.
+ * When disabled, announcements will remain visible until manually cleared.
+ *
+ * This function only works in test environments (Qunit and Rails).
+ * Useful for testing that announcements persist for expected duration.
+ *
+ * USE ONLY FOR TESTING PURPOSES
+ *
+ * @returns {void}
+ */
+export function disableClearA11yAnnouncementsInTests() {
+  if (isTesting() || isRailsTesting()) {
+    clearAnnouncements = false;
+  }
+}
 
 /**
  * @class A11yService
@@ -63,7 +101,10 @@ export default class A11y extends Service {
       }
 
       this.#messages.set(type, message);
-      this.#scheduleClear(type, clearDelay);
+
+      if (clearAnnouncements) {
+        this.#scheduleClear(type, clearDelay);
+      }
     }
 
     /**
@@ -102,7 +143,7 @@ export default class A11y extends Service {
       if (clearDelay > 0) {
         this.#timers.set(
           type,
-          later(() => {
+          discourseLater(() => {
             this.#messages.delete(type);
             this.#timers.delete(type);
           }, clearDelay)
