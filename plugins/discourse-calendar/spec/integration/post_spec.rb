@@ -802,7 +802,7 @@ describe Post do
 
     it "handles weekly recurrence across DST transition maintaining local time" do
       expected_original_datetime =
-        ActiveSupport::TimeZone["America/New_York"].parse("2025-09-25 11:00")
+        Time.find_zone("America/New_York").parse("2025-09-25 11:00")
 
       post =
         PostCreator.create!(
