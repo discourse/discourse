@@ -131,11 +131,9 @@
     @include viewport.until(md) {
       @include hide-posters;
     }
-  }
 
-  @include viewport.until(lg) {
-    .has-sidebar-page & {
-      .posters {
+    @include viewport.until(lg) {
+      .has-sidebar-page & {
         @include hide-posters;
       }
     }
