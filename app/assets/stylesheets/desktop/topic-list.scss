@@ -124,6 +124,16 @@
 
   .views {
     width: var(--d-topic-list-likes-views-posts-width);
+
+    @include viewport.until(md) {
+      display: none;
+    }
+
+    .has-sidebar-page & {
+      @include viewport.until(lg) {
+        display: none;
+      }
+    }
   }
 
   .posts {
@@ -216,14 +226,6 @@
 }
 
 /* Tablet (portrait) ----------- */
-
-@include viewport.until(md) {
-  .topic-list {
-    .views {
-      display: none;
-    }
-  }
-}
 
 // These styles kick in a little earlier when the sidebar appears
 
