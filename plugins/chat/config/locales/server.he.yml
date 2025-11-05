@@ -217,8 +217,6 @@ he:
       errors:
         slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
         is_already_in_use: "כבר בשימוש"
-    bookmarkable:
-      notification_title: "הודעה ב־%{channel_name}"
     personal_chat: "צ׳אט אישי"
     onebox:
       inline_to_message: "הודעה מס׳ %{message_id} מאת ‎%{username}‏ – ‎#%{chat_channel}"

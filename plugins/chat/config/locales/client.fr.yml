@@ -436,6 +436,7 @@ fr:
           topic: "Sujet"
       reviewable:
         type: "Message de discussion"
+        message_in_channel: "Canal"
       reactions:
         only_you: "<span>Vous avez réagi avec </span>:%{emoji}:"
         you_and_single_user: "<span>Vous et %{username} avez réagi avec </span>:%{emoji}:"
