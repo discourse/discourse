@@ -1575,6 +1575,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css(
         ".hashtag-cooked .hashtag-category-icon.hashtag-color--category-#{category_with_icon.id} svg.d-icon.d-icon-bell",
       )
+      expect(rich).to have_css(".hashtag-cooked svg use[href='#bell']")
     end
 
     it "correctly renders category with square hashtags after selecting from autocomplete" do

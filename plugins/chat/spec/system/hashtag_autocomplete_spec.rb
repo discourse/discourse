@@ -196,6 +196,9 @@ describe "Using #hashtag autocompletion to search for and lookup channels", type
       expect(topic_page.composer.rich_editor).to have_css(
         ".hashtag-cooked .d-icon-comment.hashtag-color--channel-#{channel2.id}",
       )
+      expect(topic_page.composer.rich_editor).to have_css(
+        ".hashtag-cooked svg use[href=\"#comment\"]",
+      )
     end
 
     it "cooks the post with the channel hashtag on submit" do
