@@ -970,7 +970,11 @@ export default class TopicController extends Controller {
       warningsDisabled: true,
       hijackPreview: {
         component: DEditorOriginalTranslationPreview,
-        model: { postLocale: post.locale, rawPost: raw },
+        model: {
+          postLocale: post.locale,
+          rawPost: raw,
+          translationText: () => this.composer.model?.reply,
+        },
       },
       post,
       selectedTranslationLocale: this.currentUser?.effective_locale,
