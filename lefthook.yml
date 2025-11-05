@@ -9,24 +9,35 @@ pre-commit:
     - rebase
   commands:
     rubocop:
-      glob: "*"
-      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
+      glob:
+        - "*.{rb,rake,thor}"
+        - "bin/*"
+        - "Gemfile"
       run: bundle exec rubocop --force-exclusion {staged_files}
     syntax_tree:
-      glob: "*"
-      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
+      glob:
+        - "*.{rb,rake,thor}"
+        - "bin/*"
+        - "Gemfile"
       run: bundle exec stree check Gemfile {staged_files}
     prettier:
-      glob: "*.{js,gjs,hbs,scss,css,cjs,mjs}"
-      include: "app/assets|plugins/.+?/assets|themes"
+      glob:
+        - "app/assets/stylesheets/*.{css,scss}"
+        - "frontend/*.{js,gjs,scss,css,cjs,mjs}"
+        - "plugins/*.{js,gjs,scss,css,cjs,mjs}"
+        - "themes/*.{js,gjs,scss,css,cjs,mjs}"
       run: pnpm pprettier --list-different {staged_files}
     eslint:
-      glob: "*.{js,gjs}"
-      include: "frontend|plugins/.+?/assets/javascripts"
+      glob:
+        - "frontend/*.{js,gjs}"
+        - "plugins/*.{js,gjs}"
+        - "themes/*.{js,gjs}"
       run: pnpm eslint --quiet {staged_files}
     ember-template-lint:
-      glob: "*.{hbs,gjs}"
-      include: "frontend|plugins/.+?/assets/javascripts"
+      glob:
+        - "frontend/*.gjs"
+        - "plugins/*.gjs"
+        - "themes/*.gjs"
       run: pnpm ember-template-lint {staged_files}
     yaml-syntax:
       glob: "*.{yaml,yml}"
@@ -37,43 +48,61 @@ pre-commit:
       glob: "**/{client,server}.en.yml"
       run: bundle exec ruby script/i18n_lint.rb {staged_files}
     stylelint:
-      glob: "*.scss"
-      include: "app/assets/stylesheets|plugins/.+?/assets/stylesheets|themes"
+      glob:
+        - "app/assets/stylesheets/*.scss"
+        - "plugins/*/assets/stylesheets/*.scss"
+        - "themes/*.scss"
       run: pnpm stylelint {staged_files}
 
 fix-staged:
   parallel: false
   commands:
     prettier:
-      glob: "*.{js,gjs,hbs,scss,css,cjs,mjs}"
-      include: "app/assets|plugins/.+?/assets|themes"
+      glob:
+        - "app/assets/stylesheets/*.{css,scss}"
+        - "frontend/*.{js,gjs,scss,css,cjs,mjs}"
+        - "plugins/*.{js,gjs,scss,css,cjs,mjs}"
+        - "themes/*.{js,gjs,scss,css,cjs,mjs}"
       run: pnpm pprettier --write {staged_files}
     eslint:
-      glob: "*.{js,gjs}"
-      include: "frontend|plugins/.+?/assets/javascripts|themes"
+      glob:
+        - "frontend/*.{js,gjs}"
+        - "plugins/*.{js,gjs}"
+        - "themes/*.{js,gjs}"
       run: pnpm eslint --fix {staged_files}
     ember-template-lint:
-      glob: "*.{gjs,hbs}"
-      include: "frontend|plugins/.+?/assets/javascripts|themes"
+      glob:
+        - "frontend/*.gjs"
+        - "plugins/*.gjs"
+        - "themes/*.gjs"
       run: pnpm ember-template-lint --fix {staged_files}
     stylelint:
-      glob: "*.scss"
-      include: "app/assets/stylesheets|plugins/.+?/assets/stylesheets|themes"
+      glob:
+        - "app/assets/stylesheets/*.scss"
+        - "plugins/*/assets/stylesheets/*.scss"
+        - "themes/*.scss"
       run: pnpm stylelint --fix {staged_files}
     rubocop:
-      glob: "*"
-      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
+      glob:
+        - "*.{rb,rake,thor}"
+        - "bin/*"
+        - "Gemfile"
       run: bundle exec rubocop --force-exclusion -A {staged_files}
     syntax_tree:
-      glob: "*"
-      include: "(?:\\.(rb|rake|thor)$)|^(?:Gemfile|bin/[^/]+)$"
+      glob:
+        - "*.{rb,rake,thor}"
+        - "bin/*"
+        - "Gemfile"
       run: bundle exec stree write Gemfile {staged_files}
 
 lints:
   parallel: true
   commands:
     rubocop:
-      glob: "*.rb"
+      glob:
+        - "*.{rb,rake,thor}"
+        - "bin/*"
+        - "Gemfile"
       run: bundle exec rubocop
     prettier:
       run: pnpm lint:prettier
