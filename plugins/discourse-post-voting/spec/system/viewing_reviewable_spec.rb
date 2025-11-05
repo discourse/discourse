@@ -10,6 +10,7 @@ describe "Viewing reviewable post voting comment", type: :system do
   let(:refreshed_review_page) { PageObjects::Pages::RefreshedReview.new }
 
   before do
+    SiteSetting.reviewable_old_moderator_actions = false
     SiteSetting.reviewable_ui_refresh = group.name
     group.add(admin)
     sign_in(admin)

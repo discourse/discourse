@@ -151,6 +151,26 @@ $hpad: 0.65em;
   animation: float-up ease 0.25s 1 forwards;
 }
 
+@mixin enter-animation($name, $duration, $easing: ease) {
+  &.is-entering {
+    animation: $name $duration $easing forwards;
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
+  }
+}
+
+@mixin exit-animation($name, $duration, $easing: ease) {
+  &.is-exiting {
+    animation: $name $duration $easing forwards;
+
+    @media (prefers-reduced-motion) {
+      animation-duration: 0s;
+    }
+  }
+}
+
 @mixin default-focus() {
   border-color: var(--d-input-focused-color);
   outline: 2px solid var(--d-input-focused-color);

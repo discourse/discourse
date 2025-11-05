@@ -678,10 +678,6 @@ fi:
         claimed_by_you: "Osoitit tämän itsellesi ja voit nyt käsitellä sen."
         claimed_by_other: "Tämän voi käsitellä vain <b>%{username}</b>."
         automatically_claimed_by: "Tätä asiaa käsittelee parhaillaan <b>%{username}</b>."
-      claim:
-        title: "osoita ketju itsellesi"
-      unclaim:
-        help: "peru osoitus"
       awaiting_approval: "Odottaa hyväksyntää"
       delete: "Poista"
       settings:
@@ -839,6 +835,7 @@ fi:
           title: "Viesti"
           noun: "viesti"
       flagged_as: "Liputettu merkinnällä"
+      user_label: "Käyttäjä"
       assigned_to: "Osoitettu käyttäjälle"
       moderator_actions: "Valvojan toiminnot"
       timeline_and_notes: "Aikajana ja huomautukset"
@@ -869,6 +866,7 @@ fi:
       review_user: "Käyttäjä"
       need_help: "Tarvitsetko apua?"
       copy_link: "Kopioi linkki"
+      copy_link_feedback: "Linkki kopioitu"
       view_source: "Näytä lähde"
       insights:
         title: "Tiedot"
@@ -2849,6 +2847,9 @@ fi:
         create_topic:
           label: "Uusi ketju"
           desc: Aloita uusi ketju
+        create_personal_message:
+          label: "Uusi viesti"
+          desc: "Luo uusi yksityisviesti"
         shared_draft:
           label: "Jaettu luonnos"
           desc: "Luonnostele ketju, joka näkyy vain määrätyille käyttäjille"

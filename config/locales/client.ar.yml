@@ -904,10 +904,6 @@ ar:
         claimed_by_you: "لقد طالبت بهذا العنصر ويمكنك مراجعته."
         claimed_by_other: "لا يمكن مراجعة هذا العنصر إلا بواسطة <b>%{username}</b>."
         automatically_claimed_by: "هذا العنصر قيد المراجعة حاليًا من طرف <b>%{username}</b>."
-      claim:
-        title: "المطالبة بهذا الموضوع"
-      unclaim:
-        help: "إزالة هذه المطالبة"
       awaiting_approval: "في انتظار الموافقة"
       delete: "حذف"
       settings:
@@ -1093,6 +1089,7 @@ ar:
           title: "المنشور"
           noun: "منشور"
       flagged_as: "صفة الإبلاغ"
+      user_label: "المستخدم"
       assigned_to: "معيَّنة إلى"
       moderator_actions: "الإجراءات المتاحة للمشرفين"
       timeline_and_notes: "المخطط الزمني والملاحظات"
@@ -1123,6 +1120,7 @@ ar:
       review_user: "المستخدم"
       need_help: "هل تحتاج إلى مساعدة؟"
       copy_link: "نسخ الرابط"
+      copy_link_feedback: "تم نسخ الرابط"
       view_source: "عرض المصدر"
       insights:
         title: "الرؤى"
@@ -3409,6 +3407,9 @@ ar:
         create_topic:
           label: "موضوع جديد"
           desc: أنشئ موضوعًا جديدًا
+        create_personal_message:
+          label: "رسالة جديدة"
+          desc: "إنشاء رسالة خاصة جديدة"
         shared_draft:
           label: "مسودة مشتركة"
           desc: "إنشاء مسودة الموضوع ستكون مرئية للمستخدمين المسموح لهم فقط"
@@ -4037,7 +4038,7 @@ ar:
         many: "%{count} منشورًا في الموضوع"
         other: "%{count} منشور في الموضوع"
       create: "موضوع جديد"
-      create_long: "إنشاء موضوع جديد"
+      create_long: "أنشئ موضوعًا جديدًا"
       open_draft: "فتح المسودة"
       private_message: "إنشاء رسالة"
       archive_message:

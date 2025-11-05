@@ -319,6 +319,7 @@ en:
 
     welcome_banner:
       header:
+        new_members: "Welcome, %{preferred_display_name}!"
         logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
       subheader:
@@ -749,9 +750,9 @@ en:
         claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
         automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
-        title: "claim this topic"
+        title: "Claim this topic"
       unclaim:
-        help: "remove this claim"
+        help: "Remove this claim"
       awaiting_approval: "Awaiting Approval"
       delete: "Delete"
       settings:
@@ -918,6 +919,7 @@ en:
           noun: "post"
       flagged_as: "Flagged as"
       post_flagged_as: "Post flagged as"
+      chat_flagged_as: "Chat flagged as"
       queued_post_label: "Queued post"
       user_label: "User"
       assigned_to: "Assigned to"
@@ -2933,6 +2935,10 @@ en:
         select: "Select translation"
         save: "Save translation"
         original_content: "Original post content"
+        translation_preview: "Translation preview"
+        original: "Original"
+        translation: "Translation"
+        no_translation_yet: "Start typing to see translation preview..."
         placeholder: "Enter translation for post here..."
 
       group_mentioned_limit:
@@ -4883,6 +4889,7 @@ en:
     lightbox:
       download: "Download"
       open: "Original image"
+      image_info: "Image information"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"

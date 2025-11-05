@@ -10,6 +10,8 @@ describe Chat::MessageBookmarkable do
   fab!(:category_channel) { Fabricate(:category_channel, chatable: other_category) }
   fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
   fab!(:channel, :category_channel)
+  fab!(:direct_message)
+  fab!(:direct_message_channel) { Fabricate(:direct_message_channel, chatable: direct_message) }
 
   before do
     register_test_bookmarkable(described_class)
@@ -47,7 +49,6 @@ describe Chat::MessageBookmarkable do
     end
 
     it "does not return bookmarks for messages inside direct message chat channels the user cannot access" do
-      direct_message = Fabricate(:direct_message)
       channel.update(chatable: direct_message)
       expect(registered_bookmarkable.perform_list_query(user, guardian)).to eq(nil)
       Chat::DirectMessageUser.create(user: user, direct_message: direct_message)
@@ -137,7 +138,7 @@ describe Chat::MessageBookmarkable do
         {
           title:
             I18n.t(
-              "chat.bookmarkable.notification_title",
+              "chat.bookmarkable.notification_title_channel",
               channel_name: bookmark1.bookmarkable.chat_channel.title(bookmark1.user),
             ),
           bookmarkable_url: bookmark1.bookmarkable.url,
@@ -146,6 +147,33 @@ describe Chat::MessageBookmarkable do
           bookmark_id: bookmark1.id,
           bookmarkable_type: bookmark1.bookmarkable_type,
           bookmarkable_id: bookmark1.bookmarkable_id,
+        }.to_json,
+      )
+    end
+
+    it "returns the correct notification title for direct messages" do
+      message = Fabricate(:chat_message, chat_channel: direct_message_channel)
+      bookmark = Fabricate(:bookmark, user: user, bookmarkable: message)
+
+      expect { registered_bookmarkable.send_reminder_notification(bookmark) }.to change {
+        Notification.count
+      }.by(1)
+      notification = user.notifications.last
+      expect(notification.notification_type).to eq(Notification.types[:bookmark_reminder])
+
+      expect(notification.data).to eq(
+        {
+          title:
+            I18n.t(
+              "chat.bookmarkable.notification_title_direct_message",
+              channel_name: direct_message_channel.title(user),
+            ),
+          bookmarkable_url: bookmark.bookmarkable.url,
+          display_username: bookmark.user.username,
+          bookmark_name: bookmark.name,
+          bookmark_id: bookmark.id,
+          bookmarkable_type: bookmark.bookmarkable_type,
+          bookmarkable_id: bookmark.bookmarkable_id,
         }.to_json,
       )
     end

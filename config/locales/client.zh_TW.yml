@@ -621,10 +621,6 @@ zh_TW:
         claimed_by_you: "您已聲明此項目，並可以查看。"
         claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
         automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
-      claim:
-        title: "聲稱這個話題"
-      unclaim:
-        help: "刪除此聲明"
       awaiting_approval: "等待審核"
       delete: "刪除"
       settings:
@@ -766,6 +762,7 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+      user_label: "使用者"
       notes:
         delete: "刪除"
       review_user: "使用者"
@@ -2571,8 +2568,10 @@ zh_TW:
           label: 切換為悄悄話
           desc: 悄悄話只有管理員能見
         create_topic:
-          label: "新增話題"
           desc: 開啟新話題
+        create_personal_message:
+          label: "新增訊息"
+          desc: "寫一則私訊"
         shared_draft:
           label: "共享草稿"
           desc: "建立僅允許使用者可見的話題草稿"

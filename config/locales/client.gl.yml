@@ -390,10 +390,6 @@ gl:
         required: "Debes reclamar os elementos antes de revisalos."
         claimed_by_you: "Reclamaches este elemento e podes revisalo."
         claimed_by_other: "Este elemento só pode revisalo <b>%{username}</b>."
-      claim:
-        title: "reclamar este tema"
-      unclaim:
-        help: "eliminar esta reclamación"
       awaiting_approval: "Agardando a aprobación"
       delete: "Eliminar"
       settings:
@@ -520,6 +516,7 @@ gl:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+      user_label: "Usuario"
       notes:
         delete: "Eliminar"
       review_user: "Usuario"
@@ -1887,8 +1884,9 @@ gl:
         toggle_whisper:
           label: Trocar rumor
           desc: Os rumores son visíbeis unicamente para os membros do equipo
-        create_topic:
-          label: "Novo tema"
+        create_personal_message:
+          label: "Nova mensaxe"
+          desc: "Crear unha nova mensaxe privada"
         shared_draft:
           label: "Borrador compartido"
           desc: "Facer borrador dun tema que soamente será visíbel por usuarios admitidos"
@@ -2175,7 +2173,6 @@ gl:
         one: "%{count} publicación no tema"
         other: "%{count} publicacións no tema"
       create: "Novo tema"
-      create_long: "Crear un novo tema"
       open_draft: "Abrir borrador"
       private_message: "Iniciar unha mensaxe"
       archive_message:

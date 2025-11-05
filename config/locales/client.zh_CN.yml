@@ -629,10 +629,6 @@ zh_CN:
         claimed_by_you: "您已认领此条目，可以进行审核。"
         claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审核。"
         automatically_claimed_by: "此条目目前正在由 <b>%{username}</b>审核。"
-      claim:
-        title: "认领此话题"
-      unclaim:
-        help: "移除此认领"
       awaiting_approval: "需要审批"
       delete: "删除"
       settings:
@@ -783,6 +779,7 @@ zh_CN:
           title: "帖子"
           noun: "帖子"
       flagged_as: "被标记为"
+      user_label: "用户"
       assigned_to: "已指定给"
       moderator_actions: "版主操作"
       timeline_and_notes: "时间线和注释"
@@ -2712,8 +2709,11 @@ zh_CN:
           label: 切换密语
           desc: 密语仅对管理人员可见
         create_topic:
-          label: "新建话题"
+          label: "新话题"
           desc: 创建新话题
+        create_personal_message:
+          label: "新建消息"
+          desc: "创建新的个人消息"
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"

@@ -609,10 +609,6 @@ fa_IR:
         claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
         claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
         automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
-      claim:
-        title: "درخواست این مبحث"
-      unclaim:
-        help: "حذف درخواست"
       awaiting_approval: "منتظر تایید"
       delete: "حذف"
       settings:
@@ -761,10 +757,12 @@ fa_IR:
         reviewable_post:
           title: "نوشته"
           noun: "نوشته"
+      user_label: "کاربر"
       notes:
         delete: "حذف"
       review_user: "کاربر"
       copy_link: "رونوشت پیوند"
+      copy_link_feedback: "لینک کپی شد"
       insights:
         activities:
           posts:
@@ -2649,8 +2647,10 @@ fa_IR:
           label: فعالسازی زمزمه
           desc: زمزمه ها فقط توسط کارکنان قابل مشاهده است
         create_topic:
-          label: "موضوع جدید"
           desc: یک موضوع جدید ایجاد کنید
+        create_personal_message:
+          label: "پیام جدید"
+          desc: "یک پیام شخصی جدید بساز"
         shared_draft:
           label: "درفت اشتراکی"
           desc: "موضوعی را پیش‌نویس کنید که فقط برای کاربران مجاز قابل مشاهده باشد"
@@ -3121,7 +3121,7 @@ fa_IR:
         one: "%{count} نوشته در این موضوع وجود دارد"
         other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
-      create_long: "ساخت یک موضوع جدید"
+      create_long: "یک موضوع جدید ایجاد کنید"
       open_draft: "بازکردن پیشنویس"
       private_message: "شروع یک پیام"
       archive_message:

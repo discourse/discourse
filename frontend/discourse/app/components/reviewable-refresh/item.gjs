@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import { alias } from "@ember/object/computed";
@@ -24,6 +24,8 @@ import ReviewableInsights from "discourse/components/reviewable-refresh/insights
 import ReviewableTimeline from "discourse/components/reviewable-refresh/timeline";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import dasherizeHelper from "discourse/helpers/dasherize";
+import editableValue from "discourse/helpers/editable-value";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -153,16 +155,19 @@ export default class ReviewableItem extends Component {
     "reviewable.status",
     "claimOptional",
     "claimRequired",
-    "reviewable.claimed_by"
+    "reviewable.claimed_by",
+    "siteSettings.reviewable_old_moderator_actions"
   )
   displayContextQuestion(
     createdFromFlag,
     status,
     claimOptional,
     claimRequired,
-    claimedBy
+    claimedBy,
+    oldModeratorActions
   ) {
     return (
+      oldModeratorActions &&
       createdFromFlag &&
       status === 0 &&
       (claimOptional || (claimRequired && claimedBy !== null))
@@ -316,6 +321,10 @@ export default class ReviewableItem extends Component {
 
     if (type === "ReviewableQueuedPost") {
       return "review.queued_post_label";
+    }
+
+    if (type === "ReviewableChatMessage") {
+      return "review.chat_flagged_as";
     }
 
     if (createdFromFlag) {
@@ -711,16 +720,37 @@ export default class ReviewableItem extends Component {
                 {{icon "d-post-share"}}
               </button>
             </div>
+            {{#if this.editing}}
+              <div class="editable-fields">
+                {{#each this.reviewable.editable_fields as |f|}}
+                  <div class="editable-field {{dasherizeHelper f.id}}">
+                    {{#let
+                      (lookupComponent this (concat "reviewable-field-" f.type))
+                      as |FieldComponent|
+                    }}
+                      <FieldComponent
+                        @tagName=""
+                        @value={{editableValue this.reviewable f.id}}
+                        @tagCategoryId={{this.tagCategoryId}}
+                        @valueChanged={{fn this.valueChanged f.id}}
+                        @categoryChanged={{this.categoryChanged}}
+                      />
+                    {{/let}}
+                  </div>
+                {{/each}}
+              </div>
+            {{else}}
 
-            {{#let
-              (lookupComponent this this.reviewableComponent)
-              as |ReviewableComponent|
-            }}
-              <ReviewableComponent
-                @reviewable={{this.reviewable}}
-                @tagName=""
-              />
-            {{/let}}
+              {{#let
+                (lookupComponent this this.reviewableComponent)
+                as |ReviewableComponent|
+              }}
+                <ReviewableComponent
+                  @reviewable={{this.reviewable}}
+                  @tagName=""
+                />
+              {{/let}}
+            {{/if}}
           </div>
 
           <div class="review-item__insights">
@@ -769,20 +799,17 @@ export default class ReviewableItem extends Component {
         </div>
 
         <div class="review-item__aside">
-          {{#if this.reviewable.claimed_by}}
-            <div class="review-item__assigned">
-              {{icon "user-plus"}}
-              {{i18n "review.assigned_to"}}
-              <ReviewableCreatedBy @user={{this.reviewable.claimed_by.user}} />
-            </div>
-          {{/if}}
 
           {{#unless this.reviewable.last_performing_username}}
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
-                <h3 class="review-item__aside-title">{{i18n
-                    "review.moderator_actions"
-                  }}</h3>
+                <h3 class="review-item__aside-title">
+                  {{#if this.displayContextQuestion}}
+                    {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{else}}
+                    {{i18n "review.moderator_actions"}}
+                  {{/if}}
+                </h3>
                 {{#if this.editing}}
                   <DButton
                     @disabled={{this.disabled}}
@@ -823,6 +850,16 @@ export default class ReviewableItem extends Component {
 
           {{#if this.claimEnabled}}
             <div class="review-item__moderator-actions --extra">
+              {{#if this.reviewable.claimed_by}}
+                <div class="review-item__assigned">
+                  {{icon "user-plus"}}
+                  <ReviewableCreatedBy
+                    @showUsername={{true}}
+                    @avatarSize="small"
+                    @user={{this.reviewable.claimed_by.user}}
+                  />
+                </div>
+              {{/if}}
               <ReviewableClaimedTopic
                 @topicId={{this.topicId}}
                 @claimedBy={{this.reviewable.claimed_by}}

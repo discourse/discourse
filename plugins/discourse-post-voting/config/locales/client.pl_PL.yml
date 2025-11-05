@@ -8,13 +8,13 @@ pl_PL:
   admin_js:
     site_settings:
       categories:
-        post_voting: Głosowanie na posty
+        post_voting: Głosowanie na wpisy
   post_voting:
     reviewables:
       comment_already_handled: "Dziękujemy, ale sprawdziliśmy już ten komentarz i stwierdziliśmy, że nie ma potrzeby jego ponownego oznaczania."
   js:
     discourse_post_voting:
-      title: "Głosowanie na posty"
+      title: "Głosowanie na wpisy"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -22,23 +22,23 @@ pl_PL:
       popup:
         question_answer_user_commented: '%{username} skomentował w "%{topic}" - %{site_title}'
     category:
-      post_voting_settings_heading: Głosowanie na posty
-      create_as_post_voting_default: Nowe tematy domyślnie trafiają do tematów Głosowanie na posty w tej kategorii.
+      post_voting_settings_heading: Głosowanie na wpisy
+      create_as_post_voting_default: Nowe tematy domyślnie trafiają do tematów Głosowanie na wpisy w tej kategorii.
       only_post_voting_in_this_category: Nowe tematy mogą być jedynie tematami głosowania w tej kategorii.
     composer:
       create_post_voting:
-        label: "Utwórz temat głosowania na posty"
+        label: "Utwórz temat głosowania na wpisy"
       composer_actions:
         create_as_post_voting:
-          label: "Przełącz głosowanie na posty"
-          desc: "Temat zostanie utworzony z postami, na które można głosować"
+          label: "Przełącz głosowanie na wpisy"
+          desc: "Temat zostanie utworzony ze wpisami, na które można głosować"
         remove_as_post_voting:
-          label: "Usuń głosowanie na posty"
+          label: "Usuń głosowanie na wpisy"
           desc: "Temat zostanie utworzony w zwykłym formacie"
     vote:
       already_voted: "Na jedno pytanie można oddać tylko jeden głos."
       user_over_limit: "Nie możesz przekroczyć liczby głosów odpowiadającej Twojemu poziomowi zaufania."
-      one_vote_per_post: "Na każdy post można oddać tylko jeden głos."
+      one_vote_per_post: "Na każdy wpis można oddać tylko jeden głos."
     last_answer_lowercase: ostatnia odpowiedź
     answer_lowercase:
       one: odpowiedź
@@ -135,4 +135,4 @@ pl_PL:
         view: "Zobacz transkrypcję poprzednich wiadomości"
       types:
         reviewable_post_voting_comment:
-          title: "Oznaczono komentarz do głosowania na posty"
+          title: "Oznaczono komentarz do głosowania na wpisy"
