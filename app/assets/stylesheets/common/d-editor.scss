@@ -533,6 +533,12 @@
 
   .d-editor-translation-preview-content {
     padding-inline: var(--translation-preview-padding, 1rem);
+    overflow: hidden;
+
+    img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+      max-width: 100%;
+      height: auto;
+    }
   }
 
   .d-editor-translation-preview-empty {
