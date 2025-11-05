@@ -28,6 +28,12 @@ export default class A11y extends Service {
    * @type {boolean}
    */
   @tracked showSkipLinks = true;
+
+  /**
+   * Reference date used to determine if relative dates need to be updated.
+   * When this value changes, all relative dates consuming this value will be re-rendered.
+   * @type {Date}
+   */
   @tracked autoUpdatingRelativeDateRef = new Date();
 
   #state = new (class {
