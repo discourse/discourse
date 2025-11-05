@@ -4,7 +4,7 @@ import { concat, fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { and, eq, not } from "truth-helpers";
+import { and, not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
@@ -34,7 +34,7 @@ export default class PostStream extends Component {
 
   @tracked cloakAbove;
   @tracked cloakBelow;
-  @tracked keyboardSelectedPostNumber;
+  @tracked keyboardSelection;
 
   viewportTracker = new PostStreamViewportTracker();
 
@@ -122,6 +122,15 @@ export default class PostStream extends Component {
 
   isPlaceholder(post) {
     return post instanceof Placeholder;
+  }
+
+  @bind
+  isPostKeyboardSelected(postNumber) {
+    return (
+      this.keyboardSelection &&
+      this.keyboardSelection.topicId === this.args.topic.id &&
+      this.keyboardSelection.postNumber === postNumber
+    );
   }
 
   daysBetween(post1, post2) {
@@ -216,10 +225,10 @@ export default class PostStream extends Component {
   @action
   updateKeyboardSelectedPostNumber({ selectedArticle: element }) {
     next(() => {
-      this.keyboardSelectedPostNumber = parseInt(
-        element.dataset.postNumber,
-        10
-      );
+      this.keyboardSelection = {
+        topicId: this.args.topic.id,
+        postNumber: parseInt(element.dataset.postNumber, 10),
+      };
     });
   }
 
@@ -295,7 +304,7 @@ export default class PostStream extends Component {
               (this.viewportTracker.getCloakingData
                 post above=this.cloakAbove below=this.cloakBelow
               )
-              (eq this.keyboardSelectedPostNumber post.post_number)
+              (this.isPostKeyboardSelected post.post_number)
               (concat "post_" post.post_number)
               as |PostComponent cloakingData keyboardSelected postId|
             }}
