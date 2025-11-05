@@ -139,7 +139,9 @@ function lookupModuleBySuffix(suffix) {
     moduleSuffixTrie = new SuffixTrie("/");
     const searchPaths = [
       "discourse/", // Includes themes/plugins
-      "select-kit/",
+      "discourse/select-kit/",
+      "discourse/float-kit/",
+      "discourse/truth-helpers/",
       "discourse/admin/",
     ];
     Object.keys(requirejs.entries).forEach((name) => {
