@@ -395,7 +395,7 @@ en:
     joined: "Joined"
     admin_title: "Admin"
     show_more: "show more"
-    show_help: "options"
+    show_help: "Options"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -774,7 +774,7 @@ en:
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User"
-      filtered_reviewed_by: "Reviewed By"
+      filtered_reviewed_by: "Reviewed by"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -849,7 +849,7 @@ en:
           created_at_asc: "Created At (reverse)"
 
         priority:
-          title: "Minimum Priority"
+          title: "Minimum priority"
           any: "(any)"
           low: "Low"
           medium: "Medium"

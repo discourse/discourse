@@ -26,6 +26,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import dasherizeHelper from "discourse/helpers/dasherize";
 import editableValue from "discourse/helpers/editable-value";
+import formatDate from "discourse/helpers/format-date";
 import { newReviewableStatus } from "discourse/helpers/reviewable-status";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -706,10 +707,6 @@ export default class ReviewableItem extends Component {
                   {{/each}}
                 </div>
               </div>
-              {{newReviewableStatus
-                this.reviewable.status
-                this.reviewable.type
-              }}
 
               <button
                 type="button"
@@ -719,6 +716,16 @@ export default class ReviewableItem extends Component {
               >
                 {{icon "d-post-share"}}
               </button>
+
+              {{newReviewableStatus
+                this.reviewable.status
+                this.reviewable.type
+              }}
+
+              <span class="reviewable-created-date">
+                {{formatDate this.reviewable.created_at format="tiny"}}
+              </span>
+
             </div>
             {{#if this.editing}}
               <div class="editable-fields">

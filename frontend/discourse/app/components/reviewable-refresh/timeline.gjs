@@ -247,9 +247,11 @@ export default class ReviewableTimeline extends Component {
                         </Placeholder>
                       </InterpolatedTranslation>
                     </div>
-                    <div class="timeline-event__description">
-                      {{event.description}}
-                    </div>
+                    {{#if event.description}}
+                      <div class="timeline-event__description">
+                        {{htmlSafe event.description}}
+                      </div>
+                    {{/if}}
                   </div>
 
                   {{#if (and (eq event.type "note") event.canDelete)}}

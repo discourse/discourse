@@ -18,7 +18,7 @@ const OTHER_REASON = "other_reason";
 export default class ReviseAndRejectPostReviewable extends Component {
   @service siteSettings;
 
-  @tracked reason;
+  @tracked reason = OTHER_REASON;
   @tracked customReason;
   @tracked feedback;
   @tracked submitting = false;

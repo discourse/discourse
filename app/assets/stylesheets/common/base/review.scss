@@ -41,7 +41,7 @@
 
   &__primary-content {
     position: relative;
-    flex: 0 1 70%;
+    flex: 0 1 80%;
     min-width: 0;
 
     @include viewport.from(sm) {
@@ -53,15 +53,27 @@
     }
   }
 
+  .reviewable-created-date {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    white-space: nowrap;
+    align-self: baseline;
+    padding-block: var(--space-1);
+    line-height: var(--line-height-small);
+  }
+
   .reviewable-permalink-copy {
     position: relative;
     top: -0.35em;
     right: calc(var(--space-2) * -1);
-    margin-left: calc(var(--space-4) * -1);
 
     .post-action-feedback-alert {
       top: -1rem;
-      left: 40%;
+      left: 60%;
+    }
+
+    > .d-icon {
+      margin-right: 0;
     }
   }
 
@@ -97,6 +109,7 @@
 
     &-title {
       line-height: var(--line-height-medium);
+      text-wrap: pretty;
     }
   }
 
@@ -106,7 +119,7 @@
 
   &__header {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr auto auto auto;
     gap: var(--space-2);
     align-items: start;
     background-color: var(--primary-very-low);
@@ -165,6 +178,17 @@
       display: flex;
       gap: var(--space-2);
 
+      .deleted-user {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+
+        .d-icon {
+          font-size: var(--font-down-2);
+          color: var(--primary-high);
+        }
+      }
+
       .names {
         display: inline-block;
 
@@ -191,6 +215,10 @@
       scrollbar-color: var(--primary-low) transparent;
       transition: scrollbar-color 0.25s ease-in-out;
       transition-delay: 0.5s;
+
+      .lightbox-wrapper img {
+        display: block;
+      }
 
       pre,
       code {
@@ -248,16 +276,24 @@
   .reviewable-claimed-topic {
     flex-direction: column;
     align-items: stretch;
+    white-space: nowrap;
+
+    .d-button-label {
+      @include ellipsis;
+    }
   }
 
   &__assigned {
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: var(--space-2);
 
     .d-icon {
       color: var(--primary-high);
+    }
+
+    .created-by {
+      @include ellipsis;
     }
   }
 }
