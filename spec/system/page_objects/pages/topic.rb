@@ -196,6 +196,10 @@ module PageObjects
         has_css?("#reply-control.open")
       end
 
+      def composer
+        @composer_component
+      end
+
       def type_in_composer(input)
         @composer_component.type_content(input)
       end
@@ -320,11 +324,11 @@ module PageObjects
         find(".flag-topic").click
       end
 
-      private
-
       def within_post(post)
         within(post_by_number(post)) { yield }
       end
+
+      private
 
       def within_topic_footer_buttons
         within("#topic-footer-buttons") { yield }
