@@ -3,7 +3,7 @@
 RSpec.describe "tasks/migrate_advanced_search_banner_to_welcome_banner" do
   before do
     Rake::Task.clear
-    load Rails.root.join("lib/tasks/migrate_advanced_search_banner_to_welcome_banner.rake")
+    Discourse::Application.load_tasks
   end
 
   describe "#validate_and_get_db" do
