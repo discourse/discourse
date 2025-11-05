@@ -191,17 +191,13 @@
     display: none;
     background: var(--secondary);
     box-sizing: border-box;
+    width: max-content;
+    top: 0;
+    left: 0;
 
     .selected-content {
       max-height: 300px;
       overflow-y: auto;
-    }
-
-    &[data-popper-reference-hidden] {
-      html:not(.ios-device) & {
-        visibility: hidden;
-        pointer-events: none;
-      }
     }
   }
 
