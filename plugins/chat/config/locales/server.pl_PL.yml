@@ -218,7 +218,8 @@ pl_PL:
         slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
         is_already_in_use: "jest już w użyciu"
     bookmarkable:
-      notification_title: "wiadomość w %{channel_name}"
+      notification_title_channel: "wiadomość w %{channel_name}"
+      notification_title_direct_message: "wiadomość z %{channel_name}"
     personal_chat: "czat osobisty"
     onebox:
       inline_to_message: "Wiadomość #%{message_id} od %{username} - #%{chat_channel}"

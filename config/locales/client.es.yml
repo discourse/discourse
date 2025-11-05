@@ -2699,6 +2699,7 @@ es:
         select: "Seleccionar traducción"
         save: "Guardar traducción"
         original_content: "Contenido de la publicación original"
+        translation: "Traducción"
         placeholder: "Introduce la traducción del post aquí..."
       group_mentioned_limit:
         one: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuario) de una vez. No se notificará a nadie."

@@ -98,6 +98,8 @@ et:
         types:
           category: "Foorum"
           topic: "Teema"
+      reviewable:
+        message_in_channel: "Kanal"
       composer:
         italic_text: "esiletõstetud tekst"
         bold_text: "rasvane tekst"

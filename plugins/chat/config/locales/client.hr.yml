@@ -209,6 +209,8 @@ hr:
         types:
           category: "Kategorija"
           topic: "Tema"
+      reviewable:
+        message_in_channel: "Kanal"
       composer:
         italic_text: "naglašen tekst"
         bold_text: "jaki text"

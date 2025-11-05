@@ -218,7 +218,8 @@ uk:
         slug_contains_non_ascii_chars: "містить символи, які не є ASCII"
         is_already_in_use: "вже використовується"
     bookmarkable:
-      notification_title: "повідомлення в %{channel_name}"
+      notification_title_channel: "повідомлення в %{channel_name}"
+      notification_title_direct_message: "повідомлення з %{channel_name}"
     personal_chat: "особистий чат"
     onebox:
       inline_to_message: "Повідомлення №%{message_id} від %{username} – №%{chat_channel}"

@@ -214,6 +214,7 @@ ko:
           topic: "글"
       reviewable:
         type: "채팅 메시지"
+        message_in_channel: "채널"
       composer:
         toggle_toolbar: "툴바 전환"
         italic_text: "강조하기"

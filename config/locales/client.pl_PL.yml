@@ -351,6 +351,7 @@ pl_PL:
     back_button: "Poprzednia"
     welcome_banner:
       header:
+        new_members: "Witaj, %{preferred_display_name}!"
         logged_in_members: "Witaj z powrotem, %{preferred_display_name}!"
         anonymous_members: "Witaj na %{site_name}!"
       search_placeholder: "Szukaj"
@@ -975,6 +976,7 @@ pl_PL:
           noun: "wpis"
       flagged_as: "Oflagowany jako"
       post_flagged_as: "Wpis oznaczono jako"
+      chat_flagged_as: "Czat oznaczono jako"
       queued_post_label: "Wpis w kolejce"
       user_label: "Użytkownik"
       assigned_to: "Przypisany do"
@@ -2992,6 +2994,10 @@ pl_PL:
         select: "Wybierz tłumaczenie"
         save: "Zapisz tłumaczenie"
         original_content: "Oryginalna treść wpisu"
+        translation_preview: "Podgląd tłumaczenia"
+        original: "Oryginalne"
+        translation: "Tłumaczenie"
+        no_translation_yet: "Zacznij pisać, aby zobaczyć podgląd tłumaczenia..."
         placeholder: "Tutaj wprowadź tłumaczenie wpisu..."
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."

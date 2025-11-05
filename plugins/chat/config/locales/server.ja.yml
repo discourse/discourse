@@ -177,7 +177,7 @@ ja:
         slug_contains_non_ascii_chars: "に非 ASCII 文字が含まれます"
         is_already_in_use: "はすでに使用されています"
     bookmarkable:
-      notification_title: "%{channel_name} のメッセージ"
+      notification_title_channel: "%{channel_name} のメッセージ"
     personal_chat: "パーソナルチャット"
     onebox:
       inline_to_message: "%{username} によるメッセージ #%{message_id} - #%{chat_channel}"

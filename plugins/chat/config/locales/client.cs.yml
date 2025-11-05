@@ -490,6 +490,7 @@ cs:
           topic: "Témata"
       reviewable:
         type: "Zpráva chatu"
+        message_in_channel: "Kanál"
       reactions:
         only_you: "<span>Reagovali jste pomocí </span>:%{emoji}:"
         you_and_single_user: "<span>Vy a %{username} jste reagovali pomocí </span>:%{emoji}:"

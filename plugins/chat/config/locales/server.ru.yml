@@ -210,7 +210,7 @@ ru:
         slug_contains_non_ascii_chars: "содержит символы не в ascii-кодировке"
         is_already_in_use: "уже используется"
     bookmarkable:
-      notification_title: "Сообщение в канале %{channel_name}"
+      notification_title_channel: "Сообщение в канале %{channel_name}"
     personal_chat: "личный чат"
     onebox:
       inline_to_message: "Сообщение №%{message_id} от пользователя %{username} — №%{chat_channel}"

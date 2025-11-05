@@ -82,6 +82,8 @@ hy:
         types:
           category: "Կատեգորիա"
           topic: "Թեմա"
+      reviewable:
+        message_in_channel: "Ալիք"
       composer:
         italic_text: "շեղ տեքստ"
         bold_text: "թավ տեքստ"

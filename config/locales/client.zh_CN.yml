@@ -2564,6 +2564,7 @@ zh_CN:
         select: "选择翻译"
         save: "保存翻译"
         original_content: "原始帖子内容"
+        translation: "翻译"
         placeholder: "在此处输入帖子的翻译…"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"

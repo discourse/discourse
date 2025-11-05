@@ -146,6 +146,8 @@ pt:
         types:
           category: "Categoria"
           topic: "Tópico"
+      reviewable:
+        message_in_channel: "Canal"
       composer:
         italic_text: "texto em itálico"
         bold_text: "texto em negrito"

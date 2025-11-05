@@ -133,6 +133,8 @@ ro:
         types:
           category: "Categorie"
           topic: "Subiect"
+      reviewable:
+        message_in_channel: "Canal"
       reactions:
         only_you: "<span>Ai reacționat cu </span>:%{emoji}:"
         you_and_single_user: "<span>Tu și %{username} ați reacționat cu </span>:%{emoji}:"

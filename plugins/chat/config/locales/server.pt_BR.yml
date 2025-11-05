@@ -188,7 +188,7 @@ pt_BR:
         slug_contains_non_ascii_chars: "contém caracteres não ascii"
         is_already_in_use: "já está em uso"
     bookmarkable:
-      notification_title: "mensagem em %{channel_name}"
+      notification_title_channel: "mensagem em %{channel_name}"
     personal_chat: "chat pessoal"
     onebox:
       inline_to_message: "Mensagem #%{message_id} por %{username} – #%{chat_channel}"

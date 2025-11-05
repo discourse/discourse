@@ -2861,6 +2861,7 @@ sk:
         select: "Vyberte preklad"
         save: "Uložiť preklad"
         original_content: "Pôvodný obsah príspevku"
+        translation: "Preklad"
         placeholder: "Sem zadajte preklad príspevku..."
       group_mentioned_limit:
         one: "<b>Varovanie!</b> Spomenuli ste <a href='%{group_link}'>%{group}</a>, avšak táto skupina má viac členov, ako je správcom nakonfigurovaný limit zmienky %{count} používateľa. Nikto nebude upozornený."

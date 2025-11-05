@@ -41,7 +41,7 @@ el:
         slug_contains_non_ascii_chars: "περιέχει χαρακτήρες που δεν είναι ascii"
         is_already_in_use: "είναι ήδη σε χρήση"
     bookmarkable:
-      notification_title: "μήνυμα στο %{channel_name}"
+      notification_title_channel: "μήνυμα στο %{channel_name}"
     personal_chat: "προσωπική συνομιλία"
     onebox:
       inline_to_channel: "Συνομιλία #%{chat_channel}"

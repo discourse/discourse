@@ -186,6 +186,7 @@ da:
           topic: "Emne"
       reviewable:
         type: "Chatbesked"
+        message_in_channel: "Kanal"
       composer:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"

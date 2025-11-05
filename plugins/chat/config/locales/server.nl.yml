@@ -188,7 +188,7 @@ nl:
         slug_contains_non_ascii_chars: "bevat niet-ASCII-tekens"
         is_already_in_use: "is al in gebruik"
     bookmarkable:
-      notification_title: "bericht in %{channel_name}"
+      notification_title_channel: "bericht in %{channel_name}"
     personal_chat: "privéchat"
     onebox:
       inline_to_message: "Bericht %{message_id} van %{username} – #%{chat_channel}"

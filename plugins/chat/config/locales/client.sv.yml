@@ -411,6 +411,7 @@ sv:
           topic: "Ämne"
       reviewable:
         type: "Chatt meddelande"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Du reagerade med </span>:%{emoji}:"
         you_and_single_user: "<span>Du och %{username} reagerade med </span>:%{emoji}:"

@@ -40,8 +40,11 @@ uk:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "Що ви хочете зробити з коментарем?"
         no_action_comment:
           title: "Немає дій"
+          description: "Залиште коментар як є."
         agree_and_keep_comment:
           title: "Залишити коментар"
           description: "Погоджуюся з позначкою та залишаю коментар без змін."

@@ -383,6 +383,7 @@ hu:
           topic: "Téma"
       reviewable:
         type: "Csevegőüzenet"
+        message_in_channel: "Csatorna"
       reactions:
         only_you: "<span>A következővel reagált </span>:%{emoji}:"
         you_and_single_user: "<span>Ön és %{username} a következővel reagált: </span>:%{emoji}:"

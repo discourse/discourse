@@ -408,6 +408,7 @@ ja:
           topic: "トピック"
       reviewable:
         type: "チャットメッセージ"
+        message_in_channel: "チャンネル"
       reactions:
         only_you: ":%{emoji}: <span>でリアクションしました</span>"
         you_and_single_user: "<span>あなたと %{username} が :%{emoji}: でリアクションしました</span>"

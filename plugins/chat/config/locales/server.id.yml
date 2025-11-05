@@ -158,7 +158,7 @@ id:
         slug_contains_non_ascii_chars: "berisi karakter non-ascii"
         is_already_in_use: "sedang digunakan"
     bookmarkable:
-      notification_title: "pesan di %{channel_name}"
+      notification_title_channel: "pesan di %{channel_name}"
     personal_chat: "obrolan pribadi"
     onebox:
       inline_to_message: "Pesan #%{message_id} oleh %{username} – #%{chat_channel}"

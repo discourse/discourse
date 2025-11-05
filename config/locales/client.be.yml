@@ -1145,85 +1145,85 @@ be:
         title: "Пароль"
         common: "Гэты пароль занадта папулярны."
         same_as_username: "Пароль супадае з імем карыстальніка."
-        same_as_email: "Пароль ідэнтычны Вашаму email"
-        ok: "Пароль добры."
+        same_as_email: "Пароль супадае з электроннай поштай."
+        ok: "Пароль выглядае добра."
       summary:
-        title: "Рэзюмэ"
-        stats: "статыстыка"
-        time_read: "пры чытанні"
+        title: "Зводка"
+        stats: "Статыстыка"
+        time_read: "час чытання"
         topic_count:
           one: "тэма створана"
-          few: "тэмаў створана"
-          many: "тэмаў створана"
-          other: "тэмаў створана"
+          few: "тэмы створаны"
+          many: "тэм створана"
+          other: "тэм створана"
         likes_received:
           one: "атрымана"
           few: "атрымана"
           many: "атрымана"
           other: "атрымана"
         bookmark_count:
-          one: "абранае"
+          one: "закладка"
           few: "закладкі"
-          many: "закладкі"
-          other: "закладкі"
-        more_topics: "Больш тэмаў"
-        top_categories: "ТОП катэгорый"
+          many: "закладак"
+          other: "закладак"
+        more_topics: "Больш тэм"
+        top_categories: "Топ катэгорый"
         topics: "Тэмы"
         replies: "Адказы"
       ip_address:
-        title: "Апошні IP адрас"
+        title: "Апошні IP-адрас"
       registration_ip_address:
-        title: "IP Адрас Рэгістрацыі"
+        title: "IP-адрас рэгістрацыі"
       avatar:
-        title: "Выява профілю"
+        title: "Аватар профілю"
       title:
-        title: "Назва"
+        title: "Загаловак"
       filters:
-        all: "усе"
+        all: "Усе"
       stream:
-        posted_by: "апублікавана"
-        sent_by: "адпраўлена"
+        posted_by: "Апублікавана"
+        sent_by: "Адпраўлена"
         private_message: "паведамленне"
         the_topic: "тэма"
     user_status:
       save: "Захаваць"
     errors:
       reasons:
-        network: "памылка Сеткі"
-        server: "серверная памылка"
-        forbidden: "няма доступу"
-        unknown: "памылка"
+        network: "Памылка сеткі"
+        server: "Памылка сервера"
+        forbidden: "Доступ забаронены"
+        unknown: "Памылка"
       desc:
-        network: "Калі ласка, праверце злучэння."
+        network: "Праверце злучэнне."
         server: "Код памылкі: %{status}"
-        forbidden: "Выбачайце, але гэта пераглядаць."
+        forbidden: "У вас няма дазволу на прагляд."
         unknown: "Нешта пайшло не так."
       buttons:
-        back: "вярнуцца"
+        back: "Вярнуцца"
         again: "Паспрабаваць яшчэ раз"
-        fixed: "загрузка Старонкі"
+        fixed: "Загрузіць старонку"
     modal:
-      close: "схаваць"
+      close: "закрыць"
     form_kit:
-      reset: скінуць
+      reset: Скінуць
       errors:
-        required: "абавязковыя"
-    close: "зачыніць"
-    refresh: "абнавіць"
-    home: "дома"
+        required: "Абавязковае"
+    close: "Закрыць"
+    refresh: "Абнавіць"
+    home: "Галоўная старонка"
     read_only_mode:
-      login_disabled: "Login is disabled while the site is in read only mode."
-    mute: Mute
-    unmute: Unmute
-    time_read: прачытаныя
+      login_disabled: "Уваход забаронены, пакуль сайт знаходзіцца ў рэжыме толькі для чытання."
+    mute: Адключыць гук
+    unmute: Уключыць гук
+    time_read: Прачытана
     last_reply_lowercase: апошні адказ
     replies_lowercase:
-      one: адказаць
+      one: адказ
       few: адказы
-      many: адказы
-      other: адказы
+      many: адказаў
+      other: адказаў
     signup_cta:
-      sign_up: "рэгістрацыя"
+      sign_up: "Зарэгістравацца"
       hide_forever: "няма дзякуй"
     summary:
       buttons:

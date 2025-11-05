@@ -188,7 +188,7 @@ hu:
         slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
         is_already_in_use: "már használatban van"
     bookmarkable:
-      notification_title: "Üzenet a(z) %{channel_name} csatornában."
+      notification_title_channel: "Üzenet a(z) %{channel_name} csatornában."
     personal_chat: "személyes csevegés"
     onebox:
       inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"

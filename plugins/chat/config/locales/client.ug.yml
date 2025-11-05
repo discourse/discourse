@@ -435,6 +435,7 @@ ug:
           topic: "تېما"
       reviewable:
         type: "سۆھبەت ئۇچۇرى"
+        message_in_channel: "قانال"
       reactions:
         only_you: "<span>سىز </span>:%{emoji}بىلەن ئىنكاس قايتۇردىڭىز:"
         you_and_single_user: "<span>سىز ۋە %{username} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"

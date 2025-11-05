@@ -292,6 +292,7 @@ ur:
           topic: "موضوع"
       reviewable:
         type: "گپ شپ کا پیغام"
+        message_in_channel: "چَینل"
       composer:
         italic_text: "زور دیا گیا ٹَیکسٹ"
         bold_text: "گہرا ٹَیکسٹ"

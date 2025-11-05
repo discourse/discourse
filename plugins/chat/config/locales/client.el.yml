@@ -185,6 +185,8 @@ el:
         types:
           category: "Κατηγορία"
           topic: "Θέμα"
+      reviewable:
+        message_in_channel: "Κανάλι"
       composer:
         italic_text: "κείμενο σε έμφαση"
         bold_text: "έντονη γραφή"

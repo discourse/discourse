@@ -187,7 +187,7 @@ ug:
         slug_contains_non_ascii_chars: "ascii بولمىغان ھەرپلەر بار"
         is_already_in_use: "ئىشلىتىلىۋاتىدۇ"
     bookmarkable:
-      notification_title: "%{channel_name} دىكى ئۇچۇر"
+      notification_title_channel: "%{channel_name} دىكى ئۇچۇر"
     personal_chat: "شەخسىي سۆھبەت"
     onebox:
       inline_to_message: "%{username} – #%{chat_channel} نىڭ #%{message_id} ئۇچۇرى"

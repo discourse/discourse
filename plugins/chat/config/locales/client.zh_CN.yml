@@ -408,6 +408,7 @@ zh_CN:
           topic: "话题"
       reviewable:
         type: "聊天消息"
+        message_in_channel: "频道"
       reactions:
         only_you: "<span>您回应了 </span>:%{emoji}:"
         you_and_single_user: "<span>您和 %{username} 回应了 </span>:%{emoji}:"

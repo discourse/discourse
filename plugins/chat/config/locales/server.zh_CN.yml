@@ -184,7 +184,7 @@ zh_CN:
         slug_contains_non_ascii_chars: "包含非 ASCII 字符"
         is_already_in_use: "已在使用中"
     bookmarkable:
-      notification_title: "%{channel_name}中的消息"
+      notification_title_channel: "%{channel_name}中的消息"
     personal_chat: "个人聊天"
     onebox:
       inline_to_message: "消息 #%{message_id}，来自%{username} – #%{chat_channel}"
