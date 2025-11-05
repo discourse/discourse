@@ -296,16 +296,19 @@ export default class PostStream extends Component {
                 post above=this.cloakAbove below=this.cloakBelow
               )
               (eq this.keyboardSelectedPostNumber post.post_number)
-              as |PostComponent cloakingData keyboardSelected|
+              (concat "post_" post.post_number)
+              as |PostComponent cloakingData keyboardSelected postId|
             }}
               <PostComponent
-                id={{concat "post_" post.post_number}}
+                id={{postId}}
                 class={{concatClass
                   (if cloakingData.active "post-stream--cloaked")
                   (if keyboardSelected "selected")
                 }}
                 style={{cloakingData.style}}
                 @cloaked={{cloakingData.active}}
+                {{! template-lint-disable no-duplicate-id }}
+                @elementId={{postId}}
                 @post={{post}}
                 @prevPost={{previousPost}}
                 @nextPost={{nextPost}}

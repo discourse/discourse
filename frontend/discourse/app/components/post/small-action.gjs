@@ -97,6 +97,7 @@ export default class PostSmallAction extends Component {
 
     const who = this.who ? `@${this.who}` : "";
 
+    // TODO (a11y) some i18n strings have HTML embedded in them. We need to strip
     return i18n(`action_codes.${this.code}`, { who, when, path: this.path });
   }
 
@@ -150,22 +151,33 @@ export default class PostSmallAction extends Component {
   }
 
   <template>
-    <div ...attributes>
+    <div
+      ...attributes
+      {{! The component is wrapped in a `div` and sets the same `id` below in the `article` tag,
+          we need to only set it in the `div` when the post is cloaked.
+          This is not ideal, but the post-stream component sets the `id` for the children to ensure
+          all cloaked items can be referenced and we need to override it }}
+      data-post-number={{@post.post_number}}
+      id={{if @cloaked @elementId}}
+    >
       <PostA11yHeading @post={{@post}} @text={{this.a11yHeadingText}} />
-      <article
-        class={{unless
-          @cloaked
-          (concatClass
-            "small-action"
-            "onscreen-post"
-            (if @post.deleted "deleted")
-            this.additionalClasses
-          )
-        }}
-        aria-labelledby={{concat "post-heading-" @post.post_number}}
-        data-post-number={{@post.post_number}}
-      >
-        {{#unless @cloaked}}
+      {{#unless @cloaked}}
+        <article
+          id={{@elementId}}
+          class={{unless
+            @cloaked
+            (concatClass
+              "small-action"
+              "onscreen-post"
+              (if @post.deleted "deleted")
+              this.additionalClasses
+            )
+          }}
+          aria-labelledby={{concat "post-heading-" @post.post_number}}
+          data-post-id={{@post.id}}
+          data-topic-id={{@post.topicId}}
+          data-user-id={{@post.user_id}}
+        >
           <div class="topic-avatar">
             {{icon this.icon}}
           </div>
@@ -228,8 +240,8 @@ export default class PostSmallAction extends Component {
               {{/if}}
             {{/unless}}
           </div>
-        {{/unless}}
-      </article>
+        </article>
+      {{/unless}}
     </div>
   </template>
 }

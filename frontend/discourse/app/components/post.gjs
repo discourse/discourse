@@ -121,10 +121,6 @@ export default class Post extends Component {
     return this.repliesAbove?.isResolved && this.repliesAbove.value.length > 0;
   }
 
-  get id() {
-    return `post_${this.args.post.post_number}`;
-  }
-
   get isFromCurrentUser() {
     return this.currentUser && this.currentUser.id === this.args.post.user_id;
   }
@@ -443,7 +439,7 @@ export default class Post extends Component {
           we need to only set it in the `div` when the post is cloaked.
           This is not ideal, but the post-stream component sets the `id` for the children to ensure
           all cloaked items can be referenced and we need to override it }}
-      id={{if @cloaked (concat "post_" @post.post_number)}}
+      id={{if @cloaked @elementId}}
     >
       <PostA11yHeading @post={{@post}} @text={{this.a11yHeadingText}} />
       {{#unless @cloaked}}
@@ -462,7 +458,7 @@ export default class Post extends Component {
         }}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
-              id={{this.id}}
+              id={{@elementId}}
               class={{concatClass
                 "boxed"
                 "onscreen-post"
