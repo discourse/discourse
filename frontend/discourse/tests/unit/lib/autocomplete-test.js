@@ -2,10 +2,6 @@ import { triggerKeyEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import $ from "jquery";
 import { module, test } from "qunit";
-import {
-  disableDeprecationWarningInTests,
-  enableDeprecationWarningInTests,
-} from "discourse/lib/autocomplete";
 import { escapeExpression, setCaretPosition } from "discourse/lib/utilities";
 import {
   simulateKey,
@@ -31,10 +27,6 @@ module("Unit | Utility | autocomplete", function (hooks) {
     return _element;
   }
 
-  hooks.beforeEach(() => {
-    disableDeprecationWarningInTests();
-  });
-
   hooks.afterEach(() => {
     if (!_element) {
       return;
@@ -43,8 +35,6 @@ module("Unit | Utility | autocomplete", function (hooks) {
     $e.autocomplete({ cancel: true });
     $e.autocomplete("destroy");
     _element.remove();
-
-    enableDeprecationWarningInTests();
   });
 
   test("Autocomplete can complete really short terms correctly", async function (assert) {
