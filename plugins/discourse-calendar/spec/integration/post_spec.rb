@@ -815,7 +815,7 @@ describe Post do
       expect(post.event.timezone).to eq("America/New_York")
       expect(post.event.original_starts_at).to eq_time(expected_original_datetime)
 
-      freeze_time(ActiveSupport::TimeZone["America/New_York"].parse("2025-11-05 12:00"))
+      freeze_time(Time.find_zone("America/New_York").parse("2025-11-05 12:00"))
       post.event.set_next_date
 
       next_starts_at = post.event.reload.starts_at
