@@ -329,7 +329,7 @@ module("Integration | Component | Post | PostSmallAction", function (hooks) {
 
     assert.true(
       headingText.includes("Invited"),
-      "heading text reflects closed action"
+      "heading text reflects invited action"
     );
     assert.true(
       headingText.includes("@testuser"),
