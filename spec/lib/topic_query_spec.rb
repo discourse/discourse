@@ -519,6 +519,10 @@ RSpec.describe TopicQuery do
 
   describe "tag filter" do
     fab!(:tag)
+    fab!(:tag_2, :tag)
+    fab!(:tag_3, :tag)
+    fab!(:tag_4, :tag)
+    fab!(:tag_5, :tag)
     fab!(:other_tag, :tag)
     fab!(:uppercase_tag) { Fabricate(:tag, name: "HeLlO") }
 
@@ -529,6 +533,8 @@ RSpec.describe TopicQuery do
       fab!(:tagged_topic2) { Fabricate(:topic, tags: [other_tag]) }
       fab!(:tagged_topic3) { Fabricate(:topic, tags: [tag, other_tag]) }
       fab!(:tagged_topic4) { Fabricate(:topic, tags: [uppercase_tag]) }
+      fab!(:tagged_topic5) { Fabricate(:topic, tags: [tag_2, tag_3, tag_4]) }
+      fab!(:tagged_topic6) { Fabricate(:topic, tags: [tag_2, tag_3, tag_4, tag_5]) }
       fab!(:no_tags_topic, :topic)
       fab!(:tag_group) do
         Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [other_tag.name])
@@ -546,27 +552,25 @@ RSpec.describe TopicQuery do
       end
 
       it "returns topics with the tag when filtered to it" do
-        expect(TopicQuery.new(moderator, tags: tag.name).list_latest.topics).to contain_exactly(
-          tagged_topic1,
-          tagged_topic3,
-        )
-
-        expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics).to contain_exactly(
-          tagged_topic1,
-          tagged_topic3,
-        )
+        expect(
+          TopicQuery.new(moderator, tags: tag.name).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic3.id)
 
         expect(
-          TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics,
-        ).to contain_exactly(tagged_topic1, tagged_topic2, tagged_topic3)
+          TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic3.id)
 
         expect(
-          TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics,
-        ).to contain_exactly(tagged_topic1, tagged_topic2, tagged_topic3)
+          TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic2.id, tagged_topic3.id)
 
-        expect(TopicQuery.new(moderator, tags: ["hElLo"]).list_latest.topics).to contain_exactly(
-          tagged_topic4,
-        )
+        expect(
+          TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic2.id, tagged_topic3.id)
+
+        expect(
+          TopicQuery.new(moderator, tags: ["hElLo"]).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic4.id)
       end
 
       it "can return topics with all specified tags" do
@@ -577,6 +581,26 @@ RSpec.describe TopicQuery do
             .topics
             .map(&:id),
         ).to eq([tagged_topic3.id])
+
+        expect(
+          TopicQuery
+            .new(moderator, tags: [tag_2.name, tag_3.name, tag_4.name], match_all_tags: true)
+            .list_latest
+            .topics
+            .map(&:id),
+        ).to contain_exactly(tagged_topic6.id, tagged_topic5.id)
+
+        expect(
+          TopicQuery
+            .new(
+              moderator,
+              tags: [tag_2.name, tag_3.name, tag_4.name, tag_5.name],
+              match_all_tags: true,
+            )
+            .list_latest
+            .topics
+            .map(&:id),
+        ).to contain_exactly(tagged_topic6.id)
       end
 
       it "can return topics with tag intersections using truthy/falsey values" do
@@ -585,9 +609,8 @@ RSpec.describe TopicQuery do
             .new(moderator, tags: [tag.name, other_tag.name], match_all_tags: "false")
             .list_latest
             .topics
-            .map(&:id)
-            .sort,
-        ).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+            .map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic2.id, tagged_topic3.id)
       end
 
       it "returns an empty relation when an invalid tag is passed" do
@@ -606,28 +629,29 @@ RSpec.describe TopicQuery do
       end
 
       it "can filter using a synonym" do
-        expect(TopicQuery.new(moderator, tags: synonym.name).list_latest.topics).to contain_exactly(
-          tagged_topic1,
-          tagged_topic3,
-        )
-
-        expect(TopicQuery.new(moderator, tags: [synonym.id]).list_latest.topics).to contain_exactly(
-          tagged_topic1,
-          tagged_topic3,
-        )
+        expect(
+          TopicQuery.new(moderator, tags: synonym.name).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic3.id)
 
         expect(
-          TopicQuery.new(moderator, tags: [synonym.name, other_tag.name]).list_latest.topics,
-        ).to contain_exactly(tagged_topic1, tagged_topic2, tagged_topic3)
+          TopicQuery.new(moderator, tags: [synonym.id]).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic3.id)
 
         expect(
-          TopicQuery.new(moderator, tags: [synonym.id, other_tag.id]).list_latest.topics,
-        ).to contain_exactly(tagged_topic1, tagged_topic2, tagged_topic3)
+          TopicQuery
+            .new(moderator, tags: [synonym.name, other_tag.name])
+            .list_latest
+            .topics
+            .map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic2.id, tagged_topic3.id)
 
-        expect(TopicQuery.new(moderator, tags: ["SYnonYM"]).list_latest.topics).to contain_exactly(
-          tagged_topic1,
-          tagged_topic3,
-        )
+        expect(
+          TopicQuery.new(moderator, tags: [synonym.id, other_tag.id]).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic2.id, tagged_topic3.id)
+
+        expect(
+          TopicQuery.new(moderator, tags: ["SYnonYM"]).list_latest.topics.map(&:id),
+        ).to contain_exactly(tagged_topic1.id, tagged_topic3.id)
       end
 
       context "with hidden tags" do
