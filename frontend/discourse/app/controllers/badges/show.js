@@ -3,7 +3,6 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
@@ -13,7 +12,7 @@ export default class ShowController extends Controller {
 
   @tracked loadingMore = false;
   @tracked noMoreBadges = false;
-  @trackedArray userBadges = null;
+  @tracked userBadges = null;
 
   queryParams = ["username"];
   hiddenSetTitle = true;
