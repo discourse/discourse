@@ -26,6 +26,8 @@ export default class adminPluginsHouseAdsShow extends Controller {
     this.buffered = new TrackedObject({ ...this.model });
     this.selectedCategories = this.model.categories || [];
     this.selectedGroups = this.model.groups || [];
+    this.buffered.category_ids = this.selectedCategories;
+    this.buffered.group_ids = this.selectedGroups;
   }
 
   get disabledSave() {

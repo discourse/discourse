@@ -4,7 +4,7 @@ import { i18n } from "discourse-i18n";
 
 export default class AdminPluginsHouseAdsShow extends DiscourseRoute {
   model(params) {
-    if (params.ad_id === "new") {
+    if (params.id === "new") {
       return new TrackedObject({
         name: i18n("admin.adplugin.house_ads.new_name"),
         html: "",
@@ -13,7 +13,7 @@ export default class AdminPluginsHouseAdsShow extends DiscourseRoute {
       });
     } else {
       const houseAd = this.modelFor("adminPlugins.houseAds").find(
-        (item) => item.id === parseInt(params.ad_id, 10)
+        (item) => item.id === parseInt(params.id, 10)
       );
 
       if (houseAd.groups && Array.isArray(houseAd.groups)) {

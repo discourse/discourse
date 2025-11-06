@@ -36,12 +36,7 @@ module AdPlugin
       ad = HouseAd.new(house_ad_params)
       if ad.save
         render_json_dump(
-          house_ad:
-            serialize_data(
-              ad,
-              HouseAdSerializer,
-              { include_categories: true, include_groups: true },
-            ),
+          serialize_data(ad, HouseAdSerializer, { include_categories: true, include_groups: true }),
         )
       else
         render_json_error(ad)
@@ -55,12 +50,11 @@ module AdPlugin
         ad = HouseAd.new(house_ad_params.except(:id))
         if ad.save
           render_json_dump(
-            house_ad:
-              serialize_data(
-                ad,
-                HouseAdSerializer,
-                { include_categories: true, include_groups: true },
-              ),
+            serialize_data(
+              ad,
+              HouseAdSerializer,
+              { include_categories: true, include_groups: true },
+            ),
           )
         else
           render_json_error(ad)
@@ -68,12 +62,11 @@ module AdPlugin
       else
         if ad.update(house_ad_params.except(:id))
           render_json_dump(
-            house_ad:
-              serialize_data(
-                ad,
-                HouseAdSerializer,
-                { include_categories: true, include_groups: true },
-              ),
+            serialize_data(
+              ad,
+              HouseAdSerializer,
+              { include_categories: true, include_groups: true },
+            ),
           )
         else
           render_json_error(ad)
