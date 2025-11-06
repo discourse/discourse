@@ -4,8 +4,8 @@ import AceEditor from "discourse/components/ace-editor";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import { i18n } from "discourse-i18n";
-import GroupChooser from "select-kit/components/group-chooser";
 import HouseAdsCategorySelector from "../components/house-ads-category-selector";
+import HouseAdsGroupSelector from "../components/house-ads-group-selector";
 
 export default <template>
   <section class="edit-house-ad content-body">
@@ -53,7 +53,7 @@ export default <template>
           {{i18n "admin.adplugin.house_ads.category_chooser_description"}}
         </div>
 
-        <GroupChooser
+        <HouseAdsGroupSelector
           @content={{@controller.site.groups}}
           @onChange={{@controller.setGroupIds}}
           @value={{@controller.selectedGroups}}

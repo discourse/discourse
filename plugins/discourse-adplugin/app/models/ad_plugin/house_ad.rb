@@ -61,18 +61,6 @@ module AdPlugin
       query.to_a
     end
 
-    def to_hash
-      {
-        id: id,
-        name: name,
-        html: html,
-        visible_to_logged_in_users: visible_to_logged_in_users,
-        visible_to_anons: visible_to_anons,
-        group_ids: group_ids,
-        category_ids: category_ids,
-      }
-    end
-
     private
 
     def clear_cache

@@ -7,27 +7,42 @@ module AdPlugin
     def index
       render_json_dump(
         house_ads:
-          HouseAd.all.map do |ad|
-            ad.to_hash.merge!(categories: Category.secured(@guardian).where(id: ad.category_ids))
-          end,
+          serialize_data(
+            HouseAd.all,
+            HouseAdSerializer,
+            { include_categories: true, include_groups: true },
+          ),
         settings: HouseAdSetting.all,
       )
     end
 
     def show
-      house_ad_hash = HouseAd.find(params[:id])&.to_hash
-      if house_ad_hash
-        house_ad_hash.merge!(
-          categories: Category.secured(@guardian).where(id: house_ad_hash[:category_ids]),
+      house_ad = HouseAd.find_by(id: params[:id])
+      if house_ad
+        render_json_dump(
+          house_ad:
+            serialize_data(
+              house_ad,
+              HouseAdSerializer,
+              { include_categories: true, include_groups: true },
+            ),
         )
+      else
+        render_json_error(I18n.t("not_found"), status: 404)
       end
-      render_json_dump(house_ad: house_ad_hash)
     end
 
     def create
       ad = HouseAd.new(house_ad_params)
       if ad.save
-        render_json_dump(house_ad: ad.to_hash)
+        render_json_dump(
+          house_ad:
+            serialize_data(
+              ad,
+              HouseAdSerializer,
+              { include_categories: true, include_groups: true },
+            ),
+        )
       else
         render_json_error(ad)
       end
@@ -39,13 +54,27 @@ module AdPlugin
       if ad.nil?
         ad = HouseAd.new(house_ad_params.except(:id))
         if ad.save
-          render_json_dump(house_ad: ad.to_hash)
+          render_json_dump(
+            house_ad:
+              serialize_data(
+                ad,
+                HouseAdSerializer,
+                { include_categories: true, include_groups: true },
+              ),
+          )
         else
           render_json_error(ad)
         end
       else
         if ad.update(house_ad_params.except(:id))
-          render_json_dump(house_ad: ad.to_hash)
+          render_json_dump(
+            house_ad:
+              serialize_data(
+                ad,
+                HouseAdSerializer,
+                { include_categories: true, include_groups: true },
+              ),
+          )
         else
           render_json_error(ad)
         end

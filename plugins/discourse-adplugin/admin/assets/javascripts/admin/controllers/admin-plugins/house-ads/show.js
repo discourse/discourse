@@ -26,7 +26,10 @@ export default class adminPluginsHouseAdsShow extends Controller {
   modelChanged() {
     this.buffered = new TrackedObject({ ...this.model });
     this.selectedCategories = this.model.categories || [];
-    this.selectedGroups = this.model.group_ids || [];
+    this.selectedGroups =
+      this.model.groups.map((group) => {
+        return group.id;
+      }) || [];
   }
 
   get disabledSave() {
@@ -100,9 +103,9 @@ export default class adminPluginsHouseAdsShow extends Controller {
   }
 
   @action
-  setGroupIds(groupIds) {
-    this.selectedGroups = groupIds;
-    this.buffered.group_ids = groupIds.map((id) => id);
+  setGroupIds(groupArray) {
+    this.selectedGroups = groupArray;
+    this.buffered.group_ids = groupArray.map((g) => g.id);
   }
 
   @action
