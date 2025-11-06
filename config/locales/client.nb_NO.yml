@@ -2413,7 +2413,6 @@ nb_NO:
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Opprett emne"
-      create_pm: "Send melding"
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt utkast"
       edit_shared_draft: "Rediger delt utkast"
