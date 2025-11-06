@@ -42,7 +42,7 @@ describe "Lightbox | Photoswipe", type: :system do
     end
 
     it "does not show image info button when no image details are available" do
-      post.update(cooked: post.cooked.gsub(%r{<span class="informations">.*?</span>}m, ""))
+      post.update(cooked: post.cooked.gsub(%r{<span class="informations">[^<]*</span>}, ""))
       topic_page.visit_topic(topic)
 
       find("#post_1 a.lightbox").click
