@@ -8,7 +8,7 @@ plugins:
     max: 100
     client: true
   poll_edit_window_mins:
-    default: 5
+    default: 0
     min: 0
   poll_minimum_trust_level_to_create:
     default: 1
@@ -37,4 +37,7 @@ plugins:
     client: true
   poll_default_public:
     default: true
+    client: true
+  poll_default_dynamic:
+    default: false
     client: true

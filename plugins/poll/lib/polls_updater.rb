@@ -67,7 +67,10 @@ module DiscoursePoll
       dynamic_flag = compute_dynamic_flag(new_poll_hash, old_poll)
       candidate = ::Poll.new(attributes)
 
-      return false unless is_different?(old_poll, candidate, new_options)
+      attributes_differ = attributes_differ?(old_poll, candidate)
+      options_differ = options_differ?(old_poll, new_options)
+
+      return false unless attributes_differ || options_differ
 
       if votes_present_and_restricted?(old_poll, dynamic_flag) &&
            edit_window_expired?(old_poll, edit_window)
@@ -75,8 +78,8 @@ module DiscoursePoll
         return :abort
       end
 
-      apply_poll_attribute_updates(old_poll, candidate)
-      update_poll_options(old_poll, new_options, dynamic_flag)
+      apply_poll_attribute_updates(old_poll, candidate) if attributes_differ
+      update_poll_options(old_poll, new_options, dynamic_flag) if options_differ
 
       true
     end
@@ -186,10 +189,17 @@ module DiscoursePoll
     end
 
     def self.is_different?(old_poll, new_poll, new_options)
+      attributes_differ?(old_poll, new_poll) || options_differ?(old_poll, new_options)
+    end
+
+    def self.attributes_differ?(old_poll, new_poll)
       POLL_ATTRIBUTES.each do |attr|
         return true if old_poll.public_send(attr) != new_poll.public_send(attr)
       end
+      false
+    end
 
+    def self.options_differ?(old_poll, new_options)
       sorted_old_options = old_poll.poll_options.map { |o| o.digest }.sort
       sorted_new_options = new_options.map { |o| o["id"] }.sort
 

@@ -9,6 +9,7 @@ en:
     poll_export_data_explorer_query_id: "ID of the data explorer query to use for exporting poll results (0 to disable)."
     poll_export_ranked_choice_data_explorer_query_id: "ID of the data explorer query to use for exporting instant-runoff voting poll results."
     poll_default_public: "When creating a new poll, enable the 'show who voted' option by default."
+    poll_default_dynamic: "When creating a new poll, enable the 'allow options to be added or removed after posting' option by default."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
 

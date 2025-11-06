@@ -51,7 +51,7 @@ export default class PollUiBuilderModal extends Component {
   pollResult = ALWAYS_POLL_RESULT;
   chartType = BAR_CHART_TYPE;
   publicPoll = this.siteSettings.poll_default_public;
-  dynamic = false;
+  dynamic = this.siteSettings.poll_default_dynamic;
 
   @or("showAdvanced", "isNumber") showNumber;
   @or("showAdvanced", "isRankedChoice") showRankedChoice;
