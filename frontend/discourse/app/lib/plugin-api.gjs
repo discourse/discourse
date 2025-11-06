@@ -3438,7 +3438,15 @@ class _PluginApi {
 
     blockConfig.forEach((block) => {
       if (block.group) {
-        block.blocks.forEach((groupedBlock) => validateBlock(groupedBlock));
+        block.blocks.forEach(validateBlock);
+      } else if (block.type === "conditional") {
+        block.blocks.forEach((conditionalBlock) => {
+          if (conditionalBlock.group) {
+            conditionalBlock.blocks.forEach(validateBlock);
+          } else {
+            validateBlock(conditionalBlock);
+          }
+        });
       } else {
         validateBlock(block);
       }
