@@ -2700,6 +2700,7 @@ fr:
         select: "Sélectionnez une traduction"
         save: "Enregistrer la traduction"
         original_content: "Contenu de la publication originale"
+        translation: "Traduction"
         placeholder: "Saisissez la traduction de la publication ici..."
       group_mentioned_limit:
         one: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateur configuré par l'administrateur. Personne ne sera notifié."
@@ -2750,7 +2751,7 @@ fr:
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"
-      create_pm: "Envoyer le message"
+      create_pm: "Envoyer un message"
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"

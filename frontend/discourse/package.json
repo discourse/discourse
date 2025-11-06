@@ -152,7 +152,7 @@
     "qunit-dom": "^3.5.0",
     "sinon": "^21.0.0",
     "source-map": "^0.7.6",
-    "terser": "^5.44.0",
+    "terser": "^5.44.1",
     "testem": "^3.16.0",
     "util": "^0.12.5",
     "virtual-dom": "^2.1.1",

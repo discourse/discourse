@@ -2673,6 +2673,7 @@ pt:
         select: "Selecionar tradução"
         save: "Guarda a tradução"
         original_content: "Conteúdo original da publicação"
+        translation: "Tradução"
         placeholder: "Introduz aqui a tradução para a publicação..."
       group_mentioned_limit:
         one: "<b>Atenção!</b> Referiu <a href='%{group_link}'>%{group}</a>, no entanto este grupo tem mais membros do que o limite de menções configurado pelo administrador de %{count} utilizadores. Ninguém será notificado."
@@ -2697,7 +2698,6 @@ pt:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar Tópico"
-      create_pm: "Enviar Mensagem"
       create_whisper: "Sussurro"
       create_shared_draft: "Criar Rascunho Partilhado"
       edit_shared_draft: "Editrar Rascunho Partilhado"

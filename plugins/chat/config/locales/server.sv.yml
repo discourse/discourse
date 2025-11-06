@@ -174,8 +174,6 @@ sv:
       errors:
         slug_contains_non_ascii_chars: "innehåller icke-ascii-tecken"
         is_already_in_use: "används redan"
-    bookmarkable:
-      notification_title: "meddelande i %{channel_name}"
     personal_chat: "personlig chatt"
     onebox:
       inline_to_message: "Meddelande #%{message_id} av %{username} – #%{chat_channel}"

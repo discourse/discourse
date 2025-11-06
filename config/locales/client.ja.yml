@@ -2565,6 +2565,7 @@ ja:
         select: "翻訳を選択"
         save: "翻訳を保存"
         original_content: "元の投稿のコンテンツ"
+        translation: "翻訳"
         placeholder: "ここに投稿の翻訳を入力します..."
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
@@ -2606,7 +2607,7 @@ ja:
       reply: "返信"
       cancel: "キャンセル"
       create_topic: "トピックを作成"
-      create_pm: "メッセージを送信"
+      create_pm: "メッセージを送信する"
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"

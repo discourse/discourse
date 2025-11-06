@@ -14,6 +14,14 @@ export const SKIP = "skip";
 export const CANCELLED_STATUS = "__CANCELLED";
 
 /**
+ * Regex for characters that can precede an emoji autocomplete trigger.
+ * This matches the same characters allowed in emoji autocomplete's onKeyUp regex.
+ * Used to ensure consistency between trigger detection and completion position calculation.
+ */
+export const EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP =
+  /[\s.?,@/#!%&*;:\[\]{}=\-_()+]/;
+
+/**
  * Class-based modifier for adding autocomplete functionality to input elements
  * Preserves exact CSS structure for backward compatibility
  *
@@ -606,10 +614,20 @@ export default class DAutocompleteModifier extends Modifier {
         prev = this.getValue()[caretPos - 1];
         const shouldTrigger = await this.shouldTrigger({ backSpace });
 
-        if (
-          shouldTrigger &&
-          (prev === undefined || this.ALLOWED_LETTERS_REGEXP.test(prev))
-        ) {
+        // For emoji autocomplete (key === ':'), use a more permissive check that includes
+        // common punctuation like comma, period, etc. that can appear before emoji
+        let isAllowed;
+        if (this.options.key === ":") {
+          // Match the same characters allowed in emoji autocomplete's onKeyUp regex
+          isAllowed =
+            prev === undefined ||
+            EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.test(prev);
+        } else {
+          isAllowed =
+            prev === undefined || this.ALLOWED_LETTERS_REGEXP.test(prev);
+        }
+
+        if (shouldTrigger && isAllowed) {
           start = caretPos;
           term = this.getValue().substring(caretPos + 1, initialCaretPos);
           end = caretPos + term.length;

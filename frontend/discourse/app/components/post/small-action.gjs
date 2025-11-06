@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
@@ -7,11 +9,12 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import UserAvatar from "discourse/components/user-avatar";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
-import { autoUpdatingRelativeAge } from "discourse/lib/formatter";
+import { autoUpdatingRelativeAge, relativeAge } from "discourse/lib/formatter";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
+import PostA11yHeading from "./a11y-heading";
 
 // TODO (glimmer-post-stream) remove the export after removing the legacy widget code
 export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
@@ -54,6 +57,8 @@ export function resetGroupPostSmallActionCodes() {
 }
 
 export default class PostSmallAction extends Component {
+  @service a11y;
+
   decoratorState = new TrackedMap();
 
   @cached
@@ -77,6 +82,23 @@ export default class PostSmallAction extends Component {
   @cached
   get createdAt() {
     return new Date(this.args.post.created_at);
+  }
+
+  get a11yHeadingText() {
+    // plain text version for screen reader headings
+    // a11y.autoUpdatingRelativeDateRef is consumed to force the heading text to be auto-updated
+    const when =
+      this.a11y.autoUpdatingRelativeDateRef && this.createdAt
+        ? relativeAge(this.createdAt, {
+            format: "medium-with-ago-and-on",
+            wrapInSpan: false,
+          })
+        : "";
+
+    const who = this.who ? `@${this.who}` : "";
+
+    // TODO (a11y) some i18n strings have HTML embedded in them. We need to strip
+    return i18n(`action_codes.${this.code}`, { who, when, path: this.path });
   }
 
   get description() {
@@ -129,87 +151,97 @@ export default class PostSmallAction extends Component {
   }
 
   <template>
-    <article
+    <div
       ...attributes
-      class={{unless
-        @cloaked
-        (concatClass
-          "small-action"
-          "onscreen-post"
-          (if @post.deleted "deleted")
-          this.additionalClasses
-        )
-      }}
-      aria-label={{i18n
-        "share.post"
-        postNumber=@post.post_number
-        username=@post.username
-      }}
-      role="region"
+      {{! The component is wrapped in a `div` and sets the same `id` below in the `article` tag,
+          we need to only set it in the `div` when the post is cloaked.
+          This is not ideal, but the post-stream component sets the `id` for the children to ensure
+          all cloaked items can be referenced and we need to override it }}
       data-post-number={{@post.post_number}}
+      id={{if @cloaked @elementId}}
     >
+      <PostA11yHeading @post={{@post}} @text={{this.a11yHeadingText}} />
       {{#unless @cloaked}}
-        <div class="topic-avatar">
-          {{icon this.icon}}
-        </div>
-        <div class="small-action-desc">
-          <div class="small-action-contents" role="heading" aria-level="2">
-            <UserAvatar
-              @ariaHidden={{false}}
-              @size="small"
-              @user={{@post.user}}
-            />
-            {{#if this.CustomComponent}}
-              <this.CustomComponent
-                @code={{this.code}}
-                @post={{@post}}
-                @createdAt={{this.createdAt}}
-                @path={{this.path}}
-                @who={{this.who}}
-              />
-            {{else}}
-              <p>{{htmlSafe this.description}}</p>
-            {{/if}}
+        <article
+          id={{@elementId}}
+          class={{unless
+            @cloaked
+            (concatClass
+              "small-action"
+              "onscreen-post"
+              (if @post.deleted "deleted")
+              this.additionalClasses
+            )
+          }}
+          aria-labelledby={{concat "post-heading-" @post.post_number}}
+          data-post-id={{@post.id}}
+          data-topic-id={{@post.topicId}}
+          data-user-id={{@post.user_id}}
+        >
+          <div class="topic-avatar">
+            {{icon this.icon}}
           </div>
-          <div class="small-action-buttons">
-            {{#if @post.canRecover}}
-              <DButton
-                class="btn-flat small-action-recover"
-                @icon="arrow-rotate-left"
-                @action={{@recoverPost}}
-                @title="post.controls.undelete"
+          <div class="small-action-desc">
+            <div class="small-action-contents">
+              <UserAvatar
+                @ariaHidden={{false}}
+                @size="small"
+                @user={{@post.user}}
               />
-            {{else if @post.can_edit}}
-              <DButton
-                class="btn-flat small-action-edit"
-                @icon="pencil"
-                @action={{@editPost}}
-                @title="post.controls.edit"
-              />
-            {{/if}}
-            {{#if @post.canDelete}}
-              <DButton
-                class="btn-flat btn-danger small-action-delete"
-                @icon="trash-can"
-                @action={{@deletePost}}
-                @title="post.controls.delete"
-              />
-            {{/if}}
-          </div>
-          {{#unless this.CustomComponent}}
-            {{#if @post.cooked}}
-              <div class="small-action-custom-message">
-                <PostCookedHtml
+              {{#if this.CustomComponent}}
+                <this.CustomComponent
+                  @code={{this.code}}
                   @post={{@post}}
-                  @decoratorState={{this.decoratorState}}
-                  @highlightTerm={{@highlightTerm}}
-                  @streamElement={{@streamElement}}
+                  @createdAt={{this.createdAt}}
+                  @path={{this.path}}
+                  @who={{this.who}}
                 />
-              </div>
-            {{/if}}
-          {{/unless}}
-        </div>
+              {{else}}
+                {{! aria-hidden is set to true because the a11y heading text is
+                  almost the same as the description}}
+                <p aria-hidden="true">{{htmlSafe this.description}}</p>
+              {{/if}}
+            </div>
+            <div class="small-action-buttons">
+              {{#if @post.canRecover}}
+                <DButton
+                  class="btn-flat small-action-recover"
+                  @icon="arrow-rotate-left"
+                  @action={{@recoverPost}}
+                  @title="post.controls.undelete"
+                />
+              {{else if @post.can_edit}}
+                <DButton
+                  class="btn-flat small-action-edit"
+                  @icon="pencil"
+                  @action={{@editPost}}
+                  @title="post.controls.edit"
+                />
+              {{/if}}
+              {{#if @post.canDelete}}
+                <DButton
+                  class="btn-flat btn-danger small-action-delete"
+                  @icon="trash-can"
+                  @action={{@deletePost}}
+                  @title="post.controls.delete"
+                />
+              {{/if}}
+            </div>
+            {{#unless this.CustomComponent}}
+              {{#if @post.cooked}}
+                <div class="small-action-custom-message">
+                  <PostCookedHtml
+                    @post={{@post}}
+                    @decoratorState={{this.decoratorState}}
+                    @highlightTerm={{@highlightTerm}}
+                    @streamElement={{@streamElement}}
+                  />
+                </div>
+              {{/if}}
+            {{/unless}}
+          </div>
+        </article>
       {{/unless}}
-    </article>
+    </div>
   </template>
 }

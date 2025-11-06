@@ -2700,6 +2700,7 @@ nl:
         select: "Selecteer vertaling"
         save: "Vertaling opslaan"
         original_content: "Inhoud van origineel bericht"
+        translation: "Vertaling"
         placeholder: "Voer hier de vertaling voor het bericht in..."
       group_mentioned_limit:
         one: "<b>Waarschuwing!</b> Je hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde vermeldingslimiet van %{count} gebruiker. Niemand krijgt een melding."

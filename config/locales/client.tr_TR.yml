@@ -2700,6 +2700,7 @@ tr_TR:
         select: "Çeviri seç"
         save: "Çeviriyi kaydet"
         original_content: "Orijinal gönderi içeriği"
+        translation: "Çeviri"
         placeholder: "Gönderinin çevirisini buraya girin..."
       group_mentioned_limit:
         one: "<b>Uyarı!</b> <a href='%{group_link}'>%{group}</a> grubundan bahsettiniz; ancak bu grubun yönetici tarafından yapılandırılan %{count} kullanıcılık bahsetme sınırından daha fazla üyesi var. Kimseye bildirim gönderilmeyecek."

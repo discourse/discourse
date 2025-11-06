@@ -2700,6 +2700,7 @@ fi:
         select: "Valitse käännös"
         save: "Tallenna käännös"
         original_content: "Alkuperäisen viestin sisältö"
+        translation: "Käännös"
         placeholder: "Kirjoita viestin käännös tähän..."
       group_mentioned_limit:
         one: "<b>Varoitus!</b> Olet maininnut ryhmän <a href='%{group_link}'>%{group}</a>, mutta ryhmässä on yli %{count} käyttäjä, mikä on ylläpitäjän asettama rajoitus maininnoille. Kukaan ei saa ilmoitusta."

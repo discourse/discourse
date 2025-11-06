@@ -78,6 +78,8 @@ ca:
         types:
           category: "Categoria"
           topic: "Tema"
+      reviewable:
+        message_in_channel: "Canal"
       composer:
         italic_text: "text en cursiva"
         bold_text: "text en negreta"

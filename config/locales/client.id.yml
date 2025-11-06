@@ -1636,6 +1636,7 @@ id:
       reply: "Balas"
       cancel: "Batal"
       create_topic: "Buat Topik"
+      create_pm: "Kirim pesan"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
       discard: "Batalkan"

@@ -2722,6 +2722,7 @@ de:
         select: "Übersetzung auswählen"
         save: "Übersetzung speichern"
         original_content: "Inhalt des Originalbeitrags"
+        translation: "Übersetzen"
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
