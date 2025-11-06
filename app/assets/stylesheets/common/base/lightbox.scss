@@ -139,12 +139,14 @@
     left: unset;
   }
 
-  .pswp__button--arrow--prev svg {
-    transform: scaleX(-1);
+  .pswp__button--arrow--next {
+    left: 0 !important;
+    right: unset !important;
   }
 
-  .pswp__button--arrow--next svg {
-    transform: scaleX(1);
+  .pswp__button--arrow--prev {
+    left: unset !important;
+    right: 0 !important;
   }
 }
 
