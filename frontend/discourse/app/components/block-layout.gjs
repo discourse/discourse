@@ -1,16 +1,36 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
+import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
 import { blockConfigs } from "discourse/lib/plugin-api";
 
 export default class BlockLayout extends Component {
+  @service discovery;
+
   get blocks() {
-    return blockConfigs.get(this.args.name);
+    const blocks = blockConfigs.get(this.args.name);
+
+    const resolvedBlocks = [];
+
+    for (const block of blocks) {
+      if (block.type === "conditional") {
+        if (
+          block.routes.includes("discovery") &&
+          this.discovery.onDiscoveryRoute
+        ) {
+          resolvedBlocks.push(...block.blocks);
+        }
+      } else {
+        resolvedBlocks.push(block);
+      }
+    }
+
+    return resolvedBlocks;
   }
 
   get shouldShow() {
-    return blockConfigs.has(this.args.name);
+    return this.blocks.length > 0;
   }
 
   <template>
