@@ -1,7 +1,6 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
@@ -994,6 +993,12 @@ describe Topic do
           expect { topic.invite(user, user1.username) }.to change { Notification.count }.by(
             1,
           ).and not_change { Post.where(post_type: Post.types[:small_action]).count }
+        end
+
+        it "sets invited user to watch the PM" do
+          expect { topic.invite(user, user1.username) }.to change {
+            TopicUser.get(topic, user1).try(:notification_level)
+          }.to TopicUser.notification_levels[:watching]
         end
 
         context "when from a muted user" do
