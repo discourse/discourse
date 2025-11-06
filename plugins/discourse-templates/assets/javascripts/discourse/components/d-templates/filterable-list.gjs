@@ -52,9 +52,11 @@ export default class DTemplatesFilterableList extends Component {
           return template.tags.includes(this.selectedTag);
         })
         .sort((a, b) => {
-          /* Sort replies by relevance and title. */
+          /* Sort replies by relevance, usage, and title. */
           if (a.score !== b.score) {
             return a.score > b.score ? -1 : 1; /* descending */
+          } else if (a.usages !== b.usages) {
+            return a.usages > b.usages ? -1 : 1; /* descending */
           } else if (a.title !== b.title) {
             return a.title < b.title ? -1 : 1; /* ascending */
           }
