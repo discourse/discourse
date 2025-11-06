@@ -112,8 +112,8 @@ export default class Icons extends Component {
               @onClick={{@toggleSearchMenu}}
               @active={{this.search.visible}}
               @href={{getURL "/search"}}
-              @className="search-dropdown"
               @targetSelector=".search-menu-panel"
+              class="search-dropdown"
             />
           {{/if}}
         {{else if (eq entry.key "hamburger")}}
@@ -124,7 +124,7 @@ export default class Icons extends Component {
               @iconId="toggle-hamburger-menu"
               @active={{this.header.hamburgerVisible}}
               @onClick={{this.toggleHamburger}}
-              @className="hamburger-dropdown"
+              class="hamburger-dropdown"
             />
           {{/if}}
         {{else if (eq entry.key "user-menu")}}

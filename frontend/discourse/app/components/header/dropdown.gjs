@@ -26,17 +26,14 @@ export default class Dropdown extends Component {
 
   <template>
     <li
-      class={{concatClass
-        @className
-        (if @active "active")
-        "header-dropdown-toggle"
-      }}
       {{(if
         (and @active @targetSelector)
         (modifier
           closeOnClickOutside @onClick (hash targetSelector=@targetSelector)
         )
       )}}
+      class={{concatClass (if @active "active") "header-dropdown-toggle"}}
+      ...attributes
     >
       <DButton
         class="icon btn-flat"
