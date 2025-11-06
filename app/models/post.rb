@@ -1092,21 +1092,6 @@ class Post < ActiveRecord::Base
     end
   end
 
-  private
-
-  def access_control_post_id_for_upload
-    self.id
-  end
-
-  def handle_video_thumbnail(thumbnail)
-    if self.is_first_post? && !self.topic.image_upload_id
-      self.topic.update_column(:image_upload_id, thumbnail.id)
-      extra_sizes =
-        ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
-      self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
-    end
-  end
-
   def self.find_missing_uploads(include_local_upload: true)
     missing_uploads = []
     missing_post_uploads = {}
@@ -1203,6 +1188,19 @@ class Post < ActiveRecord::Base
   end
 
   private
+
+  def access_control_post_id_for_upload
+    self.id
+  end
+
+  def handle_video_thumbnail(thumbnail)
+    if self.is_first_post? && !self.topic.image_upload_id
+      self.topic.update_column(:image_upload_id, thumbnail.id)
+      extra_sizes =
+        ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
+      self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
+    end
+  end
 
   def parse_quote_into_arguments(quote)
     return {} if quote.blank?
