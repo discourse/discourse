@@ -1,6 +1,5 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { gt } from "@ember/object/computed";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -17,7 +16,9 @@ export default class GroupIndexController extends Controller {
   showActions = false;
   bulkSelection = null;
 
-  @gt("model.members.length", 0) hasMembers;
+  get hasMembers() {
+    return this.model.members?.length > 0;
+  }
 
   get canLoadMore() {
     return this.get("model.members")?.length < this.get("model.user_count");
