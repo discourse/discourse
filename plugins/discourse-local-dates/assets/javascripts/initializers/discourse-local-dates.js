@@ -360,7 +360,6 @@ class LocalDatesInit {
     if (event?.target?.classList?.contains("download-calendar")) {
       const dataset = event.target.dataset;
 
-      // If ics data is provided, use it directly instead of generating
       if (dataset.ics) {
         // Decode base64url: reverse the -_~ encoding back to +/=
         const base64 = dataset.ics
@@ -368,7 +367,6 @@ class LocalDatesInit {
           .replace(/_/g, "/")
           .replace(/~/g, "=");
 
-        // Decode base64 to UTF-8 string (handles emoji and special characters)
         const binaryString = atob(base64);
         const bytes = new Uint8Array(binaryString.length);
         for (let i = 0; i < binaryString.length; i++) {
@@ -376,19 +374,23 @@ class LocalDatesInit {
         }
         const icsData = new TextDecoder().decode(bytes);
 
-        // Extract event title from ICS SUMMARY field for filename
-        let title = dataset.title || "event";
-        const summaryMatch = icsData.match(/SUMMARY:(.+?)[\r\n]/);
-        if (summaryMatch && summaryMatch[1]) {
-          title = summaryMatch[1].trim();
+        let title;
+        if (dataset.title) {
+          title = dataset.title;
+        } else {
+          // Extract event title from ICS SUMMARY field for filename if title missing
+          const summaryMatch = icsData.match(/SUMMARY:(.+?)[\r\n]/);
+          if (summaryMatch && summaryMatch[1]) {
+            title = summaryMatch[1].trim();
+          }
         }
+        title = title || "event";
 
         const file = new File([icsData], { type: "text/plain" });
         const a = document.createElement("a");
         document.body.appendChild(a);
         a.style = "display: none";
         a.href = window.URL.createObjectURL(file);
-        // Clean up filename: lowercase, replace non-word chars with dash, limit length
         const cleanTitle = title
           .toLowerCase()
           .replace(/[^\w\s-]/g, "")
