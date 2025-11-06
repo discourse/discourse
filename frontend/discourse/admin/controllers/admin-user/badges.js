@@ -1,12 +1,13 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, empty, sort } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import { grantableBadges } from "discourse/lib/grant-badge-utils";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import UserBadge from "discourse/models/user-badge";
@@ -17,20 +18,30 @@ export default class AdminUserBadgesController extends Controller {
   @service dialog;
   @controller adminUser;
 
+  @tracked loading;
+  @tracked selectedBadgeId;
+  @trackedArray badges;
   @trackedArray expandedBadges = [];
-  @trackedArray model;
 
   @alias("adminUser.model") user;
-  @alias("model") userBadges;
-  @alias("badges") allBadges;
   @sort("model", "badgeSortOrder") sortedBadges;
   @empty("availableBadges") noAvailableBadges;
 
   badgeSortOrder = ["granted_at:desc"];
 
-  @discourseComputed("allBadges.[]", "userBadges.[]")
-  availableBadges() {
-    return grantableBadges(this.get("allBadges"), this.get("userBadges"));
+  @dependentKeyCompat
+  get allBadges() {
+    return this.badges;
+  }
+
+  @dependentKeyCompat
+  get userBadges() {
+    return this.model;
+  }
+
+  @dependentKeyCompat
+  get availableBadges() {
+    return grantableBadges(this.allBadges, this.userBadges);
   }
 
   get groupedBadges() {
@@ -86,37 +97,35 @@ export default class AdminUserBadgesController extends Controller {
   }
 
   @action
-  performGrantBadge() {
-    UserBadge.grant(
-      this.selectedBadgeId,
-      this.get("user.username"),
-      this.badgeReason
-    ).then(
-      (newBadge) => {
-        this.set("badgeReason", "");
-        this.userBadges.pushObject(newBadge);
-        next(() => {
-          // Update the selected badge ID after the combobox has re-rendered.
-          const newSelectedBadge = this.availableBadges[0];
-          if (newSelectedBadge) {
-            this.set("selectedBadgeId", newSelectedBadge.get("id"));
-          }
-        });
-      },
-      function (error) {
-        popupAjaxError(error);
-      }
-    );
+  async performGrantBadge() {
+    try {
+      const newBadge = await UserBadge.grant(
+        this.selectedBadgeId,
+        this.get("user.username"),
+        this.badgeReason
+      );
+
+      this.set("badgeReason", "");
+      this.model.push(newBadge);
+      next(() => {
+        // Update the selected badge ID after the combobox has re-rendered.
+        const newSelectedBadge = this.availableBadges[0];
+        if (newSelectedBadge) {
+          this.set("selectedBadgeId", newSelectedBadge.get("id"));
+        }
+      });
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 
   @action
   revokeBadge(userBadge) {
     return this.dialog.yesNoConfirm({
       message: i18n("admin.badges.revoke_confirm"),
-      didConfirm: () => {
-        return userBadge.revoke().then(() => {
-          removeValueFromArray(this.model, userBadge);
-        });
+      didConfirm: async () => {
+        await userBadge.revoke();
+        removeValueFromArray(this.model, userBadge);
       },
     });
   }
