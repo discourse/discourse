@@ -189,6 +189,35 @@ acceptance("discourse-templates", function (needs) {
       "orders templates by relevance, usage, and title"
     );
   });
+
+  test("Remembers selected tag between openings", async function (assert) {
+    await visit("/");
+
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
+
+    const tagDropdown = selectKit(".templates-filter-bar .tag-drop");
+    await tagDropdown.expand();
+
+    await tagDropdown.fillInFilter(
+      "cupcake",
+      ".templates-filter-bar .tag-drop input"
+    );
+    await tagDropdown.selectRowByIndex(0);
+    assert.dom(".templates-list .template-item").exists({ count: 1 });
+
+    await click("#reply-control .toggle-save-and-close");
+
+    await click("#create-topic");
+    await selectCategory();
+    await click(".toolbar-menu__options-trigger");
+    await click(`button[title="${i18n("templates.insert_template")}"]`);
+    assert
+      .dom(".templates-list .template-item")
+      .exists({ count: 1 }, "preserves selected tag across composer sessions");
+  });
 });
 
 acceptance(

@@ -14,8 +14,11 @@ import { ALL_TAGS_ID, NO_TAG_ID } from "select-kit/components/tag-drop";
 import Item from "./item";
 import TagDrop from "./tag-drop";
 
+const PREV_TEMPLATE_TAG_ID = "template-selected-tag";
+
 export default class DTemplatesFilterableList extends Component {
   @service siteSettings;
+  @service keyValueStore;
 
   @tracked loading = true;
   @tracked listFilter = "";
@@ -87,6 +90,16 @@ export default class DTemplatesFilterableList extends Component {
             return availableTags;
           }, {})
         );
+
+        const prevSelectedTag = this.keyValueStore.get(PREV_TEMPLATE_TAG_ID);
+        if (
+          prevSelectedTag &&
+          this.availableTags.find((t) => t.id === prevSelectedTag)
+        ) {
+          this.selectedTag = prevSelectedTag;
+        } else {
+          this.keyValueStore.remove(PREV_TEMPLATE_TAG_ID);
+        }
       }
     } catch (e) {
       this.loading = false;
@@ -103,6 +116,11 @@ export default class DTemplatesFilterableList extends Component {
   @action
   changeSelectedTag(tagId) {
     this.selectedTag = tagId;
+    if (tagId === ALL_TAGS_ID) {
+      this.keyValueStore.remove(PREV_TEMPLATE_TAG_ID);
+      return;
+    }
+    this.keyValueStore.set({ key: PREV_TEMPLATE_TAG_ID, value: tagId });
   }
 
   @action
