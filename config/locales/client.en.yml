@@ -2998,7 +2998,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Send Message"
+      create_pm: "Send message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"

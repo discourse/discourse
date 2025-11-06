@@ -240,7 +240,11 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
       });
     }
 
-    if (items.length === 0 && this.currentUser.can_create_topic) {
+    if (
+      this.currentUser.can_create_topic &&
+      this.action !== CREATE_TOPIC &&
+      (items.length === 0 || this.action === PRIVATE_MESSAGE)
+    ) {
       items.push({
         name: i18n("composer.composer_actions.create_topic.label"),
         description: i18n("composer.composer_actions.create_topic.desc"),
