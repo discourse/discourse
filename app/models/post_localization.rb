@@ -11,6 +11,30 @@ class PostLocalization < ActiveRecord::Base
   validates :cooked, presence: true
   validates :localizer_user_id, presence: true
   validates :locale, uniqueness: { scope: :post_id }
+
+  after_destroy :remove_search_index
+  after_commit :reindex_post, on: %i[create update]
+
+  private
+
+  def reindex_post
+    return unless SiteSetting.content_localization_enabled
+    return if post.blank?
+
+    Scheduler::Defer.later "Reindex post for localization" do
+      SearchIndexer.index(post)
+    end
+  end
+
+  def remove_search_index
+    return if post_id.blank? || locale.blank?
+
+    DB.exec(
+      "DELETE FROM post_search_data WHERE post_id = :post_id AND locale = :locale",
+      post_id: post_id,
+      locale: locale,
+    )
+  end
 end
 
 # == Schema Information

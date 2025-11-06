@@ -83,12 +83,14 @@ class Search
     SiteSetting.search_ignore_accents ? "unaccent(#{expr})" : expr
   end
 
-  def self.segment_chinese?
-    %w[zh_TW zh_CN].include?(SiteSetting.default_locale) || SiteSetting.search_tokenize_chinese
+  def self.segment_chinese?(locale: nil)
+    locale ||= SiteSetting.default_locale
+    %w[zh_TW zh_CN].include?(locale) || SiteSetting.search_tokenize_chinese
   end
 
-  def self.segment_japanese?
-    SiteSetting.default_locale == "ja" || SiteSetting.search_tokenize_japanese
+  def self.segment_japanese?(locale: nil)
+    locale ||= SiteSetting.default_locale
+    locale == "ja" || SiteSetting.search_tokenize_japanese
   end
 
   def self.japanese_punctuation_regexp
@@ -112,26 +114,26 @@ class Search
     term
   end
 
-  def self.prepare_data(search_data, purpose = nil)
+  def self.prepare_data(search_data, purpose = nil, locale: nil)
     data = search_data.dup
     data.force_encoding("UTF-8")
     data = clean_term(data)
 
     if purpose != :topic && need_segmenting?(data)
-      if segment_chinese?
+      if segment_chinese?(locale: locale)
         require "cppjieba_rb" unless defined?(CppjiebaRb)
 
         segmented_data = []
 
         # We need to split up the string here because Cppjieba has a bug where text starting with numeric chars will
         # be split into two segments. For example, '123abc' becomes '123' and 'abc' after segmentation.
-        data.scan(/(?<chinese>[\p{Han}。,、“”《》…\.:?!;()]+)|([^\p{Han}]+)/) do
+        data.scan(/(?<chinese>[\p{Han}。,、""《》…\.:?!;()]+)|([^\p{Han}]+)/) do
           match_data = $LAST_MATCH_INFO
 
           if match_data[:chinese]
             segments = CppjiebaRb.segment(match_data.to_s, mode: :mix)
 
-            segments = CppjiebaRb.filter_stop_word(segments) if ts_config != "english"
+            segments = CppjiebaRb.filter_stop_word(segments) if ts_config(locale) != "english"
 
             segments = segments.filter { |s| s.present? }
             segmented_data << segments.join(" ")
@@ -141,7 +143,7 @@ class Search
         end
 
         data = segmented_data.join(" ")
-      elsif segment_japanese?
+      elsif segment_japanese?(locale: locale)
         data.gsub!(japanese_punctuation_regexp, " ")
         data = TinyJapaneseSegmenter.segment(data)
         data = data.filter { |s| s.present? }
@@ -1162,11 +1164,40 @@ class Search
   PHRASE_MATCH_REGEXP_PATTERN = '"([^"]+)"'
 
   def posts_query(limit, type_filter: nil, aggregate_search: false)
-    posts =
-      Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false).joins(
-        :post_search_data,
-        :topic,
-      )
+    posts = Post.where(post_type: Topic.visible_post_types(@guardian.user), hidden: false)
+
+    # Build locale-aware join for post_search_data
+    if SiteSetting.content_localization_enabled && @guardian.user
+      user_locale = @guardian.user.effective_locale || SiteSetting.default_locale
+
+      # Join with preference for user's locale, fallback to default locale
+      if user_locale != SiteSetting.default_locale
+        sanitized_user_locale = Post.connection.quote(user_locale)
+        sanitized_default_locale = Post.connection.quote(SiteSetting.default_locale)
+
+        posts =
+          posts.joins(
+            "INNER JOIN LATERAL (
+              SELECT * FROM post_search_data
+              WHERE post_search_data.post_id = posts.id
+                AND post_search_data.locale IN (#{sanitized_user_locale}, #{sanitized_default_locale})
+              ORDER BY CASE WHEN post_search_data.locale = #{sanitized_user_locale} THEN 0 ELSE 1 END
+              LIMIT 1
+            ) post_search_data ON true",
+          )
+      else
+        # User's locale is the default - just filter to that locale
+        posts =
+          posts.joins(
+            "INNER JOIN post_search_data ON post_search_data.post_id = posts.id AND post_search_data.locale = #{Post.connection.quote(user_locale)}",
+          )
+      end
+    else
+      # No content localization or no user - use standard join
+      posts = posts.joins(:post_search_data)
+    end
+
+    posts = posts.joins(:topic)
 
     if type_filter != "private_messages"
       posts = posts.joins("LEFT JOIN categories ON categories.id = topics.category_id")

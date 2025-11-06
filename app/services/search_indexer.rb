@@ -29,11 +29,21 @@ class SearchIndexer
     @disabled = prior
   end
 
-  def self.update_index(table:, id:, a_weight: nil, b_weight: nil, c_weight: nil, d_weight: nil)
+  def self.update_index(
+    table:,
+    id:,
+    a_weight: nil,
+    b_weight: nil,
+    c_weight: nil,
+    d_weight: nil,
+    locale: nil
+  )
+    locale ||= SiteSetting.default_locale
     raw_data = { a: a_weight, b: b_weight, c: c_weight, d: d_weight }
 
     # The version used in excerpts
-    search_data = raw_data.transform_values { |data| Search.prepare_data(data || "", :index) }
+    search_data =
+      raw_data.transform_values { |data| Search.prepare_data(data || "", :index, locale: locale) }
 
     # The version used to build the index
     indexed_data =
@@ -45,7 +55,7 @@ class SearchIndexer
     foreign_key = "#{table}_id"
 
     # for user login and name use "simple" lowercase stemmer
-    stemmer = table == "user" ? "simple" : Search.ts_config
+    stemmer = table == "user" ? "simple" : Search.ts_config(locale)
 
     ranked_index = <<~SQL
       setweight(to_tsvector('#{stemmer}', #{Search.wrap_unaccent("coalesce(:a,''))")}, 'A') ||
@@ -150,7 +160,7 @@ class SearchIndexer
     params = {
       "raw_data" => indexed_data,
       "#{foreign_key}" => id,
-      "locale" => SiteSetting.default_locale,
+      "locale" => locale,
       "version" => index_version,
       "search_data" => tsvector,
     }
@@ -196,8 +206,10 @@ class SearchIndexer
     category_name:,
     topic_tags:,
     cooked:,
-    private_message:
+    private_message:,
+    localizations: []
   )
+    # Index the default locale post content
     update_index(
       table: "post",
       id: post_id,
@@ -210,6 +222,21 @@ class SearchIndexer
       # length of a tsvector (1_048_576 bytes).
       d_weight: HtmlScrubber.scrub(cooked)[0..600_000],
     ) { |params| params["private_message"] = private_message }
+
+    # Index each localization with its specific locale for proper CJK handling
+    return unless SiteSetting.content_localization_enabled
+
+    localizations.each do |localization|
+      update_index(
+        table: "post",
+        id: post_id,
+        locale: localization.locale,
+        a_weight: topic_title,
+        b_weight: category_name,
+        c_weight: topic_tags,
+        d_weight: HtmlScrubber.scrub(localization.cooked)[0..600_000],
+      ) { |params| params["private_message"] = private_message }
+    end
   end
 
   def self.update_users_index(user_id, username, name, custom_fields)
@@ -303,6 +330,14 @@ class SearchIndexer
     if Post === obj && obj.raw.present? &&
          (force || obj.saved_change_to_cooked? || obj.saved_change_to_topic_id?)
       if topic
+        # Preload localizations if content localization is enabled
+        localizations =
+          if SiteSetting.content_localization_enabled
+            obj.post_localizations.to_a
+          else
+            []
+          end
+
         SearchIndexer.update_posts_index(
           post_id: obj.id,
           topic_title: topic.title,
@@ -310,6 +345,7 @@ class SearchIndexer
           topic_tags: tag_names,
           cooked: obj.cooked,
           private_message: topic.private_message?,
+          localizations: localizations,
         )
 
         SearchIndexer.update_topics_index(topic.id, topic.title, obj.cooked) if obj.is_first_post?
@@ -328,6 +364,14 @@ class SearchIndexer
     if Topic === obj && (obj.saved_change_to_title? || force)
       if obj.posts
         if post = obj.posts.find_by(post_number: 1)
+          # Preload localizations if content localization is enabled
+          localizations =
+            if SiteSetting.content_localization_enabled
+              post.post_localizations.to_a
+            else
+              []
+            end
+
           SearchIndexer.update_posts_index(
             post_id: post.id,
             topic_title: obj.title,
@@ -335,6 +379,7 @@ class SearchIndexer
             topic_tags: tag_names,
             cooked: post.cooked,
             private_message: obj.private_message?,
+            localizations: localizations,
           )
 
           SearchIndexer.update_topics_index(obj.id, obj.title, post.cooked)
