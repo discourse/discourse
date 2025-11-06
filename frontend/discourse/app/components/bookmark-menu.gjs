@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -23,7 +23,6 @@ export default class BookmarkMenu extends Component {
   @tracked quicksaved = false;
   @tracked reminderAtOptions = [];
 
-  bookmarkManager = this.args.bookmarkManager;
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
   bookmarkCreatePromise = null;
@@ -41,9 +40,10 @@ export default class BookmarkMenu extends Component {
     this.reminderAtOptions.push(custom);
   }
 
+  @cached
   get existingBookmark() {
-    return this.bookmarkManager.trackedBookmark?.id
-      ? this.bookmarkManager.trackedBookmark
+    return this.args.bookmarkManager.trackedBookmark?.id
+      ? this.args.bookmarkManager.trackedBookmark
       : null;
   }
 
@@ -121,7 +121,7 @@ export default class BookmarkMenu extends Component {
 
   @action
   onBookmark() {
-    this.bookmarkCreatePromise = this.bookmarkManager.create();
+    this.bookmarkCreatePromise = this.args.bookmarkManager.create();
     this.bookmarkCreatePromise
       .then(() => {
         // We show the menu with Edit/Delete options if the bookmark exists,
@@ -167,8 +167,8 @@ export default class BookmarkMenu extends Component {
   @action
   async onRemoveBookmark() {
     try {
-      const response = await this.bookmarkManager.delete();
-      this.bookmarkManager.afterDelete(response, this.existingBookmark.id);
+      const response = await this.args.bookmarkManager.delete();
+      this.args.bookmarkManager.afterDelete(response, this.existingBookmark.id);
       this.toasts.success({
         duration: "short",
         data: {
@@ -190,7 +190,7 @@ export default class BookmarkMenu extends Component {
       this.existingBookmark.selectedDatetime = null;
       this.existingBookmark.reminderAt = null;
 
-      await this.bookmarkManager.save();
+      await this.args.bookmarkManager.save();
 
       this.toasts.success({
         duration: "short",
@@ -217,7 +217,7 @@ export default class BookmarkMenu extends Component {
       this.existingBookmark.reminderAt = option.time;
 
       try {
-        await this.bookmarkManager.save();
+        await this.args.bookmarkManager.save();
         this.toasts.success({
           duration: "short",
           views: ["mobile"],
@@ -239,14 +239,14 @@ export default class BookmarkMenu extends Component {
         model: {
           bookmark: this.existingBookmark,
           afterSave: (savedData) => {
-            return this.bookmarkManager.afterSave(savedData);
+            return this.args.bookmarkManager.afterSave(savedData);
           },
           afterDelete: (response, bookmarkId) => {
-            this.bookmarkManager.afterDelete(response, bookmarkId);
+            this.args.bookmarkManager.afterDelete(response, bookmarkId);
           },
         },
       });
-      this.bookmarkManager.afterModalClose(closeData);
+      this.args.bookmarkManager.afterModalClose(closeData);
     } catch (error) {
       popupAjaxError(error);
     }
