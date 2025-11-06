@@ -893,7 +893,7 @@ RSpec.describe Search do
   context "with posts" do
     fab!(:post) do
       SearchIndexer.enable
-      Fabricate(:post, raw: "Original EN elephant")
+      Fabricate(:post, raw: "Original EN kittens")
     end
 
     let(:topic) { post.topic }
@@ -1113,21 +1113,21 @@ RSpec.describe Search do
 
         it "uses different localization for different locales" do
           I18n.with_locale(:ja) do
-            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
             expect(result.blurb(result.posts.first)).to include("日本語コンテンツ")
           end
 
           I18n.with_locale(:fr) do
-            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
             expect(result.blurb(result.posts.first)).to include("Contenu français")
           end
         end
 
         it "falls back to original content when no matching localization exists" do
           I18n.with_locale(:es) do
-            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
             expect(result.posts).to be_present
-            expect(result.blurb(result.posts.first)).to include("Original EN")
+            expect(result.blurb(result.posts.first)).to include("Original EN kittens")
           end
         end
       end
@@ -1145,8 +1145,8 @@ RSpec.describe Search do
           )
 
           I18n.with_locale(:ja) do
-            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
-            expect(result.blurb(result.posts.first)).to include("Original EN")
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
+            expect(result.blurb(result.posts.first)).to include("Original EN kittens")
           end
         end
       end
