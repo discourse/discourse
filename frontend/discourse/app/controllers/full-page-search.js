@@ -6,6 +6,7 @@ import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
+import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -548,8 +549,9 @@ export default class FullPageSearchController extends Controller {
 
   @action
   selectAll() {
-    this.bulkSelectHelper.selected.addObjects(
-      this.get("searchResultPosts").map((item) => item.topic)
+    addUniqueValuesToArray(
+      this.bulkSelectHelper.selected,
+      this.searchResultPosts.map((item) => item.topic)
     );
 
     // Doing this the proper way is a HUGE pain,
@@ -566,7 +568,7 @@ export default class FullPageSearchController extends Controller {
 
   @action
   clearAll() {
-    this.bulkSelectHelper.selected.clear();
+    this.bulkSelectHelper.selected = [];
 
     document
       .querySelectorAll(".fps-result input[type=checkbox]")
@@ -578,7 +580,7 @@ export default class FullPageSearchController extends Controller {
   @action
   toggleBulkSelect() {
     this.toggleProperty("bulkSelectEnabled");
-    this.bulkSelectHelper.selected.clear();
+    this.bulkSelectHelper.selected = [];
   }
 
   @action
