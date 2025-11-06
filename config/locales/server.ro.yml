@@ -939,6 +939,7 @@ ro:
       poll_pop3_timeout: "Conexiunea la serverul POP3 a dat time-out. Mailurile primite nu au putut fi accesate. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a> și furnizorul de servicii."
       poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='%{base_path}/admin/site_settings/category/email'>setările POP3</a>."
       admin_sidebar_deprecation: "Vechiul aspect de administrare este depreciat în favoarea noului <a href='https://meta.discourse.org/t/-/289281'>aspect cu bară laterală</a> și va fi eliminat în următoarea versiune. Poți <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configura</a> acum noul aspect cu bară laterală pentru a-l alege înainte de această schimbare."
+      starttls_disabled: "Configurația emailurilor de ieșire are STARTTLS dezactivat. Acest lucru nu este aproape niciodată necesar. Ia în considerare eliminarea <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> din mediul tău. Te rog să consulți <a href='https://meta.discourse.org/t/387286'>acest subiect</a> pentru mai multe detalii."
     back_from_logster_text: "Înapoi la site"
   site_settings:
     disabled: "dezactivat"
