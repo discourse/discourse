@@ -7,6 +7,9 @@ en:
       editing:
         one: "editing"
         other: "editing"
+      translating:
+        one: "translating"
+        other: "translating"
       replying_to_topic:
         one: "replying"
         other: "replying"

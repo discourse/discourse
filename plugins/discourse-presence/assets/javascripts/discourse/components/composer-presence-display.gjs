@@ -5,6 +5,7 @@ import { gt } from "truth-helpers";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import helperFn from "discourse/helpers/helper-fn";
+import Composer from "discourse/models/composer";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerPresenceDisplay extends Component {
@@ -16,6 +17,7 @@ export default class ComposerPresenceDisplay extends Component {
   @tracked replyChannel;
   @tracked whisperChannel;
   @tracked editChannel;
+  @tracked translateChannel;
 
   setupReplyChannel = helperFn((_, on) => {
     const { topic } = this.args.model;
@@ -63,9 +65,24 @@ export default class ComposerPresenceDisplay extends Component {
     on.cleanup(() => editChannel.unsubscribe());
   });
 
+  setupTranslateChannel = helperFn((_, on) => {
+    const { post } = this.args.model;
+
+    if (!post || !this.isTranslate) {
+      return;
+    }
+
+    const name = `/discourse-presence/translate/${post.id}`;
+    const translateChannel = this.presence.getChannel(name);
+    this.translateChannel = translateChannel;
+
+    translateChannel.subscribe();
+    on.cleanup(() => translateChannel.unsubscribe());
+  });
+
   notifyState = helperFn((_, on) => {
     const { topic, post, replyDirty } = this.args.model;
-    const entity = this.isEdit ? post : topic;
+    const entity = this.isEdit || this.isTranslate ? post : topic;
 
     if (entity) {
       const name = `/discourse-presence/${this.state}/${entity.id}`;
@@ -83,11 +100,17 @@ export default class ComposerPresenceDisplay extends Component {
     return this.state === "edit";
   }
 
+  get isTranslate() {
+    return this.state === "translate";
+  }
+
   @cached
   get state() {
-    const { editingPost, whisper, replyingToTopic } = this.args.model;
+    const { editingPost, whisper, replyingToTopic, action } = this.args.model;
 
-    if (editingPost) {
+    if (action === Composer.ADD_TRANSLATION) {
+      return "translate";
+    } else if (editingPost) {
       return "edit";
     } else if (whisper) {
       return "whisper";
@@ -102,6 +125,8 @@ export default class ComposerPresenceDisplay extends Component {
 
     if (this.isEdit) {
       users = this.editChannel?.users || [];
+    } else if (this.isTranslate) {
+      users = this.translateChannel?.users || [];
     } else {
       const replyUsers = this.replyChannel?.users || [];
       const whisperUsers = this.whisperChannel?.users || [];
@@ -118,6 +143,7 @@ export default class ComposerPresenceDisplay extends Component {
       {{this.setupReplyChannel}}
       {{this.setupWhisperChannel}}
       {{this.setupEditChannel}}
+      {{this.setupTranslateChannel}}
       {{this.notifyState}}
 
       {{#if (gt this.users.length 0)}}
@@ -134,6 +160,8 @@ export default class ComposerPresenceDisplay extends Component {
             <span class="description">
               {{~#if this.isReply~}}
                 {{i18n "presence.replying" count=this.users.length}}
+              {{~else if this.isTranslate~}}
+                {{i18n "presence.translating" count=this.users.length}}
               {{~else~}}
                 {{i18n "presence.editing" count=this.users.length}}
               {{~/if~}}
