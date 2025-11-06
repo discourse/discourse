@@ -9,7 +9,45 @@ el:
     currently_away:
       labels:
         username: Όνομα Χρήστη
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Η εκδήλωση ξεκίνησε
+  system_messages:
+    discourse_post_event_bulk_invite_failed:
+      subject_template: "Η επεξεργασία του αρχείου μαζικής πρόσκλησης ολοκληρώθηκε με λάθη"
+  site_settings:
+    map_events_to_color: "Ανάθεση χρώματος σε κάθε ετικέτα ή κατηγορία."
+    discourse_post_event_allowed_on_groups: "Ομάδες που επιτρέπεται να δημιουργούν εκδηλώσεις."
+    event_participation_buttons: "Λίστα κουμπιών συμμετοχής σε εκδήλωση που μπορούν να χρησιμοποιήσουν οι χρήστες."
+  discourse_calendar:
+    event_expired: "Η εκδήλωση έληξε"
   discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} πρόκειται να ξεκινήσει."
+      after_event_reminder: "%{title} έχει τελειώσει."
+      ongoing_event_reminder: "%{title} βρίσκεται σε εξέλιξη."
     errors:
       bulk_invite:
         error: "Παρουσίαστηκε ένα σφάλμα κατά το ανέβασμα του αρχείου σας, Παρακαλώ δοκιμάστε αργότερα."
+      models:
+        event:
+          only_one_event: "Μια ανάρτηση μπορεί να έχει μόνο μία εκδήλωση."
+          must_be_in_first_post: "Μια εκδήλωση μπορεί να βρίσκεται μόνο στην πρώτη ανάρτηση ενός θέματος."
+          raw_invitees_length: "Μια εκδήλωση περιορίζεται σε %{count} χρήστες/ομάδες."
+          raw_invitees:
+            only_group: "Μια εκδήλωση δέχεται μόνο ονόματα ομάδων."
+          ends_at_before_starts_at: "Μια εκδήλωση δεν μπορεί να τελειώσει πριν ξεκινήσει."
+          start_must_be_present_and_a_valid_date: "Μια εκδήλωση απαιτεί έγκυρη ημερομηνία έναρξης."
+          end_must_be_a_valid_date: "Η ημερομηνία λήξης πρέπει να είναι έγκυρη ημερομηνία."
+          invalid_timezone: "Η ζώνη ώρας δεν αναγνωρίζεται."
+          acting_user_not_allowed_to_create_event: "Ο τρέχων χρήστης δεν επιτρέπεται να δημιουργεί εκδηλώσεις."
+          acting_user_not_allowed_to_act_on_this_event: "Ο τρέχων χρήστης δεν επιτρέπεται να ενεργήσει σε αυτήν την εκδήλωση."
+          invalid_allowed_groups: "Μη έγκυρες επιτρεπόμενες ομάδες."
+          acting_user_not_allowed_to_invite_these_groups: "Ο τρέχων χρήστης δεν επιτρέπεται να προσκαλέσει αυτές τις ομάδες."
+          custom_field_is_invalid: "Το προσαρμοσμένο πεδίο `%{field}` δεν επιτρέπεται."
+          name:
+            length: "Το μήκος του ονόματος της εκδήλωσης πρέπει να είναι μεταξύ %{minimum} και %{maximum} χαρακτήρων."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Υπενθύμιση εκδήλωσης"
