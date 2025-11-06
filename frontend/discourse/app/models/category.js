@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { warn } from "@ember/debug";
 import { computed, get } from "@ember/object";
+import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { compare } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
@@ -9,6 +10,7 @@ import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { MultiCache } from "discourse/lib/multi-cache";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
@@ -468,10 +470,13 @@ export default class Category extends RestModel {
   @service currentUser;
 
   @tracked color;
-  @tracked styleType = this.style_type;
   @tracked emoji;
   @tracked icon;
   @tracked localizations = this.category_localizations;
+  @tracked minimum_required_tags;
+  @tracked styleType = this.style_type;
+  @trackedArray required_tag_groups;
+
   permissions = null;
 
   init() {
@@ -553,8 +558,8 @@ export default class Category extends RestModel {
     });
   }
 
-  @discourseComputed("required_tag_groups", "minimum_required_tags")
-  minimumRequiredTags() {
+  @dependentKeyCompat
+  get minimumRequiredTags() {
     if (this.required_tag_groups?.length > 0) {
       // it should require the max between the bare minimum set in the category and the sum of the min_count of the
       // required_tag_groups
