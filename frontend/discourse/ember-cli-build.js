@@ -22,21 +22,10 @@ const { BroccoliMergeFiles } = require("broccoli-merge-files");
 
 process.env.BROCCOLI_ENABLED_MEMOIZE = true;
 
-module.exports = function (defaults) {
-  const discourseRoot = path.resolve("../..");
-  const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
-
-  // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
-  DeprecationSilencer.silence(console, "warn");
-  DeprecationSilencer.silence(console, "log");
-  DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
-
-  const isProduction = EmberApp.env().includes("production");
-
-  const adminTree = funnel("admin", { destDir: "admin" });
-  const adminCompatModulesTree = funnel(
-    new BroccoliMergeFiles(["admin"], {
-      outputFileName: "admin-compat-modules.js",
+function compatModulesFor(name) {
+  return funnel(
+    new BroccoliMergeFiles([name], {
+      outputFileName: `${name}-compat-modules.js`,
       async merge(files) {
         const lines = [`const compatModules = {};`];
 
@@ -55,8 +44,20 @@ module.exports = function (defaults) {
         return lines.join("\n");
       },
     }),
-    { destDir: "admin" }
+    { destDir: name }
   );
+}
+
+module.exports = function (defaults) {
+  const discourseRoot = path.resolve("../..");
+  const vendorJs = discourseRoot + "/vendor/assets/javascripts/";
+
+  // Silence deprecations which we are aware of - see `lib/deprecation-silencer.js`
+  DeprecationSilencer.silence(console, "warn");
+  DeprecationSilencer.silence(console, "log");
+  DeprecationSilencer.silence(defaults.project.ui, "writeWarnLine");
+
+  const isProduction = EmberApp.env().includes("production");
 
   const app = new EmberApp(defaults, {
     autoRun: false,
@@ -94,9 +95,21 @@ module.exports = function (defaults) {
 
     trees: {
       app: withSideWatch(
-        mergeTrees(["app", adminTree, adminCompatModulesTree]),
+        mergeTrees([
+          "app",
+          funnel("admin", { destDir: "admin" }),
+          compatModulesFor("admin"),
+          funnel("select-kit", { destDir: "select-kit" }),
+          compatModulesFor("select-kit"),
+          funnel("float-kit", { destDir: "float-kit" }),
+          compatModulesFor("float-kit"),
+          funnel("truth-helpers", { destDir: "truth-helpers" }),
+          compatModulesFor("truth-helpers"),
+          funnel("dialog-holder", { destDir: "dialog-holder" }),
+          compatModulesFor("dialog-holder"),
+        ]),
         {
-          watching: ["../discourse-markdown-it", "../truth-helpers"],
+          watching: ["../discourse-markdown-it"],
         }
       ),
     },
@@ -141,7 +154,14 @@ module.exports = function (defaults) {
   const appTree = compatBuild(app, Webpack, {
     staticEmberSource: true,
     splitAtRoutes: ["wizard"],
-    staticAppPaths: ["static", "admin"],
+    staticAppPaths: [
+      "static",
+      "admin",
+      "select-kit",
+      "float-kit",
+      "truth-helpers",
+      "dialog-holder",
+    ],
     packagerOptions: {
       webpackConfig: {
         devtool:

@@ -9,7 +9,6 @@ import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DStatTiles from "discourse/components/d-stat-tiles";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DTooltip from "discourse/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
@@ -18,6 +17,7 @@ import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 import ComboBox from "select-kit/components/combo-box";
+import DTooltip from "float-kit/components/d-tooltip";
 import SpamTestModal from "./modal/spam-test-modal";
 
 export default class AiSpam extends Component {

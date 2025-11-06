@@ -227,40 +227,6 @@ importers:
 
   frontend/deprecation-silencer: {}
 
-  frontend/dialog-holder:
-    dependencies:
-      a11y-dialog:
-        specifier: 8.1.4
-        version: 8.1.4
-      ember-auto-import:
-        specifier: ^2.11.1
-        version: 2.11.1(@glint/template@1.7.2)(webpack@5.99.9(@swc/core@1.15.0)(esbuild@0.25.12))
-      ember-cli-babel:
-        specifier: ^8.2.0
-        version: 8.2.0(@babel/core@7.28.5)
-      ember-cli-htmlbars:
-        specifier: ^6.3.0
-        version: 6.3.0
-      ember-template-imports:
-        specifier: ^4.3.0
-        version: 4.3.0
-      truth-helpers:
-        specifier: workspace:1.0.0
-        version: link:../truth-helpers
-    devDependencies:
-      '@types/jquery':
-        specifier: ^3.5.33
-        version: 3.5.33
-      '@types/qunit':
-        specifier: ^2.19.13
-        version: 2.19.13
-      '@types/rsvp':
-        specifier: ^4.0.9
-        version: 4.0.9
-      webpack:
-        specifier: 5.99.9
-        version: 5.99.9(@swc/core@1.15.0)(esbuild@0.25.12)
-
   frontend/discourse:
     dependencies:
       '@faker-js/faker':
@@ -534,9 +500,6 @@ importers:
       deprecation-silencer:
         specifier: workspace:1.0.0
         version: link:../deprecation-silencer
-      dialog-holder:
-        specifier: workspace:1.0.0
-        version: link:../dialog-holder
       discourse-i18n:
         specifier: workspace:1.0.0
         version: link:../discourse-i18n
@@ -606,9 +569,6 @@ importers:
       ember-test-selectors:
         specifier: ^7.1.0
         version: 7.1.0
-      float-kit:
-        specifier: workspace:1.0.0
-        version: link:../float-kit
       html-entities:
         specifier: ^2.6.0
         version: 2.6.0
@@ -642,9 +602,6 @@ importers:
       qunit-dom:
         specifier: ^3.5.0
         version: 3.5.0
-      select-kit:
-        specifier: workspace:1.0.0
-        version: link:../select-kit
       sinon:
         specifier: ^21.0.0
         version: 21.0.0
@@ -657,9 +614,6 @@ importers:
       testem:
         specifier: ^3.16.0
         version: 3.16.0(handlebars@4.7.8)(underscore@1.13.7)
-      truth-helpers:
-        specifier: workspace:1.0.0
-        version: link:../truth-helpers
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -708,9 +662,6 @@ importers:
       pretty-text:
         specifier: workspace:1.0.0
         version: link:../pretty-text
-      truth-helpers:
-        specifier: workspace:1.0.0
-        version: link:../truth-helpers
       xss:
         specifier: ^1.0.15
         version: 1.0.15
@@ -812,91 +763,6 @@ importers:
 
   frontend/ember-cli-progress-ci: {}
 
-  frontend/float-kit:
-    dependencies:
-      '@babel/core':
-        specifier: ^7.28.5
-        version: 7.28.5(supports-color@8.1.1)
-      '@ember/render-modifiers':
-        specifier: ^3.0.0
-        version: 3.0.0(@glint/template@1.7.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      '@floating-ui/dom':
-        specifier: ^1.7.4
-        version: 1.7.4
-      ember-auto-import:
-        specifier: ^2.11.1
-        version: 2.11.1(@glint/template@1.7.2)(webpack@5.99.9(@swc/core@1.15.0)(esbuild@0.25.12))
-      ember-cli-babel:
-        specifier: ^8.2.0
-        version: 8.2.0(@babel/core@7.28.5)
-      ember-cli-htmlbars:
-        specifier: ^6.3.0
-        version: 6.3.0
-      ember-curry-component:
-        specifier: ^0.3.1
-        version: 0.3.1(@babel/core@7.28.5)
-      ember-template-imports:
-        specifier: ^4.3.0
-        version: 4.3.0
-      truth-helpers:
-        specifier: workspace:1.0.0
-        version: link:../truth-helpers
-    devDependencies:
-      '@ember/optional-features':
-        specifier: ^2.2.0
-        version: 2.2.0
-      '@embroider/test-setup':
-        specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.7.2))(@glint/template@1.7.2))(@embroider/core@3.5.5(@glint/template@1.7.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.7.2))(webpack@5.99.9(@swc/core@1.15.0)(esbuild@0.25.12)))
-      '@glimmer/component':
-        specifier: ^2.0.0
-        version: 2.0.0
-      '@types/jquery':
-        specifier: ^3.5.33
-        version: 3.5.33
-      '@types/qunit':
-        specifier: ^2.19.13
-        version: 2.19.13
-      '@types/rsvp':
-        specifier: ^4.0.9
-        version: 4.0.9
-      broccoli-asset-rev:
-        specifier: ^3.0.0
-        version: 3.0.0
-      ember-cli:
-        specifier: ~6.8.0
-        version: 6.8.0(@types/node@24.10.0)(handlebars@4.7.8)(underscore@1.13.7)
-      ember-cli-inject-live-reload:
-        specifier: ^2.1.0
-        version: 2.1.0
-      ember-cli-sri:
-        specifier: ^2.1.1
-        version: 2.1.1
-      ember-cli-terser:
-        specifier: ^4.0.2
-        version: 4.0.2
-      ember-disable-prototype-extensions:
-        specifier: ^1.1.3
-        version: 1.1.3
-      ember-load-initializers:
-        specifier: ^3.0.1
-        version: 3.0.1(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      ember-resolver:
-        specifier: ^13.1.1
-        version: 13.1.1
-      ember-source:
-        specifier: ~6.6.0
-        version: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
-      ember-source-channel-url:
-        specifier: ^3.0.0
-        version: 3.0.0(encoding@0.1.13)
-      loader.js:
-        specifier: ^4.7.0
-        version: 4.7.0
-      webpack:
-        specifier: 5.99.9
-        version: 5.99.9(@swc/core@1.15.0)(esbuild@0.25.12)
-
   frontend/pretty-text:
     dependencies:
       '@babel/core':
@@ -972,109 +838,6 @@ importers:
       webpack:
         specifier: 5.99.9
         version: 5.99.9(@swc/core@1.15.0)(esbuild@0.25.12)
-
-  frontend/select-kit:
-    dependencies:
-      '@babel/core':
-        specifier: ^7.28.5
-        version: 7.28.5(supports-color@8.1.1)
-      '@ember-decorators/component':
-        specifier: '*'
-        version: 6.1.1
-      '@ember/string':
-        specifier: ^4.0.1
-        version: 4.0.1
-      '@popperjs/core':
-        specifier: ^2.11.8
-        version: 2.11.8
-      discourse-i18n:
-        specifier: workspace:1.0.0
-        version: link:../discourse-i18n
-      ember-auto-import:
-        specifier: ^2.11.1
-        version: 2.11.1(@glint/template@1.7.2)(webpack@5.99.9(@swc/core@1.15.0)(esbuild@0.25.12))
-      ember-cached-decorator-polyfill:
-        specifier: ^1.0.2
-        version: 1.0.2(@babel/core@7.28.5)(@glint/template@1.7.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      ember-cli-babel:
-        specifier: ^8.2.0
-        version: 8.2.0(@babel/core@7.28.5)
-      ember-cli-htmlbars:
-        specifier: ^6.3.0
-        version: 6.3.0
-      ember-decorators:
-        specifier: ^6.1.1
-        version: 6.1.1
-      ember-template-imports:
-        specifier: ^4.3.0
-        version: 4.3.0
-      truth-helpers:
-        specifier: workspace:*
-        version: link:../truth-helpers
-    devDependencies:
-      '@ember/optional-features':
-        specifier: ^2.2.0
-        version: 2.2.0
-      '@embroider/test-setup':
-        specifier: ^4.0.0
-        version: 4.0.0(@embroider/compat@3.8.5(@embroider/core@3.5.5(@glint/template@1.7.2))(@glint/template@1.7.2))(@embroider/core@3.5.5(@glint/template@1.7.2))(@embroider/webpack@4.1.0(@embroider/core@3.5.5(@glint/template@1.7.2))(webpack@5.99.9(@swc/core@1.15.0)(esbuild@0.25.12)))
-      '@glimmer/component':
-        specifier: ^2.0.0
-        version: 2.0.0
-      '@types/jquery':
-        specifier: ^3.5.33
-        version: 3.5.33
-      '@types/qunit':
-        specifier: ^2.19.13
-        version: 2.19.13
-      '@types/rsvp':
-        specifier: ^4.0.9
-        version: 4.0.9
-      broccoli-asset-rev:
-        specifier: ^3.0.0
-        version: 3.0.0
-      ember-cli:
-        specifier: ~6.8.0
-        version: 6.8.0(@types/node@24.10.0)(handlebars@4.7.8)(underscore@1.13.7)
-      ember-cli-inject-live-reload:
-        specifier: ^2.1.0
-        version: 2.1.0
-      ember-cli-sri:
-        specifier: ^2.1.1
-        version: 2.1.1
-      ember-cli-terser:
-        specifier: ^4.0.2
-        version: 4.0.2
-      ember-disable-prototype-extensions:
-        specifier: ^1.1.3
-        version: 1.1.3
-      ember-load-initializers:
-        specifier: ^3.0.1
-        version: 3.0.1(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))
-      ember-resolver:
-        specifier: ^13.1.1
-        version: 13.1.1
-      ember-source:
-        specifier: ~6.6.0
-        version: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
-      ember-source-channel-url:
-        specifier: ^3.0.0
-        version: 3.0.0(encoding@0.1.13)
-      loader.js:
-        specifier: ^4.7.0
-        version: 4.7.0
-      webpack:
-        specifier: 5.99.9
-        version: 5.99.9(@swc/core@1.15.0)(esbuild@0.25.12)
-
-  frontend/truth-helpers:
-    dependencies:
-      '@embroider/addon-shim':
-        specifier: ^1.9.0
-        version: 1.10.0
-      ember-auto-import:
-        specifier: ^2.11.1
-        version: 2.11.1(@glint/template@1.7.2)(webpack@5.99.9(@swc/core@1.15.0)(esbuild@0.25.12))
 
 packages:
 

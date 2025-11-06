@@ -12,6 +12,7 @@ document.addEventListener("discourse-init", async (e) => {
   ) {
     await loadAdmin();
   }
+
   await loadThemes();
 
   const app = klass.create(config);
