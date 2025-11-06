@@ -127,6 +127,27 @@
   }
 }
 
+.rtl {
+  .pswp__scroll-wrap,
+  .pswp__bg,
+  .pswp__container,
+  .pswp__item,
+  .pswp__content,
+  .pswp__img,
+  .pswp__zoom-wrap {
+    right: 0;
+    left: unset;
+  }
+
+  .pswp__button--arrow--prev svg {
+    transform: scaleX(-1);
+  }
+
+  .pswp__button--arrow--next svg {
+    transform: scaleX(1);
+  }
+}
+
 .pswp.pswp--behind-header {
   z-index: z("header") - 1;
 }
