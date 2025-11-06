@@ -74,12 +74,14 @@
   $icon-color: var(--d-button-default-icon-color),
   $hover-text-color: var(--d-button-default-text-color--hover),
   $hover-bg-color: var(--d-button-default-bg-color--hover),
-  $hover-icon-color: var(--d-button-default-icon-color--hover)
+  $hover-icon-color: var(--d-button-default-icon-color--hover),
+  $border: var(--d-button-border),
+  $hover-border: var(--d-button-border)
 ) {
   color: $text-color;
   background-color: $bg-color;
   transition: var(--d-button-transition);
-  border: var(--d-button-border);
+  border: $border;
 
   &:visited {
     /* covers cases where we add button classes to links */
@@ -111,6 +113,7 @@
   @include hover {
     background-color: $hover-bg-color;
     color: $hover-text-color;
+    border: $hover-border;
 
     .d-icon {
       color: $hover-icon-color;
@@ -147,6 +150,7 @@
     &:hover {
       color: $text-color;
       background: $bg-color;
+      border: $border;
 
       .d-icon {
         color: $icon-color;
