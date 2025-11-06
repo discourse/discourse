@@ -41,9 +41,9 @@ class DiscourseAi::Evals::Cli
 
         opts.on(
           "-m",
-          "--model NAME",
-          "Model to evaluate (will eval all models if not specified)",
-        ) { |model| options.model = model }
+          "--models NAME",
+          "Models to evaluate (will eval all valid models if not specified)",
+        ) { |models| options.models = models }
 
         opts.on("-l", "--list", "List evals") { |model| options.list = true }
 
