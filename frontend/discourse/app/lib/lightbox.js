@@ -143,6 +143,11 @@ export default async function lightbox(elem, siteSettings) {
         tagName: "a",
         title: i18n("lightbox.image_info"),
         html: renderIcon("string", "circle-info", { class: "pswp__icn" }),
+        onInit: (el, pswp) => {
+          pswp.on("change", () => {
+            el.style.display = pswp.currSlide.data.details ? "block" : "none";
+          });
+        },
         onClick: () => {
           lightboxEl.pswp.element.classList.toggle("pswp--caption-expanded");
         },
@@ -182,6 +187,7 @@ export default async function lightbox(elem, siteSettings) {
 
       data.src = data.src || el.getAttribute("data-large-src");
       data.title = el.title || el.alt;
+      data.details = el.querySelector(".informations")?.innerHTML || "";
       data.w = data.width = width;
       data.h = data.height = height;
 

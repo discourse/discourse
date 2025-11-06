@@ -107,6 +107,10 @@ module PageObjects
         component.has_css?(IMAGE_INFO_BTN)
       end
 
+      def has_no_image_info_button?
+        component.has_no_css?(IMAGE_INFO_BTN)
+      end
+
       def has_ui_visible?
         page.has_css?(UI_VISIBLE)
       end

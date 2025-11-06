@@ -41,6 +41,15 @@ describe "Lightbox | Photoswipe", type: :system do
       expect(lightbox).to have_image_info_button
     end
 
+    it "does not show image info button when no image details are available" do
+      post.update(cooked: post.cooked.gsub(%r{<span class="informations">.*?</span>}m, ""))
+      topic_page.visit_topic(topic)
+
+      find("#post_1 a.lightbox").click
+
+      expect(lightbox).to have_no_image_info_button
+    end
+
     it "can toggle image info" do
       topic_page.visit_topic(topic)
 
