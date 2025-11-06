@@ -11,6 +11,8 @@
   --d-button-default-bg-color--hover: var(--primary-medium);
   --d-button-default-icon-color: var(--primary-high);
   --d-button-default-icon-color--hover: var(--primary-low);
+  --d-button-default-border: var(--d-button-border);
+  --d-button-default-border--hover: var(--d-button-border);
 
   // .btn-primary
   --d-button-primary-text-color: var(--secondary);
@@ -19,6 +21,8 @@
   --d-button-primary-bg-color--hover: var(--tertiary-hover);
   --d-button-primary-icon-color: var(--secondary);
   --d-button-primary-icon-color--hover: var(--secondary);
+  --d-button-primary-border: var(--d-button-border);
+  --d-button-primary-border--hover: var(--d-button-border);
 
   // .btn-danger and .btn.cancel
   --d-button-danger-text-color: var(--secondary);
@@ -27,6 +31,8 @@
   --d-button-danger-bg-color--hover: var(--danger-hover);
   --d-button-danger-icon-color: var(--danger-low);
   --d-button-danger-icon-color--hover: var(--danger-low);
+  --d-button-danger-border: var(--d-button-border);
+  --d-button-danger-border--hover: var(--d-button-border);
 
   // .btn-success and .btn.ok
   --d-button-success-text-color: var(--secondary);
@@ -35,6 +41,8 @@
   --d-button-success-bg-color--hover: var(--success-hover);
   --d-button-success-icon-color: var(--success-low);
   --d-button-success-icon-color--hover: var(--success-low);
+  --d-button-success-border: var(--d-button-border);
+  --d-button-success-border--hover: var(--d-button-border);
 
   // .btn-flat
   --d-button-flat-text-color: var(--tertiary);
