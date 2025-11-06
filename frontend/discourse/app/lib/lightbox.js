@@ -30,9 +30,23 @@ export default async function lightbox(elem, siteSettings) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
     const isTestEnv = isTesting() || isRailsTesting();
 
+    const items = [...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
+
+    // adds swipe direction for RTL languages
+    if (document.documentElement.classList.contains("rtl")) {
+      items.reverse();
+    }
+
+    items.forEach((el, index) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        lightboxEl.loadAndOpen(index);
+      });
+    });
+
     const lightboxEl = new PhotoSwipeLightbox({
-      gallery: elem,
-      children: SELECTORS.DEFAULT_ITEM_SELECTOR,
+      dataSource: items,
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
       closeTitle: i18n("lightbox.close"),
@@ -154,7 +168,9 @@ export default async function lightbox(elem, siteSettings) {
       });
     });
 
-    lightboxEl.addFilter("domItemData", (data, el) => {
+    lightboxEl.addFilter("itemData", (data) => {
+      const el = data.element;
+
       if (!el) {
         return data;
       }
