@@ -893,7 +893,7 @@ RSpec.describe Search do
   context "with posts" do
     fab!(:post) do
       SearchIndexer.enable
-      Fabricate(:post)
+      Fabricate(:post, raw: "Original EN elephant")
     end
 
     let(:topic) { post.topic }
@@ -1079,6 +1079,120 @@ RSpec.describe Search do
       results = Search.execute("end-to-end test")
 
       expect(results.posts).to eq([post])
+    end
+
+    describe "localized post blurbs in search results" do
+      fab!(:user)
+      fab!(:group)
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_allowed_groups = group.id.to_s
+        group.add(user)
+      end
+
+      context "when post has localizations" do
+        fab!(:japanese_localization) do
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "ja",
+            raw: "象についての日本語コンテンツ",
+            cooked: "<p>象についての日本語コンテンツ</p>",
+          )
+        end
+        fab!(:french_localization) do
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "fr",
+            raw: "Contenu français sur les éléphants",
+            cooked: "<p>Contenu français sur les éléphants</p>",
+          )
+        end
+
+        it "uses different localization for different locales" do
+          I18n.with_locale(:ja) do
+            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            expect(result.blurb(result.posts.first)).to include("日本語コンテンツ")
+          end
+
+          I18n.with_locale(:fr) do
+            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            expect(result.blurb(result.posts.first)).to include("Contenu français")
+          end
+        end
+
+        it "falls back to original content when no matching localization exists" do
+          I18n.with_locale(:es) do
+            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            expect(result.posts).to be_present
+            expect(result.blurb(result.posts.first)).to include("Original EN")
+          end
+        end
+      end
+
+      context "when content_localization_enabled is false" do
+        before { SiteSetting.content_localization_enabled = false }
+
+        it "always uses original content even with localizations present" do
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "ja",
+            raw: "象についての日本語コンテンツ",
+            cooked: "<p>象についての日本語コンテンツ</p>",
+          )
+
+          I18n.with_locale(:ja) do
+            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            expect(result.blurb(result.posts.first)).to include("Original EN")
+          end
+        end
+      end
+
+      context "when preventing N+1 queries" do
+        fab!(:posts) do
+          SearchIndexer.enable
+          posts = Fabricate.times(3, :post, raw: "searchable content about elephants")
+          posts.each { |p| SearchIndexer.index(p, force: true) }
+          posts
+        end
+
+        before do
+          posts.each_with_index do |post, i|
+            Fabricate(
+              :post_localization,
+              post:,
+              locale: "ja",
+              raw: "象についての日本語コンテンツ#{i}",
+              cooked: "<p>象についての日本語コンテンツ#{i}</p>",
+            )
+          end
+        end
+
+        it "preloads localizations to avoid N+1 queries" do
+          I18n.with_locale(:fr) do
+            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            expect(result.posts.length).to be >= 3
+
+            expect(result.posts.first.association(:localizations).loaded?).to eq(true)
+
+            queries = track_sql_queries { result.posts.each { |post| result.blurb(post) } }
+
+            expect(queries.select { |q| q.include?("post_localizations") }).to be_empty
+          end
+        end
+
+        it "does not preload localizations when content_localization_enabled is false" do
+          SiteSetting.content_localization_enabled = false
+
+          result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+          expect(result.posts).to be_present
+
+          expect(result.posts.first.association(:localizations).loaded?).to eq(false)
+        end
+      end
     end
   end
 

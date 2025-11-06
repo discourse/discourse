@@ -1537,6 +1537,7 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
+    query = query.includes(:localizations) if SiteSetting.content_localization_enabled
     topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
