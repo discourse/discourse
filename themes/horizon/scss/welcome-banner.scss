@@ -20,7 +20,6 @@
 
     .--with-bg-img & {
       padding-block: clamp(var(--space-4), 10vh, var(--space-11));
-      border-radius: var(--d-border-radius-large);
     }
 
     @include viewport.from(xl) {
@@ -39,12 +38,11 @@
     }
 
     .--location-below-site-header & {
-      flex-direction: column;
       border-bottom: 0;
       padding: var(--space-4) var(--space-4) var(--space-8);
 
       @include viewport.from(xl) {
-        margin: 0 var(--main-grid-gap) var(--space-2);
+        margin-left: max(var(--d-sidebar-width), var(--space-4));
       }
 
       @include viewport.until(lg) {
