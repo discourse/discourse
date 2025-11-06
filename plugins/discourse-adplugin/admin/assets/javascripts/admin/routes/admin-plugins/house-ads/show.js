@@ -12,11 +12,17 @@ export default class AdminPluginsHouseAdsShow extends DiscourseRoute {
         visible_to_anons: true,
       });
     } else {
-      return new TrackedObject(
-        this.modelFor("adminPlugins.houseAds").find(
-          (item) => item.id === parseInt(params.ad_id, 10)
-        )
+      const houseAd = this.modelFor("adminPlugins.houseAds").find(
+        (item) => item.id === parseInt(params.ad_id, 10)
       );
+
+      if (houseAd.groups && Array.isArray(houseAd.groups)) {
+        houseAd.groups = houseAd.groups.map((g) => {
+          return g.id;
+        });
+      }
+
+      return new TrackedObject(houseAd);
     }
   }
 }

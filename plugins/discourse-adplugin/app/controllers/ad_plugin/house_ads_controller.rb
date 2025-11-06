@@ -112,6 +112,9 @@ module AdPlugin
           permitted[:visible_to_anons] = ActiveModel::Type::Boolean.new.cast(
             permitted[:visible_to_anons],
           )
+
+          permitted[:group_ids] ||= [] if !params.key?(:group_ids)
+          permitted[:category_ids] ||= [] if !params.key?(:category_ids)
           permitted
         end
     end

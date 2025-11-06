@@ -6,7 +6,6 @@ import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import Preview from "../../../components/modal/preview";
 
@@ -26,10 +25,7 @@ export default class adminPluginsHouseAdsShow extends Controller {
   modelChanged() {
     this.buffered = new TrackedObject({ ...this.model });
     this.selectedCategories = this.model.categories || [];
-    this.selectedGroups =
-      this.model.groups.map((group) => {
-        return group.id;
-      }) || [];
+    this.selectedGroups = this.model.groups || [];
   }
 
   get disabledSave() {
@@ -99,21 +95,24 @@ export default class adminPluginsHouseAdsShow extends Controller {
   setCategoryIds(categoryArray) {
     this.selectedCategories = categoryArray;
     this.buffered.category_ids = categoryArray.map((c) => c.id);
-    this.setCategoriesForBuffered();
+    this.buffered.categories = this.selectedCategories;
   }
 
   @action
-  setGroupIds(groupArray) {
-    this.selectedGroups = groupArray;
-    this.buffered.group_ids = groupArray.map((g) => g.id);
+  setGroupIds(groupIds) {
+    this.selectedGroups = groupIds;
+    this.buffered.groups = groupIds;
+    this.buffered.group_ids = groupIds;
   }
 
   @action
   cancel() {
     this.buffered = new TrackedObject({ ...this.model });
     this.selectedCategories = this.model.categories || [];
-    this.selectedGroups = this.model.group_ids || [];
-    this.setCategoriesForBuffered();
+    this.selectedGroups = this.model.groups || [];
+    this.buffered.categories = this.selectedCategories;
+    this.buffered.groups = this.selectedGroups;
+    this.buffered.group_ids = this.selectedGroups;
   }
 
   @action
@@ -147,15 +146,5 @@ export default class adminPluginsHouseAdsShow extends Controller {
         html: this.buffered.html,
       },
     });
-  }
-
-  setCategoriesForBuffered() {
-    // we need to fetch the categories because the serializer is not being used
-    // to attach the category object to the house ads
-    this.buffered.categories = this.buffered.category_ids
-      ? this.buffered.category_ids.map((categoryId) =>
-          Category.findById(categoryId)
-        )
-      : [];
   }
 }
