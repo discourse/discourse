@@ -168,15 +168,33 @@ module DiscourseAi
         end
 
         def prepare_request(payload)
+          Rails.logger.info("+++++ prepare_request: llm_model.id: #{llm_model.id}")
           headers = { "content-type" => "application/json", "Accept" => "*/*" }
+          role_arn = llm_model.lookup_custom_param("role_arn")
 
           signer =
-            Aws::Sigv4::Signer.new(
-              access_key_id: llm_model.lookup_custom_param("access_key_id"),
-              region: llm_model.lookup_custom_param("region"),
-              secret_access_key: llm_model.api_key,
-              service: "bedrock",
-            )
+            if role_arn
+              Rails.logger.info("+++++ role_arn: #{role_arn}")
+              sts = Aws::STS::Client.new(region: llm_model.lookup_custom_param("region"))
+              assumed =
+                sts.assume_role(role_arn: role_arn, role_session_name: "bedrock-test-session")
+
+              Aws::Sigv4::Signer.new(
+                access_key_id: assumed.credentials.access_key_id,
+                region: llm_model.lookup_custom_param("region"),
+                secret_access_key: assumed.credentials.secret_access_key,
+                session_token: assumed.credentials.session_token,
+                service: "bedrock",
+              )
+            else
+              Rails.logger.info("+++++ no arn")
+              Aws::Sigv4::Signer.new(
+                access_key_id: llm_model.lookup_custom_param("access_key_id"),
+                region: llm_model.lookup_custom_param("region"),
+                secret_access_key: llm_model.api_key,
+                service: "bedrock",
+              )
+            end
 
           Net::HTTP::Post
             .new(model_uri)
