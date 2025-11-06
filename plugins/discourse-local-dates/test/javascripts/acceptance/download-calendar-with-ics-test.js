@@ -66,8 +66,14 @@ END:VCALENDAR`;
         downloadButton.dataset.ics.length > 0,
         "data-ics attribute is not empty"
       );
-      assert.false(downloadButton.dataset.ics.includes("+"), "data-ics uses base64url encoding (no +)");
-      assert.false(downloadButton.dataset.ics.includes("/"), "data-ics uses base64url encoding (no /)");
+      assert.false(
+        downloadButton.dataset.ics.includes("+"),
+        "data-ics uses base64url encoding (no +)"
+      );
+      assert.false(
+        downloadButton.dataset.ics.includes("/"),
+        "data-ics uses base64url encoding (no /)"
+      );
     });
   }
 );

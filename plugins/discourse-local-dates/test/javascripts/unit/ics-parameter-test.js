@@ -27,9 +27,18 @@ END:VCALENDAR`;
       .replace(/=/g, "~");
 
     assert.true(base64url.length > 0, "base64url encoding produces output");
-    assert.false(base64url.includes("+"), "base64url does not contain + character");
-    assert.false(base64url.includes("/"), "base64url does not contain / character");
-    assert.false(base64url.includes("="), "base64url does not contain = character");
+    assert.false(
+      base64url.includes("+"),
+      "base64url does not contain + character"
+    );
+    assert.false(
+      base64url.includes("/"),
+      "base64url does not contain / character"
+    );
+    assert.false(
+      base64url.includes("="),
+      "base64url does not contain = character"
+    );
 
     // Decode base64url back to UTF-8 (same as discourse-local-dates.js)
     const decodedBase64 = base64url
@@ -92,14 +101,8 @@ END:VCALENDAR`;
       testIcsData,
       "UTF-8 characters are preserved through encoding/decoding"
     );
-    assert.true(
-      decodedIcsData.includes("??"),
-      "emoji in title is preserved"
-    );
-    assert.true(
-      decodedIcsData.includes("?"),
-      "emoji in location is preserved"
-    );
+    assert.true(decodedIcsData.includes("??"), "emoji in title is preserved");
+    assert.true(decodedIcsData.includes("?"), "emoji in location is preserved");
     assert.true(
       decodedIcsData.includes("?mojis"),
       "accented characters are preserved"
@@ -125,7 +128,11 @@ END:VCALENDAR`;
     testCases.forEach((testCase) => {
       const summaryMatch = testCase.ics.match(/SUMMARY:(.+?)[\r\n]/);
       const title = summaryMatch ? summaryMatch[1].trim() : "event";
-      assert.strictEqual(title, testCase.expected, `extracts "${testCase.expected}"`);
+      assert.strictEqual(
+        title,
+        testCase.expected,
+        `extracts "${testCase.expected}"`
+      );
     });
   });
 

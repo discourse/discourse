@@ -37,10 +37,10 @@ function addLocalDate(attributes, state, buffer, applyDataAttributes) {
 
   let token = new state.Token("span_open", "span", 1);
   token.attrs = [["class", "discourse-local-date"]];
-  
+
   // applyDataAttributes will handle all data-* attributes including data-ics
   applyDataAttributes(token, attributes, "date");
-  
+
   buffer.push(token);
 
   token = new state.Token("text", "", 0);

@@ -72,7 +72,10 @@ module("Unit | Discourse Calendar | ICS Generation", function () {
 
     const icsData = generateIcsData(title, dates, options);
 
-    assert.true(icsData.includes("RRULE:FREQ=WEEKLY;BYDAY=MO"), "includes rrule");
+    assert.true(
+      icsData.includes("RRULE:FREQ=WEEKLY;BYDAY=MO"),
+      "includes rrule"
+    );
   });
 
   test("handles multiple dates", function (assert) {
@@ -139,9 +142,18 @@ module("Unit | Discourse Calendar | ICS Generation", function () {
       .replace(/\//g, "_")
       .replace(/=/g, "~");
 
-    assert.false(base64url.includes("+"), "base64url encoding replaces + with -");
-    assert.false(base64url.includes("/"), "base64url encoding replaces / with _");
-    assert.false(base64url.includes("="), "base64url encoding replaces = with ~");
+    assert.false(
+      base64url.includes("+"),
+      "base64url encoding replaces + with -"
+    );
+    assert.false(
+      base64url.includes("/"),
+      "base64url encoding replaces / with _"
+    );
+    assert.false(
+      base64url.includes("="),
+      "base64url encoding replaces = with ~"
+    );
     assert.true(base64url.length > 0, "produces non-empty output");
   });
 });
