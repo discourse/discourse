@@ -523,10 +523,22 @@
         }
       }
     }
+
+    &__raw-toggle {
+      padding-left: 0.5rem;
+      margin-left: 0.5rem;
+      border-left: 1px solid var(--primary-low);
+    }
   }
 
   .d-editor-translation-preview-content {
     padding-inline: var(--translation-preview-padding, 1rem);
+    overflow: hidden;
+
+    img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
+      max-width: 100%;
+      height: auto;
+    }
   }
 
   .d-editor-translation-preview-empty {
@@ -534,5 +546,13 @@
     font-style: italic;
     padding: 2rem 0;
     text-align: center;
+  }
+
+  .d-editor-translation-preview-raw {
+    font-family: var(--d-font-family--monospace);
+    font-size: var(--font-down-1);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-x: auto;
   }
 }
