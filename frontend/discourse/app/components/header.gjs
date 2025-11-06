@@ -264,7 +264,10 @@ export default class GlimmerHeader extends Component {
               {{this.handleFocus}}
               {{closeOnClickOutside
                 this.toggleSearchMenu
-                (hash targetSelector=".search-menu-panel")
+                (hash
+                  targetSelector=".search-menu-panel"
+                  secondaryTargetSelector=".search-dropdown"
+                )
               }}
               @closeSearchMenu={{this.toggleSearchMenu}}
               @searchInputId="icon-search-input"
