@@ -11,6 +11,10 @@ export default class BlockLayout extends Component {
   get blocks() {
     const blocks = blockConfigs.get(this.args.name);
 
+    if (!blocks) {
+      return [];
+    }
+
     const resolvedBlocks = [];
 
     for (const block of blocks) {
