@@ -13,7 +13,7 @@ export default class PostEventUpcomingEventsDefaultIndexRoute extends DiscourseR
 
     this.router?.replaceWith?.(
       "discourse-post-event-upcoming-events.index",
-      "month",
+      "week",
       year,
       month,
       day
