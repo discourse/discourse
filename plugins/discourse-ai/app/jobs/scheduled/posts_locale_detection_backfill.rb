@@ -32,6 +32,8 @@ module Jobs
 
       posts.each do |post|
         begin
+          next if !DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, "")
+
           DiscourseAi::Translation::PostLocaleDetector.detect_locale(post)
         rescue FinalDestination::SSRFDetector::LookupFailedError
           # do nothing, there are too many sporadic lookup failures
