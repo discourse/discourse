@@ -323,6 +323,7 @@ ro:
     back_button: "Înapoi"
     welcome_banner:
       header:
+        new_members: "Bine ai venit, %{preferred_display_name}!"
         logged_in_members: "Bine ai revenit, %{preferred_display_name}!"
         anonymous_members: "Bine ai venit pe %{site_name}!"
       search_placeholder: "Caută"
@@ -826,6 +827,7 @@ ro:
           noun: "postare"
       flagged_as: "Semnalat ca"
       post_flagged_as: "Postare semnalată ca"
+      chat_flagged_as: "Discuție semnalată ca"
       queued_post_label: "Postare în coadă"
       user_label: "Utilizator"
       assigned_to: "Atribuit la"
@@ -2200,6 +2202,10 @@ ro:
         select: "Selectează traducere"
         save: "Salvează traducere"
         original_content: "Conținut postare originală"
+        translation_preview: "Previzualizare traducere"
+        original: "Original"
+        translation: "Traducere"
+        no_translation_yet: "Începe să tastezi pentru a vedea previzualizarea traducerii..."
         placeholder: "Introdu aici traducerea pentru postare..."
       group_mentioned:
         one: "Menționând %{group} va notifica <a href='%{group_link}'>%{count} persoană</a>."
@@ -2227,7 +2233,6 @@ ro:
       reply: "Răspunde"
       cancel: "Anulează"
       create_topic: "Creează un subiect"
-      create_pm: "Trimite mesaj"
       create_whisper: "Șoaptă"
       create_shared_draft: "Creează ciornă partajată"
       save_and_close: "Salvează și închide"
