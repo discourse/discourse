@@ -7,6 +7,11 @@ import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { i18n } from "discourse-i18n";
 
 export default class Dropdown extends Component {
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.args.onWillDestroy?.();
+  }
+
   @action
   click(e) {
     if (wantsNewWindow(e)) {

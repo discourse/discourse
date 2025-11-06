@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
@@ -110,6 +111,7 @@ export default class Icons extends Component {
               @icon="magnifying-glass"
               @iconId={{@searchButtonId}}
               @onClick={{@toggleSearchMenu}}
+              @onWillDestroy={{fn @toggleSearchMenu null false}}
               @active={{this.search.visible}}
               @href={{getURL "/search"}}
               class="search-dropdown"

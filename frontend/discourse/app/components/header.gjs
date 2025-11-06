@@ -147,7 +147,18 @@ export default class GlimmerHeader extends Component {
   }
 
   @action
-  toggleSearchMenu() {
+  toggleSearchMenu(_, value) {
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    if (
+      (value === true && this.search.visible) ||
+      (value === false && !this.search.visible)
+    ) {
+      return;
+    }
+
     if (this.site.mobileView) {
       const context = this.search.searchContext;
       let params = "";
@@ -164,7 +175,7 @@ export default class GlimmerHeader extends Component {
       }
     }
 
-    this.search.visible = !this.search.visible;
+    this.search.visible = value ?? !this.search.visible;
     if (!this.search.visible) {
       this.search.highlightTerm = "";
       this.search.inTopicContext = false;
