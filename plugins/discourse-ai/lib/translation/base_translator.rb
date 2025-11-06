@@ -68,8 +68,8 @@ module DiscourseAi
       end
 
       def max_token_multiplier
-        multipler = SiteSetting.ai_translation_max_tokens_multiplier
-        multipler > 0 ? multipler : 1.0
+        multiplier = SiteSetting.ai_translation_max_tokens_multiplier
+        multiplier > 0 ? multiplier : 1.0
       end
 
       def persona_setting
