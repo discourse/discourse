@@ -18,7 +18,7 @@ export default class AdminBackupsLogsRoute extends DiscourseRoute {
             return log.message.length > 0 && log.message[0] !== "[";
           })
           .map((log) => EmberObject.create(log));
-        logs.pushObjects(newLogs);
+        logs.push(...newLogs);
       }
     });
   }

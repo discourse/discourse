@@ -223,7 +223,11 @@ export function trackedArray(target, key, desc) {
     };
   }
 
-  const { get, set } = tracked(target, key, desc);
+  const { get, set } = tracked(target, key, {
+    ...desc,
+    enumerable: true,
+    configurable: true,
+  });
 
   return {
     get() {
@@ -232,5 +236,7 @@ export function trackedArray(target, key, desc) {
     set(value) {
       set.call(this, ensureTrackedArray(value));
     },
+    enumerable: true,
+    configurable: true,
   };
 }

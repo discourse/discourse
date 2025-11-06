@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import routeAction from "discourse/helpers/route-action";
 import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import { registerWidgetShim } from "discourse/widgets/render-glimmer";
 import { i18n } from "discourse-i18n";
 import PostVotingAnswerButton from "../components/post-voting-answer-button";
@@ -38,8 +39,15 @@ function initPlugin(api, container) {
 }
 
 function customizePost(api) {
+  api.modifyClass(
+    "model:post",
+    (Superclass) =>
+      class extends Superclass {
+        @trackedArray comments;
+      }
+  );
+
   api.addTrackedPostProperties(
-    "comments",
     "comments_count",
     "post_voting_user_voted_direction",
     "post_voting_has_votes"

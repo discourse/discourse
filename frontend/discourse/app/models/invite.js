@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { isNone } from "@ember/utils";
-import { Promise } from "rsvp";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
@@ -18,9 +18,9 @@ export default class Invite extends EmberObject {
     return result;
   }
 
-  static findInvitedBy(user, filter, search, offset) {
+  static async findInvitedBy(user, filter, search, offset) {
     if (!user) {
-      Promise.resolve();
+      return;
     }
 
     const data = {};
@@ -32,12 +32,15 @@ export default class Invite extends EmberObject {
     }
     data.offset = offset || 0;
 
-    return ajax(userPath(`${user.username_lower}/invited.json`), {
+    const result = await ajax(userPath(`${user.username_lower}/invited.json`), {
       data,
-    }).then((result) => {
-      result.invites = result.invites.map((i) => Invite.create(i));
-      return EmberObject.create(result);
     });
+
+    result.invites = new TrackedArray(
+      result.invites.map((i) => Invite.create(i))
+    );
+
+    return EmberObject.create(result);
   }
 
   static reinviteAll() {

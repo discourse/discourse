@@ -4,9 +4,9 @@ import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
@@ -37,6 +37,9 @@ export default class Group extends RestModel {
     return ajax("/groups/check-name", { data: { group_name: name } });
   }
 
+  @trackedArray members = [];
+  @trackedArray requesters = [];
+
   user_count = 0;
   limit = null;
   offset = null;
@@ -45,11 +48,6 @@ export default class Group extends RestModel {
   requestersOffset = null;
 
   @equal("mentionable_level", 99) canEveryoneMention;
-
-  init() {
-    super.init(...arguments);
-    this.setProperties({ members: [], requesters: [] });
-  }
 
   @discourseComputed("automatic_membership_email_domains")
   emailDomains(value) {
@@ -72,21 +70,17 @@ export default class Group extends RestModel {
     }
 
     if (refresh) {
-      this.setProperties({ limit: null, offset: null });
+      this.setProperties({ limit: null, offset: null, members: [] });
     }
 
-    params = Object.assign(
-      { offset: (this.offset || 0) + (this.limit || 0) },
-      params
-    );
+    params = { offset: (this.offset || 0) + (this.limit || 0), ...params };
 
     const response = await Group.loadMembers(this.name, params);
     const ownerIds = new Set();
     response.owners.forEach((owner) => ownerIds.add(owner.id));
 
-    const members = refresh ? [] : this.members;
-    members.pushObjects(
-      response.members.map((member) => {
+    this.members.push(
+      ...response.members.map((member) => {
         member.owner = ownerIds.has(member.id);
         member.primary = member.primary_group_name === this.name;
         return User.create(member);
@@ -94,40 +88,38 @@ export default class Group extends RestModel {
     );
 
     this.setProperties({
-      members,
       user_count: response.meta.total,
       limit: response.meta.limit,
       offset: response.meta.offset,
     });
   }
 
-  findRequesters(params, refresh) {
+  async findRequesters(params, refresh) {
     if (isEmpty(this.name) || !this.can_see_members) {
-      return Promise.reject();
+      throw new Error();
     }
 
     if (refresh) {
-      this.setProperties({ requestersOffset: null, requestersLimit: null });
+      this.setProperties({
+        requesters: [],
+        requestersOffset: null,
+        requestersLimit: null,
+      });
     }
 
-    params = Object.assign(
-      {
-        offset: (this.requestersOffset || 0) + (this.requestersLimit || 0),
-        requesters: true,
-      },
-      params
-    );
+    params = {
+      offset: (this.requestersOffset || 0) + (this.requestersLimit || 0),
+      requesters: true,
+      ...params,
+    };
 
-    return Group.loadMembers(this.name, params).then((result) => {
-      const requesters = refresh ? [] : this.requesters;
-      requesters.pushObjects(result.members.map((m) => User.create(m)));
+    const result = await Group.loadMembers(this.name, params);
+    this.requesters.push(...result.members.map((m) => User.create(m)));
 
-      this.setProperties({
-        requesters,
-        request_count: result.meta.total,
-        requestersLimit: result.meta.limit,
-        requestersOffset: result.meta.offset,
-      });
+    this.setProperties({
+      request_count: result.meta.total,
+      requestersLimit: result.meta.limit,
+      requestersOffset: result.meta.offset,
     });
   }
 
