@@ -22,6 +22,8 @@ module TopicsHelper
   end
 
   def localize_topic_view_content(topic_view)
+    return if cookies.key?(ContentLocalization::SHOW_ORIGINAL_COOKIE)
+
     crawl_locale = params[Discourse::LOCALE_PARAM].presence || SiteSetting.default_locale
 
     LocalizationAttributesReplacer.replace_topic_attributes(topic_view.topic, crawl_locale)

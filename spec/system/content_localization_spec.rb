@@ -192,6 +192,63 @@ describe "Content Localization" do
         expect(post_history_modal.previous_locale).to have_content("English (US)")
       end
     end
+
+    context "when loading 20+ posts in stream", trace: true do
+      before do
+        highest = topic.highest_post_number
+        22.times do |i|
+          post_number = i + highest + 1
+          post =
+            Fabricate(
+              :post,
+              topic: topic,
+              locale: "ja",
+              raw: "Japanese content for post #{post_number}",
+              cooked: "<p>日本語コンテンツ #{post_number}</p>",
+            )
+
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "en",
+            cooked: "<p>English translation #{post_number}</p>",
+          )
+        end
+      end
+
+      let(:post_21_obj) { PageObjects::Components::Post.new(21) }
+
+      it "respects the show_original toggle for posts loaded dynamically when scrolling (20+ posts)" do
+        sign_in(site_local_user)
+        visit("/")
+
+        topic_page.visit_topic(topic)
+
+        expect(post_3_obj.post).to have_content("A general is one who ..")
+        expect(topic_page).to have_post_content(post_number: 3, content: "A general is one who ..")
+
+        5.times do
+          break if page.has_css?("#post_21 .cooked", visible: :all, wait: 0)
+          page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        end
+
+        expect(page).to have_css("#post_21")
+        expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
+
+        page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+        expect(post_3_obj.post).to have_content("将とは、智・信・仁・勇・厳なり。")
+
+        5.times do
+          break if page.has_css?("#post_21 .cooked", visible: :all, wait: 0)
+          page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+        end
+
+        expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
+
+        page.refresh
+        expect(post_3_obj.post).to have_content("将とは、智・信・仁・勇・厳なり。")
+      end
+    end
   end
 
   context "for site settings" do
