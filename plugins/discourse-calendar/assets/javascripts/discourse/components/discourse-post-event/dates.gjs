@@ -6,6 +6,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import { generateIcsData } from "discourse/lib/download-calendar";
 import discourseLater from "discourse/lib/later";
 import loadRRule from "discourse/lib/load-rrule";
 import { applyLocalDates } from "discourse/lib/local-dates";
@@ -104,6 +105,44 @@ export default class DiscoursePostEventDates extends Component {
     return date.hour() || date.minute();
   }
 
+  generateIcsForEvent() {
+    const event = this.args.event;
+    if (!event || !this.startsAt) {
+      return null;
+    }
+
+    try {
+      const title = event.name || event.post?.topic?.title || "Event";
+      const startsAt = this.startsAt.toISOString();
+      const endsAt = this.endsAt
+        ? this.endsAt.toISOString()
+        : moment(this.startsAt).add(1, "hours").toISOString();
+
+      const dates = [{ startsAt, endsAt }];
+      const options = {};
+
+      // Add recurrence rule if present
+      if (event.rrule) {
+        options.rrule = event.rrule;
+      }
+
+      // Add location if present
+      if (event.location) {
+        options.location = event.location;
+      }
+
+      // Add description if present
+      if (event.description) {
+        options.details = event.description;
+      }
+
+      // Use the existing generateIcsData function
+      return generateIcsData(title, dates, options);
+    } catch {
+      return null;
+    }
+  }
+
   buildDateBBCode({ date, format, range }) {
     const bbcode = {
       date: date.format("YYYY-MM-DD"),
@@ -119,6 +158,29 @@ export default class DiscoursePostEventDates extends Component {
 
     if (range) {
       bbcode.range = range;
+    }
+
+    // Generate ICS data from the event and encode it
+    // Use base64url encoding to avoid issues with BBCode special characters
+    const icsData = this.generateIcsForEvent();
+    if (icsData) {
+      try {
+        // Encode UTF-8 string to base64 (handles emoji and special characters)
+        const utf8Bytes = new TextEncoder().encode(icsData);
+        const binaryString = Array.from(utf8Bytes, (byte) =>
+          String.fromCharCode(byte)
+        ).join("");
+        const base64 = btoa(binaryString);
+
+        // Base64url encoding: replace +/= with -_~ to avoid BBCode issues
+        const base64url = base64
+          .replace(/\+/g, "-")
+          .replace(/\//g, "_")
+          .replace(/=/g, "~");
+        bbcode.ics = base64url;
+      } catch {
+        // Silently fail if encoding fails
+      }
     }
 
     const content = Object.entries(bbcode)

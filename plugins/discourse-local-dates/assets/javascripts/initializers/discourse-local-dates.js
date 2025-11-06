@@ -316,6 +316,12 @@ function _downloadCalendarNode(element) {
     node.setAttribute("data-ends-at", startDate.add(24, "hours").toISOString());
   }
   node.setAttribute("data-title", startDataset.title);
+
+  // If ics data is available, pass it to the download button
+  if (startDataset.ics) {
+    node.setAttribute("data-ics", startDataset.ics);
+  }
+
   return node;
 }
 
@@ -353,12 +359,56 @@ class LocalDatesInit {
   showDatePopover(event) {
     if (event?.target?.classList?.contains("download-calendar")) {
       const dataset = event.target.dataset;
-      downloadCalendar(dataset.title, [
-        {
-          startsAt: dataset.startsAt,
-          endsAt: dataset.endsAt,
-        },
-      ]);
+      
+      // If ics data is provided, use it directly instead of generating
+      if (dataset.ics) {
+        // Decode base64url: reverse the -_~ encoding back to +/=
+        const base64 = dataset.ics
+          .replace(/-/g, "+")
+          .replace(/_/g, "/")
+          .replace(/~/g, "=");
+        
+        // Decode base64 to UTF-8 string (handles emoji and special characters)
+        const binaryString = atob(base64);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        const icsData = new TextDecoder().decode(bytes);
+        
+        // Extract event title from ICS SUMMARY field for filename
+        let title = dataset.title || "event";
+        const summaryMatch = icsData.match(/SUMMARY:(.+?)[\r\n]/);
+        if (summaryMatch && summaryMatch[1]) {
+          title = summaryMatch[1].trim();
+        }
+        
+        const file = new File([icsData], { type: "text/plain" });
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.style = "display: none";
+        a.href = window.URL.createObjectURL(file);
+        // Clean up filename: lowercase, replace non-word chars with dash, limit length
+        const cleanTitle = title
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, "")
+          .replace(/[\s_]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+          .substring(0, 50);
+        a.download = `${cleanTitle || "event"}.ics`;
+        a.click();
+        setTimeout(() => {
+          window.URL.revokeObjectURL(file);
+          document.body.removeChild(a);
+        }, 20000);
+      } else {
+        downloadCalendar(dataset.title, [
+          {
+            startsAt: dataset.startsAt,
+            endsAt: dataset.endsAt,
+          },
+        ]);
+      }
 
       return this.tooltip.close("local-date");
     }
