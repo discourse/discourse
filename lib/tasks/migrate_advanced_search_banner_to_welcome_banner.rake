@@ -1,11 +1,8 @@
 # frozen_string_literal: true
+# rubocop:disable Lint/OrAssignmentToConstant
 
-THEME_GIT_URL = "https://github.com/discourse/discourse-search-banner.git" unless defined?(
-  THEME_GIT_URL
-)
-REQUIRED_TRANSLATION_KEYS = %w[search_banner.headline search_banner.subhead] unless defined?(
-  REQUIRED_TRANSLATION_KEYS
-)
+THEME_GIT_URL ||= "https://github.com/discourse/discourse-search-banner.git"
+REQUIRED_TRANSLATION_KEYS ||= %w[search_banner.headline search_banner.subhead]
 
 desc "Migrate settings from Advanced Search Banner to core welcome banner"
 task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
