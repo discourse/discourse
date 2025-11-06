@@ -93,7 +93,7 @@ export default class AdminUserFieldsForm extends Component {
       this.originalRequirement = data.requirement;
 
       if (isNew) {
-        this.adminUserFields.userFields.pushObject(this.args.userField);
+        this.adminUserFields.userFields.push(this.args.userField);
       }
 
       this.router.transitionTo("adminUserFields.index");
