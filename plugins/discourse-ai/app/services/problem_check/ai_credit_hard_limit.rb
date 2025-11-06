@@ -16,6 +16,7 @@ class ProblemCheck::AiCreditHardLimit < ProblemCheck
         next unless model.llm_credit_allocation
 
         allocation = model.llm_credit_allocation
+        allocation.reset_if_needed!
 
         problems << hard_limit_problem(model, allocation) if allocation.hard_limit_reached?
       end

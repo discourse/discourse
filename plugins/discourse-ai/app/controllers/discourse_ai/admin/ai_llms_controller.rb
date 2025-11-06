@@ -318,7 +318,9 @@ module DiscourseAi
         return unless llm_model.seeded? && params[:ai_llm].key?(:llm_credit_allocation)
 
         if credit_allocation_params
-          allocation = llm_model.llm_credit_allocation || llm_model.build_llm_credit_allocation
+          allocation =
+            llm_model.llm_credit_allocation ||
+              llm_model.build_llm_credit_allocation(last_reset_at: Time.current)
           allocation.update!(credit_allocation_params)
         elsif llm_model.llm_credit_allocation
           llm_model.llm_credit_allocation.destroy
