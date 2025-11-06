@@ -58,17 +58,18 @@ RSpec.describe ProblemCheck::AiCreditHardLimit do
       expect(problems.first.identifier).to eq(:ai_credit_hard_limit)
     end
 
-    it "resets credits before checking if needed" do
+    it "does not report problem when previous month exceeded limit but current month is new" do
+      freeze_time(Time.zone.parse("2025-10-15 14:30:00"))
       allocation =
         Fabricate(
           :llm_credit_allocation,
           llm_model: llm_model,
           monthly_credits: 1000,
           monthly_used: 1000,
-          last_reset_at: 2.months.ago,
           soft_limit_percentage: 80,
         )
 
+      freeze_time(Time.zone.parse("2025-11-05 10:00:00"))
       problems = described_class.new.call
 
       expect(problems).to be_empty
