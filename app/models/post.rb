@@ -1086,6 +1086,12 @@ class Post < ActiveRecord::Base
     locked_by_id.present?
   end
 
+  def update_uploads_secure_status(source:)
+    if Discourse.store.external?
+      self.uploads.each { |upload| upload.update_secure_status(source: source) }
+    end
+  end
+
   private
 
   def access_control_post_id_for_upload
@@ -1098,12 +1104,6 @@ class Post < ActiveRecord::Base
       extra_sizes =
         ThemeModifierHelper.new(theme_ids: Theme.user_selectable.pluck(:id)).topic_thumbnail_sizes
       self.topic.generate_thumbnails!(extra_sizes: extra_sizes)
-    end
-  end
-
-  def update_uploads_secure_status(source:)
-    if Discourse.store.external?
-      self.uploads.each { |upload| upload.update_secure_status(source: source) }
     end
   end
 
