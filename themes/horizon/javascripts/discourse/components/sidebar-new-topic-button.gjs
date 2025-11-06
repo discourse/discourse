@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -7,6 +8,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { gt } from "truth-helpers";
 import CreateTopicButton from "discourse/components/create-topic-button";
+import bodyClass from "discourse/helpers/body-class";
 
 export default class SidebarNewTopicButton extends Component {
   @service composer;
@@ -15,12 +17,17 @@ export default class SidebarNewTopicButton extends Component {
   @service router;
   @service header;
   @service appEvents;
+  @controller application;
 
   @tracked category;
   @tracked tag;
 
   get shouldRender() {
-    return this.currentUser && !this.router.currentRouteName.includes("admin");
+    return (
+      this.currentUser &&
+      !this.router.currentRouteName.includes("admin") &&
+      this.application.sidebarEnabled
+    );
   }
 
   get canCreateTopic() {
@@ -76,6 +83,7 @@ export default class SidebarNewTopicButton extends Component {
 
   <template>
     {{#if this.shouldRender}}
+      {{bodyClass "horizon-new-topic-button-enabled"}}
       <div
         class="sidebar-new-topic-button__wrapper"
         {{didInsert this.getCategoryAndTag}}
