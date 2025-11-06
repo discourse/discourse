@@ -55,13 +55,21 @@ module DiscourseAi
       end
 
       def get_max_tokens(text)
-        if text.length < 100
-          500
-        elsif text.length < 500
-          1000
-        else
-          text.length * 2
-        end
+        base_tokens =
+          if text.length < 100
+            500
+          elsif text.length < 500
+            1000
+          else
+            text.length * 2
+          end
+
+        (base_tokens * max_token_multiplier).to_i
+      end
+
+      def max_token_multiplier
+        multiplier = SiteSetting.ai_translation_max_tokens_multiplier
+        multiplier > 0 ? multiplier : 1.0
       end
 
       def persona_setting

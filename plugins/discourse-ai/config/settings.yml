@@ -513,6 +513,12 @@ discourse_ai:
     max: 20000
     client: false
     area: "ai-features/translation"
+  ai_translation_max_tokens_multiplier:
+    default: 1.0
+    type: float
+    min: 1.0
+    max: 10.0
+    area: "ai-features/translation"
   ai_translation_verbose_logs:
     default: false
     client: false
