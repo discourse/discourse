@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
@@ -10,6 +11,7 @@ import DAG from "discourse/lib/dag";
 import scrollLock from "discourse/lib/scroll-lock";
 import { scrollTop } from "discourse/lib/scroll-top";
 import DiscourseURL from "discourse/lib/url";
+import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
 import AuthButtons from "./header/auth-buttons";
 import Contents from "./header/contents";
 import HamburgerDropdownWrapper from "./header/hamburger-dropdown-wrapper";
@@ -259,8 +261,12 @@ export default class GlimmerHeader extends Component {
 
           {{#if this.search.visible}}
             <SearchMenuWrapper
-              @closeSearchMenu={{this.toggleSearchMenu}}
               {{this.handleFocus}}
+              {{closeOnClickOutside
+                this.toggleSearchMenu
+                (hash targetSelector=".search-menu-panel")
+              }}
+              @closeSearchMenu={{this.toggleSearchMenu}}
               @searchInputId="icon-search-input"
             />
           {{else if this.header.hamburgerVisible}}

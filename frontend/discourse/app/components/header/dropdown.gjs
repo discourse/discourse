@@ -1,13 +1,10 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { i18n } from "discourse-i18n";
-import closeOnClickOutside from "../../modifiers/close-on-click-outside";
 
 export default class Dropdown extends Component {
   @action
@@ -26,12 +23,6 @@ export default class Dropdown extends Component {
 
   <template>
     <li
-      {{(if
-        (and @active @targetSelector)
-        (modifier
-          closeOnClickOutside @onClick (hash targetSelector=@targetSelector)
-        )
-      )}}
       class={{concatClass (if @active "active") "header-dropdown-toggle"}}
       ...attributes
     >

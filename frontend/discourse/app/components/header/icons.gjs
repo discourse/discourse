@@ -112,7 +112,6 @@ export default class Icons extends Component {
               @onClick={{@toggleSearchMenu}}
               @active={{this.search.visible}}
               @href={{getURL "/search"}}
-              @targetSelector=".search-menu-panel"
               class="search-dropdown"
             />
           {{/if}}
