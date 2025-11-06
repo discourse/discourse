@@ -34,6 +34,7 @@ class LlmModel < ActiveRecord::Base
     {
       aws_bedrock: {
         access_key_id: :text,
+        role_arn: :text,
         region: :text,
         disable_native_tools: :checkbox,
         disable_temperature: :checkbox,
