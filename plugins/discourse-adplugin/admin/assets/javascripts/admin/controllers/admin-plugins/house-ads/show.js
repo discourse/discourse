@@ -26,14 +26,11 @@ export default class adminPluginsHouseAdsShow extends Controller {
     this.buffered = new TrackedObject({ ...this.model });
     this.selectedCategories = this.model.categories || [];
     this.selectedGroups = this.model.groups || [];
-    this.buffered.category_ids = this.selectedCategories;
-    this.buffered.group_ids = this.selectedGroups;
   }
 
   get disabledSave() {
     for (const key in this.buffered) {
-      // we don't want to compare the categories array
-      if (key !== "categories" && this.buffered[key] !== this.model[key]) {
+      if (this.buffered[key] !== this.model[key]) {
         return false;
       }
     }
@@ -55,8 +52,8 @@ export default class adminPluginsHouseAdsShow extends Controller {
       data.visible_to_logged_in_users =
         this.buffered.visible_to_logged_in_users;
       data.visible_to_anons = this.buffered.visible_to_anons;
-      data.category_ids = this.buffered.category_ids;
-      data.group_ids = this.buffered.group_ids;
+      data.category_ids = this.buffered.categories.map((c) => c.id);
+      data.group_ids = this.buffered.groups.map((g) => g.id);
       try {
         const ajaxData = await ajax(
           newRecord
@@ -96,7 +93,6 @@ export default class adminPluginsHouseAdsShow extends Controller {
   @action
   setCategoryIds(categoryArray) {
     this.selectedCategories = categoryArray;
-    this.buffered.category_ids = categoryArray.map((c) => c.id);
     this.buffered.categories = this.selectedCategories;
   }
 
@@ -104,7 +100,6 @@ export default class adminPluginsHouseAdsShow extends Controller {
   setGroupIds(groupIds) {
     this.selectedGroups = groupIds;
     this.buffered.groups = groupIds;
-    this.buffered.group_ids = groupIds;
   }
 
   @action
@@ -114,7 +109,6 @@ export default class adminPluginsHouseAdsShow extends Controller {
     this.selectedGroups = this.model.groups || [];
     this.buffered.categories = this.selectedCategories;
     this.buffered.groups = this.selectedGroups;
-    this.buffered.group_ids = this.selectedGroups;
   }
 
   @action
