@@ -1,6 +1,6 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DialogHolder from "dialog-holder/components/dialog-holder";
-import { and, eq } from "truth-helpers";
+import { eq } from "truth-helpers";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
 import CardContainer from "discourse/components/card-container";
@@ -22,7 +22,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import PoweredByDiscourse from "discourse/components/powered-by-discourse";
 import PwaInstallBanner from "discourse/components/pwa-install-banner";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
-import Sidebar from "discourse/components/sidebar";
+import SidebarWrapper from "discourse/components/sidebar-wrapper";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
 import TopicEntrance from "discourse/components/topic-entrance";
 import WelcomeBanner from "discourse/components/welcome-banner";
@@ -84,12 +84,12 @@ export default <template>
     />
 
     <div id="main-outlet-wrapper" class="wrap" role="main">
-      <div class="sidebar-wrapper">
-        {{! empty div allows for animation }}
-        {{#if (and @controller.sidebarEnabled @controller.showSidebar)}}
-          <Sidebar @toggleSidebar={{@controller.toggleSidebar}} />
-        {{/if}}
-      </div>
+      {{#if @controller.sidebarEnabled}}
+        <SidebarWrapper
+          @showSidebar={{@controller.showSidebar}}
+          @toggleSidebar={{@controller.toggleSidebar}}
+        />
+      {{/if}}
 
       <LoadingSliderFallbackSpinner />
 
