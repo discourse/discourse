@@ -3316,4 +3316,77 @@ RSpec.describe Search do
     # no op on anon - all included
     expect(result.posts.map(&:id).length).to eq(3)
   end
+
+  describe "locale: filter" do
+    fab!(:en_post) { Fabricate(:post, raw: "Hello world", locale: "en") }
+    fab!(:en_us_post) { Fabricate(:post, raw: "American English", locale: "en_US") }
+    fab!(:ja_post) { Fabricate(:post, raw: "こんにちは世界", locale: "ja") }
+    fab!(:fr_post) { Fabricate(:post, raw: "Bonjour le monde", locale: "fr") }
+    fab!(:no_locale_post) { Fabricate(:post, raw: "Post without locale", locale: nil) }
+
+    before do
+      SearchIndexer.enable
+      [en_post, en_us_post, ja_post, fr_post, no_locale_post].each do |p|
+        SearchIndexer.index(p.topic, force: true)
+      end
+    end
+
+    it "filters posts by exact locale" do
+      results = Search.execute("locale:ja")
+      expect(results.posts.map(&:id)).to contain_exactly(ja_post.id)
+    end
+
+    it "filters posts by locale base (matches regional variants)" do
+      results = Search.execute("locale:en")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id, en_us_post.id)
+    end
+
+    it "is case insensitive" do
+      results = Search.execute("locale:EN")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id, en_us_post.id)
+    end
+
+    it "handles dashes and underscores" do
+      results = Search.execute("locale:en-US")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id, en_us_post.id)
+    end
+
+    it "returns no results for non-existent locale" do
+      results = Search.execute("locale:xx")
+      expect(results.posts).to be_empty
+    end
+
+    it "filters posts with locale:none" do
+      results = Search.execute("locale:none")
+      expect(results.posts.map(&:id)).to contain_exactly(no_locale_post.id)
+    end
+
+    it "filters posts with locale:null" do
+      results = Search.execute("locale:null")
+      expect(results.posts.map(&:id)).to contain_exactly(no_locale_post.id)
+    end
+
+    it "filters posts with locale:any" do
+      results = Search.execute("locale:any")
+      expect(results.posts.map(&:id)).to contain_exactly(
+        en_post.id,
+        en_us_post.id,
+        ja_post.id,
+        fr_post.id,
+      )
+    end
+
+    it "can combine with other search terms" do
+      results = Search.execute("world locale:en")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id)
+    end
+
+    it "can combine with multiple filters" do
+      en_post.update!(wiki: true)
+      SearchIndexer.index(en_post.topic, force: true)
+
+      results = Search.execute("locale:en in:wiki")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id)
+    end
+  end
 end
