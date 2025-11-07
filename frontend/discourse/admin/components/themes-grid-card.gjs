@@ -227,7 +227,7 @@ export default class ThemeCard extends Component {
               @translatedLabel={{i18n "admin.customize.theme.edit"}}
               @route="adminCustomizeThemes.show"
               @routeModels={{this.themeRouteModels}}
-              class="btn-secondary theme-card__button edit"
+              class="btn-default theme-card__button edit"
               @preventFocus={{true}}
             />
 
