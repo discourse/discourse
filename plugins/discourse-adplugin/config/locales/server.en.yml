@@ -1,4 +1,11 @@
 en:
+  reports:
+    house_ads_performance:
+      title: House Ads performance report
+      description: "House Ads impressions"
+    ad_impressions:
+      title: Adplugin performance report
+      description: "Ads impressions"
   site_settings:
     discourse_adplugin_enabled: Enable the discourse-adplugin.
 
