@@ -153,10 +153,6 @@ class ProblemCheck
     targets.call.each(&)
   end
 
-  def self.run(target = NO_TARGET, &)
-    new(target).run(&)
-  end
-
   def initialize(target = NO_TARGET)
     @target = target
   end

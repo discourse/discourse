@@ -18,9 +18,9 @@ module Jobs
 
       check = ProblemCheck[identifier]
 
-      check.run(target) do |problem|
-        raise RetrySignal if problem.present? && retry_count < check.max_retries
-      end
+      check
+        .new(target)
+        .run { |problem| raise RetrySignal if problem.present? && retry_count < check.max_retries }
     rescue RetrySignal
       Jobs.enqueue_in(
         check.retry_after,

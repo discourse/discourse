@@ -137,11 +137,11 @@ RSpec.describe ProblemCheck do
 
   describe "#run" do
     context "when check is failing" do
-      it { expect { failing_check.run }.to change { ProblemCheckTracker.failing.count }.by(1) }
+      it { expect { failing_check.new.run }.to change { ProblemCheckTracker.failing.count }.by(1) }
     end
 
     context "when check is passing" do
-      it { expect { passing_check.run }.to change { ProblemCheckTracker.passing.count }.by(1) }
+      it { expect { passing_check.new.run }.to change { ProblemCheckTracker.passing.count }.by(1) }
     end
 
     context "when targeted check has a no-target tracker" do
@@ -153,7 +153,7 @@ RSpec.describe ProblemCheck do
       end
 
       it "deletes the tracker" do
-        expect { multi_target_check.run }.to change { ProblemCheckTracker.count }.by(-1)
+        expect { multi_target_check.new.run }.to change { ProblemCheckTracker.count }.by(-1)
       end
     end
 
@@ -161,7 +161,7 @@ RSpec.describe ProblemCheck do
       before { ProblemCheckTracker.create!(identifier: "multi_target_check", target: "baz") }
 
       it "deletes the tracker" do
-        expect { multi_target_check.run("baz") }.to change { ProblemCheckTracker.count }.by(-1)
+        expect { multi_target_check.new("baz").run }.to change { ProblemCheckTracker.count }.by(-1)
       end
     end
   end
