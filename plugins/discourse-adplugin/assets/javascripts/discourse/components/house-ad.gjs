@@ -118,18 +118,13 @@ export default class HouseAd extends AdComponent {
   }
 
   buildImpressionPayload() {
-    const adType = 0;
-    const adPluginHouseAdId = 3; // how to actually get this
-
-    if (adPluginHouseAdId) {
-      return {
-        ad_plugin_impression: {
-          ad_type: adType,
-          ad_plugin_house_ad_id: adPluginHouseAdId,
-          placement: this.get("placement"),
-        },
-      };
-    }
+    return {
+      ad_plugin_impression: {
+        ad_type: this.site.ad_types.house,
+        ad_plugin_house_ad_id: 3,
+        placement: this.get("placement"),
+      },
+    };
   }
 
   didInsertElement() {

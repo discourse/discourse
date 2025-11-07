@@ -191,7 +191,7 @@ export default class AmazonProductLinks extends AdComponent {
   buildImpressionPayload() {
     return {
       ad_plugin_impression: {
-        ad_type: 3,
+        ad_type: this.site.ad_types.amazon,
         ad_plugin_house_ad_id: null,
         placement: this.get("placement"),
       },
