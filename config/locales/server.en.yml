@@ -2737,7 +2737,7 @@ en:
     welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
     welcome_banner_page_visibility: "Determines on which pages the welcome banner will appear."
-    welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the 'primary' color from the color palette will be used."
+    welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the active theme controls the color."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
