@@ -6,7 +6,12 @@ module Styleguide
     skip_before_action :check_xhr
 
     def index
-      if !current_user || !current_user.in_any_groups?(SiteSetting.styleguide_allowed_groups_map)
+      if !current_user &&
+           !SiteSetting.styleguide_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
+        raise Discourse::InvalidAccess.new
+      end
+
+      if current_user && !current_user.in_any_groups?(SiteSetting.styleguide_allowed_groups_map)
         raise Discourse::InvalidAccess.new
       end
 
