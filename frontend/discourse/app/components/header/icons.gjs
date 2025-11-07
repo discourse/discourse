@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { eq } from "truth-helpers";
@@ -110,10 +111,10 @@ export default class Icons extends Component {
               @icon="magnifying-glass"
               @iconId={{@searchButtonId}}
               @onClick={{@toggleSearchMenu}}
+              @onWillDestroy={{fn @toggleSearchMenu null false}}
               @active={{this.search.visible}}
               @href={{getURL "/search"}}
-              @className="search-dropdown"
-              @targetSelector=".search-menu-panel"
+              class="search-dropdown"
             />
           {{/if}}
         {{else if (eq entry.key "hamburger")}}
@@ -124,7 +125,7 @@ export default class Icons extends Component {
               @iconId="toggle-hamburger-menu"
               @active={{this.header.hamburgerVisible}}
               @onClick={{this.toggleHamburger}}
-              @className="hamburger-dropdown"
+              class="hamburger-dropdown"
             />
           {{/if}}
         {{else if (eq entry.key "user-menu")}}
