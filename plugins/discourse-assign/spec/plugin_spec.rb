@@ -46,16 +46,8 @@ RSpec.describe DiscourseAssign do
     fab!(:group)
     fab!(:user) { Fabricate(:user).tap { |u| group.add(u) } }
 
-    fab!(:unassigned_topic, :topic)
-    fab!(:assigned_topic, :topic)
-    fab!(:non_related_topic, :topic)
-
-    fab!(:assigned_post) { Fabricate(:post, topic: unassigned_topic) }
-
-    fab!(:topic_assignment) do
-      Fabricate(:topic_assignment, topic: assigned_topic, assigned_to: group)
-    end
-    fab!(:post_assignment) { Fabricate(:post_assignment, post: assigned_post, assigned_to: user) }
+    fab!(:post_assignment) { Fabricate(:post_assignment, assigned_to: user) }
+    fab!(:topic_assignment) { Fabricate(:topic_assignment, assigned_to: group) }
 
     before { SiteSetting.assign_allowed_on_groups = "#{group.id}" }
 
@@ -82,14 +74,14 @@ RSpec.describe DiscourseAssign do
 
       it "respects group visibility" do
         private_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
-        private_topic = Fabricate(:topic)
 
-        private_user = Fabricate(:user).tap { |u| group.add(u) }
-        private_owner = Fabricate(:user, admin: true)
+        private_user = Fabricate(:user)
+        private_owner = Fabricate(:admin)
+
         private_group.add(private_user)
         private_group.add_owner(private_owner)
 
-        Fabricate(:topic_assignment, topic: private_topic, assigned_to: private_group)
+        private_assignment = Fabricate(:topic_assignment, assigned_to: private_group)
 
         filtered_topic_ids =
           TopicsFilter
@@ -110,7 +102,7 @@ RSpec.describe DiscourseAssign do
             .new(guardian: Guardian.new(private_owner))
             .filter_from_query_string("assigned:#{private_group.name}")
             .pluck(:id)
-        expect(filtered_topic_ids).to contain_exactly(private_topic.id)
+        expect(filtered_topic_ids).to contain_exactly(private_assignment.topic.id)
       end
     end
   end
