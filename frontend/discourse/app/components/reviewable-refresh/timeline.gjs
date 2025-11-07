@@ -15,6 +15,7 @@ import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import escape from "discourse/lib/escape";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -81,9 +82,9 @@ export default class ReviewableTimeline extends Component {
         // Build description for flagged event
         let flaggedDescription = "";
         if (score.reason || score.context) {
-          flaggedDescription = `<p>${score.reason ?? ""}</p><p>${
-            score.context ?? ""
-          }</p>`;
+          flaggedDescription = `<p>${score.reason ?? ""}</p><p>${escape(
+            score.context
+          )}</p>`;
         }
 
         // Add conversation message if available
@@ -93,9 +94,9 @@ export default class ReviewableTimeline extends Component {
           score.reviewable_conversation.conversation_posts.length > 0
         ) {
           const firstPost = score.reviewable_conversation.conversation_posts[0];
-          flaggedDescription += `<p>${firstPost.excerpt} (<a href="${
+          flaggedDescription += `<p>${escape(firstPost.excerpt)} (<a href="${escape(
             score.reviewable_conversation.permalink
-          }">${i18n("review.timeline.view_conversation")}</a>)</p>`;
+          )}">${i18n("review.timeline.view_conversation")}</a>)</p>`;
         }
 
         events.push({
@@ -159,7 +160,7 @@ export default class ReviewableTimeline extends Component {
         user: note.user,
         icon: "far-pen-to-square",
         titleKey: "review.timeline.note_added_by",
-        description: htmlSafe(`<p>${note.content}</p>`),
+        description: htmlSafe(`<p>${escape(note.content)}</p>`),
         noteId: note.id,
         canDelete:
           this.currentUser &&
