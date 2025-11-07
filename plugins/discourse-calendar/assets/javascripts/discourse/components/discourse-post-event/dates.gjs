@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
 import discourseLater from "discourse/lib/later";
-import loadRRule from "discourse/lib/load-rrule";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
 
@@ -21,21 +20,17 @@ export default class DiscoursePostEventDates extends Component {
     return this.args.event.timezone || "UTC";
   }
 
+  get showLocalTime() {
+    return this.args.event.showLocalTime ?? true;
+  }
+
   get startsAt() {
-    return (
-      this.args.currentEventStart ??
-      moment(this.args.event.startsAt).tz(this.timezone)
-    );
+    return moment.tz(this.args.event.startsAt, this.timezone);
   }
 
   get endsAt() {
-    const currentEventEnd = this.args.currentEventEnd;
     const eventEndsAt = this.args.event.endsAt;
-
-    return (
-      currentEventEnd ??
-      (eventEndsAt ? moment(eventEndsAt).tz(this.timezone) : null)
-    );
+    return eventEndsAt ? moment.tz(eventEndsAt, this.timezone) : null;
   }
 
   get startsAtFormat() {
@@ -133,8 +128,6 @@ export default class DiscoursePostEventDates extends Component {
     if (this.args.expiredAndRecurring) {
       return;
     }
-
-    this.rrule = await loadRRule();
 
     if (this.siteSettings.discourse_local_dates_enabled) {
       const bbcode = this.datesBBCode.join("<span> → </span>");

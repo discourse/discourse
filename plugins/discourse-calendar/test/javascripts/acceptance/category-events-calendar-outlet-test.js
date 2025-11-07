@@ -8,8 +8,6 @@ const eventsPretender = (server, helper) => {
       events: [
         {
           id: 67501,
-          starts_at: "2022-04-25T15:14:00.000Z",
-          ends_at: "2022-04-30T16:14:00.000Z",
           timezone: "Asia/Calcutta",
           post: {
             id: 67501,
@@ -22,6 +20,12 @@ const eventsPretender = (server, helper) => {
             },
           },
           name: "Awesome Event",
+          occurrences: [
+            {
+              starts_at: "2022-04-25T15:14:00.000Z",
+              ends_at: "2022-04-30T16:14:00.000Z",
+            },
+          ],
         },
       ],
     });

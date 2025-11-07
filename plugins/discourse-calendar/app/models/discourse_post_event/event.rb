@@ -433,6 +433,20 @@ module DiscoursePostEvent
       [next_starts_at, next_ends_at]
     end
 
+    def calculate_next_occurrence_from(from_time)
+      return nil if recurrence.blank?
+      if original_starts_at > from_time
+        return { starts_at: original_starts_at, ends_at: original_ends_at }
+      end
+
+      next_starts_at = calculate_next_recurring_date_from(from_time)
+      return nil unless next_starts_at
+
+      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      next_ends_at = next_starts_at + event_duration
+      { starts_at: next_starts_at, ends_at: next_ends_at }
+    end
+
     def duration
       return nil unless original_starts_at
 
@@ -501,6 +515,25 @@ module DiscoursePostEvent
         recurrence_until: timezone_recurrence_until,
         dtstart: timezone_starts_at,
       ).first
+    end
+
+    def calculate_next_recurring_date_from(from_time)
+      timezone_starts_at = original_starts_at.in_time_zone(timezone)
+      timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
+      from_time_in_tz = from_time.in_time_zone(timezone)
+
+      RRule::Rule
+        .new(
+          RRuleConfigurator.rule(
+            recurrence_until: timezone_recurrence_until,
+            recurrence: recurrence,
+            starts_at: timezone_starts_at,
+          ),
+          dtstart: timezone_starts_at,
+          tzid: rrule_timezone,
+        )
+        .between(from_time_in_tz - 1.hour, from_time_in_tz + 1.year)
+        .find { |date| date >= from_time_in_tz }
     end
   end
 end
