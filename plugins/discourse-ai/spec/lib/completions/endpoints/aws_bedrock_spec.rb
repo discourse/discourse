@@ -616,28 +616,27 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       # Configure the model with a role_arn
       model.update!(
         provider_params: {
-          access_key_id: "123",
           region: "us-east-1",
           role_arn: "arn:aws:iam::123456789012:role/BedRockAccessRole",
         },
       )
 
-      # Mock the STS assume_role call
-      mock_credentials =
-        OpenStruct.new(
-          access_key_id: "ASSUMED_ACCESS_KEY",
-          secret_access_key: "ASSUMED_SECRET_KEY",
-          session_token: "ASSUMED_SESSION_TOKEN",
-        )
+      # Mock Aws::AssumeRoleCredentials
+      mock_credentials = instance_double(Aws::AssumeRoleCredentials)
+      allow(mock_credentials).to receive(:access_key_id).and_return("ASSUMED_ACCESS_KEY")
+      allow(mock_credentials).to receive(:secret_access_key).and_return("ASSUMED_SECRET_KEY")
+      allow(mock_credentials).to receive(:session_token).and_return("ASSUMED_SESSION_TOKEN")
 
-      mock_assumed_role_response = OpenStruct.new(credentials: mock_credentials)
-
+      # Mock the STS client
       mock_sts_client = instance_double(Aws::STS::Client)
       allow(Aws::STS::Client).to receive(:new).with(region: "us-east-1").and_return(mock_sts_client)
-      allow(mock_sts_client).to receive(:assume_role).with(
+
+      # Mock AssumeRoleCredentials.new
+      allow(Aws::AssumeRoleCredentials).to receive(:new).with(
         role_arn: "arn:aws:iam::123456789012:role/BedRockAccessRole",
-        role_session_name: "bedrock-test-session",
-      ).and_return(mock_assumed_role_response)
+        role_session_name: "discourse-bedrock-#{Process.pid}",
+        client: mock_sts_client,
+      ).and_return(mock_credentials)
 
       proxy = DiscourseAi::Completions::Llm.proxy(model)
       request = nil
@@ -662,10 +661,11 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
       proxy.generate("test prompt", user: user)
 
-      # Verify the STS client was called with the correct parameters
-      expect(mock_sts_client).to have_received(:assume_role).with(
+      # Verify AssumeRoleCredentials was created with correct parameters
+      expect(Aws::AssumeRoleCredentials).to have_received(:new).with(
         role_arn: "arn:aws:iam::123456789012:role/BedRockAccessRole",
-        role_session_name: "bedrock-test-session",
+        role_session_name: "discourse-bedrock-#{Process.pid}",
+        client: mock_sts_client,
       )
 
       # Verify the request was signed (authorization header should be present)
@@ -700,12 +700,12 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         end
         .to_return(status: 200, body: content)
 
-      # Ensure STS is not called when role_arn is not provided
-      allow(Aws::STS::Client).to receive(:new).and_call_original
+      # Ensure AssumeRoleCredentials is not used when role_arn is not provided
+      allow(Aws::AssumeRoleCredentials).to receive(:new).and_call_original
 
       proxy.generate("test prompt", user: user)
 
-      expect(Aws::STS::Client).not_to have_received(:new)
+      expect(Aws::AssumeRoleCredentials).not_to have_received(:new)
 
       # Verify the request was signed with regular credentials
       expect(request.headers["Authorization"]).to be_present

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "aws-sigv4"
+require "aws-sdk-sts"
 
 module DiscourseAi
   module Completions
@@ -169,25 +170,32 @@ module DiscourseAi
 
         def prepare_request(payload)
           headers = { "content-type" => "application/json", "Accept" => "*/*" }
+          region = llm_model.lookup_custom_param("region")
           role_arn = llm_model.lookup_custom_param("role_arn")
 
           signer =
             if role_arn
-              sts = Aws::STS::Client.new(region: llm_model.lookup_custom_param("region"))
-              assumed =
-                sts.assume_role(role_arn: role_arn, role_session_name: "bedrock-test-session")
+              # Use AWS SDK's built-in credential provider with automatic refresh
+              credentials =
+                Aws::AssumeRoleCredentials.new(
+                  role_arn: role_arn,
+                  role_session_name: "discourse-bedrock-#{Process.pid}",
+                  client: Aws::STS::Client.new(region: region),
+                )
 
+              # AssumeRoleCredentials responds to credentials method which returns the actual credentials
+              creds = credentials.credentials
               Aws::Sigv4::Signer.new(
-                access_key_id: assumed.credentials.access_key_id,
-                region: llm_model.lookup_custom_param("region"),
-                secret_access_key: assumed.credentials.secret_access_key,
-                session_token: assumed.credentials.session_token,
+                access_key_id: creds.access_key_id,
+                secret_access_key: creds.secret_access_key,
+                session_token: creds.session_token,
+                region: region,
                 service: "bedrock",
               )
             else
               Aws::Sigv4::Signer.new(
                 access_key_id: llm_model.lookup_custom_param("access_key_id"),
-                region: llm_model.lookup_custom_param("region"),
+                region: region,
                 secret_access_key: llm_model.api_key,
                 service: "bedrock",
               )
