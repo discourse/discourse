@@ -42,7 +42,7 @@ module PageObjects
             if count > 1
               expect(page).to have_css(".review-item__flag-count.--#{css_class}")
             else
-              expect(page).not_to have_css(".review-item__flag-count.--#{css_class}")
+              expect(page).to have_no_css(".review-item__flag-count.--#{css_class}")
             end
           end
         end
