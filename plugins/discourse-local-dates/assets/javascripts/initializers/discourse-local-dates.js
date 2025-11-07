@@ -10,6 +10,7 @@ import {
   addTagDecorateCallback,
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
+import { slugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
@@ -374,25 +375,8 @@ class LocalDatesInit {
             title = summaryMatch[1].trim();
           }
         }
-        title = title || "event";
 
-        const file = new File([icsData], { type: "text/plain" });
-        const a = document.createElement("a");
-        document.body.appendChild(a);
-        a.style = "display: none";
-        a.href = window.URL.createObjectURL(file);
-        const cleanTitle = title
-          .toLowerCase()
-          .replace(/[^\w\s-]/g, "")
-          .replace(/[\s_]+/g, "-")
-          .replace(/^-+|-+$/g, "")
-          .substring(0, 50);
-        a.download = `${cleanTitle || "event"}.ics`;
-        a.click();
-        setTimeout(() => {
-          window.URL.revokeObjectURL(file);
-          document.body.removeChild(a);
-        }, 20000);
+        this.downloadIcs(title || "event", icsData);
       } else {
         downloadCalendar(dataset.title, [
           {
@@ -413,6 +397,22 @@ class LocalDatesInit {
       identifier: "local-date",
       content: htmlSafe(buildHtmlPreview(event.target, this.siteSettings)),
     });
+  }
+
+  downloadIcs(title, icsData) {
+    const blob = new Blob([icsData], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    try {
+      const a = document.createElement("a");
+      a.href = url;
+      const fileName = slugify(title);
+      a.download = `${fileName}.ics`;
+      // Most browsers allow clicking without attaching to DOM.
+      a.click();
+    } finally {
+      // Revoke on next tick so the download can start.
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
   }
 
   teardown() {
