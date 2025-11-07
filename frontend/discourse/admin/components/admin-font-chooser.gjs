@@ -50,7 +50,7 @@ export default class AdminFontChooser extends Component {
       {{/if}}
       <DButton
         @action={{this.toggleMoreFonts}}
-        class="admin-fonts-form__more font"
+        class="btn-default admin-fonts-form__more"
       >
         {{#if this.showMoreFonts}}
           {{i18n "admin.config.fonts.form.fewer_fonts"}}
