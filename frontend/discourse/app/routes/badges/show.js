@@ -1,3 +1,4 @@
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { hash } from "rsvp";
 import PreloadStore from "discourse/lib/preload-store";
 import Badge from "discourse/models/badge";
@@ -59,7 +60,7 @@ export default class BadgesShow extends DiscourseRoute {
 
   setupController(controller) {
     super.setupController(...arguments);
-    controller.userBadges = this.userBadgesGrant;
-    controller.userBadgesAll = this.userBadgesAll;
+    controller.userBadges = new TrackedObject(this.userBadgesGrant);
+    controller.userBadgesAll = new TrackedObject(this.userBadgesAll);
   }
 }
