@@ -95,6 +95,44 @@ describe "Lightbox | Photoswipe", type: :system do
       expect(lightbox).to have_original_image_button
       expect(lightbox).to have_image_info_button
     end
+
+    context "when RTL language" do
+      before { SiteSetting.default_locale = "ar" }
+
+      it "supports reversed layout" do
+        topic_page.visit_topic(topic)
+
+        find("#post_1 .lightbox-wrapper:nth-of-type(1) .lightbox").click
+
+        expect(lightbox).to be_visible
+
+        # text is reversed by CSS, so check for correct property
+        expect(get_style(lightbox.counter, "direction")).to eq("rtl")
+
+        expect(lightbox).to have_counter("1 / 2")
+        expect(lightbox).to have_caption_title("first image")
+
+        lightbox.prev_button.click
+
+        expect(lightbox).to have_counter("2 / 2")
+        expect(lightbox).to have_caption_title("second image")
+
+        lightbox.next_button.click
+
+        expect(lightbox).to have_counter("1 / 2")
+        expect(lightbox).to have_caption_title("first image")
+
+        send_keys(:left)
+
+        expect(lightbox).to have_counter("2 / 2")
+        expect(lightbox).to have_caption_title("second image")
+
+        send_keys(:right)
+
+        expect(lightbox).to have_counter("1 / 2")
+        expect(lightbox).to have_caption_title("first image")
+      end
+    end
   end
 
   context "when on mobile", mobile: true do

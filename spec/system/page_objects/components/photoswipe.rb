@@ -47,6 +47,10 @@ module PageObjects
         component.find(CLOSE_BTN)
       end
 
+      def counter
+        component.find(COUNTER)
+      end
+
       def has_counter?(text)
         component.has_css?(COUNTER, text: text)
       end
