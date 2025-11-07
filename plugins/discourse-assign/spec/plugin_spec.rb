@@ -44,12 +44,15 @@ RSpec.describe DiscourseAssign do
 
   describe "discourse-assign TopicsFilter filtering" do
     fab!(:group)
-    fab!(:user) { Fabricate(:user).tap { |u| group.add(u) } }
+    fab!(:user)
 
     fab!(:post_assignment) { Fabricate(:post_assignment, assigned_to: user) }
     fab!(:topic_assignment) { Fabricate(:topic_assignment, assigned_to: group) }
 
-    before { SiteSetting.assign_allowed_on_groups = "#{group.id}" }
+    before do
+      SiteSetting.assign_allowed_on_groups = "#{group.id}"
+      group.add(user)
+    end
 
     describe "with assigned:username" do
       it "returns topics assigned to the specified user" do
