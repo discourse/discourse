@@ -20,7 +20,7 @@ RSpec.describe "SiteSetting.styleguide_allowed_groups" do
 
       it "doesn’t allow access" do
         get "/styleguide"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
     end
   end
