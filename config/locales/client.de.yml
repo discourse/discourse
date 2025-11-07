@@ -687,9 +687,9 @@ de:
         claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
         automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b> überprüft."
       claim:
-        title: "dieses Thema reservieren"
+        title: "Dieses Thema reservieren"
       unclaim:
-        help: "diese Reservierung entfernen"
+        help: "Diese Reservierung entfernen"
       awaiting_approval: "Wartet auf Genehmigung"
       delete: "Löschen"
       settings:
@@ -847,6 +847,9 @@ de:
           title: "Beitrag"
           noun: "Beitrag"
       flagged_as: "Gemeldet als"
+      post_flagged_as: "Beitrag gemeldet als"
+      queued_post_label: "Beitrag in der Warteschlange"
+      user_label: "Benutzer"
       assigned_to: "Zugeordnet zu"
       moderator_actions: "Moderator-Aktionen"
       timeline_and_notes: "Zeitleiste & Notizen"
@@ -877,6 +880,8 @@ de:
       review_user: "Benutzer"
       need_help: "Brauchst du Hilfe?"
       copy_link: "Link kopieren"
+      copy_permalink_title: "Den Link zu diesem zu überprüfenden Element in die Zwischenablage kopieren"
+      copy_link_feedback: "Link kopiert"
       view_source: "Quelltext ansehen"
       insights:
         title: "Einblicke"
@@ -1695,6 +1700,7 @@ de:
         verify_identity: "Um fortzufahren, bestätige bitte deine Identität."
         title: "Passwort zurücksetzen"
         remove: "Passwort entfernen"
+        remove_disabled: "Das Konto benötigt mindestens eine andere Anmeldemethode (z. B. einen Passkey oder ein verknüpftes externes Konto), bevor das Passwort entfernt werden kann."
         remove_detail: "Dein Konto wird nicht mehr mit einem Passwort zugänglich sein, es sei denn, du setzt es zurück."
       second_factor_backup:
         title: "Wiederherstellungscodes für Zwei-Faktor-Authentifizierung"
@@ -1961,6 +1967,7 @@ de:
         first_time_and_daily: "Für das erste „Gefällt mir“ sowie maximal täglich"
         first_time: "Nur für das erste „Gefällt mir“ eines Beitrags"
         never: "Nie"
+      notify_on_linked_posts: "Benachrichtige mich, wenn jemand einen Link zu einem meiner Beiträge teilt"
       email_previous_replies:
         title: "Füge vorherige Beiträge ans Ende von E-Mails an"
         unless_emailed: "sofern noch nicht gesendet"
@@ -2282,6 +2289,10 @@ de:
       no_results: "Keine Ergebnisse"
       search: "Suchen …"
       label: "Optionen auswählen"
+    d_otp:
+      screen_reader:
+        one: Gib eine Zahl ein
+        other: Gib %{count} Zahlen ein
     form_kit:
       reset: Zurücksetzen
       optional: optional
@@ -2711,6 +2722,7 @@ de:
         select: "Übersetzung auswählen"
         save: "Übersetzung speichern"
         original_content: "Inhalt des Originalbeitrags"
+        translation: "Übersetzen"
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
@@ -2867,6 +2879,9 @@ de:
         create_topic:
           label: "Neues Thema"
           desc: Erstelle ein neues Thema
+        create_personal_message:
+          label: "Neue Nachricht"
+          desc: "Erstelle eine neue persönliche Nachricht"
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
@@ -3360,7 +3375,7 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
-      create_long: "Ein neues Thema erstellen"
+      create_long: "Erstelle ein neues Thema"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
       archive_message:
@@ -3448,7 +3463,7 @@ de:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
-      browse_latest_topics: "Neueste Themen durchstöbern"
+      browse_latest_topics: "Aktuelle Themen durchstöbern"
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply: "Zum ursprünglichen Ort des Beitrags springen"
       jump_reply_aria: "Zum Beitrag von @%{username} an dessen ursprünglichen Ort springen"
@@ -3990,6 +4005,7 @@ de:
         delete_post_notice: "Offizielle Mitteilung löschen"
         remove_timer: "Zeitschaltuhr deaktivieren"
         edit_timer: "Zeitschaltuhr bearbeiten"
+        remove_yourself_from_pm: "Bist du sicher, dass du dich aus dieser Nachricht entfernen möchtest? Dann wirst du sie nicht mehr sehen oder darauf antworten können."
       actions:
         people:
           like:
@@ -4532,6 +4548,7 @@ de:
     lightbox:
       download: "Herunterladen"
       open: "Originalbild"
+      image_info: "Bildinformationen"
       previous: "Zurück (linke Pfeiltaste)"
       next: "Weiter (rechte Pfeiltaste)"
       counter: "%curr% von %total%"
@@ -5287,7 +5304,11 @@ de:
           title: "Erweitert "
       upcoming_changes:
         name: "Name"
+        plugin: "Plug-in"
         enabled: "Aktiviert"
+        show_image: "Bild anzeigen"
+        groups_updated: "Gruppen aktualisiert!"
+        save_groups: "Gruppen speichern"
         select_groups: "Gruppen auswählen …"
         preview: "Vorschau"
         impact_roles:

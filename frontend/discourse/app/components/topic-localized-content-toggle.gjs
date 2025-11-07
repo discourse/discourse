@@ -30,7 +30,19 @@ export default class TopicLocalizedContentToggle extends Component {
       });
     }
 
-    this.router.refresh();
+    const postStream = this.args.topic?.postStream;
+    if (postStream) {
+      const currentURL = this.router.currentURL;
+      // this is required to clear the post stream cache
+      // otherwise the old posts before the toggle will be shown
+      postStream.removeAllPosts();
+      await this.router.refresh();
+      // refreshing clears the post number,
+      // and postStream.refresh nearPost does not load to the correct post
+      if (this.router.currentURL !== currentURL) {
+        this.router.replaceWith(currentURL);
+      }
+    }
   }
 
   get title() {

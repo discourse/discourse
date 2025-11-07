@@ -119,7 +119,7 @@ export default class UserActivityBookmarksController extends Controller {
     if (response.bookmarks) {
       const bookmarkModels = response.bookmarks.map(this.transform);
       await Bookmark.applyTransformations(bookmarkModels);
-      this.model.bookmarks.pushObjects(bookmarkModels);
+      this.model.bookmarks.push(...bookmarkModels);
       this.session.set("bookmarksModel", this.model);
     }
   }

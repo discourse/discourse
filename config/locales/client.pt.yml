@@ -687,10 +687,6 @@ pt:
         claimed_by_you: "Você reivindicou este item e pode efectuar a sua revisão."
         claimed_by_other: "Este item só pode ser revisto por <b>%{username}</b>."
         automatically_claimed_by: "Este item está atualmente a ser revisto por <b>%{username}</b>."
-      claim:
-        title: "reivindicar este tópico"
-      unclaim:
-        help: "remover esta reivindicação"
       awaiting_approval: "Aguarda Aprovação"
       delete: "Eliminar"
       settings:
@@ -846,6 +842,7 @@ pt:
           title: "Mensagem"
           noun: "publicação"
       flagged_as: "Sinalizado como"
+      user_label: "Utilizador"
       assigned_to: "Atribuído a"
       moderator_actions: "Ações do moderador"
       timeline_and_notes: "Barra cronológica e notas"
@@ -873,6 +870,7 @@ pt:
       review_user: "Utilizador"
       need_help: "Precisa de ajuda?"
       copy_link: "Copiar link"
+      copy_link_feedback: "Ligação copiada"
       view_source: "Ver fonte"
       insights:
         title: "Conhecimentos"
@@ -2675,6 +2673,7 @@ pt:
         select: "Selecionar tradução"
         save: "Guarda a tradução"
         original_content: "Conteúdo original da publicação"
+        translation: "Tradução"
         placeholder: "Introduz aqui a tradução para a publicação..."
       group_mentioned_limit:
         one: "<b>Atenção!</b> Referiu <a href='%{group_link}'>%{group}</a>, no entanto este grupo tem mais membros do que o limite de menções configurado pelo administrador de %{count} utilizadores. Ninguém será notificado."
@@ -2699,7 +2698,6 @@ pt:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar Tópico"
-      create_pm: "Enviar Mensagem"
       create_whisper: "Sussurro"
       create_shared_draft: "Criar Rascunho Partilhado"
       edit_shared_draft: "Editrar Rascunho Partilhado"
@@ -2800,8 +2798,11 @@ pt:
           label: Alternar sussurro
           desc: Os sussurros são apenas visíveis para os membros da equipa
         create_topic:
-          label: "Novo Tópico"
+          label: "Novo tópico"
           desc: Criar um novo tópico
+        create_personal_message:
+          label: "Nova mensagem"
+          desc: "Crie uma nova mensagem privada"
         shared_draft:
           label: "Rascunho Partilhado"
           desc: "Escrever um rascunho de tópico que só pode ser visível para usuários permitidos"
@@ -3182,7 +3183,7 @@ pt:
         one: "%{count} publicação no tópico"
         other: "%{count} publicações no tópico"
       create: "Novo Tópico"
-      create_long: "Criar um novo Tópico"
+      create_long: "Criar um novo tópico"
       open_draft: "Abrir Rascunho"
       private_message: "Iniciar uma mensagem"
       archive_message:

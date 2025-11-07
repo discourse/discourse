@@ -383,6 +383,7 @@ fi:
           topic: "Ketju"
       reviewable:
         type: "Chat-viesti"
+        message_in_channel: "Kanava"
       reactions:
         only_you: "<span>Reagoit emojilla</span>:%{emoji}:"
         you_and_single_user: "<span>Sinä ja %{username} reagoitte emojilla </span>:%{emoji}:"

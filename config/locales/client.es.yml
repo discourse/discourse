@@ -678,10 +678,6 @@ es:
         claimed_by_you: "Has reclamado este elemento y puedes revisarlo."
         claimed_by_other: "Este elemento solo puede ser revisado por <b>%{username}</b>."
         automatically_claimed_by: "<b>%{username}</b> ya está revisando este elemento."
-      claim:
-        title: "reclamar este tema"
-      unclaim:
-        help: "eliminar esta reclamación"
       awaiting_approval: "Esperando aprobación"
       delete: "Eliminar"
       settings:
@@ -839,6 +835,7 @@ es:
           title: "Publicación"
           noun: "publicación"
       flagged_as: "Marcado como"
+      user_label: "Usuario"
       assigned_to: "Asignado a"
       moderator_actions: "Acciones del moderador"
       timeline_and_notes: "Cronología y notas"
@@ -2702,6 +2699,7 @@ es:
         select: "Seleccionar traducción"
         save: "Guardar traducción"
         original_content: "Contenido de la publicación original"
+        translation: "Traducción"
         placeholder: "Introduce la traducción del post aquí..."
       group_mentioned_limit:
         one: "<b>Aviso</b> Has mencionado al grupo <a href='%{group_link}'>%{group}</a>, pero tiene más miembros que los que los administradores permiten mencionar (%{count} usuario) de una vez. No se notificará a nadie."
@@ -2849,6 +2847,9 @@ es:
         create_topic:
           label: "Nuevo tema"
           desc: Crear un nuevo tema
+        create_personal_message:
+          label: "Nuevo mensaje"
+          desc: "Crear un nuevo mensaje personal"
         shared_draft:
           label: "Borrador compartido"
           desc: "Inicia un tema-borrador que solo será visible por los usuarios permitidos"
@@ -3341,7 +3342,7 @@ es:
         one: "%{count} publicación en el tema"
         other: "%{count} publicaciones en el tema"
       create: "Nuevo tema"
-      create_long: "Crear un tema nuevo"
+      create_long: "Crear un nuevo tema"
       open_draft: "Abrir borrador"
       private_message: "Comenzar un mensaje"
       archive_message:

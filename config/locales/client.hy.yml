@@ -546,10 +546,6 @@ hy:
         required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
         claimed_by_you: "Դուք վերցրել եք այդ էլեմենտը և կարող եք այն դիտել: "
         claimed_by_other: "Այս կետը կարելի է դիտել միայն <b>%{username}</b>."
-      claim:
-        title: "հայտարարել այս թեման"
-      unclaim:
-        help: "Ջնջել այս պահանջը"
       awaiting_approval: "Հաստատմումը սպասման մեջ է"
       delete: "Ջնջել"
       settings:
@@ -696,6 +692,7 @@ hy:
         reviewable_post:
           title: "Գրառում"
           noun: "գրառում"
+      user_label: "Օգտատեր"
       notes:
         delete: "Ջնջել"
       review_user: "Օգտատեր"
@@ -2266,7 +2263,6 @@ hy:
       reply: "Պատասխանել"
       cancel: "Չեղարկել"
       create_topic: "Ստեղծել Թեմա"
-      create_pm: "Ուղարկել Հաղորդագրությունը"
       create_whisper: "Շշնջալ"
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
@@ -2326,8 +2322,9 @@ hy:
         toggle_whisper:
           label: Փոխանջատել շշնջումը
           desc: Շշուկները տեսանելի են միայն անձնակազմին
-        create_topic:
-          label: "Նոր Թեմա"
+        create_personal_message:
+          label: "Նոր հաղորդագրություն"
+          desc: "Գրել նոր անձնական նամակ"
         shared_draft:
           label: "Ստեղծել Կիսված Սևագիր"
         toggle_topic_bump:
@@ -2625,7 +2622,6 @@ hy:
         one: "%{count} հրապարակում թեմայում"
         other: "%{count} գրառում թեմայում"
       create: "Նոր Թեմա"
-      create_long: "Ստեղծել Նոր Թեմա"
       open_draft: "Բացել Սևագիրը"
       private_message: "Սկսել հաղորդագրություն"
       archive_message:

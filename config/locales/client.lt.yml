@@ -641,10 +641,6 @@ lt:
         claimed_by_you: "Pareiškėte teises į šį elementą ir galite jį peržiūrėti."
         claimed_by_other: "Šį elementą gali peržiūrėti tik <b>%{username}</b>."
         automatically_claimed_by: "Šį elementą šiuo metu peržiūri <b>%{username}</b>."
-      claim:
-        title: "pretenduoti į šią temą"
-      unclaim:
-        help: "pašalinti šį teiginį"
       awaiting_approval: "Laukiama patvirtinimo"
       delete: "Pašalinti"
       settings:
@@ -800,6 +796,7 @@ lt:
         reviewable_post:
           title: "Įrašai"
           noun: "įrašai"
+      user_label: "Narys"
       notes:
         delete: "Pašalinti"
       review_user: "Narys"
@@ -2386,6 +2383,8 @@ lt:
       saved_local_draft_tip: "išsaugota lokaliai"
       drafts_offline: "juodraščiai ne ryšio zonoje"
       edit_conflict: "redaguoti konfliktą"
+      translations:
+        translation: "Vertimai"
       cannot_see_mention:
         category: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie neturi prieigos prie šios kategorijos. Turėsite juos įtraukti į grupę, kuri turi prieigą prie šios kategorijos."
         private: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie negali matyti šio asmeninio pranešimo. Turėsite juos pakviesti į šią asmeninę žinutę."
@@ -2469,8 +2468,9 @@ lt:
         toggle_whisper:
           label: Visiškas gandas
           desc: Gandai matomi tik valdytojams
-        create_topic:
-          label: "Nauja tema"
+        create_personal_message:
+          label: "Nauja žinutė"
+          desc: "Sukurti naują asmeninę žinutę"
         shared_draft:
           label: "Bendrinami juodraščiai"
           desc: "Sukurkite temą, kuri bus matoma tik leidžiamiems vartotojams"
@@ -2795,7 +2795,6 @@ lt:
         many: "teoje %{count} įrašų"
         other: "temoje %{count} įrašai"
       create: "Nauja Tema"
-      create_long: "Sukurti naują temą"
       open_draft: "Atviras juodraštis"
       private_message: "Rašyti žinutę"
       archive_message:

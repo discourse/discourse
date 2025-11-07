@@ -49,7 +49,7 @@ after_initialize do
     TopicQuery.results_filter_callbacks << ->(_type, result, user, options) do
       return result unless SiteSetting.topic_voting_enabled
 
-      result = result.includes(:topic_vote_count)
+      result = result.preload(:topic_vote_count)
 
       if user
         result =

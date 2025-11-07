@@ -632,10 +632,6 @@ da:
         claimed_by_you: "Du har gjort krav på dette punkt og kan gennemgå det."
         claimed_by_other: "Dette punkt kan kun gennemgås af <b>%{username}</b> ."
         automatically_claimed_by: "Dette element er i øjeblikket ved at blive gennemgået af <b>%{username}</b>."
-      claim:
-        title: "gør krav på dette emne"
-      unclaim:
-        help: "fjern dette krav"
       awaiting_approval: "Afventer godkendelse"
       delete: "Slet"
       settings:
@@ -786,6 +782,7 @@ da:
           title: "Indlæg"
           noun: "indlæg"
       flagged_as: "Anmeldt som"
+      user_label: "Bruger"
       assigned_to: "Tildelt til"
       moderator_actions: "Moderatorhandlinger"
       timeline_and_notes: "Tidslinje og noter"
@@ -810,6 +807,7 @@ da:
       review_user: "Bruger"
       need_help: "Brug for hjælp?"
       copy_link: "Kopiér link"
+      copy_link_feedback: "Link kopieret"
       view_source: "Vis kilde"
       insights:
         title: "Indsigter"
@@ -2373,7 +2371,6 @@ da:
       reply: "Svar"
       cancel: "Annuller"
       create_topic: "Opret emne"
-      create_pm: "Send Besked"
       create_whisper: "Hvisk"
       create_shared_draft: "Opret delt kladde"
       edit_shared_draft: "Rediger delt kladde"
@@ -2461,8 +2458,11 @@ da:
           label: Slå hvisken til/fra
           desc: Hvisken er kun synlige for hjælperteam medlemmer
         create_topic:
-          label: "Nyt Emne"
+          label: "Nyt emne"
           desc: Opret et nyt emne
+        create_personal_message:
+          label: "Ny meddelelse"
+          desc: "Opret en ny privat besked"
         shared_draft:
           label: "Delt Kladde"
           desc: "Lav en udkast til et emne, der kun er synligt for tilladte brugere"
@@ -2825,7 +2825,7 @@ da:
         one: "%{count} indlæg i emnet"
         other: "%{count} indlæg i emnet"
       create: "Nyt emne"
-      create_long: "Opret et nyt emne i debatten"
+      create_long: "Opret et nyt emne"
       open_draft: "Åbn kladde"
       private_message: "Start en besked"
       archive_message:

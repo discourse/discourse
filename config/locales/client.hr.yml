@@ -739,10 +739,6 @@ hr:
         claimed_by_you: "Prisvojili ste ovu stavku i možete dodati osvrt."
         claimed_by_other: "Osvrt za ovu stavku može dodati samo <b>%{username}</b>."
         automatically_claimed_by: "<b>%{username}</b> trenutno pregledava ovaj sadržaj."
-      claim:
-        title: "prisvoji ovu temu"
-      unclaim:
-        help: "izbriši prisvajanje"
       awaiting_approval: "Čeka na odobrenje"
       delete: "Pobriši"
       settings:
@@ -907,6 +903,7 @@ hr:
           title: "Objava"
           noun: "Objava"
       flagged_as: "Označeno kao"
+      user_label: "Korisnik"
       assigned_to: "Dodijeljeno"
       moderator_actions: "Radnje moderatora"
       timeline_and_notes: "Vremenska linija i bilješke"
@@ -937,6 +934,7 @@ hr:
       review_user: "Korisnik"
       need_help: "Trebate pomoć?"
       copy_link: "Kopirajte poveznicu"
+      copy_link_feedback: "Poveznica kopirana"
       view_source: "Pogledajte izvor"
       insights:
         title: "Uvidi"
@@ -2900,7 +2898,6 @@ hr:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"
-      create_pm: "Pošalji poruku"
       create_whisper: "Šapat"
       create_shared_draft: "Stvori zajedničku skicu"
       edit_shared_draft: "Uredi zajedničku skicu"
@@ -3007,6 +3004,9 @@ hr:
         create_topic:
           label: "Nova tema"
           desc: Stvori novu temu
+        create_personal_message:
+          label: "Nova poruka"
+          desc: "Unesite novu privatnu poruku"
         shared_draft:
           label: "Zajednička skica"
           desc: "Skiciraj temu koja će biti vidljiva samo ovlaštenim korisnicima"
@@ -3533,7 +3533,7 @@ hr:
         few: "%{count} objava u temi"
         other: "%{count} objave u temi"
       create: "Nova tema"
-      create_long: "Otvori novu temu"
+      create_long: "Stvori novu temu"
       open_draft: "Otvori skicu"
       private_message: "Pokrenite poruku"
       archive_message:

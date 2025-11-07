@@ -4,6 +4,15 @@ import "decorator-transforms/globals";
 import "./loader-shims";
 import "./discourse-common-loader-shims";
 import "./global-compat";
+import dialogHolderCompatModules from "discourse/dialog-holder/dialog-holder-compat-modules";
+import floatKitCompatModules from "discourse/float-kit/float-kit-compat-modules";
+import selectKitCompatModules from "discourse/select-kit/select-kit-compat-modules";
+import truthHelperCompatModules from "discourse/truth-helpers/truth-helpers-compat-modules";
+defineModules("select-kit", selectKitCompatModules);
+defineModules("float-kit", floatKitCompatModules);
+defineModules("truth-helpers", truthHelperCompatModules);
+defineModules("dialog-holder", dialogHolderCompatModules);
+
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 
 // Register Discourse's standard implicit injections on common framework classes.
@@ -51,15 +60,21 @@ export async function loadThemes() {
   await Promise.all(promises);
 }
 
-export async function loadAdmin() {
-  const compatModules = (
-    await import(
-      /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
-    )
-  ).default;
+function defineModules(name, compatModules) {
   for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/admin/${key.slice(2)}`, () => mod);
+    define(`discourse/${name}/${key.slice(2)}`, () => mod);
   }
+}
+
+export async function loadAdmin() {
+  defineModules(
+    "admin",
+    (
+      await import(
+        /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
+      )
+    ).default
+  );
 }
 
 class Discourse extends Application {

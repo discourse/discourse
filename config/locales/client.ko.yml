@@ -481,10 +481,6 @@ ko:
         required: "항목을 검토하려면 먼저 항목을 독점해야 합니다."
         claimed_by_you: "이 항목을 독점했으며 이제 검토할 수 있습니다."
         claimed_by_other: "이 항목은 <b>%{username}</b> 님만 검토할 수 있습니다."
-      claim:
-        title: "이 주제 독점하기"
-      unclaim:
-        help: "이 독점 신청 제거"
       awaiting_approval: "승인 대기중"
       delete: "삭제"
       settings:
@@ -608,6 +604,7 @@ ko:
         reviewable_post:
           title: "게시물"
           noun: "글"
+      user_label: "사용자"
       notes:
         delete: "삭제하기"
       review_user: "사용자"
@@ -2010,6 +2007,7 @@ ko:
       reply: "댓글 달기"
       cancel: "취소"
       create_topic: "주제 생성"
+      create_pm: "전송"
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 생성"
       edit_shared_draft: "공유 초안 편집"
@@ -2080,8 +2078,9 @@ ko:
         toggle_whisper:
           label: 귓속말 토글
           desc: 귓속말은 운영진만 볼 수 있습니다
-        create_topic:
-          label: "새 주제"
+        create_personal_message:
+          label: "새 메시지"
+          desc: "새 개인 메시지 쓰기"
         shared_draft:
           label: "공유 초안"
           desc: "허용된 사용자만 볼 수 있는 주제 초안을 작성합니다"
@@ -2427,7 +2426,6 @@ ko:
       filter_to:
         other: "이 주제의 게시물 %{count}개"
       create: "새 주제"
-      create_long: "새 주제 생성"
       open_draft: "초안 열기"
       private_message: "메시지 시작"
       archive_message:

@@ -305,6 +305,12 @@ en:
 
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
+    skip_links_label: "Skip navigation links"
+    skip_to_post: "Skip to post %{post_number}"
+    skip_to_where_you_left_off: "Skip to where you left off (post %{post_number})"
+    skip_to_where_you_left_off_last: "Skip to where you left off (last reply, post %{post_number})"
+    skip_to_last_reply: "Skip to last reply"
+    skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
@@ -319,6 +325,7 @@ en:
 
     welcome_banner:
       header:
+        new_members: "Welcome, %{preferred_display_name}!"
         logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
       subheader:
@@ -918,6 +925,7 @@ en:
           noun: "post"
       flagged_as: "Flagged as"
       post_flagged_as: "Post flagged as"
+      chat_flagged_as: "Chat flagged as"
       queued_post_label: "Queued post"
       user_label: "User"
       assigned_to: "Assigned to"
@@ -2932,8 +2940,13 @@ en:
         title: "Translating post"
         select: "Select translation"
         save: "Save translation"
-        original_content: "Original post content"
+        original_content: "Original post"
+        translation_preview: "Translation preview"
+        original: "Original"
+        translation: "Translation"
+        no_translation_yet: "Start typing to see translation preview..."
         placeholder: "Enter translation for post here..."
+        show_raw_markdown: "Show raw"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
@@ -2986,7 +2999,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Send Message"
+      create_pm: "Send message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
@@ -3108,7 +3121,7 @@ en:
           desc: "Reply without changing latest reply date"
         toggle_unlisted:
           label: Toggle unlisted
-          desc: Unlisted topics only accessible to members by direct link
+          desc: "Unlisted topics are only accessible by direct link"
 
       reload: "Reload"
       ignore: "Ignore"
@@ -4106,6 +4119,7 @@ en:
         actions: "Bulk actions"
 
     post:
+      accessible_heading: "post by %{username} %{date}"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Quote (or press q)"
@@ -4129,8 +4143,13 @@ en:
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
       load_more_replies: "load more replies"
+      load_more_posts_above: "Load more posts above"
+      load_more_posts_below: "Load more posts below"
       sr_collapse_replies: "Collapse embedded replies"
       sr_load_more_replies: "Load more embedded replies"
+      loading_more_posts_above: "Loading more posts above..."
+      loading_more_posts_below: "Loading more posts below..."
+      loading_complete: "Loading complete"
       sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply"
@@ -8481,6 +8500,7 @@ en:
         category: "Post to category"
         tags: "Topic tags"
         post_author: "Post author"
+        post_author_description: "Author for all embedded topics from this host, overriding blog page meta tags. Leave empty to read author from the page's <meta name='discourse-username'> or <meta name='author'> tags."
         post_author_with_default: "Post author (defaults to %{author})"
         add_host: "Add host"
         posts_and_topics: "Posts & topics configuration"

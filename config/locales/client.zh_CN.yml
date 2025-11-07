@@ -257,6 +257,12 @@ zh_CN:
       forwarded: "转发了上述电子邮件"
     topic_admin_menu: "话题操作"
     skip_to_main_content: "跳到主要内容"
+    skip_links_label: "跳过导航链接"
+    skip_to_post: "跳至帖子 %{post_number}"
+    skip_to_where_you_left_off: "跳转到您离开的地方 (post %{post_number})"
+    skip_to_where_you_left_off_last: "跳转到您离开的地方（最后一个回复，帖子 %{post_number})"
+    skip_to_last_reply: "跳转到最后一条回复"
+    skip_to_top: "跳至顶部"
     skip_user_nav: "跳到个人资料内容"
     emails_are_disabled: "所有外发电子邮件已被管理员全局禁用。任何类型的电子邮件通知都不会发出。"
     emails_are_disabled_non_staff: "非管理员用户无法向外发送电子邮件。"
@@ -629,10 +635,6 @@ zh_CN:
         claimed_by_you: "您已认领此条目，可以进行审核。"
         claimed_by_other: "此条目仅可以由 <b>%{username}</b> 审核。"
         automatically_claimed_by: "此条目目前正在由 <b>%{username}</b>审核。"
-      claim:
-        title: "认领此话题"
-      unclaim:
-        help: "移除此认领"
       awaiting_approval: "需要审批"
       delete: "删除"
       settings:
@@ -783,6 +785,7 @@ zh_CN:
           title: "帖子"
           noun: "帖子"
       flagged_as: "被标记为"
+      user_label: "用户"
       assigned_to: "已指定给"
       moderator_actions: "版主操作"
       timeline_and_notes: "时间线和注释"
@@ -2567,6 +2570,7 @@ zh_CN:
         select: "选择翻译"
         save: "保存翻译"
         original_content: "原始帖子内容"
+        translation: "翻译"
         placeholder: "在此处输入帖子的翻译…"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
@@ -2712,8 +2716,11 @@ zh_CN:
           label: 切换密语
           desc: 密语仅对管理人员可见
         create_topic:
-          label: "新建话题"
+          label: "新话题"
           desc: 创建新话题
+        create_personal_message:
+          label: "新建消息"
+          desc: "创建新的个人消息"
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
@@ -3599,6 +3606,7 @@ zh_CN:
         clear_all: "全部清除"
         actions: "批量操作"
     post:
+      accessible_heading: "由 %{username} 发布于 %{date}"
       confirm_delete: "确定要删除此帖子吗？"
       quote_reply: "引用"
       quote_reply_shortcut: "引用（或按 q）"
@@ -3622,8 +3630,13 @@ zh_CN:
       deleted_by_author_simple: "（帖子已被作者删除）"
       collapse: "收起"
       load_more_replies: "加载更多回复"
+      load_more_posts_above: "加载上方更多的帖子"
+      load_more_posts_below: "加载下方更多的帖子"
       sr_collapse_replies: "收起嵌入式回复"
       sr_load_more_replies: "加载更多嵌入式回复"
+      loading_more_posts_above: "正在加载上方更多的帖子……"
+      loading_more_posts_below: "正在加载下方更多的帖子……"
+      loading_complete: "加载完成"
       sr_date: "发布日期"
       sr_expand_replies:
         other: "此帖子有 %{count} 条回复"

@@ -468,6 +468,7 @@ he:
           topic: "נושא"
       reviewable:
         type: "הודעת צ׳אט"
+        message_in_channel: "ערוץ"
       reactions:
         only_you: "<span>הגבת עם </span>:%{emoji}:"
         you_and_single_user: "<span>הגבת יחד עם %{username} את האמוג׳י </span>:%{emoji}:"

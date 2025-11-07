@@ -483,10 +483,6 @@ sv:
         required: "Du måste göra anspråk innan du kan granska dem."
         claimed_by_you: "Du har gjort anspråk på detta och kan nu granska det."
         claimed_by_other: "Detta föremål kan enbart granskas av <b>%{username}</b>."
-      claim:
-        title: "Gör anspråk på ämne"
-      unclaim:
-        help: "ta bort detta anspråk"
       awaiting_approval: "Inväntar godkännande"
       delete: "Radera"
       settings:
@@ -634,9 +630,11 @@ sv:
         reviewable_post:
           title: "Inlägg"
           noun: "inlägg"
+      user_label: "Användare"
       notes:
         delete: "Radera"
       review_user: "Användare"
+      copy_link_feedback: "Länken kopierad"
       insights:
         activities:
           posts:
@@ -2240,6 +2238,7 @@ sv:
       reply: "Svara"
       cancel: "Avbryt"
       create_topic: "Skapa ämne"
+      create_pm: "Skicka meddelande"
       create_whisper: "Viska"
       create_shared_draft: "Skapa delat utkast"
       edit_shared_draft: "Redigera delat utkast"
@@ -2315,8 +2314,10 @@ sv:
           label: Växla viskning
           desc: Viskningar är enbart synliga för personal
         create_topic:
-          label: "Nytt ämne"
           desc: Skapa ett nytt ämne
+        create_personal_message:
+          label: "Nytt meddelande"
+          desc: "Skapa ett nytt personligt meddelande"
         shared_draft:
           label: "Delat utkast"
           desc: "Skapa ett utkast av ett ämne vilket enbart kommer vara synligt för tillåtna användare"

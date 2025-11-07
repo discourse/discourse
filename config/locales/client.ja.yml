@@ -621,10 +621,6 @@ ja:
         claimed_by_you: "この項目を自分に割り当てたため、レビューできます。"
         claimed_by_other: "この項目は <b>%{username}</b> のみがレビューできます。"
         automatically_claimed_by: "この項目は現在、<b>%{username}</b> がレビューしています。"
-      claim:
-        title: "トピックを自分に割り当てる"
-      unclaim:
-        help: "この割り当てを削除する"
       awaiting_approval: "承認待ち"
       delete: "削除"
       settings:
@@ -775,6 +771,7 @@ ja:
           title: "投稿"
           noun: "投稿"
       flagged_as: "通報:"
+      user_label: "ユーザー"
       assigned_to: "割り当て先"
       moderator_actions: "モデレーターのアクション"
       timeline_and_notes: "タイムラインとメモ"
@@ -2568,6 +2565,7 @@ ja:
         select: "翻訳を選択"
         save: "翻訳を保存"
         original_content: "元の投稿のコンテンツ"
+        translation: "翻訳"
         placeholder: "ここに投稿の翻訳を入力します..."
       group_mentioned_limit:
         other: "<b>警告！</b> <a href='%{group_link}'>%{group}</a> をメンションしましたが、このグループのメンバー数は、管理者がメンション数制限として設定した %{count} 人を超えています。そのため誰にも通知されません。"
@@ -2609,7 +2607,7 @@ ja:
       reply: "返信"
       cancel: "キャンセル"
       create_topic: "トピックを作成"
-      create_pm: "メッセージを送信"
+      create_pm: "メッセージを送信する"
       create_whisper: "ささやき"
       create_shared_draft: "共有の下書きを作成"
       edit_shared_draft: "共有の下書きを編集"
@@ -2706,6 +2704,9 @@ ja:
         create_topic:
           label: "新規トピック"
           desc: 新しいトピックを作成します
+        create_personal_message:
+          label: "新規メッセージ"
+          desc: "新しい個人メッセージを作成する"
         shared_draft:
           label: "共有の下書き"
           desc: "許可されたユーザーにのみ表示されるトピックの下書きを作成します"
@@ -3164,7 +3165,7 @@ ja:
       filter_to:
         other: "トピックの %{count} 件の投稿"
       create: "新規トピック"
-      create_long: "新しいトピックの作成"
+      create_long: "新しいトピックを作成します"
       open_draft: "下書きを開く"
       private_message: "メッセージを書く"
       archive_message:

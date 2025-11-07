@@ -4,7 +4,10 @@ export default function ({ types: t }) {
     visitor: {
       ImportDeclaration(path) {
         const moduleName = path.node.source.value;
-        if (moduleName.startsWith("admin/")) {
+        if (
+          /^(admin|select-kit|float-kit|dialog-holder)\//.test(moduleName) ||
+          moduleName.startsWith("truth-helpers")
+        ) {
           path.node.source = t.stringLiteral(`discourse/${moduleName}`);
         }
 

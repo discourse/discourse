@@ -144,6 +144,9 @@ module.exports = {
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
   parallel: parseInt(process.env.QUNIT_PARALLEL || 1, 10),
+  socket_server_options: {
+    maxHttpBufferSize: 1e8, // 100MB
+  },
   browser_start_timeout: 120,
   browser_args: {
     Chromium: [

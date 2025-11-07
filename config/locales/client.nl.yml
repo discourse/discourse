@@ -678,10 +678,6 @@ nl:
         claimed_by_you: "Je hebt dit item geclaimd en kunt het beoordelen."
         claimed_by_other: "Dit item kan alleen worden beoordeeld door <b>%{username}</b>."
         automatically_claimed_by: "Dit item wordt momenteel beoordeeld door <b>%{username}</b>."
-      claim:
-        title: "dit topic claimen"
-      unclaim:
-        help: "deze claim verwijderen"
       awaiting_approval: "Wacht op goedkeuring"
       delete: "Verwijderen"
       settings:
@@ -839,6 +835,7 @@ nl:
           title: "Bericht"
           noun: "bericht"
       flagged_as: "Gemarkeerd als"
+      user_label: "Gebruiker"
       assigned_to: "Toegewezen aan"
       moderator_actions: "Moderatoracties"
       timeline_and_notes: "Tijdlijn en opmerkingen"
@@ -869,6 +866,7 @@ nl:
       review_user: "Gebruiker"
       need_help: "Hulp nodig?"
       copy_link: "Link kopiëren"
+      copy_link_feedback: "Link gekopieerd"
       view_source: "Bron weergeven"
       insights:
         title: "Inzichten"
@@ -2702,6 +2700,7 @@ nl:
         select: "Selecteer vertaling"
         save: "Vertaling opslaan"
         original_content: "Inhoud van origineel bericht"
+        translation: "Vertaling"
         placeholder: "Voer hier de vertaling voor het bericht in..."
       group_mentioned_limit:
         one: "<b>Waarschuwing!</b> Je hebt <a href='%{group_link}'>%{group}</a> genoemd, maar deze groep heeft meer leden dan de door een beheerder geconfigureerde vermeldingslimiet van %{count} gebruiker. Niemand krijgt een melding."
@@ -2849,6 +2848,9 @@ nl:
         create_topic:
           label: "Nieuw topic"
           desc: Maak een nieuw topic
+        create_personal_message:
+          label: "Nieuw bericht"
+          desc: "Een nieuw persoonlijk bericht maken"
         shared_draft:
           label: "Gedeeld concept"
           desc: "Maak een topicconcept dat alleen zichtbaar is voor toegestane gebruikers"
@@ -3341,7 +3343,7 @@ nl:
         one: "%{count} bericht in topic"
         other: "%{count} berichten in topic"
       create: "Nieuw topic"
-      create_long: "Nieuw topic maken"
+      create_long: "Maak een nieuw topic"
       open_draft: "Concept openen"
       private_message: "Bericht sturen"
       archive_message:

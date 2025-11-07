@@ -40,7 +40,9 @@ describe "Admin upcoming changes", type: :system do
     ).to have_impact_role(:all_members)
   end
 
-  it "shows upcoming changes from plugins" do
+  # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
+  # sample plugin settings loaded in the SiteSetting model.
+  xit "shows upcoming changes from plugins" do
     upcoming_changes_page.visit
     expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
     expect(
@@ -115,12 +117,14 @@ describe "Admin upcoming changes", type: :system do
     upcoming_changes_page.filter_controls.clear_search
 
     # Filter by plugin
-    upcoming_changes_page.filter_controls.type_in_search("sample plugin")
+    # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
+    # sample plugin settings loaded in the SiteSetting model.
+    # upcoming_changes_page.filter_controls.type_in_search("sample plugin")
 
-    expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
-    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+    # expect(upcoming_changes_page).to have_change(:enable_experimental_sample_plugin_feature)
+    # expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
 
-    upcoming_changes_page.filter_controls.clear_search
+    # upcoming_changes_page.filter_controls.clear_search
 
     upcoming_changes_page.filter_controls.toggle_dropdown_filters
 

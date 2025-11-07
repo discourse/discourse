@@ -678,10 +678,6 @@ it:
         claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
         claimed_by_other: "Questo elemento può essere rivisto esclusivamente da <b>%{username}</b>."
         automatically_claimed_by: "Questo articolo è attualmente in fase di revisione da parte di <b>%{username}</b>."
-      claim:
-        title: "rivendica questo argomento"
-      unclaim:
-        help: "rimuovi questa rivendicazione"
       awaiting_approval: "In attesa di approvazione"
       delete: "Elimina"
       settings:
@@ -839,6 +835,7 @@ it:
           title: "Messaggio"
           noun: "messaggio"
       flagged_as: "Contrassegnato come"
+      user_label: "Utente"
       assigned_to: "Assegnato a"
       moderator_actions: "Azioni del moderatore"
       timeline_and_notes: "Cronologia e note"
@@ -869,6 +866,7 @@ it:
       review_user: "Utente"
       need_help: "Hai bisogno di aiuto?"
       copy_link: "Copia link"
+      copy_link_feedback: "Link copiato"
       view_source: "Visualizza origine"
       insights:
         title: "Approfondimenti"
@@ -2699,6 +2697,7 @@ it:
         select: "Seleziona la traduzione"
         save: "Salva la traduzione"
         original_content: "Contenuto del messaggio originale"
+        translation: "Traduzione"
         placeholder: "Inserisci qui la traduzione del messaggio..."
       group_mentioned_limit:
         one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Non ci saranno notifiche."
@@ -2844,8 +2843,11 @@ it:
           label: Attiva/disattiva sussurri
           desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
-          label: "Nuovo Argomento"
+          label: "Nuovo argomento"
           desc: Crea un nuovo argomento
+        create_personal_message:
+          label: "Nuovo messaggio"
+          desc: "Crea un nuovo messaggio personale"
         shared_draft:
           label: "Bozza Condivisa"
           desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
@@ -3338,7 +3340,7 @@ it:
         one: "%{count} messaggio in questo argomento"
         other: "%{count} messaggi in questo argomento"
       create: "Nuovo Argomento"
-      create_long: "Crea un nuovo Argomento"
+      create_long: "Crea un nuovo argomento"
       open_draft: "Apri Bozza"
       private_message: "Inizia a scrivere un messaggio"
       archive_message:

@@ -5,6 +5,7 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import {
   escapeExpression,
   postRNWebviewMessage,
@@ -30,15 +31,30 @@ export default async function lightbox(elem, siteSettings) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
     const isTestEnv = isTesting() || isRailsTesting();
 
+    const rtl = isDocumentRTL();
+    const items = [...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
+
+    if (rtl) {
+      items.reverse();
+    }
+
+    items.forEach((el, index) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        lightboxEl.loadAndOpen(index);
+      });
+    });
+
     const lightboxEl = new PhotoSwipeLightbox({
-      gallery: elem,
-      children: SELECTORS.DEFAULT_ITEM_SELECTOR,
+      dataSource: items,
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
       closeTitle: i18n("lightbox.close"),
       zoomTitle: i18n("lightbox.zoom"),
       errorMsg: i18n("lightbox.error"),
       showHideAnimationType: isTestEnv ? "none" : "zoom",
+      counter: false,
       tapAction,
       paddingFn,
       pswpModule: async () => await import("photoswipe"),
@@ -50,6 +66,10 @@ export default async function lightbox(elem, siteSettings) {
       el.querySelector(".meta")?.classList.add("open");
     });
 
+    lightboxEl.on("close", function () {
+      lightboxEl.pswp.element.classList.add("pswp--behind-header");
+    });
+
     lightboxEl.on("destroy", () => {
       const el = lightboxEl.pswp.currSlide.data.element;
       el.querySelector(".meta")?.classList.remove("open");
@@ -59,7 +79,7 @@ export default async function lightbox(elem, siteSettings) {
       // adds a custom caption to lightbox
       lightboxEl.pswp.ui.registerElement({
         name: "caption",
-        order: 6,
+        order: 11,
         isButton: false,
         appendTo: "root",
         html: "",
@@ -139,13 +159,34 @@ export default async function lightbox(elem, siteSettings) {
         tagName: "a",
         title: i18n("lightbox.image_info"),
         html: renderIcon("string", "circle-info", { class: "pswp__icn" }),
+        onInit: (el, pswp) => {
+          pswp.on("change", () => {
+            el.style.display = pswp.currSlide.data.details ? "block" : "none";
+          });
+        },
         onClick: () => {
           lightboxEl.pswp.element.classList.toggle("pswp--caption-expanded");
         },
       });
+
+      lightboxEl.pswp.ui.registerElement({
+        name: "custom-counter",
+        order: 6,
+        isButton: false,
+        appendTo: "bar",
+        onInit: (el, pswp) => {
+          pswp.on("change", () => {
+            const total = pswp.getNumItems();
+            const index = rtl ? total - pswp.currIndex : pswp.currIndex + 1;
+            el.textContent = `${index} / ${total}`;
+          });
+        },
+      });
     });
 
-    lightboxEl.addFilter("domItemData", (data, el) => {
+    lightboxEl.addFilter("itemData", (data) => {
+      const el = data.element;
+
       if (!el) {
         return data;
       }
@@ -167,8 +208,9 @@ export default async function lightbox(elem, siteSettings) {
           "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%271%27%20height%3D%271%27/%3E";
       }
 
+      const imgInfo = el.querySelector(".informations")?.textContent || "";
+
       if (!width || !height) {
-        const imgInfo = el.querySelector(".informations")?.textContent || "";
         const dimensions = imgInfo.trim().split(" ")[0];
         [width, height] = dimensions.split(/x|×/).map(Number);
       }
@@ -178,6 +220,7 @@ export default async function lightbox(elem, siteSettings) {
 
       data.src = data.src || el.getAttribute("data-large-src");
       data.title = el.title || el.alt;
+      data.details = imgInfo;
       data.w = data.width = width;
       data.h = data.height = height;
 

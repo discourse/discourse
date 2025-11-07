@@ -803,10 +803,6 @@ he:
         claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
         claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
         automatically_claimed_by: "הפריט הזה נבדק כרגע על ידי <b>%{username}</b>."
-      claim:
-        title: "דרישת נושא זה"
-      unclaim:
-        help: "הסרת דרישה זו"
       awaiting_approval: "בהמתנה לאישור"
       delete: "מחיקה"
       settings:
@@ -973,6 +969,7 @@ he:
           title: "פוסט"
           noun: "פוסט"
       flagged_as: "מסומן בתור"
+      user_label: "משתמש"
       assigned_to: "הוקצה לטובת"
       moderator_actions: "פעולות פיקוח"
       timeline_and_notes: "ציר זמן והערות"
@@ -1002,6 +999,7 @@ he:
       review_user: "משתמש"
       need_help: "אפשר להציע עזרה?"
       copy_link: "העתקת קישור"
+      copy_link_feedback: "הקישור הועתק"
       view_source: "הצגת המקור"
       insights:
         title: "תובנות"
@@ -2981,6 +2979,7 @@ he:
         select: "בחירת תרגום"
         save: "שמירת תרגום"
         original_content: "תוכן פוסט מקורי"
+        translation: "תרגום"
         placeholder: "נא למלא כאן תרגום לפוסט…"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
@@ -3156,6 +3155,9 @@ he:
         create_topic:
           label: "נושא חדש"
           desc: יצירת נושא חדש
+        create_personal_message:
+          label: "הודעה חדשה"
+          desc: "צור הודעה פרטית חדשה"
         shared_draft:
           label: "טיוטה משותפת"
           desc: "יצירת טיוטה לנושא שרק משתמשים מורשים יוכלו לראות"

@@ -23,7 +23,6 @@
     "ember-auto-import": "^2.11.1",
     "markdown-it": "14.0.0",
     "pretty-text": "workspace:1.0.0",
-    "truth-helpers": "workspace:1.0.0",
     "xss": "^1.0.15"
   },
   "peerDependencies": {

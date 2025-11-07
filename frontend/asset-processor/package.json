@@ -39,7 +39,7 @@
     "postcss-nesting": "^13.0.2",
     "readable-stream": "^4.7.0",
     "source-map-js": "^1.2.1",
-    "terser": "^5.44.0"
+    "terser": "^5.44.1"
   },
   "engines": {
     "node": ">= 18",
@@ -48,6 +48,6 @@
     "pnpm": "^9"
   },
   "devDependencies": {
-    "vitest": "^4.0.6"
+    "vitest": "^4.0.7"
   }
 }

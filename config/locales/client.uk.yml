@@ -351,6 +351,7 @@ uk:
     back_button: "Назад"
     welcome_banner:
       header:
+        new_members: "Ласкаво просимо, %{preferred_display_name}!"
         logged_in_members: "З поверненням, %{preferred_display_name}!"
         anonymous_members: "Ласкаво просимо до сайту %{site_name}!"
       search_placeholder: "Пошук"
@@ -804,9 +805,9 @@ uk:
         claimed_by_other: "Цей елемент може розглядати лише <b>%{username}</b>."
         automatically_claimed_by: "Зараз цей елемент переглядає <b>%{username}</b>."
       claim:
-        title: "заявити права на цю тему"
+        title: "Заявити права на цю тему"
       unclaim:
-        help: "вилучити цю заявку"
+        help: "Вилучити цю заявку"
       awaiting_approval: "Очікує схвалення"
       delete: "Вилучити"
       settings:
@@ -978,6 +979,10 @@ uk:
           title: "Допис"
           noun: "допис"
       flagged_as: "Позначено як"
+      post_flagged_as: "Публікацію позначено як"
+      chat_flagged_as: "Чат позначено як"
+      queued_post_label: "Повідомлення в черзі"
+      user_label: "Користувач"
       assigned_to: "Призначено для"
       moderator_actions: "Дії модератора"
       timeline_and_notes: "Хронологія та нотатки"
@@ -1008,6 +1013,8 @@ uk:
       review_user: "Користувач"
       need_help: "Потрібна допомога?"
       copy_link: "Скопіювати посилання"
+      copy_permalink_title: "скопіювати посилання на цю рецензовану статтю в буфер обміну"
+      copy_link_feedback: "Посилання скопійовано"
       view_source: "Переглянути вихідний код"
       insights:
         title: "Статистика"
@@ -2519,6 +2526,12 @@ uk:
       no_results: "Немає результатів"
       search: "Пошук…"
       label: "Виберіть опції"
+    d_otp:
+      screen_reader:
+        one: Введіть %{count} число
+        few: Введіть %{count} числа
+        many: Введіть %{count} чисел
+        other: Введіть %{count} чисел
     form_kit:
       reset: Скинути
       optional: опціонально
@@ -2986,6 +2999,10 @@ uk:
         select: "Виберіть переклад"
         save: "Зберегти переклад"
         original_content: "Оригінальний текст публікації"
+        translation_preview: "Попередній перегляд перекладу"
+        original: "Оригінал"
+        translation: "Переклад"
+        no_translation_yet: "Почніть вводити текст, щоб побачити попередній перегляд перекладу..."
         placeholder: "Введіть переклад для повідомлення тут..."
       group_mentioned_limit:
         one: "<b>Увага!</b> Ви згадали <a href='%{group_link}'>%{group}</a>, в якій більше учасників, ніж встановлений адміністратором ліміт згадок на %{count} користувачів. Ніхто не отримає сповіщення."
@@ -3161,6 +3178,9 @@ uk:
         create_topic:
           label: "Нова тема"
           desc: Створити нову тему
+        create_personal_message:
+          label: "Сворити нове"
+          desc: "Створити нове приватне повідомлення"
         shared_draft:
           label: "Спільна чернетка"
           desc: "Створіть тему, яку бачитимуть лише обрані користувачі"
@@ -5021,6 +5041,7 @@ uk:
     lightbox:
       download: "Завантажити"
       open: "Оригінальне зображення"
+      image_info: "Інформація про зображення"
       previous: "Попередній (клавіша зі стрілкою вліво)"
       next: "Наступний (клавіша зі стрілкою вправо)"
       counter: "%curr% з %total%"
@@ -8191,6 +8212,7 @@ uk:
         merging_user: "Приєднання користувача…"
         merge_failed: "Помилка під час об'єднання користувачів."
         delete_forbidden_because_admin: "Адміністратори не можуть бути видалені."
+        delete_posts_forbidden_because_admin: "Неможливо видалити всі повідомлення адміністраторів."
         delete_forbidden:
           one: "Користувачі не можуть бути видалені, якщо вони мають дописи. Видаліть усі дописи, перш ніж намагатися видалити користувача. (Дописи старші %{count} день не можна видалити.)"
           few: "Користувачі не можуть бути видалені, якщо вони мають дописи. Видаліть усі дописи, перш ніж намагатися видалити користувача. (Дописи старші %{count} дні не можна видалити.)"

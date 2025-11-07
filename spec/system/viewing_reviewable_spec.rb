@@ -12,6 +12,7 @@ describe "Viewing reviewable item", type: :system do
   describe "when user is part of the groups list of the `reviewable_ui_refresh` site setting" do
     before do
       SiteSetting.reviewable_ui_refresh = group.name
+      SiteSetting.reviewable_old_moderator_actions = false
       group.add(admin)
       sign_in(admin)
     end
@@ -115,6 +116,23 @@ describe "Viewing reviewable item", type: :system do
         refreshed_review_page.click_insights_tab
         refreshed_review_page.click_timeline_tab
         expect(page).to have_text("This is a review note.")
+      end
+    end
+
+    describe "when the reviewable item is a queued post" do
+      fab!(:reviewable_queued_post)
+
+      it "allows to edit post when old moderator actions are enabled" do
+        SiteSetting.reviewable_old_moderator_actions = true
+        refreshed_review_page.visit_reviewable(reviewable_queued_post)
+
+        expect(page).to have_text("hello world post contents.")
+        refreshed_review_page.click_edit_post_button
+        refreshed_review_page.fill_post_content("Hello world from system spec!")
+        refreshed_review_page.save_post_edit
+
+        expect(page).to have_text("Hello world from system spec!")
+        expect(page).not_to have_text("hello world post contents.")
       end
     end
 

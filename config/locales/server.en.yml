@@ -1713,6 +1713,7 @@ en:
       category_style_deprecated: "Your Discourse is currently using a deprecated category style which will be removed before the final beta release of Discourse 3.2. Please refer to <a href='https://meta.discourse.org/t/282441'>Moving to a Single Category Style Site Setting</a> for instructions on how to keep your selected category style."
       maxmind_db_configuration: 'The server has been configured to use MaxMind databases for reverse IP lookups but a valid MaxMind account ID has not been configured which may result in MaxMind databases failing to download in the future. <a href="https://meta.discourse.org/t/configure-maxmind-for-reverse-ip-lookups/173941" target="_blank">See this guide to learn more</a>.'
       admin_sidebar_deprecation: "The old admin layout is deprecated in favour of the new <a href='https://meta.discourse.org/t/-/289281'>sidebar layout</a> and will be removed in the next release. You can <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>configure</a> the new sidebar layout now to opt in before that."
+      starttls_disabled: "The outgoing email configuration has STARTTLS disabled. This is almost never necessary. Consider removing <pre>DISCOURSE_SMTP_ENABLE_START_TLS=false</pre> from your environment. Please refer to <a href='https://meta.discourse.org/t/387286'>this topic</a> for more details."
     back_from_logster_text: "Back to site"
 
   site_settings:
@@ -2736,7 +2737,7 @@ en:
     welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
     welcome_banner_page_visibility: "Determines on which pages the welcome banner will appear."
-    welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the 'primary' color from the color palette will be used."
+    welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the active theme controls the color."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
