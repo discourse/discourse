@@ -24,13 +24,13 @@ RSpec.describe Styleguide::StyleguideController do
 
       it "returns 403 for anonymous users" do
         get "/styleguide"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
 
       it "returns 403 for regular users" do
         sign_in(Fabricate(:user))
         get "/styleguide"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
 
       it "allows access for moderators" do
@@ -58,13 +58,13 @@ RSpec.describe Styleguide::StyleguideController do
 
       it "returns 403 for anonymous users" do
         get "/styleguide"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
 
       it "returns 403 for users not in the group" do
         sign_in(non_member)
         get "/styleguide"
-        expect(response.status).to eq(403)
+        expect(response.status).to eq(404)
       end
 
       it "allows access for users in the group" do

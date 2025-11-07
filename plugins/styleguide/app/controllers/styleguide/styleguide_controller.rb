@@ -8,11 +8,11 @@ module Styleguide
     def index
       if !current_user &&
            !SiteSetting.styleguide_allowed_groups_map.include?(Group::AUTO_GROUPS[:everyone])
-        raise Discourse::InvalidAccess.new
+        return raise Discourse::NotFound
       end
 
       if current_user && !current_user.in_any_groups?(SiteSetting.styleguide_allowed_groups_map)
-        raise Discourse::InvalidAccess.new
+        return raise Discourse::NotFound
       end
 
       render "default/empty"
