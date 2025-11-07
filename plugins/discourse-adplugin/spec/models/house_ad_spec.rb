@@ -36,8 +36,8 @@ describe AdPlugin::HouseAd do
   describe ".find" do
     let!(:ad) { AdPlugin::HouseAd.create(valid_attrs) }
 
-    it "returns nil if no match" do
-      expect(AdPlugin::HouseAd.find(100)).to be_nil
+    it "raises RecordNotFound if no match" do
+      expect { AdPlugin::HouseAd.find(100) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "can retrieve by id" do
@@ -85,12 +85,12 @@ describe AdPlugin::HouseAd do
 
   describe "#save" do
     it "assigns an id and attrs for new record" do
-      ad = AdPlugin::HouseAd.from_hash(valid_attrs)
+      ad = AdPlugin::HouseAd.new(valid_attrs)
       expect(ad.save).to eq(true)
       expect(ad.name).to eq(valid_attrs[:name])
       expect(ad.html).to eq(valid_attrs[:html])
       expect(ad.id.to_i > 0).to eq(true)
-      ad2 = AdPlugin::HouseAd.from_hash(valid_attrs.merge(name: "Find Another Mechanic"))
+      ad2 = AdPlugin::HouseAd.new(valid_attrs.merge(name: "Find Another Mechanic"))
       expect(ad2.save).to eq(true)
       expect(ad2.id).to_not eq(ad.id)
     end
@@ -109,7 +109,7 @@ describe AdPlugin::HouseAd do
 
     describe "errors" do
       it "blank name" do
-        ad = AdPlugin::HouseAd.from_hash(valid_attrs.merge(name: ""))
+        ad = AdPlugin::HouseAd.new(valid_attrs.merge(name: ""))
         expect(ad.save).to eq(false)
         expect(ad).to_not be_valid
         expect(ad.errors.full_messages).to be_present
@@ -119,7 +119,7 @@ describe AdPlugin::HouseAd do
 
       it "duplicate name" do
         AdPlugin::HouseAd.create(valid_attrs)
-        ad = AdPlugin::HouseAd.from_hash(valid_attrs)
+        ad = AdPlugin::HouseAd.new(valid_attrs)
         expect(ad.save).to eq(false)
         expect(ad).to_not be_valid
         expect(ad.errors.full_messages).to be_present
@@ -129,7 +129,8 @@ describe AdPlugin::HouseAd do
 
       it "duplicate name, different case" do
         AdPlugin::HouseAd.create(valid_attrs.merge(name: "mechanic"))
-        ad = AdPlugin::HouseAd.create(valid_attrs.merge(name: "Mechanic"))
+        ad = AdPlugin::HouseAd.create(valid_attrs.merge(name: "mechanic"))
+
         expect(ad.save).to eq(false)
         expect(ad).to_not be_valid
         expect(ad.errors[:name]).to be_present
@@ -137,7 +138,7 @@ describe AdPlugin::HouseAd do
       end
 
       it "blank html" do
-        ad = AdPlugin::HouseAd.from_hash(valid_attrs.merge(html: ""))
+        ad = AdPlugin::HouseAd.new(valid_attrs.merge(html: ""))
         expect(ad.save).to eq(false)
         expect(ad).to_not be_valid
         expect(ad.errors.full_messages).to be_present
@@ -146,7 +147,7 @@ describe AdPlugin::HouseAd do
       end
 
       it "invalid name" do
-        ad = AdPlugin::HouseAd.from_hash(valid_attrs.merge(name: "<script>"))
+        ad = AdPlugin::HouseAd.new(valid_attrs.merge(name: "<script>"))
         expect(ad.save).to eq(false)
         expect(ad).to_not be_valid
         expect(ad.errors[:name]).to be_present
@@ -177,7 +178,7 @@ describe AdPlugin::HouseAd do
     it "can delete a record" do
       ad = AdPlugin::HouseAd.create(valid_attrs)
       ad.destroy
-      expect(AdPlugin::HouseAd.find(ad.id)).to be_nil
+      expect { AdPlugin::HouseAd.find(ad.id) }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
