@@ -145,7 +145,12 @@ RSpec.describe ProblemCheck do
     end
 
     context "when targeted check has a no-target tracker" do
-      before { multi_target_check.tracker(ProblemCheck::NO_TARGET) }
+      before do
+        ProblemCheckTracker.create!(
+          identifier: "multi_target_check",
+          target: ProblemCheck::NO_TARGET,
+        )
+      end
 
       it "deletes the tracker" do
         expect { multi_target_check.run }.to change { ProblemCheckTracker.count }.by(-1)
@@ -153,7 +158,7 @@ RSpec.describe ProblemCheck do
     end
 
     context "when targeted check has an outdated target" do
-      before { multi_target_check.tracker("baz") }
+      before { ProblemCheckTracker.create!(identifier: "multi_target_check", target: "baz") }
 
       it "deletes the tracker" do
         expect { multi_target_check.run("baz") }.to change { ProblemCheckTracker.count }.by(-1)

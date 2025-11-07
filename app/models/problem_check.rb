@@ -119,11 +119,6 @@ class ProblemCheck
     Collection.new(checks.select(&:realtime?))
   end
 
-  def self.tracker(target = NO_TARGET)
-    ProblemCheckTracker[identifier, target]
-  end
-  delegate :tracker, to: :class
-
   def self.identifier
     name.demodulize.underscore.to_sym
   end
@@ -154,15 +149,9 @@ class ProblemCheck
   end
   delegate :targeted?, to: :class
 
-  def self.ready_to_run?
-    tracker.ready_to_run?
-  end
-  delegate :ready_to_run?, to: :class
-
   def self.each_target(&)
     targets.call.each(&)
   end
-  delegate :each_target, to: :class
 
   def self.run(target = NO_TARGET, &)
     new(target).run(&)
@@ -180,7 +169,7 @@ class ProblemCheck
 
   def run
     if targeted? && (target == NO_TARGET || targets.call.exclude?(target))
-      tracker(target).destroy
+      tracker.destroy
       return
     end
 
@@ -189,7 +178,6 @@ class ProblemCheck
     yield(problem) if block_given?
 
     next_run_at = perform_every&.from_now
-    tracker = tracker(target)
 
     if problem.blank?
       tracker.no_problem!(next_run_at:)
@@ -199,6 +187,14 @@ class ProblemCheck
         details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
       )
     end
+  end
+
+  def tracker
+    ProblemCheckTracker[identifier, target]
+  end
+
+  def ready_to_run?
+    tracker.ready_to_run?
   end
 
   private
