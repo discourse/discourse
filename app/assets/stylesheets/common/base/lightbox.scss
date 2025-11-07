@@ -205,3 +205,18 @@
 .pswp__button--image-info svg {
   padding: 0.4em;
 }
+
+.pswp__custom-counter {
+  height: 30px;
+  margin-top: 15px;
+  margin-inline-start: 20px;
+  font-size: 14px;
+  line-height: 30px;
+  color: var(--pswp-icon-color);
+  text-shadow: 1px 1px 3px var(--pswp-icon-color-secondary);
+  opacity: 0.85;
+}
+
+.pswp--one-slide .pswp__custom-counter {
+  display: none;
+}

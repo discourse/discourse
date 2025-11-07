@@ -30,14 +30,11 @@ export default async function lightbox(elem, siteSettings) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
     const isTestEnv = isTesting() || isRailsTesting();
 
+    const rtl = document.documentElement.classList.contains("rtl");
     const items = [...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
+    const sortedItems = rtl ? [...items].reverse() : items;
 
-    // adds swipe direction for RTL languages
-    if (document.documentElement.classList.contains("rtl")) {
-      items.reverse();
-    }
-
-    items.forEach((el, index) => {
+    sortedItems.forEach((el, index) => {
       el.addEventListener("click", (e) => {
         e.preventDefault();
 
@@ -46,13 +43,14 @@ export default async function lightbox(elem, siteSettings) {
     });
 
     const lightboxEl = new PhotoSwipeLightbox({
-      dataSource: items,
+      dataSource: sortedItems,
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
       closeTitle: i18n("lightbox.close"),
       zoomTitle: i18n("lightbox.zoom"),
       errorMsg: i18n("lightbox.error"),
       showHideAnimationType: isTestEnv ? "none" : "zoom",
+      counter: false,
       tapAction,
       paddingFn,
       pswpModule: async () => await import("photoswipe"),
@@ -77,7 +75,7 @@ export default async function lightbox(elem, siteSettings) {
       // adds a custom caption to lightbox
       lightboxEl.pswp.ui.registerElement({
         name: "caption",
-        order: 6,
+        order: 11,
         isButton: false,
         appendTo: "root",
         html: "",
@@ -164,6 +162,22 @@ export default async function lightbox(elem, siteSettings) {
         },
         onClick: () => {
           lightboxEl.pswp.element.classList.toggle("pswp--caption-expanded");
+        },
+      });
+
+      lightboxEl.pswp.ui.registerElement({
+        name: "custom-counter",
+        order: 6,
+        isButton: false,
+        appendTo: "bar",
+        onInit: (el, pswp) => {
+          pswp.on("change", () => {
+            // we use a reversed array of images in PhotoSwipe for RTL languages
+            // then force the counter to use DOM index to invert counter when clicking back
+            const slideEl = pswp.currSlide.data.element;
+            const slideIndex = items.indexOf(slideEl);
+            el.textContent = `${slideIndex + 1} / ${pswp.getNumItems()}`;
+          });
         },
       });
     });
