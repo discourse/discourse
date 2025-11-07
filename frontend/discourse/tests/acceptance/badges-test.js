@@ -29,4 +29,12 @@ acceptance("Badges", function (needs) {
       "CustomBadge"
     );
   });
+
+  test("Shows the correct grant count", async function (assert) {
+    await visit("/badges/9/autobiographer?username=eviltrout");
+
+    assert
+      .dom("#show-others-with-badge-link")
+      .hasText("Granted to others 545 times");
+  });
 });
