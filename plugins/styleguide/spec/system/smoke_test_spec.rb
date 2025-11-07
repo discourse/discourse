@@ -140,4 +140,22 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       end
     end
   end
+
+  context "when the styleguide is only enabled for staff" do
+    before { SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:staff] }
+
+    it "denies access to regular users" do
+      user = Fabricate(:user)
+      sign_in(user)
+      visit "/styleguide"
+      expect(page).to have_content("That page doesn’t exist or is private.")
+    end
+
+    it "allows access to staff users" do
+      moderator = Fabricate(:moderator)
+      sign_in(moderator)
+      visit "/styleguide"
+      expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
+    end
+  end
 end
