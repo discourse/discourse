@@ -17,7 +17,7 @@ export default class AdminToolsService extends Service {
 
   showActionLogs(target, filters) {
     this.router.transitionTo("adminLogs.staffActionLogs", {
-      queryParams: { filters },
+      queryParams: { filters, force_refresh: true },
     });
   }
 
