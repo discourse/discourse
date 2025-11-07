@@ -3121,7 +3121,7 @@ en:
           desc: "Reply without changing latest reply date"
         toggle_unlisted:
           label: Toggle unlisted
-          desc: Unlisted topics only accessible to members by direct link
+          desc: Unlisted topics are only accessible by direct link
 
       reload: "Reload"
       ignore: "Ignore"
