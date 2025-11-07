@@ -133,3 +133,7 @@ end
 #  parent_tag_id :integer
 #  one_per_topic :boolean          default(FALSE)
 #
+# Indexes
+#
+#  index_tag_groups_on_lower_name  (lower((name)::text)) UNIQUE
+#
