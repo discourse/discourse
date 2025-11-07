@@ -18,6 +18,7 @@ module ::AdPlugin
 end
 
 require_relative "lib/adplugin/engine"
+require_relative "lib/ad_plugin/ad_type"
 
 after_initialize do
   require_relative "app/controllers/ad_plugin/house_ad_settings_controller"
@@ -47,6 +48,10 @@ after_initialize do
 
   add_to_serializer :site, :house_creatives do
     AdPlugin::HouseAdSetting.settings_and_ads(for_anons: scope.anonymous?, scope: scope)
+  end
+
+  add_to_serializer :site, :ad_types do
+    AdPlugin::AdType.enum_hash
   end
 
   add_to_serializer :topic_view, :tags_disable_ads do

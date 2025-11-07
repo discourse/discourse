@@ -11,7 +11,7 @@ module AdPlugin
 
     belongs_to :user, optional: true
 
-    enum :ad_type, { house: 0, adsense: 1, dfp: 2, amazon: 3, carbon: 4, adbutler: 5 }.freeze
+    enum :ad_type, AdType.enum_hash
 
     validates :ad_type, presence: true
     validates :placement, presence: true

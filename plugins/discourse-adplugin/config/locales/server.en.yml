@@ -1,11 +1,17 @@
 en:
   reports:
-    house_ads_performance:
-      title: House Ads performance report
-      description: "House Ads impressions"
-    ad_impressions:
-      title: Adplugin performance report
-      description: "Ads impressions"
+    ad_plugin_house_ads_performance:
+      title: Adplugin House Ads performance report
+      description: "House Ads impressions report"
+    ad_plugin_ad_impressions:
+      title: Adplugin Ad impressions performance report
+      description: "Ads impressions report"
+    ad_plugin_impressions_by_user:
+      title: Ad Plugin Impressions by User
+      description: "Ad impressions grouped by user"
+      filters:
+        ad_type:
+          label: "Ad Type"
   site_settings:
     discourse_adplugin_enabled: Enable the discourse-adplugin.
 

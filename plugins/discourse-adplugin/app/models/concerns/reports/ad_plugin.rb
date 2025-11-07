@@ -4,7 +4,7 @@ module Reports::AdPlugin
 
   class_methods do
     # Ad Impressions Report - All ads by type and placement
-    def report_ad_impressions(report)
+    def report_ad_plugin_ad_impressions(report)
       report.icon = "rectangle-ad"
       report.modes = [:table]
 
@@ -63,7 +63,7 @@ module Reports::AdPlugin
     end
 
     # House Ads Performance Report - Only house ads with detailed metrics
-    def report_house_ads_performance(report)
+    def report_ad_plugin_house_ads_performance(report)
       report.icon = "rectangle-ad"
       report.modes = [:table]
 
@@ -103,6 +103,76 @@ module Reports::AdPlugin
             placement: row.placement,
             impressions: row.impressions,
             unique_users: row.unique_users,
+          }
+        end
+    end
+
+    def report_ad_plugin_impressions_by_user(report)
+      report.icon = "rectangle-ad"
+      report.modes = [:table]
+
+      report.labels = [
+        {
+          type: :user,
+          properties: {
+            username: :username,
+            id: :user_id,
+            avatar: :avatar_template,
+          },
+          title: "User",
+        },
+        { type: :number, property: :impressions, title: "Impressions" },
+      ]
+
+      # Add ad_type filter
+      ad_type_choices =
+        ::AdPlugin::AdType.types.map { |key, value| { id: value.to_s, name: key.to_s.titleize } }
+      ad_type_choices.unshift({ id: "any", name: "All Ad Types" })
+
+      report.add_filter(
+        "ad_type",
+        type: "list",
+        default: report.filters.dig(:ad_type) || "any",
+        choices: ad_type_choices,
+        allow_any: false,
+        auto_insert_none_item: false,
+      )
+
+      ad_type_filter = report.filters.dig(:ad_type)
+      start_date = report.start_date
+      end_date = report.end_date
+      limit = report.limit || 50
+
+      # Build SQL with optional ad_type filter
+      sql = <<~SQL
+        SELECT
+          u.username,
+          u.id as user_id,
+          u.uploaded_avatar_id,
+          COUNT(*) as impressions
+        FROM ad_plugin_impressions ai
+        INNER JOIN users u ON u.id = ai.user_id
+        WHERE ai.created_at >= :start_date
+          AND ai.created_at <= :end_date
+          #{ad_type_filter != "any" ? "AND ai.ad_type = :ad_type" : ""}
+        GROUP BY u.id, u.username, u.uploaded_avatar_id
+        ORDER BY impressions DESC
+        LIMIT :limit
+      SQL
+
+      # Build query params
+      query_params = { start_date: start_date, end_date: end_date, limit: limit }
+      query_params[:ad_type] = ad_type_filter.to_i if ad_type_filter != "any"
+
+      results = DB.query(sql, query_params)
+
+      report.data =
+        results.map do |row|
+          {
+            username: row.username,
+            user_id: row.user_id,
+            avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+            impressions: row.impressions,
           }
         end
     end
