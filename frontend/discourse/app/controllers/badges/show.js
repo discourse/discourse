@@ -13,7 +13,6 @@ export default class ShowController extends Controller {
 
   @tracked loadingMore = false;
   @tracked noMoreBadges = false;
-  @tracked userBadgesInfo = null;
   @trackedArray userBadges = null;
 
   queryParams = ["username"];
