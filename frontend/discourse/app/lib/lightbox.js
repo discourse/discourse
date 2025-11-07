@@ -5,6 +5,7 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import {
   escapeExpression,
   postRNWebviewMessage,
@@ -30,15 +31,30 @@ export default async function lightbox(elem, siteSettings) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
     const isTestEnv = isTesting() || isRailsTesting();
 
+    const rtl = isDocumentRTL();
+    const items = [...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
+
+    if (rtl) {
+      items.reverse();
+    }
+
+    items.forEach((el, index) => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        lightboxEl.loadAndOpen(index);
+      });
+    });
+
     const lightboxEl = new PhotoSwipeLightbox({
-      gallery: elem,
-      children: SELECTORS.DEFAULT_ITEM_SELECTOR,
+      dataSource: items,
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
       closeTitle: i18n("lightbox.close"),
       zoomTitle: i18n("lightbox.zoom"),
       errorMsg: i18n("lightbox.error"),
       showHideAnimationType: isTestEnv ? "none" : "zoom",
+      counter: false,
       tapAction,
       paddingFn,
       pswpModule: async () => await import("photoswipe"),
@@ -63,7 +79,7 @@ export default async function lightbox(elem, siteSettings) {
       // adds a custom caption to lightbox
       lightboxEl.pswp.ui.registerElement({
         name: "caption",
-        order: 6,
+        order: 11,
         isButton: false,
         appendTo: "root",
         html: "",
@@ -152,9 +168,25 @@ export default async function lightbox(elem, siteSettings) {
           lightboxEl.pswp.element.classList.toggle("pswp--caption-expanded");
         },
       });
+
+      lightboxEl.pswp.ui.registerElement({
+        name: "custom-counter",
+        order: 6,
+        isButton: false,
+        appendTo: "bar",
+        onInit: (el, pswp) => {
+          pswp.on("change", () => {
+            const total = pswp.getNumItems();
+            const index = rtl ? total - pswp.currIndex : pswp.currIndex + 1;
+            el.textContent = `${index} / ${total}`;
+          });
+        },
+      });
     });
 
-    lightboxEl.addFilter("domItemData", (data, el) => {
+    lightboxEl.addFilter("itemData", (data) => {
+      const el = data.element;
+
       if (!el) {
         return data;
       }
