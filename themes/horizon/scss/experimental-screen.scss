@@ -79,12 +79,12 @@
   }
 
   &__top-left {
-    top: var(--header-offset);
+    top: var(--main-outlet-offset);
     left: var(--left-distance);
   }
 
   &__top-right {
-    top: var(--header-offset);
+    top: var(--main-outlet-offset);
     transform: rotate(90deg);
     left: calc(var(--right-distance) - var(--d-border-radius-large));
   }
