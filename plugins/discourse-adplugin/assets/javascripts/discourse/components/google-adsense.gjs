@@ -249,6 +249,16 @@ export default class GoogleAdsense extends AdComponent {
     );
   }
 
+  buildImpressionPayload() {
+    return {
+      ad_plugin_impression: {
+        ad_type: 1,
+        ad_plugin_house_ad_id: null,
+        placement: this.get("placement"),
+      },
+    };
+  }
+
   <template>
     {{#if this.showAd}}
       <div class="google-adsense-label"><h2>{{i18n

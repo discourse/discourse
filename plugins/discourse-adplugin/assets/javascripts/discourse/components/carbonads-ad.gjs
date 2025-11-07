@@ -41,6 +41,16 @@ export default class CarbonadsAd extends AdComponent {
     );
   }
 
+  buildImpressionPayload() {
+    return {
+      ad_plugin_impression: {
+        ad_type: 4,
+        ad_plugin_house_ad_id: null,
+        placement: this.get("placement"),
+      },
+    };
+  }
+
   <template>
     {{#if this.showAd}}
       {{! template-lint-disable no-forbidden-elements }}

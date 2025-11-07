@@ -117,6 +117,21 @@ export default class HouseAd extends AdComponent {
     this.set("adHtml", this.chooseAdHtml());
   }
 
+  buildImpressionPayload() {
+    const adType = 0;
+    const adPluginHouseAdId = 3; // how to actually get this
+
+    if (adPluginHouseAdId) {
+      return {
+        ad_plugin_impression: {
+          ad_type: adType,
+          ad_plugin_house_ad_id: adPluginHouseAdId,
+          placement: this.get("placement"),
+        },
+      };
+    }
+  }
+
   didInsertElement() {
     super.didInsertElement(...arguments);
 

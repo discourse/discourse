@@ -2,6 +2,8 @@
 import Component from "@ember/component";
 import { alias, or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import { throwAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import {
   isNthPost,
@@ -93,5 +95,57 @@ export default class AdComponent extends Component {
 
   isNthTopicListItem(n) {
     return isNthTopicListItem(n, this.get("indexNumber"));
+  }
+
+  didInsertElement() {
+    super.didInsertElement?.(...arguments);
+
+    if (!this.get("showAd")) {
+      return;
+    }
+
+    this.startVisibilityTracking();
+  }
+
+  async trackImpression() {
+    const payload = this.buildImpressionPayload?.();
+    if (!payload) {
+      return;
+    }
+
+    try {
+      await ajax("/ad_plugin/ad_impressions", {
+        type: "POST",
+        data: JSON.stringify(payload),
+        contentType: "application/json; charset=utf-8",
+      });
+    } catch (e) {
+      throwAjaxError(e);
+    }
+  }
+
+  startVisibilityTracking() {
+    if (!this.siteSettings.ad_plugin_enable_tracking) {
+      return;
+    }
+
+    if ("IntersectionObserver" in window) {
+      this._observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          this.trackImpression();
+          this._observer.disconnect();
+        }
+      });
+      this._observer.observe(this.element);
+    } else {
+      this.trackImpression();
+    }
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement?.(...arguments);
+    if (this._observer) {
+      this._observer.disconnect();
+    }
   }
 }
