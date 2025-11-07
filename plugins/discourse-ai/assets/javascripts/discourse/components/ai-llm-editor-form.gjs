@@ -347,7 +347,6 @@ export default class AiLlmEditorForm extends Component {
       <form.Field
         @name="api_key"
         @title={{i18n "discourse_ai.llms.api_key"}}
-        @validation="required"
         @format="large"
         as |field|
       >
@@ -410,7 +409,7 @@ export default class AiLlmEditorForm extends Component {
       >
         <field.Input @type="number" step="any" min="0" lang="en" />
       </form.Field>
-
+      y
       <form.InputGroup as |inputGroup|>
         <inputGroup.Field
           @name="input_cost"

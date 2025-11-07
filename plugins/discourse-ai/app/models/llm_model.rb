@@ -194,10 +194,14 @@ class LlmModel < ActiveRecord::Base
   def required_provider_params
     return if provider != BEDROCK_PROVIDER_NAME
 
-    %w[access_key_id region].each do |field|
-      if lookup_custom_param(field).blank?
-        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: field))
-      end
+    # Region is always required
+    if lookup_custom_param("region").blank?
+      errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+    end
+
+    # Either access_key_id or role_arn must be present
+    if lookup_custom_param("access_key_id").blank? && lookup_custom_param("role_arn").blank?
+      errors.add(:base, I18n.t("discourse_ai.llm_models.bedrock_missing_auth"))
     end
   end
 end

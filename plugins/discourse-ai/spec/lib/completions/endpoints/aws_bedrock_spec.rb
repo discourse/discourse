@@ -621,11 +621,18 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         },
       )
 
+      # Mock the actual credentials object returned by AssumeRoleCredentials
+      mock_creds =
+        instance_double(
+          Aws::Credentials,
+          access_key_id: "ASSUMED_ACCESS_KEY",
+          secret_access_key: "ASSUMED_SECRET_KEY",
+          session_token: "ASSUMED_SESSION_TOKEN",
+        )
+
       # Mock Aws::AssumeRoleCredentials
       mock_credentials = instance_double(Aws::AssumeRoleCredentials)
-      allow(mock_credentials).to receive(:access_key_id).and_return("ASSUMED_ACCESS_KEY")
-      allow(mock_credentials).to receive(:secret_access_key).and_return("ASSUMED_SECRET_KEY")
-      allow(mock_credentials).to receive(:session_token).and_return("ASSUMED_SESSION_TOKEN")
+      allow(mock_credentials).to receive(:credentials).and_return(mock_creds)
 
       # Mock the STS client
       mock_sts_client = instance_double(Aws::STS::Client)
