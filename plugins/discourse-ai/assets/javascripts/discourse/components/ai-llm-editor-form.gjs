@@ -409,7 +409,7 @@ export default class AiLlmEditorForm extends Component {
       >
         <field.Input @type="number" step="any" min="0" lang="en" />
       </form.Field>
-      y
+
       <form.InputGroup as |inputGroup|>
         <inputGroup.Field
           @name="input_cost"
