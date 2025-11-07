@@ -20,12 +20,6 @@ module AdPlugin
 
     validate :house_ad_id_consistency
 
-    scope :recent, -> { order(created_at: :desc) }
-    scope :for_placement, ->(placement) { where(placement: placement) }
-    scope :for_user, ->(user_id) { where(user_id: user_id) }
-    scope :house_ads, -> { where(ad_type: :house) }
-    scope :external_ads, -> { where.not(ad_type: :house) }
-
     private
 
     def house_ad_id_consistency

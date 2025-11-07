@@ -11,28 +11,6 @@ describe AdPlugin::HouseAd do
 
   before { enable_current_plugin }
 
-  def create_anon_ad
-    AdPlugin::HouseAd.create(
-      name: "anon-ad",
-      html: "<div>ANON</div>",
-      visible_to_logged_in_users: false,
-      visible_to_anons: true,
-      group_ids: [],
-      category_ids: [],
-    )
-  end
-
-  def create_logged_in_ad
-    AdPlugin::HouseAd.create(
-      name: "logged-in-ad",
-      html: "<div>LOGGED IN</div>",
-      visible_to_logged_in_users: true,
-      visible_to_anons: false,
-      group_ids: [],
-      category_ids: [],
-    )
-  end
-
   describe ".find" do
     let!(:ad) { AdPlugin::HouseAd.create(valid_attrs) }
 
@@ -63,8 +41,12 @@ describe AdPlugin::HouseAd do
   end
 
   describe ".all_for_anons" do
-    let!(:anon_ad) { create_anon_ad }
-    let!(:logged_in_ad) { create_logged_in_ad }
+    fab!(:anon_ad) do
+      Fabricate(:house_ad, visible_to_logged_in_users: false, visible_to_anons: true)
+    end
+    fab!(:logged_in_ad) do
+      Fabricate(:house_ad, visible_to_logged_in_users: true, visible_to_anons: false)
+    end
 
     it "doesn't include ads for logged in users" do
       expect(AdPlugin::HouseAd.all_for_anons.map(&:id)).to contain_exactly(anon_ad.id)
@@ -72,9 +54,13 @@ describe AdPlugin::HouseAd do
   end
 
   describe ".all_for_logged_in_users" do
-    let!(:anon_ad) { create_anon_ad }
-    let!(:logged_in_ad) { create_logged_in_ad }
-    let!(:user) { Fabricate(:user) }
+    fab!(:anon_ad) do
+      Fabricate(:house_ad, visible_to_logged_in_users: false, visible_to_anons: true)
+    end
+    fab!(:logged_in_ad) do
+      Fabricate(:house_ad, visible_to_logged_in_users: true, visible_to_anons: false)
+    end
+    fab!(:user)
 
     it "doesn't include ads for anonymous users" do
       expect(
