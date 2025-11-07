@@ -3,6 +3,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
@@ -12,7 +13,8 @@ export default class ShowController extends Controller {
 
   @tracked loadingMore = false;
   @tracked noMoreBadges = false;
-  @tracked userBadges = null;
+  @trackedArray userBadges = null;
+  @trackedArray userBadgesAll = null;
 
   queryParams = ["username"];
   hiddenSetTitle = true;
@@ -84,7 +86,7 @@ export default class ShowController extends Controller {
       });
 
       userBadges.push(...result);
-      if (userBadges.length === 0) {
+      if (result.length === 0) {
         this.noMoreBadges = true;
       }
     } finally {

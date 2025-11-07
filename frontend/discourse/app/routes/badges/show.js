@@ -59,7 +59,7 @@ export default class BadgesShow extends DiscourseRoute {
 
   setupController(controller) {
     super.setupController(...arguments);
-    controller.set("userBadges", this.userBadgesGrant);
-    controller.set("userBadgesAll", this.userBadgesAll);
+    controller.userBadges = this.userBadgesGrant;
+    controller.userBadgesAll = this.userBadgesAll;
   }
 }
