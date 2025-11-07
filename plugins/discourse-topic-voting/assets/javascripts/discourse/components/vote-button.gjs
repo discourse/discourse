@@ -3,14 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import DMenu from "discourse/components/d-menu";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
+import DMenu from "float-kit/components/d-menu";
 
 export default class VoteBox extends Component {
-  @service siteSettings;
   @service currentUser;
 
   @tracked hasVoted = false;
