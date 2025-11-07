@@ -317,7 +317,9 @@ function _downloadCalendarNode(element) {
   if (!startDataset.time && !endDataset) {
     node.setAttribute("data-ends-at", startDate.add(24, "hours").toISOString());
   }
-  node.setAttribute("data-title", startDataset.title);
+  if (startDataset.title) {
+    node.setAttribute("data-title", startDataset.title);
+  }
 
   // If ics data is available, pass it to the download button
   if (startDataset.ics) {
