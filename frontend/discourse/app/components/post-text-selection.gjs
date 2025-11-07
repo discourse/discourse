@@ -259,6 +259,10 @@ export default class PostTextSelection extends Component {
     return cooked;
   }
 
+  get usePostIOS26Heuristic() {
+    return this.capabilities.isIOS && "URLPattern" in globalThis;
+  }
+
   get post() {
     return this.args.topic.postStream.findLoadedPost(
       this.args.quoteState.postId
@@ -278,7 +282,7 @@ export default class PostTextSelection extends Component {
   shouldRenderBelow() {
     const { isIOS, isAndroid, isOpera, isFirefox, touch } = this.capabilities;
 
-    if (isIOS) {
+    if (this.usePostIOS26Heuristic) {
       const rect = virtualElementFromTextRange().rect;
       const spaceAbove = rect.top;
       const spaceBelow = window.innerHeight - rect.bottom;
@@ -297,6 +301,7 @@ export default class PostTextSelection extends Component {
 
     return (
       this.capabilities.isMobileDevice ||
+      isIOS ||
       isAndroid ||
       isOpera ||
       (touch && isFirefox)
