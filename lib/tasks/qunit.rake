@@ -134,6 +134,7 @@ task "qunit:test", %i[qunit_path filter] do |_, args|
       cmd += ["--filter", filter] if filter
       cmd += %w[--path dist] if reuse_build
       cmd << "--write-execution-file" if ENV["QUNIT_WRITE_EXECUTION_FILE"]
+      cmd += ["--launch", ENV["TESTEM_BROWSER"]] if ENV["TESTEM_BROWSER"].present?
     end
 
     # Print out all env for debugging purposes
