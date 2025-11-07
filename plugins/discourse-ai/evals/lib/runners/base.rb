@@ -14,6 +14,7 @@ module DiscourseAi
               DiscourseAi::Evals::Runners::AiHelper,
               DiscourseAi::Evals::Runners::Spam,
               DiscourseAi::Evals::Runners::Summarization,
+              DiscourseAi::Evals::Runners::Inference,
             ]
             klass = registry.find { |runner| runner.can_handle?(feature) }
             klass&.new(feature.split(":").last) if klass
