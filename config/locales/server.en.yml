@@ -4043,7 +4043,20 @@ en:
       text_body_template: |
         This is an automated message.
 
-        The new user [%{username}](%{user_url}) was automatically silenced because multiple users flagged %{username}'s post(s).
+        The new user [%{username}](%{user_url}) was automatically silenced.
+
+        Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
+
+        This threshold can be changed via the `silence_new_user` site settings.
+    user_automatically_silenced_with_reason:
+      title: "User Automatically Silenced"
+      subject_template: "New user %{username} silenced by community flags"
+      text_body_template: |
+        This is an automated message.
+
+        The new user [%{username}](%{user_url}) was automatically silenced.
+
+        Reason - %{reason}
 
         Please [review the flags](%{base_url}/review). If %{username} was incorrectly silenced from posting, click the unsilence button on [the admin page for this user](%{user_url}).
 
