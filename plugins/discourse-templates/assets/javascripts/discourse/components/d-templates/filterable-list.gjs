@@ -94,7 +94,8 @@ export default class DTemplatesFilterableList extends Component {
         const prevSelectedTag = this.keyValueStore.get(PREV_TEMPLATE_TAG_ID);
         if (
           prevSelectedTag &&
-          this.availableTags.find((t) => t.id === prevSelectedTag)
+          (prevSelectedTag === NO_TAG_ID ||
+            this.availableTags.find((t) => t.id === prevSelectedTag))
         ) {
           this.selectedTag = prevSelectedTag;
         } else {
