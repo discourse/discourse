@@ -1,6 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { bbcodeAttributeDecode } from "discourse/lib/bbcode-attributes";
 import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { iconHTML, renderIcon } from "discourse/lib/icon-library";
@@ -361,18 +362,7 @@ class LocalDatesInit {
       const dataset = event.target.dataset;
 
       if (dataset.ics) {
-        // Decode base64url: reverse the -_~ encoding back to +/=
-        const base64 = dataset.ics
-          .replace(/-/g, "+")
-          .replace(/_/g, "/")
-          .replace(/~/g, "=");
-
-        const binaryString = atob(base64);
-        const bytes = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
-        }
-        const icsData = new TextDecoder().decode(bytes);
+        const icsData = bbcodeAttributeDecode(dataset.ics);
 
         let title;
         if (dataset.title) {

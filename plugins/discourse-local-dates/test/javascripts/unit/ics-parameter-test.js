@@ -1,4 +1,8 @@
 import { module, test } from "qunit";
+import {
+  bbcodeAttributeDecode,
+  bbcodeAttributeEncode,
+} from "discourse/lib/bbcode-attributes";
 
 module("Unit | Local Dates | ICS Parameter", function () {
   test("encodes and decodes ICS data correctly", function (assert) {
@@ -15,16 +19,7 @@ DESCRIPTION:Test Description
 END:VEVENT
 END:VCALENDAR`;
 
-    // Encode UTF-8 string to base64url (same as dates.gjs)
-    const utf8Bytes = new TextEncoder().encode(testIcsData);
-    const binaryString = Array.from(utf8Bytes, (byte) =>
-      String.fromCharCode(byte)
-    ).join("");
-    const base64 = btoa(binaryString);
-    const base64url = base64
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=/g, "~");
+    const base64url = bbcodeAttributeEncode(testIcsData);
 
     assert.true(base64url.length > 0, "base64url encoding produces output");
     assert.false(
@@ -40,17 +35,7 @@ END:VCALENDAR`;
       "base64url does not contain = character"
     );
 
-    // Decode base64url back to UTF-8 (same as discourse-local-dates.js)
-    const decodedBase64 = base64url
-      .replace(/-/g, "+")
-      .replace(/_/g, "/")
-      .replace(/~/g, "=");
-    const decodedBinaryString = atob(decodedBase64);
-    const bytes = new Uint8Array(decodedBinaryString.length);
-    for (let i = 0; i < decodedBinaryString.length; i++) {
-      bytes[i] = decodedBinaryString.charCodeAt(i);
-    }
-    const decodedIcsData = new TextDecoder().decode(bytes);
+    const decodedIcsData = bbcodeAttributeDecode(base64url);
 
     assert.strictEqual(
       decodedIcsData,
@@ -73,28 +58,8 @@ DESCRIPTION:Testing ?mojis and sp?cial ?haracters
 END:VEVENT
 END:VCALENDAR`;
 
-    // Encode
-    const utf8Bytes = new TextEncoder().encode(testIcsData);
-    const binaryString = Array.from(utf8Bytes, (byte) =>
-      String.fromCharCode(byte)
-    ).join("");
-    const base64 = btoa(binaryString);
-    const base64url = base64
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=/g, "~");
-
-    // Decode
-    const decodedBase64 = base64url
-      .replace(/-/g, "+")
-      .replace(/_/g, "/")
-      .replace(/~/g, "=");
-    const decodedBinaryString = atob(decodedBase64);
-    const bytes = new Uint8Array(decodedBinaryString.length);
-    for (let i = 0; i < decodedBinaryString.length; i++) {
-      bytes[i] = decodedBinaryString.charCodeAt(i);
-    }
-    const decodedIcsData = new TextDecoder().decode(bytes);
+    const base64url = bbcodeAttributeEncode(testIcsData);
+    const decodedIcsData = bbcodeAttributeDecode(base64url);
 
     assert.strictEqual(
       decodedIcsData,

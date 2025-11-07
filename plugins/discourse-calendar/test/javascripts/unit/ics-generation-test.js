@@ -1,4 +1,8 @@
 import { module, test } from "qunit";
+import {
+  bbcodeAttributeDecode,
+  bbcodeAttributeEncode,
+} from "discourse/lib/bbcode-attributes";
 import { generateIcsData } from "discourse/lib/download-calendar";
 
 module("Unit | Discourse Calendar | ICS Generation", function () {
@@ -130,17 +134,7 @@ module("Unit | Discourse Calendar | ICS Generation", function () {
     const options = { location: "Test+Location/With=Special" };
 
     const icsData = generateIcsData(title, dates, options);
-
-    // Encode as base64url
-    const utf8Bytes = new TextEncoder().encode(icsData);
-    const binaryString = Array.from(utf8Bytes, (byte) =>
-      String.fromCharCode(byte)
-    ).join("");
-    const base64 = btoa(binaryString);
-    const base64url = base64
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=/g, "~");
+    const base64url = bbcodeAttributeEncode(icsData);
 
     assert.false(
       base64url.includes("+"),
@@ -155,5 +149,12 @@ module("Unit | Discourse Calendar | ICS Generation", function () {
       "base64url encoding replaces = with ~"
     );
     assert.true(base64url.length > 0, "produces non-empty output");
+
+    const decoded = bbcodeAttributeDecode(base64url);
+    assert.strictEqual(
+      decoded,
+      icsData,
+      "can decode back to original ICS data"
+    );
   });
 });

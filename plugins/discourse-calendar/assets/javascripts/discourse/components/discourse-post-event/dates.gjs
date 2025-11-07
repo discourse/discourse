@@ -6,6 +6,7 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import { bbcodeAttributeEncode } from "discourse/lib/bbcode-attributes";
 import { generateIcsData } from "discourse/lib/download-calendar";
 import discourseLater from "discourse/lib/later";
 import loadRRule from "discourse/lib/load-rrule";
@@ -154,17 +155,7 @@ export default class DiscoursePostEventDates extends Component {
 
     const icsData = this.generateIcsForEvent();
     if (icsData) {
-      const utf8Bytes = new TextEncoder().encode(icsData);
-      const binaryString = Array.from(utf8Bytes, (byte) =>
-        String.fromCharCode(byte)
-      ).join("");
-      const base64 = btoa(binaryString);
-
-      const base64url = base64
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_")
-        .replace(/=/g, "~");
-      bbcode.ics = base64url;
+      bbcode.ics = bbcodeAttributeEncode(icsData);
     }
 
     const content = Object.entries(bbcode)
