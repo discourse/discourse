@@ -88,7 +88,7 @@ export default class ReviewableQueuedPost extends Component {
         </ReviewableTopicLink>
       </div>
 
-      <div class="review-item__meta-label">{{i18n "review.queued_user"}}</div>
+      <div class="review-item__meta-label">{{i18n "review.review_user"}}</div>
 
       <div class="review-item__meta-flagged-user">
         <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
