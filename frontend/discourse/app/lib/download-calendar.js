@@ -67,12 +67,19 @@ export function downloadGoogle(title, dates, options = {}) {
 
 export function formatDates(dates) {
   return dates.map((date) => {
-    return {
+    const formatted = {
       startsAt: date.startsAt,
       endsAt: date.endsAt
         ? date.endsAt
         : moment.utc(date.startsAt).add(1, "hours").format(),
     };
+
+    // Preserve timezone if present
+    if (date.timezone) {
+      formatted.timezone = date.timezone;
+    }
+
+    return formatted;
   });
 }
 
@@ -163,26 +170,44 @@ function _hasFreq(rrule) {
  * Generate ICS calendar data for the given dates
  *
  * @param {string} title - Event title
- * @param {Array} dates - Array of date objects with startsAt and endsAt
- * @param {Object} options - Optional parameters (rrule, location, details)
+ * @param {Array} dates - Array of date objects with startsAt, endsAt, and optional timezone
+ * @param {Object} options - Optional parameters (rrule, location, details, timezone)
  * @returns {string} - ICS formatted calendar data
  */
 export function generateIcsData(title, dates, options = {}) {
   let data = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Discourse//EN\r\n";
   dates.forEach((date) => {
-    const startDate = moment(date.startsAt);
-    const endDate = moment(date.endsAt);
+    const timezone = date.timezone || options.timezone;
+    const startDate = timezone
+      ? moment.tz(date.startsAt, timezone)
+      : moment(date.startsAt);
+    const endDate = timezone
+      ? moment.tz(date.endsAt, timezone)
+      : moment(date.endsAt);
     const rrule = _parseRRule(options.rrule);
+
+    // Format date-time based on whether we have timezone info
+    const formatDateTime = (momentObj) => {
+      return momentObj.format("YYYYMMDDTHHmmss");
+    };
+
+    const dtStartValue = timezone
+      ? `DTSTART;TZID=${timezone}:${formatDateTime(startDate)}`
+      : `DTSTART:${startDate.utc().format("YYYYMMDDTHHmmss")}Z`;
+
+    const dtEndValue = timezone
+      ? `DTEND;TZID=${timezone}:${formatDateTime(endDate)}`
+      : `DTEND:${endDate.utc().format("YYYYMMDDTHHmmss")}Z`;
 
     data = data.concat(
       "BEGIN:VEVENT\r\n" +
-        _foldLine(`UID:${startDate.utc().format("x")}_${endDate.format("x")}`) +
+        _foldLine(`UID:${startDate.valueOf()}_${endDate.valueOf()}`) +
         "\r\n" +
-        _foldLine(`DTSTAMP:${moment().utc().format("YMMDDTHHmmss")}Z`) +
+        _foldLine(`DTSTAMP:${moment().utc().format("YYYYMMDDTHHmmss")}Z`) +
         "\r\n" +
-        _foldLine(`DTSTART:${startDate.utc().format("YMMDDTHHmmss")}Z`) +
+        _foldLine(dtStartValue) +
         "\r\n" +
-        _foldLine(`DTEND:${endDate.utc().format("YMMDDTHHmmss")}Z`) +
+        _foldLine(dtEndValue) +
         "\r\n" +
         (rrule && _hasFreq(rrule) ? _foldLine(`RRULE:${rrule}`) + "\r\n" : ``) +
         (options.location
@@ -211,6 +236,7 @@ function _displayModal(title, dates, options = {}) {
         rrule: options.rrule,
         location: options.location,
         details: options.details,
+        timezone: options.timezone,
       },
     },
   });

@@ -28,6 +28,40 @@ module("Unit | Discourse Calendar | ICS Generation", function () {
     assert.true(icsData.includes("END:VCALENDAR"), "closes VCALENDAR");
   });
 
+  test("generates ICS data with timezone (TZID)", function (assert) {
+    const title = "Test Event with Timezone";
+    const dates = [
+      {
+        startsAt: "2025-12-01T12:00:00Z",
+        endsAt: "2025-12-01T13:00:00Z",
+        timezone: "America/Los_Angeles",
+      },
+    ];
+    const options = {};
+
+    const icsData = generateIcsData(title, dates, options);
+
+    assert.true(icsData.includes("BEGIN:VCALENDAR"), "contains VCALENDAR");
+    assert.true(icsData.includes("VERSION:2.0"), "contains version");
+    assert.true(icsData.includes("BEGIN:VEVENT"), "contains VEVENT");
+    assert.true(
+      icsData.includes("SUMMARY:Test Event with Timezone"),
+      "contains title"
+    );
+    assert.true(
+      icsData.includes("DTSTART;TZID=America/Los_Angeles:"),
+      "contains start time with TZID"
+    );
+    assert.true(
+      icsData.includes("DTEND;TZID=America/Los_Angeles:"),
+      "contains end time with TZID"
+    );
+    assert.false(icsData.includes("DTSTART:"), "no UTC start time");
+    assert.false(icsData.includes("20251201T120000Z"), "no Z suffix on times");
+    assert.true(icsData.includes("END:VEVENT"), "closes VEVENT");
+    assert.true(icsData.includes("END:VCALENDAR"), "closes VCALENDAR");
+  });
+
   test("includes location when provided", function (assert) {
     const title = "Test Event";
     const dates = [

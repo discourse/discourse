@@ -80,6 +80,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
         {
           startsAt: event.startsAt,
           endsAt: event.endsAt,
+          timezone: event.timezone,
         },
       ],
       {

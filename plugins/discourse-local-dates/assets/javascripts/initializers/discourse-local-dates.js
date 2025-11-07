@@ -320,6 +320,9 @@ function _downloadCalendarNode(element) {
   if (startDataset.title) {
     node.setAttribute("data-title", startDataset.title);
   }
+  if (startDataset.timezone) {
+    node.setAttribute("data-timezone", startDataset.timezone);
+  }
 
   // If ics data is available, pass it to the download button
   if (startDataset.ics) {
@@ -380,12 +383,19 @@ class LocalDatesInit {
 
         this.downloadIcs(title || "event", icsData);
       } else {
-        downloadCalendar(dataset.title, [
+        const dates = [
           {
             startsAt: dataset.startsAt,
             endsAt: dataset.endsAt,
           },
-        ]);
+        ];
+
+        // Add timezone if available
+        if (dataset.timezone) {
+          dates[0].timezone = dataset.timezone;
+        }
+
+        downloadCalendar(dataset.title, dates);
       }
 
       return this.tooltip.close("local-date");

@@ -16,7 +16,42 @@ module("Unit | Utility | download-calendar", function (hooks) {
     sinon.stub(win, "focus");
   });
 
-  test("correct data for ICS", function (assert) {
+  test("correct data for ICS with timezone", function (assert) {
+    const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
+    sinon.useFakeTimers({
+      now,
+      toFake: ["Date"],
+      shouldAdvanceTime: true,
+      shouldClearNativeTimers: true,
+    });
+    const data = generateIcsData(
+      "event test",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+          timezone: "Europe/Paris",
+        },
+      ],
+      {
+        rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
+        location: "Paris",
+        details: "Good soup",
+      }
+    );
+
+    assert.true(data.includes("BEGIN:VCALENDAR"));
+    assert.true(data.includes("DTSTART;TZID=Europe/Paris:20211012T170000"));
+    assert.true(data.includes("DTEND;TZID=Europe/Paris:20211012T180000"));
+    assert.true(data.includes("RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"));
+    assert.true(data.includes("LOCATION:Paris"));
+    assert.true(data.includes("DESCRIPTION:Good soup"));
+    assert.true(data.includes("SUMMARY:event test"));
+    assert.true(data.includes("END:VEVENT"));
+    assert.true(data.includes("END:VCALENDAR"));
+  });
+
+  test("correct data for ICS without timezone (UTC)", function (assert) {
     const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
     sinon.useFakeTimers({
       now,
@@ -45,7 +80,34 @@ module("Unit | Utility | download-calendar", function (hooks) {
     );
   });
 
-  test("correct data for ICS when recurring event", function (assert) {
+  test("correct data for ICS when recurring event with timezone", function (assert) {
+    const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
+    sinon.useFakeTimers({
+      now,
+      toFake: ["Date"],
+      shouldAdvanceTime: true,
+      shouldClearNativeTimers: true,
+    });
+    const data = generateIcsData(
+      "event test",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+          timezone: "America/New_York",
+        },
+      ],
+      { rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
+    );
+
+    assert.true(data.includes("DTSTART;TZID=America/New_York:20211012T110000"));
+    assert.true(data.includes("DTEND;TZID=America/New_York:20211012T120000"));
+    assert.true(data.includes("RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"));
+
+    sinon.restore();
+  });
+
+  test("correct data for ICS when recurring event without timezone", function (assert) {
     const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
     sinon.useFakeTimers({
       now,

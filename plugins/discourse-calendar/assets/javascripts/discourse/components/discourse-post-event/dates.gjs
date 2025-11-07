@@ -118,7 +118,7 @@ export default class DiscoursePostEventDates extends Component {
       ? this.endsAt.toISOString()
       : moment(this.startsAt).add(1, "hours").toISOString();
 
-    const dates = [{ startsAt, endsAt }];
+    const dates = [{ startsAt, endsAt, timezone: this.timezone }];
     const options = {};
 
     if (event.rrule) {
