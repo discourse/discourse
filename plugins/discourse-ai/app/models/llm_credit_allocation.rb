@@ -14,7 +14,7 @@ class LlmCreditAllocation < ActiveRecord::Base
 
   belongs_to :llm_model
 
-  # TODO: Remove once 20251105174002_refactor_llm_credit_allocation_to_monthly_usage has been promoted to pre-deploy
+  # TODO: Remove once 20251105174003_remove_old_credit_columns_from_llm_credit_allocations has been promoted to pre-deploy
   self.ignored_columns = %w[monthly_used last_reset_at]
 
   validates :llm_model_id, presence: true, uniqueness: true
