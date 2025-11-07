@@ -5,6 +5,7 @@ import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { renderIcon } from "discourse/lib/icon-library";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
+import { isDocumentRTL } from "discourse/lib/text-direction";
 import {
   escapeExpression,
   postRNWebviewMessage,
@@ -30,7 +31,7 @@ export default async function lightbox(elem, siteSettings) {
     const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
     const isTestEnv = isTesting() || isRailsTesting();
 
-    const rtl = document.documentElement.classList.contains("rtl");
+    const rtl = isDocumentRTL();
     const items = [...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
 
     if (rtl) {
