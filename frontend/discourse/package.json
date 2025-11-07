@@ -40,7 +40,7 @@
     "@jsquash/jpeg": "^1.6.0",
     "@jsquash/resize": "^2.1.0",
     "@messageformat/core": "^3.4.0",
-    "@messageformat/runtime": "^3.0.1",
+    "@messageformat/runtime": "^3.0.2",
     "ace-builds": "^1.43.4",
     "chart.js": "3.5.1",
     "chartjs-plugin-datalabels": "2.2.0",
