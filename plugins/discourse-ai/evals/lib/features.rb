@@ -31,6 +31,9 @@ module DiscourseAi
       end
 
       def valid_feature_key?(key)
+        custom_keys = %w[custom:prompt custom:pdf_to_text custom:image_to_text custom:edit_artifact]
+        return true if custom_keys.include?(key)
+
         feature_keys.include?(key)
       end
 

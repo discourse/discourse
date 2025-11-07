@@ -8,12 +8,12 @@ require_relative "lib/prompts/prompt_evaluator"
 require_relative "lib/prompts/single_test_runner"
 require_relative "lib/features"
 require_relative "lib/recorder"
-require_relative "lib/playground"
+require_relative "lib/workbench"
 require_relative "lib/cli"
 
 features_registry =
   DiscourseAi::Evals::Features.new(modules: DiscourseAi::Configuration::Module.all)
-playground = DiscourseAi::Evals::Playground.new(output: $stdout)
+playground = DiscourseAi::Evals::Workbench.new(output: $stdout)
 
 options = DiscourseAi::Evals::Cli.parse_options!(features_registry)
 

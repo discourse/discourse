@@ -27,8 +27,8 @@ module DiscourseAi
             .map { { id: _1, poster: _2, text: _3, last_version_at: _4 } }
         end
 
-        def as_llm_messages(contents)
-          content_title = target.name
+        def as_llm_messages(contents, extras: {})
+          content_title = extras[:title]
           input =
             contents.map { |item| "(#{item[:id]} #{item[:poster]} said: #{item[:text]} " }.join
 
