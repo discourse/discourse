@@ -231,7 +231,15 @@ a.holiday {
 }
 
 .discourse-post-event-upcoming-events {
-  height: 100%;
+  height: calc(
+    var(--composer-vh, 1dvh) *
+      100 - var(--main-outlet-offset, 0px) - var(
+        --main-outlet-padding-top
+      ) - var(--main-outlet-padding-bottom) - var(
+        --powered-by-height,
+        0px
+      ) - var(--below-topic-margin)
+  );
 }
 
 .discourse-calendar-wrap {
