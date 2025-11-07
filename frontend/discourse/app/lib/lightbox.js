@@ -32,9 +32,12 @@ export default async function lightbox(elem, siteSettings) {
 
     const rtl = document.documentElement.classList.contains("rtl");
     const items = [...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
-    const sortedItems = rtl ? [...items].reverse() : items;
 
-    sortedItems.forEach((el, index) => {
+    if (rtl) {
+      items.reverse();
+    }
+
+    items.forEach((el, index) => {
       el.addEventListener("click", (e) => {
         e.preventDefault();
 
@@ -43,7 +46,7 @@ export default async function lightbox(elem, siteSettings) {
     });
 
     const lightboxEl = new PhotoSwipeLightbox({
-      dataSource: sortedItems,
+      dataSource: items,
       arrowPrevTitle: i18n("lightbox.previous"),
       arrowNextTitle: i18n("lightbox.next"),
       closeTitle: i18n("lightbox.close"),
@@ -172,9 +175,9 @@ export default async function lightbox(elem, siteSettings) {
         appendTo: "bar",
         onInit: (el, pswp) => {
           pswp.on("change", () => {
-            // get index from DOM as we load images in RTL languages in reverse order
-            const slideIndex = items.indexOf(pswp.currSlide.data.element);
-            el.textContent = `${slideIndex + 1} / ${pswp.getNumItems()}`;
+            const total = pswp.getNumItems();
+            const index = rtl ? total - pswp.currIndex : pswp.currIndex + 1;
+            el.textContent = `${index} / ${total}`;
           });
         },
       });
