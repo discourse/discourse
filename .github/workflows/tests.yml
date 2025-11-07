@@ -65,7 +65,9 @@ jobs:
 
     steps:
       - name: Set working directory owner
-        run: chown root:root .
+        run: |
+          chown root:root .
+          chown root:root $HOME
 
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
