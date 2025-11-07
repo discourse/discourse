@@ -75,39 +75,43 @@ RSpec.describe DiscourseAssign do
         expect(filtered_topic_ids).to contain_exactly(topic_assignment.topic.id)
       end
 
-      it "respects group visibility" do
-        private_group = Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+      describe "when querying private groups" do
+        fab!(:private_group) do
+          Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+        end
 
-        private_user = Fabricate(:user)
-        private_owner = Fabricate(:admin)
+        fab!(:private_topic_assignment) { Fabricate(:topic_assignment, assigned_to: private_group) }
 
-        private_group.add(private_user)
-        private_group.add_owner(private_owner)
+        it "does not return topics from private groups the user is not a member of" do
+          filtered_topic_ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("assigned:#{private_group.name}")
+              .pluck(:id)
+          expect(filtered_topic_ids).to be_empty
+        end
 
-        private_topic = Fabricate(:topic)
-        private_assignment =
-          Fabricate(:topic_assignment, topic: private_topic, assigned_to: private_group)
+        it "does not return topics from private groups the user is a member of but lacks access to" do
+          private_group.add(user)
 
-        filtered_topic_ids =
-          TopicsFilter
-            .new(guardian: Guardian.new(user))
-            .filter_from_query_string("assigned:#{private_group.name}")
-            .pluck(:id)
-        expect(filtered_topic_ids).to be_empty
+          filtered_topic_ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("assigned:#{private_group.name}")
+              .pluck(:id)
+          expect(filtered_topic_ids).to be_empty
+        end
 
-        filtered_topic_ids =
-          TopicsFilter
-            .new(guardian: Guardian.new(private_user))
-            .filter_from_query_string("assigned:#{private_group.name}")
-            .pluck(:id)
-        expect(filtered_topic_ids).to be_empty
+        it "returns topics from private groups the user has access to" do
+          private_group.add_owner(user)
 
-        filtered_topic_ids =
-          TopicsFilter
-            .new(guardian: Guardian.new(private_owner))
-            .filter_from_query_string("assigned:#{private_group.name}")
-            .pluck(:id)
-        expect(filtered_topic_ids).to contain_exactly(private_assignment.topic.id)
+          filtered_topic_ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("assigned:#{private_group.name}")
+              .pluck(:id)
+          expect(filtered_topic_ids).to contain_exactly(private_topic_assignment.topic.id)
+        end
       end
     end
   end
