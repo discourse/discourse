@@ -43,9 +43,8 @@ export default class ShowController extends Controller {
     }
   }
 
-  @discourseComputed("username", "model.grant_count", "userBadgesGrantCount")
-  grantCount(username, modelCount, userCount) {
-    return username ? userCount : modelCount;
+  get grantCount() {
+    return this.username ? this.userBadgesGrantCount : this.model.grant_count;
   }
 
   @discourseComputed("model.grant_count", "userBadgesGrantCount")
@@ -58,12 +57,11 @@ export default class ShowController extends Controller {
     return this.siteSettings.enable_badges && hasTitleBadges && hasBadge;
   }
 
-  @discourseComputed("noMoreBadges", "grantCount", "userBadges.length")
-  canLoadMore(noMoreBadges, grantCount, userBadgeLength) {
-    if (noMoreBadges) {
+  get canLoadMore() {
+    if (this.noMoreBadges) {
       return false;
     }
-    return grantCount > (userBadgeLength || 0);
+    return this.grantCount > (this.userBadges?.length || 0);
   }
 
   @discourseComputed("user", "model.grant_count")
