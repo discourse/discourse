@@ -3,6 +3,7 @@
 require_relative "endpoint_compliance"
 require "aws-eventstream"
 require "aws-sigv4"
+require "aws-sdk-sts"
 
 class BedrockMock < EndpointMock
 end
@@ -607,6 +608,110 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
       # Verify that tool_choice: "echo" is present
       expect(request_body.dig("tool_choice", "name")).to eq("echo")
+    end
+  end
+
+  describe "role-based authentication" do
+    it "uses assumed role credentials when role_arn is provided" do
+      # Configure the model with a role_arn
+      model.update!(
+        provider_params: {
+          access_key_id: "123",
+          region: "us-east-1",
+          role_arn: "arn:aws:iam::123456789012:role/BedRockAccessRole",
+        },
+      )
+
+      # Mock the STS assume_role call
+      mock_credentials =
+        OpenStruct.new(
+          access_key_id: "ASSUMED_ACCESS_KEY",
+          secret_access_key: "ASSUMED_SECRET_KEY",
+          session_token: "ASSUMED_SESSION_TOKEN",
+        )
+
+      mock_assumed_role_response = OpenStruct.new(credentials: mock_credentials)
+
+      mock_sts_client = instance_double(Aws::STS::Client)
+      allow(Aws::STS::Client).to receive(:new).with(region: "us-east-1").and_return(mock_sts_client)
+      allow(mock_sts_client).to receive(:assume_role).with(
+        role_arn: "arn:aws:iam::123456789012:role/BedRockAccessRole",
+        role_session_name: "bedrock-test-session",
+      ).and_return(mock_assumed_role_response)
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      # Verify the STS client was called with the correct parameters
+      expect(mock_sts_client).to have_received(:assume_role).with(
+        role_arn: "arn:aws:iam::123456789012:role/BedRockAccessRole",
+        role_session_name: "bedrock-test-session",
+      )
+
+      # Verify the request was signed (authorization header should be present)
+      expect(request.headers["Authorization"]).to be_present
+      expect(request.headers["X-Amz-Content-Sha256"]).to be_present
+      # The session token should be included in the signed request headers
+      expect(request.headers["X-Amz-Security-Token"]).to eq("ASSUMED_SESSION_TOKEN")
+    end
+
+    it "uses regular credentials when role_arn is not provided" do
+      # Configure the model without a role_arn
+      model.update!(provider_params: { access_key_id: "DIRECT_ACCESS_KEY", region: "us-east-1" })
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      # Ensure STS is not called when role_arn is not provided
+      allow(Aws::STS::Client).to receive(:new).and_call_original
+
+      proxy.generate("test prompt", user: user)
+
+      expect(Aws::STS::Client).not_to have_received(:new)
+
+      # Verify the request was signed with regular credentials
+      expect(request.headers["Authorization"]).to be_present
+      expect(request.headers["X-Amz-Content-Sha256"]).to be_present
+      # No session token should be present when using regular credentials
+      expect(request.headers["X-Amz-Security-Token"]).to be_nil
     end
   end
 
