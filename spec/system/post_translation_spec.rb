@@ -130,6 +130,46 @@ describe "Post translations", type: :system do
 
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
     end
+
+    it "prompts to discard changes when abandoning modified translation" do
+      discard_modal = PageObjects::Modals::DiscardDraft.new
+
+      topic_page.visit_topic(topic)
+      find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      expect(composer).to be_opened
+
+      translation_selector.expand
+      translation_selector.select_row_by_value("fr")
+
+      composer.fill_content("Salut le monde")
+      composer.minimize
+      expect(composer).to be_minimized
+
+      find("#post_#{post.post_number} .post-action-menu__reply").click
+
+      expect(discard_modal).to be_open
+    end
+
+    it "auto-closes when abandoning unchanged translation" do
+      discard_modal = PageObjects::Modals::DiscardDraft.new
+
+      topic_page.visit_topic(topic)
+      find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      expect(composer).to be_opened
+
+      translation_selector.expand
+      translation_selector.select_row_by_value("fr")
+
+      composer.minimize
+      expect(composer).to be_minimized
+
+      find("#post_#{post.post_number} .post-action-menu__reply").click
+
+      expect(discard_modal).to be_closed
+      expect(composer).to be_opened
+    end
   end
 
   context "when creating a new post in a different locale" do
