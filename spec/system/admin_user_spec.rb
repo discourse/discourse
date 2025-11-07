@@ -167,5 +167,38 @@ describe "Admin User Page", type: :system do
       # ensure the automatic groups are displayed
       page.find(".admin-user__automatic-groups").has_text?("trust_level")
     end
+
+    describe "with user action logs" do
+      let(:staff_action_logs_page) { PageObjects::Pages::AdminStaffActionLogs.new }
+
+      fab!(:user_a, :user)
+      fab!(:user_a_silenced) do
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user_a)
+      end
+      fab!(:user_b, :user)
+      fab!(:user_b_silenced) do
+        Fabricate(:user_history, action: UserHistory.actions[:silence_user], target_user: user_b)
+      end
+
+      # Relates to
+      # meta.discourse.org/t/-/387508
+      it "refreshes the filter when navigating thought the action logs button" do
+        admin_users_page.visit
+        admin_users_page.user_row(user_a.id).username.click
+
+        admin_user_page.click_action_logs_button
+        expect(staff_action_logs_page).to have_log_row(user_a_silenced)
+        expect(staff_action_logs_page).to have_no_log_row(user_b_silenced)
+
+        page.go_back # navigate back to user page
+        page.go_back # navigate back to user list
+
+        admin_users_page.user_row(user_b.id).username.click
+        admin_user_page.click_action_logs_button
+
+        expect(staff_action_logs_page).to have_log_row(user_b_silenced)
+        expect(staff_action_logs_page).to have_no_log_row(user_a_silenced)
+      end
+    end
   end
 end
