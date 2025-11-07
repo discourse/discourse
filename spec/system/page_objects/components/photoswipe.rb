@@ -13,7 +13,7 @@ module PageObjects
       DOWNLOAD_BTN = ".pswp__button--download-image"
       ORIGINAL_IMAGE_BTN = ".pswp__button--original-image"
       IMAGE_INFO_BTN = ".pswp__button--image-info"
-      COUNTER = ".pswp__counter"
+      COUNTER = ".pswp__custom-counter"
       CAPTION = ".pswp__caption"
       CAPTION_TITLE = ".pswp__caption-title"
       CAPTION_DETAILS = ".pswp__caption-details"
