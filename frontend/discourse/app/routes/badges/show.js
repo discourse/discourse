@@ -33,6 +33,10 @@ export default class BadgesShow extends DiscourseRoute {
       username: usernameFromParams,
     }).then((userBadges) => {
       this.userBadgesGrant = userBadges;
+      this.userBadgesInfo = {
+        grant_count: userBadges.grant_count ?? 0,
+        username: userBadges.username ?? "",
+      };
     });
 
     const username = this.currentUser && this.currentUser.username_lower;
@@ -59,6 +63,7 @@ export default class BadgesShow extends DiscourseRoute {
 
   setupController(controller) {
     super.setupController(...arguments);
+    controller.set("userBadgesInfo", this.userBadgesInfo);
     controller.set("userBadges", this.userBadgesGrant);
     controller.set("userBadgesAll", this.userBadgesAll);
   }

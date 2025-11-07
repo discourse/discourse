@@ -13,6 +13,7 @@ export default class ShowController extends Controller {
 
   @tracked loadingMore = false;
   @tracked noMoreBadges = false;
+  @tracked userBadgesInfo = null;
   @trackedArray userBadges = null;
 
   queryParams = ["username"];
@@ -41,12 +42,16 @@ export default class ShowController extends Controller {
     }
   }
 
-  @discourseComputed("username", "model.grant_count", "userBadges.grant_count")
+  @discourseComputed(
+    "username",
+    "model.grant_count",
+    "userBadgesInfo.grant_count"
+  )
   grantCount(username, modelCount, userCount) {
     return username ? userCount : modelCount;
   }
 
-  @discourseComputed("model.grant_count", "userBadges.grant_count")
+  @discourseComputed("model.grant_count", "userBadgesInfo.grant_count")
   othersCount(modelCount, userCount) {
     return modelCount - userCount;
   }
