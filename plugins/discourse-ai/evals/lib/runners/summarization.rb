@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
+require_relative "base"
+
 module DiscourseAi
   module Evals
     module Runners
-      class Summarization
+      class Summarization < Base
         def self.can_handle?(full_feature_name)
-          feature_name.starts_with?("summarization:")
+          full_feature_name&.start_with?("summarization:")
         end
 
         def initialize(feature_name)
-          @feature_name = feature_name
+          @feature_name = feature_name.split(":").last
         end
 
         def run(eval_case, llm)

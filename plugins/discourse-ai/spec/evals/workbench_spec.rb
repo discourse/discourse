@@ -140,7 +140,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
 
       results =
         DiscourseAi::Completions::Llm.with_prepared_responses(["Concise summary"]) do
-          workbench.send(:execute_eval, eval_case, llm)
+          workbench.execute_eval(eval_case, llm)
         end
 
       expect(results.first[:result]).to eq(:pass)
@@ -163,7 +163,7 @@ RSpec.describe DiscourseAi::Evals::Workbench do
 
       results =
         DiscourseAi::Completions::Llm.with_prepared_responses([true, "obvious spam"]) do
-          workbench.send(:execute_eval, eval_case, llm)
+          workbench.execute_eval(eval_case, llm)
         end
 
       expect(results.first[:result]).to eq(:pass)

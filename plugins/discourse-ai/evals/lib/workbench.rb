@@ -3,6 +3,9 @@
 require_relative "recorder"
 require_relative "eval"
 require_relative "llm_repository"
+require_relative "runners/base"
+require_relative "runners/ai_helper"
+require_relative "runners/spam"
 require_relative "runners/summarization"
 
 module DiscourseAi
@@ -52,32 +55,13 @@ module DiscourseAi
         recorder&.finish
       end
 
-      private
-
-      attr_reader :output
-
-      HELPER_MODES = {
-        "ai_helper:proofread" => DiscourseAi::AiHelper::Assistant::PROOFREAD,
-        "ai_helper:explain" => DiscourseAi::AiHelper::Assistant::EXPLAIN,
-        "ai_helper:smart_dates" => DiscourseAi::AiHelper::Assistant::REPLACE_DATES,
-        "ai_helper:title_suggestions" => DiscourseAi::AiHelper::Assistant::GENERATE_TITLES,
-        "ai_helper:markdown_tables" => DiscourseAi::AiHelper::Assistant::MARKDOWN_TABLE,
-        "ai_helper:custom_prompt" => DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT,
-        "ai_helper:translator" => DiscourseAi::AiHelper::Assistant::TRANSLATE,
-        "ai_helper:image_caption" => DiscourseAi::AiHelper::Assistant::IMAGE_CAPTION,
-      }.freeze
-
       def execute_eval(eval_case, llm)
         feature = eval_case.feature
 
+        runner = DiscourseAi::Evals::Runners::Base.find_runner(feature)
         raw =
-          if (helper_mode = helper_mode_for(feature))
-            helper_args = eval_case.args
-            unless helper_args.is_a?(Hash)
-              raise ArgumentError,
-                    "Eval '#{eval_case.id}' must define helper args as a hash to use #{feature}"
-            end
-            helper(llm, helper_mode: helper_mode, **helper_args)
+          if runner
+            runner.run(eval_case, llm)
           elsif feature == "custom:pdf_to_text"
             pdf_to_text(llm, **eval_case.args)
           elsif feature == "custom:image_to_text"
@@ -86,13 +70,6 @@ module DiscourseAi
             DiscourseAi::Evals::PromptEvaluator.new(llm).prompt_call(eval_case.args)
           elsif feature == "custom:edit_artifact"
             edit_artifact(llm, **eval_case.args)
-          elsif feature == "spam:inspect_posts"
-            spam(llm, **eval_case.args)
-          elsif feature&.start_with?("summarization:")
-            DiscourseAi::Evals::Runners::Summarization.new(feature.split(":").last).run(
-              eval_case,
-              llm,
-            )
           else
             raise ArgumentError, "Unsupported eval feature '#{feature}'"
           end
@@ -100,11 +77,9 @@ module DiscourseAi
         classify_results(eval_case, raw)
       end
 
-      # @param feature [String] fully qualified feature key (module:feature).
-      # @return [String, nil] the Assistant mode constant to use for helper runs.
-      def helper_mode_for(feature)
-        HELPER_MODES[feature]
-      end
+      private
+
+      attr_reader :output
 
       def classify_results(eval_case, result)
         if result.is_a?(Array)
@@ -206,44 +181,6 @@ module DiscourseAi
             context: judge_result,
           }
         end
-      end
-
-      # Execute an AI Helper prompt for the provided mode, handling optional
-      # locale switching and custom prompts used by certain helper features.
-      #
-      # @param llm [LlmModel] helper-capable LLM.
-      # @param helper_mode [String] Assistant mode constant (see HELPER_MODES).
-      # @param input [String] user input for the helper.
-      # @param locale [String, nil] optional locale to impersonate during the run.
-      # @param extra [Hash] optional keyword args such as :custom_prompt.
-      # @return [String] helper suggestion selected for evaluation.
-      def helper(llm, helper_mode:, input:, locale: nil, **extra)
-        helper = DiscourseAi::AiHelper::Assistant.new(helper_llm: llm)
-        user = Discourse.system_user
-
-        if locale
-          user = User.new
-          class << user
-            attr_accessor :effective_locale
-          end
-
-          user.effective_locale = locale
-          user.admin = true
-        end
-
-        force_default_locale = extra.fetch(:force_default_locale, false)
-        custom_prompt = extra[:custom_prompt]
-
-        result =
-          helper.generate_and_send_prompt(
-            helper_mode,
-            input,
-            user,
-            force_default_locale: force_default_locale,
-            custom_prompt: custom_prompt,
-          )
-
-        result[:suggestions].first
       end
 
       # Extract text from an image upload by delegating to the ImageToText helper.
@@ -368,26 +305,6 @@ module DiscourseAi
         end
       rescue StandardError
         false
-      end
-
-      def spam(llm, input:, topic_title:)
-        persona_id =
-          DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::SpamDetector]
-        settings =
-          AiModerationSetting.new(
-            llm_model: nil,
-            ai_persona: AiPersona.find_by_id_from_cache(persona_id),
-            data: {
-            },
-          )
-
-        topic = Topic.new(title: topic_title, id: -99)
-        post = Post.new(topic: topic, id: -99, raw: input)
-
-        DiscourseAi::AiModeration::SpamScanner
-          .test_post(post, llm_model: llm, settings: settings, include_reasoning: false)
-          .dig(:is_spam)
-          .to_s
       end
 
       def format_placeholder_value(value)
