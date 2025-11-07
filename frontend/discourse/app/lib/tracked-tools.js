@@ -223,7 +223,12 @@ export function trackedArray(target, key, desc) {
     };
   }
 
-  const { get, set } = tracked(target, key, {
+  // When using EmberObject.create(...), Ember accesses the tracked properties directly
+  // through internal references, bypassing the getter/setter defined in this decorator.
+  // To work around this, we need to use a different property name to store the tracked state.
+  // Since tracked properties are not enumerable, adding this "virtual" property
+  // should have no side effects.
+  const { get, set } = tracked(target, `${key}__trackedArray`, {
     ...desc,
     enumerable: true,
     configurable: true,
