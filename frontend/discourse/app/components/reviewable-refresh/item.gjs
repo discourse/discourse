@@ -187,10 +187,13 @@ export default class ReviewableItem extends Component {
   @discourseComputed(
     "siteSettings.reviewable_claiming",
     "topicId",
-    "reviewable.claimed_by.automatic"
+    "reviewable.claimed_by.automatic",
+    "reviewable.status"
   )
-  claimEnabled(claimMode, topicId, autoClaimed) {
-    return (claimMode !== "disabled" || autoClaimed) && !!topicId;
+  claimEnabled(claimMode, topicId, autoClaimed, status) {
+    return (
+      (claimMode !== "disabled" || autoClaimed) && !!topicId && status === 0
+    );
   }
 
   @discourseComputed("siteSettings.reviewable_claiming", "claimEnabled")
@@ -308,8 +311,12 @@ export default class ReviewableItem extends Component {
     return Object.values(scoreData);
   }
 
-  @discourseComputed("reviewable.type", "reviewable.created_from_flag")
-  reviewableTypeLabel(type, createdFromFlag) {
+  @discourseComputed(
+    "reviewable.type",
+    "reviewable.created_from_flag",
+    "reviewable.topic_id"
+  )
+  reviewableTypeLabel(type, createdFromFlag, topicId) {
     // handle plugin types
     if (reviewableTypeLabels[type]) {
       return reviewableTypeLabels[type];
@@ -321,7 +328,8 @@ export default class ReviewableItem extends Component {
     }
 
     if (type === "ReviewableQueuedPost") {
-      return "review.queued_post_label";
+      // if topic_id is null it's a new topic
+      return topicId ? "review.queued_post_label" : "review.queued_topic_label";
     }
 
     if (type === "ReviewableChatMessage") {

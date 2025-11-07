@@ -825,7 +825,7 @@ en:
       replies:
         one: "%{count} reply"
         other: "%{count} replies"
-      edit: "Edit"
+      edit: "Edit Post"
       save: "Save"
       cancel: "Cancel"
       new_topic: "Approving this item will create a new topic"
@@ -921,6 +921,7 @@ en:
       post_flagged_as: "Post flagged as"
       chat_flagged_as: "Chat flagged as"
       queued_post_label: "Queued post"
+      queued_topic_label: "Queued topic"
       user_label: "User"
       assigned_to: "Assigned to"
       moderator_actions: "Moderator actions"
@@ -945,7 +946,7 @@ en:
         chars_remaining: "%{count} characters remaining"
         delete_note: "Delete this note"
         delete: "Delete"
-      new_topic_label: "New topic"
+      topic: "Topic"
       queued_user: "Queued user"
       posted_in: "Posted in"
       flagged_user: "Flagged user"
@@ -961,9 +962,11 @@ en:
         flagged_by_users:
           one: "Flagged by %{count} unique user"
           other: "Flagged by %{count} unique users"
-        similar_posts: "Similar past posts"
-        flagged_in_timeframe: "%{count} flagged previously"
-        user_activity: "User activity"
+        similar_posts: "Past violations"
+        flagged_in_timeframe:
+          one: "%{count} confirmed flag"
+          other: "%{count} confirmed flags"
+        user_activity: "User info"
         activities:
           new_account: "new account"
           trust_level: "trust level: %{trustLevelName}"
