@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require "aws-sigv4"
-require "aws-sdk-sts"
 
 module DiscourseAi
   module Completions
@@ -175,6 +174,9 @@ module DiscourseAi
 
           signer =
             if role_arn
+              # Lazy load aws-sdk-sts only when needed
+              require "aws-sdk-sts" unless defined?(Aws::STS)
+
               # Use AWS SDK's built-in credential provider with automatic refresh
               credentials =
                 Aws::AssumeRoleCredentials.new(
