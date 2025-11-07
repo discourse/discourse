@@ -172,10 +172,8 @@ export default async function lightbox(elem, siteSettings) {
         appendTo: "bar",
         onInit: (el, pswp) => {
           pswp.on("change", () => {
-            // we use a reversed array of images in PhotoSwipe for RTL languages
-            // then force the counter to use DOM index to invert counter when clicking back
-            const slideEl = pswp.currSlide.data.element;
-            const slideIndex = items.indexOf(slideEl);
+            // get index from DOM as we load images in RTL languages in reverse order
+            const slideIndex = items.indexOf(pswp.currSlide.data.element);
             el.textContent = `${slideIndex + 1} / ${pswp.getNumItems()}`;
           });
         },
