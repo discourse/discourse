@@ -60,6 +60,6 @@ class LlmModelSerializer < ApplicationSerializer
   end
 
   def include_credit_allocation?
-    object.seeded?
+    object.seeded? && object.credit_system_enabled?
   end
 end
