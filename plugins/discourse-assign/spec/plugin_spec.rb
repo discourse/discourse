@@ -84,7 +84,9 @@ RSpec.describe DiscourseAssign do
         private_group.add(private_user)
         private_group.add_owner(private_owner)
 
-        private_assignment = Fabricate(:topic_assignment, assigned_to: private_group)
+        private_topic = Fabricate(:topic)
+        private_assignment =
+          Fabricate(:topic_assignment, topic: private_topic, assigned_to: private_group)
 
         filtered_topic_ids =
           TopicsFilter
