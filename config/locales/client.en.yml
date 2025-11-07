@@ -946,7 +946,7 @@ en:
         chars_remaining: "%{count} characters remaining"
         delete_note: "Delete this note"
         delete: "Delete"
-      topic: "Topic"
+      topic_label: "Topic"
       queued_user: "Queued user"
       posted_in: "Posted in"
       flagged_user: "Flagged user"
