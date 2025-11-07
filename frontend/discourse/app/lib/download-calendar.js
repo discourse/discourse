@@ -34,7 +34,7 @@ export function downloadIcs(title, dates, options = {}) {
   a.href = window.URL.createObjectURL(file);
   a.download = `${title.toLowerCase().replace(/[^\w]/g, "-")}.ics`;
   a.click();
-  setTimeout(() => window.URL.revokeObjectURL(file), REMOVE_FILE_AFTER); //remove file to avoid memory leaks
+  setTimeout(() => window.URL.revokeObjectURL(file), REMOVE_FILE_AFTER);
 }
 
 export function downloadGoogle(title, dates, options = {}) {
@@ -76,23 +76,125 @@ export function formatDates(dates) {
   });
 }
 
+/**
+ * Escape special characters in ICS field values per RFC 5545
+ * - Backslashes must be escaped as \\
+ * - Newlines (CR, LF, CRLF) must be encoded as \n
+ * - Semicolons must be escaped as \;
+ * - Commas must be escaped as \,
+ *
+ * @param {string} value - The value to escape
+ * @returns {string} - The escaped value
+ */
+function _escapeIcsValue(value) {
+  return value
+    .replace(/\\/g, "\\\\")
+    .replace(/\r\n|\r|\n/g, "\\n")
+    .replace(/;/g, "\\;")
+    .replace(/,/g, "\\,");
+}
+
+/**
+ * Fold a line to comply with RFC 5545 line length limit (75 octets)
+ * Continuation lines start with a space
+ *
+ * @param {string} line - The line to fold
+ * @returns {string} - The folded line
+ */
+function _foldLine(line) {
+  const maxLength = 75;
+  if (line.length <= maxLength) {
+    return line;
+  }
+
+  const result = [];
+  let currentLine = line;
+
+  while (currentLine.length > maxLength) {
+    result.push(currentLine.substring(0, maxLength));
+    currentLine = " " + currentLine.substring(maxLength);
+  }
+  result.push(currentLine);
+
+  return result.join("\r\n");
+}
+
+/**
+ * Parse and extract the RRULE line from a string that may contain
+ * both DTSTART and RRULE (legacy format)
+ *
+ * @param {string} rruleString - The RRULE string (may include DTSTART)
+ * @returns {string|null} - The extracted RRULE value or null if invalid
+ */
+function _parseRRule(rruleString) {
+  if (!rruleString) {
+    return null;
+  }
+
+  const lines = rruleString.split(/\r?\n/);
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("RRULE:")) {
+      return trimmed.substring(6);
+    } else if (/^FREQ=/i.test(trimmed)) {
+      return trimmed;
+    }
+  }
+
+  if (/^FREQ=/i.test(rruleString.trim())) {
+    return rruleString.trim();
+  }
+
+  return null;
+}
+
+/**
+ * Check if an RRULE string contains the required FREQ parameter
+ *
+ * @param {string} rrule - The RRULE string to check
+ * @returns {boolean} - True if FREQ is present
+ */
+function _hasFreq(rrule) {
+  return /FREQ=/i.test(rrule);
+}
+
+/**
+ * Generate ICS calendar data for the given dates
+ *
+ * @param {string} title - Event title
+ * @param {Array} dates - Array of date objects with startsAt and endsAt
+ * @param {Object} options - Optional parameters (rrule, location, details)
+ * @returns {string} - ICS formatted calendar data
+ */
 export function generateIcsData(title, dates, options = {}) {
-  let data = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Discourse//EN\n";
+  let data = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Discourse//EN\r\n";
   dates.forEach((date) => {
     const startDate = moment(date.startsAt);
     const endDate = moment(date.endsAt);
+    const rrule = _parseRRule(options.rrule);
 
     data = data.concat(
-      "BEGIN:VEVENT\n" +
-        `UID:${startDate.utc().format("x")}_${endDate.format("x")}\n` +
-        `DTSTAMP:${moment().utc().format("YMMDDTHHmmss")}Z\n` +
-        `DTSTART:${startDate.utc().format("YMMDDTHHmmss")}Z\n` +
-        `DTEND:${endDate.utc().format("YMMDDTHHmmss")}Z\n` +
-        (options.rrule ? `RRULE:${options.rrule}\n` : ``) +
-        (options.location ? `LOCATION:${options.location}\n` : ``) +
-        (options.details ? `DESCRIPTION:${options.details}\n` : ``) +
-        `SUMMARY:${title}\n` +
-        "END:VEVENT\n"
+      "BEGIN:VEVENT\r\n" +
+        _foldLine(`UID:${startDate.utc().format("x")}_${endDate.format("x")}`) +
+        "\r\n" +
+        _foldLine(`DTSTAMP:${moment().utc().format("YMMDDTHHmmss")}Z`) +
+        "\r\n" +
+        _foldLine(`DTSTART:${startDate.utc().format("YMMDDTHHmmss")}Z`) +
+        "\r\n" +
+        _foldLine(`DTEND:${endDate.utc().format("YMMDDTHHmmss")}Z`) +
+        "\r\n" +
+        (rrule && _hasFreq(rrule) ? _foldLine(`RRULE:${rrule}`) + "\r\n" : ``) +
+        (options.location
+          ? _foldLine(`LOCATION:${_escapeIcsValue(options.location)}`) + "\r\n"
+          : ``) +
+        (options.details
+          ? _foldLine(`DESCRIPTION:${_escapeIcsValue(options.details)}`) +
+            "\r\n"
+          : ``) +
+        _foldLine(`SUMMARY:${_escapeIcsValue(title)}`) +
+        "\r\n" +
+        "END:VEVENT\r\n"
     );
   });
   data = data.concat("END:VCALENDAR");
