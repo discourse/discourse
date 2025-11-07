@@ -51,7 +51,7 @@ after_initialize do
   end
 
   add_to_serializer :site, :ad_types do
-    AdPlugin::AdType.enum_hash
+    AdPlugin::AdType.types
   end
 
   add_to_serializer :topic_view, :tags_disable_ads do
