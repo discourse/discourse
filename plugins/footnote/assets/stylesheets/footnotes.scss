@@ -43,6 +43,10 @@
   overflow-wrap: break-word;
   font-size: var(--font-down-1);
 
+  .fk-d-tooltip__inner-content {
+    flex-direction: column;
+  }
+
   .footnote-backref {
     display: none;
   }
@@ -55,6 +59,7 @@
   p {
     margin: 0;
     min-width: 0;
+    max-width: 100%;
   }
 }
 
