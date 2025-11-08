@@ -10,6 +10,26 @@ module DiscourseAi
 
         private
 
+        def normalize_hash_response(response)
+          if response.key?(:content_blocks)
+            blocks = Array.wrap(response[:content_blocks])
+            raise ArgumentError, "content_blocks array cannot be empty" if blocks.blank?
+
+            normalized = { type: :message, content_blocks: blocks }
+            usage = response[:usage]
+            normalized[:usage] = usage if usage
+            return normalized
+          end
+
+          normalized = super(response)
+
+          if normalized[:type] == :tool_calls && response.key?(:content)
+            normalized[:message_content] = response[:content]
+          end
+
+          normalized
+        end
+
         def build_response(request)
           @response_id = nil
           super
@@ -40,12 +60,23 @@ module DiscourseAi
         end
 
         def render_standard_message(response, payload)
-          content = response[:content].to_s
-          usage = response[:usage] || usage_for_text(content, payload)
+          content_blocks = symbolized_content_blocks(response[:content_blocks])
+          usage =
+            if response[:usage]
+              response[:usage]
+            elsif content_blocks.present?
+              usage_for_content_blocks(content_blocks, payload)
+            else
+              usage_for_text(response[:content].to_s, payload)
+            end
 
           message = base_message(payload)
-          message[:content] = [{ type: "text", text: content }]
-          message[:stop_reason] = "end_turn"
+          if content_blocks.present?
+            message[:content] = format_content_blocks(content_blocks)
+          else
+            message[:content] = [{ type: "text", text: response[:content].to_s }]
+          end
+          message[:stop_reason] = response[:stop_reason] || "end_turn"
           message[:usage] = usage
 
           Response.new(body: message.to_json)
@@ -78,6 +109,15 @@ module DiscourseAi
         end
 
         def render_streaming_message(response, payload)
+          content_blocks = symbolized_content_blocks(response[:content_blocks])
+
+          if content_blocks.present?
+            usage = response[:usage] || usage_for_content_blocks(content_blocks, payload)
+            stop_reason = response[:stop_reason] || "end_turn"
+            chunks = stream_content_blocks(content_blocks, payload, usage, stop_reason)
+            return Response.new(chunks: chunks)
+          end
+
           content = response[:content].to_s
           usage = response[:usage] || usage_for_text(content, payload)
           chunks = []
@@ -104,16 +144,10 @@ module DiscourseAi
           end
 
           chunks << event_chunk("content_block_stop", index: 0)
-          chunks << event_chunk(
-            "message_delta",
-            delta: {
-              stop_reason: "end_turn",
-              stop_sequence: nil,
-            },
-            usage: {
-              output_tokens: usage[:output_tokens],
-            },
-          )
+          delta_payload = { stop_reason: "end_turn", stop_sequence: nil }
+          event_payload = { delta: delta_payload }
+          event_payload[:usage] = { output_tokens: usage[:output_tokens] } if usage[:output_tokens]
+          chunks << event_chunk("message_delta", event_payload)
           chunks << event_chunk("message_stop")
 
           Response.new(chunks: chunks)
@@ -175,7 +209,7 @@ module DiscourseAi
           Response.new(chunks: chunks)
         end
 
-        def stream_text_block(index, text)
+        def stream_text_block(index, text, chunks_override: nil)
           chunks = []
 
           chunks << event_chunk(
@@ -187,7 +221,7 @@ module DiscourseAi
             },
           )
 
-          stream_chunks_for(text).each do |piece|
+          (chunks_override || stream_chunks_for(text)).each do |piece|
             chunks << event_chunk(
               "content_block_delta",
               index: index,
@@ -205,7 +239,13 @@ module DiscourseAi
         def streaming_message_header(payload, usage)
           message = base_message(payload)
           message[:content] = []
-          message[:usage] = { input_tokens: usage[:input_tokens], output_tokens: 0 }
+
+          if usage
+            message[:usage] = {}
+            message[:usage][:input_tokens] = usage[:input_tokens] if usage[:input_tokens]
+            message[:usage][:output_tokens] = 0
+          end
+
           message[:stop_reason] = nil
           message[:stop_sequence] = nil
           message
@@ -233,6 +273,13 @@ module DiscourseAi
           }
         end
 
+        def usage_for_content_blocks(blocks, payload)
+          {
+            input_tokens: prompt_token_estimate(payload),
+            output_tokens: llm_model.tokenizer_class.size(content_blocks_text(blocks)),
+          }
+        end
+
         def usage_for_tool_calls(tool_calls, payload)
           arguments_text =
             tool_calls.map { |tool| JSON.generate(tool[:arguments], quirks_mode: true) }.join
@@ -253,6 +300,138 @@ module DiscourseAi
           end
 
           llm_model.tokenizer_class.size(parts.join)
+        end
+
+        def content_blocks_text(blocks)
+          blocks
+            .to_a
+            .map do |block|
+              block = block.deep_symbolize_keys
+              case block[:type].to_s
+              when "thinking"
+                block[:thinking].to_s
+              when "text"
+                block[:text].to_s
+              else
+                ""
+              end
+            end
+            .join
+        end
+
+        def symbolized_content_blocks(blocks)
+          return [] if blocks.blank?
+
+          Array.wrap(blocks).map { |block| block.deep_symbolize_keys }
+        end
+
+        def format_content_blocks(blocks)
+          blocks.map { |block| formatted_content_block(block) }
+        end
+
+        def formatted_content_block(block)
+          case block[:type].to_s
+          when "thinking"
+            payload = { type: "thinking", thinking: block[:thinking].to_s }
+            payload[:signature] = block[:signature].to_s if block[:signature]
+            payload
+          when "redacted_thinking"
+            { type: "redacted_thinking", data: block[:data].to_s }
+          when "text"
+            { type: "text", text: block[:text].to_s }
+          when "tool_use"
+            raise ArgumentError, "tool_use content block must include :name" if block[:name].blank?
+            {
+              type: "tool_use",
+              id: block[:id] || "toolu_#{SecureRandom.hex(6)}",
+              name: block[:name],
+              input: block[:input] || block[:arguments] || {},
+            }
+          else
+            raise ArgumentError, "Unsupported Anthropic content block #{block[:type]}"
+          end
+        end
+
+        def stream_content_blocks(blocks, payload, usage, stop_reason)
+          chunks = []
+          chunks << event_chunk("message_start", message: streaming_message_header(payload, usage))
+
+          blocks.each_with_index do |block, index|
+            case block[:type].to_s
+            when "thinking"
+              chunks.concat(stream_thinking_block(index, block))
+            when "redacted_thinking"
+              chunks << event_chunk(
+                "content_block_start",
+                index: index,
+                content_block: {
+                  type: "redacted_thinking",
+                  data: block[:data].to_s,
+                },
+              )
+              chunks << event_chunk("content_block_stop", index: index)
+            when "text"
+              chunks.concat(
+                stream_text_block(index, block[:text].to_s, chunks_override: block[:text_chunks]),
+              )
+            else
+              raise ArgumentError, "Unsupported streaming content block #{block[:type]}"
+            end
+          end
+
+          delta_payload = { stop_reason: stop_reason, stop_sequence: nil }
+          event_payload = { delta: delta_payload }
+          if usage && usage[:output_tokens]
+            event_payload[:usage] = { output_tokens: usage[:output_tokens] }
+          end
+
+          chunks << event_chunk("message_delta", event_payload)
+          chunks << event_chunk("message_stop")
+          chunks
+        end
+
+        def stream_thinking_block(index, block)
+          chunks = []
+
+          chunks << event_chunk(
+            "content_block_start",
+            index: index,
+            content_block: {
+              type: "thinking",
+              thinking: "",
+            },
+          )
+
+          thinking_chunks = block[:thinking_chunks] || stream_chunks_for(block[:thinking].to_s)
+          thinking_chunks.each do |piece|
+            chunks << event_chunk(
+              "content_block_delta",
+              index: index,
+              delta: {
+                type: "thinking_delta",
+                thinking: piece,
+              },
+            )
+          end
+
+          signature_chunks = block[:signature_chunks]
+          if signature_chunks.blank? && block[:signature]
+            signature_chunks = [block[:signature].to_s]
+          end
+
+          Array(signature_chunks).each do |piece|
+            chunks << event_chunk(
+              "content_block_delta",
+              index: index,
+              delta: {
+                type: "signature_delta",
+                signature: piece,
+              },
+            )
+          end
+
+          chunks << event_chunk("content_block_stop", index: index)
+          chunks
         end
 
         def stringify_message_content(content)

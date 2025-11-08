@@ -103,10 +103,6 @@ module DiscourseAi
                     "Supported hash responses must include :content, :tool_call, or :tool_calls. Got: #{response.keys.inspect}"
             end
 
-          if normalized[:type] == :tool_calls && response.key?(:content)
-            normalized[:message_content] = response[:content]
-          end
-
           normalized[:usage] = usage if usage
           normalized
         end
