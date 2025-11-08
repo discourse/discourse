@@ -19,7 +19,7 @@ module PageObjects
         has_no_css?("#user-card .usercard-controls .d-icon-filter")
       end
 
-      def filter_button_text()
+      def filter_button_text
         find("#user-card .usercard-controls .d-icon-filter + .d-button-label").text
       end
 
