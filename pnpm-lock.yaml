@@ -430,7 +430,7 @@ importers:
         version: 3.5.5(@glint/template@1.7.2)
       '@embroider/macros':
         specifier: ^1.16.12
-        version: 1.19.1(@glint/template@1.7.2)
+        version: 1.19.2(@glint/template@1.7.2)
       '@embroider/router':
         specifier: ^2.1.8
         version: 2.1.8(@embroider/core@3.5.5(@glint/template@1.7.2))(@glint/template@1.7.2)
@@ -1619,15 +1619,6 @@ packages:
 
   '@embroider/macros@1.16.12':
     resolution: {integrity: sha512-cgaEbzCvUOZF7Xs9FNMGknSCTgE01A1cXkkEhSTuaPbf6F/2z9pZAdQpVrBbTvo1Sg8CwMsm+piahjy43KoGuA==}
-    engines: {node: 12.* || 14.* || >= 16}
-    peerDependencies:
-      '@glint/template': ^1.0.0
-    peerDependenciesMeta:
-      '@glint/template':
-        optional: true
-
-  '@embroider/macros@1.19.1':
-    resolution: {integrity: sha512-KgPan7fiyoDGfr6SMdMELhcgUXK6pU/QICSK0yFFzsXVBJYM2fHAXCic5WCBETtv7xsvi4byziahSz5HpqYs/A==}
     engines: {node: 12.* || 14.* || >= 16}
     peerDependencies:
       '@glint/template': ^1.0.0
@@ -10039,7 +10030,7 @@ snapshots:
   '@ember/render-modifiers@3.0.0(@glint/template@1.7.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5))':
     dependencies:
       '@babel/core': 7.28.5(supports-color@8.1.1)
-      '@embroider/macros': 1.19.1(@glint/template@1.7.2)
+      '@embroider/macros': 1.19.2(@glint/template@1.7.2)
       ember-cli-babel: 8.2.0(@babel/core@7.28.5)
       ember-modifier-manager-polyfill: 1.2.0(@babel/core@7.28.5)
       ember-source: 6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)
@@ -10054,7 +10045,7 @@ snapshots:
     dependencies:
       '@ember/test-waiters': 4.1.1(@glint/template@1.7.2)
       '@embroider/addon-shim': 1.10.0
-      '@embroider/macros': 1.19.1(@glint/template@1.7.2)
+      '@embroider/macros': 1.19.2(@glint/template@1.7.2)
       '@simple-dom/interface': 1.4.0
       decorator-transforms: 2.3.0(@babel/core@7.28.5)
       dom-element-descriptors: 0.5.1
@@ -10066,7 +10057,7 @@ snapshots:
   '@ember/test-waiters@4.1.1(@glint/template@1.7.2)':
     dependencies:
       '@embroider/addon-shim': 1.10.0
-      '@embroider/macros': 1.19.1(@glint/template@1.7.2)
+      '@embroider/macros': 1.19.2(@glint/template@1.7.2)
     transitivePeerDependencies:
       - '@glint/template'
       - supports-color
@@ -10186,21 +10177,6 @@ snapshots:
       '@embroider/shared-internals': 2.9.0(supports-color@8.1.1)
       assert-never: 1.4.0
       babel-import-util: 2.1.1
-      ember-cli-babel: 7.26.11
-      find-up: 5.0.0
-      lodash: 4.17.21
-      resolve: 1.22.11
-      semver: 7.7.3
-    optionalDependencies:
-      '@glint/template': 1.7.2
-    transitivePeerDependencies:
-      - supports-color
-
-  '@embroider/macros@1.19.1(@glint/template@1.7.2)':
-    dependencies:
-      '@embroider/shared-internals': 3.0.1
-      assert-never: 1.4.0
-      babel-import-util: 3.0.1
       ember-cli-babel: 7.26.11
       find-up: 5.0.0
       lodash: 4.17.21
@@ -13273,7 +13249,7 @@ snapshots:
 
   ember-cached-decorator-polyfill@1.0.2(@babel/core@7.28.5)(@glint/template@1.7.2)(ember-source@6.6.0(patch_hash=nsmtwj6thcg4lxkztr5oqzscwe)(@glimmer/component@2.0.0)(rsvp@4.8.5)):
     dependencies:
-      '@embroider/macros': 1.19.1(@glint/template@1.7.2)
+      '@embroider/macros': 1.19.2(@glint/template@1.7.2)
       '@glimmer/tracking': 1.1.2
       babel-import-util: 1.4.1
       ember-cache-primitive-polyfill: 1.0.1(@babel/core@7.28.5)
@@ -13738,7 +13714,7 @@ snapshots:
     dependencies:
       '@ember/test-helpers': 5.4.0(@babel/core@7.28.5)(@glint/template@1.7.2)
       '@embroider/addon-shim': 1.10.0
-      '@embroider/macros': 1.19.1(@glint/template@1.7.2)
+      '@embroider/macros': 1.19.2(@glint/template@1.7.2)
       qunit: 2.24.2
       qunit-theme-ember: 1.0.0
     transitivePeerDependencies:
