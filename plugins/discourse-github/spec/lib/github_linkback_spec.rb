@@ -109,6 +109,149 @@ describe GithubLinkback do
         expect(GithubLinkback.new(unlisted_post).should_enqueue?).to eq(false)
       end
     end
+
+    describe "category allowlist and denylist" do
+      let(:category1) { Fabricate(:category) }
+      let(:category2) { Fabricate(:category) }
+      let(:subcategory1) { Fabricate(:category, parent_category: category1) }
+      let(:subcategory2) { Fabricate(:category, parent_category: category1) }
+      let(:post_in_category1) do
+        Fabricate.build(
+          :post,
+          topic: Fabricate(:topic, category: category1),
+          raw:
+            "https://github.com/discourse/discourse/commit/5be9bee2307dd517c26e6ef269471aceba5d5acf",
+        )
+      end
+      let(:post_in_category2) do
+        Fabricate.build(
+          :post,
+          topic: Fabricate(:topic, category: category2),
+          raw:
+            "https://github.com/discourse/discourse/commit/5be9bee2307dd517c26e6ef269471aceba5d5acf",
+        )
+      end
+      let(:post_in_subcategory1) do
+        Fabricate.build(
+          :post,
+          topic: Fabricate(:topic, category: subcategory1),
+          raw:
+            "https://github.com/discourse/discourse/commit/5be9bee2307dd517c26e6ef269471aceba5d5acf",
+        )
+      end
+      let(:post_no_category) do
+        Fabricate.build(
+          :post,
+          topic: Fabricate(:topic, category: nil),
+          raw:
+            "https://github.com/discourse/discourse/commit/5be9bee2307dd517c26e6ef269471aceba5d5acf",
+        )
+      end
+
+      before { SiteSetting.github_linkback_enabled = true }
+
+      it "allows all categories when both lists are empty" do
+        SiteSetting.github_linkback_allowed_categories = ""
+        SiteSetting.github_linkback_denied_categories = ""
+        expect(GithubLinkback.new(post_in_category1).should_enqueue?).to eq(true)
+        expect(GithubLinkback.new(post_in_category2).should_enqueue?).to eq(true)
+        expect(GithubLinkback.new(post_in_subcategory1).should_enqueue?).to eq(true)
+      end
+
+      it "allows posts without categories when both lists are empty" do
+        SiteSetting.github_linkback_allowed_categories = ""
+        SiteSetting.github_linkback_denied_categories = ""
+        expect(GithubLinkback.new(post_no_category).should_enqueue?).to eq(true)
+      end
+
+      describe "with allowlist" do
+        it "allows posts in allowed categories" do
+          SiteSetting.github_linkback_allowed_categories = category1.id.to_s
+          SiteSetting.github_linkback_denied_categories = ""
+          expect(GithubLinkback.new(post_in_category1).should_enqueue?).to eq(true)
+        end
+
+        it "denies posts in non-allowed categories" do
+          SiteSetting.github_linkback_allowed_categories = category1.id.to_s
+          SiteSetting.github_linkback_denied_categories = ""
+          expect(GithubLinkback.new(post_in_category2).should_enqueue?).to eq(false)
+        end
+
+        it "allows posts in subcategories of allowed categories" do
+          SiteSetting.github_linkback_allowed_categories = category1.id.to_s
+          SiteSetting.github_linkback_denied_categories = ""
+          expect(GithubLinkback.new(post_in_subcategory1).should_enqueue?).to eq(true)
+        end
+
+        it "allows multiple categories in allowlist" do
+          SiteSetting.github_linkback_allowed_categories = "#{category1.id}|#{category2.id}"
+          SiteSetting.github_linkback_denied_categories = ""
+          expect(GithubLinkback.new(post_in_category1).should_enqueue?).to eq(true)
+          expect(GithubLinkback.new(post_in_category2).should_enqueue?).to eq(true)
+        end
+      end
+
+      describe "with denylist" do
+        it "denies posts in denied categories" do
+          SiteSetting.github_linkback_allowed_categories = ""
+          SiteSetting.github_linkback_denied_categories = category1.id.to_s
+          expect(GithubLinkback.new(post_in_category1).should_enqueue?).to eq(false)
+        end
+
+        it "allows posts in non-denied categories" do
+          SiteSetting.github_linkback_allowed_categories = ""
+          SiteSetting.github_linkback_denied_categories = category1.id.to_s
+          expect(GithubLinkback.new(post_in_category2).should_enqueue?).to eq(true)
+        end
+
+        it "denies posts in subcategories of denied categories" do
+          SiteSetting.github_linkback_allowed_categories = ""
+          SiteSetting.github_linkback_denied_categories = category1.id.to_s
+          expect(GithubLinkback.new(post_in_subcategory1).should_enqueue?).to eq(false)
+        end
+
+        it "denies multiple categories in denylist" do
+          SiteSetting.github_linkback_allowed_categories = ""
+          SiteSetting.github_linkback_denied_categories = "#{category1.id}|#{category2.id}"
+          expect(GithubLinkback.new(post_in_category1).should_enqueue?).to eq(false)
+          expect(GithubLinkback.new(post_in_category2).should_enqueue?).to eq(false)
+        end
+      end
+
+      describe "with both allowlist and denylist" do
+        it "denylist overrides allowlist" do
+          SiteSetting.github_linkback_allowed_categories = category1.id.to_s
+          SiteSetting.github_linkback_denied_categories = category1.id.to_s
+          expect(GithubLinkback.new(post_in_category1).should_enqueue?).to eq(false)
+        end
+
+        it "allows categories in allowlist but not in denylist" do
+          SiteSetting.github_linkback_allowed_categories = "#{category1.id}|#{category2.id}"
+          SiteSetting.github_linkback_denied_categories = category1.id.to_s
+          expect(GithubLinkback.new(post_in_category1).should_enqueue?).to eq(false)
+          expect(GithubLinkback.new(post_in_category2).should_enqueue?).to eq(true)
+        end
+
+        it "denies subcategories when parent is denied even if parent is in allowlist" do
+          SiteSetting.github_linkback_allowed_categories = category1.id.to_s
+          SiteSetting.github_linkback_denied_categories = category1.id.to_s
+          expect(GithubLinkback.new(post_in_subcategory1).should_enqueue?).to eq(false)
+        end
+
+        it "allows subcategories when parent is allowed and not denied" do
+          SiteSetting.github_linkback_allowed_categories = category1.id.to_s
+          SiteSetting.github_linkback_denied_categories = category2.id.to_s
+          expect(GithubLinkback.new(post_in_subcategory1).should_enqueue?).to eq(true)
+        end
+
+        it "denies subcategories when subcategory is denied even if parent is allowed" do
+          SiteSetting.github_linkback_allowed_categories = category1.id.to_s
+          SiteSetting.github_linkback_denied_categories = subcategory1.id.to_s
+          expect(GithubLinkback.new(post_in_category1).should_enqueue?).to eq(true)
+          expect(GithubLinkback.new(post_in_subcategory1).should_enqueue?).to eq(false)
+        end
+      end
+    end
   end
 
   describe "#github_links" do

@@ -5,6 +5,8 @@ en:
     github_linkback_projects: "List of projects to link back from"
     github_linkback_access_token: 'A valid access token for the user who will post the linkback and for counting commits/contributions to grant badges. See <a href="https://meta.discourse.org/t/99895">here</a> for instructions on how to get a token.'
     github_linkback_maximum_links: "Maximum number of linkbacks to create from one single post. When a post contains more links, none is created."
+    github_linkback_denied_categories: "Categories in which linkbacks should not be created (includes subcategories)."
+    github_linkback_allowed_categories: "Categories in which linkbacks are allowed to be created (includes subcategories). If empty, all categories are allowed."
     github_permalinks_enabled: "Enable GitHub permalink overwrites"
     github_permalinks_exclude: "Filename or directory that should be excluded from permalink overwrites. Provide only filename or full path: user/repository/optional-directory/filename"
     github_badges_enabled: "Enable GitHub badges"

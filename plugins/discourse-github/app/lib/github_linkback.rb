@@ -23,7 +23,7 @@ class GithubLinkback
     !!(
       SiteSetting.github_linkback_enabled? && SiteSetting.enable_discourse_github_plugin? &&
         @post.present? && @post.post_type == Post.types[:regular] && @post.raw =~ /github\.com/ &&
-        Guardian.new.can_see?(@post) && @post.topic.visible?
+        Guardian.new.can_see?(@post) && @post.topic.visible? && category_allowed_for_linkback?
     )
   end
 
@@ -121,6 +121,46 @@ class GithubLinkback
 
   def self.field_for(url)
     "github-linkback:#{Digest::SHA1.hexdigest(url)[0..15]}"
+  end
+
+  def category_allowed_for_linkback?
+    return false if @post.topic.category_id.blank?
+
+    allowed_categories =
+      SiteSetting.github_linkback_allowed_categories.split("|").map(&:to_i).reject(&:zero?)
+    denied_categories =
+      SiteSetting.github_linkback_denied_categories.split("|").map(&:to_i).reject(&:zero?)
+
+    return true if allowed_categories.empty? && denied_categories.empty?
+
+    category_id = @post.topic.category_id
+    category_ancestors = Category.with_ancestors(category_id).pluck(:id).to_set
+
+    if denied_categories.present?
+      denied_category_ids = Set.new
+      denied_categories.each do |cat_id|
+        # this is an extra query, maybe consider not doing subcategories?
+        denied_category_ids.merge(Category.subcategory_ids(cat_id))
+      end
+      if denied_category_ids.include?(category_id) ||
+           (denied_category_ids & category_ancestors).present?
+        return false
+      end
+    end
+
+    if allowed_categories.present?
+      allowed_category_ids = Set.new
+      allowed_categories.each do |cat_id|
+        # ditto
+        allowed_category_ids.merge(Category.subcategory_ids(cat_id))
+      end
+      return(
+        allowed_category_ids.include?(category_id) ||
+          (allowed_category_ids & category_ancestors).present?
+      )
+    end
+
+    true
   end
 
   private
