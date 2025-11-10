@@ -103,6 +103,11 @@ export default class ReviewableNoteForm extends Component {
                 rows="1"
               />
             </field.Custom>
+            <PluginOutlet
+              @name="reviewable-note-form-after-note"
+              @connectorTagName="div"
+              @outletArgs={{lazyHash form=form reviewable=@reviewable}}
+            />
           </div>
         </form.Field>
 
@@ -110,11 +115,6 @@ export default class ReviewableNoteForm extends Component {
           <form.Submit
             @label="review.notes.add_note_button"
             class="btn-primary"
-          />
-          <PluginOutlet
-            @name="reviewable-note-form-after-note"
-            @connectorTagName="div"
-            @outletArgs={{lazyHash form=form reviewable=@reviewable}}
           />
         </form.Actions>
       </Form>

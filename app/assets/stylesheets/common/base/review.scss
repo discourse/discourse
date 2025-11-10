@@ -568,26 +568,11 @@
   padding: var(--space-5) var(--space-4);
   margin-bottom: var(--space-4);
 
-  &__form {
-    gap: 0;
-  }
-
   &__textarea-wrapper {
     width: 100%;
   }
 
-  .form-kit__actions {
-    flex-wrap: wrap-reverse;
-    align-items: center;
-    font-size: var(--font-down-1);
-
-    .form-kit__button {
-      white-space: nowrap;
-    }
-  }
-
   textarea {
-    max-width: 100%;
     margin-bottom: 0;
     resize: none;
   }
