@@ -238,27 +238,32 @@ desc "run plugin qunit tests"
 task "plugin:qunit", :plugin do |t, args|
   args.with_defaults(plugin: "*")
 
-  plugin_dirs =
-    if args[:plugin] == "*"
-      Dir.children(Rails.root.join("plugins")).flat_map { |name| plugin_test_directories_for(name) }
-    else
+  if args[:plugin] == "*"
+    # When running all plugins, use --target plugins to let bin/qunit discover and run them
+    cmd = [Rails.root.join("bin/qunit").to_s, "--standalone", "--target", "plugins"]
+    env = ENV.to_h
+
+    system(env, *cmd, chdir: Rails.root)
+    exit $?.exitstatus
+  else
+    # When running specific plugin(s), pass the directories directly
+    plugin_dirs =
       args[:plugin].split(",").flat_map { |name| plugin_test_directories_for(name.strip) }
+    plugin_dirs.uniq!
+    plugin_dirs.select! do |dir|
+      Dir.glob(File.join(Rails.root, dir, "**", "*-test.{js,gjs}"), File::FNM_EXTGLOB).any?
     end
 
-  plugin_dirs.uniq!
-  plugin_dirs.select! do |dir|
-    Dir.glob(File.join(Rails.root, dir, "**", "*-test.{js,gjs}"), File::FNM_EXTGLOB).any?
+    abort "No plugin test directories found for #{args[:plugin]}" if plugin_dirs.empty?
+
+    puts "Running plugin qunit tests in:\n  #{plugin_dirs.join("\n  ")}"
+
+    cmd = [Rails.root.join("bin/qunit").to_s, "--standalone"] + plugin_dirs
+    env = ENV.to_h.merge("LOAD_PLUGINS" => "1")
+
+    system(env, *cmd, chdir: Rails.root)
+    exit $?.exitstatus
   end
-
-  abort "No plugin test directories found for #{args[:plugin]}" if plugin_dirs.empty?
-
-  puts "Running plugin qunit tests in:\n  #{plugin_dirs.join("\n  ")}"
-
-  cmd = [Rails.root.join("bin/qunit").to_s, "--standalone"] + plugin_dirs
-  env = ENV.to_h.merge("LOAD_PLUGINS" => "1")
-
-  system(env, *cmd, chdir: Rails.root)
-  exit $?.exitstatus
 end
 
 desc "run all migrations of a plugin"
