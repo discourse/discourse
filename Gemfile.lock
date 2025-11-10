@@ -187,9 +187,9 @@ GEM
     fspath (3.1.2)
     globalid (1.3.0)
       activesupport (>= 6.1)
-    goldiloader (5.4.0)
-      activerecord (>= 6.1, < 8.1)
-      activesupport (>= 6.1, < 8.1)
+    goldiloader (6.0.0)
+      activerecord (>= 7.2, < 8.3)
+      activesupport (>= 7.2, < 8.3)
     google-protobuf (4.33.0)
       bigdecimal
       rake (>= 13)
@@ -990,7 +990,7 @@ CHECKSUMS
   ffi (1.17.2-x86_64-linux-musl) sha256=97c0eb3981414309285a64dc4d466bd149e981c279a56371ef811395d68cb95c
   fspath (3.1.2) sha256=b5ac9bafb97e2c8f8f9e303cd98ebd484be76fe9aa588bc4d01c6d99e78c9d75
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
-  goldiloader (5.4.0) sha256=277a86ff424b963bc9d98d8f4d10bb7eea0eb010d3209893dea7092302350b73
+  goldiloader (6.0.0) sha256=613db1b28e9964291255a67a521f04d481b6afd6b9ca56ea1a612fd86e9a89c7
   google-protobuf (4.33.0) sha256=a4918b45bea5889c38fb82da83a5175209600f9c17fb1698be30d635696b3526
   google-protobuf (4.33.0-aarch64-linux-gnu) sha256=ac1c9b2e9ea4d3ef7cc04b10a2d783390c6bf3e6626a2223bcbb6830759b209c
   google-protobuf (4.33.0-aarch64-linux-musl) sha256=a9440136805b61e2d22b3c89d68c852861bc523da721bb763b25ce896638cb83
