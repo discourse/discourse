@@ -5,16 +5,11 @@ require "aws-eventstream"
 require "aws-sigv4"
 require "aws-sdk-sts"
 
-class BedrockMock < EndpointMock
-end
-
 RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   subject(:endpoint) { described_class.new(model) }
 
   fab!(:user)
   fab!(:model, :bedrock_model)
-
-  let(:bedrock_mock) { BedrockMock.new(endpoint) }
 
   let(:compliance) do
     EndpointsCompliance.new(self, endpoint, DiscourseAi::Completions::Dialects::Claude, user)
@@ -28,6 +23,15 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   end
 
   before { enable_current_plugin }
+
+  def with_scripted_responses(responses, llm_model: model, &block)
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      responses,
+      llm: llm_model,
+      transport: :scripted_http,
+      &block
+    )
+  end
 
   it "should provide accurate max token count" do
     prompt = DiscourseAi::Completions::Prompt.new("hello")
@@ -50,8 +54,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       model.provider_params["disable_native_tools"] = true
       model.save!
 
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
-
       incomplete_tool_call = <<~XML.strip
         <thinking>I should be ignored</thinking>
         <search_quality_reflection>also ignored</search_quality_reflection>
@@ -72,18 +74,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           { type: "message_delta", delta: { usage: { output_tokens: 25 } } },
         ].map { |message| encode_message(message) }
 
-      request = nil
-      bedrock_mock.with_chunk_array_support do
-        stub_request(
-          :post,
-          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
-        )
-          .with do |inner_request|
-            request = inner_request
-            true
-          end
-          .to_return(status: 200, body: messages)
-
+      with_scripted_responses([{ raw_stream: messages }]) do |scripted_http|
+        proxy = DiscourseAi::Completions::Llm.proxy(model)
         prompt =
           DiscourseAi::Completions::Prompt.new(
             messages: [{ type: :user, content: "what is the weather in sydney" }],
@@ -101,10 +93,11 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         response = []
         proxy.generate(prompt, user: user) { |partial| response << partial }
 
-        expect(request.headers["Authorization"]).to be_present
-        expect(request.headers["X-Amz-Content-Sha256"]).to be_present
+        headers = scripted_http.last_request_headers
+        expect(headers["authorization"]).to be_present
+        expect(headers["x-amz-content-sha256"]).to be_present
 
-        parsed_body = JSON.parse(request.body)
+        parsed_body = scripted_http.last_request
         expect(parsed_body["system"]).to include("<function_calls>")
         expect(parsed_body["tools"]).to eq(nil)
         expect(parsed_body["stop_sequences"]).to eq(["</function_calls>"])
@@ -125,113 +118,24 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     end
 
     it "supports streaming function calls" do
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      scripted_response = {
+        tool_calls: [
+          {
+            id: "toolu_bdrk_014CMjxtGmKUtGoEFPgc7PF7",
+            name: "google",
+            arguments: {
+              query: "sydney weather today",
+            },
+          },
+        ],
+        usage: {
+          input_tokens: 846,
+          output_tokens: 39,
+        },
+      }
 
-      request = nil
-
-      messages =
-        [
-          {
-            type: "message_start",
-            message: {
-              id: "msg_bdrk_01WYxeNMk6EKn9s98r6XXrAB",
-              type: "message",
-              role: "assistant",
-              model: "claude-3-sonnet-20240307",
-              stop_sequence: nil,
-              usage: {
-                input_tokens: 840,
-                output_tokens: 1,
-              },
-              content: [],
-              stop_reason: nil,
-            },
-          },
-          {
-            type: "content_block_start",
-            index: 0,
-            delta: {
-              text: "<thinking>I should be ignored</thinking>",
-            },
-          },
-          {
-            type: "content_block_start",
-            index: 0,
-            content_block: {
-              type: "tool_use",
-              id: "toolu_bdrk_014CMjxtGmKUtGoEFPgc7PF7",
-              name: "google",
-              input: {
-              },
-            },
-          },
-          {
-            type: "content_block_delta",
-            index: 0,
-            delta: {
-              type: "input_json_delta",
-              partial_json: "",
-            },
-          },
-          {
-            type: "content_block_delta",
-            index: 0,
-            delta: {
-              type: "input_json_delta",
-              partial_json: "{\"query\": \"s",
-            },
-          },
-          {
-            type: "content_block_delta",
-            index: 0,
-            delta: {
-              type: "input_json_delta",
-              partial_json: "ydney weat",
-            },
-          },
-          {
-            type: "content_block_delta",
-            index: 0,
-            delta: {
-              type: "input_json_delta",
-              partial_json: "her today\"}",
-            },
-          },
-          { type: "content_block_stop", index: 0 },
-          {
-            type: "message_delta",
-            delta: {
-              stop_reason: "tool_use",
-              stop_sequence: nil,
-            },
-            usage: {
-              output_tokens: 53,
-            },
-          },
-          {
-            type: "message_stop",
-            "amazon-bedrock-invocationMetrics": {
-              inputTokenCount: 846,
-              outputTokenCount: 39,
-              invocationLatency: 880,
-              firstByteLatency: 402,
-            },
-          },
-        ].map { |message| encode_message(message) }
-
-      messages = messages.join("").split
-
-      bedrock_mock.with_chunk_array_support do
-        stub_request(
-          :post,
-          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
-        )
-          .with do |inner_request|
-            request = inner_request
-            true
-          end
-          .to_return(status: 200, body: messages)
-
+      with_scripted_responses([scripted_response]) do |scripted_http|
+        proxy = DiscourseAi::Completions::Llm.proxy(model)
         prompt =
           DiscourseAi::Completions::Prompt.new(
             messages: [{ type: :user, content: "what is the weather in sydney" }],
@@ -249,8 +153,9 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         response = []
         proxy.generate(prompt, user: user) { |partial| response << partial }
 
-        expect(request.headers["Authorization"]).to be_present
-        expect(request.headers["X-Amz-Content-Sha256"]).to be_present
+        headers = scripted_http.last_request_headers
+        expect(headers["authorization"]).to be_present
+        expect(headers["x-amz-content-sha256"]).to be_present
 
         expected_response = [
           DiscourseAi::Completions::ToolCall.new(
@@ -285,7 +190,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
             },
           ],
         }
-        expect(JSON.parse(request.body)).to eq(expected)
+        expect(scripted_http.last_request).to eq(expected)
 
         log = AiApiAuditLog.order(:id).last
         expect(log.request_tokens).to eq(846)
@@ -296,40 +201,27 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
   describe "Claude 3 support" do
     it "supports regular completions" do
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      payload = { content: "hello sam", usage: { input_tokens: 10, output_tokens: 20 } }
 
-      request = nil
+      response =
+        with_scripted_responses([payload]) do |scripted_http|
+          proxy = DiscourseAi::Completions::Llm.proxy(model)
+          result = proxy.generate("hello world", user: user)
 
-      content = {
-        content: [text: "hello sam"],
-        usage: {
-          input_tokens: 10,
-          output_tokens: 20,
-        },
-      }.to_json
+          headers = scripted_http.last_request_headers
+          expect(headers["authorization"]).to be_present
+          expect(headers["x-amz-content-sha256"]).to be_present
 
-      stub_request(
-        :post,
-        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
-      )
-        .with do |inner_request|
-          request = inner_request
-          true
+          expected = {
+            "max_tokens" => 4096,
+            "anthropic_version" => "bedrock-2023-05-31",
+            "messages" => [{ "role" => "user", "content" => "hello world" }],
+            "system" => "You are a helpful bot",
+          }
+          expect(scripted_http.last_request).to eq(expected)
+
+          result
         end
-        .to_return(status: 200, body: content)
-
-      response = proxy.generate("hello world", user: user)
-
-      expect(request.headers["Authorization"]).to be_present
-      expect(request.headers["X-Amz-Content-Sha256"]).to be_present
-
-      expected = {
-        "max_tokens" => 4096,
-        "anthropic_version" => "bedrock-2023-05-31",
-        "messages" => [{ "role" => "user", "content" => "hello world" }],
-        "system" => "You are a helpful bot",
-      }
-      expect(JSON.parse(request.body)).to eq(expected)
 
       expect(response).to eq("hello sam")
 
@@ -343,44 +235,31 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       model.provider_params["reasoning_tokens"] = 10_000
       model.save!
 
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      payload = { content: "hello sam", usage: { input_tokens: 10, output_tokens: 20 } }
 
-      request = nil
+      response =
+        with_scripted_responses([payload]) do |scripted_http|
+          proxy = DiscourseAi::Completions::Llm.proxy(model)
+          result = proxy.generate("hello world", user: user)
 
-      content = {
-        content: [text: "hello sam"],
-        usage: {
-          input_tokens: 10,
-          output_tokens: 20,
-        },
-      }.to_json
+          headers = scripted_http.last_request_headers
+          expect(headers["authorization"]).to be_present
+          expect(headers["x-amz-content-sha256"]).to be_present
 
-      stub_request(
-        :post,
-        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
-      )
-        .with do |inner_request|
-          request = inner_request
-          true
+          expected = {
+            "max_tokens" => 40_000,
+            "thinking" => {
+              "type" => "enabled",
+              "budget_tokens" => 10_000,
+            },
+            "anthropic_version" => "bedrock-2023-05-31",
+            "messages" => [{ "role" => "user", "content" => "hello world" }],
+            "system" => "You are a helpful bot",
+          }
+          expect(scripted_http.last_request).to eq(expected)
+
+          result
         end
-        .to_return(status: 200, body: content)
-
-      response = proxy.generate("hello world", user: user)
-
-      expect(request.headers["Authorization"]).to be_present
-      expect(request.headers["X-Amz-Content-Sha256"]).to be_present
-
-      expected = {
-        "max_tokens" => 40_000,
-        "thinking" => {
-          "type" => "enabled",
-          "budget_tokens" => 10_000,
-        },
-        "anthropic_version" => "bedrock-2023-05-31",
-        "messages" => [{ "role" => "user", "content" => "hello world" }],
-        "system" => "You are a helpful bot",
-      }
-      expect(JSON.parse(request.body)).to eq(expected)
 
       expect(response).to eq("hello sam")
 
@@ -390,38 +269,16 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
     end
 
     it "supports claude 3 streaming" do
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      payload = { content: "hello sam", usage: { input_tokens: 9, output_tokens: 25 } }
 
-      request = nil
-
-      messages =
-        [
-          { type: "message_start", message: { usage: { input_tokens: 9 } } },
-          { type: "content_block_delta", delta: { text: "hello " } },
-          { type: "content_block_delta", delta: { text: "sam" } },
-          { type: "message_delta", delta: { usage: { output_tokens: 25 } } },
-        ].map { |message| encode_message(message) }
-
-      # stream 1 letter at a time
-      # cause we need to handle this case
-      messages = messages.join("").split
-
-      bedrock_mock.with_chunk_array_support do
-        stub_request(
-          :post,
-          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
-        )
-          .with do |inner_request|
-            request = inner_request
-            true
-          end
-          .to_return(status: 200, body: messages)
-
+      with_scripted_responses([payload]) do |scripted_http|
+        proxy = DiscourseAi::Completions::Llm.proxy(model)
         response = +""
         proxy.generate("hello world", user: user) { |partial| response << partial }
 
-        expect(request.headers["Authorization"]).to be_present
-        expect(request.headers["X-Amz-Content-Sha256"]).to be_present
+        headers = scripted_http.last_request_headers
+        expect(headers["authorization"]).to be_present
+        expect(headers["x-amz-content-sha256"]).to be_present
 
         expected = {
           "max_tokens" => 4096,
@@ -429,7 +286,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           "messages" => [{ "role" => "user", "content" => "hello world" }],
           "system" => "You are a helpful bot",
         }
-        expect(JSON.parse(request.body)).to eq(expected)
+        expect(scripted_http.last_request).to eq(expected)
 
         expect(response).to eq("hello sam")
 
@@ -451,48 +308,28 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         },
       )
 
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
-      request = nil
+      with_scripted_responses(["ok"]) do |scripted_http|
+        proxy = DiscourseAi::Completions::Llm.proxy(model)
 
-      content = {
-        content: [text: "test response"],
-        usage: {
-          input_tokens: 10,
-          output_tokens: 5,
-        },
-      }.to_json
+        # Request with parameters that should be ignored
+        proxy.generate("test prompt", user: user, top_p: 0.9, temperature: 0.8, max_tokens: 500)
 
-      stub_request(
-        :post,
-        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
-      )
-        .with do |inner_request|
-          request = inner_request
-          true
-        end
-        .to_return(status: 200, body: content)
+        # Parse the request body
+        request_body = scripted_http.last_request
 
-      # Request with parameters that should be ignored
-      proxy.generate("test prompt", user: user, top_p: 0.9, temperature: 0.8, max_tokens: 500)
+        # Verify disabled parameters aren't included
+        expect(request_body).not_to have_key("top_p")
+        expect(request_body).not_to have_key("temperature")
 
-      # Parse the request body
-      request_body = JSON.parse(request.body)
-
-      # Verify disabled parameters aren't included
-      expect(request_body).not_to have_key("top_p")
-      expect(request_body).not_to have_key("temperature")
-
-      # Verify other parameters still work
-      expect(request_body).to have_key("max_tokens")
-      expect(request_body["max_tokens"]).to eq(500)
+        # Verify other parameters still work
+        expect(request_body).to have_key("max_tokens")
+        expect(request_body["max_tokens"]).to eq(500)
+      end
     end
   end
 
   describe "disabled tool use" do
     it "handles tool_choice: :none by adding a prefill message instead of using tool_choice param" do
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
-      request = nil
-
       # Create a prompt with tool_choice: :none
       prompt =
         DiscourseAi::Completions::Prompt.new(
@@ -510,51 +347,35 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           tool_choice: :none,
         )
 
-      # Mock response from Bedrock
-      content = {
-        content: [text: "I won't use any tools. Here's a direct response instead."],
+      payload = {
+        content: "I won't use any tools. Here's a direct response instead.",
         usage: {
           input_tokens: 25,
           output_tokens: 15,
         },
-      }.to_json
+      }
 
-      stub_request(
-        :post,
-        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
-      )
-        .with do |inner_request|
-          request = inner_request
-          true
-        end
-        .to_return(status: 200, body: content)
+      with_scripted_responses([payload]) do |scripted_http|
+        proxy = DiscourseAi::Completions::Llm.proxy(model)
+        proxy.generate(prompt, user: user)
 
-      proxy.generate(prompt, user: user)
+        request_body = scripted_http.last_request
+        expect(request_body).not_to have_key("tool_choice")
 
-      # Parse the request body
-      request_body = JSON.parse(request.body)
+        messages = request_body["messages"]
+        expect(messages.length).to eq(2)
 
-      # Verify that tool_choice is NOT present (not supported in Bedrock)
-      expect(request_body).not_to have_key("tool_choice")
-
-      # Verify that an assistant message was added with no_more_tool_calls_text
-      messages = request_body["messages"]
-      expect(messages.length).to eq(2) # user message + added assistant message
-
-      last_message = messages.last
-      expect(last_message["role"]).to eq("assistant")
-
-      expect(last_message["content"]).to eq(
-        DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text,
-      )
+        last_message = messages.last
+        expect(last_message["role"]).to eq("assistant")
+        expect(last_message["content"]).to eq(
+          DiscourseAi::Completions::Dialects::Dialect.no_more_tool_calls_text,
+        )
+      end
     end
   end
 
   describe "forced tool use" do
     it "can properly force tool use" do
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
-      request = nil
-
       tools = [
         {
           name: "echo",
@@ -574,40 +395,23 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         )
 
       # Mock response from Bedrock
-      content = {
-        content: [
-          {
-            type: "tool_use",
-            id: "toolu_bdrk_014CMjxtGmKUtGoEFPgc7PF7",
-            name: "echo",
-            input: {
-              text: "hello",
-            },
-          },
+      payload = {
+        tool_calls: [
+          { id: "toolu_bdrk_014CMjxtGmKUtGoEFPgc7PF7", name: "echo", arguments: { text: "hello" } },
         ],
         usage: {
           input_tokens: 25,
           output_tokens: 15,
         },
-      }.to_json
+      }
 
-      stub_request(
-        :post,
-        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
-      )
-        .with do |inner_request|
-          request = inner_request
-          true
-        end
-        .to_return(status: 200, body: content)
+      with_scripted_responses([payload]) do |scripted_http|
+        proxy = DiscourseAi::Completions::Llm.proxy(model)
+        proxy.generate(prompt, user: user)
 
-      proxy.generate(prompt, user: user)
-
-      # Parse the request body
-      request_body = JSON.parse(request.body)
-
-      # Verify that tool_choice: "echo" is present
-      expect(request_body.dig("tool_choice", "name")).to eq("echo")
+        request_body = scripted_http.last_request
+        expect(request_body.dig("tool_choice", "name")).to eq("echo")
+      end
     end
   end
 
@@ -889,32 +693,18 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         },
       }
 
-      messages =
-        [
-          { type: "message_start", message: { usage: { input_tokens: 9 } } },
-          { type: "content_block_delta", delta: { text: "\"" } },
-          { type: "content_block_delta", delta: { text: "key" } },
-          { type: "content_block_delta", delta: { text: "\":\"" } },
-          { type: "content_block_delta", delta: { text: "Hello!" } },
-          { type: "content_block_delta", delta: { text: "\n There" } },
-          { type: "content_block_delta", delta: { text: "\"}" } },
-          { type: "message_delta", delta: { usage: { output_tokens: 25 } } },
-        ].map { |message| encode_message(message) }
+      payload = {
+        content_blocks: [{ type: :text, text_chunks: ["\"key\":\"Hello!\\n There\"}"] }],
+        usage: {
+          input_tokens: 9,
+          output_tokens: 25,
+        },
+      }
 
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
-      request = nil
-      bedrock_mock.with_chunk_array_support do
-        stub_request(
-          :post,
-          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
-        )
-          .with do |inner_request|
-            request = inner_request
-            true
-          end
-          .to_return(status: 200, body: messages)
+      structured_output = nil
 
-        structured_output = nil
+      with_scripted_responses([payload]) do |scripted_http|
+        proxy = DiscourseAi::Completions::Llm.proxy(model)
         proxy.generate("hello world", response_format: schema, user: user) do |partial|
           structured_output = partial
         end
@@ -928,10 +718,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           ],
           "system" => "You are a helpful bot",
         }
-        expect(JSON.parse(request.body)).to eq(expected)
-
-        expect(structured_output.read_buffered_property(:key)).to eq("Hello!\n There")
+        expect(scripted_http.last_request).to eq(expected)
       end
+
+      expect(structured_output.read_buffered_property(:key)).to eq("Hello!\n There")
     end
 
     it "works with JSON schema array types" do
@@ -959,40 +749,26 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
         },
       }
 
-      messages =
-        [
-          { type: "message_start", message: { usage: { input_tokens: 9 } } },
-          { type: "content_block_delta", delta: { text: "\"" } },
-          { type: "content_block_delta", delta: { text: "key" } },
-          { type: "content_block_delta", delta: { text: "\":" } },
-          { type: "content_block_delta", delta: { text: " [\"" } },
-          { type: "content_block_delta", delta: { text: "Hello!" } },
-          { type: "content_block_delta", delta: { text: " I am" } },
-          { type: "content_block_delta", delta: { text: " a " } },
-          { type: "content_block_delta", delta: { text: "chunk\"," } },
-          { type: "content_block_delta", delta: { text: "\"There" } },
-          { type: "content_block_delta", delta: { text: "\"]," } },
-          { type: "content_block_delta", delta: { text: " \"plain" } },
-          { type: "content_block_delta", delta: { text: "\":\"" } },
-          { type: "content_block_delta", delta: { text: "I'm here" } },
-          { type: "content_block_delta", delta: { text: " too\"}" } },
-          { type: "message_delta", delta: { usage: { output_tokens: 25 } } },
-        ].map { |message| encode_message(message) }
+      payload = {
+        content_blocks: [
+          {
+            type: :text,
+            text_chunks: [
+              "\"key\":[\"Hello! I am a chunk\",",
+              "\"There\"],\"plain\":\"I'm here too\"}",
+            ],
+          },
+        ],
+        usage: {
+          input_tokens: 9,
+          output_tokens: 25,
+        },
+      }
 
-      proxy = DiscourseAi::Completions::Llm.proxy(model)
-      request = nil
-      bedrock_mock.with_chunk_array_support do
-        stub_request(
-          :post,
-          "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke-with-response-stream",
-        )
-          .with do |inner_request|
-            request = inner_request
-            true
-          end
-          .to_return(status: 200, body: messages)
+      structured_output = nil
 
-        structured_output = nil
+      with_scripted_responses([payload]) do |scripted_http|
+        proxy = DiscourseAi::Completions::Llm.proxy(model)
         proxy.generate("hello world", response_format: schema, user: user) do |partial|
           structured_output = partial
         end
@@ -1006,14 +782,14 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
           ],
           "system" => "You are a helpful bot",
         }
-        expect(JSON.parse(request.body)).to eq(expected)
-
-        expect(structured_output.read_buffered_property(:key)).to contain_exactly(
-          "Hello! I am a chunk",
-          "There",
-        )
-        expect(structured_output.read_buffered_property(:plain)).to eq("I'm here too")
+        expect(scripted_http.last_request).to eq(expected)
       end
+
+      expect(structured_output.read_buffered_property(:key)).to contain_exactly(
+        "Hello! I am a chunk",
+        "There",
+      )
+      expect(structured_output.read_buffered_property(:plain)).to eq("I'm here too")
     end
   end
 end

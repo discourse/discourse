@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 require_relative "endpoint_compliance"
-require "aws-eventstream"
-require "aws-sigv4"
-
-class BedrockMock < EndpointMock
-end
 
 # nova is all implemented in bedrock endpoint, split out here
 RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
@@ -14,48 +9,31 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
   subject(:endpoint) { described_class.new(nova_model) }
 
-  let(:bedrock_mock) { BedrockMock.new(endpoint) }
-
-  let(:stream_url) do
-    "https://bedrock-runtime.us-east-1.amazonaws.com/model/amazon.nova-pro-v1:0/invoke-with-response-stream"
-  end
-
-  def encode_message(message)
-    wrapped = { bytes: Base64.encode64(message.to_json) }.to_json
-    io = StringIO.new(wrapped)
-    aws_message = Aws::EventStream::Message.new(payload: io)
-    Aws::EventStream::Encoder.new.encode(aws_message)
-  end
-
   before { enable_current_plugin }
 
+  def with_scripted_responses(responses, llm_model: nova_model, &block)
+    DiscourseAi::Completions::Llm.with_prepared_responses(
+      responses,
+      llm: llm_model,
+      transport: :scripted_http,
+      &block
+    )
+  end
+
   it "should be able to make a simple request" do
-    proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
+    usage = {
+      "inputTokens" => 14,
+      "outputTokens" => 119,
+      "totalTokens" => 133,
+      "cacheReadInputTokenCount" => nil,
+      "cacheWriteInputTokenCount" => nil,
+    }
 
-    content = {
-      "output" => {
-        "message" => {
-          "content" => [{ "text" => "it is 2." }],
-          "role" => "assistant",
-        },
-      },
-      "stopReason" => "end_turn",
-      "usage" => {
-        "inputTokens" => 14,
-        "outputTokens" => 119,
-        "totalTokens" => 133,
-        "cacheReadInputTokenCount" => nil,
-        "cacheWriteInputTokenCount" => nil,
-      },
-    }.to_json
-
-    stub_request(
-      :post,
-      "https://bedrock-runtime.us-east-1.amazonaws.com/model/amazon.nova-pro-v1:0/invoke",
-    ).to_return(status: 200, body: content)
-
-    response = proxy.generate("hello world", user: user)
-    expect(response).to eq("it is 2.")
+    with_scripted_responses([{ content: "it is 2.", usage: usage }]) do
+      proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
+      response = proxy.generate("hello world", user: user)
+      expect(response).to eq("it is 2.")
+    end
 
     log = AiApiAuditLog.order(:id).last
     expect(log.request_tokens).to eq(14)
@@ -63,40 +41,17 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   end
 
   it "should be able to make a streaming request" do
-    messages =
-      [
-        { messageStart: { role: "assistant" } },
-        { contentBlockDelta: { delta: { text: "Hello" }, contentBlockIndex: 0 } },
-        { contentBlockStop: { contentBlockIndex: 0 } },
-        { contentBlockDelta: { delta: { text: "!" }, contentBlockIndex: 1 } },
-        { contentBlockStop: { contentBlockIndex: 1 } },
-        {
-          metadata: {
-            usage: {
-              inputTokens: 14,
-              outputTokens: 18,
-            },
-            metrics: {
-            },
-            trace: {
-            },
-          },
-          "amazon-bedrock-invocationMetrics": {
-            inputTokenCount: 14,
-            outputTokenCount: 18,
-            invocationLatency: 402,
-            firstByteLatency: 72,
-          },
-        },
-      ].map { |message| encode_message(message) }
+    usage = { "inputTokens" => 14, "outputTokens" => 18, "totalTokens" => 32 }
 
-    stub_request(:post, stream_url).to_return(status: 200, body: messages.join)
+    with_scripted_responses([{ content: "Hello!", usage: usage }]) do
+      proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
+      responses = []
+      proxy.generate("Hello!", user: user) { |partial| responses << partial }
 
-    proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
-    responses = []
-    proxy.generate("Hello!", user: user) { |partial| responses << partial }
+      expect(responses.join).to eq("Hello!")
+      expect(responses.length).to be > 1
+    end
 
-    expect(responses).to eq(%w[Hello !])
     log = AiApiAuditLog.order(:id).last
     expect(log.request_tokens).to eq(14)
     expect(log.response_tokens).to eq(18)
@@ -123,67 +78,24 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
     prompt.tools = [tool]
 
-    messages =
-      [
-        { messageStart: { role: "assistant" } },
+    response_payload = {
+      tool_calls: [
         {
-          contentBlockStart: {
-            start: {
-              toolUse: {
-                toolUseId: "e1bd7033-7244-4408-b088-1d33cbcf0b67",
-                name: "time",
-              },
-            },
-            contentBlockIndex: 0,
+          id: "e1bd7033-7244-4408-b088-1d33cbcf0b67",
+          name: "time",
+          arguments: {
+            timezone: "EST",
           },
         },
-        {
-          contentBlockDelta: {
-            delta: {
-              toolUse: {
-                input: "{\"timezone\":\"EST\"}",
-              },
-            },
-            contentBlockIndex: 0,
-          },
-        },
-        { contentBlockStop: { contentBlockIndex: 0 } },
-        { messageStop: { stopReason: "end_turn" } },
-        {
-          metadata: {
-            usage: {
-              inputTokens: 481,
-              outputTokens: 28,
-            },
-            metrics: {
-            },
-            trace: {
-            },
-          },
-          "amazon-bedrock-invocationMetrics": {
-            inputTokenCount: 481,
-            outputTokenCount: 28,
-            invocationLatency: 383,
-            firstByteLatency: 57,
-          },
-        },
-      ].map { |message| encode_message(message) }
+      ],
+      usage: {
+        "inputTokens" => 481,
+        "outputTokens" => 28,
+        "totalTokens" => 509,
+      },
+    }
 
-    request = nil
-    stub_request(:post, stream_url)
-      .with do |inner_request|
-        request = inner_request
-        true
-      end
-      .to_return(status: 200, body: messages)
-
-    response = []
-    bedrock_mock.with_chunk_array_support do
-      proxy.generate(prompt, user: user, max_tokens: 200) { |partial| response << partial }
-    end
-
-    parsed_request = JSON.parse(request.body)
-    expected = {
+    expected_request = {
       "system" => [{ "text" => "You are a helpful assistant." }],
       "messages" => [{ "role" => "user", "content" => [{ "text" => "what is the time in EST" }] }],
       "inferenceConfig" => {
@@ -213,37 +125,32 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       },
     }
 
-    expect(parsed_request).to eq(expected)
-    expect(response).to eq(
-      [
-        DiscourseAi::Completions::ToolCall.new(
-          name: "time",
-          id: "e1bd7033-7244-4408-b088-1d33cbcf0b67",
-          parameters: {
-            "timezone" => "EST",
-          },
-        ),
-      ],
-    )
+    with_scripted_responses([response_payload]) do |scripted_http|
+      proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
+      response = []
+      proxy.generate(prompt, user: user, max_tokens: 200) { |partial| response << partial }
+
+      parsed_request = scripted_http.last_request
+      expect(parsed_request).to eq(expected_request)
+      expect(response).to eq(
+        [
+          DiscourseAi::Completions::ToolCall.new(
+            name: "time",
+            id: "e1bd7033-7244-4408-b088-1d33cbcf0b67",
+            parameters: {
+              "timezone" => "EST",
+            },
+          ),
+        ],
+      )
+    end
 
     # lets continue and ensure all messages are mapped correctly
     prompt.push(type: :tool_call, name: "time", content: { timezone: "EST" }.to_json, id: "111")
     prompt.push(type: :tool, name: "time", content: "1pm".to_json, id: "111")
 
     # lets just return the tool call again, this is about ensuring we encode the prompt right
-    stub_request(:post, stream_url)
-      .with do |inner_request|
-        request = inner_request
-        true
-      end
-      .to_return(status: 200, body: messages)
-
-    response = []
-    bedrock_mock.with_chunk_array_support do
-      proxy.generate(prompt, user: user, max_tokens: 200) { |partial| response << partial }
-    end
-
-    expected = {
+    expected_prompt = {
       system: [{ text: "You are a helpful assistant." }],
       messages: [
         { role: "user", content: [{ text: "what is the time in EST" }] },
@@ -283,6 +190,12 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       },
     }
 
-    expect(JSON.parse(request.body, symbolize_names: true)).to eq(expected)
+    with_scripted_responses([response_payload]) do |scripted_http|
+      proxy = DiscourseAi::Completions::Llm.proxy(nova_model)
+      response = []
+      proxy.generate(prompt, user: user, max_tokens: 200) { |partial| response << partial }
+
+      expect(scripted_http.last_request.deep_symbolize_keys).to eq(expected_prompt)
+    end
   end
 end

@@ -6,6 +6,8 @@ module DiscourseAi
       class HttpClient
         def self.for(llm_model:, responses:)
           strategies = [
+            DiscourseAi::Completions::Scripted::BedrockNovaApiStyle,
+            DiscourseAi::Completions::Scripted::BedrockAnthropicApiStyle,
             DiscourseAi::Completions::Scripted::AnthropicApiStyle,
             DiscourseAi::Completions::Scripted::GeminiApiStyle,
             DiscourseAi::Completions::Scripted::OpenAiApiStyle,
@@ -30,11 +32,21 @@ module DiscourseAi
           yield strategy
         end
 
-        def last_request
+        def last_request_raw
           if strategy.nil? || strategy.last_request.nil?
             raise "No scripted HTTP interaction recorded"
           end
-          JSON.parse(strategy.last_request.body)
+          strategy.last_request
+        end
+
+        def last_request
+          JSON.parse(last_request_raw.body)
+        end
+
+        def last_request_headers
+          headers = {}
+          last_request_raw.each_header { |key, value| headers[key] = value }
+          headers
         end
       end
     end

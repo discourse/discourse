@@ -5,11 +5,30 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
   fab!(:open_ai_model, :llm_model)
   fab!(:gemini_model, :gemini_model)
   fab!(:anthropic_model, :anthropic_model)
+  fab!(:bedrock_claude_model, :bedrock_model)
+  fab!(:bedrock_nova_model, :nova_model)
 
   before { enable_current_plugin }
 
   def build_request(uri, body)
     Net::HTTP::Post.new(uri).tap { |request| request.body = body }
+  end
+
+  def decode_event_stream_chunks(chunks)
+    decoder = Aws::EventStream::Decoder.new
+    payloads = []
+
+    chunks.each do |chunk|
+      message, _done = decoder.decode_chunk(chunk)
+      while message
+        parsed = JSON.parse(message.payload.string)
+        bytes = parsed["bytes"] ? Base64.decode64(parsed["bytes"]) : ""
+        payloads << JSON.parse(bytes) if bytes.present?
+        message, _done = decoder.decode_chunk
+      end
+    end
+
+    payloads
   end
 
   describe ".for" do
@@ -26,6 +45,16 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
     it "selects the Anthropic style for Anthropic providers" do
       client = described_class.for(llm_model: anthropic_model, responses: ["hi"])
       expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::AnthropicApiStyle)
+    end
+
+    it "selects the Bedrock Anthropic style for Bedrock Claude providers" do
+      client = described_class.for(llm_model: bedrock_claude_model, responses: ["hi"])
+      expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::BedrockAnthropicApiStyle)
+    end
+
+    it "selects the Bedrock Nova style for Nova providers" do
+      client = described_class.for(llm_model: bedrock_nova_model, responses: ["hi"])
+      expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::BedrockNovaApiStyle)
     end
   end
 
@@ -91,6 +120,117 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
       yielded = []
       response.read_body { |chunk| yielded << chunk }
       expect(yielded).to eq(raw_chunks)
+    end
+  end
+
+  describe DiscourseAi::Completions::Scripted::BedrockAnthropicApiStyle do
+    let(:uri) { URI("https://bedrock-runtime.test/model/anthropic-scripted/invoke") }
+    let(:stream_uri) do
+      URI("https://bedrock-runtime.test/model/anthropic-scripted/invoke-with-response-stream")
+    end
+    let(:payload) do
+      {
+        model: bedrock_claude_model.name,
+        system: "You are helpful",
+        messages: [{ role: "user", content: "Hello?" }],
+      }
+    end
+
+    def style_for(responses)
+      DiscourseAi::Completions::Scripted::BedrockAnthropicApiStyle.new(
+        Array.wrap(responses),
+        bedrock_claude_model,
+      )
+    end
+
+    it "behaves like Anthropic for non-streaming requests" do
+      response = style_for(["Hi via Bedrock"]).request(build_request(uri, payload.to_json))
+
+      body = JSON.parse(response.body, symbolize_names: true)
+      expect(body[:content].first).to eq({ type: "text", text: "Hi via Bedrock" })
+      expect(body[:stop_reason]).to eq("end_turn")
+    end
+
+    it "wraps streaming responses inside AWS event streams" do
+      streaming_payload = payload.merge(stream: true)
+      response =
+        style_for(["Streaming via Bedrock"]).request(
+          build_request(stream_uri, streaming_payload.to_json),
+        )
+
+      chunks = []
+      response.read_body { |chunk| chunks << chunk }
+
+      decoded = decode_event_stream_chunks(chunks)
+
+      expect(decoded.first["type"]).to eq("message_start")
+      expect(decoded.any? { |entry| entry["type"] == "content_block_delta" }).to eq(true)
+      stop_event = decoded.last
+      expect(stop_event["type"]).to eq("message_stop")
+      expect(stop_event["amazon-bedrock-invocationMetrics"]).to include("outputTokenCount")
+    end
+  end
+
+  describe DiscourseAi::Completions::Scripted::BedrockNovaApiStyle do
+    let(:uri) { URI("https://bedrock-runtime.test/model/nova-scripted/invoke") }
+    let(:stream_uri) do
+      URI("https://bedrock-runtime.test/model/nova-scripted/invoke-with-response-stream")
+    end
+    let(:payload) do
+      {
+        system: [{ text: "You are helpful" }],
+        messages: [{ role: "user", content: [{ text: "Hello Nova?" }] }],
+      }
+    end
+
+    def style_for(responses)
+      DiscourseAi::Completions::Scripted::BedrockNovaApiStyle.new(
+        Array.wrap(responses),
+        bedrock_nova_model,
+      )
+    end
+
+    it "produces Nova message payloads" do
+      response = style_for(["Hi Nova"]).request(build_request(uri, payload.to_json))
+
+      body = JSON.parse(response.body)
+      expect(body.dig("output", "message", "content", 0, "text")).to eq("Hi Nova")
+      expect(body["stopReason"]).to eq("end_turn")
+      expect(body["usage"]).to include("inputTokens", "outputTokens")
+    end
+
+    it "streams Nova responses via AWS event streams" do
+      response = style_for(["Streaming Nova"]).request(build_request(stream_uri, payload.to_json))
+
+      chunks = []
+      response.read_body { |chunk| chunks << chunk }
+      decoded = decode_event_stream_chunks(chunks)
+
+      expect(decoded.first["messageStart"]).to be_present
+      deltas = decoded.select { |entry| entry["contentBlockDelta"] }
+      expect(deltas).not_to be_empty
+      metadata = decoded.last
+      expect(metadata["amazon-bedrock-invocationMetrics"]).to include("inputTokenCount")
+    end
+
+    it "streams native tool calls" do
+      tool_call = { tool_calls: [{ name: "lookup_time", arguments: { timezone: "UTC" } }] }
+      response = style_for([tool_call]).request(build_request(stream_uri, payload.to_json))
+
+      chunks = []
+      response.read_body { |chunk| chunks << chunk }
+      decoded = decode_event_stream_chunks(chunks)
+
+      start_event = decoded.find { |entry| entry.dig("contentBlockStart", "start", "toolUse") }
+
+      expect(start_event["contentBlockStart"]["start"]["toolUse"]["name"]).to eq("lookup_time")
+
+      tool_delta_chunks =
+        decoded
+          .select { |entry| entry.dig("contentBlockDelta", "delta", "toolUse", "input") }
+          .map { |entry| entry.dig("contentBlockDelta", "delta", "toolUse", "input") }
+
+      expect(tool_delta_chunks.join).to include("UTC")
     end
   end
 
