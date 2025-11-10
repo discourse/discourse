@@ -2152,4 +2152,112 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("aside.quote + p", text: "Outside")
     end
   end
+
+  describe "image grid functionality" do
+    def paste_test_images(count = 2)
+      count.times do |i|
+        cdp.allow_clipboard
+        cdp.copy_test_image
+        cdp.paste
+
+        # Wait for upload to complete
+        expect(rich).to have_css(".composer-image-node img", count: i + 1)
+        expect(rich).to have_no_css(".composer-image-node img[data-placeholder='true']")
+      end
+    end
+
+    context "when images are outside a grid" do
+      it "shows 'Add to Grid' button for images outside grids" do
+        open_composer
+        paste_test_images(1)
+
+        rich.find(".composer-image-node img").click
+
+        expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+        expect(page).to have_css(".composer-image-toolbar__add-to-grid")
+        expect(page).to have_no_css(".composer-image-toolbar__remove-from-grid")
+      end
+
+      it "creates single-image grid" do
+        open_composer
+        paste_test_images(1)
+
+        expect(rich).to have_css(".composer-image-node img", count: 1)
+        rich.find(".composer-image-node img").click
+
+        expect(page).to have_css(".composer-image-toolbar__add-to-grid")
+        find(".composer-image-toolbar__add-to-grid").click
+
+        expect(rich).to have_css(".composer-image-grid")
+        expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 1)
+      end
+
+      it "automatically adds adjacent images to existing grid" do
+        open_composer
+        composer.type_content("[grid]![image1](upload://test1.png)")
+        composer.send_keys(:enter)
+        paste_test_images(1)
+
+        expect(rich).to have_css(".composer-image-node img", count: 2)
+        expect(rich).to have_css(".composer-image-grid", count: 1)
+        expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 2)
+      end
+    end
+
+    context "when images are within a grid" do
+      it "shows 'Remove from Grid' button for images inside grids" do
+        open_composer
+        composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
+
+        rich.all(".composer-image-grid .composer-image-node img").first.click
+
+        expect(page).to have_css("[data-identifier='composer-image-toolbar']")
+        expect(page).to have_css(".composer-image-toolbar__remove-from-grid")
+        expect(page).to have_no_css(".composer-image-toolbar__add-to-grid")
+      end
+
+      it "removes image from grid" do
+        open_composer
+        composer.type_content("[grid]![image1](upload://test1.png)![image2](upload://test2.png)")
+
+        # Click on the first image inside the grid to select it
+        rich.all(".composer-image-grid .composer-image-node img").first.click
+        find(".composer-image-toolbar__remove-from-grid").click
+
+        expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 1)
+        expect(rich).to have_css(".composer-image-node img", count: 2) # One in grid, one standalone
+      end
+
+      it "removes last image from grid" do
+        open_composer
+        composer.type_content("[grid]![image1](upload://test1.png)")
+
+        rich.find(".composer-image-grid .composer-image-node img").click
+        find(".composer-image-toolbar__remove-from-grid").click
+
+        expect(rich).to have_css(".composer-image-node img", count: 1)
+        expect(rich).to have_no_css(".composer-image-grid .composer-image-node img")
+      end
+    end
+  end
+
+  describe "auto-grid functionality with experimental_auto_grid_images" do
+    before { SiteSetting.experimental_auto_grid_images = true }
+
+    it "automatically wraps 3+ uploaded images in a grid" do
+      open_composer
+
+      file_path_1 = file_from_fixtures("logo.png", "images").path
+      file_path_2 = file_from_fixtures("logo.jpg", "images").path
+      file_path_3 = file_from_fixtures("downsized.png", "images").path
+
+      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+
+      expect(composer).to have_no_in_progress_uploads
+
+      # Should automatically create a grid with 3 images
+      expect(rich).to have_css(".composer-image-grid")
+      expect(rich).to have_css(".composer-image-grid .composer-image-node img", count: 3)
+    end
+  end
 end

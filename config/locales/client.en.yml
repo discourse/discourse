@@ -3135,6 +3135,8 @@ en:
         zoom_out: "Decrease image size"
         zoom_in: "Increase image size"
         remove: "Remove image"
+        add_to_grid: "Add to grid"
+        remove_from_grid: "Remove from grid"
 
       image_scale_button: "Scale image to %{percent}%"
       delete_image_button: Delete Image

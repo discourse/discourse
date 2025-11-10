@@ -5,6 +5,7 @@ import bulletList from "./bullet-list";
 import code from "./code";
 import codeBlock from "./code-block";
 import emoji from "./emoji";
+import grid from "./grid";
 import hardBreak from "./hard-break";
 import hashtag from "./hashtag";
 import heading from "./heading";
@@ -55,6 +56,7 @@ const defaultExtensions = [
   bulletList,
   trailingInlineSpace,
   hardBreak,
+  grid,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);

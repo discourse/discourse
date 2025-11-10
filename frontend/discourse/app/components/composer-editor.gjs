@@ -292,7 +292,7 @@ export default class ComposerEditor extends Component {
   @bind
   setupEditor(textManipulation) {
     this.textManipulation = textManipulation;
-    this.uppyComposerUpload.placeholderHandler = textManipulation.placeholder;
+    this.uppyComposerUpload.textManipulation = textManipulation;
 
     const input = this.element.querySelector(".d-editor-input");
 

@@ -21,29 +21,33 @@ class ImageToolbar extends ToolbarBase {
   constructor(opts = {}) {
     super(opts);
 
-    this.addButton({
-      id: "image-scale-down",
-      icon: "magnifying-glass-minus",
-      title: "composer.image_toolbar.zoom_out",
-      className: "composer-image-toolbar__zoom-out",
-      get disabled() {
-        return !opts.canScaleDown();
-      },
-      action: opts.scaleDown,
-      tabindex: 0,
-    });
+    const isInGrid = opts.isInGrid?.();
 
-    this.addButton({
-      id: "image-scale-up",
-      icon: "magnifying-glass-plus",
-      title: "composer.image_toolbar.zoom_in",
-      className: "composer-image-toolbar__zoom-in",
-      get disabled() {
-        return !opts.canScaleUp();
-      },
-      action: opts.scaleUp,
-      tabindex: 0,
-    });
+    if (!isInGrid) {
+      this.addButton({
+        id: "image-scale-down",
+        icon: "magnifying-glass-minus",
+        title: "composer.image_toolbar.zoom_out",
+        className: "composer-image-toolbar__zoom-out",
+        get disabled() {
+          return !opts.canScaleDown();
+        },
+        action: opts.scaleDown,
+        tabindex: 0,
+      });
+
+      this.addButton({
+        id: "image-scale-up",
+        icon: "magnifying-glass-plus",
+        title: "composer.image_toolbar.zoom_in",
+        className: "composer-image-toolbar__zoom-in",
+        get disabled() {
+          return !opts.canScaleUp();
+        },
+        action: opts.scaleUp,
+        tabindex: 0,
+      });
+    }
 
     this.addButton({
       id: "image-remove",
@@ -53,6 +57,26 @@ class ImageToolbar extends ToolbarBase {
       action: opts.removeImage,
       tabindex: 0,
     });
+
+    if (isInGrid) {
+      this.addButton({
+        id: "image-remove-from-grid",
+        icon: "table-cells",
+        title: "composer.image_toolbar.remove_from_grid",
+        className: "composer-image-toolbar__remove-from-grid",
+        action: opts.removeFromGrid,
+        tabindex: 0,
+      });
+    } else {
+      this.addButton({
+        id: "image-add-to-grid",
+        icon: "table-cells",
+        title: "composer.image_toolbar.add_to_grid",
+        className: "composer-image-toolbar__add-to-grid",
+        action: opts.addToGrid,
+        tabindex: 0,
+      });
+    }
   }
 }
 
@@ -93,11 +117,14 @@ export default class ImageNodeView extends Component {
       scaleDown: this.scaleDown.bind(this),
       scaleUp: this.scaleUp.bind(this),
       removeImage: this.removeImage.bind(this),
+      removeFromGrid: this.removeFromGrid.bind(this),
+      addToGrid: this.addToGrid.bind(this),
       canScaleDown: () =>
         !this.args.node.attrs.scale || this.args.node.attrs.scale > MIN_SCALE,
       canScaleUp: () =>
         this.args.node.attrs.scale && this.args.node.attrs.scale < MAX_SCALE,
       isAltTextMenuOpen: () => this.altMenuInstance?.expanded,
+      isInGrid: () => this.isInGrid,
     });
 
     this.menuInstance = await this.menu.newInstance(this.args.dom, {
@@ -279,6 +306,224 @@ export default class ImageNodeView extends Component {
     const scale = (this.args.node.attrs.scale || 100) / 100;
 
     return htmlSafe(`width: ${width * scale}px`);
+  }
+
+  get isInGrid() {
+    const pos = this.args.getPos();
+    const $pos = this.args.view.state.doc.resolve(pos);
+
+    for (let depth = $pos.depth; depth >= 0; depth--) {
+      if ($pos.node(depth).type.name === "grid") {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  @action
+  addToGrid() {
+    const pos = this.args.getPos();
+    const view = this.args.view;
+    const { state } = view;
+    const imageNode = this.args.node;
+    const $pos = state.doc.resolve(pos);
+
+    // Check if image is the only child in a paragraph
+    const parent = $pos.parent;
+    const isOnlyChildInParagraph =
+      parent.type.name === "paragraph" &&
+      parent.childCount === 1 &&
+      parent.firstChild === imageNode;
+
+    const existingGrid = this.#findNearbyGrid(pos);
+
+    if (existingGrid) {
+      this.#addToExistingGrid(
+        existingGrid,
+        pos,
+        imageNode,
+        isOnlyChildInParagraph,
+        state,
+        view
+      );
+    } else {
+      this.#createNewGrid(pos, imageNode, isOnlyChildInParagraph, state, view);
+    }
+  }
+
+  #addToExistingGrid(
+    existingGrid,
+    pos,
+    imageNode,
+    isOnlyChildInParagraph,
+    state,
+    view
+  ) {
+    const { node: gridNode, pos: gridPos, direction } = existingGrid;
+    const tr = state.tr;
+
+    const paragraphWithImage = state.schema.nodes.paragraph.create(
+      null,
+      imageNode
+    );
+    let insertPos;
+
+    if (direction === -1) {
+      // Insert at the end of the grid
+      insertPos = gridPos + gridNode.nodeSize - 2;
+      tr.insert(insertPos, paragraphWithImage);
+    } else {
+      // Insert at the beginning of the grid
+      insertPos = gridPos + 1; // After grid opening
+      tr.insert(insertPos, paragraphWithImage);
+    }
+
+    const adjustedPos = pos + paragraphWithImage.nodeSize; // Account for the insertion
+    if (isOnlyChildInParagraph) {
+      tr.delete(adjustedPos - 1, adjustedPos + 1);
+    } else {
+      tr.delete(adjustedPos, adjustedPos + 1);
+    }
+
+    const newImagePos = insertPos + 1; // Insert position + paragraph boundary
+    tr.setSelection(NodeSelection.create(tr.doc, newImagePos)).scrollIntoView();
+
+    view.dispatch(tr);
+  }
+
+  #createNewGrid(pos, imageNode, isOnlyChildInParagraph, state, view) {
+    const tr = state.tr;
+    const gridNode = state.schema.nodes.grid.create(
+      null,
+      state.schema.nodes.paragraph.create(null, imageNode)
+    );
+
+    let gridStartPos;
+    if (isOnlyChildInParagraph) {
+      tr.replaceWith(pos - 1, pos + 1, gridNode);
+      gridStartPos = pos - 1;
+    } else {
+      tr.replaceWith(pos, pos + 1, gridNode);
+      gridStartPos = pos;
+    }
+
+    // Select the image inside the new grid: grid + paragraph + image
+    // Structure: grid(1) > paragraph(1) > image
+    const imagePos = gridStartPos + 2; // Skip grid node boundary and paragraph node boundary
+    tr.setSelection(NodeSelection.create(tr.doc, imagePos)).scrollIntoView();
+
+    view.dispatch(tr);
+  }
+
+  #findNearbyGrid(pos) {
+    const { state } = this.args.view;
+    const $pos = state.doc.resolve(pos);
+
+    // Find the block containing the image (paragraph)
+    let blockDepth = $pos.depth;
+    while (blockDepth > 0 && $pos.node(blockDepth).type.name !== "paragraph") {
+      blockDepth--;
+    }
+
+    if (blockDepth === 0) {
+      return null;
+    }
+
+    const blockPos = $pos.start(blockDepth);
+    const blockNode = $pos.node(blockDepth);
+    const blockParent = $pos.node(blockDepth - 1);
+    const blockIndex = $pos.index(blockDepth - 1);
+
+    // Check left sibling
+    if (blockIndex > 0) {
+      const leftNode = blockParent.child(blockIndex - 1);
+      if (leftNode.type.name === "grid") {
+        return {
+          node: leftNode,
+          pos: blockPos - leftNode.nodeSize,
+          direction: -1,
+        };
+      }
+    }
+
+    // Check right sibling
+    if (blockIndex < blockParent.childCount - 1) {
+      const rightNode = blockParent.child(blockIndex + 1);
+      if (rightNode.type.name === "grid") {
+        return {
+          node: rightNode,
+          pos: blockPos + blockNode.nodeSize,
+          direction: 1,
+        };
+      }
+    }
+
+    return null;
+  }
+
+  @action
+  removeFromGrid() {
+    if (!this.isInGrid) {
+      return;
+    }
+
+    const pos = this.args.getPos();
+    const view = this.args.view;
+    const { state } = view;
+    const { tr } = state;
+    const imageNode = this.args.node;
+
+    const $pos = state.doc.resolve(pos);
+    let gridDepth = null;
+    let gridPos = null;
+
+    for (let depth = $pos.depth; depth >= 0; depth--) {
+      if ($pos.node(depth).type.name === "grid") {
+        gridDepth = depth;
+        gridPos = $pos.start(depth);
+        break;
+      }
+    }
+
+    if (gridDepth === null) {
+      return;
+    }
+
+    const gridNode = $pos.node(gridDepth);
+
+    const willGridBeEmpty =
+      gridNode.childCount === 1 &&
+      gridNode.firstChild.type.name === "paragraph" &&
+      gridNode.firstChild.content.size === 1 &&
+      gridNode.firstChild.firstChild.type.name === "image";
+
+    const gridEndPos = gridPos + gridNode.nodeSize - 1;
+    const paragraphWithImage = state.schema.nodes.paragraph.create(
+      null,
+      imageNode
+    );
+
+    if (willGridBeEmpty) {
+      tr.replaceWith(
+        gridPos - 1,
+        gridPos + gridNode.nodeSize,
+        paragraphWithImage
+      );
+      tr.setSelection(NodeSelection.create(tr.doc, gridPos)).scrollIntoView();
+    } else {
+      tr.delete(pos - 1, pos + 1);
+
+      const adjustedGridEndPos = tr.mapping.map(gridEndPos);
+      tr.insert(adjustedGridEndPos, paragraphWithImage);
+
+      const newImagePos = adjustedGridEndPos + 1; // Insert position + paragraph boundary
+      tr.setSelection(
+        NodeSelection.create(tr.doc, newImagePos)
+      ).scrollIntoView();
+    }
+
+    view.dispatch(tr);
   }
 
   @action
