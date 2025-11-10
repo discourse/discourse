@@ -272,8 +272,18 @@ en:
           name: "Exchange rate"
         stock_quote:
           name: "Stock quote (AlphaVantage)"
-        image_generation:
-          name: "Flux image generator (Together.ai)"
+        image_generation_category:
+          name: "Image generation..."
+        image_generation_custom:
+          name: "Custom"
+        image_generation_openai:
+          name: "OpenAI"
+        image_generation_nanobanana:
+          name: "Nano Banana"
+        image_generation_adobe:
+          name: "Adobe Firefly"
+        image_generation_flux:
+          name: "FLUX"
         empty_tool:
           name: "Start from blank..."
       name:

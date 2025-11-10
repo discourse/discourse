@@ -380,12 +380,212 @@ class AiTool < ActiveRecord::Base
       SCRIPT
         summary: "Get real-time stock quotes using AlphaVantage API",
       },
+      { preset_id: "image_generation_category", is_category: true, category: "image_generation" },
       {
-        preset_id: "image_generation",
-        name: "Image Generation (Flux)",
+        preset_id: "image_generation_custom",
+        name: "Custom",
+        tool_name: "image_generation_custom",
+        description: "Configure a custom image generation API",
+        parameters: [
+          {
+            name: "prompt",
+            type: "string",
+            required: true,
+            description: "The text prompt for image generation",
+          },
+        ],
+        script: <<~SCRIPT,
+          #{preamble}
+          function invoke(params) {
+            // Configure your custom image generation API here
+            const apiKey = "YOUR_API_KEY";
+            const apiUrl = "YOUR_API_ENDPOINT";
+
+            // Implement your custom logic here
+            return { error: "Please configure your custom image generation API" };
+          }
+
+          function details() {
+            return "Custom image generation tool - configure manually";
+          }
+  SCRIPT
+        summary: "Custom image generation",
+        category: "image_generation",
+      },
+      {
+        preset_id: "image_generation_openai",
+        name: "GPT Image",
+        provider: "OpenAI",
+        model_name: "GPT Image 1",
+        tool_name: "image_generation_openai",
+        description: "Generate images using OpenAI's DALL-E model",
+        parameters: [
+          {
+            name: "prompt",
+            type: "string",
+            required: true,
+            description: "The text prompt for image generation",
+          },
+          {
+            name: "size",
+            type: "string",
+            required: false,
+            description: "Image size (1024x1024, 1792x1024, or 1024x1792)",
+          },
+        ],
+        script: <<~SCRIPT,
+          #{preamble}
+          const apiKey = "YOUR_OPENAI_API_KEY";
+
+          function invoke(params) {
+            const prompt = params.prompt;
+            const size = params.size || "1024x1024";
+
+            const body = {
+              model: "dall-e-3",
+              prompt: prompt,
+              size: size,
+              quality: "standard",
+              n: 1,
+              response_format: "b64_json",
+            };
+
+            const result = http.post("https://api.openai.com/v1/images/generations", {
+              headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            });
+
+            const base64Image = JSON.parse(result.body).data[0].b64_json;
+            const image = upload.create("generated_image.png", base64Image);
+            const raw = `\n![${prompt}](${image.short_url})\n`;
+            chain.setCustomRaw(raw);
+
+            return { result: "Image generated successfully" };
+          }
+
+          function details() {
+            return "Generates images using OpenAI's DALL-E model.";
+          }
+  SCRIPT
+        summary: "Generate images with OpenAI DALL-E",
+        category: "image_generation",
+      },
+      {
+        preset_id: "image_generation_nanobanana",
+        name: "Nano Banana",
+        provider: "Google Nano Banana",
+        model_name: "Gemini 2.5 Flash Image",
+        tool_name: "image_generation_nanobanana",
+        description: "Generate images using Gemini 2.5 Flash via Nano Banana",
+        parameters: [
+          {
+            name: "prompt",
+            type: "string",
+            required: true,
+            description: "The text prompt for image generation",
+          },
+        ],
+        script: <<~SCRIPT,
+          #{preamble}
+          const apiKey = "YOUR_NANOBANANA_API_KEY";
+
+          function invoke(params) {
+            const prompt = params.prompt;
+
+            const body = {
+              model: "gemini-2.5-flash-image",
+              prompt: prompt,
+            };
+
+            const result = http.post("https://api.nanobanana.ai/v1/images/generations", {
+              headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            });
+
+            const base64Image = JSON.parse(result.body).data[0].b64_json;
+            const image = upload.create("generated_image.png", base64Image);
+            const raw = `\n![${prompt}](${image.short_url})\n`;
+            chain.setCustomRaw(raw);
+
+            return { result: "Image generated successfully" };
+          }
+
+          function details() {
+            return "Generates images using Gemini 2.5 Flash via Nano Banana.";
+          }
+  SCRIPT
+        summary: "Generate images with Gemini 2.5 Flash",
+        category: "image_generation",
+      },
+      {
+        preset_id: "image_generation_adobe",
+        name: "Adobe Firefly",
+        provider: "Adobe",
+        model_name: "Firefly",
+        tool_name: "image_generation_adobe",
+        description: "Generate images using Adobe Firefly",
+        parameters: [
+          {
+            name: "prompt",
+            type: "string",
+            required: true,
+            description: "The text prompt for image generation",
+          },
+        ],
+        script: <<~SCRIPT,
+          #{preamble}
+          const apiKey = "YOUR_ADOBE_API_KEY";
+
+          function invoke(params) {
+            const prompt = params.prompt;
+
+            const body = {
+              prompt: prompt,
+              contentClass: "photo",
+              size: {
+                width: 1024,
+                height: 1024
+              }
+            };
+
+            const result = http.post("https://firefly-api.adobe.io/v2/images/generate", {
+              headers: {
+                "Authorization": `Bearer ${apiKey}`,
+                "x-api-key": apiKey,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(body),
+            });
+
+            const base64Image = JSON.parse(result.body).outputs[0].image.base64;
+            const image = upload.create("generated_image.png", base64Image);
+            const raw = `\n![${prompt}](${image.short_url})\n`;
+            chain.setCustomRaw(raw);
+
+            return { result: "Image generated successfully" };
+          }
+
+          function details() {
+            return "Generates images using Adobe Firefly.";
+          }
+  SCRIPT
+        summary: "Generate images with Adobe Firefly",
+        category: "image_generation",
+      },
+      {
+        preset_id: "image_generation_flux",
+        name: "FLUX",
+        provider: "Together.ai",
+        model_name: "FLUX 1.1",
         tool_name: "image_generation",
         description:
-          "Generate images using the FLUX model from Black Forest Labs using together.ai",
+          "Generate images using the FLUX 1.1 Pro model from Black Forest Labs via Together.ai",
         parameters: [
           {
             name: "prompt",
@@ -443,7 +643,8 @@ class AiTool < ActiveRecord::Base
             return "Generates images based on a text prompt using the FLUX model.";
           }
   SCRIPT
-        summary: "Generate image",
+        summary: "Generate images with FLUX 1.1 Pro",
+        category: "image_generation",
       },
       { preset_id: "empty_tool", script: <<~SCRIPT },
           #{preamble}
