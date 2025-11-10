@@ -254,7 +254,7 @@ export default class GoogleAdsense extends AdComponent {
       ad_plugin_impression: {
         ad_type: this.site.ad_types.adsense,
         ad_plugin_house_ad_id: null,
-        placement: this.get("placement"),
+        placement: this.placement,
       },
     };
   }

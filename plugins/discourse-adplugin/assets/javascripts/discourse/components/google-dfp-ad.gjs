@@ -422,7 +422,7 @@ export default class GoogleDfpAd extends AdComponent {
       ad_plugin_impression: {
         ad_type: this.site.ad_types.dfp,
         ad_plugin_house_ad_id: null,
-        placement: this.get("placement"),
+        placement: this.placement,
       },
     };
   }

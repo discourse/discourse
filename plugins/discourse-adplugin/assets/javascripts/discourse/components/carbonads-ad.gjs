@@ -46,7 +46,7 @@ export default class CarbonadsAd extends AdComponent {
       ad_plugin_impression: {
         ad_type: this.site.ad_types.carbon,
         ad_plugin_house_ad_id: null,
-        placement: this.get("placement"),
+        placement: this.placement,
       },
     };
   }
