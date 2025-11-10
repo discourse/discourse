@@ -53,6 +53,11 @@ class TagGroup < ActiveRecord::Base
     nil
   end
 
+  # Same as Tag#find_by_name
+  def self.find_by_name_insensitive(name)
+    self.find_by("lower(name) = ?", name.downcase)
+  end
+
   def self.resolve_permissions(permissions)
     permissions.map do |group, permission|
       group_id = Group.group_id_from_param(group)
@@ -127,4 +132,8 @@ end
 #  updated_at    :datetime         not null
 #  parent_tag_id :integer
 #  one_per_topic :boolean          default(FALSE)
+#
+# Indexes
+#
+#  index_tag_groups_on_lower_name  (lower((name)::text)) UNIQUE
 #
