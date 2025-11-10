@@ -126,6 +126,37 @@ describe "Content Localization" do
       expect(post_3_obj.post).to have_content("A general is one who ..")
     end
 
+    context "with tl parameter" do
+      before do
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.set_locale_from_cookie = true
+      end
+
+      fab!(:topic2) do
+        topic = Fabricate(:topic, title: "The Life of Oda Nobunaga", locale: "en", user: admin)
+        Fabricate(:post, topic:, locale: "en", raw: "Oda Nobunaga was a powerful daimyo ...")
+        topic
+      end
+      fab!(:topic_localization2) do
+        Fabricate(:topic_localization, topic: topic2, locale: "ja", fancy_title: "織田信長の生涯")
+      end
+
+      it "persists locale for anonymous users across page views" do
+        visit("/t/#{topic.id}?tl=ja")
+        expect(topic_page.topic_title).to have_content("孫子兵法からの人生戦略")
+
+        visit("/t/#{topic2.id}")
+        expect(topic_page.topic_title).to have_content("織田信長の生涯")
+      end
+
+      it "ignores tl parameter for logged-in users" do
+        sign_in(site_local_user)
+        visit("/t/#{topic.id}?tl=ja")
+
+        expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
+      end
+    end
+
     context "when editing" do
       let(:edit_localized_post_dialog) { PageObjects::Components::Dialog.new }
       let(:fast_editor) { PageObjects::Components::FastEditor.new }
@@ -193,7 +224,7 @@ describe "Content Localization" do
       end
     end
 
-    context "when loading 20+ posts in stream", trace: true do
+    context "when loading 20+ posts in stream" do
       before do
         highest = topic.highest_post_number
         22.times do |i|

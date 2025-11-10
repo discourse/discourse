@@ -39,6 +39,10 @@ module PageObjects
         ::Topic.find(current_topic_id)
       end
 
+      def topic_title
+        find("#topic-title .fancy-title")
+      end
+
       def has_topic_title?(text)
         has_css?("h1 .fancy-title", text: text)
       end
