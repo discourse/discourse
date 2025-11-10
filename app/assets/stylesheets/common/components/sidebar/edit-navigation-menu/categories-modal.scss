@@ -2,10 +2,10 @@
   .sidebar-categories-form__row {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--content-border-color);
     border-left: 4px solid;
-    margin-bottom: 1em;
-    padding: 0;
+    margin-bottom: var(--space-6);
+    padding-inline: var(--space-4);
+    background: var(--primary-50);
   }
 
   .sidebar-categories-form__category-row[data-category-level="0"]:not(
@@ -14,8 +14,14 @@
     border-bottom: 1px solid var(--content-border-color);
   }
 
+  .sidebar-categories-form__category-row:first-of-type {
+    .badge-category {
+      font-weight: 600;
+    }
+  }
+
   .sidebar-categories-form__category-row[data-category-level="1"] {
-    margin-left: 1em;
+    padding-left: var(--space-4);
   }
 
   .sidebar-categories-form__category-row[data-category-level="1"]:not(
@@ -25,14 +31,14 @@
   }
 
   .sidebar-categories-form__category-row[data-category-level="2"] {
-    margin-left: 2em;
+    padding-left: var(--space-8);
     border-top: 1px solid var(--content-border-color);
   }
 
   .sidebar-categories-form__category-label {
     display: flex;
     justify-content: space-between;
-    padding: 0.75em 1em;
+    padding: 0.75em 0;
     margin: 0;
     flex-grow: 1;
     font-weight: normal;
@@ -46,21 +52,19 @@
     min-width: 0;
   }
 
+  .badge-category__wrapper {
+    font-size: var(--font-0); // reset generic component
+  }
+
   .sidebar-categories-form__category-badge {
     .badge-wrapper {
       width: 100%;
     }
 
     .badge-category {
+      @include ellipsis;
       white-space: normal;
       word-wrap: break-word;
-    }
-
-    .category-name {
-      color: var(--primary);
-      font-size: var(--font-up-1);
-
-      @include ellipsis;
     }
   }
 
