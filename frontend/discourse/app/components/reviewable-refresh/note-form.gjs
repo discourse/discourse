@@ -98,6 +98,7 @@ export default class ReviewableNoteForm extends Component {
               <ExpandingTextArea
                 @value={{field.value}}
                 @input={{fn this.handleInput field.set}}
+                @name={{field.name}}
                 placeholder={{i18n "review.notes.placeholder"}}
                 class="reviewable-note-form__textarea"
                 rows="1"
