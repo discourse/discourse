@@ -1092,19 +1092,30 @@ class Search
     categories.each { |category| @results.add(category) }
   end
 
+  def scoped_users
+    User
+      .includes(:user_search_data)
+      .references(:user_search_data)
+      .where(active: true)
+      .where(staged: false)
+  end
+
   def user_search
     return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
 
     users =
-      User
-        .includes(:user_search_data)
-        .references(:user_search_data)
-        .where(active: true)
-        .where(staged: false)
-        .where("user_search_data.search_data @@ #{ts_query("simple")}")
-        .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
-        .order("last_posted_at DESC")
-        .limit(limit)
+      if SiteSetting.enable_names?
+        scoped_users.where("user_search_data.search_data @@ #{ts_query("simple")}").order(
+          "CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END",
+        )
+      else
+        scoped_users.where(
+          "username_lower LIKE :term_like",
+          term_like: "%#{@original_term.downcase}%",
+        )
+      end
+
+    users = users.order("last_posted_at DESC").limit(limit)
 
     if !SiteSetting.enable_listing_suspended_users_on_search && !@guardian.user&.admin
       users = users.where(suspended_at: nil)
