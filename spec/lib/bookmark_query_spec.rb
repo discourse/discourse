@@ -81,10 +81,19 @@ RSpec.describe BookmarkQuery do
         Fabricate(:bookmark, user: user, name: "Check up later", bookmarkable: Fabricate(:post))
       end
       let(:bookmark4) { Fabricate(:bookmark, user: user, bookmarkable: post) }
+      let!(:bookmark_with_colon) do
+        Fabricate(
+          :bookmark,
+          user: user,
+          name: "Review with:images filter",
+          bookmarkable: Fabricate(:post),
+        )
+      end
 
       before do
         Fabricate(:topic_user, user: user, topic: bookmark3.bookmarkable.topic)
         Fabricate(:topic_user, user: user, topic: bookmark4.bookmarkable.topic)
+        Fabricate(:topic_user, user: user, topic: bookmark_with_colon.bookmarkable.topic)
       end
 
       it "can search by bookmark name" do
@@ -100,6 +109,11 @@ RSpec.describe BookmarkQuery do
       it "can search by topic title" do
         bookmarks = bookmark_query(search_term: "bugfix").list_all
         expect(bookmarks.map(&:id)).to eq([bookmark4.id])
+      end
+
+      it "allows searching when the search term contains a colon" do
+        bookmarks = bookmark_query(search_term: "with:images").list_all
+        expect(bookmarks.map(&:id)).to eq([bookmark_with_colon.id])
       end
 
       context "with custom bookmarkable fitering" do

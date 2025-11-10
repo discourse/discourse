@@ -41,7 +41,7 @@ class RegisteredBookmarkable
   # See BaseBookmarkable#search_query for argument docs.
   def perform_search_query(bookmarks, query, ts_query)
     bookmarkable_klass.search_query(bookmarks, query, ts_query) do |bookmarks_joined, where_sql|
-      bookmarks_joined.where("#{where_sql} OR bookmarks.name ILIKE :q", q: query)
+      bookmarks_joined.where("#{where_sql} OR bookmarks.name ILIKE ?", query)
     end
   end
 
