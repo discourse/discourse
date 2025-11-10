@@ -1554,6 +1554,7 @@ class Search
     topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
+    topic_eager_loads << :localizations if SiteSetting.content_localization_enabled
 
     Search.custom_topic_eager_loads.each do |custom_loads|
       next unless custom_loads[:enabled].call
