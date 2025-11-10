@@ -154,9 +154,11 @@ export default {
     this.keyTrapper = new keyTrapper();
     this._stopCallback();
 
-    this.searchService = owner.lookup("service:search");
     this.appEvents = owner.lookup("service:app-events");
+    this.composer = owner.lookup("service:composer");
     this.currentUser = owner.lookup("service:current-user");
+    this.router = owner.lookup("service:router");
+    this.searchService = owner.lookup("service:search");
     this.siteSettings = owner.lookup("service:site-settings");
     this.site = owner.lookup("service:site");
 
@@ -464,6 +466,27 @@ export default {
 
     event.preventDefault();
 
+    if (this.router.currentRouteName.includes("topic")) {
+      const topicController = getOwner(this).lookup("controller:topic");
+      if (topicController.model.archetype === "private_message") {
+        this.composer.open({
+          action: Composer.PRIVATE_MESSAGE,
+          archetypeId: "private_message",
+          draftKey: this.composer.privateMessageDraftKey,
+          draftSequence: 0,
+        });
+        return;
+      }
+    }
+
+    if (this.router.currentURL.includes("/messages")) {
+      const newPMButton = document.querySelector(".new-private-message");
+      if (newPMButton) {
+        newPMButton.click();
+        return;
+      }
+    }
+
     // If the page has a create-topic button, use it for context sensitive attributes like category
     const createTopicButton = document.querySelector("#create-topic");
     if (createTopicButton) {
@@ -471,25 +494,23 @@ export default {
       return;
     }
 
-    getOwner(this).lookup("service:composer").open({
+    this.composer.open({
       action: Composer.CREATE_TOPIC,
       draftKey: Composer.NEW_TOPIC_KEY,
     });
   },
 
   focusComposer(event) {
-    const composer = getOwner(this).lookup("service:composer");
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
-    composer.focusComposer(event);
+    this.composer.focusComposer(event);
   },
 
   fullscreenComposer() {
-    const composer = getOwner(this).lookup("service:composer");
-    if (composer.get("model")) {
-      composer.toggleFullscreen();
+    if (this.composer.get("model")) {
+      this.composer.toggleFullscreen();
     }
   },
 
