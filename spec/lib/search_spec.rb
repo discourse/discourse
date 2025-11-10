@@ -1081,7 +1081,7 @@ RSpec.describe Search do
       expect(results.posts).to eq([post])
     end
 
-    describe "localized post blurbs in search results" do
+    describe "localized post blurbs and topic titles in search results" do
       fab!(:user)
       fab!(:group)
 
@@ -1091,8 +1091,9 @@ RSpec.describe Search do
         group.add(user)
       end
 
-      context "when post has localizations" do
-        fab!(:japanese_localization) do
+      context "when topic and post has localizations" do
+        before do
+          Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "日本語の象についてのトピックタイトル")
           Fabricate(
             :post_localization,
             post:,
@@ -1100,8 +1101,12 @@ RSpec.describe Search do
             raw: "象についての日本語コンテンツ",
             cooked: "<p>象についての日本語コンテンツ</p>",
           )
-        end
-        fab!(:french_localization) do
+          Fabricate(
+            :topic_localization,
+            topic:,
+            locale: "fr",
+            fancy_title: "Titre du sujet français sur les éléphants",
+          )
           Fabricate(
             :post_localization,
             post:,
@@ -1115,11 +1120,17 @@ RSpec.describe Search do
           I18n.with_locale(:ja) do
             result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
             expect(result.blurb(result.posts.first)).to include("日本語コンテンツ")
+            expect(result.posts.first.topic.get_localization.fancy_title).to eq(
+              "日本語の象についてのトピックタイトル",
+            )
           end
 
           I18n.with_locale(:fr) do
             result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
             expect(result.blurb(result.posts.first)).to include("Contenu français")
+            expect(result.posts.first.topic.get_localization.fancy_title).to eq(
+              "Titre du sujet français sur les éléphants",
+            )
           end
         end
 
@@ -1191,6 +1202,31 @@ RSpec.describe Search do
           expect(result.posts).to be_present
 
           expect(result.posts.first.association(:localizations).loaded?).to eq(false)
+        end
+
+        it "preloads topic localizations to avoid N+1 queries" do
+          I18n.with_locale(:ja) do
+            posts.each_with_index do |post, i|
+              Fabricate(
+                :topic_localization,
+                topic: post.topic,
+                locale: "ja",
+                title: "日本語のトピックタイトル #{i}",
+              )
+            end
+
+            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            expect(result.posts.length).to be >= 3
+
+            expect(result.posts.first.topic.association(:localizations).loaded?).to eq(true)
+
+            queries =
+              track_sql_queries do
+                result.posts.each { |post| post.topic.get_localization&.fancy_title }
+              end
+
+            expect(queries.select { |q| q.include?("topic_localizations") }).to be_empty
+          end
         end
       end
     end
