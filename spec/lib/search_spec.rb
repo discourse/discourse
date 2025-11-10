@@ -320,6 +320,35 @@ RSpec.describe Search do
         expect(result.users).to be_empty
       end
     end
+
+    context "when SiteSetting.enable_names is enabled" do
+      fab!(:evil_trout) { Fabricate(:user, username: "evil_trout", name: "John Doe") }
+
+      before do
+        SiteSetting.enable_names = true
+        SearchIndexer.index(evil_trout, force: true)
+      end
+
+      it "finds users by their usernames and names" do
+        result = Search.execute("evil", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("trout", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("evil_trout", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("john", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("doe", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+
+        result = Search.execute("john doe", guardian: Guardian.new(user2))
+        expect(result.users).to contain_exactly(evil_trout)
+      end
+    end
   end
 
   describe "categories" do
