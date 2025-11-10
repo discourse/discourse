@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 
 class HiddenProfileSerializer < BasicUserSerializer
-  attributes(:profile_hidden?, :title, :primary_group_name, :can_send_private_message_to_user)
+  attr_accessor :topic_post_count
+
+  attributes(
+    :profile_hidden?,
+    :title,
+    :topic_post_count,
+    :primary_group_name,
+    :can_send_private_message_to_user,
+  )
 
   def profile_hidden?
     true
@@ -13,5 +21,9 @@ class HiddenProfileSerializer < BasicUserSerializer
 
   def primary_group_name
     object.primary_group.try(:name)
+  end
+
+  def include_topic_post_count?
+    topic_post_count.present?
   end
 end
