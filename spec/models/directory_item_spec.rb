@@ -13,11 +13,12 @@ RSpec.describe DirectoryItem do
     end
   end
 
-  describe "inactive and silenced users" do
-    it "removes silenced users correctly" do
-      post = create_post
-      DirectoryItem.refresh_period!(:daily)
+  describe "eligible users" do
+    fab!(:post) { create_post }
 
+    before { DirectoryItem.refresh_period!(:daily) }
+
+    it "removes inactive users correctly" do
       count = DirectoryItem.where(user_id: post.user_id).count
       expect(count).to eq(1)
 
@@ -30,6 +31,22 @@ RSpec.describe DirectoryItem do
       post.user.update_columns(active: true)
       DirectoryItem.refresh_period!(:daily)
 
+      count = DirectoryItem.where(user_id: post.user_id).count
+      expect(count).to eq(1)
+    end
+
+    it "removes bot users correctly" do
+      count = DirectoryItem.where(user_id: post.user_id).count
+      expect(count).to eq(1)
+
+      post.user.update_columns(id: User.minimum(:id) - 100)
+      DirectoryItem.refresh_period!(:daily)
+
+      count = DirectoryItem.where(user_id: post.user_id).count
+      expect(count).to eq(0)
+    end
+
+    it "removes silenced users correctly" do
       count = DirectoryItem.where(user_id: post.user_id).count
       expect(count).to eq(1)
 
@@ -47,7 +64,7 @@ RSpec.describe DirectoryItem do
       UserActionManager.enable
     end
 
-    it "creates the record for the user and handles likes" do
+    it "creates the record for the user and handles likes given, likes received, post count, and topic count" do
       post = create_post
       _post2 = create_post(topic_id: post.topic_id, user: post.user)
 
@@ -89,7 +106,6 @@ RSpec.describe DirectoryItem do
       freeze_time(2.years.ago)
 
       post = create_post
-      # Create records for that activity
       DirectoryItem.refresh!
 
       freeze_time(2.years.from_now)
@@ -196,6 +212,192 @@ RSpec.describe DirectoryItem do
         expect(DirectoryItem.where(user_id: anon.id)).to be_blank
         expect(DirectoryItem.where(user_id: user.id)).to be_present
       end
+    end
+  end
+
+  describe "topics_entered, days_visited, and posts_read counts" do
+    fab!(:user)
+
+    before do
+      freeze_time_safe
+      UserActionManager.enable
+    end
+
+    it "correctly counts topics_entered, days_visited, and posts_read per period_type" do
+      # Create topic views at different times
+      DB.exec(
+        "INSERT INTO topic_views (topic_id, user_id, viewed_at, ip_address) VALUES (1, :user_id, :viewed_at, '127.0.0.1')",
+        user_id: user.id,
+        viewed_at: 1.minute.ago.to_date,
+      )
+      DB.exec(
+        "INSERT INTO topic_views (topic_id, user_id, viewed_at, ip_address) VALUES (2, :user_id, :viewed_at, '127.0.0.1')",
+        user_id: user.id,
+        viewed_at: 2.days.ago.to_date,
+      )
+      DB.exec(
+        "INSERT INTO topic_views (topic_id, user_id, viewed_at, ip_address) VALUES (3, :user_id, :viewed_at, '127.0.0.1')",
+        user_id: user.id,
+        viewed_at: 1.week.ago.to_date,
+      )
+      DB.exec(
+        "INSERT INTO topic_views (topic_id, user_id, viewed_at, ip_address) VALUES (4, :user_id, :viewed_at, '127.0.0.1')",
+        user_id: user.id,
+        viewed_at: 1.month.ago.to_date,
+      )
+
+      # Create user visits at different times with posts_read
+      UserVisit.create!(
+        user_id: user.id,
+        visited_at: 1.minute.ago.to_date,
+        posts_read: 5,
+        mobile: false,
+        time_read: 100,
+      )
+      UserVisit.create!(
+        user_id: user.id,
+        visited_at: 2.days.ago.to_date,
+        posts_read: 3,
+        mobile: false,
+        time_read: 200,
+      )
+      UserVisit.create!(
+        user_id: user.id,
+        visited_at: 1.week.ago.to_date,
+        posts_read: 7,
+        mobile: false,
+        time_read: 150,
+      )
+      UserVisit.create!(
+        user_id: user.id,
+        visited_at: 1.month.ago.to_date,
+        posts_read: 2,
+        mobile: false,
+        time_read: 50,
+      )
+
+      DirectoryItem.refresh!
+
+      # Daily period - only items from the last day
+      daily_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:daily])
+          .where(user_id: user.id)
+          .first
+      expect(daily_item.topics_entered).to eq(1)
+      expect(daily_item.days_visited).to eq(1)
+      expect(daily_item.posts_read).to eq(5)
+
+      # Weekly period - items from the last week
+      weekly_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:weekly])
+          .where(user_id: user.id)
+          .first
+      expect(weekly_item.topics_entered).to eq(2)
+      expect(weekly_item.days_visited).to eq(2)
+      expect(weekly_item.posts_read).to eq(8)
+
+      # Monthly period - items from the last month
+      monthly_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:monthly])
+          .where(user_id: user.id)
+          .first
+      expect(monthly_item.topics_entered).to eq(3)
+      expect(monthly_item.days_visited).to eq(3)
+      expect(monthly_item.posts_read).to eq(15)
+
+      # All period - all items
+      all_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:all])
+          .where(user_id: user.id)
+          .first
+      expect(all_item.topics_entered).to eq(4)
+      expect(all_item.days_visited).to eq(4)
+      expect(all_item.posts_read).to eq(17)
+    end
+
+    it "handles zero values correctly" do
+      DirectoryItem.refresh!
+
+      daily_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:daily])
+          .where(user_id: user.id)
+          .first
+
+      expect(daily_item.topics_entered).to eq(0)
+      expect(daily_item.days_visited).to eq(0)
+      expect(daily_item.posts_read).to eq(0)
+    end
+
+    it "only counts unique topic views per user" do
+      # Insert the same topic view multiple times (shouldn't happen, but test the query)
+      DB.exec(
+        "INSERT INTO topic_views (topic_id, user_id, viewed_at, ip_address) VALUES (1, :user_id, :viewed_at, '127.0.0.1')",
+        user_id: user.id,
+        viewed_at: 1.minute.ago.to_date,
+      )
+      DB.exec(
+        "INSERT INTO topic_views (topic_id, user_id, viewed_at, ip_address) VALUES (2, :user_id, :viewed_at, '127.0.0.1')",
+        user_id: user.id,
+        viewed_at: 1.minute.ago.to_date,
+      )
+
+      DirectoryItem.refresh!
+
+      daily_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:daily])
+          .where(user_id: user.id)
+          .first
+
+      expect(daily_item.topics_entered).to eq(2) # Two different topics
+    end
+
+    it "updates existing directory items when values change" do
+      # Initial data
+      DB.exec(
+        "INSERT INTO topic_views (topic_id, user_id, viewed_at, ip_address) VALUES (1, :user_id, :viewed_at, '127.0.0.1')",
+        user_id: user.id,
+        viewed_at: 1.minute.ago.to_date,
+      )
+      UserVisit.create!(
+        user_id: user.id,
+        visited_at: 1.minute.ago.to_date,
+        posts_read: 5,
+        mobile: false,
+        time_read: 100,
+      )
+
+      DirectoryItem.refresh!
+
+      daily_item =
+        DirectoryItem
+          .where(period_type: DirectoryItem.period_types[:daily])
+          .where(user_id: user.id)
+          .first
+
+      expect(daily_item.topics_entered).to eq(1)
+      expect(daily_item.days_visited).to eq(1)
+      expect(daily_item.posts_read).to eq(5)
+
+      # Add more data
+      DB.exec(
+        "INSERT INTO topic_views (topic_id, user_id, viewed_at, ip_address) VALUES (2, :user_id, :viewed_at, '127.0.0.1')",
+        user_id: user.id,
+        viewed_at: 1.minute.ago.to_date,
+      )
+      UserVisit.find_by(user_id: user.id, visited_at: 1.minute.ago.to_date).update!(posts_read: 10)
+
+      DirectoryItem.refresh_period!(:daily)
+
+      daily_item.reload
+      expect(daily_item.topics_entered).to eq(2)
+      expect(daily_item.days_visited).to eq(1)
+      expect(daily_item.posts_read).to eq(10)
     end
   end
 end
