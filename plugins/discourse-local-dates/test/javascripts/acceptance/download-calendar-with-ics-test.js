@@ -1,5 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { bbcodeAttributeEncode } from "discourse/lib/bbcode-attributes";
 import { cloneJSON } from "discourse/lib/object";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
@@ -31,16 +32,8 @@ DESCRIPTION:Test Description
 END:VEVENT
 END:VCALENDAR`;
 
-      // Encode ICS data as base64url
-      const utf8Bytes = new TextEncoder().encode(icsData);
-      const binaryString = Array.from(utf8Bytes, (byte) =>
-        String.fromCharCode(byte)
-      ).join("");
-      const base64 = btoa(binaryString);
-      const base64url = base64
-        .replace(/\+/g, "-")
-        .replace(/\//g, "_")
-        .replace(/=/g, "~");
+      // Use shared helper to encode ICS payload for data-ics attribute
+      const base64url = bbcodeAttributeEncode(icsData);
 
       response.post_stream.posts[0].cooked = `<p><span data-date="${startDate}" data-time="13:00:00" class="discourse-local-date" data-timezone="America/Lima" data-ics="${base64url}" data-email-preview="${startDate}T18:00:00Z UTC">${startDate}T18:00:00Z</span></p>`;
 
