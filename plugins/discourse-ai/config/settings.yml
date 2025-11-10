@@ -104,7 +104,7 @@ discourse_ai:
   composer_ai_helper_allowed_groups:
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
     area: "ai-features/ai_helper"
@@ -128,7 +128,7 @@ discourse_ai:
   post_ai_helper_allowed_groups:
     type: group_list
     list_type: compact
-    default: "3|14" # 3: @staff, 14: @trust_level_4
+    default: "3|11" # 3: @staff, 11: @trust_level_1
     allow_any: false
     refresh: true
     area: "ai-features/ai_helper"
