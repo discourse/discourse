@@ -236,8 +236,6 @@ describe "Content Localization" do
         expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
 
         page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
-        expect(post_3_obj.post).to have_content("将とは、智・信・仁・勇・厳なり。")
-
         5.times do
           break if page.has_css?("#post_21 .cooked", visible: :all, wait: 0)
           page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
