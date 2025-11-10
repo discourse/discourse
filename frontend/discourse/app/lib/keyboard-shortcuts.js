@@ -480,7 +480,7 @@ export default {
     }
 
     if (this.router.currentURL.includes("/messages")) {
-      const newPMButton = document.querySelector(".new-private-message");
+      const newPMButton = document.querySelector("#new-private-message-btn");
       if (newPMButton) {
         newPMButton.click();
         return;
