@@ -58,7 +58,7 @@
     "magnific-popup": "1.1.0",
     "moment": "2.30.1",
     "moment-timezone": "0.5.45",
-    "morphlex": "^0.0.16",
+    "morphlex": "^1.0.3",
     "orderedmap": "^2.1.1",
     "photoswipe": "5.4.4",
     "pikaday": "^1.8.2",
