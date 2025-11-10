@@ -1120,17 +1120,11 @@ RSpec.describe Search do
           I18n.with_locale(:ja) do
             result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
             expect(result.blurb(result.posts.first)).to include("日本語コンテンツ")
-            expect(result.posts.first.topic.get_localization.fancy_title).to eq(
-              "日本語の象についてのトピックタイトル",
-            )
           end
 
           I18n.with_locale(:fr) do
             result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
             expect(result.blurb(result.posts.first)).to include("Contenu français")
-            expect(result.posts.first.topic.get_localization.fancy_title).to eq(
-              "Titre du sujet français sur les éléphants",
-            )
           end
         end
 
@@ -1139,6 +1133,24 @@ RSpec.describe Search do
             result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
             expect(result.posts).to be_present
             expect(result.blurb(result.posts.first)).to include("Original EN kittens")
+          end
+        end
+
+        it "uses localized topic title in topic_title_headline when use_pg_headlines_for_excerpt is enabled" do
+          SiteSetting.use_pg_headlines_for_excerpt = true
+
+          I18n.with_locale(:ja) do
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
+            expect(result.posts).to be_present
+            expect(result.posts.first.topic_title_headline).to include("日本語の象についてのトピックタイトル")
+          end
+
+          I18n.with_locale(:fr) do
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
+            expect(result.posts).to be_present
+            expect(result.posts.first.topic_title_headline).to include(
+              "Titre du sujet français sur les éléphants",
+            )
           end
         end
       end
@@ -1220,10 +1232,7 @@ RSpec.describe Search do
 
             expect(result.posts.first.topic.association(:localizations).loaded?).to eq(true)
 
-            queries =
-              track_sql_queries do
-                result.posts.each { |post| post.topic.get_localization&.fancy_title }
-              end
+            queries = track_sql_queries { result.posts.each { |post| post.topic&.fancy_title } }
 
             expect(queries.select { |q| q.include?("topic_localizations") }).to be_empty
           end

@@ -1574,18 +1574,28 @@ class Search
     if SiteSetting.use_pg_headlines_for_excerpt
       search_term = @term.present? ? Search.escape_string(@term) : nil
       ts_config = default_ts_config
+      locale = I18n.locale.to_s.sub("-", "_")
 
-      default_scope
-        .joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id")
-        .joins("INNER JOIN topics t1 ON t1.id = posts.topic_id")
-        .select(
-          "TS_HEADLINE(
+      scope =
+        default_scope.joins("INNER JOIN post_search_data pd ON pd.post_id = posts.id").joins(
+          "INNER JOIN topics t1 ON t1.id = posts.topic_id",
+        )
+
+      if SiteSetting.content_localization_enabled
+        scope =
+          scope.joins(
+            "LEFT OUTER JOIN topic_localizations tl ON tl.topic_id = t1.id AND tl.locale = '#{locale}'",
+          )
+      end
+
+      scope.select(
+        "TS_HEADLINE(
             #{ts_config},
-            t1.fancy_title,
+            #{SiteSetting.content_localization_enabled ? "COALESCE(tl.fancy_title, t1.fancy_title)" : "t1.fancy_title"},
             PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
             'StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'', HighlightAll=true'
           ) AS topic_title_headline",
-          "TS_HEADLINE(
+        "TS_HEADLINE(
             #{ts_config},
             LEFT(
               TS_HEADLINE(
@@ -1599,10 +1609,10 @@ class Search
             PLAINTO_TSQUERY(#{ts_config}, '#{search_term}'),
             'HighlightAll=true, StartSel=''<span class=\"#{HIGHLIGHT_CSS_CLASS}\">'', StopSel=''</span>'''
           ) AS headline",
-          "LEFT(pd.raw_data, 50) AS leading_raw_data",
-          "RIGHT(pd.raw_data, 50) AS trailing_raw_data",
-          default_scope.arel.projections,
-        )
+        "LEFT(pd.raw_data, 50) AS leading_raw_data",
+        "RIGHT(pd.raw_data, 50) AS trailing_raw_data",
+        default_scope.arel.projections,
+      )
     else
       default_scope
     end
