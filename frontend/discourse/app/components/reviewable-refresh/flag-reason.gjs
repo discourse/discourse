@@ -39,9 +39,9 @@ export default class ReviewableFlagReason extends Component {
   <template>
     <span class="review-item__flag-reason --{{this.scoreCSSClass}}">
       {{@score.title}}
-      {{#if (gt @score.count 0)}}
+      {{#if (gt @score.count 1)}}
         <span class="review-item__flag-count --{{this.scoreCSSClass}}">
-          {{@score.count}}
+          x{{@score.count}}
         </span>
       {{/if}}
     </span>
