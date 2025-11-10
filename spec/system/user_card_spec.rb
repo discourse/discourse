@@ -34,25 +34,16 @@ describe "User Card", type: :system do
 
   context "when filtering posts by user" do
     fab!(:another_user, :user)
-    let(:another_mention) { "@#{another_user.username}" }
-
-    before do
-      # Create multiple posts by another_user in the topic
+    let!(:first_post_by_another_user) do
       PostCreator.create!(another_user, topic_id: topic.id, raw: "First post by another user")
+    end
+    let!(:second_post_by_another_user) do
       PostCreator.create!(another_user, topic_id: topic.id, raw: "Second post by another user")
-      # Create a post that mentions another_user
-      PostCreator.create!(
-        current_user,
-        topic_id: topic.id,
-        raw: "Hello #{another_mention}, how are you?",
-      )
     end
 
     it "shows filter button when user has 2+ posts in the topic" do
       topic_page.visit_topic(topic)
-
-      # Find the mention in the last post
-      page.find("a.mention", text: another_user.username).click
+      topic_page.click_post_author_avatar(first_post_by_another_user)
 
       expect(user_card).to be_visible
       expect(user_card).to have_filter_button
@@ -61,31 +52,25 @@ describe "User Card", type: :system do
 
     it "does not show filter button when user has less than 2 posts" do
       topic_page.visit_topic(topic)
-
-      mention_anchors = mention_post.mentions_of(user)
-      mention_anchors.first.click
+      topic_page.click_post_author_avatar(topic.posts.first)
 
       expect(user_card).to be_visible
       expect(user_card).to have_no_filter_button
     end
 
     context "when user has hidden profile" do
-      fab!(:regular_user, :user)
-
       before do
         SiteSetting.allow_users_to_hide_profile = true
         another_user.user_option.update!(hide_profile: true)
         # Sign in as regular user (not admin) to see hidden profile behavior
-        sign_in(regular_user)
+        sign_in(user)
       end
 
       it "shows filter button with post count for hidden profile" do
         topic_page.visit_topic(topic)
+        topic_page.click_post_author_avatar(first_post_by_another_user)
 
-        # Find the mention in the last post
-        page.find("a.mention", text: another_user.username).click
-
-        expect(user_card).to be_visible
+        expect(user_card).to be_showing_user(another_user.username)
         expect(user_card).to have_profile_hidden
         expect(user_card).to have_filter_button
         expect(user_card.filter_button_text).to match(I18n.t("js.topic.filter_to", count: 2))

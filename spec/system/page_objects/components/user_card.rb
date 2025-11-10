@@ -24,7 +24,7 @@ module PageObjects
       end
 
       def has_profile_hidden?
-        has_css?("#user-card .profile-hidden")
+        has_css?("#user-card .profile-hidden", visible: true)
       end
     end
   end
