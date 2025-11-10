@@ -1,15 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.describe ProblemCheck::AiCreditHardLimit do
+  subject(:check) { described_class.new(target) }
+
   fab!(:llm_model) { Fabricate(:llm_model, id: -1) }
 
   before { SiteSetting.discourse_ai_enabled = true }
 
   describe "#call" do
-    it "returns no problems when no credit allocations exist" do
-      problems = described_class.new.call
+    let(:target) { llm_model.id }
 
-      expect(problems).to be_empty
+    it "returns no problems when no credit allocations exist" do
+      expect(check).to be_chill_about_it
     end
 
     it "returns no problems when credits are not exhausted" do
@@ -21,9 +23,7 @@ RSpec.describe ProblemCheck::AiCreditHardLimit do
         soft_limit_percentage: 80,
       )
 
-      problems = described_class.new.call
-
-      expect(problems).to be_empty
+      expect(check).to be_chill_about_it
     end
 
     it "returns hard limit problem when credits are exhausted" do
@@ -35,12 +35,7 @@ RSpec.describe ProblemCheck::AiCreditHardLimit do
         soft_limit_percentage: 80,
       )
 
-      problems = described_class.new.call
-
-      expect(problems.size).to eq(1)
-      expect(problems.first.identifier).to eq(:ai_credit_hard_limit)
-      expect(problems.first.priority).to eq("high")
-      expect(problems.first.target).to eq(llm_model.id)
+      expect(check).to have_a_problem.with_priority("high").with_target(llm_model.id)
     end
 
     it "returns hard limit problem when credits are over-exhausted" do
@@ -52,10 +47,7 @@ RSpec.describe ProblemCheck::AiCreditHardLimit do
         soft_limit_percentage: 80,
       )
 
-      problems = described_class.new.call
-
-      expect(problems.size).to eq(1)
-      expect(problems.first.identifier).to eq(:ai_credit_hard_limit)
+      expect(check).to have_a_problem.with_priority("high").with_target(llm_model.id)
     end
 
     it "does not report problem when previous month exceeded limit but current month is new" do
@@ -70,9 +62,9 @@ RSpec.describe ProblemCheck::AiCreditHardLimit do
         )
 
       freeze_time(Time.zone.parse("2025-11-05 10:00:00"))
-      problems = described_class.new.call
 
-      expect(problems).to be_empty
+      expect(check).to be_chill_about_it
+
       allocation.reload
       expect(allocation.monthly_used).to eq(0)
     end
@@ -86,9 +78,7 @@ RSpec.describe ProblemCheck::AiCreditHardLimit do
         monthly_used: 1000,
       )
 
-      problems = described_class.new.call
-
-      expect(problems).to be_empty
+      expect(check).to be_chill_about_it
     end
 
     it "returns no problems when discourse_ai is disabled" do
@@ -100,9 +90,7 @@ RSpec.describe ProblemCheck::AiCreditHardLimit do
         monthly_used: 1000,
       )
 
-      problems = described_class.new.call
-
-      expect(problems).to be_empty
+      expect(check).to be_chill_about_it
     end
   end
 end
