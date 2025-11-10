@@ -2943,13 +2943,12 @@ en:
         title: "Translating post"
         select: "Select translation"
         save: "Save translation"
-        original_content: "Original post"
+        original_content: "Original post content"
         translation_preview: "Translation preview"
         original: "Original"
         translation: "Translation"
         no_translation_yet: "Start typing to see translation preview..."
         placeholder: "Enter translation for post here..."
-        show_raw_markdown: "Show raw"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
@@ -3124,7 +3123,7 @@ en:
           desc: "Reply without changing latest reply date"
         toggle_unlisted:
           label: Toggle unlisted
-          desc: "Unlisted topics are only accessible by direct link"
+          desc: Unlisted topics only accessible to members by direct link
 
       reload: "Reload"
       ignore: "Ignore"
@@ -4953,7 +4952,7 @@ en:
         go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:
         title: "Application"
-        create: "%{shortcut} Create a new topic"
+        create: "%{shortcut} Create a new topic or a personal message"
         notifications: "%{shortcut} Open notifications"
         hamburger_menu: "%{shortcut} Open navigation menu"
         user_profile_menu: "%{shortcut} Open user menu"
