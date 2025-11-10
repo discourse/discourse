@@ -58,6 +58,8 @@ export default {
     window.Logster = window.Logster || {};
     window.Logster.enabled = setupData.enableJsErrorReporting === "true";
 
+    moment.suppressDeprecationWarnings = true;
+
     let session = Session.current();
     session.serviceWorkerURL = setupData.serviceWorkerUrl;
     session.assetVersion = setupData.assetVersion;
