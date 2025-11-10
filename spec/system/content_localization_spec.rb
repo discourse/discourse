@@ -37,6 +37,13 @@ describe "Content Localization" do
   let(:post_3_obj) { PageObjects::Components::Post.new(3) }
   let(:post_4_obj) { PageObjects::Components::Post.new(4) }
 
+  def scroll_to_post(post_number)
+    5.times do
+      break if page.has_css?("#post_#{post_number} .cooked", visible: :all, wait: 0)
+      page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+    end
+  end
+
   before do
     Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "孫子兵法からの人生戦略")
     Fabricate(:topic_localization, topic:, locale: "es", fancy_title: "Estrategias de vida de ...")
@@ -227,24 +234,20 @@ describe "Content Localization" do
         expect(post_3_obj.post).to have_content("A general is one who ..")
         expect(topic_page).to have_post_content(post_number: 3, content: "A general is one who ..")
 
-        5.times do
-          break if page.has_css?("#post_21 .cooked", visible: :all, wait: 0)
-          page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-        end
+        scroll_to_post(21)
 
         expect(page).to have_css("#post_21")
         expect(topic_page).to have_post_content(post_number: 21, content: "English translation 21")
 
+        # toggle should show correct state of post content
         page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
-        5.times do
-          break if page.has_css?("#post_21 .cooked", visible: :all, wait: 0)
-          page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-        end
-
+        scroll_to_post(21)
         expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
 
+        # refresh should show correct state of post content
         page.refresh
-        expect(post_3_obj.post).to have_content("将とは、智・信・仁・勇・厳なり。")
+        scroll_to_post(21)
+        expect(post_21_obj.post).to have_content("日本語コンテンツ 21")
       end
     end
   end
