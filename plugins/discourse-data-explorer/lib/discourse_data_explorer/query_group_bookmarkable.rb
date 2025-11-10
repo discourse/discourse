@@ -36,7 +36,7 @@ module DiscourseDataExplorer
 
     # Searchable only by data_explorer_queries name
     def self.search_query(bookmarks, query, ts_query, &bookmarkable_search)
-      bookmarkable_search.call(bookmarks, "data_explorer_queries.name ILIKE :q")
+      bookmarkable_search.call(bookmarks, "data_explorer_queries.name ILIKE ?")
     end
 
     def self.reminder_handler(bookmark)
