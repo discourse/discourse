@@ -30,10 +30,10 @@ class DirectoryItem < ActiveRecord::Base
   end
 
   def self.period_directory_data(period_type)
-    query = <<~SQL
-      #{prepare_refresh_period_cte}
-      SELECT * FROM directory_cte ORDER BY likes_received DESC, likes_given DESC, topic_count DESC, post_count DESC
-    SQL
+    query =
+      with_prepare_refresh_period_cte do |cte|
+        "SELECT * FROM #{cte} ORDER BY likes_received DESC, likes_given DESC, topic_count DESC, post_count DESC"
+      end
     DB.query(query, period_query_args(period_type))
   end
 
@@ -64,30 +64,30 @@ class DirectoryItem < ActiveRecord::Base
       #
       # TODO
       # WARNING: post_count is a wrong name, it should be reply_count (excluding topic post)
-      DB.exec(<<~SQL, query_args)
-        #{prepare_refresh_period_cte}
-        UPDATE directory_items di
-        SET
-          likes_received = directory_cte.likes_received,
-          likes_given    = directory_cte.likes_given,
-          topics_entered = directory_cte.topics_entered,
-          days_visited   = directory_cte.days_visited,
-          posts_read     = directory_cte.posts_read,
-          topic_count    = directory_cte.topic_count,
-          post_count     = directory_cte.post_count
-        FROM directory_cte
-      WHERE
-        directory_cte.user_id = di.user_id AND
-        di.period_type = :period_type AND (
-          di.likes_received <> directory_cte.likes_received OR
-          di.likes_given <> directory_cte.likes_given OR
-          di.topics_entered <> directory_cte.topics_entered OR
-          di.days_visited <> directory_cte.days_visited OR
-          di.posts_read <> directory_cte.posts_read OR
-          di.topic_count <> directory_cte.topic_count OR
-          di.post_count <> directory_cte.post_count
-        )
-      SQL
+      update_query = with_prepare_refresh_period_cte { |cte| <<~SQL }
+          UPDATE directory_items di
+          SET
+            likes_received = #{cte}.likes_received,
+            likes_given    = #{cte}.likes_given,
+            topics_entered = #{cte}.topics_entered,
+            days_visited   = #{cte}.days_visited,
+            posts_read     = #{cte}.posts_read,
+            topic_count    = #{cte}.topic_count,
+            post_count     = #{cte}.post_count
+          FROM #{cte}
+        WHERE
+          #{cte}.user_id = di.user_id AND
+          di.period_type = :period_type AND (
+            di.likes_received <> #{cte}.likes_received OR
+            di.likes_given <> #{cte}.likes_given OR
+            di.topics_entered <> #{cte}.topics_entered OR
+            di.days_visited <> #{cte}.days_visited OR
+            di.posts_read <> #{cte}.posts_read OR
+            di.topic_count <> #{cte}.topic_count OR
+            di.post_count <> #{cte}.post_count
+          )
+        SQL
+      DB.exec(update_query, query_args)
 
       @@plugin_queries.each { |plugin_query| DB.exec(plugin_query, query_args) }
 
@@ -110,9 +110,14 @@ class DirectoryItem < ActiveRecord::Base
     end
   end
 
-  def self.prepare_refresh_period_cte
+  # Passes the name of the CTE to be used in the final query,
+  # then the caller returns what the _bottom_ part of the query should be,
+  # using the CTE name provided.
+  def self.with_prepare_refresh_period_cte
+    cte_name = "directory_cte"
+    final_query = yield cte_name
     <<~SQL
-      WITH humans AS (
+      WITH eligible_users AS (
         SELECT id
         FROM users
         WHERE id > 0 AND active AND silenced_till IS NULL
@@ -132,7 +137,7 @@ class DirectoryItem < ActiveRecord::Base
         WHERE user_visits.visited_at > :since
         GROUP BY user_visits.user_id
       ),
-      directory_cte AS (
+      #{cte_name} AS (
         SELECT
           h.id AS user_id,
           COALESCE(rua.likes_received, 0) AS likes_received,
@@ -142,11 +147,12 @@ class DirectoryItem < ActiveRecord::Base
           COALESCE(vi.posts_read,     0)  AS posts_read,
           COALESCE(rua.topic_count,   0)  AS topic_count,
           COALESCE(rua.post_count,    0)  AS post_count
-        FROM humans h
+        FROM eligible_users h
         LEFT JOIN recent_user_actions rua ON rua.user_id = h.id
         LEFT JOIN viewed_topics    tv    ON tv.user_id   = h.id
         LEFT JOIN visited_topics   vi   ON vi.user_id  = h.id
       )
+      #{final_query}
     SQL
   end
 
@@ -180,58 +186,30 @@ class DirectoryItem < ActiveRecord::Base
 
   def self.recent_user_actions_subquery
     <<~SQL
-    SELECT
-      ua.user_id,
-      SUM(CASE WHEN ua.action_type = :was_liked_type AND EXISTS (
-        SELECT 1
-        FROM posts p
-        JOIN topics t ON t.id = p.topic_id
-        WHERE p.id = ua.target_post_id
-          AND p.deleted_at IS NULL
-          AND p.post_type = :regular_post_type
-          AND NOT p.hidden
-          AND t.deleted_at IS NULL
-          AND t.visible
-          AND t.archetype = 'regular'
-      ) THEN 1 ELSE 0 END) AS likes_received,
-
-      SUM(CASE WHEN ua.action_type = :like_type AND EXISTS (
-        SELECT 1
-        FROM posts p
-        JOIN topics t ON t.id = p.topic_id
-        WHERE p.id = ua.target_post_id
-          AND p.deleted_at IS NULL
-          AND p.post_type = :regular_post_type
-          AND NOT p.hidden
-          AND t.deleted_at IS NULL
-          AND t.visible
-          AND t.archetype = 'regular'
-      ) THEN 1 ELSE 0 END) AS likes_given,
-
-      SUM(CASE WHEN ua.action_type = :reply_type AND EXISTS (
-        SELECT 1
-        FROM posts p
-        JOIN topics t ON t.id = p.topic_id
-        WHERE p.id = ua.target_post_id
-          AND p.deleted_at IS NULL
-          AND p.post_type = :regular_post_type
-          AND NOT p.hidden
-          AND t.deleted_at IS NULL
-          AND t.visible
-          AND t.archetype = 'regular'
-      ) THEN 1 ELSE 0 END) AS post_count,
-
-      SUM(CASE WHEN ua.action_type = :new_topic_type AND EXISTS (
-        SELECT 1
+      WITH visible_topics AS (
+        SELECT t.id
         FROM topics t
-        WHERE t.id = ua.target_topic_id
-          AND t.deleted_at IS NULL
+        WHERE t.deleted_at IS NULL
           AND t.visible
           AND t.archetype = 'regular'
-      ) THEN 1 ELSE 0 END) AS topic_count
-
+      ),
+      visible_posts AS (
+        SELECT p.id
+        FROM posts p
+        JOIN visible_topics vt ON vt.id = p.topic_id
+        WHERE p.deleted_at IS NULL
+          AND p.post_type = :regular_post_type
+          AND NOT p.hidden
+      )
+      SELECT
+        ua.user_id,
+        SUM(CASE WHEN ua.action_type = 2 AND vp.id IS NOT NULL THEN 1 ELSE 0 END) AS likes_received,
+        SUM(CASE WHEN ua.action_type = 1 AND vp.id IS NOT NULL THEN 1 ELSE 0 END) AS likes_given,
+        SUM(CASE WHEN ua.action_type = 5 AND vp.id IS NOT NULL THEN 1 ELSE 0 END) AS post_count,
+        SUM(CASE WHEN ua.action_type = 4 AND vt.id IS NOT NULL THEN 1 ELSE 0 END) AS topic_count
       FROM user_actions ua
-      JOIN humans h ON h.id = ua.user_id
+      LEFT JOIN visible_posts vp ON vp.id = ua.target_post_id
+      LEFT JOIN visible_topics vt ON vt.id = ua.target_topic_id
       WHERE ua.created_at > :since
       GROUP BY ua.user_id
     SQL
