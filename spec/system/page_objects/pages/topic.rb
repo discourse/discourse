@@ -96,6 +96,10 @@ module PageObjects
         post_by_number(post).find(".show-more-actions").click
       end
 
+      def click_post_author_avatar(post)
+        within_post(post) { find(".main-avatar[data-user-card='#{post.user.username}']").click }
+      end
+
       def click_post_action_button(post, button)
         find_post_action_button(post, button).click
       end
