@@ -19,10 +19,8 @@ const PostEventMenu = <template>
   <DiscoursePostEvent
     @linkToPost={{true}}
     @event={{@data.event}}
-    @eventId={{@data.eventId}}
     @onClose={{@data.onClose}}
     @withDescription={{false}}
-    @currentEventStart={{@data.currentEventStart}}
   />
 </template>;
 
@@ -100,8 +98,8 @@ export default class FullCalendar extends Component {
         calendarModule.DayGrid,
         calendarModule.TimeGrid,
         calendarModule.List,
-        calendarModule.RRULE,
-        calendarModule.MomentTimezone,
+        calendarModule.MomentPlugin,
+        calendarModule.MomentTimezonePlugin,
       ],
       initialView: this.initialView,
       headerToolbar: this.headerToolbar,
@@ -148,8 +146,7 @@ export default class FullCalendar extends Component {
               modalForMobile: true,
               maxWidth: 500,
               data: {
-                currentEventStart: event.start,
-                eventId: postEvent.id,
+                event: postEvent,
                 onClose: () => {
                   this.menu.getByIdentifier("post-event-menu")?.close?.();
                 },

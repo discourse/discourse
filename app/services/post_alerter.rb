@@ -311,13 +311,6 @@ class PostAlerter
   end
 
   def category_or_tag_muters(topic)
-    user_option_condition_sql_fragment =
-      if SiteSetting.watched_precedence_over_muted
-        "uo.watched_precedence_over_muted IS false"
-      else
-        "(uo.watched_precedence_over_muted IS NULL OR uo.watched_precedence_over_muted IS false)"
-      end
-
     user_ids_sql = <<~SQL
         SELECT uo.user_id FROM user_options uo
         LEFT JOIN topic_users tus ON tus.user_id = uo.user_id AND tus.topic_id = #{topic.id}
@@ -327,7 +320,7 @@ class PostAlerter
         WHERE
           (tus.id IS NULL OR tus.notification_level != #{TopicUser.notification_levels[:watching]})
           AND (cu.notification_level = #{CategoryUser.notification_levels[:muted]} OR tu.notification_level = #{TagUser.notification_levels[:muted]})
-          AND #{user_option_condition_sql_fragment}
+          AND uo.watched_precedence_over_muted IS false
         SQL
 
     User.where("id IN (#{user_ids_sql})")

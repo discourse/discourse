@@ -44,8 +44,8 @@ describe "Reactions | Post reactions" do
     expect(reactions_button).to have_emoji("hugs")
   end
 
-  context "when discourse_reactions_experimental_allow_any_emoji is enabled" do
-    before { SiteSetting.discourse_reactions_experimental_allow_any_emoji = true }
+  context "when discourse_reactions_allow_any_emoji is enabled" do
+    before { SiteSetting.discourse_reactions_allow_any_emoji = true }
 
     it "allows selecting any emoji for a post reaction" do
       visit post_2.url

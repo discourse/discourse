@@ -193,7 +193,7 @@ bg:
     welcome_banner:
       header:
         anonymous_members: "Добре дошли в %{site_name}!"
-      search: "Търсене"
+      search_placeholder: "Търсене"
     themes:
       default_description: "По подразбиране"
       error_caused_by: "Причинено от '%{name}'. <a target='blank' href='%{path}'>Щракнете тук</a> за да актуализирате, преконфигурирате или деактивирате."
@@ -383,6 +383,7 @@ bg:
       other: "Вижте %{count} нови теми"
     preview: "преглед"
     cancel: "Прекрати"
+    done: "Готово"
     deleting: "Изтриване…"
     save: "Запазете промените"
     saving: "Запазване…"
@@ -454,10 +455,6 @@ bg:
         required: "Трябва да заявите артикули, преди да можете да ги прегледате."
         claimed_by_you: "Заявихте този артикул и можете да го прегледате."
         claimed_by_other: "Този артикул може да бъде прегледан само от <b>%{username}</b>."
-      claim:
-        title: "заявете тази тема"
-      unclaim:
-        help: "премахнете на тази заявка"
       awaiting_approval: "Очаква одобрение"
       delete: "Изтрий"
       settings:
@@ -603,6 +600,7 @@ bg:
         reviewable_post:
           title: "Публикация"
           noun: "публикация"
+      user_label: "Потребител"
       notes:
         delete: "Изтрий"
       review_user: "Потребител"
@@ -2164,8 +2162,9 @@ bg:
         toggle_whisper:
           label: Превключете шепот
           desc: Шепотът се вижда само от служителите
-        create_topic:
-          label: "Нова тема"
+        create_personal_message:
+          label: "Ново съобщение"
+          desc: "Създайте ново лично съобщение"
       ignore: "Игнорирай"
     notifications:
       title: "уведомления за @name споменавания, отговори на вашите публикации и теми, лични съобщения, и т.н."
@@ -2428,7 +2427,6 @@ bg:
         name: "Изтрий"
     topic:
       create: "Нова тема"
-      create_long: "Създайте нова тема"
       open_draft: "Довърши ревизия"
       private_message: "Започни съобщение"
       archive_message:
@@ -3193,7 +3191,7 @@ bg:
       readonly: "Виж"
     preloader_text: "Зареждане"
     lightbox:
-      download: "изтегли"
+      download: "Изтегли"
       previous: "Назад (стрелка наляво)"
       next: "Напред (стрелка надясно)"
     keyboard_shortcuts_help:
@@ -3446,6 +3444,7 @@ bg:
         categories: "Всички категории"
   admin_js:
     settings: "Настройки"
+    reset_filter: "Нулиране"
     admin:
       title: "Discourse Админ"
       moderator: "Модератор"
@@ -3464,6 +3463,19 @@ bg:
           title: "Сигурност"
         plugins:
           title: "Приставки"
+      upcoming_changes:
+        name: "Име"
+        enabled: "Да е включен"
+        preview: "Преглед"
+        impact_roles:
+          admins: "Админи"
+          moderators: "Модератори"
+          staff: "Персонал"
+        filter:
+          all: "Всички"
+          enabled: "Да е включен"
+          disabled: "Деактивирани"
+          impact_type_other: "Други"
       config:
         developer:
           title: "Разработчик"
@@ -4241,7 +4253,6 @@ bg:
             cancel: "Отмени"
           confirmation:
             cancel: "Отмени"
-        delete_posts_forbidden_because_staff: "Не могат да бъдат изтрити всички постове на администратори и модератори."
         delete_forbidden:
           one: "Не може да изтривате потребители които имат публикации. Първо изтрийте всички публикации на този потребител и опитайте отново. (Публикации по стари от %{count} ден не може да бъдат изтривани)"
           other: "Не може да изтривате потребители, които имат публикации. Първо изтрийте всички публикации на този потребител и опитайте отново. (Публикации по стари от %{count} дни не могат да бъдат изтрити.) "

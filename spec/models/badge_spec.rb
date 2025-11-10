@@ -271,6 +271,79 @@ RSpec.describe Badge do
     end
   end
 
+  describe "FirstFlag badge" do
+    fab!(:flagging_user, :user)
+    fab!(:badge_enabled_category) { Fabricate(:category, allow_badges: true) }
+    fab!(:flagged_post) do
+      Fabricate(:post, topic: Fabricate(:topic, category: badge_enabled_category))
+    end
+    let(:first_flag_badge) { Badge.find(Badge::FirstFlag) }
+
+    context "when using an out-of-the-box flag" do
+      let!(:flag_post_action) do
+        Fabricate(:flag_post_action, post: flagged_post, user: flagging_user)
+      end
+
+      it "grants the badge" do
+        expect { BadgeGranter.backfill(first_flag_badge) }.to change {
+          UserBadge.where(user_id: flagging_user.id, badge_id: Badge::FirstFlag).count
+        }.by(1)
+      end
+    end
+
+    context "when using a custom flag" do
+      let!(:custom_flag) { Fabricate(:flag, name: "stahp", applies_to: %w[Post]) }
+      let!(:flag_post_action) do
+        Fabricate(
+          :flag_post_action,
+          post: flagged_post,
+          user: flagging_user,
+          post_action_type_id: PostActionType.types[:custom_stahp],
+        )
+      end
+
+      it "grants the badge" do
+        expect { BadgeGranter.backfill(first_flag_badge) }.to change {
+          UserBadge.where(user_id: flagging_user.id, badge_id: Badge::FirstFlag).count
+        }.by(1)
+      end
+    end
+
+    context "when the flag requires message" do
+      let!(:flag_post_action) do
+        Fabricate(
+          :flag_post_action,
+          post: flagged_post,
+          user: flagging_user,
+          post_action_type_id: PostActionType.types[:notify_user],
+        )
+      end
+
+      it "does not grant the badge" do
+        expect { BadgeGranter.backfill(first_flag_badge) }.not_to change {
+          UserBadge.where(user_id: flagging_user.id, badge_id: Badge::FirstFlag).count
+        }
+      end
+    end
+
+    context "when the flag is a like" do
+      let!(:flag_post_action) do
+        Fabricate(
+          :flag_post_action,
+          post: flagged_post,
+          user: flagging_user,
+          post_action_type_id: PostActionType.types[:like],
+        )
+      end
+
+      it "does not grant the badge" do
+        expect { BadgeGranter.backfill(first_flag_badge) }.not_to change {
+          UserBadge.where(user_id: flagging_user.id, badge_id: Badge::FirstFlag).count
+        }
+      end
+    end
+  end
+
   describe "#seed" do
     let(:badge_id) { Badge.maximum(:id) + 1 }
 

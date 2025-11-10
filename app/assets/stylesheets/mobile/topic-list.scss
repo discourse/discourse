@@ -8,6 +8,10 @@
 .topic-list {
   &-body {
     border-width: 1px;
+
+    body:has(.topic-replies-toggle-wrapper) & {
+      border-width: 0;
+    }
   }
 
   .num.posts-map {
@@ -493,6 +497,7 @@ td .main-link {
 }
 
 .topic-replies-toggle-wrapper {
+  border-bottom: 0.15em solid var(--primary-low);
   width: 100%;
   display: flex;
   justify-content: center;
@@ -514,14 +519,5 @@ td .main-link {
         bottom: -0.15em;
       }
     }
-  }
-}
-
-#list-area .show-more .alert {
-  align-items: center;
-  gap: 0.5em;
-
-  &.loading {
-    color: var(--primary-medium);
   }
 }

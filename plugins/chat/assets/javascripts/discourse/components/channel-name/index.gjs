@@ -78,14 +78,12 @@ export default class ChatChannelName extends Component {
           />
         {{/if}}
 
-        {{#if this.showPluginOutlet}}
-          <PluginOutlet
-            @name="after-chat-channel-username"
-            @outletArgs={{lazyHash user=@user}}
-            @tagName=""
-            @connectorTagName=""
-          />
-        {{/if}}
+        <PluginOutlet
+          @name="after-chat-channel-username"
+          @outletArgs={{if this.showPluginOutlet (lazyHash user=@user)}}
+          @tagName=""
+          @connectorTagName=""
+        />
 
         {{#if (has-block)}}
           {{yield}}

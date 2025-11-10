@@ -165,6 +165,7 @@ group :development do
   gem "yard"
   gem "ruby-lsp", require: false
   gem "ruby-lsp-rails", require: false
+  gem "ruby-lsp-rspec", require: false
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"
@@ -195,6 +196,7 @@ gem "rack-mini-profiler", require: ["enable_rails_patches"]
 
 gem "unicorn", require: false, platform: :ruby
 gem "puma", require: false
+gem "pitchfork", require: false
 
 gem "rbtrace", require: false, platform: :mri
 

@@ -8,6 +8,7 @@ module DiscourseDev
     def populate!
       reasons = %i[must_approve_users invite_only suspect_user]
       @users
+        .reject(&:approved?)
         .sample(reasons.size)
         .zip(reasons)
         .each do |(user, reason)|

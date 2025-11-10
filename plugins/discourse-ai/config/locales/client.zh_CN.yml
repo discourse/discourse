@@ -174,7 +174,6 @@ zh_CN:
               label: "PM 发送者"
               description: "发送 PM 的用户（默认为系统）"
             notify_author_pm_message:
-              label: "PM 消息"
               description: "可选发送给作者的自定义消息"
             include_personal_messages:
               label: "包括个人消息"
@@ -294,10 +293,16 @@ zh_CN:
           complete_language_detection_description: "所有符合 %{total} 条件的帖子均已检测到其语言。"
           incomplete_language_detection_description: "%{done} 个符合条件的帖子中的 %{total} 个已检测到其语言。"
           backfill_disabled: "回填功能已禁用，仅翻译新帖子。"
-          description_tooltip:
-            other: '有 %{count} 个帖子可供翻译。'
+          backfill_message: "<a href='%{settingsUrl}'> Backfill 设置</a> 为翻译 %{date} 之后的所有帖子 — — 预计需要 %{eta}。"
+          eta_minutes:
+            other: "%{count} 分钟"
+          eta_hours:
+            other: "%{count} 小时"
+          eta_days:
+            other: "%{count} 天"
         progress_chart:
           title: "翻译进度"
+          tooltip_translated: "%{done} 篇非 %{language} 篇帖子已翻译，共 %{total} 篇"
           bar_done:
             other: "%{count} 个帖子"
         translations_menu:
@@ -804,6 +809,7 @@ zh_CN:
         cancel_streaming: "停止回复"
         default_pm_prefix: "[无标题 AI 机器人私信]"
         shortcut_title: "使用 AI 机器人启动私信"
+        shortcut_link: "AI 机器人"
         exit: "退出 AI 机器人"
         share: "复制 AI 对话"
         conversation_shared: "对话已复制"

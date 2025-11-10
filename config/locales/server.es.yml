@@ -2400,7 +2400,6 @@ es:
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
     create_post_for_category_and_tag_changes: "Crear una publicación de susurro cuando cambie la categoría o las etiquetas de un tema, requiere que las publicaciones de susurro estén activadas."
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se utilicen en ningún tema o mensaje personal a diario."
-    watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy observando y que también pertenezcan a una que haya silenciado"
     company_name: "Nombre de tu empresa u organización. Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad."
     governing_law: "Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y la Política de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades."
     city_for_disputes: "Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro."
@@ -2443,9 +2442,6 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    glimmer_post_stream_mode: "Controla si se utiliza la nueva implementación de flujo de publicaciones «glimmer». «auto» se activará automáticamente cuando todos tus temas y plugins estén listos. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins con ella hasta que la implementación esté finalizada y anunciada."
-    glimmer_post_stream_mode_auto_groups: "Activa la nueva implementación de flujo de publicaciones «glimmer» en modo «auto» para los grupos de usuarios especificados. Esta implementación está en desarrollo activo y no está pensada para su uso en producción. No desarrolles temas/plugins para ella hasta que la implementación esté finalizada y anunciada."
-    deactivate_widgets_rendering: "Desactiva el motor de renderizado de widgets heredados. Esto desactivará todos los widgets que no se hayan actualizado para los componentes Glimmer y forzará la activación incondicional del flujo de publicaciones Glimmer sin importar el valor del ajuste «glimmer_post_stream_mode». Este ajuste no se recomienda para sitios de producción, ya que puede dañar los temas y plugins existentes."
     floatkit_autocomplete_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en JQuery actual."
     floatkit_autocomplete_input_fields: "Activa el menú de autocompletar basado en Floatkit para los campos de entrada en los campos de búsqueda en pantalla completa y selector de grupos. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
     floatkit_autocomplete_chat_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
@@ -2582,9 +2578,6 @@ es:
       activity_after: "Mostrar temas con última actividad después de una fecha (AAAA-MM-DD o hace días)"
       created_before: "Mostrar temas creados antes de una fecha (AAAA-MM-DD o hace días)"
       created_after: "Mostrar temas creados después de una fecha (AAAA-MM-DD o hace días)"
-      created_by: "Mostrar temas creados por un usuario específico"
-      created_by_user: "Mostrar temas creados por nombre de usuario (sin @)"
-      created_by_multiple: "Mostrar temas creados por cualquiera de los usuarios especificados (separados por comas)"
       latest_post_before: "Mostrar temas con última publicación antes de una fecha (AAAA-MM-DD o hace días)"
       latest_post_after: "Mostrar temas con última publicación después de una fecha (AAAA-MM-DD o hace días)"
       likes_min: "Mostrar temas con al menos esta cantidad de «me gusta»"
@@ -5304,6 +5297,8 @@ es:
       reject_and_keep_deleted:
         title: "Mantener publicación eliminada"
         complete: "La publicación se ha rechazado y se ha mantenido eliminada."
+      scrub:
+        title: Borrar registro
       approve_and_restore:
         title: "Aprobar y restaurar publicación"
         complete: "Publicación aprobada y restaurada."
@@ -5333,6 +5328,8 @@ es:
         complete: "Usuario eliminado"
         reason: "Eliminado a través de la cola de revisiones"
       delete_and_block_user:
+        complete: "Usuario eliminado y bloqueado"
+      delete_user_block:
         complete: "Usuario eliminado y bloqueado"
   email_style:
     html_missing_placeholder: "La plantilla html debe incluir %{placeholder}"

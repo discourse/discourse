@@ -67,6 +67,66 @@ RSpec.describe Discourse do
     end
   end
 
+  describe ".after_unicorn_worker_fork" do
+    around do |example|
+      original_env = ENV.to_hash
+      original_config = ActiveRecord::Base.configurations
+      original_show_statement_timeout =
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"]
+
+      begin
+        example.run
+      ensure
+        ENV.replace(original_env)
+        ActiveRecord::Base.configurations = original_config
+        ActiveRecord::Base.connection_handler.clear_all_connections!(:all)
+        ActiveRecord::Base.establish_connection
+        GlobalSetting.configure!
+        GlobalSetting.load_defaults
+
+        expect(
+          ActiveRecord::Base.connection.execute("SHOW statement_timeout").first[
+            "statement_timeout"
+          ],
+        ).to eq(original_show_statement_timeout)
+      end
+    end
+
+    it "applies worker-specific database variable overrides in a production environment" do
+      test_database_config = Rails.application.config.database_configuration["test"]
+
+      # In the production environment, `DISCOURSE_` ENV variables are written to the `discourse.conf` file so we need
+      # to simulate that here in the test environment.
+      temp_discourse_conf = Tempfile.new("discourse.conf")
+      temp_discourse_conf.write <<~TEXT
+      db_name = #{test_database_config["database"]}
+      db_username = ""
+      db_variables_statement_timeout = 10s
+      unicorn_worker_db_variables_statement_timeout = 100s
+      TEXT
+      temp_discourse_conf.rewind
+
+      Rails.stubs(:env).returns(ActiveSupport::StringInquirer.new("production"))
+      GlobalSetting.configure!(path: temp_discourse_conf.path, use_blank_provider: false)
+      GlobalSetting.load_defaults
+
+      Discourse.after_unicorn_worker_fork
+
+      expect(
+        ActiveRecord::Base.connection.execute("SHOW statement_timeout").first["statement_timeout"],
+      ).to eq("100s")
+    ensure
+      %i[
+        db_variables_statement_timeout
+        unicorn_worker_db_variables_statement_timeout
+      ].each { |method| GlobalSetting.singleton_class.remove_method(method) }
+
+      allow(Rails).to receive(:env).and_call_original
+      temp_discourse_conf&.close
+      temp_discourse_conf&.unlink
+    end
+  end
+
   describe ".plugins_sorted_by_name" do
     before do
       Discourse.stubs(:visible_plugins).returns(

@@ -37,7 +37,7 @@ class FinalDestination
   end
 
   DEFAULT_USER_AGENT =
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36"
 
   attr_reader :status, :cookie, :status_code, :content_type, :ignored
 

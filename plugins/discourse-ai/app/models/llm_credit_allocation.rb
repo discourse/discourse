@@ -14,14 +14,11 @@ class LlmCreditAllocation < ActiveRecord::Base
 
   belongs_to :llm_model
 
+  # TODO: Remove once 20251105174003_remove_old_credit_columns_from_llm_credit_allocations has been promoted to pre-deploy
+  self.ignored_columns = %w[monthly_used last_reset_at]
+
   validates :llm_model_id, presence: true, uniqueness: true
   validates :monthly_credits, presence: true, numericality: { only_integer: true, greater_than: 0 }
-  validates :monthly_used,
-            presence: true,
-            numericality: {
-              only_integer: true,
-              greater_than_or_equal_to: 0,
-            }
   validates :soft_limit_percentage,
             presence: true,
             numericality: {
@@ -29,9 +26,19 @@ class LlmCreditAllocation < ActiveRecord::Base
               greater_than_or_equal_to: 0,
               less_than_or_equal_to: 100,
             }
-  validates :last_reset_at, presence: true
 
-  before_validation :set_last_reset_at, on: :create
+  def current_month_key
+    Time.current.strftime("%Y-%m")
+  end
+
+  def monthly_used
+    monthly_usage[current_month_key].to_i
+  end
+
+  def monthly_used=(value)
+    month_key = current_month_key
+    self.monthly_usage = (monthly_usage || {}).merge(month_key => value.to_i)
+  end
 
   def credits_remaining
     [0, monthly_credits - monthly_used].max
@@ -64,28 +71,15 @@ class LlmCreditAllocation < ActiveRecord::Base
   end
 
   def next_reset_at
-    return nil if last_reset_at.nil?
-    last_reset_at + 1.month
-  end
-
-  def reset_if_needed!
-    with_lock do
-      reload
-      return unless should_reset?
-
-      now = Time.current
-      update!(monthly_used: 0, last_reset_at: now)
-    end
-  end
-
-  def should_reset?
-    return false if last_reset_at.nil?
-    Time.current >= next_reset_at
+    Time.current.next_month.beginning_of_month
   end
 
   def deduct_credits!(credits)
     with_lock do
-      self.monthly_used += credits
+      reload
+      month_key = current_month_key
+      self.monthly_usage = monthly_usage.merge(month_key => monthly_used + credits)
+      cleanup_old_months!
       save!
     end
   end
@@ -112,7 +106,6 @@ class LlmCreditAllocation < ActiveRecord::Base
     allocation = llm_model.llm_credit_allocation
     return true unless allocation
 
-    allocation.reset_if_needed!
     allocation.credits_available?
   end
 
@@ -120,7 +113,6 @@ class LlmCreditAllocation < ActiveRecord::Base
     return unless llm_model&.credit_system_enabled?
 
     allocation = llm_model.llm_credit_allocation
-    allocation.reset_if_needed!
     allocation.check_credits!
   end
 
@@ -144,8 +136,9 @@ class LlmCreditAllocation < ActiveRecord::Base
 
   private
 
-  def set_last_reset_at
-    self.last_reset_at ||= Time.current
+  def cleanup_old_months!
+    cutoff = 6.months.ago.beginning_of_month.strftime("%Y-%m")
+    self.monthly_usage = monthly_usage.select { |k, _| k >= cutoff }
   end
 
   def format_reset_time
@@ -159,9 +152,8 @@ end
 # Table name: llm_credit_allocations
 #
 #  id                    :bigint           not null, primary key
-#  last_reset_at         :datetime         not null
 #  monthly_credits       :bigint           not null
-#  monthly_used          :bigint           default(0), not null
+#  monthly_usage         :jsonb            not null
 #  soft_limit_percentage :integer          default(80), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null

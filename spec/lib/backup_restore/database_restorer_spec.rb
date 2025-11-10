@@ -77,6 +77,10 @@ RSpec.describe BackupRestore::DatabaseRestorer do
         expect_restore_to_work("postgresql_15.14.sql")
       end
 
+      it "ignores unwanted SQL" do
+        expect_restore_to_work("unwanted.sql")
+      end
+
       it "detects error during restore" do
         expect { restore("error.sql", stub_migrate: false) }.to raise_error(
           BackupRestore::DatabaseRestoreError,
@@ -136,6 +140,21 @@ RSpec.describe BackupRestore::DatabaseRestorer do
         expect(log).to match(
           /^CREATE TRIGGER foo_user_id_readonly .+? EXECUTE FUNCTION discourse_functions.raise_foo_user_id_readonly/,
         )
+      end
+
+      it "removes unwanted SQL" do
+        log = restore_and_log_output("unwanted.sql")
+
+        expect(log).to include("CREATE TABLE public.foo")
+        expect(log).not_to be_blank
+        expect(log).not_to include("CREATE EXTENSION")
+        expect(log).not_to include("COMMENT ON EXTENSION")
+        expect(log).not_to include(
+          "CREATE FUNCTION discourse_functions.raise_topic_status_updates_readonly",
+        )
+        expect(log).not_to include("CREATE SERVER")
+        expect(log).not_to include("CREATE USER")
+        expect(log).not_to include("CREATE FOREIGN TABLE")
       end
     end
 

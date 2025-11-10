@@ -156,6 +156,8 @@ ko:
       chat_message_separator:
         today: 오늘
         yesterday: 어제
+      search_view:
+        filter_placeholder: 메시지 검색
       members_view:
         filter_placeholder: 회원 찾기
       about_view:
@@ -168,6 +170,7 @@ ko:
         tabs:
           members: 회원
           settings: 설정
+          search: 검색
         remove_member: "제거"
       new_message_modal:
         title: 전송
@@ -211,6 +214,7 @@ ko:
           topic: "글"
       reviewable:
         type: "채팅 메시지"
+        message_in_channel: "채널"
       composer:
         toggle_toolbar: "툴바 전환"
         italic_text: "강조하기"
@@ -246,6 +250,11 @@ ko:
           title: "채팅 내보내기"
           create_export: "내보내기"
           export_has_started: "내보내기가 시작되었습니다. 준비가 되면 메시지를 받을 것입니다."
+      search:
+        no_results: "검색된 결과가 없습니다"
+        sort:
+          relevance: "관련성"
+          latest: "최신"
       direct_messages:
         create: "이동"
         leave: "이 개인 채팅에서 나가기"

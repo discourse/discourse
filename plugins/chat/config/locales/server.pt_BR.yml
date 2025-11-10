@@ -106,6 +106,10 @@ pt_BR:
     reviewables:
       message_already_handled: "Obrigado, mas já analisamos esta mensagem e determinamos que ela não precisa ser sinalizada novamente."
       actions:
+        no_action_message:
+          title: "Sem ação"
+        restore_message:
+          description: "Restaure a mensagem para que os(as) usuários(as) possam vê-las."
         agree:
           title: "Concordo..."
         agree_and_keep_message:
@@ -184,7 +188,7 @@ pt_BR:
         slug_contains_non_ascii_chars: "contém caracteres não ascii"
         is_already_in_use: "já está em uso"
     bookmarkable:
-      notification_title: "mensagem em %{channel_name}"
+      notification_title_channel: "mensagem em %{channel_name}"
     personal_chat: "chat pessoal"
     onebox:
       inline_to_message: "Mensagem #%{message_id} por %{username} – #%{chat_channel}"

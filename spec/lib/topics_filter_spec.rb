@@ -192,6 +192,37 @@ RSpec.describe TopicsFilter do
             .pluck(:id)
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
       end
+
+      context "with whispers" do
+        fab!(:whisperer_group, :group)
+        fab!(:whisperer_user) { Fabricate(:user).tap { |u| whisperer_group.add(u) } }
+        fab!(:regular_user, :user)
+        fab!(:topic_with_whisper_only) do
+          Fabricate(:post, user: u1, post_type: Post.types[:whisper]).topic
+        end
+
+        before { SiteSetting.whispers_allowed_groups = "#{whisperer_group.id}" }
+
+        it "users:alice should not return topics where alice only whispered when viewed by non-whisperer" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(regular_user))
+              .filter_from_query_string("users:alice")
+              .pluck(:id)
+          expect(ids).not_to include(topic_with_whisper_only.id)
+          expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
+        end
+
+        it "group:group1 should not return topics where group members only whispered when viewed by non-whisperer" do
+          ids =
+            TopicsFilter
+              .new(guardian: Guardian.new(regular_user))
+              .filter_from_query_string("group:group1")
+              .pluck(:id)
+          expect(ids).not_to include(topic_with_whisper_only.id)
+          expect(ids).to include(topic_by_u1.id, topic_by_u1_and_u2.id)
+        end
+      end
     end
 
     describe "ordering by hot score" do
@@ -1027,15 +1058,36 @@ RSpec.describe TopicsFilter do
 
       after { TopicsFilter.custom_status_filters.clear }
 
-      it "supports custom status filters" do
-        TopicsFilter.add_filter_by_status("foobar") { |scope| scope.where("word_count = 42") }
+      context "with custom status filters" do
+        let(:enabled?) { true }
 
-        expect(
-          TopicsFilter
-            .new(guardian: Guardian.new)
-            .filter_from_query_string("status:foobar")
-            .pluck(:id),
-        ).to contain_exactly(foobar_topic.id)
+        before do
+          TopicsFilter.add_filter_by_status("foobar", enabled: method(:enabled?)) do |scope|
+            scope.where("word_count = 42")
+          end
+        end
+
+        it "applies the custom filter" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("status:foobar")
+              .pluck(:id),
+          ).to contain_exactly(foobar_topic.id)
+        end
+
+        context "when the filter is disabled" do
+          let(:enabled?) { false }
+
+          it "does not apply the custom filter" do
+            expect(
+              TopicsFilter
+                .new(guardian: Guardian.new)
+                .filter_from_query_string("status:foobar")
+                .pluck(:id),
+            ).to contain_exactly(*Topic.all.pluck(:id))
+          end
+        end
       end
 
       it "should only return topics that have not been closed or archived when query string is `status:open`" do
@@ -1668,6 +1720,169 @@ RSpec.describe TopicsFilter do
           ).to eq([])
         end
       end
+
+      describe "when query string is `created-by:me`" do
+        it "should return the topics created by the current user" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("created-by:me")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_user.id, topic2_by_user.id)
+        end
+
+        it "should not return any topics when there is no current user" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:me")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+    end
+
+    describe "when filtering by topic creator's group" do
+      fab!(:group1) { Fabricate(:group, name: "group1") }
+      fab!(:group2) { Fabricate(:group, name: "group2") }
+
+      fab!(:user_in_group1) { Fabricate(:user).tap { |u| group1.add(u) } }
+      fab!(:user_in_group2) { Fabricate(:user).tap { |u| group2.add(u) } }
+      fab!(:user_in_both_groups) do
+        Fabricate(:user).tap do |u|
+          group1.add(u)
+          group2.add(u)
+        end
+      end
+
+      fab!(:topic_by_group1_user) { Fabricate(:topic, user: user_in_group1) }
+      fab!(:topic_by_group2_user) { Fabricate(:topic, user: user_in_group2) }
+      fab!(:topic_by_both_groups_user) { Fabricate(:topic, user: user_in_both_groups) }
+
+      describe "when query string is `created-by:group1`" do
+        it "should return topics created by users in the specified group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:group1")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_group1_user.id, topic_by_both_groups_user.id)
+        end
+      end
+
+      describe "when query string is `created-by:group2`" do
+        it "should return topics created by users in the specified group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:group2")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_group2_user.id, topic_by_both_groups_user.id)
+        end
+      end
+
+      describe "when query string is `created-by:group1,group2`" do
+        it "should return topics created by users in any of the specified groups" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:group1,group2")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_by_group1_user.id,
+            topic_by_group2_user.id,
+            topic_by_both_groups_user.id,
+          )
+        end
+      end
+
+      describe "when query string is `created-by:invalid`" do
+        it "should not return any topics" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:invalid")
+              .pluck(:id),
+          ).to eq([])
+        end
+      end
+
+      describe "when query string is `created-by:group1,invalid`" do
+        it "should only return topics created by users in the valid group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:group1,invalid")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_group1_user.id, topic_by_both_groups_user.id)
+        end
+      end
+
+      describe "with group visibility restrictions" do
+        fab!(:private_group) do
+          Fabricate(:group, visibility_level: Group.visibility_levels[:members])
+        end
+        fab!(:super_private_group) do
+          Fabricate(:group, visibility_level: Group.visibility_levels[:owners])
+        end
+
+        fab!(:owner_of_super_private_group) do
+          Fabricate(:user).tap { |u| super_private_group.add_owner(u) }
+        end
+
+        fab!(:user_in_private_group) { Fabricate(:user).tap { |u| private_group.add(u) } }
+        fab!(:user_in_super_private_group) do
+          Fabricate(:user).tap { |u| super_private_group.add(u) }
+        end
+
+        fab!(:topic_by_private_group_user) { Fabricate(:topic, user: user_in_private_group) }
+        fab!(:topic_by_super_private_group_owner) do
+          Fabricate(:topic, user: owner_of_super_private_group)
+        end
+        fab!(:topic_by_super_private_group_user) do
+          Fabricate(:topic, user: user_in_super_private_group)
+        end
+        it "should not return topics when user cannot see the group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("created-by:#{private_group.name}")
+              .pluck(:id),
+          ).to eq([])
+        end
+
+        it "should return topics when user is a member of the private group" do
+          private_group.add(user)
+
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user))
+              .filter_from_query_string("created-by:#{private_group.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_by_private_group_user.id)
+        end
+
+        it "does not filter topics when user cannot see members of the group" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(user_in_super_private_group))
+              .filter_from_query_string("created-by:#{super_private_group.name}")
+              .pluck(:id),
+          ).to eq([])
+        end
+
+        it "returns topics when user can see group members" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new(owner_of_super_private_group))
+              .filter_from_query_string("created-by:#{super_private_group.name}")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_by_super_private_group_owner.id,
+            topic_by_super_private_group_user.id,
+          )
+        end
+      end
     end
 
     shared_examples "filtering for topics by counts" do |filter|
@@ -2204,6 +2419,19 @@ RSpec.describe TopicsFilter do
       filter = TopicsFilter.new(guardian: guardian)
       scope = filter.filter_from_query_string("keyword1 keyword2")
       expect(scope.pluck(:id)).to eq([post1.topic_id])
+    end
+
+    it "excludes topics with only deleted or hidden posts from keyword search" do
+      SearchIndexer.enable
+      visible_post = Fabricate(:post, raw: "searchterm")
+      _deleted_post = Fabricate(:post, raw: "searchterm", deleted_at: Time.zone.now)
+      _hidden_post = Fabricate(:post, raw: "searchterm", hidden: true)
+      _whisper_post = Fabricate(:post, raw: "searchterm", post_type: Post.types[:whisper])
+
+      filter = TopicsFilter.new(guardian: Guardian.new)
+      scope = filter.filter_from_query_string("searchterm")
+
+      expect(scope.pluck(:id)).to contain_exactly(visible_post.topic_id)
     end
 
     describe "with a custom filter" do

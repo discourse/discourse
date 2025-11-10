@@ -196,7 +196,7 @@ sq:
     welcome_banner:
       header:
         anonymous_members: "Mirë se vini tek %{site_name}!"
-      search: "Kërko"
+      search_placeholder: "Kërko"
     themes:
       default_description: "Paracaktuar"
       error_caused_by: "Shkaktuar nga '%{name}'. <a target='blank' href='%{path}'>Klikoni këtu</a> për të përditësuar, rikonfiguruar ose çaktivizuar."
@@ -474,6 +474,7 @@ sq:
       other: "Shikoni %{count} tema të reja"
     preview: "shiko"
     cancel: "Anulo"
+    done: "Përfundo"
     deleting: "Po fshihet…"
     save: "Ruaj ndryshimet"
     saving: "Po ruhet..."
@@ -547,10 +548,6 @@ sq:
         required: "Ju duhet të përvetësoni artikuj para se t'i rishikoni ato."
         claimed_by_you: "Ju e keni përvetësuar këtë artikull dhe mund ta rishikoni atë."
         claimed_by_other: "Ky artikull mund të shqyrtohet vetëm nga <b>%{username}</b>."
-      claim:
-        title: "përvetësoni këtë temë"
-      unclaim:
-        help: "hiqni këtë përvetësim"
       awaiting_approval: "Në pritje të miratimit"
       delete: "Fshij"
       settings:
@@ -698,10 +695,12 @@ sq:
         reviewable_post:
           title: "Postim"
           noun: "postim"
+      user_label: "User"
       notes:
         delete: "Fshij"
       review_user: "User"
       copy_link: "Kopjoni lidhjen"
+      copy_link_feedback: "Lidhja u kopjua"
       insights:
         activities:
           posts:
@@ -2491,7 +2490,6 @@ sq:
       reply: "Përgjigju"
       cancel: "Anulo"
       create_topic: "Krijo temën"
-      create_pm: "Dërgo Mesazh"
       create_whisper: "Pëshpëritje"
       create_shared_draft: "Krijo draft të përbashkët"
       edit_shared_draft: "Redakto draftin e përbashkët"
@@ -2566,7 +2564,6 @@ sq:
           label: Ndërroni pëshpëritjen
           desc: Pashërritjet janë të dukshme vetëm për anëtarët e stafit
         create_topic:
-          label: "Temë e re"
           desc: Krijoni një temë të re
         shared_draft:
           label: "Drafti i përbashkët"
@@ -3037,7 +3034,7 @@ sq:
         one: "%{count} postim në temë"
         other: "%{count} postime në temë"
       create: "Temë e re"
-      create_long: "Hap një temë të re"
+      create_long: "Krijoni një temë të re"
       open_draft: "Draft i hapur"
       private_message: "Fillo një mesazh"
       archive_message:
@@ -3167,9 +3164,6 @@ sq:
       auto_close_immediate:
         one: "Postimi i fundit në temë është tashmë %{count} orë i vjetër, kështu që tema do të mbyllet menjëherë."
         other: "Postimi i fundit në temë është tashmë %{count} orë i vjetër, kështu që tema do të mbyllet menjëherë."
-      auto_close_momentarily:
-        one: "Postimi i fundit në temë është tashmë %{count} orë i vjetër, kështu që tema do të mbyllet për momentin."
-        other: "Postimi i fundit në temë është tashmë %{count} orë i vjetër, kështu që tema do të mbyllet për momentin."
       timeline:
         back: "Kthehu mbrapa"
         back_description: "Kthehu mbrapa tek postimi i fundit i palexuar"
@@ -3748,7 +3742,7 @@ sq:
       readonly: "Shiko"
     preloader_text: "Loading"
     lightbox:
-      download: "shkarko"
+      download: "Shkarko"
       counter: "%curr% nga %total%"
     keyboard_shortcuts_help:
       title: "Shkurtimet e tastierës "
@@ -3980,6 +3974,7 @@ sq:
         categories: "Të gjitha kategoritë"
   admin_js:
     settings: "Rregullimet"
+    reset_filter: "Rivendosni"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -3998,6 +3993,19 @@ sq:
           title: "Siguria"
         plugins:
           title: "Pluginet"
+      upcoming_changes:
+        name: "Emri"
+        enabled: "Aktivizuar"
+        preview: "Parashikimi"
+        impact_roles:
+          admins: "Administratorët"
+          moderators: "Moderatorë"
+          staff: "Stafi"
+        filter:
+          all: "Të gjitha"
+          enabled: "Aktivizuar"
+          disabled: "E çaktivizuar"
+          impact_type_other: "Të tjerë"
       config:
         developer:
           title: "Developer"
@@ -4708,7 +4716,6 @@ sq:
             cancel: "Anulo"
           confirmation:
             cancel: "Anulo"
-        delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
         deleted: "Anëtari u fshi."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
         send_activation_email: "Dërgo Emailin e Aktivizimit"

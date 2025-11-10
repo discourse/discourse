@@ -277,6 +277,16 @@ tr_TR:
         card: "Kart"
       translations:
         title: "Çeviriler"
+        stats:
+          eta_minutes:
+            one: "%{count} dakika"
+            other: "%{count} dakika"
+          eta_hours:
+            one: "%{count} saat"
+            other: "%{count} saat"
+          eta_days:
+            one: "%{count} gün"
+            other: "%{count} gün"
         progress_chart:
           bar_done:
             one: "%{count} gönderi"
@@ -781,6 +791,7 @@ tr_TR:
         cancel_streaming: "Yanıtı durdur"
         default_pm_prefix: "[Adsız YZ bot kişisel mesajı]"
         shortcut_title: "YZ botuyla kişisel mesaj başlatın"
+        shortcut_link: "YZ botu"
         exit: "YZ botundan çık"
         share: "YZ konuşmasını kopyala"
         conversation_shared: "Konuşma kopyalandı"

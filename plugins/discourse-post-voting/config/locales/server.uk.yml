@@ -37,6 +37,29 @@ uk:
     post_voting_comment_enabled: "Дозволити коментування дописів у темах для голосування"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        comment_actions:
+          bundle_title: "Що ви хочете зробити з коментарем?"
+        no_action_comment:
+          title: "Немає дій"
+          description: "Залиште коментар як є."
+        agree_and_keep_comment:
+          title: "Залишити коментар"
+          description: "Погоджуюся з позначкою та залишаю коментар без змін."
+        agree_and_keep_deleted:
+          title: "Залишити коментар видаленим"
+          description: "Погоджуюся з позначкою та позначаю коментар видаленим."
+        agree_and_restore:
+          title: "Відновити коментар"
+          description: "Відновіть коментар, щоб користувачі могли його бачити."
+        agree_and_delete:
+          title: "Видалити коментар"
+          description: "Видаліть коментар щоб користувачі не могли його бачити."
+        disagree_and_restore:
+          title: "Не погоджуюся та відновлюю коментар"
+          description: "Відновіть коментар, щоб його могли бачити всі користувачі."
   post_action_types:
     vote:
       title: "Голосувати"

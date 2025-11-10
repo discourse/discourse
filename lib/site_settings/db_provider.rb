@@ -57,4 +57,11 @@ class SiteSettings::DbProvider
     @table_exists ||= {}
     @table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(@model.table_name)
   end
+
+  def site_setting_groups_table_exists?
+    @site_setting_groups_table_exists ||= {}
+    @site_setting_groups_table_exists[current_site] ||= ActiveRecord::Base.connection.table_exists?(
+      "site_setting_groups",
+    )
+  end
 end

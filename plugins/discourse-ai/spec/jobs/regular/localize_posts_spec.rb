@@ -44,6 +44,13 @@ describe Jobs::LocalizePosts do
     job.execute({ limit: 10 })
   end
 
+  it "skips translation when credits are unavailable" do
+    DiscourseAi::Translation.expects(:credits_available_for_post_localization?).returns(false)
+    DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+    job.execute({ limit: 10 })
+  end
+
   it "does nothing when there are no posts to translate" do
     Post.destroy_all
     DiscourseAi::Translation::PostLocalizer.expects(:localize).never
@@ -133,6 +140,22 @@ describe Jobs::LocalizePosts do
       Fabricate(:post_localization, post: post, locale: "de_DE")
 
       DiscourseAi::Translation::PostLocalizer.expects(:localize).never
+
+      job.execute({ limit: 10 })
+    end
+  end
+
+  context "when relocalize quota is exhausted" do
+    before { post.update(locale: "es") }
+
+    it "skips localization for posts that have exceeded quota for a specific locale" do
+      DiscourseAi::Translation::PostLocalizer::MAX_QUOTA_PER_DAY.times do
+        DiscourseAi::Translation::PostLocalizer.has_relocalize_quota?(post, "en")
+      end
+
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "en").never
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "ja").once
+      DiscourseAi::Translation::PostLocalizer.expects(:localize).with(post, "de").once
 
       job.execute({ limit: 10 })
     end

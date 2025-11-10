@@ -325,7 +325,7 @@ hr:
       header:
         logged_in_members: "Dobrodošli natrag, %{preferred_display_name}!"
         anonymous_members: "Dobrodošli na %{site_name}"
-      search: "Pretraživanje"
+      search_placeholder: "Pretraživanje"
     impersonation:
       notice: "Lažno se predstavljaš kao %{username}"
       stop: "Prestani se lažno predstavljati"
@@ -649,6 +649,7 @@ hr:
       other: "Pregledajte %{count} nove teme."
     preview: "Predprikaz"
     cancel: "Odustani"
+    done: "Gotovo"
     deleting: "Brisanje…"
     save: "Zabilježi promjene"
     saving: "Spremanje…"
@@ -738,10 +739,6 @@ hr:
         claimed_by_you: "Prisvojili ste ovu stavku i možete dodati osvrt."
         claimed_by_other: "Osvrt za ovu stavku može dodati samo <b>%{username}</b>."
         automatically_claimed_by: "<b>%{username}</b> trenutno pregledava ovaj sadržaj."
-      claim:
-        title: "prisvoji ovu temu"
-      unclaim:
-        help: "izbriši prisvajanje"
       awaiting_approval: "Čeka na odobrenje"
       delete: "Pobriši"
       settings:
@@ -906,6 +903,7 @@ hr:
           title: "Objava"
           noun: "Objava"
       flagged_as: "Označeno kao"
+      user_label: "Korisnik"
       assigned_to: "Dodijeljeno"
       moderator_actions: "Radnje moderatora"
       timeline_and_notes: "Vremenska linija i bilješke"
@@ -936,6 +934,7 @@ hr:
       review_user: "Korisnik"
       need_help: "Trebate pomoć?"
       copy_link: "Kopirajte poveznicu"
+      copy_link_feedback: "Poveznica kopirana"
       view_source: "Pogledajte izvor"
       insights:
         title: "Uvidi"
@@ -2899,7 +2898,6 @@ hr:
       reply: "Odgovori"
       cancel: "Odustani"
       create_topic: "Pokreni temu"
-      create_pm: "Pošalji poruku"
       create_whisper: "Šapat"
       create_shared_draft: "Stvori zajedničku skicu"
       edit_shared_draft: "Uredi zajedničku skicu"
@@ -3006,6 +3004,9 @@ hr:
         create_topic:
           label: "Nova tema"
           desc: Stvori novu temu
+        create_personal_message:
+          label: "Nova poruka"
+          desc: "Unesite novu privatnu poruku"
         shared_draft:
           label: "Zajednička skica"
           desc: "Skiciraj temu koja će biti vidljiva samo ovlaštenim korisnicima"
@@ -3532,7 +3533,7 @@ hr:
         few: "%{count} objava u temi"
         other: "%{count} objave u temi"
       create: "Nova tema"
-      create_long: "Otvori novu temu"
+      create_long: "Stvori novu temu"
       open_draft: "Otvori skicu"
       private_message: "Pokrenite poruku"
       archive_message:
@@ -3709,10 +3710,6 @@ hr:
         one: "Posljednji post u ovoj temi je star već %{count} sat, stoga će tema odmah biti zatvorena."
         few: "Posljednji post u ovoj temi je star već %{count} sati, stoga će tema odmah biti zatvorena."
         other: "Posljednji post u ovoj temi je star već %{count} sati, stoga će tema odmah biti zatvorena."
-      auto_close_momentarily:
-        one: "Posljednji post u ovoj temi je star već %{count} sat, stoga će tema odmah biti zatvorena."
-        few: "Zadnji post u temi star je već %{count} sati, tako da će se tema trenutno zatvoriti."
-        other: "Zadnji post u temi star je već %{count} sati, tako da će se tema trenutno zatvoriti."
       timeline:
         back: "Natrag"
         back_description: "Vrati se na posljednju nepročitanu poruku"
@@ -4756,8 +4753,7 @@ hr:
       readonly: "Vidjeti"
     preloader_text: "Učitavanje"
     lightbox:
-      download: "preuzmi"
-      open: "izvorna slika"
+      download: "Preuzmi"
       previous: "Prethodno (tipka sa strelicom ulijevo)"
       next: "Sljedeće (tipka sa strelicom desno)"
       counter: "%curr% od %total%"
@@ -5495,6 +5491,7 @@ hr:
   admin_js:
     type_to_filter: "Upišite za filtriranje…"
     settings: "Postavke"
+    reset_filter: "Resetirati"
     admin:
       title: "Administrator"
       moderator: "Moderator"
@@ -5527,6 +5524,20 @@ hr:
           title: "Dodaci"
         advanced:
           title: "Napredno"
+      upcoming_changes:
+        name: "Ime"
+        enabled: "Omogućeno"
+        select_groups: "Odaberite grupe"
+        preview: "Pregled"
+        impact_roles:
+          admins: "Admini"
+          moderators: "Moderatori"
+          staff: "Osoblje"
+        filter:
+          all: "Sve"
+          enabled: "Omogućeno"
+          disabled: "Onemogućeno"
+          impact_type_other: "Ostalo"
       config:
         about:
           title: "O vašoj web stranici"
@@ -7170,8 +7181,7 @@ hr:
             cancel: "Odustani"
         merging_user: "Spajanje korisnika…"
         merge_failed: "Došlo je do pogreške prilikom spajanja korisnika."
-        delete_forbidden_because_staff: "Administratori se ne mogu izbrisati."
-        delete_posts_forbidden_because_staff: "Nije moguće obrisati sve objave administratora i moderatora."
+        delete_forbidden_because_admin: "Administratori se ne mogu izbrisati."
         delete_forbidden:
           one: "Korisnici ne mogu biti obrisani ako imaju objava. Obrišite sve njihove objave prije nego pokušate obrisati korisnika. (Objave starije od %{dana] ne mogu biti obrisane.)"
           few: "Korisnici ne mogu biti obrisani ako imaju objava. Obrišite sve njihove objave prije nego pokušate obrisati korisnika. (Objave starije od %{dana] ne mogu biti obrisane.)"

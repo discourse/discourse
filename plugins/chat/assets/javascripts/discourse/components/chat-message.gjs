@@ -92,6 +92,10 @@ export default class ChatMessage extends Component {
     return this.threadContext ? this.chatThreadPane : this.chatChannelPane;
   }
 
+  get includeSeparator() {
+    return this.args.includeSeparator ?? true;
+  }
+
   get messageInteractor() {
     return new ChatMessageInteractor(
       getOwner(this),
@@ -527,10 +531,12 @@ export default class ChatMessage extends Component {
   <template>
     {{! template-lint-disable no-invalid-interactive }}
     {{#if this.shouldRender}}
-      <ChatMessageSeparator
-        @fetchMessagesByDate={{@fetchMessagesByDate}}
-        @message={{@message}}
-      />
+      {{#if this.includeSeparator}}
+        <ChatMessageSeparator
+          @fetchMessagesByDate={{@fetchMessagesByDate}}
+          @message={{@message}}
+        />
+      {{/if}}
 
       <div
         class={{concatClass
@@ -611,7 +617,10 @@ export default class ChatMessage extends Component {
                   @threadContext={{this.threadContext}}
                 />
               {{else}}
-                <ChatMessageAvatar @message={{@message}} />
+                <ChatMessageAvatar
+                  @message={{@message}}
+                  @interactive={{@interactive}}
+                />
               {{/if}}
 
               <div class="chat-message-content">
@@ -619,6 +628,7 @@ export default class ChatMessage extends Component {
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
                   @threadContext={{this.threadContext}}
+                  @dateMode={{@dateMode}}
                 />
 
                 <ChatMessageText
@@ -635,6 +645,7 @@ export default class ChatMessage extends Component {
                           @onReaction={{this.messageInteractor.react}}
                           @message={{@message}}
                           @showTooltip={{true}}
+                          @interactive={{@interactive}}
                         />
                       {{/each}}
 

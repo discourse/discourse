@@ -195,7 +195,7 @@ hy:
     welcome_banner:
       header:
         anonymous_members: "Բարի գալուստ %{site_name}!"
-      search: "Որոնում"
+      search_placeholder: "Որոնում"
     themes:
       default_description: "Լռելյայն"
       error_caused_by: "Սխալ “%{name}” թեմայի պատճառով: <a target='blank' href='%{path}'>Սեղմեք այստեղ</a> թարմացնելու, վերաձևակերպելու կամ անջատելու համար:"
@@ -471,6 +471,7 @@ hy:
       other: "Դիտել %{count} նոր թեմաները"
     preview: "նախադիտում"
     cancel: "Չեղարկել"
+    done: "Կատարված է"
     deleting: "Ջնջվում է…"
     save: "Պահպանել Փոփոխությունները"
     saving: "Պահպանվում է…"
@@ -545,10 +546,6 @@ hy:
         required: "Դուք պետք է նախ՝ հայտ ներկայացնեք, որպեսզի կարողանաք այն դիտեք: "
         claimed_by_you: "Դուք վերցրել եք այդ էլեմենտը և կարող եք այն դիտել: "
         claimed_by_other: "Այս կետը կարելի է դիտել միայն <b>%{username}</b>."
-      claim:
-        title: "հայտարարել այս թեման"
-      unclaim:
-        help: "Ջնջել այս պահանջը"
       awaiting_approval: "Հաստատմումը սպասման մեջ է"
       delete: "Ջնջել"
       settings:
@@ -695,6 +692,7 @@ hy:
         reviewable_post:
           title: "Գրառում"
           noun: "գրառում"
+      user_label: "Օգտատեր"
       notes:
         delete: "Ջնջել"
       review_user: "Օգտատեր"
@@ -2265,7 +2263,6 @@ hy:
       reply: "Պատասխանել"
       cancel: "Չեղարկել"
       create_topic: "Ստեղծել Թեմա"
-      create_pm: "Ուղարկել Հաղորդագրությունը"
       create_whisper: "Շշնջալ"
       create_shared_draft: "Ստեղծել Կիսված Սևագիր"
       edit_shared_draft: "Խմբագրել Կիսված Սևագիրը"
@@ -2325,8 +2322,9 @@ hy:
         toggle_whisper:
           label: Փոխանջատել շշնջումը
           desc: Շշուկները տեսանելի են միայն անձնակազմին
-        create_topic:
-          label: "Նոր Թեմա"
+        create_personal_message:
+          label: "Նոր հաղորդագրություն"
+          desc: "Գրել նոր անձնական նամակ"
         shared_draft:
           label: "Ստեղծել Կիսված Սևագիր"
         toggle_topic_bump:
@@ -2624,7 +2622,6 @@ hy:
         one: "%{count} հրապարակում թեմայում"
         other: "%{count} գրառում թեմայում"
       create: "Նոր Թեմա"
-      create_long: "Ստեղծել Նոր Թեմա"
       open_draft: "Բացել Սևագիրը"
       private_message: "Սկսել հաղորդագրություն"
       archive_message:
@@ -3471,7 +3468,7 @@ hy:
       readonly: "Դիտել"
     preloader_text: "Բեռնում"
     lightbox:
-      download: "ներբեռնել"
+      download: "Ներբեռնել"
       previous: "Նախորդ (սլաքի Ձախ ստեղնը)"
       next: "Հաջորդ (սլաքի Աջ ստեղնը)"
       counter: "%curr% %total% -ից"
@@ -3826,6 +3823,7 @@ hy:
         categories: "Բոլոր կատեգորիաները"
   admin_js:
     settings: "Կարգավորումներ"
+    reset_filter: "Վերահաստատե;"
     admin:
       title: "Discourse Ադմին"
       moderator: "Մոդերատոր"
@@ -3853,6 +3851,16 @@ hy:
           title: "Անվտանգություն"
         plugins:
           title: "Հավելումներ"
+      upcoming_changes:
+        name: "Անուն"
+        preview: "Նախադիտում"
+        impact_roles:
+          moderators: "Մոդերատորներ"
+          staff: "Անձնակազմ"
+        filter:
+          all: "Բոլոր"
+          disabled: "Անջատված"
+          impact_type_other: "Այլ"
       config:
         developer:
           title: "Ծրագրավորող"
@@ -4995,7 +5003,6 @@ hy:
             transfer_and_delete: "Միավորել կայքի բովանդակությունը և Ջնջել օգտատերերին @%{username}"
             cancel: "Չեղարկել"
         merge_failed: "Օգտատերերին միավորելիս սխալ է տեղի ունեցել:"
-        delete_posts_forbidden_because_staff: "Չհաջողվեց ջնջել ադմինների և մոդերատորների բոլոր գրառումները:"
         delete_forbidden:
           one: "Օգտատերերը չեն կարող ջնջվել, եթե նրանք ունեն գրառումներ: Ջնջեք բոլոր գրառումները՝ մինչ օգտատիրոջը ջնջել փորձելը: (%{count} օրվանից հին գրառումները չեն կարող ջնջվել:)"
           other: "Օգտատերերը չեն կարող ջնջվել, եթե նրանք գրառումներ ունեն: Ջնջեք բոլոր գրառումները՝ մինչ օգտատիրոջը ջնջել փորձելը: (%{count} օրվանից հին գրառումները չեն կարող ջնջվել:)"

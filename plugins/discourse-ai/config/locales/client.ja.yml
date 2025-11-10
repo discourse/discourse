@@ -278,6 +278,13 @@ ja:
         admin_actions:
           translation_settings: "翻訳の設定"
           localization_settings: "ローカリゼーションの設定"
+        stats:
+          eta_minutes:
+            other: "%{count} 分"
+          eta_hours:
+            other: "%{count} 時間"
+          eta_days:
+            other: "%{count} 日"
         progress_chart:
           bar_done:
             other: "投稿 %{count} 件"
@@ -777,6 +784,7 @@ ja:
         cancel_streaming: "返信を停止する"
         default_pm_prefix: "[無題の AI ボット PM]"
         shortcut_title: "AI ボットと PM を開始する"
+        shortcut_link: "AI ボット"
         exit: "AI ボットを終了"
         share: "AI の会話のコピー"
         conversation_shared: "会話をコピーしました"

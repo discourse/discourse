@@ -297,7 +297,7 @@ hu:
       header:
         logged_in_members: "Üdv újra itt, %{preferred_display_name}!"
         anonymous_members: "Üdvözöljük a(z) %{site_name} oldalon."
-      search: "Keresés"
+      search_placeholder: "Keresés"
     impersonation:
       notice: "Te %{username} személyét utánozod"
       stop: "Hagyd abba az utánzást"
@@ -598,6 +598,7 @@ hu:
       other: "%{count} új téma megtekintése"
     preview: "előnézet"
     cancel: "Mégse"
+    done: "Kész"
     deleting: "Törlés…"
     save: "Módosítások mentése"
     saving: "Mentés…"
@@ -686,10 +687,6 @@ hu:
         claimed_by_you: "Zárolta ezt az elemet, és most már jóváhagyhatja."
         claimed_by_other: "Ezt az elemet csak <b>%{username}</b> hagyhatja jóvá."
         automatically_claimed_by: "Ezt az elemet <b>%{username}</b> vizsgálja felül."
-      claim:
-        title: "téma zárolása"
-      unclaim:
-        help: "zárolás eltávolítása"
       awaiting_approval: "Jóváhagyásra vár"
       delete: "Törlés"
       settings:
@@ -845,6 +842,7 @@ hu:
           title: "Bejegyzés"
           noun: "bejegyzéssel"
       flagged_as: "Megjelölt"
+      user_label: "Felhasználó"
       assigned_to: "Hozzárendelve"
       moderator_actions: "Moderátori intézkedések"
       timeline_and_notes: "Idővonal és jegyzetek"
@@ -875,6 +873,7 @@ hu:
       review_user: "Felhasználó"
       need_help: "Segítségre van szüksége?"
       copy_link: "Hivatkozás másolása"
+      copy_link_feedback: "Hivatkozás másolva"
       view_source: "Forrás megtekintése"
       insights:
         title: "Betekintések"
@@ -2868,6 +2867,9 @@ hu:
         create_topic:
           label: "Új téma"
           desc: Új téma létrehozása
+        create_personal_message:
+          label: "Új üzenet"
+          desc: "Új személyes üzenet létrehozása"
         shared_draft:
           label: "Megosztott vázlat"
           desc: "Témavázlat készítése, amely csak az engedélyezett felhasználók számára látható"
@@ -3529,9 +3531,6 @@ hu:
       auto_close_immediate:
         one: "A téma utolsó bejegyzése már %{count} órás, ezért a téma azonnal lezárásra kerül."
         other: "A téma utolsó bejegyzése már %{count} órás, ezért a téma azonnal lezárásra kerül."
-      auto_close_momentarily:
-        one: "A téma utolsó bejegyzése már %{count} órás, ezért a téma hamarosan lezárásra kerül."
-        other: "A téma utolsó bejegyzése már %{count} órás, ezért a téma hamarosan lezárásra kerül."
       timeline:
         back: "Vissza"
         back_description: "Vissza az utolsó olvasatlan bejegyzéshez"
@@ -4542,8 +4541,7 @@ hu:
       readonly: "Megtekintés"
     preloader_text: "Betöltés"
     lightbox:
-      download: "letöltés"
-      open: "eredeti kép"
+      download: "Letöltés"
       previous: "Előző (balra nyíl billentyű)"
       next: "Következő (jobbra nyíl billentyű)"
       counter: "%curr% / %total%"
@@ -5262,6 +5260,7 @@ hu:
   admin_js:
     type_to_filter: "Írj ide a szűréshez.."
     settings: "Beállítások"
+    reset_filter: "Alaphelyzetbe állítás"
     admin:
       title: "Discourse Adminisztrátor"
       moderator: "Moderátor"
@@ -5294,6 +5293,20 @@ hu:
           title: "Bővítmények"
         advanced:
           title: "Speciális"
+      upcoming_changes:
+        name: "Név"
+        enabled: "Bekapcsolva"
+        select_groups: "Csoportok kiválasztása…"
+        preview: "Előnézet"
+        impact_roles:
+          admins: "Adminisztrátorok"
+          moderators: "Moderátorok"
+          staff: "Stáb"
+        filter:
+          all: "Összes"
+          enabled: "Bekapcsolva"
+          disabled: "Kikapcsolva"
+          impact_type_other: "Egyéb"
       config:
         about:
           title: "Az Ön webhelyéről"
@@ -7547,8 +7560,7 @@ hu:
             cancel: "Mégse"
         merging_user: "Felhasználó összevonása…"
         merge_failed: "Hiba történt a felhasználók összevonása során."
-        delete_forbidden_because_staff: "Az adminokat nem lehet törölni."
-        delete_posts_forbidden_because_staff: "Nem törölhető az összes adminisztrátor és moderátor bejegyzése."
+        delete_forbidden_because_admin: "Az adminokat nem lehet törölni."
         delete_forbidden:
           one: "A felhasználókat nem lehet törölni, ha vannak hozzászólásaik. Törölj minden hozzászólást, mielőtt megpróbálnál törölni egy felhasználót. (A %{count} napnál régebbi hozzászólások nem törölhetők.)"
           other: "A felhasználókat nem lehet törölni, ha vannak hozzászólásaik. Törölj minden hozzászólást, mielőtt megpróbálnál törölni egy felhasználót. (A %{count} napnál régebbi hozzászólások nem törölhetők.)"

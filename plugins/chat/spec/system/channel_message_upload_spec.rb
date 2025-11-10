@@ -25,6 +25,7 @@ RSpec.describe "Channel message selection", type: :system do
   end
 
   it "can collapse/expand an image and still have lightbox working" do
+    SiteSetting.experimental_lightbox = false
     chat.visit_channel(channel_1)
 
     find(".chat-message-collapser-button").click

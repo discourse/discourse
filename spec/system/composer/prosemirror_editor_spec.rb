@@ -333,10 +333,28 @@ describe "Composer - ProseMirror editor", type: :system do
 
     it "avoids applying input rules in inline code if part of the matched text" do
       open_composer
-      composer.type_content("This `__code` should not__ be bold")
+      composer.type_content("This `__code` should not__ be bold. `and this, ")
+      page.send_keys([SystemHelpers::PLATFORM_KEY_MODIFIER, "e"])
+      # should not trigger the conversion of "and this, " to code as the 2nd ` is typed inside inline code
+      composer.type_content("not code`")
 
       expect(rich).to have_no_css("strong")
       expect(rich).to have_css("code", text: "__code")
+
+      expect(rich).to have_css("code", text: "not code")
+      expect(rich).to have_no_css("code", text: "and this, not code")
+    end
+
+    it "doesn't apply input rules immediately after a single backtick" do
+      open_composer
+      composer.type_content("`**not bold**\n`:tada:")
+
+      expect(rich).to have_no_css("strong")
+      expect(rich).to have_no_css("img.emoji")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("\\`\\*\\*not bold\\*\\*\n\n\\`:tada:")
     end
   end
 
@@ -1118,6 +1136,29 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(rich).to have_css("img[alt='img1'][data-orig-src]", count: 2)
     end
 
+    it "avoids triggering upload when unauthorized" do
+      SiteSetting.authorized_extensions = ""
+
+      valid_png_data_uri =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+
+      cdp.allow_clipboard
+
+      open_composer
+
+      html = <<~HTML
+          <img src="#{valid_png_data_uri}" alt="img1" width="100" height="100">
+        HTML
+
+      cdp.copy_paste(html, html: true)
+
+      expect(rich).to have_no_css("img")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("")
+    end
+
     it "merges text with link marks created from parsing" do
       cdp.allow_clipboard
       open_composer
@@ -1157,6 +1198,22 @@ describe "Composer - ProseMirror editor", type: :system do
 
       expect(composer).to have_value("<mark>mark</mark> my <ins>words</ins> <kbd>ctrl</kbd> ")
     end
+
+    it "converts newlines to hard breaks when parsing `white-space: pre` HTML" do
+      cdp.allow_clipboard
+      open_composer
+
+      cdp.copy_paste("<span style='white-space: pre;'>line1\nline2\nline3</pre>", html: true)
+
+      expect(rich).to have_css("p", text: "line1")
+      expect(rich).to have_css("p", text: "line2")
+      expect(rich).to have_css("p", text: "line3")
+      expect(rich).to have_css("br", count: 2)
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("line1\nline2\nline3")
+    end
   end
 
   describe "toolbar state updates" do
@@ -1172,7 +1229,7 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(page).to have_css(".toolbar__button.code.--active", count: 0)
       expect(page).to have_css(".toolbar__button.blockquote.--active", count: 0)
 
-      composer.type_content("> - ` [***many styles***](https://example.com)`")
+      composer.type_content("> - [***many `styles`***](https://example.com)")
       composer.send_keys(:left, :left)
 
       expect(page).to have_css(".toolbar__button.bold.--active", count: 1)
@@ -1491,6 +1548,59 @@ describe "Composer - ProseMirror editor", type: :system do
     end
   end
 
+  describe "with hashtags" do
+    fab!(:category_with_icon) { Fabricate(:category, icon: "bell", style_type: "icon") }
+    fab!(:catgeory_without_icon, :category)
+
+    it "correctly renders category with emoji hashtags after selecting from autocomplete" do
+      open_composer
+
+      composer.type_content("here is the ##{category_with_emoji.slug[0..1]}")
+      expect(composer).to have_hashtag_autocomplete
+
+      # the xpath here is to get the parent element, which is the actual hashtag-autocomplete__option
+      find(".hashtag-color--category-#{category_with_emoji.id}").find(:xpath, "..").click
+      expect(rich).to have_css(
+        ".hashtag-cooked .hashtag-category-emoji.hashtag-color--category-#{category_with_emoji.id} img.emoji[title='cat']",
+      )
+    end
+
+    it "correctly renders category with icon hashtags after selecting from autocomplete" do
+      open_composer
+
+      composer.type_content("here is the ##{category_with_icon.slug[0..1]}")
+      expect(composer).to have_hashtag_autocomplete
+
+      find(".hashtag-color--category-#{category_with_icon.id}").find(:xpath, "..").click
+      expect(rich).to have_css(
+        ".hashtag-cooked .hashtag-category-icon.hashtag-color--category-#{category_with_icon.id} svg.d-icon.d-icon-bell",
+      )
+      expect(rich).to have_css(".hashtag-cooked svg use[href='#bell']")
+    end
+
+    it "correctly renders category with square hashtags after selecting from autocomplete" do
+      open_composer
+
+      composer.type_content("here is the ##{catgeory_without_icon.slug[0..1]}")
+      expect(composer).to have_hashtag_autocomplete
+
+      find(".hashtag-color--category-#{catgeory_without_icon.id}").find(:xpath, "..").click
+      expect(rich).to have_css(
+        ".hashtag-cooked .hashtag-category-square.hashtag-color--category-#{catgeory_without_icon.id}",
+      )
+    end
+
+    it "correctly renders tag hashtags after selecting from autocomplete" do
+      open_composer
+
+      composer.type_content("##{tag.name[0..2]}")
+      expect(composer).to have_hashtag_autocomplete
+
+      find(".hashtag-color--tag-#{tag.id}").find(:xpath, "..").click
+      expect(rich).to have_css(".hashtag-cooked .d-icon.d-icon-tag.hashtag-color--tag-#{tag.id}")
+    end
+  end
+
   describe "link toolbar" do
     let(:upsert_hyperlink_modal) { PageObjects::Modals::UpsertHyperlink.new }
 
@@ -1754,6 +1864,22 @@ describe "Composer - ProseMirror editor", type: :system do
       expect(composer).to have_value(
         "[Updated **bold** and *italic* content](https://updated-example.com)",
       )
+    end
+
+    it "does not infinite loop on link rewrite" do
+      with_logs do |logger|
+        open_composer
+
+        composer.type_content("[Example](https://example.com)")
+        composer.type_content([PLATFORM_KEY_MODIFIER, "a"])
+        composer.type_content("Modified")
+
+        expect(logger.logs.map { |log| log[:message] }).not_to include(
+          "Maximum call stack size exceeded",
+        )
+
+        expect(rich).to have_content("Modified")
+      end
     end
   end
 

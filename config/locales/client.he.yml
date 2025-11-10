@@ -353,7 +353,7 @@ he:
       header:
         logged_in_members: "ברוך שובך, %{preferred_display_name}!"
         anonymous_members: "ברוך בואך אל %{site_name}!"
-      search: "חיפוש"
+      search_placeholder: "חיפוש"
     impersonation:
       notice: "בחירת להתחקות אחר %{username}"
       stop: "הפסקת התחזות"
@@ -712,6 +712,7 @@ he:
       other: "הצגת %{count} נושאים חדשים"
     preview: "תצוגה מקדימה"
     cancel: "ביטול"
+    done: "סיום"
     deleting: "מתבצעת מחיקה…"
     save: "שמירת השינויים"
     saving: "מתבצעת שמירה…"
@@ -802,10 +803,6 @@ he:
         claimed_by_you: "דרשת את הפריט הזה ועכשיו יתאפשר לך לסקור אותו."
         claimed_by_other: "הפריט הזה זמין לסריקה רק על ידי <b>%{username}</b>."
         automatically_claimed_by: "הפריט הזה נבדק כרגע על ידי <b>%{username}</b>."
-      claim:
-        title: "דרישת נושא זה"
-      unclaim:
-        help: "הסרת דרישה זו"
       awaiting_approval: "בהמתנה לאישור"
       delete: "מחיקה"
       settings:
@@ -972,6 +969,7 @@ he:
           title: "פוסט"
           noun: "פוסט"
       flagged_as: "מסומן בתור"
+      user_label: "משתמש"
       assigned_to: "הוקצה לטובת"
       moderator_actions: "פעולות פיקוח"
       timeline_and_notes: "ציר זמן והערות"
@@ -1001,6 +999,7 @@ he:
       review_user: "משתמש"
       need_help: "אפשר להציע עזרה?"
       copy_link: "העתקת קישור"
+      copy_link_feedback: "הקישור הועתק"
       view_source: "הצגת המקור"
       insights:
         title: "תובנות"
@@ -2164,6 +2163,7 @@ he:
         first_time_and_daily: "בפעם הראשונה שפוסט מקבל לייק ובאופן יומי"
         first_time: "בפעם הראשונה שמישהו אוהב פוסט"
         never: "אף פעם"
+      notify_on_linked_posts: "להודיע כשקישור לאחד הפוסטים שלי משותף"
       email_previous_replies:
         title: "לכלול תגובות קודמות בתחתית הודעות הדוא״ל"
         unless_emailed: "אלא אם נשלח לפני כן"
@@ -2979,6 +2979,7 @@ he:
         select: "בחירת תרגום"
         save: "שמירת תרגום"
         original_content: "תוכן פוסט מקורי"
+        translation: "תרגום"
         placeholder: "נא למלא כאן תרגום לפוסט…"
       group_mentioned_limit:
         one: "<b>זהירות!</b> ציינת את <a href='%{group_link}'>%{group}</a>, אך בקבוצה זו יש יותר חברים מההגבלה שהוגדרה על ידי הנהלת המערכת של עד משתמש %{count}. אף אחד לא יקבל הודעה."
@@ -3154,6 +3155,9 @@ he:
         create_topic:
           label: "נושא חדש"
           desc: יצירת נושא חדש
+        create_personal_message:
+          label: "הודעה חדשה"
+          desc: "צור הודעה פרטית חדשה"
         shared_draft:
           label: "טיוטה משותפת"
           desc: "יצירת טיוטה לנושא שרק משתמשים מורשים יוכלו לראות"
@@ -3181,6 +3185,7 @@ he:
         remove: "הסרת קישור"
         visit: "פתיחת קישור בלשונית חיצונית"
         link_copied: "הקישור הועתק!"
+      unsupported_token: "עורך הטקסט העשיר אינו תומך בכל היכולות בהן נעשה שימוש בפוסט הזה, מעביר אותך לעורך Markdown."
     notifications:
       tooltip:
         regular:
@@ -3817,6 +3822,8 @@ he:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>עיון בכל הקטגוריות</a>, <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a> או צפייה במובילים:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>עיון בכל התגיות</a> או <a href='%{basePath}/latest'>הצגת הנושאים העדכניים ביותר</a>."
       browse_latest_topics: "עיון בנושאים האחרונים"
+      browse_new_replies: "עיון בתגובות חדשות"
+      browse_new_topics: "עיון בנושאים חדשים"
       suggest_create_topic: מעניין אותך <a href>לפתוח בדיון חדש?</a>
       jump_reply: "קפיצה למיקום המקורי של הפוסט"
       jump_reply_aria: "קפיצה לפוסט של ‎@%{username} במיקומו המקורי"
@@ -3897,11 +3904,6 @@ he:
         two: "הפוסט האחרון בנושא הוא כבר בן שעתיים (%{count}), אז הנושא ייסגר אוטומטית."
         many: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, אז הנושא ייסגר אוטומטית."
         other: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, אז הנושא ייסגר אוטומטית."
-      auto_close_momentarily:
-        one: "הפוסט האחרון בנושא הוא כבר בן שעה (%{count}), לכן הנושא ייסגר מיידית."
-        two: "הפוסט האחרון בנושא הוא כבר בן שעתיים (%{count}), לכן הנושא ייסגר מיידית."
-        many: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, לכן הנושא ייסגר מיידית."
-        other: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, לכן הנושא ייסגר מיידית."
       timeline:
         back: "חזרה"
         back_description: "חיזרו לפוסט האחרון שלא-נקרא על-ידיכם"
@@ -3991,6 +3993,8 @@ he:
       reply:
         title: "תגובה"
         help: "להתחיל לכתוב תגובה לנושא זה"
+      footer_buttons:
+        region_label: "פעולות על נושא"
       share:
         title: "שיתוף נושא"
         extended_title: "שתף קישור"
@@ -4343,6 +4347,7 @@ he:
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
       cancel_composer:
+        confirm: "להתעלם מהפוסט שלך?"
         discard: "להשליך"
       via_email: "פוסט זה הגיע בדוא״ל"
       via_auto_generated_email: "פוסט זה הגיע דרך הודעת דוא״ל שנוצרה אוטומטית"
@@ -5011,6 +5016,8 @@ he:
       next: "הבא (מקש ימינה)"
       counter: "%curr% מתוך %total%"
       close: "סגירה (Esc)"
+      zoom: "תקריב (מקש Z)"
+      error: "לא ניתן לטעון את התמונה"
       content_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תוכן הזה</a>.'
       image_load_error: 'אין אפשרות לטעון את ה<a href="%url%">תמונה הזו</a>.'
     cannot_render_video: לא ניתן לעבד את הסרטון הזה מכיוון שהדפדפן שלך אינו תומך במקודד.
@@ -5585,6 +5592,8 @@ he:
           light: "בהיר"
           dark: "כהה"
           auto: "אוט׳"
+          title: "מצב צבע"
+          aria_label: "מצב צבע, כרגע %{mode}"
     welcome_topic_banner:
       title: "כאן ניתן ליצור את נושא קבלת הפנים שלך"
       description: "נושא קבלת הפנים שלך הוא הדבר הראשון שחברים חדשים יקראו. אפשר לחשוב על זה כמו על „נאום מעלית” או „הצהרת כוונות”. כדאי לתאר למי מיועדת הקהילה הזאת, מה אפשר לצפות למצוא כאן ומה מומלץ לעשות בהתחלה."
@@ -5775,6 +5784,7 @@ he:
   admin_js:
     type_to_filter: "יש להקליד לסינון…"
     settings: "הגדרות"
+    reset_filter: "איפוס"
     admin:
       title: "ניהול Discourse"
       moderator: "מפקח"
@@ -5807,6 +5817,39 @@ he:
           title: "תוספים"
         advanced:
           title: "מתקדם"
+      upcoming_changes:
+        name: "שם"
+        plugin: "תוסף"
+        metadata: "נתוני על"
+        enabled: "פעיל"
+        show_image: "הצגת תמונה"
+        groups_updated: "הקבוצות עודכנו!"
+        save_groups: "שמירת קבוצות"
+        select_groups: "בחירת קבוצות…"
+        no_changes: "אין שינויים צפויים כרגע."
+        preview: "תצוגה מקדימה"
+        statuses:
+          stable: "יציב"
+          permanent: "קבוע"
+        impact_roles:
+          admins: "מנהלים ראשיים"
+          moderators: "מפקחים"
+          staff: "סגל"
+          all_members: "כל החברים"
+          developers: "מפתחים"
+        filter:
+          search_placeholder: "סינון לפי שם, תיאור או תוסף…"
+          no_results: "אין שינויים עתידיים שתואמים את המסנן שלך"
+          all: "הכול"
+          enabled_all: "מופעל או מושבת"
+          enabled: "פעיל"
+          disabled: "כבוי"
+          impact_type_all: "כל סוגי ההשפעה"
+          impact_type_feature: "יכולת"
+          impact_type_other: "אחר"
+          status_all: "כל המצבים"
+          status_stable: "יציב"
+          status_permanent: "קבוע"
       config:
         about:
           title: "על האתר שלך"
@@ -5832,16 +5875,23 @@ he:
           header_description: "הגדרת התצוגה המשפטית, כגון תנאי השירות, מדיניות פרטיות, פרטי יצירת קשר ונושאים נקודתיים לאיחוד האירופי"
         theme_site_settings:
           title: "הגדרות ערכת העיצוב של האתר"
+          header_description: "הצגת כל הגדרות האתר עם ערכת נושא ואת ערכות הנושא שדורסות אותן"
         localization:
           title: "תרגום"
           header_description: "הגדרת שפת הממשק של הקהילה שלך ואפשרויות התאמה מקומיות אחרות עבור החברים"
           keywords: "מקום|שפה|אזור זמן|unicode|rtl"
+        upcoming_changes:
+          title: "שינויים צפויים"
         login:
           title: "כניסה ואימות"
           header_description: "הגדרה איך משתמשים נכנסים ועוברים אימות, סודות ומפתחות, ספקי OAuth2 ועוד"
           sub_pages:
             common_settings:
               title: "הגדרות"
+            authenticators:
+              title: "כניסות דרך רשתות חברתיות"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "לוגו"
           header_description: "הגדרת הלוגואים והסמלים בהם נעשה שימוש ברחבי האתר שלך"
@@ -6127,6 +6177,7 @@ he:
         default_value: "ברירת מחדל"
         overridden_value: "ערך שנדרס: %{value}"
         select_setting: "נא לבחור הגדרת אתר כדי לצפות בערכי ערכת העיצוב הנוכחיים"
+        add: "הגדרות אתר עם ערכת עיצוב"
         help: "ערכת הנושא בשימוש כרגע היא <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. יש לגשת אל <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>עמוד הגדרות ערכת העיצוב</a> כדי לשנות את הגדרות ערכת העיצוב של האתר או ללחוץ על ערכת עיצוב מקושרת בטבלה שלהלן כדי לערוך את ההגדרות שלה."
         site_setting_warning: 'ההגדרה הזאת מנוהלת על ידי ערכת העיצוב כברירת המחדל של האתר שלך (%{defaultThemeName}). אפשר לשנות אותה דרך <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">עמוד עריכת ערכת העיצוב</a>.'
       search:
@@ -7063,7 +7114,10 @@ he:
           body: "גוף"
           revert: "ביטול שינויים"
           revert_confirm: "לבטל את השינויים שלך?"
+          search_templates: "סינון לפי שם תבנית…"
+          no_templates_found: "אין תבניות שעונות על המסננים שלך."
           edit: "עריכה"
+          back: "חזרה לתבניות"
         component:
           all_filter: "הכול"
           used_filter: "בשימוש"
@@ -8101,8 +8155,7 @@ he:
             cancel: "ביטול"
         merging_user: "המשתמש ממוזג…"
         merge_failed: "אירעה שגיאה במיזוג המשתמשים."
-        delete_forbidden_because_staff: "אי אפשר למחוק מנהלים."
-        delete_posts_forbidden_because_staff: "לא ניתן להסיר את כל הפוסטים של מנהלי מערכת ומפקחים."
+        delete_forbidden_because_admin: "אי אפשר למחוק מנהלים."
         delete_forbidden:
           one: "לא ניתן למחוק משתמשים אם יש להם הודעות. יש למחוק את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מיום %{count} לא ניתן למחוק.)"
           two: "לא ניתן למחוק משתמשים אם יש להם פוסטים. יש למחוק את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מיומיים - %{count} לא ניתן למחוק.)"

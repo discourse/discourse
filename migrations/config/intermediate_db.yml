@@ -17,7 +17,7 @@ schema:
         exclude:
           - "grant_count"
           - "system"
-    badge_groupings: {}
+    badge_groupings: { }
     categories:
       columns:
         add:
@@ -45,7 +45,7 @@ schema:
       primary_key_column_names: [ "category_id", "user_id" ]
       columns:
         exclude:
-           - "id"
+          - "id"
     category_custom_fields:
       primary_key_column_names: [ "category_id", "name" ]
       columns:
@@ -92,6 +92,19 @@ schema:
       columns:
         exclude:
           - "id"
+    site_settings:
+      primary_key_column_names: [ "name" ]
+      columns:
+        include:
+          - "name"
+          - "value"
+        add:
+          - name: "import_mode"
+            enum: site_setting_import_mode
+            nullable: false
+          - name: "last_changed_at"
+            datatype: datetime
+            nullable: true
     tag_group_memberships:
       primary_key_column_names: [ "tag_group_id", "tag_id" ]
       columns:
@@ -102,7 +115,7 @@ schema:
       columns:
         exclude:
           - "id"
-    tag_groups: {}
+    tag_groups: { }
     tag_users:
       primary_key_column_names: [ "tag_id", "user_id" ]
       columns:
@@ -318,6 +331,7 @@ schema:
         - "chat_message_interactions"
         - "chat_message_reactions"
         - "chat_message_revisions"
+        - "chat_message_search_data"
         - "chat_messages"
         - "chat_thread_custom_fields"
         - "chat_threads"
@@ -396,6 +410,8 @@ schema:
         - "invites"
         - "javascript_caches"
         - "linked_topics"
+        - "llm_credit_allocations"
+        - "llm_feature_credit_costs"
         - "llm_models"
         - "llm_quota_usages"
         - "llm_quotas"
@@ -459,7 +475,7 @@ schema:
         - "sidebar_urls"
         - "silenced_assignments"
         - "single_sign_on_records"
-        - "site_settings"
+        - "site_setting_groups"
         - "sitemaps"
         - "skipped_email_logs"
         - "stylesheet_cache"
@@ -533,6 +549,15 @@ schema:
         - "web_hook_events"
         - "web_hook_events_daily_aggregates"
         - "web_hooks"
+
+  enums:
+    site_setting_import_mode:
+      values:
+        - auto
+        - override
+        - append
+    site_setting_datatype:
+      source: "::SiteSettings::TypeSupervisor.types"
 
 plugins:
   - "automation"

@@ -106,6 +106,10 @@ fr:
     reviewables:
       message_already_handled: "Merci, mais nous avons déjà examiné ce message et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
       actions:
+        no_action_message:
+          title: "Aucune action"
+        restore_message:
+          description: "Restaurer le message pour que les utilisateurs puissent le voir."
         agree:
           title: "D'accord…"
         agree_and_keep_message:
@@ -184,7 +188,7 @@ fr:
         slug_contains_non_ascii_chars: "contient des caractères non ASCII"
         is_already_in_use: "est déjà utilisé"
     bookmarkable:
-      notification_title: "message dans %{channel_name}"
+      notification_title_channel: "message dans %{channel_name}"
     personal_chat: "discussion privée"
     onebox:
       inline_to_message: "Message #%{message_id} par %{username} - #%{chat_channel}"

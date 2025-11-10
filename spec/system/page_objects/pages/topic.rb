@@ -96,6 +96,10 @@ module PageObjects
         post_by_number(post).find(".show-more-actions").click
       end
 
+      def click_post_author_avatar(post)
+        within_post(post) { find(".main-avatar[data-user-card='#{post.user.username}']").click }
+      end
+
       def click_post_action_button(post, button)
         find_post_action_button(post, button).click
       end
@@ -197,6 +201,10 @@ module PageObjects
         has_css?("#reply-control.open")
       end
 
+      def composer
+        @composer_component
+      end
+
       def type_in_composer(input)
         @composer_component.type_content(input)
       end
@@ -279,6 +287,7 @@ module PageObjects
 
       def click_admin_menu_button
         within_topic_footer_buttons { find(".toggle-admin-menu").click }
+        PageObjects::Components::TopicAdminMenu.new
       end
 
       def watch_topic
@@ -320,11 +329,11 @@ module PageObjects
         find(".flag-topic").click
       end
 
-      private
-
       def within_post(post)
         within(post_by_number(post)) { yield }
       end
+
+      private
 
       def within_topic_footer_buttons
         within("#topic-footer-buttons") { yield }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Composer - Drafts", type: :system do
-  fab!(:topic)
+  fab!(:topic, :topic_with_op)
   fab!(:current_user, :admin)
 
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -41,17 +41,31 @@ describe "Composer - Drafts", type: :system do
       end
     end
 
-    context "when only title is specified and it is too short" do
-      it "does not save the draft or show a toast" do
+    context "when only title is specified and it is less than min_topic_title_length" do
+      it "does saves the draft and shows a toast" do
         visit "/new-topic"
 
         expect(composer).to be_opened
-        composer.fill_title("test")
+        composer.fill_title("x")
         composer.close
         expect(composer).to be_closed
 
-        expect(toasts).to have_no_message
-        expect(Draft.where(user: current_user).count).to eq(0)
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+        expect(Draft.where(user: current_user).count).to eq(1)
+      end
+    end
+
+    context "when only body is specified and it is less than min_post_length" do
+      it "does saves the draft and shows a toast" do
+        visit "/new-topic"
+
+        expect(composer).to be_opened
+        composer.fill_content("x")
+        composer.close
+        expect(composer).to be_closed
+
+        expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+        expect(Draft.where(user: current_user).count).to eq(1)
       end
     end
   end
@@ -171,6 +185,138 @@ describe "Composer - Drafts", type: :system do
 
       expect(discard_draft_modal).to be_closed
       expect(composer).to be_opened
+    end
+  end
+
+  context "when replying to a different topic with an active draft" do
+    fab!(:other_topic, :topic_with_op)
+
+    let(:topic_reply_choice_dialog) { PageObjects::Components::TopicReplyChoiceDialog.new }
+    let(:topic_list) { PageObjects::Components::TopicList.new }
+
+    before do
+      topic.first_post.update!(raw: "This is the original topic OP content.")
+      topic.first_post.rebake!
+
+      other_topic.first_post.update!(raw: "This is the other topic OP content.")
+      other_topic.first_post.rebake!
+    end
+
+    def visit_topic_and_save_draft
+      topic_page.visit_topic(topic)
+      topic_page.click_reply_button
+
+      expect(composer).to be_opened
+      composer.fill_content("a b c d e f g")
+
+      composer.close
+
+      expect(toasts).to have_success(I18n.t("js.composer.draft_saved"))
+      expect(Draft.where(user: current_user).count).to eq(1)
+
+      topic_page.visit_topic(topic)
+      topic_page.click_reply_button
+
+      expect(composer).to be_opened
+      expect(composer).to have_content("a b c d e f g")
+    end
+
+    context "when clicking the original topic in the topic reply choice dialog" do
+      it "replies with the current content to the original topic" do
+        visit_topic_and_save_draft
+
+        # We have to navigate by clicking through the app to keep the
+        # composer open.
+        click_logo
+        expect(topic_list).to have_topic(other_topic)
+        topic_list.visit_topic(other_topic)
+
+        expect(topic_page).to have_post_content(
+          post_number: 1,
+          content: "This is the other topic OP content.",
+        )
+
+        composer.create
+
+        expect(topic_reply_choice_dialog).to be_open
+        expect(topic_reply_choice_dialog).to have_reply_on_original_topic(topic)
+        topic_reply_choice_dialog.click_reply_on_original
+
+        expect(topic_reply_choice_dialog).to be_closed
+        expect(composer).to be_closed
+
+        expect(topic_page).to have_post_content(
+          post_number: 1,
+          content: "This is the original topic OP content.",
+        )
+        expect(topic_page).to have_post_content(post_number: 2, content: "a b c d e f g")
+        expect(topic.reload.posts.last.raw).to eq("a b c d e f g")
+      end
+    end
+
+    context "when clicking the new topic in the topic reply choice dialog" do
+      it "replies with the current content to the new topic" do
+        visit_topic_and_save_draft
+
+        # We have to navigate by clicking through the app to keep the
+        # composer open.
+        click_logo
+        expect(topic_list).to have_topic(other_topic)
+        topic_list.visit_topic(other_topic)
+
+        expect(topic_page).to have_post_content(
+          post_number: 1,
+          content: "This is the other topic OP content.",
+        )
+
+        composer.create
+
+        expect(topic_reply_choice_dialog).to be_open
+        expect(topic_reply_choice_dialog).to have_reply_here_topic(other_topic)
+        topic_reply_choice_dialog.click_reply_here
+
+        expect(topic_reply_choice_dialog).to be_closed
+        expect(composer).to be_closed
+
+        expect(topic_page).to have_post_content(
+          post_number: 1,
+          content: "This is the other topic OP content.",
+        )
+        expect(topic_page).to have_post_content(post_number: 2, content: "a b c d e f g")
+        expect(other_topic.reload.posts.last.raw).to eq("a b c d e f g")
+      end
+    end
+
+    context "when clicking Cancel in the topic reply choice dialog" do
+      it "saves the current draft and will save future changes to the draft" do
+        visit_topic_and_save_draft
+
+        # We have to navigate by clicking through the app to keep the
+        # composer open.
+        click_logo
+        expect(topic_list).to have_topic(other_topic)
+        topic_list.visit_topic(other_topic)
+
+        expect(topic_page).to have_post_content(
+          post_number: 1,
+          content: "This is the other topic OP content.",
+        )
+
+        composer.create
+
+        expect(topic_reply_choice_dialog).to be_open
+        topic_reply_choice_dialog.click_cancel
+        expect(topic_reply_choice_dialog).to be_closed
+
+        composer.fill_content("This is my updated draft content, wow very impressive.")
+
+        try_until_success(reason: "Relies on waiting a few seconds for the draft to autosave") do
+          draft = Draft.where(user: current_user).first
+          expect(JSON.parse(draft.data)["reply"]).to eq(
+            "This is my updated draft content, wow very impressive.",
+          )
+        end
+      end
     end
   end
 end
