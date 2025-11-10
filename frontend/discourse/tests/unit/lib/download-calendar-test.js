@@ -16,7 +16,42 @@ module("Unit | Utility | download-calendar", function (hooks) {
     sinon.stub(win, "focus");
   });
 
-  test("correct data for ICS", function (assert) {
+  test("correct data for ICS with timezone", function (assert) {
+    const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
+    sinon.useFakeTimers({
+      now,
+      toFake: ["Date"],
+      shouldAdvanceTime: true,
+      shouldClearNativeTimers: true,
+    });
+    const data = generateIcsData(
+      "event test",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+          timezone: "Europe/Paris",
+        },
+      ],
+      {
+        rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR",
+        location: "Paris",
+        details: "Good soup",
+      }
+    );
+
+    assert.true(data.includes("BEGIN:VCALENDAR"));
+    assert.true(data.includes("DTSTART;TZID=Europe/Paris:20211012T170000"));
+    assert.true(data.includes("DTEND;TZID=Europe/Paris:20211012T180000"));
+    assert.true(data.includes("RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"));
+    assert.true(data.includes("LOCATION:Paris"));
+    assert.true(data.includes("DESCRIPTION:Good soup"));
+    assert.true(data.includes("SUMMARY:event test"));
+    assert.true(data.includes("END:VEVENT"));
+    assert.true(data.includes("END:VCALENDAR"));
+  });
+
+  test("correct data for ICS without timezone (UTC)", function (assert) {
     const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
     sinon.useFakeTimers({
       now,
@@ -41,24 +76,38 @@ module("Unit | Utility | download-calendar", function (hooks) {
 
     assert.strictEqual(
       data,
-      `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Discourse//EN
-BEGIN:VEVENT
-UID:1634050800000_1634054400000
-DTSTAMP:20220404T211500Z
-DTSTART:20211012T150000Z
-DTEND:20211012T160000Z
-RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR
-LOCATION:Paris
-DESCRIPTION:Good soup
-SUMMARY:event test
-END:VEVENT
-END:VCALENDAR`
+      `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Discourse//EN\r\nBEGIN:VEVENT\r\nUID:1634050800000_1634054400000\r\nDTSTAMP:20220404T211500Z\r\nDTSTART:20211012T150000Z\r\nDTEND:20211012T160000Z\r\nRRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR\r\nLOCATION:Paris\r\nDESCRIPTION:Good soup\r\nSUMMARY:event test\r\nEND:VEVENT\r\nEND:VCALENDAR`
     );
   });
 
-  test("correct data for ICS when recurring event", function (assert) {
+  test("correct data for ICS when recurring event with timezone", function (assert) {
+    const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
+    sinon.useFakeTimers({
+      now,
+      toFake: ["Date"],
+      shouldAdvanceTime: true,
+      shouldClearNativeTimers: true,
+    });
+    const data = generateIcsData(
+      "event test",
+      [
+        {
+          startsAt: "2021-10-12T15:00:00.000Z",
+          endsAt: "2021-10-12T16:00:00.000Z",
+          timezone: "America/New_York",
+        },
+      ],
+      { rrule: "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR" }
+    );
+
+    assert.true(data.includes("DTSTART;TZID=America/New_York:20211012T110000"));
+    assert.true(data.includes("DTEND;TZID=America/New_York:20211012T120000"));
+    assert.true(data.includes("RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"));
+
+    sinon.restore();
+  });
+
+  test("correct data for ICS when recurring event without timezone", function (assert) {
     const now = moment.tz("2022-04-04 23:15", "Europe/Paris").valueOf();
     sinon.useFakeTimers({
       now,
@@ -78,18 +127,7 @@ END:VCALENDAR`
     );
     assert.strictEqual(
       data,
-      `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Discourse//EN
-BEGIN:VEVENT
-UID:1634050800000_1634054400000
-DTSTAMP:20220404T211500Z
-DTSTART:20211012T150000Z
-DTEND:20211012T160000Z
-RRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR
-SUMMARY:event test
-END:VEVENT
-END:VCALENDAR`
+      `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Discourse//EN\r\nBEGIN:VEVENT\r\nUID:1634050800000_1634054400000\r\nDTSTAMP:20220404T211500Z\r\nDTSTART:20211012T150000Z\r\nDTEND:20211012T160000Z\r\nRRULE:FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR\r\nSUMMARY:event test\r\nEND:VEVENT\r\nEND:VCALENDAR`
     );
 
     sinon.restore();

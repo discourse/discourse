@@ -1,6 +1,7 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { bbcodeAttributeDecode } from "discourse/lib/bbcode-attributes";
 import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { iconHTML, renderIcon } from "discourse/lib/icon-library";
@@ -9,6 +10,7 @@ import {
   addTagDecorateCallback,
   addTextDecorateCallback,
 } from "discourse/lib/to-markdown";
+import { slugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
@@ -315,7 +317,18 @@ function _downloadCalendarNode(element) {
   if (!startDataset.time && !endDataset) {
     node.setAttribute("data-ends-at", startDate.add(24, "hours").toISOString());
   }
-  node.setAttribute("data-title", startDataset.title);
+  if (startDataset.title) {
+    node.setAttribute("data-title", startDataset.title);
+  }
+  if (startDataset.timezone) {
+    node.setAttribute("data-timezone", startDataset.timezone);
+  }
+
+  // If ics data is available, pass it to the download button
+  if (startDataset.ics) {
+    node.setAttribute("data-ics", startDataset.ics);
+  }
+
   return node;
 }
 
@@ -353,12 +366,37 @@ class LocalDatesInit {
   showDatePopover(event) {
     if (event?.target?.classList?.contains("download-calendar")) {
       const dataset = event.target.dataset;
-      downloadCalendar(dataset.title, [
-        {
-          startsAt: dataset.startsAt,
-          endsAt: dataset.endsAt,
-        },
-      ]);
+
+      if (dataset.ics) {
+        const icsData = bbcodeAttributeDecode(dataset.ics);
+
+        let title;
+        if (dataset.title) {
+          title = dataset.title;
+        } else {
+          // Extract event title from ICS SUMMARY field for filename if title missing
+          const summaryMatch = icsData.match(/SUMMARY:(.+?)[\r\n]/);
+          if (summaryMatch && summaryMatch[1]) {
+            title = summaryMatch[1].trim();
+          }
+        }
+
+        this.downloadIcs(title || "event", icsData);
+      } else {
+        const dates = [
+          {
+            startsAt: dataset.startsAt,
+            endsAt: dataset.endsAt,
+          },
+        ];
+
+        // Add timezone if available
+        if (dataset.timezone) {
+          dates[0].timezone = dataset.timezone;
+        }
+
+        downloadCalendar(dataset.title, dates);
+      }
 
       return this.tooltip.close("local-date");
     }
@@ -371,6 +409,22 @@ class LocalDatesInit {
       identifier: "local-date",
       content: htmlSafe(buildHtmlPreview(event.target, this.siteSettings)),
     });
+  }
+
+  downloadIcs(title, icsData) {
+    const blob = new Blob([icsData], { type: "text/calendar;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    try {
+      const a = document.createElement("a");
+      a.href = url;
+      const fileName = slugify(title);
+      a.download = `${fileName}.ics`;
+      // Most browsers allow clicking without attaching to DOM.
+      a.click();
+    } finally {
+      // Revoke on next tick so the download can start.
+      setTimeout(() => URL.revokeObjectURL(url), 0);
+    }
   }
 
   teardown() {
