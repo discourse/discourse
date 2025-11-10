@@ -188,7 +188,7 @@ fetch(`${target}/about.json`).catch(() => {
   // eslint-disable-next-line no-console
   console.error(
     colors.red(
-      `Error connecting to Rails server on ${target}. Is it running? Use 'bin/qunit --full' or 'plugin:qunit' to start automatically.`
+      `Error connecting to Rails server on ${target}. Is it running? Use 'bin/qunit --standalone' or 'plugin:qunit' to start automatically.`
     )
   );
 });

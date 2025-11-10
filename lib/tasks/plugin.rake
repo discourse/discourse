@@ -254,7 +254,7 @@ task "plugin:qunit", :plugin do |t, args|
 
   puts "Running plugin qunit tests in:\n  #{plugin_dirs.join("\n  ")}"
 
-  cmd = [Rails.root.join("bin/qunit").to_s, "--full"] + plugin_dirs
+  cmd = [Rails.root.join("bin/qunit").to_s, "--standalone"] + plugin_dirs
   env = ENV.to_h.merge("LOAD_PLUGINS" => "1")
 
   system(env, *cmd, chdir: Rails.root)

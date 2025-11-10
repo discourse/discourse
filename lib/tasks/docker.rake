@@ -300,7 +300,7 @@ task "docker:test" do
 
       unless ENV["RUBY_ONLY"]
         unless ENV["SKIP_CORE"]
-          @good &&= run_or_fail("CI=1 QUNIT_PARALLEL=#{qunit_concurrency} bin/qunit --full")
+          @good &&= run_or_fail("CI=1 QUNIT_PARALLEL=#{qunit_concurrency} bin/qunit --standalone")
         end
 
         unless ENV["SKIP_PLUGINS"]
