@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "plugins": [{
+      "name": "@glint/tsserver-plugin"
+    }],
     "target": "es2021",
     "module": "es2022",
     "moduleResolution": "bundler",
