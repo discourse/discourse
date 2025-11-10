@@ -33,6 +33,7 @@ export default class DownloadCalendar extends Component {
           rrule: this.args.model.calendar.rrule,
           location: this.args.model.calendar.location,
           details: this.args.model.calendar.details,
+          timezone: this.args.model.calendar.timezone,
         }
       );
     } else {
@@ -43,6 +44,7 @@ export default class DownloadCalendar extends Component {
           rrule: this.args.model.calendar.rrule,
           location: this.args.model.calendar.location,
           details: this.args.model.calendar.details,
+          timezone: this.args.model.calendar.timezone,
         }
       );
     }
