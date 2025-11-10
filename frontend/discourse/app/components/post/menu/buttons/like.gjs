@@ -6,7 +6,7 @@ import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import discourseLater from "discourse/lib/later";
 import { applyValueTransformer } from "discourse/lib/transformer";
-import LikedUsersList from "./liked-users-list";
+import LikedUsersList from "../liked-users-list";
 
 export default class PostMenuLikeButton extends Component {
   static shouldRender(args) {
@@ -38,6 +38,11 @@ export default class PostMenuLikeButton extends Component {
     return this.args.post.liked
       ? "post.controls.undo_like"
       : "post.controls.like";
+  }
+
+  get likeButtonIcon() {
+    const defaultIcon = this.args.post.liked ? "d-liked" : "d-unliked";
+    return applyValueTransformer("post-menu-like-button-icon", defaultIcon);
   }
 
   @action
@@ -77,7 +82,7 @@ export default class PostMenuLikeButton extends Component {
           data-post-id={{@post.id}}
           disabled={{this.disabled}}
           @action={{this.toggleLike}}
-          @icon={{if @post.liked "d-liked" "d-unliked"}}
+          @icon={{this.likeButtonIcon}}
           @label={{if @showLabel "post.controls.like_action"}}
           @title={{this.title}}
         />
