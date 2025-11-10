@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
-  subject(:check) { described_class.new }
+  subject(:check) { described_class.new(target) }
 
   describe ".call" do
+    let(:target) { "enable_upload_debug_mode" }
+
     before do
       mock_upcoming_change_metadata(
         {
@@ -33,7 +35,11 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
       end
 
       context "when upcoming change is stable and not opted in" do
-        it { expect(check).to have_a_problem }
+        it do
+          expect(check).to have_a_problem.with_priority("low").with_target(
+            "enable_upload_debug_mode",
+          )
+        end
       end
 
       context "when upcoming change is not yet stable and not opted in" do
@@ -65,7 +71,11 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
           )
         end
 
-        it { expect(check).to have_a_problem }
+        it do
+          expect(check).to have_a_problem.with_priority("low").with_target(
+            "enable_upload_debug_mode",
+          )
+        end
       end
     end
   end

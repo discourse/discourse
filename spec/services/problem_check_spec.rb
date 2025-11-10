@@ -7,6 +7,7 @@ RSpec.describe ProblemCheck do
     InlineCheck = Class.new(described_class) { self.inline = true }
     PluginCheck = Class.new(described_class)
     DisabledCheck = Class.new(described_class) { self.enabled = false }
+    MultiTargetCheck = Class.new(described_class) { self.targets = -> { %w[foo bar] } }
     FailingCheck =
       Class.new(described_class) do
         def call
@@ -31,7 +32,15 @@ RSpec.describe ProblemCheck do
     stub_const(
       described_class,
       "CORE_PROBLEM_CHECKS",
-      [ScheduledCheck, RealtimeCheck, InlineCheck, DisabledCheck, FailingCheck, PassingCheck],
+      [
+        ScheduledCheck,
+        RealtimeCheck,
+        InlineCheck,
+        DisabledCheck,
+        MultiTargetCheck,
+        FailingCheck,
+        PassingCheck,
+      ],
       &example
     )
 
@@ -39,6 +48,7 @@ RSpec.describe ProblemCheck do
     Object.send(:remove_const, RealtimeCheck.name)
     Object.send(:remove_const, InlineCheck.name)
     Object.send(:remove_const, DisabledCheck.name)
+    Object.send(:remove_const, MultiTargetCheck.name)
     Object.send(:remove_const, PluginCheck.name)
     Object.send(:remove_const, FailingCheck.name)
     Object.send(:remove_const, PassingCheck.name)
@@ -49,6 +59,7 @@ RSpec.describe ProblemCheck do
   let(:inline_check) { InlineCheck }
   let(:enabled_check) { RealtimeCheck }
   let(:disabled_check) { DisabledCheck }
+  let(:multi_target_check) { MultiTargetCheck }
   let(:plugin_check) { PluginCheck }
   let(:failing_check) { FailingCheck }
   let(:passing_check) { PassingCheck }
@@ -101,6 +112,11 @@ RSpec.describe ProblemCheck do
     it { expect(disabled_check).not_to be_enabled }
   end
 
+  describe ".targeted?" do
+    it { expect(scheduled_check).not_to be_targeted }
+    it { expect(multi_target_check).to be_targeted }
+  end
+
   describe "plugin problem check registration" do
     before { DiscoursePluginRegistry.register_problem_check(PluginCheck, stub(enabled?: enabled)) }
 
@@ -121,11 +137,32 @@ RSpec.describe ProblemCheck do
 
   describe "#run" do
     context "when check is failing" do
-      it { expect { failing_check.run }.to change { ProblemCheckTracker.failing.count }.by(1) }
+      it { expect { failing_check.new.run }.to change { ProblemCheckTracker.failing.count }.by(1) }
     end
 
     context "when check is passing" do
-      it { expect { passing_check.run }.to change { ProblemCheckTracker.passing.count }.by(1) }
+      it { expect { passing_check.new.run }.to change { ProblemCheckTracker.passing.count }.by(1) }
+    end
+
+    context "when targeted check has a no-target tracker" do
+      before do
+        ProblemCheckTracker.create!(
+          identifier: "multi_target_check",
+          target: ProblemCheck::NO_TARGET,
+        )
+      end
+
+      it "deletes the tracker" do
+        expect { multi_target_check.new.run }.to change { ProblemCheckTracker.count }.by(-1)
+      end
+    end
+
+    context "when targeted check has an outdated target" do
+      before { ProblemCheckTracker.create!(identifier: "multi_target_check", target: "baz") }
+
+      it "deletes the tracker" do
+        expect { multi_target_check.new("baz").run }.to change { ProblemCheckTracker.count }.by(-1)
+      end
     end
   end
 end
