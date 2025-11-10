@@ -115,7 +115,7 @@ export default class ReviewableNoteForm extends Component {
         <form.Actions>
           <form.Submit
             @label="review.notes.add_note_button"
-            class="btn-primary"
+            class="btn-small btn-primary"
           />
         </form.Actions>
       </Form>
