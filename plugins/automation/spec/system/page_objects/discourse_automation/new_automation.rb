@@ -13,6 +13,12 @@ module PageObjects
         self
       end
 
+      def select_trigger(trigger)
+        dropdown = Components::SelectKit.new(".triggerables")
+        dropdown.select_row_by_value(trigger)
+        self
+      end
+
       def create
         find(".create-automation").click
         self
