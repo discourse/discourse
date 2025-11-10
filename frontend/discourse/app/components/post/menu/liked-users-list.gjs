@@ -54,11 +54,14 @@ export default class LikedUsersList extends Component {
   }
 
   get truncatedUsers() {
-    return this.likedUsers?.slice(0, DISPLAY_MAX_USERS);
+    return this.likedUsers?.content.slice(0, DISPLAY_MAX_USERS);
   }
 
   get slicedUsers() {
-    return this.likedUsers?.slice(DISPLAY_MAX_USERS, DISPLAY_MAX_USERS * 2);
+    return this.likedUsers?.content.slice(
+      DISPLAY_MAX_USERS,
+      DISPLAY_MAX_USERS * 2
+    );
   }
 
   get hiddenUserCount() {
