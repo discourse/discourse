@@ -491,7 +491,7 @@ export default class SearchMenu extends Component {
           @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
-        <MenuPanel @panelClass="search-menu-panel">
+        <MenuPanel class="search-menu-panel">
           <Results
             @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}

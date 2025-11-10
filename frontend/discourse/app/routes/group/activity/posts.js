@@ -1,4 +1,5 @@
-import { action, get } from "@ember/object";
+import { action } from "@ember/object";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -12,9 +13,14 @@ export function buildGroupPage(type) {
       return i18n(`groups.${type}`);
     }
 
-    model(params, transition) {
-      let categoryId = get(transition.to, "queryParams.category_id");
-      return this.modelFor("group").findPosts({ type, categoryId });
+    async model(params, transition) {
+      const categoryId = transition.to.queryParams.category_id;
+      const posts = await this.modelFor("group").findPosts({
+        type,
+        categoryId,
+      });
+
+      return new TrackedArray(posts);
     }
 
     setupController(controller, model) {

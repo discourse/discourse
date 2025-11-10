@@ -23,7 +23,6 @@ export default class BookmarkMenu extends Component {
   @tracked quicksaved = false;
   @tracked reminderAtOptions = [];
 
-  bookmarkManager = this.args.bookmarkManager;
   timezone = this.currentUser?.user_option?.timezone || moment.tz.guess();
   timeShortcuts = timeShortcuts(this.timezone);
   bookmarkCreatePromise = null;
@@ -39,6 +38,10 @@ export default class BookmarkMenu extends Component {
     const custom = this.timeShortcuts.custom();
     custom.label = "time_shortcut.more_options";
     this.reminderAtOptions.push(custom);
+  }
+
+  get bookmarkManager() {
+    return this.args.bookmarkManager;
   }
 
   get existingBookmark() {

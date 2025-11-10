@@ -83,7 +83,6 @@ export default class DiscoursePostEventMoreMenu extends Component {
         },
       ],
       {
-        rrule: event.rrule,
         location: event.location,
         details: event.description,
       }

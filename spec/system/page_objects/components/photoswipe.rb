@@ -13,11 +13,12 @@ module PageObjects
       DOWNLOAD_BTN = ".pswp__button--download-image"
       ORIGINAL_IMAGE_BTN = ".pswp__button--original-image"
       IMAGE_INFO_BTN = ".pswp__button--image-info"
-      COUNTER = ".pswp__counter"
+      COUNTER = ".pswp__custom-counter"
       CAPTION = ".pswp__caption"
       CAPTION_TITLE = ".pswp__caption-title"
       CAPTION_DETAILS = ".pswp__caption-details"
       UI_VISIBLE = ".pswp--ui-visible"
+      ACTIVE_IMG = ".pswp__item[aria-hidden='false'] .pswp__img"
 
       def initialize
         @component = find(SELECTOR)
@@ -45,6 +46,10 @@ module PageObjects
 
       def close_button
         component.find(CLOSE_BTN)
+      end
+
+      def counter
+        component.find(COUNTER)
       end
 
       def has_counter?(text)
@@ -107,12 +112,20 @@ module PageObjects
         component.has_css?(IMAGE_INFO_BTN)
       end
 
+      def has_no_image_info_button?
+        component.has_no_css?(IMAGE_INFO_BTN)
+      end
+
       def has_ui_visible?
         page.has_css?(UI_VISIBLE)
       end
 
       def has_no_ui_visible?
         page.has_no_css?(UI_VISIBLE)
+      end
+
+      def has_image_source?(upload)
+        component.has_css?(ACTIVE_IMG + "[src$='#{upload.url}']")
       end
     end
   end

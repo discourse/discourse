@@ -3041,7 +3041,7 @@ ru:
       reply: "Ответить"
       cancel: "Отмена"
       create_topic: "Создать тему"
-      create_pm: "Отправить сообщение"
+      create_pm: "Отправка сообщения"
       create_whisper: "Скрытое сообщение"
       create_shared_draft: "Создать общий черновик"
       edit_shared_draft: "Редактировать общий черновик"

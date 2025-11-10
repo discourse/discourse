@@ -10,7 +10,7 @@ import {
   visit,
   waitFor,
 } from "@ember/test-helpers";
-import { test } from "qunit";
+import { module, test } from "qunit";
 import sinon from "sinon";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import LinkLookup from "discourse/lib/link-lookup";
@@ -813,6 +813,51 @@ import { i18n } from "discourse-i18n";
           .dom("#reply-control.open")
           .exists("goes back to open state if there's errors");
       });
+
+      module(
+        "Composer can switch between new topic and new PM in different contexts",
+        function () {
+          test("within post/topic context", async function (assert) {
+            await visit("/t/this-is-a-test-topic/54081");
+            await click(".topic-post[data-post-number='1'] button.reply");
+            await selectKit(".composer-actions").expand();
+            assert.notStrictEqual(
+              selectKit(".composer-actions")
+                .rowByValue("create_private_message")
+                .exists(),
+              "New message option is not present when in reply mode"
+            );
+
+            await click("#reply-control .discard-button");
+            await visit("/");
+            await click("#create-topic");
+            await selectKit(".composer-actions").expand();
+            assert.true(
+              selectKit(".composer-actions")
+                .rowByValue("reply_to_topic")
+                .exists(),
+              "composer topic context is preserved when reopened"
+            );
+
+            await selectKit(".composer-actions").selectRowByValue(
+              "create_private_message"
+            );
+            assert.dom(".action-title").hasText(i18n("topic.private_message"));
+            assert
+              .dom(".save-or-cancel button")
+              .hasText(i18n("composer.create_pm"));
+
+            await selectKit(".composer-actions").expand();
+            await selectKit(".composer-actions").selectRowByValue(
+              "create_topic"
+            );
+            assert.dom(".action-title").hasText(i18n("topic.create_long"));
+            assert
+              .dom(".save-or-cancel button")
+              .hasText(i18n("composer.create_topic"));
+          });
+        }
+      );
 
       test("Composer can toggle between reply and createTopic", async function (assert) {
         await visit("/t/this-is-a-test-topic/54081");

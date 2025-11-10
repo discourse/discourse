@@ -45,7 +45,10 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { SKIP } from "discourse/modifiers/d-autocomplete";
+import {
+  EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
+  SKIP,
+} from "discourse/modifiers/d-autocomplete";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];
@@ -324,10 +327,10 @@ export default class DEditor extends Component {
       },
 
       onKeyUp: (text, cp) => {
-        const matches =
-          /(?:^|[\s.\?,@\/#!%&*;:\[\]{}=\-_()])(:(?!:).?[\w-]*:?(?!:)(?:t\d?)?:?) ?$/gi.exec(
-            text.substring(0, cp)
-          );
+        const matches = new RegExp(
+          `(?:^|${EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP.source})(:(?!:).?[\\w-]*:?(?!:)(?:t\\d?)?:?) ?$`,
+          "gi"
+        ).exec(text.substring(0, cp));
 
         if (matches && matches[1]) {
           return [matches[1]];

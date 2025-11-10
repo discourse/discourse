@@ -1021,6 +1021,13 @@ form {
   }
 }
 
+#skip-links__container {
+  position: fixed;
+  top: -50px;
+  left: var(--space-4);
+  z-index: z("header") + 1;
+}
+
 #skip-links__container a,
 a#user-nav-skip-link,
 a#skip-link,
