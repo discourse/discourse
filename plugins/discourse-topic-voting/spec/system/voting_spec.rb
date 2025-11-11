@@ -41,7 +41,9 @@ RSpec.describe "Topic voting", type: :system do
 
     expect(topic_page.vote_count).to have_text("0")
     topic_page.vote
-    expect(topic_page.vote_popup).to have_text("My Votes: 9/10 Left")
+    expect(topic_page.vote_popup).to have_text(
+      I18n.t("js.topic_voting.see_votes", count: 9, max: 10),
+    )
     expect(topic_page.vote_count).to have_text("1")
 
     # visit user activity page
@@ -66,7 +68,9 @@ RSpec.describe "Topic voting", type: :system do
       category_page.visit(category1).select_topic(topic1)
       topic_page.vote
 
-      expect(topic_page.vote_popup).to have_text("My Votes: 0/1 Left")
+      expect(topic_page.vote_popup).to have_text(
+        I18n.t("js.topic_voting.see_votes", count: 0, max: 1),
+      )
     end
   end
 end
