@@ -51,7 +51,7 @@ export default class VoteBox extends Component {
   }
 
   get buttonClasses() {
-    return this.currentUser.vote_limit === 0
+    return this.currentUser?.vote_limit === 0
       ? "btn-default vote-button"
       : "btn-primary vote-button";
   }
