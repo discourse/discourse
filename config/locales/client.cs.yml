@@ -761,7 +761,7 @@ cs:
         ignore_success: "Všechny revize vytvořené zakázanými pluginy byly smazány."
       explain:
         why: "vysvětlete, proč tato položka skončila ve frontě"
-        title: "Přezkoumatelné bodování"
+        title: "Hodnocení nahlášeného příspěvku"
         formula: "Vzorec"
         subtotal: "Mezisoučet"
         total: "Celkem"
@@ -948,7 +948,7 @@ cs:
         all:
           title: "Vše"
       context_question:
-        is_this_post: "Je to %{reviewable_type} %{reviewable_human_score_types}?"
+        is_this_post: "Je toto %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "nebo"
         something_else_wrong: "Je na tomto %{reviewable_type} něco špatného?"
       types:
@@ -7998,7 +7998,7 @@ cs:
         manage_user: "Spravovat uživatele"
         show_public_profile: "Zobrazit veřejný profil"
         action_logs: "Protokoly akcí"
-        ip_lookup: "Vyhledávání IP adresy"
+        ip_lookup: "Vyhledání IP adresy"
         log_out: "Odhlásit se"
         logged_out: "Uživatel byl odhlášen na všech zařízeních."
         revoke_admin: "Odebrat administrátorská práva"

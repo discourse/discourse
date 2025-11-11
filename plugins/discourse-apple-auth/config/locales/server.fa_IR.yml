@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  site_settings:
+    apple_client_id: "(ورود با اپل) شناسه «Service Identifier» اپل از کنسول توسعه‌دهنده. معمولا رشته‌ای به سبک نام دامنه معکوس (مثلا com.example.auth) است. (ورود با اپل)"

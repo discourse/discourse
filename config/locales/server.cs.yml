@@ -1157,7 +1157,7 @@ cs:
       email_title: 'Příspěvek v „%{title}“ vyžaduje pozornost redakce'
       email_body: "%{link}\\n\\n%{message}\n"
     notify_user:
-      title: "Poslat @%{username} zprávu"
+      title: "Poslat zprávu na @%{username}"
       description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       short_description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       email_title: 'Váš příspěvek v „%{title}“'
@@ -2262,6 +2262,7 @@ cs:
     auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují práh rychlého psaní `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
+    reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
@@ -2342,6 +2343,9 @@ cs:
     glimmer_post_stream_mode: "Určete, zda se použije nová implementace „glimmer“ pro poststream. Možnost „auto“ se automaticky aktivuje, jakmile budou připraveny všechny vaše šablony a pluginy. Tato implementace je ve fázi aktivního vývoje a není určena pro produkční použití. Nevyvíjejte pro ni šablony/pluginy, dokud nebude implementace dokončena a oznámena."
     glimmer_post_stream_mode_auto_groups: "Povolit novou implementaci „glimmer“ pro poststream v režimu „auto“ pro zadané skupiny uživatelů. Tato implementace je ve fázi aktivního vývoje a není určena pro produkční použití. Nevyvíjejte pro ni šablony/pluginy, dokud nebude implementace dokončena a oznámena."
     deactivate_widgets_rendering: "Zakázat starší vykreslovací jádro widgetů. Tím se zakážou všechny widgety, které nebyly aktualizovány na komponenty Glimmer, a také se bezpodmínečně povolí Glimmer Post Stream bez ohledu na hodnotu nastavení `glimmer_post_stream_mode`. Toto nastavení se nedoporučuje pro produkční weby, protože může narušit stávající motivy a pluginy."
+    floatkit_autocomplete_composer: "Povolit v editoru nabídku automatického doplňování založenou na Floatkitu. Toto je vylepšení uživatelského rozhraní, které nahradí stávající nabídku automatického doplňování založenou na JQuery."
+    floatkit_autocomplete_input_fields: "Povolit nabídku automatického doplňování založenou na technologii Floatkit pro vstupní pole v polích pro vyhledávání na celé stránce a pro výběr skupin. Toto je vylepšení uživatelského rozhraní, které nahradí stávající nabídku automatického doplňování založenou na technologii jQuery."
+    floatkit_autocomplete_chat_composer: "Povolit v editoru chatu nabídku automatického doplňování založenou na Floatkitu. Toto je vylepšení uživatelského rozhraní, které nahradí stávající nabídku automatického doplňování založenou na jQuery."
     experimental_form_templates: "Povolit funkci šablon formulářů. Spravujte šablony v <a href='%{base_path}/admin/customize/form-templates'>Přizpůsobit/Šablony</a>."
     adobe_analytics_tags_url: "Adresa URL tagů Adobe Analytics (`https://assets.adobedtm.com/...`)"
     viewport_based_mobile_mode: "EXPERIMENTÁLNÍ: Zakáže mobilní/desktopové režimy založené na uživatelském agentu a použije místo nich šířku zobrazovací oblasti."
@@ -4631,6 +4635,8 @@ cs:
       low: "Nízká"
       medium: "Střední"
       high: "Vysoká"
+    must_claim: "Než budete jednat, musíte si položky nejdříve nárokovat."
+    user_claimed: "Tuto položku si nárokoval jiný uživatel."
     reasons:
       auto_silence_regex: "Nový uživatel, jehož první příspěvek odpovídá nastavení %{link} ."
       staged: "Nová témata a příspěvky pro předběžně založené uživatele musí schválit členové redakce. Viz %{link}."

@@ -14,6 +14,7 @@ fa_IR:
       event_started:
         title: رویداد شروع شد
   site_settings:
+    events_max_rows: "حداکثر ردیف‌های متنی برای هر رویداد در تقویم."
     events_calendar_categories: "نمایش رویدادهای تقویم در بالای دسته‌بندی"
     sidebar_show_upcoming_events: "پیوند رویدادهای آینده را در نوار کناری زیر «بیشتر» نمایش دهید."
   discourse_calendar:

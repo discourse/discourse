@@ -8,6 +8,12 @@ cs:
   js:
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
+    composer:
+      composer_actions:
+        create_as_post_voting:
+          label: "Hlasovat o příspěvku"
+        remove_as_post_voting:
+          label: "Odebrat hlasování o příspěvku"
     post_voting:
       post:
         post_voting_comment:

@@ -17,6 +17,12 @@ fa_IR:
               label: "مرتب‌سازی بر اساس"
             tag:
               label: "برچسب"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "ایجاد مدل LLM"
+            update_ai_llm_model: "به‌روزرسانی مدل LLM"
+            delete_ai_llm_model: "حذف مدل LLM"
   js:
     discourse_automation:
       scriptables:
@@ -44,6 +50,8 @@ fa_IR:
           fields:
             model:
               label: "مدل"
+            tool:
+              label: "ابزار"
         llm_triage:
           fields:
             search_for_text:

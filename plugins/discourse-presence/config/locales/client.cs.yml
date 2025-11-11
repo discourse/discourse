@@ -9,16 +9,16 @@ cs:
     presence:
       replying:
         one: "odpovídá"
-        few: "odpovídá"
-        many: "odpovídá"
-        other: "odpovídá"
+        few: "odpovídají"
+        many: "odpovídají"
+        other: "odpovídají"
       editing:
         one: "upravuje"
-        few: "upravuje"
-        many: "upravuje"
-        other: "upravuje"
+        few: "upravují"
+        many: "upravují"
+        other: "upravují"
       replying_to_topic:
         one: "odpovídá"
-        few: "odpovídá"
-        many: "odpovídá"
-        other: "odpovídá"
+        few: "odpovídají"
+        many: "odpovídají"
+        other: "odpovídají"
