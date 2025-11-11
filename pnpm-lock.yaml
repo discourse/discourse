@@ -246,6 +246,9 @@ importers:
 
   frontend/discourse:
     dependencies:
+      '@embroider/legacy-inspector-support':
+        specifier: ^0.1.3
+        version: 0.1.3
       '@faker-js/faker':
         specifier: ^10.1.0
         version: 10.1.0
@@ -479,7 +482,7 @@ importers:
         specifier: ^1.18.0
         version: 1.19.2(@glint/template@1.7.2)
       '@embroider/router':
-        specifier: ^3.0.1
+        specifier: ^3.0.4
         version: 3.0.4(@embroider/core@4.2.5(@glint/template@1.7.2))(@glint/template@1.7.2)
       '@embroider/test-setup':
         specifier: 4.0.0
@@ -1661,6 +1664,9 @@ packages:
   '@embroider/core@4.2.5':
     resolution: {integrity: sha512-e51BLGoG0YFEZSnEMeYqlQryi3lDCIrW4mHhti3lrnKEyIO30nPkrlCe6Z4zcBkMJPi4rJo1cecQc8UuJU5f+w==}
     engines: {node: 12.* || 14.* || >= 16}
+
+  '@embroider/legacy-inspector-support@0.1.3':
+    resolution: {integrity: sha512-0VzD1xExkT78a1CUiW8wZ5VZDL4bVyMSc3t8E/RiAW1X6TlyKIA/m6zoQgsQtQIiiTPPxH0/1Tdd0F7b5//etw==}
 
   '@embroider/macros@1.18.0':
     resolution: {integrity: sha512-KanP80XxNK4bmQ1HKTcUjy/cdCt9n7knPMLK1vzHdOFymACHo+GbhgUjXjYdOCuBTv+ZwcjL2P2XDmBcYS9r8g==}
@@ -10379,6 +10385,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
+  '@embroider/legacy-inspector-support@0.1.3':
+    dependencies:
+      '@embroider/addon-shim': 1.10.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@embroider/macros@1.18.0(@glint/template@1.7.2)':
     dependencies:
       '@embroider/shared-internals': 3.0.0
@@ -13970,7 +13982,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.5
       '@babel/eslint-parser': 7.28.5(@babel/core@7.28.5)(eslint@9.33.0)
-      '@glimmer/syntax': 0.95.0
+      '@glimmer/syntax': 0.93.1
       '@typescript-eslint/tsconfig-utils': 8.46.2(typescript@5.9.3)
       content-tag: 2.0.3
       eslint-scope: 7.2.2

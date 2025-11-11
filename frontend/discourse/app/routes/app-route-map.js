@@ -6,27 +6,22 @@ export default function () {
   this.route("exception");
   this.route("exception-unknown", { path: "/404" });
 
-  this.route("about", { resetNamespace: true });
+  this.route("about");
 
   this.route("post", { path: "/p/:id" });
   this.route("posts");
 
   // Topic routes
-  this.route(
-    "topic",
-    { path: "/t/:slug/:id", resetNamespace: true },
-    function () {
-      this.route("from-params", { path: "/" });
-      this.route("from-params-near", { path: "/:nearPost" });
-    }
-  );
+  this.route("topic", { path: "/t/:slug/:id" }, function () {
+    this.route("from-params", { path: "/" });
+    this.route("from-params-near", { path: "/:nearPost" });
+  });
 
   this.route("topicBySlugOrId", {
     path: "/t/:slug_or_id",
-    resetNamespace: true,
   });
 
-  this.route("discovery", { path: "/", resetNamespace: true }, function () {
+  this.route("discovery", { path: "/" }, function () {
     // top by periods - legacy route
     Site.currentProp("periods").forEach((period) => {
       const top = "top" + capitalize(period);
@@ -66,11 +61,11 @@ export default function () {
     this.route("login-required");
   });
 
-  this.route("groups", { resetNamespace: true, path: "/g" }, function () {
+  this.route("groups", { path: "/g" }, function () {
     this.route("new", { path: "custom/new" });
   });
 
-  this.route("group", { path: "/g/:name", resetNamespace: true }, function () {
+  this.route("group", { path: "/g/:name" }, function () {
     this.route("members");
     this.route("requests");
 
@@ -109,94 +104,90 @@ export default function () {
   this.route("activate-account", { path: "/u/activate-account/:token" });
   this.route("confirm-new-email", { path: "/u/confirm-new-email/:token" });
   this.route("confirm-old-email", { path: "/u/confirm-old-email/:token" });
-  this.route(
-    "user",
-    { path: "/u/:username", resetNamespace: true },
-    function () {
-      this.route("profile-hidden");
-      this.route("summary");
-      this.route(
-        "userActivity",
-        { path: "/activity", resetNamespace: true },
-        function () {
-          this.route("topics");
-          this.route("replies");
-          this.route("likesGiven", { path: "likes-given" });
-          this.route("bookmarks");
-          this.route("bookmarksWithReminders", {
-            path: "bookmarks-with-reminders",
-          });
-          this.route("pending");
-          this.route("drafts");
-          this.route("read");
-        }
-      );
+  this.route("user", { path: "/u/:username" }, function () {
+    this.route("profile-hidden");
+    this.route("summary");
+    this.route(
+      "userActivity",
+      { path: "/activity", resetNamespace: true },
+      function () {
+        this.route("topics");
+        this.route("replies");
+        this.route("likesGiven", { path: "likes-given" });
+        this.route("bookmarks");
+        this.route("bookmarksWithReminders", {
+          path: "bookmarks-with-reminders",
+        });
+        this.route("pending");
+        this.route("drafts");
+        this.route("read");
+      }
+    );
 
-      this.route(
-        "userNotifications",
-        { path: "/notifications", resetNamespace: true },
-        function () {
-          this.route("responses");
-          this.route("likesReceived", { path: "likes-received" });
-          this.route("mentions");
-          this.route("edits");
-          this.route("links");
-        }
-      );
+    this.route(
+      "userNotifications",
+      { path: "/notifications", resetNamespace: true },
+      function () {
+        this.route("responses");
+        this.route("likesReceived", { path: "likes-received" });
+        this.route("mentions");
+        this.route("edits");
+        this.route("links");
+      }
+    );
 
-      this.route("badges");
-      this.route("deletedPosts", { path: "/deleted-posts" });
+    this.route("badges");
+    this.route("deletedPosts", { path: "/deleted-posts" });
 
-      this.route(
-        "userPrivateMessages",
-        { path: "/messages", resetNamespace: true },
-        function () {
-          this.route("user", { path: "/" }, function () {
-            this.route("new");
-            this.route("unread");
-            this.route("archive");
-            this.route("sent");
-            this.route("warnings");
-          });
+    this.route(
+      "userPrivateMessages",
+      { path: "/messages", resetNamespace: true },
+      function () {
+        this.route("user", { path: "/" }, function () {
+          this.route("new");
+          this.route("unread");
+          this.route("archive");
+          this.route("sent");
+          this.route("warnings");
+        });
 
-          this.route("group", { path: "group/:name" }, function () {
-            this.route("archive");
-            this.route("new");
-            this.route("unread");
-          });
+        this.route("group", { path: "group/:name" }, function () {
+          this.route("archive");
+          this.route("new");
+          this.route("unread");
+        });
 
-          this.route("tags", function () {
-            this.route("show", { path: ":id" });
-          });
-        }
-      );
+        this.route("tags", function () {
+          this.route("show", { path: ":id" });
+        });
+      }
+    );
 
-      this.route("preferences", { resetNamespace: true }, function () {
-        this.route("account");
-        this.route("security");
-        this.route("profile");
-        this.route("emails");
-        this.route("notifications");
-        this.route("tracking");
-        this.route("users");
-        this.route("tags");
-        this.route("interface");
-        this.route("apps");
-        this.route("navigation-menu");
+    this.route("preferences", { resetNamespace: true }, function () {
+      this.route("account");
+      this.route("security");
+      this.route("profile");
+      this.route("emails");
+      this.route("notifications");
+      this.route("tracking");
+      this.route("users");
+      this.route("tags");
+      this.route("interface");
+      this.route("apps");
+      this.route("navigation-menu");
 
-        this.route("email");
-        this.route("second-factor");
-      });
+      this.route("email");
+      this.route("second-factor");
+    });
 
-      this.route(
-        "userInvited",
-        { path: "/invited", resetNamespace: true },
-        function () {
-          this.route("show", { path: "/:filter" });
-        }
-      );
-    }
-  );
+    this.route(
+      "userInvited",
+      { path: "/invited", resetNamespace: true },
+      function () {
+        this.route("show", { path: "/:filter" });
+      }
+    );
+  });
 
   this.route("review", function () {
     this.route("show", { path: "/:reviewable_id" });
@@ -223,13 +214,13 @@ export default function () {
   this.route("new-message");
   this.route("new-invite");
 
-  this.route("badges", { resetNamespace: true }, function () {
+  this.route("badges", function () {
     this.route("show", { path: "/:id/:slug" });
   });
 
   this.route("full-page-search", { path: "/search" });
 
-  this.route("tag", { resetNamespace: true }, function () {
+  this.route("tag", function () {
     this.route("show", { path: "/:tag_id" });
 
     Site.currentProp("filters").forEach((filter) => {
@@ -239,7 +230,7 @@ export default function () {
     });
   });
 
-  this.route("tags", { resetNamespace: true }, function () {
+  this.route("tags", function () {
     this.route("showCategory", {
       path: "/c/*category_slug_path_with_id/:tag_id",
     });
@@ -269,16 +260,12 @@ export default function () {
     this.route("legacyRedirect", { path: "/:tag_id" });
   });
 
-  this.route(
-    "tagGroups",
-    { path: "/tag_groups", resetNamespace: true },
-    function () {
-      this.route("edit", { path: "/:id" });
-      this.route("new");
-    }
-  );
+  this.route("tagGroups", { path: "/tag_groups" }, function () {
+    this.route("edit", { path: "/:id" });
+    this.route("new");
+  });
 
-  this.route("invites", { resetNamespace: true }, function () {
+  this.route("invites", function () {
     this.route("show", { path: "/:token" });
   });
 

@@ -20,6 +20,7 @@ registerDiscourseImplicitInjections();
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import "discourse/lib/theme-settings-store";
+import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
 // import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isTesting } from "discourse/lib/environment";
@@ -117,6 +118,8 @@ export async function loadAdmin() {
 class Discourse extends Application {
   modulePrefix = "discourse";
   rootElement = "#main";
+
+  inspector = setupInspector(this);
 
   customEvents = {
     paste: "paste",
