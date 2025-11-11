@@ -14,7 +14,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Translation do
 
   describe "#run" do
     it "translates a single piece of content when no cases are provided" do
-      runner = described_class.new("translation:post_raw_translator")
+      runner = described_class.new("post_raw_translator")
       allow(bot_double).to receive(:reply) { |_ctx, &blk| blk.call("Hola mundo", nil, nil) }
 
       eval_case = OpenStruct.new(args: { input: "Hello world", target_locale: "es" })
@@ -23,7 +23,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Translation do
     end
 
     it "supports multiple cases and returns metadata for each entry" do
-      runner = described_class.new("translation:short_text_translator")
+      runner = described_class.new("short_text_translator")
       responses = %w[Hola Salut]
       allow(bot_double).to receive(:reply) do |_ctx, &blk|
         blk.call(responses.shift, nil, nil)
@@ -48,7 +48,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Translation do
     end
 
     it "invokes the locale detector without requiring a target locale" do
-      runner = described_class.new("translation:locale_detector")
+      runner = described_class.new("locale_detector")
       allow(bot_double).to receive(:reply) { |_ctx, &blk| blk.call("es", nil, nil) }
 
       eval_case = OpenStruct.new(args: { input: "¿Cómo estás?" })
@@ -57,7 +57,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Translation do
     end
 
     it "raises when translation cases omit the target locale" do
-      runner = described_class.new("translation:topic_title_translator")
+      runner = described_class.new("topic_title_translator")
 
       expect { runner.run(OpenStruct.new(args: { input: "Hello" }), llm) }.to raise_error(
         ArgumentError,

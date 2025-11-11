@@ -18,8 +18,8 @@ module DiscourseAi
         end
 
         def initialize(feature_name)
-          @operation = feature_name.split(":").last
-          if !OPERATIONS.key?(@operation)
+          @operation = feature_name
+          if !FEATURE_PERSONA_MAP.key?(@operation)
             raise ArgumentError, "Unsupported translation feature '#{feature_name}'"
           end
         end
