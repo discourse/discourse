@@ -4,6 +4,7 @@ import Layout from "discourse/components/discovery/layout";
 import Navigation from "discourse/components/discovery/navigation";
 import Topics from "discourse/components/discovery/topics";
 import TagInfo from "discourse/components/tag-info";
+import { i18n } from "discourse-i18n";
 
 export default <template>
   <Layout
@@ -51,6 +52,10 @@ export default <template>
     </:header>
 
     <:list>
+      {{#if @controller.showFakeUpcomingChange}}
+        {{i18n "user.upcoming_changes.title"}}
+      {{/if}}
+
       <Topics
         @period={{@controller.model.list.for_period}}
         @changePeriod={{@controller.changePeriod}}
