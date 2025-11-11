@@ -248,7 +248,7 @@ hy:
     joined: "Միացել է "
     admin_title: "Ադմին"
     show_more: "ցույց տալ ավելին"
-    show_help: "տարբերակներ"
+    show_help: "Տարբերակներ"
     links: "Հղումներ"
     links_lowercase:
       one: "հղում"
@@ -607,7 +607,7 @@ hy:
       replies:
         one: "%{count} պատասխան"
         other: "%{count} պատասխան"
-      edit: "Խմբագրել"
+      edit: "Խմբագրել Գրառումը"
       save: "Պահպանել"
       cancel: "Չեղարկել"
       new_topic: "Այս կետի հաստատումը նոր թեմա կստեղծի"
@@ -628,7 +628,6 @@ hy:
           created_at: "Ստեղծվել է At"
           created_at_asc: "Ստեղծվել է At (հետադարձ տեսակավորում)"
         priority:
-          title: "Մինիմալ Գերակայություն"
           any: "(ցանկացած)"
           low: "Բարձր"
           medium: "Միջին"
@@ -695,6 +694,7 @@ hy:
       user_label: "Օգտատեր"
       notes:
         delete: "Ջնջել"
+      topic_label: "Թեմա"
       review_user: "Օգտատեր"
       copy_link: "Պատճենել հղումը"
       insights:
@@ -3504,7 +3504,6 @@ hy:
         go_to_unread_post: "%{shortcut} Գնալ դեպի առաջին չընթերցված գրառումը"
       application:
         title: "Հավելված"
-        create: "%{shortcut} Ստեղծել նոր թեմա"
         notifications: "%{shortcut} Բացել ծանուցումները"
         user_profile_menu: "%{shortcut} Բացել օգտատիրոջ մենյուն"
         show_incoming_updated_topics: "%{shortcut} Ցուցադրել թարմացված թեմաները"

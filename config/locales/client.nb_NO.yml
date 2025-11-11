@@ -248,7 +248,7 @@ nb_NO:
     joined: "Ble medlem"
     admin_title: "Admin"
     show_more: "vis mer"
-    show_help: "alternativer"
+    show_help: "Alternativer"
     links: "Lenker"
     links_lowercase:
       one: "link"
@@ -590,7 +590,7 @@ nb_NO:
       replies:
         one: "%{count} svar"
         other: "%{count} svar"
-      edit: "Rediger"
+      edit: "Rediger innlegg"
       save: "Lagre"
       cancel: "Avbryt"
       new_topic: "Godkjenning av dette elementet vil opprette et nytt emne"
@@ -611,7 +611,6 @@ nb_NO:
           created_at: "Opprettet på"
           created_at_asc: "Opprettet i (bakover)"
         priority:
-          title: "Minimum prioritet"
           any: "(alt)"
           low: "Lav"
           medium: "Middels"
@@ -664,6 +663,7 @@ nb_NO:
       user_label: "Bruker"
       notes:
         delete: "Slett"
+      topic_label: "Emne"
       review_user: "Bruker"
       copy_link_feedback: "Lenk kopiert"
       insights:
@@ -4045,7 +4045,6 @@ nb_NO:
         go_to_unread_post: "%{shortcut} Gå til første uleste innlegg"
       application:
         title: "Applikasjon"
-        create: "%{shortcut} Opprett nytt emne"
         notifications: "%{shortcut} Åpne varsler"
         user_profile_menu: "%{shortcut} Åpne brukermenyen"
         show_incoming_updated_topics: "%{shortcut} Vis oppdaterte emner"
