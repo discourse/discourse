@@ -33,7 +33,7 @@
 
   &.welcome-banner--enabled {
     .floating-search-input {
-      @include float-up;
+      @include d-animation(float-up, 0.25s, ease);
     }
   }
 
