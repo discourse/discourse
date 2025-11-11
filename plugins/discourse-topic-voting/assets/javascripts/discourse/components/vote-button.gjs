@@ -107,7 +107,6 @@ export default class VoteBox extends Component {
 
   @action
   onCloseMenu() {
-    // Mark that user has seen the success menu
     if (this.hasVoted && !this.hasSeenSuccessMenu) {
       this.hasSeenSuccessMenu = true;
     }
