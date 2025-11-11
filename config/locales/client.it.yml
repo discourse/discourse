@@ -357,7 +357,7 @@ it:
     joined: "Iscritto"
     admin_title: "Amministrazione"
     show_more: "mostra altro"
-    show_help: "opzioni"
+    show_help: "Opzioni"
     links: "Collegamenti"
     links_lowercase:
       one: "collegamento"
@@ -748,7 +748,7 @@ it:
       replies:
         one: "%{count} risposta"
         other: "%{count} risposte"
-      edit: "Modifica"
+      edit: "Modifica Messaggio"
       save: "Salva"
       cancel: "Annulla"
       new_topic: "L'approvazione di questo elemento creerà un nuovo Argomento"
@@ -770,7 +770,6 @@ it:
           created_at: "Creato il"
           created_at_asc: "Creato il (inverso)"
         priority:
-          title: "Priorità Minima"
           any: "(qualsiasi)"
           low: "Bassa"
           medium: "Media"
@@ -859,7 +858,7 @@ it:
         chars_remaining: "%{count} caratteri rimasti"
         delete_note: "Elimina questa nota"
         delete: "Elimina"
-      new_topic_label: "Nuovo argomento"
+      topic_label: "Argomento"
       queued_user: "Utente in coda"
       posted_in: "Pubblicato in"
       flagged_user: "Utente contrassegnato"
@@ -874,9 +873,6 @@ it:
         flagged_by_users:
           one: "Segnalato da %{count} utente unico"
           other: "Segnalato da %{count} utenti diversi"
-        similar_posts: "Messaggi simili passati"
-        flagged_in_timeframe: "%{count} segnalati in precedenza"
-        user_activity: "Attività dell'utente"
         activities:
           new_account: "nuovo account"
           trust_level: "livello di attendibilità: %{trustLevelName}"
@@ -2696,7 +2692,6 @@ it:
         title: "Traduzione del messaggio"
         select: "Seleziona la traduzione"
         save: "Salva la traduzione"
-        original_content: "Contenuto del messaggio originale"
         translation: "Traduzione"
         placeholder: "Inserisci qui la traduzione del messaggio..."
       group_mentioned_limit:
@@ -2856,7 +2851,6 @@ it:
           desc: "Rispondi senza cambiare la data dell'ultima risposta"
         toggle_unlisted:
           label: Attiva/disattiva non in elenco
-          desc: Argomenti non in elenco accessibili ai membri solo tramite link diretto
       reload: "Ricarica"
       ignore: "Ignora"
       image_alt_text:
@@ -4545,7 +4539,6 @@ it:
         go_to_unread_post: "%{shortcut} Vai al primo messaggio non letto"
       application:
         title: "Applicazione"
-        create: "%{shortcut} Crea un nuovo argomento"
         notifications: "%{shortcut} Apri notifiche"
         hamburger_menu: "%{shortcut} Apri il menu di navigazione"
         user_profile_menu: "%{shortcut} Apri menu utente"

@@ -205,7 +205,7 @@ gl:
     joined: "Inscrito"
     admin_title: "Admin"
     show_more: "amosar máis"
-    show_help: "opcións"
+    show_help: "Opcións"
     links: "Ligazóns"
     links_lowercase:
       one: "ligazón"
@@ -410,7 +410,6 @@ gl:
       topic: "Tema:"
       filtered_topic: "Filtrou o contido revisábel nun único tema."
       filtered_user: "Usuario"
-      filtered_reviewed_by: "Revisado por"
       show_all_topics: "buscar todos os temas"
       deleted_post: "(publicación eliminada)"
       deleted_user: "(usuario eliminado)"
@@ -452,7 +451,7 @@ gl:
       replies:
         one: "%{count} resposta"
         other: "%{count} respostas"
-      edit: "Editar"
+      edit: "Editar publicación"
       save: "Gardar"
       cancel: "Cancelar"
       new_topic: "A aprobación deste elemento creará un tema novo"
@@ -473,7 +472,6 @@ gl:
           created_at: "Creado o"
           created_at_asc: "Creado o (inverso)"
         priority:
-          title: "Prioridade mínima"
           any: "(calquera)"
           low: "Baixa"
           medium: "Media"
@@ -519,6 +517,7 @@ gl:
       user_label: "Usuario"
       notes:
         delete: "Eliminar"
+      topic_label: "Tema"
       review_user: "Usuario"
       insights:
         activities:
@@ -3105,7 +3104,6 @@ gl:
         go_to_unread_post: "%{shortcut} Ir á primeira publicación pendente de lectura"
       application:
         title: "Aplicativo"
-        create: "%{shortcut} Crear un novo tema"
         notifications: "%{shortcut} Abrir notificacións"
         user_profile_menu: "%{shortcut} Abrir o menú do usuario"
         show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"

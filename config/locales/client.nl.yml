@@ -357,7 +357,7 @@ nl:
     joined: "Lid sinds"
     admin_title: "Beheer"
     show_more: "meer weergeven"
-    show_help: "opties"
+    show_help: "Opties"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -748,7 +748,7 @@ nl:
       replies:
         one: "%{count} antwoord"
         other: "%{count} antwoorden"
-      edit: "Bewerken"
+      edit: "Bericht bewerken"
       save: "Opslaan"
       cancel: "Annuleren"
       new_topic: "Door dit item goed te keuren, wordt eeen nieuw topic gemaakt"
@@ -770,7 +770,6 @@ nl:
           created_at: "Gemaakt op"
           created_at_asc: "Gemaakt op (omgekeerd)"
         priority:
-          title: "Minimale prioriteit"
           any: "(alle)"
           low: "Laag"
           medium: "Middel"
@@ -859,7 +858,7 @@ nl:
         chars_remaining: "%{count} tekens resterend"
         delete_note: "Deze opmerking verwijderen"
         delete: "Verwijderen"
-      new_topic_label: "Nieuw topic"
+      topic_label: "Topic"
       queued_user: "Gebruiker in wachtrij"
       posted_in: "Geplaatst in"
       flagged_user: "Gemarkeerde gebruiker"
@@ -874,9 +873,6 @@ nl:
         flagged_by_users:
           one: "Gemarkeerd door %{count} unieke gebruiker"
           other: "Gemarkeerd door %{count} unieke gebruikers"
-        similar_posts: "Soortgelijke eerdere berichten"
-        flagged_in_timeframe: "%{count} eerder gemarkeerd"
-        user_activity: "Gebruikersactiviteit"
         activities:
           new_account: "nieuw account"
           trust_level: "vertrouwensniveau: %{trustLevelName}"
@@ -2699,7 +2695,6 @@ nl:
         title: "Bericht vertalen"
         select: "Selecteer vertaling"
         save: "Vertaling opslaan"
-        original_content: "Inhoud van origineel bericht"
         translation: "Vertaling"
         placeholder: "Voer hier de vertaling voor het bericht in..."
       group_mentioned_limit:
@@ -2859,7 +2854,6 @@ nl:
           desc: "Antwoorden zonder datum van laatste antwoord te wijzigen"
         toggle_unlisted:
           label: Onzichtbaar schakelen
-          desc: Onzichtbare topics zijn alleen toegankelijk voor leden via een rechtstreekse link
       reload: "Opnieuw laden"
       ignore: "Negeren"
       image_alt_text:
@@ -4548,7 +4542,6 @@ nl:
         go_to_unread_post: "%{shortcut} Naar eerste ongelezen bericht"
       application:
         title: "Toepassing"
-        create: "%{shortcut} Nieuw topic maken"
         notifications: "%{shortcut} Meldingen openen"
         hamburger_menu: "%{shortcut} Navigatiemenu openen"
         user_profile_menu: "%{shortcut} Gebruikersmenu openen"

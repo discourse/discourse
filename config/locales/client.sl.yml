@@ -251,7 +251,7 @@ sl:
     joined: "Pridružen"
     admin_title: "Admin"
     show_more: "Več"
-    show_help: "možnosti"
+    show_help: "Možnosti"
     links: "Povezave"
     links_lowercase:
       one: "povezava"
@@ -500,7 +500,6 @@ sl:
       topic: "Tema:"
       filtered_topic: "V eni temi ste filtrirali vsebino, ki jo je mogoče pregledati."
       filtered_user: "Uporabnik"
-      filtered_reviewed_by: "Pregledal"
       show_all_topics: "prikaži vse teme"
       deleted_post: "(prispevek izbrisan)"
       deleted_user: "(uporabnik izbrisan)"
@@ -533,7 +532,7 @@ sl:
         two: "%{count} odgovora"
         few: "%{count} odgovori"
         other: "%{count} odgovorov"
-      edit: "Uredi"
+      edit: "Uredi prispevek"
       save: "Shrani"
       cancel: "Prekliči"
       new_topic: "Odobritev tega elementa bo ustvarila novo temo"
@@ -553,7 +552,6 @@ sl:
           created_at: "Ustvarjeno"
           created_at_asc: "Ustvarjeno (obratno)"
         priority:
-          title: "Minimalna prednost"
           any: "(katerikoli)"
           low: "Nizka"
           medium: "Srednja"
@@ -607,6 +605,7 @@ sl:
       user_label: "Uporabnik"
       notes:
         delete: "Izbriši"
+      topic_label: "Tema"
       review_user: "Uporabnik"
       copy_link_feedback: "Povezava kopirana"
       insights:
@@ -3355,7 +3354,6 @@ sl:
         go_to_unread_post: "%{shortcut} Na prvi neprebran prispevek"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Ustvari novo temo"
         notifications: "%{shortcut} Odpri obvestila"
         user_profile_menu: "%{shortcut} Odpri uporabniški meni"
         show_incoming_updated_topics: "%{shortcut} Prikaži osvežene teme"

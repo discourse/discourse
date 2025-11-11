@@ -212,7 +212,7 @@ id:
     joined: "Bergabung"
     admin_title: "Admin"
     show_more: "tampilkan lebih banyak"
-    show_help: "pilihan"
+    show_help: "Opsi"
     links: "Tautan"
     links_lowercase:
       other: "tautan"
@@ -455,7 +455,7 @@ id:
       topic: "Topik:"
       filtered_topic: "Anda telah menyaring ke konten yang dapat ditinjau dalam satu topik."
       filtered_user: "Pengguna"
-      filtered_reviewed_by: "Diperiksa Oleh"
+      filtered_reviewed_by: "Diperiksa oleh"
       show_all_topics: "tampilkan semua topik"
       deleted_post: "(pos dihapus)"
       deleted_user: "(pengguna dihapus)"
@@ -490,7 +490,6 @@ id:
           other: "%{count} pengguna"
       replies:
         other: "%{count} balasan"
-      edit: "Ubah"
       save: "Simpan"
       cancel: "Batal"
       new_topic: "Menyetujui item ini akan membuat topik baru"
@@ -511,7 +510,6 @@ id:
           created_at: "Dibuat Pada"
           created_at_asc: "Dibuat Pada (terbalik)"
         priority:
-          title: "Prioritas Minimum"
           any: "(apa saja)"
           low: "Rendah"
           medium: "Sedang"
@@ -578,6 +576,7 @@ id:
       user_label: "Pengguna"
       notes:
         delete: "Hapus"
+      topic_label: "Topik"
       review_user: "Pengguna"
       insights:
         activities:
@@ -2106,7 +2105,6 @@ id:
         title: "Navigasi"
       application:
         title: "Aplikasi"
-        create: "%{shortcut} Buat topik baru"
         notifications: "%{shortcut} Buka notifikasi"
       actions:
         title: "Aksi"

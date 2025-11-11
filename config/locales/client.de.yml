@@ -295,6 +295,7 @@ de:
     back_button: "Zurück"
     welcome_banner:
       header:
+        new_members: "Willkommen, %{preferred_display_name}!"
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
       search_placeholder: "Suche"
@@ -360,7 +361,7 @@ de:
     joined: "Beigetreten"
     admin_title: "Administration"
     show_more: "mehr anzeigen"
-    show_help: "Erweiterte Suche"
+    show_help: "Optionen"
     links: "Links"
     links_lowercase:
       one: "Link"
@@ -760,7 +761,7 @@ de:
       replies:
         one: "%{count} Antwort"
         other: "%{count} Antworten"
-      edit: "Bearbeiten"
+      edit: "Beitrag bearbeiten"
       save: "Speichern"
       cancel: "Abbrechen"
       new_topic: "Das Bestätigen dieses Elements wird ein neues Thema erstellen"
@@ -782,7 +783,6 @@ de:
           created_at: "Erstellt am"
           created_at_asc: "Erstellt am (umgekehrt)"
         priority:
-          title: "Minimale Priorität"
           any: "(beliebig)"
           low: "Niedrig"
           medium: "Mittel"
@@ -873,7 +873,7 @@ de:
         chars_remaining: "%{count} Zeichen verbleibend"
         delete_note: "Diese Notiz löschen"
         delete: "Löschen"
-      new_topic_label: "Neues Thema"
+      topic_label: "Thema"
       queued_user: "Benutzer in der Warteschlange"
       posted_in: "Veröffentlicht in"
       flagged_user: "Gemeldeter Benutzer"
@@ -889,9 +889,6 @@ de:
         flagged_by_users:
           one: "Gemeldet von %{count} eindeutigen Benutzer"
           other: "Gemeldet von %{count} eindeutigen Benutzern"
-        similar_posts: "Ähnliche frühere Beiträge"
-        flagged_in_timeframe: "%{count} zuvor gemeldet"
-        user_activity: "Benutzeraktivität"
         activities:
           new_account: "neues Konto"
           trust_level: "Vertrauensstufe: %{trustLevelName}"
@@ -2721,7 +2718,9 @@ de:
         title: "Beitrag übersetzen"
         select: "Übersetzung auswählen"
         save: "Übersetzung speichern"
-        original_content: "Inhalt des Originalbeitrags"
+        original_content: "Original-Beitrag"
+        translation_preview: "Übersetzungsvorschau"
+        original: "Original"
         translation: "Übersetzen"
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
       group_mentioned_limit:
@@ -2890,7 +2889,6 @@ de:
           desc: "Antworten, ohne das Datum der neuesten Antwort zu ändern"
         toggle_unlisted:
           label: Sichtbarkeit umschalten
-          desc: Nicht aufgelistete Themen, die nur für Mitglieder über einen direkten Link zugänglich sind
       reload: "Neu laden"
       ignore: "Ignorieren"
       image_alt_text:
@@ -4594,7 +4592,6 @@ de:
         go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag springen"
       application:
         title: "Anwendung"
-        create: "%{shortcut} Neues Thema erstellen"
         notifications: "%{shortcut} Benachrichtigungen öffnen"
         hamburger_menu: "%{shortcut} Navigationsmenü öffnen"
         user_profile_menu: "%{shortcut} Benutzermenü öffnen"

@@ -353,7 +353,7 @@ da:
     joined: "Tilmeldt"
     admin_title: "Admin"
     show_more: "vis mere"
-    show_help: "muligheder"
+    show_help: "Indstillinger"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -652,7 +652,7 @@ da:
       topic: "Emne:"
       filtered_topic: "Du har filtreret til indhold der kan andmeldes i ét enkelt emne."
       filtered_user: "Bruger"
-      filtered_reviewed_by: "Gennemgået Af"
+      filtered_reviewed_by: "Gennemgået af"
       show_all_topics: "vis alle emner"
       deleted_post: "(indlæg slettet)"
       deleted_user: "(bruger slettet)"
@@ -697,7 +697,7 @@ da:
       replies:
         one: "%{count} svar"
         other: "%{count} svar"
-      edit: "Rediger"
+      edit: "Ret Indlæg"
       save: "Gem"
       cancel: "Annuller"
       new_topic: "Godkendelse af dette opretter et nyt emne"
@@ -719,7 +719,6 @@ da:
           created_at: "Oprettet kl"
           created_at_asc: "Oprettet kl (omvendt)"
         priority:
-          title: "Minimums prioritet"
           any: "(enhver)"
           low: "Lav"
           medium: "Medium"
@@ -802,7 +801,7 @@ da:
         chars_remaining: "%{count} tegn tilbage"
         delete_note: "Slet denne note"
         delete: "Slet"
-      new_topic_label: "Nyt emne"
+      topic_label: "Emne"
       posted_in: "Skrevet i"
       review_user: "Bruger"
       need_help: "Brug for hjælp?"
@@ -811,7 +810,6 @@ da:
       view_source: "Vis kilde"
       insights:
         title: "Indsigter"
-        user_activity: "Brugeraktivitet"
         activities:
           new_account: "ny konto"
           trust_level: "tillidsniveau: %{trustLevelName}"
@@ -3840,7 +3838,6 @@ da:
         go_to_unread_post: "%{shortcut} Gå til det første ulæste indlæg"
       application:
         title: "Applikation"
-        create: "%{shortcut} Opret nyt emne"
         notifications: "%{shortcut} Åben notifikationer"
         user_profile_menu: "%{shortcut} Åben bruger menu"
         show_incoming_updated_topics: "%{shortcut} Vis opdaterede emner"

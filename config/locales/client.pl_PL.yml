@@ -423,7 +423,7 @@ pl_PL:
     joined: "Dołączył"
     admin_title: "Administracja"
     show_more: "pokaż więcej"
-    show_help: "opcje"
+    show_help: "Opcje"
     links: "Linki"
     links_lowercase:
       one: "link"
@@ -894,7 +894,7 @@ pl_PL:
         few: "%{count} odpowiedzi"
         many: "%{count} odpowiedzi"
         other: "%{count} odpowiedzi"
-      edit: "Edytuj"
+      edit: "Edytuj wpis"
       save: "Zapisz"
       cancel: "Anuluj"
       new_topic: "Zatwierdzenie tego elementu stworzy nowy temat"
@@ -984,6 +984,7 @@ pl_PL:
       post_flagged_as: "Wpis oznaczono jako"
       chat_flagged_as: "Czat oznaczono jako"
       queued_post_label: "Wpis w kolejce"
+      queued_topic_label: "Temat w kolejce"
       user_label: "Użytkownik"
       assigned_to: "Przypisany do"
       moderator_actions: "Działania moderatora"
@@ -1008,7 +1009,7 @@ pl_PL:
         chars_remaining: "Pozostałe znaki: %{count}"
         delete_note: "Usuń tę uwagę"
         delete: "Usuń"
-      new_topic_label: "Nowy temat"
+      topic_label: "Temat"
       queued_user: "Użytkownik w kolejce"
       posted_in: "Opublikowano w"
       flagged_user: "Oflagowany użytkownik"
@@ -1026,9 +1027,13 @@ pl_PL:
           few: "Oflagowany przez %{count} unikalnych użytkowników"
           many: "Oflagowany przez %{count} unikalnych użytkowników"
           other: "Oflagowany przez %{count} unikalnych użytkowników"
-        similar_posts: "Podobne poprzednie wpisy"
-        flagged_in_timeframe: "%{count} oflagowano wcześniej"
-        user_activity: "Aktywność użytkownika"
+        similar_posts: "Przeszłe naruszenia"
+        flagged_in_timeframe:
+          one: "%{count} potwierdzona flaga"
+          few: "%{count} potwierdzone flagi"
+          many: "%{count} potwierdzonych flag"
+          other: "%{count} potwierdzonych flag"
+        user_activity: "Informacje o użytkowniku"
         activities:
           new_account: "nowe konto"
           trust_level: "poziom zaufania: %{trustLevelName}"
@@ -1538,6 +1543,8 @@ pl_PL:
       new_private_message: "Nowa wiadomość"
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
+      upcoming_changes:
+        title: "Nadchodząca zmiana włączona"
       user_notifications:
         filters:
           filter_by: "Filtruj według"
@@ -2999,12 +3006,13 @@ pl_PL:
         title: "Tłumaczenie wpisu"
         select: "Wybierz tłumaczenie"
         save: "Zapisz tłumaczenie"
-        original_content: "Oryginalna treść wpisu"
+        original_content: "Oryginalny wpis"
         translation_preview: "Podgląd tłumaczenia"
         original: "Oryginalne"
         translation: "Tłumaczenie"
         no_translation_yet: "Zacznij pisać, aby zobaczyć podgląd tłumaczenia..."
         placeholder: "Tutaj wprowadź tłumaczenie wpisu..."
+        show_raw_markdown: "Pokaż surowe"
       group_mentioned_limit:
         one: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
         few: "<b>Ostrzeżenie!</b> Wspomniałeś/łaś o <a href='%{group_link}'>%{group}</a> , jednak ta grupa ma więcej członków niż skonfigurowany przez administratora limit wzmianek dla użytkowników %{count}. Nikt nie zostanie powiadomiony."
@@ -3190,7 +3198,7 @@ pl_PL:
           desc: "Odpowiedz bez zmiany ostatniej daty odpowiedzi"
         toggle_unlisted:
           label: Przełącz zastrzeżone
-          desc: ! "Tematy \tzastrzeżone są dostępne tylko dla członków za pośrednictwem bezpośredniego łącza"
+          desc: "Dostęp do tematów niewymienionych na liście jest możliwy wyłącznie za pośrednictwem bezpośredniego łącza"
       reload: "Przeładuj"
       ignore: "Ignoruj"
       image_alt_text:
@@ -5092,7 +5100,7 @@ pl_PL:
         go_to_unread_post: "%{shortcut} Idź do pierwszego nieprzeczytanego wpisu"
       application:
         title: "Aplikacja"
-        create: "%{shortcut} utwórz nowy temat"
+        create: "%{shortcut} Utwórz nowy temat lub wiadomość osobistą"
         notifications: "%{shortcut} otwarte powiadomienia"
         hamburger_menu: "%{shortcut} Otwórz menu nawigacyjne"
         user_profile_menu: "%{shortcut} Otwórz menu użytkownika"

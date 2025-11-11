@@ -365,3 +365,5 @@ cs:
         tooltip:
           actions:
             disable: "Vypnout"
+      user_preferences:
+        empty: "Momentálně nejsou k dispozici žádná relevantní nastavení."

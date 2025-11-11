@@ -635,6 +635,7 @@ ug:
     review:
       show_more: "تېخىمۇ كۆپ كۆرسەت"
       show_less: "ئازراق كۆرسەت"
+      back_to_queue: "ئۆچرەتكە قايت"
       order_by: "تەرتىپى"
       date_filter: "يوللانغان ۋاقتى"
       in_reply_to: "جاۋاب"
@@ -685,6 +686,10 @@ ug:
         claimed_by_you: "بۇ تۈرنى تەلەپ قىلدىڭىز، تەكشۈرۈپ تەستىقلىيالايسىز."
         claimed_by_other: "بۇ تۈرنى پەقەت <b>%{username}</b>لا تەكشۈرۈپ تەستىقلىيالايدۇ."
         automatically_claimed_by: "ھازىر بۇ تۈرنى <b>%{username}</b> تەكشۈرۈۋاتىدۇ."
+      claim:
+        title: "تېما تەلەپ قىلىدۇ"
+      unclaim:
+        help: "بۇ تەلەپنى چىقىرىۋەت"
       awaiting_approval: "تەستىق كۈتۈۋاتىدۇ"
       delete: "ئۆچۈر"
       settings:
@@ -755,7 +760,7 @@ ug:
       replies:
         one: "%{count} جاۋاب"
         other: "%{count} جاۋاب"
-      edit: "تەھرىر"
+      edit: "يازما تەھرىر"
       save: "ساقلا"
       cancel: "ۋاز كەچ"
       new_topic: "بۇ تۈر تەستىقلانسا يېڭى تېما قۇرۇلىدۇ"
@@ -842,6 +847,10 @@ ug:
           title: "يازما"
           noun: "يازما"
       flagged_as: "پاش قىلىنغان"
+      post_flagged_as: "يازمىغا سېلىنغان بەلگە"
+      chat_flagged_as: "سۆھبەتكە سېلىنغان بەلگە"
+      queued_post_label: "ئۆچرەتتىكى يازما"
+      queued_topic_label: "ئۆچرەتتىكى تېما"
       user_label: "ئىشلەتكۈچى"
       assigned_to: "تەقسىم قىلىندى"
       moderator_actions: "رىياسەتچى مەشغۇلاتى"
@@ -866,13 +875,14 @@ ug:
         chars_remaining: "%{count} ھەرپ قالدى"
         delete_note: "بۇ ئىزاھاتنى ئۆچۈر"
         delete: "ئۆچۈر"
-      new_topic_label: "يېڭى تېما"
+      topic_label: "تېما"
       queued_user: "ئۆچرەتتىكى ئىشلەتكۈچى"
       posted_in: "يوللانغان ۋاقتى"
       flagged_user: "باش قىلىنغان ئىشلەتكۈچى"
       review_user: "ئىشلەتكۈچى"
       need_help: "ياردەم كېرەكمۇ؟"
       copy_link: "ئۇلانما كۆچۈر"
+      copy_permalink_title: "بۇ تەكشۈرۈشچان تۈرنى چاپلاش تاختىسىغا كۆچۈرىدۇ"
       copy_link_feedback: "ئۇلانما كۆچۈرۈلدى"
       view_source: "مەنبەنى كۆرسەت"
       insights:
@@ -881,9 +891,7 @@ ug:
         flagged_by_users:
           one: "%{count} يەككە ئىشلەتكۈچى پاش قىلغان"
           other: "%{count} يەككە ئىشلەتكۈچى پاش قىلغان"
-        similar_posts: "ئوخشاشراق ئىلگىرىكى يازما"
-        flagged_in_timeframe: "ئىلگىرى %{count} قېتىم پاش قىلىنغان"
-        user_activity: "ئىشلەتكۈچى پائالىيىتى"
+        similar_posts: "ئىلگىرىكى قانۇنغا خىلاپ قىلمىش"
         activities:
           new_account: "يېڭى ھېساب"
           trust_level: "ئىشەنچ دەرىجىسى: %{trustLevelName}"
@@ -2715,7 +2723,10 @@ ug:
         title: "يازمىنى تەرجىمە قىلىش"
         select: "تەرجىمە تاللىنىدۇ"
         save: "تەرجىمە ساقلا"
-        original_content: "ئەسلى يازما مەزمۇنى"
+        original_content: "ئەسلى يازما"
+        translation_preview: "تەرجىمىنى ئالدىن كۆزىتىش"
+        original: "ئەسلى"
+        translation: "تەرجىمە"
         placeholder: "بۇ جايغا يازمىنىڭ تەرجىمىسى كىرگۈزۈلىدۇ…"
       group_mentioned_limit:
         one: "<b>ئاگاھلاندۇرۇش!</b> سىز <a href='%{group_link}'>%{group}</a> نى تاتىدىڭىز، ئەمما بۇ گۇرۇپپىنىڭ ئەزالىرىنىڭ سانى باشقۇرغۇچى سەپلىگەن ئاتاش چېكى %{count} دىن ئېشىپ كەتتى، شۇڭلاشقا ھېچكىمگە ئۇقتۇرۇلمايدۇ."
@@ -2880,7 +2891,6 @@ ug:
           desc: "ئاخىرقى جاۋاب ۋاقتىنى ئۆزگەرتمەي جاۋاب قايتۇرىدۇ"
         toggle_unlisted:
           label: تىزىلمىغاننى ئالماشتۇر
-          desc: تىزىلمىغان تېمىنى پەقەت ئەزالار بىۋاستە ئۇلانما ئارقىلىق زىيارەت قىلالايدۇ
       reload: "قايتا يۈكلە"
       ignore: "پەرۋا قىلما"
       image_alt_text:
@@ -3837,8 +3847,13 @@ ug:
       deleted_by_author_simple: "(يازمىنى يازغۇچى ئۆچۈردى)"
       collapse: "يىغ"
       load_more_replies: "تېخىمۇ كۆپ جاۋابنى يۈكلە"
+      load_more_posts_above: "ئۈستىدىكى تېخىمۇ كۆپ يازمىنى يۈكلەيدۇ"
+      load_more_posts_below: "ئاستىدىكى تېخىمۇ كۆپ يازمىنى يۈكلەيدۇ"
       sr_collapse_replies: "سىڭدۈرۈلگەن جاۋابنى يىغىدۇ"
       sr_load_more_replies: "تېخىمۇ كۆپ سىڭدۈرۈلگەن جاۋابنى يۈكلەيدۇ"
+      loading_more_posts_above: "ئۈستىدىكى تېخىمۇ كۆپ يازمىنى يۈكلەۋاتىدۇ..."
+      loading_more_posts_below: "ئاستىدىكى تېخىمۇ كۆپ يازمىنى يۈكلەۋاتىدۇ..."
+      loading_complete: "يۈكلەش تامام"
       sr_date: "يوللانغان ۋاقتى"
       sr_expand_replies:
         one: "بۇ يازمىدا %{count} جاۋاب بار"
@@ -4584,7 +4599,6 @@ ug:
         go_to_unread_post: "%{shortcut} ئوقۇلمىغان تۇنجى يازمىغا يۆتكەل"
       application:
         title: "پىروگرامما"
-        create: "%{shortcut} يېڭى تېما قۇر"
         notifications: "%{shortcut} ئۇقتۇرۇش ئاچ"
         hamburger_menu: "%{shortcut} يولباشچى تىزىملىكنى ئاچ"
         user_profile_menu: "%{shortcut} ئىشلەتكۈچى تىزىملىكىنى ئاچ"

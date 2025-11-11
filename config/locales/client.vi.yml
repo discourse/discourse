@@ -218,7 +218,7 @@ vi:
     joined: "Đã tham gia"
     admin_title: "Quản trị"
     show_more: "hiện thêm"
-    show_help: "lựa chọn"
+    show_help: "Tùy chọn"
     links: "Liên kết"
     links_lowercase:
       other: "liên kết"
@@ -471,7 +471,6 @@ vi:
       topic: "Chủ đề:"
       filtered_topic: "Bạn đã lọc đến nội dung có thể xem lại trong một chủ đề."
       filtered_user: "Người dùng"
-      filtered_reviewed_by: "Xét bởi"
       show_all_topics: "hiển thị toàn bộ chủ đề"
       deleted_post: "(bài viết đã bị xóa)"
       deleted_user: "(người dùng đã bị xóa)"
@@ -507,7 +506,7 @@ vi:
           other: "%{count} người dùng"
       replies:
         other: "%{count} trả lời"
-      edit: "Sửa"
+      edit: "Sửa bài đăng"
       save: "Lưu"
       cancel: "Hủy"
       new_topic: "Phê duyệt mục này sẽ tạo một chủ đề mới"
@@ -528,7 +527,6 @@ vi:
           created_at: "Được tạo tại"
           created_at_asc: "Tạo tại (đảo ngược)"
         priority:
-          title: "Ưu tiên tối thiểu"
           any: "(bất kỳ)"
           low: "Thấp"
           medium: "Trung bình"
@@ -576,11 +574,10 @@ vi:
         flagged: "Gắn cờ"
       notes:
         delete: "Xóa"
-      new_topic_label: "Chủ đề mới"
+      topic_label: "Chủ đề"
       review_user: "Người dùng"
       view_source: "Xem mã nguồn"
       insights:
-        user_activity: "Hoạt động của người dùng"
         activities:
           new_account: "tài khoản mới"
           posts:
@@ -3409,7 +3406,6 @@ vi:
         go_to_unread_post: "%{shortcut} Đi đến bài viết chưa đọc đầu tiên"
       application:
         title: "Ứng dụng"
-        create: "%{shortcut} Tạo mới chủ đề"
         notifications: "%{shortcut} Mở thông báo"
         user_profile_menu: "%{shortcut} Mở trình đơn thành viên"
         show_incoming_updated_topics: "%{shortcut} Show updated topics"

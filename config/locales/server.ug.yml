@@ -1261,8 +1261,6 @@ ug:
       yaxis: "كۈن"
       description: "ئادەتتىكى API شىفىرلىق ئاچقۇچى ۋە ئىشلەتكۈچى API شىفىرلىق ئاچقۇچىنىڭ API ئىلتىماسى."
     consolidated_page_views_browser_detection:
-      title: "توركۆرگۈدە بايقالغان بىرلەشتۈرۈلگەن بەت كۆرۈلۈشى (تەجرىبە)"
-      title_legacy: "توركۆرگۈدە بايقالغان بىرلەشتۈرۈلگەن بەت كۆرۈلۈشى (تەجرىبە)"
       xaxis:
         page_view_anon_browser: "نامسىز توركۆرگۈ"
         page_view_logged_in_browser: "تىزىمغا كىرگەن توركۆرگۈ"

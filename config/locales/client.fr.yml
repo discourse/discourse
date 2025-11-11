@@ -357,7 +357,7 @@ fr:
     joined: "Inscrit(e)"
     admin_title: "Administration"
     show_more: "afficher plus"
-    show_help: "options"
+    show_help: "Options"
     links: "Liens"
     links_lowercase:
       one: "lien"
@@ -748,7 +748,7 @@ fr:
       replies:
         one: "%{count} réponse"
         other: "%{count} réponses"
-      edit: "Modifier"
+      edit: "Modifier le message"
       save: "Enregistrer"
       cancel: "Annuler"
       new_topic: "L'approbation de cet élément créera un nouveau sujet"
@@ -770,7 +770,6 @@ fr:
           created_at: "Date de création"
           created_at_asc: "Date de création (inverse)"
         priority:
-          title: "Priorité minimum"
           any: "(toutes)"
           low: "Faible"
           medium: "Moyenne"
@@ -859,7 +858,7 @@ fr:
         chars_remaining: "%{count} caractères restants"
         delete_note: "Supprimer cette note"
         delete: "Supprimer"
-      new_topic_label: "Nouveau sujet"
+      topic_label: "Sujet"
       queued_user: "Utilisateur en file d'attente"
       posted_in: "Publié dans"
       flagged_user: "Utilisateur signalé"
@@ -874,9 +873,6 @@ fr:
         flagged_by_users:
           one: "Signalé par %{count} utilisateur unique"
           other: "Signalé par %{count} utilisateurs uniques"
-        similar_posts: "Publications passées similaires"
-        flagged_in_timeframe: "%{count} signalements précédemment"
-        user_activity: "Activité de l'utilisateur"
         activities:
           new_account: "nouveau compte"
           trust_level: "niveau de confiance : %{trustLevelName}"
@@ -2699,7 +2695,6 @@ fr:
         title: "Traduction de publication"
         select: "Sélectionnez une traduction"
         save: "Enregistrer la traduction"
-        original_content: "Contenu de la publication originale"
         translation: "Traduction"
         placeholder: "Saisissez la traduction de la publication ici..."
       group_mentioned_limit:
@@ -2859,7 +2854,6 @@ fr:
           desc: "Répondre sans changer la date de dernière réponse"
         toggle_unlisted:
           label: Activer/désactiver l'état non répertorié
-          desc: Sujets non répertoriés accessibles uniquement aux membres par lien direct
       reload: "Recharger"
       ignore: "Ignorer"
       image_alt_text:
@@ -4548,7 +4542,6 @@ fr:
         go_to_unread_post: "%{shortcut} Accéder au premier message non lu"
       application:
         title: "Application"
-        create: "%{shortcut} Créer un nouveau sujet"
         notifications: "%{shortcut} Ouvrir les notifications"
         hamburger_menu: "%{shortcut} Ouvrir le menu de navigation"
         user_profile_menu: "%{shortcut} Ouvrir le menu utilisateur"

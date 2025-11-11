@@ -663,7 +663,7 @@ lt:
       topic: "Tema:"
       filtered_topic: "Išfiltravote turinį, kurį galima peržiūrėti vienoje temoje."
       filtered_user: "Narys"
-      filtered_reviewed_by: "Peržiūrėjo"
+      filtered_reviewed_by: "Apžvelgė"
       show_all_topics: "rodyti visas temas"
       deleted_post: "(įrašas ištrintas)"
       deleted_user: "(naudotojas ištrintas)"
@@ -710,7 +710,7 @@ lt:
         few: "%{count} atsakymai"
         many: "%{count} atsakymai"
         other: "%{count} atsakymai"
-      edit: "Redaguoti"
+      edit: "Redaguoti Įrašą"
       save: "Saugoti"
       cancel: "Atšaukti"
       new_topic: "Patvirtinus šį elementą bus sukurta nauja tema"
@@ -732,7 +732,6 @@ lt:
           created_at: "Sukurta"
           created_at_asc: "Sukurta (atvirkščiai)"
         priority:
-          title: "Mažiausias prioritetas"
           any: "(bet koks)"
           low: "Žemas"
           medium: "Vidutinis"
@@ -799,6 +798,7 @@ lt:
       user_label: "Narys"
       notes:
         delete: "Pašalinti"
+      topic_label: "Tema"
       review_user: "Narys"
       copy_link: "Nukopijuoti nuorodą"
       insights:
@@ -3761,7 +3761,6 @@ lt:
         go_to_unread_post: "%{shortcut} Eiti į pirmąją neskaitytą temą"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Sukurti naują temą"
         notifications: "Atidaryti pranešimus"
         user_profile_menu: "%{shortcut} Atidaryti vartotojo meniu"
         show_incoming_updated_topics: "%{shortcut} Rodyti atnaujintas temas"

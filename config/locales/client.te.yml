@@ -247,7 +247,7 @@ te:
     joined: "చేరినారు"
     admin_title: "అడ్మిన్"
     show_more: "మరిన్ని చూపించండి"
-    show_help: "ఐచ్చికాలు"
+    show_help: "ఎంపికలు"
     links: "లింకులు"
     links_lowercase:
       one: "లంకె"
@@ -542,7 +542,7 @@ te:
       replies:
         one: "%{count} ప్రత్యుత్తరం"
         other: "%{count} ప్రత్యుత్తరాలు"
-      edit: "సవరించండి"
+      edit: "పోస్ట్‌ని సవరించండి"
       save: "సేవ్ చేయండి"
       cancel: "రద్దు చేయండి"
       new_topic: "ఈ విషయాన్ని ఆమోదించడం వలన కొత్త విషయం సృష్టించబడుతుంది"
@@ -563,7 +563,6 @@ te:
           created_at: "వద్ద సృష్టించబడింది"
           created_at_asc: "వద్ద సృష్టించబడింది (ఆరోహణ క్రమం)"
         priority:
-          title: "కనీస ప్రాధాన్యత"
           any: "(ఏదైనా)"
           low: "తక్కువ"
           medium: "మధ్యస్థం"
@@ -630,6 +629,7 @@ te:
       user_label: "సభ్యుడు"
       notes:
         delete: "తొలగించు"
+      topic_label: "విషయం"
       review_user: "సభ్యుడు"
       insights:
         activities:
@@ -3841,7 +3841,6 @@ te:
         go_to_unread_post: "%{shortcut} మొదటి చదవని పోస్ట్‌కి వెళ్లండి"
       application:
         title: "అనువర్తనం"
-        create: "%{shortcut} కొత్త విషయాన్ని సృష్టించండి"
         notifications: "%{shortcut} చదవని నోటిఫికేషన్‌లు"
         user_profile_menu: "%{shortcut} సభ్యుడు మెనుని తెరవండి"
         show_incoming_updated_topics: "%{shortcut} నవీకరించిన విషయాలను చూపించండి"

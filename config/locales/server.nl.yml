@@ -1263,8 +1263,6 @@ nl:
       yaxis: "Dag"
       description: "API-verzoeken voor reguliere API-sleutels en gebruikers-API-sleutels."
     consolidated_page_views_browser_detection:
-      title: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
-      title_legacy: "Geconsolideerde paginaweergaven met browserdetectie (experimenteel)"
       xaxis:
         page_view_anon_browser: "Anonieme browser"
         page_view_logged_in_browser: "Aangemelde browser"
@@ -2436,8 +2434,6 @@ nl:
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
-    floatkit_autocomplete_composer: "Activeer het op Floatkit gebaseerde menu voor automatische aanvulling in de editor. Dit is een verbetering van de gebruikersinterface die het huidige op jQuery gebaseerde menu voor automatische aanvulling zal vervangen."
-    floatkit_autocomplete_chat_composer: "Activeer het op Floatkit gebaseerde menu voor automatische aanvulling in de chateditor. Dit is een verbetering van de gebruikersinterface die het huidige op jQuery gebaseerde menu voor automatische aanvulling zal vervangen."
     experimental_form_templates: "Schakel de functie Formuliersjablonen in. Beheer de sjablonen via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     show_preview_for_form_templates: "Schakel het voorbeeld voor formuliersjablonenfunctie in"
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."

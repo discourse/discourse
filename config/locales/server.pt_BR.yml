@@ -1263,8 +1263,6 @@ pt_BR:
       yaxis: "Dia"
       description: "Pedidos de API para chaves de API regulares e chaves de API do usuário."
     consolidated_page_views_browser_detection:
-      title: "Visualizações de página consolidadas com detecção no navegador (experimental)"
-      title_legacy: "Visualizações de página consolidadas com detecção no navegador (experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anônimo"
         page_view_logged_in_browser: "Navegador de acesso"
@@ -2436,8 +2434,6 @@ pt_BR:
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
     experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
-    floatkit_autocomplete_composer: "Ative o menu de preenchimento automático baseado no Floatkit no compositor. É uma melhoria de IU que substituirá o menu atual de preenchimento automático atual baseado em JQuery."
-    floatkit_autocomplete_chat_composer: "Ative o menu de preenchimento automático baseado no Floatkit no compositor do bate-papo. É uma melhoria de IU que substituirá o menu de preenchimento automático atual baseado em JQuery."
     experimental_form_templates: "Ative o recurso de modelo de formulário. Gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Ativar a pré-visualização para o recurso de modelos de formulário"
     lazy_load_categories_groups: "Carregue informações de forma ociosa apenas para os(as) usuários(as) destes grupos. Melhora o desempenho em sites com várias categorias."

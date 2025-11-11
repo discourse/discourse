@@ -640,7 +640,7 @@ zh_TW:
       topic: "話題："
       filtered_topic: "您已篩選到單個主題中的可審閱內容。"
       filtered_user: "使用者"
-      filtered_reviewed_by: "審核由"
+      filtered_reviewed_by: "評論者"
       show_all_topics: "顯示所有話題"
       deleted_post: "（貼文已被刪除）"
       deleted_user: "（使用者已被刪除）"
@@ -676,7 +676,7 @@ zh_TW:
           other: "%{count} 使用者"
       replies:
         other: "%{count}個回應"
-      edit: "編輯"
+      edit: "編輯貼文"
       save: "儲存"
       cancel: "取消"
       new_topic: "核准此項目將會建立一個新主題"
@@ -698,7 +698,6 @@ zh_TW:
           created_at: "建立於"
           created_at_asc: "建立於 (反向)"
         priority:
-          title: "最小優先權"
           any: "(任何)"
           low: "低"
           medium: "中間的"
@@ -765,6 +764,7 @@ zh_TW:
       user_label: "使用者"
       notes:
         delete: "刪除"
+      topic_label: "話題"
       review_user: "使用者"
       copy_link: "複製連結"
       insights:
@@ -4123,7 +4123,6 @@ zh_TW:
         go_to_unread_post: "%{shortcut} 前往第一篇未讀貼文"
       application:
         title: "應用"
-        create: "%{shortcut} 開啟新話題"
         notifications: "%{shortcut} 開啟通知"
         hamburger_menu: "%{shortcut} 開啟導覽功能表"
         user_profile_menu: "%{shortcut} 打開使用者菜單"

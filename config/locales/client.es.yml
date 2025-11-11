@@ -357,7 +357,7 @@ es:
     joined: "Registrado"
     admin_title: "Administrador"
     show_more: "mostrar más"
-    show_help: "opciones"
+    show_help: "Opciones"
     links: "Enlaces"
     links_lowercase:
       one: "enlace"
@@ -748,7 +748,7 @@ es:
       replies:
         one: "%{count} respuesta"
         other: "%{count} respuestas"
-      edit: "Editar"
+      edit: "Editar publicación"
       save: "Guardar"
       cancel: "Cancelar"
       new_topic: "Aprobar este elemento creará un nuevo tema"
@@ -770,7 +770,6 @@ es:
           created_at: "Creado el"
           created_at_asc: "Creado el (inverso)"
         priority:
-          title: "Prioridad mínima"
           any: "(cualquiera)"
           low: "Baja"
           medium: "Media"
@@ -859,7 +858,7 @@ es:
         chars_remaining: "Quedan %{count} caracteres..."
         delete_note: "Eliminar esta nota"
         delete: "Eliminar"
-      new_topic_label: "Nuevo tema"
+      topic_label: "Tema"
       queued_user: "Usuario en cola"
       posted_in: "Publicado en"
       flagged_user: "Usuario denunciado"
@@ -873,9 +872,6 @@ es:
         flagged_by_users:
           one: "Denunciado por %{count} usuario único"
           other: "Denunciado por %{count} usuarios únicos"
-        similar_posts: "Publicaciones anteriores similares"
-        flagged_in_timeframe: "%{count} denunciados anteriormente"
-        user_activity: "Actividad del usuario"
         activities:
           new_account: "nueva cuenta"
           trust_level: "nivel de confianza: %{trustLevelName}"
@@ -2698,7 +2694,6 @@ es:
         title: "Traduciendo publicación"
         select: "Seleccionar traducción"
         save: "Guardar traducción"
-        original_content: "Contenido de la publicación original"
         translation: "Traducción"
         placeholder: "Introduce la traducción del post aquí..."
       group_mentioned_limit:
@@ -2858,7 +2853,6 @@ es:
           desc: "Responder sin alterar la fecha de última respuesta"
         toggle_unlisted:
           label: Mostrar/ocultar no listados
-          desc: Temas no listados a los que solo pueden acceder los miembros mediante enlace directo
       reload: "Recargar"
       ignore: "Ignorar"
       image_alt_text:
@@ -4547,7 +4541,6 @@ es:
         go_to_unread_post: "%{shortcut} Ir a la primera publicación sin leer"
       application:
         title: "Aplicación"
-        create: "%{shortcut} Crear un nuevo tema"
         notifications: "%{shortcut} Abrir notificaciones"
         hamburger_menu: "%{shortcut} Abrir menú de navegación"
         user_profile_menu: "%{shortcut} Abrir menú de usuario"

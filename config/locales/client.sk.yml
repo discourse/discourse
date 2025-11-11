@@ -313,7 +313,7 @@ sk:
     joined: "Registrovaný"
     admin_title: "Administrácia"
     show_more: "zobraz viac"
-    show_help: "možnosti"
+    show_help: "Možnosti"
     links: "Odkazy"
     links_lowercase:
       one: "odkaz"
@@ -714,7 +714,7 @@ sk:
       topic: "Téma:"
       filtered_topic: "Vyfiltrovali ste obsah, ktorý možno skontrolovať v jednej téme."
       filtered_user: "Používateľ"
-      filtered_reviewed_by: "Preskúmal"
+      filtered_reviewed_by: "Hodnotené"
       show_all_topics: "zobraziť všetky témy"
       deleted_post: "(príspevok zmazaný)"
       deleted_user: "(používateľ odstránený)"
@@ -776,7 +776,7 @@ sk:
         few: "%{count} odpovede"
         many: "%{count} odpovedí"
         other: "%{count} odpovedí"
-      edit: "Upraviť"
+      edit: "Upraviť príspevok"
       save: "Uložiť"
       cancel: "Zrušiť"
       new_topic: "Schválením tejto položky sa vytvorí nová téma"
@@ -798,7 +798,6 @@ sk:
           created_at: "Vytvorené v"
           created_at_asc: "Vytvorené v (opačne)"
         priority:
-          title: "Minimálna priorita"
           any: "(akýkoľvek)"
           low: "Nízka"
           medium: "Stredná"
@@ -887,7 +886,7 @@ sk:
         chars_remaining: "%{count} zostávajúce znaky"
         delete_note: "Odstrániť túto poznámku"
         delete: "Odstrániť"
-      new_topic_label: "Nová téma"
+      topic_label: "Téma"
       queued_user: "Používateľ v rade"
       posted_in: "Uverejnené v"
       flagged_user: "Označený používateľ"
@@ -904,9 +903,6 @@ sk:
           few: "Nahlásené %{count} unikátnymi používateľmi"
           many: "Nahlásené %{count} unikátnymi používateľmi"
           other: "Nahlásené %{count} unikátnymi používateľmi"
-        similar_posts: "Podobné predchádzajúce príspevky"
-        flagged_in_timeframe: "%{count} označené už skôr"
-        user_activity: "Aktivita používateľa"
         activities:
           new_account: "nový účet"
           trust_level: "úroveň dôvery: %{trustLevelName}"
@@ -2860,7 +2856,6 @@ sk:
         title: "Preklad príspevku"
         select: "Vyberte preklad"
         save: "Uložiť preklad"
-        original_content: "Pôvodný obsah príspevku"
         translation: "Preklad"
         placeholder: "Sem zadajte preklad príspevku..."
       group_mentioned_limit:
@@ -3034,7 +3029,6 @@ sk:
           desc: "Odpoveď bez zmeny dátumu poslednej odpovede"
         toggle_unlisted:
           label: Prepínanie nezaradených
-          desc: Nezaradené témy prístupné len členom prostredníctvom priameho prepojenia
       reload: "Znovu načítať"
       ignore: "Ignorovať"
       image_alt_text:
@@ -4906,7 +4900,6 @@ sk:
         go_to_unread_post: "%{shortcut} Prejsť na prvý neprečítaný príspevok"
       application:
         title: "Aplikácia"
-        create: "%{shortcut} Vytvoriť novú tému"
         notifications: "%{shortcut} Otvor upozornenia"
         hamburger_menu: "%{shortcut} Otvorenie navigačného menu"
         user_profile_menu: "%{shortcut} Otvor užívateľské menu"

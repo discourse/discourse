@@ -219,6 +219,7 @@ cs:
         is_already_in_use: "se již používá"
     bookmarkable:
       notification_title_channel: "zpráva v %{channel_name}"
+      notification_title_direct_message: "konverzace s %{channel_name}"
     personal_chat: "soukromý chat"
     onebox:
       inline_to_message: "Zpráva #%{message_id} od %{username} – #%{chat_channel}"

@@ -247,7 +247,7 @@ sv:
     joined: "Gick med"
     admin_title: "Admin"
     show_more: "visa mer"
-    show_help: "alternativ"
+    show_help: "Alternativ"
     links: "Länkar"
     links_lowercase:
       one: "länk"
@@ -545,7 +545,7 @@ sv:
       replies:
         one: "%{count} svar"
         other: "%{count} svar"
-      edit: "Redigera"
+      edit: "Ändra inlägg"
       save: "Spara"
       cancel: "Avbryt"
       new_topic: "Godkännande av detta föremål skapar ett nytt ämne"
@@ -566,7 +566,6 @@ sv:
           created_at: "Skapad den"
           created_at_asc: "Skapad den (omvänt)"
         priority:
-          title: "Lägsta prioritet"
           any: "(valfritt)"
           low: "Låg"
           medium: "Medium"
@@ -633,6 +632,7 @@ sv:
       user_label: "Användare"
       notes:
         delete: "Radera"
+      topic_label: "Ämne"
       review_user: "Användare"
       copy_link_feedback: "Länken kopierad"
       insights:
@@ -3845,7 +3845,6 @@ sv:
         go_to_unread_post: "%{shortcut} Gå till det första olästa inlägget"
       application:
         title: "Applikation"
-        create: "%{shortcut} Skapa ett nytt ämne"
         notifications: "%{shortcut} Öppna aviseringar"
         user_profile_menu: "%{shortcut} Öppna användarmeny"
         show_incoming_updated_topics: "%{shortcut} Visa uppdaterade ämnen"

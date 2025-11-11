@@ -15,6 +15,10 @@ ro:
         one: "editează"
         few: "editează"
         other: "editează"
+      translating:
+        one: "traduc"
+        few: "traduc"
+        other: "traduc"
       replying_to_topic:
         one: "răspunde"
         few: "răspund"

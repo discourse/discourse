@@ -704,7 +704,7 @@ ur:
       topic: "موضوع:"
       filtered_topic: "آپ نے ایک موضوع میں قابل تجدید مواد کو فِلٹر کر دیا ہے۔"
       filtered_user: "رکن"
-      filtered_reviewed_by: "کی طرف سے جائزہ کردہ"
+      filtered_reviewed_by: "نے جائزہ لیا"
       show_all_topics: "تمام موضوعات دکھائیں"
       deleted_post: "(دھاگہ مٹا دیا)"
       deleted_user: "(رکن مٹادیا گیا)"
@@ -754,7 +754,7 @@ ur:
       replies:
         one: "%{count} جواب"
         other: "%{count} جوابات"
-      edit: "ترمیم"
+      edit: "پوسٹ میں ترمیم کریں"
       save: "محفوظ کریں"
       cancel: "منسوخ"
       new_topic: "اِس شے کی منظوری سے ایک نیا موضوع بن جائے گا"
@@ -776,7 +776,6 @@ ur:
           created_at: "کو بنایا گیا"
           created_at_asc: "کو بنایا گیا (ریوَرس)"
         priority:
-          title: "کم از کم ترجیح"
           any: "(کوئی بھی)"
           low: "کم"
           medium: "درمیانی"
@@ -865,7 +864,7 @@ ur:
         chars_remaining: "%{count} حروف باقی ہیں"
         delete_note: "اس نوٹ کو حذف کریں"
         delete: "مٹائیں"
-      new_topic_label: "نیا موضوع"
+      topic_label: "ٹاپک"
       queued_user: "قطار میں رکن"
       posted_in: "میں پوسٹ کیا گیا"
       flagged_user: "نشان۔زدہ صارف"
@@ -880,9 +879,6 @@ ur:
         flagged_by_users:
           one: "%{count} منفرد رکن کے ذریعے نشان دہی"
           other: "%{count} منفرد اراکین کے ذریعے نشان دہی"
-        similar_posts: "اسی طرح کے ماضی ک دھاگے"
-        flagged_in_timeframe: "%{count} پہلےکی نشان دہی"
-        user_activity: "صارف سرگرمی"
         activities:
           new_account: "نیا اکاؤنٹ"
           trust_level: "فعالیت کا درجہ: %{trustLevelName}"
@@ -2714,7 +2710,6 @@ ur:
         title: "ترجمہ پوسٹ"
         select: "ترجمہ کا انتخاب"
         save: "ترجمہ محفوظ"
-        original_content: "اصل پوسٹ کا مواد"
         placeholder: "پوسٹ کا ترجمہ یہاں درج کریں۔۔۔"
       group_mentioned_limit:
         one: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں منتظمین کی تشکیل کردہ ذکر کی حد %{count} رکن سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
@@ -2883,7 +2878,6 @@ ur:
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
         toggle_unlisted:
           label: غیر مندرج ٹوگل
-          desc: غیر فہرست شدہ موضوعات صرف براہ راست لنک کے ذریعے ارکان کے لیے قابل رسائی ہیں
       reload: "دوبارہ لوڈ"
       ignore: "نظر انداز کریں"
       image_alt_text:
@@ -4574,7 +4568,6 @@ ur:
         go_to_unread_post: "%{shortcut} پہلی غیر پڑھی پوسٹ پر جائیں"
       application:
         title: "ایپلیکیشن"
-        create: "%{shortcut} نیا ٹاپک بنائیں"
         notifications: "%{shortcut} اطلاعات کھولیں"
         hamburger_menu: "%{shortcut} نیویگیشن مینو کھولیں"
         user_profile_menu: "%{shortcut} صارف مینو کھولیں"

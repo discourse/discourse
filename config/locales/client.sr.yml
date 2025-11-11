@@ -276,7 +276,7 @@ sr:
     joined: "Pridružen"
     admin_title: "Admin"
     show_more: "prikaži više"
-    show_help: "opcije"
+    show_help: "Opcije"
     links: "Linkovi"
     links_lowercase:
       one: "link"
@@ -639,7 +639,7 @@ sr:
       topic: "Tema:"
       filtered_topic: "Prikazujete samo sadržaje unutar jedne teme koji zahtevaju pregled."
       filtered_user: "Korisnik"
-      filtered_reviewed_by: "Pregledano od strane"
+      filtered_reviewed_by: "Pregledano od"
       show_all_topics: "prikaži sve teme"
       deleted_post: "(post izbrisan)"
       deleted_user: "(korisnik izbrisan)"
@@ -686,7 +686,6 @@ sr:
         one: "%{count} odgovor"
         few: "%{count} odgovora"
         other: "%{count} odgovora"
-      edit: "Izmeni"
       save: "Sačuvaj"
       cancel: "Odustani"
       new_topic: "Odobravanjem će se napraviti nova tema"
@@ -708,7 +707,6 @@ sr:
           created_at: "Napravljeno"
           created_at_asc: "Napravljeno (obrnuto)"
         priority:
-          title: "Minimalni prioritet"
           any: "(bilo koji)"
           low: "Manji"
           medium: "Srednje"
@@ -772,6 +770,7 @@ sr:
       user_label: "Korisnik"
       notes:
         delete: "Obriši"
+      topic_label: "Tema"
       review_user: "Korisnik"
       insights:
         activities:
@@ -2419,7 +2418,6 @@ sr:
         next_prev: "%{shortcut} Sledeći/predhodni deo"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Otvori novu temu"
         notifications: "%{shortcut} Otvori obaveštenja"
         user_profile_menu: "%{shortcut} Otvori korisnički meni"
         show_incoming_updated_topics: "%{shortcut} Pokaži ažurirane teme"
