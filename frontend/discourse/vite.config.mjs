@@ -1,5 +1,6 @@
 import {
   assets,
+  classicEmberSupport,
   compatPrebuild,
   contentFor,
   ember,
@@ -45,11 +46,12 @@ export default defineConfig(({ mode, command }) => {
     plugins: [
       // Standard Ember stuff
       ember(),
-      hbs(),
-      scripts(),
-      compatPrebuild(),
-      assets(),
-      contentFor(),
+      classicEmberSupport(),
+      // hbs(),
+      // scripts(),
+      // compatPrebuild(),
+      // assets(),
+      // contentFor(),
 
       discourseTestSiteSettings(),
       customInvokableResolver(),
@@ -68,17 +70,17 @@ export default defineConfig(({ mode, command }) => {
     //   ...optimizeDeps(),
     //   include: ["virtual-dom"],
     // },
-    optimizeDeps: {
-      include: ["virtual-dom"],
-      exclude: ["@embroider/macros"],
-      rollupOptions: {
-        plugins: [
-          resolver(),
-          templateTag(),
-          babel({ babelHelpers: "runtime", extensions }),
-        ],
-      },
-    },
+    // optimizeDeps: {
+    //   include: ["virtual-dom"],
+    //   exclude: ["@embroider/macros"],
+    //   rollupOptions: {
+    //     plugins: [
+    //       resolver(),
+    //       templateTag(),
+    //       babel({ babelHelpers: "runtime", extensions }),
+    //     ],
+    //   },
+    // },
     server: {
       port: 4200,
       strictPort: true,

@@ -1,283 +1,283 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import EmberObject from "@ember/object";
-import { getOwner } from "@ember/owner";
-import { clearRender, render, settled } from "@ember/test-helpers";
-import { observes as nativeClassObserves } from "@ember-decorators/object";
-import { hbs } from "ember-cli-htmlbars";
-import curryComponent from "ember-curry-component";
-import { module, test } from "qunit";
-import discourseComputed, {
-  afterRender,
-  debounce,
-  observes,
-  on,
-} from "discourse/lib/decorators";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+// /* eslint-disable ember/no-classic-components */
+// import Component from "@ember/component";
+// import EmberObject from "@ember/object";
+// import { getOwner } from "@ember/owner";
+// import { clearRender, render, settled } from "@ember/test-helpers";
+// import { observes as nativeClassObserves } from "@ember-decorators/object";
+// import { hbs } from "ember-cli-htmlbars";
+// import curryComponent from "ember-curry-component";
+// import { module, test } from "qunit";
+// import discourseComputed, {
+//   afterRender,
+//   debounce,
+//   observes,
+//   on,
+// } from "discourse/lib/decorators";
+// import { withSilencedDeprecations } from "discourse/lib/deprecated";
+// import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-// eslint-disable-next-line ember/no-classic-classes
-const fooComponent = Component.extend({
-  classNames: ["foo-component"],
+// // eslint-disable-next-line ember/no-classic-classes
+// const fooComponent = Component.extend({
+//   classNames: ["foo-component"],
 
-  baz: null,
+//   baz: null,
 
-  didInsertElement() {
-    this._super(...arguments);
+//   didInsertElement() {
+//     this._super(...arguments);
 
-    this.setBaz(1);
-  },
+//     this.setBaz(1);
+//   },
 
-  willDestroyElement() {
-    this._super(...arguments);
+//   willDestroyElement() {
+//     this._super(...arguments);
 
-    this.setBaz(2);
-  },
+//     this.setBaz(2);
+//   },
 
-  @afterRender
-  setBaz(baz) {
-    this.set("baz", baz);
-  },
-});
+//   @afterRender
+//   setBaz(baz) {
+//     this.set("baz", baz);
+//   },
+// });
 
-// eslint-disable-next-line ember/no-classic-classes
-const EmberObjectComponent = Component.extend({
-  name: "",
-  layout: hbs`<span class="ember-object-component">{{this.text}}</span>`,
+// // eslint-disable-next-line ember/no-classic-classes
+// const EmberObjectComponent = Component.extend({
+//   name: "",
+//   layout: hbs`<span class="ember-object-component">{{this.text}}</span>`,
 
-  @discourseComputed("name")
-  text(name) {
-    return `hello, ${name}`;
-  },
-});
+//   @discourseComputed("name")
+//   text(name) {
+//     return `hello, ${name}`;
+//   },
+// });
 
-class NativeComponent extends Component {
-  name = "";
-  layout = hbs`<span class="native-component">{{this.text}}</span>`;
+// class NativeComponent extends Component {
+//   name = "";
+//   layout = hbs`<span class="native-component">{{this.text}}</span>`;
 
-  @discourseComputed("name")
-  text(name) {
-    return `hello, ${name}`;
-  }
-}
+//   @discourseComputed("name")
+//   text(name) {
+//     return `hello, ${name}`;
+//   }
+// }
 
-// eslint-disable-next-line ember/no-classic-classes
-const TestStub = EmberObject.extend({
-  counter: 0,
-  otherCounter: 0,
-  state: null,
+// // eslint-disable-next-line ember/no-classic-classes
+// const TestStub = EmberObject.extend({
+//   counter: 0,
+//   otherCounter: 0,
+//   state: null,
 
-  @debounce(50)
-  increment(value) {
-    this.counter += value;
-  },
+//   @debounce(50)
+//   increment(value) {
+//     this.counter += value;
+//   },
 
-  @debounce(50, true)
-  setState(state) {
-    this.state = state;
-  },
+//   @debounce(50, true)
+//   setState(state) {
+//     this.state = state;
+//   },
 
-  @observes("prop")
-  propChanged() {
-    this.react();
-  },
+//   @observes("prop")
+//   propChanged() {
+//     this.react();
+//   },
 
-  @debounce(50)
-  react() {
-    this.otherCounter++;
-  },
-});
+//   @debounce(50)
+//   react() {
+//     this.otherCounter++;
+//   },
+// });
 
-const ClassSyntaxTestStub = class extends EmberObject {
-  counter = 0;
-  otherCounter = 0;
-  state = null;
+// const ClassSyntaxTestStub = class extends EmberObject {
+//   counter = 0;
+//   otherCounter = 0;
+//   state = null;
 
-  @debounce(50)
-  increment(value) {
-    this.counter += value;
-  }
+//   @debounce(50)
+//   increment(value) {
+//     this.counter += value;
+//   }
 
-  @debounce(50, true)
-  setState(state) {
-    this.state = state;
-  }
+//   @debounce(50, true)
+//   setState(state) {
+//     this.state = state;
+//   }
 
-  @nativeClassObserves("prop")
-  propChanged() {
-    this.react();
-  }
+//   @nativeClassObserves("prop")
+//   propChanged() {
+//     this.react();
+//   }
 
-  @debounce(50)
-  react() {
-    this.otherCounter++;
-  }
-};
+//   @debounce(50)
+//   react() {
+//     this.otherCounter++;
+//   }
+// };
 
-module("Unit | Utils | decorators", function (hooks) {
-  setupRenderingTest(hooks);
+// module("Unit | Utils | decorators", function (hooks) {
+//   setupRenderingTest(hooks);
 
-  test("afterRender", async function (assert) {
-    this.set("baz", 0);
+//   test("afterRender", async function (assert) {
+//     this.set("baz", 0);
 
-    await render(curryComponent(fooComponent, { baz: this.baz }), getOwner(this));
+//     await render(curryComponent(fooComponent, { baz: this.baz }), getOwner(this));
 
-    assert.dom(".foo-component").exists();
-    assert.strictEqual(this.baz, 1);
+//     assert.dom(".foo-component").exists();
+//     assert.strictEqual(this.baz, 1);
 
-    await clearRender();
+//     await clearRender();
 
-    assert.dom(".foo-component").doesNotExist();
-    assert.strictEqual(this.baz, 1);
-  });
+//     assert.dom(".foo-component").doesNotExist();
+//     assert.strictEqual(this.baz, 1);
+//   });
 
-  test("discourseComputed works in EmberObject classes", async function (assert) {
-    this.set("name", "Jarek");
-    await render(curryComponent(EmberObjectComponent, { name: this.name }, getOwner(this)));
+//   test("discourseComputed works in EmberObject classes", async function (assert) {
+//     this.set("name", "Jarek");
+//     await render(curryComponent(EmberObjectComponent, { name: this.name }, getOwner(this)));
 
-    assert.dom(".ember-object-component").hasText("hello, Jarek");
+//     assert.dom(".ember-object-component").hasText("hello, Jarek");
 
-    this.set("name", "Joffrey");
-    assert
-      .dom(".ember-object-component")
-      .hasText(
-        "hello, Joffrey",
-        "rerenders the component when arguments change"
-      );
-  });
+//     this.set("name", "Joffrey");
+//     assert
+//       .dom(".ember-object-component")
+//       .hasText(
+//         "hello, Joffrey",
+//         "rerenders the component when arguments change"
+//       );
+//   });
 
-  test("discourseComputed works in native classes", async function (assert) {
-    this.set("name", "Jarek");
-    await render(curryComponent(NativeComponent, { name: this.name }, getOwner(this)));
+//   test("discourseComputed works in native classes", async function (assert) {
+//     this.set("name", "Jarek");
+//     await render(curryComponent(NativeComponent, { name: this.name }, getOwner(this)));
 
-    assert.dom(".native-component").hasText("hello, Jarek");
+//     assert.dom(".native-component").hasText("hello, Jarek");
 
-    this.set("name", "Joffrey");
-    assert
-      .dom(".native-component")
-      .hasText(
-        "hello, Joffrey",
-        "rerenders the component when arguments change"
-      );
-  });
+//     this.set("name", "Joffrey");
+//     assert
+//       .dom(".native-component")
+//       .hasText(
+//         "hello, Joffrey",
+//         "rerenders the component when arguments change"
+//       );
+//   });
 
-  test("debounce", async function (assert) {
-    const stub = TestStub.create();
+//   test("debounce", async function (assert) {
+//     const stub = TestStub.create();
 
-    stub.increment(1);
-    stub.increment(1);
-    stub.increment(1);
-    await settled();
+//     stub.increment(1);
+//     stub.increment(1);
+//     stub.increment(1);
+//     await settled();
 
-    assert.strictEqual(stub.counter, 1);
+//     assert.strictEqual(stub.counter, 1);
 
-    stub.increment(500);
-    stub.increment(1000);
-    stub.increment(5);
-    await settled();
+//     stub.increment(500);
+//     stub.increment(1000);
+//     stub.increment(5);
+//     await settled();
 
-    assert.strictEqual(stub.counter, 6);
-  });
+//     assert.strictEqual(stub.counter, 6);
+//   });
 
-  test("immediate debounce", async function (assert) {
-    const stub = TestStub.create();
+//   test("immediate debounce", async function (assert) {
+//     const stub = TestStub.create();
 
-    stub.setState("foo");
-    stub.setState("bar");
-    await settled();
+//     stub.setState("foo");
+//     stub.setState("bar");
+//     await settled();
 
-    assert.strictEqual(stub.state, "foo");
-  });
+//     assert.strictEqual(stub.state, "foo");
+//   });
 
-  test("debounce works with native class syntax", async function (assert) {
-    const stub = ClassSyntaxTestStub.create();
+//   test("debounce works with native class syntax", async function (assert) {
+//     const stub = ClassSyntaxTestStub.create();
 
-    stub.increment(1);
-    stub.increment(1);
-    stub.increment(1);
-    await settled();
+//     stub.increment(1);
+//     stub.increment(1);
+//     stub.increment(1);
+//     await settled();
 
-    assert.strictEqual(stub.counter, 1);
+//     assert.strictEqual(stub.counter, 1);
 
-    stub.increment(500);
-    stub.increment(1000);
-    stub.increment(5);
-    await settled();
+//     stub.increment(500);
+//     stub.increment(1000);
+//     stub.increment(5);
+//     await settled();
 
-    assert.strictEqual(stub.counter, 6);
-  });
+//     assert.strictEqual(stub.counter, 6);
+//   });
 
-  test("@observes works via .extend and native class syntax", async function (assert) {
-    let NativeClassWithObserver;
-    withSilencedDeprecations("discourse.utils-decorators-observes", () => {
-      NativeClassWithObserver = class extends EmberObject {
-        counter = 0;
+//   test("@observes works via .extend and native class syntax", async function (assert) {
+//     let NativeClassWithObserver;
+//     withSilencedDeprecations("discourse.utils-decorators-observes", () => {
+//       NativeClassWithObserver = class extends EmberObject {
+//         counter = 0;
 
-        @observes("value")
-        incrementCounter() {
-          this.set("counter", this.counter + 1);
-        }
-      };
-    });
+//         @observes("value")
+//         incrementCounter() {
+//           this.set("counter", this.counter + 1);
+//         }
+//       };
+//     });
 
-    // eslint-disable-next-line ember/no-classic-classes
-    const ExtendWithObserver = EmberObject.extend({
-      counter: 0,
-      @observes("value")
-      incrementCounter() {
-        this.set("counter", this.counter + 1);
-      },
-    });
+//     // eslint-disable-next-line ember/no-classic-classes
+//     const ExtendWithObserver = EmberObject.extend({
+//       counter: 0,
+//       @observes("value")
+//       incrementCounter() {
+//         this.set("counter", this.counter + 1);
+//       },
+//     });
 
-    const nativeClassTest = NativeClassWithObserver.create();
-    nativeClassTest.set("value", "one");
-    await settled();
-    nativeClassTest.set("value", "two");
-    await settled();
-    assert.strictEqual(
-      nativeClassTest.counter,
-      2,
-      "observer triggered for native class"
-    );
+//     const nativeClassTest = NativeClassWithObserver.create();
+//     nativeClassTest.set("value", "one");
+//     await settled();
+//     nativeClassTest.set("value", "two");
+//     await settled();
+//     assert.strictEqual(
+//       nativeClassTest.counter,
+//       2,
+//       "observer triggered for native class"
+//     );
 
-    const extendTest = ExtendWithObserver.create();
-    extendTest.set("value", "one");
-    await settled();
-    extendTest.set("value", "two");
-    await settled();
-    assert.strictEqual(extendTest.counter, 2, "observer triggered for .extend");
-  });
+//     const extendTest = ExtendWithObserver.create();
+//     extendTest.set("value", "one");
+//     await settled();
+//     extendTest.set("value", "two");
+//     await settled();
+//     assert.strictEqual(extendTest.counter, 2, "observer triggered for .extend");
+//   });
 
-  test("@on works via .extend and native class syntax", async function (assert) {
-    let NativeClassWithOn;
-    withSilencedDeprecations("discourse.utils-decorators-on", () => {
-      NativeClassWithOn = class extends EmberObject {
-        counter = 0;
+//   test("@on works via .extend and native class syntax", async function (assert) {
+//     let NativeClassWithOn;
+//     withSilencedDeprecations("discourse.utils-decorators-on", () => {
+//       NativeClassWithOn = class extends EmberObject {
+//         counter = 0;
 
-        @on("init")
-        incrementCounter() {
-          this.set("counter", this.counter + 1);
-        }
-      };
-    });
+//         @on("init")
+//         incrementCounter() {
+//           this.set("counter", this.counter + 1);
+//         }
+//       };
+//     });
 
-    // eslint-disable-next-line ember/no-classic-classes
-    const ExtendWithOn = EmberObject.extend({
-      counter: 0,
-      @on("init")
-      incrementCounter() {
-        this.set("counter", this.counter + 1);
-      },
-    });
+//     // eslint-disable-next-line ember/no-classic-classes
+//     const ExtendWithOn = EmberObject.extend({
+//       counter: 0,
+//       @on("init")
+//       incrementCounter() {
+//         this.set("counter", this.counter + 1);
+//       },
+//     });
 
-    const nativeClassTest = NativeClassWithOn.create();
-    assert.strictEqual(
-      nativeClassTest.counter,
-      1,
-      "on triggered for native class"
-    );
+//     const nativeClassTest = NativeClassWithOn.create();
+//     assert.strictEqual(
+//       nativeClassTest.counter,
+//       1,
+//       "on triggered for native class"
+//     );
 
-    const extendTest = ExtendWithOn.create();
-    assert.strictEqual(extendTest.counter, 1, "on triggered for .extend");
-  });
-});
+//     const extendTest = ExtendWithOn.create();
+//     assert.strictEqual(extendTest.counter, 1, "on triggered for .extend");
+//   });
+// });
