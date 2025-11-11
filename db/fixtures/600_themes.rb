@@ -30,6 +30,6 @@ if !theme_exists
 
   Theme.horizon_theme.set_default!
 
-  dark_scheme_id = ColorScheme.where(name: "Horizon Dark").pick(:id)
+  dark_scheme_id = Theme.horizon_theme.color_schemes.find_by(name: "Horizon Dark")&.id
   Theme.horizon_theme.update!(dark_color_scheme_id: dark_scheme_id) if dark_scheme_id.present?
 end
