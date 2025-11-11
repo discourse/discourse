@@ -14,14 +14,14 @@
   }
 
   &.-animated {
-    @include float-down;
+    @include d-animation(float-down, 0.25s, ease);
 
     &[data-placement^="bottom"] {
       transform-origin: top center;
     }
 
     &[data-placement^="top"] {
-      @include float-up;
+      @include d-animation(float-up, 0.25s, ease);
       transform-origin: bottom center;
     }
 
