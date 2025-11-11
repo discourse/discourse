@@ -39,8 +39,6 @@ class QunitRunner
       dry_run_tests
     elsif @standalone_mode
       run_standalone_mode
-    elsif @plugin_targets.any?
-      run_multiple_plugin_targets
     elsif @file_paths.any?
       run_file_tests
     elsif @filter
@@ -176,7 +174,10 @@ class QunitRunner
       end
     end
 
-    @file_paths -= potential_plugin_names if @plugin_targets.any?
+    if @plugin_targets.any?
+      @file_paths -= potential_plugin_names
+      @load_plugins = true
+    end
   end
 
   def find_all_plugins_with_tests
@@ -294,53 +295,16 @@ class QunitRunner
     run_ember_exam(filter: @filter, load_plugins: is_plugin, query: query)
   end
 
-  def run_multiple_plugin_targets
-    check_dev_environment!
-
-    puts "\nRunning tests for #{@plugin_targets.length} plugin(s) against dev servers"
-    puts "Plugins: #{@plugin_targets.join(", ")}"
-    puts ""
-
-    overall_success = true
-    @plugin_targets.each_with_index do |plugin_target, index|
-      puts "\n" + ("=" * 80)
-      puts "Running tests for plugin: #{plugin_target} (#{index + 1}/#{@plugin_targets.length})"
-      puts "=" * 80
-
-      # Temporarily set target for this run
-      original_target = @target
-      @target = plugin_target
-
-      query = build_query_string(target: plugin_target)
-
-      dir = frontend_dir
-      env = { "LOAD_PLUGINS" => "1", "UNICORN_PORT" => @rails_port.to_s }
-      args = %w[pnpm ember exam]
-      args += ["--query", query] if query
-      args += %w[--path dist]
-
-      puts "Executing: #{args.join(" ")}" if @verbose
-      success = system(env, *args, chdir: dir)
-
-      # Restore original target
-      @target = original_target
-
-      overall_success &&= success
-
-      unless success
-        puts "\n✗ Tests failed for plugin: #{plugin_target}"
-        break unless ENV["QUNIT_CONTINUE_ON_ERROR"] == "1"
-      end
-    end
-
-    exit(overall_success ? 0 : 1)
-  end
 
   def run_all_tests_quick
-    load_plugins = should_load_plugins?
-    query = build_standalone_query(include_filter: false, include_hidepassed: false)
-
-    run_ember_exam(load_plugins: load_plugins, query: query)
+    if @plugin_targets.any?
+      puts "\nRunning tests for #{@plugin_targets.length} plugin(s) in parallel"
+      run_ember_exam(load_plugins: true)
+    else
+      load_plugins = should_load_plugins?
+      query = build_standalone_query(include_filter: false, include_hidepassed: false)
+      run_ember_exam(load_plugins: load_plugins, query: query)
+    end
   end
 
   def run_ember_exam(filter: nil, load_plugins:, file_path_filter: nil, query: nil)
@@ -349,7 +313,9 @@ class QunitRunner
     puts "\nRunning tests against dev environment:"
     puts "  Ember: localhost:#{@ember_port}"
     puts "  Rails: localhost:#{@rails_port}"
-    if file_path_filter
+    if @plugin_targets.any?
+      puts "  Plugins: #{@plugin_targets.join(", ")}"
+    elsif file_path_filter
       puts "  Using --file-path filter"
       puts "  Additional filter: #{filter}" if filter
     else
@@ -368,6 +334,7 @@ class QunitRunner
     env = {}
     env["LOAD_PLUGINS"] = "1" if load_plugins
     env["UNICORN_PORT"] = @rails_port.to_s
+    env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
 
     args = %w[pnpm ember exam]
     args += ["--query", query] if query
@@ -483,11 +450,7 @@ class QunitRunner
         Process.spawn(unicorn_env, File.join(rails_root, "bin", "unicorn"), pgroup: true)
       wait_for_rails_server(unicorn_port)
 
-      if @plugin_targets.any?
-        success = execute_multiple_plugin_targets(unicorn_port, detected_browser)
-      else
-        success = execute_standalone_suite(unicorn_port, detected_browser)
-      end
+      success = execute_standalone_suite(unicorn_port, detected_browser)
     ensure
       stop_unicorn(unicorn_pid, unicorn_env["UNICORN_PID_PATH"]) if unicorn_pid
     end
@@ -570,44 +533,14 @@ class QunitRunner
     puts "Rails server is warmed up"
   end
 
-  def execute_multiple_plugin_targets(unicorn_port, detected_browser)
-    puts "\nRunning tests for #{@plugin_targets.length} plugin(s): #{@plugin_targets.join(", ")}"
 
-    reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1"
-    run_theme_build(unless_build_reused: reuse_build) unless @qunit_path
-
-    overall_success = true
-    @plugin_targets.each_with_index do |plugin_target, index|
-      puts "\n" + ("=" * 80)
-      puts "Running tests for plugin: #{plugin_target} (#{index + 1}/#{@plugin_targets.length})"
-      puts "=" * 80
-
-      # Temporarily set target for this run
-      original_target = @target
-      @target = plugin_target
-
-      success = execute_standalone_suite(unicorn_port, detected_browser, skip_build: true)
-      overall_success &&= success
-
-      # Restore original target
-      @target = original_target
-
-      unless success
-        puts "\n✗ Tests failed for plugin: #{plugin_target}"
-        break unless ENV["QUNIT_CONTINUE_ON_ERROR"] == "1"
-      end
-    end
-
-    overall_success
-  end
-
-  def execute_standalone_suite(unicorn_port, detected_browser, skip_build: false)
+  def execute_standalone_suite(unicorn_port, detected_browser)
     ensure_file_paths_exist! if @file_paths.any?
 
     file_path_filter = build_file_path_filter(@file_paths)
     query = build_standalone_query
     parallel = present_string(@parallel)
-    reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1" || skip_build
+    reuse_build = ENV["QUNIT_REUSE_BUILD"] == "1"
 
     env = {
       "UNICORN_PORT" => unicorn_port.to_s,
@@ -623,12 +556,17 @@ class QunitRunner
 
     env["LOAD_PLUGINS"] = "1" if should_load_plugins?
     env["REPORT_REQUESTS"] = "1" if @report_requests
+    env["PLUGIN_TARGETS"] = @plugin_targets.join(",") if @plugin_targets.any?
 
     cmd = []
 
     if @qunit_path
-      run_theme_build(unless_build_reused: reuse_build) unless skip_build
+      run_theme_build(unless_build_reused: reuse_build)
       env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
+      cmd += %w[pnpm testem ci -f testem.js]
+      cmd += ["--parallel", parallel.to_s] if parallel
+    elsif @plugin_targets.any?
+      run_theme_build(unless_build_reused: reuse_build)
       cmd += %w[pnpm testem ci -f testem.js]
       cmd += ["--parallel", parallel.to_s] if parallel
     else
@@ -845,6 +783,11 @@ class QunitRunner
     @filter ||= ENV["FILTER"]
 
     ensure_supported_target!(source: "TARGET env var") if env_target
+
+    # Auto-enable plugin loading when targeting plugins
+    if @target && @target != "core" && !@load_plugins
+      @load_plugins = true
+    end
   end
 
   def plugin_names_from_filter(filter)
