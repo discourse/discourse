@@ -1002,7 +1002,7 @@ ar:
         few: "%{count} ردود"
         many: "%{count} ردًا"
         other: "%{count} رد"
-      edit: "تعديل"
+      edit: "تعديل المنشور"
       save: "حفظ"
       cancel: "إلغاء"
       new_topic: "ستؤدي الموافقة على هذا العنصر إلى إنشاء موضوع جديد"
@@ -1024,7 +1024,6 @@ ar:
           created_at: "تاريخ الإنشاء"
           created_at_asc: "تاريخ الإنشاء (عكسي)"
         priority:
-          title: "الحد الأدنى للأولوية"
           any: "(أي)"
           low: "منخفضة"
           medium: "متوسطة"
@@ -1113,7 +1112,7 @@ ar:
         chars_remaining: "متبقي %{count} من الحروف"
         delete_note: "حذف هذه الملاحظة"
         delete: "حذف"
-      new_topic_label: "موضوع جديد"
+      topic_label: "الموضوع"
       queued_user: "مستخدم في قائمة الانتظار"
       posted_in: "نُشر في"
       flagged_user: "المستخدم المبلَّغ عنه"
@@ -1132,9 +1131,6 @@ ar:
           few: "جرى الإبلاغ بواسطة %{count} مستخدمين مختلفين"
           many: "جرى الإبلاغ بواسطة %{count} مستخدمًا مختلفًا"
           other: "جرى الإبلاغ بواسطة %{count} مستخدم مختلف"
-        similar_posts: "المنشورات السابقة المشابهة"
-        flagged_in_timeframe: "تم الإبلاغ عن %{count} سابقًا"
-        user_activity: "نشاط المستخدم"
         activities:
           new_account: "حساب جديد"
           trust_level: "مستوى الثقة: %{trustLevelName}"
@@ -3213,7 +3209,6 @@ ar:
         title: "جاري ترجمة المنشور"
         select: "اختر الترجمة"
         save: "احفظ الترجمة"
-        original_content: "المحتوى الأصلي للمنشور"
         translation: "ترجمة"
         placeholder: "أدخل ترجمة المنشور هنا…"
       group_mentioned_limit:
@@ -3419,7 +3414,6 @@ ar:
           desc: "الرد دون تغيير تاريخ آخر رد"
         toggle_unlisted:
           label: تفعيل إلغاء الإدراج
-          desc: يُتاح الوصول إلى الموضوعات غير المدرجة للأعضاء فقط من خلال الرابط المباشر
       reload: "إعادة التحميل"
       ignore: "تجاهل"
       image_alt_text:
@@ -5480,7 +5474,6 @@ ar:
         go_to_unread_post: "%{shortcut} الانتقال إلى أول منشور غير مقروء"
       application:
         title: "التطبيق"
-        create: "%{shortcut} إنشاء موضوع جديد"
         notifications: "%{shortcut} فتح الإخطارات"
         hamburger_menu: "%{shortcut} فتح قائمة التنقل"
         user_profile_menu: "%{shortcut} فتح قائمة المستخدم"

@@ -360,7 +360,7 @@ hu:
     joined: "Tagság kezdete"
     admin_title: "Adminisztrátor"
     show_more: "több megjelenítése"
-    show_help: "beállítások"
+    show_help: "Beállítások"
     links: "Hivatkozások"
     links_lowercase:
       one: "hivatkozás"
@@ -755,7 +755,7 @@ hu:
       replies:
         one: "%{count} válasz"
         other: "%{count} válasz"
-      edit: "Szerkesztés"
+      edit: "Bejegyzés szerkesztése"
       save: "Mentés"
       cancel: "Mégse"
       new_topic: "Az elem jóváhagyása új témát hoz létre"
@@ -777,7 +777,6 @@ hu:
           created_at: "Létrehozva"
           created_at_asc: "Létrehozva (fordított)"
         priority:
-          title: "Legalacsonyabb prioritás"
           any: "(Bármely)"
           low: "Alacsony"
           medium: "Közepes"
@@ -866,7 +865,7 @@ hu:
         chars_remaining: "%{count} karakter maradt"
         delete_note: "Jegyzet törlése"
         delete: "Törlés"
-      new_topic_label: "Új téma"
+      topic_label: "Téma"
       queued_user: "Várakozó felhasználó"
       posted_in: "Közzétéve itt:"
       flagged_user: "Megjelölt felhasználó"
@@ -880,9 +879,6 @@ hu:
         flagged_by_users:
           one: "%{count} egyedi felhasználó jelölte meg"
           other: "%{count} egyedi felhasználó jelölte meg"
-        similar_posts: "Hasonló korábbi bejegyzések"
-        flagged_in_timeframe: "%{count} korábban megjelölés"
-        user_activity: "Felhasználói aktivitás"
         activities:
           new_account: "új fiók"
           trust_level: "bizalmi szint: %{trustLevelName}"
@@ -2709,7 +2705,6 @@ hu:
         title: "Bejegyzés fordítása"
         select: "Fordítás kiválasztása"
         save: "Fordítás mentése"
-        original_content: "Eredeti bejegyzés tartalma"
         placeholder: "Adja meg a bejegyzés fordítását…"
       group_mentioned_limit:
         one: "<b>Figyelem!</b>Megemlítette a(z) <a href='%{group_link}'>%{group}</a> csoportot, azonban ennek a csoportnak több mint %{count} tagja van, amely több, mint a rendszergazda által beállított megemlítési korlát. Senki nem lesz értesítve."
@@ -2878,7 +2873,6 @@ hu:
           desc: "Válasz a legutóbbi válasz dátumának módosítása nélkül"
         toggle_unlisted:
           label: Nem listázott állapot be/ki
-          desc: Nem listázott témák, amelyek csak a tagok számára érhetők el közvetlen linken keresztül
       reload: "Újratöltés"
       ignore: "Letiltás"
       image_alt_text:
@@ -4585,7 +4579,6 @@ hu:
         go_to_unread_post: "%{shortcut} Ugrás az első olvasatlan bejegyzésre"
       application:
         title: "Alkalmazás"
-        create: "%{shortcut} Új téma létrehozása"
         notifications: "%{shortcut} Értesítések megnyitása"
         hamburger_menu: "%{shortcut} Navigációs menü megnyitása"
         user_profile_menu: "%{shortcut} Felhasználói menü megnyitása"
@@ -5295,7 +5288,10 @@ hu:
           title: "Speciális"
       upcoming_changes:
         name: "Név"
+        plugin: "Bővítmény"
+        metadata: "Metaadat"
         enabled: "Bekapcsolva"
+        show_image: "Kép megjelenítése"
         select_groups: "Csoportok kiválasztása…"
         preview: "Előnézet"
         impact_roles:

@@ -882,7 +882,7 @@ he:
         two: "שתי תגובות"
         many: "%{count} תגובות"
         other: "%{count} תגובות"
-      edit: "עריכה"
+      edit: "עריכת פוסט"
       save: "שמירה"
       cancel: "ביטול"
       new_topic: "אישור הפריט הזה ייצור נושא חדש"
@@ -904,7 +904,6 @@ he:
           created_at: "מועד יצירה"
           created_at_asc: "מועד יצירה (הפוך)"
         priority:
-          title: "עדיפות מזערית"
           any: "(כלשהו)"
           low: "נמוכה"
           medium: "בינונית"
@@ -992,7 +991,7 @@ he:
         chars_remaining: "נותרו %{count} תווים"
         delete_note: "מחיקת ההערה הזאת"
         delete: "מחיקה"
-      new_topic_label: "נושא חדש"
+      topic_label: "נושא"
       queued_user: "משתמש בתור"
       posted_in: "פורסם ב־"
       flagged_user: "משתמש מסומן"
@@ -1009,9 +1008,6 @@ he:
           two: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
           many: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
           other: "סומן על ידי %{count} משתמש/ים ייחודיים/ות"
-        similar_posts: "פוסטים דומים מהעבר"
-        flagged_in_timeframe: "%{count} סומנו בעבר"
-        user_activity: "פעילות המשתמש"
         activities:
           new_account: "חשבון חדש"
           trust_level: "רמת אמון: %{trustLevelName}"
@@ -2978,7 +2974,6 @@ he:
         title: "תרגום פוסט"
         select: "בחירת תרגום"
         save: "שמירת תרגום"
-        original_content: "תוכן פוסט מקורי"
         translation: "תרגום"
         placeholder: "נא למלא כאן תרגום לפוסט…"
       group_mentioned_limit:
@@ -3164,8 +3159,6 @@ he:
         toggle_topic_bump:
           label: "החלפת מצב הקפצת נושא"
           desc: "הגב מבלי לשנות את תאריך התגובה האחרונה"
-        toggle_unlisted:
-          desc: נושאים מוסתרים נגישים לחברים רק באמצעות קישור ישיר
       reload: "ריענון"
       ignore: "התעלמות"
       image_alt_text:
@@ -5057,7 +5050,6 @@ he:
         go_to_unread_post: "%{shortcut} מעבר לפוסט הראשון שלא נקרא"
       application:
         title: "אפליקציה"
-        create: "%{shortcut} יצירת נושא חדש"
         notifications: "%{shortcut} פתיחת התראות"
         hamburger_menu: "%{shortcut} פתיחת תפריט ניווט"
         user_profile_menu: "%{shortcut} פתיחת תפריט משתמש"

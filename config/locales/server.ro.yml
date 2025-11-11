@@ -707,7 +707,8 @@ ro:
         user_api: "API Utilizator"
       yaxis: "Zi"
     consolidated_page_views_browser_detection:
-      title_legacy: "Afișări de pagină consolidate cu detectarea navigatorului (experimental)"
+      title: "Afișări de pagină consolidate cu detectarea navigatorului (recomandat)"
+      title_legacy: "Afișări de pagină consolidate cu detectarea navigatorului (recomandat)"
       yaxis: "Zi"
       description: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate vechi”."
       description_legacy: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate”."
@@ -1288,8 +1289,6 @@ ro:
     welcome_banner_location: "Stabilește unde va apărea bannerul de bun venit pe pagină."
     welcome_banner_page_visibility: "Stabilește pe ce pagini va apărea bannerul de bun venit."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
-    floatkit_autocomplete_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitor. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
-    floatkit_autocomplete_chat_composer: "Activează meniul de completare automată bazat pe Floatkit în compozitorul de discuții. Aceasta este o îmbunătățire a interfeței utilizator care va înlocui meniul actual de completare automată bazat pe jQuery."
     experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     experimental_impersonation: "Preia identitatea unui utilizator fără a fi nevoie să te deconectezi din contul tău de administrator."
@@ -1307,6 +1306,7 @@ ro:
     content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
     content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
     content_localization_language_switcher: "Arată un comutator de limbă în antet, permițând vizitatorilor să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii. Folosește limbile definite în „locale acceptate din localizarea de conținut”"
+    fake_upcoming_change: "Aceasta este o modificare viitoare falsă, în scopuri de testare. Nu este nevoie să traduci acest șir."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."

@@ -357,7 +357,7 @@ tr_TR:
     joined: "Katılma Tarihi"
     admin_title: "Yönetici"
     show_more: "daha fazla göster"
-    show_help: "seçenekler"
+    show_help: "Seçenekler"
     links: "Bağlantılar"
     links_lowercase:
       one: "bağlantı"
@@ -698,7 +698,7 @@ tr_TR:
       topic: "Konu:"
       filtered_topic: "Tek bir konu içerisinde incelenebilir içerikleri filtrelediniz."
       filtered_user: "Kullanıcı"
-      filtered_reviewed_by: "İnceleyen"
+      filtered_reviewed_by: "İnceleyen:"
       show_all_topics: "bütün konuları göster"
       deleted_post: "(gönderi silindi)"
       deleted_user: "(kullanıcı silindi)"
@@ -748,7 +748,7 @@ tr_TR:
       replies:
         one: "%{count} yanıt"
         other: "%{count} yanıt"
-      edit: "Düzenle"
+      edit: "Gönderiyi düzenle"
       save: "Kaydet"
       cancel: "İptal et"
       new_topic: "Bu ögeyi onaylamak yeni bir konu yaratır"
@@ -770,7 +770,6 @@ tr_TR:
           created_at: "Oluşturulma:"
           created_at_asc: "Oluşturulma (ters):"
         priority:
-          title: "Minimum Öncelik"
           any: "(hiç)"
           low: "Düşük"
           medium: "Orta"
@@ -859,7 +858,7 @@ tr_TR:
         chars_remaining: "%{count} karakter kaldı"
         delete_note: "Bu notu sil"
         delete: "Sil"
-      new_topic_label: "Yeni konu"
+      topic_label: "Konu"
       queued_user: "Sıraya alınmış kullanıcı"
       posted_in: "Paylaşılan yer:"
       flagged_user: "Bayrak eklenen kullanıcı"
@@ -874,9 +873,6 @@ tr_TR:
         flagged_by_users:
           one: "%{count} benzersiz kullanıcı tarafından bayrak eklendi"
           other: "%{count} benzersiz kullanıcı tarafından bayrak eklendi"
-        similar_posts: "Benzer geçmiş gönderiler"
-        flagged_in_timeframe: "Daha önce %{count} kişi bayrak ekledi"
-        user_activity: "Kullanıcı aktivitesi"
         activities:
           new_account: "yeni hesap"
           trust_level: "güven seviyesi: %{trustLevelName}"
@@ -2699,7 +2695,6 @@ tr_TR:
         title: "Gönderi çevriliyor"
         select: "Çeviri seç"
         save: "Çeviriyi kaydet"
-        original_content: "Orijinal gönderi içeriği"
         translation: "Çeviri"
         placeholder: "Gönderinin çevirisini buraya girin..."
       group_mentioned_limit:
@@ -2859,7 +2854,6 @@ tr_TR:
           desc: "En son yanıt tarihini değiştirmeden yanıtla"
         toggle_unlisted:
           label: Listeden kaldırılanı aç/kapat
-          desc: Listeden kaldırılan konulara yalnızca üyeler doğrudan bağlantı yoluyla erişebilir
       reload: "Yeniden Yükle"
       ignore: "Yok say"
       image_alt_text:
@@ -4548,7 +4542,6 @@ tr_TR:
         go_to_unread_post: "%{shortcut} Okunmamış ilk gönderiye git"
       application:
         title: "Uygulama"
-        create: "%{shortcut} Yeni konu oluştur"
         notifications: "%{shortcut} Bildirimleri aç"
         hamburger_menu: "%{shortcut} Navigasyon menüsünü aç"
         user_profile_menu: "%{shortcut} Kullanıcı menüsünü aç"

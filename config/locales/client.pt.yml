@@ -360,7 +360,7 @@ pt:
     joined: "Juntou-se"
     admin_title: "Administração"
     show_more: "mostrar mais"
-    show_help: "opções"
+    show_help: "Opções"
     links: "Hiperligações"
     links_lowercase:
       one: "hiperligação"
@@ -755,7 +755,7 @@ pt:
       replies:
         one: "%{count} resposta"
         other: "%{count} respostas"
-      edit: "Editar"
+      edit: "Editar Mensagem"
       save: "Guardar"
       cancel: "Cancelar"
       new_topic: "A aprovação deste item criará um novo tópico"
@@ -777,7 +777,6 @@ pt:
           created_at: "Criado a"
           created_at_asc: "Criado em (reverso)"
         priority:
-          title: "Prioridade Mínima"
           any: "(qualquer)"
           low: "Baixa"
           medium: "Médio"
@@ -863,7 +862,7 @@ pt:
         chars_remaining: "Restam %{count} carateres"
         delete_note: "Eliminar esta nota"
         delete: "Eliminar"
-      new_topic_label: "Novo tópico"
+      topic_label: "Tópico"
       queued_user: "Utilizador em fila"
       posted_in: "Publicado em"
       flagged_user: "Utilizador sinalizado"
@@ -874,8 +873,6 @@ pt:
       view_source: "Ver fonte"
       insights:
         title: "Conhecimentos"
-        similar_posts: "Similar às publicações antigas"
-        user_activity: "Atividade do utilizador"
         activities:
           new_account: "nova conta"
           trust_level: "nível de confiança: %{trustLevelName}"
@@ -2672,7 +2669,6 @@ pt:
         title: "Traduzir a mensagem"
         select: "Selecionar tradução"
         save: "Guarda a tradução"
-        original_content: "Conteúdo original da publicação"
         translation: "Tradução"
         placeholder: "Introduz aqui a tradução para a publicação..."
       group_mentioned_limit:
@@ -4168,7 +4164,6 @@ pt:
         go_to_unread_post: "%{shortcut} Ir para a primeira postagem não lida"
       application:
         title: "Aplicação"
-        create: "%{shortcut} Criar um novo tópico"
         notifications: "%{shortcut} Abrir notificações"
         user_profile_menu: "%{shortcut} Abrir menu de utilizador"
         show_incoming_updated_topics: "%{shortcut} Mostrar tópicos atualizados"
