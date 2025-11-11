@@ -1362,8 +1362,8 @@ en:
       yaxis: "Day"
       description: "API requests for regular API keys and user API keys."
     consolidated_page_views_browser_detection:
-      title: "Consolidated Pageviews with Browser Detection (Experimental)"
-      title_legacy: "Consolidated Pageviews with Browser Detection (Experimental)"
+      title: "Consolidated Pageviews with Browser Detection (Recommended)"
+      title_legacy: "Consolidated Pageviews with Browser Detection (Recommended)"
       xaxis:
         page_view_anon_browser: "Anonymous Browser"
         page_view_logged_in_browser: "Logged In Browser"
