@@ -3765,7 +3765,7 @@ en:
           24_hours: "24 Hours"
           custom: "Custom Duration"
       slow_mode_notice:
-        duration: "Please wait %{duration} between posts in this topic"
+        duration: "Please wait %{duration} between your posts in this topic"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
