@@ -466,6 +466,7 @@ export default {
 
     event.preventDefault();
 
+    // create new message: if at PM topic route
     if (this.router.currentRouteName.includes("topic")) {
       const topicController = getOwner(this).lookup("controller:topic");
       if (topicController.model.archetype === "private_message") {
@@ -479,7 +480,11 @@ export default {
       }
     }
 
-    if (this.router.currentURL.includes("/messages")) {
+    // create new message: if at messages list route
+    if (
+      this.router.currentRouteName.includes("userPrivateMessages") ||
+      this.router.currentRouteName.includes("group.messages")
+    ) {
       const newPMButton = document.querySelector("#new-private-message-btn");
       if (newPMButton) {
         newPMButton.click();
@@ -487,13 +492,14 @@ export default {
       }
     }
 
-    // If the page has a create-topic button, use it for context sensitive attributes like category
+    // create new topic: context-aware (preserves category, etc.)
     const createTopicButton = document.querySelector("#create-topic");
     if (createTopicButton) {
       createTopicButton.click();
       return;
     }
 
+    // create new topic: default action
     this.composer.open({
       action: Composer.CREATE_TOPIC,
       draftKey: Composer.NEW_TOPIC_KEY,

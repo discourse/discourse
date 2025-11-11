@@ -272,7 +272,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
   });
 
   module("context aware create new shortcuts", function () {
-    test("C key opens composer in new topic mode from dashboard", async function (assert) {
+    test("C key opens composer in new topic mode from topics list", async function (assert) {
       await visit("/");
       await triggerKeyEvent(document, "keypress", "C");
 
@@ -284,7 +284,7 @@ acceptance("Keyboard Shortcuts - Authenticated Users", function (needs) {
         );
     });
 
-    test("C key opens composer in new PM mode from messages view", async function (assert) {
+    test("C key opens composer in new PM mode from messages list", async function (assert) {
       await visit("/my/messages");
       await triggerKeyEvent(document, "keypress", "C");
 
