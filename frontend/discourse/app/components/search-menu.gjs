@@ -22,6 +22,7 @@ import { search as searchCategoryTag } from "discourse/lib/category-tag-search";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
 import {
   isValidSearchTerm,
   searchForTerm,
@@ -49,6 +50,7 @@ export default class SearchMenu extends Component {
   @tracked suggestionKeyword = false;
   @tracked suggestionResults = [];
   @tracked invalidTerm = false;
+  @tracked isClosing = false;
   @tracked menuPanelOpen = false;
 
   searchInputId = this.args.searchInputId ?? "search-term";
@@ -97,6 +99,10 @@ export default class SearchMenu extends Component {
       classes.push("loading");
     }
 
+    if (this.isClosing) {
+      classes.push("is-closing");
+    }
+
     return classes.join(" ");
   }
 
@@ -143,13 +149,20 @@ export default class SearchMenu extends Component {
   @action
   close() {
     if (this.args?.onClose) {
-      return this.args.onClose();
+      discourseLater(() => {
+        this.isClosing = false;
+        return this.args.onClose();
+      }, 250);
     }
 
     // We want to blur the search input when in stand-alone mode
     // so that when we focus on the search input again, the menu panel pops up
     document.getElementById(this.searchInputId)?.blur();
-    this.menuPanelOpen = false;
+    this.isClosing = true;
+    discourseLater(() => {
+      this.isClosing = false;
+      this.menuPanelOpen = false;
+    }, 250);
   }
 
   @action
@@ -484,7 +497,7 @@ export default class SearchMenu extends Component {
           @clearSearch={{this.clearSearch}}
         />
       {{else if this.displayMenuPanelResults}}
-        <MenuPanel class="search-menu-panel">
+        <MenuPanel class="search-menu-panel drop-down">
           <Results
             @searchInputId={{this.searchInputId}}
             @loading={{this.loading}}

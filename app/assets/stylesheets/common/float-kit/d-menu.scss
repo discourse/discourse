@@ -24,14 +24,6 @@
       }
     }
 
-    &.-closing {
-      @include dissolve;
-
-      &[data-placement^="bottom-start"] {
-        transform-origin: top left;
-      }
-    }
-
     &[data-placement^="bottom"] {
       transform-origin: top center;
     }
