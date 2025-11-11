@@ -10,6 +10,9 @@ RSpec.describe Chat::GuardianExtensions do
   let(:guardian) { Guardian.new(user) }
   let(:staff_guardian) { Guardian.new(staff) }
 
+  fab!(:private_group_create_post, :group)
+  fab!(:private_channel) { Fabricate(:private_category_channel, group: private_group_create_post) }
+
   before { SiteSetting.chat_allowed_groups = chatters.id }
 
   describe "#can_chat?" do
@@ -252,6 +255,59 @@ RSpec.describe Chat::GuardianExtensions do
                 channel.chatable,
                 post_allowed_category_ids: [channel.chatable.id],
               )
+            end
+          end
+
+          context "when user is a shadow account" do
+            fab!(:non_chatter) { Fabricate(:user, refresh_auto_groups: true) }
+
+            before do
+              SiteSetting.allow_anonymous_mode = true
+              private_group_create_post.add(user)
+            end
+
+            context "when allow_chat_in_anonymous_mode is true" do
+              before { SiteSetting.allow_chat_in_anonymous_mode = true }
+
+              it "allows shadow account to chat if master account can chat" do
+                anonymous = AnonymousShadowCreator.get(user)
+                expect(anonymous.id).to be_present
+                expect(
+                  Guardian.new(anonymous).can_post_in_chatable?(private_channel.chatable),
+                ).to eq(true)
+                expect(Guardian.new(user).can_post_in_chatable?(private_channel.chatable)).to eq(
+                  true,
+                )
+              end
+
+              it "doesn't allow shadow account to chat if master account can not chat" do
+                anonymous = AnonymousShadowCreator.get(non_chatter)
+                expect(anonymous.id).to be_present
+                expect(
+                  Guardian.new(anonymous).can_post_in_chatable?(private_channel.chatable),
+                ).to eq(false)
+                expect(
+                  Guardian.new(non_chatter).can_post_in_chatable?(private_channel.chatable),
+                ).to eq(false)
+              end
+            end
+
+            context "when allow_chat_in_anonymous_mode is false" do
+              before { SiteSetting.allow_chat_in_anonymous_mode = false }
+
+              it "doesn't allow shadow account to chat even if master account can chat" do
+                anonymous = AnonymousShadowCreator.get(user)
+                expect(anonymous.id).to be_present
+                expect(Guardian.new(anonymous).can_chat?).to eq(false)
+                expect(Guardian.new(user).can_chat?).to eq(true)
+              end
+
+              it "doesn't allow shadow account to chat if master account can not chat" do
+                anonymous = AnonymousShadowCreator.get(non_chatter)
+                expect(anonymous.id).to be_present
+                expect(Guardian.new(anonymous).can_chat?).to eq(false)
+                expect(Guardian.new(non_chatter).can_chat?).to eq(false)
+              end
             end
           end
 
