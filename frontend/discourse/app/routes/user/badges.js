@@ -14,7 +14,7 @@ export default class UserBadges extends DiscourseRoute {
 
   setupController() {
     super.setupController(...arguments);
-    this.controllerFor("user-activity").userActionType = -1;
+    // this.controllerFor("user-activity").userActionType = -1;
   }
 
   titleToken() {

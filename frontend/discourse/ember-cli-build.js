@@ -33,12 +33,12 @@ const allRoutes = [
   "tag",
   "tags",
   "topic",
-  // "user-activity",
+  "user-activity",
   "user-invited",
   "user-notifications",
   "user-posts",
   "user-private-messages",
-  "user-topics-list",
+  // "user-topics-list", // Referred to by templateName=
   // "user", // Many @controller user
   "users",
   "activate-account",
