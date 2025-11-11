@@ -4,6 +4,7 @@ class Tag < ActiveRecord::Base
   include Searchable
   include HasDestroyedWebHook
   include HasSanitizableFields
+  include Localizable
 
   self.ignored_columns = [
     "topic_count", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
