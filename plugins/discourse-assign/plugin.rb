@@ -333,7 +333,12 @@ after_initialize do
       )
     end
 
-    group_id = Group.where(name: name.downcase).pick(:id)
+    group_id =
+      Group
+        .visible_groups(topic_query.guardian.user)
+        .members_visible_groups(topic_query.guardian.user)
+        .where(name: name.downcase)
+        .pick(:id)
 
     if group_id
       next(
@@ -917,17 +922,23 @@ after_initialize do
 
     found_names ||= []
     user_ids ||= []
-
     # a bit edge casey cause we have username_lower for users but not for groups
     # we share a namespace though so in practice this is ok
     remaining_names = names - found_names
     group_ids = []
-    group_ids.concat(Group.where(name: remaining_names).pluck(:id)) if remaining_names.present?
+    if remaining_names.present?
+      group_ids.concat(
+        Group
+          .visible_groups(guardian.user)
+          .members_visible_groups(guardian.user)
+          .where(name: remaining_names)
+          .pluck(:id),
+      )
+    end
 
     next scope.none if user_ids.empty? && group_ids.empty?
 
     assignment_query = Assignment.none # needed cause we are adding .or later
-
     if user_ids.present?
       assignment_query =
         assignment_query.or(
@@ -975,7 +986,6 @@ after_initialize do
 
   register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
     next if !@guardian.can_assign? || match.blank?
-
     if user_id = User.find_by_username(match)&.id
       posts.where(<<~SQL, user_id)
         topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
