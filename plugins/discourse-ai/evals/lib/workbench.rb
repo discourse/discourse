@@ -5,6 +5,7 @@ require_relative "eval"
 require_relative "llm_repository"
 require_relative "runners/base"
 require_relative "runners/ai_helper"
+require_relative "runners/translation"
 require_relative "runners/inference"
 require_relative "runners/spam"
 require_relative "runners/summarization"
@@ -83,7 +84,7 @@ module DiscourseAi
       attr_reader :output
 
       def find_runner(feature)
-        DiscourseAi::Evals::Runners::Base.build(feature)
+        DiscourseAi::Evals::Runners::Base.find_runner(feature)
       end
 
       def classify_results(eval_case, result)

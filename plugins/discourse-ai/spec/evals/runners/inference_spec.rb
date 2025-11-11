@@ -31,7 +31,7 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
           },
         )
 
-      runner = described_class.new("inference:generate_concepts")
+      runner = described_class.new("generate_concepts")
       result = runner.run(eval_case, llm)
 
       expect(result).to eq("concept_a\nconcept_b")
@@ -40,12 +40,12 @@ RSpec.describe DiscourseAi::Evals::Runners::Inference do
     it "uses provided concept candidates for match_concepts" do
       eval_case =
         OpenStruct.new(args: { input: "Moderation queue updates", concepts: %w[queue ai] })
-      runner = described_class.new("inference:match_concepts")
+      runner = described_class.new("match_concepts")
       expect(runner.run(eval_case, llm)).to eq("concept_a\nconcept_b")
     end
 
     it "requires concepts for deduplicate_concepts" do
-      runner = described_class.new("inference:deduplicate_concepts")
+      runner = described_class.new("deduplicate_concepts")
       expect do runner.run(OpenStruct.new(args: {}), llm) end.to raise_error(
         ArgumentError,
         /requires :concepts/,

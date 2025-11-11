@@ -97,15 +97,16 @@ module DiscourseAi
 
         def persona_instance(op)
           config = OPERATIONS.fetch(op) { raise ArgumentError }
-          persona = config.dig(:persona)
-          persona_record = AiPersona.find_by_id_from_cache(persona)
+          persona_klass = config.dig(:persona)
+          persona_id = DiscourseAi::Personas::Persona.system_personas[persona_klass]
+          persona_record = AiPersona.find_by_id_from_cache(persona_id)
 
-          persona_record&.class_instance&.new || persona.new
+          persona_record&.class_instance&.new || persona_klass.new
         end
 
         def capture_structured_output(persona, llm, context, op)
           schema = OPERATIONS.fetch(op)
-          schema_key = persona.response_format&.first.to_h
+          schema_key = schema[:schema_key]
           schema_type = schema[:schema_type]
 
           bot = DiscourseAi::Personas::Bot.as(Discourse.system_user, persona: persona, model: llm)

@@ -12,6 +12,7 @@ module DiscourseAi
           def find_runner(feature)
             registry = [
               DiscourseAi::Evals::Runners::AiHelper,
+              DiscourseAi::Evals::Runners::Translation,
               DiscourseAi::Evals::Runners::Spam,
               DiscourseAi::Evals::Runners::Summarization,
               DiscourseAi::Evals::Runners::Inference,
