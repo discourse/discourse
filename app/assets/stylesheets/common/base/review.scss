@@ -37,7 +37,7 @@
 
   .reviewable-created-date {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--primary-high);
     white-space: nowrap;
     align-self: baseline;
     padding-block: var(--space-1);
@@ -51,12 +51,18 @@
     align-self: center;
 
     .post-action-feedback-alert {
-      top: -1rem;
+      top: -1.25rem;
       left: 60%;
     }
 
-    > .d-icon {
+    .d-icon {
       margin-right: 0;
+    }
+
+    .post-action-feedback-svg {
+      right: unset;
+      left: -0.5em;
+      top: 0.05em;
     }
   }
 
@@ -193,6 +199,10 @@
 
     &-content-wrapper {
       width: 100%;
+
+      .review-item__post-content .transcript {
+        margin: var(--space-2) 0 0;
+      }
     }
 
     &-content {
@@ -205,6 +215,7 @@
       transition-delay: 0.5s;
       background: var(--primary-very-low);
       padding: var(--space-4);
+      border-radius: var(--d-border-radius);
 
       .lightbox-wrapper img {
         display: block;
@@ -262,7 +273,8 @@
   &__insights {
     padding-inline: var(--space-4);
 
-    .nav-pills {
+    .nav-pills.action-list {
+      margin-bottom: 0;
       border-bottom: 1px solid var(--content-border-color);
     }
   }
@@ -355,6 +367,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  margin-top: var(--space-2);
 
   &__item {
     display: grid;
@@ -362,6 +375,7 @@
     column-gap: var(--space-2);
     align-items: start;
     padding-bottom: var(--space-3);
+    padding-inline: var(--space-4);
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--content-border-color);
@@ -395,6 +409,7 @@
 
   button {
     justify-content: left;
+    text-align: left;
   }
 }
 
@@ -427,7 +442,6 @@
   .timeline-events {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
   }
 
   .timeline-event {
@@ -436,6 +450,7 @@
     align-items: flex-start;
     gap: var(--space-3);
     background: var(--secondary);
+    padding-block: var(--space-4);
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--content-border-color);
@@ -454,9 +469,9 @@
       align-items: flex-start;
       justify-content: center;
       width: 2.5rem;
-      height: 2.5rem;
       font-size: 1.1rem;
       flex-shrink: 0;
+      padding-left: var(--space-2);
       padding-top: 0.2em;
       color: var(--primary-medium);
     }
@@ -492,7 +507,14 @@
     &__description {
       color: var(--primary-high);
       font-size: var(--font-down-1);
-      line-height: var(--line-height-medium);
+
+      :first-child {
+        margin-top: 0;
+      }
+
+      :last-child {
+        margin-bottom: 0;
+      }
     }
 
     &__actions {
@@ -528,14 +550,14 @@
   }
 
   .timeline-empty {
-    text-align: center;
-    padding: var(--space-6) var(--space-4);
+    padding: var(--space-4);
     color: var(--primary-medium);
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2);
 
     &__icon {
-      font-size: 2rem;
-      margin-bottom: var(--space-3);
-      opacity: 0.5;
+      color: var(--primary-low-mid);
     }
 
     &__message {
@@ -548,24 +570,17 @@
 // Reviewable Note Form Styles
 .reviewable-note-form {
   background-color: var(--primary-very-low);
-  border: 1px solid var(--content-border-color);
-  border-radius: var(--d-border-radius);
+  border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
   padding: var(--space-4);
   margin-bottom: var(--space-4);
 
-  &__form {
-    gap: var(--space-2);
+  &__textarea-wrapper {
+    width: 100%;
   }
 
   textarea {
-    resize: vertical;
-  }
-
-  @include viewport.between(sm, lg) {
-    // prevents textarea from squishing controls after resizing window
-    .form-kit__field .form-kit__container-content.--full {
-      max-width: 40vw;
-    }
+    margin-bottom: 0;
+    resize: none;
   }
 }
 
