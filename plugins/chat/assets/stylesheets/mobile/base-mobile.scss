@@ -12,6 +12,9 @@
 html.has-full-page-chat {
   body #main-outlet {
     padding: 0;
+    height: calc(
+      var(--composer-vh, 1dvh) * 100 - var(--main-outlet-offset, 0px)
+    );
 
     .main-chat-outlet {
       .chat-channel {
