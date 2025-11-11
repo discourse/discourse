@@ -54,7 +54,7 @@ export default defineConfig(({ mode, command }) => {
       // contentFor(),
 
       discourseTestSiteSettings(),
-      customInvokableResolver(),
+      // customInvokableResolver(),
 
       babel({
         babelHelpers: "runtime",

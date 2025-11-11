@@ -59,9 +59,9 @@ function populatePreloadStore() {
 populatePreloadStore();
 
 let adminCompatModules = {};
-if (PreloadStore.get("currentUser")?.staff) {
-  adminCompatModules = (await import("../admin/compat-modules")).default;
-}
+// if (PreloadStore.get("currentUser")?.staff) {
+adminCompatModules = (await import("../admin/compat-modules")).default;
+// }
 
 await loadThemes();
 

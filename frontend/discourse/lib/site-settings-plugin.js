@@ -26,7 +26,7 @@ export default function discourseTestSiteSettings() {
       if (id !== resolvedVirtualModuleId) {
         return;
       }
-      const file = "../../../../config/site_settings.yml";
+      const file = "../../config/site_settings.yml";
       this.addWatchFile(`/${file}`);
       const yaml = fs.readFileSync(file, {
         encoding: "UTF-8",
