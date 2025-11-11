@@ -701,7 +701,7 @@ fi:
       topic: "Ketju:"
       filtered_topic: "Olet suodattanut käsiteltävän sisällön yhdestä ketjusta."
       filtered_user: "Käyttäjä"
-      filtered_reviewed_by: "Käsittelijä:"
+      filtered_reviewed_by: "Käsittelijä"
       show_all_topics: "näytä kaikki ketjut"
       deleted_post: "(viesti poistettu)"
       deleted_user: "(käyttäjä poistettu)"

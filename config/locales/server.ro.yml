@@ -707,6 +707,7 @@ ro:
         user_api: "API Utilizator"
       yaxis: "Zi"
     consolidated_page_views_browser_detection:
+      title: "Afișări de pagină consolidate cu detectarea navigatorului (experimental)"
       title_legacy: "Afișări de pagină consolidate cu detectarea navigatorului (experimental)"
       yaxis: "Zi"
       description: "Afișări de pagină pentru utilizatorii conectați, utilizatori anonimi, roboții de indexare cunoscuți și altele. Acest raport experimental asigură că solicitările de utilizatori conectați sau anonimi provin din navigatoare reale înainte de a le număra. Datele istorice pentru acest raport nu sunt disponibile; pentru datele istorice, consultă raportul „Afișări de pagină consolidate vechi”."
