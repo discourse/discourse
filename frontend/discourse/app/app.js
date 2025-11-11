@@ -59,7 +59,7 @@ populatePreloadStore();
 
 let adminCompatModules = {};
 if (PreloadStore.get("currentUser")?.staff) {
-  adminCompatModules = (await import("admin/compat-modules")).default;
+  adminCompatModules = (await import("../admin/compat-modules")).default;
 }
 
 await loadThemes();
@@ -108,7 +108,7 @@ export async function loadAdmin() {
     "admin",
     (
       await import(
-        /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
+        /* webpackChunkName: "admin" */ "discourse/admin/compat-modules"
       )
     ).default
   );

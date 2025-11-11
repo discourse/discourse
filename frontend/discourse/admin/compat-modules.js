@@ -9,7 +9,7 @@ const moduleSets = [
   .flat();
 
 for (const [path, module] of moduleSets) {
-  let name = path.replace("./", "admin/").replace(/\.\w+$/, "");
+  let name = path.replace("./", "discourse/admin/").replace(/\.\w+$/, "");
   if (!seenNames.has(name)) {
     seenNames.add(name);
     adminCompatModules[name] = module;

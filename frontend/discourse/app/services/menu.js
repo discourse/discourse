@@ -1,1 +1,1 @@
-export { default } from "float-kit/services/menu";
+export { default } from "discourse/float-kit/services/menu";

@@ -130,9 +130,6 @@ loaderShim("@messageformat/runtime/messages", () =>
   importSync("@messageformat/runtime/messages")
 );
 loaderShim("@popperjs/core", () => importSync("@popperjs/core"));
-loaderShim("@uppy/aws-s3-multipart", () =>
-  importSync("@uppy/aws-s3-multipart")
-);
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/core", () => importSync("@uppy/core"));
 loaderShim("@uppy/drop-target", () => importSync("@uppy/drop-target"));
@@ -154,40 +151,9 @@ loaderShim("jquery", () => importSync("jquery"));
 loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("virtual-dom", () => importSync("virtual-dom"));
 loaderShim("xss", () => importSync("xss"));
-loaderShim("message-bus-client", () => importSync("message-bus-client"));
+// loaderShim("message-bus-client", () => importSync("message-bus-client"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
-loaderShim("truth-helpers", () => importSync("truth-helpers"));
-loaderShim("truth-helpers/helpers/and", () =>
-  importSync("truth-helpers/helpers/and")
-);
-loaderShim("truth-helpers/helpers/eq", () =>
-  importSync("truth-helpers/helpers/eq")
-);
-loaderShim("truth-helpers/helpers/gt", () =>
-  importSync("truth-helpers/helpers/gt")
-);
-loaderShim("truth-helpers/helpers/gte", () =>
-  importSync("truth-helpers/helpers/gte")
-);
-loaderShim("truth-helpers/helpers/includes", () =>
-  importSync("truth-helpers/helpers/includes")
-);
-loaderShim("truth-helpers/helpers/lt", () =>
-  importSync("truth-helpers/helpers/lt")
-);
-loaderShim("truth-helpers/helpers/lte", () =>
-  importSync("truth-helpers/helpers/lte")
-);
-loaderShim("truth-helpers/helpers/not-eq", () =>
-  importSync("truth-helpers/helpers/not-eq")
-);
-loaderShim("truth-helpers/helpers/not", () =>
-  importSync("truth-helpers/helpers/not")
-);
-loaderShim("truth-helpers/helpers/or", () =>
-  importSync("truth-helpers/helpers/or")
-);
 loaderShim("virtual-dom", () => importSync("virtual-dom"));
 loaderShim("xss", () => importSync("xss"));
 otherLoader("@messageformat/runtime/messages", () =>

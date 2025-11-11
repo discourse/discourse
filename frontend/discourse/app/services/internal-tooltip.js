@@ -1,1 +1,1 @@
-export { default } from "float-kit/services/internal-tooltip";
+export { default } from "discourse/float-kit/services/internal-tooltip";

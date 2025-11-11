@@ -40,12 +40,6 @@ export default defineConfig(({ mode, command }) => {
           find: "discourse-widget-hbs",
           replacement: "/../discourse-widget-hbs/addon",
         },
-        { find: "select-kit", replacement: "/../select-kit/addon" },
-        { find: "float-kit", replacement: "/../float-kit/addon" },
-        { find: "discourse/tests", replacement: "/tests" },
-        { find: "discourse", replacement: "/app" },
-        { find: "admin", replacement: "/../admin/addon" },
-        { find: "dialog-holder", replacement: "/../dialog-holder/addon" },
       ],
     },
     plugins: [

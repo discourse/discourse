@@ -1,1 +1,1 @@
-export { default } from "dialog-holder/services/dialog";
+export { default } from "discourse/dialog-holder/services/dialog";

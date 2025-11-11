@@ -7,6 +7,7 @@ let path = require("path");
 const {
   WidgetHbsCompiler,
 } = require("discourse-widget-hbs/lib/widget-hbs-compiler");
+const transformModuleRenames = require("./lib/babel-transform-module-renames");
 
 // Enable template colocation in our other root namespaces (e.g. select-kit, etc.)
 const unrestrictedTemplateColocationPlugin = [
@@ -21,6 +22,7 @@ const unrestrictedTemplateColocationPlugin = [
 
 module.exports = {
   plugins: [
+    transformModuleRenames,
     [
       "babel-plugin-ember-template-compilation",
       {
