@@ -4278,3 +4278,12 @@ experimental:
     default: false
     hidden: true
     client: true
+  fake_upcoming_change:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"
+      learn_more_url: "https://meta.discourse.org"
+
