@@ -35,14 +35,16 @@ module PageObjects
                 ReviewableScore.type_title(type).to_s
               end
 
-            expect(find(".review-item__flag-reason.--#{css_class}").text.gsub(/\s+/, " ")).to eq(
-              expected_text,
-            )
+            within(".review-item__header") do
+              expect(find(".review-item__flag-reason.--#{css_class}").text.gsub(/\s+/, " ")).to eq(
+                expected_text,
+              )
 
-            if count > 1
-              expect(page).to have_css(".review-item__flag-count.--#{css_class}")
-            else
-              expect(page).to have_no_css(".review-item__flag-count.--#{css_class}")
+              if count > 1
+                expect(page).to have_css(".review-item__flag-count.--#{css_class}")
+              else
+                expect(page).to have_no_css(".review-item__flag-count.--#{css_class}")
+              end
             end
           end
         end

@@ -100,7 +100,7 @@ export default class ReviewableItem extends Component {
   @optionalService adminTools;
 
   @tracked disabled = false;
-  @tracked activeTab = "insights";
+  @tracked activeTab = "timeline";
 
   @alias("reviewable.claimed_by.automatic") autoClaimed;
 
@@ -776,20 +776,6 @@ export default class ReviewableItem extends Component {
               >
                 <li
                   class={{concatClass
-                    "insights"
-                    (if (eq this.activeTab "insights") "active")
-                  }}
-                >
-                  <a
-                    href="#"
-                    class={{if (eq this.activeTab "insights") "active"}}
-                    {{on "click" (fn this.switchTab "insights")}}
-                  >
-                    {{i18n "review.insights.title"}}
-                  </a>
-                </li>
-                <li
-                  class={{concatClass
                     "timeline"
                     (if (eq this.activeTab "timeline") "active")
                   }}
@@ -800,6 +786,20 @@ export default class ReviewableItem extends Component {
                     {{on "click" (fn this.switchTab "timeline")}}
                   >
                     {{i18n "review.timeline_and_notes"}}
+                  </a>
+                </li>
+                <li
+                  class={{concatClass
+                    "insights"
+                    (if (eq this.activeTab "insights") "active")
+                  }}
+                >
+                  <a
+                    href="#"
+                    class={{if (eq this.activeTab "insights") "active"}}
+                    {{on "click" (fn this.switchTab "insights")}}
+                  >
+                    {{i18n "review.insights.title"}}
                   </a>
                 </li>
               </HorizontalOverflowNav>

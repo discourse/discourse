@@ -8,4 +8,4 @@ en:
       show: "User Notes (%{count})"
       delete_confirm: "Are you sure you want to delete that user note?"
       show_post: "Show Post"
-      copy_reviewable_note: "Copy note to user profile?"
+      copy_reviewable_note: "Copy note to %{username}'s profile?"

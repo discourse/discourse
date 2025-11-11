@@ -90,6 +90,8 @@ module PageObjects
 
         if component.has_css?(".multi-select")
           "multi-select"
+        elsif component.has_css?("textarea")
+          "textarea"
         else
           raise "Unknown custom control"
         end

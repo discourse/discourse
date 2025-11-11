@@ -946,7 +946,7 @@ en:
         note_added_by: "Moderator note by %{username} · %{relativeDate}"
         no_events: "No timeline events to display"
       notes:
-        add_note_description: "Visible only to moderators. Use this note to add context or decisions about the review."
+        add_note_description: "Add a note to provide context to other moderators."
         add_note_button: "Add note"
         placeholder: "Write your note here..."
         chars_remaining: "%{count} characters remaining"
