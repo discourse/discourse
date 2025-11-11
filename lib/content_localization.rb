@@ -14,7 +14,7 @@ class ContentLocalization
   # @param post [Post] The post object
   # @return [Boolean]
   def self.show_translated_post?(post, scope)
-    SiteSetting.experimental_content_localization && post.raw.present? && post.locale.present? &&
+    SiteSetting.content_localization_enabled && post.raw.present? && post.locale.present? &&
       !post.in_user_locale? && !show_original?(scope)
   end
 
@@ -23,7 +23,15 @@ class ContentLocalization
   # @param topic [Topic] The topic record
   # @return [Boolean]
   def self.show_translated_topic?(topic, scope)
-    SiteSetting.experimental_content_localization && topic.locale.present? &&
-      !topic.in_user_locale? && !show_original?(scope)
+    SiteSetting.content_localization_enabled && topic.locale.present? && !topic.in_user_locale? &&
+      !show_original?(scope)
+  end
+
+  # This method returns true when we should try to show the translated category.
+  # @param scope [Object] The serializer scope from which the method is called
+  # @param category [Category] The category record
+  # @return [Boolean]
+  def self.show_translated_category?(category, scope)
+    SiteSetting.content_localization_enabled && !category.in_user_locale? && !show_original?(scope)
   end
 end

@@ -2,7 +2,7 @@
 
 describe "UserAddedToGroup" do
   fab!(:user)
-  fab!(:tracked_group) { Fabricate(:group) }
+  fab!(:tracked_group, :group)
   fab!(:automation) do
     Fabricate(:automation, trigger: DiscourseAutomation::Triggers::USER_ADDED_TO_GROUP)
   end

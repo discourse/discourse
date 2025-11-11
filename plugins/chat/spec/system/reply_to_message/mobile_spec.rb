@@ -6,8 +6,8 @@ RSpec.describe "Reply to message - channel - mobile", type: :system, mobile: tru
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
 
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
   fab!(:original_message) do
     Fabricate(
       :chat_message,

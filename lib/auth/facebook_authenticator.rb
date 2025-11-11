@@ -11,6 +11,10 @@ class Auth::FacebookAuthenticator < Auth::ManagedAuthenticator
     "Facebook"
   end
 
+  def provider_url
+    "https://www.facebook.com"
+  end
+
   def enabled?
     SiteSetting.enable_facebook_logins
   end

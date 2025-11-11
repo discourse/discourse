@@ -17,7 +17,11 @@ class User::Silence
     validates :reason, presence: true, length: { maximum: 300 }
     validates :silenced_till, presence: true
     validates :other_user_ids, length: { maximum: User::MAX_SIMILAR_USERS }
-    validates :post_action, inclusion: { in: %w[delete delete_replies edit] }, allow_blank: true
+    validates :post_action,
+              inclusion: {
+                in: %w[delete delete_replies edit none],
+              },
+              allow_blank: true
   end
 
   model :user

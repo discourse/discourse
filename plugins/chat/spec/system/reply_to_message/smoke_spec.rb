@@ -6,9 +6,9 @@ RSpec.describe "Reply to message - smoke", type: :system do
   let(:thread_page) { PageObjects::Pages::ChatThread.new }
   let(:side_panel) { PageObjects::Pages::ChatSidePanel.new }
 
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:channel_1, :category_channel)
   fab!(:original_message) { Fabricate(:chat_message, chat_channel: channel_1) }
 
   before do

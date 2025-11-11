@@ -50,7 +50,7 @@ module Chat
                   prefix: "chat_separate_sidebar_mode"
       end
 
-      if !base.method_defined?(:chat_send_shortcut_default?)
+      if !base.method_defined?(:chat_send_shortcut_enter?)
         base.enum :chat_send_shortcut, base.chat_send_shortcut, prefix: "chat_send_shortcut"
       end
 

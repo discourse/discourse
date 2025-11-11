@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ComponentIndexSerializer do
-  fab!(:theme_1) { Fabricate(:theme) }
-  fab!(:theme_2) { Fabricate(:theme) }
+  fab!(:theme_1, :theme)
+  fab!(:theme_2, :theme)
 
   fab!(:component) do
     Fabricate(

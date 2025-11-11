@@ -18,7 +18,7 @@ RSpec.describe StaffActionLogger do
   describe "log_user_deletion" do
     subject(:log_user_deletion) { described_class.new(admin).log_user_deletion(deleted_user) }
 
-    fab!(:deleted_user) { Fabricate(:user) }
+    fab!(:deleted_user, :user)
 
     it "raises an error when user is nil" do
       expect { logger.log_user_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -50,7 +50,7 @@ RSpec.describe StaffActionLogger do
   describe "log_post_deletion" do
     subject(:log_post_deletion) { described_class.new(admin).log_post_deletion(deleted_post) }
 
-    fab!(:deleted_post) { Fabricate(:post) }
+    fab!(:deleted_post, :post)
 
     it "raises an error when post is nil" do
       expect { logger.log_post_deletion(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -208,6 +208,33 @@ RSpec.describe StaffActionLogger do
     end
   end
 
+  # allow_user_locale is just used as an example here because upcoming
+  # changes will not exist forever, so there aren't any stable names we
+  # can use
+  describe "log_upcoming_change_toggle" do
+    it "raises an error when params are invalid" do
+      expect { logger.log_upcoming_change_toggle(nil, false, true) }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+      expect {
+        logger.log_upcoming_change_toggle("change_that_will_not_exist", false, true)
+      }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      expect { logger.log_upcoming_change_toggle("allow_user_locale", false, true) }.to change {
+        UserHistory.count
+      }.by(1)
+    end
+
+    it "records the details of why the toggle happened" do
+      details =
+        "This upcoming change was automatically enabled because it reached the 'Beta' status, which meets or exceeds the defined promotion status of 'Beta' on your site. See <a href='#{Discourse.base_url}/admin/config/upcoming-changes'>the upcoming changes page for details</a>."
+      result = logger.log_upcoming_change_toggle("allow_user_locale", false, true, { details: })
+      expect(result.details).to eq(details)
+    end
+  end
+
   describe "log_theme_change" do
     fab!(:theme)
 
@@ -238,6 +265,7 @@ RSpec.describe StaffActionLogger do
       expect(json["theme_fields"]).to eq(
         [
           {
+            "file_path" => "common/common.scss",
             "name" => "scss",
             "target" => "common",
             "value" => "body{margin: 10px;}",
@@ -278,6 +306,7 @@ RSpec.describe StaffActionLogger do
       expect(json["theme_fields"]).to eq(
         [
           {
+            "file_path" => "common/common.scss",
             "name" => "scss",
             "target" => "common",
             "value" => "body{margin: 10px;}",
@@ -536,7 +565,7 @@ RSpec.describe StaffActionLogger do
   end
 
   describe "log_category_deletion" do
-    fab!(:parent_category) { Fabricate(:category) }
+    fab!(:parent_category, :category)
     fab!(:category) { Fabricate(:category, parent_category: parent_category) }
 
     it "raises an error when category is missing" do
@@ -637,7 +666,7 @@ RSpec.describe StaffActionLogger do
       described_class.new(admin).log_check_personal_message(personal_message)
     end
 
-    fab!(:personal_message) { Fabricate(:private_message_topic) }
+    fab!(:personal_message, :private_message_topic)
 
     it "raises an error when topic is nil" do
       expect { logger.log_check_personal_message(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -655,7 +684,7 @@ RSpec.describe StaffActionLogger do
   describe "log_post_approved" do
     subject(:log_post_approved) { described_class.new(admin).log_post_approved(approved_post) }
 
-    fab!(:approved_post) { Fabricate(:post) }
+    fab!(:approved_post, :post)
 
     it "raises an error when post is nil" do
       expect { logger.log_post_approved(nil) }.to raise_error(Discourse::InvalidParameters)
@@ -675,7 +704,7 @@ RSpec.describe StaffActionLogger do
       described_class.new(admin).log_post_rejected(reviewable, DateTime.now)
     end
 
-    fab!(:reviewable) { Fabricate(:reviewable_queued_post) }
+    fab!(:reviewable, :reviewable_queued_post)
 
     it "raises an error when reviewable not supplied" do
       expect { logger.log_post_rejected(nil, DateTime.now) }.to raise_error(

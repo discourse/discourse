@@ -12,11 +12,6 @@ on:
       - main
       - beta
       - stable
-    paths-ignore:
-      - ".github/workflows/migration-tests.yml"
-      - ".github/dependabot.yml"
-      - ".github/labeler.yml"
-      - "migrations/**"
 
 concurrency:
   group: tests-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
@@ -31,7 +26,7 @@ jobs:
     name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }} # Update fetch-job-id step if changing this
     runs-on: ${{ (github.repository_owner == 'discourse' && (matrix.target == 'plugins' && matrix.build_type == 'system' && 'debian-12-16core' || 'debian-12-8core')) || 'ubuntu-latest' }}
     container: discourse/discourse_test:release
-    timeout-minutes: ${{ ((matrix.build_type == 'system' && matrix.target == 'plugins') && 30) || 20 }}
+    timeout-minutes: ${{ ((matrix.build_type == 'system' && (matrix.target == 'plugins' || matrix.target == 'core')) && 30) || 20 }}
 
     env:
       RAILS_ENV: test
@@ -46,6 +41,7 @@ jobs:
       TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
       TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
+      LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
 
     strategy:
       fail-fast: false
@@ -85,7 +81,7 @@ jobs:
             echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -144,7 +140,7 @@ jobs:
 
       - name: Pull compatible versions of plugins
         if: matrix.target == 'plugins' && (github.ref_name != 'main' && github.base_ref != 'main')
-        run: bin/rake plugin:pull_compatible_all
+        run: LOAD_PLUGINS=0 bin/rake plugin:pull_compatible_all
 
       - name: Checkout official themes
         if: matrix.target == 'themes'
@@ -171,8 +167,10 @@ jobs:
             ${{ hashFiles('.github/workflows/tests.yml') }}-
             ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
             ${{ hashFiles('config/environments/test.rb') }}-
+            ${{ env.LOAD_PLUGINS }}-
             ${{ env.USES_PARALLEL_DATABASES }}-
             ${{ env.PARALLEL_TEST_PROCESSORS }}-
+            ${{ matrix.target }}-
 
       - name: Restore database from cache
         if: steps.app-cache.outputs.cache-hit == 'true'
@@ -183,7 +181,8 @@ jobs:
         run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
 
       - name: Create and migrate database
-        if: steps.app-cache.outputs.cache-hit != 'true'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake db:create
           script/silence_successful_output bin/rake db:migrate
@@ -192,6 +191,8 @@ jobs:
         if: >-
           env.USES_PARALLEL_DATABASES == 'true' &&
           steps.app-cache.outputs.cache-hit != 'true'
+        env:
+          LOAD_PLUGINS: ${{ (matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
         run: |
           bin/rake parallel:create
           script/silence_successful_output bin/rake parallel:migrate
@@ -214,25 +215,31 @@ jobs:
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       - name: Check Annotations
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
+        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins' || matrix.target == 'chat')
         run: |
           bin/rake annotate:ensure_all_indexes
-          bin/annotate --models --model-dir app/models
 
-          if [ ! -z "$(git status --porcelain app/models/)" ]; then
+          directories=""
+          if [ "${{ matrix.target }}" = "core" ]; then
+            directories="app/models"
+          else
+            directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
+          fi
+
+          bin/annotaterb models --model-dir $(echo "${directories}" | tr '\n' ',')
+
+          if [ ! -z "$(git status --porcelain ${directories})" ]; then
             echo "Core annotations are not up to date. To resolve, run:"
             echo "  bin/rake annotate:clean"
             echo
             echo "Or manually apply the diff printed below:"
             echo "---------------------------------------------"
-            git -c color.ui=always diff app/models/
+            git -c color.ui=always diff ${directories}
             exit 1
           fi
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
-        env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
         run: |
           if ! bin/rails runner 'Rails.application.reloader.reload!'; then
             echo
@@ -246,8 +253,6 @@ jobs:
 
       - name: Check SKIP_DB_AND_REDIS bootability
         if: matrix.build_type == 'backend'
-        env:
-          LOAD_PLUGINS: ${{ (matrix.target == 'plugins') && '1' || '0' }}
         run: |
           if ! (SKIP_DB_AND_REDIS=1 DISCOURSE_DEV_DB="nonexist" bin/rails runner "puts 'booted successfully'"); then
             echo
@@ -261,29 +266,34 @@ jobs:
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose --format=documentation --profile=50
+        run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
 
       - name: Plugin RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
-        run: bin/rake plugin:turbo_spec['*','--verbose --format=documentation --use-runtime-info --profile=50']
+        run: bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
 
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
         run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake qunit:test
 
+      - name: Asset Processor Tests
+        if: matrix.build_type == 'frontend' && matrix.target == 'core'
+        working-directory: frontend/asset-processor
+        run: pnpm test
+
       - name: Plugin QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
-        run: QUNIT_WRITE_EXECUTION_FILE=1 bin/rake plugin:qunit['*']
+        run: bin/rake plugin:qunit['*']
 
       - name: Theme QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'themes'
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: always() && matrix.build_type == 'frontend'
         with:
-          name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./app/assets/javascripts/discourse/test-execution-*.json') }}
-          path: ./app/assets/javascripts/discourse/test-execution-*.json
+          name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
+          path: ./frontend/discourse/test-execution-*.json
 
       - name: Ember Build for System Tests
         if: matrix.build_type == 'system'
@@ -304,21 +314,21 @@ jobs:
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
         shell: bash
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: LOAD_PLUGINS=1 RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
         shell: bash
 
       - name: Check for failed system test artifacts
@@ -333,7 +343,7 @@ jobs:
         shell: bash
 
       - name: Upload failed system test artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
         with:
           name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
@@ -365,7 +375,7 @@ jobs:
         run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
 
       - name: Upload flaky tests report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
@@ -377,7 +387,7 @@ jobs:
     needs: build
     steps:
       - name: Merge Artifacts
-        uses: actions/upload-artifact/merge@v4
+        uses: actions/upload-artifact/merge@v5
         with:
           name: failed-system-test-artifacts
           pattern: failed-system-test-artifacts-*
@@ -387,7 +397,7 @@ jobs:
         continue-on-error: true
 
       - name: Merge Artifacts
-        uses: actions/upload-artifact/merge@v4
+        uses: actions/upload-artifact/merge@v5
         with:
           name: flaky-test-reports
           pattern: flaky-test-reports-*

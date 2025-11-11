@@ -31,6 +31,7 @@ he:
     chat_editing_grace_period_max_diff_high_trust: "מספר שינויים התווים המרבי המותר במהלך זמן החסד של עריכת צ׳אט, אם השתנו יותר, להציג את התגית (נערך) ליד הודעת הצ׳אט (דרגות אמון 2 ומעלה)."
     chat_preferred_index: "לשונית מועדפת בעת טעינת ‎/chat."
     allow_chat_in_anonymous_mode: "יש להפעיל את ההגדרה הזאת כדי לאפשר למשתמשים שגולשים באתר שלך באלמוניות להשתמש בצ׳אט. ההגדרה הזאת דורשת שההגדרה `allow anonymous mode` (לאפשר מצב אלמוני) תהיה פעילה."
+    chat_search_enabled: "הפעלת ההגדרה הזאת תאפשר למשתמשים לחפש הודעות צ׳אט."
     errors:
       chat_default_channel: "ערוץ הצ׳אט כברירת המחדל חייב להיות ערוץ ציבורי."
       direct_message_enabled_groups_invalid: "יש לציין לפחות קבוצה אחת בהגדרה הזאת. כדי למנוע מכולם לשלוח הודעות ישירות למעט הסגל, יש לבחור בקבוצת הסגל."
@@ -112,6 +113,17 @@ he:
     reviewables:
       message_already_handled: "תודה, אבל כבר סקרנו הודעה זו וקבענו שאין צורך לסמן אותה שוב."
       actions:
+        message_actions:
+          bundle_title: "מה לעשות עם ההודעה?"
+        no_action_message:
+          title: "אין פעולה"
+          description: "להשאיר את ההודעה כפי שהיא."
+        delete_message:
+          title: "למחוק את ההודעה"
+          description: "למחוק את ההודעה הזאת לצמיתות."
+        restore_message:
+          title: "לשחזר את ההודעה"
+          description: "לשחזר את ההודעה כדי שמשתמשים יוכלו לצפות בה."
         agree:
           title: "הסכמה…"
         agree_and_keep_message:
@@ -170,6 +182,7 @@ he:
     mention_warning:
       dismiss: "התעלמות"
       cannot_see: "ל־%{first_identifier} אין גישה לערוץ הזה ולא נשלחה התראה."
+      cannot_see_group: "חלק מהחברים בקבוצה %{group_name} לא יכולים לגשת לערוץ הזה והם לא קיבלו על כך הודעה."
       cannot_see_multiple:
         one: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
         two: "ל־%{first_identifier} ולעוד %{count} אין גישה לערוץ הזה ולא נשלחו הודעות."
@@ -204,8 +217,6 @@ he:
       errors:
         slug_contains_non_ascii_chars: "מכיל תווים שאינם בתחום ASCII"
         is_already_in_use: "כבר בשימוש"
-    bookmarkable:
-      notification_title: "הודעה ב־%{channel_name}"
     personal_chat: "צ׳אט אישי"
     onebox:
       inline_to_message: "הודעה מס׳ %{message_id} מאת ‎%{username}‏ – ‎#%{chat_channel}"

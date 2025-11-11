@@ -22,7 +22,12 @@ export default {
     const chatChannelsManager = container.lookup(
       "service:chat-channels-manager"
     );
+    const siteSettings = container.lookup("service:site-settings");
+
     const openQuickChannelSelector = (e) => {
+      if (isInputSelection(event.target) && !isChatComposer(event.target)) {
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       modal.show(ChatModalNewMessage);
@@ -98,9 +103,11 @@ export default {
     };
 
     const closeChat = (event) => {
-      // TODO (joffrey): removes this when we move from magnific popup
-      // there's no proper way to prevent propagation in mfp
-      if (event.srcElement?.classList?.value?.includes("mfp-wrap")) {
+      // when escaping from lightbox, do not close chat
+      const lightboxClass = siteSettings.experimental_lightbox
+        ? "lightbox"
+        : "mfp-wrap";
+      if (event.srcElement?.classList?.value?.includes(lightboxClass)) {
         return;
       }
 
@@ -135,7 +142,7 @@ export default {
       }
     };
 
-    withPluginApi("0.12.1", (api) => {
+    withPluginApi((api) => {
       api.addKeyboardShortcut(
         `${PLATFORM_KEY_MODIFIER}+k`,
         openQuickChannelSelector,

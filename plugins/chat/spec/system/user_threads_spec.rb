@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "User threads", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel_1) { Fabricate(:chat_channel, threading_enabled: true) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }

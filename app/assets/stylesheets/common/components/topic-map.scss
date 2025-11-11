@@ -2,7 +2,7 @@
 
 .topic-map.--op {
   // topic map under OP
-  border-top: 1px solid var(--primary-low);
+  border-top: 1px solid var(--content-border-color);
   border-bottom: none;
   padding-left: calc(
     var(--topic-body-width-padding) + var(--topic-avatar-width)
@@ -35,7 +35,7 @@ body:not(.archetype-private_message) {
   --chart-line-color: var(--tertiary);
   --chart-point-color: var(--tertiary-medium);
   --chart-prediction-color: var(--primary-low-mid);
-  border-bottom: 1px solid var(--primary-low);
+  border-bottom: 1px solid var(--content-border-color);
   box-sizing: border-box;
   max-width: calc(
     var(--topic-avatar-width) + var(--topic-body-width) +
@@ -155,79 +155,6 @@ body:not(.archetype-private_message) {
     }
   }
 
-  .participants {
-    // PMs
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-
-    & + .controls {
-      margin-top: 0.5em;
-    }
-
-    &.hide-names .user {
-      .username,
-      .group-name {
-        display: none;
-      }
-    }
-
-    .user {
-      @include ellipsis;
-      border: 1px solid var(--primary-low);
-      border-radius: 0.25em;
-      padding: 0;
-      margin: 0.125em 0.25em 0.125em 0;
-      display: flex;
-      align-items: center;
-      height: 26px;
-
-      .user-link,
-      .group-link {
-        @include ellipsis;
-        color: var(--primary-high);
-
-        &:hover {
-          color: var(--primary);
-        }
-      }
-
-      .avatar,
-      .d-icon-users {
-        margin-left: 0.25em;
-        margin-right: 0.25em;
-      }
-
-      .username,
-      .group-name {
-        margin-right: 0.25em;
-      }
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      .remove-invited {
-        display: flex;
-        flex: 1 0 0px;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-        border-radius: 0 var(--border-radius) var(--border-radius) 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        height: calc(100% + 0.25em);
-        margin-right: -4px;
-      }
-    }
-  }
-
-  .add-remove-participant-btn {
-    .d-icon {
-      margin-left: 0.25em;
-    }
-  }
-
   &__buttons {
     margin-left: auto;
     display: flex;
@@ -298,7 +225,7 @@ body:not(.archetype-private_message) {
       padding-inline: 1rem;
       padding-bottom: 0.5em;
       font-size: var(--font-up-1);
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
     }
 
     .loading-container {
@@ -326,7 +253,9 @@ body:not(.archetype-private_message) {
       padding: 0.75em 1rem;
 
       .discourse-no-touch & {
-        &:hover {
+        &:hover,
+        &:focus-visible {
+          outline: 0;
           background: var(--d-hover);
         }
       }
@@ -334,7 +263,7 @@ body:not(.archetype-private_message) {
 
     li:not(:last-of-type) {
       a {
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
       }
     }
 
@@ -385,27 +314,37 @@ body:not(.archetype-private_message) {
       gap: 0.25em;
 
       &:not(:last-of-type) {
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
       }
 
       .discourse-no-touch & {
-        &:hover {
+        &:hover,
+        &:focus-within {
           background: var(--d-hover);
+
+          a {
+            outline: 0;
+          }
         }
       }
     }
 
     .topic-link {
-      display: contents;
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-row: 1;
+      grid-column: 1 / -1;
 
       .content {
-        grid-area: link;
+        grid-row: 1;
+        grid-column: 2;
       }
     }
 
     .topic-link[data-clicks]::before {
       @include click-counter-badge;
-      grid-area: counter;
+      grid-row: 1;
+      grid-column: 1;
       align-self: start;
       margin-top: 0.35em;
     }
@@ -415,7 +354,8 @@ body:not(.archetype-private_message) {
     }
 
     .domain {
-      grid-area: domain;
+      grid-row: 2;
+      grid-column: 2;
       font-size: var(--font-down-2);
       color: var(--primary-medium);
     }

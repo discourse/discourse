@@ -1,0 +1,13 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  js:
+    login:
+      amazon:
+        name: "Amazon"
+        title: "Aanmelden met Amazon"
+        message: "Verificatie met Aanmelden met Amazon (zorg dat pop-upblokkeringen niet zijn ingeschakeld)"

@@ -15,7 +15,7 @@
   .combo-box .combo-box-header {
     background: var(--secondary);
     color: var(--primary);
-    border: 1px solid var(--primary-medium);
+    border: 1px solid var(--input-border-color);
     font-size: var(--font-0);
     height: 100%;
 
@@ -32,9 +32,51 @@
 }
 
 .navigation-container {
-  width: 100%;
+  width: calc(100% - var(--nav-horizontal-padding) * 2);
+  font-size: var(--d-nav-font-size);
   display: flex;
   flex-wrap: wrap;
+  gap: var(--nav-space);
+  padding: 0 var(--nav-horizontal-padding);
+  margin-bottom: var(--nav-space);
+}
+
+#navigation-bar {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  margin-right: auto;
+}
+
+.navigation-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--nav-space) 0.5em;
+
+  > * {
+    white-space: nowrap;
+  }
+
+  .select-kit-header {
+    height: 100%;
+  }
+
+  @include viewport.until(sm) {
+    .edit-category {
+      .d-button-label {
+        display: none;
+      }
+
+      .d-icon {
+        margin: 0;
+      }
+    }
+  }
+
+  .dismiss-container-top:empty {
+    display: none;
+  }
 }
 
 .category-breadcrumb {
@@ -43,7 +85,7 @@
   gap: var(--nav-space) 0; // used if the breadcrumb dropdowns wrap
   list-style: none;
   padding: 0;
-  margin: 0 0 var(--nav-space) 0;
+  margin: 0;
 
   > li {
     // only target the top-level li, not dropdowns

@@ -1,0 +1,66 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    discourse_policy:
+      title: "策略"
+      accepted_tooltip: "已接受此策略的用户"
+      not_accepted_tooltip: "未接受此策略的用户"
+      accept_policy: "接受策略"
+      revoke_policy: "撤销策略"
+      edit_reason: "策略设置已被修改"
+      no_possible_users: "此策略没有可能的用户"
+      accept_policy_template: "我接受此政策"
+      builder:
+        title: 策略
+        attach: 创建策略
+        save: 保存更改
+        insert: 插入
+        errors:
+          group: 群组为必填项
+          version: 版本为必填项
+        groups:
+          label: 群组
+          description: 与此策略关联的群组
+        version:
+          label: 版本
+          description: 策略的版本，提升版本将强制相关人员重新接受
+        renew:
+          label: 更新
+          description: 每 x 天更新一次策略
+        renew-start:
+          label: 更新开始
+          description: 策略应在何时更新
+        reminder:
+          label: 提醒
+          description: 发送接受策略提醒通知的频率
+          no_reminder: '（无提醒）'
+        accept:
+          label: 接受
+          description: 接受按钮上使用的文本
+        revoke:
+          label: 撤销
+          description: 撤销按钮上使用的文本
+        private:
+          label: 不公开？
+          description: 将策略状态对管理员保密
+        send-email:
+          label: 发送电子邮件？
+          description: 通过电子邮件通知用户新策略
+        add-users-to-group:
+          label: 将用户添加到群组
+          description: 当用户接受此政策时，将其添加到以下组中
+      preferences:
+        title: 策略
+        policy_emails:
+          always_description: 仅当您还选择了接收新的活动电子邮件时，我们才会向您发送电子邮件。
+          away_description: 仅当我们在策略状态发生更改的 10 分钟内没有看到您，并且您还选择了接收新的活动电子邮件时，我们才会给您发送电子邮件。
+          label: 当策略需要我审核时给我发送电子邮件
+          email_frequency_options:
+            never: 从不
+            when_away: 仅在离开时
+            always: 始终

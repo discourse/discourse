@@ -20,8 +20,8 @@ sl:
           title: "Opomniki teme"
         post:
           title: "Prispevek"
-        suggested_topics:
-          title: "Predlagane teme"
+        more_topics:
+          title: "Več tem"
         tooltips:
           description: "Opis"
           header: "Glava"

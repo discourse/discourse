@@ -46,6 +46,10 @@ class Auth::DiscordAuthenticator < Auth::ManagedAuthenticator
     "Discord"
   end
 
+  def provider_url
+    "https://discord.com"
+  end
+
   def enabled?
     SiteSetting.enable_discord_logins?
   end

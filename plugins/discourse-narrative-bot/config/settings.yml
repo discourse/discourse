@@ -3,7 +3,7 @@ plugins:
     default: true
     client: true
   disable_discourse_narrative_bot_welcome_post:
-    default: false
+    default: true
   discourse_narrative_bot_welcome_post_type:
     default: 'new_user_track'
     enum: 'DiscourseNarrativeBot::WelcomePostTypeSiteSetting'

@@ -86,13 +86,13 @@ describe "Local dates", type: :system do
     it "allows selecting a date without a time and inserts into the post" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      find(".d-editor-button-bar .toolbar-popup-menu-options").click
-      page.find(".toolbar-popup-menu-options [data-name=local-dates]").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
       insert_datetime_modal.click_primary_button
-      expect(composer.composer_input.value).to have_content(
+      expect(composer).to have_value(
         "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} timezone=\"#{timezone}\"]",
       )
     end
@@ -100,15 +100,15 @@ describe "Local dates", type: :system do
     it "allows selecting a date with a time and inserts into the post" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      find(".d-editor-button-bar .toolbar-popup-menu-options").click
-      page.find(".toolbar-popup-menu-options [data-name=local-dates]").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
       insert_datetime_modal.calendar_date_time_picker.fill_time("11:45")
       insert_datetime_modal.click_primary_button
 
-      expect(composer.composer_input.value).to have_content(
+      expect(composer).to have_value(
         "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
       )
     end
@@ -116,8 +116,8 @@ describe "Local dates", type: :system do
     it "allows selecting a start date and time and an end date and time" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(topic_page).to have_expanded_composer
-      find(".d-editor-button-bar .toolbar-popup-menu-options").click
-      page.find(".toolbar-popup-menu-options [data-name=local-dates]").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
       expect(insert_datetime_modal).to be_open
       insert_datetime_modal.calendar_date_time_picker.select_year(year)
       insert_datetime_modal.calendar_date_time_picker.select_day(16)
@@ -129,7 +129,7 @@ describe "Local dates", type: :system do
       insert_datetime_modal.calendar_date_time_picker.fill_time("12:45")
 
       insert_datetime_modal.click_primary_button
-      expect(composer.composer_input.value).to have_content(
+      expect(composer).to have_value(
         "[date-range from=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")}T11:45:00 to=#{Date.parse("#{year}-#{month}-23").strftime("%Y-%m-%d")}T12:45:00 timezone=\"#{timezone}\"]",
       )
     end
@@ -139,8 +139,8 @@ describe "Local dates", type: :system do
 
       expect(topic_page).to have_expanded_composer
 
-      find(".d-editor-button-bar .toolbar-popup-menu-options").click
-      page.find(".toolbar-popup-menu-options [data-name=local-dates]").click
+      find(".toolbar-menu__options-trigger").click
+      page.find("button[data-name=local-dates]").click
 
       expect(insert_datetime_modal).to be_open
 
@@ -154,7 +154,7 @@ describe "Local dates", type: :system do
       insert_datetime_modal.delete_to
       insert_datetime_modal.click_primary_button
 
-      expect(composer.composer_input.value).to have_content(
+      expect(composer).to have_value(
         "[date=#{Date.parse("#{year}-#{month}-16").strftime("%Y-%m-%d")} time=11:45:00 timezone=\"#{timezone}\"]",
       )
     end

@@ -322,7 +322,6 @@ sk:
         many: "%{count} súborov"
         other: "%{count} súborov"
       you_flagged: "Túto správu ste označili"
-      exit: "späť"
       channel_status:
         read_only_header: "Kanál je len na čítanie"
         read_only: "Iba na čítanie"
@@ -346,6 +345,8 @@ sk:
       chat_message_separator:
         today: Dnes
         yesterday: Včera
+      search_view:
+        filter_placeholder: Hľadaj správy
       members_view:
         filter_placeholder: Nájdite členov
         add_member: Pridať člena
@@ -362,6 +363,7 @@ sk:
         tabs:
           members: Členovia
           settings: Nastavenia
+          search: Hľadať
         remove_member: "Odstrániť"
       new_message_modal:
         title: Odoslať správu
@@ -483,6 +485,7 @@ sk:
           topic: "Témy"
       reviewable:
         type: "Chatová správa"
+        message_in_channel: "Kanál"
       reactions:
         only_you: "<span>Reagovali ste na </span>:%{emoji}:"
         you_and_single_user: "<span>Vy a %{username} ste reagovali pomocou </span>:%{emoji}:"
@@ -549,6 +552,10 @@ sk:
           create_export: "Vytvoriť export"
           confirm_export: "Týmto spôsobom sa exportujú všetky správy zo všetkých kanálov a výsledok sa vám odošle v osobnej správe. Ste si istí, že chcete exportovať?"
           export_has_started: "Export sa začal. Keď bude hotový, budeme Vás informovať cez súkromnú správu."
+      search:
+        sort:
+          relevance: "Relevancia"
+          latest: "Najnovšie"
       my_threads:
         title: Moje vlákna
         aria_label: "Prepnúť na môj zoznam vlákien"
@@ -585,6 +592,7 @@ sk:
         select_emoji: "Vyberte Emoji"
         system: "systém"
         title: "Prichádzajúce webhooky"
+        header_description: "Prichádzajúce webhooky môžu externé systémy použiť na odosielanie správ do určeného chatovacieho kanála ako používateľ bota."
         url: "URL"
         url_instructions: "Táto adresa URL obsahuje tajnú hodnotu – uschovajte ju."
         username: "Používateľské meno"
@@ -777,7 +785,6 @@ sk:
           switch_channel_arrows: "%{shortcut} Prepnúť kanál"
           switch__unread_channel_arrows: "%{shortcut} Prepnutie neprečítaného kanála"
           open_quick_channel_selector: "%{shortcut} Otvorte rýchly výber kanálov"
-          open_insert_link_modal: "%{shortcut} Vložiť hypertextový odkaz (iba skladateľ)"
           composer_bold: "%{shortcut} Tučné (iba skladateľ)"
           composer_italic: "%{shortcut} Kurzíva (iba skladateľ)"
           composer_code: "%{shortcut} Kód (iba skladateľ)"
@@ -809,6 +816,8 @@ sk:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        title: Vytvorenie osobného chatu
       panels:
         chat:
           label: "Chat"

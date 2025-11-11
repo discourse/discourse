@@ -4,22 +4,23 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import avatar from "discourse/helpers/avatar";
 import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
+import AutomationEnabledToggle from "discourse/plugins/automation/admin/components/automation-enabled-toggle";
 
 // number of runs required to show the runs count for the period
 const RUN_THRESHOLD = 10;
 
 export default class AutomationList extends Component {
   @service dialog;
-  @service router;
 
   @action
   async destroyAutomation(automation) {
@@ -32,7 +33,7 @@ export default class AutomationList extends Component {
         didConfirm: () => {
           try {
             automation.destroyRecord();
-            this.args.model.removeObject(automation);
+            removeValueFromArray(this.args.model.content, automation);
             automation = null;
           } catch (e) {
             popupAjaxError(e);
@@ -90,7 +91,7 @@ export default class AutomationList extends Component {
         </:actions>
       </DPageSubheader>
 
-      {{#if @model.length}}
+      {{#if @model.content.length}}
         <table class="d-admin-table automations">
           <thead>
             <tr>
@@ -113,7 +114,7 @@ export default class AutomationList extends Component {
             </tr>
           </thead>
           <tbody>
-            {{#each @model as |automation|}}
+            {{#each @model.content as |automation|}}
               <tr class="d-admin-row__content">
                 {{#if automation.script.not_found}}
                   <td
@@ -202,10 +203,16 @@ export default class AutomationList extends Component {
                         "discourse_automation.models.automation.enabled.label"
                       }}
                     </div>
-                    <DToggleSwitch
-                      @state={{automation.enabled}}
-                      {{on "click" (fn this.toggleEnabled automation)}}
-                    />
+                    <span class="enabled-toggle-with-tooltip">
+                      <AutomationEnabledToggle
+                        @automation={{automation}}
+                        @canBeEnabled={{or
+                          automation.enabled
+                          automation.canBeEnabled
+                        }}
+                        @onToggle={{fn this.toggleEnabled automation}}
+                      />
+                    </span>
                   </td>
                 {{/if}}
 

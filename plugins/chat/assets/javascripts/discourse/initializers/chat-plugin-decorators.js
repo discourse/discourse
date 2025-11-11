@@ -39,7 +39,7 @@ export default {
   initialize(container) {
     if (container.lookup("service:chat").userCanChat) {
       const siteSettings = container.lookup("service:site-settings");
-      withPluginApi("0.8.42", (api) => {
+      withPluginApi((api) => {
         this.initializeWithPluginApi(api, siteSettings);
       });
     }

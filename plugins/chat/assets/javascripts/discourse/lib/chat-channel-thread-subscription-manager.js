@@ -37,7 +37,7 @@ export default class ChatChannelThreadSubscriptionManager {
   }
 
   @bind
-  onMessage(busData, _, __, lastMessageBusId) {
+  onMessage(busData, _, lastMessageBusId) {
     switch (busData.type) {
       case "sent":
         this.handleSentMessage(busData);

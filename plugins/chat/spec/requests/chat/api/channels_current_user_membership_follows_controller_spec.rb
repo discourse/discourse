@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Chat::Api::ChannelsCurrentUserMembershipController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   before do
     channel_1.add(current_user)
@@ -12,7 +12,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
   describe "#destroy" do
     describe "for a category channel" do
-      fab!(:channel_1) { Fabricate(:category_channel) }
+      fab!(:channel_1, :category_channel)
 
       it "works" do
         delete "/chat/api/channels/#{channel_1.id}/memberships/me/follows"
@@ -32,8 +32,8 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
     end
 
     describe "for a group direct message channel" do
-      fab!(:other_user_1) { Fabricate(:user) }
-      fab!(:other_user_2) { Fabricate(:user) }
+      fab!(:other_user_1, :user)
+      fab!(:other_user_2, :user)
       fab!(:channel_1) do
         Fabricate(:direct_message_channel, users: [current_user, other_user_1, other_user_2])
       end
@@ -47,7 +47,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
     end
 
     describe "for a direct message channel" do
-      fab!(:other_user_1) { Fabricate(:user) }
+      fab!(:other_user_1, :user)
       fab!(:channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user_1]) }
 
       it "works" do

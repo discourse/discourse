@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Drawer", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
@@ -12,8 +12,25 @@ RSpec.describe "Drawer", type: :system do
     chat_page.prefers_drawer
   end
 
+  it "handles transitions between drawer and full page and applies appropriate classes" do
+    visit("/")
+
+    chat_page.open_from_header
+    expect(page).to have_css(
+      "body.has-drawer-chat.has-chat.chat-drawer-active.chat-drawer-expanded",
+    )
+    expect(page).to have_css("html.has-drawer-chat.has-chat")
+    expect(page).to have_no_css("body.has-full-page-chat")
+
+    drawer_page.maximize
+    expect(page).to have_css("body.has-chat.has-full-page-chat")
+    expect(page).to have_css("html.has-chat.has-full-page-chat")
+    expect(page).to have_no_css("body.has-drawer-chat")
+    expect(page).to have_no_css("html.has-drawer-chat")
+  end
+
   context "when on channel" do
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel, :chat_channel)
     fab!(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
     end
@@ -91,7 +108,7 @@ RSpec.describe "Drawer", type: :system do
   end
 
   context "when closing the drawer" do
-    fab!(:channel_1) { Fabricate(:chat_channel) }
+    fab!(:channel_1, :chat_channel)
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
     before { channel_1.add(current_user) }
@@ -126,9 +143,9 @@ RSpec.describe "Drawer", type: :system do
   end
 
   context "when going from drawer to full page" do
-    fab!(:channel_1) { Fabricate(:chat_channel) }
-    fab!(:channel_2) { Fabricate(:chat_channel) }
-    fab!(:user_1) { Fabricate(:user) }
+    fab!(:channel_1, :chat_channel)
+    fab!(:channel_2, :chat_channel)
+    fab!(:user_1, :user)
 
     before do
       current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel_1.id)
@@ -163,7 +180,7 @@ RSpec.describe "Drawer", type: :system do
   end
 
   context "when subfolder install" do
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel, :chat_channel)
 
     before do
       current_user.upsert_custom_fields(::Chat::LAST_CHAT_CHANNEL_ID => channel.id)
@@ -182,7 +199,7 @@ RSpec.describe "Drawer", type: :system do
   context "when sending a message from topic" do
     fab!(:topic)
     fab!(:posts) { Fabricate.times(5, :post, topic: topic) }
-    fab!(:channel) { Fabricate(:chat_channel) }
+    fab!(:channel, :chat_channel)
     fab!(:membership) do
       Fabricate(:user_chat_channel_membership, user: current_user, chat_channel: channel)
     end

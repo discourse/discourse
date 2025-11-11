@@ -1,0 +1,81 @@
+# Singapore holiday definitions for the Holidays gem!
+
+# Days not included in the definitions (yet):
+# Vesak Day (falls on the first full moon in May)
+# Lunar New Year (falls on the first day of the Lunar Calendar)
+# Hari Raya Puasa and Hari Raya Haji (based on moon sightings, Islamic Calendar)
+# Deepavali (15th Day of September or October, based on the Hindu Calendar)
+
+# Source:
+# http://publicholidays.sg/
+# https://www.mom.gov.sg/employment-practices/public-holidays
+
+months:
+  1:
+  - name: New Year's Day
+    regions: [sg]
+    mday: 1
+    observed: to_weekday_if_weekend(date)
+  - name: First day of Chinese New Year
+    regions: [sg]
+    mday: 29
+    observed: to_weekday_if_weekend(date)
+    year_ranges:
+      limited: [2025]
+  - name: Second day of Chinese New Year
+    regions: [sg]
+    mday: 30
+    observed: to_weekday_if_weekend(date)
+    year_ranges:
+      limited: [2025]
+  3:
+  - name: Hari Raya Puasa
+    regions: [sg]
+    mday: 31
+    year_ranges:
+      limited: [2025]
+  4:
+  - name: Good Friday
+    regions: [sg]
+    mday: 18
+    year_ranges:
+      limited: [2025]
+  5:
+  - name: Labour Day
+    regions: [sg]
+    mday: 1
+    observed: to_weekday_if_weekend(date)
+  - name: Polling Day
+    regions: [sg]
+    mday: 3
+    year_ranges:
+      limited: [2025]
+    observed: to_weekday_if_weekend(date)
+  - name: Vesak Day
+    regions: [sg]
+    mday: 12
+    year_ranges:
+      limited: [2025]
+  6:
+  - name: Hari Raya Haji
+    regions: [sg]
+    mday: 7
+    year_ranges:
+      limited: [2025]
+  8:
+  - name: National Day
+    regions: [sg]
+    mday: 9
+    observed: to_weekday_if_weekend(date)
+  10:
+  - name: Deepavali (Observed)
+    regions: [sg]
+    mday: 20
+    year_ranges:
+      limited: [2025]
+  12:
+  - name: Christmas Day
+    regions: [sg]
+    mday: 25
+    observed: to_weekday_if_weekend(date)
+

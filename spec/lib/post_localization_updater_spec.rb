@@ -12,8 +12,8 @@ describe PostLocalizationUpdater do
   let(:new_raw) { "新しいバージョンです" }
 
   before do
-    SiteSetting.experimental_content_localization = true
-    SiteSetting.experimental_content_localization_allowed_groups = group.id.to_s
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_allowed_groups = group.id.to_s
     group.add(user)
   end
 
@@ -27,6 +27,12 @@ describe PostLocalizationUpdater do
       localizer_user_id: user.id,
       post_version: post.version,
     )
+  end
+
+  it "enqueues ProcessLocalizedCook job" do
+    loc = described_class.update(post_id: post.id, locale: locale, raw: new_raw, user: user)
+
+    expect_job_enqueued(job: :process_localized_cooked, args: { post_localization_id: loc.id })
   end
 
   it "raises not found if the localization is missing" do

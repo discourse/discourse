@@ -1,0 +1,38 @@
+.admin-detail #patreon {
+  .new-filter input.channel {
+    margin-bottom: 0;
+  }
+
+  .select2-container-multi .select2-choices {
+    border: 1px solid #e9e9e9;
+  }
+
+  h1 {
+    margin-bottom: 15px;
+  }
+
+  .error {
+    color: #f55959;
+  }
+
+  .last_synced {
+    margin-left: 5px;
+  }
+}
+
+.badge-card.patreon .badge-contents .badge-icon img {
+  max-width: 48px;
+}
+
+.patreon-donation-prompt {
+  clear: both;
+  padding: 15px;
+  border-radius: 3px;
+  background-color: var(--tertiary-low);
+  box-sizing: border-box;
+  margin: 15px 0;
+
+  span.close {
+    float: right;
+  }
+}

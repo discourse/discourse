@@ -8,11 +8,11 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     cursor: pointer;
 
     &:first-child {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
     }
 
     &:hover {

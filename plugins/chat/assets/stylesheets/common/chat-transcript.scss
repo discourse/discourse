@@ -24,7 +24,7 @@
   .chat-transcript-meta {
     color: var(--primary-high);
     font-size: var(--font-down-2-rem);
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
 
@@ -62,6 +62,13 @@
 
     p:last-of-type {
       margin-bottom: 0;
+    }
+
+    .lazy-video-container {
+      height: 150px;
+      max-width: calc(150px / 9 * 16);
+      margin: 1em 0 0.5em 0;
+      padding: 0;
     }
   }
 

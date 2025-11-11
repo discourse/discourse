@@ -9,7 +9,6 @@ import ChannelInfoNav from "./channel-info-nav";
 
 export default class ChatRoutesChannelInfo extends Component {
   @service chatChannelInfoRouteOriginManager;
-  @service site;
   @service modal;
   @service chatGuardian;
 

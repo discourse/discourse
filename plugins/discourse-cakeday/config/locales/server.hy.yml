@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hy:
+  site_settings:
+    cakeday_enabled: "Ցուցադրել տորթի օրվա էմոջի[ներ] օգտատիրոջ անվան կողքին Discourse-ին նրանց միանալու օրը:"
+    cakeday_emoji: "Էմոջի[ներ], որոնք կցուցադրվեն օգտատիրոջ անվան կողքին Discourse-Ին նրանց միանալու օրը: Բազմակի էմոջիները կարող են որոշվել՝ smile|cake|smile"
+    cakeday_birthday_enabled: "Ցուցադրել ծննդյան էմոջի[ներ] օգտատիրոջ անվան կողքին նրանց ծննդյան օրը:"
+    cakeday_birthday_emoji: "Էմոջի[ներ], որոնք կցուցադրվեն օգտատիրոջ անվան կողքին իրենց ծննդյան օրը: Բազմակի էմոջիները կարող են որոշվել՝ smile|cake|smile"

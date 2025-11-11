@@ -62,7 +62,7 @@
 .new-user-wrapper {
   .user-navigation {
     --user-navigation__border-width: 4px;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .nav-pills {
       @include bordered-nav-pills;
@@ -101,18 +101,14 @@
       font-size: var(--font-up-1);
     }
 
-    .user-nav-messages-dropdown {
-      // manage long group names
-      max-width: 20vw;
-      min-width: 7em;
-
-      .select-kit-selected-name,
-      .name {
-        @include ellipsis;
+    .messages-dropdown-trigger {
+      @include viewport.from(sm) {
+        max-width: clamp(100px, 20vw, 200px);
       }
+      box-sizing: border-box;
 
-      .name {
-        min-width: 0;
+      .d-button-label {
+        @include ellipsis;
       }
     }
 
@@ -136,10 +132,6 @@
       @include viewport.until(xl) {
         font-size: var(--font-down-1);
       }
-
-      span {
-        display: inline-flex;
-      }
     }
 
     .nav-pills {
@@ -160,7 +152,6 @@
   }
 
   .empty-state {
-    padding: 0;
     margin: 1em 0;
   }
 
@@ -192,6 +183,49 @@
   .control-group {
     width: 100%;
     min-width: 16em;
+  }
+}
+
+%unread-icon {
+  font-size: var(--font-down-4);
+  margin: 0 0.375rem;
+  color: var(--tertiary);
+}
+
+.user-messages-page {
+  .messages-dropdown-trigger {
+    .d-icon-d-unread {
+      @extend %unread-icon;
+    }
+
+    .btn:hover {
+      .d-icon-d-unread {
+        color: var(--tertiary);
+      }
+    }
+
+    .d-icon-angle-down {
+      margin-right: 0;
+    }
+  }
+
+  .messages-dropdown-content {
+    .dropdown-menu__item {
+      .d-icon-d-unread {
+        @extend %unread-icon;
+      }
+
+      .btn:hover {
+        .d-icon-d-unread {
+          color: var(--tertiary);
+        }
+      }
+
+      .btn.is-selected {
+        background: var(--d-selected);
+        color: var(--primary);
+      }
+    }
   }
 }
 

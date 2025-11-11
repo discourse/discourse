@@ -215,6 +215,26 @@ RSpec.describe Oneboxer do
         with_tag("span", with: { class: "hashtag-icon-placeholder" })
       end
     end
+
+    it "does not show private subcategory information" do
+      parent_category = Fabricate(:category)
+      private_subcategory =
+        Fabricate(
+          :private_category,
+          parent_category: parent_category,
+          group: Fabricate(:group, name: "superhero"),
+          name: "Private Subcategory",
+        )
+      public_subcategory =
+        Fabricate(:category, parent_category: parent_category, name: "Public Subcategory")
+
+      preview = preview(parent_category.relative_url)
+      expect(preview).not_to include(private_subcategory.name)
+      expect(preview).not_to include(private_subcategory.url)
+
+      expect(preview).to include(public_subcategory.name)
+      expect(preview).to include(public_subcategory.url)
+    end
   end
 
   describe ".onebox_raw" do

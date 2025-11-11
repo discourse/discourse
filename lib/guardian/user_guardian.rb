@@ -12,7 +12,7 @@ module UserGuardian
     # can always pick blank avatar
     return true if !upload
     return true if user_avatar.contains_upload?(upload.id)
-    return true if upload.user_id == user_avatar.user_id || upload.user_id == user.id
+    return true if upload.user_id == user_avatar.user_id || is_my_own?(upload)
 
     UserUpload.exists?(upload_id: upload.id, user_id: user.id)
   end
@@ -38,9 +38,10 @@ module UserGuardian
   end
 
   def can_edit_name?(user)
-    return false unless SiteSetting.enable_names?
     return false if SiteSetting.auth_overrides_name?
-    return true if is_staff?
+    return true if is_admin?
+    return false unless SiteSetting.enable_names?
+    return true if is_moderator?
     return false if is_anonymous?
     can_edit?(user)
   end
@@ -111,7 +112,12 @@ module UserGuardian
 
   def can_see_suspension_reason?(user)
     return true unless SiteSetting.hide_suspension_reasons?
-    user == @user || is_staff?
+    is_me?(user) || is_staff?
+  end
+
+  def can_see_silencing_reason?(user)
+    return true unless SiteSetting.hide_silencing_reasons?
+    is_me?(user) || is_staff?
   end
 
   def can_disable_second_factor?(user)
@@ -136,7 +142,8 @@ module UserGuardian
 
     if SiteSetting.hide_new_user_profiles && !SiteSetting.invite_only &&
          !SiteSetting.must_approve_users
-      if user.user_stat.blank? || user.user_stat.post_count == 0
+      if (user.user_stat.blank? || user.user_stat.post_count == 0) &&
+           !user.has_trust_level?(TrustLevel[2])
         return false if anonymous? || !@user.has_trust_level?(TrustLevel[2])
       end
 
@@ -149,7 +156,7 @@ module UserGuardian
   end
 
   def can_see_user_actions?(user, action_types)
-    return true if !@user.anonymous? && (@user.id == user.id || is_admin?)
+    return true if !@user.anonymous? && (is_me?(user) || is_admin?)
     return false if SiteSetting.hide_user_activity_tab?
     (action_types & UserAction.private_types).empty?
   end
@@ -222,5 +229,13 @@ module UserGuardian
 
   def can_change_tracking_preferences?(user)
     (SiteSetting.allow_changing_staged_user_tracking || !user.staged) && can_edit_user?(user)
+  end
+
+  def can_create_theme?
+    return false if !is_admin?
+    # this modifier is used to further restrict theme creation, it's not
+    # possible to use this modifier to open up theme creation permissions (e.g.
+    # to non-admins)
+    DiscoursePluginRegistry.apply_modifier(:user_guardian_can_create_theme, true, self)
   end
 end

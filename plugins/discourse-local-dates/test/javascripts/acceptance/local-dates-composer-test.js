@@ -78,9 +78,8 @@ acceptance("Local Dates - composer", function (needs) {
     const categoryChooser = selectKit(".category-chooser");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
-    const optionsMenu = selectKit(".toolbar-popup-menu-options");
-    await optionsMenu.expand();
-    await optionsMenu.selectRowByName("local-dates");
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='local-dates']");
 
     const timezoneChooser = selectKit(".timezone-input");
     await timezoneChooser.expand();
@@ -97,9 +96,8 @@ acceptance("Local Dates - composer", function (needs) {
     const categoryChooser = selectKit(".category-chooser");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(2);
-    const optionsMenu = selectKit(".toolbar-popup-menu-options");
-    await optionsMenu.expand();
-    await optionsMenu.selectRowByName("local-dates");
+    await click(".toolbar-menu__options-trigger");
+    await click("[data-name='local-dates']");
 
     await click('.pika-table td[data-day="5"] > .pika-button');
 

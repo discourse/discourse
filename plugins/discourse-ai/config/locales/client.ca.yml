@@ -1,0 +1,188 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Ordena per"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ID de tema"
+            title:
+              label: "Títol"
+            categories:
+              label: "Categories"
+            tags:
+              label: "Etiquetes"
+        llm_triage:
+          fields:
+            category:
+              label: "Categoria"
+            tags:
+              label: "Etiquetes"
+            canned_reply:
+              label: "Respon"
+    discourse_ai:
+      features:
+        back: "Enrere"
+        disabled: "(desactivat)"
+        groups: "Grups:"
+        no_groups: "Cap"
+        edit: "Edita"
+        expand_list:
+          one: "(%{count} més)"
+          other: "(%{count} més)"
+        filters:
+          all: "Tots"
+          reset: "Restableix"
+        search:
+          name: "Cerca"
+        spam:
+          name: "Brossa"
+      modals:
+        select_option: "Trieu una opció..."
+      translations:
+        title: "Traduccions"
+        stats:
+          eta_minutes:
+            one: "%{count} minut"
+            other: "%{count} minuts"
+          eta_hours:
+            one: "%{count} hora"
+            other: "%{count} hores"
+          eta_days:
+            one: "%{count} dia"
+            other: "%{count} dies"
+        progress_chart:
+          bar_done:
+            one: "%{count} publicació"
+            other: "%{count} publicacions"
+      spam:
+        short_title: "Brossa"
+        last_seven_days: "Els darrers 7 dies"
+        enable: "Activa"
+        test_modal:
+          spam: "Brossa"
+      usage:
+        summary: "Resum"
+        username: "Nom d'usuari "
+        total_requests: "Total de peticions"
+        periods:
+          last_day: "Últimes 24 hores"
+      ai_persona:
+        back: "Enrere"
+        name: "Nom"
+        edit: "Edita"
+        export: "Exporta"
+        import: "Importa"
+        description: "Descripció"
+        user: Usuari
+        save: "Desa"
+        enabled: "Activat?"
+        delete: "Suprimeix"
+        response_format:
+          open_modal: "Edita"
+          modal:
+            key_title: "Clau"
+        filters:
+          reset: "Restableix"
+      rag:
+        uploads:
+          title: "Càrregues"
+          uploading: "Carregant..."
+      tools:
+        back: "Enrere"
+        export: "Exporta"
+        import: "Importa"
+        name: "Nom"
+        description: "Descripció"
+        summary: "Resum"
+        save: "Desa"
+        remove_parameter: "Elimina"
+        parameter_required: "Necessari"
+        edit: "Edita"
+        delete: "Suprimeix"
+      llms:
+        display_name: "Nom"
+        provider: "Proveïdor"
+        save: "Desa"
+        edit: "Edita"
+        back: "Enrere"
+        delete: Suprimeix
+        quotas:
+          group: "Grup"
+          duration: "Duració"
+          hours: "hores"
+        usage:
+          ai_spam: "Brossa"
+        next:
+          title: "Següent"
+        tests:
+          success: "Èxit!"
+        providers:
+          google: "Google"
+          fake: "Personalitzat"
+      ai_helper:
+        context_menu:
+          cancel: "Cancel·la"
+          confirm: "Confirma"
+          discard: "Descarta"
+        post_options_menu:
+          close: "Tanca"
+          copy: "Còpia"
+          copied: "Copiat!"
+          cancel: "Cancel·la"
+        image_caption:
+          save_caption: "Desa"
+      embeddings:
+        back: "Enrere"
+        save: "Desa"
+        delete: "Suprimeix"
+        edit: "Edita"
+        tests:
+          success: "Èxit!"
+        display_name: "Nom"
+        provider: "Proveïdor"
+        providers:
+          google: "Google"
+          fake: "Personalitzat"
+      ai_bot:
+        debug_ai_modal:
+          request: "Sol·licita"
+          response: "Reacció"
+          next_log: "Següent"
+          previous_log: "Previ"
+        invite_ai_conversation:
+          button: "Convida"
+        share_modal:
+          copy: "Còpia"
+        conversations:
+          today: "Avui"
+          last_7_days: "Els darrers 7 dies"
+          last_30_days: "Els darrers 30 dies"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Tots"
+            neutral: "Neutre"
+          group_types:
+            category: "Categoria"
+          table:
+            total_count: "Total"
+      discobot_discoveries:
+        regular_results: "Temes"
+        collapse: "Redueix"
+        tooltip:
+          actions:
+            disable: "Desactiva"

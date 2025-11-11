@@ -2,16 +2,16 @@
 
 describe Chat::Mailer do
   fab!(:user) { Fabricate(:user, last_seen_at: 1.hour.ago) }
-  fab!(:other) { Fabricate(:user) }
+  fab!(:other, :user)
 
   fab!(:group) do
     Fabricate(:group, mentionable_level: Group::ALIAS_LEVELS[:everyone], users: [user, other])
   end
 
-  fab!(:followed_channel) { Fabricate(:category_channel) }
-  fab!(:non_followed_channel) { Fabricate(:category_channel) }
-  fab!(:muted_channel) { Fabricate(:category_channel) }
-  fab!(:unseen_channel) { Fabricate(:category_channel) }
+  fab!(:followed_channel, :category_channel)
+  fab!(:non_followed_channel, :category_channel)
+  fab!(:muted_channel, :category_channel)
+  fab!(:unseen_channel, :category_channel)
   fab!(:direct_message) { Fabricate(:direct_message_channel, users: [user, other]) }
 
   fab!(:job) { :user_email }
@@ -23,9 +23,7 @@ describe Chat::Mailer do
   end
 
   def expect_enqueued
-    expect {
-      expect_enqueued_with(job:, args:) { described_class.send_unread_mentions_summary }
-    }.to_not output.to_stderr_from_any_process
+    expect_enqueued_with(job:, args:) { described_class.send_unread_mentions_summary }
     expect(Jobs::UserEmail.jobs.size).to eq(1)
   end
 

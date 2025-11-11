@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
-  fab!(:channel_1) { Fabricate(:chat_channel) }
-  fab!(:current_user) { Fabricate(:admin) }
+  fab!(:channel_1, :chat_channel)
+  fab!(:current_user, :admin)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
@@ -46,7 +46,7 @@ RSpec.describe "Chat | composer | shortcuts | channel", type: :system do
   end
 
   context "when the thread panel is also open" do
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2, :user)
     fab!(:thread) do
       chat_thread_chain_bootstrap(
         channel: channel_1,

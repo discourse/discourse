@@ -18,6 +18,8 @@ zh_TW:
       user_cannot_send_direct_messages: "抱歉，您無法傳送私訊。"
     reviewables:
       actions:
+        no_action_message:
+          title: "沒有動作"
         agree:
           title: "同意..."
         agree_and_keep_message:
@@ -41,7 +43,7 @@ zh_TW:
       errors:
         is_already_in_use: "已被使用"
     bookmarkable:
-      notification_title: "%{channel_name} 中的訊息"
+      notification_title_channel: "%{channel_name} 中的訊息"
     onebox:
       thread_title_connector: "在"
       x_members:

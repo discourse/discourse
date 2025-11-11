@@ -1,0 +1,143 @@
+.post-event-builder-modal {
+  .conditional-loading-section {
+    background: transparent;
+  }
+
+  .event-field {
+    display: flex;
+    margin-bottom: 2em;
+    flex-direction: column;
+
+    &.description {
+      textarea {
+        border-radius: var(--d-input-border-radius);
+        margin: 0;
+      }
+    }
+
+    &.name,
+    &.url {
+      input {
+        width: 100%;
+      }
+    }
+
+    .event-field-description {
+      margin: 0 0 0.5em 0;
+    }
+
+    .event-field-label {
+      display: flex;
+      min-height: 1px;
+      padding-top: 0;
+      top: 0;
+      vertical-align: middle;
+      align-items: center;
+
+      .label {
+        font-weight: 700;
+        margin-bottom: 0.5em;
+      }
+    }
+
+    .event-field-control {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+
+      .select-kit.available-recurrences {
+        width: 100%;
+      }
+
+      .custom-field-label {
+        font-weight: 500;
+        margin: 0.5em 0 0.25em 0;
+      }
+
+      .custom-field-input {
+        width: 100%;
+      }
+
+      .radio-label,
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1em;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        input[type="radio"] {
+          width: auto;
+        }
+
+        .message {
+          margin: 0 0 0 1em;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+
+          .description {
+            font-weight: normal;
+          }
+        }
+      }
+
+      .ac-wrap {
+        max-width: 100%;
+      }
+
+      input {
+        margin: 0;
+      }
+    }
+  }
+
+  .event-field.reminders {
+    display: flex;
+
+    .reminders-list {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1em;
+
+      .reminder-item {
+        display: flex;
+        flex: 1 0 auto;
+        padding: 0.25em 0;
+
+        .select-kit-header {
+          height: 100%;
+        }
+
+        .reminder-type {
+          width: 320px;
+          margin-right: 0.5em;
+        }
+
+        .reminder-value {
+          width: 60px;
+          margin-right: 0.5em;
+        }
+
+        .reminder-unit {
+          width: 140px;
+          margin-right: 0.5em;
+        }
+
+        .reminder-period {
+          margin-right: 0.5em;
+        }
+
+        .remove-reminder {
+          margin-left: auto;
+        }
+      }
+    }
+
+    .add-reminder {
+      align-self: flex-start;
+    }
+  }
+}

@@ -25,6 +25,10 @@ module PageObjects
           end
         end
 
+        def has_description?(text)
+          invite_type_col.has_css?(".invite-description", text:)
+        end
+
         def email_type?(email)
           invite_type_col.has_text?(email) && invite_type_col.has_css?(".d-icon-envelope")
         end
@@ -38,7 +42,7 @@ module PageObjects
         end
 
         def edit_button
-          tr_element.find(".invite-actions .btn-default")
+          tr_element.find(".invite-actions .edit-invite")
         end
 
         def expiry_date

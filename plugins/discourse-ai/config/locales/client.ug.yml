@@ -1,0 +1,225 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ug:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "سۈنئىي ئەقىلدە ئىزدەشكە يول قويىدۇ"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "تەرتىپى"
+            tag:
+              label: "بەلگە"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "يوللىغۇچى"
+            topic_id:
+              label: "تېما كىملىكى"
+            title:
+              label: "ئاتاق"
+            categories:
+              label: "سەھىپە"
+            tags:
+              label: "بەلگە"
+        llm_triage:
+          fields:
+            category:
+              label: "سەھىپە"
+            tags:
+              label: "بەلگە"
+            canned_reply:
+              label: "جاۋاب"
+    discourse_ai:
+      features:
+        back: "كەينى"
+        disabled: "(چەكلەندى)"
+        groups: "گۇرۇپپا:"
+        no_persona: "تەڭشەلمىدى"
+        no_groups: "يوق"
+        edit: "تەھرىر"
+        expand_list:
+          one: "(%{count} تېخىمۇ كۆپ)"
+          other: "(%{count} تېخىمۇ كۆپ)"
+        collapse_list: "(ئازراق كۆرسەت)"
+        filters:
+          all: "ھەممىسى"
+          reset: "ئەسلىگە قايتۇر"
+        search:
+          name: "ئىزدە"
+        spam:
+          name: "ئەخلەت خەت"
+      modals:
+        select_option: "تاللانما تاللىنىدۇ..."
+      translations:
+        title: "تەرجىمە"
+        stats:
+          eta_minutes:
+            one: "%{count} مىنۇت"
+            other: "%{count} مىنۇت"
+          eta_hours:
+            one: "%{count} سائەت"
+            other: "%{count} سائەت"
+          eta_days:
+            one: "%{count} كۈن"
+            other: "%{count} كۈن"
+        progress_chart:
+          bar_done:
+            one: "%{count} يازما"
+            other: "%{count} يازما"
+      spam:
+        short_title: "ئەخلەت خەت"
+        enable: "قوزغات"
+        save_button: "ئۆزگەرتىشنى ساقلا"
+        test_modal:
+          result: "نەتىجە"
+          run: "سىناقنى ئىجرا قىل"
+          spam: "ئەخلەت خەت"
+      usage:
+        short_title: "ئىشلىتىلىشى"
+        summary: "خۇلاسە"
+        username: "ئىشلەتكۈچى ئاتى"
+        total_requests: "جەمئىي ئىلتىماس"
+        periods:
+          custom: "ئىختىيارى..."
+      ai_persona:
+        back: "كەينى"
+        name: "ئىسمى"
+        edit: "تەھرىر"
+        export: "چىقار"
+        description: "چۈشەندۈرۈش"
+        user: ئىشلەتكۈچى
+        save: "ساقلا"
+        enabled: "قوزغىتىلدى؟"
+        delete: "ئۆچۈر"
+        response_format:
+          open_modal: "تەھرىر"
+          modal:
+            key_title: "ئاچقۇچ"
+        filters:
+          reset: "ئەسلىگە قايتۇر"
+      rag:
+        uploads:
+          title: "يۈكلەنمە"
+          uploading: "يۈكلەۋاتىدۇ..."
+      tools:
+        back: "كەينى"
+        export: "چىقار"
+        name: "ئىسمى"
+        description: "چۈشەندۈرۈش"
+        summary: "خۇلاسە"
+        script: "قوليازما"
+        save: "ساقلا"
+        remove_parameter: "چىقىرىۋەت"
+        parameter_required: "زۆرۈر"
+        edit: "تەھرىر"
+        test: "سىناقنى ئىجرا قىل"
+        delete: "ئۆچۈر"
+        test_modal:
+          run: "سىناقنى ئىجرا قىل"
+      llms:
+        display_name: "ئىسمى"
+        save: "ساقلا"
+        edit: "تەھرىر"
+        back: "كەينى"
+        delete: ئۆچۈر
+        quotas:
+          group: "گۇرۇپپا"
+          max_usages: "ئەڭ كۆپ ئىشلىتىلىشى"
+          duration: "داۋاملىشىش ۋاقتى"
+          durations:
+            hour: "1 سائەت"
+            six_hours: "6 سائەت"
+            day: "24 سائەت"
+            week: "7 كۈن"
+            custom: "ئىختىيارى..."
+          hours: "سائەت"
+        usage:
+          ai_summarization: "خۇلاسە"
+          ai_spam: "ئەخلەت خەت"
+        next:
+          title: "كېيىنكى"
+        tests:
+          title: "سىناقنى ئىجرا قىل"
+          success: "مۇۋەپپەقىيەتلىك!"
+        providers:
+          google: "Google"
+          fake: "ئىختىيارى"
+      ai_helper:
+        context_menu:
+          cancel: "ۋاز كەچ"
+          confirm: "جەزملە"
+          discard: "تاشلىۋەت"
+        post_options_menu:
+          close: "تاقا"
+          copy: "كۆچۈر"
+          copied: "كۆچۈرۈلدى!"
+          cancel: "ۋاز كەچ"
+        thumbnail_suggestions:
+          select: "تاللا"
+          selected: "تاللاندى"
+        image_caption:
+          save_caption: "ساقلا"
+      embeddings:
+        back: "كەينى"
+        save: "ساقلا"
+        delete: "ئۆچۈر"
+        edit: "تەھرىر"
+        tests:
+          title: "سىناقنى ئىجرا قىل"
+          success: "مۇۋەپپەقىيەتلىك!"
+        display_name: "ئىسمى"
+        providers:
+          google: "Google"
+          fake: "ئىختىيارى"
+      ai_bot:
+        debug_ai_modal:
+          request: "ئىلتىماس"
+          response: "ئىنكاس"
+          next_log: "كېيىنكى"
+          previous_log: "ئالدىنقى"
+        invite_ai_conversation:
+          button: "تەكلىپ"
+        share_modal:
+          copy: "كۆچۈر"
+        conversations:
+          today: "بۈگۈن"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "ھەممىسى"
+            neutral: "بىتەرەپ"
+          group_types:
+            category: "سەھىپە"
+            tag: "بەلگە"
+          table:
+            total_count: "جەمئىي"
+      summarization:
+        chat:
+          title: "ئۇچۇرنى خۇلاسىلە"
+          description: "تۆۋەندىكى تاللانما تاللانسا لازىملىق ۋاقىت دائىرىسىدە يوللانغان سۆھبەتنى خۇلاسىلەيدۇ."
+          summarize: "خۇلاسە"
+          since:
+            one: "ئاخىرقى %{count} سائەت"
+            other: "ئاخىرقى %{count} سائەت"
+      discobot_discoveries:
+        regular_results: "تېما"
+        collapse: "يىغ"
+        tooltip:
+          actions:
+            disable: "چەكلە"

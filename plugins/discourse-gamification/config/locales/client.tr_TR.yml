@@ -1,0 +1,83 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discourse Oyunlaştırma"
+  js:
+    gamification_score: "Tezahürat"
+    gamification:
+      score: "Tezahürat"
+      you: "Siz"
+      leaderboard:
+        title: "Liderlik Tabloları"
+        info: "Bu nasıl işler?"
+        link_to_settings: "Ayarlar"
+        refresh: "Yenile"
+        modal:
+          title: "Liderlik tablosu nasıl işler?"
+          text: "Ziyaret etme, beğenme ve gönderme gibi toplulukla etkileşim için puan verilir. Puanınız birkaç dakikada bir güncellenir. Bu yüzden yardımsever, aktif ve destekleyici olun ve sıralamada yükselin!"
+        name: "Ad"
+        name_placeholder: "Ad..."
+        new: "Yeni liderlik tablosu"
+        create_success: "Liderlik tablosu oluşturuldu"
+        delete_success: "Liderlik tablosu silindi"
+        save_success: "Liderlik tablosu kaydedildi"
+        cta: "İlk liderlik tablonuzu oluşturun"
+        none: "Henüz liderlik tablosu oluşturulmadı."
+        confirm_destroy: "Bu liderlik tablosunu silmek istediğinizden emin misiniz?"
+        date:
+          range: "Başlangıç / Bitiş Tarih Aralığı"
+          from: "Başlangıç tarihi"
+          to: "Bitiş tarihi"
+          helper: "Tarihler boş bırakılırsa liderlik tablosu herhangi bir zaman kısıtlaması olmaksızın kazanılan puanları gösterir."
+        visible_to_groups: "Gruplara görünür"
+        visible_to_groups_help: "Sadece bu gruplardaki kullanıcılar liderlik tablosunu görüntüleyebilir. Herkese izin vermek için boş bırakın."
+        included_groups: "Dahil edilen gruplar"
+        included_groups_help: "Yalnızca bu gruplardaki kullanıcılar liderlik tablosuna dahil edilir. Herkesi listelemek için boş bırakın."
+        excluded_groups: "Hariç tutulan gruplar"
+        excluded_groups_help: "Bu gruplardaki kullanıcıların liderlik tablosuna dahil edilmesini kaldırın. Herkesi listelemek için boş bırakın."
+        default_period: "Varsayılan dönem"
+        default_period_help: "Bu liderlik tablosu için gösterilecek varsayılan zaman aralığını ayarlayın."
+        period_filter_disabled: "Zaman aralığı filtresini devre dışı bırak"
+        period:
+          all_time: "Tüm Zamanlar"
+          yearly: "Yıllık"
+          quarterly: "Üç aylık"
+          monthly: "Aylık"
+          weekly: "Haftalık"
+          daily: "Günlük"
+        rank: "Sıra"
+      create: "Oluştur"
+      cancel: "İptal et"
+      close: "Kapat"
+      delete: "Sil"
+      edit: "Düzenle"
+      back: "Geri"
+      save: "Kaydet"
+      apply: "Uygula"
+      recalculate: "Puanları yeniden hesapla"
+      recalculating: "Puanlar yeniden hesaplanıyor..."
+      completed: "Bitti! Puanlar başarıyla yeniden hesaplandı."
+      update_scores_help: "Şuradan tüm skor tabloları için tüm puanları güncelleyin:"
+      update_range:
+        last_10_days: "Son 10 gün"
+        last_30_days: "Son 30 gün"
+        last_90_days: "Son 90 gün"
+        last_year: "Geçen yıl"
+        all_time: "Tüm Zamanlar"
+        custom_date_range: "Özel aralık"
+      custom_range_from: "Başlangıç:"
+      daily_update_scores_availability:
+        one: "%{count} günlük yeniden hesaplama kaldı"
+        other: "%{count} günlük yeniden hesaplama kaldı"
+      admin:
+        title: "Oyunlaştırma"
+        name: "Ad"
+        period: "Dönem"

@@ -46,7 +46,7 @@ describe ListableTopicSerializer do
       topic.update!(locale: "en")
       Fabricate(:topic_localization, topic:, excerpt: "X", locale: "ja")
 
-      SiteSetting.experimental_content_localization = true
+      SiteSetting.content_localization_enabled = true
       SiteSetting.always_include_topic_excerpts = true
 
       json = ListableTopicSerializer.new(topic, scope: Guardian.new).as_json

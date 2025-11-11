@@ -23,6 +23,18 @@ module PageObjects
         find(container_selector).find(SELECTOR).click
       end
 
+      def has_light_as_current_mode?
+        has_css?(SELECTOR + "[data-current-mode='light']")
+      end
+
+      def has_dark_as_current_mode?
+        has_css?(SELECTOR + "[data-current-mode='dark']")
+      end
+
+      def has_auto_as_current_mode?
+        has_css?(SELECTOR + "[data-current-mode='auto']")
+      end
+
       def light_option
         find("#{SELECTOR}__light-option")
       end

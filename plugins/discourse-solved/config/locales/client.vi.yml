@@ -1,0 +1,24 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "đã chấp nhận"
+    solved:
+      title: "Đã xử lý"
+      accepted_answer_post_number: "bài viết %{post_number}"
+      topic_status_filter:
+        all: "Tất cả"
+        solved: "đã xử lý"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          fields:
+            maximum_trust_level:
+              label: Bậc tin tưởng

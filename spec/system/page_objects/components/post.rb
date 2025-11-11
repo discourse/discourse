@@ -60,6 +60,19 @@ module PageObjects
         find("#embedded-posts__top--#{@post_number}").has_no_content?(content)
       end
 
+      def post_language
+        post.find(".post-info.post-language").hover
+        find(".post-language-content")
+      end
+
+      def open_post_history
+        post.find(".post-info.edits").click
+      end
+
+      def mentions_of(user)
+        post.all("a.mention[href='/u/#{user.username}']")
+      end
+
       private
 
       def post_id

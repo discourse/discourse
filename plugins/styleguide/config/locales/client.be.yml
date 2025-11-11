@@ -22,8 +22,8 @@ be:
           title: "Спіс катэгорый"
         post:
           title: "Паведамленне"
-        suggested_topics:
-          title: "Прапанаваныя тэмы"
+        more_topics:
+          title: "Больш тэмаў"
         tooltips:
           description: "Апісанне"
           header: "Header"

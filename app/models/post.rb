@@ -9,6 +9,7 @@ class Post < ActiveRecord::Base
   include Searchable
   include HasCustomFields
   include LimitedEdit
+  include Localizable
 
   self.ignored_columns = [
     "avg_time", # TODO: Remove when 20240212034010_drop_deprecated_columns has been promoted to pre-deploy
@@ -67,8 +68,6 @@ class Post < ActiveRecord::Base
 
   has_many :user_actions, foreign_key: :target_post_id
 
-  has_many :post_localizations, dependent: :destroy
-
   belongs_to :image_upload, class_name: "Upload"
 
   has_many :post_hotlinked_media, dependent: :destroy, class_name: "PostHotlinkedMedia"
@@ -113,7 +112,7 @@ class Post < ActiveRecord::Base
   scope :with_user, -> { includes(:user) }
   scope :created_since, ->(time_ago) { where("posts.created_at > ?", time_ago) }
   scope :public_posts,
-        -> { joins(:topic).where("topics.archetype <> ?", Archetype.private_message) }
+        -> { joins(:topic).where.not(topics: { archetype: Archetype.private_message }) }
   scope :private_posts,
         -> { joins(:topic).where("topics.archetype = ?", Archetype.private_message) }
   scope :with_topic_subtype, ->(subtype) { joins(:topic).where("topics.subtype = ?", subtype) }
@@ -554,6 +553,10 @@ class Post < ActiveRecord::Base
     post_number.blank? ? topic.try(:highest_post_number) == 0 : post_number == 1
   end
 
+  def is_last_reply?
+    topic.try(:highest_post_number) == post_number && post_number != 1
+  end
+
   def is_category_description?
     topic.present? && topic.is_category_topic? && is_first_post?
   end
@@ -625,6 +628,7 @@ class Post < ActiveRecord::Base
       )
 
     hiding_again = hidden_at.present?
+    should_reset_bumped_at = is_last_reply? && !whisper?
 
     Post.transaction do
       self.skip_validation = true
@@ -635,7 +639,7 @@ class Post < ActiveRecord::Base
       any_visible_posts_in_topic =
         Post.exists?(topic_id: topic_id, hidden: false, post_type: Post.types[:regular])
 
-      if !any_visible_posts_in_topic
+      if is_first_post? || !any_visible_posts_in_topic
         self.topic.update_status(
           "visible",
           false,
@@ -675,6 +679,8 @@ class Post < ActiveRecord::Base
         message_options: options,
       )
     end
+
+    topic.reset_bumped_at if should_reset_bumped_at
   end
 
   def unhide!
@@ -698,6 +704,8 @@ class Post < ActiveRecord::Base
         )
         should_update_user_stat = false
       end
+
+      self.topic.reset_bumped_at(self) if is_last_reply? && !whisper?
 
       # We need to do this because TopicStatusUpdater also does the increment
       # and we don't want to double count for the OP.
@@ -888,6 +896,8 @@ class Post < ActiveRecord::Base
       self.baked_at = Time.zone.now
       self.baked_version = BAKED_VERSION
     end
+
+    self.locale = nil if locale.blank?
   end
 
   def advance_draft_sequence
@@ -1041,7 +1051,7 @@ class Post < ActiveRecord::Base
     post_revision = PostRevision.find_by(post_id: id, number: (number + 1))
     post_revision.modifications.each do |attribute, change|
       attribute = "version" if attribute == "cached_version"
-      write_attribute(attribute, change[0])
+      self[attribute] = change[0]
     end
   end
 
@@ -1160,6 +1170,7 @@ class Post < ActiveRecord::Base
         "track/@src",
         "video/@poster",
         "div/@data-video-src",
+        "div/@data-original-video-src",
       )
 
     links =
@@ -1324,22 +1335,14 @@ class Post < ActiveRecord::Base
   end
 
   def has_localization?(locale = I18n.locale)
-    post_localizations.exists?(locale: locale.to_s.sub("-", "_"))
-  end
-
-  def in_user_locale?
-    locale == I18n.locale.to_s
-  end
-
-  def get_localization(locale = I18n.locale)
-    post_localizations.find_by(locale: locale.to_s.sub("-", "_"))
+    get_localization(locale).present?
   end
 
   private
 
   def parse_quote_into_arguments(quote)
     return {} if quote.blank?
-    args = HashWithIndifferentAccess.new
+    args = ActiveSupport::HashWithIndifferentAccess.new
     quote.first.scan(/([a-z]+)\:(\d+)/).each { |arg| args[arg[0]] = arg[1].to_i }
     args
   end
@@ -1424,9 +1427,14 @@ end
 #  idx_posts_deleted_posts                                (topic_id,post_number) WHERE (deleted_at IS NOT NULL)
 #  idx_posts_user_id_deleted_at                           (user_id) WHERE (deleted_at IS NULL)
 #  index_for_rebake_old                                   (id) WHERE (((baked_version IS NULL) OR (baked_version < 2)) AND (deleted_at IS NULL))
+#  index_posts_on_deleted_by_id                           (deleted_by_id) WHERE (deleted_by_id IS NOT NULL)
 #  index_posts_on_id_and_baked_version                    (id DESC,baked_version) WHERE (deleted_at IS NULL)
 #  index_posts_on_id_topic_id_where_not_deleted_or_empty  (id,topic_id) WHERE ((deleted_at IS NULL) AND (raw <> ''::text))
 #  index_posts_on_image_upload_id                         (image_upload_id)
+#  index_posts_on_last_editor_id                          (last_editor_id) WHERE (last_editor_id IS NOT NULL)
+#  index_posts_on_locale                                  (locale)
+#  index_posts_on_locked_by_id                            (locked_by_id) WHERE (locked_by_id IS NOT NULL)
+#  index_posts_on_reply_to_user_id                        (reply_to_user_id) WHERE (reply_to_user_id IS NOT NULL)
 #  index_posts_on_topic_id_and_created_at                 (topic_id,created_at)
 #  index_posts_on_topic_id_and_percent_rank               (topic_id,percent_rank)
 #  index_posts_on_topic_id_and_post_number                (topic_id,post_number) UNIQUE

@@ -43,7 +43,8 @@ RSpec.describe StepsController do
     end
 
     it "returns errors if the field has them" do
-      put "/wizard/steps/introduction.json", params: { fields: { title: "" } }
+      title = SiteSetting.title
+      put "/wizard/steps/introduction.json", params: { fields: { title: } }
 
       expect(response.status).to eq(422)
     end

@@ -12,7 +12,7 @@ RSpec.describe TopicViewSerializer do
 
   fab!(:topic)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_2, :user)
   fab!(:admin)
 
   describe "#featured_link and #featured_link_root_domain" do
@@ -94,7 +94,7 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "#suggested_topics" do
-    fab!(:topic2) { Fabricate(:topic) }
+    fab!(:topic2, :topic)
 
     before { TopicUser.update_last_read(user, topic2.id, 0, 0, 0) }
 
@@ -655,7 +655,7 @@ RSpec.describe TopicViewSerializer do
     end
 
     it "returns the localized fancy_title" do
-      SiteSetting.experimental_content_localization = true
+      SiteSetting.content_localization_enabled = true
       Fabricate(:topic_localization, topic:, fancy_title: "X", locale: "ja")
       I18n.locale = "ja"
       topic.update!(locale: "en")
@@ -666,7 +666,7 @@ RSpec.describe TopicViewSerializer do
   end
 
   describe "#has_localized_content" do
-    before { SiteSetting.experimental_content_localization = true }
+    before { SiteSetting.content_localization_enabled = true }
 
     it "returns true if the topic has localization" do
       Fabricate(:topic_localization, topic:, locale: "ja")
@@ -692,7 +692,7 @@ RSpec.describe TopicViewSerializer do
     end
 
     it "does not return attribute if setting is disabled" do
-      SiteSetting.experimental_content_localization = false
+      SiteSetting.content_localization_enabled = false
 
       json = serialize_topic(topic, user)
       expect(json[:has_localized_content]).to eq(nil)

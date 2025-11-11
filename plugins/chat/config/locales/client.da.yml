@@ -127,7 +127,6 @@ da:
       uploaded_files:
         one: "%{count} fil"
         other: "%{count} filer"
-      exit: "tilbage"
       channel_status:
         read_only_header: "Kanalen er skrivebeskyttet"
         read_only: "Kun læsning"
@@ -146,6 +145,8 @@ da:
       chat_message_separator:
         today: I dag
         yesterday: I går
+      search_view:
+        filter_placeholder: Søg i meddelelser
       members_view:
         add_member: Tilføj Medlem
         back_to_settings: "Tilbage til indstillinger"
@@ -158,6 +159,7 @@ da:
         tabs:
           members: Brugere
           settings: Indstillinger
+          search: Søg
         remove_member: "Fjern"
       new_message_modal:
         no_items: "Ingen punkter"
@@ -184,6 +186,7 @@ da:
           topic: "Emne"
       reviewable:
         type: "Chatbesked"
+        message_in_channel: "Kanal"
       composer:
         italic_text: "kursiv skrift"
         bold_text: "fed skrift"
@@ -213,6 +216,11 @@ da:
         title: "Chat"
         export_messages:
           description: "Dette eksporterer alle beskeder fra alle kanaler."
+      search:
+        no_results: "Ingen resultater fundet"
+        sort:
+          relevance: "Relevans"
+          latest: "Seneste"
       incoming_webhooks:
         back: "Tilbage"
         description: "Beskrivelse"

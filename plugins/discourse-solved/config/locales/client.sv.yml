@@ -1,0 +1,63 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sv:
+  js:
+    notifications:
+      alt:
+        solved:
+          accepted_notification: "accepterad"
+    solutions: "Lösningar"
+    solved:
+      title: "Löst"
+      allow_accepted_answers: "Låt ämnesägare och personal markera ett svar som lösningen"
+      solved_topics_auto_close_hours: "Stäng automatiskt ämnet (n) timmar efter det senaste svaret när ämnet har markerats som löst."
+      accept_answer: "Välj om det här svaret löser problemet"
+      accepted_description: "Detta är den accepterade lösningen för detta ämne"
+      has_no_accepted_answer: "Detta ämne har ingen lösning"
+      unaccept_answer: "Avmarkera om detta svar inte längre löser problemet"
+      accepted_answer: "Lösning"
+      solution: "Lösning"
+      solution_summary:
+        one: "lösning"
+        other: "lösningar"
+      accepted_answer_post_number: "inlägg %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
+      topic_status_filter:
+        all: "alla"
+        solved: "lösta"
+        unsolved: "olösta"
+      no_solved_topics_title: "Du har inte löst några ämnen än"
+      no_solved_topics_title_others: "%{username} har inte löst några ämnen ännu"
+      no_solved_topics_body: "När du ger ett användbart svar på ett ämne kan ditt svar väljas som lösningen av ämnesägaren eller personalen."
+      no_answer:
+        title: Har din fråga besvarats?
+        description: "Markera svaret och hjälp andra genom att använda lösningsknappen under det korrekta svaret."
+    topic_statuses:
+      solved:
+        help: "Detta ämne har en lösning"
+    search:
+      advanced:
+        statuses:
+          solved: "är lösta"
+          unsolved: "är olösta"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Löst händelse"
+    discourse_automation:
+      triggerables:
+        first_accepted_solution:
+          max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
+            any: Valfri
+          fields:
+            maximum_trust_level:
+              label: Förtroendenivå
+              description: Användare under denna förtroendenivå kommer att utlösa denna automatisering

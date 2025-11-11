@@ -21,13 +21,13 @@ module("Chat | Unit | Utility | plugin-api", function (hooks) {
       return [200, {}, {}];
     });
 
-    withPluginApi("1.1.0", async (api) => {
+    withPluginApi(async (api) => {
       await api.sendChatMessage(1, { message: "hello", threadId: 2 });
     });
   });
 
   test("#removeChatComposerSecondaryActions", async function (assert) {
-    withPluginApi("1.1.0", async (api) => {
+    withPluginApi(async (api) => {
       // assert that the api method is defined
       assert.strictEqual(
         typeof api.removeChatComposerSecondaryActions,

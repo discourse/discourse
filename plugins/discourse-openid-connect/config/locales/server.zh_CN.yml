@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  site_settings:
+    openid_connect_enabled: 启用 OpenID Connect 身份验证。在<a href='%{base_path}/admin/customize/site_texts?q=js.login.oidc'>此处</a>自定义用户界面文本
+    openid_connect_discovery_document: "OpenID Connect 发现文档 URL。通常位于 'https://your.domain/.well-known/openid-configuration' 下"
+    openid_connect_client_id: "OpenID Connect 客户端 ID"
+    openid_connect_client_secret: "OpenID Connect 客户端密钥"
+    openid_connect_authorize_scope: "发送到授权端点的范围。必须包含“openid”。"
+    openid_connect_rp_initiated_logout: "退出登录后将用户重定向到 end_session_endpoint。必须受到您的身份提供商的支持并附于发现文档中。"
+    openid_connect_rp_initiated_logout_redirect: "（可选）将被传递到退出登录端点的 post_logout_redirect_uri。如果提供，则必须向身份提供商注册。"
+    openid_connect_token_scope: "请求令牌端点时发送的范围。官方规范不需要。"
+    openid_connect_error_redirects: "如果回调 error_reason 包含第一个参数，用户将被重定向到第二个参数中的 URL"
+    openid_connect_allow_association_change: "允许用户从 OpenID Connect 提供商断开并重新连接其 Discourse 帐户"
+    openid_connect_verbose_logging: "将详细的 openid-connect 身份验证信息记录到 `/logs`。常规使用期间应保持禁用。"
+    openid_connect_authorize_parameters: "从 /auth/oidc 到 IDP 授权端点的重定向中将包含的 URL 参数"
+    openid_connect_overrides_email: "每次登录时，使用 openid-connect 值覆盖用户的电子邮件。工作原理与 `auth_overrides_email` 设置相同，但特定于 OpenID Connect 登录。"
+    openid_connect_claims: "明确定义声明以用于不基于范围传回数据的提供商。(JSON)"
+    openid_connect_match_by_email: "使用电子邮件地址将 OpenID Connect 身份验证与现有 Discourse 用户帐户相匹配。"
+    openid_connect_use_pkce: "为 OpenID Connect 身份验证启用代码交换验证密钥 (PKCE)。"
+  login:
+    omniauth_error:
+      openid_connect_discovery_error: 无法从身份提供商获取配置。请重试。

@@ -3,11 +3,8 @@
 #mixin for all guardian methods dealing with topic permissions
 module TopicGuardian
   def can_remove_allowed_users?(topic, target_user = nil)
-    is_staff? || (topic.user == @user && @user.has_trust_level?(TrustLevel[2])) ||
-      (
-        topic.allowed_users.count > 1 && topic.user != target_user &&
-          !!(target_user && user == target_user)
-      )
+    is_staff? || (is_my_own?(topic) && @user.has_trust_level?(TrustLevel[2])) ||
+      (topic.allowed_users.count > 1 && topic.user != target_user && !!(is_me?(target_user)))
   end
 
   def can_review_topic?(topic)
@@ -145,24 +142,24 @@ module TopicGuardian
   end
 
   def can_recover_topic?(topic)
-    if is_staff? || (topic&.category && is_category_group_moderator?(topic.category)) ||
+    return false if topic.blank?
+
+    if is_category_group_moderator?(topic.category) ||
          user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
-      !!(topic && topic.deleted_at)
+      topic.deleted_at?
     else
-      topic && can_recover_post?(topic.ordered_posts.first)
+      can_recover_post?(topic.ordered_posts.first)
     end
   end
 
   def can_delete_topic?(topic)
-    !topic.trashed? &&
-      (
-        is_staff? ||
-          (
-            is_my_own?(topic) && topic.posts_count <= 1 && topic.created_at &&
-              topic.created_at > 24.hours.ago
-          ) || is_category_group_moderator?(topic.category) ||
-          user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
-      ) && !topic.is_category_topic? && !Discourse.static_doc_topic_ids.include?(topic.id)
+    return false if topic.trashed?
+    return false if topic.is_category_topic?
+    return false if Discourse.static_doc_topic_ids.include?(topic.id)
+    return true if is_category_group_moderator?(topic.category)
+    return true if user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
+
+    is_my_own?(topic) && can_delete_own_topic?(topic)
   end
 
   def can_permanently_delete_topic?(topic)
@@ -216,7 +213,7 @@ module TopicGuardian
   end
 
   def can_see_deleted_topics?(category)
-    is_staff? || is_category_group_moderator?(category) ||
+    is_category_group_moderator?(category) ||
       user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
   end
 
@@ -281,7 +278,7 @@ module TopicGuardian
     can_see_category?(category) &&
       (
         !category.read_restricted || !is_staged? || secure_category_ids.include?(category.id) ||
-          topic.user == user
+          is_my_own?(topic)
       )
   end
 
@@ -365,6 +362,10 @@ module TopicGuardian
   end
 
   private
+
+  def can_delete_own_topic?(topic)
+    topic.posts_count <= 1 && topic.created_at? && topic.created_at > 24.hours.ago
+  end
 
   def private_message_topic_scope(scope)
     pm_scope = scope.private_messages_for_user(user)

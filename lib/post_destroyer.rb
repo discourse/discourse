@@ -75,6 +75,8 @@ class PostDestroyer
     delete_removed_posts_after =
       @opts[:delete_removed_posts_after] || SiteSetting.delete_removed_posts_after
 
+    should_reset_bumped_at = @post.is_last_reply? && !@post.whisper?
+
     if delete_removed_posts_after < 1 || post_is_reviewable? ||
          Guardian.new(@user).can_moderate_topic?(@topic) || permanent?
       perform_delete
@@ -105,6 +107,8 @@ class PostDestroyer
         Discourse.clear_urls!
       end
     end
+
+    @topic.reset_bumped_at if should_reset_bumped_at
   end
 
   def recover

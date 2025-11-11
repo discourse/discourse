@@ -1,0 +1,193 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse-toewijzing"
+  js:
+    filters:
+      unassigned:
+        title: "Niet toegewezen"
+        help: "Topics die niet zijn toegewezen"
+    action_codes:
+      assigned: "Heeft %{who} toegewezen op %{when}"
+      assigned_group: "Heeft %{who} toegewezen op %{when}"
+      assigned_to_post: "Heeft %{who} toegewezen aan <a href='%{path}'>bericht</a> op %{when}"
+      assigned_group_to_post: "Heeft %{who} toegewezen aan <a href='%{path}'>bericht</a> op %{when}"
+      unassigned: "Heeft de toewijzing aan %{who} opgeheven op %{when}"
+      unassigned_group: "Heeft de toewijzing aan %{who} opgeheven op %{when}"
+      unassigned_from_post: "Heeft de toewijzing van %{who} aan <a href='%{path}'>bericht</a> opgeheven op %{when}"
+      unassigned_group_from_post: "Heeft de toewijzing van %{who} aan <a href='%{path}'>bericht</a> opgeheven op %{when}"
+      reassigned: "heeft %{who} opnieuw toegewezen op %{when}"
+      reassigned_group: "heeft %{who} opnieuw toegewezen op %{when}"
+      details_change: "Heeft de toewijzingsdetails voor %{who} gewijzigd op %{when}"
+      note_change: "Heeft de toewijzingsopmerking voor %{who} gewijzigd op %{when}"
+      status_change: "Heeft de toewijzingsstatus voor %{who} gewijzigd op %{when}"
+    discourse_assign:
+      add_unassigned_filter: "Filter 'niet toegewezen' toevoegen aan categorie"
+      cant_act: "Je kunt geen actie ondernemen voor markeringen die aan andere gebruikers zijn toegewezen"
+      cant_act_unclaimed: "Je moet dit topic opeisen voordat je actie kunt ondernemen voor markeringen."
+      topic_search_placeholder: "Zoek topics op titel of berichtinhoud"
+      sidebar_name_filter_placeholder: "Naam/gebruikersnaam"
+      assigned: "Toegewezen"
+      group_everyone: "Iedereen"
+      assigned_to: "Toegewezen aan"
+      assigned_topic_to: "Topic toegewezen aan <a href='%{path}'>%{username}</a>"
+      assign_post_to: "#%{post_number} toegewezen aan %{username}"
+      assign_post_to_multiple: "#%{post_number} aan %{username}"
+      assigned_to_w_ellipsis: "Toegewezen aan..."
+      unassign:
+        title: "Toewijzing opheffen"
+        title_w_ellipsis: "Toewijzing opheffen..."
+        help: "Toewijzing van topic aan %{username} opheffen"
+      assign:
+        title: "Toewijzen"
+        help: "Topic toewijzen aan gebruiker"
+      assign_post:
+        title: "Bericht toewijzen"
+      unassign_post:
+        title: "Toewijzing aan bericht opheffen"
+        help: "Toewijzing van %{username} aan bericht opheffen"
+      reassign:
+        title: "Bewerken"
+        title_w_ellipsis: "Toewijzing bewerken..."
+        to_self: "Opnieuw toewijzen aan mij"
+        to_self_help: "Topic opnieuw toewijzen aan mij"
+        help: "Toewijzingsdetails bewerken"
+      reassign_modal:
+        title: "Topic opnieuw toewijzen"
+      topic_level_menu:
+        edit_assignments: "Toewijzingen bewerken..."
+        reassign_topic_to_me: "Topic opnieuw toewijzen aan mij"
+        unassign_with_ellipsis: "Toewijzing opheffen..."
+        unassign_from_post: "Toewijzing van @%{assignee} aan %{post_number} opheffen"
+        unassign_from_post_help: "Toewijzing van @%{assignee} aan bericht %{post_number} opheffen"
+        unassign_from_topic: "Toewijzing van @%{username} aan topic opheffen"
+      assign_modal:
+        title: "Topic toewijzen"
+        reassign_title: "Topic opnieuw toewijzen"
+        assign: "Toewijzen"
+        assignee_label: Toegewezen persoon
+        assignment_label: Toewijzing
+        choose_assignee: Kies een gebruiker om toe te wijzen.
+        edit_assignments_title: "Toewijzingen bewerken"
+        note_label: Opmerking
+        optional_label: "(optioneel)"
+        status_label: Status
+        suggestions: suggesties
+      assign_post_modal:
+        title: "Bericht toewijzen"
+      claim:
+        title: "claimen"
+        help: "Wijs het topic toe aan jezelf"
+      assign_mailer:
+        never: "Nooit"
+        different_users: "Alleen als toewijzer en toegewezen persoon verschillend zijn"
+        always: "Altijd"
+      reminders_frequency:
+        description: "Frequentie voor het ontvangen van herinneringen over toegewezen topics"
+        never: "Nooit"
+        daily: "Dagelijks"
+        weekly: "Wekelijks"
+        monthly: "Maandelijks"
+        quarterly: "Driemaandelijks"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Toewijzen"
+              assignable_levels:
+                title: "Wie kan deze groep toewijzen"
+    user:
+      notification_level_when_assigned:
+        label: "Wanneer toegewezen"
+        watch_topic: "Topic observeren"
+        track_topic: "Topic volgen"
+        do_nothing: "Niets doen"
+      messages:
+        assigned_title: "Toegewezen (%{count})"
+        assigned: "Toegewezen"
+      no_assignments_title: "Je hebt nog geen toewijzingen"
+      no_assignments_body: >
+        Je toegewezen topics en berichten worden hier weergegeven. Ook ontvang je periodiek een herinneringsmelding over je toewijzingen, die je kunt aanpassen in je <a href='%{preferencesUrl}'>gebruikersvoorkeuren</a>. <br><br> Om een topic of bericht aan jezelf of iemand anders toe te wijzen, zoek je de knop %{icon} Toewijzen onderaan.
+      dismiss_assigned_tooltip: "Alle ongelezen toewijzingsmeldingen markeren als gelezen"
+      assigned_to_group:
+        post: "bericht toegewezen aan %{group_name}"
+        topic: "topic toegewezen aan %{group_name}"
+      assigned_to_you:
+        post: "bericht toegewezen aan jou"
+        topic: "topic toegewezen aan jou"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Toewijzingsgebeurtenissen"
+          assigned: "Wanneer een gebruiker een topic toewijst"
+          unassigned: "Wanneer een gebruiker de toewijzing van een topic opheft"
+    search:
+      advanced:
+        in:
+          assigned: "zijn toegewezen"
+          unassigned: "zijn niet langer toegewezen"
+        assigned:
+          label: "Toegewezen aan"
+    topics:
+      bulk:
+        unassign: "Toewijzing van topics opheffen"
+        assign: "Topics toewijzen"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Berichtsjabloon
+              description: Indien ingevuld, wordt een bericht met dit sjabloon gemaakt en wordt er een gebruiker aan toegewezen in plaats van het topic.
+            assignees_group:
+              label: Groep van toegewezen gebruikers
+            minimum_time_between_assignments:
+              label: Minimaal aantal uren tussen toewijzingen
+            min_recently_assigned_days:
+              label: Min. dagen recent toegewezen
+              description: Standaard ingesteld op 14 dagen.
+            skip_new_users_for_days:
+              label: Dagen om nieuwe gebruikers over te slaan
+              description: Standaard ingesteld op 0 dagen (gebruikers kunnen direct na registratie worden toegewezen).
+            max_recently_assigned_days:
+              label: Max. dagen recent toegewezen
+              description: Eerste poging om gebruikers uit te sluiten die de afgelopen 'n' dagen zijn toegewezen. Als er geen gebruiker over is, valt dit terug naar 'min_recently_assigned_days'. Standaard ingesteld op 180 dagen.
+            assigned_topic:
+              label: ID toegewezen topic
+            in_working_hours:
+              label: Gebruikers tijdens werktijd
+    notification_reason:
+      user: "Je ziet het aantal nieuwe antwoorden omdat dit topic aan jou is toegewezen."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} heeft je toegewezen"
+      titles:
+        assigned: "Toegewezen"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Weet je het zeker? Je hebt %{count} ongelezen toewijzingsmelding."
+            other: "Weet je het zeker? Je hebt %{count} ongelezen toewijzingsmeldingen."
+    user_menu:
+      view_all_assigned: "alle toegewezen items weergeven"
+      tabs:
+        assign_list: "Toewijzingslijst"
+        assign_list_with_unread:
+          one: "Toewijzingslijst - %{count} ongelezen toewijzing"
+          other: "Toewijzingslijst - %{count} ongelezen toewijzingen"
+    edit_assignments_modal:
+      title: "Toewijzingen bewerken"
+      topic: "Topic"
+      post: "Bericht"

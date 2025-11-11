@@ -1,0 +1,75 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  accepted_answer: "已被接受的回答"
+  site_settings:
+    solved_enabled: "启用“已解决”插件，允许用户为话题选择解决方案"
+    allow_solved_on_all_topics: "允许用户选择所有话题的解决方案（未选中时，可以按类别或标签启用解决方案）"
+    accept_all_solutions_trust_level: "在任何话题中接受解决方案所需的最小信任级别（即使不是 OP）"
+    accept_all_solutions_allowed_groups: "能够接受任何话题解决方案的群组（即使不是 OP 时）。管理员和版主始终可以。"
+    empty_box_on_unsolved: "在未解决的话题旁显示一个空框"
+    solved_quote_length: "在第一个帖子下显示解决方案时引用的字符数量"
+    solved_topics_auto_close_hours: "当话题被标记为已解决后，在最后一条回复 (n) 小时后自动关闭话题。设置为 0 将禁用自动关闭。"
+    show_filter_by_solved_status: "显示下拉列表以按已解决状态筛选话题列表。"
+    notify_on_staff_accept_solved: "当帖子被管理人员标记为解决方案时，向话题创建者发送通知"
+    ignore_solved_topics_in_assigned_reminder: "防止指定的提醒中包含已解决的话题。仅在使用 discourse-assign 插件时相关。"
+    assignment_status_on_solve: "当一个话题被解决时，将所有指定更新为此状态"
+    assignment_status_on_unsolve: "当一个话题被取消解决时，将所有指定更新为此状态"
+    disable_solved_education_message: "禁用已解决话题的教育消息。"
+    accept_solutions_topic_author: "允许话题作者接受解决方案。"
+    solved_add_schema_markup: "将 QAPage 架构标记添加到 HTML。"
+    enable_solved_tags: "允许用户选择解决方案的标签。"
+    prioritize_solved_topics_in_search: "在搜索结果中优先显示已解决的话题。"
+    show_who_marked_solved: "显示谁将该话题标记为已解决。它会在该话题的第一个帖子以及工具提示中的回答帖子中显示。"
+    keywords:
+      accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
+  reports:
+    accepted_solutions:
+      title: "已被接受的解决方案"
+      xaxis: "天"
+      yaxis: "总计"
+  solved:
+    no_solutions:
+      self: "您还没有被接受的解决方案。"
+      others: "没有被接受的解决方案。"
+    filter:
+      description:
+        solved: "筛选已解决的话题"
+        unsolved: "筛选未解决的话题"
+  badges:
+    solved_1:
+      name: "已解决！"
+      description: "有 1 条回复被标记为解决方案"
+      long_description: "此徽章是由于 1 条回复被标记为话题的解决方案而获得的。:white_check_mark: 干得好。:+1:"
+    solved_2:
+      name: "指导顾问"
+      description: "有 10 条回复被标记为解决方案"
+      long_description: "此徽章是由于 10 条回复被标记为话题的解决方案而获得的。:white_check_mark: 您对社区成员来说是真正的财富。"
+    solved_3:
+      name: "无所不知"
+      description: "有 50 条回复被标记为解决方案"
+      long_description: "此徽章是由于 50 条回复被标记为话题的解决方案而获得的。:white_check_mark: 您真的很懂行。:clap:"
+    solved_4:
+      name: "解决方案机构"
+      description: "有 150 条回复被标记为解决方案"
+      long_description: "此徽章是由于 150 条回复被标记为话题的解决方案而获得的。:white_check_mark: 太棒了。:slightly_smiling_face: 您正式成为一个解决方案机构。:brain:"
+  discourse_automation:
+    triggerables:
+      first_accepted_solution:
+        title: 第一个被接受的解决方案
+        doc: 当用户的解决方案首次被接受时触发。
+  education:
+    topic_is_solved: |
+      ### 此话题已被解决
+
+      仅在以下情况下回复：
+
+      - 您有其他详细信息
+
+      - 该解决方案对您不起作用
+
+      如果您有不相关的问题，请[新建话题](%{base_url}/new-topic)。

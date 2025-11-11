@@ -2,6 +2,9 @@
 
 module Migrations::Importer
   class Step
+    MappingType = ::Migrations::Importer::MappingType
+    Enums = ::Migrations::Database::IntermediateDB::Enums
+
     class << self
       # stree-ignore
       def title(value = (getter = true; nil))
@@ -40,6 +43,15 @@ module Migrations::Importer
         @dependencies || []
       end
 
+      # stree-ignore
+      def priority(value = (getter = true; nil))
+        if getter
+          @priority
+        else
+          @priority = value
+        end
+      end
+
       def requires_mapping(name, sql)
         @required_mappings ||= {}
         @required_mappings[name] = sql
@@ -59,12 +71,15 @@ module Migrations::Importer
       end
     end
 
-    def initialize(intermediate_db, discourse_db, shared_data)
+    def initialize(intermediate_db, discourse_db, shared_data, config)
       @intermediate_db = intermediate_db
       @discourse_db = discourse_db
       @shared_data = shared_data
+      @config = config
 
       @stats = StepStats.new(skip_count: 0, warning_count: 0, error_count: 0)
+
+      setup
     end
 
     def execute
@@ -72,6 +87,10 @@ module Migrations::Importer
     end
 
     private
+
+    # Override in subclasses if necessary
+    def setup
+    end
 
     def load_required_data
       required_mappings = self.class.required_mappings

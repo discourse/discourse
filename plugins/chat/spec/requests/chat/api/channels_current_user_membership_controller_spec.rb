@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe Chat::Api::ChannelsCurrentUserMembershipController do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:category_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :category_channel)
 
   before do
     SiteSetting.chat_enabled = true
@@ -37,7 +37,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
     context "when channel is a category channel" do
       context "when current user can't write in channel" do
         fab!(:private_category_1) { Fabricate(:private_category, group: Fabricate(:group)) }
-        fab!(:readonly_group_1) { Fabricate(:group) }
+        fab!(:readonly_group_1, :group)
         fab!(:channel_2) { Fabricate(:category_channel, chatable: private_category_1) }
 
         before do
@@ -60,7 +60,7 @@ describe Chat::Api::ChannelsCurrentUserMembershipController do
 
       context "when current user can write in channel" do
         fab!(:private_category_1) { Fabricate(:private_category, group: Fabricate(:group)) }
-        fab!(:readonly_group_1) { Fabricate(:group) }
+        fab!(:readonly_group_1, :group)
         fab!(:channel_2) { Fabricate(:category_channel, chatable: private_category_1) }
 
         before do

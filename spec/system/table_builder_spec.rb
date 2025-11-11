@@ -36,8 +36,8 @@ describe "Table Builder", type: :system do
         it "should add table items created in spreadsheet to composer input" do
           visit("/latest")
           page.find("#create-topic").click
-          page.find(".toolbar-popup-menu-options").click
-          page.find(".select-kit-row[data-name='toggle-spreadsheet']").click
+          find(".toolbar-menu__options-trigger").click
+          page.find("button[data-name='toggle-spreadsheet']").click
           insert_table_modal.type_in_cell(0, 0, "Item 1")
           insert_table_modal.type_in_cell(0, 1, "Item 2")
           insert_table_modal.type_in_cell(0, 2, "Item 3")
@@ -64,8 +64,8 @@ describe "Table Builder", type: :system do
           it "should close the modal if there are no changes made" do
             visit("/latest")
             page.find("#create-topic").click
-            page.find(".toolbar-popup-menu-options").click
-            page.find(".select-kit-row[data-name='toggle-spreadsheet']").click
+            find(".toolbar-menu__options-trigger").click
+            page.find("button[data-name='toggle-spreadsheet']").click
             insert_table_modal.cancel
             expect(page).to have_no_css(".insert-table-modal")
           end
@@ -73,8 +73,8 @@ describe "Table Builder", type: :system do
           it "should show a warning popup if there are unsaved changes" do
             visit("/latest")
             page.find("#create-topic").click
-            page.find(".toolbar-popup-menu-options").click
-            page.find(".select-kit-row[data-name='toggle-spreadsheet']").click
+            find(".toolbar-menu__options-trigger").click
+            page.find("button[data-name='toggle-spreadsheet']").click
             insert_table_modal.type_in_cell(0, 0, "Item 1")
             insert_table_modal.cancel
             expect(page).to have_css(".dialog-container .dialog-content")
@@ -116,9 +116,7 @@ describe "Table Builder", type: :system do
             |Honda | S2000 | 2001|
           RAW
 
-          try_until_success do
-            expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
-          end
+          expect(normalize_value(post1.reload.raw)).to eq(normalize_value(updated_post))
         end
 
         it "should respect the original empty header" do
@@ -135,9 +133,7 @@ describe "Table Builder", type: :system do
             |1 | 2 | 3|
           RAW
 
-          try_until_success do
-            expect(normalize_value(post2.reload.raw)).to eq(normalize_value(updated_post))
-          end
+          expect(normalize_value(post2.reload.raw)).to eq(normalize_value(updated_post))
         end
 
         context "when adding an edit reason" do

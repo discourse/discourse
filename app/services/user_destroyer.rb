@@ -31,7 +31,7 @@ class UserDestroyer
       Draft.where(user_id: user.id).delete_all
       Reviewable.where(created_by_id: user.id).delete_all
 
-      category_topic_ids = Category.where("topic_id IS NOT NULL").pluck(:topic_id)
+      category_topic_ids = Category.where.not(topic_id: nil).pluck(:topic_id)
 
       if opts[:delete_posts]
         DiscoursePluginRegistry.user_destroyer_on_content_deletion_callbacks.each do |cb|
@@ -114,10 +114,10 @@ class UserDestroyer
       end
     end
 
-    # After the user is deleted, remove the reviewable
-    if reviewable = ReviewableUser.pending.find_by(target: user)
-      reviewable.perform(@actor, :delete_user)
-    end
+    # After the user is deleted, remove the reviewable unless request comes from reviewable
+    return result if opts[:from_reviewable]
+    reviewable = ReviewableUser.pending.find_by(target: user)
+    reviewable.perform(@actor, :delete_user) if reviewable
 
     result
   end

@@ -460,15 +460,10 @@ lv:
       title: "Iestatīt paroli"
   page_not_found:
     page_title: "Lapa nav atrasta"
-    popular_topics: "Populāri"
-    recent_topics: "Neseni"
     see_more: "Vairāk"
-    search_title: "Meklēt šajā vietnē"
     search_button: "Meklēt"
   upload:
     unauthorized: "Atvainojiet, fails, ko mēģināt augšuplādēt, nav atļauts (atļautie paplašinājumi: %{authorized_extensions})."
-  color_schemes:
-    default_theme_name: "Noklusējums"
   csv_export:
     boolean_yes: "Jā"
     boolean_no: "Nē"
@@ -539,7 +534,7 @@ lv:
     actions:
       agree:
         title: "Jā"
-      delete_single:
+      delete:
         title: "Dzēst"
         complete: "Ieraksts dzēsts."
       delete_and_ignore:
@@ -558,8 +553,10 @@ lv:
           complete: "Lietotājs dzēsts."
       reject:
         title: "Noraidīt"
+      delete_post:
+        complete: "Ieraksts dzēsts"
       delete_user:
-        complete: "Lietotājs dzēsts."
+        complete: "Lietotājs dzēsts"
   fallback_username: "lietotājs"
   activemodel:
     errors:

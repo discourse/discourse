@@ -1,0 +1,107 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pl_PL:
+  site_settings:
+    assign_enabled: "Włącz wtyczkę przypisywania"
+    assigns_public: "Zezwól wszystkim na widzenie, komu przypisano dany temat"
+    assigns_user_url_path: "Ścieżka do tematów przypisanych użytkownikom (użyj: {username} , aby zastąpić nazwę użytkownika)"
+    assigns_by_staff_mention: "Jeśli pracownik wspomina innego pracownika, temat jest automatycznie przypisywany"
+    unassign_creates_tracking_post: "Jeśli anulujesz przypisanie tematu, zostanie utworzony szept lub mała akcja w celu śledzenia zmian"
+    assign_self_regex: "Wyrażenie regularne, które musi przejść, by możliwe było przypisanie tematu samemu sobie. Przykład: ’moja lista’"
+    assign_other_regex: "Wyrażenie regularne, które musi przejść, by możliwe było przypisanie tematów innym użytkownikom dzięki wzmiankom. Przykład: ’twoja lista’"
+    unassign_on_group_archive: "Gdy wiadomość zostanie zarchiwizowana przez grupę, anuluj przypisanie wiadomości (przypisz ją ponownie, jeśli została przeniesiona z powrotem do skrzynki odbiorczej)"
+    unassign_on_close: "Gdy temat zostanie zamknięty, usuń przypisanie tematu"
+    reassign_on_open: "Po otwarciu tematu ponownie przypisz wcześniej przypisanych użytkowników/grupy"
+    invite_on_assign: "Gdy użytkownikowi lub grupie zostanie przypisana wiadomość osobista, zaproś ich do prywatnej wiadomości, jeśli jeszcze nie są uczestnikami."
+    assign_mailer: "Kiedy wysłać powiadomienie e-mailem o zadaniach"
+    remind_assigns: "Przypomnij użytkownikom o oczekujących zadaniach."
+    remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
+    pending_assign_reminder_threshold: "Liczba oczekujących zadań, które powodują wysłanie przypomnienia."
+    max_assigned_topics: "Maksymalna liczba tematów, jakie można przypisać użytkownikowi."
+    assign_allowed_on_groups: "Użytkownicy w tych grupach mogą przypisywać tematy i być przydzielani do tematów."
+    enable_assign_status: "Dodaj pole statusu, które można dostosować do każdego zadania."
+    assign_statuses: "Lista statusów dostępnych dla każdego zadania. Pierwszy status to domyślny status stosowany do każdego nowego zadania."
+    errors:
+      assign_statuses:
+        too_few: "Muszą być dostępne co najmniej dwa różne statusy."
+        duplicate: "Istnieją zduplikowane wartości statusu."
+        removed_in_use: "Nie można usunąć statusu z listy, jeśli istnieją już zadania używające tego statusu."
+  discourse_assign:
+    assigned_to: "Temat przypisany do @%{username}"
+    unassigned: "Cofnięto przypisanie tematu"
+    filter:
+      description:
+        assigned: "Filtruj tematy przypisane do określonego użytkownika lub grupy"
+        nobody: "Filtruj tematy, które nie są nikomu przypisane"
+        anyone: "Filtruj tematy przypisane do dowolnej osoby"
+    already_claimed: "Ten temat został już przejęty."
+    already_assigned: "Temat jest już przypisany do @%{username}"
+    too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
+    too_many_assigns_for_topic: "Osiągnięto limit %{limit} przypisań na temat."
+    forbidden_assign_to: "Nie można przypisać @%{username}, ponieważ nie należy do przypisanych dozwolonych grup."
+    forbidden_assignee_not_pm_participant: "@%{username} nie może być przypisany, ponieważ nie ma dostępu do tej prywatnej wiadomości. Możesz przyznać dostęp @%{username}, zapraszając go do tej prywatnej wiadomości."
+    forbidden_assignee_cant_see_topic: "Nie można przypisać @%{username}, ponieważ nie ma dostępu do tego tematu."
+    group_already_assigned: "Temat jest już przypisany do @%{group}"
+    forbidden_group_assign_to: "Nie można przypisać @%{group}, ponieważ nie należy do przypisanych dozwolonych grup."
+    forbidden_group_assignee_not_pm_participant: "Nie można przypisać @%{group}, ponieważ nie wszyscy członkowie mają dostęp do tej prywatnej wiadomości."
+    forbidden_group_assignee_cant_see_topic: "Nie można przypisać @%{group}, ponieważ nie wszyscy członkowie mają dostęp do tego tematu."
+    flag_assigned: "Przepraszamy, temat, w którym jest ta flaga, został przypisany do innego użytkownika."
+    flag_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na fladze."
+    topic_assigned_excerpt: "przypisano Ci temat '%{title}'"
+    topic_group_assigned_excerpt: "przypisano temat '%{title}' do @%{group}"
+    reminders_frequency:
+      never: "nigdy"
+      daily: "dziennie"
+      weekly: "tygodniowo"
+      monthly: "miesięcznie"
+      quarterly: "kwartalnie"
+  assign_mailer:
+    title: "Przypisz mailera"
+    subject_template: "[%{email_prefix}] %{assignee_name} przypisał Cię do '%{topic_title}'!"
+    text_body_template: |
+      Hej, %{assignee_name} **przypisał** Cię do dyskusji
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Jeśli jesteś zainteresowany, kliknij poniższy link:
+
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Masz %{pending_assignments} oczekujących zadań"
+    body: |
+      Masz [%{pending_assignments} oczekujących przypisań](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      To przypomnienie będzie wysyłane %{frequency}, jeśli masz więcej niż jeden przypisany temat.
+    newest: |
+      ### Najnowsze
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Najstarszy
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Przypisanie losowe
+        no_one: "Próbowano losowo przypisać członka `@%{group}`, ale nikt nie był dostępny."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} przypisał Ciebie"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Wybrany status jest nieprawidłowy (nie jest zawarty w ustawieniu witryny assigned_status)."

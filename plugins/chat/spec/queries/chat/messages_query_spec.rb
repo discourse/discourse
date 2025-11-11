@@ -5,8 +5,8 @@ RSpec.describe Chat::MessagesQuery do
     described_class.call(guardian: current_user.guardian, channel: channel, **options)
   end
 
-  fab!(:channel) { Fabricate(:category_channel) }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:channel, :category_channel)
+  fab!(:current_user, :user)
 
   let(:include_thread_messages) { false }
   let(:thread_id) { nil }

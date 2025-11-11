@@ -56,14 +56,24 @@ module Migrations::Database
       if (@statement_counter += 1) >= @transaction_batch_size
         commit_transaction
       end
+
+      nil
     end
 
     def query(sql, *parameters, &block)
       @db.query(sql, *parameters, &block)
     end
 
-    def count(sql, *parameters)
+    def query_array(sql, *parameters, &block)
+      @db.query_array(sql, *parameters, &block)
+    end
+
+    def query_value(sql, *parameters)
       @db.query_single_splat(sql, *parameters)
+    end
+
+    def count(sql, *parameters)
+      query_value(sql, *parameters)
     end
 
     def execute(sql, *parameters)

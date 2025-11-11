@@ -258,18 +258,22 @@ class BulkImport::Base
     @last_upload_id = last_id(Upload)
     @user_ids_by_username_lower = User.unscoped.pluck(:id, :username_lower).to_h
     @usernames_by_id = User.unscoped.pluck(:id, :username).to_h
-    @user_full_names_by_id = User.unscoped.where("name IS NOT NULL").pluck(:id, :name).to_h
+    @user_full_names_by_id = User.unscoped.where.not(name: nil).pluck(:id, :name).to_h
 
     puts "Loading categories indexes..."
     @last_category_id = last_id(Category)
     @last_category_group_id = last_id(CategoryGroup)
     @highest_category_position = Category.unscoped.maximum(:position) || 0
-    @category_names =
-      Category
-        .unscoped
-        .pluck(:parent_category_id, :name)
-        .map { |pci, name| "#{pci}-#{name.downcase}" }
-        .to_set
+
+    @category_names = Set.new
+    @category_slugs = Set.new
+    Category
+      .unscoped
+      .pluck(:parent_category_id, :name, :slug)
+      .each do |pci, name, slug|
+        @category_names << "#{pci}-#{name.downcase}"
+        @category_slugs << slug.downcase
+      end
 
     puts "Loading topics indexes..."
     @last_topic_id = last_id(Topic)
@@ -311,7 +315,7 @@ class BulkImport::Base
     @chat_message_mapping = load_index(MAPPING_TYPES[:chat_message])
     @last_chat_message_id = last_id(Chat::Message)
 
-    if defined?(::DiscourseReactions)
+    if defined?(DiscourseReactions)
       puts "Loading reaction indexes..."
       @discourse_reaction_mapping = load_index(MAPPING_TYPES[:discourse_reactions_reaction])
       @last_discourse_reaction_id = last_id(DiscourseReactions::Reaction)
@@ -499,6 +503,9 @@ class BulkImport::Base
     id
     name
     full_name
+    public_admission
+    public_exit
+    allow_membership_requests
     title
     bio_raw
     bio_cooked
@@ -509,12 +516,14 @@ class BulkImport::Base
     created_at
     updated_at
   ]
+  GROUP_COLUMNS << :assignable_level if defined?(DiscourseAssign)
 
   USER_COLUMNS = %i[
     id
     username
     username_lower
     name
+    title
     active
     trust_level
     admin
@@ -598,6 +607,7 @@ class BulkImport::Base
     automatically_unpin_topics
     enable_quoting
     enable_smart_lists
+    enable_markdown_monospace_font
     external_links_in_new_tab
     dynamic_favicon
     new_topic_duration_minutes
@@ -611,11 +621,12 @@ class BulkImport::Base
     sidebar_link_to_filtered_list
     sidebar_show_count_of_new_items
     timezone
+    composition_mode
   ]
 
   USER_FOLLOWER_COLUMNS = %i[user_id follower_id level created_at updated_at]
 
-  GROUP_USER_COLUMNS = %i[group_id user_id created_at updated_at]
+  GROUP_USER_COLUMNS = %i[group_id user_id owner created_at updated_at]
 
   USER_CUSTOM_FIELD_COLUMNS = %i[user_id name value created_at updated_at]
 
@@ -645,10 +656,14 @@ class BulkImport::Base
     description
     position
     parent_category_id
-    read_restricted
     uploaded_logo_id
     created_at
     updated_at
+    show_subcategory_list
+    subcategory_list_style
+    minimum_required_tags
+    color
+    text_color
   ]
 
   CATEGORY_CUSTOM_FIELD_COLUMNS = %i[category_id name value created_at updated_at]
@@ -658,6 +673,8 @@ class BulkImport::Base
   CATEGORY_TAG_GROUP_COLUMNS = %i[category_id tag_group_id created_at updated_at]
 
   CATEGORY_USER_COLUMNS = %i[category_id user_id notification_level last_seen_at]
+
+  CATEGORY_MODERATION_GROUP_COLUMNS = %i[category_id group_id created_at updated_at]
 
   TOPIC_COLUMNS = %i[
     id
@@ -797,6 +814,14 @@ class BulkImport::Base
     updated_at
     multiple_grant
     query
+    allow_title
+    icon
+    listable
+    target_posts
+    enabled
+    auto_revoke
+    trigger
+    show_posts
   ]
 
   USER_BADGE_COLUMNS = %i[badge_id user_id granted_at granted_by_id seq post_id created_at]
@@ -1041,6 +1066,10 @@ class BulkImport::Base
     create_records(rows, "category_user", CATEGORY_USER_COLUMNS, &block)
   end
 
+  def create_category_moderation_groups(rows, &block)
+    create_records(rows, "category_moderation_group", CATEGORY_MODERATION_GROUP_COLUMNS, &block)
+  end
+
   def create_topics(rows, &block)
     create_records(rows, "topic", TOPIC_COLUMNS, &block)
   end
@@ -1225,6 +1254,10 @@ class BulkImport::Base
 
     group[:created_at] ||= NOW
     group[:updated_at] ||= group[:created_at]
+    # Default assignable_level if not provided by the source data.
+    # The 'assignable_level' attribute itself is only included in the import
+    # if the DiscourseAssign plugin is active (see GROUP_COLUMNS).
+    group[:assignable_level] ||= Group::ALIAS_LEVELS[:nobody]
     group
   end
 
@@ -1362,6 +1395,7 @@ class BulkImport::Base
     automatically_unpin_topics: SiteSetting.default_topics_automatic_unpin,
     enable_quoting: SiteSetting.default_other_enable_quoting,
     enable_smart_lists: SiteSetting.default_other_enable_smart_lists,
+    enable_markdown_monospace_font: SiteSetting.default_other_enable_markdown_monospace_font,
     external_links_in_new_tab: SiteSetting.default_other_external_links_in_new_tab,
     dynamic_favicon: SiteSetting.default_other_dynamic_favicon,
     new_topic_duration_minutes: SiteSetting.default_other_new_topic_duration_minutes,
@@ -1369,13 +1403,20 @@ class BulkImport::Base
     notification_level_when_replying: SiteSetting.default_other_notification_level_when_replying,
     like_notification_frequency: SiteSetting.default_other_like_notification_frequency,
     skip_new_user_tips: SiteSetting.default_other_skip_new_user_tips,
+    hide_profile_and_presence: false,
     hide_profile: SiteSetting.default_hide_profile,
     hide_presence: SiteSetting.default_hide_presence,
     sidebar_link_to_filtered_list: SiteSetting.default_sidebar_link_to_filtered_list,
     sidebar_show_count_of_new_items: SiteSetting.default_sidebar_show_count_of_new_items,
+    composition_mode: SiteSetting.default_composition_mode,
   }
 
   def process_user_option(user_option)
+    if user_option.key?(:hide_profile_and_presence)
+      hide_profile_and_presence = user_option[:hide_profile_and_presence]
+      user_option[:hide_profile] = user_option[:hide_presence] = hide_profile_and_presence
+    end
+
     USER_OPTION_DEFAULTS.each { |key, value| user_option[key] = value if user_option[key].nil? }
     user_option
   end
@@ -1405,6 +1446,7 @@ class BulkImport::Base
   end
 
   def process_group_user(group_user)
+    group_user[:owner] ||= false
     group_user[:created_at] = NOW
     group_user[:updated_at] = NOW
     group_user
@@ -1424,23 +1466,29 @@ class BulkImport::Base
     category[:id] ||= @last_category_id += 1
     @categories[category[:imported_id].to_i] ||= category[:id]
 
-    next_number = 1
+    name_next_number = 1
     original_name = name = category[:name][0...50].scrub.strip
 
-    while @category_names.include?("#{category[:parent_category_id]}-#{name.downcase}")
-      name = "#{original_name[0...50 - next_number.to_s.length]}#{next_number}"
-      next_number += 1
+    while !@category_names.add?("#{category[:parent_category_id]}-#{name.downcase}")
+      name = "#{original_name[0...50 - name_next_number.to_s.length]}#{name_next_number}"
+      name_next_number += 1
     end
 
-    @category_names << "#{category[:parent_category_id]}-#{name.downcase}"
     name_lower = name.downcase
-
     category[:name] = name
     category[:name_lower] = name_lower
-    category[:slug] ||= Slug.for(name_lower, "") # TODO Ensure that slug doesn't exist yet
+
+    slug_next_number = 1
+    original_slug = slug = (category[:slug] || Slug.for(name_lower, ""))
+
+    while !@category_slugs.add?(slug.downcase)
+      slug = "#{original_slug}-#{slug_next_number}"
+      slug_next_number += 1
+    end
+
+    category[:slug] = slug
     category[:description] = (category[:description] || "").scrub.strip.presence
     category[:user_id] ||= Discourse::SYSTEM_USER_ID
-    category[:read_restricted] = false if category[:read_restricted].nil?
     category[:created_at] ||= NOW
     category[:updated_at] ||= category[:created_at]
 
@@ -1451,6 +1499,9 @@ class BulkImport::Base
       category[:position] = @highest_category_position += 1
     end
 
+    category[:minimum_required_tags] ||= 0
+    category[:color] ||= "0088CC"
+    category[:text_color] ||= "FFFFFF"
     category
   end
 
@@ -1465,6 +1516,12 @@ class BulkImport::Base
     category_group[:created_at] = NOW
     category_group[:updated_at] = NOW
     category_group
+  end
+
+  def process_category_moderation_group(category_moderation_group)
+    category_moderation_group[:created_at] ||= NOW
+    category_moderation_group[:updated_at] ||= NOW
+    category_moderation_group
   end
 
   def process_category_tag_group(category_tag_group)
@@ -2076,7 +2133,7 @@ class BulkImport::Base
       print "\r%7d - %6d/sec\n" % [rows_created, rows_created.to_f / (Time.now - start)]
     end
 
-    id_mapping_method_name = "#{name}_id_from_imported_id".freeze
+    id_mapping_method_name = "#{name}_id_from_imported_id"
     return true unless respond_to?(id_mapping_method_name)
     create_custom_fields(name, "id", imported_ids) do |imported_id|
       { record_id: send(id_mapping_method_name, imported_id), value: imported_id }

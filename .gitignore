@@ -30,8 +30,6 @@
 *.sql.gz
 !/spec/fixtures/**/*.sql
 /db/*.sqlite3
-/db/structure.sql
-/db/schema.rb
 /db/schema_cache.yml
 
 # Plugins except for the bundled ones
@@ -49,6 +47,36 @@
 !/plugins/spoiler-alert
 !/plugins/checklist
 !/plugins/footnote
+!/plugins/discourse-reactions
+!/plugins/discourse-apple-auth
+!/plugins/discourse-login-with-amazon
+!/plugins/discourse-lti
+!/plugins/discourse-microsoft-auth
+!/plugins/discourse-oauth2-basic
+!/plugins/discourse-openid-connect
+!/plugins/discourse-zendesk-plugin
+!/plugins/discourse-patreon
+!/plugins/discourse-graphviz
+!/plugins/discourse-rss-polling
+!/plugins/discourse-math
+!/plugins/discourse-chat-integration
+!/plugins/discourse-data-explorer
+!/plugins/discourse-post-voting
+!/plugins/discourse-user-notes
+!/plugins/discourse-assign
+!/plugins/discourse-subscriptions
+!/plugins/discourse-hcaptcha
+!/plugins/discourse-gamification
+!/plugins/discourse-calendar
+!/plugins/discourse-policy
+!/plugins/discourse-github
+!/plugins/discourse-adplugin
+!/plugins/discourse-affiliate
+!/plugins/discourse-solved
+!/plugins/discourse-topic-voting
+!/plugins/discourse-templates
+!/plugins/discourse-ai
+!/plugins/discourse-cakeday
 /plugins/*/auto_generated
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -92,3 +120,8 @@ openapi/*
 
 # direnv.net
 .direnv
+
+# discourse-ai evals
+/plugins/discourse-ai/evals/cases
+/plugins/discourse-ai/evals/log
+/plugins/discourse-ai/config/eval-llms.local.yml

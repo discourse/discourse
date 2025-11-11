@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  site_settings:
+    chat_integration_mattermost_webhook_url: 'URL για το webhook του Mattermost'
+    chat_integration_rocketchat_webhook_url: "Το URL για το webhook ενσωμάτωσης του Rocket Chat"
+  chat_integration:
+    all_categories: "(όλες οι κατηγορίες)"
+    topic_tag_changed:
+      added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
+      added: "Προστέθηκε %{added}"
+      removed: "Αφαιρέθηκε %{removed}"
+    provider:
+      slack:
+        messaging:
+          topic_tag_changed:
+            added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
+            added: "Προστέθηκε %{added}"
+            removed: "Αφαιρέθηκε %{removed}"

@@ -7,10 +7,12 @@ export default class ChatChannelNoticesManager extends Service {
   @tracked notices = new TrackedArray();
 
   handleNotice(data) {
-    this.notices.pushObject(ChatNotice.create(data));
+    this.notices.push(ChatNotice.create(data));
   }
 
   clearNotice(notice) {
-    this.notices.removeObject(notice);
+    this.notices = new TrackedArray(
+      this.notices.filter((n) => n.id !== notice.id)
+    );
   }
 }

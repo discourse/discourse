@@ -5,9 +5,14 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          spoiler_alert: "تنبيه حرق أحداث Discourse"
   js:
     spoiler:
-      title: تمويه حرق الأحداث
+      title: تمويه المحتوى المخفي
       label:
         show: "إظهار المحتوى المخفي"
     composer:

@@ -6,8 +6,6 @@
 
 lt:
   js:
-    details:
-      title: Paslėpti detales
     composer:
       details_title: Santrauka
       details_text: "Šis tekstas bus paslėptas"

@@ -1,0 +1,138 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Допис опитування
+  post_voting:
+    reviewables:
+      comment_already_handled: "Дякуємо, але ми вже переглянули цей коментар і вирішили, що його не потрібно позначати повторно."
+  js:
+    discourse_post_voting:
+      title: "Допис опитування"
+    notifications:
+      question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "новий коментар"
+      popup:
+        question_answer_user_commented: '%{username} прокоментував "%{topic}" - %{site_title}'
+    category:
+      post_voting_settings_heading: Допис опитування
+      create_as_post_voting_default: Нові теми за замовчуванням є темами для голосування за публікації в цій категорії.
+      only_post_voting_in_this_category: Нові теми в цій категорії можуть бути лише темами голосування.
+    composer:
+      create_post_voting:
+        label: "Створити тему голосування"
+      composer_actions:
+        create_as_post_voting:
+          label: "Переключити голосування за публікацію"
+          desc: "Тема буде створена з повідомленнями для голосування"
+        remove_as_post_voting:
+          label: "Видалити голосування за допис"
+          desc: "Тема буде створена в звичайному форматі"
+    vote:
+      already_voted: "Ви можете проголосувати лише один раз за кожне питання."
+      user_over_limit: "Ви не можете перевищити кількість голосів для вашого рівня довіри."
+      one_vote_per_post: "Ви можете проголосувати лише один раз за кожну публікацію."
+    last_answer_lowercase: остання відповідь
+    answer_lowercase:
+      one: відповідь
+      few: відповіді
+      many: відповіді
+      other: відповіді
+    post_voting:
+      post:
+        post_voting_comment:
+          composer:
+            too_short:
+              one: "Введіть хоча б %{count} символ"
+              few: "Введіть хоча б %{count} символи"
+              many: "Введіть хоча б %{count} символи"
+              other: "Введіть хоча б %{count} символи"
+            length_ok:
+              one: "%{count} символ залишився..."
+              few: "%{count} символи залишилося..."
+              many: "%{count} символів залишилося..."
+              other: "%{count} залишилося символів..."
+            too_long:
+              one: "Коментар не може бути довшим за %{count} символ"
+              few: "Коментар не може бути довшим за %{count} символи"
+              many: "Коментар не може бути довшим за %{count} символів"
+              other: "Коментар не може бути довшим за %{count} символів"
+          submit: "Додати коментар"
+          edit: "редагувати"
+          cancel: "скасувати"
+          add: "Додати коментар"
+          show:
+            one: Показати ще %{count} коментар
+            few: Показати ще %{count} коментарі
+            many: Показати ще %{count} коментарів
+            other: Показати ще %{count} коментарів
+          delete:
+            confirm: "Ви впевнені, що хочете видалити цей коментар?"
+          user:
+            deleted: "(користувача вилучено)"
+          reviewables:
+            comment_already_handled: "Дякуємо, але ми вже переглянули цей коментар і вирішили, що його не потрібно позначати повторно."
+            actions:
+              agree:
+                title: "Погоджуюся…"
+              agree_and_keep_comment:
+                title: "Залишити коментар"
+                description: "Погоджуюся з позначкою та залишаю коментар без змін."
+              agree_and_keep_deleted:
+                title: "Залишити коментар видаленим"
+                description: "Погоджуюся з позначкою та позначаю коментар видаленим."
+              agree_and_suspend:
+                title: "Призупинити користувача"
+                description: "Погодитися з прапором та призупинити користувача."
+              agree_and_silence:
+                title: "Заблокувати користувача"
+                description: "Погодитися з прапором та заблокувати користувача."
+              agree_and_restore:
+                title: "Відновити коментар"
+                description: "Відновіть коментар, щоб користувачі могли його бачити."
+              agree_and_delete:
+                title: "Видалити коментар"
+                description: "Видаліть коментар щоб користувачі не могли його бачити."
+              delete_and_agree:
+                title: "Ігнорувати позначку та видалити коментар"
+                description: "Ігноруйте позначку, видаливши її з черги, та видаліть коментар."
+              disagree_and_restore:
+                title: "Не погоджуюся та відновлюю коментар"
+                description: "Відновіть коментар, щоб його могли бачити всі користувачі."
+              disagree:
+                title: "Відмовити"
+              ignore:
+                title: "Нічого не робити"
+                description: "Ігнорувати прапорець, видаливши його з черги без жодних дій."
+            transcript:
+              view: "Переглянути стенограму попередніх коментарів"
+      topic:
+        answer:
+          label: "Відповідь"
+          help: "почати писати відповідь"
+        sort_by: "Сортувати за"
+        votes: "Голоси"
+        activity: "Активність"
+        answer_count:
+          one: "%{count} Відповідь."
+          few: "%{count} Відповіді"
+          many: "%{count} Відповідей."
+          other: "%{count} Відповідей."
+        voters_count_diff:
+          one: "і ще %{count} користувач..."
+          few: "і ще %{count} користувачі..."
+          many: "і ще %{count} користувачів..."
+          other: "та ще %{count} користувачів..."
+    review:
+      transcript:
+        view: "Показати попередні повідомлення"
+      types:
+        reviewable_post_voting_comment:
+          title: "Позначений коментар до голосування"

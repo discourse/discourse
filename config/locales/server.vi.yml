@@ -1006,7 +1006,6 @@ vi:
     educate_until_posts: "Khi người dùng bắt đầu đăng (n) bài viết đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
-    disabled_image_download_domains: "Tải ảnh từ xa sẽ không áp dụng với các tên miền sau. Phân cách bằng dấu |"
     editing_grace_period: "Trong khoảng (n) giây sau khi gửi bài, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử bài viết."
     edit_history_visible_to_public: "Cho phép mọi người nhìn thấy phiên bản trước khi chỉnh sửa bài viết. Khi không cho phép, chỉ nhân viên có thể xem."
     delete_removed_posts_after: "Bài viết đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
@@ -1018,7 +1017,6 @@ vi:
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
     facebook_app_access_token: "Mã thông báo được tạo từ bí mật và ID ứng dụng Facebook của bạn. Được sử dụng để tạo hộp thư Instagram."
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
-    email_custom_headers: "Danh sách xác định email header tùy chỉnh"
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
@@ -1098,7 +1096,6 @@ vi:
     enable_github_logins: "Bật xác thực GitHub, yêu cầu github_client_id và github_client_secret. Xem <a href='https://meta.discourse.org/t/13745' target='_blank'>Định cấu hình đăng nhập GitHub cho Discourse</a>."
     github_client_id: "Id ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Bí mật ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
-    automatic_backups_enabled: "Chạy sao lưu tự động như cấu hình trong tần số sao lưu"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
     backup_time_of_day: "Thời gian theo ngày UTC khi backup."
     backup_with_uploads: "Kèm theo cả thư mục uploads theo lịch trình backup. Tắt tính năng này sẽ chỉ backup csdl."
@@ -1173,7 +1170,6 @@ vi:
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
     personal_email_time_window_seconds: "Chờ (n) giây trước khi gửi bất kỳ email thông báo tin nhắn cá nhân nào để người dùng có cơ hội chỉnh sửa và hoàn thiện tin nhắn của họ."
     email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
-    flush_timings_secs: "Tần suất tuôn dữ liệu thời gian tới server, theo giây."
     title_max_word_length: "Chiều dài tối đa chữ cho phép, tính theo ký tự, trong một tiêu đề chủ đề."
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
@@ -1246,7 +1242,6 @@ vi:
     detect_custom_avatars: "Có kiểm tra hay không việc thành viên đã upload ảnh hồ sơ của họ."
     max_daily_gravatar_crawls: "Giới hạn số lần Discourse sẽ kiểm tra Gravatar mới trong một ngày"
     enable_user_directory: "Cung cấp một danh mục thành viên để duyệt xem"
-    anonymous_posting_min_trust_level: "Độ tin cậy tối thiểu bắt buộc để có thể gửi bài ở chế độ ẩn danh"
     anonymous_account_duration_minutes: "Để bảo vệ danh tính tạo ra một tài khoản ẩn danh mới mỗi N phút cho mỗi người dùng. Ví dụ: nếu đặt là 600, ngay sau khi 600 phút trôi qua kể từ bài viết cuối cùng VÀ lập tức tạo ra một tài khoản ẩn danh mới cho thành viên."
     hide_user_profiles_from_public: "Vô hiệu hóa thẻ thành viên, hồ sơ và thư mục người dùng với các thành viên ẩn danh."
     log_personal_messages_views: "Ghi nhật ký lượt xem tin nhắn cá nhân của Admin cho người dùng / nhóm khác."
@@ -1804,12 +1799,6 @@ vi:
     account_second_factor_disabled:
       title: "Xác thực hai yếu tố bị vô hiệu hóa"
       subject_template: "[%{email_prefix}] Đã tắt Xác thực hai yếu tố"
-      text_body_template: |
-        Xác thực hai yếu tố đã bị vô hiệu hóa trên tài khoản của bạn lúc %{site_name}. Bây giờ bạn có thể đăng nhập chỉ bằng mật khẩu của mình; một mã xác thực bổ sung không còn cần thiết.
-
-        Nếu bạn không chọn tắt xác thực hai yếu tố, ai đó có thể đã xâm phạm tài khoản của bạn.
-
-        Nếu bạn có bất kỳ câu hỏi nào, [liên hệ với nhân viên thân thiện của chúng tôi](%{base_url}/about).
     digest:
       since_last_visit: "Kể từ lần thăm cuối cùng của bạn"
       new_topics: "Chủ đề mới"
@@ -1856,10 +1845,7 @@ vi:
   page_not_found:
     page_title: "Không Tìm Thấy Trang"
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
-    popular_topics: "Phổ biến"
-    recent_topics: "Gân đây"
     see_more: "Thêm"
-    search_title: "Tìm trang này"
     search_button: "Tìm kiếm"
   upload:
     edit_reason: "tải về một bản sao của hình ảnh."
@@ -1897,7 +1883,6 @@ vi:
     group_smtp_topic_deleted: "chủ đề đã bị xóa"
   color_schemes:
     base_theme_name: "Cơ bản"
-    default_theme_name: "Mặc định"
   edit_this_page: "Sửa trang này"
   csv_export:
     boolean_yes: "Đồng ý"
@@ -2067,7 +2052,6 @@ vi:
         Huy hiệu này được cấp cho chuyến thăm 100 ngày liên tục. Đó là hơn ba tháng!
     badge_title_metadata: "%{display_name} huy hiệu trên %{site_title}"
   admin_login:
-    success: "Gửi mail lỗi"
     email_input: "Email quản trị"
     submit_button: "Gửi email"
   performance_report:
@@ -2146,7 +2130,7 @@ vi:
     actions:
       agree:
         title: "Đồng ý"
-      delete_single:
+      delete:
         title: "Xóa"
         complete: "Bài viết đã bị xóa."
       delete_and_ignore:
@@ -2167,6 +2151,8 @@ vi:
         title: "Duyệt"
       approve_post:
         title: "Phê duyệt bài đăng"
+      approve_post_closed:
+        title: "Phê duyệt bài đăng"
       reject_post:
         title: "Từ chối bài đăng"
       approve_user:
@@ -2186,8 +2172,14 @@ vi:
         title: "Giữ bài đăng bị xóa"
       approve_and_restore:
         title: "Phê duyệt và khôi phục bài đăng"
+      no_action_post:
+        title: "Không có hành động"
+      delete_post:
+        complete: "Bài viết đã bị xóa"
+      no_action_user:
+        title: "Không có hành động"
       delete_user:
-        complete: "Người dùng đã bị xóa."
+        complete: "Người dùng đã bị xóa"
   discord:
     not_in_allowed_guild: "Quá trình xác thực đã thất bại. Bạn không phải là thành viên của bang hội Discord được phép."
   old_keys_reminder:

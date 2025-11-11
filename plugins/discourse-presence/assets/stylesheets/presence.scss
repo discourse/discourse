@@ -1,13 +1,15 @@
 .topic-above-footer-buttons-outlet.presence {
-  min-height: 2.55em; // height of the avatars, prevents layout shift
+  // slightly larger than avatars to prevent layout shift
+  min-height: calc(var(--avatar-min-height) + 1px);
+  padding: var(--space-2) var(--space-2) var(--space-2) 0;
   margin: var(--below-topic-margin) 0;
 }
 
 .presence-users {
+  // ideally you don't want to add padding or margin here,
+  // because you may cause a layout shift on presence appearance
   color: var(--primary-medium);
   display: flex;
-  padding: 0.5em;
-  padding-left: 0;
   border-radius: var(--d-border-radius);
 
   span.presence-text {

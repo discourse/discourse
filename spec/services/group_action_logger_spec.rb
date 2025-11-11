@@ -3,7 +3,7 @@
 RSpec.describe GroupActionLogger do
   subject(:logger) { described_class.new(group_owner, group) }
 
-  fab!(:group_owner) { Fabricate(:user) }
+  fab!(:group_owner, :user)
   fab!(:group)
   fab!(:user)
 

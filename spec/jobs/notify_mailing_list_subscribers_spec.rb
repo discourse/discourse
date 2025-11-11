@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::NotifyMailingListSubscribers do
-  fab!(:mailing_list_user) { Fabricate(:user) }
+  fab!(:mailing_list_user, :user)
 
   before do
     mailing_list_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
@@ -107,7 +107,7 @@ RSpec.describe Jobs::NotifyMailingListSubscribers do
       end
 
       context "when to an anonymous user" do
-        fab!(:mailing_list_user) { Fabricate(:anonymous) }
+        fab!(:mailing_list_user, :anonymous)
         include_examples "no emails"
       end
 

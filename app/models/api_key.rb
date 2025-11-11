@@ -9,7 +9,7 @@ class ApiKey < ActiveRecord::Base
   belongs_to :created_by, class_name: "User"
 
   scope :active, -> { where("revoked_at IS NULL") }
-  scope :revoked, -> { where("revoked_at IS NOT NULL") }
+  scope :revoked, -> { where.not(revoked_at: nil) }
 
   scope :with_key,
         ->(key) do

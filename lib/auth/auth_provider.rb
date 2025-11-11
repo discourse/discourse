@@ -10,22 +10,19 @@ class Auth::AuthProvider
   def self.auth_attributes
     %i[
       authenticator
-      pretty_name
-      title
-      frame_width
-      frame_height
-      pretty_name_setting
-      title_setting
       custom_url
+      frame_height
+      frame_width
       icon
+      icon_setting
+      pretty_name
+      pretty_name_setting
+      title
+      title_setting
     ]
   end
 
   attr_accessor(*auth_attributes)
-
-  def name
-    authenticator.name
-  end
 
   def can_connect
     authenticator.can_connect_existing_user?
@@ -33,5 +30,13 @@ class Auth::AuthProvider
 
   def can_revoke
     authenticator.can_revoke?
+  end
+
+  def name
+    authenticator.name
+  end
+
+  def provider_url
+    authenticator.provider_url
   end
 end

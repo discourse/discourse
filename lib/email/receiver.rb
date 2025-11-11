@@ -208,8 +208,13 @@ module Email
 
       if user.present?
         log_and_validate_user(user)
-      else
-        raise UserNotFoundError unless SiteSetting.enable_staged_users
+      elsif !SiteSetting.enable_staged_users
+        category = Category.find_by_email(mail.to)
+        if category&.email_in_allow_strangers? && SiteSetting.email_in_allow_system_user_fallback
+          user = Discourse.system_user
+        else
+          raise UserNotFoundError
+        end
       end
 
       recipients = get_all_recipients(@mail)
@@ -870,7 +875,7 @@ module Email
         return group if group
 
         category = Category.find_by_email(address)
-        return category if category
+        return category if category && SiteSetting.reply_by_email_enabled?
       end
 
       # reply

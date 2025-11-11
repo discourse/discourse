@@ -396,19 +396,6 @@ hu:
           Új néz ki, hogy még mindig figyeli :eyes: ezt a témát! Ha nem találja, akkor az értesítési szint gombja a téma alján található.
         reply: "Nagyszerű munka! Remélem, hogy nem némította le ezt a témát, sajnos néha kicsit fecsegős vagyok :grin:. \n\nNe feledje, hogy amikor egy témára válaszol, vagy egy témát néhány percnél tovább olvas, akkor azt automatikusan elkezdi követni is. Ezt megváltoztathatja a [felhasználói beállításokban](%{base_uri}/my/preferences)."
       poll:
-        instructions: |-
-          Tudta hogy bármelyik bejegyzéshez adhat hozzá szavazást? Próbálja ki a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> fogaskereket a szerkesztőben, hogy **szavazást hozzon létre**.
-        not_found: |-
-          Hoppá! A válaszában nem volt szavazás.
-
-          Használja az <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> fogaskerék ikont a szerkesztőben, vagy másolja és illessze be ezt a szavazást a következő válaszába:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hé, szép kis szavazás! Hogy sikerült a tanításom?
 
@@ -417,20 +404,6 @@ hu:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Előfordulhat, hogy **el akarja rejteni a részleteket** a válaszaiban:
-
-          - Ha egy film vagy tévéműsor cselekményéről beszélünk, akkor spoiler lehet, amit írna.
-
-          - Ha a bejegyzés megválaszolásához rengeteg apró részletre van szükség, melyek nehezen befogadhatóak, ha egyszerre kell valakinek elolvasniuk.
-
-          [details=Válassza ki ezt, hogy lássa, hogyan működik!]
-          1. Válassza ki a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gombot a szerkesztőben.
-          2. Válassza a „Részletek elrejtése” lehetőséget.
-          3. Szerkessze a részletek összefoglalóját, és adjon hozzá tartalmat.
-          [/details]
-
-          Megtenné, hogy kipróbálja a szerkesztőben található <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gombot, hogy egy ilyen részletező szakaszt adjon a következő válaszához?
         not_found: |-
           Gondjai vannak a részletező elem létrehozásával? Próbálja beilleszteni az alábbiakat a következő válaszába:
 

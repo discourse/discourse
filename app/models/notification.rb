@@ -1,10 +1,6 @@
 # frozen_string_literal: true
 
 class Notification < ActiveRecord::Base
-  self.ignored_columns = [
-    :old_id, # TODO: Remove once 20240829140226_drop_old_notification_id_columns has been promoted to pre-deploy
-  ]
-
   attr_accessor :acting_user
   attr_accessor :acting_username
 
@@ -15,8 +11,8 @@ class Notification < ActiveRecord::Base
 
   MEMBERSHIP_REQUEST_CONSOLIDATION_WINDOW_HOURS = 24
 
-  validates_presence_of :data
-  validates_presence_of :notification_type
+  validates :data, presence: true
+  validates :notification_type, presence: true
 
   scope :unread, lambda { where(read: false) }
   scope :recent,
@@ -294,7 +290,7 @@ class Notification < ActiveRecord::Base
     elsif user.user_option.like_notification_frequency ==
           UserOption.like_notification_frequency_type[:never]
       like_types.each do |notification_type|
-        notifications = notifications.where("notification_type <> ?", notification_type)
+        notifications = notifications.where.not(notification_type:)
       end
     end
     notifications.to_a
@@ -312,9 +308,7 @@ class Notification < ActiveRecord::Base
       [
         Notification.types[:liked],
         Notification.types[:liked_consolidated],
-      ].each do |notification_type|
-        notifications = notifications.where("notification_type <> ?", notification_type)
-      end
+      ].each { |notification_type| notifications = notifications.where.not(notification_type:) }
     end
 
     notifications = notifications.to_a
@@ -434,6 +428,10 @@ end
 # Indexes
 #
 #  idx_notifications_speedup_unread_count                       (user_id,notification_type) WHERE (NOT read)
+#  index_notifications_on_data_display_username                 ((((data)::jsonb ->> 'display_username'::text))) WHERE (((data)::jsonb ->> 'display_username'::text) IS NOT NULL)
+#  index_notifications_on_data_original_username                ((((data)::jsonb ->> 'original_username'::text))) WHERE (((data)::jsonb ->> 'original_username'::text) IS NOT NULL)
+#  index_notifications_on_data_username                         ((((data)::jsonb ->> 'username'::text))) WHERE (((data)::jsonb ->> 'username'::text) IS NOT NULL)
+#  index_notifications_on_data_username2                        ((((data)::jsonb ->> 'username2'::text))) WHERE (((data)::jsonb ->> 'username2'::text) IS NOT NULL)
 #  index_notifications_on_post_action_id                        (post_action_id)
 #  index_notifications_on_topic_id_and_post_number              (topic_id,post_number)
 #  index_notifications_on_user_id_and_created_at                (user_id,created_at)

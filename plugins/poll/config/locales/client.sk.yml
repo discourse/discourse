@@ -131,7 +131,6 @@ sk:
       error_while_fetching_voters: "Ľutujeme, nastala chyba pri zobrazení účastníkov."
       error_while_exporting_results: "Ospravedlňujeme sa, došlo k chybe pri exporte výsledkov ankety."
       ui_builder:
-        title: Vytvoriť hlasovanie
         insert: Vložiť hlasovanie
         help:
           options_min_count: Zadajte aspoň 1 možnosť.

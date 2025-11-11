@@ -119,7 +119,7 @@ module PageObjects
 
       def has_open_channel?(channel)
         has_css?("html.has-drawer-chat")
-        has_css?("#{VISIBLE_DRAWER} .chat-channel[data-id='#{channel.id}']")
+        has_css?("#{VISIBLE_DRAWER} .chat-channel.--loaded[data-id='#{channel.id}']")
       end
 
       def has_channel_settings?

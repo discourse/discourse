@@ -22,8 +22,8 @@ RSpec.describe "category tag restrictions" do
   end
 
   context "with tags restricted to one category" do
-    fab!(:category_with_tags) { Fabricate(:category) }
-    fab!(:other_category) { Fabricate(:category) }
+    fab!(:category_with_tags, :category)
+    fab!(:other_category, :category)
 
     before { category_with_tags.tags = [tag1, tag2] }
 
@@ -274,9 +274,9 @@ RSpec.describe "category tag restrictions" do
   end
 
   context "with tag groups restricted to a category" do
-    fab!(:tag_group1) { Fabricate(:tag_group) }
+    fab!(:tag_group1, :tag_group)
     fab!(:category)
-    fab!(:other_category) { Fabricate(:category) }
+    fab!(:other_category, :category)
 
     before do
       tag_group1.tags = [tag1, tag2]
@@ -417,8 +417,8 @@ RSpec.describe "category tag restrictions" do
       end
 
       context "when another category has restricted tags using groups" do
-        fab!(:category2) { Fabricate(:category) }
-        fab!(:tag_group2) { Fabricate(:tag_group) }
+        fab!(:category2, :category)
+        fab!(:tag_group2, :tag_group)
 
         before do
           tag_group2.tags = [tag2, tag3]
@@ -462,7 +462,7 @@ RSpec.describe "category tag restrictions" do
       end
 
       context "when another category has restricted tags" do
-        fab!(:category2) { Fabricate(:category) }
+        fab!(:category2, :category)
 
         it "doesn't filter tags that are also restricted in another category" do
           category2.tags = [tag2, tag3]
@@ -601,8 +601,8 @@ RSpec.describe "category tag restrictions" do
     end
 
     context "with category restrictions" do
-      fab!(:car_category) { Fabricate(:category) }
-      fab!(:other_category) { Fabricate(:category) }
+      fab!(:car_category, :category)
+      fab!(:other_category, :category)
       fab!(:makes) { Fabricate(:tag_group, name: "Makes") }
       fab!(:honda_group) { Fabricate(:tag_group, name: "Honda Models") }
       fab!(:ford_group) { Fabricate(:tag_group, name: "Ford Models") }
@@ -762,10 +762,10 @@ end
 RSpec.describe "tag topic counts per category" do
   fab!(:admin)
   fab!(:category)
-  fab!(:category2) { Fabricate(:category) }
-  fab!(:tag1) { Fabricate(:tag) }
-  fab!(:tag2) { Fabricate(:tag) }
-  fab!(:tag3) { Fabricate(:tag) }
+  fab!(:category2, :category)
+  fab!(:tag1, :tag)
+  fab!(:tag2, :tag)
+  fab!(:tag3, :tag)
 
   before do
     SiteSetting.tagging_enabled = true

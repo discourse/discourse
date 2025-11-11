@@ -17,7 +17,7 @@
     grid-row-end: 2;
 
     .horizontal-overflow-nav {
-      border-block: 1px solid var(--primary-low);
+      border-block: 1px solid var(--content-border-color);
     }
 
     .group-dropdown {
@@ -36,7 +36,6 @@
     grid-column-end: 3;
     grid-row-start: 2;
     grid-row-end: 3;
-    border-bottom: 1px solid var(--primary-low);
     font-size: var(--font-down-1);
   }
 
@@ -49,6 +48,7 @@
       flex: 1 0 auto;
 
       a {
+        box-sizing: border-box;
         width: 100%;
         justify-content: center;
       }
@@ -83,6 +83,10 @@
 }
 
 .user-content {
+  box-sizing: border-box;
+  margin-top: 2em;
+  background: var(--d-content-background, var(--secondary));
+
   .list-actions {
     display: flex;
     margin-bottom: 12px;
@@ -120,12 +124,13 @@
   .user-notifications-filter {
     display: block;
     width: 100%;
-    border-bottom: 0.5px solid var(--primary-low);
+    border-bottom: 0.5px solid var(--content-border-color);
   }
 }
 
 .user-main {
   background: var(--d-content-background);
+  padding-bottom: 60px;
 
   .about {
     width: 100%;
@@ -136,17 +141,37 @@
         background-size: cover;
         background-position: center center;
         background-repeat: no-repeat;
+        height: 200px;
+
+        @include viewport.from(md) {
+          height: 300px;
+        }
       }
 
       .staff-counters {
         margin-bottom: 0;
+      }
+
+      @include viewport.until(md) {
+        &:not(.collapsed-info) .details .user-profile-avatar {
+          margin-top: -60px;
+        }
+      }
+
+      @include viewport.from(md) {
+        .details {
+          box-sizing: border-box;
+          width: 100%;
+          padding: 15px 0 0 0;
+          bottom: 0;
+        }
       }
     }
 
     .secondary {
       display: inline-block;
       width: 100%;
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
 
       .btn {
         padding: 4px 12px;
@@ -154,7 +179,7 @@
 
       dl {
         margin: 0;
-        padding: 0.25em 0;
+        padding: 0.5em 0;
 
         div {
           display: inline-flex;
@@ -198,17 +223,19 @@
 
     .details {
       background: rgb(var(--secondary-rgb), 0.8);
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
 
-      .groups {
-        display: inline;
-      }
-
-      img.avatar {
-        float: left;
+      @include viewport.from(md) {
+        img.avatar {
+          margin: 0 20px 10px 0;
+        }
       }
 
       .suspended {
+        color: var(--danger);
+      }
+
+      .silenced {
         color: var(--danger);
       }
 
@@ -217,9 +244,24 @@
         position: relative;
         display: flex;
 
+        @include viewport.until(md) {
+          flex-wrap: wrap;
+        }
+
         .bio {
           max-height: 300px;
           overflow: auto;
+
+          @include viewport.until(md) {
+            text-align: center;
+
+            ul,
+            ol {
+              display: inline-block;
+              padding-left: 0;
+              text-align: left;
+            }
+          }
 
           img {
             max-width: 100%;
@@ -231,27 +273,103 @@
         position: relative;
         align-self: flex-start;
 
+        @include viewport.until(md) {
+          margin: 8px auto;
+        }
+
         .avatar-flair {
-          bottom: 8px;
-          right: 16px;
+          right: 2px;
+
+          @include viewport.from(md) {
+            right: 16px;
+            bottom: 8px;
+          }
         }
       }
     }
 
     .controls {
+      @include viewport.until(md) {
+        flex: 1 1 25%;
+      }
+
+      @include viewport.from(md) {
+        align-self: center;
+        max-width: 13.5em;
+        margin-left: 0.5em;
+
+        .btn {
+          min-width: 9em;
+          width: 100%;
+        }
+      }
+
       ul {
         display: flex;
         flex-wrap: wrap;
         gap: 0.5em;
         list-style-type: none;
         margin: 0 0 0.5em 0;
+
+        @include viewport.until(md) {
+          li,
+          > span {
+            display: flex;
+            flex: 1 1 45%;
+
+            button,
+            a {
+              width: 100%;
+            }
+
+            .select-kit.dropdown-select-box.user-notifications-dropdown {
+              width: 100%;
+            }
+          }
+        }
       }
     }
 
     &.collapsed-info {
+      @include viewport.from(md) {
+        .user-profile-image {
+          display: none;
+        }
+      }
+
       .details {
         margin-top: 0;
         background: rgb(var(--secondary-rgb), 0.8);
+
+        @include viewport.until(md) {
+          display: flex;
+          margin-bottom: 0;
+        }
+
+        @include viewport.from(md) {
+          position: relative;
+          padding: 0;
+          margin-top: 0;
+          border-bottom: 1px solid var(--content-border-color);
+
+          .controls {
+            display: flex;
+            max-width: unset;
+            flex: 1 2 min-content;
+
+            > ul {
+              flex-wrap: wrap;
+              margin-left: auto;
+              justify-content: end;
+            }
+          }
+        }
+
+        @include viewport.until(md) {
+          .user-profile-names {
+            text-align: left;
+          }
+        }
 
         .bio {
           display: none;
@@ -279,10 +397,23 @@
           .user-profile__featured-topic {
             display: none;
           }
+
+          @include viewport.until(md) {
+            .primary-textual {
+              flex: 1 0 80%;
+              margin: 0;
+            }
+          }
         }
       }
 
       .user-profile-avatar {
+        @include viewport.until(md) {
+          margin: 0;
+          flex: 0 0 auto;
+          align-self: flex-start;
+        }
+
         .avatar-flair {
           bottom: 8px;
           right: 2px;
@@ -299,15 +430,17 @@
     background: var(--primary);
     color: var(--secondary);
     display: flex;
+    flex-wrap: wrap;
     padding: 10px;
     margin-bottom: 16px;
+    gap: var(--space-2);
 
     > div,
     > div a {
       display: flex;
       align-items: baseline;
       flex: 0 1 auto;
-      margin: 0 10px 0 0;
+      margin: 0;
       color: var(--secondary);
 
       span {
@@ -338,6 +471,10 @@
     background-color: var(--danger-medium);
   }
 
+  .silencings {
+    background-color: var(--danger-medium);
+  }
+
   .suspensions {
     background-color: var(--danger);
   }
@@ -357,6 +494,12 @@
         margin-top: 5px;
         margin-bottom: 10px;
         font-size: var(--font-down-1);
+      }
+    }
+
+    @include viewport.from(md) {
+      input[type="text"] {
+        width: 530px;
       }
     }
   }
@@ -386,6 +529,11 @@
 .public-user-fields {
   margin-top: 8px;
   margin-bottom: 8px;
+  overflow: hidden;
+
+  @include viewport.until(md) {
+    text-align: center;
+  }
 
   .user-field-name {
     font-weight: bold;
@@ -491,15 +639,22 @@
 
   li {
     display: inline-block;
-    padding: 10px 14px 10px 0;
-    margin: 0 10px 10px 0;
+    margin: 0 15px 10px 0;
+    padding: 0;
+
+    @include viewport.from(md) {
+      padding: 10px 14px 10px 0;
+      margin: 0 10px 10px 0;
+    }
 
     &.linked-stat {
       // This makes the entire "box" (the li) clickable instead of a narrow area.
       padding: 0;
 
       a {
-        padding: 10px 14px 10px 0;
+        @include viewport.from(md) {
+          padding: 10px 14px 10px 0;
+        }
         width: 100%;
         height: 100%;
         display: block;
@@ -743,7 +898,8 @@
     }
   }
 
-  .light-color-scheme {
+  .light-color-scheme,
+  .dark-color-scheme {
     margin-right: 1em;
   }
 
@@ -761,18 +917,6 @@
 
     .select-kit.combo-box .select-kit-header {
       border-color: var(--primary-medium);
-    }
-  }
-
-  @media (prefers-color-scheme: dark) {
-    .light-color-scheme {
-      @include inactiveMode;
-    }
-  }
-
-  @media (prefers-color-scheme: light) {
-    .dark-color-scheme {
-      @include inactiveMode;
     }
   }
 
@@ -828,12 +972,12 @@
   .pref-passkeys,
   .pref-auth-tokens {
     .row {
-      border-top: 1px solid var(--primary-low);
+      border-top: 1px solid var(--content-border-color);
       padding: 0.5em 0;
       margin: 0.5em 0;
 
       &:last-child {
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
       }
     }
   }
@@ -884,10 +1028,11 @@
 
 .second-factor {
   .second-factor-item {
-    width: 100%;
+    width: auto;
     display: flex;
+    gap: 1em;
     justify-content: space-between;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     margin: 0.25em 0;
     padding: 0.25em 0;
     align-items: center;
@@ -920,7 +1065,7 @@
 
   .wrapper {
     display: flex;
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     width: 100%;
   }
 
@@ -956,7 +1101,18 @@
 .primary-textual {
   flex: 1 1 auto;
   min-width: 0;
-  margin-right: auto;
+  word-break: break-word;
+  max-width: 100%;
+
+  @include viewport.until(md) {
+    width: 100%;
+  }
+
+  @include viewport.from(md) {
+    margin-right: auto;
+    flex: 0 1 auto;
+    padding: 0 0 0.5em;
+  }
 }
 
 .primary-textual .staged,
@@ -1013,6 +1169,10 @@
   .user-profile-location {
     margin-right: 1em;
   }
+
+  @include viewport.until(md) {
+    justify-content: center;
+  }
 }
 
 .selectable-avatars {
@@ -1060,19 +1220,77 @@
     grid-column: 1 / span 2;
   }
 
-  table.user-invite-list {
-    .invite-type {
-      .d-icon {
-        color: var(--primary-medium);
+  .d-table.user-invite-list {
+    margin-top: var(--space-4);
+
+    .d-table__cell {
+      &.--overview {
+        .d-icon {
+          color: var(--primary-medium);
+          font-size: var(--font-down-1);
+          margin-right: var(--space-1);
+        }
       }
-    }
 
-    .invite-extra {
-      font-size: var(--font-down-1);
-      margin: 0.25em 0;
+      &.--controls {
+        width: 10%;
+      }
 
-      a {
-        color: var(--primary-medium);
+      &.invite-updated-at {
+        width: 18%;
+
+        @include viewport.until(md) {
+          width: auto;
+        }
+      }
+
+      &.invite-expires-at {
+        width: 20%;
+
+        @include viewport.until(md) {
+          width: auto;
+        }
+      }
+
+      .invite-shortkey {
+        @include viewport.until(md) {
+          max-width: 70%;
+        }
+      }
+
+      .invite-description {
+        color: var(--primary-high);
+        margin-top: var(--space-1);
+      }
+
+      .invite-details {
+        margin-left: var(--space-5);
+      }
+
+      .invite-groups {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        row-gap: 0;
+        margin-top: var(--space-2);
+      }
+
+      .invite-topic {
+        margin-top: var(--space-2);
+      }
+
+      .invite-extra {
+        font-size: var(--font-down-1);
+
+        a {
+          color: var(--primary-very-high);
+        }
+      }
+
+      .invite-extra-item-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--primary-high);
       }
     }
   }
@@ -1115,25 +1333,77 @@
 }
 
 // Due to special login animations, the order here needs to be changed
-.control-group[data-setting-name="user-user-fields"]
-  .user-field.text
-  .controls {
-  display: flex;
-  flex-direction: column;
+.control-group[data-setting-name="user-user-fields"] {
+  .user-field.text,
+  .user-field.textarea {
+    .controls {
+      display: flex;
+      flex-direction: column;
 
-  .control-label.alt-placeholder {
-    order: 1;
+      .control-label.alt-placeholder {
+        order: 1;
+      }
+
+      .ember-text-field,
+      .ember-text-area {
+        order: 2;
+      }
+
+      .tip {
+        order: 3;
+      }
+
+      .instructions {
+        order: 4;
+      }
+    }
+  }
+}
+
+.user-profile-hidden {
+  font-size: var(--font-up-2);
+  text-align: center;
+}
+
+.pref-avatar {
+  .avatar {
+    max-width: 90px;
+    max-height: 90px;
+  }
+}
+
+.user-invite-search {
+  input {
+    margin: 0;
+  }
+}
+
+.user-messages-page {
+  .paginated-topics-list {
+    margin-top: 0;
   }
 
-  .ember-text-field {
-    order: 2;
+  .show-mores {
+    // See N new topics message
+    margin-top: 0.5em;
+
+    @include viewport.from(md) {
+      position: absolute;
+    }
+  }
+}
+
+@include viewport.until(md) {
+  .featured-topic {
+    text-align: center;
+    font-size: var(--font-0);
   }
 
-  .tip {
-    order: 3;
+  .user-profile-names {
+    text-align: center;
   }
 
-  .instructions {
-    order: 4;
+  #change-email {
+    width: 100%;
   }
 }

@@ -28,9 +28,9 @@
     .admin-badge-list {
       height: 70vh;
       overflow-y: scroll;
-      border-right: 1px solid var(--primary-low);
-      border-left: 1px solid var(--primary-low);
-      border-bottom: 1px solid var(--primary-low);
+      border-right: 1px solid var(--content-border-color);
+      border-left: 1px solid var(--content-border-color);
+      border-bottom: 1px solid var(--content-border-color);
 
       .admin-badge-list-item {
         &:first-child {
@@ -100,7 +100,7 @@
       display: flex;
       align-items: center;
       background-color: var(--primary-very-low);
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       padding: 0 10px 0 10px;
 
       img,
@@ -122,7 +122,7 @@
   .current-badge-actions {
     margin: 10px;
     padding: 10px;
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 }
 
@@ -162,7 +162,7 @@
     margin: 0;
 
     .badge-grouping-item {
-      border-bottom: 1px solid var(--primary-low);
+      border-bottom: 1px solid var(--content-border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;

@@ -20,7 +20,7 @@ RSpec.describe PostMover do
     context "with topics" do
       before { freeze_time }
 
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
       fab!(:another_user) { evil_trout }
       fab!(:category) { Fabricate(:category, user: user) }
       fab!(:topic) { Fabricate(:topic, user: user, created_at: 4.hours.ago) }
@@ -160,15 +160,6 @@ RSpec.describe PostMover do
         before do
           TopicUser.update_last_read(user, topic.id, p4.post_number, p4.post_number, 0)
           TopicLink.extract_from(p2)
-        end
-
-        def create_post_timing(post, user, msecs)
-          PostTiming.create!(
-            topic_id: post.topic_id,
-            user_id: user.id,
-            post_number: post.post_number,
-            msecs: msecs,
-          )
         end
 
         context "with post replies" do
@@ -591,11 +582,11 @@ RSpec.describe PostMover do
               )
             end
 
-            fab!(:user1) { Fabricate(:user) }
+            fab!(:user1, :user)
             fab!(:user2) { Fabricate(:user, refresh_auto_groups: true) }
             fab!(:user3) { Fabricate(:user, refresh_auto_groups: true) }
-            fab!(:admin1) { Fabricate(:admin) }
-            fab!(:admin2) { Fabricate(:admin) }
+            fab!(:admin1, :admin)
+            fab!(:admin2, :admin)
 
             it "correctly moves topic_user records" do
               create_topic_user(
@@ -925,7 +916,7 @@ RSpec.describe PostMover do
           end
 
           context "with post timings" do
-            fab!(:some_user) { Fabricate(:user) }
+            fab!(:some_user, :user)
 
             it "successfully moves timings" do
               create_post_timing(p1, some_user, 500)
@@ -1037,11 +1028,11 @@ RSpec.describe PostMover do
               )
             end
 
-            fab!(:user1) { Fabricate(:user) }
-            fab!(:user2) { Fabricate(:user) }
-            fab!(:user3) { Fabricate(:user) }
-            fab!(:admin1) { Fabricate(:admin) }
-            fab!(:admin2) { Fabricate(:admin) }
+            fab!(:user1, :user)
+            fab!(:user2, :user)
+            fab!(:user3, :user)
+            fab!(:admin1, :admin)
+            fab!(:admin2, :admin)
 
             it "leaves post numbers unchanged when they were lower then the topic's highest post number" do
               Fabricate(:post, topic: destination_topic)
@@ -1180,6 +1171,135 @@ RSpec.describe PostMover do
                 posted: false,
               )
             end
+          end
+        end
+
+        context "when moving old posts to an existing topic" do
+          fab!(:from_topic) do
+            Fabricate(
+              :topic,
+              user: user,
+              created_at: 21.days.ago,
+              bumped_at: 21.days.ago,
+              updated_at: 21.days.ago,
+            )
+          end
+
+          fab!(:from_topic_with_newer_op) do
+            Fabricate(
+              :topic,
+              user: user,
+              created_at: 1.day.ago,
+              bumped_at: 1.day.ago,
+              updated_at: 1.day.ago,
+            )
+          end
+
+          fab!(:to_topic) do
+            Fabricate(
+              :topic,
+              user: user,
+              created_at: 22.days.ago,
+              bumped_at: 22.days.ago,
+              updated_at: 22.days.ago,
+            )
+          end
+
+          fab!(:to_p1) do
+            Fabricate(
+              :post,
+              topic: to_topic,
+              user: user,
+              created_at: 9.days.ago,
+              updated_at: 9.days.ago,
+            )
+          end
+
+          fab!(:to_p2) do
+            Fabricate(
+              :post,
+              topic: to_topic,
+              user: user,
+              created_at: 7.days.ago,
+              updated_at: 7.days.ago,
+            )
+          end
+
+          fab!(:from_p1) do
+            Fabricate(
+              :post,
+              topic: from_topic,
+              user: user,
+              created_at: 8.days.ago,
+              updated_at: 8.days.ago,
+            )
+          end
+
+          fab!(:from_p2) do
+            Fabricate(
+              :post,
+              topic: from_topic,
+              user: user,
+              created_at: 6.days.ago,
+              updated_at: 6.days.ago,
+            )
+          end
+
+          fab!(:from_topic_with_newer_op_p1) do
+            Fabricate(
+              :post,
+              topic: from_topic_with_newer_op,
+              user: user,
+              created_at: 1.day.ago,
+              updated_at: 1.day.ago,
+            )
+          end
+
+          it "does not change bumped_at when first post gets moved and is older" do
+            # from_p1 was the first post in from_topic
+            to_topic_bumped_at = to_topic.bumped_at
+            moved_to =
+              from_topic.move_posts(
+                user,
+                [from_p1.id],
+                destination_topic_id: to_topic.id,
+                chronological_order: true,
+              )
+            expect(moved_to.bumped_at).to eq_time(to_topic_bumped_at)
+          end
+
+          it "sets bumped_at to now when moved post becomes latest post" do
+            # from_p2 will be the latest post once moved
+            moved_to =
+              from_topic.move_posts(
+                user,
+                [from_p2.id],
+                destination_topic_id: to_topic.id,
+                chronological_order: true,
+              )
+            expect(moved_to.bumped_at).to eq_time(Time.zone.now)
+          end
+
+          it "sets bumped_at to now if first post gets moved and is newer (chronological)" do
+            moved_to =
+              from_topic_with_newer_op.move_posts(
+                user,
+                [from_topic_with_newer_op_p1.id],
+                destination_topic_id: to_topic.id,
+                chronological_order: true,
+              )
+            expect(moved_to.bumped_at).to eq_time(Time.zone.now)
+          end
+
+          it "sets bumped_at to now if first post gets moved and is newer (sequential)" do
+            moved_to =
+              from_topic_with_newer_op.move_posts(
+                user,
+                [from_topic_with_newer_op_p1.id],
+                destination_topic_id: to_topic.id,
+                chronological_order: false,
+              )
+            expect(moved_to.bumped_at).to eq_time(Time.zone.now)
           end
         end
 
@@ -1937,7 +2057,7 @@ RSpec.describe PostMover do
           end
 
           context "with post timings" do
-            fab!(:some_user) { Fabricate(:user) }
+            fab!(:some_user, :user)
 
             it "successfully moves timings" do
               create_post_timing(p1, some_user, 500)
@@ -2055,7 +2175,7 @@ RSpec.describe PostMover do
             Fabricate(:post, topic: source_2_topic, user: user, created_at: 2.hours.ago)
             create_post_timing(source_2_topic.first_post, user, 400)
             source_2_post =
-              Fabricate(:post, topic: source_2_topic, user: user, created_at: 1.hours.ago)
+              Fabricate(:post, topic: source_2_topic, user: user, created_at: 1.hour.ago)
             create_post_timing(source_2_topic.posts.second, user, 500)
 
             moved_to =
@@ -2166,11 +2286,11 @@ RSpec.describe PostMover do
               )
             end
 
-            fab!(:user1) { Fabricate(:user) }
-            fab!(:user2) { Fabricate(:user) }
-            fab!(:user3) { Fabricate(:user) }
-            fab!(:admin1) { Fabricate(:admin) }
-            fab!(:admin2) { Fabricate(:admin) }
+            fab!(:user1, :user)
+            fab!(:user2, :user)
+            fab!(:user3, :user)
+            fab!(:admin1, :admin)
+            fab!(:admin2, :admin)
 
             it "leaves post numbers unchanged when they were lower then the topic's highest post number" do
               Fabricate(:post, topic: destination_topic)
@@ -2351,8 +2471,8 @@ RSpec.describe PostMover do
 
     context "with messages" do
       fab!(:user)
-      fab!(:another_user) { Fabricate(:user) }
-      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:another_user, :user)
+      fab!(:regular_user, :trust_level_4)
       fab!(:personal_message) { Fabricate(:private_message_topic, user: evil_trout) }
       fab!(:p1) { Fabricate(:post, topic: personal_message, user: user, created_at: 4.hours.ago) }
       fab!(:p2) do
@@ -2686,7 +2806,7 @@ RSpec.describe PostMover do
     end
 
     context "with banner topic" do
-      fab!(:regular_user) { Fabricate(:trust_level_4) }
+      fab!(:regular_user, :trust_level_4)
       fab!(:topic)
       fab!(:personal_message) { Fabricate(:private_message_topic, user: regular_user) }
       fab!(:banner_topic) { Fabricate(:banner_topic, user: evil_trout) }
@@ -2715,8 +2835,8 @@ RSpec.describe PostMover do
     end
 
     context "with event trigger" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:topic_1, :topic)
+      fab!(:topic_2, :topic)
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
       fab!(:post_2) { Fabricate(:post, topic: topic_1) }
 
@@ -2780,8 +2900,8 @@ RSpec.describe PostMover do
     end
 
     context "with modifier" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:topic_2) { Fabricate(:topic) }
+      fab!(:topic_1, :topic)
+      fab!(:topic_2, :topic)
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
       fab!(:user)
 
@@ -2838,8 +2958,8 @@ RSpec.describe PostMover do
     end
 
     context "with freeze_original option" do
-      fab!(:original_topic) { Fabricate(:topic) }
-      fab!(:destination_topic) { Fabricate(:topic) }
+      fab!(:original_topic, :topic)
+      fab!(:destination_topic, :topic)
       fab!(:op) { Fabricate(:post, topic: original_topic, raw: "op of original topic") }
       fab!(:op_of_destination) do
         Fabricate(:post, topic: destination_topic, raw: "op of destination topic")
@@ -2937,8 +3057,8 @@ RSpec.describe PostMover do
       end
 
       context "with `post_mover_create_moderator_post` modifier" do
-        fab!(:topic_1) { Fabricate(:topic) }
-        fab!(:topic_2) { Fabricate(:topic) }
+        fab!(:topic_1, :topic)
+        fab!(:topic_2, :topic)
         fab!(:post_1) { Fabricate(:post, topic: topic_1) }
         fab!(:user)
 
@@ -2976,6 +3096,18 @@ RSpec.describe PostMover do
       it "keeps posts when moving all posts to a new topic" do
         all_posts_from_original_topic = original_topic.ordered_posts.map(&:raw)
 
+        create_post_timing(op, Discourse.system_user, 100)
+        create_post_timing(first_post, Discourse.system_user, 200)
+        create_post_timing(second_post, Discourse.system_user, 300)
+        create_post_timing(third_post, Discourse.system_user, 400)
+
+        expect(
+          PostTiming.where(topic_id: original_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 100], [2, 200], [3, 300], [4, 400])
+
         new_topic =
           PostMover.new(
             original_topic,
@@ -2991,11 +3123,45 @@ RSpec.describe PostMover do
 
         expect(original_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
         expect(new_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
+
+        expect(
+          PostTiming.where(topic_id: original_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to include([1, 100], [2, 200], [3, 300], [4, 400])
+
+        expect(
+          PostTiming.where(topic_id: new_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 100], [2, 200], [3, 300], [4, 400])
       end
 
       it "does not get deleted when moved all posts to topic" do
         SiteSetting.delete_merged_stub_topics_after_days = 0
         all_posts_from_original_topic = original_topic.posts.map(&:raw)
+
+        create_post_timing(op, Discourse.system_user, 100)
+        create_post_timing(first_post, Discourse.system_user, 200)
+        create_post_timing(second_post, Discourse.system_user, 300)
+        create_post_timing(third_post, Discourse.system_user, 400)
+        create_post_timing(op_of_destination, Discourse.system_user, 1000)
+
+        expect(
+          PostTiming.where(topic_id: original_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 100], [2, 200], [3, 300], [4, 400])
+
+        expect(
+          PostTiming.where(topic_id: destination_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 1000])
 
         PostMover.new(
           original_topic,
@@ -3011,6 +3177,20 @@ RSpec.describe PostMover do
 
         expect(original_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
         expect(destination_topic.posts.map(&:raw)).to include(*all_posts_from_original_topic)
+
+        expect(
+          PostTiming.where(topic_id: original_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to include([1, 100], [2, 200], [3, 300], [4, 400])
+
+        expect(
+          PostTiming.where(topic_id: destination_topic.id, user_id: Discourse.system_user.id).pluck(
+            :post_number,
+            :msecs,
+          ),
+        ).to contain_exactly([1, 1000], [2, 100], [3, 200], [4, 300], [5, 400])
       end
 
       it "keeps all posts when moving to a new PM" do
@@ -3170,10 +3350,10 @@ RSpec.describe PostMover do
 
     describe "#enqueue_jobs" do
       fab!(:admin)
-      fab!(:original_topic) { Fabricate(:topic) }
+      fab!(:original_topic, :topic)
       fab!(:post_1) { Fabricate(:post, topic: original_topic) }
       fab!(:post_2) { Fabricate(:post, topic: original_topic) }
-      fab!(:destination_topic) { Fabricate(:topic) }
+      fab!(:destination_topic, :topic)
 
       it "calls enqueue jobs for PostCreator when @post_creator is present" do
         post_mover = PostMover.new(original_topic, admin, [post_1, post_2].map(&:id))
@@ -3205,6 +3385,15 @@ RSpec.describe PostMover do
           )
         end
       end
+    end
+
+    def create_post_timing(post, user, msecs)
+      PostTiming.create!(
+        topic_id: post.topic_id,
+        user_id: user.id,
+        post_number: post.post_number,
+        msecs: msecs,
+      )
     end
   end
 end

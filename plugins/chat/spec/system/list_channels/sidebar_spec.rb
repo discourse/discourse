@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "List channels | sidebar", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:chat) { PageObjects::Pages::Chat.new }
   let(:drawer_page) { PageObjects::Pages::ChatDrawer.new }
+  let(:chat_sidebar) { PageObjects::Components::Chat::Sidebar.new }
 
   before do
     chat_system_bootstrap
@@ -14,7 +15,7 @@ RSpec.describe "List channels | sidebar", type: :system do
 
   context "when channels present" do
     context "when category channel" do
-      fab!(:category_channel_1) { Fabricate(:category_channel) }
+      fab!(:category_channel_1, :category_channel)
 
       context "when member of the channel" do
         before do
@@ -95,7 +96,7 @@ RSpec.describe "List channels | sidebar", type: :system do
 
     context "when direct message channels" do
       fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
-      fab!(:inaccessible_dm_channel_1) { Fabricate(:direct_message_channel) }
+      fab!(:inaccessible_dm_channel_1, :direct_message_channel)
 
       context "when member of the channel" do
         before { visit("/") }
@@ -134,10 +135,23 @@ RSpec.describe "List channels | sidebar", type: :system do
   end
 
   context "when no direct message channels" do
-    before { visit("/") }
+    it "shows the start new dm button" do
+      visit("/")
+      chat_sidebar.click_start_new_dm
 
-    it "shows the section" do
-      expect(page).to have_css(".sidebar-section[data-section-name='chat-dms']")
+      expect(page).to have_selector(".chat-modal-new-message")
+    end
+
+    context "when user can't dm" do
+      fab!(:group)
+
+      before { SiteSetting.direct_message_enabled_groups = group.id }
+
+      it "doesn't show the section" do
+        visit("/")
+
+        expect(chat_sidebar).to have_no_dm_section
+      end
     end
   end
 

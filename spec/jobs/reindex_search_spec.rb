@@ -94,6 +94,104 @@ RSpec.describe Jobs::ReindexSearch do
     end
   end
 
+  describe "rebuild_registered_search_handlers" do
+    let(:plugin) { Plugin::Instance.new }
+    let(:mock_model_class) do
+      Class.new do
+        def self.name
+          "TestModel"
+        end
+
+        def self.table_name
+          "test_models"
+        end
+
+        def self.find_by(id:)
+          return nil unless id == 1
+          new(id: id)
+        end
+
+        def initialize(id:)
+          @id = id
+        end
+
+        attr_reader :id
+      end
+    end
+
+    let(:mock_search_data_class) { double }
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "rebuilds records for registered search handlers" do
+      indexer = mock("SearchIndexer")
+      indexer.expects(:index).once
+
+      plugin.register_search_index(
+        model_class: mock_model_class,
+        search_data_class: mock_search_data_class,
+        index_version: 1,
+        search_data: ->(record, indexer_helper) { { a_weight: "test" } },
+        load_unindexed_record_ids: ->(**_args) { [1] },
+      )
+
+      job.rebuild_registered_search_handlers(indexer: indexer)
+    end
+
+    it "skips disabled handlers" do
+      indexer = mock("SearchIndexer")
+      indexer.expects(:index).never
+
+      plugin.register_search_index(
+        model_class: mock_model_class,
+        search_data_class: mock_search_data_class,
+        index_version: 1,
+        search_data: ->(record, indexer_helper) { { a_weight: "test" } },
+        load_unindexed_record_ids: ->(**_args) { [1] },
+        enabled: -> { false },
+      )
+
+      job.rebuild_registered_search_handlers(indexer: indexer)
+    end
+
+    it "passes limit and index_version to load_unindexed_record_ids" do
+      indexer = mock("SearchIndexer")
+      received_args = nil
+
+      plugin.register_search_index(
+        model_class: mock_model_class,
+        search_data_class: mock_search_data_class,
+        index_version: 2,
+        search_data: ->(record, indexer_helper) { { a_weight: "test" } },
+        load_unindexed_record_ids:
+          lambda do |**args|
+            received_args = args
+            []
+          end,
+      )
+
+      job.rebuild_registered_search_handlers(limit: 5000, indexer: indexer)
+
+      expect(received_args[:limit]).to eq(5000)
+      expect(received_args[:index_version]).to eq(2)
+    end
+
+    it "handles missing records gracefully" do
+      indexer = mock("SearchIndexer")
+      indexer.expects(:index).never
+
+      plugin.register_search_index(
+        model_class: mock_model_class,
+        search_data_class: mock_search_data_class,
+        index_version: 1,
+        search_data: ->(record, indexer_helper) { { a_weight: "test" } },
+        load_unindexed_record_ids: ->(**_args) { [999] },
+      )
+
+      expect { job.rebuild_registered_search_handlers(indexer: indexer) }.not_to raise_error
+    end
+  end
+
   describe "#execute" do
     it "should clean up topic_search_data of trashed topics" do
       topic = Fabricate(:post).topic

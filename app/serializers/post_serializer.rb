@@ -95,7 +95,6 @@ class PostSerializer < BasicPostSerializer
              :user_status,
              :mentioned_users,
              :post_url,
-             :has_post_localizations,
              :post_localizations_count,
              :locale,
              :is_localized,
@@ -655,32 +654,20 @@ class PostSerializer < BasicPostSerializer
     SiteSetting.enable_user_status
   end
 
-  def has_post_localizations
-    object.post_localizations.any?
-  end
-
   def post_localizations_count
-    object.post_localizations.count
-  end
-
-  def include_has_post_localizations?
-    object&.user&.guardian&.can_localize_content?
+    object.localizations.size
   end
 
   def include_post_localizations_count?
-    object&.user&.guardian&.can_localize_content?
+    scope.can_localize_content?
   end
 
   def raw
-    if ContentLocalization.show_translated_post?(object, scope)
-      object.get_localization(I18n.locale)&.raw || object.raw
-    else
-      object.raw
-    end
+    object.raw
   end
 
   def include_locale?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 
   def is_localized
@@ -688,15 +675,15 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_is_localized?
-    SiteSetting.experimental_content_localization
+    SiteSetting.content_localization_enabled
   end
 
   def language
-    LocaleSiteSetting.get_language_name(object.locale) || locale
+    locale
   end
 
   def include_language?
-    SiteSetting.experimental_content_localization && object.locale.present?
+    SiteSetting.content_localization_enabled && object.locale.present?
   end
 
   def localization_outdated

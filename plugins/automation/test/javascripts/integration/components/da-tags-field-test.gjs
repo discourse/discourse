@@ -14,8 +14,6 @@ module("Integration | Component | da-tags-field", function (hooks) {
   });
 
   test("set value", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "tags",
     });
@@ -23,8 +21,8 @@ module("Integration | Component | da-tags-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -33,5 +31,28 @@ module("Integration | Component | da-tags-field", function (hooks) {
     await selectKit().selectRowByValue("monkey");
 
     assert.deepEqual(this.field.metadata.value, ["monkey"]);
+  });
+
+  test("empty tags", async function (assert) {
+    this.field = new AutomationFabricators(getOwner(this)).field({
+      component: "tags",
+    });
+
+    await render(
+      <template>
+        <AutomationField
+          @automation={{this.automation}}
+          @field={{this.field}}
+        />
+      </template>
+    );
+    await selectKit().expand();
+    await selectKit().selectRowByValue("monkey");
+
+    assert.deepEqual(this.field.metadata.value, ["monkey"]);
+
+    await selectKit().deselectItemByValue("monkey");
+
+    assert.strictEqual(this.field.metadata.value, undefined);
   });
 });

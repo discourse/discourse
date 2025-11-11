@@ -72,6 +72,7 @@
   }
 
   .revision__title,
+  .revision__locale,
   .body-diff,
   table.markdown > tbody > tr,
   .-tag-revisions {
@@ -110,6 +111,18 @@
   .revision__title {
     margin: 0;
     line-height: var(--line-height-medium);
+  }
+
+  .revision__locale {
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+
+    .diff-ins,
+    .diff-del {
+      width: fit-content;
+    }
   }
 
   &:not(.--mode-inline) {

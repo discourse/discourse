@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  discourse_assign:
+    assigned_to: "Chủ đề được gán cho @%{username}"
+    reminders_frequency:
+      never: "không bao giờ"
+      daily: "hàng ngày"
+      weekly: "hàng tuần"
+      monthly: "hàng tháng"
+      quarterly: "hàng quý"

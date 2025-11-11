@@ -1,0 +1,637 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "Modell-ID"
+        max_prompt_tokens: "Kontextfenster"
+  discourse_automation:
+    ai:
+      flag_types:
+        review: "Beitrag zur Warteschlange zur Überprüfung hinzufügen"
+        review_hide: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag verstecken"
+        review_delete: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag löschen"
+        spam: "Als Spam markieren und Beitrag verbergen"
+        spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
+    scriptables:
+      llm_tool_triage:
+        title: Sichtung von Beiträgen mit dem KI-Tool
+        description: "Sichtung von Beiträgen mit benutzerdefinierter Logik in einem KI-Tool"
+      llm_persona_triage:
+        title: Sichtung von Beiträgen mit KI-Persona
+        description: "Reagiere auf Beiträge mit einer bestimmten KI-Persona"
+      llm_triage:
+        title: Beiträge mithilfe von KI sortieren
+        description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
+        notify_author_pm:
+          subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
+          body: |
+            Hallo @%{username},
+
+            Dein Beitrag in „%{topic_title}“ wurde vorübergehend entfernt und zu unserer Überprüfungswarteschlange hinzugefügt, damit ein Moderator ihn prüfen kann. Nach der Genehmigung wird er automatisch wiederhergestellt.
+
+            Referenz: %{post_url}
+      llm_report:
+        title: Regelmäßiger Bericht mit KI
+        description: "Regelmäßiger Bericht auf der Grundlage eines großen Sprachmodells"
+      llm_tagger:
+        title: Themen mithilfe von KI mit Schlagwörtern versehen
+        description: "Themen mithilfe von KI automatisch mit Schlagwörtern versehen"
+  site_settings:
+    discourse_ai_enabled: "Aktiviere das Discourse-KI-Plug-in."
+    ai_default_llm_model: "Das Standard-LLM-Modell, das für alle KI-Funktionen verwendet wird"
+    ai_artifact_security: "Das KI-Artefaktsystem generiert IFRAMEs mit ausführbarem Code. Der strikte Modus erfordert einen zusätzlichen Klick zum Ausführen des Codes. Der laxe Modus führt Code sofort aus. Im Hybridmodus kann der Benutzer data-ai-artifact-autorun angeben, um den Code sofort anzuzeigen. Der deaktivierte Modus deaktiviert das Artefaktsystem."
+    ai_toxicity_enabled: "Aktiviere das Toxizitätsmodul."
+    ai_toxicity_inference_service_api_endpoint: "URL, unter der die API für das Toxizitätsmodul läuft"
+    ai_toxicity_inference_service_api_key: "API-Schlüssel für die Toxizitäts-API"
+    ai_toxicity_inference_service_api_model: "Modell, das für die Inferenz verwendet wird. Das mehrsprachige Modell funktioniert mit Italienisch, Französisch, Russisch, Portugiesisch, Spanisch und Türkisch."
+    ai_toxicity_flag_automatically: "Markiere automatisch Beiträge/Chat-Nachrichten, die über den konfigurierten Schwellenwerten liegen."
+    ai_toxicity_flag_threshold_toxicity: "Toxizität: ein unhöflicher, respektloser oder unangemessener Kommentar, der dich mit einiger Wahrscheinlichkeit dazu bringt, eine Diskussion zu verlassen oder deinen Standpunkt nicht mehr zu teilen"
+    ai_toxicity_flag_threshold_severe_toxicity: "Drastische Toxizität: ein sehr hasserfüllter, aggressiver oder respektloser Kommentar, der dich mit hoher Wahrscheinlichkeit dazu bringt, eine Diskussion zu verlassen oder deinen Standpunkt nicht mehr zu teilen"
+    ai_toxicity_flag_threshold_obscene: "Obszön"
+    ai_toxicity_flag_threshold_identity_attack: "Identitätsangriff"
+    ai_toxicity_flag_threshold_insult: "Beleidigung"
+    ai_toxicity_flag_threshold_threat: "Bedrohung"
+    ai_toxicity_flag_threshold_sexual_explicit: "Sexuell explizit"
+    ai_toxicity_groups_bypass: "Die Beiträge von Benutzern in diesen Gruppen werden nicht durch das Toxizitätsmodul eingestuft."
+    ai_sentiment_enabled: "Aktiviere das Stimmungsmodul."
+    ai_sentiment_inference_service_api_endpoint: "URL, unter der die API für das Stimmungsmodul läuft"
+    ai_sentiment_inference_service_api_key: "API-Schlüssel für die Stimmungsmodul-API"
+    ai_sentiment_models: "Modelle, die für die Inferenz verwendet werden. Das Stimmungsmodul klassifiziert Beiträge in den Bereichen positiv/neutral/negativ. Emotionen werden in die Bereiche Wut/Ekel/Furcht/Freude/neutral/Traurigkeit/Überraschung eingeordnet."
+    ai_nsfw_detection_enabled: "Aktiviere das NSFW-Modul."
+    ai_nsfw_inference_service_api_endpoint: "URL, unter der die API für das NSFW-Modul läuft"
+    ai_nsfw_inference_service_api_key: "API-Schlüssel für die NSFW-API"
+    ai_nsfw_flag_automatically: "Kennzeichne automatisch NSFW-Beiträge, die über den konfigurierten Schwellenwerten liegen."
+    ai_nsfw_flag_threshold_general: "Allgemeiner Schwellenwert, ab dem ein Bild als NSFW gilt."
+    ai_nsfw_flag_threshold_drawings: "Schwellenwert, ab dem eine Zeichnung als NSFW gilt."
+    ai_nsfw_flag_threshold_hentai: "Schwellenwert, ab dem ein Bild, das als Hentai eingestuft wird, als NSFW gilt."
+    ai_nsfw_flag_threshold_porn: "Schwellenwert, ab dem ein Bild, das als Porno eingestuft wird, als NSFW gilt."
+    ai_nsfw_flag_threshold_sexy: "Schwellenwert, ab dem ein Bild, das als sexy eingestuft wird, als NSFW gilt."
+    ai_nsfw_models: "Modelle, die für NSFW-Inferenz verwendet werden."
+    ai_spam_detection_enabled: "Aktiviere das KI-Spamerkennungsmodul"
+    ai_openai_api_key: "API-Schlüssel für OpenAI-API. Wird NUR für Bilderstellung und -bearbeitung verwendet. Für GPT verwende die Registerkarte für die LLM-Konfiguration"
+    ai_openai_image_generation_url: "URL für die OpenAI-Bilderstellungs-API"
+    ai_openai_image_edit_url: "URL für die OpenAI-Bildbearbeitungs-API"
+    ai_helper_enabled: "Aktiviere den KI-Helfer."
+    composer_ai_helper_allowed_groups: "Benutzer dieser Gruppen sehen die KI-Helfer-Schaltfläche im Composer."
+    ai_helper_allowed_in_pm: "Aktiviere den Composer-KI-Helfer in PN."
+    ai_helper_model: "Modell, das für den KI-Helfer verwendet werden soll."
+    ai_helper_automatic_chat_thread_title_delay: "Verzögerung in Minuten, bevor der KI-Helfer automatisch den Titel des Chat-Threads festlegt."
+    ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
+    ai_helper_illustrate_post_model: "Modell, das für die Funktion „Beitrag illustrieren“ des Composer-KI-Helfers verwendet wird"
+    ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
+    post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
+    ai_helper_image_caption_model: "Wähle das Modell aus, das für die Erstellung von Bildbeschriftungen verwendet werden soll"
+    ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
+    ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
+    ai_embeddings_semantic_related_topics_enabled: "Verwende die semantische Suche für verwandte Themen."
+    ai_embeddings_semantic_related_topics: "Maximale Anzahl der Themen, die im Abschnitt für verwandte Themen angezeigt werden sollen."
+    ai_embeddings_backfill_batch_size: "Anzahl der Einbettungen, die alle 15 Minuten aufgefüllt werden."
+    ai_embeddings_semantic_search_enabled: "Aktiviere die semantische Ganzseitensuche."
+    ai_embeddings_semantic_search_use_hyde: "Verwende HyDE für die semantische Ganzseitensuche. Verwendet ein LLM, um einen hypothetischen Beitrag aus dem Suchbegriff des Benutzers zu erstellen, der bei der Suche nach Treffern hilft."
+    ai_embeddings_semantic_quick_search_enabled: "Aktiviere die semantische Suchoption im Such-Menü-Pop-up."
+    ai_embeddings_semantic_related_include_closed_topics: "Geschlossene Themen in semantische Suchergebnisse einbeziehen"
+    ai_embeddings_semantic_related_age_penalty: "Wende eine exponentielle Altersstrafe auf Themen in semantischen Suchergebnissen an. 0,0 = kein Abzug, 0,3 = leichte Tendenz zu kürzlich aktiven Inhalten, 1,0+ = starke Tendenz zur Aktualität."
+    ai_embeddings_semantic_related_age_time_scale: "Zeitskala in Tagen für die Berechnung der Altersstrafe. Themen, die so viele Tage inaktiv sind, erhalten ~50 % Strafe bei \"penalty\"=1,0. Verwende 365 für die jährliche Skala, 90 für die vierteljährliche Skala."
+    ai_embeddings_semantic_search_hyde_model: "Modell zur Erweiterung von Schlüsselwörtern, um bessere Ergebnisse bei der semantischen Suche zu erzielen"
+    ai_embeddings_per_post_enabled: Erstelle Einbettungen für jeden Beitrag
+    ai_summarization_enabled: "Aktiviere die Zusammenfassungsfunktion"
+    ai_summarization_model: "Modell, das für die Zusammenfassung verwendet werden soll"
+    ai_summarization_persona: "Persona, die für die Zusammenfassungsfunktion verwendet werden soll"
+    ai_custom_summarization_allowed_groups: "Gruppen, die neue Zusammenfassungen erstellen dürfen."
+    ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
+    ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
+    ai_summary_gists_allowed_groups: "Gruppen, die zentrale Punkte in der Liste der aktuellen Themen sehen dürfen."
+    ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde nachgeholt werden."
+    ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
+    ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
+    ai_bot_allowed_groups: "Wenn der GPT-Bot Zugriff auf die PN hat, wird er den Mitgliedern dieser Gruppen antworten."
+    ai_bot_debugging_allowed_groups: "Erlaube diesen Gruppen, eine Debug-Schaltfläche in Beiträgen zu sehen, der die rohe KI-Anfrage und -Antwort anzeigt."
+    ai_bot_public_sharing_allowed_groups: "Erlaube diesen Gruppen, persönliche KI-Nachrichten über einen eindeutigen, öffentlich zugänglichen Link mit der Öffentlichkeit zu teilen. Hinweis: Wenn für deine Website eine Anmeldung erforderlich ist, ist auch zum Ansehen des geteilten Inhalts eine Anmeldung erforderlich."
+    ai_bot_github_access_token: "GitHub-Zugangstoken für die Verwendung mit den GitHub-KI-Tools (erforderlich für die Suchunterstützung)"
+    ai_discover_enabled: "Aktivieren Sie die Entdeckungs-Suchfunktion"
+    ai_discover_persona: "Persona, die für die Entdeckungsfunktion verwendet werden soll"
+    ai_stability_api_key: "API-Schlüssel für die stability.ai-API"
+    ai_stability_engine: "Bildgenerierungsengine für die stability.ai-API"
+    ai_stability_api_url: "URL für die stability.ai-API"
+    ai_google_custom_search_api_key: "API-Schlüssel für die Google Custom Search API, siehe: https://developers.google.com/custom-search"
+    ai_google_custom_search_cx: "CX für Google Custom Search API"
+    ai_discord_search_enabled: "Aktiviert die Discord-Suchfunktion"
+    ai_discord_app_id: "Die ID der Discord-Anwendung, mit der du die Discord-Suche verbinden möchtest"
+    ai_discord_app_public_key: "Der öffentliche Schlüssel der Discord-Anwendung, mit der du die Discord-Suche verbinden möchtest"
+    ai_discord_search_mode: "Wähle den Suchmodus für die Discord-Suche aus"
+    ai_discord_search_persona: "Die Persona, die für die Discord-Suche verwendet wird."
+    ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
+    ai_translation_model: "Das Modell, das für die Übersetzung verwendet werden soll. Dieses Modell muss die Übersetzung unterstützen. Personas können diese Einstellung überschreiben."
+    ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
+    ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
+    ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
+  reviewables:
+    reasons:
+      flagged_by_toxicity: Das KI-Plug-in meldete dies nach der Klassifizierung als toxisch.
+      flagged_by_nsfw: Das KI-Plug-in meldete dies nach der Klassifizierung von mindestens einem der angehängten Bilder als NSFW.
+  reports:
+    sentiment_analysis:
+      title: "Stimmungsanalyse"
+      description: "Dieser Bericht enthält eine Stimmungsanalyse für Beiträge, gruppiert nach Kategorie, mit positiven, negativen und neutralen Bewertungen für jeden Beitrag und jede Kategorie."
+    overall_sentiment:
+      title: "Allgemeine Stimmung"
+      description: 'Das Diagramm vergleicht die Anzahl der Beiträge, die entweder als positiv oder negativ eingestuft werden. Sie werden berechnet, wenn die positive oder negative Bewertung über dem festgelegten Schwellenwert liegt. Das bedeutet, dass neutrale Beiträge nicht angezeigt werden. Persönliche Nachrichten (PN) sind ebenfalls ausgeschlossen. Klassifiziert mit „cardiffnlp/twitter-roberta-base-sentiment-latest“'
+      xaxis: "Positiv (%)"
+      yaxis: "Datum"
+    emotion_admiration:
+      title: "\U0001F929 Bewunderung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Bewunderung“ klassifiziert wurden."
+    emotion_amusement:
+      title: "\U0001F604 Unterhaltung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Unterhaltung“ klassifiziert wurden."
+    emotion_anger:
+      title: "\U0001F620 Wut"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Wut“ klassifiziert wurden."
+    emotion_annoyance:
+      title: "\U0001F612 Ärgernis"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Ärgernis“ klassifiziert wurden."
+    emotion_approval:
+      title: "\U0001F44D Zustimmung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Zustimmung“ klassifiziert wurden."
+    emotion_caring:
+      title: "\U0001F917 Fürsorge"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Fürsorge“ klassifiziert wurden."
+    emotion_confusion:
+      title: "\U0001F615 Verwirrung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Verwirrung“ klassifiziert wurden."
+    emotion_curiosity:
+      title: "\U0001F914 Neugierde"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Neugierde“ klassifiziert wurden."
+    emotion_desire:
+      title: "\U0001F60D Wunsch"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Wunsch“ klassifiziert wurden."
+    emotion_disappointment:
+      title: "\U0001F61E Enttäuschung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Enttäuschung“ klassifiziert wurden."
+    emotion_disapproval:
+      title: "\U0001F44E Missbilligung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Missbilligung“ klassifiziert wurden."
+    emotion_disgust:
+      title: "\U0001F922 Ekel"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Ekel“ klassifiziert wurden."
+    emotion_embarrassment:
+      title: "\U0001F633 Verlegenheit"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Verlegenheit“ klassifiziert wurden."
+    emotion_excitement:
+      title: "\U0001F92A Aufregung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Aufregung“ klassifiziert wurden."
+    emotion_fear:
+      title: "\U0001F628 Furcht"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Furcht“ klassifiziert wurden."
+    emotion_gratitude:
+      title: "\U0001F64F Dankbarkeit"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Dankbarkeit“ klassifiziert wurden."
+    emotion_grief:
+      title: "\U0001F622 Kummer"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Kummer“ klassifiziert wurden."
+    emotion_joy:
+      title: "\U0001F60A Freude"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Freude“ klassifiziert wurden."
+    emotion_love:
+      title: '❤️ Liebe'
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Liebe“ klassifiziert wurden."
+    emotion_nervousness:
+      title: "\U0001F630 Nervosität"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Nervosität“ klassifiziert wurden."
+    emotion_neutral:
+      title: "\U0001F610 Neutral"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Neutral“ klassifiziert wurden."
+    emotion_optimism:
+      title: "\U0001F31F Optimismus"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Optimismus“ klassifiziert wurden."
+    emotion_pride:
+      title: "\U0001F981 Stolz"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Stolz“ klassifiziert wurden."
+    emotion_realization:
+      title: "\U0001F4A1 Realisierung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Realisierung“ klassifiziert wurden."
+    emotion_relief:
+      title: "\U0001F60C Erleichterung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Erleichterung“ klassifiziert wurden."
+    emotion_remorse:
+      title: "\U0001F614 Reue"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Reue“ klassifiziert wurden."
+    emotion_sadness:
+      title: "\U0001F62D Traurigkeit"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Traurigkeit“ klassifiziert wurden."
+    emotion_surprise:
+      title: "\U0001F632 Überraschung"
+      description: "Beiträge, die per KI unter Verwendung des Modells „SamLowe/roberta-base-go_emotions“ mit der Emotion „Überraschung“ klassifiziert wurden."
+  discourse_ai:
+    ai_artifact:
+      errors:
+        max_keys_exceeded:
+          one: "Du kannst nur %{count} Schlüssel im Artefakt haben."
+          other: "Du kannst nur %{count} Schlüssel im Artefakt haben."
+      link: "In neuer Registerkarte anzeigen"
+      copy_embed: "Einbettung kopieren"
+      view_source: "Quelle anzeigen"
+      view_changes: "Änderungen anzeigen"
+      change_description: "Beschreibung ändern"
+      copied: "Wurde in Zwischenablage kopiert"
+    unknown_model: "Unbekanntes KI-Modell"
+    tools:
+      custom_name: "%{name} (benutzerdefiniert)"
+      presets:
+        browse_web_jina:
+          name: "Web durchsuchen (jina.ai)"
+        exchange_rate:
+          name: "Wechselkurs"
+        stock_quote:
+          name: "Aktienkurs (AlphaVantage)"
+        image_generation:
+          name: "Flux-Bildgenerator (Together.ai)"
+        empty_tool:
+          name: "Von vorne beginnen …"
+      name:
+        characters: "darf nur Zahlen, Buchstaben und Unterstriche enthalten"
+    ai_helper:
+      errors:
+        completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."
+      prompts:
+        translate: Übersetzen in %{language}
+        generate_titles: Thementitel vorschlagen
+        proofread: Text korrekturlesen
+        markdown_table: Markdown-Tabelle generieren
+        custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
+        explain: "Erklären"
+        illustrate_post: "Beitrag illustrieren"
+        replace_dates: "Intelligente Termine"
+      painter:
+        attribution:
+          stable_diffusion_xl: "Bild von Stable Diffusion XL"
+          dall_e_3: "Bild von DALL-E 3"
+      image_caption:
+        attribution: "Beschriftet durch KI"
+    share_ai:
+      read_more: "Vollständiges Transkript lesen"
+      onebox_title: "KI-Unterhaltung mit %{llm_name}"
+      formatted_excerpt: "KI-Unterhaltung mit %{llm_name}:\n %{excerpt}"
+      title: "%{title} – KI-Unterhaltung – %{site_name}"
+      errors:
+        not_allowed: "Du darfst dieses Thema nicht teilen"
+        other_people_in_pm: "Persönliche Nachrichten mit anderen Menschen können nicht öffentlich geteilt werden"
+        other_content_in_pm: "Persönliche Nachrichten, die Beiträge von anderen Personen enthalten, können nicht öffentlich geteilt werden"
+        failed_to_share: "Die Unterhaltung konnte nicht geteilt werden"
+        conversation_deleted: "Unterhaltungsfreigabe erfolgreich gelöscht"
+    spam_detection:
+      flag_reason: "Als Spam gemeldet von <a href='%{url}'>Discourse KI</a>"
+      silence_reason: "Benutzer automatisch stummgeschaltet durch <a href='%{url}'>Discourse KI</a>"
+      invalid_error_type: "Ungültiger Fehlertyp angegeben"
+      unexpected: "Ein unerwarteter Fehler ist aufgetreten"
+      bot_user_update_failed: "Aktualisierung des Spam-Scan-Bot-Benutzers fehlgeschlagen"
+      configuration_missing: "Die Konfiguration der KI-Spamerkennung fehlt. Füge die Konfiguration in „Administration > Plug-ins > Discourse KI > Spam“ hinzu, bevor du sie aktivierst."
+      logging_subject: "Spam-Erkennung"
+    ai_bot:
+      reply_error: "Entschuldigung, es sieht so aus, als ob unser System beim Versuch, zu antworten, auf ein unerwartetes Problem gestoßen ist.\n\n[details='Fehlerdetails']\n%{details}\n[/details]"
+      default_pm_prefix: "[KI-Bot-PN ohne Titel]"
+      thinking: "Ich denke …"
+      personas:
+        default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
+        cannot_delete_system_persona: "System-Personas können nicht gelöscht werden, bitte deaktiviere sie stattdessen"
+        cannot_edit_system_persona: "System-Personas können nur umbenannt werden. Du darfst keine Tools oder die System-Eingabeaufforderung bearbeiten, sondern musst sie deaktivieren und eine Kopie erstellen"
+        cannot_have_duplicate_tools: "Es kann keine doppelten Werkzeuge geben"
+        github_helper:
+          name: "GitHub-Helfer"
+          description: "KI-Bot, der auf die Unterstützung bei GitHub-bezogenen Aufgaben und Fragen spezialisiert ist"
+        general:
+          name: Forum-Helfer
+          description: "Universeller KI-Bot, der verschiedene Aufgaben erfüllen kann"
+        artist:
+          name: Künstler
+          description: "KI-Bot, spezialisiert auf die Erstellung von Bildern"
+        designer:
+          name: Designer
+          description: "KI-Bot, spezialisiert auf die Erstellung und Bearbeitung von Bildern"
+        forum_researcher:
+          name: Forum-Rechercheur
+          description: "KI-Bot, spezialisiert auf gründliche Recherche für das Forum"
+        sql_helper:
+          name: SQL-Helfer
+          description: "KI-Bot, der darauf spezialisiert ist, bei der Erstellung von SQL-Abfragen auf dieser Discourse-Instanz zu helfen"
+        settings_explorer:
+          name: Einstellungs-Explorer
+          description: "KI-Bot, der darauf spezialisiert ist, die Einstellungen der Discourse-Website zu erkunden"
+        researcher:
+          name: Web-Rechercheur
+          description: "KI-Bot mit Google-Zugriff, der Webseiten sowohl suchen als auch lesen kann"
+        creative:
+          name: Kreativ
+          description: "KI-Bot ohne externe Integrationen, spezialisiert auf kreative Aufgaben"
+        dall_e3:
+          name: "DALL-E 3"
+          description: "KI-Bot, spezialisiert auf die Erstellung von Bildern mit DALL-E 3"
+        discourse_helper:
+          name: "Discourse-Helfer"
+          description: "KI-Bot, der auf die Unterstützung bei Discourse-bezogenen Aufgaben spezialisiert ist"
+        web_artifact_creator:
+          name: "Web-Artefakt-Ersteller"
+          description: "KI-Bot, spezialisiert auf die Erstellung interaktiver Web-Artefakte"
+        summarizer:
+          name: "Zusammenfasser"
+          description: "Standard-Persona für die KI-Zusammenfassungen"
+        short_summarizer:
+          name: "Zusammenfasser (Kurzform)"
+          description: "Standard-Persona zur Erstellung von KI-Kurzzusammenfassungen für die Elemente der Themenlisten"
+        concept_finder:
+          name: "Konzept-Finder"
+          description: "KI-Bot spezialisiert auf die Identifizierung von Konzepten und Themen in Inhalten"
+        concept_matcher:
+          name: "Konzept-Verbinder"
+          description: "KI-Bot spezialisiert auf den Abgleich von Inhalten mit bestehenden Konzepten"
+        concept_deduplicator:
+          name: "Konzept-Deduplikator"
+          description: "KI-Bot spezialisiert auf das Entfernen von redundanten Daten in Konzepten"
+        custom_prompt:
+          name: "Benutzerdefinierte Eingabeaufforderung"
+          description: "Standard-Persona für die „Benutzerdefinierte Eingabeaufforderungs“-Funktion des Helfers"
+        smart_dates:
+          name: "Intelligente Termine"
+          description: "Standard-Persona für die „Intelligente Termine“-Funktion des Helfers"
+        markdown_table_generator:
+          name: "Markdown-Tabellengenerator"
+          description: "Standard-Persona für die „Generiere Markdown-Tabelle“-Funktion des Helfers"
+        post_illustrator:
+          name: "Beitragsillustrator"
+          description: "Generiert StableDiffusion-Eingabeaufforderungen, für die Funktion „Beitrag illustrieren“ des Helfers"
+        proofreader:
+          name: "Korrekturleser"
+          description: "Standard-Persona für die „Korrekturlesen“-Funktion des Helfers"
+        titles_generator:
+          name: "Titelgenerator"
+          description: "Standard-Persona für die „Thementitel vorschlagen“-Funktion des Helfers"
+        tutor:
+          name: "Tutor"
+          description: "Standard-Persona für die „Erklären“-Funktion des Helfers"
+        translator:
+          name: "Übersetzer"
+          description: "Standard-Persona für die Übersetzerfunktion des Helfers"
+        image_captioner:
+          name: "Bildbeschriftungen"
+          description: "Standard-Persona für die Bildbeschriftungsfunktion des Helfers"
+        locale_detector:
+          name: "Sprachdetektor"
+          description: "Unterstützt die Übersetzungsfunktion durch Erkennen der Sprache eines bestimmten Textes (Beiträge, Titel usw.)."
+        post_raw_translator:
+          name: "Beitragsübersetzer"
+          description: "Unterstützt die Übersetzungsfunktion durch die Übersetzung von Beiträgen, die Discourse Markdown enthalten"
+        topic_title_translator:
+          name: "Thementitel-Übersetzer"
+          description: "Unterstützt die Übersetzungsfunktion durch die Übersetzung von Thementiteln"
+        short_text_translator:
+          name: "Kurztext-Übersetzer"
+          description: "Betreibt die Übersetzungsfunktion als generischer Textübersetzer, der für kurze Texte wie Kategorienamen oder Schlagwörter verwendet wird."
+        spam_detector:
+          name: "Spam-Detektor"
+          description: "Standard-Persona, die unsere Spam-Erkennungsfunktion betreibt"
+        content_creator:
+          name: "Inhaltsersteller"
+          description: "Standard-Persona für die HyDE-Suche"
+        report_runner:
+          name: "Berichtsausführer"
+          description: "Standard-Persona, die im Automatisierungsskript für Berichte verwendet wird."
+        discover:
+          name: "Entdecken"
+          description: "Standard-Persona, die in der Entdeckungsfunktion verwendet wird (ergänzende Suche)"
+      topic_not_found: "Zusammenfassung nicht verfügbar, Thema nicht gefunden!"
+      summarizing: "Thema zusammenfassen"
+      searching: "Suche nach: „%{query}“"
+      tool_options:
+        researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "Für die Recherche zu verwendendes Sprachmodell (standardmäßig das LLM der aktuellen Persona)"
+          max_tokens_per_batch:
+            name: "Maximale Token pro Bündel"
+            description: "Maximale Anzahl von Token, die für jedes Bündel in der Recherche verwendet werden"
+          max_tokens_per_post:
+            name: "Maximale Token pro Beitrag"
+            description: "Maximale Anzahl von Token, die für jeden Beitrag in der Recherche verwendet werden können"
+          max_results:
+            name: "Maximale Anzahl von Ergebnissen"
+            description: "Maximale Anzahl von Ergebnissen, die in einen Filter aufgenommen werden"
+          include_private:
+            name: "Private einschließen"
+            description: "Private Themen in die Filter einbeziehen"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "Sprachmodell, das für die Erstellung von Artefakten verwendet werden soll"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "Sprachmodell, das für Artefaktbearbeitungen verwendet werden soll"
+          update_algorithm:
+            name: "Algorithmus aktualisieren"
+            description: "Bitten LLM, den gesamten Austausch vorzunehmen, oder verwenden diff zum Aktualisieren"
+          do_not_echo_artifact:
+            name: "Kein Echo Artefakt"
+            description: "Begrenzt die Kosten, reduziert aber die Effektivität von Artefakt-Updates"
+        google:
+          base_query:
+            name: "Basissuchanfrage"
+            description: "Basisanfrage, die bei der Suche verwendet werden soll. Beispiele: „site:example.com“ enthält nur Ergebnisse von example.com, „before:2022-01-01“ enthält nur Ergebnisse aus dem Jahr 2021 und früher. Dieser Text wird der Suchanfrage vorangestellt."
+        read:
+          read_private:
+            name: "Privat lesen"
+            description: "Erlaube den Zugriff auf alle Themen, auf die der Nutzer Zugriff hat (standardmäßig sind nur öffentliche Themen verfügbar)"
+        search:
+          search_private:
+            name: "Privat suchen"
+            description: "Alle Themen, auf die der Nutzer Zugriff hat, in die Suchergebnisse einbeziehen (standardmäßig werden nur öffentliche Themen einbezogen)"
+          max_results:
+            name: "Maximale Anzahl von Ergebnissen"
+            description: "Maximale Anzahl der Ergebnisse, die in die Suche einbezogen werden sollen – wenn leer, werden die Standardregeln verwendet und die Anzahl wird je nach verwendetem Modell skaliert. Der höchste Wert ist 100."
+          base_query:
+            name: "Basissuchanfrage"
+            description: "Basisanfrage, die bei der Suche verwendet wird. Beispiel: Bei „#dringend“ wird der Suchanfrage „#dringend“ vorangestellt und es werden nur Themen mit der Kategorie oder dem Schlagwort „dringend“ angezeigt."
+      tool_summary:
+        read_artifact: "Ein Web-Artefakt lesen"
+        update_artifact: "Aktualisieren eines Web-Artefakts"
+        create_artifact: "Web-Artefakt erstellen"
+        web_browser: "Web durchsuchen"
+        github_search_files: "GitHub-Datei-Suche"
+        github_search_code: "GitHub-Code-Suche"
+        github_file_content: "GitHub-Datei-Inhalt"
+        github_pull_request_diff: "GitHub-Pull-Request-Diff"
+        random_picker: "Zufallsauswahl"
+        categories: "Kategorien auflisten"
+        search: "Suche"
+        tags: "Schlagwörter auflisten"
+        time: "Zeit"
+        summarize: "Zusammenfassen"
+        image: "Bild generieren"
+        google: "Google-Suche"
+        read: "Thema lesen"
+        setting_context: "Kontext der Website-Einstellung nachschlagen"
+        schema: "Datenbankschema nachschlagen"
+        search_settings: "Website-Einstellungen werden durchsucht"
+        dall_e: "Bild generieren"
+        search_meta_discourse: "Meta-Discourse durchsuchen"
+        javascript_evaluator: "JavaScript auswerten"
+        create_image: "Bild erstellen"
+        edit_image: "Bild bearbeiten"
+        researcher: "Rechercheur"
+        researcher_dry_run: "Recherche vorbereiten"
+      tool_help:
+        read_artifact: "Lesen eines Webartefakts mit dem KI-Bot"
+        update_artifact: "Aktualisiere ein Web-Artefakt mit dem KI-Bot"
+        create_artifact: "Erstelle ein Web-Artefakt mit dem KI-Bot"
+        web_browser: "Webseite mit dem KI-Bot durchsuchen"
+        github_search_code: "Code in einem GitHub-Repository suchen"
+        github_search_files: "Dateien in einem GitHub-Repository suchen"
+        github_file_content: "Inhalt von Dateien aus einem GitHub-Repository abrufen"
+        github_pull_request_diff: "GitHub-Pull-Request-Diff abrufen"
+        random_picker: "Zufallszahl oder zufälliges Element aus einer Liste auswählen"
+        categories: "Alle öffentlich sichtbaren Kategorien im Forum auflisten"
+        search: "Alle öffentlichen Themen im Forum durchsuchen"
+        tags: "Alle Schlagwörter im Forum auflisten"
+        time: "Zeit in verschiedenen Zeitzonen finden"
+        summary: "Ein Thema zusammenfassen"
+        image: "Bild mit Stable Diffusion generieren"
+        create_image: "Erstelle ein Bild mit dem Open AI GPT Bildmodell"
+        edit_image: "Bearbeite ein Bild mit dem Open AI GPT Bildmodell"
+        google: "Bei Google nach einer Anfrage suchen"
+        read: "Öffentliches Thema im Forum lesen"
+        setting_context: "Kontext der Website-Einstellung nachschlagen"
+        schema: "Datenbankschema nachschlagen"
+        search_settings: "Website-Einstellungen durchsuchen"
+        dall_e: "Bild mit DALL-E 3 generieren"
+        search_meta_discourse: "Meta-Discourse durchsuchen"
+        javascript_evaluator: "JavaScript auswerten"
+        researcher: "Foreninformationen mit dem KI-Bot recherchieren"
+      tool_description:
+        read_artifact: "Lesen eines Webartefakts mit dem KI-Bot"
+        update_artifact: "Ein Web-Artefakt wurde mit dem KI-Bot aktualisiert"
+        create_artifact: "Erstellt ein Web-Artefakt: %{name} - %{specification}"
+        web_browser: "<a href='%{url}'>%{url}</a> wird gelesen"
+        github_search_files: "Gesucht wurde nach „%{keywords}“ in %{repo}/%{branch}"
+        github_search_code: "Gesucht wurde nach „%{query}“ in %{repo}"
+        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_file_content: "Inhalt von %{file_paths} in %{repo_name}@%{branch} wurde abgerufen"
+        random_picker: "Auswahl aus %{options}. Ausgewählt wurde: %{result}"
+        read: "Wird gelesen: <a href='%{url}'>%{title}</a>"
+        time: "Die Uhrzeit in %{timezone} ist %{time}"
+        summarize: "<a href='%{url}'>%{title}</a> zusammengefasst"
+        dall_e: "%{prompt}"
+        create_image: "%{prompt}"
+        edit_image: "%{prompt}"
+        image: "%{prompt}"
+        categories:
+          one: "%{count} Kategorie gefunden"
+          other: "%{count} Kategorien gefunden"
+        tags:
+          one: "%{count} Schlagwort gefunden"
+          other: "%{count} Schlagwörter gefunden"
+        search:
+          one: "%{count} <a href='%{url}'>Ergebnis</a> für „%{query}“ gefunden"
+          other: "%{count} <a href='%{url}'>Ergebnisse</a> für „%{query}“ gefunden"
+        search_meta_discourse:
+          one: "%{count} <a href='%{url}'>Ergebnis</a> für „%{query}“ gefunden"
+          other: "%{count} <a href='%{url}'>Ergebnisse</a> für „%{query}“ gefunden"
+        google:
+          one: "%{count} <a href='%{url}'>Ergebnis</a> für „%{query}“ gefunden"
+          other: "%{count} <a href='%{url}'>Ergebnisse</a> für „%{query}“ gefunden"
+        setting_context: "Kontext wird gelesen für: %{setting_name}"
+        schema: "%{tables}"
+        researcher_dry_run:
+          one: "Vorgeschlagene Ziele: %{goals}\n\n%{count} Beitrag passend zu „%{filter}“ gefunden"
+          other: "Vorgeschlagene Ziele: %{goals}\n\n%{count} Beiträge passend zu „%{filter}“ gefunden"
+        researcher:
+          one: "Recherche: %{goals}\n\n%{count} Beitrag passend zu „%{filter}“ gefunden"
+          other: "Recherche: %{goals}\n\n%{count} Beiträge passend zu „%{filter}“ gefunden"
+        search_settings:
+          one: "%{count} Ergebnis für „%{query}“ gefunden"
+          other: "%{count} Ergebnisse für „%{query}“ gefunden"
+      discoveries:
+        continue_conversation:
+          title: "Entdeckungsunterhaltung: Suche nach %{query}"
+          raw: "Bei meiner Suche nach %{query} hast du mir die folgenden Informationen gezeigt:\n\n%{context}\n\nLass uns die Unterhaltung fortsetzen."
+    summarization:
+      configuration_hint:
+        one: "Konfiguriere zunächst die Einstellung `%{setting}`."
+        other: "Konfiguriere zunächst diese Einstellungen: %{settings}"
+      chat:
+        no_targets: "Im ausgewählten Zeitraum gab es keine Nachrichten."
+    sentiment:
+      reports:
+        overall_sentiment: "Gesamtstimmung (positiv–negativ)"
+        post_emotion:
+          sadness: "Traurigkeit \U0001F622"
+          surprise: "Überraschung \U0001F631"
+          neutral: "Neutral \U0001F610"
+          fear: "Furcht \U0001F628"
+          anger: "Wut \U0001F621"
+          joy: "Freude \U0001F600"
+          disgust: "Ekel \U0001F922"
+        sentiment_analysis:
+          positive: "Positiv"
+          negative: "Negativ"
+          neutral: "Neutral"
+    llm:
+      configuration:
+        create_llm: "Du musst einen LLM einrichten, bevor du diese Funktion aktivierst"
+        disable_modules_first: "Du musst zuerst diese Module deaktivieren: %{settings}"
+        set_llm_first: "Stelle zuerst %{setting} ein"
+        model_unreachable: "Wir konnten keine Antwort von diesem Modell abrufen. Überprüfe zuerst deine Einstellungen."
+        invalid_seeded_model: "Du kannst dieses Modell nicht mit dieser Funktion verwenden"
+        invalid_persona_response_format: "Die ausgewählte Persona muss ein Antwortformat mit einem booleschen Feld namens „spam“ haben."
+        must_select_model: "Du musst zuerst ein LLM auswählen"
+      endpoints:
+        not_configured: "%{display_name} (nicht konfiguriert)"
+        configuration_hint:
+          one: "Vergewissere dich, dass die Einstellung `%{settings}` konfiguriert wurde."
+          other: "Vergewissere dich, dass diese Einstellungen konfiguriert wurden: %{settings}"
+      delete_failed:
+        one: "Wir konnten dieses Modell nicht löschen, weil es von %{settings} verwendet wird. Aktualisiere die Einstellung und versuche es erneut."
+        other: "Wir konnten dieses Modell nicht löschen, weil %{settings} es verwenden. Aktualisiere die Einstellungen und versuche es erneut."
+      cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
+    personas:
+      malformed_examples: "Die angegebenen Beispiele haben das falsche Format."
+    embeddings:
+      delete_failed: "Dieses Modell wird derzeit verwendet. Aktualisiere zuerst `ai embeddings selected model`."
+      cannot_edit_builtin: "Du kannst ein integriertes Modell nicht bearbeiten."
+      configuration:
+        disable_embeddings: "Du musst zuerst „KI-Einbettungen aktiviert“ deaktivieren."
+        choose_model: "Lege zuerst „ausgewähltes KI-Einbettungsmodell“ fest."
+        model_test_failed: "Es ist uns nicht gelungen, mit diesem Modell eine Testeinbettung zu generieren. Überprüfe, ob es richtig konfiguriert ist."
+    llm_models:
+      missing_provider_param: "%{param} darf nicht leer sein"
+      bedrock_invalid_url: "Bitte fülle alle Felder aus, um dieses Modell zu verwenden."
+    ai_staff_action_logger:
+      updated: "aktualisiert"
+      set: "gesetzt"
+      removed: "entfernt"
+    translation:
+      errors:
+        disabled: "Die KI-Übersetzungsfunktion ist nicht vollständig konfiguriert."
+    errors:
+      quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
+      quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"
+      no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
+      no_user_for_persona: Die angegebene Persona hat keinen Benutzer, der mit ihr verbunden ist.
+      persona_not_found: Die angegebene Persona existiert nicht. Überprüfe die Parameter persona_name oder persona_id.
+      no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.
+      user_not_found: Der angegebene Benutzer existiert nicht. Überprüfe den Parameter username.
+      persona_disabled: Die angegebene Persona ist deaktiviert. Überprüfe die Parameter persona_name oder persona_id.
+      no_default_llm: Die Persona muss eine default_llm definiert haben.
+      user_not_allowed: Der Benutzer darf nicht am Thema teilnehmen.
+      prompt_message_length: Die Nachricht %{idx} hat die 1000-Zeichen-Grenze überschritten.
+      persona_already_exists: Eine Persona mit dem Namen %{name} existiert bereits.
+      custom_tool_exists:
+        one: "Ein benutzerdefiniertes Tool mit dem Namen %{names} existiert bereits."
+        other: "Benutzerdefinierte Tools mit dem Namen %{names} existieren bereits."
+  dashboard:
+    problem:
+      ai_llm_status: "Bei dem LLM-Modell: %{model_name} treten Probleme auf. Bitte überprüfe <a href='%{url}'>die Konfigurationsseite des Modells</a>."

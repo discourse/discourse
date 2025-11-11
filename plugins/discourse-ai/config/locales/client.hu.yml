@@ -1,0 +1,224 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hu:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "Rendezés"
+            tag:
+              label: "Címke"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Feladó"
+            topic_id:
+              label: "Témaazonosító"
+            title:
+              label: "Cím"
+            categories:
+              label: "Kategóriák"
+            tags:
+              label: "Címkék"
+        llm_triage:
+          fields:
+            category:
+              label: "Kategória"
+            tags:
+              label: "Címkék"
+            canned_reply:
+              label: "Válasz"
+    discourse_ai:
+      features:
+        back: "Vissza"
+        disabled: "(kikapcsolva)"
+        groups: "Csoportok:"
+        no_persona: "Nincs beállítva"
+        no_groups: "Egyik sem"
+        edit: "Szerkesztés"
+        expand_list:
+          one: "(%{count} további)"
+          other: "(%{count} további)"
+        collapse_list: "(kevesebb megjelenítése)"
+        filters:
+          all: "Összes"
+          reset: "Alaphelyzetbe állítás"
+        search:
+          name: "Keresés"
+        spam:
+          name: "Kéretlen tartalom"
+      modals:
+        select_option: "Válasszon egy lehetőséget…"
+      layout:
+        table: "Táblázat"
+      translations:
+        title: "Fordítások"
+        stats:
+          eta_minutes:
+            one: "%{count} perc"
+            other: "%{count} perc"
+          eta_hours:
+            one: "%{count} óra"
+            other: "%{count} óra"
+          eta_days:
+            one: "%{count} nap"
+            other: "%{count} nap"
+        progress_chart:
+          bar_done:
+            one: "%{count} bejegyzés"
+            other: "%{count} bejegyzés"
+      spam:
+        short_title: "Kéretlen tartalom"
+        last_seven_days: "Elmúlt 7 nap"
+        enable: "Engedélyezés"
+        save_button: "Módosítások mentése"
+        test_modal:
+          result: "Eredmény"
+          run: "Teszt futtatása"
+          spam: "Kéretlen tartalom"
+      usage:
+        short_title: "Használat"
+        summary: "Összefoglaló"
+        username: "Felhasználónév"
+        total_requests: "Összes kérés"
+        periods:
+          last_day: "Elmúlt 24 óra"
+          custom: "Egyéni…"
+      ai_persona:
+        back: "Vissza"
+        name: "Név"
+        edit: "Szerkesztés"
+        export: "Exportálás"
+        import: "Importálás"
+        description: "Leírás"
+        user: Felhasználó
+        save: "Mentés"
+        enabled: "Engedélyezve?"
+        delete: "Törlés"
+        response_format:
+          open_modal: "Szerkesztés"
+          modal:
+            key_title: "Kulcs"
+        filters:
+          reset: "Alaphelyzetbe állítás"
+      rag:
+        uploads:
+          title: "Feltöltések"
+          uploading: "Feltöltés…"
+      tools:
+        back: "Vissza"
+        export: "Exportálás"
+        import: "Importálás"
+        name: "Név"
+        description: "Leírás"
+        summary: "Összefoglaló"
+        script: "Parancsfájl"
+        save: "Mentés"
+        remove_parameter: "Eltávolítás"
+        parameter_required: "Kötelező"
+        edit: "Szerkesztés"
+        test: "Teszt futtatása"
+        delete: "Törlés"
+        test_modal:
+          run: "Teszt futtatása"
+      llms:
+        display_name: "Név"
+        provider: "Szolgáltató"
+        save: "Mentés"
+        edit: "Szerkesztés"
+        back: "Vissza"
+        delete: Törlés
+        quotas:
+          group: "Csoport"
+          max_usages: "Maximális használat"
+          duration: "Időtartam"
+          durations:
+            hour: "1 óra"
+            six_hours: "6 óra"
+            day: "24 óra"
+            week: "7 nap"
+            custom: "Egyéni…"
+          hours: "óra"
+        usage:
+          ai_summarization: "Összefoglalás"
+          ai_spam: "Kéretlen tartalom"
+        next:
+          title: "Következő"
+        tests:
+          title: "Teszt futtatása"
+          success: "Sikeres!"
+        providers:
+          google: "Google"
+          fake: "Egyéni"
+      related_topics:
+        pill: "Kapcsolódó"
+      ai_helper:
+        context_menu:
+          cancel: "Mégse"
+          confirm: "Megerősítés"
+          discard: "Elvetés"
+        post_options_menu:
+          close: "Bezárás"
+          copy: "Másolás"
+          copied: "Másolva!"
+          cancel: "Mégse"
+        thumbnail_suggestions:
+          select: "Kiválasztás"
+          selected: "Kiválasztott"
+        image_caption:
+          save_caption: "Mentés"
+      embeddings:
+        back: "Vissza"
+        save: "Mentés"
+        delete: "Törlés"
+        edit: "Szerkesztés"
+        tests:
+          title: "Teszt futtatása"
+          success: "Sikeres!"
+        display_name: "Név"
+        provider: "Szolgáltató"
+        providers:
+          google: "Google"
+          fake: "Egyéni"
+      ai_bot:
+        debug_ai_modal:
+          request: "Kérés"
+          response: "Válasz"
+          next_log: "Következő"
+          previous_log: "Előző"
+        invite_ai_conversation:
+          button: "Meghívás"
+        share_modal:
+          copy: "Másolás"
+        conversations:
+          today: "Ma"
+          last_7_days: "Elmúlt 7 nap"
+          last_30_days: "Elmúlt 30 nap"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Összes"
+            neutral: "Semleges"
+          group_types:
+            category: "Kategória"
+            tag: "Címke"
+          table:
+            total_count: "Összesen"
+      summarization:
+        chat:
+          summarize: "Összefoglalás"
+      discobot_discoveries:
+        regular_results: "Témák"
+        collapse: "Összecsukás"
+        tooltip:
+          actions:
+            disable: "Letiltás"

@@ -1,0 +1,252 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "اے آئی تلاش کی اجازت دیتا ہے"
+      site_settings:
+        categories:
+          discourse_ai: "ڈسکورس اے آئی"
+      dashboard:
+        emotion:
+          title: "جذبات"
+        reports:
+          filters:
+            group_by:
+              label: "گروہ بذریعہ"
+            sort_by:
+              label: "ترتیب بہ"
+            tag:
+              label: "ٹیگ"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "ایل ایل ایم ماڈل بنائیں"
+            update_ai_llm_model: "ایل ایل ایم ماڈل کو اپ ڈیٹ کریں"
+            delete_ai_llm_model: "ایل ایل ایم ماڈل حذف کریں"
+            create_ai_persona: "اے آئی پرسونا تخلیق کریں"
+            update_ai_persona: "اے آئی پرسونا اپڈیٹ کریں"
+            delete_ai_persona: "اے آئی پرسونا حذف کریں"
+            create_ai_tool: "اے آئی ٹول بنائیں"
+            update_ai_tool: "اے آئی ٹول اپ ڈیٹ کریں"
+            delete_ai_tool: "اے آئی ٹول حذف کریں"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "ٹاپک ID"
+            title:
+              label: "عنوان"
+            categories:
+              label: "اقسام"
+            tags:
+              label: "ٹیگز"
+        llm_triage:
+          fields:
+            category:
+              label: "زُمرَہ"
+            tags:
+              label: "ٹیگز"
+            canned_reply:
+              label: "جواب"
+            hide_topic:
+              label: "موضوع چھپائیں"
+    discourse_ai:
+      features:
+        back: "واپس"
+        disabled: "(غیر فعال)"
+        groups: "گروپس:"
+        no_groups: "کوئی نہیں"
+        edit: "ترمیم کریں"
+        expand_list:
+          one: "(%{count} مزید)"
+          other: "(%{count} مزید)"
+        filters:
+          all: "تمام"
+          reset: "رِی سَیٹ"
+        search:
+          name: "تلاش کریں"
+        spam:
+          name: "سپَیم"
+          description: "منتخب کردہ LLM کا استعمال کرتے ہوئے ممکنہ سپیم کی شناخت کرتا ہے اور اسے سائٹ کے نگرانوں کے لیے نشاندہ کرتا ہے تاکہ وہ جائزہ کی قطار میں معائنہ کر سکیں"
+      modals:
+        select_option: "ایک آپشن منتخب کریں..."
+      translations:
+        title: "ترجمہ"
+        stats:
+          eta_minutes:
+            one: "%{count} منٹ"
+            other: "%{count} منٹس"
+          eta_hours:
+            one: "%{count} گھنٹہ"
+            other: "%{count} گھنٹے"
+          eta_days:
+            one: "%{count} دن"
+            other: "%{count} دن"
+        progress_chart:
+          bar_done:
+            one: "%{count} پوسٹ"
+            other: "%{count} پوسٹس"
+      spam:
+        short_title: "سپَیم"
+        last_seven_days: "پچھلے 7 دن"
+        enable: "فعال کریں"
+        spam_tip: "AI سپیم کا پتہ لگانے سے عوامی موضوعات پر تمام نئے اراکین کی پہلی 3 لڑیوں کو اسکین کیا جائے گا۔ یہ ان پر نظرثانی کے لیے جھنڈا لگائے گا اور اگر اراکین ممکنہ طور پر سپیم ہیں تو انہیں بلاک کر دے گا۔"
+        spam_description: "منتخب کردہ LLM کا استعمال کرتے ہوئے ممکنہ سپیم کی شناخت کرتا ہے اور اسے سائٹ کے نگرانوں کے لیے نشاندہ کرتا ہے تاکہ وہ جائزہ کی قطار میں معائنہ کر سکیں"
+        test_modal:
+          spam: "سپَیم"
+        stat_tooltips:
+          incorrectly_flagged: "وہ اشیاء جن پر AI بوٹ نے اسپام کے بطور نشاندہ کیا ہے جہاں نگران متفق نہیں ہیں۔"
+          missed_spam: "کمیونٹی کی طرف سے اسپام کے طور پر نشاندہ کی گئیں اشیاء جن کا پتہ AI بوٹ نے نہیں لگایا، جن سے نگرانوں نے اتفاق کیا"
+      usage:
+        summary: "Summary"
+        username: "اسمِ صارف"
+        total_requests: "کُل درخواستیں"
+        subheader_description: "ٹوکن بنیادی اکائیاں ہیں جنہیں LLMs متن کو سمجھنے اور بنانے کے لیے استعمال کرتے ہیں، استعمال کا ڈیٹا لاگت کو متاثر کر سکتا ہے"
+        periods:
+          last_day: "پچھلے 24 گھنٹے"
+          last_week: "گزشتہ ہفتے"
+          last_month: "گزشتہ ماہ"
+          custom: "ترمیم..."
+      ai_persona:
+        back: "واپس"
+        name: "نام"
+        edit: "ترمیم کریں"
+        export: "برآمد"
+        import: "درآمد"
+        description: "تفصیل"
+        user: صارف
+        save: "محفوظ کریں"
+        enabled: "فعال؟"
+        delete: "مٹائیں"
+        response_format:
+          open_modal: "ترمیم کریں"
+          modal:
+            key_title: "کی"
+        filters:
+          reset: "رِی سَیٹ"
+      rag:
+        uploads:
+          title: "اَپ لوڈز"
+          uploading: "اَپ لوڈ کیا جا رہا ہے..."
+      tools:
+        back: "واپس"
+        export: "برآمد"
+        import: "درآمد"
+        import_error_conflict: "ٹول پہلے سے موجود ہے، کیا آپ اسے اپ ڈیٹ کرنا چاہیں گے؟"
+        name: "نام"
+        description: "تفصیل"
+        summary: "Summary"
+        save: "محفوظ کریں"
+        remove_parameter: "خارج کریں"
+        parameter_required: "درکار"
+        edit: "ترمیم کریں"
+        delete: "مٹائیں"
+      llms:
+        display_name: "نام"
+        provider: "پرووَائیڈر"
+        save: "محفوظ کریں"
+        edit: "ترمیم کریں"
+        back: "واپس"
+        delete: مٹائیں
+        quotas:
+          group: "گروپ"
+          max_usages: "زیادہ سے زیادہ استعمال"
+          duration: "دورانیہ"
+          durations:
+            hour: "1 گھنٹہ"
+            six_hours: "6 گھنٹے"
+            day: "24 گھنٹے"
+            week: "7 دن"
+            custom: "ترمیم..."
+          hours: "گھنٹے"
+        usage:
+          ai_summarization: "خلاصہ"
+          ai_spam: "سپَیم"
+        next:
+          title: "اگلا"
+        tests:
+          success: "کامیابی!"
+        providers:
+          google: "گُوگَل"
+          fake: "اپنی مرضی کا"
+      related_topics:
+        title: "متعلقہ موضوعات"
+        pill: "متعلقہ"
+      ai_helper:
+        context_menu:
+          cancel: "منسوخ"
+          confirm: "تصدیق کریں"
+          discard: "منسوخ"
+        post_options_menu:
+          close: "بند کریں"
+          copy: "کاپی"
+          copied: "کاپی کر لیا!"
+          cancel: "منسوخ"
+        image_caption:
+          save_caption: "محفوظ کریں"
+      embeddings:
+        back: "واپس"
+        save: "محفوظ کریں"
+        delete: "مٹائیں"
+        edit: "ترمیم کریں"
+        tests:
+          success: "کامیابی!"
+        display_name: "نام"
+        provider: "پرووَائیڈر"
+        providers:
+          google: "گُوگَل"
+          fake: "اپنی مرضی کا"
+      ai_bot:
+        pm_warning: "AI چیٹ بوٹ پیغامات کو نگرانوں کے ذریعے باقاعدگی سے مانیٹر کیا جاتا ہے۔"
+        debug_ai_modal:
+          request: "ریکویسٹ"
+          response: "جواب"
+          next_log: "اگلا"
+          previous_log: "پچھلی"
+        share_full_topic_modal:
+          share: "رابطہ کو شیئر اور کاپی کریں"
+          update: "رابطہ کو اپ ڈیٹ اور کاپی کریں"
+          delete: "شیئر کو حذف کریں"
+        invite_ai_conversation:
+          button: "دعوت دیں"
+        share_modal:
+          copy: "کاپی"
+        conversations:
+          today: "آج"
+          last_7_days: "پچھلے 7 دن"
+          last_30_days: "پچھلے 30 دن"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "تمام"
+            neutral: "نیوٹرل"
+          group_types:
+            category: "زُمرَہ"
+            tag: "ٹیگ"
+          table:
+            total_count: "کُل"
+      summarization:
+        chat:
+          summarize: "خلاصہ"
+        topic:
+          title: "موضوع کا خلاصہ"
+          close: "خلاصہ پینل بند کریں"
+      discobot_discoveries:
+        regular_results: "موضوعات"
+        collapse: "بند کریں"
+        tooltip:
+          header: "AI سے چلنے والی تلاش"
+          content: "%{model}کے ذریعے تقویت یافتہ زبان کی تلاش"
+          actions:
+            disable: "غیر فعال کریں"

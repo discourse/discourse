@@ -17,7 +17,9 @@ module Chat
       attribute :category_id, :integer
     end
 
-    step :create_memberships
+    lock(:user_id, :channel_id, :category_id) do
+      try(PG::UniqueViolation) { step :create_memberships }
+    end
 
     private
 

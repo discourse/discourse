@@ -96,7 +96,7 @@ class Admin::EmailLogsController < Admin::AdminController
       serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
       render_json_dump(serializer)
     rescue => e
-      render json: { errors: [e.message] }, status: 404
+      render json: { errors: [e.message] }, status: :not_found
     end
   end
 
@@ -117,7 +117,9 @@ class Admin::EmailLogsController < Admin::AdminController
 
     if params[:address].present?
       query = "#{table_name}.to_address ILIKE :address"
-      query += " OR #{table_name}.cc_addresses ILIKE :address"
+      query += " OR #{table_name}.cc_addresses ILIKE :address" if logs.column_names.include?(
+        "cc_addresses",
+      )
 
       logs = logs.where(query, { address: "%#{params[:address]}%" })
     end

@@ -28,8 +28,7 @@ def upload(path, remote_path, content_type, content_encoding = nil, logger:)
   options = {
     cache_control: "max-age=31556952, public, immutable",
     content_type: content_type,
-    acl: SiteSetting.s3_use_acls ? "public-read" : nil,
-  }
+  }.merge(Discourse.store.default_s3_options(secure: false))
 
   options[:content_encoding] = content_encoding if content_encoding
 

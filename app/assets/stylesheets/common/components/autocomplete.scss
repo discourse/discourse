@@ -1,0 +1,123 @@
+@use "lib/viewport";
+
+.autocomplete {
+  z-index: z("composer", "dropdown") + 1;
+  max-width: 370px;
+  min-width: 300px;
+  background-color: var(--secondary);
+  border: 1px solid var(--primary-low);
+  box-shadow: var(--shadow-dropdown);
+  border-radius: 8px;
+
+  @include viewport.from(sm) {
+    max-width: 600px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      &:first-of-type a {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+
+      &:last-of-type a {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+
+      a {
+        align-items: center;
+        color: var(--primary);
+        display: flex;
+        gap: 0.25em;
+        padding: 0.3em 1em;
+
+        @include hover {
+          background-color: var(--d-hover);
+          text-decoration: none;
+        }
+
+        &.selected {
+          background-color: var(--d-selected);
+        }
+
+        .avatar {
+          margin-right: 0.25em;
+        }
+
+        .name {
+          display: contents;
+          font-size: var(--font-down-1);
+          color: var(--primary-high);
+        }
+
+        .user-status-message {
+          display: flex;
+          align-items: center;
+          gap: 0.25em;
+
+          .user-status-message-description {
+            @include ellipsis;
+            font-size: var(--font-down-2);
+            color: var(--primary-high);
+            margin: 0;
+          }
+        }
+
+        .relative-date {
+          font-size: var(--font-down-3);
+        }
+
+        .text-content {
+          @include ellipsis;
+          display: inline-block;
+          max-width: 100%;
+          vertical-align: top;
+
+          .username,
+          .name {
+            display: inline;
+          }
+        }
+
+        .d-icon + .text-content {
+          max-width: calc(100% - 1em);
+        }
+      }
+
+      .d-icon-users {
+        color: var(--primary-medium);
+        padding: 0 2px;
+      }
+    }
+  }
+
+  &.ac-user {
+    li a {
+      padding: 0.5em 1em;
+
+      .text-content {
+        max-width: calc(100% - 24px); // 24px is for `tiny` avatar width
+      }
+    }
+
+    .emoji {
+      height: 0.75em;
+      width: 0.75em;
+    }
+  }
+
+  &.ac-emoji {
+    li:last-of-type a {
+      color: var(--primary-high);
+    }
+
+    .emoji {
+      margin-right: 0.25em;
+    }
+  }
+}

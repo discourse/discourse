@@ -8,7 +8,7 @@ module Migrations::Converters::Discourse
       @source_db.count <<~SQL
         SELECT COUNT(*)
         FROM user_options
-        WHERE user_id >= 0
+        WHERE user_id > 0
       SQL
     end
 
@@ -16,7 +16,7 @@ module Migrations::Converters::Discourse
       @source_db.query <<~SQL
         SELECT *
         FROM user_options
-        WHERE user_id >= 0
+        WHERE user_id > 0
         ORDER BY user_id
       SQL
     end
@@ -24,7 +24,9 @@ module Migrations::Converters::Discourse
     def process_item(item)
       IntermediateDB::UserOption.create(
         user_id: item[:user_id],
+        ai_search_discoveries: item[:ai_search_discoveries],
         allow_private_messages: item[:allow_private_messages],
+        auto_image_caption: item[:auto_image_caption],
         auto_track_topics_after_msecs: item[:auto_track_topics_after_msecs],
         automatically_unpin_topics: item[:automatically_unpin_topics],
         bookmark_auto_delete_preference: item[:bookmark_auto_delete_preference],
@@ -35,6 +37,7 @@ module Migrations::Converters::Discourse
         chat_separate_sidebar_mode: item[:chat_separate_sidebar_mode],
         chat_sound: item[:chat_sound],
         color_scheme_id: item[:color_scheme_id],
+        composition_mode: item[:composition_mode],
         dark_scheme_id: item[:dark_scheme_id],
         default_calendar: item[:default_calendar],
         digest_after_minutes: item[:digest_after_minutes],
@@ -48,7 +51,7 @@ module Migrations::Converters::Discourse
         email_previous_replies: item[:email_previous_replies],
         enable_allowed_pm_users: item[:enable_allowed_pm_users],
         enable_defer: item[:enable_defer],
-        enable_experimental_sidebar: item[:enable_experimental_sidebar],
+        enable_markdown_monospace_font: item[:enable_markdown_monospace_font],
         enable_quoting: item[:enable_quoting],
         enable_smart_lists: item[:enable_smart_lists],
         external_links_in_new_tab: item[:external_links_in_new_tab],
@@ -58,14 +61,18 @@ module Migrations::Converters::Discourse
         homepage_id: item[:homepage_id],
         ignore_channel_wide_mention: item[:ignore_channel_wide_mention],
         include_tl0_in_digests: item[:include_tl0_in_digests],
+        interface_color_mode: item[:interface_color_mode],
         last_redirected_to_top_at: item[:last_redirected_to_top_at],
         like_notification_frequency: item[:like_notification_frequency],
         mailing_list_mode: item[:mailing_list_mode],
         mailing_list_mode_frequency: item[:mailing_list_mode_frequency],
         new_topic_duration_minutes: item[:new_topic_duration_minutes],
+        notification_level_when_assigned: item[:notification_level_when_assigned],
         notification_level_when_replying: item[:notification_level_when_replying],
+        notify_on_linked_posts: item[:notify_on_linked_posts],
         oldest_search_log_date: item[:oldest_search_log_date],
         only_chat_push_notifications: item[:only_chat_push_notifications],
+        policy_email_frequency: item[:policy_email_frequency],
         seen_popups: item[:seen_popups],
         show_thread_title_prompts: item[:show_thread_title_prompts],
         sidebar_link_to_filtered_list: item[:sidebar_link_to_filtered_list],

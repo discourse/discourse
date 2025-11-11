@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "mysql2"
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require_relative "base"
 
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
@@ -87,7 +87,7 @@ class ImportScripts::MyBB < ImportScripts::Base
           avatar_url: avatar_url,
           post_create_action:
             proc do |newuser|
-              if !user["avatar"].blank?
+              if user["avatar"].present?
                 avatar = user["avatar"].gsub(/\?.*/, "")
                 if avatar.match(/^http.*/)
                   UserAvatar.import_url_for_user(avatar, newuser)

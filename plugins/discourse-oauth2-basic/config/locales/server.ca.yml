@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  login:
+    authenticator_error_fetch_user_details: "No s'han pogut recuperar les dades d'usuari. Teniu un compte actiu?"
+  site_settings:
+    oauth2_enabled: "OAuth2 personalitzat està habilitat"
+    oauth2_client_id: "ID de client per a OAuth2 personalitzat"
+    oauth2_client_secret: "Secret del client per a OAuth2 personalitzat"
+    oauth2_authorize_url: "URL d'autorització per a OAuth2"
+    oauth2_token_url: "URL del testimoni per a OAuth2"
+    oauth2_token_url_method: "Mètode que s'utilitza per a obtenir l'URL del testimoni"
+    oauth2_callback_user_id_path: "Camí en la resposta del testimoni a l'identificador de l'usuari, p. ex. params.info.uuid"
+    oauth2_callback_user_info_paths: "Camins en la resposta de testimoni a altres propietats de l'usuari. Les propietats compatibles són: name, username, email, email_verified i avatar. El format és propietat:camí, per exemple name:params.info.name"
+    oauth2_fetch_user_details: "Obté el JSON d'usuari per a OAuth2"
+    oauth2_user_json_url: "URL per a obtenir el JSON d'usuari per a OAuth2 (tingueu en compte que reemplacem :id amb l'identificador retornat per la crida OAuth i :token amb l'identificador de testimoni)"
+    oauth2_user_json_url_method: "Mètode utilitzat per a obtenir l'URL de l'usuari JSON"
+    oauth2_json_user_id_path: "Camí en el JSON d'usuari OAuth2 a l'identificador d'usuari, p. ex.: user.id"
+    oauth2_json_username_path: "Camí en el JSON d'usuari OAuth2 al nom d'usuari, p. ex.: user.username"
+    oauth2_json_name_path: "Ruta d'accés en el JSON d'usuari OAuth2 al nom complet d'usuari. Per exemple: user.name.full"
+    oauth2_json_email_path: "Ruta d'accés en el JSON d'usuari OAuth2 al correu electrònic d'usuari. Per exemple: user.email"
+    oauth2_email_verified: "Comprova-ho si el lloc web OAuth2 ha verificat el correu electrònic"
+    oauth2_send_auth_header: "Envia les credencials de client en una capçalera d’autorització HTTP"
+    oauth2_debug_auth: "Inclou informació de depuració enriquida en els registres"
+    oauth2_authorize_options: "En autoritzar sol·licita aquestes opcions"
+    oauth2_scope: "En autoritzar sol·licita aquest abast"
+    oauth2_button_title: "Text del botó OAuth2"
+    oauth2_allow_association_change: Permet als usuaris desconnectar i reconnectar els comptes de Discourse des del proveïdor OAuth2
+    errors:
+      oauth2_fetch_user_details: "oauth2_callback_user_id_p_path ha de ser present per a inhabilitar oauth2_fetch_user_details"

@@ -14,13 +14,17 @@ module Onebox
         path.match?(%r{^/\d+(/\w+)?/?$})
       end
 
+      def self.embed_url(video_id)
+        "https://player.vimeo.com/video/#{video_id}"
+      end
+
       def placeholder_html
         ::Onebox::Helpers.video_placeholder_html
       end
 
       def to_html
         video_src = Nokogiri::HTML5.fragment(oembed_data[:html]).at_css("iframe")&.[]("src")
-        video_src = "https://player.vimeo.com/video/#{oembed_data[:video_id]}" if video_src.blank?
+        video_src = self.class.embed_url(oembed_data[:video_id]) if video_src.blank?
         video_src = video_src.gsub("autoplay=1", "").chomp("?")
 
         <<-HTML

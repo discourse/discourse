@@ -47,31 +47,31 @@ module PageObjects
 
       def has_group_mentioned_notification?(topic, user_that_mentioned_group, group_mentioned)
         expect(find("#quick-access-replies .group-mentioned").text).to eq(
-          "#{user_that_mentioned_group.username} @#{group_mentioned.name} #{topic.title}",
+          "#{user_that_mentioned_group.username} @#{group_mentioned.name}\n#{topic.title}",
         )
       end
 
       def has_user_full_name_mentioned_notification?(topic, user_that_mentioned)
         expect(find("#quick-access-replies .mentioned").text).to eq(
-          "#{user_that_mentioned.name} #{topic.title}",
+          "#{user_that_mentioned.name}\n#{topic.title}",
         )
       end
 
       def has_user_full_name_messaged_notification?(post, user)
         expect(find("#quick-access-all-notifications .private-message").text).to eq(
-          "#{user.name} #{post.topic.title}",
+          "#{user.name}\n#{post.topic.title}",
         )
       end
 
       def has_user_full_name_bookmarked_notification?(post, user)
         expect(find("#quick-access-bookmarks .bookmark").text).to eq(
-          "#{user.name} #{post.topic.title}",
+          "#{user.name}\n#{post.topic.title}",
         )
       end
 
       def has_user_username_mentioned_notification?(topic, user_that_mentioned)
         expect(find("#quick-access-replies .mentioned").text).to eq(
-          "#{user_that_mentioned.username} #{topic.title}",
+          "#{user_that_mentioned.username}\n#{topic.title}",
         )
       end
 

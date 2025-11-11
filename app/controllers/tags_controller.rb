@@ -160,6 +160,22 @@ class TagsController < ::ApplicationController
       @additional_tags =
         params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
 
+      if @additional_tags.present?
+        additional_tags_trimmed = @additional_tags.dup
+        additional_tags_trimmed.delete(@tag_id)
+        additional_tags_trimmed = additional_tags_trimmed&.uniq
+
+        if additional_tags_trimmed != @additional_tags
+          if additional_tags_trimmed.present?
+            params[:additional_tag_ids] = additional_tags_trimmed&.join("/")
+          else
+            params[:additional_tag_ids] = nil
+          end
+
+          return redirect_to url_for(params.to_unsafe_hash)
+        end
+      end
+
       list_opts = build_topic_list_options
       @list = nil
 
@@ -200,10 +216,10 @@ class TagsController < ::ApplicationController
   end
 
   def update
-    guardian.ensure_can_admin_tags!
-
     tag = Tag.find_by_name(params[:tag_id])
     raise Discourse::NotFound if tag.nil?
+
+    guardian.ensure_can_edit_tag!(tag)
 
     if (params[:tag][:id].present?)
       new_tag_name = DiscourseTagging.clean_tag(params[:tag][:id])
@@ -244,14 +260,15 @@ class TagsController < ::ApplicationController
 
             if tag_group_name
               tag_group =
-                TagGroup.find_by(name: tag_group_name) || TagGroup.create!(name: tag_group_name)
+                TagGroup.find_by_name_insensitive(tag_group_name) ||
+                  TagGroup.create!(name: tag_group_name)
               tag.tag_groups << tag_group if tag.tag_groups.exclude?(tag_group)
             end
           end
         end
         render json: success_json
       rescue Discourse::InvalidParameters => e
-        render json: failed_json.merge(errors: [e.message]), status: 422
+        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
       end
     end
   end
@@ -312,7 +329,7 @@ class TagsController < ::ApplicationController
 
     filter_params[:category] = Category.find_by_id(params[:categoryId]) if params[:categoryId]
 
-    if !params[:q].blank?
+    if params[:q].present?
       clean_name = DiscourseTagging.clean_tag(params[:q])
       filter_params[:term] = clean_name
       filter_params[:order_search_results] = true
@@ -402,7 +419,7 @@ class TagsController < ::ApplicationController
   end
 
   def create_synonyms
-    guardian.ensure_can_admin_tags!
+    guardian.ensure_can_edit_tag!
     value = DiscourseTagging.add_or_create_synonyms_by_name(@tag, params[:synonyms])
     if value.is_a?(Array)
       render json:
@@ -419,14 +436,16 @@ class TagsController < ::ApplicationController
   end
 
   def destroy_synonym
-    guardian.ensure_can_admin_tags!
     synonym = Tag.where_name(params[:synonym_id]).first
     raise Discourse::NotFound unless synonym
+
+    guardian.ensure_can_edit_tag!(synonym)
+
     if synonym.target_tag == @tag
       synonym.update!(target_tag: nil)
       render json: success_json
     else
-      render json: failed_json, status: 400
+      render json: failed_json, status: :bad_request
     end
   end
 

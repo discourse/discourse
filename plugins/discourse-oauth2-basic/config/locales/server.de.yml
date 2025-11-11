@@ -1,0 +1,40 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  login:
+    authenticator_error_fetch_user_details: "Deine Benutzerdaten konnten nicht abgerufen werden. Hast du ein aktives Konto?"
+  site_settings:
+    oauth2_enabled: "Benutzerdefiniertes OAuth2 ist aktiviert"
+    oauth2_client_id: "Client-ID für benutzerdefiniertes OAuth2"
+    oauth2_client_secret: "Client-Geheimnis für benutzerdefiniertes OAuth2"
+    oauth2_authorize_url: "Autorisierungs-URL für OAuth2"
+    oauth2_authorize_signup_url: '(optional) Alternative Autorisierungs-URL, die zum Einsatz kommt, wenn die Schaltfläche „Registrieren“ verwendet wird'
+    oauth2_token_url: "Token-URL für OAuth2"
+    oauth2_token_url_method: "Methode, mit der die Token-URL abgerufen wird"
+    oauth2_callback_user_id_path: "Pfad in der Token-Antwort zur Benutzer-ID. Beispiel: params.info.uuid"
+    oauth2_callback_user_info_paths: "Pfade in der Token-Antwort zu anderen Benutzereigenschaften. Unterstützte Eigenschaften sind name, username, email, email_verified und avatar. Format: property:path, z. B. name:params.info.name"
+    oauth2_fetch_user_details: "Benutzer-JSON für OAuth2 abrufen"
+    oauth2_user_json_url: "URL zum Abrufen der Benutzer-JSON für OAuth2 (beachte, dass wir :id durch die vom OAuth-Call zurückgegebene ID und :token durch die Token-ID ersetzen)"
+    oauth2_user_json_url_method: "Methode, mit der die Benutzer-JSON-URL abgerufen wird"
+    oauth2_json_user_id_path: "Pfad im OAuth2-Benutzer-JSON zur Benutzer-ID. Beispiel: user.id"
+    oauth2_json_username_path: "Pfad im OAuth2-Benutzer-JSON zum Benutzernamen. Beispiel: user.username"
+    oauth2_json_name_path: "Pfad im OAuth2-Benutzer-JSON zum vollständigen Namen des Benutzers. Beispiel: user.name.full"
+    oauth2_json_email_path: "Pfad im OAuth2-Benutzer-JSON zur E-Mail-Adresse des Benutzers. Beispiel: user.email"
+    oauth2_json_email_verified_path: "Pfad im OAuth2-Benutzer-JSON zum E-Mail-Verifizierungsstatus des Benutzers. Beispiel: user.email.verified. oauth2_email_verified muss deaktiviert sein, damit diese Einstellung eine Wirkung hat"
+    oauth2_json_avatar_path: "Pfad im OAuth2-Benutzer-JSON zum Avatar des Benutzers. Beispiel: user.avatar_url"
+    oauth2_email_verified: "Aktivieren, wenn die OAuth2-Website die E-Mail verifiziert hat"
+    oauth2_overrides_email: "Überschreibt die Discourse-E-Mail-Adresse bei jeder Anmeldung mit der remote E-Mail-Adresse. Funktioniert genauso wie die Einstellung `auth_overrides_email`, ist aber spezifisch für OAuth2-Anmeldungen."
+    oauth2_send_auth_header: "Client-Anmeldedaten in einem HTTP-Autorisierungs-Header senden"
+    oauth2_send_auth_body: "Client-Anmeldedaten im Anfrage-Body senden"
+    oauth2_debug_auth: "Ausführliche Informationen zur Fehlerbehebung in Protokolle aufnehmen"
+    oauth2_authorize_options: "Bei der Autorisierung folgende Optionen anfordern"
+    oauth2_scope: "Bei der Autorisierung folgenden Bereich anfordern"
+    oauth2_button_title: "Der Text für die OAuth2-Schaltfläche"
+    oauth2_allow_association_change: Erlaube Benutzern, ihre Discourse-Konten vom OAuth2-Anbieter zu trennen und wieder zu verbinden
+    oauth2_disable_csrf: "CSRF-Prüfung deaktivieren"
+    errors:
+      oauth2_fetch_user_details: "oauth2_callback_user_id_path muss vorhanden sein, um oauth2_fetch_user_details zu deaktivieren"

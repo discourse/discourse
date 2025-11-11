@@ -458,12 +458,8 @@ th:
       title: "โพสต์ของคุณได้รับการอนุมัติ"
   page_not_found:
     page_title: "ไม่พบหน้าดังกล่าว"
-    popular_topics: "ยอดนิยม"
     see_more: "อื่น"
-    search_title: "ค้นหาเว็บไซต์นี้"
     search_button: "ค้นหา"
-  color_schemes:
-    default_theme_name: "ค่าเริ่มต้น"
   csv_export:
     boolean_yes: "ใช่"
     boolean_no: "ไม่ใช่"
@@ -541,7 +537,7 @@ th:
     actions:
       agree:
         title: "ใช่"
-      delete_single:
+      delete:
         title: "ลบ"
         complete: "โพสต์ถูกลบ."
       delete_and_ignore:
@@ -560,8 +556,10 @@ th:
           complete: "ผู้ใช้ถูกลบ."
       reject:
         title: "ละทิ้ง"
+      delete_post:
+        complete: "โพสต์ถูกลบ"
       delete_user:
-        complete: "ผู้ใช้ถูกลบ."
+        complete: "ผู้ใช้ถูกลบ"
   fallback_username: "ผู้ใช้"
   activemodel:
     errors:

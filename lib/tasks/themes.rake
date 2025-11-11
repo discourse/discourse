@@ -105,7 +105,7 @@ def update_themes(version_cache: Concurrent::Map.new)
 end
 
 desc "Update themes & theme components"
-task "themes:update": %w[environment assets:precompile:theme_transpiler] do
+task "themes:update": %w[environment assets:precompile:asset_processor] do
   if ENV["RAILS_DB"].present?
     update_themes
   else
@@ -281,9 +281,19 @@ task "themes:qunit_all_official" => :environment do |task, args|
   ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
     path = File.join(Rails.root, "tmp/themes/#{theme_name}")
 
-    if Dir.glob("#{File.join(path, "test")}/**/*.{js,es6}").any?
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs}").any?
       theme = RemoteTheme.import_theme_from_directory(path)
       theme_ids_with_qunit_tests << theme.id
+    else
+      puts "Skipping #{theme_name} as no QUnit tests have been detected"
+    end
+  end
+
+  Theme::CORE_THEMES.each do |(theme_name, theme_id)|
+    path = File.join(Rails.root, "themes/#{theme_name}")
+
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs}").any?
+      theme_ids_with_qunit_tests << theme_id
     else
       puts "Skipping #{theme_name} as no QUnit tests have been detected"
     end

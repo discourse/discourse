@@ -7,17 +7,25 @@
 hr:
   system_messages:
     chat_channel_archive_failed:
-      title: "Arhiva Chat kanala nije uspjela"
+      title: "Arhiva kanala za chat nije uspjela"
       subject_template: "Arhiva kanala za chat nije uspjela"
     chat_channel_archive_failed_no_topic:
-      title: "Arhiva Chat kanala nije uspjela"
+      title: "Arhiva kanala za chat nije uspjela"
       subject_template: "Arhiva kanala za chat nije uspjela"
+      text_body_template: |
+        Arhiviranje chat kanala %{channel_hashtag_or_name} nije uspjelo. Poruke nisu arhivirane. Tema nije uspješno kreirana iz sljedećih razloga:
+
+          %{topic_validation_errors}
+
+        Posjetite kanal na %{channel_url} kako biste ponovno pokušali.
   chat:
     deleted_chat_username: izbrisao
     errors:
       not_accepting_dms: "Žao nam je, %{username} trenutno ne prihvaća poruke."
     reviewables:
       actions:
+        no_action_message:
+          title: "Nema akcije"
         agree_and_suspend:
           title: "Suspendiraj korisnika"
         agree_and_silence:

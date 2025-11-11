@@ -4,6 +4,10 @@
 
 $mobile-breakpoint: 700px;
 
+:root {
+  --admin-content-max-width: min(700px, 100%);
+}
+
 // Common admin styles
 .admin-main-nav {
   display: inline-flex;
@@ -118,10 +122,6 @@ $mobile-breakpoint: 700px;
   td,
   th {
     padding: 8px;
-  }
-
-  tr:hover {
-    background-color: var(--primary-very-low);
   }
 
   tr.selected {
@@ -273,7 +273,7 @@ $mobile-breakpoint: 700px;
 
   .site-text {
     cursor: pointer;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
     margin-bottom: 0.5em;
 
     &.overridden {
@@ -360,7 +360,7 @@ $mobile-breakpoint: 700px;
     }
 
     .outdated {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       box-sizing: border-box;
       color: var(--primary);
       margin-bottom: 1em;
@@ -851,7 +851,7 @@ $mobile-breakpoint: 700px;
 .admin-detail {
   background-color: var(--secondary);
   margin-left: 0;
-  border-left: solid 1px var(--primary-low);
+  border-left: solid 1px var(--content-border-color);
   padding: 30px 0 90px 30px;
   width: 82%;
   box-sizing: border-box;
@@ -1070,7 +1070,9 @@ table#user-badges {
 
     .shift-up-value-btn,
     .shift-down-value-btn {
-      display: none;
+      .discourse-no-touch & {
+        display: none;
+      }
       margin-inline: 0.25em;
     }
 
@@ -1243,6 +1245,7 @@ a.inline-editable-field {
 @import "admin/json_schema_editor";
 @import "admin/schema_field";
 @import "admin/staff_logs";
+@import "admin/color_palettes";
 @import "admin/customize";
 @import "admin/customize-install-theme";
 @import "admin/api";
@@ -1253,6 +1256,7 @@ a.inline-editable-field {
 @import "admin/search";
 @import "admin/admin_table";
 @import "admin/admin_filter";
+@import "admin/admin_filter_controls";
 @import "admin/admin_reports";
 @import "admin/admin_report";
 @import "admin/admin_report_counters";
@@ -1263,6 +1267,7 @@ a.inline-editable-field {
 @import "admin/admin_report_table";
 @import "admin/admin_report_inline_table";
 @import "admin/admin_section_landing_page";
+@import "admin/admin_user_fields";
 @import "admin/admin_intro";
 @import "admin/mini_profiler";
 @import "admin/schema_setting_editor";
@@ -1271,3 +1276,4 @@ a.inline-editable-field {
 @import "admin/color-palette-editor";
 @import "admin/admin_config_color_palettes";
 @import "admin/admin_config_components";
+@import "admin/upcoming-changes";

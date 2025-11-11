@@ -1,11 +1,10 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:whisperers_group) { Fabricate(:group) }
+  fab!(:whisperers_group, :group)
   fab!(:user2) { Fabricate(:user, groups: [whisperers_group]) }
   fab!(:moderator)
   fab!(:coding_horror)
@@ -386,8 +385,8 @@ describe Topic do
   end
 
   describe "topic title uniqueness" do
-    fab!(:category1) { Fabricate(:category) }
-    fab!(:category2) { Fabricate(:category) }
+    fab!(:category1, :category)
+    fab!(:category2, :category)
 
     fab!(:topic) { Fabricate(:topic, category: category1) }
     let(:new_topic) { Fabricate.build(:topic, title: topic.title, category: category1) }
@@ -611,7 +610,7 @@ describe Topic do
   end
 
   describe "category validation" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
 
     context "when allow_uncategorized_topics is false" do
       before { SiteSetting.allow_uncategorized_topics = false }
@@ -646,7 +645,7 @@ describe Topic do
   end
 
   describe ".similar_to" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
 
     it "returns an empty array with nil params" do
       expect(Topic.similar_to(nil, nil)).to eq([])
@@ -681,6 +680,64 @@ describe Topic do
       SiteSetting.search_ignore_accents = true
 
       expect(Topic.similar_to("'bad quotes'", "'bad quotes'")).to eq([])
+    end
+
+    context "with plugin similar_topic_candidate_ids modifier" do
+      it "uses plugin-provided candidate ids preserving order and respecting limit" do
+        t1 = Fabricate(:topic)
+        t2 = Fabricate(:topic)
+        t3 = Fabricate(:topic)
+        t4 = Fabricate(:topic)
+
+        raws = { t1.id => "raw one", t2.id => "raw two", t3.id => "raw three", t4.id => "raw four" }
+
+        [t1, t2, t3, t4].each do |t|
+          Fabricate(:post, topic: t, user: t.user, post_number: 1, raw: raws[t.id])
+        end
+
+        desired_order = [t3.id, t1.id, t2.id, t4.id]
+
+        plugin_instance = Plugin::Instance.new
+        begin
+          blk =
+            lambda do |candidates, args|
+              expect(args[:title]).to eq("any title")
+              expect(args[:raw]).to eq("any raw")
+              desired_order
+            end
+
+          DiscoursePluginRegistry.register_modifier(
+            plugin_instance,
+            :similar_topic_candidate_ids,
+            &blk
+          )
+
+          results = Topic.similar_to("any title", "any raw")
+
+          # keeping this 3 but test will break if MAX_SIMILAR_TOPICS is changed (by design)
+          expected_ids = desired_order.first(3)
+          expect(results.map(&:id)).to eq(expected_ids)
+
+          # ensure extra selected columns are present and correct
+          results.each_with_index do |topic, idx|
+            # topics.* still present
+            expect(topic).to be_a(Topic)
+            expect(topic.id).to eq(expected_ids[idx])
+
+            # similarity is computed as 3,2,1 for our limited set
+            expect(topic["similarity"]).to eq(expected_ids.length - idx)
+
+            # blurb is first post cooked
+            expect(topic["blurb"]).to eq(topic.posts.first.cooked)
+          end
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :similar_topic_candidate_ids,
+            &blk
+          )
+        end
+      end
     end
 
     context "with a similar topic" do
@@ -938,6 +995,12 @@ describe Topic do
           ).and not_change { Post.where(post_type: Post.types[:small_action]).count }
         end
 
+        it "sets invited user to watch the PM" do
+          expect { topic.invite(user, user1.username) }.to change {
+            TopicUser.get(topic, user1).try(:notification_level)
+          }.to TopicUser.notification_levels[:watching]
+        end
+
         context "when from a muted user" do
           before { Fabricate(:muted_user, user: user1, muted_user: user) }
 
@@ -1087,7 +1150,7 @@ describe Topic do
 
           fab!(:topic) { Fabricate(:topic, category: category) }
           fab!(:inviter) { Fabricate(:user).tap { |user| group.add_owner(user) } }
-          fab!(:invitee) { Fabricate(:user) }
+          fab!(:invitee, :user)
 
           describe "as a group owner" do
             it "should be able to invite a user" do
@@ -1361,11 +1424,11 @@ describe Topic do
         }.not_to change(topic, :bumped_at)
       end
 
-      it "bumps the topic when a new version is made of the last post" do
+      it "doesn't bump the topic when a new version is made of the last post" do
         expect {
           last_post.revise(moderator, raw: "updated contents")
           topic.reload
-        }.to change(topic, :bumped_at)
+        }.not_to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
@@ -1714,7 +1777,7 @@ describe Topic do
       end
 
       it "returns a localized banner" do
-        SiteSetting.experimental_content_localization = true
+        SiteSetting.content_localization_enabled = true
 
         first_post.update!(locale: "en")
         I18n.locale = :ja
@@ -1750,7 +1813,7 @@ describe Topic do
   end
 
   describe "with category" do
-    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:category, :category_with_definition)
 
     it "should not increase the topic_count with no category" do
       expect {
@@ -1909,6 +1972,14 @@ describe Topic do
             expect(topic.category_id).to eq(new_category.id)
           end
 
+          it "should not generate a notification if options: silent is true" do
+            expect do topic.change_category_to_id(new_category.id, silent: true) end.not_to change {
+              Notification.count
+            }
+
+            expect(topic.category_id).to eq(new_category.id)
+          end
+
           it "should generate the modified notification for the topic if already seen" do
             TopicUser.create!(
               topic_id: topic.id,
@@ -2001,7 +2072,7 @@ describe Topic do
         describe "when the topic title is not valid" do
           fab!(:topic_title) { topic.title }
           fab!(:topic_slug) { topic.slug }
-          fab!(:topic_2) { Fabricate(:topic) }
+          fab!(:topic_2, :topic)
 
           it "does not save title or slug when title repeats letters" do
             topic.title = "a" * 50
@@ -2539,10 +2610,10 @@ describe Topic do
 
   describe "all_allowed_users" do
     fab!(:topic) { Fabricate(:topic, allowed_groups: [group]) }
-    fab!(:allowed_user) { Fabricate(:user) }
-    fab!(:allowed_group_user) { Fabricate(:user) }
+    fab!(:allowed_user, :user)
+    fab!(:allowed_group_user, :user)
     fab!(:moderator) { Fabricate(:user, moderator: true) }
-    fab!(:rando) { Fabricate(:user) }
+    fab!(:rando, :user)
 
     before do
       topic.allowed_users << allowed_user
@@ -2640,7 +2711,7 @@ describe Topic do
     fab!(:topic)
 
     context "with category's topic count" do
-      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:category, :category_with_definition)
 
       it "subtracts 1 if topic is being deleted" do
         topic = Fabricate(:topic, category: category)
@@ -2690,7 +2761,7 @@ describe Topic do
     fab!(:topic)
 
     context "with category's topic count" do
-      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:category, :category_with_definition)
 
       it "adds 1 if topic is deleted" do
         topic = Fabricate(:topic, category: category, deleted_at: 1.day.ago)
@@ -3143,7 +3214,7 @@ describe Topic do
   end
 
   describe "#pm_with_non_human_user?" do
-    fab!(:robot) { Fabricate(:bot) }
+    fab!(:robot, :bot)
 
     fab!(:topic) do
       topic =
@@ -3332,6 +3403,17 @@ describe Topic do
     end
   end
 
+  describe "#before_save" do
+    it "replaces empty locales with nil" do
+      topic = Fabricate(:topic, locale: "en")
+
+      topic.locale = ""
+      topic.save!
+
+      expect(topic.reload.locale).to eq(nil)
+    end
+  end
+
   describe "#after_update" do
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:category) { Fabricate(:category_with_definition, read_restricted: true) }
@@ -3465,7 +3547,7 @@ describe Topic do
         from_address: "discourse@example.com",
         topic: topic,
         post: topic.posts.first,
-        created_at: 1.minutes.ago,
+        created_at: 1.minute.ago,
       )
     end
 
@@ -3528,8 +3610,8 @@ describe Topic do
   end
 
   describe "#publish_stats_to_clients!" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user2, :user)
     fab!(:topic) { Fabricate(:topic, user: user1) }
     fab!(:post1) { Fabricate(:post, topic: topic, user: user1) }
     fab!(:post2) { Fabricate(:post, topic: topic, user: user2) }
@@ -3621,13 +3703,29 @@ describe Topic do
     it "returns the localization with the specified locale" do
       I18n.locale = "ja"
       topic = Fabricate(:topic)
-      zh_localization = Fabricate(:topic_localization, topic: topic, locale: "zh_CN")
-      ja_localization = Fabricate(:topic_localization, topic: topic, locale: "ja")
+      zh_localization = Fabricate(:topic_localization, topic:, locale: "zh_CN")
+      ja_localization = Fabricate(:topic_localization, topic:, locale: "ja")
 
       expect(topic.get_localization(:zh_CN)).to eq(zh_localization)
       expect(topic.get_localization("zh-CN")).to eq(zh_localization)
       expect(topic.get_localization("xx")).to eq(nil)
       expect(topic.get_localization).to eq(ja_localization)
+    end
+
+    it "returns a regional localization (ja_JP) when the user's locale (ja) is not available" do
+      I18n.locale = "ja"
+      topic = Fabricate(:topic)
+      ja_jp_localization = Fabricate(:topic_localization, topic:, locale: "ja_JP")
+
+      expect(topic.get_localization).to eq(ja_jp_localization)
+    end
+
+    it "returns a normalized localization (pt) if the user's locale (pt_BR) is not available" do
+      I18n.locale = "pt_BR"
+      topic = Fabricate(:topic)
+      pt_localization = Fabricate(:topic_localization, topic:, locale: "pt")
+
+      expect(topic.get_localization).to eq(pt_localization)
     end
   end
 
@@ -3636,6 +3734,9 @@ describe Topic do
       I18n.locale = "ja"
       topic = Fabricate(:topic, locale: "ja")
 
+      expect(topic.in_user_locale?).to eq(true)
+
+      topic.update!(locale: "ja_JP")
       expect(topic.in_user_locale?).to eq(true)
 
       topic.update!(locale: "es")

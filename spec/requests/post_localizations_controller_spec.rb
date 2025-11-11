@@ -9,8 +9,8 @@ describe PostLocalizationsController do
   let(:raw) { "これは翻訳です。" }
 
   before do
-    SiteSetting.experimental_content_localization = true
-    SiteSetting.experimental_content_localization_allowed_groups = group.id.to_s
+    SiteSetting.content_localization_enabled = true
+    SiteSetting.content_localization_allowed_groups = group.id.to_s
     group.add(user)
     sign_in(user)
   end

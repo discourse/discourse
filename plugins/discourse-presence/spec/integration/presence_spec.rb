@@ -3,7 +3,7 @@
 RSpec.describe "discourse-presence" do
   describe "PresenceChannel configuration" do
     fab!(:user)
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     fab!(:admin)
 
     fab!(:group) do
@@ -70,13 +70,20 @@ RSpec.describe "discourse-presence" do
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+      )
 
       SiteSetting.enable_category_group_moderation = true
       Fabricate(:category_moderation_group, category:, group:)
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}", use_cache: false)
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff], group.id)
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+        group.id,
+      )
     end
 
     it "adds edit_all_post_groups to the presence channel" do
@@ -87,7 +94,8 @@ RSpec.describe "discourse-presence" do
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.allowed_group_ids).to contain_exactly(
-        Group::AUTO_GROUPS[:staff],
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
         Group::AUTO_GROUPS[:trust_level_1],
         g.id,
       )
@@ -109,7 +117,11 @@ RSpec.describe "discourse-presence" do
     it "handles permissions for private messages" do
       c = PresenceChannel.new("/discourse-presence/reply/#{private_message.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(group.id, Group::AUTO_GROUPS[:staff])
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        group.id,
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+      )
       expect(c.config.allowed_user_ids).to contain_exactly(
         *private_message.topic_allowed_users.pluck(:user_id),
       )
@@ -129,7 +141,8 @@ RSpec.describe "discourse-presence" do
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(
-        Group::AUTO_GROUPS[:staff],
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
         *SiteSetting.whispers_allowed_groups_map,
       )
       expect(c.config.allowed_user_ids).to eq(nil)
@@ -139,7 +152,10 @@ RSpec.describe "discourse-presence" do
       p = Fabricate(:post, topic: public_topic, user: admin, locked_by_id: Discourse.system_user.id)
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+      )
       expect(c.config.allowed_user_ids).to eq(nil)
     end
 
@@ -149,7 +165,8 @@ RSpec.describe "discourse-presence" do
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(
         Group::AUTO_GROUPS[:trust_level_4],
-        Group::AUTO_GROUPS[:staff],
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
       )
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
@@ -169,7 +186,10 @@ RSpec.describe "discourse-presence" do
 
       c = PresenceChannel.new("/discourse-presence/edit/#{post.id}")
       expect(c.config.public).to eq(false)
-      expect(c.config.allowed_group_ids).to contain_exactly(Group::AUTO_GROUPS[:staff])
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+      )
       expect(c.config.allowed_user_ids).to contain_exactly(user.id)
     end
 
@@ -179,13 +199,72 @@ RSpec.describe "discourse-presence" do
       c = PresenceChannel.new("/discourse-presence/edit/#{post.id}")
       expect(c.config.public).to eq(false)
       expect(c.config.allowed_group_ids).to contain_exactly(
-        Group::AUTO_GROUPS[:staff],
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
         *private_message.allowed_groups.pluck(:id),
       )
       expect(c.config.allowed_user_ids).to contain_exactly(
         user.id,
         *private_message.allowed_users.pluck(:id),
       )
+    end
+
+    it "handles permissions for translate channel on public topics" do
+      post = Fabricate(:post, topic: public_topic, user: user)
+      SiteSetting.content_localization_enabled = true
+      SiteSetting.content_localization_allowed_groups = group.id
+
+      c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+      expect(c.config.public).to eq(false)
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+        group.id,
+      )
+      expect(c.config.allowed_user_ids).to eq(nil)
+    end
+
+    it "handles permissions for translate channel on secure category topics" do
+      post = Fabricate(:post, topic: private_topic, user: user)
+      SiteSetting.content_localization_enabled = true
+
+      c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+      expect(c.config.public).to eq(false)
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+        group.id,
+      )
+      expect(c.config.allowed_user_ids).to eq(nil)
+    end
+
+    it "handles permissions for translate channel on private messages" do
+      post = Fabricate(:post, topic: private_message, user: user)
+      SiteSetting.content_localization_enabled = true
+
+      c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+      expect(c.config.public).to eq(false)
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+        group.id,
+      )
+      expect(c.config.allowed_user_ids).to contain_exactly(
+        *private_message.topic_allowed_users.pluck(:user_id),
+      )
+    end
+
+    it "allows only staff for translate channel when content localization is disabled" do
+      post = Fabricate(:post, topic: public_topic, user: user)
+      SiteSetting.content_localization_enabled = false
+
+      c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
+      expect(c.config.public).to eq(false)
+      expect(c.config.allowed_group_ids).to contain_exactly(
+        Group::AUTO_GROUPS[:admins],
+        Group::AUTO_GROUPS[:moderators],
+      )
+      expect(c.config.allowed_user_ids).to eq(nil)
     end
   end
 end

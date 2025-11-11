@@ -60,10 +60,18 @@ function on_reopenlogs()
 export UNICORN_SUPERVISOR_PID=$$
 
 trap on_exit EXIT
-trap on_reload USR2 HUP
-trap on_reopenlogs USR1
+if [[ -z "$RUN_PITCHFORK" ]]; then
+  trap on_reload USR2 HUP
+  trap on_reopenlogs USR1
+  unicorn $@ &
+else
+  args=()
+  for arg in "$@"; do
+    args+=("${arg/unicorn.conf.rb/pitchfork.conf.rb}")
+  done
+  pitchfork "${args[@]}" &
+fi
 
-unicorn $@ &
 UNICORN_PID=$!
 
 echo "supervisor pid: $UNICORN_SUPERVISOR_PID unicorn pid: $UNICORN_PID"

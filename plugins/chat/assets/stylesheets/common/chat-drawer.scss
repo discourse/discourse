@@ -60,9 +60,13 @@ html.rtl {
   max-width: calc(100% - var(--composer-right));
   min-height: 300px !important; // important to override inline styles
 
+  .chat-search__filters .filter-input-container {
+    max-width: 250px;
+  }
+
   .chat-drawer-container {
     background: var(--secondary);
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     border-bottom: 0;
     border-top-left-radius: var(--d-border-radius-large);
     border-top-right-radius: var(--d-border-radius-large);

@@ -3,7 +3,7 @@
 RSpec.describe CategoryGuardian do
   fab!(:admin)
   fab!(:user)
-  fab!(:can_create_user) { Fabricate(:user) }
+  fab!(:can_create_user, :user)
 
   describe "can_post_in_category?" do
     fab!(:category)

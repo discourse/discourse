@@ -8,11 +8,11 @@ nl:
   js:
     presence:
       replying:
-        one: "beantwoordt"
-        other: "beantwoorden"
+        one: "is aan het typen"
+        other: "zijn aan het typen"
       editing:
         one: "bewerkt"
         other: "bewerken"
       replying_to_topic:
-        one: "beantwoordt"
-        other: "beantwoorden"
+        one: "is aan het typen"
+        other: "zijn aan het typen"

@@ -9,22 +9,31 @@ module Migrations::Database::IntermediateDB
     SQL = <<~SQL
       INSERT INTO user_emails (
         email,
+        user_id,
         created_at,
-        "primary",
-        user_id
+        "primary"
       )
       VALUES (
         ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
-    def self.create(email:, created_at: nil, primary: nil, user_id:)
+    # Creates a new `user_emails` record in the IntermediateDB.
+    #
+    # @param email        [String]
+    # @param user_id      [Integer, String]
+    # @param created_at   [Time, nil]
+    # @param primary      [Boolean, nil]
+    #
+    # @return [void]
+    def self.create(email:, user_id:, created_at: nil, primary: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
         email,
+        user_id,
         ::Migrations::Database.format_datetime(created_at),
         ::Migrations::Database.format_boolean(primary),
-        user_id,
       )
     end
   end

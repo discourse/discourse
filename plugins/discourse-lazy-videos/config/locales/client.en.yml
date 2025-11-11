@@ -1,0 +1,4 @@
+en:
+  js:
+    lazy_videos:
+      play_video: "Play %{title}"

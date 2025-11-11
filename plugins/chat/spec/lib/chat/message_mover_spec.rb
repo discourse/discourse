@@ -2,8 +2,8 @@
 
 describe Chat::MessageMover do
   fab!(:acting_user) { Fabricate(:admin, username: "testmovechat") }
-  fab!(:source_channel) { Fabricate(:category_channel) }
-  fab!(:destination_channel) { Fabricate(:category_channel) }
+  fab!(:source_channel, :category_channel)
+  fab!(:destination_channel, :category_channel)
 
   fab!(:message1) do
     Fabricate(

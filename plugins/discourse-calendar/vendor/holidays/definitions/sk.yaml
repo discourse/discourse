@@ -1,0 +1,154 @@
+# Slovak holiday definitions for the Ruby Holiday gem.
+#
+# Updated: 2013-12-26.
+# Sources:
+# - http://sk.wikipedia.org/wiki/Slovensk%C3%A9_%C5%A1t%C3%A1tne_sviatky
+---
+months:
+  0:
+  - name: Veľkonočný pondelok
+    regions: [sk]
+    function: easter(year)
+    function_modifier: 1
+  - name: Veľký piatok
+    regions: [sk]
+    function: easter(year)
+    function_modifier: -2
+  1:
+  - name: Nový rok
+    regions: [sk]
+    mday: 1
+  - name: Zjavenie Pána (Traja králi)
+    regions: [sk]
+    mday: 6
+  5:
+  - name: Sviatok práce
+    regions: [sk]
+    mday: 1
+  - name: Deň víťazstva nad fašizmom
+    regions: [sk]
+    mday: 8
+  7:
+  - name: Sviatok svätého Cyrila a svätého Metoda
+    regions: [sk]
+    mday: 5
+  8:
+  - name: Výročie Slovenského národného povstania
+    regions: [sk]
+    mday: 29
+  9:
+  - name: Deň Ústavy Slovenskej republiky
+    regions: [sk]
+    mday: 1
+  - name: Sedembolestná Panna Mária
+    regions: [sk]
+    mday: 15
+  11:
+  - name: Sviatok všetkých svätých
+    regions: [sk]
+    mday: 1
+  - name: Deň boja za slobodu a demokraciu
+    regions: [sk]
+    mday: 17
+  12:
+  - name: Štedrý deň
+    regions: [sk]
+    mday: 24
+  - name: 1. sviatok vianočný
+    regions: [sk]
+    mday: 25
+  - name: 2. sviatok vianočný
+    regions: [sk]
+    mday: 26
+
+tests:
+  - given:
+      date: '2013-01-01'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Nový rok"
+  - given:
+      date: '2013-01-06'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Zjavenie Pána (Traja králi)"
+  - given:
+      date: '2013-03-29'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Veľký piatok"
+  - given:
+      date: '2013-04-01'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Veľkonočný pondelok"
+  - given:
+      date: '2013-05-01'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Sviatok práce"
+  - given:
+      date: '2013-05-08'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Deň víťazstva nad fašizmom"
+  - given:
+      date: '2013-07-05'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Sviatok svätého Cyrila a svätého Metoda"
+  - given:
+      date: '2013-08-29'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Výročie Slovenského národného povstania"
+  - given:
+      date: '2013-09-01'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Deň Ústavy Slovenskej republiky"
+  - given:
+      date: '2013-09-15'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Sedembolestná Panna Mária"
+  - given:
+      date: '2013-11-01'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Sviatok všetkých svätých"
+  - given:
+      date: '2013-11-17'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Deň boja za slobodu a demokraciu"
+  - given:
+      date: '2013-12-24'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "Štedrý deň"
+  - given:
+      date: '2013-12-25'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "1. sviatok vianočný"
+  - given:
+      date: '2013-12-26'
+      regions: ["sk"]
+      options: ["informal"]
+    expect:
+      name: "2. sviatok vianočný"

@@ -81,7 +81,13 @@ module BackupRestore
       obj = object_from_path(file_name)
       raise BackupFileExists.new if obj.exists?
       key = temporary_upload_path(file_name)
-      s3_helper.create_multipart(key, content_type, metadata: metadata)
+
+      s3_helper.create_multipart(
+        key,
+        content_type,
+        metadata: metadata,
+        **FileStore::S3Store.default_s3_options(secure: true),
+      )
     end
 
     def move_existing_stored_upload(
@@ -92,11 +98,11 @@ module BackupRestore
       s3_helper.copy(
         existing_external_upload_key,
         File.join(s3_helper.s3_bucket_folder_path, original_filename),
-        options: {
-          acl: SiteSetting.s3_use_acls ? "private" : nil,
-          apply_metadata_to_destination: true,
-        },
+        options: { apply_metadata_to_destination: true }.merge(
+          FileStore::S3Store.default_s3_options(secure: true),
+        ),
       )
+
       s3_helper.delete_object(existing_external_upload_key)
     end
 

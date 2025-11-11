@@ -220,9 +220,9 @@ zh_CN:
         header: "聊天标题"
         composer: "聊天输入框"
         channels_list: "聊天频道列表"
-      no_direct_message_channels: "您还没有加入任何直接消息。"
+      no_direct_message_channels: "您还没有加入任何直接消息！"
       no_direct_message_channels_cta: "开始一个对话"
-      no_public_channels: "您还没有加入任何频道。"
+      no_public_channels: "您还没有加入任何频道！"
       no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
       only_chat_push_notifications:
@@ -286,7 +286,7 @@ zh_CN:
       uploaded_files:
         other: "%{count} 个文件"
       you_flagged: "您已举报此消息"
-      exit: "返回"
+      exit: "退出聊天"
       channel_status:
         read_only_header: "频道为只读"
         read_only: "只读"
@@ -310,6 +310,8 @@ zh_CN:
       chat_message_separator:
         today: 今天
         yesterday: 昨天
+      search_view:
+        filter_placeholder: 搜索消息
       members_view:
         filter_placeholder: 查找成员
         add_member: 添加成员
@@ -326,6 +328,7 @@ zh_CN:
         tabs:
           members: 成员
           settings: 设置
+          search: 搜索
         remove_member: "移除"
       new_message_modal:
         title: 发送消息
@@ -405,6 +408,7 @@ zh_CN:
           topic: "话题"
       reviewable:
         type: "聊天消息"
+        message_in_channel: "频道"
       reactions:
         only_you: "<span>您回应了 </span>:%{emoji}:"
         you_and_single_user: "<span>您和 %{username} 回应了 </span>:%{emoji}:"
@@ -465,6 +469,10 @@ zh_CN:
           create_export: "创建导出"
           confirm_export: "这会从所有频道中导出所有消息，并通过私信将结果发送给您。确定要导出吗？"
           export_has_started: "导出已开始。导出完成后，您将收到一条私信。"
+      search:
+        sort:
+          relevance: "相关性"
+          latest: "最新"
       my_threads:
         title: 我的消息串
         aria_label: "切换到我的消息串列表"
@@ -501,6 +509,7 @@ zh_CN:
         select_emoji: "选择表情符号"
         system: "系统"
         title: "传入网络钩子"
+        header_description: "外部系统可以使用传入的网络钩子将消息发布到作为机器人用户的指定聊天频道"
         url: "URL"
         url_instructions: "此 URL 包含一个秘密值 - 请安全保管。"
         username: "用户名"
@@ -666,7 +675,7 @@ zh_CN:
           switch_channel_arrows: "%{shortcut} 切换频道"
           switch__unread_channel_arrows: "%{shortcut} 切换未读频道"
           open_quick_channel_selector: "%{shortcut} 打开快速频道选择器"
-          open_insert_link_modal: "%{shortcut} 插入超链接（仅输入框）"
+          open_insert_link_modal: "%{shortcut} 插入链接（仅输入框）"
           composer_bold: "%{shortcut} 粗体（仅输入框）"
           composer_italic: "%{shortcut} 斜体（仅输入框）"
           composer_code: "%{shortcut} 代码（仅输入框）"
@@ -695,6 +704,9 @@ zh_CN:
         chat:
           title: 聊天
     sidebar:
+      start_new_dm:
+        text: 开始新的 DM
+        title: 创建个人聊天
       panels:
         chat:
           label: "聊天"

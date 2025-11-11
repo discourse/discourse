@@ -234,7 +234,7 @@ HTML
       f =
         ThemeField.create!(
           target_id: Theme.targets[:mobile],
-          theme_id: 1,
+          theme_id: -1,
           name: "after_header",
           value: html,
         )
@@ -246,24 +246,22 @@ HTML
       html = <<HTML
         <script type='text/discourse-plugin' version='0.1'>
           const x = 1;
+          console.log(x, settings.foo);
         </script>
 HTML
 
       baked, javascript_cache, field = transpile(html)
       expect(baked).to include(javascript_cache.url)
 
-      expect(javascript_cache.content).to include("if ('define' in window) {")
       expect(javascript_cache.content).to include(
-        "define(\"discourse/theme-#{field.theme_id}/discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"",
+        "themeCompatModules[\"discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"]",
       )
-      expect(javascript_cache.content).to include(
-        "settings = require(\"discourse/lib/theme-settings-store\").getObjectForTheme(#{field.theme_id});",
-      )
+      expect(javascript_cache.content).to include("getObjectForTheme(#{field.theme_id});")
       expect(javascript_cache.content).to include(
         "name: \"theme-field-#{field.id}-mobile-html-script-1\",",
       )
       expect(javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(javascript_cache.content).to include("(0, _pluginApi.withPluginApi)(\"0.1\", api =>")
+      expect(javascript_cache.content).to include("withPluginApi(\"0.1\", api =>")
       expect(javascript_cache.content).to include("const x = 1;")
     end
   end
@@ -392,7 +390,7 @@ HTML
           target: :common,
           name: :after_header,
           value:
-            '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{};</script>',
+            '<script type="text/discourse-plugin" version="1.0">alert(settings.name); let a = ()=>{}; console.log(a);</script>',
         )
       theme.save!
 
@@ -400,21 +398,19 @@ HTML
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(
         theme_field.javascript_cache.url,
       )
-      expect(theme_field.javascript_cache.content).to include("if ('require' in window) {")
+      expect(theme_field.javascript_cache.content).to include <<~JS
+        registerSettings(#{theme_field.theme.id}, {
+          "name": "bob"
+        });
+      JS
       expect(theme_field.javascript_cache.content).to include(
-        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{theme_field.theme.id}, {\"name\":\"bob\"});",
-      )
-      expect(theme_field.javascript_cache.content).to include("if ('define' in window) {")
-      expect(theme_field.javascript_cache.content).to include(
-        "define(\"discourse/theme-#{theme_field.theme.id}/discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\",",
+        "themeCompatModules[\"discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\"]",
       )
       expect(theme_field.javascript_cache.content).to include(
         "name: \"theme-field-#{theme_field.id}-common-html-script-1\",",
       )
       expect(theme_field.javascript_cache.content).to include("after: \"inject-objects\",")
-      expect(theme_field.javascript_cache.content).to include(
-        "(0, _pluginApi.withPluginApi)(\"1.0\", api =>",
-      )
+      expect(theme_field.javascript_cache.content).to include("withPluginApi(\"1.0\", api =>")
       expect(theme_field.javascript_cache.content).to include("alert(settings.name)")
       expect(theme_field.javascript_cache.content).to include("let a = () => {}")
 
@@ -423,9 +419,11 @@ HTML
       theme.save!
 
       theme_field.reload
-      expect(theme_field.javascript_cache.content).to include(
-        "require(\"discourse/lib/theme-settings-store\").registerSettings(#{theme_field.theme.id}, {\"name\":\"bill\"});",
-      )
+      expect(theme_field.javascript_cache.content).to include <<~JS
+        registerSettings(#{theme_field.theme.id}, {
+          "name": "bill"
+        });
+      JS
       expect(Theme.lookup_field(theme.id, :desktop, :after_header)).to include(
         theme_field.javascript_cache.url,
       )
@@ -597,6 +595,7 @@ HTML
         .filter { |m| m.channel == "/file-change" }
     expect(messages.count).to eq(1)
     expect(messages.first.data.map { |d| d[:target] }).to contain_exactly(
+      :common,
       :admin,
       :desktop,
       :mobile,
@@ -844,7 +843,8 @@ HTML
         theme.set_field(
           target: :common,
           name: :after_header,
-          value: '<script>console.log("hello world");</script>',
+          value:
+            '<script type="text/discourse-plugin" version="0.1">console.log("hello world");</script>',
         )
       theme.save!
 
@@ -990,21 +990,6 @@ HTML
 
       expect(content).to include("function migrate(settings)")
     end
-
-    it "digest does not change when settings are changed" do
-      content, digest = theme.baked_js_tests_with_digest
-      expect(content).to be_present
-      expect(digest).to be_present
-      expect(content).to include("assert.ok(true);")
-
-      theme.update_setting(:some_number, 55)
-      theme.save!
-      expect(theme.build_settings_hash[:some_number]).to eq(55)
-
-      new_content, new_digest = theme.baked_js_tests_with_digest
-      expect(new_content).to eq(content)
-      expect(new_digest).to eq(digest)
-    end
   end
 
   describe "get_setting" do
@@ -1143,7 +1128,7 @@ HTML
       theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
       theme.save!
 
-      expect(theme.javascript_cache.content).to include('"list_setting":"aa,bb"')
+      expect(theme.javascript_cache.content).to include('"list_setting": "aa,bb"')
 
       settings_field.update!(value: <<~YAML)
         integer_setting: 1
@@ -1166,7 +1151,7 @@ HTML
 
       expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
       expect(setting_record.value).to eq("zz|aa")
-      expect(theme.javascript_cache.content).to include('"list_setting":"zz|aa"')
+      expect(theme.javascript_cache.content).to include('"list_setting": "zz|aa"')
     end
 
     it "allows changing a setting's type" do
@@ -1590,17 +1575,6 @@ HTML
     end
   end
 
-  describe "#owned_color_scheme" do
-    it "is destroyed when the theme is destroyed" do
-      scheme = Fabricate(:color_scheme, owning_theme: theme)
-
-      theme.destroy!
-
-      expect(ThemeColorScheme.exists?(color_scheme_id: scheme.id)).to eq(false)
-      expect(ColorScheme.unscoped.exists?(id: scheme.id)).to eq(false)
-    end
-  end
-
   describe ".include_basic_relations" do
     fab!(:parent_theme_1) do
       Fabricate(
@@ -1717,51 +1691,6 @@ HTML
       )
       theme.save!
       expect(theme.screenshot_url).to eq(upload.url)
-    end
-  end
-
-  describe "#find_or_create_owned_color_palette" do
-    it "correctly associates a theme with its owned color palette" do
-      palette = theme.find_or_create_owned_color_palette
-
-      expect(palette.owning_theme).to eq(theme)
-      expect(theme.reload.owned_color_palette).to eq(palette)
-    end
-
-    it "ensures owned color palette is not user selectable" do
-      palette = theme.find_or_create_owned_color_palette
-
-      expect(palette.user_selectable).to eq(false)
-    end
-
-    it "copies colors from base or theme color scheme" do
-      theme_without_scheme = Fabricate(:theme, color_scheme: nil)
-      base_palette = theme_without_scheme.find_or_create_owned_color_palette
-
-      expect(base_palette.colors.length).to be > 0
-      expect(base_palette.colors.map(&:name).sort).to eq(ColorScheme.base.colors.map(&:name).sort)
-
-      custom_palette =
-        Fabricate(
-          :color_scheme,
-          colors: [ColorSchemeColor.new(name: "custom", hex: "11ccff", dark_hex: "ee9955")],
-        )
-      theme_with_scheme = Fabricate(:theme, color_scheme: custom_palette)
-      custom_palette = theme_with_scheme.find_or_create_owned_color_palette
-
-      expect(custom_palette.colors.length).to be > 0
-      expect(custom_palette.colors.map(&:name).sort).to eq(custom_palette.colors.map(&:name).sort)
-    end
-
-    it "returns the existing palette if a race condition occurs and a theme-owned palette is created while it's executing" do
-      expect(theme.owned_color_palette).to eq(nil)
-
-      palette = Fabricate(:color_scheme)
-      ThemeColorScheme.create!(theme_id: theme.id, color_scheme_id: palette.id)
-
-      expect(theme.owned_color_palette).to eq(nil)
-      expect(theme.find_or_create_owned_color_palette.id).to eq(palette.id)
-      expect(theme.owned_color_palette).to eq(palette)
     end
   end
 

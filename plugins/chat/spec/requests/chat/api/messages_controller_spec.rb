@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Api::ChannelMessagesController do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:admin)
 
   before do
@@ -67,7 +67,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     end
 
     describe "for category" do
-      fab!(:user_2) { Fabricate(:user) }
+      fab!(:user_2, :user)
       fab!(:chat_channel)
       fab!(:message) { Fabricate(:chat_message, chat_channel: chat_channel, user: current_user) }
       fab!(:user_2_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user_2) }
@@ -87,7 +87,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     end
 
     describe "for dm channel" do
-      fab!(:user_2) { Fabricate(:user) }
+      fab!(:user_2, :user)
       fab!(:chat_channel) { Fabricate(:direct_message_channel, users: [current_user, user_2]) }
       fab!(:message) { Fabricate(:chat_message, chat_channel: chat_channel, user: current_user) }
       fab!(:user_2_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user_2) }
@@ -179,7 +179,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     end
 
     fab!(:admin)
-    fab!(:another_user) { Fabricate(:user) }
+    fab!(:another_user, :user)
 
     describe "for category" do
       fab!(:category)
@@ -189,7 +189,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
     end
 
     describe "for dm channel" do
-      fab!(:user_2) { Fabricate(:user) }
+      fab!(:user_2, :user)
       fab!(:chat_channel) do
         Fabricate(:direct_message_channel, users: [current_user, another_user])
       end
@@ -247,7 +247,7 @@ RSpec.describe Chat::Api::ChannelMessagesController do
       end
 
       context "when the user is staff" do
-        fab!(:user) { Fabricate(:admin) }
+        fab!(:user, :admin)
 
         it "errors when the channel is not open or closed" do
           chat_channel.update(status: :closed)

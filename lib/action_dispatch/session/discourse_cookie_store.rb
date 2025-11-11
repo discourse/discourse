@@ -5,6 +5,13 @@ class ActionDispatch::Session::DiscourseCookieStore < ActionDispatch::Session::C
     super(app, options)
   end
 
+  # By default, Rack/Rails will include the session cookie in every response,
+  # even if its content hasn't changed. This makes race conditions very likely when
+  # multiple requests are made in parallel
+  def commit_session?(request, session, options)
+    super(request, session, options) && session_has_changed?(request, session)
+  end
+
   private
 
   def set_cookie(request, session_id, cookie)
@@ -15,5 +22,11 @@ class ActionDispatch::Session::DiscourseCookieStore < ActionDispatch::Session::C
       end
     end
     cookie_jar(request)[@key] = cookie
+  end
+
+  def session_has_changed?(request, session)
+    _, original_session = load_session(request)
+    new_session = session.to_hash
+    original_session != new_session
   end
 end

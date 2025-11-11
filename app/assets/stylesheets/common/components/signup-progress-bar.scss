@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --progress-bar-line-width: 1px;
   --progress-bar-circle-size: 0.5rem;
@@ -8,8 +10,12 @@
   width: auto;
   display: flex;
   box-sizing: border-box;
-  margin-bottom: 1.2em;
+  margin-bottom: 1.2rem;
   gap: 1rem;
+
+  @include viewport.until(sm) {
+    margin: 1.5rem 0.85rem;
+  }
 
   .account-created &,
   .activate-account & {

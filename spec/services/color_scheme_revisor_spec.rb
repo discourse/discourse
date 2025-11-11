@@ -10,6 +10,7 @@ RSpec.describe ColorSchemeRevisor do
       color_scheme_colors: [color],
     )
   end
+  let(:dark_color_scheme) { ColorScheme.find_by(name: "Dark") }
   let(:valid_params) { { name: color_scheme.name, colors: nil } }
 
   describe "revise" do
@@ -25,8 +26,11 @@ RSpec.describe ColorSchemeRevisor do
     end
 
     it "can update the base_scheme_id" do
-      ColorSchemeRevisor.revise(color_scheme, valid_params.merge(base_scheme_id: "test"))
-      expect(color_scheme.reload.base_scheme_id).to eq("test")
+      ColorSchemeRevisor.revise(
+        color_scheme,
+        valid_params.merge(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]),
+      )
+      expect(color_scheme.reload.base_scheme_id).to eq(ColorScheme::NAMES_TO_ID_MAP["Dark"])
     end
 
     it "can change colors" do

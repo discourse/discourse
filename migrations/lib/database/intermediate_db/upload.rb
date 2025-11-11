@@ -16,6 +16,7 @@ module Migrations::Database::IntermediateDB
       )
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     SQL
+    private_constant :SQL
 
     def self.create_for_file(
       path:,
@@ -90,6 +91,8 @@ module Migrations::Database::IntermediateDB
         origin,
         user_id,
       )
+
+      id
     end
   end
 end

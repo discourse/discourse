@@ -1,0 +1,179 @@
+.ai-usage {
+  --chart-response-color: rgb(75, 192, 192, 0.8);
+  --chart-request-color: rgb(153, 102, 255, 0.8);
+  --chart-cached-color: rgb(153, 102, 255, 0.4);
+  padding: 1em;
+
+  &__filters-dates {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-bottom: 1em;
+  }
+
+  &__period-buttons {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+
+    .btn {
+      padding: 0.5em 1em;
+
+      &.btn-primary {
+        background: var(--tertiary);
+        color: var(--secondary);
+      }
+    }
+  }
+
+  &__custom-date-pickers {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    margin-top: 0.5em;
+  }
+
+  &__filters {
+    margin-bottom: 2em;
+  }
+
+  &__filters-period {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+
+  .d-date-time-input-range {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+  }
+
+  .d-date-time-input-range .from {
+    margin: 0;
+  }
+
+  &__period-label {
+    font-weight: bold;
+  }
+
+  &__summary {
+    margin: 2em 0;
+  }
+
+  &__summary-title {
+    margin-bottom: 1em;
+    color: var(--primary);
+    font-size: 1.2em;
+  }
+
+  &__charts {
+    margin-top: 2em;
+  }
+
+  &__chart {
+    position: relative;
+  }
+
+  &__chart-container {
+    margin-bottom: 2em;
+  }
+
+  &__chart-title {
+    margin-bottom: 1em;
+  }
+
+  &__breakdowns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    margin-top: 2em;
+
+    @media (width <= 768px) {
+      grid-template-columns: none;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  &__users {
+    grid-column: span 2;
+
+    .admin-config-area-card__content {
+      display: flex;
+
+      .ai-usage__users-table {
+        &:first-child {
+          margin-right: 2em;
+
+          &.-double-width {
+            margin-right: 0;
+          }
+        }
+
+        &.-double-width {
+          .ai-usage__users-username {
+            width: auto;
+          }
+        }
+
+        .ai-usage__users-username {
+          width: 50px;
+        }
+      }
+    }
+  }
+
+  &__features-table,
+  &__users-table,
+  &__models-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      text-align: left;
+      padding: 0.5em;
+      border-bottom: 2px solid var(--primary-low);
+    }
+  }
+
+  &__features-row,
+  &__users-row,
+  &__models-row {
+    &:hover {
+      background: var(--primary-low);
+    }
+  }
+
+  &__features-cell,
+  &__users-cell,
+  &__models-cell {
+    padding: 0.5em;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__credit-allocations {
+    margin-top: 2em;
+    grid-column: span 2;
+  }
+
+  &__credit-model {
+    padding: 1em;
+    border-bottom: 1px solid var(--primary-low);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    h4 {
+      margin: 0 0 0.5em 0;
+      font-size: var(--font-0);
+    }
+  }
+
+  &__credit-details {
+    margin-top: 0.5em;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+}

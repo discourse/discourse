@@ -18,6 +18,7 @@ class Invite < ActiveRecord::Base
   BULK_INVITE_EMAIL_LIMIT = 200
   DOMAIN_REGEX =
     /\A(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])\z/
+  DESCRIPTION_MAX_LENGTH = 100
 
   rate_limit :limit_invites_per_day
 
@@ -30,10 +31,11 @@ class Invite < ActiveRecord::Base
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
 
-  validates_presence_of :invited_by_id
-  validates :email, email: true, allow_blank: true, length: { maximum: 500 }
+  validates :invited_by_id, presence: true
+  validates :email, email: true, allow_blank: true
   validates :custom_message, length: { maximum: 1000 }
   validates :domain, length: { maximum: 500 }
+  validates :description, length: { maximum: DESCRIPTION_MAX_LENGTH }
   validate :ensure_max_redemptions_allowed
   validate :valid_redemption_count
   validate :valid_domain, if: :will_save_change_to_domain?
@@ -177,7 +179,14 @@ class Invite < ActiveRecord::Base
       )
     else
       create_args =
-        opts.slice(:email, :domain, :moderator, :custom_message, :max_redemptions_allowed)
+        opts.slice(
+          :email,
+          :description,
+          :domain,
+          :moderator,
+          :custom_message,
+          :max_redemptions_allowed,
+        )
       create_args[:invited_by] = invited_by
       create_args[:email] = email
       create_args[:emailed_status] = emailed_status
@@ -268,7 +277,7 @@ class Invite < ActiveRecord::Base
     InvitedUser
       .joins("LEFT JOIN invites ON invites.id = invited_users.invite_id")
       .includes(user: :user_stat)
-      .where("invited_users.user_id IS NOT NULL")
+      .where.not(user_id: nil)
       .where("invites.invited_by_id = ?", inviter.id)
       .order("invited_users.redeemed_at DESC")
       .references("invite")
@@ -382,6 +391,7 @@ end
 #  expires_at              :datetime         not null
 #  email_token             :string
 #  domain                  :string
+#  description             :string(100)
 #
 # Indexes
 #

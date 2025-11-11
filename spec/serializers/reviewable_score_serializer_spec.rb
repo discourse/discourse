@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe ReviewableScoreSerializer do
-  fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
+  fab!(:reviewable, :reviewable_flagged_post)
   fab!(:admin)
 
   reasons = %w[

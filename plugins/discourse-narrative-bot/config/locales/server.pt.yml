@@ -27,7 +27,7 @@ pt:
   discourse_narrative_bot:
     bio: "Oi, eu não sou uma pessoa real. Eu sou um bot que pode te ensinar sobre este site. Para interagir comigo, envie-me uma mensagem ou mencione-me pelo nome."
     tl2_promotion_message:
-      subject_template: "Agora que você foi promovido, é hora de aprender sobre alguns recursos avançados!"
+      subject_template: "Agora que foi promovido, é hora de aprender sobre algumas funcionalidades avançadas!"
       text_body_template: |
         Responda a esta mensagem com `@%{discobot_username} %{reset_trigger}`para saber mais sobre o que você pode fazer.
     timeout:
@@ -70,7 +70,7 @@ pt:
         quote: "A vida é como uma caixa de chocolates. Você nunca sabe o que vai obter."
         author: "A mãe de Forrest Gump"
       "7":
-        quote: "Isto é um pequeno passo para o homem, um salto gigantesco para a humanidade."
+        quote: "Isto é um pequeno passo para o homem, um salto gigante para a humanidade."
         author: "Neil Armstrong"
       "8":
         quote: "Faça todos os dias uma coisa que o assuste."
@@ -79,7 +79,7 @@ pt:
         quote: "Os erros são sempre perdoáveis, se a pessoa tiver a coragem de os admitir."
         author: "Bruce Lee"
       "10":
-        quote: "O que quer que a mente do homem possa conceber e acreditar, ela pode alcançar."
+        quote: "Tudo o que a mente do homem pode conceber e acreditar, ela pode alcançar."
         author: "Napoleon Hill"
       "11":
         quote: "Paz em casa, paz no mundo."
@@ -102,7 +102,7 @@ pt:
         "5": "Você pode contar com isso"
         "6": "A meu ver, sim"
         "7": "Mais provavelmente"
-        "8": "Perspectiva boa"
+        "8": "Perspetiva boa"
         "9": "Sim"
         "10": "Sinais apontam que sim"
         "11": "Resposta confusa, tente novamente"
@@ -113,7 +113,7 @@ pt:
         "16": "Não conte com isso"
         "17": "A minha resposta é não"
         "18": "As minhas fontes dizem não"
-        "19": "Perspectiva não tão boa"
+        "19": "Perspetiva não tão boa"
         "20": "Muito duvidoso"
       result: |-
         > :crystal_ball: %{result}
@@ -299,7 +299,7 @@ pt:
     advanced_user_narrative:
       reset_trigger: "tutorial avançado"
       cert_title: "Como reconhecimento da conclusão bem-sucedida do tutorial do utilizador avançado"
-      title: ":arrow_up: Funcionalidades de utilizador avançadas"
+      title: ":arrow_up: Funcionalidades avançadas do utilizador"
       start_message: |-
         Como um usuário _avançado_, você já visitou [sua página de preferências] (%{base_uri}/my/preferences) @%{username}? Existem várias maneiras de personalizar sua experiência, como selecionar um tema escuro ou claro.
 
@@ -362,19 +362,6 @@ pt:
 
           Observe que quando você responde a um tópico ou lê um tópico por mais de alguns minutos, ele é automaticamente definido para um nível de notificação de 'rastreamento'. Você pode alterar isso nas [suas preferências de usuário](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Você sabia que você pode adicionar uma enquete a qualquer publicação? Tente usar a <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem do editor para **montar uma enquete**.
-        not_found: |-
-          Opa! Não houve enquete em sua resposta.
-
-          Use o ícone de <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> engrenagem no editor, ou copie e cole esta enquete em sua próxima resposta:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Ei, boa enquete! Como eu me saí ensinando você?
 
@@ -383,20 +370,6 @@ pt:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Às vezes você pode querer **ocultar detalhes** em suas respostas:
-
-          - Quando você está discutindo os pontos de um filme ou de um programa de TV que poderiam ser considerados como spoiler.
-
-          - Quando sua postagem precisa de muitos detalhes opcionais que podem ser implacantes quando lidos de uma só vez.
-
-          [Details=Selecione isso para ver como funciona!]
-          1. Selecione a engrenagem <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> no editor.
-          2. Selecione “Ocultar Detalhes”.
-          3. Edite o resumo dos detalhes e adicione seu conteúdo.
-          [/details]
-
-          Você poderia usar a engrenagem <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> no editor para adicionar uma seção de detalhes à sua próxima resposta?
         not_found: |-
           Está tendo dificuldades em criar um widget de detalhes? Tente incluir o seguinte em sua próxima resposta:
 

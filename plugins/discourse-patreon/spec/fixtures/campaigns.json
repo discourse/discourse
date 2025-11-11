@@ -1,0 +1,260 @@
+{
+  "data": [{
+    "attributes": {
+      "created_at": "2017-10-20T21:39:01+00:00",
+      "creation_count": 0,
+      "creation_name": "Documentation",
+      "discord_server_id": null,
+      "display_patron_goals": false,
+      "earnings_visibility": "public",
+      "image_small_url": null,
+      "image_url": null,
+      "is_charged_immediately": false,
+      "is_monthly": false,
+      "is_nsfw": false,
+      "is_plural": false,
+      "main_video_embed": null,
+      "main_video_url": null,
+      "one_liner": null,
+      "outstanding_payment_amount_cents": 0,
+      "patron_count": 0,
+      "pay_per_name": null,
+      "pledge_sum": 0,
+      "pledge_url": "/bePatron?c=0000000",
+      "published_at": "2017-10-20T21:49:31+00:00",
+      "summary": null,
+      "thanks_embed": null,
+      "thanks_msg": null,
+      "thanks_video_url": null
+    },
+    "id": "0000000",
+    "relationships": {
+      "creator": {
+        "data": {
+          "id": "1111111",
+          "type": "user"
+        },
+        "links": {
+          "related": "https://www.patreon.com/api/user/1111111"
+        }
+      },
+      "goals": {
+        "data": []
+      },
+      "rewards": {
+        "data": [{
+            "id": "-1",
+            "type": "reward"
+          },
+          {
+            "id": "0",
+            "type": "reward"
+          },
+          {
+            "id": "999997",
+            "type": "reward"
+          },
+          {
+            "id": "999998",
+            "type": "reward"
+          },
+          {
+            "id": "999999",
+            "type": "reward"
+          }
+        ]
+      },
+      "pledges": {
+        "links": {
+          "first": "https://www.patreon.com/api/oauth2/api/campaigns/70261/pledges?page%5Bcount%5D=20&sort=created",
+          "next": "https://www.patreon.com/api/oauth2/api/campaigns/70261/pledges?page%5Bcount%5D=20&sort=created&page%5Bcursor%5D=2017-08-21T20%3A16%3A49.258893%2B00%3A00"
+        }
+      }
+    },
+    "type": "campaign"
+  }],
+  "included": [{
+      "attributes": {
+        "about": null,
+        "created": "2017-10-20T21:36:23+00:00",
+        "discord_id": null,
+        "email": "corgi@patreon.com",
+        "facebook": null,
+        "facebook_id": null,
+        "first_name": "Corgi",
+        "full_name": "Corgi The Dev",
+        "gender": 0,
+        "has_password": true,
+        "image_url": "https://c8.patreon.com/2/400/1111111",
+        "is_deleted": false,
+        "is_email_verified": false,
+        "is_nuked": false,
+        "is_suspended": false,
+        "last_name": "The Dev",
+        "social_connections": {
+          "deviantart": null,
+          "discord": null,
+          "facebook": null,
+          "spotify": null,
+          "twitch": null,
+          "twitter": null,
+          "youtube": null
+        },
+        "thumb_url": "https://c8.patreon.com/2/100/1111111",
+        "twitch": null,
+        "twitter": null,
+        "url": "https://www.patreon.com/drkthedev",
+        "vanity": "drkthedev",
+        "youtube": null
+      },
+      "id": "1111111",
+      "relationships": {
+        "campaign": {
+          "data": {
+            "id": "0000000",
+            "type": "campaign"
+          },
+          "links": {
+            "related": "https://www.patreon.com/api/campaigns/0000000"
+          }
+        }
+      },
+      "type": "user"
+    },
+    {
+      "attributes": {
+        "amount": 0,
+        "amount_cents": 0,
+        "created_at": null,
+        "description": "Everyone",
+        "id": "-1",
+        "remaining": 0,
+        "requires_shipping": false,
+        "type": "reward",
+        "url": null,
+        "user_limit": null
+      },
+      "id": "-1",
+      "relationships": {
+        "creator": {
+          "data": {
+            "id": "1111111",
+            "type": "user"
+          },
+          "links": {
+            "related": "https://www.patreon.com/api/user/1111111"
+          }
+        }
+      },
+      "type": "reward"
+    },
+    {
+      "attributes": {
+        "amount": 1,
+        "amount_cents": 1,
+        "created_at": null,
+        "description": "Patrons Only",
+        "id": "0",
+        "remaining": 0,
+        "requires_shipping": false,
+        "type": "reward",
+        "url": null,
+        "user_limit": null
+      },
+      "id": "0",
+      "relationships": {
+        "creator": {
+          "data": {
+            "id": "1111111",
+            "type": "user"
+          },
+          "links": {
+            "related": "https://www.patreon.com/api/user/1111111"
+          }
+        }
+      },
+      "type": "reward"
+    },
+    {
+      "attributes": {
+        "amount": 10,
+        "amount_cents": 10,
+        "created_at": null,
+        "description": "Standard",
+        "id": "0",
+        "remaining": 0,
+        "requires_shipping": false,
+        "type": "reward",
+        "url": null,
+        "user_limit": null
+      },
+      "id": "999997",
+      "relationships": {
+        "creator": {
+          "data": {
+            "id": "1111111",
+            "type": "user"
+          },
+          "links": {
+            "related": "https://www.patreon.com/api/user/1111111"
+          }
+        }
+      },
+      "type": "reward"
+    },
+    {
+      "attributes": {
+        "amount": 100,
+        "amount_cents": 100,
+        "created_at": null,
+        "description": "Pro",
+        "id": "0",
+        "remaining": 0,
+        "requires_shipping": false,
+        "type": "reward",
+        "url": null,
+        "user_limit": null
+      },
+      "id": "999998",
+      "relationships": {
+        "creator": {
+          "data": {
+            "id": "1111111",
+            "type": "user"
+          },
+          "links": {
+            "related": "https://www.patreon.com/api/user/1111111"
+          }
+        }
+      },
+      "type": "reward"
+    },
+    {
+      "attributes": {
+        "amount": 1000,
+        "amount_cents": 1000,
+        "created_at": null,
+        "description": "Premium",
+        "id": "0",
+        "remaining": 0,
+        "requires_shipping": false,
+        "type": "reward",
+        "url": null,
+        "user_limit": null
+      },
+      "id": "999999",
+      "relationships": {
+        "creator": {
+          "data": {
+            "id": "1111111",
+            "type": "user"
+          },
+          "links": {
+            "related": "https://www.patreon.com/api/user/1111111"
+          }
+        }
+      },
+      "type": "reward"
+    }
+  ]
+}

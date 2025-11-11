@@ -7,7 +7,7 @@ describe "User preferences | Navigation menu", type: :system do
 
   describe "when visiting the user's preferences page" do
     it "should allow the user to scroll the horizontal navigation menu when window width is narrow" do
-      resize_window(width: 400) do
+      resize_window(width: 650) do # narrow enough to hide some links, but higher than 640px so we don't trigger mobile styling
         sign_in(user)
 
         user_preferences_page.visit(user)

@@ -46,3 +46,33 @@ ro:
           _psst_ … Am ascuns o surpriză în acest subiect. Dacă ești gata pentru o provocare, **selectează pictograma de căutare** <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-search.png" width="16" height="16"> din dreapta sus &#8599;, alege „în acest subiect”, apoi caută.
 
           Încearcă să cauți termenul „capy&#8203;bara” în acest subiect
+    advanced_user_narrative:
+      poll:
+        instructions: |-
+          Știai că poți adăuga un sondaj la orice postare? Încearcă să folosești iconul <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> din editor pentru a **construi un sondaj**.
+        not_found: |-
+          Hopa! Nu a existat niciun sondaj în răspunsul tău.
+
+          Utilizează iconul <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> în editor, sau copiază și lipește acest sondaj în următorul tău răspuns:
+
+          ``text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ````
+      details:
+        instructions: |-
+          Uneori poate vrei să **ascunzi detalii** în răspunsurile tale:
+
+          - Când discuți despre intrigi ale unui film sau ale unui spectacol TV, care ar fi considerate un spoiler.
+
+          - Când postarea ta are nevoie de o mulțime de detalii opționale care pot fi copleșitoare atunci când le citești pe toate odată.
+
+          [details=Selectează asta pentru a vedea cum funcționează!]
+          1. Selectează iconul <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> din editor.
+          2. Selectează „Ascunde detalii”.
+          3. Editează rezumatul detaliilor și adaugă conținutul tău.
+          [/details]
+
+          Poți folosi iconul <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> în editor pentru a adăuga o secțiune de detalii la următorul tău răspuns?

@@ -12,11 +12,15 @@ module DiscourseAutomation
     around_save :on_update_callback
 
     def on_update_callback
+      automation.fields.reload
+
       previous_fields = automation.serialized_fields
 
       automation.reset!
 
       yield
+
+      automation.fields.reload
 
       automation&.triggerable&.on_update&.call(
         automation,

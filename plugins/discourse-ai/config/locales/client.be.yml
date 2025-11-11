@@ -1,0 +1,165 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+be:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "сартаваць па"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            topic_id:
+              label: "Номер тэмы"
+            title:
+              label: "Загаловак"
+            categories:
+              label: "катэгорыі"
+            tags:
+              label: "Цэтлікі"
+        llm_triage:
+          fields:
+            category:
+              label: "Катэгорыя"
+            tags:
+              label: "Цэтлікі"
+            canned_reply:
+              label: "Адказаць"
+    discourse_ai:
+      features:
+        back: "Назад"
+        disabled: "(адключана)"
+        groups: "групы:"
+        edit: "Рэдагаваць"
+        filters:
+          all: "усе"
+          reset: "скінуць"
+        search:
+          name: "Пошук"
+        spam:
+          name: "Спам"
+      translations:
+        stats:
+          eta_minutes:
+            one: "%{count} хвіліну"
+            few: "%{count}хвілін"
+            many: "%{count}хвіліны"
+            other: "%{count}хвілін"
+          eta_hours:
+            one: "%{count} гадзіна"
+            few: "%{count} гадзіны"
+            many: "%{count} гадзін"
+            other: "%{count} гадзін"
+          eta_days:
+            one: "%{count} дзень"
+            few: "%{count} дні"
+            many: "%{count} дзён"
+            other: "%{count} дзён"
+        progress_chart:
+          bar_done:
+            one: "%{count} запіс"
+            few: "%{count}запісаў"
+            many: "%{count}запісаў"
+            other: "%{count}запісаў"
+      spam:
+        short_title: "Спам"
+        enable: "Уключыць"
+        test_modal:
+          spam: "Спам"
+      usage:
+        summary: "вынік"
+        username: "Імя карыстальніка"
+        total_requests: "Усяго запытаў"
+      ai_persona:
+        back: "Назад"
+        name: "Імя"
+        edit: "Рэдагаваць"
+        export: "экспарт"
+        description: "Апісанне"
+        user: Карыстальнік
+        save: "Захаваць"
+        delete: "Выдаліць"
+        response_format:
+          open_modal: "Рэдагаваць"
+        filters:
+          reset: "скінуць"
+      rag:
+        uploads:
+          title: "Загрузкі"
+          uploading: "Запампоўванне ..."
+      tools:
+        back: "Назад"
+        export: "экспарт"
+        name: "Імя"
+        description: "Апісанне"
+        summary: "вынік"
+        save: "Захаваць"
+        remove_parameter: "выдаліць"
+        parameter_required: "абавязковыя"
+        edit: "Рэдагаваць"
+        delete: "Выдаліць"
+      llms:
+        display_name: "Імя"
+        save: "Захаваць"
+        edit: "Рэдагаваць"
+        back: "Назад"
+        delete: Выдаліць
+        quotas:
+          group: "Група"
+        usage:
+          ai_spam: "Спам"
+        next:
+          title: "Далей"
+        tests:
+          success: "поспех!"
+        providers:
+          google: "Google"
+      ai_helper:
+        context_menu:
+          cancel: "Адмяніць"
+        post_options_menu:
+          close: "зачыніць"
+          copy: "капіяваць"
+          cancel: "Адмяніць"
+        image_caption:
+          save_caption: "Захаваць"
+      embeddings:
+        back: "Назад"
+        save: "Захаваць"
+        delete: "Выдаліць"
+        edit: "Рэдагаваць"
+        tests:
+          success: "поспех!"
+        display_name: "Імя"
+        providers:
+          google: "Google"
+      ai_bot:
+        debug_ai_modal:
+          request: "запыт"
+          next_log: "Далей"
+        share_modal:
+          copy: "капіяваць"
+        conversations:
+          today: "Today"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "усе"
+            neutral: "нейтральны"
+          group_types:
+            category: "Катэгорыя"
+          table:
+            total_count: "агульны"
+      discobot_discoveries:
+        regular_results: "тэмы"
+        tooltip:
+          actions:
+            disable: "Адключыць"

@@ -137,7 +137,5 @@ sl:
             label: Verzija
           status:
             label: Stanje
-          enabled:
-            label: Vključeno
           disabled:
             label: Onemogočeno

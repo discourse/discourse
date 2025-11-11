@@ -445,8 +445,12 @@ module Oneboxer
   def self.local_category_html(url, route)
     return unless route[:category_slug_path_with_id]
     category = Category.find_by_slug_path_with_id(route[:category_slug_path_with_id])
+    guardian = Guardian.new
 
-    if Guardian.new.can_see_category?(category)
+    if guardian.can_see_category?(category)
+      subcategories =
+        category.subcategories.select { |subcategory| guardian.can_see_category?(subcategory) }
+
       args = {
         url: category.url,
         name: category.name,
@@ -455,7 +459,7 @@ module Oneboxer
         description: Onebox::Helpers.sanitize(category.description),
         has_subcategories: category.subcategories.present?,
         subcategories:
-          category.subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } },
+          subcategories.collect { |sc| { name: sc.name, color: sc.color, url: sc.url } },
       }
 
       Mustache.render(template("discourse_category_onebox"), args)

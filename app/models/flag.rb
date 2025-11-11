@@ -37,9 +37,17 @@ class Flag < ActiveRecord::Base
     PostActionType.reload_types
   end
 
-  def self.used_flag_ids
-    PostAction.distinct(:post_action_type_id).pluck(:post_action_type_id) |
-      ReviewableScore.distinct(:reviewable_score_type).pluck(:reviewable_score_type)
+  def self.used_flag_ids(flag_ids)
+    sql =
+      flag_ids
+        .reduce([]) do |queries, flag_id|
+          queries << "(SELECT #{flag_id} FROM post_actions WHERE post_action_type_id = #{flag_id} LIMIT 1)"
+          queries << "(SELECT #{flag_id} FROM reviewable_scores WHERE reviewable_score_type = #{flag_id} LIMIT 1)"
+          queries
+        end
+        .join(" UNION ")
+
+    DB.query_single(sql)
   end
 
   def system?

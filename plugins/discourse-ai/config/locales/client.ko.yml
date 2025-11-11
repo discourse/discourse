@@ -1,0 +1,207 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ko:
+  admin_js:
+    admin:
+      dashboard:
+        reports:
+          filters:
+            sort_by:
+              label: "정렬 기준"
+            tag:
+              label: "태그"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "발신자"
+            topic_id:
+              label: "글 ID"
+            title:
+              label: "제목"
+            categories:
+              label: "카테고리"
+            tags:
+              label: "태그"
+        llm_triage:
+          fields:
+            category:
+              label: "카테고리"
+            tags:
+              label: "태그"
+            canned_reply:
+              label: "댓글쓰기"
+    discourse_ai:
+      features:
+        back: "뒤로"
+        disabled: "(비활성)"
+        groups: "그룹:"
+        no_groups: "없음"
+        edit: "편집"
+        expand_list:
+          other: "(%{count}개 더보기)"
+        filters:
+          all: "모두"
+          reset: "리셋"
+        search:
+          name: "검색"
+        spam:
+          name: "스팸"
+      modals:
+        select_option: "옵션 선택..."
+      translations:
+        title: "번역"
+        stats:
+          eta_minutes:
+            other: "%{count}분"
+          eta_hours:
+            other: "%{count}시간"
+          eta_days:
+            other: "%{count}일"
+        progress_chart:
+          bar_done:
+            other: "글 %{count}개"
+      spam:
+        short_title: "스팸"
+        last_seven_days: "지난 7일"
+        enable: "활성화"
+        test_modal:
+          spam: "스팸"
+      usage:
+        summary: "요약"
+        username: "아이디"
+        total_requests: "총 요청횟수"
+        periods:
+          last_day: "지난 24시간"
+          custom: "사용자 지정..."
+      ai_persona:
+        back: "뒤로"
+        name: "그룹명"
+        edit: "편집"
+        export: "내보내기"
+        import: "가져오기"
+        description: "내용"
+        user: 사용자
+        save: "저장"
+        enabled: "활성화?"
+        allowed_groups: "허용 된 그룹"
+        delete: "삭제"
+        response_format:
+          open_modal: "편집"
+          modal:
+            key_title: "키"
+        filters:
+          reset: "리셋"
+      rag:
+        uploads:
+          title: "업로드된 파일"
+          uploading: "업로드 중..."
+      tools:
+        back: "뒤로"
+        export: "내보내기"
+        import: "가져오기"
+        name: "그룹명"
+        description: "내용"
+        summary: "요약"
+        save: "저장"
+        remove_parameter: "제거"
+        parameter_required: "필수"
+        edit: "편집"
+        delete: "삭제"
+      llms:
+        display_name: "그룹명"
+        provider: "공급자"
+        save: "저장"
+        edit: "편집"
+        back: "뒤로"
+        delete: 삭제
+        quotas:
+          group: "그룹"
+          max_usages: "최대 사용"
+          duration: "기간"
+          durations:
+            hour: "1시간"
+            six_hours: "6시간"
+            day: "24시간"
+            week: "7 일"
+            custom: "사용자 지정..."
+          hours: "시간"
+        usage:
+          ai_summarization: "요약하기"
+          ai_spam: "스팸"
+        next:
+          title: "다음"
+        tests:
+          success: "성공!"
+        providers:
+          google: "구글"
+          fake: "사용자 정의"
+      ai_helper:
+        context_menu:
+          cancel: "취소"
+          confirm: "확인"
+          discard: "포기"
+        post_options_menu:
+          close: "닫기"
+          copy: "복사"
+          copied: "복사되었습니다!"
+          cancel: "취소"
+        thumbnail_suggestions:
+          select: "선택"
+        image_caption:
+          save_caption: "저장"
+      embeddings:
+        back: "뒤로"
+        save: "저장"
+        delete: "삭제"
+        edit: "편집"
+        tests:
+          success: "성공!"
+        display_name: "그룹명"
+        provider: "공급자"
+        providers:
+          google: "구글"
+          fake: "사용자 정의"
+      ai_bot:
+        debug_ai_modal:
+          request: "요청"
+          response: "응답"
+          next_log: "다음"
+          previous_log: "이전값"
+        invite_ai_conversation:
+          button: "초대"
+        share_modal:
+          copy: "복사"
+        conversations:
+          today: "오늘"
+          last_7_days: "지난 7일"
+          last_30_days: "지난 30일"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "모두"
+            neutral: "중립국"
+          group_types:
+            category: "카테고리"
+            tag: "태그"
+          table:
+            total_count: "합계"
+      summarization:
+        chat:
+          title: "메시지 요약"
+          description: "선택된 시간 동안 전송된 대화 내역을 요약하기 위한 옵션을 선택하십시오."
+          summarize: "요약하기"
+          since:
+            other: "약 %{count}시간"
+      discobot_discoveries:
+        regular_results: "글"
+        collapse: "축소"
+        tooltip:
+          actions:
+            disable: "비활성화"

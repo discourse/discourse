@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewablePost < Reviewable
+  include ReviewableActionBuilder
+
   def self.action_aliases
     { reject_and_silence: :reject_and_suspend }
   end
@@ -32,7 +34,11 @@ class ReviewablePost < Reviewable
 
   def build_actions(actions, guardian, args)
     return unless pending?
+    super
+  end
 
+  # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
+  def build_legacy_combined_actions(actions, guardian, args)
     if post.trashed? && guardian.can_recover_post?(post)
       build_action(actions, :approve_and_restore, icon: "check")
     elsif post.hidden?
@@ -72,68 +78,48 @@ class ReviewablePost < Reviewable
     end
   end
 
+  # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
+  def build_new_separated_actions
+    build_post_actions_bundle
+    build_user_actions_bundle
+  end
+
+  # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI
   def perform_approve(performed_by, _args)
-    successful_transition :approved, recalculate_score: false
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_reject_and_keep_deleted(performed_by, _args)
-    successful_transition :rejected, recalculate_score: false
+    create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_approve_and_restore(performed_by, _args)
     PostDestroyer.new(performed_by, post).recover
 
-    successful_transition :approved, recalculate_score: false
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_approve_and_unhide(performed_by, _args)
     post.unhide!
 
-    successful_transition :approved, recalculate_score: false
+    create_result(:success, :approved, [created_by_id], false)
   end
 
   def perform_reject_and_delete(performed_by, _args)
     PostDestroyer.new(performed_by, post, reviewable: self).destroy
 
-    successful_transition :rejected, recalculate_score: false
+    create_result(:success, :rejected, [created_by_id], false)
   end
 
   def perform_reject_and_suspend(performed_by, _args)
-    successful_transition :rejected, recalculate_score: false
+    create_result(:success, :rejected, [created_by_id], false)
   end
+  # TODO (reviewable-refresh): Remove combined actions above when fully migrated to new UI
 
   private
 
   def post
     @post ||= (target || Post.with_deleted.find_by(id: target_id))
-  end
-
-  def build_action(
-    actions,
-    id,
-    icon:,
-    button_class: nil,
-    bundle: nil,
-    client_action: nil,
-    confirm: false
-  )
-    actions.add(id, bundle: bundle) do |action|
-      prefix = "reviewables.actions.#{id}"
-      action.icon = icon
-      action.button_class = button_class
-      action.label = "#{prefix}.title"
-      action.description = "#{prefix}.description"
-      action.client_action = client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
-      action.completed_message = "#{prefix}.complete"
-    end
-  end
-
-  def successful_transition(to_state, recalculate_score: true)
-    create_result(:success, to_state) do |result|
-      result.recalculate_score = recalculate_score
-      result.update_flag_stats = { status: to_state, user_ids: [created_by_id] }
-    end
   end
 end
 

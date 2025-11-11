@@ -38,6 +38,8 @@ uk:
           title: "Шрифти"
         colors:
           title: "Кольори"
+        dialog:
+          title: "Діалог"
         icons:
           title: "Іконки"
           full_list: "Перегляньте повний список значків Font Awesome"
@@ -89,8 +91,8 @@ uk:
           title: "Карта теми"
         site_header:
           title: "Заголовок сайту"
-        suggested_topics:
-          title: "Схожі теми"
+        more_topics:
+          title: "Більше тем"
         post_menu:
           title: "Меню повідомлення"
         modal:
@@ -103,6 +105,8 @@ uk:
           title: "Значки заголовків"
         spinners:
           title: "Спінери"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Порожній стан"
         tooltips:

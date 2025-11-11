@@ -72,6 +72,75 @@ RSpec.describe Jobs::ExportCsvFile do
         admin.uploads.each(&:destroy!)
       end
     end
+
+    context "when exporting staff action" do
+      it "exports staff action logs with date filters" do
+        freeze_time
+        (1..10).each do |i|
+          Fabricate(
+            :user_history,
+            action: UserHistory.actions[:suspend_user],
+            created_at: i.days.ago,
+          )
+        end
+
+        expect do
+          Jobs::ExportCsvFile.new.execute(
+            user_id: admin.id,
+            entity: "staff_action",
+            args: {
+              # Fine-tuning for 1 minute to ensure we capture the correct range
+              start_date: (5.days.ago - 1.minute).iso8601,
+              end_date: (2.days.ago + 1.minute).iso8601,
+            },
+          )
+        end.to change { Upload.count }.by(1)
+
+        Zip::File.open(Discourse.store.path_for(Upload.last)) do |zip_file|
+          zip_file.each do |entry|
+            content = zip_file.read(entry)
+            expect(CSV.parse(content).size).to eq(5) # [header, 2, 3, 4, 5]
+          end
+        end
+      end
+
+      it "delegates to UserHistory.staff_action_records" do
+        Fabricate(:user_history, action: UserHistory.actions[:suspend_user])
+        Fabricate(:user_history, action: UserHistory.actions[:change_site_setting])
+        Fabricate(:user_history, action: UserHistory.actions[:delete_theme])
+
+        res =
+          UserHistory.staff_action_records(
+            admin,
+            action_id: UserHistory.actions[:suspend_user].to_s,
+          )
+
+        UserHistory
+          .expects(:staff_action_records)
+          .with(
+            admin,
+            ActiveSupport::HashWithIndifferentAccess.new(
+              "action_id" => UserHistory.actions[:suspend_user].to_s,
+            ),
+          )
+          .returns(res)
+
+        Jobs::ExportCsvFile.new.execute(
+          user_id: admin.id,
+          entity: "staff_action",
+          args: {
+            "action_id" => UserHistory.actions[:suspend_user].to_s,
+          },
+        )
+
+        Zip::File.open(Discourse.store.path_for(Upload.last)) do |zip_file|
+          zip_file.each do |entry|
+            content = zip_file.read(entry)
+            expect(CSV.parse(content).size).to eq(2)
+          end
+        end
+      end
+    end
   end
 
   describe ".report_export" do
@@ -81,7 +150,10 @@ RSpec.describe Jobs::ExportCsvFile do
       exporter = Jobs::ExportCsvFile.new
       exporter.entity = "report"
       exporter.extra =
-        HashWithIndifferentAccess.new(start_date: "2010-01-01", end_date: "2011-01-01")
+        ActiveSupport::HashWithIndifferentAccess.new(
+          start_date: "2010-01-01",
+          end_date: "2011-01-01",
+        )
       exporter.current_user = User.find_by(id: user.id)
       exporter
     end
@@ -268,11 +340,6 @@ RSpec.describe Jobs::ExportCsvFile do
       location
       website
       views
-      external_id
-      external_email
-      external_username
-      external_name
-      external_avatar_url
     ]
   end
 
@@ -307,10 +374,43 @@ RSpec.describe Jobs::ExportCsvFile do
       external_email: "test@test.com",
     )
 
+    user_list_header.push(
+      "external_id",
+      "external_email",
+      "external_username",
+      "external_name",
+      "external_avatar_url",
+    )
+
     user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
 
     expect(user["location"]).to eq('"La,La Land"')
     expect(user["external_id"]).to eq("123")
     expect(user["external_email"]).to eq("test@test.com")
+  end
+
+  it "exports user fields" do
+    user_field_1 = Fabricate(:user_field, name: "custom field 1")
+    user_field_2 = Fabricate(:user_field, name: "custom field 2", field_type: "confirm")
+    user_field_3 = Fabricate(:user_field, name: "custom field 3", field_type: "confirm")
+
+    user = Fabricate(:user)
+    user.set_user_field(user_field_1.id, "Answer custom 1")
+    user.set_user_field(user_field_2.id, true)
+    user.set_user_field(user_field_3.id, false)
+    user.save!
+
+    user_list_header.push(
+      "custom field 1 (custom user field)",
+      "custom field 2 (custom user field)",
+      "custom field 3 (custom user field)",
+    )
+
+    export_user = to_hash(user_list_export.find { |u| u[0].to_i == user.id })
+    puts export_user.pretty_inspect
+
+    expect(export_user["custom field 1 (custom user field)"]).to eq("Answer custom 1")
+    expect(export_user["custom field 2 (custom user field)"]).to eq("true")
+    expect(export_user["custom field 3 (custom user field)"]).to eq("false")
   end
 end

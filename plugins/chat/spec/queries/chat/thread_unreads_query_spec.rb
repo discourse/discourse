@@ -17,7 +17,7 @@ describe Chat::ThreadUnreadsQuery do
   fab!(:thread_2) { Fabricate(:chat_thread, channel: channel_1) }
   fab!(:thread_3) { Fabricate(:chat_thread, channel: channel_2) }
   fab!(:thread_4) { Fabricate(:chat_thread, channel: channel_2) }
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
 
   let(:params) { { user_id: current_user.id, channel_ids: channel_ids, thread_ids: thread_ids } }
   let(:include_missing_memberships) { false }

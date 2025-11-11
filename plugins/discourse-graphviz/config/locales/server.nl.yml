@@ -1,0 +1,10 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  site_settings:
+    discourse_graphviz_enabled: "Graphviz-plug-in inschakelen"
+    graphviz_default_svg: "Standaard ingesteld op SVG-rendering in plaats van afbeeldingsrendering, kan per grafiek worden aangepast met het element 'svg=true|false'."

@@ -3,7 +3,7 @@
 RSpec.describe Wizard::StepUpdater do
   before { SiteSetting.wizard_enabled = true }
 
-  fab!(:user) { Fabricate(:admin) }
+  fab!(:user, :admin)
   let(:wizard) { Wizard::Builder.new(user).build }
 
   describe "introduction" do

@@ -343,19 +343,6 @@ sl:
 
           Ko odgovorite v temo ali ko berete temo več kot nekaj minut, se bo nivo obveščanja samodejno nastavil na 'Sledim'. To lahko spremenite v [vaših uporabniških nastavitvah](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Ali ste vedeli, da lahko dodate anketo v vsak prispevek? Poskusite uporabiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gumb v urejevalniku za **Ustvari anketo**.
-        not_found: |-
-          Ups! V vašem odgovoru ni bilo nobene ankete.
-
-          Uporabite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gumb v urejevalniku ali kopirajte in prilepite to anketo v vaš naslednji odgovor:
-
-          ```text
-          [poll]
-          * :mačka:
-          * :pes:
-          [/poll]
-          ```
         reply: |-
           Hej, zanimiva anketa! Kako dobro sem vas naučil?
 
@@ -364,20 +351,6 @@ sl:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Kdaj si boste zaželeli da bi **skrili del besedila** v vaših prispevkih:
-
-          - Ko razpravljate o vsebini filma ali oddaje, kjer si ne zaželite razkriti bistva in s tem pokvariti užitka gledalcu.
-
-          - Ko vaš prispevek potrebuje dodatna pojasnila, ki pa so mogoče preobsežna za branje vseh.
-
-          [details=Izberite tole, da vidite kako deluje!]
-          1. Izberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gumb v urejevalniku.
-          2. Izberite "Dodaj skrito besedilo".
-          3. Uredite povzetek in dodajte vsebino.
-          [/details]
-
-          Ali lahko uporabite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gumb v urejevalniku za dodajanje skritega besedila v svojem naslednjem dogovoru?
         not_found: |-
           Imate težavo pri dodajanju skritega besedila? Poskusite vključiti naslednje v vaš naslednji odgovor:
 

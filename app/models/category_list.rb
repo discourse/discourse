@@ -140,7 +140,7 @@ class CategoryList
   def find_categories
     query = Category.includes(CategoryList.included_associations).secured(@guardian)
 
-    if SiteSetting.experimental_content_localization
+    if SiteSetting.content_localization_enabled
       locale = I18n.locale.to_s
       query =
         query.joins(
@@ -173,7 +173,7 @@ class CategoryList
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
-    if SiteSetting.experimental_content_localization
+    if SiteSetting.content_localization_enabled
       query =
         query.group("categories.id").select(
           "categories.*,

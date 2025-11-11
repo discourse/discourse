@@ -3,13 +3,19 @@
 class TopicsFilter
   attr_reader :topic_notification_levels
 
-  def initialize(guardian:, scope: Topic.all)
-    @guardian = guardian
+  def initialize(guardian:, scope: Topic.all, loaded_topic_users_reference: false)
+    @loaded_topic_users_reference = loaded_topic_users_reference
+    @guardian = guardian || Guardian.new
     @scope = scope
     @topic_notification_levels = Set.new
   end
 
-  FILTER_ALIASES = { "categories" => "category", "tags" => "tag" }
+  FILTER_ALIASES = {
+    "categories" => "category",
+    "tags" => "tag",
+    "groups" => "group",
+    "user" => "users",
+  }
   private_constant :FILTER_ALIASES
 
   def filter_from_query_string(query_string)
@@ -34,7 +40,6 @@ class TopicsFilter
       values = hash["values"]
 
       filter_values = extract_and_validate_value_for(filter, values)
-
       case filter
       when "activity-before"
         filter_by_activity(before: filter_values)
@@ -47,7 +52,7 @@ class TopicsFilter
       when "created-before"
         filter_by_created(before: filter_values)
       when "created-by"
-        filter_created_by_user(usernames: filter_values.flat_map { |value| value.split(",") })
+        filter_created_by(names: filter_values.flat_map { |value| value.split(",") })
       when "in"
         filter_in(values: filter_values)
       when "latest-post-after"
@@ -64,6 +69,10 @@ class TopicsFilter
         filter_by_number_of_likes_in_first_post(max: filter_values)
       when "order"
         order_by(values: filter_values)
+      when "users"
+        filter_users(values: key_prefixes.zip(filter_values))
+      when "group"
+        filter_groups(values: filter_values)
       when "posts-min"
         filter_by_number_of_posts(min: filter_values)
       when "posts-max"
@@ -78,6 +87,8 @@ class TopicsFilter
         filter_tag_groups(values: key_prefixes.zip(filter_values))
       when "tag"
         filter_tags(values: key_prefixes.zip(filter_values))
+      when "locale"
+        filter_locale(values: key_prefixes.zip(filter_values))
       when "views-min"
         filter_by_number_of_views(min: filter_values)
       when "views-max"
@@ -89,11 +100,26 @@ class TopicsFilter
       end
     end
 
+    keywords =
+      query_string.split(/\s+/).reject { |word| word.include?(":") }.map(&:strip).reject(&:empty?)
+
+    if keywords.present? && keywords.join(" ").length >= SiteSetting.min_search_term_length
+      ts_query = Search.ts_query(term: keywords.join(" "))
+      @scope = @scope.where(<<~SQL)
+          topics.id IN (
+            SELECT topic_id
+            FROM post_search_data
+            JOIN posts ON posts.id = post_search_data.post_id
+            WHERE search_data @@ #{ts_query} AND NOT posts.hidden AND posts.deleted_at IS NULL #{whisper_condition("posts")}
+          )
+        SQL
+    end
+
     @scope
   end
 
-  def self.add_filter_by_status(status, &blk)
-    custom_status_filters[status] = blk
+  def self.add_filter_by_status(status, enabled: -> { true }, &block)
+    custom_status_filters[status] = { block:, enabled: }
   end
 
   def self.custom_status_filters
@@ -116,17 +142,222 @@ class TopicsFilter
       category = category_id.present? ? Category.find_by(id: category_id) : nil
 
       if @guardian.can_see_deleted_topics?(category)
-        @scope = @scope.unscope(where: :deleted_at).where("topics.deleted_at IS NOT NULL")
+        @scope = @scope.unscope(where: :deleted_at).where.not(topics: { deleted_at: nil })
       end
     when "public"
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
     else
       if custom_filter = TopicsFilter.custom_status_filters[status]
-        @scope = custom_filter.call(@scope)
+        @scope = custom_filter[:block].call(@scope) if custom_filter[:enabled].call
       end
     end
 
     @scope
+  end
+
+  def self.option_info(guardian)
+    results = [
+      {
+        name: "category:",
+        alias: "categories:",
+        description: I18n.t("filter.description.category"),
+        priority: 1,
+        type: "category",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.category_any") }],
+        prefixes: [
+          { name: "-", description: I18n.t("filter.description.exclude_category") },
+          { name: "=", description: I18n.t("filter.description.category_without_subcategories") },
+          {
+            name: "-=",
+            description: I18n.t("filter.description.exclude_category_without_subcategories"),
+          },
+        ],
+      },
+      {
+        name: "activity-before:",
+        description: I18n.t("filter.description.activity_before"),
+        type: "date",
+      },
+      {
+        name: "activity-after:",
+        description: I18n.t("filter.description.activity_after"),
+        type: "date",
+      },
+      {
+        name: "created-before:",
+        description: I18n.t("filter.description.created_before"),
+        type: "date",
+      },
+      {
+        name: "created-after:",
+        description: I18n.t("filter.description.created_after"),
+        priority: 1,
+        type: "date",
+      },
+      {
+        name: "created-by:",
+        description: I18n.t("filter.description.created_by"),
+        type: "username_group_list",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.created_by_multiple") }],
+      },
+      {
+        name: "users:",
+        description: I18n.t("filter.description.users"),
+        type: "username",
+        priority: 1,
+        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_users") }],
+        delimiters: [
+          { name: ",", description: I18n.t("filter.description.users_any") },
+          { name: "+", description: I18n.t("filter.description.users_all") },
+        ],
+      },
+      {
+        name: "latest-post-before:",
+        description: I18n.t("filter.description.latest_post_before"),
+        type: "date",
+      },
+      {
+        name: "latest-post-after:",
+        description: I18n.t("filter.description.latest_post_after"),
+        type: "date",
+      },
+      { name: "likes-min:", description: I18n.t("filter.description.likes_min"), type: "number" },
+      { name: "likes-max:", description: I18n.t("filter.description.likes_max"), type: "number" },
+      {
+        name: "likes-op-min:",
+        description: I18n.t("filter.description.likes_op_min"),
+        type: "number",
+      },
+      {
+        name: "likes-op-max:",
+        description: I18n.t("filter.description.likes_op_max"),
+        type: "number",
+      },
+      { name: "posts-min:", description: I18n.t("filter.description.posts_min"), type: "number" },
+      { name: "posts-max:", description: I18n.t("filter.description.posts_max"), type: "number" },
+      {
+        name: "posters-min:",
+        description: I18n.t("filter.description.posters_min"),
+        type: "number",
+      },
+      {
+        name: "posters-max:",
+        description: I18n.t("filter.description.posters_max"),
+        type: "number",
+      },
+      { name: "views-min:", description: I18n.t("filter.description.views_min"), type: "number" },
+      { name: "views-max:", description: I18n.t("filter.description.views_max"), type: "number" },
+      { name: "status:", description: I18n.t("filter.description.status"), priority: 1 },
+      { name: "status:open", description: I18n.t("filter.description.status_open") },
+      { name: "status:closed", description: I18n.t("filter.description.status_closed") },
+      { name: "status:archived", description: I18n.t("filter.description.status_archived") },
+      { name: "status:listed", description: I18n.t("filter.description.status_listed") },
+      { name: "status:unlisted", description: I18n.t("filter.description.status_unlisted") },
+      { name: "status:deleted", description: I18n.t("filter.description.status_deleted") },
+      { name: "status:public", description: I18n.t("filter.description.status_public") },
+      { name: "order:", description: I18n.t("filter.description.order"), priority: 1 },
+      { name: "order:activity", description: I18n.t("filter.description.order_activity") },
+      { name: "order:activity-asc", description: I18n.t("filter.description.order_activity_asc") },
+      { name: "order:category", description: I18n.t("filter.description.order_category") },
+      { name: "order:category-asc", description: I18n.t("filter.description.order_category_asc") },
+      { name: "order:created", description: I18n.t("filter.description.order_created") },
+      { name: "order:created-asc", description: I18n.t("filter.description.order_created_asc") },
+      { name: "order:latest-post", description: I18n.t("filter.description.order_latest_post") },
+      {
+        name: "order:latest-post-asc",
+        description: I18n.t("filter.description.order_latest_post_asc"),
+      },
+      { name: "order:likes", description: I18n.t("filter.description.order_likes") },
+      { name: "order:likes-asc", description: I18n.t("filter.description.order_likes_asc") },
+      { name: "order:likes-op", description: I18n.t("filter.description.order_likes_op") },
+      { name: "order:likes-op-asc", description: I18n.t("filter.description.order_likes_op_asc") },
+      { name: "order:posters", description: I18n.t("filter.description.order_posters") },
+      { name: "order:posters-asc", description: I18n.t("filter.description.order_posters_asc") },
+      { name: "order:title", description: I18n.t("filter.description.order_title") },
+      { name: "order:title-asc", description: I18n.t("filter.description.order_title_asc") },
+      { name: "order:views", description: I18n.t("filter.description.order_views") },
+      { name: "order:views-asc", description: I18n.t("filter.description.order_views_asc") },
+      { name: "order:hot", description: I18n.t("filter.description.order_hot") },
+      { name: "order:hot-asc", description: I18n.t("filter.description.order_hot_asc") },
+      { name: "order:read", description: I18n.t("filter.description.order_read") },
+      { name: "order:read-asc", description: I18n.t("filter.description.order_read_asc") },
+    ]
+
+    if guardian.authenticated?
+      results.concat(
+        [
+          { name: "in:", description: I18n.t("filter.description.in"), priority: 1 },
+          { name: "in:pinned", description: I18n.t("filter.description.in_pinned") },
+          { name: "in:bookmarked", description: I18n.t("filter.description.in_bookmarked") },
+          { name: "in:watching", description: I18n.t("filter.description.in_watching") },
+          { name: "in:tracking", description: I18n.t("filter.description.in_tracking") },
+          { name: "in:muted", description: I18n.t("filter.description.in_muted") },
+          { name: "in:normal", description: I18n.t("filter.description.in_normal") },
+          {
+            name: "in:watching_first_post",
+            description: I18n.t("filter.description.in_watching_first_post"),
+          },
+          { name: "in:new", description: I18n.t("filter.description.in_new") },
+          { name: "in:new-replies", description: I18n.t("filter.description.in_new_replies") },
+          { name: "in:new-topics", description: I18n.t("filter.description.in_new_topics") },
+          { name: "in:unseen", description: I18n.t("filter.description.in_unseen") },
+        ],
+      )
+    end
+
+    if SiteSetting.tagging_enabled?
+      results.push(
+        {
+          name: "tag:",
+          description: I18n.t("filter.description.tag"),
+          alias: "tags:",
+          priority: 1,
+          type: "tag",
+          delimiters: [
+            { name: ",", description: I18n.t("filter.description.tags_any") },
+            { name: "+", description: I18n.t("filter.description.tags_all") },
+          ],
+          prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag") }],
+        },
+      )
+      results.push(
+        {
+          name: "tag_group:",
+          description: I18n.t("filter.description.tag_group"),
+          type: "tag_group",
+          prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_tag_group") }],
+        },
+      )
+    end
+
+    # Group participation filter (any/all)
+    results.push(
+      {
+        name: "group:",
+        alias: "groups:",
+        description: I18n.t("filter.description.group"),
+        type: "group",
+        priority: 1,
+        delimiters: [
+          { name: ",", description: I18n.t("filter.description.groups_any") },
+          { name: "+", description: I18n.t("filter.description.groups_all") },
+        ],
+      },
+    )
+
+    # Locale filter
+    results.push(
+      {
+        name: "locale:",
+        description: I18n.t("filter.description.locale"),
+        type: "text",
+        delimiters: [{ name: ",", description: I18n.t("filter.description.locale_any") }],
+        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_locale") }],
+      },
+    )
+
+    # this modifier allows custom plugins to add UI tips in the /filter route
+    DiscoursePluginRegistry.apply_modifier(:topics_filter_options, results, guardian)
   end
 
   private
@@ -205,7 +436,144 @@ class TopicsFilter
   end
 
   def filter_by_number_of_views(min: nil, max: nil)
-    filter_by_topic_range(column_name: "views", min:, max:)
+    filter_by_topic_range(column_name: "topics.views", min:, max:)
+  end
+
+  def calculate_all_or_any(value)
+    require_all = nil
+    names = nil
+
+    if value.include?("+")
+      names = value.split("+")
+      require_all = true
+      if value.include?(",")
+        # no mix and match
+        return nil, []
+      end
+    else
+      names = value.split(",")
+      require_all = false
+      if value.include?("+")
+        # no mix and match
+        return nil, []
+      end
+    end
+
+    [require_all, names.map(&:downcase).reject(&:blank?)]
+  end
+
+  # users:a,b => any of a or b participated in the topic
+  # users:a+b => both a and b participated in the topic
+  # -users:a,b => neither a nor b participated in the topic
+  # -users:a+b => at least one of a or b did not participate in the topic
+  def filter_users(values:)
+    values.each do |prefix, value|
+      require_all, usernames = calculate_all_or_any(value)
+
+      if usernames.empty?
+        @scope = @scope.none
+        next
+      end
+
+      user_ids = User.not_staged.where("username_lower IN (?)", usernames).pluck(:id)
+
+      if user_ids.empty?
+        @scope = @scope.none
+        next
+      end
+
+      if require_all
+        if user_ids.length < usernames.length
+          @scope = @scope.none
+          next
+        end
+
+        # A possible alternative is to select the topics with the users with the least posts
+        # then expand to all of the rest of the users, this can limit the scanning
+        if prefix == "-"
+          @scope = @scope.where(<<~SQL, user_ids: user_ids, user_count: user_ids.length)
+            topics.id NOT IN (
+              SELECT p1.topic_id
+              FROM posts p1
+              WHERE p1.user_id IN (:user_ids) AND p1.deleted_at IS NULL #{whisper_condition("p1")}
+              GROUP BY p1.topic_id
+              HAVING COUNT(DISTINCT p1.user_id) = :user_count
+            )
+          SQL
+        else
+          user_ids.each_with_index { |uid, idx| @scope = @scope.where(<<~SQL) }
+            EXISTS (
+              SELECT 1
+              FROM posts p#{idx}
+              WHERE p#{idx}.topic_id = topics.id AND p#{idx}.user_id = #{uid} AND p#{idx}.deleted_at IS NULL #{whisper_condition("p#{idx}")}
+              LIMIT 1
+            )
+          SQL
+        end
+      else
+        not_sql = prefix == "-" ? "NOT" : ""
+        @scope = @scope.where(<<~SQL, user_ids: user_ids)
+              topics.id #{not_sql} IN (
+                SELECT DISTINCT p.topic_id
+                FROM posts p
+                WHERE p.user_id IN (:user_ids)
+                  AND p.deleted_at IS NULL
+                  #{whisper_condition("p")}
+              )
+            SQL
+      end
+    end
+  end
+
+  # group:staff,moderators => any of the groups have participation
+  # group:staff+moderators => both groups have participation
+  def filter_groups(values:)
+    values.each do |value|
+      require_all, group_names = calculate_all_or_any(value)
+
+      if group_names.empty?
+        @scope = @scope.none
+        next
+      end
+
+      group_ids =
+        Group
+          .visible_groups(@guardian.user)
+          .members_visible_groups(@guardian.user)
+          .where("lower(name) IN (?)", group_names)
+          .pluck(:id)
+
+      if group_ids.empty?
+        @scope = @scope.none
+        next
+      end
+
+      if require_all
+        if group_ids.length < group_names.length
+          @scope = @scope.none
+          next
+        end
+
+        group_ids.each_with_index { |gid, idx| @scope = @scope.where(<<~SQL) }
+            EXISTS (
+              SELECT 1
+              FROM posts pg#{idx}
+              JOIN group_users gu#{idx} ON gu#{idx}.user_id = pg#{idx}.user_id
+              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid} #{whisper_condition("pg#{idx}")}
+            )
+          SQL
+      else
+        @scope = @scope.where(<<~SQL, group_ids: group_ids)
+              topics.id IN (
+                SELECT DISTINCT p.topic_id
+                FROM posts p
+                JOIN group_users gu ON gu.user_id = p.user_id
+                WHERE gu.group_id IN (:group_ids)
+                  #{whisper_condition("p")}
+              )
+            SQL
+      end
+    end
   end
 
   def filter_categories(values:)
@@ -291,16 +659,83 @@ class TopicsFilter
       SQL
   end
 
-  def filter_created_by_user(usernames:)
-    @scope =
-      @scope.joins(:user).where(
-        "users.username_lower IN (:usernames)",
-        usernames: usernames.map(&:downcase),
-      )
+  def filter_created_by(names:)
+    if names.include?("me") && @guardian.authenticated?
+      names = names.map { |n| n == "me" ? @guardian.user.username_lower : n }
+    end
+
+    if (user_ids = User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)) &&
+         user_ids.any?
+      @scope = @scope.joins(:user).where(user_id: user_ids)
+      return
+    end
+
+    if (
+         group_ids =
+           Group
+             .visible_groups(@guardian.user)
+             .members_visible_groups(@guardian.user)
+             .where("lower(name) IN (?)", names.map(&:downcase))
+             .pluck(:id)
+       ) && group_ids.any?
+      @scope =
+        @scope
+          .joins(:user)
+          .joins("INNER JOIN group_users ON group_users.user_id = users.id")
+          .where("group_users.group_id IN (?)", group_ids)
+          .distinct(:id)
+      return
+    end
+
+    @scope = @scope.none
+  end
+
+  def apply_custom_filter!(scope:, filter_name:, values:)
+    values.dup.each do |value|
+      custom_key = "#{filter_name}:#{value}"
+      if custom_match =
+           DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(custom_key) }
+        scope = custom_match[custom_key].call(scope, custom_key, @guardian) || scope
+        values.delete(value)
+      end
+    end
+    scope
+  end
+
+  def ensure_topic_users_reference!
+    if @guardian.authenticated?
+      if !@loaded_topic_users_reference
+        @scope =
+          @scope.joins(
+            "LEFT JOIN topic_users tu ON tu.topic_id = topics.id
+            AND tu.user_id = #{@guardian.user.id.to_i}",
+          )
+        @loaded_topic_users_reference = true
+      end
+    end
+  end
+
+  def topic_user_scope
+    @scope.where(
+      "tu.notification_level IN (:topic_notification_levels)",
+      topic_notification_levels: @topic_notification_levels.to_a,
+    )
+  end
+
+  def watching_first_post_scope
+    TopicQuery.watching_first_post_filter(@scope, @guardian.user)
+  end
+
+  def combine_scopes_with_or(scope1, scope2)
+    @scope.joins_values.concat(scope1.joins_values, scope2.joins_values).uniq!
+    @scope.merge(scope1.or(scope2))
   end
 
   def filter_in(values:)
     values.uniq!
+
+    # handle edge case of comma-separated values
+    values.map! { |value| value.split(",") }.flatten!
 
     if values.delete("pinned")
       @scope =
@@ -310,13 +745,42 @@ class TopicsFilter
         )
     end
 
-    if @guardian.user
-      if values.delete("bookmarked")
+    @scope = apply_custom_filter!(scope: @scope, filter_name: "in", values:)
+
+    if @guardian.authenticated?
+      if values.delete("new-topics")
+        ensure_topic_users_reference!
         @scope =
-          @scope.joins(:topic_users).where(
-            "topic_users.bookmarked AND topic_users.user_id = ?",
-            @guardian.user.id,
+          TopicQuery.new_filter(
+            @scope,
+            treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
           )
+      end
+
+      if values.delete("new-replies")
+        ensure_topic_users_reference!
+        @scope = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
+      end
+
+      if values.delete("new")
+        ensure_topic_users_reference!
+        new_topics =
+          TopicQuery.new_filter(
+            @scope,
+            treat_as_new_topic_start_date: @guardian.user.user_option.treat_as_new_topic_start_date,
+          )
+        unread_topics = TopicQuery.unread_filter(@scope, whisperer: @guardian.user.whisperer?)
+        @scope = combine_scopes_with_or(new_topics, unread_topics)
+      end
+
+      if values.delete("unseen")
+        ensure_topic_users_reference!
+        @scope = TopicQuery.unseen_filter(@scope, @guardian.user)
+      end
+
+      if values.delete("bookmarked")
+        ensure_topic_users_reference!
+        @scope = @scope.where("tu.bookmarked")
       end
 
       if values.present?
@@ -329,13 +793,20 @@ class TopicsFilter
               end
             end
         end
+      end
 
-        @scope =
-          @scope.joins(:topic_users).where(
-            "topic_users.notification_level IN (:topic_notification_levels) AND topic_users.user_id = :user_id",
-            topic_notification_levels: @topic_notification_levels.to_a,
-            user_id: @guardian.user.id,
-          )
+      # watching_first_post is a category/tag-level notification, not a topic-level one
+      # We need to handle it separately from regular notification levels and combine with OR
+      has_watching_first_post = values.delete("watching_first_post")
+
+      if has_watching_first_post && @topic_notification_levels.present?
+        ensure_topic_users_reference!
+        @scope = combine_scopes_with_or(topic_user_scope, watching_first_post_scope)
+      elsif has_watching_first_post
+        @scope = @scope.merge(watching_first_post_scope)
+      elsif @topic_notification_levels.present?
+        ensure_topic_users_reference!
+        @scope = @scope.merge(topic_user_scope)
       end
     elsif values.present?
       @scope = @scope.none
@@ -403,11 +874,6 @@ class TopicsFilter
   def filter_tags(values:)
     return if !SiteSetting.tagging_enabled?
 
-    exclude_all_tags = []
-    exclude_any_tags = []
-    include_any_tags = []
-    include_all_tags = []
-
     values.each do |key_prefix, value|
       break if key_prefix && key_prefix != "-"
 
@@ -421,45 +887,25 @@ class TopicsFilter
             true
           end
 
-        (
-          case [key_prefix, match_all]
-          in ["-", true]
-            exclude_all_tags
-          in ["-", false]
-            exclude_any_tags
-          in [nil, true]
-            include_all_tags
-          in [nil, false]
-            include_any_tags
+        tags = tag_names.split(delimiter)
+        tag_ids = tag_ids_from_tag_names(tags)
+
+        case [key_prefix, match_all]
+        in ["-", false]
+          exclude_topics_with_any_tags(tag_ids)
+        in ["-", true]
+          exclude_topics_with_all_tags(tag_ids)
+        in [nil, false]
+          include_topics_with_any_tags(tag_ids)
+        in [nil, true]
+          has_invalid_tags = tag_ids.length < tags.length
+
+          if has_invalid_tags
+            @scope = @scope.none
+          else
+            include_topics_with_all_tags(tag_ids)
           end
-        ).concat(tag_names.split(delimiter))
-      end
-    end
-
-    if exclude_all_tags.present?
-      exclude_topics_with_all_tags(tag_ids_from_tag_names(exclude_all_tags))
-    end
-
-    if exclude_any_tags.present?
-      exclude_topics_with_any_tags(tag_ids_from_tag_names(exclude_any_tags))
-    end
-
-    if include_any_tags.present?
-      include_topics_with_any_tags(tag_ids_from_tag_names(include_any_tags))
-    end
-
-    if include_all_tags.present?
-      has_invalid_tags = false
-
-      all_tag_ids =
-        tag_ids_from_tag_names(include_all_tags) do |tag_ids, _|
-          has_invalid_tags = tag_ids.length < include_all_tags.length
         end
-
-      if has_invalid_tags
-        @scope = @scope.none
-      else
-        include_topics_with_all_tags(all_tag_ids)
       end
     end
   end
@@ -497,7 +943,6 @@ class TopicsFilter
   def include_topics_with_all_tags(tag_ids)
     tag_ids.each do |tag_id|
       sql_alias = topic_tags_alias
-
       @scope =
         @scope.joins(
           "INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag_id}",
@@ -513,6 +958,28 @@ class TopicsFilter
         .joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id")
         .where("#{sql_alias}.tag_id IN (?)", tag_ids)
         .distinct(:id)
+  end
+
+  def filter_locale(values:)
+    include_locales = []
+    exclude_locales = []
+
+    values.each do |key_prefix, value|
+      locales = value.split(",").map(&:strip).reject(&:blank?)
+      next if locales.empty?
+
+      if key_prefix == "-"
+        exclude_locales.concat(locales)
+      else
+        include_locales.concat(locales)
+      end
+    end
+
+    @scope = @scope.where(locale: include_locales) if include_locales.present?
+
+    if exclude_locales.present?
+      @scope = @scope.where("topics.locale IS NULL OR topics.locale NOT IN (?)", exclude_locales)
+    end
   end
 
   ORDER_BY_MAPPINGS = {
@@ -545,6 +1012,24 @@ class TopicsFilter
     "views" => {
       column: "topics.views",
     },
+    "hot" => {
+      column: "COALESCE(topic_hot_scores.score, 0)",
+      scope: -> do
+        @scope.joins("LEFT JOIN topic_hot_scores ON topic_hot_scores.topic_id = topics.id")
+      end,
+    },
+    "read" => {
+      column: "tu.last_visited_at",
+      scope: -> do
+        if @guardian.authenticated?
+          ensure_topic_users_reference!
+          @scope.where.not(tu: { last_visited_at: nil })
+        else
+          # make sure this works for anon (particularly selection)
+          @scope.joins("LEFT JOIN topic_users tu ON 1 = 0")
+        end
+      end,
+    },
   }
   private_constant :ORDER_BY_MAPPINGS
 
@@ -559,10 +1044,9 @@ class TopicsFilter
         if scope = ORDER_BY_MAPPINGS.dig(match_data[:order_by], :scope)
           @scope = instance_exec(&scope)
         end
-
         @scope = @scope.order("#{column_name} #{match_data[:asc] ? "ASC" : "DESC"}")
       else
-        match_data = value.match /^(?<column>.*?)(?:-(?<asc>asc))?$/
+        match_data = value.match(/^(?<column>.*?)(?:-(?<asc>asc))?$/)
         key = "order:#{match_data[:column]}"
         if custom_match =
              DiscoursePluginRegistry.custom_filter_mappings.find { |hash| hash.key?(key) }
@@ -577,5 +1061,13 @@ class TopicsFilter
     scope.joins(
       "INNER JOIN posts AS first_posts ON first_posts.topic_id = topics.id AND first_posts.post_number = 1",
     )
+  end
+
+  def whisper_condition(table_alias)
+    if @guardian.can_see_whispers?
+      ""
+    else
+      "AND #{table_alias}.post_type != #{Post.types[:whisper]}"
+    end
   end
 end

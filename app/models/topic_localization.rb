@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TopicLocalization < ActiveRecord::Base
+  include LocaleMatchable
+
   belongs_to :topic
 
   validates :locale, presence: true, length: { maximum: 20 }

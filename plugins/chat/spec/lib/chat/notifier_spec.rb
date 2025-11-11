@@ -2,9 +2,9 @@
 
 describe Chat::Notifier do
   describe "#notify_new" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:user_1) { Fabricate(:user, refresh_auto_groups: true) }
-    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_2, :user)
 
     before do
       @chat_group =
@@ -335,7 +335,7 @@ describe Chat::Notifier do
     end
 
     describe "group mentions" do
-      fab!(:user_3) { Fabricate(:user) }
+      fab!(:user_3, :user)
       fab!(:group) do
         Fabricate(
           :public_group,
@@ -343,7 +343,7 @@ describe Chat::Notifier do
           mentionable_level: Group::ALIAS_LEVELS[:everyone],
         )
       end
-      fab!(:other_channel) { Fabricate(:category_channel) }
+      fab!(:other_channel, :category_channel)
 
       before { @chat_group.add(user_3) }
 
@@ -440,7 +440,7 @@ describe Chat::Notifier do
     end
 
     describe "unreachable users" do
-      fab!(:user_3) { Fabricate(:user) }
+      fab!(:user_3, :user)
 
       it "notifies poster of users who are not allowed to use chat" do
         msg = build_cooked_msg("Hello @#{user_3.username}", user_1)
@@ -550,7 +550,7 @@ describe Chat::Notifier do
     end
 
     describe "users who can be invited to join the channel" do
-      fab!(:user_3) { Fabricate(:user) }
+      fab!(:user_3, :user)
 
       before { @chat_group.add(user_3) }
 
@@ -705,7 +705,7 @@ describe Chat::Notifier do
     end
 
     describe "enforcing limits when mentioning groups" do
-      fab!(:user_3) { Fabricate(:user) }
+      fab!(:user_3, :user)
       fab!(:group) do
         Fabricate(
           :public_group,

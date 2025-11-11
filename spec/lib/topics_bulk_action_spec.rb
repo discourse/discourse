@@ -5,7 +5,7 @@ RSpec.describe TopicsBulkAction do
   fab!(:topic) { Fabricate(:topic, user: user) }
 
   describe "#dismiss_topics" do
-    fab!(:user) { Fabricate(:user, created_at: 1.days.ago, refresh_auto_groups: true) }
+    fab!(:user) { Fabricate(:user, created_at: 1.day.ago, refresh_auto_groups: true) }
     fab!(:category)
     fab!(:topic2) { Fabricate(:topic, category: category, created_at: 60.minutes.ago) }
     fab!(:topic3) { Fabricate(:topic, category: category, created_at: 120.minutes.ago) }
@@ -120,7 +120,7 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user is staff" do
-      fab!(:user) { Fabricate(:admin) }
+      fab!(:user, :admin)
 
       context "when the highest_staff_post_number is > highest_post_number for a topic (e.g. whisper is last post)" do
         it "dismisses posts" do
@@ -159,6 +159,58 @@ RSpec.describe TopicsBulkAction do
   describe "change_category" do
     fab!(:category)
     fab!(:fist_post) { Fabricate(:post, topic: topic) }
+
+    describe "option 'perform action silently'" do
+      fab!(:watcher, :user)
+      fab!(:admin)
+
+      before do
+        Jobs.run_immediately!
+        TopicUser.change(
+          watcher,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:watching],
+        )
+      end
+
+      shared_examples "performing with `silent` option provided" do
+        context "when 'silent` option is `false` or not present" do
+          it "will send notification to users watching the topic" do
+            expect do
+              TopicsBulkAction.new(
+                admin,
+                [topic.id],
+                type: "change_category",
+                category_id: category.id,
+              ).perform!
+            end.to change { Notification.where(user: watcher).count }
+          end
+        end
+
+        context "when 'silent' option is `true`" do
+          it "will not send notification to users watching the topic" do
+            expect do
+              TopicsBulkAction.new(
+                admin,
+                [topic.id],
+                type: "change_category",
+                category_id: category.id,
+                silent: true,
+              ).perform!
+            end.to_not change { Notification.where(user: watcher).count }
+          end
+        end
+      end
+
+      context "when 'create_revision_on_bulk_topic_moves' enabled" do
+        SiteSetting.create_revision_on_bulk_topic_moves = true
+        include_examples "performing with `silent` option provided"
+      end
+      context "when 'create_revision_on_bulk_topic_moves' disabled" do
+        SiteSetting.create_revision_on_bulk_topic_moves = false
+        include_examples "performing with `silent` option provided"
+      end
+    end
 
     context "when the user can edit the topic" do
       context "with 'create_revision_on_bulk_topic_moves' setting enabled" do
@@ -293,6 +345,44 @@ RSpec.describe TopicsBulkAction do
       end
     end
 
+    context "when notification_level_id is blank" do
+      it "raises an invalid parameters error" do
+        tba =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_notification_level",
+            notification_level_id: "",
+          )
+        expect { tba.perform! }.to raise_error(
+          Discourse::InvalidParameters,
+          /notification_level_id/,
+        )
+      end
+
+      it "raises an invalid parameters error when notification_level_id is nil" do
+        tba =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_notification_level",
+            notification_level_id: nil,
+          )
+        expect { tba.perform! }.to raise_error(
+          Discourse::InvalidParameters,
+          /notification_level_id/,
+        )
+      end
+
+      it "raises an invalid parameters error when notification_level_id is missing" do
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: "change_notification_level")
+        expect { tba.perform! }.to raise_error(
+          Discourse::InvalidParameters,
+          /notification_level_id/,
+        )
+      end
+    end
+
     context "when the user can't see the topic" do
       it "doesn't change the level" do
         Guardian.any_instance.expects(:can_see?).returns(false)
@@ -414,8 +504,8 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "change_tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
@@ -481,9 +571,9 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "append tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
@@ -552,8 +642,8 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "remove_tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
 
     before do
       SiteSetting.tagging_enabled = true

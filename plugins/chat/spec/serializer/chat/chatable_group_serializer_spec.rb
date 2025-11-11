@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 RSpec.describe Chat::ChatableGroupSerializer do
   fab!(:group)
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:bot_user) { Fabricate(:bot) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:bot_user, :bot)
 
   subject(:serializer) { described_class.new(group, scope: Fabricate(:user).guardian, root: false) }
 

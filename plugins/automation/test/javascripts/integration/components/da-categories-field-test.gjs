@@ -14,8 +14,6 @@ module("Integration | Component | da-categories-field", function (hooks) {
   });
 
   test("sets values", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "categories",
     });
@@ -23,8 +21,8 @@ module("Integration | Component | da-categories-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -34,5 +32,29 @@ module("Integration | Component | da-categories-field", function (hooks) {
     await selectKit().selectRowByValue(8);
 
     assert.deepEqual(this.field.metadata.value, [6, 8]);
+  });
+
+  test("empty", async function (assert) {
+    this.field = new AutomationFabricators(getOwner(this)).field({
+      component: "categories",
+    });
+
+    await render(
+      <template>
+        <AutomationField
+          @automation={{this.automation}}
+          @field={{this.field}}
+        />
+      </template>
+    );
+
+    await selectKit().expand();
+    await selectKit().selectRowByValue(6);
+
+    assert.deepEqual(this.field.metadata.value, [6]);
+
+    await selectKit().deselectItemByValue(6);
+
+    assert.strictEqual(this.field.metadata.value, undefined);
   });
 });

@@ -2,7 +2,7 @@
 
 class TagGroup < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
-  validates_uniqueness_of :name, case_sensitive: false
+  validates :name, uniqueness: { case_sensitive: false }
 
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
@@ -17,9 +17,9 @@ class TagGroup < ActiveRecord::Base
 
   belongs_to :parent_tag, class_name: "Tag"
 
-  before_create :init_permissions
   before_save :apply_permissions
   before_save :remove_parent_from_group
+  before_create :init_permissions
 
   after_commit { DiscourseTagging.clear_cache! }
 
@@ -51,6 +51,11 @@ class TagGroup < ActiveRecord::Base
   def self.find_id_by_slug(slug)
     self.pluck(:id, :name).each { |id, name| return id if Slug.for(name) == slug }
     nil
+  end
+
+  # Same as Tag#find_by_name
+  def self.find_by_name_insensitive(name)
+    self.find_by("lower(name) = ?", name.downcase)
   end
 
   def self.resolve_permissions(permissions)
@@ -127,4 +132,8 @@ end
 #  updated_at    :datetime         not null
 #  parent_tag_id :integer
 #  one_per_topic :boolean          default(FALSE)
+#
+# Indexes
+#
+#  index_tag_groups_on_lower_name  (lower((name)::text)) UNIQUE
 #

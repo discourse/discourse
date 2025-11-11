@@ -111,6 +111,10 @@ RSpec.describe Email::MessageBuilder do
     expect(header_args["X-Auto-Response-Suppress"]).to eq("All")
   end
 
+  it "disables Outlook's reaction via email feature" do
+    expect(header_args["x-ms-reactions"]).to eq("disallow")
+  end
+
   describe "include_respond_instructions" do
     context "when include_respond_instructions is false" do
       let(:private_reply) { false }

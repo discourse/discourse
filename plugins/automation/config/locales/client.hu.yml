@@ -161,7 +161,7 @@ hu:
               description: "Opcionális, korlátozza az aktiválást csak a létrehozott vagy szerkesztett eseményekre"
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
             restricted_tags:
               label: Címkék
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés rendelkezik ezen címkék bármelyikével
@@ -245,7 +245,7 @@ hu:
               description: Hagyja ki az eseményindítót, ha a feladónak van válasz e-mailje, vagy automatizált forrásból származik. Csak az e-mailben létrehozott PÜ-re vonatkozik
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
         topic_tags_changed:
           trigger_on_modes:
             tags_added_or_removed: Címkék hozzáadva vagy eltávolítva
@@ -256,18 +256,18 @@ hu:
               label: Figyelt kategóriák
               description: Csak akkor aktiválódik, ha a téma e kategóriák egyikébe tartozik
             watching_tags:
-              label: Figyelt címkék
+              label: Címkék figyelése
               description: Csak akkor aktiválódik, ha a témakör rendelkezik ezen címkék bármelyikével
             trigger_on:
               label: Trigger bekapcsolva
             trigger_with_pms:
-              label: Aktiválás PÜ-el
+              label: Aktiválás PÜ-vel
               description: Akkor is aktiválódik, ha a címkéket PÜ-ben módosították
         after_post_cook:
           fields:
             valid_trust_levels:
               label: Érvényes bizalmi szintek
-              description: Csak akkor aktiválódik, ha a bejegyzést a felhasználó hozza létre ezeken a bizalmi szinteken, alapértelmezés szerint bármely bizalmi szint
+              description: Csak akkor aktiválódik, ha a bejegyzést egy ezeken a bizalmi szinteken lévő felhasználó hozza létre, alapértelmezés szerint ez bármelyik bizalmi szint
             restricted_category:
               label: Kategória
               description: Opcionális, csak akkor aktiválódik, ha a bejegyzés témája ebbe a kategóriába tartozik
@@ -339,7 +339,7 @@ hu:
           levels:
             warning: Figyelmeztetés
             info: Információ
-            success: Siker
+            success: Sikeres
             error: Hiba
         user_group_membership_through_badge:
           fields:
@@ -352,7 +352,7 @@ hu:
               label: Felhasználó címének és hangulatának frissítése
               description: Opcionális, Felhasználó címének és hangulatának frissítése
             remove_members_without_badge:
-              label: Távolítsa el a meglévő tagokat jelvény nélkül
+              label: Jelvény nélküli meglévő tagok eltávolítása
               description: 'Opcionális: Távolítsa el a meglévő csoporttagokat a megadott jelvény nélkül'
             badge:
               label: Jelvény
@@ -404,9 +404,9 @@ hu:
             receiver:
               label: PÜ fogadó
             sendable_pms:
-              label: PÜ-ek
+              label: PÜ-k
             sender:
-              label: PÜ feladó
+              label: PÜ feladója
               description: "Győződjön meg arról, hogy a feladó megfelelő jogosultságokkal rendelkezik ahhoz, hogy PM-eket küldjön a címzettnek"
         close_topic:
           fields:
@@ -421,35 +421,33 @@ hu:
         add_user_to_group_through_custom_field:
           fields:
             custom_field_name:
-              label: "Felhasználó egyéni mező neve"
+              label: "Felhasználó egyéni mezőneve"
       unnamed_automation: "Névtelen automatizálás"
       models:
         script:
           name:
-            label: Szkript
+            label: Parancsfájl
         trigger:
           name:
-            label: Trigger
+            label: Aktiváló
         automation:
           runs_today: "%{count} ma"
           runs_this_week: "%{count} ezen a héten"
           runs_this_month: "%{count} ebben a hónapban"
           runs:
-            label: Fut
+            label: Futások
           name:
             label: Név
           trigger:
-            label: Trigger
+            label: Aktiváló
           script:
-            label: Szkript
+            label: Parancsfájl
           version:
             label: Verzió
           status:
             label: Állapot
-          enabled:
-            label: Engedélyezed
           disabled:
-            label: Kikapcsolt
+            label: Letiltva
           placeholders:
             label: Helyőrzők
           last_updated_at:
@@ -457,4 +455,4 @@ hu:
           last_run:
             label: Utolsó futás
           last_updated_by:
-            label: Frissítette
+            label: 'Frissítette:'

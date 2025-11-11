@@ -3,8 +3,8 @@
 RSpec.describe Chat::Channel do
   subject(:channel) { Fabricate(:chat_channel) }
 
-  fab!(:category_channel_1) { Fabricate(:category_channel) }
-  fab!(:dm_channel_1) { Fabricate(:direct_message_channel) }
+  fab!(:category_channel_1, :category_channel)
+  fab!(:dm_channel_1, :direct_message_channel)
 
   it { is_expected.to validate_length_of(:description).is_at_most(500) }
   it { is_expected.to validate_length_of(:slug).is_at_most(100) }
@@ -93,12 +93,12 @@ RSpec.describe Chat::Channel do
   end
 
   describe ".ensure_consistency!" do
-    fab!(:category_channel_2) { Fabricate(:category_channel) }
+    fab!(:category_channel_2, :category_channel)
 
     describe "updating messages_count for all channels" do
-      fab!(:category_channel_3) { Fabricate(:category_channel) }
-      fab!(:category_channel_4) { Fabricate(:category_channel) }
-      fab!(:dm_channel_2) { Fabricate(:direct_message_channel) }
+      fab!(:category_channel_3, :category_channel)
+      fab!(:category_channel_4, :category_channel)
+      fab!(:dm_channel_2, :direct_message_channel)
 
       before do
         Fabricate(:chat_message, chat_channel: category_channel_1)
@@ -142,10 +142,10 @@ RSpec.describe Chat::Channel do
     end
 
     describe "updating user_count for all channels" do
-      fab!(:user_1) { Fabricate(:user) }
-      fab!(:user_2) { Fabricate(:user) }
-      fab!(:user_3) { Fabricate(:user) }
-      fab!(:user_4) { Fabricate(:user) }
+      fab!(:user_1, :user)
+      fab!(:user_2, :user)
+      fab!(:user_3, :user)
+      fab!(:user_4, :user)
 
       def create_memberships
         user_1.user_chat_channel_memberships.create!(
@@ -257,7 +257,7 @@ RSpec.describe Chat::Channel do
   end
 
   describe "#latest_not_deleted_message_id" do
-    fab!(:channel) { Fabricate(:category_channel) }
+    fab!(:channel, :category_channel)
     fab!(:old_message) { Fabricate(:chat_message, chat_channel: channel) }
     fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel) }
 

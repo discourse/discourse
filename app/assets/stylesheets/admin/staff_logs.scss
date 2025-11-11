@@ -132,21 +132,53 @@
   }
 
   td.context {
-    word-break: break-all;
+    max-width: 20vw;
   }
 }
 
 .staff-action-logs-controls {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.5em;
+  justify-content: space-between;
   margin: 0 0 1em 0;
 
-  .select-kit {
-    margin: 0 0.5em;
+  // for too small screen, we want it to also wrap
+  @media (width <= 400px) {
+    flex-wrap: wrap;
   }
 
-  button {
-    margin-left: auto;
+  .staff-action-logs-controls__left {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+
+    // we want to put it in one line
+    .date-filter-container .d-date-time-input-range {
+      display: flex;
+      gap: 0.5em;
+
+      .from {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  #staff-action-logs-action-filter {
+    // unset the global width of .admin-container .select-kit, so we can shrink it by flex
+    width: unset;
+    flex: 1 0 120px;
+    max-width: 400px;
+  }
+
+  .action-filter-container {
+    flex: 0 1 380px;
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
   }
 
   a.filter {

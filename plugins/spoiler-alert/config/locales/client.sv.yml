@@ -7,7 +7,6 @@
 sv:
   js:
     spoiler:
-      title: Blurra spoiler
       label:
         show: "Visa dolt innehåll"
     composer:

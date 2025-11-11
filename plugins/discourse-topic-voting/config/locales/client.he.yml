@@ -1,0 +1,65 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  js:
+    category:
+      sort_options:
+        votes: "הצבעות"
+    topic_voting:
+      title: "הצבעה על נושאים"
+      reached_limit: "נגמרו לך ההצבעות, עליך להסיר הצבעה קיימת!"
+      list_votes: "הצגת ההצבעות שלך"
+      votes_nav_help: "נושאים עם הכי הרבה הצבעות"
+      voted: "הצבעת לנושא זה"
+      allow_topic_voting: "לאפשר למשתמשים להצביע על נושאים בקטגוריה זו"
+      vote_title: "הצבעה"
+      vote_title_plural: "הצבעות"
+      voted_title: "התקבלה הצבעה"
+      voting_closed_title: "סגור"
+      voting_limit: "מגבלה"
+      votes_left:
+        one: "נותרה לרשותך הצבעה %{count}, להצגת ה<a href='%{path}'>הצבעות שלך</a>."
+        two: "נותרו לרשותך שתי הצבעות, להצגת ה<a href='%{path}'>הצבעות שלך</a>."
+        many: "נותרו לרשותך %{count} הצבעות, להצגת ה<a href='%{path}'>הצבעות שלך</a>."
+        other: "נותרו לרשותך %{count} הצבעות, להצגת ה<a href='%{path}'>הצבעות שלך</a>."
+      votes_left_button_title:
+        one: "נותרה לך הצבעה %{count}."
+        two: "נותרו לך %{count} הצבעות."
+        many: "נותרו לך %{count} הצבעות."
+        other: "נותרו לך %{count} הצבעות."
+      votes:
+        one: "הצבעה"
+        two: "שתי הצבעות"
+        many: "%{count} הצבעות"
+        other: "%{count} הצבעות"
+      anonymous_button:
+        one: "הצבעה"
+        two: "הצבעות"
+        many: "הצבעות"
+        other: "הצבעות"
+      remove_vote: "הסרת הצבעה"
+      no_votes_title_self: "עדיין לא הצבעת לאף נושא"
+      no_votes_title_others: "עדיין לא התקבלה הצבעה על נושא כלשהו מאת %{username}"
+    filters:
+      votes:
+        title: "הצבעות"
+        help: "נושאים עם הכי הרבה הצבעות"
+      my_votes:
+        title: "הצבעות שלי"
+        help: "נושאים שהצבעת עליהם"
+    search:
+      most_votes: "רוב ההצבעות"
+      advanced:
+        vote:
+          count:
+            label: "ספירת הצבעות מינימלית"
+    admin:
+      web_hooks:
+        voting_event:
+          group_name: "אירוע הצבעה בנושא"
+          topic_upvote: "כשמשתמש מצביע לנושא"
+          topic_unvote: "כשמשתמש מבטל הצבעה לנושא"

@@ -12,6 +12,7 @@ acceptance("Discourse Chat - Chat live pane collapse", function (needs) {
 
   needs.settings({
     chat_enabled: true,
+    enable_emoji: true,
   });
 
   needs.pretender((server, helper) => {

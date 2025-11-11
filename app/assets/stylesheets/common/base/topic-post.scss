@@ -373,8 +373,6 @@ nav.post-controls {
         &.like {
           // Like button with 0 likes
           &:hover {
-            background: var(--love-low);
-
             .d-icon {
               color: var(--love);
             }
@@ -389,8 +387,6 @@ nav.post-controls {
 
           .discourse-no-touch & {
             &:hover {
-              background: var(--primary-low);
-
               .d-icon {
                 color: var(--primary-medium);
               }
@@ -407,13 +403,6 @@ nav.post-controls {
           + .toggle-like {
             // Like button when like count is present
             padding-left: 0.45em;
-
-            // Like button when like count is present
-            .discourse-no-touch & {
-              &:hover {
-                background: var(--primary-low);
-              }
-            }
           }
 
           // Like count button
@@ -449,14 +438,6 @@ nav.post-controls {
     }
 
     button {
-      flex: 0 1 auto;
-      font-size: var(--font-up-1);
-      padding: 8px 10px;
-      vertical-align: top;
-      background: transparent;
-      border: none;
-      border-radius: var(--d-post-control-border-radius);
-
       .discourse-no-touch & {
         &:hover,
         &:focus-visible,
@@ -491,7 +472,6 @@ nav.post-controls {
       }
 
       &.create {
-        margin-right: 0;
         color: var(--d-post-control-create-text-color);
 
         .d-icon {
@@ -629,19 +609,49 @@ aside.quote {
   margin-bottom: 1em;
 
   .title {
+    display: flex;
+    align-items: start;
+    gap: var(--space-2);
     color: var(--primary-high-or-secondary-low);
     padding: 0.8em 0.8em 0 0.8em;
 
     @include post-aside;
     @include unselectable;
 
-    // blockquote is underneath this and has top margin
-    .avatar {
-      margin-right: 0.5em;
+    &[data-can-toggle-quote] {
+      cursor: pointer;
     }
 
-    img {
-      margin-top: -0.26em;
+    a {
+      @include ellipsis;
+    }
+
+    .badge-category__wrapper {
+      align-self: center;
+    }
+
+    .quote-controls {
+      min-height: 24px; // match avatar height for alignment
+    }
+
+    // empty control div can impact layout, so hide it
+    &:not([data-has-quote-controls]) {
+      .quote-controls {
+        display: none;
+      }
+    }
+  }
+
+  .quote-title__text-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 var(--space-2);
+    min-width: 0;
+
+    .badge-category__wrapper {
+      align-self: auto;
     }
   }
 
@@ -673,15 +683,17 @@ aside.quote {
 }
 
 .quote-controls {
-  float: right;
   display: flex;
   align-items: center;
+  margin-left: auto;
+  order: 2; // for non-glimmer post stream
 
   a {
     margin-left: 0.3em;
   }
 
-  .quote-toggle {
+  .quote-toggle,
+  .back {
     padding: 0;
   }
 }
@@ -737,8 +749,8 @@ aside.quote {
   opacity: 0.4;
 }
 
-.fk-d-menu[data-identifier="post-text-selection-toolbar"] {
-  @include user-select(none);
+.post-stream--cloaked {
+  min-height: 1px; // ensures that cloaked items have a minimum height to force the intersection observers to work
 }
 
 .quote-button {
@@ -934,7 +946,7 @@ aside.quote {
   }
 
   .group-request {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
     padding-top: 0.5em;
   }
 }
@@ -1090,12 +1102,22 @@ kbd {
 
 // we assume blockquotes have their own margins, so all blockquotes
 // will remove margins from first (top) and last (bottom) child elements
-blockquote > *:first-child {
-  margin-top: 0 !important;
-}
+blockquote,
+blockquote .post__contents-cooked-quote {
+  overflow-wrap: break-word;
 
-blockquote > *:last-child {
-  margin-bottom: 0 !important;
+  > *:first-child {
+    margin-top: 0 !important;
+  }
+
+  > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  table {
+    table-layout: fixed; // prevents table from expanding past the post body width
+    width: 100%;
+  }
 }
 
 .gap {
@@ -1152,7 +1174,7 @@ blockquote > *:last-child {
 
   .topic-avatar,
   .small-action-desc {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 
   .topic-avatar {
@@ -1342,7 +1364,7 @@ span.mention {
 .blocked-hotlinked-placeholder {
   display: inline-flex;
   flex-direction: column;
-  border: 1px solid var(--primary-low);
+  border: 1px solid var(--content-border-color);
   align-items: center;
   justify-content: center;
 
@@ -1481,47 +1503,44 @@ span.mention {
 }
 
 .post-notice {
-  box-sizing: border-box;
   align-items: center;
-  background-color: var(--tertiary-low);
-  border-top: 1px solid var(--primary-low);
+  background-color: var(--tertiary-very-low);
+  border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
-  max-width: calc(
-    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
-      var(--topic-avatar-width)
-  );
-  padding: var(--topic-body-width-padding);
-  padding-left: 0;
+  max-width: 100%;
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-down-1-rem);
+  border-radius: var(--d-border-radius);
+  gap: var(--space-2);
+  box-sizing: border-box;
 
-  &.old {
-    background-color: unset;
-    color: var(--primary-medium);
-
-    .d-icon {
-      color: var(--primary-medium);
-    }
+  @include viewport.until(sm) {
+    margin-bottom: var(--space-4);
   }
 
-  .post-notice-message {
-    p {
-      display: inline;
-    }
-
-    .custom_created_by {
-      display: inline-block;
-    }
+  &.custom {
+    background: var(--danger-low);
   }
 
-  p {
-    margin: 0;
+  .emoji {
+    width: 1.5em;
+    height: 1.5em;
   }
 
   .d-icon {
-    font-size: 2em;
-    width: var(--topic-avatar-width);
+    width: 1.25em;
+    height: 1.25em;
     color: var(--primary-high);
-    margin-right: var(--topic-body-width-padding);
+  }
+
+  p {
+    display: inline;
+    margin: 0;
+  }
+
+  .custom_created_by {
+    display: inline-block;
   }
 }
 

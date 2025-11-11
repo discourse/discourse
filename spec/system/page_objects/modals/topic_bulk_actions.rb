@@ -24,6 +24,10 @@ module PageObjects
         find("#bulk-close-note").set(message)
       end
 
+      def select_notification_level(level)
+        find(".bulk-notification-list input[name='notification_level'][value='#{level}']").click
+      end
+
       def has_category_badge?(category)
         within(MODAL_SELECTOR) do
           PageObjects::Components::CategoryBadge.new.find_for_category(category)

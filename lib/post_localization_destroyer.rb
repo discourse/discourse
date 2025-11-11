@@ -6,7 +6,10 @@ class PostLocalizationDestroyer
 
     localization = PostLocalization.find_by(post_id: post_id, locale: locale)
     raise Discourse::NotFound unless localization
+    post = localization.post
 
-    localization.destroy
+    localization.destroy!
+
+    post.publish_change_to_clients! :revised
   end
 end

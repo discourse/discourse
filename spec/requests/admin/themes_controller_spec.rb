@@ -138,7 +138,7 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Awesome Theme")
-        expect(json["theme"]["theme_fields"].length).to eq(3)
+        expect(json["theme"]["theme_fields"].length).to eq(4)
       end
     end
 
@@ -337,7 +337,7 @@ RSpec.describe Admin::ThemesController do
         json = response.parsed_body
 
         expect(json["theme"]["name"]).to eq("Header Icons")
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
@@ -369,7 +369,7 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["name"]).to eq("Some other name")
         expect(json["theme"]["id"]).to eq(other_existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
       end
 
@@ -399,9 +399,42 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["name"]).to eq("Header Icons")
         expect(json["theme"]["id"]).not_to eq(existing_theme.id)
-        expect(json["theme"]["theme_fields"].length).to eq(6)
+        expect(json["theme"]["theme_fields"].length).to eq(7)
         expect(json["theme"]["auto_update"]).to eq(false)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+      end
+
+      context "with registered user_guardian_can_create_theme" do
+        after { DiscoursePluginRegistry.reset! }
+
+        it "doesn't allow importing a theme if the modifier returns false" do
+          plugin_instance = Plugin::Instance.new
+          can_create = true
+
+          plugin_instance.register_modifier(:user_guardian_can_create_theme) do |val, guardian|
+            expect(guardian.user).to eq(admin)
+            can_create
+          end
+
+          RemoteTheme.stubs(:import_theme).returns(Fabricate(:theme))
+          post "/admin/themes/import.json",
+               params: {
+                 remote: "https://github.com/discourse/discourse-brand-header.git",
+               }
+          expect(response.status).to eq(201)
+          json = response.parsed_body
+          expect(json["theme"]).to be_present
+
+          can_create = false
+
+          expect do
+            post "/admin/themes/import.json",
+                 params: {
+                   remote: "https://github.com/discourse/discourse-brand-header-2.git",
+                 }
+          end.not_to change { Theme.count }
+          expect(response.status).to eq(403)
+        end
       end
     end
 
@@ -554,7 +587,7 @@ RSpec.describe Admin::ThemesController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
-      it "creates a theme" do
+      it "creates a theme and theme fields" do
         post "/admin/themes.json",
              params: {
                theme: {
@@ -569,6 +602,89 @@ RSpec.describe Admin::ThemesController do
 
         expect(json["theme"]["theme_fields"].length).to eq(1)
         expect(UserHistory.where(action: UserHistory.actions[:change_theme]).count).to eq(1)
+      end
+
+      it "can set a theme to default" do
+        post "/admin/themes.json", params: { theme: { name: "my test name", default: "true" } }
+
+        expect(response.status).to eq(201)
+
+        json = response.parsed_body
+        expect(json["theme"]["default"]).to eq(true)
+      end
+
+      context "when creating a theme field with an invalid target" do
+        it "errors" do
+          post "/admin/themes.json",
+               params: {
+                 theme: {
+                   name: "my test name",
+                   theme_fields: [name: "scss", target: "blah", value: "body{color: red;}"],
+                 },
+               }
+
+          expect(response.status).to eq(400)
+
+          json = response.parsed_body
+          expect(json["errors"]).to include("Unknown target blah passed to set field")
+        end
+      end
+
+      context "when creating a theme field with an invalid type" do
+        it "errors" do
+          post "/admin/themes.json",
+               params: {
+                 theme: {
+                   name: "my test name",
+                   theme_fields: [name: "blahblah", target: "common", value: "body{color: red;}"],
+                 },
+               }
+
+          expect(response.status).to eq(400)
+
+          json = response.parsed_body
+          expect(json["errors"]).to include(
+            "No type could be guessed for field blahblah for target common",
+          )
+        end
+      end
+
+      context "with registered user_guardian_can_create_theme" do
+        after { DiscoursePluginRegistry.reset! }
+
+        it "doesn't allow theme creation if the modifier returns false" do
+          plugin_instance = Plugin::Instance.new
+          can_create = true
+
+          plugin_instance.register_modifier(:user_guardian_can_create_theme) do |val, guardian|
+            expect(guardian.user).to eq(admin)
+            can_create
+          end
+
+          post "/admin/themes.json",
+               params: {
+                 theme: {
+                   name: "my test name",
+                   theme_fields: [name: "scss", target: "common", value: "body{color: red;}"],
+                 },
+               }
+          expect(response.status).to eq(201)
+          json = response.parsed_body
+          expect(json["theme"]).to be_present
+
+          can_create = false
+
+          expect do
+            post "/admin/themes.json",
+                 params: {
+                   theme: {
+                     name: "my test name 2",
+                     theme_fields: [name: "scss", target: "common", value: "body{color: red;}"],
+                   },
+                 }
+          end.not_to change { Theme.count }
+          expect(response.status).to eq(403)
+        end
       end
     end
 
@@ -599,6 +715,20 @@ RSpec.describe Admin::ThemesController do
       before { sign_in(user) }
 
       include_examples "theme creation not allowed"
+    end
+
+    context "when theme allowlist mode is enabled" do
+      before do
+        global_setting :allowed_theme_repos, "  https://magic.com/repo.git, https://x.com/git"
+      end
+
+      it "prevents theme creation with 404 error" do
+        expect do
+          post "/admin/themes.json", params: { theme: { name: "my test name" } }
+        end.not_to change { Theme.count }
+
+        expect(response.status).to eq(404)
+      end
     end
   end
 
@@ -1047,7 +1177,7 @@ RSpec.describe Admin::ThemesController do
       it "returns the right response when an invalid id is given" do
         delete "/admin/themes/9999.json"
 
-        expect(response.status).to eq(400)
+        expect(response.status).to eq(404)
       end
 
       it "deletes the field's javascript cache" do
@@ -1058,18 +1188,18 @@ RSpec.describe Admin::ThemesController do
         )
         theme.save!
 
-        javascript_cache =
+        javascript_caches =
           theme
             .theme_fields
             .find_by(target_id: Theme.targets[:common], name: :header)
-            .javascript_cache
-        expect(javascript_cache).to_not eq(nil)
+            .raw_javascript_caches
+        expect(javascript_caches.length).to eq(1)
 
         delete "/admin/themes/#{theme.id}.json"
 
         expect(response.status).to eq(204)
         expect { theme.reload }.to raise_error(ActiveRecord::RecordNotFound)
-        expect { javascript_cache.reload }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { javascript_caches[0].reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
@@ -1382,7 +1512,7 @@ RSpec.describe Admin::ThemesController do
         get "/admin/themes/#{theme.id}/translations/foo.json"
         expect(response.status).to eq(400)
         expect(response.parsed_body["errors"]).to include(
-          I18n.t("invalid_params", message: :locale),
+          I18n.t("errors.messages.invalid_locale", invalid_locale: "foo"),
         )
       end
     end
@@ -1419,19 +1549,24 @@ RSpec.describe Admin::ThemesController do
       expect do
         delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
       end.to change { Theme.count }.by(-2)
+      expect(response.status).to eq(204)
     end
 
-    it "does not destroy if any theme is system" do
+    it "does not destroy any themes if any of them is a system theme" do
       theme.update_columns(id: -10)
       expect do
         delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
-      end.to change { Theme.count }.by(-1)
-      expect { theme_2.reload }.to raise_exception(ActiveRecord::RecordNotFound)
+      end.not_to change { Theme.count }
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"]).to eq(
+        ["Theme ids " + I18n.t("errors.messages.must_all_be_positive")],
+      )
     end
 
     it "logs the theme destroy action for each theme" do
       StaffActionLogger.any_instance.expects(:log_theme_destroy).twice
       delete "/admin/themes/bulk_destroy.json", params: { theme_ids: theme_ids }
+      expect(response.status).to eq(204)
     end
   end
 
@@ -1555,95 +1690,47 @@ RSpec.describe Admin::ThemesController do
     end
   end
 
-  describe "#change_colors" do
-    fab!(:theme)
+  describe "#show" do
+    let(:theme) { Fabricate(:theme) }
 
-    before { sign_in(admin) }
+    it "allows base_url in setting description" do
+      set_subfolder "/community"
 
-    context "with valid parameters" do
-      it "creates a theme-owned color palette if one doesn't exist" do
-        expect(theme.owned_color_palette).to be_nil
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        my_setting:
+          default: true
+          description: This is a link to %{base_path}/example
+      YAML
+      theme.save!
 
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
-            }
+      sign_in admin
 
-        expect(response.status).to eq(200)
+      get "/admin/themes/#{theme.id}"
+      expect(response.status).to eq(200)
 
-        theme.reload
-        expect(theme.owned_color_palette.id).to eq(response.parsed_body["id"])
-
-        color = theme.owned_color_palette.colors.find_by(name: "primary")
-        expect(color.hex).to eq("ff0000")
-        expect(color.dark_hex).to eq("0000ff")
-      end
-
-      it "updates an existing theme-owned color palette" do
-        palette = theme.find_or_create_owned_color_palette
-        primary_color = palette.colors.find_by(name: "primary")
-        secondary_color = palette.colors.find_by(name: "secondary")
-
-        original_secondary_hex = secondary_color.hex
-        original_secondary_dark_hex = secondary_color.dark_hex
-
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "aabbcc", dark_hex: "ccddee" }],
-            }
-
-        expect(response.status).to eq(200)
-
-        primary_color.reload
-        secondary_color.reload
-
-        expect(primary_color.hex).to eq("aabbcc")
-        expect(primary_color.dark_hex).to eq("ccddee")
-
-        expect(secondary_color.hex).to eq(original_secondary_hex)
-        expect(secondary_color.dark_hex).to eq(original_secondary_dark_hex)
-      end
-
-      it "returns the updated palette in the response" do
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "abcdef", dark_hex: "fedcba" }],
-            }
-
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json["colors"]).to be_present
-        primary_color = json["colors"].find { |c| c["name"] == "primary" }
-        expect(primary_color["hex"]).to eq("abcdef")
-        expect(primary_color["dark_hex"]).to eq("fedcba")
-      end
+      expect(response.parsed_body.dig("theme", "settings", 0, "description")).to eq(
+        "This is a link to /community/example",
+      )
     end
 
-    context "with invalid parameters" do
-      it "returns 404 for non-existent theme" do
-        max_id = (Theme.maximum(:id) || 0) + 1
+    it "skips interpolation for unknown variables" do
+      set_subfolder "/community"
 
-        put "/admin/themes/#{max_id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
-            }
+      theme.set_field(target: :settings, name: "yaml", value: <<~YAML)
+        my_setting:
+          default: true
+          description: Description %{some_mistake}
+      YAML
+      theme.save!
 
-        expect(response.status).to eq(404)
-      end
-    end
+      sign_in admin
 
-    context "when system theme" do
-      before { theme.update_columns(id: -10) }
+      get "/admin/themes/#{theme.id}"
+      expect(response.status).to eq(200)
 
-      it "returns invalid access" do
-        put "/admin/themes/#{theme.id}/change-colors.json",
-            params: {
-              colors: [{ name: "primary", hex: "ff0000", dark_hex: "0000ff" }],
-            }
-
-        expect(response.status).to eq(403)
-      end
+      expect(response.parsed_body.dig("theme", "settings", 0, "description")).to eq(
+        "Description %{some_mistake}",
+      )
     end
   end
 end

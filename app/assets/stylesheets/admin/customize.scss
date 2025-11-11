@@ -141,39 +141,57 @@
     margin-top: 20px;
   }
 
-  .color-schemes li {
-    .d-icon {
-      margin-right: 0.25em;
-      color: var(--primary-medium);
-    }
-  }
-
   .show-current-style {
     display: inline-block;
     vertical-align: top;
+    max-width: var(--admin-content-max-width);
 
     .title {
-      font-size: var(--font-up-1);
+      font-family: var(--heading-font-family);
+      font-size: var(--font-up-2-rem);
       font-weight: bold;
-      margin-bottom: 0.25em;
       display: flex;
       align-items: center;
 
-      span {
-        min-width: 0;
-        overflow-wrap: anywhere;
-      }
-
-      input {
+      .title-button {
         margin: 0;
+        padding: 0;
+        border-radius: 0;
+        border: none;
+        text-align: left;
+        font-weight: bold;
+        gap: var(--space-2);
+
+        &:hover {
+          color: inherit;
+
+          .d-icon-pencil {
+            display: block;
+            font-size: var(--font-down-2);
+          }
+        }
+
+        span {
+          margin-top: var(--space-2);
+          margin-bottom: var(--space-1);
+        }
       }
 
-      .btn {
-        margin-left: 0.5em;
+      .d-icon-pencil {
+        display: none;
       }
 
-      a {
-        font-size: var(--font-down-2);
+      .container-edit-title {
+        margin: 0;
+        width: 100%;
+
+        input {
+          font-size: var(--font-up-1-rem);
+        }
+
+        .btn-small {
+          font-size: var(--font-down-3);
+        }
       }
     }
 
@@ -526,7 +544,6 @@
     }
 
     .color-picker input {
-      width: 80px;
       margin-bottom: 0;
     }
 
@@ -672,7 +689,7 @@
 .admin-flag-item {
   &__delete.btn,
   &__delete.btn:hover {
-    border-top: 1px solid var(--primary-low);
+    border-top: 1px solid var(--content-border-color);
   }
 }
 
@@ -779,7 +796,7 @@
   .user-field {
     padding-block: 0.5em;
     margin-bottom: 1em;
-    border-bottom: 1px solid var(--primary-low);
+    border-bottom: 1px solid var(--content-border-color);
 
     .form-display {
       width: 25%;
@@ -826,6 +843,18 @@
 
   .d-editor {
     height: 50vh;
+  }
+
+  .back-to-email-templates {
+    margin-bottom: var(--space-2);
+  }
+
+  .email-templates-list {
+    &__row {
+      &.overridden {
+        border-left: 3px solid var(--highlight-medium);
+      }
+    }
   }
 }
 
@@ -916,7 +945,7 @@
 
     .btn {
       &:not(:last-of-type) {
-        border-right: 1px solid var(--primary-low);
+        border-right: 1px solid var(--content-border-color);
       }
     }
   }
@@ -938,59 +967,11 @@
   }
 }
 
-.about-customize-colors {
-  text-align: center;
-  width: 65%;
-  margin-left: 30%;
-}
-
-.desktop-view .admin-customize {
-  .show-current-style {
-    width: 68%;
-
-    &.legacy {
-      padding-left: 2%;
-    }
-
-    .title {
-      input {
-        width: 80%;
-      }
-    }
-  }
-
-  .themes-list {
-    width: 28%;
-  }
-
-  .back-to-themes-and-components {
-    margin-bottom: 1em;
-  }
+.back-to-themes-and-components {
+  margin-bottom: 1em;
 }
 
 .mobile-view .admin-customize {
-  .show-current-style {
-    padding: 0;
-    width: 100%;
-  }
-
-  .themes-list,
-  .color-schemes {
-    width: 100%;
-    margin-bottom: 1em;
-  }
-
-  .admin-container {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0;
-  }
-
-  .content-list.color-schemes ul {
-    max-height: 250px;
-    overflow-x: auto;
-  }
-
   .color-scheme {
     h1,
     h1 input {

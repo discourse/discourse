@@ -1,0 +1,34 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+hr:
+  js:
+    explorer:
+      or: "ili"
+      help:
+        label: "Pomoć"
+        auto_resolution: "<h2>Automatsko razlučivanje entiteta</h2> <p>Kada vaš upit vrati ID entiteta, Data Explorer ga može automatski zamijeniti nazivom entiteta i drugim korisnim informacijama u rezultatima upita. Automatsko rješavanje dostupno je za <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i> i <i><b>badge_id</b></i>. Kako biste ovo isprobali, pokrenite ovaj upit:</p> <pre><code>SELECT user_id\nFROM posts</code></pre>"
+      schema:
+        filter: "Pretraži..."
+      types:
+        bool:
+          yes: "Da"
+          no: "Ne"
+      export: "Izvoz"
+      save: "Zabilježi promjene"
+      edit: "Uredi"
+      delete: "Izbriši"
+      result_count:
+        one: "%{count} rezultat."
+        few: "%{count} rezultata."
+        other: "%{count} rezultata."
+      query_groups: "Grupe"
+      query_description: "Opis"
+      query_user: "Napravio"
+      reset_params: "Resetirati"
+      search_placeholder: "Pretraži..."
+    group:
+      reports: "Izvještaji"

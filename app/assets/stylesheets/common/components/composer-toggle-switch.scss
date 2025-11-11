@@ -1,11 +1,12 @@
 .composer-toggle-switch {
-  --toggle-switch-width: 40px;
-  --toggle-switch-height: 24px;
+  --toggle-switch-width: 52px;
+  --toggle-switch-height: 26px;
   justify-content: center;
   display: flex;
   align-items: center;
   border: 0;
   padding: 0;
+  margin-left: var(--space-2);
   background: transparent;
 
   &:focus-visible {
@@ -24,11 +25,19 @@
     height: var(--toggle-switch-height);
     position: relative;
     vertical-align: middle;
-    border-radius: 0.25em;
+    border-radius: var(--d-border-radius);
 
     :focus-visible & {
       outline: 2px solid var(--tertiary);
       outline-offset: 2px;
+    }
+
+    &:hover {
+      background: var(--d-hover);
+    }
+
+    &:active {
+      background-color: var(--primary-low);
     }
 
     &::before {
@@ -36,10 +45,10 @@
       display: block;
       position: absolute;
       background-color: var(--tertiary-low);
-      width: calc(var(--toggle-switch-height) - 0.125rem);
-      height: calc(var(--toggle-switch-height) - 0.25rem);
-      top: 0.125rem;
-      border-radius: 0.25em;
+      width: calc(var(--toggle-switch-height) - var(--space-half));
+      height: calc(var(--toggle-switch-height) - var(--space-1));
+      top: var(--space-half);
+      border-radius: var(--d-border-radius);
       box-shadow: 0 1px 2px 1px rgb(var(--tertiary-rgb), 0.2);
 
       .--markdown & {
@@ -51,10 +60,6 @@
           calc(var(--toggle-switch-width) - var(--toggle-switch-height))
         );
       }
-
-      @media (prefers-reduced-motion: reduce) {
-        transition-duration: 0ms;
-      }
     }
   }
 
@@ -64,12 +69,11 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    opacity: 0;
     height: 100%;
-    width: calc(var(--toggle-switch-height) - 0.125rem);
+    width: calc(var(--toggle-switch-height) - var(--space-half));
+    color: var(--primary-high);
 
     .d-icon {
-      color: var(--primary);
       vertical-align: text-bottom;
     }
 
@@ -79,18 +83,18 @@
   }
 
   &__left-icon {
-    left: 0.125rem;
+    left: var(--space-half);
 
     .--markdown & {
-      opacity: 1;
+      color: var(--primary);
     }
   }
 
   &__right-icon {
-    right: 0.125rem;
+    right: var(--space-half);
 
     .--rte & {
-      opacity: 1;
+      color: var(--primary);
     }
   }
 }

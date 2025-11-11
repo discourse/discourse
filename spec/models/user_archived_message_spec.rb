@@ -2,7 +2,7 @@
 
 RSpec.describe UserArchivedMessage do
   fab!(:user)
-  fab!(:user_2) { Fabricate(:user) }
+  fab!(:user_2, :user)
 
   fab!(:private_message) do
     create_post(

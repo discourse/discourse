@@ -1,11 +1,16 @@
 @use "lib/viewport";
 
+:root {
+  --onebox-shadow-color: var(--primary-100);
+  --onebox-border-color: var(--primary-300);
+}
+
 @mixin onebox-shadow($thickness) {
   border: 0;
   margin-inline: $thickness;
   box-shadow:
-    0 0 0 1px var(--primary-300),
-    0 0 0 $thickness var(--primary-100);
+    0 0 0 1px var(--onebox-border-color),
+    0 0 0 $thickness var(--onebox-shadow-color);
 
   // Makes the outer drop shadow radius equal to --d-border-radius
   border-radius: calc(var(--d-border-radius) - ($thickness / 2));
@@ -618,6 +623,12 @@ pre.onebox code ol.lines li.selected {
   }
 }
 
+.onebox.githubrepo {
+  .github-row {
+    display: contents;
+  }
+}
+
 .onebox.githubactions {
   h4 {
     margin-top: 5px;
@@ -726,7 +737,7 @@ aside.onebox.twitterstatus .onebox-body {
     padding: 1em 0;
 
     .quoted {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       padding: 0.5em 1em;
       margin-top: 1em;
       white-space: normal;
@@ -875,7 +886,7 @@ aside.onebox.xkcd .onebox-body img {
   }
 
   &.category-onebox {
-    border: 1px solid var(--primary-low);
+    border: 1px solid var(--content-border-color);
     padding-left: calc(1em - 5px);
     margin-left: 5px;
   }
@@ -1221,7 +1232,7 @@ aside.onebox.preview-error .site-icon {
     padding: 1em 0;
 
     .quoted {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       padding: 0.5em 1em;
       margin-top: 1em;
       white-space: normal;

@@ -1,0 +1,63 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require_relative "lib/boot"
+require_relative "lib/llm"
+require_relative "lib/eval"
+require_relative "lib/prompts/prompt_evaluator"
+require_relative "lib/prompts/single_test_runner"
+require_relative "lib/features"
+require_relative "lib/recorder"
+require_relative "lib/playground"
+require_relative "lib/cli"
+
+features_registry =
+  DiscourseAi::Evals::Features.new(modules: DiscourseAi::Configuration::Module.all)
+playground = DiscourseAi::Evals::Playground.new(output: $stdout)
+
+options = DiscourseAi::Evals::Cli.parse_options!(features_registry)
+
+if options.list_models
+  DiscourseAi::Evals::Llm.print
+  exit 0
+end
+
+if options.list_features
+  features_registry.print
+  exit 0
+end
+
+available_evals = DiscourseAi::Evals::Eval.available_cases
+
+if options.list
+  available_evals.each(&:print)
+  exit 0
+end
+
+llms = DiscourseAi::Evals::Llm.choose(options.model)
+
+if llms.empty?
+  puts "Error: Unknown model '#{options.model}'"
+  exit 1
+end
+
+selected_evals = available_evals
+selected_evals =
+  selected_evals.select do |eval_case|
+    eval_case.feature == options.feature_key
+  end if options.feature_key.present?
+selected_evals =
+  selected_evals.select do |eval_case|
+    eval_case.id == options.eval_name
+  end if options.eval_name.present?
+
+if selected_evals.empty?
+  if options.feature_key
+    puts "Error: No evaluations registered for feature '#{options.feature_key}'"
+  else
+    puts "Error: Unknown evaluation '#{options.eval_name}'"
+  end
+  exit 1
+end
+
+selected_evals.each { |eval_case| playground.run(eval_case: eval_case, llms: llms) }

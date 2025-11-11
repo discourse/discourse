@@ -32,8 +32,6 @@ module("Integration | Component | da-users-field", function (hooks) {
   });
 
   test("sets values", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "users",
     });
@@ -41,8 +39,8 @@ module("Integration | Component | da-users-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -57,8 +55,6 @@ module("Integration | Component | da-users-field", function (hooks) {
   });
 
   test("allows emails", async function (assert) {
-    const self = this;
-
     this.field = new AutomationFabricators(getOwner(this)).field({
       component: "users",
     });
@@ -66,8 +62,8 @@ module("Integration | Component | da-users-field", function (hooks) {
     await render(
       <template>
         <AutomationField
-          @automation={{self.automation}}
-          @field={{self.field}}
+          @automation={{this.automation}}
+          @field={{this.field}}
         />
       </template>
     );
@@ -77,5 +73,30 @@ module("Integration | Component | da-users-field", function (hooks) {
     await selectKit().selectRowByValue("j.jaffeux@example.com");
 
     assert.deepEqual(this.field.metadata.value, ["j.jaffeux@example.com"]);
+  });
+
+  test("empty", async function (assert) {
+    this.field = new AutomationFabricators(getOwner(this)).field({
+      component: "users",
+    });
+
+    await render(
+      <template>
+        <AutomationField
+          @automation={{this.automation}}
+          @field={{this.field}}
+        />
+      </template>
+    );
+
+    await selectKit().expand();
+    await selectKit().fillInFilter("sam");
+    await selectKit().selectRowByValue("sam");
+
+    assert.deepEqual(this.field.metadata.value, ["sam"]);
+
+    await selectKit().deselectItemByValue("sam");
+
+    assert.strictEqual(this.field.metadata.value, undefined);
   });
 });

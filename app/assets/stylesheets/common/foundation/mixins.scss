@@ -84,7 +84,8 @@ $breakpoints: (
 
 // Only shows hover on non-touch devices
 @mixin hover {
-  .discourse-no-touch & {
+  .discourse-no-touch &,
+  .no-ember & {
     &:hover,
     &.btn-hover {
       @content;
@@ -142,17 +143,17 @@ $hpad: 0.65em;
   background-color: var(--blend-primary-secondary-5);
 }
 
-@mixin float-down {
-  animation: float-down ease 0.25s 1 forwards;
-}
+@mixin d-animation($name, $duration, $easing: ease) {
+  animation: $name $duration $easing forwards;
 
-@mixin float-up {
-  animation: float-up ease 0.25s 1 forwards;
+  @media (prefers-reduced-motion) {
+    animation-duration: 0s;
+  }
 }
 
 @mixin default-focus() {
-  border-color: var(--tertiary);
-  outline: 2px solid var(--tertiary);
+  border-color: var(--d-input-focused-color);
+  outline: 2px solid var(--d-input-focused-color);
   outline-offset: -2px;
 }
 
@@ -245,18 +246,22 @@ $hpad: 0.65em;
 }
 
 @mixin mention() {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25em;
+  // memo to self: do not make this inline-flex because it breaks text alignments and causes a whole avalance of unpleasant consequences
+  display: inline-block;
   font-size: 0.93em;
   font-weight: normal;
   color: var(--primary);
   padding: 0.2em 0.34em;
-  background: var(--primary-low);
+  background: var(--mention-background-color);
   border-radius: 0.6em;
   text-decoration: none;
   text-wrap: nowrap;
   line-height: 1;
+
+  &[data-valid="false"] {
+    background: unset;
+    padding: 0;
+  }
 
   &.--bot {
     background: var(--success-low);

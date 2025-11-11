@@ -126,7 +126,7 @@ class Middleware::RequestTracker
 
     # Message-bus requests may include this 'deferred track' header which we use to detect
     # 'real browser' views.
-    if data[:deferred_track] && !data[:is_crawler]
+    if data[:deferred_track_view] && !data[:is_crawler]
       if data[:has_auth_cookie]
         ApplicationRequest.increment!(:page_view_logged_in_browser)
         ApplicationRequest.increment!(:page_view_logged_in_browser_mobile) if data[:is_mobile]
@@ -182,31 +182,18 @@ class Middleware::RequestTracker
     # end up as 127.0.0.1.
     request_remote_ip = env["action_dispatch.remote_ip"].to_s
 
-    # Value of the discourse-track-view request header, set in `lib/ajax.js`
-    env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
+    view_tracking_data = extract_view_tracking_data(env, status, headers)
 
-    # Was the discourse-track-view request header set to true? Likely
-    # set by our ajax library to indicate a page view.
-    explicit_track_view = status == 200 && %w[1 true].include?(env_track_view)
-
-    # An HTML response to a GET request is tracked implicitly
-    implicit_track_view =
-      status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !request.xhr? &&
-        headers["Content-Type"] =~ %r{text/html}
-
-    # This header is sent on a follow-up request after a real browser loads up a page
-    # see `scripts/pageview.js` and `instance-initializers/page-tracking.js`
-    deferred_track_view = %w[1 true].include?(env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"])
-
-    # This is treated separately from deferred tracking in #log_request, this is
-    # why deferred_track_view is not counted here.
-    track_view = !!(explicit_track_view || implicit_track_view)
-
-    # These are set in the same place as the respective track view headers in the client.
+    # Discourse-Deferred-Track-View-Topic-ID is set in the same place as
+    # Discourse-Deferred-Track-View, piggybacked on MessageBus on initial
+    # page load.
+    #
+    # Discourse-Track-View-Topic-ID is set when navigating to a topic on
+    # Ember route change in ajax.js
     topic_id =
-      if deferred_track_view
+      if view_tracking_data[:deferred_track_view]
         env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW_TOPIC_ID"]
-      elsif explicit_track_view || implicit_track_view
+      elsif view_tracking_data[:explicit_track_view] || view_tracking_data[:implicit_track_view]
         env["HTTP_DISCOURSE_TRACK_VIEW_TOPIC_ID"]
       end
 
@@ -239,7 +226,7 @@ class Middleware::RequestTracker
         end
       end
 
-    h = {
+    request_data = {
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: has_auth_cookie,
@@ -249,16 +236,13 @@ class Middleware::RequestTracker
       is_user_api: is_user_api,
       is_background: is_message_bus || is_topic_timings,
       is_mobile: helper.is_mobile?,
-      track_view: track_view,
       timing: timing,
       queue_seconds: env["REQUEST_QUEUE_SECONDS"],
-      explicit_track_view: explicit_track_view,
-      deferred_track: deferred_track_view,
       request_remote_ip: request_remote_ip,
-    }
+    }.merge(view_tracking_data)
 
-    if h[:is_background]
-      h[:background_type] = if is_message_bus
+    if request_data[:is_background]
+      request_data[:background_type] = if is_message_bus
         if request.query_string.include?("dlp=t")
           "message-bus-dlp"
         elsif env["HTTP_DONT_CHUNK"]
@@ -271,17 +255,17 @@ class Middleware::RequestTracker
       end
     end
 
-    if h[:is_crawler]
+    if request_data[:is_crawler]
       user_agent = env["HTTP_USER_AGENT"]
       user_agent = HttpUserAgentEncoder.ensure_utf8(user_agent) if user_agent
-      h[:user_agent] = user_agent
+      request_data[:user_agent] = user_agent
     end
 
     if cache = headers["X-Discourse-Cached"]
-      h[:cache] = cache
+      request_data[:cache] = cache
     end
 
-    h
+    request_data
   end
 
   def log_request_info(env, result, info, request = nil)
@@ -301,6 +285,7 @@ class Middleware::RequestTracker
     if data
       if result && (headers = result[1])
         headers["X-Discourse-TrackView"] = "1" if data[:track_view]
+        headers["X-Discourse-BrowserPageView"] = "1" if data[:browser_page_view]
       end
 
       if @@detailed_request_loggers
@@ -334,6 +319,12 @@ class Middleware::RequestTracker
     # doing this as early as possible so we have an
     # accurate counter
     ::Middleware::RequestTracker.populate_request_queue_seconds!(env)
+
+    # Doing this before the app.call will allow us to have this data available
+    # in the MessageBus middleware to add headers in the 004-message_bus.rb initializer.
+    if !env["discourse.request_tracker.skip"]
+      env["discourse.view_tracking_data"] = self.class.extract_view_tracking_data(env, nil, nil)
+    end
 
     request = Rack::Request.new(env)
     cookie = find_auth_cookie(env)
@@ -575,5 +566,58 @@ class Middleware::RequestTracker
     nil
   rescue RateLimiter::LimitExceeded => e
     [e.available_in, e.error_code]
+  end
+
+  def self.extract_view_tracking_data(env, status, headers)
+    request = Rack::Request.new(env)
+    status ||= 200
+    headers ||= {}
+
+    is_html_request = headers["Content-Type"]&.include?("text/html")
+    is_ajax_request = request.xhr?
+
+    # This Discourse-Track-View request header is set in `lib/ajax.js`,
+    # whenever the user navigates between Ember routes, to indicate a
+    # browser page view.
+    env_track_view = env["HTTP_DISCOURSE_TRACK_VIEW"]
+    explicit_track_view = status == 200 && %w[1 true].include?(env_track_view)
+
+    # An HTML response to a GET request is tracked implicitly, these do
+    # not count as browser page views but they do count as legacy page views.
+    implicit_track_view =
+      status == 200 && !%w[0 false].include?(env_track_view) && request.get? && !is_ajax_request &&
+        is_html_request
+
+    # This Discourse-Deferred-Track-View header is piggybacked on a
+    # follow-up MessageBus request after a real browser loads up a page
+    # to avoid bots influencing browser page views when loading HTML
+    # versions of a page.
+    #
+    # See `scripts/pageview.js` and `instance-initializers/page-tracking.js`
+    env_deferred_track_view = env["HTTP_DISCOURSE_DEFERRED_TRACK_VIEW"]
+    deferred_track_view = %w[1 true].include?(env_deferred_track_view)
+
+    # This only indicates that we are tracking a page view of some kind, not
+    # using an API key. In #log_request is where we are determining which
+    # of these count as browser page views.
+    #
+    # TL;DR -- Explicit and Deferred page views count as browser page views (BPVs),
+    # explicit and implicit page views count as legacy page views.
+    #
+    # If this is true, then the X-Discourse-TrackView header is included in
+    # the response.
+    #
+    # If the page view is explicit or deferred, then the X-Discourse-BrowserPageView header
+    # is included in the response.
+    track_view = !!(explicit_track_view || implicit_track_view)
+    browser_page_view = !!(explicit_track_view || deferred_track_view)
+
+    {
+      track_view: track_view,
+      explicit_track_view: explicit_track_view,
+      deferred_track_view: deferred_track_view,
+      implicit_track_view: implicit_track_view,
+      browser_page_view: browser_page_view,
+    }
   end
 end

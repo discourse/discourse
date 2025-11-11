@@ -4,6 +4,7 @@ require "guardian/bookmark_guardian"
 require "guardian/category_guardian"
 require "guardian/ensure_magic"
 require "guardian/group_guardian"
+require "guardian/invite_guardian"
 require "guardian/flag_guardian"
 require "guardian/post_guardian"
 require "guardian/post_revision_guardian"
@@ -20,6 +21,7 @@ class Guardian
   include EnsureMagic
   include FlagGuardian
   include GroupGuardian
+  include InviteGuardian
   include PostGuardian
   include PostRevisionGuardian
   include LocalizationGuardian
@@ -138,15 +140,8 @@ class Guardian
     return false if !category
     return false if !category_group_moderation_allowed?
 
-    @group_moderator_categories ||= {}
-
-    if @group_moderator_categories.key?(category.id)
-      @group_moderator_categories[category.id]
-    else
-      @group_moderator_categories[category.id] = category_group_moderator_scope.exists?(
-        id: category.id,
-      )
-    end
+    @moderated_category_ids ||= category_group_moderator_scope.pluck(:id).to_set
+    @moderated_category_ids.include?(category.id)
   end
 
   def is_silenced?
@@ -340,9 +335,13 @@ class Guardian
   end
 
   def can_suspend?(user)
-    user && is_staff? && user.regular?
+    can_unsuspend?(user) && user.regular?
   end
   alias can_deactivate? can_suspend?
+
+  def can_unsuspend?(user)
+    user && is_staff?
+  end
 
   def can_revoke_admin?(admin)
     can_administer_user?(admin) && admin.admin?
@@ -395,7 +394,7 @@ class Guardian
   end
 
   def can_change_trust_level?(user)
-    user && is_staff?
+    user && (is_admin? || (is_moderator? && SiteSetting.moderators_change_trust_levels))
   end
 
   # Support sites that have to approve users
@@ -407,61 +406,6 @@ class Guardian
     return true if is_staff?
 
     @user.approved?
-  end
-
-  def can_see_invite_details?(user)
-    is_staff? || is_me?(user)
-  end
-
-  def can_see_invite_emails?(user)
-    is_staff? || is_me?(user)
-  end
-
-  def can_invite_to_forum?(groups = nil)
-    authenticated? && (is_staff? || SiteSetting.max_invites_per_day.to_i.positive?) &&
-      (is_staff? || @user.in_any_groups?(SiteSetting.invite_allowed_groups_map)) &&
-      (is_admin? || groups.blank? || groups.all? { |g| can_edit_group?(g) })
-  end
-
-  def can_invite_to?(object, groups = nil)
-    return false if !authenticated?
-    return false if !object.is_a?(Topic) || !can_see?(object)
-    return false if groups.present?
-
-    if object.is_a?(Topic)
-      if object.private_message?
-        return true if is_admin?
-
-        return false if !@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
-        return false if object.reached_recipients_limit? && !is_staff?
-      end
-
-      if (category = object.category) && category.read_restricted
-        return category.groups&.where(automatic: false)&.any? { |g| can_edit_group?(g) }
-      end
-    end
-
-    true
-  end
-
-  def can_invite_via_email?(object)
-    return false if !can_invite_to_forum?
-    return false if !can_invite_to?(object)
-
-    (SiteSetting.enable_local_logins || SiteSetting.enable_discourse_connect) &&
-      (!SiteSetting.must_approve_users? || is_staff?)
-  end
-
-  def can_bulk_invite_to_forum?(user)
-    user.admin?
-  end
-
-  def can_resend_all_invites?(user)
-    user.staff?
-  end
-
-  def can_destroy_all_invites?(user)
-    user.staff?
   end
 
   def can_see_private_messages?(user_id)
@@ -487,9 +431,8 @@ class Guardian
     authenticated? &&
       # User can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
       (
-        is_staff? || from_bot || from_system ||
-          (@user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)) ||
-          notify_moderators
+        from_bot || from_system || notify_moderators ||
+          @user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
       )
   end
 
@@ -554,6 +497,13 @@ class Guardian
     SiteSetting.moderators_view_emails && is_moderator?
   end
 
+  def can_see_ip?
+    return true if is_admin?
+    return true if is_moderator? && SiteSetting.moderators_view_ips
+
+    false
+  end
+
   def can_mute_user?(target_user)
     can_mute_users? && @user.id != target_user.id && !target_user.staff?
   end
@@ -592,7 +542,7 @@ class Guardian
     return false if !@user.admin?
 
     allowed_repos = GlobalSetting.allowed_theme_repos
-    if !allowed_repos.blank?
+    if allowed_repos.present?
       urls = allowed_repos.split(",").map(&:strip)
       return urls.include?(repo)
     end
@@ -659,6 +609,10 @@ class Guardian
       @user.in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
   end
 
+  def can_see_reviewable_ui_refresh?
+    @user.in_any_groups?(SiteSetting.reviewable_ui_refresh_map)
+  end
+
   def is_me?(other)
     other && authenticated? && other.is_a?(User) && @user == other
   end
@@ -710,9 +664,10 @@ class Guardian
   end
 
   def category_group_moderator_scope
-    Category
-      .joins(:category_moderation_groups)
-      .joins("INNER JOIN group_users ON group_users.group_id = category_moderation_groups.group_id")
-      .where("group_users.user_id": user.id)
+    Category.joins(category_moderation_groups: { group: :group_users }).where(
+      group_users: {
+        user_id: user.id,
+      },
+    )
   end
 end

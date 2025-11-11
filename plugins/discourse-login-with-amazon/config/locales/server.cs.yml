@@ -1,0 +1,18 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+cs:
+  site_settings:
+    enable_login_with_amazon: "Povolit přihlášení pomocí ověřování Amazon, vyžaduje `login with amazon client id` a `login with amazon client secret`."
+    login_with_amazon_client_id: "Login with Amazon client ID"
+    login_with_amazon_client_secret: "Login with Amazon client secret"
+    login_with_amazon_scope: "Login with Amazon OAuth2 scopes (oddělené mezerou)"
+    login_with_amazon_overrides_email: "Přepíše e-mailovou adresu v uživatelském účtu Discourse."
+    login_with_amazon_user_can_connect: "Umožnit stávajícím uživatelům připojit svůj účet Amazon v předvolbách."
+    login_with_amazon_user_can_revoke: "Umožnit uživatelům zrušit přidružený účet Amazon v předvolbách."
+    errors:
+      login_with_amazon_client_id_is_blank: "Před povolením tohoto nastavení je nutné nastavit 'login with amazon client id'."
+      login_with_amazon_client_secret_is_blank: "Před povolením tohoto nastavení je nutné nastavit 'login with amazon client secret'."

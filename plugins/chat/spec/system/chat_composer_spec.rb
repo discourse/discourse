@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe "Chat composer", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
-  fab!(:channel_1) { Fabricate(:chat_channel) }
+  fab!(:current_user, :user)
+  fab!(:channel_1, :chat_channel)
   fab!(:message_1) { Fabricate(:chat_message, user: current_user, chat_channel: channel_1) }
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
@@ -240,15 +240,11 @@ RSpec.describe "Chat composer", type: :system do
 
       file_path = file_from_fixtures("logo.png", "images").path
       cdp.with_slow_upload do
-        attach_file(file_path) do
-          channel_page.open_action_menu
-          channel_page.click_action_button("chat-upload-btn")
-        end
-
+        attach_file("channel-file-uploader", file_path, make_visible: true)
         expect(page).to have_css(".chat-composer-upload--in-progress")
         expect(page).to have_css(".chat-composer.is-send-disabled")
-        page.find(".chat-composer-upload").hover
-        page.find(".chat-composer-upload__remove-btn").click
+        find(".chat-composer-upload").hover
+        find(".chat-composer-upload__remove-btn").click
       end
     end
   end
@@ -321,6 +317,31 @@ RSpec.describe "Chat composer", type: :system do
 
         expect(open_thread).to have_reaction(thread_message, "+1")
       end
+    end
+  end
+
+  context "when using user autocomplete" do
+    fab!(:autocomplete_user) do
+      Fabricate(:user, username: "ac_test_user", name: "Autocomplete Test User")
+    end
+
+    before do
+      SiteSetting.enable_mentions = true
+      channel_1.add(autocomplete_user)
+    end
+
+    it "fails on subsequent autocomplete selection due to cache pollution" do
+      chat_page.visit_channel(channel_1)
+
+      find(".chat-composer__input").send_keys("@#{autocomplete_user.username}")
+      find(".autocomplete.ac-user", text: "ac_test_user").click
+      expect(channel_page.composer).to have_value("@#{autocomplete_user.username} ")
+      find(".chat-composer__input").set("")
+
+      # 2nd autocomplete attempt to ensure user object is not mutated by existing store record behaviour
+      find(".chat-composer__input").send_keys("@#{autocomplete_user.username}")
+      find(".autocomplete.ac-user", text: "ac_test_user").click
+      expect(channel_page.composer).to have_value("@#{autocomplete_user.username} ")
     end
   end
 end

@@ -1,0 +1,132 @@
+@use "lib/viewport";
+
+.welcome-banner {
+  &.--location-below-site-header {
+    border-radius: 0;
+
+    @include viewport.until(lg) {
+      margin-bottom: var(--space-4);
+    }
+  }
+
+  &__wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    border-bottom: 1px solid var(--primary-300);
+    margin-block: 0;
+    padding-block: var(--space-4) var(--space-8);
+
+    .--with-bg-img & {
+      padding-block: clamp(var(--space-4), 10vh, var(--space-11));
+    }
+
+    @include viewport.from(xl) {
+      justify-content: center;
+    }
+
+    @include viewport.until(md) {
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    @include viewport.until(sm) {
+      display: block;
+      padding: 0.5em;
+      margin-top: 0;
+    }
+
+    .--location-below-site-header & {
+      border-bottom: 0;
+      padding: var(--space-8);
+      margin: 0 var(--main-grid-gap) var(--space-2);
+
+      @include viewport.until(lg) {
+        padding: var(--space-8) var(--space-4) var(--space-8);
+      }
+    }
+
+    .--location-above-topic-content & {
+      @container (width <= 800px) {
+        flex-direction: column;
+        gap: var(--space-4);
+      }
+
+      @include viewport.until(lg) {
+        padding-inline: var(--space-4);
+      }
+    }
+
+    .search-menu {
+      width: 100%;
+      align-self: center;
+
+      .--location-above-topic-content & {
+        @container (width >= 800px) {
+          width: 50cqw;
+        }
+      }
+
+      @include viewport.from(xl) {
+        margin-inline: unset;
+      }
+    }
+  }
+
+  .search-menu .search-input,
+  .search-menu-container .search-input {
+    border: 1px solid var(--input-border-color);
+    border-radius: var(--d-border-radius);
+  }
+
+  .search-menu .search-input:focus-within,
+  .search-menu-container .search-input:focus-within {
+    border: 1px solid var(--search-color);
+    outline: 2px solid var(--search-color);
+  }
+
+  .panel-body {
+    z-index: z("dropdown");
+  }
+
+  .results {
+    background: var(--d-content-background);
+  }
+
+  &__title {
+    text-align: left;
+    margin: 0;
+    color: var(--search-color);
+
+    .--location-above-topic-content & {
+      @container (width >= 800px) {
+        flex-grow: 1;
+      }
+
+      @container (width <= 800px) {
+        white-space: nowrap;
+        text-align: center;
+      }
+    }
+
+    @include viewport.from(xl) {
+      margin-inline: unset;
+    }
+
+    @include viewport.from(md) {
+      font-size: clamp(var(--font-up-4), 4vw, var(--font-up-6));
+    }
+
+    @include viewport.until(md) {
+      font-size: var(--font-up-4);
+    }
+
+    @include viewport.until(sm) {
+      font-size: var(--font-up-2);
+    }
+  }
+
+  &__subheader {
+    white-space: wrap;
+  }
+}

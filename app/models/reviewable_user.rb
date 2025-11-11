@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewableUser < Reviewable
+  include ReviewableActionBuilder
+
   def self.create_for(user)
     create(created_by_id: Discourse.system_user.id, target: user)
   end
@@ -9,17 +11,40 @@ class ReviewableUser < Reviewable
     { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
   end
 
-  def build_actions(actions, guardian, args)
-    return unless pending?
-
-    if guardian.can_approve?(target)
-      actions.add(:approve_user) do |a|
-        a.icon = "user-plus"
-        a.label = "reviewables.actions.approve_user.title"
-      end
-    end
+  def build_legacy_combined_actions(actions, guardian, args)
+    return if status != "pending"
+    build_action(actions, :approve_user, icon: "user-plus") if guardian.can_approve?(target)
 
     delete_user_actions(actions, require_reject_reason: !is_a_suspect_user?)
+  end
+
+  def build_actions(actions, guardian, args)
+    return if approved?
+    super
+  end
+
+  # TODO (reviewable-refresh): Move to build_actions when fully migrated to new UI
+  def build_new_separated_actions
+    bundle_actions = {}
+    if status == "pending"
+      bundle_actions[:approve_user] = {} if target_user && !target_user.approved? &&
+        guardian.can_approve?(target_user)
+
+      if @guardian.can_delete_user?(target_user)
+        bundle_actions[:delete_user] = {}
+        bundle_actions[:delete_user_block] = {}
+      end
+    end
+    if status == "rejected" && !payload["scrubbed_by"]
+      bundle_actions[:scrub] = { client_action: "scrub" }
+    end
+
+    build_bundle(
+      "#{id}-user-actions",
+      "reviewables.actions.user_actions.bundle_title",
+      bundle_actions,
+      source: "core",
+    )
   end
 
   def perform_approve_user(performed_by, args)
@@ -98,6 +123,7 @@ class ReviewableUser < Reviewable
         else
           I18n.t("user.destroy_reasons.reviewable_reject")
         end
+        delete_args[:from_reviewable] = true
 
         destroyer.destroy(target, delete_args)
       rescue UserDestroyer::PostsExistError, Discourse::InvalidAccess

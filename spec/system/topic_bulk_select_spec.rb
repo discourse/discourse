@@ -44,7 +44,7 @@ describe "Topic bulk select", type: :system do
 
       topic_bulk_actions_modal.click_dismiss_confirm
 
-      expect(page).to have_text(I18n.t("js.topics.none.unread"))
+      expect(page).to have_text(I18n.t("js.topics.none.education.unread"))
     end
   end
 
@@ -66,14 +66,14 @@ describe "Topic bulk select", type: :system do
 
       topic_bulk_actions_modal.click_dismiss_confirm
 
-      expect(page).to have_text(I18n.t("js.topics.none.new"))
+      expect(page).to have_text(I18n.t("js.topics.none.education.new"))
     end
   end
 
   context "when appending tags" do
-    fab!(:tag1) { Fabricate(:tag) }
-    fab!(:tag2) { Fabricate(:tag) }
-    fab!(:tag3) { Fabricate(:tag) }
+    fab!(:tag1, :tag)
+    fab!(:tag2, :tag)
+    fab!(:tag3, :tag)
 
     before { SiteSetting.tagging_enabled = true }
 
@@ -387,6 +387,37 @@ describe "Topic bulk select", type: :system do
         visit("/u/#{admin.username}/messages")
         open_bulk_actions_modal([private_message_1], "archive-messages")
       end
+    end
+  end
+
+  context "when changing topic notification levels" do
+    it "allows changing notification levels for selected topics" do
+      sign_in(admin)
+      visit("/latest")
+
+      # Click bulk select button
+      topic_list_header.click_bulk_select_button
+      expect(topic_list).to have_topic_checkbox(topics.first)
+
+      # Select Topics
+      topic_list.click_topic_checkbox(topics.first)
+      topic_list.click_topic_checkbox(topics.second)
+
+      # Has Dropdown
+      expect(topic_list_header).to have_bulk_select_topics_dropdown
+      topic_list_header.click_bulk_select_topics_dropdown
+
+      topic_list_header.click_bulk_button("update-notifications")
+      expect(topic_bulk_actions_modal).to be_open
+
+      # By default, the confirm button is disabled
+      expect(page).to have_css("#bulk-topics-confirm:disabled")
+
+      topic_bulk_actions_modal.select_notification_level(NotificationLevels.all[:muted])
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+
+      expect(topic_list).to have_no_topic(topics.first)
+      expect(topic_list).to have_no_topic(topics.second)
     end
   end
 end

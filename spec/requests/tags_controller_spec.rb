@@ -3,7 +3,7 @@
 RSpec.describe TagsController do
   fab!(:user)
   fab!(:admin)
-  fab!(:regular_user) { Fabricate(:trust_level_4) }
+  fab!(:regular_user, :trust_level_4)
   fab!(:moderator)
   fab!(:category)
   fab!(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
@@ -406,7 +406,7 @@ RSpec.describe TagsController do
 
   describe "#show" do
     fab!(:tag) { Fabricate(:tag, name: "test") }
-    fab!(:topic_without_tags) { Fabricate(:topic) }
+    fab!(:topic_without_tags, :topic)
     fab!(:topic_with_tags) { Fabricate(:topic, tags: [tag]) }
 
     it "should return the right response" do
@@ -777,8 +777,8 @@ RSpec.describe TagsController do
 
   describe "#show_latest" do
     fab!(:tag)
-    fab!(:other_tag) { Fabricate(:tag) }
-    fab!(:third_tag) { Fabricate(:tag) }
+    fab!(:other_tag, :tag)
+    fab!(:third_tag, :tag)
 
     fab!(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
     fab!(:multi_tag_topic) { Fabricate(:topic, tags: [tag, other_tag]) }
@@ -1322,6 +1322,47 @@ RSpec.describe TagsController do
         expect(Tag.find_by_name("tag4").tag_groups.pluck(:name)).to contain_exactly("taggroup1")
       end
 
+      it "does not fail if tags already exist" do
+        Fabricate(:tag, name: "TAG1")
+        Fabricate(:tag_group, name: "TAGGROUP1")
+
+        sign_in(moderator)
+
+        post "/tags/upload.json", params: { file: file, name: filename }
+
+        expect(response.status).to eq(200)
+        expect(Tag.pluck(:name)).to contain_exactly(
+          "TAG1",
+          "capitaltag2",
+          "spaced-tag",
+          "tag3",
+          "tag4",
+        )
+        expect(Tag.find_by_name("tag3").tag_groups.pluck(:name)).to contain_exactly("TAGGROUP1")
+        expect(Tag.find_by_name("tag4").tag_groups.pluck(:name)).to contain_exactly("TAGGROUP1")
+      end
+
+      describe "with `SiteSetting.force_lowercase_tags = false" do
+        before { SiteSetting.force_lowercase_tags = false }
+        it "does not fail if tags already exist" do
+          Fabricate(:tag, name: "tag1")
+          Fabricate(:tag, name: "CAPITALTAG2")
+          Fabricate(:tag, name: "tag3")
+          sign_in(moderator)
+
+          post "/tags/upload.json", params: { file: file, name: filename }
+
+          expect(response.status).to eq(200)
+          expect(Tag.pluck(:name)).to contain_exactly(
+            "tag1",
+            "CAPITALTAG2",
+            "spaced-tag",
+            "tag3",
+            "tag4",
+          )
+        end
+      end
+
       it "fails gracefully with invalid input" do
         sign_in(moderator)
 
@@ -1341,10 +1382,17 @@ RSpec.describe TagsController do
       expect(response.status).to eq(403)
     end
 
-    it "fails if not staff user" do
+    it "fails if user not in allowed group" do
       sign_in(user)
       post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
       expect(response.status).to eq(403)
+    end
+
+    it "succeeds when user in allowed group" do
+      SiteSetting.edit_tags_allowed_groups = "1|2|13"
+      sign_in(regular_user)
+      post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym1"] }
+      expect(response.status).to eq(200)
     end
 
     context "when signed in as admin" do

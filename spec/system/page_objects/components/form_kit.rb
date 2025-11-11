@@ -42,7 +42,7 @@ module PageObjects
           component.find(".fk-d-menu__trigger")["data-value"]
         when "select"
           PageObjects::Components::DSelect.new(component.find("select")).value
-        when "composer"
+        when "composer", "textarea"
           component.find("textarea").value
         when "image"
           url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
@@ -80,7 +80,7 @@ module PageObjects
       end
 
       def has_no_errors?
-        !has_css?(".form-kit__errors")
+        has_no_css?(".form-kit__errors")
       end
 
       def control_type
@@ -202,10 +202,7 @@ module PageObjects
       end
 
       def submit
-        page.execute_script(
-          "var form = arguments[0]; form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));",
-          find(component),
-        )
+        find("#{component} button[type='submit']").click
       end
 
       def reset

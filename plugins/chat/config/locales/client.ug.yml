@@ -302,7 +302,6 @@ ug:
         one: "%{count} ھۆججەت"
         other: "%{count} ھۆججەت"
       you_flagged: "بۇ ئۇچۇرنى پاش قىلدىڭىز"
-      exit: "كەينى"
       channel_status:
         read_only_header: "قانال پەقەت ئوقۇلىدۇ"
         read_only: "پەقەت ئوقۇلىدۇ"
@@ -326,6 +325,8 @@ ug:
       chat_message_separator:
         today: بۈگۈن
         yesterday: تۈنۈگۈن
+      search_view:
+        filter_placeholder: ئۇچۇر ئىزدە
       members_view:
         filter_placeholder: ئەزا ئىزدە
         add_member: ئەزا قوش
@@ -342,6 +343,7 @@ ug:
         tabs:
           members: ئەزا
           settings: تەڭشەك
+          search: ئىزدە
         remove_member: "چىقىرىۋەت"
       new_message_modal:
         title: ئۇچۇر يوللا
@@ -433,6 +435,7 @@ ug:
           topic: "تېما"
       reviewable:
         type: "سۆھبەت ئۇچۇرى"
+        message_in_channel: "قانال"
       reactions:
         only_you: "<span>سىز </span>:%{emoji}بىلەن ئىنكاس قايتۇردىڭىز:"
         you_and_single_user: "<span>سىز ۋە %{username} </span>:%{emoji}بىلەن ئىنكاس قايتۇردى:"
@@ -495,6 +498,11 @@ ug:
           create_export: "چىقىرىش قۇر"
           confirm_export: "بارلىق قاناللاردىن ھەممە ئۇچۇرنى چىقىرىپ نەتىجىسىنى شەخسىي ئۇچۇردا سىزگە يوللايدۇ. راستتىنلا چىقىرامسىز؟"
           export_has_started: "چىقىرىش باشلاندى. چىقىرىش تەييار بولغاندا بىر شەخسىي ئۇچۇر تاپشۇرۇۋالىسىز."
+      search:
+        no_results: "ھېچقانداق نەتىجە تېپىلمىدى"
+        sort:
+          relevance: "مۇناسىۋىتى"
+          latest: "ئاخىرقى"
       my_threads:
         title: تېمام
         aria_label: "تېما تىزىمىمغا ئالماش"
@@ -531,6 +539,7 @@ ug:
         select_emoji: "چىراي ئىپادە تاللا"
         system: "سىستېما"
         title: "كەلگەن تور ئىلمىكى"
+        header_description: "سىرتقى سىستېما كەلگەن تور ئىلمىكىنى ئىشلىتىپ ئۇچۇرنى ماشىنا ئادەم ئىشلەتكۈچى سۈپىتىدە بەلگىلەنگەن سۆھبەت قانىلىغا يوللاشتا قوللىنىدۇ"
         url: "تور ئادرېسى"
         url_instructions: "بۇ تور ئادرېسىنىڭ مەخپىي قىممىتى بار- ئۇنى بىخەتەر ساقلاڭ."
         username: "ئىشلەتكۈچى ئاتى"
@@ -705,7 +714,6 @@ ug:
           switch_channel_arrows: "%{shortcut} قانال ئالماشتۇر"
           switch__unread_channel_arrows: "%{shortcut} ئوقۇلمىغان قانالغا ئالماشتۇرىدۇ"
           open_quick_channel_selector: "%{shortcut} تېز قانال تاللىغۇچنى ئاچ"
-          open_insert_link_modal: "%{shortcut} ئۇلانما قىستۇر (كىرگۈزۈش كۆزنىكىلا)"
           composer_bold: "%{shortcut} توم (كىرگۈزۈش كۆزنىكىلا)"
           composer_italic: "%{shortcut} يانتۇ (كىرگۈزۈش كۆزنىكىلا)"
           composer_code: "%{shortcut} كود (كىرگۈزۈش كۆزنىكىلا)"
@@ -735,6 +743,8 @@ ug:
         chat:
           title: سۆھبەت
     sidebar:
+      start_new_dm:
+        title: شەخسىي سۆھبەت قۇر
       panels:
         chat:
           label: "سۆھبەت"

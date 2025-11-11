@@ -1,0 +1,41 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ur:
+  reports:
+    overall_sentiment:
+      yaxis: "تاریخ"
+    emotion_neutral:
+      title: "\U0001F610 نیوٹرل"
+  discourse_ai:
+    spam_detection:
+      bot_user_update_failed: "اسپام اسکیننگ بوٹ رکن کو اپ ڈیٹ کرنے میں ناکام"
+    ai_bot:
+      personas:
+        default_llm_required: "چیٹ کو فعال کرنے سے پہلے ڈیفالٹ LLM ماڈل درکار ہے۔"
+      tool_options:
+        update_artifact:
+          editor_llm:
+            name: "ایل ایل ایم"
+          update_algorithm:
+            name: "الگورتھم کو اپ ڈیٹ کریں"
+            description: "ایل ایل ایم کو مکمل طور پر تبدیل کرنے کے لئے کہیں، یا اپ ڈیٹ کرنے کے لئے ڈِیف استعمال کریں"
+      tool_summary:
+        search: "تلاش کریں"
+        time: "وقت"
+        summarize: "خلاصہ"
+        read: "موضوع پڑھیں"
+      tool_description:
+        time: "%{timezone} میں وقت %{time} ہے"
+    sentiment:
+      reports:
+        post_emotion:
+          neutral: "نیوٹرل \U0001F610"
+        sentiment_analysis:
+          neutral: "نیوٹرل"
+    ai_staff_action_logger:
+      updated: "اپ ڈیٹ"
+      removed: "ہٹا دیا"

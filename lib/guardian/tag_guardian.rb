@@ -10,14 +10,18 @@ module TagGuardian
     SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.create_tag_allowed_groups_map)
   end
 
+  def can_edit_tag?(_tag = nil)
+    SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.edit_tags_allowed_groups_map)
+  end
+
   def can_tag_topics?
     SiteSetting.tagging_enabled && @user.in_any_groups?(SiteSetting.tag_topic_allowed_groups_map)
   end
 
   def can_tag_pms?
     return false if !SiteSetting.tagging_enabled
-    return false if @user.blank?
-    return true if @user == Discourse.system_user
+    return false if !authenticated?
+    return true if @user.is_system_user?
 
     group_ids = SiteSetting.pm_tags_allowed_for_groups_map
     group_ids.include?(Group::AUTO_GROUPS[:everyone]) ||

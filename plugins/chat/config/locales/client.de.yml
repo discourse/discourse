@@ -302,7 +302,7 @@ de:
         one: "%{count} Datei"
         other: "%{count} Dateien"
       you_flagged: "Du hast diese Nachricht markiert"
-      exit: "zurück"
+      exit: "Chat verlassen"
       channel_status:
         read_only_header: "Kanal ist schreibgeschützt"
         read_only: "Schreibgeschützt"
@@ -326,6 +326,8 @@ de:
       chat_message_separator:
         today: Heute
         yesterday: Gestern
+      search_view:
+        filter_placeholder: Nachrichten durchsuchen
       members_view:
         filter_placeholder: Mitglieder finden
         add_member: Mitglied hinzufügen
@@ -342,6 +344,7 @@ de:
         tabs:
           members: Mitglieder
           settings: Einstellungen
+          search: Suche
         remove_member: "Entfernen"
       new_message_modal:
         title: Nachricht senden
@@ -433,6 +436,7 @@ de:
           topic: "Thema"
       reviewable:
         type: "Chat-Nachricht"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Du hast mit reagiert mit </span>:%{emoji}:"
         you_and_single_user: "<span>Du und %{username} habt reagiert mit </span>:%{emoji}:"
@@ -495,6 +499,11 @@ de:
           create_export: "Export erstellen"
           confirm_export: "Dies exportiert alle Nachrichten aus allen Kanälen und schickt dir das Ergebnis in einer persönlichen Nachricht. Bist du sicher, dass du exportieren willst?"
           export_has_started: "Der Export hat begonnen. Du erhältst eine PN, wenn er abgeschlossen ist."
+      search:
+        no_results: "Keine Ergebnisse gefunden"
+        sort:
+          relevance: "Relevanz"
+          latest: "Aktuelle"
       my_threads:
         title: Meine Threads
         aria_label: "Zu meiner Thread-Liste wechseln"
@@ -531,6 +540,7 @@ de:
         select_emoji: "Emoji auswählen"
         system: "System"
         title: "Eingehende Webhooks"
+        header_description: "Eingehende Webhooks können von externen Systemen verwendet werden, um als Bot-Benutzer Nachrichten in einem bestimmten Chat-Kanal zu posten"
         url: "URL"
         url_instructions: "Diese URL enthält einen geheimen Wert – bewahre ihn sicher auf."
         username: "Benutzername"
@@ -644,9 +654,9 @@ de:
         header: "Neue Nachricht"
         cancel: "Abbrechen"
       quick_reaction_type:
-        title: "Chat-Reaktionen mit einem Klick"
+        title: "Chat-Reaktionen per Klick"
         options:
-          frequent: "Am häufigsten verwendete Chat-Reaktionen"
+          frequent: "Häufigste Chat-Reaktionen"
           custom: "Benutzerdefinierte Reaktionen"
     notifications:
       chat_invitation: "hat dich eingeladen, einem Chat-Kanal beizutreten"
@@ -705,7 +715,7 @@ de:
           switch_channel_arrows: "%{shortcut} Kanal wechseln"
           switch__unread_channel_arrows: "%{shortcut} Ungelesenen Kanal wechseln"
           open_quick_channel_selector: "%{shortcut} Schnellauswahl für Kanäle öffnen"
-          open_insert_link_modal: "%{shortcut} Hyperlink einfügen (nur Composer)"
+          open_insert_link_modal: "%{shortcut} Link einfügen (nur Composer)"
           composer_bold: "%{shortcut} Fett (nur Composer)"
           composer_italic: "%{shortcut} Kursiv (nur Composer)"
           composer_code: "%{shortcut} Code (nur Composer)"
@@ -735,6 +745,9 @@ de:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        text: Neue DN starten
+        title: Persönlichen Chat erstellen
       panels:
         chat:
           label: "Chat"

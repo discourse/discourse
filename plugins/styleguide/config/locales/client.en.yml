@@ -34,6 +34,8 @@ en:
           title: "Font System"
         colors:
           title: "Colors"
+        dialog:
+          title: "Dialog"
         icons:
           title: "Icons"
           full_list: "See the full list of Font Awesome Icons"
@@ -85,8 +87,8 @@ en:
           title: "Topic Map"
         site_header:
           title: "Site Header"
-        suggested_topics:
-          title: "Suggested Topics"
+        more_topics:
+          title: "More Topics"
         post_menu:
           title: "Post Menu"
         modal:
@@ -99,6 +101,8 @@ en:
           title: "Header Icons"
         spinners:
           title: "Spinners"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Empty State"
         tooltips:
@@ -109,4 +113,3 @@ en:
         char_counter:
           title: "Character Counter"
           placeholder: "Enter your text here..."
-

@@ -132,8 +132,8 @@ RSpec.describe PostAlerter do
     end
 
     context "with group inboxes" do
-      fab!(:user1) { Fabricate(:user) }
-      fab!(:user2) { Fabricate(:user) }
+      fab!(:user1, :user)
+      fab!(:user2, :user)
       fab!(:group) do
         Fabricate(:group, users: [user2], name: "TestGroup", default_notification_level: 2)
       end
@@ -732,6 +732,24 @@ RSpec.describe PostAlerter do
       expect(
         staged_user.notifications.where(notification_type: Notification.types[:linked]).count,
       ).to eq(0)
+    end
+
+    it "does not notify when user has disabled linked post notifications" do
+      user.user_option.update!(notify_on_linked_posts: false)
+      linking_post
+
+      expect(user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(
+        0,
+      )
+    end
+
+    it "still notifies when user has enabled linked post notifications (default)" do
+      expect(user.user_option.notify_on_linked_posts).to eq(true)
+      linking_post
+
+      expect(user.notifications.where(notification_type: Notification.types[:linked]).count).to eq(
+        1,
+      )
     end
   end
 
@@ -1379,7 +1397,7 @@ RSpec.describe PostAlerter do
       evil_trout.update!(last_seen_at: 5.minutes.ago)
 
       expect { mention_post }.to change { Jobs::PushNotification.jobs.count }
-      expect(Jobs::PushNotification.jobs[0]["at"]).to be_within(30.second).of(
+      expect(Jobs::PushNotification.jobs[0]["at"]).to be_within(30.seconds).of(
         5.minutes.from_now.to_f,
       )
     end
@@ -1406,7 +1424,7 @@ RSpec.describe PostAlerter do
         delay = 5.minutes.from_now.to_f
 
         expect { mention_post }.to change { Jobs::SendPushNotification.jobs.count }
-        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_within(30.second).of(delay)
+        expect(Jobs::SendPushNotification.jobs[0]["at"]).to be_within(30.seconds).of(delay)
       end
 
       it "does not delay push notification for inactive offline user" do
@@ -2077,51 +2095,7 @@ RSpec.describe PostAlerter do
         )
       end
 
-      it "adds notification when watched_precedence_over_muted setting is true" do
-        SiteSetting.watched_precedence_over_muted = true
-        expect {
-          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
-        }.to change { Notification.count }.by(1)
-        expect {
-          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
-        }.to change { Notification.count }.by(1)
-        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
-          Notification.count
-        }.by(1)
-      end
-
-      it "respects user option even if watched_precedence_over_muted site setting is true" do
-        SiteSetting.watched_precedence_over_muted = true
-        user.user_option.update!(watched_precedence_over_muted: false)
-        expect {
-          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
-        }.not_to change { Notification.count }
-        expect {
-          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
-        }.not_to change { Notification.count }
-        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
-          Notification.count
-        }.by(1)
-      end
-
-      it "does not add notification when watched_precedence_over_muted setting is false" do
-        SiteSetting.watched_precedence_over_muted = false
-        expect {
-          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
-        }.not_to change { Notification.count }
-        expect {
-          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
-        }.not_to change { Notification.count }
-        expect { PostAlerter.post_created(topic_with_watched_category.posts.first) }.to change {
-          Notification.count
-        }.by(1)
-        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
-          Notification.count
-        }.by(1)
-      end
-
-      it "respects user option even if watched_precedence_over_muted site setting is false" do
-        SiteSetting.watched_precedence_over_muted = false
+      it "adds notification when watched_precedence_over_muted preference is true" do
         user.user_option.update!(watched_precedence_over_muted: true)
         expect {
           PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
@@ -2133,12 +2107,25 @@ RSpec.describe PostAlerter do
           Notification.count
         }.by(1)
       end
+
+      it "does not add notifcation when watched_precedence_over_muted preference is false" do
+        user.user_option.update!(watched_precedence_over_muted: false)
+        expect {
+          PostAlerter.post_created(topic_with_muted_tag_and_watched_category.posts.first)
+        }.not_to change { Notification.count }
+        expect {
+          PostAlerter.post_created(topic_with_muted_category_and_watched_tag.posts.first)
+        }.not_to change { Notification.count }
+        expect { PostAlerter.post_created(directly_watched_topic.posts.first) }.to change {
+          Notification.count
+        }.by(1)
+      end
     end
 
     context "with on change" do
       fab!(:user)
-      fab!(:other_tag) { Fabricate(:tag) }
-      fab!(:watched_tag) { Fabricate(:tag) }
+      fab!(:other_tag, :tag)
+      fab!(:watched_tag, :tag)
 
       before do
         SiteSetting.tagging_enabled = true
@@ -2208,10 +2195,10 @@ RSpec.describe PostAlerter do
     end
 
     context "with private message" do
-      fab!(:post) { Fabricate(:private_message_post) }
-      fab!(:other_tag) { Fabricate(:tag) }
-      fab!(:other_tag2) { Fabricate(:tag) }
-      fab!(:other_tag3) { Fabricate(:tag) }
+      fab!(:post, :private_message_post)
+      fab!(:other_tag, :tag)
+      fab!(:other_tag2, :tag)
+      fab!(:other_tag3, :tag)
       fab!(:user)
       fab!(:staged)
 
@@ -2346,7 +2333,7 @@ RSpec.describe PostAlerter do
 
   describe "#extract_linked_users" do
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:post2) { Fabricate(:post) }
+    fab!(:post2, :post)
 
     describe "when linked post has been deleted" do
       let(:topic_link) do
@@ -2370,7 +2357,7 @@ RSpec.describe PostAlerter do
 
   describe "#notify_post_users" do
     fab!(:post) { Fabricate(:post, topic: topic) }
-    fab!(:last_editor) { Fabricate(:user) }
+    fab!(:last_editor, :user)
     fab!(:tag)
     fab!(:category)
 

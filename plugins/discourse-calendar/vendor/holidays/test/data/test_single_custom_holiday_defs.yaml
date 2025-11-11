@@ -1,0 +1,12 @@
+months:
+  6:
+  - name: Company Founding
+    regions: [custom_single_file]
+    mday: 20
+
+tests:
+  - given:
+      date: '2013-06-20'
+      regions: [custom_single_file]
+    expect:
+      name: "Company Founding"

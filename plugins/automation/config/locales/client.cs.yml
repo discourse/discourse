@@ -150,14 +150,12 @@ cs:
             label: Spouštěč
         automation:
           name:
-            label: Jméno
+            label: Název
           trigger:
             label: Spouštěč
           version:
             label: Verze
           status:
             label: Stav
-          enabled:
-            label: Zapnuto
           disabled:
             label: Vypnuto

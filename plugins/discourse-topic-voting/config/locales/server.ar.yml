@@ -1,0 +1,32 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ar:
+  site_settings:
+    topic_voting_enabled: 'هل تريد السماح للأعضاء بالتصويت على الموضوعات؟'
+    topic_voting_tl0_vote_limit: 'ما عدد الأصوات النشطة المسموح بها للمستخدمين من مستوى الثقة 0؟'
+    topic_voting_tl1_vote_limit: 'ما عدد الأصوات النشطة المسموح بها للمستخدمين من مستوى الثقة 1؟'
+    topic_voting_tl2_vote_limit: 'ما عدد الأصوات النشطة المسموح بها للمستخدمين من مستوى الثقة 2؟'
+    topic_voting_tl3_vote_limit: 'ما عدد الأصوات النشطة المسموح بها للمستخدمين من مستوى الثقة 3؟'
+    topic_voting_tl4_vote_limit: 'ما عدد الأصوات النشطة المسموح بها للمستخدمين من مستوى الثقة 4؟'
+    topic_voting_show_who_voted: 'هل تريد السماح للأعضاء برؤية من صوَّتوا؟'
+    topic_voting_show_votes_on_profile: 'هل تريد السماح للأعضاء برؤية أصواتهم في موجز النشاط؟'
+    topic_voting_alert_votes_left: 'تنبيه المستخدم عندما يتبقى هذا العدد من الأصوات'
+  topic_voting:
+    votes_moved:
+      zero: "تم نقل %{count} من الأصوات."
+      one: "تم نقل صوت واحد."
+      two: "تم نقل صوتين (%{count})."
+      few: "تم نقل %{count} أصوات."
+      many: "تم نقل %{count} صوتًا."
+      other: "تم نقل %{count} صوت."
+    duplicated_votes:
+      zero: "تعذَّر نقل %{count} من الأصوات لأن المستخدم قد صوَّت بالفعل في موضوع آخر."
+      one: "تعذَّر نقل صوت واحد لأن المستخدم قد صوَّت بالفعل في موضوع آخر."
+      two: "تعذَّر نقل صوتين (%{count}) لأن المستخدم قد صوَّت بالفعل في موضوع آخر."
+      few: "تعذَّر نقل %{count} أصوات لأن المستخدم قد صوَّت بالفعل في موضوع آخر."
+      many: "تعذَّر نقل %{count} صوتًا لأن المستخدم قد صوَّت بالفعل في موضوع آخر."
+      other: "تعذَّر نقل %{count} صوت لأن المستخدم قد صوَّت بالفعل في موضوع آخر."

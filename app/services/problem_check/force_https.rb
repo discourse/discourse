@@ -5,7 +5,6 @@ class ProblemCheck::ForceHttps < ProblemCheck
 
   def call
     return no_problem if SiteSetting.force_https
-    return no_problem if !data.check_force_https
 
     problem
   end

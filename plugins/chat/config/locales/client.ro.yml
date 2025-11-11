@@ -69,6 +69,8 @@ ro:
             one: "@%{group} și încă %{count} grup nu permit mențiuni."
             few: "@%{group} și încă %{count} grupuri nu permit mențiuni."
             other: "@%{group} și încă %{count} de grupuri nu permit mențiuni."
+      no_direct_message_channels: "Încă nu te-ai alăturat niciunui mesaj direct!"
+      no_public_channels: "Încă nu te-ai alăturat niciunui canal!"
       placeholder_group: "Discuție în grup"
       reply: "Răspunde"
       edit: "Modifică"
@@ -80,7 +82,7 @@ ro:
       return_to_threads_list: "Revino la lista de fire"
       sounds:
         none: "Nimeni"
-      exit: "înapoi"
+      exit: "ieși din discuție"
       channel_status:
         closed: "Închis"
         open: "Deschis"
@@ -92,6 +94,8 @@ ro:
       chat_message_separator:
         today: Astăzi
         yesterday: Ieri
+      search_view:
+        filter_placeholder: Caută mesaje
       members_view:
         add_member: Adaugă membru
         back_to_settings: "Înapoi la setări"
@@ -104,6 +108,7 @@ ro:
         tabs:
           members: Membri
           settings: Setări
+          search: Caută
         remove_member: "Elimină"
       new_message_modal:
         user_search_placeholder: "...adaugă mai mulți membri"
@@ -128,6 +133,8 @@ ro:
         types:
           category: "Categorie"
           topic: "Subiect"
+      reviewable:
+        message_in_channel: "Canal"
       reactions:
         only_you: "<span>Ai reacționat cu </span>:%{emoji}:"
         you_and_single_user: "<span>Tu și %{username} ați reacționat cu </span>:%{emoji}:"
@@ -166,6 +173,11 @@ ro:
         category_label: "Categorie"
         history_label: "Istoric"
         members_label: "Membri"
+      search:
+        no_results: "Nu s-au găsit rezultate"
+        sort:
+          relevance: "Relevanță"
+          latest: "Ultimele"
       direct_messages:
         close: "Închide această conversație personală"
       incoming_webhooks:
@@ -178,6 +190,7 @@ ro:
         save: "Salvează"
         edit: "Editează"
         system: "sistem"
+        header_description: "Cârligele web primite pot fi folosite de sisteme externe pentru a posta mesaje într-un canal de discuții desemnat ca utilizator de tip bot"
         url: "URL"
         username: "Nume de utilizator"
       selection:
@@ -244,3 +257,8 @@ ro:
       chat:
         keyboard_shortcuts:
           switch__unread_channel_arrows: "%{shortcut} Comută canal necitit"
+          open_insert_link_modal: "%{shortcut} Inserează legătură (doar pentru compozitor)"
+    sidebar:
+      start_new_dm:
+        text: Începe un mesaj direct nou
+        title: Creează o discuție personală

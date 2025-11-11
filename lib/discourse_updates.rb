@@ -154,14 +154,14 @@ module DiscourseUpdates
       return nil if entries.nil?
 
       entries.map! do |item|
-        next item if !item["experiment_setting"]
+        next item if !item["related_site_setting"]
 
-        if !SiteSetting.respond_to?(item["experiment_setting"]) ||
-             SiteSetting.type_supervisor.get_type(item["experiment_setting"].to_sym) != :bool
-          item["experiment_setting"] = nil
-          item["experiment_enabled"] = false
+        if !SiteSetting.respond_to?(item["related_site_setting"]) ||
+             SiteSetting.type_supervisor.get_type(item["related_site_setting"].to_sym) != :bool
+          item["related_site_setting"] = nil
+          item["setting_enabled"] = false
         else
-          item["experiment_enabled"] = SiteSetting.send(item["experiment_setting"].to_sym) if item
+          item["setting_enabled"] = SiteSetting.send(item["related_site_setting"].to_sym) if item
         end
 
         item
@@ -171,7 +171,8 @@ module DiscourseUpdates
         begin
           valid_version =
             item["discourse_version"].nil? ||
-              Discourse.has_needed_version?(current_version, item["discourse_version"])
+              Discourse.has_needed_version?(current_version, item["discourse_version"]) ||
+              GitUtils.has_commit?(item["discourse_version"])
 
           valid_plugin_name =
             item["plugin_name"].blank? || Discourse.plugins_by_name[item["plugin_name"]].present?

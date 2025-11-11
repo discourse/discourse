@@ -52,6 +52,19 @@ describe "User notifications", type: :system do
     end
   end
 
+  describe "infinite scrolling" do
+    it "loads notifications progressively as user scrolls" do
+      Fabricate.times(70, :notification, user: user, read: true)
+
+      user_notifications_page.visit(user)
+
+      expect(user_notifications_page).to have_notification_count_of(60)
+
+      page.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+      expect(user_notifications_page).to have_notification_count_of(72)
+    end
+  end
+
   describe "user group notifications" do
     fab!(:group) { Fabricate(:group, name: "Awesome_Group") }
     fab!(:topic) { Fabricate(:topic, title: "Group Mention Notification test") }
@@ -63,7 +76,7 @@ describe "User notifications", type: :system do
         topic: topic,
       )
     end
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
     fab!(:group_mention_notification) do
       Fabricate(:group_mentioned_notification, post: post, user: user2, group: group)
     end

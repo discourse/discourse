@@ -16,7 +16,7 @@ describe "Uploading files in the composer", type: :system do
 
     file_path_1 = file_from_fixtures("logo.png", "images").path
     file_path_2 = file_from_fixtures("logo.jpg", "images").path
-    attach_file([file_path_1, file_path_2]) { composer.click_toolbar_button("upload") }
+    attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
 
     expect(composer).to have_no_in_progress_uploads
     expect(composer.preview).to have_css(".image-wrapper", count: 2)
@@ -28,7 +28,7 @@ describe "Uploading files in the composer", type: :system do
 
     file_path_1 = file_from_fixtures("huge.jpg", "images").path
     cdp.with_slow_upload do
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
       expect(composer).to have_in_progress_uploads
       find("#cancel-file-upload").click
 
@@ -40,7 +40,7 @@ describe "Uploading files in the composer", type: :system do
   context "when video thumbnails are enabled" do
     before do
       SiteSetting.video_thumbnails_enabled = true
-      SiteSetting.authorized_extensions += "|webm"
+      SiteSetting.authorized_extensions += "|webm|mp4"
     end
 
     it "generates a topic preview thumbnail from the video" do
@@ -49,7 +49,7 @@ describe "Uploading files in the composer", type: :system do
       topic.fill_in_composer_title("Video upload test")
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
@@ -66,7 +66,7 @@ describe "Uploading files in the composer", type: :system do
       topic.fill_in_composer_title("Video upload test")
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
@@ -100,7 +100,7 @@ describe "Uploading files in the composer", type: :system do
       JS
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
@@ -132,31 +132,48 @@ describe "Uploading files in the composer", type: :system do
       JS
 
       file_path_1 = file_from_fixtures("small.webm", "media").path
-      attach_file(file_path_1) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", file_path_1, make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.preview).to have_css(".onebox-placeholder-container")
+    end
+
+    it "handles multiple video uploads" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+      topic.fill_in_composer_title("Video upload test")
+
+      file_path_1 = file_from_fixtures("small.webm", "media").path
+      file_path_2 = file_from_fixtures("small.mp4", "media").path
+      attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".onebox-placeholder-container", count: 2)
     end
   end
 
   context "when multiple images are uploaded" do
     before { SiteSetting.experimental_auto_grid_images = true }
 
-    it "automatically wraps images in [grid] tags on 3 or more images" do
-      visit "/new-topic"
-      expect(composer).to be_opened
+    %w[en fr de].each do |locale|
+      before { SiteSetting.default_locale = locale }
 
-      file_path_1 = file_from_fixtures("logo.png", "images").path
-      file_path_2 = file_from_fixtures("logo.jpg", "images").path
-      file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file([file_path_1, file_path_2, file_path_3]) do
-        composer.click_toolbar_button("upload")
+      context "when the locale is #{locale}" do
+        it "automatically wraps images in [grid] tags on 3 or more images" do
+          visit "/new-topic"
+          expect(composer).to be_opened
+
+          file_path_1 = file_from_fixtures("logo.png", "images").path
+          file_path_2 = file_from_fixtures("logo.jpg", "images").path
+          file_path_3 = file_from_fixtures("downsized.png", "images").path
+          attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
+
+          expect(composer).to have_no_in_progress_uploads
+          expect(composer.composer_input.value).to match(
+            %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
+          )
+        end
       end
-
-      expect(composer).to have_no_in_progress_uploads
-      expect(composer.composer_input.value).to match(
-        %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
-      )
     end
 
     it "does not wrap [grid] tags on less than 3 images" do
@@ -165,7 +182,7 @@ describe "Uploading files in the composer", type: :system do
 
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
-      attach_file([file_path_1, file_path_2]) { composer.click_toolbar_button("upload") }
+      attach_file("file-uploader", [file_path_1, file_path_2], make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.composer_input.value).to match(
@@ -184,9 +201,7 @@ describe "Uploading files in the composer", type: :system do
       file_path_5 = file_from_fixtures("large_icon_correct.png", "images").path
       file_path_6 = file_from_fixtures("large_icon_incorrect.png", "images").path
 
-      attach_file([file_path_1, file_path_2, file_path_3]) do
-        composer.click_toolbar_button("upload")
-      end
+      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
 
@@ -196,9 +211,7 @@ describe "Uploading files in the composer", type: :system do
 
       composer.clear_content
 
-      attach_file([file_path_4, file_path_5, file_path_6]) do
-        composer.click_toolbar_button("upload")
-      end
+      attach_file("file-uploader", [file_path_4, file_path_5, file_path_6], make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.composer_input.value).to match(
@@ -215,9 +228,7 @@ describe "Uploading files in the composer", type: :system do
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file([file_path_1, file_path_2, file_path_3]) do
-        composer.click_toolbar_button("upload")
-      end
+      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.composer_input.value).to match(
@@ -235,9 +246,7 @@ describe "Uploading files in the composer", type: :system do
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file([file_path_1, file_path_2, file_path_3]) do
-        composer.click_toolbar_button("upload")
-      end
+      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
       expect(composer).to have_no_in_progress_uploads
       expect(composer.composer_input.value).to match(
         %r{\[grid\].*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*!\[.*?\]\(upload://.*?\).*?\[/grid\]}m,
@@ -253,9 +262,7 @@ describe "Uploading files in the composer", type: :system do
       file_path_1 = file_from_fixtures("logo.png", "images").path
       file_path_2 = file_from_fixtures("logo.jpg", "images").path
       file_path_3 = file_from_fixtures("downsized.png", "images").path
-      attach_file([file_path_1, file_path_2, file_path_3]) do
-        composer.click_toolbar_button("upload")
-      end
+      attach_file("file-uploader", [file_path_1, file_path_2, file_path_3], make_visible: true)
 
       expect(composer).to have_no_in_progress_uploads
       expect(composer.composer_input.value).to match(

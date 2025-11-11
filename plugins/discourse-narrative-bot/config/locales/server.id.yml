@@ -364,19 +364,6 @@ id:
 
           Perhatikan bahwa ketika Anda membalas suatu topik, atau membaca suatu topik selama lebih dari beberapa menit, itu secara otomatis diatur ke tingkat notifikasi 'tracking'. Anda dapat mengubahnya di [preferensi pengguna Anda](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Tahukah Anda bahwa Anda dapat menambahkan poll ke post mana pun? Coba gunakan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor untuk **membuat poll**.
-        not_found: |-
-          Ups! Tidak ada jajak pendapat dalam balasan Anda.
-
-          Gunakan ikon <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor, atau salin dan tempel poll ini di balasan Anda berikutnya:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hei, survei yang bagus! Apakah saya pandai mengajarkan Anda?
 
@@ -385,20 +372,6 @@ id:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Terkadang Anda mungkin ingin **menyembunyikan detail** dalam balasan Anda:
-
-          - Saat Anda mendiskusikan poin plot dari film atau acara TV yang akan dianggap sebagai spoiler.
-
-          - Ketika posting Anda membutuhkan banyak detail opsional yang mungkin berlebihan saat dibaca sekaligus.
-
-          [details=Pilih ini untuk melihat cara kerjanya!]
-          1. Pilih roda gigi <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> di editor.
-          2. Pilih "Sembunyikan Detail".
-          3. Edit ringkasan detail dan tambahkan konten Anda.
-          [/details]
-
-          Dapatkah Anda menggunakan <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> roda gigi di editor untuk menambahkan bagian detail pada balasan berikutnya?
         not_found: |-
           Kesulitan membuat spoiler? Coba masukkan teks di bawah ini untuk balasan selanjutnya:
 

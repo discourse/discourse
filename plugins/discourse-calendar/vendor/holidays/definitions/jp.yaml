@@ -1,0 +1,761 @@
+# Japanese holiday definitions for Ruby Holiday gem.
+# Reference:
+#   - http://www.h3.dion.ne.jp/~sakatsu/holiday_topic.htm
+#   - http://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html
+#   - https://en.wikipedia.org/wiki/Public_holidays_in_Japan
+#
+# For Japanese/English translations of each holiday:
+#   - https://kotoritone.com/japanesecalendar/holidays/2019/
+#
+# This definition can calculate current Japanese holidays,
+# don't compat with past changes of Japan Holiday Act.
+#
+# CHANGES:
+#  2010-12-25: Initial version by Tatsuki Sugiura <sugi@nemui.org>
+#  2014-11-09: Added substitute holiday by Yoshiyuki Hirano <yoshiyuki.hirano@henteco-labs.com>
+#  2015-05-10: Non-Monday substitute holidays by Shuhei Kagawa <shuhei.kagawa@gmail.com>
+#  2015-12-15: Added mountain day by Tsuyoshi Sano <ttwo32@gmail.com>
+#  2016-03-26: Updated to match new custom method signature. See below for more. Phil Trimble <philtrimble@gmail.com>
+#  2019-02-10: Changing usage of 'year_ranges.after' to 'year_ranges.from' and 'year_ranges.before' to 'year_ranges.until', see https://github.com/holidays/definitions/issues/117
+#
+# MAINTAINER NOTE: This is the most complex set of custom date methods in the entire
+# project, mainly surrounding the idea of 'substitute' holidays. Since this is
+# the only one that is this complex I have settled on a less-than-ideal solution.
+# It is overly verbose and not easy to follow. It will be a target for refactoring
+# in the near future.
+---
+months:
+  1:
+  - name: 元日
+    regions: [jp]
+    mday: 1
+  - name: 成人の日
+    regions: [jp]
+    wday: 1
+    week: 2
+  - name: 振替休日
+    regions: [jp]
+    mday: 1
+    function: jp_substitute_holiday(year, month, day)
+  2:
+  - name: 建国記念の日
+    regions: [jp]
+    mday: 11
+  - name: 振替休日
+    regions: [jp]
+    mday: 11
+    function: jp_substitute_holiday(year, month, day)
+  - name: 天皇誕生日
+    regions: [jp]
+    mday: 23
+    year_ranges:
+      from: 2020
+  - name: 振替休日
+    regions: [jp]
+    mday: 23
+    function: jp_substitute_holiday(year, month, day)
+    year_ranges:
+      from: 2020
+  3:
+  - name: 春分の日
+    regions: [jp]
+    function: jp_vernal_equinox_day(year)
+  - name: 振替休日
+    regions: [jp]
+    function: jp_vernal_equinox_day_substitute(year)
+  4:
+  - name: 昭和の日
+    regions: [jp]
+    mday: 29
+  - name: 振替休日
+    regions: [jp]
+    mday: 29
+    function: jp_substitute_holiday(year, month, day)
+  - name: 休日
+    regions: [jp]
+    mday: 30
+    year_ranges:
+      limited: [2019]
+  5:
+  - name: 天皇即位
+    regions: [jp]
+    mday: 1
+    year_ranges:
+      limited: [2019]
+  - name: 休日
+    regions: [jp]
+    mday: 2
+    year_ranges:
+      limited: [2019]
+  - name: 憲法記念日
+    regions: [jp]
+    mday: 3
+  - name: みどりの日
+    regions: [jp]
+    mday: 4
+  - name: こどもの日
+    regions: [jp]
+    mday: 5
+  - name: 振替休日
+    regions: [jp]
+    mday: 3
+    function: jp_substitute_holiday(year, month, day)
+  - name: 振替休日
+    regions: [jp]
+    mday: 4
+    function: jp_substitute_holiday(year, month, day)
+  - name: 振替休日
+    regions: [jp]
+    mday: 5
+    function: jp_substitute_holiday(year, month, day)
+  7:
+  - name: 海の日
+    regions: [jp]
+    mday: 20
+    year_ranges:
+      between:
+        start: 1996
+        end: 2002
+  - name: 海の日
+    regions: [jp]
+    wday: 1
+    week: 3
+    year_ranges:
+      between:
+        start: 2003
+        end: 2019
+  - name: 海の日
+    regions: [jp]
+    mday: 23
+    year_ranges:
+      limited: [2020]
+  - name: 海の日
+    regions: [jp]
+    mday: 22
+    year_ranges:
+      limited: [2021]
+  - name: 海の日
+    regions: [jp]
+    wday: 1
+    week: 3
+    year_ranges:
+      from: 2022
+  - name: 振替休日
+    regions: [jp]
+    function: jp_marine_day_substitute(year)
+    year_ranges:
+      between:
+        start: 1996
+        end: 2002
+  - name: スポーツの日
+    regions: [jp]
+    mday: 23
+    year_ranges:
+      limited: [2021]
+  - name: スポーツの日
+    regions: [jp]
+    mday: 24
+    year_ranges:
+      limited: [2020]
+  8:
+  - name: 山の日
+    regions: [jp]
+    year_ranges:
+      between:
+        start: 2016
+        end: 2019
+    function: jp_mountain_holiday(year)
+  - name: 山の日
+    regions: [jp]
+    mday: 10
+    year_ranges:
+      limited: [2020]
+  - name: 山の日
+    regions: [jp]
+    mday: 8
+    year_ranges:
+      limited: [2021]
+  - name: 山の日
+    regions: [jp]
+    year_ranges:
+      from: 2022
+    function: jp_mountain_holiday(year)
+  - name: 振替休日
+    regions: [jp]
+    year_ranges:
+      between:
+        start: 2016
+        end: 2020
+    function: jp_mountain_holiday_substitute(year)
+  - name: 振替休日
+    regions: [jp]
+    mday: 9
+    year_ranges:
+      limited: [2021]
+  - name: 振替休日
+    regions: [jp]
+    year_ranges:
+      from: 2022
+    function: jp_mountain_holiday_substitute(year)
+  9:
+  - name: 敬老の日
+    regions: [jp]
+    wday: 1
+    week: 3
+  - name: 振替休日
+    regions: [jp]
+    function: jp_respect_for_aged_holiday_substitute(year)
+  - name: 国民の休日
+    regions: [jp]
+    year_ranges:
+      from: 2003
+    function: jp_citizens_holiday(year)
+  - name: 秋分の日
+    regions: [jp]
+    function: jp_national_culture_day(year)
+  - name: 振替休日
+    regions: [jp]
+    function: jp_national_culture_day_substitute(year)
+  10:
+  - name: 体育の日
+    regions: [jp]
+    wday: 1
+    week: 2
+    year_ranges:
+      until: 2019
+  - name: スポーツの日
+    regions: [jp]
+    wday: 1
+    week: 2
+    year_ranges:
+      from: 2022
+  - name: 振替休日
+    regions: [jp]
+    function: jp_health_sports_day_substitute(year)
+  - name: 即位礼正殿の儀
+    regions: [jp]
+    mday: 22
+    year_ranges:
+      limited: [2019]
+  11:
+  - name: 文化の日
+    regions: [jp]
+    mday: 3
+  - name: 振替休日
+    regions: [jp]
+    mday: 3
+    function: jp_substitute_holiday(year, month, day)
+  - name: 勤労感謝の日
+    regions: [jp]
+    mday: 23
+  - name: 振替休日
+    regions: [jp]
+    mday: 23
+    function: jp_substitute_holiday(year, month, day)
+  12:
+  - name: 天皇誕生日
+    regions: [jp]
+    mday: 23
+    year_ranges:
+      until: 2018
+  - name: 振替休日
+    regions: [jp]
+    mday: 23
+    function: jp_substitute_holiday(year, month, day)
+    year_ranges:
+      until: 2018
+
+methods:
+  jp_health_sports_day_substitute:
+    arguments: year
+    ruby: |
+      Holidays::Factory::Definition.custom_methods_repository.find("jp_substitute_holiday(year, month, day)").call(year, 10, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 10, 2, 1))
+
+  jp_vernal_equinox_day:
+    arguments: year
+    ruby: |
+      day =
+        case year
+        when 1851..1899
+          19.8277
+        when 1900..1979
+          20.8357
+        when 1980..2099
+          20.8431
+        when 2100..2150
+          21.8510
+        else
+          raise IndexError.new("Out of range")
+        end
+      day += 0.242194 * (year - 1980) - ((year - 1980)/4).floor
+      day = day.floor
+      Date.civil(year, 3, day)
+
+  jp_vernal_equinox_day_substitute:
+    arguments: year
+    ruby: |
+      date = Holidays::Factory::Definition.custom_methods_repository.find("jp_vernal_equinox_day(year)").call(year)
+      Holidays::Factory::Definition.custom_methods_repository.find("jp_substitute_holiday(year, month, day)").call(year, date.month, date.mday)
+
+  jp_marine_day_substitute:
+    arguments: year
+    ruby: |
+      Holidays::Factory::Definition.custom_methods_repository.find("jp_substitute_holiday(year, month, day)").call(year, 7, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 7, 3, 1))
+
+  jp_national_culture_day:
+    arguments: year
+    ruby: |
+      day =
+        case year
+        when 1851..1899
+          22.2588
+        when 1900..1979
+          23.2588
+        when 1980..2099
+          23.2488
+        when 2100..2150
+          24.2488
+        else
+          raise IndexError.new("Out of range")
+        end
+      day += 0.242194 * (year - 1980) - ((year - 1980)/4).floor
+      day = day.floor
+      Date.civil(year, 9, day)
+
+  jp_national_culture_day_substitute:
+    arguments: year
+    ruby: |
+      date = Holidays::Factory::Definition.custom_methods_repository.find("jp_national_culture_day(year)").call(year)
+      Holidays::Factory::Definition.custom_methods_repository.find("jp_substitute_holiday(year, month, day)").call(year, date.month, date.mday)
+
+  jp_citizens_holiday:
+    arguments: year
+    ruby: |
+      ncd = Holidays::Factory::Definition.custom_methods_repository.find("jp_national_culture_day(year)").call(year)
+      if ncd.wday == 3
+        ncd - 1
+      else
+        nil
+      end
+
+  jp_mountain_holiday:
+    arguments: year
+    ruby: |
+      Date.civil(year, 8, 11)
+
+  jp_mountain_holiday_substitute:
+    arguments: year
+    ruby: |
+      date = Holidays::Factory::Definition.custom_methods_repository.find("jp_mountain_holiday(year)").call(year)
+      Holidays::Factory::Definition.custom_methods_repository.find("jp_substitute_holiday(year, month, day)").call(year, date.month, date.mday)
+
+  jp_respect_for_aged_holiday_substitute:
+    arguments: year
+    ruby: |
+      Holidays::Factory::Definition.custom_methods_repository.find("jp_substitute_holiday(year, month, day)").call(year, 9, Holidays::Factory::DateCalculator.day_of_month_calculator.call(year, 9, 3, 1))
+
+  jp_substitute_holiday:
+    arguments: year, month, day
+    ruby: |
+      date = Date.civil(year, month, day)
+      date.wday == 0 ? (Holidays::Factory::Definition.custom_methods_repository.find("jp_next_weekday(date)").call(date+1)) : nil
+  jp_next_weekday:
+    arguments: date
+    ruby: |
+      # This suuuucks. I have no idea how to make this not reach into our interal ruby API to do this.
+      # I'm punting, I'll come back to this.
+      is_holiday = Holidays::JP.holidays_by_month[date.month].any? do |holiday|
+        holiday[:mday] == date.day
+      end
+      date.wday == 0 || is_holiday ? (Holidays::Factory::Definition.custom_methods_repository.find("jp_next_weekday(date)").call(date+1)) : date
+
+tests:
+  - given:
+      date: '2008-01-01'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "元日"
+  - given:
+      date: '2010-01-11'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "成人の日"
+  - given:
+      date: '2008-02-11'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "建国記念の日"
+  - given:
+      date: '2008-04-29'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "昭和の日"
+  - given:
+      date: '2008-05-03'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "憲法記念日"
+  - given:
+      date: '2008-05-05'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "こどもの日"
+  - given:
+      date: '2010-07-19'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2010-09-20'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "敬老の日"
+  - given:
+      date: '2010-10-11'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "体育の日"
+  - given:
+      date: '2008-11-03'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "文化の日"
+  - given:
+      date: '2008-11-23'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "勤労感謝の日"
+  - given:
+      date: '2008-12-23'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "天皇誕生日"
+  - given:
+      date: '2010-03-22'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "振替休日"
+  - given:
+      date: '2008-11-24'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "振替休日"
+  - given:
+      date: '2012-01-02'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "振替休日"
+  - given:
+      date: '2013-05-06'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "振替休日"
+  - given:
+      date: '2014-05-06'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "振替休日"
+  - given:
+      date: '2015-05-06'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "振替休日"
+  - given:
+      date: '2019-08-12'
+      regions: ["jp"]
+      options: ["informal"]
+    expect:
+      name: "振替休日"
+  - given:
+      date: '2004-03-20'
+      regions: ["jp"]
+    expect:
+      name: "春分の日"
+  - given:
+      date: '2005-03-20'
+      regions: ["jp"]
+    expect:
+      name: "春分の日"
+  - given:
+      date: '2006-03-21'
+      regions: ["jp"]
+    expect:
+      name: "春分の日"
+  - given:
+      date: '2007-03-21'
+      regions: ["jp"]
+    expect:
+      name: "春分の日"
+  - given:
+      date: '2008-03-20'
+      regions: ["jp"]
+    expect:
+      name: "春分の日"
+  - given:
+      date: '2009-03-20'
+      regions: ["jp"]
+    expect:
+      name: "春分の日"
+  - given:
+      date: '2010-03-21'
+      regions: ["jp"]
+    expect:
+      name: "春分の日"
+  - given:
+      date: '2004-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2005-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2006-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2007-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2008-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2009-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2010-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2011-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2012-09-22'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2013-09-23'
+      regions: ["jp"]
+    expect:
+      name: "秋分の日"
+  - given:
+      date: '2032-09-21'
+      regions: ["jp"]
+    expect:
+      name: "国民の休日"
+  - given:
+      date: '2049-09-21'
+      regions: ["jp"]
+    expect:
+      name: "国民の休日"
+  - given:
+      date: '2009-09-22'
+      regions: ["jp"]
+    expect:
+      name: "国民の休日"
+  - given:
+      date: '2015-09-22'
+      regions: ["jp"]
+    expect:
+      name: "国民の休日"
+  - given:
+      date: '2026-09-22'
+      regions: ["jp"]
+    expect:
+      name: "国民の休日"
+  - given:
+      date: '1996-07-20'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2002-07-20'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2003-07-21'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2004-07-19'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2005-07-18'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2006-07-17'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2007-07-16'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2009-07-20'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2013-07-15'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2014-07-21'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2019-07-15'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2020-07-20'
+      regions: ["jp"]
+    expect:
+      holiday: false
+  - given:
+      date: '2020-07-23'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2021-07-22'
+      regions: ["jp"]
+    expect:
+      name: "海の日"
+  - given:
+      date: '2016-08-11'
+      regions: ["jp"]
+    expect:
+      name: "山の日"
+  - given:
+      date: '2017-08-11'
+      regions: ["jp"]
+    expect:
+      name: "山の日"
+  - given:
+      date: '2018-08-11'
+      regions: ["jp"]
+    expect:
+      name: "山の日"
+  - given:
+      date: '2019-08-11'
+      regions: ["jp"]
+    expect:
+      name: "山の日"
+  - given:
+      date: '2020-08-10'
+      regions: ["jp"]
+    expect:
+      name: "山の日"
+  - given:
+      date: '2020-08-11'
+      regions: ["jp"]
+    expect:
+      holiday: false
+  - given:
+      date: '2021-08-08'
+      regions: ["jp"]
+    expect:
+      name: "山の日"
+  - given:
+      date: '2021-08-09'
+      regions: ["jp"]
+    expect:
+      name: "振替休日"
+  - given:
+      date: '2022-08-11'
+      regions: ["jp"]
+    expect:
+      name: "山の日"
+  - given:
+      date: '2015-08-11'
+      regions: ["jp"]
+    expect:
+      holiday: false
+  - given:
+      date: '1998-09-22'
+      regions: ["jp"]
+    expect:
+      holiday: false
+  - given:
+      date: '2018-12-23'
+      regions: ["jp"]
+    expect:
+      name: "天皇誕生日"
+  - given:
+      date: '2019-02-23'
+      regions: ["jp"]
+    expect:
+      holiday: false
+  - given:
+      date: '2019-12-23'
+      regions: ["jp"]
+    expect:
+      holiday: false
+  - given:
+      date: '2020-02-23'
+      regions: ["jp"]
+    expect:
+      name: "天皇誕生日"
+  - given:
+      date: '2019-10-14'
+      regions: ["jp"]
+    expect:
+      name: "体育の日"
+  - given:
+      date: '2020-07-24'
+      regions: ["jp"]
+    expect:
+      name: "スポーツの日"
+  - given:
+      date: '2020-10-12'
+      regions: ["jp"]
+    expect:
+      holiday: false
+  - given:
+      date: '2021-07-23'
+      regions: ["jp"]
+    expect:
+      name: "スポーツの日"

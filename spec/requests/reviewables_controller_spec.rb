@@ -51,7 +51,7 @@ RSpec.describe ReviewablesController do
       end
 
       it "returns JSON with reviewable content" do
-        reviewable = Fabricate(:reviewable)
+        reviewable = Fabricate(:reviewable_flagged_post)
 
         get "/review.json"
         expect(response.code).to eq("200")
@@ -62,7 +62,7 @@ RSpec.describe ReviewablesController do
         expect(json_review["id"]).to eq(reviewable.id)
         expect(json_review["created_by_id"]).to eq(reviewable.created_by_id)
         expect(json_review["status"]).to eq(Reviewable.statuses[:pending])
-        expect(json_review["type"]).to eq("ReviewableUser")
+        expect(json_review["type"]).to eq("ReviewableFlaggedPost")
         expect(json_review["target_created_by_id"]).to eq(reviewable.target_created_by_id)
         expect(json_review["score"]).to eq(reviewable.score)
         expect(json_review["version"]).to eq(reviewable.version)
@@ -76,7 +76,7 @@ RSpec.describe ReviewablesController do
       end
 
       context "with trashed topics and posts" do
-        fab!(:post1) { Fabricate(:post) }
+        fab!(:post1, :post)
         fab!(:reviewable) do
           Fabricate(
             :reviewable,
@@ -90,7 +90,7 @@ RSpec.describe ReviewablesController do
         fab!(:moderator)
         let(:topic) { post1.topic }
 
-        fab!(:category_mod) { Fabricate(:user) }
+        fab!(:category_mod, :user)
         fab!(:group)
         fab!(:group_user) { GroupUser.create!(group_id: group.id, user_id: category_mod.id) }
         fab!(:mod_group) do
@@ -329,7 +329,7 @@ RSpec.describe ReviewablesController do
         end
 
         it "returns reviewable content that matches the date range" do
-          reviewable = Fabricate(:reviewable, created_at: 2.day.ago)
+          reviewable = Fabricate(:reviewable, created_at: 2.days.ago)
 
           get "/review.json?from_date=#{from}&to_date=#{to}"
 
@@ -352,7 +352,7 @@ RSpec.describe ReviewablesController do
           user.custom_fields["private_field"] = "private"
           user.save!
 
-          reviewable = Fabricate(:reviewable, target_created_by: user)
+          reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
 
           get "/review.json"
           json = response.parsed_body
@@ -657,7 +657,7 @@ RSpec.describe ReviewablesController do
       end
 
       context "with claims" do
-        fab!(:qp) { Fabricate(:reviewable_queued_post) }
+        fab!(:qp, :reviewable_queued_post)
 
         it "fails when reviewables must be claimed" do
           SiteSetting.reviewable_claiming = "required"
@@ -745,9 +745,9 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#topics" do
-      fab!(:post0) { Fabricate(:post) }
+      fab!(:post0, :post)
       fab!(:post1) { Fabricate(:post, topic: post0.topic) }
-      fab!(:post2) { Fabricate(:post) }
+      fab!(:post2, :post)
       fab!(:user0) { Fabricate(:user, refresh_auto_groups: true) }
       fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
 
@@ -846,8 +846,8 @@ RSpec.describe ReviewablesController do
 
     describe "#update" do
       fab!(:reviewable)
-      fab!(:reviewable_post) { Fabricate(:reviewable_queued_post) }
-      fab!(:reviewable_topic) { Fabricate(:reviewable_queued_post_topic) }
+      fab!(:reviewable_post, :reviewable_queued_post)
+      fab!(:reviewable_topic, :reviewable_queued_post_topic)
       fab!(:moderator)
       fab!(:reviewable_approved_post) do
         Fabricate(:reviewable_queued_post, status: Reviewable.statuses[:approved])

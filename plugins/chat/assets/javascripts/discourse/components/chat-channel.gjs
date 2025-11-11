@@ -35,10 +35,10 @@ import {
   scrollListToMessage,
 } from "discourse/plugins/chat/discourse/lib/scroll-helpers";
 import ChatMessage from "discourse/plugins/chat/discourse/models/chat-message";
-import { stackingContextFix } from "../lib/chat-ios-hacks";
 import ChatComposerChannel from "./chat/composer/channel";
 import ChatScrollToBottomArrow from "./chat/scroll-to-bottom-arrow";
 import ChatSelectionManager from "./chat/selection-manager";
+import ChatChannelFilter from "./chat-channel-filter";
 import ChatChannelPreviewCard from "./chat-channel-preview-card";
 import ChatMentionWarnings from "./chat-mention-warnings";
 import Message from "./chat-message";
@@ -49,7 +49,6 @@ import ChatSkeleton from "./chat-skeleton";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatChannel extends Component {
-  @service appEvents;
   @service capabilities;
   @service chat;
   @service chatApi;
@@ -61,9 +60,6 @@ export default class ChatChannel extends Component {
   @service("chat-channel-pane") pane;
   @service currentUser;
   @service dialog;
-  @service messageBus;
-  @service router;
-  @service site;
   @service siteSettings;
 
   @tracked sending = false;
@@ -89,7 +85,7 @@ export default class ChatChannel extends Component {
   }
 
   get currentUserMembership() {
-    return this.args.channel.currentUserMembership;
+    return this.args.channel?.currentUserMembership;
   }
 
   get hasSavedScrollPosition() {
@@ -108,6 +104,11 @@ export default class ChatChannel extends Component {
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.subscriptionManager.teardown();
     this.updateLastReadMessage();
+
+    // Cancel any pending search request and debounced calls
+    cancel(this, this._performSearch);
+    this.searchRequest?.abort?.();
+    this.searchRequest = null;
   }
 
   @action
@@ -147,7 +148,14 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  loadMessages() {
+  onLoadTargetMessageId(targetMessageId) {
+    this.loadMessages(null, targetMessageId);
+  }
+
+  @action
+  loadMessages(_element, targetMessageId) {
+    targetMessageId ??= this.args.targetMessageId;
+
     if (!this.args.channel?.id) {
       return;
     }
@@ -158,8 +166,8 @@ export default class ChatChannel extends Component {
       { onNewMessage: this.onNewMessage }
     );
 
-    if (this.args.targetMessageId) {
-      this.debounceHighlightOrFetchMessage(this.args.targetMessageId);
+    if (targetMessageId) {
+      this.debounceHighlightOrFetchMessage(targetMessageId);
     } else if (this.chatChannelScrollPositions.get(this.args.channel.id)) {
       this.debounceHighlightOrFetchMessage(
         this.chatChannelScrollPositions.get(this.args.channel.id)
@@ -177,9 +185,7 @@ export default class ChatChannel extends Component {
       return;
     }
 
-    stackingContextFix(this.scroller, () => {
-      this.messagesManager.addMessages([message]);
-    });
+    this.messagesManager.addMessages([message]);
     this.debouncedUpdateLastReadMessage();
   }
 
@@ -241,9 +247,7 @@ export default class ChatChannel extends Component {
     }
 
     const targetMessageId = this.messagesManager.messages.lastObject.id;
-    stackingContextFix(this.scroller, () => {
-      this.messagesManager.addMessages(messages);
-    });
+    this.messagesManager.addMessages(messages);
 
     if (direction === FUTURE && !opts.noScroll) {
       this.scrollToMessageId(targetMessageId, {
@@ -538,9 +542,7 @@ export default class ChatChannel extends Component {
     this.resetComposerMessage();
 
     try {
-      stackingContextFix(this.scroller, async () => {
-        await this.chatApi.editMessage(this.args.channel.id, message.id, data);
-      });
+      await this.chatApi.editMessage(this.args.channel.id, message.id, data);
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -552,9 +554,7 @@ export default class ChatChannel extends Component {
   async #sendNewMessage(message) {
     this.pane.sending = true;
 
-    stackingContextFix(this.scroller, async () => {
-      await this.args.channel.stageMessage(message);
-    });
+    await this.args.channel.stageMessage(message);
 
     message.manager = this.args.channel.messagesManager;
     this.resetComposerMessage();
@@ -569,6 +569,7 @@ export default class ChatChannel extends Component {
         in_reply_to_id: message.inReplyTo?.id,
         staged_id: message.id,
         upload_ids: message.uploads.map((upload) => upload.id),
+        client_created_at: message.createdAt.toISOString(),
         ...extractCurrentTopicInfo(this),
       });
 
@@ -709,6 +710,12 @@ export default class ChatChannel extends Component {
       <ChatChannelStatus @channel={{@channel}} />
       <ChatNotices @channel={{@channel}} />
       <ChatMentionWarnings />
+      <ChatChannelFilter
+        @isFiltering={{@isFiltering}}
+        @onToggleFilter={{@onToggleFilter}}
+        @channel={{@channel}}
+        @onLoadTargetMessageId={{this.onLoadTargetMessageId}}
+      />
 
       <ChatMessagesScroller
         @onRegisterScroller={{this.registerScroller}}

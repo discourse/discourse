@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
@@ -14,8 +15,8 @@ import ChatComposerUpload from "discourse/plugins/chat/discourse/components/chat
 
 @classNames("chat-composer-uploads")
 export default class ChatComposerUploads extends Component {
+  @service capabilities;
   @service mediaOptimizationWorker;
-  @service chatStateManager;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "chat-composer-uploader",
@@ -27,19 +28,23 @@ export default class ChatComposerUploads extends Component {
         this.uppyUpload.uppyWrapper.useUploadPlugin(UppyMediaOptimization, {
           optimizeFn: (data, opts) =>
             this.mediaOptimizationWorker.optimizeImage(data, opts),
-          runParallel: !this.site.isMobileDevice,
+          runParallel: !this.capabilities.isMobileDevice,
         });
       }
 
       this.uppyUpload.uppyWrapper.onPreProcessProgress((file) => {
-        const inProgressUpload = this.inProgressUploads.findBy("id", file.id);
+        const inProgressUpload = this.inProgressUploads.find(
+          (item) => item.id === file.id
+        );
         if (!inProgressUpload?.processing) {
           inProgressUpload?.set("processing", true);
         }
       });
 
       this.uppyUpload.uppyWrapper.onPreProcessComplete((file) => {
-        const inProgressUpload = this.inProgressUploads.findBy("id", file.id);
+        const inProgressUpload = this.inProgressUploads.find(
+          (item) => item.id === file.id
+        );
         inProgressUpload?.set("processing", false);
       });
     },

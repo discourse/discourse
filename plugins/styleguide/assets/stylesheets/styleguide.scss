@@ -64,16 +64,26 @@
     }
 
     .styleguide-example {
+      output {
+        border: 1px dotted var(--content-border-color);
+        width: 100%;
+        padding: 1rem;
+        box-sizing: border-box;
+      }
+
       .example-title {
         color: var(--primary-medium);
         font-size: var(--font-down-1);
-        border-bottom: 1px solid var(--primary-low);
+        border-bottom: 1px solid var(--content-border-color);
         margin-bottom: 1em;
       }
 
       .rendered {
         width: 100%;
         position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
 
         .component-properties {
           width: 100%;

@@ -45,7 +45,7 @@ class GlobalSetting
             end
           end
         end
-        if !secret_key_base.blank? && token != secret_key_base
+        if secret_key_base.present? && token != secret_key_base
           STDERR.puts "WARNING: DISCOURSE_SECRET_KEY_BASE is invalid, it was re-generated"
         end
         token
@@ -126,7 +126,8 @@ class GlobalSetting
     hostnames
   end
 
-  def self.database_config
+  def self.database_config(variables_overrides: {})
+    variables_overrides = variables_overrides.with_indifferent_access
     hash = { "adapter" => "postgresql" }
 
     %w[
@@ -166,6 +167,11 @@ class GlobalSetting
       db_variables.each do |k|
         hash["variables"][k.slice(("db_variables_".length)..)] = self.public_send(k)
       end
+    end
+
+    variables_overrides.each do |key, value|
+      hash["variables"] ||= {}
+      hash["variables"][key.to_s] = value
     end
 
     { "production" => hash }
@@ -219,7 +225,7 @@ class GlobalSetting
         c[:username] = redis_username if redis_username.present?
         c[:password] = redis_password if redis_password.present?
         c[:db] = redis_db if redis_db != 0
-        c[:db] = 1 if Rails.env == "test"
+        c[:db] = 1 if Rails.env.test?
         c[:id] = nil if redis_skip_client_commands
         c[:ssl] = true if redis_use_ssl
 
@@ -246,7 +252,7 @@ class GlobalSetting
         c[:username] = message_bus_redis_username if message_bus_redis_username.present?
         c[:password] = message_bus_redis_password if message_bus_redis_password.present?
         c[:db] = message_bus_redis_db if message_bus_redis_db != 0
-        c[:db] = 1 if Rails.env == "test"
+        c[:db] = 1 if Rails.env.test?
         c[:id] = nil if message_bus_redis_skip_client_commands
         c[:ssl] = true if redis_use_ssl
 
@@ -293,13 +299,7 @@ class GlobalSetting
     end
 
     def resolve(current, default)
-      BaseProvider.coerce(
-        if current.present?
-          current
-        else
-          default.present? ? default : nil
-        end,
-      )
+      BaseProvider.coerce(current.presence || default.presence)
     end
   end
 
@@ -372,13 +372,14 @@ class GlobalSetting
     attr_accessor :provider
   end
 
-  def self.configure!
-    if Rails.env == "test"
+  def self.configure!(
+    path: File.expand_path("../../../config/discourse.conf", __FILE__),
+    use_blank_provider: Rails.env.test?
+  )
+    if use_blank_provider
       @provider = BlankProvider.new
     else
-      @provider =
-        FileProvider.from(File.expand_path("../../../config/discourse.conf", __FILE__)) ||
-          EnvProvider.new
+      @provider = FileProvider.from(path) || EnvProvider.new
     end
   end
 

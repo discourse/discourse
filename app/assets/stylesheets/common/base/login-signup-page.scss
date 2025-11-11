@@ -1,4 +1,5 @@
-// Shared styles
+@use "lib/viewport";
+
 .login-fullpage,
 .signup-fullpage {
   height: 100%;
@@ -42,12 +43,27 @@ body.activate-account-page {
 body.login-page,
 body.signup-page {
   background-color: var(--secondary);
+
+  .sidebar-wrapper {
+    display: none;
+  }
 }
 
 .login-fullpage,
 .signup-fullpage,
 .invites-show,
 .password-reset-page {
+  min-height: calc(90vh - var(--header-offset));
+
+  @include viewport.until(md) {
+    justify-content: flex-start;
+  }
+
+  html.keyboard-visible:not(.ios-device) & {
+    height: calc((var(--composer-vh, 1vh) * 100) - var(--header-offset));
+    overflow-y: scroll;
+  }
+
   .signup-body,
   .login-body {
     display: flex;
@@ -55,6 +71,12 @@ body.signup-page {
     width: 100%;
     max-width: 800px;
     box-sizing: border-box;
+
+    @include viewport.until(md) {
+      flex-direction: column;
+      gap: unset;
+      padding-inline: 0.5rem;
+    }
   }
 
   .alert {
@@ -68,6 +90,63 @@ body.signup-page {
   .signup-page-cta {
     display: flex;
     flex-direction: column;
+
+    @include viewport.from(sm) {
+      &__buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+
+        button {
+          font-size: var(--font-0) !important;
+          width: 100%;
+        }
+      }
+
+      &__existing-account,
+      &__no-account-yet {
+        font-size: var(--font-down-1);
+        margin-bottom: 0.5rem;
+        text-align: center;
+        width: 100%;
+
+        &::before {
+          content: " ";
+          display: block;
+          height: 1px;
+          width: 100%;
+          background-color: var(--primary-low);
+          margin-block: 1rem;
+        }
+      }
+
+      &__disclaimer {
+        font-size: var(--font-down-1);
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    @include viewport.until(md) {
+      font-size: var(--font-down-1);
+      padding: 1rem;
+      padding-top: 0;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+
+      &__buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      button {
+        padding-block: 0.65rem;
+        width: fit-content;
+      }
+    }
 
     &__existing-account,
     &__no-account-yet {
@@ -83,15 +162,24 @@ body.signup-page {
 
   .login-left-side {
     box-sizing: border-box;
-    padding: 3rem;
-    overflow: auto;
     width: 100%;
     max-width: 500px;
+
+    @include viewport.from(md) {
+      padding: 3rem;
+      overflow: auto;
+    }
   }
 
   .login-right-side {
     padding: 3rem;
     position: relative;
+
+    @include viewport.until(md) {
+      padding: 1rem 0 0;
+      background: unset;
+      max-width: unset;
+    }
 
     &::before {
       content: "";
@@ -112,11 +200,17 @@ body.signup-page {
     margin-bottom: 1em;
 
     input,
-    .select-kit-header {
+    .select-kit-header,
+    textarea {
       padding: 0.75em 0.77em;
       min-width: 250px;
       margin-bottom: 0.25em;
       width: 100%;
+    }
+
+    textarea {
+      border: var(--d-input-border);
+      border-radius: var(--d-input-border-radius);
     }
 
     input:not(.filter-input):focus {
@@ -217,13 +311,67 @@ body.signup-page {
     }
   }
 
-  #login-form {
+  @include viewport.until(md) {
+    .login-form,
+    #login-form {
+      margin: 0;
+      padding: 0 1rem;
+    }
+  }
+
+  .login-form,
+  #login-form,
+  .invite-form {
     margin-block: 2em 1.2em;
     display: flex;
     flex-direction: column;
 
     .create-account-associate-link {
       order: 1;
+    }
+
+    @include viewport.until(md) {
+      .input-group {
+        margin-bottom: 1em;
+
+        input {
+          height: 2.5em;
+          margin-bottom: 0.25em;
+        }
+
+        input:focus + label,
+        input.value-entered + label.alt-placeholder {
+          top: -10px;
+        }
+
+        input.alt-placeholder:invalid {
+          color: var(--primary);
+        }
+
+        label.more-info {
+          color: var(--primary-medium);
+        }
+
+        label.alt-placeholder,
+        .user-field.text label.control-label {
+          top: 11px;
+        }
+
+        div.user-field:not(.dropdown)
+          .controls
+          input:focus
+          + label.alt-placeholder.control-label,
+        div.user-field.value-entered:not(.dropdown)
+          .controls
+          label.alt-placeholder.control-label {
+          top: -10px;
+        }
+
+        .user-field.dropdown label.control-label,
+        .user-field.multiselect label.control-label {
+          top: -10px;
+        }
+      }
     }
   }
 
@@ -234,14 +382,75 @@ body.signup-page {
     gap: 1rem;
     white-space: nowrap;
 
+    @include viewport.from(sm) {
+      height: 100%;
+    }
+
+    @include viewport.until(md) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 0 1rem;
+      gap: 0.25em;
+      margin-bottom: 1rem;
+
+      .btn {
+        margin: 0;
+        padding-block: 0.65rem;
+        border: 1px solid var(--content-border-color);
+        flex: 1 1 calc(50% - 0.25em);
+        font-size: var(--font-down-1);
+        white-space: nowrap;
+
+        &:last-child {
+          margin-right: auto;
+        }
+      }
+
+      .discourse-id__wrapper {
+        flex: 1 1 100%;
+      }
+    }
+
     .btn-social {
-      border: 1px solid var(--primary-low);
+      border: 1px solid var(--content-border-color);
       padding: 0.75em 0.77em; // matches input padding
+
+      &.discourse_id {
+        border-color: var(--discourse_id-border);
+      }
+    }
+
+    .discourse-id__wrapper {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      .btn-discourse-id__suffix {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        color: var(--primary-500);
+        font-size: var(--font-down-1);
+
+        .btn-discourse-id__description {
+          max-width: 175px;
+
+          @include ellipsis;
+        }
+      }
     }
   }
 
   .login-welcome-header {
+    box-sizing: border-box;
     width: 100%;
+
+    @include viewport.until(md) {
+      padding: 1rem;
+    }
   }
 
   .btn-social-title {
@@ -271,6 +480,10 @@ body.signup-page {
   .caps-lock-warning {
     color: var(--danger);
     font-size: var(--font-down-1);
+
+    @include viewport.until(md) {
+      display: none;
+    }
   }
 
   .create-account__password-info {
@@ -311,6 +524,68 @@ body.signup-page {
       font-size: 1rem;
     }
   }
+
+  @include viewport.from(sm) {
+    &:not(:has(.has-alt-auth)) .alert {
+      max-width: 500px;
+    }
+  }
+
+  @include viewport.until(md) {
+    .login-or-separator {
+      border-top: 1px solid var(--content-border-color);
+      position: relative;
+      margin-block: 1rem;
+
+      span {
+        transform: translate(-50%, -50%);
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        background: var(--secondary);
+        padding-inline: 0.5rem;
+        color: var(--primary-medium);
+        font-size: var(--font-down-1-rem);
+        text-transform: uppercase;
+      }
+    }
+  }
+
+  @include viewport.between(sm, md) {
+    .has-alt-auth {
+      flex-direction: column;
+      overflow: auto;
+      gap: 0;
+
+      .login-page-cta,
+      .signup-page-cta,
+      .btn-social {
+        font-size: var(--font-down-1);
+      }
+
+      .login-left-side {
+        overflow: unset;
+        padding: 1em;
+        max-width: unset;
+      }
+
+      .login-right-side {
+        padding: 1em;
+        max-width: unset;
+
+        &::before {
+          height: 1px;
+          width: calc(100% - 2em);
+          left: 1em;
+          top: 0;
+        }
+      }
+    }
+
+    .signup-progress-bar {
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 // Login page
@@ -325,8 +600,6 @@ body.signup-page {
 
     input:focus {
       outline: none;
-      border: 1px solid var(--tertiary);
-      box-shadow: 0 0 0 2px rgb(var(--tertiary-rgb), 0.25);
     }
   }
 }
@@ -340,9 +613,11 @@ body.signup-page {
 
   .user-fields .input-group {
     .user-field {
-      &.text {
+      &.text,
+      &.textarea {
         &.value-entered label.alt-placeholder.control-label,
-        input:focus + label.alt-placeholder.control-label {
+        input:focus + label.alt-placeholder.control-label,
+        textarea:focus + label.alt-placeholder.control-label {
           top: -8px;
           left: calc(1em - 0.25em);
           background-color: var(--secondary);
@@ -392,5 +667,89 @@ body.signup-page {
         }
       }
     }
+  }
+}
+
+@include viewport.until(md) {
+  .login-page,
+  .signup-page,
+  .invite-page {
+    #main-outlet,
+    #main-outlet-wrapper {
+      padding: 0;
+    }
+  }
+
+  .login-right-side::before {
+    display: none;
+  }
+
+  .invites-show {
+    .login-welcome-header {
+      padding-inline: 0;
+    }
+
+    .signup-progress-bar {
+      margin-inline: 0;
+    }
+  }
+
+  .login-fullpage .login-body {
+    .login-page-cta {
+      &__buttons {
+        .login-page-cta__login {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      &__signup {
+        background: none !important;
+        font-size: var(--font-up-1);
+        padding: 0;
+      }
+
+      &__no-account-yet {
+        font-size: var(--font-up-1);
+      }
+    }
+  }
+
+  .signup-fullpage .signup-body {
+    .signup-page-cta {
+      &__buttons {
+        .signup-page-cta__signup {
+          width: 100%;
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      &__login {
+        background: none !important;
+        font-size: var(--font-up-1);
+        padding: 0;
+      }
+
+      &__existing-account {
+        font-size: var(--font-up-1);
+      }
+    }
+
+    .login-welcome-header {
+      padding-bottom: 0.25rem;
+      padding-top: 0;
+    }
+
+    #login-form {
+      padding-bottom: 0;
+    }
+  }
+}
+
+@include viewport.from(sm) {
+  .invites-show.container {
+    box-sizing: border-box;
+    box-shadow: none;
+    max-width: 550px;
   }
 }

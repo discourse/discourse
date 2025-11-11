@@ -1,0 +1,83 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discourse – Gamifizierung"
+  js:
+    gamification_score: "Beifall"
+    gamification:
+      score: "Beifall"
+      you: "Du"
+      leaderboard:
+        title: "Ranglisten"
+        info: "Wie funktioniert das?"
+        link_to_settings: "Einstellungen"
+        refresh: "Aktualisieren"
+        modal:
+          title: "Wie funktioniert die Rangliste?"
+          text: "Punkte werden für die Interaktion mit der Community vergeben, z. B. für Besuche, „Gefällt mir“ und Posten. Deine Punktzahl wird alle paar Minuten aktualisiert. Sei also hilfsbereit, aktiv sowie solidarisch und steige auf!"
+        name: "Name"
+        name_placeholder: "Name …"
+        new: "Neue Rangliste"
+        create_success: "Rangliste erstellt"
+        delete_success: "Rangliste gelöscht"
+        save_success: "Rangliste gespeichert"
+        cta: "Erstelle deine erste Rangliste"
+        none: "Es wurden noch keine Ranglisten erstellt."
+        confirm_destroy: "Bist du sicher, dass du diese Rangliste löschen möchtest?"
+        date:
+          range: "Datumsbereich von/bis"
+          from: "Ab Datum"
+          to: "Bis Datum"
+          helper: "Wenn die Daten leer gelassen werden, zeigt die Rangliste die erzielten Punktzahlen ohne Zeitbeschränkungen."
+        visible_to_groups: "Sichtbar für Gruppen"
+        visible_to_groups_help: "Nur Benutzer in diesen Gruppen können die Rangliste sehen. Leer lassen, um dies allen zu ermöglichen."
+        included_groups: "Eingeschlossene Gruppen"
+        included_groups_help: "Nur Benutzer in diesen Gruppen werden in die Rangliste aufgenommen. Leer lassen, um alle aufzulisten."
+        excluded_groups: "Ausgeschlossene Gruppen"
+        excluded_groups_help: "Benutzer in diesen Gruppen von der Rangliste entfernen. Leer lassen, um alle aufzulisten."
+        default_period: "Standard-Zeitraum"
+        default_period_help: "Lege den Standard-Zeitraum fest, der für diese Rangliste angezeigt werden soll."
+        period_filter_disabled: "Zeitraumfilter deaktivieren"
+        period:
+          all_time: "Gesamt"
+          yearly: "Jährlich"
+          quarterly: "Vierteljährlich"
+          monthly: "Monatlich"
+          weekly: "Wöchentlich"
+          daily: "Täglich"
+        rank: "Rang"
+      create: "Erstellen"
+      cancel: "Abbrechen"
+      close: "Schließen"
+      delete: "Löschen"
+      edit: "Bearbeiten"
+      back: "Zurück"
+      save: "Speichern"
+      apply: "Anwenden"
+      recalculate: "Scores neu berechnen"
+      recalculating: "Scores werden neu berechnet …"
+      completed: "Fertig! Die Scores wurden erfolgreich neu berechnet."
+      update_scores_help: "Alle Scores für sämtliche Ranglisten aktualisieren von"
+      update_range:
+        last_10_days: "Letzte 10 Tage"
+        last_30_days: "Letzte 30 Tage"
+        last_90_days: "Letzte 90 Tage"
+        last_year: "Letztes Jahr"
+        all_time: "Gesamt"
+        custom_date_range: "Benutzerdefinierter Bereich"
+      custom_range_from: "Von"
+      daily_update_scores_availability:
+        one: "%{count} tägliche Neuberechnung übrig"
+        other: "%{count} tägliche Neuberechnungen übrig"
+      admin:
+        title: "Gamifizierung"
+        name: "Name"
+        period: "Zeitraum"

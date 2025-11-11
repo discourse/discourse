@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Post" do
-  fab!(:topic_1) { Fabricate(:topic) }
+  fab!(:topic_1, :topic)
   let!(:raw) { "this is me testing a post" }
 
   before { SiteSetting.discourse_automation_enabled = true }

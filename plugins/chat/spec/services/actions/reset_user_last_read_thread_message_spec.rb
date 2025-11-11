@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Chat::Action::ResetUserLastReadThreadMessage do
-  fab!(:thread_1) { Fabricate(:chat_thread) }
-  fab!(:thread_2) { Fabricate(:chat_thread) }
+  fab!(:thread_1, :chat_thread)
+  fab!(:thread_2, :chat_thread)
   fab!(:message_1) do
     Fabricate(
       :chat_message,

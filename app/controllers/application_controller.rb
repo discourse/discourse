@@ -14,6 +14,9 @@ class ApplicationController < ActionController::Base
 
   attr_reader :theme_id
 
+  delegate :server_session, to: :request
+  alias_method :secure_session, :server_session
+
   serialization_scope :guardian
 
   protect_from_forgery
@@ -26,10 +29,11 @@ class ApplicationController < ActionController::Base
     unless is_api? || is_user_api?
       super
       clear_current_user
-      render plain: "[\"BAD CSRF\"]", status: 403
+      render plain: "[\"BAD CSRF\"]", status: :forbidden
     end
   end
 
+  around_action :ensure_dont_cache_page
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -45,9 +49,9 @@ class ApplicationController < ActionController::Base
   before_action :preload_json
   before_action :initialize_application_layout_preloader
   before_action :check_xhr
+  before_action :set_crawler_header
   after_action :add_readonly_header
   after_action :perform_refresh_session
-  after_action :dont_cache_page
   after_action :conditionally_allow_site_embedding
   after_action :ensure_vary_header
   after_action :add_noindex_header,
@@ -145,7 +149,7 @@ class ApplicationController < ActionController::Base
   rescue_from PG::ReadOnlySqlTransaction do |e|
     Discourse.received_postgres_readonly!
     Rails.logger.error("#{e.class} #{e.message}: #{e.backtrace.join("\n")}")
-    rescue_with_handler(Discourse::ReadOnly.new) || raise
+    rescue_with_handler(Discourse::ReadOnly) || raise
   end
 
   rescue_from ActionController::ParameterMissing do |e|
@@ -157,6 +161,11 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActionController::RoutingError, PluginDisabled do
+    # This error is raised outside of the normal request response cycle and is called via the
+    # `DiscoursePublicExceptions` middleware which creates a new instance of the ApplicationController.
+    # As a result, controller actions hooks are not called and we need to explicitly call `dont_cache_page` here.
+    dont_cache_page
+
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -251,14 +260,16 @@ class ApplicationController < ActionController::Base
         format.json do
           render_json_error I18n.t("read_only_mode_enabled"), type: :read_only, status: 503
         end
-        format.html { render status: 503, layout: "no_ember", template: "exceptions/read_only" }
+        format.html do
+          render status: :service_unavailable, layout: "no_ember", template: "exceptions/read_only"
+        end
       end
     end
   end
 
   rescue_from SecondFactor::AuthManager::SecondFactorRequired do |e|
     if request.xhr?
-      render json: { second_factor_challenge_nonce: e.nonce }, status: 403
+      render json: { second_factor_challenge_nonce: e.nonce }, status: :forbidden
     else
       redirect_to session_2fa_path(nonce: e.nonce)
     end
@@ -282,7 +293,7 @@ class ApplicationController < ActionController::Base
 
     show_json_errors =
       (request.format && request.format.json?) || (request.xhr?) ||
-        ((params[:external_id] || "").ends_with? ".json")
+        ((params[:external_id] || "").to_s.ends_with?(".json"))
 
     if type == :not_found && opts[:check_permalinks]
       url = opts[:original_path] || request.fullpath
@@ -420,6 +431,7 @@ class ApplicationController < ActionController::Base
     else
       locale = Discourse.anonymous_locale(request)
       locale ||= SiteSetting.default_locale
+      persist_locale_param_to_cookie
     end
 
     locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE if !I18n.locale_available?(locale)
@@ -567,10 +579,6 @@ class ApplicationController < ActionController::Base
     request.session_options[:skip] = true
   end
 
-  def secure_session
-    SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
-  end
-
   def handle_permalink(path)
     permalink = Permalink.find_by_url(path)
     if permalink && permalink.target_url
@@ -580,9 +588,7 @@ class ApplicationController < ActionController::Base
 
   def rate_limit_second_factor!(user)
     return if params[:second_factor_token].blank?
-
     RateLimiter.new(nil, "second-factor-min-#{request.remote_ip}", 6, 1.minute).performed!
-
     RateLimiter.new(nil, "second-factor-min-#{user.username}", 6, 1.minute).performed! if user
   end
 
@@ -734,19 +740,26 @@ class ApplicationController < ActionController::Base
     raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
   end
 
+  # Keep in sync with `NO_DESTINATION_COOKIE` in `frontend/discourse/app/lib/utilities.js`
+  NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
+
+  def is_valid_destination_url?(url)
+    url.present? && url != path("/") && NO_DESTINATION_COOKIE.none? { url.start_with? path(_1) }
+  end
+
   def destination_url
-    request.original_url unless request.original_url =~ /uploads/
+    request.original_url if is_valid_destination_url?(request.original_url)
   end
 
   def redirect_to_login
     dont_cache_page
 
     if SiteSetting.auth_immediately && SiteSetting.enable_discourse_connect?
-      # save original URL in a session so we can redirect after login
-      session[:destination_url] = destination_url
+      # save original URL in the server session so we can redirect after login
+      server_session[:destination_url] = destination_url
       redirect_to path("/session/sso")
     elsif SiteSetting.auth_immediately && !SiteSetting.enable_local_logins &&
-          Discourse.enabled_authenticators.length == 1 && !cookies[:authentication_data]
+          Discourse.enabled_authenticators.one? && !cookies[:authentication_data]
       # Only one authentication provider, direct straight to it.
       # If authentication_data is present, then we are halfway though registration. Don't redirect offsite
       cookies[:destination_url] = destination_url
@@ -884,6 +897,7 @@ class ApplicationController < ActionController::Base
     @container_class = "wrap not-found-container"
     @page_title = I18n.t("page_not_found.page_title")
     @title = opts[:title] || I18n.t("page_not_found.title")
+    @subtitle = opts[:subtitle] || I18n.t("page_not_found.subtitle")
     @group = opts[:group]
     @hide_search = true if SiteSetting.login_required
 
@@ -939,11 +953,11 @@ class ApplicationController < ActionController::Base
   protected
 
   def honeypot_value
-    secure_session[HONEYPOT_KEY] ||= SecureRandom.hex
+    server_session[HONEYPOT_KEY] ||= SecureRandom.hex
   end
 
   def challenge_value
-    secure_session[CHALLENGE_KEY] ||= SecureRandom.hex
+    server_session[CHALLENGE_KEY] ||= SecureRandom.hex
   end
 
   def render_post_json(post, add_raw: true)
@@ -978,7 +992,7 @@ class ApplicationController < ActionController::Base
     action = action_class.new(guardian, request, opts: action_data, target_user: target_user)
     manager = SecondFactor::AuthManager.new(guardian, action, target_user: target_user)
     yield(manager) if block_given?
-    result = manager.run!(request, params, secure_session)
+    result = manager.run!(request, params, server_session)
 
     if !result.no_second_factors_enabled? && !result.second_factor_auth_completed? &&
          !result.second_factor_auth_skipped?
@@ -1044,10 +1058,31 @@ class ApplicationController < ActionController::Base
   end
 
   def clean_xml
-    response.body.gsub!(XmlCleaner::INVALID_CHARACTERS, "")
+    response.body = response.body.gsub(XmlCleaner::INVALID_CHARACTERS, "")
   end
 
   def service_params
     { params: params.to_unsafe_h, guardian: }
+  end
+
+  def set_crawler_header
+    response.headers["X-Discourse-Crawler-View"] = "true" if use_crawler_layout?
+  end
+
+  def ensure_dont_cache_page
+    yield
+  ensure
+    dont_cache_page
+  end
+
+  def persist_locale_param_to_cookie
+    if SiteSetting.set_locale_from_param && SiteSetting.set_locale_from_cookie &&
+         (locale_param = params[Discourse::LOCALE_PARAM]).present?
+      if I18n.locale_available?(locale_param)
+        cookie_args = { path: "/" }
+        cookie_args[:path] = Discourse.base_path if Discourse.base_path.present?
+        cookies[:locale] = cookie_args.merge(value: locale_param)
+      end
+    end
   end
 end

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "extralite"
-
 module Migrations::CLI
   class ImportCommand
     def initialize(options)
@@ -11,7 +9,7 @@ module Migrations::CLI
     def execute
       ::Migrations.load_rails_environment(quiet: true)
 
-      ::Migrations::Importer.execute
+      ::Migrations::Importer.execute(@options)
     end
   end
 end

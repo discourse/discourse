@@ -1,0 +1,387 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+lt:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "Leidžia dirbtinio intelekto paiešką"
+              stream_completion: "Leidžia transliuoti dirbtinio intelekto personažų užbaigimus"
+              update_personas: "Leidžia atnaujinti dirbtinio intelekto personas"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
+      dashboard:
+        emotion:
+          title: "Emocija"
+          description: "Lentelėje pateikiamas įrašų, priskirtų konkrečiai emocijai, skaičius. Klasifikuota pagal modelį „SamLowe/roberta-base-go_emotions“."
+        reports:
+          filters:
+            group_by:
+              label: "Grupuoti pagal"
+            sort_by:
+              label: "Rūšiuoti pagal"
+            tag:
+              label: "Žymėti"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "Sukurkite LLM modelį"
+            update_ai_llm_model: "Atnaujinti LLM modelį"
+            delete_ai_llm_model: "Ištrinti LLM modelį"
+            create_ai_persona: "Sukurkite AI personažą"
+            update_ai_persona: "Atnaujinti dirbtinio intelekto personažą"
+            delete_ai_persona: "Ištrinti dirbtinio intelekto personažą"
+            create_ai_tool: "Sukurkite dirbtinio intelekto įrankį"
+            update_ai_tool: "Atnaujinti dirbtinio intelekto įrankį"
+            delete_ai_tool: "Ištrinti dirbtinio intelekto įrankį"
+            create_ai_embedding: "Sukurti dirbtinio intelekto įterpimą"
+            update_ai_embedding: "Atnaujinti dirbtinio intelekto įterpimą"
+            delete_ai_embedding: "Ištrinti dirbtinio intelekto įterpimą"
+            update_ai_spam_settings: "Atnaujinti dirbtinio intelekto šlamšto nustatymus"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Siuntėjas"
+              description: "Vartotojas, kuris atsiųs ataskaitą"
+            receivers:
+              label: "Gavėjai"
+              description: "Vartotojai, kurie gaus ataskaitą (el. laiškai bus siunčiami tiesioginiais el. laiškais, naudotojų vardai bus išsiųsti PM)"
+            topic_id:
+              label: "Temos ID"
+              description: "Temos ID, į kurį reikia skelbti ataskaitą"
+            title:
+              label: "Antraštė"
+              description: "Pranešimo pavadinimas"
+            days:
+              label: "Dienos"
+              description: "Ataskaitos laikotarpis"
+            offset:
+              label: "Poslinkis"
+              description: "Testuodami ataskaitą galite paleisti senesne data, naudodami poslinkį, kad ataskaita būtų pradėta anksčiau."
+            instructions:
+              label: "Instrukcijos"
+              description: "Didelio kalbos modelio instrukcijos"
+            sample_size:
+              label: "Pavyzdžio dydis"
+              description: "Įrašų, į kuriuos reikia įtraukti ataskaitą, skaičius"
+            tokens_per_post:
+              label: "Žetonų už įrašą"
+              description: "LLM žetonų, kuriuos galima naudoti vienam įrašui, skaičius"
+            model:
+              label: "Modelis"
+              description: "LLM, naudojama ataskaitų generavimui"
+            categories:
+              label: "Kategorijos"
+              description: "Filtruoti temas tik pagal šias kategorijas"
+            tags:
+              label: "Žymos"
+              description: "Filtruoti temas tik pagal šias žymas"
+            exclude_tags:
+              label: "Išskirti žymas"
+              description: "Išskirti temas su šiomis žymėmis"
+            exclude_categories:
+              label: "Išskirti kategorijas"
+              description: "Išskirti temas su šiomis kategorijomis"
+            allow_secure_categories:
+              label: "Leisti saugias kategorijas"
+              description: "Leisti generuoti ataskaitą temoms, esančioms saugiose kategorijose"
+            suppress_notifications:
+              label: "Slėpti pranešimus"
+              description: "Neleisti ataskaitos generuojamų pranešimų, transformuojant juos į turinį. Tai pakeis paminėjimų ir vidinių nuorodų susiejimą."
+            debug_mode:
+              label: "Derinimo režimas"
+              description: "Įjunkite derinimo režimą, kad matytumėte neapdorotus LLM įvesties ir išvesties duomenis"
+            priority_group:
+              label: "Pagrindinė Grupė"
+              description: "Ataskaitoje teikti pirmenybę šios grupės turiniui"
+            temperature:
+              label: "Temperatūra"
+              description: "Temperatūra, kurią naudosite LLM. Padidinkite, kad padidintumėte atsitiktinumą (palikite tuščią, kad naudotumėte numatytuosius modelio parametrus)."
+            top_p:
+              label: "Viršutinė P"
+              description: "Viršutinė P, naudojama LLM, padidinkite, kad padidėtų atsitiktinumas (palikite tuščią, jei norite naudoti numatytuosius modelio parametrus)"
+            persona_id:
+              label: "Persona"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Modelis"
+              description: "Numatytasis kalbos modelis, naudojamas triažui"
+            tool:
+              label: "Įrankis"
+              description: "Įrankis, naudojamas triažui (įrankis negali turėti apibrėžtų parametrų)"
+        llm_persona_triage:
+          fields:
+            persona:
+              label: "Persona"
+        llm_triage:
+          fields:
+            triage_persona:
+              label: "Persona"
+            search_for_text:
+              label: "Ieškokite teksto"
+            category:
+              label: "Kategorija"
+              description: "Kategorija, kuriai taikoma tema"
+            tags:
+              label: "Žymos"
+              description: "Žymos, kuriai taikoma tema"
+            canned_reply:
+              label: "Atsakyti"
+            canned_reply_user:
+              label: "Atsakyti Vartotojas"
+              description: "Vartotojo vardas, norintis paskelbti paruoštą atsakymą"
+            hide_topic:
+              label: "Slėpti temą"
+    discourse_ai:
+      title: "AI"
+      features:
+        back: "Atgal"
+        disabled: "(uždrausta)"
+        groups: "Grupės:"
+        no_groups: "Nieko"
+        edit: "Redaguoti"
+        expand_list:
+          one: "(%{count} daugiau)"
+          few: "(%{count}daugiau)"
+          many: "(%{count}daugiau)"
+          other: "(%{count} daugiau)"
+        collapse_list: "(rodyti mažiau)"
+        filters:
+          all: "Visi"
+          reset: "Atstatyti"
+        search:
+          name: "Paieška"
+        inference:
+          match_concepts: "Sąvokų atitikimas"
+          deduplicate_concepts: "Sąvokų deduplikacija"
+        ai_helper:
+          name: "Padėjėjas"
+          description: "Padeda vartotojams bendrauti bendruomenėje, pavyzdžiui, kurti temas, rašyti įrašus ir skaityti turinį"
+          proofread: Korektūruotas tekstas
+          title_suggestions: "Siūlyti pavadinimus"
+          explain: "Paaiškinkite"
+          illustrate_post: "Iliustruoti įrašą"
+          smart_dates: "Išmaniosios datos"
+          translate: "Versti"
+          markdown_tables: "Sukurti Markdown lentelę"
+          custom_prompt: "Pasirinktinis raginimas"
+          image_caption: "Antraštės vaizdai"
+        translation:
+          name: "Vertimai"
+          description: "Verčia turinį į palaikomas kalbas"
+          locale_detector: "Lokalės detektorius"
+          post_raw_translator: "Neapdoroto įrašo vertėjas"
+          topic_title_translator: "Temos pavadinimo vertėjas"
+          short_text_translator: "Trumpų tekstų vertėjas"
+        spam:
+          name: "Šlamštas"
+          description: "Naudodamas pasirinktą LLM, identifikuoja galimą šlamštą ir pažymi jį svetainės moderatoriams, kad jie galėtų jį patikrinti peržiūros eilėje."
+          inspect_posts: "Apžiūrėti įrašus"
+      modals:
+        select_option: "Pasirink nustatymą..."
+      layout:
+        table: "Lentelė"
+        card: "Kortelė"
+      translations:
+        title: "Vertimai"
+        stats:
+          eta_minutes:
+            one: "%{count} minutė"
+            few: "%{count} minutės"
+            many: "%{count} minučių"
+            other: "%{count} minučių"
+          eta_hours:
+            one: "%{count} valanda"
+            few: "%{count} valandos"
+            many: "%{count} valandų"
+            other: "%{count} valandų"
+          eta_days:
+            one: "%{count} diena"
+            few: "%{count} dienos"
+            many: "%{count} dienų"
+            other: "%{count} dienų"
+        progress_chart:
+          bar_done:
+            one: "%{count} pranešimas"
+            few: "%{count} pranešimai"
+            many: "%{count} pranešimų"
+            other: "%{count} pranešimų"
+      spam:
+        short_title: "Šlamštas"
+        title: "Šlamšto tvarkymo konfigūravimas"
+        select_llm: "Pasirinkite teisės magistro laipsnį (LLM)"
+        select_persona: "Pasirinkite asmenį"
+        custom_instructions: "Individualūs nurodymai"
+        custom_instructions_help: "Jūsų svetainei pritaikytos instrukcijos, padedančios dirbtiniam intelektui atpažinti šlamštą, pvz., „Aktyviau nuskaitykite įrašus ne anglų kalba“."
+        last_seven_days: "Paskutinės 7 dienos"
+        scanned_count: "Įrašai nuskaityti"
+        false_positives: "Neteisingai pažymėta"
+        false_negatives: "Praleistas šlamštas"
+        spam_detected: "Aptiktas šlamštas"
+        custom_instructions_placeholder: "Svetainėms skirtos instrukcijos dirbtiniam intelektui, padedančios tiksliau atpažinti šlamštą"
+        enable: "Įgalinti"
+        spam_tip: "Dirbtinio intelekto šlamšto aptikimo funkcija nuskaitys pirmuosius 3 visų naujų vartotojų įrašus viešose temose. Jie bus pažymėti peržiūrai ir užblokuoti vartotojus, jei jie greičiausiai yra šlamštas."
+        settings_saved: "Nustatymai išsaugoti"
+        spam_description: "Naudodamas pasirinktą LLM, identifikuoja galimą šlamštą ir pažymi jį svetainės moderatoriams, kad jie galėtų jį patikrinti peržiūros eilėje."
+        no_llms: "Nėra laisvų teisės magistro laipsnių (LLM)."
+        test_button: "Bandymas..."
+        save_button: "Išsaugoti pakeitimus"
+        test_modal:
+          title: "Šlamšto aptikimo bandymas"
+          post_url_label: "Įrašo URL arba ID"
+          post_url_placeholder: "https://your-forum.com/t/topic/123/4 arba įrašo ID"
+          result: "Rezultatas"
+          scan_log: "Nuskaitymo žurnalas"
+          spam: "Šlamštas"
+      usage:
+        summary: "Santrauka"
+        model: "Modelis"
+        username: "Naudotojo vardas"
+        total_requests: "Visos užklausos"
+        periods:
+          last_day: "Paskutinės 24 valandos"
+          custom: "Pasirinktinis..."
+      ai_persona:
+        back: "Atgal"
+        name: "Vardas"
+        edit: "Redaguoti"
+        export: "Eksportuoti"
+        import: "Importuoti"
+        description: "Aprašymas"
+        user: Narys
+        save: "Saugoti"
+        enabled: "Galimas?"
+        delete: "Pašalinti"
+        temperature: "Temperatūra"
+        top_p: "Viršutinė P"
+        response_format:
+          open_modal: "Redaguoti"
+          modal:
+            key_title: "Raktas"
+        filters:
+          reset: "Atstatyti"
+      rag:
+        uploads:
+          title: "Įkėlimai"
+          uploading: "Įkeliama"
+      tools:
+        back: "Atgal"
+        export: "Eksportuoti"
+        import: "Importuoti"
+        name: "Vardas"
+        description: "Aprašymas"
+        summary: "Santrauka"
+        save: "Saugoti"
+        remove_parameter: "Pašalinti"
+        parameter_required: "Privalomi"
+        edit: "Redaguoti"
+        delete: "Pašalinti"
+      llms:
+        display_name: "Vardas"
+        save: "Saugoti"
+        edit: "Redaguoti"
+        back: "Atgal"
+        delete: Pašalinti
+        quotas:
+          group: "Grupė"
+          max_usages: "Maksimaliai naudoja"
+          duration: "Trukmė"
+          durations:
+            hour: "1 valanda"
+            six_hours: "6 valandos"
+            day: "24 valandos"
+            week: "7 dienos"
+            custom: "Pasirinktinis..."
+          hours: "valandos"
+        usage:
+          ai_summarization: "Apibendrinti"
+          ai_spam: "Šlamštas"
+        next:
+          title: "Kitas"
+        tests:
+          success: "Sėkmingai!"
+        providers:
+          google: "Google"
+          fake: "Išskirtinės"
+      ai_helper:
+        context_menu:
+          trigger: "Paklauskite AI"
+          cancel: "Atšaukti"
+          confirm: "Patvirtinti"
+          discard: "Išmesti"
+          custom_prompt:
+            title: "Pasirinktinis raginimas"
+        post_options_menu:
+          trigger: "Paklauskite AI"
+          title: "Paklauskite AI"
+          close: "Uždaryti"
+          copy: "Kopijuoti"
+          copied: "Nukopijuota!"
+          cancel: "Atšaukti"
+        thumbnail_suggestions:
+          select: "Pasirinkite"
+        image_caption:
+          button_label: "Antraštė su AI"
+          generating: "Generuojama antraštė..."
+          credits: "Antraštė teikiama AI"
+          save_caption: "Saugoti"
+      embeddings:
+        back: "Atgal"
+        save: "Saugoti"
+        delete: "Pašalinti"
+        edit: "Redaguoti"
+        tests:
+          success: "Sėkmingai!"
+        display_name: "Vardas"
+        providers:
+          google: "Google"
+          fake: "Išskirtinės"
+      ai_bot:
+        persona: "Persona"
+        llm: "Modelis"
+        debug_ai_modal:
+          request: "Užklausa"
+          response: "Atsakymas"
+          next_log: "Kitas"
+          previous_log: "Buvęs"
+        invite_ai_conversation:
+          button: "Kviesti"
+        ai_label: "AI"
+        share_modal:
+          copy: "Kopijuoti"
+        bot_names:
+          claude-2: "Claude 2"
+        conversations:
+          today: "Šandien"
+          last_7_days: "Paskutinės 7 dienos"
+          last_30_days: "Paskutinės 30 dienų"
+      sentiments:
+        sentiment_analysis:
+          filter_types:
+            all: "Visi"
+            neutral: "Neutrali"
+          group_types:
+            category: "Kategorija"
+            tag: "Žymėti"
+          table:
+            total_count: "Viso"
+      summarization:
+        chat:
+          summarize: "Apibendrinti"
+      discobot_discoveries:
+        regular_results: "Temos"
+        collapse: "Suskleisti"
+        tooltip:
+          actions:
+            disable: "Išjungti"

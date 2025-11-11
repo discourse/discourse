@@ -1,0 +1,12 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  site_settings:
+    rss_polling_enabled: "[משיכת RSS] הפעלת ייבוא והטמעת פוסטים ממגוון ערוצי RSS"
+    rss_polling_frequency: "[משיכת RSS] תדירות משיכת ערוץ, בדקות"
+    rss_polling_use_pubdate: "[משיכת RSS] להגדיר תאריך יצירת נושאים ל־pubDate (תאריך פרסום) שנמצא בערוץ ה־RSS"
+    rss_polling_update_tags: "[משיכת RSS] לעדכן תגיות נושאים כאשר נושא מתעדכן. השבתת האפשרות הזאת מושכת תגיות ראשוניות אבל משביתה שינויים נוספים בתגיות."

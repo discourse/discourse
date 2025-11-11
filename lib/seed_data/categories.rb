@@ -50,6 +50,8 @@ module SeedData
           position: 0,
           color: "0088CC",
           text_color: "FFFFFF",
+          style_type: "emoji",
+          emoji: "card_file_box",
           permissions: {
             everyone: :full,
           },
@@ -63,6 +65,8 @@ module SeedData
           position: 1,
           color: "808281",
           text_color: "FFFFFF",
+          style_type: "emoji",
+          emoji: "thought_balloon",
           permissions: {
             everyone: :full,
           },
@@ -76,6 +80,8 @@ module SeedData
           position: 2,
           color: "E45735",
           text_color: "FFFFFF",
+          style_type: "emoji",
+          emoji: "shield",
           permissions: {
             staff: :full,
           },
@@ -89,6 +95,8 @@ module SeedData
           position: 3,
           color: "25AAE2",
           text_color: "FFFFFF",
+          style_type: "emoji",
+          emoji: "blue_book",
           permissions: {
             everyone: :full,
           },
@@ -112,6 +120,8 @@ module SeedData
       position:,
       color:,
       text_color:,
+      style_type:,
+      emoji:,
       permissions:,
       force_permissions:,
       force_existence: false,
@@ -129,6 +139,8 @@ module SeedData
             position: position,
             color: color,
             text_color: text_color,
+            style_type: style_type,
+            emoji: emoji,
           )
 
         category.skip_category_definition = true if description.blank?

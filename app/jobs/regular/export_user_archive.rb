@@ -26,7 +26,7 @@ module Jobs
     ]
 
     HEADER_ATTRS_FOR =
-      HashWithIndifferentAccess.new(
+      ActiveSupport::HashWithIndifferentAccess.new(
         user_archive: %w[
           topic_title
           categories
@@ -130,7 +130,7 @@ module Jobs
         @requesting_user = @archive_for_user
       end
 
-      @extra = HashWithIndifferentAccess.new(args[:args]) if args[:args]
+      @extra = ActiveSupport::HashWithIndifferentAccess.new(args[:args]) if args[:args]
       @timestamp ||= Time.now.strftime("%y%m%d-%H%M%S")
 
       components = []
@@ -182,8 +182,11 @@ module Jobs
         FileUtils.rm_rf(dirname)
       end
 
+      provide_results(user_export, zip_filename, export_title, args)
+    end
+
+    def provide_results(user_export, zip_filename, export_title, args)
       begin
-        # create upload
         create_upload_for_user(user_export, zip_filename)
       ensure
         post = notify_user(user_export, export_title)

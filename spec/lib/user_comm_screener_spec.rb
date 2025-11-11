@@ -23,7 +23,7 @@ RSpec.describe UserCommScreener do
   end
   fab!(:target_user4) { Fabricate(:user, username: "janescreen") }
   fab!(:target_user5) { Fabricate(:user, username: "maryscreen") }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   it "allows initializing the class with both an acting_user_id and an acting_user" do
     acting_user = Fabricate(:user)
@@ -45,7 +45,7 @@ RSpec.describe UserCommScreener do
   end
 
   context "when the actor is not staff" do
-    fab!(:acting_user) { Fabricate(:user) }
+    fab!(:acting_user, :user)
     fab!(:muted_user) { Fabricate(:muted_user, user: target_user1, muted_user: acting_user) }
     fab!(:ignored_user) do
       Fabricate(
@@ -133,7 +133,7 @@ RSpec.describe UserCommScreener do
   end
 
   context "when the actor is staff" do
-    fab!(:acting_user) { Fabricate(:admin) }
+    fab!(:acting_user, :admin)
     fab!(:muted_user) { Fabricate(:muted_user, user: target_user1, muted_user: acting_user) }
     fab!(:ignored_user) do
       Fabricate(
@@ -209,7 +209,7 @@ RSpec.describe UserCommScreener do
   end
 
   describe "actor preferences" do
-    fab!(:acting_user) { Fabricate(:user) }
+    fab!(:acting_user, :user)
     fab!(:muted_user) { Fabricate(:muted_user, user: acting_user, muted_user: target_user1) }
     fab!(:ignored_user) do
       Fabricate(
@@ -271,6 +271,32 @@ RSpec.describe UserCommScreener do
           expect(screener.actor_allowing_communication).to match_array(
             [target_user1.id, target_user2.id, target_user3.id, target_user4.id, target_user5.id],
           )
+        end
+      end
+    end
+
+    describe "#actor_ignoring_or_muting_users" do
+      it "returns only the user_ids that the actor is ignoring or muting, excluding PM allowlist" do
+        acting_user.user_option.update!(enable_allowed_pm_users: true)
+        expect(screener.actor_ignoring_or_muting_users).to match_array(
+          [target_user1.id, target_user2.id],
+        )
+      end
+
+      it "does not include users filtered by PM allowlist" do
+        acting_user.user_option.update!(enable_allowed_pm_users: true)
+        expect(screener.actor_ignoring_or_muting_users).not_to include(target_user3.id)
+        expect(screener.actor_ignoring_or_muting_users).not_to include(target_user5.id)
+      end
+
+      describe "when the actor has no preferences" do
+        before do
+          muted_user.destroy
+          ignored_user.destroy
+        end
+
+        it "returns an empty array and does not error" do
+          expect(screener.actor_ignoring_or_muting_users).to match_array([])
         end
       end
     end

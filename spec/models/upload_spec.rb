@@ -47,6 +47,139 @@ RSpec.describe Upload do
     end
   end
 
+  describe "video conversion" do
+    let(:user) { Fabricate(:user) }
+
+    before do
+      # Add mp4 to authorized extensions for video uploads
+      extensions = SiteSetting.authorized_extensions.split("|")
+      SiteSetting.authorized_extensions = (extensions | ["mp4"]).join("|")
+
+      SiteSetting.video_conversion_service = "aws_mediaconvert"
+      SiteSetting.mediaconvert_role_arn = "arn:aws:iam::123456789012:role/MediaConvertRole"
+      SiteSetting.enable_s3_uploads = true
+      SiteSetting.s3_use_iam_profile = true
+      SiteSetting.video_conversion_enabled = true
+    end
+
+    context "when video conversion is enabled" do
+      it "enqueues a convert_video job for supported video files on create" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+
+        upload = nil
+        expect_enqueued_with(job: :convert_video, args: {}) do
+          upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+        end
+        expect_job_enqueued(job: :convert_video, args: { upload_id: upload.id })
+      end
+
+      it "does not enqueue a convert_video job for unsupported video files" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(false)
+
+        expect_not_enqueued_with(job: :convert_video) do
+          Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+        end
+      end
+
+      it "does not enqueue a convert_video job when video conversion is disabled" do
+        SiteSetting.video_conversion_enabled = false
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+
+        expect_not_enqueued_with(job: :convert_video) do
+          Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+        end
+      end
+
+      it "does not enqueue a convert_video job when S3 uploads are disabled" do
+        SiteSetting.enable_s3_uploads = false
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+
+        expect_not_enqueued_with(job: :convert_video) do
+          Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+        end
+      end
+
+      it "does not enqueue a convert_video job for non-video files" do
+        expect_not_enqueued_with(job: :convert_video) do
+          Fabricate(:upload, original_filename: "image.png", extension: "png", user: user)
+        end
+      end
+
+      it "does not enqueue a convert_video job if OptimizedVideo already exists" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+        allow(FileHelper).to receive(:is_supported_video?).with("video_converted.mp4").and_return(
+          true,
+        )
+
+        # Create original upload
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        # Create OptimizedVideo record for the original upload
+        optimized_video = Fabricate(:optimized_video, upload: upload)
+
+        # Update the original upload to trigger after_commit
+        expect_not_enqueued_with(job: :convert_video) { upload.update!(filesize: 12_345) }
+      end
+
+      it "does not enqueue a convert_video job on update, only on create" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        # Update the upload - should not trigger video conversion since it's after_create, not after_update
+        expect_not_enqueued_with(job: :convert_video) { upload.update!(filesize: 12_345) }
+      end
+
+      it "does not enqueue a convert_video job for optimized video uploads to prevent infinite loop" do
+        allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
+        allow(FileHelper).to receive(:is_supported_video?).with("video_converted.mp4").and_return(
+          true,
+        )
+
+        # Create original upload
+        upload = Fabricate(:upload, original_filename: "small.mp4", extension: "mp4", user: user)
+
+        # Use OptimizedVideo.create_for to simulate the real flow
+        # This creates the optimized upload and then the OptimizedVideo record
+        optimized_video = nil
+        optimized_upload = nil
+        expect_not_enqueued_with(job: :convert_video) do
+          optimized_video =
+            OptimizedVideo.create_for(
+              upload,
+              "video_converted.mp4",
+              user.id,
+              filesize: 1000,
+              sha1: "abcdef1234567890",
+              url: "https://example.com/video_converted.mp4",
+              adapter: "aws_mediaconvert",
+            )
+        end
+
+        expect(optimized_video).not_to be_nil
+      end
+
+      it "enqueues a convert_video job for user uploads with _converted in filename" do
+        allow(FileHelper).to receive(:is_supported_video?).with(
+          "my_video_converted.mp4",
+        ).and_return(true)
+
+        # User uploads a file with "_converted" in the name - should still be converted
+        upload = nil
+        expect_enqueued_with(job: :convert_video, args: {}) do
+          upload =
+            Fabricate(
+              :upload,
+              original_filename: "my_video_converted.mp4",
+              extension: "mp4",
+              user: user,
+            )
+        end
+        expect_job_enqueued(job: :convert_video, args: { upload_id: upload.id })
+      end
+    end
+  end
+
   describe ".create_thumbnail!" do
     it "does not create a thumbnail when disabled" do
       SiteSetting.create_thumbnails = false
@@ -457,7 +590,7 @@ RSpec.describe Upload do
       end
 
       it "marks the upload as not secure if its access control post is a public post" do
-        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload)
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(upload)
         upload.update!(secure: true, access_control_post: Fabricate(:post))
         upload.update_secure_status
         expect(upload.secure).to eq(false)
@@ -470,18 +603,9 @@ RSpec.describe Upload do
       end
 
       it "does not attempt to change the ACL if the secure status has not changed" do
-        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload).never
+        FileStore::S3Store.any_instance.expects(:update_upload_access_control).with(upload).never
         upload.update!(secure: true, access_control_post: Fabricate(:private_message_post))
         upload.update_secure_status
-      end
-
-      it "does not attempt to change the ACL if s3_use_acls is disabled" do
-        SiteSetting.secure_uploads = false
-        SiteSetting.s3_use_acls = false
-        FileStore::S3Store.any_instance.expects(:update_upload_ACL).with(upload).never
-        upload.update!(secure: true, access_control_post: Fabricate(:post))
-        upload.update_secure_status
-        expect(upload.secure).to eq(false)
       end
 
       it "marks an image upload as secure if login_required is enabled" do
@@ -522,7 +646,7 @@ RSpec.describe Upload do
       it "does not throw an error if the object storage provider does not support ACLs" do
         FileStore::S3Store
           .any_instance
-          .stubs(:update_upload_ACL)
+          .stubs(:update_upload_access_control)
           .raises(
             Aws::S3::Errors::NotImplemented.new(
               "A header you provided implies functionality that is not implemented",

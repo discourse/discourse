@@ -352,19 +352,6 @@ da:
 
           Bemærk, at når du svarer på et emne eller læser et emne i mere end et par minutter, indstilles det automatisk til et meddelelsesniveau for 'Følger'. Du kan ændre dette i [dine brugerindstillinger](%{base_uri}/my/preferences).
       poll:
-        instructions: |-
-          Vidste du, at du kan føje en afstemning til hvert et indlæg? Prøv at bruge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gearet i editoren til at **oprette en afstemning**.
-        not_found: |-
-          Ups! Der var ingen afstemning i dit svar.
-
-          Brug <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> tandhjulsikonet i editoren, eller kopier og indsæt denne afstemning i dit næste svar:
-
-          ```text
-          [poll]
-          * :cat:
-          * :dog:
-          [/poll]
-          ```
         reply: |-
           Hej, skøn afstemning! Hvordan var min undervisning af dig?
 
@@ -373,20 +360,6 @@ da:
           * :-1:
           [/poll]
       details:
-        instructions: |-
-          Nogle gange vil du måske **skjule detaljer** i dine svar:
-
-          - Når du diskuterer plotpunkter i en film eller et tv-show, der ville blive betragtet som en spoiler.
-
-          - Når dit indlæg har brug for masser af valgfrie detaljer, der kan være overvældende, når de læses på én gang.
-
-          [details=Vælg dette for at se, hvordan det fungerer!]
-          1. Vælg <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gearet i editoren.
-          2. Vælg "Skjul detaljer".
-          3. Rediger detaljeringsoversigten, og tilføj dit indhold.
-          [/details]
-
-          Kan du bruge <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> gearet i editoren til at tilføje et detaljeret afsnit til dit næste svar?
         not_found: |-
           Har du udfordringer med at oprette en detaljewidget? Prøv at medtage følgende i dit næste svar:
 

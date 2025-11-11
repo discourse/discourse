@@ -49,7 +49,6 @@ vi:
       select: "Chọn"
       sounds:
         none: "Không có gì"
-      exit: "quay lại"
       channel_status:
         closed: "Đã "
         open: "Mở"
@@ -61,6 +60,8 @@ vi:
       chat_message_separator:
         today: Hôm nay
         yesterday: Hôm qua
+      search_view:
+        filter_placeholder: Tìm tin nhắn
       about_view:
         title: Tiêu đề
         name: Tên
@@ -70,6 +71,7 @@ vi:
         tabs:
           members: Các thành viên
           settings: Cài đặt
+          search: Tìm kiếm
         remove_member: "Xoá"
       new_message_modal:
         no_items: "Không có mẫu nào"
@@ -86,6 +88,8 @@ vi:
         italic_text: "văn bản nhấn mạnh"
         bold_text: "chữ in đậm"
         send: "Gửi"
+      quote:
+        copy_success: "Đã sao chép trích dẫn trò chuyện vào bảng tạm"
       notification_levels:
         never: "Không bao giờ"
       settings:
@@ -102,6 +106,11 @@ vi:
         category_label: "Danh mục"
         history_label: "Lịch sử"
         members_label: "Các thành viên"
+      search:
+        no_results: "Không tìm thấy kết quả"
+        sort:
+          relevance: "Độ phù hợp"
+          latest: "Mới nhất"
       direct_messages:
         title: "Tin nhắn"
       incoming_webhooks:

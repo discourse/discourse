@@ -8,6 +8,8 @@ class EmailController < ApplicationController
                      :redirect_to_login_if_required,
                      :redirect_to_profile_if_required
 
+  skip_before_action :verify_authenticity_token, only: [:unsubscribe], if: :one_click_unsubscribe?
+
   def unsubscribe
     key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
     @found = key.present?
@@ -29,7 +31,22 @@ class EmailController < ApplicationController
     key = UnsubscribeKey.includes(:user).find_by(key: params[:key])
     raise Discourse::NotFound if key.nil? || key.user.nil?
     user = key.user
-    updated = UnsubscribeKey.get_unsubscribe_strategy_for(key)&.unsubscribe(params)
+
+    resolved_params = params.dup
+
+    if params["List-Unsubscribe"] == "One-Click"
+      # digests
+      resolved_params["digest_after_minutes"] = 0
+
+      # specific topics
+      resolved_params["unwatch_topic"] = true
+      resolved_params["unwatch_category"] = true
+
+      # everything else (mailing list mode etc...)
+      resolved_params["unsubscribe_all"] = true
+    end
+
+    updated = UnsubscribeKey.get_unsubscribe_strategy_for(key)&.unsubscribe(resolved_params)
 
     if updated
       cache_key = "unsub_#{SecureRandom.hex}"
@@ -53,5 +70,11 @@ class EmailController < ApplicationController
       topic = Topic.find_by(id: @topic_id)
       @topic = topic if topic && Guardian.new.can_see?(topic)
     end
+  end
+
+  private
+
+  def one_click_unsubscribe?
+    request.post? && params["List-Unsubscribe"] == "One-Click"
   end
 end

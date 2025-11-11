@@ -7,11 +7,11 @@ describe Chat::Statistics do
     frozen_time - time
   end
 
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
-  fab!(:user4) { Fabricate(:user) }
-  fab!(:user5) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
+  fab!(:user3, :user)
+  fab!(:user4, :user)
+  fab!(:user5, :user)
 
   fab!(:channel1) { Fabricate(:chat_channel, created_at: minus_time(1.hour)) }
   fab!(:channel2) { Fabricate(:chat_channel, created_at: minus_time(2.days)) }
@@ -139,9 +139,9 @@ describe Chat::Statistics do
       Fabricate(:chat_message, chat_channel: channel_1, created_at: now - 50.days)
     end
 
-    fab!(:dm_channel_1) { Fabricate(:direct_message_channel) }
-    fab!(:dm_channel_2) { Fabricate(:direct_message_channel) }
-    fab!(:dm_channel_3) { Fabricate(:direct_message_channel) }
+    fab!(:dm_channel_1, :direct_message_channel)
+    fab!(:dm_channel_2, :direct_message_channel)
+    fab!(:dm_channel_3, :direct_message_channel)
 
     # these DM channel messages should be ignored when counting:
     fab!(:dm_message1) do
@@ -309,9 +309,9 @@ describe Chat::Statistics do
       Fabricate(:chat_message, chat_channel: channel_2, created_at: now - 50.days)
     end
 
-    fab!(:dm_channel_1) { Fabricate(:direct_message_channel) }
-    fab!(:dm_channel_2) { Fabricate(:direct_message_channel) }
-    fab!(:dm_channel_3) { Fabricate(:direct_message_channel) }
+    fab!(:dm_channel_1, :direct_message_channel)
+    fab!(:dm_channel_2, :direct_message_channel)
+    fab!(:dm_channel_3, :direct_message_channel)
 
     # these DM channel messages should be ignored when counting:
     fab!(:dm_message1) do

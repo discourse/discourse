@@ -99,7 +99,7 @@ describe "glimmer topic list", type: :system do
   end
 
   describe "bulk topic selection" do
-    fab!(:user) { Fabricate(:moderator) }
+    fab!(:user, :moderator)
 
     it "shows the buttons and checkboxes" do
       topics = Fabricate.times(2, :topic)
@@ -139,5 +139,24 @@ describe "glimmer topic list", type: :system do
 
     wait_for { TopicUser.exists?(topic:, user:) }
     expect(TopicUser.find_by(topic:, user:).cleared_pinned_at).to_not be_nil
+  end
+
+  it "ensures visited topics have a different color" do
+    not_visited_topic = Fabricate(:topic)
+    Fabricate(:post, topic: not_visited_topic)
+
+    visited_topic = Fabricate(:topic)
+    Fabricate(:post, topic: visited_topic)
+
+    visit(visited_topic.url)
+
+    # Clicking the logo is "safer" than visiting /latest so the client-side
+    # app can update the visited status of the topic
+    find("#site-logo").click
+
+    visited_color = find(".topic-list .topic-list-item.visited a.title").style("color")
+    not_visited_color = find(".topic-list .topic-list-item:not(.visited) a.title").style("color")
+
+    expect(visited_color).to_not eq(not_visited_color)
   end
 end

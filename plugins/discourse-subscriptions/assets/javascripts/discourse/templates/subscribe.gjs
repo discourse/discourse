@@ -1,0 +1,15 @@
+import { i18n } from "discourse-i18n";
+
+export default <template>
+  <div class="container">
+    <div class="title-wrapper">
+      <h1>
+        {{i18n "discourse_subscriptions.subscribe.title"}}
+      </h1>
+    </div>
+
+    <hr />
+
+    {{outlet}}
+  </div>
+</template>

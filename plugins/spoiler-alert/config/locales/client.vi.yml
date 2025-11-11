@@ -6,7 +6,5 @@
 
 vi:
   js:
-    spoiler:
-      title: Làm Mờ Spoiler
     composer:
       spoiler_text: "Đoạn text này sẽ được làm mờ"

@@ -3,7 +3,7 @@ import NavigationBar from "discourse/components/navigation-bar";
 import GroupDropdown from "select-kit/components/group-dropdown";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
-const NavigationBar0 = <template>
+const NavigationBarMolecule = <template>
   <StyleguideExample @title="<NavigationBar>">
     <NavigationBar @navItems={{@dummy.navItems}} @filterMode="latest" />
   </StyleguideExample>
@@ -37,4 +37,4 @@ const NavigationBar0 = <template>
   </StyleguideExample>
 </template>;
 
-export default NavigationBar0;
+export default NavigationBarMolecule;

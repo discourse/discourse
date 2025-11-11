@@ -1,0 +1,21 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+el:
+  reports:
+    overall_sentiment:
+      yaxis: "Ημερομηνία"
+  discourse_ai:
+    spam_detection:
+      flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
+    ai_bot:
+      tool_summary:
+        search: "Αναζήτηση"
+        time: "Ώρα"
+        summarize: "Συνοψίστε"
+    ai_staff_action_logger:
+      updated: "ενημερώθηκε"
+      removed: "αφαιρέθηκε"

@@ -3,7 +3,7 @@ RSpec.describe ReviewableNoteSerializer do
   fab!(:admin)
   fab!(:moderator)
   fab!(:user)
-  fab!(:reviewable) { Fabricate(:reviewable_flagged_post) }
+  fab!(:reviewable, :reviewable_flagged_post)
   fab!(:note) do
     Fabricate(:reviewable_note, reviewable: reviewable, user: admin, content: "Test note content")
   end

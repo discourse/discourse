@@ -1,0 +1,917 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+nl:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            discourse_ai:
+              search: "Staat AI zoeken toe"
+              stream_completion: "Maakt streamen van voltooiingen van AI-persona's mogelijk"
+              update_personas: "Staat bijwerken van AI-persona's toe"
+      site_settings:
+        categories:
+          discourse_ai: "Discourse AI"
+      dashboard:
+        emotion:
+          title: "Emotie"
+          description: "De tabel bevat een telling van berichten die zijn geclassificeerd met een bepaalde emotie. Geclassificeerd met het model 'SamLowe/roberta-base-go_emotions'."
+        reports:
+          filters:
+            group_by:
+              label: "Groeperen op"
+            sort_by:
+              label: "Sorteren op"
+            tag:
+              label: "Tag"
+      logs:
+        staff_actions:
+          actions:
+            create_ai_llm_model: "LLM-model maken"
+            update_ai_llm_model: "LLM-model bijwerken"
+            delete_ai_llm_model: "LLM-model verwijderen"
+            create_ai_persona: "AI-persona maken"
+            update_ai_persona: "AI-persona bijwerken"
+            delete_ai_persona: "AI-persona verwijderen"
+            create_ai_tool: "AI-tool maken"
+            update_ai_tool: "AI-tool bijwerken"
+            delete_ai_tool: "AI-tool verwijderen"
+            create_ai_embedding: "AI-insluiting maken"
+            update_ai_embedding: "AI-insluiting bijwerken"
+            delete_ai_embedding: "AI-insluiting verwijderen"
+            update_ai_spam_settings: "AI-spaminstellingen bijwerken"
+  js:
+    discourse_automation:
+      scriptables:
+        llm_report:
+          fields:
+            sender:
+              label: "Afzender"
+              description: "De gebruiker die het rapport verzendt"
+            receivers:
+              label: "Ontvangers"
+              description: "De gebruikers die het rapport ontvangen (e-mails worden rechtstreeks verzonden, gebruikersnamen ontvangen een PB)"
+            topic_id:
+              label: "Topic-ID"
+              description: "De ID van het topic waarin het rapport moet worden geplaatst"
+            title:
+              label: "Titel"
+              description: "De titel van het rapport"
+            days:
+              label: "Dagen"
+              description: "Het tijdsbestek van het rapport"
+            offset:
+              label: "Offset"
+              description: "Bij het testen wil je het rapport wellicht historisch uitvoeren. Gebruik offset om het rapport op een eerdere datum te starten"
+            instructions:
+              label: "Instructies"
+              description: "De instructies voor het grote taalmodel"
+            sample_size:
+              label: "Monstergrootte"
+              description: "Het aantal berichten om te gebruiken voor het rapport"
+            tokens_per_post:
+              label: "Tokens per bericht"
+              description: "Het aantal LLM-tokens dat per bericht moet worden gebruikt"
+            model:
+              label: "Model"
+              description: "Te gebruiken LLM voor het genereren van het rapport"
+            categories:
+              label: "Categorieën"
+              description: "Filter topics alleen op deze categorieën"
+            tags:
+              label: "Tags"
+              description: "Filter topics alleen op deze tags"
+            exclude_tags:
+              label: "Tags uitsluiten"
+              description: "Sluit topics met deze tags uit"
+            exclude_categories:
+              label: "Categorieën uitsluiten"
+              description: "Sluit topics met deze categorieën uit"
+            allow_secure_categories:
+              label: "Beveiligde categorieën toestaan"
+              description: "Sta toe dat het rapport wordt gegenereerd voor topics in beveiligde categorieën"
+            suppress_notifications:
+              label: "Meldingen onderdrukken"
+              description: "Onderdruk meldingen die het rapport kan genereren door ze om te zetten in inhoud. Hierdoor worden vermeldingen en interne links opnieuw toegewezen."
+            debug_mode:
+              label: "Foutopsporingsmodus"
+              description: "Schakel de foutopsporingsmodus in om de onbewerkte in- en uitvoer van het LLM te bekijken"
+            priority_group:
+              label: "Prioriteitsgroep"
+              description: "Geef prioriteit aan content van deze groep in het rapport"
+            temperature:
+              label: "Temperatuur"
+              description: "Te gebruiken temperatuur voor de LLM. Verhoog deze om de willekeur te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken)"
+            top_p:
+              label: "Top P"
+              description: "Te gebruiken top P voor de LLM. Verhoog deze om de willekeur te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken)"
+            persona_id:
+              label: "Persona"
+              description: "Te gebruiken AI-persona voor rapportgeneratie"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Model"
+              description: "Het standaard taalmodel dat voor triage wordt gebruikt"
+            tool:
+              label: "Tool"
+              description: "Tool om te gebruiken voor triage (er mogen geen parameters zijn gedefinieerd voor de tool)"
+        llm_persona_triage:
+          fields:
+            persona:
+              label: "Persona"
+              description: "AI-persona om te gebruiken voor triage (moet standaard-LLM en gebruiker hebben ingesteld)"
+            whisper:
+              label: "Antwoorden als fluisterbericht"
+              description: "Of de respons van de persona een fluisterbericht moet zijn"
+            silent_mode:
+              label: "Stille modus"
+              description: "In de stille modus ontvangt de persona de content, maar plaatst niets op het forum. Dit is handig bij triage met behulp van tools."
+        llm_triage:
+          fields:
+            triage_persona:
+              label: "Persona"
+              description: "De prompt om te gebruiken voor triage. Zorg dat deze antwoordt met een enkel woord dat kan worden gebruikt om de actie te activeren"
+            max_post_tokens:
+              label: "Maximaal aantal plaatsingstokens"
+              description: "Het maximale aantal tokens om te scannen met LLM-triage"
+            stop_sequences:
+              label: "Stopsequenties"
+              description: "Instrueer het model om het genereren van tokens te stoppen als een van deze waarden wordt bereikt"
+            search_for_text:
+              label: "Tekst zoeken"
+              description: "Pas deze acties toe als de volgende tekst voorkomt in het LLM-antwoord"
+            category:
+              label: "Categorie"
+              description: "Toe te passen categorie op het topic"
+            tags:
+              label: "Tags"
+              description: "Toe te passen tags op het topic"
+            canned_reply:
+              label: "Antwoord"
+              description: "Ruwe tekst van standaardantwoord te plaatsen in het topic"
+            canned_reply_user:
+              label: "Antwoordgebruiker"
+              description: "Gebruikersnaam van de gebruiker die het standaardantwoord plaatst"
+            hide_topic:
+              label: "Topic verbergen"
+              description: "Maak het topic onzichtbaar voor het publiek als dit wordt geactiveerd"
+            flag_type:
+              label: "Markeringstype"
+              description: "Type markering om toe te passen op het bericht (spam of gewoon verhogen voor beoordeling)"
+            flag_post:
+              label: "Bericht markeren"
+              description: "Markeert berichten (als spam of ter beoordeling)"
+            include_personal_messages:
+              label: "Persoonlijke berichten opnemen"
+              description: "Scan en triageer ook persoonlijke berichten"
+            whisper:
+              label: "Antwoorden als fluisterbericht"
+              description: "Of de respons van de AI een fluisterbericht moet zijn"
+            reply_persona:
+              label: "Antwoordpersona"
+              description: "AI-persona om te gebruiken voor antwoorden (moet standaard-LLM hebben), krijgt voorrang boven standaardantwoorden"
+            max_output_tokens:
+              label: "Maximaal aantal uitvoertokens"
+              description: "Door dit op te geven wordt een bovenlimiet ingesteld voor het maximale aantal tokens dat het model kan genereren. Respecteert de maximumlimiet voor uitvoertokens van de LLM."
+    discourse_ai:
+      title: "AI"
+      default_llm:
+        title: "Standaard LLM-model"
+        description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of persona. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
+      features:
+        short_title: "Functies"
+        description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke persona's en LLM's en de toegang kan per groep worden beheerd."
+        back: "Terug"
+        disabled: "(uitgeschakeld)"
+        persona:
+          one: "Persona:"
+          other: "Persona's:"
+        groups: "Groepen:"
+        llm:
+          one: "LLM:"
+          other: "LLM's:"
+        no_llm: "Geen LLM geselecteerd"
+        no_persona: "Niet ingesteld"
+        no_groups: "Geen"
+        edit: "Bewerken"
+        expand_list:
+          one: "(Nog %{count})"
+          other: "(Nog %{count})"
+        collapse_list: "(minder weergeven)"
+        bot:
+          bot: "Chatbot"
+          name: "Bot"
+          description: "Een chatbot die vragen kan beantwoorden en gebruikers kan helpen in persoonlijke berichten, op het forum en in de chat"
+        nav:
+          configured: "Geconfigureerd"
+          unconfigured: "Niet geconfigureerd"
+        filters:
+          all: "Alles"
+          text: "Zoek naar functies, persona's, LLM's of groepen..."
+          no_results: "Geen functies gevonden die aan je filters voldoen."
+          reset: "Resetten"
+        no_automations: "Er zijn nog geen automatiseringen"
+        summarization:
+          name: "Samenvattingen"
+          description: "Maakt een samenvattingsknop beschikbaar waarmee bezoekers topics kunnen samenvatten"
+          topic_summaries: "Topicsamenvattingen"
+          gists: "Korte samenvattingen voor topiclijst"
+        search:
+          name: "Zoeken"
+          description: "Verbetert de zoekervaring door AI-gegenereerde antwoorden op vragen te bieden"
+          discoveries: "Ontdekkingen"
+        embeddings:
+          name: "Insluitingen"
+          description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
+          hyde: "HyDE"
+        discord:
+          name: "Discord-integratie"
+          description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"
+          search: "Discord-zoeken"
+        inference:
+          name: "Afgeleide concepten"
+          description: "Classificeert topics en berichten in interessegebieden / labels."
+          generate_concepts: "Conceptenafleiding"
+          match_concepts: "Conceptenmatching"
+          deduplicate_concepts: "Conceptendeduplicatie"
+        ai_helper:
+          name: "Helper"
+          description: "Helpt gebruikers bij de interactie met de community, zoals het maken van topics, het schrijven van berichten en het lezen van content"
+          proofread: Tekst proeflezen
+          title_suggestions: "Titels voorstellen"
+          explain: "Uitleggen"
+          illustrate_post: "Bericht illustreren"
+          smart_dates: "Slimme datums"
+          translate: "Vertalen"
+          markdown_tables: "Markdowntabel genereren"
+          custom_prompt: "Aangepaste prompt"
+          image_caption: "Afbeeldingen bijschriften geven"
+          translator: "Vertaler"
+        translation:
+          name: "Vertaling"
+          description: "Vertaalt content in ondersteunde talen"
+          locale_detector: "Taaldetector"
+          post_raw_translator: "Ruwe berichtvertaler"
+          topic_title_translator: "Topictitelvertaler"
+          short_text_translator: "Kortetekstvertaler"
+        spam:
+          name: "Spam"
+          description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
+          inspect_posts: "Berichten inspecteren"
+        automation_reports:
+          name: "Geautomatiseerde rapporten"
+          description: "Creëert automatisch beknopte overzichten van activiteit, waarbij trends, belangrijke topics en betrokkenheid worden uitgelicht"
+        automation_triage:
+          name: "Berichtentriage"
+          description: "Automatiseert moderatie en beheer van berichten door gebruik te maken van configureerbare automatiseringsregels"
+      modals:
+        select_option: "Selecteer een optie..."
+      layout:
+        table: "Tabel"
+        card: "Kaart"
+      translations:
+        title: "Vertalingen"
+        stats:
+          eta_minutes:
+            one: "%{count} minuut"
+            other: "%{count} minuten"
+          eta_hours:
+            one: "%{count} uur"
+            other: "%{count} uur"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dagen"
+        progress_chart:
+          bar_done:
+            one: "%{count} bericht"
+            other: "%{count} berichten"
+      spam:
+        short_title: "Spam"
+        title: "Spamafhandeling configureren"
+        select_llm: "Selecteer LLM"
+        select_persona: "Selecteer persona"
+        custom_instructions: "Aangepaste instructies"
+        custom_instructions_help: "Aangepaste instructies specifiek voor jouw site om de AI te helpen bij het identificeren van spam, bijvoorbeeld 'Wees agressiever bij het scannen van berichten die niet in het Engels zijn'."
+        last_seven_days: "Afgelopen 7 dagen"
+        scanned_count: "Gescande berichten"
+        false_positives: "Onjuist gemarkeerd"
+        false_negatives: "Gemiste spam"
+        spam_detected: "Gedetecteerde spam"
+        custom_instructions_placeholder: "Sitespecifieke instructies voor de AI om spam nauwkeuriger te identificeren"
+        enable: "Inschakelen"
+        spam_tip: "AI-spamdetectie scant de eerste 3 berichten van alle nieuwe gebruikers bij openbare topics. De AI markeert ze voor beoordeling en blokkeert gebruikers als ze waarschijnlijk spam zijn."
+        settings_saved: "Instellingen opgeslagen"
+        spam_description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
+        no_llms: "Geen LLM's beschikbaar"
+        test_button: "Testen..."
+        save_button: "Wijzigingen opslaan"
+        test_modal:
+          title: "Spamdetectie testen"
+          post_url_label: "Bericht-URL of -ID"
+          post_url_placeholder: "https://jouw-forum.com/t/topic/123/4 of bericht-ID"
+          result: "Resultaat"
+          scan_log: "Scanlog"
+          run: "Test uitvoeren"
+          spam: "Spam"
+          not_spam: "Geen spam"
+        stat_tooltips:
+          incorrectly_flagged: "Items die de AI-bot als spam heeft gemarkeerd en waar de moderators het niet mee eens waren"
+          missed_spam: "Door de community als spam gemarkeerde items die niet door de AI-bot zijn gedetecteerd en waar de moderators het mee eens waren"
+        errors:
+          scan_not_admin:
+            message: "Waarschuwing: het scannen van spam werkt niet goed omdat het account voor het scannen van spam geen beheerder is."
+            action: "Oplossen"
+          resolved: "De fout is opgelost!"
+      usage:
+        short_title: "Gebruik"
+        summary: "Samenvatting"
+        total_tokens: "Totaal aantal tokens"
+        tokens_over_time: "Tokens in de loop van de tijd"
+        features_breakdown: "Gebruik per functie"
+        feature: "Functie"
+        usage_count: "Gebruiksaantal"
+        model: "Model"
+        models_breakdown: "Gebruik per model"
+        users_breakdown: "Gebruik per gebruiker"
+        all_features: "Alle functies"
+        all_models: "Alle modellen"
+        username: "Gebruikersnaam"
+        total_requests: "Totaal aantal verzoeken"
+        request_tokens: "Verzoektokens"
+        response_tokens: "Antwoordtokens"
+        net_request_tokens: "Netto verzoektokens"
+        cached_tokens: "Gecachete tokens"
+        cached_request_tokens: "Gecachete verzoektokens"
+        total_spending: "Geschatte kosten"
+        no_users: "Geen gebruikergebruiksgegevens gevonden"
+        no_models: "Geen modelgebruiksgegevens gevonden"
+        no_features: "Geen functiegebruiksgegevens gevonden"
+        subheader_description: "Tokens zijn de basiseenheden die LLM's gebruiken om tekst te begrijpen en te genereren. Gebruiksgegevens kunnen de kosten beïnvloeden"
+        stat_tooltips:
+          total_requests: "Alle verzoeken aan LLM's via Discourse"
+          total_tokens: "Alle tokens die zijn gebruikt bij het prompten van een LLM"
+          request_tokens: "Tokens die zijn gebruikt wanneer de LLM probeert te begrijpen wat je zegt"
+          response_tokens: "Tokens die zijn gebruikt wanneer de LLM antwoordt op je prompt"
+          cached_tokens: "Eerder verwerkte verzoektokens die de LLM hergebruikt om prestaties en kosten te optimaliseren"
+          total_spending: "Cumulatieve kosten van alle tokens die door de LLM's worden gebruikt, gebaseerd op de gespecificeerde kostenmetrieken die zijn toegevoegd aan de LLM-configuratie-instellingen"
+        periods:
+          last_day: "Afgelopen 24 uur"
+          last_week: "Vorige week"
+          last_month: "Vorige maand"
+          custom: "Aangepast..."
+      ai_persona:
+        ai_tools: "Tools"
+        tool_strategies:
+          all: "Toepassen op alle antwoorden"
+          replies:
+            one: "Alleen toepassen op eerste antwoord"
+            other: "Alleen toepassen op eerste %{count} antwoorden"
+        back: "Terug"
+        name: "Naam"
+        edit: "Bewerken"
+        export: "Exporteren"
+        import: "Importeren"
+        import_error_conflict: "Conflict gedetecteerd bij het importeren van %{name}. Wil je de bestaande persona bijwerken?"
+        overwrite: "Overschrijven"
+        description: "Beschrijving"
+        no_llm_selected: "Geen taalmodel geselecteerd"
+        use_parent_llm: "Taalmodel van persona gebruiken"
+        max_context_posts: "Maximaal aantal contextberichten"
+        max_context_posts_help: "Het maximale aantal berichten dat als context voor de AI kan worden gebruikt bij het reageren op een gebruiker. (Leeg voor standaardinstelling)"
+        vision_enabled: Zicht ingeschakeld
+        vision_enabled_help: Indien ingeschakeld, zal de AI proberen afbeeldingen te begrijpen die gebruikers in het topic plaatsen, afhankelijk van het gebruikte model ter ondersteuning van zicht. Ondersteund door de nieuwste modellen van Anthropic, Google en OpenAI.
+        vision_max_pixels: Ondersteunde afbeeldingsgrootte
+        vision_max_pixel_sizes:
+          low: Lage kwaliteit - goedkoopst (256x256)
+          medium: Middelmatige kwaliteit (512x512)
+          high: Hoge kwaliteit - langzaamst (1024x1024)
+        tool_details: Tooldetails weergeven
+        tool_details_help: Toont eindgebruikers informatie over welke tools het taalmodel heeft geactiveerd.
+        mentionable: Vermeldingen toestaan
+        mentionable_help: Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze gebruiker vermelden in berichten. De AI reageert als deze persona.
+        user: Gebruiker
+        create_user: Gebruiker maken
+        create_user_help: Je kunt optioneel een gebruiker aan deze persona koppelen. Als je dat doet, gebruikt de AI deze gebruiker om op verzoeken te antwoorden.
+        default_llm: Standaard taalmodel
+        default_llm_help: Het standaard taalmodel dat voor deze persona moet worden gebruikt. Vereist als je de persona wilt vermelden in openbare berichten.
+        question_consolidator_llm: Taalmodel voor Vragenconsolidator
+        question_consolidator_llm_help: Het te gebruiken taalmodel voor de vragenconsolidator. Je kunt een minder krachtig model kiezen om kosten te besparen.
+        system_prompt: Systeemprompt
+        forced_tool_strategy: Gedwongen toolstrategie
+        allow_chat_direct_messages: "Directe chatberichten toestaan"
+        allow_chat_direct_messages_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen directe berichten naar deze persona sturen."
+        allow_chat_channel_mentions: "Vermelding in chatkanalen toestaan"
+        allow_chat_channel_mentions_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze persona vermelden in chatkanalen."
+        allow_personal_messages: "Persoonlijke berichten toestaan"
+        allow_personal_messages_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen persoonlijke berichten naar deze persona sturen."
+        allow_topic_mentions: "Vermelding in topics toestaan"
+        allow_topic_mentions_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze persona vermelden in topics."
+        force_default_llm: "Altijd standaard taalmodel gebruiken"
+        save: "Opslaan"
+        saved: "Persona opgeslagen"
+        enabled: "Ingeschakeld?"
+        tools: "Ingeschakelde tools"
+        forced_tools: "Geforceerde tools"
+        allowed_groups: "Toegestane groepen"
+        confirm_delete: "Weet je zeker dat je deze persona wilt verwijderen?"
+        new: "Nieuwe persona"
+        no_personas: "Je hebt nog geen persona's gemaakt"
+        title: "Persona's"
+        short_title: "Persona's"
+        delete: "Verwijderen"
+        temperature: "Temperatuur"
+        temperature_help: "Te gebruiken temperatuur voor de LLM. Verhoog deze om de creativiteit te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken, doorgaans een waarde van 0,0 tot 2,0)"
+        top_p: "Top P"
+        top_p_help: "Te gebruiken Top P voor de LLM. Verhoog deze om de willekeurigheid te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken, doorgaans een waarde van 0,0 tot 1,0)"
+        priority: "Prioriteit"
+        priority_help: "Prioritaire persona's worden bovenaan de personalijst weergegeven voor gebruikers. Als meerdere persona's prioriteit hebben, worden deze alfabetisch gesorteerd."
+        tool_options: "Toolopties"
+        rag_conversation_chunks: "Conversatiechunks zoeken"
+        rag_conversation_chunks_help: "Het te gebruiken aantal chunks voor zoeken door het RAG-model. Verhoog dit om de hoeveelheid context te vergroten die de AI kan gebruiken."
+        persona_description: "Persona's zijn een krachtige functie waarmee je het gedrag van de AI-engine kunt aanpassen in je Discourse-forum. Ze fungeren als een 'systeembericht' dat de reacties en interacties van de AI stuurt, waardoor je een persoonlijkere en boeiendere gebruikerservaring creëert."
+        response_format:
+          title: "JSON-responsindeling"
+          no_format: "Geen JSON-indeling opgegeven"
+          open_modal: "Bewerken"
+          modal:
+            root_title: "Responsstructuur"
+            key_title: "Sleutel"
+        examples:
+          title: Voorbeelden
+          examples_help: Simuleer eerdere interacties met de LLM en pas deze toe om betere resultaten te krijgen.
+          new: Nieuw voorbeeld
+          remove: Voorbeeld verwijderen
+          collapsable_title: "Voorbeeld %{number}"
+          user: "Gebruikersbericht"
+          model: "Modelrespons"
+        list:
+          enabled: "AI-bot?"
+        ai_bot:
+          title: "AI-botopties"
+          save_first: "Nadat je de persona hebt opgeslagen, zijn er meer AI-botopties beschikbaar."
+        filters:
+          text: "Zoek een persona"
+          reset: "Resetten"
+          no_results: "Geen persona's gevonden die aan je filters voldoen."
+          all_features: "Elke functie"
+        features_list:
+          one: "Functie:"
+          other: "Functies:"
+        llms_list: "LLM:"
+      rag:
+        title: "RAG"
+        options:
+          rag_chunk_tokens: "Uploadchunktokens"
+          rag_chunk_tokens_help: "Het te gebruiken aantal tokens voor elke chunk in het RAG-model. Verhoog dit om de hoeveelheid context die de AI kan gebruiken te vergroten. (Als je dit wijzigt, worden alle uploads opnieuw geïndexeerd)"
+          rag_chunk_overlap_tokens: "Uploadchunkoverlaptokens"
+          rag_chunk_overlap_tokens_help: "Het te overlappen aantal tokens tussen chunks in het RAG-model. (Als je dit wijzigt, worden alle uploads opnieuw geïndexeerd)"
+          rag_llm_model: "Taalmodel voor indexering"
+          rag_llm_model_help: "Het taalmodel dat wordt gebruikt voor OCR tijdens het indexeren van pdf's en afbeeldingen"
+          show_indexing_options: "Uploadopties weergeven"
+          hide_indexing_options: "Uploadopties verbergen"
+        uploads:
+          title: "Uploads"
+          description: "Pdf (.pdf), platte tekst (.txt) of markdown (.md)"
+          description_with_images: "Platte tekst (.txt), markdown (.md), pdf (.pdf) of afbeelding (.png, .jpeg)"
+          button: "Bestanden toevoegen"
+          filter: "Uploads filteren"
+          indexed: "Geïndexeerd"
+          indexing: "Indexeren"
+          uploaded: "Klaar om te indexeren"
+          uploading: "Uploaden..."
+          remove: "Upload verwijderen"
+      tools:
+        back: "Terug"
+        short_title: "Tools"
+        export: "Exporteren"
+        import: "Importeren"
+        import_error_conflict: "Tool bestaat al. Wil je deze updaten?"
+        overwrite: "Overschrijven"
+        no_tools: "Je hebt nog geen tools gemaakt"
+        name: "Naam"
+        name_help: "De naam wordt weergegeven in de Discourse-gebruikersinterface en is de korte identificatie die je gebruikt om de tool te vinden in verschillende instellingen. Deze moet uniek zijn."
+        new: "Nieuwe tool"
+        tool_name: "Toolnaam"
+        tool_name_help: "De toolnaam wordt gepresenteerd aan het grote taalmodel. Deze is niet uniek, maar wel uniek per persona. (Persona valideert bij opslaan)"
+        description: "Beschrijving"
+        description_help: "Een duidelijke beschrijving van het doel van de tool voor het taalmodel"
+        subheader_description: "Tools breiden de mogelijkheden van AI-bots uit met door de gebruiker gedefinieerde JavaScript-functies."
+        summary: "Samenvatting"
+        summary_help: "Samenvatting van de tools die voor eindgebruikers moeten worden weergegeven"
+        script: "Script"
+        parameters: "Parameters"
+        save: "Opslaan"
+        parameter_type: "Parametertype"
+        add_parameter: "Parameter toevoegen"
+        remove_parameter: "Verwijderen"
+        parameter_required: "Vereist"
+        parameter_enum: "Enum"
+        parameter_name: "Parameternaam"
+        parameter_description: "Parameterbeschrijving"
+        enum_value: "Enumwaarde"
+        add_enum_value: "Enumwaarde toevoegen"
+        edit: "Bewerken"
+        test: "Test uitvoeren"
+        delete: "Verwijderen"
+        saved: "Tool opgeslagen"
+        confirm_delete: "Weet je zeker dat je deze tool wilt verwijderen?"
+        test_modal:
+          title: "AI-tool testen"
+          run: "Test uitvoeren"
+          result: "Testresultaat"
+      llms:
+        short_title: "LLM's"
+        no_llms: "Nog geen LLM's"
+        new: "Nieuw model"
+        display_name: "Naam"
+        name: "Model-ID"
+        provider: "Provider"
+        tokenizer: "Tokenizer"
+        max_prompt_tokens: "Contextvenster"
+        max_output_tokens: "Maximaal aantal uitvoertokens"
+        url: "URL van de service die het model host"
+        api_key: "API-sleutel van de service die het model host"
+        enabled_chat_bot: "AI-botkiezer toestaan"
+        vision_enabled: "Zicht ingeschakeld"
+        ai_bot_user: "AI-botgebruiker"
+        cost_input: "Invoerkosten"
+        cost_cached_input: "Kosten gecachte invoer"
+        cost_output: "Uitvoerkosten"
+        save: "Opslaan"
+        edit: "Bewerken"
+        saved: "LLM-model opgeslagen"
+        back: "Terug"
+        confirm_delete: Weet je zeker dat je dit model wilt verwijderen?
+        delete: Verwijderen
+        seeded_warning: "Dit model is vooraf geconfigureerd op je site en kan niet worden bewerkt."
+        quotas:
+          title: "Gebruiksquota's"
+          add_title: "Nieuw quotum maken"
+          group: "Groep"
+          max_tokens: "Maximaal aantal tokens"
+          max_usages: "Max. gebruiken"
+          duration: "Duur"
+          confirm_delete: "Weet je zeker dat je dit quotum wilt verwijderen?"
+          add: "Quotum toevoegen"
+          durations:
+            hour: "1 uur"
+            six_hours: "6 uur"
+            day: "24 uur"
+            week: "7 dagen"
+            custom: "Aangepast..."
+          hours: "uur"
+          max_tokens_help: "Maximum aantal tokens (woorden en tekens) dat elke gebruiker in deze groep kan gebruiken binnen de opgegeven tijdsduur. Tokens zijn de eenheden die door AI-modellen worden gebruikt om tekst te verwerken. Ruwweg 1 token = 4 tekens of 3/4 van een woord."
+          max_tokens_required: "Moet worden ingesteld als het maximale aantal gebruiken niet is ingesteld"
+          max_usages_help: "Maximum aantal keren dat elke gebruiker in deze groep het AI-model kan gebruiken binnen de opgegeven tijdsduur. Dit quotum wordt bijgehouden per individuele gebruiker, niet gedeeld door de groep."
+          max_usages_required: "Moet worden ingesteld als het maximale aantal tokens niet is ingesteld"
+        usage:
+          ai_bot: "AI-bot"
+          ai_helper: "Helper (%{persona})"
+          ai_helper_image_caption: "Afbeeldingsbijschrift"
+          ai_persona: "Persona (%{persona})"
+          ai_summarization: "Samenvatten"
+          ai_embeddings_semantic_search: "AI zoeken"
+          ai_spam: "Spam"
+          automation: "Automatisering (%{persona})"
+        in_use_warning:
+          one: "Dit model wordt momenteel gebruikt door %{settings}. Als het onjuist is geconfigureerd, werkt de functie niet zoals verwacht."
+          other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
+        model_description:
+          none: "Algemene instellingen die werken voor de meeste taalmodellen"
+          anthropic-claude-opus-4-1: "Het intelligentste model van Antropic"
+          anthropic-claude-sonnet-4-0: "Optimale balans tussen snelheid en kosten"
+          anthropic-claude-3-7-sonnet-latest: "Optimale balans tussen snelheid en kosten (vorige generatie)"
+          anthropic-claude-3-5-haiku-latest: "Snel en kosteneffectief"
+          google-gemini-2-5-pro: "Groot multimodaal model dat een groot aantal taken kan uitvoeren"
+          google-gemini-2-0-flash: "Lichtgewicht, snel en kostenefficiënt met multimodale redenering (vorige generatie)"
+          google-gemini-2-5-flash: "Lichtgewicht, snel en kostenefficiënt met multimodale redenering"
+          google-gemini-2-0-flash-lite: "Kostenefficiënt model met lage latentie"
+          open_ai-o4-mini: "Geavanceerd kostenefficiënt redeneringsmodel"
+          open_ai-gpt-5-mini: "Biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijk model is voor veel gebruikssituaties."
+          open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model."
+          samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficiënt lichtgewicht meertalig model"
+          samba_nova-Meta-Llama-3-3-70B-Instruct": "Krachtig multifunctioneel model"
+          mistral-mistral-large-latest: "Het krachtigste model van Mistral"
+          mistral-pixtral-large-latest: "Het krachtigste model met zichtcapaciteit van Mistral"
+          open_router-x-ai-grok-3-beta: "Het nieuwste model van xAI"
+          open_router-deepseek-deepseek-r1-0528-free: "Het nieuwste redeneringsmodel van DeepSeek"
+          open_router-meta-llama-3-3-70b-instruct: "Zeer capabel meertalig model"
+        preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
+        configured:
+          title: "Geconfigureerde LLM's"
+        preconfigured_llms: "Selecteer je LLM"
+        preconfigured:
+          title_no_llms: "Selecteer een sjabloon om te beginnen"
+          title: "Niet-geconfigureerde LLM-sjablonen"
+          description: "LLM's (Large Language Models) zijn AI-tools die zijn geoptimaliseerd voor taken als het samenvatten van inhoud, het genereren van rapporten, het automatiseren van klantinteracties en het faciliteren van forummoderatie en inzichten"
+          fake: "Handmatige configuratie"
+          button: "Instellen"
+        next:
+          title: "Volgende"
+        tests:
+          title: "Test uitvoeren"
+          running: "Test uitvoeren..."
+          success: "Succes!"
+          failure: "Een poging om verbinding te maken met het model resulteerde in deze fout: %{error}"
+        hints:
+          max_prompt_tokens: "Het maximale aantal tokens dat het model in één verzoek kan verwerken"
+          max_output_tokens: "Het maximale aantal tokens dat het model in één verzoek kan genereren"
+          display_name: "De naam die wordt gebruikt om naar dit model te verwijzen in de interface van je site."
+          name: "We nemen dit op in de API-aanroep om aan te geven welk model we gebruiken"
+          vision_enabled: "Indien ingeschakeld, zal de AI proberen afbeeldingen te begrijpen. Dit is afhankelijk van het gebruikte model ter ondersteuning van zicht. Ondersteund door de nieuwste modellen van Anthropic, Google en OpenAI."
+          enabled_chat_bot: "Indien ingeschakeld, kunnen gebruikers dit model selecteren bij het maken van PB's met de AI-bot."
+          cost_input: "De invoerkosten per 1 miljoen tokens voor dit model"
+          cost_cached_input: "De kosten voor gecachte invoer per 1 miljoen tokens voor dit model"
+          cost_output: "De uitvoerkosten per 1 miljoen tokens voor dit model"
+          cost_measure: "$/miljoen tokens"
+        providers:
+          aws_bedrock: "AWS Bedrock"
+          anthropic: "Anthropic"
+          vllm: "vLLM"
+          hugging_face: "Hugging Face"
+          cohere: "Cohere"
+          open_ai: "OpenAI"
+          google: "Google"
+          azure: "Azure"
+          ollama: "Ollama"
+          CDCK: "CDCK"
+          samba_nova: "SambaNova"
+          mistral: "Mistral"
+          open_router: "OpenRouter"
+          fake: "Aangepast"
+        provider_fields:
+          access_key_id: "Toegangssleutel-ID AWS Bedrock"
+          region: "Regio AWS Bedrock"
+          organization: "Optionele organisatie-ID OpenAI"
+          disable_system_prompt: "Systeembericht uitschakelen in prompts"
+          enable_native_tool: "Ondersteuning voor native tools inschakelen"
+          disable_native_tools: "Ondersteuning voor native tool uitschakelen (gebruik tools op XML-basis)"
+          provider_order: "Volgorde van providers (door komma's gescheiden lijst)"
+          provider_quantizations: "Volgorde van providerkwantificeringen (door komma's gescheiden lijst, bijvoorbeeld: fp16, fp8)"
+          disable_streaming: "Streamingvoltooiingen uitschakelen (streaming- naar niet-streaming-verzoeken converteren)"
+          reasoning_effort: "Redeneringsinspanning (alleen van toepassing op redeneringsmodellen)"
+          enable_reasoning: "Redeneren inschakelen (alleen van toepassing op redeneringsmodellen)"
+          enable_thinking: "Denken inschakelen (alleen op toepasselijke modellen, bijvoorbeeld: flash 2.5)"
+          thinking_tokens: "Aantal tokens dat wordt gebruikt voor denken"
+          reasoning_tokens: "Aantal tokens dat wordt gebruikt voor redeneren"
+          disable_temperature: "Temperatuur uitschakelen (sommige denkmodellen ondersteunen geen temperatuur)"
+          disable_top_p: "Top P uitschakelen (sommige denkmodellen ondersteunen geen top P)"
+          enable_responses_api: "Respons-API inschakelen (vereist voor bepaalde OpenAI-modellen)"
+      related_topics:
+        title: "Gerelateerde topics"
+        pill: "Gerelateerd"
+      ai_helper:
+        title: "Stel wijzigingen voor met behulp van AI"
+        description: "Kies een van de onderstaande opties, dan zal de AI je een nieuwe versie van de tekst voorstellen."
+        selection_hint: "Tip: je kunt ook een deel van de tekst selecteren voordat je de hulp opent om alleen dat deel te herschrijven."
+        suggest: "Voorstellen met AI"
+        suggest_errors:
+          too_many_tags:
+            one: "Je kunt maximaal %{count} tag hebben"
+            other: "Je kunt maximaal %{count} tags hebben"
+          no_suggestions: "Geen suggesties beschikbaar"
+        missing_content: "Voer wat inhoud in om suggesties te genereren."
+        context_menu:
+          trigger: "AI vragen"
+          loading: "AI is aan het genereren"
+          cancel: "Annuleren"
+          regen: "Opnieuw proberen"
+          confirm: "Bevestigen"
+          discard: "Weggooien"
+          changes: "Voorgestelde bewerkingen"
+          custom_prompt:
+            title: "Aangepaste prompt"
+            placeholder: "Voer een aangepaste prompt in..."
+            submit: "Prompt verzenden"
+          translate_prompt: "Vertalen naar %{language}"
+        post_options_menu:
+          trigger: "AI vragen"
+          title: "AI vragen"
+          loading: "AI is aan het genereren"
+          close: "Sluiten"
+          copy: "Kopiëren"
+          copied: "Gekopieerd!"
+          cancel: "Annuleren"
+          insert_footnote: "Voetnoot toevoegen"
+          footnote_disabled: "Automatisch invoegen uitgeschakeld, klik op de knop Kopiëren en bewerk het handmatig"
+          footnote_credits: "Uitleg door AI"
+        fast_edit:
+          suggest_button: "Bewerking voorstellen"
+        thumbnail_suggestions:
+          title: "Voorgestelde miniaturen"
+          select: "Selecteren"
+          selected: "Geselecteerd"
+        image_caption:
+          button_label: "Bijschrift met AI"
+          generating: "Bijschrift genereren..."
+          credits: "Bijschrift door AI"
+          save_caption: "Opslaan"
+        no_content_error: "Voeg eerst inhoud toe om er AI-acties op uit te voeren"
+      reviewables:
+        model_used: "Gebruikt model:"
+        accuracy: "Nauwkeurigheid:"
+      embeddings:
+        short_title: "Insluitingen"
+        description: "Insluitingen zijn numerieke representaties van gegevens die betekenis en relaties vastleggen, waardoor AI-functies van Discourse zoals Gerelateerde onderwerpen en AI-zoeken content kunnen begrijpen en verbinden."
+        new: "Nieuwe insluiting"
+        back: "Terug"
+        save: "Opslaan"
+        saved: "Insluitingsconfiguratie opgeslagen"
+        delete: "Verwijderen"
+        confirm_delete: Weet je zeker dat je deze insluitingsconfiguratie wilt verwijderen?
+        empty: "Je hebt nog geen insluitingen ingesteld"
+        presets: "Selecteer een preset..."
+        configure_manually: "Handmatig configureren"
+        edit: "Bewerken"
+        seeded_warning: "Dit is vooraf geconfigureerd op je site en kan niet worden bewerkt."
+        tests:
+          title: "Test uitvoeren"
+          running: "Test uitvoeren..."
+          success: "Succes!"
+          failure: "Pogingen om een insluitingen te genereren resulteerden in: %{error}"
+        hints:
+          dimensions_warning: "Eenmaal opgeslagen kan deze waarde niet meer worden gewijzigd."
+          matryoshka_dimensions: "Bepaalt de grootte van geneste insluitingen die worden gebruikt voor hiërarchische of meerlaagse weergave van gegevens, vergelijkbaar met hoe geneste poppetjes in elkaar passen."
+          embed_prompt: "Taakinstructievoorvoegsel bij het genereren van insluitingen van forumcontent. ALLEEN voor insluitingsmodellen die prefixen vereisen, zoals nomic-embed of stella. Niet nodig voor de meeste modellen."
+          search_prompt: "Taakinstructievoorvoegsel bij het genereren van insluitingen van zoekopdrachten. ALLEEN voor insluitingsmodellen die prefixen vereisen, zoals nomic-embed of stella. Niet nodig voor de meeste modellen."
+          sequence_length: "Het maximale aantal tokens dat in één keer kan worden verwerkt bij het maken van insluitingen of het verwerken van een query."
+          distance_function: "Bepaalt hoe de mate van overeenkomst tussen insluitingen wordt berekend, met behulp van cosinusafstand (meting van de hoek tussen vectoren) of negatief binnenproduct (meting van de overlap van vectorwaarden)."
+        display_name: "Naam"
+        provider: "Provider"
+        url: "URL insluitingsservice"
+        api_key: "API-sleutel insluitingsservice"
+        tokenizer: "Tokenizer"
+        dimensions: "Insluitingsafmetingen"
+        max_sequence_length: "Sequentielengte"
+        embed_prompt: "Insluitingsprompt"
+        search_prompt: "Zoekprompt"
+        matryoshka_dimensions: "Matroesjka-afmetingen"
+        distance_function: "Afstandsfunctie"
+        distance_functions:
+          "<#>": "Negatief binnenproduct"
+          <=>: "Cosinusafstand"
+        providers:
+          hugging_face: "Hugging Face"
+          open_ai: "OpenAI"
+          google: "Google"
+          cloudflare: "Cloudflare"
+          CDCK: "CDCK"
+          fake: "Aangepast"
+        provider_fields:
+          model_name: "Modelnaam"
+        semantic_search: "Topics (semantisch)"
+        semantic_search_loading: "Zoeken naar meer resultaten met behulp van AI"
+        semantic_search_results:
+          toggle: "%{count} resultaten gevonden met AI worden weergegeven"
+          toggle_hidden: "%{count} resultaten gevonden met AI zijn verborgen"
+          none: "Sorry, AI zoeken heeft geen overeenkomende topics gevonden"
+          new: "Druk op 'Zoeken' om nieuwe resultaten te zoeken met AI"
+          unavailable: "AI-resultaten niet beschikbaar"
+        semantic_search_tooltips:
+          results_explanation: "Als dit is ingeschakeld, worden hieronder extra AI-zoekresultaten toegevoegd."
+          invalid_sort: "Zoekresultaten moeten worden gesorteerd op Relevantie om AI-resultaten weer te geven"
+        semantic_search_unavailable_tooltip: "Zoekresultaten moeten worden gesorteerd op Relevantie om AI-resultaten weer te geven"
+        ai_generated_result: "Zoekresultaat gevonden met AI"
+        quick_search:
+          suffix: "in alle topics en berichten met AI"
+      ai_artifact:
+        expand_view_label: "Weergave uitvouwen"
+        collapse_view_label: "Volledig scherm verlaten (ESC of knop Terug)"
+        click_to_run_label: "Artefact uitvoeren"
+      ai_bot:
+        persona: "Persona"
+        llm: "Model"
+        pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
+        cancel_streaming: "Stoppen met antwoorden"
+        default_pm_prefix: "[Ongetitelde PB van AI-bot]"
+        shortcut_title: "Start een PB met een AI-bot"
+        shortcut_link: "AI-bot"
+        exit: "AI-bot afsluiten"
+        share: "AI-conversatie kopiëren"
+        conversation_shared: "Conversatie gekopieerd"
+        embed_copied: "Insluiting gekopieerd naar klembord"
+        debug_ai: "Ruw AI-verzoek en -antwoord weergeven"
+        sidebar_empty: "Hier wordt de botconversatiegeschiedenis weergegeven."
+        debug_ai_modal:
+          title: "AI-interactie weergeven"
+          copy_request: "Verzoek kopiëren"
+          copy_response: "Antwoord kopiëren"
+          request_tokens: "Verzoektokens:"
+          response_tokens: "Antwoordtokens:"
+          request: "Verzoek"
+          response: "Antwoord"
+          next_log: "Volgende"
+          previous_log: "Vorige"
+        share_full_topic_modal:
+          title: "Conversatie openbaar delen"
+          share: "Link delen en kopiëren"
+          update: "Link bijwerken en kopiëren"
+          delete: "Deling verwijderen"
+        share_ai_conversation:
+          name: "AI-conversatie delen"
+          title: "Deel deze AI-conversatie openbaar"
+        invite_ai_conversation:
+          button: "Uitnodigen"
+          title: "Uitnodiging voor AI-conversatie"
+        ai_label: "AI"
+        ai_title: "Conversatie met AI"
+        share_modal:
+          title: "AI-conversatie kopiëren"
+          copy: "Kopiëren"
+          context: "Te delen interacties:"
+          share_tip: "Je kunt ook de hele conversatie delen"
+        bot_names:
+          fake: "Neppe testbot"
+          claude-3-opus: "Claude 3 Opus"
+          claude-3-sonnet: "Claude 3 Sonnet"
+          claude-3-haiku: "Claude 3 Haiku"
+          cohere-command-r-plus: "Cohere Command R Plus"
+          gpt-4: "GPT-4"
+          gpt-4-turbo: "GPT-4 Turbo"
+          gpt-4o: "GPT-4 Omni"
+          gpt-3:
+            5-turbo: "GPT-3.5"
+          claude-2: "Claude 2"
+          gemini-1:
+            5-pro: "Gemini"
+          mixtral-8x7B-Instruct-V0:
+            "1": "Mixtral-8x7B V0.1"
+        conversations:
+          header: "Waarmee kan ik helpen?"
+          submit: "Vraag verzenden"
+          disclaimer: "Generatieve AI kan fouten maken. Verifieer belangrijke informatie."
+          placeholder: "Stel een vraag..."
+          new: "Nieuwe vraag"
+          min_input_length_message:
+            one: "Bericht moet %{count} teken of langer zijn"
+            other: "Bericht moet %{count} tekens of langer zijn"
+          messages_sidebar_title: "Conversaties"
+          today: "Vandaag"
+          last_7_days: "Afgelopen 7 dagen"
+          last_30_days: "Afgelopen 30 dagen"
+          upload_files: "Bestanden uploaden"
+          uploads_in_progress: "Kan niet verzenden terwijl het uploaden bezig is"
+      sentiments:
+        dashboard:
+          title: "Sentiment"
+        sidebar:
+          overview: "Sentimentoverzicht"
+          analysis: "Sentimentanalyse"
+        sentiment_analysis:
+          share_chart: "Link naar grafiek kopiëren"
+          filter_types:
+            all: "Alles"
+            positive: "Positief"
+            neutral: "Neutraal"
+            negative: "Negatief"
+          group_types:
+            category: "Categorie"
+            tag: "Tag"
+          table:
+            sentiment: "Sentiment"
+            total_count: "Totaal"
+      summarization:
+        chat:
+          title: "Berichten samenvatten"
+          description: "Selecteer hieronder een optie om het gesprek samen te vatten dat tijdens de gewenste periode is gevoerd."
+          summarize: "Samenvatten"
+          since:
+            one: "Afgelopen uur"
+            other: "Afgelopen %{count} uur"
+        topic:
+          title: "Topicsamenvatting"
+          close: "Samenvattingspaneel sluiten"
+        topic_list_layout:
+          button:
+            compact: "Compact"
+            expanded: "Uitgebreid"
+            expanded_description: "met AI-samenvattingen"
+      discobot_discoveries:
+        main_title: "Discobot-ontdekkingen"
+        regular_results: "Topics"
+        tell_me_more: "Vertel me meer..."
+        continue_convo: "Conversatie voortzetten..."
+        loading_convo: "Conversatie laden"
+        collapse: "Samenvouwen"
+        timed_out: "Discobot kon geen ontdekkingen vinden. Er is iets misgegaan."
+        user_setting: "Zoekontdekkingen inschakelen"
+        tooltip:
+          header: "AI-gestuurd zoeken"
+          content: "Zoeken in natuurlijke taal, aangestuurd door %{model}"
+          actions:
+            info: "Hoe werkt het?"
+            disable: "Uitschakelen"
+      user_preferences:
+        empty: "Er zijn op dit moment geen relevante instellingen beschikbaar"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Door AI gemarkeerd bericht"
+        reviewable_ai_chat_message:
+          title: "Door AI gemarkeerd chatbericht"

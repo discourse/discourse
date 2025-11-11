@@ -26,6 +26,12 @@ module PageObjects
         has_no_css?(AVATAR_UPLOAD_BUTTON_SELECTOR)
       end
 
+      def has_avatar_options?(*options)
+        ordered_options = options.map { |o| ".avatar-choice--#{o}" }.join(" + ")
+
+        body.has_css?(ordered_options)
+      end
+
       def has_user_avatar_image_uploaded?
         body.has_css?(".avatar[src*='uploads/default']")
       end

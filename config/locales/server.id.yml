@@ -200,7 +200,6 @@ id:
       s3_backup_requires_s3_settings: "Anda tidak dapat menggunakan S3 sebagai lokasi cadangan kecuali Anda telah memberikan '%{setting_name}'."
       s3_bucket_reused: "Anda tidak dapat menggunakan keranjang yang sama untuk 's3_upload_bucket' dan 's3_backup_bucket'. Pilih keranjang yang berbeda atau gunakan jalur yang berbeda untuk setiap keranjang."
       secure_uploads_requirements: "Unggahan S3 dan ACL S3 harus diaktifkan sebelum mengaktifkan unggahan aman."
-      s3_use_acls_requirements: "Anda harus mengaktifkan ACL S3 saat unggahan aman diaktifkan."
       share_quote_facebook_requirements: "Anda harus mengatur id app Facebook untuk mengaktifkan berbagi kutipan untuk Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Anda tidak dapat menerapkan 2FA jika login lokal dinonaktifkan."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Anda tidak dapat menerapkan 2FA jika DiscourseConnect diaktifkan."
@@ -1223,13 +1222,10 @@ id:
     top_menu: "Tentukan item mana yang muncul di navigasi beranda, dan dalam urutan apa."
     send_welcome_message: "Kirim semua pengguna ucapan selamat datang dengan panduan awal singkat."
     hidden_post_visible_groups: "Izinkan anggota grup ini untuk melihat post tersembunyi. Pengguna staf selalu dapat melihat post tersembunyi."
-    blocked_email_domains: "Daftar domain email yang dipisahkan tanda pipa yang tidak diizinkan untuk didaftarkan akun oleh pengguna. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. Contoh: mailinator.com|trashmail.net"
-    allowed_email_domains: "Daftar domain email yang dibatasi pipa yang HARUS digunakan pengguna untuk mendaftarkan akun. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung. PERINGATAN: Pengguna dengan domain email selain yang terdaftar tidak akan diizinkan!"
     auto_approve_email_domains: "Pengguna dengan alamat email dari daftar domain ini akan disetujui secara otomatis. Subdomain secara otomatis ditangani untuk domain yang ditentukan. Simbol wildcard * dan ? tidak didukung."
     include_in_discourse_discover: "Izinkan CDCK, Inc (\"Discourse\") untuk menampilkan komunitas ini di <a href='https://discover.discourse.org' target='_blank'>halaman Discover</a> dan dalam materi pemasaran Discourse. Dengan demikian, Anda akan membagikan data yang diperlukan agar situs Anda dapat disertakan dalam layanan ini. Harap diperhatikan bahwa promosi komunitas merupakan kebijakan Discourse."
     discourse_connect_url: "URL endpoint DiscourseConnect (harus menyertakan http:// atau https://, dan tidak boleh menyertakan garis miring)"
     discourse_connect_allowed_redirect_domains: "Batasi ke domain ini untuk return_paths yang disediakan oleh DiscourseConnect (secara bawaan jalur pengembalian harus ada di situs saat ini). Gunakan * untuk mengizinkan domain apa pun untuk jalur pengembalian. Karakter pengganti subdomain (`*.foobar.com`) tidak diizinkan."
-    s3_use_acls: "AWS merekomendasikan untuk tidak menggunakan ACL pada bucket S3; jika Anda mengikuti saran ini, hapus centang opsi ini. Ini harus diaktifkan jika Anda menggunakan unggahan aman."
     enable_direct_s3_uploads: "Memungkinkan pengunggahan multipart secara langsung ke Amazon S3, lihat https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469 untuk informasi lebih lanjut."
     backup_location: "Lokasi penyimpanan cadangan. PENTING: S3 memerlukan kredensial S3 valid yang dimasukkan dalam pengaturan File. Saat mengubahnya ke S3 dari Lokal, Anda harus menjalankan tugas rake `s3:ensure_cors_rules`."
     s3_use_cdn_url_for_all_uploads: "Gunakan URL CDN untuk semua file yang diunggah ke s3, bukan hanya untuk gambar."
@@ -1263,7 +1259,6 @@ id:
       <b>PERINGATAN</b>: Mengubah trust level akan mencegah pengguna dengan tingkat kepercayaan yang lebih rendah untuk masuk melalui Discourse Hub
     enable_max_tags_per_email_subject: "Gunakan max_tags_per_email_subject saat membuat subjek email"
     max_tags_per_email_subject: "Tag maksimum yang dapat dimasukkan ke dalam subjek email"
-    watched_precedence_over_muted: "Beri tahu saya tentang topik dalam kategori atau tag yang saya ikuti yang juga termasuk dalam kategori yang telah saya nonaktifkan"
     enable_user_tips: "Aktifkan kiat pengguna baru yang menjelaskan fitur utama kepada pengguna"
     navigation_menu: "Tentukan bilah sisi atau menu tarik-turun tajuk sebagai menu navigasi utama untuk situs Anda. Bilah sisi direkomendasikan."
     default_navigation_menu_categories: "Kategori yang dipilih akan ditampilkan di bawah bagian Kategori pada Menu Navigasi secara bawaan."
@@ -1387,8 +1382,6 @@ id:
     sender_topic_deleted: "topik telah dihapus"
     group_smtp_post_deleted: "postingan telah dihapus"
     group_smtp_topic_deleted: "topik telah dihapus"
-  color_schemes:
-    default_theme_name: "Asal"
   csv_export:
     boolean_yes: "Ya"
     boolean_no: "Tidak"
@@ -1845,7 +1838,7 @@ id:
       agree_and_edit:
         title: "Setuju dan Edit Post"
         description: "Setuju dengan bendera dan buka jendela komposer untuk mengedit post."
-      delete_single:
+      delete:
         title: "Hapus"
         complete: "Pos dihapus."
       delete_and_ignore:
@@ -1881,6 +1874,8 @@ id:
         complete: "Post disetujui."
       approve_post:
         complete: "Post disetujui."
+      approve_post_closed:
+        complete: "Post disetujui."
       reject_post:
         complete: "Post ditolak."
       approve_user:
@@ -1891,8 +1886,23 @@ id:
           complete: "Pengguna dihapus."
       reject:
         title: "Tolak"
+      no_action_post:
+        title: "Tidak ada tindakan"
+      delete_post:
+        title: "Hapus postingan"
+        complete: "Pos dihapus"
+      hide_post:
+        title: "Sembunyikan pos"
+      restore_post:
+        title: "Pulihkan post"
+      no_action_user:
+        title: "Tidak ada tindakan"
+      silence_user:
+        title: "Senyapkan pengguna"
+      suspend_user:
+        title: "Tangguhkan pengguna"
       delete_user:
-        complete: "Pengguna dihapus."
+        complete: "Pengguna dihapus"
   fallback_username: "pengguna"
   form_templates:
     errors:

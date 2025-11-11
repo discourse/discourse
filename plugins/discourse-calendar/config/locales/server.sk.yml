@@ -1,0 +1,102 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  reports:
+    currently_away:
+      title: Používatelia, ktorí sú momentálne preč,
+      labels:
+        username: Používateľské meno
+  discourse_automation:
+    triggerables:
+      event_started:
+        title: Udalosť sa začala
+  system_messages:
+    discourse_calendar_holiday_region_invalid: "Vami zadaný dovolenkový región neexistuje."
+    discourse_calendar_enable_holiday_failed: "Tento sviatok sa nepodarilo povoliť, je už povolený alebo nie je zakázaný."
+    discourse_post_event_bulk_invite_succeeded:
+      title: "Udalosť – hromadné pozvanie úspešné"
+      subject_template: "Hromadná pozvánka bola úspešne spracovaná"
+      text_body_template: "Váš súbor s hromadnými pozvánkami bol spracovaný, vytvorený(í) súbor(y) %{processed} ."
+    discourse_post_event_bulk_invite_failed:
+      title: "Udalosť – hromadné pozvanie zlyhalo"
+      subject_template: "Hromadné pozvanie spracované s chybami"
+      text_body_template: |
+        Váš súbor s hromadnými pozvánkami bol spracovaný, %{processed} pozvánky vytvorené s chybou(-ami) %{failed} .
+
+        Tu je protokol:
+
+        ```text
+        %{logs}
+        ````
+  site_settings:
+    map_events_to_color: "Priraďte farbu každej značke alebo kategórii."
+    map_events_title: "Prepíše „Udalosti“ v názve bočného panela „Nadchádzajúce udalosti“ pre každú kategóriu."
+    calendar_enabled: "Povoľte plugin discourse-calendar. Týmto sa pridá podpora pre značku [calendar][/calendar] v prvom príspevku témy."
+    discourse_post_event_enabled: "Povolí funkcie udalostí. Poznámka: Na povolenie je tiež potrebné mať povolený kalendár."
+    displayed_invitees_limit: "Obmedzuje počet pozvaných osôb zobrazených na udalosti."
+    display_post_event_date_on_topic_title: "Zobrazí dátum udalosti za názvom témy."
+    use_local_event_date: "Používanie miestneho dátumu za názvom témy namiesto relatívneho času."
+    discourse_post_event_allowed_on_groups: "Skupiny, ktoré môžu vytvárať udalosti."
+    discourse_post_event_allowed_custom_fields: "Umožňuje umožniť každej udalosti nastaviť hodnotu vlastných polí."
+    discourse_post_event_edit_notifications_time_extension: "Predĺži (v minútach) obdobie po skončení udalosti, keď sú pozvaní účastníci stále upozorňovaní na úpravu v pôvodnom príspevku."
+    holiday_calendar_topic_id: "ID témy kalendára dovoleniek/neprítomnosti personálu."
+    holiday_status_emoji: Definuje emotikon použitý pre stav dovolenky.
+    delete_expired_event_posts_after: "Príspevky s udalosťami, ktorých platnosť vypršala, budú automaticky vymazané po (n) hodinách. Nastavte na -1, ak chcete vymazanie zakázať."
+    all_day_event_start_time: "Udalosti, ktoré nemajú zadaný čas začiatku, sa začnú v tomto čase. Formát je HH:mm. Pre 6:00 hod. ráno zadajte 06:00 hod."
+    all_day_event_end_time: "Udalosti, ktoré nemajú zadaný čas ukončenia, skončia v tomto čase. Formát je HH:mm. Pre 6:00 pm zadajte 18:00."
+    all_day_event_time_error: "Neplatný čas. Formát musí byť HH:mm (napr. 08:00)."
+    calendar_categories: "Zobrazenie kalendára v hornej časti kategórie. Povinné nastavenia sú categoryId a postId. napr.: categoryId=6;postId=453\n Ďalšie platné nastavenia: tzPicker, víkendy a defaultView."
+    calendar_categories_outlet: "Umožňuje zmeniť, na ktorom výstupe sa má zobrazovať kalendár kategórie."
+    working_days: "Nastavenie pracovných dní. Dostupnosť skupiny môžete zobraziť pomocou značky `timezones` v príspevku, napr.: `[timezones group=admins][timezones]`"
+    working_day_start_hour: "Začiatok pracovných hodín."
+    working_day_end_hour: "Koniec pracovného dňa."
+    close_to_working_day_hours_extension: "Nastavenie času predĺženia v hodinách pracovného dňa na zvýraznenie časových pásiem."
+    events_calendar_categories: "Zobrazenie kalendára udalostí v hornej časti kategórie."
+    sort_categories_by_event_start_date_enabled: "Povolenie triedenia tém kategórií podľa dátumu začiatku udalosti."
+    disable_resorting_on_categories_enabled: "Povolenie kategórií, aby sa používateľom zakázala možnosť triedenia podľa kategórie udalosti."
+    calendar_automatic_holidays_enabled: "Automatické nastavenie stavu dovolenky na základe regiónu používateľa (poznámka: v nastaveniach pluginu môžete vypnúť konkrétne automatické dovolenky)"
+    event_participation_buttons: "Zoznam tlačidiel účasti na udalosti, ktoré môžu používatelia používať."
+    sidebar_show_upcoming_events: "Zobrazenie odkazu na nadchádzajúce udalosti v bočnom paneli v časti \"Viac\"."
+  discourse_calendar:
+    invite_user_notification: "%{username} vás pozval na: %{description}"
+    calendar_must_be_in_first_post: "Značku kalendára možno použiť len v prvom príspevku témy."
+    more_than_one_calendar: "V jednom príspevku nemôžete mať viac ako jeden kalendár."
+    more_than_two_dates: "Príspevok témy kalendára nemôže obsahovať viac ako dva dátumy."
+    event_expired: "Platnosť udalosti vypršala"
+    holiday_status:
+      description: "Na dovolenke"
+  discourse_post_event:
+    notifications:
+      before_event_reminder: "%{title} sa práve začína."
+      after_event_reminder: "%{title} sa skončila."
+      ongoing_event_reminder: "%{title} práve prebieha."
+    errors:
+      bulk_invite:
+        max_invitees: "Prvých %{max_invittes} pozvaných bolo vytvorených. Skúste súbor rozdeliť na menšie časti."
+        error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
+      models:
+        event:
+          only_one_event: "Príspevok môže mať iba jednu udalosť."
+          must_be_in_first_post: "Udalosť môže byť iba v prvom príspevku témy."
+          raw_invitees_length: "Udalosť je obmedzená na %{count} používateľov/skupín."
+          raw_invitees:
+            only_group: "Udalosť akceptuje iba názvy skupín."
+          ends_at_before_starts_at: "Udalosť nemôže skončiť skôr, ako sa začne."
+          start_must_be_present_and_a_valid_date: "Udalosť vyžaduje platný dátum začiatku."
+          end_must_be_a_valid_date: "Dátum ukončenia musí byť platný dátum."
+          invalid_recurrence: "Opakovanie musí byť jedno z nasledujúcich: každý_mesiac, každý_týždeň, každé_dva_týždne, každé_štyri_týždne, každý_deň, každý_pracovný_deň."
+          invalid_timezone: "Časové pásmo nebolo rozpoznané."
+          acting_user_not_allowed_to_create_event: "Aktuálny používateľ nemá povolenie vytvárať udalosti."
+          acting_user_not_allowed_to_act_on_this_event: "Aktuálny používateľ nemá povolené konať v súvislosti s touto udalosťou."
+          invalid_allowed_groups: "Neplatné povolené skupiny."
+          acting_user_not_allowed_to_invite_these_groups: "Aktuálny používateľ nemá povolené pozývať tieto skupiny."
+          custom_field_is_invalid: "Vlastné pole `%{field}` nie je povolené."
+          name:
+            length: "Dĺžka názvu udalosti musí byť od %{minimum} do %{maximum} znakov."
+  discourse_push_notifications:
+    popup:
+      event_reminder: "Pripomienka udalosti"

@@ -21,7 +21,7 @@ el:
       topic:
         title: Δημιουργήστε ένα θέμα
       flag_post_on_words:
-        flag_message: "Η δημοσίευση περιέχει απαγορευμένες λέξεις: %{words}"
+        flag_message: "Η ανάρτηση περιέχει απαγορευμένες λέξεις: %{words}"
       zapier_webhook:
         title: Zapier webhook
       pin_topic:

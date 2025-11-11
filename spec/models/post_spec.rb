@@ -1415,7 +1415,7 @@ RSpec.describe Post do
   describe "#set_owner" do
     fab!(:post)
     fab!(:admin)
-    fab!(:new_user) { Fabricate(:user) }
+    fab!(:new_user, :user)
 
     it "will change owner of a post correctly" do
       post.set_owner(coding_horror, Discourse.system_user)
@@ -1549,6 +1549,52 @@ RSpec.describe Post do
         post_2.user.user_stat.reload.post_count
       }.from(1).to(0)
     end
+
+    it "changes topic visible status to false if it is the first post" do
+      t = post.topic
+      expect(t.visible).to eq(true)
+
+      post.hide!(PostActionType.types[:off_topic])
+
+      t.reload
+      expect(t.visible).to eq(false)
+    end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper])
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "does not reset the topic's bumped_at when hiding a whisper" do
+        whisper_post.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "resets the topic's bumped_at when hiding the last visible reply" do
+        last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(second_last_reply.created_at)
+      end
+
+      it "does not reset the topic's bumped_at when hiding a reply that is not the last" do
+        second_last_reply.hide!(PostActionType.types[:off_topic])
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+    end
   end
 
   describe "#unhide!" do
@@ -1609,6 +1655,42 @@ RSpec.describe Post do
         1,
       )
     end
+
+    context "in a topic with multiple replies" do
+      let!(:second_last_reply) do
+        freeze_time 1.day.from_now
+        create_post(topic:, user: coding_horror, hidden: true)
+      end
+      fab!(:user)
+      let!(:last_reply) do
+        freeze_time 2.days.from_now
+        create_post(topic:, user:, hidden: true)
+      end
+      let!(:whisper_post) do
+        freeze_time 3.days.from_now
+        create_post(topic:, user: user, post_type: Post.types[:whisper], hidden: true)
+      end
+
+      before { topic.update_columns(bumped_at: 1.day.from_now) }
+
+      it "does not reset the topic's bumped_at when unhiding a whisper" do
+        whisper_post.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+
+      it "resets the topic's bumped_at when unhiding the last visible reply" do
+        last_reply.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(last_reply.created_at)
+      end
+
+      it "does not reset the topic's bumped_at when unhiding a reply that is not the last" do
+        second_last_reply.unhide!
+
+        expect(topic.reload.bumped_at).to eq_time(1.day.from_now)
+      end
+    end
   end
 
   it "will unhide the post but will keep the topic invisible/unlisted" do
@@ -1637,8 +1719,8 @@ RSpec.describe Post do
 
   describe "video_thumbnails" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
-    fab!(:image_upload) { Fabricate(:upload) }
-    fab!(:image_upload_2) { Fabricate(:upload) }
+    fab!(:image_upload, :upload)
+    fab!(:image_upload_2, :upload)
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
     let(:video_url) { "#{base_url}#{video_upload.url}" }
 
@@ -1710,10 +1792,10 @@ RSpec.describe Post do
   describe "uploads" do
     fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }
     fab!(:video_upload_2) { Fabricate(:upload, extension: "mp4") }
-    fab!(:image_upload) { Fabricate(:upload) }
+    fab!(:image_upload, :upload)
     fab!(:audio_upload) { Fabricate(:upload, extension: "ogg") }
     fab!(:attachment_upload) { Fabricate(:upload, extension: "csv") }
-    fab!(:attachment_upload_2) { Fabricate(:upload) }
+    fab!(:attachment_upload_2, :upload)
     fab!(:attachment_upload_3) { Fabricate(:upload, extension: nil) }
 
     let(:base_url) { "#{Discourse.base_url_no_prefix}#{Discourse.base_path}" }
@@ -2160,8 +2242,8 @@ RSpec.describe Post do
   end
 
   describe "#publish_changes_to_client!" do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user3) { Fabricate(:user) }
+    fab!(:user1, :user)
+    fab!(:user3, :user)
     fab!(:topic) { Fabricate(:private_message_topic, user: user1) }
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:group_user) { Fabricate(:group_user, user: user3) }
@@ -2379,12 +2461,29 @@ RSpec.describe Post do
       I18n.locale = "ja"
       post = Fabricate(:post)
       zh_localization = Fabricate(:post_localization, post: post, locale: "zh_CN")
+      Fabricate(:post_localization, post: post, locale: "ja_JP")
       ja_localization = Fabricate(:post_localization, post: post, locale: "ja")
 
       expect(post.get_localization(:zh_CN)).to eq(zh_localization)
       expect(post.get_localization("zh-CN")).to eq(zh_localization)
       expect(post.get_localization("xx")).to eq(nil)
       expect(post.get_localization).to eq(ja_localization)
+    end
+
+    it "returns a regional localization (ja_JP) when the user's locale (ja) is not available" do
+      I18n.locale = "ja"
+      post = Fabricate(:post)
+      ja_jp_localization = Fabricate(:post_localization, post: post, locale: "ja_JP")
+
+      expect(post.get_localization).to eq(ja_jp_localization)
+    end
+
+    it "returns a normalized localization (pt) if the user's locale (pt_BR) is not available" do
+      I18n.locale = "pt_BR"
+      post = Fabricate(:post)
+      pt_localization = Fabricate(:post_localization, post: post, locale: "pt")
+
+      expect(post.get_localization).to eq(pt_localization)
     end
   end
 
@@ -2394,9 +2493,22 @@ RSpec.describe Post do
       post = Fabricate(:post, locale: "ja")
 
       expect(post.in_user_locale?).to eq(true)
+      post.update!(locale: "ja_JP")
+      expect(post.in_user_locale?).to eq(true)
 
       post.update!(locale: "es")
       expect(post.in_user_locale?).to eq(false)
+    end
+  end
+
+  describe "#before_save" do
+    it "replaces empty locales with nil" do
+      post = Fabricate(:post, locale: "en")
+
+      post.locale = ""
+      post.save!
+
+      expect(post.reload.locale).to eq(nil)
     end
   end
 end

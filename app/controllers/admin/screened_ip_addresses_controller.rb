@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Admin::ScreenedIpAddressesController < Admin::StaffController
+  before_action :can_see_ip
   before_action :fetch_screened_ip_address, only: %i[update destroy]
 
   def index
@@ -48,6 +49,10 @@ class Admin::ScreenedIpAddressesController < Admin::StaffController
   end
 
   private
+
+  def can_see_ip
+    raise Discourse::InvalidAccess.new if !guardian.can_see_ip?
+  end
 
   def allowed_params
     params.require(:ip_address)

@@ -2,7 +2,7 @@
 
 RSpec.describe TopicTrackingState do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:whisperers_group) { Fabricate(:group) }
+  fab!(:whisperers_group, :group)
   fab!(:private_message_post)
   let(:private_message_topic) { private_message_post.topic }
   let(:post) { create_post }
@@ -756,7 +756,7 @@ RSpec.describe TopicTrackingState do
   end
 
   describe ".report_totals" do
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user2, :user)
 
     it "correctly returns new/unread totals" do
       report = TopicTrackingState.report_totals(user)

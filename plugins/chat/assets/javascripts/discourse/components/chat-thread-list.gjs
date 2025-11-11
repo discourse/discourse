@@ -11,7 +11,6 @@ import ChatThreadListItem from "discourse/plugins/chat/discourse/components/chat
 import ChatTrackMessage from "discourse/plugins/chat/discourse/modifiers/chat/track-message";
 
 export default class ChatThreadList extends Component {
-  @service chat;
   @service chatApi;
   @service messageBus;
   @service chatTrackingStateManager;
@@ -162,9 +161,8 @@ export default class ChatThreadList extends Component {
   }
 
   handleDeleteMessage(data) {
-    const deletedOriginalMessageThread = this.threadsManager.threads.findBy(
-      "originalMessage.id",
-      data.deleted_id
+    const deletedOriginalMessageThread = this.threadsManager.threads.find(
+      (item) => item.originalMessage.id === data.deleted_id
     );
 
     if (!deletedOriginalMessageThread) {
@@ -175,9 +173,8 @@ export default class ChatThreadList extends Component {
   }
 
   handleRestoreMessage(data) {
-    const restoredOriginalMessageThread = this.threadsManager.threads.findBy(
-      "originalMessage.id",
-      data.chat_message.id
+    const restoredOriginalMessageThread = this.threadsManager.threads.find(
+      (item) => item.originalMessage.id === data.chat_message.id
     );
 
     if (!restoredOriginalMessageThread) {

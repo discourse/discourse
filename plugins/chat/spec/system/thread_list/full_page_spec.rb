@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe "Thread list in side panel | full page", type: :system do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:channel) { Fabricate(:chat_channel, threading_enabled: true) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:other_user, :user)
 
   let(:side_panel_page) { PageObjects::Pages::ChatSidePanel.new }
   let(:chat_page) { PageObjects::Pages::Chat.new }

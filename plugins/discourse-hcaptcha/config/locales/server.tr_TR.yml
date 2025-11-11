@@ -1,0 +1,19 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+tr_TR:
+  dashboard:
+    problem:
+      hcaptcha_configuration: "hCaptcha `site_key` veya `secret_key` yapılandırmanızda bir sorun var"
+  admin:
+    site_settings:
+      categories:
+        discourse_hcaptcha: "hCaptcha Eklentisi"
+  site_settings:
+    discourse_hcaptcha_enabled: "hCaptcha Eklentisini etkinleştirin. <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> hesabı gerektirir."
+    hcaptcha_site_key: "<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> hesabınızdan hCaptcha Site Anahtarı"
+    hcaptcha_secret_key: "<a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> hesabınızdan hCaptcha Gizli Anahtarı"
+  h_captcha_verification_failed: "hCaptcha doğrulaması başarısız oldu"

@@ -2,7 +2,7 @@
 
 RSpec.describe Users::AssociateAccountsController do
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user2, :user)
 
   before { OmniAuth.config.test_mode = true }
 

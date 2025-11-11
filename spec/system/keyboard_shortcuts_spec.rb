@@ -57,7 +57,7 @@ RSpec.describe "Keyboard shortcuts", type: :system do
     before { sign_in(current_user) }
 
     context "when on a private message page" do
-      fab!(:topic) { Fabricate(:private_message_topic) }
+      fab!(:topic, :private_message_topic)
 
       context "when the message is not archived" do
         it "archives the message" do

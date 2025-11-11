@@ -46,6 +46,12 @@ module PageObjects
         self
       end
 
+      def click_staff_info_silencings_link
+        staff_counters = page.find(".staff-counters")
+        staff_counters.find("a:has(.silencings)").click
+        self
+      end
+
       def expand_info_panel
         button = page.find("button[aria-controls='collapsed-info-panel']")
         button.click if button["aria-expanded"] == "false"

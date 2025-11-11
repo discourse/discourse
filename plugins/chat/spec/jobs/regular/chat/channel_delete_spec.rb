@@ -2,9 +2,9 @@
 
 describe Jobs::Chat::ChannelDelete do
   fab!(:chat_channel)
-  fab!(:user1) { Fabricate(:user) }
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
+  fab!(:user1, :user)
+  fab!(:user2, :user)
+  fab!(:user3, :user)
   let(:users) { [user1, user2, user3] }
 
   before do

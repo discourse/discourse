@@ -33,12 +33,12 @@ RSpec.describe Chat::AddUsersToChannel do
   describe ".call" do
     subject(:result) { described_class.call(params:, **dependencies) }
 
-    fab!(:current_user) { Fabricate(:user) }
+    fab!(:current_user, :user)
     fab!(:users) { Fabricate.times(5, :user) }
     fab!(:direct_message) { Fabricate(:direct_message, users: [current_user], group: true) }
     fab!(:channel) { Fabricate(:direct_message_channel, chatable: direct_message) }
-    fab!(:group_user_1) { Fabricate(:user) }
-    fab!(:group_user_2) { Fabricate(:user) }
+    fab!(:group_user_1, :user)
+    fab!(:group_user_2, :user)
     fab!(:group) { Fabricate(:public_group, users: [group_user_1, group_user_2]) }
 
     let(:guardian) { Guardian.new(current_user) }
@@ -183,13 +183,13 @@ RSpec.describe Chat::AddUsersToChannel do
     end
 
     context "when channel is not a direct message channel" do
-      fab!(:channel) { Fabricate(:chat_channel) }
+      fab!(:channel, :chat_channel)
 
       it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
     end
 
     context "when user is not admin and not a member of the channel" do
-      fab!(:current_user) { Fabricate(:user) }
+      fab!(:current_user, :user)
 
       it { is_expected.to fail_a_policy(:can_add_users_to_channel) }
     end

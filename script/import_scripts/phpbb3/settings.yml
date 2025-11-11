@@ -118,7 +118,7 @@ import:
 
   # Enable this, if you want import password hashes in order to use the "migratepassword" plugin.
   # This will allow users to login with their current password.
-  # The plugin is available at: https://github.com/discoursehosting/discourse-migratepassword
+  # The plugin is available at: https://github.com/communiteq/discourse-migratepassword
   passwords: false
 
   # By default all the following things get imported. You can disable them by setting them to false.

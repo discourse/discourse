@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          styleguide: "Руководство по стилю Discourse"
   js:
     styleguide:
       title: "Руководство по стилю"
@@ -25,6 +30,8 @@ ru:
           title: "Поля ввода Даты/Времени"
         menus:
           title: "Меню"
+        multi_select:
+          title: "Множественный выбор"
         toasts:
           title: "Сообщения-подсказки"
         font_scale:
@@ -82,8 +89,8 @@ ru:
           title: "Карта темы"
         site_header:
           title: "Заголовок сайта"
-        suggested_topics:
-          title: "Похожие темы"
+        more_topics:
+          title: "Другие темы"
         post_menu:
           title: "Меню сообщения"
         modal:

@@ -26,10 +26,7 @@ module ApplicationHelper
       EmberENV: {
         FEATURES: {
         },
-        EXTEND_PROTOTYPES: {
-          Date: false,
-          String: false,
-        },
+        EXTEND_PROTOTYPES: false,
       },
       APP: {
         name: "discourse",
@@ -363,14 +360,7 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url =
-      (
-        if opts[:x_summary_large_image].present?
-          opts[:x_summary_large_image]
-        else
-          opts[:image]
-        end
-      )
+    img_url = (opts[:x_summary_large_image].presence || opts[:image])
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
@@ -566,38 +556,39 @@ module ApplicationHelper
     @stylesheet_manager = Stylesheet::Manager.new(theme_id: theme_id)
   end
 
+  def user_scheme_id
+    return @user_scheme_id if defined?(@user_scheme_id)
+    scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
+    @user_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+  end
+
   def scheme_id
     return @scheme_id if defined?(@scheme_id)
 
-    custom_user_scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
-    if custom_user_scheme_id && ColorScheme.find_by_id(custom_user_scheme_id)
-      return custom_user_scheme_id
-    end
-
+    return user_scheme_id if user_scheme_id
     return if theme_id.blank?
 
-    if SiteSetting.use_overhauled_theme_color_palette
-      @scheme_id = ThemeColorScheme.where(theme_id: theme_id).pick(:color_scheme_id)
-    end
-    @scheme_id ||= Theme.where(id: theme_id).pick(:color_scheme_id)
+    @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
+  end
+
+  def user_dark_scheme_id
+    return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
+    scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
+    @user_dark_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
   end
 
   def dark_scheme_id
-    if SiteSetting.use_overhauled_theme_color_palette
-      scheme_id
-    else
-      cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id ||
-        SiteSetting.default_dark_mode_color_scheme_id
-    end
+    user_dark_scheme_id ||
+      (theme_id ? Theme.find_by_id(theme_id) : Theme.find_default)&.dark_color_scheme_id || -1
   end
 
   def current_homepage
     current_user&.user_option&.homepage || HomepageHelper.resolve(request, current_user)
   end
 
-  def build_plugin_html(name)
+  def build_plugin_html(name, **kwargs)
     return "" unless allow_plugins?
-    DiscoursePluginRegistry.build_html(name, controller) || ""
+    DiscoursePluginRegistry.build_html(name, controller, **kwargs) || ""
   end
 
   # If there is plugin HTML return that, otherwise yield to the template
@@ -679,7 +670,6 @@ module ApplicationHelper
     if dark_scheme_id != -1
       result << stylesheet_manager.color_scheme_stylesheet_preload_tag(
         dark_scheme_id,
-        dark: SiteSetting.use_overhauled_theme_color_palette,
         fallback_to_base: false,
       )
     end
@@ -697,7 +687,6 @@ module ApplicationHelper
       dark_href =
         stylesheet_manager.color_scheme_stylesheet_link_tag_href(
           dark_scheme_id,
-          dark: SiteSetting.use_overhauled_theme_color_palette,
           fallback_to_base: false,
         )
     end
@@ -759,13 +748,21 @@ module ApplicationHelper
   end
 
   def forced_light_mode?
-    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "light" &&
-      !dark_color_scheme?
+    return false if dark_color_scheme?
+
+    cookie = cookies[:forced_color_mode]
+    return cookie == "light" if cookie.present?
+
+    !!(current_user&.user_option&.light_mode_forced?)
   end
 
   def forced_dark_mode?
-    InterfaceColorSelectorSetting.enabled? && cookies[:forced_color_mode] == "dark" &&
-      dark_scheme_id != -1
+    return false if dark_scheme_id == -1
+
+    cookie = cookies[:forced_color_mode]
+    return cookie == "dark" if cookie.present?
+
+    !!(current_user&.user_option&.dark_mode_forced?)
   end
 
   def light_color_hex_for_name(name)
@@ -773,11 +770,7 @@ module ApplicationHelper
   end
 
   def dark_color_hex_for_name(name)
-    ColorScheme.hex_for_name(
-      name,
-      dark_scheme_id,
-      dark: SiteSetting.use_overhauled_theme_color_palette,
-    )
+    ColorScheme.hex_for_name(name, dark_scheme_id)
   end
 
   def dark_elements_media_query
@@ -822,10 +815,14 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_id),
+      media_optimization_bundle:
+        script_asset_path(
+          EmberCli.script_chunks["media-optimization-bundle"]&.first || "media-optimization-bundle",
+        ),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
-      user_color_scheme_id: scheme_id,
-      user_dark_scheme_id: dark_scheme_id,
+      user_color_scheme_id: user_scheme_id || -1,
+      user_dark_scheme_id: user_dark_scheme_id || -1,
     }
 
     if Rails.env.development?
@@ -833,6 +830,10 @@ module ApplicationHelper
 
       setup_data[:debug_preloaded_app_data] = true if ENV["DEBUG_PRELOADED_APP_DATA"]
       setup_data[:mb_last_file_change_id] = MessageBus.last_id("/file-change")
+    end
+
+    if Rails.env.test? && ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+      setup_data[:capybara_playwright_debug_client_settled] = true
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

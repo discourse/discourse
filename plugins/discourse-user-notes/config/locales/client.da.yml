@@ -1,0 +1,15 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+da:
+  js:
+    user_notes:
+      title: "Bruger Noter"
+      attach: "Tilføj Brugernote"
+      remove: "Fjern Brugernote"
+      show: "Bruger Noter (%{count})"
+      delete_confirm: "Er du sikker på, at du vil slette bruger noten?"
+      show_post: "Vis indlæg"

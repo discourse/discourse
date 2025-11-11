@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::Chat::UpdateThreadReplyCount do
-  fab!(:thread) { Fabricate(:chat_thread) }
+  fab!(:thread, :chat_thread)
   fab!(:message_1) { Fabricate(:chat_message, thread: thread) }
   fab!(:message_2) { Fabricate(:chat_message, thread: thread) }
 

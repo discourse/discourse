@@ -1,0 +1,33 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+pt_BR:
+  site_settings:
+    discourse_gamification_enabled: "Habilite o Plugin de Gamificação do Discourse"
+    like_received_score_value: "O valor da saudação concedida quando um usuário recebe uma curtida"
+    like_given_score_value: "O valor da saudação concedida por cada curtida feita por um usuário"
+    solution_score_value: "O valor da saudação concedida quando a postagem de um usuário é marcada como solução"
+    user_invited_score_value: "O valor da saudação concedida quando um usuário tiver um convite resgatado"
+    time_read_score_value: "O valor da saudação concedida por cada hora de tempo gasto na leitura"
+    post_read_score_value: "O valor da saudação concedida para cada cem postagens que um usuário lê"
+    topic_created_score_value: "O valor da saudação concedida quando um usuário cria um tópico"
+    post_created_score_value: "O valor da saudação concedida quando um usuário cria uma postagem"
+    flag_created_score_value: "O valor da saudação concedida quando um usuário sinaliza uma postagem e essa sinalização é aceita por um usuário da equipe"
+    day_visited_score_value: "O valor da saudação concedida para cada dia que um usuário visita o site"
+    scorable_categories: "Lista de categorias em que as ações vão gerar saudações. Deixe em branco para ativar saudações em todas as categorias"
+    reaction_received_score_value: "O valor da saudação concedida quando um(a) usuário(a) recebe uma reação"
+    reaction_given_score_value: "O valor da saudação concedida por cada reação feita por um(a) usuário(a)"
+    chat_reaction_received_score_value: "O valor da saudação concedida quando um(a) usuário(a) recebe uma reação para uma mensagem de chat"
+    chat_reaction_given_score_value: "O valor da saudação concedida por cada reação feita por um(a) usuário(a) para uma mensagem de chat"
+    chat_message_created_score_value: "O valor da saudação concedida por cada mensagem enviada por um(a) usuário(a) no chat"
+    score_ranking_strategy: "Estratégia de classificação de posição no placar"
+  score: "Saudações"
+  default_leaderboard_name: "Tabela de Classificação Global"
+  rate_limiter:
+    by_type:
+      recalculate_scores_remaining: "Você atingiu o número máximo de pontuação recalculada. Espere %{time_left} antes de tentar novamente."
+  errors:
+    leaderboard_positions_not_ready: "Estamos gerando seu placar. Tente novamente em alguns minutos."

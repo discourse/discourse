@@ -251,15 +251,9 @@ bs_BA:
         reply: |-
           Awesome work! Nadam se da niste isključili ovu temu jer ja ponekad mogu malo da pričam: ceri :. Imajte na umu da kada odgovorite na temu ili pročitate neku temu duže od nekoliko minuta, ona se automatski postavlja na nivo obaveštenja o „praćenju“. Ovo možete promijeniti u [vašim korisničkim postavkama] (%{base_uri} / my / preferences).
       poll:
-        instructions: |-
-          Da li ste znali da možete dodati anketu u bilo koji post? Pokušajte da koristite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremu u uređivaču ** napravite anketu **.
-        not_found: |-
-          Ups! Nije bilo ankete u vašem odgovoru. Koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> ikona zupčanika u uređivaču, ili kopirajte i zalijepite ovu anketu u vaš sljedeći odgovor: `` `text [poll] *: cat: *: dog: [/ poll]` ``
         reply: |-
           Hej, lepa anketa! Kako sam te naučio? [anketa] *: +1: *: -1: [/ poll]
       details:
-        instructions: |-
-          Ponekad možete poželeti da ** sakrijete detalje ** u odgovorima: - Kada raspravljate o točkama filma ili TV emisije koje bi se smatrale spojlerom. - Kada je vašoj poruci potrebno puno neobaveznih detalja koji mogu biti neodoljivi kada se pročitaju odjednom. [details = Izaberite ovo da vidite kako radi!] 1. Izaberite <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremu u uredniku. 2. Izaberite "Sakrij detalje". 3. Uredite sažetak detalja i dodajte svoj sadržaj. Možete li koristiti <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-gear.png" width="16" height="16"> opremite u uredniku da dodate sledeći odeljak detaljima?
         not_found: |-
           Imate problema sa kreiranjem widgeta detalja? Pokušajte uključiti sljedeće u sljedećem odgovoru: `` `tekst [detalji = Izaberite me za detalje] Ovdje su detalji [/ details]` ``
         reply: |-

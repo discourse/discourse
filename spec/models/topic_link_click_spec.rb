@@ -94,7 +94,7 @@ RSpec.describe TopicLinkClick do
       end
 
       context "while logged in" do
-        fab!(:other_user) { Fabricate(:user) }
+        fab!(:other_user, :user)
 
         let!(:url) do
           described_class.create_from(

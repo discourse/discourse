@@ -41,7 +41,7 @@ RSpec.describe SiteSettingExtension do
     new_settings(provider_local)
   end
 
-  it "Does not leak state cause changes are not linked" do
+  it "does not leak state cause changes are not linked" do
     t1 =
       Thread.new do
         5.times do
@@ -66,7 +66,12 @@ RSpec.describe SiteSettingExtension do
     t2.join
   end
 
-  describe "refresh!" do
+  describe ".refresh!" do
+    it "ensures that the right MessageBus subscription has been set up" do
+      settings.expects(:ensure_listen_for_changes).once
+      settings.refresh!
+    end
+
     it "will reset to default if provider vanishes" do
       settings.setting(:hello, 1)
       settings.hello = 100
@@ -89,7 +94,7 @@ RSpec.describe SiteSettingExtension do
       expect(settings.hello).to eq(99)
     end
 
-    it "publishes changes cross sites" do
+    it "picks up changes from provider on refresh across processes" do
       settings.setting(:hello, 1)
       settings2.setting(:hello, 1)
 
@@ -635,6 +640,7 @@ RSpec.describe SiteSettingExtension do
 
   describe "hidden" do
     before do
+      settings.setting(:other_setting, "Blah")
       settings.setting(:superman_identity, "Clark Kent", hidden: true)
       settings.refresh!
     end
@@ -655,6 +661,17 @@ RSpec.describe SiteSettingExtension do
       expect(
         settings.all_settings(include_hidden: true).find { |s| s[:setting] == :superman_identity },
       ).to be_present
+    end
+
+    it "does not call the hidden_site_settings plugin modifier in a loop" do
+      called = 0
+      plugin = Plugin::Instance.new
+      plugin.register_modifier(:hidden_site_settings) do |defaults|
+        called += 1
+        defaults + [:other_setting]
+      end
+      settings.all_settings(include_hidden: true)
+      expect(called).to eq(1)
     end
   end
 
@@ -921,12 +938,99 @@ RSpec.describe SiteSettingExtension do
 
       expect(client_settings["with_html"]).to eq("<script></script>rest")
     end
+
+    it "does not include themeable site settings" do
+      SiteSetting.refresh!
+      expect(SiteSetting.client_settings_json_uncached).not_to include("enable_welcome_banner")
+      expect(SiteSetting.client_settings_json_uncached).not_to include("search_experience")
+    end
+
+    context "when error occurs" do
+      it "re-raises the exception instead of returning nil" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        allow(settings).to receive(:public_send).with(:default_locale).and_return(
+          SiteSetting.default_locale,
+        )
+        allow(settings).to receive(:public_send).with(:test_setting).and_raise(
+          PG::ConnectionBad,
+          "connection lost",
+        )
+
+        expect { settings.client_settings_json_uncached }.to raise_error(
+          PG::ConnectionBad,
+          /connection lost/,
+        )
+      end
+    end
+  end
+
+  describe ".client_settings_json" do
+    it "returns valid JSON when successful" do
+      settings.setting(:test_setting, "value", client: true)
+      settings.refresh!
+
+      result = settings.client_settings_json
+      expect { JSON.parse(result) }.not_to raise_error
+      parsed = JSON.parse(result)
+      expect(parsed["test_setting"]).to eq("value")
+    end
+
+    context "when error occurs" do
+      it "returns empty string without caching the error" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        allow(settings).to receive(:client_settings_json_uncached).and_raise(
+          PG::ConnectionBad,
+          "connection lost",
+        )
+
+        result = settings.client_settings_json
+        expect(result).to eq("")
+      end
+
+      it "does not cache the error and retries on next call" do
+        settings.setting(:test_setting, "value", client: true)
+        settings.refresh!
+
+        cache_key = SiteSettingExtension.client_settings_cache_key
+
+        call_count = 0
+        allow(settings).to receive(:client_settings_json_uncached) do
+          call_count += 1
+          if call_count == 1
+            raise PG::ConnectionBad, "connection lost"
+          else
+            '{"default_locale":"en","test_setting":"value"}'
+          end
+        end
+
+        # First call fails
+        result1 = settings.client_settings_json
+        expect(result1).to eq("")
+        # Verify error was NOT cached in Redis
+        expect(Discourse.cache.exist?(cache_key)).to be_falsey
+
+        # Second call should retry (not use cached error) and succeed
+        result2 = settings.client_settings_json
+        expect(result2).to eq('{"default_locale":"en","test_setting":"value"}')
+        expect(call_count).to eq(2) # Both calls executed, error was not cached
+
+        # Verify success was cached in Redis
+        expect(Discourse.cache.exist?(cache_key)).to be_truthy
+        expect(Discourse.cache.read(cache_key)).to eq(
+          '{"default_locale":"en","test_setting":"value"}',
+        )
+      end
+    end
   end
 
   describe ".setup_methods" do
     describe "for uploads site settings" do
       fab!(:upload)
-      fab!(:upload2) { Fabricate(:upload) }
+      fab!(:upload2, :upload)
 
       it "should return the upload record" do
         settings.setting(:some_upload, upload.id.to_s, type: :upload)
@@ -981,6 +1085,218 @@ RSpec.describe SiteSettingExtension do
           :requires_confirmation
         ],
       ).to eq(nil)
+    end
+  end
+
+  describe "site setting groups" do
+    before do
+      SiteSettingGroup.create!(
+        name: "enable_upload_debug_mode",
+        group_ids: "#{Group::AUTO_GROUPS[:trust_level_0]}|#{Group::AUTO_GROUPS[:trust_level_1]}",
+      )
+    end
+
+    it "returns the correct group for a setting" do
+      SiteSetting.refresh!
+      expect(SiteSetting.site_setting_group_ids[:enable_upload_debug_mode]).to eq([10, 11])
+    end
+  end
+
+  describe "#notify_clients!" do
+    context "when the site setting is an upcoming change" do
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :pre_alpha,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+            some_other_upcoming_setting: {
+              impact: "feature,staff",
+              status: :alpha,
+              impact_type: "feature",
+              impact_role: "staff",
+            },
+          },
+        )
+        SiteSetting.send(:setup_methods, :enable_upload_debug_mode)
+        SiteSetting.refresh!
+      end
+
+      after { SiteSetting.refresh! }
+
+      context "with site setting groups assigned" do
+        before do
+          SiteSettingGroup.create!(
+            name: "enable_upload_debug_mode",
+            group_ids:
+              "#{Group::AUTO_GROUPS[:trust_level_0]}|#{Group::AUTO_GROUPS[:trust_level_1]}",
+          )
+          SiteSetting.refresh!
+        end
+
+        after { SiteSetting.refresh! }
+
+        it "does not publish to MessageBus for the client settings channel" do
+          messages =
+            MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+              SiteSetting.notify_clients!(:enable_upload_debug_mode)
+            end
+
+          expect(messages.length).to eq(0)
+        end
+      end
+
+      context "without site setting groups assigned" do
+        it "publishes to MessageBus with the setting name and value" do
+          messages =
+            MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+              SiteSetting.notify_clients!(:enable_upload_debug_mode)
+            end
+
+          expect(messages.length).to eq(1)
+          expect(messages.first.data[:name]).to eq(:enable_upload_debug_mode)
+          expect(messages.first.data[:value]).to eq(SiteSetting.enable_upload_debug_mode)
+        end
+      end
+    end
+
+    context "when the site setting is not an upcoming change" do
+      it "publishes to MessageBus with the setting name and value" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:title)
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:name]).to eq(:title)
+        expect(messages.first.data[:value]).to eq(SiteSetting.title)
+      end
+
+      it "includes scoped_to parameter when provided" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:title, { theme_id: 123 })
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:scoped_to]).to eq({ theme_id: 123 })
+      end
+    end
+
+    context "with default_locale setting" do
+      it "uses the custom getter for default_locale" do
+        messages =
+          MessageBus.track_publish(SiteSettingExtension::CLIENT_SETTINGS_CHANNEL) do
+            SiteSetting.notify_clients!(:default_locale)
+          end
+
+        expect(messages.length).to eq(1)
+        expect(messages.first.data[:name]).to eq(:default_locale)
+        expect(messages.first.data[:value]).to eq(SiteSetting.default_locale)
+      end
+    end
+  end
+
+  describe "themeable settings" do
+    fab!(:theme_1, :theme)
+    fab!(:theme_2, :theme)
+    fab!(:tss_1) do
+      Fabricate(
+        :theme_site_setting_with_service,
+        name: "enable_welcome_banner",
+        value: false,
+        theme: theme_1,
+      )
+    end
+    fab!(:tss_2) do
+      Fabricate(
+        :theme_site_setting_with_service,
+        name: "search_experience",
+        value: "search_field",
+        theme: theme_2,
+      )
+    end
+
+    it "has the site setting default values when there are no theme site settings for the theme" do
+      SiteSetting.refresh!
+      expect(SiteSetting.theme_site_settings[theme_1.id][:search_experience]).to eq("search_icon")
+      expect(SiteSetting.theme_site_settings[theme_2.id][:enable_welcome_banner]).to eq(true)
+    end
+
+    it "returns true for settings that are themeable" do
+      expect(SiteSetting.themeable[:enable_welcome_banner]).to eq(true)
+    end
+
+    it "returns false for settings that are not themeable" do
+      expect(SiteSetting.themeable[:title]).to eq(false)
+    end
+
+    it "caches the theme site setting values on a per theme basis" do
+      SiteSetting.refresh!
+      expect(SiteSetting.theme_site_settings[theme_1.id][:enable_welcome_banner]).to eq(false)
+      expect(SiteSetting.theme_site_settings[theme_2.id][:search_experience]).to eq("search_field")
+    end
+
+    it "overrides the site setting value with the theme site setting" do
+      SiteSetting.create!(
+        name: "enable_welcome_banner",
+        data_type: SiteSettings::TypeSupervisor.types[:bool],
+        value: "t",
+      )
+      SiteSetting.create!(
+        name: "search_experience",
+        data_type: SiteSettings::TypeSupervisor.types[:enum],
+        value: SiteSetting.type_supervisor.to_db_value(:search_experience, "search_icon"),
+      )
+      SiteSetting.refresh!
+      expect(SiteSetting.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
+      expect(SiteSetting.enable_welcome_banner(theme_id: theme_2.id)).to eq(true)
+      expect(SiteSetting.search_experience(theme_id: theme_1.id)).to eq("search_icon")
+      expect(SiteSetting.search_experience(theme_id: theme_2.id)).to eq("search_field")
+    end
+
+    it "publishes the right MessageBus message when a theme site setting is updated" do
+      settings_tss_instance_1 = new_settings(provider_local)
+      settings_tss_instance_1.load_settings(File.join(Rails.root, "config", "site_settings.yml"))
+      settings_tss_instance_1.refresh!
+
+      expect(settings_tss_instance_1.enable_welcome_banner(theme_id: theme_1.id)).to eq(false)
+
+      tss_1.update!(value: true)
+
+      messages =
+        MessageBus.track_publish(described_class::SITE_SETTINGS_CHANNEL) do
+          settings_tss_instance_1.change_themeable_site_setting(
+            theme_1.id,
+            :enable_welcome_banner,
+            true,
+          )
+        end
+
+      expect(messages.length).to eq(1)
+
+      message = messages.first
+
+      expect(message.data[:process]).to eq(settings_tss_instance_1.process_id)
+    end
+
+    describe ".theme_site_settings_json_uncached" do
+      it "returns the correct JSON" do
+        SiteSetting.refresh!
+        expect(SiteSetting.theme_site_settings_json_uncached(theme_1.id)).to eq(
+          %Q|{"enable_welcome_banner":false,"search_experience":"search_icon"}|,
+        )
+      end
+
+      it "returns default JSON when the theme_id is null" do
+        SiteSetting.refresh!
+        expect(SiteSetting.theme_site_settings_json_uncached(nil)).to eq(
+          %Q|{"enable_welcome_banner":true,"search_experience":"search_icon"}|,
+        )
+      end
     end
   end
 
@@ -1058,6 +1374,24 @@ RSpec.describe SiteSettingExtension do
           "some_old_setting",
         )
       end
+    end
+  end
+
+  describe "humanized_name" do
+    it "returns the humanized name for a setting" do
+      expect(SiteSetting.humanized_name(:clean_up_inactive_users_after_days)).to eq(
+        "Clean up inactive users after days",
+      )
+    end
+
+    it "handles acronyms in setting names" do
+      expect(SiteSetting.humanized_name(:enable_linkedin_oidc_logins)).to eq(
+        "Enable LinkedIn OIDC logins",
+      )
+    end
+
+    it "handles mixed case in setting names" do
+      expect(SiteSetting.humanized_name(:opengraph_image)).to eq("OpenGraph image")
     end
   end
 
