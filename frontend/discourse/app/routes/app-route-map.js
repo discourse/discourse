@@ -95,7 +95,7 @@ export default function () {
   });
 
   // User routes
-  this.route("users", { resetNamespace: true, path: "/u" });
+  this.route("users", { path: "/u" });
   this.route("password-reset", { path: "/u/password-reset/:token" });
   this.route("account-created", { path: "/u/account-created" }, function () {
     this.route("resent");
