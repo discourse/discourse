@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 describe "Interface color selector", type: :system do
-  let!(:light_scheme) { ColorScheme.find_by(base_scheme_id: "Solarized Light") }
-  let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: "Dark") }
+  let!(:light_scheme) do
+    ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Solarized Light"])
+  end
+  let!(:dark_scheme) { ColorScheme.find_by(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"]) }
 
   let(:selector_in_sidebar) do
     PageObjects::Components::InterfaceColorSelector.new(".sidebar-footer-actions")

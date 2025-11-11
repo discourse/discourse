@@ -9,3 +9,7 @@ es:
     login:
       oauth2_basic:
         name: "OAuth 2"
+    admin:
+      site_settings:
+        categories:
+          discourse_oauth2_basic: "Inicio de sesión OAuth2"

@@ -23,7 +23,7 @@ DiscourseAi::Personas::Persona.system_personas.each do |persona_class, id|
       persona.allowed_group_ids = [Group::AUTO_GROUPS[:staff]]
     elsif summarization_personas.include?(persona_class)
       # Copy group permissions from site settings.
-      default_groups = [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:trust_level_3]]
+      default_groups = [Group::AUTO_GROUPS[:staff], Group::AUTO_GROUPS[:trust_level_1]]
 
       setting_name = "ai_custom_summarization_allowed_groups"
       if persona_class == DiscourseAi::Personas::ShortSummarizer
@@ -79,7 +79,9 @@ DiscourseAi::Personas::Persona.system_personas.each do |persona_class, id|
     end
   end
 
-  persona.tools = tools.map { |name, value| [name, value] }
+  forced_tool_names = instance.force_tool_use.map { |tool| tool.to_s.split("::").last }
+  persona.tools = tools.map { |name, value| [name, value, forced_tool_names.include?(name)] }
+  persona.forced_tool_count = instance.forced_tool_count
 
   persona.response_format = instance.response_format
   persona.examples = instance.examples

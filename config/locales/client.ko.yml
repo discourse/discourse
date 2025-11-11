@@ -170,7 +170,7 @@ ko:
       header:
         logged_in_members: "어서오세요, %{preferred_display_name}님!"
         anonymous_members: "%{site_name}에 오신 것을 환영합니다!"
-      search: "검색"
+      search_placeholder: "검색"
     themes:
       default_description: "기본"
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 테마를 업데이트 또는 재설정하거나, 테마 사용을 중지하세요."
@@ -408,6 +408,7 @@ ko:
       other: "%{count}개의 새 주제 보기"
     preview: "미리보기"
     cancel: "취소"
+    done: "완료"
     deleting: "삭제 중…"
     save: "변경사항 저장"
     saving: "저장 중…"
@@ -480,10 +481,6 @@ ko:
         required: "항목을 검토하려면 먼저 항목을 독점해야 합니다."
         claimed_by_you: "이 항목을 독점했으며 이제 검토할 수 있습니다."
         claimed_by_other: "이 항목은 <b>%{username}</b> 님만 검토할 수 있습니다."
-      claim:
-        title: "이 주제 독점하기"
-      unclaim:
-        help: "이 독점 신청 제거"
       awaiting_approval: "승인 대기중"
       delete: "삭제"
       settings:
@@ -607,6 +604,7 @@ ko:
         reviewable_post:
           title: "게시물"
           noun: "글"
+      user_label: "사용자"
       notes:
         delete: "삭제하기"
       review_user: "사용자"
@@ -1126,14 +1124,13 @@ ko:
       color_scheme: "색상 팔레트"
       color_schemes:
         default_description: "디폴트 테마"
-        disable_dark_scheme: "일반과 동일"
         undo: "리셋"
-        regular: "일반"
         dark: "다크 모드"
-        default_dark_scheme: "(사이트 디폴트)"
         interface_modes:
           light: "라이트"
           dark: "다크"
+        picker:
+          active: "활성화 사용자"
       dark_mode: "다크 모드"
       text_size_default_on_all_devices: "모든 디바이스에서 디폴트 텍스트 크기로 설정"
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
@@ -1914,6 +1911,8 @@ ko:
     full_name_requirement:
       required_at_signup: "필수"
       optional_at_signup: "선택 사항"
+    welcome_banner_page_visibility:
+      homepage: "홈페이지"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1924,6 +1923,7 @@ ko:
         other: "+%{count}개의 하위 카테고리"
       topic_count:
         other: "이 카테고리에는 %{count}개의 주제가 있습니다"
+      read_only: "읽기 전용"
     select_kit:
       delete_item: "%{name} 삭제"
       filter_by: "필터링 기준: %{name}"
@@ -1978,7 +1978,7 @@ ko:
       whisper: "귓속말"
       unlist: "목록에서 제외됨"
       add_warning: "공식 경고입니다."
-      toggle_whisper: "귓속말 토글"
+      toggle_whisper: "귀속말 켜고 끄기"
       posting_not_on_topic: "어떤 주제에 댓글을 달까요?"
       saved_local_draft_tip: "로컬에 저장됨"
       drafts_offline: "오프라인 초안"
@@ -2007,10 +2007,12 @@ ko:
       reply: "댓글 달기"
       cancel: "취소"
       create_topic: "주제 생성"
+      create_pm: "전송"
       create_whisper: "귓속말"
       create_shared_draft: "공유 초안 생성"
       edit_shared_draft: "공유 초안 편집"
       title: "또는 %{modifier}Enter를 누르세요"
+      discard: "포기"
       users_placeholder: "사용자 또는 그룹 추가"
       title_placeholder: "토론 주제를 한 문장으로 적으세요"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요"
@@ -2045,19 +2047,9 @@ ko:
       paste_code_text: "여기에 코드를 입력하거나 붙여 넣으세요"
       upload_title: "업로드"
       upload_description: "여기에 업로드 설명을 입력하세요"
-      olist_title: "번호 매기기 목록"
-      ulist_title: "글머리 기호 목록"
       list_item: "목록 항목"
-      toggle_direction: "방향 전환"
       help: "Markdown 편집 도움말"
-      collapse: "작성기 패널 최소화"
-      open: "작성기 패널 열기"
-      abandon: "작성기 닫기 및 초안 버리기"
-      enter_fullscreen: "전체화면으로 작성기 보기"
-      exit_fullscreen: "작성기 전체화면 종료"
       exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
-      show_toolbar: "작성기 툴바 표시"
-      hide_toolbar: "작성기 툴바 숨기기"
       modal_ok: "확인"
       cant_send_pm: "%{username} 님에게 메시지를 보낼 수 없습니다."
       yourself_confirm:
@@ -2086,8 +2078,9 @@ ko:
         toggle_whisper:
           label: 귓속말 토글
           desc: 귓속말은 운영진만 볼 수 있습니다
-        create_topic:
-          label: "새 주제"
+        create_personal_message:
+          label: "새 메시지"
+          desc: "새 개인 메시지 쓰기"
         shared_draft:
           label: "공유 초안"
           desc: "허용된 사용자만 볼 수 있는 주제 초안을 작성합니다"
@@ -2433,7 +2426,6 @@ ko:
       filter_to:
         other: "이 주제의 게시물 %{count}개"
       create: "새 주제"
-      create_long: "새 주제 생성"
       open_draft: "초안 열기"
       private_message: "메시지 시작"
       archive_message:
@@ -2546,8 +2538,6 @@ ko:
       auto_close_title: "자동 종료 설정"
       auto_close_immediate:
         other: "주제의 마지막 게시물은 이미 %{count} 시간이 지났으므로 이 주제는 즉시 종료됩니다."
-      auto_close_momentarily:
-        other: "주제의 마지막 게시물은 이미 %{count} 시간이 지났으므로 이 주제는 일시적으로 종료됩니다."
       timeline:
         back: "뒤로 가기"
         back_description: "읽지 않은 마지막 게시물로 이동합니다"
@@ -2856,10 +2846,7 @@ ko:
         attachment_upload_not_allowed_for_new_user: "신규 사용자는 첨부 파일을 업로드할 수 없습니다."
         attachment_download_requires_login: "첨부 파일을 다운로드하려면 로그인이 필요합니다."
       cancel_composer:
-        confirm: "게시물에 어떤 작업을 하고 싶나요?"
         discard: "버리기"
-        save_draft: "나중을 위해 초안 저장"
-        keep_editing: "편집 유지"
       via_email: "이 게시물은 이메일을 통해 전달됐습니다"
       via_auto_generated_email: "이 게시물은 자동 생성된 이메일로 전달됐습니다"
       whisper: "이 게시물은 운영자를 위한 비공개 귓속말입니다"
@@ -3017,8 +3004,8 @@ ko:
         name: "그룹명"
         description: "내용"
         remove: "제거"
-      tags_allowed_tags: "이 태그를 이 카테고리로 제한:"
-      tags_allowed_tag_groups: "이 태그 그룹을 이 카테고리로 제한:"
+      tags_allowed_tags_new_category: "이 태그를 현재 카테고리로 제한:"
+      tags_allowed_tag_groups_new_category: "이 태그 그룹을 현재 카테고리로 제한:"
       tags_placeholder: "(선택사항) 허용된 태그 목록"
       tags_tab_description: "위에 지정된 태그 및 태그 그룹은 이 카테고리 및 이를 지정하는 기타 카테고리에서만 사용할 수 있습니다. 그외 카테고리에서는 사용할 수 없습니다."
       tag_groups_placeholder: "(선택사항) 허용된 태그 그룹 목록"
@@ -3041,6 +3028,8 @@ ko:
       logo: "카테고리 로고 이미지"
       background_image: "카테고리 백그라운드 이미지"
       background_color: "색상"
+      color_validations:
+        cant_be_empty: "필수 작성"
       styles:
         icon: "아이콘"
         emoji: "이모티콘"
@@ -3334,7 +3323,6 @@ ko:
     preloader_text: "로딩 중"
     lightbox:
       download: "다운로드"
-      open: "원본 이미지"
       previous: "이전(왼쪽 화살표 키)"
       next: "다음(오른쪽 화살표 키)"
       counter: "%curr% / %total%"
@@ -3474,7 +3462,6 @@ ko:
       selector_remove_filter: "필터 제거"
       tags: "태그"
       choose_for_topic: "태그(선택사항)"
-      info: "정보"
       default_info: "이 태그는 카테고리로 제한되지 않으며 동의어가 없습니다."
       category_restricted: "이 태그는 액세스 권한이 없는 카테고리로 제한됩니다."
       synonyms: "동의어"
@@ -3740,6 +3727,7 @@ ko:
   admin_js:
     type_to_filter: "필터 입력..."
     settings: "설정"
+    reset_filter: "리셋"
     admin:
       title: "Discourse 관리자"
       moderator: "운영자"
@@ -3767,6 +3755,19 @@ ko:
           title: "보안"
         plugins:
           title: "플러그인"
+      upcoming_changes:
+        name: "그룹명"
+        enabled: "활성화"
+        preview: "미리 보기"
+        impact_roles:
+          admins: "관리자"
+          moderators: "관리자"
+          staff: "스태프"
+        filter:
+          all: "모두"
+          enabled: "활성화"
+          disabled: "비활성"
+          impact_type_other: "기타"
       config:
         developer:
           title: "개발자"
@@ -3778,6 +3779,10 @@ ko:
           title: "파일"
         legal:
           title: "법률조항"
+        login:
+          sub_pages:
+            common_settings:
+              title: "설정"
         logo:
           form:
             mobile: "모바일"
@@ -4364,7 +4369,6 @@ ko:
         copy_to_clipboard: "클립보드에 복사"
         copied_to_clipboard: "클립보드로 복사됨"
         copy_to_clipboard_error: "클립보드로 복사하는 중 에러가 발생하였습니다"
-        theme_owner: "편집 불가, 소유자:"
         email_templates:
           title: "이메일"
           subject: "제목"
@@ -4372,6 +4376,7 @@ ko:
           body: "본문"
           revert: "변경사항 되돌리기"
           revert_confirm: "변경사항을 되돌릴까요?"
+          edit: "편집"
         component:
           all_filter: "전체"
           enabled_filter: "활성화"
@@ -4405,13 +4410,12 @@ ko:
           extra_files_upload: "이 파일을 보려면 테마를 내보내세요."
           extra_files_remote: "이 파일을 보려면 테마를 내보내거나 Git 저장소를 확인하세요."
           preview: "미리보기"
-          default: "활성화 사용자"
           is_default: "디폴트로 테마가 활성화되었습니다"
           user_selectable: "사용자가 테마를 선택할 수 있습니다"
           auto_update: "Discourse 업데이트 시 자동 업데이트"
           color_scheme: "색상 팔레트"
           default_light_scheme: "라이트(디폴트)"
-          color_scheme_select: "테마에서 사용할 색상 선택"
+          color_scheme_select: "테마에서 사용될 컬러 선택."
           custom_sections: "사용자 지정 섹션:"
           theme_components: "테마 구성 요소:"
           add_all_themes: "모든 테마 추가"
@@ -4489,10 +4493,6 @@ ko:
           remote_theme_edits: "이 테마를 편집하려면 <a href='%{repoURL}' target='_blank'>저장소에 변경사항을 제출</a>해야 합니다."
           repo_unreachable: "이 테마의 Git 저장소에 접속할 수 없습니다. 오류 메시지:"
           imported_from_archive: "이 테마는 .zip 파일에서 임포트했습니다."
-          settings: "설정"
-          colors: "색상"
-          discard_colors: "포기"
-          colors_title: "색상"
           scss:
             text: "CSS"
           after_header:
@@ -4531,12 +4531,12 @@ ko:
           select_base:
             title: "베이스 색상 팔레트 선택"
             description: "베이스 팔레트:"
+          light: "라이트"
+          dark: "다크"
           title: "색상"
           edit: "편집"
           filters:
             all: "모두"
-          active_badge:
-            text: "활성화 사용자"
           about: "테마에 사용되는 색상을 수정합니다. 시작하려면 새 색상 팔레트를 생성하세요."
           copy_name_prefix: "다음의 사본"
           undo: "실행 취소"
@@ -5054,8 +5054,6 @@ ko:
             transfer_and_delete: "@%{username} 이전 및 삭제"
             cancel: "취소"
         merge_failed: "사용자를 병합하는 중에 오류가 발생했습니다."
-        delete_forbidden_because_staff: "관리자 및 운영자 계정은 삭제할 수 없습니다."
-        delete_posts_forbidden_because_staff: "관리자 및 운영자의 게시물은 모두 삭제할 수 없습니다."
         delete_forbidden:
           other: "게시물이 있는 사용자는 삭제할 수 없습니다. 사용자를 삭제하기 전에 게시물을 모두 삭제해야 합니다. (%{count}일 이전에 작성한 글은 삭제할 수 없습니다.)"
         cant_delete_all_posts:

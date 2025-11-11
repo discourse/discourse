@@ -8,8 +8,8 @@ describe ListController do
     SiteSetting.assign_enabled = true
   end
 
-  fab!(:user) { Fabricate(:active_user) }
-  fab!(:user2) { Fabricate(:user) }
+  fab!(:user, :active_user)
+  fab!(:user2, :user)
   let(:admin) { Fabricate(:admin) }
   let(:post) { Fabricate(:post) }
 
@@ -48,9 +48,9 @@ describe ListController do
   describe "#group_topics_assigned" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1) { Fabricate(:post) }
-    fab!(:post2) { Fabricate(:post) }
-    fab!(:post3) { Fabricate(:post) }
+    fab!(:post1, :post)
+    fab!(:post2, :post)
+    fab!(:post3, :post)
     fab!(:topic) { post3.topic }
     fab!(:topic1) { post1.topic }
     fab!(:topic2) { post2.topic }
@@ -110,9 +110,9 @@ describe ListController do
   describe "#sorting messages_assigned and group_topics_assigned" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1) { Fabricate(:post) }
-    fab!(:post2) { Fabricate(:post) }
-    fab!(:post3) { Fabricate(:post) }
+    fab!(:post1, :post)
+    fab!(:post2, :post)
+    fab!(:post3, :post)
     fab!(:topic1) { post1.topic }
     fab!(:topic2) { post2.topic }
     fab!(:topic3) { post3.topic }
@@ -131,7 +131,7 @@ describe ListController do
     it "group_topics_assigned returns sorted topicsList" do
       topic1.bumped_at = Time.now
       topic2.bumped_at = 1.day.ago
-      topic3.bumped_at = 3.day.ago
+      topic3.bumped_at = 3.days.ago
 
       topic1.views = 3
       topic2.views = 5
@@ -178,7 +178,7 @@ describe ListController do
 
     it "messages_assigned returns sorted topicsList" do
       topic1.bumped_at = Time.now
-      topic3.bumped_at = 3.day.ago
+      topic3.bumped_at = 3.days.ago
 
       topic1.views = 3
       topic3.views = 1
@@ -224,9 +224,9 @@ describe ListController do
   describe "filtering of topics as per parameter" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1) { Fabricate(:post) }
-    fab!(:post2) { Fabricate(:post) }
-    fab!(:post3) { Fabricate(:post) }
+    fab!(:post1, :post)
+    fab!(:post2, :post)
+    fab!(:post3, :post)
     fab!(:topic1) { post1.topic }
     fab!(:topic2) { post2.topic }
     fab!(:topic3) { post3.topic }
@@ -307,8 +307,8 @@ describe ListController do
   describe "#messages_assigned" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1) { Fabricate(:post) }
-    fab!(:post2) { Fabricate(:post) }
+    fab!(:post1, :post)
+    fab!(:post2, :post)
 
     before do
       add_to_assign_allowed_group(user)
@@ -360,9 +360,9 @@ describe ListController do
 
     fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:mods_and_admins]) }
 
-    fab!(:topic_1) { Fabricate(:topic) }
-    fab!(:topic_2) { Fabricate(:topic) }
-    fab!(:topic_3) { Fabricate(:topic) }
+    fab!(:topic_1, :topic)
+    fab!(:topic_2, :topic)
+    fab!(:topic_3, :topic)
 
     fab!(:post_1) { Fabricate(:post, topic: topic_1) }
     fab!(:post_2) { Fabricate(:post, topic: topic_2) }
@@ -408,6 +408,142 @@ describe ListController do
         expect(
           response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
         ).to contain_exactly(topic_2.id)
+      end
+
+      it "filters topics by multiple assigned users and groups" do
+        add_to_assign_allowed_group(user)
+        user2 = Fabricate(:user)
+        add_to_assign_allowed_group(user2)
+
+        # Assign topics to different users and groups
+        Assigner.new(topic_1, admin).assign(user)
+        Assigner.new(topic_2, admin).assign(group)
+        Assigner.new(topic_3, admin).assign(user2)
+
+        # Test filtering by multiple users and groups (comma-separated)
+        get "/filter",
+            params: {
+              q: "assigned:#{user.username_lower},#{group.name},#{user2.username_lower}",
+              format: :json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
+
+      it "filters topics by subset of multiple assigned users and groups" do
+        add_to_assign_allowed_group(user)
+        user2 = Fabricate(:user)
+        add_to_assign_allowed_group(user2)
+
+        # Assign topics to different users and groups
+        Assigner.new(topic_1, admin).assign(user)
+        Assigner.new(topic_2, admin).assign(group)
+        # topic_3 remains unassigned
+
+        # Test filtering by specific users only
+        get "/filter",
+            params: {
+              q: "assigned:#{user.username_lower},#{user2.username_lower}",
+              format: :json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "filters topics by assigned:*" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+        Assigner.new(topic_2, admin).assign(group)
+        # topic_3 remains unassigned
+
+        get "/filter", params: { q: "assigned:*", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id)
+      end
+
+      it "filters topics by assigned:nobody" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+        Assigner.new(topic_2, admin).assign(group)
+        # topic_3 remains unassigned
+
+        get "/filter", params: { q: "assigned:nobody", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_3.id)
+      end
+
+      it "handles empty multi-value assigned filter gracefully" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+
+        # Test with empty values and spaces
+        get "/filter", params: { q: "assigned:,  ,", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
+
+      it "handles non-existent users and groups in multi-value filter" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+
+        # Test with mix of existing and non-existing users/groups
+        get "/filter",
+            params: {
+              q: "assigned:#{user.username_lower},nonexistent_user,nonexistent_group",
+              format: :json,
+            }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id)
+      end
+    end
+
+    describe "when user cannot assign" do
+      it "ignores the assigned:* filter" do
+        add_to_assign_allowed_group(admin)
+
+        Assigner.new(topic_1, admin).assign(admin)
+
+        get "/filter", params: { q: "assigned:*", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
+
+      it "ignores the assigned:nobody filter" do
+        add_to_assign_allowed_group(admin)
+
+        Assigner.new(topic_1, admin).assign(admin)
+
+        get "/filter", params: { q: "assigned:nobody", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
       end
     end
   end

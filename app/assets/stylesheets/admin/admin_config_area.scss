@@ -44,7 +44,6 @@
 
   &__content {
     margin-top: 0.5rem;
-    padding-right: 15px;
   }
 }
 
@@ -83,7 +82,7 @@
 
   &__aside {
     /* use for help inset */
-    flex: 0 1 30%;
+    flex: 0 1 20%;
     padding: var(--space-2);
 
     @media (max-width: $mobile-breakpoint) {

@@ -63,8 +63,8 @@ lt:
           title: "Temos žemėlapis"
         site_header:
           title: "Svetainės antraštė"
-        suggested_topics:
-          title: "Siūlomos Temos"
+        more_topics:
+          title: "Daugiau Temų"
         modal:
           title: "Modalinis"
           header: "Modalinis pavadinimas"

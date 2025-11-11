@@ -9,10 +9,16 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   def toggle
     post = fetch_post_from_params
+    reaction = params[:reaction]
 
-    if DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
-      return render_json_error(post)
-    end
+    invalid_reaction =
+      if SiteSetting.discourse_reactions_allow_any_emoji
+        !Emoji.exists?(reaction)
+      else
+        DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
+      end
+
+    return render_json_error(post) if invalid_reaction
 
     begin
       manager =
@@ -61,7 +67,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         .joins("LEFT JOIN categories c ON c.id = t.category_id")
         .includes(:user, :post, :reaction)
         .where(user_id: user.id)
-        .where("discourse_reactions_reactions.reaction_users_count IS NOT NULL")
+        .where.not(discourse_reactions_reactions: { reaction_users_count: nil })
 
     reaction_users = secure_reaction_users!(reaction_users)
 
@@ -95,7 +101,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       DiscourseReactions::ReactionUser
         .joins(:reaction)
         .where(post_id: post_ids)
-        .where("discourse_reactions_reactions.reaction_users_count IS NOT NULL")
+        .where.not(discourse_reactions_reactions: { reaction_users_count: nil })
 
     # Guarantee backwards compatibility if someone was calling this endpoint with the old param.
     # TODO(roman): Remove after the 2.9 release.
@@ -180,9 +186,10 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           .joins(
             "LEFT JOIN discourse_reactions_reactions ON discourse_reactions_reactions.id = discourse_reactions_reaction_users.reaction_id",
           )
-          .where(
-            "discourse_reactions_reactions.reaction_value NOT IN (:valid_reactions)",
-            valid_reactions: DiscourseReactions::Reaction.valid_reactions.to_a,
+          .where.not(
+            discourse_reactions_reactions: {
+              reaction_value: DiscourseReactions::Reaction.valid_reactions.to_a,
+            },
           )
 
       likes = likes.where.not(id: historical_reaction_likes.select(:id))

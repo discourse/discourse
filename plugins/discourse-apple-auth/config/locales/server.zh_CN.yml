@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  site_settings:
+    sign_in_with_apple_enabled: '是否启用使用 Apple 登录？'
+    apple_team_id: '（使用 Apple 登录）Apple Team ID（10 个字符）'
+    apple_key_id: '（使用 Apple 登录）Apple Key ID（10 个字符）'
+    apple_pem: '（使用 Apple 登录）Apple Pem 文件内容。包括 BEGIN 和 END 行'

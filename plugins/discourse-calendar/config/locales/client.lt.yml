@@ -24,6 +24,7 @@ lt:
         month: "Per mėnesį"
         week: "Per savaitę"
         day: "Diena"
+        year: "Metai"
     group_timezones:
       search: "Paieška..."
     discourse_post_event:

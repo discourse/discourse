@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_affiliate: "Discourse-affiliate"

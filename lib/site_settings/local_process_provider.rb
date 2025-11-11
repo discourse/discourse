@@ -21,8 +21,6 @@ class SiteSettings::LocalProcessProvider
     end
   end
 
-  attr_accessor :model
-
   def settings
     @settings[current_site] ||= {}
   end
@@ -48,10 +46,6 @@ class SiteSettings::LocalProcessProvider
       settings[name] = setting
     end
     setting.value = value.to_s
-
-    # So we can simulate the MessageBus notifications
-    # done by the DbProvider
-    @model.notify_changed! if @model
 
     setting
   end

@@ -10,6 +10,14 @@ module DiscourseAi
           end
         end
 
+        def strip_upload_markdown_mode
+          if llm_model.name.include?("image")
+            :all
+          else
+            :model_only
+          end
+        end
+
         def native_tool_support?
           !llm_model.lookup_custom_param("disable_native_tools")
         end
@@ -84,14 +92,14 @@ module DiscourseAi
         end
 
         def model_msg(msg)
-          if beta_api?
-            { role: "model", parts: [{ text: msg[:content] }] }
-          else
-            { role: "model", parts: { text: msg[:content] } }
-          end
+          message_for_role("model", msg)
         end
 
         def user_msg(msg)
+          message_for_role("user", msg)
+        end
+
+        def message_for_role(role, msg)
           content_array = []
           content_array << "#{msg[:id]}: " if msg[:id]
 
@@ -107,9 +115,9 @@ module DiscourseAi
             )
 
           if beta_api?
-            { role: "user", parts: content_array }
+            { role:, parts: content_array }
           else
-            { role: "user", parts: content_array.first }
+            { role:, parts: content_array.first }
           end
         end
 

@@ -14,12 +14,15 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import {
+  isAiCreditLimitError,
+  popupAiCreditLimitError,
+} from "../../lib/ai-errors";
 import DiffStreamer from "../../lib/diff-streamer";
 import SmoothStreamer from "../../lib/smooth-streamer";
 import AiIndicatorWave from "../ai-indicator-wave";
 
 export default class ModalDiffModal extends Component {
-  @service currentUser;
   @service messageBus;
 
   @tracked loading = false;
@@ -104,6 +107,13 @@ export default class ModalDiffModal extends Component {
 
   @action
   updateResult(result) {
+    if (isAiCreditLimitError(result)) {
+      this.loading = false;
+      popupAiCreditLimitError(result);
+      this.cleanup();
+      return;
+    }
+
     this.loading = false;
 
     if (result.done) {
@@ -138,7 +148,11 @@ export default class ModalDiffModal extends Component {
 
       this.progressChannel = result.progress_channel;
     } catch (e) {
-      popupAjaxError(e);
+      if (isAiCreditLimitError(e)) {
+        popupAiCreditLimitError(e);
+      } else {
+        popupAjaxError(e);
+      }
     }
   }
 

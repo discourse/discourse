@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Welcome banner", type: :system do
-  fab!(:current_user, :user)
+  fab!(:current_user) { Fabricate(:user, seen_before: true) }
   let(:banner) { PageObjects::Components::WelcomeBanner.new }
   let(:search_page) { PageObjects::Pages::Search.new }
 
@@ -22,6 +22,16 @@ describe "Welcome banner", type: :system do
       sign_in(current_user)
       visit "/"
       expect(banner).to have_logged_in_title(current_user.username)
+    end
+
+    context "for new users who have not visited before" do
+      fab!(:current_user, :user)
+
+      it "shows a new user title" do
+        sign_in(current_user)
+        visit "/"
+        expect(banner).to have_new_user_title(current_user.username)
+      end
     end
 
     context "with subheader translations" do
@@ -146,6 +156,44 @@ describe "Welcome banner", type: :system do
       end
     end
 
+    context "for background image setting" do
+      fab!(:current_user, :admin)
+      fab!(:bg_img) { Fabricate(:image_upload, color: "cyan") }
+
+      before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
+
+      it "shows banner without background image" do
+        sign_in(current_user)
+        visit "/"
+        expect(banner).to be_visible
+        expect(banner).to have_no_bg_img
+      end
+
+      it "sets a background image with uploaded image" do
+        SiteSetting.welcome_banner_image = bg_img
+
+        sign_in(current_user)
+        visit "/"
+        expect(banner).to have_bg_img(bg_img.url)
+      end
+
+      context "for text color setting" do
+        let(:red) { "#ff0000" }
+        before { SiteSetting.welcome_banner_text_color = red }
+
+        it "doesn't set text color without background image" do
+          visit "/"
+          expect(banner).to have_no_custom_text_color(red)
+        end
+
+        it "applies text color if background image is set" do
+          SiteSetting.welcome_banner_image = bg_img
+          visit "/"
+          expect(banner).to have_custom_text_color(red)
+        end
+      end
+    end
+
     context "with interface location setting" do
       it "shows above topic content" do
         SiteSetting.welcome_banner_location = "above_topic_content"
@@ -163,15 +211,58 @@ describe "Welcome banner", type: :system do
     context "with interface page visibility setting" do
       before { current_user.update!(admin: true) }
 
-      it "should show on all pages" do
-        SiteSetting.welcome_banner_page_visibility = "all_pages"
+      context "when show on all pages" do
+        fab!(:invite)
+        let(:inactive_user_email_token) do
+          Fabricate(:email_token, user: Fabricate(:user, active: false))
+        end
+        let(:password_reset_email_token) do
+          current_user.email_tokens.create!(
+            email: current_user.email,
+            scope: EmailToken.scopes[:password_reset],
+          )
+        end
 
-        visit "/"
-        expect(banner).to be_visible
-        sign_in(current_user)
-        %W[/ /u/#{current_user.username}/preferences/emails /my/messages].each do |path|
-          visit path
+        before { SiteSetting.welcome_banner_page_visibility = "all_pages" }
+
+        it "should show on" do
+          sign_in(current_user)
+
+          visit "/"
           expect(banner).to be_visible
+
+          visit "/u/#{current_user.username}/preferences/emails"
+          expect(banner).to be_visible
+
+          visit "/my/messages"
+          expect(banner).to be_visible
+        end
+
+        it "should NOT show on" do
+          visit "/login"
+          expect(banner).to be_hidden
+
+          visit "/signup"
+          expect(banner).to be_hidden
+
+          visit "/invites/#{invite.invite_key}"
+          expect(banner).to be_hidden
+
+          visit "/u/activate-account/#{inactive_user_email_token}"
+          expect(banner).to be_hidden
+
+          sign_in(current_user)
+          visit "/u/password-reset/#{password_reset_email_token}"
+          expect(banner).to be_hidden
+
+          visit "/admin"
+          expect(banner).to be_hidden
+
+          visit "/admin/config/site-admin"
+          expect(banner).to be_hidden
+
+          visit "/admin/customize"
+          expect(banner).to be_hidden
         end
       end
 

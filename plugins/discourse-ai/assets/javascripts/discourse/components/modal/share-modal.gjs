@@ -14,7 +14,6 @@ import copyConversation from "../../lib/copy-conversation";
 
 export default class ShareModal extends Component {
   @service modal;
-  @service siteSettings;
   @service currentUser;
 
   @tracked contextValue = 1;

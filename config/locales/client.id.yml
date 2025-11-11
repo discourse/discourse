@@ -162,7 +162,7 @@ id:
     welcome_banner:
       header:
         anonymous_members: "Selamat datang ke %{site_name}!"
-      search: "Cari"
+      search_placeholder: "Cari"
     themes:
       default_description: "Asal"
       error_caused_by: "Disebabkan oleh '%{name}'. <a target='blank' href='%{path}'>Klik di sini</a> untuk memperbarui, mengkonfigurasi ulang, atau menonaktifkan."
@@ -436,10 +436,6 @@ id:
         required: "Anda harus mengklaim hal ini sebelum dapat meninjaunya."
         claimed_by_you: "Anda telah mengklaim item ini dan dapat meninjaunya."
         claimed_by_other: "Item ini hanya dapat ditinjau oleh <b>%{username}</b> ."
-      claim:
-        title: "klaim topik ini"
-      unclaim:
-        help: "hapus klaim ini"
       awaiting_approval: "Menunggu Persetujuan"
       delete: "Hapus"
       settings:
@@ -579,6 +575,7 @@ id:
         reviewable_post:
           title: "Postingan"
           noun: "postingan"
+      user_label: "Pengguna"
       notes:
         delete: "Hapus"
       review_user: "Pengguna"
@@ -1046,11 +1043,10 @@ id:
       theme_default_on_all_devices: "Jadikan ini tema default di semua perangkat saya"
       color_schemes:
         default_description: "Default tema"
-        disable_dark_scheme: "Sama seperti reguler"
         undo: "Reset"
-        regular: "Umum"
         dark: "Mode gelap"
-        default_dark_scheme: "(bawaan situs)"
+        picker:
+          active: "Aktif"
       dark_mode: "Mode Gelap"
       text_size_default_on_all_devices: "Jadikan ini ukuran teks default di semua perangkat saya"
       allow_private_messages: "Izinkan pengguna lain mengirimi saya pesan pribadi"
@@ -1212,7 +1208,7 @@ id:
         taken: "Maaf, username tersebut sudah ada yang menggunakan"
         invalid: "Username tersebut tidak valid. Username harus berupa angka dan huruf"
       add_email:
-        add: "menambahkan"
+        add: "Menambahkan"
       change_email:
         title: "Ganti Alamat Surel"
         taken: "Maaf, alamat surel tersebut tidak tersedia."
@@ -1640,8 +1636,10 @@ id:
       reply: "Balas"
       cancel: "Batal"
       create_topic: "Buat Topik"
+      create_pm: "Kirim pesan"
       create_shared_draft: "Buat Konsep Bersama"
       edit_shared_draft: "Sunting Konsep Bersama"
+      discard: "Batalkan"
       title_placeholder: "Tentang apa diskusi ini dalam satu kalimat pendek?"
       title_or_link_placeholder: "Ketik judul, atau tempel tautan disini"
       edit_reason_placeholder: "mengapa Anda menyunting?"
@@ -1680,8 +1678,9 @@ id:
         reply_to_topic:
           label: Balas ke topik
           desc: Membalas topik, bukan tulisan tertentu
-        create_topic:
-          label: "Topik Baru"
+        create_personal_message:
+          label: "Pesan baru"
+          desc: "Buat pesan pribadi baru"
         shared_draft:
           label: "Konsep Bersama"
       ignore: "Abaikan"
@@ -1797,7 +1796,6 @@ id:
         name: "Tandai Belum Dibaca"
     topic:
       create: "Topik Baru"
-      create_long: "Pilih topik baru"
       archive_message:
         title: "Arsip"
       move_to_inbox:
@@ -1969,6 +1967,8 @@ id:
       name: "Nama Kategori"
       description: "Deskripsi"
       background_image_dark: "Gambar Latar Belakang Kategori Gelap"
+      color_validations:
+        cant_be_empty: "tidak boleh kosong"
       permissions:
         reply: "Balas"
         create: "Buat"
@@ -2098,7 +2098,6 @@ id:
       admin_message: 'Salah satu tema Anda telah mengaktifkan pengubah "custom_homepage" tetapi tidak menampilkan apa pun di konektor [custom-homepage]. (Pesan ini hanya ditampilkan kepada administrator situs.)'
     preloader_text: "Memuat"
     lightbox:
-      download: "unduh"
       close: "Tutup (Esc)"
     keyboard_shortcuts_help:
       jump_to:
@@ -2305,6 +2304,7 @@ id:
         categories: "Semua kategori"
   admin_js:
     settings: "Pengaturan"
+    reset_filter: "Reset"
     admin:
       title: "Admin Discourse"
       moderator: "Moderator"
@@ -2318,7 +2318,22 @@ id:
           title: "Akun"
         email:
           title: "Surel"
+      upcoming_changes:
+        name: "Nama"
+        enabled: "Diaktifkan"
+        impact_roles:
+          moderators: "Moderator"
+          staff: "Staf"
+        filter:
+          all: "Semua"
+          enabled: "Diaktifkan"
+          disabled: "Dinonaktifkan"
+          impact_type_other: "Lainnya"
       config:
+        login:
+          sub_pages:
+            common_settings:
+              title: "Pengaturan"
         logo:
           form:
             email: "Surel"
@@ -2566,6 +2581,7 @@ id:
           title: "Email"
           subject: "Judul"
           body: "Konten"
+          edit: "Ubah"
         component:
           all_filter: "Semua"
           enabled_filter: "Diaktifkan"
@@ -2579,7 +2595,6 @@ id:
           create_name: "Nama"
           save: "Simpan"
           edit: "Ubah"
-          default: "Aktif"
           selected:
             other: "%{count} dipilih"
           cancel: "Batal"
@@ -2592,10 +2607,6 @@ id:
           disable: "Nonaktifkan"
           add: "Menambahkan"
           empty: "Tidak ada item"
-          settings: "Pengaturan"
-          colors: "Warna"
-          discard_colors: "Batalkan"
-          colors_title: "Warna"
           all_filter: "Semua"
           active_filter: "Aktif"
         schema:
@@ -2608,8 +2619,6 @@ id:
           edit: "Ubah"
           filters:
             all: "Semua"
-          active_badge:
-            text: "Aktif"
           undo: "Batalkan perintah"
           revert: "Dibalik"
           primary:

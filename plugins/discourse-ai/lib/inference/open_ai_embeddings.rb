@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ::DiscourseAi
+module DiscourseAi
   module Inference
     class OpenAiEmbeddings
       def initialize(endpoint, api_key, model, dimensions)

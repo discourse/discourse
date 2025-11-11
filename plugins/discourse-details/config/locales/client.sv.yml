@@ -6,8 +6,6 @@
 
 sv:
   js:
-    details:
-      title: Dölj detaljer
     composer:
       details_title: Sammanfattning
       details_text: "Denna text kommer att döljas"

@@ -20,7 +20,7 @@ ur:
       group_mention_template: "ذکر: @%{name} کے"
       group_message_template: "پیغامات: @%{name} کیلئے"
       choose_group: "(ایک گروپ منتخب کریں)"
-      all_categories: "(تمام زُمرَہ جات)"
+      all_categories: "(تمام زمرہ جات)"
       all_tags: "(تمام ٹَیگز)"
       create_rule: "اصول بنائیں"
       create_channel: "چینل بنائیں"
@@ -30,7 +30,7 @@ ur:
       channel_delete_confirm: "کیا آپ واقعی یہ چینل حذف کرنا چاہتے ہیں؟ تمام منسلک اصول حذف ہو جائیں گے۔"
       test_modal:
         title: "ایک ٹیسٹ پیغام بھیجیں"
-        topic: "ٹاپک"
+        topic: "موضوع"
         send: "ٹیسٹ پیغام بھیجیں"
         close: "بند کریں"
         error: "پیغام بھیجنے پر ایک نامعلوم خرابی کا سامنا کرنا پڑا۔ مزید جاننے کیلئے سائٹ لاگز چیک کریں۔"
@@ -80,10 +80,9 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             action_prohibited: "بَوٹ کو اُس چینل پر پوسٹ کرنے کی اجازت نہیں ہے"
-            channel_not_found: "یہ مخصوص چینل سلَّیک پر موجود نہیں ہے"
         telegram:
           title: "ٹَیلیگرام"
           param:
@@ -116,7 +115,7 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             channel_not_found: "یہ مخصوص چینل مَیٹرمَوسٹ پر موجود نہیں ہے"
         matrix:
@@ -127,7 +126,6 @@ ur:
               help: "چَینل کی وضاحت کرنے کیلئے نام۔ یہ مَیٹرِکس کے ساتھ کنکشن کیلئے استعمال نہیں کیا جاتا ہے۔"
             room_id:
               title: "رُوم ID"
-              help: "رُوم کا 'پرائیوَِیٹ آئیڈَینٹِیفائر'۔ یہ کچھ abcdefg:matrix.org! کی طرح نظر آنا چاہئے"
           errors:
             unknown_token: "ایکسَیس ٹوکن غلط ہے"
             unknown_room: "رُوم ID غلط ہے"
@@ -147,7 +145,7 @@ ur:
           param:
             identifier:
               title: چَینل
-              help: "مثال کے طور پر #چینل، @صارف نام۔"
+              help: "مثال کے طور پر #چینل، @اسمِ صارف۔"
           errors:
             invalid_channel: "وہ چینل راکٹ چَیٹ پر موجود نہیں ہے"
         gitter:
@@ -201,5 +199,7 @@ ur:
               label: چَینل
         send_chat_integration_message:
           fields:
+            channel_name:
+              description: "آپ چیٹ انٹیگریشن ترتیبات میں چینل کا نام تلاش کر سکتے ہیں۔"
             provider:
               label: پرووَائیڈر

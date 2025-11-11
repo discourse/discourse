@@ -82,7 +82,6 @@ bg:
         none: "Без"
       title: "чат"
       title_capitalized: "Чат"
-      exit: "назад"
       channel_status:
         closed: "Затворена"
         open: "Отвори"
@@ -95,6 +94,8 @@ bg:
       chat_message_separator:
         today: Днес
         yesterday: Вчера
+      search_view:
+        filter_placeholder: Търси съобщения
       about_view:
         title: Заглавие
         name: Име
@@ -104,6 +105,7 @@ bg:
         tabs:
           members: Членове
           settings: Настройки
+          search: Търсене
         remove_member: "Премахване"
       new_message_modal:
         filter: "Филтър"
@@ -137,6 +139,10 @@ bg:
         members_label: "Членове"
       admin:
         title: "Чат"
+      search:
+        sort:
+          relevance: "Приложимост"
+          latest: "Последни"
       channel_list:
         title: "Канали"
       incoming_webhooks:

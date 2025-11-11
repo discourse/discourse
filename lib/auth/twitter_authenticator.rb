@@ -18,12 +18,18 @@ class Auth::TwitterAuthenticator < Auth::ManagedAuthenticator
   end
 
   def healthy?
-    connection =
-      Faraday.new(url: "https://api.twitter.com") do |config|
-        config.basic_auth(SiteSetting.twitter_consumer_key, SiteSetting.twitter_consumer_secret)
-      end
-    connection.post("/oauth2/token").status == 200
-  rescue Faraday::Error
+    consumer_key = SiteSetting.twitter_consumer_key
+    consumer_secret = SiteSetting.twitter_consumer_secret
+
+    return false if consumer_key.blank? || consumer_secret.blank?
+
+    OmniAuth::Strategies::Twitter
+      .new(nil, consumer_key, consumer_secret)
+      .consumer
+      .get_request_token(oauth_callback: "oob")
+
+    true
+  rescue OAuth::Error, Net::HTTPExceptions
     false
   end
 

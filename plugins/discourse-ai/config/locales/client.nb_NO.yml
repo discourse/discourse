@@ -54,6 +54,22 @@ nb_NO:
           name: "Spam"
       modals:
         select_option: "Velg et alternativ..."
+      translations:
+        title: "Oversettelser"
+        stats:
+          eta_minutes:
+            one: "%{count} minutt"
+            other: "%{count} minutter"
+          eta_hours:
+            one: "%{count} time"
+            other: "%{count} timer"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dager"
+        progress_chart:
+          bar_done:
+            one: "%{count} innlegg"
+            other: "%{count} innlegg"
       spam:
         short_title: "Spam"
         last_seven_days: "Siste 7 dager"

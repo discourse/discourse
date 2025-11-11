@@ -6,8 +6,6 @@
 
 sq:
   js:
-    details:
-      title: Fshih detajet
     composer:
       details_title: Përmbledhja
       details_text: "Ky tekst do të fshihet"

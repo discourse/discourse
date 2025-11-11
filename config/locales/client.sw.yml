@@ -141,7 +141,7 @@ sw:
     welcome_banner:
       header:
         anonymous_members: "Karibu kwenye %{site_name}!"
-      search: "Tafuta"
+      search_placeholder: "Tafuta"
     themes:
       default_description: "Halisi"
     s3:
@@ -264,6 +264,7 @@ sw:
       other: "Angalia Topiki %{count} Mpya"
     preview: "kihakiki"
     cancel: "Ghairi"
+    done: "Imekwisha"
     save: "Hifadhi Mabadiliko"
     saved: "Imehifadhiwa!"
     upload: "Pakia"
@@ -346,6 +347,7 @@ sw:
         reviewable_post:
           title: "Ujumbe"
           noun: "ujumbe"
+      user_label: "Mtumiaji"
       notes:
         delete: "Futa"
       review_user: "Mtumiaji"
@@ -669,10 +671,11 @@ sw:
       dismiss_notifications_tooltip: "Weka alama kuwa taarifa zote ambazo hazijasomwa kuwa zimesomwa"
       color_schemes:
         undo: "Anza Upya"
-        regular: "Kawaida"
         interface_modes:
           light: "Hafifu"
           dark: "Nyeusi"
+        picker:
+          active: "Amilifu"
       allow_private_messages: "Ruhusu watumiaji wengine wanitumie ujumbe binafsi"
       external_links_in_new_tab: "Fungua viungo vingine kwenye kichupo kingine"
       enable_quoting: "Ruhusu jibu nukulu kwenye neno lenye angaza"
@@ -1200,6 +1203,8 @@ sw:
     full_name_requirement:
       required_at_signup: "Muhimu na Inahitajika"
       optional_at_signup: "Sio muhimu"
+    welcome_banner_page_visibility:
+      homepage: "Ukurasa mkuu"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1245,7 +1250,6 @@ sw:
       whisper: "nong'ona"
       unlist: "ondoa kwenye orodha"
       add_warning: "Hii ni onyo rasmi."
-      toggle_whisper: "Badilisha Nong'ono"
       posting_not_on_topic: "Mada zipi unazotaka kuzijibu?"
       saved_local_draft_tip: "Imehifadhiwa kwenye mazingira yako"
       drafts_offline: "Miswadajaribio Nje ya Mtandao"
@@ -1287,13 +1291,8 @@ sw:
       paste_code_text: "andika au bandika kodi hapa"
       upload_title: "Pakia"
       upload_description: "Ingiza maelezo kuhusu upakiaji hapa"
-      olist_title: "Listi yenye namba"
-      ulist_title: "Listi yenye vitufe"
       list_item: "Listi kitu"
-      toggle_direction: "Badilisha uwelekeo"
       help: "Msaada kwenye kuhariri MarkDown"
-      collapse: "Shusha chini paneli ya Composer"
-      abandon: "Funga Composer na acha rasimu"
       modal_ok: "Sawa"
       cant_send_pm: "Samahani, hauwezi kutuma ujumbe kwenda kwa %{username}."
       yourself_confirm:
@@ -1314,8 +1313,9 @@ sw:
           desc: Jibu mada, sio chapisho lolote tu
         toggle_whisper:
           desc: Minong'ono inapatikana kwa wasaidizi tu
-        create_topic:
-          label: "Mada Mpya"
+        create_personal_message:
+          label: "Ujumbe mpya"
+          desc: "Tengeneza ujumbe binafsi mpya"
         shared_draft:
           label: "Mswadajaribio Gawiza"
       ignore: "Puuzia"
@@ -1531,7 +1531,6 @@ sw:
         one: "%{count} chapisho kwenye mada"
         other: "%{count} machapisho kwenye mada"
       create: "Mada Mpya"
-      create_long: "Tengeneza Mada mpya"
       open_draft: "Fungua Mswadajaribio"
       private_message: "Anzisha ujumbe"
       archive_message:
@@ -1939,6 +1938,8 @@ sw:
       logo: "Nembo ya Kategoria"
       background_image: "Mandharinyuma ya Kategoria"
       background_color: "Rangi"
+      color_validations:
+        cant_be_empty: "haiwezi kuachwa wazi"
       styles:
         icon: "ikoni"
         emoji: "Emoji"
@@ -2157,7 +2158,7 @@ sw:
       readonly: "Angalia"
     preloader_text: "Inapakuliwa"
     lightbox:
-      download: "pakua"
+      download: "Pakua"
       counter: "%curr% chini ya %total%"
     keyboard_shortcuts_help:
       title: "Njia Mkato za Baobonye"
@@ -2398,6 +2399,7 @@ sw:
         categories: "Kategoria Zote"
   admin_js:
     settings: "Mipangilio"
+    reset_filter: "Weka/Anzisha Upya"
     admin:
       title: "Kiongozi wa Discourse"
       moderator: "Msimamizi"
@@ -2418,6 +2420,19 @@ sw:
           title: "Ulinzi"
         plugins:
           title: "Programu Jalizi"
+      upcoming_changes:
+        name: "Jina"
+        enabled: "Imeruhusiwa"
+        preview: "Kihakiki"
+        impact_roles:
+          admins: "Viongozi"
+          moderators: "Wasimamizi"
+          staff: "Wasaidizi"
+        filter:
+          all: "Yote"
+          enabled: "Imeruhusiwa"
+          disabled: "Imezuiwa"
+          impact_type_other: "Nyingine"
       config:
         developer:
           title: "Mtengenezaji"
@@ -2427,6 +2442,10 @@ sw:
           title: "Mafaili"
         legal:
           title: "Halali"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Mipangilio"
         logo:
           form:
             mobile: "Kifaa cha kiganjani"
@@ -2834,13 +2853,13 @@ sw:
         copy_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copied_to_clipboard: "Umenakili kwenye Ubao Nakili"
         copy_to_clipboard_error: "Hitilafu imetokea wakati wa kunakili taarifa kwenye ubao nakili."
-        theme_owner: "haiwezi kufanyiwa uhariri, inamilikiwa na:"
         email_templates:
           title: "Barua Pepe"
           subject: "Maudhui"
           body: "Mwili"
           revert: "Ondoa Mabadiliko"
           revert_confirm: "Una uhakika unataka kuondoa mabadiliko?"
+          edit: "Hariri"
         component:
           all_filter: "Vyote"
           enabled_filter: "Imeruhusiwa"
@@ -2861,10 +2880,9 @@ sw:
           desktop: "Eneo kazi la Kompyuta"
           mobile: "Kifaa cha kiganjani"
           preview: "Kihakiki"
-          default: "Mara kwa Mara"
           is_default: "Mandhari imewezeshwa kama chaguo-msingi"
           user_selectable: "Mandhari inaweza kuchaguliwa na watumiaji"
-          color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari"
+          color_scheme_select: "Chagua rangi zitakazotumika kwenye mandhari."
           custom_sections: "Vifungu binafsi:"
           theme_components: "Vipengele vya Mandhari"
           cancel: "Ghairi"
@@ -2889,9 +2907,6 @@ sw:
           up_to_date: "Mandhari hii ime toleo la sasa, mara ya mwisho imeangaliwa:"
           add: "Ongeza"
           no_settings: "Mandhari hii haina mipangilio."
-          settings: "Mipangilio"
-          colors: "Rangi"
-          colors_title: "Rangi"
           scss:
             text: "CSS"
           after_header:
@@ -2910,12 +2925,12 @@ sw:
               too_small: "izidi au iwe sawa na %{count}"
               too_large: "lazima iwe chini ya au sawa na %{count}"
         colors:
+          light: "hafifu"
+          dark: "nyeusi"
           title: "Rangi"
           edit: "Hariri"
           filters:
             all: "Yote"
-          active_badge:
-            text: "Amilifu"
           copy_name_prefix: "Nakala ya"
           undo: "Tendua"
           undo_title: "tendua madiliko kwenye rangi hii kutoka mara ya mwisho ilivyohifadhiwa."
@@ -3271,8 +3286,6 @@ sw:
             cancel: "Ghairi"
           confirmation:
             cancel: "Ghairi"
-        delete_forbidden_because_staff: "Viongozi na wasimamizi hawawezi kufutwa."
-        delete_posts_forbidden_because_staff: "Hauwezi kufuta machapisho yote za viongozi na wasimamizi."
         cant_delete_all_posts:
           one: "Hauwezi kufuta taarifa zote. Kuna taarifa ambazo ziliandikwa siku %{count}zilizopita. (The delete_user_max_post_age setting.)"
           other: "Hauwezi kufuta machapisho yote. Kuna machapisho ambazo ziliandikwa siku %{count}zilizopita. (The delete_user_max_post_age setting.)"

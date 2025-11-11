@@ -150,6 +150,15 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
       "can be set to private"
     );
 
+    await click(".poll-toggle-dynamic");
+    await click(".insert-poll");
+    assert.strictEqual(
+      results[results.length - 1],
+      "[poll type=regular results=always public=false chartType=bar dynamic=true]\n* a\n* b\n[/poll]\n",
+      "includes dynamic=true when enabled"
+    );
+
+    await click(".poll-toggle-dynamic");
     const groupChooser = selectKit(".group-chooser");
     await groupChooser.expand();
     await groupChooser.selectRowByName("custom_group");

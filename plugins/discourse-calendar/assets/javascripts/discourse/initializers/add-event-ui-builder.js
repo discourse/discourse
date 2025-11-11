@@ -8,10 +8,14 @@ function initializeEventBuilder(api) {
 
   api.addComposerToolbarPopupMenuOption({
     action: (toolbarEvent) => {
+      const userTz = currentUser?.user_option?.timezone;
+      const timezone = userTz || moment.tz.guess();
+      const now = moment.tz(moment(), timezone);
+
       const event = DiscoursePostEventEvent.create({
         status: "public",
-        starts_at: moment(),
-        timezone: moment.tz.guess(),
+        starts_at: now,
+        timezone,
       });
 
       modal.show(PostEventBuilder, {

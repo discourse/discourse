@@ -3,7 +3,7 @@
 require_relative "dialect_context"
 
 RSpec.describe DiscourseAi::Completions::Dialects::Gemini do
-  fab!(:model) { Fabricate(:gemini_model) }
+  fab!(:model, :gemini_model)
   let(:context) { DialectContext.new(described_class, model) }
 
   before { enable_current_plugin }
@@ -18,6 +18,42 @@ RSpec.describe DiscourseAi::Completions::Dialects::Gemini do
       translated = context.system_user_scenario
 
       expect(translated).to eq(gemini_version)
+    end
+
+    describe "upload markdown stripping for image preview model" do
+      fab!(:upload)
+      let(:image_model) { Fabricate(:gemini_model, name: "gemini-2.5-flash-image-preview") }
+
+      it "strips upload markdown from both user and model messages" do
+        base62 = Upload.base62_sha1(upload.sha1)
+
+        user_md = "User text start ![user image](upload://#{base62}.png) end."
+        model_md = "Model text start ![model image](upload://#{base62}.png) end."
+
+        prompt =
+          DiscourseAi::Completions::Prompt.new(
+            nil,
+            messages: [
+              { type: :system, content: "Sys" },
+              { type: :user, content: [user_md, { upload_id: upload.id }] },
+              { type: :model, content: [model_md, { upload_id: upload.id }] },
+            ],
+          )
+
+        dialect = described_class.new(prompt, image_model)
+        expect(dialect.strip_upload_markdown_mode).to eq(:all)
+
+        translated = dialect.translate
+
+        user_msg = translated[:messages].find { |m| m[:role] == "user" }
+        model_msg = translated[:messages].find { |m| m[:role] == "model" }
+
+        user_text = user_msg[:parts].map { |p| p[:text] }.join
+        model_text = model_msg[:parts].map { |p| p[:text] }.join
+
+        expect(user_text).to eq("User text start  end.")
+        expect(model_text).to eq("Model text start  end.")
+      end
     end
 
     it "injects model after tool call" do

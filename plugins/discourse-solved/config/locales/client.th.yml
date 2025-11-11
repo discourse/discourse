@@ -21,6 +21,7 @@ th:
       solution: "วิธีแก้ปัญหา"
       solution_summary:
         other: "การแก้ปัญหา"
+      accepted_answer_post_number: "โพสต์ %{post_number}"
       topic_status_filter:
         all: "ทั้งหมด"
         solved: "แก้ไขแล้ว"

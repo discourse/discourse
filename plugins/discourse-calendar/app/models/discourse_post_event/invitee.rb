@@ -9,7 +9,7 @@ module DiscoursePostEvent
     belongs_to :event, foreign_key: :post_id
     belongs_to :user
 
-    default_scope { joins(:user).includes(:user).where("users.id IS NOT NULL") }
+    default_scope { joins(:user).includes(:user).where.not(users: { id: nil }) }
     scope :with_status, ->(status) { where(status: Invitee.statuses[status]) }
 
     after_commit :sync_chat_channel_members
@@ -19,6 +19,11 @@ module DiscoursePostEvent
     end
 
     def self.create_attendance!(user_id, post_id, status)
+      event = Event.find(post_id)
+      if status.to_sym == :going && event.at_capacity?
+        raise Discourse::InvalidParameters.new(:max_attendees)
+      end
+
       invitee =
         Invitee.create!(status: Invitee.statuses[status.to_sym], post_id: post_id, user_id: user_id)
       invitee.event.publish_update!
@@ -31,6 +36,11 @@ module DiscoursePostEvent
     end
 
     def update_attendance!(status)
+      if status && status.to_sym == :going && event.at_capacity? &&
+           self.status != Invitee.statuses[:going]
+        raise Discourse::InvalidParameters.new(:max_attendees)
+      end
+
       new_status = Invitee.statuses[status.to_sym]
       status_changed = self.status != new_status
       self.update(status: new_status)

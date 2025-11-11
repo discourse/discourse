@@ -21,6 +21,8 @@ zh_CN:
       voted_title: "已投票"
       voting_closed_title: "已关闭"
       voting_limit: "限制"
+      votes_left:
+        other: "您还有 %{count} 次投票机会，查看<a href='%{path}'>您的投票</a>。"
       votes_left_button_title:
         other: "您还有 %{count} 次投票机会。"
       votes:

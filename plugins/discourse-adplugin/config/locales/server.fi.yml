@@ -15,6 +15,7 @@ fi:
     house_ads_after_nth_topic: 'Jos "ketjujen väliset" omat mainokset ovat määritettynä, näytä mainos joka N. ketjun jälkeen, jossa N on tämä arvo.'
     house_ads_after_nth_post: 'Jos "viestien väliset" omat mainokset ovat määritettynä, näytä mainos joka N. viestin jälkeen, jossa N on tämä arvo.'
     house_ads_frequency: "Jos muita mainosverkostoja on määritetty näkymaan mainoskentässä, kuinka usein omien mainoksien pitäisi näkyä, prosenttimääränä."
+    ads_txt: "Ads.txt-tiedostosi sisältö. Lisätietoja on saatavilla <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>tällä Google AdSensen ohjesivulla</a>."
     dfp_publisher_id: "Syötä Google Ad Managerin (aiemmin DFP) verkkokoodi, joka löytyy verkkoasetuksistasi. HUOMAUTUS: Sinun täytyy päivittää \"Content Security Policy script src\" -asetus. Katso viimeisimmät ohjeet <a href='https://meta.discourse.org/t/33734' target='_blank'>tästä ketjusta</a>."
     dfp_publisher_id_mobile: "(Valinnainen) Jos haluat käyttää eri Ad Managerin julkaisijan tunnusta sivun mobiiliversiolle, syötä se tähän. Jos tämä jätetään tyhjäksi, mobiiliversiossa käytetään dfp_publisher_id:tä."
     dfp_through_trust_level: "Näytä mainoksia käyttäjälle luottamustason mukaan. Käyttäjät, joiden luottamustaso on tätä korkeampi, eivät näe mainoksia."
@@ -44,6 +45,7 @@ fi:
     dfp_mobile_post_bottom_ad_sizes: "Valitse mobiilinäkymässä viestien välissä näytettävän mainoksen koko."
     dfp_target_post_bottom_key_code: "Syötä mukautetut kohdistusavaimet - Varastotaso"
     dfp_target_post_bottom_value_code: "Syötä mukautetut kohdistusarvot - Varastotaso"
+    adsense_publisher_code: "Julkaisijatunnuksesi. Anna vain numero ilman pub-etuliitettä. HUOMAUTUS: Sinun täytyy päivittää \"Content Security Policy script src\" -asetus. Katso viimeisimmät ohjeet <a href='https://meta.discourse.org/t/33734' target='_blank'>tästä ketjusta</a>."
     adsense_through_trust_level: "Näytä mainoksia käyttäjälle luottamustason mukaan. Käyttäjät, joiden luottamustaso on tätä korkeampi, eivät näe mainoksia."
     adsense_exclude_groups: "Mainoksia ei näytetä näiden ryhmien jäsenille"
     adsense_topic_list_top_code: "Syötä ketjuluettelon yläsijainnissa näytettävän mainosyksikön koodi. Kyseessä on mainosyksikköä symboloiva numero. Ei JavaScript-koodi."
@@ -96,6 +98,7 @@ fi:
     carbonads_exclude_groups: "Mainoksia ei näytetä näiden ryhmien jäsenille"
     carbonads_topic_list_top_enabled: "Näytä mainos ketjuluettelon yläpuolella"
     carbonads_above_post_stream_enabled: "Näytä mainos viestivirran yläpuolella"
+    adbutler_publisher_id: "AdButlerin julkaisijatunnus. HUOMAUTUS: Sinun täytyy mahdollisesti päivittää \"Content Security Policy script src\" -asetus. Katso viimeisimmät ohjeet <a href='https://meta.discourse.org/t/33734' target='_blank'>tästä ketjusta</a>."
     adbutler_mobile_topic_list_top_zone_id: "Mobiililaitteiden ketjuluettelon yläsijainnin aluetunnus"
     adbutler_mobile_topic_above_post_stream_zone_id: "Mobiililaitteiden ketjun viestivirran yläpuolisen sijainnin aluetunnus"
     adbutler_mobile_post_bottom_zone_id: "Mobiililaitteiden viestin alaosan sijainnin aluetunnus"

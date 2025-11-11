@@ -18,6 +18,7 @@ Chat::Engine.routes.draw do
     get "/channels/:channel_id" => "channels#show"
     put "/channels/:channel_id/status" => "channels_status#update"
     get "/channels/:channel_id/messages" => "channel_messages#index"
+    get "/search" => "search#index"
     put "/channels/:channel_id/messages/:message_id" => "channel_messages#update"
     post "/channels/:channel_id/messages/moves" => "channels_messages_moves#create"
     delete "/channels/:channel_id/messages/:message_id/streaming" =>
@@ -88,6 +89,7 @@ Chat::Engine.routes.draw do
 
   # chat_controller routes
   get "/" => "chat#respond"
+  get "/search" => "chat#respond"
   get "/new-message" => "chat#respond"
   get "/direct-messages" => "chat#respond"
   get "/channels" => "chat#respond"
@@ -108,7 +110,7 @@ Chat::Engine.routes.draw do
   get base_c_route => "chat#respond", :as => "channel"
   get "#{base_c_route}/:message_id" => "chat#respond"
 
-  %w[info info/about info/members info/settings].each do |route|
+  %w[info info/about info/members info/settings info/search].each do |route|
     get "#{base_c_route}/#{route}" => "chat#respond"
   end
 
@@ -123,7 +125,7 @@ Chat::Engine.routes.draw do
 
   get base_channel_route, to: redirect(redirect_base)
 
-  %w[info info/about info/members info/settings].each do |route|
+  %w[info info/about info/members info/settings info/search].each do |route|
     get "#{base_channel_route}/#{route}", to: redirect("#{redirect_base}/#{route}")
   end
 end

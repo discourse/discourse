@@ -32,6 +32,8 @@ ur:
               disagree:
                 title: "اختلاف کریں"
       topic:
+        answer:
+          label: "جواب"
         sort_by: "ترتیب بہ"
         votes: "ووٹ"
         activity: "سرگرمی"

@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 ar:
+  site_settings:
+    sign_in_with_apple_enabled: 'هل تريد تفعيل تسجيل الدخول باستخدام Apple؟'
+    apple_team_id: '(تسجيل الدخول باستخدام Apple) معرف فريق Apple (10 حروف)'
+    apple_key_id: '(تسجيل الدخول باستخدام Apple) معرف مفتاح Apple (10 حروف)'
+    apple_pem: '(الدخول عبر حساب Apple) محتوى ملف PEM لشركة Apple، مع ضرورة تضمين أسطر BEGIN و END'

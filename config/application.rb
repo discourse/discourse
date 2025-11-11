@@ -40,7 +40,6 @@ require "rails_failover/active_record" if !GlobalSetting.skip_db?
 require "rails_failover/redis" if !GlobalSetting.skip_redis?
 
 require "pry-rails" if Rails.env.development?
-require "pry-byebug" if Rails.env.development?
 
 require "discourse_fonts"
 
@@ -60,11 +59,11 @@ require_relative "../lib/require_dependency_backward_compatibility"
 
 module Discourse
   class Application < Rails::Application
-    def config.database_configuration
+    def config.database_configuration(variables_overrides: {})
       if Rails.env.production?
-        GlobalSetting.database_config
+        GlobalSetting.database_config(variables_overrides:)
       else
-        super
+        super()
       end
     end
 
@@ -85,14 +84,15 @@ module Discourse
     config.active_record.belongs_to_required_by_default = false
     config.active_record.yaml_column_permitted_classes = [
       Hash,
-      HashWithIndifferentAccess,
+      ActiveSupport::HashWithIndifferentAccess,
       Time,
       Symbol,
     ]
     config.active_support.key_generator_hash_digest_class = OpenSSL::Digest::SHA1
-    config.action_dispatch.cookies_serializer = :hybrid
+    config.action_dispatch.cookies_serializer = :message_pack_allow_marshal
     config.action_controller.wrap_parameters_by_default = false
     config.active_support.cache_format_version = 7.1
+    config.active_record.dump_schema_after_migration = false
 
     # we skip it cause we configure it in the initializer
     # the railtie for message_bus would insert it in the
@@ -157,6 +157,9 @@ module Discourse
     require "middleware/default_headers"
     config.middleware.insert_before ActionDispatch::ShowExceptions, Middleware::DefaultHeaders
 
+    require "middleware/crawler_hooks"
+    config.middleware.use Middleware::CrawlerHooks
+
     require "content_security_policy/middleware"
     config.middleware.swap ActionDispatch::ContentSecurityPolicy::Middleware,
                            ContentSecurityPolicy::Middleware
@@ -220,6 +223,14 @@ module Discourse
           controller.action_methods
         end
       end
+
+      puts <<~WARNING if Rails.env.local? && Rails.application.assets.config.manifest_path.exist?
+          \e[1;31m==========================================================================
+          WARNING: an asset manifest file exists. This means the assets won’t be
+          compiled automatically, and will be served statically instead.
+          To re-enable automatic compilation, you can run `bin/rails assets:clobber`
+          ==========================================================================\e[0m
+        WARNING
     end
 
     require "rbtrace" if ENV["RBTRACE"] == "1"

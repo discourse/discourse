@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class CategorySerializer < SiteCategorySerializer
+  include BasicCategoryAttributes
+
   class CategorySettingSerializer < ApplicationSerializer
     attributes :auto_bump_cooldown_days,
                :num_auto_bump_daily,
@@ -130,5 +132,13 @@ class CategorySerializer < SiteCategorySerializer
 
   def include_custom_fields?
     true
+  end
+
+  def name
+    category_name
+  end
+
+  def description
+    category_description
   end
 end

@@ -9,7 +9,9 @@ zh_CN:
     user_notes:
       title: "用户备注"
       attach: "添加用户备注"
+      attach_note_description: "添加关于此用户的备注。此备注仅对管理人员可见。"
       remove: "移除用户备注"
       show: "用户备注 (%{count})"
       delete_confirm: "确定要删除该用户备注吗？"
       show_post: "显示帖子"
+      copy_reviewable_note: "是否将备注复制到用户个人资料？"

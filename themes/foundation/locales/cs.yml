@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 cs:
+  theme_metadata:
+    description: "Klasický motiv Discourse, který se dobře hodí k přizpůsobení specifickým potřebám vaší komunity."

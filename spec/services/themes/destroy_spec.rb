@@ -28,6 +28,12 @@ RSpec.describe Themes::Destroy do
       it { is_expected.to fail_to_find_a_model(:theme) }
     end
 
+    context "for a default theme" do
+      before { theme.set_default! }
+
+      it { is_expected.to fail_a_policy(:not_default) }
+    end
+
     context "when everything is ok" do
       it { is_expected.to run_successfully }
 

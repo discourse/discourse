@@ -1,8 +1,8 @@
-.admin-search-modal .d-modal__body {
+.d-modal.admin-search-modal .d-modal__body {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  padding: var(--space-4);
+  padding: 0 var(--space-2) var(--space-2) var(--space-2);
 }
 
 // Search field
@@ -106,7 +106,7 @@
 
   .admin-search__no-results,
   .admin-search__input-container {
-    padding-inline: var(--space-4);
+    padding-inline: var(--space-2);
   }
 
   .admin-search__no-results {
@@ -120,7 +120,7 @@
     z-index: z("modal", "content"); // above title icons
 
     &.--has-results {
-      padding-bottom: var(--space-4);
+      padding-bottom: var(--space-2);
     }
   }
 }

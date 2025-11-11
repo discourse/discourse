@@ -2,12 +2,24 @@
 
 module DiscourseAi
   module Automation
+    def self.spam_based_flag_types
+      %w[spam spam_silence]
+    end
+
     def self.flag_types
       [
         { id: "review", translated_name: I18n.t("discourse_automation.ai.flag_types.review") },
         {
           id: "review_hide",
           translated_name: I18n.t("discourse_automation.ai.flag_types.review_hide"),
+        },
+        {
+          id: "review_delete",
+          translated_name: I18n.t("discourse_automation.ai.flag_types.review_delete"),
+        },
+        {
+          id: "review_delete_silence",
+          translated_name: I18n.t("discourse_automation.ai.flag_types.review_delete_silence"),
         },
         { id: "spam", translated_name: I18n.t("discourse_automation.ai.flag_types.spam") },
         {

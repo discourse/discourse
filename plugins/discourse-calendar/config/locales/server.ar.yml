@@ -33,7 +33,6 @@ ar:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "الحد الأقصى للصفوف النصية لكل حدث في التقويم."
     map_events_to_color: "تعيين لون لكل وسم أو فئة."
     map_events_title: "يستبدل \"الأحداث\" في عنوان الشريط الجانبي \"الأحداث القادمة\" لكل فئة."
     calendar_enabled: "قم بتفعيل المكوِّن الإضافي لتقويم Discourse. سيضيف ذلك دعمًا لعلامة [calendar][/calendar] في أول منشور في الموضوع."
@@ -62,7 +61,6 @@ ar:
     calendar_automatic_holidays_enabled: "يحدِّد حالة العطلة تلقائيًا حسب المنطقة الجغرافية للمستخدمين (ملاحظة: يمكنك إيقاف عطلات تلقائية محدَّدة في إعدادات المكوِّن الإضافي)"
     event_participation_buttons: "قائمة أزرار المشاركة في الأحداث التي يمكن للمستخدمين استخدامها."
     sidebar_show_upcoming_events: "عرض رابط الأحداث القادمة في الشريط الجانبي ضمن \"المزيد\"."
-    include_expired_events_on_calendar: "تضمين الأحداث الماضية/منتهية الصلاحية في طرق عرض تقويم الفئة والأحداث القادمة."
   discourse_calendar:
     invite_user_notification: "دعاك %{username} إلى: %{description}"
     calendar_must_be_in_first_post: "لا يمكن استخدام علامة التقويم إلا في المنشور الأول في الموضوع."

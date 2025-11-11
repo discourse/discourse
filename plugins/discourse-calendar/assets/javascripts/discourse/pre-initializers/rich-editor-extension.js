@@ -25,6 +25,7 @@ const extension = {
     event: {
       attrs: EVENT_ATTRIBUTES,
       group: "block",
+      content: "block*",
       defining: true,
       isolating: true,
       draggable: true,
@@ -81,17 +82,21 @@ const extension = {
 
   serializeNode: {
     event(state, node) {
-      let bbcode = "[event";
+      state.write("[event");
 
       Object.entries(node.attrs).forEach(([key, value]) => {
         if (value !== null) {
-          bbcode += ` ${key}="${value}"`;
+          state.write(` ${key}="${value}"`);
         }
       });
 
-      bbcode += "]\n[/event]\n";
+      state.write("]\n");
 
-      state.write(bbcode);
+      if (node.content.size > 0) {
+        state.renderContent(node);
+      }
+
+      state.write("[/event]\n");
     },
   },
 };

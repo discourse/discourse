@@ -33,6 +33,11 @@ es:
   discourse_assign:
     assigned_to: "Tema asignado a @%{username}"
     unassigned: "Se anuló la asignación del tema"
+    filter:
+      description:
+        assigned: "Filtrar temas asignados a un usuario o grupo específico"
+        nobody: "Filtrar temas que no están asignados a nadie"
+        anyone: "Filtrar temas asignados a cualquier persona"
     already_claimed: "Ese tema ya ha sido reclamado."
     already_assigned: "El tema ya está asignado a @%{username}"
     too_many_assigns: "@%{username} ya ha alcanzado el número máximo de temas asignados (%{max})."
@@ -58,17 +63,17 @@ es:
     title: "Asignar correo"
     subject_template: "¡[%{email_prefix}] %{assignee_name} te ha asignado a «%{topic_title}»!"
     text_body_template: |
-      Hola, %{assignee_name}, **te ha asignado** a una discusión
+      Hola, %{assignee_name} **te ha asignado** a una discusión
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      Si estás interesado, haz clic en el siguiente enlace:
+      Si te interesa, haz clic en el siguiente enlace:
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "Tienes %{pending_assignments} asignaciones pendientes"
     body: |
-      Actualmente tienes [%{pending_assignments} asignaciones pendientes](%{assignments_link}).
+      Actualmente, tienes [%{pending_assignments} asignaciones pendientes](%{assignments_link}).
 
       %{newest_assignments}
       %{oldest_assignments}

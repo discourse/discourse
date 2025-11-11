@@ -3,6 +3,8 @@
 module DiscourseAi
   module Translation
     class PostLocalizer
+      MAX_QUOTA_PER_DAY = 2
+
       def self.localize(post, target_locale = I18n.locale)
         if post.blank? || target_locale.blank? ||
              LocaleNormalizer.is_same?(post.locale, target_locale) || post.raw.blank?
@@ -17,7 +19,20 @@ module DiscourseAi
           PostLocalization.find_or_initialize_by(post_id: post.id, locale: target_locale)
 
         localization.raw = translated_raw
-        localization.cooked = PrettyText.cook(translated_raw)
+        localization.cooked = post.post_analyzer.cook(translated_raw, post.cooking_options || {})
+
+        cooked_processor = LocalizedCookedPostProcessor.new(localization, post, {})
+        begin
+          cooked_processor.post_process
+          localization.cooked = cooked_processor.html
+        rescue => e
+          # Log but don't fail translation if post-processing (oneboxes, images) fails
+          Rails.logger.warn(
+            "Post-processing failed for localization of post #{post.id} to #{target_locale}: #{e.class} - #{e.message}",
+          )
+          # Keep the cooked content without post-processing
+        end
+
         localization.post_version = post.version
         localization.localizer_user_id = Discourse.system_user.id
         localization.save!
@@ -25,7 +40,7 @@ module DiscourseAi
       end
 
       def self.has_relocalize_quota?(post, locale, skip_incr: false)
-        return false if get_relocalize_quota(post, locale).to_i >= 2
+        return false if get_relocalize_quota(post, locale).to_i >= MAX_QUOTA_PER_DAY
 
         incr_relocalize_quota(post, locale) unless skip_incr
         true

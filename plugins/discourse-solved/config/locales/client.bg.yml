@@ -13,6 +13,7 @@ bg:
     solved:
       accepted_answer: "Решение"
       solution: "Решение"
+      accepted_answer_post_number: "публикация %{post_number} "
       topic_status_filter:
         all: "всички подкатегории"
     discourse_automation:

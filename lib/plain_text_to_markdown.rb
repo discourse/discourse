@@ -186,7 +186,7 @@ class PlainTextToMarkdown
     urls = Set.new
     text.scan(URL_REGEX) { urls << $& }
 
-    hoisted = urls.map { |url| [SecureRandom.hex, url] }.to_h
+    hoisted = urls.index_by { |url| SecureRandom.hex }
 
     hoisted.each { |h, url| text.gsub!(url, h) }
 

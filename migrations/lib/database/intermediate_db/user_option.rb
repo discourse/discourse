@@ -56,6 +56,7 @@ module Migrations::Database::IntermediateDB
         new_topic_duration_minutes,
         notification_level_when_assigned,
         notification_level_when_replying,
+        notify_on_linked_posts,
         oldest_search_log_date,
         only_chat_push_notifications,
         policy_email_frequency,
@@ -76,10 +77,80 @@ module Migrations::Database::IntermediateDB
       VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-        ?, ?, ?, ?
+        ?, ?, ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
+    # Creates a new `user_options` record in the IntermediateDB.
+    #
+    # @param user_id                                [Integer, String]
+    # @param ai_search_discoveries                  [Boolean, nil]
+    # @param allow_private_messages                 [Boolean, nil]
+    # @param auto_image_caption                     [Boolean, nil]
+    # @param auto_track_topics_after_msecs          [Integer, nil]
+    # @param automatically_unpin_topics             [Boolean, nil]
+    # @param bookmark_auto_delete_preference        [Integer, nil]
+    # @param chat_email_frequency                   [Integer, nil]
+    # @param chat_enabled                           [Boolean, nil]
+    # @param chat_header_indicator_preference       [Integer, nil]
+    # @param chat_quick_reaction_type               [Integer, nil]
+    # @param chat_quick_reactions_custom            [String, nil]
+    # @param chat_send_shortcut                     [Integer, nil]
+    # @param chat_separate_sidebar_mode             [Integer, nil]
+    # @param chat_sound                             [String, nil]
+    # @param color_scheme_id                        [Integer, String, nil]
+    # @param composition_mode                       [Integer, nil]
+    # @param dark_scheme_id                         [Integer, String, nil]
+    # @param default_calendar                       [Integer, nil]
+    # @param digest_after_minutes                   [Integer, nil]
+    # @param dismissed_channel_retention_reminder   [Boolean, nil]
+    # @param dismissed_dm_retention_reminder        [Boolean, nil]
+    # @param dynamic_favicon                        [Boolean, nil]
+    # @param email_digests                          [Boolean, nil]
+    # @param email_in_reply_to                      [Boolean, nil]
+    # @param email_level                            [Integer, nil]
+    # @param email_messages_level                   [Integer, nil]
+    # @param email_previous_replies                 [Integer, nil]
+    # @param enable_allowed_pm_users                [Boolean, nil]
+    # @param enable_defer                           [Boolean, nil]
+    # @param enable_markdown_monospace_font         [Boolean, nil]
+    # @param enable_quoting                         [Boolean, nil]
+    # @param enable_smart_lists                     [Boolean, nil]
+    # @param external_links_in_new_tab              [Boolean, nil]
+    # @param hide_presence                          [Boolean, nil]
+    # @param hide_profile                           [Boolean, nil]
+    # @param hide_profile_and_presence              [Boolean, nil]
+    # @param homepage_id                            [Integer, String, nil]
+    # @param ignore_channel_wide_mention            [Boolean, nil]
+    # @param include_tl0_in_digests                 [Boolean, nil]
+    # @param interface_color_mode                   [Integer, nil]
+    # @param last_redirected_to_top_at              [Time, nil]
+    # @param like_notification_frequency            [Integer, nil]
+    # @param mailing_list_mode                      [Boolean, nil]
+    # @param mailing_list_mode_frequency            [Integer, nil]
+    # @param new_topic_duration_minutes             [Integer, nil]
+    # @param notification_level_when_assigned       [Integer, nil]
+    # @param notification_level_when_replying       [Integer, nil]
+    # @param notify_on_linked_posts                 [Boolean, nil]
+    # @param oldest_search_log_date                 [Time, nil]
+    # @param only_chat_push_notifications           [Boolean, nil]
+    # @param policy_email_frequency                 [Integer, nil]
+    # @param seen_popups                            [Integer, nil]
+    # @param show_thread_title_prompts              [Boolean, nil]
+    # @param sidebar_link_to_filtered_list          [Boolean, nil]
+    # @param sidebar_show_count_of_new_items        [Boolean, nil]
+    # @param skip_new_user_tips                     [Boolean, nil]
+    # @param text_size_key                          [Integer, nil]
+    # @param text_size_seq                          [Integer, nil]
+    # @param theme_ids                              [Integer, nil]
+    # @param theme_key_seq                          [Integer, nil]
+    # @param timezone                               [String, nil]
+    # @param title_count_mode_key                   [Integer, nil]
+    # @param topics_unread_when_closed              [Boolean, nil]
+    # @param watched_precedence_over_muted          [Boolean, nil]
+    #
+    # @return [void]
     def self.create(
       user_id:,
       ai_search_discoveries: nil,
@@ -129,6 +200,7 @@ module Migrations::Database::IntermediateDB
       new_topic_duration_minutes: nil,
       notification_level_when_assigned: nil,
       notification_level_when_replying: nil,
+      notify_on_linked_posts: nil,
       oldest_search_log_date: nil,
       only_chat_push_notifications: nil,
       policy_email_frequency: nil,
@@ -196,6 +268,7 @@ module Migrations::Database::IntermediateDB
         new_topic_duration_minutes,
         notification_level_when_assigned,
         notification_level_when_replying,
+        ::Migrations::Database.format_boolean(notify_on_linked_posts),
         ::Migrations::Database.format_datetime(oldest_search_log_date),
         ::Migrations::Database.format_boolean(only_chat_push_notifications),
         policy_email_frequency,

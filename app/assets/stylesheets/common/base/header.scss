@@ -181,10 +181,6 @@
     .discourse-no-touch &:hover,
     .discourse-no-touch &:focus {
       background-color: var(--d-hover);
-
-      > .d-icon {
-        color: var(--primary-medium);
-      }
     }
   }
 
@@ -220,7 +216,6 @@
   .badge-notification {
     border: 2px solid var(--header_background);
     position: absolute;
-    z-index: z("base");
     top: -4px;
     min-width: 0.6em;
     left: auto;
@@ -522,5 +517,18 @@ $mobile-avatar-height: 1.532em;
     .d-header-icons {
       display: none;
     }
+  }
+}
+
+.impersonation-notice {
+  background-color: var(--header_background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+
+  button {
+    margin-left: 10px;
   }
 }

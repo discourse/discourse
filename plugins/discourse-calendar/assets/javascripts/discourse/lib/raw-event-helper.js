@@ -55,6 +55,10 @@ export function buildParams(startsAt, endsAt, event, siteSettings) {
     params.chatEnabled = "true";
   }
 
+  if (event.maxAttendees) {
+    params.maxAttendees = `${event.maxAttendees}`;
+  }
+
   if (endsAt) {
     params.end = moment(endsAt).tz(eventTz).format("YYYY-MM-DD HH:mm");
   }

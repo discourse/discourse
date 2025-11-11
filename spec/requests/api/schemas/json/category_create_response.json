@@ -182,12 +182,36 @@
             }
         },
         "category_setting": {
-          "auto_bump_cooldown_days": 1,
-          "num_auto_bump_daily": null,
-          "require_reply_approval": null,
-          "require_topic_approval": null
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "auto_bump_cooldown_days": {
+              "type": "integer"
+            },
+            "num_auto_bump_daily": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "require_reply_approval": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "require_topic_approval": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            }
+          }
         },
-        "category_localizations": [],
+        "category_localizations": {
+          "type": "array",
+          "items": {}
+        },
         "read_only_banner": {
           "type": [
             "string",

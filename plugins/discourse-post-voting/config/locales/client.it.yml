@@ -13,6 +13,8 @@ it:
     reviewables:
       comment_already_handled: "Grazie, ma abbiamo già esaminato questo commento e stabilito che non è necessario contrassegnarlo di nuovo."
   js:
+    discourse_post_voting:
+      title: "Votazioni dei messaggi"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -28,10 +30,8 @@ it:
         label: "Crea un argomento di votazione dei messaggi"
       composer_actions:
         create_as_post_voting:
-          label: "Attiva/disattiva votazione dei messaggi"
           desc: "L'argomento verrà creato con messaggi votabili"
         remove_as_post_voting:
-          label: "Rimuovi votazione dei messaggi"
           desc: "L'argomento verrà creato nel formato normale"
     vote:
       already_voted: "Puoi votare una sola volta per domanda."
@@ -111,6 +111,9 @@ it:
         answer_count:
           one: "%{count} risposta"
           other: "%{count} risposte"
+        voters_count_diff:
+          one: "e %{count} altro utente..."
+          other: "e altri %{count} utenti..."
     review:
       transcript:
         view: "Visualizza la trascrizione dei messaggi precedenti"

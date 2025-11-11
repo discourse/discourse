@@ -10,3 +10,4 @@ nl:
     microsoft_auth_client_id: 'Microsoft app-ID/client-ID (NIET de geheime ID) - ga om er een in te stellen naar <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
     microsoft_auth_client_secret: "Microsoft geheim wachtwoord (gebruik de waarde, NIET de geheime ID)"
     microsoft_auth_email_verified: "Behandel alle Microsoft-e-mails standaard als geverifieerd. WAARSCHUWING: schakel dit alleen in als je zeker weet dat al je gebruikers geverifieerde e-mailadressen hebben."
+    microsoft_auth_tenant_id: 'Microsoft-tenant-ID (algemeen is standaard, VEREIST voor alle gevallen behalve enkele tenant) - om de ID te vinden, ga naar <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

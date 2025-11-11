@@ -15,3 +15,7 @@ hu:
     topic_voting_show_who_voted: 'Lehetővé teszi a felhasználók számára, hogy láthassák ki szavazott?'
     topic_voting_show_votes_on_profile: 'Lehetővé teszi a felhasználók számára, hogy láthassák a szavazataikat a tevékenységfolyamukban?'
     topic_voting_alert_votes_left: 'A felhasználó figyelmeztetése, ha ennyi szavazata maradt'
+  topic_voting:
+    votes_moved:
+      one: "Szavazás áthelyezve"
+      other: "%{count} szavazás áthelyezve"

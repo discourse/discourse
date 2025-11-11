@@ -95,7 +95,6 @@ class PostSerializer < BasicPostSerializer
              :user_status,
              :mentioned_users,
              :post_url,
-             :has_post_localizations,
              :post_localizations_count,
              :locale,
              :is_localized,
@@ -655,20 +654,12 @@ class PostSerializer < BasicPostSerializer
     SiteSetting.enable_user_status
   end
 
-  def has_post_localizations
-    object.localizations.any?
-  end
-
   def post_localizations_count
     object.localizations.size
   end
 
-  def include_has_post_localizations?
-    object&.user&.guardian&.can_localize_content?
-  end
-
   def include_post_localizations_count?
-    object&.user&.guardian&.can_localize_content?
+    scope.can_localize_content?
   end
 
   def raw

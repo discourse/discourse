@@ -249,25 +249,53 @@ RSpec.describe DiscourseUpdates do
       expect(result[2]["title"]).to eq("Bells")
     end
 
-    it "correctly shows features with correct boolean experimental site settings" do
+    it "correctly shows features by commit hash" do
+      features_with_versions = [
+        { "emoji" => "🤾", "title" => "Bells", "created_at" => 2.days.ago },
+        {
+          "emoji" => "🙈",
+          "title" => "Whistles",
+          "created_at" => 120.minutes.ago,
+          "discourse_version" => "208cc7b0dd4bcd134297ce076e7263d2898740e9",
+        },
+        {
+          "emoji" => "🙈",
+          "title" => "Confetti",
+          "created_at" => 15.minutes.ago,
+          "discourse_version" => "05a7fc954a620800ee99ecdbabcfd41572706674",
+        },
+      ]
+
+      GitUtils.stubs(:has_commit?).with("208cc7b0dd4bcd134297ce076e7263d2898740e9").returns(true)
+      GitUtils.stubs(:has_commit?).with("05a7fc954a620800ee99ecdbabcfd41572706674").returns(false)
+
+      Discourse.redis.set("new_features", MultiJson.dump(features_with_versions))
+      result = DiscourseUpdates.new_features
+
+      expect(result.length).to eq(2)
+      expect(result[0]["title"]).to eq("Whistles")
+      expect(result[1]["title"]).to eq("Bells")
+    end
+
+    it "correctly shows features with correct boolean site settings" do
       features_with_versions = [
         {
           "emoji" => "🤾",
           "title" => "Bells",
           "created_at" => 2.days.ago,
-          "experiment_setting" => "enable_mobile_theme",
+          "related_site_setting" => "enable_mobile_theme",
         },
         {
           "emoji" => "🙈",
           "title" => "Whistles",
           "created_at" => 3.days.ago,
-          "experiment_setting" => "default_theme_id",
+          "related_site_setting" => "default_theme_id",
         },
         {
           "emoji" => "🙈",
           "title" => "Confetti",
           "created_at" => 4.days.ago,
-          "experiment_setting" => "wrong value",
+          "related_site_setting" => "wrong value",
         },
       ]
 
@@ -276,12 +304,12 @@ RSpec.describe DiscourseUpdates do
       result = DiscourseUpdates.new_features
 
       expect(result.length).to eq(3)
-      expect(result[0]["experiment_setting"]).to eq("enable_mobile_theme")
-      expect(result[0]["experiment_enabled"]).to eq(true)
-      expect(result[1]["experiment_setting"]).to be_nil
-      expect(result[1]["experiment_enabled"]).to eq(false)
-      expect(result[2]["experiment_setting"]).to be_nil
-      expect(result[2]["experiment_enabled"]).to eq(false)
+      expect(result[0]["setting_enabled"]).to eq(true)
+      expect(result[0]["related_site_setting"]).to eq("enable_mobile_theme")
+      expect(result[1]["setting_enabled"]).to eq(false)
+      expect(result[1]["related_site_setting"]).to be_nil
+      expect(result[2]["setting_enabled"]).to eq(false)
+      expect(result[2]["related_site_setting"]).to be_nil
     end
 
     it "correctly shows features when related plugins are installed" do

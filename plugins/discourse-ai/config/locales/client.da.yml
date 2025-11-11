@@ -23,10 +23,16 @@ da:
               label: "Emne ID"
             title:
               label: "Titel"
+            days:
+              label: "Dage"
+            model:
+              label: "Model"
             categories:
               label: "Kategorier"
             tags:
               label: "Mærker"
+            exclude_tags:
+              label: "Udeluk Mærker"
         llm_triage:
           fields:
             category:
@@ -57,6 +63,22 @@ da:
         select_option: "Vælg en indstilling..."
       layout:
         table: "Tabel"
+      translations:
+        title: "Oversættelser"
+        stats:
+          eta_minutes:
+            one: "%{count} minut"
+            other: "%{count} minutter"
+          eta_hours:
+            one: "%{count} time"
+            other: "%{count} timer"
+          eta_days:
+            one: "%{count} dag"
+            other: "%{count} dage"
+        progress_chart:
+          bar_done:
+            one: "%{count} indlæg"
+            other: "%{count} indlæg"
       spam:
         short_title: "Spam"
         last_seven_days: "Seneste 7 dage"

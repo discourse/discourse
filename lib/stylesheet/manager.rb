@@ -8,7 +8,7 @@ end
 
 class Stylesheet::Manager
   # Bump this number to invalidate all stylesheet caches (e.g. if you change something inside the compiler)
-  BASE_COMPILER_VERSION = 5
+  BASE_COMPILER_VERSION = 6
 
   # Add any dependencies here which should automatically cause a global cache invalidation.
   BASE_CACHE_KEY = "#{BASE_COMPILER_VERSION}::#{DiscourseFonts::VERSION}"
@@ -42,11 +42,10 @@ class Stylesheet::Manager
     cache.clear_regex(/#{plugin}/)
   end
 
-  def self.color_scheme_cache_key(color_scheme, theme_id = nil, dark: false)
+  def self.color_scheme_cache_key(color_scheme, theme_id = nil)
     color_scheme_name = Slug.for(color_scheme.name) + color_scheme&.id.to_s
     theme_string = theme_id ? "_theme#{theme_id}" : ""
-    dark_string = dark ? "_dark" : ""
-    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}_#{GlobalSetting.relative_url_root}_#{dark_string}"
+    "#{COLOR_SCHEME_STYLESHEET}_#{color_scheme_name}_#{theme_string}_#{Discourse.current_hostname}_#{GlobalSetting.relative_url_root}"
   end
 
   def self.precompile_css
@@ -117,17 +116,13 @@ class Stylesheet::Manager
       theme_dark_color_scheme = ColorScheme.find_by_id(dark_color_scheme_id)
       theme = manager.get_theme(theme_id)
       [theme_color_scheme, theme_dark_color_scheme, *color_schemes].compact.uniq.each do |scheme|
-        [true, false].each do |dark|
-          mode = dark ? "dark" : "light"
-          $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name}) (#{mode})"
-          Stylesheet::Manager::Builder.new(
-            target: COLOR_SCHEME_STYLESHEET,
-            theme: theme,
-            color_scheme: scheme,
-            manager: manager,
-            dark:,
-          ).compile(force: true)
-        end
+        $stderr.puts "precompile target: #{COLOR_SCHEME_STYLESHEET} #{theme.name} (#{scheme.name})"
+        Stylesheet::Manager::Builder.new(
+          target: COLOR_SCHEME_STYLESHEET,
+          theme: theme,
+          color_scheme: scheme,
+          manager: manager,
+        ).compile(force: true)
       end
 
       clear_color_scheme_cache!
@@ -344,12 +339,7 @@ class Stylesheet::Manager
     end
   end
 
-  def color_scheme_stylesheet_details(
-    color_scheme_id = nil,
-    dark: false,
-    fallback_to_base: true,
-    include_dark_scheme: false
-  )
+  def color_scheme_stylesheet_details(color_scheme_id = nil, fallback_to_base: true)
     theme_id = @theme_id || SiteSetting.default_theme_id
 
     color_scheme = ColorScheme.find_by(id: color_scheme_id)
@@ -361,10 +351,10 @@ class Stylesheet::Manager
 
     target = COLOR_SCHEME_STYLESHEET.to_sym
     current_hostname = Discourse.current_hostname
-    cache_key = self.class.color_scheme_cache_key(color_scheme, theme_id, dark:)
+    cache_key = self.class.color_scheme_cache_key(color_scheme, theme_id)
 
     cache.defer_get_set(cache_key) do
-      stylesheet = { color_scheme_id: color_scheme.id, dark: }
+      stylesheet = { color_scheme_id: color_scheme.id }
 
       theme = get_theme(theme_id)
 
@@ -374,7 +364,6 @@ class Stylesheet::Manager
           theme: get_theme(theme_id),
           color_scheme: color_scheme,
           manager: self,
-          dark:,
         )
 
       builder.compile unless File.exist?(builder.stylesheet_fullpath)
@@ -382,27 +371,12 @@ class Stylesheet::Manager
       href = builder.stylesheet_absolute_url
       stylesheet[:new_href] = href
 
-      if include_dark_scheme
-        dark_href =
-          self.color_scheme_stylesheet_link_tag_href(
-            color_scheme_id,
-            dark: true,
-            fallback_to_base: false,
-          )
-
-        stylesheet[:new_dark_href] = dark_href if dark_href
-      end
-
       stylesheet.freeze
     end
   end
 
-  def color_scheme_stylesheet_preload_tag(
-    color_scheme_id = nil,
-    dark: false,
-    fallback_to_base: true
-  )
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, dark:, fallback_to_base:)
+  def color_scheme_stylesheet_preload_tag(color_scheme_id = nil, fallback_to_base: true)
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, fallback_to_base:)
 
     return "" if !stylesheet
 
@@ -411,12 +385,8 @@ class Stylesheet::Manager
     %[<link href="#{href}" rel="preload" as="style"/>].html_safe
   end
 
-  def color_scheme_stylesheet_link_tag_href(
-    color_scheme_id = nil,
-    dark: false,
-    fallback_to_base: true
-  )
-    stylesheet = color_scheme_stylesheet_details(color_scheme_id, dark:, fallback_to_base:)
+  def color_scheme_stylesheet_link_tag_href(color_scheme_id = nil, fallback_to_base: true)
+    stylesheet = color_scheme_stylesheet_details(color_scheme_id, fallback_to_base:)
 
     return if !stylesheet
 

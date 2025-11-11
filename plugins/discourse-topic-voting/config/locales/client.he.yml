@@ -21,11 +21,21 @@ he:
       voted_title: "התקבלה הצבעה"
       voting_closed_title: "סגור"
       voting_limit: "מגבלה"
+      votes_left:
+        one: "נותרה לרשותך הצבעה %{count}, להצגת ה<a href='%{path}'>הצבעות שלך</a>."
+        two: "נותרו לרשותך שתי הצבעות, להצגת ה<a href='%{path}'>הצבעות שלך</a>."
+        many: "נותרו לרשותך %{count} הצבעות, להצגת ה<a href='%{path}'>הצבעות שלך</a>."
+        other: "נותרו לרשותך %{count} הצבעות, להצגת ה<a href='%{path}'>הצבעות שלך</a>."
       votes_left_button_title:
         one: "נותרה לך הצבעה %{count}."
         two: "נותרו לך %{count} הצבעות."
         many: "נותרו לך %{count} הצבעות."
         other: "נותרו לך %{count} הצבעות."
+      votes:
+        one: "הצבעה"
+        two: "שתי הצבעות"
+        many: "%{count} הצבעות"
+        other: "%{count} הצבעות"
       anonymous_button:
         one: "הצבעה"
         two: "הצבעות"

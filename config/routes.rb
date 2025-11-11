@@ -27,7 +27,7 @@ Discourse::Application.routes.draw do
     match "/404", to: "exceptions#not_found", via: %i[get post]
     get "/404-body" => "exceptions#not_found_body"
 
-    if Rails.env.test? || Rails.env.development?
+    if Rails.env.local?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
       get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
     end
@@ -98,6 +98,9 @@ Discourse::Application.routes.draw do
     get "wizard" => "wizard#index"
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
+
+    delete "admin/impersonate" => "admin/impersonate#destroy",
+           :constraints => ImpersonatorConstraint.new
 
     namespace :admin, constraints: StaffConstraint.new do
       get "" => "admin#index"
@@ -251,7 +254,6 @@ Discourse::Application.routes.draw do
           put "setting" => "themes#update_single_setting"
           put "site-setting" => "themes#update_theme_site_setting"
           get "objects_setting_metadata/:setting_name" => "themes#objects_setting_metadata"
-          put "change-colors" => "themes#change_colors"
         end
 
         collection do
@@ -272,7 +274,6 @@ Discourse::Application.routes.draw do
         get "components/:id" => "themes#index"
         get "components/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id/export" => "themes#export"
-        get "themes/:id/colors" => "themes#index"
         get "themes/:id/schema/:setting_name" => "themes#schema"
         get "components/:id/schema/:setting_name" => "themes#schema"
 
@@ -420,6 +421,13 @@ Discourse::Application.routes.draw do
         get "legal" => "site_settings#index"
         get "localization" => "site_settings#index"
         get "login-and-authentication" => "site_settings#index"
+        get "login-and-authentication/authenticators" => "site_settings#index"
+        get "login-and-authentication/discourseconnect" => "site_settings#index"
+
+        DiscoursePluginRegistry.admin_config_login_routes.each do |location|
+          get "login-and-authentication/#{location}" => "site_settings#index"
+        end
+
         get "navigation" => "site_settings#index"
         get "notifications" => "site_settings#index"
         get "rate-limits" => "site_settings#index"
@@ -438,8 +446,10 @@ Discourse::Application.routes.draw do
         put "/logo" => "logo#update"
         put "/fonts" => "fonts#update"
         get "colors/:id" => "color_palettes#show"
-        get "theme-site-settings" => "theme_site_settings#index"
         get "colors" => "color_palettes#index"
+        get "upcoming-changes" => "upcoming_changes#index"
+        put "upcoming-changes/groups" => "upcoming_changes#update_groups"
+        put "upcoming-changes/toggle" => "upcoming_changes#toggle_change"
 
         resources :flags, only: %i[index new create update destroy] do
           put "toggle"
@@ -458,6 +468,7 @@ Discourse::Application.routes.draw do
           collection do
             get "/themes" => "customize#themes"
             get "/components" => "customize#components"
+            get "/theme-site-settings" => "customize#theme_site_settings"
           end
         end
       end
@@ -1607,7 +1618,9 @@ Discourse::Application.routes.draw do
 
     get "message-bus/poll" => "message_bus#poll"
 
-    resources :drafts, only: %i[index create show destroy]
+    resources :drafts, only: %i[index create show destroy] do
+      collection { delete :bulk_destroy }
+    end
 
     get "/service-worker.js" => "static#service_worker_asset", :format => :js
 
@@ -1625,6 +1638,7 @@ Discourse::Application.routes.draw do
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"
     get ".well-known/assetlinks.json" => "metadata#app_association_android"
+    get ".well-known/discourse-id-challenge" => "metadata#discourse_id_challenge"
     # Apple accepts either of these paths for the apple-app-site-association file
     # Might as well support both
     get "apple-app-site-association" => "metadata#app_association_ios", :format => false

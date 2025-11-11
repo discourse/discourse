@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe DiscoursePostEvent::EventFinder do
-  fab!(:current_user) { Fabricate(:user) }
+  fab!(:current_user, :user)
   fab!(:user)
 
   subject(:finder) { DiscoursePostEvent::EventFinder }
@@ -13,7 +13,7 @@ describe DiscoursePostEvent::EventFinder do
   end
 
   describe "by attending user" do
-    fab!(:attending_user) { Fabricate(:user) }
+    fab!(:attending_user, :user)
     fab!(:public_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
     fab!(:private_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:private]) }
     fab!(:another_event) { Fabricate(:event, status: DiscoursePostEvent::Event.statuses[:public]) }
@@ -142,92 +142,6 @@ describe DiscoursePostEvent::EventFinder do
       end
     end
 
-    describe "by expiration status" do
-      let!(:old_event) do
-        Fabricate(
-          :event,
-          name: "old_event",
-          original_starts_at: 2.hours.ago,
-          original_ends_at: 1.hour.ago,
-        )
-      end
-      let!(:future_event) do
-        Fabricate(
-          :event,
-          name: "future_event",
-          original_starts_at: 1.hour.from_now,
-          original_ends_at: 2.hours.from_now,
-        )
-      end
-      let!(:current_event) do
-        Fabricate(
-          :event,
-          name: "current_event",
-          original_starts_at: 5.minutes.ago,
-          original_ends_at: 5.minutes.from_now,
-        )
-      end
-      let!(:older_event) do
-        Fabricate(
-          :event,
-          name: "older_event",
-          original_starts_at: 4.hours.ago,
-          original_ends_at: 3.hour.ago,
-        )
-      end
-
-      it "returns correct events" do
-        expect(finder.search(current_user, { include_expired: false })).to eq(
-          [current_event, future_event],
-        )
-        expect(finder.search(current_user, { include_expired: true })).to eq(
-          [older_event, old_event, current_event, future_event],
-        )
-      end
-
-      context "when a past event has been edited to be in the future" do
-        let!(:event_date) do
-          Fabricate(
-            :event_date,
-            event: future_event,
-            starts_at: 2.hours.ago,
-            ends_at: 1.hour.ago,
-            finished_at: 1.hour.ago,
-          )
-        end
-
-        it "returns correct events" do
-          expect(finder.search(current_user, { include_expired: false })).to eq(
-            [current_event, future_event],
-          )
-          expect(finder.search(current_user, { include_expired: true })).to eq(
-            [older_event, old_event, current_event, future_event],
-          )
-        end
-      end
-
-      context "when a future event has been edited to be in the past" do
-        let!(:event_date) do
-          Fabricate(
-            :event_date,
-            event: old_event,
-            starts_at: 1.hour.from_now,
-            ends_at: 2.hours.from_now,
-            finished_at: 1.hour.ago,
-          )
-        end
-
-        it "returns correct events" do
-          expect(finder.search(current_user, { include_expired: false })).to eq(
-            [current_event, future_event],
-          )
-          expect(finder.search(current_user, { include_expired: true })).to eq(
-            [older_event, current_event, future_event, old_event],
-          )
-        end
-      end
-    end
-
     describe "with a limit parameter provided" do
       let!(:event1) { Fabricate(:event) }
       let!(:event2) { Fabricate(:event) }
@@ -238,7 +152,7 @@ describe DiscoursePostEvent::EventFinder do
       end
     end
 
-    describe "with a before  parameter provided" do
+    describe "with a before parameter provided" do
       let!(:event1) { Fabricate(:event, original_starts_at: 2.minutes.from_now) }
       let!(:event2) { Fabricate(:event, original_starts_at: 1.minute.from_now) }
       let!(:event3) { Fabricate(:event, original_starts_at: 2.hours.ago) }
@@ -247,6 +161,106 @@ describe DiscoursePostEvent::EventFinder do
         expect(finder.search(current_user, { before: event2.starts_at.to_s })).to match_array(
           [event3],
         )
+      end
+    end
+
+    describe "recurring events date filtering" do
+      let!(:recurring_event_june) do
+        Fabricate(
+          :event,
+          original_starts_at: Time.parse("2024-06-15 10:00:00 UTC"),
+          recurrence: "every_week",
+          recurrence_until: Time.parse("2024-12-31 10:00:00 UTC"),
+        )
+      end
+
+      let!(:recurring_event_endless) do
+        Fabricate(
+          :event,
+          original_starts_at: Time.parse("2024-06-15 10:00:00 UTC"),
+          recurrence: "every_week",
+          recurrence_until: nil,
+        )
+      end
+
+      let!(:non_recurring_event_august) do
+        Fabricate(:event, original_starts_at: Time.parse("2024-08-15 10:00:00 UTC"))
+      end
+
+      describe "filtering for August events" do
+        it "returns recurring events that start before August but recur until after August" do
+          results =
+            finder.search(
+              current_user,
+              {
+                after: Time.parse("2024-08-01 00:00:00 UTC").to_s,
+                before: Time.parse("2024-08-31 23:59:59 UTC").to_s,
+              },
+            )
+
+          expect(results).to include(recurring_event_june)
+          expect(results).to include(non_recurring_event_august)
+          expect(results).to include(recurring_event_endless)
+        end
+      end
+
+      describe "filtering for January next year events" do
+        it "returns only endless recurring events and events that recur until after January" do
+          results =
+            finder.search(
+              current_user,
+              {
+                after: Time.parse("2025-01-01 00:00:00 UTC").to_s,
+                before: Time.parse("2025-01-31 23:59:59 UTC").to_s,
+              },
+            )
+
+          expect(results).not_to include(recurring_event_june)
+          expect(results).to include(recurring_event_endless)
+          expect(results).not_to include(non_recurring_event_august)
+        end
+      end
+    end
+
+    describe "expired events" do
+      let!(:expired_event) do
+        Fabricate(:event, original_starts_at: 2.hours.ago, original_ends_at: 1.hour.ago)
+      end
+
+      let!(:current_event) do
+        Fabricate(:event, original_starts_at: 1.hour.from_now, original_ends_at: 2.hours.from_now)
+      end
+
+      it "returns both expired and current events" do
+        results = finder.search(current_user)
+        expect(results).to include(expired_event)
+        expect(results).to include(current_event)
+      end
+    end
+
+    describe "with an order parameter provided" do
+      let!(:event1) { Fabricate(:event, original_starts_at: 3.days.from_now) }
+      let!(:event2) { Fabricate(:event, original_starts_at: 1.day.from_now) }
+      let!(:event3) { Fabricate(:event, original_starts_at: 2.days.from_now) }
+
+      it "returns events in ascending order by default" do
+        results = finder.search(current_user)
+        expect(results.pluck(:id)).to eq([event2.id, event3.id, event1.id])
+      end
+
+      it "returns events in ascending order when order=asc" do
+        results = finder.search(current_user, { order: "asc" })
+        expect(results.pluck(:id)).to eq([event2.id, event3.id, event1.id])
+      end
+
+      it "returns events in descending order when order=desc" do
+        results = finder.search(current_user, { order: "desc" })
+        expect(results.pluck(:id)).to eq([event1.id, event3.id, event2.id])
+      end
+
+      it "defaults to ascending order for invalid order values" do
+        results = finder.search(current_user, { order: "invalid" })
+        expect(results.pluck(:id)).to eq([event2.id, event3.id, event1.id])
       end
     end
   end

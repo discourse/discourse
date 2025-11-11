@@ -33,6 +33,11 @@ fi:
   discourse_assign:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"
+    filter:
+      description:
+        assigned: "Suodata tietylle käyttäjälle tai ryhmälle osoitetut ketjut"
+        nobody: "Suodata ketjut, joita ei ole osoitettu kenellekään"
+        anyone: "Suodata kenelle tahansa osoitetut ketjut"
     already_claimed: "Ketju on jo omittu."
     already_assigned: "Ketju on jo osoitettu käyttäjälle %{username}"
     too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen enimmäismäärän (%{max})."
@@ -52,8 +57,8 @@ fi:
       never: "ei koskaan"
       daily: "päivittäin"
       weekly: "viikoittain"
-      monthly: "kuukausittainen"
-      quarterly: "neljännesvuosittainen"
+      monthly: "kuukausittain"
+      quarterly: "neljännesvuosittain"
   assign_mailer:
     title: "Osoitus"
     subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun \"%{topic_title}\"!"

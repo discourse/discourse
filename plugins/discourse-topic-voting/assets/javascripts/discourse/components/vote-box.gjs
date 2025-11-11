@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -100,14 +99,14 @@ export default class VoteBox extends Component {
         <VoteOptions
           @topic={{@topic}}
           @removeVote={{this.removeVote}}
-          {{closeOnClickOutside this.closeVoteOptions (hash)}}
+          {{closeOnClickOutside this.closeVoteOptions}}
         />
       {{/if}}
 
       {{#if this.votesAlert}}
         <div
           class="voting-popup-menu vote-options popup-menu"
-          {{closeOnClickOutside this.closeVotesAlert (hash)}}
+          {{closeOnClickOutside this.closeVotesAlert}}
         >
           {{htmlSafe
             (i18n

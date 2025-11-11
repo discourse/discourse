@@ -32,7 +32,7 @@
   --d-sidebar-suffix-color: var(--tertiary-med-or-tertiary);
 
   // highlight applies to both hover and focus states
-  --d-sidebar-highlight-background: var(--primary-low);
+  --d-sidebar-highlight-background: var(--d-hover);
   --d-sidebar-highlight-color: var(--primary-high);
   --d-sidebar-highlight-prefix-background: var(--primary-300);
   --d-sidebar-highlight-prefix-color: var(--d-sidebar-highlight-color);
@@ -214,7 +214,7 @@
     margin-bottom: -2px;
 
     @include viewport.until(sm) {
-      grid-template-columns: 2em 4.5em repeat(2, 1fr);
+      grid-template-columns: 4em auto auto min-content;
     }
 
     &.header {
@@ -432,6 +432,7 @@
     margin-top: 0.5em;
     margin-bottom: 0.5em;
     border-radius: var(--d-input-border-radius);
+    overflow: hidden;
   }
 
   &__icon.btn.btn-transparent {

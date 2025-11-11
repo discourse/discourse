@@ -21,6 +21,11 @@ cs:
       voted_title: "Hlasováno"
       voting_closed_title: "Zavřené"
       voting_limit: "limit"
+      votes_left:
+        one: "Zbývá vám %{count} hlas, podívejte se na <a href='%{path}'>vaše hlasy</a>."
+        few: "Zbývají vám %{count} hlasy, podívejte se na <a href='%{path}'>vaše hlasy</a>."
+        many: "Zbývá vám %{count} hlasů, podívejte se na <a href='%{path}'>vaše hlasy</a>."
+        other: "Zbývá vám %{count} hlasů, podívejte se na <a href='%{path}'>vaše hlasy</a>."
       votes_left_button_title:
         one: "Zbývá vám %{count} hlas."
         few: "Zbývají vám %{count} hlasy."

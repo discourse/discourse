@@ -16,6 +16,10 @@
     }
   }
 
+  .inline-footnote {
+    display: inline-block;
+  }
+
   // This is hack to work with lazy-loading, we will trick the browser
   // to believe the image is in the DOM and can be loaded
   .footnotes-list,
@@ -39,6 +43,10 @@
   overflow-wrap: break-word;
   font-size: var(--font-down-1);
 
+  .fk-d-tooltip__inner-content {
+    flex-direction: column;
+  }
+
   .footnote-backref {
     display: none;
   }
@@ -50,6 +58,8 @@
 
   p {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
   }
 }
 

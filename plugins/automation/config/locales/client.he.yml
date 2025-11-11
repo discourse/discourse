@@ -449,7 +449,7 @@ he:
           status:
             label: מצב
           enabled:
-            label: פעיל
+            label: "הפעלת אוטומציה"
           disabled:
             label: כבוי
           placeholders:
@@ -460,3 +460,4 @@ he:
             label: ריצה אחרונה
           last_updated_by:
             label: עודכן על ידי
+          enable_toggle_disabled: "אפשר להפעיל את האוטומציה הזאת לאחר שכל השדות הנחוצים מולאו."

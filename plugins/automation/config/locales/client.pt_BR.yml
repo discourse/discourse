@@ -167,16 +167,22 @@ pt_BR:
               description: Opcional, ativação apenas se a postagem tiver alguma destas etiquetas
             restricted_categories:
               label: Categorias
-              description: Opcional, ativa apenas se o tópico da postagem estiver nestas categorias
+              description: Opcional, acionamento apenas se o tópico da postagem estiver nestas categorias
             exclude_subcategories:
               label: Excluir subcategorias
-              description: Opcional, ativa apenas se o tópico da postagem estiver exatamente nas categorias especificadas acima
+              description: Opcional, acionamento apenas se o tópico da postagem estiver exatamente nas categorias especificadas acima
             restricted_archetype:
               label: Tipo de tópico
-              description: Opcional, permitir a ativação apenas em tópicos ou mensagens pessoais
+              description: Opcional, permitir acionamento apenas em tópicos ou mensagens pessoais
+            restricted_groups:
+              label: Grupos restritos
+              description: Opcional, acionamento apenas se o(a) usuário(a) da postagem estiver em algum desses grupos
             restricted_inbox_groups:
               label: Grupos de caixas de entrada restritas
-              description: Opcional. Será ativado apenas se o tópico da postagem for uma mensagem pessoal em uma das caixas de entrada do grupo
+              description: Opcional, acionamento apenas se o tópico da postagem for uma mensagem pessoal em uma das caixas de entrada do grupo
+            excluded_groups:
+              label: Grupos excluídos
+              description: Opcional, ignora o acionamento se o(a) usuário(a) da postagem pertencer a um desses grupos
             ignore_automated:
               label: Ignorar automatizado
               description: Ignore o gatilho se o remetente tiver um e-mail sem resposta ou for de uma fonte automatizada. Aplica-se apenas a postagens criadas por e-mail.
@@ -189,9 +195,14 @@ pt_BR:
             skip_via_email:
               label: "Pular por e-mail"
               description: "Pule o acionador se a postagem tiver sido criada por e-mail"
+            post_features:
+              label: Recursos de postagem
+              description: "Opcional, limitar o acionamento apenas a postagens com esses recursos"
           created: Criado(a)
           edited: Editado(a)
+          topics: Todos os tópicos
           personal_messages: Mensagens pessoais
+          public_topics: Tópicos públicos (exceto todas as categorias protegidas)
           with_images: Imagens
           with_links: Links
           with_code: Código
@@ -396,7 +407,7 @@ pt_BR:
               label: MPs
             sender:
               label: Remetente de MPs
-              description: "Certifique-se de que o remetente tenha as permissões corretas para enviar mensagens privadas ao destinatário"
+              description: "Verifique se o remetente tem as permissões corretas para enviar mensagens privadas ao(à) destinatário(a)"
         close_topic:
           fields:
             topic:
@@ -420,7 +431,11 @@ pt_BR:
           name:
             label: Gatilho
         automation:
+          runs_today: "%{count} hoje"
+          runs_this_week: "%{count} esta semana"
           runs_this_month: "%{count} este mês"
+          runs:
+            label: Execuções
           name:
             label: Nome
           trigger:
@@ -432,12 +447,15 @@ pt_BR:
           status:
             label: Status
           enabled:
-            label: Ativada
+            label: "Ativar automação"
           disabled:
             label: Desativada
           placeholders:
             label: Espaços reservados
           last_updated_at:
             label: Última atualização
+          last_run:
+            label: Última execução
           last_updated_by:
             label: Atualizado por
+          enable_toggle_disabled: "Você pode ativar a automação quando todos os campos obrigatórios estiverem concluídos."

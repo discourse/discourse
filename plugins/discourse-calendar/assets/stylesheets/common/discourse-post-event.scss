@@ -30,16 +30,19 @@ $show-interested: inherit;
   }
 
   .discourse-post-event-widget {
-    box-shadow: 0 0 0 3px var(--primary-100);
-    border: 1px solid var(--primary-300);
     display: flex;
     background: var(--secondary);
-    margin: 5px 0;
     flex-direction: column;
     flex: 1 0 auto;
-    max-width: calc(100% - 2px - 6px);
+    max-width: 100%;
     box-sizing: border-box;
-    border-radius: var(--d-border-radius);
+
+    .cooked & {
+      box-shadow: 0 0 0 3px var(--primary-100);
+      border: 1px solid var(--primary-300);
+      border-radius: var(--d-border-radius);
+      margin: 5px 0;
+    }
 
     section:last-child {
       padding-bottom: 0.75em;
@@ -144,8 +147,6 @@ $show-interested: inherit;
     margin-right: 0.5rem;
 
     .name {
-      @include ellipsis;
-      max-width: 45vw;
       font-size: var(--font-up-2);
       font-weight: 400;
     }
@@ -173,6 +174,8 @@ $show-interested: inherit;
       .username {
         margin-left: 0.25em;
         color: var(--primary);
+
+        @include ellipsis;
       }
 
       .creators {
@@ -180,9 +183,13 @@ $show-interested: inherit;
         align-items: center;
 
         .event-creator {
+          @include ellipsis;
+
           .topic-invitee-avatar {
             display: flex;
             align-items: center;
+
+            @include ellipsis;
           }
         }
       }
@@ -322,6 +329,7 @@ $show-interested: inherit;
 
         .avatar {
           width: 1.5rem;
+          height: 1.5rem;
         }
 
         .avatar-flair {
@@ -370,6 +378,10 @@ $show-interested: inherit;
       margin: 0 auto;
       padding: 0;
     }
+
+    .chat-channel-link {
+      @include ellipsis;
+    }
   }
 
   .event-url {
@@ -413,8 +425,8 @@ $show-interested: inherit;
   .event-invitees-icon .going {
     font-size: var(--font-down-3);
     position: absolute;
-    right: -2px;
-    bottom: -8px;
+    right: 0;
+    bottom: 0;
     background: var(--secondary);
     border-radius: 50%;
     display: flex;

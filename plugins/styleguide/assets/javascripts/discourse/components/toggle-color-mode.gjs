@@ -46,8 +46,6 @@ function colorSchemeOverride(type) {
 }
 
 export default class ToggleColorMode extends Component {
-  @service keyValueStore;
-  @service siteSettings;
   @service site;
 
   @tracked colorSchemeOverride = this.default;
@@ -59,7 +57,7 @@ export default class ToggleColorMode extends Component {
     // If site has a dark color scheme set but user doesn't auto switch in dark mode
     // we need to load the stylesheet manually
     if (!document.querySelector("link.dark-scheme")) {
-      if (this.site.default_dark_color_scheme.id > 0) {
+      if (this.site.default_dark_color_scheme?.id > 0) {
         loadColorSchemeStylesheet(
           this.site.default_dark_color_scheme.id,
           currentThemeId(),

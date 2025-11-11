@@ -15,6 +15,8 @@ ru:
       group_not_found: "Группа не найдена"
       no_policy: "Политики для записи не существует"
       staff_only: "Политика может применяться только к записям персонала"
+    error:
+      no_permission: "Не авторизовано"
   reports:
     unaccepted-policies:
       title: Непринятые политики

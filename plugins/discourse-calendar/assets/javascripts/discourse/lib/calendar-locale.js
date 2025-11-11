@@ -10,6 +10,6 @@ export function getCalendarButtonsText() {
     month: i18n("discourse_calendar.toolbar_button.month"),
     week: i18n("discourse_calendar.toolbar_button.week"),
     day: i18n("discourse_calendar.toolbar_button.day"),
-    list: i18n("discourse_calendar.toolbar_button.list"),
+    list: i18n("discourse_calendar.toolbar_button.year"),
   };
 }

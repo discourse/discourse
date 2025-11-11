@@ -5,7 +5,9 @@ module DiscourseAi
     class << self
       def topic_summary(topic)
         return nil if !SiteSetting.ai_summarization_enabled
-        if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)).blank?
+        if (
+             ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
+           ).blank?
           return nil
         end
 
@@ -21,7 +23,9 @@ module DiscourseAi
 
       def topic_gist(topic)
         return nil if !SiteSetting.ai_summarization_enabled
-        if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summary_gists_persona)).blank?
+        if (
+             ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summary_gists_persona)
+           ).blank?
           return nil
         end
 
@@ -37,7 +41,9 @@ module DiscourseAi
 
       def chat_channel_summary(channel, time_window_in_hours)
         return nil if !SiteSetting.ai_summarization_enabled
-        if (ai_persona = AiPersona.find_by(id: SiteSetting.ai_summarization_persona)).blank?
+        if (
+             ai_persona = AiPersona.find_by_id_from_cache(SiteSetting.ai_summarization_persona)
+           ).blank?
           return nil
         end
 

@@ -80,7 +80,7 @@
     flex-grow: 1;
   }
 
-  &.-active {
+  &.--default {
     @include theme-card-border(tertiary);
   }
 
@@ -137,6 +137,16 @@
     gap: 0.5rem;
     align-items: center;
     overflow-wrap: anywhere;
+    color: var(--primary);
+
+    &:visited {
+      color: currentcolor;
+    }
+
+    &:hover,
+    &:focus {
+      color: var(--tertiary);
+    }
   }
 
   &__description {
@@ -202,16 +212,6 @@
       height: 0.75em;
       color: var(--primary-high);
     }
-
-    &.--active {
-      background-color: var(--tertiary);
-      color: var(--secondary);
-      position: absolute;
-      right: 8px;
-      top: 8px;
-      font-size: var(--font-down-3);
-      text-transform: uppercase;
-    }
   }
 
   .admin-config-area-card__header-action {
@@ -245,10 +245,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-
-  &:hover {
-    border-color: var(--tertiary-medium);
-  }
 
   .admin-config-area-card__content {
     margin: 0;

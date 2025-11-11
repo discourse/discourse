@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::Automation::LlmToolTriage do
-  fab!(:solver) { Fabricate(:user) }
+  fab!(:solver, :user)
   fab!(:new_user) { Fabricate(:user, trust_level: TrustLevel[0], created_at: 1.day.ago) }
   fab!(:topic) { Fabricate(:topic, user: new_user) }
   fab!(:post) { Fabricate(:post, topic: topic, user: new_user, raw: "How do I reset my password?") }

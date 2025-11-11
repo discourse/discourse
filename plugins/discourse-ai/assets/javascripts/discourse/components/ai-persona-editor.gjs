@@ -11,6 +11,10 @@ import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
 import { i18n } from "discourse-i18n";
@@ -26,7 +30,6 @@ import RagUploader from "./rag-uploader";
 
 export default class PersonaEditor extends Component {
   @service router;
-  @service store;
   @service dialog;
   @service toasts;
   @service siteSettings;
@@ -122,7 +125,7 @@ export default class PersonaEditor extends Component {
       this.#sortPersonas();
 
       if (isNew && this.args.model.rag_uploads.length === 0) {
-        this.args.personas.addObject(personaToSave);
+        addUniqueValueToArray(this.args.personas.content, personaToSave);
         await this.router.replaceWith(
           "adminPlugins.show.discourse-ai-personas.edit",
           personaToSave
@@ -154,7 +157,7 @@ export default class PersonaEditor extends Component {
       message: i18n("discourse_ai.ai_persona.confirm_delete"),
       didConfirm: () => {
         return this.args.model.destroyRecord().then(() => {
-          this.args.personas.removeObject(this.args.model);
+          removeValueFromArray(this.args.personas.content, this.args.model);
           this.router.transitionTo(
             "adminPlugins.show.discourse-ai-personas.index"
           );
@@ -241,7 +244,7 @@ export default class PersonaEditor extends Component {
     const updatedOptions = Object.assign({}, currentOptions);
 
     toolNames.forEach((toolId) => {
-      const tool = this.allTools.findBy("id", toolId);
+      const tool = this.allTools.find((item) => item.id === toolId);
       const toolOptions = tool?.options;
 
       if (!toolOptions || updatedOptions[toolId]) {
@@ -280,7 +283,8 @@ export default class PersonaEditor extends Component {
   }
 
   #sortPersonas() {
-    const sorted = this.args.personas.toArray().sort((a, b) => {
+    // .sort is done in place and personas.content is a tracked array.
+    this.args.personas.content.sort((a, b) => {
       if (a.priority && !b.priority) {
         return -1;
       } else if (!a.priority && b.priority) {
@@ -289,8 +293,6 @@ export default class PersonaEditor extends Component {
         return a.name.localeCompare(b.name);
       }
     });
-    this.args.personas.clear();
-    this.args.personas.setObjects(sorted);
   }
 
   @action

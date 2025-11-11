@@ -32,16 +32,17 @@ module DiscourseAi
           Example Output:
           AI, AJAX, API, APK, APT Package Manager, ARIA, ARM Architecture, AWS, Abbreviations
 
-          Please provide your streamlined list of tags within <streamlined_tags> key.
+          Please provide your streamlined list of tags within "streamlined_tags" key.
 
           Remember, the goal is to create a more focused and effective set of tags while maintaining the essence of the original list.
 
           Your output should be in the following format:
-            <o>
-              {
-                "streamlined_tags": ["tag1", "tag3"]
-              }
-            </o>
+
+          {
+            "streamlined_tags": ["tag1", "tag3"]
+          }
+
+          reply with valid JSON only
         PROMPT
       end
 

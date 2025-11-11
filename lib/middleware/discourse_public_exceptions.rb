@@ -65,6 +65,8 @@ module Middleware
           end
 
           if ApplicationController.rescue_with_handler(exception, object: fake_controller)
+            # Calling `ActionDispatch::Response#to_a` here to ensure that cache control headers are set.
+            response.to_a
             body = response.body
             body = [body] if String === body
             rack_response = [response.status, response.headers, body]

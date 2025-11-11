@@ -29,9 +29,10 @@ nl:
       solution_summary:
         one: "oplossing"
         other: "oplossingen"
+      accepted_answer_post_number: "bericht %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
-        all: "alle"
+        all: "alles"
         solved: "opgelost"
         unsolved: "onopgelost"
       no_solved_topics_title: "Je hebt nog geen topics opgelost"

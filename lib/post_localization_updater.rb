@@ -15,6 +15,9 @@ class PostLocalizationUpdater
     localization.localizer_user_id = user.id
     localization.post_version = post.version
     localization.save!
+
+    Jobs.enqueue(:process_localized_cooked, post_localization_id: localization.id)
+
     localization
   end
 end

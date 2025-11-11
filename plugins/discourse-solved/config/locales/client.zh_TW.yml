@@ -22,6 +22,7 @@ zh_TW:
       solution: "解決方式"
       solution_summary:
         other: "解決方案"
+      accepted_answer_post_number: "貼文 %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "全部"

@@ -60,6 +60,22 @@ hu:
         select_option: "Válasszon egy lehetőséget…"
       layout:
         table: "Táblázat"
+      translations:
+        title: "Fordítások"
+        stats:
+          eta_minutes:
+            one: "%{count} perc"
+            other: "%{count} perc"
+          eta_hours:
+            one: "%{count} óra"
+            other: "%{count} óra"
+          eta_days:
+            one: "%{count} nap"
+            other: "%{count} nap"
+        progress_chart:
+          bar_done:
+            one: "%{count} bejegyzés"
+            other: "%{count} bejegyzés"
       spam:
         short_title: "Kéretlen tartalom"
         last_seven_days: "Elmúlt 7 nap"

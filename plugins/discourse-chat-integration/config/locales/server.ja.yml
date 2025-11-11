@@ -61,6 +61,9 @@ ja:
     chat_integration_webex_excerpt_length: "Webex Teams 投稿の抜粋の長さ"
     chat_integration_google_enabled: "Google チャット チャット統合プロバイダーを有効にする"
     chat_integration_google_excerpt_length: "Google チャット投稿の抜粋の長さ"
+  dashboard:
+    problem:
+      channel_errors: "一部のチャット統合チャンネルにエラーがあります。詳細については、<a href='%{base_path}/admin/plugins/chat-integration'>チャット統合のセクション</a>をご覧ください。"
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -86,7 +89,7 @@ ja:
           no_rules: "このチャンネルに設定されたルールはありません。`/discourse help` で手順を確認できます。"
           rule_string: "*%{index}）* *%{category}* の投稿を*%{filter}*"
           rule_string_tags_suffix: " タグ: *%{tags}*"
-        parse_error: "残念ながら、そのコマンドを理解できません。`/discourse help` で手順を確認できます。"
+        parse_error: "残念ながら、そのコマンドを理解できません。`/discourse help` で指示を確認できます。"
         create:
           created: "ルールを正常に作成しました"
           updated: "ルールを正常に更新しました"
@@ -170,7 +173,7 @@ ja:
           - <b>mute</b> - このチャンネルへの通知をミュートにする
 
           <b>ルールの削除:</b> <code>/remove [ルール番号]</code>
-          （<code>[ルール番号]</code>は <code>/status</code> を実行することで見つけることができます)
+          (<code>[ルール番号]</code>は <code>/status</code> を実行することで見つけることができます)
 
           <b>ルール一覧:</b> <code>/status</code>
 

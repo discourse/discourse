@@ -1636,10 +1636,7 @@ sl:
   page_not_found:
     page_title: "stran ne obstaja"
     title: "Oops! Ta stran ne obstaja ali je zasebna."
-    popular_topics: "Zanimivo"
-    recent_topics: "Nedavno"
     see_more: "Več"
-    search_title: "Išči na tem spletnem mestu"
     search_button: "Išči"
   upload:
     edit_reason: "prenos slik v lokalno kopijo"
@@ -1983,7 +1980,7 @@ sl:
         description: "Potrdi prijavo in utišaj uporabnika"
       agree_and_restore:
         description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
-      delete_single:
+      delete:
         title: "Izbriši"
         complete: "Prispevek izbrisan."
       delete_and_ignore:
@@ -2008,6 +2005,9 @@ sl:
       approve_post:
         title: "Odobri prispevek"
         complete: "Objava odobrena."
+      approve_post_closed:
+        title: "Odobri prispevek"
+        complete: "Objava odobrena."
       reject_post:
         title: "Zavrni prispevek"
         complete: "Objava zavrnjena."
@@ -2023,9 +2023,11 @@ sl:
           description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
       reject:
         title: "Zavrni"
+      delete_post:
+        complete: "Prispevek izbrisan"
       delete_user:
+        complete: "Uporabnik izbrisan"
         reason: "Izbriši preko vrste za pregled"
-        complete: "Uporabnik izbrisan."
   fallback_username: "uporabnik"
   activemodel:
     errors:

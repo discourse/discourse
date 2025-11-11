@@ -33,6 +33,11 @@ uk:
   discourse_assign:
     assigned_to: "Тема призначена для @ %{username}"
     unassigned: "Тема не була призначена"
+    filter:
+      description:
+        assigned: "Фільтрувати теми, призначені певному користувачеві або групі"
+        nobody: "Фільтрувати теми, які нікому не призначені"
+        anyone: "Фільтрувати теми, призначені будь-кому"
     already_claimed: "Цю тему вже заявлено."
     already_assigned: "Тема вже призначена для @ %{username}"
     too_many_assigns: "@ %{username} вже досяг максимальної кількості призначених тем (%{max})."

@@ -24,6 +24,7 @@ fr:
     solved_add_schema_markup: "Ajouter le marquage du schéma QAPage au code HTML."
     enable_solved_tags: "Étiquettes qui permettront aux utilisateurs de sélectionner des solutions."
     prioritize_solved_topics_in_search: "Prioriser les sujets résolus dans les résultats de recherche."
+    show_who_marked_solved: "Affichez qui a marqué le sujet comme résolu. Cette information apparaît dans la première publication du sujet et dans une infobulle sur la réponse."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
@@ -35,6 +36,10 @@ fr:
     no_solutions:
       self: "Vous n'avez pas encore de solutions acceptées."
       others: "Aucune solution acceptée."
+    filter:
+      description:
+        solved: "Filtrer les sujets qui ont été résolus"
+        unsolved: "Filtrer les sujets qui n'ont pas été résolus"
   badges:
     solved_1:
       name: "Résolu !"

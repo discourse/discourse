@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ReviewablePostVotingComment < Reviewable
+  include ReviewableActionBuilder
+
   def serializer
     ReviewablePostVotingCommentSerializer
   end
@@ -30,7 +32,8 @@ class ReviewablePostVotingComment < Reviewable
     @comment_creator ||= User.find_by(id: comment.user_id)
   end
 
-  def build_actions(actions, guardian, args)
+  # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
+  def build_legacy_combined_actions(actions, guardian, args)
     return unless pending?
     return if comment.blank?
 
@@ -70,6 +73,33 @@ class ReviewablePostVotingComment < Reviewable
 
     unless comment.deleted_at?
       build_action(actions, :delete_and_agree, icon: "far-trash-can", bundle: ignore_bundle)
+    end
+  end
+
+  # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
+  def build_new_separated_actions
+    bundle_actions = { no_action_comment: {} }
+    if comment.deleted_at?
+      bundle_actions[:agree_and_restore] = {}
+      bundle_actions[:disagree_and_restore] = {}
+    else
+      bundle_actions[:agree_and_delete] = {}
+      bundle_actions[:agree_and_keep_comment] = {}
+    end
+
+    build_bundle(
+      "#{id}-comment-actions",
+      "discourse_post_voting.reviewables.actions.comment_actions.bundle_title",
+      bundle_actions,
+    )
+    build_user_actions_bundle
+  end
+
+  def perform_no_action_comment(performed_by, args)
+    if comment.deleted_at?
+      create_result(:success, :approved, [created_by_id], true)
+    else
+      create_result(:success, :rejected, [created_by_id], true)
     end
   end
 
@@ -126,26 +156,6 @@ class ReviewablePostVotingComment < Reviewable
     yield if block_given?
     create_result(:success, :ignored) do |result|
       result.update_flag_stats = { status: :ignored, user_ids: flagged_by_user_ids }
-    end
-  end
-
-  def build_action(
-    actions,
-    id,
-    icon:,
-    button_class: nil,
-    bundle: nil,
-    client_action: nil,
-    confirm: false
-  )
-    actions.add(id, bundle: bundle) do |action|
-      prefix = "reviewables.actions.#{id}"
-      action.icon = icon
-      action.button_class = button_class
-      action.label = "post_voting.comment.#{prefix}.title"
-      action.description = "post_voting.comment.#{prefix}.description"
-      action.client_action = client_action
-      action.confirm_message = "#{prefix}.confirm" if confirm
     end
   end
 end

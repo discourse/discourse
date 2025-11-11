@@ -165,6 +165,15 @@ en:
             flag_post:
               label: "Flag post"
               description: "Flags post (either as spam or for review)"
+            notify_author_pm:
+              label: "Notify author via PM"
+              description: "Send a personal message to the post author when their post is queued and deleted"
+            notify_author_pm_user:
+              label: "PM sender"
+              description: "User who will send the PM (defaults to system)"
+            notify_author_pm_message:
+              label: "PM content"
+              description: "Optional custom message to send to the author"
             include_personal_messages:
               label: "Include personal messages"
               description: "Also scan and triage personal messages"
@@ -177,6 +186,38 @@ en:
             max_output_tokens:
               label: "Max output tokens"
               description: "When specified, sets an upper bound to the maximum number of tokens the model can generate. Respects LLM's max output tokens limit"
+        llm_tagger:
+          tag_mode:
+            manual: "Use specific tag list (configured below)"
+            discover: "Let AI discover and use any site tags"
+          fields:
+            tagger_persona:
+              label: "AI Persona"
+              description: "The AI persona to use for analyzing and tagging topics"
+            tag_mode:
+              label: "Tag Selection Mode"
+              description: "Choose how the AI selects tags"
+            available_tags:
+              label: "Available Tags"
+              description: "Tags that the AI can choose from (only used in manual mode)"
+            confidence_threshold:
+              label: "Confidence Threshold"
+              description: "Minimum confidence percentage (0-100) required to apply suggested tags"
+            max_tags_per_post:
+              label: "Maximum Tags Per Post"
+              description: "Maximum number of tags that can be applied to a single post"
+            max_post_tokens:
+              label: "Maximum Post Tokens"
+              description: "Maximum number of tokens from the post content to analyze"
+            allow_restricted_tags:
+              label: "Allow Restricted Tags"
+              description: "Allow AI to suggest and apply tags with restricted permissions or visibility."
+            max_posts_for_context:
+              label: "Maximum Posts for Context"
+              description: "Maximum number of posts from the topic to include for analysis context (default: 5)"
+            allow_system_posts:
+              label: "Allow System Posts"
+              description: "Allow tagging of posts created by the system user."
 
     discourse_ai:
       title: "AI"
@@ -217,6 +258,9 @@ en:
           text: "Search features, personas, LLMs, or groups..."
           no_results: "No features found matching your filters."
           reset: "Reset"
+
+        no_automations: "There are no automations yet"
+
         summarization:
           name: "Summaries"
           description: "Makes a summarization button available that allows visitors to summarize topics"
@@ -268,12 +312,58 @@ en:
           description: "Identifies potential spam using the selected LLM and flags it for site moderators to inspect in the review queue"
           inspect_posts: "Inspect posts"
 
+        automation_reports:
+          name: "Automated reports"
+          description: "Automatically creates concise overviews of activity, highlighting trends, key topics, and engagement"
+
+        automation_triage:
+          name: "Posts triage"
+          description: "Automates moderation and management of posts by using configurable automation rules"
+
       modals:
         select_option: "Select an option..."
 
       layout:
         table: "Table"
         card: "Card"
+
+      translations:
+        title: "Translations"
+        description: "Automatically translate all content on your forum to the user's preferred language"
+        supported_locales: "Supported languages"
+        supported_locales_description: "This site setting also allows visitors to contribute post translations."
+        admin_actions:
+          translation_settings: "Translation settings"
+          localization_settings: "Localization settings"
+          enable_translations: "Enable automatic translations"
+        stats:
+          title: "Translation statistics"
+          complete_language_detection_description: "All %{total} eligible posts have their language detected."
+          incomplete_language_detection_description: "%{done} of %{total} eligible posts have their language detected."
+          backfill_disabled: "Backfilling is disabled, only new posts will be translated."
+          backfill_message: "<a href='%{settingsUrl}'>Backfill settings</a> are configured to translate all posts after %{date} — this is estimated to take %{eta}."
+          eta_minutes:
+            one: "%{count} minute"
+            other: "%{count} minutes"
+          eta_hours:
+            one: "%{count} hour"
+            other: "%{count} hours"
+          eta_days:
+            one: "%{count} day"
+            other: "%{count} days"
+        progress_chart:
+          title: "Translation Progress"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} out of %{total} non-%{language} posts translated"
+          bar_done:
+            one: "%{count} post"
+            other: "%{count} posts"
+        translations_menu:
+          translate:
+            label: "Translate post"
+            title: "Translates this post to all supported languages"
+            confirm: "This will update any existing translations on this post. Are you sure?"
+            success: "Post has been sent for translation"
 
       spam:
         short_title: "Spam"
@@ -350,6 +440,7 @@ en:
           last_week: "Last week"
           last_month: "Last month"
           custom: "Custom..."
+        credit_allocations: "Credit allocations"
 
       ai_persona:
         ai_tools: "Tools"
@@ -565,6 +656,11 @@ en:
           max_tokens_required: "Must be set if max usages is not set"
           max_usages_help: "Maximum number of times each user in this group can use the AI model within the specified duration. This quota is tracked per individual user, not shared across the group."
           max_usages_required: "Must be set if max tokens is not set"
+        credit_allocation:
+          credits_remaining: "%{remaining} of %{total} credits remaining (%{percentage}%)"
+          soft_limit_warning: "This model has %{percentage}% of AI credits remaining this month"
+          hard_limit_warning: "You have run out of AI credits for this model. AI features using this model will be unavailable until %{reset_date}"
+          next_reset: "Credits reset on %{time}"
         usage:
           ai_bot: "AI bot"
           ai_helper: "Helper (%{persona})"
@@ -588,9 +684,10 @@ en:
           google-gemini-2-0-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning (previous generation)"
           google-gemini-2-5-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning"
           google-gemini-2-0-flash-lite: "Cost efficient and low latency model"
-          open_ai-o3: "Open AI's most capable reasoning model"
+          google-gemini-2-5-flash-image-preview: "Latest image generation model with vision capabilities"
+          open_ai-o3: "OpenAI's most capable reasoning model"
           open_ai-o4-mini: "Advanced Cost-efficient reasoning model"
-          open_ai-gpt-5: "Open AI's flagship model. It is well suited for problem solving across domains"
+          open_ai-gpt-5: "OpenAI's flagship model. It is well suited for problem solving across domains"
           open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
           open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficient lightweight multilingual model"
@@ -600,6 +697,8 @@ en:
           open_router-x-ai-grok-3-beta: "xAI's latest model"
           open_router-deepseek-deepseek-r1-0528-free: "DeepSeek's latest reasoning model"
           open_router-meta-llama-3-3-70b-instruct: "Highly capable multilingual model"
+          groq-openai-gpt-oss-120b: "State of the art open-weight model by OpenAI"
+          groq-openai-gpt-oss-20b: "Lightweigh, fast, open-weight model by OpenAI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -619,6 +718,7 @@ en:
           title: "Run test"
           running: "Running test..."
           success: "Success!"
+          invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
 
         hints:
@@ -646,6 +746,7 @@ en:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Custom"
 
         provider_fields:
@@ -718,6 +819,12 @@ en:
           save_caption: "Save"
         no_content_error: "Add content first to perform AI actions on it"
 
+      errors:
+        credit_limit_dialog:
+          title: "AI credit limit reached"
+          message: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets at %{reset_time}."
+          message_without_time: "You've hit the AI credit limit for your plan. Responses will be unavailable until your limit resets."
+
       reviewables:
         model_used: "Model used:"
         accuracy: "Accuracy:"
@@ -781,6 +888,7 @@ en:
           none: "Sorry, our AI search found no matching topics"
           new: "Press 'search' to begin looking for new results with AI"
           unavailable: "AI results unavailable"
+          zero_results_expanded: "Zero results found, showing %{count} AI results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
           invalid_sort: "Search results must be sorted by Relevance to display AI results"
@@ -801,6 +909,7 @@ en:
         cancel_streaming: "Stop reply"
         default_pm_prefix: "[Untitled AI bot PM]"
         shortcut_title: "Start a PM with an AI bot"
+        shortcut_link: "AI bot"
         exit: "exit AI bot"
         share: "Copy AI conversation"
         conversation_shared: "Conversation copied"
@@ -903,6 +1012,14 @@ en:
         topic:
           title: "Topic summary"
           close: "Close summary panel"
+          regenerate: "Regenerate short summary"
+          regenerate_bulk: "Regenerate short summaries"
+          regenerate_success:
+            one: "Short summary regenerated successfully"
+            other: "%{count} short summaries regenerated successfully"
+          regenerate_error:
+            one: "Failed to regenerate short summary"
+            other: "Failed to regenerate %{count} short summaries"
         topic_list_layout:
           button:
             compact: "Compact"

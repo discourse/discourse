@@ -151,7 +151,6 @@ hr:
       title_capitalized: "Čet"
       upload_to_channel: "Prenesi na %{title}"
       upload_to_thread: "Prenesi u nit"
-      exit: "natrag"
       channel_status:
         archive_failed_no_topic: "Arhiviranje kanala nije uspjelo. %{completed}/%{total} poruka je arhivirano, odredišna tema nije kreirana. Pritisnite ponovno za pokušaj dovršetka arhiviranja."
         closed: "Zatvoreno"
@@ -165,6 +164,8 @@ hr:
       chat_message_separator:
         today: Danas
         yesterday: Jučer
+      search_view:
+        filter_placeholder: Pretražite poruke
       about_view:
         title: Naslov
         name: Ime
@@ -174,6 +175,7 @@ hr:
         tabs:
           members: Članovi
           settings: Postavke
+          search: Pretraživanje
         remove_member: "Ukloni"
       new_message_modal:
         no_items: "Nema stvari"
@@ -207,6 +209,8 @@ hr:
         types:
           category: "Kategorija"
           topic: "Tema"
+      reviewable:
+        message_in_channel: "Kanal"
       composer:
         italic_text: "naglašen tekst"
         bold_text: "jaki text"
@@ -238,6 +242,10 @@ hr:
           title: "Izvezi poruke čavrljanja"
           create_export: "Stvori izvoz"
           export_has_started: "Izvoz je počeo. Dobit ćete PM kad bude spreman."
+      search:
+        sort:
+          relevance: "Relevantnost"
+          latest: "Posljednje"
       incoming_webhooks:
         back: "Natrag"
         description: "Opis"
@@ -316,6 +324,21 @@ hr:
         title: "Čet"
         keyboard_shortcuts:
           mark_all_channels_read: "%{shortcut} Označi sve kanale kao pročitane"
+    user:
+      allow_private_messages: "Dopusti drugim korisnicima da mi šalju osobne poruke i izravne poruke u chatu"
+      muted_users_instructions: "Nećete primati nikakve obavijesti, osobne poruke ili izravne poruke u chatu od ovog korisnika."
+      allowed_pm_users_instructions: "Dopusti samo osobne poruke ili izravne poruke u chatu od ovih korisnika."
+      allow_private_messages_from_specific_users: "Dopusti samo određenim korisnicima da mi šalju osobne poruke ili izravne poruke u chatu"
+      ignored_users_instructions: "Nećete primati nikakve obavijesti, osobne poruke ili izravne poruke u chatu od ovog korisnika."
+    user_menu:
+      no_chat_notifications_title: "Još nemate nijednu obavijest"
+      no_chat_notifications_body: >
+        Bit ćete obaviješteni na ovoj ploči kada vam netko pošalje izravnu poruku ili vas <b>@spomene</b> u chatu. Obavijesti će također biti poslane na vašu e-poštu kada se neko vrijeme ne prijavite. <br><br> Kliknite naslov na vrhu bilo kojeg kanala za chat kako biste konfigurirali koje obavijesti primate u tom kanalu. Za više informacija pogledajte svoje <a href='%{preferencesUrl}'>postavke obavijesti</a>.
+      tabs:
+        chat_notifications_with_unread:
+          one: "Obavijesti o chatu - %{count} nepročitana obavijest"
+          few: "Obavijesti o chatu - %{count} nepročitane obavijesti"
+          other: "Obavijesti o chatu - %{count} nepročitanih obavijesti"
     styleguide:
       sections:
         chat:

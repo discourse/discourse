@@ -23,6 +23,9 @@ nl:
     patreon_donation_prompt_campaign_url: "Campagne-URL voor donatievraag"
     errors:
       patreon_creator_username_not_set: "Je moet de instelling Discourse-gebruikersnaam Patreon-maker instellen voordat je Patreon-aanmelding inschakelt."
+  dashboard:
+    problem:
+      access_token_invalid: "De toegangs- en vernieuwingstokenwaarden van Patreon Creator zijn onjuist. Je moet de nieuwe tokens kopiëren en plakken van de <a href='https://www.patreon.com/platform/documentation/clients'>Patreon-website</a> naar de <a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>site-instellingen</a>."
   patreon:
     error:
       invalid_response: "Ongeldig antwoord van Patreon-API"

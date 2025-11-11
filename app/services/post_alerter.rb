@@ -311,13 +311,6 @@ class PostAlerter
   end
 
   def category_or_tag_muters(topic)
-    user_option_condition_sql_fragment =
-      if SiteSetting.watched_precedence_over_muted
-        "uo.watched_precedence_over_muted IS false"
-      else
-        "(uo.watched_precedence_over_muted IS NULL OR uo.watched_precedence_over_muted IS false)"
-      end
-
     user_ids_sql = <<~SQL
         SELECT uo.user_id FROM user_options uo
         LEFT JOIN topic_users tus ON tus.user_id = uo.user_id AND tus.topic_id = #{topic.id}
@@ -327,7 +320,7 @@ class PostAlerter
         WHERE
           (tus.id IS NULL OR tus.notification_level != #{TopicUser.notification_levels[:watching]})
           AND (cu.notification_level = #{CategoryUser.notification_levels[:muted]} OR tu.notification_level = #{TagUser.notification_levels[:muted]})
-          AND #{user_option_condition_sql_fragment}
+          AND uo.watched_precedence_over_muted IS false
         SQL
 
     User.where("id IN (#{user_ids_sql})")
@@ -538,6 +531,8 @@ class PostAlerter
            UserOption.like_notification_frequency_type[:never]
       return
     end
+
+    return if type == Notification.types[:linked] && !user.user_option.notify_on_linked_posts
 
     return if !Guardian.new(user).can_receive_post_notifications?(post)
 
@@ -1037,7 +1032,7 @@ class PostAlerter
     notify = notify.where(staged: false).staff if post.topic.private_message?
 
     exclude_user_ids = notified.map(&:id)
-    notify = notify.where("users.id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
+    notify = notify.where.not(id: exclude_user_ids) if exclude_user_ids.present?
 
     DiscourseEvent.trigger(:before_create_notifications_for_users, notify, post)
 

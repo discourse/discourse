@@ -19,6 +19,7 @@ export default {
       this.route("edit", { path: "/:id/edit" });
     });
     this.route("discourse-ai-spam", { path: "ai-spam" });
+    this.route("discourse-ai-translations", { path: "ai-translations" });
     this.route("discourse-ai-usage", { path: "ai-usage" });
 
     this.route(

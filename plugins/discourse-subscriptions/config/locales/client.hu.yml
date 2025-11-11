@@ -5,18 +5,86 @@
 # https://translate.discourse.org/
 
 hu:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse-előfizetések"
+  site_settings:
+    discourse_subscriptions_enabled: Engedélyezze a Discourse előfizetések bővítményt.
+    discourse_subscriptions_extra_nav_subscribe: A feliratkozás gomb megjelenítése az elsődleges navigációs sávban
+    discourse_subscriptions_pricing_table_id: Adja hozzá az ártábla azonosítóját az Ártáblázat beágyazási kódjából.
+    discourse_subscriptions_pricing_table_enabled: Az előfizetés gombra kattintva megjelenik a beágyazott árlista, és a Stripe Checkout szolgáltatást fogja használni.
+    discourse_subscriptions_public_key: Stripe nyilvános kulcs
+    discourse_subscriptions_secret_key: Stripe titkos kulcs
+    discourse_subscriptions_webhook_secret: Stripe titkos webhook
+    discourse_subscriptions_currency: Alapértelmezett pénznemkód. Ez felülírható előfizetési csomag létrehozásakor.
+    discourse_subscriptions_campaign_enabled: Engedélyez egy kampánybannert, amely a közösség anyagi támogatását népszerűsíti.
+    discourse_subscriptions_campaign_goal: A támogatói kampányod számszerű célja (előfizetők száma vagy összegyűjtött összeg).
+    discourse_subscriptions_campaign_type: Kiválasztja a futtatni kívánt kampány típusát (előfizetők vagy havi összegyűjtött összeg).
+    discourse_subscriptions_campaign_banner_location: Kiválasztja a kampánybanner helyét (felső vagy oldalsáv).
+    discourse_subscriptions_campaign_banner_shadow_color: Kiválasztja a kampány bannerének árnyékának színét.
+    discourse_subscriptions_campaign_banner_bg_image: Egyéni kép feltöltése, a kampány banneréhez
+    discourse_subscriptions_campaign_show_contributors: Az előfizetéses termékek legutóbbi vásárlásainak avatarjainak megjelenítése.
+    discourse_subscriptions_campaign_product: A Stripe termékazonosító, amely a támogatókat a kampányon található gombra kattintva irányítja át. Ha ez a beállítás üres, a támogatók a fő termékoldalra lesznek átirányítva.
+    discourse_subscriptions_enable_automatic_tax: Engedélyezi az automatikus adószámítást, amely automatikusan kiszámítja az adókulcsokat az előfizetés által generált összes számlán.
+    discourse_subscriptions_enable_verbose_logging: Részletesebb naplózást tesz lehetővé a hibakeresés megkönnyítése érdekében. Kérjük, ne hagyja állandóan engedélyezve éles környezetben.
+    errors:
+      discourse_patrons_amount_must_be_currency: "A pénznemek összegének dollárjel nélküli pénznemnek kell lennie (pl. 1,50)"
   js:
+    filters:
+      subscribe:
+        help: Támogassa ezt az oldalt előfizetéssel
     discourse_subscriptions:
+      title: Discourse előfizetések
+      admin_navigation: Előfizetések
       optional: Nem kötelező
+      navigation:
+        billing: Számlázás
+        payments: Fizetések
+        subscriptions: Előfizetések
+        subscribe: Előfizetés
+        user_activity:
+          payments: Kifizetések
       campaign:
+        title: Támogasson minket
+        body: Szükségünk van a segítségedre, hogy ez a közösség fennmaradjon és működjön!
         success_title: Sikeres!
+        success_body: Köszönöm a segítségedet, hogy életben tarthatod ezt a közösséget!
+        subscribers: Előfizetők
+        goal_comparison: "<strong>%{current}</strong> a <strong>%{goal}</strong>"
+        raised: Emelkedett
+        button: Támogatás
+        recent_contributors: Legutóbbi közreműködők
+        goal: Elértük a célunkat
+        one_click_campaign: Támogató kampány automatikus létrehozása
+        refresh_campaign: Kampányadatok frissítése
+        refresh_page: A kampányadatok most szinkronizálódnak a Stripe-ból a háttérben. Frissítsd az oldalt néhány pillanat múlva a frissített információk betöltéséhez.
+        supporter: Támogató
+        supporters: Támogatók
+        confirm_creation_title: Automatikusan szeretne kampányt létrehozni a közössége számára?
+        confirm_creation: |-
+          <p>A folytatással a következők jönnek létre:</p>
+
+          <ul>
+          <li>Egy csoport, ahol egyéni címmel és avatar stílussal jutalmazhatod a támogatóidat</li>
+          <li>Egy Stripe termék előre beállított árakkal (havi és éves), amelyet a felhasználók megvásárolhatnak az oldalad támogatására.</li>
+          </ul>
+
+          <p>Folytatod?</p>
+        created: Az egykattintásos kampányod elkészült és készen áll a használatra! Átirányítunk a kampánybeállításokhoz.
+      one_time_payment: Egyszeri fizetés
       plans:
+        purchase: Előfizetés vásárlása
+        select: Előfizetési csomag kiválasztása
         interval:
           adverb:
             day: Naponta
             week: Hetente
             month: Havonta
             year: Éves
+        payment_button: Előfizetés
+        success: Köszönjük! Előfizetését létrehoztuk.
       user:
         payments:
           created_at: Létrehozott
@@ -35,17 +103,67 @@ hu:
           AR: "Argentína"
           AU: "Ausztrália"
           AT: "Ausztria"
+          BH: "Bahrein"
+          BD: "Banglades"
+          BB: "Barbados"
+          BY: "Fehéroroszország"
+          BE: "Belgium"
+          BZ: "Belize"
+          BJ: "Benin"
+          BM: "Bermuda"
+          BT: "Bhután"
+          BO: "Bolívia, Többnemzetiségű Állam"
+          BQ: "Bonaire, Sint Eustatius és Saba"
+          BA: "Bosznia-Hercegovina"
+          BW: "Botswana"
+          BV: "Bouvet-sziget"
           BR: "Brazília"
+          IO: "Brit Indiai-óceáni Terület"
+          BN: "Brunei Darussalam"
+          BG: "Bulgária"
+          BF: "Burkina Faso"
+          BI: "Burundi"
+          KH: "Kambodzsa"
+          CM: "Kamerun"
           CA: "Kanada"
+          CV: "Zöld-foki Köztársaság"
+          KY: "Kajmán-szigetek"
+          CF: "Közép-afrikai Köztársaság"
+          TD: "Csád"
           CL: "Chile"
+          CN: "Kína"
+          CX: "Karácsony-sziget"
+          CC: "Kókusz- (Keeling-) szigetek"
           CO: "Kolumbia"
+          KM: "Comore-szigetek"
+          CG: "Kongó"
+          CD: "Kongó, a Kongói Demokratikus Köztársaság"
+          CK: "Cook-szigetek"
           CR: "Costa Rica"
+          CI: "Elefántcsontpart"
           HR: "Horvátország"
+          CU: "Kuba"
+          CW: "Curaçao"
+          CY: "Ciprus"
           CZ: "Cseh Köztársaság"
           DK: "Dánia"
+          DJ: "Dzsibuti"
+          DM: "Dominika"
+          DO: "Dominikai Köztársaság"
+          EC: "Ecuador"
+          EG: "Egyiptom"
+          SV: "El Salvador"
+          GQ: "Egyenlítői-Guinea"
+          ER: "Eritrea"
           EE: "Észtország"
+          ET: "Etiópia"
+          FK: "Falkland-szigetek (Malvinas-szigetek)"
+          FO: "Feröer-szigetek"
+          FJ: "Fidzsi-szigetek"
           FI: "Finnország"
           FR: "Franciaország"
+          GF: "Francia Guyana"
+          PF: "Francia Polinézia"
           GE: "Grúzia"
           DE: "Németország"
           GR: "Görögország"
@@ -65,23 +183,73 @@ hu:
           LU: "Luxemburg"
           MY: "Malajzia"
           MX: "Mexikó"
+          MN: "Mongólia"
+          ME: "Montenegró"
+          MS: "Montserrat"
           MA: "Marokkó"
+          MZ: "Mozambik"
+          MM: "Mianmar"
+          NA: "Namíbia"
+          NR: "Nauru"
+          NP: "Nepál"
           NL: "Hollandia"
+          NC: "Új-Kaledónia"
           NZ: "Új-Zéland"
+          NI: "Nicaragua"
+          NE: "Niger"
           NG: "Nigéria"
+          NU: "Niue"
+          NF: "Norfolk-sziget"
+          MP: "Északi-Mariana-szigetek"
           "NO": "Norvégia"
+          OM: "Omán"
+          PK: "Pakisztán"
+          PW: "Palau"
+          PS: "Palesztin terület, megszállt"
+          PA: "Panama"
+          PG: "Pápua Új-Guinea"
+          PY: "Paraguay"
           PE: "Peru"
           PH: "Fülöp-szigetek"
+          PN: "Pitcairn"
           PL: "Lengyelország"
           PT: "Portugália"
+          PR: "Puerto Rico"
+          QA: "Katar"
+          RE: "Réunion"
           RO: "Románia"
           RU: "Orosz Föderáció"
+          RW: "Ruanda"
+          BL: "Saint Barthélemy"
+          SH: "Szent Ilona, Felemelkedés és Trisztán da Cunha"
+          KN: "Saint Kitts és Nevis"
+          LC: "Szent Lucia"
+          MF: "Saint Martin (francia rész)"
+          PM: "Saint-Pierre és Miquelon"
+          VC: "Saint Vincent és a Grenadine-szigetek"
+          WS: "Szamoa"
+          SM: "San Marino"
+          ST: "São Tomé és Príncipe"
           SA: "Szaúd-Arábia"
+          SN: "Szenegál"
+          RS: "Szerbia"
+          SC: "Seychelle-szigetek"
+          SL: "Sierra Leone"
           SG: "Szingapúr"
+          SX: "Sint Maarten (holland rész)"
           SK: "Szlovákia"
           SI: "Szlovénia"
+          SB: "Salamon-szigetek"
+          SO: "Szomália"
           ZA: "Dél-afrikai Köztársaság"
+          GS: "Déli-Georgia és Déli-Sandwich-szigetek"
+          SS: "Dél-Szudán"
           ES: "Spanyolország"
+          LK: "Srí Lanka"
+          SD: "Szudán"
+          SR: "Suriname"
+          SJ: "Svalbard és Jan Mayen"
+          SZ: "Szváziföld"
           SE: "Svédország"
           CH: "Svájc"
           TH: "Thaiföld"
@@ -101,18 +269,55 @@ hu:
         products:
           product:
             description: Leírás
+            repurchaseable: Újravásárolható?
+            repurchase_help: A termék és a kapcsolódó csomagok többszöri megvásárlásának engedélyezése
             active: Aktív
+            active_help: Ezt addig kapcsolja ki, amíg a termék készen áll a fogyasztók számára.
             created_at: Létrehozott
             updated_at: Frissítve
+          product_help: Mielőtt az ügyfelek feliratkozhatnának az oldaladra, létre kell hoznod legalább egy terméket és egy hozzá tartozó csomagot.
         plans:
+          title: Díjcsomagok
+          operations:
+            add: Új csomag hozzáadása
+            create: Csomag létrehozása
+            update: Csomag frissítése
+            create_help: Miután létrehoztak egy árképzési csomagot, csak a beceneve, a próbaidőszaka és a felhasználói csoportja frissíthető.
+            new: Új csomag
+            destroy:
+              confirm: Biztosan meg akarod semmisíteni ezt a csomagot?
           plan:
+            nickname: Csomag beceneve
+            nickname_help: Ez nem lesz látható az ügyfelek számára, de később segít megtalálni ezt a csomagot.
+            plan_id: Csomag ID
+            product: Termék
+            interval: Számlázási intervallum
+            amount: Összeg
+            trial: Próbaidőszak napjai
+            trial_help: Az erre a csomagra vonatkozó előfizetések automatikusan egy ilyen hosszúságú ingyenes próbaidőszakkal indulnak.
+            group: Felhasználói csoport
+            group_help: Ez az a Discourse felhasználói csoport, amelyhez az ügyfél hozzáadódik az előfizetés létrehozásakor.
             active: Aktív
             created_at: Létrehozott
+            recurring: Ismétlődő csomag?
         coupons:
+          title: Kuponok
+          code: Promóciós kód
+          discount: Kedvezmény
+          times_redeemed: Megváltott idők
           active: Aktív?
           actions: Műveletek
+          create: Kupon létrehozása
+          promo_code: Promóciós kód (kis- és nagybetűk nélkül)
         subscriptions:
+          title: Előfizetések
           subscription:
             user: Felhasználó
+            subscription_id: Előfizetés-azonosító
+            customer: Vevő
+            product: Termék
+            plan: Csomag
             status: Állapot
             created_at: Létrehozott
+        ask_refund: Visszatéríti az ügyfél utolsó fizetését?
+        canceled: "Az előfizetés lemondva."

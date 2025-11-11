@@ -4,8 +4,8 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   let(:builder) { DiscourseAi::Completions::PromptMessagesBuilder.new }
   fab!(:user)
   fab!(:admin)
-  fab!(:bot_user) { Fabricate(:user) }
-  fab!(:other_user) { Fabricate(:user) }
+  fab!(:bot_user, :user)
+  fab!(:other_user, :user)
 
   fab!(:image_upload1) do
     Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
@@ -175,7 +175,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       Fabricate(:chat_message, chat_channel: dm_channel, user: user, message: "How are you?")
     end
 
-    fab!(:public_channel) { Fabricate(:category_channel) }
+    fab!(:public_channel, :category_channel)
     fab!(:public_message1) do
       Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "Hello everyone")
     end
@@ -312,8 +312,8 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   end
 
   describe "upload limits in messages_from_chat" do
-    fab!(:test_channel) { Fabricate(:category_channel) }
-    fab!(:test_user) { Fabricate(:user) }
+    fab!(:test_channel, :category_channel)
+    fab!(:test_user, :user)
 
     # Create MAX_CHAT_UPLOADS + 1 uploads
     fab!(:uploads) do
@@ -530,6 +530,63 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
           { type: :user, content: "This is a second reply by the user", id: user.username },
         ],
       )
+    end
+
+    it "handles uploads correctly in topic style messages (and times)" do
+      freeze_time 1.month.ago
+
+      # Use Discourse's upload format in the post raw content
+      upload_markdown = "![test1|658x372](#{image_upload1.short_url})"
+
+      post1 =
+        Fabricate(
+          :post,
+          topic: pm,
+          user: admin,
+          raw: "This is the original #{upload_markdown} I just added",
+        )
+
+      UploadReference.create!(target: post1, upload: image_upload1)
+
+      long_title = "A" * 40
+      upload2_markdown = "![#{long_title}|658x372](#{image_upload2.short_url})"
+
+      freeze_time 1.month.from_now
+
+      post2_with_upload =
+        Fabricate(
+          :post,
+          topic: pm,
+          user: admin,
+          raw: "This post has a different image #{upload2_markdown} I just added",
+        )
+
+      UploadReference.create!(target: post2_with_upload, upload: image_upload2)
+
+      messages =
+        described_class.messages_from_post(
+          post2_with_upload,
+          style: :topic,
+          max_posts: 3,
+          bot_usernames: [bot_user.username],
+          include_uploads: true,
+        )
+
+      expect(messages.length).to eq(1)
+      content = messages[0][:content]
+
+      upload_hashes = content.select { |c| c.is_a?(Hash) }
+      expect(upload_hashes).to include(
+        { upload_id: image_upload1.id },
+        { upload_id: image_upload2.id },
+      )
+
+      text = content.select { |c| c.is_a?(String) }.join(" ")
+
+      expect(text).to include("This is the original")
+      expect(text).to include("(1 month ago)")
+      expect(text).to include("#{upload_markdown}")
+      expect(text).to include("#{upload2_markdown}")
     end
 
     it "only include regular posts" do

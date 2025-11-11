@@ -15,6 +15,7 @@ nl:
     house_ads_after_nth_topic: 'Als House Ads voor ''Tussen onderwerpen'' zijn gedefinieerd, een advertentie weergeven na elk N topic, waarbij N deze waarde is.'
     house_ads_after_nth_post: 'Als House Ads voor ''Tussen berichten zijn gedefinieerd, een advertentie weergeven na elk N bericht, waarbij N deze waarde is.'
     house_ads_frequency: "Hoe vaak House Ads moeten worden weergegeven, als percentage, als andere advertentienetwerken zijn geconfigureerd voor weergave in een advertentieruimte."
+    ads_txt: "Inhoud van je ads.txt-bestand. Meer informatie is beschikbaar op <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>deze Google AdSense-helppagina</a>."
     dfp_publisher_id: "Voer je Google Ad Manager-netwerkcode (voorheen DFP genoemd) in, die je kunt vinden in je netwerkinstellingen. OPMERKING: je moet de instelling 'content security policy script src' bijwerken. Zie <a href='https://meta.discourse.org/t/33734' target='_blank'>dit topic</a> voor de meest recente instructies."
     dfp_publisher_id_mobile: "(Optioneel) Als je een andere Ad Manager-uitgever-ID wilt gebruiken voor de mobiele versie van de site, geef deze dan hier op. Laat dit leeg om dfp_publisher_id te gebruiken op mobiel."
     dfp_through_trust_level: "Toon je advertenties aan gebruikers op basis van vertrouwensniveaus. Gebruikers met een vertrouwensniveau hoger dan deze waarde krijgen geen advertenties te zien."
@@ -44,6 +45,7 @@ nl:
     dfp_mobile_post_bottom_ad_sizes: "Kies je advertentiegrootte voor het advertentieblok tussen berichten in de mobiele weergave."
     dfp_target_post_bottom_key_code: "Voer aangepaste targetingcodes in - inventarisniveau"
     dfp_target_post_bottom_value_code: "Voer aangepaste targetingwaarden in - inventarisniveau"
+    adsense_publisher_code: "Je uitgever-ID. Vul alleen het nummer in, zonder 'pub-'. OPMERKING: je moet de instelling 'content security policy script src' bijwerken. Zie <a href='https://meta.discourse.org/t/33734' target='_blank'>dit topic</a> voor de meest recente instructies."
     adsense_through_trust_level: "Toon je advertenties aan gebruikers op basis van vertrouwensniveaus. Gebruikers met een vertrouwensniveau hoger dan deze waarde krijgen geen advertenties te zien."
     adsense_exclude_groups: "Advertenties worden niet getoond aan leden van deze groepen"
     adsense_topic_list_top_code: "Voer de code in van het advertentieblok om weer te geven bovenaan een topicslijst. Dit is het nummer dat is toegewezen aan het advertentieblok, niet de JavaScript-code."
@@ -96,6 +98,7 @@ nl:
     carbonads_exclude_groups: "Advertenties worden niet getoond aan leden van deze groepen"
     carbonads_topic_list_top_enabled: "Advertentie tonen boven de topicslijst"
     carbonads_above_post_stream_enabled: "Advertentie tonen boven de berichtstroom"
+    adbutler_publisher_id: "AdButler-uitgever-ID. OPMERKING: je moet mogelijk de instelling 'content security policy script src' bijwerken. Zie <a href='https://meta.discourse.org/t/33734' target='_blank'>dit topic</a> voor de meest recente instructies."
     adbutler_mobile_topic_list_top_zone_id: "Zone-ID voor locatie boven topicslijst in mobiele weergave"
     adbutler_mobile_topic_above_post_stream_zone_id: "Zone-ID voor locatie boven berichtstroom in mobiele weergave"
     adbutler_mobile_post_bottom_zone_id: "Zone-ID voor locatie onder topic in mobiele weergave"

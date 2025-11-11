@@ -181,7 +181,9 @@ hu:
         header: "Csevegés fejléce"
         composer: "Csevegés szerkesztője"
         channels_list: "Csevegőcsatornák"
+      no_direct_message_channels: "Még nem csatlakozott közvetlen üzenetekhez!"
       no_direct_message_channels_cta: "Beszélgetés kezdése"
+      no_public_channels: "Még nem csatlakozott egyetlen csatornához sem!"
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
       only_chat_push_notifications:
@@ -247,7 +249,7 @@ hu:
         one: "%{count} fájl"
         other: "%{count} fájl"
       you_flagged: "Megjelölte ezt az üzenetet"
-      exit: "vissza"
+      exit: "kilépés a csevegésből"
       channel_status:
         read_only_header: "A csatorna írásvédett"
         read_only: "Írásvédett"
@@ -271,6 +273,8 @@ hu:
       chat_message_separator:
         today: Ma
         yesterday: Tegnap
+      search_view:
+        filter_placeholder: Üzenetek keresése
       members_view:
         filter_placeholder: Tagok keresése
         add_member: Tag hozzáadása
@@ -287,6 +291,7 @@ hu:
         tabs:
           members: Tagok
           settings: Beállítások
+          search: Keresés
         remove_member: "Eltávolítás"
       new_message_modal:
         title: Üzenet küldése
@@ -378,6 +383,7 @@ hu:
           topic: "Téma"
       reviewable:
         type: "Csevegőüzenet"
+        message_in_channel: "Csatorna"
       reactions:
         only_you: "<span>A következővel reagált </span>:%{emoji}:"
         you_and_single_user: "<span>Ön és %{username} a következővel reagált: </span>:%{emoji}:"
@@ -440,6 +446,11 @@ hu:
           create_export: "Export létrehozása"
           confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
           export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-t, ha elkészült."
+      search:
+        no_results: "Nincs találat"
+        sort:
+          relevance: "Relevancia"
+          latest: "Legutóbbi"
       my_threads:
         title: Saját szálak
         aria_label: "Váltás a saját szálakra"
@@ -476,6 +487,7 @@ hu:
         select_emoji: "Válasszon emodzsit"
         system: "rendszer"
         title: "Bejövő webhookok"
+        header_description: "A bejövő webhookokat külső rendszerek használhatják üzenetek közzétételére egy kijelölt csevegőcsatornán bot felhasználóként."
         url: "Webcím"
         url_instructions: "Ez a webcím egy titkos értéket tartalmaz – tartsa biztonságban."
         username: "Felhasználónév"
@@ -650,7 +662,7 @@ hu:
           switch_channel_arrows: "%{shortcut} Csatorna váltása"
           switch__unread_channel_arrows: "%{shortcut} Olvasatlan csatornára váltás"
           open_quick_channel_selector: "%{shortcut} Gyors csatornaválasztó megnyitása"
-          open_insert_link_modal: "%{shortcut} Hiperhivatkozás beillesztése (csak a szerkesztőben)"
+          open_insert_link_modal: "%{shortcut} Link beszúrása (csak szerkesztő)"
           composer_bold: "%{shortcut} Félkövér (csak a szerkesztőben)"
           composer_italic: "%{shortcut} Dőlt (csak a szerkesztőben)"
           composer_code: "%{shortcut} Kód (csak a szerkesztőben)"
@@ -680,6 +692,9 @@ hu:
         chat:
           title: Csevegés
     sidebar:
+      start_new_dm:
+        text: Új privát beszélgetés
+        title: Személyes csevegés létrehozása
       panels:
         chat:
           label: "Csevegés"

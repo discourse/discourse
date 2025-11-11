@@ -84,7 +84,7 @@ pl_PL:
               help: "np. #kanał, @użytkownik."
           errors:
             action_prohibited: "Bot nie ma uprawnień do publikowania na tym kanale"
-            channel_not_found: "Ten kanał nie istnieje na Slacku"
+            channel_not_found: "Podany kanał nie istnieje w Slacku"
         telegram:
           title: "Telegram"
           param:
@@ -131,7 +131,7 @@ pl_PL:
               help: "Nazwa opisująca kanał. Nie jest używana do połączenia z Matrix."
             room_id:
               title: "ID pokoju"
-              help: "\"Prywatny identyfikator\" pokoju. Powinien wyglądać mniej więcej tak: !abcdefg:matrix.org"
+              help: "„Prywatny identyfikator” pokoju. Powinien wyglądać mniej więcej tak: !abcdefghijkl"
           errors:
             unknown_token: "Token dostępu jest nieprawidłowy"
             unknown_room: "ID pokoju jest nieprawidłowy"

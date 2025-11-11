@@ -43,7 +43,6 @@ hy:
       save: "Պահպանել"
       sounds:
         none: "Ոչ մի"
-      exit: "ետ"
       channel_status:
         closed: "Փակված"
         open: "Բացել"
@@ -55,6 +54,8 @@ hy:
       chat_message_separator:
         today: Այսօրվա
         yesterday: Երեկվա
+      search_view:
+        filter_placeholder: Որոնել հաղորդագրություններում
       about_view:
         title: Վերնագիր
         name: Անուն
@@ -64,6 +65,7 @@ hy:
         tabs:
           members: Անդամներ
           settings: Կարգավորումներ
+          search: Որոնում
         remove_member: "Հեռացնել"
       new_message_modal:
         no_items: "Տարրեր չկան"
@@ -80,6 +82,8 @@ hy:
         types:
           category: "Կատեգորիա"
           topic: "Թեմա"
+      reviewable:
+        message_in_channel: "Ալիք"
       composer:
         italic_text: "շեղ տեքստ"
         bold_text: "թավ տեքստ"
@@ -100,6 +104,10 @@ hy:
         category_label: "Կատեգորիա"
         history_label: "Պատմություն"
         members_label: "Անդամներ"
+      search:
+        sort:
+          relevance: "Համապատասխանության"
+          latest: "Վերջինը"
       incoming_webhooks:
         back: "Ետ"
         description: "Նկարագրությունը"

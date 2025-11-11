@@ -106,6 +106,10 @@ hu:
     reviewables:
       message_already_handled: "Köszönjük, de már megvizsgáltuk ezt az üzenetet, és megállapítottuk, hogy nem kell újra megjelölni."
       actions:
+        no_action_message:
+          title: "Nincs művelet"
+        restore_message:
+          description: "Üzenet helyreállítása, hogy láthassák a felhasználók."
         agree:
           title: "Egyetértek…"
         agree_and_keep_message:
@@ -158,6 +162,7 @@ hu:
     mention_warning:
       dismiss: "elvetés"
       cannot_see: "%{first_identifier} nem tud hozzáférni ehhez a csatornához, és nem kapott értesítést."
+      cannot_see_group: "A %{group_name} néhány tagja nem férhet hozzá ehhez a csatornához, és nem is értesítették őket."
       cannot_see_multiple:
         one: "%{first_identifier} és %{count} további felhasználó nem fér hozzá ehhez a csatornához, és nem értesítették őket."
         other: "%{first_identifier} és %{count} további felhasználó nem fér hozzá ehhez a csatornához, és nem értesítették őket."
@@ -183,7 +188,7 @@ hu:
         slug_contains_non_ascii_chars: "nem ASCII karaktereket tartalmaz"
         is_already_in_use: "már használatban van"
     bookmarkable:
-      notification_title: "Üzenet a(z) %{channel_name} csatornában."
+      notification_title_channel: "Üzenet a(z) %{channel_name} csatornában."
     personal_chat: "személyes csevegés"
     onebox:
       inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"

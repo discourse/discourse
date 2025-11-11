@@ -5,13 +5,15 @@ class LlmModel < ActiveRecord::Base
   BEDROCK_PROVIDER_NAME = "aws_bedrock"
 
   has_many :llm_quotas, dependent: :destroy
+  has_one :llm_credit_allocation, dependent: :destroy
+  has_many :llm_feature_credit_costs, dependent: :destroy
   belongs_to :user
 
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
   validates :url, presence: true, unless: -> { provider == BEDROCK_PROVIDER_NAME }
-  validates_presence_of :name, :api_key
+  validates :name, :api_key, presence: true
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
   validates :input_cost,
             :cached_input_cost,
@@ -59,6 +61,17 @@ class LlmModel < ActiveRecord::Base
           default: "default",
         },
       },
+      groq: {
+        disable_native_tools: :checkbox,
+        disable_temperature: :checkbox,
+        disable_top_p: :checkbox,
+        disable_streaming: :checkbox,
+        reasoning_effort: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+        },
+      },
       mistral: {
         disable_native_tools: :checkbox,
       },
@@ -71,6 +84,12 @@ class LlmModel < ActiveRecord::Base
       },
       azure: {
         disable_native_tools: :checkbox,
+        enable_responses_api: :checkbox,
+        reasoning_effort: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+        },
       },
       hugging_face: {
         disable_system_prompt: :checkbox,
@@ -163,6 +182,10 @@ class LlmModel < ActiveRecord::Base
     else
       self[:api_key]
     end
+  end
+
+  def credit_system_enabled?
+    seeded? && llm_credit_allocation.present?
   end
 
   private

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe ::DiscourseGamification do
+describe DiscourseGamification do
   let(:user) { Fabricate(:user) }
   let!(:gamification_score) { Fabricate(:gamification_score, user_id: user.id) }
 
@@ -21,7 +21,7 @@ describe ::DiscourseGamification do
   end
 end
 
-describe ::DiscourseGamification do
+describe DiscourseGamification do
   let(:guardian) { Guardian.new }
   let!(:default_gamification_leaderboard) { Fabricate(:gamification_leaderboard) }
 
@@ -36,9 +36,9 @@ describe ::DiscourseGamification do
 end
 
 context "when merging users" do
-  fab!(:user_1) { Fabricate(:user) }
-  fab!(:user_2) { Fabricate(:user) }
-  fab!(:leaderboard) { Fabricate(:gamification_leaderboard) }
+  fab!(:user_1, :user)
+  fab!(:user_2, :user)
+  fab!(:leaderboard, :gamification_leaderboard)
 
   before do
     SiteSetting.discourse_gamification_enabled = true

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ro:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Nicio acțiune"
   post_action_types:
     vote:
       title: "Votează"
@@ -15,7 +20,7 @@ ro:
       reviewables:
         actions:
           agree_and_suspend:
-            title: "Suspendă Utilizator"
+            title: "Suspendă utilizator"
           agree_and_silence:
             title: "Reducere la tăcere utilizator"
           disagree:

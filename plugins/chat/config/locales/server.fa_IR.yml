@@ -35,6 +35,8 @@ fa_IR:
     reviewables:
       message_already_handled: "با تشکر از شما، اما ما در حال حاضر این پیام را بررسی کرده‌ایم و تشخیص داده‌ایم که نیازی به گزارش دوباره ندارد."
       actions:
+        no_action_message:
+          title: "هیچ اقدامی"
         agree:
           title: "موافقم..."
         agree_and_suspend:
@@ -58,8 +60,6 @@ fa_IR:
           other: "%{comma_separated_usernames} و %{count} نفر دیگر"
     mention_warning:
       dismiss: "رد کردن"
-    bookmarkable:
-      notification_title: "پیام در %{channel_name}"
     personal_chat: "گفتگوی شخصی"
     onebox:
       inline_to_channel: "گفتگو #%{chat_channel}"

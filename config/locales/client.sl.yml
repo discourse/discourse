@@ -207,7 +207,7 @@ sl:
     welcome_banner:
       header:
         anonymous_members: "Dobrodošli na %{site_name}!"
-      search: "Išči"
+      search_placeholder: "Išči"
     themes:
       default_description: "Privzeto"
     s3:
@@ -424,6 +424,7 @@ sl:
       other: "Poglej %{count} novih tem"
     preview: "predogled"
     cancel: "Prekliči"
+    done: "Končano"
     deleting: "Brišem..."
     save: "Shrani spremembe"
     saving: "Shranjujem..."
@@ -603,9 +604,11 @@ sl:
         reviewable_post:
           title: "Prispevek"
           noun: "prispevek"
+      user_label: "Uporabnik"
       notes:
         delete: "Izbriši"
       review_user: "Uporabnik"
+      copy_link_feedback: "Povezava kopirana"
       insights:
         activities:
           posts:
@@ -1128,11 +1131,10 @@ sl:
         description: "Preskoči namige in značke za nove uporabnike"
       theme_default_on_all_devices: "Nastavi kot privzeti videz na vseh mojih napravah"
       color_schemes:
-        disable_dark_scheme: "Enako kot običajna"
         undo: "Ponastavi"
-        regular: "Običajna"
         dark: "Temni način"
-        default_dark_scheme: "(privzeto za mesto)"
+        picker:
+          active: "Aktivni"
       dark_mode: "Temni način"
       text_size_default_on_all_devices: "Nastavi kot privzeto velikost besedila na vseh mojih napravah"
       allow_private_messages: "Dovoli drugim uporabnikom da mi pošiljajo zasebna sporočila."
@@ -1323,7 +1325,7 @@ sl:
         invalid: "Uporabniško ime ni pravilno. Vsebuje lahko samo črke in številke. Preslednica in posebni znaki niso dovoljeni."
       add_email:
         title: "Dodaj e-naslov"
-        add: "dodaj"
+        add: "Dodaj"
       change_email:
         title: "Spremeni e-naslov"
         taken: "Ta e-naslov ni na voljo."
@@ -2023,6 +2025,7 @@ sl:
       create_whisper: "Šepet"
       create_shared_draft: "Ustvari skupni osnutek"
       edit_shared_draft: "Uredi skupni osnutek"
+      discard: "Zavrzi"
       title_placeholder: "Kaj je tema prispevka v kratkem stavku?"
       title_or_link_placeholder: "vpiši naslov ali prilepi povezavo"
       edit_reason_placeholder: "zakaj spreminjate prispevek?"
@@ -2054,18 +2057,8 @@ sl:
       paste_code_text: "vpiši ali prilepi kodo"
       upload_title: "Naloži"
       upload_description: "vnesite opis prenosa tukaj"
-      olist_title: "Oštevilčen seznam"
-      ulist_title: "Seznam"
       list_item: "Element seznama"
-      toggle_direction: "Preklopi smer"
       help: "pomoč pri Markdown urejanju"
-      collapse: "minimiziraj urejevalnik"
-      open: "odpri urejevalnik"
-      abandon: "zapri urejevalnik in zavrzi osnutek"
-      enter_fullscreen: "vklopi celozaslonski urejevalnik"
-      exit_fullscreen: "izklopi celozaslonski urejevalnik"
-      show_toolbar: "prikaži orodno vrstico urejevalnika"
-      hide_toolbar: "skrij orodno vrstico urejevalnika"
       modal_ok: "V redu"
       cant_send_pm: "Ne moremo poslati sporočila %{username}."
       yourself_confirm:
@@ -2089,8 +2082,9 @@ sl:
         toggle_whisper:
           label: Preklopi šepet
           desc: Šepeti so vidni samo članom osebja
-        create_topic:
-          label: "Nova tema"
+        create_personal_message:
+          label: "Novo ZS"
+          desc: "Odgovori v zasebno sporočilo"
         shared_draft:
           label: "Skupen osnutek"
         toggle_topic_bump:
@@ -2387,7 +2381,6 @@ sl:
         few: "%{count} prispevki v temi"
         other: "%{count} prispevkov v temi"
       create: "Nova tema"
-      create_long: "Ustvari novo temo"
       open_draft: "Odpri osnutek"
       private_message: "Novo zasebno sporočilo"
       archive_message:
@@ -2836,10 +2829,7 @@ sl:
         attachment_upload_not_allowed_for_new_user: "Oprostite, novi uporabniki ne morejo nalagati priponk."
         attachment_download_requires_login: "Oprostite, morate biti prijavljeni da lahko prenesete priponke."
       cancel_composer:
-        confirm: "Kaj bi radi naredili z vašim prispevkom?"
         discard: "Zavrzi"
-        save_draft: "Shrani osnutek"
-        keep_editing: "Nadaljuj z urejanjem"
       via_email: "ta prispevek je prispel preko e-sporočila"
       via_auto_generated_email: "ta prispevek je prispel preko samodejno ustvarjenega e-sporočila"
       whisper: "ta prispevek je zasebno šepetanje med moderatorji"
@@ -2988,8 +2978,8 @@ sl:
         name: "Ime"
         description: "Opis"
         remove: "Odstrani"
-      tags_allowed_tags: "Omeji te oznake na to kategorijo:"
-      tags_allowed_tag_groups: "Omeji te skupine oznak na to kategorijo:"
+      tags_allowed_tags_new_category: "Omeji te oznake na to kategorijo:"
+      tags_allowed_tag_groups_new_category: "Omeji te skupine oznak na to kategorijo:"
       tags_placeholder: "(neobvezno) seznam dovoljenih oznak"
       tag_groups_placeholder: "(neobvezno) seznam dovoljenih oznak skupin"
       allow_global_tags_label: "Dovoli tudi druge oznake"
@@ -3327,7 +3317,7 @@ sl:
       readonly: "Vidi"
     preloader_text: "Nalagam"
     lightbox:
-      download: "prenesi"
+      download: "Naloži"
       previous: "Predhodna (leva puščična tipka)"
       next: "Naslednja (desna puščična tipka)"
       counter: "%curr% od %total%"
@@ -3733,6 +3723,7 @@ sl:
         categories: "Vse kategorije"
   admin_js:
     settings: "Nastavitve"
+    reset_filter: "Ponastavi"
     admin:
       title: "Discourse Admin"
       moderator: "Moderator"
@@ -3760,6 +3751,20 @@ sl:
           title: "Varnost"
         plugins:
           title: "Vtičniki"
+      upcoming_changes:
+        name: "Ime"
+        enabled: "Vključeno"
+        select_groups: "Izberi skupine…"
+        preview: "Predogled"
+        impact_roles:
+          admins: "Administratorji"
+          moderators: "Moderatorji"
+          staff: "Osebje"
+        filter:
+          all: "Vsi"
+          enabled: "Vključeno"
+          disabled: "Onemogočeno"
+          impact_type_other: "Drugo"
       config:
         developer:
           title: "Razvijalci"
@@ -3771,6 +3776,10 @@ sl:
           title: "Datoteke"
         legal:
           title: "Pravno"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Nastavitve"
         logo:
           form:
             mobile: "Mobilno"
@@ -4211,6 +4220,7 @@ sl:
           multiple_subjects: "Ta e-sporočilo predloga ima več naslovov."
           revert: "Prekliči spremembe"
           revert_confirm: "Ste prepričani, da želite preklicati spremembe?"
+          edit: "Uredi"
         component:
           all_filter: "Vse"
           enabled_filter: "Vključeno"
@@ -4232,7 +4242,6 @@ sl:
           desktop: "Namizno"
           mobile: "Mobilno"
           preview: "Predogled"
-          default: "Aktivni"
           auto_update: "Samodejno posodobi ob posodobitvi Discourse"
           convert_component_alert_generic: "Ali ste prepričani, da želite pretvoriti to komponento v temo?"
           convert_theme_alert_generic: "Ali ste prepričani, da želite pretvoriti to temo v komponento?"
@@ -4253,10 +4262,6 @@ sl:
           disable: "Onemogoči"
           add: "Dodaj"
           remote_theme_edits: "Če želite urediti to temo, morate <a href='%{repoURL}' target='_blank'>predlagati spremembo v njenem repozitoriju</a>"
-          settings: "Nastavitve"
-          colors: "Barve"
-          discard_colors: "Zavrzi"
-          colors_title: "Barve"
           scss:
             text: "CSS"
           all_filter: "Vse"
@@ -4272,8 +4277,6 @@ sl:
           edit: "Uredi"
           filters:
             all: "Vsi"
-          active_badge:
-            text: "Aktivni"
           copy_name_prefix: "Kopija od"
           undo: "Razveljavi"
           revert: "Povrni"
@@ -4605,8 +4608,6 @@ sl:
           confirmation:
             cancel: "Prekliči"
         merging_user: "Združujem uporabnika…"
-        delete_forbidden_because_staff: "Administratorjev in moderatorjev se ne da izbrisati."
-        delete_posts_forbidden_because_staff: "Ne morete izbrisati vseh prispevkov od administratorjev ali moderatorjev."
         delete_forbidden:
           one: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dne ne morejo biti izbrisani.)"
           two: "Uporabnik ne more biti izbrisan, če ima prispevke. Izbrišite vse prispevke preden izbrišete uporabnika. (Prispevki starejši od %{count} dni ne morejo biti izbrisani.)"

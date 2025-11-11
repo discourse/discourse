@@ -22,7 +22,6 @@ export default class ChatDrawer extends Component {
   @service chat;
   @service router;
   @service chatDrawerSize;
-  @service chatChannelsManager;
   @service chatStateManager;
   @service chatDrawerRouter;
 

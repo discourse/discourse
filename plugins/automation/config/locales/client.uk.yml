@@ -449,7 +449,7 @@ uk:
           status:
             label: Статус
           enabled:
-            label: Включено
+            label: "Увімкнути автоматизацію"
           disabled:
             label: Вимкнено
           placeholders:
@@ -460,3 +460,4 @@ uk:
             label: Останній запуск
           last_updated_by:
             label: Оновлено
+          enable_toggle_disabled: "Ви можете ввімкнути цю автоматизацію після заповнення всіх обов'язкових полів."

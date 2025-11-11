@@ -28,7 +28,7 @@ class UserHistory < ActiveRecord::Base
   validates :previous_value, length: { maximum: MAX_JSON_LENGTH }
   validates :new_value, length: { maximum: MAX_JSON_LENGTH }
 
-  validates_presence_of :action
+  validates :action, presence: true
 
   scope :only_staff_actions, -> { where("action IN (?)", UserHistory.staff_action_ids) }
 
@@ -157,6 +157,9 @@ class UserHistory < ActiveRecord::Base
         tag_group_change: 118,
         delete_associated_accounts: 119,
         change_theme_site_setting: 120,
+        stop_impersonating: 121,
+        upcoming_change_toggled: 122,
+        change_site_setting_groups: 123,
       )
   end
 
@@ -280,6 +283,9 @@ class UserHistory < ActiveRecord::Base
       update_flag
       create_flag
       change_theme_site_setting
+      stop_impersonating
+      upcoming_change_toggled
+      change_site_setting_groups
     ]
   end
 

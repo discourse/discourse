@@ -10,3 +10,4 @@ tr_TR:
     microsoft_auth_client_id: 'Microsoft Uygulama Kimliği/İstemci Kimliği (Gizli Kimlik DEĞİL) - Kurmak için şu adresi ziyaret edin: <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
     microsoft_auth_client_secret: "Microsoft Gizli Şifre (Değeri kullanın, Gizli Kimliği DEĞİL)"
     microsoft_auth_email_verified: "Tüm Microsoft e-postalarına varsayılan olarak doğrulanmış gibi davranın. UYARI: Bunu yalnızca tüm kullanıcılarınızın e-posta adreslerinin doğrulandığından eminseniz etkinleştirin."
+    microsoft_auth_tenant_id: 'Microsoft Kiracı Kimliği (ortak olan standarttır, Tek Kiracı hariç tüm durumlar için ZORUNLUDUR). Kimliği bulmak için <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a> adresini ziyaret edin'

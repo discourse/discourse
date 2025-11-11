@@ -334,7 +334,7 @@ uk:
         many: "%{count} файлів"
         other: "%{count} файлів"
       you_flagged: "Ви поскаржилися на це повідомлення"
-      exit: "назад"
+      exit: "вийти з чату"
       channel_status:
         read_only_header: "Канал тільки для читання"
         read_only: "Тільки для читання"
@@ -358,6 +358,12 @@ uk:
       chat_message_separator:
         today: Сьогодні
         yesterday: Вчора
+      search_view:
+        filter_placeholder: Шукати приватні повідомлення
+        message_result_label: "Повідомлення в чаті від %{username}: %{preview} %{threadInfo}"
+        in_thread: "у темі %{title}"
+        sr_instructions: "Натисніть Enter або пробіл, щоб відкрити повідомлення. Використовуйте Tab для навігації між результатами."
+        results_list_label: "Результати пошуку повідомлень чату"
       members_view:
         filter_placeholder: Знайти учасників
         add_member: Додати учасника
@@ -374,6 +380,7 @@ uk:
         tabs:
           members: Учасники
           settings: Налаштування
+          search: Пошук
         remove_member: "Вилучити"
       new_message_modal:
         title: Надіслати повідомлення
@@ -495,6 +502,7 @@ uk:
           topic: "Тема"
       reviewable:
         type: "Повідомлення чату"
+        message_in_channel: "Канал"
       reactions:
         only_you: "<span>Ви відреагували </span>:%{emoji}:"
         you_and_single_user: "<span>Ви та %{username} відреагували </span>:%{emoji}:"
@@ -561,6 +569,13 @@ uk:
           create_export: "Створити експорт"
           confirm_export: "Це експортує всі повідомлення з усіх каналів і надсилає результат вам в особистому повідомленні. Ви впевнені, що хочете експортувати?"
           export_has_started: "Експорт почався. Ви отримаєте ПП коли він буде готовий."
+      search:
+        title: Пошук у чаті
+        aria_label: "Перейти до пошуку в чаті"
+        no_results: "Не знайдено результатів"
+        sort:
+          relevance: "За змістом"
+          latest: "Остання"
       my_threads:
         title: Мої теми
         aria_label: "Перейти до списку моїх тем"
@@ -790,7 +805,7 @@ uk:
           switch_channel_arrows: "%{shortcut} Переключити канал"
           switch__unread_channel_arrows: "%{shortcut} Переключити непрочитаний канал"
           open_quick_channel_selector: "%{shortcut} Відкрити швидкий селектор каналів"
-          open_insert_link_modal: "%{shortcut} Вставити гіперпосилання (лише редактор)"
+          open_insert_link_modal: "%{shortcut} Вставити посилання (лише в редакторі)"
           composer_bold: "%{shortcut} Жирний (лише в редакторі)"
           composer_italic: "%{shortcut} Курсив (лише в редакторі)"
           composer_code: "%{shortcut} Код (тільки в редакторі)"
@@ -822,6 +837,9 @@ uk:
         chat:
           title: Чат
     sidebar:
+      start_new_dm:
+        text: Почати нове особисте повідомлення
+        title: Створити особистий чат
       panels:
         chat:
           label: "Чат"

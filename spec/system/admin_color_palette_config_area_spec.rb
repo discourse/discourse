@@ -3,6 +3,7 @@
 describe "Admin Color Palette Config Area Page", type: :system do
   fab!(:admin)
   fab!(:color_scheme) { Fabricate(:color_scheme, user_selectable: false, name: "A Test Palette") }
+  fab!(:color_scheme_2, :color_scheme)
 
   let(:config_area) { PageObjects::Pages::AdminColorPaletteConfigArea.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
@@ -10,6 +11,11 @@ describe "Admin Color Palette Config Area Page", type: :system do
   let(:cdp) { PageObjects::CDP.new }
 
   before { sign_in(admin) }
+
+  after do
+    Stylesheet::Manager.rm_cache_folder
+    Stylesheet::Manager.cache.clear
+  end
 
   it "allows editing the palette name" do
     config_area.visit(color_scheme.id)
@@ -70,37 +76,36 @@ describe "Admin Color Palette Config Area Page", type: :system do
   it "allows changing colors" do
     config_area.visit(color_scheme.id)
 
-    expect(config_area.color_palette_editor).to have_light_tab_active
-
     config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#abcdef")
 
     expect(config_area).to have_unsaved_changes_indicator
-
-    config_area.color_palette_editor.switch_to_dark_tab
-    expect(config_area.color_palette_editor).to have_dark_tab_active
-
-    config_area.color_palette_editor.input_for_color("primary").fill_in(with: "#fedcba")
-    config_area.color_palette_editor.input_for_color("secondary").fill_in(with: "#111222")
 
     config_area.form.submit
 
     expect(toasts).to have_success(I18n.t("js.saved"))
     expect(config_area).to have_no_unsaved_changes_indicator
-    expect(config_area.color_palette_editor).to have_dark_tab_active
-    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#fedcba")
-    expect(config_area.color_palette_editor.input_for_color("secondary").value).to eq("#111222")
 
-    config_area.color_palette_editor.switch_to_light_tab
-    expect(config_area.color_palette_editor).to have_light_tab_active
     expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#abcdef")
 
     expect(color_scheme.colors.find_by(name: "primary").hex).to eq("abcdef")
-    expect(color_scheme.colors.find_by(name: "primary").dark_hex).to eq("fedcba")
-    expect(color_scheme.colors.find_by(name: "secondary").dark_hex).to eq("111222")
+  end
+
+  it "supports pasting color codes with and without leading #" do
+    config_area.visit(color_scheme.id)
+
+    config_area.color_palette_editor.input_for_hex("primary").click
+    cdp.copy_paste("#888888")
+
+    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#888888")
+
+    config_area.color_palette_editor.input_for_hex("primary").click
+    cdp.copy_paste("#777777")
+
+    expect(config_area.color_palette_editor.input_for_color("primary").value).to eq("#777777")
   end
 
   it "allows reverting colors to their default values" do
-    color_scheme.update!(base_scheme_id: "Dark")
+    color_scheme.update!(base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"])
     color_scheme.colors.create!(name: "primary", hex: "aaaaaa")
 
     config_area.visit(color_scheme.id)
@@ -171,11 +176,9 @@ describe "Admin Color Palette Config Area Page", type: :system do
       visible: false,
     )
 
-    try_until_success do
-      expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
-        "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
-      )
-    end
+    expect(get_rgb_color(find("html"), "backgroundColor")).to eq(
+      "rgb(#{"aa".to_i(16)}, #{"33".to_i(16)}, #{"9f".to_i(16)})",
+    )
   end
 
   it "doesn't apply changes when editing a palette that's not currently active" do
@@ -204,8 +207,35 @@ describe "Admin Color Palette Config Area Page", type: :system do
 
     color_scheme.colors.each do |color|
       expect(color.hex).to eq(clipboard_scheme["light"][color.name])
-      next if color.dark_hex.nil?
-      expect(color.dark_hex).to eq(clipboard_scheme["dark"][color.name])
     end
+  end
+
+  it "can toggle light and dark palette as default on default theme" do
+    Theme.find_default.update!(color_scheme: color_scheme)
+
+    config_area.visit(color_scheme.id)
+    expect(page).to have_text(
+      I18n.t(
+        "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_light_on_theme",
+        themeName: "Foundation",
+      ),
+    )
+    expect(page).to have_text(
+      I18n.t(
+        "admin_js.admin.config_areas.color_palettes.color_options.toggle_default_dark_on_theme",
+        themeName: "Foundation",
+      ),
+    )
+    config_area.default_light_on_theme_field.have_value?(true)
+    config_area.default_dark_on_theme_field.have_value?(false)
+    config_area.default_light_on_theme_field.toggle
+    config_area.default_dark_on_theme_field.toggle
+    config_area.form.submit
+    config_area.default_light_on_theme_field.have_value?(false)
+    config_area.default_dark_on_theme_field.have_value?(true)
+
+    config_area.visit(color_scheme_2.id)
+    config_area.default_light_on_theme_field.have_value?(false)
+    config_area.default_dark_on_theme_field.have_value?(false)
   end
 end

@@ -5,3 +5,10 @@
 # https://translate.discourse.org/
 
 fr:
+  js:
+    login:
+      apple:
+        name: "Apple"
+        title: "Se connecter avec Apple"
+        sr_title: "Se connecter avec Apple"
+        message: "Authentification avec Apple"

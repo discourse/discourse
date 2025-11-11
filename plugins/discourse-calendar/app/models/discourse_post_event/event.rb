@@ -17,10 +17,11 @@ module DiscoursePostEvent
     belongs_to :post, foreign_key: :id
 
     scope :visible, -> { where(deleted_at: nil) }
+    scope :open, -> { where(closed: false) }
 
+    before_save :chat_channel_sync
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
-    before_save :chat_channel_sync
 
     validate :raw_invitees_are_groups
     validates :original_starts_at, presence: true
@@ -30,6 +31,7 @@ module DiscoursePostEvent
               },
               unless: ->(event) { event.name.blank? }
     validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
+    validates :max_attendees, numericality: { only_integer: true, greater_than: 0, allow_nil: true }
 
     validate :raw_invitees_length
     validate :ends_before_start
@@ -59,47 +61,26 @@ module DiscoursePostEvent
 
       return if !starts_at_changed && !ends_at_changed
 
-      event_dates.update_all(finished_at: Time.current)
       set_next_date
     end
 
     def set_next_date
-      next_dates = calculate_next_date
-      return if !next_dates
+      next_date_result = calculate_next_date
 
-      date_args = { starts_at: next_dates[:starts_at], ends_at: next_dates[:ends_at] }
-      if next_dates[:ends_at] && next_dates[:ends_at] < Time.current
-        date_args[:finished_at] = next_dates[:ends_at]
-      end
+      return event_dates.update_all(finished_at: Time.current) if next_date_result.nil?
 
-      existing_date = event_dates.find_by(starts_at: date_args[:starts_at])
-
-      if existing_date && existing_date.ends_at == date_args[:ends_at] &&
-           existing_date.finished_at == date_args[:finished_at]
-        # exact same state in DB, this is a dupe call, return early
-        return
-      end
-
-      if existing_date
-        existing_date.update!(date_args)
-      else
-        event_dates.create!(date_args)
-      end
-
-      invitees.where.not(status: Invitee.statuses[:going]).update_all(status: nil, notified: false)
-
-      if !next_dates[:rescheduled]
-        notify_invitees!
-        notify_missing_invitees!
-      end
-
+      starts_at, ends_at = next_date_result
+      finish_previous_event_dates(starts_at) if dates_changed?
+      upsert_event_date(starts_at, ends_at)
+      reset_invitee_notifications
+      notify_if_new_event
       publish_update!
     end
 
     def set_topic_bump
       date = nil
 
-      return if reminders.blank?
+      return if reminders.blank? || starts_at.nil?
       reminders
         .split(",")
         .each do |reminder|
@@ -118,20 +99,47 @@ module DiscoursePostEvent
     end
 
     def expired?
+      if recurring?
+        return false if recurrence_until.nil?
+        return Time.current > recurrence_until
+      end
+
+      return true if starts_at.nil?
       (ends_at || starts_at.end_of_day) <= Time.now
     end
 
     def starts_at
-      event_dates.pending.order(:starts_at).last&.starts_at ||
-        event_dates.order(:updated_at, :id).last&.starts_at
+      return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+
+      date =
+        if association(:event_dates).loaded?
+          pending = event_dates.select { |d| d.finished_at.nil? }
+          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        else
+          event_dates.where(finished_at: nil).order(:starts_at).last ||
+            event_dates.order(:updated_at, :id).last
+        end
+
+      date&.starts_at || original_starts_at
     end
 
     def ends_at
-      event_dates.pending.order(:starts_at).last&.ends_at ||
-        event_dates.order(:updated_at, :id).last&.ends_at
+      return nil if recurring? && recurrence_until.present? && recurrence_until < Time.current
+
+      date =
+        if association(:event_dates).loaded?
+          pending = event_dates.select { |d| d.finished_at.nil? }
+          pending.max_by(&:starts_at) || event_dates.max_by { |d| [d.updated_at, d.id] }
+        else
+          event_dates.where(finished_at: nil).order(:starts_at).last ||
+            event_dates.order(:updated_at, :id).last
+        end
+
+      date&.ends_at || original_ends_at
     end
 
     def on_going_event_invitees
+      return [] if self.starts_at.nil? # Can't determine ongoing status without start time
       return [] if !self.ends_at && self.starts_at < Time.now
 
       if self.ends_at
@@ -190,7 +198,7 @@ module DiscoursePostEvent
       end
       result = self.invitees.insert_all!(attrs)
 
-      # batch event does not call calleback
+      # batch event does not call callback
       ChatChannelSync.sync(self) if chat_enabled?
 
       result
@@ -215,7 +223,8 @@ module DiscoursePostEvent
     end
 
     def create_notification!(user, post, predefined_attendance: false)
-      return if post.event.starts_at < Time.current
+      return if post.event.starts_at.nil? || post.event.starts_at < Time.current
+      return if !Guardian.new(user).can_see?(post)
 
       message =
         if predefined_attendance
@@ -241,9 +250,18 @@ module DiscoursePostEvent
     end
 
     def ongoing?
-      return false if self.closed || self.expired?
+      return false if self.closed || self.expired? || self.starts_at.nil?
       finishes_at = self.ends_at || self.starts_at.end_of_day
       (self.starts_at..finishes_at).cover?(Time.now)
+    end
+
+    def going_count
+      invitees.where(status: Invitee.statuses[:going]).count
+    end
+
+    def at_capacity?
+      return false if max_attendees.blank?
+      going_count >= max_attendees
     end
 
     def self.statuses
@@ -335,6 +353,7 @@ module DiscoursePostEvent
           minimal: event_params[:minimal],
           closed: event_params[:closed] || false,
           chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
+          max_attendees: event_params[:"max-attendees"]&.to_i,
         }
 
         params[:custom_fields] = {}
@@ -365,6 +384,8 @@ module DiscoursePostEvent
             .where.not(id: excluded_ids)
             .select(:id)
         User.where(id: user_ids)
+      elsif self.private?
+        User.none
       else
         users.where.not(id: excluded_ids)
       end
@@ -400,27 +421,119 @@ module DiscoursePostEvent
     end
 
     def calculate_next_date
-      if self.recurrence.blank? || original_starts_at > Time.current
-        return { starts_at: original_starts_at, ends_at: original_ends_at, rescheduled: false }
+      if recurrence.blank? || original_starts_at > Time.current
+        return original_starts_at, original_ends_at
       end
 
-      next_starts_at =
-        RRuleGenerator.generate(
-          starts_at: original_starts_at.in_time_zone(timezone),
-          timezone:,
-          recurrence:,
-          recurrence_until:,
-        ).first
-      return unless next_starts_at
+      next_starts_at = calculate_next_recurring_date
+      return nil unless next_starts_at
 
-      if original_ends_at
-        difference = original_ends_at - original_starts_at
-        next_ends_at = next_starts_at + difference.seconds
+      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      next_ends_at = next_starts_at + event_duration
+      [next_starts_at, next_ends_at]
+    end
+
+    def calculate_next_occurrence_from(from_time)
+      return nil if recurrence.blank?
+      if original_starts_at > from_time
+        return { starts_at: original_starts_at, ends_at: original_ends_at }
+      end
+
+      next_starts_at = calculate_next_recurring_date_from(from_time)
+      return nil unless next_starts_at
+
+      event_duration = original_ends_at ? original_ends_at - original_starts_at : 3600
+      next_ends_at = next_starts_at + event_duration
+      { starts_at: next_starts_at, ends_at: next_ends_at }
+    end
+
+    def duration
+      return nil unless original_starts_at
+
+      duration_seconds = original_ends_at ? original_ends_at - original_starts_at : 3600
+      hours = (duration_seconds / 3600)
+      minutes = ((duration_seconds % 3600) / 60)
+      seconds = (duration_seconds % 60)
+
+      sprintf("%02d:%02d:%02d", hours, minutes, seconds)
+    end
+
+    def rrule_timezone
+      timezone || "UTC"
+    end
+
+    private
+
+    def dates_changed?
+      saved_change_to_original_starts_at || saved_change_to_original_ends_at
+    end
+
+    def finish_previous_event_dates(current_starts_at)
+      existing_date = event_dates.find_by(starts_at: current_starts_at)
+      event_dates
+        .where.not(id: existing_date&.id)
+        .where(finished_at: nil)
+        .update_all(finished_at: Time.current)
+    end
+
+    def upsert_event_date(starts_at, ends_at)
+      finished_at = ends_at && ends_at < Time.current ? ends_at : nil
+
+      existing_date = event_dates.find_by(starts_at:)
+
+      if existing_date
+        # Only update if something actually changed
+        unless existing_date.ends_at == ends_at && existing_date.finished_at == finished_at
+          existing_date.update!(ends_at:, finished_at:)
+        end
       else
-        next_ends_at = nil
+        event_dates.create!(starts_at:, ends_at:, finished_at:)
       end
+    end
 
-      { starts_at: next_starts_at, ends_at: next_ends_at, rescheduled: true }
+    def reset_invitee_notifications
+      invitees.where.not(status: Invitee.statuses[:going]).update_all(status: nil, notified: false)
+    end
+
+    def notify_if_new_event
+      is_generating_future_recurrence = recurrence.present? && original_starts_at <= Time.current
+
+      unless is_generating_future_recurrence
+        notify_invitees!
+        notify_missing_invitees!
+      end
+    end
+
+    def calculate_next_recurring_date
+      timezone_starts_at = original_starts_at.in_time_zone(timezone)
+      timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
+
+      RRuleGenerator.generate(
+        starts_at: timezone_starts_at,
+        timezone: rrule_timezone,
+        recurrence: recurrence,
+        recurrence_until: timezone_recurrence_until,
+        dtstart: timezone_starts_at,
+      ).first
+    end
+
+    def calculate_next_recurring_date_from(from_time)
+      timezone_starts_at = original_starts_at.in_time_zone(timezone)
+      timezone_recurrence_until = recurrence_until&.in_time_zone(timezone)
+      from_time_in_tz = from_time.in_time_zone(timezone)
+
+      RRule::Rule
+        .new(
+          RRuleConfigurator.rule(
+            recurrence_until: timezone_recurrence_until,
+            recurrence: recurrence,
+            starts_at: timezone_starts_at,
+          ),
+          dtstart: timezone_starts_at,
+          tzid: rrule_timezone,
+        )
+        .between(from_time_in_tz - 1.hour, from_time_in_tz + 1.year)
+        .find { |date| date >= from_time_in_tz }
     end
   end
 end
@@ -449,4 +562,5 @@ end
 #  chat_channel_id    :bigint
 #  recurrence_until   :datetime
 #  show_local_time    :boolean          default(FALSE), not null
+#  max_attendees      :integer
 #

@@ -23,7 +23,7 @@ export default class Billing extends Component {
     {{#if this.viewingSelf}}
       <LinkTo @route="user.billing">
         {{icon "far-credit-card"}}
-        {{i18n "discourse_subscriptions.navigation.billing"}}
+        <span>{{i18n "discourse_subscriptions.navigation.billing"}}</span>
       </LinkTo>
     {{/if}}
   </template>

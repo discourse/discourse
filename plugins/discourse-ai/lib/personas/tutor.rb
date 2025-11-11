@@ -22,11 +22,11 @@ module DiscourseAi
 
           Format your response as a JSON object with a single key named "output", which has the explanation as the value.
           Your output should be in the following format:
-            <output>
-              {"output": "xx"}
-            </output>
+          
+          {"output": "xx"}
 
           Where "xx" is replaced by the explanation.
+          reply with valid JSON only.
         PROMPT
       end
 

@@ -31,7 +31,6 @@ export default class ChatRouteChannelInfoSettings extends Component {
   @service chatApi;
   @service chatGuardian;
   @service chatChannelsManager;
-  @service currentUser;
   @service siteSettings;
   @service dialog;
   @service modal;

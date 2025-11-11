@@ -88,7 +88,5 @@ id:
             label: Nama
           status:
             label: Status
-          enabled:
-            label: Diaktifkan
           disabled:
             label: Dinonaktifkan

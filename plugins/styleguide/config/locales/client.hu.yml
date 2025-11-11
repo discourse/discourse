@@ -89,8 +89,8 @@ hu:
           title: "Téma térkép"
         site_header:
           title: "Webhelyfejléc"
-        suggested_topics:
-          title: "Ajánlott témák"
+        more_topics:
+          title: "További témák"
         post_menu:
           title: "Bejegyzés menü"
         modal:

@@ -166,23 +166,23 @@ fi:
               label: Tunnisteet
               description: Valinnainen, käynnistyy vain, jos viestillä on jokin näistä tunnisteista
             restricted_categories:
-              label: Luokat
+              label: Alueet
               description: Valinnainen, käynnistyy vain, jos viestin aihe on näissä kategorioissa
             exclude_subcategories:
               label: Jätä pois alakategoriat
-              description: Valinnainen, laukaisee vain, jos viestin aihe on täsmälleen yllä mainituissa kategorioissa
+              description: Valinnainen, käynnistyy vain, jos viestin aihe on täsmälleen yllä mainituissa kategorioissa
             restricted_archetype:
-              label: Aiheen Tyyppi
-              description: Valinnainen, salli laukaista vain aiheita tai henkilökohtaisia viestejä
+              label: Aiheen tyyppi
+              description: Valinnainen, sallii käynnistymisen vain aiheissa tai henkilökohtaisissa viesteissä
             restricted_groups:
               label: Rajoitetut ryhmät
               description: Valinnainen, käynnistyy vain, jos viestin käyttäjä kuuluu johonkin näistä ryhmistä
             restricted_inbox_groups:
-              label: Rajoitetut postilaatikot
+              label: Rajoitetut postilaatikkoryhmät
               description: Valinnainen, käynnistyy vain, jos viestin ketju on henkilökohtainen viesti jossakin ryhmän postilaatikoista
             excluded_groups:
               label: Poisjätetyt ryhmät
-              description: Valinnainen, Ohita laukaisin, jos julkaisun käyttäjä kuuluu johonkin näistä ryhmistä
+              description: Valinnainen, ohita triggeri, jos viestin käyttäjä kuuluu johonkin näistä ryhmistä
             ignore_automated:
               label: Ohita automaattiset
               description: Ohita triggeri, jos lähettäjällä on sähköpostiosoite, joka ei ota vastaan vastauksia, tai se on automatisoidusta lähteestä. Koskee vain sähköpostitse luotuja viestejä.
@@ -197,12 +197,12 @@ fi:
               description: "Ohita triggeri, jos viesti on luotu sähköpostitse"
             post_features:
               label: Viestin ominaisuudet
-              description: "Valinnainen, rajoita laukaisu vain viesteihin, joissa on nämä ominaisuudet"
+              description: "Valinnainen, rajoita käynnistäminen vain viesteihin, joissa on nämä ominaisuudet"
           created: Luotu
           edited: Muokattu
           topics: Kaikki aiheet
           personal_messages: Henkilökohtaiset viestit
-          public_topics: Julkiset aiheet (pois lukien kaikki suojatut luokat)
+          public_topics: Julkiset aiheet (pois lukien kaikki suojatut alueet)
           with_images: Kuvat
           with_links: Linkit
           with_code: Koodi
@@ -435,7 +435,7 @@ fi:
           runs_this_week: "%{count} tällä viikolla"
           runs_this_month: "%{count} tässä kuussa"
           runs:
-            label: Ajot
+            label: Suorituksia
           name:
             label: Nimi
           trigger:
@@ -447,7 +447,7 @@ fi:
           status:
             label: Tila
           enabled:
-            label: Käytössä
+            label: "Ota automaatio käyttöön"
           disabled:
             label: Pois käytöstä
           placeholders:
@@ -455,6 +455,7 @@ fi:
           last_updated_at:
             label: Viimeisin päivitys
           last_run:
-            label: Viimeinen ajo
+            label: Viimeisin suoritus
           last_updated_by:
             label: Päivittänyt
+          enable_toggle_disabled: "Voit ottaa tämän automaation käyttöön, kun kaikki pakolliset kentät on täytetty."

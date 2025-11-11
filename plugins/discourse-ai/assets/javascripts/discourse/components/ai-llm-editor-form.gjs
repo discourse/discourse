@@ -11,6 +11,10 @@ import Form from "discourse/components/form";
 import Avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminUser from "admin/models/admin-user";
 import DurationSelector from "./ai-quota-duration-selector";
@@ -26,6 +30,7 @@ export default class AiLlmEditorForm extends Component {
   @tracked testRunning = false;
   @tracked testResult = null;
   @tracked testError = null;
+  @tracked testValidationErrors = null;
 
   @cached
   get formData() {
@@ -35,8 +40,10 @@ export default class AiLlmEditorForm extends Component {
         return { provider_params: {} };
       }
 
-      const info = this.args.llms.resultSetMeta.presets.findBy("id", id);
-      const modelInfo = info.models.findBy("name", modelName);
+      const info = this.args.llms.resultSetMeta.presets.find(
+        (item) => item.id === id
+      );
+      const modelInfo = info.models.find((item) => item.name === modelName);
 
       return {
         max_prompt_tokens: modelInfo.tokens,
@@ -100,7 +107,11 @@ export default class AiLlmEditorForm extends Component {
   }
 
   get testErrorMessage() {
-    return i18n("discourse_ai.llms.tests.failure", { error: this.testError });
+    if (this.testValidationErrors?.length > 0) {
+      return i18n("discourse_ai.llms.tests.invalid_config");
+    } else {
+      return i18n("discourse_ai.llms.tests.failure", { error: this.testError });
+    }
   }
 
   get displayTestResult() {
@@ -201,7 +212,7 @@ export default class AiLlmEditorForm extends Component {
       await this.args.model.save(updatedData);
 
       if (isNew) {
-        this.args.llms.addObject(this.args.model);
+        addUniqueValueToArray(this.args.llms.content, this.args.model);
         await this.router.replaceWith(
           "adminPlugins.show.discourse-ai-llms.edit",
           this.args.model.id
@@ -230,8 +241,10 @@ export default class AiLlmEditorForm extends Component {
 
       if (this.testResult) {
         this.testError = null;
+        this.testValidationErrors = null;
       } else {
         this.testError = configTestResult.error;
+        this.testValidationErrors = configTestResult.validation_errors;
       }
     } catch (e) {
       popupAjaxError(e);
@@ -256,7 +269,7 @@ export default class AiLlmEditorForm extends Component {
         return this.args.model
           .destroyRecord()
           .then(() => {
-            this.args.llms.removeObject(this.args.model);
+            removeValueFromArray(this.args.llms.content, this.args.model);
             this.router.transitionTo(
               "adminPlugins.show.discourse-ai-llms.index"
             );
@@ -622,6 +635,11 @@ export default class AiLlmEditorForm extends Component {
               <div class="ai-llm-editor-tests__failure">
                 {{icon "xmark"}}
                 {{this.testErrorMessage}}
+                <ul>
+                  {{#each this.testValidationErrors as |error|}}
+                    <li>{{error}}</li>
+                  {{/each}}
+                </ul>
               </div>
             {{/if}}
           </ConditionalLoadingSpinner>

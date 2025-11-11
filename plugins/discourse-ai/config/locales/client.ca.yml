@@ -52,6 +52,22 @@ ca:
           name: "Brossa"
       modals:
         select_option: "Trieu una opció..."
+      translations:
+        title: "Traduccions"
+        stats:
+          eta_minutes:
+            one: "%{count} minut"
+            other: "%{count} minuts"
+          eta_hours:
+            one: "%{count} hora"
+            other: "%{count} hores"
+          eta_days:
+            one: "%{count} dia"
+            other: "%{count} dies"
+        progress_chart:
+          bar_done:
+            one: "%{count} publicació"
+            other: "%{count} publicacions"
       spam:
         short_title: "Brossa"
         last_seven_days: "Els darrers 7 dies"

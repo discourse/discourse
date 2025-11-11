@@ -36,7 +36,7 @@ ar:
         error: "حدث خطأ غير معروف في أثناء إرسال الرسالة. تحقَّق من سجلات الموقع لمزيدٍ من المعلومات."
         success: "تم إرسال الرسالة بنجاح"
       type:
-        normal: طبيعية
+        normal: عادي
         group_message: رسالة مجموعة
         group_mention: إشارة مجموعة
       filter:
@@ -84,7 +84,6 @@ ar:
               help: "على سبيل المثال، #channel، @username."
           errors:
             action_prohibited: "لا يملك برنامج الروبوت إذن النشر في هذه القناة"
-            channel_not_found: "القناة المحدَّدة غير موجودة على Slack"
         telegram:
           title: "Telegram"
           param:
@@ -131,7 +130,6 @@ ar:
               help: "اسم لوصف القناة. لا يتم استخدامه للاتصال بـ Matrix."
             room_id:
               title: "مُعرِّف الغرفة"
-              help: "\"المُعرِّف الخاص\" للغرفة. يجب أن يبدو مثل !abcdefg:matrix.org"
           errors:
             unknown_token: "رمز الوصول غير صالح"
             unknown_room: "مُعرِّف الغرفة غير صالح"

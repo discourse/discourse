@@ -115,7 +115,7 @@ zh_CN:
         assigned: "已指定"
       no_assignments_title: "您还没有任何任务指定"
       no_assignments_body: >
-        指定给您的话题和消息将在此处列出。您还将收到关于您的任务指定的定期提醒通知，您可以在<a href='%{preferencesUrl}'>用户偏好设置</a>中进行调整。 <br><br>要将话题或消息指定给自己或其他人，请查找底部的 %{icon} 指定按钮。
+        指定给您的话题和消息将在此处列出。您还将收到关于您的任务指定的定期提醒通知，您可以在<a href='%{preferencesUrl}'>用户偏好设置</a>中进行调整。<br><br>要将话题或消息指定给自己或其他人，请查找底部的 %{icon} 指定按钮。
       dismiss_assigned_tooltip: "将所有未读指定通知标记为已读"
       assigned_to_group:
         post: "帖子被指定给 %{group_name}"

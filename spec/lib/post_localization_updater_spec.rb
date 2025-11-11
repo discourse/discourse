@@ -29,6 +29,12 @@ describe PostLocalizationUpdater do
     )
   end
 
+  it "enqueues ProcessLocalizedCook job" do
+    loc = described_class.update(post_id: post.id, locale: locale, raw: new_raw, user: user)
+
+    expect_job_enqueued(job: :process_localized_cooked, args: { post_localization_id: loc.id })
+  end
+
   it "raises not found if the localization is missing" do
     expect {
       described_class.update(post_id: post.id, locale: "nope", raw: new_raw, user: user)

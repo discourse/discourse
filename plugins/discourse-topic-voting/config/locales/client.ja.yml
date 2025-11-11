@@ -21,6 +21,8 @@ ja:
       voted_title: "投票済み"
       voting_closed_title: "終了"
       voting_limit: "制限"
+      votes_left:
+        other: "残り %{count} 票です。<a href='%{path}'>あなたの投票</a>を確認してください。"
       votes_left_button_title:
         other: "残り %{count} 票です。"
       votes:

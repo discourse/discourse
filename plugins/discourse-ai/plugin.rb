@@ -19,6 +19,8 @@ register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
 
+register_asset "stylesheets/modules/translation/common/admin-translations.scss"
+
 register_asset "stylesheets/modules/ai-helper/common/ai-helper.scss"
 register_asset "stylesheets/modules/ai-helper/desktop/ai-helper-fk-modals.scss", :desktop
 register_asset "stylesheets/modules/ai-helper/mobile/ai-helper.scss", :mobile
@@ -46,6 +48,7 @@ register_asset "stylesheets/modules/embeddings/common/ai-embedding-editor.scss"
 register_asset "stylesheets/modules/llms/common/usage.scss"
 register_asset "stylesheets/modules/llms/common/spam.scss"
 register_asset "stylesheets/modules/llms/common/ai-llm-quotas.scss"
+register_asset "stylesheets/modules/llms/common/ai-credit-bar.scss"
 
 register_asset "stylesheets/modules/ai-bot/common/ai-tools.scss"
 
@@ -59,12 +62,12 @@ module ::DiscourseAi
   end
 end
 
-Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: ::DiscourseAi)
+Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: DiscourseAi)
 
 require_relative "lib/engine"
 require_relative "lib/configuration/module"
 
-::DiscourseAi::Configuration::Module::NAMES.each do |module_name|
+DiscourseAi::Configuration::Module::NAMES.each do |module_name|
   register_site_setting_area("ai-features/#{module_name}")
 end
 
@@ -78,6 +81,7 @@ after_initialize do
   require_relative "discourse_automation/llm_report"
   require_relative "discourse_automation/llm_tool_triage"
   require_relative "discourse_automation/llm_persona_triage"
+  require_relative "discourse_automation/llm_tagger"
 
   add_admin_route("discourse_ai.title", "discourse-ai", { use_new_show_route: true })
 
@@ -91,9 +95,12 @@ after_initialize do
     DiscourseAi::AiBot::EntryPoint.new,
     DiscourseAi::AiModeration::EntryPoint.new,
     DiscourseAi::Translation::EntryPoint.new,
+    DiscourseAi::Discover::EntryPoint.new,
   ].each { |a_module| a_module.inject_into(self) }
 
-  register_problem_check ProblemCheck::AiLlmStatus
+  #register_problem_check ProblemCheck::AiLlmStatus
+  #register_problem_check ProblemCheck::AiCreditSoftLimit
+  #register_problem_check ProblemCheck::AiCreditHardLimit
 
   register_reviewable_type ReviewableAiChatMessage
   register_reviewable_type ReviewableAiPost
@@ -144,6 +151,11 @@ after_initialize do
     face-smile
     face-meh
     face-angry
+    circle-info
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
+
+  add_model_callback(DiscourseAutomation::Automation, :after_save) do
+    DiscourseAi::Configuration::Feature.feature_cache.flush!
+  end
 end

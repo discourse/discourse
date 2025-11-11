@@ -69,7 +69,7 @@
 
     &[data-placement^="top"] {
       .arrow {
-        bottom: -10px;
+        bottom: -11px;
         rotate: 180deg;
       }
     }
@@ -82,21 +82,21 @@
 
     &[data-placement^="bottom"] {
       .arrow {
-        top: -10px;
+        top: -11px;
       }
     }
 
     &[data-placement^="right"] {
       .arrow {
         rotate: -90deg;
-        left: -10px;
+        left: -11px;
       }
     }
 
     &[data-placement^="left"] {
       .arrow {
         rotate: 90deg;
-        right: -10px;
+        right: -11px;
       }
     }
   }

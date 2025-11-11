@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe "AI Post helper", type: :system do
-  fab!(:user) { Fabricate(:admin) }
-  fab!(:non_member_group) { Fabricate(:group) }
+  fab!(:user, :admin)
+  fab!(:non_member_group, :group)
   fab!(:topic)
   fab!(:category)
-  fab!(:category_2) { Fabricate(:category) }
+  fab!(:category_2, :category)
   fab!(:post) do
     Fabricate(
       :post,
@@ -30,11 +30,11 @@ RSpec.describe "AI Post helper", type: :system do
   end
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:suggestion_menu) { PageObjects::Components::AiSplitTopicSuggester.new }
-  fab!(:video) { Fabricate(:tag) }
-  fab!(:music) { Fabricate(:tag) }
-  fab!(:cloud) { Fabricate(:tag) }
-  fab!(:feedback) { Fabricate(:tag) }
-  fab!(:review) { Fabricate(:tag) }
+  fab!(:video, :tag)
+  fab!(:music, :tag)
+  fab!(:cloud, :tag)
+  fab!(:feedback, :tag)
+  fab!(:review, :tag)
   fab!(:embedding_definition)
 
   before do

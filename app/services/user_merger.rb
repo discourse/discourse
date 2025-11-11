@@ -436,7 +436,7 @@ class UserMerger
       :topic_timers,
       conditions: [
         "x.status_type = y.status_type",
-        "x.topic_id = y.topic_id",
+        "x.timerable_id = y.timerable_id",
         "y.deleted_at IS NULL",
       ],
     )
@@ -483,6 +483,14 @@ class UserMerger
         "x.badge_id = y.badge_id",
         "x.seq = y.seq",
         "x.post_id IS NOT DISTINCT FROM y.post_id",
+      ],
+    )
+
+    update_user_id(
+      :bookmarks,
+      conditions: [
+        "x.bookmarkable_type = y.bookmarkable_type",
+        "x.bookmarkable_id = y.bookmarkable_id",
       ],
     )
 

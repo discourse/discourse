@@ -10,7 +10,6 @@ ko:
       site_settings:
         categories:
           discourse_post_event: "Discourse 이벤트"
-          discourse_calendar: "Discourse 캘린더"
   js:
     notifications:
       titles:
@@ -85,6 +84,7 @@ ko:
         month: "월"
         week: "주"
         day: "일"
+        year: "년"
     group_timezones:
       search: "검색..."
     discourse_post_event:

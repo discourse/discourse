@@ -7,11 +7,9 @@
 sv:
   admin_js:
     admin:
-      calendar: "Kalender"
       site_settings:
         categories:
           discourse_post_event: "Discourse-evenemang"
-          discourse_calendar: "Discourse-kalender"
   js:
     notifications:
       titles:
@@ -41,6 +39,7 @@ sv:
         title: "Region"
         none: "Ingen"
         use_current_region: "Använd nuvarande region"
+        select_region: "Välj en region ..."
         names:
           ar: "Argentina"
           at: "Österrike"
@@ -134,6 +133,7 @@ sv:
           dk: "Danmark"
           ee: "Estland"
           el: "Grekland"
+          gr: "Grekland"
           es_an: "Spanien (es_an)"
           es_ar: "Spanien (es_ar)"
           es_ce: "Spanien (es_ce)"
@@ -302,16 +302,14 @@ sv:
         month: "Månad"
         week: "Vecka"
         day: "Dag"
+        year: "År"
     group_timezones:
       search: "Sök..."
       group_availability: "%{group}-tillgänglighet"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} har automatiskt ställt in din närvaro och bjudit in dig till %{description}"
-        before_event_reminder_html: "Ett evenemang börjar snart %{description}"
-        after_event_reminder_html: "Ett evenemang har avslutats %{description}"
-        ongoing_event_reminder_html: "Ett evenemang pågår %{description}"
+        invite_user_predefined_attendance_notification: "%{username} har automatiskt ställt in din närvaro och bjudit in dig till %{eventName}"
       edit_reason: "Evenemang uppdaterat"
       topic_title:
         starts_at: "Evenemanget börjar: %{date}"

@@ -13,6 +13,8 @@ fr:
     reviewables:
       comment_already_handled: "Merci, mais nous avons déjà examiné ce commentaire et déterminé qu'il n'a pas besoin d'être signalé à nouveau."
   js:
+    discourse_post_voting:
+      title: "Vote d'une publication"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
@@ -28,10 +30,8 @@ fr:
         label: "Créer un sujet de vote de message"
       composer_actions:
         create_as_post_voting:
-          label: "Activer/désactiver le vote de message"
           desc: "Le sujet sera créé avec des messages pouvant faire l'objet d'un vote"
         remove_as_post_voting:
-          label: "Supprimer le vote de message"
           desc: "Le sujet sera créé dans le format normal"
     vote:
       already_voted: "Vous ne pouvez voter qu'une seule fois par question."
@@ -111,6 +111,9 @@ fr:
         answer_count:
           one: "%{count} réponse"
           other: "%{count} réponses"
+        voters_count_diff:
+          one: "et %{count} utilisateur supplémentaire..."
+          other: "et %{count} utilisateurs supplémentaires..."
     review:
       transcript:
         view: "Afficher la transcription des messages précédents"

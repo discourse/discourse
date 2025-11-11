@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-module ::DiscourseDataExplorer
+module DiscourseDataExplorer
   class QueryController < ApplicationController
     requires_plugin PLUGIN_NAME
 
     before_action :set_group, only: %i[group_reports_index group_reports_show group_reports_run]
-    before_action :set_query, only: %i[group_reports_show group_reports_run show update]
+    before_action :set_query, only: %i[group_reports_show group_reports_run show update public_run]
     before_action :ensure_admin
 
-    skip_before_action :check_xhr, only: %i[show group_reports_run run]
+    skip_before_action :check_xhr, only: %i[show group_reports_run run public_run]
     skip_before_action :ensure_admin,
-                       only: %i[group_reports_index group_reports_show group_reports_run]
+                       only: %i[group_reports_index group_reports_show group_reports_run public_run]
 
     def index
       queries = Query.where(hidden: false).order(:last_run_at, :name).includes(:groups).to_a
@@ -83,6 +83,13 @@ module ::DiscourseDataExplorer
       run
     end
 
+    # Public GET endpoint to run a query by ID for users with access
+    def public_run
+      return raise Discourse::NotFound if !guardian.user_can_access_query?(@query) || @query.hidden
+
+      run
+    end
+
     def create
       query =
         Query.create!(
@@ -145,7 +152,10 @@ module ::DiscourseDataExplorer
       response.sending_file = true if params[:download]
 
       query_params = {}
-      query_params = MultiJson.load(params[:params]) if params[:params]
+      if params[:params]
+        query_params =
+          params[:params].is_a?(String) ? MultiJson.load(params[:params]) : params[:params]
+      end
 
       opts = { current_user: current_user&.username }
       opts[:explain] = true if params[:explain] == "true"
@@ -177,7 +187,7 @@ module ::DiscourseDataExplorer
           err_msg = "#{err_class}: #{err_msg}"
         end
 
-        render json: { success: false, errors: [err_msg] }, status: 422
+        render json: { success: false, errors: [err_msg] }, status: :unprocessable_entity
       else
         content_disposition =
           "attachment; filename=#{query.slug}@#{Slug.for(Discourse.current_hostname, "discourse")}-#{Date.today}.dcqresult"

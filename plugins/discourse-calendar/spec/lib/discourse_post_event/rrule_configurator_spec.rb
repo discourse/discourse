@@ -43,14 +43,14 @@ describe RRuleConfigurator do
     context "with every_two_weeks recurrence" do
       it "generates the correct rule" do
         rule = RRuleConfigurator.rule(recurrence: "every_two_weeks", starts_at: time)
-        expect(rule).to eq("FREQ=WEEKLY;INTERVAL=2;")
+        expect(rule).to eq("FREQ=WEEKLY;INTERVAL=2")
       end
     end
 
     context "with every_four_weeks recurrence" do
       it "generates the correct rule" do
         rule = RRuleConfigurator.rule(recurrence: "every_four_weeks", starts_at: time)
-        expect(rule).to eq("FREQ=WEEKLY;INTERVAL=4;")
+        expect(rule).to eq("FREQ=WEEKLY;INTERVAL=4")
       end
     end
 
@@ -78,7 +78,7 @@ describe RRuleConfigurator do
       it "adds the UNTIL parameter to the rule" do
         recurrence_until = Time.utc(2021, 8, 12, 16, 32)
         rule = RRuleConfigurator.rule(recurrence: "every_day", starts_at: time, recurrence_until:)
-        expect(rule).to eq("FREQ=DAILY;UNTIL=20210812T163200Z")
+        expect(rule).to eq("FREQ=DAILY;UNTIL=20210812T163200")
       end
     end
   end

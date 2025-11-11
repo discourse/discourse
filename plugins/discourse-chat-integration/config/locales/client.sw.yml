@@ -81,7 +81,6 @@ sw:
               help: "mfano. #chaneli, @jinalamtumiaji."
           errors:
             action_prohibited: "Roboti hana ruhusa kuchapisha ndani ya hiyo chaneli"
-            channel_not_found: "Chaneli iliyochaguliwa haipo slack"
         telegram:
           title: "Telegram"
           param:
@@ -123,7 +122,6 @@ sw:
               help: "Jina la kuelezea chaneli. Haitumiki kuunganisha na Matrix."
             room_id:
               title: "Utambulisho wa Chumba"
-              help: "'Kitambulishi Binafsi' kwa ajili ya chumba. Inabidi kifanane na hivi !abcdefg:matrix.org"
           errors:
             unknown_token: "Ishara ya Ufikivu ni batili"
             unknown_room: "Utambulisho wa Chumba ni batili"

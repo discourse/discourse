@@ -73,8 +73,8 @@ id:
           title: "Peta Topik"
         site_header:
           title: "Header Situs"
-        suggested_topics:
-          title: "Topik Yang Disarankan"
+        more_topics:
+          title: "Topik Lainnya"
         post_menu:
           title: "Menu Post"
         modal:

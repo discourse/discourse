@@ -6,4 +6,7 @@
 
 ja:
   site_settings:
+    rss_polling_enabled: "[RSS ポーリング] 複数の RSS フィードからの埋め込み投稿のインポートを有効にする"
     rss_polling_frequency: "[RSS Polling] フィードの更新間隔 (分)"
+    rss_polling_use_pubdate: "[RSS ポーリング] トピック作成日を RSS フィードの pubDate に設定する"
+    rss_polling_update_tags: "[RSS ポーリング] トピックが更新されたらトピックタグを更新する。これを無効にすると、最初のタグは取得されますが、以降のタグの変更は無効になります。"

@@ -43,9 +43,9 @@ acceptance("Discourse Calendar - Topic Calendar Holidays", function (needs) {
     await visit("/t/-/252");
 
     assert
-      .dom(".fc-week:nth-child(5) .fc-content-skeleton tbody td:first-child")
-      .hasClass(
-        "fc-event-container",
+      .dom(".fc-daygrid-body tr:nth-of-type(5) .fc-event-title")
+      .hasText(
+        "gmt+1_user",
         "Italian Christmas Day is displayed on Monday 2023-12-25"
       );
   });

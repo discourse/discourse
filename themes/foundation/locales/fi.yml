@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 fi:
+  theme_metadata:
+    description: "Klassinen Discourse-teema, joka sopii hyvin mukauttamiseen yhteisösi erityisiin tarpeisiin."

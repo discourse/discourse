@@ -12,19 +12,15 @@ module(
     setupRenderingTest(hooks);
 
     test("no participants", async function (assert) {
-      const self = this;
-
       this.thread = new ChatFabricators(getOwner(this)).thread();
       await render(
-        <template><ChatThreadParticipants @thread={{self.thread}} /></template>
+        <template><ChatThreadParticipants @thread={{this.thread}} /></template>
       );
 
       assert.dom(".chat-thread-participants").doesNotExist();
     });
 
     test("@includeOriginalMessageUser=true", async function (assert) {
-      const self = this;
-
       const originalMessageUser = new CoreFabricators(getOwner(this)).user({
         username: "bob",
       });
@@ -42,15 +38,13 @@ module(
       });
 
       await render(
-        <template><ChatThreadParticipants @thread={{self.thread}} /></template>
+        <template><ChatThreadParticipants @thread={{this.thread}} /></template>
       );
 
       assert.dom(".chat-user-avatar[data-username]").exists({ count: 2 });
     });
 
     test("@includeOriginalMessageUser=false", async function (assert) {
-      const self = this;
-
       const originalMessageUser = new CoreFabricators(getOwner(this)).user({
         username: "bob",
       });
@@ -70,7 +64,7 @@ module(
       await render(
         <template>
           <ChatThreadParticipants
-            @thread={{self.thread}}
+            @thread={{this.thread}}
             @includeOriginalMessageUser={{false}}
           />
         </template>

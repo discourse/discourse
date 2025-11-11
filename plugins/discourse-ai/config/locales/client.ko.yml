@@ -55,6 +55,18 @@ ko:
           name: "스팸"
       modals:
         select_option: "옵션 선택..."
+      translations:
+        title: "번역"
+        stats:
+          eta_minutes:
+            other: "%{count}분"
+          eta_hours:
+            other: "%{count}시간"
+          eta_days:
+            other: "%{count}일"
+        progress_chart:
+          bar_done:
+            other: "글 %{count}개"
       spam:
         short_title: "스팸"
         last_seven_days: "지난 7일"

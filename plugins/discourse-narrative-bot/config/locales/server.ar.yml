@@ -173,8 +173,22 @@ ar:
 
           - إننا نؤمن [بالسلوك المتحضر للمجتمع](%{base_uri}/guidelines) في جميع الأوقات.
       onebox:
+        instructions: |-
+          بعد ذلك، هل يمكنك مشاركة أحد هذه الروابط معي؟ رد **برابط على سطر منفرد**، وسيتوسع تلقائيًا ليشمل ملخصًا رائعًا.
+
+          لنسخ أي رابط، اضغط عليه مطولًا على الهاتف المحمول، أو انقر بزر الفأرة الأيمن على جهازك:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           رائع! سيعمل ذلك مع معظم <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> الروابط. تذكَّر أنه يجب أن يكون في سطر _بمفرده_ دون أي شيء آخر أمامه أو خلفه.
+        not_found: |-
+          عذرًا، لم أتمكن من العثور على الرابط في ردك! :cry:
+
+          هل يمكنك محاولة إضافة الرابط التالي، على سطر منفصل، في ردك القادم؟
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           هذه صورة لأحادي القرن:
@@ -375,6 +389,19 @@ ar:
 
           لاحظ أنه عند الرد على موضوع، أو قراءة موضوع لأكثر من بضع دقائق، ييتم تعيين مستوى الإشعارات تلقائيًا على "تتبُّع". يمكنك تغيير ذلك في [تفضيلات المستخدم](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          هل تعلم أنه يمكنك إضافة استطلاع رأي إلى أي منشور؟ جرّب استخدام أيقونة <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> في المحرر لإنشاء استطلاع رأي.
+        not_found: |-
+          عذرًا! لم يكن هناك أي استطلاع رأي في ردك.
+
+          استخدم أيقونة <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> في المحرِّر، أو انسخ هذا الاستطلاع والصقه في ردك التالي:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           مرحبًا، استطلاع رائع! كيف كان أدائي في تعليمك؟
 
@@ -385,6 +412,20 @@ ar:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          أحيانًا قد ترغب في **إخفاء بعض التفاصيل** في ردودك:
+
+          عند مناقشة أحداث فيلم أو مسلسل قد تعتبر مفسدة للحبكة.
+
+          عندما يحتوي منشورك على الكثير من التفاصيل الاختيارية التي قد تكون مربكة إذا قرئت دفعة واحدة.
+
+          [details=اختر هذا لرؤية كيفية عملها!]
+          1. اختر أيقونة <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> في المحرر.
+          2. اختر "إخفاء التفاصيل".
+          3. عدّل ملخص التفاصيل وأضف محتواك.
+          [/details]
+
+          هل يمكنك استخدام أيقونة <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> في المحرر لإضافة قسم تفاصيل في ردك التالي؟
         not_found: |-
           هل تواجه مشكلة في إنشاء عنصر واجهة للتفاصيل؟ حاول تضمين ما يلي في ردك التالي:
 

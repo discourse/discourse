@@ -7,11 +7,11 @@
 uk:
   admin_js:
     admin:
-      calendar: "Календар"
+      calendar: "Календар та події"
       site_settings:
         categories:
           discourse_post_event: "Подія Discourse"
-          discourse_calendar: "Календар Discourse"
+          discourse_calendar: "Календар та події"
   js:
     notifications:
       titles:
@@ -36,6 +36,7 @@ uk:
         header_title: "Свята"
         pick_region_description: "Оберіть регіон, щоб побачити свята для цього регіону."
         disabled_holidays_description: "При вимкненні свят вони будуть виключені з календаря персоналу."
+        header_description: "Виберіть регіон, щоб переглянути свята для нього. Свята для людей з інвалідністю будуть виключені з календаря свят персоналу."
       date: "Дата"
       add_to_calendar: "Додати до календаря Google"
       toggle_timezone_offset_title: "Змінити часовий пояс"
@@ -44,6 +45,7 @@ uk:
         title: "Регіон"
         none: "Немає"
         use_current_region: "Використовувати поточний регіон"
+        select_region: "Виберіть регіон..."
         names:
           ae: "Об'єднані Арабські Емірати"
           ar: "Аргентина"
@@ -138,6 +140,7 @@ uk:
           dk: "Данія"
           ee: "Естонія"
           el: "Греція"
+          gr: "Греція"
           es_an: "Іспанія (es_an)"
           es_ar: "Іспанія (es_ar)"
           es_ce: "Іспанія (es_ce)"
@@ -314,7 +317,7 @@ uk:
         month: "Місяць"
         week: "Тиждень"
         day: "День"
-        list: "Список"
+        year: "Рік"
     group_timezones:
       search: "Пошук…"
       group_availability: "%{group} доступність"
@@ -324,10 +327,8 @@ uk:
         after_event_reminder: "Подія завершилася"
         ongoing_event_reminder: "Подія триває"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} автоматично встановив вашу присутність і запросив вас на %{description}"
-        before_event_reminder_html: "Подія ось-ось розпочнеться %{description}"
-        after_event_reminder_html: "Подія закінчилася %{description}"
-        ongoing_event_reminder_html: "Подія триває  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} автоматично встановив вашу присутність і запросив вас на %{eventName}"
+        an_event: "подія"
       edit_reason: "Подію оновлено"
       edit_reason_closed: "Подія закрита"
       edit_reason_opened: "Подія відкрита"
@@ -425,6 +426,7 @@ uk:
         event:
           expired: "Термін дії закінчився"
           closed: "Закриті"
+          full: "Повний"
           status:
             standalone:
               title: "Автономна"
@@ -482,6 +484,9 @@ uk:
         minimal:
           label: "Мінімальна подія"
           checkbox_label: "Приховати кнопки \"Йду/Не йду\" та статус запрошених"
+        max_attendees:
+          label: "Максимальна кількість учасників"
+          placeholder: "Без обмежень"
         allow_chat:
           label: "Інтеграція з чатом"
           checkbox_label: "Створення та керування каналом чату для конкретних подій"

@@ -69,8 +69,8 @@ fa_IR:
           title: "نقشه موضوع"
         site_header:
           title: "سربرگ سایت"
-        suggested_topics:
-          title: "موضوعات پیشنهادی"
+        more_topics:
+          title: "موضوعات بیشتر"
         post_menu:
           title: "منوی نوشته"
         modal:

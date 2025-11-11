@@ -31,6 +31,7 @@ pl_PL:
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
     chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
     allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają twoją stronę anonimowo, korzystanie z czatu. To ustawienie wymaga włączenia ustawienia `allow anonymous mode`."
+    chat_search_enabled: "Włącz to ustawienie, aby umożliwić użytkownikom przeszukiwanie wiadomości na czacie."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."
@@ -112,6 +113,17 @@ pl_PL:
     reviewables:
       message_already_handled: "Dziękujemy, ale sprawdziliśmy już tę wiadomość i ustaliliśmy, że nie trzeba jej ponownie oznaczać."
       actions:
+        message_actions:
+          bundle_title: "Co chcesz zrobić z tą wiadomością?"
+        no_action_message:
+          title: "Brak akcji"
+          description: "Pozostaw wiadomość bez zmian."
+        delete_message:
+          title: "Usuń wiadomość"
+          description: "Trwale usuń wiadomość."
+        restore_message:
+          title: "Przywróć wiadomość"
+          description: "Przywróć wiadomość, aby użytkownicy mogli ją zobaczyć."
         agree:
           title: "Zgadzam się..."
         agree_and_keep_message:
@@ -170,6 +182,7 @@ pl_PL:
     mention_warning:
       dismiss: "odrzuć"
       cannot_see: "%{first_identifier} nie ma dostępu do tego kanału i nie został powiadomiony."
+      cannot_see_group: "Niektórzy członkowie %{group_name} nie mają dostępu do tego kanału i nie zostali o tym powiadomieni."
       cannot_see_multiple:
         one: "%{first_identifier} i %{count} inny użytkownik nie ma dostępu do tego kanału i nie został powiadomiony."
         few: "%{first_identifier} i %{count} innych użytkowników nie ma dostępu do tego kanału i nie zostali powiadomieni."
@@ -205,7 +218,8 @@ pl_PL:
         slug_contains_non_ascii_chars: "zawiera znaki inne niż ascii"
         is_already_in_use: "jest już w użyciu"
     bookmarkable:
-      notification_title: "wiadomość w %{channel_name}"
+      notification_title_channel: "wiadomość w %{channel_name}"
+      notification_title_direct_message: "wiadomość z %{channel_name}"
     personal_chat: "czat osobisty"
     onebox:
       inline_to_message: "Wiadomość #%{message_id} od %{username} - #%{chat_channel}"

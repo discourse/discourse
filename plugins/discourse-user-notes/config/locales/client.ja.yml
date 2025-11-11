@@ -9,7 +9,9 @@ ja:
     user_notes:
       title: "ユーザーメモ"
       attach: "ユーザーメモを追加"
+      attach_note_description: "このユーザーに関するメモを追加します。このメモはスタッフのみに表示されます。"
       remove: "ユーザーメモを削除"
       show: "ユーザーメモ（%{count}）"
       delete_confirm: "このユーザーメモを削除してもよろしいですか？"
       show_post: "投稿を表示"
+      copy_reviewable_note: "メモをユーザープロファイルにコピーしますか？"

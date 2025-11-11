@@ -21,6 +21,7 @@ fa_IR:
       solution_summary:
         one: "راه حل مورد قبول"
         other: "راه حل ها"
+      accepted_answer_post_number: "نوشته %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "همه"

@@ -2,8 +2,6 @@
 
 module Migrations::Importer
   class CopyStep < Step
-    MappingType = ::Migrations::Importer::MappingType
-
     NOW = "NOW()"
     SYSTEM_USER_ID = Discourse::SYSTEM_USER_ID
 
@@ -57,7 +55,7 @@ module Migrations::Importer
       end
     end
 
-    def initialize(intermediate_db, discourse_db, shared_data)
+    def initialize(intermediate_db, discourse_db, shared_data, config)
       super
 
       @last_id = 0
@@ -66,14 +64,26 @@ module Migrations::Importer
 
     def execute
       super
+
+      before(total_rows: total_count)
       with_progressbar(total_count) { copy_data }
+      after(total_rows: total_count)
+
       nil
     end
 
     private
 
+    def before(total_rows:)
+      # Override in step implementation if needed
+    end
+
+    def after(total_rows:)
+      # Override in step implementation if needed
+    end
+
     def copy_data
-      table_name = self.class.table_name || self.class.name&.demodulize&.underscore
+      table_name = self.class.table_name || self.class.name.demodulize.underscore
       column_names = self.class.column_names || @discourse_db.column_names(table_name)
 
       if self.class.store_mapped_ids?
@@ -165,8 +175,11 @@ module Migrations::Importer
     end
 
     def total_count
-      query, parameters = self.class.total_rows_query
-      @intermediate_db.count(query, *parameters)
+      @total_count ||=
+        begin
+          query, parameters = self.class.total_rows_query
+          @intermediate_db.count(query, *parameters)
+        end
     end
   end
 end

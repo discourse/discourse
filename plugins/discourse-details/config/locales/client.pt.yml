@@ -6,8 +6,6 @@
 
 pt:
   js:
-    details:
-      title: Ocultar detalhes
     composer:
       details_title: Resumo
       details_text: "Este texto será ocultado"

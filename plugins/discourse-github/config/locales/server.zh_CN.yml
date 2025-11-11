@@ -36,5 +36,20 @@ zh_CN:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "discourse-github 插件所需操作"
+      repository_identifier_invalid_pm: |
+        discourse-github 插件中指定的仓库无效：
+        %{repo_name}
+
+        它们应该被指定为 `user/repo`。
+
+        除非在 <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github 站点设置</a>中更正名称并重新打开“github_badges_enabled”，否则不会授予徽章。
       repository_not_found_pm_title: "discourse-github 插件所需操作"
+      repository_not_found_pm: |
+        discourse-github 插件中指定的仓库返回了“找不到”错误：%{repo_name}
+
+        除非在 <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github 站点设置</a>中更正名称并重新打开“github_badges_enabled”，否则不会授予徽章。
       invalid_octokit_credentials_pm_title: "discourse-github 插件所需操作"
+      invalid_octokit_credentials_pm: |
+        提供给 discourse-github 插件的 GitHub 凭据无效。“github badges enabled”站点设置已被禁用，并且在议题解决之前将不会填充提交。
+
+        检查您的“github 反向链接访问令牌”站点设置，确保令牌正确并通过 <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-github 站点设置</a>获得对所有仓库的权限。

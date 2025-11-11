@@ -19,13 +19,15 @@ import { shortDateNoYear } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
 import DTooltip from "float-kit/components/d-tooltip";
 import AiSummarySkeleton from "../../components/ai-summary-skeleton";
+import {
+  isAiCreditLimitError,
+  popupAiCreditLimitError,
+} from "../../lib/ai-errors";
 import SmoothStreamer from "../../lib/smooth-streamer";
 
 export default class AiSummaryModal extends Component {
-  @service siteSettings;
   @service messageBus;
   @service currentUser;
-  @service site;
   @service modal;
 
   @tracked text = "";
@@ -143,6 +145,13 @@ export default class AiSummaryModal extends Component {
 
   @bind
   async _updateSummary(update) {
+    if (isAiCreditLimitError(update)) {
+      this.loading = false;
+      popupAiCreditLimitError(update);
+      this.unsubscribe();
+      return;
+    }
+
     const topicSummary = {
       done: update.done,
       raw: update.ai_topic_summary?.summarized_text,

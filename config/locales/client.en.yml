@@ -305,6 +305,12 @@ en:
 
     topic_admin_menu: "topic actions"
     skip_to_main_content: "Skip to main content"
+    skip_links_label: "Skip navigation links"
+    skip_to_post: "Skip to post %{post_number}"
+    skip_to_where_you_left_off: "Skip to where you left off (post %{post_number})"
+    skip_to_where_you_left_off_last: "Skip to where you left off (last reply, post %{post_number})"
+    skip_to_last_reply: "Skip to last reply"
+    skip_to_top: "Skip to top"
     skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
@@ -319,12 +325,17 @@ en:
 
     welcome_banner:
       header:
+        new_members: "Welcome, %{preferred_display_name}!"
         logged_in_members: "Welcome back, %{preferred_display_name}!"
         anonymous_members: "Welcome to %{site_name}!"
       subheader:
         logged_in_members: ""
         anonymous_members: ""
-      search: "Search"
+      search_placeholder: "Search"
+
+    impersonation:
+      notice: "You are impersonating %{username}"
+      stop: "Stop impersonating"
 
     themes:
       default_description: "Default"
@@ -390,7 +401,7 @@ en:
     joined: "Joined"
     admin_title: "Admin"
     show_more: "show more"
-    show_help: "options"
+    show_help: "Options"
     links: "Links"
     links_lowercase:
       one: "link"
@@ -601,6 +612,11 @@ en:
       resume: "Resume"
       remove: "Remove"
       remove_confirmation: "Are you sure you want to delete this draft?"
+      bulk_delete: "Delete selected"
+      bulk_delete_confirmation: "Delete drafts"
+      bulk_delete_message:
+        one: "Are you sure you want to delete this draft?"
+        other: "Are you sure you want to delete these %{count} drafts?"
       new_topic: "New topic draft"
       new_private_message: "New personal message draft"
       edit_topic: "Edit topic draft"
@@ -638,6 +654,7 @@ en:
 
     preview: "preview"
     cancel: "Cancel"
+    done: "Done"
 
     deleting: "Deleting…"
 
@@ -687,6 +704,7 @@ en:
     review:
       show_more: "Show more"
       show_less: "Show less"
+      back_to_queue: "Back to queue"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
@@ -738,9 +756,9 @@ en:
         claimed_by_other: "This item can only be reviewed by <b>%{username}</b>."
         automatically_claimed_by: "This item is currently being reviewed by <b>%{username}</b>."
       claim:
-        title: "claim this topic"
+        title: "Claim this topic"
       unclaim:
-        help: "remove this claim"
+        help: "Remove this claim"
       awaiting_approval: "Awaiting Approval"
       delete: "Delete"
       settings:
@@ -762,7 +780,7 @@ en:
       topic: "Topic:"
       filtered_topic: "You have filtered to reviewable content in a single topic."
       filtered_user: "User"
-      filtered_reviewed_by: "Reviewed By"
+      filtered_reviewed_by: "Reviewed by"
       show_all_topics: "show all topics"
       deleted_post: "(post deleted)"
       deleted_user: "(user deleted)"
@@ -813,7 +831,7 @@ en:
       replies:
         one: "%{count} reply"
         other: "%{count} replies"
-      edit: "Edit"
+      edit: "Edit Post"
       save: "Save"
       cancel: "Cancel"
       new_topic: "Approving this item will create a new topic"
@@ -837,7 +855,7 @@ en:
           created_at_asc: "Created At (reverse)"
 
         priority:
-          title: "Minimum Priority"
+          title: "Minimum priority"
           any: "(any)"
           low: "Low"
           medium: "Medium"
@@ -906,6 +924,11 @@ en:
           title: "Post"
           noun: "post"
       flagged_as: "Flagged as"
+      post_flagged_as: "Post flagged as"
+      chat_flagged_as: "Chat flagged as"
+      queued_post_label: "Queued post"
+      queued_topic_label: "Queued topic"
+      user_label: "User"
       assigned_to: "Assigned to"
       moderator_actions: "Moderator actions"
       timeline_and_notes: "Timeline & notes"
@@ -929,13 +952,15 @@ en:
         chars_remaining: "%{count} characters remaining"
         delete_note: "Delete this note"
         delete: "Delete"
-      new_topic_label: "New topic"
+      topic_label: "Topic"
       queued_user: "Queued user"
       posted_in: "Posted in"
       flagged_user: "Flagged user"
       review_user: "User"
       need_help: "Need help?"
       copy_link: "Copy link"
+      copy_permalink_title: "copy a link to this reviewable item to clipboard"
+      copy_link_feedback: "Link copied"
       view_source: "View source"
       insights:
         title: "Insights"
@@ -943,9 +968,11 @@ en:
         flagged_by_users:
           one: "Flagged by %{count} unique user"
           other: "Flagged by %{count} unique users"
-        similar_posts: "Similar past posts"
-        flagged_in_timeframe: "%{count} flagged previously"
-        user_activity: "User activity"
+        similar_posts: "Past violations"
+        flagged_in_timeframe:
+          one: "%{count} confirmed flag"
+          other: "%{count} confirmed flags"
+        user_activity: "User info"
         activities:
           new_account: "new account"
           trust_level: "trust level: %{trustLevelName}"
@@ -1782,12 +1809,14 @@ en:
         in_progress: "(sending email)"
         error: "(error)"
         action: "Send Password Reset Email"
+        staged_user: "Staged users can not receive password reset emails."
         set_password: "Set Password"
         choose_new: "Choose a new password"
         choose: "Choose a password"
         verify_identity: "To continue, please verify your identity."
         title: "Password Reset"
         remove: "Remove Password"
+        remove_disabled: "The account needs at least one other login method (e.g. a passkey or a linked external account) before removing the password."
         remove_detail: "Your account will no longer be accessible with a password unless you reset it."
 
       second_factor_backup:
@@ -1895,7 +1924,7 @@ en:
 
       add_email:
         title: "Add Email"
-        add: "add"
+        add: "Add"
 
       change_email:
         title: "Change Email"
@@ -2078,6 +2107,7 @@ en:
         first_time_and_daily: "First time a post is liked and daily"
         first_time: "First time a post is liked"
         never: "Never"
+      notify_on_linked_posts: "Notify when someone shares a link to one of my posts"
       email_previous_replies:
         title: "Include previous replies at the bottom of emails"
         unless_emailed: "unless previously sent"
@@ -2431,6 +2461,10 @@ en:
       no_results: "No results"
       search: "Search…"
       label: "Select options"
+    d_otp:
+      screen_reader:
+        one: Enter a number
+        other: Enter %{count} numbers
     form_kit:
       reset: Reset
       optional: optional
@@ -2687,6 +2721,7 @@ en:
       admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
       resend_activation_email: "Click here to send the activation email again."
       omniauth_disallow_totp: "Your account has two-factor authentication enabled. Please log in with your password."
+      works_with: "Works with"
 
       activate_account: "Activate Account"
       resend_title: "Resend Activation Email"
@@ -2812,6 +2847,8 @@ en:
       topic_count:
         one: "%{count} topic in this category"
         other: "%{count} topics in this category"
+      read_only: "read-only"
+      read_only_description: "This category is read-only so you cannot choose it for this topic"
 
     timezone_input:
       ambiguous_ist: "IST is ambiguous, please select a specific timezone (eg: Asia/Kolkata)"
@@ -2880,6 +2917,10 @@ en:
       publishing: "Publishing Topic…"
 
     composer:
+      autocomplete:
+        username_missing: "Selected autocomplete result is missing username."
+        name_missing: "Selected autocomplete result is missing name."
+
       emoji: "Emoji :)"
       more_emoji: "more…"
       options: "Options"
@@ -2902,8 +2943,13 @@ en:
         title: "Translating post"
         select: "Select translation"
         save: "Save translation"
-        original_content: "Original post content"
+        original_content: "Original post"
+        translation_preview: "Translation preview"
+        original: "Original"
+        translation: "Translation"
+        no_translation_yet: "Start typing to see translation preview..."
         placeholder: "Enter translation for post here..."
+        show_raw_markdown: "Show raw"
 
       group_mentioned_limit:
         one: "<b>Warning!</b> You mentioned <a href='%{group_link}'>%{group}</a>, however this group has more members than the administrator configured mention limit of %{count} user. Nobody will be notified."
@@ -2956,11 +3002,14 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Send Message"
+      create_pm: "Send message"
       create_whisper: "Whisper"
       create_shared_draft: "Create Shared Draft"
       edit_shared_draft: "Edit Shared Draft"
       title: "Or press %{modifier}Enter"
+      save_and_close: "Save and close"
+      discard: "Discard"
+      draft_saved: "Draft saved!"
 
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
@@ -3018,14 +3067,15 @@ en:
       list_item: "List item"
       toggle_direction: "Toggle direction"
       help: "Markdown Editing Help"
-      collapse: "minimize the composer panel"
-      open: "open the composer panel"
-      abandon: "close composer and discard draft"
-      enter_fullscreen: "enter fullscreen composer"
-      exit_fullscreen: "exit fullscreen composer"
+      collapse: "Minimize the composer panel"
+      open: "Open the composer panel"
+      abandon: "Close composer and discard draft"
+      enter_fullscreen: "Enter fullscreen composer"
+      exit_fullscreen: "Exit fullscreen composer"
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
-      show_toolbar: "show composer toolbar"
-      hide_toolbar: "hide composer toolbar"
+      show_toolbar: "Show composer toolbar"
+      hide_toolbar: "Hide composer toolbar"
+      peek_mode_toggle: "Toggle peek mode"
       modal_ok: "OK"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
       create_message_error: "Sorry, there was an error creating that message. Please try again."
@@ -3061,8 +3111,11 @@ en:
           label: Toggle whisper
           desc: Whispers are only visible to staff members
         create_topic:
-          label: "New Topic"
+          label: "New topic"
           desc: Create a new topic
+        create_personal_message:
+          label: "New message"
+          desc: "Create a new personal message"
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to allowed users"
@@ -3071,7 +3124,7 @@ en:
           desc: "Reply without changing latest reply date"
         toggle_unlisted:
           label: Toggle unlisted
-          desc: Unlisted topics only accessible to members by direct link
+          desc: "Unlisted topics are only accessible by direct link"
 
       reload: "Reload"
       ignore: "Ignore"
@@ -3096,6 +3149,8 @@ en:
         remove: "Remove link"
         visit: "Open link in external tab"
         link_copied: "Link copied!"
+
+      unsupported_token: "The rich text editor doesn’t support all features used in this post; switching you to the Markdown editor."
 
     notifications:
       tooltip:
@@ -3432,6 +3487,7 @@ en:
     topics:
       new_messages_marker: "last visit"
       bulk:
+        select: "Bulk select"
         confirm: "Confirm"
         select_all: "Select All"
         clear_all: "Clear All"
@@ -3577,9 +3633,7 @@ en:
         one: "%{count} post in topic"
         other: "%{count} posts in topic"
       create: "New Topic"
-      create_disabled_category: "You're not allowed to create topics in this category"
-      create_disabled_tag: "You're not allowed to create topics with this tag"
-      create_long: "Create a new Topic"
+      create_long: "Create a new topic"
       open_draft: "Open Draft"
       private_message: "Start a message"
       archive_message:
@@ -3676,6 +3730,8 @@ en:
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Browse all categories</a>, <a href='%{basePath}/latest'>view latest topics</a> or see top:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Browse all tags</a> or <a href='%{basePath}/latest'>view latest topics</a>."
       browse_latest_topics: "Browse latest topics"
+      browse_new_replies: "Browse new replies"
+      browse_new_topics: "Browse new topics"
 
       suggest_create_topic: Ready to <a href>start a new conversation?</a>
       jump_reply: "Jump to post's original location"
@@ -3757,10 +3813,6 @@ en:
       auto_close_immediate:
         one: "The last post in the topic is already %{count} hour old, so the topic will be closed immediately."
         other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
-      auto_close_momentarily:
-        one: "The last post in the topic is already %{count} hour old, so the topic will be closed momentarily."
-        other: "The last post in the topic is already %{count} hours old, so the topic will be closed momentarily."
-
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
@@ -3853,6 +3905,9 @@ en:
       reply:
         title: "Reply"
         help: "begin composing a reply to this topic"
+
+      footer_buttons:
+        region_label: "Topic actions"
 
       share:
         title: "Share Topic"
@@ -4058,8 +4113,16 @@ en:
       title: "Latest posts"
       empty: "There are no posts"
       aria_post_number: "%{title} - post #%{postNumber}"
+      bulk:
+        selected:
+          one: "%{count} post selected"
+          other: "%{count} posts selected"
+        select_all: "Select all"
+        clear_all: "Clear all"
+        actions: "Bulk actions"
 
     post:
+      accessible_heading: "post by %{username} %{date}"
       confirm_delete: "Are you sure you want to delete this post?"
       quote_reply: "Quote"
       quote_reply_shortcut: "Quote (or press q)"
@@ -4083,8 +4146,13 @@ en:
       deleted_by_author_simple: "(post deleted by author)"
       collapse: "collapse"
       load_more_replies: "load more replies"
+      load_more_posts_above: "Load more posts above"
+      load_more_posts_below: "Load more posts below"
       sr_collapse_replies: "Collapse embedded replies"
       sr_load_more_replies: "Load more embedded replies"
+      loading_more_posts_above: "Loading more posts above..."
+      loading_more_posts_below: "Loading more posts below..."
+      loading_complete: "Loading complete"
       sr_date: "Post date"
       sr_expand_replies:
         one: "This post has %{count} reply"
@@ -4148,6 +4216,7 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
+        manage: "Manage translations (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
@@ -4181,10 +4250,8 @@ en:
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
 
       cancel_composer:
-        confirm: "What would you like to do with your post?"
+        confirm: "Do you want to discard your post?"
         discard: "Discard"
-        save_draft: "Save draft for later"
-        keep_editing: "Keep editing"
 
       via_email: "this post arrived via email"
       via_auto_generated_email: "this post arrived via an auto generated email"
@@ -4260,6 +4327,7 @@ en:
         delete_post_notice: "Delete Official Notice"
         remove_timer: "remove timer"
         edit_timer: "edit timer"
+        remove_yourself_from_pm: "Are you sure you want to remove yourself from this message? You will no longer be able to see or reply to it."
 
       actions:
         people:
@@ -4431,6 +4499,10 @@ en:
       style: "Styles"
       background_color: "Color"
       foreground_color: "Text color"
+      color_validations:
+        cant_be_empty: "can't be empty"
+        incorrect_length: "must match the format #RRGGBB or #RGB"
+        non_hexdecimal: "must only contain hexadecimal characters (0-9, A-F)"
       styles:
         type: "Style"
         icon: "Icon"
@@ -4831,12 +4903,15 @@ en:
     preloader_text: "Loading"
 
     lightbox:
-      download: "download"
-      open: "original image"
+      download: "Download"
+      open: "Original image"
+      image_info: "Image information"
       previous: "Previous (Left arrow key)"
       next: "Next (Right arrow key)"
       counter: "%curr% of %total%"
       close: "Close (Esc)"
+      zoom: "Zoom (Z key)"
+      error: "The image cannot be loaded"
       content_load_error: '<a href="%url%">The content</a> could not be loaded.'
       image_load_error: '<a href="%url%">The image</a> could not be loaded.'
 
@@ -5021,7 +5096,7 @@ en:
       choose_for_topic_required_group:
         one: "select %{count} tag from '%{name}'…"
         other: "select %{count} tags from '%{name}'…"
-      info: "Info"
+      info: "Show tag info"
       default_info: "This tag isn't restricted to any categories, and has no synonyms."
       staff_info: "To add restrictions, put this tag in a <a href=%{basePath}/tag_groups>tag group</a>."
       category_restricted: "This tag is restricted to categories you don't have permission to access."
@@ -5052,6 +5127,7 @@ en:
         one: "Its synonym will also be deleted."
         other: "Its %{count} synonyms will also be deleted."
       edit_tag: "Edit tag name and description"
+      edit: "Edit this tag"
       description: "Description (max 1000 characters)"
       sort_by: "Sort by:"
       sort_by_count: "count"
@@ -5157,6 +5233,7 @@ en:
       enabled: "Safe mode is enabled, to exit safe mode close this browser window"
 
     theme_preview_notice: "You are currently previewing a theme, close this browser tab or window to return to your normal site configuration."
+    theme_preview_failed: "Failed to preview theme because it doesn't exist, or you don't have permission to access it."
 
     image_removed: "(image removed)"
 
@@ -5388,6 +5465,8 @@ en:
           light: "Light"
           dark: "Dark"
           auto: "Auto"
+          title: "Color mode"
+          aria_label: "Color mode, currently %{mode}"
 
     welcome_topic_banner:
       title: "Create your Welcome Topic"
@@ -5576,12 +5655,18 @@ en:
             default: "%{filter} topics in %{category} without tags"
 
         categories: "All categories"
+    content_localization:
+      toggle_localized:
+        translated: "Page is machine-translated. Click to view original."
+        not_translated: "Page is not translated. Click to translate."
 
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     # This is a text input placeholder, keep the translation short
     type_to_filter: "Type to filter…"
     settings: "Settings"
+    reset_filter: "Reset"
+    toggle_filters: "Toggle dropdown filters"
 
     admin:
       title: "Discourse Admin"
@@ -5619,6 +5704,54 @@ en:
         advanced:
           title: "Advanced"
 
+      upcoming_changes:
+        name: "Name"
+        plugin: "Plugin"
+        metadata: "Metadata"
+        enabled: "Enabled"
+        show_image: "Show image"
+        edit_groups: "Edit opt-in groups"
+        groups_updated: "Groups updated!"
+        save_groups: "Save groups"
+        select_groups: "Select groups…"
+        opt_in_groups: "Opt-in groups"
+        opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
+        toggled_too_fast: "You have toggled this change too quickly. Please wait a few seconds before trying again."
+        change_enabled: "You have opted-in to this change"
+        change_disabled: "You have opted-out of this change"
+        permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
+        permanent_no_group_selection: "N/A, permanent changes apply to all groups."
+        no_changes: "There are no upcoming changes at this time."
+        preview: "Preview"
+        statuses:
+          pre_alpha: "Pre-Alpha"
+          alpha: "Alpha"
+          beta: "Beta"
+          stable: "Stable"
+          permanent: "Permanent"
+        impact_roles:
+          admins: "Admins"
+          moderators: "Moderators"
+          staff: "Staff"
+          all_members: "All members"
+          developers: "Developers"
+        filter:
+          search_placeholder: "Filter by name, description, or plugin..."
+          no_results: "No upcoming changes match your filter"
+          all: "All"
+          enabled_all: "Enabled or disabled"
+          enabled: "Enabled"
+          disabled: "Disabled"
+          impact_type_all: "All impact types"
+          impact_type_feature: "Feature"
+          impact_type_other: "Other"
+          status_all: "All statuses"
+          status_pre_alpha: "Pre-Alpha"
+          status_alpha: "Alpha"
+          status_beta: "Beta"
+          status_stable: "Stable"
+          status_permanent: "Permanent"
+
       config:
         about:
           title: "About your site"
@@ -5649,10 +5782,19 @@ en:
           title: "Localization"
           header_description: "Configure your community’s interface language and other localization options for your members"
           keywords: "locale|language|timezone|unicode|ltr"
-        login_and_authentication:
+        upcoming_changes:
+          title: "Upcoming changes"
+          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by impact, change type, and status.\n\nOpt-in groups can be used to let a certain group of users to test a change before it is released to everyone, though these groups will be irrelevant once a change progresses to the Stable status."
+        login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
-
+          sub_pages:
+            common_settings:
+              title: "Settings"
+            authenticators:
+              title: "Social logins"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Configure the logos and icons used throughout your site"
@@ -5943,6 +6085,9 @@ en:
         select_setting: "Select a site setting to see current theme values"
         add: "Go to theme site settings"
         help: "The theme you are currently using is <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Go to the <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>theme config page</a> to alter theme site settings, or click on a linked theme in the table below to edit its settings."
+        filter: "Filter theme site settings by setting name, description, or theme name..."
+        filter_no_results: "No theme site settings match your filter"
+        site_setting_warning: 'This setting is managed by the default theme for your site (%{defaultThemeName}). You can modify it from <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">the theme''s edit page</a>.'
 
       search:
         modal_title: "Search everything in admin"
@@ -5998,11 +6143,18 @@ en:
           only_experiments: "Only show experimental features"
           experiment_enabled: "You have enabled the experimental feature."
           experiment_disabled: "You have disabled the experimental feature."
-          experiment_toggled_too_fast: "You have toggled the experimental feature too fast. Please wait a few seconds before trying again."
+          feature_enabled: "You have enabled the feature."
+          feature_disabled: "You have disabled the feature."
+          toggled_too_fast: "You have switched the toggle too fast. Please wait a few seconds before trying again."
           experiment_tooltip:
-            title_disabled: "Try our experimental feature"
+            title_disabled: "Try this experimental feature"
             title_enabled: "Turn off experimental feature"
-            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt-out whenever you like.<br/><br/>Changing this will enable the feature for all users."
+            content_disabled: "Give our newest feature in development a spin! It's still in the experimental stage, so we might remove it at any time. You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
+            content_enabled: "Changing this will disable the feature for all users."
+          feature_tooltip:
+            title_disabled: "Try this feature"
+            title_enabled: "Turn off feature"
+            content_disabled: "Give this new feature a spin! You can opt out whenever you like.<br/><br/>Changing this will enable the feature for all users."
             content_enabled: "Changing this will disable the feature for all users."
 
         last_checked: "Last checked"
@@ -6287,6 +6439,7 @@ en:
               suspend: Suspend user accounts.
               delete: Delete user accounts.
               list: Get a list of users.
+              create: Create a new user.
             user_status:
               read: Read user status.
               update: Update user status.
@@ -6627,9 +6780,12 @@ en:
         themes_and_components:
           breadcrumb_title: "Customize"
           install: "Install"
+          theme_site_settings:
+            title: "Theme site settings"
+            description: "Settings that allow themes to have greater control over the full site experience by overriding a small subset of core site settings."
           themes:
             title: "Themes"
-            description: 'Site-wide themes that change the overall look and feel of your site for all users. Want to check which site settings your themes override? <a href="%{themeSiteSettingsUrl}">View theme site settings</a>'
+            description: "Site-wide themes that change the overall look and feel of your site for all users."
             themes_intro: "Install a new theme to get started, or create your own from scratch using these resources."
             new_theme: "New theme"
             back: "Back to themes"
@@ -6695,6 +6851,8 @@ en:
             title: "Color options"
             toggle: "User selectable"
             toggle_description: "Color palette can be selected by users"
+            toggle_default_light_on_theme: "Color palette is the default light palette on default theme (%{themeName})"
+            toggle_default_dark_on_theme: "Color palette is the default dark palette on default theme (%{themeName})"
           colors:
             title: "Colors"
           save_changes: "Save changes"
@@ -6788,6 +6946,7 @@ en:
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is currently disabled. To enable it, visit the <a href='%{url}'>site settings</a>."
+            is_disabled_title: "Restore is currently disabled. To enable it, search for 'allow restore' in site settings."
             label: "Restore"
             title: "Restore the backup"
             confirm: "Are you sure you want to restore this backup?"
@@ -6841,14 +7000,19 @@ en:
         copy_to_clipboard: "Copy to Clipboard"
         copied_to_clipboard: "Copied to Clipboard"
         copy_to_clipboard_error: "Error copying data to Clipboard"
-        theme_owner: "Not editable, owned by:"
+        theme_owner: "Owned by:"
         email_templates:
           title: "Email"
           subject: "Subject"
           multiple_subjects: "This email template has multiple subjects."
+          multiple_bodies: "This email template has multiple bodies."
           body: "Body"
           revert: "Revert Changes"
           revert_confirm: "Are you sure you want to revert your changes?"
+          search_templates: "Filter by template name..."
+          no_templates_found: "No templates match your filters."
+          edit: "Edit"
+          back: "Back to templates"
         component:
           all_filter: "All"
           used_filter: "Used"
@@ -6894,7 +7058,7 @@ en:
           extra_files_upload: "Export theme to view these files."
           extra_files_remote: "Export theme or check the git repository to view these files."
           preview: "Preview"
-          default: "Active"
+          default: "Default theme"
           settings_editor: "Settings Editor"
           show_advanced: "Show advanced"
           is_default: "Theme is enabled by default"
@@ -6907,11 +7071,10 @@ en:
           auto_update: "Auto update when Discourse is updated"
           color_scheme: "Color Palette"
           dark_color_scheme: "Dark Color Palette"
-          edit_color_scheme: "Edit Color Palette"
-          edit_dark_color_scheme: "Edit DarkWColor Palette"
           default_light_scheme: "Light (default)"
-          color_scheme_select: "Select colors to be used by theme"
-          dark_color_scheme_select: "Select colors to be used by theme in dark mode"
+          color_scheme_select: "Select colors to be used by theme."
+          dark_color_scheme_select: "Select colors to be used by theme in dark mode."
+          edit_colors: "Edit colors"
           custom_sections: "Custom sections:"
           theme_components: "Theme Components"
           add_all_themes: "Add all themes"
@@ -6923,11 +7086,12 @@ en:
           convert_theme_alert_generic: "Are you sure you want to convert this theme to component?"
           convert_theme_tooltip: "Convert this theme to component"
           inactive_themes: "Inactive themes:"
-          set_default_theme: "Set as active"
-          default_theme: "Active theme"
+          set_default_theme: "Set as default"
+          default_theme: "Default theme"
           set_default_success: "Default theme set to %{theme}"
           setting_was_saved: "Theme setting was saved"
           install_success: "%{theme} installed successfully!"
+          delete_success: "%{theme} deleted successfully!"
           inactive_components: "Unused components:"
           selected:
             one: "%{count} selected"
@@ -7023,15 +7187,6 @@ en:
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
           built_in_description: "This theme is preinstalled and can not be deleted or customized"
           imported_from_archive: "This theme was imported from a .zip file"
-          settings: "Settings"
-          colors: "Colors"
-          unsaved_colors:
-            one: "You have %{count} unsaved color"
-            other: "You have %{count} unsaved colors"
-          unsaved_colors_leave_route_confirmation: "You haven't saved your color palette changes yet. Are you sure you want to leave?"
-          save_colors: "Save colors"
-          discard_colors: "Discard"
-          colors_title: "Colors"
           scss:
             text: "CSS"
             title: "Custom CSS rules with support for SCSS syntax"
@@ -7083,6 +7238,8 @@ en:
         schema:
           title: "Edit %{name} setting"
           back_button: "Back to %{name}"
+          move_up: "Move up"
+          move_down: "Move down"
           fields:
             required: "*required"
             groups:
@@ -7108,12 +7265,16 @@ en:
           select_base:
             title: "Select base color palette"
             description: "Base palette:"
-          preference_warning: "You've changed <a href='%{link}'>your personal theme settings</a>, so palette changes may not be visible to you. Visitors that haven't changed their defaults will still see the changes you make here."
+          non_default_theme_warning: "Your <a href='%{link}'>personal preferences</a> for theme are different than the default. Changes you make here may not apply to you, but will apply to everyone using the default (%{themeName})."
+          custom_schemes_warning: "Your <a href='%{link}'>personal preferences</a> for %{colorModes} color palette are different than the default. Changes to the %{colorModes} palette may not apply to you, but will apply to everyone using the default."
+          light: "light"
+          dark: "dark"
           title: "Colors"
           edit: "Edit"
+          view: "View"
           set_default_light: "Set as light palette on default theme (%{theme})"
           set_default_dark: "Set as dark palette on default theme (%{theme})"
-          set_default_success: "%{schemeName} set as active palette for %{themeName}"
+          set_default_success: "%{schemeName} set as default palette for %{themeName}"
           saved_refreshing: "Saved! Refreshing colors..."
           from_theme: "From theme: %{name}"
           filters:
@@ -7122,16 +7283,13 @@ en:
             user_selectable: "User selectable"
             from_theme: "From theme"
             no_results: "No color palettes found"
-          active_light_badge:
-            text: "Active light"
-            title: "Active light color palette"
+          default_light_badge:
+            text: "Default light"
+            title: "Default light color palette"
             reset: "Reset filters"
-          active_dark_badge:
-            text: "Active dark"
-            title: "Active light color palette"
-          active_both_badge:
-            text: "Active light and dark"
-            title: "Active light and dark color palette"
+          default_dark_badge:
+            text: "Default dark"
+            title: "Default dark color palette"
           system_palette: "This is a built-in color palette, it cannot be edited or deleted."
           back_to_colors: "Back to color palettes"
           long_title: "Color palettes"
@@ -7454,6 +7612,9 @@ en:
             tag_group_change: "change tag group"
             delete_associated_accounts: "delete associated accounts"
             change_theme_site_setting: "change theme site setting"
+            stop_impersonating: "stop impersonating"
+            upcoming_change_toggled: "upcoming change toggled"
+            change_site_setting_groups: "change site setting groups"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -7646,6 +7807,7 @@ en:
         help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
         not_found: "That user can't be found."
         invalid: "Sorry, you may not impersonate that user."
+        error: "Oops. An unexpected error occurred."
 
       users:
         title: "Users"
@@ -7900,8 +8062,8 @@ en:
 
         merging_user: "Merging user…"
         merge_failed: "There was an error while merging the users."
-        delete_forbidden_because_staff: "Admins and moderators can't be deleted."
-        delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
+        delete_forbidden_because_admin: "Admins can't be deleted."
+        delete_posts_forbidden_because_admin: "Can't delete all posts of admins."
         delete_forbidden:
           one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
           other: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} days old can't be deleted.)"
@@ -8050,6 +8212,10 @@ en:
           title: "Show on user card"
           enabled: "Shown on user card"
           disabled: "Not shown on user card"
+        show_on_signup:
+          title: "Show on signup form"
+          enabled: "Shown signup form"
+          disabled: "Not shown on signup form"
         searchable:
           title: "Searchable"
           enabled: "Searchable"
@@ -8199,7 +8365,9 @@ en:
           block_common_passwords:
             prompt: "You’re about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
-
+        job_status:
+          completed: "Update completed"
+          enqueued: "Update in progress"
       badges:
         status: Status
         title: Badges
@@ -8335,6 +8503,7 @@ en:
         category: "Post to category"
         tags: "Topic tags"
         post_author: "Post author"
+        post_author_description: "Author for all embedded topics from this host, overriding blog page meta tags. Leave empty to read author from the page's <meta name='discourse-username'> or <meta name='author'> tags."
         post_author_with_default: "Post author (defaults to %{author})"
         add_host: "Add host"
         posts_and_topics: "Posts & topics configuration"

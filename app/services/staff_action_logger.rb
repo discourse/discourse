@@ -258,6 +258,37 @@ class StaffActionLogger
     )
   end
 
+  # This is different from site settings because, even though an upcoming change
+  # is a site setting, we want to be able to distinguish it from the other hundreds
+  # of other site setting change events, so we need a unique distinguishing type
+  def log_upcoming_change_toggle(setting_name, previous_value, new_value, opts = {})
+    unless setting_name.present? && SiteSetting.respond_to?(setting_name)
+      raise Discourse::InvalidParameters.new(:setting_name)
+    end
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:upcoming_change_toggled],
+        subject: setting_name,
+        previous_value: previous_value ? "true" : "false",
+        new_value: new_value ? "true" : "false",
+      ),
+    )
+  end
+
+  def log_site_setting_groups_change(setting_name, previous_value, new_value, opts = {})
+    unless setting_name.present? && SiteSetting.respond_to?(setting_name)
+      raise Discourse::InvalidParameters.new(:setting_name)
+    end
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:change_site_setting_groups],
+        subject: setting_name,
+        previous_value: previous_value&.to_s,
+        new_value: new_value&.to_s,
+      ),
+    )
+  end
+
   def theme_json(theme)
     ThemeSerializer.new(theme, root: false, include_theme_field_values: true).to_json
   end
@@ -563,6 +594,12 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create!(
       params(opts).merge(action: UserHistory.actions[:impersonate], target_user_id: user.id),
+    )
+  end
+
+  def log_stop_impersonation(user, opts = {})
+    UserHistory.create!(
+      params(opts).merge(action: UserHistory.actions[:stop_impersonating], target_user_id: user.id),
     )
   end
 

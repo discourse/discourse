@@ -1,18 +1,21 @@
 # frozen_string_literal: true
 
 describe "Admin Customize Themes", type: :system do
-  fab!(:color_scheme) { Fabricate(:color_scheme, base_scheme_id: "light") }
+  fab!(:color_scheme) do
+    Fabricate(:color_scheme, base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"])
+  end
   fab!(:theme) { Fabricate(:theme, name: "Cool theme 1", user_selectable: true) }
   fab!(:admin) { Fabricate(:admin, locale: "en") }
 
   let(:theme_page) { PageObjects::Pages::AdminCustomizeThemes.new }
+  let(:themes_page) { PageObjects::Pages::AdminCustomizeThemesConfigArea.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
   before { sign_in(admin) }
 
   describe "when visiting the page to customize a single theme" do
     it "should allow admin to update the light color scheme of the theme" do
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       color_scheme_settings = find(".theme-settings__light-color-scheme")
 
@@ -26,10 +29,15 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
       expect(color_scheme_settings).to have_no_css(".submit-light-edit")
       expect(color_scheme_settings).to have_no_css(".cancel-light-edit")
+
+      expect(page).to have_link(
+        I18n.t("admin_js.admin.customize.theme.edit_colors"),
+        href: "/admin/config/colors/#{color_scheme.id}",
+      )
     end
 
     it "should allow admin to update the dark color scheme of the theme" do
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       color_scheme_settings = find(".theme-settings__dark-color-scheme")
 
@@ -43,6 +51,22 @@ describe "Admin Customize Themes", type: :system do
       expect(color_scheme_settings.find(".setting-value")).to have_content(color_scheme.name)
       expect(color_scheme_settings).not_to have_css(".submit-dark-edit")
       expect(color_scheme_settings).not_to have_css(".cancel-dark-edit")
+
+      expect(page).to have_link(
+        I18n.t("admin_js.admin.customize.theme.edit_colors"),
+        href: "/admin/config/colors/#{color_scheme.id}",
+      )
+    end
+
+    it "allows a theme to be deleted" do
+      theme_page.visit(theme).click_delete_button_and_confirm
+
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("admin_js.admin.customize.theme.delete_success", theme: theme.name),
+      )
+
+      expect(page).to have_current_path("/admin/config/customize/themes")
+      expect(themes_page).to have_no_theme(theme.name)
     end
   end
 
@@ -63,11 +87,9 @@ describe "Admin Customize Themes", type: :system do
       find(".ace_text-input", visible: false).fill_in(with: "console.log('test')\n")
       find(".save-theme").click
 
-      try_until_success do
-        expect(
-          theme.theme_fields.find_by(target_id: Theme.targets[:extra_js])&.value,
-        ).to start_with("console.log('test')\n")
-      end
+      expect(theme.theme_fields.find_by(target_id: Theme.targets[:extra_js])&.value).to start_with(
+        "console.log('test')\n",
+      )
 
       # Check content is loaded from db correctly
       theme
@@ -82,7 +104,7 @@ describe "Admin Customize Themes", type: :system do
 
   it "cannot edit js, upload files or delete system themes" do
     theme.update_columns(id: -10)
-    visit("/admin/customize/themes/#{theme.id}")
+    theme_page.visit(theme)
     expect(page).to have_css(".system-theme-info")
     expect(page).to have_css(".title button")
     expect(page).to have_no_css(".title button svg")
@@ -92,9 +114,9 @@ describe "Admin Customize Themes", type: :system do
   end
 
   it "hides unecessary sections and buttons for system themes" do
-    theme.theme_fields.create!(
-      name: "js",
-      target_id: Theme.targets[:extra_js],
+    theme.set_field(
+      target: :extra_js,
+      name: "discourse/api-initializers/test.js",
       value: "console.log('second test')",
     )
     yaml = <<~YAML
@@ -105,7 +127,7 @@ describe "Admin Customize Themes", type: :system do
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
 
-    visit("/admin/customize/themes/#{theme.id}")
+    theme_page.visit(theme)
     expect(page).to have_css(".created-by")
     expect(page).to have_css(".export")
     expect(page).to have_css(".extra-files")
@@ -117,12 +139,30 @@ describe "Admin Customize Themes", type: :system do
     # This avoids needing to update the theme field data to point to a different theme id.
     allow_any_instance_of(Theme).to receive(:system?).and_return(true)
 
-    visit("/admin/customize/themes/#{theme.id}")
+    theme_page.visit(theme)
     expect(page).to have_css(".system-theme-info")
     expect(page).to have_no_css(".created-by")
     expect(page).to have_no_css(".export")
     expect(page).to have_no_css(".extra-files")
     expect(page).to have_css(".theme-settings")
+  end
+
+  it "shows both JS and SCSS extra files with canonical paths" do
+    theme.set_field(
+      target: :extra_js,
+      name: "discourse/api-initializers/canvas.js",
+      value: "console.log('extra js')",
+    )
+    theme.set_field(target: :extra_scss, name: "properties", value: ".custom { color: red; }")
+    theme.save!
+
+    theme_page.visit(theme)
+
+    extra_files = find(".extra-files")
+    extra_files.find("summary").click
+
+    expect(extra_files).to have_content("javascripts/discourse/api-initializers/canvas.js")
+    expect(extra_files).to have_content("stylesheets/properties.scss")
   end
 
   describe "when editing theme translations" do
@@ -135,7 +175,7 @@ describe "Admin Customize Themes", type: :system do
 
       theme.save!
 
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
@@ -143,7 +183,7 @@ describe "Admin Customize Themes", type: :system do
       theme_translations_settings_editor.fill_in("Hello World")
       theme_translations_settings_editor.save
 
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       expect(theme_translations_settings_editor.get_input_value).to have_content("Hello World")
     end
@@ -161,7 +201,7 @@ describe "Admin Customize Themes", type: :system do
       )
       theme.save!
 
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
@@ -195,7 +235,7 @@ describe "Admin Customize Themes", type: :system do
       )
       theme.save!
 
-      visit("/admin/customize/themes/#{theme.id}")
+      theme_page.visit(theme)
 
       theme_translations_settings_editor =
         PageObjects::Components::AdminThemeTranslationsSettingsEditor.new
@@ -241,120 +281,6 @@ describe "Admin Customize Themes", type: :system do
       expect(page.find(".relative-theme-selector .formatted-selection").text).to eq(
         "#{theme.name}, Foundation, Horizon",
       )
-    end
-  end
-
-  describe "theme color palette editor" do
-    before { SiteSetting.use_overhauled_theme_color_palette = true }
-
-    it "allows editing colors of theme-owned palette" do
-      theme_page.visit(theme.id)
-      theme_page.colors_tab.click
-
-      expect(theme_page).to have_current_path("/admin/customize/themes/#{theme.id}/colors")
-
-      theme_page.color_palette_editor.change_color("primary", "#ff000e")
-
-      expect(theme_page.changes_banner).to be_visible
-      theme_page.changes_banner.click_save
-
-      page.refresh
-      expect(theme_page).to have_colors_tab_active
-
-      updated_color = theme_page.color_palette_editor.get_color_value("primary")
-      expect(updated_color).to eq("#ff000e")
-    end
-
-    it "allows discarding unsaved color changes" do
-      theme_page.visit(theme.id)
-      theme_page.colors_tab.click
-
-      original_hex = theme_page.color_palette_editor.get_color_value("primary")
-
-      theme_page.color_palette_editor.change_color("primary", "#10ff00")
-
-      theme_page.changes_banner.click_discard
-
-      expect(theme_page.changes_banner).to be_hidden
-
-      updated_color = theme_page.color_palette_editor.get_color_value("primary")
-      expect(updated_color).to eq(original_hex)
-    end
-
-    it "allows editing dark mode colors" do
-      theme_page.visit(theme.id)
-      theme_page.colors_tab.click
-
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      theme_page.color_palette_editor.change_color("primary", "#000fff")
-
-      theme_page.changes_banner.click_save
-
-      page.refresh
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      updated_dark_color = theme_page.color_palette_editor.get_color_value("primary")
-      expect(updated_dark_color).to eq("#000fff")
-    end
-
-    it "shows count of unsaved colors" do
-      theme_page.visit(theme.id)
-      theme_page.colors_tab.click
-
-      theme_page.color_palette_editor.change_color("primary", "#eeff80")
-
-      expect(theme_page.changes_banner).to have_label(
-        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 1),
-      )
-
-      theme_page.color_palette_editor.switch_to_dark_tab
-
-      theme_page.color_palette_editor.change_color("primary", "#ff80ee")
-
-      expect(theme_page.changes_banner).to have_label(
-        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 2),
-      )
-
-      theme_page.color_palette_editor.change_color("secondary", "#ee30ab")
-      expect(theme_page.changes_banner).to have_label(
-        I18n.t("admin_js.admin.customize.theme.unsaved_colors", count: 3),
-      )
-    end
-
-    it "doesn't show colors tab or DPageHeader for components" do
-      component = Fabricate(:theme, component: true)
-      theme_page.visit(component.id)
-      expect(theme_page.header).to be_hidden
-
-      expect(theme_page).to have_no_color_scheme_selector
-    end
-
-    it "shows a confirmation dialog when leaving the page with unsaved changes" do
-      theme_page.visit(theme.id)
-      theme_page.colors_tab.click
-
-      theme_page.color_palette_editor.change_color("primary", "#eeff80")
-
-      expect(theme_page.changes_banner).to be_visible
-
-      find("#site-logo").click
-
-      expect(dialog).to be_open
-      expect(page).to have_content(
-        I18n.t("admin_js.admin.customize.theme.unsaved_colors_leave_route_confirmation"),
-      )
-
-      dialog.click_no
-
-      expect(dialog).to be_closed
-      expect(page).to have_current_path("/admin/customize/themes/#{theme.id}/colors")
-
-      find("#site-logo").click
-      expect(dialog).to be_open
-
-      dialog.click_yes
-      expect(page).to have_current_path("/")
     end
   end
 
@@ -419,7 +345,7 @@ describe "Admin Customize Themes", type: :system do
         theme_page.toggle_theme_site_setting("enable_welcome_banner")
       end
 
-      expect(banner).to be_hidden
+      try_until_success(reason: "Relies on MessageBus updates") { expect(banner).to be_hidden }
     end
   end
 end

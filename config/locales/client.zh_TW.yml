@@ -110,6 +110,105 @@ zh_TW:
       placeholder: 日期
       from_placeholder: "從日期"
       to_placeholder: "至今"
+    languages:
+      ar:
+        name: 阿拉伯語
+      be:
+        name: 白羅斯語
+      bg:
+        name: 保加利亞語
+      bs_BA:
+        name: 波士尼亞語
+      ca:
+        name: 加泰隆尼亞語
+      cs:
+        name: 捷克語
+      da:
+        name: 丹麥語
+      de:
+        name: 德語
+      el:
+        name: 希臘語
+      en:
+        name: 英語（美國）
+      en_GB:
+        name: 英語（英國）
+      es:
+        name: 西班牙語
+      et:
+        name: 愛沙尼亞語
+      fa_IR:
+        name: 波斯語
+      fi:
+        name: 芬蘭語
+      fr:
+        name: 法語
+      gl:
+        name: 加利西亞語
+      he:
+        name: 希伯來語
+      hr:
+        name: 克羅埃西亞語
+      hu:
+        name: 匈牙利語
+      hy:
+        name: 亞美尼亞語
+      id:
+        name: 印尼語
+      it:
+        name: 義大利語
+      ja:
+        name: 日語
+      ko:
+        name: 韓語
+      lt:
+        name: 立陶宛語
+      lv:
+        name: 拉脫維亞語
+      nb_NO:
+        name: 書面挪威語
+      nl:
+        name: 荷蘭語
+      pl_PL:
+        name: 波蘭語
+      pt:
+        name: 葡萄牙語
+      pt_BR:
+        name: 葡萄牙語
+      ro:
+        name: 羅馬尼亞語
+      ru:
+        name: 俄語
+      sk:
+        name: 斯洛伐克語
+      sl:
+        name: 斯洛維尼亞語
+      sq:
+        name: 阿爾巴尼亞語
+      sr:
+        name: 塞爾維亞語
+      sv:
+        name: 瑞典語
+      sw:
+        name: 斯瓦希里語
+      te:
+        name: 泰盧固語
+      th:
+        name: 泰語
+      tr_TR:
+        name: 土耳其語
+      ug:
+        name: 維吾爾語
+      uk:
+        name: 烏克蘭語
+      ur:
+        name: 烏爾都語
+      vi:
+        name: 越南語
+      zh_TW:
+        name: 華語
+      zh_CN:
+        name: 簡體中文
     share:
       topic_html: '話題：<span class="topic-title">%{topicTitle}</span>'
       post: "由@%{username}發布#%{postNumber}"
@@ -168,15 +267,22 @@ zh_TW:
       header:
         logged_in_members: "%{preferred_display_name} 歡迎回來！"
         anonymous_members: "歡迎來到 %{site_name}！"
-      search: "搜索"
+      search_placeholder: "搜索"
     themes:
       default_description: "預設"
+      broken_theme_alert: "你的網站無法運作，因為主題/元件發生錯誤，請檢查瀏覽主控台獲得更多資訊。"
       error_caused_by: "由 '%{name}' 引起。 <a target='blank' href='%{path}'>按一下這裡</a> 以更新、重新設定或停用。"
       only_admins: "（此消息僅向網站管理員顯示）"
     broken_decorator_alert: "貼文可能無法正確顯示，因為您網站上的帖子內容裝飾器之一引發了錯誤。"
     broken_page_change_alert: "onPageChange 處理器產生錯誤。請檢查瀏覽器開發工具以取得更多資訊。"
     broken_plugin_alert: "由外掛程式引起 '%{name}'"
     broken_transformer_alert: "出現錯誤。您的網站可能無法正常運作。"
+    critical_deprecation:
+      notice: "<b>[管理員通知]</b> %{source} 包含需要更新的程式碼。 (id:%{id})"
+      learn_more_link: "(<a href='%{url}' target='_blank'><em>了解更多</em></a>)"
+      theme_source: "主題 <a target='_blank' href='%{path}'>'%{name}'</a>"
+      plugin_source: "外掛 '%{name}'"
+      unknown_source: "您的主題或外掛"
     s3:
       regions:
         ap_northeast_1: "亞太地區 (東京)"
@@ -343,6 +449,7 @@ zh_TW:
       bookmarked_success: "已加入書籤！"
       deleted_bookmark_success: "書籤已刪除！"
       reminder_set_success: "提醒已設定！"
+      reminder_clear_success: "提醒已清除"
       created: "你已將這篇文章加入書籤。 %{name}"
       created_generic: "您已將此加入書籤。 %{name}"
       create: "建立書籤"
@@ -427,6 +534,7 @@ zh_TW:
       other: "檢視 %{count} 則新話題"
     preview: "預覽"
     cancel: "取消"
+    done: "完成"
     deleting: "正在刪除..."
     save: "儲存變更"
     saving: "正在儲存..."
@@ -513,10 +621,6 @@ zh_TW:
         claimed_by_you: "您已聲明此項目，並可以查看。"
         claimed_by_other: "此項目只能給<b>%{username}</b>來審核。"
         automatically_claimed_by: "這個項目目前由 <b>%{username}</b> 審核。"
-      claim:
-        title: "聲稱這個話題"
-      unclaim:
-        help: "刪除此聲明"
       awaiting_approval: "等待審核"
       delete: "刪除"
       settings:
@@ -658,6 +762,7 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+      user_label: "使用者"
       notes:
         delete: "刪除"
       review_user: "使用者"
@@ -1215,18 +1320,16 @@ zh_TW:
       color_scheme: "調色盤"
       color_schemes:
         default_description: "預設佈景主題"
-        disable_dark_scheme: "與常規相同"
         dark_instructions: "您可以通過切換設備的深色模式來預覽深色模式調色板。"
         undo: "重置"
-        regular: "普通"
         dark: "夜間模式"
-        default_dark_scheme: "(網站預設值)"
         interface_modes:
           auto: "自動"
           light: "輕亮"
           dark: "黑暗"
+        picker:
+          active: "啟用"
       dark_mode: "夜間模式"
-      dark_mode_enable: "啟用自動深色模式調色板"
       text_size_default_on_all_devices: "在所有裝置上設為預設文字大小"
       allow_private_messages: "允許其他使用者寄送個人訊息給我"
       external_links_in_new_tab: "在新分頁中開啟所有外部連結"
@@ -1517,7 +1620,7 @@ zh_TW:
         invalid: "此使用者名稱無效，只能使用數字與英文字母。"
       add_email:
         title: "新增電子郵件"
-        add: "添加"
+        add: "加入"
       change_email:
         title: "修改電子郵件地址"
         taken: "抱歉，此電子郵件地址無效。"
@@ -2185,6 +2288,9 @@ zh_TW:
         name: "Google"
         title: "使用 Google 登入"
         sr_title: "使用 Google 登入"
+      twitter:
+        title: "使用 X 登入"
+        sr_title: "使用 X 登入"
       instagram:
         name: "Instagram"
         title: "使用 Instagram 登入"
@@ -2255,6 +2361,11 @@ zh_TW:
       disabled: "不顯示"
       sidebar_footer: "在側邊欄頁腳中顯示"
       header: "在標題中顯示"
+    welcome_banner_page_visibility:
+      homepage: "主頁"
+    composition_mode:
+      markdown: "Markdown"
+      rich: "豐富文字"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2267,6 +2378,7 @@ zh_TW:
         other: "+%{count} 個子類別"
       topic_count:
         other: "%{count}個話題在此分類"
+      read_only: "唯讀"
     select_kit:
       delete_item: "刪除 %{name} 個"
       filter_by: "篩選條件 %{name}"
@@ -2330,8 +2442,7 @@ zh_TW:
       whisper: "密談"
       unlist: "不公開"
       add_warning: "這是正式警告。"
-      toggle_whisper: "切換密談"
-      insert_table: "插入表格"
+      toggle_whisper: "切換為悄悄話"
       posting_not_on_topic: "你想要回覆哪個話題?"
       saved_local_draft_tip: "本地儲存完畢"
       similar_topics: "你的主題類似於…"
@@ -2380,11 +2491,12 @@ zh_TW:
       reply: "回覆"
       cancel: "取消"
       create_topic: "開啟話題"
-      create_pm: "送出"
+      create_pm: "傳送訊息"
       create_whisper: "悄悄話"
       create_shared_draft: "建立共享草稿"
       edit_shared_draft: "編輯共享草稿"
       title: "或按 %{modifier}Enter"
+      discard: "捨棄"
       users_placeholder: "新增使用者或群組"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
@@ -2420,19 +2532,9 @@ zh_TW:
       paste_code_text: "輸入或貼上代碼"
       upload_title: "上傳"
       upload_description: "在此輸入上傳的描述"
-      olist_title: "編號清單"
-      ulist_title: "符號清單"
       list_item: "清單項目"
-      toggle_direction: "切換方向"
       help: "Markdown 編輯說明"
-      collapse: "縮小編輯版面"
-      open: "打開編輯版面"
-      abandon: "關閉編輯並放棄草稿"
-      enter_fullscreen: "進入全螢幕編輯"
-      exit_fullscreen: "離開全螢幕編輯"
       exit_fullscreen_prompt: "按<kbd>ESC</kbd>離開全螢幕"
-      show_toolbar: "顯示編輯器工具列"
-      hide_toolbar: "隱藏編輯器工具欄"
       modal_ok: "確定"
       cant_send_pm: "抱歉，你不能發訊息給 %{username} 。"
       create_message_error: "抱歉，建立該訊息時出錯。請重試。"
@@ -2466,8 +2568,10 @@ zh_TW:
           label: 切換為悄悄話
           desc: 悄悄話只有管理員能見
         create_topic:
-          label: "新增話題"
           desc: 開啟新話題
+        create_personal_message:
+          label: "新增訊息"
+          desc: "寫一則私訊"
         shared_draft:
           label: "共享草稿"
           desc: "建立僅允許使用者可見的話題草稿"
@@ -2909,8 +3013,6 @@ zh_TW:
       filter_to:
         other: "本話題中的 %{count} 帖"
       create: "新話題"
-      create_disabled_category: "您不允許在此類別中創建主題"
-      create_disabled_tag: "您無權創建帶有此標記的話題"
       create_long: "開啟新話題"
       open_draft: "開啟草稿"
       private_message: "發送訊息"
@@ -3065,8 +3167,6 @@ zh_TW:
       auto_close_title: "自動關閉設定"
       auto_close_immediate:
         other: "話題中的最後一帖是 %{hours} 小時前發出的，所以話題將會立即關閉。"
-      auto_close_momentarily:
-        other: "該話題中的最後一個貼文已經存在 %{count} 小時，因此該話題將被立即關閉。"
       timeline:
         back: "返回"
         back_description: "回到最後一個未讀貼文"
@@ -3324,6 +3424,9 @@ zh_TW:
       title: " 最近貼文"
       empty: "沒有貼文"
       aria_post_number: "%{title} - 貼文 #%{postNumber}"
+      bulk:
+        clear_all: "清除全部"
+        actions: "批次操作"
     post:
       confirm_delete: "確定要刪除此貼文嗎？"
       quote_reply: "引用"
@@ -3411,10 +3514,7 @@ zh_TW:
         attachment_upload_not_allowed_for_new_user: "抱歉，新使用者不可上傳附件。"
         attachment_download_requires_login: "抱歉，您必須登入以下載附件。"
       cancel_composer:
-        confirm: "您想對您的貼文做什麼？"
         discard: "捨棄"
-        save_draft: "儲存草稿以備稍後使用"
-        keep_editing: "繼續編輯"
       via_email: "本貼文透過電子郵件送達"
       via_auto_generated_email: "通過自動生成郵件發表的貼文"
       whisper: "這貼文是版主私人密談"
@@ -3595,8 +3695,8 @@ zh_TW:
         name: "名字"
         description: "簡述"
         remove: "移除"
-      tags_allowed_tags: "將這些標籤（Tags）限制為此分類做使用："
-      tags_allowed_tag_groups: "將這些標籤群組限制在此類別使用："
+      tags_allowed_tags_new_category: "將這些標籤（Tags）限制為此分類做使用："
+      tags_allowed_tag_groups_new_category: "將這些標籤群組限制在此類別使用："
       tags_placeholder: "（可選）允許使用的標籤列表"
       tags_tab_description: "上面指定的標記和標記組將僅在此類別和也指定它們的其他類別中可用。它們將無法用於其他類別。"
       tag_groups_placeholder: "（可選）允許使用的標籤組列表"
@@ -3624,6 +3724,8 @@ zh_TW:
       background_image: "分類背景圖片"
       background_image_dark: "深色類別背景圖片"
       background_color: "顏色"
+      color_validations:
+        cant_be_empty: "不能空白"
       styles:
         icon: "圖示"
         emoji: "Emoji"
@@ -3980,7 +4082,6 @@ zh_TW:
     preloader_text: "載入中"
     lightbox:
       download: "下載"
-      open: "原始圖片"
       previous: "上一個（左箭頭鍵）"
       next: "下一個（右箭頭鍵）"
       counter: "%curr%的%total%"
@@ -4141,7 +4242,6 @@ zh_TW:
         other: "至少選擇 %{count} 個標記…"
       choose_for_topic_required_group:
         other: "從 '%{name}' 中選擇 %{count} 個標記…"
-      info: "資訊"
       default_info: "此標記不限於任何類別，並且沒有同義詞。"
       staff_info: "要新增限制，請將此標記放入<a href=%{basePath}/tag_groups>標記組</a>。"
       category_restricted: "此標記僅限於您無權訪問的類別。"
@@ -4466,6 +4566,7 @@ zh_TW:
           light: "輕亮"
           dark: "黑暗"
           auto: "自動"
+          aria_label: "色彩模式，當前爲 %{mode}"
     welcome_topic_banner:
       title: "建立您的歡迎主題"
       description: "您的歡迎主題是新成員首先會閱讀的內容。將其視為你的“電梯遊說”或“使命宣言”。讓每個人都知道這個社區是為誰而建的、他們可以在這裡找到什麼以及你希望他們首先做什麼。"
@@ -4575,6 +4676,7 @@ zh_TW:
   admin_js:
     type_to_filter: "篩選類型…"
     settings: "設定"
+    reset_filter: "重置"
     admin:
       title: "論壇管理員"
       moderator: "板主"
@@ -4606,6 +4708,19 @@ zh_TW:
           title: "延伸套件"
         advanced:
           title: "進階"
+      upcoming_changes:
+        name: "名稱"
+        enabled: "啟用"
+        select_groups: "選擇群組…"
+        preview: "預覽"
+        impact_roles:
+          moderators: "板主"
+          staff: "管理員"
+        filter:
+          all: "全部"
+          enabled: "啟用"
+          disabled: "停用"
+          impact_type_other: "其他"
       config:
         about:
           title: "關於您的網站"
@@ -4633,9 +4748,12 @@ zh_TW:
           title: "本地化"
           header_description: "為您的成員設定社群的介面語言和其他本地化選項"
           keywords: "地區 | 語言 | 時區 | 單一區 | ltr"
-        login_and_authentication:
+        login:
           title: "登入與驗證"
           header_description: "設定使用者登入和驗證方式、密碼和金鑰、OAuth2 提供者等"
+          sub_pages:
+            common_settings:
+              title: "設定"
         logo:
           title: "標誌"
           form:
@@ -4896,11 +5014,10 @@ zh_TW:
           only_experiments: "僅顯示實驗性功能"
           experiment_enabled: "您已啟用實驗性功能。"
           experiment_disabled: "您已停用實驗性功能。"
-          experiment_toggled_too_fast: "您切換實驗性功能的速度太快。請稍等幾秒鐘再重新嘗試。"
           experiment_tooltip:
-            title_disabled: "嘗試我們的實驗性功能"
             title_enabled: "關閉實驗性功能"
-            content_disabled: "試試我們最新開發的功能！目前仍在實驗階段，因此我們可能隨時移除。您可以隨時選擇退出。<br/><br/>變更此選項將啟用所有使用者的功能。"
+            content_enabled: "更改此項將為所有使用者禁用該功能。"
+          feature_tooltip:
             content_enabled: "更改此項將為所有使用者禁用該功能。"
         last_checked: "上次檢查的時間"
         refresh_problems: "重新整理"
@@ -5637,7 +5754,6 @@ zh_TW:
         copy_to_clipboard: "複製至剪貼簿"
         copied_to_clipboard: "已複製至剪貼簿"
         copy_to_clipboard_error: "複製資料到剪貼簿時發生錯誤"
-        theme_owner: "無法編輯，擁有者為："
         email_templates:
           title: "電子信箱"
           subject: "主旨"
@@ -5645,6 +5761,7 @@ zh_TW:
           body: "內容"
           revert: "恢復變更"
           revert_confirm: "你確定要恢復這個變更?"
+          edit: "編輯"
         component:
           all_filter: "全部"
           used_filter: "已使用"
@@ -5687,7 +5804,7 @@ zh_TW:
           extra_files_upload: "匯出主題以檢視這些檔案。"
           extra_files_remote: "導出主題或檢查 git 存儲庫以查看這些文件。"
           preview: "預覽"
-          default: "啟用的"
+          default: "預設佈景主題"
           settings_editor: "設定編輯器"
           show_advanced: "顯示進階"
           is_default: "佈景主題預設啟用"
@@ -5696,9 +5813,8 @@ zh_TW:
           color_scheme_user_selectable: "調色盤可由使用者選擇"
           auto_update: "當 Discourse 更新時自動更新"
           color_scheme: "調色盤"
-          edit_color_scheme: "編輯調色盤"
           default_light_scheme: "亮色 (預設)"
-          color_scheme_select: "選擇佈景主題可用的顏色"
+          color_scheme_select: "選擇佈景主題可用的顏色."
           custom_sections: "自訂區域："
           theme_components: "佈景主題元件"
           add_all_themes: "新增所有佈景主題"
@@ -5710,6 +5826,7 @@ zh_TW:
           convert_theme_alert_generic: "您確定要將此主題轉換為元件嗎？"
           convert_theme_tooltip: "轉換此佈景主題為元件"
           inactive_themes: "未啟用的佈景主題"
+          default_theme: "預設主題"
           set_default_success: "預設主題設定為 %{theme}"
           install_success: "%{theme} 安裝成功！"
           inactive_components: "未使用的元件："
@@ -5795,10 +5912,6 @@ zh_TW:
           remote_theme_edits: "如果您要編輯此主題，您必須<a href='%{repoURL}' target='_blank'>在其儲存庫中提交變更</a>"
           repo_unreachable: "無法連線至此佈景主題的 Git 版本庫。錯誤訊息："
           imported_from_archive: "此主題從 .zip 檔案匯入"
-          settings: "設定"
-          colors: "顏色"
-          discard_colors: "捨棄"
-          colors_title: "顏色"
           scss:
             text: "CSS"
             title: "支援 SCSS 語法的自訂 CSS 規則"
@@ -5846,6 +5959,8 @@ zh_TW:
           updates_available_filter: "有可用更新"
         schema:
           back_button: "返回 %{name}"
+          move_up: "上移"
+          move_down: "下移"
           fields:
             required: "*必要設定"
             groups:
@@ -5867,13 +5982,13 @@ zh_TW:
           select_base:
             title: "選擇調色盤"
             description: "基本顏色："
+          light: "輕亮"
+          dark: "黑暗"
           title: "顏色"
           edit: "編輯"
           filters:
             all: "全部"
             user_selectable: "使用者可選"
-          active_badge:
-            text: "啟用"
           long_title: "調色盤"
           about: "修改您的佈景主題所使用的顏色，建立一個新調色盤以開始。"
           new_name: "新的調色盤"
@@ -6577,8 +6692,6 @@ zh_TW:
             cancel: "取消"
         merging_user: "合併使用者…"
         merge_failed: "合併用戶時發生錯誤。"
-        delete_forbidden_because_staff: "管理員與板主不可刪除。"
-        delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有貼文。"
         delete_forbidden:
           other: "不能刪除擁有貼文的使用者。請先刪除所有貼文後才能刪除該使用者。( 發表超過 %{count} 天的貼文不能刪除 )"
         cant_delete_all_posts:

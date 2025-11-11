@@ -10,3 +10,4 @@ zh_CN:
     microsoft_auth_client_id: 'Microsoft 应用 ID/客户端 ID（非秘密 ID）– 要进行设置，请访问 <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>'
     microsoft_auth_client_secret: "Microsoft 秘密密码（使用值，而非秘密 ID）"
     microsoft_auth_email_verified: "默认将所有 Microsoft 电子邮件视为已验证。警告：仅当您确定所有用户都已验证电子邮件时才启用此功能。"
+    microsoft_auth_tenant_id: 'Microsoft 租户 ID（通用为标准，除单租户外，所有情况均必须使用）- 要查找 ID，请访问 <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

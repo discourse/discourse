@@ -187,6 +187,9 @@ da:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
     site_settings:
       invalid_category_id: "Du angav en kategori, der ikke findes"
+      invalid_choice:
+        one: "'%{name}' er et ugyldigt valg."
+        other: "'%{name}' er ugyldige valg."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       default_tags_already_selected: "Du kan ikke vælge et mærke, der bruges i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke aktivere overførsler til S3 med mindre du har angivet 's3_upload_bucket'."
@@ -576,6 +579,9 @@ da:
     too_many_requests: "Du har udført denne handling for mange gange. Vent venligst %{time_left} før du prøver igen."
     by_type:
       first_day_replies_per_day: "Vi sætter pris på din entusiasme, bliv ved med det! Når det er sagt, så har du af hensyn til vores fællesskab nået det maksimale antal svar, som en ny bruger kan oprette på sin første dag. Vent venligst %{time_left} og du vil kunne oprette flere svar."
+      create_topic: "Du opretter emner lidt for hurtigt. Vent venligst %{time_left} før du prøver igen."
+      create_post: "Du svarer lidt for hurtigt. Vent venligst %{time_left} før du prøver igen."
+      topics_per_day: "Du har nået det maksimale antal nye emner pr. dag. Du kan oprette flere nye emner om %{time_left}."
     hours:
       one: "%{count} time"
       other: "%{count} timer"
@@ -1285,7 +1291,6 @@ da:
     educate_until_posts: "Når brugeren begynder at skrive deres første (n) nye indlæg, skal pop op panel med ny bruger undervisning vises i editoren."
     crawl_images: "Hent billeder fra eksterne URLs for at indsætte de korrekte bredde og højde dimensioner."
     download_remote_images_threshold: "Minimum hukommelse påkrævet på drev for at downloade billeder lokalt (i procent)"
-    disabled_image_download_domains: "Eksterne billeder vil ikke blive hentet fra disse domæner. Afgrænset liste."
     editing_grace_period: "For (n) sekunder efter postering, vil redigering ikke skabe et nyt indlæg."
     staff_edit_locks_post: "Indlæg vil være låst fra redigering, hvis de redigeres af personalet"
     edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."
@@ -1301,10 +1306,8 @@ da:
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
     allowed_inline_onebox_domains: "En liste over domæner, der vil blive onebox'et i miniatureform, hvis de linkes uden en titel"
     facebook_app_access_token: "Et token genereret fra dit Facebook-app-id og hemmelighed. Bruges til at generere Instagram oneboxes."
-    mobile_logo: "Logoet, der bruges på mobilversionen af dit websted. Brug et bredt rektangulært billede med en højde på 120 og et billedformat, der er større end 3: 1. Hvis det er tomt, bruges billedet fra 'logo'-indstillingen."
     favicon: "Et favicon til dit websted, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. For at fungere korrekt over et CDN skal det være en png. Ændres til 32x32. Hvis det er tomt, vil large_icon blive brugt."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
-    email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
     detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
     summary_score_threshold: "Påkrævet minimum score for et indlæg til at blive inkluderet i 'opsummering af emne'"
@@ -2575,12 +2578,6 @@ da:
     account_second_factor_disabled:
       title: "To-Faktor godkendelse deaktiveret"
       subject_template: "[%{email_prefix}] To-Faktor godkendelse deaktiveret"
-      text_body_template: |
-        To-faktor-godkendelse er blevet deaktiveret for din konto på %{site_name}. Du kan nu logge ind ved kun at bruge din adgangskode; en ekstra godkendelseskode er ikke længere påkrævet.
-
-        Hvis du ikke valgte at deaktivere tofaktorautentificering, kan nogen have kompromitteret din konto.
-
-        Hvis du har spørgsmål, [kontakt vores venlige personale](%{base_url}/about).
     digest:
       since_last_visit: "Siden dit sidste besøg"
       new_topics: "Nye Emner"
@@ -2754,10 +2751,7 @@ da:
   page_not_found:
     page_title: "Side ikke fundet"
     title: "Ups! Den side eksisterer ikke eller også er den privat."
-    popular_topics: "Populære"
-    recent_topics: "Nye"
     see_more: "Flere"
-    search_title: "Søg på dette websted"
     search_button: "Søg"
   upload:
     unauthorized: "Beklager, filen, som du forsøger at overføre er ikke godkendt (godkente filendelser: %{authorized_extensions})."
@@ -3231,11 +3225,9 @@ da:
         title: "Ja"
       agree_and_restore:
         description: "Gendan indlægget, så alle brugere kan se det."
-      delete_single:
+      delete:
         title: "Slet"
         complete: "Indlæg slettet."
-      delete:
-        title: "Slet…"
       delete_and_ignore:
         complete: "Indlæg slettet."
       delete_and_ignore_replies:
@@ -3261,6 +3253,9 @@ da:
       approve_post:
         title: "Godkend Indlæg"
         complete: "Indlæg godkendt."
+      approve_post_closed:
+        title: "Godkend Indlæg"
+        complete: "Indlæg godkendt."
       reject_post:
         title: "Afvis Indlæg"
         complete: "Indlæg afvist."
@@ -3279,9 +3274,17 @@ da:
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      no_action_post:
+        title: "Ingen handling"
+      delete_post:
+        title: "Slet indlæg"
+        complete: "Indlæg slettet"
+      no_action_user:
+        title: "Ingen handling"
       delete_user:
+        title: "Slet bruger"
+        complete: "Bruger slettet"
         reason: "Slettet via gennemgangskø"
-        complete: "Bruger slettet."
   email_style:
     html_missing_placeholder: "HTML-skabelonen skal indeholde %{placeholder}"
   notification_level:

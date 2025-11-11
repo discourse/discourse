@@ -7,3 +7,7 @@
 cs:
   site_settings:
     discourse_math_enabled: "Povolit Discourse matematický plugin (přidá speciální zpracování pro $ a $$ bloky)"
+    discourse_math_provider: "Výchozí zprostředkovatel vykreslování matematiky"
+    discourse_math_zoom_on_hover: "Zvětšení 200 % při najetí myší (pouze MathJax)"
+    discourse_math_enable_accessibility: "Povolit funkce usnadnění přístupu (pouze MathJax)"
+    discourse_math_enable_asciimath: "Povolit asciimath (přidá speciální zpracování vstupu ohraničeného %) (pouze MathJax)"

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ja:
+  theme_metadata:
+    description: "コミュニティーの特定のニーズに合わせてカスタマイズするのに適した Discourse のクラシックテーマ"

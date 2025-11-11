@@ -322,7 +322,7 @@ pl_PL:
         many: "%{count} plików"
         other: "%{count} plików"
       you_flagged: "Oflagowałeś tę wiadomość"
-      exit: "poprzednia"
+      exit: "opuść czat"
       channel_status:
         read_only_header: "Kanał jest tylko do odczytu"
         read_only: "Tylko do odczytu"
@@ -346,6 +346,12 @@ pl_PL:
       chat_message_separator:
         today: Dzisiaj
         yesterday: Wczoraj
+      search_view:
+        filter_placeholder: Wyszukiwanie wiadomości
+        message_result_label: "Wiadomość czatu od %{username}: %{preview} %{threadInfo}"
+        in_thread: "w wątku %{title}"
+        sr_instructions: "Naciśnij Enter lub spację, aby otworzyć wiadomość. Użyj Tab, aby poruszać się między wynikami."
+        results_list_label: "Wyniki wyszukiwania wiadomości czatu"
       members_view:
         filter_placeholder: Znajdź członków
         add_member: Dodaj członka
@@ -362,6 +368,7 @@ pl_PL:
         tabs:
           members: Członkowie
           settings: Ustawienia
+          search: Szukaj
         remove_member: "Usuń"
       new_message_modal:
         title: Wyślij wiadomość
@@ -467,6 +474,7 @@ pl_PL:
           topic: "Temat"
       reviewable:
         type: "Wiadomość na czacie"
+        message_in_channel: "Kanał"
       reactions:
         only_you: "<span>Zareagowałeś za pomocą </span>:%{emoji}:"
         you_and_single_user: "<span>Ty i %{username} zareagowaliście za pomocą </span>:%{emoji}:"
@@ -533,6 +541,13 @@ pl_PL:
           create_export: "Utwórz eksport"
           confirm_export: "Eksportuje wszystkie wiadomości ze wszystkich kanałów i wysyła wynik do Ciebie w wiadomości prywatnej. Czy na pewno chcesz eksportować?"
           export_has_started: "Eksport rozpoczął się. Otrzymasz wiadomość prywatną, gdy będzie gotowy."
+      search:
+        title: Wyszukaj czat
+        aria_label: "Przejdź do wyszukiwania czatu"
+        no_results: "Brak wyników wyszukiwania"
+        sort:
+          relevance: "Trafność"
+          latest: "Najnowsza"
       my_threads:
         title: Moje wątki
         aria_label: "Przejdź do mojej listy wątków"
@@ -762,7 +777,7 @@ pl_PL:
           switch_channel_arrows: "%{shortcut} Przełącz kanał"
           switch__unread_channel_arrows: "%{shortcut} Przełącz nieprzeczytany kanał"
           open_quick_channel_selector: "%{shortcut} Otwórz szybki selektor kanałów"
-          open_insert_link_modal: "%{shortcut} Wstaw hiperłącze (tylko kompozytor)"
+          open_insert_link_modal: "%{shortcut} Wstaw link (tylko kompozytor)"
           composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
           composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
           composer_code: "%{shortcut} Kod (tylko kompozytor)"
@@ -794,6 +809,9 @@ pl_PL:
         chat:
           title: Czat
     sidebar:
+      start_new_dm:
+        text: Rozpocznij nowy DM
+        title: Utwórz osobisty czat
       panels:
         chat:
           label: "Czat"

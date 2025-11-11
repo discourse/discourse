@@ -15,6 +15,8 @@ pt_BR:
       group_not_found: "Grupo não encontrado para política"
       no_policy: "Não existem políticas para a postagem"
       staff_only: "Políticas podem ser aplicadas apenas às postagens da equipe"
+    error:
+      no_permission: "Sem autorização"
   reports:
     unaccepted-policies:
       title: Políticas não aceitas

@@ -10,5 +10,14 @@ pt_BR:
     discourse_templates_categories: "Categorias para buscar os modelos"
     discourse_templates_enable_private_templates: "Permitir o uso de modelos privados"
     discourse_templates_groups_allowed_private_templates: "Grupos autorizados a usar modelos privados. Os membros da equipe são sempre permitidos."
+    discourse_templates_private_templates_tags: "Etiquetas que identificam uma mensagem pessoal como um modelo privado"
   default_category_template:
     name: Modelos
+    description: |
+      Esta categoria é usada para armazenar modelos.
+
+      Os modelos permitem que os usuários armazenem conteúdo para uso frequente.
+
+      Cada tópico nesta categoria representa um modelo diferente. **A primeira postagem** de cada tópico é usada como conteúdo para o modelo.
+
+      Observe que todos os usuários com acesso nesta categoria terão permissão para usar os modelos.

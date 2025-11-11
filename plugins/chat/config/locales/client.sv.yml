@@ -278,7 +278,6 @@ sv:
         one: "%{count} fil"
         other: "%{count} filer"
       you_flagged: "Du flaggade detta meddelande"
-      exit: "tillbaka"
       channel_status:
         read_only_header: "Kanalen är skrivskyddad"
         read_only: "Endast läsning"
@@ -302,6 +301,8 @@ sv:
       chat_message_separator:
         today: Idag
         yesterday: Igår
+      search_view:
+        filter_placeholder: Sök meddelanden
       members_view:
         filter_placeholder: Hitta medlemmar
         add_member: Lägg till medlem
@@ -318,6 +319,7 @@ sv:
         tabs:
           members: Medlemmar
           settings: Inställningar
+          search: Sök
         remove_member: "Ta bort"
       new_message_modal:
         title: Skicka meddelande
@@ -409,6 +411,7 @@ sv:
           topic: "Ämne"
       reviewable:
         type: "Chatt meddelande"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Du reagerade med </span>:%{emoji}:"
         you_and_single_user: "<span>Du och %{username} reagerade med </span>:%{emoji}:"
@@ -469,6 +472,11 @@ sv:
           description: "Detta exporterar alla meddelanden från alla kanaler."
           create_export: "Skapa export"
           export_has_started: "Exporten har börjat. Du får ett PM när det är klart."
+      search:
+        no_results: "Inga resultat hittades"
+        sort:
+          relevance: "Relevans"
+          latest: "Senaste"
       my_threads:
         title: Mina trådar
         aria_label: "Byt till min trådlista"
@@ -647,7 +655,6 @@ sv:
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} Byt kanal"
           open_quick_channel_selector: "%{shortcut} Öppna snabbval av kanal"
-          open_insert_link_modal: "%{shortcut} Infoga hyperlänk (endast kompositör)"
           composer_bold: "%{shortcut} Fet (endast kompositör)"
           composer_italic: "%{shortcut} Kursiv (endast kompositör)"
           composer_code: "%{shortcut} Kod (endast kompositör)"
@@ -677,6 +684,8 @@ sv:
         chat:
           title: Chatt
     sidebar:
+      start_new_dm:
+        title: Skapa en personlig chatt
       panels:
         chat:
           label: "Chatt"

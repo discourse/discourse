@@ -32,6 +32,11 @@ he:
   discourse_assign:
     assigned_to: "הנושא רשום ל@%{username}"
     unassigned: "הקצאת הנושא בוטלה"
+    filter:
+      description:
+        assigned: "סינון נושאים שמוצרים למשתמש/ת או קבוצה מסוימים"
+        nobody: "סינון נושאים שלא מוקצאים לאף אחד"
+        anyone: "סינון נושאים שמוקצים למישהו"
     already_claimed: "נושא זה כבר נדרש."
     already_assigned: "הנושא כבר מוקצה לטובת ‎@%{username}"
     too_many_assigns: "‎@%{username}‎ כבר הגיע לכמות הנושאים המרבית שניתן להקצות לטובתו (%{max})."

@@ -16,6 +16,10 @@ fa_IR:
   solved:
     no_solutions:
       others: "هیچ راه حل پذیرفته ای وجود ندارد"
+    filter:
+      description:
+        solved: "فیلتر کردن موضوعاتی که حل شده‌اند"
+        unsolved: "فیلتر کردن موضوعاتی که حل نشده‌اند"
   badges:
     solved_1:
       name: "حل شده!"

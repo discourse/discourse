@@ -87,7 +87,7 @@ after_initialize do
   add_to_class(:user, :can_assign?) do
     return @can_assign if defined?(@can_assign)
 
-    allowed_groups = SiteSetting.assign_allowed_on_groups.split("|").compact
+    allowed_groups = SiteSetting.assign_allowed_on_groups_map
     @can_assign = admin? || (allowed_groups.present? && groups.where(id: allowed_groups).exists?)
   end
 
@@ -315,9 +315,9 @@ after_initialize do
 
     if name == "*"
       next(
-        results.joins("JOIN assignments a ON a.topic_id = topics.id AND active").where(
-          "a.assigned_to_id IS NOT NULL",
-        )
+        results
+          .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
+          .where.not(a: { assigned_to_id: nil })
       )
     end
 
@@ -376,18 +376,24 @@ after_initialize do
   add_to_class(:topic_query, :group_topics_assigned_results) do |group|
     list = default_results(include_all_pms: true)
 
-    topic_ids_sql = +<<~SQL
-      SELECT topic_id FROM assignments
-      WHERE (
-        assigned_to_id = :group_id AND assigned_to_type = 'Group' AND active
-      )
-    SQL
+    assignee_condition = "(a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group')"
+    if @options[:filter] != :direct
+      assignee_condition +=
+        " OR (a.assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND a.assigned_to_type = 'User')"
+    end
 
-    topic_ids_sql << <<~SQL if @options[:filter] != :direct
-        OR (
-          assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND assigned_to_type = 'User' AND active
+    topic_ids_sql = <<~SQL
+      SELECT a.topic_id FROM assignments a
+      LEFT JOIN topics t ON t.id = a.topic_id
+      LEFT JOIN posts p ON p.id = a.target_id AND a.target_type = 'Post'
+      WHERE a.active
+        AND t.deleted_at IS NULL
+        AND (
+          a.target_type = 'Topic' OR
+          (a.target_type = 'Post' AND p.deleted_at IS NULL AND p.deleted_by_id IS NULL AND p.user_deleted = false)
         )
-      SQL
+        AND (#{assignee_condition})
+    SQL
 
     sql = "topics.id IN (#{topic_ids_sql})"
 
@@ -892,19 +898,67 @@ after_initialize do
   add_filter_custom_filter("assigned") do |scope, filter_values, guardian|
     next if !guardian.can_assign? || filter_values.blank?
 
-    user_or_group_name = filter_values.compact.first
+    # Handle multiple comma-separated values (user1,group1,user2)
+    names =
+      filter_values.compact.flat_map { |value| value.to_s.split(",") }.map(&:strip).reject(&:blank?)
 
-    next if user_or_group_name.blank?
+    next if names.blank?
 
-    if user_id = User.find_by_username(user_or_group_name)&.id
-      scope.where(<<~SQL, user_id)
-        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
-      SQL
-    elsif group_id = Group.find_by(name: user_or_group_name)&.id
-      scope.where(<<~SQL, group_id)
-        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active)
-      SQL
+    if names.include?("nobody")
+      next scope.where("topics.id NOT IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
     end
+
+    if names.include?("*")
+      next scope.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
+    end
+
+    found_names, user_ids =
+      User.where(username_lower: names.map(&:downcase)).pluck(:username, :id).transpose
+
+    found_names ||= []
+    user_ids ||= []
+
+    # a bit edge casey cause we have username_lower for users but not for groups
+    # we share a namespace though so in practice this is ok
+    remaining_names = names - found_names
+    group_ids = []
+    group_ids.concat(Group.where(name: remaining_names).pluck(:id)) if remaining_names.present?
+
+    next scope.none if user_ids.empty? && group_ids.empty?
+
+    assignment_query = Assignment.none # needed cause we are adding .or later
+
+    if user_ids.present?
+      assignment_query =
+        assignment_query.or(
+          Assignment.active.where(assigned_to_type: "User", assigned_to_id: user_ids),
+        )
+    end
+
+    if group_ids.present?
+      assignment_query =
+        assignment_query.or(
+          Assignment.active.where(assigned_to_type: "Group", assigned_to_id: group_ids),
+        )
+    end
+
+    scope.where(id: assignment_query.select(:topic_id))
+  end
+
+  register_modifier(:topics_filter_options) do |results, guardian|
+    if guardian.can_assign?
+      results << {
+        name: "assigned:",
+        description: I18n.t("discourse_assign.filter.description.assigned"),
+        type: "username_group_list",
+        extra_entries: [
+          { name: "nobody", description: I18n.t("discourse_assign.filter.description.nobody") },
+          { name: "*", description: I18n.t("discourse_assign.filter.description.anyone") },
+        ],
+        priority: 1,
+      }
+    end
+    results
   end
 
   register_search_advanced_filter(/in:assigned/) do |posts|

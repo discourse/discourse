@@ -1185,6 +1185,25 @@ RSpec.describe TopicsController do
 
         expect(body["topic_status_update"]).to eq(nil)
       end
+
+      it "should update the status when `enabled` is a truthy value" do
+        closed_user_topic = Fabricate(:topic, user: user, closed: false)
+
+        put "/t/#{closed_user_topic.id}/status.json", params: { status: "closed", enabled: "t" }
+
+        expect(response.status).to eq(200)
+        expect(closed_user_topic.reload.closed).to eq(true)
+
+        put "/t/#{closed_user_topic.id}/status.json", params: { status: "closed", enabled: "0" }
+
+        expect(response.status).to eq(200)
+        expect(closed_user_topic.reload.closed).to eq(false)
+
+        put "/t/#{closed_user_topic.id}/status.json", params: { status: "closed", enabled: true }
+
+        expect(response.status).to eq(200)
+        expect(closed_user_topic.reload.closed).to eq(true)
+      end
     end
 
     describe "when logged in as a group member with reviewable status" do
@@ -1859,64 +1878,6 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(200)
         end
 
-        context "when using SiteSetting.disable_category_edit_notifications" do
-          it "doesn't bump the topic if the setting is enabled" do
-            SiteSetting.disable_category_edit_notifications = true
-            last_bumped_at = topic.bumped_at
-            expect(last_bumped_at).not_to be_nil
-
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
-            end.to change { topic.reload.category_id }.to(category.id)
-
-            expect(response.status).to eq(200)
-            expect(topic.reload.bumped_at).to eq_time(last_bumped_at)
-          end
-
-          it "bumps the topic if the setting is disabled" do
-            SiteSetting.disable_category_edit_notifications = false
-            last_bumped_at = topic.bumped_at
-            expect(last_bumped_at).not_to be_nil
-
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { category_id: category.id }
-            end.to change { topic.reload.category_id }.to(category.id)
-
-            expect(response.status).to eq(200)
-            expect(topic.reload.bumped_at).not_to eq_time(last_bumped_at)
-          end
-        end
-
-        context "when using SiteSetting.disable_tags_edit_notifications" do
-          fab!(:t1, :tag)
-          fab!(:t2, :tag)
-          let(:tags) { [t1, t2] }
-
-          it "doesn't bump the topic if the setting is enabled" do
-            SiteSetting.disable_tags_edit_notifications = true
-            last_bumped_at = topic.bumped_at
-            expect(last_bumped_at).not_to be_nil
-
-            put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: tags.map(&:name) }
-
-            expect(topic.reload.tags).to match_array(tags)
-            expect(response.status).to eq(200)
-            expect(topic.reload.bumped_at).to eq_time(last_bumped_at)
-          end
-
-          it "bumps the topic if the setting is disabled" do
-            SiteSetting.disable_tags_edit_notifications = false
-            last_bumped_at = topic.bumped_at
-            expect(last_bumped_at).not_to be_nil
-
-            put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: tags.map(&:name) }
-
-            expect(topic.reload.tags).to match_array(tags)
-            expect(response.status).to eq(200)
-            expect(topic.reload.bumped_at).not_to eq_time(last_bumped_at)
-          end
-        end
-
         describe "when first post is locked" do
           it "blocks user from editing even if they are in 'edit_all_topic_groups' and 'edit_all_post_groups'" do
             SiteSetting.edit_all_topic_groups = Group::AUTO_GROUPS[:trust_level_3]
@@ -2377,6 +2338,26 @@ RSpec.describe TopicsController do
 
     it "return 404 for an invalid page" do
       get "/t/#{topic.slug}/#{topic.id}.json", params: { page: 2 }
+      expect(response.status).to eq(404)
+    end
+
+    it "handles pagination correctly with deleted posts" do
+      topic_with_posts = Fabricate(:topic)
+
+      24.times do |i|
+        Fabricate(:post, topic: topic_with_posts, deleted_at: i.even? ? DateTime.now : nil)
+      end
+
+      Topic.reset_highest(topic_with_posts.id)
+      topic_with_posts.reload
+
+      expect(topic_with_posts.posts_count).to eq(12)
+      expect(topic_with_posts.highest_post_number).to eq(24)
+
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 1 }
+      expect(response.status).to eq(200)
+
+      get "/t/#{topic_with_posts.slug}/#{topic_with_posts.id}.json", params: { page: 2 }
       expect(response.status).to eq(404)
     end
 
@@ -3653,6 +3634,84 @@ RSpec.describe TopicsController do
           body = response.parsed_body
 
           expect(body["post_stream"]["posts"].first["id"]).to eq(post2.id)
+        end
+      end
+    end
+
+    describe "#posts with content localization" do
+      fab!(:localized_post) do
+        post = Fabricate(:post, user:, locale: "en", cooked: "<p>Original EN</p>")
+        Fabricate(:post_localization, post:, locale: "ja", cooked: "<p>Translated JA</p>")
+        post
+      end
+      fab!(:localized_topic) { localized_post.topic }
+      fab!(:localized_post2) do
+        post =
+          Fabricate(
+            :post,
+            user:,
+            topic: localized_topic,
+            locale: "ja",
+            cooked: "<p>Original 2 JA</p>",
+          )
+        Fabricate(:post_localization, post:, locale: "en", cooked: "<p>Translated 2 EN</p>")
+        post
+      end
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "en"
+      end
+
+      context "when show_original cookie is not set" do
+        it "returns translated posts" do
+          get "/t/#{localized_topic.id}/posts.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          posts = body["post_stream"]["posts"]
+
+          expect(posts.first["cooked"]).to eq("<p>Original EN</p>")
+          expect(posts.second["cooked"]).to eq("<p>Translated 2 EN</p>")
+        end
+
+        it "returns translated posts when loading specific post_ids" do
+          get "/t/#{localized_topic.id}/posts.json", params: { post_ids: [localized_post2.id] }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          posts = body["post_stream"]["posts"]
+
+          expect(posts.first["cooked"]).to eq("<p>Translated 2 EN</p>")
+        end
+      end
+
+      context "when show_original cookie is set" do
+        before { cookies[ContentLocalization::SHOW_ORIGINAL_COOKIE] = "true" }
+
+        it "returns original posts" do
+          get "/t/#{localized_topic.id}/posts.json"
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          posts = body["post_stream"]["posts"]
+
+          expect(posts.first["cooked"]).to eq("<p>Original EN</p>")
+          expect(posts.second["cooked"]).to eq("<p>Original 2 JA</p>")
+        end
+
+        it "returns original posts when loading specific post_ids" do
+          get "/t/#{localized_topic.id}/posts.json", params: { post_ids: [localized_post2.id] }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          posts = body["post_stream"]["posts"]
+
+          expect(posts.first["cooked"]).to eq("<p>Original 2 JA</p>")
         end
       end
     end
@@ -4973,7 +5032,7 @@ RSpec.describe TopicsController do
 
         post "/t/#{topic.id}/timer.json",
              params: {
-               time: Time.current - 1.day,
+               time: 1.day.ago,
                status_type: TopicTimer.types[1],
              }
         expect(response.status).to eq(400)
@@ -5140,6 +5199,25 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(403)
         expect(response.parsed_body["error_type"]).to eq("invalid_access")
+      end
+
+      it "allows category moderators to set delete_replies timer" do
+        user.update!(trust_level: TrustLevel[4])
+        Group.user_trust_level_change!(user.id, user.trust_level)
+        Fabricate(:category_moderation_group, category: topic.category, group: user.groups.first)
+
+        sign_in(user)
+
+        post "/t/#{topic.id}/timer.json",
+             params: {
+               duration_minutes: 1440,
+               status_type: "delete_replies",
+             }
+
+        expect(response.status).to eq(200)
+
+        topic_timer = TopicTimer.last
+        expect(topic_timer.status_type).to eq(TopicTimer.types[:delete_replies])
       end
     end
   end
@@ -5566,10 +5644,12 @@ RSpec.describe TopicsController do
         )
       end
 
-      it "renders with the crawler layout, and handles proper pagination" do
-        user_agent = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      let!(:bot_user_agent) do
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+      end
 
-        get topic.relative_url, env: { "HTTP_USER_AGENT" => user_agent }
+      it "renders with the crawler layout, and handles proper pagination" do
+        get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
 
         body = response.body
 
@@ -5582,7 +5662,7 @@ RSpec.describe TopicsController do
 
         expect(response.headers["Last-Modified"]).to eq(page1_time.httpdate)
 
-        get topic.relative_url + "?page=2", env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url + "?page=2", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
 
         expect(response.headers["Last-Modified"]).to eq(page2_time.httpdate)
@@ -5593,7 +5673,7 @@ RSpec.describe TopicsController do
         expect(body).to include('<link rel="prev" href="' + topic.relative_url)
         expect(body).to include('<link rel="next" href="' + topic.relative_url + "?page=3")
 
-        get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => user_agent }
+        get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
@@ -5662,18 +5742,15 @@ RSpec.describe TopicsController do
 
       context "with canonical_url" do
         fab!(:topic_embed) { Fabricate(:topic_embed, embed_url: "https://markvanlan.com") }
-        let!(:user_agent) do
-          "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-        end
 
         it "set to topic.url when embed_set_canonical_url is false" do
-          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => bot_user_agent }
           expect(response.body).to include('<link rel="canonical" href="' + topic_embed.topic.url)
         end
 
         it "set to topic_embed.embed_url when embed_set_canonical_url is true" do
           SiteSetting.embed_set_canonical_url = true
-          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => user_agent }
+          get topic_embed.topic.url, env: { "HTTP_USER_AGENT" => bot_user_agent }
           expect(response.body).to include('<link rel="canonical" href="' + topic_embed.embed_url)
         end
       end
@@ -5690,6 +5767,119 @@ RSpec.describe TopicsController do
 
           expect(body).to have_tag(:body, with: { class: "crawler" })
           expect(body).to_not have_tag(:meta, with: { name: "fragment" })
+        end
+      end
+
+      context "when content localization is enabled" do
+        fab!(:category) { Fabricate(:category, locale: "en") }
+        fab!(:subcategory) { Fabricate(:category, parent_category: category, locale: "en") }
+        fab!(:tag)
+
+        before do
+          SiteSetting.content_localization_enabled = true
+
+          topic.update!(category: subcategory, tags: [tag], locale: "en")
+          topic.first_post.update(locale: "en")
+          # randomly create localizations for an untested locale
+          topic
+            .posts
+            .sample(3)
+            .each do |post|
+              post.update!(locale: "en")
+              Fabricate(:post_localization, post:, locale: "de")
+            end
+        end
+
+        describe "when tl param is absent" do
+          fab!(:pt_topic) { Fabricate(:topic_localization, topic:, locale: "pt") }
+          fab!(:pt_category) { Fabricate(:category_localization, category:, locale: "pt") }
+          fab!(:pt_subcategory) do
+            Fabricate(:category_localization, category: subcategory, locale: "pt")
+          end
+          fab!(:pt_first_post) do
+            Fabricate(:post_localization, post: topic.first_post, locale: "pt_BR")
+          end
+
+          it "localizes (english) topic for crawler to (portuguese) default locale when localization exists" do
+            SiteSetting.default_locale = "pt"
+
+            get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+            expect(response.body).to include(pt_topic.title)
+            expect(response.body).to include(pt_category.name)
+            expect(response.body).to include(pt_subcategory.name)
+            expect(response.body).to include(pt_first_post.cooked)
+          end
+
+          it "leaves topic as-is if no localization" do
+            SiteSetting.default_locale = "es"
+
+            get topic.relative_url, env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+            expect(response.body).to include(topic.title)
+            expect(response.body).to include(category.name)
+            expect(response.body).to include(subcategory.name)
+            expect(response.body).to include(topic.first_post.cooked)
+          end
+        end
+
+        describe "when tl param is present ?tl=ja" do
+          fab!(:ja_topic) { Fabricate(:topic_localization, topic:, locale: "ja") }
+          fab!(:ja_category) { Fabricate(:category_localization, category:, locale: "ja") }
+          fab!(:ja_subcategory) do
+            Fabricate(:category_localization, category: subcategory, locale: "ja")
+          end
+
+          it "localizes topic for crawler" do
+            get topic.relative_url,
+                env: {
+                  "HTTP_USER_AGENT" => bot_user_agent,
+                },
+                params: {
+                  tl: "ja",
+                }
+
+            expect(response.body).to include(ja_topic.title)
+            # breadcrumbs
+            expect(response.body).to include(ja_category.name)
+            expect(response.body).to include(ja_subcategory.name)
+          end
+        end
+
+        it "does not have N+1s when loading localizations" do
+          Fabricate(:topic_localization, topic:, locale: "ja")
+          topic
+            .posts
+            .where("post_number < 4")
+            .each { |post| Fabricate(:post_localization, post:, locale: "ja") }
+
+          initial_sql_queries =
+            track_sql_queries do
+              get topic.relative_url,
+                  env: {
+                    "HTTP_USER_AGENT" => bot_user_agent,
+                  },
+                  params: {
+                    tl: "ja",
+                  }
+              expect(response.status).to eq(200)
+            end.select { |q| q.include?("_localizations") }.count
+
+          Fabricate(:post_localization, post: topic.posts.find_by_post_number(4), locale: "ja")
+
+          new_sql_queries =
+            track_sql_queries do
+              get topic.relative_url,
+                  env: {
+                    "HTTP_USER_AGENT" => bot_user_agent,
+                  },
+                  params: {
+                    tl: "ja",
+                  }
+              expect(response.status).to eq(200)
+            end.select { |q| q.include?("_localizations") }.count
+
+          expect(new_sql_queries).to eq(initial_sql_queries)
         end
       end
     end

@@ -168,8 +168,22 @@ ja:
 
           - コミュニティーでは常に礼節ある行動 (%{base_uri}/guidelines) を取ってもらえると信じています。
       onebox:
+        instructions: |-
+          次に、以下のリンクを 1 つ共有してもらえますか？**リンクだけの行**で返信すると、自動的に展開して便利な要約が含められます。
+
+          リンクをコピーするには、モバイルの場合は長押し、ポインティングデバイスの場合は右クリックしてください。
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           うまくいきましたね！この方法は、ほとんどの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> リンクで使用できます。_リンクだけ_を 1 行に入力し、前後にリンクに含まれない文字などを含めないようにしましょう。
+        not_found: |-
+          返信にリンクが見つかりません！:cry:
+
+          次の返信で下のリンクをリンクだけの 1 行で追加してみてください。
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           ここにユニコーンの画像があります。
@@ -385,6 +399,19 @@ ja:
 
           トピックに返信する際、またはトピックを数分以上閲覧している場合は、自動的に通知レベルが '追跡' に設定されます。この設定は[ユーザー設定](%{base_uri}/my/preferences)で変更可能です。
       poll:
+        instructions: |-
+          投稿に投票を追加できることをご存知ですか？エディターで**投票を作成**アイコン <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> を使ってみましょう。
+        not_found: |-
+          あれれ？返信に投票がありませんよ。
+
+          エディターの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> アイコンを使うか下の投票をコピーして次の返信に貼り付けましょう。
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           素敵な投票ですね！私の教え方はどうですか？
 
@@ -393,6 +420,20 @@ ja:
           * :-1:
           [/poll]
       details:
+        instructions: |-
+          たまに、返信の**詳細を非表示**にしたいことがあるかもしれません。
+
+          - 映画またはテレビ番組のあらすじについて話している場合は、ネタバレと思われる可能性がある場合。
+
+          - まとめて一度に読むと多すぎる可能性のある詳細な情報を投稿に含める必要がある場合。
+
+          [details=これを選択してどのように動作するか見てみましょう！]
+          1. エディターの <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> アイコンを選択します。
+          2. 「詳細を非表示」を選択します。
+          3. 詳細の要約を編集して、コンテンツを追加します。
+          [/details]
+
+          エディターの<img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> アイコンを使って、次の返信に詳細セクションを追加してみましょう。
         not_found: |-
           詳細ウィジェットを作成できませんか？次の返信に以下のテキストを含めてみてください。
 

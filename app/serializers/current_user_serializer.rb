@@ -81,7 +81,9 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_localize_content?,
              :effective_locale,
              :use_reviewable_ui_refresh,
-             :can_see_ip
+             :can_see_ip,
+             :is_impersonating,
+             :upcoming_changes
 
   delegate :user_stat, to: :object, private: true
   delegate :any_posts, :draft_count, :pending_posts_count, :read_faq?, to: :user_stat
@@ -99,6 +101,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def login_method
     @options[:login_method]
+  end
+
+  def is_impersonating
+    !!object.is_impersonating
   end
 
   def groups
@@ -364,5 +370,16 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_can_see_ip?
     object.admin? || (object.moderator? && SiteSetting.moderators_view_ips)
+  end
+
+  # TODO (martin) A page for members to see what upcoming changes
+  # they have enabled??
+  #
+  def upcoming_changes
+    SiteSetting
+      .upcoming_change_site_settings
+      .each_with_object({}) do |upcoming_change, hash|
+        hash[upcoming_change] = object.upcoming_change_enabled?(upcoming_change)
+      end
   end
 end

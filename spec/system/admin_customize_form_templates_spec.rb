@@ -117,6 +117,25 @@ describe "Admin Customize Form Templates", type: :system do
       expect(form_template_page).to have_validations_modal
     end
 
+    it "allows previewing, closing the modal, and then saving the template" do
+      form_template_page.visit_new
+
+      sample_name = "Preview Close Save Template"
+      sample_template = "- type: input\n  id: name"
+
+      form_template_page.type_in_template_name(sample_name)
+      ace_editor.type_input(sample_template)
+
+      form_template_page.click_preview_button
+      expect(form_template_page).to have_preview_modal
+
+      find(".modal-close").click
+      expect(form_template_page).to have_no_preview_modal
+
+      form_template_page.click_save_button
+      expect(form_template_page).to have_form_template(sample_name)
+    end
+
     it "should show a preview of the template in a modal when clicking the preview button" do
       form_template_page.visit_new
       form_template_page.type_in_template_name("New Template")

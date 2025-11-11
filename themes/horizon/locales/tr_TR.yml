@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  theme_metadata:
+    description: "Discourse siteleri için kullanıma hazır deneyimi geliştiren basit ve güzel bir tema."

@@ -1,5 +1,7 @@
 export default function () {
   this.route("chat", function () {
+    this.route("search");
+
     this.route("channel", { path: "/c/:channelTitle/:channelId" }, function () {
       this.route("near-message", { path: "/:messageId" });
       this.route("near-message-with-thread", {

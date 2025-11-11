@@ -25,8 +25,8 @@ class Site
   cattr_accessor :markdown_additional_options
   self.markdown_additional_options = {}
 
-  def self.add_categories_callbacks(&block)
-    categories_callbacks << block
+  def self.add_categories_callbacks(enabled: -> { true }, &block)
+    categories_callbacks << { block:, enabled: }
   end
 
   def self.categories_callbacks
@@ -73,33 +73,20 @@ class Site
         categories =
           begin
             query =
-              Category.includes(
-                :uploaded_logo,
-                :uploaded_logo_dark,
-                :uploaded_background,
-                :uploaded_background_dark,
-                :tags,
-                :tag_groups,
-                :form_templates,
-                category_required_tag_groups: :tag_group,
-              ).joins("LEFT JOIN topics t on t.id = categories.topic_id")
-
-            if SiteSetting.content_localization_enabled
-              locale = I18n.locale.to_s
-              query =
-                query.joins(
-                  "LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = '#{ActiveRecord::Base.connection.quote_string(locale)}'",
-                ).select(
-                  "categories.*,
-                      t.slug topic_slug,
-                      COALESCE(cl.name, categories.name) AS name,
-                      COALESCE(cl.description, categories.description) AS description",
+              Category
+                .includes(
+                  :uploaded_logo,
+                  :uploaded_logo_dark,
+                  :uploaded_background,
+                  :uploaded_background_dark,
+                  :tags,
+                  :tag_groups,
+                  :form_templates,
+                  category_required_tag_groups: :tag_group,
                 )
-            else
-              query = query.select("categories.*, t.slug topic_slug")
-            end
-
-            query = query.order(:position)
+                .joins("LEFT JOIN topics t on t.id = categories.topic_id")
+                .select("categories.*, t.slug topic_slug")
+                .order(:position)
             query =
               DiscoursePluginRegistry.apply_modifier(:site_all_categories_cache_query, query, self)
             query.to_a
@@ -178,7 +165,10 @@ class Site
 
         categories.reject! { |c| c[:parent_category_id] && !by_id[c[:parent_category_id]] }
 
-        self.class.categories_callbacks.each { |callback| callback.call(categories, @guardian) }
+        self.class.categories_callbacks.each do |callback|
+          next unless callback[:enabled].call
+          callback[:block].call(categories, @guardian)
+        end
 
         categories
       end
@@ -227,6 +217,8 @@ class Site
             end,
           full_name_required_for_signup:,
           full_name_visible_in_signup:,
+          tos_url: Discourse.tos_url,
+          privacy_policy_url: Discourse.privacy_policy_url,
         }.to_json
       )
     end

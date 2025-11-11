@@ -91,7 +91,8 @@ describe DiscourseAi::Automation::LlmTriage do
 
     reviewable = ReviewablePost.last
 
-    expect(reviewable.target).to eq(post)
+    expect(reviewable.target_id).to eq(post.id)
+    expect(reviewable.target_type).to eq("Post")
     expect(reviewable.reviewable_scores.first.reason).to include("bad")
   end
 
@@ -142,9 +143,121 @@ describe DiscourseAi::Automation::LlmTriage do
 
     reviewable = ReviewablePost.last
 
-    expect(reviewable.target).to eq(post)
+    expect(reviewable.target_id).to eq(post.id)
+    expect(reviewable.target_type).to eq("Post")
     expect(reviewable.reviewable_scores.first.reason).to include("bad")
     expect(post.reload).to be_hidden
+  end
+
+  it "can handle flag + delete" do
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review_delete,
+        automation: nil,
+      )
+    end
+
+    reviewable = ReviewablePost.last
+
+    expect(reviewable.target_id).to eq(post.id)
+    expect(reviewable.target_type).to eq("Post")
+    expect(reviewable.reviewable_scores.first.reason).to include("bad")
+    expect(post.reload.trashed?).to eq(true)
+  end
+
+  it "can handle flag + delete post + silence" do
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review_delete_silence,
+        automation: nil,
+      )
+    end
+
+    reviewable = ReviewablePost.last
+
+    expect(reviewable.target_id).to eq(post.id)
+    expect(reviewable.target_type).to eq("Post")
+    expect(reviewable.reviewable_scores.first.reason).to include("bad")
+    expect(post.reload.trashed?).to eq(true)
+    expect(post.user.silenced?).to eq(true)
+  end
+
+  it "restores deleted post when moderator approves" do
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review_delete,
+        automation: nil,
+      )
+    end
+
+    reviewable = ReviewablePost.last
+    expect(post.reload.trashed?).to eq(true)
+    topic = Topic.with_deleted.find_by(id: post.topic_id)
+    expect(topic.trashed?).to eq(true)
+
+    moderator = Fabricate(:moderator)
+    result = reviewable.perform(moderator, :approve_and_restore)
+    expect(result).to be_success
+
+    # Post and topic should be restored
+    expect(post.reload.trashed?).to eq(false)
+    expect(post.topic.reload.trashed?).to eq(false)
+  end
+
+  it "sends author a PM when notify_author_pm is enabled" do
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review_delete,
+        automation: nil,
+        notify_author_pm: true,
+      )
+    end
+
+    pm_topic = Topic.where(archetype: Archetype.private_message).order(:id).last
+    expect(pm_topic).to be_present
+    expect(pm_topic.allowed_users).to include(post.user)
+  end
+
+  it "uses custom PM message when provided" do
+    custom_message = "Your post is pending review."
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review_delete,
+        automation: nil,
+        notify_author_pm: true,
+        notify_author_pm_message: custom_message,
+      )
+    end
+
+    pm_post =
+      Post
+        .where(
+          "posts.topic_id IN (?)",
+          Topic.where(archetype: Archetype.private_message).select(:id),
+        )
+        .order(:id)
+        .last
+    expect(pm_post.raw).to include(custom_message)
   end
 
   it "does not silence the user if the flag fails" do
@@ -252,5 +365,63 @@ describe DiscourseAi::Automation::LlmTriage do
     end
 
     expect(post.topic.reload.tags).to contain_exactly(tag_1, tag_2)
+  end
+
+  it "includes the base path in the flagged post message" do
+    allow(Discourse).to receive(:base_path).and_return("http://test.host")
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        automation: nil,
+      )
+    end
+
+    reviewable = ReviewablePost.last
+    expect(reviewable.target_id).to eq(post.id)
+    expect(reviewable.target_type).to eq("Post")
+    expect(reviewable.reviewable_scores.first.reason).to include(
+      "<a href=\"#{Discourse.base_path}/admin/plugins/automation/",
+    )
+  end
+
+  it "only sends one PM when multiple rules flag the same post" do
+    # First rule flags the post and sends PM
+    DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review,
+        automation: nil,
+        notify_author_pm: true,
+      )
+
+      triage(
+        post: post.reload,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review,
+        automation: nil,
+        notify_author_pm: true,
+      )
+    end
+
+    pm_topics =
+      Topic
+        .where(archetype: Archetype.private_message)
+        .joins(:topic_allowed_users)
+        .where(topic_allowed_users: { user: post.user })
+
+    expect(pm_topics.size).to eq(1)
+
+    reviewable_scores_count =
+      ReviewableScore.joins(:reviewable).where(reviewable: { target: post }).count
+    expect(reviewable_scores_count).to eq(2)
   end
 end

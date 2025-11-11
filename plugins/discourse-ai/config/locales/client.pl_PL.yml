@@ -134,9 +134,9 @@ pl_PL:
               description: "W trybie cichym persona otrzyma zawartość, ale nie opublikuje niczego na forum - przydatne podczas przeprowadzania selekcji przy użyciu narzędzi."
         llm_triage:
           fields:
-            system_prompt:
-              label: "Monit systemowy"
-              description: "Wskazówka, która zostanie użyta do trializacji, upewnij się, że odpowiedziałaś jednym słowem, którego możesz użyć do uruchomienia akcji"
+            triage_persona:
+              label: "Osobowość"
+              description: "Osobowość używana do triażu powinna odpowiadać jednym słowem, którego możesz użyć do wywołania akcji"
             max_post_tokens:
               label: "Maksymalna ilość tokenów postu"
               description: "Maksymalna liczba tokenów do skanowania przy użyciu selekcji LLM"
@@ -167,6 +167,15 @@ pl_PL:
             flag_post:
               label: "Oflaguj post"
               description: "Oflaguj post (jako spam lub do sprawdzenia)"
+            notify_author_pm:
+              label: "Powiadom autora przez PW"
+              description: "Wyślij osobistą wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
+            notify_author_pm_user:
+              label: "Nadawca PW"
+              description: "Użytkownik, który wyśle PW (domyślnie system)"
+            notify_author_pm_message:
+              label: "Treść PW"
+              description: "Opcjonalna niestandardowa wiadomość do wysłania do autora"
             include_personal_messages:
               label: "Dołącz osobiste wiadomości"
               description: "Skanuj i sortuj również wiadomości prywatne"
@@ -176,15 +185,41 @@ pl_PL:
             reply_persona:
               label: "Persona odpowiedzi"
               description: "AI Persona użyta do odpowiedzi (musi mieć domyślną wartość LLM), będzie traktowana priorytetowo nad gotową odpowiedzią"
-            model:
-              label: "Model"
-              description: "Model językowy używany do selekcji"
-            temperature:
-              label: "Temperatura"
-              description: "Temperatura używana dla LLM. Zwiększ, aby zwiększyć losowość (pozostaw puste, aby użyć domyślnego modelu)."
             max_output_tokens:
               label: "Maksymalna liczba tokenów wyjściowych"
               description: "Po określeniu, ustawia górną granicę maksymalnej liczby tokenów, jaką model może wygenerować. Szanuje limit maksymalnej liczby tokenów wyjściowych LLM."
+        llm_tagger:
+          tag_mode:
+            manual: "Użyj konkretnej listy tagów (skonfigurowanej poniżej)"
+            discover: "Pozwól AI odkrywać i używać dowolnych tagów witryny"
+          fields:
+            tagger_persona:
+              label: "Osobowość AI"
+              description: "Osobowość AI do analizy i tagowania tematów"
+            tag_mode:
+              label: "Tryb wyboru tagów"
+              description: "Wybierz sposób, w jaki AI wybiera tagi"
+            available_tags:
+              label: "Dostępne tagi"
+              description: "Tagi, z których AI może wybierać (używane tylko w trybie ręcznym)"
+            confidence_threshold:
+              label: "Próg ufności"
+              description: "Minimalny procent ufności (0–100) wymagany do zastosowania sugerowanych tagów"
+            max_tags_per_post:
+              label: "Maksymalna liczba tagów na post"
+              description: "Maksymalna liczba tagów, które można zastosować do jednego wpisu"
+            max_post_tokens:
+              label: "Maksymalna liczba tokenów wpisów"
+              description: "Maksymalna liczba tokenów z treści wpisu do analizy"
+            allow_restricted_tags:
+              label: "Zezwalaj na ograniczone tagi"
+              description: "Pozwól AI proponować i stosować tagi z ograniczonymi uprawnieniami lub widocznością."
+            max_posts_for_context:
+              label: "Maksymalna liczba postów dla kontekstu"
+              description: "Maksymalna liczba postów z tematu do uwzględnienia w kontekście analizy (domyślnie: 5)"
+            allow_system_posts:
+              label: "Zezwalaj na wpisy systemowe"
+              description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
       default_llm:
@@ -228,6 +263,7 @@ pl_PL:
           text: "Wyszukaj funkcje, osobowości, LLM-y lub grupy..."
           no_results: "Nie znaleziono funkcji spełniających kryteria filtrów."
           reset: "Przywróć"
+        no_automations: "Nie ma jeszcze żadnych automatyzacji"
         summarization:
           name: "Podsumowania"
           description: "Udostępnia przycisk podsumowania, który umożliwia odwiedzającym podsumowanie tematów"
@@ -275,11 +311,62 @@ pl_PL:
           name: "Spam"
           description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."
           inspect_posts: "Sprawdź posty"
+        automation_reports:
+          name: "Zautomatyzowane raporty"
+          description: "Automatycznie tworzy zwięzłe podsumowania aktywności, podkreślając trendy, kluczowe tematy i zaangażowanie"
+        automation_triage:
+          name: "Triaż postów"
+          description: "Automatyzuje moderację i zarządzanie postami, korzystając z konfigurowalnych reguł automatyzacji"
       modals:
         select_option: "Wybierz opcję..."
       layout:
         table: "Tabela"
         card: "Karta"
+      translations:
+        title: "Tłumaczenia"
+        description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
+        supported_locales: "Obsługiwane języki"
+        supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
+        admin_actions:
+          translation_settings: "Ustawienia tłumaczenia"
+          localization_settings: "Ustawienia lokalizacji"
+          enable_translations: "Włącz automatyczne tłumaczenia"
+        stats:
+          title: "Statystyki tłumaczeń"
+          complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język."
+          incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język."
+          backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
+          backfill_message: "<a href='%{settingsUrl}'>Ustawienia uzupełniania</a> są skonfigurowane tak, aby tłumaczyć wszystkie posty po %{date} — szacuje się, że zajmie to %{eta}."
+          eta_minutes:
+            one: "%{count} minuta"
+            few: "%{count} minuty"
+            many: "%{count} minut"
+            other: "%{count} minut"
+          eta_hours:
+            one: "%{count} godzina"
+            few: "%{count} godziny"
+            many: "%{count} godzin"
+            other: "%{count} godzin"
+          eta_days:
+            one: "%{count} dzień"
+            few: "%{count} dni"
+            many: "%{count} dni"
+            other: "%{count} dni"
+        progress_chart:
+          title: "Postęp tłumaczenia"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} z %{total} wpisów w języku innym niż %{language} przetłumaczono"
+          bar_done:
+            one: "%{count} wpis"
+            few: "%{count} wpisy"
+            many: "%{count} wpisów"
+            other: "%{count} wpisów"
+        translations_menu:
+          translate:
+            label: "Przetłumacz post"
+            title: "Tłumaczy ten post na wszystkie obsługiwane języki"
+            confirm: "Spowoduje to zaktualizowanie wszystkich istniejących tłumaczeń w tym poście. Czy na pewno chcesz to zrobić?"
+            success: "Post został wysłany do przetłumaczenia"
       spam:
         short_title: "Spam"
         title: "Skonfiguruj obsługę spamu"
@@ -354,6 +441,7 @@ pl_PL:
           last_week: "Ostatni tydzień"
           last_month: "Ostatni miesiąc"
           custom: "Niestandardowy..."
+        credit_allocations: "Alokacje kredytów"
       ai_persona:
         ai_tools: "Narzędzia"
         tool_strategies:
@@ -563,6 +651,11 @@ pl_PL:
           max_tokens_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnego użycia"
           max_usages_help: "Maksymalna liczba przypadków, w których każdy użytkownik w tej grupie może użyć modelu AI w określonym czasie. Ten limit jest śledzony dla poszczególnych użytkowników, a nie współdzielony przez grupę."
           max_usages_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnej liczby tokenów"
+        credit_allocation:
+          credits_remaining: "Pozostało %{remaining} z %{total} kredytów (%{percentage}%)"
+          soft_limit_warning: "Ten model ma %{percentage}% kredytów AI pozostałych w tym miesiącu"
+          hard_limit_warning: "Wyczerpały się kredyty AI dla tego modelu. Funkcje SI wykorzystujące ten model będą niedostępne do %{reset_date}."
+          next_reset: "Zresetowano kredyty na %{time}"
         usage:
           ai_bot: "Bot AI"
           ai_helper: "Pomocnik (%{persona})"
@@ -579,7 +672,7 @@ pl_PL:
           other: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
         model_description:
           none: "Ogólne ustawienia, które działają dla większości modeli językowych"
-          anthropic-claude-opus-4-0: "Najbardziej inteligentny model Anthropic"
+          anthropic-claude-opus-4-1: "Najbardziej inteligentny model Anthropic"
           anthropic-claude-sonnet-4-0: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-3-7-sonnet-latest: "Optymalna równowaga między szybkością a kosztami (poprzednia generacja)"
           anthropic-claude-3-5-haiku-latest: "Szybko i ekonomicznie"
@@ -587,11 +680,12 @@ pl_PL:
           google-gemini-2-0-flash: "Lekki, szybki i ekonomiczny z multimodalnym rozumowaniem (poprzednia generacja)"
           google-gemini-2-5-flash: "Lekki, szybki i ekonomiczny z multimodalnym rozumowaniem"
           google-gemini-2-0-flash-lite: "Model ekonomiczny i o niskim opóźnieniu"
-          open_ai-o3: "Najbardziej wydajny model rozumowania Open AI"
+          google-gemini-2-5-flash-image-preview: "Najnowszy model generowania obrazu z funkcjami wizyjnymi"
+          open_ai-o3: "Najbardziej zaawansowany model wnioskowania OpenAI"
           open_ai-o4-mini: "Zaawansowany, efektywny kosztowo model rozumowania"
-          open_ai-gpt-4-1: "Flagowy model Open AI. Doskonale nadaje się do rozwiązywania problemów w różnych domenach."
-          open_ai-gpt-4-1-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami, co czyni go atrakcyjnym modelem do wielu zastosowań."
-          open_ai-gpt-4-1-nano: "Najszybszy i najbardziej ekonomiczny model GPT-4.1."
+          open_ai-gpt-5: "Flagowy model OpenAI. Doskonale nadaje się do rozwiązywania problemów w różnych domenach."
+          open_ai-gpt-5-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami, co czyni go atrakcyjnym modelem do wielu zastosowań."
+          open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5."
           samba_nova-Meta-Llama-3-1-8B-Instruct: "Wydajny, lekki model wielojęzyczny"
           samba_nova-Meta-Llama-3-3-70B-Instruct": "Wydajny model wielofunkcyjny"
           mistral-mistral-large-latest: "Najpotężniejszy model Mistral"
@@ -599,6 +693,8 @@ pl_PL:
           open_router-x-ai-grok-3-beta: "Najnowszy model xAI"
           open_router-deepseek-deepseek-r1-0528-free: "Najnowszy model wnioskowania DeepSeek"
           open_router-meta-llama-3-3-70b-instruct: "Wysoce wydajny model wielojęzyczny"
+          groq-openai-gpt-oss-120b: "Najnowocześniejszy model open-weight opracowany przez OpenAI"
+          groq-openai-gpt-oss-20b: "Lekki, szybki i otwarty model OpenAI"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
           title: "Skonfigurowane LLM"
@@ -615,6 +711,7 @@ pl_PL:
           title: "Przeprowadź test"
           running: "Przeprowadzam test..."
           success: "Powodzenie!"
+          invalid_config: "Najpierw napraw następujące błędy w konfiguracji:"
           failure: "Próba nawiązania kontaktu z modelem zwróciła następujący błąd: %{error}"
         hints:
           max_prompt_tokens: "Maksymalna liczba tokenów, jaką model może przetworzyć w jednym żądaniu"
@@ -641,6 +738,7 @@ pl_PL:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Niestandardowe"
         provider_fields:
           access_key_id: "Identyfikator klucza dostępu AWS Bedrock"
@@ -712,6 +810,11 @@ pl_PL:
           credits: "Napisy z AI"
           save_caption: "Zapisz"
         no_content_error: "Najpierw dodaj zawartość, aby wykonać na niej działania AI."
+      errors:
+        credit_limit_dialog:
+          title: "Osiągnięto limit kredytów AI"
+          message: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu na stronie %{reset_time}."
+          message_without_time: "Osiągnąłeś limit kredytów AI dla swojego planu. Odpowiedzi będą niedostępne do czasu zresetowania limitu."
       reviewables:
         model_used: "Zastosowany model:"
         accuracy: "Dokładność:"
@@ -772,6 +875,7 @@ pl_PL:
           none: "Przepraszamy, nasze wyszukiwanie AI nie znalazło pasujących tematów"
           new: "Naciśnij „Szukaj”, aby rozpocząć wyszukiwanie nowych wyników za pomocą sztucznej inteligencji"
           unavailable: "Wyniki AI są niedostępne"
+          zero_results_expanded: "Znaleziono zero wyników, pokazano %{count} wyników AI"
         semantic_search_tooltips:
           results_explanation: "Po włączeniu tej opcji poniżej zostaną dodane dodatkowe wyniki wyszukiwania AI."
           invalid_sort: "Aby wyświetlić wyniki AI, wyniki wyszukiwania muszą być sortowane według trafności"
@@ -790,6 +894,8 @@ pl_PL:
         cancel_streaming: "Zatrzymaj odpowiedź"
         default_pm_prefix: "[PW bota AI bez tytułu]"
         shortcut_title: "Rozpocznij PW z botem AI"
+        shortcut_link: "Bot AI"
+        exit: "opuść bota AI"
         share: "Skopiuj rozmowę AI"
         conversation_shared: "Rozmowa skopiowana"
         embed_copied: "Osadź skopiowane do schowka"
@@ -888,6 +994,18 @@ pl_PL:
         topic:
           title: "Podsumowanie tematu"
           close: "Zamknij panel podsumowania"
+          regenerate: "Wygeneruj krótkie podsumowanie"
+          regenerate_bulk: "Wygeneruj krótkie podsumowania"
+          regenerate_success:
+            one: "Krótkie podsumowanie zostało pomyślnie wygenerowane"
+            few: "%{count} krótkie podsumowania zostały pomyślnie wygenerowane"
+            many: "%{count} krótkich podsumowań zostało pomyślnie wygenerowanych"
+            other: "%{count} krótkich podsumowań zostało pomyślnie wygenerowanych"
+          regenerate_error:
+            one: "Nie udało się wygenerować krótkiego podsumowania"
+            few: "Nie udało się wygenerować %{count} krótkich podsumowań"
+            many: "Nie udało się wygenerować %{count} krótkich podsumowań"
+            other: "Nie udało się wygenerować %{count} krótkich podsumowań"
         topic_list_layout:
           button:
             compact: "Kompaktowy"

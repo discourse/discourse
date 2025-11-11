@@ -34,6 +34,6 @@ zh_CN:
   unsubscribe:
     policy_emails:
       select_title: "将接收策略提醒电子邮件的频率设为："
-      never: 永不
+      never: 从不
       when_away: 仅在离开时
       always: 始终

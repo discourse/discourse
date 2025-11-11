@@ -138,6 +138,51 @@ fa_IR:
       placeholder: تاریخ
       from_placeholder: "از تاریخ"
       to_placeholder: "تا تاریخ"
+    languages:
+      ar:
+        name: عربی
+      be:
+        name: بلاروسی
+      bs_BA:
+        name: بوسنیایی
+      de:
+        name: آلمانی
+      en:
+        name: انگلیسی (لهجه آمریکایی)
+      en_GB:
+        name: انگلیسی (بریتانیا)
+      es:
+        name: اسپانیایی
+      et:
+        name: استونی
+      fa_IR:
+        name: فارسی
+      fr:
+        name: فرانسوی
+      he:
+        name: عبری
+      hr:
+        name: کرواسی
+      hy:
+        name: ارمنی
+      id:
+        name: اندونزیایی
+      it:
+        name: ایتالیایی
+      ja:
+        name: ژاپنی
+      ko:
+        name: کره‌ای
+      lt:
+        name: لیتوانی
+      pt:
+        name: پرتغالی
+      ro:
+        name: رومانی
+      ru:
+        name: روسی
+      sk:
+        name: اسلوواکی
     share:
       topic_html: 'موضوع: <span class="topic-title">%{topicTitle}</span>'
       post: "نوشته #%{postNumber} توسط @%{username}"
@@ -198,7 +243,7 @@ fa_IR:
       header:
         logged_in_members: "خوش آمدید، %{preferred_display_name}!"
         anonymous_members: "به %{site_name} خوش آمدید!"
-      search: "جستجو"
+      search_placeholder: "جستجو"
     themes:
       default_description: "پیش‌فرض"
       error_caused_by: "ناشی از '%{name}'. برای به روز رسانی، پیکربندی مجدد یا غیر فعال کردن، <a target='blank' href='%{path}'>کلیک کنید</a>."
@@ -476,6 +521,7 @@ fa_IR:
       other: "مشاهده %{count} موضوع جدید"
     preview: "پیش‌نمایش"
     cancel: "انصراف"
+    done: "انجام شد"
     deleting: "در حال حذف ..."
     save: "ذخیره سازی تغییرات"
     saving: "در‌حال ذخیره‌سازی..."
@@ -563,10 +609,6 @@ fa_IR:
         claimed_by_you: "می‌توانید این مورد را درخواست کنید و آن را بازنگری کنید."
         claimed_by_other: "این مورد فقط توسط کاربر<b>%{username} </b>قابل بازنگری است."
         automatically_claimed_by: "این مورد توسط <b>%{username}</b> در حال بازنگری است."
-      claim:
-        title: "درخواست این مبحث"
-      unclaim:
-        help: "حذف درخواست"
       awaiting_approval: "منتظر تایید"
       delete: "حذف"
       settings:
@@ -715,10 +757,12 @@ fa_IR:
         reviewable_post:
           title: "نوشته"
           noun: "نوشته"
+      user_label: "کاربر"
       notes:
         delete: "حذف"
       review_user: "کاربر"
       copy_link: "رونوشت پیوند"
+      copy_link_feedback: "لینک کپی شد"
       insights:
         activities:
           posts:
@@ -1290,18 +1334,16 @@ fa_IR:
       color_scheme: "پالت رنگ"
       color_schemes:
         default_description: "تم پیش‌فرض"
-        disable_dark_scheme: "مثل معمولی"
         dark_instructions: "می‌توانید با تغییر پوسته دستگاهتان به حالت تاریک، پالت رنگ حالت تاریک را پیش‌نمایش کنید."
         undo: "بازنشانی"
-        regular: "عادی"
         dark: "حالت تاریک"
-        default_dark_scheme: "(پیش‌فرض سایت)"
         interface_modes:
           auto: "خودکار"
           light: "روشن"
           dark: "تیره"
+        picker:
+          active: "فعال"
       dark_mode: "حالت تاریک"
-      dark_mode_enable: "پالت رنگ حالت تاریک خودکار را فعال کنید"
       text_size_default_on_all_devices: "این سایز قلم حالت پیش فرض در تمام دستگاه های من باشد"
       allow_private_messages: "به دیگر کاربران اجازه بده به من پیام شخصی بفرستند"
       external_links_in_new_tab: "همهٔ پیوندهای خروجی را در یک تب جدید باز کن"
@@ -2389,6 +2431,8 @@ fa_IR:
       disabled: "نمایش داده نشود"
       sidebar_footer: "نمایش در پاورقی نوار کناری"
       header: "نمایش در سر صفحه"
+    welcome_banner_page_visibility:
+      homepage: "صفحه اصلی"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2403,6 +2447,7 @@ fa_IR:
       topic_count:
         one: "%{count} موضوع در این دسته"
         other: "%{count} موضوع در این دسته"
+      read_only: "فقط خواندنی"
     select_kit:
       delete_item: "حذف %{name}"
       filter_by: "فیلتر توسط: %{name}"
@@ -2469,8 +2514,7 @@ fa_IR:
       whisper: "زمزمه"
       unlist: "از فهرست پاک شده"
       add_warning: "این یک هشدار رسمی است."
-      toggle_whisper: "تغییر وضعیت زمزمه"
-      insert_table: "درج جدول"
+      toggle_whisper: "فعالسازی زمزمه"
       posting_not_on_topic: "به کدام موضوع می‌خواهید پاسخ دهید؟"
       saved_local_draft_tip: "به صورت محلی ذخیره شد"
       similar_topics: "موضوعات مشابه…"
@@ -2527,11 +2571,11 @@ fa_IR:
       reply: "پاسخ"
       cancel: "لغو کردن"
       create_topic: "ایجاد موضوع"
-      create_pm: "ارسال پیام"
       create_whisper: "زمزمه"
       create_shared_draft: "ایجاد پیش‌نویس مشترک"
       edit_shared_draft: "ویرایش درفت مشترک"
       title: "یا %{modifier}Enter را فشار دهید"
+      discard: "حذف"
       users_placeholder: "افزودن کاربران یا گروه‌ها"
       title_placeholder: "در یک جمله‌ی کوتاه بگویید که این موضوع در چه موردی است؟"
       title_or_link_placeholder: "عنوان را بنویسید،یا پیوند را بچسبانید"
@@ -2567,19 +2611,9 @@ fa_IR:
       paste_code_text: "کد را در اینجا بنویسید یا بچسبانید"
       upload_title: "بارگذاری"
       upload_description: "توضیح بارگذاری را در اینجا بنویسید"
-      olist_title: "فهرست شماره گذاری شده"
-      ulist_title: "فهرست نقطه‌ای"
       list_item: "فهرست موارد"
-      toggle_direction: "تغییر جهت"
       help: "راهنمای ویرایش با Markdown"
-      collapse: "کوچک سازی پنل نوشتن"
-      open: "پنل کامپوزر را باز کنید"
-      abandon: "پنل نوشتن را ببند و پیش‌نویس را حذف کن"
-      enter_fullscreen: "کامپوزر تمام صفحه"
-      exit_fullscreen: "خارج شدن از حالت نوشتار تمام‌صفحه"
       exit_fullscreen_prompt: "برای خروج از تمام صفحه، دکمه <kbd>ESC</kbd> را فشار دهید"
-      show_toolbar: "نمایش نوار ابزار نوشتن"
-      hide_toolbar: "مخفی کردن نوار ابزار نوشتن"
       modal_ok: "تایید"
       cant_send_pm: "متاسفانه , شما نمیتوانید به %{username} پیام بفرستید."
       create_message_error: "متاسفیم، خطایی در ایجاد این پیام رخ داد. لطفا دوباره امتحان کنید"
@@ -2612,8 +2646,10 @@ fa_IR:
           label: فعالسازی زمزمه
           desc: زمزمه ها فقط توسط کارکنان قابل مشاهده است
         create_topic:
-          label: "موضوع جدید"
           desc: یک موضوع جدید ایجاد کنید
+        create_personal_message:
+          label: "پیام جدید"
+          desc: "یک پیام شخصی جدید بساز"
         shared_draft:
           label: "درفت اشتراکی"
           desc: "موضوعی را پیش‌نویس کنید که فقط برای کاربران مجاز قابل مشاهده باشد"
@@ -3084,9 +3120,7 @@ fa_IR:
         one: "%{count} نوشته در این موضوع وجود دارد"
         other: "%{count} نوشته در این موضوع وجود دارد"
       create: "موضوع جدید"
-      create_disabled_category: "شما مجاز به ایجاد موضوع در این دسته‌بندی نیستید"
-      create_disabled_tag: "شما مجاز به ایجاد موضوع با این برچسب نیستید"
-      create_long: "ساخت یک موضوع جدید"
+      create_long: "یک موضوع جدید ایجاد کنید"
       open_draft: "بازکردن پیشنویس"
       private_message: "شروع یک پیام"
       archive_message:
@@ -3249,9 +3283,6 @@ fa_IR:
       auto_close_immediate:
         one: "از آخرین نوشته این موضوع %{count} ساعت گذشته، بنابراین موضوع بسته می‌شود."
         other: "از آخرین نوشته این موضوع %{count} ساعت گذشته، بنابراین موضوع بسته می‌شود."
-      auto_close_momentarily:
-        one: "از آخرین نوشته این موضوع %{count} ساعت گذشته است؛ بنابراین موضوع موقتاً بسته می‌شود."
-        other: "از آخرین نوشته این موضوع %{count} ساعت گذشته است؛ بنابراین موضوع موقتاً بسته می‌شود."
       timeline:
         back: "بازگشت"
         back_description: "بازگشت به اولین نوشته‌ی خوانده نشده"
@@ -3522,6 +3553,9 @@ fa_IR:
       title: "آخرین فرسته‌ها"
       empty: "هیچ پستی وجود ندارد"
       aria_post_number: "%{title} - نوشته #%{postNumber}"
+      bulk:
+        clear_all: "پاکسازی همه"
+        actions: "عملیات گروهی"
     post:
       confirm_delete: "آیا مطمئن هستید که می‌خواهید این پست را حذف کنید؟"
       quote_reply: "نقل‌قول"
@@ -3620,10 +3654,7 @@ fa_IR:
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار‌گذاری کنند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
       cancel_composer:
-        confirm: "دوست دارید با پست خود چه کار کنید؟"
         discard: "دور انداختن"
-        save_draft: "ذخیره به عنوان پیش نویس"
-        keep_editing: "ادامه ویرایش"
       via_email: "این نوشته از طریق ایمیل ارسال شده است"
       via_auto_generated_email: "این نوشته با ایمیل خودکار ارسال شده"
       whisper: "این ارسال نجوای خصوصی برای ناظران است"
@@ -3817,8 +3848,8 @@ fa_IR:
         add: "افزودن زبان جدید"
         remove: "پاک کردن"
         hint: "در حال حاضر هیچ محلی‌سازی برای این دسته‌بندی وجود ندارد. برای افزودن محلی‌سازی، روی «افزودن زبان جدید» در زیر کلیک کنید."
-      tags_allowed_tags: "محدودکردن این برچسب‌ها به این دسته‌بندی:"
-      tags_allowed_tag_groups: "این گروه برچسب را به این دسته محدود کنید:"
+      tags_allowed_tags_new_category: "محدودکردن این برچسب‌ها به این دسته‌بندی:"
+      tags_allowed_tag_groups_new_category: "این گروه برچسب را به این دسته محدود کنید:"
       tags_placeholder: "(اختیاری) فهرست برچسب‌های قابل استفاده"
       tags_tab_description: "برچسب‌ها و گروه‌های برچسب مشخص‌شده در بالا فقط در این دسته و سایر دسته‌هایی که آنها را نیز مشخص می‌کنید در دسترس خواهند بود. آنها برای استفاده در دسته های دیگر در دسترس نخواهند بود."
       tag_groups_placeholder: "(اختیاری) لیست برچسب‌های قابل استفاده‌ی گروه"
@@ -3844,6 +3875,8 @@ fa_IR:
       logo_dark: "حالت تیره دسته‌بندی تصویر لوگو"
       background_image: "تصویر پس‌زمینه برای دسته‌بندی"
       background_color: "رنگ"
+      color_validations:
+        cant_be_empty: "نمی‌تواند خالی باشد"
       styles:
         icon: "آیکن"
         emoji: "شکلک"
@@ -4216,7 +4249,6 @@ fa_IR:
     preloader_text: "بارگیری..."
     lightbox:
       download: "دانلود"
-      open: "تصویر اصلی"
       previous: "قبلی (مکان‌نمای چپ)"
       next: "بعدی (مکان‌نمای راست)"
       counter: "%curr% از %total%"
@@ -4382,7 +4414,6 @@ fa_IR:
       choose_for_topic_required_group:
         one: "برچسب از '%{name}' انتخاب کنید... %{count}"
         other: "برچسب از '%{name}' انتخاب کنید... %{count}"
-      info: "اطلاعات"
       default_info: "این برچسب به هیچ دسته ای محدود نمی شود و مترادف ندارد."
       staff_info: "برای افزودن محدودیت، این برچسب را در یک <a href=%{basePath}/tag_groups>گروه برچسب</a> قرار دهید."
       category_restricted: "این برچسب محدود به دسته‌هایی است که اجازه دسترسی به آن‌ها را ندارید."
@@ -4837,6 +4868,7 @@ fa_IR:
   admin_js:
     type_to_filter: "برای فیلتر کردن تایپ کنید..."
     settings: "تنظیمات"
+    reset_filter: "بازنشانی"
     admin:
       title: "مدیر ارشد دیسکورس"
       moderator: "ناظر"
@@ -4868,6 +4900,20 @@ fa_IR:
           title: "افزونه‌ها"
         advanced:
           title: "پیشرفته"
+      upcoming_changes:
+        name: "نام"
+        enabled: "فعال شده"
+        select_groups: "انتخاب گروه‌ها"
+        preview: "پیش‌نمایش"
+        impact_roles:
+          admins: "مدیران ارشد"
+          moderators: "ناظران"
+          staff: "همکاران"
+        filter:
+          all: "همه"
+          enabled: "فعال شده"
+          disabled: "غیرفعال"
+          impact_type_other: "دیگر"
       config:
         about:
           title: "درباره سایت شما"
@@ -4892,9 +4938,12 @@ fa_IR:
           title: "محلی‌سازی"
           header_description: "زبان رابط انجمن خود و سایر گزینه‌های محلی سازی را برای اعضای خود پیکربندی کنید"
           keywords: "محل|زبان|منطقه زمانی|یونیکد|ltr"
-        login_and_authentication:
+        login:
           title: "ورود و احراز هویت"
           header_description: "نحوه ورود و احراز هویت کاربران، اسرار و کلیدها، ارائه دهندگان OAuth2 و موارد دیگر را پیکربندی کنید"
+          sub_pages:
+            common_settings:
+              title: "تنظیم"
         logo:
           form:
             logo:
@@ -5082,11 +5131,10 @@ fa_IR:
           experimental: "آزمایشی"
           experiment_enabled: "شما ویژگی آزمایشی را فعال کرده‌اید."
           experiment_disabled: "شما ویژگی آزمایشی را غیرفعال کرده‌اید."
-          experiment_toggled_too_fast: "شما ویژگی آزمایشی را خیلی سریع تغییر داده‌اید. لطفا چند ثانیه منتظر بمانید و دوباره تلاش کنید."
           experiment_tooltip:
-            title_disabled: "ویژگی آزمایشی ما را امتحان کنید."
             title_enabled: "ویژگی آزمایشی را خاموش کنید"
-            content_disabled: "ویژگی جدید ما را امتحان کنید! این ویژگی همچنان در مرحله آزمایشی است، بنابراین ممکن است در هر زمانی حذف شود. شما می‌توانید هر زمان که خواستید از آن انصراف دهید. <br/><br/>با تغییر این تنظیم، ویژگی مذکور برای همه کاربران فعال می شود."
+            content_enabled: "با تغییر این تنظیم، این ویژگی برای همه کاربران غیرفعال می‌شود."
+          feature_tooltip:
             content_enabled: "با تغییر این تنظیم، این ویژگی برای همه کاربران غیرفعال می‌شود."
         last_checked: " آخرین بررسی"
         refresh_problems: "تازه کردن"
@@ -5841,7 +5889,6 @@ fa_IR:
         copy_to_clipboard: "کپی در clipboard"
         copied_to_clipboard: "کپی شد"
         copy_to_clipboard_error: "خطا در کپی اطلاعات"
-        theme_owner: "قابل ویرایش نیست، مالک:"
         email_templates:
           title: "ایمیل"
           subject: "عنوان"
@@ -5849,6 +5896,7 @@ fa_IR:
           body: "متن"
           revert: "بازگرداندن تغییرات"
           revert_confirm: "آیا مطمئن هستید که میخواهید تنظیمات را بازگردانی کنید؟"
+          edit: "ویرایش"
         component:
           all_filter: "همه"
           used_filter: "استفاده شده"
@@ -5891,7 +5939,7 @@ fa_IR:
           extra_files_upload: "برای مشاهده این فایل‌ها، پوسته را صادر کنید."
           extra_files_remote: "برای مشاهده این فایل‌ها، پوسته را صادر کنید یا مخزن git را بررسی کنید."
           preview: "پیش‌نمایش"
-          default: "فعال"
+          default: "پوسته پیش‌فرض"
           settings_editor: "تنظیمات ویرایشگر"
           is_default: "قالب پیش‌فرض"
           user_selectable: "قالب توسط کاربر قابل تغییر است"
@@ -5899,9 +5947,8 @@ fa_IR:
           color_scheme_user_selectable: "پالت رنگ می‌تواند توسط کاربران انتخاب شود"
           auto_update: "به‌روزرسانی خودکار هنگام به‌روزرسانی Discourse"
           color_scheme: "پالت رنگ"
-          edit_color_scheme: "ویرایش پالت رنگ"
           default_light_scheme: "روشن(پیش‌فرض)"
-          color_scheme_select: "انتخاب رنگ مورد استفاده قالب"
+          color_scheme_select: "انتخاب رنگ مورد استفاده قالب."
           custom_sections: "بخش‌های سفارشی"
           theme_components: "اجزای قالب"
           add_all_themes: "اضافه کردن همه پوسته‌ها"
@@ -5913,6 +5960,7 @@ fa_IR:
           convert_theme_alert_generic: "آیا مطمئن هستید که می خواهید این پوسته را به کامپوننت تبدیل کنید؟"
           convert_theme_tooltip: "تبدیل این تم به کامپوننت"
           inactive_themes: "تم های غیر فعال:"
+          default_theme: "پوسته پیش‌فرض"
           set_default_success: "پوسته پیش‌فرض روی %{theme} تنظیم شد."
           install_success: "%{theme} با موفقیت نصب شد!"
           inactive_components: "کامپوننت‌های بلااستفاده:"
@@ -5995,10 +6043,6 @@ fa_IR:
           remote_theme_edits: "اگر می‌خواهید این پوسته را ویرایش کنید، باید <a href='%{repoURL}' target='_blank'>تغییری را در مخزن آن ارسال کنید</a>"
           repo_unreachable: "نمی توان با مخزن Git این پوسته ارتباط برقرار کرد. پیام خطا:"
           imported_from_archive: "این پوسته از یک فایل zip. وارد شده است"
-          settings: "تنظیمات"
-          colors: "رنگ‌ها"
-          discard_colors: "حذف"
-          colors_title: "رنگ‌ها"
           scss:
             text: "سی اس اس"
           after_header:
@@ -6034,6 +6078,8 @@ fa_IR:
         schema:
           title: "ویرایش تنظیمات %{name}"
           back_button: "بازگشت به %{name}"
+          move_up: "انتقال به بالا"
+          move_down: "انتقال به پایین"
           fields:
             required: "*مورد نیاز"
             groups:
@@ -6059,13 +6105,13 @@ fa_IR:
           select_base:
             title: "پالت رنگ پایه را انتخاب کنید"
             description: "پالت پایه:"
+          light: "روشن"
+          dark: "تیره"
           title: "رنگ‌ها"
           edit: "ویرایش"
           filters:
             all: "همه"
             user_selectable: "قابل انتخاب توسط کاربر"
-          active_badge:
-            text: "فعال"
           long_title: "پالت‌های رنگ"
           about: "رنگ های استفاده شده توسط پوسته‌های خود را تغییر دهید. برای شروع یک پالت رنگ جدید ایجاد کنید."
           new_name: "پالت رنگی جدید"
@@ -6720,8 +6766,6 @@ fa_IR:
             cancel: "لغو کردن"
         merging_user: "درحال ادغام کاربر…"
         merge_failed: "هنگام ادغام کاربران خطایی روی داد."
-        delete_forbidden_because_staff: "مدیران و ناظران را نمی‌توانید پاک کنید"
-        delete_posts_forbidden_because_staff: "نمی توان همه‌ی نوشته‌های مدیران و ناظران را حذف کرد"
         delete_forbidden:
           one: "کاربرانی را که دارای موضوع هستند نمی‌توانید پاک کنید. پیش از تلاش برای پاک کردن کاربر، ابتدا همه‌ی موضوعاتش را پاک کنید. (موضوعات که بیش از %{count} روز پیش فرستاده شده باشند، نمی‌توانند پاک شوند.)"
           other: "کاربرانی را که دارای موضوع هستند نمی‌توانید پاک کنید. پیش از تلاش برای پاک کردن کاربر، ابتدا همه‌ی موضوعاتش را پاک کنید. (موضوعات که بیش از %{count} روز پیش فرستاده شده باشند، نمی‌توانند پاک شوند.)"

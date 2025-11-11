@@ -10,6 +10,7 @@ it:
     discourse_templates_categories: "Categorie da cui prelevare i modelli"
     discourse_templates_enable_private_templates: "Consente l'uso di modelli privati"
     discourse_templates_groups_allowed_private_templates: "Gruppi autorizzati a utilizzare modelli privati. I membri dello staff sono sempre autorizzati."
+    discourse_templates_private_templates_tags: "Tag che identificano un messaggio personale come modello privato"
   default_category_template:
     name: Modelli
     description: |

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ar:
+  theme_metadata:
+    description: "سمة سهلة وجذابة تسهم في تحسين تجربة التشغيل الافتراضية لمواقع Discourse."

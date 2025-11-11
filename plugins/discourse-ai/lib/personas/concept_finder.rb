@@ -33,11 +33,11 @@ module DiscourseAi
           #{existing_concepts_text}
           Format your response as a JSON object with a single key named "concepts", which has an array of concept strings as the value.
           Your output should be in the following format:
-            <o>
-              {"concepts": ["concept1", "concept2", "concept3"]}
-            </o>
+
+          {"concepts": ["concept1", "concept2", "concept3"]}
 
           Where the concepts are replaced by the actual concepts you've identified.
+          reply with valid JSON only
         PROMPT
       end
 

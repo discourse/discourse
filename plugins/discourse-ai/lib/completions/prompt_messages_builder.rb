@@ -115,6 +115,7 @@ module DiscourseAi
               "(
                   SELECT array_agg(ref.upload_id)
                   FROM upload_references ref
+                  JOIN uploads u ON u.id = ref.upload_id
                   WHERE ref.target_type = 'Post' AND ref.target_id = posts.id
                ) as upload_ids",
               "posts.created_at",
@@ -152,9 +153,7 @@ module DiscourseAi
 
             context[:id] = username if context[:type] == :user
 
-            if upload_ids.present? && context[:type] == :user && include_uploads
-              context[:upload_ids] = upload_ids.compact
-            end
+            context[:upload_ids] = upload_ids.compact if upload_ids.present? && include_uploads
             context[:created_at] = created_at
 
             builder.push(**context)

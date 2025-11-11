@@ -315,9 +315,7 @@ module PostGuardian
     return false if post.blank?
     return true if is_admin?
     return false unless can_see_post_topic?(post)
-    unless post.user == @user || Topic.visible_post_types(@user).include?(post.post_type)
-      return false
-    end
+    return false unless is_my_own?(post) || Topic.visible_post_types(@user).include?(post.post_type)
     return true if is_moderator? || is_category_group_moderator?(post.topic.category)
     if (!post.trashed? || can_see_deleted_post?(post)) &&
          (!post.hidden? || can_see_hidden_post?(post))
@@ -339,7 +337,9 @@ module PostGuardian
     end
     return false if anonymous?
     return true if is_staff?
-    post.user_id == @user.id || @user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
+    return true if is_my_own?(post)
+
+    @user.in_any_groups?(SiteSetting.hidden_post_visible_groups_map)
   end
 
   def can_view_edit_history?(post)
@@ -349,7 +349,10 @@ module PostGuardian
       return true if post.wiki || SiteSetting.edit_history_visible_to_public
     end
 
-    authenticated? && (is_staff? || @user.id == post.user_id) && can_see_post?(post)
+    return false if !authenticated?
+    return false if !can_see_post?(post)
+
+    is_staff? || is_my_own?(post)
   end
 
   def can_change_post_owner?

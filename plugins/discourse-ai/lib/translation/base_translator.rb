@@ -12,7 +12,7 @@ module DiscourseAi
 
       def translate
         return nil if !SiteSetting.ai_translation_enabled
-        if (ai_persona = AiPersona.find_by(id: persona_setting)).blank?
+        if (ai_persona = AiPersona.find_by_id_from_cache(persona_setting)).blank?
           return nil
         end
         translation_user = ai_persona.user || Discourse.system_user
@@ -55,13 +55,21 @@ module DiscourseAi
       end
 
       def get_max_tokens(text)
-        if text.length < 100
-          500
-        elsif text.length < 500
-          1000
-        else
-          text.length * 2
-        end
+        base_tokens =
+          if text.length < 100
+            500
+          elsif text.length < 500
+            1000
+          else
+            text.length * 2
+          end
+
+        (base_tokens * max_token_multiplier).to_i
+      end
+
+      def max_token_multiplier
+        multiplier = SiteSetting.ai_translation_max_tokens_multiplier
+        multiplier > 0 ? multiplier : 1.0
       end
 
       def persona_setting

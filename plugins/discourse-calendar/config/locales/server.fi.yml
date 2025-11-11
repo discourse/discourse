@@ -33,7 +33,6 @@ fi:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Tekstirivien enimmäismäärä tapahtumaa kohden kalenterissa."
     map_events_to_color: "Määritä jokaiselle tunnisteelle tai alueelle väri."
     map_events_title: "Korvaa \"Tapahtumat\" \"Tulevat tapahtumat\" -sivupalkin otsikossa aluekohtaisesti."
     calendar_enabled: "Ota discourse-calendar-lisäosa käyttöön. Tämä lisää tuen [calendar][/calendar]-tunnisteelle ketjun ensimmäisessä viestissä."
@@ -62,7 +61,6 @@ fi:
     calendar_automatic_holidays_enabled: "Aseta lomatila automaattisesti käyttäjän alueen mukaan (huomaa: voit poistaa tietyt automaattiset lomat käytöstä lisäosan asetuksissa)"
     event_participation_buttons: "Luettelo tapahtuman osallistumispainikkeista, joita käyttäjät voivat käyttää."
     sidebar_show_upcoming_events: "Näytä tulevat tapahtumat -linkki sivupalkissa Lisää-kohdan alla."
-    include_expired_events_on_calendar: "Sisällytä menneet/vanhentuneet tapahtumat Alueen kalenteri- ja Tulevat tapahtumat -näkymiin."
   discourse_calendar:
     invite_user_notification: "%{username} kutsui sinut: %{description}"
     calendar_must_be_in_first_post: "Kalenteritunnistetta voi käyttää vain ketjun ensimmäisessä viestissä."

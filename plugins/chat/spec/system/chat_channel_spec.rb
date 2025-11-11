@@ -137,7 +137,7 @@ RSpec.describe "Chat channel", type: :system do
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_no_css("[data-id='#{unloaded_message.id}']")
 
-      find(".chat-scroll-to-bottom__button.visible").click
+      find(".chat-channel:not(.loading) .chat-scroll-to-bottom__button.visible").click
 
       expect(channel_page).to have_no_loading_skeleton
       expect(page).to have_css("[data-id='#{unloaded_message.id}']")
@@ -425,5 +425,47 @@ RSpec.describe "Chat channel", type: :system do
     chat_page.visit_channel(channel_1)
 
     expect(page).to have_title("#🐕 Dogs - Chat - Discourse")
+  end
+
+  context "when messages are sent with client timestamps" do
+    it "orders messages by client timestamp rather than server timestamp" do
+      first_message =
+        Chat::CreateMessage.call(
+          params: {
+            chat_channel_id: channel_1.id,
+            message: "I was created first but should appear second",
+            client_created_at: 30.seconds.ago.iso8601,
+          },
+          guardian: current_user.guardian,
+        ).message_instance
+
+      second_message =
+        Chat::CreateMessage.call(
+          params: {
+            chat_channel_id: channel_1.id,
+            message: "I was created second but should appear first",
+            client_created_at: 45.seconds.ago.iso8601,
+          },
+          guardian: current_user.guardian,
+        ).message_instance
+
+      chat_page.visit_channel(channel_1)
+
+      expect(page).to have_selector(
+        ".chat-message-container[data-id='#{first_message.id}'] .chat-message-text",
+        text: "I was created first but should appear second",
+      )
+      expect(page).to have_selector(
+        ".chat-message-container[data-id='#{second_message.id}'] .chat-message-text",
+        text: "I was created second but should appear first",
+      )
+
+      messages = page.all(".chat-message-container[data-id]")
+      message_ids = messages.map { |msg| msg["data-id"].to_i }
+      second_message_index = message_ids.index(second_message.id)
+      first_message_index = message_ids.index(first_message.id)
+
+      expect(second_message_index).to be < first_message_index
+    end
   end
 end

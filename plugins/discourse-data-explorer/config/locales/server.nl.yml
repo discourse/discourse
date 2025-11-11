@@ -20,4 +20,26 @@ nl:
     report_generator:
       private_message:
         title: "Gepland rapport voor %{query_name}"
+        body: |
+          Hallo %{recipient_name}, je Gegevensverkenner-rapport is gereed.
+
+          Querynaam:
+          %{query_name}
+
+          Hier zijn de resultaten:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Query bekijken in Gegevensverkenner</a>
+
+          Rapport gemaakt op %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Gepland rapport voor %{query_name}
+
+          Hier zijn de resultaten:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Query bekijken in Gegevensverkenner</a>
+
+          Rapport gemaakt op %{created_at} (%{timezone})
       upload_appendix: "Bijlage: [%{filename}|bijlage](%{short_url})"

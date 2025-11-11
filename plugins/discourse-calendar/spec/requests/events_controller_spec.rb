@@ -10,30 +10,119 @@ module DiscoursePostEvent
     end
 
     describe "#index" do
-      fab!(:event_1) { Fabricate(:event, original_starts_at: 1.day.from_now) }
-
       it "should not result in N+1 queries problem when multiple events are returned" do
-        original_queries = track_sql_queries { get "/discourse-post-event/events.json" }
+        # Warmup
+        get "/discourse-post-event/events.json"
 
+        # Test with 1 event
+        Fabricate(:event, original_starts_at: 1.day.from_now)
+        queries_with_1_event = track_sql_queries { get "/discourse-post-event/events.json" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["events"].length).to eq(1)
 
-        event_2 = Fabricate(:event, original_starts_at: 2.days.from_now)
-        event_3 = Fabricate(:event, original_starts_at: 3.days.from_now)
-
-        new_queries = track_sql_queries { get "/discourse-post-event/events.json" }
-
+        # Test with 3 events
+        Fabricate(:event, original_starts_at: 2.days.from_now)
+        Fabricate(:event, original_starts_at: 3.days.from_now)
+        queries_with_3_events = track_sql_queries { get "/discourse-post-event/events.json" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["events"].length).to eq(3)
 
-        # TODO: There is still N+1 query problem here so uncomment this line when it is fixed
-        # expect(new_queries.count).to eq(original_queries.count)
+        expect(queries_with_3_events.count).to eq(queries_with_1_event.count)
+      end
+
+      it "should not show deleted events" do
+        active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
+        active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)
+        deleted_event =
+          Fabricate(:event, original_starts_at: 3.days.from_now, deleted_at: 1.hour.ago)
+
+        get "/discourse-post-event/events.json"
+
+        expect(response.status).to eq(200)
+        events = response.parsed_body["events"]
+        event_ids = events.map { |e| e["id"] }
+
+        expect(event_ids).to match_array([active_event1.id, active_event2.id])
+      end
+
+      it "should not show closed events" do
+        active_event1 = Fabricate(:event, original_starts_at: 1.day.from_now)
+        active_event2 = Fabricate(:event, original_starts_at: 2.days.from_now)
+        closed_event = Fabricate(:event, original_starts_at: 3.days.from_now, closed: true)
+
+        get "/discourse-post-event/events.json"
+
+        expect(response.status).to eq(200)
+        events = response.parsed_body["events"]
+        event_ids = events.map { |e| e["id"] }
+
+        expect(event_ids).to match_array([active_event1.id, active_event2.id])
+      end
+
+      it "should return events in ics format" do
+        event1 = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event 1")
+        event2 = Fabricate(:event, original_starts_at: 2.days.from_now, name: "Test Event 2")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to include("text/calendar")
+
+        event_ids_sorted = [event1.id, event2.id].sort.join("-")
+        expected_filename = "events-#{Digest::SHA1.hexdigest(event_ids_sorted)}.ics"
+        expect(response.headers["Content-Disposition"]).to eq(
+          "attachment; filename=\"#{expected_filename}\"",
+        )
+
+        body = response.body
+        expect(body).to include("BEGIN:VCALENDAR")
+        expect(body).to include("END:VCALENDAR")
+        expect(body).to include("BEGIN:VEVENT")
+        expect(body).to include("END:VEVENT")
+        expect(body).to include("SUMMARY:Test Event 1")
+        expect(body).to include("SUMMARY:Test Event 2")
+      end
+
+      it "should include location and description in ics format" do
+        event =
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            name: "Tech Conference",
+            location: "https://meet.google.com/abc-defg-hij",
+            description: "Bring your laptop and questions!",
+            url: "https://example.com/event-info",
+          )
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to include("text/calendar")
+
+        body = response.body
+        expect(body).to include("SUMMARY:Tech Conference")
+        expect(body).to include("LOCATION:https://meet.google.com/abc-defg-hij")
+        expect(body).to include("DESCRIPTION:Bring your laptop and questions!")
+        expect(body).to include("URL:https://example.com/event-info")
+      end
+
+      it "should handle events without location and description in ics format" do
+        event = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Simple Event")
+
+        get "/discourse-post-event/events.ics"
+
+        expect(response.status).to eq(200)
+        body = response.body
+        expect(body).to include("SUMMARY:Simple Event")
+        # Should still generate valid ICS even without LOCATION/DESCRIPTION
+        expect(body).to include("BEGIN:VEVENT")
+        expect(body).to include("END:VEVENT")
       end
     end
 
     context "with an existing post" do
       let(:user) { Fabricate(:user, admin: true) }
-      let(:topic) { Fabricate(:topic, user: user) }
+      let(:topic) { Fabricate(:topic, user: user, category: Fabricate(:category)) }
       let(:post1) { Fabricate(:post, user: user, topic: topic) }
       let(:invitee1) { Fabricate(:user) }
       let(:invitee2) { Fabricate(:user) }
@@ -268,8 +357,10 @@ module DiscoursePostEvent
 
             expect(response.status).to eq(200)
             events = response.parsed_body["events"]
-            expect(events.length).to eq(1)
-            expect(events[0]["id"]).to eq(event_1.id)
+            expect(events.length).to eq(2) # Now includes expired event_3
+            event_ids = events.map { |e| e["id"] }
+            expect(event_ids).to include(event_1.id)
+            expect(event_ids).to include(event_3.id)
           end
 
           it "includes subcategory events when param provided" do
@@ -277,38 +368,7 @@ module DiscoursePostEvent
 
             expect(response.status).to eq(200)
             events = response.parsed_body["events"]
-            expect(events.length).to eq(2)
-            expect(events).to match_array(
-              [hash_including("id" => event_1.id), hash_including("id" => event_2.id)],
-            )
-          end
-
-          it "includes events' details when param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&include_details=true"
-
-            expect(response.status).to eq(200)
-            events = response.parsed_body["events"]
-            expect(events.length).to eq(2)
-            expect(events[0].keys).to include(
-              "creator",
-              "sample_invitees",
-              "watching_invitee",
-              "stats",
-              "status",
-              "can_update_attendance",
-              "should_display_invitees",
-              "is_public",
-              "is_private",
-              "is_standalone",
-            )
-          end
-
-          it "includes expired events when param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&include_expired=true"
-
-            expect(response.status).to eq(200)
-            events = response.parsed_body["events"]
-            expect(events.length).to eq(3)
+            expect(events.length).to eq(3) # Now includes expired event_3
             expect(events).to match_array(
               [
                 hash_including("id" => event_1.id),
@@ -324,11 +384,11 @@ module DiscoursePostEvent
             expect(response.status).to eq(200)
             events = response.parsed_body["events"]
             expect(events.length).to eq(1)
-            expect(events[0]["id"]).to eq(event_2.id)
+            expect(events[0]["id"]).to eq(event_3.id) # Expired event sorts first (NULL starts_at)
           end
 
           it "filters events before the provided datetime if before param provided" do
-            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&include_expired=true&before=#{event_2.starts_at}"
+            get "/discourse-post-event/events.json?category_id=#{category.id}&include_subcategories=true&before=#{event_2.starts_at}"
 
             expect(response.status).to eq(200)
             events = response.parsed_body["events"]
@@ -437,6 +497,48 @@ module DiscoursePostEvent
           expect(private_event.raw_invitees).to be_nil
         end
       end
+    end
+  end
+
+  describe "bulk invite respects capacity" do
+    before do
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    let(:user) { Fabricate(:user, admin: true) }
+    let(:topic) { Fabricate(:topic, user: user) }
+    let(:post1) { Fabricate(:post, user: user, topic: topic) }
+    let!(:event) { Fabricate(:event, post: post1, max_attendees: 1) }
+
+    it "skips creating going when full" do
+      sign_in(user)
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+
+      expect_enqueued_with(
+        job: :discourse_post_event_bulk_invite,
+        args: {
+          "event_id" => event.id,
+          "invitees" => [
+            { "identifier" => user1.username, "attendance" => "going" },
+            { "identifier" => user2.username, "attendance" => "going" },
+          ],
+          "current_user_id" => user.id,
+        },
+      ) do
+        post "/discourse-post-event/events/#{event.id}/bulk-invite.json",
+             params: {
+               invitees: [
+                 { "identifier" => user1.username, "attendance" => "going" },
+                 { "identifier" => user2.username, "attendance" => "going" },
+               ],
+             }
+      end
+
+      Jobs.run_immediately!
+      event.reload
+      expect(event.invitees.with_status(:going).count).to be <= 1
     end
   end
 end

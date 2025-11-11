@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import AiPersonaLlmSelector from "discourse/plugins/discourse-ai/discourse/components/ai-persona-llm-selector";
 
 function isBotMessage(composer, currentUser) {
@@ -9,24 +8,21 @@ function isBotMessage(composer, currentUser) {
     composer.targetRecipients &&
     currentUser.ai_enabled_chat_bots
   ) {
-    const reciepients = composer.targetRecipients.split(",");
+    const recipients = composer.targetRecipients.split(",");
 
     return currentUser.ai_enabled_chat_bots
       .filter((bot) => bot.username)
-      .any((bot) => reciepients.any((username) => username === bot.username));
+      .some((bot) => recipients.some((username) => username === bot.username));
   }
   return false;
 }
 
 export default class BotSelector extends Component {
-  static shouldRender(args, context) {
+  static shouldRender(args, { currentUser }) {
     return (
-      context?.currentUser?.ai_enabled_personas &&
-      isBotMessage(args.model, context.currentUser)
+      currentUser?.ai_enabled_personas && isBotMessage(args.model, currentUser)
     );
   }
-
-  @service currentUser;
 
   @action
   setPersonaIdOnComposer(id) {

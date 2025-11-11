@@ -5,16 +5,34 @@
 # https://translate.discourse.org/
 
 ro:
+  site_settings:
+    chat_integration_discourse_username: 'Numele utilizatorului care va fi utilizat la preluarea conținutului.'
+    chat_integration_delay_seconds: 'Numărul de secunde de așteptare după crearea postării înainte de trimiterea notificărilor de discuție'
+    chat_integration_slack_username: "Numele de utilizator al botului cu care va posta pe Slack"
+    chat_integration_slack_excerpt_length: 'Lungime rezumat postare pentru Slack'
   chat_integration:
     all_categories: "(toate categoriile)"
+    deleted_category: "(categorie ștearsă)"
+    deleted_group: "(grup șters)"
+    group_mention_template: "mențiuni despre: @%{name}"
+    group_message_template: "mesaje către: @%{name}"
     topic_tag_changed:
       added_and_removed: "%{added} a fost adăugat și %{removed} a fost eliminat"
       added: "Adăugată în %{added}"
-      removed: "Eliminată %{removed}"
+      removed: "%{removed} a fost eliminată"
     provider:
       slack:
+        status:
+          rule_string_tags_suffix: " cu etichetele: *%{tags}*"
         messaging:
           topic_tag_changed:
-            added_and_removed: "%{added} a fost adăugat și %{removed} a fost eliminat"
-            added: "Adăugată în %{added}"
-            removed: "Eliminată %{removed}"
+            added_and_removed: "%{added} a fost adăugată și %{removed} a fost eliminată"
+            added: "%{added} a fost adăugată"
+            removed: "%{removed} a fost eliminată"
+      flowdock:
+        message_title: "postat"
+      google:
+        new_post: "Postare nouă pe %{site_title}"
+        new_topic: "Subiect nou pe %{site_title}"
+        author: "de @%{username}"
+        link: "Vezi în %{site_title}"

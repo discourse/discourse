@@ -16,7 +16,15 @@ module Migrations::Database::IntermediateDB
         ?, ?, ?
       )
     SQL
+    private_constant :SQL
 
+    # Creates a new `muted_users` record in the IntermediateDB.
+    #
+    # @param created_at      [Time, nil]
+    # @param muted_user_id   [Integer, String]
+    # @param user_id         [Integer, String]
+    #
+    # @return [void]
     def self.create(created_at: nil, muted_user_id:, user_id:)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,

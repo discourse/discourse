@@ -84,7 +84,6 @@ es:
               help: "por ejemplo, #canal, @nombredeusuario."
           errors:
             action_prohibited: "Este bot no tiene permiso para publicar en ese canal."
-            channel_not_found: "El canal especificado no existe en Slack"
         telegram:
           title: "Telegram"
           param:
@@ -131,7 +130,6 @@ es:
               help: "Un nombre para describir el canal. No se usa para la conexión con Matrix."
             room_id:
               title: "ID de la sala"
-              help: "El «identificador privado» de la sala. Debería ser algo como !abcdefg:matrix.org"
           errors:
             unknown_token: "Token de acceso no válido"
             unknown_room: "La ID de la sala no es válida"

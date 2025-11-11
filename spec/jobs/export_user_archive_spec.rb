@@ -344,7 +344,7 @@ RSpec.describe Jobs::ExportUserArchive do
 
       bookmark1 =
         manager.create_for(bookmarkable_id: post1.id, bookmarkable_type: "Post", name: name)
-      update1_at = now + 1.hours
+      update1_at = now + 1.hour
       bookmark1.update(name: "great food recipe", updated_at: update1_at)
 
       manager.create_for(

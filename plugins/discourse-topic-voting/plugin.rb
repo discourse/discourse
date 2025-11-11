@@ -47,7 +47,9 @@ after_initialize do
 
   if TopicQuery.respond_to?(:results_filter_callbacks)
     TopicQuery.results_filter_callbacks << ->(_type, result, user, options) do
-      result = result.includes(:topic_vote_count)
+      return result unless SiteSetting.topic_voting_enabled
+
+      result = result.preload(:topic_vote_count)
 
       if user
         result =
@@ -216,7 +218,7 @@ after_initialize do
   end
 
   Discourse::Application.routes.append do
-    mount ::DiscourseTopicVoting::Engine, at: "/voting"
+    mount DiscourseTopicVoting::Engine, at: "/voting"
 
     get "topics/voted-by/:username" => "list#voted_by",
         :as => "voted_by",

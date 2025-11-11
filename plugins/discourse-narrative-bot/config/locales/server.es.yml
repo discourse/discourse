@@ -169,8 +169,22 @@ es:
 
           - Creemos en [el comportamiento de una comunidad civilizada](%{base_uri}/guidelines) en todo momento.
       onebox:
+        instructions: |-
+          ¿Podrías compartir uno de estos enlaces conmigo? Responde con **un enlace en una línea aparte** y se expandirá automáticamente para incluir un resumen ingenioso.
+
+          Para copiar cualquier enlace, toca y mantén pulsado el dispositivo móvil o haz clic derecho con el ratón:
+
+          [https://en.wikipedia.org/wiki/Inherently_funny_word](https://en.wikipedia.org/wiki/Inherently_funny_word)
+          [https://en.wikipedia.org/wiki/Death_by_coconut](https://en.wikipedia.org/wiki/Death_by_coconut)
+          [https://en.wikipedia.org/wiki/Calculator_spelling](https://en.wikipedia.org/wiki/Calculator_spelling)
         reply: |-
           ¡Genial! Esto funcionará para la mayoría de los <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-link.png" width="16" height="16"> enlaces. Recuerda, debe estar en una línea _todo por sí mismo_, con nada más delante o detrás.
+        not_found: |-
+          Lo sentimos, no hemos podido encontrar el enlace en tu respuesta. :cry:
+
+          ¿Podrías intentar añadir el siguiente enlace, en una línea aparte, en tu próxima respuesta?
+
+          [https://en.wikipedia.org/wiki/Exotic_Shorthair](https://en.wikipedia.org/wiki/Exotic_Shorthair)
       images:
         instructions: |-
           Aquí hay una foto de un unicornio:
@@ -384,6 +398,19 @@ es:
 
           Ten en cuenta que cuando respondes a un tema o lees un tema durante más de unos minutos, el nivel de notificación se establece automáticamente en «siguiendo». Puedes cambiar esto en [tus preferencias de usuario](%{base_uri}/my/preferences).
       poll:
+        instructions: |-
+          ¿Sabías que puedes añadir una encuesta a cualquier publicación? Prueba a usar el icono <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> en el editor para **crear una encuesta**.
+        not_found: |-
+          ¡Vaya! No había ninguna encuesta en tu respuesta.
+
+          Usa el icono <img src="%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png" width="16" height="16"> en el editor, o copia y pega esta encuesta en la siguiente respuesta:
+
+          ```text
+          [poll]
+          * :cat:
+          * :dog:
+          [/poll]
+          ```
         reply: |-
           Hey, ¡buena encuesta! ¿Qué tal estuvo mi proceso de enseñanza?
 
@@ -392,6 +419,7 @@ es:
           * :-1:
           [/poll]
       details:
+        instructions: "Puede que a veces quieras **ocultar detalles** en tus respuestas:\n\n- Cuando estás hablando sobre detalles de la trama de una película o programa de televisión que podrían ser considerados spoiler.\n\n- Cuando tu publicación necesita un montón de detalles opcionales que pueden ser abrumadores cuando se leen todos a la vez. \n\n[details=¡Clic aquí para ver cómo funciona!]\n1. Selecciona el icono <img src=\"%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png\" width=\"16\" height=\"16\"> del editor.\n2. Selecciona «Ocultar detalles».\n3. Edita el resumen de detalles y añade tu contenido.\n[/details]\n\n¿Puedes usar el icono <img src=\"%{base_uri}/plugins/discourse-narrative-bot/images/font-awesome-plus.png\" width=\"16\" height=\"16\"> del editor para añadir una sección de detalles en tu próxima respuesta?"
         not_found: |-
           ¿Tienes problemas para crear un widget de detalles? Trata de incluir lo siguiente en tu próxima respuesta:
 

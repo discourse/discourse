@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class RagDocumentFragment < ActiveRecord::Base
-  # TODO Jan 2025 - remove
-  self.ignored_columns = %i[ai_persona_id]
-
   belongs_to :upload
   belongs_to :target, polymorphic: true
 

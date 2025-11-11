@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_affiliate: "Discourse 联属"

@@ -36,7 +36,7 @@ de:
       subscribe:
         help: Unterstütze diese Website, indem du ein Abonnement abschließt
     discourse_subscriptions:
-      title: Discourse – Abonnements
+      title: Discourse-Abonnements
       admin_navigation: Abonnements
       optional: Optional
       navigation:
@@ -108,7 +108,7 @@ de:
             heading: "Karte für Abonnement aktualisieren: %{sub_id}"
             single: "Aktualisieren"
           created_at: Erstellt
-          cancel: abbrechen
+          cancel: kündigen
           cancelled: gekündigt
           operations:
             destroy:
@@ -410,7 +410,7 @@ de:
           title: Dashboard
           table:
             head:
-              user: Nutzer
+              user: Benutzer
               payment_intent: Zahlungs-ID
               receipt_email: Belegs-E-Mail
               amount: Betrag
@@ -473,7 +473,7 @@ de:
         subscriptions:
           title: Abonnements
           subscription:
-            user: Nutzer
+            user: Benutzer
             subscription_id: Abonnement-ID
             customer: Kunde
             product: Produkt

@@ -5,28 +5,44 @@
 # https://translate.discourse.org/
 
 he:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "מזהה מודל"
+        max_prompt_tokens: "חלון הקשר"
   discourse_automation:
     ai:
       flag_types:
         review: "הוספת פוסט לתור הביקורת"
         review_hide: "הוספת פוסט לתור הסקירה והסתרתו"
+        review_delete: "הוספת פוסט לתור הסקירה ומחיקתו"
+        review_delete_silence: "הוספת פוסט לתור סריקה, למחוק את הפוסט ולהשתיק את המשתמש/ת"
         spam: "סימון כזבל והסתרת הפוסט"
         spam_silence: "סימון כזבל, הסתרת הפוסט והשתקת המשתמש"
     scriptables:
       llm_tool_triage:
         title: מיון ראשוני של פוסטים באמצעות כלי בינה מלאכותית
+        description: "מיון פוסטים ראשוני באמצעות לוגיקה מותאמת בכלי בינה מלאכותית"
       llm_persona_triage:
+        title: מיון ראשוני של פוסטים באמצעות דמות בינה מלאכותית
         description: "תגובה לפוסטים באמצעות דמות בינה מלאכותית מסוימת"
       llm_triage:
         title: מיון ראשוני של פוסטים באמצעות בינה מלאכותית
         description: "מיון ראשוני של פוסטים באמצעות דגם שפה גדול"
-        flagged_post: |
-          <div>תגובה מהמודל:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>הוזנקה על ידי הכלל <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a>.</b>
+        notify_author_pm:
+          subject: "הפוסט שלך הוסר זמנית לצורך בדיקה"
+          body: |
+            שלום ‎@%{username},
+
+            הפוסט שלך תחת „%{topic_title}” הוסר זמנית והועבר לתור הבדיקה שלנו כדי שההנהלה תוכל לעיין בו. אם יאושר, הוא ישוחזר אוטומטית.
+
+            הפניה: %{post_url}
       llm_report:
         title: דוח תקופתי בעזרת בינה מלאכותית
         description: "דוח תקופתי שמבוסס על דגם שפה גדול"
+      llm_tagger:
+        title: תיוג נושאים באמצעות בינה מלאכותית
+        description: "לתייג נושאים אוטומטית באמצעות בינה מלאכותית"
   site_settings:
     discourse_ai_enabled: "הפעלת תוסף הבינה המלאכותית של Discourse."
     ai_default_llm_model: "מודל ה־LLM/מש״ג כברירת מחדל לשימוש ליכולות בינה מלאכותית"
@@ -66,7 +82,6 @@ he:
     composer_ai_helper_allowed_groups: "משתמשים בקבוצות אלו יראו כפתור מסייע בינה מלאכותית במחבר ההודעות."
     ai_helper_allowed_in_pm: "הפעלת מסייע הבינה המלאכותית בכותב ההודעות בהודעות הפרטיות."
     ai_helper_model: "דגם לשימוש למסייע הבינה המלאכותית."
-    ai_helper_custom_prompts_allowed_groups: "משתמשים בקבוצות אלה יראו את אפשרות הבקשה המותאמת אישית במסייע הבינה המלאכותית."
     ai_helper_automatic_chat_thread_title_delay: "השהייה בשניות לפני שמסייע הבינה המלאכותית מגדיר את כותרת שרשור הצ׳אט אוטומטית."
     ai_helper_automatic_chat_thread_title: "הגדרת כותרות שרשור הצ׳אט אוטומטית לפי תוכן השרשור."
     ai_helper_illustrate_post_model: "דגם לשימוש ליכולת הדמיית הפוסט של מסייע הבינה המלאכותית בכתיבה"
@@ -96,8 +111,9 @@ he:
     ai_bot_allowed_groups: "כאשר לבוט של GPT יש גישה להודעות הפרטיות, הוא יגיב לחברים בקבוצות האלה."
     ai_bot_debugging_allowed_groups: "לאפשר לקבוצות האלו לצפות בכפתור ניפוי שיאות שמציג את בקשת ותגובה הבינה המלאכותית באופן גולמי"
     ai_bot_public_sharing_allowed_groups: "לאפשר לקבוצות האלה לשתף הודעות אישיות של בינה למאכותית עם הציבור באמצעות קישור ייחודי גלוי לציבור. הערה: אם האתר שלך דורש כניסה, גם שיתופים ידרשו כניסה."
-    ai_bot_add_to_header: "הצגת כפתור בכותרת כדי לפתוח הודעה פרטית עם בוט בינה מלאכותית"
     ai_bot_github_access_token: "אסימון גישה ל־GitHub לשימוש עם כלי הבינה המלאכותית של GitHub (נחוץ לתמיכה בחיפוש)"
+    ai_discover_enabled: "הפעלת יכולת חיפוש גילוי"
+    ai_discover_persona: "דמות לשימוש ליכולת חיפוש גילוי"
     ai_stability_api_key: "מפתח API ל־API של stability.ai"
     ai_stability_engine: "מנוע לחילול תמונות לשימוש עבור ה־API של stability.ai"
     ai_stability_api_url: "כתובת ל־API של stability.ai"
@@ -111,7 +127,7 @@ he:
     ai_discord_allowed_guilds: "גילדות (שרתי) Discord בהן מותר לבוט לחפש"
     ai_translation_enabled: "הפעלת יכולת תרגום עם בינה מלאכותית"
     ai_translation_model: "המודל לשימוש לתרגום. המודל הזה חייב לתמוך בתרגום. הדמויות יכולות לדרוס את ההגדרה הזאת."
-    ai_translation_max_post_length: "אורך הפוסט המרבי לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
+    ai_translation_max_post_length: "מספר התווים המרבי בפוסט לתרגום. פוסטים ארוכים מהערך הזה לא יתורגמו."
   reviewables:
     reasons:
       flagged_by_toxicity: תוסף הבינה המלאכותית סימן את זה לאחר סיווג כרעיל.
@@ -375,6 +391,9 @@ he:
         report_runner:
           name: "אצן דוחות"
           description: "דמות ברירת המחדל שסקריפט אוטומציית הדוחות משתמש בה"
+        discover:
+          name: "גילוי"
+          description: "דמות ברירת מחדל לשימוש ביכולת הגילויים (חיפוש משלים)"
       topic_not_found: "תקציר לא זמין, לא נמצא נושא!"
       summarizing: "הנושא מסוכם"
       searching: "חיפוש אחר: ‚%{query}’"
@@ -574,6 +593,7 @@ he:
         set_llm_first: "קודם יש להגדיר את %{setting}"
         model_unreachable: "לא הצלחנו לקבל תגובה מהמודל הזה. נא לוודא שההגדרות שלך נכונות קודם."
         invalid_seeded_model: "אי אפשר להשתמש במודל הזה עם היכולת הזאת"
+        invalid_persona_response_format: "לדמות הנבחרת חייבת להיות תבנית תגובה עם שדה בוליאני בשם „spam”"
         must_select_model: "קודם יש לבחור LLM"
       endpoints:
         not_configured: "%{display_name} (לא מוגדר)"
@@ -595,14 +615,18 @@ he:
       cannot_edit_builtin: "אי אפשר לערוך מודל מובנה."
       configuration:
         disable_embeddings: "יש להשבית קודם את ‚הטמעת בינה מלאכותית פעילה’."
-        invalid_config: "בחרת אפשרות שגויה."
         choose_model: "יש לעדכן את ‚ai embeddings selected model’."
+        model_test_failed: "כשלנו בייצור הטמעות בדיקה עם המודל הזה. נא לבדוק שהוא מוגדר כראוי."
     llm_models:
       missing_provider_param: "%{param} לא יכול להישאר ריק"
       bedrock_invalid_url: "נא למלא את כל השדות די להשתמש במודל הזה."
     ai_staff_action_logger:
       updated: "עודכן"
+      set: "הגדרה"
       removed: "הוסרה"
+    translation:
+      errors:
+        disabled: "יכולת התרגום של הבינה המלאכותית אינה מוגדרת במלואה."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
       quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"

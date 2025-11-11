@@ -66,6 +66,22 @@ ug:
           name: "ئەخلەت خەت"
       modals:
         select_option: "تاللانما تاللىنىدۇ..."
+      translations:
+        title: "تەرجىمە"
+        stats:
+          eta_minutes:
+            one: "%{count} مىنۇت"
+            other: "%{count} مىنۇت"
+          eta_hours:
+            one: "%{count} سائەت"
+            other: "%{count} سائەت"
+          eta_days:
+            one: "%{count} كۈن"
+            other: "%{count} كۈن"
+        progress_chart:
+          bar_done:
+            one: "%{count} يازما"
+            other: "%{count} يازما"
       spam:
         short_title: "ئەخلەت خەت"
         enable: "قوزغات"

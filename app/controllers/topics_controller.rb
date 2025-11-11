@@ -159,7 +159,7 @@ class TopicsController < ApplicationController
     end
 
     page = params[:page]
-    if (page < 0) || ((page - 1) * @topic_view.chunk_size >= @topic_view.topic.highest_post_number)
+    if page < 0 || page > 1 && (page - 1) * @topic_view.chunk_size >= @topic_view.topic.posts_count
       raise Discourse::NotFound
     end
 
@@ -442,15 +442,12 @@ class TopicsController < ApplicationController
     success = true
 
     if changes.length > 0
-      bypass_bump = should_bypass_bump?(changes)
-
       first_post = topic.ordered_posts.first
       success =
         PostRevisor.new(first_post, topic).revise!(
           current_user,
           changes,
           validate_post: false,
-          bypass_bump: bypass_bump,
           keep_existing_draft: params[:keep_existing_draft].to_s == "true",
         )
 
@@ -502,7 +499,7 @@ class TopicsController < ApplicationController
 
     status = params[:status]
     topic_id = params[:topic_id].to_i
-    enabled = params[:enabled] == "true"
+    enabled = ActiveModel::Type::Boolean.new.cast(params[:enabled])
 
     check_for_status_presence(:status, status)
     @topic =
@@ -574,7 +571,7 @@ class TopicsController < ApplicationController
 
     options = { by_user: current_user, based_on_last_post: based_on_last_post }
 
-    options.merge!(category_id: params[:category_id]) if !params[:category_id].blank?
+    options.merge!(category_id: params[:category_id]) if params[:category_id].present?
     if params[:duration_minutes].present?
       options.merge!(duration_minutes: params[:duration_minutes].to_i)
     end
@@ -732,7 +729,7 @@ class TopicsController < ApplicationController
     if topic.remove_allowed_user(current_user, user)
       render json: success_json
     else
-      render json: failed_json, status: 422
+      render json: failed_json, status: :unprocessable_entity
     end
   end
 
@@ -744,7 +741,7 @@ class TopicsController < ApplicationController
     if topic.remove_allowed_group(current_user, params[:name])
       render json: success_json
     else
-      render json: failed_json, status: 422
+      render json: failed_json, status: :unprocessable_entity
     end
   end
 
@@ -777,7 +774,7 @@ class TopicsController < ApplicationController
       topic.invite_group(current_user, group, should_notify: should_notify)
       render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: "group")
     else
-      render json: failed_json, status: 422
+      render json: failed_json, status: :unprocessable_entity
     end
   end
 
@@ -830,10 +827,10 @@ class TopicsController < ApplicationController
           end
         end
 
-        render json: json, status: 422
+        render json: json, status: :unprocessable_entity
       end
     rescue Topic::UserExists, Topic::NotAllowed => e
-      render json: { errors: [e.message] }, status: 422
+      render json: { errors: [e.message] }, status: :unprocessable_entity
     end
   end
 
@@ -938,7 +935,7 @@ class TopicsController < ApplicationController
       ).change_owner!
       render json: success_json
     rescue ArgumentError
-      render json: failed_json, status: 422
+      render json: failed_json, status: :unprocessable_entity
     end
   end
 
@@ -962,7 +959,7 @@ class TopicsController < ApplicationController
 
       render json: success_json
     rescue ActiveRecord::RecordInvalid, TopicTimestampChanger::InvalidTimestampError
-      render json: failed_json, status: 422
+      render json: failed_json, status: :unprocessable_entity
     end
   end
 
@@ -1257,11 +1254,6 @@ class TopicsController < ApplicationController
     Promotion.new(current_user).review if current_user.present?
   end
 
-  def should_bypass_bump?(changes)
-    (changes[:category_id].present? && SiteSetting.disable_category_edit_notifications) ||
-      (changes[:tags].present? && SiteSetting.disable_tags_edit_notifications)
-  end
-
   def slugs_do_not_match
     if SiteSetting.slug_generation_method != "encoded"
       params[:slug] && @topic_view.topic.slug != params[:slug]
@@ -1301,7 +1293,7 @@ class TopicsController < ApplicationController
       url << "#{s}#{k}=#{v}"
     end
 
-    redirect_to url, status: 301
+    redirect_to url, status: :moved_permanently
   end
 
   def track_visit_to_topic
@@ -1382,9 +1374,10 @@ class TopicsController < ApplicationController
     respond_to do |format|
       format.html do
         @tags = SiteSetting.tagging_enabled ? @topic_view.topic.tags.visible(guardian) : []
+
+        helpers.localize_topic_view_content(@topic_view) if SiteSetting.content_localization_enabled
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta =
-          @topic_view.topic.excerpt.present? ? @topic_view.topic.excerpt : @topic_view.summary
+        @description_meta = (@topic_view.topic.excerpt.presence || @topic_view.summary)
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show
       end

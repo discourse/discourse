@@ -101,7 +101,6 @@ RSpec.describe "AI Bot - Homepage", type: :system do
     pm.custom_fields[DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD] = "t"
     pm.save!
 
-    SiteSetting.ai_bot_enable_dedicated_ux = true
     SiteSetting.ai_bot_enabled = true
     SiteSetting.navigation_menu = "sidebar"
     Jobs.run_immediately!
@@ -133,14 +132,14 @@ RSpec.describe "AI Bot - Homepage", type: :system do
             "article[data-post-id='#{post_with_link.id}'] .cooked a[href='#{post_url}']",
           ).click
 
-          try_until_success do
-            expect(topic_page.current_topic).to eq(regular_topic)
-            expect(page).to have_css("article[data-post-id='#{regular_post.id}']")
-          end
+          expect(topic_page.current_topic).to eq(regular_topic)
+          expect(page).to have_css("article[data-post-id='#{regular_post.id}']")
         end
       end
 
       context "when `ai_bot_enable_dedicated_ux` is enabled" do
+        before { SiteSetting.ai_bot_add_to_header = true }
+
         it "allows uploading files to a new conversation" do
           ai_pm_homepage.visit
           expect(ai_pm_homepage).to have_homepage
@@ -294,7 +293,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         end
 
         it "displays last_7_days label in the sidebar" do
-          pm.update!(last_posted_at: Time.zone.now - 5.days)
+          pm.update!(last_posted_at: 5.days.ago)
           visit "/"
           header.click_bot_button
 
@@ -303,7 +302,7 @@ RSpec.describe "AI Bot - Homepage", type: :system do
         end
 
         it "displays last_30_days label in the sidebar" do
-          pm.update!(last_posted_at: Time.zone.now - 28.days)
+          pm.update!(last_posted_at: 28.days.ago)
           visit "/"
           header.click_bot_button
 
@@ -406,13 +405,18 @@ RSpec.describe "AI Bot - Homepage", type: :system do
           expect(ai_pm_homepage.llm_selector).to have_selected_name(claude_2_dup.display_name)
         end
 
-        it "does not render back to forum link" do
+        it "renders back to forum link when header button is disabled" do
+          SiteSetting.ai_bot_add_to_header = false
           ai_pm_homepage.visit
-          expect(ai_pm_homepage).to have_no_sidebar_back_link
+          expect(ai_pm_homepage).to have_sidebar_back_link
         end
 
         context "with hamburger menu" do
-          before { SiteSetting.navigation_menu = "header dropdown" }
+          before do
+            SiteSetting.navigation_menu = "header dropdown"
+            SiteSetting.ai_bot_add_to_header = true
+          end
+
           it "keeps robot icon in the header and doesn't display sidebar back link" do
             visit "/"
             expect(header).to have_icon_in_bot_button(icon: "robot")
@@ -429,35 +433,6 @@ RSpec.describe "AI Bot - Homepage", type: :system do
             expect(sidebar).to be_visible
             expect(header_dropdown).to be_visible
           end
-        end
-      end
-
-      context "when `ai_bot_enable_dedicated_ux` is disabled" do
-        before { SiteSetting.ai_bot_enable_dedicated_ux = false }
-
-        it "opens composer on bot click" do
-          visit "/"
-          header.click_bot_button
-
-          expect(ai_pm_homepage).to have_no_homepage
-          expect(composer).to be_opened
-        end
-
-        it "does not render sidebar when navigation menu is set to header on pm" do
-          SiteSetting.navigation_menu = "header dropdown"
-          topic_page.visit_topic(pm)
-
-          expect(ai_pm_homepage).to have_no_homepage
-          expect(sidebar).to be_not_visible
-          expect(header_dropdown).to be_visible
-        end
-
-        it "shows default content in the sidebar" do
-          topic_page.visit_topic(pm)
-
-          expect(sidebar).to have_section("categories")
-          expect(sidebar).to have_section("chat-dms")
-          expect(sidebar).to have_no_css("button.ai-new-question-button")
         end
       end
 

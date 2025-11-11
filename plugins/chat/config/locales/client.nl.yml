@@ -234,7 +234,9 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
+      no_direct_message_channels: "Je neemt nog niet deel aan directe berichten!"
       no_direct_message_channels_cta: "Gesprek starten"
+      no_public_channels: "Je neemt nog niet deel aan kanalen!"
       no_public_channels_cta: "Kanalen bekijken"
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
       only_chat_push_notifications:
@@ -300,7 +302,7 @@ nl:
         one: "%{count} bestand"
         other: "%{count} bestanden"
       you_flagged: "Je hebt dit bericht gemarkeerd"
-      exit: "vorige"
+      exit: "chat afsluiten"
       channel_status:
         read_only_header: "Kanaal is alleen-lezen"
         read_only: "Alleen-lezen"
@@ -316,7 +318,7 @@ nl:
       browse:
         back: "Terug"
         title: Kanalen
-        filter_all: Alle
+        filter_all: Alles
         filter_open: Open
         filter_closed: Gesloten
         filter_archived: Gearchiveerd
@@ -324,6 +326,8 @@ nl:
       chat_message_separator:
         today: Vandaag
         yesterday: Gisteren
+      search_view:
+        filter_placeholder: Zoeken in berichten
       members_view:
         filter_placeholder: Leden zoeken
         add_member: Lid toevoegen
@@ -336,10 +340,11 @@ nl:
         description: Beschrijving
       channel_info:
         back_to_all_channels: "Alle kanalen"
-        back_to_channel: "Vorige"
+        back_to_channel: "Terug"
         tabs:
           members: Leden
           settings: Instellingen
+          search: Zoeken
         remove_member: "Verwijderen"
       new_message_modal:
         title: Bericht sturen
@@ -431,6 +436,7 @@ nl:
           topic: "Topic"
       reviewable:
         type: "Chatbericht"
+        message_in_channel: "Kanaal"
       reactions:
         only_you: "<span>Je hebt gereageerd met </span>:%{emoji}:"
         you_and_single_user: "<span>Jij en %{username} hebben gereageerd met </span>:%{emoji}:"
@@ -493,6 +499,11 @@ nl:
           create_export: "Export maken"
           confirm_export: "Hiermee worden alle berichten van alle kanalen geëxporteerd en wordt het resultaat naar jou gestuurd in een persoonlijk bericht. Weet je zeker dat je wilt exporteren?"
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
+      search:
+        no_results: "Geen resultaten gevonden"
+        sort:
+          relevance: "Relevantie"
+          latest: "Recent"
       my_threads:
         title: Mijn threads
         aria_label: "Wisselen naar mijn threadslijst"
@@ -508,7 +519,7 @@ nl:
         title: "Kanalen"
         aria_label: "Wisselen naar kanalenlijst"
       incoming_webhooks:
-        back: "Vorige"
+        back: "Terug"
         channel_placeholder: "Selecteer een kanaal"
         channel: "Kanaal"
         confirm_destroy: "Weet je zeker dat je deze inkomende webhook wilt verwijderen? Dit kan niet ongedaan worden gemaakt."
@@ -529,6 +540,7 @@ nl:
         select_emoji: "Kies emoji"
         system: "systeem"
         title: "Inkomende webhooks"
+        header_description: "Binnenkomende webhooks kunnen door externe systemen worden gebruikt om berichten te plaatsen als botgebruiker in een aangewezen chatkanaal"
         url: "URL"
         url_instructions: "Deze URL bevat een geheime waarde, bewaar deze veilig."
         username: "Gebruikersnaam"
@@ -641,6 +653,11 @@ nl:
       draft_channel_screen:
         header: "Nieuw bericht"
         cancel: "Annuleren"
+      quick_reaction_type:
+        title: "Chatreacties met één klik"
+        options:
+          frequent: "Meest gebruikte chatreacties"
+          custom: "Aangepaste reacties"
     notifications:
       chat_invitation: "heeft je uitgenodigd om deel te nemen aan een chatkanaal"
       chat_invitation_html: "<span>%{username}</span> <span>heeft je uitgenodigd voor een chatkanaal</span>"
@@ -698,7 +715,7 @@ nl:
           switch_channel_arrows: "%{shortcut} Kanaal wisselen"
           switch__unread_channel_arrows: "%{shortcut} Ongelezen kanaal wisselen"
           open_quick_channel_selector: "%{shortcut} Snelle kanaalkiezer openen"
-          open_insert_link_modal: "%{shortcut} Hyperlink invoegen (alleen opstellen)"
+          open_insert_link_modal: "%{shortcut} Link invoegen (alleen opstellen)"
           composer_bold: "%{shortcut} Vet (alleen opstellen)"
           composer_italic: "%{shortcut} Cursief (alleen opstellen)"
           composer_code: "%{shortcut} Code (alleen opstellen)"
@@ -728,6 +745,8 @@ nl:
         chat:
           title: Chat
     sidebar:
+      start_new_dm:
+        title: Maak een persoonlijke chat
       panels:
         chat:
           label: "Chat"

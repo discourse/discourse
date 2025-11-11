@@ -23,6 +23,7 @@ bs_BA:
         month: "Mjesec"
         week: "Sedmica"
         day: "Day"
+        year: "Godina"
     group_timezones:
       search: "Pretraga..."
     discourse_post_event:

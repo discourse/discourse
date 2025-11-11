@@ -19,6 +19,7 @@ nb_NO:
       unaccept_answer: "Fravelg dette hvis svaret ikke lenger løser problemet"
       accepted_answer: "Løsning"
       solution: "Løsning"
+      accepted_answer_post_number: "innlegg %{post_number}"
       topic_status_filter:
         all: "alle"
         solved: "løst"

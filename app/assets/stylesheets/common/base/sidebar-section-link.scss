@@ -42,7 +42,8 @@
     }
 
     &--active,
-    &.active {
+    &.active,
+    &.exact-url-match {
       background: var(--d-sidebar-active-background);
       color: var(--d-sidebar-active-color);
       font-weight: var(--d-sidebar-active-font-weight);
@@ -113,9 +114,13 @@
     .sidebar-section-link-content-text {
       @include ellipsis;
 
+      .user-status-message {
+        vertical-align: -0.125em;
+      }
+
       .emoji {
-        width: 15px;
-        height: 15px;
+        width: 1em;
+        height: 1em;
         vertical-align: baseline;
       }
 

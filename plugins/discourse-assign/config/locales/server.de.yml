@@ -75,12 +75,12 @@ de:
 
       Diese Erinnerung wird %{frequency} zugesandt, wenn du mehr als ein zugeordnetes Thema hast.
     newest: |
-      ### Neuestes
+      ### Neueste
       %{topic_0}
       %{topic_1}
       %{topic_2}
     oldest: |
-      ### Ältestes
+      ### Älteste
       %{topic_0}
       %{topic_1}
       %{topic_2}

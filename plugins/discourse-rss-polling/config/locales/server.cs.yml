@@ -6,4 +6,7 @@
 
 cs:
   site_settings:
+    rss_polling_enabled: "[RSS Polling] Povolit import vložených příspěvků z více RSS kanálů"
     rss_polling_frequency: "[RSS Polling] Frekvece feed pollingu (v minutách)"
+    rss_polling_use_pubdate: "[RSS Polling] Nastavit datum vytvoření tématu na pubDate nalezené v RSS kanálu"
+    rss_polling_update_tags: "[RSS Polling] Aktualizovat štítky témat při aktualizaci tématu. Zakázáním této funkce se stáhnou původní štítky, ale zakážou se jejich další změny."

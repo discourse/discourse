@@ -33,6 +33,11 @@ cs:
   discourse_assign:
     assigned_to: "Téma přiděleno uživateli @%{username}"
     unassigned: "Přidělení tématu bylo odstraněno"
+    filter:
+      description:
+        assigned: "Filtrovat témata přiřazená konkrétnímu uživateli nebo skupině"
+        nobody: "Filtrovat témata, která nejsou nikomu přiřazena"
+        anyone: "Filtrovat témata přiřazená komukoliv"
     already_claimed: "Toto téma již bylo nárokováno."
     already_assigned: "Téma je již přiděleno uživateli @%{username}"
     too_many_assigns: "@%{username} již dosáhl/a maximálního počtu přidělených témat (%{max})."

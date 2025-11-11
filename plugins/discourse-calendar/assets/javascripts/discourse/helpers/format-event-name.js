@@ -18,10 +18,7 @@ export function formatEventName(event, userTimezone) {
     event.timezone &&
     !sameTimezoneOffset(event.timezone, userTimezone)
   ) {
-    output +=
-      ` (${i18n("discourse_calendar.local_time")}: ` +
-      moment(event.startsAt).tz(event.timezone).format("H:mma") +
-      ")";
+    output += ` (${i18n("discourse_calendar.local_time")})`;
   }
 
   return output;

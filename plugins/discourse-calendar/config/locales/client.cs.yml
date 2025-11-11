@@ -7,11 +7,11 @@
 cs:
   admin_js:
     admin:
-      calendar: "Kalendář"
+      calendar: "Kalendář a události"
       site_settings:
         categories:
           discourse_post_event: "Událost Discourse"
-          discourse_calendar: "Kalendář Discourse"
+          discourse_calendar: "Kalendář a události"
   js:
     notifications:
       titles:
@@ -36,6 +36,7 @@ cs:
         header_title: "Svátky"
         pick_region_description: "Vyberte region a podívejte se na svátky pro tento region."
         disabled_holidays_description: "Zakázané svátky budou vyloučeny z kalendáře dovolených."
+        header_description: "Vyberte region a zobrazte si svátky pro daný region. Zakázané svátky budou z kalendáře svátků členů redakce vyloučeny."
       date: "Datum"
       add_to_calendar: "Přidat do Kalendáře Google"
       toggle_timezone_offset_title: "Přepnout posun časového pásma"
@@ -44,6 +45,7 @@ cs:
         title: "Region"
         none: "Žádná"
         use_current_region: "Použít současný region"
+        select_region: "Vyberte region…"
         names:
           ae: "Spojené arabské emiráty"
           ar: "Argentina"
@@ -138,6 +140,7 @@ cs:
           dk: "Dánsko"
           ee: "Estonsko"
           el: "Řecko"
+          gr: "Řecko"
           es_an: "Španělsko (es_an)"
           es_ar: "Španělsko (es_ar)"
           es_ce: "Španělsko (es_ce)"
@@ -314,7 +317,7 @@ cs:
         month: "Měsíc"
         week: "Týden"
         day: "Den"
-        list: "Seznam"
+        year: "Rok"
     group_timezones:
       search: "Hledat…"
       group_availability: "Dostupnost %{group}"
@@ -324,10 +327,8 @@ cs:
         after_event_reminder: "Událost skončila"
         ongoing_event_reminder: "Událost probíhá"
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} automaticky nastavil vaši účast a pozval vás na %{description}"
-        before_event_reminder_html: "Brzy začne událost %{description}"
-        after_event_reminder_html: "Skončila událost %{description}"
-        ongoing_event_reminder_html: "Probíhá událost  %{description}"
+        invite_user_predefined_attendance_notification: "%{username} automaticky nastavil vaši účast a pozval vás na %{eventName}"
+        an_event: "událost"
       edit_reason: "Událost aktualizována"
       edit_reason_closed: "Akce uzavřena"
       edit_reason_opened: "Událost otevřena"
@@ -425,6 +426,7 @@ cs:
         event:
           expired: "Platnost vypršela"
           closed: "Zavřené"
+          full: "Obsazeno"
           status:
             standalone:
               title: "Samostatná"
@@ -482,6 +484,9 @@ cs:
         minimal:
           label: "Mini-událost"
           checkbox_label: "Skrýt tlačítka Zúčastním/Nuzúčastním a stav pozvaných osob"
+        max_attendees:
+          label: "Maximální počet účastníků"
+          placeholder: "Bez omezení"
         allow_chat:
           label: "Integrace chatu"
           checkbox_label: "Vytvoří a spravuje speciální kanál chatu pro tuto událost"

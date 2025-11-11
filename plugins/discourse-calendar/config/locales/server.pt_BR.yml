@@ -27,13 +27,12 @@ pt_BR:
       text_body_template: |
         Seu arquivo de convites em massa para usuários(as) foi processado, %{processed} convites foram enviados por e-mail com %{failed} erro(s).
 
-        Aqui está o registro:
+        Confira o registro:
 
         ``` texto
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Máximo de linhas de texto por evento no Calendário."
     map_events_to_color: "Atribua uma cor a cada etiqueta ou categoria."
     map_events_title: "Substitui \"Eventos\" no título da barra lateral \"Próximos eventos\" por categoria."
     calendar_enabled: "Ativar o plugin discourse-calendar. Isso adicionará suporte a uma tag [calendar][/calendar] na primeira postagem de um tópico."
@@ -62,7 +61,6 @@ pt_BR:
     calendar_automatic_holidays_enabled: "Definir automaticamente o status do feriado conforme a região do(a) usuário(a) (observação: você pode desativar feriados automáticos específicos nas configurações do plugin)"
     event_participation_buttons: "Lista botões de participação no evento que os(as) usuários(as) podem usar."
     sidebar_show_upcoming_events: "Mostre o link dos próximos eventos na barra lateral, em \"Mais\"."
-    include_expired_events_on_calendar: "Inclua eventos passados/expirados na categoria Calendário e visualizações dos próximos eventos."
   discourse_calendar:
     invite_user_notification: "%{username} convidou para participar de %{description}"
     calendar_must_be_in_first_post: "A etiqueta do calendário só pode ser usada no primeiro post de um tópico."

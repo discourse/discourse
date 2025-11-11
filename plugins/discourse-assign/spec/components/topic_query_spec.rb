@@ -6,9 +6,9 @@ describe TopicQuery do
   before { SiteSetting.assign_enabled = true }
 
   fab!(:user)
-  fab!(:user2) { Fabricate(:user) }
-  fab!(:user3) { Fabricate(:user) }
-  fab!(:user4) { Fabricate(:user) }
+  fab!(:user2, :user)
+  fab!(:user3, :user)
+  fab!(:user4, :user)
 
   include_context "with group that is allowed to assign"
 
@@ -102,6 +102,47 @@ describe TopicQuery do
           .topics
 
       expect(assigned_messages).to contain_exactly(group_topic)
+    end
+
+    it "excludes assignments to deleted posts and topics" do
+      # Create a new topic with only a post assignment (no topic assignment)
+      post_only_topic = Fabricate(:post, user: user).topic
+      post_in_topic = Fabricate(:post, topic: post_only_topic)
+      assign_to(post_in_topic, user, user)
+
+      assigned_messages =
+        TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
+      expect(assigned_messages).to contain_exactly(
+        private_message,
+        topic,
+        group_topic,
+        post_only_topic,
+      )
+
+      # delete entire topic (soft deletion)
+      post_only_topic.update!(deleted_at: Time.current)
+      assigned_messages =
+        TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
+      expect(assigned_messages).to contain_exactly(private_message, topic, group_topic)
+
+      # restore topic, but delete the post (moderator deletion)
+      post_only_topic.update!(deleted_at: nil)
+      post_in_topic.update!(deleted_at: Time.current)
+      assigned_messages =
+        TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
+      expect(assigned_messages).to contain_exactly(private_message, topic, group_topic)
+
+      # user deletion of post
+      post_in_topic.update!(deleted_at: nil, user_deleted: true)
+      assigned_messages =
+        TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
+      expect(assigned_messages).to contain_exactly(private_message, topic, group_topic)
+
+      # system deletion of post
+      post_in_topic.update!(user_deleted: false, deleted_by_id: Discourse.system_user.id)
+      assigned_messages =
+        TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
+      expect(assigned_messages).to contain_exactly(private_message, topic, group_topic)
     end
   end
 

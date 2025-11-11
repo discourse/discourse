@@ -5,6 +5,7 @@ shared_examples "signup scenarios" do
   let(:login_page) { PageObjects::Pages::Login.new }
   let(:invite_form) { PageObjects::Pages::InviteForm.new }
   let(:activate_account) { PageObjects::Pages::ActivateAccount.new }
+  let(:composer) { PageObjects::Components::Composer.new }
   let(:invite) { Fabricate(:invite) }
   let(:topic) { Fabricate(:topic, title: "Super cool topic") }
 
@@ -99,6 +100,34 @@ shared_examples "signup scenarios" do
       activate_account.click_activate_account
 
       expect(page).to have_current_path("/t/#{topic.slug}/#{topic.id}")
+    end
+
+    it "redirects to a new-topic after signin and keeps the query" do
+      category = Fabricate(:category)
+      SiteSetting.create_topic_allowed_groups = "0"
+
+      visit "/new-topic?category_id=#{category.id}"
+      signup_page
+        .open
+        .fill_email("johndoe@awesomeemail.com")
+        .fill_username("john11122")
+        .fill_password("supersecurepassword")
+
+      expect(signup_page).to have_valid_fields
+
+      signup_page.click_create_account
+
+      expect(page).to have_current_path("/u/account-created")
+
+      mail = ActionMailer::Base.deliveries.first
+      activation_link = mail.body.to_s[%r{/u/activate-account/\S+}]
+
+      visit activation_link
+
+      activate_account.click_activate_account
+
+      expect(page).to have_current_path("/c/#{category.id}")
+      expect(composer).to be_opened
     end
 
     it "cannot signup with a common password" do
@@ -316,9 +345,12 @@ shared_examples "signup scenarios" do
   it "correctly loads the invites page" do
     inviter = Fabricate(:user)
     invite = Fabricate(:invite, invited_by: inviter)
+    Fabricate(:user_field, name: "test", show_on_signup: false)
+
     visit "/invites/#{invite.invite_key}?t=#{invite.email_token}"
 
     expect(page).to have_css(".invited-by .user-info[data-username='#{inviter.username}']")
+    expect(page).to have_no_css(".user-field-test")
     find(".invitation-cta__sign-in").click
     expect(page).to have_css("#login-form")
     page.go_back
@@ -390,6 +422,14 @@ shared_examples "signup scenarios" do
       expect(signup_page).to have_content(
         I18n.t("js.user_fields.required_select", name: user_field_dropdown.name),
       )
+    end
+
+    it "does not show fields that are configured hidden on signup" do
+      Fabricate(:user_field, name: "test", show_on_signup: false)
+
+      signup_page.open
+
+      expect(signup_page).to have_no_css(".user-field-test")
     end
   end
 end

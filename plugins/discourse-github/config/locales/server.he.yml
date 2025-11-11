@@ -36,5 +36,24 @@ he:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "נדרשת פעולה עבור תוסף discourse-github"
+      repository_identifier_invalid_pm: |
+        מאגר שצוין ב־discourse-github שגוי:
+        %{repo_name}
+
+        יש לציין אותם בתור `user/repo` (משתמש/מאגר).
+
+        לא יוענקו עיטורים עד שהשם יתוקן
+        ב<a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">הגדרות האתר של discourse-github</a>
+        ו־„github_badges_enabled” (עיטורים של GitHub פעילים) מופעל בחזרה.
       repository_not_found_pm_title: "נדרשת פעולה עבור תוסף discourse-github"
+      repository_not_found_pm: |
+        מאגר שצוין ב־discourse-github החזירה שגיאת „לא נמצא”: %{repo_name}
+
+        לא יוענקו עיטורים עד שהשם יתוקן
+        ב<a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">הגדרות האתר של discourse-github</a>
+        ו־„github_badges_enabled” (עיטורים של GitHub פעילים) מופעל בחזרה.
       invalid_octokit_credentials_pm_title: "נדרשת פעולה עבור תוסף discourse-github"
+      invalid_octokit_credentials_pm: |
+        פרטי הגישה ל־GitHub שסופקו לתוסף discourse-github שגויים. הגדרת האתר „github badges enabled” הושבתה וההגשות לא ימולאו עד לפתרון התקלה.
+
+        כדאי לבדוק את הגדרת האתר „github linkback access token” (אסימון גישה לקישור חוזר ל־GitHub) כדי לוודא שהאסימון נכון ושיש ללו הרשאות לכל המאגרים דרך <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">הגדרות האתר של discourse-github</a>.

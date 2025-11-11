@@ -24,8 +24,8 @@ el:
           title: "Χρονοδιακόπτες Νημάτων"
         post:
           title: "Ανάρτηση"
-        suggested_topics:
-          title: "Προτεινόμενα θέματα"
+        more_topics:
+          title: "Περισσότερα Θέματα"
         tooltips:
           description: "Περιγραφή"
           header: "Header"

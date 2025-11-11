@@ -5,10 +5,23 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rss_polling: "استطلاع الرأي RSS في Discourse"
   js:
+    rss_polling:
+      title: استطلاع الرأي RSS
     admin:
       rss_polling:
+        feed: إعدادات الموجز
+        discourse: إعدادات Discourse
         author: المؤلف
         feed_url: عنوان URL
         discourse_category: الفئة
         discourse_tags: الوسوم
+        feed_category_filter: عامل تصفية الفئة
+        documentation: المستندات الخاصة بتكوين عملية الاستطلاع الدوري لموجز RSS
+        destroy_feed:
+          confirm: "هل أنت متأكد أنك تريد حذف هذا الموجز؟"

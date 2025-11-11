@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_subscriptions: "Discourse Předplatná"
+  site_settings:
+    discourse_subscriptions_enabled: Povolte plugin Discourse Předplatná.
   js:
     discourse_subscriptions:
       optional: Volitelné

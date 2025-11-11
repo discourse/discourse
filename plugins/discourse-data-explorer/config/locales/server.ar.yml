@@ -20,4 +20,26 @@ ar:
     report_generator:
       private_message:
         title: "تقرير مجدول للاستعلام %{query_name}"
+        body: |
+          مرحبًا %{recipient_name}، تقريرك في مستكشف البيانات جاهز.
+
+          اسم الاستعلام:
+          %{query_name}
+
+          إليك النتائج:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>عرض الاستعلام في مستكشف البياناتr</a>
+
+          تم إنشاء التقرير في %{created_at} (%{timezone})
+      post:
+        body: |
+          ### تقرير مجدول للاستعلام %{query_name}
+
+          إليك النتائج:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>عرض الاستعلام في مستكشف البيانات</a>
+
+          تم إنشاء التقرير في %{created_at} (%{timezone})
       upload_appendix: "الملحق: [%{filename}|مرفق](%{short_url})"

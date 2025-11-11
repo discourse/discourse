@@ -129,7 +129,5 @@ et:
             label: Versioon
           status:
             label: Staatus
-          enabled:
-            label: Sisse lülitatud
           disabled:
             label: Välja lülitatud

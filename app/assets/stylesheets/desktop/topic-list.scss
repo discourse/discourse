@@ -1,5 +1,27 @@
 @use "lib/viewport";
 
+@mixin hide-posters {
+  width: 2em;
+  text-align: center;
+
+  a:first-child .avatar.latest:not(.single) {
+    top: 0;
+    left: 0;
+  }
+
+  a:not(.latest) {
+    display: none;
+  }
+
+  a.latest {
+    width: 100%;
+
+    img {
+      margin: 0 auto;
+    }
+  }
+}
+
 // --------------------------------------------------
 // Topic lists
 // --------------------------------------------------
@@ -77,19 +99,6 @@
     }
   }
 
-  .topics-replies-toggle {
-    background: none;
-    border: none;
-    line-height: var(--line-height-large);
-    padding-left: var(--space-2);
-    padding-right: var(--space-2);
-    position: relative;
-
-    &.active {
-      @include nav-active;
-    }
-  }
-
   $td-posters-height: 29px; // min-height of td with avatar glow
   $td-posters-more-lh: $td-posters-height - 4;
 
@@ -118,6 +127,16 @@
         font-size: var(--font-down-1);
       }
     }
+
+    @include viewport.until(md) {
+      @include hide-posters;
+    }
+
+    @include viewport.until(lg) {
+      .has-sidebar-page & {
+        @include hide-posters;
+      }
+    }
   }
 
   td.topic-list-data.posters {
@@ -137,6 +156,16 @@
 
   .views {
     width: var(--d-topic-list-likes-views-posts-width);
+
+    @include viewport.until(md) {
+      display: none;
+    }
+
+    .has-sidebar-page & {
+      @include viewport.until(lg) {
+        display: none;
+      }
+    }
   }
 
   .posts {
@@ -204,25 +233,6 @@
   h2 {
     margin: var(--space-5) 0 var(--space-3);
   }
-
-  .show-more {
-    width: 100%;
-    z-index: z("base");
-    position: absolute;
-    top: 0;
-
-    .alert {
-      margin: 0;
-      padding: var(--space-4) var(--space-8) var(--space-4) var(--space-3);
-      gap: var(--space-3);
-      align-items: center;
-
-      &.loading {
-        color: var(--primary-medium);
-        cursor: default;
-      }
-    }
-  }
 }
 
 .bulk-select-topics {
@@ -254,39 +264,24 @@
 /* stylelint-disable-next-line discourse/no-breakpoint-mixin */
 @include breakpoint(medium, $sidebar: true) {
   .topic-list {
-    // suppress views column
-    .views {
-      display: none;
-    }
-
     // reduce width for more title space
     .posts {
       width: 3em;
     }
+  }
+}
 
-    .posters {
-      width: 2em;
-      text-align: center;
-    }
+.topic-replies-toggle-wrapper {
+  .topics-replies-toggle {
+    background: none;
+    border: none;
+    line-height: var(--line-height-large);
+    padding: var(--space-2);
+    position: relative;
+    font-size: var(--font-down-1-rem);
 
-    // show only the first poster
-    .topic-list-data.posters {
-      a:first-child .avatar.latest:not(.single) {
-        top: 0;
-        left: 0;
-      }
-
-      a:not(.latest) {
-        display: none;
-      }
-
-      a.latest {
-        width: 100%;
-
-        img {
-          margin: 0 auto;
-        }
-      }
+    &.active {
+      @include nav-active;
     }
   }
 }

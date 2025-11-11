@@ -53,6 +53,18 @@ zh_TW:
           name: "搜尋"
         spam:
           name: "垃圾內容"
+      translations:
+        title: "翻譯"
+        stats:
+          eta_minutes:
+            other: "%{count} 分"
+          eta_hours:
+            other: "%{count} 小時"
+          eta_days:
+            other: "%{count} 天"
+        progress_chart:
+          bar_done:
+            other: "%{count} 篇貼文"
       spam:
         short_title: "垃圾內容"
         last_seven_days: "過去 7 天"

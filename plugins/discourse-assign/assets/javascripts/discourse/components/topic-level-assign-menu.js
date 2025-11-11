@@ -1,4 +1,4 @@
-import { getOwner } from "@ember/application";
+import { getOwner } from "@ember/owner";
 import { htmlSafe } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { iconHTML } from "discourse/lib/icon-library";
@@ -105,7 +105,7 @@ export default {
   displayed() {
     return (
       this.currentUser?.can_assign &&
-      !this.site.mobileView &&
+      this.site.desktopView &&
       (this.topic.isAssigned() || this.topic.hasAssignedPosts())
     );
   },

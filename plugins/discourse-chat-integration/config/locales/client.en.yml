@@ -82,7 +82,7 @@ en:
               help: "e.g. #channel, @username."
           errors:
             action_prohibited: "The bot does not have permission to post to that channel"
-            channel_not_found: "The specified channel does not exist on slack"
+            channel_not_found: "The specified channel does not exist on Slack"
 
         #######################################
         ########## TELEGRAM STRINGS ###########
@@ -149,7 +149,7 @@ en:
               help: "A name to describe the channel. It is not used for the connection to Matrix."
             room_id:
               title: "Room ID"
-              help: "The 'private identifier' for the room. It should look something like !abcdefg:matrix.org"
+              help: "The 'private identifier' for the room. It should look something like !abcdefghijkl"
           errors:
             unknown_token: "Access token is invalid"
             unknown_room: "Room ID is invalid"

@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 98
+  BASE_COMPILER_VERSION = 100
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
@@ -66,13 +66,6 @@ class Theme < ActiveRecord::Base
           -> { where(target_id: Theme.targets[:settings], name: "yaml") },
           class_name: "ThemeField"
   has_one :javascript_cache, dependent: :destroy
-  has_one :theme_color_scheme, dependent: :destroy
-  has_one :owned_color_scheme,
-          class_name: "ColorScheme",
-          through: :theme_color_scheme,
-          source: :color_scheme
-  alias_method :owned_color_palette, :owned_color_scheme
-  alias_method :owned_color_palette=, :owned_color_scheme=
 
   has_many :locale_fields,
            -> { filter_locale_fields(I18n.fallbacks[I18n.locale]) },
@@ -113,7 +106,11 @@ class Theme < ActiveRecord::Base
             :theme_site_settings,
             :settings_field,
             theme_fields: %i[upload theme_settings_migration],
-            child_themes: %i[color_scheme locale_fields theme_translation_overrides],
+            child_themes: [
+              { color_scheme: :base_scheme },
+              :locale_fields,
+              :theme_translation_overrides,
+            ],
           )
         end
 
@@ -124,8 +121,7 @@ class Theme < ActiveRecord::Base
             :user,
             :locale_fields,
             :theme_translation_overrides,
-            color_scheme: %i[theme color_scheme_colors],
-            owned_color_scheme: %i[theme color_scheme_colors],
+            color_scheme: %i[theme color_scheme_colors base_scheme],
             parent_themes: %i[color_scheme locale_fields theme_translation_overrides],
           )
         end
@@ -248,7 +244,7 @@ class Theme < ActiveRecord::Base
     get_set_cache "compiler_version" do
       dependencies = [
         BASE_COMPILER_VERSION,
-        EmberCli.ember_version,
+        AssetProcessor.new.ember_version,
         GlobalSetting.cdn_url,
         GlobalSetting.s3_cdn_url,
         GlobalSetting.s3_endpoint,
@@ -539,10 +535,9 @@ class Theme < ActiveRecord::Base
     when :extra_js
       get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
         require_rebake =
-          ThemeField.where(theme_id: theme_ids, target_id: Theme.targets[:extra_js]).where(
-            "compiler_version <> ?",
-            Theme.compiler_version,
-          )
+          ThemeField
+            .where(theme_id: theme_ids, target_id: targets[:extra_js])
+            .where.not(compiler_version: compiler_version)
 
         ActiveRecord::Base.transaction do
           require_rebake.each { |tf| tf.ensure_baked! }
@@ -1083,40 +1078,6 @@ class Theme < ActiveRecord::Base
   def themeable_site_settings
     return [] if self.component?
     ThemeSiteSettingResolver.new(theme: self).resolved_theme_site_settings
-  end
-
-  def find_or_create_owned_color_palette
-    Theme.transaction do
-      next self.owned_color_palette if self.owned_color_palette
-
-      palette = self.color_palette || ColorScheme.base
-
-      copy = palette.dup
-      copy.theme_id = self.id
-      copy.base_scheme_id = nil
-      copy.user_selectable = false
-      copy.via_wizard = false
-      copy.save!
-
-      result =
-        ThemeColorScheme.insert_all(
-          [{ theme_id: self.id, color_scheme_id: copy.id }],
-          unique_by: :index_theme_color_schemes_on_theme_id,
-        )
-
-      if result.rows.size == 0
-        # race condition, a palette has already been associated with this theme
-        copy.destroy!
-        self.reload.owned_color_palette
-      else
-        ColorSchemeColor.insert_all(
-          palette.colors.map do |color|
-            { color_scheme_id: copy.id, name: color.name, hex: color.hex, dark_hex: color.dark_hex }
-          end,
-        )
-        copy.reload
-      end
-    end
   end
 
   private

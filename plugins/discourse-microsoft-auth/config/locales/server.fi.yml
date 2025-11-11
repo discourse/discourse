@@ -10,3 +10,4 @@ fi:
     microsoft_auth_client_id: 'Microsoft App ID/Client ID (EI Secret ID) – määritä osoitteessa <a href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade">https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade</a>)'
     microsoft_auth_client_secret: "Microsoft Secret Password (käytä arvoa, EI Secret ID:tä)"
     microsoft_auth_email_verified: "Käsittele kaikkia Microsoft-sähköpostiosoitteita oletusarvoisesti vahvistettuina. VAROITUS: käytä tätä vain, jos kaikki käyttäjäsi ovat varmasti vahvistaneet osoitteensa."
+    microsoft_auth_tenant_id: 'Microsoftin Tenant ID (common on vakio, PAKOLLINEN kaikissa tapauksissa paitsi yksittäisen vuokralaisen tapauksessa) – Tenant ID löytyy osoitteesta <a href="https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView">https://portal.azure.com/#view/Microsoft_AAD_IAM/TenantProperties.ReactView</a>'

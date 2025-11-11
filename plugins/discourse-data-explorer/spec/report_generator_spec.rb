@@ -2,8 +2,8 @@
 
 describe DiscourseDataExplorer::ReportGenerator do
   fab!(:user)
-  fab!(:unauthorised_user) { Fabricate(:user) }
-  fab!(:unauthorised_group) { Fabricate(:group) }
+  fab!(:unauthorised_user, :user)
+  fab!(:unauthorised_group, :group)
   fab!(:group) { Fabricate(:group, users: [user]) }
 
   fab!(:query) { DiscourseDataExplorer::Query.find(-1) }

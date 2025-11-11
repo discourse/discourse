@@ -33,7 +33,6 @@ tr_TR:
         %{logs}
         ```
   site_settings:
-    events_max_rows: "Takvimdeki etkinlik başına maksimum metin satırı."
     map_events_to_color: "Her etikete veya kategoriye bir renk atayın."
     map_events_title: "Her kategori için \"Yaklaşan Etkinlikler\" kenar çubuğu başlığındaki \"Etkinlikler\"in üzerine yazar."
     calendar_enabled: "discourse-calendar eklentisini etkinleştirin. Bu, bir konunun ilk gönderisine [calendar][/calendar] etiketi için destek ekleyecektir."
@@ -62,7 +61,6 @@ tr_TR:
     calendar_automatic_holidays_enabled: "Kullanıcı bölgesine göre tatil durumunu otomatik olarak ayarla (not: belirli otomatik tatilleri eklenti ayarlarından devre dışı bırakabilirsiniz)"
     event_participation_buttons: "Kullanıcıların kullanabileceği etkinlik katılım düğmelerinin listesi."
     sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
-    include_expired_events_on_calendar: "Kategori Takvimi ve Yaklaşan Etkinlikler görünümlerine geçmiş/süresi dolmuş etkinlikleri ekleyin."
   discourse_calendar:
     invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
     calendar_must_be_in_first_post: "Takvim etiketi, bir konunun yalnızca ilk gönderisinde kullanılabilir."

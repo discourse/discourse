@@ -54,7 +54,7 @@ RSpec.describe FoundUserSerializer do
         end
 
         it "doesn't add expired user status" do
-          user.user_status.ends_at = 1.minutes.ago
+          user.user_status.ends_at = 1.minute.ago
           serializer = described_class.new(user, scope: Guardian.new(user), root: false)
           json = serializer.as_json
 

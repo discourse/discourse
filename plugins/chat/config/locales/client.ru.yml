@@ -262,7 +262,9 @@ ru:
         header: "Заголовок чата"
         composer: "Редактор чата"
         channels_list: "Список каналов чата"
+      no_direct_message_channels: "Вы еще не начали общение через прямые сообщения!"
       no_direct_message_channels_cta: "Начать разговор"
+      no_public_channels: "Вы еще не присоединились ни к одному каналу!"
       no_public_channels_cta: "Просмотреть каналы"
       kicked_from_channel: "У вас больше нет доступа к этому каналу."
       only_chat_push_notifications:
@@ -332,7 +334,7 @@ ru:
         many: "%{count} файла"
         other: "%{count} файла"
       you_flagged: "Вы пожаловались на это сообщение"
-      exit: "Назад"
+      exit: "выйти из чата"
       channel_status:
         read_only_header: "Канал только для чтения"
         read_only: "Только для чтения"
@@ -356,6 +358,8 @@ ru:
       chat_message_separator:
         today: Сегодня
         yesterday: Вчера
+      search_view:
+        filter_placeholder: Искать в сообщениях
       members_view:
         filter_placeholder: Найти участников
         add_member: Добавить участника
@@ -372,7 +376,8 @@ ru:
         tabs:
           members: Участники
           settings: Настройки
-        remove_member: "Отозвать"
+          search: Искать
+        remove_member: "Удалить"
       new_message_modal:
         title: Отправка сообщения
         add_user_long: <kbd>Shift + щелчок</kbd> или <kbd>Shift + Ввод</kbd><span>Добавить пользователя @%{username}</span>
@@ -493,6 +498,7 @@ ru:
           topic: "Тема"
       reviewable:
         type: "Сообщение чата"
+        message_in_channel: "Канал"
       reactions:
         only_you: "<span>Вы отреагировали с эмодзи</span>:%{emoji}:"
         you_and_single_user: "<span>Вы и %{username} отреагировали с эмодзи </span>:%{emoji}:"
@@ -559,6 +565,11 @@ ru:
           create_export: "Создать экспорт"
           confirm_export: "Экспортируются все сообщения со всех каналов и отправляются вам в личном сообщении. Действительно экспортировать?"
           export_has_started: "Экспорт начался. Когда он завершится, вы получите личное сообщение."
+      search:
+        no_results: "Ничего не найдено"
+        sort:
+          relevance: "По соответствию"
+          latest: "Последние"
       my_threads:
         title: Мои цепочки сообщений
         aria_label: "Перейти к моим цепочкам сообщений"
@@ -595,6 +606,7 @@ ru:
         select_emoji: "Выберите эмодзи"
         system: "Системный"
         title: "Входящие вебхуки"
+        header_description: "Входящие вебхуки могут использоваться внешними системами для публикации сообщений в указанном чате от имени пользователя-бота"
         url: "URL"
         url_instructions: "Этот URL содержит секретное значение — берегите его."
         username: "Имя пользователя"
@@ -723,6 +735,11 @@ ru:
       draft_channel_screen:
         header: "Новое сообщение"
         cancel: "Отмена"
+      quick_reaction_type:
+        title: "Реакции в чате в один клик"
+        options:
+          frequent: "Самые часто используемые реакции в чате"
+          custom: "Пользовательские реакции"
     notifications:
       chat_invitation: "пригласил вас присоединиться к каналу чата"
       chat_invitation_html: "<span>Пользователь %{username}</span> <span> пригласил вас присоединиться к каналу</span>"
@@ -782,7 +799,7 @@ ru:
           switch_channel_arrows: "%{shortcut} Переключить канал"
           switch__unread_channel_arrows: "%{shortcut} Переключить непрочитанный канал"
           open_quick_channel_selector: "%{shortcut} Открыть переключатель каналов"
-          open_insert_link_modal: "%{shortcut} Вставить гиперссылку (только в редакторе)"
+          open_insert_link_modal: "%{shortcut} Вставить ссылку (только редактор)"
           composer_bold: "%{shortcut} Жирный (только в редакторе)"
           composer_italic: "%{shortcut} Курсив (только в редакторе)"
           composer_code: "%{shortcut} Код (только в редакторе)"
@@ -814,6 +831,9 @@ ru:
         chat:
           title: Чат
     sidebar:
+      start_new_dm:
+        text: Начать новый DM
+        title: Создать личный чат
       panels:
         chat:
           label: "Чат"

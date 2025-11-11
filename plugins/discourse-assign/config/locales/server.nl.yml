@@ -33,6 +33,11 @@ nl:
   discourse_assign:
     assigned_to: "Topic toegewezen aan @%{username}"
     unassigned: "Toewijzing van topic is opgeheven"
+    filter:
+      description:
+        assigned: "Filter topics die zijn toegewezen aan een specifieke gebruiker of groep"
+        nobody: "Filter topics die aan niemand zijn toegewezen"
+        anyone: "Filter topics die aan iemand zijn toegewezen"
     already_claimed: "Dat topic is al geclaimd."
     already_assigned: "Topic is al toegewezen aan @%{username}"
     too_many_assigns: "@%{username} heeft het maximale aantal toegewezen topics (%{max}) al bereikt."

@@ -229,7 +229,7 @@ lt:
       header:
         logged_in_members: "Sveikas sugrįžęs, %{preferred_display_name}!"
         anonymous_members: "Sveiki atvykę į %{site_name}!"
-      search: "Paieška"
+      search_placeholder: "Paieška"
     themes:
       default_description: "Numatytasis"
       error_caused_by: "Sukėlė '%{name}'. <a target='blank' href='%{path}'>Spustelėkite čia</a> norėdami atnaujinti, iš naujo sukonfigūruoti arba išjungti."
@@ -551,6 +551,7 @@ lt:
       other: "Pamatyk %{count} naujas temas"
     preview: "Peržiūrėti"
     cancel: "Atšaukti"
+    done: "Baigta"
     deleting: "Ištrinama…"
     save: "Išsaugoti pakeitimus"
     saving: "Saugoma..."
@@ -640,10 +641,6 @@ lt:
         claimed_by_you: "Pareiškėte teises į šį elementą ir galite jį peržiūrėti."
         claimed_by_other: "Šį elementą gali peržiūrėti tik <b>%{username}</b>."
         automatically_claimed_by: "Šį elementą šiuo metu peržiūri <b>%{username}</b>."
-      claim:
-        title: "pretenduoti į šią temą"
-      unclaim:
-        help: "pašalinti šį teiginį"
       awaiting_approval: "Laukiama patvirtinimo"
       delete: "Pašalinti"
       settings:
@@ -799,6 +796,7 @@ lt:
         reviewable_post:
           title: "Įrašai"
           noun: "įrašai"
+      user_label: "Narys"
       notes:
         delete: "Pašalinti"
       review_user: "Narys"
@@ -1375,17 +1373,15 @@ lt:
       color_scheme: "Spalvų paletė"
       color_schemes:
         default_description: "Tema numatytoji"
-        disable_dark_scheme: "Toks pat kaip įprastas"
         dark_instructions: "Tamsaus režimo spalvų paletę galite peržiūrėti įjungdami įrenginio tamsų režimą."
         undo: "Atstatyti"
-        regular: "Nuolatinės"
         dark: "Tamsus režimas"
-        default_dark_scheme: "(numatytoji svetainė)"
         interface_modes:
           light: "Šviesi"
           dark: "Tamsi"
+        picker:
+          active: "Aktyvus"
       dark_mode: "Tamsus režimas"
-      dark_mode_enable: "Įgalinti automatinę tamsaus režimo spalvų paletę"
       text_size_default_on_all_devices: "Padarykite tai numatytuoju teksto dydžiu visuose mano įrenginiuose"
       allow_private_messages: "Leisti kitiems vartotojams siųsti man asmeninius pranešimus"
       external_links_in_new_tab: "Atidaryti visas pridėtas nuorodas naujame lange"
@@ -1595,7 +1591,7 @@ lt:
         invalid: "Šis vartotojo vardas yra neteisingas. Jame turi būti tik skaičiai ir raidės"
       add_email:
         title: "Pridėti el. paštą"
-        add: "pridėti"
+        add: "Pridėti"
       change_email:
         title: "Keisti el. paštą"
         taken: "Atsiprašome, šis el. paštas negalimas."
@@ -2298,6 +2294,8 @@ lt:
       disabled: "Netrukdyti"
       sidebar_footer: "Rodyti šoninės juostos poraštėje"
       header: "Rodyti antraštėje"
+    welcome_banner_page_visibility:
+      homepage: "Pagrindinis puslapis"
     shortcut_modifier_key:
       shift: "t"
       ctrl: "Ctrl"
@@ -2316,6 +2314,7 @@ lt:
         few: "%{count} temos šioje kategorijoje"
         many: "%{count} temų šioje kategorijoje"
         other: "%{count} temos šioje kategorijoje"
+      read_only: "tik skaityti"
     timezone_input:
       ambiguous_ist: "IST yra dviprasmiškas, pasirinkite konkrečią laiko juostą (pvz.: Azija/Kolkata)"
     select_kit:
@@ -2379,11 +2378,13 @@ lt:
       whisper: "šnabždesys"
       unlist: "neįtraukta į sąrašą"
       add_warning: "Tai Oficialus Ispėjimas"
-      toggle_whisper: "Įjungti Šnabždesį"
+      toggle_whisper: "Visiškas gandas"
       posting_not_on_topic: "Kurią temą nori atsakyti?"
       saved_local_draft_tip: "išsaugota lokaliai"
       drafts_offline: "juodraščiai ne ryšio zonoje"
       edit_conflict: "redaguoti konfliktą"
+      translations:
+        translation: "Vertimai"
       cannot_see_mention:
         category: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie neturi prieigos prie šios kategorijos. Turėsite juos įtraukti į grupę, kuri turi prieigą prie šios kategorijos."
         private: "Paminėjote @%{username} , tačiau jiems nebus pranešta, nes jie negali matyti šio asmeninio pranešimo. Turėsite juos pakviesti į šią asmeninę žinutę."
@@ -2405,6 +2406,7 @@ lt:
       create_shared_draft: "Sukurti bendrinamą juodraštį"
       edit_shared_draft: "Redaguoti bendrinamą juodraštį"
       title: "Arba paspauskite %{modifier}Enter"
+      discard: "Išmesti"
       title_placeholder: "Apibūdinkite apie ka bus ši diskusija vienu trumpu sakiniu"
       title_or_link_placeholder: "Įveskite pavadinimą, arba įklijuokite nuorodą čia"
       edit_reason_placeholder: "kodėl jūs redaguojate?"
@@ -2438,10 +2440,7 @@ lt:
       paste_code_text: "įveskite arba ėkopijuokite kodą čia"
       upload_title: "Įkelti"
       upload_description: "įveskite čia nuorodos aprašymą"
-      olist_title: "Sunumeruotas sąrašas"
-      ulist_title: "Suženklintas sąrašas"
       list_item: "Įkelti"
-      toggle_direction: "Perjungti kryptį"
       help: "Markdown redagavimo pagalba"
       modal_ok: "OK"
       cant_send_pm: "Atsiprašome, bet negalite siųsti žinučių %{username}."
@@ -2469,8 +2468,9 @@ lt:
         toggle_whisper:
           label: Visiškas gandas
           desc: Gandai matomi tik valdytojams
-        create_topic:
-          label: "Nauja tema"
+        create_personal_message:
+          label: "Nauja žinutė"
+          desc: "Sukurti naują asmeninę žinutę"
         shared_draft:
           label: "Bendrinami juodraščiai"
           desc: "Sukurkite temą, kuri bus matoma tik leidžiamiems vartotojams"
@@ -2795,7 +2795,6 @@ lt:
         many: "teoje %{count} įrašų"
         other: "temoje %{count} įrašai"
       create: "Nauja Tema"
-      create_long: "Sukurti naują temą"
       open_draft: "Atviras juodraštis"
       private_message: "Rašyti žinutę"
       archive_message:
@@ -3231,10 +3230,7 @@ lt:
         attachment_upload_not_allowed_for_new_user: "Atsiprašome, bet nauji vartotojai negali įkelti priedų."
         attachment_download_requires_login: "Atsiprašome, bet jūs turite būti prisijungęs, kad galėtumėt atsisiųsti priedus."
       cancel_composer:
-        confirm: "Ką norėtumėte daryti su savo įrašu?"
         discard: "Išmesti"
-        save_draft: "Išsaugoti juodraštį vėlesniam laikui"
-        keep_editing: "Tęskite redagavimą"
       via_email: "Šis įrašas buvo gautas per el. paštą"
       via_auto_generated_email: "šis pranešimas atkeliavo automatiškai sugeneruotu el. paštu"
       whisper: "Šis įrašas yra privatus šnabždesys moderatoriams"
@@ -3385,8 +3381,8 @@ lt:
         name: "Vardas"
         description: "Aprašymas"
         remove: "Pašalinti"
-      tags_allowed_tags: "Apribokite šias žymas šioje kategorijoje:"
-      tags_allowed_tag_groups: "Apribokite šias žymų grupes šioje kategorijoje:"
+      tags_allowed_tags_new_category: "Apribokite šias žymas šioje kategorijoje:"
+      tags_allowed_tag_groups_new_category: "Apribokite šias žymų grupes šioje kategorijoje:"
       tags_placeholder: "(Neprivaloma) leidžiamų žymų sąrašas"
       tags_tab_description: "Aukščiau nurodytos žymos ir žymų grupės bus pasiekiamos tik šioje kategorijoje ir kitose jas taip pat nurodančiose kategorijose. Jų nebus galima naudoti kitose kategorijose."
       tag_groups_placeholder: "(Neprivaloma) leidžiamų žymų grupių sąrašas"
@@ -3408,6 +3404,8 @@ lt:
       logo: "Kategorijos logotipo paveiksliukas"
       background_image: "Kategorijos fono paveiksliukas"
       background_color: "Spalva"
+      color_validations:
+        cant_be_empty: "negali būti tuščia"
       styles:
         icon: "Ikona"
         emoji: "Emoji"
@@ -3726,8 +3724,7 @@ lt:
       readonly: "Peržiūrėti"
     preloader_text: "Kraunama"
     lightbox:
-      download: "atsisiųsti"
-      open: "originalus vaizdas"
+      download: "Atsisiųsti"
       previous: "Ankstesnis (rodyklės į kairę klavišas)"
       next: "Kitas (Dešinės rodyklės klavišas)"
       counter: "%curr% iš %total%"
@@ -3863,7 +3860,6 @@ lt:
       selector_remove_filter: "išjungti filtrus"
       tags: "Žymos"
       choose_for_topic: "pasirenkamos žymos"
-      info: "Informacija"
       default_info: "Ši žyma neapsiriboja jokiomis kategorijomis ir neturi sinonimų."
       staff_info: "Norėdami pridėti apribojimų, įtraukite šią žymą į <a href=%{basePath}/tag_groups>žymų grupę</a>."
       category_restricted: "Ši žyma skirta tik kategorijoms, prie kurių neturite prieigos teisės."
@@ -4104,6 +4100,7 @@ lt:
   admin_js:
     type_to_filter: "Įveskite filtrą…"
     settings: "Nustatymai"
+    reset_filter: "Atstatyti"
     admin:
       title: "Forumo administratorius"
       moderator: "Moderatorius"
@@ -4131,6 +4128,19 @@ lt:
           title: "Apsauga"
         plugins:
           title: "Apklausos"
+      upcoming_changes:
+        name: "Vardas"
+        enabled: "Galimas"
+        preview: "Peržiūrėti"
+        impact_roles:
+          admins: "Administratoriai"
+          moderators: "Moderatoriai"
+          staff: "Personalas"
+        filter:
+          all: "Visi"
+          enabled: "Galimas"
+          disabled: "Uždrausta"
+          impact_type_other: "Kiti"
       config:
         developer:
           title: "Programuotojams"
@@ -4142,6 +4152,10 @@ lt:
           title: "Failai"
         legal:
           title: "Naudojimosi taisyklės"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Nustatymai"
         logo:
           form:
             mobile: "Mobilus"
@@ -4679,7 +4693,6 @@ lt:
         copy_to_clipboard: "Nukopijuoti į iškarpinę"
         copied_to_clipboard: "Nukopijuota į iškirptę"
         copy_to_clipboard_error: "Klaida kopijuojant duomenis į iškarpinę"
-        theme_owner: "Neredaguojama, priklauso:"
         email_templates:
           title: "Epaštas"
           subject: "Tema"
@@ -4687,6 +4700,7 @@ lt:
           body: "Tekstas"
           revert: "Atstatyti Pakeitimus"
           revert_confirm: "Ar tikrai nori atstatyti pakeitimus?"
+          edit: "Redaguoti"
         component:
           all_filter: "Visos"
           enabled_filter: "Galimas"
@@ -4718,13 +4732,12 @@ lt:
           extra_files_upload: "Norėdami peržiūrėti šiuos failus, eksportuokite temą."
           extra_files_remote: "Eksportuokite temą arba patikrinkite „git“ saugyklą, kad peržiūrėtumėte šiuos failus."
           preview: "Peržiūrėti"
-          default: "Aktyvūs"
           is_default: "Tema įgalinta pagal nutylėjimą"
           user_selectable: "Temą gali pasirinkti vartotojai"
           auto_update: "Automatinis naujinimas, kai Discourse atnaujinamas"
           color_scheme: "Spalvų paletė"
           default_light_scheme: "Šviesus (numatytasis)"
-          color_scheme_select: "Pasirinkite spalvas, kurias norite naudoti pagal temą"
+          color_scheme_select: "Pasirinkite spalvas, kurias norite naudoti pagal temą."
           custom_sections: "Pasirinktiniai skyriai:"
           theme_components: "Temos komponentai"
           add_all_themes: "Pridėti visas temas"
@@ -4797,10 +4810,6 @@ lt:
           compare_commits: "(Žr. naujus įsipareigojimus)"
           repo_unreachable: "Nepavyko susisiekti su šios temos „Git“ saugykla. Klaidos pranešimas:"
           imported_from_archive: "Ši tema buvo importuota iš .zip failo"
-          settings: "Nustatymai"
-          colors: "Spalvos"
-          discard_colors: "Išmesti"
-          colors_title: "Spalvos"
           scss:
             text: "CSS"
           after_header:
@@ -4824,12 +4833,12 @@ lt:
           select_base:
             title: "Pasirinkite pagrindinę spalvų paletę"
             description: "Pagrindinė paletė:"
+          light: "šviesi"
+          dark: "tamsi"
           title: "Spalvos"
           edit: "Redaguoti"
           filters:
             all: "Visi"
-          active_badge:
-            text: "Aktyvus"
           about: "Pakeiskite temų naudojamas spalvas. Norėdami pradėti, sukurkite naują spalvų paletę."
           copy_name_prefix: "Kopija"
           undo: "Anuliuoti"
@@ -5290,8 +5299,6 @@ lt:
             transfer_and_delete: "Perkelti ir ištrinti @%{username}"
             cancel: "Atšaukti"
         merge_failed: "Sujungiant vartotojus įvyko klaida."
-        delete_forbidden_because_staff: "Administratoriai ir moderatoriai negali būti ištrinti."
-        delete_posts_forbidden_because_staff: "Negalima ištrinti administratorių ir moderatorių įrašų"
         delete_forbidden:
           one: "Vartotojai negali būti ištrinti jeigu jie sukūrė įrašus. Ištrink visus įrašus prieš ištrinant vartotoją (%{count} dienos senumo įrašas negali būti ištrintas)"
           few: "Vartotojai negali būti ištrinti jeigu jie sukūrė įrašus. Ištrink visus įrašus prieš ištrinant vartotoją (%{count} dienų senumo įrašai negali būti ištrinti)"

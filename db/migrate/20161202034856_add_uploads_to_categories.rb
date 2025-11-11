@@ -2,8 +2,8 @@
 
 class AddUploadsToCategories < ActiveRecord::Migration[4.2]
   def up
-    add_column :categories, :uploaded_logo_id, :integer, index: true
-    add_column :categories, :uploaded_background_id, :integer, index: true
+    add_column :categories, :uploaded_logo_id, :integer
+    add_column :categories, :uploaded_background_id, :integer
 
     execute <<~SQL
     UPDATE categories c1

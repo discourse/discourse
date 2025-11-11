@@ -10,13 +10,13 @@ class ThemeSetting < ActiveRecord::Base
 
   MAXIMUM_JSON_VALUE_SIZE_BYTES = 0.5 * 1024 * 1024 # 0.5 MB
 
-  validates_presence_of :name, :theme
+  validates :name, :theme, presence: true
   validates :data_type, inclusion: { in: TYPES_ENUM.values }
   validate :json_value_size, if: -> { self.data_type == TYPES_ENUM[:objects] }
   validates :name, length: { maximum: 255 }
 
-  after_save :clear_settings_cache
   after_destroy :clear_settings_cache
+  after_save :clear_settings_cache
 
   after_save do
     if self.data_type == ThemeSetting.types[:upload] && saved_change_to_value?

@@ -257,7 +257,7 @@ class PostRevisionSerializer < ApplicationSerializer
 
     # backtrack
     post_revisions.each do |pr|
-      revision = HashWithIndifferentAccess.new
+      revision = ActiveSupport::HashWithIndifferentAccess.new
       revision[:revision] = pr.number
       revision[:hidden] = pr.hidden
 

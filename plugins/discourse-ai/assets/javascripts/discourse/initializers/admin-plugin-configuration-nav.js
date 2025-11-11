@@ -46,6 +46,11 @@ export default {
           route: "adminPlugins.show.discourse-ai-spam",
           description: "discourse_ai.spam.spam_description",
         },
+        {
+          label: "discourse_ai.translations.title",
+          route: "adminPlugins.show.discourse-ai-translations",
+          description: "discourse_ai.translations.description",
+        },
       ]);
     });
   },

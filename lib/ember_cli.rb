@@ -5,7 +5,7 @@ class EmberCli < ActiveSupport::CurrentAttributes
   attribute :request_cache
 
   def self.dist_dir
-    "#{Rails.root}/app/assets/javascripts/discourse/dist"
+    "#{Rails.root}/frontend/discourse/dist"
   end
 
   def self.assets
@@ -68,17 +68,6 @@ class EmberCli < ActiveSupport::CurrentAttributes
 
   def self.is_ember_cli_asset?(name)
     assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
-  end
-
-  def self.ember_version
-    @version ||=
-      begin
-        ember_source_package_raw =
-          File.read(
-            "#{Rails.root}/app/assets/javascripts/discourse/node_modules/ember-source/package.json",
-          )
-        JSON.parse(ember_source_package_raw)["version"]
-      end
   end
 
   def self.has_tests?

@@ -34,7 +34,7 @@ export default class AiPersonaLlmSelector extends Component {
   }
 
   get hasLlmSelector() {
-    return this.currentUser.ai_enabled_chat_bots.any((bot) => !bot.is_persona);
+    return this.currentUser.ai_enabled_chat_bots.some((bot) => !bot.is_persona);
   }
 
   get botOptions() {
@@ -129,6 +129,10 @@ export default class AiPersonaLlmSelector extends Component {
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
+  get showPersonaSelector() {
+    return this.botOptions?.length > 1;
+  }
+
   get showLLMSelector() {
     return this.allowLLMSelector && this.llmOptions.length > 1;
   }
@@ -161,7 +165,7 @@ export default class AiPersonaLlmSelector extends Component {
     this._value = this.botOptions[0].id;
     if (personaId) {
       personaId = parseInt(personaId, 10);
-      if (this.botOptions.any((bot) => bot.id === personaId)) {
+      if (this.botOptions.some((bot) => bot.id === personaId)) {
         this._value = personaId;
       }
     }
@@ -200,20 +204,22 @@ export default class AiPersonaLlmSelector extends Component {
 
   <template>
     <div class="persona-llm-selector">
-      <div class="persona-llm-selector__selection-wrapper gpt-persona">
-        {{#if @showLabels}}
-          <label>{{i18n "discourse_ai.ai_bot.persona"}}</label>
-        {{/if}}
-        <DropdownSelectBox
-          class="persona-llm-selector__persona-dropdown"
-          @value={{this.value}}
-          @content={{this.botOptions}}
-          @options={{hash
-            icon=(if @showLabels "angle-down" "robot")
-            filterable=this.filterable
-          }}
-        />
-      </div>
+      {{#if this.showPersonaSelector}}
+        <div class="persona-llm-selector__selection-wrapper gpt-persona">
+          {{#if @showLabels}}
+            <label>{{i18n "discourse_ai.ai_bot.persona"}}</label>
+          {{/if}}
+          <DropdownSelectBox
+            class="persona-llm-selector__persona-dropdown"
+            @value={{this.value}}
+            @content={{this.botOptions}}
+            @options={{hash
+              icon=(if @showLabels "angle-down" "robot")
+              filterable=this.filterable
+            }}
+          />
+        </div>
+      {{/if}}
       {{#if this.showLLMSelector}}
         <div class="persona-llm-selector__selection-wrapper llm-selector">
           {{#if @showLabels}}

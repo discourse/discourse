@@ -70,6 +70,14 @@ months:
     regions: [nz]
     week: 1
     wday: 1
+    year_ranges:
+      until: 2022
+  - name: King's Birthday
+    regions: [nz]
+    week: 1
+    wday: 1
+    year_ranges:
+      from: 2023
   9:
   - name: Dominion Day
     regions: [nz_sc]
@@ -264,6 +272,16 @@ tests:
       regions: ["nz"]
     expect:
       name: "Matariki"
+  - given:
+      date: "2022-06-06"
+      regions: ["nz"]
+    expect:
+      name: "Queen's Birthday"
+  - given:
+      date: "2023-06-05"
+      regions: ["nz"]
+    expect:
+      name: "King's Birthday"
 
 methods:
   closest_monday:

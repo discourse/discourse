@@ -46,7 +46,7 @@
 
   @include viewport.until(sm) {
     .hamburger-panel .revamped & {
-      margin-bottom: var(--spacing-block-m);
+      margin-bottom: var(--space-4);
     }
   }
 
@@ -60,7 +60,7 @@
     flex-direction: column;
 
     @include viewport.from(xl) {
-      gap: var(--spacing-block-xs);
+      gap: var(--space-1);
     }
   }
 }
@@ -78,7 +78,7 @@
 }
 
 .sidebar-new-topic-button__wrapper {
-  margin: 0 var(--spacing-inline-m) var(--spacing-block-l);
+  margin: 0 var(--space-4) var(--space-6);
 
   .sidebar-new-topic-button .d-icon {
     display: none;

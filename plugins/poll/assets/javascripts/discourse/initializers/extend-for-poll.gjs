@@ -33,6 +33,7 @@ function attachPolls(elem, helper) {
 
     if (poll) {
       const titleHTML = pollNode.querySelector(".poll-title")?.outerHTML;
+      const isDynamic = pollNode.dataset.pollDynamic === "true";
 
       const newPollNode = document.createElement("div");
       Object.assign(newPollNode.dataset, {
@@ -48,7 +49,12 @@ function attachPolls(elem, helper) {
       helper.renderGlimmer(
         newPollNode,
         <template>
-          <Poll @poll={{poll}} @post={{post}} @titleHTML={{titleHTML}} />
+          <Poll
+            @poll={{poll}}
+            @post={{post}}
+            @titleHTML={{titleHTML}}
+            @isDynamic={{if isDynamic true poll.dynamic}}
+          />
         </template>
       );
     }

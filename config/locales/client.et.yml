@@ -166,7 +166,7 @@ et:
     welcome_banner:
       header:
         anonymous_members: "Tere tulemast lehele %{site_name}!"
-      search: "Otsi"
+      search_placeholder: "Otsi"
     themes:
       default_description: "Vaikimisi"
     s3:
@@ -334,6 +334,7 @@ et:
       other: "Vaata %{count} uut teemat"
     preview: "eelvaade"
     cancel: "Tühista"
+    done: "Tehtud"
     deleting: "Kustutan..."
     save: "Salvesta muudatused"
     saving: "Salvestan..."
@@ -455,6 +456,7 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+      user_label: "Kasutaja"
       notes:
         delete: "Kustuta"
       review_user: "Kasutaja"
@@ -853,10 +855,11 @@ et:
       color_schemes:
         default_description: "Teema vaikimisi"
         undo: "Lähtesta"
-        regular: "Tavaline"
         interface_modes:
           light: "Hele"
           dark: "Tume"
+        picker:
+          active: "Aktiivne"
       dark_mode: "Tume režiim"
       allow_private_messages: "Luba teistel kasutajatel mulle privaatsõnumeid saata"
       external_links_in_new_tab: "Ava kõik välisviited uuel sakil"
@@ -1000,7 +1003,7 @@ et:
         invalid: "Selline kasutajanimi ei ole lubatud. Kasutada tohib ainult numbreid ja tähti"
       add_email:
         title: "Lisa meiliaadress"
-        add: "lisa"
+        add: "isa"
       change_email:
         title: "Muuda meiliaadressi"
         taken: "Vabandust, see meiliaadress ei ole saadaval."
@@ -1405,6 +1408,8 @@ et:
     full_name_requirement:
       required_at_signup: "Nõutud"
       optional_at_signup: "Valikuline"
+    welcome_banner_page_visibility:
+      homepage: "Avaleht"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -1444,8 +1449,6 @@ et:
       whisper: "sosista"
       unlist: "eemaldatud"
       add_warning: "See on ametlik hoiatus."
-      toggle_whisper: "Lülita sosistamine ümber"
-      insert_table: "Sisesta tabel"
       posting_not_on_topic: "Millisesse teemasse soovid vastata?"
       saved_local_draft_tip: "salvestatud lokaalselt"
       drafts_offline: "mustandid vallasrežiimis"
@@ -1488,10 +1491,7 @@ et:
       paste_code_text: "kirjuta või kleebi kood siia"
       upload_title: "Laadi üles"
       upload_description: "sisesta üleslaaditu kirjeldus siia"
-      olist_title: "Numberloend"
-      ulist_title: "Täpploend"
       list_item: "Loendi element"
-      toggle_direction: "Muuda suunda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
@@ -1505,8 +1505,8 @@ et:
         edit: Muuda
         reply_to_topic:
           label: Vasta teemale
-        create_topic:
-          label: "Uus teema"
+        create_personal_message:
+          label: "Uus sõnum"
         shared_draft:
           label: "Jagatud mustand"
       ignore: "Ignoreeri"
@@ -1724,7 +1724,6 @@ et:
         one: "%{count} postitus teemas"
         other: "%{count} postitust teemas"
       create: "Uus teema"
-      create_long: "Loo uus teema"
       open_draft: "Ava mustand"
       private_message: "Alusta sõnumit"
       archive_message:
@@ -2210,6 +2209,8 @@ et:
       logo: "Kategooria logo"
       background_image: "Kategooria taustapilt"
       background_color: "Värv"
+      color_validations:
+        cant_be_empty: "ei tohi olla tühi"
       styles:
         icon: "Ikoon"
         emoji: "Emotikon"
@@ -2471,7 +2472,7 @@ et:
       readonly: "Vaata"
     preloader_text: "Laaditakse"
     lightbox:
-      download: "laadi alla"
+      download: "Laadi alla"
       counter: "%curr% %total%-st"
     keyboard_shortcuts_help:
       title: "Klaviatuuri kiirvalikud"
@@ -2721,6 +2722,7 @@ et:
         categories: "Kõik kategooriad"
   admin_js:
     settings: "Sätted"
+    reset_filter: "Nulli"
     admin:
       title: "Discourse'i adminn"
       moderator: "Moderaator"
@@ -2739,6 +2741,19 @@ et:
           title: "Turve"
         plugins:
           title: "Pistikprogrammid"
+      upcoming_changes:
+        name: "Nimi"
+        enabled: "Sisse lülitatud"
+        preview: "Eelvaade"
+        impact_roles:
+          admins: "Adminnid"
+          moderators: "Moderaatorid"
+          staff: "Meeskond"
+        filter:
+          all: "Kõik"
+          enabled: "Sisse lülitatud"
+          disabled: "Välja lülitatud"
+          impact_type_other: "Muu"
       config:
         developer:
           title: "Arendaja"
@@ -2750,6 +2765,10 @@ et:
           title: "Failid"
         legal:
           title: "Õiguslik"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Seaded"
         logo:
           form:
             mobile: "Mobiil"
@@ -3194,6 +3213,7 @@ et:
           body: "Sisu"
           revert: "Loobu muudatustest"
           revert_confirm: "Kas oled kindel, et soovid oma muudatustest loobuda?"
+          edit: "Muuda"
         component:
           all_filter: "Kõik"
           enabled_filter: "Sisse lülitatud"
@@ -3217,7 +3237,6 @@ et:
           desktop: "Töölaud"
           mobile: "Mobiil"
           preview: "Eelvaade"
-          default: "Aktiivne"
           is_default: "Kujundus on vaikimisi sisse lülitatud"
           user_selectable: "Kasutajad saavad teemat valida"
           color_scheme: "Värvipalett"
@@ -3236,9 +3255,6 @@ et:
           enable: "Luba"
           disable: "Keela"
           add: "Lisa"
-          settings: "Seaded"
-          colors: "Värvid"
-          colors_title: "Värvid"
           scss:
             text: "CSS"
           after_header:
@@ -3258,12 +3274,12 @@ et:
               too_small: "peab olema suurem või võrdne kui %{count}"
               too_large: "peab olema väiksem või võrdne kui %{count}"
         colors:
+          light: "hele"
+          dark: "tume"
           title: "Värvid"
           edit: "Muuda"
           filters:
             all: "Kõik"
-          active_badge:
-            text: "Aktiivne"
           copy_name_prefix: "Koopia sellest"
           undo: "Ennista"
           undo_title: "Ennista selle värvistiku muudatused alates viimasest salvestamisest."
@@ -3600,8 +3616,6 @@ et:
             cancel: "Tühista"
           confirmation:
             cancel: "Tühista"
-        delete_forbidden_because_staff: "Adminne ja moderaatoreid ei saa kustutada."
-        delete_posts_forbidden_because_staff: "Ei saa kustutada adminnide ja moderaatorite kõiki postitusi."
         delete_forbidden:
           one: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päev ei saa kustutada.)"
           other: "Kasutajaid ei saa kustutada, kui neil on postitusi. Kustuta kõik postitused enne kasutaja kustutamist. (Postitusi, mis on vanemaid kui %{count} päeva ei saa kustutada.)"

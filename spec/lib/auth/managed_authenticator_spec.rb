@@ -221,27 +221,38 @@ RSpec.describe Auth::ManagedAuthenticator do
 
       it "schedules the job upon update correctly" do
         # No image supplied, do not schedule
-        expect { result = authenticator.after_authenticate(hash) }.not_to change {
+        expect { authenticator.after_authenticate(hash) }.not_to change {
           Jobs::DownloadAvatarFromUrl.jobs.count
         }
 
         # Image supplied, schedule
         expect {
-          result =
-            authenticator.after_authenticate(
-              hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
-            )
+          authenticator.after_authenticate(
+            hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
+          )
         }.to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
 
         # User already has profile picture, don't schedule
         user.user_avatar = Fabricate(:user_avatar, custom_upload: Fabricate(:upload))
         user.save!
         expect {
-          result =
-            authenticator.after_authenticate(
-              hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
-            )
+          authenticator.after_authenticate(
+            hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
+          )
         }.not_to change { Jobs::DownloadAvatarFromUrl.jobs.count }
+      end
+
+      it "ensures avatar is overriden when using auth_overrides_avatar" do
+        # User already has profile picture and settings dictate we must override it, schedule
+        SiteSetting.auth_overrides_avatar = true
+
+        user.user_avatar = Fabricate(:user_avatar, custom_upload: Fabricate(:upload))
+        user.save!
+        expect {
+          authenticator.after_authenticate(
+            hash.deep_merge(info: { image: "https://some.domain/image.jpg" }),
+          )
+        }.to change { Jobs::DownloadAvatarFromUrl.jobs.count }.by(1)
       end
     end
 

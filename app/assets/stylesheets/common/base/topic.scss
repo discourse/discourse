@@ -28,6 +28,19 @@
 
   .topic-navigation {
     overflow-anchor: none;
+
+    .btn-toggle-localized-content.--active {
+      background-image: linear-gradient(
+        to bottom,
+        rgb(var(--primary-rgb), 0.6) 100%,
+        rgb(var(--primary-rgb), 0.6) 100%
+      );
+      color: var(--d-button-default-text-color--hover);
+
+      .d-icon {
+        color: var(--d-button-default-text-color--hover);
+      }
+    }
   }
 
   // timeline
@@ -60,19 +73,25 @@
       top: 0;
       overflow-y: auto;
       z-index: z("timeline");
-      padding: 10px 10px 35px 10px;
+      padding: var(--space-4);
       box-shadow: var(--shadow-dropdown);
       background: var(--tertiary-low);
+
+      h2 {
+        font-size: var(--font-0);
+        padding-right: calc(
+          1em + 0.65em - var(--space-2)
+        ); // more or less reserved space for floating close button
+      }
 
       .close {
         display: flex;
         align-items: center;
         position: absolute;
         right: 0;
-        top: 8px;
+        top: 0;
         color: var(--primary);
         opacity: 0.5;
-        font-size: var(--font-up-1);
       }
     }
   }
@@ -81,19 +100,6 @@
   @media screen and (width <= 924px) {
     grid-template-areas: "posts";
     grid-template-columns: auto;
-
-    .topic-navigation {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      grid-area: posts;
-      grid-row: 3;
-      width: auto;
-
-      .btn-toggle-localized-content {
-        height: 100%;
-      }
-    }
 
     .timeline-container:not(.timeline-fullscreen) {
       display: none; // hiding this because sometimes the JS switch lags and causes layout issues
@@ -276,6 +282,7 @@
 
     .select-kit.combo-box.category-chooser {
       width: 100%;
+      height: 100%;
     }
   }
 

@@ -1,4 +1,3 @@
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { PLATFORM_KEY_MODIFIER } from "discourse/lib/keyboard-shortcuts";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import extractVariablesFromChatChannel from "../../lib/variables-chat-channel";
@@ -84,10 +83,10 @@ function addChatIntegration(api, container) {
   }
 
   const channelVariablesExtractor = function () {
-    const chat = getOwnerWithFallback(this).lookup("service:chat");
+    const chat = container.lookup("service:chat");
     const activeChannel = chat?.activeChannel;
     const currentMessage = activeChannel?.draft;
-    const router = getOwnerWithFallback(this).lookup("service:router");
+    const router = container.lookup("service:router");
 
     return extractVariablesFromChatChannel(
       activeChannel,
@@ -97,10 +96,10 @@ function addChatIntegration(api, container) {
   };
 
   const threadVariablesExtractor = function () {
-    const chat = getOwnerWithFallback(this).lookup("service:chat");
+    const chat = container.lookup("service:chat");
     const activeThread = chat?.activeChannel?.activeThread;
     const currentMessage = activeThread?.draft;
-    const router = getOwnerWithFallback(this).lookup("service:router");
+    const router = container.lookup("service:router");
 
     return extractVariablesFromChatThread(activeThread, currentMessage, router);
   };
@@ -126,7 +125,7 @@ function addChatIntegration(api, container) {
 
       const textarea = this.composer?.textarea?.textarea; // this.composer.textarea is a TextareaInteractor instance
 
-      getOwnerWithFallback(this)
+      container
         .lookup("service:d-templates")
         .showTextAreaUI(contextVariablesExtractor, textarea);
     },

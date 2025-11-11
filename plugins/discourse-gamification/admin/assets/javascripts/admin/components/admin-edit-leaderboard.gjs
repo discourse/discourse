@@ -11,13 +11,14 @@ import GroupChooser from "select-kit/components/group-chooser";
 import PeriodInput from "discourse/plugins/discourse-gamification/discourse/components/period-input";
 
 export default class AdminEditLeaderboard extends Component {
-  @service currentUser;
   @service site;
   @service toasts;
   @service router;
 
   get siteGroups() {
-    return this.site.groups.rejectBy("id", AUTO_GROUPS.everyone.id);
+    return this.site.groups.filter(
+      (group) => group.id !== AUTO_GROUPS.everyone.id
+    );
   }
 
   get formData() {

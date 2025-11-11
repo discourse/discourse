@@ -23,17 +23,17 @@
 
     .user-selector,
     .title-and-category {
-      padding: 0 var(--spacing-inline-m);
-      width: calc(100% - var(--spacing-inline-m) * 2);
+      padding: 0 var(--space-4);
+      width: calc(100% - var(--space-4) * 2);
     }
 
     .d-editor-button-bar {
-      padding: 3px var(--spacing-inline-m);
+      padding: 3px var(--space-4);
       border: none;
     }
 
     .d-editor-input {
-      padding: var(--spacing-inline-m);
+      padding: var(--space-4);
     }
 
     &:has(.in-focus) .grippie {
@@ -46,7 +46,7 @@
 
     .reply-to,
     .submit-panel {
-      padding-inline: var(--spacing-inline-sm);
+      padding-inline: var(--space-2);
     }
 
     .d-editor-textarea-wrapper {

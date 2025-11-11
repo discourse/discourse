@@ -106,71 +106,24 @@ module DiscourseAi
         guardian.filter_allowed_categories(query_filter_results)
       end
 
-      def quick_search(query)
-        max_semantic_results_per_page = 100
-        search = Search.new(query, { guardian: guardian })
-        search_term = search.term
-        hyde_model_id = self.class.find_ai_hyde_model_id
+      def similar_topic_ids_to(query, candidates:)
+        # NOTE: candidates may be a very large relation, be deliberate that only first is selected
+        return [] if candidates.limit(1).empty?
 
-        return [] if search_term.nil? || search_term.length < SiteSetting.min_search_term_length
+        over_selection_limit = ::Topic::SIMILAR_TOPIC_LIMIT * OVER_SELECTION_FACTOR
+        asymmetric = true
+        search_embedding = vector.vector_from(query, asymmetric)
 
-        vector = DiscourseAi::Embeddings::Vector.instance
+        schema = DiscourseAi::Embeddings::Schema.for(Topic)
 
-        digest = OpenSSL::Digest::SHA1.hexdigest(search_term)
+        candidate_topic_ids =
+          schema.asymmetric_similarity_search(
+            search_embedding,
+            limit: over_selection_limit,
+            offset: 0,
+          ).map(&:topic_id)
 
-        embedding_key =
-          build_embedding_key(digest, hyde_model_id, SiteSetting.ai_embeddings_selected_model)
-
-        search_term_embedding =
-          Discourse
-            .cache
-            .fetch(embedding_key, expires_in: 1.week) do
-              vector.vector_from(search_term, asymmetric: true)
-            end
-
-        candidate_post_ids =
-          DiscourseAi::Embeddings::Schema
-            .for(Post)
-            .asymmetric_similarity_search(
-              search_term_embedding,
-              limit: max_semantic_results_per_page,
-              offset: 0,
-            )
-            .map(&:post_id)
-
-        semantic_results =
-          ::Post
-            .where(post_type: ::Topic.visible_post_types(guardian.user))
-            .public_posts
-            .where("topics.visible")
-            .where(id: candidate_post_ids)
-            .order("array_position(ARRAY#{candidate_post_ids}, posts.id)")
-
-        filtered_results = search.apply_filters(semantic_results)
-
-        rerank_posts_payload =
-          filtered_results
-            .map(&:cooked)
-            .map { Nokogiri::HTML5.fragment(_1).text }
-            .map { _1.truncate(2000, omission: "") }
-
-        reranked_results =
-          DiscourseAi::Inference::HuggingFaceTextEmbeddings.rerank(
-            search_term,
-            rerank_posts_payload,
-          )
-
-        reordered_ids = reranked_results.map { _1[:index] }.map { filtered_results[_1].id }.take(5)
-
-        reranked_semantic_results =
-          ::Post
-            .where(post_type: ::Topic.visible_post_types(guardian.user))
-            .public_posts
-            .where("topics.visible")
-            .where(id: reordered_ids)
-            .order("array_position(ARRAY#{reordered_ids}, posts.id)")
-
-        guardian.filter_allowed_categories(reranked_semantic_results)
+        candidates.where(id: candidate_topic_ids).pluck(:id)
       end
 
       def hypothetical_post_from(search_term)
@@ -219,11 +172,7 @@ module DiscourseAi
             id: SiteSetting.ai_embeddings_semantic_search_hyde_persona,
           )&.default_llm_id
 
-        if persona_llm_id.present?
-          persona_llm_id
-        else
-          SiteSetting.ai_default_llm_model.to_i || LlmModel.last&.id
-        end
+        persona_llm_id.presence || SiteSetting.ai_default_llm_model.to_i || LlmModel.last&.id
       end
 
       private

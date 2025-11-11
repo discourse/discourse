@@ -36,5 +36,25 @@ fi:
   github_commits_populator:
     errors:
       repository_identifier_invalid_pm_title: "Discourse-github-lisäosa edellyttää toimenpiteitä"
+      repository_identifier_invalid_pm: |
+        Discourse-github-lisäosassa määritetty tietovarasto on virheellinen:
+        %{repo_name}
+
+        Ne tulisi määrittää muodossa "käyttäjä/tietovarasto".
+
+        Kunniamerkkejä ei myönnetä ennen kuin nimi on korjattu
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-githubin sivustoasetuksissa</a>
+        ja "github_badges_enabled" on otettu käyttöön uudelleen.
       repository_not_found_pm_title: "Discourse-github-lisäosa edellyttää toimenpiteitä"
+      repository_not_found_pm: |
+        Discourse-github-lisäosassa määritetty tietovarasto palautti "ei löydy" -virheen:
+        %{repo_name}
+
+        Kunniamerkkejä ei myönnetä ennen kuin nimi on korjattu
+        <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-githubin sivustoasetuksissa</a>
+        ja "github_badges_enabled" on otettu käyttöön uudelleen.
       invalid_octokit_credentials_pm_title: "Discourse-github-lisäosa edellyttää toimenpiteitä"
+      invalid_octokit_credentials_pm: |
+        Discourse-github-lisäosalle annetut GitHubin tunnistetiedot ovat virheellisiä. "Github badges enabled" -sivustoasetus on poistettu käytöstä, eikä solmuja enää täytetä ennen kuin ongelma on ratkaistu.
+
+        Tarkista "github linkback access token" -sivustoasetuksesi varmistaaksesi, että tietue on oikea ja että sillä on kaikkien tietovarastojen käyttöoikeus <a href="%{base_path}/admin/site_settings/category/plugins?filter=GitHub">discourse-githubin sivustoasetuksissa</a>.

@@ -10,7 +10,6 @@ hu:
       site_settings:
         categories:
           discourse_post_event: "Discourse esemény"
-          discourse_calendar: "Discourse naptár"
   js:
     notifications:
       titles:
@@ -127,6 +126,7 @@ hu:
           dk: "Dánia"
           ee: "Észtország"
           el: "Görögország"
+          gr: "Görögország"
           es_an: "Spanyolország (es_an)"
           es_ar: "Spanyolország (es_ar)"
           es_ce: "Spanyolország (es_ce)"
@@ -293,16 +293,14 @@ hu:
         month: "Utolsó 30 nap"
         week: "Utolsó 7 nap"
         day: "Nap"
+        year: "Elmúlt év"
     group_timezones:
       search: "Keresés…"
       group_availability: "%{group} elérhetősége"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
-        invite_user_predefined_attendance_notification_html: "%{username} automatikusan beállította a részvételét, és meghívta erre: %{description}"
-        before_event_reminder_html: "Egy esemény hamarosan elkezdődik: %{description}"
-        after_event_reminder_html: "Egy esemény véget ért: %{description}"
-        ongoing_event_reminder_html: "Egy esemény folyamatban van: %{description}"
+        invite_user_predefined_attendance_notification: "%{username} automatikusan beállította a részvételét, és meghívta erre: %{eventName}"
       edit_reason: "Esemény frissítve"
       topic_title:
         starts_at: "Esemény kezdete: %{date}"

@@ -11,6 +11,8 @@ be:
       not_accepting_dms: "На жаль, %{username}не прымае паведамленні ў дадзены момант."
     reviewables:
       actions:
+        no_action_message:
+          title: "Ніякіх дзеянняў"
         agree:
           title: "Пагадзіцеся ..."
         agree_and_suspend:

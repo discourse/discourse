@@ -44,6 +44,57 @@ describe "User preferences | Account", type: :system do
     end
   end
 
+  describe "overridden provider attributes" do
+    before do
+      authenticator =
+        Class
+          .new(Auth::ManagedAuthenticator) do
+            def name
+              "test_auth"
+            end
+
+            def enabled?
+              true
+            end
+          end
+          .new
+
+      provider =
+        Auth::AuthProvider.new(
+          authenticator:,
+          icon: "flash",
+          icon_setting: :test_icon,
+          pretty_name: "old pretty name",
+          pretty_name_setting: :test_pretty_name,
+          title: "old_title",
+          title_setting: :test_title,
+        )
+      DiscoursePluginRegistry.register_auth_provider(provider)
+
+      allow(SiteSetting).to receive(:get).and_call_original
+      allow(SiteSetting).to receive(:get).with(:test_icon).and_return("bullseye")
+      allow(SiteSetting).to receive(:get).with(:test_pretty_name).and_return("new pretty name")
+      allow(SiteSetting).to receive(:get).with(:test_title).and_return("new_title")
+    end
+
+    after { DiscoursePluginRegistry.reset! }
+
+    it "displays the correct name when overridden" do
+      user_account_preferences_page.visit(user)
+      name = find(".pref-associated-accounts table tr.test-auth .associated-account__name")
+      expect(name).not_to have_text("old pretty name")
+      expect(name).to have_text("new pretty name")
+    end
+
+    it "displays the correct icon when overridden" do
+      user_account_preferences_page.visit(user)
+      icon_classes =
+        find(".pref-associated-accounts table tr.test-auth .associated-account__icon svg")[:class]
+      expect(icon_classes).not_to have_content("d-icon-flash")
+      expect(icon_classes).to have_content("d-icon-bullseye")
+    end
+  end
+
   describe "external login provider URLs" do
     it "shows provider URLs as links when available" do
       SiteSetting.enable_discord_logins = true

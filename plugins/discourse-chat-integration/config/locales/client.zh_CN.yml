@@ -84,7 +84,6 @@ zh_CN:
               help: "例如：#channel、@username。"
           errors:
             action_prohibited: "机器人没有权限在该频道发帖"
-            channel_not_found: "指定的频道在 Slack 上不存在"
         telegram:
           title: "Telegram"
           param:
@@ -131,7 +130,7 @@ zh_CN:
               help: "用于描述频道的名称。它不用于连接到 Matrix。"
             room_id:
               title: "房间 ID"
-              help: "房间的“私有标识符”。看起来应该像 !abcdefg:matrix.org"
+              help: "房间的“私有标识符”。应该类似于 !abcdefghijkl"
           errors:
             unknown_token: "访问令牌无效"
             unknown_room: "房间 ID 无效"
@@ -225,7 +224,7 @@ zh_CN:
           title: 发送 Slack 消息
           fields:
             message:
-              label: 发送私信
+              label: 消息
               description: >-
                 为话题名称使用 ${TOPIC}，为使用的 URL 使用 ${URL}，为移除的标签使用 ${REMOVED_TAGS}，为添加的标签使用 ${ADDED_TAGS}，为默认文本使用 ${ADDED_AND_REMOVED}。仅在触发器设置为“话题标签已更改”时可用。
             url:

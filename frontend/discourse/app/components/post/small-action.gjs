@@ -1,0 +1,247 @@
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { concat } from "@ember/helper";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import DButton from "discourse/components/d-button";
+import PostCookedHtml from "discourse/components/post/cooked-html";
+import UserAvatar from "discourse/components/user-avatar";
+import concatClass from "discourse/helpers/concat-class";
+import icon from "discourse/helpers/d-icon";
+import { autoUpdatingRelativeAge, relativeAge } from "discourse/lib/formatter";
+import getURL from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
+import { userPath } from "discourse/lib/url";
+import { i18n } from "discourse-i18n";
+import PostA11yHeading from "./a11y-heading";
+
+// TODO (glimmer-post-stream) remove the export after removing the legacy widget code
+export const GROUP_ACTION_CODES = ["invited_group", "removed_group"];
+export const customGroupActionCodes = [];
+
+export const ICONS = {
+  "closed.enabled": "topic.closed",
+  "closed.disabled": "topic.opened",
+  "autoclosed.enabled": "topic.closed",
+  "autoclosed.disabled": "topic.opened",
+  "archived.enabled": "folder",
+  "archived.disabled": "folder-open",
+  "pinned.enabled": "thumbtack",
+  "pinned.disabled": "thumbtack unpinned",
+  "pinned_globally.enabled": "thumbtack",
+  "pinned_globally.disabled": "thumbtack unpinned",
+  "banner.enabled": "thumbtack",
+  "banner.disabled": "thumbtack unpinned",
+  "visible.enabled": "far-eye",
+  "visible.disabled": "far-eye-slash",
+  split_topic: "right-from-bracket",
+  invited_user: "circle-plus",
+  invited_group: "circle-plus",
+  user_left: "circle-minus",
+  removed_user: "circle-minus",
+  removed_group: "circle-minus",
+  public_topic: "comment",
+  open_topic: "comment",
+  private_topic: "envelope",
+  autobumped: "hand-point-right",
+};
+
+export function addGroupPostSmallActionCode(actionCode) {
+  customGroupActionCodes.push(actionCode);
+}
+
+// only for testing purposes
+export function resetGroupPostSmallActionCodes() {
+  customGroupActionCodes.length = 0;
+}
+
+export default class PostSmallAction extends Component {
+  @service a11y;
+
+  decoratorState = new TrackedMap();
+
+  @cached
+  get CustomComponent() {
+    return applyValueTransformer("post-small-action-custom-component", null, {
+      code: this.code,
+      post: this.args.post,
+    });
+  }
+
+  get additionalClasses() {
+    return applyValueTransformer("post-small-action-class", [], {
+      post: this.args.post,
+    });
+  }
+
+  get code() {
+    return this.args.post.action_code;
+  }
+
+  @cached
+  get createdAt() {
+    return new Date(this.args.post.created_at);
+  }
+
+  get a11yHeadingText() {
+    // plain text version for screen reader headings
+    // a11y.autoUpdatingRelativeDateRef is consumed to force the heading text to be auto-updated
+    const when =
+      this.a11y.autoUpdatingRelativeDateRef && this.createdAt
+        ? relativeAge(this.createdAt, {
+            format: "medium-with-ago-and-on",
+            wrapInSpan: false,
+          })
+        : "";
+
+    const who = this.who ? `@${this.who}` : "";
+
+    // TODO (a11y) some i18n strings have HTML embedded in them. We need to strip
+    return i18n(`action_codes.${this.code}`, { who, when, path: this.path });
+  }
+
+  get description() {
+    const when = this.createdAt
+      ? autoUpdatingRelativeAge(this.createdAt, {
+          format: "medium-with-ago-and-on",
+        })
+      : "";
+
+    let who = "";
+    if (this.who) {
+      if (this.isGroupAction) {
+        who = `<a class="mention-group" href="/g/${this.who}">@${this.who}</a>`;
+      } else {
+        who = `<a class="mention" href="${userPath(this.who)}">@${
+          this.who
+        }</a>`;
+      }
+    }
+
+    return htmlSafe(
+      i18n(`action_codes.${this.code}`, { who, when, path: this.path })
+    );
+  }
+
+  @cached
+  get icon() {
+    return applyValueTransformer(
+      "post-small-action-icon",
+      ICONS[this.code] || "exclamation",
+      { code: this.code, post: this.args.post }
+    );
+  }
+
+  get isGroupAction() {
+    return (
+      GROUP_ACTION_CODES.includes(this.code) ||
+      customGroupActionCodes.includes(this.code)
+    );
+  }
+
+  get path() {
+    return getURL(
+      this.args.post.action_code_path || `/t/${this.args.post.topic.id}`
+    );
+  }
+
+  get who() {
+    return this.args.post.action_code_who;
+  }
+
+  <template>
+    <div
+      ...attributes
+      {{! The component is wrapped in a `div` and sets the same `id` below in the `article` tag,
+          we need to only set it in the `div` when the post is cloaked.
+          This is not ideal, but the post-stream component sets the `id` for the children to ensure
+          all cloaked items can be referenced and we need to override it }}
+      data-post-number={{@post.post_number}}
+      id={{if @cloaked @elementId}}
+    >
+      <PostA11yHeading @post={{@post}} @text={{this.a11yHeadingText}} />
+      {{#unless @cloaked}}
+        <article
+          id={{@elementId}}
+          class={{unless
+            @cloaked
+            (concatClass
+              "small-action"
+              "onscreen-post"
+              (if @post.deleted "deleted")
+              this.additionalClasses
+            )
+          }}
+          aria-labelledby={{concat "post-heading-" @post.post_number}}
+          data-post-id={{@post.id}}
+          data-topic-id={{@post.topicId}}
+          data-user-id={{@post.user_id}}
+        >
+          <div class="topic-avatar">
+            {{icon this.icon}}
+          </div>
+          <div class="small-action-desc">
+            <div class="small-action-contents">
+              <UserAvatar
+                @ariaHidden={{false}}
+                @size="small"
+                @user={{@post.user}}
+              />
+              {{#if this.CustomComponent}}
+                <this.CustomComponent
+                  @code={{this.code}}
+                  @post={{@post}}
+                  @createdAt={{this.createdAt}}
+                  @path={{this.path}}
+                  @who={{this.who}}
+                />
+              {{else}}
+                {{! aria-hidden is set to true because the a11y heading text is
+                  almost the same as the description}}
+                <p aria-hidden="true">{{htmlSafe this.description}}</p>
+              {{/if}}
+            </div>
+            <div class="small-action-buttons">
+              {{#if @post.canRecover}}
+                <DButton
+                  class="btn-flat small-action-recover"
+                  @icon="arrow-rotate-left"
+                  @action={{@recoverPost}}
+                  @title="post.controls.undelete"
+                />
+              {{else if @post.can_edit}}
+                <DButton
+                  class="btn-flat small-action-edit"
+                  @icon="pencil"
+                  @action={{@editPost}}
+                  @title="post.controls.edit"
+                />
+              {{/if}}
+              {{#if @post.canDelete}}
+                <DButton
+                  class="btn-flat btn-danger small-action-delete"
+                  @icon="trash-can"
+                  @action={{@deletePost}}
+                  @title="post.controls.delete"
+                />
+              {{/if}}
+            </div>
+            {{#unless this.CustomComponent}}
+              {{#if @post.cooked}}
+                <div class="small-action-custom-message">
+                  <PostCookedHtml
+                    @post={{@post}}
+                    @decoratorState={{this.decoratorState}}
+                    @highlightTerm={{@highlightTerm}}
+                    @streamElement={{@streamElement}}
+                  />
+                </div>
+              {{/if}}
+            {{/unless}}
+          </div>
+        </article>
+      {{/unless}}
+    </div>
+  </template>
+}

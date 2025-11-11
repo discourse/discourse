@@ -9,11 +9,11 @@ pt_BR:
     admin:
       site_settings:
         categories:
-          chat_integration: "Integrações de bate-papo"
+          chat_integration: "Integrações de chat"
   js:
     chat_integration:
-      menu_title: "Integrações de bate-papo"
-      settings: "Definições"
+      menu_title: "Integrações de chat"
+      settings: "Configurações"
       no_providers: "Você precisa habilitar alguns provedores nas configurações do plugin"
       channels_with_errors: "Alguns canais deste provedor falharam na última vez em que as mensagens foram enviadas. Clique no(s) ícone(s) de erro para saber mais."
       channel_exception: "Um erro desconhecido ocorreu na última vez que uma mensagem foi enviada para este canal."
@@ -84,7 +84,6 @@ pt_BR:
               help: "ex.: #canal, @username."
           errors:
             action_prohibited: "Este robô não tem permissão para postar naquele canal"
-            channel_not_found: "O canal especificado não existe no Slack"
         telegram:
           title: "Telegram"
           param:
@@ -92,7 +91,7 @@ pt_BR:
               title: "Nome"
               help: "Um nome para descrever o canal. Não é usado para a conexão ao Telegram."
             chat_id:
-              title: ID do Bate-Papo
+              title: ID do chat
               help: Um número dado a você pelo robô, ou um identificador do canal de transmissão no formato @nome_do_canal
           errors:
             channel_not_found: "O canal especificado não existe no Telegram"
@@ -130,8 +129,7 @@ pt_BR:
               title: "Nome"
               help: "Um nome para descrever o canal. Não é usado para a conexão com o Matrix."
             room_id:
-              title: "ID da Sala"
-              help: "O \"identificador privado\" para a sala. Precisa ser algo como !abcdefg:matrix.org"
+              title: "ID da sala"
           errors:
             unknown_token: "O token de acesso é inválido"
             unknown_room: "O ID da sala é inválido"
@@ -211,7 +209,7 @@ pt_BR:
           errors:
             invalid_channel: "Este canal não existe no Webex"
         google:
-          title: "Bate-papo do Google"
+          title: "Chat do Google"
           param:
             name:
               title: "Nome"

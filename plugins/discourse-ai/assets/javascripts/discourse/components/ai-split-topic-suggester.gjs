@@ -9,11 +9,11 @@ import DButton from "discourse/components/d-button";
 import categoryBadge from "discourse/helpers/category-badge";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import DMenu from "float-kit/components/d-menu";
 
 export default class AiSplitTopicSuggester extends Component {
   @service site;
-  @service menu;
 
   @tracked suggestions = [];
   @tracked loading = false;
@@ -89,10 +89,10 @@ export default class AiSplitTopicSuggester extends Component {
       if (this.args.currentValue) {
         if (Array.isArray(this.args.currentValue)) {
           const updatedTags = [...this.args.currentValue, suggestion];
-          this.args.updateAction([...new Set(updatedTags)]);
+          this.args.updateAction(uniqueItemsFromArray(updatedTags));
         } else {
           const updatedTags = [this.args.currentValue, suggestion];
-          this.args.updateAction([...new Set(updatedTags)]);
+          this.args.updateAction(uniqueItemsFromArray(updatedTags));
         }
       } else {
         if (Array.isArray(suggestion)) {

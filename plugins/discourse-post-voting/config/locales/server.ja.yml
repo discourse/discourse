@@ -31,8 +31,29 @@ ja:
     post_voting_comment_limit_per_post: "各投稿に許可されるコメント数"
     min_trust_to_flag_posts_voting_comments: "投稿の投票コメントを通報できる最低信頼レベル"
     flag_posts_voting_comments_allowed_groups: "投稿の投票コメントを通報できるグループ"
+    post_voting_comment_enabled: "投稿の投票トピックで投稿へのコメントを有効にする"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "未対応"
+        agree_and_keep_comment:
+          title: "コメントを保持"
+          description: "通報に同意し、コメントを変更しないままにします。"
+        agree_and_keep_deleted:
+          title: "コメントを削除されたままにする"
+          description: "通報に同意し、コメントを削除したままにします。"
+        agree_and_restore:
+          title: "コメントを復元"
+          description: "ユーザーが閲覧できるようにコメントを復元します。"
+        agree_and_delete:
+          title: "コメントを削除"
+          description: "ユーザーが閲覧できないようにコメントを削除します。"
+        disagree_and_restore:
+          title: "却下してコメントを復元"
+          description: "すべてのユーザーが閲覧できるようにコメントを復元します。"
   post_action_types:
     vote:
       title: "投票"
@@ -56,6 +77,7 @@ ja:
         limit_exceeded: "投稿あたり %{limit} 件のコメント数制限に達しました。"
         perform: "ユーザーを投稿禁止にするのに十分なスコアで通報された投稿の投票コメント。"
         auto_silence_from_flags: "通報により自動的に投稿禁止にされました。"
+        disabled: "投稿にコメントすることはできません。"
       reviewables:
         comment_already_handled: "ありがとうございます。ただ、このコメントはすでにレビュー済みで、通報の必要がないと判断されています。"
         actions:

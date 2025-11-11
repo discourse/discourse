@@ -18,7 +18,7 @@ pt_BR:
       leaderboard:
         title: "Tabelas de classificação"
         info: "Como isso funciona?"
-        link_to_settings: "Definições"
+        link_to_settings: "Configurações"
         refresh: "Atualizar"
         modal:
           title: "Como funciona a tabela de classificação?"

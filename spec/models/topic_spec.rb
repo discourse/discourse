@@ -1,7 +1,6 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
-describe Topic do
+RSpec.describe Topic do
   let(:now) { Time.zone.local(2013, 11, 20, 8, 0) }
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:user1) { Fabricate(:user, refresh_auto_groups: true) }
@@ -683,6 +682,64 @@ describe Topic do
       expect(Topic.similar_to("'bad quotes'", "'bad quotes'")).to eq([])
     end
 
+    context "with plugin similar_topic_candidate_ids modifier" do
+      it "uses plugin-provided candidate ids preserving order and respecting limit" do
+        t1 = Fabricate(:topic)
+        t2 = Fabricate(:topic)
+        t3 = Fabricate(:topic)
+        t4 = Fabricate(:topic)
+
+        raws = { t1.id => "raw one", t2.id => "raw two", t3.id => "raw three", t4.id => "raw four" }
+
+        [t1, t2, t3, t4].each do |t|
+          Fabricate(:post, topic: t, user: t.user, post_number: 1, raw: raws[t.id])
+        end
+
+        desired_order = [t3.id, t1.id, t2.id, t4.id]
+
+        plugin_instance = Plugin::Instance.new
+        begin
+          blk =
+            lambda do |candidates, args|
+              expect(args[:title]).to eq("any title")
+              expect(args[:raw]).to eq("any raw")
+              desired_order
+            end
+
+          DiscoursePluginRegistry.register_modifier(
+            plugin_instance,
+            :similar_topic_candidate_ids,
+            &blk
+          )
+
+          results = Topic.similar_to("any title", "any raw")
+
+          # keeping this 3 but test will break if MAX_SIMILAR_TOPICS is changed (by design)
+          expected_ids = desired_order.first(3)
+          expect(results.map(&:id)).to eq(expected_ids)
+
+          # ensure extra selected columns are present and correct
+          results.each_with_index do |topic, idx|
+            # topics.* still present
+            expect(topic).to be_a(Topic)
+            expect(topic.id).to eq(expected_ids[idx])
+
+            # similarity is computed as 3,2,1 for our limited set
+            expect(topic["similarity"]).to eq(expected_ids.length - idx)
+
+            # blurb is first post cooked
+            expect(topic["blurb"]).to eq(topic.posts.first.cooked)
+          end
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :similar_topic_candidate_ids,
+            &blk
+          )
+        end
+      end
+    end
+
     context "with a similar topic" do
       fab!(:post) do
         with_search_indexer_enabled do
@@ -936,6 +993,12 @@ describe Topic do
           expect { topic.invite(user, user1.username) }.to change { Notification.count }.by(
             1,
           ).and not_change { Post.where(post_type: Post.types[:small_action]).count }
+        end
+
+        it "sets invited user to watch the PM" do
+          expect { topic.invite(user, user1.username) }.to change {
+            TopicUser.get(topic, user1).try(:notification_level)
+          }.to TopicUser.notification_levels[:watching]
         end
 
         context "when from a muted user" do
@@ -1361,11 +1424,11 @@ describe Topic do
         }.not_to change(topic, :bumped_at)
       end
 
-      it "bumps the topic when a new version is made of the last post" do
+      it "doesn't bump the topic when a new version is made of the last post" do
         expect {
           last_post.revise(moderator, raw: "updated contents")
           topic.reload
-        }.to change(topic, :bumped_at)
+        }.not_to change(topic, :bumped_at)
       end
 
       it "doesn't bump the topic when a post that isn't the last post receives a new version" do
@@ -3484,7 +3547,7 @@ describe Topic do
         from_address: "discourse@example.com",
         topic: topic,
         post: topic.posts.first,
-        created_at: 1.minutes.ago,
+        created_at: 1.minute.ago,
       )
     end
 

@@ -9,8 +9,15 @@ ar:
     discourse_automation_enabled: "تفعيل المكوِّن الإضافي discourse-automation"
   discourse_automation:
     models:
+      automations:
+        validations:
+          script_blank: "لا يجوز أن يكون البرنامج النصي فارغًا"
+          trigger_blank: "لا يجوز أن يكون المشغل فارغًا"
+          script_missing_required_fields: "يفتقد البرنامج النصي الحقول المطلوبة: %{fields}"
+          trigger_missing_required_fields: "يفتقد المشغل الحقول المطلوبة: %{fields}"
       fields:
         required_field: يجب ملء الحقل `%{name}` في `%{target}:%{target_name}`.
+        invalid_field: لا يمكن استخدام المكوّن %{component} الخاص بالحقل على %{target}:%{target_name}.
         invalid_metadata: بيانات الحقل `%{field}` غير صالحة أو المكوِّن `%{component}` غير معروف.
     triggerables:
       errors:

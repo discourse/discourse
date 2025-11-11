@@ -7,3 +7,28 @@
 ur:
   site_settings:
     data_explorer_enabled: "ڈیٹا ایکسپلورر کو /admin/plugins/explorer پر فعال کریں"
+  data_explorer:
+    report_generator:
+      private_message:
+        body: |
+          آداب %{recipient_name}، آپ کی ڈیٹا ایکسپلورر رپورٹ تیار ہے۔
+
+          سوال کا نام:
+          %{query_name}
+
+          یہاں نتائج ہیں:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>ڈیٹا ایکسپلورر میں سوال دیکھیں</a>
+
+           %{created_at} (%{timezone}) پر بنائی گئی رپورٹ
+      post:
+        body: |
+          ### %{query_name}
+
+          کے لئے شیڈول رپورٹ یہاں نتائج ہیں:
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>ڈیٹا ایکسپلورر میں سوال دیکھیں</a>
+
+           %{created_at} (%{timezone}) پر بنائی گئی رپورٹ

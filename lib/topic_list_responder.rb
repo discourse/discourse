@@ -25,26 +25,8 @@ module TopicListResponder
     return if list.topics.blank? || !SiteSetting.content_localization_enabled
     crawl_locale = params[Discourse::LOCALE_PARAM].presence || SiteSetting.default_locale
 
-    list.topics.each { |topic| replace_topic_attributes(crawl_locale, topic) }
-  end
-
-  def replace_topic_attributes(crawl_locale, topic)
-    if topic.locale.present? && !LocaleNormalizer.is_same?(topic.locale, crawl_locale) &&
-         (loc = topic.get_localization(crawl_locale))
-      # assigning directly to title would commit the change to the database
-      # due to the setter method defined in the Topic model
-      topic.send(:write_attribute, :title, loc.title) if loc.title.present?
-      topic.excerpt = loc.excerpt if loc.excerpt.present?
-
-      category = topic.category
-      replace_category_name(category, crawl_locale)
-    end
-  end
-
-  def replace_category_name(category, crawl_locale)
-    if category.locale.present? && !LocaleNormalizer.is_same?(category.locale, crawl_locale) &&
-         (category_loc = category.get_localization(crawl_locale))
-      category.name = category_loc.name if category_loc.name.present?
+    list.topics.each do |topic|
+      LocalizationAttributesReplacer.replace_topic_attributes(topic, crawl_locale)
     end
   end
 end

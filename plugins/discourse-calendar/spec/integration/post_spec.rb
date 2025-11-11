@@ -687,7 +687,7 @@ describe Post do
 
         raw = 'Vacation [date="2018-06-05" time="10:20:00"] to [date="2018-06-06" time="10:20:00"]'
         post = create_post(raw: raw, topic: calendar_post.topic)
-        DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+        Jobs::DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
 
         # the job has set the holiday status:
         status = post.user.user_status
@@ -708,7 +708,7 @@ describe Post do
 
         raw = 'Vacation [date="2018-06-05" time="10:20:00"] to [date="2018-06-06" time="10:20:00"]'
         post = create_post(raw: raw, topic: calendar_post.topic)
-        DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
+        Jobs::DiscourseCalendar::UpdateHolidayUsernames.new.execute(nil)
 
         # the job has set the holiday status:
         status = post.user.user_status
@@ -798,6 +798,30 @@ describe Post do
       expect(post.event.timezone).to eq("Europe/Paris")
       expect(post.event.original_starts_at).to eq_time(expected_original_datetime)
       expect(post.event.starts_at).to eq_time(expected_next_datetime)
+    end
+
+    it "handles showLocalTime with non-recurring events" do
+      expected_datetime = ActiveSupport::TimeZone["Europe/Prague"].parse("2025-09-07 18:30")
+
+      post =
+        PostCreator.create!(
+          user,
+          title: "Prague dinner",
+          raw:
+            "[event start='2025-09-07 18:30' end='2025-09-07 21:00' timezone='Europe/Prague' showLocalTime='true']\n[/event]",
+        ).reload
+
+      expect(post.event.timezone).to eq("Europe/Prague")
+      expect(post.event.show_local_time).to eq(true)
+      expect(post.event.original_starts_at).to eq_time(expected_datetime)
+
+      serializer =
+        DiscoursePostEvent::BasicEventSerializer.new(post.event, scope: Guardian.new(user))
+      serialized = serializer.as_json
+
+      # Should return floating time (no timezone info)
+      expect(serialized[:basic_event][:starts_at]).to eq("2025-09-07T18:30:00")
+      expect(serialized[:basic_event][:ends_at]).to eq("2025-09-07T21:00:00")
     end
   end
 end

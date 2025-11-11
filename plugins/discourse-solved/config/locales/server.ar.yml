@@ -24,6 +24,7 @@ ar:
     solved_add_schema_markup: "إضافة علامات مخطط Qapage إلى HTML"
     enable_solved_tags: "الوسوم التي ستسمح للمستخدمين بتحديد الحلول"
     prioritize_solved_topics_in_search: "منح الأولوية للموضوعات التي تم حلها في نتائج البحث."
+    show_who_marked_solved: "عرض الشخص الذي وضع علامة \"تم الحل\" على الموضوع. يظهر ذلك في أول منشور بالموضوع، وعلى منشور الإجابة في تلميح الأدوات."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"
   reports:
@@ -35,6 +36,10 @@ ar:
     no_solutions:
       self: "ليس لديك أي حلول مقبولة حتى الآن."
       others: "لا توجد حلول مقبولة."
+    filter:
+      description:
+        solved: "تصفية الموضوعات التي تم حلها"
+        unsolved: "تصفية الموضوعات التي لم يتم حلها"
   badges:
     solved_1:
       name: "تم الحل!"

@@ -6,4 +6,7 @@
 
 tr_TR:
   site_settings:
+    rss_polling_enabled: "[RSS Anketi] Birden fazla RSS akışından gömülü gönderilerin içe aktarılmasını etkinleştirin"
     rss_polling_frequency: "[RSS Polling] Besleme yoklama sıklığı (dakika cinsinden)"
+    rss_polling_use_pubdate: "[RSS Anketi] Konu oluşturma tarihini RSS akışında bulunan pubDate değerine ayarlayın"
+    rss_polling_update_tags: "[RSS Anketi] Bir konu güncellendiğinde konu etiketlerini güncelleyin. Bu özelliği devre dışı bırakmak, ilk etiketleri çeker ancak sonraki etiket değişikliklerini devre dışı bırakır."

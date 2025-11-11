@@ -8,6 +8,13 @@ module Jobs
     def execute(args)
       return if !DiscourseAi::Translation.enabled?
 
+      unless DiscourseAi::Translation.credits_available_for_category_localization?
+        Rails.logger.info(
+          "Translation skipped for categories: insufficient credits. Will resume when credits reset.",
+        )
+        return
+      end
+
       limit = args[:limit]
       raise Discourse::InvalidParameters.new(:limit) if limit.nil?
       return if limit <= 0
@@ -15,7 +22,7 @@ module Jobs
       categories =
         DiscourseAi::Translation::CategoryCandidates
           .get
-          .where("locale IS NOT NULL")
+          .where.not(locale: nil)
           .order(:id)
           .limit(limit)
       return if categories.empty?

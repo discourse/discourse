@@ -27,6 +27,6 @@ ur:
     zendesk_jobs_email: Zendesk تصدیق کے لیے استعمال کرنے کے لیے ای میل
     zendesk_job_push_all_posts: Zendesk تبصرے کے طور پر ایک موضوع میں تمام پوسٹس کو آگےکریں؟ غیر فعال ہونے پر صرف پہلی پوسٹ کو Zendesk پر بھیج دیا جائے گا۔
     zendesk_job_push_only_author_posts: صرف اصل موضوع کے مصنف کی پوسٹس کو زینڈیسک پر دھکیلیں۔ صرف اس صورت میں لاگو ہوتا ہے جب `zendesk_job_push_all_posts` فعال ہو۔
-    sync_comments_from_zendesk: زینڈیسک سے ڈسکورس تک تبصرے آٹو پوسٹ کریں۔ صرف `zendesk_autogenerate_categories` میں عنوانات پر لاگو ہوگا۔
+    sync_comments_from_zendesk: زینڈیسک سے ڈسکورس تک تبصرے آٹو پوسٹ کریں۔ صرف `zendesk_autogenerate_categories` میں موضوعات پر لاگو ہوگا۔
     zendesk_incoming_webhook_token: Zendesk آؤٹ گوئنگ ویب ہک سے پے لوڈ میں ٹوکن بھیجا گیا۔ صرف اس صورت میں مطلوب ہے جب `sync_comments_from_zendesk` فعال ہو۔
     zendesk_tags: ہر ٹکٹ میں شامل کرنے کے لیے دھجیوں کی فہرست

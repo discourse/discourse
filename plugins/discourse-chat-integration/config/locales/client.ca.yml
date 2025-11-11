@@ -83,7 +83,6 @@ ca:
               help: "per exemple #canal, @nomdusuari."
           errors:
             action_prohibited: "El bot no té permís per a publicar en aquest canal"
-            channel_not_found: "El canal especificat no existeix en Slack"
         telegram:
           title: "Telegram"
           param:
@@ -127,7 +126,6 @@ ca:
               help: "Un nom per a descriure el canal. No s'utilitza per a la connexió amb Matrix."
             room_id:
               title: "ID de la sala"
-              help: "'Identificador privat' de la sala. Hauria de ser similar a !abcdefg:matrix.org"
           errors:
             unknown_token: "El testimoni d'accés no és vàlid"
             unknown_room: "L'ID de la sala no és vàlid"

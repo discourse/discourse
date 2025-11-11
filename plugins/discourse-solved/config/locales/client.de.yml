@@ -29,7 +29,8 @@ de:
       solution_summary:
         one: "Lösung"
         other: "Lösungen"
-      accepted_html: "%{icon} Gelöst <span class='by'>von <a href data-user-card='%{username_lower}'>%{username}</a></span> in <a href='%{post_path}' class='back'>Beitrag #%{post_number}</a>"
+      accepted_answer_solver_info: "Gelöst von %{user} in %{post}"
+      accepted_answer_post_number: "Beitrag %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "alle"
@@ -38,7 +39,7 @@ de:
       no_solved_topics_title: "Du hast noch keine Themen gelöst"
       no_solved_topics_title_others: "%{username} hat noch keine Themen gelöst"
       no_solved_topics_body: "Wenn du eine hilfreiche Antwort auf ein Thema gibst, kann es sein, dass deine Antwort vom Themenersteller oder einem Team-Mitglied als Lösung ausgewählt wird."
-      marked_solved_by: "Als gelöst markiert von <a href data-user-card='%{username_lower}'>%{username}</a></span>"
+      marked_solved_by: "Als gelöst markiert von %{user}"
       no_answer:
         title: Wurde deine Frage beantwortet?
         description: "Hebe die Antwort hervor und hilf anderen, indem du die Lösungsschaltfläche unter der richtigen Antwort verwendest."

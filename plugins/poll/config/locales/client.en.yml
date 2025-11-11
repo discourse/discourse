@@ -6,6 +6,8 @@ en:
           poll: "Discourse Poll"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Options can be added or removed."
       voters:
         one: "voter"
         other: "voters"
@@ -161,6 +163,8 @@ en:
           step: Step
         poll_public:
           label: Show who voted
+        poll_dynamic:
+          label: Allow options to be added or removed after posting
         poll_title:
           label: Title (optional)
         poll_options:

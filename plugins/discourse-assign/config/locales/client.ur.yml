@@ -26,7 +26,7 @@ ur:
       cant_act: "آپ دوسرے صارفین کو اسائین کردہ فلیگ پر کاروائی نہیں کر سکتے"
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
       topic_search_placeholder: "عنوان یا پوسٹ مواد کے ذریعہ موضوعات تلاش کریں"
-      sidebar_name_filter_placeholder: "نام/صارف نام"
+      sidebar_name_filter_placeholder: "نام/اسمِ صارف"
       assigned: "تفویض کردہ"
       group_everyone: "ہر کوئی"
       assigned_to: "کو تفویض"
@@ -114,10 +114,12 @@ ur:
               label: تفویض کا روں کاگروپ
             minimum_time_between_assignments:
               label: اسائنمنٹس کے درمیان کم از کم گھنٹے
+    notification_reason:
+      user: "آپ کو نئے جوابات کی تعداد نظر آئے گی کیونکہ یہ موضوع آپ کو تفویض کیا گیا."
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "تفویض کردہ"
     edit_assignments_modal:
-      topic: "ٹاپک"
+      topic: "موضوع"
       post: "پوسٹ"

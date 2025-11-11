@@ -84,7 +84,6 @@ sv:
               help: "t.ex. #kanal, @användarnamn."
           errors:
             action_prohibited: "Hjälpredan har inte behörighet att publicera inlägg i den kanalen"
-            channel_not_found: "Den angivna kanalen finns inte på Slack"
         telegram:
           title: "Telegram"
           param:
@@ -128,7 +127,6 @@ sv:
               help: "Ett namn som beskriver kanalen. Det används inte för anslutningen till Matrix."
             room_id:
               title: "Rums-ID"
-              help: "Den 'privata identifieraren' för rummet. Den borde vara något i stil med !abcdefg:matrix.org"
           errors:
             unknown_token: "Åtkomstbevis är ogiltigt"
             unknown_room: "Rums-ID är ogiltigt"

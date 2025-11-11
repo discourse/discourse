@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 sk:
+  activerecord:
+    attributes:
+      llm_model:
+        max_prompt_tokens: "Kontextové okno"
   discourse_automation:
     ai:
       flag_types:
@@ -22,10 +26,6 @@ sk:
       llm_triage:
         title: Triážne príspevky pomocou AI
         description: "Triedenie príspevkov pomocou rozsiahleho jazykového modelu"
-        flagged_post: |
-          <div>Odpoveď modelu:</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>Spúšťa sa <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> pravidlom.</b>
       llm_report:
         title: Pravidelná správa s použitím AI
         description: "Pravidelná správa na základe rozsiahleho jazykového modelu"
@@ -67,7 +67,6 @@ sk:
     composer_ai_helper_allowed_groups: "Používatelia v týchto skupinách uvidia v kompozitore tlačidlo pomocníka AI."
     ai_helper_allowed_in_pm: "Povolenie pomocníka AI skladateľa v PM."
     ai_helper_model: "Model, ktorý sa má použiť pre pomocníka AI."
-    ai_helper_custom_prompts_allowed_groups: "Používatelia týchto skupín uvidia v pomocníkovi AI možnosť vlastnej výzvy."
     ai_helper_automatic_chat_thread_title_delay: "Oneskorenie v minútach, kým pomocník AI automaticky nastaví názov chatového vlákna."
     ai_helper_automatic_chat_thread_title: "Automatické nastavenie názvov chatových vlákien na základe obsahu vlákna."
     ai_helper_illustrate_post_model: "Model, ktorý sa má použiť pre funkciu ilustrácie príspevku v pomocníkovi kompozície AI"
@@ -97,7 +96,6 @@ sk:
     ai_bot_allowed_groups: "Keď má bot GPT prístup k PM, bude odpovedať členom týchto skupín."
     ai_bot_debugging_allowed_groups: "Povoľte týmto skupinám zobrazenie tlačidla na ladenie príspevkov, ktoré zobrazuje nespracovanú požiadavku a odpoveď AI."
     ai_bot_public_sharing_allowed_groups: "Umožnite týmto skupinám zdieľať osobné správy AI s verejnosťou prostredníctvom jedinečného verejne dostupného prepojenia. Poznámka: ak vaša stránka vyžaduje prihlásenie, aj zdieľania budú vyžadovať prihlásenie."
-    ai_bot_add_to_header: "Zobrazenie tlačidla v záhlaví na spustenie PM s AI Bot"
     ai_bot_github_access_token: "Prístupový token GitHub na použitie s nástrojmi AI GitHub (vyžaduje sa pre podporu vyhľadávania)"
     ai_stability_api_key: "Kľúč API pre rozhranie API stability.ai"
     ai_stability_engine: "Generátor obrázkov, ktorý sa má použiť pre API stability.ai"
@@ -110,11 +108,8 @@ sk:
     ai_discord_search_mode: "Vyberte režim vyhľadávania, ktorý chcete použiť na vyhľadávanie v službe Discord"
     ai_discord_search_persona: "Persona, ktorá sa má použiť pri vyhľadávaní na Discorde."
     ai_discord_allowed_guilds: "Discord cechy (servery), kde môže bot vyhľadávať"
-    ai_bot_enable_dedicated_ux: "Umožniť rozhranie bota na celú obrazovku namiesto PM"
-    ai_translation_enabled: "Umožňuje funkciu prekladu pomocou AI"
     ai_translation_model: "Model, ktorý sa má použiť na preklad. Tento model musí podporovať preklad. Personas môžu toto nastavenie prepísať."
     ai_translation_backfill_limit_to_public_content: "Ak je táto možnosť povolená, preloží sa iba obsah verejných kategórií. Ak je vypnuté, na preklad sa bude posielať aj obsah v skupinových PM a súkromných kategóriách."
-    ai_translation_max_post_length: "Maximálna dĺžka príspevku, ktorý sa má preložiť. Príspevky dlhšie ako táto hodnota nebudú preložené."
     ai_translation_backfill_max_age_days: "Maximálny vek príspevku a témy, ktoré sa majú preložiť. Príspevky a témy staršie ako táto hodnota nebudú preložené. Hodnota 0 zakáže spätné dopĺňanie, ale nezakáže preklad nových príspevkov."
   reviewables:
     reasons:
@@ -609,7 +604,6 @@ sk:
       cannot_edit_builtin: "Vstavaný model nie je možné upravovať."
       configuration:
         disable_embeddings: "Najprv musíte vypnúť možnosť „povolené vkladanie AI“."
-        invalid_config: "Vybrali ste neplatnú možnosť."
         choose_model: "Najprv nastavte „vybraný model pre vloženie AI“."
     llm_models:
       missing_provider_param: "%{param} nemôže byť prázdne"

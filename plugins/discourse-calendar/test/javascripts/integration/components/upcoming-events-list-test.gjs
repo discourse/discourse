@@ -11,7 +11,7 @@ import UpcomingEventsList, {
 
 const today = "2100-02-01T08:00:00";
 const tomorrowAllDay = "2100-02-02T00:00:00";
-const nextMonth = "2100-03-02T08:00:00";
+const laterThisMonth = "2100-02-22T08:00:00";
 const nextWeek = "2100-02-09T08:00:00";
 
 module("Integration | Component | upcoming-events-list", function (hooks) {
@@ -77,7 +77,7 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
       ),
       [
         moment(tomorrowAllDay).format("MMM").toUpperCase(),
-        moment(nextMonth).format("MMM").toUpperCase(),
+        moment(laterThisMonth).format("MMM").toUpperCase(),
       ],
       "displays the correct month"
     );
@@ -86,7 +86,7 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
       [...queryAll(".upcoming-events-list__event-date .day")].map(
         (el) => el.innerText
       ),
-      [moment(tomorrowAllDay).format("D"), moment(nextMonth).format("D")],
+      [moment(tomorrowAllDay).format("D"), moment(laterThisMonth).format("D")],
       "displays the correct day"
     );
 
@@ -96,7 +96,7 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
       ),
       [
         i18n("discourse_post_event.upcoming_events_list.all_day"),
-        moment(nextMonth).format(DEFAULT_TIME_FORMAT),
+        moment(laterThisMonth).format(DEFAULT_TIME_FORMAT),
       ],
       "displays the formatted time"
     );
@@ -106,7 +106,7 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
         (el) => el.innerText
       ),
       ["Awesome Event", "Another Awesome Event"],
-      "displays the event name"
+      "displays the event name in the correct order"
     );
 
     assert
@@ -230,7 +230,7 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
       ),
       [
         i18n("discourse_post_event.upcoming_events_list.all_day"),
-        moment(nextMonth).format("LLL"),
+        moment(laterThisMonth).format("LLL"),
       ],
       "displays the formatted time"
     );
@@ -354,7 +354,7 @@ function twoEventsResponseHandler({ queryParams }) {
     },
     {
       id: 67502,
-      starts_at: nextMonth,
+      starts_at: laterThisMonth,
       ends_at: null,
       timezone: "Asia/Calcutta",
       post: {

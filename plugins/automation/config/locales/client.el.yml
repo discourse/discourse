@@ -239,15 +239,15 @@ el:
         user_group_membership_through_badge:
           fields:
             badge_name:
-              label: Όνομα σήματος
+              label: Όνομα Παρασήμου
             group:
               label: Ομάδα
             remove_members_without_badge:
-              label: Αφαίρεση υπαρχόντων μελών χωρίς σήμα
+              label: Αφαίρεση υπαρχόντων μελών χωρίς παράσημο
               description: Προαιρετικό, αφαίρεση υπαρχόντων μελών ομάδας χωρίς το καθορισμένο σήμα
             badge:
               label: Παράσημο
-              description: Επιλογή σήματος
+              description: Επιλογή παρασήμου
         suspend_user_by_email:
           fields:
             suspend_until:
@@ -317,8 +317,6 @@ el:
             label: Έκδοση
           status:
             label: Κατάσταση
-          enabled:
-            label: Ενεργοποιημένο
           disabled:
             label: Απενεργοποιημένο
           last_updated_at:

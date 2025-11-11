@@ -5,6 +5,7 @@
     <title><%= title_content %></title>
     <meta name="description" content="<%= description_content %>">
     <%= render partial: "layouts/head" %>
+    <%= render partial: "common/hreflang_tags" %>
     <%= render partial: "common/discourse_stylesheet" %>
     <%= theme_lookup("head_tag") %>
     <%= render_google_universal_analytics_code %>

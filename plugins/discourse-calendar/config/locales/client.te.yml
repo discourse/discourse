@@ -23,6 +23,7 @@ te:
         month: "ఈ నెల"
         week: "వారం"
         day: "రోజు"
+        year: "సంవత్సరం"
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"

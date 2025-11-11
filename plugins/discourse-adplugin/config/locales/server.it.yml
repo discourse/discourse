@@ -15,6 +15,7 @@ it:
     house_ads_after_nth_topic: 'Se sono impostati gli annunci "tra argomenti", il sistema mostra un annuncio ogni N argomenti, dove N è il valore di questo parametro.'
     house_ads_after_nth_post: 'Se sono impostati gli annunci "tra messaggi", il sistema mostra un annuncio ogni N messaggi, dove N è il valore di questo parametro.'
     house_ads_frequency: "Se sono configurate altre reti di annunci perché mostrino gli annunci in uno slot, indica quanto spesso tali pubblicità devono apparire, in percentuale."
+    ads_txt: "Contenuto del file ads.txt. Maggiori dettagli sono disponibili in <a href='https://support.google.com/adsense/answer/7532444?hl=en' target='_blank'>questa pagina della guida di Google AdSense</a>."
     dfp_publisher_id: "Inserisci il codice di rete Google Ad Manager (precedentemente chiamato DFP), che si trova nelle impostazioni di rete. NOTA: sarà necessario aggiornare l'impostazione 'content security policy script src'. Vedi <a href='https://meta.discourse.org/t/33734' target='_blank'>questo argomento</a> per le ultime istruzioni."
     dfp_publisher_id_mobile: "(Facoltativo) Se vuoi usare un id diverso dell'Ad Manager publisher per la versione mobile del sito, inseriscilo qui. Lascia in bianco per usare dfp_publisher_id sul sito mobile."
     dfp_through_trust_level: "Mostra i tuoi annunci agli utenti in base al livello di attendibilità. Gli utenti con livello di attendibilità superiore a questo valore non vedranno gli annunci."
@@ -44,6 +45,7 @@ it:
     dfp_mobile_post_bottom_ad_sizes: "Scegli la dimensione dell'annuncio mostrato tra i messaggi per la visualizzazione su dispositivo mobile."
     dfp_target_post_bottom_key_code: "Inserisci le chiavi personalizzate di targeting - Livello inventario"
     dfp_target_post_bottom_value_code: "Inserisci i valori personalizzati di targeting - Livello inventario"
+    adsense_publisher_code: "Il tuo publisher ID. Inserisci solo il numero, escluso 'pub-'. NOTA: sarà necessario aggiornare l'impostazione 'content security policy script src'. Vedi <a href='https://meta.discourse.org/t/33734' target='_blank'>questo argomento</a> per le ultime istruzioni."
     adsense_through_trust_level: "Mostra i tuoi annunci agli utenti in base al livello di attendibilità. Gli utenti con livello di attendibilità superiore a questo valore non vedranno gli annunci."
     adsense_exclude_groups: "Gli annunci non verranno mostrati ai membri di questi gruppi"
     adsense_topic_list_top_code: "Inserisci il codice del gruppo annunci da mostrare in cima alla lista degli argomenti. Si tratta del numero assegnato all'annuncio, non del codice JavaScript."
@@ -96,6 +98,7 @@ it:
     carbonads_exclude_groups: "Gli annunci non verranno mostrati ai membri di questi gruppi"
     carbonads_topic_list_top_enabled: "Mostra un annuncio sopra l'elenco degli argomenti"
     carbonads_above_post_stream_enabled: "Mostra un annuncio sopra la lista dei messaggi"
+    adbutler_publisher_id: "ID AdButler Publisher. NOTA: potrebbe essere necessario aggiornare l'impostazione 'content security policy script src'. Vedi <a href='https://meta.discourse.org/t/33734' target='_blank'>questo argomento</a> per le ultime istruzioni."
     adbutler_mobile_topic_list_top_zone_id: "ID zona per la posizione superiore dell'elenco di argomenti su mobile"
     adbutler_mobile_topic_above_post_stream_zone_id: "ID zona per argomento sopra la posizione del flusso dei messaggi su dispositivo mobile"
     adbutler_mobile_post_bottom_zone_id: "ID zona per la posizione inferiore nel messaggio su dispositivi mobili"

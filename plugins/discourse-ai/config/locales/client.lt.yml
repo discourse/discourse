@@ -126,9 +126,8 @@ lt:
               label: "Persona"
         llm_triage:
           fields:
-            system_prompt:
-              label: "Sistemos pranešimas"
-              description: "Pranešimas, kuris bus naudojamas nustatant, įsitikinkite, kad jis turi atsakyti vienu žodžiu, kurį galite naudoti veiksmui suaktyvinti"
+            triage_persona:
+              label: "Persona"
             search_for_text:
               label: "Ieškokite teksto"
             category:
@@ -144,11 +143,6 @@ lt:
               description: "Vartotojo vardas, norintis paskelbti paruoštą atsakymą"
             hide_topic:
               label: "Slėpti temą"
-            model:
-              label: "Modelis"
-            temperature:
-              label: "Temperatūra"
-              description: "Temperatūra, kurią naudosite LLM. Padidinkite, kad padidintumėte atsitiktinumą (palikite tuščią, kad naudotumėte numatytuosius modelio parametrus)."
     discourse_ai:
       title: "AI"
       features:
@@ -199,6 +193,30 @@ lt:
       layout:
         table: "Lentelė"
         card: "Kortelė"
+      translations:
+        title: "Vertimai"
+        stats:
+          eta_minutes:
+            one: "%{count} minutė"
+            few: "%{count} minutės"
+            many: "%{count} minučių"
+            other: "%{count} minučių"
+          eta_hours:
+            one: "%{count} valanda"
+            few: "%{count} valandos"
+            many: "%{count} valandų"
+            other: "%{count} valandų"
+          eta_days:
+            one: "%{count} diena"
+            few: "%{count} dienos"
+            many: "%{count} dienų"
+            other: "%{count} dienų"
+        progress_chart:
+          bar_done:
+            one: "%{count} pranešimas"
+            few: "%{count} pranešimai"
+            many: "%{count} pranešimų"
+            other: "%{count} pranešimų"
       spam:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"

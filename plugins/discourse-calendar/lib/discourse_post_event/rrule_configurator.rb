@@ -21,15 +21,15 @@ class RRuleConfigurator
       when "every_weekday"
         "FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR"
       when "every_two_weeks"
-        "FREQ=WEEKLY;INTERVAL=2;"
+        "FREQ=WEEKLY;INTERVAL=2"
       when "every_four_weeks"
-        "FREQ=WEEKLY;INTERVAL=4;"
+        "FREQ=WEEKLY;INTERVAL=4"
       else
         byday = starts_at.strftime("%A").upcase[0, 2]
         "FREQ=WEEKLY;BYDAY=#{byday}"
       end
 
-    rule += ";UNTIL=#{recurrence_until.strftime("%Y%m%dT%H%M%SZ")}" if recurrence_until
+    rule += ";UNTIL=#{recurrence_until.strftime("%Y%m%dT%H%M%S")}" if recurrence_until
     rule
   end
 

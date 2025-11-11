@@ -118,7 +118,6 @@ zh_TW:
       title: "聊天"
       title_capitalized: "聊天"
       upload_to_channel: "上傳至 %{title}"
-      exit: "上一步"
       channel_status:
         read_only_header: "頻道為唯讀"
         read_only: "唯讀"
@@ -136,6 +135,8 @@ zh_TW:
       chat_message_separator:
         today: 今天
         yesterday: 昨天
+      search_view:
+        filter_placeholder: 搜尋訊息
       about_view:
         associated_topic: 連結的主題
         associated_category: 連結的類別
@@ -148,6 +149,7 @@ zh_TW:
         tabs:
           members: 成員
           settings: 設定
+          search: 搜索
         remove_member: "移除"
       new_message_modal:
         title: 傳送訊息
@@ -208,6 +210,10 @@ zh_TW:
         export_messages:
           title: "匯出聊天訊息"
           create_export: "建立匯出"
+      search:
+        sort:
+          relevance: "最相關"
+          latest: "最新版本"
       direct_messages:
         create: "開始"
         cannot_create: "抱歉，您無法傳送私訊。"

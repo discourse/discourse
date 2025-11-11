@@ -20,4 +20,26 @@ zh_CN:
     report_generator:
       private_message:
         title: "%{query_name} 的定时报告"
+        body: |
+          %{recipient_name}，您好！您的数据资源管理器已准备就绪。
+
+          查询名称：
+          %{query_name}
+
+          结果如下：
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>在数据资源管理器中查看查询</a>
+
+          报告创建时间：%{created_at} (%{timezone})
+      post:
+        body: |
+          ### %{query_name} 的定时报告
+
+          结果如下：
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>在数据资源管理器中查看查询</a>
+
+          报告创建时间：%{created_at} (%{timezone})
       upload_appendix: "附录：[%{filename}|附件](%{short_url})"

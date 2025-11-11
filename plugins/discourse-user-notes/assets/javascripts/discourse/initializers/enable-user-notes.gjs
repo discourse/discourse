@@ -54,10 +54,7 @@ function customizePost(api, container) {
 
   // Handle placement next to avatar
   if (placement === "avatar") {
-    api.renderAfterWrapperOutlet(
-      "poster-avatar",
-      UserNotesPostMetadataFlairIcon
-    );
+    api.renderAfterWrapperOutlet("post-avatar", UserNotesPostMetadataFlairIcon);
   }
   // Handle placement next to username
   else if (placement === "name") {
@@ -115,9 +112,6 @@ function customizeWidgetPost(api) {
     updatePostUserNotesCount(this.model, count);
   });
 
-  const mobileView = api.container.lookup("service:site").mobileView;
-  const loc = mobileView ? "before" : "after";
-
   // Helper to attach notes icon if user has notes
   const attachUserNotesIconIfPresent = (dec) => {
     const post = dec.getModel();
@@ -127,8 +121,25 @@ function customizeWidgetPost(api) {
   };
 
   // Add notes icon to poster name
-  api.decorateWidget(`poster-name:${loc}`, (dec) => {
-    if (dec.widget.settings.hideNotes) {
+
+  // place the icon before the poster name on mobile
+  api.decorateWidget(`poster-name:before`, (dec) => {
+    if (
+      api.container.lookup("service:site").desktopView ||
+      dec.widget.settings.hideNotes
+    ) {
+      return;
+    }
+
+    return attachUserNotesIconIfPresent(dec);
+  });
+
+  // place the icon after the poster name on desktop
+  api.decorateWidget(`poster-name:after`, (dec) => {
+    if (
+      api.container.lookup("service:site").mobileView ||
+      dec.widget.settings.hideNotes
+    ) {
       return;
     }
 

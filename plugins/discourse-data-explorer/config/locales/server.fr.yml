@@ -20,4 +20,26 @@ fr:
     report_generator:
       private_message:
         title: "Rapport planifié pour %{query_name}"
+        body: |
+          Bonjour %{recipient_name}, votre rapport de l'explorateur de données est prêt.
+
+          Nom de la requête :
+          %{query_name}
+
+          Voici les résultats :
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Afficher la requête dans l'explorateur de données</a>
+
+          Rapport créé à %{created_at} (%{timezone})
+      post:
+        body: |
+          ### Rapport planifié pour %{query_name}
+
+          Voici les résultats :
+          %{table}
+
+          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>Afficher la requête dans l'explorateur de données</a>
+
+          Rapport créé à %{created_at} (%{timezone})
       upload_appendix: "Annexe : [%{filename}|pièce jointe](%{short_url})"

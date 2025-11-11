@@ -2,9 +2,9 @@
 
 module DiscourseZendeskPlugin
   class SyncController < ApplicationController
-    include ::DiscourseZendeskPlugin::Helper
+    include DiscourseZendeskPlugin::Helper
 
-    requires_plugin ::DiscourseZendeskPlugin::PLUGIN_NAME
+    requires_plugin PLUGIN_NAME
 
     layout false
     before_action :zendesk_token_valid?, only: :webhook
@@ -16,7 +16,7 @@ module DiscourseZendeskPlugin
 
     def webhook
       unless SiteSetting.zendesk_enabled? && SiteSetting.sync_comments_from_zendesk
-        return render json: failed_json, status: 422
+        return render json: failed_json, status: :unprocessable_entity
       end
 
       ticket_id = params[:ticket_id]
@@ -30,7 +30,7 @@ module DiscourseZendeskPlugin
       if latest_comment.present?
         existing_comment =
           PostCustomField.where(
-            name: ::DiscourseZendeskPlugin::ZENDESK_ID_FIELD,
+            name: DiscourseZendeskPlugin::ZENDESK_ID_FIELD,
             value: latest_comment.id,
           ).first
 
@@ -40,7 +40,7 @@ module DiscourseZendeskPlugin
         end
       end
 
-      render json: {}, status: 204
+      head :no_content
     end
 
     private

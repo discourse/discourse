@@ -36,6 +36,10 @@ pl_PL:
     no_solutions:
       self: "Nie masz jeszcze żadnych akceptowanych rozwiązań."
       others: "Brak akceptowanych rozwiązań."
+    filter:
+      description:
+        solved: "Filtruj tematy, które zostały rozwiązane"
+        unsolved: "Filtruj tematy, które nie zostały rozwiązane"
   badges:
     solved_1:
       name: "Rozwiązany!"

@@ -29,7 +29,7 @@ ro:
       save: "Salvează"
       apply: "Aplică"
       update_range:
-        last_10_days: "Ultimele 10 de zile"
+        last_10_days: "Ultimele 10 zile"
         last_30_days: "Ultimele 30 de zile"
         last_90_days: "Ultimele 90 de zile"
         all_time: "Dintotdeauna"

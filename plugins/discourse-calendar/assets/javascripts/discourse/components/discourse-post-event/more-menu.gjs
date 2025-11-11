@@ -9,7 +9,6 @@ import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { exportEntity } from "discourse/lib/export-csv";
-import { getAbsoluteURL } from "discourse/lib/get-url";
 import { cook } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
@@ -23,7 +22,6 @@ import PostEventInvitees from "../modal/post-event-invitees";
 export default class DiscoursePostEventMoreMenu extends Component {
   @service currentUser;
   @service dialog;
-  @service discoursePostEventApi;
   @service modal;
   @service router;
   @service siteSettings;
@@ -82,12 +80,12 @@ export default class DiscoursePostEventMoreMenu extends Component {
         {
           startsAt: event.startsAt,
           endsAt: event.endsAt,
+          timezone: event.timezone,
         },
       ],
       {
-        recurrenceRule: event.recurrenceRule,
-        location: event.url,
-        details: getAbsoluteURL(event.post.url),
+        location: event.location,
+        details: event.description,
       }
     );
   }
@@ -254,6 +252,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
       @identifier="discourse-post-event-more-menu"
       @triggerClass={{concatClass
         "more-dropdown"
+        "btn-small"
         (if this.isSavingEvent "--saving")
       }}
       @icon="ellipsis"

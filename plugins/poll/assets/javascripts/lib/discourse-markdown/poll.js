@@ -16,6 +16,7 @@ const ALLOWED_ATTRIBUTES = [
   "status",
   "step",
   "type",
+  "dynamic",
 ];
 
 function addNumberListItems(state, pollTokens, min, max, step) {

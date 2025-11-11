@@ -9,7 +9,7 @@ pt_BR:
     admin:
       site_settings:
         categories:
-          poll: "Enquete Discourse"
+          poll: "Enquete do Discourse"
   js:
     poll:
       voters:

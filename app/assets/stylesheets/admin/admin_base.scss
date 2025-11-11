@@ -124,10 +124,6 @@ $mobile-breakpoint: 700px;
     padding: 8px;
   }
 
-  tr:hover {
-    background-color: var(--primary-very-low);
-  }
-
   tr.selected {
     background-color: var(--primary-low);
   }
@@ -1271,6 +1267,7 @@ a.inline-editable-field {
 @import "admin/admin_report_table";
 @import "admin/admin_report_inline_table";
 @import "admin/admin_section_landing_page";
+@import "admin/admin_user_fields";
 @import "admin/admin_intro";
 @import "admin/mini_profiler";
 @import "admin/schema_setting_editor";
@@ -1279,3 +1276,4 @@ a.inline-editable-field {
 @import "admin/color-palette-editor";
 @import "admin/admin_config_color_palettes";
 @import "admin/admin_config_components";
+@import "admin/upcoming-changes";

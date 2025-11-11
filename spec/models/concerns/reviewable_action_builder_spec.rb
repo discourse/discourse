@@ -5,6 +5,52 @@ RSpec.describe ReviewableActionBuilder do
   fab!(:guardian) { Guardian.new(admin) }
   fab!(:user)
 
+  describe "#build_user_actions_bundle" do
+    fab!(:post) { Fabricate(:post, user: user) }
+    fab!(:reviewable_post) do
+      ReviewablePost.needs_review!(target: post, created_by: admin, potential_spam: false)
+    end
+    fab!(:post_actions) { Reviewable::Actions.new(reviewable_post, guardian) }
+
+    before do
+      reviewable_post.instance_variable_set(:@actions, post_actions)
+      reviewable_post.instance_variable_set(:@guardian, guardian)
+      reviewable_post.instance_variable_set(:@action_args, {})
+    end
+
+    it "creates a user bundle with standard actions when allowed" do
+      bundle = reviewable_post.build_user_actions_bundle
+
+      # bundle id and label
+      expect(bundle.id).to eq("#{reviewable_post.id}-user-actions")
+      expect(bundle.label).to eq("reviewables.actions.user_actions.bundle_title")
+
+      # action ids are prefixed with target type (post-...)
+      action_ids = bundle.actions.map(&:id)
+      expect(action_ids).to include("post-no_action_user")
+      expect(action_ids).to include("post-silence_user")
+      expect(action_ids).to include("post-suspend_user")
+      expect(action_ids).to include("post-delete_user")
+      expect(action_ids).to include("post-delete_and_block_user")
+
+      # client_action is set for moderation actions
+      silence = bundle.actions.find { |a| a.id == "post-silence_user" }
+      suspend = bundle.actions.find { |a| a.id == "post-suspend_user" }
+      expect(silence.client_action).to eq("silence")
+      expect(suspend.client_action).to eq("suspend")
+    end
+
+    it "includes only the no-op action when user is nil" do
+      allow(reviewable_post).to receive(:target_created_by).and_return(nil)
+
+      bundle = reviewable_post.build_user_actions_bundle
+      server_actions = bundle.actions.map(&:server_action)
+
+      expect(server_actions).to include("no_action_user")
+      expect(server_actions - ["no_action_user"]).to be_empty
+    end
+  end
+
   describe "#build_action" do
     fab!(:reviewable_user) { ReviewableUser.create_for(user) }
 

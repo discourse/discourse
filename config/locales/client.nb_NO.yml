@@ -195,7 +195,7 @@ nb_NO:
     welcome_banner:
       header:
         anonymous_members: "Velkommen til %{site_name}!"
-      search: "Søk"
+      search_placeholder: "Søk"
     themes:
       default_description: "Forvalg"
       error_caused_by: "Forårsaket av '%{name}'. <a target='blank' href='%{path}'>Klikk her</a> for å oppdatere, rekonfigurere eller deaktivere."
@@ -453,6 +453,7 @@ nb_NO:
       other: "Se %{count} nye emner"
     preview: "forhåndsvisning"
     cancel: "Avbryt"
+    done: "Ferdig"
     deleting: "forhåndsvisning"
     save: "Lagre endringer"
     saving: "Lagrer…"
@@ -527,10 +528,6 @@ nb_NO:
         required: "Du må gjøre krav på varer før du kan se gjennom dem."
         claimed_by_you: "Du har gjort krav på dette elementet og kan se gjennom det."
         claimed_by_other: "Dette elementet kan bare bli vurdert av <b>%{username}</b>."
-      claim:
-        title: "Gjør krav på dette emne"
-      unclaim:
-        help: "fjern dette kravet"
       awaiting_approval: "Venter på godkjenning"
       delete: "Slett"
       settings:
@@ -664,9 +661,11 @@ nb_NO:
         reviewable_post:
           title: "Innlegg"
           noun: "innlegg"
+      user_label: "Bruker"
       notes:
         delete: "Slett"
       review_user: "Bruker"
+      copy_link_feedback: "Lenk kopiert"
       insights:
         activities:
           posts:
@@ -1237,14 +1236,13 @@ nb_NO:
       color_scheme: "Farge Palett"
       color_schemes:
         default_description: "Tema standard"
-        disable_dark_scheme: "Samme som vanlig"
         undo: "Tilbakestill"
-        regular: "Aktivt medlem"
         dark: "Mørk modus"
-        default_dark_scheme: "(nettstedsstandard)"
         interface_modes:
           light: "Lys"
           dark: "Mørk"
+        picker:
+          active: "Aktiv"
       dark_mode: "Mørk Modus"
       text_size_default_on_all_devices: "Gjør denne standardtekststørrelsen på alle mine enheter"
       allow_private_messages: "Tillat andre brukere å sende meg personlige meldinger"
@@ -1552,7 +1550,7 @@ nb_NO:
         invalid: "Det brukernavnet er ugyldig. Det kan bare inneholde nummer og bokstaver."
       add_email:
         title: "Send e-post"
-        add: "legg til"
+        add: "Legg til"
       change_email:
         title: "Endre e-postadresse"
         taken: "Beklager, den e-postadressen er ikke tilgjengelig."
@@ -2275,6 +2273,8 @@ nb_NO:
     full_name_requirement:
       required_at_signup: "Påkrevd"
       optional_at_signup: "Valgfritt"
+    welcome_banner_page_visibility:
+      homepage: "Hjemmeside"
     shortcut_modifier_key:
       shift: "Shift"
       ctrl: "Ctrl"
@@ -2355,8 +2355,7 @@ nb_NO:
       whisper: "hvisk"
       unlist: "skjult"
       add_warning: "Dette er en offisiell advarsel."
-      toggle_whisper: "Slå på/av hvisking"
-      insert_table: "Sett inn tabell"
+      toggle_whisper: "Veksle hvisking"
       posting_not_on_topic: "Hvilket emne ønsker du å svare på?"
       saved_local_draft_tip: "lagret lokalt"
       similar_topics: "Emnet ditt ligner på…"
@@ -2414,11 +2413,11 @@ nb_NO:
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Opprett emne"
-      create_pm: "Send melding"
       create_whisper: "Hvisk"
       create_shared_draft: "Opprett delt utkast"
       edit_shared_draft: "Rediger delt utkast"
       title: "Eller trykk %{modifier}Enter"
+      discard: "Forkast"
       users_placeholder: "Legg til brukere eller grupper"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       title_or_link_placeholder: "Skriv inn tittel eller lim inn en lenke her"
@@ -2453,19 +2452,9 @@ nb_NO:
       paste_code_text: "skriv inn eller kopier kode her"
       upload_title: "Bilde"
       upload_description: "beskriv bildet her"
-      olist_title: "Nummerert liste"
-      ulist_title: "Kulepunktliste"
       list_item: "Listeelement"
-      toggle_direction: "Skift retning"
       help: "Hjelp for redigering i Markdown"
-      collapse: "minimer redigeringspanelet"
-      open: "minimer redigeringspanelet"
-      abandon: "lukk redigeringspanel og forkast utkast"
-      enter_fullscreen: "gå inn i fullskjerm komponist"
-      exit_fullscreen: "avslutt fullskjerm komponist"
       exit_fullscreen_prompt: "Trykk <kbd>ESC</kbd> for å gå ut av fullskjerm"
-      show_toolbar: "vis verktøylinje for komponist"
-      hide_toolbar: "skjul verktøylinje for komponist"
       modal_ok: "OK"
       cant_send_pm: "Beklager, du kan ikke sende privat melding til %{username}."
       create_message_error: "Beklager, det oppstod en feil ved opprettelsen av denne meldingen. Vennligst prøv igjen."
@@ -2499,8 +2488,10 @@ nb_NO:
           label: Veksle hvisking
           desc: Hvisking er kun synlig for stab
         create_topic:
-          label: "Nytt emne"
           desc: Opprett et nytt emne
+        create_personal_message:
+          label: "Ny melding"
+          desc: "Opprett en ny personlig melding"
         shared_draft:
           label: "Delt utkast"
           desc: "Lag et emne som bare vil være synlig for tillatte brukere"
@@ -2966,7 +2957,6 @@ nb_NO:
         one: "%{count} innlegg i emnet"
         other: "%{count} innlegg i emnet"
       create: "Nytt emne"
-      create_disabled_category: "Du har ikke lov til å opprette emner i denne kategorien"
       create_long: "Opprett et nytt emne"
       open_draft: "Åpne utkast"
       private_message: "Begynn en melding"
@@ -3130,9 +3120,6 @@ nb_NO:
       auto_close_immediate:
         one: "Det siste innlegget i emnet er allerede en time gammelt, så emnet vil stenges umiddelbart."
         other: "Det siste innlegget i emnet er allerede %{count} timer gammelt, så emnet vil stenges umiddelbart."
-      auto_close_momentarily:
-        one: "Siste innlegg i emnet er allerede %{count} timer gammel, så emnet vil bli lukket om et øyeblikk."
-        other: "Siste innlegg i emnet er allerede %{count} timer gammelt, så emnet vil bli stengt om et øyeblikk."
       timeline:
         back: "Tilbake"
         back_description: "Gå tilbake til forrige uleste innlegg"
@@ -3484,10 +3471,7 @@ nb_NO:
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brukere kan ikke laste opp vedlegg."
         attachment_download_requires_login: "Beklager, du må være innlogget for å laste ned vedlegg."
       cancel_composer:
-        confirm: "Hva vil du gjøre med innlegget ditt?"
         discard: "Forkast"
-        save_draft: "Lagre utkast til senere"
-        keep_editing: "Fortsett å redigere"
       via_email: "Dette innlegget ankom via e-post"
       via_auto_generated_email: "dette innlegget kom fra en automatisk generert e-post"
       whisper: "dette innlegget er en privat hvisking for moderatorer"
@@ -3669,8 +3653,8 @@ nb_NO:
         name: "Navn"
         description: "Beskrivelse"
         remove: "Fjern"
-      tags_allowed_tags: "Begrens disse stikkordene til denne kategorien:"
-      tags_allowed_tag_groups: "Begrens disse stikkordgruppene til denne kategorien:"
+      tags_allowed_tags_new_category: "Begrens disse stikkordene til denne kategorien:"
+      tags_allowed_tag_groups_new_category: "Begrens disse stikkordgruppene til denne kategorien:"
       tags_placeholder: "(Valgfritt) liste over tillatte stikkord"
       tags_tab_description: "Stikkord og stikkordgrupper som er spesifisert ovenfor vil bare være tilgjengelig i denne kategorien og andre kategorier som også spesifiserer de. De vil ikke være tilgjengelige for bruk i andre kategorier."
       tag_groups_placeholder: "(Valgfritt) liste over tillatte stikkordgrupper"
@@ -3697,6 +3681,8 @@ nb_NO:
       background_image: "Kategori bakgrunnsbilde"
       background_image_dark: "Mørk kategori bakgrunnsbilde"
       background_color: "Farge"
+      color_validations:
+        cant_be_empty: "kan ikke være tom"
       styles:
         icon: "Ikon"
         emoji: "Emoji"
@@ -4020,7 +4006,7 @@ nb_NO:
       readonly: "Se"
     preloader_text: "Laster"
     lightbox:
-      download: "last ned"
+      download: "Last ned"
       previous: "Forrige (Venstre pil-nøkkel)"
       next: "Neste (pil-nøkkel)"
       counter: "%curr% av %total%"
@@ -4150,7 +4136,6 @@ nb_NO:
       selector_remove_filter: "fjern filter"
       tags: "Stikkord"
       choose_for_topic: "valgfrie stikkord"
-      info: "Informasjon"
       category_restricted: "Denne taggen er begrenset til kategorier du ikke har tilgang til tilgang."
       synonyms: "Synonymer"
       synonyms_description: "Når følgende merkelapper brukes, vil de bli erstattet med <b>%{base_tag_name}</b>."
@@ -4385,6 +4370,7 @@ nb_NO:
   admin_js:
     type_to_filter: "Skriv for å filtrere…"
     settings: "Instillinger"
+    reset_filter: "Tilbakestill"
     admin:
       title: "Discourse-admin"
       moderator: "Moderator"
@@ -4412,6 +4398,19 @@ nb_NO:
           title: "Sikkerhet"
         plugins:
           title: "Utvidelser"
+      upcoming_changes:
+        name: "Navn"
+        enabled: "Aktivert"
+        preview: "Forhåndsvis"
+        impact_roles:
+          admins: "Adminer"
+          moderators: "Moderatorer"
+          staff: "Stab"
+        filter:
+          all: "Alle"
+          enabled: "Aktivert"
+          disabled: "Deaktivert"
+          impact_type_other: "Annet"
       config:
         developer:
           title: "Utvikler"
@@ -4423,6 +4422,10 @@ nb_NO:
           title: "Filer"
         legal:
           title: "Juridisk"
+        login:
+          sub_pages:
+            common_settings:
+              title: "Innstillinger"
         logo:
           form:
             mobile: "Mobil"
@@ -4932,7 +4935,6 @@ nb_NO:
         copy_to_clipboard: "Kopier til utklippstavle"
         copied_to_clipboard: "Kopiert til utklippstavle"
         copy_to_clipboard_error: "Feil ved kopiering av data til utklippstavle"
-        theme_owner: "Kan ikke endres, eid av:"
         email_templates:
           title: "E-post"
           subject: "Emne"
@@ -4940,6 +4942,7 @@ nb_NO:
           body: "Meldingstekst"
           revert: "Tilbakestill endringer"
           revert_confirm: "Er du sikker på at du vil tilbakestille dine endringer?"
+          edit: "Rediger"
         component:
           all_filter: "Alle"
           enabled_filter: "Aktivert"
@@ -4973,13 +4976,12 @@ nb_NO:
           extra_files_upload: "Eksporter tema for å vise disse filene."
           extra_files_remote: "Eksporter temaet eller sjekk git-repository for å vise disse filene."
           preview: "Forhåndsvis"
-          default: "Aktiv"
           is_default: "Drakt påskrudd som forvalg"
           user_selectable: "Drakten kan velges av brukerne"
           auto_update: "Automatisk oppdatering når Discourse er oppdatert"
           color_scheme: "Farge Palett"
           default_light_scheme: "Lys (standard)"
-          color_scheme_select: "Velg farger å bruke i drakten"
+          color_scheme_select: "Velg farger å bruke i drakten."
           custom_sections: "Egendefinerte valg:"
           theme_components: "Drakt-komponenter"
           add_all_themes: "Legg til alle temaer"
@@ -5031,10 +5033,6 @@ nb_NO:
           commits_behind:
             one: "Drakten er én utgave foreldet!"
             other: "Drakten er %{count} utgaver foreldet!"
-          settings: "Innstillinger"
-          colors: "Farger"
-          discard_colors: "Forkast"
-          colors_title: "Farger"
           scss:
             text: "CSS"
           after_header:
@@ -5057,12 +5055,12 @@ nb_NO:
               too_small: "må være lik eller større enn %{count}"
               too_large: "må være lik eller mindre enn %{count}"
         colors:
+          light: "lys"
+          dark: "mørk"
           title: "Farger"
           edit: "Rediger"
           filters:
             all: "Alle"
-          active_badge:
-            text: "Aktiv"
           copy_name_prefix: "Kopi av"
           undo: "Angre"
           undo_title: "Fjern endringer av denne fargen siden sist den ble lagret."
@@ -5489,8 +5487,6 @@ nb_NO:
             cancel: "Avbryt"
           confirmation:
             cancel: "Avbryt"
-        delete_forbidden_because_staff: "Administratorer og moderatorer kan ikke slettes."
-        delete_posts_forbidden_because_staff: "Kan ikke slette alle innlegg av administratorer og moderatorer."
         delete_forbidden:
           one: "Brukere kan ikke slettes om de har innlegg. Slett alle brukerens innlegg før bruker kan slettes. (Innlegg eldre enn %{count} dag kan ikke slettes.)"
           other: "Brukere kan ikke slettes om de har innlegg. Slett alle innlegg før du forsøker å slette en bruker. (Innlegg eldre enn %{count} dager kan ikke slettes.)"

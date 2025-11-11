@@ -34,8 +34,29 @@ he:
     post_voting_comment_limit_per_post: "מספר התגובות המותר על כל פוסט"
     min_trust_to_flag_posts_voting_comments: "דרגת האמון המזערית לסימון הערת הצבעה על פוסט"
     flag_posts_voting_comments_allowed_groups: "קבוצות שמורשות לסמן הערת הצבעה לפוסט"
+    post_voting_comment_enabled: "הפעלת הערות בפוסט בנושאים עם הצבעות על פוסטים"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments (דרגת אמון מזערית לסימון הערות הצבעה על פוסטים)"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "אין פעולה"
+        agree_and_keep_comment:
+          title: "להשאיר את התגובה"
+          description: "הבעת הסכמה עם הדגל והשארת התגובה ללא שינוי."
+        agree_and_keep_deleted:
+          title: "להשאיר את התגובה מחוקה"
+          description: "הבעת הסכמה עם הדגל והשארת התגובה מחוקה."
+        agree_and_restore:
+          title: "שחזור תגובה"
+          description: "לשחזר את התגובה כדי שמשתמשים יוכלו לראות אותה."
+        agree_and_delete:
+          title: "מחיקת תגובה"
+          description: "למחוק את התגובה כדי שמשתמשים לא יוכלו לראות אותה."
+        disagree_and_restore:
+          title: "לסרב ולשחזר תגובה"
+          description: "לשחזר את התגובה כדי שכל המשתמשים יוכלו לראות אותה."
   post_action_types:
     vote:
       title: "הצבעה"
@@ -62,6 +83,7 @@ he:
         limit_exceeded: "הגעת למגבלה של %{limit} תגובות לפוסט."
         perform: "הערת הצבעת פוסט סומנה עם ניקוד גבוה מספיק כדי להשתיק את המשתמש."
         auto_silence_from_flags: "הושתק אוטומטית עקב סימון."
+        disabled: "הוספת תגובה על פוסט אסורה."
       reviewables:
         comment_already_handled: "תודה לך, כבר בדקנו את התגובה הזאת והחלטנו שאין צורך לסמן אותה בדגל פעם נוספת."
         actions:

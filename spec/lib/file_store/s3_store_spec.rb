@@ -204,67 +204,6 @@ RSpec.describe FileStore::S3Store do
           )
         end
       end
-
-      context "when video conversion is enabled" do
-        let(:video_file) { file_from_fixtures("small.mp4", "media") }
-        let(:video_upload) do
-          Fabricate.build(:upload, original_filename: "small.mp4", extension: "mp4", id: 42)
-        end
-
-        before do
-          # Set up required MediaConvert settings
-          SiteSetting.video_conversion_service = "aws_mediaconvert"
-          SiteSetting.mediaconvert_role_arn = "arn:aws:iam::123456789012:role/MediaConvertRole"
-          SiteSetting.video_conversion_enabled = true
-          # Default stub that returns false for any argument
-          allow(FileHelper).to receive(:is_supported_video?).and_return(false)
-          # Override for the specific video file case
-          allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(true)
-          allow(store.s3_helper).to receive(:upload).and_return(["some/path.mp4", "\"etag\""])
-          # Setup Jobs as a spy
-          allow(Jobs).to receive(:enqueue)
-        end
-
-        it "enqueues a convert_video job for supported video files" do
-          store.store_upload(video_file, video_upload)
-
-          expect(Jobs).to have_received(:enqueue).with(:convert_video, upload_id: video_upload.id)
-        end
-
-        it "does not enqueue a convert_video job for unsupported video files" do
-          allow(FileHelper).to receive(:is_supported_video?).with("small.mp4").and_return(false)
-
-          store.store_upload(video_file, video_upload)
-
-          expect(Jobs).not_to have_received(:enqueue).with(
-            :convert_video,
-            upload_id: video_upload.id,
-          )
-        end
-
-        it "does not enqueue a convert_video job when video conversion is disabled" do
-          SiteSetting.video_conversion_enabled = false
-
-          store.store_upload(video_file, video_upload)
-
-          expect(Jobs).not_to have_received(:enqueue).with(
-            :convert_video,
-            upload_id: video_upload.id,
-          )
-        end
-
-        it "does not enqueue a convert_video job for non-video files" do
-          non_video_upload =
-            Fabricate.build(:upload, original_filename: "image.png", extension: "png", id: 43)
-
-          store.store_upload(uploaded_file, non_video_upload)
-
-          expect(Jobs).not_to have_received(:enqueue).with(
-            :convert_video,
-            upload_id: non_video_upload.id,
-          )
-        end
-      end
     end
 
     describe "#store_optimized_image" do

@@ -23,6 +23,9 @@ ja:
     patreon_donation_prompt_campaign_url: "寄付プロンプトのキャンペーン URL"
     errors:
       patreon_creator_username_not_set: "Patreon ログインを有効にする前に、Patreon クリエーターの Discourse ユーザー名設定を設定する必要があります。"
+  dashboard:
+    problem:
+      access_token_invalid: "Patreon クリエイターのアクセストークンとリフレッシュトークンの値が誤っています。<a href='https://www.patreon.com/platform/documentation/clients'>Patreon ウェブサイト</a>で新しいトークンをコピーして<a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>サイト設定</a>に貼り付けてください。"
   patreon:
     error:
       invalid_response: "Patreon API からの無効な応答"

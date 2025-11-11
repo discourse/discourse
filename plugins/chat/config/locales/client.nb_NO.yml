@@ -44,7 +44,6 @@ nb_NO:
       select: "Velg"
       sounds:
         none: "Ingen"
-      exit: "forrige"
       channel_status:
         closed: "Lukket"
         open: "Åpne"
@@ -56,6 +55,8 @@ nb_NO:
       chat_message_separator:
         today: I dag
         yesterday: I går
+      search_view:
+        filter_placeholder: Søk i meldinger
       about_view:
         title: Tittel
         name: Navn
@@ -65,6 +66,7 @@ nb_NO:
         tabs:
           members: Medlemmer
           settings: Instillinger
+          search: Søk
         remove_member: "Fjern"
       new_message_modal:
         filter: "Filtrer"
@@ -80,6 +82,8 @@ nb_NO:
         types:
           category: "Kategori"
           topic: "Emne"
+      reviewable:
+        message_in_channel: "Kanal"
       composer:
         italic_text: "kursiv tekst"
         bold_text: "sterk tekst"
@@ -103,6 +107,11 @@ nb_NO:
         category_label: "Kategori"
         history_label: "Historie"
         members_label: "Medlemmer"
+      search:
+        no_results: "Ingen treff funnet"
+        sort:
+          relevance: "Relevanse"
+          latest: "Siste"
       incoming_webhooks:
         back: "Forrige"
         description: "Beskrivelse"

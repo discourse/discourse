@@ -20,7 +20,6 @@ import {
   PAST,
   READ_INTERVAL_MS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import { stackingContextFix } from "discourse/plugins/chat/discourse/lib/chat-ios-hacks";
 import ChatMessagesLoader from "discourse/plugins/chat/discourse/lib/chat-messages-loader";
 import DatesSeparatorsPositioner from "discourse/plugins/chat/discourse/lib/dates-separators-positioner";
 import { extractCurrentTopicInfo } from "discourse/plugins/chat/discourse/lib/extract-current-topic-info";
@@ -43,11 +42,9 @@ import ChatThreadHeading from "./chat-thread-heading";
 import ChatUploadDropZone from "./chat-upload-drop-zone";
 
 export default class ChatThread extends Component {
-  @service appEvents;
   @service capabilities;
   @service chat;
   @service chatApi;
-  @service chatHistory;
   @service chatDraftsManager;
   @service chatThreadComposer;
   @service chatThreadPane;
@@ -238,9 +235,7 @@ export default class ChatThread extends Component {
     }
 
     const [messages, meta] = this.processMessages(this.args.thread, result);
-    stackingContextFix(this.scroller, () => {
-      this.messagesManager.addMessages(messages);
-    });
+    this.messagesManager.addMessages(messages);
     this.args.thread.details = meta;
 
     if (meta.target_message_id) {
@@ -268,9 +263,7 @@ export default class ChatThread extends Component {
       return;
     }
 
-    stackingContextFix(this.scroller, () => {
-      this.messagesManager.addMessages(messages);
-    });
+    this.messagesManager.addMessages(messages);
     this.args.thread.details = meta;
 
     if (direction === FUTURE) {
@@ -341,9 +334,7 @@ export default class ChatThread extends Component {
       return;
     }
 
-    stackingContextFix(this.scroller, () => {
-      this.messagesManager.addMessages([message]);
-    });
+    this.messagesManager.addMessages([message]);
   }
 
   @bind
@@ -438,9 +429,7 @@ export default class ChatThread extends Component {
 
     this.chatThreadPane.sending = true;
     this._ignoreNextScroll = true;
-    stackingContextFix(this.scroller, async () => {
-      await this.args.thread.stageMessage(message);
-    });
+    await this.args.thread.stageMessage(message);
     this.resetComposerMessage();
 
     if (!this.messagesLoader.canLoadMoreFuture) {
@@ -456,6 +445,7 @@ export default class ChatThread extends Component {
           staged_id: message.id,
           upload_ids: message.uploads.map((upload) => upload.id),
           thread_id: message.thread.id,
+          client_created_at: message.createdAt.toISOString(),
           ...extractCurrentTopicInfo(this),
         }
       );

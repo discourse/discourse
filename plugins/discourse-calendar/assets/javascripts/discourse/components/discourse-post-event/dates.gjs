@@ -2,37 +2,43 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { next } from "@ember/runloop";
+import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import { bbcodeAttributeEncode } from "discourse/lib/bbcode-attributes";
+import { generateIcsData } from "discourse/lib/download-calendar";
+import discourseLater from "discourse/lib/later";
 import { applyLocalDates } from "discourse/lib/local-dates";
 import { cook } from "discourse/lib/text";
 
 export default class DiscoursePostEventDates extends Component {
   @service siteSettings;
+  @service currentUser;
 
   @tracked htmlDates = "";
-
-  get startsAt() {
-    return moment(this.args.event.startsAt).tz(this.timezone);
-  }
-
-  get endsAt() {
-    return (
-      this.args.event.endsAt && moment(this.args.event.endsAt).tz(this.timezone)
-    );
-  }
 
   get timezone() {
     return this.args.event.timezone || "UTC";
   }
 
+  get showLocalTime() {
+    return this.args.event.showLocalTime ?? true;
+  }
+
+  get startsAt() {
+    return moment.tz(this.args.event.startsAt, this.timezone);
+  }
+
+  get endsAt() {
+    const eventEndsAt = this.args.event.endsAt;
+    return eventEndsAt ? moment.tz(eventEndsAt, this.timezone) : null;
+  }
+
   get startsAtFormat() {
-    return this._buildFormat(this.startsAt, {
-      includeYear: !this.isSameYear(this.startsAt),
-      includeTime: this.hasTime(this.startsAt) || this.isSingleDayEvent,
-    });
+    const includeYear = !this.isSameYear(this.startsAt);
+    const includeTime = this.hasTime(this.startsAt) || this.isSingleDayEvent;
+    return this._buildFormat(this.startsAt, { includeYear, includeTime });
   }
 
   get endsAtFormat() {
@@ -40,12 +46,12 @@ export default class DiscoursePostEventDates extends Component {
       return "LT";
     }
 
-    return this._buildFormat(this.endsAt, {
-      includeYear:
-        !this.isSameYear(this.endsAt) ||
-        !this.isSameYear(this.endsAt, this.startsAt),
-      includeTime: this.hasTime(this.endsAt),
-    });
+    const endsAt = this.endsAt;
+    const includeYear =
+      !this.isSameYear(endsAt) || !this.isSameYear(endsAt, this.startsAt);
+    const includeTime = this.hasTime(endsAt);
+
+    return this._buildFormat(endsAt, { includeYear, includeTime });
   }
 
   _buildFormat(date, { includeYear, includeTime }) {
@@ -67,22 +73,21 @@ export default class DiscoursePostEventDates extends Component {
   get datesBBCode() {
     const dates = [];
 
-    dates.push(
-      this.buildDateBBCode({
-        date: this.startsAt,
-        format: this.startsAtFormat,
-        range: !!this.endsAt && "from",
-      })
-    );
+    const startDate = this.buildDateBBCode({
+      date: this.startsAt,
+      format: this.startsAtFormat,
+      range: !!this.endsAt && "from",
+    });
+
+    dates.push(startDate);
 
     if (this.endsAt) {
-      dates.push(
-        this.buildDateBBCode({
-          date: this.endsAt,
-          format: this.endsAtFormat,
-          range: "to",
-        })
-      );
+      const endDate = this.buildDateBBCode({
+        date: this.endsAt,
+        format: this.endsAtFormat,
+        range: "to",
+      });
+      dates.push(endDate);
     }
 
     return dates;
@@ -96,13 +101,43 @@ export default class DiscoursePostEventDates extends Component {
     return date.hour() || date.minute();
   }
 
+  generateIcsForEvent() {
+    const event = this.args.event;
+    if (!event || !this.startsAt) {
+      return null;
+    }
+
+    const title = event.name || event.post?.topic?.title || "Event";
+    const startsAt = this.startsAt.toISOString();
+    const endsAt = this.endsAt
+      ? this.endsAt.toISOString()
+      : moment(this.startsAt).add(1, "hours").toISOString();
+
+    const dates = [{ startsAt, endsAt, timezone: this.timezone }];
+    const options = {};
+
+    if (event.rrule) {
+      options.rrule = event.rrule;
+    }
+
+    if (event.location) {
+      options.location = event.location;
+    }
+
+    if (event.description) {
+      options.details = event.description;
+    }
+
+    return generateIcsData(title, dates, options);
+  }
+
   buildDateBBCode({ date, format, range }) {
     const bbcode = {
       date: date.format("YYYY-MM-DD"),
       time: date.format("HH:mm"),
       format,
-      timezone: this.timezone,
-      hideTimezone: this.args.event.showLocalTime,
+      timezone: date.tz(),
+      postId: this.args.event.id,
     };
 
     if (this.args.event.showLocalTime) {
@@ -111,6 +146,11 @@ export default class DiscoursePostEventDates extends Component {
 
     if (range) {
       bbcode.range = range;
+    }
+
+    const icsData = this.generateIcsForEvent();
+    if (icsData) {
+      bbcode.ics = bbcodeAttributeEncode(icsData);
     }
 
     const content = Object.entries(bbcode)
@@ -122,33 +162,54 @@ export default class DiscoursePostEventDates extends Component {
 
   @action
   async computeDates(element) {
+    if (this.args.expiredAndRecurring) {
+      return;
+    }
+
     if (this.siteSettings.discourse_local_dates_enabled) {
-      const result = await cook(this.datesBBCode.join("<span> → </span>"));
+      const bbcode = this.datesBBCode.join("<span> → </span>");
+      const result = await cook(bbcode);
       this.htmlDates = htmlSafe(result.toString());
 
-      next(() => {
-        if (this.isDestroying || this.isDestroyed) {
-          return;
-        }
+      // doesn’t work reliably without discourseLater
+      discourseLater(() => {
+        schedule("afterRender", () => {
+          if (this.isDestroying || this.isDestroyed) {
+            return;
+          }
 
-        applyLocalDates(
-          element.querySelectorAll(
-            `[data-post-id="${this.args.event.id}"] .discourse-local-date`
-          ),
-          this.siteSettings
-        );
+          const localDateElements = element.querySelectorAll(
+            `[data-post-id="${this.args.event.id}"].discourse-local-date`
+          );
+          applyLocalDates(
+            localDateElements,
+            this.siteSettings,
+            this.currentUser?.user_option?.timezone
+          );
+        });
       });
     } else {
       let dates = `${this.startsAt.format(this.startsAtFormat)}`;
       if (this.endsAt) {
-        dates += ` → ${moment(this.endsAt).format(this.endsAtFormat)}`;
+        const endFormatted = moment(this.endsAt).format(this.endsAtFormat);
+        dates += ` → ${endFormatted}`;
       }
       this.htmlDates = htmlSafe(dates);
     }
   }
 
   <template>
-    <section class="event__section event-dates" {{didInsert this.computeDates}}>
-      {{icon "clock"}}{{this.htmlDates}}</section>
+    <section
+      data-event-id={{@event.id}}
+      class="event__section event-dates"
+      {{didInsert this.computeDates}}
+    >
+      {{icon "clock"}}
+      {{#if @expiredAndRecurring}}
+        -
+      {{else}}
+        {{this.htmlDates}}
+      {{/if}}
+    </section>
   </template>
 }

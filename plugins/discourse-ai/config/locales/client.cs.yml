@@ -66,6 +66,30 @@ cs:
           name: "Spam"
       modals:
         select_option: "Vyberte možnost..."
+      translations:
+        title: "Překlady"
+        stats:
+          eta_minutes:
+            one: "%{count} minutu"
+            few: "%{count} minuty"
+            many: "%{count} minut"
+            other: "%{count} minut"
+          eta_hours:
+            one: "%{count} hodinu"
+            few: "%{count} hodiny"
+            many: "%{count} hodin"
+            other: "%{count} hodin"
+          eta_days:
+            one: "%{count} den"
+            few: "%{count} dny"
+            many: "%{count} dní"
+            other: "%{count} dní"
+        progress_chart:
+          bar_done:
+            one: "%{count} příspěvek"
+            few: "%{count} příspěvků"
+            many: "%{count} příspěvky"
+            other: "%{count} příspěvky"
       spam:
         short_title: "Spam"
         last_seven_days: "Posledních 7 dní"

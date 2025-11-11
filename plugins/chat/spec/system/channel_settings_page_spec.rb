@@ -180,7 +180,7 @@ RSpec.describe "Channel - Info - Settings page", type: :system do
         expect {
           PageObjects::Components::DToggleSwitch.new(".c-channel-settings__threading-switch").toggle
           expect(toasts).to have_success(I18n.t("js.saved"))
-        }.to change { channel_1.reload.threading_enabled }.from(true).to(false)
+        }.to change { channel_1.reload.threading_enabled }.from(false).to(true)
       end
     end
   end

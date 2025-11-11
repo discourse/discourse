@@ -83,6 +83,9 @@ module DiscourseAi
         return if !should_scan_post?(post)
         return if scanned_max_times?(post)
 
+        editor = post.last_editor
+        return if editor && (editor.staff? || editor.bot?)
+
         previous_version = post.revisions.last&.modifications&.dig("raw", 0)
         current_version = post.raw
 

@@ -142,6 +142,10 @@ discourse-ai:
   - changed-files:
       - any-glob-to-any-file: plugins/discourse-ai/**/*
 
+discourse-cakeday:
+  - changed-files:
+      - any-glob-to-any-file: plugins/discourse-cakeday/**/*
+
 footnote:
   - changed-files:
       - any-glob-to-any-file: plugins/footnote/**/*

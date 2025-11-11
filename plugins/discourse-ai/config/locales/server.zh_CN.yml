@@ -5,31 +5,49 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  activerecord:
+    attributes:
+      llm_model:
+        name: "模型 ID"
+        max_prompt_tokens: "上下文窗口"
   discourse_automation:
     ai:
       flag_types:
         review: "将帖子添加到审核队列"
-        spam: "标记为垃圾内容并隐藏帖子"
-        spam_silence: "标记为垃圾内容，隐藏帖子并将用户禁言"
+        review_hide: "将帖子添加到审核队列并隐藏帖子"
+        review_delete: "将帖子添加到审核队列并删除帖子"
+        spam: "标记为垃圾信息并隐藏帖子"
+        spam_silence: "标记为垃圾信息，隐藏帖子并将用户禁言"
     scriptables:
+      llm_tool_triage:
+        title: 使用 AI 工具对帖子进行分类
+        description: "使用 AI 工具中的自定义逻辑对帖子进行分类"
+      llm_persona_triage:
+        title: 使用 AI 角色对帖子进行分类
+        description: "使用特定的 AI 角色回复帖子"
       llm_triage:
         title: 使用 AI 对帖子进行分类
         description: "使用大语言模型对帖子进行分类"
-        flagged_post: |
-          <div>模型的回答：</div>
-          <p>%%LLM_RESPONSE%%</p>
-          <b>由 <a href="%{base_path}/admin/plugins/discourse-automation/%%AUTOMATION_ID%%">%%AUTOMATION_NAME%%</a> 规则触发。</b>
+        notify_author_pm:
+          subject: "您的帖子已暂时移除供审核"
+          body: |
+            你好 @%{username},
+
+            你在 “%{topic_title}” 中的帖子已被暂时删除并放入我们的审阅队列中供版主查看。如果获得批准，它将自动恢复。
+
+            参考： %{post_url}
       llm_report:
         title: 使用 AI 的定期报告
         description: "基于大语言模型的定期报告"
   site_settings:
     discourse_ai_enabled: "启用 Discourse AI 插件。"
     ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
+    ai_artifact_security: "AI 工件系统会生成包含可运行代码的 iframe。严格模式将强制额外点击才能运行代码。宽松模式则立即运行代码。混合模式允许用户提供 data-ai-artifact-autorun 来立即显示。禁用模式则会禁用工件系统。"
     ai_toxicity_enabled: "启用毒性模块。"
     ai_toxicity_inference_service_api_endpoint: "为毒性模块运行 API 的 URL"
     ai_toxicity_inference_service_api_key: "毒性 API 的 API 密钥"
-    ai_toxicity_inference_service_api_model: "用于推断的模型。多语言模型适用于意大利语、法语、俄语、葡萄牙语、西班牙语和土耳其语。"
-    ai_toxicity_flag_automatically: "自动举报高于已配置阈值的帖子/聊天消息。"
+    ai_toxicity_inference_service_api_model: "用于推断的模型。多语言模型支持意大利语、法语、俄语、葡萄牙语、西班牙语和土耳其语。"
+    ai_toxicity_flag_automatically: "自动标记高于已配置阈值的帖子/聊天消息。"
     ai_toxicity_flag_threshold_toxicity: "毒性：粗鲁、无礼或不合理的评论，可能会让您离开讨论或放弃分享您的观点"
     ai_toxicity_flag_threshold_severe_toxicity: "严重毒性：极度仇恨、激进或无礼的评论，很可能让您离开讨论或放弃分享您的观点"
     ai_toxicity_flag_threshold_obscene: "淫秽"
@@ -45,18 +63,21 @@ zh_CN:
     ai_nsfw_detection_enabled: "启用 NSFW 模块。"
     ai_nsfw_inference_service_api_endpoint: "为 NSFW 模块运行 API 的 URL"
     ai_nsfw_inference_service_api_key: "NSFW API 的 API 密钥"
-    ai_nsfw_flag_automatically: "自动举报高于已配置阈值的 NSFW 帖子。"
+    ai_nsfw_flag_automatically: "自动标记高于已配置阈值的 NSFW 帖子。"
     ai_nsfw_flag_threshold_general: "图片被视为 NSFW 的一般阈值。"
     ai_nsfw_flag_threshold_drawings: "绘图被视为 NSFW 的阈值。"
     ai_nsfw_flag_threshold_hentai: "分类为成人内容的图片被视为 NSFW 的阈值。"
     ai_nsfw_flag_threshold_porn: "分类为色情作品的图片被视为 NSFW 的阈值。"
     ai_nsfw_flag_threshold_sexy: "分类为性感的图片被视为 NSFW 的阈值。"
     ai_nsfw_models: "用于 NSFW 推断的模型。"
+    ai_spam_detection_enabled: "启用 AI 垃圾信息检测模块"
+    ai_openai_api_key: "OpenAI API 的 API 密钥。仅用于图片创建和编辑。对于 GPT，请使用 LLM 配置标签页"
+    ai_openai_image_generation_url: "OpenAI 图片生成 API 的 URL"
+    ai_openai_image_edit_url: "OpenAI 图片编辑 API 的 URL"
     ai_helper_enabled: "启用 AI 助手。"
     composer_ai_helper_allowed_groups: "这些群组中的用户将在编辑器中看到 AI 助手按钮。"
     ai_helper_allowed_in_pm: "在私信中启用编辑器的 AI 助手。"
     ai_helper_model: "用于 AI 助手的模型。"
-    ai_helper_custom_prompts_allowed_groups: "这些群组中的用户将在 AI 助手中看到自定义提示选项。"
     ai_helper_automatic_chat_thread_title_delay: "在 AI 助手自动设置聊天对话标题之前的延迟（以分钟为单位）。"
     ai_helper_automatic_chat_thread_title: "根据话题内容自动设置聊天对话标题。"
     ai_helper_illustrate_post_model: "用于编辑器 AI 助手的为帖子创建插图功能的模型"
@@ -66,34 +87,54 @@ zh_CN:
     ai_embeddings_selected_model: "使用所选模型生成嵌入向量。"
     ai_embeddings_generate_for_pms: "为个人消息生成嵌入向量。"
     ai_embeddings_semantic_related_topics_enabled: "将语义搜索用于相关话题。"
-    ai_embeddings_semantic_related_topics: "相关话题部分中显示的最大话题数。"
+    ai_embeddings_semantic_related_topics: "在相关话题部分中显示的最大话题数。"
     ai_embeddings_backfill_batch_size: "每 15 分钟回填的嵌入向量数。"
     ai_embeddings_semantic_search_enabled: "启用全页语义搜索。"
+    ai_embeddings_semantic_search_use_hyde: "使用 HyDE 进行语义全页搜索。使用 LLM 可以根据用户搜索词创建一个假设的帖子来帮助匹配。"
     ai_embeddings_semantic_quick_search_enabled: "在搜索菜单弹出窗口中启用语义搜索选项。"
     ai_embeddings_semantic_related_include_closed_topics: "在语义搜索结果中包含已关闭话题"
     ai_embeddings_semantic_search_hyde_model: "用于在语义搜索中扩展关键字以获得更好结果的模型"
     ai_embeddings_per_post_enabled: 为每个帖子生成嵌入向量
+    ai_summarization_enabled: "启用总结功能"
+    ai_summarization_model: "用于总结的模型"
+    ai_summarization_persona: "用于总结功能的角色"
     ai_custom_summarization_allowed_groups: "能够创建新总结的群组。"
-    ai_pm_summarization_allowed_groups: "可以创建摘要并在私信中查看的群组。"
-    ai_summary_gists_allowed_groups: "可以查看热门话题列表中的要点的群组。"
+    ai_pm_summarization_allowed_groups: "能够创建摘要并在私信中查看的群组。"
+    ai_summary_gists_enabled: "自动生成话题中最新回复的简要总结"
+    ai_summary_gists_allowed_groups: "能够查看热门话题列表中的要点的群组。"
     ai_summary_backfill_maximum_topics_per_hour: "每小时回填的话题摘要数。"
     ai_bot_enabled: "启用 AI 机器人模块。"
     ai_bot_enable_chat_warning: "启动私信聊天时显示警告。可以通过编辑翻译字符串进行覆盖：discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "当 GPT 机器人可以访问私信时，它将回复这些群组的成员。"
     ai_bot_debugging_allowed_groups: "允许这些群组在帖子上看到显示原始 AI 请求和回答的调试按钮"
-    ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的网站需要登录，分享时也需要登录。"
-    ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人启动私信"
-    ai_bot_github_access_token: "使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
+    ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的站点需要登录，分享时也需要登录。"
+    ai_bot_github_access_token: "搭配使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
+    ai_discover_enabled: "启用发现搜索功能"
+    ai_discover_persona: "用于发现搜索功能的 Persona"
     ai_stability_api_key: "stability.ai API 的 API 密钥"
     ai_stability_engine: "用于 stability.ai API 的图片生成引擎"
     ai_stability_api_url: "stability.ai API 的 URL"
     ai_google_custom_search_api_key: "Google 自定义搜索 API 的 API 密钥，请参阅：https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "Google 自定义搜索 API 的 CX"
+    ai_discord_search_enabled: "启用 Discord 搜索功能"
+    ai_discord_app_id: "您要将 Discord 搜索关联到的 Discord 应用程序的 ID"
+    ai_discord_app_public_key: "您要将 Discord 搜索关联到的 Discord 应用程序的公钥"
+    ai_discord_search_mode: "选择用于 Discord 搜索的搜索模式"
+    ai_discord_search_persona: "用于 Discord 搜索的角色。"
+    ai_discord_allowed_guilds: "允许机器人搜索的 Discord 公会（服务器）"
+    ai_translation_enabled: "启用AI翻译功能"
+    ai_translation_model: "用于翻译的模型。此模型必须支持翻译。角色可以覆盖此设置。"
+    ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
+    ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
+    ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
   reviewables:
     reasons:
-      flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了举报。
-      flagged_by_nsfw: AI 插件在将至少一张附加图片分类为 NSFW 后对其进行了举报。
+      flagged_by_toxicity: AI 插件将其分类为有毒后对其进行了标记。
+      flagged_by_nsfw: AI 插件在将至少一张附加图片分类为 NSFW 后对其进行了标记。
   reports:
+    sentiment_analysis:
+      title: "情绪分析"
+      description: "此报告按类别对帖子进行情绪分析，每个帖子和类别都有积极、消极和中性分数。"
     overall_sentiment:
       title: "整体情绪"
       description: '该图表会比较分类为积极或消极的帖子数。当积极分数或消极分数大于设定的阈值分数时，会计算这些值。这意味着不显示中性的帖子。私信 (PM) 也不包括在内。使用“cardiffnlp/twitter-roberta-base-sentiment-latest”进行分类'
@@ -101,92 +142,99 @@ zh_CN:
       yaxis: "日期"
     emotion_admiration:
       title: "\U0001F929 钦佩"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为钦佩情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为钦佩情绪的帖子。"
     emotion_amusement:
       title: "\U0001F604 愉悦"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为愉悦情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为愉悦情绪的帖子。"
     emotion_anger:
       title: "\U0001F620 愤怒"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为愤怒情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为愤怒情绪的帖子。"
     emotion_annoyance:
       title: "\U0001F612 烦恼"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为烦恼情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为烦恼情绪的帖子。"
     emotion_approval:
       title: "\U0001F44D 赞同"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为赞同情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为赞同情绪的帖子。"
     emotion_caring:
       title: "\U0001F917 关怀"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为关怀情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为关怀情绪的帖子。"
     emotion_confusion:
       title: "\U0001F615 困惑"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为困惑情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为困惑情绪的帖子。"
     emotion_curiosity:
       title: "\U0001F914 好奇"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为好奇情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为好奇情绪的帖子。"
     emotion_desire:
       title: "\U0001F60D 渴望"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为渴望情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为渴望情绪的帖子。"
     emotion_disappointment:
       title: "\U0001F61E 沮丧"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为沮丧情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为沮丧情绪的帖子。"
     emotion_disapproval:
       title: "\U0001F44E 不赞同"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为不赞同情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为不赞同情绪的帖子。"
     emotion_disgust:
       title: "\U0001F922 厌恶"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为厌恶情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为厌恶情绪的帖子。"
     emotion_embarrassment:
       title: "\U0001F633 尴尬"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为尴尬情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为尴尬情绪的帖子。"
     emotion_excitement:
       title: "\U0001F92A 兴奋"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为兴奋情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为兴奋情绪的帖子。"
     emotion_fear:
       title: "\U0001F628 恐惧"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为恐惧情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为恐惧情绪的帖子。"
     emotion_gratitude:
       title: "\U0001F64F 感谢"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为感谢情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为感谢情绪的帖子。"
     emotion_grief:
-      title: "\U0001F622 悲伤"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为悲伤情绪的帖子。"
+      title: "\U0001F622 悲痛"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为悲痛情绪的帖子。"
     emotion_joy:
       title: "\U0001F60A 开心"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为开心情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为开心情绪的帖子。"
     emotion_love:
       title: '❤️ 爱心'
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为爱心情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为爱心情绪的帖子。"
     emotion_nervousness:
       title: "\U0001F630 紧张"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为紧张情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为紧张情绪的帖子。"
     emotion_neutral:
       title: "\U0001F610 中性"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为中性情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为中性情绪的帖子。"
     emotion_optimism:
       title: "\U0001F31F 乐观"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为乐观情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为乐观情绪的帖子。"
     emotion_pride:
       title: "\U0001F981 骄傲"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为骄傲情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为骄傲情绪的帖子。"
     emotion_realization:
       title: "\U0001F4A1 领悟"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为领悟情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为领悟情绪的帖子。"
     emotion_relief:
       title: "\U0001F60C 缓解"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为缓解情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为缓解情绪的帖子。"
     emotion_remorse:
       title: "\U0001F614 懊悔"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为懊悔情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为懊悔情绪的帖子。"
     emotion_sadness:
       title: "\U0001F62D 悲伤"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为悲伤情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为悲伤情绪的帖子。"
     emotion_surprise:
       title: "\U0001F632 惊讶"
-      description: "使用“SamLowe/roberta-base-go_emotions”模型，通过 AI 分类为惊讶情绪的帖子。"
+      description: "使用 'SamLowe/roberta-base-go_emotions' 模型，通过 AI 分类为惊讶情绪的帖子。"
   discourse_ai:
     ai_artifact:
+      errors:
+        max_keys_exceeded:
+          other: "只能在工件中使用 %{count} 个密钥。"
+      link: "在新标签页中显示"
+      copy_embed: "复制嵌入"
       view_source: "查看来源"
       view_changes: "查看更改"
+      change_description: "更改描述"
+      copied: "已复制到剪贴板"
     unknown_model: "未知 AI 模型"
     tools:
       custom_name: "%{name}（自定义）"
@@ -201,6 +249,8 @@ zh_CN:
           name: "Flux 图片生成器 (Together.ai)"
         empty_tool:
           name: "从空白开始…"
+      name:
+        characters: "只能包含数字、字母和下划线"
     ai_helper:
       errors:
         completion_request_failed: "尝试提供建议时出错。请重试。"
@@ -220,7 +270,7 @@ zh_CN:
       image_caption:
         attribution: "由 AI 生成标题"
     share_ai:
-      read_more: "阅读完整转写文稿"
+      read_more: "阅读完整语音稿"
       onebox_title: "与 %{llm_name} 的 AI 对话"
       formatted_excerpt: "与 %{llm_name} 的 AI 对话：\n %{excerpt}"
       title: "%{title} - AI 对话 - %{site_name}"
@@ -231,19 +281,22 @@ zh_CN:
         failed_to_share: "无法分享对话"
         conversation_deleted: "对话分享已成功删除"
     spam_detection:
-      flag_reason: "被 <a href='%{url}'>Discourse AI</a> 标记为垃圾内容"
+      flag_reason: "被 <a href='%{url}'>Discourse AI</a> 标记为垃圾信息"
       silence_reason: "用户被 <a href='%{url}'>Discourse AI</a> 自动禁言"
       invalid_error_type: "提供的错误类型无效"
       unexpected: "发生意外错误"
-      bot_user_update_failed: "无法更新垃圾内容扫描机器人用户"
+      bot_user_update_failed: "无法更新垃圾信息扫描机器人用户"
+      configuration_missing: "缺少 AI 垃圾信息检测配置。请先在“管理 > 插件 > Discourse AI > 垃圾信息”中添加配置，然后再启用。"
       logging_subject: "垃圾信息检测"
     ai_bot:
       reply_error: "抱歉，我们的系统在尝试回复时似乎遇到了意外问题。\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[无标题 AI 机器人私信]"
+      thinking: "正在思考…"
       personas:
         default_llm_required: "启用聊天之前需要默认的 LLM 模型"
         cannot_delete_system_persona: "无法删除系统角色，请改为将其禁用"
         cannot_edit_system_persona: "系统角色只能重命名，您不能编辑工具或系统提示，但可以禁用和复制"
+        cannot_have_duplicate_tools: "不能有重复的工具"
         github_helper:
           name: "GitHub 助手"
           description: "专门协助处理 GitHub 相关任务和问题的 AI 机器人"
@@ -253,15 +306,24 @@ zh_CN:
         artist:
           name: 艺术家
           description: "专门用于生成图片的 AI 机器人"
+        designer:
+          name: 设计师
+          description: "专门用于生成和编辑图片的 AI 机器人"
+        forum_researcher:
+          name: 论坛研究员
+          description: "专门用于对论坛进行深入研究的 AI 机器人"
         sql_helper:
           name: SQL 助手
           description: "专门帮助在此 Discourse 实例上编写 SQL 查询的 AI 机器人"
         settings_explorer:
           name: 设置资源管理器
           description: "专门帮助探索 Discourse 站点设置的 AI 机器人"
+        researcher:
+          name: Web 研究员
+          description: "可以访问 Google 的 AI 机器人，既能搜索也能阅读网页"
         creative:
           name: 创作者
-          description: "无需外部集成的专门从事创作任务的 AI 机器人"
+          description: "专门从事创作任务，无外部集成的 AI 机器人"
         dall_e3:
           name: "DALL-E 3"
           description: "专门使用 DALL-E 3 生成图片的 AI 机器人"
@@ -270,22 +332,111 @@ zh_CN:
           description: "专门帮助处理 Discourse 相关任务的 AI 机器人"
         web_artifact_creator:
           name: "Web 工件创建者"
-          description: "专注于创建交互式 Web 工件的 AI 机器人"
+          description: "专门用于创建交互式 Web 工件的 AI 机器人"
+        summarizer:
+          name: "总结器"
+          description: "用于支持 AI 总结的默认角色"
+        short_summarizer:
+          name: "总结器（简短形式）"
+          description: "用于为话题列表条目提供 AI 简短总结的默认角色"
+        concept_finder:
+          name: "概念查找器"
+          description: "专门用于识别内容中的概念和主题的 AI 机器人"
+        concept_matcher:
+          name: "概念匹配器"
+          description: "专门用于将内容与现有概念进行匹配的 AI 机器人"
+        concept_deduplicator:
+          name: "概念去重器"
+          description: "专门用于对概念去重的 AI 机器人"
         custom_prompt:
           name: "自定义提示"
+          description: "支持助手的自定义提示功能的默认角色"
         smart_dates:
           name: "智能日期"
+          description: "支持助手的智能日期功能的默认角色"
+        markdown_table_generator:
+          name: "Markdown 表生成器"
+          description: "支持助手的生成 Markdown 表功能的默认角色"
+        post_illustrator:
+          name: "帖子插图创建器"
+          description: "生成 StableDiffusion 提示来支持助手的为帖子创建插图功能"
+        proofreader:
+          name: "审校"
+          description: "支持助手的审校文本功能的默认角色"
+        titles_generator:
+          name: "标题生成器"
+          description: "支持助手的建议话题标题功能的默认角色"
+        tutor:
+          name: "导师"
+          description: "支持助手的解释功能的默认角色"
+        translator:
+          name: "翻译器"
+          description: "支持助手的翻译器功能的默认角色"
+        image_captioner:
+          name: "图片标题"
+          description: "支持助手的图片标题功能的默认角色"
+        locale_detector:
+          name: "语言环境检测器"
+          description: "通过检测给定文本（帖子、标题等）的语言环境来支持翻译功能"
+        post_raw_translator:
+          name: "帖子翻译器"
+          description: "通过翻译包含 Discourse Markdown 的帖子来增强翻译功能"
+        topic_title_translator:
+          name: "话题标题翻译器"
+          description: "通过翻译话题标题来增强翻译功能"
+        short_text_translator:
+          name: "短文本翻译器"
+          description: "作为通用文本翻译器来增强翻译功能，用于类别名称或标签等短文本"
+        spam_detector:
+          name: "垃圾信息检测器"
+          description: "支持我们的垃圾信息检测功能的默认角色"
+        content_creator:
+          name: "内容创建器"
+          description: "支持 HyDE 搜索的默认角色"
+        report_runner:
+          name: "报告运行器"
+          description: "报告自动化脚本中使用的默认角色"
+        discover:
+          name: "发现"
+          description: "发现功能中使用的默认 Persona（免费搜索）"
       topic_not_found: "总结不可用，找不到话题！"
       summarizing: "正在总结话题"
       searching: "搜索：'%{query}'"
       tool_options:
         researcher:
+          researcher_llm:
+            name: "LLM"
+            description: "用于研究的语言模型（默认为当前角色的 LLM）"
+          max_tokens_per_batch:
+            name: "每个批次最大词元数"
+            description: "研究中每个批次可以使用的最大词元数"
+          max_tokens_per_post:
+            name: "每个帖子的最大词元数"
+            description: "研究中每个帖子可以使用的最大词元数"
           max_results:
             name: "最大结果数"
+            description: "筛选器中可以包括的最大结果数"
+          include_private:
+            name: "包括不公开"
+            description: "在筛选器中包含不公开话题"
+        create_artifact:
+          creator_llm:
+            name: "LLM"
+            description: "用于创建工件的语言模型"
+        update_artifact:
+          editor_llm:
+            name: "LLM"
+            description: "用于编辑工件的语言模型"
+          update_algorithm:
+            name: "更新算法"
+            description: "要求 LLM 完全替换，或使用 diff 进行更新"
+          do_not_echo_artifact:
+            name: "不重复工件"
+            description: "将限制成本，但工件更新的效能会下降"
         google:
           base_query:
             name: "基本搜索查询"
-            description: "搜索时使用的基本查询。例如：'site:example.com' 将仅包括 example.com 中的结果，before:2022-01-01 将仅包括 2021 年及之前的结果。此文本会附加到搜索查询的前面。"
+            description: "搜索时使用的基本查询。示例：'site:example.com' 将仅包括 example.com 中的结果，before:2022-01-01 将仅包括 2021 年及之前的结果。此文本会附加到搜索查询的前面。"
         read:
           read_private:
             name: "阅读不公开话题"
@@ -301,6 +452,7 @@ zh_CN:
             name: "基本搜索查询"
             description: "搜索时要使用的基本查询。示例：'#urgent' 会在搜索查询前面加上 '#urgent'，并且仅包含具有紧急类别或标签的话题。"
       tool_summary:
+        read_artifact: "阅读 Web 工件"
         update_artifact: "更新 Web 工件"
         create_artifact: "创建 Web 工件"
         web_browser: "浏览网页"
@@ -317,19 +469,24 @@ zh_CN:
         image: "生成图片"
         google: "搜索 Google"
         read: "阅读话题"
-        setting_context: "查找网站设置上下文"
+        setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
-        search_settings: "正在搜索网站设置"
+        search_settings: "正在搜索站点设置"
         dall_e: "生成图片"
         search_meta_discourse: "搜索元 Discourse"
         javascript_evaluator: "评估 JavaScript"
+        create_image: "创建图片"
+        edit_image: "编辑图片"
+        researcher: "研究"
+        researcher_dry_run: "准备研究"
       tool_help:
+        read_artifact: "使用 AI 机器人阅读 Web 工件"
         update_artifact: "使用 AI 机器人更新 Web 工件"
         create_artifact: "使用 AI 机器人创建 Web 工件"
         web_browser: "使用 AI 机器人浏览网页"
         github_search_code: "在 GitHub 仓库中搜索代码"
         github_search_files: "在 GitHub 仓库中搜索文件"
-        github_file_content: "从 GitHub 仓库检索文件内容"
+        github_file_content: "从 GitHub 仓库检索文件的内容"
         github_pull_request_diff: "检索 GitHub 拉取请求差异"
         random_picker: "选择一个随机数或列表的随机元素"
         categories: "列出论坛上所有公开可见的类别"
@@ -338,16 +495,21 @@ zh_CN:
         time: "查找不同时区的时间"
         summary: "总结话题"
         image: "使用 Stable Diffusion 生成图片"
+        create_image: "使用 Open AI GPT 图片模型生成图片"
+        edit_image: "使用 Open AI GPT 图片模型编辑图片"
         google: "在 Google 中搜索查询"
         read: "在论坛上阅读公开话题"
-        setting_context: "查找网站设置上下文"
+        setting_context: "查找站点设置上下文"
         schema: "查找数据库架构"
-        search_settings: "搜索网站设置"
+        search_settings: "搜索站点设置"
         dall_e: "使用 DALL-E 3 生成图片"
         search_meta_discourse: "搜索元 Discourse"
         javascript_evaluator: "评估 JavaScript"
+        researcher: "使用 AI 机器人研究论坛信息"
       tool_description:
+        read_artifact: "使用 AI 机器人阅读 Web 工件"
         update_artifact: "已使用 AI 机器人更新 Web 工件"
+        create_artifact: "创建了一个 Web 工件：%{name} - %{specification}"
         web_browser: "正在阅读 <a href='%{url}'>%{url}</a>"
         github_search_files: "已在 %{repo}/%{branch} 中搜索 '%{keywords}'"
         github_search_code: "已在 %{repo} 中搜索 '%{query}'"
@@ -373,8 +535,16 @@ zh_CN:
           other: "找到 '%{query}' 的 %{count} 个<a href='%{url}'>结果</a>"
         setting_context: "正在阅读上下文：%{setting_name}"
         schema: "%{tables}"
+        researcher_dry_run:
+          other: "建议的目标：%{goals}\n\n找到 %{count} 个与“%{filter}”相符的帖子"
+        researcher:
+          other: "正在研究：%{goals}\n\n找到 %{count} 个与“%{filter}”相符的帖子"
         search_settings:
-          other: "找到“%{query}”的 %{count} 个结果"
+          other: "找到 '%{query}' 的 %{count} 个结果"
+      discoveries:
+        continue_conversation:
+          title: "发现对话：搜索 %{query}"
+          raw: "在我搜索“%{query}”时，您向我展示了以下信息：\n\n%{context}\n\n让我们继续对话吧。"
     summarization:
       configuration_hint:
         other: "首先配置这些设置：%{settings}"
@@ -397,18 +567,22 @@ zh_CN:
           neutral: "中性"
     llm:
       configuration:
-        disable_modules_first: "您必须先禁用这些模块： %{settings}"
+        create_llm: "您需要先设置 LLM 才能启用此功能"
+        disable_modules_first: "您必须先禁用这些模块：%{settings}"
         set_llm_first: "首先设置%{setting}"
-        model_unreachable: "我们无法从此模型获得回应。请先检查您的设置。"
+        model_unreachable: "我们无法从此模型获得回答。请先检查您的设置。"
         invalid_seeded_model: "您无法在此模型中使用此功能"
+        invalid_persona_response_format: "所选角色必须具有带有布尔字段名称“spam”的回答格式"
         must_select_model: "必须先选择一个 LLM"
       endpoints:
         not_configured: "%{display_name}（未配置）"
         configuration_hint:
           other: "确保配置了以下设置：%{settings}"
       delete_failed:
-        other: "由于 %{settings} 正在使用此模型，无法将其删除。请更新设置并重试。"
+        other: "由于 %{settings} 正在使用此模型，我们无法将其删除。请更新设置并重试。"
       cannot_edit_builtin: "您无法编辑内置模型。"
+    personas:
+      malformed_examples: "给出的示例格式错误。"
     embeddings:
       delete_failed: "此模型目前正在使用中。请先更新 `ai embeddings selected model`。"
       cannot_edit_builtin: "您无法编辑内置模型。"
@@ -416,20 +590,30 @@ zh_CN:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
         choose_model: "首先设置 'ai embeddings selected model'。"
     llm_models:
-      missing_provider_param: "%{param} 不能为空"
+      missing_provider_param: "%{param}不能为空"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
     ai_staff_action_logger:
-      updated: "更新时间"
+      updated: "已更新"
+      set: "已设置"
       removed: "已移除"
+    translation:
+      errors:
+        disabled: "人工智能翻译功能未完全配置。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
       quota_required: "必须为此模型指定最大词元数或使用次数"
-      no_query_specified: 查询参数为必填项，请指定。
+      no_query_specified: 查询参数为必选项，请指定。
       no_user_for_persona: 指定的角色没有与之关联的用户。
       persona_not_found: 指定的角色不存在。请检查 persona_name 或 persona_id 参数。
-      no_user_specified: username 或 user_unique_id 参数为必填项，请指定。
+      no_user_specified: username 或 user_unique_id 参数为必选项，请指定。
       user_not_found: 指定的用户不存在。请检查 username 参数。
       persona_disabled: 指定的角色被禁用。请检查 persona_name 或 persona_id 参数。
       no_default_llm: 角色必须定义一个 default_llm。
-      user_not_allowed: 该用户无法参与该话题。
+      user_not_allowed: 该用户无权参与该话题。
       prompt_message_length: 消息 %{idx} 超过 1000 个字符限制。
+      persona_already_exists: 名称为“%{name}”的角色已存在。
+      custom_tool_exists:
+        other: "名称为“%{names}”的自定义工具已存在。"
+  dashboard:
+    problem:
+      ai_llm_status: "LLM 模型：%{model_name} 遇到了问题。请检查<a href='%{url}'>模型的配置页面</a>。"

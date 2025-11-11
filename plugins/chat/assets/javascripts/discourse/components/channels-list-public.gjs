@@ -16,11 +16,8 @@ import ChatZero from "./svg/chat-zero";
 
 export default class ChannelsListPublic extends Component {
   @service chatChannelsManager;
-  @service chatStateManager;
   @service chatTrackingStateManager;
   @service site;
-  @service siteSettings;
-  @service currentUser;
   @service router;
 
   get inSidebar() {

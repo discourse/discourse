@@ -93,6 +93,7 @@ module Chat
     def search_groups(params, guardian)
       Group
         .visible_groups(guardian.user)
+        .members_visible_groups(guardian.user)
         .includes(users: :user_option)
         .where(
           "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",

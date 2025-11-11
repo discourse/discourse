@@ -11,14 +11,32 @@ import DiscoursePostEventInvitees from "discourse/plugins/discourse-calendar/dis
  * @implements {@ember/service}
  */
 export default class DiscoursePostEventApi extends Service {
-  async event(id) {
-    const result = await this.#getRequest(`/events/${id}`);
+  eventsPromise = null;
+
+  async event(id, data = {}) {
+    const result = await this.#getRequest(`/events/${id}`, data);
     return DiscoursePostEventEvent.create(result.event);
   }
 
   async events(data = {}) {
-    const result = await this.#getRequest("/events", data);
-    return result.events.map((e) => DiscoursePostEventEvent.create(e));
+    if (this.eventsPromise) {
+      this.eventsPromise.abort();
+    }
+    this.eventsPromise = this.#getRequest("/events", data);
+    const response = await this.eventsPromise;
+    this.eventsPromise = null;
+
+    return (response.events || []).flatMap((eventData) => {
+      const occurrences = eventData.occurrences || [];
+
+      return occurrences.map((occurrence) => {
+        return DiscoursePostEventEvent.create({
+          ...eventData,
+          starts_at: occurrence.starts_at,
+          ends_at: occurrence.ends_at,
+        });
+      });
+    });
   }
 
   async listEventInvitees(event, data = {}) {
@@ -56,6 +74,11 @@ export default class DiscoursePostEventApi extends Service {
     event.shouldDisplayInvitees =
       result.invitee.meta.event_should_display_invitees;
 
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats.going) >= capacity;
+    }
+
     return event;
   }
 
@@ -68,6 +91,15 @@ export default class DiscoursePostEventApi extends Service {
 
     if (event.watchingInvitee?.id === invitee.id) {
       event.watchingInvitee = null;
+    }
+
+    if (invitee?.status === "going" && Number(event.stats?.going) > 0) {
+      event.stats.going = Number(event.stats.going) - 1;
+    }
+
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats?.going) >= capacity;
     }
   }
 
@@ -83,9 +115,18 @@ export default class DiscoursePostEventApi extends Service {
       event.sampleInvitees.push(event.watchingInvitee);
     }
 
+    if (invitee?.status === "going") {
+      event.stats.going = Number(event.stats.going || 0) + 1;
+    }
+
     event.stats = result.invitee.meta.event_stats;
     event.shouldDisplayInvitees =
       result.invitee.meta.event_should_display_invitees;
+
+    const capacity = Number(event.maxAttendees);
+    if (!Number.isNaN(capacity) && capacity > 0) {
+      event.atCapacity = Number(event.stats.going) >= capacity;
+    }
 
     return invitee;
   }
