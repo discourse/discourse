@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { and, eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
@@ -27,7 +28,7 @@ export default class VoteBox extends Component {
       } else if (this.topic.user_voted) {
         content.label = i18n("topic_voting.voted_title");
         content.title = i18n("topic_voting.voted_title");
-      } else if (this.currentUser.vote_limit_0) {
+      } else if (this.currentUser.vote_limit === 0) {
         content.label = i18n("topic_voting.locked");
         content.title = i18n("topic_voting.locked_description");
       } else if (this.currentUser.votes_exceeded) {
@@ -50,7 +51,7 @@ export default class VoteBox extends Component {
   }
 
   get buttonClasses() {
-    return this.currentUser.vote_limit_0
+    return this.currentUser.vote_limit === 0
       ? "btn-default vote-button"
       : "btn-primary vote-button";
   }
@@ -62,7 +63,7 @@ export default class VoteBox extends Component {
         return this.args.showLogin();
       }
 
-      if (this.currentUser.vote_limit_0) {
+      if (this.currentUser.vote_limit === 0) {
         return;
       }
 
@@ -134,25 +135,27 @@ export default class VoteBox extends Component {
                 @translatedLabel={{i18n
                   "topic_voting.see_votes"
                   count=this.currentUser.votes_left
-                  max=this.currentUser.votes_max
+                  max=this.currentUser.vote_limit
                 }}
                 @href="/my/activity/votes"
                 @icon="check-to-slot"
                 class="btn-transparent see-votes topic-voting-menu__row-btn"
               />
             </dropdown.item>
-          {{else if this.currentUser.vote_limit_0}}
+          {{else if (eq this.currentUser.vote_limit 0)}}
             <dropdown.item class="topic-voting-menu__title --locked">
               {{icon "lock"}}
               <span>{{i18n "topic_voting.locked_description"}}</span>
             </dropdown.item>
-          {{else if this.currentUser.votes_exceeded}}
+          {{else if
+            (and this.currentUser.votes_exceeded (not this.topic.user_voted))
+          }}
             <dropdown.item class="topic-voting-menu__row">
               <DButton
                 @translatedLabel={{i18n
                   "topic_voting.see_votes"
                   count=this.currentUser.votes_left
-                  max=this.currentUser.votes_max
+                  max=this.currentUser.vote_limit
                 }}
                 @href="/my/activity/votes"
                 @icon="check-to-slot"
@@ -165,7 +168,7 @@ export default class VoteBox extends Component {
                 @translatedLabel={{i18n
                   "topic_voting.see_votes"
                   count=this.currentUser.votes_left
-                  max=this.currentUser.votes_max
+                  max=this.currentUser.vote_limit
                 }}
                 @href="/my/activity/votes"
                 @icon="check-to-slot"
