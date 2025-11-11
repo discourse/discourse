@@ -51,12 +51,18 @@
     align-self: center;
 
     .post-action-feedback-alert {
-      top: -1rem;
+      top: -1.25rem;
       left: 60%;
     }
 
-    > .d-icon {
+    .d-icon {
       margin-right: 0;
+    }
+
+    .post-action-feedback-svg {
+      right: unset;
+      left: -0.5em;
+      top: 0.05em;
     }
   }
 
@@ -436,7 +442,6 @@
   .timeline-events {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4);
   }
 
   .timeline-event {
@@ -445,6 +450,7 @@
     align-items: flex-start;
     gap: var(--space-3);
     background: var(--secondary);
+    padding-block: var(--space-4);
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--content-border-color);
@@ -473,7 +479,6 @@
     &__content {
       flex: 1;
       min-width: 0;
-      margin-bottom: var(--space-4);
     }
 
     &__main {
@@ -545,7 +550,7 @@
   }
 
   .timeline-empty {
-    padding: 0 var(--space-4) var(--space-4);
+    padding: var(--space-4);
     color: var(--primary-medium);
     display: flex;
     justify-content: center;

@@ -174,7 +174,7 @@ export default class ReviewableTimeline extends Component {
       });
     });
 
-    return events.sort((a, b) => Date.parse(b.date) - Date.parse(a.date));
+    return events.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
   }
 
   /**
@@ -216,10 +216,6 @@ export default class ReviewableTimeline extends Component {
 
   <template>
     <div class="reviewable-timeline">
-      <ReviewableNoteForm
-        @reviewable={{@reviewable}}
-        @onNoteCreated={{this.onNoteCreated}}
-      />
 
       {{#if this.timelineEvents}}
         <div class="timeline-events">
@@ -286,6 +282,10 @@ export default class ReviewableTimeline extends Component {
           </p>
         </div>
       {{/if}}
+      <ReviewableNoteForm
+        @reviewable={{@reviewable}}
+        @onNoteCreated={{this.onNoteCreated}}
+      />
     </div>
   </template>
 }
