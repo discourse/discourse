@@ -5777,6 +5777,8 @@ RSpec.describe TopicsController do
 
         before do
           SiteSetting.content_localization_enabled = true
+          SiteSetting.allow_user_locale = true
+          SiteSetting.set_locale_from_param = true
 
           topic.update!(category: subcategory, tags: [tag], locale: "en")
           topic.first_post.update(locale: "en")
