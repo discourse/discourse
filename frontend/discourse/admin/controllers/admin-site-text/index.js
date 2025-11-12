@@ -2,9 +2,9 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import ReseedModal from "discourse/admin/components/modal/reseed";
 import discourseDebounce from "discourse/lib/debounce";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
-import ReseedModal from "admin/components/modal/reseed";
 
 let lastSearch;
 

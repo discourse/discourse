@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { and, not } from "truth-helpers";
+import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
 import concatClass from "discourse/helpers/concat-class";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import FieldInputDescription from "admin/components/schema-setting/field-input-description";
 
 export default class SchemaSettingTypeString extends Component {
   @tracked touched = false;

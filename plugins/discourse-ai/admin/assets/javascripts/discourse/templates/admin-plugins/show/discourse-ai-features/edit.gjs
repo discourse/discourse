@@ -1,5 +1,5 @@
+import SiteSettingComponent from "discourse/admin/components/site-setting";
 import BackButton from "discourse/components/back-button";
-import SiteSettingComponent from "admin/components/site-setting";
 
 export default <template>
   <BackButton

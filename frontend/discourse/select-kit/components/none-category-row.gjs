@@ -3,7 +3,7 @@ import { classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import dirSpan from "discourse/helpers/dir-span";
 import discourseComputed from "discourse/lib/decorators";
-import CategoryRowComponent from "select-kit/components/category-row";
+import CategoryRowComponent from "discourse/select-kit/components/category-row";
 
 @classNames("none category-row")
 export default class NoneCategoryRow extends CategoryRowComponent {

@@ -7,8 +7,8 @@ import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import PostLocalization from "discourse/models/post-localization";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 export default class PostTranslationEditor extends Component {
   @service composer;

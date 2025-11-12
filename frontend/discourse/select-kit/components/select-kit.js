@@ -19,13 +19,13 @@ import { bind as bindDecorator } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
-import { i18n } from "discourse-i18n";
-import { normalize } from "select-kit/lib/input-utils";
+import { normalize } from "discourse/select-kit/lib/input-utils";
 import {
   applyContentPluginApiCallbacks,
   applyOnChangePluginApiCallbacks,
-} from "select-kit/lib/plugin-api";
-import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
+} from "discourse/select-kit/lib/plugin-api";
+import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
+import { i18n } from "discourse-i18n";
 import ErrorsCollection from "./select-kit/errors-collection";
 import SelectKitCollection from "./select-kit/select-kit-collection";
 import SelectKitFilter from "./select-kit/select-kit-filter";

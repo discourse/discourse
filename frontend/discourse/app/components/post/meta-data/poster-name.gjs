@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import { and, or } from "truth-helpers";
 import GroupLink from "discourse/components/group-link";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostMetaDataPosterNameIcon from "discourse/components/post/meta-data/poster-name/icon";
@@ -17,6 +16,7 @@ import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { formatUsername } from "discourse/lib/utilities";
+import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataPosterName extends Component {

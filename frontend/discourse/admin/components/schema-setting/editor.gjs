@@ -3,14 +3,14 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { gt, not } from "truth-helpers";
+import Tree from "discourse/admin/components/schema-setting/editor/tree";
+import FieldInput from "discourse/admin/components/schema-setting/field";
 import DButton from "discourse/components/d-button";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { cloneJSON } from "discourse/lib/object";
 import { trackedArray } from "discourse/lib/tracked-tools";
+import { gt, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import Tree from "admin/components/schema-setting/editor/tree";
-import FieldInput from "admin/components/schema-setting/field";
 
 export default class SchemaSettingNewEditor extends Component {
   @service router;

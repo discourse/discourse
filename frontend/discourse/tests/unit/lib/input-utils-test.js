@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import { isNumeric, isValidInput, normalize } from "select-kit/lib/input-utils";
+import { isNumeric, isValidInput, normalize } from "discourse/select-kit/lib/input-utils";
 
 module("Unit | Lib | input-utils", function () {
   module("isValidInput", function () {

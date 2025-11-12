@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
 import Form from "discourse/components/form";
 import replaceEmoji from "discourse/helpers/replace-emoji";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatChannelChooser from "discourse/plugins/chat/discourse/components/chat-channel-chooser";
 

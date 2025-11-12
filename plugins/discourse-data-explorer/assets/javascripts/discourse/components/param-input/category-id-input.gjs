@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import CategoryChooser from "select-kit/components/category-chooser";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
 
 export default class CategoryIdInput extends Component {
   // CategoryChooser will try to modify the value of value,

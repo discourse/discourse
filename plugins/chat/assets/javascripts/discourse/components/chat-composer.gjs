@@ -17,7 +17,6 @@ import {
 } from "pretty-text/emoji";
 import { replacements, translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
-import { not, or } from "truth-helpers";
 import DTextarea from "discourse/components/d-textarea";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import UpsertHyperlink from "discourse/components/modal/upsert-hyperlink";
@@ -44,6 +43,7 @@ import DAutocompleteModifier, {
   SKIP,
 } from "discourse/modifiers/d-autocomplete";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
+import { not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import DButton from "discourse/plugins/chat/discourse/components/chat/composer/button";
 import ChatComposerDropdown from "discourse/plugins/chat/discourse/components/chat-composer-dropdown";

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
-import { and, or } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
 import noop from "discourse/helpers/noop";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ThreadSettingsModal from "discourse/plugins/chat/discourse/components/chat/modal/thread-settings";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";

@@ -1,8 +1,8 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
+import ScreenedEmail from "discourse/admin/models/screened-email";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
-import ScreenedEmail from "admin/models/screened-email";
 
 export default class AdminLogsScreenedEmailsController extends Controller {
   loading = false;

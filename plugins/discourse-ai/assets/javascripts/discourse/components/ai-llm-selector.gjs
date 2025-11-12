@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import ComboBox from "select-kit/components/combo-box";
+import ComboBox from "discourse/select-kit/components/combo-box";
 
 const AiLlmSelector = <template>
   <ComboBox

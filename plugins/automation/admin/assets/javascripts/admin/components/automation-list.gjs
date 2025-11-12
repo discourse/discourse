@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import avatar from "discourse/helpers/avatar";
@@ -12,8 +12,8 @@ import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { escapeExpression } from "discourse/lib/utilities";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
 import AutomationEnabledToggle from "discourse/plugins/automation/admin/components/automation-enabled-toggle";
 
 // number of runs required to show the runs count for the period

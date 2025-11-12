@@ -11,9 +11,9 @@ import GroupSelector from "discourse/components/group-selector";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import Group from "discourse/models/group";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 import BulkInviteSampleCsvFile from "../bulk-invite-sample-csv-file";
 import CsvUploader from "../csv-uploader";
 

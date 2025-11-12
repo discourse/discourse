@@ -1,4 +1,4 @@
-import TopicNotificationsButton from "select-kit/components/topic-notifications-button";
+import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 const TopicNotifications = <template>

@@ -9,7 +9,10 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isNone } from "@ember/utils";
-import { and } from "truth-helpers";
+import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
+import Description from "discourse/admin/components/site-settings/description";
+import JobStatus from "discourse/admin/components/site-settings/job-status";
+import SiteSetting from "discourse/admin/models/site-setting";
 import DButton from "discourse/components/d-button";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import basePath from "discourse/helpers/base-path";
@@ -19,11 +22,8 @@ import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import SettingValidationMessage from "admin/components/setting-validation-message";
-import Description from "admin/components/site-settings/description";
-import JobStatus from "admin/components/site-settings/job-status";
-import SiteSetting from "admin/models/site-setting";
 
 const CUSTOM_TYPES = [
   "bool",

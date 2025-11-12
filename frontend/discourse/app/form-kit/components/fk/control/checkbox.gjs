@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { eq } from "truth-helpers";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKOptional from "discourse/form-kit/components/fk/optional";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
+import { eq } from "discourse/truth-helpers";
 
 export default class FKControlCheckbox extends Component {
   static controlType = "checkbox";

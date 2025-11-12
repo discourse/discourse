@@ -5,12 +5,12 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { observes } from "@ember-decorators/object";
+import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import DEditor from "discourse/components/d-editor";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import discourseComputed from "discourse/lib/decorators";
+import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
 import { i18n } from "discourse-i18n";
-import { buildCategoryPanel } from "admin/components/edit-category-panel";
-import FormTemplateChooser from "select-kit/components/form-template-chooser";
 
 export default class EditCategoryTopicTemplate extends buildCategoryPanel(
   "topic-template"

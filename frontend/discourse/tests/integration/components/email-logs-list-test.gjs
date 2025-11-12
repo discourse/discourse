@@ -1,8 +1,8 @@
 import { fillIn, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import EmailLogsList from "discourse/admin/components/email-logs-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import EmailLogsList from "admin/components/email-logs-list";
 
 const EMAIL_LOGS = [
   {

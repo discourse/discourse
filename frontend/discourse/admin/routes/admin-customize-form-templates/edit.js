@@ -1,5 +1,5 @@
+import FormTemplate from "discourse/admin/models/form-template";
 import DiscourseRoute from "discourse/routes/discourse";
-import FormTemplate from "admin/models/form-template";
 
 export default class AdminCustomizeFormTemplatesEdit extends DiscourseRoute {
   model(params) {

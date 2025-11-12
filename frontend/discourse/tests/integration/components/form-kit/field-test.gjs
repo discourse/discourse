@@ -10,9 +10,9 @@ import {
 import { module, test } from "qunit";
 import sinon from "sinon";
 import Form from "discourse/components/form";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import DTooltip from "float-kit/components/d-tooltip";
 
 module("Integration | Component | FormKit | Field", function (hooks) {
   setupRenderingTest(hooks);

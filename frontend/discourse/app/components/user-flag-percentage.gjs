@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { gte } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
+import { gte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UserFlagPercentage extends Component {

@@ -9,7 +9,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { classify, dasherize } from "@ember/string";
 import { tagName } from "@ember-decorators/component";
-import { eq } from "truth-helpers";
+import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import DButton from "discourse/components/d-button";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import ExplainReviewableModal from "discourse/components/modal/explain-reviewable";
@@ -38,8 +38,8 @@ import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import Topic from "discourse/models/topic";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ScrubRejectedUserModal from "admin/components/modal/scrub-rejected-user";
 
 let _components = {};
 
