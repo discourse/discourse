@@ -411,7 +411,7 @@ module Holidays
             {:mday => 31, :type => :informal, :name => "Nyttårsaften", :regions => [:no]},
             {:mday => 4, :type => :informal, :name => "Barbórka (Dzień Górnika, Naftowca i Gazownika)", :regions => [:pl]},
             {:mday => 6, :type => :informal, :name => "Mikołajki", :regions => [:pl]},
-            {:mday => 24, :type => :informal, :name => "Wigilia Bożego Narodzenia", :regions => [:pl]},
+            {:mday => 24, :name => "Wigilia Bożego Narodzenia", :regions => [:pl]},
             {:mday => 25, :name => "pierwszy dzień Bożego Narodzenia", :regions => [:pl]},
             {:mday => 26, :name => "drugi dzień Bożego Narodzenia", :regions => [:pl]},
             {:mday => 31, :type => :informal, :name => "Sylwester", :regions => [:pl]},

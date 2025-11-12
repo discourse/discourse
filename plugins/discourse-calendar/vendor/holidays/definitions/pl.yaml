@@ -161,7 +161,6 @@ months:
   - name: Wigilia Bożego Narodzenia
     regions: [pl]
     mday: 24
-    type: informal
   - name: pierwszy dzień Bożego Narodzenia
     regions: [pl]
     mday: 25
