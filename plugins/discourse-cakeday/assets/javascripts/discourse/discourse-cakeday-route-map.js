@@ -1,5 +1,5 @@
 export default function () {
-  this.route("cakeday", { resetNamespace: true }, function () {
+  this.route("cakeday", function () {
     this.route("birthdays", function () {
       this.route("today");
       this.route("tomorrow");
