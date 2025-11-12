@@ -1082,8 +1082,9 @@ export default class ComposerEditor extends Component {
     {{else if this.showTranslationEditor}}
       <PostTranslationEditor
         @setupEditor={{this.setupEditor}}
-        {{didInsert this._composerEditorInitEditor}}
-        {{willDestroy this._composerEditorDestroyEditor}}
+        @extraButtons={{this.extraButtons}}
+        @showLink={{this.showLink}}
+        @uppyComposerUpload={{this.uppyComposerUpload}}
         {{didInsert this._composerEditorInitPreview}}
         {{willDestroy this._composerEditorDestroyPreview}}
       />

@@ -2,8 +2,11 @@
 
 class PostLocalization < ActiveRecord::Base
   include LocaleMatchable
+  include HasPostUploadReferences
 
   belongs_to :post
+  has_many :upload_references, as: :target, dependent: :destroy
+  has_many :uploads, through: :upload_references
 
   validates :post_version, presence: true
   validates :locale, presence: true, length: { maximum: 20 }
@@ -11,6 +14,12 @@ class PostLocalization < ActiveRecord::Base
   validates :cooked, presence: true
   validates :localizer_user_id, presence: true
   validates :locale, uniqueness: { scope: :post_id }
+
+  private
+
+  def access_control_post_id_for_upload
+    self.post_id
+  end
 end
 
 # == Schema Information

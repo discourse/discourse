@@ -20,6 +20,7 @@ class LocalizedCookedPostProcessor
   def post_process
     post_process_oneboxes
     post_process_images
+    @post_localization.link_post_uploads(fragments: @doc)
   end
 
   def html
