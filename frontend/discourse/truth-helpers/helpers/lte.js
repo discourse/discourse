@@ -1,3 +1,11 @@
+/**
+ * Less than or equal helper
+ * @param {unknown} left - First value to compare
+ * @param {unknown} right - Second value to compare
+ * @param {object} [options] - Options
+ * @param {boolean} [options.forceNumber=false] - Force number conversion
+ * @returns {boolean} Whether left is less than or equal to right
+ */
 export default function lte(left, right, { forceNumber = false } = {}) {
   if (forceNumber) {
     if (typeof left !== "number") {
