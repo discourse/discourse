@@ -14,6 +14,13 @@ module PostVoting
       can_edit_comment?(comment)
     end
 
+    def can_create_post_voting_topic?
+      return false if !self.user
+
+      self.user.staff? ||
+        self.user.in_any_groups?(SiteSetting.post_voting_create_allowed_groups_map)
+    end
+
     def can_flag_post_voting_comments?
       return false if self.user.silenced?
       return true if self.user.staff?
