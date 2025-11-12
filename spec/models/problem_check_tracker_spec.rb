@@ -8,6 +8,22 @@ RSpec.describe ProblemCheckTracker do
     it { expect(record).to validate_uniqueness_of(:identifier).scoped_to(:target) }
 
     it { expect(record).to validate_numericality_of(:blips).is_greater_than_or_equal_to(0) }
+
+    it { expect(record).to validate_presence_of(:target) }
+  end
+
+  describe "callbacks" do
+    describe "before_destroy (silence the alarm)" do
+      let(:tracker) do
+        ProblemCheckTracker.create!(identifier: "twitter_login", target: ProblemCheck::NO_TARGET)
+      end
+
+      before { tracker.problem! }
+
+      it "removes any associated admin notices" do
+        expect { tracker.destroy }.to change { AdminNotice.count }.by(-1)
+      end
+    end
   end
 
   describe ".[]" do
