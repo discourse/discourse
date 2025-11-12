@@ -1,18 +1,3 @@
-.full-page-chat {
-  #main-chat-outlet.chat-view {
-    display: grid;
-    grid-template-rows: 1fr auto;
-    grid-template-areas:
-      "list"
-      "footer";
-  }
-
-  .channels-list {
-    grid-area: list;
-    padding-bottom: 0;
-  }
-}
-
 .c-footer {
   position: fixed;
   width: 100%;

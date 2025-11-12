@@ -273,6 +273,7 @@ html.has-full-page-chat {
   &.mobile-view {
     #main-outlet-wrapper {
       padding: 0;
+      display: block;
     }
   }
 
