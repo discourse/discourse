@@ -1310,6 +1310,7 @@ export default class ComposerService extends Service {
         );
       }
 
+      this.set("model.loading", false);
       this.close();
       this.toasts.success({
         duration: "short",
@@ -1320,8 +1321,6 @@ export default class ComposerService extends Service {
       this.selectedTranslationLocale = null;
     } catch (e) {
       popupAjaxError(e);
-    } finally {
-      this.set("model.loading", false);
     }
   }
 
