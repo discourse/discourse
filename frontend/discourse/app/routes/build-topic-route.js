@@ -1,4 +1,5 @@
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";

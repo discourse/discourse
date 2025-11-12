@@ -10,7 +10,7 @@ import PluginOutlet from "./plugin-outlet";
 
 export default class CardContainer extends Component {
   @service site;
-  @controller topic;
+  // @controller topic;
 
   @action
   filterPosts(user) {

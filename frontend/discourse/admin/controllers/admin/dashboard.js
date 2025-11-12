@@ -11,7 +11,7 @@ const PROBLEMS_CHECK_MINUTES = 1;
 export default class AdminDashboardController extends Controller {
   @service router;
   @service siteSettings;
-  @controller("exception") exceptionController;
+  // @controller("exception") exceptionController;
 
   isLoading = false;
   dashboardFetchedAt = null;
@@ -80,6 +80,7 @@ export default class AdminDashboardController extends Controller {
           this.setProperties(properties);
         })
         .catch((e) => {
+          // TODO THIS IS BROKEN
           this.exceptionController.set("thrown", e.jqXHR);
           this.router.replaceWith("exception");
         })

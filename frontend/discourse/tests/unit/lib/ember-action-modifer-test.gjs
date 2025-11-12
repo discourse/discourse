@@ -18,6 +18,12 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
+<<<<<<<< HEAD:frontend/discourse/tests/unit/lib/ember-action-modifer-test.gjs
+    await render(
+      <template>
+        <button id="childButton" {{action this.onChildClick}} />
+      </template>
+========
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
       async () => {
@@ -25,6 +31,7 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
           <button id="childButton" {{action this.onChildClick}} />
         `);
       }
+>>>>>>>> main:frontend/discourse/tests/unit/lib/ember-action-modifer-test.js
     );
 
     await click("#childButton");
@@ -40,6 +47,10 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
+<<<<<<<< HEAD:frontend/discourse/tests/unit/lib/ember-action-modifer-test.gjs
+    await render(
+      <template><button id="childButton" {{action "onChildClick"}} /></template>
+========
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
       async () => {
@@ -47,6 +58,7 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
           <button id="childButton" {{action 'onChildClick'}} />
         `);
       }
+>>>>>>>> main:frontend/discourse/tests/unit/lib/ember-action-modifer-test.js
     );
 
     await click("#childButton");
@@ -62,6 +74,10 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       childClicked: undefined,
     });
 
+<<<<<<<< HEAD:frontend/discourse/tests/unit/lib/ember-action-modifer-test.gjs
+    await render(
+      <template><button id="childButton" {{action "onChildClick"}} /></template>
+========
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
       async () => {
@@ -69,6 +85,7 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       <button id="childButton" {{action 'onChildClick'}} />
     `);
       }
+>>>>>>>> main:frontend/discourse/tests/unit/lib/ember-action-modifer-test.js
     );
 
     await click("#childButton", { ctrlKey: true });
@@ -84,6 +101,12 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       dblClicked: undefined,
     });
 
+<<<<<<<< HEAD:frontend/discourse/tests/unit/lib/ember-action-modifer-test.gjs
+    await render(
+      <template>
+        <button id="childButton" {{action this.onDblClick on="dblclick"}} />
+      </template>
+========
     await withSilencedDeprecationsAsync(
       "discourse.template-action",
       async () => {
@@ -91,6 +114,7 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
       <button id="childButton" {{action this.onDblClick on='dblclick'}} />
     `);
       }
+>>>>>>>> main:frontend/discourse/tests/unit/lib/ember-action-modifer-test.js
     );
 
     await doubleClick("#childButton");
@@ -167,6 +191,12 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
         oneClicked: undefined,
       });
 
+<<<<<<<< HEAD:frontend/discourse/tests/unit/lib/ember-action-modifer-test.gjs
+      await render(
+        <template>
+          <ExampleClassicButton @onDoSomething={{this.onOneClick}} />
+        </template>
+========
       await withSilencedDeprecationsAsync(
         "discourse.template-action",
         async () => {
@@ -174,6 +204,7 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
         <ExampleClassicButton @onDoSomething={{this.onOneClick}} />
       `);
         }
+>>>>>>>> main:frontend/discourse/tests/unit/lib/ember-action-modifer-test.js
       );
 
       assert.strictEqual(this.oneClicked, undefined);
@@ -198,6 +229,12 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
         oneClicked: undefined,
       });
 
+<<<<<<<< HEAD:frontend/discourse/tests/unit/lib/ember-action-modifer-test.gjs
+      await render(
+        <template>
+          <ExampleClassicButtonWithActions @onDoSomething={{this.onOneClick}} />
+        </template>
+========
       await withSilencedDeprecationsAsync(
         "discourse.template-action",
         async () => {
@@ -205,6 +242,7 @@ module("Unit | Lib | ember-action-modifier", function (hooks) {
             <ExampleClassicButtonWithActions @onDoSomething={{this.onOneClick}} />
           `);
         }
+>>>>>>>> main:frontend/discourse/tests/unit/lib/ember-action-modifer-test.js
       );
 
       assert.strictEqual(this.oneClicked, undefined);

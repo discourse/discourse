@@ -155,6 +155,12 @@ export function expireModuleTrieCache() {
 
 export function buildResolver(baseName) {
   return class extends Resolver {
+    static withModules(compatModules) {
+      console.log("WITH MODULES");
+      addModuleShims(compatModules);
+      return super.withModules(compatModules);
+    }
+
     resolveRouter(/* parsedName */) {
       const routerPath = `${baseName}/router`;
       if (requirejs.entries[routerPath]) {
@@ -191,7 +197,7 @@ export function buildResolver(baseName) {
         // We need the same for our connector templates names
         normalized = "template:" + split[1].replace(/_/g, "-");
       } else {
-        normalized = super._normalize(fullName);
+        normalized = original;
       }
 
       // This is code that we don't really want to keep long term. The main situation where we need it is for
@@ -270,10 +276,13 @@ export function buildResolver(baseName) {
     // If no match is found here, the resolver falls back to `resolveOther`.
     resolveRoute(parsedName) {
       if (parsedName.fullNameWithoutType === "basic") {
-        return requirejs("discourse/routes/discourse", null, null, true)
-          .default;
+        return this.resolveRoute("discourse");
       }
     }
+
+    // resolveController(parsedName) {
+    // console.trace("lookup", parsedName);
+    // }
 
     resolveTemplate(parsedName) {
       return (
@@ -404,5 +413,28 @@ export function buildResolver(baseName) {
         return this.findTemplate(parsedName, "discourse/admin/templates/");
       }
     }
+
+    addModules(modules) {
+      addModuleShims(modules);
+      console.log("adding", Object.keys(modules));
+      for (let [name, module] of Object.entries(modules)) {
+        define(name, [], () => module);
+      }
+      DiscourseTemplateMap.setModuleNames(Object.keys(requirejs.entries));
+      expireModuleTrieCache();
+      Object.keys(this._normalizeCache).forEach(
+        (key) => delete this._normalizeCache[key]
+      );
+      super.addModules(modules);
+    }
   };
+}
+
+function addModuleShims(compatModules) {
+  for (let [name, module] of Object.entries(compatModules)) {
+    console.log(name);
+    if (name.endsWith("-index")) {
+      compatModules[name.replace(/-index$/, "/index")] = module;
+    }
+  }
 }

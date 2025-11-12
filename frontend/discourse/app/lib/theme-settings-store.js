@@ -24,6 +24,8 @@ export function registerSettings(themeId, settingsObject) {
   settings[themeId] = s;
 }
 
+globalThis.registerDiscourseThemeSettings = registerSettings;
+
 export function getSetting(themeId, settingKey) {
   if (settings[themeId]) {
     return get(settings[themeId], settingKey);

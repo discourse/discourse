@@ -1,4 +1,3 @@
-import ShareTopicModal from "discourse/components/modal/share-topic";
 import { registerTopicFooterButton } from "discourse/lib/register-topic-footer-button";
 
 const SHARE_PRIORITY = 1000;
@@ -19,7 +18,10 @@ export default {
         }
       },
       title: "topic.share.help",
-      action() {
+      async action() {
+        const ShareTopicModal = await import(
+          "discourse/components/modal/share-topic"
+        );
         owner.lookup("service:modal").show(ShareTopicModal, {
           model: {
             category: this.topic.category,

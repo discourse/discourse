@@ -3,8 +3,16 @@ import { setupEmberOnerrorValidation, start } from "ember-qunit";
 import * as QUnit from "qunit";
 import { setup } from "qunit-dom";
 import { loadAdmin, loadThemes } from "discourse/app";
+import { loadCompatModules } from "discourse/compat-modules";
+import config from "discourse/config/environment";
 import setupTests from "discourse/tests/setup-tests";
-import config from "../config/environment";
+
+loadCompatModules(
+  {
+    ...import.meta.glob("./**/*.{gjs,js}", { eager: true }),
+  },
+  "discourse/tests/"
+);
 
 document.addEventListener("discourse-init", async () => {
   await loadAdmin();

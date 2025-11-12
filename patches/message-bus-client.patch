@@ -1,0 +1,12 @@
+diff --git a/package.json b/package.json
+index d559ffc6c755f755b9ecc22c6d1096ba487cb19d..df59e877dd1cfd8d8388e7099ecfacb076035bdc 100644
+--- a/package.json
++++ b/package.json
+@@ -11,7 +11,6 @@
+     "assets/message-bus.js"
+   ],
+   "jsnext:main": "assets/message-bus.js",
+-  "module": "assets/message-bus.js",
+   "repository": "https://github.com/discourse/message_bus",
+   "author": "Sam Saffron, Robin Ward",
+   "license": "MIT",

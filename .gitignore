@@ -120,6 +120,7 @@ openapi/*
 
 # direnv.net
 .direnv
+/app/assets/javascripts/discourse/tmp
 
 # discourse-ai evals
 /plugins/discourse-ai/evals/cases
