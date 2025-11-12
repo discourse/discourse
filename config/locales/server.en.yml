@@ -2775,7 +2775,6 @@ en:
     enable_upcoming_changes: "Enable upcoming changes"
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
 
-
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
       invalid_email: "Invalid email address."
@@ -5825,7 +5824,7 @@ en:
         title: "Discard Post"
         complete: "Post discarded."
       revise_and_reject_post:
-        title: "Revise Post..."
+        title: "Request Revision..."
         complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"
