@@ -10,7 +10,7 @@
     "./config/environment.js"
   ],
   "exclude": ["./tests/unit/utils/decorators-test.js"],
-  "extends": "../../jsconfig-base.json",
+  "extends": "../../tsconfig-base.json",
   "compilerOptions": {
     "composite": true,
     "rootDir": "./",
