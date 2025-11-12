@@ -84,7 +84,7 @@ describe TopicListItemSerializer do
       end
     end
 
-    context "when first_post is loaded and site setting is enabled" do
+    context "when first_post is loaded and modifier is true" do
       before do
         topic.association(:first_post).target = first_post
         first_post.post_actions_with_reaction_users =
@@ -427,68 +427,67 @@ describe TopicListItemSerializer do
           expect(json[:op_reactions_data][:current_user_used_main_reaction]).to eq(true)
         end
       end
-    end
-  end
+      context "when modifier returns false" do
+        let(:false_plugin_instance) { Plugin::Instance.new }
+        let(:false_modifier_block) { Proc.new { false } }
 
-  describe "#include_op_reactions_data?" do
-    context "when modifier returns false" do
-      let(:false_plugin_instance) { Plugin::Instance.new }
-      let(:false_modifier_block) { Proc.new { false } }
+        before do
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :include_discourse_reactions_data_on_topic_list,
+            &modifier_block
+          )
+          false_plugin_instance.register_modifier(
+            :include_discourse_reactions_data_on_topic_list,
+            &false_modifier_block
+          )
+        end
 
-      before do
-        DiscoursePluginRegistry.unregister_modifier(
-          plugin_instance,
-          :include_discourse_reactions_data_on_topic_list,
-          &modifier_block
-        )
-        false_plugin_instance.register_modifier(
-          :include_discourse_reactions_data_on_topic_list,
-          &false_modifier_block
-        )
+        after do
+          DiscoursePluginRegistry.unregister_modifier(
+            false_plugin_instance,
+            :include_discourse_reactions_data_on_topic_list,
+            &false_modifier_block
+          )
+          # Re-register the original modifier for subsequent tests
+          plugin_instance.register_modifier(
+            :include_discourse_reactions_data_on_topic_list,
+            &modifier_block
+          )
+        end
+
+        it "excludes op_reactions_data" do
+          topic.association(:first_post).target = first_post
+
+          json =
+            TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
+
+          expect(json.key?(:op_reactions_data)).to eq(false)
+        end
+
+        it "returns false" do
+          topic.association(:first_post).target = first_post
+
+          json =
+            TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
+
+          expect(json.key?(:op_reactions_data)).to eq(false)
+        end
       end
 
-      after do
-        DiscoursePluginRegistry.unregister_modifier(
-          false_plugin_instance,
-          :include_discourse_reactions_data_on_topic_list,
-          &false_modifier_block
-        )
-        # Re-register the original modifier for subsequent tests
-        plugin_instance.register_modifier(
-          :include_discourse_reactions_data_on_topic_list,
-          &modifier_block
-        )
-      end
-
-      it "excludes op_reactions_data" do
+      it "returns true when first_post is loaded and modifier returns true" do
         topic.association(:first_post).target = first_post
+        first_post.post_actions_with_reaction_users =
+          DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
+            [first_post.id],
+          )[
+            first_post.id
+          ]
 
         json = TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
 
-        expect(json.key?(:op_reactions_data)).to eq(false)
+        expect(json.key?(:op_reactions_data)).to eq(true)
       end
-
-      it "returns false" do
-        topic.association(:first_post).target = first_post
-
-        json = TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
-
-        expect(json.key?(:op_reactions_data)).to eq(false)
-      end
-    end
-
-    it "returns true when first_post is loaded and modifier returns true" do
-      topic.association(:first_post).target = first_post
-      first_post.post_actions_with_reaction_users =
-        DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-          [first_post.id],
-        )[
-          first_post.id
-        ]
-
-      json = TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
-
-      expect(json.key?(:op_reactions_data)).to eq(true)
     end
   end
 end
