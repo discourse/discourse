@@ -278,7 +278,7 @@ en:
           name: "Custom"
         image_generation_openai:
           name: "OpenAI"
-        image_generation_nanobanana:
+        image_generation_gemini:
           name: "Nano Banana"
         image_generation_adobe:
           name: "Adobe Firefly"

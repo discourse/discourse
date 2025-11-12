@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "../../ai_bot/constants"
+
 module DiscourseAi
   module Personas
     module Tools

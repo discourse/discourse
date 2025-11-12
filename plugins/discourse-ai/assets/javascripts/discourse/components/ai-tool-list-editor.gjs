@@ -46,9 +46,9 @@ export default class AiToolListEditor extends Component {
     const customPreset = presets.find(
       (p) => p.preset_id === "image_generation_custom"
     );
-    const otherPresets = presets.filter(
-      (p) => p.preset_id !== "image_generation_custom"
-    );
+    const otherPresets = presets
+      .filter((p) => p.preset_id !== "image_generation_custom")
+      .sort((a, b) => a.provider.localeCompare(b.provider));
 
     return { otherPresets, customPreset };
   }
@@ -183,7 +183,6 @@ export default class AiToolListEditor extends Component {
             <:content>
               <DropdownMenu as |dropdown|>
                 {{#if this.expandedCategory}}
-                  {{! Back button when category is expanded }}
                   <dropdown.item>
                     <DButton
                       @label="back_button"
@@ -193,10 +192,8 @@ export default class AiToolListEditor extends Component {
                     />
                   </dropdown.item>
                   <dropdown.divider />
-                  {{! Show provider presets }}
                   {{#each this.categoryPresets.otherPresets as |preset|}}
                     <dropdown.item>
-                      {{! Use custom clickable div for multi-line items }}
                       <div
                         role="button"
                         class="ai-tool-preset-item"
@@ -212,7 +209,7 @@ export default class AiToolListEditor extends Component {
                       </div>
                     </dropdown.item>
                   {{/each}}
-                  {{! Show Custom at the bottom after a divider }}
+
                   {{#if this.categoryPresets.customPreset}}
                     <dropdown.divider />
                     <dropdown.item>
@@ -228,7 +225,6 @@ export default class AiToolListEditor extends Component {
                     </dropdown.item>
                   {{/if}}
                 {{else}}
-                  {{! Show main presets }}
                   {{#each this.dropdownPresets as |preset index|}}
                     {{#if (eq index this.lastIndexOfPresets)}}
                       <dropdown.divider />

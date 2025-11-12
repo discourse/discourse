@@ -250,16 +250,17 @@ class AiTool < ActiveRecord::Base
   end
 
   def self.presets
-    [
-      {
-        preset_id: "browse_web_jina",
-        name: "Browse Web",
-        tool_name: "browse_web",
-        description: "Browse the web as a markdown document",
-        parameters: [
-          { name: "url", type: "string", required: true, description: "The URL to browse" },
-        ],
-        script: <<~SCRIPT,
+    (
+      [
+        {
+          preset_id: "browse_web_jina",
+          name: "Browse Web",
+          tool_name: "browse_web",
+          description: "Browse the web as a markdown document",
+          parameters: [
+            { name: "url", type: "string", required: true, description: "The URL to browse" },
+          ],
+          script: <<~SCRIPT,
           #{preamble}
           let url;
           function invoke(p) {
@@ -272,28 +273,28 @@ class AiTool < ActiveRecord::Base
             return "Read: " + url
           }
         SCRIPT
-      },
-      {
-        preset_id: "exchange_rate",
-        name: "Exchange Rate",
-        tool_name: "exchange_rate",
-        description: "Get current exchange rates for various currencies",
-        parameters: [
-          {
-            name: "base_currency",
-            type: "string",
-            required: true,
-            description: "The base currency code (e.g., USD, EUR)",
-          },
-          {
-            name: "target_currency",
-            type: "string",
-            required: true,
-            description: "The target currency code (e.g., EUR, JPY)",
-          },
-          { name: "amount", type: "number", description: "Amount to convert eg: 123.45" },
-        ],
-        script: <<~SCRIPT,
+        },
+        {
+          preset_id: "exchange_rate",
+          name: "Exchange Rate",
+          tool_name: "exchange_rate",
+          description: "Get current exchange rates for various currencies",
+          parameters: [
+            {
+              name: "base_currency",
+              type: "string",
+              required: true,
+              description: "The base currency code (e.g., USD, EUR)",
+            },
+            {
+              name: "target_currency",
+              type: "string",
+              required: true,
+              description: "The target currency code (e.g., EUR, JPY)",
+            },
+            { name: "amount", type: "number", description: "Amount to convert eg: 123.45" },
+          ],
+          script: <<~SCRIPT,
         #{preamble}
         // note: this script uses the open.er-api.com service, it is only updated
         // once every 24 hours, for more up to date rates see: https://www.exchangerate-api.com
@@ -328,22 +329,22 @@ class AiTool < ActiveRecord::Base
           return "<a href='https://www.exchangerate-api.com'>Rates By Exchange Rate API</a>";
         }
       SCRIPT
-        summary: "Get current exchange rates between two currencies",
-      },
-      {
-        preset_id: "stock_quote",
-        name: "Stock Quote (AlphaVantage)",
-        tool_name: "stock_quote",
-        description: "Get real-time stock quote information using AlphaVantage API",
-        parameters: [
-          {
-            name: "symbol",
-            type: "string",
-            required: true,
-            description: "The stock symbol (e.g., AAPL, GOOGL)",
-          },
-        ],
-        script: <<~SCRIPT,
+          summary: "Get current exchange rates between two currencies",
+        },
+        {
+          preset_id: "stock_quote",
+          name: "Stock Quote (AlphaVantage)",
+          tool_name: "stock_quote",
+          description: "Get real-time stock quote information using AlphaVantage API",
+          parameters: [
+            {
+              name: "symbol",
+              type: "string",
+              required: true,
+              description: "The stock symbol (e.g., AAPL, GOOGL)",
+            },
+          ],
+          script: <<~SCRIPT,
         #{preamble}
         function invoke(params) {
           const apiKey = 'YOUR_ALPHAVANTAGE_API_KEY'; // Replace with your actual API key
@@ -378,8 +379,26 @@ class AiTool < ActiveRecord::Base
           return "<a href='https://www.alphavantage.co'>Stock data provided by AlphaVantage</a>";
         }
       SCRIPT
-        summary: "Get real-time stock quotes using AlphaVantage API",
-      },
+          summary: "Get real-time stock quotes using AlphaVantage API",
+        },
+      ] + image_generation_presets + [{ preset_id: "empty_tool", script: <<~SCRIPT }]
+          #{preamble}
+          function invoke(params) {
+            // logic here
+            return params;
+          }
+          function details() {
+            return "Details about this tool";
+          }
+        SCRIPT
+    ).map do |preset|
+      preset[:preset_name] = I18n.t("discourse_ai.tools.presets.#{preset[:preset_id]}.name")
+      preset
+    end
+  end
+
+  def self.image_generation_presets
+    [
       { preset_id: "image_generation_category", is_category: true, category: "image_generation" },
       {
         preset_id: "image_generation_custom",
@@ -418,7 +437,7 @@ class AiTool < ActiveRecord::Base
         provider: "OpenAI",
         model_name: "GPT Image 1",
         tool_name: "image_generation_openai",
-        description: "Generate images using OpenAI's DALL-E model",
+        description: "Generate images using OpenAI's GPT Image 1 model",
         parameters: [
           {
             name: "prompt",
@@ -442,12 +461,10 @@ class AiTool < ActiveRecord::Base
             const size = params.size || "1024x1024";
 
             const body = {
-              model: "dall-e-3",
+              model: "gpt-image-1",
               prompt: prompt,
               size: size,
-              quality: "standard",
               n: 1,
-              response_format: "b64_json",
             };
 
             const result = http.post("https://api.openai.com/v1/images/generations", {
@@ -458,7 +475,25 @@ class AiTool < ActiveRecord::Base
               body: JSON.stringify(body),
             });
 
-            const base64Image = JSON.parse(result.body).data[0].b64_json;
+            const responseData = JSON.parse(result.body);
+
+            // Check for API errors
+            if (responseData.error) {
+              return {
+                error: `OpenAI API Error: ${responseData.error.message || JSON.stringify(responseData.error)}`
+              };
+            }
+
+            // Validate response structure
+            if (!responseData.data || !responseData.data[0] || !responseData.data[0].b64_json) {
+              return {
+                error: "Unexpected API response format",
+                status: result.status,
+                body_preview: JSON.stringify(responseData).substring(0, 500)
+              };
+            }
+
+            const base64Image = responseData.data[0].b64_json;
             const image = upload.create("generated_image.png", base64Image);
             const raw = `\n![${prompt}](${image.short_url})\n`;
             chain.setCustomRaw(raw);
@@ -467,19 +502,19 @@ class AiTool < ActiveRecord::Base
           }
 
           function details() {
-            return "Generates images using OpenAI's DALL-E model.";
+            return "Generates images using OpenAI's GPT Image 1 model.";
           }
   SCRIPT
-        summary: "Generate images with OpenAI DALL-E",
+        summary: "Generate images with OpenAI GPT Image 1 model",
         category: "image_generation",
       },
       {
-        preset_id: "image_generation_nanobanana",
+        preset_id: "image_generation_gemini",
         name: "Nano Banana",
         provider: "Google Nano Banana",
         model_name: "Gemini 2.5 Flash Image",
-        tool_name: "image_generation_nanobanana",
-        description: "Generate images using Gemini 2.5 Flash via Nano Banana",
+        tool_name: "image_generation_gemini",
+        description: "Generate images using Gemini 2.5 Flash Image (Nano Banana)",
         parameters: [
           {
             name: "prompt",
@@ -490,25 +525,32 @@ class AiTool < ActiveRecord::Base
         ],
         script: <<~SCRIPT,
           #{preamble}
-          const apiKey = "YOUR_NANOBANANA_API_KEY";
+          const apiKey = "YOUR_GOOGLE_API_KEY";
 
           function invoke(params) {
             const prompt = params.prompt;
 
             const body = {
-              model: "gemini-2.5-flash-image",
-              prompt: prompt,
+              contents: [{
+                parts: [{ text: prompt }]
+              }],
+              generationConfig: {
+                responseModalities: ["Image"]
+              }
             };
 
-            const result = http.post("https://api.nanobanana.ai/v1/images/generations", {
-              headers: {
-                "Authorization": `Bearer ${apiKey}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-            });
+            const result = http.post(
+              `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+              }
+            );
 
-            const base64Image = JSON.parse(result.body).data[0].b64_json;
+            const responseData = JSON.parse(result.body);
+            const base64Image = responseData.candidates[0].content.parts[0].inline_data.data;
             const image = upload.create("generated_image.png", base64Image);
             const raw = `\n![${prompt}](${image.short_url})\n`;
             chain.setCustomRaw(raw);
@@ -517,10 +559,10 @@ class AiTool < ActiveRecord::Base
           }
 
           function details() {
-            return "Generates images using Gemini 2.5 Flash via Nano Banana.";
+            return "Generates images using Gemini 2.5 Flash Image (Nano Banana).";
           }
   SCRIPT
-        summary: "Generate images with Gemini 2.5 Flash",
+        summary: "Generate images with Gemini 2.5 Flash Image",
         category: "image_generation",
       },
       {
@@ -646,20 +688,7 @@ class AiTool < ActiveRecord::Base
         summary: "Generate images with FLUX 1.1 Pro",
         category: "image_generation",
       },
-      { preset_id: "empty_tool", script: <<~SCRIPT },
-          #{preamble}
-          function invoke(params) {
-            // logic here
-            return params;
-          }
-          function details() {
-            return "Details about this tool";
-          }
-        SCRIPT
-    ].map do |preset|
-      preset[:preset_name] = I18n.t("discourse_ai.tools.presets.#{preset[:preset_id]}.name")
-      preset
-    end
+    ]
   end
 end
 
