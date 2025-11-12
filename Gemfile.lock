@@ -661,7 +661,7 @@ GEM
     sqlite3 (2.7.4-x86_64-linux-musl)
     sshkey (3.0.0)
     stackprof (0.2.27)
-    stringio (3.1.7)
+    stringio (3.1.8)
     stripe (11.1.0)
     syntax_tree (6.3.0)
       prettier_print (>= 1.2.0)
@@ -1208,7 +1208,7 @@ CHECKSUMS
   sqlite3 (2.7.4-x86_64-linux-musl) sha256=494b4ce35524f3bf8ef6741737d0c197086ed8ac4804220fa71d653b39d82a54
   sshkey (3.0.0) sha256=655ba351d6e01a48dfe59d65530af8975c777b8cc57a061770de3228ff2d11cd
   stackprof (0.2.27) sha256=aff6d28656c852e74cf632cc2046f849033dc1dedffe7cb8c030d61b5745e80c
-  stringio (3.1.7) sha256=5b78b7cb242a315fb4fca61a8255d62ec438f58da2b90be66048546ade4507fa
+  stringio (3.1.8) sha256=99c43c3a9302843cca223fd985bfc503dd50a4b1723d3e4a9eb1d9c37d99e4ec
   stripe (11.1.0) sha256=a76e82cc7e4d2433803ca5fbe9453d019df376236f0b9fbcb7f36e6dd327f98d
   syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
   test-prof (1.4.4) sha256=1a59513ed9d33a1f5ca17c0b89da4e70f60a91c83ec62e9a873dbb99141353ef
