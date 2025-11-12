@@ -1,6 +1,6 @@
 import { hash } from "@ember/helper";
-import FilterComponent from "admin/components/report-filters/filter";
-import ComboBox from "select-kit/components/combo-box";
+import FilterComponent from "discourse/admin/components/report-filters/filter";
+import ComboBox from "discourse/select-kit/components/combo-box";
 
 export default class List extends FilterComponent {
   <template>

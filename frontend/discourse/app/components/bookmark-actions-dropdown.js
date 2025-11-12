@@ -1,12 +1,12 @@
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
-import { i18n } from "discourse-i18n";
-import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import DropdownSelectBoxComponent from "discourse/select-kit/components/dropdown-select-box";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 
 const ACTION_REMOVE = "remove";
 const ACTION_EDIT = "edit";

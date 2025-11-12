@@ -60,8 +60,6 @@ fa_IR:
           other: "%{comma_separated_usernames} و %{count} نفر دیگر"
     mention_warning:
       dismiss: "رد کردن"
-    bookmarkable:
-      notification_title: "پیام در %{channel_name}"
     personal_chat: "گفتگوی شخصی"
     onebox:
       inline_to_channel: "گفتگو #%{chat_channel}"

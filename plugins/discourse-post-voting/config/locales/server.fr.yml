@@ -35,6 +35,26 @@ fr:
     post_voting_comment_enabled: "Activer les commentaires sur les publications dans les sujets à vote de publication"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Aucune action"
+        agree_and_keep_comment:
+          title: "Conserver le commentaire"
+          description: "Accepter le signalement et conserver le commentaire tel quel."
+        agree_and_keep_deleted:
+          title: "Garder le commentaire supprimé"
+          description: "Accepter le signalement et laisser le commentaire supprimé."
+        agree_and_restore:
+          title: "Restaurer le commentaire"
+          description: "Restaurer le commentaire pour que les utilisateurs puissent le voir."
+        agree_and_delete:
+          title: "Supprimer le commentaire"
+          description: "Supprimer le commentaire pour que les utilisateurs ne puissent pas le voir."
+        disagree_and_restore:
+          title: "Rejeter le signalement et rétablir le commentaire"
+          description: "Restaurer le commentaire pour que tous les utilisateurs puissent le voir."
   post_action_types:
     vote:
       title: "Voter"

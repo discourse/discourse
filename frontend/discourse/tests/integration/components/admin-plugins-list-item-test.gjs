@@ -1,8 +1,8 @@
 import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import AdminPluginsListItem from "discourse/admin/components/admin-plugins-list-item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import AdminPluginsListItem from "admin/components/admin-plugins-list-item";
 
 module("Integration | Component | admin-plugins-list-item", function (hooks) {
   setupRenderingTest(hooks);

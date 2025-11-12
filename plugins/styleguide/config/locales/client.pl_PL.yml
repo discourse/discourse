@@ -105,6 +105,8 @@ pl_PL:
           title: "Ikony nagłówka"
         spinners:
           title: "Ładowanie"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Pusty stan"
         tooltips:

@@ -14,10 +14,10 @@
     "@babel/preset-env": "^7.28.5",
     "@babel/standalone": "^7.28.5",
     "@csstools/postcss-light-dark-function": "^2.0.11",
-    "@rollup/browser": "^4.52.5",
+    "@rollup/browser": "^4.53.2",
     "@rollup/plugin-babel": "^6.1.0",
     "abort-controller": "^3.0.0",
-    "autoprefixer": "^10.4.21",
+    "autoprefixer": "^10.4.22",
     "babel-plugin-ember-template-compilation": "^3.0.1",
     "content-tag": "^4.0.0",
     "core-js": "^3.46.0",
@@ -39,7 +39,7 @@
     "postcss-nesting": "^13.0.2",
     "readable-stream": "^4.7.0",
     "source-map-js": "^1.2.1",
-    "terser": "^5.44.0"
+    "terser": "^5.44.1"
   },
   "engines": {
     "node": ">= 18",
@@ -48,6 +48,6 @@
     "pnpm": "^9"
   },
   "devDependencies": {
-    "vitest": "^4.0.5"
+    "vitest": "^4.0.8"
   }
 }

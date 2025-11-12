@@ -10,16 +10,31 @@ describe DiscourseAi::Translation::LanguageDetector do
   before do
     enable_current_plugin
     assign_fake_provider_to(:ai_default_llm_model)
+    SiteSetting.ai_translation_enabled = true
   end
 
   describe ".detect" do
     let(:locale_detector) { described_class.new("meow") }
-    let(:llm_response) { "hur dur hur dur!" }
+    let(:llm_response) { "en-US" }
 
     it "creates the correct prompt" do
+      expected_system_prompt = DiscourseAi::Personas::LocaleDetector.new.system_prompt
+
       allow(DiscourseAi::Completions::Prompt).to receive(:new).with(
-        persona.system_prompt,
-        messages: [{ type: :user, content: "meow", id: "user" }],
+        expected_system_prompt,
+        messages: [
+          { type: :user, content: "Can you tell me what '私の世界で一番好きな食べ物はちらし丼です' means?" },
+          { type: :model, content: "en" },
+          {
+            type: :user,
+            content:
+              "[quote]\nNon smettere mai di credere nella bellezza dei tuoi sogni. Anche quando tutto sembra perduto, c'è sempre una luce che aspetta di essere trovata.\nOgni passo, anche il più piccolo, ti avvicina a ciò che desideri. La forza che cerchi è già dentro di te.\n[/quote]\n¿Cuál es el mensaje principal de esta cita?",
+          },
+          { type: :model, content: "es" },
+          { type: :user, content: "meow" },
+        ],
+        post_id: nil,
+        topic_id: nil,
       ).and_call_original
 
       DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
@@ -27,31 +42,39 @@ describe DiscourseAi::Translation::LanguageDetector do
       end
     end
 
-    it "sends the language detection prompt to the ai helper model" do
-      mock_prompt = instance_double(DiscourseAi::Completions::Prompt)
-      mock_llm = instance_double(DiscourseAi::Completions::Llm)
-
-      structured_output =
-        DiscourseAi::Completions::StructuredOutput.new({ locale: { type: "string" } })
-      structured_output << { locale: llm_response }.to_json
-
-      allow(DiscourseAi::Completions::Prompt).to receive(:new).and_return(mock_prompt)
-      allow(DiscourseAi::Completions::Llm).to receive(:proxy).with(
-        SiteSetting.ai_default_llm_model,
-      ).and_return(mock_llm)
-      allow(mock_llm).to receive(:generate).with(
-        mock_prompt,
-        user: Discourse.system_user,
-        feature_name: "translation",
-        response_format: persona.response_format,
-      ).and_return(structured_output)
-
-      locale_detector.detect
-    end
-
     it "returns the language from the llm's response in the language tag" do
       DiscourseAi::Completions::Llm.with_prepared_responses([llm_response]) do
         locale_detector.detect
+      end
+    end
+
+    it "returns nil when the llm's response is not a valid language tag" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["not a language code"]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses([""]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["1234"]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en-US-INCORRECT"]) do
+        expect(locale_detector.detect).to eq(nil)
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en-US"]) do
+        expect(locale_detector.detect).to eq("en-US")
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["en"]) do
+        expect(locale_detector.detect).to eq("en")
+      end
+
+      DiscourseAi::Completions::Llm.with_prepared_responses(["sr-Latn"]) do
+        expect(locale_detector.detect).to eq("sr-Latn")
       end
     end
 

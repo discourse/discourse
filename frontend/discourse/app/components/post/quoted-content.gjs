@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -16,6 +15,7 @@ import { ajax } from "discourse/lib/ajax";
 import { makeArray } from "discourse/lib/helpers";
 import highlightHTML from "discourse/lib/highlight-html";
 import { postUrl } from "discourse/lib/utilities";
+import { eq } from "discourse/truth-helpers";
 import PostCookedHtml from "./cooked-html";
 
 export default class PostQuotedContent extends Component {

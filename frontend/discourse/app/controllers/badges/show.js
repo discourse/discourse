@@ -1,7 +1,9 @@
+import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import discourseComputed from "discourse/lib/decorators";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
 import { i18n } from "discourse-i18n";
@@ -9,9 +11,13 @@ import { i18n } from "discourse-i18n";
 export default class ShowController extends Controller {
   @controller application;
 
+  @tracked loadingMore = false;
+  @tracked noMoreBadges = false;
+
+  @tracked userBadgesGrantCount;
+  @trackedArray userBadges = null;
+
   queryParams = ["username"];
-  noMoreBadges = false;
-  userBadges = null;
   hiddenSetTitle = true;
 
   @discourseComputed("userBadgesAll")
@@ -37,12 +43,11 @@ export default class ShowController extends Controller {
     }
   }
 
-  @discourseComputed("username", "model.grant_count", "userBadges.grant_count")
-  grantCount(username, modelCount, userCount) {
-    return username ? userCount : modelCount;
+  get grantCount() {
+    return this.username ? this.userBadgesGrantCount : this.model.grant_count;
   }
 
-  @discourseComputed("model.grant_count", "userBadges.grant_count")
+  @discourseComputed("model.grant_count", "userBadgesGrantCount")
   othersCount(modelCount, userCount) {
     return modelCount - userCount;
   }
@@ -52,12 +57,11 @@ export default class ShowController extends Controller {
     return this.siteSettings.enable_badges && hasTitleBadges && hasBadge;
   }
 
-  @discourseComputed("noMoreBadges", "grantCount", "userBadges.length")
-  canLoadMore(noMoreBadges, grantCount, userBadgeLength) {
-    if (noMoreBadges) {
+  get canLoadMore() {
+    if (this.noMoreBadges) {
       return false;
     }
-    return grantCount > (userBadgeLength || 0);
+    return this.grantCount > (this.userBadges?.length || 0);
   }
 
   @discourseComputed("user", "model.grant_count")
@@ -66,31 +70,27 @@ export default class ShowController extends Controller {
   }
 
   @action
-  loadMore() {
-    if (!this.canLoadMore) {
+  async loadMore() {
+    if (!this.canLoadMore || this.loadingMore) {
       return;
     }
 
-    if (this.loadingMore) {
-      return;
-    }
-    this.set("loadingMore", true);
+    this.loadingMore = true;
 
-    const userBadges = this.userBadges;
-
-    UserBadge.findByBadgeId(this.get("model.id"), {
-      offset: userBadges.length,
-      username: this.username,
-    })
-      .then((result) => {
-        userBadges.pushObjects(result);
-        if (userBadges.length === 0) {
-          this.set("noMoreBadges", true);
-        }
-      })
-      .finally(() => {
-        this.set("loadingMore", false);
+    try {
+      const userBadges = this.userBadges;
+      const result = await UserBadge.findByBadgeId(this.get("model.id"), {
+        offset: userBadges.length,
+        username: this.username,
       });
+
+      userBadges.push(...result);
+      if (userBadges.length === 0) {
+        this.noMoreBadges = true;
+      }
+    } finally {
+      this.loadingMore = false;
+    }
   }
 
   @action

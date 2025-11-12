@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
-import { and, eq } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -21,6 +20,7 @@ import {
   applyMutableValueTransformer,
   applyValueTransformer,
 } from "discourse/lib/transformer";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -671,22 +671,6 @@ export default class PostMenu extends Component {
           "post.actions.people.read"
         }}
         @users={{this.readers}}
-      />
-      <SmallUserList
-        class="who-liked"
-        @addSelf={{and @post.liked (eq this.remainingLikedUsers 0)}}
-        @isVisible={{this.isWhoLikedVisible}}
-        @count={{if
-          this.remainingLikedUsers
-          this.remainingLikedUsers
-          this.totalLikedUsers
-        }}
-        @description={{if
-          this.remainingLikedUsers
-          "post.actions.people.like_capped"
-          "post.actions.people.like"
-        }}
-        @users={{this.likedUsers}}
       />
       {{#if
         (this.showMoreButton.shouldRender

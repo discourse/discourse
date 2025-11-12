@@ -33,12 +33,12 @@ RSpec.describe "tasks/version_bump" do
       run "git", "init"
       run "git", "checkout", "-b", "main"
       run "git", "add", "."
-      run "git", "commit", "-m", "Initial commit"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "Initial commit"
 
       run "git", "checkout", "-b", "stable"
       File.write("#{origin_path}/lib/version.rb", fake_version_rb("3.1.2"))
       run "git", "add", "."
-      run "git", "commit", "-m", "Previous stable version bump"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "Previous stable version bump"
 
       run "git", "checkout", "main"
       run "git", "config", "receive.denyCurrentBranch", "ignore"
@@ -192,16 +192,16 @@ RSpec.describe "tasks/version_bump" do
 
       File.write("firstfile.txt", "contents")
       run "git", "add", "firstfile.txt"
-      run "git", "commit", "-m", "security fix one, commit one"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit one"
       File.write("secondfile.txt", "contents")
       run "git", "add", "secondfile.txt"
-      run "git", "commit", "-m", "security fix one, commit two"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit two"
 
       run "git", "checkout", "main"
       run "git", "checkout", "-b", "security-fix-two"
       File.write("somefile.txt", "contents")
       run "git", "add", "somefile.txt"
-      run "git", "commit", "-m", "security fix two"
+      run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix two"
     end
 
     Dir.chdir(local_path) do

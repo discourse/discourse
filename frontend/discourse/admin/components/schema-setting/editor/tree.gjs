@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { eq } from "truth-helpers";
+import TreeNode from "discourse/admin/components/schema-setting/editor/tree-node";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
-import TreeNode from "admin/components/schema-setting/editor/tree-node";
+import { eq } from "discourse/truth-helpers";
 
 <template>
   <ul class="schema-setting-editor__tree">

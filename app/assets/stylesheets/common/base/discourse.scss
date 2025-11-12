@@ -1021,8 +1021,17 @@ form {
   }
 }
 
+#skip-links__container {
+  position: fixed;
+  top: -50px;
+  left: var(--space-4);
+  z-index: z("header") + 1;
+}
+
+#skip-links__container a,
 a#user-nav-skip-link,
-a#skip-link {
+a#skip-link,
+.skip-link {
   padding: var(--space-1) var(--space-2);
   position: fixed;
   top: -50px;
@@ -1035,6 +1044,10 @@ a#skip-link {
   &:focus {
     top: 0;
     transition: top 0.15s ease-in;
+  }
+
+  &:visited {
+    color: var(--secondary);
   }
 }
 

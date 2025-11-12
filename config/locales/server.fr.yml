@@ -1263,8 +1263,6 @@ fr:
       yaxis: "Jour"
       description: "Requêtes d'API pour les clés d'API ordinaires et les clés d'API de l'utilisateur."
     consolidated_page_views_browser_detection:
-      title: "Vues de pages consolidées avec détection du navigateur (expérimental)"
-      title_legacy: "Vues de pages consolidées avec détection du navigateur (expérimental)"
       xaxis:
         page_view_anon_browser: "Navigateur anonyme"
         page_view_logged_in_browser: "Navigateur connecté"
@@ -2400,7 +2398,6 @@ fr:
     force_lowercase_tags: "Forcer les nouvelles étiquettes à être en minuscule."
     create_post_for_category_and_tag_changes: "Créez une publication chuchotée lorsque la catégorie ou les étiquettes d'un sujet changent. Cette option nécessite l'activation des publications chuchotées."
     automatically_clean_unused_tags: "Supprimez automatiquement les étiquettes qui ne sont utilisées dans aucun sujet ou message direct au quotidien."
-    watched_precedence_over_muted: "M'avertir des sujets des catégories ou des étiquettes que je regarde et qui appartiennent également à un sujet que j'ai désactivé"
     company_name: "Nom de votre entreprise ou organisation. Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis."
     governing_law: "Précisez la juridiction qui régit les aspects juridiques du site, y compris les Conditions d'utilisation et la Politique de confidentialité. Il s'agit généralement du pays ou de l'État dans lequel la société exploitant le site est enregistrée ou exerce ses activités."
     city_for_disputes: "Précisez la ville qui sera utilisée comme juridiction pour résoudre tout litige lié à l'utilisation de ce forum. Ces informations sont généralement incluses dans des documents juridiques tels que les conditions d'utilisation du forum."
@@ -2443,8 +2440,6 @@ fr:
     default_navigation_menu_categories: "Les catégories sélectionnées seront affichées par défaut dans la section Catégories du menu de navigation."
     default_navigation_menu_tags: "Les étiquettes sélectionnées seront affichées par défaut dans la section Étiquettes du menu de navigation."
     experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
-    floatkit_autocomplete_composer: "Activez le menu de saisie semi-automatique basé sur FloatKit dans l'éditeur. Il s'agit d'une amélioration de l'interface utilisateur qui remplacera le menu de saisie semi-automatique actuel basé sur jQuery."
-    floatkit_autocomplete_chat_composer: "Activez le menu de saisie semi-automatique basé sur FloatKit dans l'éditeur de discussion. Il s'agit d'une amélioration de l'interface utilisateur qui remplacera le menu de saisie semi-automatique actuel basé sur jQuery."
     experimental_form_templates: "Activez la fonctionnalité de modèles de formulaire. Gérez les modèles dans <a href='%{base_path}/admin/customize/form-templates'>Personnaliser/modèles</a>."
     show_preview_for_form_templates: "Activer la fonctionnalité d'aperçu des modèles de formulaires"
     lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
@@ -2578,9 +2573,6 @@ fr:
       activity_after: "Afficher les sujets dont la dernière activité est postérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
       created_before: "Afficher les sujets créés avant une date (AAAA-MM-JJ ou il y a quelques jours)"
       created_after: "Afficher les sujets créés après une date (AAAA-MM-JJ ou il y a quelques jours)"
-      created_by: "Afficher les sujets créés par un utilisateur spécifique"
-      created_by_user: "Afficher les sujets créés par nom d'utilisateur (sans @)"
-      created_by_multiple: "Afficher les sujets créés par l'un des utilisateurs spécifiés (séparés par des virgules)"
       latest_post_before: "Afficher les sujets dont la dernière publication est antérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
       latest_post_after: "Afficher les sujets dont la dernière publication est postérieure à une date (YYYY-MM-DD ou il y a quelques jours)"
       likes_min: "Afficher les sujets comptant au moins ce nombre de mentions J'aime"

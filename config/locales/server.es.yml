@@ -1263,8 +1263,6 @@ es:
       yaxis: "Día"
       description: "Solicitudes de API para claves de API normales y claves de API de usuario."
     consolidated_page_views_browser_detection:
-      title: "Páginas vistas consolidadas con detección de navegador (Experimental)"
-      title_legacy: "Páginas vistas consolidadas con detección de navegador (Experimental)"
       xaxis:
         page_view_anon_browser: "Navegador anónimo"
         page_view_logged_in_browser: "Navegador conectado"
@@ -2400,7 +2398,6 @@ es:
     force_lowercase_tags: "Forzar que todas las etiquetas estén completamente en minúscula"
     create_post_for_category_and_tag_changes: "Crear una publicación de susurro cuando cambie la categoría o las etiquetas de un tema, requiere que las publicaciones de susurro estén activadas."
     automatically_clean_unused_tags: "Elimina automáticamente las etiquetas que no se utilicen en ningún tema o mensaje personal a diario."
-    watched_precedence_over_muted: "Notificarme sobre temas en categorías o etiquetas que estoy observando y que también pertenezcan a una que haya silenciado"
     company_name: "Nombre de tu empresa u organización. Si se deja en blanco, no se proporcionará ningún tipo de Términos del servicio o Aviso de privacidad."
     governing_law: "Especifica la jurisdicción que rige los aspectos legales del sitio, incluidos los Términos del servicio y la Política de privacidad. Normalmente, se trata del país o estado en el que la empresa que gestiona el sitio está registrada o lleva a cabo sus actividades."
     city_for_disputes: "Especifica la ciudad que se utilizará como jurisdicción para resolver cualquier disputa relacionada con el uso de este foro. Esta información suele incluirse en documentos legales como los Términos del servicio del foro."
@@ -2443,9 +2440,6 @@ es:
     default_navigation_menu_categories: "Las categorías seleccionadas se mostrarán por defecto en la sección Categorías del Menú de navegación."
     default_navigation_menu_tags: "Las etiquetas seleccionadas se mostrarán por defecto en la sección Etiquetas del Menú de navegación."
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
-    floatkit_autocomplete_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en JQuery actual."
-    floatkit_autocomplete_input_fields: "Activa el menú de autocompletar basado en Floatkit para los campos de entrada en los campos de búsqueda en pantalla completa y selector de grupos. Esta mejora de la interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
-    floatkit_autocomplete_chat_composer: "Activa el menú de autocompletar basado en Floatkit en el compositor. Esta mejora de interfaz de usuario reemplazará el menú de autocompletar basado en jQuery actual."
     experimental_form_templates: "Activa la característica de plantillas de formulario. Gestiona las plantillas en <a href='%{base_path}/admin/customize/form-templates'>Personalizar / Plantillas</a>."
     show_preview_for_form_templates: "Activa la vista previa de las plantillas de formulario"
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
@@ -2579,9 +2573,6 @@ es:
       activity_after: "Mostrar temas con última actividad después de una fecha (AAAA-MM-DD o hace días)"
       created_before: "Mostrar temas creados antes de una fecha (AAAA-MM-DD o hace días)"
       created_after: "Mostrar temas creados después de una fecha (AAAA-MM-DD o hace días)"
-      created_by: "Mostrar temas creados por un usuario específico"
-      created_by_user: "Mostrar temas creados por nombre de usuario (sin @)"
-      created_by_multiple: "Mostrar temas creados por cualquiera de los usuarios especificados (separados por comas)"
       latest_post_before: "Mostrar temas con última publicación antes de una fecha (AAAA-MM-DD o hace días)"
       latest_post_after: "Mostrar temas con última publicación después de una fecha (AAAA-MM-DD o hace días)"
       likes_min: "Mostrar temas con al menos esta cantidad de «me gusta»"

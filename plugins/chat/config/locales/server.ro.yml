@@ -51,6 +51,9 @@ ro:
         few: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
         other: "%{first_identifier} și %{count} alte grupuri nu permit mențiuni."
       too_many_members: "%{first_identifier} are prea mulți membri. Nimeni nu a fost anunțat."
+    bookmarkable:
+      notification_title_channel: "mesaj în %{channel_name}"
+      notification_title_direct_message: "mesaj cu %{channel_name}"
     onebox:
       inline_to_thread: "%{thread_title} - #%{chat_channel}"
       inline_to_thread_no_title: "Fir în #%{chat_channel}"

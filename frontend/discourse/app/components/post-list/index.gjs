@@ -3,7 +3,8 @@
  *
  * @component PostList
  *
- * @args {Array<Object>} posts - The array of post objects to display
+ * @args {Array<Object>} posts - The array of post objects to display (it must be a tracked array to ensure that
+ *   the component is re-rendered when the array changes)
  * @args {Function} fetchMorePosts - A function that fetches more posts. Must return a Promise that resolves to an array of new posts.
  * @args {String} emptyText (optional) - Custom text to display when there are no posts
  * @args {String|Array} additionalItemClasses (optional) - Additional classes to add to each post list item

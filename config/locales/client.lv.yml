@@ -167,7 +167,7 @@ lv:
     welcome_banner:
       header:
         anonymous_members: "Laipni lūdzam %{site_name}!"
-      search: "Meklēt"
+      search_placeholder: "Meklēt"
     themes:
       default_description: "Noklusējums"
     s3:
@@ -212,7 +212,7 @@ lv:
     joined: "Pievienojās"
     admin_title: "Administrators"
     show_more: "parādīt vairāk"
-    show_help: "iespējas"
+    show_help: "Opcijas"
     links: "Saites"
     links_lowercase:
       zero: "saite"
@@ -380,10 +380,6 @@ lv:
         required: "Jums ir jāpieprasa vienumi, pirms jūs varat tos pārskatīt."
         claimed_by_you: "Jūs pieprasījāt šo vienumu un varat to pārskatīt."
         claimed_by_other: "Šo vienumu var pārskatīt tikai <b>%{username}</b>."
-      claim:
-        title: "pieprasīt šo tēmu"
-      unclaim:
-        help: "noņemt šo prasību"
       awaiting_approval: "Gaida apstiprinājumu"
       delete: "Dzēst"
       settings:
@@ -401,7 +397,6 @@ lv:
       topic: "Tēma:"
       filtered_topic: "Jūs esat filtrējis līdz pārskatāmam saturam vienā tēmā."
       filtered_user: "Lietotājs"
-      filtered_reviewed_by: "Pārskatīja"
       show_all_topics: "rādīt visas tēmas"
       deleted_post: "(ieraksts dzēsts)"
       deleted_user: "(lietotājs dzēsts)"
@@ -431,7 +426,7 @@ lv:
         zero: "%{count} atbildes"
         one: "%{count} atbilde"
         other: "%{count} atbildes"
-      edit: "Labot"
+      edit: "Rediģēt ierakstu"
       save: "Saglabāt"
       cancel: "Atcelt"
       new_topic: "Apstiprinot šo vienumu, tiks izveidota jauna tēma"
@@ -452,7 +447,6 @@ lv:
           created_at: "Izveidots"
           created_at_asc: "Izveidots (reversā)"
         priority:
-          title: "Minimālā prioritāte"
           any: "(jebkurš)"
           low: "Zems"
           medium: "Vidējs"
@@ -495,8 +489,10 @@ lv:
         reviewable_post:
           title: "Ieraksts"
           noun: "ieraksts"
+      user_label: "Lietotājs"
       notes:
         delete: "Dzēst"
+      topic_label: "Tēmas"
       review_user: "Lietotājs"
       insights:
         activities:
@@ -1731,8 +1727,6 @@ lv:
       composer_actions:
         reply: Atbilde
         edit: Labot
-        create_topic:
-          label: "Jauna tēma"
       ignore: "Ignorēt"
     notifications:
       title: "paziņojumi par @vārda pieminēšanu, atbildēm uz jūsu ierakstiem un tēmām, ziņām, utt."
@@ -1943,7 +1937,6 @@ lv:
         one: "%{count} ziņa tēmā"
         other: "%{count} ziņas tēmā"
       create: "Jauna tēma"
-      create_long: "Izveidot jaunu tēmu "
       private_message: "Rakstīt ziņu "
       archive_message:
         help: "Pārvietot ziņu uz arhīvu "
@@ -2646,7 +2639,6 @@ lv:
         next_prev: "%{shortcut} Nākamā/iepriekšējā sadaļa"
       application:
         title: "Lietotne"
-        create: "%{shortcut} Izveidot jaunu tēmu"
         notifications: "%{shortcut} Atvērt paziņojumus"
         user_profile_menu: "%{shortcut} Atvērt lietotaja menu"
         show_incoming_updated_topics: "%{shortcut} Parādīt tēmas ar izmaiņām"
@@ -2865,6 +2857,7 @@ lv:
         categories: "Visas sadaļas"
   admin_js:
     settings: "Iestatījumi"
+    reset_filter: "Atlikt"
     admin:
       title: "Discourse administrators"
       moderator: "Moderators"
@@ -2883,6 +2876,19 @@ lv:
           title: "Drošība"
         plugins:
           title: "Spraudņi"
+      upcoming_changes:
+        name: "Vārds"
+        enabled: "Ieslēgts"
+        preview: "Priekšskatījums"
+        impact_roles:
+          admins: "Administratori"
+          moderators: "Moderātori"
+          staff: "Personāls"
+        filter:
+          all: "Visi"
+          enabled: "Ieslēgts"
+          disabled: "Atslēgt"
+          impact_type_other: "Citi"
       config:
         developer:
           title: "Izstrādātājs"
@@ -3638,7 +3644,6 @@ lv:
             cancel: "Atcelt"
           confirmation:
             cancel: "Atcelt"
-        delete_posts_forbidden_because_staff: "Nevar izdzēst visus administratoru un moderatoru ierakstus."
         delete_forbidden:
           zero: "Lietotāji nevar tikt dzēsti ja viņiem ir ieraksti. Izdzēs visus ierakstus pirms dzēs lietotāju. (ieraksti vecāki kā %{count} dienas nevar tikt izdzēsti.)"
           one: "Lietotāji nevar tikt dzēsti ja viņiem ir ieraksti. Izdzēs visus ierakstus pirms dzēs lietotāju. (ieraksti vecāki kā %{count} dienas nevar tikt izdzēsti.)"

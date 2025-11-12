@@ -5,15 +5,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import Chart from "discourse/admin/components/chart";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import Chart from "admin/components/chart";
-import MultiSelect from "select-kit/components/multi-select";
 
 export default class AiTranslations extends Component {
   @service router;
@@ -292,11 +292,7 @@ export default class AiTranslations extends Component {
     const colors = this.chartColors;
     const processedData = this.data.map(({ locale, total, done }) => {
       const rawPercentage = total > 0 ? (done / total) * 100 : 0;
-      // Show one decimal place when between 99.0 and 99.9 to avoid showing 100% when not complete
-      const donePercentage =
-        rawPercentage >= 99 && rawPercentage < 100 && rawPercentage % 1 !== 0
-          ? rawPercentage.toFixed(1)
-          : rawPercentage.toFixed(0);
+      const donePercentage = Math.trunc(rawPercentage).toString();
       const localeName = this.languageNameLookup.getLanguageName(locale);
       const languageNameForTooltip = localeName.split(" (")[0];
 

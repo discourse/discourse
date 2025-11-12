@@ -1,7 +1,7 @@
+import AdminAreaSettings from "discourse/admin/components/admin-area-settings";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminAreaSettings from "admin/components/admin-area-settings";
 
 export default <template>
   <DPageHeader

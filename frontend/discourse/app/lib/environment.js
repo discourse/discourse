@@ -5,11 +5,7 @@ export const INPUT_DELAY = 250;
 let environment = "unknown";
 
 export function setEnvironment(e) {
-  if (isTesting()) {
-    environment = "testing";
-  } else {
-    environment = e;
-  }
+  environment = e;
 }
 
 /**

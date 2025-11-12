@@ -1263,8 +1263,6 @@ de:
       yaxis: "Tag"
       description: "API-Anfragen für reguläre API-Schlüssel und Benutzer-API-Schlüssel."
     consolidated_page_views_browser_detection:
-      title: "Konsolidierte Seitenaufrufe mit Browser-Erkennung (experimentell)"
-      title_legacy: "Konsolidierte Seitenaufrufe mit Browser-Erkennung (experimentell)"
       xaxis:
         page_view_anon_browser: "Browser (anonym)"
         page_view_logged_in_browser: "Browser (angemeldet)"
@@ -2409,7 +2407,6 @@ de:
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Um einen Flüsterbeitrag zu erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern, müssen Flüsterbeiträge aktiviert sein."
     automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder persönlichen Nachrichten verwendet werden."
-    watched_precedence_over_muted: "Benachrichtige mich über Themen in Kategorien oder Schlagwörtern, die ich beobachte und die auch zu einem Thema gehören, das ich stummgeschaltet habe"
     company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
     governing_law: "Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzerklärung. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Website betreibt, registriert ist oder Geschäfte tätigt."
     city_for_disputes: "Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten."
@@ -2452,9 +2449,6 @@ de:
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
     experimental_new_new_view_groups: 'Eine neue Themenliste aktivieren, die ungelesene und neue Themen kombiniert, und den Link „Alles“ in der Seitenleiste entsprechend verknüpfen.'
-    floatkit_autocomplete_composer: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü im Editor. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle JQuery-basierte Autovervollständigungsmenü ersetzt."
-    floatkit_autocomplete_input_fields: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü für Eingabefelder in der Ganzseitensuche und in Gruppenauswahlfeldern. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle jQuery-basierte Autovervollständigungsmenü ersetzt."
-    floatkit_autocomplete_chat_composer: "Aktiviere das Floatkit-basierte Autovervollständigungsmenü im Chat-Editor. Dies ist eine Verbesserung der Benutzeroberfläche, die das aktuelle jQuery-basierte Autovervollständigungsmenü ersetzt."
     experimental_form_templates: "Aktiviere die Funktion für Formularvorlagen. Verwalte die Vorlagen unter <a href='%{base_path}/admin/customize/form-templates'>Anpassen / Vorlagen</a>."
     show_preview_for_form_templates: "Aktiviere die Vorschau für Formularvorlagen"
     lazy_load_categories_groups: "Lazy Loading von Kategorieinformationen nur für Benutzer dieser Gruppen. Dies verbessert die Leistung auf Websites mit vielen Kategorien."
@@ -2591,9 +2585,6 @@ de:
       activity_after: "Themen mit letzter Aktivität nach einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
       created_before: "Themen anzeigen, die vor einem bestimmten Datum (JJJJ-MM-TT oder vor Tagen) erstellt wurden"
       created_after: "Themen anzeigen, die nach einem Datum erstellt wurden (JJJJ-MM-TT oder vor Tagen)"
-      created_by: "Themen anzeigen, die von einem bestimmten Benutzer erstellt wurden"
-      created_by_user: "Themen anzeigen, die von 'Benutzername' erstellt wurden (ohne @)"
-      created_by_multiple: "Themen anzeigen, die von einem der angegebenen Benutzer erstellt wurden (durch Kommas getrennt)"
       latest_post_before: "Themen mit dem letzten Beitrag vor einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
       latest_post_after: "Themen mit dem letzten Beitrag nach einem Datum anzeigen (JJJJ-MM-TT oder vor Tagen)"
       likes_min: "Themen mit mindestens so vielen „Gefällt mir“-Angaben anzeigen"

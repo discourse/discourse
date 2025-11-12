@@ -1,7 +1,7 @@
+import AdminSearch from "discourse/admin/components/admin-search";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
-import AdminSearch from "admin/components/admin-search";
 
 export default <template>
   <DPageHeader

@@ -649,6 +649,11 @@ export default class PostStream extends RestModel {
     postIds.forEach((id) => delete identityMap[id]);
   }
 
+  removeAllPosts() {
+    const posts = Object.values(this._identityMap).filter((p) => p);
+    this.removePosts(posts);
+  }
+
   // Returns a post from the identity map if it's been inserted.
   findLoadedPost(id) {
     return this._identityMap[id];

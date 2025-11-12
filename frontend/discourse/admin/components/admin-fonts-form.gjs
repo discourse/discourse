@@ -3,20 +3,20 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { decamelize, underscore } from "@ember/string";
-import { eq } from "truth-helpers";
+import AdminFontChooser from "discourse/admin/components/admin-font-chooser";
+import {
+  DEFAULT_TEXT_SIZES,
+  MAIN_FONTS,
+  MORE_FONTS,
+} from "discourse/admin/lib/constants";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import UpdateDefaultTextSize from "discourse/components/modal/update-default-text-size";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminFontChooser from "admin/components/admin-font-chooser";
-import {
-  DEFAULT_TEXT_SIZES,
-  MAIN_FONTS,
-  MORE_FONTS,
-} from "admin/lib/constants";
 
 const ALL_FONTS = [...MAIN_FONTS, ...MORE_FONTS];
 

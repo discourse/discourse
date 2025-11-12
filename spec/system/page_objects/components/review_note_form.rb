@@ -4,7 +4,7 @@ module PageObjects
   module Components
     class ReviewNoteForm < PageObjects::Components::Base
       def add_note(note)
-        form.fill_in("note", with: note)
+        form.fill_in("content", with: note)
         form.submit
       end
 

@@ -3,14 +3,14 @@ import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { alias, equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import { and } from "truth-helpers";
 import ChooseTopic from "discourse/components/choose-topic";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
 import discourseComputed from "discourse/lib/decorators";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import TagChooser from "select-kit/components/tag-chooser";
 
 export const NEW_TOPIC_SELECTION = "new_topic";
 export const EXISTING_TOPIC_SELECTION = "existing_topic";

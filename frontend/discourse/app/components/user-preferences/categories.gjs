@@ -2,8 +2,8 @@ import { fn } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import { i18n } from "discourse-i18n";
-import CategorySelector from "select-kit/components/category-selector";
 
 const Categories = <template>
   <div class="control-group category-notifications">

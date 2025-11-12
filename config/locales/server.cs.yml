@@ -1157,7 +1157,7 @@ cs:
       email_title: 'Příspěvek v „%{title}“ vyžaduje pozornost redakce'
       email_body: "%{link}\\n\\n%{message}\n"
     notify_user:
-      title: "Poslat @%{username} zprávu"
+      title: "Poslat zprávu na @%{username}"
       description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       short_description: "Chci si s touto osobou o jejich příspěvku promluvit přímo a osobně."
       email_title: 'Váš příspěvek v „%{title}“'
@@ -1413,8 +1413,6 @@ cs:
       yaxis: "Den"
       description: "Požadavky API na běžné klíče API a uživatelské klíče API."
     consolidated_page_views_browser_detection:
-      title: "Konsolidované počty zobrazení stránek s detekcí prohlížeče (experimentální)"
-      title_legacy: "Konsolidované počty zobrazení stránek s detekcí prohlížeče (experimentální)"
       xaxis:
         page_view_anon_browser: "Anonymní prohlížeč"
         page_view_logged_in_browser: "Přihlášený prohlížeč"
@@ -1987,7 +1985,7 @@ cs:
     auto_approve_email_domains: "Uživatelé s e-mailovými adresami z tohoto seznamu domén budou automaticky schváleni. Subdomény jsou pro zadané domény zpracovávány automaticky. Zástupné znaky * a ? nejsou podporovány."
     hide_email_address_taken: "Neinformovat uživatele o existenci účtu s danou e-mailovou adresou během registrace nebo během procesu zapomenutí hesla. V případě požadavku na zapomenuté heslo požadovat celou e-mailovou adresu."
     log_out_strict: "Při odhlašování odhlásit VŠECHNY relace uživatele na všech zařízeních"
-    version_checks: "Odešlete příkaz ping na Discourse Hub pro aktualizace verzí a zobrazte zprávy o nových verzích na <a href='%{base_path}/admin' target='_blank'>/admin</a> nástěnce"
+    version_checks: "Odesílat příkaz ping na Discourse Hub pro aktualizace verzí a zobrazit informace o nových verzích na nástěnce <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Až bude k dispozici nová verze Discourse, poslat e-mail na adresu contact_email."
     include_in_discourse_discover: "Dovolte společnosti CDCK, Inc. („Discourse“), aby tuto komunitu zobrazila na stránce <a href='https://discover.discourse.org' target='_blank'>Discover</a> a v marketingových materiálech Discourse. Tímto způsobem sdílíte data potřebná k tomu, aby byl váš web zahrnut do služby. Upozorňujeme, že propagace komunit je na uvážení společnosti Discourse."
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
@@ -2265,6 +2263,7 @@ cs:
     auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují práh rychlého psaní `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
+    reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     forwarded_emails_behaviour: "Jak zacházet s přeposlaným e-mailem na Discourse. <a href='https://meta.discourse.org/t/-/62977' target='_blank'>Další informace</a>"
     email_total_attachment_size_limit_kb: "Maximální celková velikost souborů připojených k odchozím e-mailům. Nastavením na 0 zakážete odesílání příloh."
@@ -2322,7 +2321,6 @@ cs:
     default_text_size: "Určuje výchozí velikost písma pro všechny textové prvky na webu. Tuto velikost si může každý uživatel následně upravit podle svých preferencí."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     force_lowercase_tags: "Vynutit, aby všechny nové štítky byly psány výhradně malými písmeny."
-    watched_precedence_over_muted: "Informujte mě o tématech v kategoriích nebo štítcích, které sleduji a které také patří do těch, které jsem ztlumil."
     shared_drafts_allowed_groups: "Povolte uživatelům v těchto skupinách zobrazovat a upravovat sdílené návrhy."
     base_font: "Základní písmo použité pro většinu textu na webu. Motivy mohou toto přepsat pomocí vlastní vlastnosti CSS `--font-family`."
     heading_font: "Písmo, které se má použít pro nadpisy na webu. Motivy toto mohou přepsat pomocí vlastní vlastnosti CSS `--heading-font-family`."
@@ -2385,9 +2383,6 @@ cs:
       activity_after: "Zobrazit témata s poslední činností po datu (před YYYY-MM-DD nebo x dnech)"
       created_before: "Zobrazit témata vytvořená před datem (před YYYY-MM-DD nebo před x dny)"
       created_after: "Zobrazit témata vytvořená před datem (RRRR-MM-DD nebo x dny)"
-      created_by: "Zobrazit témata vytvořená konkrétním uživatelem"
-      created_by_user: "Zobrazit témata vytvořená uživatelským jménem (bez @)"
-      created_by_multiple: "Zobrazit témata vytvořená kterýmkoli ze zadaných uživatelů (oddělenými čárkou)"
       latest_post_before: "Zobrazit témata s posledním příspěvkem před datem (před YYYY-MM-DD nebo před x dny)"
       latest_post_after: "Zobrazit témata s posledním příspěvkem po datu (před YYYY-MM-DD nebo x dnech)"
       likes_min: "Zobrazit témata alespoň s tímto množstvím líbí se"
@@ -4618,6 +4613,8 @@ cs:
       low: "Nízká"
       medium: "Střední"
       high: "Vysoká"
+    must_claim: "Než budete jednat, musíte si položky nejdříve nárokovat."
+    user_claimed: "Tuto položku si nárokoval jiný uživatel."
     reasons:
       auto_silence_regex: "Nový uživatel, jehož první příspěvek odpovídá nastavení %{link} ."
       staged: "Nová témata a příspěvky pro předběžně založené uživatele musí schválit členové redakce. Viz %{link}."

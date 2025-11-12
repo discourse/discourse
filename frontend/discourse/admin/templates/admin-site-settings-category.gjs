@@ -1,5 +1,5 @@
+import SiteSetting from "discourse/admin/components/site-setting";
 import { i18n } from "discourse-i18n";
-import SiteSetting from "admin/components/site-setting";
 
 export default <template>
   {{#if @controller.filteredSiteSettings}}

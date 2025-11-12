@@ -7,6 +7,10 @@ module PageObjects
         page.visit("/admin/users/#{user.id}/#{user.username}")
       end
 
+      def click_action_logs_button
+        click_button(I18n.t("admin_js.admin.user.action_logs"))
+      end
+
       def has_suspend_button?
         has_css?(".btn-danger.suspend-user")
       end

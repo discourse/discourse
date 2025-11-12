@@ -297,7 +297,7 @@ fr:
       header:
         logged_in_members: "Bienvenue, %{preferred_display_name} !"
         anonymous_members: "Bienvenue sur %{site_name} !"
-      search: "Recherche"
+      search_placeholder: "Recherche"
     themes:
       default_description: "Par défaut"
       broken_theme_alert: "Il se peut que votre site ne fonctionne pas, car un thème ou un composant comporte des erreurs. Consultez la console du navigateur pour obtenir plus d'informations."
@@ -357,7 +357,7 @@ fr:
     joined: "Inscrit(e)"
     admin_title: "Administration"
     show_more: "afficher plus"
-    show_help: "options"
+    show_help: "Options"
     links: "Liens"
     links_lowercase:
       one: "lien"
@@ -678,10 +678,6 @@ fr:
         claimed_by_you: "Vous avez réservé cet élément et pouvez donc l'examiner."
         claimed_by_other: "Cet élément ne peut être examiné que par <b>%{username}</b>."
         automatically_claimed_by: "Cet élément est actuellement en cours d'examen par <b>%{username}</b>."
-      claim:
-        title: "réserver ce sujet"
-      unclaim:
-        help: "retirer cette réservation"
       awaiting_approval: "En attente d'approbation"
       delete: "Supprimer"
       settings:
@@ -752,7 +748,7 @@ fr:
       replies:
         one: "%{count} réponse"
         other: "%{count} réponses"
-      edit: "Modifier"
+      edit: "Modifier le message"
       save: "Enregistrer"
       cancel: "Annuler"
       new_topic: "L'approbation de cet élément créera un nouveau sujet"
@@ -774,7 +770,6 @@ fr:
           created_at: "Date de création"
           created_at_asc: "Date de création (inverse)"
         priority:
-          title: "Priorité minimum"
           any: "(toutes)"
           low: "Faible"
           medium: "Moyenne"
@@ -839,6 +834,7 @@ fr:
           title: "Message"
           noun: "message"
       flagged_as: "Signalé comme"
+      user_label: "Utilisateur"
       assigned_to: "Attribué à"
       moderator_actions: "Actions du modérateur"
       timeline_and_notes: "Chronologie et notes"
@@ -862,13 +858,14 @@ fr:
         chars_remaining: "%{count} caractères restants"
         delete_note: "Supprimer cette note"
         delete: "Supprimer"
-      new_topic_label: "Nouveau sujet"
+      topic_label: "Sujet"
       queued_user: "Utilisateur en file d'attente"
       posted_in: "Publié dans"
       flagged_user: "Utilisateur signalé"
       review_user: "Utilisateur"
       need_help: "Vous avez besoin d'aide ?"
       copy_link: "Copier le lien"
+      copy_link_feedback: "Lien copié "
       view_source: "Voir la source"
       insights:
         title: "Analyses"
@@ -876,9 +873,6 @@ fr:
         flagged_by_users:
           one: "Signalé par %{count} utilisateur unique"
           other: "Signalé par %{count} utilisateurs uniques"
-        similar_posts: "Publications passées similaires"
-        flagged_in_timeframe: "%{count} signalements précédemment"
-        user_activity: "Activité de l'utilisateur"
         activities:
           new_account: "nouveau compte"
           trust_level: "niveau de confiance : %{trustLevelName}"
@@ -2701,7 +2695,7 @@ fr:
         title: "Traduction de publication"
         select: "Sélectionnez une traduction"
         save: "Enregistrer la traduction"
-        original_content: "Contenu de la publication originale"
+        translation: "Traduction"
         placeholder: "Saisissez la traduction de la publication ici..."
       group_mentioned_limit:
         one: "<b>Attention !</b> Vous avez mentionné <a href='%{group_link}'>%{group}</a>, cependant ce groupe comprend plus de membres que le nombre limite de mentions de %{count} utilisateur configuré par l'administrateur. Personne ne sera notifié."
@@ -2752,7 +2746,7 @@ fr:
       reply: "Répondre"
       cancel: "Annuler"
       create_topic: "Créer le sujet"
-      create_pm: "Envoyer le message"
+      create_pm: "Envoyer un message"
       create_whisper: "Murmurer"
       create_shared_draft: "Créer un brouillon partagé"
       edit_shared_draft: "Modifier le brouillon partagé"
@@ -2849,6 +2843,9 @@ fr:
         create_topic:
           label: "Nouveau sujet"
           desc: Créer un nouveau sujet
+        create_personal_message:
+          label: "Nouveau message direct"
+          desc: "Créer un nouveau message direct"
         shared_draft:
           label: "Brouillon partagé"
           desc: "Créer un brouillon de sujet qui ne sera visible que par les utilisateurs autorisés"
@@ -2857,7 +2854,6 @@ fr:
           desc: "Répondre sans changer la date de dernière réponse"
         toggle_unlisted:
           label: Activer/désactiver l'état non répertorié
-          desc: Sujets non répertoriés accessibles uniquement aux membres par lien direct
       reload: "Recharger"
       ignore: "Ignorer"
       image_alt_text:
@@ -4546,7 +4542,6 @@ fr:
         go_to_unread_post: "%{shortcut} Accéder au premier message non lu"
       application:
         title: "Application"
-        create: "%{shortcut} Créer un nouveau sujet"
         notifications: "%{shortcut} Ouvrir les notifications"
         hamburger_menu: "%{shortcut} Ouvrir le menu de navigation"
         user_profile_menu: "%{shortcut} Ouvrir le menu utilisateur"
@@ -5212,6 +5207,7 @@ fr:
   admin_js:
     type_to_filter: "Commencez votre saisie pour filtrer…"
     settings: "Paramètres"
+    reset_filter: "Réinitialiser"
     admin:
       title: "Administrateur Discourse"
       moderator: "Modérateur"
@@ -5244,6 +5240,21 @@ fr:
           title: "Extensions"
         advanced:
           title: "Avancé"
+      upcoming_changes:
+        name: "Nom"
+        enabled: "Activé"
+        select_groups: "Sélectionnez des groupes…"
+        preview: "Aperçu"
+        impact_roles:
+          admins: "Administrateurs "
+          moderators: "Modérateurs"
+          staff: "Responsable"
+        filter:
+          all: "Tout"
+          enabled: "Activé"
+          disabled: "Désactivé"
+          impact_type_feature: "Fonctionnalité"
+          impact_type_other: "Autre"
       config:
         about:
           title: "À propos de votre site"
@@ -7453,7 +7464,6 @@ fr:
             cancel: "Annuler"
         merging_user: "Fusion de l'utilisateur…"
         merge_failed: "Une erreur s'est produite lors de la fusion des utilisateurs."
-        delete_posts_forbidden_because_staff: "Vous ne pouvez pas supprimer tous les messages des administrateurs et des modérateurs."
         delete_forbidden:
           one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jour ne peuvent pas être supprimés.)"
           other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont publié des messages. Supprimez tous les messages avant d'essayer de supprimer un utilisateur. (Les messages datant d'il y a plus de %{count} jours ne peuvent pas être supprimés.)"

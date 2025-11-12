@@ -1,4 +1,4 @@
-import SchemaSettingNumberField from "admin/components/schema-setting/number-field";
+import SchemaSettingNumberField from "discourse/admin/components/schema-setting/number-field";
 
 export default class SchemaSettingTypeInteger extends SchemaSettingNumberField {
   inputMode = "numeric";

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
 
 export default class InstallThemeCard extends Component {
   externalResources = [

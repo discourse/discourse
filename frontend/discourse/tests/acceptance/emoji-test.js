@@ -63,6 +63,23 @@ acceptance("Emoji", function (needs) {
       );
   });
 
+  test("emoji autocomplete after punctuation", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-buttons .btn.create");
+
+    await simulateKeys(".d-editor-input", "Hello world,:smi");
+    assert.dom(".autocomplete.ac-emoji").exists();
+
+    await simulateKey(".d-editor-input", "\t");
+
+    assert
+      .dom(".d-editor-input")
+      .hasValue(
+        "Hello world,:smiley: ",
+        "emoji inserted at correct position after comma"
+      );
+  });
+
   needs.settings({ emoji_autocomplete_min_chars: 2 });
 
   test("siteSetting:emoji_autocomplete_min_chars", async function (assert) {

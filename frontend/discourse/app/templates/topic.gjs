@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { and, eq } from "truth-helpers";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import AddTopicStatusClasses from "discourse/components/add-topic-status-classes";
 import AnonymousTopicFooterButtons from "discourse/components/anonymous-topic-footer-buttons";
@@ -32,6 +31,7 @@ import TopicLocalizedContentToggle from "discourse/components/topic-localized-co
 import TopicMap from "discourse/components/topic-map/index";
 import TopicNavigation from "discourse/components/topic-navigation";
 import TopicProgress from "discourse/components/topic-progress";
+import TopicSkipLinks from "discourse/components/topic-skip-links";
 import TopicStatus from "discourse/components/topic-status";
 import TopicTimeline from "discourse/components/topic-timeline";
 import TopicTimerInfo from "discourse/components/topic-timer-info";
@@ -43,9 +43,11 @@ import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import autoFocus from "discourse/modifiers/auto-focus";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import MiniTagChooser from "select-kit/components/mini-tag-chooser";
+import booleanString from "../helpers/boolean-string";
 
 export default <template>
   {{#let @controller.model.postStream as |postStream|}}
@@ -60,6 +62,10 @@ export default <template>
     @topic={{@controller.model}}
     @hasScrolled={{@controller.hasScrolled}}
   >
+    <TopicSkipLinks
+      @postStream={{@controller.model.postStream}}
+      @topic={{@controller.model}}
+    />
     {{#if @controller.model}}
       <AddCategoryTagClasses
         @category={{@controller.model.category}}
@@ -201,7 +207,12 @@ export default <template>
             </div>
 
           {{else}}
-            <h1 data-topic-id={{@controller.model.id}}>
+            <h1
+              data-topic-id={{@controller.model.id}}
+              {{! Prevent duplicating the topic title heading on screen readers when the header is displaying the title
+                in the header }}
+              aria-hidden={{booleanString @controller.titleIsVisibleOnHeader}}
+            >
               {{#unless @controller.model.is_warning}}
                 {{#if @controller.canSendPms}}
                   <PrivateMessageGlyph

@@ -811,6 +811,19 @@ class Search
     posts.where("topics.views <= ?", match.to_i)
   end
 
+  advanced_filter(/\Alocale:([a-zA-Z0-9_-]+)\z/i) do |posts, match|
+    case match.downcase
+    when "none", "null"
+      posts.where("posts.locale IS NULL")
+    when "any", "present"
+      posts.where("posts.locale IS NOT NULL")
+    else
+      locale = match.downcase.gsub("-", "_")
+      base_locale = locale.split("_").first
+      posts.where("posts.locale LIKE ?", "#{base_locale}%")
+    end
+  end
+
   def apply_filters(posts)
     @filters.each do |block, match|
       if block.arity == 1
@@ -1537,9 +1550,11 @@ class Search
 
   def posts_eager_loads(query)
     query = query.includes(:user, :post_search_data)
+    query = query.includes(:localizations) if SiteSetting.content_localization_enabled
     topic_eager_loads = [{ category: :parent_category }]
 
     topic_eager_loads << :tags if SiteSetting.tagging_enabled
+    topic_eager_loads << :localizations if SiteSetting.content_localization_enabled
 
     Search.custom_topic_eager_loads.each do |custom_loads|
       next unless custom_loads[:enabled].call

@@ -39,6 +39,7 @@ export default class SignupPageController extends Controller {
   accountChallenge = 0;
   accountHoneypot = 0;
   formSubmitted = false;
+  /** @type Array */
   rejectedEmails = A();
   prefilledUsername = null;
   maskPassword = true;

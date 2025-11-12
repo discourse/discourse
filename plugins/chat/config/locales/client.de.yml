@@ -436,6 +436,7 @@ de:
           topic: "Thema"
       reviewable:
         type: "Chat-Nachricht"
+        message_in_channel: "Kanal"
       reactions:
         only_you: "<span>Du hast mit reagiert mit </span>:%{emoji}:"
         you_and_single_user: "<span>Du und %{username} habt reagiert mit </span>:%{emoji}:"
