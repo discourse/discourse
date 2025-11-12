@@ -107,7 +107,7 @@ after_initialize do
       # Likes will only be blank if there are only reactions where the reaction is in
       # discourse_reactions_excluded_from_like. All other reactions will have a `PostAction` record.
       if likes.blank?
-        return reactions.sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] }
+        return(reactions.sort_by { |reaction| [-reaction[:count].to_i, reaction[:id]] })
       end
 
       # Reactions using main_reaction_id only have a `PostAction` record,
@@ -206,7 +206,17 @@ after_initialize do
     ReactionsSerializerHelpers.current_user_used_main_reaction_for_post(object, scope)
   end
 
-  add_to_serializer(:topic_list_item, :op_reactions_data) do
+  add_to_serializer(
+    :topic_list_item,
+    :op_reactions_data,
+    include_condition: -> do
+      object.association(:first_post).loaded? &&
+        DiscoursePluginRegistry.apply_modifier(
+          :include_discourse_reactions_data_on_topic_list,
+          false,
+        )
+    end,
+  ) do
     return nil unless object.first_post
 
     post = object.first_post
@@ -236,11 +246,6 @@ after_initialize do
         canToggle: like_action ? scope.can_delete_post_action?(like_action) : true,
       },
     }
-  end
-
-  add_to_serializer(:topic_list_item, :include_op_reactions_data?) do
-    object.association(:first_post).loaded? &&
-      SiteSetting.include_discourse_reactions_data_on_topic_list
   end
 
   add_to_serializer(:topic_view, :valid_reactions) { DiscourseReactions::Reaction.valid_reactions }

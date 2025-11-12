@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { cancel, later, run, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { createPopper } from "@popperjs/core";
 import curryComponent from "ember-curry-component";
 import $ from "jquery";
@@ -123,10 +122,9 @@ export default class DiscourseReactionsActions extends Component {
   @tracked reactionsPickerExpanded = false;
   @tracked statePanelExpanded = false;
   @tracked clickOutsideDisabled = false;
-  @tracked reactionsData = new TrackedObject(this.args.reactionsData);
 
   get data() {
-    return this.args.post || this.reactionsData;
+    return this.args.post;
   }
 
   get classes() {

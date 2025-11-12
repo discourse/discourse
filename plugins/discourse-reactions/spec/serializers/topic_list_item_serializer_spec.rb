@@ -10,11 +10,26 @@ describe TopicListItemSerializer do
   fab!(:topic) { Fabricate(:topic, user: user_1) }
   fab!(:first_post) { Fabricate(:post, user: user_1, topic: topic, post_number: 1) }
 
+  let(:plugin_instance) { Plugin::Instance.new }
+  let(:modifier_block) { Proc.new { true } }
+
   before do
     SiteSetting.discourse_reactions_enabled = true
     SiteSetting.discourse_reactions_enabled_reactions = "otter|+1|tada"
     SiteSetting.discourse_reactions_like_icon = "heart"
-    SiteSetting.include_discourse_reactions_data_on_topic_list = true
+
+    plugin_instance.register_modifier(
+      :include_discourse_reactions_data_on_topic_list,
+      &modifier_block
+    )
+  end
+
+  after do
+    DiscoursePluginRegistry.unregister_modifier(
+      plugin_instance,
+      :include_discourse_reactions_data_on_topic_list,
+      &modifier_block
+    )
   end
 
   describe "#op_reactions_data" do
@@ -32,8 +47,34 @@ describe TopicListItemSerializer do
       end
     end
 
-    context "when site setting is disabled" do
-      before { SiteSetting.include_discourse_reactions_data_on_topic_list = false }
+    context "when modifier returns false" do
+      let(:false_plugin_instance) { Plugin::Instance.new }
+      let(:false_modifier_block) { Proc.new { false } }
+
+      before do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :include_discourse_reactions_data_on_topic_list,
+          &modifier_block
+        )
+        false_plugin_instance.register_modifier(
+          :include_discourse_reactions_data_on_topic_list,
+          &false_modifier_block
+        )
+      end
+
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          false_plugin_instance,
+          :include_discourse_reactions_data_on_topic_list,
+          &false_modifier_block
+        )
+        # Re-register the original modifier for subsequent tests
+        plugin_instance.register_modifier(
+          :include_discourse_reactions_data_on_topic_list,
+          &modifier_block
+        )
+      end
 
       it "does not include op_reactions_data" do
         topic.association(:first_post).target = first_post
@@ -390,25 +431,53 @@ describe TopicListItemSerializer do
   end
 
   describe "#include_op_reactions_data?" do
-    it "excludes op_reactions_data when site setting is disabled" do
-      SiteSetting.include_discourse_reactions_data_on_topic_list = false
-      topic.association(:first_post).target = first_post
+    context "when modifier returns false" do
+      let(:false_plugin_instance) { Plugin::Instance.new }
+      let(:false_modifier_block) { Proc.new { false } }
 
-      json = TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
+      before do
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :include_discourse_reactions_data_on_topic_list,
+          &modifier_block
+        )
+        false_plugin_instance.register_modifier(
+          :include_discourse_reactions_data_on_topic_list,
+          &false_modifier_block
+        )
+      end
 
-      expect(json.key?(:op_reactions_data)).to eq(false)
+      after do
+        DiscoursePluginRegistry.unregister_modifier(
+          false_plugin_instance,
+          :include_discourse_reactions_data_on_topic_list,
+          &false_modifier_block
+        )
+        # Re-register the original modifier for subsequent tests
+        plugin_instance.register_modifier(
+          :include_discourse_reactions_data_on_topic_list,
+          &modifier_block
+        )
+      end
+
+      it "excludes op_reactions_data" do
+        topic.association(:first_post).target = first_post
+
+        json = TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
+
+        expect(json.key?(:op_reactions_data)).to eq(false)
+      end
+
+      it "returns false" do
+        topic.association(:first_post).target = first_post
+
+        json = TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
+
+        expect(json.key?(:op_reactions_data)).to eq(false)
+      end
     end
 
-    it "returns false when site setting is disabled" do
-      SiteSetting.include_discourse_reactions_data_on_topic_list = false
-      topic.association(:first_post).target = first_post
-
-      json = TopicListItemSerializer.new(topic, scope: Guardian.new(user_1), root: false).as_json
-
-      expect(json.key?(:op_reactions_data)).to eq(false)
-    end
-
-    it "returns true when first_post is loaded and site setting is enabled" do
+    it "returns true when first_post is loaded and modifier returns true" do
       topic.association(:first_post).target = first_post
       first_post.post_actions_with_reaction_users =
         DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(

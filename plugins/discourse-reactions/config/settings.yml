@@ -29,5 +29,3 @@ discourse_reactions:
     default: false
     client: true
     area: "emojis"
-  include_discourse_reactions_data_on_topic_list:
-    default: false
