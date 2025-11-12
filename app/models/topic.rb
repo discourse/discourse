@@ -1579,11 +1579,14 @@ class Topic < ActiveRecord::Base
   end
 
   def inherit_auto_close_from_category(timer_type: :close)
-    auto_close_hours = self.category&.auto_close_hours
+    default_timer = self.category&.category_default_timer
+    return unless default_timer
+
+    auto_close_hours = default_timer.duration_minutes.minutes.in_hours
 
     if self.open? && !@ignore_category_auto_close && auto_close_hours.present? &&
          public_topic_timer&.execute_at.blank?
-      based_on_last_post = self.category.auto_close_based_on_last_post
+      based_on_last_post = default_timer.based_on_last_post
       duration_minutes = based_on_last_post ? auto_close_hours * 60 : nil
 
       # the timer time can be a timestamp or an integer based

@@ -9,8 +9,7 @@ RSpec.describe "Post rake tasks" do
 
   describe "topics:apply_autoclose" do
     it "should close topics silently" do
-      category.auto_close_hours = 1
-      category.save!
+      Fabricate(:category_default_timer, category:, duration_minutes: 60)
 
       original_bumped_at = topic.bumped_at
 

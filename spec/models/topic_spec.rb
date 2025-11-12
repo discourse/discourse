@@ -2022,7 +2022,10 @@ RSpec.describe Topic do
         describe "when new category is set to auto close by default" do
           before do
             freeze_time
-            new_category.update!(auto_close_hours: 5)
+            new_category.set_or_create_default_timer duration_minutes: 300,
+                                                     status_type: BaseTimer.types[:close],
+                                                     execute_at: Time.now,
+                                                     user: Discourse.system_user
             topic.user.update!(admin: true)
           end
 
@@ -2350,7 +2353,10 @@ RSpec.describe Topic do
     end
 
     describe "when category's default auto close is set" do
-      let(:category) { Fabricate(:category_with_definition, auto_close_hours: 4) }
+      fab!(:category) { Fabricate(:category_with_definition) }
+      fab!(:category_default_timer) do
+        Fabricate(:category_default_timer, category: category, duration_minutes: 240)
+      end
       let(:topic) { Fabricate(:topic, category: category) }
 
       it "should be able to override category's default auto close" do
