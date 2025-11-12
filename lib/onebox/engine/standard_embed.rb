@@ -32,6 +32,8 @@ module Onebox
       add_oembed_provider(%r{vimeo\.com/}, "https://vimeo.com/api/oembed.json")
       # NYT requires login so use oembed only
       add_oembed_provider(%r{nytimes\.com/}, "https://www.nytimes.com/svc/oembed/json/")
+      # YouTube's oEmbed for reliable metadata (thumbnails, titles)
+      add_oembed_provider(/youtube\.com|youtu\.be/, "https://www.youtube.com/oembed")
 
       def always_https?
         AllowlistedGenericOnebox.host_matches(uri, AllowlistedGenericOnebox.https_hosts) || super
