@@ -270,6 +270,10 @@ RSpec.describe TopicEmbed do
           headers: {
           },
         )
+        stub_request(
+          :get,
+          "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=K56soYl0U1w",
+        ).to_return(status: 200, body: "", headers: {})
 
         imported_post =
           TopicEmbed.import(
