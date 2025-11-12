@@ -565,10 +565,6 @@ class QunitRunner
       env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
       cmd += %w[pnpm testem ci -f testem.js]
       cmd += ["--parallel", parallel.to_s] if parallel
-    elsif @plugin_targets.any?
-      run_theme_build(unless_build_reused: reuse_build)
-      cmd += %w[pnpm testem ci -f testem.js]
-      cmd += ["--parallel", parallel.to_s] if parallel
     else
       cmd += %w[pnpm ember exam]
       cmd += ["--query", query] if query && !query.empty?
