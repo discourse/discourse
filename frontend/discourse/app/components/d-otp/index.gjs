@@ -4,6 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
+import autoFocus from "discourse/modifiers/auto-focus";
 import preventScrollOnFocus from "discourse/modifiers/prevent-scroll-on-focus";
 import { i18n } from "discourse-i18n";
 import Slot from "./slot";
@@ -18,6 +19,10 @@ export default class DOTP extends Component {
 
   get slots() {
     return this.args.slots ?? DEFAULT_SLOTS;
+  }
+
+  get autofocus() {
+    return this.args.autofocus ?? true;
   }
 
   get isFilled() {
@@ -143,6 +148,7 @@ export default class DOTP extends Component {
           {{on "blur" this.onBlur}}
           {{on "paste" this.onPaste}}
           aria-label={{i18n "d_otp.screen_reader" count=this.slots}}
+          {{(if this.autofocus (modifier autoFocus))}}
           ...attributes
         />
       </div>
