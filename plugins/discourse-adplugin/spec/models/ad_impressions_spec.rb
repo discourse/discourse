@@ -3,6 +3,9 @@
 describe AdPlugin::AdImpression do
   fab!(:house_ad)
   fab!(:user)
+  fab!(:house_ad_impression) { Fabricate(:house_ad_impression, house_ad: house_ad, user: user) }
+  fab!(:external_ad_impression)
+  fab!(:anonymous_house_ad_impression)
 
   before { enable_current_plugin }
 
@@ -62,34 +65,30 @@ describe AdPlugin::AdImpression do
 
   describe "associations" do
     it "belongs to house_ad" do
-      impression = Fabricate(:house_ad_impression)
-      expect(impression.house_ad).to be_present
-      expect(impression.house_ad).to be_a(AdPlugin::HouseAd)
+      expect(house_ad_impression.house_ad).to be_present
+      expect(house_ad_impression.house_ad).to be_a(AdPlugin::HouseAd)
     end
 
     it "belongs to user" do
-      impression = Fabricate(:house_ad_impression, user_id: user.id)
-      expect(impression.user).to eq(user)
+      expect(house_ad_impression.user).to eq(user)
     end
 
     it "allows nil user (anonymous impressions)" do
-      impression = Fabricate(:house_ad_impression)
-      expect(impression.user).to be_nil
-      expect(impression).to be_valid
+      expect(anonymous_house_ad_impression.user).to be_nil
+      expect(anonymous_house_ad_impression).to be_valid
     end
 
     it "allows nil house_ad for external ads" do
-      impression = Fabricate(:external_ad_impression)
-      expect(impression.house_ad).to be_nil
-      expect(impression).to be_valid
+      expect(external_ad_impression.house_ad).to be_nil
+      expect(external_ad_impression).to be_valid
     end
   end
 
   describe "enum ad_type" do
     it "defines house ad type" do
       impression = Fabricate(:house_ad_impression)
-      expect(impression.house?).to eq(true)
-      expect(impression.adsense?).to eq(false)
+      expect(house_ad_impression.house?).to eq(true)
+      expect(house_ad_impression.adsense?).to eq(false)
     end
 
     it "defines adsense ad type" do
@@ -107,7 +106,8 @@ describe AdPlugin::AdImpression do
     end
 
     it "defines amazon ad type" do
-      impression = Fabricate(:external_ad_impression)
+      impression =
+        AdPlugin::AdImpression.create!(ad_type: AdPlugin::AdType[:amazon], placement: "test")
       expect(impression.amazon?).to eq(true)
       expect(impression.house?).to eq(false)
     end
@@ -127,14 +127,11 @@ describe AdPlugin::AdImpression do
     end
 
     it "provides scopes for each ad type" do
-      house_impression = Fabricate(:house_ad_impression)
-      external_impression = Fabricate(:external_ad_impression)
+      expect(AdPlugin::AdImpression.house).to include(house_ad_impression)
+      expect(AdPlugin::AdImpression.house).not_to include(external_ad_impression)
 
-      expect(AdPlugin::AdImpression.house).to include(house_impression)
-      expect(AdPlugin::AdImpression.house).not_to include(external_impression)
-
-      expect(AdPlugin::AdImpression.amazon).to include(external_impression)
-      expect(AdPlugin::AdImpression.amazon).not_to include(house_impression)
+      expect(AdPlugin::AdImpression.amazon).to include(external_ad_impression)
+      expect(AdPlugin::AdImpression.amazon).not_to include(house_ad_impression)
     end
 
     it "allows setting ad_type using bang method" do
@@ -146,15 +143,13 @@ describe AdPlugin::AdImpression do
   end
 
   describe "creating impressions" do
-    fab!(:house_ad_impression) { Fabricate(:house_ad_impression, house_ad: house_ad) }
-    fab!(:external_ad_impression)
-    # it "creates house ad impression" do
-    #   expect(house_ad_impression).to be_persisted
-    #   expect(AdPlugin::AdType.types[house_ad_impression.ad_type.to_sym]).to eq(
-    #     AdPlugin::AdType[:house],
-    #   )
-    #   expect(house_ad_impression.house_ad).to eq(house_ad)
-    # end
+    it "creates house ad impression" do
+      expect(house_ad_impression).to be_persisted
+      expect(AdPlugin::AdType.types[house_ad_impression.ad_type.to_sym]).to eq(
+        AdPlugin::AdType[:house],
+      )
+      expect(house_ad_impression.house_ad).to eq(house_ad)
+    end
 
     it "creates external ad impression" do
       expect(external_ad_impression).to be_persisted
@@ -165,15 +160,13 @@ describe AdPlugin::AdImpression do
     end
 
     it "creates impression with user" do
-      house_ad_impression.user = user
-      house_ad_impression.save
-
-      re_loaded_house_ad_impression = AdPlugin::AdImpression.find(house_ad_impression.id)
-
-      expect(re_loaded_house_ad_impression.user).to eq(user)
+      expect(house_ad_impression.user).to eq(user)
     end
 
     it "creates impression without user (anonymous)" do
+      house_ad_impression.user = nil
+      house_ad_impression.save
+      re_loaded_house_ad_impression = AdPlugin::AdImpression.find(house_ad_impression.id)
       expect(house_ad_impression.user).to be_nil
     end
 
@@ -226,8 +219,8 @@ describe AdPlugin::AdImpression do
   end
 
   describe "cascade deletion" do
+    fab!(:impression) { Fabricate(:house_ad_impression, house_ad: house_ad, user: user) }
     it "deletes impressions when house_ad is deleted" do
-      impression = Fabricate(:house_ad_impression, house_ad: house_ad)
       impression_id = impression.id
 
       house_ad.destroy!
@@ -238,7 +231,6 @@ describe AdPlugin::AdImpression do
     end
 
     it "nullifies user_id when user is deleted" do
-      impression = Fabricate(:house_ad_impression, house_ad: house_ad, user_id: user.id)
       user_id = user.id
 
       user.destroy!

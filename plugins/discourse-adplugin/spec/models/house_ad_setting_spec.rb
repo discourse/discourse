@@ -69,25 +69,23 @@ describe AdPlugin::HouseAdSetting do
   end
 
   describe ".publish_settings" do
-    let!(:anon_ad) do
-      AdPlugin::HouseAd.create(
+    fab!(:anon_ad) do
+      Fabricate(
+        :house_ad,
         name: "anon-ad",
         html: "<whatever-anon>",
         visible_to_anons: true,
         visible_to_logged_in_users: false,
-        group_ids: [],
-        category_ids: [],
       )
     end
 
-    let!(:logged_in_ad) do
-      AdPlugin::HouseAd.create(
+    fab!(:logged_in_ad) do
+      Fabricate(
+        :house_ad,
         name: "logged-in-ad",
         html: "<whatever-logged-in>",
         visible_to_anons: false,
         visible_to_logged_in_users: true,
-        group_ids: [],
-        category_ids: [],
       )
     end
 

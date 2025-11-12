@@ -13,7 +13,11 @@ module AdPlugin
     private
 
     def impression_params
-      params.require(:ad_plugin_impression).permit(:ad_type, :ad_plugin_house_ad_id, :placement)
+      required_params =
+        params.require(:ad_plugin_impression).permit(:ad_type, :ad_plugin_house_ad_id, :placement)
+
+      required_params[:ad_type] = required_params[:ad_type].to_i
+      required_params
     end
   end
 end
