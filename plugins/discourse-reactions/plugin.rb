@@ -214,6 +214,7 @@ after_initialize do
         DiscoursePluginRegistry.apply_modifier(
           :include_discourse_reactions_data_on_topic_list,
           false,
+          scope.user,
         )
     end,
   ) do
