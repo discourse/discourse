@@ -1759,7 +1759,7 @@ en:
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. allow_duplicate_topic_titles must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
-    title: "The name of this site. Visible to all visitors including anonymous users."
+    title: "The name of this site. Visible to all visitors including anonymous users. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
     site_description: "Describe this site in one sentence. Visible to all visitors including anonymous users."
     short_site_description: "Short description in a few words. Visible to all visitors including anonymous users."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications, and also displayed on <a href='%{base_path}/about' target='_blank'>/about</a>. Visible to anonymous users on public sites."
@@ -2711,7 +2711,7 @@ en:
     enable_user_status: "Allow users to set custom status message (emoji + description)."
     enable_user_tips: "Enable new user tips that describe key features to users"
 
-    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters."
+    short_title: "The short title will be used on the user's home screen, launcher, or other places where space may be limited. It should be limited to 12 characters. Note that changing this title may send a prompt to users of the PWA asking them to either update or uninstall the app."
 
     dashboard_hidden_reports: "Allow to hide the specified reports from the dashboard."
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
