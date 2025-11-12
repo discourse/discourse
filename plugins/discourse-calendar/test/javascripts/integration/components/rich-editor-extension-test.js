@@ -38,4 +38,31 @@ module("Integration | Component | rich-editor-extension", function (hooks) {
       });
     });
   });
+
+  test("custom fields persist when toggling between markdown and rich text", async function (assert) {
+    this.siteSettings.rich_editor = true;
+    this.siteSettings.discourse_post_event_allowed_custom_fields =
+      "customField|anotherField";
+
+    const markdown = `[event start="2022-07-01 12:00" status="public" timezone="UTC" customField="test-value" anotherField="another-value"]\nEvent description\n[/event]\n`;
+
+    // The expectedMarkdown should preserve all custom fields after toggling
+    const expectedMarkdown = `[event start="2022-07-01 12:00" status="public" timezone="UTC" customField="test-value" anotherField="another-value"]\nEvent description\n\n[/event]\n`;
+
+    await testMarkdown(
+      assert,
+      markdown,
+      () => {
+        // Just verify the editor is rendering
+        assert.dom(".discourse-post-event").exists();
+        assert
+          .dom(".discourse-post-event")
+          .hasAttribute("data-custom-field", "test-value");
+        assert
+          .dom(".discourse-post-event")
+          .hasAttribute("data-another-field", "another-value");
+      },
+      expectedMarkdown
+    );
+  });
 });
