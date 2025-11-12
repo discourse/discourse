@@ -100,19 +100,21 @@ describe AdPlugin::HouseAdSetting do
       anon_message = messages.find { |m| m.channel == "/site/house-creatives/anonymous" }
       logged_in_message = messages.find { |m| m.channel == "/site/house-creatives/logged-in" }
 
-      expect(anon_message.data[:creatives]).to eq(
+      expect(anon_message.data[:creatives]).to match(
         "anon-ad" => {
           html: "<whatever-anon>",
           category_ids: [],
+          id: a_kind_of(Integer),
         },
       )
       expect(anon_message.group_ids).to eq(nil)
       expect(anon_message.user_ids).to eq(nil)
 
-      expect(logged_in_message.data[:creatives]).to eq(
+      expect(logged_in_message.data[:creatives]).to match(
         "logged-in-ad" => {
           html: "<whatever-logged-in>",
           category_ids: [],
+          id: a_kind_of(Integer),
         },
       )
       expect(logged_in_message.group_ids).to eq([Group::AUTO_GROUPS[:trust_level_0]])
