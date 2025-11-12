@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe HasUploadReferences do
+RSpec.describe HasPostUploadReferences do
   fab!(:upload1, :upload)
   fab!(:upload2, :upload)
   fab!(:video_upload) { Fabricate(:upload, extension: "mp4") }

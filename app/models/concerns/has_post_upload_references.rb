@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module HasUploadReferences
+module HasPostUploadReferences
   extend ActiveSupport::Concern
 
   def link_post_uploads(fragments: nil)

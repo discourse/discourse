@@ -2,7 +2,7 @@
 
 class PostLocalization < ActiveRecord::Base
   include LocaleMatchable
-  include HasUploadReferences
+  include HasPostUploadReferences
 
   belongs_to :post
   has_many :upload_references, as: :target, dependent: :destroy
