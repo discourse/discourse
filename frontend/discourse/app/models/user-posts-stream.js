@@ -34,7 +34,7 @@ export default class UserPostsStream extends EmberObject {
 
   async findItems() {
     if (this.loading || !this.canLoadMore) {
-      throw new Error();
+      return;
     }
 
     this.loading = true;
