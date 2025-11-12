@@ -14,6 +14,9 @@
 }
 
 .c-footer {
+  position: fixed;
+  width: 100%;
+
   &__item {
     .c-unread-indicator,
     .c-unread-indicator.-urgent {
