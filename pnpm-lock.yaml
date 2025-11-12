@@ -283,9 +283,6 @@ importers:
       '@messageformat/runtime':
         specifier: ^3.0.2
         version: 3.0.2
-      '@types/@glimmer__component':
-        specifier: npm:@glimmer/component@^2.0.0
-        version: '@glimmer/component@2.0.0'
       ace-builds:
         specifier: ^1.43.4
         version: 1.43.4
