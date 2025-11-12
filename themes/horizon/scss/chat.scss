@@ -8,7 +8,9 @@
   background-color: var(--d-content-background);
 
   .full-page-chat & {
-    padding: 0 1.5em;
+    @include viewport.from(sm) {
+      padding: 0 1.5em;
+    }
   }
 
   .chat-drawer.is-collapsed & {
