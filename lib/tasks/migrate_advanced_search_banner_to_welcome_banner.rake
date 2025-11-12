@@ -4,8 +4,21 @@
 THEME_GIT_URL ||= "https://github.com/discourse/discourse-search-banner.git"
 REQUIRED_TRANSLATION_KEYS ||= %w[search_banner.headline search_banner.subhead]
 
+desc "Run all Advanced Search Banner migration tasks"
+task "themes:advanced_search_banner:migrate_all" => :environment do
+  puts "\n1. Migrating settings..."
+  puts "------------------------"
+  Rake::Task["themes:advanced_search_banner:1_migrate_settings_to_welcome_banner"].invoke
+  puts "\n2. Migrating translations..."
+  puts "----------------------------"
+  Rake::Task["themes:advanced_search_banner:2_migrate_translations_to_welcome_banner"].invoke
+  puts "\n3. Excluding and disabling..."
+  puts "-----------------------------"
+  Rake::Task["themes:advanced_search_banner:3_exclude_and_disable"].invoke
+end
+
 desc "Migrate settings from Advanced Search Banner to core welcome banner"
-task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :environment do
+task "themes:advanced_search_banner:1_migrate_settings_to_welcome_banner" => :environment do
   components = find_all_components([:theme_settings])
 
   if components.empty?
@@ -17,7 +30,7 @@ task "themes:advanced_search_banner:migrate_settings_to_welcome_banner" => :envi
 end
 
 desc "Migrate translations from Advanced Search Banner to core welcome banner"
-task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :environment do
+task "themes:advanced_search_banner:2_migrate_translations_to_welcome_banner" => :environment do
   components = find_all_components([:theme_translation_overrides])
 
   if components.empty?
@@ -29,7 +42,7 @@ task "themes:advanced_search_banner:migrate_translations_to_welcome_banner" => :
 end
 
 desc "Exclude and disable Advanced Search Banner theme component"
-task "themes:advanced_search_banner:exclude_and_disable" => :environment do
+task "themes:advanced_search_banner:3_exclude_and_disable" => :environment do
   components = find_all_components
 
   if components.empty?
