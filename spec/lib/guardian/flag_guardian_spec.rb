@@ -5,7 +5,32 @@ RSpec.describe FlagGuardian do
   fab!(:admin)
   fab!(:moderator)
 
+  fab!(:post)
+
   after(:each) { Flag.reset_flag_settings! }
+
+  describe "#can_see_flags?" do
+    it "returns false when there is no post" do
+      expect(Guardian.new(moderator).can_see_flags?(nil)).to be_falsey
+    end
+
+    it "returns false when there is no user" do
+      expect(Guardian.new(nil).can_see_flags?(post)).to be_falsey
+    end
+
+    it "allow regular users to see flags" do
+      expect(Guardian.new(user).can_see_flags?(post)).to be_falsey
+    end
+
+    it "allows moderators to see flags" do
+      expect(Guardian.new(moderator).can_see_flags?(post)).to be_truthy
+    end
+
+    it "allows moderators to see flags" do
+      expect(Guardian.new(admin).can_see_flags?(post)).to be_truthy
+    end
+  end
+
   describe "#can_create_flag?" do
     it "returns true for admin and when custom flags limit is not reached" do
       SiteSetting.custom_flags_limit = 1
