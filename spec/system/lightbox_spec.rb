@@ -211,5 +211,30 @@ describe "Lightbox | Photoswipe", type: :system do
 
       expect(lightbox).to have_no_caption_details
     end
+
+    it "preloads images and sets dimensions when missing data attributes" do
+      post.update(
+        raw: "![image without dimensions](#{upload_1.url})",
+        cooked: <<~HTML
+          <p>
+            <a href="#{upload_1.url}" class="lightbox" data-large-src="#{upload_1.url}">
+              <img src="#{upload_1.url}" alt="image without dimensions">
+            </a>
+          </p>
+        HTML
+      )
+
+      topic_page.visit_topic(topic)
+      lightbox_link = find("#post_1 a.lightbox")
+      expect(lightbox_link["data-target-width"]).to be_nil
+      expect(lightbox_link["data-target-height"]).to be_nil
+      lightbox_link.click
+
+      expect(lightbox).to be_visible
+
+      expect(lightbox_link["data-target-width"]).to eq(upload_1.width.to_s)
+      expect(lightbox_link["data-target-height"]).to eq(upload_1.height.to_s)
+      expect(lightbox).to have_caption_title("image without dimensions")
+    end
   end
 end

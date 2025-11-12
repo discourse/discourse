@@ -240,21 +240,15 @@ export default async function lightbox(elem, siteSettings) {
       return data;
     });
 
-    // Preload images without dimensions to get their dimensions
-    const itemsToPreload = Array.from(
-      elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)
-    ).filter((item) => {
-      // Check if item has an image source
-      const hasImageSrc =
-        item.getAttribute("data-large-src") || item.getAttribute("href");
+    const itemsToPreload = items.filter((item) => {
+      const { largeSrc, targetWidth, targetHeight } = item.dataset;
+      const hasImageSrc = largeSrc || item.getAttribute("href");
+      const missingDimensions = !targetWidth || !targetHeight;
+      const missingMetaData = !item
+        .querySelector(".meta")
+        ?.textContent.match(/x|×/);
 
-      // Check if dimensions are missing
-      const missingDimensions =
-        !item.getAttribute("data-target-width") ||
-        !item.getAttribute("data-target-height");
-
-      // Only preload if it has an image AND is missing dimensions
-      return hasImageSrc && missingDimensions;
+      return hasImageSrc && missingDimensions && missingMetaData;
     });
 
     await Promise.all(
