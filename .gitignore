@@ -121,7 +121,7 @@ openapi/*
 # direnv.net
 .direnv
 
-types/
+# Types
 frontend/discourse-types/declarations
 *.tsbuildinfo
 
