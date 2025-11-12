@@ -7704,7 +7704,7 @@ en:
           success: "Success"
           exists: "Already exists"
           upload: "Add from file"
-          upload_successful: "Upload successful. Words have been added."
+          upload_successful: "Upload successful. The words will be processed shortly."
           case_sensitivity_label: "Is case-sensitive"
           case_sensitivity_description: "Only words with matching character casing"
           html_label: "HTML"

@@ -1,51 +1,94 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
+import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { observes } from "@ember-decorators/object";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
+import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { trackedArray } from "discourse/lib/tracked-tools";
+import WatchedWord from "admin/models/watched-word";
+
+const MESSAGE_BUS_UPLOAD_PATH = "/watched_words/upload";
 
 export default class AdminWatchedWordsController extends Controller {
-  filter = null;
+  @service messageBus;
+
+  @tracked filter = null;
+  @trackedArray allWatchedWords;
+  @trackedArray filteredWatchedWords;
+
   showWords = false;
 
-  _filterContent() {
+  @observes("allWatchedWords", "filter")
+  filterContent() {
+    discourseDebounce(this, this.updateFilteredContent, INPUT_DELAY);
+  }
+
+  @bind
+  subscribe() {
+    this.messageBus.subscribe(MESSAGE_BUS_UPLOAD_PATH, this._onUploadMessage);
+  }
+
+  @bind
+  unsubscribe() {
+    this.messageBus.unsubscribe(MESSAGE_BUS_UPLOAD_PATH, this._onUploadMessage);
+  }
+
+  @bind
+  async updateAllWords() {
+    this.allWatchedWords = await WatchedWord.findAll();
+    this.filterContent();
+  }
+
+  @bind
+  updateFilteredContent() {
     if (isEmpty(this.allWatchedWords)) {
       return;
     }
 
     if (!this.filter) {
-      this.set("model", this.allWatchedWords);
+      this.filteredWatchedWords = this.allWatchedWords;
       return;
     }
 
     const filter = this.filter.toLowerCase();
-    const model = [];
+    const filteredWatchedWords = [];
 
     this.allWatchedWords.forEach((wordsForAction) => {
       const wordRecords = wordsForAction.words.filter((wordRecord) => {
         return wordRecord.word.includes(filter);
       });
 
-      model.pushObject(
+      filteredWatchedWords.push(
         EmberObject.create({
           nameKey: wordsForAction.nameKey,
           name: wordsForAction.name,
-          words: wordRecords,
+          words: new TrackedArray(wordRecords),
         })
       );
     });
-    this.set("model", model);
+
+    this.filteredWatchedWords = filteredWatchedWords;
   }
 
-  @observes("filter")
-  filterContent() {
-    discourseDebounce(this, this._filterContent, INPUT_DELAY);
+  @bind
+  async _onUploadMessage(message) {
+    if (message.words_updated > 0) {
+      await this.updateAllWords();
+    }
+
+    if (message.errors?.length) {
+      popupAjaxError(message.errors[0]);
+    }
   }
 
   @action
   clearFilter() {
-    this.set("filter", "");
+    this.filter = "";
   }
 
   @action
