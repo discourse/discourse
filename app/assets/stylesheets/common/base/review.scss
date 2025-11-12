@@ -302,6 +302,22 @@
       @include ellipsis;
     }
   }
+
+  .editable-fields {
+    box-sizing: border-box;
+    padding: var(--space-4);
+
+    .d-editor-button-bar {
+      flex: 1 0 auto;
+      font-size: var(--font-down-1);
+      flex-wrap: nowrap;
+      overflow: scroll;
+    }
+
+    .d-editor-textarea-wrapper {
+      min-height: 10em;
+    }
+  }
 }
 
 .review-item__status {
