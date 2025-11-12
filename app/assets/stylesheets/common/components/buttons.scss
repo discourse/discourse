@@ -11,6 +11,8 @@
   --d-button-default-bg-color--hover: var(--primary-medium);
   --d-button-default-icon-color: var(--primary-high);
   --d-button-default-icon-color--hover: var(--primary-low);
+  --d-button-default-border: var(--d-button-border);
+  --d-button-default-border--hover: var(--d-button-border);
 
   // .btn-primary
   --d-button-primary-text-color: var(--secondary);
@@ -19,6 +21,8 @@
   --d-button-primary-bg-color--hover: var(--tertiary-hover);
   --d-button-primary-icon-color: var(--secondary);
   --d-button-primary-icon-color--hover: var(--secondary);
+  --d-button-primary-border: var(--d-button-border);
+  --d-button-primary-border--hover: var(--d-button-border);
 
   // .btn-danger and .btn.cancel
   --d-button-danger-text-color: var(--secondary);
@@ -27,6 +31,8 @@
   --d-button-danger-bg-color--hover: var(--danger-hover);
   --d-button-danger-icon-color: var(--danger-low);
   --d-button-danger-icon-color--hover: var(--danger-low);
+  --d-button-danger-border: var(--d-button-border);
+  --d-button-danger-border--hover: var(--d-button-border);
 
   // .btn-success and .btn.ok
   --d-button-success-text-color: var(--secondary);
@@ -35,6 +41,8 @@
   --d-button-success-bg-color--hover: var(--success-hover);
   --d-button-success-icon-color: var(--success-low);
   --d-button-success-icon-color--hover: var(--success-low);
+  --d-button-success-border: var(--d-button-border);
+  --d-button-success-border--hover: var(--d-button-border);
 
   // .btn-flat
   --d-button-flat-text-color: var(--tertiary);
@@ -66,12 +74,14 @@
   $icon-color: var(--d-button-default-icon-color),
   $hover-text-color: var(--d-button-default-text-color--hover),
   $hover-bg-color: var(--d-button-default-bg-color--hover),
-  $hover-icon-color: var(--d-button-default-icon-color--hover)
+  $hover-icon-color: var(--d-button-default-icon-color--hover),
+  $border: var(--d-button-border),
+  $hover-border: var(--d-button-border)
 ) {
   color: $text-color;
   background-color: $bg-color;
   transition: var(--d-button-transition);
-  border: var(--d-button-border);
+  border: $border;
 
   &:visited {
     /* covers cases where we add button classes to links */
@@ -103,6 +113,7 @@
   @include hover {
     background-color: $hover-bg-color;
     color: $hover-text-color;
+    border: $hover-border;
 
     .d-icon {
       color: $hover-icon-color;
@@ -139,6 +150,7 @@
     &:hover {
       color: $text-color;
       background: $bg-color;
+      border: $border;
 
       .d-icon {
         color: $icon-color;
@@ -235,7 +247,12 @@
 
 /* Default button */
 .btn-default {
+  border: var(--d-button-default-border);
   border-radius: var(--d-button-border-radius);
+
+  @include hover {
+    border: var(--d-button-default-border--hover);
+  }
 }
 
 /* Primary button */
@@ -246,7 +263,9 @@
     $icon-color: var(--d-button-primary-icon-color),
     $hover-text-color: var(--d-button-primary-text-color--hover),
     $hover-bg-color: var(--d-button-primary-bg-color--hover),
-    $hover-icon-color: var(--d-button-primary-icon-color--hover)
+    $hover-icon-color: var(--d-button-primary-icon-color--hover),
+    $border: var(--d-button-primary-border),
+    $hover-border: var(--d-button-primary-border--hover)
   );
   border-radius: var(--d-button-border-radius);
 }
@@ -260,7 +279,9 @@
     $icon-color: var(--d-button-danger-icon-color),
     $hover-text-color: var(--d-button-danger-text-color--hover),
     $hover-bg-color: var(--d-button-danger-bg-color--hover),
-    $hover-icon-color: var(--d-button-danger-icon-color--hover)
+    $hover-icon-color: var(--d-button-danger-icon-color--hover),
+    $border: var(--d-button-danger-border),
+    $hover-border: var(--d-button-danger-border--hover)
   );
   border-radius: var(--d-button-border-radius);
 }
@@ -274,7 +295,9 @@
     $icon-color: var(--d-button-success-icon-color),
     $hover-text-color: var(--d-button-success-text-color--hover),
     $hover-bg-color: var(--d-button-success-bg-color--hover),
-    $hover-icon-color: var(--d-button-success-icon-color--hover)
+    $hover-icon-color: var(--d-button-success-icon-color--hover),
+    $border: var(--d-button-success-border),
+    $hover-border: var(--d-button-success-border--hover)
   );
   border-radius: var(--d-button-border-radius);
 }
