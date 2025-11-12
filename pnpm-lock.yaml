@@ -13940,7 +13940,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.28.5(supports-color@8.1.1)
       '@babel/eslint-parser': 7.28.5(@babel/core@7.28.5)(eslint@9.39.1(jiti@2.4.2))
-      '@glimmer/syntax': 0.95.0
+      '@glimmer/syntax': 0.93.1
       '@typescript-eslint/tsconfig-utils': 8.46.4(typescript@5.9.3)
       content-tag: 2.0.3
       eslint-scope: 7.2.2
