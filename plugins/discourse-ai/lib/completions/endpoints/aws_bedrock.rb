@@ -170,22 +170,10 @@ module DiscourseAi
         def prepare_request(payload)
           headers = { "content-type" => "application/json", "Accept" => "*/*" }
           region = llm_model.lookup_custom_param("region")
-          role_arn = llm_model.lookup_custom_param("role_arn")
 
           signer =
-            if role_arn
-              # Lazy load aws-sdk-sts only when needed
-              require "aws-sdk-sts" unless defined?(Aws::STS)
-
-              # Use AWS SDK's built-in credential provider with automatic refresh
-              credentials =
-                Aws::AssumeRoleCredentials.new(
-                  role_arn: role_arn,
-                  role_session_name: "discourse-bedrock-#{Process.pid}",
-                  client: Aws::STS::Client.new(region: region),
-                )
-
-              # AssumeRoleCredentials responds to credentials method which returns the actual credentials
+            if (credentials = llm_model.aws_bedrock_credentials)
+              # Use cached AWS role-based credentials with automatic refresh
               creds = credentials.credentials
               Aws::Sigv4::Signer.new(
                 access_key_id: creds.access_key_id,
@@ -195,6 +183,7 @@ module DiscourseAi
                 service: "bedrock",
               )
             else
+              # Use static access key credentials
               Aws::Sigv4::Signer.new(
                 access_key_id: llm_model.lookup_custom_param("access_key_id"),
                 region: region,

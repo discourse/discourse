@@ -720,6 +720,153 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       # No session token should be present when using regular credentials
       expect(request.headers["X-Amz-Security-Token"]).to be_nil
     end
+
+    it "caches assumed role credentials across multiple requests" do
+      # Configure the model with a role_arn
+      model.update!(
+        provider_params: {
+          region: "us-east-1",
+          role_arn: "arn:aws:iam::123456789012:role/BedRockAccessRole",
+        },
+      )
+
+      # Mock the actual credentials object returned by AssumeRoleCredentials
+      mock_creds =
+        instance_double(
+          Aws::Credentials,
+          access_key_id: "ASSUMED_ACCESS_KEY",
+          secret_access_key: "ASSUMED_SECRET_KEY",
+          session_token: "ASSUMED_SESSION_TOKEN",
+        )
+
+      # Mock Aws::AssumeRoleCredentials
+      mock_credentials = instance_double(Aws::AssumeRoleCredentials)
+      allow(mock_credentials).to receive(:credentials).and_return(mock_creds)
+
+      # Mock the STS client
+      mock_sts_client = instance_double(Aws::STS::Client)
+      allow(Aws::STS::Client).to receive(:new).with(region: "us-east-1").and_return(mock_sts_client)
+
+      # Mock AssumeRoleCredentials.new
+      allow(Aws::AssumeRoleCredentials).to receive(:new).with(
+        role_arn: "arn:aws:iam::123456789012:role/BedRockAccessRole",
+        role_session_name: "discourse-bedrock-#{Process.pid}",
+        client: mock_sts_client,
+      ).and_return(mock_credentials)
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      ).to_return(status: 200, body: content)
+
+      # Make multiple generate calls
+      proxy.generate("test prompt 1", user: user)
+      proxy.generate("test prompt 2", user: user)
+      proxy.generate("test prompt 3", user: user)
+
+      # Verify AssumeRoleCredentials was created only once (cached in LlmModel)
+      expect(Aws::AssumeRoleCredentials).to have_received(:new).once
+    end
+
+    it "invalidates cache when role_arn changes" do
+      # Configure the model with initial role_arn
+      model.update!(
+        provider_params: {
+          region: "us-east-1",
+          role_arn: "arn:aws:iam::123456789012:role/FirstRole",
+        },
+      )
+
+      # Mock credentials for first role
+      mock_creds_1 =
+        instance_double(
+          Aws::Credentials,
+          access_key_id: "FIRST_ACCESS_KEY",
+          secret_access_key: "FIRST_SECRET_KEY",
+          session_token: "FIRST_SESSION_TOKEN",
+        )
+      mock_credentials_1 = instance_double(Aws::AssumeRoleCredentials)
+      allow(mock_credentials_1).to receive(:credentials).and_return(mock_creds_1)
+
+      # Mock credentials for second role
+      mock_creds_2 =
+        instance_double(
+          Aws::Credentials,
+          access_key_id: "SECOND_ACCESS_KEY",
+          secret_access_key: "SECOND_SECRET_KEY",
+          session_token: "SECOND_SESSION_TOKEN",
+        )
+      mock_credentials_2 = instance_double(Aws::AssumeRoleCredentials)
+      allow(mock_credentials_2).to receive(:credentials).and_return(mock_creds_2)
+
+      mock_sts_client = instance_double(Aws::STS::Client)
+      allow(Aws::STS::Client).to receive(:new).with(region: "us-east-1").and_return(mock_sts_client)
+
+      # Mock AssumeRoleCredentials.new to return different credentials based on role_arn
+      allow(Aws::AssumeRoleCredentials).to receive(:new).with(
+        role_arn: "arn:aws:iam::123456789012:role/FirstRole",
+        role_session_name: "discourse-bedrock-#{Process.pid}",
+        client: mock_sts_client,
+      ).and_return(mock_credentials_1)
+
+      allow(Aws::AssumeRoleCredentials).to receive(:new).with(
+        role_arn: "arn:aws:iam::123456789012:role/SecondRole",
+        role_session_name: "discourse-bedrock-#{Process.pid}",
+        client: mock_sts_client,
+      ).and_return(mock_credentials_2)
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      ).to_return(status: 200, body: content)
+
+      # First request with initial role
+      proxy.generate("test prompt 1", user: user)
+
+      # Change the role_arn
+      model.update!(
+        provider_params: {
+          region: "us-east-1",
+          role_arn: "arn:aws:iam::123456789012:role/SecondRole",
+        },
+      )
+
+      # Second request should use new role
+      proxy.generate("test prompt 2", user: user)
+
+      # Verify AssumeRoleCredentials was created twice (once for each role)
+      expect(Aws::AssumeRoleCredentials).to have_received(:new).with(
+        role_arn: "arn:aws:iam::123456789012:role/FirstRole",
+        role_session_name: "discourse-bedrock-#{Process.pid}",
+        client: mock_sts_client,
+      ).once
+
+      expect(Aws::AssumeRoleCredentials).to have_received(:new).with(
+        role_arn: "arn:aws:iam::123456789012:role/SecondRole",
+        role_session_name: "discourse-bedrock-#{Process.pid}",
+        client: mock_sts_client,
+      ).once
+    end
   end
 
   describe "structured output via prefilling" do

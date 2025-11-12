@@ -189,6 +189,31 @@ class LlmModel < ActiveRecord::Base
     seeded? && llm_credit_allocation.present?
   end
 
+  def aws_bedrock_credentials
+    return nil unless provider == BEDROCK_PROVIDER_NAME
+
+    role_arn = lookup_custom_param("role_arn")
+    return nil unless role_arn
+
+    # Invalidate cache if role_arn changed
+    if @cached_role_arn != role_arn
+      @cached_role_arn = role_arn
+      @aws_bedrock_credentials = nil
+    end
+
+    @aws_bedrock_credentials ||=
+      begin
+        require "aws-sdk-sts" unless defined?(Aws::STS)
+        region = lookup_custom_param("region")
+
+        Aws::AssumeRoleCredentials.new(
+          role_arn: role_arn,
+          role_session_name: "discourse-bedrock-#{Process.pid}",
+          client: Aws::STS::Client.new(region: region),
+        )
+      end
+  end
+
   private
 
   def required_provider_params
