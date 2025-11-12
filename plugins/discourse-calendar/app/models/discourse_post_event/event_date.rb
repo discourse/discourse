@@ -14,7 +14,7 @@ module DiscoursePostEvent
     scope :expired, -> { where("ends_at IS NOT NULL AND ends_at < ?", Time.now) }
     scope :not_expired, -> { where("ends_at IS NULL OR ends_at > ?", Time.now) }
 
-    after_commit :upsert_topic_custom_field, on: %i[create]
+    after_commit :upsert_topic_custom_field, on: %i[create update]
     def upsert_topic_custom_field
       if self.event.post && self.event.post.is_first_post?
         TopicCustomField.upsert(
