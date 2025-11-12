@@ -106,6 +106,10 @@ tr_TR:
     reviewables:
       message_already_handled: "Teşekkürler, ancak bu mesajı daha önce inceledik ve yeniden bayrak eklenmesine gerek olmadığına karar verdik."
       actions:
+        no_action_message:
+          title: "Eylem yok"
+        restore_message:
+          description: "Kullanıcıların görebilmesi için mesajı geri yükleyin."
         agree:
           title: "Kabul et..."
         agree_and_keep_message:
@@ -184,7 +188,7 @@ tr_TR:
         slug_contains_non_ascii_chars: "ascii olmayan karakterler içeriyor"
         is_already_in_use: "zaten kullanımda"
     bookmarkable:
-      notification_title: "%{channel_name} adlı kanaldaki mesaj"
+      notification_title_channel: "%{channel_name} adlı kanaldaki mesaj"
     personal_chat: "kişisel sohbet"
     onebox:
       inline_to_message: "%{username} adlı kullanıcının #%{message_id} mesajı - #%{chat_channel}"

@@ -326,6 +326,8 @@ fr:
       chat_message_separator:
         today: Aujourd'hui
         yesterday: Hier
+      search_view:
+        filter_placeholder: Rechercher dans les messages directs
       members_view:
         filter_placeholder: Trouver des membres
         add_member: Ajouter un membre
@@ -342,6 +344,7 @@ fr:
         tabs:
           members: Membres
           settings: Paramètres
+          search: Recherche
         remove_member: "Supprimer"
       new_message_modal:
         title: Envoyer un message
@@ -433,6 +436,7 @@ fr:
           topic: "Sujet"
       reviewable:
         type: "Message de discussion"
+        message_in_channel: "Canal"
       reactions:
         only_you: "<span>Vous avez réagi avec </span>:%{emoji}:"
         you_and_single_user: "<span>Vous et %{username} avez réagi avec </span>:%{emoji}:"
@@ -495,6 +499,11 @@ fr:
           create_export: "Créer une exportation"
           confirm_export: "Cela exporte tous les messages de tous les canaux et vous envoie le résultat dans un message privé. Voulez-vous vraiment exporter ?"
           export_has_started: "L'exportation a commencé. Vous recevrez un MP quand elle sera prête."
+      search:
+        no_results: "Aucun résultat trouvé"
+        sort:
+          relevance: "Pertinence"
+          latest: "Récents"
       my_threads:
         title: Mes fils de discussion
         aria_label: "Passer à ma liste de fils de discussion"

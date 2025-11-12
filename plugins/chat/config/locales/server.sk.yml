@@ -112,6 +112,10 @@ sk:
     reviewables:
       message_already_handled: "Ďakujeme, ale túto správu sme už skontrolovali a rozhodli sme sa, že ju netreba znova nahlásiť."
       actions:
+        no_action_message:
+          title: "Žiadna akcia"
+        restore_message:
+          description: "Obnovte správu, aby ju používatelia mohli vidieť."
         agree:
           title: "Súhlasím..."
         agree_and_keep_message:
@@ -205,7 +209,7 @@ sk:
         slug_contains_non_ascii_chars: "obsahuje znaky, ktoré nie sú ascii"
         is_already_in_use: "je už v prevádzke"
     bookmarkable:
-      notification_title: "správa v %{channel_name}"
+      notification_title_channel: "správa v %{channel_name}"
     personal_chat: "osobný chat"
     onebox:
       inline_to_message: "Správa #%{message_id} od %{username} – #%{chat_channel}"

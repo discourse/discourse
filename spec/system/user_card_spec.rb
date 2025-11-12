@@ -31,4 +31,50 @@ describe "User Card", type: :system do
       expect(user_card).to be_showing_user(user.username)
     end
   end
+
+  context "when filtering posts by user" do
+    fab!(:another_user, :user)
+    let!(:first_post_by_another_user) do
+      PostCreator.create!(another_user, topic_id: topic.id, raw: "First post by another user")
+    end
+    let!(:second_post_by_another_user) do
+      PostCreator.create!(another_user, topic_id: topic.id, raw: "Second post by another user")
+    end
+
+    it "shows filter button when user has 2+ posts in the topic" do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_author_avatar(first_post_by_another_user)
+
+      expect(user_card).to be_visible
+      expect(user_card).to have_filter_button
+      expect(user_card.filter_button_text).to match(I18n.t("js.topic.filter_to", count: 2))
+    end
+
+    it "does not show filter button when user has less than 2 posts" do
+      topic_page.visit_topic(topic)
+      topic_page.click_post_author_avatar(topic.posts.first)
+
+      expect(user_card).to be_visible
+      expect(user_card).to have_no_filter_button
+    end
+
+    context "when user has hidden profile" do
+      before do
+        SiteSetting.allow_users_to_hide_profile = true
+        another_user.user_option.update!(hide_profile: true)
+        # Sign in as regular user (not admin) to see hidden profile behavior
+        sign_in(user)
+      end
+
+      it "shows filter button with post count for hidden profile" do
+        topic_page.visit_topic(topic)
+        topic_page.click_post_author_avatar(first_post_by_another_user)
+
+        expect(user_card).to be_showing_user(another_user.username)
+        expect(user_card).to have_profile_hidden
+        expect(user_card).to have_filter_button
+        expect(user_card.filter_button_text).to match(I18n.t("js.topic.filter_to", count: 2))
+      end
+    end
+  end
 end

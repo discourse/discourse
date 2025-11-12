@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import icon from "discourse/helpers/d-icon";
+import { htmlSafe } from "@ember/template";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -31,12 +31,12 @@ export default class ReviewableInsights extends Component {
     });
 
     // Similar posts insight
-    if (user.flags_agreed) {
+    if (user?.flags_agreed) {
       insights.push({
         icon: "clock-rotate-left",
         label: i18n("review.insights.similar_posts"),
         description: i18n("review.insights.flagged_in_timeframe", {
-          count: user.user_stat.flags_agreed,
+          count: user.user_stat?.flags_agreed || 0,
         }),
       });
     }
@@ -44,29 +44,40 @@ export default class ReviewableInsights extends Component {
     // User activity insight
     const activities = [];
 
-    if (Date.now() - Date.parse(user.created_at) < 7 * 24 * 60 * 60 * 1000) {
-      activities.push(i18n("review.insights.activities.new_account"));
+    if (user) {
+      if (Date.now() - Date.parse(user.created_at) < 7 * 24 * 60 * 60 * 1000) {
+        activities.push(i18n("review.insights.activities.new_account"));
+      }
+      if (user.trustLevel) {
+        activities.push(
+          i18n("review.insights.activities.trust_level", {
+            trustLevelName: user.trustLevel.name,
+          })
+        );
+      }
     }
-    if (user.trustLevel) {
+
+    const postCount = user?.post_count || 0;
+    const postsText = i18n("review.insights.activities.posts", {
+      count: postCount,
+    });
+
+    if (postCount > 0 && user?.username) {
       activities.push(
-        i18n("review.insights.activities.trust_level", {
-          trustLevelName: user.trustLevel.name,
-        })
+        `<a href="/u/${user.username}/activity">${postsText}</a>`
       );
+    } else {
+      activities.push(postsText);
     }
-    activities.push(
-      i18n("review.insights.activities.posts", {
-        count: user.post_count,
-      })
-    );
+
     insights.push({
       icon: "users",
       label: i18n("review.insights.user_activity"),
-      description: activities.join(", "),
+      description: htmlSafe(activities.join(", ")),
     });
 
     // Visibility insight
-    if (!reviewable?.topic?.visible) {
+    if (reviewable?.topic && !reviewable?.topic?.visible) {
       insights.push({
         icon: "far-eye-slash",
         label: i18n("review.insights.visibility"),
@@ -81,14 +92,11 @@ export default class ReviewableInsights extends Component {
     <div class="review-insight">
       {{#each this.reviewInsights as |insight|}}
         <div class="review-insight__item">
-          <div class="review-insight__icon">
-            {{icon insight.icon}}
-          </div>
           <div class="review-insight__content">
             <div class="review-insight__label">{{insight.label}}</div>
-            <div
-              class="review-insight__description"
-            >{{insight.description}}</div>
+            <div class="review-insight__description">
+              {{insight.description}}
+            </div>
           </div>
         </div>
       {{/each}}

@@ -297,7 +297,7 @@ pt_BR:
       header:
         logged_in_members: "Boas-vindas novamente, %{preferred_display_name}!"
         anonymous_members: "Boas-vindas ao %{site_name}!"
-      search: "Pesquisar"
+      search_placeholder: "Pesquisar"
     themes:
       default_description: "Padrão"
       broken_theme_alert: "Seu site pode não funcionar por causa de um tema/componente com erro. Verifique o console do seu navegador para obter mais informações."
@@ -590,6 +590,7 @@ pt_BR:
       other: "Veja %{count} novos tópicos"
     preview: "pré-visualizar"
     cancel: "Cancelar"
+    done: "Concluído(a)"
     deleting: "Excluindo…"
     save: "Salvar alterações"
     saving: "Salvando…"
@@ -677,10 +678,6 @@ pt_BR:
         claimed_by_you: "Você reivindicou este item e pode revisá-lo."
         claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
         automatically_claimed_by: "Este item está sendo revisado por <b>%{username}</b>."
-      claim:
-        title: "reivindicar este tópico"
-      unclaim:
-        help: "remover esta reivindicação"
       awaiting_approval: "Aguardando aprovação"
       delete: "Excluir"
       settings:
@@ -838,6 +835,7 @@ pt_BR:
           title: "Postagem"
           noun: "postagem"
       flagged_as: "Sinalizado como"
+      user_label: "Usuário(a)"
       assigned_to: "Atribuído(a) a"
       moderator_actions: "Ações da moderação"
       timeline_and_notes: "Cronograma e observações"
@@ -868,6 +866,7 @@ pt_BR:
       review_user: "Usuário(a)"
       need_help: "Precisa de ajuda?"
       copy_link: "Copiar link"
+      copy_link_feedback: "Link copiado"
       view_source: "Visualizar origem"
       insights:
         title: "Percepções"
@@ -2701,6 +2700,7 @@ pt_BR:
         select: "Selecione a tradução"
         save: "Salvar tradução"
         original_content: "Conteúdo original da postagem"
+        translation: "Tradução"
         placeholder: "Digite a tradução da postagem aqui..."
       group_mentioned_limit:
         one: "<b>Aviso!</b> Você menciou <a href='%{group_link}'>%{group}</a>, mas este grupo tem mais membros do que o limite de menções configurado pelo(a) administrador(a) de %{count} usuário(a). Ninguém será notificado(a)."
@@ -2751,7 +2751,7 @@ pt_BR:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Criar tópico"
-      create_pm: "Enviar Mensagem"
+      create_pm: "Enviar mensagem"
       create_whisper: "Sussuro"
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
@@ -2848,6 +2848,9 @@ pt_BR:
         create_topic:
           label: "Novo tópico"
           desc: Criar um novo tópico
+        create_personal_message:
+          label: "Nova mensagem"
+          desc: "Criar uma nova mensagem pessoal"
         shared_draft:
           label: "Rascunho compartilhado"
           desc: "Fazer rascunho do tópico visívei apenas para usuários(as) com permissão"
@@ -3507,9 +3510,6 @@ pt_BR:
       auto_close_immediate:
         one: "A última postagem no tópico foi feita há %{count} hora, portanto o tópico será fechado imediatamente."
         other: "A última postagem no tópico já foi feita há %{count} horas, portanto o tópico será fechado imediatamente."
-      auto_close_momentarily:
-        one: "A última postagem no tópico foi feita há %{count} hora, portanto o tópico será fechado momentaneamente."
-        other: "A última postagem no tópico foi feita há %{count} horas, portanto o tópico será fechado momentaneamente."
       timeline:
         back: "Voltar"
         back_description: "Voltar para a sua última postagem não lida"
@@ -4504,8 +4504,7 @@ pt_BR:
       readonly: "Ver"
     preloader_text: "Carregando"
     lightbox:
-      download: "download"
-      open: "imagem original"
+      download: "Download"
       previous: "Anterior (seta para a esquerda)"
       next: "Próximo (seta para a direita)"
       counter: "%curr% de %total%"
@@ -5215,6 +5214,7 @@ pt_BR:
   admin_js:
     type_to_filter: "Digite para filtrar..."
     settings: "Configurações"
+    reset_filter: "Redefinir"
     admin:
       title: "Administrador(a) do Discourse"
       moderator: "Moderador(a)"
@@ -5247,6 +5247,20 @@ pt_BR:
           title: "Plugins"
         advanced:
           title: "Avançado"
+      upcoming_changes:
+        name: "Nome"
+        enabled: "Ativados(as)"
+        select_groups: "Selecionar grupos…"
+        preview: "Pré-visualizar"
+        impact_roles:
+          moderators: "Moderadores(as)"
+          staff: "Equipe"
+        filter:
+          all: "Todos(as)"
+          enabled: "Ativados(as)"
+          disabled: "Desativados(as)"
+          impact_type_feature: "Recurso"
+          impact_type_other: "Outras"
       config:
         about:
           title: "Sobre seu site"
@@ -7456,7 +7470,6 @@ pt_BR:
             cancel: "Cancelar"
         merging_user: "Mesclando usuário(a)…"
         merge_failed: "Ocorreu um erro ao mesclar os(as) usuários(as)."
-        delete_posts_forbidden_because_staff: "Não é possível excluir todas as postagens de administradores(as) e moderadores(as)."
         delete_forbidden:
           one: "Usuários(as) não podem ser excluídos(as) se tiverem postagens. Exclua todas as postagens antes de tentar excluir um(a) usuário(a). (Mensagens com mais de %{count} dia não podem ser excluídas.)"
           other: "Usuários(as) não podem ser excluídos(as) se tiverem postagens. Exclua todas as postagens antes de tentar excluir um(a) usuário(a). (Mensagens com mais de %{count} dias não podem ser excluídas.)"

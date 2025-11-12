@@ -59,6 +59,19 @@ hr:
         select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
+        stats:
+          eta_minutes:
+            one: "%{count} minuta"
+            few: "%{count} minuta"
+            other: "%{count} minuta"
+          eta_hours:
+            one: "%{count} sat"
+            few: "%{count} sata"
+            other: "%{count} sata"
+          eta_days:
+            one: "%{count} dan"
+            few: "%{count} dana"
+            other: "%{count} dana"
         progress_chart:
           bar_done:
             one: "%{count} objava"

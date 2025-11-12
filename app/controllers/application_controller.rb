@@ -33,6 +33,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  around_action :ensure_dont_cache_page
   before_action :check_readonly_mode
   before_action :handle_theme
   before_action :set_current_user_for_logs
@@ -51,7 +52,6 @@ class ApplicationController < ActionController::Base
   before_action :set_crawler_header
   after_action :add_readonly_header
   after_action :perform_refresh_session
-  after_action :dont_cache_page
   after_action :conditionally_allow_site_embedding
   after_action :ensure_vary_header
   after_action :add_noindex_header,
@@ -161,6 +161,11 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from ActionController::RoutingError, PluginDisabled do
+    # This error is raised outside of the normal request response cycle and is called via the
+    # `DiscoursePublicExceptions` middleware which creates a new instance of the ApplicationController.
+    # As a result, controller actions hooks are not called and we need to explicitly call `dont_cache_page` here.
+    dont_cache_page
+
     rescue_discourse_actions(:not_found, 404)
   end
 
@@ -426,6 +431,7 @@ class ApplicationController < ActionController::Base
     else
       locale = Discourse.anonymous_locale(request)
       locale ||= SiteSetting.default_locale
+      persist_locale_param_to_cookie
     end
 
     locale = SiteSettings::DefaultsProvider::DEFAULT_LOCALE if !I18n.locale_available?(locale)
@@ -1061,5 +1067,22 @@ class ApplicationController < ActionController::Base
 
   def set_crawler_header
     response.headers["X-Discourse-Crawler-View"] = "true" if use_crawler_layout?
+  end
+
+  def ensure_dont_cache_page
+    yield
+  ensure
+    dont_cache_page
+  end
+
+  def persist_locale_param_to_cookie
+    if SiteSetting.set_locale_from_param && SiteSetting.set_locale_from_cookie &&
+         (locale_param = params[Discourse::LOCALE_PARAM]).present?
+      if I18n.locale_available?(locale_param)
+        cookie_args = { path: "/" }
+        cookie_args[:path] = Discourse.base_path if Discourse.base_path.present?
+        cookies[:locale] = cookie_args.merge(value: locale_param)
+      end
+    end
   end
 end

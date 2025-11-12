@@ -58,9 +58,9 @@ export default <template>
         />
       {{/each}}
 
-      {{#if @controller.model}}
+      {{#if @controller.model.content}}
         <TagList
-          @tags={{@controller.model}}
+          @tags={{@controller.model.content}}
           @sortProperties={{@controller.sortProperties}}
           @titleKey={{@controller.otherTagsTitleKey}}
         />

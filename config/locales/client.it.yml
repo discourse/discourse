@@ -297,7 +297,7 @@ it:
       header:
         logged_in_members: "Rieccoti, %{preferred_display_name}!"
         anonymous_members: "Ti diamo il benvenuto su %{site_name}!"
-      search: "Cerca"
+      search_placeholder: "Cerca"
     themes:
       default_description: "Predefinito"
       broken_theme_alert: "Il tuo sito potrebbe non funzionare a causa di errori in un tema/componente. Controlla la console del browser per maggiori informazioni."
@@ -590,6 +590,7 @@ it:
       other: "Vedi %{count} nuovi argomenti"
     preview: "anteprima"
     cancel: "Annulla"
+    done: "Fatto"
     deleting: "Eliminazione…"
     save: "Salva Modifiche"
     saving: "Salvataggio…"
@@ -677,10 +678,6 @@ it:
         claimed_by_you: "Hai rivendicato questo elemento e puoi revisionarlo."
         claimed_by_other: "Questo elemento può essere rivisto esclusivamente da <b>%{username}</b>."
         automatically_claimed_by: "Questo articolo è attualmente in fase di revisione da parte di <b>%{username}</b>."
-      claim:
-        title: "rivendica questo argomento"
-      unclaim:
-        help: "rimuovi questa rivendicazione"
       awaiting_approval: "In attesa di approvazione"
       delete: "Elimina"
       settings:
@@ -838,6 +835,7 @@ it:
           title: "Messaggio"
           noun: "messaggio"
       flagged_as: "Contrassegnato come"
+      user_label: "Utente"
       assigned_to: "Assegnato a"
       moderator_actions: "Azioni del moderatore"
       timeline_and_notes: "Cronologia e note"
@@ -868,6 +866,7 @@ it:
       review_user: "Utente"
       need_help: "Hai bisogno di aiuto?"
       copy_link: "Copia link"
+      copy_link_feedback: "Link copiato"
       view_source: "Visualizza origine"
       insights:
         title: "Approfondimenti"
@@ -2698,6 +2697,7 @@ it:
         select: "Seleziona la traduzione"
         save: "Salva la traduzione"
         original_content: "Contenuto del messaggio originale"
+        translation: "Traduzione"
         placeholder: "Inserisci qui la traduzione del messaggio..."
       group_mentioned_limit:
         one: "<b>Attenzione!</b> Hai menzionato <a href='%{group_link}'>%{group}</a>, tuttavia questo gruppo ha più membri rispetto al limite di %{count} menzione di utente configurato dall'amministratore. Non ci saranno notifiche."
@@ -2843,8 +2843,11 @@ it:
           label: Attiva/disattiva sussurri
           desc: I Sussurri sono visibili solo ai membri dello staff
         create_topic:
-          label: "Nuovo Argomento"
+          label: "Nuovo argomento"
           desc: Crea un nuovo argomento
+        create_personal_message:
+          label: "Nuovo messaggio"
+          desc: "Crea un nuovo messaggio personale"
         shared_draft:
           label: "Bozza Condivisa"
           desc: "Crea una bozza di argomento che sarà visibile solo agli utenti autorizzati"
@@ -3337,7 +3340,7 @@ it:
         one: "%{count} messaggio in questo argomento"
         other: "%{count} messaggi in questo argomento"
       create: "Nuovo Argomento"
-      create_long: "Crea un nuovo Argomento"
+      create_long: "Crea un nuovo argomento"
       open_draft: "Apri Bozza"
       private_message: "Inizia a scrivere un messaggio"
       archive_message:
@@ -3504,9 +3507,6 @@ it:
       auto_close_immediate:
         one: "L'ultimo messaggio nell'argomento risale a %{count} ora fa, per cui l'argomento verrà chiuso immediatamente."
         other: "L'ultimo messaggio nell'argomento risale a %{count} ore fa, per cui l'argomento verrà chiuso immediatamente."
-      auto_close_momentarily:
-        one: "L'ultimo messaggio dell'argomento risale a %{count} ora fa, quindi l'argomento verrà chiuso momentaneamente."
-        other: "L'ultimo messaggio dell'argomento risale a %{count} ore fa, quindi l'argomento verrà chiuso momentaneamente."
       timeline:
         back: "Indietro"
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
@@ -4501,8 +4501,7 @@ it:
       readonly: "Visualizza"
     preloader_text: "Caricamento"
     lightbox:
-      download: "scarica"
-      open: "immagine originale"
+      download: "Scarica"
       previous: "Precedente (tasto freccia a sinistra)"
       next: "Successivo (tasto freccia a destra)"
       counter: "%curr% di %total%"
@@ -5212,6 +5211,7 @@ it:
   admin_js:
     type_to_filter: "Digita per filtrare…"
     settings: "Impostazioni"
+    reset_filter: "Reimposta"
     admin:
       title: "Amministratore Discourse"
       moderator: "Moderatore"
@@ -5244,6 +5244,21 @@ it:
           title: "Plugin"
         advanced:
           title: "Avanzato"
+      upcoming_changes:
+        name: "Nome"
+        enabled: "Abilitato"
+        select_groups: "Seleziona gruppi…"
+        preview: "Anteprima"
+        impact_roles:
+          admins: "Amministratori"
+          moderators: "Moderatori"
+          staff: "Staff"
+        filter:
+          all: "Tutte"
+          enabled: "Abilitato"
+          disabled: "Disabilitati"
+          impact_type_feature: "Funzionalità"
+          impact_type_other: "Altri"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -7453,7 +7468,6 @@ it:
             cancel: "Annulla"
         merging_user: "Unione utente in corso…"
         merge_failed: "Si è verificato un errore durante l'unione degli utenti."
-        delete_posts_forbidden_because_staff: "Impossibile cancellare tutti i messaggi degli amministratori e dei moderatori."
         delete_forbidden:
           one: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorno non possono essere cancellati)."
           other: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorni non possono essere cancellati)."

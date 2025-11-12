@@ -14,6 +14,7 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
       { href: "/atoms/icons", title: "Icons" },
       { href: "/atoms/forms", title: "Forms" },
       { href: "/atoms/spinners", title: "Spinners" },
+      { href: "/atoms/otp", title: "OTP" },
       { href: "/atoms/date-time-inputs", title: "Date/Time inputs" },
       { href: "/atoms/dropdowns", title: "Dropdowns" },
       { href: "/atoms/topic-link", title: "Topic Link" },
@@ -96,6 +97,13 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
     end
   end
 
+  it "renders the index page correctly on a site with no default theme" do
+    SiteSetting.default_theme_id = nil
+    visit "/styleguide"
+
+    expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
+  end
+
   # uses the sections hash to generate a test for each page and check if it renders correctly
   context "when testing the available pages" do
     before do
@@ -130,6 +138,24 @@ RSpec.describe "Styleguide Smoke Test", type: :system do
           expect(page).to have_css(".styleguide-contents h1.section-title", text: item[:title])
         end
       end
+    end
+  end
+
+  context "when the styleguide is only enabled for staff" do
+    before { SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:staff] }
+
+    it "denies access to regular users" do
+      user = Fabricate(:user)
+      sign_in(user)
+      visit "/styleguide"
+      expect(page).to have_content("That page doesn’t exist or is private.")
+    end
+
+    it "allows access to staff users" do
+      moderator = Fabricate(:moderator)
+      sign_in(moderator)
+      visit "/styleguide"
+      expect(page).to have_css(".styleguide-contents h1.section-title", text: "Styleguide")
     end
   end
 end

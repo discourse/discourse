@@ -13,18 +13,19 @@ import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
 import { i18n } from "discourse-i18n";
+import { trackedArray } from "../lib/tracked-tools";
 
 let _messagesCache = {};
 
 @classNameBindings(":composer-popup-container", "hidden")
 export default class ComposerMessages extends Component {
   @tracked showShareModal;
+  @trackedArray similarTopics = null;
 
   checkedMessages = false;
   messages = null;
   messagesByTemplate = null;
   queuedForTyping = null;
-  similarTopics = null;
   usersNotSeen = null;
   recipientNames = [];
 
@@ -233,8 +234,7 @@ export default class ComposerMessages extends Component {
       return;
     }
 
-    this.similarTopics.clear();
-    this.similarTopics.pushObjects(topics.content);
+    this.similarTopics.splice(0, Infinity, ...topics.content);
 
     if (this.similarTopics.length > 0) {
       this._similarTopicsMessage.set("similarTopics", this.similarTopics);
@@ -288,7 +288,7 @@ export default class ComposerMessages extends Component {
 
     this.set("checkedMessages", true);
 
-    messages.forEach((msg) => {
+    messages.content.forEach((msg) => {
       if (msg.wait_for_typing) {
         this.queuedForTyping.addObject(msg);
       } else {

@@ -13,7 +13,7 @@ class ProblemCheck
     end
 
     def run_all
-      select(&:enabled?).each(&:run)
+      select(&:enabled?).each { |check| check.each_target { |t| check.new(t).run } }
     end
 
     private
@@ -56,6 +56,11 @@ class ProblemCheck
   #
   config_accessor :inline, default: false, instance_writer: false
 
+  # Used to set up multiple targets for the check. For example, a check that
+  # operates on groups may need to specify which groups to work on.
+  #
+  config_accessor :targets, default: -> { [NO_TARGET] }, instance_writer: false
+
   # Problem check classes need to be registered here in order to be enabled.
   #
   # Note: This list must come after the `config_accessor` declarations.
@@ -83,11 +88,13 @@ class ProblemCheck
     ProblemCheck::S3UploadConfig,
     ProblemCheck::SidekiqCheck,
     ProblemCheck::SubfolderEndsInSlash,
+    ProblemCheck::StarttlsDisabled,
     ProblemCheck::TranslationOverrides,
     ProblemCheck::TwitterConfig,
     ProblemCheck::TwitterLogin,
     ProblemCheck::UnreachableThemes,
     ProblemCheck::WatchedWords,
+    ProblemCheck::UpcomingChangeStableOptedOut,
   ].freeze
 
   # To enforce the unique constraint in Postgres <15 we need a dummy
@@ -111,11 +118,6 @@ class ProblemCheck
   def self.realtime
     Collection.new(checks.select(&:realtime?))
   end
-
-  def self.tracker(target = NO_TARGET)
-    ProblemCheckTracker[identifier, target]
-  end
-  delegate :tracker, to: :class
 
   def self.identifier
     name.demodulize.underscore.to_sym
@@ -142,79 +144,77 @@ class ProblemCheck
   end
   delegate :inline?, to: :class
 
-  def self.ready_to_run?
-    tracker.ready_to_run?
+  def self.targeted?
+    targets.call != [ProblemCheck::NO_TARGET]
   end
-  delegate :ready_to_run?, to: :class
+  delegate :targeted?, to: :class
 
-  def self.call(data = {})
-    new(data).call
-  end
-
-  def self.run(data = {}, &)
-    new(data).run(&)
+  def self.each_target(&)
+    targets.call.each(&)
   end
 
-  def initialize(data = {})
-    @data = OpenStruct.new(data)
+  def initialize(target = NO_TARGET)
+    @target = target
   end
 
-  attr_reader :data
+  attr_reader :target
 
   def call
     raise NotImplementedError
   end
 
   def run
-    problems = call
+    if targeted? && (target == NO_TARGET || targets.call.exclude?(target))
+      tracker.destroy
+      return
+    end
 
-    yield(problems) if block_given?
+    problem = call
+
+    yield(problem) if block_given?
 
     next_run_at = perform_every&.from_now
 
-    if problems.empty?
-      targets.each { |t| tracker(t).no_problem!(next_run_at:) }
+    if problem.blank?
+      tracker.no_problem!(next_run_at:)
     else
-      problems
-        .uniq(&:target)
-        .each do |problem|
-          tracker(problem.target).problem!(
-            next_run_at:,
-            details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
-          )
-        end
+      tracker.problem!(
+        next_run_at:,
+        details: translation_data.merge(problem.details).merge(base_path: Discourse.base_path),
+      )
     end
+  end
 
-    problems
+  def tracker
+    ProblemCheckTracker[identifier, target]
+  end
+
+  def ready_to_run?
+    tracker.ready_to_run?
   end
 
   private
 
-  def targets
-    [NO_TARGET]
-  end
-
   def problem(target = nil, override_key: nil, override_data: {}, details: {})
-    problem =
-      Problem.new(
-        I18n.t(
-          override_key || translation_key,
-          base_path: Discourse.base_path,
-          **override_data.merge(
-            target.present? ? translation_data(target) : translation_data,
-          ).symbolize_keys,
-        ),
-        priority: self.config.priority,
-        identifier:,
-        target: target&.id,
-        details:,
-      )
+    target_identifier = target.kind_of?(ActiveRecord::Base) ? target.id : target
 
-    target.present? ? problem : [problem]
+    Problem.new(
+      I18n.t(
+        override_key || translation_key,
+        base_path: Discourse.base_path,
+        **override_data.merge(
+          target.present? ? translation_data(target) : translation_data,
+        ).symbolize_keys,
+      ),
+      priority: self.config.priority,
+      identifier:,
+      target: target_identifier,
+      details:,
+    )
   end
 
   def no_problem
-    []
+    nil
   end
 
   def translation_key

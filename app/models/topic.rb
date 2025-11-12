@@ -2196,6 +2196,14 @@ class Topic < ActiveRecord::Base
         topic_allowed_users.create!(user_id: target_user.id)
       end
 
+      # Set the invited user to watch the PM so they receive notifications for new messages
+      # even if they haven’t opened the PM yet.
+      TopicUser.change(
+        target_user,
+        self,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
       user_in_allowed_group = (user.group_ids & topic_allowed_groups.map(&:group_id)).present?
       add_small_action(invited_by, "invited_user", target_user.username) if !user_in_allowed_group
 

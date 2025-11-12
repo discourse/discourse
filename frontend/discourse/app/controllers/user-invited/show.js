@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { equal, reads } from "@ember/object/computed";
@@ -16,13 +17,15 @@ export default class UserInvitedShowController extends Controller {
   @service modal;
   @service toasts;
 
+  @tracked canLoadMore = true;
+  @tracked hasLoadedInitialInvites = false;
+  @tracked invitesLoading = false;
+
   user = null;
   model = null;
   filter = null;
   invitesCount = null;
-  canLoadMore = true;
-  invitesLoading = false;
-  hasLoadedInitialInvites = false;
+
   reinvitedAll = false;
   searchTerm = "";
 
@@ -122,30 +125,32 @@ export default class UserInvitedShowController extends Controller {
   }
 
   @action
-  loadMore() {
+  async loadMore() {
     const model = this.model;
 
     if (this.canLoadMore && !this.invitesLoading) {
-      this.set("invitesLoading", true);
-      Invite.findInvitedBy(
-        this.user,
-        this.filter,
-        this.searchTerm,
-        model.invites.length
-      )
-        .then((invite_model) => {
-          this.set("invitesLoading", false);
-          model.invites.pushObjects(invite_model.invites);
-          if (
-            invite_model.invites.length === 0 ||
-            invite_model.invites.length < this.siteSettings.invites_per_page
-          ) {
-            this.set("canLoadMore", false);
-          }
-        })
-        .finally(() => {
-          this.set("hasLoadedInitialInvites", true);
-        });
+      this.invitesLoading = true;
+
+      try {
+        const inviteList = await Invite.findInvitedBy(
+          this.user,
+          this.filter,
+          this.searchTerm,
+          model.invites.length
+        ).invites;
+
+        this.invitesLoading = false;
+        model.invites.push(...inviteList);
+
+        if (
+          inviteList.length === 0 ||
+          inviteList.length < this.siteSettings.invites_per_page
+        ) {
+          this.canLoadMore = false;
+        }
+      } finally {
+        this.hasLoadedInitialInvites = true;
+      }
     }
   }
 }

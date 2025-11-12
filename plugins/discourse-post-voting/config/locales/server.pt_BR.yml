@@ -35,6 +35,26 @@ pt_BR:
     post_voting_comment_enabled: "Ativar comentários na postagem, nos tópicos de votação em postagem"
     keywords:
       flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
+  discourse_post_voting:
+    reviewables:
+      actions:
+        no_action_comment:
+          title: "Sem ação"
+        agree_and_keep_comment:
+          title: "Manter comentário"
+          description: "Concorde com o sinalizador e mantenha o comentário inalterado."
+        agree_and_keep_deleted:
+          title: "Manter comentário excluído"
+          description: "Concorde com o sinalizador e mantenha o comentário excluído."
+        agree_and_restore:
+          title: "Restaurar comentário"
+          description: "Restaure o comentário para que os(as) usuários(as) possam ver."
+        agree_and_delete:
+          title: "Excluir comentário"
+          description: "Exclua o comentário para que os(as) usuários(as) não possam ver."
+        disagree_and_restore:
+          title: "Discordar e restaurar comentário"
+          description: "Restaure o comentário para que todos(as) usuários(as) possam ver."
   post_action_types:
     vote:
       title: "Votar"

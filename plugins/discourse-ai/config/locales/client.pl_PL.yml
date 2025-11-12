@@ -174,7 +174,7 @@ pl_PL:
               label: "Nadawca PW"
               description: "Użytkownik, który wyśle PW (domyślnie system)"
             notify_author_pm_message:
-              label: "Wiadomość PW"
+              label: "Treść PW"
               description: "Opcjonalna niestandardowa wiadomość do wysłania do autora"
             include_personal_messages:
               label: "Dołącz osobiste wiadomości"
@@ -195,7 +195,7 @@ pl_PL:
           fields:
             tagger_persona:
               label: "Osobowość AI"
-              description: "Osobowość AI do analizy i tagowania postów"
+              description: "Osobowość AI do analizy i tagowania tematów"
             tag_mode:
               label: "Tryb wyboru tagów"
               description: "Wybierz sposób, w jaki AI wybiera tagi"
@@ -336,15 +336,26 @@ pl_PL:
           complete_language_detection_description: "Wszystkie %{total} kwalifikujące się posty mają wykryty język."
           incomplete_language_detection_description: "%{done} z %{total} kwalifikujących się postów ma wykryty język."
           backfill_disabled: "Uzupełnianie jest wyłączone, tłumaczone będą tylko nowe wpisy."
-          description_tooltip:
-            one: 'Jest %{count} wpis nadający się do przetłumaczenia.'
-            few: 'Są %{count} wpisy nadające się do przetłumaczenia.'
-            many: 'Jest %{count} wpisów nadających się do przetłumaczenia.'
-            other: 'Jest %{count} wpisów nadających się do przetłumaczenia.'
+          backfill_message: "<a href='%{settingsUrl}'>Ustawienia uzupełniania</a> są skonfigurowane tak, aby tłumaczyć wszystkie posty po %{date} — szacuje się, że zajmie to %{eta}."
+          eta_minutes:
+            one: "%{count} minuta"
+            few: "%{count} minuty"
+            many: "%{count} minut"
+            other: "%{count} minut"
+          eta_hours:
+            one: "%{count} godzina"
+            few: "%{count} godziny"
+            many: "%{count} godzin"
+            other: "%{count} godzin"
+          eta_days:
+            one: "%{count} dzień"
+            few: "%{count} dni"
+            many: "%{count} dni"
+            other: "%{count} dni"
         progress_chart:
           title: "Postęp tłumaczenia"
           data_label: "%{percentage}%"
-          tooltip_translated: "%{done} z %{total} przetłumaczonych postów"
+          tooltip_translated: "%{done} z %{total} wpisów w języku innym niż %{language} przetłumaczono"
           bar_done:
             one: "%{count} wpis"
             few: "%{count} wpisy"
@@ -883,6 +894,7 @@ pl_PL:
         cancel_streaming: "Zatrzymaj odpowiedź"
         default_pm_prefix: "[PW bota AI bez tytułu]"
         shortcut_title: "Rozpocznij PW z botem AI"
+        shortcut_link: "Bot AI"
         exit: "opuść bota AI"
         share: "Skopiuj rozmowę AI"
         conversation_shared: "Rozmowa skopiowana"

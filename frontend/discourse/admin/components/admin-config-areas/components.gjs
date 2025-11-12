@@ -541,7 +541,7 @@ class ComponentRow extends Component {
       <td class="d-table__cell --controls">
         <div class="d-table__cell-actions">
           <DButton
-            class="admin-config-components__edit"
+            class="btn-default admin-config-components__edit"
             @label="admin.config_areas.themes_and_components.components.edit"
             @route="adminCustomizeThemes.show"
             @routeModels={{array "themes" @component.id}}

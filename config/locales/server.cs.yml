@@ -1987,7 +1987,7 @@ cs:
     auto_approve_email_domains: "Uživatelé s e-mailovými adresami z tohoto seznamu domén budou automaticky schváleni. Subdomény jsou pro zadané domény zpracovávány automaticky. Zástupné znaky * a ? nejsou podporovány."
     hide_email_address_taken: "Neinformovat uživatele o existenci účtu s danou e-mailovou adresou během registrace nebo během procesu zapomenutí hesla. V případě požadavku na zapomenuté heslo požadovat celou e-mailovou adresu."
     log_out_strict: "Při odhlašování odhlásit VŠECHNY relace uživatele na všech zařízeních"
-    version_checks: "Odešlete příkaz ping na Discourse Hub pro aktualizace verzí a zobrazte zprávy o nových verzích na <a href='%{base_path}/admin' target='_blank'>/admin</a> nástěnce"
+    version_checks: "Odesílat příkaz ping na Discourse Hub pro aktualizace verzí a zobrazit informace o nových verzích na nástěnce <a href='%{base_path}/admin' target='_blank'>/admin</a>"
     new_version_emails: "Až bude k dispozici nová verze Discourse, poslat e-mail na adresu contact_email."
     include_in_discourse_discover: "Dovolte společnosti CDCK, Inc. („Discourse“), aby tuto komunitu zobrazila na stránce <a href='https://discover.discourse.org' target='_blank'>Discover</a> a v marketingových materiálech Discourse. Tímto způsobem sdílíte data potřebná k tomu, aby byl váš web zahrnut do služby. Upozorňujeme, že propagace komunit je na uvážení společnosti Discourse."
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
@@ -2322,7 +2322,6 @@ cs:
     default_text_size: "Určuje výchozí velikost písma pro všechny textové prvky na webu. Tuto velikost si může každý uživatel následně upravit podle svých preferencí."
     tags_sort_alphabetically: "Zobrazit štítky dle abecedy. Standardně jsou setříděny dle popularity."
     force_lowercase_tags: "Vynutit, aby všechny nové štítky byly psány výhradně malými písmeny."
-    watched_precedence_over_muted: "Informujte mě o tématech v kategoriích nebo štítcích, které sleduji a které také patří do těch, které jsem ztlumil."
     shared_drafts_allowed_groups: "Povolte uživatelům v těchto skupinách zobrazovat a upravovat sdílené návrhy."
     base_font: "Základní písmo použité pro většinu textu na webu. Motivy mohou toto přepsat pomocí vlastní vlastnosti CSS `--font-family`."
     heading_font: "Písmo, které se má použít pro nadpisy na webu. Motivy toto mohou přepsat pomocí vlastní vlastnosti CSS `--heading-font-family`."
@@ -2385,9 +2384,6 @@ cs:
       activity_after: "Zobrazit témata s poslední činností po datu (před YYYY-MM-DD nebo x dnech)"
       created_before: "Zobrazit témata vytvořená před datem (před YYYY-MM-DD nebo před x dny)"
       created_after: "Zobrazit témata vytvořená před datem (RRRR-MM-DD nebo x dny)"
-      created_by: "Zobrazit témata vytvořená konkrétním uživatelem"
-      created_by_user: "Zobrazit témata vytvořená uživatelským jménem (bez @)"
-      created_by_multiple: "Zobrazit témata vytvořená kterýmkoli ze zadaných uživatelů (oddělenými čárkou)"
       latest_post_before: "Zobrazit témata s posledním příspěvkem před datem (před YYYY-MM-DD nebo před x dny)"
       latest_post_after: "Zobrazit témata s posledním příspěvkem po datu (před YYYY-MM-DD nebo x dnech)"
       likes_min: "Zobrazit témata alespoň s tímto množstvím líbí se"
@@ -4710,6 +4706,8 @@ cs:
         title: "Odmítnout a odstranit příspěvek"
       reject_and_keep_deleted:
         title: "Ponechat příspěvek smazaný"
+      scrub:
+        title: Očistit záznam
       approve_and_restore:
         title: "Schválit a obnovit příspěvek"
       no_action_post:

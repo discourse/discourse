@@ -31,6 +31,7 @@ uk:
     chat_editing_grace_period_max_diff_high_trust: "Максимальна кількість змін символів, дозволена протягом пільгового періоду редагування чату, якщо змінено більше, відображати тег (відредаговано) біля повідомлення чату (рівень довіри 2 і вище)."
     chat_preferred_index: "Бажана вкладка при завантаженні /chat."
     allow_chat_in_anonymous_mode: "Увімкніть це налаштування, щоб дозволити користувачам, які переглядають ваш сайт анонімно, користуватися чатом. Цей параметр вимагає, щоб було ввімкнено параметр `дозволити анонімний режим`."
+    chat_search_enabled: "Увімкніть цей параметр, щоб дозволити користувачам шукати повідомлення чату."
     errors:
       chat_default_channel: "Канал чату за замовчуванням має бути публічним."
       direct_message_enabled_groups_invalid: "Ви повинні вказати принаймні одну групу для цього параметра. Якщо ви не хочете, щоб хтось, крім членів команди обслуговування, надсилав приватні повідомлення, виберіть групу команди обслуговування."
@@ -112,6 +113,17 @@ uk:
     reviewables:
       message_already_handled: "Дякуємо, але ми вже переглянули це повідомлення та вирішили, що його не потрібно знову позначати."
       actions:
+        message_actions:
+          bundle_title: "Що ви хочете зробити з повідомленням?"
+        no_action_message:
+          title: "Немає дій"
+          description: "Залиште повідомлення як є."
+        delete_message:
+          title: "Видалити повідомлення"
+          description: "Видалити повідомлення назавжди."
+        restore_message:
+          title: "Відновити повідомлення"
+          description: "Відновити повідомлення, щоб користувачі могли його бачити."
         agree:
           title: "Погодитися…"
         agree_and_keep_message:
@@ -206,7 +218,8 @@ uk:
         slug_contains_non_ascii_chars: "містить символи, які не є ASCII"
         is_already_in_use: "вже використовується"
     bookmarkable:
-      notification_title: "повідомлення в %{channel_name}"
+      notification_title_channel: "повідомлення в %{channel_name}"
+      notification_title_direct_message: "повідомлення з %{channel_name}"
     personal_chat: "особистий чат"
     onebox:
       inline_to_message: "Повідомлення №%{message_id} від %{username} – №%{chat_channel}"

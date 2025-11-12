@@ -2,6 +2,7 @@
 
 RSpec.describe ReviewableSerializer do
   fab!(:reviewable, :reviewable_queued_post)
+  fab!(:reviewable_user)
   fab!(:admin)
 
   it "serializes all the fields" do
@@ -53,6 +54,18 @@ RSpec.describe ReviewableSerializer do
       json = described_class.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
       expect(json[:target_url]).to eq(reviewable.topic.url)
       expect(json[:topic_url]).to eq(reviewable.topic.url)
+    end
+  end
+
+  describe "target_created_by" do
+    it "serializes the user who created a reviewable post" do
+      json = described_class.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_created_by_id]).to eq(reviewable.target_created_by.id)
+    end
+
+    it "serializes a reviewable user directly" do
+      json = described_class.new(reviewable_user, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:target_created_by_id]).to eq(reviewable_user.target.id)
     end
   end
 end

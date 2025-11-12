@@ -151,7 +151,7 @@ th:
     welcome_banner:
       header:
         anonymous_members: "ยินดีต้อนรับสู่ %{site_name}!"
-      search: "ค้นหา"
+      search_placeholder: "ค้นหา"
     themes:
       default_description: "ค่าเริ่มต้น"
       only_admins: "(ข้อความนี้จะแสดงเฉพาะผู้ดูแลไซต์เท่านั้น)"
@@ -305,6 +305,7 @@ th:
       other: "ดู%{count}กระทู้ใหม่"
     preview: "แสดงตัวอย่าง"
     cancel: "ยกเลิก"
+    done: "เสร็จ"
     save: "บันทึกการเปลี่ยนแปลง"
     saved: "บันทึกแล้ว!"
     upload: "อัปโหลด"
@@ -437,6 +438,7 @@ th:
         reviewable_post:
           title: "โพสต์"
           noun: "โพส"
+      user_label: "ผู้ใช้"
       notes:
         delete: "ลบ"
       review_user: "ผู้ใช้"
@@ -1436,8 +1438,9 @@ th:
           desc: ตอบกลับโพสต์ที่เจาะจง
         reply_to_topic:
           label: ตอบกลับกระทู้
-        create_topic:
-          label: "กระทู้ใหม่"
+        create_personal_message:
+          label: "ข้อความใหม่"
+          desc: "สร้างข้อความส่วนตัวใหม่"
         shared_draft:
           label: "แบบร่างที่ถูกแบ่งปัน"
         toggle_topic_bump:
@@ -1659,7 +1662,6 @@ th:
       filter_to:
         other: " %{count} โพสต์ในกระทู้"
       create: "กระทู้ใหม่"
-      create_long: "สร้างกระทู้ใหม่"
       open_draft: "เปิดแบบร่าง"
       private_message: "เริ่มข้อความ"
       archive_message:
@@ -2562,6 +2564,17 @@ th:
           title: "ความปลอดภัย"
         plugins:
           title: "ตัวเสริม"
+      upcoming_changes:
+        name: "ชื่อ"
+        preview: "แสดงตัวอย่าง"
+        impact_roles:
+          admins: "แอดมิน"
+          moderators: "ผู้ดูแลระบบ"
+          staff: "ทีมงาน"
+        filter:
+          all: "ทั้งหมด"
+          disabled: "ปิดใช้งานแล้ว"
+          impact_type_other: "อื่นๆ"
       config:
         developer:
           title: "นักพัฒนา"
@@ -3221,7 +3234,6 @@ th:
             text: "ถ่ายโอน @%{username} ไปยัง @%{targetUsername}"
             transfer_and_delete: "ถ่ายโอนและลบ @%{username}"
             cancel: "ยกเลิก"
-        delete_posts_forbidden_because_staff: "ไม่สามารถลบโพสต์ทั้งหมดของแอดมินและผู้ดูแลระบบได้"
         deleted: "ผู้ใช้ถูกลบแล้ว"
         delete_failed: "มีข้อผิดพลาดขณะกำลังลบผู้ใช้นั้น กรุณาตรวจสอบอีกครั้งว่าโพสต์ทั้งหมดถูกลบก่อนลบผู้ใช้นั้น"
         send_activation_email: "ส่งอีเมลยืนยันตัวตน"

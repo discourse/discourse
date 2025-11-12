@@ -130,6 +130,46 @@ describe "Post translations", type: :system do
 
       expect(PostLocalization.exists?(post_id: post.id, locale: "fr")).to be false
     end
+
+    it "prompts to discard changes when abandoning modified translation" do
+      discard_modal = PageObjects::Modals::DiscardDraft.new
+
+      topic_page.visit_topic(topic)
+      find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      expect(composer).to be_opened
+
+      translation_selector.expand
+      translation_selector.select_row_by_value("fr")
+
+      composer.fill_content("Salut le monde")
+      composer.minimize
+      expect(composer).to be_minimized
+
+      find("#post_#{post.post_number} .post-action-menu__reply").click
+
+      expect(discard_modal).to be_open
+    end
+
+    it "auto-closes when abandoning unchanged translation" do
+      discard_modal = PageObjects::Modals::DiscardDraft.new
+
+      topic_page.visit_topic(topic)
+      find("#post_#{post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+      expect(composer).to be_opened
+
+      translation_selector.expand
+      translation_selector.select_row_by_value("fr")
+
+      composer.minimize
+      expect(composer).to be_minimized
+
+      find("#post_#{post.post_number} .post-action-menu__reply").click
+
+      expect(discard_modal).to be_closed
+      expect(composer).to be_opened
+    end
   end
 
   context "when creating a new post in a different locale" do
@@ -163,6 +203,90 @@ describe "Post translations", type: :system do
       visit("/latest")
       page.find("#create-topic").click
       expect(page.has_no_css?("#{POST_LANGUAGE_SWITCHER_SELECTOR} .d-button-label")).to be true
+    end
+  end
+
+  context "when viewing raw markdown in translation editor" do
+    fab!(:markdown_post) do
+      Fabricate(
+        :post,
+        topic: topic,
+        raw: "# Heading\n\n**Bold** text with [link](https://example.com) and *italic*",
+      )
+    end
+    let(:translation_preview) { PageObjects::Components::DEditorOriginalTranslationPreview.new }
+
+    it "shows raw markdown toggle only on Original tab" do
+      topic_page.visit_topic(topic)
+      find("#post_#{markdown_post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      expect(translation_preview).to have_raw_toggle
+      expect(translation_preview.original_tab_active?).to be true
+
+      translation_preview.click_translation_tab
+      expect(translation_preview.translation_tab_active?).to be true
+      expect(translation_preview).to have_no_raw_toggle
+    end
+
+    it "displays rendered HTML by default" do
+      topic_page.visit_topic(topic)
+      find("#post_#{markdown_post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      expect(translation_preview.original_tab_active?).to be true
+      expect(translation_preview).to have_rendered_content
+      expect(translation_preview).to have_no_raw_markdown_content
+    end
+
+    it "displays raw markdown when toggle is enabled" do
+      topic_page.visit_topic(topic)
+      find("#post_#{markdown_post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      translation_preview.raw_toggle.toggle
+
+      expect(translation_preview).to have_raw_markdown_content
+      raw_content = translation_preview.raw_markdown_content
+      expect(raw_content).to include("# Heading")
+      expect(raw_content).to include("**Bold**")
+      expect(raw_content).to include("[link](https://example.com)")
+      expect(raw_content).to include("*italic*")
+    end
+
+    it "resets raw markdown view when switching tabs" do
+      topic_page.visit_topic(topic)
+      find("#post_#{markdown_post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      translation_preview.raw_toggle.toggle
+      expect(translation_preview).to have_raw_markdown_content
+
+      translation_preview.click_translation_tab
+      expect(translation_preview).to have_no_raw_toggle
+
+      translation_preview.click_original_tab
+      expect(translation_preview).to have_raw_toggle
+      expect(translation_preview.raw_toggle).to be_unchecked
+      expect(translation_preview).to have_rendered_content
+    end
+
+    it "maintains raw markdown state while on Original tab" do
+      topic_page.visit_topic(topic)
+      find("#post_#{markdown_post.post_number} .post-action-menu-edit-translations-trigger").click
+      find(".update-translations-menu__add .post-action-menu__add-translation").click
+
+      expect(composer).to be_opened
+      translation_preview.raw_toggle.toggle
+      expect(translation_preview).to have_raw_markdown_content
+
+      translation_preview.raw_toggle.toggle
+      expect(translation_preview).to have_no_raw_markdown_content
+      expect(translation_preview).to have_rendered_content
     end
   end
 end

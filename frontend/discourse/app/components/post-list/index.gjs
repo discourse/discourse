@@ -3,7 +3,8 @@
  *
  * @component PostList
  *
- * @args {Array<Object>} posts - The array of post objects to display
+ * @args {Array<Object>} posts - The array of post objects to display (it must be a tracked array to ensure that
+ *   the component is re-rendered when the array changes)
  * @args {Function} fetchMorePosts - A function that fetches more posts. Must return a Promise that resolves to an array of new posts.
  * @args {String} emptyText (optional) - Custom text to display when there are no posts
  * @args {String|Array} additionalItemClasses (optional) - Additional classes to add to each post list item
@@ -42,6 +43,7 @@ import concatClass from "discourse/helpers/concat-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import { addUniqueValuesToArray } from "../../lib/array-tools";
 
 export default class PostList extends Component {
   @tracked loading = false;
@@ -61,7 +63,9 @@ export default class PostList extends Component {
 
     try {
       const newPosts = await this.args.fetchMorePosts();
-      this.args.posts?.addObjects(newPosts);
+      if (this.args.posts) {
+        addUniqueValuesToArray(this.args.posts, newPosts);
+      }
 
       if (newPosts.length === 0) {
         this.canLoadMore = false;

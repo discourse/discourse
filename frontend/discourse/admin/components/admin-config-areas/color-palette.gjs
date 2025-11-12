@@ -314,7 +314,7 @@ export default class AdminConfigAreasColorPalette extends Component {
             {{/if}}
             <div class="admin-config-color-palettes__top-actions">
               <DButton
-                class="duplicate-palette"
+                class="btn-default duplicate-palette"
                 @label="admin.config_areas.color_palettes.duplicate"
                 @action={{this.duplicate}}
               />
@@ -430,7 +430,7 @@ export default class AdminConfigAreasColorPalette extends Component {
                   </span>
                 {{/if}}
                 <DButton
-                  class="copy-to-clipboard"
+                  class="btn-default copy-to-clipboard"
                   @label="admin.config_areas.color_palettes.copy_to_clipboard"
                   @action={{this.copyToClipboard}}
                 />

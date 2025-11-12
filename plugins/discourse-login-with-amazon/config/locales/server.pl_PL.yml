@@ -11,6 +11,8 @@ pl_PL:
     login_with_amazon_client_secret: "Zaloguj się za pomocą sekretu klienta Amazon"
     login_with_amazon_scope: "Zaloguj się za pomocą zakresów Amazon OAuth2 (oddzielone spacją)"
     login_with_amazon_overrides_email: "Zastępuje adres e-mail na koncie użytkownika Discourse."
+    login_with_amazon_user_can_connect: "Zezwól istniejącym użytkownikom na podłączenie ich konta Amazon w preferencjach."
+    login_with_amazon_user_can_revoke: "Zezwól użytkownikom na anulowanie powiązanego konta Amazon w preferencjach."
     errors:
       login_with_amazon_client_id_is_blank: "Musisz ustawić 'login with amazon client id' przed włączeniem tego ustawienia."
       login_with_amazon_client_secret_is_blank: "Musisz ustawić 'login with amazon client secret' przed włączeniem tego ustawienia."

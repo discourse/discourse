@@ -60,6 +60,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "post-flag-title",
   "post-menu-buttons",
   "post-menu-collapsed",
+  "post-menu-like-button-icon",
   "post-meta-data-edits-indicator-label",
   "post-meta-data-infos",
   "post-meta-data-poster-name-suppress-similar-name",

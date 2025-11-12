@@ -54,6 +54,7 @@ export default <template>
           @action={{routeAction "composePrivateMessage"}}
           @icon="envelope"
           @label="user.new_private_message"
+          id="new-private-message-btn"
           class="btn-primary new-private-message"
         />
       {{/if}}

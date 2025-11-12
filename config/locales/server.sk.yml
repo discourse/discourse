@@ -2541,7 +2541,6 @@ sk:
     force_lowercase_tags: "Vynútiť, aby všetky nové značky boli písané výhradne malými písmenami."
     create_post_for_category_and_tag_changes: "Vytvorenie šepkaného príspevku pri zmene kategórie alebo značky témy, vyžaduje, aby boli povolené šepkané príspevky."
     automatically_clean_unused_tags: "Automaticky odstráňte značky, ktoré sa nepoužívajú na žiadne témy alebo osobné správy na dennej báze."
-    watched_precedence_over_muted: "Upozorniť ma na témy v kategóriách alebo značkách, ktoré sledujem a ktoré tiež patria do tých, ktoré som stlmil"
     company_name: "Názov vašej spoločnosti alebo organizácie. Ak pole ponecháte prázdne, neposkytnú sa žiadne všeobecné zmluvné podmienky ani oznámenie o ochrane osobných údajov."
     governing_law: "Uveďte jurisdikciu, ktorá upravuje právne aspekty stránky vrátane podmienok používania služby a zásad ochrany osobných údajov. Zvyčajne ide o krajinu alebo štát, v ktorom je spoločnosť prevádzkujúca lokalitu registrovaná alebo v ktorom podniká."
     city_for_disputes: "Uveďte mesto, ktoré sa použije ako súdna právomoc na riešenie akýchkoľvek sporov súvisiacich s používaním tohto fóra. Táto informácia sa zvyčajne uvádza v právnych dokumentoch, ako sú napríklad podmienky používania fóra."
@@ -2582,9 +2581,6 @@ sk:
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
-    glimmer_post_stream_mode: "Ovládanie, či sa použije nová implementácia postreamu \"glimmer\". 'auto' sa zapne automaticky, akonáhle sú všetky vaše témy a doplnky pripravené. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    glimmer_post_stream_mode_auto_groups: "Povolenie novej implementácie postreamu \"glimmer\" v režime \"auto\" pre zadané skupiny používateľov. Táto implementácia je v štádiu aktívneho vývoja a nie je určená na produkčné použitie. Nevyvíjajte proti nej témy/pluginy, kým nebude implementácia dokončená a oznámená."
-    deactivate_widgets_rendering: "Zakázanie staršieho vykresľovacieho jadra widgetov. Tým sa zakážu všetky widgety, ktoré neboli aktualizované na komponenty Glimmer, a tiež sa bezpodmienečne povolí Glimmer Post Stream bez ohľadu na hodnotu nastavenia `glimmer_post_stream_mode`. Toto nastavenie sa neodporúča pre produkčné stránky, pretože môže narušiť existujúce témy a doplnky."
     experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
@@ -2724,9 +2720,6 @@ sk:
       activity_after: "Zobrazenie tém s poslednou aktivitou po určitom dátume (RRRR-MM-DD alebo pred niekoľkými dňami)"
       created_before: "Zobraziť témy vytvorené pred dátumom (RRRR-MM-DD alebo pred niekoľkými dňami)"
       created_after: "Zobraziť témy vytvorené po určitom dátume (RRRR-MM-DD alebo pred niekoľkými dňami)"
-      created_by: "Zobraziť témy vytvorené konkrétnym používateľom"
-      created_by_user: "Zobraziť témy vytvorené používateľským menom (bez @)"
-      created_by_multiple: "Zobraziť témy vytvorené niektorým zo zadaných používateľov (oddelené čiarkou)"
       latest_post_before: "Zobraziť témy s posledným príspevkom pred dátumom (RRRR-MM-DD alebo pred niekoľkými dňami)"
       latest_post_after: "Zobraziť témy s posledným príspevkom po určitom dátume (RRRR-MM-DD alebo pred niekoľkými dňami)"
       likes_min: "Zobraziť témy s aspoň týmto počtom označení „Páči sa mi to“"
@@ -5536,6 +5529,8 @@ sk:
       reject_and_keep_deleted:
         title: "Ponechať príspevok odstránený"
         complete: "Príspevok zamietnutý a vymazaný."
+      scrub:
+        title: Záznam o čistení
       approve_and_restore:
         title: "Schváliť a obnoviť príspevok"
         complete: "Príspevok schválený a obnovený."
@@ -5565,6 +5560,8 @@ sk:
         complete: "Používateľ odstránený"
         reason: "Odstránené prostredníctvom poradia na kontrolu"
       delete_and_block_user:
+        complete: "Používateľ vymazaný a zablokovaný"
+      delete_user_block:
         complete: "Používateľ vymazaný a zablokovaný"
   email_style:
     html_missing_placeholder: "Šablóna html musí obsahovať %{placeholder}"

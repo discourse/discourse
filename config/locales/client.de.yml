@@ -297,7 +297,7 @@ de:
       header:
         logged_in_members: "Willkommen zurück, %{preferred_display_name}!"
         anonymous_members: "Willkommen bei %{site_name}!"
-      search: "Suche"
+      search_placeholder: "Suche"
     impersonation:
       notice: "Du verwendest derzeit die Rolle von %{username}"
       stop: "Nutzerrolle verlassen"
@@ -598,6 +598,7 @@ de:
       other: "Zeige %{count} neue Themen"
     preview: "Vorschau"
     cancel: "Abbrechen"
+    done: "Erledigt"
     deleting: "Wird gelöscht …"
     save: "Änderungen speichern"
     saving: "Wird gespeichert …"
@@ -686,9 +687,9 @@ de:
         claimed_by_other: "Dieses Element kann nur von <b>%{username}</b> überprüft werden."
         automatically_claimed_by: "Dieses Element wird derzeit von <b>%{username}</b> überprüft."
       claim:
-        title: "dieses Thema reservieren"
+        title: "Dieses Thema reservieren"
       unclaim:
-        help: "diese Reservierung entfernen"
+        help: "Diese Reservierung entfernen"
       awaiting_approval: "Wartet auf Genehmigung"
       delete: "Löschen"
       settings:
@@ -846,6 +847,9 @@ de:
           title: "Beitrag"
           noun: "Beitrag"
       flagged_as: "Gemeldet als"
+      post_flagged_as: "Beitrag gemeldet als"
+      queued_post_label: "Beitrag in der Warteschlange"
+      user_label: "Benutzer"
       assigned_to: "Zugeordnet zu"
       moderator_actions: "Moderator-Aktionen"
       timeline_and_notes: "Zeitleiste & Notizen"
@@ -876,6 +880,8 @@ de:
       review_user: "Benutzer"
       need_help: "Brauchst du Hilfe?"
       copy_link: "Link kopieren"
+      copy_permalink_title: "Den Link zu diesem zu überprüfenden Element in die Zwischenablage kopieren"
+      copy_link_feedback: "Link kopiert"
       view_source: "Quelltext ansehen"
       insights:
         title: "Einblicke"
@@ -1694,6 +1700,7 @@ de:
         verify_identity: "Um fortzufahren, bestätige bitte deine Identität."
         title: "Passwort zurücksetzen"
         remove: "Passwort entfernen"
+        remove_disabled: "Das Konto benötigt mindestens eine andere Anmeldemethode (z. B. einen Passkey oder ein verknüpftes externes Konto), bevor das Passwort entfernt werden kann."
         remove_detail: "Dein Konto wird nicht mehr mit einem Passwort zugänglich sein, es sei denn, du setzt es zurück."
       second_factor_backup:
         title: "Wiederherstellungscodes für Zwei-Faktor-Authentifizierung"
@@ -1960,6 +1967,7 @@ de:
         first_time_and_daily: "Für das erste „Gefällt mir“ sowie maximal täglich"
         first_time: "Nur für das erste „Gefällt mir“ eines Beitrags"
         never: "Nie"
+      notify_on_linked_posts: "Benachrichtige mich, wenn jemand einen Link zu einem meiner Beiträge teilt"
       email_previous_replies:
         title: "Füge vorherige Beiträge ans Ende von E-Mails an"
         unless_emailed: "sofern noch nicht gesendet"
@@ -2281,6 +2289,10 @@ de:
       no_results: "Keine Ergebnisse"
       search: "Suchen …"
       label: "Optionen auswählen"
+    d_otp:
+      screen_reader:
+        one: Gib eine Zahl ein
+        other: Gib %{count} Zahlen ein
     form_kit:
       reset: Zurücksetzen
       optional: optional
@@ -2710,6 +2722,7 @@ de:
         select: "Übersetzung auswählen"
         save: "Übersetzung speichern"
         original_content: "Inhalt des Originalbeitrags"
+        translation: "Übersetzen"
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
@@ -2866,6 +2879,9 @@ de:
         create_topic:
           label: "Neues Thema"
           desc: Erstelle ein neues Thema
+        create_personal_message:
+          label: "Neue Nachricht"
+          desc: "Erstelle eine neue persönliche Nachricht"
         shared_draft:
           label: "Gemeinsamer Entwurf"
           desc: "Entwurf eines Themas, das nur für erlaubte Benutzer sichtbar ist"
@@ -3300,7 +3316,7 @@ de:
         hot: "Es gibt keine heißen Themen."
         filter: "Es gibt keine Themen."
         education:
-          topic_tracking_preferences: 'Du kannst deine Einstellungen für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
+          topic_tracking_preferences: 'Du kannst deine Konfiguration für die Verfolgung neuer Themen in <a href="%{basePath}/my/preferences/tracking">deinen Einstellungen</a> einsehen und ändern.'
           unread: "Nichts ungelesen … beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
@@ -3359,7 +3375,7 @@ de:
         one: "%{count} Beitrag im Thema"
         other: "%{count} Beiträge im Thema"
       create: "Neues Thema"
-      create_long: "Ein neues Thema erstellen"
+      create_long: "Erstelle ein neues Thema"
       open_draft: "Entwurf öffnen"
       private_message: "Eine Unterhaltung beginnen"
       archive_message:
@@ -3447,7 +3463,7 @@ de:
       browse_all_categories_latest: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
       browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Durchstöbere alle Kategorien</a>, <a href='%{basePath}/latest'>sieh dir die aktuellen Themen</a> oder die Top-Themen an:"
       browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Durchstöbere alle Schlagwörter</a> oder <a href='%{basePath}/latest'>sieh dir die aktuellen Themen an</a>."
-      browse_latest_topics: "Neueste Themen durchstöbern"
+      browse_latest_topics: "Aktuelle Themen durchstöbern"
       suggest_create_topic: Bereit, <a href>eine neue Unterhaltung zu beginnen?</a>
       jump_reply: "Zum ursprünglichen Ort des Beitrags springen"
       jump_reply_aria: "Zum Beitrag von @%{username} an dessen ursprünglichen Ort springen"
@@ -3526,9 +3542,6 @@ de:
       auto_close_immediate:
         one: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunde alt. Das Thema wird daher sofort geschlossen."
         other: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunden alt. Das Thema wird daher sofort geschlossen."
-      auto_close_momentarily:
-        one: "Der letzte Beitrag im Thema ist bereits %{count} Stunde alt, daher wird das Thema augenblicklich geschlossen."
-        other: "Der letzte Beitrag im Thema ist bereits %{count} Stunden alt, daher wird das Thema augenblicklich geschlossen."
       timeline:
         back: "Zurück"
         back_description: "Gehe zurück zum letzten ungelesenen Beitrag"
@@ -3616,6 +3629,8 @@ de:
       reply:
         title: "Antworten"
         help: "beginne damit, eine Antwort auf dieses Thema zu verfassen"
+      footer_buttons:
+        region_label: "Themenaktionen"
       share:
         title: "Thema teilen"
         extended_title: "Link teilen"
@@ -3917,6 +3932,7 @@ de:
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Anhänge hochladen."
         attachment_download_requires_login: "Entschuldige, du musst angemeldet sein, um Anhänge herunterladen zu können."
       cancel_composer:
+        confirm: "Willst du deinen Beitrag verwerfen?"
         discard: "Verwerfen"
       via_email: "dieser Beitrag ist per E-Mail eingetroffen"
       via_auto_generated_email: "dieser Beitrag ist per automatisch generierter E-Mail eingegangen"
@@ -3989,6 +4005,7 @@ de:
         delete_post_notice: "Offizielle Mitteilung löschen"
         remove_timer: "Zeitschaltuhr deaktivieren"
         edit_timer: "Zeitschaltuhr bearbeiten"
+        remove_yourself_from_pm: "Bist du sicher, dass du dich aus dieser Nachricht entfernen möchtest? Dann wirst du sie nicht mehr sehen oder darauf antworten können."
       actions:
         people:
           like:
@@ -4152,6 +4169,8 @@ de:
       foreground_color: "Textfarbe"
       color_validations:
         cant_be_empty: "darf nicht leer sein"
+        incorrect_length: "muss dem Format #RRGGBB oder #RGB entsprechen"
+        non_hexdecimal: "darf nur Hexadezimalzeichen (0-9, A-F) enthalten"
       styles:
         type: "Stil"
         icon: "Symbol"
@@ -4527,12 +4546,15 @@ de:
       readonly: "Ansehen"
     preloader_text: "Wird geladen"
     lightbox:
-      download: "herunterladen"
+      download: "Herunterladen"
       open: "Originalbild"
+      image_info: "Bildinformationen"
       previous: "Zurück (linke Pfeiltaste)"
       next: "Weiter (rechte Pfeiltaste)"
       counter: "%curr% von %total%"
       close: "Schließen (Esc)"
+      zoom: "Vergrößern (Z-Taste)"
+      error: "Das Bild kann nicht geladen werden"
       content_load_error: '<a href="%url%">Der Inhalt</a> konnte nicht geladen werden.'
       image_load_error: '<a href="%url%">Das Bild</a> konnte nicht geladen werden.'
     cannot_render_video: Dieses Video kann nicht gerendert werden, da dein Browser den Codec nicht unterstützt.
@@ -4841,6 +4863,7 @@ de:
     safe_mode:
       enabled: "Der abgesicherte Modus ist aktiviert. Schließe das Browserfenster, um ihn zu verlassen."
     theme_preview_notice: "Du siehst gerade eine Vorschau eines Themes. Schließe diese Browser-Registerkarte oder dieses Fenster, um zur normalen Konfiguration deiner Website zurückzukehren."
+    theme_preview_failed: "Die Vorschau des Themes kann nicht angezeigt werden, da es nicht existiert oder du nicht berechtigt bist, darauf zuzugreifen."
     image_removed: "(Bild entfernt)"
     pause_notifications:
       title: "Benachrichtigungen pausieren für …"
@@ -5062,6 +5085,8 @@ de:
           light: "Hell"
           dark: "Dunkel"
           auto: "Automatisch"
+          title: "Farbmodus"
+          aria_label: "Farbmodus, derzeit %{mode}"
     welcome_topic_banner:
       title: "Erstelle dein Willkommensthema"
       description: "Dein Willkommen-Thema ist das erste, was neue Mitglieder lesen. Betrachte es als dein „Fahrstuhl-Vorstellungsgespräch“ oder „Leitbild“. Hier erfährt jeder, für wen diese Community gedacht ist, was einen hier erwartet und was man direkt zu Beginn tun soll."
@@ -5244,6 +5269,7 @@ de:
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
+    reset_filter: "Zurücksetzen"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5276,6 +5302,25 @@ de:
           title: "Plug-ins"
         advanced:
           title: "Erweitert "
+      upcoming_changes:
+        name: "Name"
+        plugin: "Plug-in"
+        enabled: "Aktiviert"
+        show_image: "Bild anzeigen"
+        groups_updated: "Gruppen aktualisiert!"
+        save_groups: "Gruppen speichern"
+        select_groups: "Gruppen auswählen …"
+        preview: "Vorschau"
+        impact_roles:
+          admins: "Administratoren"
+          moderators: "Moderatoren"
+          staff: "Team"
+        filter:
+          all: "Gesamt"
+          enabled: "Aktiviert"
+          disabled: "Deaktiviert"
+          impact_type_feature: "Funktion"
+          impact_type_other: "Sonstiges"
       config:
         about:
           title: "Über deine Website"
@@ -5312,6 +5357,10 @@ de:
           sub_pages:
             common_settings:
               title: "Einstellungen"
+            authenticators:
+              title: "Soziale Netzwerke"
+            discourseconnect:
+              title: "Discourse Connect"
         logo:
           title: "Logo"
           header_description: "Konfiguriere die Logos und Symbole, die auf deiner Website verwendet werden"
@@ -6494,6 +6543,7 @@ de:
         copy_to_clipboard: "In Zwischenablage kopieren"
         copied_to_clipboard: "Wurde in Zwischenablage kopiert"
         copy_to_clipboard_error: "Beim Kopieren in die Zwischenablage trat ein Fehler auf"
+        theme_owner: "Im Besitz von:"
         email_templates:
           title: "E-Mail"
           subject: "Betreff"
@@ -6502,7 +6552,10 @@ de:
           body: "Nachrichtentext"
           revert: "Änderungen verwerfen"
           revert_confirm: "Möchtest du wirklich deine Änderungen verwerfen?"
+          search_templates: "Nach Vorlagennamen filtern ..."
+          no_templates_found: "Keine Vorlage entspricht deinen Filtern."
           edit: "Bearbeiten"
+          back: "Zurück zu Vorlagen"
         component:
           all_filter: "Alle"
           used_filter: "Verwendet"
@@ -7514,8 +7567,7 @@ de:
             cancel: "Abbrechen"
         merging_user: "Benutzer wird zusammengeführt …"
         merge_failed: "Beim Zusammenführen der Benutzer ist ein Fehler aufgetreten."
-        delete_forbidden_because_staff: "Administratoren können nicht gelöscht werden."
-        delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
+        delete_forbidden_because_admin: "Administratoren können nicht gelöscht werden."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
           other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"

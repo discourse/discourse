@@ -93,6 +93,7 @@ import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
+import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 import {
@@ -271,6 +272,7 @@ export function testCleanup(container, app) {
   resetGroupPostSmallActionCodes();
   resetPostSmallActionClassesCallbacks();
   resetPostClassesCallback();
+  enableClearA11yAnnouncementsInTests();
 }
 
 function cleanupCssGeneratorTags() {

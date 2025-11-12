@@ -12,10 +12,10 @@ CORE_NAMESPACES = {
   "discourse/tests/*" => ["frontend/discourse/tests"],
   "admin/*" => ["frontend/discourse/admin"], # TODO: remove once all core code is migrated to new import path
   "pretty-text/*" => ["frontend/pretty-text/addon"],
-  "select-kit/*" => ["frontend/select-kit/addon"],
-  "float-kit/*" => ["frontend/float-kit/addon"],
-  "truth-helpers/*" => ["frontend/truth-helpers/addon"],
-  "dialog-holder/*" => ["frontend/dialog-holder/addon"],
+  "select-kit/*" => ["frontend/discourse/select-kit"],
+  "float-kit/*" => ["frontend/discourse/float-kit"],
+  "truth-helpers/*" => ["frontend/discourse/truth-helpers"],
+  "dialog-holder/*" => ["frontend/discourse/dialog-holder"],
 }
 
 def relative(from, to)

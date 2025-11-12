@@ -9,7 +9,7 @@ export default class AdminCustomizeThemesEditRoute extends Route {
 
   model(params) {
     const all = this.modelFor("adminCustomizeThemes");
-    const model = all.find(
+    const model = all.content.find(
       (value) => value.id === parseInt(params.theme_id, 10)
     );
     if (model) {

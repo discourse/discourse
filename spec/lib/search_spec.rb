@@ -179,29 +179,31 @@ RSpec.describe Search do
 
   describe "custom_eager_load" do
     fab!(:topic)
-    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:post) { Fabricate(:post, topic:) }
+
+    let(:enabled?) { true }
+    let(:record) { described_class.execute("test").posts[0].topic }
 
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
+      described_class.custom_topic_eager_load([:topic_users], enabled: method(:enabled?))
+      described_class.custom_topic_eager_load(enabled: method(:enabled?)) { [:bookmarks] }
     end
 
+    after { described_class.instance_variable_set(:@custom_topic_eager_loads, []) }
+
     it "includes custom tables" do
-      begin
-        SiteSetting.tagging_enabled = false
-        expect(Search.execute("test").posts[0].topic.association(:category).loaded?).to be true
-        expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be false
+      expect(record.association(:topic_users)).to be_loaded
+      expect(record.association(:bookmarks)).to be_loaded
+    end
 
-        SiteSetting.tagging_enabled = true
-        Search.custom_topic_eager_load([:topic_users])
-        Search.custom_topic_eager_load() { [:bookmarks] }
+    context "when tables/blocks are disabled" do
+      let(:enabled?) { false }
 
-        expect(Search.execute("test").posts[0].topic.association(:tags).loaded?).to be true
-        expect(Search.execute("test").posts[0].topic.association(:topic_users).loaded?).to be true
-        expect(Search.execute("test").posts[0].topic.association(:bookmarks).loaded?).to be true
-      ensure
-        SiteSetting.tagging_enabled = false
-        Search.instance_variable_set(:@custom_topic_eager_loads, [])
+      it "does not include custom tables" do
+        expect(record.association(:topic_users)).not_to be_loaded
+        expect(record.association(:bookmarks)).not_to be_loaded
       end
     end
   end
@@ -891,7 +893,7 @@ RSpec.describe Search do
   context "with posts" do
     fab!(:post) do
       SearchIndexer.enable
-      Fabricate(:post)
+      Fabricate(:post, raw: "Original EN kittens")
     end
 
     let(:topic) { post.topic }
@@ -1077,6 +1079,156 @@ RSpec.describe Search do
       results = Search.execute("end-to-end test")
 
       expect(results.posts).to eq([post])
+    end
+
+    describe "localized post blurbs and topic titles in search results" do
+      fab!(:user)
+      fab!(:group)
+
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.content_localization_allowed_groups = group.id.to_s
+        group.add(user)
+      end
+
+      context "when topic and post has localizations" do
+        before do
+          Fabricate(:topic_localization, topic:, locale: "ja", fancy_title: "日本語の象についてのトピックタイトル")
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "ja",
+            raw: "象についての日本語コンテンツ",
+            cooked: "<p>象についての日本語コンテンツ</p>",
+          )
+          Fabricate(
+            :topic_localization,
+            topic:,
+            locale: "fr",
+            fancy_title: "Titre du sujet français sur les éléphants",
+          )
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "fr",
+            raw: "Contenu français sur les éléphants",
+            cooked: "<p>Contenu français sur les éléphants</p>",
+          )
+        end
+
+        it "uses different localization for different locales" do
+          I18n.with_locale(:ja) do
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
+            expect(result.blurb(result.posts.first)).to include("日本語コンテンツ")
+            expect(result.posts.first.topic.get_localization.fancy_title).to eq(
+              "日本語の象についてのトピックタイトル",
+            )
+          end
+
+          I18n.with_locale(:fr) do
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
+            expect(result.blurb(result.posts.first)).to include("Contenu français")
+            expect(result.posts.first.topic.get_localization.fancy_title).to eq(
+              "Titre du sujet français sur les éléphants",
+            )
+          end
+        end
+
+        it "falls back to original content when no matching localization exists" do
+          I18n.with_locale(:es) do
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
+            expect(result.posts).to be_present
+            expect(result.blurb(result.posts.first)).to include("Original EN kittens")
+          end
+        end
+      end
+
+      context "when content_localization_enabled is false" do
+        before { SiteSetting.content_localization_enabled = false }
+
+        it "always uses original content even with localizations present" do
+          Fabricate(
+            :post_localization,
+            post:,
+            locale: "ja",
+            raw: "象についての日本語コンテンツ",
+            cooked: "<p>象についての日本語コンテンツ</p>",
+          )
+
+          I18n.with_locale(:ja) do
+            result = Search.execute("kittens", type_filter: "topic", include_blurbs: true)
+            expect(result.blurb(result.posts.first)).to include("Original EN kittens")
+          end
+        end
+      end
+
+      context "when preventing N+1 queries" do
+        fab!(:posts) do
+          SearchIndexer.enable
+          posts = Fabricate.times(3, :post, raw: "searchable content about elephants")
+          posts.each { |p| SearchIndexer.index(p, force: true) }
+          posts
+        end
+
+        before do
+          posts.each_with_index do |post, i|
+            Fabricate(
+              :post_localization,
+              post:,
+              locale: "ja",
+              raw: "象についての日本語コンテンツ#{i}",
+              cooked: "<p>象についての日本語コンテンツ#{i}</p>",
+            )
+          end
+        end
+
+        it "preloads localizations to avoid N+1 queries" do
+          I18n.with_locale(:fr) do
+            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            expect(result.posts.length).to be >= 3
+
+            expect(result.posts.first.association(:localizations).loaded?).to eq(true)
+
+            queries = track_sql_queries { result.posts.each { |post| result.blurb(post) } }
+
+            expect(queries.select { |q| q.include?("post_localizations") }).to be_empty
+          end
+        end
+
+        it "does not preload localizations when content_localization_enabled is false" do
+          SiteSetting.content_localization_enabled = false
+
+          result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+          expect(result.posts).to be_present
+
+          expect(result.posts.first.association(:localizations).loaded?).to eq(false)
+        end
+
+        it "preloads topic localizations to avoid N+1 queries" do
+          I18n.with_locale(:ja) do
+            posts.each_with_index do |post, i|
+              Fabricate(
+                :topic_localization,
+                topic: post.topic,
+                locale: "ja",
+                title: "日本語のトピックタイトル #{i}",
+              )
+            end
+
+            result = Search.execute("elephants", type_filter: "topic", include_blurbs: true)
+            expect(result.posts.length).to be >= 3
+
+            expect(result.posts.first.topic.association(:localizations).loaded?).to eq(true)
+
+            queries =
+              track_sql_queries do
+                result.posts.each { |post| post.topic.get_localization&.fancy_title }
+              end
+
+            expect(queries.select { |q| q.include?("topic_localizations") }).to be_empty
+          end
+        end
+      end
     end
   end
 
@@ -2850,18 +3002,37 @@ RSpec.describe Search do
         raw: "this is the first post about advanced filter with length more than 50 chars",
       )
     end
-    let!(:post1) { Fabricate(:post, raw: "this is the second post about advanced filter") }
+    let!(:post1) { Fabricate(:post, raw: "another post about advanced filter min_chars:50") }
 
-    it "allows to define custom filter" do
-      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+    context "with custom filters" do
+      let(:enabled?) { true }
+      let(:posts) { described_class.new("advanced min_chars:50").execute.posts }
 
-      Search.advanced_filter(/^min_chars:(\d+)$/) do |posts, match|
-        posts.where("(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?", match.to_i)
+      before do
+        described_class.advanced_filter(
+          /^min_chars:(\d+)$/,
+          enabled: method(:enabled?),
+        ) do |posts, match|
+          posts.where(
+            "(SELECT LENGTH(p2.raw) FROM posts p2 WHERE p2.id = posts.id) >= ?",
+            match.to_i,
+          )
+        end
       end
 
-      expect(Search.new("advanced min_chars:50").execute.posts).to eq([post0])
-    ensure
-      Search.advanced_filters.delete(/^min_chars:(\d+)$/)
+      after { described_class.advanced_filters.delete(/^min_chars:(\d+)$/) }
+
+      it "applies the custom filter" do
+        expect(posts).to contain_exactly(post0)
+      end
+
+      context "when the filter is disabled" do
+        let(:enabled?) { false }
+
+        it "does not apply the custom filter" do
+          expect(posts).to contain_exactly(post1) # matches `min_chars:50` as a normal word
+        end
+      end
     end
 
     it "forces custom filters matchers to be case insensitive" do
@@ -2876,14 +3047,29 @@ RSpec.describe Search do
       Search.advanced_filters.delete(/^MIN_CHARS:(\d+)$/)
     end
 
-    it "allows to define custom order" do
-      expect(Search.new("advanced").execute.posts).to eq([post1, post0])
+    context "with custom order" do
+      let(:enabled?) { true }
+      let(:posts) { described_class.new("advanced order:chars").execute.posts }
 
-      Search.advanced_order(:chars) { |posts| posts.reorder("MAX(LENGTH(posts.raw)) DESC") }
+      before do
+        described_class.advanced_order(:chars, enabled: method(:enabled?)) do
+          _1.reorder("MAX(LENGTH(posts.raw)) DESC")
+        end
+      end
 
-      expect(Search.new("advanced order:chars").execute.posts).to eq([post0, post1])
-    ensure
-      Search.advanced_orders.delete(:chars)
+      after { described_class.advanced_orders.delete(:chars) }
+
+      it "applies custom order" do
+        expect(posts).to eq([post0, post1])
+      end
+
+      context "when the callback is disabled" do
+        let(:enabled?) { false }
+
+        it "does not apply custom order" do
+          expect(posts).to eq([post1, post0])
+        end
+      end
     end
   end
 
@@ -3165,5 +3351,78 @@ RSpec.describe Search do
 
     # no op on anon - all included
     expect(result.posts.map(&:id).length).to eq(3)
+  end
+
+  describe "locale: filter" do
+    fab!(:en_post) { Fabricate(:post, raw: "Hello world", locale: "en") }
+    fab!(:en_us_post) { Fabricate(:post, raw: "American English", locale: "en_US") }
+    fab!(:ja_post) { Fabricate(:post, raw: "こんにちは世界", locale: "ja") }
+    fab!(:fr_post) { Fabricate(:post, raw: "Bonjour le monde", locale: "fr") }
+    fab!(:no_locale_post) { Fabricate(:post, raw: "Post without locale", locale: nil) }
+
+    before do
+      SearchIndexer.enable
+      [en_post, en_us_post, ja_post, fr_post, no_locale_post].each do |p|
+        SearchIndexer.index(p.topic, force: true)
+      end
+    end
+
+    it "filters posts by exact locale" do
+      results = Search.execute("locale:ja")
+      expect(results.posts.map(&:id)).to contain_exactly(ja_post.id)
+    end
+
+    it "filters posts by locale base (matches regional variants)" do
+      results = Search.execute("locale:en")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id, en_us_post.id)
+    end
+
+    it "is case insensitive" do
+      results = Search.execute("locale:EN")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id, en_us_post.id)
+    end
+
+    it "handles dashes and underscores" do
+      results = Search.execute("locale:en-US")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id, en_us_post.id)
+    end
+
+    it "returns no results for non-existent locale" do
+      results = Search.execute("locale:xx")
+      expect(results.posts).to be_empty
+    end
+
+    it "filters posts with locale:none" do
+      results = Search.execute("locale:none")
+      expect(results.posts.map(&:id)).to contain_exactly(no_locale_post.id)
+    end
+
+    it "filters posts with locale:null" do
+      results = Search.execute("locale:null")
+      expect(results.posts.map(&:id)).to contain_exactly(no_locale_post.id)
+    end
+
+    it "filters posts with locale:any" do
+      results = Search.execute("locale:any")
+      expect(results.posts.map(&:id)).to contain_exactly(
+        en_post.id,
+        en_us_post.id,
+        ja_post.id,
+        fr_post.id,
+      )
+    end
+
+    it "can combine with other search terms" do
+      results = Search.execute("world locale:en")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id)
+    end
+
+    it "can combine with multiple filters" do
+      en_post.update!(wiki: true)
+      SearchIndexer.index(en_post.topic, force: true)
+
+      results = Search.execute("locale:en in:wiki")
+      expect(results.posts.map(&:id)).to contain_exactly(en_post.id)
+    end
   end
 end

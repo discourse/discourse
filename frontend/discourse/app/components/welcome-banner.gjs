@@ -94,7 +94,12 @@ export default class WelcomeBanner extends Component {
       });
     }
 
-    return i18n("welcome_banner.header.logged_in_members", {
+    const isNewUser = !this.currentUser.previous_visit_at;
+    const key = isNewUser
+      ? "welcome_banner.header.new_members"
+      : "welcome_banner.header.logged_in_members";
+
+    return i18n(key, {
       preferred_display_name: sanitize(
         prioritizeNameFallback(this.currentUser.name, this.currentUser.username)
       ),
@@ -189,7 +194,7 @@ export default class WelcomeBanner extends Component {
             <SearchMenu
               @location="welcome-banner"
               @searchInputId="welcome-banner-search-input"
-              @placeholder={{i18n "welcome_banner.search"}}
+              @searchInputPlaceholder="welcome_banner.search_placeholder"
             />
           </div>
           <PluginOutlet @name="welcome-banner-below-input" />

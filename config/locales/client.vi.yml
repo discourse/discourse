@@ -167,7 +167,7 @@ vi:
       header:
         logged_in_members: "Chào mừng %{preferred_display_name} đã trở lại đây!"
         anonymous_members: "Chào mừng đến với %{site_name}!"
-      search: "Tìm kiếm"
+      search_placeholder: "Tìm kiếm"
     themes:
       default_description: "Mặc định"
       error_caused_by: "Gây ra bởi '%{name}'. <a target='blank' href='%{path}'>Nhấp vào đây</a> để cập nhật, cấu hình lại hoặc tắt."
@@ -379,6 +379,7 @@ vi:
       other: "Xem %{count} chủ đề mới"
     preview: "xem trước"
     cancel: "Huỷ"
+    done: "Hoàn tất"
     deleting: "Đang xóa…"
     save: "Lưu thay đổi"
     saving: "Đang lưu…"
@@ -451,10 +452,6 @@ vi:
         required: "Bạn phải yêu cầu các mục trước khi bạn có thể xem xét chúng."
         claimed_by_you: "Bạn đã yêu cầu mặt hàng này và có thể xem xét nó."
         claimed_by_other: "Mục này chỉ có thể được xem xét bởi <b>%{username}</b> ."
-      claim:
-        title: "yêu cầu chủ đề này"
-      unclaim:
-        help: "xóa yêu cầu này"
       awaiting_approval: "Đang đợi Phê duyệt"
       delete: "Xóa"
       settings:
@@ -574,6 +571,7 @@ vi:
         reviewable_post:
           title: "Bài viết"
           noun: "bài đăng"
+      user_label: "Người dùng"
       timeline:
         flagged: "Gắn cờ"
       notes:
@@ -2014,7 +2012,6 @@ vi:
       reply: "Trả lời "
       cancel: "Huỷ"
       create_topic: "Tạo chủ đề"
-      create_pm: "Nhắn tin"
       create_whisper: "Thì thầm"
       create_shared_draft: "Tạo bản nháp được chia sẻ"
       edit_shared_draft: "Chỉnh sửa Bản nháp"
@@ -2090,8 +2087,11 @@ vi:
           label: Chuyển đổi nói thầm
           desc: Những lời thì thầm chỉ hiển thị với MOD
         create_topic:
-          label: "Chủ đề Mới"
+          label: "Chủ đề mới"
           desc: Tạo một chủ đề mới
+        create_personal_message:
+          label: "Tin nhắn mới"
+          desc: "Tạo một tin nhắn cá nhân mới"
         shared_draft:
           label: "Bản nháp được Chia sẻ"
           desc: "Nháp một chủ đề sẽ chỉ hiển thị cho người dùng được phép"
@@ -2461,7 +2461,7 @@ vi:
       filter_to:
         other: "%{count} bài viết trong chủ đề"
       create: "Chủ đề Mới"
-      create_long: "Tạo một Chủ đề mới"
+      create_long: "Tạo một chủ đề mới"
       open_draft: "Đăng bài"
       private_message: "Bắt đầu một thông điệp"
       archive_message:
@@ -2577,8 +2577,6 @@ vi:
       auto_close_title: "Tự động-Đóng các Cài đặt"
       auto_close_immediate:
         other: "Các bài mới nhất trong chủ đề này là đã %{count} giờ cũ, vì vậy đề tài sẽ đóng cửa ngay lập tức."
-      auto_close_momentarily:
-        other: "Bài cuối cùng trong chủ đề đã được %{count} giờ, vì vậy chủ đề sẽ được đóng lại trong giây lát."
       timeline:
         back: "Quay lại"
         back_description: "Quay lại bài viết chưa đọc cuối cùng của bạn"
@@ -3371,8 +3369,7 @@ vi:
       readonly: "Xem"
     preloader_text: "Đang tải"
     lightbox:
-      download: "tải về"
-      open: "ảnh gốc"
+      download: "Tải xuống"
       previous: "Trước (Phím mũi tên trái)"
       next: "Tiếp theo (Phím mũi tên phải)"
       counter: "%curr% trên %total%"
@@ -3777,6 +3774,7 @@ vi:
   admin_js:
     type_to_filter: "Gõ vào bộ lọc…"
     settings: "Cài đặt"
+    reset_filter: "Cài lại"
     admin:
       title: "Quản trị Diễn đàn"
       moderator: "Điều hành"
@@ -3806,6 +3804,18 @@ vi:
           title: "Plugins"
         advanced:
           title: "Nâng cao"
+      upcoming_changes:
+        name: "Tên"
+        select_groups: "Chọn nhóm…"
+        preview: "Xem trước"
+        impact_roles:
+          admins: "Quản trị"
+          moderators: "Điều hành viên"
+          staff: "Nhân viên"
+        filter:
+          all: "Tất cả"
+          disabled: "Vô hiệu hóa"
+          impact_type_other: "Khác"
       config:
         developer:
           title: "Nhà phát triển"
@@ -5089,7 +5099,6 @@ vi:
             cancel: "Hủy"
         merging_user: "Đang hợp nhất người dùng…"
         merge_failed: "Đã xảy ra lỗi khi hợp nhất người dùng."
-        delete_posts_forbidden_because_staff: "Không thể xóa tất cả bài viết của quản trị và điều hành viên."
         delete_forbidden:
           other: "Không thể xóa tài khoản nếu họ có bài viết, hãy xóa tất cả các bài viết trước khi xóa tài khoản. (Không thể xóa các bài viết cũ hơn %{count} ngày.)"
         cant_delete_all_posts:

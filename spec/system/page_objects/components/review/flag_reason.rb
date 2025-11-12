@@ -28,11 +28,22 @@ module PageObjects
 
         def has_flag_reason?(reviewable, css_class:, type:, count: 1)
           within_reviewable_item(reviewable) do
+            expected_text =
+              if count > 1
+                "#{ReviewableScore.type_title(type)} x#{count}"
+              else
+                ReviewableScore.type_title(type).to_s
+              end
+
             expect(find(".review-item__flag-reason.--#{css_class}").text.gsub(/\s+/, " ")).to eq(
-              "#{count} #{ReviewableScore.type_title(type)}",
+              expected_text,
             )
 
-            expect(page).to have_css(".review-item__flag-count.--#{css_class}")
+            if count > 1
+              expect(page).to have_css(".review-item__flag-count.--#{css_class}")
+            else
+              expect(page).to have_no_css(".review-item__flag-count.--#{css_class}")
+            end
           end
         end
 

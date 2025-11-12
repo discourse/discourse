@@ -10,17 +10,19 @@ module Jobs
     every 10.minutes
 
     def execute(_args)
-      ProblemCheck.scheduled.filter_map do |check|
-        if eligible_for_this_run?(check)
-          Jobs.enqueue(:run_problem_check, check_identifier: check.identifier.to_s)
+      ProblemCheck.scheduled.filter_map do |scheduled_check|
+        scheduled_check.each_target do |target|
+          check = scheduled_check.new(target)
+
+          if check.enabled? && check.ready_to_run?
+            Jobs.enqueue(
+              :run_problem_check,
+              check_identifier: check.identifier.to_s,
+              target: target.to_s,
+            )
+          end
         end
       end
-    end
-
-    private
-
-    def eligible_for_this_run?(check)
-      check.enabled? && check.scheduled? && check.ready_to_run?
     end
   end
 end

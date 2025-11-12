@@ -13,7 +13,7 @@ export default class AiEmbeddingsListEditor extends Component {
   @service adminPluginNavManager;
 
   get hasEmbeddingElements() {
-    return this.args.embeddings.length !== 0;
+    return this.args.embeddings.content.length !== 0;
   }
 
   <template>
@@ -53,7 +53,7 @@ export default class AiEmbeddingsListEditor extends Component {
               </tr>
             </thead>
             <tbody>
-              {{#each @embeddings as |embedding|}}
+              {{#each @embeddings.content as |embedding|}}
                 <tr class="ai-embeddings-list__row d-admin-row__content">
                   <td class="d-admin-row__overview">
                     <div class="ai-embeddings-list__name">

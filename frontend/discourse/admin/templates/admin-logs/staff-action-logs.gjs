@@ -202,7 +202,13 @@ export default <template>
                     {{/if}}
                   </div>
                 </td>
-                <td class="col value context">{{item.context}}</td>
+                <td class="col value context">
+                  {{#if (fn @controller.showHtmlSafeContext item)}}
+                    {{htmlSafe item.context}}
+                  {{else}}
+                    {{item.context}}
+                  {{/if}}
+                </td>
               </tr>
             {{/each}}
           </tbody>

@@ -11,6 +11,10 @@ import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import {
+  addUniqueValueToArray,
+  removeValueFromArray,
+} from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
 import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
 import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
@@ -204,7 +208,7 @@ export default class AiEmbeddingEditor extends Component {
           ...dataToSave,
         });
         await newModel.save();
-        this.args.embeddings.addObject(newModel);
+        addUniqueValueToArray(this.args.embeddings.content, newModel);
       } else {
         // existing embeddings
         await this.args.model.save(dataToSave);
@@ -277,7 +281,7 @@ export default class AiEmbeddingEditor extends Component {
         return this.args.model
           .destroyRecord()
           .then(() => {
-            this.args.embeddings.removeObject(this.args.model);
+            removeValueFromArray(this.args.embeddings, this.args.model);
             this.router.transitionTo(
               "adminPlugins.show.discourse-ai-embeddings.index"
             );
