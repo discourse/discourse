@@ -10,6 +10,7 @@ module DiscourseAi
             DiscourseAi::Completions::Scripted::BedrockAnthropicApiStyle,
             DiscourseAi::Completions::Scripted::AnthropicApiStyle,
             DiscourseAi::Completions::Scripted::GeminiApiStyle,
+            DiscourseAi::Completions::Scripted::VllmApiStyle,
             DiscourseAi::Completions::Scripted::OpenAiApiStyle,
           ]
 

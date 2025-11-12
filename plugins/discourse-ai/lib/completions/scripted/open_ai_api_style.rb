@@ -4,7 +4,7 @@ module DiscourseAi
   module Completions
     module Scripted
       class OpenAiApiStyle < BaseStyle
-        SUPPORTED_PROVIDERS = %w[open_ai azure groq open_router mistral samba_nova vllm]
+        SUPPORTED_PROVIDERS = %w[open_ai azure groq open_router mistral samba_nova hugging_face]
 
         def self.can_handle?(llm_model)
           SUPPORTED_PROVIDERS.include?(llm_model.provider)

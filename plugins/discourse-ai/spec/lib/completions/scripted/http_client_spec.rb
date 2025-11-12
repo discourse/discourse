@@ -7,6 +7,8 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
   fab!(:anthropic_model, :anthropic_model)
   fab!(:bedrock_claude_model, :bedrock_model)
   fab!(:bedrock_nova_model, :nova_model)
+  fab!(:hf_model)
+  fab!(:vllm_model)
 
   before { enable_current_plugin }
 
@@ -55,6 +57,16 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
     it "selects the Bedrock Nova style for Nova providers" do
       client = described_class.for(llm_model: bedrock_nova_model, responses: ["hi"])
       expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::BedrockNovaApiStyle)
+    end
+
+    it "selects the OpenAI style for Hugging Face providers" do
+      client = described_class.for(llm_model: hf_model, responses: ["hi"])
+      expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::OpenAiApiStyle)
+    end
+
+    it "selects the vLLM style for vLLM providers" do
+      client = described_class.for(llm_model: vllm_model, responses: ["hi"])
+      expect(client.strategy).to be_a(DiscourseAi::Completions::Scripted::VllmApiStyle)
     end
   end
 
@@ -419,6 +431,52 @@ RSpec.describe DiscourseAi::Completions::Scripted::HttpClient do
       ) { |strategy| strategy.request(request) }
 
       expect(client.last_request.dig("messages", 0, "content")).to eq("Ping")
+    end
+  end
+
+  describe DiscourseAi::Completions::Scripted::VllmApiStyle do
+    let(:uri) { URI(vllm_model.url) }
+    let(:payload) do
+      { model: vllm_model.name, messages: [{ role: "user", content: "Hello vLLM?" }] }
+    end
+
+    def style_for(responses)
+      DiscourseAi::Completions::Scripted::VllmApiStyle.new(Array.wrap(responses), vllm_model)
+    end
+
+    it "streams usage metadata with every chunk" do
+      streaming_payload = payload.merge(stream: true)
+      responses = [
+        {
+          content: "Hello Sam. Nice to meet you.",
+          usage: {
+            prompt_tokens: 12,
+            completion_tokens: 7,
+            total_tokens: 19,
+          },
+        },
+      ]
+
+      response = style_for(responses).request(build_request(uri, streaming_payload.to_json))
+
+      chunks = []
+      response.read_body { |chunk| chunks << chunk }
+
+      payloads =
+        chunks
+          .map do |chunk|
+            data_line = chunk.split("\n").find { |line| line.start_with?("data: ") }
+            JSON.parse(data_line.sub("data: ", "")) if data_line
+          end
+          .compact
+
+      expect(payloads.length).to be > 1
+      expect(
+        payloads.all? do |payload|
+          payload["usage"] ==
+            { "prompt_tokens" => 12, "completion_tokens" => 7, "total_tokens" => 19 }
+        end,
+      ).to eq(true)
     end
   end
 end
