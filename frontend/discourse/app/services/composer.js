@@ -1422,6 +1422,14 @@ export default class ComposerService extends Service {
       opts.draftKey !== composerModel.draftKey &&
       composerModel.composeState === Composer.DRAFT
     ) {
+      // Check if content is dirty before auto-closing
+      if (composerModel.anyDirty) {
+        const retry = await this.cancelComposer(opts);
+        if (retry) {
+          await this.open(opts);
+        }
+        return;
+      }
       this.close();
       composerModel = null;
     }

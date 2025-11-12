@@ -65,7 +65,7 @@ export default class ReviewableRefreshChatMessage extends Component {
               <LinkTo
                 @route="topic"
                 @models={{array "-" @reviewable.payload.transcript_topic_id}}
-                class="btn btn-small"
+                class="btn btn-default btn-small"
               >
                 {{i18n "review.transcript.view"}}
               </LinkTo>

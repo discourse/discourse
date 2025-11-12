@@ -357,7 +357,7 @@ fi:
     joined: "Liittynyt"
     admin_title: "Ylläpitäjä"
     show_more: "näytä lisää"
-    show_help: "valinnat"
+    show_help: "Asetukset"
     links: "Linkit"
     links_lowercase:
       one: "linkki"
@@ -748,7 +748,7 @@ fi:
       replies:
         one: "%{count} vastaus"
         other: "%{count} vastausta"
-      edit: "Muokkaa"
+      edit: "Muokkaa viestiä"
       save: "Tallenna"
       cancel: "Peruuta"
       new_topic: "Tämän kohteen hyväksyminen aloittaa uuden ketjun"
@@ -770,7 +770,6 @@ fi:
           created_at: "Luotu"
           created_at_asc: "Luotu (käänteinen)"
         priority:
-          title: "Vähimmäisprioriteetti"
           any: "(kaikki)"
           low: "Matala"
           medium: "Keskitaso"
@@ -859,7 +858,7 @@ fi:
         chars_remaining: "%{count} merkkiä jäljellä"
         delete_note: "Poista tämä huomautus"
         delete: "Poista"
-      new_topic_label: "Uusi ketju"
+      topic_label: "Ketju"
       queued_user: "Jonossa oleva käyttäjä"
       posted_in: "Julkaistu kanavalla"
       flagged_user: "Liputettu käyttäjä"
@@ -874,9 +873,6 @@ fi:
         flagged_by_users:
           one: "%{count} yksittäisen käyttäjän liputtama"
           other: "%{count} yksittäisen käyttäjän liputtama"
-        similar_posts: "Samankaltaisia aiempia viestejä"
-        flagged_in_timeframe: "%{count} liputettu aiemmin"
-        user_activity: "Käyttäjätoiminta"
         activities:
           new_account: "uusi tili"
           trust_level: "luottamustaso: %{trustLevelName}"
@@ -2699,7 +2695,6 @@ fi:
         title: "Käännetään viestiä"
         select: "Valitse käännös"
         save: "Tallenna käännös"
-        original_content: "Alkuperäisen viestin sisältö"
         translation: "Käännös"
         placeholder: "Kirjoita viestin käännös tähän..."
       group_mentioned_limit:
@@ -2859,7 +2854,6 @@ fi:
           desc: "Vastaa muuttamatta ketjun viimeisimmän vastauksen päivämäärää"
         toggle_unlisted:
           label: Listaus päälle/pois
-          desc: Listaamattomat ketjut, joihin jäsenet pääsevät vain suoran linkin kautta
       reload: "Lataa uudelleen"
       ignore: "Ohita"
       image_alt_text:
@@ -4548,7 +4542,6 @@ fi:
         go_to_unread_post: "%{shortcut} Siirry ensimmäiseen lukemattomaan viestiin"
       application:
         title: "Sovellus"
-        create: "%{shortcut} Aloita uusi ketju"
         notifications: "%{shortcut} Avaa ilmoitukset"
         hamburger_menu: "%{shortcut} Avaa navigointivalikko"
         user_profile_menu: "%{shortcut} Avaa käyttäjävalikko"

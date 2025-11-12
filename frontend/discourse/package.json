@@ -11,6 +11,7 @@
     "./select-kit/*": "./select-kit/*",
     "./float-kit/*": "./float-kit/*",
     "./truth-helpers/*": "./truth-helpers/*",
+    "./truth-helpers": "./truth-helpers/index.js",
     "./dialog-holder/*": "./dialog-holder/*",
     "./*": "./app/*"
   },
@@ -76,7 +77,7 @@
     "prosemirror-model": "^1.25.4",
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.4",
-    "prosemirror-transform": "^1.10.4",
+    "prosemirror-transform": "^1.10.5",
     "prosemirror-view": "^1.41.3",
     "rrule": "^2.8.1"
   },
@@ -121,7 +122,7 @@
     "discourse-markdown-it": "workspace:1.0.0",
     "discourse-plugins": "workspace:1.0.0",
     "ember-async-data": "^2.0.1",
-    "ember-auto-import": "^2.11.1",
+    "ember-auto-import": "^2.11.2",
     "ember-buffered-proxy": "^2.1.1",
     "ember-cached-decorator-polyfill": "^1.0.2",
     "ember-cli": "~6.8.0",

@@ -222,7 +222,7 @@ bs_BA:
     joined: "Pridružio se"
     admin_title: "Admin"
     show_more: "prikaži još"
-    show_help: "opcije"
+    show_help: "Opcije"
     links: "Linkovi"
     links_lowercase:
       one: "link"
@@ -432,7 +432,6 @@ bs_BA:
       topic: "Tema:"
       filtered_topic: "Filtrirali ste sadržaj koji se može pregledati u jednoj temi."
       filtered_user: "User"
-      filtered_reviewed_by: "Pregledao je"
       show_all_topics: "(pokaži sve teme)"
       deleted_post: "(post izbrisan)"
       deleted_user: "(korisnik izbrisan)"
@@ -476,7 +475,7 @@ bs_BA:
         one: "%{count} reply"
         few: "%{count} replies"
         other: "%{count}odgovora "
-      edit: "Izmijeni"
+      edit: "Izmjeni objavu"
       save: "Sačuvaj"
       cancel: "Odustani"
       new_topic: "Odobravanje ove stvari će napraviti novu temu"
@@ -497,7 +496,6 @@ bs_BA:
           created_at: "Napravjeno kod"
           created_at_asc: "Napravijeno kod (preokrenuti)"
         priority:
-          title: "Minimalni prioritet"
           any: "(bilo koji)"
           low: "Nisko"
           medium: "Srednije"
@@ -543,6 +541,7 @@ bs_BA:
       user_label: "User"
       notes:
         delete: "Delete"
+      topic_label: "Topic"
       review_user: "User"
       insights:
         activities:
@@ -2850,7 +2849,6 @@ bs_BA:
         go_to_unread_post: "%{shortcut} Idi na prvu nepročitanu poruku"
       application:
         title: "Aplikacija"
-        create: "%{shortcut} Otvori novu temu"
         notifications: "%{shortcut} Otvori notifikacije"
         user_profile_menu: "%{shortcut} Otvori meni korisnika"
         show_incoming_updated_topics: "%{shortcut} Pročitaj promjenje teme"

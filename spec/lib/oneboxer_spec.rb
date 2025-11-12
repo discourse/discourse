@@ -717,6 +717,17 @@ RSpec.describe Oneboxer do
         status: 200,
         body: html,
       )
+      stub_request(
+        :get,
+        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      ).to_return(
+        status: 200,
+        body: {
+          title: "Onebox1 - ceci n'est pas un titre",
+          author_name: "Blah",
+          thumbnail_url: "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+        }.to_json,
+      )
       stub_request(:any, "https://www.youtube.com/embed/dQw4w9WgXcQ").to_return(
         status: 403,
         body: nil,

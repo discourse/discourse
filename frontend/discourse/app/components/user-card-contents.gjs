@@ -148,9 +148,9 @@ export default class UserCardContents extends CardContentsBase {
     return username ? `user-card-${username}` : "";
   }
 
-  @discourseComputed("username", "topicPostCount")
-  filterPostsLabel(username, count) {
-    return i18n("topic.filter_to", { username, count });
+  @discourseComputed("topicPostCount")
+  filterPostsLabel(count) {
+    return i18n("topic.filter_to", { count });
   }
 
   @discourseComputed("user.user_fields.@each.value")

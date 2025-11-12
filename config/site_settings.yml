@@ -1740,10 +1740,11 @@ content_localization:
       - all
     default: none
     client: true
+    area: "localization"
     validator: "LanguageSwitcherSettingValidator"
   content_localization_crawler_param:
     default: false
-    hidden: true
+    area: "localization"
 
 email:
   email_time_window_mins:
@@ -4278,3 +4279,12 @@ experimental:
     default: false
     hidden: true
     client: true
+  fake_upcoming_change:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "other,all_members"
+      learn_more_url: "https://meta.discourse.org"
+

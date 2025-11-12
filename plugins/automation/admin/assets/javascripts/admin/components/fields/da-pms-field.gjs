@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { TrackedArray, TrackedObject } from "@ember-compat/tracked-built-ins";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
+import { USER_OPTION_COMPOSITION_MODES } from "discourse/lib/constants";
 import { i18n } from "discourse-i18n";
 import PlaceholdersList from "../placeholders-list";
 import BaseField from "./da-base-field";
@@ -72,7 +73,7 @@ export default class PmsField extends BaseField {
               <div class="field-wrapper">
                 <DEditor
                   @value={{pm.raw}}
-                  @forceEditorMode="rich"
+                  @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.rich}}
                   @processPreview={{false}}
                 />
 

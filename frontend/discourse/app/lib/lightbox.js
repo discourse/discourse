@@ -114,8 +114,12 @@ export default async function lightbox(elem, siteSettings) {
           isButton: true,
           tagName: "a",
           title: i18n("lightbox.download"),
-          html: renderIcon("string", "download", { class: "pswp__icn" }),
-
+          html: {
+            isCustomSVG: true,
+            inner:
+              '<path d="M20.5 14.3 17.1 18V10h-2.2v7.9l-3.4-3.6L10 16l6 6.1 6-6.1ZM23 23H9v2h14Z" id="pswp__icn-download"/>',
+            outlineID: "pswp__icn-download",
+          },
           onInit: (el, pswp) => {
             el.setAttribute("download", "");
             el.setAttribute("target", "_blank");
@@ -140,8 +144,12 @@ export default async function lightbox(elem, siteSettings) {
         isButton: true,
         tagName: "a",
         title: i18n("lightbox.open"),
-        html: renderIcon("string", "image", { class: "pswp__icn" }),
-
+        html: {
+          isCustomSVG: true,
+          inner:
+            '<path id="pswp__icn-image" d="M8 4C6.23 4 4.8 5.43 4.8 7.2v17.6c0 1.77 1.43 3.2 3.2 3.2h17.6c1.77 0 3.2-1.43 3.2-3.2V7.2c0-1.77-1.43-3.2-3.2-3.2H8zm2.56 4C11.6 8 12.8 9.2 12.8 10.8s-1.2 2.8-2.8 2.8-2.8-1.2-2.8-2.8S9.04 8 10.56 8zm7.2 4.48c0.42 0 0.84 0.21 1.1 0.56l5.44 8.72c0.28 0.46 0.29 1.04 0.03 1.52s-0.74 0.72-1.28 0.72H9.2a1.36 1.36 0 0 1-1.3-0.88c-0.26-0.52-0.22-1.12 0.12-1.6l3.12-4.64c0.28-0.4 0.74-0.64 1.24-0.64s0.96 0.24 1.24 0.64l1.64 2.32 3.76-6.16a1.28 1.28 0 0 1 1.1-0.56z"/>',
+          outlineID: "pswp__icn-image",
+        },
         onInit: (el, pswp) => {
           el.setAttribute("target", "_blank");
           el.setAttribute("rel", "noopener");
@@ -158,7 +166,12 @@ export default async function lightbox(elem, siteSettings) {
         isButton: true,
         tagName: "a",
         title: i18n("lightbox.image_info"),
-        html: renderIcon("string", "circle-info", { class: "pswp__icn" }),
+        html: {
+          isCustomSVG: true,
+          inner:
+            '<path id="pswp__icn-info" d="M16 28.8C23.07 28.8 28.8 23.07 28.8 16C28.8 8.93 23.07 3.2 16 3.2C8.93 3.2 3.2 8.93 3.2 16C3.2 23.07 8.93 28.8 16 28.8zM14.4 11.2C14.4 10.31 15.115 9.6 16 9.6C16.88 9.6 17.6 10.315 17.6 11.2C17.6 12.085 16.885 12.8 16 12.8C15.115 12.8 14.4 12.085 14.4 11.2zM14 14.4L16.4 14.4C17.065 14.4 17.6 14.935 17.6 15.6L17.6 20L18 20C18.665 20 19.2 20.535 19.2 21.2C19.2 21.865 18.665 22.4 18 22.4L14 22.4C13.335 22.4 12.8 21.865 12.8 21.2C12.8 20.535 13.335 20 14 20L15.2 20L15.2 16.8L14 16.8C13.335 16.8 12.8 16.265 12.8 15.6C12.8 14.935 13.335 14.4 14 14.4z"/>',
+          outlineID: "pswp__icn-info",
+        },
         onInit: (el, pswp) => {
           pswp.on("change", () => {
             el.style.display = pswp.currSlide.data.details ? "block" : "none";

@@ -296,7 +296,7 @@ fa_IR:
     joined: "ملحق شده"
     admin_title: "مدیر"
     show_more: "بیش‌تر نشان بده"
-    show_help: "گزینه‌ها"
+    show_help: "تنظیمات"
     links: "پیوندها"
     links_lowercase:
       one: "پیوندها"
@@ -671,7 +671,7 @@ fa_IR:
       replies:
         one: "%{count}پاسخ"
         other: "%{count}پاسخ"
-      edit: "ویرایش"
+      edit: "ویرایش نوشته"
       save: "ذخیره"
       cancel: "لغو کردن"
       new_topic: "تایید این مورد یک مبحث جدید ایجاد خواهد کرد."
@@ -693,7 +693,6 @@ fa_IR:
           created_at: "ساخته شده"
           created_at_asc: "ساخته شده (برعکس)"
         priority:
-          title: "کمترین اولویت"
           any: "(هر چی)"
           low: "کم"
           medium: "متوسط"
@@ -760,6 +759,7 @@ fa_IR:
       user_label: "کاربر"
       notes:
         delete: "حذف"
+      topic_label: "موضوع"
       review_user: "کاربر"
       copy_link: "رونوشت پیوند"
       copy_link_feedback: "لینک کپی شد"
@@ -4290,7 +4290,6 @@ fa_IR:
         go_to_unread_post: "برو به اولین پست خوانده‌نشده %{shortcut}"
       application:
         title: "برنامه"
-        create: "ایجاد موضوع جدید"
         notifications: "%{shortcut} باز کردن آگاه‌سازی‌ها"
         hamburger_menu: "%{shortcut} باز کردن منوی ناوبری"
         user_profile_menu: "%{shortcut} نمایش منو کاربری"

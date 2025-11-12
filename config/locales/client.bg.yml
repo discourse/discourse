@@ -243,7 +243,7 @@ bg:
     joined: "Присъединен"
     admin_title: "Админ"
     show_more: "покажи повече"
-    show_help: "опции"
+    show_help: "Опции"
     links: "Връзки"
     links_lowercase:
       one: "Линк"
@@ -475,7 +475,7 @@ bg:
       topic: "Тема:"
       filtered_topic: "Филтрирахте съдържание, което може да бъде прегледано, в една тема."
       filtered_user: "Потребител"
-      filtered_reviewed_by: "Прегледано от"
+      filtered_reviewed_by: "Прегледан от"
       show_all_topics: "покажи всички теми"
       deleted_post: "(публикацията е изтрита)"
       deleted_user: "(потребителят е изтрит)"
@@ -517,7 +517,7 @@ bg:
       replies:
         one: "%{count} отговор"
         other: "%{count} отговора"
-      edit: "Редактирай"
+      edit: "Редактиране на публикацията"
       save: "Запази"
       cancel: "Отмени"
       new_topic: "Одобряването на този елемент ще създаде нова тема"
@@ -538,7 +538,6 @@ bg:
           created_at: "Създадено на"
           created_at_asc: "Създадено на (по обратен ред)"
         priority:
-          title: "Минимален приоритет"
           any: "(всяко)"
           low: "Ниска"
           medium: "Среден"
@@ -603,6 +602,7 @@ bg:
       user_label: "Потребител"
       notes:
         delete: "Изтрий"
+      topic_label: "Тема"
       review_user: "Потребител"
       insights:
         activities:
@@ -3216,7 +3216,6 @@ bg:
         next_prev: "%{shortcut} Следваща/Предишна секция "
       application:
         title: "Приложение"
-        create: "%{shortcut} Създайте нова тема"
         notifications: "%{shortcut} Отворяне на известията"
         user_profile_menu: "%{shortcut} Отваряне на потребителското меню"
         show_incoming_updated_topics: "%{shortcut} Показване на обновените теми"

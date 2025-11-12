@@ -350,7 +350,7 @@ el:
     joined: "Έγινε μέλος"
     admin_title: "Διαχειριστής"
     show_more: "περισσότερα"
-    show_help: "επιλογές"
+    show_help: "Επιλογές"
     links: "Σύνδεσμοι"
     links_lowercase:
       one: "Σύνδεσμος"
@@ -742,7 +742,7 @@ el:
       replies:
         one: "%{count} απάντηση"
         other: "%{count} απαντήσεις"
-      edit: "Επεξεργασία"
+      edit: "Επεξεργασία Ανάρτησης"
       save: "Αποθήκευση"
       cancel: "Άκυρο"
       new_topic: "Η έγκριση αυτού του στοιχείου θα δημιουργήσει ένα νέο θέμα"
@@ -764,7 +764,6 @@ el:
           created_at: "Δημιουργήθηκε στις"
           created_at_asc: "Δημιουργήθηκε στις (αντίστροφα)"
         priority:
-          title: "Ελάχιστη προτεραιότητα"
           any: "(οποιοδήποτε)"
           low: "Χαμηλή"
           medium: "Μεσαία"
@@ -841,7 +840,7 @@ el:
         chars_remaining: "%{count} χαρακτήρες απομένουν"
         delete_note: "Διαγραφή αυτής της σημείωσης"
         delete: "Σβήσιμο"
-      new_topic_label: "Νέο θέμα"
+      topic_label: "Θέμα"
       posted_in: "Δημοσιεύτηκε σε"
       flagged_user: "Αναφερόμενος χρήστης"
       review_user: "Χρήστης"
@@ -854,8 +853,6 @@ el:
         flagged_by_users:
           one: "Αναφέρθηκε από %{count} μοναδικό χρήστη"
           other: "Αναφέρθηκε από %{count} μοναδικούς χρήστες"
-        similar_posts: "Παρόμοιες προηγούμενες αναρτήσεις"
-        user_activity: "Δραστηριότητα χρήστη"
         activities:
           new_account: "νέος λογαριασμός"
           trust_level: "επίπεδο εμπιστοσύνης: %{trustLevelName}"
@@ -2429,7 +2426,6 @@ el:
         title: "Μετάφραση ανάρτησης"
         select: "Επιλογή μετάφρασης"
         save: "Αποθήκευση μετάφρασης"
-        original_content: "Αρχικό περιεχόμενο ανάρτησης"
         placeholder: "Εισάγετε τη μετάφραση για την ανάρτηση εδώ..."
       cannot_see_group_mention:
         not_mentionable: "Δεν μπορείτε να επισημάνετε την ομάδα @%{group}."
@@ -4052,7 +4048,6 @@ el:
         go_to_unread_post: "%{shortcut} Μετάβαση στην πρώτη αδιάβαστη ανάρτηση"
       application:
         title: "Εφαρμογή"
-        create: "%{shortcut} Δημιουργία νέου θέματος"
         notifications: "%{shortcut} Άνοιγμα ειδοποιήσεων"
         hamburger_menu: "%{shortcut} Άνοιγμα μενού πλοήγησης"
         user_profile_menu: "%{shortcut} Άνοιγμα μενού χρήστη"
