@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { gt } from "truth-helpers";
+import { gt } from "discourse/truth-helpers";
 
 const SCORE_TYPE_TO_CSS_CLASS_MAP = {
   illegal: "illegal",

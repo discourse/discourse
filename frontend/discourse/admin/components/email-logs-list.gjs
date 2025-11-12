@@ -4,6 +4,7 @@ import { fn, get } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import EmailLog from "discourse/admin/models/email-log";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import HorizontalScrollSyncWrapper from "discourse/components/horizontal-scroll-sync-wrapper";
 import LoadMore from "discourse/components/load-more";
@@ -13,7 +14,6 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import { i18n } from "discourse-i18n";
-import EmailLog from "admin/models/email-log";
 
 export default class EmailLogsList extends Component {
   @tracked allLoaded = false;

@@ -6,7 +6,7 @@ import { dasherize } from "@ember/string";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import { isRTL } from "discourse/lib/text-direction";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 
 export default class ReviewableBundledAction extends Component {
   @service site;

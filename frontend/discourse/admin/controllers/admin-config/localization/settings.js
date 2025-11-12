@@ -1,3 +1,3 @@
-import AdminAreaSettingsBaseController from "admin/controllers/admin-area-settings-base";
+import AdminAreaSettingsBaseController from "discourse/admin/controllers/admin-area-settings-base";
 
 export default class AdminConfigLocalizationSettingsController extends AdminAreaSettingsBaseController {}

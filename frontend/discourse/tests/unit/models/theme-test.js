@@ -1,7 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import ThemeSettings from "admin/models/theme-settings";
+import ThemeSettings from "discourse/admin/models/theme-settings";
 
 module("Unit | Model | theme", function (hooks) {
   setupTest(hooks);

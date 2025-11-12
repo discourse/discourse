@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import AdminUser from "discourse/admin/models/admin-user";
 import DModal from "discourse/components/d-modal";
 import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import AdminUser from "admin/models/admin-user";
 
 export default class DeleteUserPostsProgress extends Component {
   @tracked deletedPosts = 0;

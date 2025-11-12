@@ -2,11 +2,11 @@ import { getOwner } from "@ember/owner";
 import { click, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
+import DMenus from "discourse/float-kit/components/d-menus";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import DMenus from "float-kit/components/d-menus";
 
 function renderComponent(
   post,

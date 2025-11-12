@@ -1,11 +1,11 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import TagDrop from "discourse/select-kit/components/tag-drop";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import TagDrop from "select-kit/components/tag-drop";
 
 module("Integration | Component | select-kit/tag-drop", function (hooks) {
   setupRenderingTest(hooks);

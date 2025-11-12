@@ -1,7 +1,7 @@
 import { fn } from "@ember/helper";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
+import { eq } from "discourse/truth-helpers";
 
 const ToggleInvitees = <template>
   <div class="invitees-type-filter">

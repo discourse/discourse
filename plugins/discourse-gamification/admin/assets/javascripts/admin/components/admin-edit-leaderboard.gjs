@@ -6,8 +6,8 @@ import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import GroupChooser from "select-kit/components/group-chooser";
 import PeriodInput from "discourse/plugins/discourse-gamification/discourse/components/period-input";
 
 export default class AdminEditLeaderboard extends Component {

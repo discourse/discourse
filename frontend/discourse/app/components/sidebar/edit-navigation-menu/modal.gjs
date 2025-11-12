@@ -7,8 +7,8 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 export default class SidebarEditNavigationMenuModal extends Component {
   @tracked filter = "";

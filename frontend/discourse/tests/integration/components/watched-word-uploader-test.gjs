@@ -2,11 +2,11 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import WatchedWordUploader from "discourse/admin/components/watched-word-uploader";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { createFile } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import WatchedWordUploader from "admin/components/watched-word-uploader";
 
 module("Integration | Component | watched-word-uploader", function (hooks) {
   setupRenderingTest(hooks);

@@ -1,10 +1,10 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import SiteSetting from "discourse/admin/models/site-setting";
 import { adminRouteValid } from "discourse/lib/admin-utilities";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import SiteSetting from "admin/models/site-setting";
 
 export default class AdminPluginsIndexController extends Controller {
   @service session;

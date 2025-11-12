@@ -6,9 +6,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { NodeSelection } from "prosemirror-state";
-import { eq } from "truth-helpers";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
 import { ToolbarBase } from "discourse/lib/composer/toolbar";
+import { eq } from "discourse/truth-helpers";
 import ImageAltTextInput from "./image-alt-text-input";
 
 const MIN_SCALE = 50;

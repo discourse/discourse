@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
-import { or } from "truth-helpers";
 import AvatarFlair from "discourse/components/avatar-flair";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
@@ -15,8 +14,9 @@ import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { convertIconClass } from "discourse/lib/icon-library";
+import IconPicker from "discourse/select-kit/components/icon-picker";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import IconPicker from "select-kit/components/icon-picker";
 
 @classNames("group-flair-inputs")
 export default class GroupFlairInputs extends Component {

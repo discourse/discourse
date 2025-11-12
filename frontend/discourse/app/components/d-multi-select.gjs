@@ -6,10 +6,10 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import TextField from "discourse/components/text-field";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
@@ -17,8 +17,8 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { makeArray } from "discourse/lib/helpers";
 import scrollIntoView from "discourse/modifiers/scroll-into-view";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 class Skeleton extends Component {
   get width() {

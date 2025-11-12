@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class PostMetaDataLanguage extends Component {
   // TODO (glimmer-post-stream) once we switch to glimmer, we can remove `this.args.data.x` from the following 2 getters

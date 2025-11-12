@@ -5,11 +5,11 @@ import { computed, get } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
-import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { makeArray } from "discourse/lib/helpers";
-import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
+import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
+import { and } from "discourse/truth-helpers";
 
 @tagName("")
 @selectKitPropUtils

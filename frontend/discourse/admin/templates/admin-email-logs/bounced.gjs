@@ -4,15 +4,15 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import EmailLogsList from "discourse/admin/components/email-logs-list";
+import IncomingEmailModal from "discourse/admin/components/modal/incoming-email";
+import IncomingEmail from "discourse/admin/models/incoming-email";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import EmailLogsList from "admin/components/email-logs-list";
-import IncomingEmailModal from "admin/components/modal/incoming-email";
-import IncomingEmail from "admin/models/incoming-email";
 
 const BOUNCED_HEADERS = [
   { key: "admin.email.user" },

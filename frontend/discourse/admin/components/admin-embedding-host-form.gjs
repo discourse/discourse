@@ -4,14 +4,14 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import CategoryChooser from "select-kit/components/category-chooser";
-import TagChooser from "select-kit/components/tag-chooser";
-import UserChooser from "select-kit/components/user-chooser";
 
 export default class AdminEmbeddingHostForm extends Component {
   @service router;

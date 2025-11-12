@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { assert } from "@ember/debug";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
-import { or } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { or } from "discourse/truth-helpers";
 import fields from "./fields";
 
 export default class WizardFieldComponent extends Component {

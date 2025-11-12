@@ -3,8 +3,8 @@ import { find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ComboBox from "select-kit/components/combo-box";
 
 module(
   "Integration | Component | consistent input/dropdown/button sizes",

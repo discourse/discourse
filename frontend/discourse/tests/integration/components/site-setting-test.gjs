@@ -6,13 +6,13 @@ import {
   typeIn,
 } from "@ember/test-helpers";
 import { module, skip, test } from "qunit";
+import SiteSettingComponent from "discourse/admin/components/site-setting";
+import SiteSetting from "discourse/admin/models/site-setting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
-import SiteSettingComponent from "admin/components/site-setting";
-import SiteSetting from "admin/models/site-setting";
 
 module("Integration | Component | SiteSetting", function (hooks) {
   setupRenderingTest(hooks);

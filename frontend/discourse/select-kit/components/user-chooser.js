@@ -6,11 +6,11 @@ import userSearch, {
   eagerCompleteSearch,
   skipSearch,
 } from "discourse/lib/user-search";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 import UserRow from "./user-chooser/user-row";
 
 export const CUSTOM_USER_SEARCH_OPTIONS = [];

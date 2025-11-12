@@ -6,7 +6,6 @@ import { action } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
-import { and, gt } from "truth-helpers";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import BulkSelectToggle from "discourse/components/bulk-select-toggle";
 import CategoryNotificationsTracking from "discourse/components/category-notifications-tracking";
@@ -23,7 +22,8 @@ import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import NavItem from "discourse/models/nav-item";
-import CategoriesAdminDropdown from "select-kit/components/categories-admin-dropdown";
+import CategoriesAdminDropdown from "discourse/select-kit/components/categories-admin-dropdown";
+import { and, gt } from "discourse/truth-helpers";
 
 @tagName("")
 export default class DNavigation extends Component {

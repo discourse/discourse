@@ -1,7 +1,7 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 
 @classNames("house-ads-chooser")
 export default class HouseAdsChooser extends MultiSelectComponent {

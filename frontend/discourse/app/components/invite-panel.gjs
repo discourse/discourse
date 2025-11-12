@@ -14,9 +14,9 @@ import { computedI18n } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { getNativeContact } from "discourse/lib/pwa-utils";
 import { emailValid } from "discourse/lib/utilities";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
-import GroupChooser from "select-kit/components/group-chooser";
 
 export default class InvitePanel extends Component {
   @service site;

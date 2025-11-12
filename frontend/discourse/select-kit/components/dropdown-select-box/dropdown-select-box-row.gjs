@@ -2,7 +2,7 @@ import { readOnly } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 
 @classNames("dropdown-select-box-row")
 export default class DropdownSelectBoxRow extends SelectKitRowComponent {

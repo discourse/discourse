@@ -1,6 +1,6 @@
 import { gte } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
-import SingleSelectComponent from "select-kit/components/single-select";
+import SingleSelectComponent from "discourse/select-kit/components/single-select";
 import ComboBoxHeader from "./combo-box/combo-box-header";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 

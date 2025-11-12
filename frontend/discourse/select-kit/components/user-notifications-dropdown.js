@@ -3,9 +3,9 @@ import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
 import IgnoreDurationModal from "discourse/components/modal/ignore-duration-with-username";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import { selectKitOptions } from "select-kit/components/select-kit";
 
 @classNames("user-notifications", "user-notifications-dropdown")
 @selectKitOptions({

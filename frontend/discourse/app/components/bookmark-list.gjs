@@ -7,7 +7,6 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { Promise } from "rsvp";
-import { and } from "truth-helpers";
 import BookmarkActionsDropdown from "discourse/components/bookmark-actions-dropdown";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -31,8 +30,9 @@ import {
   openLinkInNewTab,
   shouldOpenInNewTab,
 } from "discourse/lib/click-track";
+import BulkSelectBookmarksDropdown from "discourse/select-kit/components/bulk-select-bookmarks-dropdown";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import BulkSelectBookmarksDropdown from "select-kit/components/bulk-select-bookmarks-dropdown";
 
 @classNames("bookmark-list-wrapper")
 export default class BookmarkList extends Component {

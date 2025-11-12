@@ -1,6 +1,6 @@
 import MobileNav from "discourse/components/mobile-nav";
 import NavigationBar from "discourse/components/navigation-bar";
-import GroupDropdown from "select-kit/components/group-dropdown";
+import GroupDropdown from "discourse/select-kit/components/group-dropdown";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 const NavigationBarMolecule = <template>

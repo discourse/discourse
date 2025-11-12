@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import MultiSelectFilterComponent from "select-kit/components/multi-select/multi-select-filter";
+import MultiSelectFilterComponent from "discourse/select-kit/components/multi-select/multi-select-filter";
 
 @classNames("email-group-user-chooser-filter")
 export default class EmailGroupUserChooserFilter extends MultiSelectFilterComponent {

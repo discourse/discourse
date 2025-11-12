@@ -4,8 +4,8 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
 import { i18n } from "discourse-i18n";
-import ColorPalettePicker from "select-kit/components/color-palette-picker";
 
 export default class ColorSchemeSelectBase extends Component {
   @tracked selectedBaseThemeId = this.args.model.colorSchemes?.[0]?.id;

@@ -1,4 +1,4 @@
-import { or } from "truth-helpers";
+import { or } from "discourse/truth-helpers";
 
 const Component = <template>
   <div class="styleguide__component">

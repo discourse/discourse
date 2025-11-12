@@ -6,8 +6,8 @@ import { computed } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
+import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 import { i18n } from "discourse-i18n";
-import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
 
 @tagName("")
 @selectKitPropUtils

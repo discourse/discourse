@@ -3,10 +3,10 @@ import { A } from "@ember/array";
 import ArrayProxy from "@ember/array/proxy";
 import EmberObject from "@ember/object";
 import { not } from "@ember/object/computed";
+import ColorSchemeColor from "discourse/admin/models/color-scheme-color";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import ColorSchemeColor from "admin/models/color-scheme-color";
 
 class ColorSchemes extends ArrayProxy {}
 

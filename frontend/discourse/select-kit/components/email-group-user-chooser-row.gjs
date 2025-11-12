@@ -1,11 +1,11 @@
 import { classNames } from "@ember-decorators/component";
-import { and } from "truth-helpers";
 import UserStatusMessage from "discourse/components/user-status-message";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import decorateUsernameSelector from "discourse/helpers/decorate-username-selector";
 import formatUsername from "discourse/helpers/format-username";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
+import { and } from "discourse/truth-helpers";
 
 @classNames("email-group-user-chooser-row")
 export default class EmailGroupUserChooserRow extends SelectKitRowComponent {

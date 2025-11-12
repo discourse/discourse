@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { or } from "truth-helpers";
 import DBreadcrumbsContainer from "discourse/components/d-breadcrumbs-container";
 import {
   DangerActionListItem,
@@ -16,9 +15,10 @@ import {
 } from "discourse/components/d-page-action-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { bind } from "discourse/lib/decorators";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 const HEADLESS_ACTIONS = ["new", "edit"];
 

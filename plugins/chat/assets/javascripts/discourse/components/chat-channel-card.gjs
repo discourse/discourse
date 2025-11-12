@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { gt } from "truth-helpers";
 import borderColor from "discourse/helpers/border-color";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 

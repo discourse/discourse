@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import { eq, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
 import lazyHash from "discourse/helpers/lazy-hash";
 import number from "discourse/helpers/number";
 import { emojiUnescape, sanitize } from "discourse/lib/text";
+import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
 

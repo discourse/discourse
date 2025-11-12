@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { and } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import HighlightedSearch from "discourse/components/search-menu/highlighted-search";
 import Blurb from "discourse/components/search-menu/results/blurb";
@@ -10,6 +9,7 @@ import categoryLink from "discourse/helpers/category-link";
 import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { and } from "discourse/truth-helpers";
 
 export default class Results extends Component {
   @service siteSettings;

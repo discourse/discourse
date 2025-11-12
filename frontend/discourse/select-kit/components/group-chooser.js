@@ -1,11 +1,11 @@
 import { classNames } from "@ember-decorators/component";
-import FilterForMore from "select-kit/components/filter-for-more";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import FilterForMore from "discourse/select-kit/components/filter-for-more";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   MAIN_COLLECTION,
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 
 const FILTER_FOR_MORE_GROUPS_COLLECTION = "MORE_GROUPS_COLLECTION";
 

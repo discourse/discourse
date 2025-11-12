@@ -2,8 +2,8 @@
 import Component from "@ember/component";
 import { tagName } from "@ember-decorators/component";
 import { i18n as computedI18n } from "discourse/lib/computed";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 @tagName("")
 export default class UserNotificationScheduleDay extends Component {

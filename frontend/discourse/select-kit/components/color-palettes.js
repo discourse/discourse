@@ -1,6 +1,6 @@
 import { classNames } from "@ember-decorators/component";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBoxComponent from "select-kit/components/combo-box";
 import ColorPalettesRow from "./color-palettes/color-palettes-row";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 

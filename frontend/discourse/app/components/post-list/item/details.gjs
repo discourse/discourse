@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicStatus from "discourse/components/topic-status";
@@ -11,6 +10,7 @@ import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class PostListItemDetails extends Component {

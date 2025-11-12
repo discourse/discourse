@@ -5,8 +5,8 @@ import GroupsFormInteractionFields from "discourse/components/groups-form-intera
 import GroupsFormMembershipFields from "discourse/components/groups-form-membership-fields";
 import GroupsFormProfileFields from "discourse/components/groups-form-profile-fields";
 import bodyClass from "discourse/helpers/body-class";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 export default <template>
   {{bodyClass "groups-new-page"}}

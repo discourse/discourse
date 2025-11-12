@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
+import AdminUser from "discourse/admin/models/admin-user";
 import DiscourseRoute from "discourse/routes/discourse";
-import AdminUser from "admin/models/admin-user";
 
 export default class AdminUsersListRoute extends DiscourseRoute {
   @action

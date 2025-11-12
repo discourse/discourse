@@ -4,8 +4,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 export default class InterfaceColorSelector extends Component {
   @service interfaceColor;

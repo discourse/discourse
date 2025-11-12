@@ -20,8 +20,8 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
-import TagChooser from "select-kit/components/tag-chooser";
 
 @tagName("")
 export default class TagInfo extends Component {

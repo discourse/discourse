@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import DTooltip from "float-kit/components/d-tooltip";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 
 export default class FKTooltip extends Component {
   get isComponentTooltip() {

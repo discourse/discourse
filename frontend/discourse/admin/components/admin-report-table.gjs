@@ -4,12 +4,12 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { classNameBindings, classNames } from "@ember-decorators/component";
+import AdminReportTableHeader from "discourse/admin/components/admin-report-table-header";
+import AdminReportTableRow from "discourse/admin/components/admin-report-table-row";
 import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import AdminReportTableHeader from "admin/components/admin-report-table-header";
-import AdminReportTableRow from "admin/components/admin-report-table-row";
 
 const PAGES_LIMIT = 8;
 

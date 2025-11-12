@@ -12,6 +12,7 @@ import TopicMapLink from "discourse/components/topic-map/topic-map-link";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import TopicViews from "discourse/components/topic-map/topic-views";
 import TopicViewsChart from "discourse/components/topic-map/topic-views-chart";
+import DMenu from "discourse/float-kit/components/d-menu";
 import avatar from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
@@ -20,7 +21,6 @@ import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 const TRUNCATED_LINKS_LIMIT = 5;
 const LINKS_THRESHOLD = 50;

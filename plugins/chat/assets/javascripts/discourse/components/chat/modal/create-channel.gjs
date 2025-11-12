@@ -9,6 +9,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isBlank, isPresent } from "@ember/utils";
 import DModal from "discourse/components/d-modal";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -17,9 +18,8 @@ import { extractError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { escapeExpression } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import I18n, { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import DTooltip from "float-kit/components/d-tooltip";
 
 const DEFAULT_HINT = htmlSafe(
   i18n("chat.create_channel.choose_category.default_hint", {

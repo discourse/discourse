@@ -93,6 +93,7 @@ import { resetLastEditNotificationClick } from "discourse/models/post-stream";
 import Site from "discourse/models/site";
 import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
+import { _clearSnapshots } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
@@ -105,7 +106,6 @@ import { resetDecorators as resetPostCookedDecorators } from "discourse/widgets/
 import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 import { resetDecorators } from "discourse/widgets/widget";
 import I18n from "discourse-i18n";
-import { _clearSnapshots } from "select-kit/components/composer-actions";
 import { setupDSelectAssertions } from "./d-select-assertions";
 import { setupFormKitAssertions } from "./form-kit-assertions";
 import { setupNotificationsTrackingAssertions } from "./notifications-tracking-assertions";

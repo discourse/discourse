@@ -1,4 +1,4 @@
-import CategorySelector from "select-kit/components/category-selector";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 
 export default class HouseAdsCategorySelector extends CategorySelector {
   get value() {

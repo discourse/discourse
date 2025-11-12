@@ -5,10 +5,10 @@ import { service } from "@ember/service";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import UserAvatar from "discourse/components/user-avatar";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 const LIKE_ACTION = 2; // The action type ID for "like" in Discourse
 const DISPLAY_MAX_USERS = 8; // will show X users, then a button to show one more row of X;

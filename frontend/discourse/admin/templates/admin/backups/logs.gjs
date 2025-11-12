@@ -1,6 +1,6 @@
+import AdminBackupsLogs from "discourse/admin/components/admin-backups-logs";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import { i18n } from "discourse-i18n";
-import AdminBackupsLogs from "admin/components/admin-backups-logs";
 
 export default <template>
   <DBreadcrumbsItem

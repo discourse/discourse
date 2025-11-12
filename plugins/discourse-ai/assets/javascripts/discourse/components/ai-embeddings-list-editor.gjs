@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import DTooltip from "float-kit/components/d-tooltip";
 import AiEmbeddingEditor from "./ai-embedding-editor";
 
 export default class AiEmbeddingsListEditor extends Component {

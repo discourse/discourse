@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { service } from "@ember/service";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DButton from "discourse/components/d-button";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class AdminConfigAreasEmojisList extends Component {
   @service adminEmojis;

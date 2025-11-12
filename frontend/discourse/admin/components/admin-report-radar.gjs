@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
+import hexToRGBA from "discourse/admin/lib/hex-to-rgba";
+import Report from "discourse/admin/models/report";
 import { makeArray } from "discourse/lib/helpers";
-import hexToRGBA from "admin/lib/hex-to-rgba";
-import Report from "admin/models/report";
 import Chart from "./chart";
 
 export default class AdminReportRadar extends Component {

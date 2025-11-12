@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
-import { and } from "truth-helpers";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -21,6 +20,7 @@ import {
   applyMutableValueTransformer,
   applyValueTransformer,
 } from "discourse/lib/transformer";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";

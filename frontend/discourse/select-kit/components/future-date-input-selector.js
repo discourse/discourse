@@ -2,11 +2,11 @@ import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import ComboBoxComponent from "select-kit/components/combo-box";
+import ComboBoxComponent from "discourse/select-kit/components/combo-box";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
 import FutureDateInputSelectorHeader from "./future-date-input-selector/future-date-input-selector-header";
 import FutureDateInputSelectorRow from "./future-date-input-selector/future-date-input-selector-row";
 

@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 import { classNames } from "@ember-decorators/component";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
 import icon from "discourse/helpers/d-icon";
-import SelectedNameComponent from "select-kit/components/selected-name";
+import SelectedNameComponent from "discourse/select-kit/components/selected-name";
 
 @classNames("selected-category")
 export default class SelectedCategory extends SelectedNameComponent {

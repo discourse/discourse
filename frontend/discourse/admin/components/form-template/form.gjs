@@ -3,15 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import FormTemplateValidationOptionsModal from "discourse/admin/components/modal/form-template-validation-options";
+import { templateFormFields } from "discourse/admin/lib/template-form-fields";
+import FormTemplate from "discourse/admin/models/form-template";
 import AceEditor from "discourse/components/ace-editor";
 import DButton from "discourse/components/d-button";
 import FormTemplateFormPreview from "discourse/components/modal/form-template-form-preview";
 import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import FormTemplateValidationOptionsModal from "admin/components/modal/form-template-validation-options";
-import { templateFormFields } from "admin/lib/template-form-fields";
-import FormTemplate from "admin/models/form-template";
 
 export default class FormTemplateForm extends Component {
   @service router;

@@ -3,17 +3,17 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
 } from "discourse/models/composer";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DMenu from "float-kit/components/d-menu";
 
 const DRAFTS_LIMIT = 4;
 

@@ -2,14 +2,14 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DToast from "discourse/float-kit/components/d-toast";
+import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 import { forceMobile } from "discourse/lib/mobile";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import {
   disableRaiseOnDeprecation,
   enableRaiseOnDeprecation,
 } from "discourse/tests/helpers/raise-on-deprecation";
-import DToast from "float-kit/components/d-toast";
-import DToastInstance from "float-kit/lib/d-toast-instance";
 
 function createCustomToastInstance(owner, options, newClose) {
   class CustomToastInstance extends DToastInstance {

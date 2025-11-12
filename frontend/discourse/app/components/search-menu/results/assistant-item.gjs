@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, or } from "truth-helpers";
 import Category from "discourse/components/search-menu/results/type/category";
 import Tag from "discourse/components/search-menu/results/type/tag";
 import User from "discourse/components/search-menu/results/type/user";
@@ -10,6 +9,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { debounce } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const _itemSelectCallbacks = [];

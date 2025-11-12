@@ -1,7 +1,11 @@
 import { fn, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { and, not, or } from "truth-helpers";
+import InlineEditCheckbox from "discourse/admin/components/inline-edit-checkbox";
+import ThemeSettingEditor from "discourse/admin/components/theme-setting-editor";
+import ThemeSettingRelativesSelector from "discourse/admin/components/theme-setting-relatives-selector";
+import ThemeSiteSettingEditor from "discourse/admin/components/theme-site-setting-editor";
+import ThemeTranslation from "discourse/admin/components/theme-translation";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -11,14 +15,10 @@ import formatDate from "discourse/helpers/format-date";
 import formatUsername from "discourse/helpers/format-username";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
+import ColorPalettePicker from "discourse/select-kit/components/color-palette-picker";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { and, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import InlineEditCheckbox from "admin/components/inline-edit-checkbox";
-import ThemeSettingEditor from "admin/components/theme-setting-editor";
-import ThemeSettingRelativesSelector from "admin/components/theme-setting-relatives-selector";
-import ThemeSiteSettingEditor from "admin/components/theme-site-setting-editor";
-import ThemeTranslation from "admin/components/theme-translation";
-import ColorPalettePicker from "select-kit/components/color-palette-picker";
-import ComboBox from "select-kit/components/combo-box";
 
 export default <template>
   <div class="metadata control-unit">

@@ -6,12 +6,12 @@ import { action, set, setProperties } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
-import { not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import discourseComputed from "discourse/lib/decorators";
 import { emojiUrlFor } from "discourse/lib/text";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 @classNameBindings(":value-list", ":emoji-list")

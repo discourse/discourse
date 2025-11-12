@@ -1,7 +1,7 @@
 import Route from "@ember/routing/route";
 import { service } from "@ember/service";
+import ColorScheme from "discourse/admin/models/color-scheme";
 import { ajax } from "discourse/lib/ajax";
-import ColorScheme from "admin/models/color-scheme";
 
 export default class AdminConfigColorPalettesShowRoute extends Route {
   @service router;

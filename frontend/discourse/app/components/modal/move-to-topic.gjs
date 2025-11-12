@@ -17,10 +17,10 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
-import TagChooser from "select-kit/components/tag-chooser";
 
 export default class MoveToTopic extends Component {
   @service currentUser;

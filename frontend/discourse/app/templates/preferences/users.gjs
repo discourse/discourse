@@ -5,8 +5,8 @@ import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import SaveControls from "discourse/components/save-controls";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { i18n } from "discourse-i18n";
-import UserChooser from "select-kit/components/user-chooser";
 
 export default <template>
   <label class="control-label">{{i18n "user.users"}}</label>

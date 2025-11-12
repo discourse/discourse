@@ -4,8 +4,8 @@ import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
-import DTooltip from "float-kit/components/d-tooltip";
 
 function isPreseeded(llm) {
   if (llm.id < 0) {

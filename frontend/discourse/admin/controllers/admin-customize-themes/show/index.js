@@ -8,6 +8,10 @@ import {
   readOnly,
 } from "@ember/object/computed";
 import { service } from "@ember/service";
+import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
+import SiteSetting from "discourse/admin/models/site-setting";
+import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
+import ThemeSettings from "discourse/admin/models/theme-settings";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -15,10 +19,6 @@ import { url } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import ThemeSettingsEditor from "admin/components/theme-settings-editor";
-import SiteSetting from "admin/models/site-setting";
-import { COMPONENTS, THEMES } from "admin/models/theme";
-import ThemeSettings from "admin/models/theme-settings";
 import ThemeUploadAddModal from "../../../components/theme-upload-add";
 
 const THEME_UPLOAD_VAR = 2;

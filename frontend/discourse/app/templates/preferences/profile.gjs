@@ -11,9 +11,9 @@ import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import UserField from "discourse/components/user-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import TimezoneInput from "select-kit/components/timezone-input";
 
 export default <template>
   {{#if @controller.showEnforcedRequiredFieldsNotice}}

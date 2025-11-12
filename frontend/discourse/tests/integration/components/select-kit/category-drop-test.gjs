@@ -5,13 +5,13 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
-import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { i18n } from "discourse-i18n";
 import CategoryDrop, {
   ALL_CATEGORIES_ID,
   NO_CATEGORIES_ID,
-} from "select-kit/components/category-drop";
+} from "discourse/select-kit/components/category-drop";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 function initCategories(context) {
   const categories = context.site.categoriesList;

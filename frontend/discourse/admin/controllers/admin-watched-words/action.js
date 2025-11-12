@@ -3,12 +3,12 @@ import { action } from "@ember/object";
 import { or } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
+import WatchedWordTestingModal from "discourse/admin/components/modal/watched-word-testing";
+import WatchedWord from "discourse/admin/models/watched-word";
 import { ajax } from "discourse/lib/ajax";
 import { fmt } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import WatchedWordTestingModal from "admin/components/modal/watched-word-testing";
-import WatchedWord from "admin/models/watched-word";
 
 export default class AdminWatchedWordsActionController extends Controller {
   @service dialog;

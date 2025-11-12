@@ -5,8 +5,8 @@ import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DatePickerPast from "discourse/components/date-picker-past";
 import TextField from "discourse/components/text-field";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 export default <template>
   <DPageSubheader

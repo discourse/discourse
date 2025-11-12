@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { optionalRequire } from "discourse/lib/utilities";
-import ComboBox from "select-kit/components/combo-box";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import Icon from "discourse/plugins/chat/discourse/components/chat/header/icon";
 import {
   HEADER_INDICATOR_PREFERENCE_ALL_NEW,

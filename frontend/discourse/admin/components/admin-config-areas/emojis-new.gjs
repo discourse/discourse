@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import EmojiUploader from "discourse/admin/components/emoji-uploader";
 import BackButton from "discourse/components/back-button";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import EmojiUploader from "admin/components/emoji-uploader";
 
 export default class AdminConfigAreasEmojisNew extends Component {
   @service router;

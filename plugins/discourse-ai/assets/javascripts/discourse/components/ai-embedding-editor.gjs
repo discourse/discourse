@@ -4,7 +4,8 @@ import { concat, fn, get } from "@ember/helper";
 import { action } from "@ember/object";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
-import { eq, not } from "truth-helpers";
+import AdminSectionLandingItem from "discourse/admin/components/admin-section-landing-item";
+import AdminSectionLandingWrapper from "discourse/admin/components/admin-section-landing-wrapper";
 import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -15,9 +16,8 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminSectionLandingItem from "admin/components/admin-section-landing-item";
-import AdminSectionLandingWrapper from "admin/components/admin-section-landing-wrapper";
 
 export default class AiEmbeddingEditor extends Component {
   @service toasts;

@@ -2,8 +2,8 @@
 import Component from "@ember/component";
 import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { includes } from "truth-helpers";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
+import { includes } from "discourse/truth-helpers";
 
 const BACKGROUND_SIZE_COVER = ["welcome_banner_image"];
 

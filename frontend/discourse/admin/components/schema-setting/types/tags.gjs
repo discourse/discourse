@@ -1,7 +1,7 @@
-import { and, not } from "truth-helpers";
-import FieldInputDescription from "admin/components/schema-setting/field-input-description";
-import SchemaSettingTypeModels from "admin/components/schema-setting/types/models";
-import TagChooser from "select-kit/components/tag-chooser";
+import FieldInputDescription from "discourse/admin/components/schema-setting/field-input-description";
+import SchemaSettingTypeModels from "discourse/admin/components/schema-setting/types/models";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
+import { and, not } from "discourse/truth-helpers";
 
 export default class SchemaSettingTypeTags extends SchemaSettingTypeModels {
   type = "tags";

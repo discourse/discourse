@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
@@ -12,9 +13,8 @@ import {
   getCollapsedSidebarSectionKey,
   getSidebarSectionContentId,
 } from "discourse/lib/sidebar/helpers";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
-import DTooltip from "float-kit/components/d-tooltip";
 import SectionHeader from "./section-header";
 
 export default class SidebarSection extends Component {

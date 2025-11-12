@@ -4,15 +4,15 @@ import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
+import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import AsyncContent from "discourse/components/async-content";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import basePath from "discourse/helpers/base-path";
 import { ajax } from "discourse/lib/ajax";
 import { currentThemeId, listThemes } from "discourse/lib/theme-selector";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminFilterControls from "admin/components/admin-filter-controls";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class ThemeSiteSettings extends Component {
   @service site;

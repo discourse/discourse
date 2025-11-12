@@ -3,7 +3,7 @@ import { cached, tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
+import WebhookEventChooser from "discourse/admin/components/webhook-event-chooser";
 import BackButton from "discourse/components/back-button";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import Form from "discourse/components/form";
@@ -11,10 +11,10 @@ import GroupSelector from "discourse/components/group-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CategorySelector from "discourse/select-kit/components/category-selector";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import WebhookEventChooser from "admin/components/webhook-event-chooser";
-import CategorySelector from "select-kit/components/category-selector";
-import TagChooser from "select-kit/components/tag-chooser";
 
 export default class AdminConfigAreasWebhookForm extends Component {
   @service router;

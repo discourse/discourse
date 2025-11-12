@@ -3,14 +3,14 @@ import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminConfigAreaCardSection from "discourse/admin/components/admin-config-area-card-section";
+import SimpleList from "discourse/admin/components/simple-list";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCardSection from "admin/components/admin-config-area-card-section";
-import SimpleList from "admin/components/simple-list";
 
 export default class AdminLogoForm extends Component {
   @service siteSettings;

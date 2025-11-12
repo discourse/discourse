@@ -1,8 +1,8 @@
 import { service } from "@ember/service";
+import AdminPlugin from "discourse/admin/models/admin-plugin";
 import { ajax } from "discourse/lib/ajax";
 import { sanitize } from "discourse/lib/text";
 import DiscourseRoute from "discourse/routes/discourse";
-import AdminPlugin from "admin/models/admin-plugin";
 
 export default class AdminPluginsShowRoute extends DiscourseRoute {
   @service adminPluginNavManager;

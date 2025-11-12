@@ -1,9 +1,9 @@
+import AdminReport from "discourse/admin/components/admin-report";
+import DashboardPeriodSelector from "discourse/admin/components/dashboard-period-selector";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
-import AdminReport from "admin/components/admin-report";
-import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
 
 export default <template>
   <div class="sections">

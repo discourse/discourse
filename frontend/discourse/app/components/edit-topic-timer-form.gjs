@@ -24,9 +24,9 @@ import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export default class EditTopicTimerForm extends Component {
   @service currentUser;

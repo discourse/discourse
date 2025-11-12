@@ -1,6 +1,6 @@
 import { hash } from "@ember/helper";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { number } from "discourse/lib/formatter";
-import DTooltip from "float-kit/components/d-tooltip";
 
 const DStatTile = <template>
   <div class="d-stat-tile" role="group">

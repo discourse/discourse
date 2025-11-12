@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
-import ComboBox from "select-kit/components/combo-box";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

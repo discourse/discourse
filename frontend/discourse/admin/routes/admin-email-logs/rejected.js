@@ -1,5 +1,5 @@
+import AdminEmailLogsRoute from "discourse/admin/routes/admin-email-logs";
 import { i18n } from "discourse-i18n";
-import AdminEmailLogsRoute from "admin/routes/admin-email-logs";
 
 export default class AdminEmailLogsRejectedRoute extends AdminEmailLogsRoute {
   titleToken() {

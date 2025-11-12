@@ -2,12 +2,12 @@ import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
+import ScreenedIpAddress from "discourse/admin/models/screened-ip-address";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { i18n } from "discourse-i18n";
-import ScreenedIpAddress from "admin/models/screened-ip-address";
 
 export default class AdminLogsScreenedIpAddressesController extends Controller {
   @service dialog;

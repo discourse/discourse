@@ -2,7 +2,6 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { htmlSafe } from "@ember/template";
-import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import GoogleSearch from "discourse/components/google-search";
@@ -19,8 +18,9 @@ import categoryLink from "discourse/helpers/category-link";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default <template>
   {{#if @controller.loading}}

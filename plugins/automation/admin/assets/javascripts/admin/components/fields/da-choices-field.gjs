@@ -1,9 +1,9 @@
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import MultiSelect from "select-kit/components/multi-select";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

@@ -1,12 +1,12 @@
 import { get } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
 import { isBlank, isEmpty } from "@ember/utils";
+import ThemeSettings from "discourse/admin/models/theme-settings";
+import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
-import ThemeSettings from "admin/models/theme-settings";
-import ThemeSiteSettings from "admin/models/theme-site-settings";
 
 const THEME_UPLOAD_VAR = 2;
 const FIELDS_IDS = [0, 1, 5, 6];

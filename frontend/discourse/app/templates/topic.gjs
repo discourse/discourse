@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
-import { and, eq } from "truth-helpers";
 import AddCategoryTagClasses from "discourse/components/add-category-tag-classes";
 import AddTopicStatusClasses from "discourse/components/add-topic-status-classes";
 import AnonymousTopicFooterButtons from "discourse/components/anonymous-topic-footer-buttons";
@@ -44,9 +43,10 @@ import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import autoFocus from "discourse/modifiers/auto-focus";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 import booleanString from "../helpers/boolean-string";
 
 export default <template>

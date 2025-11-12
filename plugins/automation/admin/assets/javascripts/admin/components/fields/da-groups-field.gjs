@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
 import Group from "discourse/models/group";
-import GroupChooser from "select-kit/components/group-chooser";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

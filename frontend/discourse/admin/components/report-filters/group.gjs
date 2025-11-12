@@ -1,8 +1,8 @@
 import { hash } from "@ember/helper";
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import FilterComponent from "admin/components/report-filters/filter";
-import ComboBox from "select-kit/components/combo-box";
+import FilterComponent from "discourse/admin/components/report-filters/filter";
+import ComboBox from "discourse/select-kit/components/combo-box";
 
 @classNames("group-filter")
 export default class Group extends FilterComponent {

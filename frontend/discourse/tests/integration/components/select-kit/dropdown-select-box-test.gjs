@@ -1,9 +1,9 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import DropdownSelectBox from "select-kit/components/dropdown-select-box";
 
 const DEFAULT_CONTENT = [
   { id: 1, name: "foo" },

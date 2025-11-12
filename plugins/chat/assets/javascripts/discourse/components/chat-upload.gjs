@@ -4,8 +4,8 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
+import { eq } from "discourse/truth-helpers";
 
 export default class ChatUpload extends Component {
   @service siteSettings;

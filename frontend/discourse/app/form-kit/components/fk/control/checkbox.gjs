@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import FKLabel from "discourse/form-kit/components/fk/label";
 import FKRequired from "discourse/form-kit/components/fk/required";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
+import { eq } from "discourse/truth-helpers";
 
 export default class FKControlCheckbox extends Component {
   static controlType = "checkbox";

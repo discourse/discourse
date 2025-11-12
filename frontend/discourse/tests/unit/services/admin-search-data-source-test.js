@@ -2,16 +2,16 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
+import {
+  PageLinkFormatter,
+  SettingLinkFormatter,
+} from "discourse/admin/services/admin-search-data-source";
 import PreloadStore from "discourse/lib/preload-store";
 import {
   logIn,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
-import {
-  PageLinkFormatter,
-  SettingLinkFormatter,
-} from "admin/services/admin-search-data-source";
 
 // NOTE: This test relies on `/admin/search/all.json` from admin-search-fixtures.js
 

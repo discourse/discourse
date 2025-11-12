@@ -1,7 +1,7 @@
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 import UserInfoList from "../../../components/user-info-list";
 
 export default <template>

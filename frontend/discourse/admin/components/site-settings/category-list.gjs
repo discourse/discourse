@@ -3,7 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import Category from "discourse/models/category";
-import CategorySelector from "select-kit/components/category-selector";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 
 export default class CategoryList extends Component {
   @tracked selectedCategories = [];

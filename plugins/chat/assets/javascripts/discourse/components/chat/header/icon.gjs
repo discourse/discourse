@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { and } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatHeaderIconUnreadIndicator from "discourse/plugins/chat/discourse/components/chat/header/icon/unread-indicator";
 import { getUserChatSeparateSidebarMode } from "discourse/plugins/chat/discourse/lib/get-user-chat-separate-sidebar-mode";

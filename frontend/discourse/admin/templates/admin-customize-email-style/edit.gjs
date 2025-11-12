@@ -1,5 +1,5 @@
+import EmailStylesEditor from "discourse/admin/components/email-styles-editor";
 import DButton from "discourse/components/d-button";
-import EmailStylesEditor from "admin/components/email-styles-editor";
 
 export default <template>
   <EmailStylesEditor

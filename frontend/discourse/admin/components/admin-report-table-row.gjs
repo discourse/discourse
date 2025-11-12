@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { classNames, tagName } from "@ember-decorators/component";
-import AdminReportTableCell from "admin/components/admin-report-table-cell";
+import AdminReportTableCell from "discourse/admin/components/admin-report-table-cell";
 
 @tagName("tr")
 @classNames("admin-report-table-row")

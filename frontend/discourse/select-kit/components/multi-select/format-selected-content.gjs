@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { tagName } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
-import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
+import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 
 @tagName("")
 @selectKitPropUtils

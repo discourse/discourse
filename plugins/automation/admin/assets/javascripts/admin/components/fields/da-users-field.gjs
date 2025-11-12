@@ -1,7 +1,7 @@
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { isBlank } from "@ember/utils";
-import UserChooser from "select-kit/components/user-chooser";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

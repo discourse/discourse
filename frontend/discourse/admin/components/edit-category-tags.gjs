@@ -3,12 +3,12 @@ import { array, fn, hash } from "@ember/helper";
 import { action, set } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
 import { LinkTo } from "@ember/routing";
+import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
+import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
 import { i18n } from "discourse-i18n";
-import { buildCategoryPanel } from "admin/components/edit-category-panel";
-import TagChooser from "select-kit/components/tag-chooser";
-import TagGroupChooser from "select-kit/components/tag-group-chooser";
 
 export default class EditCategoryTags extends buildCategoryPanel("tags") {
   @empty("category.allowed_tags") allowedTagsEmpty;

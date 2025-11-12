@@ -6,7 +6,9 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { eq, gt, lt } from "truth-helpers";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import Chart from "discourse/admin/components/chart";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -17,11 +19,9 @@ import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { number } from "discourse/lib/formatter";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq, gt, lt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import Chart from "admin/components/chart";
-import ComboBox from "select-kit/components/combo-box";
 import AiCreditBar from "./ai-credit-bar";
 
 export default class AiUsage extends Component {

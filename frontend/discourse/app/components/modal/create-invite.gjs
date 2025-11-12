@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { and, notEq, or } from "truth-helpers";
 import CopyButton from "discourse/components/copy-button";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
@@ -18,10 +17,11 @@ import { sanitize } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { emailValid, hostnameValid } from "discourse/lib/utilities";
 import Invite from "discourse/models/invite";
+import { FORMAT as DATE_INPUT_FORMAT } from "discourse/select-kit/components/future-date-input-selector";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
+import TopicChooser from "discourse/select-kit/components/topic-chooser";
+import { and, notEq, or } from "discourse/truth-helpers";
 import I18n, { i18n } from "discourse-i18n";
-import { FORMAT as DATE_INPUT_FORMAT } from "select-kit/components/future-date-input-selector";
-import GroupChooser from "select-kit/components/group-chooser";
-import TopicChooser from "select-kit/components/topic-chooser";
 
 export default class CreateInvite extends Component {
   @service currentUser;

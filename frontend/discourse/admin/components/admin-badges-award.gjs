@@ -4,13 +4,13 @@ import { Input } from "@ember/component";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import iconOrImage from "discourse/helpers/icon-or-image";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import AdminBadgesList from "admin/components/admin-badges-list";
 
 export default class AdminBadgesAward extends Component {
   @service adminBadges;

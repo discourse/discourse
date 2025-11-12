@@ -1,7 +1,7 @@
 import { fillIn, render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ColorInput from "discourse/admin/components/color-input";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ColorInput from "admin/components/color-input";
 
 module("Integration | Component | ColorInput", function (hooks) {
   setupRenderingTest(hooks);

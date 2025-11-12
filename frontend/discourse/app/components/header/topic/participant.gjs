@@ -3,10 +3,10 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq, or } from "truth-helpers";
 import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import getURL from "discourse/lib/get-url";
+import { eq, or } from "discourse/truth-helpers";
 
 export default class Participant extends Component {
   @service appEvents;

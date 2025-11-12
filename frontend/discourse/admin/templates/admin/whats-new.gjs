@@ -1,7 +1,7 @@
+import DashboardNewFeatures from "discourse/admin/components/dashboard-new-features";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DPageHeader from "discourse/components/d-page-header";
 import { i18n } from "discourse-i18n";
-import DashboardNewFeatures from "admin/components/dashboard-new-features";
 
 export default <template>
   <DPageHeader

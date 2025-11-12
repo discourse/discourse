@@ -5,9 +5,9 @@ import { action } from "@ember/object";
 import { run } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { eq } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
+import { eq } from "discourse/truth-helpers";
 
 export default class PageLoadingSlider extends Component {
   @service loadingSlider;

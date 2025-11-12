@@ -9,12 +9,12 @@ import {
 import { setting } from "discourse/lib/computed";
 import { bind } from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
-import { i18n } from "discourse-i18n";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
+} from "discourse/select-kit/components/select-kit";
+import { i18n } from "discourse-i18n";
 import SelectKitRow from "./select-kit/select-kit-row";
 import TagRow from "./tag-row";
 

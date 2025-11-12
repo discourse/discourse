@@ -5,7 +5,7 @@ import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import ComboBox from "select-kit/components/combo-box";
+import ComboBox from "discourse/select-kit/components/combo-box";
 
 function convertMinutes(num) {
   return { hours: Math.floor(num / 60), minutes: num % 60 };

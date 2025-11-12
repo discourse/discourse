@@ -1,5 +1,5 @@
-import { or } from "truth-helpers";
 import replaceEmoji from "discourse/helpers/replace-emoji";
+import { or } from "discourse/truth-helpers";
 import SectionLink from "./section-link";
 
 const SidebarMoreSectionLink = <template>

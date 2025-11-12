@@ -5,9 +5,9 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-import { eq } from "truth-helpers";
 import AsyncContent from "discourse/components/async-content";
 import { searchForTerm } from "discourse/lib/search";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ChooseMessage extends Component {

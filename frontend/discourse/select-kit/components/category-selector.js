@@ -3,8 +3,8 @@ import { mapBy } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
 import Category from "discourse/models/category";
-import CategoryRow from "select-kit/components/category-row";
-import MultiSelectComponent from "select-kit/components/multi-select";
+import CategoryRow from "discourse/select-kit/components/category-row";
+import MultiSelectComponent from "discourse/select-kit/components/multi-select";
 import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 import SelectedChoiceCategory from "./selected-choice-category";
 

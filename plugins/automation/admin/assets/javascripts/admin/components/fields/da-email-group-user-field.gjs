@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";
 import DAFieldLabel from "./da-field-label";

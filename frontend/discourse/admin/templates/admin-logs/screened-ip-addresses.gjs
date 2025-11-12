@@ -1,5 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import ScreenedIpAddressForm from "discourse/admin/components/screened-ip-address-form";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
@@ -7,7 +8,6 @@ import TextField from "discourse/components/text-field";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ScreenedIpAddressForm from "admin/components/screened-ip-address-form";
 
 export default <template>
   <DPageSubheader

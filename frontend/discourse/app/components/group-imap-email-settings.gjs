@@ -7,7 +7,6 @@ import { LinkTo } from "@ember/routing";
 import { isEmpty } from "@ember/utils";
 import { tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
-import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
@@ -16,8 +15,9 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 @tagName("")
 export default class GroupImapEmailSettings extends Component {

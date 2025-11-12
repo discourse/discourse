@@ -6,8 +6,8 @@ import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 import EventField from "../event-field";
 
 export default class PostEventInviteUserOrGroup extends Component {

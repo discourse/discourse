@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
 import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Assistant from "discourse/components/search-menu/results/assistant";
@@ -9,6 +8,7 @@ import InitialOptions from "discourse/components/search-menu/results/initial-opt
 import MoreLink from "discourse/components/search-menu/results/more-link";
 import Types from "discourse/components/search-menu/results/types";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import CategoryViewComponent from "./results/type/category";
 import GroupViewComponent from "./results/type/group";

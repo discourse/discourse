@@ -1,6 +1,6 @@
+import SiteSettingMatcher from "discourse/admin/lib/site-setting-matcher";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
-import SiteSettingMatcher from "admin/lib/site-setting-matcher";
 
 export default class SiteSettingFilter {
   constructor(siteSettings) {

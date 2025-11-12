@@ -3,13 +3,13 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import avatar from "discourse/helpers/bound-avatar-template";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import PolicyBuilder from "./modal/policy-builder";
 

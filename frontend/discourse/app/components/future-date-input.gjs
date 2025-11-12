@@ -15,10 +15,10 @@ import {
   TIME_SHORTCUT_TYPES,
   timeShortcuts,
 } from "discourse/lib/time-shortcut";
-import { i18n } from "discourse-i18n";
 import FutureDateInputSelector, {
   FORMAT,
-} from "select-kit/components/future-date-input-selector";
+} from "discourse/select-kit/components/future-date-input-selector";
+import { i18n } from "discourse-i18n";
 
 export default class FutureDateInput extends Component {
   selection = null;

@@ -3,7 +3,7 @@ import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { isNone } from "@ember/utils";
-import { eq } from "truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export const NO_VALUE_OPTION = "__NONE__";

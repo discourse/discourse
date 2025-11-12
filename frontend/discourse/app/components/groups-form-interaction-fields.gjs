@@ -4,13 +4,13 @@ import { fn, hash } from "@ember/helper";
 import { or } from "@ember/object/computed";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TextField from "discourse/components/text-field";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import NotificationsButton from "discourse/select-kit/components/notifications-button";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
-import NotificationsButton from "select-kit/components/notifications-button";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class GroupsFormInteractionFields extends Component {
   @or(

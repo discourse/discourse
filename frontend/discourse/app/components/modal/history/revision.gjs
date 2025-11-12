@@ -3,13 +3,13 @@ import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { and, eq, not } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import boundAvatarTemplate from "discourse/helpers/bound-avatar-template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { and, eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class Revision extends Component {

@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { not, or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import CountI18n from "discourse/components/count-i18n";
 import DiscourseLinkedText from "discourse/components/discourse-linked-text";
@@ -25,8 +24,9 @@ import loadingSpinner from "discourse/helpers/loading-spinner";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
+import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import { not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import PeriodChooser from "select-kit/components/period-chooser";
 
 export default class DiscoveryTopics extends Component {
   @service composer;

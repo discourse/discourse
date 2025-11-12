@@ -4,8 +4,8 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { classNames } from "@ember-decorators/component";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
-import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
 @classNames("assigned-to-filter")
 export default class AssignedToFilter extends Component {

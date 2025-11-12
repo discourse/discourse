@@ -1,9 +1,9 @@
 import { LinkTo } from "@ember/routing";
+import AdminReport from "discourse/admin/components/admin-report";
+import DashboardPeriodSelector from "discourse/admin/components/dashboard-period-selector";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import AdminReport from "admin/components/admin-report";
-import DashboardPeriodSelector from "admin/components/dashboard-period-selector";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default <template>
   <div class="sentiment section">

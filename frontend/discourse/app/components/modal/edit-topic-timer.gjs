@@ -8,8 +8,8 @@ import DModal from "discourse/components/d-modal";
 import EditTopicTimerForm from "discourse/components/edit-topic-timer-form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import TopicTimer from "discourse/models/topic-timer";
+import { FORMAT } from "discourse/select-kit/components/future-date-input-selector";
 import { i18n } from "discourse-i18n";
-import { FORMAT } from "select-kit/components/future-date-input-selector";
 
 export const CLOSE_STATUS_TYPE = "close";
 export const CLOSE_AFTER_LAST_POST_STATUS_TYPE = "close_after_last_post";

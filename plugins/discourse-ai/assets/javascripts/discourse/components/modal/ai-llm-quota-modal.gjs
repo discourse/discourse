@@ -5,8 +5,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import GroupChooser from "select-kit/components/group-chooser";
 import DurationSelector from "../ai-quota-duration-selector";
 
 export default class AiLlmQuotaModal extends Component {

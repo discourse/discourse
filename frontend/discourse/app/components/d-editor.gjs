@@ -12,7 +12,6 @@ import curryComponent from "ember-curry-component";
 import { emojiSearch, isSkinTonableEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 import { Promise } from "rsvp";
-import { not } from "truth-helpers";
 import TextareaEditor from "discourse/components/composer/textarea-editor";
 import ToggleSwitch from "discourse/components/composer/toggle-switch";
 import ToolbarButtons from "discourse/components/composer/toolbar-buttons";
@@ -49,6 +48,7 @@ import {
   EMOJI_ALLOWED_PRECEDING_CHARS_REGEXP,
   SKIP,
 } from "discourse/modifiers/d-autocomplete";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 let _createCallbacks = [];

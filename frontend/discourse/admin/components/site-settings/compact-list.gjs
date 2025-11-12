@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
-import ListSetting from "select-kit/components/list-setting";
+import ListSetting from "discourse/select-kit/components/list-setting";
 
 export default class CompactList extends Component {
   @tracked createdChoices = null;

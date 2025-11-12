@@ -1,11 +1,11 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import NotificationsButton from "discourse/select-kit/components/notifications-button";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit, {
   setDefaultState,
 } from "discourse/tests/helpers/select-kit-helper";
-import NotificationsButton from "select-kit/components/notifications-button";
 
 module(
   "Integration | Component | select-kit/notifications-button",

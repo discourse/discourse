@@ -1,9 +1,9 @@
 import { hash } from "@ember/helper";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import GroupChooser from "select-kit/components/group-chooser";
 
 module("Integration | Component | select-kit/group-chooser", function (hooks) {
   setupRenderingTest(hooks);

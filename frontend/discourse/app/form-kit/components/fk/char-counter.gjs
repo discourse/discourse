@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { gt, lt } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import { gt, lt } from "discourse/truth-helpers";
 
 export default class FKCharCounter extends Component {
   get currentLength() {

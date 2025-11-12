@@ -1,6 +1,5 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { not } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
@@ -8,6 +7,7 @@ import TableHeaderToggle from "discourse/components/table-header-toggle";
 import TextField from "discourse/components/text-field";
 import boundDate from "discourse/helpers/bound-date";
 import icon from "discourse/helpers/d-icon";
+import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ShareReport from "../../components/share-report";
 

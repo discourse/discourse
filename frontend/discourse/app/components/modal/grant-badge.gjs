@@ -14,8 +14,8 @@ import {
 } from "discourse/lib/grant-badge-utils";
 import Badge from "discourse/models/badge";
 import UserBadge from "discourse/models/user-badge";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class GrantBadgeModal extends Component {
   @tracked loading = true;

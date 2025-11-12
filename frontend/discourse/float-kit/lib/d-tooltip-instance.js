@@ -3,8 +3,8 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TOOLTIP } from "float-kit/lib/constants";
-import FloatKitInstance from "float-kit/lib/float-kit-instance";
+import { TOOLTIP } from "discourse/float-kit/lib/constants";
+import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 
 export default class DTooltipInstance extends FloatKitInstance {
   @service tooltip;

@@ -1,7 +1,6 @@
 import { Input } from "@ember/component";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { or } from "truth-helpers";
 import BulkGroupMemberDropdown from "discourse/components/bulk-group-member-dropdown";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -17,6 +16,7 @@ import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>

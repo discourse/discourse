@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
-import { and } from "truth-helpers";
 import {
   DangerButton,
   DefaultButton,
@@ -10,6 +9,7 @@ import {
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import element from "discourse/helpers/element";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AdminSectionLandingItem extends Component {

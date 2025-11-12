@@ -6,7 +6,6 @@ import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe, isHTMLSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
-import { and, eq } from "truth-helpers";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostCountOrBadges from "discourse/components/topic-list/post-count-or-badges";
 import TopicExcerpt from "discourse/components/topic-list/topic-excerpt";
@@ -26,6 +25,7 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class Item extends Component {

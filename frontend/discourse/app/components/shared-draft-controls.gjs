@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import discourseComputed from "discourse/lib/decorators";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
 
 @tagName("")
 export default class SharedDraftControls extends Component {

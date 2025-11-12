@@ -1,4 +1,4 @@
-import { notEq } from "truth-helpers";
+import { notEq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const EventField = <template>

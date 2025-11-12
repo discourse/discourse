@@ -1,5 +1,5 @@
 import { action, computed } from "@ember/object";
-import TagDrop from "select-kit/components/tag-drop";
+import TagDrop from "discourse/select-kit/components/tag-drop";
 
 export default class DTemplatesTagDrop extends TagDrop {
   @computed("availableTags.[]")

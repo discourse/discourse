@@ -6,14 +6,14 @@ import { empty, equal } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { classNames, tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
+import WatchedWord from "discourse/admin/models/watched-word";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
+import WatchedWords from "discourse/select-kit/components/watched-words";
 import { i18n } from "discourse-i18n";
-import WatchedWord from "admin/models/watched-word";
-import TagChooser from "select-kit/components/tag-chooser";
-import WatchedWords from "select-kit/components/watched-words";
 
 @tagName("form")
 @classNames("watched-word-form")

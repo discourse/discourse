@@ -6,8 +6,8 @@ import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import discourseComputed from "discourse/lib/decorators";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class CreateCouponForm extends Component {
   discountType = "amount";

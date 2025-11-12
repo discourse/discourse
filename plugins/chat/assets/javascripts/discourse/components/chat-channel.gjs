@@ -7,7 +7,6 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { and, not } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
@@ -17,6 +16,7 @@ import {
   onPresenceChange,
   removeOnPresenceChange,
 } from "discourse/lib/user-presence";
+import { and, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChatChannelStatus from "discourse/plugins/chat/discourse/components/chat-channel-status";
 import firstVisibleMessageId from "discourse/plugins/chat/discourse/helpers/first-visible-message-id";

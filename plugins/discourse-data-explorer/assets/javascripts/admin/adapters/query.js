@@ -1,3 +1,3 @@
-import buildPluginAdapter from "admin/adapters/build-plugin";
+import buildPluginAdapter from "discourse/admin/adapters/build-plugin";
 
 export default buildPluginAdapter("explorer").extend({});

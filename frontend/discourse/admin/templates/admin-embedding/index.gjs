@@ -1,11 +1,11 @@
 import { htmlSafe } from "@ember/template";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
+import EmbeddableHost from "discourse/admin/components/embeddable-host";
+import HighlightedCode from "discourse/admin/components/highlighted-code";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import EmbeddableHost from "admin/components/embeddable-host";
-import HighlightedCode from "admin/components/highlighted-code";
 
 export default <template>
   {{#if @controller.embedding.embeddable_hosts}}

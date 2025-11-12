@@ -6,10 +6,10 @@ import {
   settled,
   triggerKeyEvent,
 } from "@ember/test-helpers";
-import DialogHolder from "dialog-holder/components/dialog-holder";
 import { module, test } from "qunit";
 import GroupDeleteDialogMessage from "discourse/components/dialog-messages/group-delete";
 import SecondFactorConfirmPhrase from "discourse/components/dialog-messages/second-factor-confirm-phrase";
+import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
 

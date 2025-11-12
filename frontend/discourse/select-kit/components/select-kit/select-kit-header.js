@@ -7,8 +7,8 @@ import {
   classNames,
 } from "@ember-decorators/component";
 import { makeArray } from "discourse/lib/helpers";
-import { isValidInput } from "select-kit/lib/input-utils";
-import selectKitPropUtils from "select-kit/lib/select-kit-prop-utils";
+import { isValidInput } from "discourse/select-kit/lib/input-utils";
+import selectKitPropUtils from "discourse/select-kit/lib/select-kit-prop-utils";
 
 @classNames("select-kit-header")
 @classNameBindings("isFocused")

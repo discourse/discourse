@@ -3,14 +3,14 @@ import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import BackButton from "discourse/components/back-button";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
+import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import MultiSelect from "select-kit/components/multi-select";
 
 export default class AdminFlagsForm extends Component {
   @service router;

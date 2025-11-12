@@ -1,5 +1,4 @@
 import { fn } from "@ember/helper";
-import { or } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import LoadMore from "discourse/components/load-more";
@@ -9,6 +8,7 @@ import TextField from "discourse/components/text-field";
 import UserInfo from "discourse/components/user-info";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default <template>

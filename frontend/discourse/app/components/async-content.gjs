@@ -4,13 +4,13 @@ import { hash } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
 import { Promise as RsvpPromise } from "rsvp";
-import { eq } from "truth-helpers";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import FlashMessage from "discourse/components/flash-message";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import { eq } from "discourse/truth-helpers";
 import { extractErrorInfo } from "../lib/ajax-error";
 
 const ERROR_MODES = ["flash", "popup"];

@@ -10,9 +10,9 @@ import categoryVariables from "discourse/helpers/category-variables";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
-import CategoryDrop from "select-kit/components/category-drop";
-import TagDrop from "select-kit/components/tag-drop";
-import TagsIntersectionChooser from "select-kit/components/tags-intersection-chooser";
+import CategoryDrop from "discourse/select-kit/components/category-drop";
+import TagDrop from "discourse/select-kit/components/tag-drop";
+import TagsIntersectionChooser from "discourse/select-kit/components/tags-intersection-chooser";
 
 @tagName("ol")
 @classNameBindings("hidden:hidden", ":category-breadcrumb")

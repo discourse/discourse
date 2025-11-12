@@ -3,8 +3,8 @@ import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import UploadedImageListModal from "discourse/admin/components/modal/uploaded-image-list";
 import DButton from "discourse/components/d-button";
-import UploadedImageListModal from "admin/components/modal/uploaded-image-list";
 
 export default class UploadedImageList extends Component {
   @service modal;

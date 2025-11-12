@@ -1,6 +1,6 @@
+import AdminReport from "discourse/admin/components/admin-report";
 import BackButton from "discourse/components/back-button";
 import routeAction from "discourse/helpers/route-action";
-import AdminReport from "admin/components/admin-report";
 
 export default <template>
   <BackButton @route="adminReports" @label="admin.reports.back" />

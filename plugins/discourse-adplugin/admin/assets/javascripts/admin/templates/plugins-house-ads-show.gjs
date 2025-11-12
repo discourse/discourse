@@ -3,8 +3,8 @@ import { fn, hash } from "@ember/helper";
 import AceEditor from "discourse/components/ace-editor";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
+import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
-import GroupChooser from "select-kit/components/group-chooser";
 import HouseAdsCategorySelector from "../components/house-ads-category-selector";
 
 export default <template>

@@ -1,8 +1,8 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import UserChooser from "discourse/select-kit/components/user-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import UserChooser from "select-kit/components/user-chooser";
 
 module("Integration | Component | select-kit/user-chooser", function (hooks) {
   setupRenderingTest(hooks);

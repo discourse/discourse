@@ -1,16 +1,16 @@
 import { htmlSafe } from "@ember/template";
-import { and, not } from "truth-helpers";
+import EditCategoryGeneral from "discourse/admin/components/edit-category-general";
+import EditCategoryImages from "discourse/admin/components/edit-category-images";
+import EditCategoryLocalizations from "discourse/admin/components/edit-category-localizations";
+import EditCategorySecurity from "discourse/admin/components/edit-category-security";
+import EditCategorySettings from "discourse/admin/components/edit-category-settings";
+import EditCategoryTab from "discourse/admin/components/edit-category-tab";
+import EditCategoryTags from "discourse/admin/components/edit-category-tags";
+import EditCategoryTopicTemplate from "discourse/admin/components/edit-category-topic-template";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
-import EditCategoryGeneral from "admin/components/edit-category-general";
-import EditCategoryImages from "admin/components/edit-category-images";
-import EditCategoryLocalizations from "admin/components/edit-category-localizations";
-import EditCategorySecurity from "admin/components/edit-category-security";
-import EditCategorySettings from "admin/components/edit-category-settings";
-import EditCategoryTab from "admin/components/edit-category-tab";
-import EditCategoryTags from "admin/components/edit-category-tags";
-import EditCategoryTopicTemplate from "admin/components/edit-category-topic-template";
+import { and, not } from "discourse/truth-helpers";
 
 const TAB_COMPONENTS = {
   general: EditCategoryGeneral,

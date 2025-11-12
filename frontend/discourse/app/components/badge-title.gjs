@@ -6,8 +6,8 @@ import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 @tagName("")
 export default class BadgeTitle extends Component {

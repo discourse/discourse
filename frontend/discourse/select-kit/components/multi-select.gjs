@@ -3,18 +3,18 @@ import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import { and, not } from "truth-helpers";
 import componentForCollection from "discourse/helpers/component-for-collection";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { makeArray } from "discourse/lib/helpers";
-import { i18n } from "discourse-i18n";
 import SelectKitComponent, {
   pluginApiIdentifiers,
   resolveComponent,
   selectKitOptions,
-} from "select-kit/components/select-kit";
-import SelectKitBody from "select-kit/components/select-kit/select-kit-body";
-import { isNumeric } from "select-kit/lib/input-utils";
+} from "discourse/select-kit/components/select-kit";
+import SelectKitBody from "discourse/select-kit/components/select-kit/select-kit-body";
+import { isNumeric } from "discourse/select-kit/lib/input-utils";
+import { and, not } from "discourse/truth-helpers";
+import { i18n } from "discourse-i18n";
 import MultiSelectFilter from "./multi-select/multi-select-filter";
 import MultiSelectHeader from "./multi-select/multi-select-header";
 

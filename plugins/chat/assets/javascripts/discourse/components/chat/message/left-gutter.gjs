@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import BookmarkIcon from "discourse/components/bookmark-icon";
 import icon from "discourse/helpers/d-icon";
+import { eq } from "discourse/truth-helpers";
 import formatChatDate from "../../../helpers/format-chat-date";
 
 export default class ChatMessageLeftGutter extends Component {

@@ -1,8 +1,8 @@
 import { computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import ColorPalettePreview from "discourse/components/color-palette-preview";
+import SelectKitRowComponent from "discourse/select-kit/components/select-kit/select-kit-row";
 import { i18n } from "discourse-i18n";
-import SelectKitRowComponent from "select-kit/components/select-kit/select-kit-row";
 
 @classNames("color-palette-picker-row")
 export default class ColorPalettePickerRow extends SelectKitRowComponent {

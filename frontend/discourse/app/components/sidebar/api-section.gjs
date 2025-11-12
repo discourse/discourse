@@ -1,4 +1,4 @@
-import { and, eq, not } from "truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import Section from "./section";
 import SectionLink from "./section-link";
 

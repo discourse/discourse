@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import Chart from "admin/components/chart";
+import Chart from "discourse/admin/components/chart";
 
 export default class DoughnutChart extends Component {
   @tracked canvasSize = null;

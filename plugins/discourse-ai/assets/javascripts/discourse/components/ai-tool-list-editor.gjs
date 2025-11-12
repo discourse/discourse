@@ -3,17 +3,17 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaEmptyList from "admin/components/admin-config-area-empty-list";
-import DMenu from "float-kit/components/d-menu";
 import AiTool from "../admin/models/ai-tool";
 
 export default class AiToolListEditor extends Component {

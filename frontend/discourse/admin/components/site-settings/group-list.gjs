@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
-import ListSetting from "select-kit/components/list-setting";
+import ListSetting from "discourse/select-kit/components/list-setting";
 
 export default class GroupList extends Component {
   tokenSeparator = "|";

@@ -1,8 +1,8 @@
 import { blur, click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import SecretValueList from "discourse/admin/components/secret-value-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { i18n } from "discourse-i18n";
-import SecretValueList from "admin/components/secret-value-list";
 
 module("Integration | Component | secret-value-list", function (hooks) {
   setupRenderingTest(hooks);

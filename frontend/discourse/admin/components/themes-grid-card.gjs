@@ -3,15 +3,15 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
+import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import DMenu from "discourse/float-kit/components/d-menu";
 import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
-import AdminConfigAreaCard from "admin/components/admin-config-area-card";
-import DMenu from "float-kit/components/d-menu";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
 
 // NOTE (martin): We will need to revisit and improve this component

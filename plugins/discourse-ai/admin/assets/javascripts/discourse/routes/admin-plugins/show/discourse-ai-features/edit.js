@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
+import SiteSetting from "discourse/admin/models/site-setting";
 import { ajax } from "discourse/lib/ajax";
 import DiscourseRoute from "discourse/routes/discourse";
-import SiteSetting from "admin/models/site-setting";
 
 export default class AdminPluginsShowDiscourseAiFeaturesEdit extends DiscourseRoute {
   async model(params) {

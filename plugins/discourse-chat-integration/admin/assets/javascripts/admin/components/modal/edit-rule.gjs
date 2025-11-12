@@ -3,14 +3,14 @@ import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { eq } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import ComboBox from "discourse/select-kit/components/combo-box";
+import TagChooser from "discourse/select-kit/components/tag-chooser";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import ComboBox from "select-kit/components/combo-box";
-import TagChooser from "select-kit/components/tag-chooser";
 import ChannelData from "../channel-data";
 
 export default class EditRule extends Component {

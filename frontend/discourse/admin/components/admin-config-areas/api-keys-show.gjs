@@ -6,15 +6,15 @@ import { on } from "@ember/modifier";
 import { action, get } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import AdminFormRow from "discourse/admin/components/admin-form-row";
+import ApiKeyUrlsModal from "discourse/admin/components/modal/api-key-urls";
 import BackButton from "discourse/components/back-button";
 import DButton from "discourse/components/d-button";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import avatar from "discourse/helpers/avatar";
 import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
-import AdminFormRow from "admin/components/admin-form-row";
-import ApiKeyUrlsModal from "admin/components/modal/api-key-urls";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class AdminConfigAreasApiKeysShow extends Component {
   @service modal;

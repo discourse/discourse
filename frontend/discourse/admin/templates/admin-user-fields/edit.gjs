@@ -1,5 +1,5 @@
+import AdminUserFieldsForm from "discourse/admin/components/admin-user-fields-form";
 import BackButton from "discourse/components/back-button";
-import AdminUserFieldsForm from "admin/components/admin-user-fields-form";
 
 export default <template>
   <BackButton @route="adminUserFields.index" @label="admin.user_fields.back" />

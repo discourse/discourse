@@ -2,8 +2,8 @@
 import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import discourseComputed from "discourse/lib/decorators";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class RemindAssignsFrequency extends Component {
   @discourseComputed(

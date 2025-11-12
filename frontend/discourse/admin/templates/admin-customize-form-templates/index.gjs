@@ -1,7 +1,7 @@
+import InfoHeader from "discourse/admin/components/form-template/info-header";
+import RowItem from "discourse/admin/components/form-template/row-item";
 import DButton from "discourse/components/d-button";
 import { i18n } from "discourse-i18n";
-import InfoHeader from "admin/components/form-template/info-header";
-import RowItem from "admin/components/form-template/row-item";
 
 export default <template>
   <div class="form-templates">

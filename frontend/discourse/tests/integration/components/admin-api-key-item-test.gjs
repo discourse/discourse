@@ -1,7 +1,7 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import ApiKeyItem from "discourse/admin/components/api-key-item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import ApiKeyItem from "admin/components/api-key-item";
 
 module("Integration | Component | ApiKeyItem", function (hooks) {
   setupRenderingTest(hooks);

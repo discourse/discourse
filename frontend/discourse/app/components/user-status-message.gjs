@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
+import DTooltip from "discourse/float-kit/components/d-tooltip";
 import emoji from "discourse/helpers/emoji";
 import { until } from "discourse/lib/formatter";
-import DTooltip from "float-kit/components/d-tooltip";
 
 export default class UserStatusMessage extends Component {
   @service currentUser;

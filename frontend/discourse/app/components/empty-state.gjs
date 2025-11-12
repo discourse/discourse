@@ -1,7 +1,7 @@
 import { concat } from "@ember/helper";
-import { or } from "truth-helpers";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
+import { or } from "discourse/truth-helpers";
 
 const EmptyState = <template>
   <div

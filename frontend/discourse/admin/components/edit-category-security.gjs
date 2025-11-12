@@ -1,14 +1,14 @@
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { not } from "@ember/object/computed";
+import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import CategoryPermissionRow from "discourse/components/category-permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import discourseComputed from "discourse/lib/decorators";
 import PermissionType from "discourse/models/permission-type";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
-import { buildCategoryPanel } from "admin/components/edit-category-panel";
-import ComboBox from "select-kit/components/combo-box";
 
 export default class EditCategorySecurity extends buildCategoryPanel(
   "security"

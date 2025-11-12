@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { and, or } from "truth-helpers";
 import ComposerActionTitle from "discourse/components/composer-action-title";
 import ComposerBody from "discourse/components/composer-body";
 import ComposerEditor from "discourse/components/composer-editor";
@@ -29,9 +28,10 @@ import loadingSpinner from "discourse/helpers/loading-spinner";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
+import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import CategoryChooser from "select-kit/components/category-chooser";
-import MiniTagChooser from "select-kit/components/mini-tag-chooser";
 
 export default class ComposerContainer extends Component {
   @service composer;

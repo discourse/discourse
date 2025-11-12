@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import { gte } from "truth-helpers";
 import concatClass from "discourse/helpers/concat-class";
+import { gte } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class MembersCount extends Component {

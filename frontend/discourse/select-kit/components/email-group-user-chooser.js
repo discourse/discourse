@@ -2,8 +2,8 @@ import { classNameBindings, classNames } from "@ember-decorators/component";
 import {
   pluginApiIdentifiers,
   selectKitOptions,
-} from "select-kit/components/select-kit";
-import UserChooserComponent from "select-kit/components/user-chooser";
+} from "discourse/select-kit/components/select-kit";
+import UserChooserComponent from "discourse/select-kit/components/user-chooser";
 import EmailGroupUserChooserFilter from "./email-group-user-chooser-filter";
 import EmailGroupUserChooserRow from "./email-group-user-chooser-row";
 

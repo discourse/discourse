@@ -1,8 +1,8 @@
 import Service, { service } from "@ember/service";
+import AdminSearchModal from "discourse/admin/components/modal/admin-search";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import scrollLock from "discourse/lib/scroll-lock";
 import { ADMIN_PANEL, MAIN_PANEL } from "discourse/lib/sidebar/panels";
-import AdminSearchModal from "admin/components/modal/admin-search";
 
 export default class AdminSidebarStateManager extends Service {
   @service sidebarState;

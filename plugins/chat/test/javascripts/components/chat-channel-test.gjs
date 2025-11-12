@@ -1,10 +1,10 @@
 import { getOwner } from "@ember/owner";
 import { render, triggerEvent, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DTooltips from "discourse/float-kit/components/d-tooltips";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
-import DTooltips from "float-kit/components/d-tooltips";
 import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 

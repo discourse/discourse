@@ -3,14 +3,14 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import InstallThemeModal from "discourse/admin/components/modal/install-theme";
+import ThemesGrid from "discourse/admin/components/themes-grid";
+import { THEMES } from "discourse/admin/models/theme";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import getURL from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
-import InstallThemeModal from "admin/components/modal/install-theme";
-import ThemesGrid from "admin/components/themes-grid";
-import { THEMES } from "admin/models/theme";
 
 export default class AdminConfigAreasThemes extends Component {
   @service modal;

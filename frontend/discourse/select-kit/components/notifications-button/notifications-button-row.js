@@ -2,8 +2,8 @@ import { computed } from "@ember/object";
 import { readOnly } from "@ember/object/computed";
 import { classNames } from "@ember-decorators/component";
 import { escapeExpression } from "discourse/lib/utilities";
+import DropdownSelectBoxRowComponent from "discourse/select-kit/components/dropdown-select-box/dropdown-select-box-row";
 import { i18n } from "discourse-i18n";
-import DropdownSelectBoxRowComponent from "select-kit/components/dropdown-select-box/dropdown-select-box-row";
 
 @classNames("notifications-button-row")
 export default class NotificationsButtonRow extends DropdownSelectBoxRowComponent {

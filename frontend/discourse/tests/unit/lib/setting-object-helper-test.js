@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import SettingObjectHelper from "admin/lib/setting-object-helper";
+import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
 
 module("Unit | Lib | setting-object-helper", function (hooks) {
   setupTest(hooks);
