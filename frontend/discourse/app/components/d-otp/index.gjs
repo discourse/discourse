@@ -1,3 +1,4 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
@@ -11,6 +12,19 @@ import Slot from "./slot";
 
 const DEFAULT_SLOTS = 6;
 
+/**
+ * @typedef DOTPSignature
+ *
+ * @property {object} Args
+ *
+ * @property {number} [Args.slots] - Number of OTP input slots to display (defaults to 6)
+ * @property {boolean} [Args.autofocus] - Whether to autofocus the input on mount (defaults to true)
+ * @property {function(string): void} [Args.onChange] - Callback invoked whenever the OTP value changes
+ * @property {function(string): void} [Args.onFill] - Callback invoked when all OTP slots are filled
+ *
+ */
+
+/** @extends {Component<DOTPSignature>} */
 export default class DOTP extends Component {
   @tracked isFocused = false;
   @tracked isAllSelected = false;
