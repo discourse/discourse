@@ -52,6 +52,13 @@ schema:
         exclude:
           - "created_at"
           - "id"
+    category_moderation_groups:
+      primary_key_column_names: [ "category_id", "group_id" ]
+      columns:
+        exclude:
+          - "created_at"
+          - "updated_at"
+          - "id"
     group_users:
       primary_key_column_names: [ "group_id", "user_id" ]
       columns:
@@ -313,7 +320,6 @@ schema:
         - "category_form_templates"
         - "category_groups"
         - "category_localizations"
-        - "category_moderation_groups"
         - "category_required_tag_groups"
         - "category_search_data"
         - "category_settings"
